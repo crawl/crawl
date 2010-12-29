@@ -2249,6 +2249,10 @@ int monster_die(monster* mons, killer_type killer,
         // And his vault can be placed again.
         you.uniq_map_names.erase("uniq_boris");
     }
+    if (mons->type == MONS_JORY && !in_transit)
+    {
+        blood_spray(mons->pos(), MONS_JORY, 50);
+    }
     else if (mons_is_kirke(mons)
              && !in_transit
              && !testbits(mons->flags, MF_WAS_NEUTRAL))

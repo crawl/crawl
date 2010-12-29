@@ -2350,6 +2350,13 @@ enum monster_type                      // (int) menv[].type
 
     // Another set of uniques and monsters!
     MONS_RAVEN,
+    MONS_JORY,
+    MONS_TENTACLED_STARSPAWN,
+    MONS_LURKING_HORROR,
+    MONS_THRASHING_HORROR,
+    MONS_STARCURSED_MASS,
+    MONS_ANCIENT_ZYME,
+    MONS_WRETCHED_STAR,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2604,6 +2611,10 @@ enum mon_spellbook_type
     MST_HOLY_DRAGON,
     MST_BOG_MUMMY,
     MST_SPRIGGAN_DRUID,
+    MST_TENTACLED_STARSPAWN,
+    MST_LURKING_HORROR,
+    MST_STARCURSED_MASS,
+    MST_ANCIENT_ZYME,
     // unique monsters' "spellbooks"
     MST_RUPERT,
     MST_ROXANNE,
@@ -2649,6 +2660,7 @@ enum mon_spellbook_type
     MST_SERPENT_OF_HELL_TARTARUS,
     MST_SERPENT_OF_HELL_DIS,
     MST_NERGALLE,
+    MST_JORY,
 
     MST_GHOST, // special
     MST_TEST_SPAWNER,

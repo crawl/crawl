@@ -628,8 +628,12 @@ bool mons_is_projectile(int mc)
 
 bool mons_has_blood(int mc)
 {
+    // XXX: Jory is hacked in here so that he can
+    // explode in a cloud of blood when he dies (this
+    // is historically and thematically good).
     return (mons_class_flag(mc, M_COLD_BLOOD)
-            || mons_class_flag(mc, M_WARM_BLOOD));
+            || mons_class_flag(mc, M_WARM_BLOOD)
+            || mc == MONS_JORY);
 }
 
 bool mons_behaviour_perceptible(const monster* mon)

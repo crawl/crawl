@@ -1606,6 +1606,17 @@
       }
     },
 
+    {  MST_JORY,
+      {
+       SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+       SPELL_CAUSE_FEAR,
+       SPELL_BLINK,
+       SPELL_BRAIN_FEED,
+       SPELL_PAIN,
+       SPELL_VAMPIRIC_DRAINING,
+      }
+    },
+
     {  MST_SHEDU,
       {
        SPELL_RESURRECT,
