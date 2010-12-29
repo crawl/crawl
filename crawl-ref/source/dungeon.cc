@@ -2851,7 +2851,7 @@ static void _builder_extras(int level_number)
 
 // Used to nuke shafts placed in corridors on low levels - it's just
 // too nasty otherwise.
-// Well, actually this just checks if it's next to a non-passable 
+// Well, actually this just checks if it's next to a non-passable
 // square. (jpeg)
 static bool _shaft_is_in_corridor(const coord_def& c)
 {
