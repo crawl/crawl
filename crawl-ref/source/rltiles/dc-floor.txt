@@ -4,7 +4,9 @@
 %sdir dc-dngn
 
 dngn_unseen DNGN_UNSEEN
+%back dngn_unseen
 dc-misc/error DNGN_ERROR
+%back none
 
 %weight 6
 floor/grey_dirt0 FLOOR_GREY_DIRT FLOOR_NORMAL
@@ -504,3 +506,35 @@ limestone6
 limestone7
 limestone8
 limestone9
+
+sigil_curve_N_E SIGIL_CURVE_N_E
+sigil_curve_N_W SIGIL_CURVE_N_W
+sigil_curve_S_E SIGIL_CURVE_S_E
+sigil_curve_S_W SIGIL_CURVE_S_W
+sigil_straight_E_W SIGIL_STRAIGHT_E_W
+sigil_straight_N_S SIGIL_STRAIGHT_N_S
+sigil_straight_NE_SW SIGIL_STRAIGHT_NE_SW
+sigil_straight_NW_SE SIGIL_STRAIGHT_NW_SE
+sigil_cross SIGIL_CROSS
+sigil_circle SIGIL_CIRCLE
+sigil_rhombus SIGIL_RHOMBUS
+sigil_Y_N SIGIL_Y
+sigil_Y_S SIGIL_Y_INVERTED
+sigil_Y_E SIGIL_Y_RIGHT
+sigil_Y_W SIGIL_Y_LEFT
+sigil_Y_left SIGIL_Y_LEFTLEANING
+sigil_Y_right SIGIL_Y_RIGHTLEANING
+sigil_algiz_left SIGIL_ALGIZ_LEFT
+sigil_algiz_right SIGIL_ALGIZ_RIGHT
+sigil_wide_E_NW SIGIL_STRAIGHT_E_NW
+sigil_wide_E_SW SIGIL_STRAIGHT_E_SW
+sigil_wide_W_NE SIGIL_STRAIGHT_W_NE
+sigil_wide_W_SE SIGIL_STRAIGHT_W_SE
+sigil_wide_N_SE SIGIL_STRAIGHT_N_SE
+sigil_wide_N_SW SIGIL_STRAIGHT_N_SW
+sigil_wide_S_NE SIGIL_STRAIGHT_S_NE
+sigil_wide_S_NW SIGIL_STRAIGHT_S_NW
+sigil_straight_E_W_NE_NW SIGIL_FOURWAY
+sigil_sharp_E_NE SIGIL_SHARP_E_NE
+sigil_sharp_W_SW SIGIL_SHARP_W_SW
+sigil_straight_E_NE_SW SIGIL_STRAIGHT_E_NE_SW
