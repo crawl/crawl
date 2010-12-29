@@ -166,7 +166,6 @@ static bool _connect_spotty(const coord_def& from);
 static bool _connect_vault_exit(const coord_def& exit);
 
 // ITEM & SHOP FUNCTIONS
-static void _place_shops(int level_number);
 static object_class_type _item_in_shop(shop_type shop_type);
 
 // SPECIAL ROOM BUILDERS
@@ -2102,11 +2101,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         // XXX: Moved this here from builder_monsters so that
         //      connectivity can be ensured
         _place_uniques(level_number, level_type);
-
-        // Place shops, if appropriate. This must be protected by the
-        // connectivity check.
-        if (level_type == LEVEL_DUNGEON)
-            _place_shops(level_number);
 
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
@@ -5194,61 +5188,6 @@ static void _place_altar()
 
         grd[px][py] = _pick_an_altar();
         break;
-    }
-}
-
-// If a level gets shops, how many there are.
-// Just one most of the time; expected value is 1.42.
-static int _num_shops()
-{
-    if (x_chance_in_y(5, 6))
-        return (1);
-    else
-        return (random_range(2, MAX_RANDOM_SHOPS));
-}
-
-static void _place_shops(int level_number)
-{
-    coord_def shop_place;
-
-    int nshops;
-    bool allow_bazaars = true;
-
-#ifdef DEBUG_SHOPS
-    nshops = MAX_SHOPS;
-#else
-    if (level_number < 3)
-        return;
-    if (!x_chance_in_y(your_branch().shop_chance, 100))
-        return;
-    nshops = _num_shops();
-#endif
-
-    for (int i = 0; i < nshops; i++)
-    {
-        int timeout = 0;
-
-        do
-        {
-            shop_place = random_in_bounds();
-
-            timeout++;
-
-            if (timeout > 10000)
-                return;
-        }
-        while (grd(shop_place) != DNGN_FLOOR
-               && !map_masked(shop_place, MMT_NO_SHOP));
-
-        if (allow_bazaars && level_number > 9 && level_number < 27
-            && one_chance_in(30 - level_number))
-        {
-            _place_specific_stair(DNGN_ENTER_PORTAL_VAULT,
-                                 "bzr_entry", level_number, true);
-            allow_bazaars = false;
-        }
-        else
-            place_spec_shop(level_number, shop_place, SHOP_RANDOM);
     }
 }
 
