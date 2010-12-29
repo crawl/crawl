@@ -4469,8 +4469,15 @@ int dgn_place_monster(mons_spec &mspec,
                 mons.spells = mspec.spells;
 
             if (mspec.props.exists("monster_tile"))
+            {
                 mons.props["monster_tile"] =
                     mspec.props["monster_tile"].get_short();
+            }
+            if (mspec.props.exists("monster_tile_name"))
+            {
+                mons.props["monster_tile_name"].get_string() =
+                    mspec.props["monster_tile_name"].get_string();
+            }
 
             if (mspec.props.exists("always_corpse"))
                 mons.props["always_corpse"] = true;
