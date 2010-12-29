@@ -53,6 +53,7 @@
 #include "env.h"
 #include "tags.h"
 #ifdef USE_TILE
+ #include "tiledef-dngn.h"
  #include "tilemcache.h"
  #include "tilepick.h"
  #include "tileview.h"
@@ -2644,13 +2645,17 @@ static void tag_construct_level_monsters(writer &th)
 
 void tag_construct_level_tiles(writer &th)
 {
-#ifdef USE_TILE
+#ifndef USE_TILE
+    marshallBoolean(th, false);
+#else
     unsigned int rle_count = 0; // for run-length encoding
-    unsigned int tile = 0;
+    unsigned int tile      = 0;
     unsigned int last_tile = 0;
 
-    marshallBoolean(th, true);
-    // Legacy version number.
+    marshallBoolean(th, true); // Tiles data included.
+    marshallInt(th, TILE_WALL_MAX);
+
+    // Legacy version number. (What's up with this? --jpeg)
     marshallShort(th, 0);
 
     // Map grids.
@@ -2736,9 +2741,6 @@ void tag_construct_level_tiles(writer &th)
         }
 
     mcache.construct(th);
-
-#else
-    marshallBoolean(th, false);
 #endif
 }
 
@@ -3089,7 +3091,20 @@ void tag_read_level_tiles(reader &th)
         _debug_count_tiles();
         return;
     }
+
 #ifdef USE_TILE
+ #if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_DNGN_TILECOUNT
+        || unmarshallInt(th) != TILE_WALL_MAX)
+ #else
+    if (unmarshallInt(th) != TILE_WALL_MAX)
+ #endif
+    {
+        dprf("DNGN tilecount has changed -- recreating tile data.");
+        tag_missing_level_tiles();
+        return;
+    }
+
     // Initialise env settings.
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
