@@ -54,6 +54,7 @@
 #include "tags.h"
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
+ #include "tiledef-player.h"
  #include "tilemcache.h"
  #include "tilepick.h"
  #include "tileview.h"
@@ -2999,6 +3000,24 @@ void unmarshallMonster(reader &th, monster& m)
     m.props.clear();
     m.props.read(th);
 
+#ifdef USE_TILE
+    if (m.props.exists("monster_tile_name"))
+    {
+        std::string tile = m.props["monster_tile_name"].get_string();
+        tileidx_t index;
+        if (!tile_player_index(tile.c_str(), &index))
+        {
+            // If invalid tile name, complain and discard the props.
+            dprf("bad tile name: \"%s\".", tile.c_str());
+            m.props.erase("monster_tile_name");
+            if (m.props.exists("monster_tile"))
+                m.props.erase("monster_tile");
+        }
+        else // Update monster tile.
+            m.props["monster_tile"] = short(index);
+    }
+#endif
+
     m.check_speed();
 }
 
@@ -3163,7 +3182,7 @@ void tag_read_level_tiles(reader &th)
             env.tile_flv[x][y].wall    = unmarshallShort(th);
             env.tile_flv[x][y].floor   = unmarshallShort(th);
             env.tile_flv[x][y].special = unmarshallShort(th);
-            env.tile_flv[x][y].feat   = unmarshallShort(th);
+            env.tile_flv[x][y].feat    = unmarshallShort(th);
         }
     _debug_count_tiles();
 

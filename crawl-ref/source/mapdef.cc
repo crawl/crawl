@@ -3641,6 +3641,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 error = make_stringf("bad tile name: \"%s\".", tile.c_str());
                 return (slot);
             }
+
+            // Store name along with the tile.
+            mspec.props["monster_tile_name"].get_string() = tile;
             mspec.props["monster_tile"] = short(index);
         }
 #endif
