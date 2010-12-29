@@ -154,7 +154,8 @@ static void _give_wand(monster* mon, int level)
 
 static void _give_potion(monster* mon, int level)
 {
-    if (mons_species(mon->type) == MONS_VAMPIRE && one_chance_in(5))
+    if (mons_species(mon->type) == MONS_VAMPIRE
+        && (one_chance_in(5) || mon->type == MONS_JORY))
     {
         // This handles initialization of stack timer.
         const int thing_created =
@@ -649,6 +650,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_DRACONIAN_KNIGHT:
+    case MONS_JORY:
     {
         item.base_type = OBJ_WEAPONS;
 
@@ -1731,6 +1733,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DONALD:
     case MONS_MAUD:
     case MONS_VAMPIRE_KNIGHT:
+    case MONS_JORY:
     case MONS_VAULT_GUARD:
     {
         item.base_type = OBJ_ARMOUR;

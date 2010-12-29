@@ -1334,6 +1334,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_VAMPIRE_KNIGHT;
     case MONS_VAMPIRE_MAGE:
         return TILEP_MONS_VAMPIRE_MAGE;
+    case MONS_JORY:
+        return TILEP_MONS_JORY;
 
     // wraiths ('W')
     case MONS_WRAITH:

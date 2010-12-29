@@ -622,8 +622,11 @@ iron_troll_monk_ghost MONS_IRON_TROLL_MONK
 vampire MONS_VAMPIRE
 vampire_knight MONS_VAMPIRE_KNIGHT
 vampire_mage MONS_VAMPIRE_MAGE
+%sdir dc-mon/unique
+jory MONS_JORY
 
 ## Wraiths ('W')
+%sdir dc-mon/undead
 wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
