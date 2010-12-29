@@ -650,7 +650,7 @@ rakshasa
 %%%%
 raven
 
-"The Hatter opened his eyes very wide on hearing this; but all he said  was “Why is a raven like a writing-desk?"
+"The Hatter opened his eyes very wide on hearing this; but all he said was 'Why is a raven like a writing-desk?'"
     -Lewis Carroll, Alice's Adventures in Wonderland
 %%%%
 shadow
