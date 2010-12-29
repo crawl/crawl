@@ -3886,4 +3886,3 @@ static void _shedu_movement_clamp(monster *shedu)
     if (grid_distance(shedu->pos(), my_pair->pos()) >= 10)
         mmov = (my_pair->pos() - shedu->pos()).sgn();
 }
-

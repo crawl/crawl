@@ -134,7 +134,7 @@ bool GridRegion::place_cursor(MouseEvent &event, unsigned int &item_idx)
     return (true);
 }
 
-void GridRegion::add_quad_char(char c, int x, int y, 
+void GridRegion::add_quad_char(char c, int x, int y,
                                int ofs_x, int ofs_y, bool outline)
 {
     int num = c - '0';
