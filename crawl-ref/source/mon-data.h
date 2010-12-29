@@ -2900,7 +2900,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_OPHAN, 'G', ETC_FIRE, "ophan",
+    MONS_OPHAN, 'G', RED, "ophan",
     M_SPELLCASTER | M_SEE_INVIS | M_GLOWS_LIGHT | M_UNFINISHED,
     MR_RES_ASPHYX,
     450, 14, MONS_ANGEL, MONS_OPHAN, MH_HOLY, MAG_IMMUNE,
