@@ -227,8 +227,6 @@ static coord_def _dgn_random_point_in_bounds(
 static int                  _setup_temple_altars(CrawlHashTable &temple);
 static dungeon_feature_type _pick_temple_altar(vault_placement &place);
 static dungeon_feature_type _pick_an_altar();
-static void _place_altar();
-static void _place_altars();
 
 static std::vector<god_type> _temple_altar_list;
 static CrawlHashTable*       _current_temple_hash = NULL; // XXX: hack!
@@ -2119,7 +2117,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
         _fixup_walls();
         _fixup_branch_stairs();
-        _place_altars();
     }
 
     _fixup_misplaced_items();
@@ -5127,67 +5124,6 @@ static dungeon_feature_type _pick_an_altar()
     }
 
     return (altar_type);
-}
-
-static void _place_altars()
-{
-    // No altars before level 5.
-    if (you.absdepth0 < 4)
-        return;
-
-    if (you.level_type == LEVEL_DUNGEON)
-    {
-        int prob = your_branch().altar_chance;
-        while (prob)
-        {
-            if (random2(100) >= prob)
-                break;
-
-            dprf("Placing an altar");
-            _place_altar();
-            // Reduce the chance and try to place another.
-            prob /= 5;
-        }
-    }
-}
-
-static void _place_altar()
-{
-    for (int numtry = 0; numtry < 5000; ++numtry)
-    {
-        int px = 15 + random2(55);
-        int py = 15 + random2(45);
-
-        const int numfloors = _count_feature_in_box(px-2, py-2, px+3, py+3,
-                                                    DNGN_FLOOR);
-        const int numgood =
-            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_ROCK_WALL) +
-            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_CLOSED_DOOR) +
-            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_SECRET_DOOR) +
-            _count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_FLOOR);
-
-        if (numgood < 5*5 || numfloors == 0)
-            continue;
-
-        bool mon_there = false;
-
-        for (int i = px - 2; i <= px + 2; i++)
-            for (int j = py - 2; j <= py + 2; j++)
-            {
-                if (monster_at(coord_def(i, j)))
-                    mon_there = true;
-            }
-
-        if (mon_there)
-            continue;
-
-        for (int i = px - 2; i <= px + 2; i++)
-            for (int j = py - 2; j <= py + 2; j++)
-                grd[i][j] = DNGN_FLOOR;
-
-        grd[px][py] = _pick_an_altar();
-        break;
-    }
 }
 
 static bool _need_varied_selection(shop_type shop)

@@ -81,6 +81,23 @@ ENDMAP
 # II   General altars
 ######################################
 
+NAME: basic_altar
+TAGS: allow_dup extra no_monster_gen
+DEPTH: 5-
+CHANCE: 20% (Orc)
+CHANCE: 10% (Snake, Forest, Dwarf)
+CHANCE: 8% (D, Elf)
+CHANCE: 5% (Lair, Slime, Vault, Crypt)
+CHANCE: 1% (Zot)
+CHANCE: 0
+MAP
+.....
+.....
+..C..
+.....
+.....
+ENDMAP
+
 NAME: old_standard_altar
 TAGS: allow_dup
 SHUFFLE: cvxxxx
