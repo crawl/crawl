@@ -1702,11 +1702,17 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         pbolt.setup_retrace();
         viewwindow();
         pbolt.fire();
-        msg::stream << "The weapon returns "
-                    << (you.can_see(mons)?
-                          ("to " + mons->name(DESC_NOCAP_THE))
-                        : "whence it came from")
-                    << "!" << std::endl;
+
+        // Only print a message if you can see the target or the thrower.
+        // Otherwise we get "The weapon returns whence it came from!" regardless.
+        if (you.see_cell(pbolt.target) || you.can_see(mons))
+        {
+            msg::stream << "The weapon returns "
+                        << (you.can_see(mons)?
+                              ("to " + mons->name(DESC_NOCAP_THE))
+                            : "from whence it came")
+                        << "!" << std::endl;
+        }
 
         // Player saw the item return.
         if (!is_artefact(item))
