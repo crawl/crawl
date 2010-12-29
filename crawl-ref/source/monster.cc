@@ -6358,7 +6358,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                              "lava and is incinerated" :
                              "deep water and drowns");
             }
-            else if (fly_died)
+            else if (fly_died && observable())
             {
                 mprf("%s jumps down from %s now dead mount.",
                      name(DESC_CAP_THE).c_str(),
