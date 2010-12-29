@@ -1336,6 +1336,12 @@ int place_monster(mgen_data mg, bool force_pos)
                 menv[band_id].flags |= MF_NO_REWARD;
                 menv[band_id].props["pikel_band"] = true;
             }
+            if (mon->type == MONS_SHEDU)
+            {
+                // We store these here for later resurrection, etc.
+                menv[band_id].number = menv[id].mid;
+                menv[id].number = menv[band_id].mid;
+            }
         }
     }
 
@@ -2651,6 +2657,12 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_ELEPHANT;
         band_size = 2 + random2(4);
         break;
+
+    case MONS_SHEDU:
+        band = BAND_SHEDU;
+        band_size = 1;
+        break;
+
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -3001,6 +3013,10 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_ELEPHANT:
         mon_type = MONS_ELEPHANT;
+        break;
+
+    case BAND_SHEDU:
+        mon_type = MONS_SHEDU;
         break;
 
     default:

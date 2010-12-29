@@ -436,6 +436,8 @@ monster_type fill_out_corpse(const monster* mons,
     {
         corpse.props[MONSTER_HIT_DICE] = short(mons->hit_dice);
         corpse.props[MONSTER_NUMBER]   = short(mons->number);
+        // XXX: Appears to be a safe conversion?
+        corpse.props[MONSTER_MID]      = int(mons->mid);
     }
 
     corpse.colour = mons_class_colour(corpse_class);
@@ -721,7 +723,7 @@ static void _give_monster_experience(int experience, int killer_index)
 static int _calc_player_experience(monster* mons, killer_type killer,
                                    bool pet_kill, int killer_index)
 {
-    const int experience = exper_value(mons);
+    int experience = exper_value(mons);
 
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
     const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
@@ -729,8 +731,17 @@ static int _calc_player_experience(monster* mons, killer_type killer,
     const bool already_got_half_xp = testbits(mons->flags, MF_GOT_HALF_XP);
     const int half_xp = (experience + 1) / 2;
 
-    if (created_friendly || was_neutral || no_xp)
+    // We give double exp for shedu here, rather than artificially
+    // adjusting the modifier.
+    if (mons->flags & MF_BAND_MEMBER && mons_is_shedu(mons))
+        experience *= 2;
+
+    if (created_friendly || was_neutral || no_xp
+        || mons_is_shedu(mons) && shedu_pair_alive(mons))
+    {
         return (0); // No xp if monster was created friendly or summoned.
+                    // or if you've only killed one of two shedu.
+    }
     else if (YOU_KILL(killer))
     {
         if (already_got_half_xp)
@@ -2305,6 +2316,13 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons_is_elven_twin(mons) && mons_near(mons))
     {
         elven_twin_died(mons, in_transit, killer, killer_index);
+    }
+    else if (mons_is_shedu(mons))
+    {
+        if (in_transit)
+            mons->number = 0;
+        else
+            shedu_do_resurrection(mons);
     }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
@@ -4067,6 +4085,43 @@ void monster_teleport(monster* mons, bool instan, bool silent)
         return;
     }
 
+    coord_def newpos;
+
+    if (mons_is_shedu(mons) && shedu_pair_alive(mons))
+    {
+        // find a location close to its mate instead.
+        monster* my_pair = get_shedu_pair(mons);
+        coord_def pair = my_pair->pos();
+        coord_def target;
+
+        int tries = 0;
+        while (tries++ < 1000)
+        {
+            target = coord_def(random_range(pair.x - 5, pair.x + 5),
+                               random_range(pair.y - 5, pair.y + 5));
+
+            if (grid_distance(target, pair) >= 10)
+                continue;
+
+            newpos = target;
+            break;
+        }
+
+        if (newpos.origin())
+            dprf("ERROR: Couldn't find a safe location near mate for Shedu!");
+    }
+
+    if (newpos.origin())
+        monster_random_space(mons, newpos, !mons->wont_attack());
+
+    // XXX: If the above function didn't find a good spot, return now
+    // rather than continue by slotting the monster (presumably)
+    // back into its old location (previous behaviour). This seems
+    // to be much cleaner and safer than relying on what appears to
+    // have been a mistake.
+    if (newpos.origin())
+        return;
+
     bool was_seen = !silent
         && you.can_see(mons) && !mons_is_lurking(mons);
 
@@ -4078,10 +4133,10 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // Pick the monster up.
     mgrd(oldplace) = NON_MONSTER;
 
-    coord_def newpos;
-    if (monster_random_space(mons, newpos, !mons->wont_attack()))
-        mons->moveto(newpos);
+    // Move it to its new home.
+    mons->moveto(newpos);
 
+    // And slot it back into the grid.
     mgrd(mons->pos()) = mons->mindex();
 
     // Mimics change form/colour when teleported.
