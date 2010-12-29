@@ -25,6 +25,7 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
+#include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
@@ -180,20 +181,37 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
 
     for (monster_iterator targ(caster); targ; ++targ)
     {
-        if (*targ != caster
-            && (mons_genus(targ->type) == caster_genus
-                || mons_genus(targ->base_monster) == caster_genus
-                || targ->is_holy() && caster->is_holy())
+        if (*targ == caster)
+            continue;
+
+        int targ_distance = grid_distance(targ->pos(), caster->pos());
+
+        bool got_target = false;
+
+        // Shedu only heal each other.
+        if (mons_is_shedu(caster))
+            if (mons_is_shedu(*targ) && caster->mid == targ->number
+                && caster->number == targ->mid)
+            {
+                got_target = true;
+            }
+            else
+                continue;
+
+        else if (mons_genus(targ->type) == caster_genus
+                 || mons_genus(targ->base_monster) == caster_genus
+                 || targ->is_holy() && caster->is_holy()
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
         {
-            int targ_distance = grid_distance(targ->pos(), caster->pos());
-            if (targ_distance < min_distance && targ_distance < pbolt.range)
-            {
-                min_distance = targ_distance;
-                selected_target = *targ;
-            }
+            got_target = true;
+        }
+
+        if (got_target && targ_distance < min_distance && targ_distance < pbolt.range)
+        {
+            min_distance = targ_distance;
+            selected_target = *targ;
         }
     }
 

@@ -2718,7 +2718,8 @@ bool monster::paralysed() const
 bool monster::cannot_act() const
 {
     return (paralysed()
-            || petrified() && !petrifying());
+            || petrified() && !petrifying()
+            || has_ench(ENCH_PREPARING_RESURRECT));
 }
 
 bool monster::cannot_move() const
@@ -4649,8 +4650,8 @@ void monster::timeout_enchantments(int levels)
             break;
 
         case ENCH_TP:
-            del_ench(i->first);
             teleport(true);
+            del_ench(i->first);
             break;
 
         case ENCH_CONFUSION:
@@ -4685,6 +4686,15 @@ void monster::timeout_enchantments(int levels)
                 spirit_fades(this);
             break;
         }
+
+        case ENCH_PREPARING_RESURRECT:
+        {
+            const int actdur = speed_to_duration(speed) * levels;
+            if (lose_ench_duration(i->first, actdur))
+                shedu_do_actual_resurrection(this);
+            break;
+        }
+
         default:
             break;
         }
@@ -5151,6 +5161,13 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             spirit_fades(this);
+        }
+        break;
+
+    case ENCH_PREPARING_RESURRECT:
+        if (decay_enchantment(me))
+        {
+            shedu_do_actual_resurrection(this);
         }
         break;
 
@@ -6557,7 +6574,7 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_PREPARING_RESURRECT:
         // A timer. When it runs out, the creature will cast resurrect.
-        return (random_range(1, 3) * 10);
+        return (random_range(4, 7) * 10);
 
     case ENCH_EXPLODING:
         return (random_range(3,7) * 10);

@@ -7,8 +7,10 @@
 #include "mon-death.h"
 
 #include "areas.h"
+#include "coordit.h"
 #include "database.h"
 #include "env.h"
+#include "items.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "mon-behv.h"
@@ -427,4 +429,155 @@ void spirit_fades (monster *spirit)
     else
         mprf("A powerful presence appears to avenge a fallen spirit!", MSGCH_TALK);
 
+}
+
+// Shedu
+monster* get_shedu_pair (const monster* mons)
+{
+    monster* pair = monster_by_mid(mons->number);
+    if (pair)
+        return (pair);
+
+    return (NULL);
+}
+
+bool shedu_pair_alive (const monster* mons)
+{
+    if (get_shedu_pair(mons) == NULL)
+        return (false);
+
+    return (true);
+}
+
+bool mons_is_shedu(const monster* mons)
+{
+    return (mons->type == MONS_SHEDU
+            || (mons->props.exists("original_name")
+                && mons->props["original_name"].get_string() == "shedu"));
+}
+
+void shedu_do_resurrection (const monster* mons)
+{
+    if (!mons_is_shedu(mons))
+        return;
+
+    if (mons->number == 0)
+        return;
+
+    monster* my_pair = get_shedu_pair(mons);
+    if (!my_pair)
+        return;
+
+    if (you.can_see(my_pair))
+        simple_monster_message(my_pair, " ceases action and prepares to resurrect its fallen mate.");
+
+    my_pair->add_ench(ENCH_PREPARING_RESURRECT);
+}
+
+void shedu_do_actual_resurrection (monster* mons)
+{
+    // Here is where we actually recreate the dead
+    // shedu.
+    bool found_body = false;
+    coord_def place_at;
+    bool success = false;
+    bool from_inventory = false;
+
+    // Our pair might already be irretrievably dead.
+    if (mons->number == 0)
+        return;
+
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND, mons->get_los()); ri; ++ri)
+    {
+        for (stack_iterator si(*ri); si; ++si)
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+                && si->props.exists(MONSTER_MID)
+                && static_cast<unsigned int>(si->props[MONSTER_MID].get_int()) == mons->number)
+            {
+                place_at = *ri;
+                destroy_item(si->index());
+                found_body = true;
+                break;
+            }
+    }
+
+    if (!found_body)
+    {
+        for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
+        {
+            if (!you.inv[slot].defined())
+                continue;
+
+            item_def* si = &you.inv[slot];
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+                && si->props.exists(MONSTER_MID)
+                && static_cast<unsigned int>(si->props[MONSTER_MID].get_int()) == mons->number)
+            {
+                // it was in the player's inventory
+                place_at = coord_def(-1, -1);
+                dec_inv_item_quantity(slot, 1, false);
+                found_body = true;
+                from_inventory = true;
+                break;
+            }
+        }
+
+        if (found_body)
+        {
+            for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+                if ((place_at.origin() || one_chance_in(3))
+                    && monster_habitable_grid(mons, grd(*ai)))
+                {
+                    place_at = *ai;
+                }
+        }
+    }
+
+    if (!found_body)
+    {
+        mons->number = 0;
+        return;
+    }
+
+    mgen_data new_shedu;
+    new_shedu.cls = MONS_SHEDU;
+    new_shedu.behaviour = mons->behaviour;
+    if (!place_at.origin())
+        new_shedu.pos = place_at;
+    new_shedu.foe = mons->foe;
+    new_shedu.god = mons->god;
+
+    // try placing at exact location
+    bool at_right_place = (!new_shedu.pos.origin());
+    int id = place_monster(new_shedu, true);
+
+    // try elsewhere
+    if (id == -1)
+    {
+        at_right_place = false;
+        new_shedu.pos.reset();
+        id = place_monster(new_shedu, false);
+    }
+
+    // give up
+    if (id == -1)
+    {
+        dprf("Couldn't place new shedu!");
+        return;
+    }
+
+    success = true;
+
+    monster* my_pair = &menv[id];
+    my_pair->number = mons->mid;
+    mons->number = my_pair->mid;
+    my_pair->flags |= MF_BAND_MEMBER;
+
+    if (!at_right_place)
+        my_pair->teleport(true);
+
+    if (success && from_inventory)
+        simple_monster_message(mons, " resurrects its mate from your pack!");
+    else if (success && you.can_see(mons))
+        simple_monster_message(mons, " resurrects its mate from the grave!");
 }

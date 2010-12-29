@@ -312,6 +312,7 @@ enum CHAR_ATTRIBUTES
 const char * const MONSTER_HIT_DICE = "monster-hit-dice";
 const char * const MONSTER_NUMBER = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
+const char * const MONSTER_MID = "monster-mid";
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

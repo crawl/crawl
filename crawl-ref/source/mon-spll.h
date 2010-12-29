@@ -1606,6 +1606,17 @@
       }
     },
 
+    {  MST_SHEDU,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_HEAL_OTHER,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
