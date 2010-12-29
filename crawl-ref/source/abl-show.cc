@@ -2207,14 +2207,18 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_INJURY_MIRROR:
         if (yred_injury_mirror())
         {
-            mpr("You already have a dark mirror aura!");
-            return (false);
+            // Strictly speaking, since it is random, it is possible it
+            // actually decreases.  The player doesn't know this, and this
+            // way smart-asses won't re-roll it several times before charging.
+            mpr("Your dark aura grows in power.");
         }
-
-        mprf("You %s in prayer and are bathed in unholy energy.",
-             you.species == SP_NAGA ? "coil" :
-             you.species == SP_CAT  ? "sit"
-                                    : "kneel");
+        else
+        {
+            mprf("You %s in prayer and are bathed in unholy energy.",
+                 you.species == SP_NAGA ? "coil" :
+                 you.species == SP_CAT  ? "sit"
+                                        : "kneel");
+        }
         you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
                      + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
         break;
