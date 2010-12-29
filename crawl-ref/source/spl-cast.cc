@@ -1528,9 +1528,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        if (you.airborne() || you.clinging
-            || !feat_has_solid_floor(grd(you.pos())) || feat_is_staircase(grd(you.pos()))
-            || feat_is_altar(grd(you.pos())))
+        if (you.airborne() || you.clinging || !feat_has_solid_floor(grd(you.pos())))
         {
             if (you.airborne() || you.clinging)
                 mprf("You can't cast this spell without touching the ground.");

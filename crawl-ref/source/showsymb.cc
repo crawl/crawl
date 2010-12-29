@@ -88,6 +88,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
     if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
         colour = ETC_WAVES;
 
+    if (feat_has_solid_floor(feat) && cell.flags & MAP_LIQUEFIED)
+        colour = ETC_LIQUEFIED;
+
     if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
     {
         if (cell.flags & MAP_HALOED)
@@ -99,8 +102,6 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
         }
         else if (cell.flags & MAP_SILENCED)
             colour = CYAN;
-        else if (cell.flags & MAP_LIQUEFIED)
-            colour = ETC_LIQUEFIED;
     }
     return (colour);
 }
