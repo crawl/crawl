@@ -3632,21 +3632,22 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         }
 
         std::string tile = strip_tag_prefix(mon_str, "tile:");
-#ifdef USE_TILE
         if (!tile.empty())
         {
+#ifdef USE_TILE
             tileidx_t index;
             if (!tile_player_index(tile.c_str(), &index))
             {
                 error = make_stringf("bad tile name: \"%s\".", tile.c_str());
                 return (slot);
             }
-
+#endif
             // Store name along with the tile.
             mspec.props["monster_tile_name"].get_string() = tile;
+#ifdef USE_TILE
             mspec.props["monster_tile"] = short(index);
-        }
 #endif
+        }
 
         std::string name = strip_tag_prefix(mon_str, "name:");
         if (!name.empty())
