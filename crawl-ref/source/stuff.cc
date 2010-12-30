@@ -428,6 +428,15 @@ void end(int exit_code, bool print_error, const char *format, ...)
     CrawlIsExiting = true;
     if (exit_code)
         CrawlIsCrashing = true;
+
+#ifdef DEBUG_GLOBALS
+    delete real_env;         real_env = 0;
+    delete real_crawl_state; real_crawl_state = 0;
+    delete real_dlua;        real_dlua = 0;
+    delete real_clua;        real_clua = 0;
+    delete real_you;         real_you = 0;
+#endif
+
     exit(exit_code);
 }
 
