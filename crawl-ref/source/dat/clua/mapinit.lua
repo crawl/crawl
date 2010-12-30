@@ -15,7 +15,7 @@ end
 register_flags("minivault mini_float allow_dup extra")
 register_flags("no_hmirror no_vmirror no_rotate no_pool_fixup")
 register_flags("no_wall_fixup dummy transparent no_monster_gen")
-register_flags("no_item_gen no_shop_gen no_trap_gen ruin")
+register_flags("no_item_gen no_trap_gen ruin")
 register_flags("generate_awake no_dump generate_loot sealed_layout")
 register_flags("water_ok unrand place_unique luniq uniq")
 register_flags("patrolling")

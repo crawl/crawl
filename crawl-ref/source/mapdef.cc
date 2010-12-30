@@ -5329,7 +5329,7 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
         static std::string flag_list[] =
             {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
              "no_secret_doors", "no_wall_fixup", "opaque", "no_trap_gen",
-             "no_shop_gen", ""};
+             ""};
         map_mask = map_flags::parse(flag_list, s);
     }
     catch (const std::string &error)
