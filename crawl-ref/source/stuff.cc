@@ -435,6 +435,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
     delete real_dlua;        real_dlua = 0;
     delete real_clua;        real_clua = 0;
     delete real_you;         real_you = 0;
+    delete real_Options;     real_Options = 0;
 #endif
 
     exit(exit_code);
