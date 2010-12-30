@@ -950,7 +950,7 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     lower_limit -= tab_margin;
     lines = (lower_limit - m_region_map->ey) / m_region_tab->dy;
     lines = std::min(lines, 3);
-    if (lines > 0)
+    if (Options.tile_allow_detached_montab && lines > 0)
     {
         delta_y = lines * m_region_tab->dy;
         m_region_tab->disable_tab(TAB_MONSTER);

@@ -103,7 +103,7 @@ The contents of this text are:
                 tile_font_lbl_file, tile_font_crt_size, tile_font_stat_size,
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
                 tile_show_minihealthbar, tile_show_minimagicbar,
-                tile_show_demon_tier
+                tile_show_demon_tier, tile_allow_detached_montab
 5-  Character Dump.
 5-a     Items and Kills.
                 kill_map, dump_kill_places, dump_item_origins,
@@ -1821,6 +1821,13 @@ tile_show_demon_tier = true
         Will overlay demon tiles with an icon intended to represent their
         tier (or difficulty rank) among demons, as is the case for non-Tiles
         builds.
+
+tile_allow_detached_montab = true
+	If set to true and there's enough space on the screen, will attempt
+        to display the monster tab all of the time in addition to the
+	inventory and spells.
+	This is a temporary option. If you're getting crashes when there are
+	monsters around, try setting this to false.
 
 5-  Character Dump.
 ===================
