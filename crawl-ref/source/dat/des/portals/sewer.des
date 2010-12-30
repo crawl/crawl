@@ -47,7 +47,8 @@ function sewer_portal(e)
         dstorigin = "in the sewers",
         overview = "glowing drain",
         turns = timeout_turns,
-        floor = "floor",
+        floor = "stone_arch",
+        feat_tile = "dngn_portal_sewer_rusted",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightgreen")
