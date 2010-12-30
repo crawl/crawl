@@ -5356,6 +5356,7 @@ void player::init()
 
     running.clear();
     received_weapon_warning = false;
+    bondage_level = 0;
 
     delay_queue.clear();
 
