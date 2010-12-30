@@ -36,17 +36,16 @@ hook("post_place", function()
         num = num - 1
     end
 
-    dgn.place_maps { name = "shop", count = num }
+    dgn.place_maps { tag = "shop", count = num }
 end)
 }}
 MAP
 ENDMAP
 
-NAME:   shop
-TAGS:   allow_dup extra
-DEPTH:  4-
-WEIGHT: 0
-KFEAT:  O = any shop
+# Shop vaults: Tagged shop, may only contain a single shop.
+NAME:  shop
+TAGS:  allow_dup extra shop
+KFEAT: O = any shop
 MAP
 O
 ENDMAP
