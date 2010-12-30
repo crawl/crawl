@@ -2924,6 +2924,7 @@ void unmarshallMonster(reader &th, monster& m)
     else
 #endif
     m.mid             = unmarshallInt(th);
+    ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th, 100);
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);
