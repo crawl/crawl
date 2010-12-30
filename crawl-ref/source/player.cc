@@ -5265,7 +5265,7 @@ void player::init()
 
     skill_cost_level = 1;
     total_skill_points = 0;
-    exp_available    = crawl_state.game_is_zotdef()? 80 : 25;
+    exp_available = 0; // new games get 25 or 80 later
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
