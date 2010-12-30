@@ -1451,6 +1451,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 #ifdef USE_TILE
         tile_init_default_flavour();
         tile_clear_flavour();
+        env.tile_names.clear();
 #endif
 
         _clear_env_map();

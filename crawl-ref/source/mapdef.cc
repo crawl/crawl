@@ -521,6 +521,27 @@ void map_lines::apply_markers(const coord_def &c)
     markers.clear();
 }
 
+#ifdef USE_TILE
+static int _get_tilename_index(const std::string tile)
+{
+    if (tile.empty())
+        return 0;
+
+    // Increase index by 1 to distinguish between first entry and none.
+    unsigned int i;
+    for (i = 0; i < env.tile_names.size(); ++i)
+        if (!strcmp(tile.c_str(), env.tile_names[i].c_str()))
+            return (i+1);
+
+#ifdef DEBUG_TILE_NAMES
+    mprf("adding %s on index %d (%d)", tile.c_str(), i, i+1);
+#endif
+    // If not found, add tile name to vector.
+    env.tile_names.push_back(tile);
+    return (i+1);
+}
+#endif
+
 void map_lines::apply_grid_overlay(const coord_def &c)
 {
     if (!overlay.get())
@@ -549,39 +570,61 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             }
 
 #ifdef USE_TILE
-            int floor = (*overlay)(x, y).floortile;
-            if (floor)
+            bool has_floor = false, has_rock = false;
+            std::string name = (*overlay)(x, y).floortile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).floor_idx = _get_tilename_index(name);
+
+                tileidx_t floor;
+                tile_dngn_index(name.c_str(), &floor);
                 if (colour)
                     floor = tile_dngn_coloured(floor, colour);
                 int offset = random2(tile_dngn_count(floor));
                 env.tile_flv(gc).floor = floor + offset;
+                has_floor = true;
             }
-            int rock = (*overlay)(x, y).rocktile;
-            if (rock)
+
+            name = (*overlay)(x, y).rocktile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).wall_idx = _get_tilename_index(name);
+
+                tileidx_t rock;
+                tile_dngn_index(name.c_str(), &rock);
                 if (colour)
                     rock = tile_dngn_coloured(rock, colour);
                 int offset = random2(tile_dngn_count(rock));
                 env.tile_flv(gc).wall = rock + offset;
+                has_rock = true;
             }
-            int tile = (*overlay)(x, y).tile;
-            if (tile)
+
+            name = (*overlay)(x, y).tile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).feat_idx = _get_tilename_index(name);
+
+                tileidx_t feat;
+                tile_dngn_index(name.c_str(), &feat);
+
                 if (colour)
-                    tile = tile_dngn_coloured(tile, colour);
-                int offset = random2(tile_dngn_count(tile));
+                    feat = tile_dngn_coloured(feat, colour);
+
+                int offset = 0;
                 if ((*overlay)(x, y).last_tile)
-                    offset = tile_dngn_count(tile) - 1;
-                if (grd(gc) == DNGN_FLOOR && !floor)
-                    env.tile_flv(gc).floor = tile + offset;
-                else if (grd(gc) == DNGN_ROCK_WALL && !rock)
-                    env.tile_flv(gc).wall = tile + offset;
+                    offset = tile_dngn_count(feat) - 1;
+                else
+                    offset = random2(tile_dngn_count(feat));
+
+                if (!has_floor && grd(gc) == DNGN_FLOOR)
+                    env.tile_flv(gc).floor = feat + offset;
+                else if (!has_rock && grd(gc) == DNGN_ROCK_WALL)
+                    env.tile_flv(gc).wall = feat + offset;
                 else
                 {
                     if ((*overlay)(x, y).no_random)
                         offset = 0;
-                    env.tile_flv(gc).feat = tile + offset;
+                    env.tile_flv(gc).feat = feat + offset;
                 }
             }
 #endif
@@ -1309,9 +1352,9 @@ void map_lines::overlay_tiles(tile_spec &spec)
             if (spec.floor)
                 (*overlay)(pos, y).floortile = spec.get_tile();
             else if (spec.feat)
-                (*overlay)(pos, y).tile = spec.get_tile();
+                (*overlay)(pos, y).tile      = spec.get_tile();
             else
-                (*overlay)(pos, y).rocktile = spec.get_tile();
+                (*overlay)(pos, y).rocktile  = spec.get_tile();
 
             (*overlay)(pos, y).no_random = spec.no_random;
             (*overlay)(pos, y).last_tile = spec.last_tile;
@@ -1828,10 +1871,10 @@ bool map_tile_list::parse(const std::string &s, int weight)
 {
     tileidx_t idx = 0;
     if (s != "none" && !tile_dngn_index(s.c_str(), &idx))
-        return false;
+        return (false);
 
-    push_back(map_weighted_tile(idx, weight));
-    return true;
+    push_back(map_weighted_tile(s, weight));
+    return (true);
 }
 
 std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_feat)
@@ -1881,12 +1924,12 @@ std::string map_lines::add_spec_tile(const std::string &sub)
 //////////////////////////////////////////////////////////////////////////
 // tile_spec
 
-tileidx_t tile_spec::get_tile()
+std::string tile_spec::get_tile()
 {
     if (chose_fixed)
         return fixed_tile;
 
-    tileidx_t chosen = 0;
+    std::string chosen = "";
     int cweight = 0;
     for (int i = 0, size = tiles.size(); i < size; ++i)
         if (x_chance_in_y(tiles[i].second, cweight += tiles[i].second))
@@ -1895,7 +1938,7 @@ tileidx_t tile_spec::get_tile()
     if (fix)
     {
         chose_fixed = true;
-        fixed_tile = chosen;
+        fixed_tile  = chosen;
     }
     return (chosen);
 }

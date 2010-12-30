@@ -227,8 +227,8 @@ void tile_clear_flavour()
     {
         env.tile_flv(*ri).floor   = 0;
         env.tile_flv(*ri).wall    = 0;
-        env.tile_flv(*ri).special = 0;
         env.tile_flv(*ri).feat    = 0;
+        env.tile_flv(*ri).special = 0;
     }
 }
 

@@ -2654,7 +2654,6 @@ void tag_construct_level_tiles(writer &th)
     unsigned int last_tile = 0;
 
     marshallBoolean(th, true); // Tiles data included.
-    marshallInt(th, TILE_WALL_MAX);
 
     // Legacy version number. (What's up with this? --jpeg)
     marshallShort(th, 0);
@@ -2727,6 +2726,10 @@ void tag_construct_level_tiles(writer &th)
     marshallInt(th, tile);
     marshallUByte(th, rle_count);
 
+    marshallShort(th, env.tile_names.size());
+    for (unsigned int i = 0; i < env.tile_names.size(); ++i)
+        marshallString(th, env.tile_names[i]);
+
     // flavour
     marshallShort(th, env.tile_default.wall);
     marshallShort(th, env.tile_default.floor);
@@ -2735,13 +2738,19 @@ void tag_construct_level_tiles(writer &th)
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
+            marshallShort(th, env.tile_flv[count_x][count_y].wall_idx);
+            marshallShort(th, env.tile_flv[count_x][count_y].floor_idx);
+            marshallShort(th, env.tile_flv[count_x][count_y].feat_idx);
+
             marshallShort(th, env.tile_flv[count_x][count_y].wall);
             marshallShort(th, env.tile_flv[count_x][count_y].floor);
-            marshallShort(th, env.tile_flv[count_x][count_y].special);
             marshallShort(th, env.tile_flv[count_x][count_y].feat);
+            marshallShort(th, env.tile_flv[count_x][count_y].special);
         }
 
     mcache.construct(th);
+
+    marshallInt(th, TILE_WALL_MAX);
 #endif
 }
 
@@ -2809,8 +2818,8 @@ static void tag_read_level(reader &th, int minorVersion)
 #endif
         env.cloud[i].source = unmarshallInt(th);
         env.cloud[i].colour = unmarshallShort(th);
-        env.cloud[i].name = unmarshallString(th);
-        env.cloud[i].tile = unmarshallString(th);
+        env.cloud[i].name   = unmarshallString(th);
+        env.cloud[i].tile   = unmarshallString(th);
         ASSERT(in_bounds(env.cloud[i].pos));
         env.cgrid(env.cloud[i].pos) = i;
         env.cloud_no++;
@@ -3120,15 +3129,14 @@ void tag_read_level_tiles(reader &th)
 #ifdef USE_TILE
  #if TAG_MAJOR_VERSION == 31
     if (th.getMinorVersion() < TAG_MINOR_DNGN_TILECOUNT
-        || unmarshallInt(th) != TILE_WALL_MAX)
- #else
-    if (unmarshallInt(th) != TILE_WALL_MAX)
- #endif
+        || th.getMinorVersion() < TAG_MINOR_TILE_NAMES
+           && unmarshallInt(th) != TILE_WALL_MAX)
     {
         dprf("DNGN tilecount has changed -- recreating tile data.");
         tag_missing_level_tiles();
         return;
     }
+ #endif
 
     // Initialise env settings.
     for (int i = 0; i < GXM; i++)
@@ -3177,26 +3185,67 @@ void tag_read_level_tiles(reader &th)
             rle_count--;
         }
 
+ #if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() >= TAG_MINOR_TILE_NAMES)
+    {
+ #endif
+        unsigned int num_tilenames = unmarshallShort(th);
+        for (unsigned int i = 0; i < num_tilenames; ++i)
+            env.tile_names.push_back(unmarshallString(th));
+ #if TAG_MAJOR_VERSION == 31
+    }
+ #endif
+
     // flavour
-    env.tile_default.wall = unmarshallShort(th);
-    env.tile_default.floor = unmarshallShort(th);
+    env.tile_default.wall    = unmarshallShort(th);
+    env.tile_default.floor   = unmarshallShort(th);
     env.tile_default.special = unmarshallShort(th);
 
     for (int x = 0; x < gx; x++)
         for (int y = 0; y < gy; y++)
         {
-            env.tile_flv[x][y].wall    = unmarshallShort(th);
-            env.tile_flv[x][y].floor   = unmarshallShort(th);
-            env.tile_flv[x][y].special = unmarshallShort(th);
-            env.tile_flv[x][y].feat    = unmarshallShort(th);
+ #if TAG_MAJOR_VERSION == 31
+            if (th.getMinorVersion() < TAG_MINOR_TILE_NAMES)
+            {
+                env.tile_flv[x][y].wall    = unmarshallShort(th);
+                env.tile_flv[x][y].floor   = unmarshallShort(th);
+                env.tile_flv[x][y].special = unmarshallShort(th);
+                env.tile_flv[x][y].feat    = unmarshallShort(th);
+            }
+            else
+            {
+ #endif
+                env.tile_flv[x][y].wall_idx  = unmarshallShort(th);
+                env.tile_flv[x][y].floor_idx = unmarshallShort(th);
+                env.tile_flv[x][y].feat_idx  = unmarshallShort(th);
+
+                env.tile_flv[x][y].wall    = unmarshallShort(th);
+                env.tile_flv[x][y].floor   = unmarshallShort(th);
+                env.tile_flv[x][y].feat    = unmarshallShort(th);
+                env.tile_flv[x][y].special = unmarshallShort(th);
+ #if TAG_MAJOR_VERSION == 31
+            }
+ #endif
         }
     _debug_count_tiles();
 
     mcache.read(th);
-#else
+
+ #if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() >= TAG_MINOR_TILE_NAMES
+        && unmarshallInt(th) != TILE_WALL_MAX)
+ #else
+    if (unmarshallInt(th) != TILE_WALL_MAX)
+ #endif
+    {
+        dprf("DNGN tilecount has changed -- recreating tile data.");
+        tag_missing_level_tiles();
+    }
+
+#else // not Tiles
     // Snarf all remaining data, throwing it out.
     // This can happen only when loading in console a save from tiles.
-    // It's a data loss bug that needs to be fixed.
+    // It's a data loss bug that needs to be fixed. (FIXME)
     try
     {
         while (1)
@@ -3208,24 +3257,66 @@ void tag_read_level_tiles(reader &th)
 #endif
 }
 
+static tileidx_t _get_tile_from_vector(const unsigned int idx)
+{
+    ASSERT(idx > 0 && idx <= env.tile_names.size());
+    if (idx <= 0 || idx > env.tile_names.size())
+        return 0;
+
+    std::string tilename = env.tile_names[idx - 1];
+
+    tileidx_t tile;
+    if (!tile_dngn_index(tilename.c_str(), &tile))
+    {
+#ifdef DEBUG_TILE_NAMES
+        mprf("tilename %s (index %d) not found",
+             tilename.c_str(), idx - 1);
+#endif
+        return 0;
+    }
+#ifdef DEBUG_TILE_NAMES
+    mprf("tilename %s (index %d) resolves to tile %d",
+         tilename.c_str(), idx - 1, (int) tile);
+#endif
+
+    return tile;
+}
+
+static void _reinit_flavour_tiles()
+{
+    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
+         ri; ++ri)
+    {
+        if (env.tile_flv(*ri).wall_idx)
+        {
+            env.tile_flv(*ri).wall
+                = _get_tile_from_vector(env.tile_flv(*ri).wall_idx);
+        }
+        if (env.tile_flv(*ri).floor_idx)
+        {
+            env.tile_flv(*ri).floor
+                = _get_tile_from_vector(env.tile_flv(*ri).floor_idx);
+        }
+        if (env.tile_flv(*ri).feat_idx)
+        {
+            env.tile_flv(*ri).feat
+                = _get_tile_from_vector(env.tile_flv(*ri).feat_idx);
+        }
+        tileidx_t fg, bg;
+        tileidx_from_map_cell(&fg, &bg, env.map_knowledge(*ri));
+
+        env.tile_bk_bg(*ri) = bg;
+        env.tile_bk_fg(*ri) = fg;
+   }
+}
+
 static void tag_missing_level_tiles()
 {
 #ifdef USE_TILE
     tile_init_default_flavour();
     tile_clear_flavour();
-
-    for (int i = 0; i < GXM; i++)
-        for (int j = 0; j < GYM; j++)
-        {
-            coord_def gc(i, j);
-            tileidx_t fg, bg;
-            tileidx_from_map_cell(&fg, &bg, env.map_knowledge(gc));
-
-            env.tile_bk_bg(gc) = bg;
-            env.tile_bk_fg(gc) = fg;
-        }
-
     mcache.clear_all();
+    _reinit_flavour_tiles();
 
     tile_new_level(true, false);
 #endif
