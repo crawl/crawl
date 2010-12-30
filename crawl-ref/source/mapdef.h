@@ -1034,7 +1034,7 @@ public:
     map_def         *original;
 
     uint8_t         rock_colour, floor_colour;
-    int             rock_tile, floor_tile;
+    std::string     rock_tile, floor_tile;
 
     dungeon_feature_type border_fill_type;
 private:
@@ -1201,4 +1201,5 @@ std::string mapdef_split_key_item(const std::string &s,
 
 const char *map_section_name(int msect);
 
+int store_tilename_get_index(const std::string tilename);
 #endif

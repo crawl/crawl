@@ -145,6 +145,27 @@ std::string mapdef_split_key_item(const std::string &s,
     return ("");
 }
 
+#ifdef USE_TILE
+int store_tilename_get_index(const std::string tilename)
+{
+    if (tilename.empty())
+        return 0;
+
+    // Increase index by 1 to distinguish between first entry and none.
+    unsigned int i;
+    for (i = 0; i < env.tile_names.size(); ++i)
+        if (!strcmp(tilename.c_str(), env.tile_names[i].c_str()))
+            return (i+1);
+
+#ifdef DEBUG_TILE_NAMES
+    mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
+#endif
+    // If not found, add tile name to vector.
+    env.tile_names.push_back(tilename);
+    return (i+1);
+}
+#endif
+
 ///////////////////////////////////////////////
 // level_range
 //
@@ -521,27 +542,6 @@ void map_lines::apply_markers(const coord_def &c)
     markers.clear();
 }
 
-#ifdef USE_TILE
-static int _get_tilename_index(const std::string tile)
-{
-    if (tile.empty())
-        return 0;
-
-    // Increase index by 1 to distinguish between first entry and none.
-    unsigned int i;
-    for (i = 0; i < env.tile_names.size(); ++i)
-        if (!strcmp(tile.c_str(), env.tile_names[i].c_str()))
-            return (i+1);
-
-#ifdef DEBUG_TILE_NAMES
-    mprf("adding %s on index %d (%d)", tile.c_str(), i, i+1);
-#endif
-    // If not found, add tile name to vector.
-    env.tile_names.push_back(tile);
-    return (i+1);
-}
-#endif
-
 void map_lines::apply_grid_overlay(const coord_def &c)
 {
     if (!overlay.get())
@@ -574,7 +574,8 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             std::string name = (*overlay)(x, y).floortile;
             if (!name.empty())
             {
-                env.tile_flv(gc).floor_idx = _get_tilename_index(name);
+                env.tile_flv(gc).floor_idx =
+                    store_tilename_get_index(name);
 
                 tileidx_t floor;
                 tile_dngn_index(name.c_str(), &floor);
@@ -588,7 +589,8 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             name = (*overlay)(x, y).rocktile;
             if (!name.empty())
             {
-                env.tile_flv(gc).wall_idx = _get_tilename_index(name);
+                env.tile_flv(gc).wall_idx =
+                    store_tilename_get_index(name);
 
                 tileidx_t rock;
                 tile_dngn_index(name.c_str(), &rock);
@@ -602,7 +604,8 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             name = (*overlay)(x, y).tile;
             if (!name.empty())
             {
-                env.tile_flv(gc).feat_idx = _get_tilename_index(name);
+                env.tile_flv(gc).feat_idx =
+                    store_tilename_get_index(name);
 
                 tileidx_t feat;
                 tile_dngn_index(name.c_str(), &feat);
@@ -2115,8 +2118,8 @@ map_def::map_def()
       welcome_messages(), map(), mons(), items(), random_mons(),
       prelude("dlprelude"), mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
-      rock_colour(BLACK), floor_colour(BLACK), rock_tile(0),
-      floor_tile(0), border_fill_type(DNGN_ROCK_WALL),
+      rock_colour(BLACK), floor_colour(BLACK), rock_tile(""),
+      floor_tile(""), border_fill_type(DNGN_ROCK_WALL),
       index_only(false), cache_offset(0L), validating_map_flag(false)
 {
     init();
@@ -2155,7 +2158,7 @@ void map_def::reinit()
     welcome_messages.clear();
 
     rock_colour = floor_colour = BLACK;
-    rock_tile = floor_tile = 0;
+    rock_tile = floor_tile = "";
     border_fill_type = DNGN_ROCK_WALL;
 
     // Chance of using this level. Nonzero chance should be used
