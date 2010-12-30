@@ -59,6 +59,7 @@ struct crawl_environment
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
     tile_flavour tile_default;
+    std::vector<std::string> tile_names;
 #endif
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list

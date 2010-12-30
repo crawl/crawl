@@ -34,14 +34,17 @@
 
 struct tile_flavour
 {
-    // The floor tile to use.
+    unsigned short floor_idx;
+    unsigned short wall_idx;
+    unsigned short feat_idx;
+
     unsigned short floor;
-    // The wall tile to use.
     unsigned short wall;
-    // Used as a random value or for special cases e.g. (bazaars, gates).
-    unsigned short special;
     // Used (primarily) by the vault 'TILE' overlay.
     unsigned short feat;
+
+    // Used as a random value or for special cases e.g. (bazaars, gates).
+    unsigned short special;
 };
 
 // A glorified unsigned int that assists with ref-counting the mcache.

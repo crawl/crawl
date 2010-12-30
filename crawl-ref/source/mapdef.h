@@ -222,7 +222,7 @@ public:
 };
 
 #ifdef USE_TILE
-typedef std::pair<tileidx_t, int> map_weighted_tile;
+typedef std::pair<std::string, int> map_weighted_tile;
 class map_tile_list : public std::vector<map_weighted_tile>
 {
 public:
@@ -234,11 +234,11 @@ class tile_spec
 public:
     tile_spec(const std::string &_key, bool _fix, bool _rand, bool _last, bool _floor, bool _feat, const map_tile_list &_tiles)
         : key(_key), fix(_fix), chose_fixed(false), no_random(_rand), last_tile(_last), floor(_floor), feat(_feat),
-          fixed_tile(0), tiles(_tiles)
+          fixed_tile(""), tiles(_tiles)
     {
     }
 
-    tileidx_t get_tile();
+    std::string get_tile();
 
 public:
     std::string key;
@@ -248,7 +248,7 @@ public:
     bool last_tile;
     bool floor;
     bool feat;
-    tileidx_t fixed_tile;
+    std::string fixed_tile;
     map_tile_list tiles;
 };
 #endif
@@ -495,14 +495,14 @@ private:
     struct overlay_def
     {
         overlay_def() :
-            colour(0), rocktile(0), floortile(0), tile(0),
+            colour(0), rocktile(""), floortile(""), tile(""),
             no_random(false), last_tile(false), property(0), height(INVALID_HEIGHT),
             keyspec_idx(0)
         {}
         int colour;
-        int rocktile;
-        int floortile;
-        int tile;
+        std::string rocktile;
+        std::string floortile;
+        std::string tile;
         bool no_random;
         bool last_tile;
         int property;
