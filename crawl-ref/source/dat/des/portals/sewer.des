@@ -217,8 +217,7 @@ SHUFFLE:  deef
 ITEM:     potion of heal wounds / potion of healing
 ITEM:     potion of healing / potion of healing q:2 w:5 / \
           potion of heal wounds / potion of heal wounds q:2 w:5
-KITEM:    f = potion of levitation q:2, \
-          potion of restore abilities w:7 / potion of cure mutation / \
+KITEM:    f = potion of levitation q:2, potion of restore abilities w:7 / \
           potion of gain intelligence / potion of gain strength / \
           potion of gain dexterity
 KFEAT:    f = shallow_water
@@ -277,7 +276,9 @@ MONS:   kobold / big kobold w:1
 MONS:   small snake / snake w:5 / giant newt w:2 / ooze w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
-ITEM:   any potion / any scroll / any armour w:2 / any weapon w:2
+ITEM:   potion of healing / potion of heal wounds / potion of might w:4 /\
+        potion of brilliance w:4 / potion of agility w:4 /\
+        potion of levitationany scroll w:7 / any armour w:2 / any weapon w:2
 : sewer_setup(_G)
 : dgn.set_feature_desc_short("translucent stone wall",
 : "large window")
@@ -368,7 +369,7 @@ c-WwwwccwwwWwwwwwwwwww!cccccc-WwW-c
 c-WwwwcwwWW<-wwwwwwwwww!ccccc-WwW-c
 c-Wwwwwwww-..-ww.--wwwww!cccc-WwW-c
 c-WwWwwWww---.-.*.--wwwwwcccc-WwW-c
-c-WwWWWwWww-.--*|*.wwwwwwcccc-WwW.c
+c-WwWWWwWww-.--***.wwwwwwcccc-WwW.c
 c-WwWWwwwWww.---d-wwwwwwwcccc-WwW.c
 c-WwWWWwwwW------wwwwwwwwcccc.WwW.c
 c-WwWWWwwwwW---wwwwwwWwwccccc.WwW.c
@@ -400,12 +401,12 @@ KFEAT:    W = W
 KFEAT:    ! = w
 COLOUR:   ! = green
 KMONS:    ! = giant frog / nothing w:2
-SHUFFLE:  edfgh$|
+SHUFFLE:  edfgh$*
 ITEM:     nothing, nothing
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
 ITEM:     nothing, nothing
-KITEM:    de = |
+KITEM:    de = *
 : sewer_setup(_G)
 epilogue{{
 sewer_milestone(_G)
@@ -421,7 +422,7 @@ MAP
  cc---cc----ccc!!!!!ccc----cc---cc
  c----c----cc!w---ww!!cc----c----c
 cc---cc---ccw--..---ww!cc---cc---c
-c.---c----cw--.gh|.---w!c----c---c
+c.---c----cw--.gh*.---w!c----c---c
 c<.--c----c--.edf.-----!c----c---c
 c.---c----c----$------w!c----c---c
 cc---cc---c---.------w!cc---cc---c
@@ -454,12 +455,10 @@ MONS:    grey rat / rat w:5 / green rat w:1
 MONS:    small snake / snake w:5 / giant newt w:2 / ooze w:1
 MONS:    giant frog
 ITEM:    potion of healing / potion of heal wounds / potion of might /\
-         potion of magic / potion of speed w:5 / potion of brilliance w:5 /\
-         potion of cure mutation w:2 / potion of experience w:1
+         potion of magic / potion of speed w:5 / potion of brilliance w:5
 ITEM:    scroll of teleportation / scroll of blinking w:5 /\
          scroll of fear w:5 / scroll of magic mapping /\
-         scroll of recharging / scroll of fog /\
-         scroll of enchant armour w:3 / scroll of enchant weapon III w:1
+         scroll of recharging / scroll of fog
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 SUBST:   c = c x:1
@@ -523,7 +522,7 @@ sewer_milestone(_G)
 }}
 MAP
  ccccccc
-cc$*|*$cc
+cc$***$cc
 c..$*$..c
 c.......c
 c...2...c
