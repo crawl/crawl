@@ -158,6 +158,7 @@ const monster* MonsterRegion::get_monster(unsigned int idx) const
 
 void MonsterRegion::pack_buffers()
 {
+    update();
     const int num_floor = tile_dngn_count(env.tile_default.floor);
 
     unsigned int i = 0;
