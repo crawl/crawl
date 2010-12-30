@@ -971,6 +971,7 @@ static void _try_monster_cast(spell_type spell, int powc,
     mon->hit_dice   = you.experience_level;
     mon->set_position(you.pos());
     mon->target     = spd.target;
+    mon->mid        = MID_PLAYER;
 
     if (!spd.isTarget)
         mon->foe = MHITNOT;
