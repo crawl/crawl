@@ -441,6 +441,9 @@ private:
     static const std::string interrupt_prefix;
 };
 
+#ifdef DEBUG_GLOBALS
+#define Options (*real_Options)
+#endif
 extern game_options  Options;
 
 #endif

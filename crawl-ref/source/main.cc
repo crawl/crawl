@@ -226,6 +226,7 @@ static void _compile_time_asserts();
 int main(int argc, char *argv[])
 {
 #ifdef DEBUG_GLOBALS
+    real_Options = new game_options();
     real_you = new player();
     real_clua = new CLua(true);
     real_dlua = new CLua(false);
