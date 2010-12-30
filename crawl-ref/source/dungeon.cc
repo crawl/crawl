@@ -67,6 +67,7 @@
 #include "tags.h"
 #include "terrain.h"
 #ifdef USE_TILE
+ #include "tiledef-dngn.h"
  #include "tileview.h"
 #endif
 #include "traps.h"
@@ -1081,11 +1082,29 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         env.rock_colour = place.map.rock_colour;
 
 #ifdef USE_TILE
-    if (place.map.rock_tile != 0)
-        env.tile_default.wall = place.map.rock_tile;
+    if (!place.map.rock_tile.empty())
+    {
+        tileidx_t rock;
+        if (tile_dngn_index(place.map.rock_tile.c_str(), &rock))
+        {
+            env.tile_default.wall_idx =
+                store_tilename_get_index(place.map.rock_tile);
 
-    if (place.map.floor_tile != 0)
-        env.tile_default.floor = place.map.floor_tile;
+            env.tile_default.wall = rock;
+        }
+    }
+
+    if (!place.map.floor_tile.empty())
+    {
+        tileidx_t floor;
+        if (tile_dngn_index(place.map.floor_tile.c_str(), &floor))
+        {
+            env.tile_default.floor_idx =
+                store_tilename_get_index(place.map.floor_tile);
+
+            env.tile_default.floor = floor;
+        }
+    }
 #endif
 
     env.level_vaults.push_back(new vault_placement(place));

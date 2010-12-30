@@ -79,11 +79,8 @@ LUAFN(dgn_lrocktile)
     MAP(ls, 1, map);
 
 #ifdef USE_TILE
-    tileidx_t tile = get_tile_idx(ls, 2);
-    map->rock_tile = tile;
-
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
+    map->rock_tile = luaL_checkstring(ls, 2);
+    PLUARET(string, map->rock_tile.c_str());
 #else
     UNUSED(map);
     PLUARET(string, "invalid");
@@ -95,11 +92,8 @@ LUAFN(dgn_lfloortile)
     MAP(ls, 1, map);
 
 #ifdef USE_TILE
-    tileidx_t tile = get_tile_idx(ls, 2);
-    map->floor_tile = tile;
-
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
+    map->floor_tile = luaL_checkstring(ls, 2);
+    PLUARET(string, map->floor_tile.c_str());
 #else
     UNUSED(map);
     PLUARET(string, "invalid");

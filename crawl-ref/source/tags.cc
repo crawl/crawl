@@ -2731,6 +2731,9 @@ void tag_construct_level_tiles(writer &th)
         marshallString(th, env.tile_names[i]);
 
     // flavour
+    marshallShort(th, env.tile_default.wall_idx);
+    marshallShort(th, env.tile_default.floor_idx);
+
     marshallShort(th, env.tile_default.wall);
     marshallShort(th, env.tile_default.floor);
     marshallShort(th, env.tile_default.special);
@@ -3197,9 +3200,18 @@ void tag_read_level_tiles(reader &th)
  #endif
 
     // flavour
-    env.tile_default.wall    = unmarshallShort(th);
-    env.tile_default.floor   = unmarshallShort(th);
-    env.tile_default.special = unmarshallShort(th);
+ #if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() >= TAG_MINOR_TILE_NAMES)
+    {
+ #endif
+    env.tile_default.wall_idx  = unmarshallShort(th);
+    env.tile_default.floor_idx = unmarshallShort(th);
+ #if TAG_MAJOR_VERSION == 31
+    }
+ #endif
+    env.tile_default.wall      = unmarshallShort(th);
+    env.tile_default.floor     = unmarshallShort(th);
+    env.tile_default.special   = unmarshallShort(th);
 
     for (int x = 0; x < gx; x++)
         for (int y = 0; y < gy; y++)
@@ -3284,6 +3296,17 @@ static tileidx_t _get_tile_from_vector(const unsigned int idx)
 
 static void _reinit_flavour_tiles()
 {
+    if (env.tile_default.wall_idx)
+    {
+        env.tile_default.wall
+            = _get_tile_from_vector(env.tile_default.wall_idx);
+    }
+    if (env.tile_default.floor_idx)
+    {
+        env.tile_default.floor
+            = _get_tile_from_vector(env.tile_default.floor_idx);
+    }
+
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
          ri; ++ri)
     {
