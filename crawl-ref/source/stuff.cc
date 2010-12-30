@@ -357,8 +357,6 @@ void cio_cleanup()
     deinit_libw32c();
 #endif
 
-    msg::deinitialise_mpr_streams();
-    clear_globals_on_exit();
     crawl_state.io_inited = false;
 }
 
@@ -406,6 +404,8 @@ void end(int exit_code, bool print_error, const char *format, ...)
     }
 
     cio_cleanup();
+    msg::deinitialise_mpr_streams();
+    clear_globals_on_exit();
     databaseSystemShutdown();
 
     if (!error.empty())
