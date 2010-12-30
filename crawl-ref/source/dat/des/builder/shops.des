@@ -43,9 +43,51 @@ MAP
 ENDMAP
 
 # Shop vaults: Tagged shop, may only contain a single shop.
-NAME:  shop
-TAGS:  allow_dup extra shop
-KFEAT: O = any shop
+NAME:   shop
+TAGS:   allow_dup extra shop
+WEIGHT: 100
+KFEAT:  O = any shop
 MAP
 O
+ENDMAP
+
+NAME:   shop_fountains
+TAGS:   allow_dup extra shop
+WEIGHT: 10
+KFEAT:  O = any shop
+MAP
+T.T
+.O.
+T.T
+ENDMAP
+
+NAME:   shop_statue
+TAGS:   allow_dup extra shop
+WEIGHT: 10
+KFEAT:  O = any shop
+MAP
+.G..O..G.
+ENDMAP
+
+NAME:   shop_coins
+TAGS:   allow_dup extra shop
+WEIGHT: 3
+KFEAT:  O = any shop
+MAP
+$$$
+$O$
+$$$
+ENDMAP
+
+NAME:   shop_scrolls
+TAGS:   allow_dup extra shop
+WEIGHT: 1
+KFEAT:  O = scroll shop
+ITEM:   scroll of paper / nothing w:30 / scroll of curse armour w:2 /\
+        scroll of curse weapon w:2 / scroll of curse jewellery w:2 /\
+        scroll of noise w:2 / scroll of random uselessness w:2
+MAP
+ddd
+dOd
+ddd
 ENDMAP
