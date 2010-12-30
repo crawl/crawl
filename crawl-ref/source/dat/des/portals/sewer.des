@@ -278,7 +278,7 @@ SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 ITEM:   potion of healing / potion of heal wounds / potion of might w:4 /\
         potion of brilliance w:4 / potion of agility w:4 /\
-        potion of levitationany scroll w:7 / any armour w:2 / any weapon w:2
+        potion of levitation / any scroll w:7 / any armour w:2 / any weapon w:2
 : sewer_setup(_G)
 : dgn.set_feature_desc_short("translucent stone wall",
 : "large window")
