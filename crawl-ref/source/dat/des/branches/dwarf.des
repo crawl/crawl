@@ -502,7 +502,7 @@ MAP
 ENDMAP
 
 NAME:     dhfh_hall
-TAGS:     extra no_monster_gen no_item_gen no_wall_fixup no_shop_gen
+TAGS:     extra no_monster_gen no_item_gen no_wall_fixup
 ORIENT:   float
 PLACE:    Dwarf:1
 NSUBST:   s = 1:= / *:c
@@ -549,7 +549,7 @@ cccccc.ccccsc.c
 ENDMAP
 
 NAME:   dhfh_barracks_1
-TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
+TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks
 ORIENT: float
 CHANCE: 50%
 DEPTH:  Dwarf:1
@@ -613,7 +613,7 @@ xxxxxxxxxxxxc.?.c........c
 ENDMAP
 
 NAME:   dhfh_barracks_2
-TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
+TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks
 ORIENT: float
 CHANCE: 50%
 DEPTH:  Dwarf:1

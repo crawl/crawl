@@ -1049,9 +1049,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     if (place.map.has_tag("no_wall_fixup"))
         _mask_vault(place, MMT_NO_WALL);
 
-    if (place.map.has_tag("no_shop_gen"))
-        _mask_vault(place, MMT_NO_SHOP);
-
     if (place.map.has_tag("no_trap_gen"))
         _mask_vault(place, MMT_NO_TRAP);
 
@@ -5149,9 +5146,6 @@ void place_spec_shop(int level_number,
 
     bool note_status = notes_are_active();
     activate_notes(false);
-
-    if (map_masked(where, MMT_NO_SHOP))
-        return;
 
     for (i = 0; i < MAX_SHOPS; i++)
         if (env.shop[i].type == SHOP_UNASSIGNED)
