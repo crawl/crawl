@@ -606,9 +606,9 @@ ENDMAP
 
 ############################################################################
 # Purgy island. by co
-# Purgy lives on this island, he appears in one of three places, if he is 
-# outside the loot room, you can get the loot without fighting him 
-# (if you are sneaky enough). Not much to walk on here, if you manage to 
+# Purgy lives on this island, he appears in one of three places, if he is
+# outside the loot room, you can get the loot without fighting him
+# (if you are sneaky enough). Not much to walk on here, if you manage to
 # confuse Purge he will probably drown. Some stone walls from the secret room
 # can be seen from the island.
 #
@@ -943,7 +943,7 @@ SUBST:  - = WW...
 SUBST:  " = W...
 NSUBST: ? = 4=ef / *=112233
 KITEM:  e = potion of healing / potion of heal wounds / potion of might /\
-        potion of magic / potion of speed w:5 / potion of brilliance w:5 
+        potion of magic / potion of speed w:5 / potion of brilliance w:5
 KITEM:  f = scroll of teleportation / scroll of fear w:5 /\
         scroll of blinking w:3 / scroll of magic mapping w:3 /\
         scroll of recharging w:2 / scroll of fog w:3
@@ -1082,30 +1082,30 @@ MAP
  xwwwwwwwwmwWe.........1..VVVVVVVVV.1..........ecx
  xccccccccccccIIIIIIccccccccccKccccccMMMcccccMMMcx
  xxxxxxxxxxxxxx"xx"xxxxxxxxxxcVcxxxxxx"xxxxxxx"xxx
-             xxx""xxxxxxxxxxxcVcxxxxxxx"xXxxx"xx  
-             xXxx"xxxxxxxxxxxcVcxxxxxxxx"xX""Xx   
-             xx""x"xxxxxxxxxxc2cxxxxxxxxx"x"xxx   
-             x"xxXxxxXxXxxxxxcVcxxxxxxxxxX"x"xx   
-             xx""""x"x"xxxxxxcVcxxxxxxxxx"xXx"xx  
-             xXxxxx"x"x"xxxxxcVcxxxxxxxxxx"xxx"x  
- xxxxxxxxxxxxxxxxx"xxxxx"xxxxcVcxxxxxxxxxxx"Xx"xxxxxxxxxxxxx 
- xcccccccccccccccHHHcccHHHccccJcccccccccccLLLLLLcccccccccccx 
- xwwwwwwwwmwWe....1.......VVVVVVVVV........1...eWwmwwwwwwwwx 
- xwwwwwwwwmwWe.........1..VVVVVVVVV..1.........eWwmwwwwwwwwx 
- xccccccccccCCCccCCCccccccccccEccccccccccGGGcGGGcccccccccccx 
- xxxxxxxxxxxx"xxxx"xxxxxxxxxxcVcxxxxxxxxxx"xxx"xxxxxxxxxxxxx 
+             xxx""xxxxxxxxxxxcVcxxxxxxx"xXxxx"xx
+             xXxx"xxxxxxxxxxxcVcxxxxxxxx"xX""Xx
+             xx""x"xxxxxxxxxxc2cxxxxxxxxx"x"xxx
+             x"xxXxxxXxXxxxxxcVcxxxxxxxxxX"x"xx
+             xx""""x"x"xxxxxxcVcxxxxxxxxx"xXx"xx
+             xXxxxx"x"x"xxxxxcVcxxxxxxxxxx"xxx"x
+ xxxxxxxxxxxxxxxxx"xxxxx"xxxxcVcxxxxxxxxxxx"Xx"xxxxxxxxxxxxx
+ xcccccccccccccccHHHcccHHHccccJcccccccccccLLLLLLcccccccccccx
+ xwwwwwwwwmwWe....1.......VVVVVVVVV........1...eWwmwwwwwwwwx
+ xwwwwwwwwmwWe.........1..VVVVVVVVV..1.........eWwmwwwwwwwwx
+ xccccccccccCCCccCCCccccccccccEccccccccccGGGcGGGcccccccccccx
+ xxxxxxxxxxxx"xxxx"xxxxxxxxxxcVcxxxxxxxxxx"xxx"xxxxxxxxxxxxx
           xxxx"xx"xxxxxxxxxxxcVcxxxxxxxxxxx"x"xx
           xxxx"x"xxxxxxxxxxxxcVcxxxxxxxxxxxx""Xx
           xX""x"xXxxxxxxxxxxxc2cxxxxxxxXx"xX"xxx
           xxxx"xxxxxxxxxxxxxxcVcxxxxxxxx"xx"x"xx
            xxx""xXxXxxxxxxxxxcVcxxxxxxxx"x"xxx"x
            xxXxx"""xxxxxxxxxxcVcxxxxxxxxx"xxxXxx
-           xxxx"xxx"xxxxxxxxxcVcxxxxxxxx"x"xxxxxxxxxxxxxxxxx 
-           xccBBBcBBBcccccccccDccccccccFFFFFcccccccccccccccx 
-           xc<............VVVVVVVVV.........1..eWwmwwwwwwwwx 
-           xcA........1...VVVVVVVVV.....1......eWwmwwwwwwwwx 
-           xcccccccccccccccccccccccccccccccccccccccccccccccx 
-           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+           xxxx"xxx"xxxxxxxxxcVcxxxxxxxx"x"xxxxxxxxxxxxxxxxx
+           xccBBBcBBBcccccccccDccccccccFFFFFcccccccccccccccx
+           xc<............VVVVVVVVV.........1..eWwmwwwwwwwwx
+           xcA........1...VVVVVVVVV.....1......eWwmwwwwwwwwx
+           xcccccccccccccccccccccccccccccccccccccccccccccccx
+           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################################
@@ -1122,7 +1122,7 @@ COLOUR:  P = green
 KFEAT:   1 = W
 COLOUR:  1 = green
 KMONS:   1 = giant newt / small snake w:5 /  generate_awake small snake w:5 / \
-         snake w:7 / big fish w:5 
+         snake w:7 / big fish w:5
 SUBST:   1 = 1111W
 #      other monsters
 KMONS:   2 = jackal / kobold, w:5 big kobold / w:5 green rat, w:7 grey rat, rat
@@ -1192,4 +1192,3 @@ xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
