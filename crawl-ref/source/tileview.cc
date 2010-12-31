@@ -959,21 +959,20 @@ static bool _top_item_is_corpse(const coord_def &gc)
             && item.sub_type == CORPSE_BODY);
 }
 
-void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
-                           tileidx_t *bg)
+void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 {
     if (is_excluded(gc))
     {
         if (is_exclude_root(gc))
-            *bg |= TILE_FLAG_EXCL_CTR;
+            cell.bg |= TILE_FLAG_EXCL_CTR;
         else
-            *bg |= TILE_FLAG_TRAV_EXCL;
+            cell.bg |= TILE_FLAG_TRAV_EXCL;
     }
 
     if (!map_bounds(gc))
         return;
 
-    _apply_variations(env.tile_flv(gc), bg, gc);
+    _apply_variations(env.tile_flv(gc), &cell.bg, gc);
 
     bool print_blood = true;
     if (haloed(gc))
@@ -985,14 +984,16 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
                  && (!mons_is_mimic(mon->type)
                      || testbits(mon->flags, MF_KNOWN_MIMIC)))
             {
-                *bg |= TILE_FLAG_HALO;
+                cell.is_haloed = true;
                 print_blood = false;
             }
         }
     }
+    else
+        cell.is_haloed = false;
 
     if (print_blood && (_suppress_blood(gc)
-                        || _suppress_blood((*bg) & TILE_FLAG_MASK)))
+                        || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
     {
         print_blood = false;
     }
@@ -1002,20 +1003,20 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
     if (print_blood)
     {
         if (is_moldy(gc))
-            *bg |= TILE_FLAG_MOLD;
+            cell.is_moldy = true;
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
-            *bg |= TILE_FLAG_BLOOD;
+            cell.is_bloody = true;
     }
 
     const dungeon_feature_type feat = grd(gc);
     if (feat_is_water(feat) || feat == DNGN_LAVA)
-        *bg |= TILE_FLAG_WATER;
+        cell.bg |= TILE_FLAG_WATER;
 
     if (is_sanctuary(gc))
-        *bg |= TILE_FLAG_SANCTUARY;
+        cell.is_sanctuary = true;
 
     if (silenced(gc))
-        *bg |= TILE_FLAG_SILENCED;
+        cell.is_silenced = true;
 }
 
 void tile_clear_map(const coord_def& gc)

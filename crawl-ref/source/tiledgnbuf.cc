@@ -22,6 +22,19 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 
+void packed_cell::clear ()
+{
+    num_dngn_overlay = 0;
+    fg = 0;
+    bg = 0;
+
+    is_bloody = false;
+    is_silenced = false;
+    is_haloed = false;
+    is_moldy = false;
+    is_sanctuary = false;
+}
+
 DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_floor(&im->m_textures[TEX_FLOOR]),
     m_buf_wall(&im->m_textures[TEX_WALL]),
@@ -477,17 +490,15 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
 
 void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell)
 {
-    const tileidx_t bg = cell.bg;
-    if (!(bg & TILE_FLAG_MISC_FLOOR))
+    if (!cell.is_bloody && !cell.is_moldy)
         return;
 
-    tileidx_t misc = bg & TILE_FLAG_MISC_FLOOR;
-    if (misc == TILE_FLAG_BLOOD)
+    if (cell.is_bloody)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
         m_buf_feat.add(TILE_BLOOD + offset, x, y);
     }
-    else if (misc == TILE_FLAG_MOLD)
+    else if (cell.is_moldy)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
         m_buf_feat.add(TILE_MOLD + offset, x, y);
@@ -532,14 +543,14 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_SW, x, y);
         }
 
-        if (bg & TILE_FLAG_HALO)
+        if (cell.is_haloed)
             m_buf_feat.add(TILE_HALO, x, y);
 
         if (!(bg & TILE_FLAG_UNSEEN))
         {
-            if ((bg & TILE_FLAG_MISC_FLOOR) == TILE_FLAG_SANCTUARY)
+            if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
-            if (bg & TILE_FLAG_SILENCED)
+            if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
