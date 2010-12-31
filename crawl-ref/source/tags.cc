@@ -2931,11 +2931,17 @@ void unmarshallMonster(reader &th, monster& m)
         return;
 
 #if TAG_MAJOR_VERSION == 31
-    if (th.getMinorVersion() <= TAG_MINOR_FIX_MID)
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_ID)
         m.mid = ++you.last_mid;
     else
 #endif
-    m.mid             = unmarshallInt(th);
+        m.mid             = unmarshallInt(th);
+
+#if TAG_MAJOR_VERSION == 31
+    if (!m.mid && th.getMinorVersion() <= TAG_MINOR_FIX_MID)
+        m.mid = ++you.last_mid;
+#endif
+
     ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th, 100);
     m.ac              = unmarshallByte(th);
