@@ -135,6 +135,7 @@ void monster::init_with(const monster& mon)
 {
     reset();
 
+    mid               = mon.mid;
     mname             = mon.mname;
     type              = mon.type;
     base_monster      = mon.base_monster;
