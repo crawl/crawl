@@ -8,12 +8,16 @@
 #include "rng.h"
 
 #include "mt19937ar.h"
+#include "syscalls.h"
 
 #ifdef USE_MORE_SECURE_SEED
 
+#ifdef UNIX
 // for times()
 #include <sys/times.h>
+#endif
 
+#undef rename
 // for getpid()
 #include <sys/types.h>
 #include <unistd.h>
@@ -62,24 +66,15 @@ void seed_rng()
     /* (at least) 256-bit wide seed */
     unsigned long seed_key[8];
 
+#ifdef UNIX
     struct tms  buf;
-    seed += times(&buf) + getpid();
+    seed += times(&buf);
+#endif
+
+    seed += getpid();
     seed_key[0] = seed;
 
-    /* Try opening from various system provided (hopefully) CSPRNGs */
-    FILE* seed_f = fopen("/dev/urandom", "rb");
-    if (!seed_f)
-        seed_f = fopen("/dev/random", "rb");
-    if (!seed_f)
-        seed_f = fopen("/dev/srandom", "rb");
-    if (!seed_f)
-        seed_f = fopen("/dev/arandom", "rb");
-    if (seed_f)
-    {
-        fread(&seed_key[1], sizeof(unsigned long), 7, seed_f);
-        fclose(seed_f);
-    }
-
+    read_urandom((char*)(seed_key[1]), sizeof(seed_key[0]) * 7);
     seed_rng(seed_key, 8);
 
 #else
