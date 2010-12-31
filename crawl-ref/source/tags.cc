@@ -2931,7 +2931,7 @@ void unmarshallMonster(reader &th, monster& m)
         return;
 
 #if TAG_MAJOR_VERSION == 31
-    if (th.getMinorVersion() < TAG_MINOR_MONSTER_ID)
+    if (th.getMinorVersion() <= TAG_MINOR_FIX_MID)
         m.mid = ++you.last_mid;
     else
 #endif
