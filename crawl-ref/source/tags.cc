@@ -3269,6 +3269,7 @@ void tag_read_level_tiles(reader &th)
 #endif
 }
 
+#ifdef USE_TILE
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
 {
     ASSERT(idx > 0 && idx <= env.tile_names.size());
@@ -3332,6 +3333,7 @@ static void _reinit_flavour_tiles()
         env.tile_bk_fg(*ri) = fg;
    }
 }
+#endif
 
 static void tag_missing_level_tiles()
 {
