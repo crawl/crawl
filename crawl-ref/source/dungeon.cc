@@ -7073,23 +7073,15 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // Third pass: look for any clear terrain and abandon the idea of
     // looking nearby now. This is used when taking transit Pandemonium gates,
     // or landing in Labyrinths. Never land the PC inside a Pan or Lab vault.
-    // We can't check vaults for other levels because vault information is
-    // not saved, and the player can re-enter other levels.
-    for (int xpos = 0; xpos < GXM; xpos++)
-        for (int ypos = 0; ypos < GYM; ypos++)
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (grd(*ri) >= DNGN_FLOOR && !map_masked(*ri, MMT_VAULT))
         {
-            if (grd[xpos][ypos] >= DNGN_FLOOR
-                && (you.level_type == LEVEL_DUNGEON
-                    || !map_masked(coord_def(xpos, ypos), MMT_VAULT)))
-            {
-                found++;
-                if (one_chance_in(found))
-                {
-                    result.x = xpos;
-                    result.y = ypos;
-                }
-            }
+            found++;
+            if (one_chance_in(found))
+                result = *ri;
         }
+    }
 
     if (found)
         return (result);
