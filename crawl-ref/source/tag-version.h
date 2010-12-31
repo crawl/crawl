@@ -33,7 +33,8 @@ enum tag_minor_version
     TAG_MINOR_DNGN_TILECOUNT = 23, // Recreate tile data if dngn tilecount has changed.
     TAG_MINOR_MON_NUMBER_32  = 24, // Save full 32 bits of mon.number.
     TAG_MINOR_TILE_NAMES     = 25, // Store vault defined tile names.
-    TAG_MINOR_VERSION        = 25, // Current version.  (Keep equal to max.)
+    TAG_MINOR_FIX_MID        = 26, // Cope with broken monster mids.
+    TAG_MINOR_VERSION        = 26, // Current version.  (Keep equal to max.)
 };
 
 #endif
