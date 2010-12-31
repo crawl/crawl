@@ -108,9 +108,7 @@ void DungeonRegion::pack_buffers()
         {
             coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
 
-            packed_cell tile_cell;
-            tile_cell.bg = vbuf_cell->tile_bg;
-            tile_cell.fg = vbuf_cell->tile_fg;
+            packed_cell tile_cell = packed_cell(vbuf_cell->tile);
             if (map_bounds(gc))
             {
                 tile_cell.flv = env.tile_flv(gc);
@@ -967,7 +965,7 @@ bool DungeonRegion::update_tip_text(std::string &tip)
             const screen_cell_t *vbuf = m_vbuf;
             const coord_def vc(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
             const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
-            tip += tile_debug_string(cell.tile_fg, cell.tile_bg, 'V');
+            tip += tile_debug_string(cell.tile.fg, cell.tile.bg, 'V');
         }
 
         ret = true;
