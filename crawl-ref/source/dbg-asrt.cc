@@ -37,6 +37,41 @@
 #include "hiscores.h"
 #include "zotdef.h"
 
+#if defined(USE_TILE) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
+#define NOCOMM            /* Comm driver APIs and definitions */
+#define NOLOGERROR        /* LogError() and related definitions */
+#define NOPROFILER        /* Profiler APIs */
+#define NOLFILEIO         /* _l* file I/O routines */
+#define NOOPENFILE        /* OpenFile and related definitions */
+#define NORESOURCE        /* Resource management */
+#define NOATOM            /* Atom management */
+#define NOLANGUAGE        /* Character test routines */
+#define NOLSTRING         /* lstr* string management routines */
+#define NODBCS            /* Double-byte character set routines */
+#define NOKEYBOARDINFO    /* Keyboard driver routines */
+#define NOCOLOR           /* COLOR_* color values */
+#define NODRAWTEXT        /* DrawText() and related definitions */
+#define NOSCALABLEFONT    /* Truetype scalable font support */
+#define NOMETAFILE        /* Metafile support */
+#define NOSYSTEMPARAMSINFO /* SystemParametersInfo() and SPI_* definitions */
+#define NODEFERWINDOWPOS  /* DeferWindowPos and related definitions */
+#define NOKEYSTATES       /* MK_* message key state flags */
+#define NOWH              /* SetWindowsHook and related WH_* definitions */
+#define NOCLIPBOARD       /* Clipboard APIs and definitions */
+#define NOICONS           /* IDI_* icon IDs */
+#define NOMDI             /* MDI support */
+#define NOCTLMGR          /* Control management and controls */
+#define NOHELP            /* Help support */
+#define WIN32_LEAN_AND_MEAN /* No cryptography etc */
+#define NONLS             /* All NLS defines and routines */
+#define NOSERVICE         /* All Service Controller routines, SERVICE_ equates, etc. */
+#define NOKANJI           /* Kanji support stuff. */
+#define NOMCX             /* Modem Configuration Extensions */
+#include <windows.h>
+#undef max
+#include <SDL/SDL_syswm.h>
+#endif
+
 #ifdef ASSERTS
 static std::string _assert_msg;
 #endif
@@ -653,7 +688,17 @@ void do_crash_dump()
 //---------------------------------------------------------------
 static void _BreakStrToDebugger(const char *mesg)
 {
-#if defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
+#if defined(USE_TILE) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
+    SDL_SysWMinfo SysInfo;
+    SDL_VERSION(&SysInfo.version);
+    if (SDL_GetWMInfo(&SysInfo) > 0)
+        MessageBox(SysInfo.window, mesg, "Assertion failed!", MB_OK|MB_ICONERROR);
+    else
+        fprintf(stderr, "%s", mesg);
+    int* p = NULL;
+    *p = 0;
+
+#elif defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
     fprintf(stderr, "%s", mesg);
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
