@@ -48,7 +48,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       'O', false, false, 5 },
 
-    { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 3, 4, 7, 4, 0, 0,
+    { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 3, 4, 5, 4, 0, 0,
       DNGN_ENTER_ELVEN_HALLS, DNGN_RETURN_FROM_ELVEN_HALLS,
       "Elven Halls", "the Elven Halls", "Elf",
       NULL,
