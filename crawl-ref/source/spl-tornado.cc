@@ -3,6 +3,7 @@
 #include "spl-damage.h"
 
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "godconduct.h"
@@ -15,6 +16,81 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "terrain.h"
+
+static bool _airtight(coord_def c)
+{
+    return grd(c) <= DNGN_MAXWALL;
+}
+
+/* Explanation of the algorithm:
+   http://en.wikipedia.org/wiki/Biconnected_component
+   We include everything up to and including the first articulation vertex,
+   the center is never considered to be one.
+*/
+class WindSystem
+{
+    coord_def org;
+    SquareArray<int, TORNADO_RADIUS+1> depth;
+    SquareArray<bool, TORNADO_RADIUS+1> cut, wind;
+    int visit(coord_def c, int d, coord_def parent);
+    void pass_wind(coord_def c);
+public:
+    WindSystem(coord_def _org);
+    bool has_wind(coord_def c);
+};
+
+WindSystem::WindSystem(coord_def _org)
+{
+    org = _org;
+    depth.init(-1);
+    cut.init(false);
+    visit(org, 0, coord_def(0,0));
+    cut(coord_def(0,0)) = false;
+    wind.init(false);
+    pass_wind(org);
+}
+
+int WindSystem::visit(coord_def c, int d, coord_def parent)
+{
+    depth(c - org) = d;
+    int low = d;
+    int sonmax = -1;
+
+    for (adjacent_iterator ai(c); ai; ++ai)
+    {
+        if ((*ai - org).abs() > dist_range(TORNADO_RADIUS) || _airtight(*ai))
+            continue;
+        if (depth(*ai - org) == -1)
+        {
+            int sonlow = visit(*ai, d+1, c);
+            low = std::min(low, sonlow);
+            sonmax = std::max(sonmax, sonlow);
+        }
+        else if (*ai != parent)
+            low = std::min(low, depth(*ai - org));
+    }
+
+    cut(c - org) = (sonmax >= d);
+    return low;
+}
+
+void WindSystem::pass_wind(coord_def c)
+{
+    wind(c - org) = true;
+    depth(c - org) = -1;
+    if (cut(c - org))
+        return;
+
+    for (adjacent_iterator ai(c); ai; ++ai)
+        if (depth(*ai - org) != -1)
+            pass_wind(*ai);
+}
+
+bool WindSystem::has_wind(coord_def c)
+{
+    ASSERT(grid_distance(c, org) <= TORNADO_RADIUS); // might say no instead
+    return wind(c - org);
+}
 
 static void _set_tornado_durations(int powc)
 {
@@ -79,6 +155,7 @@ void tornado_damage(int dur)
     int pow = div_rand_round(calc_spell_power(SPELL_TORNADO, true) * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = you.pos();
+    WindSystem winds(org);
 
     std::stack<actor*>    move_act;
 
@@ -90,7 +167,7 @@ void tornado_damage(int dur)
         int cnt_all  = 0;
         while (count_i && count_i.radius() == r)
         {
-            if (!feat_is_solid(grd(*count_i)))
+            if (winds.has_wind(*count_i))
                 cnt_open++;
             cnt_all++;
             count_i++;
@@ -112,7 +189,7 @@ void tornado_damage(int dur)
                 did_god_conduct(DID_KILL_PLANT, 1);
             }
 
-            if (feat_is_solid(grd(*dam_i)))
+            if (!winds.has_wind(*dam_i))
                 continue;
 
             if (actor* victim = actor_at(*dam_i))
