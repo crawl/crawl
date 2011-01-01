@@ -142,6 +142,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     attitude = ATT_HOSTILE;
     pos = coord_def(0, 0);
 
+    mimic_feature = DNGN_UNSEEN;
+
     type = p_type;
     base_type = p_base_type;
 
@@ -195,6 +197,8 @@ monster_info::monster_info(const monster* m, int milev)
     mb = 0;
     attitude = ATT_HOSTILE;
     pos = grid2player(m->pos());
+
+    mimic_feature = DNGN_UNSEEN;
 
     // XXX: this doesn't take into account ENCH_TEMP_PACIF, but that's probably
     // a bug for mons_attitude, not this.
@@ -251,6 +255,9 @@ monster_info::monster_info(const monster* m, int milev)
 
         if (m->is_summoned())
             mb |= ULL1 << MB_SUMMONED;
+
+        if (mons_is_known_mimic(m) && mons_genus(type) == MONS_DOOR_MIMIC)
+            mimic_feature = get_mimic_feat(m);
     }
     else
     {

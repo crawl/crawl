@@ -2571,6 +2571,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallString(th, mi.description);
     marshallString(th, mi.quote);
     marshallUnsigned(th, mi.fly);
+    marshallUnsigned(th, mi.mimic_feature);
 }
 
 void unmarshallMonsterInfo(reader &th, monster_info& mi)
@@ -2597,6 +2598,12 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.description = unmarshallString(th);
     mi.quote = unmarshallString(th);
     unmarshallUnsigned(th, mi.fly);
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_MINF_MIMIC_FEAT)
+        mi.mimic_feature = DNGN_UNSEEN;
+    else
+#endif
+        unmarshallUnsigned(th, mi.mimic_feature);
 }
 
 static void tag_construct_level_monsters(writer &th)

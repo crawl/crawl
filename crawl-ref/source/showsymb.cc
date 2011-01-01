@@ -224,7 +224,7 @@ glyph get_cell_glyph(const map_cell& cell, const coord_def& loc,
 }
 
 glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
-                                show_class cls, int colour_mode)
+                                const show_class cls, int colour_mode)
 {
     const bool coloured = colour_mode == 0 ? cell.visible() : (colour_mode > 0);
     glyph g;
@@ -267,6 +267,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
             g.col = _get_mons_colour(*mi);
         else
             g.col = mons_class_colour(show.mons);
+
         break;
 
     case SH_CLOUD:
@@ -329,19 +330,11 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
 
     if (cls == SH_MONSTER)
     {
-        if (mons_genus(show.mons) == MONS_DOOR_MIMIC)
+        if (mons_genus(show.mons) == MONS_DOOR_MIMIC
+            && cell.monsterinfo()->mimic_feature)
         {
-            // Do some magic to make known mimics show up
-            // with the right glyph.
-
-            // We do this to get flags and mimic type.
-            // We shouldn't leak any unknown information.
-            const monster* mons = monster_at(loc);
-
-            // We shouldn't get to this point with unknown mimics.
-            ASSERT(mons_is_known_mimic(mons));
-
-            const feature_def &fdef = get_feature_def(get_mimic_feat(mons));
+            const feature_def &fdef =
+                get_feature_def(cell.monsterinfo()->mimic_feature);
             g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
         }
         else
