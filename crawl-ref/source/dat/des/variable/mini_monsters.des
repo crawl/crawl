@@ -453,7 +453,7 @@ ENDMAP
 NAME:   not_minivault_9_due
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:20-27, Elf:4-7, Vault:4-8
+DEPTH:  D:20-27, Elf:3-5, Vault:4-8
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =

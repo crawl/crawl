@@ -855,14 +855,14 @@ ENDMAP
 # Oklob shooting range
 #
 # Disallowing this vault on branch starts, as brown stairs can't help there.
-# Chance for a plant to turn oklob based on dungeon level. Elf:7 is hard, but
+# Chance for a plant to turn oklob based on dungeon level. Elf:5 is hard, but
 # considered okay. Has between 1 and 3 oklob plants.
 # Single oklob at absolute depth 10, expect 2 oklobs at depth 20.
 # Rarely (2.5% chance) the whole vault is enclosed. This is the hardest case,
 # and the walls are always diggable then.
 #
 NAME:    oklob_3
-DEPTH:   D:18-26, Lair:2-, Elf:2-7
+DEPTH:   D:18-26, Lair:2-, Elf:2-5
 WEIGHT:  2
 ORIENT:  float
 SHUFFLE: ab" / AB'
@@ -1335,7 +1335,7 @@ ENDMAP
 # Elemental Laboratory (by Mu.)
 #
 NAME:   elemental_lab_mu
-DEPTH:  D:13-26, Elf:1-6
+DEPTH:  D:13-26, Elf:1-4
 ORIENT: float
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 MARKER: ! = lua:fog_machine { \
