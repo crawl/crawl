@@ -270,7 +270,7 @@ static void _post_init(bool newc)
     update_player_symbol();
 
     draw_border();
-    new_level();
+    new_level(!newc);
     update_turn_count();
     update_vision_range();
     you.xray_vision = !!you.duration[DUR_SCRYING];

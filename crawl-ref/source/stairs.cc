@@ -1358,8 +1358,16 @@ void down_stairs(dungeon_feature_type force_stair,
 
 }
 
-void new_level(void)
+void new_level(bool restore)
 {
+    print_stats_level();
+#ifdef DGL_WHEREIS
+    whereis_record();
+#endif
+
+    if (restore)
+        return;
+
     cancel_tornado();
 
     if (you.level_type == LEVEL_PORTAL_VAULT)
@@ -1372,11 +1380,6 @@ void new_level(void)
     }
     else
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
-
-    print_stats_level();
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
 }
 
 // Returns a hatch or stair (up or down)
