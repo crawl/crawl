@@ -1017,6 +1017,16 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (silenced(gc))
         cell.is_silenced = true;
+
+    // In the Swamp, draw water underneath the trees. As trees are
+    // replaced by water when destroyed, this matches in thematically.
+    // This is applied to all DNGN_TREE, DNGN_SHALLOW_WATER and DNGN_DEEP_WATER
+    // to allow for waves.
+    if (player_in_branch(BRANCH_SWAMP) && (grd(gc) == DNGN_TREE
+        || feat_is_water(grd(gc))))
+    {
+        cell.swamp_tree_water = true;
+    }
 }
 
 void tile_clear_map(const coord_def& gc)

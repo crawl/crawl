@@ -33,6 +33,7 @@ void packed_cell::clear ()
     is_haloed = false;
     is_moldy = false;
     is_sanctuary = false;
+    swamp_tree_water = false;
 }
 
 DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
@@ -393,49 +394,61 @@ static dungeon_feature_type _safe_feat(coord_def gc)
     return (env.map_knowledge(gc).feat());
 }
 
-static bool _is_seen_land(coord_def gc)
+static bool _is_seen_land(coord_def gc, bool swamp_trees)
 {
-    dungeon_feature_type feat = _safe_feat(gc);
+    const dungeon_feature_type feat = _safe_feat(gc);
+    if (swamp_trees && feat == DNGN_TREE)
+        return (false);
+
     return (feat != DNGN_UNSEEN && !feat_is_water(feat) && feat != DNGN_LAVA);
 }
 
-static bool _is_seen_shallow(coord_def gc)
+static bool _is_seen_shallow(coord_def gc, bool swamp_trees)
 {
-    return (_safe_feat(gc) == DNGN_SHALLOW_WATER);
+    const dungeon_feature_type feat = _safe_feat(gc);
+    if (swamp_trees && feat == DNGN_TREE)
+        return (true);
+
+    return (feat == DNGN_SHALLOW_WATER);
 }
 
 static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
 {
     // Any tile on water with an adjacent solid tile will get an extra
     // bit of shoreline.
-    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    dungeon_feature_type feat = env.map_knowledge(gc).feat();
+
+    // Treat trees in Swamp as though they were shallow water.
+    if (cell->swamp_tree_water && feat == DNGN_TREE)
+        feat = DNGN_SHALLOW_WATER;
+
     if (!feat_is_water(feat) && feat != DNGN_LAVA || env.grid_colours(gc))
         return;
 
     if (feat == DNGN_DEEP_WATER)
     {
-        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
+        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1), cell->swamp_tree_water))
             _add_overlay(TILE_DNGN_WAVE_N, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1), cell->swamp_tree_water))
             _add_overlay(TILE_DNGN_WAVE_NE, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y), cell->swamp_tree_water))
             _add_overlay(TILE_DNGN_WAVE_E, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1), cell->swamp_tree_water))
             _add_overlay(TILE_DNGN_WAVE_SE, cell);
-        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
+        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1), cell->swamp_tree_water))
             _add_overlay(TILE_DNGN_WAVE_S, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1), cell->swamp_tree_water))
             _add_overlay(TILE_DNGN_WAVE_SW, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y), cell->swamp_tree_water))
             _add_overlay(TILE_DNGN_WAVE_W, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1), cell->swamp_tree_water))
             _add_overlay(TILE_DNGN_WAVE_NW, cell);
     }
 
 
-    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
-    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
-    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
+    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1), cell->swamp_tree_water);
+    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y), cell->swamp_tree_water);
+    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y), cell->swamp_tree_water);
 
     if (north || west || east)
     {
@@ -509,6 +522,9 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 {
     const tileidx_t bg = cell.bg;
     const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
+
+    if (cell.swamp_tree_water && bg_idx > TILE_DNGN_UNSEEN)
+        m_buf_feat.add(TILE_DNGN_SHALLOW_WATER, x, y);
 
     if (bg_idx >= TILE_DNGN_WAX_WALL)
         add_dngn_tile(cell.flv.floor, x, y);
