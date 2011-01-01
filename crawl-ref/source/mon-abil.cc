@@ -2545,7 +2545,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_BOG_MUMMY:
-    {
         if (one_chance_in(8))
         {
             // A hacky way of making these rot regularly.
@@ -2559,12 +2558,10 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 simple_monster_message(mons, " begins to rapidly decay!");
         }
         break;
-    }
 
     case MONS_AGATE_SNAIL:
     case MONS_SNAPPING_TURTLE:
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
-    {
         // Use the same calculations as for low-HP casting
         if (mons->hit_points < mons->max_hit_points / 4 && !one_chance_in(4)
             && !mons->has_ench(ENCH_WITHDRAWN))
@@ -2575,9 +2572,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 behaviour_event(mons, ME_CORNERED);
 
             simple_monster_message(mons, " withdraws into its shell!");
-            break;
         }
-    }
+        break;
 
     case MONS_MANTICORE:
         if (mons->has_ench(ENCH_CONFUSION))
