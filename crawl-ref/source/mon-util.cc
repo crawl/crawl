@@ -1707,8 +1707,8 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[1] = MST_JESSICA;
         break;
 
-    case MONS_DEEP_DWARF_UNBORN:
-        book[0] = MST_DEEP_DWARF_UNBORN;
+    case MONS_UNBORN_DEEP_DWARF:
+        book[0] = MST_UNBORN_DEEP_DWARF;
         book[1] = MST_NECROMANCER_I;
         break;
 
