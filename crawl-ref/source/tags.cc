@@ -3138,7 +3138,9 @@ void tag_read_level_tiles(reader &th)
 {
     if (!unmarshallBoolean(th))
     {
+#ifdef USE_TILE
         dprf("Tile data missing -- recreating from scratch.");
+#endif
         tag_missing_level_tiles();
         _debug_count_tiles();
         return;
