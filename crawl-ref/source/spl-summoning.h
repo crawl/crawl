@@ -30,7 +30,7 @@ bool cast_summon_ice_beast(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_ugly_thing(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_dragon(int pow, god_type god = GOD_NO_GOD);
 bool summon_berserker(int pow, actor *caster,
-                      monster_type overridemons = MONS_PROGRAM_BUG);
+                      monster_type override_mons = MONS_PROGRAM_BUG);
 bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool force_hostile = false, bool permanent = false,
                          bool quiet = false);
