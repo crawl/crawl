@@ -114,6 +114,8 @@ public:
     CrawlHashTable props;
 
 public:
+    void set_new_monster_id();
+
     mon_attitude_type temp_attitude() const;
 
     // Returns true if the monster is named with a proper name, or is

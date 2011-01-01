@@ -301,7 +301,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     ASSERT(!actor_at(pos));
 
     *mons          = *orig;
-    mons->mid      = ++you.last_mid;
+    mons->set_new_monster_id();
     mons->set_position(pos);
     mgrd(pos)    = mons->mindex();
 

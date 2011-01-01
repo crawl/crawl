@@ -2478,7 +2478,7 @@ static bool _jelly_divide(monster* parent)
     child->max_hit_points  = child->hit_points;
     child->speed_increment = 70 + random2(5);
     child->moveto(child_spot);
-    child->mid = ++you.last_mid;
+    child->set_new_monster_id();
 
     mgrd(child->pos()) = child->mindex();
 
