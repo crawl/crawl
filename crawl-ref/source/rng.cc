@@ -74,7 +74,7 @@ void seed_rng()
     seed += getpid();
     seed_key[0] = seed;
 
-    read_urandom((char*)(seed_key[1]), sizeof(seed_key[0]) * 7);
+    read_urandom((char*)(&seed_key[1]), sizeof(seed_key[0]) * 7);
     seed_rng(seed_key, 8);
 
 #else
