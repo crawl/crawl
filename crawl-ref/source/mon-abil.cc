@@ -2558,6 +2558,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (mons->visible_to(&you))
                 simple_monster_message(mons, " begins to rapidly decay!");
         }
+        break;
     }
 
     case MONS_AGATE_SNAIL:
