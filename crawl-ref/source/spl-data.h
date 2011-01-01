@@ -343,7 +343,7 @@ struct spell_desc
     SPELL_RING_OF_FLAMES, "Ring of Flames",
      SPTYP_ENCHANTMENT | SPTYP_FIRE,
      SPFLAG_AREA,
-     8,
+     7,
      200,
      -1, -1,
      0,
