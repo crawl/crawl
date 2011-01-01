@@ -3650,8 +3650,14 @@ void monster::pandemon_init()
     load_spells(MST_GHOST);
 }
 
+void monster::set_new_monster_id()
+{
+    mid = ++you.last_mid;
+}
+
 void monster::ghost_init()
 {
+    set_new_monster_id();
     type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
     hit_dice        = ghost->xl;
