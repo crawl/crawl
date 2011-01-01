@@ -516,6 +516,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             || cloud_is_inferior(old_cloud.type, cl_type)
             || old_cloud.type == CLOUD_BLACK_SMOKE
             || old_cloud.type == CLOUD_MIST
+            || old_cloud.type == CLOUD_TORNADO
             || old_cloud.decay <= 20) // soon gone
         {
             // Delete this cloud and replace it.
