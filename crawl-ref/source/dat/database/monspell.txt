@@ -379,7 +379,7 @@ Something harnesses the cleansing power of fire!
 %%%%
 shedu cast
 
-@The_monster@ performs a healing in @possessive_God@ name.
+@The_monster@ performs a healing ritual in @possessive_God@ name.
 %%%%
 # Should only be casting spells at each other.
 shedu cast targeted
