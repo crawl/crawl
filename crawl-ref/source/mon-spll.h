@@ -63,7 +63,7 @@
       }
     },
 
-    {  MST_DEEP_DWARF_UNBORN,
+    {  MST_UNBORN_DEEP_DWARF,
       {
        SPELL_AGONY,
        SPELL_DISPEL_UNDEAD,
