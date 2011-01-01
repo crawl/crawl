@@ -1079,30 +1079,28 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *)
 {
     UNUSED(pow);
 
-    bool did_anything = false;
-
     const int i = env.cgrid(where);
     if (i != EMPTY_CLOUD)
     {
         cloud_struct& cloud = env.cloud[i];
         if (cloud.type == CLOUD_STINK)
         {
-            did_anything = true;
-            cloud.type = CLOUD_FIRE;
-
             cloud.decay /= 2;
 
             if (cloud.decay < 1)
                 cloud.decay = 1;
         }
-        else if (cloud.type == CLOUD_POISON)
-        {
-            did_anything = true;
-            cloud.type = CLOUD_FIRE;
-        }
+        else if (cloud.type != CLOUD_POISON)
+            return false;
+
+        cloud.type = CLOUD_FIRE;
+        cloud.whose = KC_YOU;
+        cloud.killer = KILL_YOU_MISSILE;
+        cloud.source = MID_PLAYER;
+        return true;
     }
 
-    return did_anything;
+    return false;
 }
 
 static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
