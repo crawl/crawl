@@ -9,6 +9,7 @@
 #define TILESDL_H
 
 #include "externs.h"
+#include "tilereg.h"
 #include "tiletex.h"
 
 class Region;
@@ -182,6 +183,7 @@ protected:
     LayerID m_active_layer;
 
     // Normal layer
+    TileRegionInit  m_init;
     DungeonRegion   *m_region_tile;
     StatRegion      *m_region_stat;
     MessageRegion   *m_region_msg;
@@ -195,6 +197,8 @@ protected:
     CommandRegion   *m_region_cmd;
     TabbedRegion    *m_region_tab_spl;
     TabbedRegion    *m_region_tab_mon;
+
+    int             m_dynamic_regions;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
@@ -211,6 +215,7 @@ protected:
     int m_crt_font;
     int m_msg_font;
     int m_tip_font;
+    int m_lbl_font;
 
     bool layout_statcol(bool message_overlay, bool show_gold_turns);
 
