@@ -151,8 +151,13 @@ void tornado_damage(actor *caster, int dur)
     if (dur <= 0)
         return;
 
+    int pow;
     // Not stored so unwielding that staff will reduce damage.
-    int pow = div_rand_round(calc_spell_power(SPELL_TORNADO, true) * dur, 10);
+    if (caster->atype() == ACT_PLAYER)
+        pow = calc_spell_power(SPELL_TORNADO, true);
+    else
+        pow = caster->as_monster()->hit_dice * 4;
+    pow = div_rand_round(pow * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
     WindSystem winds(org);
