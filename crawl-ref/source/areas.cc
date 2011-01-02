@@ -15,6 +15,7 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
+#include "files.h"
 #include "fprop.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
@@ -211,6 +212,17 @@ coord_def find_centre_for (const coord_def& f, area_centre_type at)
 
     return (possible);
 }
+
+///////////////
+// Callback
+//
+// Thus agrid can be invalidated when loading.
+static void _agrid_callback(bool saving)
+{
+    if (!saving)
+        invalidate_agrid(true);
+}
+static SavefileCallback _register_agrid_callback(_agrid_callback);
 
 ///////////////
 // Sanctuary
