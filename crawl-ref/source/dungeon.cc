@@ -136,7 +136,7 @@ static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
                         uint8_t pool_y2);
 static void _many_pools(dungeon_feature_type pool_type);
 static bool _join_the_dots(const coord_def &from, const coord_def &to,
-                           unsigned mmask, bool early_exit = false);
+                           unsigned mmask);
 
 static void _build_river(dungeon_feature_type river_type); //mv
 static void _build_lake(dungeon_feature_type lake_type); //mv
@@ -4887,7 +4887,7 @@ static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
 
 static bool _join_the_dots_pathfind(coord_set &coords,
                                     const coord_def &from, const coord_def &to,
-                                    uint32_t mapmask, bool early_exit)
+                                    uint32_t mapmask)
 {
     coord_def curr = from;
     while (true)
@@ -4926,14 +4926,13 @@ static bool _join_the_dots_pathfind(coord_set &coords,
 }
 
 static bool _join_the_dots(const coord_def &from, const coord_def &to,
-                           uint32_t mapmask, bool early_exit)
+                           uint32_t mapmask)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
     const coord_comparator comp(to);
     coord_set coords(comp);
-    const bool found = _join_the_dots_pathfind(coords, from, to, mapmask,
-                                               early_exit);
+    const bool found = _join_the_dots_pathfind(coords, from, to, mapmask);
 
     return (found);
 }
