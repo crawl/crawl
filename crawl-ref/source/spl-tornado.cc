@@ -146,7 +146,7 @@ bool cast_tornado(int powc)
     return true;
 }
 
-void tornado_damage(int dur)
+void tornado_damage(actor *caster, int dur)
 {
     if (dur <= 0)
         return;
@@ -154,7 +154,7 @@ void tornado_damage(int dur)
     // Not stored so unwielding that staff will reduce damage.
     int pow = div_rand_round(calc_spell_power(SPELL_TORNADO, true) * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
-    const coord_def org = you.pos();
+    const coord_def org = caster->pos();
     WindSystem winds(org);
 
     std::stack<actor*>    move_act;
@@ -204,7 +204,8 @@ void tornado_damage(int dur)
                         // levitate the monster so you get only one attempt at
                         // tossing them into water/lava
                         monster *mon = victim->as_monster();
-                        mon_enchant ench(ENCH_LEVITATION, 0, KC_YOU, 20);
+                        mon_enchant ench(ENCH_LEVITATION, 0,
+                                         caster->kill_alignment(), 20);
                         if (mon->has_ench(ENCH_LEVITATION))
                             mon->update_ench(ench);
                         else
@@ -213,9 +214,20 @@ void tornado_damage(int dur)
                         if (mons_is_mimic(mon->type))
                             mimic_alert(mon);
                     }
+                    else
+                    {
+                        bool standing = !you.airborne();
+                        if (standing)
+                            mpr("The vortex of raging winds lifts you up.");
+                        you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+                        you.duration[DUR_LEVITATION]
+                            = std::max(you.duration[DUR_LEVITATION], 20);
+                        if (standing)
+                            float_player(false);
+                    }
                     int dmg = roll_dice(6, pow) / 8;
                     dprf("damage done: %d", dmg);
-                    victim->hurt(&you, dmg);
+                    victim->hurt(caster, dmg);
                 }
 
                 if (victim->alive())
@@ -225,7 +237,7 @@ void tornado_damage(int dur)
                 || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
                 && x_chance_in_y(pow, 20))
             {
-                place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), &you);
+                place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), caster);
             }
             clouds.push_back(*dam_i);
             swap_clouds(clouds[random2(clouds.size())], *dam_i);
