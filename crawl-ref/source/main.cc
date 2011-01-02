@@ -2448,7 +2448,7 @@ static void _decrement_durations()
     // Should expire before levitation.
     if (you.duration[DUR_TORNADO])
     {
-        tornado_damage(std::min(delay, you.duration[DUR_TORNADO]));
+        tornado_damage(&you, std::min(delay, you.duration[DUR_TORNADO]));
         _decrement_a_duration(DUR_TORNADO, delay,
                               "The winds around you calm down.");
     }

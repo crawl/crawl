@@ -40,6 +40,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -5373,6 +5374,9 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me);
         break;
 
+    case ENCH_PERM_TORNADO:
+        tornado_damage(this, speed_to_duration(speed));
+        break;
 
     case ENCH_BLEED:
     {

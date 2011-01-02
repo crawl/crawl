@@ -1394,6 +1394,7 @@ enum enchant_type
     ENCH_LEVITATION,
     ENCH_HELPLESS,
     ENCH_LIQUEFYING,
+    ENCH_PERM_TORNADO,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
