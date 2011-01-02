@@ -1452,8 +1452,8 @@ MAP
 xxXmm.x
 x.....x
 x.xxxxx
-x.x    
-x@x    
+x.x
+x@x
 ENDMAP
 
 NAME:   co_window_cross_1
@@ -1485,8 +1485,8 @@ x....x
 x.xx.x
 x.xx.x
 x@xx@x
-  xx  
-  xx  
+  xx
+  xx
 ENDMAP
 
 NAME:   co_window_of_opportunity_c
@@ -1500,9 +1500,9 @@ x.....x
 x.xxx.x
 x.xxx.x
 x@xxx@x
-  xxx  
-  xxx  
-  xxx  
+  xxx
+  xxx
+  xxx
 ENDMAP
 
 
@@ -1522,8 +1522,8 @@ MAP
 xxxXmm.x
 x......x
 x.xxxxxx
-x.x     
-x@x     
+x.x
+x@x
 ENDMAP
 
 NAME:   co_window_corner_ca
@@ -1543,8 +1543,8 @@ MAP
 xxxmmXX.x
 x.......x
 x.xxxxxxx
-x.x      
-x@x      
+x.x
+x@x
 ENDMAP
 
 NAME:   co_window_corner_cb
@@ -1823,8 +1823,8 @@ WEIGHT: 2
 TAGS:   luni qallow_dup extra mini_float serial_co_window_rare
 SUBST:  c : mmccb
 MAP
-   xxx 
-   @x@ 
+   xxx
+   @x@
  xx.x.xx
  xx.x.xx
  @x.x.x@
@@ -1840,7 +1840,7 @@ x.x.x.x.x
  @x.x.x@
  xx.x.xx
  xx.x.xx
-   @x@ 
+   @x@
    xxx
 ENDMAP
 
@@ -1849,7 +1849,7 @@ WEIGHT: 2
 TAGS:   luniq allow_dup extra mini_float serial_co_window_rare
 SUBST:  c : mmccb
 MAP
-    x  
+    x
     x x
     x@x
   xxx.x
@@ -1865,9 +1865,9 @@ x.x.m.x.x
 x@x.x.xxx
   x.x.@
   x.xxx
-  x@x  
-  x x  
-    x  
+  x@x
+  x x
+    x
 ENDMAP
 
 NAME:   co_window_4corner_a
