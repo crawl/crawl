@@ -5994,6 +5994,12 @@ void monster::check_awaken(int)
     // XXX
 }
 
+int monster::beam_resists(bolt &beam, int hurted, bool doEffects,
+                          std::string source)
+{
+    return mons_adjust_flavoured(this, beam, hurted, doEffects);
+}
+
 const monsterentry *monster::find_monsterentry() const
 {
     return (type == MONS_NO_MONSTER || type == MONS_PROGRAM_BUG) ? NULL

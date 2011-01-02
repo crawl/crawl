@@ -420,6 +420,7 @@ public:
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);
     void check_awaken(int disturbance);
+    int beam_resists(bolt &beam, int hurted, bool doEffects, std::string source);
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }

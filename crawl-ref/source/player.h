@@ -588,6 +588,8 @@ public:
     void put_to_sleep(actor *, int power = 0);
     void awake();
     void check_awaken(int disturbance);
+    int beam_resists(bolt &beam, int hurted, bool doEffects,
+                     std::string source);
 
     bool can_throw_large_rocks() const;
     bool can_smell() const;
