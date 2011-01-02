@@ -504,10 +504,19 @@ MAP
 1...1
 ENDMAP
 
-Crawl will convert this map into the following Lua code, wrapped in an
-anonymous function (this is called a Lua chunk):
+Crawl will convert this map into the following Lua code wrapped in
+anonymous functions (an anonymous function that takes no parameters is
+called a Lua chunk):
 
-function ()
+function mapchunk()
+  map(".....")
+  map(".www.")
+  map(".wGw.")
+  map(".www.")
+  map(".....")
+end
+
+function main()
   tags("no_rotate")
   tags("no_pool_fixup")
   if you.absdepth() < 7 then
@@ -515,12 +524,10 @@ function ()
   else
     mons("oklob plant")
   end
-  map(".....")
-  map(".www.")
-  map(".wGw.")
-  map(".www.")
-  map(".....")
 end
+
+You'll notice that these functions are not actually anonymous, but
+they're named just to distinguish them.
 
 If your level defines prelude or validation Lua code, such code is
 extracted into separate prelude and validation chunks. The prelude and
@@ -589,6 +596,20 @@ MAP
 .www.
 1...1
 ENDMAP
+
+You can check what Lua code is produced when a .des file is compiled
+by starting Crawl with the -dump-maps option:
+
+   ./crawl -dump-maps -builddb 2>compiled-maps.lua
+
+This will only produce output for .des files that are compiled, so if
+Crawl has already compiled all .des files it will produce no output.
+You can force Crawl to recompile a .des file by updating its
+modification time or by deleting the $SAVEDIR/des directory.
+
+Also note that Crawl writes -dump-maps output to stderr, not stdout,
+hence the use of 2> for redirection.
+
 
 How Lua chunks are associated with a C++ map object
 ---------------------------------------------------
