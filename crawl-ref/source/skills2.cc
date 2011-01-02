@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 
 #include "skills2.h"
-#include "skills_menu.h"
 
 #include <algorithm>
 #include <cmath>
@@ -183,40 +182,6 @@ JOB_PALADIN:
 
 ************************************************************* */
 
-static const skill_type skill_display_order[] =
-{
-    SK_TITLE,
-    SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES,
-    SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,
-
-    SK_BLANK_LINE,
-
-    SK_BOWS, SK_CROSSBOWS, SK_THROWING, SK_SLINGS,
-
-    SK_BLANK_LINE,
-
-    SK_ARMOUR, SK_DODGING, SK_STEALTH, SK_SHIELDS,
-
-    SK_COLUMN_BREAK, SK_TITLE,
-
-    SK_STABBING, SK_TRAPS_DOORS,
-
-    SK_BLANK_LINE,
-
-    SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS, SK_SUMMONINGS,
-    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
-    SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_POISON_MAGIC,
-
-    SK_BLANK_LINE,
-
-    SK_INVOCATIONS, SK_EVOCATIONS,
-
-    SK_COLUMN_BREAK,
-};
-
-static const int ndisplayed_skills =
-            sizeof(skill_display_order) / sizeof(*skill_display_order);
-
 int get_skill_percentage(const skill_type x)
 {
     const int needed = skill_exp_needed(you.skills[x] + 1, x);
@@ -243,6 +208,9 @@ static void _add_item(TextItem* item, MenuObject* mo, const int size,
     mo->attach_item(item);
     coord.x += size + 1;
 }
+
+menu_letter SkillMenuEntry::m_letter;
+SkillMenu* SkillMenuEntry::m_skm;
 
 #define NAME_SIZE 20
 #define LEVEL_SIZE 4
