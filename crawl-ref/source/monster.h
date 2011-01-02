@@ -51,6 +51,8 @@ private:
     int calc_duration(const monster* mons, const mon_enchant *added) const;
 };
 
+enchant_type name_to_ench(const char *name);
+
 typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
