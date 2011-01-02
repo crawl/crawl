@@ -81,6 +81,9 @@ TilesFramework::TilesFramework() :
     m_fullscreen(false),
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
+    m_region_tab_spl(NULL),
+    m_region_tab_mon(NULL),
+    m_dynamic_regions(0),
     m_buttons_held(0),
     m_key_mod(0),
     m_mouse(-1, -1),
@@ -321,27 +324,25 @@ bool TilesFramework::initialise()
                               Options.tile_font_stat_size, true, false);
     m_tip_font    = load_font(Options.tile_font_tip_file.c_str(),
                               Options.tile_font_tip_size, true, false);
-    int lbl_font  = load_font(Options.tile_font_lbl_file.c_str(),
+    m_lbl_font    = load_font(Options.tile_font_lbl_file.c_str(),
                               Options.tile_font_lbl_size, true, true);
 
     if (m_crt_font == -1 || m_msg_font == -1 || stat_font == -1
-        || m_tip_font == -1 || lbl_font == -1)
+        || m_tip_font == -1 || m_lbl_font == -1)
     {
         return (false);
     }
 
-    TileRegionInit init(m_image, m_fonts[lbl_font].font, TILE_X, TILE_Y);
-    m_region_tile = new DungeonRegion(init);
+    m_init = TileRegionInit(m_image, m_fonts[m_lbl_font].font, TILE_X, TILE_Y);
+    m_region_tile = new DungeonRegion(m_init);
     m_region_map  = new MapRegion(Options.tile_map_pixels);
-    m_region_tab  = new TabbedRegion(init);
-    m_region_inv  = new InventoryRegion(init);
-    m_region_spl  = new SpellRegion(init);
-    m_region_mem  = new MemoriseRegion(init);
-    m_region_mon  = new MonsterRegion(init);
-    m_region_skl  = new SkillRegion(init);
-    m_region_cmd  = new CommandRegion(init);
-    m_region_tab_spl  = new TabbedRegion(init);
-    m_region_tab_mon  = new TabbedRegion(init);
+    m_region_tab  = new TabbedRegion(m_init);
+    m_region_inv  = new InventoryRegion(m_init);
+    m_region_spl  = new SpellRegion(m_init);
+    m_region_mem  = new MemoriseRegion(m_init);
+    m_region_mon  = new MonsterRegion(m_init);
+    m_region_skl  = new SkillRegion(m_init);
+    m_region_cmd  = new CommandRegion(m_init);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
@@ -350,9 +351,6 @@ bool TilesFramework::initialise()
     m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
     m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
     m_region_tab->activate_tab(TAB_ITEM);
-
-    m_region_tab_spl->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
-    m_region_tab_mon->set_tab_region(0, m_region_mon, TILEG_TAB_MONSTER);
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
@@ -902,6 +900,12 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
 {
+    while (m_dynamic_regions > 0)
+    {
+        m_layers[LAYER_NORMAL].m_regions.pop_back();
+        --m_dynamic_regions;
+    }
+
     // Assumes that the region_stat has already been placed.
     int hud_height = 12 + (show_gold_turns ? 1 : 0);
     m_region_stat->resize(m_region_stat->mx, hud_height);
@@ -932,17 +936,27 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
 
     if (delta_y < m_region_tab->sy - m_region_map->ey && you.spell_no > 0)
     {
+        if (m_region_tab_spl == NULL)
+        {
+            m_region_tab_spl  = new TabbedRegion(m_init);
+            m_region_tab_spl->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
+            m_region_tab_spl->enable_tab(0);
+            m_region_tab_spl->activate_tab(0);
+        }
         m_region_tab->disable_tab(TAB_SPELL);
-        m_region_tab_spl->enable_tab(0);
-        m_region_tab_spl->activate_tab(0);
         m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab_spl);
         m_region_tab_spl->place(inv_col, m_region_tab->sy - delta_y);
         m_region_tab_spl->resize(m_region_tab->mx, lines);
+        ++m_dynamic_regions;
         lower_limit = m_region_tab_spl->sy;
     }
     else
     {
-        m_region_tab_spl->disable_tab(0);
+        if (m_region_tab_spl)
+        {
+            delete m_region_tab_spl;
+            m_region_tab_spl = NULL;
+        }
         m_region_tab->enable_tab(TAB_SPELL);
         lower_limit = m_region_tab->sy;
     }
@@ -952,20 +966,29 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     lines = std::min(lines, 3);
     if (Options.tile_allow_detached_montab && lines > 0)
     {
+        if (m_region_tab_mon == NULL)
+        {
+            m_region_tab_mon  = new TabbedRegion(m_init);
+            m_region_tab_mon->set_tab_region(0, m_region_mon, TILEG_TAB_MONSTER);
+            m_region_tab_mon->enable_tab(0);
+            m_region_tab_mon->activate_tab(0);
+        }
         delta_y = lines * m_region_tab->dy;
         m_region_tab->disable_tab(TAB_MONSTER);
-        m_region_tab_mon->enable_tab(0);
-        m_region_tab_mon->activate_tab(0);
         m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab_mon);
         m_region_tab_mon->place(inv_col, lower_limit - delta_y);
         m_region_tab_mon->resize(m_region_tab->mx, lines);
+        ++m_dynamic_regions;
     }
     else
     {
-        m_region_tab_mon->disable_tab(0);
+        if (m_region_tab_mon)
+        {
+            delete m_region_tab_mon;
+            m_region_tab_mon = NULL;
+        }
         m_region_tab->enable_tab(TAB_MONSTER);
     }
-
     int num_items = m_region_tab->mx * (m_region_tab->my - 1);
     return (num_items >= ENDOFPACK);
 }
@@ -1166,8 +1189,10 @@ void TilesFramework::update_inventory()
         return;
 
     m_region_tab->update();
-    m_region_tab_spl->update();
-    m_region_tab_mon->update();
+    if (m_region_tab_spl)
+        m_region_tab_spl->update();
+    if (m_region_tab_mon)
+        m_region_tab_mon->update();
 }
 
 void TilesFramework::toggle_inventory_display()
