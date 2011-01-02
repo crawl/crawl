@@ -2434,31 +2434,21 @@ void MiscastEffect::_air(int severity)
     switch (severity)
     {
     case 0:         // just a harmless message
-        num = 10 + (_has_hair(target) ? 1 : 0);
+        num = 9;
+        if (target == &you)
+            num += 3 + _has_hair(target);
         switch (random2(num))
         {
         case 0:
-            you_msg = "Ouch! You gave yourself an electric shock.";
-            // Monster messages needed.
-            break;
-        case 1:
             you_msg      = "You feel momentarily weightless.";
             mon_msg_seen = "@The_monster@ bobs in the air for a moment.";
             break;
-        case 2:
+        case 1:
             you_msg      = "Wisps of vapour drift from your @hands@.";
             mon_msg_seen = "Wisps of vapour drift from @the_monster@'s "
                            "@hands@.";
             break;
-        case 3:
-            you_msg = "You feel a strange surge of energy!";
-            // Monster messages needed.
-            break;
-        case 4:
-            you_msg = "You feel electric!";
-            // Monster messages needed.
-            break;
-        case 5:
+        case 2:
         {
             bool pluralised = true;
             if (!hand_str.empty())
@@ -2482,11 +2472,11 @@ void MiscastEffect::_air(int severity)
             }
             break;
         }
-        case 6:
+        case 3:
             you_msg      = "You are blasted with air!";
             mon_msg_seen = "@The_monster@ is blasted with air!";
             break;
-        case 7:
+        case 4:
             if (neither_end_silenced())
             {
                 all_msg        = "You hear a whooshing sound.";
@@ -2498,11 +2488,11 @@ void MiscastEffect::_air(int severity)
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
             break;
-        case 8:
+        case 5:
             // Set nothing; canned_msg(MSG_NOTHING_HAPPENS) will be taken
             // care of elsewhere.
             break;
-        case 9:
+        case 6:
             if (neither_end_silenced())
             {
                 all_msg        = "You hear a crackling sound.";
@@ -2514,26 +2504,11 @@ void MiscastEffect::_air(int severity)
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
             break;
-        case 10:
-        {
-            // Player only (for now).
-            bool plural;
-            std::string hair = _hair_str(target, plural);
-            you_msg = make_stringf("Your %s stand%s on end.", hair.c_str(),
-                                   plural ? "" : "s");
-            break;
-        }
-        }
-        do_msg();
-        break;
-    case 1:         // a bit less harmless stuff
-        switch (random2(2))
-        {
-        case 0:
+        case 7:
             you_msg      = "There is a short, sharp shower of sparks.";
             mon_msg_seen = "@The_monster@ is briefly showered in sparks.";
             break;
-        case 1:
+        case 8:
             if (silenced(you.pos()))
             {
                you_msg        = "The wind whips around you!";
@@ -2547,11 +2522,31 @@ void MiscastEffect::_air(int severity)
                mon_msg_unseen = "The wind howls!";
             }
             break;
+        case 9:
+            you_msg = "Ouch! You gave yourself an electric shock.";
+            // Monster messages needed.
+            break;
+        case 10:
+            you_msg = "You feel a strange surge of energy!";
+            // Monster messages needed.
+            break;
+        case 11:
+            you_msg = "You feel electric!";
+            // Monster messages needed.
+            break;
+        case 12:
+        {
+            // Player only (for now).
+            bool plural;
+            std::string hair = _hair_str(target, plural);
+            you_msg = make_stringf("Your %s stand%s on end.", hair.c_str(),
+                                   plural ? "" : "s");
+            break;
+        }
         }
         do_msg();
         break;
-
-    case 2:         // rather less harmless stuff
+    case 1:         // rather less harmless stuff
         switch (random2(2))
         {
         case 0:
@@ -2570,7 +2565,7 @@ void MiscastEffect::_air(int severity)
         }
         break;
 
-    case 3:         // musch less harmless stuff
+    case 2:         // much less harmless stuff
         switch (random2(2))
         {
         case 0:
@@ -2599,6 +2594,8 @@ void MiscastEffect::_air(int severity)
             _big_cloud(CLOUD_POISON, 20, 8 + random2(5));
             break;
         }
+    case 3:         // even less harmless stuff
+        break;
     }
 }
 
