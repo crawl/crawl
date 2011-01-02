@@ -371,7 +371,7 @@ void wizard_list_branches()
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].startdepth != - 1)
+        if (branches[i].startdepth != -1)
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
                  i, branches[i].longname, branches[i].startdepth,
