@@ -379,6 +379,53 @@ static int l_mons_do_has_prop(lua_State *ls)
 
 MDEFN(has_prop, do_has_prop)
 
+static int l_mons_do_add_ench(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    const char *ench_name = luaL_checkstring(ls, 1);
+    enchant_type met = name_to_ench(ench_name);
+    if (!met)
+    {
+        std::string err
+            = make_stringf("No such enchantment: %s", ench_name);
+        luaL_argerror(ls, 1, err.c_str());
+        return 0;
+    }
+
+    mons->add_ench(mon_enchant(met, luaL_checkint(ls, 2), KC_OTHER,
+                               luaL_checkint(ls, 3)));
+    return 0;
+}
+
+MDEFN(add_ench, do_add_ench)
+
+static int l_mons_do_del_ench(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    const char *ench_name = luaL_checkstring(ls, 1);
+    enchant_type met = name_to_ench(ench_name);
+    if (!met)
+    {
+        std::string err
+            = make_stringf("No such enchantment: %s", ench_name);
+        luaL_argerror(ls, 1, err.c_str());
+        return 0;
+    }
+
+    mons->del_ench(met);
+    return 0;
+}
+
+MDEFN(del_ench, do_del_ench)
+
 MDEF(you_can_see)
 {
     ASSERT_DLUA;
@@ -424,6 +471,8 @@ static MonsAccessor mons_attrs[] =
     { "set_prop",        l_mons_set_prop        },
     { "get_prop",        l_mons_get_prop        },
     { "has_prop",        l_mons_has_prop        },
+    { "add_ench",        l_mons_add_ench        },
+    { "del_ench",        l_mons_del_ench        },
     { "you_can_see",     l_mons_you_can_see     }
 };
 

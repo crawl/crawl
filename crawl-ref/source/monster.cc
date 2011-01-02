@@ -6407,7 +6407,7 @@ static const char *enchant_names[] =
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "levitation", "helpless",
-    "liquefying", "buggy",
+    "liquefying", "perm_tornado", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6418,6 +6418,14 @@ static const char *_mons_enchantment_name(enchant_type ench)
         ench = NUM_ENCHANTMENTS;
 
     return (enchant_names[ench]);
+}
+
+enchant_type name_to_ench(const char *name)
+{
+    for (unsigned int i = ENCH_NONE; i < ARRAYSZ(enchant_names); i++)
+        if (!strcmp(name, enchant_names[i]))
+            return (enchant_type)i;
+    return ENCH_NONE;
 }
 
 mon_enchant::mon_enchant(enchant_type e, int deg, kill_category whose,
