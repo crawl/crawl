@@ -10,6 +10,8 @@ enum ev_ignore_type
     EV_IGNORE_PHASESHIFT = 2,
 };
 
+class bolt;
+
 class actor
 {
 public:
@@ -197,6 +199,8 @@ public:
     virtual bool can_sleep() const;
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
+    virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
+                             std::string source = "") = 0;
 
     virtual int  skill(skill_type sk, bool skill_bump = false) const
     {

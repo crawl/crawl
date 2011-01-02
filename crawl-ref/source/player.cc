@@ -6822,6 +6822,13 @@ void player::check_awaken(int disturbance)
         awake();
 }
 
+int player::beam_resists(bolt &beam, int hurted, bool doEffects,
+                         std::string source)
+{
+    ASSERT(doEffects); // not implemented yet
+    return check_your_resists(hurted, beam.flavour, source, &beam);
+}
+
 void player::set_place_info(PlaceInfo place_info)
 {
     place_info.assert_validity();
