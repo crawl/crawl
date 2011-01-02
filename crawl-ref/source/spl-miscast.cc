@@ -2547,11 +2547,12 @@ void MiscastEffect::_air(int severity)
         do_msg();
         break;
     case 1:         // rather less harmless stuff
-        switch (random2(2))
+        switch (random2(3))
         {
         case 0:
-            you_msg = "Electricity courses through your body.";
-            // Monster messages needed.
+            you_msg        = "Electricity courses through your body.";
+            mon_msg_seen   = "@The_monster@ is jolted!";
+            mon_msg_unseen = "Something invisible sparkles with electricity.";
             _ouch(4 + random2avg(9, 2), BEAM_ELECTRICITY);
             break;
         case 1:
@@ -2561,6 +2562,13 @@ void MiscastEffect::_air(int severity)
             mon_msg_unseen = "Noxious gasses appear from out of thin air!";
 
             _big_cloud(CLOUD_STINK, 20, 9 + random2(4));
+            break;
+        case 2:
+            you_msg        = "You are under the weather.";
+            mon_msg_seen   = "@The_monster@ looks under the weather.";
+            mon_msg_unseen = "Inclement weather forms around a spot in thin air.";
+
+            _big_cloud(CLOUD_RAIN, 20, 20 + random2(20));
             break;
         }
         break;
