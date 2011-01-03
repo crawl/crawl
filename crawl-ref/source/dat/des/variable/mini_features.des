@@ -31,6 +31,8 @@ default-depth: D, Vault, Elf, Crypt
 #       from a list of thematically linked maps. This is mostly for flavour,
 #       although it may later be interesting to created serial vaults around
 #       threats.
+#       In general, we don't want more than one serial vault on a level. Use
+#       the luniq_serial in the serial vault's header map for this.
 #
 ############################################################################
 
@@ -40,9 +42,9 @@ default-depth: D, Vault, Elf, Crypt
 # we only roll numbers between 2 and 12 (non-flat distribution).
 # Sometimes we add a few rarer glass vaults to the level.
 NAME:   serial_glass
-TAGS:   allow_dup extra luniq
+TAGS:   allow_dup extra luniq_serial
 DEPTH:  D, Elf, Vault, Crypt
-CHANCE: 5%
+CHANCE: 3%
 {{
   local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
   local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
@@ -58,7 +60,7 @@ CHANCE: 5%
 # a bit messy, considering how randomly they are placed, and how the
 # statues stand out (especially in tiles).
 NAME:   serial_corexii_hall
-TAGS:   allow_dup extra luniq
+TAGS:   allow_dup extra luniq_serial
 #       Fits best in the rooms layout.
 TAGS:   layout_rooms
 DEPTH:  D, Elf, Crypt, Snake
@@ -72,11 +74,11 @@ CHANCE: 1%
 
 #       Curved corridors.
 NAME:   serial_curves
-TAGS:   allow_dup extra luniq
+TAGS:   allow_dup extra luniq_serial
 #       Suitable for the rooms layout.
 TAGS:   layout_rooms
 DEPTH:  D, Snake
-CHANCE: 3%
+CHANCE: 1%
 {{
   local c = 2 + crawl.random2(3)*crawl.random2(2)
   hook("post_place", function()
@@ -91,10 +93,10 @@ CHANCE: 3%
 # like a labyrinth. The vaults are divided in three groups: small, common and
 # rare. Made by co.
 # I added a chance to have some additional glass vaults. dpeg
-NAME:   serial_co_window
+NAME:   serial_co_window_serial
 TAGS:   allow_dup extra luniq
 DEPTH:  D, Elf, Crypt
-CHANCE: 3%
+CHANCE: 2%
 {{
   local s = 5 + crawl.random2(3)*crawl.random2(3)
   local c = 3 + crawl.random2(5)
