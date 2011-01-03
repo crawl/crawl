@@ -1799,7 +1799,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (doFlavouredEffects)
             {
                 if (original > 0)
-                    simple_monster_message(mons, "appears unharmed.");
+                    simple_monster_message(mons, " appears unharmed.");
                 else if (mons->observable())
                     mprf("The beam of light passes harmlessly through %s.",
                          mons->name(DESC_NOCAP_THE, true).c_str());
@@ -1815,6 +1815,23 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_SPORE:
         if (mons->type == MONS_BALLISTOMYCETE)
             hurted = 0;
+        break;
+
+    case BEAM_AIR:
+        if (mons->res_wind() > 0)
+            hurted = 0;
+        else if (mons->flight_mode())
+            hurted += hurted / 2;
+        if (!hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(mons, " is harmlessly tossed around.");
+        }
+        else if (original < hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(mons, " gets badly buffeted.");
+        }
         break;
 
     default:
@@ -5830,6 +5847,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_INK:                   return ("ink");
     case BEAM_HOLY_FLAME:            return ("cleansing flame");
     case BEAM_HOLY_LIGHT:            return ("holy light");
+    case BEAM_AIR:                   return ("air");
 
     case NUM_BEAMS:                  DEBUGSTR("invalid beam type");
                                      return ("INVALID");

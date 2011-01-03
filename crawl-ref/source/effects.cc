@@ -745,18 +745,12 @@ void direct_effect(monster* source, spell_type spell,
             mpr("The air twists around and strikes you!");
 
         pbolt.name       = "airstrike";
-        pbolt.flavour    = BEAM_MISSILE;
+        pbolt.flavour    = BEAM_AIR;
         pbolt.aux_source = "by the air";
 
         damage_taken     = 10 + 2 * source->hit_dice;
 
-        // Apply "bonus" against flying/levitating characters after AC
-        // has been checked.
-        if (defender->flight_mode() != FL_NONE)
-        {
-            damage_taken *= 3;
-            damage_taken /= 2;
-        }
+        damage_taken = defender->beam_resists(pbolt, damage_taken, false);
 
         // Previous method of damage calculation (in line with player
         // airstrike) had absurd variance.

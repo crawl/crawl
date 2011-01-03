@@ -318,8 +318,9 @@ enum beam_type                  // beam[].flavour
     BEAM_HOLY_FLAME,
     BEAM_HOLY_LIGHT,
     BEAM_POTION_RANDOM,
+    BEAM_AIR,
 
-    BEAM_LAST_REAL = BEAM_POTION_RANDOM,
+    BEAM_LAST_REAL = BEAM_AIR,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
