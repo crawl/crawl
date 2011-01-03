@@ -660,7 +660,7 @@ int airstrike(int pow, const dist &beam)
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
-        if (mons->res_wind())
+        if (mons->res_wind() > 0)
         {
             mprf("The air twists arounds and harmlessly tosses %s around.",
                  mons->name(DESC_NOCAP_THE).c_str());
@@ -693,11 +693,10 @@ int airstrike(int pow, const dist &beam)
             int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
                            + (random2(pow) / 7));
 
-            if (mons_flies(mons))
-            {
-                hurted *= 3;
-                hurted /= 2;
-            }
+            bolt pbeam;
+            pbeam.flavour = BEAM_AIR;
+            hurted = mons->beam_resists(pbeam, hurted, false);
+            // perhaps we should let the beam subtract AC and do damage too?
 
             hurted -= random2(1 + mons->ac);
 

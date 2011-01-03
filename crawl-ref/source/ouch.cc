@@ -290,6 +290,15 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         }
         break;
 
+    case BEAM_AIR:
+    {
+        // Airstrike.
+        if (you.res_wind() > 0)
+            hurted = 0;
+        else if (you.flight_mode())
+            hurted += hurted / 2;
+        break;
+    }
     default:
         break;
     }                           // end switch
