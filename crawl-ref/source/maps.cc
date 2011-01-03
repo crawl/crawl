@@ -1146,7 +1146,7 @@ static bool load_map_index(const std::string &base)
         FILE *fp = fopen((base + ".lux").c_str(), "rb");
         if (fp)
         {
-            reader inf(fp);
+            reader inf(fp, TAG_MINOR_VERSION);
             lc_global_prelude.read(inf);
             fclose(fp);
 
@@ -1157,8 +1157,8 @@ static bool load_map_index(const std::string &base)
     FILE* fp = fopen((base + ".idx").c_str(), "rb");
     if (!fp)
         end(1, true, "Unable to read %s", (base + ".idx").c_str());
-    reader inf(fp);
 
+    reader inf(fp, TAG_MINOR_VERSION);
     // Discard version (it's been checked by verify_map_index).
     (void) unmarshallInt(inf);
     const int nmaps = unmarshallShort(inf);

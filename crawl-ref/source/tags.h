@@ -155,8 +155,8 @@ void marshallSigned(writer& th, int64_t v);
 class reader
 {
 public:
-    reader(const std::string &filename, int minorVersion = TAG_MINOR_VERSION);
-    reader(FILE* input, int minorVersion = TAG_MINOR_VERSION)
+    reader(const std::string &filename, int minorVersion = TAG_MINOR_INVALID);
+    reader(FILE* input, int minorVersion = TAG_MINOR_INVALID)
         : _file(input), _chunk(0), opened_file(false), _pbuf(0),
           _read_offset(0), _minorVersion(minorVersion) {}
     reader(const std::vector<unsigned char>& input,
@@ -170,11 +170,16 @@ public:
     unsigned char readByte();
     void read(void *data, size_t size);
     void advance(size_t size);
-    int getMinorVersion();
+    int getMinorVersion() const;
+    void setMinorVersion(int minorVersion);
     bool valid() const;
-    void fail_if_not_eof(const std::string name);
+    void fail_if_not_eof(const std::string &name);
+    void close();
+
+    std::string filename() const { return _filename; }
 
 private:
+    std::string _filename;
     FILE* _file;
     chunk_reader *_chunk;
     bool  opened_file;
@@ -228,7 +233,7 @@ static inline void unmarshallSigned(reader& th, T& v)
  * Tag interface
  * *********************************************************************** */
 
-void tag_read(reader &inf, int minorVersion, tag_type tag_id);
+void tag_read(reader &inf, tag_type tag_id);
 void tag_write(tag_type tagID, writer &outf);
 
 /* ***********************************************************************

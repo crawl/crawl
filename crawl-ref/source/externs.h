@@ -677,7 +677,7 @@ public:
     void clear();
 
     void write(writer &) const;
-    void read(reader &, int minorVersion);
+    void read(reader &);
 
 private:
     typedef std::multimap<coord_def, map_marker *> dgn_marker_map;
