@@ -160,11 +160,11 @@ public:
         : _file(input), _chunk(0), opened_file(false), _pbuf(0),
           _read_offset(0), _minorVersion(minorVersion) {}
     reader(const std::vector<unsigned char>& input,
-           int minorVersion = TAG_MINOR_VERSION)
+           int minorVersion = TAG_MINOR_INVALID)
         : _file(0), _chunk(0), opened_file(false), _pbuf(&input),
           _read_offset(0), _minorVersion(minorVersion) {}
     reader(package *save, const std::string &chunkname,
-           int minorVersion = TAG_MINOR_VERSION);
+           int minorVersion = TAG_MINOR_INVALID);
     ~reader();
 
     unsigned char readByte();
