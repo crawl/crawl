@@ -6825,8 +6825,7 @@ void player::check_awaken(int disturbance)
 int player::beam_resists(bolt &beam, int hurted, bool doEffects,
                          std::string source)
 {
-    ASSERT(doEffects); // not implemented yet
-    return check_your_resists(hurted, beam.flavour, source, &beam);
+    return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
 }
 
 void player::set_place_info(PlaceInfo place_info)
