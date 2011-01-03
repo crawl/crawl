@@ -53,6 +53,7 @@
 #include "env.h"
 #include "tags.h"
 #ifdef USE_TILE
+ #include "options.h"
  #include "tiledef-dngn.h"
  #include "tiledef-player.h"
  #include "tilemcache.h"
@@ -3150,7 +3151,8 @@ void tag_read_level_tiles(reader &th, int minorVersion)
 
 #ifdef USE_TILE
  #if TAG_MAJOR_VERSION == 31
-    if (minorVersion < TAG_MINOR_DNGN_TILECOUNT
+    if (Options.tile_force_regenerate_levels
+        || minorVersion < TAG_MINOR_DNGN_TILECOUNT
         || minorVersion < TAG_MINOR_TILE_NAMES
            && unmarshallInt(th) != TILE_WALL_MAX)
     {

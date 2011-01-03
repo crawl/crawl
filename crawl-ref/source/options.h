@@ -373,6 +373,7 @@ public:
     bool        tile_show_minimagicbar;
     bool        tile_show_demon_tier;
     bool        tile_allow_detached_montab;
+    bool        tile_force_regenerate_levels;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;
