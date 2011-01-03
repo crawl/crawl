@@ -265,7 +265,7 @@ static void tag_construct_level_tiles(writer &th);
 static void tag_read_level(reader &th, int minorVersion);
 static void tag_read_level_items(reader &th, int minorVersion);
 static void tag_read_level_monsters(reader &th, int minorVersion);
-static void tag_read_level_tiles(reader &th);
+static void tag_read_level_tiles(reader &th, int minorVersion);
 static void tag_missing_level_tiles();
 
 static void tag_construct_ghost(writer &th);
@@ -951,9 +951,11 @@ void tag_read(reader &inf, int minorVersion, tag_type tag_id)
         tag_read_level(th, minorVersion);
         tag_read_level_items(th, minorVersion);
         tag_read_level_monsters(th, minorVersion);
-        tag_read_level_tiles(th);
+        tag_read_level_tiles(th, minorVersion);
         break;
-    case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
+    case TAG_GHOST:
+        tag_read_ghost(th, minorVersion);
+        break;
     default:
         // I don't know how to read that!
         ASSERT(!"unknown tag type");
@@ -3134,7 +3136,7 @@ static void _debug_count_tiles()
 #endif
 }
 
-void tag_read_level_tiles(reader &th)
+void tag_read_level_tiles(reader &th, int minorVersion)
 {
     if (!unmarshallBoolean(th))
     {
@@ -3148,8 +3150,8 @@ void tag_read_level_tiles(reader &th)
 
 #ifdef USE_TILE
  #if TAG_MAJOR_VERSION == 31
-    if (th.getMinorVersion() < TAG_MINOR_DNGN_TILECOUNT
-        || th.getMinorVersion() < TAG_MINOR_TILE_NAMES
+    if (minorVersion < TAG_MINOR_DNGN_TILECOUNT
+        || minorVersion < TAG_MINOR_TILE_NAMES
            && unmarshallInt(th) != TILE_WALL_MAX)
     {
         dprf("DNGN tilecount has changed -- recreating tile data.");
@@ -3206,7 +3208,7 @@ void tag_read_level_tiles(reader &th)
         }
 
  #if TAG_MAJOR_VERSION == 31
-    if (th.getMinorVersion() >= TAG_MINOR_TILE_NAMES)
+    if (minorVersion >= TAG_MINOR_TILE_NAMES)
     {
  #endif
         unsigned int num_tilenames = unmarshallShort(th);
@@ -3218,7 +3220,7 @@ void tag_read_level_tiles(reader &th)
 
     // flavour
  #if TAG_MAJOR_VERSION == 31
-    if (th.getMinorVersion() >= TAG_MINOR_TILE_NAMES)
+    if (minorVersion >= TAG_MINOR_TILE_NAMES)
     {
  #endif
     env.tile_default.wall_idx  = unmarshallShort(th);
@@ -3234,7 +3236,7 @@ void tag_read_level_tiles(reader &th)
         for (int y = 0; y < gy; y++)
         {
  #if TAG_MAJOR_VERSION == 31
-            if (th.getMinorVersion() < TAG_MINOR_TILE_NAMES)
+            if (minorVersion < TAG_MINOR_TILE_NAMES)
             {
                 env.tile_flv[x][y].wall    = unmarshallShort(th);
                 env.tile_flv[x][y].floor   = unmarshallShort(th);
@@ -3261,7 +3263,7 @@ void tag_read_level_tiles(reader &th)
     mcache.read(th);
 
  #if TAG_MAJOR_VERSION == 31
-    if (th.getMinorVersion() >= TAG_MINOR_TILE_NAMES
+    if (minorVersion >= TAG_MINOR_TILE_NAMES
         && unmarshallInt(th) != TILE_WALL_MAX)
  #else
     if (unmarshallInt(th) != TILE_WALL_MAX)
