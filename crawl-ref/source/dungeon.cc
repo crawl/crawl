@@ -3660,45 +3660,43 @@ static void _build_rooms(int nrooms)
 
     // Where did this magic number come from?
     const int maxrooms = 30;
-    dgn_region rom[maxrooms];
+
+    dgn_region room;
+    coord_def connect_target;
 
     for (int i = 0; i < nrooms; i++)
     {
-        dgn_region &myroom = rom[which_room];
-
         int overlap_tries = 200;
         do
         {
-            myroom.size.set(3 + random2(8), 3 + random2(8));
-            myroom.pos.set(
+            room.size.set(3 + random2(8), 3 + random2(8));
+            room.pos.set(
                 random_range(MAPGEN_BORDER,
-                             GXM - MAPGEN_BORDER - 1 - myroom.size.x),
+                             GXM - MAPGEN_BORDER - 1 - room.size.x),
                 random_range(MAPGEN_BORDER,
-                             GYM - MAPGEN_BORDER - 1 - myroom.size.y));
+                             GYM - MAPGEN_BORDER - 1 - room.size.y));
         }
-        while (_find_forbidden_in_area(myroom, MMT_VAULT)
+        while (_find_forbidden_in_area(room, MMT_VAULT)
                && overlap_tries-- > 0);
 
         if (overlap_tries < 0)
             continue;
 
-        const coord_def end = myroom.end();
+        const coord_def end = room.end();
 
         if (i > 0 && exclusive
-         && _count_antifeature_in_box(myroom.pos.x - 1, myroom.pos.y - 1,
+         && _count_antifeature_in_box(room.pos.x - 1, room.pos.y - 1,
                                       end.x, end.y, DNGN_ROCK_WALL))
         {
             continue;
         }
 
-        dgn_replace_area(myroom.pos, end, DNGN_ROCK_WALL, DNGN_FLOOR);
+        dgn_replace_area(room.pos, end, DNGN_ROCK_WALL, DNGN_FLOOR);
 
-        if (which_room > 0)
-        {
-            _join_the_dots(myroom.random_edge_point(),
-                           rom[which_room - 1].random_edge_point(),
-                           MMT_VAULT);
-        }
+        if (!connect_target.origin())
+            _join_the_dots(room.random_edge_point(), connect_target, MMT_VAULT);
+
+        connect_target = room.random_edge_point();
 
         which_room++;
 
