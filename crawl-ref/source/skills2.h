@@ -163,7 +163,7 @@ private:
 #endif
 };
 
-static const int SK_ARR_LN  = (ndisplayed_skills +1) / 2;
+static const int SK_ARR_LN  = (ndisplayed_skills - 1) / 2;
 static const int SK_ARR_COL =  2;
 
 class SkillMenu : public PrecisionMenu
