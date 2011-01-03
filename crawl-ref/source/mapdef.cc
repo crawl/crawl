@@ -2323,7 +2323,7 @@ void map_def::load()
     file_lock deslock(descache_base + ".lk", "rb", false);
     const std::string loadfile = descache_base + ".dsc";
 
-    reader inf(loadfile);
+    reader inf(loadfile, TAG_MINOR_VERSION);
     if (!inf.valid())
         throw map_load_exception(name);
     inf.advance(cache_offset);

@@ -7,6 +7,7 @@
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
+    TAG_MINOR_INVALID        = -1,
     TAG_MINOR_RESET          = 0, // Minor tags were reset
     TAG_MINOR_DIAG_COUNTERS  = 1, // Counters for diag/ortho moves.
     TAG_MINOR_FISHTAIL       = 2, // Merfolk's tail state.

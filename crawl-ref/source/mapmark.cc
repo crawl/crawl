@@ -961,10 +961,8 @@ void map_markers::write(writer &outf) const
     }
 }
 
-void map_markers::read(reader &inf, int minorVersion)
+void map_markers::read(reader &inf)
 {
-    UNUSED(minorVersion);
-
     clear();
 
     const int cooky = unmarshallInt(inf);
