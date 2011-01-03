@@ -979,6 +979,7 @@ void game_options::reset_options()
     tile_show_demon_tier     = true;
     // Temporary option until the montab crashes are fixed.
     tile_allow_detached_montab = true;
+    tile_force_regenerate_levels = false;
 #endif
 
     // map each colour to itself as default
@@ -3297,6 +3298,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(tile_show_minimagicbar);
     else BOOL_OPTION(tile_show_demon_tier);
     else BOOL_OPTION(tile_allow_detached_montab);
+    else BOOL_OPTION(tile_force_regenerate_levels);
     else if (key == "tile_tag_pref")
     {
         tile_tag_pref = _str_to_tag_pref(field.c_str());
