@@ -3300,7 +3300,10 @@ void tag_read_level_tiles(reader &th)
 #ifdef USE_TILE
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
 {
-    ASSERT(idx > 0 && idx <= env.tile_names.size());
+#ifdef DEBUG_TILE_NAMES
+    mprf("Index out of bounds: idx = %d, size(tile_names) = %d",
+         idx, env.tile_names.size());
+#endif
     if (idx <= 0 || idx > env.tile_names.size())
         return 0;
 
