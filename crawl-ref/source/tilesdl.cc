@@ -966,7 +966,10 @@ bool TilesFramework::layout_statcol(bool show_gold_turns)
     m_statcol_bottom = m_region_tab->sy - tab_margin;
 
     // Integer divison rounded up
-    int lines = (you.spell_no - 1) / m_region_tab->mx + 1;
+    int lines = (n_common_commands - 1) / m_region_tab->mx + 1;
+    place_tab(TAB_COMMAND, lines, lines);
+
+    lines = (you.spell_no - 1) / m_region_tab->mx + 1;
     if (you.spell_no > 0)
         place_tab(TAB_SPELL, lines, lines);
     else
