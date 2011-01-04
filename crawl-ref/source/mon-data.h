@@ -1781,6 +1781,18 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_LABORATORY_RAT, 'r', BLACK, "laboratory rat",
+    M_WARM_BLOOD | M_SPELLCASTER,
+    MR_NO_FLAGS,
+    300, 10, MONS_RAT, MONS_LABORATORY_RAT, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 4, 3, 5, 0 },
+    5, 5, MST_NO_SPELLS, CE_POISON_CONTAM, Z_SMALL, S_ROAR,
+    I_ANIMAL, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
+},
+
+{
     MONS_PORCUPINE, 'r', BLUE, "porcupine",
     M_WARM_BLOOD,
     MR_NO_FLAGS,

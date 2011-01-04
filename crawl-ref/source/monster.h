@@ -210,6 +210,7 @@ public:
     void ghost_init();
     void pandemon_init();
     void dancing_weapon_init();
+    void labrat_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();

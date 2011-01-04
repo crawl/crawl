@@ -1280,7 +1280,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return (false);
     else if (mons_is_confused(mons, false))
         return (false);
-    else if (mons->type == MONS_PANDEMONIUM_DEMON
+    else if (mons_is_ghost_demon(mons->type)
              && !mons->ghost->spellcaster)
     {
         return (false);

@@ -1968,6 +1968,13 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->set_ghost(ghost, false);
         mon->uglything_init();
     }
+    else if (mon->type == MONS_LABORATORY_RAT)
+    {
+        ghost_demon ghost;
+        ghost.init_labrat(mg.colour);
+        mon->set_ghost(ghost, false);
+        mon->labrat_init();
+    }
     else if (mon->type == MONS_DANCING_WEAPON)
     {
         ghost_demon ghost;
