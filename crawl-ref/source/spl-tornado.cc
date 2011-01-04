@@ -148,7 +148,7 @@ bool cast_tornado(int powc)
 
 void tornado_damage(actor *caster, int dur)
 {
-    if (dur <= 0)
+    if (!dur)
         return;
 
     int pow;
@@ -157,7 +157,8 @@ void tornado_damage(actor *caster, int dur)
         pow = calc_spell_power(SPELL_TORNADO, true);
     else
         pow = caster->as_monster()->hit_dice * 4;
-    pow = div_rand_round(pow * dur, 10);
+    if (dur > 0)
+        pow = div_rand_round(pow * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
     WindSystem winds(org);
@@ -185,7 +186,7 @@ void tornado_damage(actor *caster, int dur)
         std::vector<coord_def> clouds;
         for (; dam_i && dam_i.radius() == r; dam_i++)
         {
-            if (grd(*dam_i) == DNGN_TREE && one_chance_in(20))
+            if (grd(*dam_i) == DNGN_TREE && dur > 0 && one_chance_in(20))
             {
                 grd(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
@@ -231,6 +232,8 @@ void tornado_damage(actor *caster, int dur)
                             float_player(false);
                     }
                     int dmg = roll_dice(6, pow) / 8;
+                    if (dur < 0)
+                        dmg = 0;
                     dprf("damage done: %d", dmg);
                     if (victim->atype() == ACT_PLAYER)
                         ouch(dmg, caster->mindex(), KILLED_BY_BEAM,

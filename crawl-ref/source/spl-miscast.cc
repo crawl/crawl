@@ -2603,6 +2603,25 @@ void MiscastEffect::_air(int severity)
             break;
         }
     case 3:         // even less harmless stuff
+        switch (random2(3))
+        {
+        case 0:
+            if (_create_monster(MONS_BALL_LIGHTNING, 3))
+                all_msg = "A ball of electricity appears!";
+            do_msg();
+            break;
+        case 1:
+            you_msg        = "The air twists around and strikes you!";
+            mon_msg_seen   = "@The_monster@ is struck by twisting air!";
+            mon_msg_unseen = "The air madly twists around a spot.";
+            _ouch(12 + random2avg(29, 2), BEAM_AIR);
+            break;
+        case 2:
+            if (_create_monster(MONS_TWISTER, 1))
+                all_msg = "A huge vortex of air appears!";
+            do_msg();
+            break;
+        }
         break;
     }
 }

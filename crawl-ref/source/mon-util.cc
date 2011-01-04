@@ -1432,8 +1432,11 @@ bool mons_flattens_trees(const monster* mon)
 int mons_class_res_wind(int mc)
 {
     // Lightning goes well with storms.
-    if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING)
+    if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING
+        || mc == MONS_TWISTER)
+    {
         return 1;
+    }
 
     // Flyers are not immune due to buffeting -- and for airstrike, even
     // specially vulnerable.
