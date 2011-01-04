@@ -195,10 +195,9 @@ protected:
     MonsterRegion   *m_region_mon;
     SkillRegion     *m_region_skl;
     CommandRegion   *m_region_cmd;
-    TabbedRegion    *m_region_tab_spl;
-    TabbedRegion    *m_region_tab_mon;
 
-    int             m_dynamic_regions;
+    std::map<int, TabbedRegion*> m_tabs;
+    std::map<int, TabbedRegion*>::iterator m_tabs_it;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
@@ -217,7 +216,12 @@ protected:
     int m_tip_font;
     int m_lbl_font;
 
-    bool layout_statcol(bool message_overlay, bool show_gold_turns);
+    int m_inv_col;
+    int m_statcol_top;
+    int m_statcol_bottom;
+
+    bool layout_statcol(bool show_gold_turns);
+    void place_tab(int idx, int min_ln, int max_ln);
 
     ImageManager *m_image;
 
