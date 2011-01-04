@@ -385,8 +385,18 @@ GCC_VER := 4.2
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
 endif
 
-CC = $(GCC) -arch $(ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-CXX = $(GXX) -arch $(ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+ifdef BUILD_UNIVERSAL
+# [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
+CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
+CFLAGS_DEPCC_ARCH := -arch i386
+else
+CFLAGS_ARCH := -arch $(ARCH)
+endif
+
+CC = $(GCC) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+CXX = $(GXX) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 
 ifdef USE_ICC
 CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
@@ -871,6 +881,7 @@ ifneq (,$(SRC_VERSION_SHORT))
     SRC_VERSION := $(SRC_VERSION_SHORT)
   endif
 endif
+export SRC_VERSION_SHORT
 
 PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
 SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
@@ -1063,6 +1074,7 @@ clean: clean-rltiles
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
 	    build.h compflag.h .contrib-libs .cflags
 	$(RM) -r build-win
+	$(RM) -r build
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
@@ -1070,6 +1082,7 @@ clean-contrib:
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
 	$(RM) scores $(GAME) core $(DEPENDENCY_MKF)
+	$(RM) -r mac-app-zips
 
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
@@ -1077,10 +1090,6 @@ $(GAME): $(GAME_DEPENDS)
 debug: all
 profile: all
 wizard: all
-
-# [ds] Note we don't use the standard CFLAGS here; that's intentional, most
-# flex/bison combos I've tried don't produce code that passes the warnings
-# test.
 
 $(UTIL)%.o: $(UTIL)%.cc .cflags
 ifdef NO_INLINE_DEPGEN
@@ -1103,7 +1112,7 @@ $(OBJECTS): $(OBJECTS:%.o=%.d) $(YACC_OBJECTS:%.o=%.d)
 endif
 
 %.d: %.cc .cflags $(GENERATED_FILES)
-	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 
 %.o: %.m .cflags $(GENERATED_FILES)
 ifdef NO_INLINE_DEPGEN
@@ -1229,3 +1238,13 @@ endif
 	+$(MAKE) TILES=  DESTDIR=build-win SAVEDIR='~/crawl' install
 	mv build-win/crawl.exe build-win/crawl-console.exe
 	echo $(SRC_VERSION_SHORT) >build-win/version.txt
+
+#############################################################################
+# Building Mac app bundles
+#
+
+mac-app-tiles: all
+	+$(MAKE) -j1 -C mac -f Makefile.app-bundle tiles
+
+mac-app-console: all
+	+$(MAKE) -j1 -C mac -f Makefile.app-bundle
