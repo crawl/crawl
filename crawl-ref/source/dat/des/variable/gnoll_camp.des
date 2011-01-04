@@ -84,7 +84,7 @@ MONS:   gnoll
 MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3
 : gnoll_sergeant(_G)
 : gnoll_shaman(_G)
-MONS:   jackal w:20 / hound / war dog w:1
+MONS:   jackal w:20 / hound / war dog w:1 / nothing w:5
 MAP
 ...............
 ...ccccccccc...
@@ -233,7 +233,7 @@ ENDMAP
 
 NAME:  gnoll_camp_mini_loothouse
 TAGS:  serial_gnoll_camp patrolling
-MONS:  gnoll, hound / war dog
+MONS:  gnoll, hound / war dog w:2
 MAP
 ............
 ...ccc......
@@ -249,25 +249,25 @@ ENDMAP
 NAME:   gnoll_camp_mini_secret_sergeant
 TAGS:   serial_gnoll_camp patrolling
 WEIGHT: 5
-MONS:   gnoll
+MONS:   gnoll / nothing w:2
 : gnoll_sergeant(_G)
 MAP
-....................
-...cccccccccc.......
-..xxxxxxxxxxxx...x..
-.cx...x........1.xc.
-.cx.>.x...1.1....xc.
-.cx...x.1.....1..xc.
-.cx.2.=..........xc.
-..=xxxxxxxxxxxxxxx..
-...cccccccccccccc...
-....................
+...............
+...ccccc.......
+..xxxxxxx...x..
+.cx...x...1.xc.
+.cx.>.x..11.xc.
+.cx...x.1...xc.
+.cx.2.=.....xc.
+..=xxxxxxxxxx..
+...ccccccccc...
+...............
 ENDMAP
 
 # Are they guarding or looting? Or just shopping?
 NAME:  gnoll_camp_mini_shop
 TAGS:  serial_gnoll_camp patrolling allow_dup
-MONS:  gnoll
+MONS:  gnoll / nothing w:2
 KFEAT: S = any shop
 MAP
 ........
@@ -287,7 +287,7 @@ SHUFFLE: 23
 MONS:    gnoll
 : gnoll_sergeant(_G)
 : gnoll_shaman(_G)
-MONS:    war dog
+MONS:    hound / war dog w:2
 MAP
 ...........
 ...1..1....
