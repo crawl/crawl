@@ -39,6 +39,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-damage.h"
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
@@ -1370,6 +1371,18 @@ void mons_add_blame(monster* mon, const std::string &blame_string)
     blame.get_vector().push_back(blame_string);
 }
 
+static void _place_twister_clouds(monster *mon)
+{
+    // Yay for the abj_degree having a huge granularity.
+    if (mon->has_ench(ENCH_ABJ))
+    {
+        mon_enchant abj = mon->get_ench(ENCH_ABJ);
+        mon->lose_ench_duration(abj, abj.duration / 2);
+    }
+
+    tornado_damage(mon, -10);
+}
+
 static int _place_monster_aux(const mgen_data &mg,
                               bool first_band_member, bool force_pos)
 {
@@ -1614,6 +1627,9 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         mon->add_ench(ENCH_EXPLODING);
     }
+
+    if (mg.cls == MONS_TWISTER)
+        mon->add_ench(ENCH_PERM_TORNADO);
 
     if (mons_is_feat_mimic(mg.cls))
     {
@@ -1991,6 +2007,11 @@ static int _place_monster_aux(const mgen_data &mg,
         //        success before printing messages.
         handle_seen_interrupt(mon);
     }
+
+    // Area effects can produce additional messages, and thus need to be
+    // done after come in view ones.
+    if (mon->type == MONS_TWISTER)
+        _place_twister_clouds(mon);
 
     return (mon->mindex());
 }

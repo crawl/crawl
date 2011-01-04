@@ -2206,7 +2206,7 @@ enum monster_type                      // (int) menv[].type
 
     MONS_PLAYER_ILLUSION,
     MONS_HELL_DEMON,
-      MONS_UNUSED_409,
+    MONS_TWISTER,        // air miscasts
       MONS_UNUSED_410,
       MONS_UNUSED_411,
       MONS_UNUSED_412,

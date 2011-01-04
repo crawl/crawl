@@ -1659,7 +1659,8 @@ int monster_die(monster* mons, killer_type killer,
             _spore_goes_pop(mons, killer, killer_index, pet_kill, wizard);
     }
     else if (mons->type == MONS_FIRE_VORTEX
-             || mons->type == MONS_SPATIAL_VORTEX)
+             || mons->type == MONS_SPATIAL_VORTEX
+             || mons->type == MONS_TWISTER)
     {
         if (!silent && !mons_reset)
         {
