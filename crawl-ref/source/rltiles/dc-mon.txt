@@ -767,6 +767,8 @@ blessed_toe MONS_BLESSED_TOE /*'*'*/
 ## Dwarves ('q')
 %sdir dc-mon
 dwarf MONS_DWARF
+deep_dwarf_berserker MONS_DEEP_DWARF_BERSERKER
+deep_dwarf_necromancer MONS_DEEP_DWARF_NECROMANCER
 # an entry vault
 gnome MONS_GNOME
 

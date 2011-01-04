@@ -1694,6 +1694,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // dwarves ('q')
     case MONS_DWARF:
         return TILEP_MONS_DWARF;
+    case MONS_DEEP_DWARF_BERSERKER:
+        return TILEP_MONS_DEEP_DWARF_BERSERKER;
+    case MONS_DEEP_DWARF_NECROMANCER:
+        return TILEP_MONS_DEEP_DWARF_NECROMANCER;
     case MONS_GNOME:
         return TILEP_MONS_GNOME;
 
