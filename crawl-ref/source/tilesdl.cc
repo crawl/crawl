@@ -993,7 +993,7 @@ bool TilesFramework::layout_statcol(bool show_gold_turns)
 
     lines = (you.spell_no - 1) / m_region_tab->mx + 1;
     if (you.spell_no > 0)
-        place_tab(TAB_SPELL, lines, lines);
+        place_tab(TAB_SPELL, 1, lines);
     else
         m_region_tab->enable_tab(TAB_SPELL);
 
