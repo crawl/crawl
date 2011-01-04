@@ -176,11 +176,12 @@ apis MONS_APIS
 %sdir dc-mon/nonliving
 earth_elemental MONS_EARTH_ELEMENTAL /*'#'*/
 fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
-water_elemental MONS_WATER_ELEMENTAL /*'{'*/
-air_elemental MONS_AIR_ELEMENTAL /*'v'*/
+water_elemental MONS_WATER_ELEMENTAL /*'#'*/
+#air_elemental MONS_AIR_ELEMENTAL /*'#'*/
 iron_elemental MONS_IRON_ELEMENTAL
 fire_vortex MONS_FIRE_VORTEX /*'v'*/
 spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
+twister MONS_TWISTER /*'v'*/
 %rim 0
 vapour MONS_VAPOUR /*'#'*/
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
