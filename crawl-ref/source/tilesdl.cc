@@ -334,7 +334,6 @@ bool TilesFramework::initialise()
 
     m_init = TileRegionInit(m_image, m_fonts[m_lbl_font].font, TILE_X, TILE_Y);
     m_region_tile = new DungeonRegion(m_init);
-    m_region_map  = new MapRegion(Options.tile_map_pixels);
     m_region_tab  = new TabbedRegion(m_init);
     m_region_inv  = new InventoryRegion(m_init);
     m_region_spl  = new SpellRegion(m_init);
@@ -357,7 +356,6 @@ bool TilesFramework::initialise()
 
     m_region_menu = new MenuRegion(m_image, m_fonts[m_crt_font].font);
 
-    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_msg);
@@ -418,7 +416,8 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     coord_def win_start(gc.x - ox, gc.y - oy);
     coord_def win_end(gc.x + ox + 1, gc.y + oy + 1);
 
-    m_region_map->set_window(win_start, win_end);
+    if (m_region_map)
+        m_region_map->set_window(win_start, win_end);
 }
 
 void TilesFramework::load_dungeon(const coord_def &cen)
@@ -761,7 +760,7 @@ void TilesFramework::do_layout()
     // between dungeon view on the left and status area on the right.
     // message_y_divider is the horizontal line between dungeon view on
     // the top and message window at the bottom.
-    int stat_x_divider = 0;
+    m_stat_x_divider = 0;
     int message_y_divider = 0;
 
     bool message_overlay = Options.tile_force_overlay ? true : false;
@@ -782,7 +781,7 @@ void TilesFramework::do_layout()
         available_width_in_tiles = ENV_SHOW_DIAMETER;
     }
 
-    stat_x_divider = available_width_in_tiles * m_region_tile->dx;
+    m_stat_x_divider = available_width_in_tiles * m_region_tile->dx;
 
     // Calculate message_y_divider. First off, if we have already decided to
     // use the overlay, we can place the divider to the bottom of the screen.
@@ -833,7 +832,7 @@ void TilesFramework::do_layout()
     }
 
     // Resize and place the dungeon region.
-    m_region_tile->resize_to_fit(stat_x_divider, message_y_divider);
+    m_region_tile->resize_to_fit(m_stat_x_divider, message_y_divider);
     m_region_tile->place(0, 0, 0);
 
     crawl_view.viewsz.x = m_region_tile->mx;
@@ -844,13 +843,13 @@ void TilesFramework::do_layout()
     {
        m_region_msg->place(0, 0, 0); // TODO: Maybe add an option to place
                                      // overlay at the bottom.
-       m_region_msg->resize_to_fit(stat_x_divider, Options.msg_min_height
+       m_region_msg->resize_to_fit(m_stat_x_divider, Options.msg_min_height
                                    * m_region_msg->dy);
        m_region_msg->set_overlay(message_overlay);
     }
     else
     {
-        m_region_msg->resize_to_fit(stat_x_divider, m_windowsz.y
+        m_region_msg->resize_to_fit(m_stat_x_divider, m_windowsz.y
                                     - message_y_divider);
         m_region_msg->place(0, m_region_tile->ey, 0);
     }
@@ -858,26 +857,12 @@ void TilesFramework::do_layout()
     crawl_view.msgsz.x = m_region_msg->mx;
     crawl_view.msgsz.y = m_region_msg->my;
 
-    m_region_stat->resize_to_fit(m_windowsz.x - stat_x_divider, m_windowsz.y);
-    m_region_stat->place(stat_x_divider + map_stat_margin, 0, 0);
+    m_region_stat->resize_to_fit(m_windowsz.x - m_stat_x_divider, m_windowsz.y);
+    m_region_stat->place(m_stat_x_divider + map_stat_margin, 0, 0);
 
     m_inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
     if (message_overlay)
         m_inv_col = m_region_stat->sx;
-
-    // Fit the minimap into place.
-    m_region_map->dx = m_region_map->dy = Options.tile_map_pixels;
-
-    if (GXM * m_region_map->dx > m_windowsz.x - stat_x_divider)
-    {
-        m_region_map->dx = (m_windowsz.x - stat_x_divider - map_margin * 2)
-                            / GXM;
-        m_region_map->dy = m_region_map->dx;
-    }
-
-    m_region_map->resize(GXM, GYM);
-    m_region_map->place(stat_x_divider + map_stat_margin,
-                        m_region_stat->ey, map_margin);
 
     // If show_gold_turns isn't turned on, try turning it on if there's room.
     if (!Options.show_gold_turns)
@@ -898,10 +883,41 @@ void TilesFramework::do_layout()
 
     crawl_view.init_view();
 }
+void TilesFramework::place_minimap()
+{
+    m_region_map  = new MapRegion(Options.tile_map_pixels);
+    // Fit the minimap into place.
+    m_region_map->dx = m_region_map->dy = Options.tile_map_pixels;
+
+    if (GXM * m_region_map->dx > m_windowsz.x - m_stat_x_divider)
+    {
+        m_region_map->dx = (m_windowsz.x - m_stat_x_divider - map_margin * 2)
+                            / GXM;
+        m_region_map->dy = m_region_map->dx;
+    }
+
+    m_region_map->resize(GXM, GYM);
+    if (m_region_map->dy * GYM > m_statcol_bottom - m_statcol_top)
+    {
+        delete m_region_map;
+        m_region_map = NULL;
+        return;
+    }
+
+    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
+    m_region_map->place(m_stat_x_divider + map_stat_margin,
+                        m_region_stat->ey, map_margin);
+    m_region_map->place(m_region_stat->sx, m_region_stat->ey,
+                        m_region_stat->ex, m_region_stat->ey + m_region_map->wy,
+                        map_margin);
+
+    tile_new_level(false, false);
+    m_statcol_top = m_region_map->ey + map_margin;
+}
 
 void TilesFramework::place_tab(int idx, int min_ln, int max_ln)
 {
-    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top)
+    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top - tab_margin)
                                  / m_region_tab->dy);
     if (lines >= min_ln)
     {
@@ -925,10 +941,10 @@ void TilesFramework::place_tab(int idx, int min_ln, int max_ln)
         region_tab->activate_tab(0);
         m_region_tab->disable_tab(idx);
         m_layers[LAYER_NORMAL].m_regions.push_back(region_tab);
-        region_tab->place(m_inv_col,
-                          m_statcol_bottom - lines * m_region_tab->dy);
+        region_tab->place(m_inv_col, m_statcol_bottom
+                                     - lines * m_region_tab->dy - tab_margin);
         region_tab->resize(m_region_tab->mx, lines);
-        m_statcol_bottom = region_tab->sy - tab_margin;
+        m_statcol_bottom = region_tab->sy;
     }
     else
         m_region_tab->enable_tab(idx);
@@ -943,17 +959,24 @@ bool TilesFramework::layout_statcol(bool show_gold_turns)
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
 
+    if (m_region_map)
+    {
+        delete m_region_map;
+        m_region_map = NULL;
+        m_layers[LAYER_NORMAL].m_regions.pop_back();
+    }
+
     // Assumes that the region_stat has already been placed.
     int hud_height = 12 + (show_gold_turns ? 1 : 0);
     m_region_stat->resize(m_region_stat->mx, hud_height);
     crawl_view.hudsz.y = hud_height;
-    m_region_map->place(m_region_stat->sx, m_region_stat->ey,
-                        m_region_stat->ex, m_region_stat->ey + m_region_map->wy,
-                        map_margin);
 
-    tile_new_level(false, false);
+    m_statcol_top = m_region_stat->ey;
+    m_statcol_bottom = m_windowsz.y;
 
-    m_region_tab->place(m_inv_col, m_region_map->ey);
+    place_minimap();
+
+    m_region_tab->place(m_inv_col, m_statcol_top);
     m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
                                 m_windowsz.y - m_region_tab->sy);
     m_region_tab->resize(std::min(13, (int)m_region_tab->mx),
@@ -962,8 +985,7 @@ bool TilesFramework::layout_statcol(bool show_gold_turns)
     int self_inv_y = m_windowsz.y - m_region_tab->wy;
     m_region_tab->place(m_inv_col, self_inv_y);
 
-    m_statcol_top = m_region_map->ey;
-    m_statcol_bottom = m_region_tab->sy - tab_margin;
+    m_statcol_bottom = m_region_tab->sy;
 
     // Integer divison rounded up
     int lines = (n_common_commands - 1) / m_region_tab->mx + 1;
@@ -1140,7 +1162,7 @@ static map_feature get_cell_map_feature(const map_cell& cell)
 
 void TilesFramework::update_minimap(const coord_def& gc)
 {
-    if (!player_in_mappable_area())
+    if (!player_in_mappable_area() || !m_region_map)
         return;
 
     map_feature mf;
@@ -1164,12 +1186,14 @@ void TilesFramework::update_minimap(const coord_def& gc)
 
 void TilesFramework::clear_minimap()
 {
-    m_region_map->clear();
+    if (m_region_map)
+        m_region_map->clear();
 }
 
 void TilesFramework::update_minimap_bounds()
 {
-    m_region_map->update_bounds();
+    if (m_region_map)
+        m_region_map->update_bounds();
 }
 
 void TilesFramework::update_inventory()

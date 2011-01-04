@@ -217,11 +217,13 @@ protected:
     int m_lbl_font;
 
     int m_inv_col;
+    int m_stat_x_divider;
     int m_statcol_top;
     int m_statcol_bottom;
 
     bool layout_statcol(bool show_gold_turns);
     void place_tab(int idx, int min_ln, int max_ln);
+    void place_minimap();
 
     ImageManager *m_image;
 
