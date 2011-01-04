@@ -40,7 +40,7 @@ struct packed_cell
                                         is_sanctuary(c->is_sanctuary),
                                         swamp_tree_water(c->swamp_tree_water) {}
 
-    void clear ();
+    void clear();
 };
 
 // For a given location, pack any waves/ink/wall shadow tiles
