@@ -28,6 +28,7 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
+#include "ghost.h"
 #include "initfile.h"
 #include "invent.h"
 #include "items.h"
@@ -4139,6 +4140,19 @@ mons_spec mons_list::mons_by_name(std::string name) const
         if (colour)
         {
             mons_spec spec = mons_by_name(name.substr(wordend + 1));
+            spec.colour = colour;
+            return (spec);
+        }
+    }
+    if (name.find(" laboratory rat") != std::string::npos)
+    {
+        const std::string::size_type wordend = name.find(' ');
+        const std::string first_word = name.substr(0, wordend);
+
+        const int colour = colour_for_labrat_adjective(first_word);
+        if (colour != BLACK)
+        {
+            mons_spec spec = mons_by_name(name.substr(wordend+1));
             spec.colour = colour;
             return (spec);
         }

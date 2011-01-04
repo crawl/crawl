@@ -569,6 +569,10 @@ std::string monster_info::_core_name() const
             s = ugly_thing_colour_name(colour) + " " + s;
             break;
 
+        case MONS_LABORATORY_RAT:
+            s = adjective_for_labrat_colour(colour) + " " + s;
+            break;
+
         case MONS_DRACONIAN_CALLER:
         case MONS_DRACONIAN_MONK:
         case MONS_DRACONIAN_ZEALOT:
@@ -913,7 +917,8 @@ void monster_info::to_string(int count, std::string& desc,
             out << pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
         }
         else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-                || type == MONS_DANCING_WEAPON || !mname.empty() || !fullname)
+                || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
+                || !mname.empty() || !fullname)
         {
             out << pluralise(mons_type_name(type, DESC_PLAIN));
         }

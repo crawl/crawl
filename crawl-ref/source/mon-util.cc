@@ -994,7 +994,8 @@ bool mons_is_ghost_demon(int mc)
             || mc == MONS_PLAYER_GHOST
             || mc == MONS_PLAYER_ILLUSION
             || mc == MONS_DANCING_WEAPON
-            || mc == MONS_PANDEMONIUM_DEMON);
+            || mc == MONS_PANDEMONIUM_DEMON
+            || mc == MONS_LABORATORY_RAT);
 }
 
 bool mons_is_pghost(int mc)
@@ -2065,6 +2066,14 @@ void define_monster(monster* mons)
         mons->set_ghost(ghost, false);
         mons->uglything_init();
         break;
+    }
+
+    case MONS_LABORATORY_RAT:
+    {
+        ghost_demon ghost;
+        ghost.init_labrat();
+        mons->set_ghost(ghost, false);
+        mons->labrat_init();
     }
     default:
         break;

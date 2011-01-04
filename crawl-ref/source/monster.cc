@@ -3720,6 +3720,20 @@ void monster::dancing_weapon_init()
     colour          = ghost->colour;
 }
 
+void monster::labrat_init ()
+{
+    hit_dice        = ghost->xl;
+    max_hit_points  = ghost->max_hp;
+    hit_points      = max_hit_points;
+    ac              = ghost->ac;
+    ev              = ghost->ev;
+    speed           = ghost->speed;
+    speed_increment = 70;
+    colour          = ghost->colour;
+
+    load_spells(MST_GHOST);
+}
+
 void monster::uglything_mutate(uint8_t force_colour)
 {
     ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true, force_colour);

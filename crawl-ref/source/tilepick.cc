@@ -955,6 +955,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ORANGE_RAT;
     case MONS_PORCUPINE:
         return TILEP_MONS_PORCUPINE;
+    case MONS_LABORATORY_RAT:
+        return _mon_clamp(TILEP_MONS_LABORATORY_RAT, offset_for_labrat_colour(colour));
 
     // spiders and insects ('s')
     case MONS_GIANT_MITE:
@@ -3186,6 +3188,15 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_ORANGE_RAT;
     case MONS_PORCUPINE:
         return TILE_CORPSE_PORCUPINE;
+    case MONS_LABORATORY_RAT:
+    {
+        int colour_offset = tile_offset_for_labrat_colour(item.colour);
+
+        if (colour_offset == -1)
+            colour_offset = 0;
+
+        return (TILE_CORPSE_LABORATORY_RAT + colour_offset);
+    }
 
     // spiders and insects ('s')
     case MONS_GIANT_MITE:
