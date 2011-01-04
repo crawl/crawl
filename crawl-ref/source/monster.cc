@@ -3335,6 +3335,8 @@ int monster::res_torment() const
 
 int monster::res_wind() const
 {
+    if (has_ench(ENCH_PERM_TORNADO))
+        return 1;
     return mons_class_res_wind(type);
 }
 
