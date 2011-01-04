@@ -22,7 +22,7 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 
-void packed_cell::clear ()
+void packed_cell::clear()
 {
     num_dngn_overlay = 0;
     fg = 0;
