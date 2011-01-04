@@ -81,9 +81,6 @@ TilesFramework::TilesFramework() :
     m_fullscreen(false),
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
-    m_region_tab_spl(NULL),
-    m_region_tab_mon(NULL),
-    m_dynamic_regions(0),
     m_buttons_held(0),
     m_key_mod(0),
     m_mouse(-1, -1),
@@ -136,8 +133,6 @@ void TilesFramework::shutdown()
     delete m_region_mon;
     delete m_region_crt;
     delete m_region_menu;
-    delete m_region_tab_spl;
-    delete m_region_tab_mon;
 
     m_region_tile  = NULL;
     m_region_stat  = NULL;
@@ -150,8 +145,12 @@ void TilesFramework::shutdown()
     m_region_mon   = NULL;
     m_region_crt   = NULL;
     m_region_menu  = NULL;
-    m_region_tab_spl   = NULL;
-    m_region_tab_mon   = NULL;
+
+    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
+    {
+        delete (*m_tabs_it).second;
+        m_tabs.erase(m_tabs_it);
+    }
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
         m_layers[i].m_regions.clear();
@@ -862,6 +861,10 @@ void TilesFramework::do_layout()
     m_region_stat->resize_to_fit(m_windowsz.x - stat_x_divider, m_windowsz.y);
     m_region_stat->place(stat_x_divider + map_stat_margin, 0, 0);
 
+    m_inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
+    if (message_overlay)
+        m_inv_col = m_region_stat->sx;
+
     // Fit the minimap into place.
     m_region_map->dx = m_region_map->dy = Options.tile_map_pixels;
 
@@ -879,15 +882,13 @@ void TilesFramework::do_layout()
     // If show_gold_turns isn't turned on, try turning it on if there's room.
     if (!Options.show_gold_turns)
     {
-        if (layout_statcol(message_overlay, true))
+        if (layout_statcol(true))
             Options.show_gold_turns = true;
         else
-            layout_statcol(message_overlay, false);
+            layout_statcol(false);
     }
     else
-    {
-        layout_statcol(message_overlay, true);
-    }
+        layout_statcol(true);
 
     m_region_crt->place(0, 0, 0);
     m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
@@ -898,12 +899,48 @@ void TilesFramework::do_layout()
     crawl_view.init_view();
 }
 
-bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
+void TilesFramework::place_tab(int idx, int min_ln, int max_ln)
 {
-    while (m_dynamic_regions > 0)
+    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top)
+                                 / m_region_tab->dy);
+    if (lines >= min_ln)
     {
+        TabbedRegion* region_tab = new TabbedRegion(m_init);
+        switch (idx)
+        {
+        case TAB_SPELL:
+            region_tab->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
+            break;
+        case TAB_MONSTER:
+            region_tab->set_tab_region(0, m_region_mon, TILEG_TAB_MONSTER);
+            break;
+        case TAB_COMMAND:
+            region_tab->set_tab_region(0, m_region_cmd, TILEG_TAB_COMMAND);
+            break;
+        default:
+            delete region_tab;
+            return;
+        }
+        m_tabs[idx] = region_tab;
+        region_tab->activate_tab(0);
+        m_region_tab->disable_tab(idx);
+        m_layers[LAYER_NORMAL].m_regions.push_back(region_tab);
+        region_tab->place(m_inv_col,
+                          m_statcol_bottom - lines * m_region_tab->dy);
+        region_tab->resize(m_region_tab->mx, lines);
+        m_statcol_bottom = region_tab->sy - tab_margin;
+    }
+    else
+        m_region_tab->enable_tab(idx);
+}
+
+bool TilesFramework::layout_statcol(bool show_gold_turns)
+{
+    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
+    {
+        delete (*m_tabs_it).second;
+        m_tabs.erase(m_tabs_it);
         m_layers[LAYER_NORMAL].m_regions.pop_back();
-        --m_dynamic_regions;
     }
 
     // Assumes that the region_stat has already been placed.
@@ -914,81 +951,30 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
                         m_region_stat->ex, m_region_stat->ey + m_region_map->wy,
                         map_margin);
 
-    int inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
-    if (message_overlay)
-        inv_col = m_region_stat->sx;
-
     tile_new_level(false, false);
 
-    m_region_tab->place(inv_col, m_region_map->ey);
+    m_region_tab->place(m_inv_col, m_region_map->ey);
     m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
                                 m_windowsz.y - m_region_tab->sy);
     m_region_tab->resize(std::min(13, (int)m_region_tab->mx),
                          std::min(6, (int)m_region_tab->my));
 
     int self_inv_y = m_windowsz.y - m_region_tab->wy;
-    m_region_tab->place(inv_col, self_inv_y);
+    m_region_tab->place(m_inv_col, self_inv_y);
+
+    m_statcol_top = m_region_map->ey;
+    m_statcol_bottom = m_region_tab->sy - tab_margin;
 
     // Integer divison rounded up
     int lines = (you.spell_no - 1) / m_region_tab->mx + 1;
-    int delta_y = m_region_tab->dy * lines + tab_margin;
-    int lower_limit = 0;
-
-    if (delta_y < m_region_tab->sy - m_region_map->ey && you.spell_no > 0)
-    {
-        if (m_region_tab_spl == NULL)
-        {
-            m_region_tab_spl  = new TabbedRegion(m_init);
-            m_region_tab_spl->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
-            m_region_tab_spl->enable_tab(0);
-            m_region_tab_spl->activate_tab(0);
-        }
-        m_region_tab->disable_tab(TAB_SPELL);
-        m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab_spl);
-        m_region_tab_spl->place(inv_col, m_region_tab->sy - delta_y);
-        m_region_tab_spl->resize(m_region_tab->mx, lines);
-        ++m_dynamic_regions;
-        lower_limit = m_region_tab_spl->sy;
-    }
+    if (you.spell_no > 0)
+        place_tab(TAB_SPELL, lines, lines);
     else
-    {
-        if (m_region_tab_spl)
-        {
-            delete m_region_tab_spl;
-            m_region_tab_spl = NULL;
-        }
         m_region_tab->enable_tab(TAB_SPELL);
-        lower_limit = m_region_tab->sy;
-    }
 
-    lower_limit -= tab_margin;
-    lines = (lower_limit - m_region_map->ey) / m_region_tab->dy;
-    lines = std::min(lines, 3);
-    if (Options.tile_allow_detached_montab && lines > 0)
-    {
-        if (m_region_tab_mon == NULL)
-        {
-            m_region_tab_mon  = new TabbedRegion(m_init);
-            m_region_tab_mon->set_tab_region(0, m_region_mon, TILEG_TAB_MONSTER);
-            m_region_tab_mon->enable_tab(0);
-            m_region_tab_mon->activate_tab(0);
-        }
-        delta_y = lines * m_region_tab->dy;
-        m_region_tab->disable_tab(TAB_MONSTER);
-        m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab_mon);
-        m_region_tab_mon->place(inv_col, lower_limit - delta_y);
-        m_region_tab_mon->resize(m_region_tab->mx, lines);
-        ++m_dynamic_regions;
-    }
-    else
-    {
-        if (m_region_tab_mon)
-        {
-            delete m_region_tab_mon;
-            m_region_tab_mon = NULL;
-        }
-        m_region_tab->enable_tab(TAB_MONSTER);
-    }
+    if (Options.tile_allow_detached_montab)
+        place_tab(TAB_MONSTER, 1, 3);
+
     int num_items = m_region_tab->mx * (m_region_tab->my - 1);
     return (num_items >= ENDOFPACK);
 }
@@ -1189,10 +1175,8 @@ void TilesFramework::update_inventory()
         return;
 
     m_region_tab->update();
-    if (m_region_tab_spl)
-        m_region_tab_spl->update();
-    if (m_region_tab_mon)
-        m_region_tab_mon->update();
+    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
+        (*m_tabs_it).second->update();
 }
 
 void TilesFramework::toggle_inventory_display()
