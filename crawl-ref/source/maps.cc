@@ -543,27 +543,6 @@ static map_section_type apply_vault_definition(
 ///////////////////////////////////////////////////////////////////////////
 // Map lookups
 
-template <typename I>
-static bool map_has_no_tags(const map_def &map, I begin, I end)
-{
-    for (; begin != end; ++begin)
-        if (map.has_tag(*begin))
-            return (false);
-
-    return (true);
-}
-
-static bool vault_unforbidden(const map_def &map)
-{
-    return (you.uniq_map_names.find(map.name) == you.uniq_map_names.end()
-            && (env.level_uniq_maps.find(map.name) ==
-                env.level_uniq_maps.end())
-            && map_has_no_tags(map, you.uniq_map_tags.begin(),
-                               you.uniq_map_tags.end())
-            && map_has_no_tags(map, env.level_uniq_map_tags.begin(),
-                               env.level_uniq_map_tags.end()));
-}
-
 static bool map_matches_layout_type(const map_def &map)
 {
     if (env.level_layout_types.empty() || !map.has_tag_prefix("layout_"))
@@ -628,7 +607,7 @@ mapref_vector find_maps_for_tag(const std::string tag,
             && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
                 || mapdef.is_usable_in(place))
-            && (!check_used || vault_unforbidden(mapdef)))
+            && (!check_used || !mapdef.map_already_used()))
         {
             maps.push_back(&mapdef);
         }
@@ -736,7 +715,7 @@ bool map_selector::accept(const map_def &mapdef) const
                 && (!mapdef.has_tag("tutorial")
                     || crawl_state.game_is_tutorial())
                 && map_matches_layout_type(mapdef)
-                && vault_unforbidden(mapdef));
+                && !mapdef.map_already_used());
 
     case DEPTH:
     {
@@ -744,7 +723,7 @@ bool map_selector::accept(const map_def &mapdef) const
         return (mapdef.is_minivault() == mini
                 && (!chance.valid() || chance.dummy_chance())
                 && depth_selectable(mapdef)
-                && vault_unforbidden(mapdef));
+                && !mapdef.map_already_used());
     }
 
     case DEPTH_AND_CHANCE:
@@ -754,7 +733,7 @@ bool map_selector::accept(const map_def &mapdef) const
         return (chance.valid()
                 && !chance.dummy_chance()
                 && depth_selectable(mapdef)
-                && vault_unforbidden(mapdef));
+                && !mapdef.map_already_used());
     }
 
     case TAG:
@@ -764,7 +743,7 @@ bool map_selector::accept(const map_def &mapdef) const
                     || mapdef.is_usable_in(place))
                 && _map_matches_species(mapdef)
                 && map_matches_layout_type(mapdef)
-                && vault_unforbidden(mapdef));
+                && !mapdef.map_already_used());
 
     default:
         return (false);

@@ -1065,6 +1065,7 @@ public:
     map_chance chance(const level_id &lid) const;
 
     bool in_map(const coord_def &p) const;
+    bool map_already_used() const;
 
     coord_def size() const { return coord_def(map.width(), map.height()); }
 
@@ -1135,6 +1136,16 @@ public:
     bool has_tag(const std::string &tag) const;
     bool has_tag_prefix(const std::string &tag) const;
     bool has_tag_suffix(const std::string &suffix) const;
+
+    template <typename TagIterator>
+    bool has_any_tag(TagIterator begin, TagIterator end) const
+    {
+        for ( ; begin != end; ++begin)
+            if (has_tag(*begin))
+                return true;
+        return false;
+    }
+
     std::vector<std::string> get_tags() const;
 
     std::vector<std::string> get_shuffle_strings() const;

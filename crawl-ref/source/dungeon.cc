@@ -2589,13 +2589,20 @@ static bool _builder_by_branch(int level_number)
 static void _place_chance_vaults()
 {
     const level_id &lid(level_id::current());
-    const mapref_vector maps = random_chance_maps_in_depth(lid);
+    mapref_vector maps = random_chance_maps_in_depth(lid);
+    // [ds] If there are multiple CHANCE maps that share an luniq_ or
+    // uniq_ tag, only the first such map will be placed. Shuffle the
+    // order of chosen maps so we don't have a first-map bias.
+    std::random_shuffle(maps.begin(), maps.end());
     for (int i = 0, size = maps.size(); i < size; ++i)
     {
         const map_def *map = maps[i];
-        dprf("Placing CHANCE vault: %s (%s)",
-             map->name.c_str(), map->chance(lid).describe().c_str());
-        _build_secondary_vault(you.absdepth0, map);
+        if (!map->map_already_used())
+        {
+            dprf("Placing CHANCE vault: %s (%s)",
+                 map->name.c_str(), map->chance(lid).describe().c_str());
+            _build_secondary_vault(you.absdepth0, map);
+        }
     }
 }
 

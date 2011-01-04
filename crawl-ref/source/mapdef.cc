@@ -2187,6 +2187,17 @@ void map_def::reinit()
     mons.clear();
 }
 
+bool map_def::map_already_used() const
+{
+    return (you.uniq_map_names.find(name) != you.uniq_map_names.end()
+            || (env.level_uniq_maps.find(name) !=
+                env.level_uniq_maps.end())
+            || has_any_tag(you.uniq_map_tags.begin(),
+                           you.uniq_map_tags.end())
+            || has_any_tag(env.level_uniq_map_tags.begin(),
+                           env.level_uniq_map_tags.end()));
+}
+
 bool map_def::valid_item_array_glyph(int gly)
 {
     return (gly >= 'd' && gly <= 'k');
