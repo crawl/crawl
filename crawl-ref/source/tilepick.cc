@@ -1009,10 +1009,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_FIRE_VORTEX;
     case MONS_SPATIAL_VORTEX:
         return TILEP_MONS_SPATIAL_VORTEX;
+    case MONS_TWISTER:
+        return TILEP_MONS_TWISTER;
 
-    // elementals (different symbols)
-    case MONS_AIR_ELEMENTAL:
-        return TILEP_MONS_AIR_ELEMENTAL;
+    // elementals ('E')
+//    case MONS_AIR_ELEMENTAL:
+//        return TILEP_MONS_AIR_ELEMENTAL;
     case MONS_EARTH_ELEMENTAL:
         return TILEP_MONS_EARTH_ELEMENTAL;
     case MONS_FIRE_ELEMENTAL:
