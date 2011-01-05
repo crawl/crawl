@@ -16,6 +16,7 @@ enum TextureID
     TEX_PLAYER,  // player.png
     TEX_DEFAULT, // main.png
     TEX_GUI,     // gui.png
+    TEX_ICONS,   // icons.png
     TEX_MAX
 };
 

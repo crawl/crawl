@@ -462,7 +462,7 @@ static bool _kikubaaqudgha_retribution()
         kiku_receive_corpses(you.experience_level * 4, you.pos());
 
         if (coinflip())
-            corpse_rot();
+            corpse_rot(&you);
     }
 
     if (coinflip())
@@ -570,7 +570,7 @@ static bool _trog_retribution()
 
                 points -= cost;
 
-                if (summon_berserker(cost * 20, god, 0, true))
+                if (summon_berserker(cost * 20, 0))
                     count++;
             }
         }

@@ -8,7 +8,6 @@
 #include "cluautil.h"
 #include "colour.h"
 #include "dlua.h"
-#include "message.h"
 
 typedef int (*lua_element_colour_calculator)(int, const coord_def&, lua_datum);
 

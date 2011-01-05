@@ -39,6 +39,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-damage.h"
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
@@ -49,7 +50,6 @@
 #include "travel.h"
 #include "view.h"
 #include "viewchar.h"
-#include "zotdef.h"
 #ifdef USE_TILE
  #include "tiledef-player.h"
  #include "tilepick.h"
@@ -104,7 +104,6 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
     if (feat_wanted == DNGN_FLOOR)
     {
         return (actual_feat >= DNGN_FLOOR
-                    && actual_feat != DNGN_BUILDER_SPECIAL_WALL
                 || actual_feat == DNGN_SHALLOW_WATER);
     }
 
@@ -569,7 +568,9 @@ monster_type pick_random_monster(const level_id &place, int power,
                       arena_veto_random_monster(mon_type)) ||
                      (crawl_state.game_is_sprint() &&
                       sprint_veto_random_abyss_monster(mon_type)) ||
-                     (force_mobile && mons_class_is_stationary(mon_type)));
+                     (force_mobile && (mons_class_is_stationary(mon_type)
+                       || mons_is_mimic(mon_type))
+                     ));
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
@@ -1140,7 +1141,7 @@ int place_monster(mgen_data mg, bool force_pos)
                 continue;
 
             // Is the grid verboten?
-            if (!unforbidden(mg.pos, mg.map_mask))
+            if (map_masked(mg.pos, mg.map_mask))
                 continue;
 
             // Let's recheck these even for PROX_NEAR_STAIRS, just in case.
@@ -1336,6 +1337,12 @@ int place_monster(mgen_data mg, bool force_pos)
                 menv[band_id].flags |= MF_NO_REWARD;
                 menv[band_id].props["pikel_band"] = true;
             }
+            if (mon->type == MONS_SHEDU)
+            {
+                // We store these here for later resurrection, etc.
+                menv[band_id].number = menv[id].mid;
+                menv[id].number = menv[band_id].mid;
+            }
         }
     }
 
@@ -1362,6 +1369,18 @@ void mons_add_blame(monster* mon, const std::string &blame_string)
     if (!exists)
         blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
     blame.get_vector().push_back(blame_string);
+}
+
+static void _place_twister_clouds(monster *mon)
+{
+    // Yay for the abj_degree having a huge granularity.
+    if (mon->has_ench(ENCH_ABJ))
+    {
+        mon_enchant abj = mon->get_ench(ENCH_ABJ);
+        mon->lose_ench_duration(abj, abj.duration / 2);
+    }
+
+    tornado_damage(mon, -10);
 }
 
 static int _place_monster_aux(const mgen_data &mg,
@@ -1426,6 +1445,7 @@ static int _place_monster_aux(const mgen_data &mg,
     }
 
     // Now, actually create the monster. (Wheeee!)
+    mon->set_new_monster_id();
     mon->type         = mg.cls;
     mon->base_monster = mg.base_type;
     mon->number       = mg.number;
@@ -1477,9 +1497,12 @@ static int _place_monster_aux(const mgen_data &mg,
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
-        // Deep dwarf berserkers belong to Trog.
-        if (mg.cls == MONS_DEEP_DWARF_BERSERKER)
+        // Berserkers belong to Trog.
+        if (mg.cls == MONS_DEEP_DWARF_BERSERKER
+            || mg.cls == MONS_SPRIGGAN_BERSERKER)
+        {
             mon->god = GOD_TROG;
+        }
         // Deep dwarf death knights belong to Yredelemnul.
         else if (mg.cls == MONS_DEEP_DWARF_DEATH_KNIGHT)
             mon->god = GOD_YREDELEMNUL;
@@ -1604,6 +1627,9 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         mon->add_ench(ENCH_EXPLODING);
     }
+
+    if (mg.cls == MONS_TWISTER)
+        mon->add_ench(ENCH_PERM_TORNADO);
 
     if (mons_is_feat_mimic(mg.cls))
     {
@@ -1942,6 +1968,13 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->set_ghost(ghost, false);
         mon->uglything_init();
     }
+    else if (mon->type == MONS_LABORATORY_RAT)
+    {
+        ghost_demon ghost;
+        ghost.init_labrat(mg.colour);
+        mon->set_ghost(ghost, false);
+        mon->labrat_init();
+    }
     else if (mon->type == MONS_DANCING_WEAPON)
     {
         ghost_demon ghost;
@@ -1961,6 +1994,15 @@ static int _place_monster_aux(const mgen_data &mg,
     tile_init_props(mon);
 #endif
 
+#ifndef DEBUG_DIAGNOSTICS
+    // A rare case of a debug message NOT showing in the debug mode.
+    if (mons_class_flag(mon->type, M_UNFINISHED))
+    {
+        mprf(MSGCH_WARN, "Warning: monster '%s' is not yet fully coded.",
+             mon->name(DESC_PLAIN).c_str());
+    }
+#endif
+
     mark_interesting_monst(mon, mg.behaviour);
 
     if (crawl_state.game_is_arena())
@@ -1972,6 +2014,11 @@ static int _place_monster_aux(const mgen_data &mg,
         //        success before printing messages.
         handle_seen_interrupt(mon);
     }
+
+    // Area effects can produce additional messages, and thus need to be
+    // done after come in view ones.
+    if (mon->type == MONS_TWISTER)
+        _place_twister_clouds(mon);
 
     return (mon->mindex());
 }
@@ -2449,11 +2496,6 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 2 + random2(4);
         break;
 
-    case MONS_GREY_RAT:
-        band = BAND_GREY_RATS;
-        band_size = 4 + random2(6);
-        break;
-
     case MONS_GREEN_RAT:
         band = BAND_GREEN_RATS;
         band_size = 4 + random2(6);
@@ -2638,6 +2680,12 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_ELEPHANT;
         band_size = 2 + random2(4);
         break;
+
+    case MONS_SHEDU:
+        band = BAND_SHEDU;
+        band_size = 1;
+        break;
+
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2880,9 +2928,6 @@ static monster_type _band_member(band_type band, int power)
     case BAND_WAR_DOGS:
         mon_type = MONS_WAR_DOG;
         break;
-    case BAND_GREY_RATS:
-        mon_type = MONS_GREY_RAT;
-        break;
     case BAND_GREEN_RATS:
         mon_type = MONS_GREEN_RAT;
         break;
@@ -2990,6 +3035,10 @@ static monster_type _band_member(band_type band, int power)
         mon_type = MONS_ELEPHANT;
         break;
 
+    case BAND_SHEDU:
+        mon_type = MONS_SHEDU;
+        break;
+
     default:
         break;
     }
@@ -3009,7 +3058,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
 
     bool interesting = false;
 
-    // Unique monsters are always intersting
+    // Unique monsters are always interesting
     if (mons_is_unique(mons->type))
         interesting = true;
     // If it's never going to attack us, then not interesting
@@ -3472,7 +3521,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
 
     int good_count = 0;
 
-    for (radius_iterator ri(where, radius, C_SQUARE, NULL, !allow_centre);
+    for (radius_iterator ri(where, radius, C_ROUND, NULL, !allow_centre);
          ri; ++ri)
     {
         bool success = false;

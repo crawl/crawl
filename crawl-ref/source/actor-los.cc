@@ -84,7 +84,7 @@ bool player::can_see(const actor* a) const
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return (see_cell(a->pos()));
     else if (xray_vision)
-        return(see_cell(a->pos()));
+        return see_cell(a->pos());
     else
         return (actor::can_see(a));
 }

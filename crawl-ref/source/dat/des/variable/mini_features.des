@@ -8,6 +8,7 @@
 #           Minivaults with monsters go to mini_monsters.des.
 #           Maps for the Vault branch, including Vaults:8 are in vaults.des.
 #
+# <<0>> Serial vaults            (thematic vaults possibly spawned together)
 # <<1>> Flavour vaults           (no items, no monsters)
 # <<2>> Inaccessible items
 # <<3>> Supply closet vaults     (vaults with items and no risk).
@@ -22,6 +23,96 @@ default-depth: D, Vault, Elf, Crypt
 
 ############################################################################
 #
+# <<0>> Serial vaults
+#       Sometimes, we want flavour vaults to be placed several times, so as
+#       to makes the level feel more coherent. The lua calls for such serial
+#       vaults are here.
+#       The vaults eventually could be just copies of one map, or also come
+#       from a list of thematically linked maps. This is mostly for flavour,
+#       although it may later be interesting to created serial vaults around
+#       threats.
+#       In general, we don't want more than one serial vault on a level. Use
+#       the luniq_serial in the serial vault's header map for this.
+#
+############################################################################
+
+# Glass vaults
+#
+# Single instances of serial_glass vaults can be placed normally, so
+# we only roll numbers between 2 and 12 (non-flat distribution).
+# Sometimes we add a few rarer glass vaults to the level.
+NAME:   serial_glass
+TAGS:   allow_dup extra luniq_serial
+DEPTH:  D, Elf, Vault, Crypt
+CHANCE: 3%
+{{
+  local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
+  local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_glass", count=c}
+    dgn.place_maps{tag="serial_glass_rare", count=d}
+  end)
+}}
+
+# Corridors, turns etc, with statue and fountain arrangements.
+#
+# Place a moderate amount of vaults. Having too many of the vaults seems
+# a bit messy, considering how randomly they are placed, and how the
+# statues stand out (especially in tiles).
+NAME:   serial_corexii_hall
+TAGS:   allow_dup extra luniq_serial
+#       Fits best in the rooms layout.
+TAGS:   layout_rooms
+DEPTH:  D, Elf, Crypt, Snake
+CHANCE: 1%
+{{
+  local c = 2 + crawl.random2(3)*crawl.random2(3)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_corexii_hall", count=c}
+  end)
+}}
+
+#       Curved corridors.
+NAME:   serial_curves
+TAGS:   allow_dup extra luniq_serial
+#       Suitable for the rooms layout.
+TAGS:   layout_rooms
+DEPTH:  D, Snake
+CHANCE: 1%
+{{
+  local c = 2 + crawl.random2(3)*crawl.random2(2)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_curves", count=c}
+  end)
+}}
+
+# Windows
+#
+# Window serial vault. The theme of this serial vault is "two floor
+# components seperated by glass". This will make the level feel a bit more
+# like a labyrinth. The vaults are divided in three groups: small, common and
+# rare. Made by co.
+# I added a chance to have some additional glass vaults. dpeg
+NAME:   serial_co_window_serial
+TAGS:   allow_dup extra luniq
+DEPTH:  D, Elf, Crypt
+CHANCE: 2%
+{{
+  local s = 5 + crawl.random2(3)*crawl.random2(3)
+  local c = 3 + crawl.random2(5)
+  local r = crawl.random2(3)
+  local g = crawl.random2(6)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_co_window_small", count=s}
+    dgn.place_maps{tag="serial_co_window_common", count=c}
+    dgn.place_maps{tag="serial_co_window_rare", count=r}
+    dgn.place_maps{tag="serial_glass", count=g}
+  end)
+}}
+
+
+############################################################################
+#
 # <<1>> Flavour vaults
 #       no items, no monsters. Statues, glass, fountains, water...
 #
@@ -29,7 +120,7 @@ default-depth: D, Vault, Elf, Crypt
 
 NAME:   glass_columns_a
 DEPTH:  D, Elf, Crypt
-TAGS:   extra luniq_mini
+TAGS:   serial_glass allow_dup
 WEIGHT: 5
 MAP
 .....
@@ -41,7 +132,7 @@ ENDMAP
 
 NAME:   glass_columns_b
 DEPTH:  D, Elf, Crypt
-TAGS:   extra luniq_mini
+TAGS:   serial_glass allow_dup
 WEIGHT: 3
 MAP
 .......
@@ -55,7 +146,7 @@ ENDMAP
 
 NAME:   glass_columns_c
 DEPTH:  D, Elf, Crypt
-TAGS:   extra luniq_mini
+TAGS:   serial_glass allow_dup
 WEIGHT: 2
 MAP
 .........
@@ -233,7 +324,8 @@ ENDMAP
 # with a chance of a secret bypass, by Core Xii.
 NAME:   corexii_corridor_pit
 DEPTH:  D
-TAGS:   no_pool_fixup no_monster_gen no_item_gen allow_dup extra luniq_mini mini_float
+TAGS:   no_pool_fixup no_monster_gen no_item_gen
+TAGS:   allow_dup extra luniq_mini
 : if crawl.random2(5) == 0 then
 :   subst("l = W")
 :   subst("= = x")
@@ -262,9 +354,9 @@ ENDMAP
 
 # 3-wide hallways lined with statues, by Core Xii.
 NAME:   corexii_hall_statues_deadend
-DEPTH:  D
+DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:2 V:2 G:1
 NSUBST: ? = 1:% / *:.
 MAP
@@ -278,9 +370,10 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:   corexii_hall_statues_i
-DEPTH:  D
+DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 2
-TAGS:   allow_dup extra mini_float
+TAGS:   extra allow_dup serial_corexii_hall
+SUBST:  T = T:2 V:2 G:1
 SUBST:  T = T:1 G:4, T = T V
 MAP
 xxxxxxxxxxx
@@ -293,9 +386,9 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:   corexii_hall_statues_l
-DEPTH:  D
+DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 2
-TAGS:   allow_dup extra mini_float
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:1 G:2, T = T V
 MAP
 xx@@@xx
@@ -314,9 +407,9 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:   corexii_hall_statues_s
-DEPTH:  D
+DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:4 G:1, T = T V
 MAP
 xx@@@xx
@@ -333,9 +426,9 @@ xxxxxxxxxx...xx
 ENDMAP
 
 NAME:   corexii_hall_statues_u
-DEPTH:  D
+DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:4 G:1, T = T V
 MAP
 xx@@@xxxxx@@@xx
@@ -350,9 +443,10 @@ xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   corexii_hall_statues_t
-DEPTH:  D
+DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float
+TAGS:   extra allow_dup serial_corexii_hall
+SUBST:  T = T:4 G:1, T = T V
 SUBST:  T = T:2 V:2 G:1
 MAP
 xxxxxxxxxxxxxxxxxxx
@@ -371,9 +465,9 @@ xxxxxxxx...xxxxxxxx
 ENDMAP
 
 NAME:   corexii_hall_statues_x
-DEPTH:  D
+DEPTH:  D, Elf, Crypt, Snake
 WEIGHT: 2
-TAGS:   allow_dup extra mini_float
+TAGS:   extra allow_dup serial_corexii_hall
 SUBST:  T = T:3 V:3 G:1 .:3
 MAP
       xx@@@xx
@@ -452,7 +546,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_crystal_room
-TAGS:   extra luniq_mini mini_float
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf
 NSUBST: ? = 1:b / *:?
 SUBST:  ? = bbbbb@
@@ -467,7 +561,7 @@ b?b?b?b?b
 ENDMAP
 
 NAME:    minmay_hedge_maze
-TAGS:    extra luniq_mini mini_float
+TAGS:    extra luniq_mini
 DEPTH:   D, Lair
 MONS:    bush
 SHUFFLE: ABC
@@ -489,8 +583,8 @@ MAP
 ENDMAP
 
 NAME:  minmay_strange_pillars
-TAGS:  extra luniq_mini
-DEPTH: D, Elf
+TAGS:  serial_glass_rare allow_dup extra
+DEPTH: D, Elf, Crypt
 MAP
  ...   ...
 ..m.. ..m..
@@ -529,7 +623,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_liquid_box
-TAGS:  extra luniq_mini mini_float no_monster_gen
+TAGS:  extra luniq_mini no_monster_gen
 ITEM:  potion of water / nothing
 DEPTH: D
 SUBST: w : wWWld
@@ -542,7 +636,7 @@ xx+xx
 ENDMAP
 
 NAME:  minmay_fountain_box
-TAGS:  extra luniq_mini mini_float
+TAGS:  extra luniq_mini
 DEPTH: D, Elf
 KMASK: T = no_monster_gen
 KMASK: U = no_monster_gen
@@ -560,7 +654,7 @@ xxxx+xxxx
 ENDMAP
 
 NAME:  minmay_tree_intersection
-TAGS:  extra luniq_mini mini_float
+TAGS:  extra luniq_mini
 DEPTH: D
 MAP
 xxx@xxx
@@ -666,7 +760,7 @@ x.x.x.x.x
 ENDMAP
 
 NAME:  minmay_misc_feat_encased
-TAGS:  extra mini_float luniq_mini
+TAGS:  extra luniq_mini
 DEPTH: D
 SUBST: c : bcvm
 SUBST: @ : +@
@@ -681,7 +775,7 @@ x@xxxxx
 ENDMAP
 
 NAME:  minmay_misc_feat_rugged
-TAGS:  extra mini_float luniq_mini
+TAGS:  extra luniq_mini
 DEPTH: D
 SUBST: A = x..., B = x.., C = x., D = xx.
 KPROP: BCD = no_rtele_into
@@ -724,7 +818,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_tower
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D
 NSUBST: ? = 1:@ / *:?
 SUBST:  ? = @...
@@ -833,7 +927,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_ornament
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf, Crypt
 MAP
 x@xxxxxxx@x
@@ -848,7 +942,7 @@ x@xxxxxxx@x
 ENDMAP
 
 NAME:   minmay_misc_feat_hallway
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Crypt
 SUBST:  G : ..GGxb
 MAP
@@ -864,7 +958,7 @@ xxx@xxx
 ENDMAP
 
 NAME:   minmay_misc_feat_alley
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf, Crypt
 MAP
 xx@xx@xx
@@ -1013,6 +1107,834 @@ MAP
 ......
 ENDMAP
 
+# Simple curved corridors, mainly for the serial_curves serial vault.
+
+NAME:   eino_curves_01
+DEPTH:  D, Snake
+WEIGHT: 1
+TAGS:   allow_dup extra serial_curves
+MAP
+  @
+x...xxxxxxxxxx
+x...xxxxxxxxxx
+x...xxxxxxxxxx
+xx...xxxxxxxxx
+xx...xxxxxxxxx
+xxx...xxxxxxxx
+xxx...xxxxxxxx
+xxxx...xxxxxxx
+xxxxx...xxxxxx
+xxxxxx...xxxxx
+xxxxxxx...xxxx
+xxxxxxxx...xxx
+xxxxxxxx...xxx
+xxxxxxxxx...xx
+xxxxxxxxx...xx
+xxxxxxxxxx...x
+xxxxxxxxxx...x
+xxxxxxxxxx...x
+           @
+ENDMAP
+
+NAME:   eino_curves_02
+DEPTH:  D, Snake
+TAGS:   allow_dup extra serial_curves
+WEIGHT: 1
+MAP
+  @
+x...xxxxxx
+x...xxxxxx
+x...xxxxxx
+xx...xxxxx
+xx...xxxxx
+xxx...xxxx
+xxxx...xxx
+xxxxx...xx
+xxxxx...xx
+xxxxxx...x
+xxxxxx...x
+xxxxxx...x
+       @
+ENDMAP
+
+NAME:   eino_curves_03
+DEPTH:  D, Snake
+TAGS:   allow_dup extra serial_curves
+WEIGHT: 1
+MAP
+ xxxxxxxxxxxxx
+ xxx.xxxxx.xxx
+ xx...xxx...xx
+ xx...xxx...xx
+ x..x..x..x..x
+ x.xxx.x.xxx.x
+ ..xxx...xxx..
+@.xxxxx.xxxxx.@
+ .xxxxx.xxxxx.
+ xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   eino_curves_04
+DEPTH:  D, Snake
+TAGS:   allow_dup extra serial_curves
+WEIGHT: 1
+MAP
+ xxxxxxxxxxxxxxxxxx
+ ...xxxxxxxxxxxxxxx
+@......xxxxxxxxxxxx
+ x.......xxxxxxxxxx
+ xxx......xxxxxxxxx
+ xxxxxx...xxxxxxxxx
+ xxxxxxx...xxxxxxxx
+ xxxxxxx...xxxxxxxx
+ xxxxxxxx...xxxxxxx
+ xxxxxxxx......xxxx
+ xxxxxxxxx........x
+ xxxxxxxxxxx.......@
+ xxxxxxxxxxxxxxx...
+ xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_stone_trees_small
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 6
+MAP
+.......
+..ttt..
+.tccct.
+.tccct.
+.tccct.
+..ttt..
+.......
+ENDMAP
+
+NAME:   minmay_stone_trees_medium
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 3
+MAP
+.............
+..ttt...ttt..
+.tccct.tccct.
+.tccct.tccct.
+.tccct.tccct.
+..ttt.t.ttt..
+.....ttt.....
+..ttt.t.ttt..
+.tccct.tccct.
+.tccct.tccct.
+.tccct.tccct.
+..ttt...ttt..
+.............
+ENDMAP
+
+NAME:   minmay_stone_trees_large
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 1
+SUBST:  T = t.
+MAP
+...................
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...T.....T.....T...
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...T.....T.....T...
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...................
+ENDMAP
+
+NAME:   minmay_crystal_water
+TAGS:   extra no_monster_gen luniq_mini
+DEPTH:  D
+MAP
+wwwwwwwww
+wbwwwwwbw
+wbwbbbwbw
+wbwwwwwbw
+wwwwwwwww
+ENDMAP
+
+NAME:   minmay_holes
+TAGS:   extra luniq_mini
+DEPTH:  D, Lair
+KFEAT:  ^ = known shaft trap
+SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
+WEIGHT: 15
+MAP
+     ....
+   ........
+  ..........
+ ....''''....
+ ...''''''...
+...'''""'''...
+...''""""''...
+...''""""''...
+...'''""'''...
+ ...''''''...
+ ....''''....
+  ..........
+   ........
+     ....
+ENDMAP
+
+NAME:   minmay_splitting_lines
+TAGS:   extra luniq_mini
+DEPTH:  D
+WEIGHT: 5
+MAP
+.....................
+.....x...x.x...x.....
+......x.x...x.x......
+...x...x.....x...x...
+....x..x.....x..x....
+.x...xxx.....xxx...x.
+..x..x..x...x..x..x..
+...xxx...x.x...xxx...
+..x...x...x...x...x..
+.x.....x..x..x.....x.
+........xxxxx........
+.x.....x..x..x.....x.
+..x...x...x...x...x..
+...xxx...x.x...xxx...
+..x..x..x...x..x..x..
+.x...xxx.....xxx...x.
+....x..x.....x..x....
+...x...x.....x...x...
+......x.x...x.x......
+.....x...x.x...x.....
+.....................
+ENDMAP
+
+NAME:   minmay_curled_crystal
+TAGS:   extra luniq_mini
+DEPTH:  D, Elf
+WEIGHT: 3
+MAP
+................
+..bb........bb..
+.b..b......b..b.
+.b............b.
+..bbbbbbbbbbbb..
+................
+ENDMAP
+
+NAME:    minmay_parallelograms
+DEPTH:   D
+WEIGHT:  2
+SHUFFLE: EFGH
+SUBST:   B : xx., C : xx., D : xx., E : xx., F : xx., G : xx., H : xx.
+MAP
+...........         ...........
+.xx.xxxxxx..       ..BBBBBB.BB.
+..xx.....xx..     ..BB.....BB..
+ ..xx.EEE.xx..   ..BB.FFF.BB..
+  ..xx.EEE.xx.. ..BB.FFF.BB..
+   ..xx.....xx...BB.....BB..
+    ..xxxxxx.xx.BB.BBBBBB..
+     .....................
+    ..CCCCCC.CC.DD.DDDDDD..
+   ..CC.....CC...DD.....DD..
+  ..CC.HHH.CC.. ..DD.GGG.DD..
+ ..CC.HHH.CC..   ..DD.GGG.DD..
+..CC.....CC..     ..DD.....DD..
+.CC.CCCCCC..       ..DDDDDD.DD.
+...........         ...........
+ENDMAP
+
+NAME:    minmay_large_rounded_square
+DEPTH:   D, Vault, Crypt
+WEIGHT:  1
+SUBST:   x : x c:2 v:1 b:1
+MAP
+     ..............
+   ...xxxxxxxxxxxx...
+  ..xxxxxxxxxxxxxxxx..
+ ..xxxxxxxxxxxxxxxxxx..
+ .xxxxxxxxxxxxxxxxxxxx.
+..xxxxxxxxxxxxxxxxxxxx..
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+..xxxxxxxxxxxxxxxxxxxx..
+ .xxxxxxxxxxxxxxxxxxxx.
+ ..xxxxxxxxxxxxxxxxxx..
+  ..xxxxxxxxxxxxxxxx..
+   ...xxxxxxxxxxxx...
+     ..............
+ENDMAP
+
+
+# co window small. (5)
+
+NAME:   co_window_of_opportunity_a
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_small
+NSUBST: A = 1:@ / *:x
+NSUBST: B = 1:@ / *:x
+SUBST:  X:xm
+MAP
+@...@
+xXmXx
+x...x
+x.x.x
+x.x.x
+A.x.B
+xAxBx
+  x
+ENDMAP
+
+NAME:   co_window_paths_a
+WEIGHT: 5
+TAGS:   allow_dup extra mini_float serial_co_window_small
+SUBST:  X:Xxm, X=xm
+MAP
+  x
+  x
+x@x@x
+x.X.x
+x.m.x
+x.X.x
+x@x@x
+  x
+  x
+ENDMAP
+
+NAME:   co_window_paths_b
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_small
+SUBST:  X=xm
+MAP
+  x
+  x
+x@x@x
+x.x.x
+x.X.x
+x.m.x
+x.X.x
+x.x.x
+x@x@x
+  x
+  x
+ENDMAP
+
+NAME:   co_window_corner_a
+WEIGHT: 5
+TAGS:   allow_dup extra mini_float serial_co_window_small
+SUBST:  X:Xxm, X=xm
+MAP
+    x
+    x
+    x
+..@.x@x
+....x.x
+@...X.x
+....m.x
+xxXmm.x
+x.....x
+x.xxxxx
+x.x
+x@x
+ENDMAP
+
+NAME:   co_window_cross_1
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_small
+MAP
+xxxxx@xxxxx
+xxxxx.xxxxx
+xxxxx.xxxxx
+xxxxx.xxxxx
+@...m.m...@
+xxxxx.xxxxx
+xxxxx.xxxxx
+xxxxx.xxxxx
+xxxxx@xxxxx
+ENDMAP
+
+
+# co window common. (18)
+
+NAME:   co_window_of_opportunity_b
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:Xxm, X=xm
+MAP
+@....@
+xXmmXx
+x....x
+x.xx.x
+x.xx.x
+x@xx@x
+  xx
+  xx
+ENDMAP
+
+NAME:   co_window_of_opportunity_c
+WEIGHT: 2
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:Xxm, X=xm
+MAP
+@.....@
+xXmmmXx
+x.....x
+x.xxx.x
+x.xxx.x
+x@xxx@x
+  xxx
+  xxx
+  xxx
+ENDMAP
+
+
+NAME:   co_window_corner_b
+TAGS:   allow_dup extra mini_float serial_co_window_common
+WEIGHT: 5
+SUBST:  X:Xxm, X=xm
+MAP
+     x
+     x
+     x
+..@..x@x
+.....x.x
+.....x.x
+@....X.x
+.....m.x
+xxxXmm.x
+x......x
+x.xxxxxx
+x.x
+x@x
+ENDMAP
+
+NAME:   co_window_corner_ca
+TAGS:   allow_dup extra mini_float serial_co_window_common
+WEIGHT: 2
+SUBST:  X:mx
+MAP
+      x
+      x
+      x
+...@..x@x
+......x.x
+......x.x
+@.....m.x
+......m.x
+......X.x
+xxxmmXX.x
+x.......x
+x.xxxxxxx
+x.x
+x@x
+ENDMAP
+
+NAME:   co_window_corner_cb
+WEIGHT: 2
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:mx
+MAP
+         x
+         x
+         x
+   ...@..x@x
+   ......x.x
+   ......x.x
+   @.....m.x
+   ......m.x
+   ......X.x
+xxxxxxmmXX.x
+   @.......x
+   xxxxxxxxx
+ENDMAP
+
+NAME:   co_window_paths_c
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:xm
+MAP
+  x x
+  x x
+  x x
+x@x@x@x
+x.x.x.x
+x.X.X.x
+x.m.m.x
+x.X.X.x
+x.x.x.x
+x@x@x@x
+  x x
+  x x
+  x x
+ENDMAP
+
+
+NAME:   co_window_2corner
+WEIGHT: 5
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  A : .x
+SUBST:  B : .xxxx
+MAP
+AAAAAAx@xxxxx
+AAAAAAx.xxxxx
+AAAAAAx.xxxxx
+AAAAAAx.xxxxx
+AAAAAAx.xxxxx
+AAAAAAm.....@
+xxxxxmmmxxxxx
+@.....mBBBBBB
+xxxxx.xBBBBBB
+xxxxx.xBBBBBB
+xxxxx.xBBBBBB
+xxxxx.xBBBBBB
+xxxxx@xBBBBBB
+ENDMAP
+
+NAME:   co_window_broadway_a
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxxx@@@xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...m......@
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx@@@xxxxxxxx
+ENDMAP
+
+NAME:   co_window_broadway_b
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxxx@@@xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+@......m...m......@
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx@@@xxxxxxxx
+ENDMAP
+
+NAME:   co_window_broadway_c
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxxx@@@xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...m......@
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+.......m...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx@@@xxxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_a
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxx@xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+@.....m.m.....@
+@.....m.m.....@
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_b
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxx@xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+@.....m.m.....@
+@.....m.m.....@
+@.....m.m.....@
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_c
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:xm
+MAP
+xxxxxxx@xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+@.....X.X.....@
+@.....m.m.....@
+@.....m.m.....@
+@.....X.X.....@
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_d
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:xm
+MAP
+xxxxxxx@@xxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx..xxxxxxx
+@.....X..X.....@
+@.....m..m.....@
+@.....m..m.....@
+@.....X..X.....@
+xxxxxxx..xxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx@@xxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_e
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:xm
+MAP
+xxxxxxx@@@xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+@.....X...X.....@
+@.....m...m.....@
+@.....m...m.....@
+@.....X...X.....@
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx@@@xxxxxxx
+ENDMAP
+
+NAME:   co_window_cross_4
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxx@@@@xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+@.....m....m.....@
+@.....m....m.....@
+@.....m....m.....@
+@.....m....m.....@
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx@@@@xxxxxxx
+ENDMAP
+
+NAME:   co_window_cross_3
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxx@@@xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+@.....m...m.....@
+@.....m...m.....@
+@.....m...m.....@
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx@@@xxxxxxx
+ENDMAP
+
+NAME: co_window_cross_2
+WEIGHT: 1
+TAGS: allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxx@@xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+@....m..m....@
+@....m..m....@
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx@@xxxxxx
+ENDMAP
+
+# co window rare. (5)
+
+NAME:   co_window_paths_d
+WEIGHT: 2
+TAGS:   luni qallow_dup extra mini_float serial_co_window_rare
+SUBST:  c : mmccb
+MAP
+   xxx
+   @x@
+ xx.x.xx
+ xx.x.xx
+ @x.x.x@
+x.x.x.x.x
+x.x.x.x.x
+x.m.m.m.x
+x.c.c.c.x
+x.m.m.m.x
+x.c.c.c.x
+x.m.m.m.x
+x.x.x.x.x
+x.x.x.x.x
+ @x.x.x@
+ xx.x.xx
+ xx.x.xx
+   @x@
+   xxx
+ENDMAP
+
+NAME:   co_window_paths_e
+WEIGHT: 2
+TAGS:   luniq allow_dup extra mini_float serial_co_window_rare
+SUBST:  c : mmccb
+MAP
+    x
+    x x
+    x@x
+  xxx.x
+  @.x.x
+xxx.x.x@x
+x.x.m.x.x
+x.x.m.x.x
+x.m.c.m.x
+@.m.c.m.@
+x.m.c.m.x
+x.x.m.x.x
+x.x.m.x.x
+x@x.x.xxx
+  x.x.@
+  x.xxx
+  x@x
+  x x
+    x
+ENDMAP
+
+NAME:   co_window_4corner_a
+WEIGHT: 3
+TAGS:   luniq allow_dup extra mini_float serial_co_window_rare
+SUBST:  c : cm
+MAP
+xxxxxx@xxxxx@xxxxxx
+xxxxxx.xxxxx.xxxxxx
+@..xxx...x...xxx..@
+xx.xxxxx.x.xxxxx.xx
+xx.xxxxx.m.xxxxx.xx
+xx.......c.......xx
+xxxxxxxmcccmxxxxxxx
+xx.......c.......xx
+xx.xxxxx.m.xxxxx.xx
+xx.xxxxx.x.xxxxx.xx
+@..xx....x...xxx..@
+xxxxx.xxxxxx.xxxxxx
+xxxxx@xxxxxx@xxxxxx
+ENDMAP
+
+NAME:   co_window_4corner_b
+WEIGHT: 3
+TAGS:   allow_dup luniq  extra mini_float serial_co_window_rare
+MAP
+xxxxx@xxxx@xxxxxxxx
+xxxxx.xxxx.xxxxxxxx
+@..xx....x.xxxxxxxx
+xx.xxxxx.m.xxxxxxxx
+xx.xxxxx.m.xxxxxxxx
+xx.......x........@
+xxxxmmxxxxxxxmmxxxx
+@........x.......xx
+xxxxxxxx.m.xxxxx.xx
+xxxxxxxx.m.xxxxx.xx
+xxxxxxxx.x....xx..@
+xxxxxxxx.xxxx.xxxxx
+xxxxxxxx@xxxx.xxxxx
+ENDMAP
+
+NAME:   co_window_sun
+WEIGHT: 3
+TAGS:   allow_dup luniq extra mini_float serial_co_window_rare
+SUBST:  c : ccccm
+MAP
+xxxx@xxxxxxx@xxxx
+xxxx.xxxxxxx.xxxx
+xxxx..xxxxx..xxxx
+xxxcm...x...mcxxx
+@..mcxx.x.xxcm..@
+xx..xxx...xxx..xx
+xxx.xxccmccxx.xxx
+xxx...cmmmc...xxx
+xxxxx.mmcmm.xxxxx
+xxx...cmmmc...xxx
+xxx.xxccmccxx.xxx
+xx..xxx...xxx..xx
+@..mcxx.x.xxcm..@
+xxxcm...x...mcxxx
+xxxx..xxxxx..xxxx
+xxxx.xxxxxxx.xxxx
+xxxx@xxxxxxx@xxxx
+ENDMAP
+
 
 #####################################################################
 #
@@ -1024,7 +1946,7 @@ ENDMAP
 
 NAME:  feat_on_display
 DEPTH: D, Elf, Crypt, Vault
-TAGS:  extra luniq_mini
+TAGS:  serial_glass_rare allow_dup
 SUBST: ? = TUl
 TAGS:  no_monster_gen no_item_gen
 MAP
@@ -1037,7 +1959,7 @@ ENDMAP
 
 NAME:   item_on_display_a
 DEPTH:  D, Elf, Crypt, Vault
-TAGS:   extra luniq_mini
+TAGS:   serial_glass_rare allow_dup
 WEIGHT: 9
 SUBST:  % = %%%*
 TAGS:   no_monster_gen no_item_gen
@@ -1051,7 +1973,7 @@ ENDMAP
 
 NAME:   item_on_display_b
 DEPTH:  D, Elf, Crypt, Vault
-TAGS:   extra luniq_mini
+TAGS:   serial_glass_rare allow_dup
 WEIGHT: 1
 SUBST:  * = ***|
 TAGS:   no_monster_gen no_item_gen
@@ -1067,7 +1989,7 @@ ENDMAP
 # contains within an unseen horror, by due.
 NAME:   unseen_surprise_small
 WEIGHT: 1
-TAGS:   no_wall_fixup extra luniq_mini
+TAGS:   serial_glass_rare allow_dup no_wall_fixup
 DEPTH:  D:8-27, Elf, Crypt, Vault
 KMONS:  a = generate_awake unseen_horror
 KITEM:  a = | / *
@@ -1082,7 +2004,7 @@ ENDMAP
 # Unseen surprise! by due (and dpeg).
 NAME:   due_unseen_surprise
 DEPTH:  D, Elf, Crypt, Vault
-TAGS:   no_wall_fixup extra luniq_mini
+TAGS:   serial_glass_rare allow_dup no_wall_fixup luniq
 : if you.absdepth()<11 or crawl.random2(27)>you.absdepth() then
 SUBST:  a = %
 SUBST:  b = %**
@@ -1236,7 +2158,7 @@ ENDMAP
 
 
 NAME:  minmay_trapped_gold
-TAGS:  extra luniq_mini mini_float no_monster_gen
+TAGS:  extra luniq_mini no_monster_gen
 DEPTH: D:16-, Crypt
 KFEAT: a = axe trap / bolt trap
 KFEAT: b = blade trap
@@ -1272,7 +2194,7 @@ xxxx
 ENDMAP
 
 NAME:  minmay_bad_closet
-TAGS:  extra mini_float
+TAGS:  extra
 DEPTH: D:2-12
 : if you.absdepth() > 4 then
 ITEM:  scroll of immolation / potion of degeneration / potion of decay / \
@@ -1289,7 +2211,7 @@ xx+x
 ENDMAP
 
 NAME:    minmay_variable_closet
-TAGS:    extra mini_float allow_dup luniq_mini
+TAGS:    extra allow_dup luniq_mini
 DEPTH:   D:9-27, Vault
 ITEM:    any weapon, any missile, any armour, any food, any scroll
 ITEM:    any jewellery, any potion, any book
@@ -1308,7 +2230,7 @@ ENDMAP
 
 NAME:   secret_library_closet
 DEPTH:  D, Vault, Elf, Crypt, Snake, Spider, Dwarf, Orc
-TAGS:   mini_float allow_dup extra luniq_mini
+TAGS:   allow_dup extra luniq_mini
 ITEM:   any book w:20 / any scroll / nothing
 MAP
 x=xx
@@ -1330,7 +2252,7 @@ xx...xx
 ENDMAP
 
 NAME:   eino_tiny_chamber_secret
-TAGS:   mini_float allow_dup extra luniq_mini
+TAGS:   allow_dup extra luniq_mini
 DEPTH:  D:2-27, Elf, Vault, Crypt
 MAP
 xxxxx
@@ -2031,4 +2953,13 @@ MAP
 .x........x.
 .x.xxxxxxxx.
 ............
+ENDMAP
+
+NAME: early_knife
+TAGS: allow_dup extra transparent
+DEPTH: D:1-5
+CHANCE: 50%
+ITEM: knife not_cursed
+MAP
+d
 ENDMAP

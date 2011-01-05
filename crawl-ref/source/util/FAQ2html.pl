@@ -196,7 +196,7 @@ close FILE;
 open (OUTFILE, ">$outfile") or die "Cannot write to file '$outfile'.\n";
 
 # Print the header.
-print OUTFILE "<a name=\"top\">\n";
+print OUTFILE "<a name=\"top\"></a>\n";
 print OUTFILE "<b>Dungeon Crawl Stone Soup - Frequently Asked Questions</b></br>\n";
 print OUTFILE "$BR\n";
 

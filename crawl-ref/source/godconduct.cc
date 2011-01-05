@@ -850,17 +850,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     else if (last_glowing_lecture != you.num_turns)
                     {
                         last_glowing_lecture = you.num_turns;
-                        if (get_contamination_level() == 1)
-                        {
-                            // Increase contamination within gray glow.
-                            simple_god_message(" does not appreciate the extra "
-                                               "mutagenic glow.");
-                        }
-                        else
-                        {
-                            simple_god_message(" does not appreciate the "
-                                               "mutagenic glow surrounding you!");
-                        }
+                        // Increase contamination within yellow glow.
+                        simple_god_message(" does not appreciate the extra "
+                                           "mutagenic glow surrounding you!");
                     }
                 }
 

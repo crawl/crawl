@@ -372,7 +372,7 @@ tileidx_t tileidx_player()
     int ch = TILEP_PLAYER;
 
     // Handle shapechange first
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
         // animals
         case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
@@ -382,7 +382,20 @@ tileidx_t tileidx_player()
         case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
         case TRAN_STATUE:    ch = TILEP_TRAN_STATUE;    break;
         case TRAN_DRAGON:    ch = TILEP_TRAN_DRAGON;    break;
-        case TRAN_LICH:      ch = TILEP_TRAN_LICH;      break;
+        case TRAN_LICH:
+        {
+            switch (you.species)
+            {
+            case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
+            case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
+            case SP_CAT:     ch = TILEP_TRAN_LICH_FELID;    break;
+            default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
+            }
+            break;
+        }
+        // no special tile
+        case TRAN_BLADE_HANDS: break;
+        case TRAN_NONE: break;
     }
 
     if (you.airborne())

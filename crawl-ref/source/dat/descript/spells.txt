@@ -330,6 +330,10 @@ Iskenderun's Mystic Blast
 
 This spell throws a crackling sphere of destructive energy.
 %%%%
+Leda's Liquefaction
+
+This spell liquefies the ground around the caster by shaking it rapidly, making it difficult to move through. Any attempt to move through the liquefied ground will be a very slow one.
+%%%%
 Lee's Rapid Deconstruction
 
 This spell fragments a wall into an explosion of deadly shrapnel. It can also be used directly on monsters made of wall-like substances.

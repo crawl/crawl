@@ -34,14 +34,17 @@
 
 struct tile_flavour
 {
-    // The floor tile to use.
+    unsigned short floor_idx;
+    unsigned short wall_idx;
+    unsigned short feat_idx;
+
     unsigned short floor;
-    // The wall tile to use.
     unsigned short wall;
-    // Used as a random value or for special cases e.g. (bazaars, gates).
-    unsigned short special;
     // Used (primarily) by the vault 'TILE' overlay.
     unsigned short feat;
+
+    // Used as a random value or for special cases e.g. (bazaars, gates).
+    unsigned short special;
 };
 
 // A glorified unsigned int that assists with ref-counting the mcache.
@@ -69,7 +72,7 @@ protected:
 
 extern char info[INFO_SIZE];         // defined in main.cc {dlb}
 
-const int kNameLen = 30;
+#define kNameLen        30
 #ifdef SHORT_FILE_NAMES
     const int kFileNameLen = 6;
 #else
@@ -268,6 +271,12 @@ struct run_check_dir
     coord_def delta;
 };
 
+typedef uint32_t mid_t;
+#define MID_PLAYER      ((mid_t)0xffffffff)
+// the numbers are meaningless, there's just plenty of space for gods, env,
+// and whatever else we want to have, while keeping all monster ids smaller.
+#define MID_ANON_FRIEND ((mid_t)0xffff0000)
+
 struct cloud_struct
 {
     coord_def     pos;
@@ -276,6 +285,7 @@ struct cloud_struct
     uint8_t       spread_rate;
     kill_category whose;
     killer_type   killer;
+    mid_t         source;
     int           colour;
     std::string   name;
     std::string   tile;
@@ -291,7 +301,8 @@ struct cloud_struct
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);
 
-    std::string cloud_name(const std::string &default_name = "") const;
+    std::string cloud_name(const std::string &default_name = "",
+                           bool terse = false) const;
     void announce_actor_engulfed(const actor *engulfee,
                                  bool beneficial = false) const;
 
@@ -666,7 +677,7 @@ public:
     void clear();
 
     void write(writer &) const;
-    void read(reader &, int minorVersion);
+    void read(reader &);
 
 private:
     typedef std::multimap<coord_def, map_marker *> dgn_marker_map;

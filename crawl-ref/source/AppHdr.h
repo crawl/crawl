@@ -90,6 +90,11 @@
     #endif
 #endif
 
+// Use this to seed the PRNG with a bit more than just time()... which
+// leads to problems if for any reason we get started twice in the same
+// second.
+#define USE_MORE_SECURE_SEED
+
 // =========================================================================
 //  System Defines
 // =========================================================================
@@ -138,16 +143,6 @@
     // Have the utimes function to set access and modification time on
     // a file.
     #define HAVE_UTIMES
-
-    // Use this to seed the PRNG with a bit more than just time()... turning
-    // this off is perfectly okay, the game just becomes more exploitable
-    // with a bit of hacking (ie only by people who know how).
-    //
-    // For now, we'll make it default to on for Linux (who should have
-    // no problems with compiling this).
-#ifndef TARGET_COMPILER_MINGW
-    #define USE_MORE_SECURE_SEED
-#endif
 
     // Use POSIX regular expressions
 #ifndef REGEX_PCRE

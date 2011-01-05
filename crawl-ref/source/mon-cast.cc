@@ -25,6 +25,7 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
+#include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
@@ -170,7 +171,6 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 }
 
 // Find an allied monster to cast a beneficial beam spell at.
-// Only used for haste other at the moment.
 static bool _set_allied_target(monster* caster, bolt & pbolt)
 {
     monster* selected_target = NULL;
@@ -180,20 +180,37 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
 
     for (monster_iterator targ(caster); targ; ++targ)
     {
-        if (*targ != caster
-            && (mons_genus(targ->type) == caster_genus
-                || mons_genus(targ->base_monster) == caster_genus
-                || targ->is_holy() && caster->is_holy())
+        if (*targ == caster)
+            continue;
+
+        int targ_distance = grid_distance(targ->pos(), caster->pos());
+
+        bool got_target = false;
+
+        // Shedu only heal each other.
+        if (mons_is_shedu(caster))
+            if (mons_is_shedu(*targ) && caster->mid == targ->number
+                && caster->number == targ->mid)
+            {
+                got_target = true;
+            }
+            else
+                continue;
+
+        else if (mons_genus(targ->type) == caster_genus
+                 || mons_genus(targ->base_monster) == caster_genus
+                 || targ->is_holy() && caster->is_holy()
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
         {
-            int targ_distance = grid_distance(targ->pos(), caster->pos());
-            if (targ_distance < min_distance && targ_distance < pbolt.range)
-            {
-                min_distance = targ_distance;
-                selected_target = *targ;
-            }
+            got_target = true;
+        }
+
+        if (got_target && targ_distance < min_distance && targ_distance < pbolt.range)
+        {
+            min_distance = targ_distance;
+            selected_target = *targ;
         }
     }
 
@@ -586,7 +603,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_STICKY_FLAME_SPLASH:
-    case SPELL_STICKY_FLAME:
+    case SPELL_STICKY_FLAME_RANGE:
         beam.colour   = RED;
         beam.name     = "sticky flame";
         beam.damage   = dice_def(3, 3 + power / 50);
@@ -1045,6 +1062,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HOLIES:
     case SPELL_SUMMON_GREATER_HOLY:
     case SPELL_REGENERATION:
+    case SPELL_CORPSE_ROT:
+    case SPELL_LEDAS_LIQUEFACTION:
         return (true);
     default:
         if (check_validity)
@@ -1194,9 +1213,7 @@ static bool _animate_dead_okay()
     if (is_butchering())
         return (false);
 
-    // TODO: Could probably check herbivorousness here too, but this should be
-    // enough for the moment.
-    if (you.hunger_state < HS_SATIATED)
+    if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
         return (false);
 
     return (true);
@@ -1263,7 +1280,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return (false);
     else if (mons_is_confused(mons, false))
         return (false);
-    else if (mons->type == MONS_PANDEMONIUM_DEMON
+    else if (mons_is_ghost_demon(mons->type)
              && !mons->ghost->spellcaster)
     {
         return (false);
@@ -1442,7 +1459,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     spell_cast = hspell_pass[random2(5)];
                 }
 
-                if (spell_cast == SPELL_NO_SPELL)
+                // XXX: Resurrect is a do-nothing spell. Remove it!
+                if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_RESURRECT)
                     continue;
 
                 // Setup the spell.
@@ -1452,7 +1470,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 // resurrect, or sacrifice itself for.
                 if ((spell_cast == SPELL_HASTE_OTHER
                      || spell_cast == SPELL_HEAL_OTHER
-                     || spell_cast == SPELL_RESURRECT
                      || spell_cast == SPELL_SACRIFICE)
                         && !_set_allied_target(mons, beem))
                 {
@@ -1484,7 +1501,19 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
                 // Monsters are limited casting it, too.
                 if (spell_cast == SPELL_MALIGN_GATEWAY
-                    && count_malign_gateways() >= 1)
+                    && !can_cast_malign_gateway())
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
+
+                // Monsters shouldn't cast BiA before going berserk.
+                // Thematically, they are berserkers, they rush into
+                // battle without thinking. Stopping before berserk to
+                // ask your god for a few friends seems like too
+                // complicated a thought.
+                if (spell_cast == SPELL_BROTHERS_IN_ARMS
+                    && !mons->props.exists("went_berserk"))
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
@@ -2286,7 +2315,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (spell_cast == SPELL_CANTRIP
         || spell_cast == SPELL_VAMPIRIC_DRAINING
         || spell_cast == SPELL_MIRROR_DAMAGE
-        || spell_cast == SPELL_DRAIN_LIFE)
+        || spell_cast == SPELL_DRAIN_LIFE
+        || spell_cast == SPELL_LEDAS_LIQUEFACTION)
     {
         do_noise = false;       // Spell itself does the messaging.
     }
@@ -2359,6 +2389,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BERSERKER_RAGE:
+        mons->props["went_berserk"] = bool(true);
         mons->go_berserk(true);
         return;
 
@@ -2371,13 +2402,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, KC_OTHER, dur));
         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, KC_OTHER, dur));
         dprf("Trog's Hand cast (dur: %d aut)", dur);
-        return;
-    }
-
-    case SPELL_BROTHERS_IN_ARMS:
-    {
-        const int power = (mons->hit_dice * 20) + random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
-        summon_berserker(power, GOD_TROG, 0, true);
         return;
     }
 
@@ -2426,7 +2450,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (!feat_is_watery(grd(mons->pos())))
             return;
 
-        big_cloud(CLOUD_INK, mons->kill_alignment(), mons->pos(), 30, 30);
+        big_cloud(CLOUD_INK, mons, mons->pos(), 30, 30);
 
         simple_monster_message(
             mons,
@@ -2840,6 +2864,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_MALIGN_GATEWAY:
+        if (!can_cast_malign_gateway())
+            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! Counted %d gateways.", mons->name(DESC_CAP_THE).c_str(), count_malign_gateways());
         cast_malign_gateway(mons, 200);
         return;
 
@@ -2863,6 +2889,29 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                 + random2(mons->hit_dice / 4 + 1), god);
         return;
 
+    case SPELL_BROTHERS_IN_ARMS:
+    {
+        const int power = (mons->hit_dice * 20) + random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
+        monster_type to_summon;
+
+        if (mons->type == MONS_SPRIGGAN_BERSERKER)
+        {
+            monster_type berserkers[4] = { MONS_BLACK_BEAR, MONS_BEAR, MONS_GRIZZLY_BEAR,
+                                           MONS_POLAR_BEAR };
+            to_summon = RANDOM_ELEMENT(berserkers);
+        }
+        else /* if (mons->type == MONS_DEEP_DWARF_BERSERKER) */
+        {
+            monster_type berserkers[8] = { MONS_BLACK_BEAR, MONS_GRIZZLY_BEAR, MONS_OGRE,
+                                           MONS_TROLL, MONS_HILL_GIANT, MONS_DEEP_TROLL,
+                                           MONS_ROCK_TROLL, MONS_TWO_HEADED_OGRE};
+            to_summon = RANDOM_ELEMENT(berserkers);
+        }
+
+        summon_berserker(power, mons, to_summon);
+        return;
+    }
+
     case SPELL_SYMBOL_OF_TORMENT:
         torment(mons->mindex(), mons->pos());
         return;
@@ -2877,6 +2926,22 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_DRAIN_LIFE:
         _mons_drain_life(mons);
+        return;
+
+    case SPELL_LEDAS_LIQUEFACTION:
+        if (!mons->has_ench(ENCH_LIQUEFYING))
+        {
+            mprf("%s liquefies the ground around %s!", mons->name(DESC_CAP_THE).c_str(),
+                mons->pronoun(PRONOUN_REFLEXIVE).c_str());
+            flash_view_delay(BROWN, 80);
+        }
+
+        mons->add_ench(ENCH_LIQUEFYING);
+        invalidate_agrid(true);
+        return;
+
+    case SPELL_CORPSE_ROT:
+        corpse_rot(mons);
         return;
 
     case SPELL_SUMMON_GREATER_DEMON:
@@ -3362,6 +3427,10 @@ static unsigned int _noise_keys(std::vector<std::string>& key_list,
     key_list.push_back(spell_name + cast_str);
 
     const unsigned int num_spell_keys = key_list.size();
+
+    // Before just using generic per-monster casts, try per-monster,
+    // per-spell.
+    key_list.push_back(spell_name + " " + mons_type_name(mons->type, DESC_PLAIN) + cast_str);
 
     // Next the monster type name, then species name, then genus name.
     key_list.push_back(mons_type_name(mons->type, DESC_PLAIN) + cast_str);

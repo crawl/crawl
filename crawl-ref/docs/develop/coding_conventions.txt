@@ -35,9 +35,9 @@ the remaining parameters are usually indented in the lines below.
 The same is true when a method is called:
 
         // place guardian {dlb}:
-        mons_place( MONS_GUARDIAN_NAGA, BEH_SLEEP, MHITNOT, true,
-                    sr.x1 + random2( sr.x2 - sr.x1 ),
-                    sr.y1 + random2( sr.y2 - sr.y1 ) );
+        mons_place(MONS_GUARDIAN_NAGA, BEH_SLEEP, MHITNOT, true,
+                   sr.x1 + random2(sr.x2 - sr.x1),
+                   sr.y1 + random2(sr.y2 - sr.y1));
 
 
 There are cases where this is not possible because the parameters themselves
@@ -55,7 +55,7 @@ This probably seems obvious for simple ifs ...
         && !player_in_branch(BRANCH_SWAMP)
         && !player_in_branch(BRANCH_SHOALS))
     {
-        _prepare_water( level_number );
+        _prepare_water(level_number);
     }
 
 ... but it should also be followed for else if conditionals.
@@ -63,7 +63,7 @@ This probably seems obvious for simple ifs ...
         else if (keyin == ESCAPE || keyin == ' '
                  || keyin == '\r' || keyin == '\n')
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -125,8 +125,8 @@ the conditional statements should be.
 
 Comparisons using the ? shortcut may be indented ...
 
-            mpr( forget_spell() ? "You have forgotten a spell!"
-                                : "You get a splitting headache." );
+            mpr(forget_spell() ? "You have forgotten a spell!"
+                               : "You get a splitting headache.");
 
 ... but really short ones don't have to be.
 
@@ -199,7 +199,7 @@ Braces are always put on their own lines.
     {
         curse_an_item(false);
     }
-    while ( !one_chance_in(3) );
+    while (!one_chance_in(3));
 
 
 If many comparisons are necessary, this can result in a number of nested
@@ -226,7 +226,7 @@ Otherwise, place braces.
         }
 
 
-    for ( int i = 0; i < power_level * 5 + 2; ++i )
+    for (int i = 0; i < power_level * 5 + 2; ++i)
     {
         create_monster(result, std::min(power/50, 6),
                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
@@ -405,3 +405,20 @@ Another thing to watch for with such flags is this sort of thing:
 The #elif statement should read '#elif defined(SOME_OTHER_FLAG)'. If the
 macro was undefined, this would lead to the same undefined behavior noted
 above. If it was defined as above, the #elif would not function as expected.
+
+G) Spaces around parenthesis
+----------------------------
+Prefer no spaces inside parentheses.
+Put a space before opening parenthesis if it's part of a conditional or preceded by a statement.
+
+    return (inf == CLOUD_STINK && superior == CLOUD_POISON);
+
+    if (trap_count > 0)
+
+    catch (map_load_exception &mload)
+
+ But not if it is the parameter list of a function or method.
+
+    _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
+
+    tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));

@@ -12,13 +12,16 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
+#include "coordit.h"
 #include "decks.h"
 #include "describe.h"
 #include "env.h"
 #include "food.h"
+#include "ghost.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
@@ -34,6 +37,7 @@
 #include "tiledef-unrand.h"
 #include "tilemcache.h"
 #include "traps.h"
+#include "viewgeom.h"
 
 // This should not be changed.
 COMPILE_CHECK(TILE_DNGN_UNSEEN == 0, c0);
@@ -191,6 +195,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_WAX_WALL;
     case DNGN_TREE:
         return TILE_DNGN_TREE;
+    case DNGN_SWAMP_TREE:
+        return TILE_DNGN_TREE; // fixme
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
     case DNGN_LAVA:
@@ -425,8 +431,12 @@ tileidx_t tileidx_feature(const coord_def &gc)
 
 tileidx_t tileidx_out_of_bounds(int branch)
 {
-    if (branch == BRANCH_SHOALS)
+    if (branch == BRANCH_SHOALS
+        && you.level_type != LEVEL_LABYRINTH
+        && you.level_type != LEVEL_PORTAL_VAULT)
+    {
         return (TILE_DNGN_OPEN_SEA | TILE_FLAG_UNSEEN);
+    }
     else
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
@@ -489,6 +499,52 @@ static bool _is_skeleton(const int z_type)
     return (z_type == MONS_SKELETON_SMALL || z_type == MONS_SKELETON_LARGE);
 }
 
+static bool _is_zombie(const int z_type)
+{
+    return (z_type == MONS_ZOMBIE_SMALL || z_type == MONS_ZOMBIE_LARGE);
+}
+
+static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
+{
+    switch (z_tile)
+    {
+    case TILEP_MONS_ZOMBIE_SMALL:
+        return TILEP_MONS_SPECTRAL_SMALL;
+    case TILEP_MONS_ZOMBIE_LARGE:
+        return TILEP_MONS_SPECTRAL_LARGE;
+    case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
+        return TILEP_MONS_SPECTRAL_QUADRUPED_SMALL;
+    case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
+        return TILEP_MONS_SPECTRAL_QUADRUPED_LARGE;
+    case TILEP_MONS_ZOMBIE_BAT:
+        return TILEP_MONS_SPECTRAL_BAT;
+    case TILEP_MONS_ZOMBIE_BEE:
+        return TILEP_MONS_SPECTRAL_BEE;
+    case TILEP_MONS_ZOMBIE_BEETLE:
+        return TILEP_MONS_SPECTRAL_BEETLE;
+    case TILEP_MONS_ZOMBIE_FISH:
+        return TILEP_MONS_SPECTRAL_FISH;
+    case TILEP_MONS_ZOMBIE_CENTAUR:
+        return TILEP_MONS_SPECTRAL_CENTAUR;
+    case TILEP_MONS_ZOMBIE_NAGA:
+        return TILEP_MONS_SPECTRAL_NAGA;
+    case TILEP_MONS_ZOMBIE_SNAKE:
+        return TILEP_MONS_SPECTRAL_SNAKE;
+    case TILEP_MONS_ZOMBIE_SPIDER:
+        return TILEP_MONS_SPECTRAL_SPIDER;
+    case TILEP_MONS_ZOMBIE_DRAGON:
+        return TILEP_MONS_SPECTRAL_DRAGON;
+    default:
+        if (z_tile >= TILEP_MONS_ZOMBIE_HYDRA
+            && z_tile <= TILEP_MONS_SKELETON_SMALL)
+        {
+            return TILEP_MONS_SPECTRAL_HYDRA
+                   + (z_tile - TILEP_MONS_ZOMBIE_HYDRA);
+        }
+    }
+    return TILEP_ERROR;
+}
+
 static tileidx_t _tileidx_monster_zombified(const monster* mon)
 {
     const int z_type = mon->type;
@@ -501,6 +557,10 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
     }
 
     const int subtype = (int) mons_zombie_base(mon);
+
+    if (subtype == MONS_KRAKEN)
+        return TILEP_MONS_ZOMBIE_KRAKEN;
+
     const int z_size = mons_zombie_size(subtype);
 
     tileidx_t z_tile;
@@ -553,8 +613,20 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
                      + std::min((int)mon->number, 5) - 1;
             break;
         }
+        else if (_is_zombie(z_type)
+                 && mons_genus(subtype) == MONS_HOUND)
+        {
+            return TILEP_MONS_ZOMBIE_HOUND;
+        }
         // else fall-through
     case MON_SHAPE_QUADRUPED_TAILLESS:
+        if (_is_zombie(z_type)
+            && (mons_genus(subtype) == MONS_GIANT_FROG
+                || mons_genus(subtype) == MONS_BLINK_FROG))
+        {
+            return TILEP_MONS_ZOMBIE_TOAD;
+        }
+
         if (z_type == MONS_SKELETON_SMALL)
             return TILEP_MONS_SKELETON_QUADRUPED_SMALL;
         else if (z_type == MONS_SKELETON_LARGE)
@@ -597,7 +669,7 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
     }
 
     if (z_type == MONS_SPECTRAL_THING)
-        z_tile += (TILEP_MONS_SPECTRAL_SMALL - TILEP_MONS_ZOMBIE_SMALL);
+        z_tile = _zombie_tile_to_spectral(z_tile);
 
     return (z_tile);
 }
@@ -669,6 +741,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GIANT_BAT;
     case MONS_BUTTERFLY:
         return _mon_mod(TILEP_MONS_BUTTERFLY, colour);
+    case MONS_RAVEN:
+        return TILEP_MONS_RAVEN;
 
     // centaurs ('c')
     case MONS_CENTAUR:
@@ -882,6 +956,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GREEN_RAT;
     case MONS_ORANGE_RAT:
         return TILEP_MONS_ORANGE_RAT;
+    case MONS_PORCUPINE:
+        return TILEP_MONS_PORCUPINE;
+    case MONS_LABORATORY_RAT:
+        return _mon_clamp(TILEP_MONS_LABORATORY_RAT, tile_offset_for_labrat_colour(colour));
 
     // spiders and insects ('s')
     case MONS_GIANT_MITE:
@@ -918,6 +996,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
         return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE;
+    case MONS_FIRECRAB:
+        return TILEP_MONS_FIRECRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -934,10 +1014,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_FIRE_VORTEX;
     case MONS_SPATIAL_VORTEX:
         return TILEP_MONS_SPATIAL_VORTEX;
+    case MONS_TWISTER:
+        return TILEP_MONS_TWISTER;
 
-    // elementals (different symbols)
-    case MONS_AIR_ELEMENTAL:
-        return TILEP_MONS_AIR_ELEMENTAL;
+    // elementals ('E')
+//    case MONS_AIR_ELEMENTAL:
+//        return TILEP_MONS_AIR_ELEMENTAL;
     case MONS_EARTH_ELEMENTAL:
         return TILEP_MONS_EARTH_ELEMENTAL;
     case MONS_FIRE_ELEMENTAL:
@@ -1175,6 +1257,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GREATER_MUMMY;
     case MONS_MUMMY_PRIEST:
         return TILEP_MONS_MUMMY_PRIEST;
+    case MONS_BOG_MUMMY:
+        return TILEP_MONS_BOG_MUMMY;
 
     // nagas ('N')
     case MONS_NAGA:
@@ -1204,6 +1288,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_BURNING_BUSH:
         return TILEP_MONS_BUSH_BURNING;
     case MONS_OKLOB_SAPLING:
+        return TILEP_MONS_OKLOB_SAPLING;
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
 
@@ -1256,6 +1341,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_VAMPIRE_KNIGHT;
     case MONS_VAMPIRE_MAGE:
         return TILEP_MONS_VAMPIRE_MAGE;
+    case MONS_JORY:
+        return TILEP_MONS_JORY;
 
     // wraiths ('W')
     case MONS_WRAITH:
@@ -1318,8 +1405,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_JELLYFISH;
     case MONS_KRAKEN:
         return TILEP_MONS_KRAKEN_HEAD;
-    case MONS_KRAKEN_TENTACLE:
-        return _mon_random(TILEP_MONS_KRAKEN_TENTACLE);
 
     // lava monsters
     case MONS_LAVA_WORM:
@@ -1337,7 +1422,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // humans ('@')
     case MONS_HUMAN:
-    case MONS_DEMIGOD:
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
@@ -1353,12 +1437,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
-    case MONS_DWARF:
-        return TILEP_MONS_DWARF;
     case MONS_SLAVE:
         return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
     case MONS_DEMONSPAWN:
         return TILEP_MONS_DEMONSPAWN;
+    case MONS_DEMIGOD:
+        return TILEP_MONS_DEMIGOD;
     case MONS_HALFLING:
         return TILEP_MONS_HALFLING;
     case MONS_PALADIN:
@@ -1520,6 +1604,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return _mon_random(TILEP_MONS_ORB_OF_DESTRUCTION);
     case MONS_BLESSED_TOE:
         return TILEP_MONS_BLESSED_TOE;
+    case MONS_SILVER_STAR:
+        return TILEP_MONS_SILVER_STAR;
 
     // other symbols
     case MONS_VAPOUR:
@@ -1578,6 +1664,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SPRIGGAN_RIDER;
     case MONS_SPRIGGAN_DRUID:
         return TILEP_MONS_SPRIGGAN_DRUID;
+    case MONS_SPRIGGAN_BERSERKER:
+        return TILEP_MONS_SPRIGGAN_BERSERKER;
     case MONS_SPRIGGAN_DEFENDER:
         return TILEP_MONS_SPRIGGAN_DEFENDER;
     case MONS_SPRIGGAN_ASSASSIN:
@@ -1608,6 +1696,16 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_SAINT_ROKA:
         return TILEP_MONS_SAINT_ROKA;
 
+    // dwarves ('q')
+    case MONS_DWARF:
+        return TILEP_MONS_DWARF;
+    case MONS_DEEP_DWARF_BERSERKER:
+        return TILEP_MONS_DEEP_DWARF_BERSERKER;
+    case MONS_DEEP_DWARF_NECROMANCER:
+        return TILEP_MONS_DEEP_DWARF_NECROMANCER;
+    case MONS_GNOME:
+        return TILEP_MONS_GNOME;
+
     // curse skull ('z')
     case MONS_MURRAY:
         return TILEP_MONS_MURRAY;
@@ -1617,15 +1715,19 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_POLYPHEMUS;
     case MONS_CHUCK:
         return TILEP_MONS_CHUCK;
+    case MONS_IRON_GIANT:
+        return TILEP_MONS_IRON_GIANT;
     case MONS_ANTAEUS:
         return TILEP_MONS_ANTAEUS;
-    // TODO
-    case MONS_IRON_GIANT:
-        return TILEP_MONS_STONE_GIANT;
 
     // dragons and hydras ('D')
     case MONS_LERNAEAN_HYDRA:
-        return TILEP_MONS_LERNAEAN_HYDRA;
+        // Step down the number of heads to get the appropriate tile:
+        // For the last five heads, use tiles 1-5, for greater amounts
+        // use the next tile for every 5 more heads.
+        return _mon_clamp(TILEP_MONS_LERNAEAN_HYDRA,
+                          number <= 5 ? number - 1
+                                      : 4 + (number - 1)/5);
     case MONS_XTAHUA:
         return TILEP_MONS_XTAHUA;
 
@@ -1762,6 +1864,423 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     return TILEP_MONS_PROGRAM_BUG;
 }
 
+// Returns true if using a directional tentacle tile would leak
+// information the player doesn't have about a tentacle segment's
+// current position.
+static bool _tentacle_pos_unknown(const monster *tentacle,
+                                  const coord_def orig_pos)
+{
+    // We can see the segment, no guessing necessary.
+    if (!tentacle->submerged())
+        return (false);
+
+    const coord_def t_pos = tentacle->pos();
+
+    // Checks whether there are any positions adjacent to the
+    // original tentacle that might also contain the segment.
+    for (adjacent_iterator ai(orig_pos); ai; ++ai)
+    {
+        if (*ai == t_pos)
+            continue;
+
+        if (!in_bounds(*ai))
+            continue;
+
+        if (you.pos() == *ai)
+            continue;
+
+        // If there's an adjacent deep water tile, the segment
+        // might be there instead.
+        if (grd(*ai) == DNGN_DEEP_WATER)
+        {
+            const monster *mon = monster_at(*ai);
+            if (mon && you.can_see(mon))
+            {
+                // Could originate from the kraken.
+                if (mon->type == MONS_KRAKEN)
+                    return (true);
+
+                // Otherwise, we know the segment can't be there.
+                continue;
+            }
+            return (true);
+        }
+
+        if (grd(*ai) == DNGN_SHALLOW_WATER)
+        {
+            const monster *mon = monster_at(*ai);
+
+            // We know there's no segment there.
+            if (!mon)
+                continue;
+
+            // Disturbance in shallow water -> might be a tentacle.
+            if (mon->type == MONS_KRAKEN || mon->submerged())
+                return (true);
+        }
+    }
+
+    // Using a directional tile leaks no information.
+    return (false);
+}
+
+enum main_dir
+{
+    NORTH = 0,
+    EAST,
+    SOUTH,
+    WEST
+};
+
+static void _add_tentacle_overlay(const coord_def pos,
+                                  const main_dir dir)
+{
+    coord_def next = pos;
+    switch (dir)
+    {
+        case NORTH: next += coord_def( 0, -1); break;
+        case EAST:  next += coord_def( 1,  0); break;
+        case SOUTH: next += coord_def( 0,  1); break;
+        case WEST:  next += coord_def(-1,  0); break;
+        default:
+            ASSERT(false);
+    }
+    if (!in_bounds(next))
+        return;
+
+    tile_flags flag;
+    switch (dir)
+    {
+        case NORTH: flag = TILE_FLAG_KRAKEN_SW; break; // SW
+        case EAST:  flag = TILE_FLAG_KRAKEN_NW; break; // NW
+        case SOUTH: flag = TILE_FLAG_KRAKEN_NE; break; // NE
+        case WEST:  flag = TILE_FLAG_KRAKEN_SE; break; // SE
+        default:
+            ASSERT(false);
+    }
+    env.tile_bg(grid2show(next)) |= flag;
+}
+
+static void _handle_tentacle_overlay(const coord_def pos,
+                                     const tileidx_t tile)
+{
+    switch (tile)
+    {
+    case TILEP_MONS_KRAKEN_TENTACLE_NW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW:
+        _add_tentacle_overlay(pos, NORTH);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_NE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE:
+        _add_tentacle_overlay(pos, EAST);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE:
+        _add_tentacle_overlay(pos, SOUTH);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW:
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW:
+        _add_tentacle_overlay(pos, WEST);
+        break;
+    // diagonals
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE:
+        _add_tentacle_overlay(pos, NORTH);
+        _add_tentacle_overlay(pos, SOUTH);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW:
+        _add_tentacle_overlay(pos, EAST);
+        _add_tentacle_overlay(pos, WEST);
+        break;
+    // other
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW:
+        _add_tentacle_overlay(pos, NORTH);
+        _add_tentacle_overlay(pos, EAST);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE:
+        _add_tentacle_overlay(pos, EAST);
+        _add_tentacle_overlay(pos, SOUTH);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW:
+        _add_tentacle_overlay(pos, SOUTH);
+        _add_tentacle_overlay(pos, WEST);
+        break;
+    case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW:
+        _add_tentacle_overlay(pos, NORTH);
+        _add_tentacle_overlay(pos, WEST);
+        break;
+    }
+}
+
+static tileidx_t _tileidx_tentacle(const monster *mon)
+{
+    ASSERT(mon->type == MONS_KRAKEN_TENTACLE
+           || mon->type == MONS_KRAKEN_TENTACLE_SEGMENT);
+
+    // If the tentacle is submerged, we shouldn't even get here.
+    ASSERT(!mon->submerged());
+
+    // Get the parent tentacle.
+    ASSERT(mon->props.exists("inwards"));
+    const int h_idx = mon->props["inwards"].get_int();
+    ASSERT(!invalid_monster_index(h_idx));
+    const monster head = menv[h_idx];
+
+    // Get head and tentacle positions.
+    const coord_def t_pos = mon->pos();  // tentacle position
+    const coord_def h_pos = head.pos();  // head position
+    ASSERT(adjacent(t_pos, h_pos));
+
+    const bool head_in_water =
+                    (head.type == MONS_KRAKEN
+                     || head.type == MONS_ZOMBIE_LARGE
+                     || _tentacle_pos_unknown(&head, mon->pos()));
+
+    // Tentacle end only requires checking of head position.
+    if (mon->type == MONS_KRAKEN_TENTACLE)
+    {
+        if (head_in_water)
+            return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
+
+        ASSERT(head.type == MONS_KRAKEN_TENTACLE_SEGMENT);
+
+        // Different handling according to relative positions.
+        if (h_pos.x == t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_N;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_S;
+        }
+        else if (h_pos.y == t_pos.y)
+        {
+            if (h_pos.x < t_pos.x)
+                return TILEP_MONS_KRAKEN_TENTACLE_W;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_E;
+        }
+        else if (h_pos.x < t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_NW;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SW;
+        }
+        else if (h_pos.x > t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_NE;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SE;
+        }
+        ASSERT(false);
+    }
+
+    // Only tentacle segments from now on.
+    ASSERT(mon->type == MONS_KRAKEN_TENTACLE_SEGMENT);
+
+    // For segments, we also need the next segment (or end piece).
+    ASSERT(mon->props.exists("outwards"));
+    const int n_idx = mon->props["outwards"].get_int();
+    ASSERT(!invalid_monster_index(n_idx));
+    const monster next = menv[n_idx];
+
+    const coord_def n_pos = next.pos();  // next position
+    if (head_in_water && next.submerged())
+    {
+        // Both head and next are submerged.
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
+    }
+
+    if (head_in_water || _tentacle_pos_unknown(&next, mon->pos()))
+    {
+        // One segment end goes into water, the other
+        // into the direction of head or next.
+        const coord_def s_pos = (head_in_water ? n_pos : h_pos);
+
+        if (s_pos.x == t_pos.x)
+        {
+            if (s_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S;
+        }
+        else if (s_pos.y == t_pos.y)
+        {
+            if (s_pos.x < t_pos.x)
+                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E;
+        }
+        else if (s_pos.x < t_pos.x)
+        {
+            if (s_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW;
+        }
+        else if (s_pos.x > t_pos.x)
+        {
+            if (s_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
+        }
+        ASSERT(false);
+    }
+
+    // Okay, neither head nor next are submerged.
+    // Compare all three positions.
+
+    // Straight lines first: Vertical.
+    if (h_pos.x == t_pos.x && t_pos.x == n_pos.x)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_S;
+    // Horizontal.
+    if (h_pos.y == t_pos.y && t_pos.y == n_pos.y)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_W;
+    // Diagonals.
+    if (h_pos.x < t_pos.x && t_pos.x < n_pos.x
+           && h_pos.y < t_pos.y && t_pos.y < n_pos.y
+        || n_pos.x < t_pos.x && t_pos.x < h_pos.x
+           && n_pos.y < t_pos.y && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE;
+    }
+    if (n_pos.x < t_pos.x && t_pos.x < h_pos.x
+           && h_pos.y < t_pos.y && t_pos.y < n_pos.y
+        || h_pos.x < t_pos.x && t_pos.x < n_pos.x
+           && n_pos.y < t_pos.y && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW;
+    }
+
+    // Curved segments.
+    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x == n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x == h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_N;
+    }
+    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x == n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x == h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_S;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x == n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x == h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_W;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x == n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x == h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_W;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y < t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y < t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y > t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y > t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y < t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y < t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW;
+    }
+    if (h_pos.x > t_pos.x && h_pos.y < t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y < t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE;
+    }
+
+    // Connect corners and edges.
+    if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x == t_pos.x && n_pos.y < t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
+    {
+        _add_tentacle_overlay(t_pos, WEST);
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
+    }
+    if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x == t_pos.x && n_pos.y < t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE;
+    }
+    if (h_pos.x == t_pos.x && h_pos.y > t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x == t_pos.x && n_pos.y > t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW;
+    }
+    if (h_pos.x == t_pos.x && h_pos.y > t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x == t_pos.x && n_pos.y > t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE;
+    }
+    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE;
+    }
+    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y > n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y > h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW;
+    }
+    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
+           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
+        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
+           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
+    {
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW;
+    }
+
+    return TILEP_MONS_PROGRAM_BUG;
+}
+
 static tileidx_t _tileidx_monster_no_props(const monster* mon)
 {
     bool in_water = feat_is_water(grd(mon->pos()));
@@ -1817,12 +2336,12 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         case MONS_ARMOUR_MIMIC:
         case MONS_SCROLL_MIMIC:
         case MONS_POTION_MIMIC:
-            {
-                tileidx_t t = tileidx_item(get_mimic_item(mon));
-                if (mons_is_known_mimic(mon))
-                    t |= TILE_FLAG_MIMIC;
-                return t;
-            }
+        {
+            tileidx_t t = tileidx_item(get_mimic_item(mon));
+            if (mons_is_known_mimic(mon))
+                t |= TILE_FLAG_MIMIC;
+            return t;
+        }
 
         // Feature mimics get drawn with the dungeon, see tileidx_feature.
         case MONS_SHOP_MIMIC:
@@ -1836,24 +2355,39 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
             return 0;
 
         case MONS_DANCING_WEAPON:
-            {
-                // Use item tile.
-                item_def item = mitm[mon->inv[MSLOT_WEAPON]];
-                return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
-            }
+        {
+            // Use item tile.
+            item_def item = mitm[mon->inv[MSLOT_WEAPON]];
+            return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
+        }
 
+        case MONS_KRAKEN_TENTACLE:
+        case MONS_KRAKEN_TENTACLE_SEGMENT:
+        {
+            const tileidx_t t = _tileidx_tentacle(mon);
+            _handle_tentacle_overlay(mon->pos(), t);
+            return t;
+        }
         default:
             return _tileidx_monster_base(type, in_water, mon->colour,
-                                           mon->number, tile_num);
+                                         mon->number, tile_num);
         }
     }
+}
+
+static bool _tentacle_tile_not_levitating(tileidx_t tile)
+{
+    // All tiles between these two enums feature tentacles
+    // emerging from water.
+    return (tile >= TILEP_FIRST_TENTACLE_IN_WATER
+            && tile <= TILEP_LAST_TENTACLE_IN_WATER);
 }
 
 tileidx_t tileidx_monster(const monster* mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if (mons_flies(mons))
+    if (mons_flies(mons) && !_tentacle_tile_not_levitating(ch))
         ch |= TILE_FLAG_FLYING;
     if (mons->has_ench(ENCH_HELD))
         ch |= TILE_FLAG_NET;
@@ -1977,7 +2511,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 
     switch (item.sub_type)
     {
-    case WPN_KNIFE: return TILE_WPN_KNIFE;
+    case WPN_KNIFE:
+        return TILE_WPN_KNIFE;
 
     case WPN_DAGGER:
         if (race == ISFLAG_ORCISH)
@@ -1993,10 +2528,17 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
             return TILE_WPN_SHORT_SWORD_ELF;
         return TILE_WPN_SHORT_SWORD;
 
-    case WPN_QUICK_BLADE: return TILE_WPN_QUICK_BLADE;
-    case WPN_SABRE: return TILE_WPN_SABRE;
-    case WPN_FALCHION: return TILE_WPN_FALCHION;
-    case WPN_KATANA: return TILE_WPN_KATANA;
+    case WPN_QUICK_BLADE:
+        return TILE_WPN_QUICK_BLADE;
+
+    case WPN_SABRE:
+        return TILE_WPN_SABRE;
+
+    case WPN_FALCHION:
+        return TILE_WPN_FALCHION;
+
+    case WPN_KATANA:
+        return TILE_WPN_KATANA;
 
     case WPN_LONG_SWORD:
         if (race == ISFLAG_ORCISH)
@@ -2473,6 +3015,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_BAT;
     case MONS_BUTTERFLY:
         return TILE_CORPSE_BUTTERFLY;
+    case MONS_RAVEN:
+        return TILE_CORPSE_RAVEN;
 
     // centaurs ('c')
     case MONS_CENTAUR:
@@ -2631,6 +3175,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
         return TILE_CORPSE_DWARF;
+    case MONS_GNOME:
+        return TILE_CORPSE_GNOME;
 
     // rodents ('r')
     case MONS_RAT:
@@ -2643,6 +3189,17 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GREEN_RAT;
     case MONS_ORANGE_RAT:
         return TILE_CORPSE_ORANGE_RAT;
+    case MONS_PORCUPINE:
+        return TILE_CORPSE_PORCUPINE;
+    case MONS_LABORATORY_RAT:
+    {
+        int colour_offset = tile_offset_for_labrat_colour(item.colour);
+
+        if (colour_offset == -1)
+            colour_offset = 0;
+
+        return (TILE_CORPSE_LABORATORY_RAT + colour_offset);
+    }
 
     // spiders and insects ('s')
     case MONS_GIANT_MITE:
@@ -2679,6 +3236,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
         return TILE_CORPSE_ALLIGATOR_SNAPPING_TURTLE;
+    case MONS_FIRECRAB:
+        return TILE_CORPSE_FIRECRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -2811,8 +3370,14 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HARPY;
     case MONS_MINOTAUR:
         return TILE_CORPSE_MINOTAUR;
+    case MONS_KENKU:
+        return TILE_CORPSE_KENKU;
     case MONS_SPHINX:
         return TILE_CORPSE_SPHINX;
+
+    // beasts ('I')
+    case MONS_SKY_BEAST:
+        return TILE_CORPSE_SKY_BEAST;
 
     // jellies ('J')
     case MONS_GIANT_AMOEBA:
@@ -2909,7 +3474,12 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_HELL_KNIGHT:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
+    case MONS_DEMIGOD: // haloed corpse looks abysmal
         return TILE_CORPSE_HUMAN;
+    case MONS_DEMONSPAWN:
+        return TILE_CORPSE_DEMONSPAWN;
+    case MONS_HALFLING:
+        return TILE_CORPSE_HALFLING;
     case MONS_SHAPESHIFTER:
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:
@@ -3313,9 +3883,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     }
 
     if (label >= TILE_SCR_ID_FIRST && label <= TILE_SCR_ID_LAST)
-    {
         return (TILE_SCROLL);
-    }
 
     if (label >= TILE_WAND_ID_FIRST && label <= TILE_WAND_ID_LAST)
     {
@@ -3604,6 +4172,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DEMONIC_HORDE:            return TILEG_DEMONIC_HORDE;
     case SPELL_SUMMON_GREATER_DEMON:     return TILEG_SUMMON_GREATER_DEMON;
     case SPELL_SUMMON_HORRIBLE_THINGS:   return TILEG_SUMMON_HORRIBLE_THINGS;
+    case SPELL_MALIGN_GATEWAY:           return TILEG_MALIGN_GATEWAY;
 
     // Necromancy
     case SPELL_ANIMATE_SKELETON:         return TILEG_ANIMATE_SKELETON;
@@ -3644,12 +4213,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MAGIC_DART:               return TILEG_MAGIC_DART;
     case SPELL_ISKENDERUNS_MYSTIC_BLAST: return TILEG_ISKENDERUNS_MYSTIC_BLAST;
     case SPELL_IOOD:                     return TILEG_IOOD;
-
-    // Divination (soon to be obsolete, or moved to abilities)
-    case SPELL_DETECT_SECRET_DOORS:      return TILEG_DETECT_SECRET_DOORS;
-    case SPELL_DETECT_TRAPS:             return TILEG_DETECT_TRAPS;
-    case SPELL_DETECT_ITEMS:             return TILEG_DETECT_ITEMS;
-    case SPELL_DETECT_CREATURES:         return TILEG_DETECT_CREATURES;
 
     // --------------------------------------------
     // Rods and abilities (tiles needed for later)
@@ -3697,6 +4260,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DRACONIAN_BREATH:
     case SPELL_WATER_ELEMENTALS:
     case SPELL_PORKALATOR:
+    case SPELL_STICKY_FLAME_RANGE:
     default:
         return TILEG_ERROR;
     }
@@ -3746,6 +4310,43 @@ tileidx_t tileidx_skill(skill_type skill, bool active)
         ch++;
 
     return ch;
+}
+
+tileidx_t tileidx_command(const command_type cmd)
+{
+    switch (cmd)
+    {
+    case CMD_REST:
+        return TILEG_CMD_REST;
+    case CMD_EXPLORE:
+        return TILEG_CMD_EXPLORE;
+    case CMD_INTERLEVEL_TRAVEL:
+        return TILEG_CMD_INTERLEVEL_TRAVEL;
+    case CMD_SEARCH_STASHES:
+        return TILEG_CMD_SEARCH_STASHES;
+    case CMD_REPLAY_MESSAGES:
+        return TILEG_CMD_REPLAY_MESSAGES;
+    case CMD_RESISTS_SCREEN:
+        return TILEG_CMD_RESISTS_SCREEN;
+    case CMD_DISPLAY_OVERMAP:
+        return TILEG_CMD_DISPLAY_OVERMAP;
+    case CMD_DISPLAY_RELIGION:
+        return TILEG_CMD_DISPLAY_RELIGION;
+    case CMD_DISPLAY_MUTATIONS:
+        return TILEG_CMD_DISPLAY_MUTATIONS;
+    case CMD_DISPLAY_SKILLS:
+        return TILEG_CMD_DISPLAY_SKILLS;
+    case CMD_DISPLAY_CHARACTER_STATUS:
+        return TILEG_CMD_DISPLAY_CHARACTER_STATUS;
+    case CMD_SAVE_GAME_NOW:
+        return TILEG_CMD_SAVE_GAME_NOW;
+    case CMD_EDIT_PLAYER_TILE:
+        return TILEG_CMD_EDIT_PLAYER_TILE;
+    case CMD_DISPLAY_COMMANDS:
+        return TILEG_CMD_DISPLAY_COMMANDS;
+    default:
+        return TILEG_TODO;
+    }
 }
 
 tileidx_t tileidx_known_brand(const item_def &item)

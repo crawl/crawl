@@ -297,7 +297,7 @@ ENDMAP
 ##############################################################################
 #       small crypt building
 NAME:   minicrypt_bobbens
-TAGS:   mini_float allow_dup
+TAGS:   allow_dup
 DEPTH:  Crypt
 MONS:   necromancer
 MONS:   large zombie/small zombie/large skeleton/small skeleton

@@ -185,7 +185,13 @@ bool dump_char(const std::string &fname, bool show_prices, bool full_id,
 
 static void _sdump_header(dump_params &par)
 {
-    par.text += " " CRAWL " version " + Version::Long();
+    std::string type = crawl_state.game_type_name();
+    if (type.empty())
+        type = CRAWL;
+    else
+        type += " DCSS";
+
+    par.text += " " + type + " version " + Version::Long();
     par.text += " character file.\n\n";
 }
 
@@ -226,11 +232,11 @@ static void _sdump_hunger(dump_params &par)
 static void _sdump_transform(dump_params &par)
 {
     std::string &text(par.text);
-    if (you.attribute[ATTR_TRANSFORMATION])
+    if (you.form)
     {
         std::string verb = par.se? "were" : "are";
 
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_SPIDER:
             text += "You " + verb + " in spider-form.";
@@ -258,6 +264,8 @@ static void _sdump_transform(dump_params &par)
             break;
         case TRAN_PIG:
             text += "You " + verb + " a filthy swine.";
+            break;
+        case TRAN_NONE:
             break;
         }
 

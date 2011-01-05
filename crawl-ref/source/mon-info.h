@@ -73,11 +73,13 @@ struct monster_info_base
     monster_type type;
     monster_type base_type;
     monster_type draco_type;
+    dungeon_feature_type mimic_feature;
     unsigned number;
     unsigned colour;
     mon_attitude_type attitude;
     mon_dam_level_type dam;
-    dungeon_feature_type fire_blocker; // TODO: maybe we should store the position instead
+    // TODO: maybe we should store the position instead
+    dungeon_feature_type fire_blocker;
     std::string description;
     std::string quote;
     mon_holy_type holi;
@@ -95,7 +97,8 @@ struct monster_info_base
 struct monster_info : public monster_info_base
 {
     static bool less_than(const monster_info& m1,
-                          const monster_info& m2, bool zombified = true, bool fullname = true);
+                          const monster_info& m2, bool zombified = true,
+                          bool fullname = true);
 
     static bool less_than_wrapper(const monster_info& m1,
                                   const monster_info& m2);
@@ -105,7 +108,8 @@ struct monster_info : public monster_info_base
 #define MILEV_NAME -2
     monster_info() {}
     monster_info(const monster* m, int level = MILEV_ALL);
-    monster_info(monster_type p_type, monster_type p_base_type = MONS_NO_MONSTER);
+    monster_info(monster_type p_type,
+                 monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
     : monster_info_base(mi)
@@ -148,7 +152,7 @@ struct monster_info : public monster_info_base
 
     inline bool is(unsigned mbflag) const
     {
-        return !!(mb & ((uint64_t)1 << mbflag));
+        return !!(mb & (((uint64_t)1) << mbflag));
     }
 
     inline std::string damage_desc() const

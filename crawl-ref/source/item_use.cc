@@ -36,7 +36,6 @@
 #include "map_knowledge.h"
 #include "fight.h"
 #include "food.h"
-#include "godabil.h"
 #include "goditem.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -248,13 +247,6 @@ static bool _valid_weapon_swap(const item_def &item)
             return (you.has_spell(SPELL_STICKS_TO_SNAKES));
 
         return (false);
-    }
-
-    // Bone Shards.
-    if (item.base_type == OBJ_CORPSES)
-    {
-        return (item.sub_type == CORPSE_SKELETON
-                && you.has_spell(SPELL_BONE_SHARDS));
     }
 
     // Sublimation of Blood.
@@ -1186,7 +1178,7 @@ static bool _fire_warn_if_impossible()
     }
 
     // If you can't wield it, you can't throw it.
-    if (!transform_can_wield())
+    if (!form_can_wield())
     {
         canned_msg(MSG_PRESENT_FORM);
         return (true);
@@ -1541,7 +1533,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     if (victim->atype() == ACT_PLAYER)
     {
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
         victim->moveto(pos);
         canned_msg(MSG_YOU_BLINK);
@@ -1556,8 +1548,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         mon->move_to_pos(pos);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3),
-                    victim->kill_alignment());
+        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
 
         mon->apply_location_effects(oldpos);
         mon->check_redraw(oldpos);
@@ -1581,7 +1572,7 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
 
     // A hack and code duplication, but that's easier than adding accounting
     // for each of multiple brands.
-    if (victim->id() == MONS_SIXFIRHY)
+    if (victim->type == MONS_SIXFIRHY)
     {
         if (!beam.is_tracer)
             victim->heal(10 + random2(15), false);
@@ -1597,7 +1588,7 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
     {
         if (victim->atype() == ACT_PLAYER)
             dmg_msg = "You are electrocuted!";
-        else if (victim->id() == MONS_SIXFIRHY)
+        else if (victim->type == MONS_SIXFIRHY)
             dmg_msg = victim->name(DESC_CAP_THE) + " is charged up!";
         else
             dmg_msg = "There is a sudden explosion of sparks!";
@@ -3895,7 +3886,8 @@ void drink(int slot)
     }
 
     if (alreadyknown && potion.sub_type == POT_BERSERK_RAGE
-        && !berserk_check_wielded_weapon())
+        && (!berserk_check_wielded_weapon()
+            || !you.can_go_berserk(true, true)))
     {
         return;
     }
@@ -4327,9 +4319,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     }
 
     // Even if not affected, it may be uncursed.
-    if (!is_enchantable_armour(arm, false)
-        || arm.plus > MAX_SEC_ENCHANT
-           && x_chance_in_y(arm.plus, MAX_ARM_ENCHANT))
+    if (!is_enchantable_armour(arm, false))
     {
         if (is_cursed)
         {
@@ -4346,10 +4336,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         {
             if (!quiet)
                 canned_msg(MSG_NOTHING_HAPPENS);
-
-            // Xom thinks it's funny if enchantment is possible but fails.
-            if (is_enchantable_armour(arm, false))
-                xom_is_stimulated(32);
 
             return (false);
         }
@@ -4786,7 +4772,7 @@ void read_scroll(int slot)
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");
-        big_cloud(random_smoke_type(), KC_YOU, you.pos(), 50, 8 + random2(8));
+        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
     case SCR_MAGIC_MAPPING:
@@ -5134,14 +5120,26 @@ void tile_item_use_floor(int idx)
     }
 }
 
-void tile_item_pickup(int idx)
+void tile_item_pickup(int idx, bool part)
 {
-    pickup_single_item(idx, mitm[idx].quantity);
+    pickup_single_item(idx, part ? 0 : -1);
 }
 
-void tile_item_drop(int idx)
+void tile_item_drop(int idx, bool partdrop)
 {
-    drop_item(idx, you.inv[idx].quantity);
+    int quantity = you.inv[idx].quantity;
+    if (partdrop && quantity > 1)
+    {
+        quantity = prompt_for_int("Drop how many? ", true);
+        if (quantity < 1)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        if (quantity > you.inv[idx].quantity)
+            quantity = you.inv[idx].quantity;
+    }
+    drop_item(idx, quantity);
 }
 
 static bool _prompt_eat_bad_food(const item_def food)

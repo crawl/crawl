@@ -161,6 +161,10 @@ Jessica
 
 An evil apprentice sorceress. She entered the dungeon hoping to find a quiet, secluded place where she could study the darker arts without being disturbed.
 %%%%
+Jory
+
+Once a simple village peasant, Jory found himself transformed in undeath into a powerful creature. Through the countless centuries unlived since, he has honed his skills in combat and magic, massed great wealth and many possessions, and now resides in a stonily quiet Tower of Silence. He's not about to let any puny adventurers ruin of his hard work, so beware those who encounter him!
+%%%%
 Joseph
 
 Looks like a mercenary.
@@ -446,6 +450,10 @@ bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many dragons.
 %%%%
+bog mummy
+
+An undead figure preserved by the brackish waters of a bog. Though it has been reanimated by some unknown magic, this magic is not enough to prevent its decaying. It radiates a malignant curse upon all who offend it.
+%%%%
 boring beetle
 
 A large brown beetle with huge, rock-crushing mandibles.
@@ -707,7 +715,7 @@ This one is remarkably plain looking.
 %%%%
 ettin
 
-A two-headed giant.
+A two-headed giant, able to land devastating blows left and right.
 %%%%
 Executioner
 
@@ -728,6 +736,10 @@ This feline has been given sentience with magic. It uses the gift of speech to d
 fiend
 
 One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
+%%%%
+fire crab
+
+These crabs are prized for their brilliantly jewelled shells. The rarity of these shells is only enhanced by the vicious, fiery nature of the animal, and their almost supernatural ability to expel massive quantities of flames.
 %%%%
 fire elemental
 
@@ -876,6 +888,10 @@ A shapeshifter which has lost control over its transformations, and is constantl
 gnoll
 
 A taller and better-equipped relative of goblins and orcs, somewhat doglike in appearance.
+%%%%
+gnome
+
+A small, stout humanoid said to be good at finding its way through underground passages. Once commonly found in dungeons across the world, gnomes are now on the verge of extinction. This one may be the last of its kind.
 %%%%
 goblin
 
@@ -1121,6 +1137,10 @@ kraken
 
 A gargantuan sea monster, capable of devouring entire ships. It embraces them with its tentacles and draws them into the depths. Fortunately, the tentacles are too big to embrace a small creature like you. Wait, did I say "fortunately"?
 %%%%
+laboratory rat
+
+This poor rat was the subject of a wizard's terrible experiments! Who knows what it is capable of?
+%%%%
 large abomination
 
 A large and hideous form, created or summoned by some arcane process.
@@ -1275,7 +1295,7 @@ A disgusting glob of grey sludge.
 %%%%
 ophan
 
-This strange creature consits of a wheel nested inside another, both of these covered in eyes, and a strange flame flickering across its surface.
+This strange creature consists of a wheel within a wheel, and both of these are covered in eyes; strange flames flicker across both surfaces.
 %%%%
 orange crystal statue
 
@@ -1375,6 +1395,10 @@ polar bear
 
 A large and very strong bear covered in glistening white fur. If provoked, it may become angry!
 %%%%
+porcupine
+
+While it may look cute and harmless, its bite is painful and its spikes are sharp!
+%%%%
 program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the DevTeam.
@@ -1414,6 +1438,12 @@ A demon in the form of a tiger who comes to the material world in search of powe
 rat
 
 Wherever there are men, there are rats - rattus rattus. This rat has grown large and aggressive in the pestilential dungeon environment.
+%%%%
+raven
+
+This opportunistic bird sates its appetite by pecking at anything it can find. This includes such carrion as dead animals, dead monsters, and, of course, dead adventurers. The latter needn't necessarily be dead: a raven is quite happy to help you on their way to the afterlife.
+
+It has a particularly unhealthy fascination with eyeballs and things resembling eyeballs, such as pickled onions, walnuts and olives.
 %%%%
 reaper
 
@@ -1508,7 +1538,7 @@ A disturbing creature with the power to change its form. It is very rarely obser
 %%%%
 shedu
 
-A divine guardians that travels always as a pair, it has the ability to resurrect its mate from death.
+These dangerous divine guardians always travel in pairs. Each has the ability to heal the other and, if the worst is to occur, can even resurrect it.
 %%%%
 sheep
 
@@ -1631,6 +1661,10 @@ A small humanoid, resembling a human or elf except for the size. They move at a 
 spriggan assassin
 
 These masters of stealth have mastered the art of delivering a quick blade right under your fifth rib as well.
+%%%%
+spriggan berserker
+
+A load of pure fury concentrated in a stature of three and a half feet.
 %%%%
 spriggan defender
 

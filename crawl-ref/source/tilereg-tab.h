@@ -30,6 +30,8 @@ public:
     void activate_tab(int idx);
     int active_tab() const;
     int num_tabs() const;
+    void enable_tab(int idx);
+    void disable_tab(int idx);
 
     virtual void update();
     virtual void clear();
@@ -47,9 +49,13 @@ protected:
     virtual void draw_tag();
     virtual void activate() {}
 
+    bool invalid_index(int idx) const;
     bool active_is_valid() const;
     // Returns the tab the mouse is over, -1 if none.
     int get_mouseover_tab(MouseEvent &event) const;
+    void set_icon_pos(int idx);
+    void reset_icons(int from_idx);
+
 
     int m_active;
     int m_mouse_tab;
@@ -62,6 +68,8 @@ protected:
         int ofs_y;
         int min_y;
         int max_y;
+        int height;
+        bool enabled;
     };
     std::vector<TabInfo> m_tabs;
 };

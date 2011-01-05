@@ -68,6 +68,9 @@ static TextDB AllDBs[] =
             "descript/skills.txt",
             "descript/ability.txt",
             "descript/cards.txt",
+#ifdef USE_TILE
+            "descript/commands.txt",
+#endif
             NULL),
 
     TextDB("gamestart",
@@ -463,7 +466,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
     }
 
     if (parts.size() == 0)
-        return("BUG, EMPTY ENTRY");
+        return "BUG, EMPTY ENTRY";
 
     int choice = 0;
     if (fixed_weight != -1)
@@ -473,9 +476,9 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
 
     for (int i = 0, size = parts.size(); i < size; i++)
         if (choice < weights[i])
-            return(parts[i]);
+            return parts[i];
 
-    return("BUG, NO STRING CHOSEN");
+    return "BUG, NO STRING CHOSEN";
 }
 
 #define MAX_RECURSION_DEPTH 10

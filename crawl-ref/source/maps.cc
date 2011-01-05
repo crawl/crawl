@@ -22,7 +22,6 @@
 #include "env.h"
 #include "enum.h"
 #include "files.h"
-#include "flood_find.h"
 #ifdef USE_TILE
 #include "initfile.h"
 #endif
@@ -37,13 +36,13 @@
 #include "tags.h"
 #include "terrain.h"
 
-static int write_vault(map_def &mdef,
-                       vault_placement &,
-                       bool check_place);
-static int apply_vault_definition(
-                        map_def &def,
-                        vault_placement &,
-                        bool check_place);
+static map_section_type write_vault(map_def &mdef,
+                                    vault_placement &,
+                                    bool check_place);
+static map_section_type apply_vault_definition(
+    map_def &def,
+    vault_placement &,
+    bool check_place);
 
 static bool resolve_map(map_def &def);
 
@@ -84,13 +83,10 @@ dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
 
 // Make sure that vault_n, where n is a number, is a vault which can be put
 // anywhere, while other vault names are for specific level ranges, etc.
-int vault_main(vault_placement &place, const map_def *vault,
-                bool check_place)
+map_section_type vault_main(vault_placement &place, const map_def *vault,
+                            bool check_place)
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Generating level: %s (%d,%d)",
-         vault->name.c_str(), place.pos.x, place.pos.y);
-
     if (crawl_state.map_stat_gen)
         mapgen_report_map_try(*vault);
 #endif
@@ -102,9 +98,9 @@ int vault_main(vault_placement &place, const map_def *vault,
     return (write_vault(const_cast<map_def&>(*vault), place, check_place));
 }
 
-static int write_vault(map_def &mdef,
-                       vault_placement &place,
-                       bool check_place)
+static map_section_type write_vault(map_def &mdef,
+                                    vault_placement &place,
+                                    bool check_place)
 {
     mdef.load();
 
@@ -133,8 +129,20 @@ static int write_vault(map_def &mdef,
     return (MAP_NONE);
 }
 
+void dgn_flush_map_environments()
+{
+    // Clean up cached environments.
+    dlua.callfn("dgn_flush_map_environments", 0, 0);
+}
+
+void dgn_flush_map_environment_for(const std::string &mapname)
+{
+    dlua.callfn("dgn_flush_map_environment_for", "s", mapname.c_str());
+}
+
 static bool resolve_map_lua(map_def &map)
 {
+    dgn_flush_map_environment_for(map.name);
     map.reinit();
     std::string err = map.run_lua(true);
     if (!err.empty())
@@ -317,12 +325,9 @@ static bool _may_overwrite_feature(const coord_def p,
         return (false);
 
     // If in the abyss, the placement mask is the only check necessary
-    // for terrain; we must still check that we're not overwriting
-    // items.
+    // for terrain.
     if (Vault_Placement_Mask && player_in_level_area(LEVEL_ABYSS))
-    {
-        return (igrd(p) == NON_ITEM);
-    }
+        return (true);
 
     const dungeon_feature_type grid = grd(p);
 
@@ -341,7 +346,7 @@ static bool _may_overwrite_feature(const coord_def p,
         return (false);
     }
 
-    if (feat_is_wall(grid) || grid == DNGN_TREE)
+    if (feat_is_wall(grid) || feat_is_tree(grid))
         return (wall_ok);
 
     // Otherwise, feel free to clobber this feature.
@@ -369,13 +374,11 @@ bool map_safe_vault_place(const map_def &map,
 
         // Also check adjacent squares for collisions, because being next
         // to another vault may block off one of this vault's exits.
-        for (int y = -1; y <= 1; ++y)
-            for (int x = -1; x <= 1; ++x)
-            {
-                const coord_def vp(x + cp.x, y + cp.y);
-                if (map_bounds(vp) && (env.level_map_mask(vp) & MMT_VAULT))
-                    return (false);
-            }
+        for (adjacent_iterator ai(cp); ai; ++ai)
+        {
+            if (map_bounds(*ai) && (env.level_map_mask(*ai) & MMT_VAULT))
+                return (false);
+        }
 
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
@@ -492,17 +495,17 @@ static bool apply_vault_grid(map_def &def,
     // Floating maps can go anywhere, ask the map_def to suggest a place.
     if (orient == MAP_FLOAT)
     {
-        const bool minivault = def.has_tag("minivault");
+        const bool minivault = def.is_minivault();
         if (map_bounds(place.pos))
         {
             start = place.pos - size / 2;
-            fit_region_into_map_bounds(start, size, minivault ? 2 : 0);
+            fit_region_into_map_bounds(start, size, minivault ? MAPGEN_BORDER : 0);
         }
         else if (minivault)
         {
             start = _find_minivault_place(place, check_place);
             if (map_bounds(start))
-                fit_region_into_map_bounds(start, size, 2);
+                fit_region_into_map_bounds(start, size, MAPGEN_BORDER);
         }
         else
             start = def.float_place();
@@ -525,50 +528,34 @@ static bool apply_vault_grid(map_def &def,
     return (true);
 }
 
-static int apply_vault_definition(
-        map_def &def,
-        vault_placement &place,
-        bool check_place)
+static map_section_type apply_vault_definition(
+    map_def &def,
+    vault_placement &place,
+    bool check_place)
 {
     if (!apply_vault_grid(def, place, check_place))
         return (MAP_NONE);
 
-    int orient = def.orient;
-    if (orient == MAP_NONE)
-        orient = MAP_NORTH;
-
-    return (orient);
+    const map_section_type orient = def.orient;
+    return (orient == MAP_NONE? MAP_NORTH : orient);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 // Map lookups
 
-template <typename I>
-static bool map_has_no_tags(const map_def &map, I begin, I end)
-{
-    for (; begin != end; ++begin)
-        if (map.has_tag(*begin))
-            return (false);
-
-    return (true);
-}
-
-static bool vault_unforbidden(const map_def &map)
-{
-    return (you.uniq_map_names.find(map.name) == you.uniq_map_names.end()
-            && (env.level_uniq_maps.find(map.name) ==
-                env.level_uniq_maps.end())
-            && map_has_no_tags(map, you.uniq_map_tags.begin(),
-                               you.uniq_map_tags.end())
-            && map_has_no_tags(map, env.level_uniq_map_tags.begin(),
-                               env.level_uniq_map_tags.end()));
-}
-
 static bool map_matches_layout_type(const map_def &map)
 {
-    return (env.level_layout_type.empty()
-            || !map.has_tag_prefix("layout_")
-            || map.has_tag("layout_" + env.level_layout_type));
+    if (env.level_layout_types.empty() || !map.has_tag_prefix("layout_"))
+        return true;
+
+    for (string_set::const_iterator i = env.level_layout_types.begin();
+         i != env.level_layout_types.end(); ++i)
+    {
+        if (map.has_tag("layout_" + *i))
+            return true;
+    }
+
+    return false;
 }
 
 static bool _map_matches_species(const map_def &map)
@@ -620,22 +607,12 @@ mapref_vector find_maps_for_tag(const std::string tag,
             && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
                 || mapdef.is_usable_in(place))
-            && (!check_used || vault_unforbidden(mapdef)))
+            && (!check_used || !mapdef.map_already_used()))
         {
             maps.push_back(&mapdef);
         }
     }
     return (maps);
-}
-
-int weight_map_vector (std::vector<map_def> maps)
-{
-    int weights = 0;
-
-    for (std::vector<map_def>::iterator mi = maps.begin(); mi != maps.end(); ++mi)
-        weights += mi->weight;
-
-    return (weights);
 }
 
 struct map_selector
@@ -692,7 +669,8 @@ private:
         : ignore_chance(false), preserve_dummy(false),
           sel(_typ), place(_pl), tag(_tag),
           mini(_mini), check_depth(_check_depth),
-          check_layout(sel == DEPTH && place == level_id::current())
+          check_layout((sel == DEPTH || sel == DEPTH_AND_CHANCE)
+                    && place == level_id::current())
     {
         if (_typ == PLACE)
             ignore_chance = true;
@@ -737,27 +715,35 @@ bool map_selector::accept(const map_def &mapdef) const
                 && (!mapdef.has_tag("tutorial")
                     || crawl_state.game_is_tutorial())
                 && map_matches_layout_type(mapdef)
-                && vault_unforbidden(mapdef));
+                && !mapdef.map_already_used());
 
     case DEPTH:
+    {
+        const map_chance chance(mapdef.chance(place));
         return (mapdef.is_minivault() == mini
-                && (!mapdef.chance || !mapdef.chance_priority)
+                && (!chance.valid() || chance.dummy_chance())
                 && depth_selectable(mapdef)
-                && vault_unforbidden(mapdef));
+                && !mapdef.map_already_used());
+    }
 
     case DEPTH_AND_CHANCE:
-        return (// Only vaults with valid chance and chance priority
-                (mapdef.chance > 0 && mapdef.chance_priority > 0)
+    {
+        const map_chance chance(mapdef.chance(place));
+        // Only vaults with valid chance
+        return (chance.valid()
+                && !chance.dummy_chance()
                 && depth_selectable(mapdef)
-                && vault_unforbidden(mapdef));
+                && !mapdef.map_already_used());
+    }
 
     case TAG:
         return (mapdef.has_tag(tag)
-                && (!check_depth || !mapdef.has_depth()
+                && (!check_depth
+                    || !mapdef.has_depth()
                     || mapdef.is_usable_in(place))
                 && _map_matches_species(mapdef)
                 && map_matches_layout_type(mapdef)
-                && vault_unforbidden(mapdef));
+                && !mapdef.map_already_used());
 
     default:
         return (false);
@@ -772,9 +758,9 @@ void map_selector::announce(const map_def *vault) const
         if (sel == DEPTH_AND_CHANCE)
         {
             mprf(MSGCH_DIAGNOSTICS,
-                 "[CHANCE+DEPTH] Found map %s for %s (%d:%d)",
+                 "[CHANCE+DEPTH] Found map %s for %s (%s)",
                  vault->name.c_str(), place.describe().c_str(),
-                 vault->chance_priority, vault->chance);
+                 vault->chance(place).describe().c_str());
         }
         else
         {
@@ -824,9 +810,10 @@ static vault_indices _eligible_maps_for_selector(const map_selector &sel)
 static const map_def *_random_map_by_selector(const map_selector &sel);
 
 static bool _vault_chance_new(const map_def &map,
+                              const level_id &place,
                               std::set<std::string> &chance_tags)
 {
-    if (map.chance > 0)
+    if (map.chance(place).valid())
     {
         // There may be several alternatives for a portal
         // vault that want to be governed by one common
@@ -849,7 +836,8 @@ class vault_chance_roll_iterator
 {
 public:
     vault_chance_roll_iterator(const mapref_vector &_maps)
-        : maps(_maps), current(_maps.begin()), end(_maps.end())
+        : maps(_maps), place(level_id::current()),
+          current(_maps.begin()), end(_maps.end())
     {
         find_valid();
     }
@@ -875,12 +863,13 @@ public:
 private:
     void find_valid()
     {
-        while (current != end && random2(CHANCE_ROLL) >= (*current)->chance)
+        while (current != end && !(*current)->chance(place).roll())
             ++current;
     }
 
 private:
     const std::vector<const map_def *> &maps;
+    level_id place;
     mapref_vector::const_iterator current;
     mapref_vector::const_iterator end;
 };
@@ -916,8 +905,11 @@ _random_chance_maps_in_list(const map_selector &sel,
     for (unsigned f = 0, size = filtered.size(); f < size; ++f)
     {
         const int i = filtered[f];
-        if (!sel.ignore_chance && _vault_chance_new(vdefs[i], chance_tags))
+        if (!sel.ignore_chance
+            && _vault_chance_new(vdefs[i], sel.place, chance_tags))
+        {
             chance.push_back(&vdefs[i]);
+        }
     }
 
     for (vault_chance_roll_iterator vc(chance); vc; ++vc)
@@ -949,9 +941,9 @@ _random_map_in_list(const map_selector &sel,
     for (unsigned f = 0, size = filtered.size(); f < size; ++f)
     {
         const int i = filtered[f];
-        if (!sel.ignore_chance && vdefs[i].chance)
+        if (!sel.ignore_chance && vdefs[i].chance(sel.place).valid())
         {
-            if (_vault_chance_new(vdefs[i], chance_tags))
+            if (_vault_chance_new(vdefs[i], sel.place, chance_tags))
                 chance.push_back(&vdefs[i]);
         }
         else
@@ -973,12 +965,12 @@ _random_map_in_list(const map_selector &sel,
         if (sel.place.level_type == LEVEL_DUNGEON && sel.place.is_valid())
             absdepth = sel.place.absdepth();
 
+        const level_id &here(level_id::current());
         for (mapref_vector::const_iterator i = eligible.begin();
              i != eligible.end(); ++i)
         {
             const map_def &map(**i);
-            const int weight = map.weight
-                + absdepth * map.weight_depth_mult / map.weight_depth_div;
+            const int weight = map.weight(here);
 
             if (weight <= 0)
                 continue;
@@ -1133,7 +1125,7 @@ static bool load_map_index(const std::string &base)
         FILE *fp = fopen((base + ".lux").c_str(), "rb");
         if (fp)
         {
-            reader inf(fp);
+            reader inf(fp, TAG_MINOR_VERSION);
             lc_global_prelude.read(inf);
             fclose(fp);
 
@@ -1144,8 +1136,8 @@ static bool load_map_index(const std::string &base)
     FILE* fp = fopen((base + ".idx").c_str(), "rb");
     if (!fp)
         end(1, true, "Unable to read %s", (base + ".idx").c_str());
-    reader inf(fp);
 
+    reader inf(fp, TAG_MINOR_VERSION);
     // Discard version (it's been checked by verify_map_index).
     (void) unmarshallInt(inf);
     const int nmaps = unmarshallShort(inf);
@@ -1291,8 +1283,7 @@ static void parse_maps(const std::string &s)
 void read_map(const std::string &file)
 {
     parse_maps(lc_desfile = datafile_path(file));
-    // Clean up cached environments.
-    dlua.callfn("dgn_flush_map_environments", 0, 0);
+    dgn_flush_map_environments();
     // Force GC to prevent heap from swelling unnecessarily.
     dlua.gc();
 }
@@ -1320,6 +1311,13 @@ void reread_maps()
     vdefs.clear();
     map_files_read.clear();
     read_maps();
+}
+
+void dump_map(const map_def &map)
+{
+    if (crawl_state.dump_maps)
+        fprintf(stderr, "\n----------------------------------------\n%s\n",
+                map.describe().c_str());
 }
 
 void add_parsed_map(const map_def &md)

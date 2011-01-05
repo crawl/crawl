@@ -683,7 +683,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       statues in statue_cache aren't, so I'm taking that as a precedent.
 KMONS:  G = statue name:firespitter name_adjective \
         tile:mons_firespitter_statue generate_awake \
-        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+        spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: G = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 12 items, 6 gold.
 :       volcano_setup(_G, false, true)
@@ -708,7 +708,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 :       fiery_guardians(_G)
 KMONS:  F = statue name:firespitter name_adjective \
         tile:mons_firespitter_statue generate_awake \
-        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+        spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: F = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 10 items.
 :       volcano_setup(_G, false, true)
@@ -1226,20 +1226,20 @@ volcano_milestone(_G)
 }}
 MAP
                cccc ccc
-             ccc<XcccZcccccc
-           cccZcccXRRX1ccZZccc
-           c<XXZZccXXZccZ1X<cc
-           ccc1RRZcZXccXRRXcccc
-          cc<ccZXXccMcXZZXccZZcc
-         ccZXZccZMcY.cMccccZ1X<c
+             cccXXcccZcccccc
+           cccZccc<RRX1ccZZccc
+           cXX<ZZccXXZccZ1XXcc
+           ccc1RRZcZXccXRR<cccc
+          ccXccZXXccMcXZZXccZZcc
+         ccZ<ZccZMcY.cMccccZ1<Xc
         ccZ121ZcccY...ccMXXRRccc
        ccZXRRRRccY....Y.cccccc
        cZXXXXXccY..A<....ccZZccc
        ccZRRXXXM.....YcccMXRR1Zcc
-        cccZXcccMY..YMc1ccZXXXX<c
+        cccZXcccMY..YMc1ccZXXX<Xc
           ccccXXccYcccZXXcccZZccc
            ccZXXZccccZXRRXZcccc
-          ccZRRX1XX<cccZZXZcc
+          ccZRRX1<XXcccZZ<Zcc
            ccZXZXZccc cccMcc
             ccccXcc     ccc
              ccccc

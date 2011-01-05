@@ -25,7 +25,7 @@
 #include "travel.h"
 #include "viewgeom.h"
 
-void tile_new_level(bool first_time)
+void tile_new_level(bool first_time, bool init_unseen)
 {
     tiles.clear_minimap();
 
@@ -36,7 +36,7 @@ void tile_new_level(bool first_time)
     if (first_time)
         tile_init_flavour();
 
-    if (!player_in_mappable_area() || first_time)
+    if (!player_in_mappable_area() || init_unseen)
     {
         for (unsigned int x = 0; x < GXM; x++)
             for (unsigned int y = 0; y < GYM; y++)
@@ -64,7 +64,6 @@ void tile_init_default_flavour()
 {
     tile_default_flv(you.level_type, you.where_are_you, env.tile_default);
 }
-
 
 void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 {
@@ -126,8 +125,8 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     switch (br)
     {
     case BRANCH_MAIN_DUNGEON:
-        flv.wall    = TILE_WALL_NORMAL;
-        flv.floor   = TILE_FLOOR_NORMAL;
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
         return;
 
     case BRANCH_HIVE:
@@ -227,8 +226,8 @@ void tile_clear_flavour()
     {
         env.tile_flv(*ri).floor   = 0;
         env.tile_flv(*ri).wall    = 0;
-        env.tile_flv(*ri).special = 0;
         env.tile_flv(*ri).feat    = 0;
+        env.tile_flv(*ri).special = 0;
     }
 }
 
@@ -337,14 +336,13 @@ static int _jitter(SpecialIdx i)
 
 static bool _adjacent_target(dungeon_feature_type target, int x, int y)
 {
-    for (int i = -1; i <= 1; i++)
-        for (int j = -1; j <= 1; j++)
-        {
-            if (!map_bounds(x+i, y+j))
-                continue;
-            if (grd[x+i][y+j] == target)
-                return (true);
-        }
+    for (adjacent_iterator ai(coord_def(x, y), false); ai; ++ai)
+    {
+        if (!map_bounds(*ai))
+            continue;
+        if (grd(*ai) == target)
+            return (true);
+    }
 
     return (false);
 }
@@ -360,10 +358,10 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
             if (!_adjacent_target(target, x, y))
                 continue;
 
-            bool l_flr = (x > 0) ? grd[x-1][y] >= DNGN_FLOOR_MIN : false;
-            bool r_flr = (x < GXM - 1) ? grd[x+1][y] >= DNGN_FLOOR_MIN : false;
-            bool u_flr = (y > 0) ? grd[x][y-1] >= DNGN_FLOOR_MIN : false;
-            bool d_flr = (y < GYM - 1) ? grd[x][y+1] >= DNGN_FLOOR_MIN : false;
+            bool l_flr = (x > 0 && grd[x-1][y] >= DNGN_FLOOR_MIN);
+            bool r_flr = (x < GXM - 1 && grd[x+1][y] >= DNGN_FLOOR_MIN);
+            bool u_flr = (y > 0 && grd[x][y-1] >= DNGN_FLOOR_MIN);
+            bool d_flr = (y < GYM - 1 && grd[x][y+1] >= DNGN_FLOOR_MIN);
 
             bool l_target = _adjacent_target(target, x-1, y);
             bool r_target = _adjacent_target(target, x+1, y);
@@ -614,6 +612,9 @@ void tile_draw_floor()
 // Called from item() in view.cc
 void tile_place_item(const coord_def &gc, const item_def &item)
 {
+    if (env.tile_fg(gc))
+        return;
+
     tileidx_t t = tileidx_item(item);
     if (item.link != NON_ITEM)
         t |= TILE_FLAG_S_UNDER;
@@ -641,7 +642,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
 
     const coord_def ep = grid2show(gc);
 
-    tileidx_t t = tileidx_monster(mon);
+    tileidx_t t    = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
@@ -697,16 +698,21 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
     if (pref != TAGPREF_NAMED && mon->friendly())
         return;
 
-    // HACK.  Names cover up pan demons in a weird way.
-    if (mon->type == MONS_PANDEMONIUM_DEMON)
+    // HACK.  Large-tile monsters don't interact well with name tags.
+    if (mon->type == MONS_PANDEMONIUM_DEMON
+        || mon->type == MONS_LERNAEAN_HYDRA)
+    {
         return;
-
+    }
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
     const coord_def ep = grid2show(gc);
+    if (env.tile_fg(ep) != 0)
+        return;
+
     const monster* mon = monster_at(gc);
     bool disturbance = false;
 
@@ -792,7 +798,7 @@ static bool _suppress_blood(const coord_def pos)
         return (true);
 
     const dungeon_feature_type feat = grd(pos);
-    if (feat == DNGN_TREE)
+    if (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE)
         return (true);
 
     if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
@@ -814,6 +820,12 @@ static bool _suppress_blood(const coord_def pos)
     return (false);
 }
 
+static bool _suppress_blood(tileidx_t bg_idx)
+{
+    return (bg_idx >= TILE_WALL_BRICK_TORCH_START
+            && bg_idx <= TILE_WALL_BRICK_TORCH_END);
+}
+
 // Specifically for vault-overwritten doors. We have three "sets" of tiles that
 // can be dealt with. The tile sets should be 2, 3, 8 and 9 respectively. They
 // are:
@@ -823,8 +835,8 @@ static bool _suppress_blood(const coord_def pos)
 //     gate left open, gate middle open, gate right open.
 //  9. Detected, closed, open, gate left closed, gate middle closed, gate right
 //     closed, gate left open, gate middle open, gate right open.
-static int _get_door_offset (tileidx_t base_tile, bool opened = false,
-                             bool detected = false, int gateway_type = 0)
+static int _get_door_offset(tileidx_t base_tile, bool opened = false,
+                            bool detected = false, int gateway_type = 0)
 {
     int count = tile_dngn_count(base_tile);
     if (count == 1)
@@ -946,21 +958,20 @@ static bool _top_item_is_corpse(const coord_def &gc)
             && item.sub_type == CORPSE_BODY);
 }
 
-void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
-                           tileidx_t *bg)
+void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 {
     if (is_excluded(gc))
     {
         if (is_exclude_root(gc))
-            *bg |= TILE_FLAG_EXCL_CTR;
+            cell.bg |= TILE_FLAG_EXCL_CTR;
         else
-            *bg |= TILE_FLAG_TRAV_EXCL;
+            cell.bg |= TILE_FLAG_TRAV_EXCL;
     }
 
     if (!map_bounds(gc))
         return;
 
-    _apply_variations(env.tile_flv(gc), bg, gc);
+    _apply_variations(env.tile_flv(gc), &cell.bg, gc);
 
     bool print_blood = true;
     if (haloed(gc))
@@ -972,34 +983,42 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
                  && (!mons_is_mimic(mon->type)
                      || testbits(mon->flags, MF_KNOWN_MIMIC)))
             {
-                *bg |= TILE_FLAG_HALO;
+                cell.is_haloed = true;
                 print_blood = false;
             }
         }
     }
+    else
+        cell.is_haloed = false;
 
-    if (print_blood && _suppress_blood(gc))
+    if (print_blood && (_suppress_blood(gc)
+                        || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
+    {
         print_blood = false;
+    }
 
     // Mold has the same restrictions as blood
     // but mold takes precendence over blood.
     if (print_blood)
     {
         if (is_moldy(gc))
-            *bg |= TILE_FLAG_MOLD;
+            cell.is_moldy = true;
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
-            *bg |= TILE_FLAG_BLOOD;
+            cell.is_bloody = true;
     }
 
     const dungeon_feature_type feat = grd(gc);
     if (feat_is_water(feat) || feat == DNGN_LAVA)
-        *bg |= TILE_FLAG_WATER;
+        cell.bg |= TILE_FLAG_WATER;
 
     if (is_sanctuary(gc))
-        *bg |= TILE_FLAG_SANCTUARY;
+        cell.is_sanctuary = true;
 
     if (silenced(gc))
-        *bg |= TILE_FLAG_SILENCED;
+        cell.is_silenced = true;
+
+    if (grd(gc) == DNGN_SWAMP_TREE || feat_is_water(grd(gc)))
+        cell.swamp_tree_water = true;
 }
 
 void tile_clear_map(const coord_def& gc)

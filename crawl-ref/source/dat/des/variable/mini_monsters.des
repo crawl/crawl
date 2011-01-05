@@ -24,7 +24,6 @@
 
 default-depth: D:9-27, Vault, Elf
 
-
 ###############################################################################
 #
 # <<1>> Invertebrae
@@ -67,7 +66,7 @@ ENDMAP
 
 NAME:    eino_jars
 DEPTH:   D:4-14
-TAGS:    mini_float extra luniq_mini
+TAGS:    extra luniq_mini
 SHUFFLE: 11%
 : if you.absdepth() >7 then
 MONS:    killer bee / nothing w:5
@@ -331,7 +330,6 @@ MAP
 ENDMAP
 
 NAME:  minmay_rats_cheese
-TAGS:  mini_float
 DEPTH: D:2-3
 MONS:  rat
 ITEM:  cheese
@@ -352,7 +350,6 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:  minmay_rat_hole
-TAGS:  mini_float
 DEPTH: D:2-4
 MONS:  rat / grey rat w:1
 ITEM:  cheese w:30 / bread ration / meat ration / nothing w:60
@@ -370,7 +367,7 @@ xxxx111xx
 ENDMAP
 
 NAME:  minmay_snake_closets
-TAGS:  mini_float no_monster_gen no_item_gen
+TAGS:  no_monster_gen no_item_gen
 DEPTH: D:2-4
 MONS:  snake / small snake
 ITEM:  any scroll / any potion
@@ -389,24 +386,6 @@ xxxx+xxxxx...xxxxx+xxxx
    x..x?.x...x.?x..x
    x.?x..+...+..x?.x
    xxxxxxx.@.xxxxxxx
-ENDMAP
-
-NAME:    doghouse_eino
-DEPTH:   D:4-8
-TAGS:    extra luniq_mini
-SHUFFLE: 1?T
-SUBST:   T : T V:2
-SUBST:   ? : 1:2 .
-MONS:    hound / w:1 nothing / w:2 jackal
-KMASK:   T = no_monster_gen
-MAP
-.......
-.xx+xx.
-.x...x.
-.x?..x.
-.x1.Tx.
-.xxxxx.
-.......
 ENDMAP
 
 # This vault can be highly OOD, which is why lindwurms are used in the
@@ -509,34 +488,6 @@ MAP
 ...1..
 ENDMAP
 
-# Guardian serpents guard a snake-like passage. (nrook)
-NAME:    guardian_serpent_snake_passage
-ORIENT:  float
-DEPTH:   D:9-27
-TAGS:    no_monster_gen no_rotate
-MONS:    patrolling guardian serpent
-SHUFFLE: yY/zZ
-SUBST:   y=., Y==, Z=x, z=b
-COLOUR:  *. = lightgreen
-SUBST:   ' = .
-MAP
-            xxxxxxxxxxxxxxx
-            xxxxbbbbbbbbxxx'
-            xxbbb..*...bbbx'
-            xbb...bbbb...yY1
-            xb..bbbbbbbbbbx@
-            xb.bbxxxxxxxxxx'
-            xb..bbbbxx
-            xbb.*..bbx
-            xxbbbb..bx
- xxxxxxxxxxxxxxxxbb.bx
-'xbbbbxxxxxxxxxxxbb.bx
-1Zz..bbbxxxxxxxbbb..bx
-@xbb...bbbbbbbbb.*.bbx
-'xxbbb...*.......bbbxx
- xxxxbbbbbbbbbbbbbxxxx
-ENDMAP
-
 # A real vault behind a false one. (nrook)
 NAME:  nrook_guardian_serpent_double
 DEPTH: D:9-27, Snake
@@ -617,7 +568,7 @@ ENDMAP
 ###############################################################################
 
 NAME:    minmay_goblin_outpost
-TAGS:    mini_float no_pool_fixup
+TAGS:    no_pool_fixup
 DEPTH:   D:2-4
 MONS:    goblin / hobgoblin w:5, goblin; sling . stone q:20
 SUBST:   y = .WWw, Y = ...W, . = .....1
@@ -638,7 +589,7 @@ xxxxxxxxx
 ENDMAP
 
 NAME:  minmay_goblin_kobold_house
-TAGS:  mini_float no_monster_gen
+TAGS:  no_monster_gen
 DEPTH: D:2-4
 MONS:  goblin / hobgoblin, kobold
 SUBST: . = 1%......
@@ -692,7 +643,6 @@ MAP
 ENDMAP
 
 NAME:  minmay_orc_keep
-TAGS:  mini_float
 DEPTH: D:8-, Orc
 : if you.absdepth() > 24 then
 MONS:  orc knight, orc warlord, orc sorcerer / orc high priest
@@ -721,7 +671,6 @@ ENDMAP
 
 NAME:   minmay_ogre_servants
 DEPTH:  D:3-6
-TAGS:   mini_float
 MONS:   ogre
 NSUBST: " = 6:" / *:'
 KITEM:  ' = meat ration
@@ -737,7 +686,6 @@ ENDMAP
 # Darts of dispersal
 NAME:   minmay_kobolds_dispersive
 DEPTH:  D:6-12
-TAGS:   mini_float
 WEIGHT: 5
 MONS:   kobold; dart ego:dispersal q:2 / w:3 big kobold; dart ego:dispersal q:4
 MAP
@@ -750,7 +698,6 @@ ENDMAP
 # Darts of explosion
 NAME:   minmay_kobolds_explosive
 DEPTH:  D:8-14
-TAGS:   mini_float
 WEIGHT: 5
 MONS:   kobold; dart ego:exploding q:2 / w:3 big kobold; dart ego:exploding q:4
 MAP
@@ -785,7 +732,6 @@ ENDMAP
 
 # Very unpleasant kobold minivault
 NAME:   minmay_kobolds_curare
-TAGS:   mini_float
 WEIGHT: 5
 DEPTH:  D:12-18
 MONS:   kobold; blowgun . needle ego:curare q:1 / \
@@ -795,6 +741,24 @@ xx+xx
 x111x
 x111x
 xx+xx
+ENDMAP
+
+# Humans defending their loot
+NAME:   minmay_ruffians
+DEPTH:  D:6-10
+MONS:   human; club | mace w:3 . animal skin | leather armour
+MONS:   human; sling . stone | sling bullet w:3 . animal skin | leather armour
+SUBST:  1 = 112.
+KMONS:  3 = human; flail | spiked flail w:3 . ring mail | scale mail
+KITEM:  3 = %
+MAP
+.........
+.1.1.1...
+.........
+.x+xxx.1.
+.x%%3x...
+.xxxxx.1.
+.........
 ENDMAP
 
 # Necromancer has a house with a fridge (and a nice garden) (Eino)
@@ -821,7 +785,7 @@ ENDMAP
 NAME:   corexii_checkpoint_a
 DEPTH:  D, Elf
 WEIGHT: 7
-TAGS:   no_monster_gen no_item_gen allow_dup extra luniq_mini mini_float
+TAGS:   no_monster_gen no_item_gen allow_dup extra luniq_mini
 NSUBST: 1 = 2:1 / *:.
 : if you.branch() == "Elf" then
 MONS:   elf
@@ -840,7 +804,7 @@ ENDMAP
 NAME:    corexii_checkpoint_b
 DEPTH:   D, Elf
 WEIGHT:  3
-TAGS:    no_monster_gen no_item_gen allow_dup extra luniq_mini mini_float
+TAGS:    no_monster_gen no_item_gen allow_dup extra luniq_mini
 SHUFFLE: mA
 SUBST:   A = x
 NSUBST:  1 = 2:1 / *:.
@@ -858,52 +822,6 @@ x.A11x.
 xxxxxxx
 ENDMAP
 
-##############################################################################
-# Shantytown, noun: An area containing a collection of shacks,
-#                   shanties or makeshift dwellings. By Core Xii
-NAME:   corexii_shantytown
-DEPTH:  D:4-13
-ORIENT: float
-TAGS:   no_monster_gen no_item_gen
-NSUBST: + = 1:+ / *:=
-SUBST:  = = + x:100
-NSUBST: A = 1:+ / *:x, B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
-NSUBST: E = 1:+ / *:x, F = 1:+ / *:x, G = 1:+ / *:x, H = 1:+ / *:x
-NSUBST: I = 1:+ / *:x, J = 1:+ / *:x, K = 1:+ / *:x, L = 1:+ / *:x
-NSUBST: M = 1:+ / *:x, N = 1:+ / *:x, O = 1:+ / *:x, P = 1:+ / *:x
-NSUBST: Q = 1:+ / *:x, R = 1:+ / *:x, S = 1:+ / *:x, T = 1:+ / *:x
-NSUBST: U = 1:+ / *:x, V = 1:+ / *:x
-# There are 111 - glyphs, which leads to about 27 monsters
-SUBST:  - = 2:20 d .:50
-ITEM:   any food / any weapon / any missile / w:5 any armour / \
-        w:5 any potion / w:5 any scroll, w:1 any misc
-MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc / w:5 gnoll
-MAP
-.......................
-..1..x++x..1..x+++++x..
-.1x++x--x++x++x-----+.. 7
-..+--A--B--C--E-----+.. 11
-..+--A--B--C--E-----+.. 14
-.1xxAxxBxCCx--xEExEExx. 2
-..1+--R....xDDx..F---+. 5
-..1+--R..........F---+. 5 -- 44
-.1xxRxx.xSSSxTTx.xFx+x.
-..+--Q..S---T--T...+1.. 7
-..+--Q..S---T--T...+1.. 7 -- 14
-.xxPxx.xxSSxxTxx.xGxx1.
-.+--P..V---U--U..G--+.. 9 -- 53
-.+--P..V---U--U..G--+.. 9
-.xxOxx.V---xUUx..xHHxx. 3
-..+--O.xVVVx.....H---+. 5
-..+--O........xJJx---+. 5
-.xxNNxMMx..xKKx--xIIxx. 2
-.+---N--xLLx--J--I--+.. 1
-.+---N--M--L--x++x--+.. 11
-.x+++x++x--L--+11+--+.. 6
-.1...1..x++x++x..x++x1.
-.......................
-ENDMAP
-
 NAME:   corexii_shack
 DEPTH:  D:2-6
 TAGS:   no_monster_gen no_item_gen allow_dup extra
@@ -919,82 +837,6 @@ MAP
 .2xmmx2.
 ..2222..
 ........
-ENDMAP
-
-# Cluster of small buildings with basic monsters and loot, by Core Xii
-NAME:   corexii_shack_village
-DEPTH:  D:3-9
-ORIENT: float
-TAGS:   no_monster_gen no_item_gen
-NSUBST: A = 1:+ / *:x, B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
-NSUBST: E = 1:+ / *:x, F = 1:+ / *:x, G = 1:+ / *:x, H = 1:+ / *:x
-# 39 - glyphs, leading to about 10 monsters.
-SUBST:  - = 2:20 d .:50
-SUBST:  T = T:50 V G 1 .:20
-ITEM:   any food / any weapon / any missile / w:5 any armour / w:5 any potion
-MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc
-MAP
-....................
-.1xAAx1.xxxxx111111.
-.1x--x1.B---xxxxxxx.
-.1x--x1.B---C--D--x.
-.1xAAx1.xBBBx--D--x.
-............xCCxDDx.
-..........T.........
-.11.xFFFx...........
-.xEEx---xGGx1.xHHx1.
-.x--E---G--x1.H--x1.
-.x--E---G--x1.H--x1.
-.xxxxxxxxxxx1.xxxx1.
-....................
-ENDMAP
-
-# Small gnoll camp 1
-NAME:   eino_small_gnoll_camp_1
-DEPTH:  D:3-10
-WEIGHT: 5
-TAGS:   uniq_gnoll_camp no_monster_gen patrolling
-MONS:   gnoll
-# a "gnoll seargeant" with guaranteed good gear
-MONS:   gnoll ; potion of healing | potion of heal wounds \
-              . whip ego:reaching | whip good_item no_uniq | \
-                spear ego:reaching | glaive \
-              . scale mail | chain mail
-MONS:  jackal / hound
-MAP
-xxxxxxxxxx
-x..3..xTxx
-x..313..xx
-+....2..>x
-x..1..x%xx
-x...31x%xx
-xxxxxxxxxx
-ENDMAP
-
-# Small gnoll camp 2
-NAME:   eino_small_gnoll_camp_2
-DEPTH:  D:3-10
-WEIGHT: 5
-TAGS:   uniq_gnoll_camp mini_float no_monster_gen patrolling
-MONS:   gnoll
-# a "gnoll seargeant" with guaranteed good gear
-MONS:   gnoll ; potion of healing | potion of heal wounds \
-              . whip ego:reaching | whip good_item no_uniq | \
-                spear ego:reaching | glaive . scale mail | chain mail
-MONS:   jackal / hound
-MAP
-xxxxxxxxxx
-xxxx33+%%x
-xxx...x*$x
-xxx...xxxx
-xxxx.3.xxx
-x21+...1.x
-x11x..1..x
-xxxx....xx
-xxxx..xxxx
-xxxx..xxxx
-xx......xx
-xx......xx
 ENDMAP
 
 # Centaur isle (Lemuel)
@@ -1106,6 +948,44 @@ MAP
 .............
 ENDMAP
 
+NAME:    kenku_band
+DEPTH:   D:9-, Shoals, Swamp
+TAGS:    no_pool_fixup
+MONS:    kenku
+MONS:    kenku ; war axe / kenku ; long sword / kenku ; scimitar
+MONS:    kenku spells:airstrike;magic_dart;iskenderun's_mystic_blast
+MAP
+ .........
+..wwwww.1..
+.wwttwww.2.
+.wtt3.tww..
+.wwwt.2....
+..wwwwww2..
+ .........
+ENDMAP
+
+NAME:   minmay_rotating_lava
+TAGS:   no_monster_gen
+DEPTH:  D:10-16
+MONS:   hell hound, hell knight band, hell knight
+MAP
+...............
+.ccccccccccccc.
+.c.....3.....c.
+.c.ccccccccc.c.
+.c.c......1c.c.
+.c.c.cclcc.c.c.
+.c.c.c...c1l.c.
+.c.c2c.3.c.l.c.
+.c.c.c***c1l.c.
+.c.c.ccccc.c.c.
+.c.c......1c.c.
+.c.ccccccccc.c.
+.c...1.1.1...c.
+.cccclllllcccc.
+...............
+ENDMAP
+
 
 ################################################################################
 #
@@ -1114,7 +994,6 @@ ENDMAP
 ################################################################################
 
 NAME:   minmay_hunger
-TAGS:   mini_float
 DEPTH:  D:10-16
 WEIGHT: 5
 MONS:   hungry ghost
@@ -1130,7 +1009,6 @@ ccc+ccc
 ENDMAP
 
 NAME:  minmay_nine_imps
-TAGS:  mini_float
 DEPTH: D:7-14
 MONS:  imp / white imp w:3 / shadow imp w:1
 MAP
@@ -1142,7 +1020,6 @@ xx+xx
 ENDMAP
 
 NAME:    minmay_room_of_horrors
-TAGS:    mini_float
 DEPTH:   D:16-
 MONS:    small abomination, large abomination, unseen horror / chaos spawn
 KFEAT:   _ = enter_abyss
@@ -1185,6 +1062,20 @@ MAP
 .pccnnnccc+cccnnnccp.
 .pp.....pPPPp.....pp.
 .........ppp.........
+ENDMAP
+
+NAME:   minmay_beelzebubs_servants
+DEPTH:  D:6-12
+MONS:   hairy devil / nothing, giant blowfly / nothing
+MAP
+........................
+..xxxx....xxxx....xxxx..
+.xx1.xx..xx**xx..xx.1xx.
+.x21................12x.
+.x21................12x.
+.xx1.xx..xx**xx..xx.1xx.
+..xxxx....xxxx....xxxx..
+........................
 ENDMAP
 
 ################################################################################
@@ -1355,7 +1246,6 @@ MAP
 ENDMAP
 
 NAME:  minmay_brain_eaters
-TAGS:  mini_float
 DEPTH: D:10-18
 MONS:  brain worm, neqoxec
 MAP
@@ -1600,7 +1490,6 @@ WWWWWWWWWWWWWW
 ENDMAP
 
 NAME:  minmay_archer_statue_crystal
-TAGS:  mini_float
 DEPTH: D:10-, Vault, Elf
 MONS:  statue name:archer tile:mons_statue_archer name_adjective; \
        longbow ego:frost | longbow ego:flame . arrow q:40
@@ -1630,7 +1519,6 @@ MAP
 ENDMAP
 
 NAME:  minmay_more_statues
-TAGS:  mini_float
 DEPTH: D:12-26
 MONS:  ice statue w:5 / silver statue / orange crystal statue
 MAP
@@ -1641,118 +1529,6 @@ b..1.....G.....1..b
 c.................c
 c.....c.....c.....c
 cccbcccc.@.ccccbccc
-ENDMAP
-
-# Ice Spiral I (Lemuel)
-#
-# There is a path to the center that the freezing clouds never appear on.
-# It's pretty obvious. -LP
-NAME:    ice_spiral
-WEIGHT:  1
-ORIENT:  float
-TAGS:    no_item_gen no_monster_gen
-MONS:    ice beast / nothing
-ITEM:    nothing, nothing
-SHUFFLE: 1ef
-SUBST:   + : +=
-SUBST:   * : *$
-SUBST:   * = ***.|
-MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 2, pow_max = 4, delay = 17, start_clouds = 1, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
-MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 2, pow_max = 4, delay = 19, start_clouds = 1, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
-MARKER:  f = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 2, pow_max = 4, delay = 23, start_clouds = 1, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
-MARKER:  G = lua:props_marker { stop_explore = "a frost-covered granite \
-             statue.", feature_description = "frost-covered granite statue" }
-MAP
-mG++Gmmmmmmmmmmmmmmmmmm
-m......f..1..1...e...fm
-m....1...f..e..f...1..m
-m......e..............m
-m....f...............em
-m......1..............m
-m....1.....e.1.f......m
-m...........f.e.1....1m
-m......e..............m
-m....e......***.......m
-m......1....***.f....fm
-m.....................m
-m....f1..e1.f..1e.....m
-m....................em
-m.....................m
-m.....................m
-m....................1m
-mf..1..e..f..e..f..e..m
-mmmmmmmmmmmmmmmmmmmmmmm
-ENDMAP
-
-# Ice Spiral II (Lemuel)
-#
-# Wait for the freezing cloud to disappear, then run to the next gap,
-# then wait. It creates an agreeable sense of tension. -LP
-NAME:    ice_spiral_2
-ORIENT:  float
-DEPTH:   D:5-27, Vault
-TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
-MONS:    nothing
-ITEM:    nothing, nothing
-SHUFFLE: Bb/Mm/Mm/Mm
-COLOUR:  B = blue
-SUBST:   M=. , m=n, B=. , b=c
-SUBST:   + : +=
-SUBST:   * : *$
-MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
-              pow_min = 5, pow_max = 5, delay = 120, start_clouds = 1, \
-              size = 1, walk_dist = 0, spread_rate= 0 }
-MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
-              pow_min = 9, pow_max = 9, delay = 200, start_clouds = 1, \
-              size = 1, walk_dist = 0, spread_rate= 0 }
-MARKER:  G = lua:props_marker { stop_explore = "a frost-covered granite \
-             statue.", feature_desc = "A frost-covered granite statue." }
-MAP
-mG+Gmmmmmmmmmmmmmmmmm
-mBBB111B111BeeeeeeeBm
-mmmmmmmmmmmmmmmmmmmBm
-m*****eeeeeee111B111m
-mmmmmmmmmmmmmmmmmmmmm
-ENDMAP
-
-NAME:   Flame_loot_2_lemuel
-DEPTH:  D:9-27
-ORIENT: float
-ITEM:   nothing
-SUBST:  * = |**...
-SUBST:  * : *$
-SUBST:  L = ll.
-MONS:   molten gargoyle / fire drake / lindwurm / nothing w:20
-MARKER: d = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
-MAP
-ccccc...ccccc
-ccccc...ccccc
-ccccc...ccccc
-ccccc.d.ccccc
-ccccc...ccccc
-ccccc...ccccc
-ccccc.d.ccccc
-ccccc...ccccc
-ccccc...ccccc
-ccccc...ccccc
-c...LLlLL...c
-c..LLlllLL..c
-c.LLll*llLL.c
-cLLll***llLLc
-cLll**1**llLc
-cLlll***lllLc
-cLLlll*lllLLc
-c.LLlllllLL.c
-c..LLlllLL..c
-ccccccccccccc
 ENDMAP
 
 
@@ -1916,6 +1692,24 @@ MAP
 ...........
 ENDMAP
 
+NAME:   minmay_acid_items
+TAGS:   no_monster_gen no_item_gen no_trap_gen
+DEPTH:  D:14-26
+MONS:   ooze / jelly / brown ooze / death ooze / giant amoeba / azure jelly
+MONS:   acid blob
+KPROP:  | = no_tele_into
+MAP
+  ...........
+ ..mmmmmmmmm..
+..mm1112111mm..
+.mm11mmmmm11mm.
+.m11mm|||mm11m.
+.mm11mmmmm11mm.
+..mm1112111mm..
+ ..mmmmmmmmm..
+  ...........
+ENDMAP
+
 
 ###################################################################
 #
@@ -1923,6 +1717,127 @@ ENDMAP
 #       Either using 8, 9, 0 glyphs or just many choices.
 #
 ###################################################################
+
+NAME:   minmay_circled_x
+DEPTH:  D:1-2
+WEIGHT: 3
+MAP
+     ......
+   ...xxxx...
+  ..xx....xx..
+ ..x........x..
+ .x.x......x.x.
+..x..x....x..x..
+.x....x%%x....x.
+.x....0xx0....x.
+.x....0xx0....x.
+.x....x%%x....x.
+..x..x....x..x..
+ .x.x......x.x.
+ ..x........x..
+  ..xx....xx..
+   ...xxxx...
+     ......
+ENDMAP
+
+NAME:   minmay_three_crescents
+DEPTH:  D:1-4
+WEIGHT: 3
+MAP
+ .....
+..xxx..
+.xx%xx..
+.x%.0......
+.xx0...xxx..
+..x.....0xx.
+ ........%x.
+..x.....0xx.
+.xx0...xxx..
+.x%.0......
+.xx%xx.
+..xxx..
+ .....
+ENDMAP
+
+# vault rotation makes the jar with loot unknown
+NAME:   minmay_mini_jars
+DEPTH:  D:2-4
+WEIGHT: 3
+MAP
+..........
+.x.x++x.x.
+...x00x...
+.xxxxxxxx.
+.+0x%%00+.
+.+0x%%00+.
+.xxxxxxxx.
+...x00x...
+.x.x++x.x.
+..........
+ENDMAP
+
+NAME:   minmay_divided_ellipse
+DEPTH:  D:2-6
+WEIGHT: 5
+MAP
+      .......
+   ....xx+xx....
+ ...xxxx...xxxx...
+..xxx%0x...x0%xxx..
+.xx0x0.x0.0x.0x0xx.
+.+.%x..x.0.x..x%.+.
+.xx0x..x...x..x0xx.
+..xxx..x9.9x..xxx..
+ ...xx+x%*%x+xx...
+   ....xxxxx....
+      .......
+ENDMAP
+
+NAME:   minmay_hollow_rounded_squares
+DEPTH:  D:4-
+SUBST:  0 = 0., x : x c:2 v:1 b:1
+MAP
+ ........
+..xxxxxx..
+.xx.00.xx.
+.x0xxxx0x.
+.x.0.x0xx........
+.x0x.xx.+.xx==xx..
+.x0xx9xxxxxG..Gxx.
+.xx*x.|xxxG....Gx.
+..xxxxxx.x*.8..|x.
+..xxxxxx.x|..8.*x.
+.xx0.9|xxxG....Gx.
+.x..xxxxxxxG..Gxx.
+.x0xx0x.+.xx==xx..
+.x0x*x0.x........
+.x.xxxx0x.
+.xx.00.xx.
+..xxxxxx..
+ ........
+ENDMAP
+
+NAME:   minmay_pinched_square
+DEPTH:  D:8-, Vault
+MAP
+.......   .......
+.xxx.........xxx.
+.x|xxxx...xxxx|x.
+.xx9..xxxxx..9xx.
+..x.....0.....x..
+..x..x..0..x..x..
+..xx..xx.xx..xx..
+ ..x..xx.xx..x..
+ ..x00..8xx00x..
+ ..x..xxxxx..x..
+..xx..xxxxx..xx..
+..x..x..0..x.0x..
+..x.....0...0.x..
+.xx9..xxxxx0..xx.
+.x|xxxx...xxxx.x.
+.xxx.........xx..
+.......   .......
+ENDMAP
 
 NAME:  minmay_ominous_box
 TAGS:  extra luniq_mini
@@ -2032,7 +1947,6 @@ ENDMAP
 
 # Evil grid
 NAME:   minmay_evil_grid
-TAGS:   mini_float
 DEPTH:  D:8-
 NSUBST: A = 7:+ / *:c
 NSUBST: B = 1:= / *:c
@@ -2197,6 +2111,40 @@ MAP
 .v???d???v.
 .vvnvvvnvv.
 .....@.....
+ENDMAP
+
+NAME:   minmay_librarian
+TAGS:   mini_float no_monster_gen no_item_gen no_trap_gen
+DEPTH:  D:9-27
+: if you.absdepth() > 24 then
+MONS:   ancient lich w:50 / greater mummy
+ITEM:   any scroll w:6 / any book
+: elseif you.absdepth() > 20 then
+MONS:   lich w:60 / draconian annihilator w:20 / \
+        draconian scorcher / draconian shifter
+ITEM:   any scroll / any book
+: elseif you.absdepth() > 15 then
+MONS:   deep elf annihilator w:30 / deep elf sorcerer w:20 / \
+        deep elf demonologist / deep elf death mage
+ITEM:   any scroll / any book w:6
+: else
+MONS:   wizard w:50 / necromancer w:20 / deep elf mage w:20  / \
+        deep elf summoner / deep elf conjurer / orc sorcerer / \
+        ogre mage / naga mage / vampire mage / kobold demonologist w:5
+ITEM:   any scroll / any book w:3
+: end
+MAP
+xxxxxxxxxxxxx
+xd....1....dx
+xx.........xx
+xd.........dx
+xx.........xx
+xd.........dx
+xx.........xx
+xd.........dx
+xx.........xx
+xd.........dx
+xxxxxx+xxxxxx
 ENDMAP
 
 
@@ -2531,7 +2479,7 @@ NAME:    laboratory_2
 MONS:    col:lightred wizard spells:polymorph_other;paralyse;blink\
          ;bolt_of_fire;bolt_of_fire;teleport_self
 DEPTH:   D:10-26, Vault
-MONS:    col:red name:altered name_adjective rat spells:fire_breath
+MONS:    laboratory rat
 MAP
 ccccccc+cc
 c........c
@@ -2720,6 +2668,49 @@ MAP
 ...........
 ENDMAP
 
+NAME: special_room
+TAGS: allow_dup luniq no_item_gen layout_basic
+CHANCE: 20%
+DEPTH: 6-30
+{{
+    local width = 5 + crawl.random2avg(6, 2)
+    local height = 5 + crawl.random2avg(6, 2)
+
+    extend_map { width = width, height = height }
+    make_box { x1 = 0, y1 = 0, x2 = width - 1, y2 = height - 1, floor = 'O' }
+    _G.subvault('O : special_room')
+
+    local entrance_x, entrance_y
+    if crawl.coinflip() then
+        entrance_x = crawl.coinflip() and 0 or width - 1
+        entrance_y = crawl.random_range(1, height - 2)
+    else
+        entrance_x = crawl.random_range(1, width - 2)
+        entrance_y = crawl.coinflip() and 0 or height - 1
+    end
+
+    mapgrd[entrance_x][entrance_y] = '+'
+}}
+MAP
+ENDMAP
+
+NAME: crypt_curse_skull
+TAGS: allow_dup luniq extra
+DEPTH: Crypt
+CHANCE: 3333
+MONS: curse skull
+MAP
+1
+ENDMAP
+
+NAME: crypt_curse_skull_rare
+TAGS: allow_dup luniq extra
+DEPTH: Crypt
+CHANCE: 1429
+MONS: curse skull
+MAP
+1
+ENDMAP
 
 
 #### commented out vaults #### should look into these at some point

@@ -7,6 +7,7 @@
 
 #include "player.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "dgnevent.h"
 #include "env.h"
@@ -22,11 +23,6 @@
 #include "transform.h"
 #include "traps.h"
 #include "viewgeom.h"
-
-monster_type player::id() const
-{
-    return (MONS_PLAYER);
-}
 
 int player::mindex() const
 {
@@ -118,7 +114,7 @@ bool player::floundering() const
 
 bool player::extra_balanced() const
 {
-    return (species == SP_NAGA && !transform_changed_physiology());
+    return (species == SP_NAGA && !form_changed_physiology());
 }
 
 int player::get_experience_level() const
@@ -167,7 +163,7 @@ int player::body_weight(bool base) const
     if (base)
         return (weight);
 
-    switch (attribute[ATTR_TRANSFORMATION])
+    switch (form)
     {
     case TRAN_STATUE:
         weight *= 2;
@@ -191,7 +187,7 @@ int player::damage_type(int)
 {
     if (const item_def* wp = weapon())
         return (get_vorpal_type(*wp));
-    else if (attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (form == TRAN_BLADE_HANDS)
         return (DVORP_SLICING);
     else if (has_usable_claws())
         return (DVORP_CLAWING);
@@ -213,7 +209,7 @@ int player::damage_brand(int)
         ret = SPWPN_CONFUSE;
     else
     {
-        switch (attribute[ATTR_TRANSFORMATION])
+        switch (form)
         {
         case TRAN_SPIDER:
             ret = SPWPN_VENOM;
@@ -346,9 +342,9 @@ static std::string _pronoun_you(description_level_type desc)
     }
 }
 
-std::string player::name(description_level_type type, bool) const
+std::string player::name(description_level_type dt, bool) const
 {
-    return (_pronoun_you(type));
+    return (_pronoun_you(dt));
 }
 
 std::string player::pronoun(pronoun_type pro, bool) const
@@ -386,9 +382,9 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     std::string str;
 
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    if (form == TRAN_SPIDER)
         str = "hind leg";
-    else if (!transform_changed_physiology())
+    else if (!form_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES) >= 3)
             str = "hoof";
@@ -417,7 +413,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
 std::string player::arm_name(bool plural, bool *can_plural) const
 {
-    if (transform_changed_physiology())
+    if (form_changed_physiology())
         return hand_name(plural, can_plural);
 
     if (can_plural != NULL)
@@ -441,12 +437,12 @@ std::string player::arm_name(bool plural, bool *can_plural) const
 bool player::fumbles_attack(bool verbose)
 {
     // Fumbling in shallow water.
-    if (floundering())
+    if (floundering() || (liquefied(pos()) && !airborne() && !clinging))
     {
         if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
             if (verbose)
-                mpr("Unstable footing causes you to fumble your attack.");
+                mpr("Your unstable footing causes you to fumble your attack.");
             return (true);
         }
     }

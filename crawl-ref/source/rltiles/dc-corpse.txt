@@ -22,6 +22,7 @@ queen_ant CORPSE_QUEEN_ANT
 butterfly CORPSE_BUTTERFLY
 %back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 giant_bat CORPSE_GIANT_BAT
+raven CORPSE_RAVEN
 
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL
@@ -64,6 +65,20 @@ quokka CORPSE_QUOKKA
 grey_rat CORPSE_GREY_RAT
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
+porcupine CORPSE_PORCUPINE
+%sdir dc-mon/rat
+labrat_plain CORPSE_LABORATORY_RAT
+labrat_armoured
+labrat_beastly
+labrat_fiery
+labrat_gaseous
+labrat_leeching
+labrat_levitating
+labrat_mutated
+labrat_shifting
+labrat_venomous
+%sdir dc-mon/animals
+
 
 ## Spiders and insects ('s')
 %back dc-misc/blood_green
@@ -88,6 +103,7 @@ alligator_baby CORPSE_BABY_ALLIGATOR
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
+firecrab CORPSE_FIRECRAB
 
 ## Worms ('w')
 %back dc-misc/blood_green
@@ -115,7 +131,7 @@ giant_goldfish CORPSE_GIANT_GOLDFISH
 electric_eel CORPSE_ELECTRIC_EEL
 #lava_fish CORPSE_LAVA_FISH
 shark CORPSE_SHARK
-kraken_head CORPSE_KRAKEN /*'x'*/
+dc-mon/kraken/kraken_head CORPSE_KRAKEN /*'x'*/
 %back dc-misc/blood_green
 jellyfish CORPSE_JELLYFISH /*'J'*/
 
@@ -192,6 +208,7 @@ orc CORPSE_ORC
 
 ## Dwarves ('q')
 unique/wiglaf CORPSE_DWARF
+gnome CORPSE_GNOME
 
 ## Ugly things ('u')
 %sdir dc-mon/demons
@@ -255,6 +272,10 @@ manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
+kenku CORPSE_KENKU
+
+## Sky beast ('I')
+sky_beast CORPSE_SKY_BEAST
 
 ## Jellies ('J')
 %back dc-misc/blood_green
@@ -281,6 +302,8 @@ deep_troll CORPSE_DEEP_TROLL
 
 ## Human shaped ('@')
 human CORPSE_HUMAN
+demonspawn CORPSE_DEMONSPAWN
+halfling CORPSE_HALFLING
 %back dc-misc/blood_green
 shapeshifter CORPSE_SHAPESHIFTER
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER

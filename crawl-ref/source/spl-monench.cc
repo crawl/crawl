@@ -51,69 +51,6 @@ void cast_mass_sleep(int pow)
     apply_area_visible(_sleep_monsters, pow);
 }
 
-// This is a hack until we set an is_beast flag in the monster data
-// (which we might never do, this is sort of minor.)
-// It's a list of monster types which can be affected by beast taming.
-static bool _is_domesticated_animal(int type)
-{
-    const monster_type types[] = {
-        MONS_GIANT_BAT, MONS_HOUND, MONS_JACKAL, MONS_RAT,
-        MONS_YAK, MONS_WYVERN, MONS_HIPPOGRIFF, MONS_GRIFFON,
-        MONS_DEATH_YAK, MONS_WAR_DOG, MONS_GREY_RAT,
-        MONS_GREEN_RAT, MONS_ORANGE_RAT, MONS_SHEEP,
-        MONS_HOG, MONS_GIANT_FROG, MONS_GIANT_TOAD,
-        MONS_SPINY_FROG, MONS_BLINK_FROG, MONS_WOLF, MONS_WARG,
-        MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR
-    };
-
-    for (unsigned int i = 0; i < ARRAYSZ(types); ++i)
-        if (types[i] == type)
-            return (true);
-
-    return (false);
-}
-
-static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
-{
-    monster* mons = monster_at(where);
-    if (mons == NULL)
-        return 0;
-
-    if (!_is_domesticated_animal(mons->type) || mons->friendly()
-        || player_will_anger_monster(mons))
-    {
-        return 0;
-    }
-
-    if (you.species == SP_CAT && mons_genus(mons->type) == MONS_HOUND)
-        return 0;
-
-    // 50% bonus for dogs
-    if (mons->type == MONS_HOUND || mons->type == MONS_WAR_DOG)
-        pow += (pow / 2);
-
-    if (you.species == SP_HILL_ORC && mons->type == MONS_WARG)
-        pow += (pow / 2);
-
-    if (mons->check_res_magic(pow) > 0)
-        return 0;
-
-    simple_monster_message(mons, " is tamed!");
-
-    if (random2(100) < random2(pow / 10))
-        mons->attitude = ATT_FRIENDLY;  // permanent
-    else
-        mons->add_ench(ENCH_CHARM);     // temporary
-    mons_att_changed(mons);
-
-    return 1;
-}
-
-void cast_tame_beasts(int pow)
-{
-    apply_area_visible(_tame_beast_monsters, pow);
-}
-
 bool backlight_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED(pow);

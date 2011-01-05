@@ -521,6 +521,8 @@ public:
     MenuItem();
     virtual ~MenuItem();
 
+    void set_tile_height();
+
     void set_id(int id) { m_item_id = id; }
     int get_id() const { return m_item_id; }
 
@@ -552,6 +554,18 @@ public:
 
     void add_hotkey(int key);
     const std::vector<int>& get_hotkeys() const;
+    void clear_hotkeys();
+
+    void set_link_left(MenuItem* item);
+    void set_link_right(MenuItem* item);
+    void set_link_up(MenuItem* item);
+    void set_link_down(MenuItem* item);
+
+    MenuItem* get_link_left() const;
+    MenuItem* get_link_right() const;
+    MenuItem* get_link_up() const;
+    MenuItem* get_link_down() const;
+
 protected:
     coord_def m_min_coord;
     coord_def m_max_coord;
@@ -566,10 +580,16 @@ protected:
     COLORS m_highlight_colour;
     int m_bg_colour;
 
+    MenuItem* m_link_left;
+    MenuItem* m_link_right;
+    MenuItem* m_link_up;
+    MenuItem* m_link_down;
+
 #ifdef USE_TILE
     // Holds the conversion values to translate unit values to pixel values
     unsigned int m_unit_width_pixels;
     unsigned int m_unit_height_pixels;
+    int get_vertical_offset() const;
 #endif
 
     int m_item_id;
@@ -617,6 +637,17 @@ public:
 };
 
 /**
+ * Behaves the same as NoSelectTextItem but use formatted text for rendering.
+ * It ignores bg_colour.
+ * TODO: add bg_colour support to formatted_string and merge this with TextItem.
+ */
+class FormattedTextItem : public NoSelectTextItem
+{
+public:
+    virtual void render();
+};
+
+/**
  * Holds an arbitary number of tiles, currently rendered on top of each other
  */
 #ifdef USE_TILE
@@ -630,6 +661,7 @@ public:
     virtual void render();
 
     virtual void add_tile(tile_def tile);
+    void clear_tile() { m_tiles.clear(); };
 
 protected:
     std::vector<tile_def> m_tiles;
@@ -688,6 +720,7 @@ public:
     MenuObject();
     virtual ~MenuObject();
 
+    void set_tile_height();
     void init(const coord_def& min_coord, const coord_def& max_coord,
               const std::string& name);
     const coord_def& get_min_coord() const { return m_min_coord; }
@@ -714,6 +747,7 @@ public:
     virtual std::vector<MenuItem*> get_selected_items();
     virtual bool select_item(int index) = 0;
     virtual bool select_item(MenuItem* item) = 0;
+    virtual MenuItem* find_item_by_hotkey(int key);
     virtual MenuItem* select_item_by_hotkey(int key);
     virtual void clear_selections();
     virtual MenuItem* get_active_item() = 0;
@@ -772,6 +806,8 @@ public:
     virtual void set_active_item(MenuItem* item);
     virtual void activate_first_item();
     virtual void activate_last_item();
+    void set_default_item(MenuItem* item);
+    void activate_default_item();
 
     virtual bool select_item(int index);
     virtual bool select_item(MenuItem* item);
@@ -785,6 +821,7 @@ protected:
 
     // cursor position
     MenuItem* m_active_item;
+    MenuItem* m_default_item;
 };
 
 /**

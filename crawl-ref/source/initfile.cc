@@ -622,11 +622,6 @@ static std::string _user_home_subpath(const std::string subpath)
     return catpath(_user_home_dir(), subpath);
 }
 
-static std::string _user_home_crawl_subpath(const std::string subpath)
-{
-    return _user_home_subpath(catpath(".crawl", subpath));
-}
-
 #if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
 static std::string _resolve_dir(const char* path, const char* suffix)
 {
@@ -661,7 +656,7 @@ void game_options::reset_options()
     if (macro_dir.empty())
     {
 #ifdef UNIX
-        macro_dir = _user_home_crawl_subpath("");
+        macro_dir = _user_home_subpath(".crawl");
 #else
         macro_dir = "settings/";
 #endif
@@ -925,7 +920,7 @@ void game_options::reset_options()
 
 #ifdef USE_TILE
     strcpy(tile_show_items, "!?/%=([)x}+\\_.");
-    tile_title_screen    = true;
+    tile_skip_title      = false;
     tile_menu_icons      = true;
 
     // minimap colours
@@ -982,6 +977,9 @@ void game_options::reset_options()
     tile_show_minihealthbar  = true;
     tile_show_minimagicbar   = true;
     tile_show_demon_tier     = true;
+    // Temporary option until the montab crashes are fixed.
+    tile_allow_detached_montab = true;
+    tile_force_regenerate_levels = false;
 #endif
 
     // map each colour to itself as default
@@ -3159,7 +3157,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         strncpy(tile_show_items, field.c_str(), 18);
     }
-    else BOOL_OPTION(tile_title_screen);
+    else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
     else if (key == "tile_player_col")
     {
@@ -3299,6 +3297,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(tile_show_minihealthbar);
     else BOOL_OPTION(tile_show_minimagicbar);
     else BOOL_OPTION(tile_show_demon_tier);
+    else BOOL_OPTION(tile_allow_detached_montab);
+    else BOOL_OPTION(tile_force_regenerate_levels);
     else if (key == "tile_tag_pref")
     {
         tile_tag_pref = _str_to_tag_pref(field.c_str());
@@ -3544,6 +3544,7 @@ enum commandline_option_type
     CLO_MACRO,
     CLO_MAPSTAT,
     CLO_ARENA,
+    CLO_DUMP_MAPS,
     CLO_TEST,
     CLO_SCRIPT,
     CLO_BUILDDB,
@@ -3565,9 +3566,10 @@ enum commandline_option_type
 static const char *cmd_ops[] = {
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "test", "script", "builddb", "help", "version",
-    "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
-    "sprint-map", "edit-save", "print-charset", "zotdef",
+    "mapstat", "arena", "dump-maps", "test", "script", "builddb",
+    "help", "version", "seed", "save-version", "sprint",
+    "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
+    "print-charset", "zotdef",
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -3987,6 +3989,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     Options.game.arena_teams = next_arg;
                 nextUsed = true;
             }
+            break;
+
+        case CLO_DUMP_MAPS:
+            crawl_state.dump_maps = true;
             break;
 
         case CLO_TEST:

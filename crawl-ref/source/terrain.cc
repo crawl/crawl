@@ -66,6 +66,21 @@ int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feat
     return count;
 }
 
+bool feat_is_test (dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
+{
+    return (checker(feat));
+}
+
+bool feat_is_test (const coord_def& c, bool (*checker)(dungeon_feature_type))
+{
+    return (checker(grd(c)));
+}
+
+bool feat_is_malign_gateway_suitable (dungeon_feature_type feat)
+{
+    return (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER);
+}
+
 bool feat_is_wall(dungeon_feature_type feat)
 {
     return (feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL);
@@ -400,6 +415,7 @@ bool feat_is_water(dungeon_feature_type feat)
     return (feat == DNGN_SHALLOW_WATER
             || feat == DNGN_DEEP_WATER
             || feat == DNGN_OPEN_SEA
+            || feat == DNGN_SWAMP_TREE
             || feat == DNGN_WATER_RESERVED);
 }
 
@@ -445,6 +461,11 @@ bool feat_is_branch_stairs(dungeon_feature_type feat)
 {
     return ((feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
             || (feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS));
+}
+
+bool feat_is_tree(dungeon_feature_type feat)
+{
+    return feat == DNGN_TREE || feat == DNGN_SWAMP_TREE;
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
@@ -1299,12 +1320,11 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     bool escape = false;
     coord_def empty;
 
-    if (you.species == SP_MERFOLK && terrain == DNGN_DEEP_WATER
-        && (!transform_can_swim() || !you.fishtail)
-        && !you.transform_uncancellable)
+    if (species_likes_water() && terrain == DNGN_DEEP_WATER
+        && !form_likes_water() && !you.transform_uncancellable)
     {
         // These can happen when we enter deep water directly -- bwr
-        merfolk_start_swimming();
+        emergency_untransform();
         return (false);
     }
 
@@ -1364,7 +1384,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     }
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             mpr("You sink like a stone!");
         else
             mpr("You try to escape, but your burden drags you down!");
@@ -1512,7 +1532,7 @@ const char *dngn_feature_names[] =
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"open_sea", "tree", "orcish_idol", "", "", "",
+"open_sea", "tree", "orcish_idol", "swamp_tree", "", "",
 "granite_statue", "statue_reserved_1", "statue_reserved_2",
 "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",

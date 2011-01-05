@@ -25,6 +25,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool circular = false,
                    coord_def origin = coord_def(-1, -1));
 void reautomap_level();
+void fully_map_level();
 
 bool is_feature(wchar_t feature, const coord_def& where);
 
@@ -44,7 +45,8 @@ void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
 
 void viewwindow(bool show_updates = true);
 void update_monsters_in_view();
-void handle_seen_interrupt(monster* mons);
+void handle_seen_interrupt(monster* mons,
+                           std::vector<std::string>* msgs_buf = NULL);
 void flush_comes_into_view();
 
 void toggle_show_terrain();

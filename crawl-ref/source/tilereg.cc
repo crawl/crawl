@@ -132,10 +132,15 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
     return valid;
 }
 
-void Region::set_transform()
+void Region::set_transform(bool no_scaling)
 {
     GLW_3VF trans(sx + ox, sy + oy, 0);
-    GLW_3VF scale(dx, dy, 1);
+    GLW_3VF scale;
+
+    if (no_scaling)
+        scale = GLW_3VF(1, 1, 1);
+    else
+        scale = GLW_3VF(dx, dy, 1);
 
     glmanager->set_transform(trans, scale);
 }

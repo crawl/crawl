@@ -172,33 +172,34 @@ int zin_recite_to_single_monster(const coord_def& where,
 
     const mon_holy_type holiness = mon->holiness();
     bool impressible = true;
-    int resist;
+    int resist = 1 + (mon->res_magic() / 4);
 
     if (mon->is_holy())
-        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
-    else
     {
-        resist = mon->res_magic();
-
-        if (holiness == MH_UNDEAD)
-        {
-            impressible = false;
-            pow -= 2 + random2(3);
-        }
-        else if (holiness == MH_DEMONIC)
-        {
-            impressible = false;
-            pow -= 3 + random2(5);
-        }
-
-        if (mon->is_unclean() || mon->is_chaotic())
-            impressible = false;
+        resist -= 2 + random2(3);
+    }
+    else if (holiness == MH_UNDEAD)
+    {
+       impressible = false;
+       resist += 2 + random2(3);
+    }
+    else if (holiness == MH_DEMONIC)
+    {
+        impressible = false;
+        resist += 3 + random2(5);
     }
 
-    pow -= resist;
+    if (mon->is_unclean() || mon->is_chaotic())
+        impressible = false;
 
-    if (pow > 0)
-        pow = random2avg(pow, 2);
+    resist -= random2(you.skills[SK_INVOCATIONS]);
+    resist = std::max(0, resist);
+
+    dprf("Pow: %d  MR: %d  Resist: %d ", pow, mon->res_magic(), resist);
+
+    pow = random2(pow) - resist;
+
+    dprf("random2d pow - resist: %d", pow);
 
     if (pow <= 0) // Uh oh...
     {
@@ -231,70 +232,48 @@ int zin_recite_to_single_monster(const coord_def& where,
         return (1);
     }
 
-    switch (pow)
+    // High-powered Recite goes through all the powers until it finds one
+    // that applies to the monster.
+    if (pow > 17 && impressible)
     {
-        case 0:
-            return (0); // handled above
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            if (!mons_class_is_confusable(mon->type)
-                || !mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
-                                              (16 + random2avg(13, 2)) * 10)))
-            {
-                return (0);
-            }
-            simple_monster_message(mon, " looks confused.");
-            break;
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-            if (!mon->can_hibernate())
-                return (0);
-            mon->hibernate();
-            simple_monster_message(mon, " falls asleep!");
-            break;
-        case 9:
-        case 10:
-        case 11:
-        case 12:
-            if (!impressible
-                || !mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
-                                  (16 + random2avg(13, 2)) * 10)))
-            {
-                return (0);
-            }
-            simple_monster_message(mon, " seems impressed!");
-            break;
-        case 13:
-        case 14:
-        case 15:
-            if (!mon->add_ench(ENCH_FEAR))
-                return (0);
-            simple_monster_message(mon, " turns to flee.");
-            break;
-        case 16:
-        case 17:
-            if (!mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
-                               (16 + random2avg(13, 2)) * 10)))
-            {
-                return (0);
-            }
-            simple_monster_message(mon, " freezes in fright!");
-            break;
-        default:
-            if (mon->is_holy())
-                good_god_holy_attitude_change(mon);
-            else
-            {
-                if (!impressible)
-                    return (0);
-                simple_monster_message(mon, " seems fully impressed!");
-                mons_pacify(mon);
-            }
-            break;
+        if (mon->is_holy())
+            good_god_holy_attitude_change(mon);
+        else
+        {
+            simple_monster_message(mon, " seems fully impressed!");
+            mons_pacify(mon);
+        }
+    }
+    else if (pow > 15 && mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
+                                                   (16 + random2avg(13, 2))
+                                                   * 10)))
+    {
+        simple_monster_message(mon, " freezes in fright!");
+    }
+    else if (pow > 12 && mon->add_ench(ENCH_FEAR))
+    {
+        simple_monster_message(mon, " turns to flee.");
+    }
+    else if (pow > 8 && impressible
+             && mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
+                                          (16 + random2avg(13, 2)) * 10)))
+    {
+        simple_monster_message(mon, " seems impressed!");
+    }
+    else if (pow > 4 && mon->can_hibernate())
+    {
+        mon->hibernate();
+        simple_monster_message(mon, " falls asleep!");
+    }
+    else if (pow > 0 && mons_class_is_confusable(mon->type)
+             && mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+                                          (16 + random2avg(13, 2)) * 10)))
+    {
+        simple_monster_message(mon, " looks confused.");
+    }
+    else
+    {
+        return (0);
     }
 
     return (1);
@@ -673,10 +652,10 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
         || spell == SPELL_TORNADO
+        || spell == SPELL_FREEZE
         || spell == SPELL_IGNITE_POISON
-        || spell == SPELL_OZOCUBUS_REFRIGERATION
+        || spell == SPELL_OZOCUBUS_REFRIGERATION)
         // Toxic Radiance does no direct damage
-        || spell == SPELL_BONE_SHARDS)
     {
         return (true);
     }
@@ -764,7 +743,7 @@ bool trog_burn_spellbooks()
             }
 
             const int duration = std::min(4 + count + random2(rarity/2), 23);
-            place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
+            place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
             mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
                  count == 1 ? ""  : "s",
@@ -1894,7 +1873,7 @@ int fedhas_rain(const coord_def &target)
 
             if (x_chance_in_y(expected, 20))
             {
-                place_cloud(CLOUD_RAIN, *rad, 10, KC_YOU);
+                place_cloud(CLOUD_RAIN, *rad, 10, &you);
 
                 processed_count++;
             }
@@ -2143,7 +2122,7 @@ bool fedhas_evolve_flora()
             || !mons_class_can_pass(MONS_BALLISTOMYCETE,
                                     env.grid(spelld.target)))
         {
-            if (env.grid(spelld.target) == DNGN_TREE)
+            if (feat_is_tree(env.grid(spelld.target)))
                 mprf("The tree has already reached the pinnacle of evolution.");
             else
                 mprf("You must target a plant or fungus.");
@@ -2440,36 +2419,34 @@ bool ashenzari_transfer_knowledge()
         if (!ashenzari_end_transfer())
             return false;
 
-    you.transfer_from_skill = select_skill();
-    if (you.transfer_from_skill == SK_NONE)
+    while(true)
     {
-        redraw_screen();
-        return false;
-    }
+        skill_menu(true);
+        if (is_invalid_skill(you.transfer_from_skill))
+        {
+            redraw_screen();
+            return false;
+        }
 
-    int fsk_points = you.skill_points[you.transfer_from_skill];
-    int skp_max; // maximum number of skill points transferrable.
+        you.transfer_skill_points = skill_transfer_amount(
+                                                    you.transfer_from_skill);
 
-    skp_max = fsk_points / 2;
-    skp_max = std::max(skp_max, 1000);
-    if (skp_max > fsk_points)
-        skp_max = fsk_points;
+        skill_menu(true);
+        if (is_invalid_skill(you.transfer_to_skill))
+        {
+            you.transfer_from_skill = SK_NONE;
+            you.transfer_skill_points = 0;
+            continue;
+        }
 
-    you.transfer_skill_points = skp_max;
-    you.transfer_to_skill = select_skill();
-    if (you.transfer_to_skill == SK_NONE)
-    {
-        you.transfer_from_skill = SK_NONE;
-        you.transfer_skill_points = 0;
-        redraw_screen();
-        return false;
+        break;
     }
 
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(you.transfer_from_skill),
          skill_name(you.transfer_to_skill));
 
-    you.transfer_total_skill_points = skp_max;
+    you.transfer_total_skill_points = you.transfer_skill_points;
 
     redraw_screen();
     return true;

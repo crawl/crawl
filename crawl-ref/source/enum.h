@@ -192,7 +192,9 @@ enum attribute_type
     ATTR_DIVINE_LIGHTNING_PROTECTION,
     ATTR_DIVINE_REGENERATION,
     ATTR_DIVINE_DEATH_CHANNEL,
-    ATTR_TRANSFORMATION,
+#if TAG_MAJOR_VERSION == 31
+    ATTR_OBSOLETE_TRANSFORMATION,
+#endif
     ATTR_CARD_COUNTDOWN,
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
@@ -219,7 +221,21 @@ enum attribute_type
     ATTR_FRUIT_FOUND,          // Mask of fruit types found.
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
+    ATTR_PERM_LEVITATION,      // Kenku flight or boots of lev are on.
     NUM_ATTRIBUTES
+};
+
+enum transformation_type
+{
+    TRAN_NONE,
+    TRAN_SPIDER,
+    TRAN_BLADE_HANDS,
+    TRAN_STATUE,
+    TRAN_ICE_BEAST,
+    TRAN_DRAGON,
+    TRAN_LICH,
+    TRAN_BAT,
+    TRAN_PIG,
 };
 
 enum beam_type                  // beam[].flavour
@@ -302,8 +318,9 @@ enum beam_type                  // beam[].flavour
     BEAM_HOLY_FLAME,
     BEAM_HOLY_LIGHT,
     BEAM_POTION_RANDOM,
+    BEAM_AIR,
 
-    BEAM_LAST_REAL = BEAM_POTION_RANDOM,
+    BEAM_LAST_REAL = BEAM_AIR,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -354,7 +371,9 @@ enum book_type
     BOOK_POWER,
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,
+#if TAG_MAJOR_VERSION == 31
     BOOK_BEASTS,
+#endif
     BOOK_STALKING,
     BOOK_BRANDS,
     BOOK_DRAGON,
@@ -536,6 +555,7 @@ enum command_type
     CMD_TOGGLE_AUTOPICKUP,
     CMD_TOGGLE_FRIENDLY_PICKUP,
     CMD_PICKUP,
+    CMD_PICKUP_QUANTITY,
     CMD_DROP,
     CMD_BUTCHER,
     CMD_INSPECT_FLOOR,
@@ -613,6 +633,10 @@ enum command_type
     CMD_MOUSE_CLICK,
 
     CMD_ANNOTATE_LEVEL,
+
+#ifdef CLUA_BINDINGS
+    CMD_AUTOFIGHT,
+#endif
 
 #ifdef USE_TILE
     CMD_EDIT_PLAYER_TILE,
@@ -1075,6 +1099,7 @@ enum dungeon_feature_type
     // Can be seen through and reached past.
     DNGN_TREE,
     DNGN_ORCISH_IDOL,
+    DNGN_SWAMP_TREE,
     DNGN_GRANITE_STATUE = 21,
     DNGN_STATUE_RESERVED,
 
@@ -1088,6 +1113,7 @@ enum dungeon_feature_type
     DNGN_DEEP_WATER,
 
     DNGN_SHALLOW_WATER = 65,
+    DNGN_MOVEMENT_MIN = DNGN_SHALLOW_WATER,
     DNGN_WATER_RESERVED,
 
     // Lowest grid value that an item can be placed on.
@@ -1297,6 +1323,7 @@ enum duration_type
     DUR_MIRROR_DAMAGE,
     DUR_SCRYING,
     DUR_TORNADO,
+    DUR_LIQUEFYING,
 
     NUM_DURATIONS
 };
@@ -1368,6 +1395,8 @@ enum enchant_type
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
     ENCH_LEVITATION,
     ENCH_HELPLESS,
+    ENCH_LIQUEFYING,
+    ENCH_PERM_TORNADO,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1744,187 +1773,187 @@ enum targ_mode_type
 // NOTE: Changing this order will break saves!
 enum monster_type                      // (int) menv[].type
 {
-    MONS_PROGRAM_BUG,                  //    0
+    MONS_PROGRAM_BUG,
     MONS_GIANT_BAT,
     MONS_CENTAUR,
     MONS_RED_DEVIL,
     MONS_ETTIN,
-    MONS_FUNGUS,                       //    5
+    MONS_FUNGUS,
     MONS_GOBLIN,
     MONS_HOUND,
     MONS_IMP,
     MONS_JACKAL,
-    MONS_KILLER_BEE,                   //   10
+    MONS_KILLER_BEE,
     MONS_KILLER_BEE_LARVA,
     MONS_MANTICORE,
     MONS_NECROPHAGE,
     MONS_ORC,
-    MONS_PHANTOM,                      //   15
+    MONS_PHANTOM,
     MONS_QUASIT,
     MONS_RAT,
     MONS_SCORPION,
     MONS_DWARF,
-    MONS_UGLY_THING,                   //   20
+    MONS_UGLY_THING,
     MONS_FIRE_VORTEX,
     MONS_WORM,
     MONS_ABOMINATION_SMALL,
     MONS_YELLOW_WASP,
-    MONS_ZOMBIE_SMALL,                 //   25
+    MONS_ZOMBIE_SMALL,
     MONS_ANGEL,
     MONS_GIANT_BEETLE,
     MONS_CYCLOPS,
     MONS_DRAGON,
-    MONS_TWO_HEADED_OGRE,              //   30
+    MONS_TWO_HEADED_OGRE,
     MONS_FIEND,
     MONS_GIANT_SPORE,
     MONS_HOBGOBLIN,
     MONS_ICE_BEAST,
-    MONS_JELLY,                        //   35
+    MONS_JELLY,
     MONS_KOBOLD,
     MONS_LICH,
     MONS_MUMMY,
     MONS_GUARDIAN_SERPENT,
-    MONS_OGRE,                         //   40
+    MONS_OGRE,
     MONS_PLANT,
     MONS_QUEEN_BEE,
     MONS_RAKSHASA,
     MONS_SNAKE,
-    MONS_TROLL,                        //   45
+    MONS_TROLL,
     MONS_UNSEEN_HORROR,
     MONS_VAMPIRE,
     MONS_WRAITH,
     MONS_ABOMINATION_LARGE,
-    MONS_YAK,                          //   50
+    MONS_YAK,
     MONS_ZOMBIE_LARGE,
     MONS_ORC_WARRIOR,
     MONS_KOBOLD_DEMONOLOGIST,
     MONS_ORC_WIZARD,
-    MONS_ORC_KNIGHT,                   //   55
+    MONS_ORC_KNIGHT,
     MONS_ORB_OF_DESTRUCTION, // a projectile, not a real mon
     MONS_WYVERN,
     MONS_BIG_KOBOLD,
     MONS_GIANT_EYEBALL,
-    MONS_WIGHT,                        //   60
+    MONS_WIGHT,
     MONS_OKLOB_PLANT,
     MONS_WOLF_SPIDER,
     MONS_SHADOW,
     MONS_HUNGRY_GHOST,
-    MONS_EYE_OF_DRAINING,              //   65
+    MONS_EYE_OF_DRAINING,
     MONS_BUTTERFLY,
     MONS_WANDERING_MUSHROOM,
     MONS_EFREET,
     MONS_BRAIN_WORM,
-    MONS_GIANT_ORANGE_BRAIN,           //   70
+    MONS_GIANT_ORANGE_BRAIN,
     MONS_BOULDER_BEETLE,
     MONS_FLYING_SKULL,
     MONS_HELL_HOUND,
     MONS_MINOTAUR,
-    MONS_ICE_DRAGON,                   //   75
+    MONS_ICE_DRAGON,
     MONS_SLIME_CREATURE,
     MONS_FREEZING_WRAITH,
     MONS_RAKSHASA_FAKE,
     MONS_GREAT_ORB_OF_EYES,
-    MONS_HELLION,                      //   80
+    MONS_HELLION,
     MONS_ROTTING_DEVIL,
     MONS_TORMENTOR,
     MONS_REAPER,
     MONS_SOUL_EATER,
-    MONS_HAIRY_DEVIL,                  //   85
+    MONS_HAIRY_DEVIL,
     MONS_ICE_DEVIL,
     MONS_BLUE_DEVIL,
     MONS_BEAST,
     MONS_IRON_DEVIL,
-    MONS_SIXFIRHY,                     //   90
+    MONS_SIXFIRHY,
     MONS_MERGED_SLIME_CREATURE, // used only for recoloring
     MONS_GHOST,                 // common genus for monster and player ghosts
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_PLAYER,                // a certain ugly creature
     MONS_VAMPIRE_BAT,           // for recolouring
-    MONS_DEMIGOD,               // for recolouring
-    MONS_DEMONSPAWN,            // for recolouring... but there are FRs
+    MONS_DEMIGOD,               // recolouring + single vault
+    MONS_DEMONSPAWN,            // recolouring + single vault... but there are FRs
     MONS_GLOWING_SHAPESHIFTER,
     MONS_SHAPESHIFTER,
-    MONS_GIANT_MITE,                   //  100
+    MONS_GIANT_MITE,
     MONS_STEAM_DRAGON,
     MONS_VERY_UGLY_THING,
     MONS_ORC_SORCERER,
     MONS_HIPPOGRIFF,
-    MONS_GRIFFON,                      //  105
+    MONS_GRIFFON,
     MONS_HYDRA,
     MONS_SKELETON_SMALL,
     MONS_SKELETON_LARGE,
     MONS_HELL_KNIGHT,
-    MONS_NECROMANCER,                  //  110
+    MONS_NECROMANCER,
     MONS_WIZARD,
     MONS_ORC_PRIEST,
     MONS_ORC_HIGH_PRIEST,
     MONS_HUMAN,
-    MONS_GNOLL,                        //  115
+    MONS_GNOLL,
     MONS_CLAY_GOLEM,
     MONS_WOOD_GOLEM,
     MONS_STONE_GOLEM,
     MONS_IRON_GOLEM,
-    MONS_CRYSTAL_GOLEM,                //  120
+    MONS_CRYSTAL_GOLEM,
     MONS_TOENAIL_GOLEM,
     MONS_MOTTLED_DRAGON,
     MONS_EARTH_ELEMENTAL,
     MONS_FIRE_ELEMENTAL,
-    MONS_AIR_ELEMENTAL,                //  125
+    MONS_AIR_ELEMENTAL,
     MONS_ICE_FIEND,
     MONS_SHADOW_FIEND,
     MONS_WATER_MOCCASIN,
     MONS_CROCODILE,
-    MONS_PHANTASMAL_WARRIOR,           //  130
+    MONS_PHANTASMAL_WARRIOR,
     MONS_PULSATING_LUMP,
     MONS_STORM_DRAGON,
     MONS_YAKTAUR,
     MONS_DEATH_YAK,
-    MONS_ROCK_TROLL,                   //  135
+    MONS_ROCK_TROLL,
     MONS_STONE_GIANT,
     MONS_FLAYED_GHOST,
     MONS_BUMBLEBEE,
     MONS_REDBACK,
-    MONS_INSUBSTANTIAL_WISP,           //  140
+    MONS_INSUBSTANTIAL_WISP,
     MONS_VAPOUR,
     MONS_OGRE_MAGE,
     MONS_SPINY_WORM,
     MONS_DANCING_WEAPON,
-    MONS_TITAN,                        //  145
+    MONS_TITAN,
     MONS_GOLDEN_DRAGON,
     MONS_ELF,
     MONS_LINDWURM,
     MONS_ELEPHANT_SLUG,
-    MONS_WAR_DOG,                      //  150
+    MONS_WAR_DOG,
     MONS_GREY_RAT,
     MONS_GREEN_RAT,
     MONS_ORANGE_RAT,
     MONS_BLACK_MAMBA,
-    MONS_SHEEP,                        //  155
+    MONS_SHEEP,
     MONS_GHOUL,
     MONS_HOG,
     MONS_GIANT_MOSQUITO,
     MONS_GIANT_CENTIPEDE,
-    MONS_IRON_TROLL,                   //  160
+    MONS_IRON_TROLL,
     MONS_NAGA,
     MONS_FIRE_GIANT,
     MONS_FROST_GIANT,
     MONS_FIRE_DRAKE,
-    MONS_SHADOW_DRAGON,                //  165
+    MONS_SHADOW_DRAGON,
     MONS_VIPER,
     MONS_ANACONDA,
     MONS_DEEP_TROLL,
     MONS_GIANT_BLOWFLY,
-    MONS_RED_WASP,                     //  170
+    MONS_RED_WASP,
     MONS_SWAMP_DRAGON,
     MONS_SWAMP_DRAKE,
     MONS_DEATH_DRAKE,
     MONS_SOLDIER_ANT,
-    MONS_HILL_GIANT,                   //  175
+    MONS_HILL_GIANT,
     MONS_QUEEN_ANT,
     MONS_ANT_LARVA,
     MONS_GIANT_FROG,
     MONS_GIANT_TOAD,
-    MONS_SPINY_FROG,                   //  180
+    MONS_SPINY_FROG,
     MONS_BLINK_FROG,
     MONS_GIANT_COCKROACH,
     MONS_SMALL_SNAKE,
@@ -1934,17 +1963,17 @@ enum monster_type                      // (int) menv[].type
     MONS_BEAR,
     MONS_GRIZZLY_BEAR,
     MONS_POLAR_BEAR,
-    MONS_BLACK_BEAR,                   //  190
+    MONS_BLACK_BEAR,
     MONS_SIMULACRUM_SMALL,
     MONS_SIMULACRUM_LARGE,
     MONS_MERFOLK,
     MONS_MERMAID,
-    MONS_SIREN,                        //  195
+    MONS_SIREN,
     MONS_FLAMING_CORPSE,
     MONS_HARPY,
     MONS_TOADSTOOL,
     MONS_BUSH,
-    MONS_BALLISTOMYCETE,               //  200
+    MONS_BALLISTOMYCETE,
 
     // Shoals guardians
     MONS_MERFOLK_IMPALER,
@@ -1952,15 +1981,16 @@ enum monster_type                      // (int) menv[].type
     MONS_MERFOLK_JAVELINEER,
 
     MONS_SNAPPING_TURTLE,
-    MONS_ALLIGATOR_SNAPPING_TURTLE,    //  205
+    MONS_ALLIGATOR_SNAPPING_TURTLE,
     MONS_SEA_SNAKE,
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
-    MONS_HALFLING,              // for recolouring only.  And let's remove them!
-    MONS_FELID,                 // for recolouring only.  Miaow!
-    MONS_SPIDER,                // for recolouring, for now.
+    MONS_HALFLING,              // recolouring + single vault.
+    MONS_FELID,                 // recolouring + single vault.  Miaow!
+    MONS_SPIDER,
     MONS_OKLOB_SAPLING,
     MONS_BURNING_BUSH,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_213,
       MONS_UNUSED_214,
       MONS_UNUSED_215,
@@ -1968,80 +1998,85 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_217,
       MONS_UNUSED_218,
       MONS_UNUSED_219,
-    MONS_WHITE_IMP,                    //  220
+#endif
+    MONS_WHITE_IMP,
     MONS_LEMURE,
     MONS_UFETUBUS,
     MONS_IRON_IMP,
     MONS_MIDGE,
-    MONS_NEQOXEC,                      //  225
+    MONS_NEQOXEC,
     MONS_ORANGE_DEMON,
     MONS_HELLWING,
     MONS_SMOKE_DEMON,
     MONS_YNOXINUL,
-    MONS_EXECUTIONER,                  //  230
+    MONS_EXECUTIONER,
     MONS_GREEN_DEATH,
     MONS_BLUE_DEATH,
     MONS_BALRUG,
     MONS_CACODEMON,
-    MONS_DEMONIC_CRAWLER,              //  235
+    MONS_DEMONIC_CRAWLER,
     MONS_SUN_DEMON,
     MONS_SHADOW_IMP,
     MONS_SHADOW_DEMON,
     MONS_LOROCYPROCA,
-    MONS_SHADOW_WRAITH,                //  240
+    MONS_SHADOW_WRAITH,
     MONS_GIANT_AMOEBA,
     MONS_GIANT_SLUG,
     MONS_AGATE_SNAIL,
     MONS_SPATIAL_VORTEX,
-    MONS_PIT_FIEND,                    //  245
+    MONS_PIT_FIEND,
     MONS_BORING_BEETLE,
     MONS_GARGOYLE,
     MONS_METAL_GARGOYLE,
     MONS_MOLTEN_GARGOYLE,
-    MONS_GIANT_ANT,                    //  250
+    MONS_GIANT_ANT,
 // BCR - begin first batch of uniques.
     MONS_MNOLEG,
     MONS_LOM_LOBON,
     MONS_CEREBOV,
-    MONS_GLOORX_VLOQ,                  //  254
+    MONS_GLOORX_VLOQ,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_MOLLUSC_LORD,
       MONS_UNUSED_256,
       MONS_UNUSED_257,
       MONS_UNUSED_258,
       MONS_UNUSED_PARACELSUS,
+#endif
 // BCR - End first batch of uniques.
-    MONS_NAGA_MAGE,                    //  260
+    MONS_NAGA_MAGE,
     MONS_NAGA_WARRIOR,
     MONS_ORC_WARLORD,
     MONS_DEEP_ELF_SOLDIER,
     MONS_DEEP_ELF_FIGHTER,
-    MONS_DEEP_ELF_KNIGHT,              //  265
+    MONS_DEEP_ELF_KNIGHT,
     MONS_DEEP_ELF_MAGE,
     MONS_DEEP_ELF_SUMMONER,
     MONS_DEEP_ELF_CONJURER,
     MONS_DEEP_ELF_PRIEST,
-    MONS_DEEP_ELF_HIGH_PRIEST,         //  270
+    MONS_DEEP_ELF_HIGH_PRIEST,
     MONS_DEEP_ELF_DEMONOLOGIST,
     MONS_DEEP_ELF_ANNIHILATOR,
     MONS_DEEP_ELF_SORCERER,
     MONS_DEEP_ELF_DEATH_MAGE,
-    MONS_BROWN_OOZE,                   //  275
+    MONS_BROWN_OOZE,
     MONS_AZURE_JELLY,
     MONS_DEATH_OOZE,
     MONS_ACID_BLOB,
     MONS_ROYAL_JELLY,
 // BCR - begin second batch of uniques.
-    MONS_TERENCE,                      //  280
+    MONS_TERENCE,
     MONS_JESSICA,
     MONS_IJYB,
     MONS_SIGMUND,
     MONS_BLORK_THE_ORC,
-    MONS_EDMUND,                       //  285
+    MONS_EDMUND,
     MONS_PSYCHE,
     MONS_EROLCHA,
     MONS_DONALD,
     MONS_URUG,
-      MONS_UNUSED_UNIQUE,              //  290
+#if TAG_MAJOR_VERSION == 31
+      MONS_UNUSED_UNIQUE,
+#endif
     MONS_JOSEPH,
     MONS_SNORG, // was Anita - Snorg is correct 16jan2000 {dlb}
     MONS_ERICA,
@@ -2100,17 +2135,19 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_NECROMANCER,
     MONS_DEEP_DWARF_BERSERKER,
     MONS_DEEP_DWARF_DEATH_KNIGHT,
-    MONS_DEEP_DWARF_UNBORN,
-      MONS_UNUSED_NISSE,
+    MONS_UNBORN_DEEP_DWARF,
+    MONS_GNOME, // single vault
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_338,
       MONS_UNUSED_339,
-
+#endif
     // The Lords of Hell (also unique):
-    MONS_GERYON,                       //  340
+    MONS_GERYON,
     MONS_DISPATER,
     MONS_ASMODEUS,
     MONS_ANTAEUS,
-    MONS_ERESHKIGAL,                   //  344
+    MONS_ERESHKIGAL,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_345,
       MONS_UNUSED_346,
       MONS_UNUSED_347,
@@ -2122,27 +2159,27 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_353,
       MONS_UNUSED_354,
       MONS_UNUSED_355,
-
-    MONS_ANCIENT_LICH,                 //  356
+#endif
+    MONS_ANCIENT_LICH,
     MONS_OOZE,
     MONS_KRAKEN,
     MONS_KRAKEN_TENTACLE,
-    MONS_VAULT_GUARD,                  //  360
+    MONS_VAULT_GUARD,
     MONS_CURSE_SKULL,
     MONS_VAMPIRE_KNIGHT,
     MONS_VAMPIRE_MAGE,
     MONS_SHINING_EYE,
-    MONS_ORB_GUARDIAN,                 //  365
+    MONS_ORB_GUARDIAN,
     MONS_DAEVA,
     MONS_SPECTRAL_THING,
     MONS_GREATER_NAGA,
     MONS_BONE_DRAGON,
-    MONS_TENTACLED_MONSTROSITY,        //  370
+    MONS_TENTACLED_MONSTROSITY,
     MONS_SPHINX,
     MONS_ROTTING_HULK,
     MONS_GUARDIAN_MUMMY,
     MONS_GREATER_MUMMY,
-    MONS_MUMMY_PRIEST,                 //  375
+    MONS_MUMMY_PRIEST,
     MONS_CENTAUR_WARRIOR,
     MONS_YAKTAUR_CAPTAIN,
     MONS_KILLER_KLOWN,
@@ -2152,33 +2189,34 @@ enum monster_type                      // (int) menv[].type
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
     MONS_TRAPDOOR_SPIDER,
     MONS_CHAOS_SPAWN,
-    MONS_EYE_OF_DEVASTATION,           //  385
+    MONS_EYE_OF_DEVASTATION,
     MONS_MOTH_OF_WRATH,
     MONS_DEATH_COB,
     MONS_CURSE_TOE,
     MONS_GOLD_MIMIC,
-    MONS_WEAPON_MIMIC,                 //  390
+    MONS_WEAPON_MIMIC,
     MONS_ARMOUR_MIMIC,
     MONS_SCROLL_MIMIC,
     MONS_POTION_MIMIC,
     MONS_HELL_HOG,
-    MONS_SERPENT_OF_HELL,              //  395
+    MONS_SERPENT_OF_HELL,
     MONS_BOGGART,
     MONS_QUICKSILVER_DRAGON,
     MONS_IRON_DRAGON,
-    MONS_SKELETAL_WARRIOR,             //  399
-    MONS_PLAYER_GHOST,                 //  400
-    MONS_PANDEMONIUM_DEMON,            //  401
+    MONS_SKELETAL_WARRIOR,
+    MONS_PLAYER_GHOST,
+    MONS_PANDEMONIUM_DEMON,
 
-    MONS_GIANT_NEWT,                   //  402
-    MONS_GIANT_GECKO,                  //  403
+    MONS_GIANT_NEWT,
+    MONS_GIANT_GECKO,
     MONS_IGUANA,
-    MONS_GILA_MONSTER,                 //  405
-    MONS_KOMODO_DRAGON,                //  406
+    MONS_GILA_MONSTER,
+    MONS_KOMODO_DRAGON,
 
     MONS_PLAYER_ILLUSION,
     MONS_HELL_DEMON,
-      MONS_UNUSED_409,
+    MONS_TWISTER,        // air miscasts
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_410,
       MONS_UNUSED_411,
       MONS_UNUSED_412,
@@ -2189,31 +2227,33 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_417,
       MONS_UNUSED_418,
       MONS_UNUSED_419,
-
+#endif
     // Lava monsters:
-    MONS_LAVA_WORM,                    //  420
+    MONS_LAVA_WORM,
     MONS_LAVA_FISH,
     MONS_LAVA_SNAKE,
-    MONS_SALAMANDER,                   //  423 mv: was another lava thing
+    MONS_SALAMANDER,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_424,
       MONS_UNUSED_425,
       MONS_UNUSED_426,
       MONS_UNUSED_427,
       MONS_UNUSED_428,
       MONS_UNUSED_429,
-
+#endif
     // Water monsters:
-    MONS_BIG_FISH,                     //  430
+    MONS_BIG_FISH,
     MONS_GIANT_GOLDFISH,
     MONS_ELECTRIC_EEL,
     MONS_JELLYFISH,
     MONS_WATER_ELEMENTAL,
-    MONS_SWAMP_WORM,                   //  435
+    MONS_SWAMP_WORM,
     MONS_SHARK,
     MONS_KRAKEN_TENTACLE_SEGMENT,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_438,
       MONS_UNUSED_439,
-
+#endif
     // Monsters which move through rock:
     MONS_ROCK_WORM,
 
@@ -2223,33 +2263,34 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_STATUE,
     MONS_STATUE,
     MONS_TRAINING_DUMMY,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_446,
       MONS_UNUSED_447,
       MONS_UNUSED_448,
       MONS_UNUSED_449,
-
+#endif
     // Third batch of uniques
     MONS_ROXANNE, // -- statue, too!
     MONS_SONJA,
     MONS_EUSTACHIO,
     MONS_AZRAEL,
     MONS_ILSUIW,
-    MONS_PRINCE_RIBBIT,                // 455
+    MONS_PRINCE_RIBBIT,
     MONS_NERGALLE,
     MONS_SAINT_ROKA,
     MONS_NESSOS,
     MONS_LERNAEAN_HYDRA,
-    MONS_DISSOLUTION,                  // 460
+    MONS_DISSOLUTION,
     MONS_KIRKE,
     MONS_GRUM,
     MONS_PURGY,
     MONS_MENKAURE,
-    MONS_DUVESSA,                      // 465
+    MONS_DUVESSA,
     MONS_DOWAN,
     MONS_GASTRONOK,
     MONS_MAURICE,
     MONS_KHUFU,
-    MONS_NIKOLA,                       // 470
+    MONS_NIKOLA,
     MONS_GOLDEN_EYE,
     MONS_AIZUL,
     MONS_PIKEL,
@@ -2289,7 +2330,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN_DRUID,
     MONS_SPRIGGAN_ASSASSIN,
     MONS_SPRIGGAN_RIDER,
-    MONS_SPRIGGAN_WARPER,
+    MONS_SPRIGGAN_BERSERKER,
     MONS_SPRIGGAN_DEFENDER,
     MONS_THE_ENCHANTRESS,
     MONS_FIREFLY,
@@ -2321,6 +2362,16 @@ enum monster_type                      // (int) menv[].type
     MONS_SKY_BEAST,
     MONS_LABORATORY_RAT,
     MONS_PORCUPINE,
+
+    // Another set of uniques and monsters!
+    MONS_RAVEN,
+    MONS_JORY,
+    MONS_TENTACLED_STARSPAWN,
+    MONS_LURKING_HORROR,
+    MONS_THRASHING_HORROR,
+    MONS_STARCURSED_MASS,
+    MONS_ANCIENT_ZYME,
+    MONS_WRETCHED_STAR,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2474,7 +2525,7 @@ enum mon_spellbook_type
     MST_ORC_WIZARD_II,
     MST_ORC_WIZARD_III,
     MST_DEEP_DWARF_NECROMANCER,
-    MST_DEEP_DWARF_UNBORN,
+    MST_UNBORN_DEEP_DWARF,
     MST_BK_TROG,
     MST_BK_YREDELEMNUL,
     MST_BK_OKAWARU,
@@ -2575,6 +2626,10 @@ enum mon_spellbook_type
     MST_HOLY_DRAGON,
     MST_BOG_MUMMY,
     MST_SPRIGGAN_DRUID,
+    MST_TENTACLED_STARSPAWN,
+    MST_LURKING_HORROR,
+    MST_STARCURSED_MASS,
+    MST_ANCIENT_ZYME,
     // unique monsters' "spellbooks"
     MST_RUPERT,
     MST_ROXANNE,
@@ -2620,6 +2675,7 @@ enum mon_spellbook_type
     MST_SERPENT_OF_HELL_TARTARUS,
     MST_SERPENT_OF_HELL_DIS,
     MST_NERGALLE,
+    MST_JORY,
 
     MST_GHOST, // special
     MST_TEST_SPAWNER,
@@ -2968,6 +3024,7 @@ enum skill_type
 
     SK_BLANK_LINE,                     // used for skill output
     SK_COLUMN_BREAK,                   // used for skill output
+    SK_TITLE,                          // used for skill output
     SK_NONE,
 };
 
@@ -3103,7 +3160,9 @@ enum spell_type
     SPELL_POISON_ARROW,
     SPELL_TWISTED_RESURRECTION,
     SPELL_REGENERATION,
+#if TAG_MAJOR_VERSION == 31
     SPELL_BONE_SHARDS,
+#endif
     SPELL_BANISHMENT,
     SPELL_CIGOTUVIS_DEGENERATION,
     SPELL_STING,
@@ -3134,7 +3193,9 @@ enum spell_type
     SPELL_ALTER_SELF,
     SPELL_DEBUGGING_RAY,
     SPELL_RECALL,
+#if TAG_MAJOR_VERSION == 31
     SPELL_PORTAL,
+#endif
     SPELL_AGONY,
     SPELL_SPIDER_FORM,
     SPELL_DISINTEGRATE,
@@ -3158,7 +3219,9 @@ enum spell_type
     SPELL_STICKS_TO_SNAKES,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_SUMMON_DRAGON,
+#if TAG_MAJOR_VERSION == 31
     SPELL_TAME_BEASTS,
+#endif
     SPELL_HIBERNATION,
     SPELL_ENGLACIATION,
     SPELL_DETECT_SECRET_DOORS,
@@ -3266,6 +3329,8 @@ enum spell_type
     SPELL_NOXIOUS_CLOUD,
 #endif
     SPELL_TORNADO,
+    SPELL_STICKY_FLAME_RANGE,
+    SPELL_LEDAS_LIQUEFACTION,
 
     NUM_SPELLS
 };
@@ -3663,19 +3728,28 @@ enum tile_flags
     TILE_FLAG_CURSOR2    = 0x00008000,
     TILE_FLAG_CURSOR3    = 0x0000C000,
     TILE_FLAG_CURSOR     = 0x0000C000,
-    TILE_FLAG_BLOOD      = 0x00010000,
-    TILE_FLAG_HALO       = 0x00020000,
-    TILE_FLAG_NEW_STAIR  = 0x00040000,
-    TILE_FLAG_WAS_SECRET = 0x00080000,
-    TILE_FLAG_TRAV_EXCL  = 0x00100000,
-    TILE_FLAG_EXCL_CTR   = 0x00200000,
-    TILE_FLAG_SANCTUARY  = 0x00400000,
-    TILE_FLAG_TUT_CURSOR = 0x00800000,
-    TILE_FLAG_RAY_OOR    = 0x01000000,
-    TILE_FLAG_OOR        = 0x02000000,
-    TILE_FLAG_WATER      = 0x04000000,
-    TILE_FLAG_MOLD       = 0x08000000,
-    TILE_FLAG_SILENCED   = 0x10000000,
+    TILE_FLAG_TUT_CURSOR = 0x00010000,
+    TILE_FLAG_TRAV_EXCL  = 0x00020000,
+    TILE_FLAG_EXCL_CTR   = 0x00040000,
+    TILE_FLAG_RAY_OOR    = 0x00080000,
+    TILE_FLAG_OOR        = 0x00100000,
+    TILE_FLAG_WATER      = 0x00200000,
+     TILE_FLAG_UNUSED1   = 0x00400000,
+    TILE_FLAG_NEW_STAIR  = 0x00800000,
+    TILE_FLAG_WAS_SECRET = 0x01000000,
+     TILE_FLAG_UNUSED2   = 0x02000000,
+
+    // Mutually exclusive
+     TILE_FLAG_UNUSED3   = 0x04000000,
+     TILE_FLAG_UNUSED4   = 0x10000000,
+     TILE_FLAG_UNUSED5   = 0x14000000,
+    TILE_FLAG_MISC_FLOOR = 0x14000000,
+
+    // Kraken tentacle overlays.
+    TILE_FLAG_KRAKEN_NW  = 0x08000000,
+    TILE_FLAG_KRAKEN_NE  = 0x20000000,
+    TILE_FLAG_KRAKEN_SE  = 0x40000000,
+    TILE_FLAG_KRAKEN_SW  = 0x80000000,
 
     // General
     TILE_FLAG_MASK       = 0x000007FF,

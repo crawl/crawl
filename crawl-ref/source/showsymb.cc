@@ -23,9 +23,9 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "coord.h"
-#include "cloud.h"
 
-static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
+static
+unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
 {
     dungeon_feature_type feat = cell.feat();
     unsigned short colour = BLACK;
@@ -34,7 +34,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
     // These aren't shown mossy/bloody/slimy.
     const bool norecolour = is_critical_feature(feat) || feat_is_trap(feat);
 
-    if (!colored)
+    if (!coloured)
     {
         if (cell.flags & MAP_EMPHASIZE)
             colour = fdef.seen_em_colour;
@@ -53,7 +53,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
         // dark grey.
         colour = DARKGREY;
     }
-    else if (feat >= DNGN_MINMOVE && cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2))
+    else if (feat >= DNGN_MINMOVE
+             && (cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))
     {
         if (cell.flags & MAP_SANCTUARY_1)
             colour = YELLOW;
@@ -88,6 +89,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell, bool colored)
 
     if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
         colour = ETC_WAVES;
+
+    if (feat_has_solid_floor(feat) && cell.flags & MAP_LIQUEFIED)
+        colour = ETC_LIQUEFIED;
 
     if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
     {
@@ -158,14 +162,18 @@ static int _get_mons_colour(const monster_info& mi)
     return (col);
 }
 
-show_class get_cell_show_class(const map_cell& cell, bool only_stationary_monsters)
+show_class get_cell_show_class(const map_cell& cell,
+                               bool only_stationary_monsters)
 {
     if (cell.invisible_monster())
         return SH_INVIS_EXPOSED;
 
     if (cell.monster() != MONS_NO_MONSTER
-            && (!only_stationary_monsters || mons_class_is_stationary(cell.monster())))
+        && (!only_stationary_monsters
+            || mons_class_is_stationary(cell.monster())))
+    {
         return SH_MONSTER;
+    }
 
     if (cell.cloud() != CLOUD_NONE && cell.cloud() != CLOUD_GLOOM)
         return SH_CLOUD;
@@ -200,42 +208,47 @@ static const unsigned short ripple_table[] =
      BROWN,         // YELLOW       => BROWN
      LIGHTGREY};    // WHITE        => LIGHTGREY
 
-glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters, int color_mode)
+glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
+                     int colour_mode)
 {
-    return get_cell_glyph(env.map_knowledge(loc), loc, only_stationary_monsters, color_mode);
+    return get_cell_glyph(env.map_knowledge(loc), loc,
+                          only_stationary_monsters, colour_mode);
 }
 
-glyph get_cell_glyph(const map_cell& cell, const coord_def& loc, bool only_stationary_monsters, int color_mode)
+glyph get_cell_glyph(const map_cell& cell, const coord_def& loc,
+                     bool only_stationary_monsters, int colour_mode)
 {
-    return get_cell_glyph_with_class(cell, loc, get_cell_show_class(cell, only_stationary_monsters), color_mode);
+    const show_class cell_show_class =
+        get_cell_show_class(cell, only_stationary_monsters);
+    return get_cell_glyph_with_class(cell, loc, cell_show_class, colour_mode);
 }
 
-glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show_class cls, int color_mode)
+glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
+                                const show_class cls, int colour_mode)
 {
-    bool colored = color_mode == 0 ? cell.visible() : (color_mode > 0);
+    const bool coloured = colour_mode == 0 ? cell.visible() : (colour_mode > 0);
     glyph g;
     show_type show;
-    g.ch = ' ';
-    g.col = LIGHTGRAY;
 
-    bool gloom = false;
-    if (cell.cloud() && cell.cloud() == CLOUD_GLOOM)
+    const cloud_type cell_cloud = cell.cloud();
+    const bool gloom = cell_cloud == CLOUD_GLOOM;
+
+    if (gloom)
     {
-        gloom = true;
-        if (colored)
+        if (coloured)
             g.col = cell.cloud_colour();
         else
             g.col = DARKGREY;
     }
 
-    switch(cls)
+    switch (cls)
     {
     case SH_INVIS_EXPOSED:
         if (!cell.invisible_monster())
             return g;
 
         show.cls = SH_INVIS_EXPOSED;
-        if (cell.cloud() != CLOUD_NONE)
+        if (cell_cloud != CLOUD_NONE)
             g.col = cell.cloud_colour();
         else
             g.col = ripple_table[cell.feat_colour() & 0xf];
@@ -248,20 +261,21 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
         show = cell.monster();
         if (cell.detected_monster())
             g.col = Options.detected_monster_colour;
-        else if (!colored)
+        else if (!coloured)
             g.col = DARKGRAY;
         else if (const monster_info* mi = cell.monsterinfo())
             g.col = _get_mons_colour(*mi);
         else
             g.col = mons_class_colour(show.mons);
+
         break;
 
     case SH_CLOUD:
-        if (!cell.cloud())
+        if (!cell_cloud)
             return g;
 
         show.cls = SH_CLOUD;
-        if (colored)
+        if (coloured)
             g.col = cell.cloud_colour();
         else
             g.col = DARKGRAY;
@@ -275,7 +289,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
         show = cell.feat();
 
         if (!gloom)
-            g.col = _cell_feat_show_colour(cell, colored);
+            g.col = _cell_feat_show_colour(cell, coloured);
 
         if (cell.item())
         {
@@ -297,7 +311,7 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
                 if (!feat_is_water(cell.feat()))
                     g.col = eitem->colour;
                 else
-                    g.col = _cell_feat_show_colour(cell, colored);
+                    g.col = _cell_feat_show_colour(cell, coloured);
 
                 // monster(mimic)-owned items have link = NON_ITEM+1+midx
                 if (cell.flags & MAP_MORE_ITEMS)
@@ -315,7 +329,17 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc, show
     }
 
     if (cls == SH_MONSTER)
-        g.ch = mons_char(show.mons);
+    {
+        if (mons_genus(show.mons) == MONS_DOOR_MIMIC
+            && cell.monsterinfo()->mimic_feature)
+        {
+            const feature_def &fdef =
+                get_feature_def(cell.monsterinfo()->mimic_feature);
+            g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
+        }
+        else
+            g.ch = mons_char(show.mons);
+    }
     else
     {
         const feature_def &fdef = get_feature_def(show);
@@ -349,7 +373,11 @@ glyph get_item_glyph(const item_def *item)
 glyph get_mons_glyph(const monster_info& mi, bool realcol)
 {
     glyph g;
-    if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
+    if (mons_genus(mi.type) == MONS_DOOR_MIMIC && mons_is_known_mimic(mi.mon()))
+    {
+        g.ch = get_feature_def(get_mimic_feat(mi.mon())).symbol;
+    }
+    else if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
     else
         g.ch = mons_char(mi.type);

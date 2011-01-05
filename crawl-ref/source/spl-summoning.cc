@@ -696,78 +696,86 @@ bool cast_summon_dragon(int pow, god_type god)
     return (false);
 }
 
+// This assumes that the specified monster can go berserk.
+static void _make_mons_berserk_summon(monster* mon)
+{
+    mon->go_berserk(false);
+    mon_enchant berserk = mon->get_ench(ENCH_BERSERK);
+    mon_enchant abj = mon->get_ench(ENCH_ABJ);
+
+    // Let Trog's gifts berserk longer, and set the abjuration timeout
+    // to the berserk timeout.
+    berserk.duration = berserk.duration * 3 / 2;
+    berserk.maxduration = berserk.duration;
+    abj.duration = abj.maxduration = berserk.duration;
+    mon->update_ench(berserk);
+    mon->update_ench(abj);
+}
+
 // This is actually one of Trog's wrath effects.
-bool summon_berserker(int pow, god_type god, int spell,
-                      bool force_hostile)
+bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    if (pow <= 100)
-    {
-        // bears
-        mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_GRIZZLY_BEAR;
-    }
-    else if (pow <= 140)
-    {
-        // ogres
-        mon = (one_chance_in(3) ? MONS_TWO_HEADED_OGRE : MONS_OGRE);
-    }
-    else if (pow <= 180)
-    {
-        // trolls
-        switch (random2(8))
-        {
-        case 0:
-            mon = MONS_DEEP_TROLL;
-            break;
-        case 1:
-        case 2:
-            mon = MONS_IRON_TROLL;
-            break;
-        case 3:
-        case 4:
-            mon = MONS_ROCK_TROLL;
-            break;
-        default:
-            mon = MONS_TROLL;
-            break;
-        }
-    }
+    if (override_mons != MONS_PROGRAM_BUG)
+        mon = override_mons;
     else
     {
-        // giants
-        mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
+        if (pow <= 100)
+        {
+            // bears
+            mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_GRIZZLY_BEAR;
+        }
+        else if (pow <= 140)
+        {
+            // ogres
+            mon = (one_chance_in(3) ? MONS_TWO_HEADED_OGRE : MONS_OGRE);
+        }
+        else if (pow <= 180)
+        {
+            // trolls
+            switch (random2(8))
+            {
+            case 0:
+                mon = MONS_DEEP_TROLL;
+                break;
+            case 1:
+            case 2:
+                mon = MONS_IRON_TROLL;
+                break;
+            case 3:
+            case 4:
+                mon = MONS_ROCK_TROLL;
+                break;
+            default:
+                mon = MONS_TROLL;
+                break;
+            }
+        }
+        else
+        {
+            // giants
+            mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
+        }
     }
 
-    mgen_data mg(mon, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, dur, spell, you.pos(),
-                 MHITYOU, 0, god);
+    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
+                 caster ? caster->pos() : you.pos(),
+                 (caster && caster->atype() == ACT_MONSTER)
+                     ? ((monster*)caster)->foe : MHITYOU,
+                 0, GOD_TROG);
 
-    if (force_hostile)
-        mg.non_actor_summoner = "the rage of " + god_name(god, false);
+    if (!caster)
+        mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
 
     const int mons = create_monster(mg);
 
     if (mons == -1)
         return (false);
 
-    monster* summon = &menv[mons];
-
-    summon->go_berserk(false);
-    mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
-    mon_enchant abj = summon->get_ench(ENCH_ABJ);
-
-    // Let Trog's gifts berserk longer, and set the abjuration
-    // timeout to the berserk timeout.
-    berserk.duration = berserk.duration * 3 / 2;
-    berserk.maxduration = berserk.duration;
-    abj.duration = abj.maxduration = berserk.duration;
-    summon->update_ench(berserk);
-    summon->update_ench(abj);
-
-    player_angers_monster(summon);
+    _make_mons_berserk_summon(&menv[mons]);
     return (true);
 }
 
@@ -1123,16 +1131,22 @@ bool cast_shadow_creatures(god_type god)
 
 bool can_cast_malign_gateway()
 {
+    timeout_malign_gateways(0);
+
     return count_malign_gateways() < 1;
 }
 
-bool cast_malign_gateway(actor * caster, int pow, god_type god)
+coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dungeon_feature_type))
 {
-    bool success = false;
     coord_def point = coord_def(0, 0);
+
+    bool xray = you.xray_vision;
+    you.xray_vision = false;
 
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
+
+    bool check_environment = (environment_checker != NULL);
 
     for (unsigned i = 0; i < 8; ++i)
     {
@@ -1145,8 +1159,7 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         for (int t = 0; t < tries; t++)
         {
             test = caster->pos() + (delta * (2+t+random2(4)));
-            if (!in_bounds(test) || !(env.grid(test) == DNGN_FLOOR
-                                       || env.grid(test) == DNGN_SHALLOW_WATER)
+            if (!in_bounds(test) || check_environment && !feat_is_test(test, environment_checker)
                 || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
@@ -1160,24 +1173,35 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         if (!found_spot)
             continue;
 
-        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
-        env.markers.add(new map_malign_gateway_marker(test,
-                                            malign_gateway_duration,
-                                            caster->atype() == ACT_PLAYER,
-                                            caster->atype() == ACT_PLAYER ? NULL : caster->as_monster(),
-                                            god,
-                                            pow));
-        env.markers.clear_need_activate();
-        env.grid(test) = DNGN_TEMP_PORTAL;
-
         point = test;
-        success = true;
-
         break;
     }
 
+    you.xray_vision = xray;
+
+    return (point);
+}
+
+bool cast_malign_gateway(actor * caster, int pow, god_type god)
+{
+    coord_def point = find_gateway_location(caster);
+    bool success = (point != coord_def(0, 0));
+
+    bool is_player = (caster->atype() == ACT_PLAYER);
+
     if (success)
     {
+        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+        env.markers.add(new map_malign_gateway_marker(point,
+                                malign_gateway_duration,
+                                is_player,
+                                is_player ? "" : caster->as_monster()->full_name(DESC_NOCAP_A, true),
+                                is_player ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
+                                god,
+                                pow));
+        env.markers.clear_need_activate();
+        env.grid(point) = DNGN_TEMP_PORTAL;
+
         noisy(10, point);
         mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
 
@@ -1193,7 +1217,7 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
     else if (caster->atype() == ACT_PLAYER)
     {
         // We don't care if monsters fail to cast it.
-        mpr("Such a gateway cannot be opened in such a cramped space!");
+        mpr("A gateway cannot be opened in this cramped space!");
     }
 
     return (success);
@@ -1518,6 +1542,11 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         roll_zombie_hp(&menv[mons]);
     }
 
+    if (item.props.exists("ev"))
+        menv[mons].ev = item.props["ev"].get_int();
+    if (item.props.exists("ac"))
+        menv[mons].ac = item.props["ac"].get_int();
+
     if (is_named_corpse(item))
     {
         uint64_t name_type = 0;
@@ -1640,7 +1669,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     int number_seen   = 0;
     int motions       = 0;
 
-    radius_iterator ri(caster->pos(), 6, C_SQUARE,
+    radius_iterator ri(caster->pos(), 7, C_ROUND,
                        caster->get_los_no_trans());
 
     for (; ri; ++ri)
@@ -1933,7 +1962,7 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
             create_monster(
                 mgen_data(mon,
                           BEH_FRIENDLY, &you,
-                          5, SPELL_HAUNT,
+                          3, SPELL_HAUNT,
                           where, mi, MG_FORCE_BEH, god));
 
         if (mons != -1)

@@ -17,6 +17,7 @@ extern CLua dlua;
 
 // Lua chunks cannot exceed 512K. Which is plenty!
 const int LUA_CHUNK_MAX_SIZE = 512 * 1024;
+const int E_CHUNK_LOAD_FAILURE = -1000;
 
 class reader;
 class writer;
@@ -52,6 +53,7 @@ public:
 
     static dlua_chunk precompiled(const std::string &compiled);
 
+    std::string describe(const std::string &chunkname) const;
     void clear();
     void add(int line, const std::string &line2);
     void set_chunk(const std::string &s);

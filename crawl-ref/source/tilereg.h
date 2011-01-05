@@ -71,7 +71,7 @@ public:
 protected:
     void recalculate();
     virtual void on_resize() = 0;
-    void set_transform();
+    void set_transform(bool no_scaling = false);
 };
 
 class FontWrapper;
@@ -83,6 +83,7 @@ class TileRegionInit
 public:
     TileRegionInit(ImageManager *_im, FontWrapper *_font, int _tx, int _ty) :
         im(_im), tag_font(_font), tile_x(_tx), tile_y(_ty) { }
+    TileRegionInit() { }
 
     ImageManager *im;
     FontWrapper *tag_font;

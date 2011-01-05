@@ -63,7 +63,6 @@
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "spl-zap.h"
-#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #ifdef USE_TILE
@@ -386,7 +385,7 @@ int spell_fail(spell_type spell)
 
     if (you.duration[DUR_TRANSFORMATION] > 0)
     {
-        switch (you.attribute[ATTR_TRANSFORMATION])
+        switch (you.form)
         {
         case TRAN_BLADE_HANDS:
             chance2 += 20;
@@ -395,6 +394,9 @@ int spell_fail(spell_type spell)
         case TRAN_SPIDER:
         case TRAN_BAT:
             chance2 += 10;
+            break;
+
+        default:
             break;
         }
     }
@@ -541,7 +543,7 @@ void inspect_spells()
 
 void do_cast_spell_cmd(bool force)
 {
-    if (player_in_bat_form() || you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+    if (player_in_bat_form() || you.form == TRAN_PIG)
     {
         canned_msg(MSG_PRESENT_FORM);
         return;
@@ -895,7 +897,6 @@ static bool _vampire_cannot_cast(spell_type spell)
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
     case SPELL_STONESKIN:
-    case SPELL_TAME_BEASTS:
         return (true);
     default:
         return (false);
@@ -973,6 +974,7 @@ static void _try_monster_cast(spell_type spell, int powc,
     mon->hit_dice   = you.experience_level;
     mon->set_position(you.pos());
     mon->target     = spd.target;
+    mon->mid        = MID_PLAYER;
 
     if (!spd.isTarget)
         mon->foe = MHITNOT;
@@ -1041,7 +1043,6 @@ static void _maybe_cancel_repeat(spell_type spell)
     case SPELL_DELAYED_FIREBALL:
     case SPELL_TUKIMAS_DANCE:
     case SPELL_ALTER_SELF:
-    case SPELL_PORTAL:
         crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
                                                  spell_title(spell)));
         break;
@@ -1399,11 +1400,6 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
-    case SPELL_BONE_SHARDS:
-        if (!cast_bone_shards(powc, beam))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_VAMPIRIC_DRAINING:
         if (!vampiric_drain(powc,
                             monster_at(spd.isTarget ? beam.target
@@ -1432,15 +1428,15 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_POISONOUS_CLOUD:
-        cast_big_c(powc, CLOUD_POISON, KC_YOU, beam);
+        cast_big_c(powc, CLOUD_POISON, &you, beam);
         break;
 
     case SPELL_HOLY_BREATH:
-        cast_big_c(powc, CLOUD_HOLY_FLAMES, KC_YOU, beam);
+        cast_big_c(powc, CLOUD_HOLY_FLAMES, &you, beam);
         break;
 
     case SPELL_FREEZING_CLOUD:
-        cast_big_c(powc, CLOUD_COLD, KC_YOU, beam);
+        cast_big_c(powc, CLOUD_COLD, &you, beam);
         break;
 
     case SPELL_FIRE_STORM:
@@ -1533,6 +1529,25 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_SHATTER:
         cast_shatter(powc);
+        break;
+
+    case SPELL_LEDAS_LIQUEFACTION:
+        if (you.airborne() || you.clinging || !feat_has_solid_floor(grd(you.pos())))
+        {
+            if (you.airborne() || you.clinging)
+                mprf("You can't cast this spell without touching the ground.");
+            else
+                mprf("You need to be on clear, solid ground to cast this spell.");
+            return (SPRET_ABORT);
+        }
+
+        if (you.duration[DUR_LIQUEFYING] || liquefied(you.pos()))
+        {
+            mprf("The ground here is already liquefied! You'll have to wait.");
+            return (SPRET_ABORT);
+        }
+
+        cast_liquefaction(powc);
         break;
 
     case SPELL_SYMBOL_OF_TORMENT:
@@ -1688,9 +1703,13 @@ static spret_type _do_cast(spell_type spell, int powc,
         mass_enchantment(ENCH_FEAR, powc, MHITYOU);
         break;
 
+#if TAG_MAJOR_VERSION == 31
     case SPELL_TAME_BEASTS:
-        cast_tame_beasts(powc);
-        break;
+    case SPELL_BONE_SHARDS:
+    case SPELL_PORTAL:
+        mpr("It appears that an accident happened to this spell.");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_INTOXICATE:
         cast_intoxicate(powc);
@@ -1868,11 +1887,23 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEVITATION:
+        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        {
+            mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
+            return (SPRET_ABORT);
+        }
+
         you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
         levitate_player(powc);
         break;
 
     case SPELL_FLY:
+        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        {
+            mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
+            return (SPRET_ABORT);
+        }
+
         cast_fly(powc);
         break;
 
@@ -2011,13 +2042,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         recall(0);
         break;
 
-    case SPELL_PORTAL:
-        if (crawl_state.game_is_sprint() || (portal() == -1))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_CORPSE_ROT:
-        corpse_rot();
+        corpse_rot(&you);
         break;
 
     case SPELL_FULSOME_DISTILLATION:

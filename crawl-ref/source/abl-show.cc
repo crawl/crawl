@@ -103,6 +103,8 @@ static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil, int xpcost);
 static std::string _describe_talent(const talent& tal);
 static int _scale_piety_cost(ability_type abil, int original_cost);
+static std::string _zd_mons_description_for_ability (const ability_def &abil);
+static monster_type _monster_for_ability (const ability_def& abil);
 
 // this all needs to be split into data/util/show files
 // and the struct mechanism here needs to be rewritten (again)
@@ -211,7 +213,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_HELLFIRE, "Hellfire", 0, 350, 200, 0, ABFLAG_NONE },
+    { ABIL_HELLFIRE, "Hellfire", 0, 250, 200, 0, ABFLAG_NONE },
     { ABIL_THROW_FLAME, "Throw Flame", 0, 20, 50, 0, ABFLAG_NONE },
     { ABIL_THROW_FROST, "Throw Frost", 0, 20, 50, 0, ABFLAG_NONE },
 
@@ -463,11 +465,13 @@ std::string print_abilities()
     return text;
 }
 
-int count_relevant_monsters(const ability_def& abil)
+static monster_type _monster_for_ability (const ability_def& abil)
 {
     monster_type mtyp = MONS_PROGRAM_BUG;
     switch(abil.ability)
     {
+        case ABIL_MAKE_PLANT:         mtyp = MONS_PLANT;         break;
+        case ABIL_MAKE_FUNGUS:        mtyp = MONS_FUNGUS;        break;
         case ABIL_MAKE_OKLOB_SAPLING: mtyp = MONS_OKLOB_SAPLING; break;
         case ABIL_MAKE_OKLOB_CIRCLE:
         case ABIL_MAKE_OKLOB_PLANT:   mtyp = MONS_OKLOB_PLANT;   break;
@@ -481,6 +485,39 @@ int count_relevant_monsters(const ability_def& abil)
             mprf("DEBUG: NO RELEVANT MONSTER FOR %d", abil.ability);
             break;
     }
+    return mtyp;
+}
+
+static std::string _zd_mons_description_for_ability (const ability_def &abil)
+{
+    switch (abil.ability)
+    {
+    case ABIL_MAKE_PLANT:
+        return ("Tendrils and shoots erupt from the earth and gnarl into the form of a plant.");
+    case ABIL_MAKE_OKLOB_SAPLING:
+        return ("A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.");
+    case ABIL_MAKE_OKLOB_PLANT:
+        return ("A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.");
+    case ABIL_MAKE_BURNING_BUSH:
+        return ("Blackened shoots writhe from the ground and burst into flame!");
+    case ABIL_MAKE_ICE_STATUE:
+        return ("Water vapor collects and crystallizes into an icy humanoid shape.");
+    case ABIL_MAKE_OCS:
+        return ("Quartz juts from the ground and forms a humanoid shape. You smell citrus.");
+    case ABIL_MAKE_SILVER_STATUE:
+        return ("Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape.");
+    case ABIL_MAKE_CURSE_SKULL:
+        return ("You sculpt a terrible being from the primitive principle of evil.");
+    case ABIL_MAKE_ELECTRIC_EEL:
+        return ("You fashion an electric eel.");
+    default:
+        return ("");
+    }
+}
+
+int count_relevant_monsters(const ability_def& abil)
+{
+    monster_type mtyp = _monster_for_ability(abil);
     if (mtyp == MONS_PROGRAM_BUG)
         return 0;
     return count_monsters(mtyp, true);        /* Friendly ones only */
@@ -500,9 +537,8 @@ trap_type trap_for_ability(const ability_def& abil)
         case ABIL_MAKE_TELEPORT_TRAP: return TRAP_TELEPORT;
         case ABIL_MAKE_ALARM_TRAP: return TRAP_ALARM;
         case ABIL_MAKE_BLADE_TRAP: return TRAP_BLADE;
-        default: ;
+        default: return TRAP_UNASSIGNED;
     }
-    return TRAP_UNASSIGNED;
 }
 
 // Scale the xp cost by the number of friendly monsters
@@ -517,10 +553,11 @@ int xp_cost(const ability_def& abil)
     switch(abil.ability)
     {
         default:
-            cost = abil.xp_cost;
-            break;
+            return abil.xp_cost;
 
         // Monster type 1: reasonably generous
+        case ABIL_MAKE_PLANT:
+        case ABIL_MAKE_FUNGUS:
         case ABIL_MAKE_OKLOB_SAPLING:
         case ABIL_MAKE_OKLOB_PLANT:
         case ABIL_MAKE_OKLOB_CIRCLE:
@@ -530,6 +567,12 @@ int xp_cost(const ability_def& abil)
             // special case for oklob circles
             if (abil.ability == ABIL_MAKE_OKLOB_CIRCLE)
                 num /= 3;
+            // ... and for harmless stuff
+            else if (abil.ability == ABIL_MAKE_PLANT
+                  || abil.ability == ABIL_MAKE_FUNGUS)
+            {
+                num /= 5;
+            }
             num -= 2;        // first two are base cost
             num = std::max(num, 0);
             scale10 = std::min(num, 10);       // next 10 at 10% increment
@@ -571,14 +614,15 @@ int xp_cost(const ability_def& abil)
         case ABIL_MAKE_BLADE_TRAP:
             scale10 = count_traps(TRAP_BLADE); // Max of 18-ish at base cost 3000
             break;
-
     }
-    for (; scale10 > 0; scale10--)
-        cost = (cost * 11) / 10;        // +10%
-    for (; scale20 > 0; scale20--)
-        cost = (cost * 6) / 5;        // +20%
 
-    return cost;
+    float c = cost; // stave off round-off errors
+    for (; scale10 > 0; scale10--)
+        c = c * 1.1;        // +10%
+    for (; scale20 > 0; scale20--)
+        c = c * 1.2;        // +20%
+
+    return c;
 }
 
 const std::string make_cost_description(ability_type ability)
@@ -722,18 +766,18 @@ const std::string make_cost_description(ability_type ability)
 
 static std::string _get_food_amount_str(int value)
 {
-    return(value > 300 ? "extremely large" :
-           value > 200 ? "large" :
-           value > 100 ? "moderate" :
-                         "small");
+    return (value > 300 ? "extremely large" :
+            value > 200 ? "large" :
+            value > 100 ? "moderate" :
+                          "small");
 }
 
 static std::string _get_piety_amount_str(int value)
 {
-    return(value > 15 ? "extremely large" :
-           value > 10 ? "large" :
-           value > 5  ? "moderate" :
-                        "small");
+    return (value > 15 ? "extremely large" :
+            value > 10 ? "large" :
+            value > 5  ? "moderate" :
+                         "small");
 }
 
 const std::string make_detailed_cost_description(ability_type ability)
@@ -916,7 +960,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
                         - 10 * player_mutation_level(MUT_BREATHE_FLAMES)
                         - you.experience_level;
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        if (you.form == TRAN_DRAGON)
             failure -= 20;
         break;
 
@@ -929,14 +973,14 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_BREATHE_MEPHITIC:
         failure = 30 - you.experience_level;
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        if (you.form == TRAN_DRAGON)
             failure -= 20;
         break;
 
     case ABIL_BREATHE_STEAM:
         failure = 20 - you.experience_level;
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        if (you.form == TRAN_DRAGON)
             failure -= 20;
         break;
 
@@ -1519,6 +1563,15 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
+    if ((tal.which == ABIL_EVOKE_LEVITATE || tal.which == ABIL_TRAN_BAT)
+        && liquefied(you.pos())
+        && !you.airborne() && !you.clinging)
+    {
+        mpr("You can't escape from the ground with such puny magic!", MSGCH_WARN);
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
+
     // Some abilities don't need a hunger check.
     bool hungerCheck = true;
     switch (tal.which)
@@ -1631,12 +1684,16 @@ static bool _do_ability(const ability_def& abil)
     args.needs_path = false;
     args.may_target_monster = false;
 
-
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
     {
     case ABIL_MAKE_FUNGUS:
+        if (count_allies() > MAX_MONSTERS / 2)
+        {
+            mpr("Mushrooms don't grow well in such thickets.");
+            return false;
+        }
         args.top_prompt="Center fungus circle where?";
         direction(abild, args);
         if (!abild.isValid)
@@ -1650,114 +1707,47 @@ static bool _do_ability(const ability_def& abil)
             place_monster(mgen_data(MONS_FUNGUS, BEH_FRIENDLY, &you, 0, 0, *ai,
                           you.pet_target), true);
         }
-        break; // //
+        break;
 
+    /* Begin ZotDef allies */
     case ABIL_MAKE_PLANT:
-        if (!create_zotdef_ally(MONS_PLANT,
-              "Tendrils and shoots erupt from the earth and gnarl into the form of a plant."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_OKLOB_SAPLING:
-        if (!create_zotdef_ally(MONS_OKLOB_SAPLING,
-            "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_OKLOB_PLANT:
-        if (!create_zotdef_ally(MONS_OKLOB_PLANT,
-            "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_BURNING_BUSH:
-        if (!create_zotdef_ally(MONS_BURNING_BUSH,
-            "Blackened shoots writhe from the ground and burst into flame!"))
-            return false;
-        break; // //
-
-
-    case ABIL_MAKE_DART_TRAP:
-        if (!create_trap(TRAP_DART)) return false;
-        break; // //
-
     case ABIL_MAKE_ICE_STATUE:
-        if (!create_zotdef_ally(MONS_ICE_STATUE,
-            "Water vapor collects and crystallizes into an icy humanoid shape."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_OCS:
-        if (!create_zotdef_ally(MONS_ORANGE_STATUE,
-            "Quartz juts from the ground and forms a humanoid shape. You smell citrus."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_SILVER_STATUE:
-        if (!create_zotdef_ally(MONS_SILVER_STATUE,
-            "Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_CURSE_SKULL:
-        if (!create_zotdef_ally(MONS_CURSE_SKULL,
-            "You sculpt a terrible being from the primitive principle of evil."))
-            return false;
-        break; // //
+    case ABIL_MAKE_ELECTRIC_EEL:
+        if (!create_zotdef_ally(_monster_for_ability(abil), _zd_mons_description_for_ability(abil).c_str()))
+            return (false);
+        break;
+    /* End ZotDef Allies */
 
     case ABIL_MAKE_TELEPORT:
         you_teleport_now(true, true);
         break; // //
 
-    case ABIL_MAKE_ARROW_TRAP:
-        if (!create_trap(TRAP_ARROW))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_BOLT_TRAP:
-        if (!create_trap(TRAP_BOLT))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_SPEAR_TRAP:
-        if (!create_trap(TRAP_SPEAR))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_AXE_TRAP:
-        if (!create_trap(TRAP_AXE))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_NEEDLE_TRAP:
-        if (!create_trap(TRAP_NEEDLE))
-            return false;
-        break; // //
-
-    case ABIL_MAKE_NET_TRAP:
-        if (!create_trap(TRAP_NET))
-            return false;
-        break; // //
-
+    /* ZotDef traps */
     case ABIL_MAKE_TELEPORT_TRAP:
         if (you.pos().distance_from(orb_position()) < 10)
         {
             mpr("Radiation from the Orb interferes with the trap's magic!");
             return false;
         }
-        if (!create_trap(TRAP_TELEPORT))
-             return false;
-        break; // //
-
+    case ABIL_MAKE_DART_TRAP:
+    case ABIL_MAKE_ARROW_TRAP:
+    case ABIL_MAKE_BOLT_TRAP:
+    case ABIL_MAKE_SPEAR_TRAP:
+    case ABIL_MAKE_AXE_TRAP:
+    case ABIL_MAKE_NEEDLE_TRAP:
+    case ABIL_MAKE_NET_TRAP:
     case ABIL_MAKE_ALARM_TRAP:
-        if (!create_trap(TRAP_ALARM))
-            return false;
-        break; // //
-
     case ABIL_MAKE_BLADE_TRAP:
-        if (!create_trap(TRAP_BLADE))
+        if (!create_trap(trap_for_ability(abil)))
             return false;
-        break; // //
+        break;
+    /* End ZotDef traps */
 
     case ABIL_MAKE_OKLOB_CIRCLE:
         args.top_prompt = "Center oklob circle where?";
@@ -1787,12 +1777,6 @@ static bool _do_ability(const ability_def& abil)
         create_pond(you.pos(), 3, false); // //
         break;
 
-    case ABIL_MAKE_ELECTRIC_EEL:
-        if (!create_zotdef_ally(MONS_ELECTRIC_EEL,
-            "You make an electric eel."))
-            return false;
-        break; // //
-
     case ABIL_MAKE_BAZAAR:
     {
         // Early exit: don't clobber important features.
@@ -1804,15 +1788,14 @@ static bool _do_ability(const ability_def& abil)
 
         // Generate a portal to something.
         const map_def *mapidx = random_map_for_tag("zotdef_bazaar", false);
-        if (!mapidx)
+        if (mapidx && dgn_safe_place_map(mapidx, true, true, you.pos()))
         {
-            mpr("A buggy portal flickers into view, then vanishes.");
+            mpr("A mystic portal forms.");
         }
         else
         {
-            //no_messages n;
-            dgn_place_map(mapidx, true, true, you.pos());
-            mpr("A mystic portal forms.");
+            mpr("A buggy portal flickers into view, then vanishes.");
+            return (false);
         }
 
         break;
@@ -1825,9 +1808,7 @@ static bool _do_ability(const ability_def& abil)
             god_type rgod=GOD_NO_GOD;
             // Don't allow Fedhas, as his abilities don't fit
             while (rgod==GOD_NO_GOD || rgod==GOD_FEDHAS)
-            {
                 rgod = static_cast<god_type>(random2(NUM_GODS));
-            }
             grd(you.pos()) = altar_for_god(rgod);
 
             if (grd(you.pos()) != DNGN_FLOOR)
@@ -1959,7 +1940,7 @@ static bool _do_ability(const ability_def& abil)
             power = you.experience_level
                     + player_mutation_level(MUT_BREATHE_FLAMES) * 4;
 
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+            if (you.form == TRAN_DRAGON)
                 power += 12;
 
             snprintf(info, INFO_SIZE, "You breathe a blast of fire%c",
@@ -1971,7 +1952,7 @@ static bool _do_ability(const ability_def& abil)
 
         case ABIL_BREATHE_FROST:
             if (!zapping(ZAP_BREATHE_FROST,
-                 (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                 (you.form == TRAN_DRAGON) ?
                      2 * you.experience_level : you.experience_level,
                  beam, true,
                          "You exhale a wave of freezing cold."))
@@ -1995,7 +1976,7 @@ static bool _do_ability(const ability_def& abil)
 
         case ABIL_SPIT_ACID:
             if (!zapping(ZAP_BREATHE_ACID,
-                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                (you.form == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true, "You spit a glob of acid."))
             {
@@ -2005,7 +1986,7 @@ static bool _do_ability(const ability_def& abil)
 
         case ABIL_BREATHE_POWER:
             if (!zapping(ZAP_BREATHE_POWER,
-                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                (you.form == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
                          "You spit a bolt of incandescent energy."))
@@ -2016,7 +1997,7 @@ static bool _do_ability(const ability_def& abil)
 
         case ABIL_BREATHE_STICKY_FLAME:
             if (!zapping(ZAP_BREATHE_STICKY_FLAME,
-                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                (you.form == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
                          "You spit a glob of burning liquid."))
@@ -2027,7 +2008,7 @@ static bool _do_ability(const ability_def& abil)
 
         case ABIL_BREATHE_STEAM:
             if (!zapping(ZAP_BREATHE_STEAM,
-                (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                (you.form == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
                          "You exhale a blast of scalding steam."))
@@ -2038,7 +2019,7 @@ static bool _do_ability(const ability_def& abil)
 
         case ABIL_BREATHE_MEPHITIC:
              if (!zapping(ZAP_BREATHE_MEPHITIC,
-                 (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON) ?
+                 (you.form == TRAN_DRAGON) ?
                      2 * you.experience_level : you.experience_level,
                  beam, true,
                           "You exhale a blast of noxious fumes."))
@@ -2070,10 +2051,14 @@ static bool _do_ability(const ability_def& abil)
 
     // Fly (kenku) - eventually becomes permanent (see main.cc).
     case ABIL_FLY:
-        cast_fly(you.experience_level * 4);
-
-        if (you.experience_level > 14)
+        if (you.experience_level < 15)
+            cast_fly(you.experience_level * 4);
+        else
+        {
+            you.attribute[ATTR_PERM_LEVITATION] = 1;
+            float_player(true);
             mpr("You feel very comfortable in the air.");
+        }
         break;
 
     // Fly (Draconians, or anything else with wings).
@@ -2114,18 +2099,31 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
-        levitate_player(2 * you.skills[SK_EVOCATIONS] + 30);
+        if (player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION))
+        {
+            bool standing = !you.airborne();
+            you.attribute[ATTR_PERM_LEVITATION] = 1;
+            if (standing)
+                float_player(false);
+            else
+                mpr("You feel more buoyant.");
+        }
+        else
+            levitate_player(2 * you.skills[SK_EVOCATIONS] + 30);
         break;
 
     case ABIL_EVOKE_STOP_LEVITATING:
         ASSERT(!you.attribute[ATTR_LEV_UNCANCELLABLE]);
-        mpr("You feel heavy.");
-        you.duration[DUR_LEVITATION] = 1;
+        you.duration[DUR_LEVITATION] = 0;
+        // cancels all sources at once: boots + kenku
+        you.attribute[ATTR_PERM_LEVITATION] = 0;
+        land_player();
         break;
 
     case ABIL_STOP_FLYING:
-        mpr("You feel heavy.");
-        you.duration[DUR_LEVITATION] = 1;
+        you.duration[DUR_LEVITATION] = 0;
+        you.attribute[ATTR_PERM_LEVITATION] = 0;
+        land_player();
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -2209,14 +2207,18 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_INJURY_MIRROR:
         if (yred_injury_mirror())
         {
-            mpr("You already have a dark mirror aura!");
-            return (false);
+            // Strictly speaking, since it is random, it is possible it
+            // actually decreases.  The player doesn't know this, and this
+            // way smart-asses won't re-roll it several times before charging.
+            mpr("Your dark aura grows in power.");
         }
-
-        mprf("You %s in prayer and are bathed in unholy energy.",
-             you.species == SP_NAGA ? "coil" :
-             you.species == SP_CAT  ? "sit"
-                                    : "kneel");
+        else
+        {
+            mprf("You %s in prayer and are bathed in unholy energy.",
+                 you.species == SP_NAGA ? "coil" :
+                 you.species == SP_CAT  ? "sit"
+                                        : "kneel");
+        }
         you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
                      + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
         break;
@@ -2343,7 +2345,7 @@ static bool _do_ability(const ability_def& abil)
         // Trog abilities don't use or train invocations.
         summon_berserker(you.piety +
                          random2(you.piety/4) - random2(you.piety/4),
-                         GOD_TROG);
+                         &you);
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
@@ -2948,8 +2950,8 @@ std::vector<talent> your_talents(bool check_confused)
     // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
     // Transformed nagas, or non-nagas, can only get Spit Poison.
     if (you.species == SP_NAGA
-        && (!transform_changed_physiology()
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER))
+        && (!form_changed_physiology()
+            || you.form == TRAN_SPIDER))
     {
         _add_talent(talents, player_mutation_level(MUT_BREATHE_POISON) ?
                     ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
@@ -2979,14 +2981,14 @@ std::vector<talent> your_talents(bool check_confused)
         // Draconians don't maintain their original breath weapons
         // if shapechanged into a non-dragon form, but green draconians
         // do get spit poison in spider form.
-        if (transform_changed_physiology())
+        if (form_changed_physiology())
         {
             if (you.species == SP_GREEN_DRACONIAN
-                && you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+                && you.form == TRAN_SPIDER)
             {
                 ability = ABIL_SPIT_POISON; // spit, not breath
             }
-            else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_DRAGON)
+            else if (you.form != TRAN_DRAGON)
                 ability = ABIL_NON_ABILITY;
         }
 
@@ -2996,31 +2998,33 @@ std::vector<talent> your_talents(bool check_confused)
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
         && you.hunger_state <= HS_SATIATED
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+        && you.form != TRAN_BAT)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 6)
-    {
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
-    }
 
-    if (!you.airborne() && !transform_changed_physiology())
+    if (you.species == SP_KENKU
+        && !you.attribute[ATTR_PERM_LEVITATION]
+        && you.experience_level >= 5
+        && (you.experience_level >= 15 || !you.airborne())
+        && !form_changed_physiology())
     {
         // Kenku can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
         // jmf: "upgrade" for draconians -- expensive flight
-        if (you.species == SP_KENKU && you.experience_level >= 5)
-            _add_talent(talents, ABIL_FLY, check_confused);
-        else if (player_genus(GENPC_DRACONIAN)
-                 && player_mutation_level(MUT_BIG_WINGS))
-        {
-            _add_talent(talents, ABIL_FLY_II, check_confused);
-        }
+        _add_talent(talents, ABIL_FLY, check_confused);
+    }
+    else if (player_mutation_level(MUT_BIG_WINGS) && !you.airborne()
+             && !form_changed_physiology())
+    {
+        ASSERT(player_genus(GENPC_DRACONIAN));
+        _add_talent(talents, ABIL_FLY_II, check_confused);
     }
 
-    if (you.airborne() && !transform_changed_physiology()
+    if (you.attribute[ATTR_PERM_LEVITATION] && !form_changed_physiology()
         && you.species == SP_KENKU && you.experience_level >= 5)
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
@@ -3036,11 +3040,8 @@ std::vector<talent> your_talents(bool check_confused)
     if (player_mutation_level(MUT_THROW_FROST))
         _add_talent(talents, ABIL_THROW_FROST, check_confused);
 
-    if (you.duration[DUR_TRANSFORMATION]
-        && !you.transform_uncancellable)
-    {
+    if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
-    }
 
     if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);
@@ -3113,7 +3114,7 @@ std::vector<talent> your_talents(bool check_confused)
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
     //     Make better ones come first.
-    if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+    if ((you.form == TRAN_DRAGON
         && dragon_form_dragon_type() == MONS_DRAGON
         && you.species != SP_RED_DRACONIAN)
         || player_mutation_level(MUT_BREATHE_FLAMES))
@@ -3143,19 +3144,24 @@ std::vector<talent> your_talents(bool check_confused)
             _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }
 
-    // Note: This ability only applies to this counter.
     if (player_evokable_levitation())
     {
         // Has no effect on permanently flying Kenku.
-        if (!you.permanent_flight() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+        if (!you.permanent_flight())
         {
+            // You can still evoke perm levitation if you have temporary one.
+            if (!you.is_levitating()
+                || !you.attribute[ATTR_PERM_LEVITATION]
+                   && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION))
+            {
+                _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
+            }
             // Now you can only turn levitation off if you have an
             // activatable item.  Potions and miscast effects will
             // have to time out (this makes the miscast effect actually
             // a bit annoying). -- bwr
-            _add_talent(talents, you.duration[DUR_LEVITATION] ?
-                        ABIL_EVOKE_STOP_LEVITATING : ABIL_EVOKE_LEVITATE,
-                        check_confused);
+            if (you.is_levitating() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
+                _add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused);
         }
     }
 

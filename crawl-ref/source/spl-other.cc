@@ -271,6 +271,16 @@ bool cast_passwall(const coord_def& delta, int pow)
         mpr("You sense an overwhelming volume of rock.");
     else if (feat_is_solid(grd(dest)))
         mpr("Something is blocking your path through the rock.");
+    else if (is_feat_dangerous(grd(dest), true))
+    {
+        if (grd(dest) == DNGN_DEEP_WATER)
+            mpr("You sense a large body of water on the other side of the rock.");
+        else if (grd(dest) == DNGN_LAVA)
+            mpr("You sense an intense heat on the other side of the rock.");
+        else
+            mprf(MSGCH_ERROR, "Unhandled dangerous feature: ",
+                 feature_description(dest, false, DESC_PLAIN).c_str());
+    }
     else if (walls > maxrange)
         mpr("This rock feels extremely deep.");
     else if (walls > range)
@@ -506,9 +516,9 @@ void cast_stoneskin(int pow)
         return;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
+    if (you.form != TRAN_NONE
+        && you.form != TRAN_STATUE
+        && you.form != TRAN_BLADE_HANDS)
     {
         mpr("This spell does not affect your current form.");
         return;
@@ -524,7 +534,7 @@ void cast_stoneskin(int pow)
         mpr("Your skin feels harder.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             mpr("Your stone body feels more resilient.");
         else
             mpr("Your skin hardens.");

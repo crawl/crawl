@@ -41,7 +41,7 @@
 {'d', CMD_DROP},
 {'e', CMD_EAT},
 {'f', CMD_FIRE},
-{'g', CMD_PICKUP},
+{'g', CMD_PICKUP_QUANTITY},
 {'i', CMD_DISPLAY_INVENTORY},
 {'m', CMD_DISPLAY_SKILLS},
 {'o', CMD_EXPLORE},

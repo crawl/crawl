@@ -26,18 +26,18 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
-#include "decks.h"
 #include "delay.h"
 #include "dgn-shoals.h"
-#include "dungeon.h"
-#include "directn.h"
 #include "dgnevent.h"
+#include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
-#include "fprop.h"
 #include "food.h"
+#include "fprop.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -48,13 +48,13 @@
 #include "makeitem.h"
 #include "map_knowledge.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
-#include "mon-place.h"
-#include "mgen_data.h"
 #include "mon-pathfind.h"
+#include "mon-place.h"
 #include "mon-project.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -62,12 +62,11 @@
 #include "notes.h"
 #include "ouch.h"
 #include "place.h"
-#include "player.h"
 #include "player-stats.h"
+#include "player.h"
 #include "religion.h"
+#include "shout.h"
 #include "skills.h"
-#include "skills2.h"
-#include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
@@ -78,8 +77,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
-#include "shout.h"
 #include "viewchar.h"
 #include "xom.h"
 
@@ -540,6 +537,8 @@ static std::string _who_banished(const std::string &who)
 void banished(dungeon_feature_type gate_type, const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
+    if (crawl_state.game_is_zotdef())
+        return;
 
     if (gate_type == DNGN_ENTER_ABYSS)
     {
@@ -746,18 +745,12 @@ void direct_effect(monster* source, spell_type spell,
             mpr("The air twists around and strikes you!");
 
         pbolt.name       = "airstrike";
-        pbolt.flavour    = BEAM_MISSILE;
+        pbolt.flavour    = BEAM_AIR;
         pbolt.aux_source = "by the air";
 
         damage_taken     = 10 + 2 * source->hit_dice;
 
-        // Apply "bonus" against flying/levitating characters after AC
-        // has been checked.
-        if (defender->flight_mode() != FL_NONE)
-        {
-            damage_taken *= 3;
-            damage_taken /= 2;
-        }
+        damage_taken = defender->beam_resists(pbolt, damage_taken, false);
 
         // Previous method of damage calculation (in line with player
         // airstrike) had absurd variance.
@@ -1326,7 +1319,7 @@ static void _hell_effects()
         else                // 1 in 8 odds {dlb}
             which_miscast = coinflip() ? SPTYP_HEXES : SPTYP_CHARMS;
 
-        MiscastEffect(&you, MISC_KNOWN_MISCAST, which_miscast,
+        MiscastEffect(&you, MISC_MISCAST, which_miscast,
                       4 + random2(6), random2avg(97, 3),
                       "the effects of Hell");
     }
@@ -1382,7 +1375,7 @@ static void _hell_effects()
         }
         else
         {
-            MiscastEffect(&you, MISC_KNOWN_MISCAST, which_miscast,
+            MiscastEffect(&you, MISC_MISCAST, which_miscast,
                           4 + random2(6), random2avg(97, 3),
                           "the effects of Hell");
         }
@@ -1619,7 +1612,7 @@ void change_labyrinth(bool msg)
                 continue;
 
             // Skip on grids inside vaults so as not to disrupt them.
-            if (testbits(env.pgrid(*ri), FPROP_VAULT))
+            if (map_masked(*ri, MMT_VAULT))
                 continue;
 
             // Make sure we don't accidentally create "ugly" dead-ends.

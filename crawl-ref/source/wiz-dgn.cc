@@ -199,7 +199,10 @@ static void _wizard_go_to_level(const level_pos &pos)
         abs_depth > you.absdepth0? DNGN_STONE_STAIRS_DOWN_I
                                   : DNGN_STONE_STAIRS_UP_I;
 
-    if (abs_depth > you.absdepth0 && pos.id.depth == 1
+    if (pos.id.depth == branches[pos.id.branch].depth)
+        stair_taken = DNGN_STONE_STAIRS_DOWN_I;
+
+    if (pos.id.branch != you.where_are_you && pos.id.depth == 1
         && pos.id.branch != BRANCH_MAIN_DUNGEON)
     {
         stair_taken = branches[pos.id.branch].entry_stairs;
@@ -345,9 +348,22 @@ void wizard_create_feature()
             return;
         }
 
-        dungeon_terrain_changed(you.pos(), feat, false);
 #ifdef USE_TILE
         env.tile_flv(you.pos()).special = 0;
+        const dungeon_feature_type old_feat = grd(you.pos());
+#endif
+        dungeon_terrain_changed(you.pos(), feat, false);
+#ifdef USE_TILE
+        // Update gate tiles, if existing.
+        if (feat_is_door(old_feat) || feat_is_door(feat))
+        {
+            const coord_def left  = you.pos() - coord_def(1, 0);
+            const coord_def right = you.pos() + coord_def(1, 0);
+            if (map_bounds(left) && feat_is_door(grd(left)))
+                tile_init_flavour(left);
+            if (map_bounds(right) && feat_is_door(grd(right)))
+                tile_init_flavour(right);
+        }
 #endif
     }
     else
@@ -358,7 +374,7 @@ void wizard_list_branches()
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].startdepth != - 1)
+        if (branches[i].startdepth != -1)
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
                  i, branches[i].longname, branches[i].startdepth,

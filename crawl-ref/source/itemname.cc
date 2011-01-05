@@ -65,7 +65,7 @@ bool is_vowel(const char chr)
 // quant_name is useful since it prints out a different number of items
 // than the item actually contains.
 std::string quant_name(const item_def &item, int quant,
-                        description_level_type des, bool terse)
+                       description_level_type des, bool terse)
 {
     // item_name now requires a "real" item, so we'll mangle a tmp
     item_def tmp = item;
@@ -126,7 +126,9 @@ std::string item_def::name(description_level_type descrip,
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
         && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
-             & MF_NAME_SPECIES) && !(corpse_flags & MF_NAME_DEFINITE))
+               & MF_NAME_SPECIES)
+             && !(corpse_flags & MF_NAME_DEFINITE))
+             && !(corpse_flags & MF_NAME_SUFFIX)
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
         switch (descrip)
@@ -1148,8 +1150,10 @@ std::string sub_type_string (object_class_type type, int sub_type, bool known, i
             return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
+#if TAG_MAJOR_VERSION == 31
         else if (sub_type == BOOK_BEASTS)
             return "Monster Manual";
+#endif
 
         return book_type_name(sub_type);
     }
@@ -1791,8 +1795,10 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "tome of Destruction";
         else if (item_typ == BOOK_YOUNG_POISONERS)
             buff << "Young Poisoner's Handbook";
+#if TAG_MAJOR_VERSION == 31
         else if (item_typ == BOOK_BEASTS)
             buff << "Monster Manual";
+#endif
         else
             buff << "book of " << book_type_name(item_typ);
         break;
@@ -1886,12 +1892,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "corpse bug";
 
         if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
-            && !(name_flags & MF_NAME_SPECIES))
+            && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX)
         {
-            if (name_type == MF_NAME_SUFFIX)
-                buff << " " << _name;
-            else
-                buff << " of " << _name;
+            buff << " of " << _name;
         }
         break;
     }
@@ -2835,7 +2838,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
-            if (!temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+            if (!temp && you.form == TRAN_LICH
                 && you.species != SP_DEMONSPAWN)
             {
                 return (false);
@@ -3056,7 +3059,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == FOOD_CHUNK
             && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
                 || you.has_spell(SPELL_SIMULACRUM)
-                || !temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH))
+                || !temp && you.form == TRAN_LICH))
         {
             return (false);
         }
@@ -3070,8 +3073,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type != CORPSE_SKELETON)
             return (false);
 
-        if (you.has_spell(SPELL_BONE_SHARDS)
-            || you.has_spell(SPELL_ANIMATE_DEAD)
+        if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
             || you.religion == GOD_YREDELEMNUL && !you.penance[GOD_YREDELEMNUL]
                && you.piety >= piety_breakpoint(0))

@@ -77,6 +77,9 @@ extern "C" int stricmp(const char *str1, const char *str2);
 #endif
 size_t strlcpy(char *dst, const char *src, size_t n);
 
+int strwidth(const char *s);
+int strwidth(const std::string &s);
+
 // String "tags"
 #define TAG_UNFOUND -20404
 bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);
