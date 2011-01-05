@@ -2815,6 +2815,13 @@ static void tag_read_level(reader &th)
                 if (feat_is_branch_stairs(grd[i][j]))
                     stairs[grd[i][j]] = true;
             }
+
+            if (th.getMinorVersion() < TAG_MINOR_SWAMP_TREES
+                && grd[i][j] == DNGN_TREE
+                && player_in_branch(BRANCH_SWAMP))
+            {
+                grd[i][j] = DNGN_SWAMP_TREE;
+            }
 #endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
