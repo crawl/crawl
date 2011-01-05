@@ -17,6 +17,7 @@
 #include "describe.h"
 #include "env.h"
 #include "food.h"
+#include "ghost.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
@@ -956,7 +957,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_PORCUPINE:
         return TILEP_MONS_PORCUPINE;
     case MONS_LABORATORY_RAT:
-        return _mon_clamp(TILEP_MONS_LABORATORY_RAT, offset_for_labrat_colour(colour));
+        return _mon_clamp(TILEP_MONS_LABORATORY_RAT, tile_offset_for_labrat_colour(colour));
 
     // spiders and insects ('s')
     case MONS_GIANT_MITE:
