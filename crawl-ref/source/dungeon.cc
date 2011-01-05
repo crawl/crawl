@@ -1309,6 +1309,7 @@ void dgn_reset_level(bool enable_random_maps)
     // Clear custom tile settings from vaults
     tile_init_default_flavour();
     tile_clear_flavour();
+    env.tile_names.clear();
 #endif
 }
 
