@@ -1270,7 +1270,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
             {
                 if (you.pos() == coord_def(x, y))
                     fputc('@', fp);
-                else if (grd[x][y] == DNGN_FLOOR_SPECIAL)
+                else if (testbits(env.pgrid[x][y], FPROP_HIGHLIGHT))
                     fputc('?', fp);
                 else if (dist && grd[x][y] == DNGN_FLOOR
                          && travel_point_distance[x][y] > 0
