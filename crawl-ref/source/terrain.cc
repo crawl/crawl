@@ -1532,7 +1532,7 @@ const char *dngn_feature_names[] =
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"open_sea", "tree", "orcish_idol", "", "", "",
+"open_sea", "tree", "orcish_idol", "swamp_tree", "", "",
 "granite_statue", "statue_reserved_1", "statue_reserved_2",
 "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
