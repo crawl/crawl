@@ -834,8 +834,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ELEPHANT_SLUG;
     case MONS_GIANT_SLUG:
         return TILEP_MONS_GIANT_SLUG;
-    case MONS_AGATE_SNAIL:
-        return TILEP_MONS_AGATE_SNAIL;
 
     // killer bees ('k')
     case MONS_KILLER_BEE:
@@ -991,10 +989,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BABY_ALLIGATOR;
     case MONS_ALLIGATOR:
         return TILEP_MONS_ALLIGATOR;
-    case MONS_SNAPPING_TURTLE:
-        return TILEP_MONS_SNAPPING_TURTLE;
-    case MONS_ALLIGATOR_SNAPPING_TURTLE:
-        return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE;
     case MONS_FIRECRAB:
         return TILEP_MONS_FIRECRAB;
 
@@ -2329,6 +2323,16 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
             break;
         case MONS_HYPERACTIVE_BALLISTOMYCETE:
             return TILEP_MONS_HYPERACTIVE_BALLISTOMYCETE;
+
+        case MONS_SNAPPING_TURTLE:
+            return TILEP_MONS_SNAPPING_TURTLE
+                    + (mon->has_ench(ENCH_WITHDRAWN) ? 1 : 0);
+        case MONS_ALLIGATOR_SNAPPING_TURTLE:
+            return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE
+                    + (mon->has_ench(ENCH_WITHDRAWN) ? 1 : 0);
+        case MONS_AGATE_SNAIL:
+            return TILEP_MONS_AGATE_SNAIL
+                    + (mon->has_ench(ENCH_WITHDRAWN) ? 1 : 0);
 
         case MONS_GOLD_MIMIC:
         case MONS_WEAPON_MIMIC:
