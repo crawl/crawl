@@ -1021,6 +1021,7 @@ std::string adjective_for_labrat_colour (uint8_t l_colour)
     return ("");
 }
 
+#ifdef USE_TILE
 int tile_offset_for_labrat_colour (uint8_t l_colour)
 {
     switch (l_colour)
@@ -1039,6 +1040,7 @@ int tile_offset_for_labrat_colour (uint8_t l_colour)
         return (0);
     }
 }
+#endif
 
 uint8_t colour_for_labrat_adjective (std::string adjective)
 {
