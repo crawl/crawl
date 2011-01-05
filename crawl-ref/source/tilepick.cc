@@ -4352,6 +4352,22 @@ tileidx_t tileidx_command(const command_type cmd)
     }
 }
 
+tileidx_t tileidx_gametype(const game_type gtype)
+{
+    switch (gtype)
+    {
+    case GAME_TYPE_NORMAL:
+    case GAME_TYPE_TUTORIAL:
+    case GAME_TYPE_ARENA:
+    case GAME_TYPE_SPRINT:
+    case GAME_TYPE_HINTS:
+    case GAME_TYPE_ZOTDEF:
+    case GAME_TYPE_INSTRUCTIONS:
+    default:
+        return TILEG_ERROR;
+    }
+}
+
 tileidx_t tileidx_known_brand(const item_def &item)
 {
     if (!item_type_known(item))
