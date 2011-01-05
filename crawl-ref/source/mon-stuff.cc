@@ -621,11 +621,13 @@ int place_monster_corpse(const monster* mons, bool silent,
                      mitm[o].name(DESC_CAP_A).c_str());
             }
         }
-        const bool poison = (chunk_is_poisonous(mons_corpse_effect(corpse_class))
-                             && player_res_poison() <= 0);
-
-        if (o != NON_ITEM)
+        if (o != NON_ITEM && !silent)
+        {
+            const bool poison =
+                (chunk_is_poisonous(mons_corpse_effect(corpse_class))
+                 && player_res_poison() <= 0);
             hints_dissection_reminder(!poison);
+        }
     }
 
     return (o == NON_ITEM ? -1 : o);

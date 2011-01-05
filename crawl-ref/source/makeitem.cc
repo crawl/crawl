@@ -3307,64 +3307,6 @@ int items(int allow_uniques,       // not just true-false,
     return (p);
 }
 
-static bool _item_corpse_def(monster_type mons, item_def &item,
-                             const item_spec &ispec)
-{
-    const monster_type created_mons = fill_out_corpse(NULL, mons, item);
-
-    if (created_mons == MONS_NO_MONSTER)
-        return (false);
-
-    if (ispec.props.exists(CORPSE_NEVER_DECAYS))
-        item.props[CORPSE_NEVER_DECAYS].get_bool() =
-            ispec.props[CORPSE_NEVER_DECAYS].get_bool();
-
-    if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
-        turn_corpse_into_skeleton(item);
-    else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(item, false, false);
-
-    if (ispec.props.exists(MONSTER_HIT_DICE))
-        item.props[MONSTER_HIT_DICE].get_short() =
-            ispec.props[MONSTER_HIT_DICE].get_short();
-
-    // Hydra heads:
-    if (ispec.plus2)
-        item.props[MONSTER_NUMBER].get_short() = ispec.plus2;
-
-    if (ispec.qty && ispec.base_type == OBJ_FOOD)
-        item.quantity = ispec.qty;
-
-    return (true);
-}
-
-// Creates a corpse item and returns its item index, or NON_ITEM if it
-// fails. The corpse is not linked into the item grid; nor is the
-// item's position set to anything meaningful.
-int item_corpse(monster_type mons, const item_spec &ispec)
-{
-    if (mons != MONS_NO_MONSTER)
-        mons = mons_species(mons);
-
-    if (mons == MONS_NO_MONSTER
-        || !mons_class_can_leave_corpse(mons))
-    {
-        return (NON_ITEM);
-    }
-
-    const int p = get_item_slot(10);
-    if (p == NON_ITEM)
-        return (NON_ITEM);
-
-    item_def &item(mitm[p]);
-    if (!_item_corpse_def(mons, item, ispec))
-    {
-        item.clear();
-        return (NON_ITEM);
-    }
-    return (p);
-}
-
 void reroll_brand(item_def &item, int item_level)
 {
     ASSERT(!is_artefact(item));
