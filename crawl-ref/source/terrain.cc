@@ -1547,7 +1547,7 @@ const char *dngn_feature_names[] =
 "", "enter_dis", "enter_gehenna", "enter_cocytus",
 "enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
 "enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"", "", "", "builder_special_wall", "builder_special_floor", "",
+"", "", "", "", "", "",
 "", "", "enter_dwarven_hall", "enter_orcish_mines", "enter_hive", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
