@@ -686,7 +686,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
     int number_built = 0;
 
     const dungeon_feature_type safe_tiles[] = {
-        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
+        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
     };
 
     bool proceed;

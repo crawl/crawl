@@ -1467,7 +1467,7 @@ void direction_chooser::print_items_description() const
 void direction_chooser::print_floor_description(bool boring_too) const
 {
     const dungeon_feature_type feat = grd(target());
-    if (!boring_too && (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL))
+    if (!boring_too && feat == DNGN_FLOOR)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2717,7 +2717,6 @@ void describe_floor()
     switch (grid)
     {
     case DNGN_FLOOR:
-    case DNGN_FLOOR_SPECIAL:
         return;
 
     case DNGN_ENTER_SHOP:
@@ -2887,7 +2886,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("Some shallow water");
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_FLOOR:
-    case DNGN_FLOOR_SPECIAL:
         return ("Floor");
     case DNGN_OPEN_DOOR:
         return ("open door");
@@ -3831,15 +3829,14 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         // Suppress "Floor." if there's something on that square that we've
         // already described.
-        if ((feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL) && !bloody
+        if (feat == DNGN_FLOOR && !bloody
             && (monster_described || item_described || cloud_described))
         {
             return;
         }
 
         msg_channel_type channel = MSGCH_EXAMINE;
-        if (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL
-            || feat_is_water(feat))
+        if (feat == DNGN_FLOOR || feat_is_water(feat))
         {
             channel = MSGCH_EXAMINE_FILTER;
         }
