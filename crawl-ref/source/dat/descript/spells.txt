@@ -597,6 +597,10 @@ Summon Horrible Things
 
 This spell opens a gate to the Abyss and calls through one or more hideous abominations from that dreadful place. The powers who answer this invocation require of casters a portion of their intellect in exchange for this service.
 %%%%
+Summon Hydra
+
+This spell summons a hydra to fight alongside the caster.
+%%%%
 Summon Ice Beast
 
 This spell calls forth a beast of ice to serve the caster.

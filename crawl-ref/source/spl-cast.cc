@@ -1569,6 +1569,10 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_summon_dragon(&you, powc, god);
         break;
 
+    case SPELL_SUMMON_HYDRA:
+        cast_summon_hydra(powc, god);
+        break;
+
     case SPELL_TUKIMAS_DANCE:
         // Temporarily turns a wielded weapon into a dancing weapon.
         cast_tukimas_dance(powc, god);

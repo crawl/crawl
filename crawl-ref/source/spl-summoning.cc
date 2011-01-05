@@ -670,6 +670,36 @@ bool cast_summon_ugly_thing(int pow, god_type god)
     return (false);
 }
 
+bool cast_summon_hydra(int pow, god_type god)
+{
+    // Short duration, power determines number of heads
+    // Minimum 4 heads, maximum 12.  Rare to get more than 8.
+    int heads;
+    int dur = (coinflip()) ? 2 : 3;
+
+    // Small chance to create a huge hydra (if spell power is high enough)
+    if (one_chance_in(6))
+        heads = std::min((random2(pow) / 6), 12);
+    else
+        heads = std::min((random2(pow) / 6), 8);
+
+    if (heads < 4)
+        heads = 4;
+
+    if (create_monster(
+            mgen_data(MONS_HYDRA, BEH_FRIENDLY, &you,
+                      dur, SPELL_SUMMON_HYDRA,
+                      you.pos(), MHITYOU,
+                      0, god, MONS_HYDRA, heads)) != -1)
+    {
+        mpr("A hydra appears.");
+        return (true);
+    }
+
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return (false);
+}
+
 bool cast_summon_dragon(actor *caster, int pow, god_type god)
 {
     // Dragons are always friendly now. Dragon type depends on power &
