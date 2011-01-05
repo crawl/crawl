@@ -3263,7 +3263,7 @@ void level_change(bool skip_attribute_increase)
             }
         }
 
-        // // zot defense abilities; must also be updated in abil-show.cc when these levels are changed
+        // // zot defence abilities; must also be updated in abil-show.cc when these levels are changed
         if (crawl_state.game_is_zotdef())
         {
             if (you.experience_level == 1)

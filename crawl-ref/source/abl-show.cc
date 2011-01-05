@@ -382,7 +382,7 @@ static const ability_def Ability_List[] =
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
       0, 0, 0, 0, ABFLAG_PIETY },
 
-    // // zot defense abilities
+    // // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, ABFLAG_NONE, 10 },
     { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, ABFLAG_NONE, 5 },
     { ABIL_MAKE_PLANT, "Make plant", 0, 0, 0, 0, ABFLAG_NONE, 2},
@@ -913,7 +913,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 0;
         break;
 
-    // // begin zot defense abilities
+    // // begin zot defence abilities
     case ABIL_MAKE_FUNGUS:
     case ABIL_MAKE_PLANT:
     case ABIL_MAKE_OKLOB_PLANT:
@@ -2874,7 +2874,7 @@ std::vector<talent> your_talents(bool check_confused)
 {
     std::vector<talent> talents;
 
-    // // zot defense abilities; must also be updated in player.cc when these levels are changed
+    // // zot defence abilities; must also be updated in player.cc when these levels are changed
     if (crawl_state.game_is_zotdef())
     {
         if (you.experience_level >= 1)
