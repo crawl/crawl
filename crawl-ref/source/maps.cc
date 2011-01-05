@@ -346,7 +346,7 @@ static bool _may_overwrite_feature(const coord_def p,
         return (false);
     }
 
-    if (feat_is_wall(grid) || grid == DNGN_TREE)
+    if (feat_is_wall(grid) || feat_is_tree(grid))
         return (wall_ok);
 
     // Otherwise, feel free to clobber this feature.

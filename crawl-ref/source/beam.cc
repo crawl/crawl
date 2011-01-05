@@ -811,18 +811,7 @@ void bolt::digging_wall_effect()
     if (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
         || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE)
     {
-        grd(pos()) = DNGN_FLOOR;
-        // Mark terrain as changed so travel excludes can be updated
-        // as necessary.
-        // XXX: This doesn't work for some reason: after digging
-        //      the wrong grids are marked excluded.
-        set_terrain_changed(pos());
-
-        // Blood does not transfer onto floor.
-        if (is_bloodcovered(pos()))
-            env.pgrid(pos()) &= ~(FPROP_BLOODY);
-
-        remove_mold(pos());
+        nuke_wall(pos());
 
         if (!msg_generated)
         {
@@ -853,7 +842,7 @@ void bolt::fire_wall_effect()
 {
     dungeon_feature_type feat;
     // Fire only affects wax walls and trees.
-    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat != DNGN_TREE
+    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat_is_tree(feat)
         || env.markers.property_at(pos(), MAT_ANY, "veto_fire") == "veto")
     {
         finish_beam();
@@ -879,8 +868,7 @@ void bolt::fire_wall_effect()
         else
         {
             // Destroy the wall.
-            grd(pos()) = DNGN_FLOOR;
-            set_terrain_changed(pos());
+            nuke_wall(pos());
             if (you.see_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
             else if (you.can_smell())
@@ -895,8 +883,7 @@ void bolt::fire_wall_effect()
         if (is_superhot())
         {
             // Destroy the wall.
-            grd(pos()) = dgn_tree_base_feature_at(pos());
-            set_terrain_changed(pos());
+            nuke_wall(pos());
             if (you.see_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
             else if (you.can_smell())
@@ -916,7 +903,7 @@ void bolt::fire_wall_effect()
 void bolt::elec_wall_effect()
 {
     const dungeon_feature_type feat = grd(pos());
-    if (feat == DNGN_TREE
+    if (feat_is_tree(feat)
         && env.markers.property_at(pos(), MAT_ANY, "veto_fire") != "veto")
     {
         fire_wall_effect();
@@ -976,6 +963,7 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         break;
 
     case DNGN_TREE:
+    case DNGN_SWAMP_TREE:
         if (see)
             msg = "The tree breaks and falls down!";
         else if (hear)
@@ -998,18 +986,6 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         return (false);
 }
 
-static void _nuke_wall(const coord_def& p)
-{
-    // Blood does not transfer onto floor.
-    if (is_bloodcovered(p))
-        env.pgrid(p) &= ~(FPROP_BLOODY);
-
-    remove_mold(p);
-
-    grd(p) = DNGN_FLOOR;
-    set_terrain_changed(p);
-}
-
 void bolt::nuke_wall_effect()
 {
     if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
@@ -1030,7 +1006,8 @@ void bolt::nuke_wall_effect()
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
     case DNGN_TREE:
-        _nuke_wall(pos());
+    case DNGN_SWAMP_TREE:
+        nuke_wall(pos());
         break;
 
     case DNGN_CLOSED_DOOR:
@@ -1040,7 +1017,7 @@ void bolt::nuke_wall_effect()
          std::set<coord_def> doors = connected_doors(pos());
          std::set<coord_def>::iterator it;
          for (it = doors.begin(); it != doors.end(); ++it)
-             _nuke_wall(*it);
+             nuke_wall(*it);
          break;
     }
 
@@ -1056,7 +1033,7 @@ void bolt::nuke_wall_effect()
         if (beam_source == NON_MONSTER)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
     }
-    else if (feat == DNGN_TREE)
+    else if (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE)
     {
         if (whose_kill() == KC_YOU)
             did_god_conduct(DID_KILL_PLANT, 1);
@@ -2247,7 +2224,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return (false);
 
     if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL
-        && feat != DNGN_TREE)
+        && feat != DNGN_TREE && feat != DNGN_SWAMP_TREE)
     {
         return (true);
     }
@@ -2561,10 +2538,10 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
         return (B_TRUE);
     }
 
-    if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREE))
+    if (is_fiery() && (wall == DNGN_WAX_WALL || feat_is_tree(wall)))
         return (is_superhot() ? B_TRUE : B_MAYBE);
 
-    if (flavour == BEAM_ELECTRICITY && wall == DNGN_TREE)
+    if (flavour == BEAM_ELECTRICITY && feat_is_tree(wall))
         return (is_superhot() ? B_TRUE : B_MAYBE);
 
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
@@ -2578,6 +2555,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_GRANITE_STATUE
             || wall == DNGN_ORCISH_IDOL
             || wall == DNGN_TREE
+            || wall == DNGN_SWAMP_TREE
             || wall == DNGN_CLOSED_DOOR
             || wall == DNGN_DETECTED_SECRET_DOOR
             || wall == DNGN_SECRET_DOOR)

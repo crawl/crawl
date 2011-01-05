@@ -254,8 +254,6 @@ int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int level = INVALID_ABSDEPTH);
 
-dungeon_feature_type dgn_tree_base_feature_at(coord_def c);
-
 class item_list;
 void dgn_place_multiple_items(item_list &list,
                               const coord_def& where,
@@ -312,5 +310,6 @@ void remember_vault_placement(std::string key, const vault_placement &place);
 std::string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
+void nuke_wall(const coord_def& p);
 
 #endif

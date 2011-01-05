@@ -57,6 +57,7 @@ bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too = false);
 command_type feat_stair_direction(dungeon_feature_type feat);
 bool feat_sealable_portal(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
+bool feat_is_tree(dungeon_feature_type feat);
 
 bool feat_is_stair(dungeon_feature_type feat);
 bool feat_is_travelable_stair(dungeon_feature_type feat);

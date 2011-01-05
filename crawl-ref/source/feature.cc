@@ -100,6 +100,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_WALL;
             break;
 
+        case DNGN_SWAMP_TREE:
+            f.dchar        = DCHAR_TREE;
+            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            f.colour       = ETC_SWAMP_TREE;
+            f.minimap      = MF_WALL;
+            break;
+
         case DNGN_OPEN_SEA:
             f.dchar        = DCHAR_WALL;
             f.colour       = BLUE;

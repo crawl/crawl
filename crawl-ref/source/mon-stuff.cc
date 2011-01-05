@@ -4412,7 +4412,7 @@ actor* forest_near_enemy(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (grd(*ai) == DNGN_TREE && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
                 return (foe);
     }
 
@@ -4423,7 +4423,7 @@ actor* forest_near_enemy(const actor *mon)
 void forest_message(const coord_def pos, const std::string msg, msg_channel_type ch)
 {
     for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
-        if (grd(*ri) == DNGN_TREE
+        if (feat_is_tree(grd(*ri))
             && cell_see_cell(you.pos(), *ri, LOS_DEFAULT)
             && cell_see_cell(pos, *ri, LOS_DEFAULT))
         {
@@ -4452,7 +4452,7 @@ void forest_damage(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (grd(*ai) == DNGN_TREE && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
             {
                 const int damage = 5 + random2(10);
                 if (foe->atype() == ACT_PLAYER)
