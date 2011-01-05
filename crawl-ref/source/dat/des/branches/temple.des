@@ -718,14 +718,16 @@ WEIGHT: 1
 ORIENT: float
 SUBST:  < : <>
 KMASK:  l = no_monster_gen
+KPROP:  . = no_rtele_into
+SUBST:  ' = .
 KFEAT:  O = enter_temple
 MAP
 clclclclc
 l.......l
 c.clclc.c
-l.l...l.l
+l.l'''l.l
 c.c<O<c.c
-l.l...l.l
+l.l'''l.l
 c.clclc.c
 l.......l
 clclclclc
@@ -786,26 +788,31 @@ MAP
 ENDMAP
 
 NAME:   minmay_temple_entry_water_ring
-TAGS:   temple_entry
+TAGS:   temple_entry no_pool_fixup
 ORIENT: float
 WEIGHT: 3
 KMONS:  1 = big fish
 KFEAT:  1 = W
 KMASK:  W = no_monster_gen
 NSUBST: W = 1:1
+: if crawl.one_chance_in(5) then
+SUBST:  W = w
+KPROP:  ' = no_rtele_into
+: end
+SUBST:  ' = .
 SUBST:  x : xxcccvvbt
 KFEAT:  O = enter_temple
 MAP
 .............
 .xxx.....xxx.
 .xWWWWWWWWWx.
-.xWx.....xWx.
-..W.......W..
-..W.......W..
-..W...O...W..
-..W.......W..
-..W.......W..
-.xWx.....xWx.
+.xWx'''''xWx.
+..W'''''''W..
+..W'''''''W..
+..W'''O'''W..
+..W'''''''W..
+..W'''''''W..
+.xWx'''''xWx.
 .xWWWWWWWWWx.
 .xxx.....xxx.
 .............
@@ -824,6 +831,106 @@ G...G
 GGGGG
 ENDMAP
 
+NAME:   minmay_temple_entry_statues_pillars
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  c : cccxxb
+KFEAT:  O = enter_temple
+MAP
+c.G.c
+.....
+G.O.G
+.....
+c.G.c
+ENDMAP
+
+NAME:   minmay_temple_entry_from_below_a
+TAGS:   temple_entry
+ORIENT: float
+WEIGHT: 5
+KFEAT:  O = enter_temple
+MAP
+      @
+ccccccncc
+c.......c
+c.O.c.}.c
+c.......c
+ccncccccc
+  @
+ENDMAP
+
+NAME:   minmay_temple_entry_from_below_b
+TAGS:   temple_entry
+ORIENT: float
+WEIGHT: 2
+KFEAT:  O = enter_temple
+MAP
+         @
+cccccccccnccc
+cG.........Gc
+c....T.T....c
+c..O.....}..c
+c....T.T....c
+cG.........Gc
+cccnccccccccc
+   @
+ENDMAP
+
+NAME:   minmay_temple_entry_from_below_c
+TAGS:   temple_entry
+ORIENT: float
+WEIGHT: 2
+KFEAT:  O = enter_temple
+MAP
+        xx@xxx
+       xxcncxx
+xxxxxxxxcc.ccx
+@..x...cc...cx
+xx.=.O.n..}.cx
+xx.x...cc...cx
+xx.xxxxxcccccx
+xx@xxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_temple_entry_from_below_d
+TAGS:   temple_entry
+ORIENT: float
+WEIGHT: 1
+KFEAT:  O = enter_temple
+MAP
+        @
+xxxxxxxcnc
+xccccccc.cc
+xc...cc...x
+xc.}..n.T.x
+xc...cc...x
+xcc.ccxx=xx
+xxcncxxx..@
+xx...xxx.xx
+xx.O.xxx.xx
+xx...xxx.xx
+xxx=xxxx.xx
+@...xxxx.xx
+xxx.xxxx.xx
+xxx@xxxx@xx
+ENDMAP
+
+NAME:   minmay_temple_entry_enclosed_plants
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  t : t12
+MONS:   plant, bush
+KFEAT:  O = enter_temple
+MAP
+ xxxxx
+xxtttxx
+xt...tx
+xt.O.tx
+xt...tx
+xxt.txx
+ xx+xx
+ENDMAP
+
 
 ##############################################################################
 # Temple maps
@@ -832,475 +939,126 @@ ENDMAP
 # Maps for the main temple (Ecumenical Temple branch) come here, use
 # PLACE:  Temple
 # ORIENT: encompass
-# Altars are to be placed as B glyphs, modification a la SUBST or SHUFFLE are
-# allowed. You could place any number of altars between one and the number of
-# guaranteed gods. However, don't make temple maps with less than six altars.
 #
+# Altars are to be placed as B glyphs, and should not be modified a la SUBST
+# or SHUFFLE. You could place any number of altars between one and the number
+# of guaranteed gods. However, don't make temple maps with less than six
+# altars.
 # Guaranteed gods not present in a temple will get altars in the dungeon.
 # See altar.des.
+#
+# There are some main themes for temple maps, and then some sporadic maps.
+# For news maps in a theme, stick to its defining properties (colour, or
+# shape), unless you know what you are doing. New maps for a theme can be
+# used for variety and (more often) to allow differing numbers of altars.
 
 ##########################################################################
-# Circular temple (David Ploog). 1 x 12 = 12 gods.
+# Circular temples
+#   Total weight: 65 = 40+10+5+5+5
+#   The classical shape, so highest weight.
+#   Several versions, to accomodate differing numbers of gods.
+#   Stones walls, so grey colour. (The versions with a pool change colour.)
 
-NAME:   circular_temple
+# 12 gods
+NAME:   circular_temple_12
 PLACE:  Temple
 WEIGHT: 40
 TAGS:   no_rotate
 ORIENT: encompass
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxccccc.....<.....cccccxxxxxxxxxxxx
-xxxxxxxxxcccc...................ccccxxxxxxxxx
-xxxxxxxccc.........................cccxxxxxxx
-xxxxxccc..............B..............cccxxxxx
-xxxxcc.........B.............B.........ccxxxx
-xxxcc...................................ccxxx
-xxcc.....................................ccxx
-xxc........B.....................B........cxx
-xcc.................T...T.................ccx
-xc.........................................cx
-xc.........................................cx
-xc(......B.......T.........T.......B......{cx
-xc.........................................cx
-xc.........................................cx
-xcc.................T...T.................ccx
-xxc........B.....................B........cxx
-xxcc.....................................ccxx
-xxxcc...................................ccxxx
-xxxxcc.........B.............B.........ccxxxx
-xxxxxccc..............B..............cccxxxxx
-xxxxxxxccc.........................cccxxxxxxx
-xxxxxxxxxcccc...................ccccxxxxxxxxx
-xxxxxxxxxxxxccccc.....[.....cccccxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+               ccccccccccccc
+           ccccc.....<.....ccccc
+        cccc...................cccc
+      ccc.........................ccc
+    ccc..............B..............ccc
+   cc.........B.............B.........cc
+  cc...................................cc
+ cc.....................................cc
+ c........B.....................B........c
+cc.................T...T.................cc
+c.........................................c
+c.........................................c
+c(......B.......T.........T.......B......{c
+c.........................................c
+c.........................................c
+cc.................T...T.................cc
+ c........B.....................B........c
+ cc.....................................cc
+  cc...................................cc
+   cc.........B.............B.........cc
+    ccc..............B..............ccc
+      ccc.........................ccc
+        cccc...................cccc
+           ccccc.....[.....ccccc
+               ccccccccccccc
 ENDMAP
 
 # 6 gods
-NAME:    circular_temple_variant
+NAME:    circular_temple_6
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: BG
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxccccc.....<.....cccccxxxxxxxxxxxx
-xxxxxxxxxcccc...................ccccxxxxxxxxx
-xxxxxxxccc.........................cccxxxxxxx
-xxxxxccc..............B..............cccxxxxx
-xxxxcc.........G.............G.........ccxxxx
-xxxcc...................................ccxxx
-xxcc.....................................ccxx
-xxc........B.....................B........cxx
-xcc.................T...T.................ccx
-xc.........................................cx
-xc.........................................cx
-xc(......G.......T.........T.......G......{cx
-xc.........................................cx
-xc.........................................cx
-xcc.................T...T.................ccx
-xxc........B.....................B........cxx
-xxcc.....................................ccxx
-xxxcc...................................ccxxx
-xxxxcc.........G.............G.........ccxxxx
-xxxxxccc..............B..............cccxxxxx
-xxxxxxxccc.........................cccxxxxxxx
-xxxxxxxxxcccc...................ccccxxxxxxxxx
-xxxxxxxxxxxxccccc.....[.....cccccxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+               ccccccccccccc
+           ccccc.....<.....ccccc
+        cccc...................cccc
+      ccc.........................ccc
+    ccc..............B..............ccc
+   cc.........G.............G.........cc
+  cc...................................cc
+ cc.....................................cc
+ c........B.....................B........c
+cc.................T...T.................cc
+c.........................................c
+c.........................................c
+c(......G.......T.........T.......G......{c
+c.........................................c
+c.........................................c
+cc.................T...T.................cc
+ c........B.....................B........c
+ cc.....................................cc
+  cc...................................cc
+   cc.........G.............G.........cc
+    ccc..............B..............ccc
+      ccc.........................ccc
+        cccc...................cccc
+           ccccc.....[.....ccccc
+               ccccccccccccc
 ENDMAP
 
-##############################################################################
-# Three leaves temple (David Ploog). 3 x 5 = 15 gods.
-
-NAME:   three_leaves__temple
-PLACE:  Temple
-TAGS:   no_rotate
-ORIENT: encompass
-WEIGHT: 1
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxbbbxxxxxxxxxxxxxxxbbbxxxxxxx
-xxxxxxbbb.bbxxxxxxxxxxxxxbb.bbbxxxxx
-xxxxxbb....bbxxxxxxxxxxxbb....bbxxxx
-xxxxbb......bbbxxxxxxxbbb......bbxxx
-xxxbb.....B...bbxxxxxbb...B.....bbxx
-xxbb..B........bbbxbbb........B..bbx
-xxbb.........B...bbb...B.........bbx
-xbb....B..........b..........B....bb
-xbb........B...{.....[...B........bb
-xxbbbbbbbb........b........bbbbbbbbx
-xxxxxxxxxbbbbbbbb...bbbbbbbbxxxxxxxx
-xxxxxxxxxxxxxxxbb.(.bbxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxbb.....bbxxxxxxxxxxxxx
-xxxxxxxxxxxxxbb..B.B..bbxxxxxxxxxxxx
-xxxxxxxxxxxxbb.........bbxxxxxxxxxxx
-xxxxxxxxxxxbb...........bbxxxxxxxxxx
-xxxxxxxxxxbb....B...B....bbxxxxxxxxx
-xxxxxxxxxbb.......B.......bbxxxxxxxx
-xxxxxxxxxxbbb...........bbbxxxxxxxxx
-xxxxxxxxxxxxbbbb.....bbbbxxxxxxxxxxx
-xxxxxxxxxxxxxxxbbbbbbbxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-# 9 gods
-NAME:   three_leaves_temple_variant
-PLACE:  Temple
-TAGS:   no_rotate
-ORIENT: encompass
-WEIGHT: 2
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxbbbxxxxxxxxxxxxxxxbbbxxxxxxx
-xxxxxxbbb.bbxxxxxxxxxxxxxbb.bbbxxxxx
-xxxxxbb....bbxxxxxxxxxxxbb....bbxxxx
-xxxxbb......bbbxxxxxxxbbb......bbxxx
-xxxbb.....B...bbxxxxxbb...B.....bbxx
-xxbb..B........bbbxbbb........B..bbx
-xxbb.............bbb.............bbx
-xbb....B....T.....b.....T....B....bb
-xbb............{.....[............bb
-xxbbbbbbbb........b........bbbbbbbbx
-xxxxxxxxxbbbbbbbb...bbbbbbbbxxxxxxxx
-xxxxxxxxxxxxxxxbb.(.bbxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxbb.....bbxxxxxxxxxxxxx
-xxxxxxxxxxxxxbb.......bbxxxxxxxxxxxx
-xxxxxxxxxxxxbb....T....bbxxxxxxxxxxx
-xxxxxxxxxxxbb...........bbxxxxxxxxxx
-xxxxxxxxxxbb....B...B....bbxxxxxxxxx
-xxxxxxxxxbb.......B.......bbxxxxxxxx
-xxxxxxxxxxbbb...........bbbxxxxxxxxx
-xxxxxxxxxxxxbbbb.....bbbbxxxxxxxxxxx
-xxxxxxxxxxxxxxxbbbbbbbxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
-# Ten chambers temple. 10 gods.
-NAME:   ten_chambers_temple
-PLACE:  Temple
-TAGS:   no_rotate
-ORIENT: encompass
-WEIGHT: 3
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
-xvvvvvvvvvvv..........................vvvvvvvvvxx
-xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvv.....vvvvvxx
-xvvvvv...vvvvv.....vvv.....vvv.....vvvvvv...vvvxx
-xvvvvv.vvvvvv...B...v...B...v...B...vvvvvvv.vvvxx
-xvv.....vvvvv.......v.......v.......vvvvv.....vvx
-xv.......vvvvv.....vvv.....vvv.....vvvvv.......vx
-xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
-xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
-xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
-xvvvv.vvvv.............................vvvv.vvvvx
-xvvv..vvvv.............................vvvv..vvvx
-xvvv.vvvvv...T......(...{...[......T...vvvvv.vvvx
-xvvv..vvvv.............................vvvv..vvvx
-xvvvv.vvvv.............................vvvv.vvvvx
-xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
-xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
-xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
-xv.......vvvvv.....vvv.....vvv.....vvvvv.......vx
-xvv.....vvvvv.......v.......v.......vvvvv.....vvx
-xvvvvv.vvvvvv...B...v...B...v...B...vvvvvv.vvvvxx
-xvvvvv...vvvvv.....vvv.....vvv.....vvvvv...vvvvxx
-xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvv.....vvvvvvxx
-xvvvvvvvvvvv.........................vvvvvvvvvvxx
-xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
-# Twelve chambers temple (David Ploog). 12 x 1 = 12 gods.
-
-NAME:   twelve_chambers_temple
-PLACE:  Temple
-TAGS:   no_rotate
-ORIENT: encompass
-WEIGHT: 5
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
-xvvvvvvvvvvv..................................vvvvvvvvvxx
-xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvvvvxx
-xvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvvvvv...vvvxx
-xvvvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvvv.vvvxx
-xvv.....vvvvv.......v.......v.......v.......vvvvv.....vvx
-xv.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......vx
-xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
-xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
-xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
-xvvvv.vvvv.....................................vvvv.vvvvx
-xvvv..vvvv.....................................vvvv..vvvx
-xvvv.vvvvv......T.......(...{...[.......T......vvvvv.vvvx
-xvvv..vvvv.....................................vvvv..vvvx
-xvvvv.vvvv.....................................vvvv.vvvvx
-xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
-xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
-xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
-xv.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......vx
-xvv.....vvvvv.......v.......v.......v.......vvvvv.....vvx
-xvvvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvv.vvvvxx
-xvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvvvv...vvvvxx
-xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvvvvvxx
-xvvvvvvvvvvv.................................vvvvvvvvvvxx
-xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
-# Fourteen chambers temple (David Ploog). 14 x 1 = 14 gods.
-
-NAME:   fourteen_chambers_temple
-PLACE:  Temple
-TAGS:   no_rotate
-ORIENT: encompass
-WEIGHT: 2
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
-xvvvvvvvvvvv..........................................vvvvvvvvvxx
-xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvvvvxx
-xvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvvv...vvvxx
-xvvvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvvv.vvvxx
-xvv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vvx
-xv.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......vx
-xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
-xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
-xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
-xvvvv.vvvv.............................................vvvv.vvvvx
-xvvv..vvvv.............................................vvvv..vvvx
-xvvv.vvvvv........T.........(...{...[.........T........vvvvv.vvvx
-xvvv..vvvv.............................................vvvv..vvvx
-xvvvv.vvvv.............................................vvvv.vvvvx
-xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
-xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
-xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
-xv.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......vx
-xvv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vvx
-xvvvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvv.vvvvxx
-xvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv...vvvvxx
-xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvvvvvxx
-xvvvvvvvvvvv.........................................vvvvvvvvvvxx
-xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##########################################################################
-# Another temple (David Ploog). 12 + 3 = 1 + 2 + 3 + 4 + 5 => 12 gods.
-
-NAME:   triangle_temple
-PLACE:  Temple
-WEIGHT: 10
-TAGS:   no_rotate
-ORIENT: encompass
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
-xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
-xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
-xllllllllllllllllllllllll......{......llllllllllllllllllllllllx
-xlllllllllllllllllllllll...............lllllllllllllllllllllllx
-xllllllllllllllllllllll.................llllllllllllllllllllllx
-xlllllllllllllllllllll......B.....B......lllllllllllllllllllllx
-xllllllllllllllllllll.....................llllllllllllllllllllx
-xlllllllllllllllllll.......................lllllllllllllllllllx
-xllllllllllllllllll...B.................B...llllllllllllllllllx
-xlllllllllllllllll.............B.............lllllllllllllllllx
-xllllllllllllllll.............................llllllllllllllllx
-xlllllllllllllll...............................lllllllllllllllx
-xllllllllllllll.................................llllllllllllllx
-xlllllllllllll.....B.......B.......B.......B.....lllllllllllllx
-xllllllllllll.....................................llllllllllllx
-xlllllllllll.......................................lllllllllllx
-xllllllllll.........................................llllllllllx
-xlllllllll....(.........B.............B.........[....lllllllllx
-xllllllll......................B.....................lllllllllx
-xllllllll............................................lllllllllx
-xlllllllll..........................................llllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-# Spot the difference! ;)
-NAME:   triangle_temple_variant
-PLACE:  Temple
-WEIGHT: 10
-TAGS:   no_rotate
-ORIENT: encompass
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
-xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
-xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
-xllllllllllllllllllllllll......{......llllllllllllllllllllllllx
-xlllllllllllllllllllllll...............lllllllllllllllllllllllx
-xllllllllllllllllllllll.................llllllllllllllllllllllx
-xlllllllllllllllllllll......B.....B......lllllllllllllllllllllx
-xllllllllllllllllllll.....................llllllllllllllllllllx
-xlllllllllllllllllll.......................lllllllllllllllllllx
-xllllllllllllllllll...B.................B...llllllllllllllllllx
-xlllllllllllllllll.............B.............lllllllllllllllllx
-xllllllllllllllll.............................llllllllllllllllx
-xlllllllllllllll...............................lllllllllllllllx
-xllllllllllllll.................................llllllllllllllx
-xlllllllllllll.....B.......B.......B.......B.....lllllllllllllx
-xllllllllllll.....................................llllllllllllx
-xlllllllllll.......................................lllllllllllx
-xllllllllll.........................................llllllllllx
-xlllllllll....(.........B.............B.........[....lllllllllx
-xllllllll......................T.....................lllllllllx
-xllllllll............................................lllllllllx
-xlllllllll..........................................llllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##########################################################################
-# Watery temple (Darshan Shaligram). 12 gods.
-NAME:   water_temple
-TAGS:   no_pool_fixup no_rotate
-WEIGHT: 10
-PLACE:  Temple
-ORIENT: encompass
-MAP
-xcccccccccccccccccccccccccccccccccccccccccccccccccccx
-xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
-xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
-xcwwwwwwww.................................wwwwwwwwcx
-xcwwwww...................B...................wwwwwcx
-xcwww......B.............................B......wwwcx
-xcwww.............B...............B.............wwwcx
-xcww......................(......................wwcx
-xcww.............................................wwcx
-xcww...B......B...........T...........B......B...wwcx
-xcww.............................................wwcx
-xcww...................[.....{...................wwcx
-xcwww.............B...............B.............wwwcx
-xcwww......B.............................B......wwwcx
-xcwwwww...................B...................wwwwwcx
-xcwwwwwwww.................................wwwwwwwwcx
-xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
-xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
-xcccccccccccccccccccccccccccccccccccccccccccccccccccx
-ENDMAP
-
-NAME:   water_temple_variant
-TAGS:   no_pool_fixup no_rotate
-WEIGHT: 10
-PLACE:  Temple
-ORIENT: encompass
-MAP
-xcccccccccccccccccccccccccccccccccccccccccccccccccccx
-xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
-xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
-xcwwwwwwww.................................wwwwwwwwcx
-xcwwwww...................G...................wwwwwcx
-xcwww......B.............................B......wwwcx
-xcwww.............B...............B.............wwwcx
-xcww......................(......................wwcx
-xcww.............................................wwcx
-xcww...B......B...........T...........B......B...wwcx
-xcww.............................................wwcx
-xcww...................[.....{...................wwcx
-xcwww.............B...............B.............wwwcx
-xcwww......B.............................B......wwwcx
-xcwwwww...................G...................wwwwwcx
-xcwwwwwwww.................................wwwwwwwwcx
-xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
-xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
-xcccccccccccccccccccccccccccccccccccccccccccccccccccx
-ENDMAP
-
-##########################################################################
-# Zaba's temple. 12 gods.
-NAME:    zaba_temple_1
+# 13 gods
+NAME:    circular_temple_13
+WEIGHT:  5
 PLACE:   Temple
-WEIGHT:  8
-TAGS:    no_rotate
+FLAGS:   no_rotate
 ORIENT:  encompass
-COLOUR:  c = magenta
-SHUFFLE: {[
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxcccccccccccccccccccccccccccccccccccccccccccxx
-xxcccc.......ccccccc.......ccccccc.......ccccxx
-xxcc...B...B...ccc...B...B...ccc...B...B...ccxx
-xxc.............c.............c.............cxx
-xxcc...........ccc...........ccc...........ccxx
-xxcccc...(.............[.............{....cccxx
-xxcc...........ccc...........ccc...........ccxx
-xxc.............c.............c.............cxx
-xxcc...B...B...ccc...B...B...ccc...B...B...ccxx
-xxcccc.......ccccccc.......ccccccc.......ccccxx
-xxcccccccccccccccccccccccccccccccccccccccccccxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+         ccccccccccccc
+      cccc...........cccc
+    ccc........(........ccc
+   cc.....................cc
+  cc.....B...........B.....cc
+ cc.........................cc
+ c.............B.............c
+cc...........................cc
+c........B...........B........c
+c.............................c
+c..B...........B...........B..c
+c.............................c
+c........B...........B........c
+cc...........................cc
+ c.[...........B...........{.c
+ cc.........................cc
+  cc.....B...........B.....cc
+   cc.....................cc
+    ccc........T........ccc
+      cccc...........cccc
+         ccccccccccccc
 ENDMAP
 
-NAME:    zaba_temple_1_variant
-PLACE:   Temple
-WEIGHT:  2
-TAGS:    no_rotate
-ORIENT:  encompass
-COLOUR:  c = magenta
-SHUFFLE: {[
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxcccccccccccccccccccccccccccccccccccccccccccxx
-xxcccc.......ccccccc.......ccccccc.......ccccxx
-xxcc...B...B...ccc...T...T...ccc...B...B...ccxx
-xxc.............c.............c.............cxx
-xxcc...........ccc...........ccc...........ccxx
-xxcccc...(.............{.............[....cccxx
-xxcc...........ccc...........ccc...........ccxx
-xxc.............c.............c.............cxx
-xxcc...B...B...ccc...T...T...ccc...B...B...ccxx
-xxcccc.......ccccccc.......ccccccc.......ccccxx
-xxcccccccccccccccccccccccccccccccccccccccccccxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##########################################################################
-# Loop temple (David Ploog). 16 = 12 + 4. 12 gods.
-NAME:    loop_temple
+# 16 gods
+NAME:    circular_temple_pool
 PLACE:   Temple
 WEIGHT:  5
 TAGS:    no_rotate no_pool_fixup
@@ -1335,37 +1093,35 @@ COLOUR: m = blue
 COLOUR: c = blue
 :end
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxccccc...........cccccxxxxxxxxxxxx
-xxxxxxxxxcccc...................ccccxxxxxxxxx
-xxxxxxxccc............A............cccxxxxxxx
-xxxxxccc.......B.............B.......cccxxxxx
-xxxxcc.................................ccxxxx
-xxxcc.....C........mmmmmmm........C.....ccxxx
-xxcc............mmmmwwwwwmmmm............ccxx
-xxc...........mmmwwwwwwwwwwwmmm...........cxx
-xcc....B.....mmwwwwwwwWwwwwwwwmm.....B....ccx
-xc..........mmwwwwwwwwwwwwwwwwwmm..........cx
-xc..........mwwwwwwwwwwwwwwwwwwwm..........cx
-xc....A.....mwwwwWwwwwwwwwwWwwwwm.....A....cx
-xc..........mwwwwwwwwwwwwwwwwwwwm..........cx
-xc..........mmwwwwwwwwwwwwwwwwwmm..........cx
-xcc....B.....mmwwwwwwwWwwwwwwwmm.....B....ccx
-xxc...........mmmmwwwwwwwwwwmmm...........cxx
-xxcc.............mmmwwwwwmmmm............ccxx
-xxxcc.....C........mmmmmmm........C.....ccxxx
-xxxxcc.................................ccxxxx
-xxxxxccc.......B.............B.......cccxxxxx
-xxxxxxxccc............A............cccxxxxxxx
-xxxxxxxxxcccc...................ccccxxxxxxxxx
-xxxxxxxxxxxxccccc...........cccccxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc............A............ccc
+    ccc.......B.............B.......ccc
+   cc.................................cc
+  cc.....C........mmmmmmm........C.....cc
+ cc............mmmmwwwwwmmmm............cc
+ c...........mmmwwwwwwwwwwwmmm...........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c....A.....mwwwwWwwwwwwwwwWwwwwm.....A....c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+ c...........mmmmwwwwwwwwwwmmm...........c
+ cc.............mmmwwwwwmmmm............cc
+  cc.....C........mmmmmmm........C.....cc
+   cc.................................cc
+    ccc.......B.............B.......ccc
+      ccc............A............ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
 ENDMAP
 
-# 8 gods
-NAME:    loop_temple_variant
+# 16 gods
+NAME:    circular_temple_pool_variant
 PLACE:   Temple
 WEIGHT:  5
 TAGS:    no_rotate no_pool_fixup
@@ -1398,149 +1154,309 @@ COLOUR: m = blue
 COLOUR: c = blue
 :end
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxccccc...........cccccxxxxxxxxxxxx
-xxxxxxxxxcccc...................ccccxxxxxxxxx
-xxxxxxxccc............T............cccxxxxxxx
-xxxxxccc.......B.............B.......cccxxxxx
-xxxxcc.................................ccxxxx
-xxxcc.....A........mmmmmmm........A.....ccxxx
-xxcc............mmmmwwwwwmmmm............ccxx
-xxc...........mmmwwwwwwwwwwwmmm...........cxx
-xcc....B.....mmwwwwwwwWwwwwwwwmm.....B....ccx
-xc..........mmwwwwwwwwwwwwwwwwwmm..........cx
-xc..........mwwwwwwwwwwwwwwwwwwwm..........cx
-xc....T.....mwwwwWwwwwwwwwwWwwwwm.....T....cx
-xc..........mwwwwwwwwwwwwwwwwwwwm..........cx
-xc..........mmwwwwwwwwwwwwwwwwwmm..........cx
-xcc....B.....mmwwwwwwwWwwwwwwwmm.....B....ccx
-xxc...........mmmmwwwwwwwwwwmmm...........cxx
-xxcc.............mmmwwwwwmmmm............ccxx
-xxxcc.....T........mmmmmmm........T.....ccxxx
-xxxxcc.................................ccxxxx
-xxxxxccc.......B.............B.......cccxxxxx
-xxxxxxxccc............A............cccxxxxxxx
-xxxxxxxxxcccc...................ccccxxxxxxxxx
-xxxxxxxxxxxxccccc...........cccccxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc............T............ccc
+    ccc.......B.............B.......ccc
+   cc.................................cc
+  cc.....A........mmmmmmm........A.....cc
+ cc............mmmmwwwwwmmmm............cc
+ c...........mmmwwwwwwwwwwwmmm...........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c....T.....mwwwwWwwwwwwwwwWwwwwm.....T....c
+c..........mwwwwwwwwwwwwwwwwwwwm..........c
+c..........mmwwwwwwwwwwwwwwwwwmm..........c
+cc....B.....mmwwwwwwwWwwwwwwwmm.....B....cc
+ c...........mmmmwwwwwwwwwwmmm...........c
+ cc.............mmmwwwwwmmmm............cc
+  cc.....T........mmmmmmm........T.....cc
+   cc.................................cc
+    ccc.......B.............B.......ccc
+      ccc............A............ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
 ENDMAP
+
 
 ##########################################################################
-# Five rooms temple (David Ploog). 12 + 3 = 5 x 3 => 12 gods.
-#
-# Todo: would be nice to have the altars in each room follow a theme.
-#       That's harder with the random temples but perhaps there is a way.
-#
-NAME:    five_temple
-PLACE:   Temple
-TAGS:    no_rotate
-ORIENT:  encompass
-KFEAT:   X : G / U / T
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
-xxxxxxxxxx........xxxxx+xxxxx........xxxxxxxxxx
-xxxxxxx.....xxxxxxxxx.....xxxxxxxxx.....xxxxxxx
-xxxxxx...xxxxxxxxxx.........xxxxxxxxxx...xxxxxx
-xxxxx..xxxxxxxxxxx..(.....[..xxxxxxxxxxx..xxxxx
-xxxx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xxxx
-xxx..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..xxx
-xxx..xxx.....xxxxxx....{....xxxxxx.....xxx..xxx
-xx..+x..B......xxxxxx.....xxxxxx......B..x+..xx
-xx..x...........xxxxxxxxxxxxxxx...........x..xx
-x..xx.....X..B..xxxxxxxxxxxxxxx..B..X.....xx..x
-x..xx...........xxxxxxxxxxxxxxx...........xx..x
-x..xxx..B......xxxxxxxxxxxxxxxxx......B..xxx..x
-x..xxxxx.....xxxxxxxxxxxxxxxxxxxxx.....xxxxx..x
-x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
-x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
-x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
-xx..xxxxxxx......B..xxxxxxx..B......xxxxxxx..xx
-xx..xxxxxx.B.........xxxxx.........B.xxxxxx..xx
-xxx..xxxxx.....X.....xxxxx.....X.....xxxxx..xxx
-xxx..xxxxx...........xxxxx...........xxxxx..xxx
-xxxx..xxxxx......B..xxxxxxx..B......xxxxx..xxxx
-xxxxx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xxxxx
-xxxxxx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xxxxxx
-xxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxx
-xxxxxxxxxx........xxxxxxxxxxx........xxxxxxxxxx
-xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
+# Temples with lots of trees
+#    Total weight: 30 = 15+5+2+2+3+3
+#    Trees, sometimes other plants.
 
-# 12 gods
-NAME:    temple_eino_lava_a
+# 15 gods
+NAME:    kilobyte_mini_greek_temple
 PLACE:   Temple
+WEIGHT:  15
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  5
 SHUFFLE: {([
-COLOUR:  c = red
+NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
+SUBST:   ' = .
+COLOUR:  " : darkgrey w:3 / white w:1 / none
+SUBST:   " = .
+MONS:    plant, bush
 MAP
-ccccccccccccccccccccccccc
-cccccccclccccccclcccccccc
-cccccccl.lcclccl.lccccccc
-cccclll...c...c...lllcccc
-ccclll..B.G...G.B..lllccc
-cccll.......B.......llccc
-cccl.................lccc
-ccl...................lcc
-cl..B...............B..lc
-ccl...................lcc
-ccccG...............Gcccc
-ccc..........[........ccc
-ccl..B.....(.......B..lcc
-ccc..........{........ccc
-ccccG...............Gcccc
-ccl...................lcc
-cl..B...............B..lc
-ccl...................lcc
-cccl.................lccc
-cccll.......B.......llccc
-ccclll..B.G...G.B..lllccc
-cccclll...c...c...lllcccc
-cccccccl.lcclccl.lccccccc
-cccccccclccccccclcccccccc
-ccccccccccccccccccccccccc
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttt....1111tttttttttttttttttttttttttttttttttttttttt
+tttttttt.........1111....tttttttttttt.........tttttttttttttt
+tttt.......................1tttttt.......t.........ttttttttt
+tt.........2........t..........''''''...............2222tttt
+tt.....{..21...t...............''ccccccccccccccc.....22.tttt
+ttt...........ttt.......(......''G'c"""""""""""ctt..t..ttttt
+tttt......2....................''''c"B"B"B"B"B"ctt......tttt
+tttttt.....................t...''G'c"""""""""""cttt.....tttt
+ttttttttt..1.....2...t.........''''+"B"B"B"B"B"ctt...t....tt
+tttttttt.....[.................''G'c"""""""""""ct...ttt..ttt
+ttttttttt...................1..''''c"B"B"B"B"B"ct..tttt.tttt
+ttttttttttttttt....2....t......''G'c"""""""""""ct....t..tttt
+ttttttttttttttttt..............''ccccccccccccccct.......2ttt
+tttttttttttttttttt..........t.........t......ttt......2ttttt
+ttttttttttttttttttttt...............................22tttttt
+ttttttttttttttttttttttt............t..........t....ttttttttt
+tttttttttttttttttttttttttttt...........t.........ttttttttttt
+ttttttttttttttttttttttttttttttt..............ttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 # 8 gods
-NAME:    temple_eino_lava_b
+NAME:    minmay_temple_alley_garden
 PLACE:   Temple
 TAGS:    no_rotate
-ORIENT:  encompass
 WEIGHT:  5
-SHUFFLE: {([
-COLOUR:  c = red
+ORIENT:  encompass
+COLOUR:  ' : darkgrey w:3 / white w:1 / none
+COLOUR:  . = green, " = brown
+FTILE:   .t = floor_grass, 'ABGT = floor_vault, D" = floor_dirt
+SUBST:   D = G
+NSUBST:  A = { / ( / [
+NSUBST:  . = 12:1 / 7:2 / *:.
+SUBST:   "' = .
+MONS:    bush, plant
 MAP
-ccccccccccccccccccccccccc
-cccccccclccccccclcccccccc
-cccccccl.lcclccl.lccccccc
-cccclll...c...c...lllcccc
-ccclll..B.G...G.B..lllccc
-cccll.......B.......llccc
-cccl.................lccc
-ccccG...............Gcccc
-ccc...................ccc
-ccl..B....{.(.[....B..lcc
-ccc...................ccc
-ccccG...............Gcccc
-cccl.................lccc
-cccll.......B.......llccc
-ccclll..B.G...G.B..lllccc
-cccclll...c...c...lllcccc
-cccccccl.lcclccl.lccccccc
-cccccccclccccccclcccccccc
-ccccccccccccccccccccccccc
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tt''''''''''....................................................tt
+tt'G'''''G''.............................t............t.........tt
+tt''''''''''......................t.............................tt
+tt''''''''''....................................t...............tt
+tt''''A'''''...............................................t....tt
+tt''''''''''................cccccccccccccccccccccccc............tt
+tt''''''''''................c''''''''''''''''''''''c....t.......tt
+tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c............tt
+tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
+tt''''''''''""""""""""""""""+''''''''''''''''''''''c.........t..tt
+tt''''A'''''""""""""""""""""+''''''T''''''''T''''''c...t........tt
+tt''''''''''""""""""""""""""+''''''''''''''''''''''c............tt
+tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
+tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c......t.....tt
+tt''''''''''................c''''''''''''''''''''''c............tt
+tt''''''''''................cccccccccccccccccccccccc............tt
+tt''''A'''''..........................................t.........tt
+tt''''''''''..................t.................................tt
+tt''''''''''.................................t..................tt
+tt'G'''''G''.........................t.......................t..tt
+tt''''''''''....................................................tt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 # 12 gods
-NAME:    temple_eino_water
+NAME:    minmay_temple_clearing_a
+WEIGHT:  2
 PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+SHUFFLE: '"
+FTILE:   ' = floor_dirt, ."tABX = floor_grass
+NSUBST:  A = { / ( / [
+SUBST:   ' = ., " = t
+KFEAT:   X : G / U / T
+COLOUR:  . = green / brown w:2
+MAP
+                ttttttttt
+           ttttttttttttttttt
+         ttttttttt.....ttttttttt
+      tttttttttt.........tttttttttt
+    ttttttttt''..A.....A..''ttttttttt
+   tttttttt''tt.....X.....tt''tttttttt
+ ttttttttt'tttt...........tttt'ttttttttt
+ttttt.....tttttt....A....tttttt.....ttttt
+ttt..B......tttttt.....tttttt......B..ttt
+tt...........ttttttt"ttttttt...........tt
+tt.....X..B..ttttttt"ttttttt..B..X.....tt
+tt...........tttttt"""tttttt...........tt
+ttt..B......t"""tt""w""tt"""t......B..ttt
+ttttt.....tttttt"""www"""tttttt.....ttttt
+ttttt'tttttttttttt""w""tttttttttttt'ttttt
+tttttt'tttttttttttt"""tttttttttttt'tttttt
+ttttttt'tt.....tt""ttt""tt.....tt'ttttttt
+ ttttttt......B..ttttttt..B......ttttttt
+ tttttt.B.........ttttt.........B.tttttt
+  ttttt.....X.....ttttt.....X.....ttttt
+  ttttt...........ttttt...........ttttt
+   ttttt......B..ttttttt..B......ttttt
+    tttttt.....tt''ttt''tt.....tttttt
+      ttttttttttttt'''ttttttttttttt
+        ttttttttttttttttttttttttt
+               ttttttttttt
+ENDMAP
+
+# 9 gods
+NAME:    minmay_temple_clearing_b
+WEIGHT:  2
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+SUBST:   ' : t"
+FTILE:   "A = floor_dirt, tBTX. = floor_grass
+NSUBST:  A = { / ( / [
+SUBST:   " = .
+SHUFFLE: TX
+KFEAT:   X : G / U
+COLOUR:  . = green / brown w:2
+MAP
+                ttttttttt
+           ttttttttttttttttt
+         ttttttttt.....ttttttttt
+      tttttttttt.........tttttttttt
+    ttttttttt''..X.....X..''ttttttttt
+   tttttttt''tt.....B.....tt''tttttttt
+ ttttttttt'tttt...........tttt'ttttttttt
+ttttt.....tttttt....X....tttttt.....ttttt
+ttt..B......tttttt.....tttttt......B..ttt
+tt...........ttttttt"ttttttt...........tt
+tt.....X..B..ttttttt"ttttttt..B..X.....tt
+tt..........."tttttt"tttttt"...........tt
+ttt..B......tt""ttt"""ttt""tt......B..ttt
+ttttt.....tttttt"""AAA"""tttttt.....ttttt
+ttttt'tttttttttttt"""""tttttttttttt'ttttt
+tttttt'ttttttttt""ttttt""ttttttttt'tttttt
+ttttttt'tt....."ttttttttt".....tt'ttttttt
+ ttttttt......T..ttttttt..T......ttttttt
+ tttttt.T.........ttttt.........T.tttttt
+  ttttt.....B.....ttttt.....B.....ttttt
+  ttttt...........ttttt...........ttttt
+   ttttt......T..ttttttt..T......ttttt
+    tttttt.....tt''ttt''tt.....tttttt
+      ttttttttttttt'''ttttttttttttt
+        ttttttttttttttttttttttttt
+               ttttttttttt
+ENDMAP
+
+# 12 gods
+NAME:       minmay_temple_forest_path
+PLACE:      Temple
+ORIENT:     encompass
+WEIGHT:     3
+LFLOORCOL:  green
+LFLOORTILE: floor_lair
+SUBST:      t = t:18 1:1 .:1
+MONS:       plant / bush w:1 / fungus w:1
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+ttt...tttttttttttttttttttttttttttttttttttttttttttt
+tt.......ttttttttttt...tttttttttttttttttttt.{.tttt
+tt..B..tt...ttttt.......tttttttttttttttttt[...(ttt
+tt.....ttttt.tt..tt..B..tttttttttttttttttt.....ttt
+ttt...ttttttt..tttt.....tttttttttttttttttt.....ttt
+ttt.ttttttttt.ttttt....ttttttttttt...tttttt...tttt
+tttt.ttttttt.ttttt.tttttttttttttt.....tttttt.ttttt
+tttt.ttttttt.ttttt.tttttttttttttt..B..tttttt.ttttt
+ttttt.ttttt...tttt.tttttttttttttt.....tttttt.ttttt
+ttttt.tttt.....tt.tttttttttttttttt...tttttt.tttttt
+tttt.ttttt..B..tt.tttttttttttttttt.tttttt..ttttttt
+tttt.ttttt.....ttt.tttttt...ttttttt.tttt.ttttttttt
+tttt.tttttt...ttt.t..ttt........tt...tt.tttttttttt
+ttttt.ttttttttttt.ttt.....B..ttt..ttt.t.tttt...ttt
+ttttt.tttttttttt.ttttttt.....ttttttttt.tttt.....tt
+ttttt...ttttttt.ttttttttt...tttttttttt.tttt..B..tt
+tttt.....ttt...ttttttttt.tttttttttttttt.ttt.....tt
+tttt..B.....tt.ttttttttt.tttttttttttttt.tt.....ttt
+tttt.....ttttt.tttttttttt....tttt...tttt..tttttttt
+tttt....ttttt.ttttttttt..tttt........ttt.ttttttttt
+tttt.ttttttt.tttt...tt.ttttttttt..B..t..tttttttttt
+ttttt.tttttt.ttt......tttttttttt......tttttttttttt
+tttttt..ttt.tttt..B..tttttttttttt...tttttttttttttt
+tttttttt...ttttt.......ttt..tttttttt.ttttttttttttt
+ttttttttttttttttt...ttt...tt.ttttttt.ttttttttttttt
+ttttttttttttttttt.ttttttttttt...ttttt.ttttt...tttt
+ttttttttttttttttt.tttttttttttttt.tttt...tt.....ttt
+tttttt...tt...tt.tttttttttttttttt.tt.ttt....B..ttt
+ttttt......ttt..tttttttttttttttttt..tttttt.....ttt
+ttttt..B..tttttttttttttttt...tt...ttttttttt...tttt
+ttttt.....ttttttttttttttt......ttttttttttttttttttt
+tttttt...tttttttttttttttt..B..tttttttttttttttttttt
+ttttttttttttttttttttttttt.....tttttttttttttttttttt
+tttttttttttttttttttttttttt...ttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+# 13 gods
+#
+# XXX: The tiles for floor around the altars might be better.
+#      Cutting a plant leaves grey floor, which is not ideal either.
+NAME:    cyrus_temple_forest
+WEIGHT:  3
+PLACE:   Temple
+FLAGS:   no_rotate
+ORIENT:  encompass
+NSUBST:  . = 10:X / 34:Y / *:.
+SUBST:   X : tXY.
+SUBST:   X = t.
+SUBST:   Y : Y.
+SUBST:   Y = 1112..
+SUBST:   _ = .
+SUBST:   " : """.
+COLOUR:  . = green
+COLOUR:  " : darkgrey
+COLOUR:  ' : white / lightgrey
+FTILE:   .t12 = floor_grass
+FTILE:   " = floor_dirt
+FTILE:   ' = floor_vault
+MONS:    plant, bush
+MAP
+                 ttttttttttttttttttttttttttt
+                 ttttttttttttttttttttttttttt
+                 tt.......................tt
+                 tt.."""............."""..tt
+                 tt.."B"....."""....."B"..tt
+                 tt.."""....."B"....."""..tt
+ccccccccccccccccccc.........."""..........tt
+c(''G''G''G''G''G'c.......................tt
+c'''''''''''''''''+__.."""..."""..."""....tt
+c{''''''''''''''''+__.."B"..."T"..."B"....tt
+c'''''''''''''''''+__.."""..."""..."""....tt
+c[''G''G''G''G''G'c.......................tt
+ccccccccccccccccccc.........."""..........tt
+                 tt.."""....."B"....."""..tt
+                 tt.."B"....."""....."B"..tt
+                 tt.."""............."""..tt
+                 tt.......................tt
+                 ttttttttttttttttttttttttttt
+                 ttttttttttttttttttttttttttt
+ENDMAP
+
+
+##########################################################################
+# Water temples
+#   Total weight: 25 = 8+7+7+1+1+1
+
+# XXX: Most or all of the water temple maps could use open sea borders
+#      from the shoals. But the line
+#         : set_border_fill_type("open_sea")
+#      does not work.
+
+# 12 gods
+NAME:    eino_temple_water
+PLACE:   Temple
+WEIGHT:  8
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
@@ -1602,47 +1518,892 @@ cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
 ccccccccccccccccccccccccccccccccc
 ENDMAP
 
+# 7 gods
+# Author unknown
+NAME:    temple_island
+PLACE:   Temple
+WEIGHT:  7
+TAGS:    no_rotate
+ORIENT:  encompass
+SUBST:   W = W:30 w
+SUBST:   ~ = ':20 W
+COLOUR:  ' = green / brown w:2
+FTILE:   'A = floor_grass, .BT = floor_vault
+NSUBST:  ' = 5:t / 7:1 / 4:2 / .
+NSUBST:  A = { / ( / [
+MONS:    bush, plant
+:   set_border_fill_type("open_sea")
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwwwww
+wwwwwwwwwwwWW~~~~~~~~~~~~~~~~~WWwwwwwwwwwww
+wwwwwwwwwwWW~'''''''''''''''''~WWwwwwwwwwww
+wwwwwwwwwWW~'''''''''''''''''''~WWwwwwwwwww
+wwwwwwwwWW~'''''''''''''''''''''~WWwwwwwwww
+wwwwwwwWW~''''''''ccccccc''''A'''~WWwwwwwww
+wwwwwwWW~'''''''ccc.....ccc'''''''~WWwwwwww
+wwwwwWW~''''''ccc....B....ccc''''''~WWwwwww
+wwwwwW~''''''cc...B.....B...cc''''''~Wwwwww
+wwwwwW~''''''+...............c''''''~Wwwwww
+wwwwwW~''A'''+.......T...B...c''''''~Wwwwww
+wwwwwW~''''''+...............c''''''~Wwwwww
+wwwwwW~''''''cc...B.....B...cc''''''~Wwwwww
+wwwwwWW~''''''ccc....B....ccc''''''~WWwwwww
+wwwwwwWW~'''''''ccc.....ccc'''''''~WWwwwwww
+wwwwwwwWW~''''''''ccccccc''''A'''~WWwwwwwww
+wwwwwwwwWW~'''''''''''''''''''''~WWwwwwwwww
+wwwwwwwwwWW~'''''''''''''''''''~WWwwwwwwwww
+wwwwwwwwwwWW~'''''''''''''''''~WWwwwwwwwwww
+wwwwwwwwwwwWW~~~~~~~~~~~~~~~~~WWwwwwwwwwwww
+wwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+# 8 gods
+NAME:   minmay_temple_bridge_a
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 7
+: if crawl.one_chance_in(10) then
+SUBST:  w = l
+:   set_border_fill_type("lava")
+: else
+:   set_border_fill_type("open_sea")
+: end
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww..{..wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww......wwwwwwwwwwww......wwwwwwww
+wwwwwwww.....................B..wwwwwwww
+wwwwwwww..(.....................wwwwwwww
+wwwwwwww.....................B..wwwwwwww
+wwwwwwww......wwwwwwwwwwww......wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww..[..wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+# 8 gods
+NAME:   minmay_temple_bridge_b
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 1
+: if crawl.one_chance_in(10) then
+SUBST:  w = l
+:   set_border_fill_type("lava")
+: else
+:   set_border_fill_type("open_sea")
+: end
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww
+wwwwwwwww...wwwww.wwww.wwwww...wwwwwwwww
+wwwwwwww.....www.wwbbww.www..B..wwwwwwww
+wwwwwwww..{..www.wbbbbw.www.....wwwwwwww
+wwwwwwww.....www.wwbbww.www..B..wwwwwwww
+wwwwwwww.....wwww.wwww.wwww.....wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww......wwww.ww.wwww......wwwwwwww
+wwwwwwww...........ww........B..wwwwwwww
+wwwwwwww..(........ww...........wwwwwwww
+wwwwwwww...........ww........B..wwwwwwww
+wwwwwwww......wwww.ww.wwww......wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww.....wwww.wwww.wwww.....wwwwwwww
+wwwwwwww.....www.wwbbww.www..B..wwwwwwww
+wwwwwwww..[..www.wbbbbw.www.....wwwwwwww
+wwwwwwww.....www.wwbbww.www..B..wwwwwwww
+wwwwwwwww...wwwww.wwww.wwwww...wwwwwwwww
+wwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+# 8 gods
+NAME:   minmay_temple_bridge_c
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 1
+: if crawl.one_chance_in(10) then
+SUBST:  w = l
+:   set_border_fill_type("lava")
+: else
+:   set_border_fill_type("open_sea")
+: end
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwww..{..wwwwww..wwwwww.....wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww.....wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww......www.wwww.www......wwwwwwww
+wwwwwwww.......w.wwbbww.w....B..wwwwwwww
+wwwwwwww..(.....wwbbbbww........wwwwwwww
+wwwwwwww.......w.wwbbww.w....B..wwwwwwww
+wwwwwwww......www.wwww.www......wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww.....wwwwwwww
+wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
+wwwwwwww..[..wwwwww..wwwwww.....wwwwwwww
+wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
+wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+# 8 gods
+NAME:   minmay_temple_bridge_d
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 1
+: if crawl.one_chance_in(10) then
+SUBST:  w = l
+:   set_border_fill_type("lava")
+: else
+:   set_border_fill_type("open_sea")
+: end
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwww...www...wwwwwwwwww...wwwwwwwww
+wwwwwwww.....w.www.wwwwwwww..B..wwwwwwww
+wwwwwwww..{..w.wbw.wwww..ww.....wwwwwwww
+wwwwwwww.....w.www.www.ww.w..B..wwwwwwww
+wwwwwwww.....ww.w.www.www.w.....wwwwwwww
+wwwwwwww.....ww.w.ww.ww..ww..B..wwwwwwww
+wwwwwwww......w.w.ww.w.www......wwwwwwww
+wwwwwwww........w.w.ww.w.....B..wwwwwwww
+wwwwwwww..(.....w.w..w.w........wwwwwwww
+wwwwwwww........w.ww.w.w.....B..wwwwwwww
+wwwwwwww......www.w.ww.w.w......wwwwwwww
+wwwwwwww.....ww..ww.ww.w.ww..B..wwwwwwww
+wwwwwwww.....w.www.www.w.ww.....wwwwwwww
+wwwwwwww.....w.ww.www.www.w..B..wwwwwwww
+wwwwwwww..[..ww..wwww.wbw.w.....wwwwwwww
+wwwwwwww.....wwwwwwww.www.w..B..wwwwwwww
+wwwwwwwww...wwwwwwwwww...www...wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+
+##########################################################################
+# Triangular temples (dpeg)
+#   Total weight: 20 = 10+10
+#   Surrounded by lava, so red colour.
+
+# 12 gods
+NAME:   triangle_temple
+PLACE:  Temple
+WEIGHT: 10
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
+xllllllllllllllllllllllll......{......llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll.................llllllllllllllllllllllx
+xlllllllllllllllllllll......B.....B......lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xllllllllllllllllll...B.................B...llllllllllllllllllx
+xlllllllllllllllll.............B.............lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...............................lllllllllllllllx
+xllllllllllllll.................................llllllllllllllx
+xlllllllllllll.....B.......B.......B.......B.....lllllllllllllx
+xllllllllllll.....................................llllllllllllx
+xlllllllllll.......................................lllllllllllx
+xllllllllll.........................................llllllllllx
+xlllllllll....(.........B.............B.........[....lllllllllx
+xllllllll......................B.....................lllllllllx
+xllllllll............................................lllllllllx
+xlllllllll..........................................llllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 11 gods
+NAME:   triangle_temple_variant
+PLACE:  Temple
+WEIGHT: 10
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
+xllllllllllllllllllllllll......{......llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll.................llllllllllllllllllllllx
+xlllllllllllllllllllll......B.....B......lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xllllllllllllllllll...B.................B...llllllllllllllllllx
+xlllllllllllllllll.............B.............lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...............................lllllllllllllllx
+xllllllllllllll.................................llllllllllllllx
+xlllllllllllll.....B.......B.......B.......B.....lllllllllllllx
+xllllllllllll.....................................llllllllllllx
+xlllllllllll.......................................lllllllllllx
+xllllllllll.........................................llllllllllx
+xlllllllll....(.........B.............B.........[....lllllllllx
+xllllllll......................T.....................lllllllllx
+xllllllll............................................lllllllllx
+xlllllllll..........................................llllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##########################################################################
+# Temples with curved shapes
+#   Total weight: 15 = 5+5+5
+#   Rock walls.
+
+# 12 gods
+NAME:    dpeg_five_rooms_temple
+PLACE:   Temple
+TAGS:    no_rotate
+WEIGHT:  5
+ORIENT:  encompass
+KFEAT:   X : G / U / T
+MAP
+                   xxxxxxxxx
+              xxxxxx.......xxxxxx
+         xxxxxx........x........xxxxxx
+      xxxx........xxxxx+xxxxx........xxxx
+     xx.....xxxxxxxxx.....xxxxxxxxx.....xx
+    xx...xxxxxxxxxx.........xxxxxxxxxx...xx
+   xx..xxxxxxxxxxx..(.....[..xxxxxxxxxxx..xx
+  xx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xx
+  x..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..x
+ xx..xxx.....xxxxxx....{....xxxxxx.....xxx..xx
+ x..+x..B......xxxxxx.....xxxxxx......B..x+..x
+xx..x...........xxxxxxxxxxxxxxx...........x..xx
+x..xx.....X..B..xxxxxxxxxxxxxxx..B..X.....xx..x
+x..xx...........xxxxxxxxxxxxxxx...........xx..x
+x..xxx..B......xxxxxxxxxxxxxxxxx......B..xxx..x
+x..xxxxx.....xxxxxxxxxxxxxxxxxxxxx.....xxxxx..x
+x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
+xx..xxxxxxx......B..xxxxxxx..B......xxxxxxx..xx
+ x..xxxxxx.B.........xxxxx.........B.xxxxxx..x
+ xx..xxxxx.....X.....xxxxx.....X.....xxxxx..xx
+  x..xxxxx...........xxxxx...........xxxxx..x
+  xx..xxxxx......B..xxxxxxx..B......xxxxx..xx
+   xx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xx
+    xx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xx
+     xxx....xxxxxxxxxxxxxxxxxxxxxxx....xxx
+       xxx........xxxxxxxxxxx........xxx
+         xxxxxx........x........xxxxxx
+              xxxxxx.......xxxxxx
+                   xxxxxxxxx
+ENDMAP
+
+# 12 gods
+NAME:    minmay_temple_curvy_x
+PLACE:   Temple
+WEIGHT:  5
+ORIENT:  encompass
+SHUFFLE: {[(, GT
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
+xxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxx
+xxxxxxx..B..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..B..xxxxxxx
+xxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
+xxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxx
+xx...xxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxx...xx
+x.....x........xxxxxxxxxxxxxxxxxxxxxxxxx........x.....x
+x..B..+..G........xxxxxxxxxxxxxxxxxxx........G..+..B..x
+x.....x.............xxxxxx...xxxxxx.............x.....x
+xx...xxx.............xxxx.....xxxx.............xxx...xx
+xxxxxxxxx+xxxx.......xxxx..[..xxxx.......xxxx+xxxxxxxxx
+xxxxxxxx...xxxxxx.....xxx.....xxx.....xxxxxx...xxxxxxxx
+xxxxxxx.....xxxxxxx....xxx...xxx....xxxxxxx.....xxxxxxx
+xxxxxxx..B..xxxxxxxx.....xx+xx.....xxxxxxxx..B..xxxxxxx
+xxxxxxx.....xxxxxxxx...............xxxxxxxx.....xxxxxxx
+xxxxxxxx...xxxxxxxxxx....T...T....xxxxxxxxxx...xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx......(......xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx...xxxxxxxxxx....T...T....xxxxxxxxxx...xxxxxxxx
+xxxxxxx.....xxxxxxxx...............xxxxxxxx.....xxxxxxx
+xxxxxxx..B..xxxxxxxx.....xx+xx.....xxxxxxxx..B..xxxxxxx
+xxxxxxx.....xxxxxxx....xxx...xxx....xxxxxxx.....xxxxxxx
+xxxxxxxx...xxxxxx.....xxx.....xxx.....xxxxxx...xxxxxxxx
+xxxxxxxxx+xxxx.......xxxx..{..xxxx.......xxxx+xxxxxxxxx
+xx...xxx.............xxxx.....xxxx.............xxx...xx
+x.....x.............xxxxxx...xxxxxx.............x.....x
+x..B..+..G........xxxxxxxxxxxxxxxxxxx........G..+..B..x
+x.....x........xxxxxxxxxxxxxxxxxxxxxxxxx........x.....x
+xx...xxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxx...xx
+xxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
+xxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxx
+xxxxxxx..B..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..B..xxxxxxx
+xxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 8 gods
+NAME:    minmay_temple_u
+PLACE:   Temple
+WEIGHT:  5
+ORIENT:  encompass
+SHUFFLE: {[(
+MONS:    plant
+SUBST:   y = Ww, Y = W., 1 : 1G.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx...xxxxxxxxxxxxxxxxxxxxwwwxxxx
+xxx..{..xxxxxxxxxxxxxxxxxxwwwwwxxx
+xxx.....xxxxxxxxxxxxxxxxxxWywwwxxx
+xx..[.(..xx...xxxxxx...xxWWWWWwwxx
+xx.......x.....xxxx.....xWY.YWywxx
+x1.......+..B..xxxx..B..+....WWyxx
+xx.......x.....xxxx.....x.....WWxx
+x1.......xx...xxxxxx...xx.......1x
+xx.......xxxxxxxxxxxxxxxx.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......+..B..xxxx..B..+.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......xxxxxxxxxxxxxxxx.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......+..B..xxxx..B..+.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......xxxxxxxxxxxxxxxx.......xx
+x1.......xx...xxxxxx...xx.......1x
+xx.......x.....xxxx.....x.......xx
+x1.......+..B..xxxx..B..+.......1x
+xx.......x.....xxxx.....x.......xx
+xx.......xx...xxxxxx...xx.......xx
+xxx.......xxxxxxxxxxxxxx.......xxx
+xxx..........xxxxxxxx..........xxx
+xxx............xxxx............xxx
+xxxx............xx............xxxx
+xxxx..........................xxxx
+xxxxx...........xx...........xxxxx
+xxxxxxx........xxxx........xxxxxxx
+xxxxxxxxxx...xxxxxxxx...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Chambers temples (dpeg)
+#   Total weight: 10 = 3+5+2
+#   Metal walls, so cyan colour.
+
+# 10 gods
+NAME:   ten_chambers_temple
+PLACE:  Temple
+TAGS:   no_rotate
+ORIENT: encompass
+WEIGHT: 3
+MAP
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      vvvvv..........................vvvvv
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvv.....vvv
+    v...vvvvv.....vvv.....vvv.....vvvvvv...v
+ vvvv.vvvvvv...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.............................vvvv.vvv
+  v..vvvv.............................vvvv..v
+  v.vvvvv...T......(...{...[......T...vvvvv.v
+  v..vvvv.............................vvvv..v
+ vvv.vvvv.............................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...vvvvvv.vvvv
+    v...vvvvv.....vvv.....vvv.....vvvvv...v
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvv.....vvv
+      vvvvv.........................vvvvv
+          vvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 12 gods
+NAME:   twelve_chambers_temple
+PLACE:  Temple
+TAGS:   no_rotate
+ORIENT: encompass
+WEIGHT: 5
+MAP
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      vvvvv..................................vvvvv
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvvvvv...v
+ vvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.....................................vvvv.vvv
+  v..vvvv.....................................vvvv..v
+  v.vvvvv......T.......(...{...[.......T......vvvvv.v
+  v..vvvv.....................................vvvv..v
+ vvv.vvvv.....................................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvv.vvvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvvvv...v
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvv
+      vvvvv.................................vvvvv
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 14 gods
+NAME:   fourteen_chambers_temple
+PLACE:  Temple
+TAGS:   no_rotate
+ORIENT: encompass
+WEIGHT: 2
+MAP
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      vvvvv..........................................vvvvv
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvvv...vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvvv.vvv
+vv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vv
+v.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+ vvv.vvvv.............................................vvvv.vvv
+  v..vvvv.............................................vvvv..v
+  v.vvvvv........T.........(...{...[.........T........vvvvv.v
+  v..vvvv.............................................vvvv..v
+ vvv.vvvv.............................................vvvv.vvv
+vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
+v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
+v..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..v
+v.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......v
+vv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vv
+ vvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvv.vvvv
+    v...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv...v
+    vvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvv
+      vvvvv.........................................vvvvv
+          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+##########################################################################
+# Watered room temples (greensnark)
+#   Total weight: 10 = 5+5
+#   A room with fountains and water.
+
+# 12 gods
+NAME:   water_room_temple
+TAGS:   no_pool_fixup no_rotate
+WEIGHT: 5
+PLACE:  Temple
+ORIENT: encompass
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwww.........................wwwwwwwwwwwwc
+cwwwwwwww.................................wwwwwwwwc
+cwwwww...................B...................wwwwwc
+cwww......B.............................B......wwwc
+cwww.............B...............B.............wwwc
+cww......................(......................wwc
+cww.............................................wwc
+cww...B......B...........T...........B......B...wwc
+cww.............................................wwc
+cww...................[.....{...................wwc
+cwww.............B...............B.............wwwc
+cwww......B.............................B......wwwc
+cwwwww...................B...................wwwwwc
+cwwwwwwww.................................wwwwwwwwc
+cwwwwwwwwwwww.........................wwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+# 12 gods
+NAME:   water_room_temple_variant
+TAGS:   no_pool_fixup no_rotate
+WEIGHT: 5
+PLACE:  Temple
+ORIENT: encompass
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwww.........................wwwwwwwwwwwwc
+cwwwwwwww.................................wwwwwwwwc
+cwwwww...................G...................wwwwwc
+cwww......B.............................B......wwwc
+cwww.............B...............B.............wwwc
+cww......................(......................wwc
+cww.............................................wwc
+cww...B......B...........T...........B......B...wwc
+cww.............................................wwc
+cww...................[.....{...................wwc
+cwww.............B...............B.............wwwc
+cwww......B.............................B......wwwc
+cwwwww...................G...................wwwwwc
+cwwwwwwww.................................wwwwwwwwc
+cwwwwwwwwwwww.........................wwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+
+##########################################################################
+# Magenta chambers (zaba)
+#   Total weight: 10 = 8+2
+#   Wall colour is magenta (in console).
+
+# 12 gods
+NAME:    zaba_magenta_temple_12
+PLACE:   Temple
+WEIGHT:  8
+TAGS:    no_rotate
+ORIENT:  encompass
+COLOUR:  c = magenta
+SHUFFLE: {[
+MAP
+ccccccccccccccccccccccccccccccccccccccccccc
+cccc.......ccccccc.......ccccccc.......cccc
+cc...B...B...ccc...B...B...ccc...B...B...cc
+c.............c.............c.............c
+cc...........ccc...........ccc...........cc
+cccc...(.............[.............{....ccc
+cc...........ccc...........ccc...........cc
+c.............c.............c.............c
+cc...B...B...ccc...B...B...ccc...B...B...cc
+cccc.......ccccccc.......ccccccc.......cccc
+ccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+# 8 gods
+NAME:    zaba_magenta_temple_8
+PLACE:   Temple
+WEIGHT:  2
+TAGS:    no_rotate
+ORIENT:  encompass
+COLOUR:  c = magenta
+SHUFFLE: {[
+MAP
+ccccccccccccccccccccccccccccccccccccccccccc
+cccc.......ccccccc.......ccccccc.......cccc
+cc...B...B...ccc...T...T...ccc...B...B...cc
+c.............c.............c.............c
+cc...........ccc...........ccc...........cc
+cccc...(.............{.............[....ccc
+cc...........ccc...........ccc...........cc
+c.............c.............c.............c
+cc...B...B...ccc...T...T...ccc...B...B...cc
+cccc.......ccccccc.......ccccccc.......cccc
+ccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+
+##########################################################################
+# Lava temples (Eino)
+#   Total weight: 10 = 5+5
+#   Red stone walls and lava, so colour is red.
+
+# 12 gods
+NAME:    temple_eino_lava_a
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+WEIGHT:  5
+SHUFFLE: {([
+COLOUR:  c = red
+MAP
+       cccc    ccc
+      cclccccccclcc
+   ccccl.lcclccl.lcccc
+  cclll...c...c...lllcc
+  clll..B.G...G.B..lllc
+  cll.......B.......llc
+ ccl.................lcc
+ccl...................lcc
+cl..B...............B..lc
+ccl...................lcc
+ cccG...............Gccc
+ cc..........[........cc
+ cl..B.....(.......B..lc
+ cc..........{........cc
+ cccG...............Gccc
+ccl...................lcc
+cl..B...............B..lc
+ccl...................lcc
+ ccl.................lcc
+  cll.......B.......llc
+  clll..B.G...G.B..lllc
+  cclll...c...c...lllcc
+   ccccl.lcclccl.lcccc
+      cclccccccclcc
+       ccc     ccc
+ENDMAP
+
+# 8 gods
+NAME:    temple_eino_lava_b
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+WEIGHT:  5
+SHUFFLE: {([
+COLOUR:  c = red
+MAP
+      ccc     ccc
+     cclccccccclcc
+  ccccl.lcclccl.lcccc
+ cclll...c...c...lllcc
+ clll..B.G...G.B..lllc
+ cll.......B.......llc
+ cl.................lc
+ ccG...............Gccc
+cc...................cc
+cl..B....{.(.[....B..lc
+cc...................cc
+ ccG...............Gcc
+ cl.................lc
+ cll.......B.......llc
+ clll..B.G...G.B..lllc
+ cclll...c...c...lllcc
+  ccccl.lcclccl.lcccc
+     cclccccccclcc
+      ccc     ccc
+ENDMAP
+
+
+
+
+##########################################################################
+# Crystal temples
+#   Total weight: 8 = 1+1+1+1+1+1+1+1
+#   These are intentionally rare, just like crystal is.
+#   Crystal walls, so green colour.
+
+# 15 gods
+NAME:   dpeg_three_leaves_temple
+PLACE:  Temple
+TAGS:   no_rotate
+ORIENT: encompass
+WEIGHT: 1
+MAP
+       bbb               bbb
+     bbb.bb             bb.bbb
+    bb....bb           bb....bb
+   bb......bbb       bbb......bb
+  bb.....B...bb     bb...B.....bb
+ bb..B........bbb bbb........B..bb
+ bb.........B...bbb...B.........bb
+bb....B..........b..........B....bb
+bb........B...{.....[...B........bb
+ bbbbbbbb........b........bbbbbbbb
+        bbbbbbbb...bbbbbbbb
+              bb.(.bb
+             bb.....bb
+            bb..B.B..bb
+           bb.........bb
+          bb...........bb
+         bb....B...B....bb
+        bb.......B.......bb
+         bbb...........bbb
+           bbbb.....bbbb
+              bbbbbbb
+ENDMAP
+
+# 9 gods
+NAME:   dpeg_three_leaves_temple_variant
+PLACE:  Temple
+TAGS:   no_rotate
+ORIENT: encompass
+WEIGHT: 1
+MAP
+       bbb               bbb
+     bbb.bb             bb.bbb
+    bb....bb           bb....bb
+   bb......bbb       bbb......bb
+  bb.....B...bb     bb...B.....bb
+ bb..B........bbb bbb........B..bb
+ bb.............bbb.............bb
+bb....B....T.....b.....T....B....bb
+bb............{.....[............bb
+ bbbbbbbb........b........bbbbbbbb
+        bbbbbbbb...bbbbbbbb
+              bb.(.bb
+             bb.....bb
+            bb.......bb
+           bb....T....bb
+          bb...........bb
+         bb....B...B....bb
+        bb.......B.......bb
+         bbb...........bbb
+           bbbb.....bbbb
+              bbbbbbb
+ENDMAP
+
 # 12 gods.
 NAME:    temple_eino_crystal_narrow_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
-WEIGHT:  2
+WEIGHT:  1
 MAP
-bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-bbbbbbbbbbbbb...bbbbbbbbbbbbb
-bbbbbbb...b..bbb..b...bbbbbbb
-bbbbbbb.B..bbbbbbb..B.bbbbbbb
-bbbbbbb...bbbbbbbbb...bbbbbbb
-bbbbbbbbbb.bbbbbbb.bbbbbbbbbb
-bbbbbbbbbbb.bbbbb.bbbbbbbbbbb
-bbbbbbbbbbbb.bbb.bbbbbbbbbbbb
-bb...bbbbbbbb...bbbbbbbb...bb
-bb.B.bbbbbbbb.B.bbbbbbbb.B.bb
-bb...bbbbbbbb...bbbbbbbb...bb
-bbb.b.bbbbbbbb.bbbbbbbb.b.bbb
-bbb.bb.bbbbbbb.bbbbbbb.bb.bbb
-bb.bbbb.bbbbb...bbbbb.bbbb.bb
+            bbbbb
+      bbbbbbb...bbbbbbb
+      b...b..bbb..b...b
+      b.B..bbbbbbb..B.b
+      b...bbbbbbbbb...b
+      bbbb.bbbbbbb.bbbb
+         bb.bbbbb.bb
+ bbbbb    bb.bbb.bb    bbbbb
+ b...b     bb...bb     b...b
+ b.B.b      b.B.b      b.B.b
+ b...bb     b...b     bb...b
+ bb.b.bb    bb.bb    bb.b.bb
+ bb.bb.bb   bb.bb   bb.bb.bb
+ b.bbbb.bb  b...b  bb.bbbb.b
 bb.bbbbb.bbbb.[.bbbb.bbbbb.bb
 b.bbbbbbb...b...b...bbbbbbb.b
 b.bbbbbbb.B...{...B.bbbbbbb.b
 b.bbbbbbb...b...b...bbbbbbb.b
 bb.bbbbb.bbbb.(.bbbb.bbbbb.bb
-bb.bbbb.bbbbb...bbbbb.bbbb.bb
-bbb.bb.bbbbbbb.bbbbbbb.bb.bbb
-bbb.b.bbbbbbbb.bbbbbbbb.b.bbb
-bb...bbbbbbbb...bbbbbbbb...bb
-bb.B.bbbbbbbb.B.bbbbbbbb.B.bb
-bb...bbbbbbbb...bbbbbbbb...bb
-bbbbbbbbbbbb.bbb.bbbbbbbbbbbb
-bbbbbbbbbbb.bbbbb.bbbbbbbbbbb
-bbbbbbbbbb.bbbbbbb.bbbbbbbbbb
-bbbbbbb...bbbbbbbbb...bbbbbbb
-bbbbbbb.B..bbbbbbb..B.bbbbbbb
-bbbbbbb...b..bbb..b...bbbbbbb
-bbbbbbbbbbbbb...bbbbbbbbbbbbb
-bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+ b.bbbb.bb  b...b  bb.bbbb.b
+ bb.bb.bb   bb.bb   bb.bb.bb
+ bb.b.bb    bb.bb    bb.b.bb
+ b...bb     b...b     bb...b
+ b.B.b      b.B.b      b.B.b
+ b...b     bb...bb     b...b
+ bbbbb    bb.bbb.bb    bbbbb
+         bb.bbbbb.bb
+      bbbb.bbbbbbb.bbbb
+      b...bbbbbbbbb...b
+      b.B..bbbbbbb..B.b
+      b...b..bbb..b...b
+      bbbbbbb...bbbbbbb
+            bbbbb
 ENDMAP
 
 # 12 gods
@@ -1651,41 +2412,41 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
-WEIGHT:  2
+WEIGHT:  1
 MAP
-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
-bbbbbbbbbbbbbbb.B.bbbbbbbbbbbbbbb
-bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
-bbbbbbbbbbbbbb.b.b.bbbbbbbbbbbbbb
-bbbbbbbbbbbbb.bb.bb.bbbbbbbbbbbbb
-bbbbbbbbbbbb.bbb.bbb.bbbbbbbbbbbb
-bbbbbbbbbbb.bbbb.bbbb.bbbbbbbbbbb
-bbbbbbbb...bbbbb.bbbbb...bbbbbbbb
-bbbbbbbb.B.bbbbb.bbbbb.B.bbbbbbbb
-bbbbbbbb...bbbb...bbbb...bbbbbbbb
-bbbbbbb.bbb.bbb.B.bbb.bbb.bbbbbbb
-bbbbbb.bbbbb.bb...bb.bbbbb.bbbbbb
-bbbbb.bbbbbbb.bb.bb.bbbbbbb.bbbbb
+              bbbbb
+              b...b
+              b.B.b
+             bb...bb
+            bb.b.b.bb
+           bb.bb.bb.bb
+          bb.bbb.bbb.bb
+       bbbb.bbbb.bbbb.bbbb
+       b...bbbbb.bbbbb...b
+       b.B.bbbbb.bbbbb.B.b
+      bb...bbbb...bbbb...bb
+     bb.bbb.bbb.B.bbb.bbb.bb
+    bb.bbbbb.bb...bb.bbbbb.bb
+   bb.bbbbbbb.bb.bb.bbbbbbb.bb
 bbbb.bbbbbbbbb.b.b.bbbbbbbbb.bbbb
 b...bbbbbb...bb.[.bb...bbbbbb...b
 b.B........B.........B........B.b
 b...bbbbbb...bb{.(bb...bbbbbb...b
 bbbb.bbbbbbbbb.b.b.bbbbbbbbb.bbbb
-bbbbb.bbbbbbb.bb.bb.bbbbbbb.bbbbb
-bbbbbb.bbbbb.bb...bb.bbbbb.bbbbbb
-bbbbbbb.bbb.bbb.B.bbb.bbb.bbbbbbb
-bbbbbbbb...bbbb...bbbb...bbbbbbbb
-bbbbbbbb.B.bbbbb.bbbbb.B.bbbbbbbb
-bbbbbbbb...bbbbb.bbbbb...bbbbbbbb
-bbbbbbbbbbb.bbbb.bbbb.bbbbbbbbbbb
-bbbbbbbbbbbb.bbb.bbb.bbbbbbbbbbbb
-bbbbbbbbbbbbb..b.bb.bbbbbbbbbbbbb
-bbbbbbbbbbbbbb.b.b.bbbbbbbbbbbbbb
-bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
-bbbbbbbbbbbbbbb.B.bbbbbbbbbbbbbbb
-bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+   bb.bbbbbbb.bb.bb.bbbbbbb.bb
+    bb.bbbbb.bb...bb.bbbbb.bb
+     bb.bbb.bbb.B.bbb.bbb.bb
+      bb...bbbb...bbbb...bb
+       b.B.bbbbb.bbbbb.B.b
+       b...bbbbb.bbbbb...b
+       bbbb.bbbb.bbbb.bbbb
+          bb.bbb.bbb.bb
+           bb..b.bb.bb
+            bb.b.b.bb
+             bb...bb
+              b.B.b
+              b...b
+              bbbbb
 ENDMAP
 
 # 10 gods
@@ -1693,7 +2454,7 @@ NAME:    temple_eino_crystal_wide_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  2
+WEIGHT:  1
 SHUFFLE: {([
 MAP
             bbbbb
@@ -1719,7 +2480,7 @@ NAME:    temple_eino_crystal_wide_b
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  3
+WEIGHT:  1
 SHUFFLE: {([
 MAP
             bbbbb
@@ -1743,71 +2504,109 @@ bbbbb.B....bb...bb....B.bbbbb
             bbbbb
 ENDMAP
 
+# 15 gods
+NAME:    temple_minmay_crystal_snake
+TAGS:    no_rotate
+PLACE:   Temple
+WEIGHT:  1
+ORIENT:  encompass
+MAP
+        bbb   bbb   bbb
+       bb.bb bb.bb bb.bb
+      bb...bbb...bbb...bb
+      b..B.....B.....(..b
+      bb...bbb...bbb...bb
+       bb.bb bb.bb bb.bb
+  bbb   b.b   bbb   b.b
+ bb.bb bb.bb       bb.bb
+bb...bbb...bb     bb...bb
+b..B.....B..b     b..B..b
+bb...bbb...bb     bb...bb
+ bb.bb bb.bb       bb.bb
+  bbb   bbb   bbb   b.b
+             bb.bb bb.bb
+            bb...bbb...bb
+            b..B.....B..b
+            bb...bbb...bb
+             bb.bb bb.bb
+        bbb   b.b   bbb   bbb   bbb
+       bb.bb bb.bb       bb.bb bb.bb
+      bb...bbb...bb     bb...bbb...bb
+      b..[.....B..b     b..B.....B..b
+      bb...bbb...bb     bb...bbb...bb
+       bb.bb bb.bb       bb.bb bb.bb
+        b.b   bbb   bbb   b.b   bbb
+       bb.bb       bb.bb bb.bb
+      bb...bb     bb...bbb...bb
+      b..B..b     b..{.....B..b
+      bb...bb     bb...bbb...bb
+       bb.bb       bb.bb bb.bb
+        b.b   bbb   b.b   bbb
+       bb.bb bb.bb bb.bb
+      bb...bbb...bbb...bb
+      b..B.....B.....B..b
+      bb...bbb...bbb...bb
+       bb.bb bb.bb bb.bb
+        bbb   bbb   bbb
+ENDMAP
+
 # 12 gods
-NAME:    temple_eino_scatter_a
-PLACE:   Temple
+NAME:    temple_minmay_crystal_spiral
 TAGS:    no_rotate
-ORIENT:  encompass
-SHUFFLE: {([
+PLACE:   Temple
 WEIGHT:  1
+ORIENT:  encompass
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..x...xxx....xxxxxxx....xxx...x..x
-x.x.....x.......xxx.......x.....x.x
-xx...B..x..B.....x.....B..x..B...xx
-x.......x.................x.......x
-xx.....xxx.......{.......xxx.....xx
-xxx...xxxxx...xx...xx...xxxxx...xxx
-xx.....xxx.....xx.xx.....xxx.....xx
-x.......x.......x.x.......x.......x
-x..B.........B..x(x..B.........B..x
-x.......x.......x.x.......x.......x
-xx.....xxx.....xx.xx.....xxx.....xx
-xxx...xxxxx...xx...xx...xxxxx...xxx
-xx.....xxx.......[.......xxx.....xx
-x.......x.................x.......x
-xx...B..x..B.....x.....B..x..B...xx
-x.x.....x.......xxx.......x.....x.x
-x..x...xxx....xxxxxxx....xxx...x..x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                        bbbbbbb
+                        b.....b
+                        b.....b
+                        b..B..b
+                       bb.....bb
+                      bb.......bb
+                  bbbbb...bbb...bbbbb
+                  b......bb bb......b
+                  b.....bb   bb.....b
+                  b..B..b     b..B..b
+                 bb.....b     b.....bb
+                bb......b     b......bb
+bbbbbbb     bbbbb...bbbbbbbbbbbbbbb...bbbbb
+b.....b     b......bb   b.....b   bb......b
+b..{..b     b.....bb    b.....b    bb.....b
+b.....b     b..B..b     b..B..b     b..B..b
+b.[.(.bb    b.....bb   bb.....b    bb.....b
+b......bb   b......bb bb......b   bb......b
+bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
+    bb......b   bb.......bb   b......bb
+     bb.....b    bb.....bb    b.....bb
+      b..B..b     b..B..b     b..B..b
+      b.....bb    b.....b    bb.....b
+      b......bb   b.....b   bb......b
+      bbbbb...bbbbbbbbbbbbbbb...bbbbb
+          bb......b     b......bb
+           bb.....b     b.....bb
+            b..B..b     b..B..b
+            b.....bb   bb.....b
+            b......bb bb......b
+            bbbbb...bbb...bbbbb
+                bb.......bb
+                 bb.....bb
+                  b..B..b
+                  b.....b
+                  b.....b
+                  bbbbbbb
 ENDMAP
 
-# 10 gods
-NAME:    temple_eino_scatter_b
-PLACE:   Temple
-TAGS:    no_rotate
-ORIENT:  encompass
-SHUFFLE: {([
-WEIGHT:  1
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..x...xxx....xxxxxxx....xxx...x..x
-x.x.....x.......xxx.......x.....x.x
-xx...B..x..B.....x.....B..x..B...xx
-x.......x.................x.......x
-xx.....xxx.......{.......xxx.....xx
-xxx...xxxxx...xx...xx...xxxxx...xxx
-xx.....xxx...xxxx.xxxx...xxx.....xx
-x.......x...xxxx...xxxx...x.......x
-x..B.......xxxx..(..xxxx.......B..x
-x.......x...xxxx...xxxx...x.......x
-xx.....xxx...xxxx.xxxx...xxx.....xx
-xxx...xxxxx...xx...xx...xxxxx...xxx
-xx.....xxx.......[.......xxx.....xx
-x.......x.................x.......x
-xx...B..x..B.....x.....B..x..B...xx
-x.x.....x.......xxx.......x.....x.x
-x..x...xxx....xxxxxxx....xxx...x..x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
 
+##########################################################################
+# Hexagonal temples (Eino)
+#   Total weight: 3 = 1+1+1
 
 # 8 gods
 NAME:    temple_eino_rhombus_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  2
+WEIGHT:  1
 SHUFFLE: {([
 MAP
             xxxxx     xxxxx
@@ -1846,7 +2645,7 @@ NAME:    temple_eino_rhombus_b
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  2
+WEIGHT:  1
 SHUFFLE: {([
 MAP
                   xxx
@@ -1891,7 +2690,7 @@ NAME:    temple_eino_rhombus_c
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  2
+WEIGHT:  1
 SHUFFLE: {([
 MAP
              xxx
@@ -1927,321 +2726,41 @@ xx...x..x.x..x.x..x.x..x...xx
        xxxxx     xxxxx
 ENDMAP
 
-# 15 gods
-NAME:    mini_greek_temple
-PLACE:   Temple
-WEIGHT:  30
-TAGS:    no_rotate
-ORIENT:  encompass
-SHUFFLE: {([
-NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
-SUBST:   ' = .
-COLOUR:  " : darkgrey w:3 / white w:1 / none
-SUBST:   " = .
-MONS:    plant, bush
-MAP
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttt....1111tttttttttttttttttttttttttttttttttttttttt
-tttttttt.........1111....tttttttttttt.........tttttttttttttt
-tttt.......................1tttttt.......t.........ttttttttt
-tt.........2........t..........''''''...............2222tttt
-tt.....{..21...t...............''ccccccccccccccc.....22.tttt
-ttt...........ttt.......(......''G'c"""""""""""ctt..t..ttttt
-tttt......2....................''''c"B"B"B"B"B"ctt......tttt
-tttttt.....................t...''G'c"""""""""""cttt.....tttt
-ttttttttt..1.....2...t.........''''+"B"B"B"B"B"ctt...t....tt
-tttttttt.....[.................''G'c"""""""""""ct...ttt..ttt
-ttttttttt...................1..''''c"B"B"B"B"B"ct..tttt.tttt
-ttttttttttttttt....2....t......''G'c"""""""""""ct....t..tttt
-ttttttttttttttttt..............''ccccccccccccccct.......2ttt
-tttttttttttttttttt..........t.........t......ttt......2ttttt
-ttttttttttttttttttttt...............................22tttttt
-ttttttttttttttttttttttt............t..........t....ttttttttt
-tttttttttttttttttttttttttttt...........t.........ttttttttttt
-ttttttttttttttttttttttttttttttt..............ttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-ENDMAP
 
-# 12 gods
-NAME:    temple_minmay_many_rooms
-TAGS:    no_rotate
-PLACE:   Temple
-WEIGHT:  2
-ORIENT:  encompass
-SUBST:   c : cccb
-MAP
-ccccccccccccccccccccccccc
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-c..B..+..B..+..B..+..B..c
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-ccc+ccccc+ccccc+ccccc+ccc
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-c..B..+..B..+..B..+..B..c
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-ccc+ccccc+ccccc+ccccc+ccc
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-c..B..+..B..+..B..+..B..c
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-ccccccccc+ccccc+ccccccccc
-      c...........c
-      c.{.T.[.T.(.c
-      c...........c
-      ccccccccccccc
-ENDMAP
 
-# 6 gods
-NAME:    temple_minmay_many_rooms_variant1
-TAGS:    no_rotate
-PLACE:   Temple
-WEIGHT:  1
-ORIENT:  encompass
-SUBST:   c : cccb
-MAP
-ccccccccccccccccccc
-c.....c.....c.....c
-c.....c.....c.....c
-c..B..+..B..+..B..c
-c.....c.....c.....c
-c.....c.....c.....c
-ccc+ccccc+ccccc+ccc
-c.....c.....c.....c
-c.....c.....c.....c
-c..[..+..{..+..(..c
-c.....c.....c.....c
-c.....c.....c.....c
-ccc+ccccc+ccccc+ccc
-c.....c.....c.....c
-c.....c.....c.....c
-c..B..+..B..+..B..c
-c.....c.....c.....c
-c.....c.....c.....c
-ccccccccccccccccccc
-ENDMAP
+##########################################################################
+# Some sporadic layouts
+#   Total weight: 26 = 3+3+10
 
-# 8 gods
-NAME:    temple_minmay_many_rooms_variant2
-TAGS:    no_rotate
-PLACE:   Temple
-WEIGHT:  5
-ORIENT:  encompass
-NSUBST:  A = ( / { / [
-SUBST:   c : cccb
+# 7 gods
+NAME:   minmay_temple_rotated_squares
+PLACE:  Temple
+WEIGHT: 3
+ORIENT: encompass
 MAP
-      ccccccccccccc
-      c...........c
-      c.T...A...T.c
-      c...........c
-ccccccccc+ccccc+ccccccccc
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-c..B..+..B..+..B..+..B..c
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-ccc+ccccc+ccccc+ccccc+ccc
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-c..B..+..B..+..B..+..B..c
-c.....c.....c.....c.....c
-c.....c.....c.....c.....c
-ccccccccc+ccccc+ccccccccc
-      c...........c
-      c.A...T...A.c
-      c...........c
-      ccccccccccccc
-ENDMAP
-
-# 12 gods
-NAME:    temple_minmay_telebubbles
-TAGS:    no_rotate
-PLACE:   Temple
-WEIGHT:  3
-ORIENT:  encompass
-KFEAT:   ^ = teleport trap
-SUBST:   c : cccb
-MAP
-     ccccc         ccccc
-   ccc...ccc     ccc...ccc
-  cc.......cc   cc.......cc
- cc....B....cc cc....B....cc
- c...........c c...........c
-cc...........ccc...........cc
-c.............c.............c
-c..B...T...B..c..B...[...B..c
-c.............c.............c
-cc...........ccc...........cc
- c...........c c...........c
- cc.........cc cc.........cc
-  cc.......ccccccc.......cc
-   ccc...cccc^^^cccc...ccc
-     cc+cc  c^{^c  cc+cc
-   ccc...cccc^^^cccc...ccc
-  cc.......ccccccc.......cc
- cc.........cc cc.........cc
- c...........c c...........c
-cc...........ccc...........cc
-c.............c.............c
-c..B...(...B..c..B...T...B..c
-c.............c.............c
-cc...........ccc...........cc
- c...........c c...........c
- cc....B....cc cc....B....cc
-  cc.......cc   cc.......cc
-   ccc...ccc     ccc...ccc
-     ccccc         ccccc
-ENDMAP
-
-# 15 gods
-NAME:    temple_minmay_crystal_snake
-TAGS:    no_rotate
-PLACE:   Temple
-WEIGHT:  3
-ORIENT:  encompass
-MAP
-        bbb   bbb   bbb
-       bb.bb bb.bb bb.bb
-      bb...bbb...bbb...bb
-      b..B.....B.....(..b
-      bb...bbb...bbb...bb
-       bb.bb bb.bb bb.bb
-  bbb   b.b   bbb   b.b
- bb.bb bb.bb       bb.bb
-bb...bbb...bb     bb...bb
-b..B.....B..b     b..B..b
-bb...bbb...bb     bb...bb
- bb.bb bb.bb       bb.bb
-  bbb   bbb   bbb   b.b
-             bb.bb bb.bb
-            bb...bbb...bb
-            b..B.....B..b
-            bb...bbb...bb
-             bb.bb bb.bb
-        bbb   b.b   bbb   bbb   bbb
-       bb.bb bb.bb       bb.bb bb.bb
-      bb...bbb...bb     bb...bbb...bb
-      b..[.....B..b     b..B.....B..b
-      bb...bbb...bb     bb...bbb...bb
-       bb.bb bb.bb       bb.bb bb.bb
-        b.b   bbb   bbb   b.b   bbb
-       bb.bb       bb.bb bb.bb
-      bb...bb     bb...bbb...bb
-      b..B..b     b..{.....B..b
-      bb...bb     bb...bbb...bb
-       bb.bb       bb.bb bb.bb
-        b.b   bbb   b.b   bbb
-       bb.bb bb.bb bb.bb
-      bb...bbb...bbb...bb
-      b..B.....B.....B..b
-      bb...bbb...bbb...bb
-       bb.bb bb.bb bb.bb
-        bbb   bbb   bbb
-ENDMAP
-
-# 12 gods
-NAME:    temple_minmay_floating_metal
-TAGS:    no_rotate no_pool_fixup
-PLACE:   Temple
-WEIGHT:  3
-ORIENT:  encompass
-MAP
-cccccccccccccccccccccccccccccccccc
-cwwwwwwwwwwwwwwwwwvvvvwwwwwwwwwwwc
-cwwwvvwwwwwwwwwwwwvvvvwwwwwwwwwwwc
-cwwwvvwwwwwwwwwwwwvvvvwwwwwwwwwwwc
-cwwwwwwwwwwwwwwwwwvvvvwwwwwwwwwwwc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
-cwwwwwwwwvwwwwwwwwwwwwwwwwwwwwwwwc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
-cwwwwwwwwwwwwwwB..Bwwwwwwwwwvwwwwc
-cwwwwwwwwwwww........wwwwwwwwwwwwc
-cwwwwwwwwwwB......vv..Bwwwwwvvwwwc
-cwwwwwwwwww.......vv...wwwwwvvwwwc
-cwwwwwwwww..vvv.........wwwwwwwwwc
-cwwwvvvwww..vvv.........wwwwwwwwwc
-cwwwvvvwwB..vvv...vvvvv.Bwwwwwvwwc
-cwwwvvvww.........v..[v..wwwwwwwwc
-cwwwwwwww.........+..{v..wwwwwwwwc
-cwwwwwwwwB........v..(v.Bwwwwwwwwc
-cwwwwwwwww...vv...vvvvv.wwwwwwwwwc
-cwwwwwwwww...vv.........wwwwwwwwwc
-cwwwwwwwwww........v...wwwwwwwwwwc
-cwwwwwwwwwwB..........Bwwwwwwwwwwc
-cwwvvvvwwwwww........wwwwwwvvvvvwc
-cwwvvvvwwwwwwwwB..Bwwwwwwwwvvvvvwc
-cwwvvvvwwwwwwwwwwwwwwwwwwwwvvvvvwc
-cwwvvvvwwwwwwwwwwwwwwwvwwwwvvvvvwc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwvvvvvwc
-cwwwwwwwwwwwwvvvwwwwwwwwwwwwwwwwwc
-cwwwwwwwwwwwwvvvwwwwwwwwwwwwwwwwwc
-cwwwwwvwwwwwwvvvwwwwwwwwwwwwwwwwwc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwvwwwc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
-cccccccccccccccccccccccccccccccccc
-ENDMAP
-
-# 12 gods
-NAME:    temple_minmay_simple_box
-TAGS:    no_rotate
-PLACE:   Temple
-WEIGHT:  3
-ORIENT:  encompass
-SUBST:   T = TV
-SUBST:   c : cccb
-MAP
-ccccccccccccccccc
-c...............c
-c.B..T..B..T..B.c
-c...............c
-c...ccc...ccc...c
-c.T.c.......c.T.c
-c...c.B...B.c...c
-c...............c
-c.B...[.{.(...B.c
-c...............c
-c...c.B...B.c...c
-c.T.c.......c.T.c
-c...ccc...ccc...c
-c...............c
-c.B..T..B..T..B.c
-c...............c
-ccccccccccccccccc
-ENDMAP
-
-NAME:    temple_minmay_simple_box_variant
-TAGS:    no_rotate
-PLACE:   Temple
-WEIGHT:  2
-ORIENT:  encompass
-SHUFFLE: ACD
-SUBST:   A = B, C = B, D = G
-SUBST:   T = TV
-SUBST:   c : cccb
-MAP
-ccccccccccccccccc
-c...............c
-c.A..T..C..T..A.c
-c...............c
-c...ccc...ccc...c
-c.T.c.......c.T.c
-c...c.D...D.c...c
-c...............c
-c.C...[.{.(...C.c
-c...............c
-c...c.D...D.c...c
-c.T.c.......c.T.c
-c...ccc...ccc...c
-c...............c
-c.A..T..C..T..A.c
-c...............c
-ccccccccccccccccc
+            xxx
+          xxxBx
+        xxx...xx
+      xxx......x
+    xxx...cc+c.xx
+  xxx...ccc..c..x
+xxx...ccc....cc.xx
+xB..ccc...vv..c..x
+xx.ccB..vvvvv.cc.xx
+ x..c..vv..[v..c..x
+ xx.cc.vv...vv.cc.xx
+  x..c..v{...v..c..x
+  xx.cc.vv..(vv.cc.xx
+   x..c..v..vvv..c..x
+   xx.cc.v+vv...Bcc.xx
+    x..c.......ccc..Bx
+    xx.cc....ccc...xxx
+     x..cB.ccc...xxx
+     xx.cccc...xxx
+      x..c...xxx
+      xx...xxx
+       xBxxx
+       xxx
 ENDMAP
 
 # 12 gods
@@ -2250,74 +2769,31 @@ TAGS:    no_rotate
 PLACE:   Temple
 WEIGHT:  3
 ORIENT:  encompass
+COLOUR:  c = white
+# XXX: What are good tiles to use here?
 MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 3, pow_max = 5, delay = 5, start_clouds = 3, \
              size = 1, spread_rate= 0 }
 MAP
-bbbbbbbbbbbbbbb
-b.............b
-b.d.d.d.d.d.d.b
-b.............b
-b.d.B.B.B.B.d.b
-b.............b
-b.d.B..[..B.d.b
-b.............b
-b.d.B.{.(.B.d.b
-b.............b
-b.d.B.B.B.B.d.b
-b.............b
-b.d.d.d.d.d.d.b
-b.............b
-bbbbbbbbbbbbbbb
+ccccccccccccccc
+c.............c
+c.d.d.d.d.d.d.c
+c.............c
+c.d.B.B.B.B.d.c
+c.............c
+c.d.B..[..B.d.c
+c.............c
+c.d.B.{.(.B.d.c
+c.............c
+c.d.B.B.B.B.d.c
+c.............c
+c.d.d.d.d.d.d.c
+c.............c
+ccccccccccccccc
 ENDMAP
 
-# 12 gods
-NAME:    temple_minmay_crystal_spiral
-TAGS:    no_rotate
-PLACE:   Temple
-WEIGHT:  3
-ORIENT:  encompass
-MAP
-                        bbbbbbb
-                        b.....b
-                        b.....b
-                        b..B..b
-                       bb.....bb
-                      bb.......bb
-                  bbbbb...bbb...bbbbb
-                  b......bb bb......b
-                  b.....bb   bb.....b
-                  b..B..b     b..B..b
-                 bb.....b     b.....bb
-                bb......b     b......bb
-bbbbbbb     bbbbb...bbbbbbbbbbbbbbb...bbbbb
-b.....b     b......bb   b.....b   bb......b
-b..{..b     b.....bb    b.....b    bb.....b
-b.....b     b..B..b     b..B..b     b..B..b
-b.[.(.bb    b.....bb   bb.....b    bb.....b
-b......bb   b......bb bb......b   bb......b
-bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
-    bb......b   bb.......bb   b......bb
-     bb.....b    bb.....bb    b.....bb
-      b..B..b     b..B..b     b..B..b
-      b.....bb    b.....b    bb.....b
-      b......bb   b.....b   bb......b
-      bbbbb...bbbbbbbbbbbbbbb...bbbbb
-          bb......b     b......bb
-           bb.....b     b.....bb
-            b..B..b     b..B..b
-            b.....bb   bb.....b
-            b......bb bb......b
-            bbbbb...bbb...bbbbb
-                bb.......bb
-                 bb.....bb
-                  b..B..b
-                  b.....b
-                  b.....b
-                  bbbbbbb
-ENDMAP
-
-# 6 gods, plus 6 more altars to Lugonu.
+# 6 gods
+# plus 6 more altars to Lugonu.
 # NOTE: A random number of temple gods would be nicer, but
 #       this does not currently work. Since the map is evaluated
 #       twice (once at gamestart, once at Temple generation),
@@ -2326,6 +2802,7 @@ ENDMAP
 #       gods missing from the game entirely.
 NAME:     corrupted_temple
 PLACE:    Temple
+WEIGHT:   10
 ORIENT:   encompass
 NSUBST:   O = 6:B / *:O
 KFEAT:    O = altar_lugonu
@@ -2366,302 +2843,6 @@ xx.O.xxx.'.xxx.O.xx
        xxxxx
 ENDMAP
 
-# 8 gods
-NAME:    temple_alley_garden
-PLACE:   Temple
-TAGS:    no_rotate
-ORIENT:  encompass
-COLOUR:  ' : darkgrey w:3 / white w:1 / none
-COLOUR:  . = green, " = brown
-FTILE:   .t = floor_grass, 'ABGT = floor_vault, D" = floor_dirt
-SUBST:   D = G
-NSUBST:  A = { / ( / [
-NSUBST:  . = 12:1 / 7:2 / *:.
-SUBST:   "' = .
-MONS:    bush, plant
-MAP
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tt''''''''''....................................................tt
-tt'G'''''G''.............................t............t.........tt
-tt''''''''''......................t.............................tt
-tt''''''''''....................................t...............tt
-tt''''A'''''...............................................t....tt
-tt''''''''''................cccccccccccccccccccccccc............tt
-tt''''''''''................c''''''''''''''''''''''c....t.......tt
-tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c............tt
-tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
-tt''''''''''""""""""""""""""+''''''''''''''''''''''c.........t..tt
-tt''''A'''''""""""""""""""""+''''''T''''''''T''''''c...t........tt
-tt''''''''''""""""""""""""""+''''''''''''''''''''''c............tt
-tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
-tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c......t.....tt
-tt''''''''''................c''''''''''''''''''''''c............tt
-tt''''''''''................cccccccccccccccccccccccc............tt
-tt''''A'''''..........................................t.........tt
-tt''''''''''..................t.................................tt
-tt''''''''''.................................t..................tt
-tt'G'''''G''.........................t.......................t..tt
-tt''''''''''....................................................tt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-ENDMAP
-
-# 6 gods
-NAME:    temple_island
-PLACE:   Temple
-TAGS:    no_rotate
-ORIENT:  encompass
-SUBST:   W = W:30 w
-SUBST:   ~ = ':20 W
-COLOUR:  ' = green / brown w:2
-FTILE:   'A = floor_grass, .BT = floor_vault
-NSUBST:  ' = 5:t / 7:1 / 4:2 / .
-NSUBST:  A = { / ( / [
-MONS:    bush, plant
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
-xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
-xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
-xwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwwwwx
-xwwwwwwwwwwWW~~~~~~~~~~~~~~~~~WWwwwwwwwwwwx
-xwwwwwwwwwWW~'''''''''''''''''~WWwwwwwwwwwx
-xwwwwwwwwWW~'''''''''''''''''''~WWwwwwwwwwx
-xwwwwwwwWW~'''''''''''''''''''''~WWwwwwwwwx
-xwwwwwwWW~''''''''xxxxxxx''''A'''~WWwwwwwwx
-xwwwwwWW~'''''''xxx.....xxx'''''''~WWwwwwwx
-xwwwwWW~''''''xxx.........xxx''''''~WWwwwwx
-xwwwwW~''''''xx....B...B....xx''''''~Wwwwwx
-xwwwwW~''''''+..............Bx''''''~Wwwwwx
-xwwwwW~''A'''+.......T.......x''''''~Wwwwwx
-xwwwwW~''''''+..............Bx''''''~Wwwwwx
-xwwwwW~''''''xx....B...B....xx''''''~Wwwwwx
-xwwwwWW~''''''xxx.........xxx''''''~WWwwwwx
-xwwwwwWW~'''''''xxx.....xxx'''''''~WWwwwwwx
-xwwwwwwWW~''''''''xxxxxxx''''A'''~WWwwwwwwx
-xwwwwwwwWW~'''''''''''''''''''''~WWwwwwwwwx
-xwwwwwwwwWW~'''''''''''''''''''~WWwwwwwwwwx
-xwwwwwwwwwWW~'''''''''''''''''~WWwwwwwwwwwx
-xwwwwwwwwwwWW~~~~~~~~~~~~~~~~~WWwwwwwwwwwwx
-xwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwwwwx
-xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
-xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
-xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-# 8 gods
-NAME:    temple_compass
-PLACE:   Temple
-WEIGHT:  3
-TAGS:    no_rotate
-ORIENT:  encompass
-MAP
-xxxxxxx     xxxxxxx     xxxxxxx
-x.....x     x.....x     x.....x
-x..B..x     x..B..x     x..B..x
-x.....xx    x.....x    xx.....x
-xxxxxx.xx   xxx.xxx   xx.xxxxxx
-     xx.xx    x.x    xx.xx
-      xx.xx   x.x   xx.xx
-       xx.xx  x.x  xx.xx
-        xx.xx x.x xx.xx
-         xx.xxx.xxx.xx
-xxxxxxx   xx.......xx   xxxxxxx
-x.....xxxxxx.(...[.xxxxxx.....x
-x..B.......................B..x
-x.....xxxxxx...{...xxxxxx.....x
-xxxxxxx   xx.......xx   xxxxxxx
-         xx.xxx.xxx.xx
-        xx.xx x.x xx.xx
-       xx.xx  x.x  xx.xx
-      xx.xx   x.x   xx.xx
-     xx.xx    x.x    xx.xx
-xxxxxx.xx   xxx.xxx   xx.xxxxxx
-x.....xx    x.....x    xx.....x
-x..B..x     x..B..x     x..B..x
-x.....x     x.....x     x.....x
-xxxxxxx     xxxxxxx     xxxxxxx
-ENDMAP
-
-# 12 gods
-NAME:    temple_forest_path
-WEIGHT:  5
-PLACE:   Temple
-TAGS:    no_rotate
-ORIENT:  encompass
-SHUFFLE: '"
-FTILE:   ' = floor_dirt, ."tABX = floor_grass
-NSUBST:  A = { / ( / [
-SUBST:   ' = ., " = t
-KFEAT:   X : G / U / T
-COLOUR:  . = green / brown w:2
-MAP
-                ttttttttt
-           ttttttttttttttttt
-         ttttttttt.....ttttttttt
-      tttttttttt.........tttttttttt
-    ttttttttt''..A.....A..''ttttttttt
-   tttttttt''tt.....X.....tt''tttttttt
- ttttttttt'tttt...........tttt'ttttttttt
-ttttt.....tttttt....A....tttttt.....ttttt
-ttt..B......tttttt.....tttttt......B..ttt
-tt...........ttttttt"ttttttt...........tt
-tt.....X..B..ttttttt"ttttttt..B..X.....tt
-tt...........tttttt"""tttttt...........tt
-ttt..B......t"""tt""w""tt"""t......B..ttt
-ttttt.....tttttt"""www"""tttttt.....ttttt
-ttttt'tttttttttttt""w""tttttttttttt'ttttt
-tttttt'tttttttttttt"""tttttttttttt'tttttt
-ttttttt'tt.....tt""ttt""tt.....tt'ttttttt
- ttttttt......B..ttttttt..B......ttttttt
- tttttt.B.........ttttt.........B.tttttt
-  ttttt.....X.....ttttt.....X.....ttttt
-  ttttt...........ttttt...........ttttt
-   ttttt......B..ttttttt..B......ttttt
-    tttttt.....tt''ttt''tt.....tttttt
-      ttttttttttttt'''ttttttttttttt
-        ttttttttttttttttttttttttt
-               ttttttttttt
-ENDMAP
-
-# 9 gods
-NAME:    temple_forest_star
-WEIGHT:  5
-PLACE:   Temple
-TAGS:    no_rotate
-ORIENT:  encompass
-SUBST:   ' : t"
-FTILE:   "A = floor_dirt, tBTX. = floor_grass
-NSUBST:  A = { / ( / [
-SUBST:   " = .
-SHUFFLE: TX
-KFEAT:   X : G / U
-COLOUR:  . = green / brown w:2
-MAP
-                ttttttttt
-           ttttttttttttttttt
-         ttttttttt.....ttttttttt
-      tttttttttt.........tttttttttt
-    ttttttttt''..X.....X..''ttttttttt
-   tttttttt''tt.....B.....tt''tttttttt
- ttttttttt'tttt...........tttt'ttttttttt
-ttttt.....tttttt....X....tttttt.....ttttt
-ttt..B......tttttt.....tttttt......B..ttt
-tt...........ttttttt"ttttttt...........tt
-tt.....X..B..ttttttt"ttttttt..B..X.....tt
-tt..........."tttttt"tttttt"...........tt
-ttt..B......tt""ttt"""ttt""tt......B..ttt
-ttttt.....tttttt"""AAA"""tttttt.....ttttt
-ttttt'tttttttttttt"""""tttttttttttt'ttttt
-tttttt'ttttttttt""ttttt""ttttttttt'tttttt
-ttttttt'tt....."ttttttttt".....tt'ttttttt
- ttttttt......T..ttttttt..T......ttttttt
- tttttt.T.........ttttt.........T.tttttt
-  ttttt.....B.....ttttt.....B.....ttttt
-  ttttt...........ttttt...........ttttt
-   ttttt......T..ttttttt..T......ttttt
-    tttttt.....tt''ttt''tt.....tttttt
-      ttttttttttttt'''ttttttttttttt
-        ttttttttttttttttttttttttt
-               ttttttttttt
-ENDMAP
-
-##########################################################################
-# Temple 13-1 (Cyrus)
-# 13 gods
-NAME:    temple_13gods_1
-WEIGHT:  2
-PLACE:   Temple
-FLAGS:   no_rotate
-ORIENT:  encompass
-MAP
-         ccccccccccccc
-      cccc...........cccc
-    ccc........(........ccc
-   cc.....................cc
-  cc.....B...........B.....cc
- cc.........................cc
- c.............B.............c
-cc...........................cc
-c........B...........B........c
-c.............................c
-c..B...........B...........B..c
-c.............................c
-c........B...........B........c
-cc...........................cc
- c.[...........B...........{.c
- cc.........................cc
-  cc.....B...........B.....cc
-   cc.....................cc
-    ccc........T........ccc
-      cccc...........cccc
-         ccccccccccccc
-ENDMAP
-
-##########################################################################
-# Temple 13-2 (Cyrus)
-# 13 gods
-NAME:    temple_13gods_2
-WEIGHT:  2
-PLACE:   Temple
-FLAGS:   no_rotate
-ORIENT:  encompass
-SHUFFLE: TU
-MAP
-            ccccccccc
-        ccccc.......ccccc
-      ccc...............ccc
-    ccc...T.....B.....T...ccc
-   cc.......................cc
-  cc.........................cc
- cc...........................cc
- c..U.....B.....B.....B.....U..c
-cc.............................cc
-c............(.....[............c
-c...............................c
-c...B.....B.....B.....B.....B...c
-c...............................c
-c............{.....<............c
-cc.............................cc
- c..U.....B.....B.....B.....U..c
- cc...........................cc
-  cc.........................cc
-   cc.......................cc
-    ccc...T.....B.....T...ccc
-      ccc...............ccc
-        ccccc.......ccccc
-            ccccccccc
-ENDMAP
-
-##########################################################################
-# Temple 13-3 (Cyrus)
-# 13 gods
-NAME:    temple_13gods_3
-WEIGHT:  5
-PLACE:   Temple
-FLAGS:   no_rotate
-ORIENT:  encompass
-MAP
-                  bbbbbbbbbbbbbbbbbbbbbbbbb
-                  b.......................b
-                  b..T.................T..b
-                  b.......................b
-                  b.....B.....B.....B.....b
-bbbbbbbbbbbbbbbbbbb.......................b
-bG..G..G..G..G..G.b........B.....B........b
-b.................b.......................b
-bG.([{............+.....B.....B.....B.....b
-b.................b.......................b
-bG..G..G..G..G..G.b........B.....B........b
-bbbbbbbbbbbbbbbbbbb.......................b
-                  b.....B.....B.....B.....b
-                  b.......................b
-                  b..T.................T..b
-                  b.......................b
-                  bbbbbbbbbbbbbbbbbbbbbbbbb
-ENDMAP
 
 #############################################################################
 # Overflow temples
@@ -2670,11 +2851,87 @@ ENDMAP
 # To make an overflow temple for N altars, give it the tag
 # "temple_overflow_N".
 
-##############################################################################
-# Overflow temples with one altar, must have tag "temple_overflow_1"
-#
-NAME:   overflow_temple_1_a
+# The boring standard.
+NAME:   overflow_temple_1_default
 TAGS:   temple_overflow_1 allow_dup
 MAP
 B
+ENDMAP
+
+NAME:   minmay_overflow_temple_star_quad
+TAGS:   temple_overflow_3
+ORIENT: float
+MAP
+           c
+           c
+          ccc
+          cBc
+         cc.cc
+         c...c
+        cc...cc
+        c.....c
+      ccc.....ccc
+    ccc....G....ccc
+  ccc......c......ccc
+cccB.....GcccG.....Bccc
+  ccc......c......ccc
+    ccc....G....ccc
+      ccc.....ccc
+        c.....c
+        cc...cc
+         c...c
+         cc.cc
+          c.c
+          c+c
+           @
+ENDMAP
+
+NAME:   minmay_overflow_temple_star_hex
+TAGS:   temple_overflow_5
+ORIENT: float
+KMASK:  T = no_monster_gen
+MAP
+          ccc
+         ccBcc
+        cc...cc
+       cc.....cc
+cccccccc...G...cccccccc
+cB...................Bc
+ccc......G...G......ccc
+  ccc.............ccc
+    ccc....T....ccc
+  ccc.............ccc
+ccc......G...G......ccc
+cB...................Bc
+cccccccc...G...cccccccc
+       cc.....cc
+        cc...cc
+         cc.cc
+          c+c
+          ...
+          .@.
+ENDMAP
+
+NAME:   minmay_overflow_temple_hex
+TAGS:   temple_overflow_6
+ORIENT: float
+MAP
+   cccccccccc
+   cB......Bc
+  cc........cc
+  c...c..c...c
+ cc..........cc
+ c...c....c...c
+cc............cc
+cB..c......c..Bc
+cc............cc
+ c...c....c...c
+ cc..........cc
+  c...c..c...c
+  cc........cc
+   cB......Bc
+   cccc++cccc
+      ....
+      ....
+      .@@.
 ENDMAP

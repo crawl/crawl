@@ -267,7 +267,7 @@ struct spell_desc
      6,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     0,
+     -6,
      NULL,
      false,
      true
@@ -343,7 +343,7 @@ struct spell_desc
     SPELL_RING_OF_FLAMES, "Ring of Flames",
      SPTYP_CHARMS | SPTYP_FIRE,
      SPFLAG_AREA,
-     8,
+     7,
      200,
      -1, -1,
      0,
@@ -382,7 +382,7 @@ struct spell_desc
     SPELL_TELEPORT_OTHER, "Teleport Other",
      SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
-     4,
+     3,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
@@ -763,7 +763,7 @@ struct spell_desc
     SPELL_CONTROL_UNDEAD, "Control Undead",
      SPTYP_HEXES | SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     6,
+     5,
      200,
      -1, -1,
      0,
@@ -827,7 +827,7 @@ struct spell_desc
     SPELL_BORGNJORS_REVIVIFICATION, "Borgnjor's Revivification",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     5,
+     7,
      200,
      -1, -1,
      0,
@@ -881,7 +881,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
-     5, 5,
+     1, 1,
      0,
      NULL,
      true,
@@ -1018,6 +1018,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_BONE_SHARDS, "Bone Shards",
      SPTYP_NECROMANCY,
@@ -1030,6 +1031,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_BANISHMENT, "Banishment",
@@ -1409,6 +1411,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_PORTAL, "Portal",
      SPTYP_TRANSLOCATION,
@@ -1421,6 +1424,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_AGONY, "Agony",
@@ -1530,7 +1534,7 @@ struct spell_desc
     SPELL_DEATH_CHANNEL, "Death Channel",
      SPTYP_NECROMANCY,
      SPFLAG_HELPFUL,
-     9,
+     8,
      200,
      -1, -1,
      0,
@@ -1721,6 +1725,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_TAME_BEASTS, "Tame Beasts",
      SPTYP_HEXES,
@@ -1733,6 +1738,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_HIBERNATION, "Ensorcelled Hibernation",
@@ -1816,7 +1822,7 @@ struct spell_desc
     SPELL_WARP_BRAND, "Warp Weapon",
      SPTYP_HEXES | SPTYP_TRANSLOCATION,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
-     7,     // this is high for a reason - Warp brands are very powerful.
+     5,     // this is high for a reason - Warp brands are very powerful.
      0,
      -1, -1,
      0,
@@ -1855,7 +1861,7 @@ struct spell_desc
     SPELL_DISPERSAL, "Dispersal",
      SPTYP_TRANSLOCATION,
      SPFLAG_AREA | SPFLAG_ESCAPE,
-     7,
+     6,
      200,
      -1, -1,
      0,
@@ -1935,7 +1941,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      50,
-     1, 1,                      // Special-cased!
+     2, 2,                      // Special-cased!
      0,
      NULL,
      true,
@@ -2368,6 +2374,20 @@ struct spell_desc
      5,
      0,
      LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+// Monster version of the spell (with full range)
+{
+    SPELL_STICKY_FLAME_RANGE, "Sticky Flame Range",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     4,
+     100,
+     5, 5,
      0,
      NULL,
      true,
@@ -2831,7 +2851,7 @@ struct spell_desc
 
 {
     SPELL_HEAL_OTHER, "Heal Other",
-     SPTYP_HOLY,
+     SPTYP_NONE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      6,
      200,
@@ -2900,6 +2920,19 @@ struct spell_desc
      SPFLAG_AREA,
      6,
      0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_LEDAS_LIQUEFACTION, "Leda's Liquefaction",
+     SPTYP_EARTH,
+     SPFLAG_AREA,
+     6,
+     200,
      -1, -1,
      0,
      NULL,

@@ -1174,9 +1174,9 @@
 { MUT_IRIDESCENT_SCALES,                2,  3, false,  true,
   NULL,
 
-  {"You are partially covered in iridescent scales (AC +3).",
+  {"You are partially covered in iridescent scales (AC +4).",
    "You are mostly covered in iridescent scales (AC +6).",
-   "You are completely covered in iridescent scales (AC +9)."},
+   "You are completely covered in iridescent scales (AC +8)."},
 
   {"Iridescent scales grow over part of your body.",
    "Iridescent scales spread over more of your body.",
@@ -1319,8 +1319,8 @@
   NULL,
 
   {"You are partially covered in colourless scales (AC +1).",
-   "You are mostly covered in yellow scales (AC +2).",
-   "You are completely covered in yellow scales (AC +3, rCorr)."},
+   "You are mostly covered in yellow scales (AC +2, rAcid+).",
+   "You are completely covered in yellow scales (AC +3, rAcid++)."},
 
   {"Colourless scales grow over part of your body.",
    "Your colourless scales turn yellow and spread over more of your body.",

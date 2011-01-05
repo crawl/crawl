@@ -5,9 +5,8 @@
 
 {{
 function dis_setup(e)
-   e.tags(dis)
    e.place("Dis:7")
-   e.tags(no_rotate)
+   e.tags("dis", "no_rotate")
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
@@ -22,7 +21,7 @@ end
 
 function geh_setup(e)
    e.place("Geh:7")
-   e.tags(no_rotate)
+   e.tags("no_rotate")
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
@@ -43,7 +42,7 @@ end
 
 function coc_setup(e)
    e.place("Coc:7")
-   e.tags(no_rotate)
+   e.tags("no_rotate")
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
@@ -65,7 +64,7 @@ end
 
 function tar_setup(e)
    e.place("Tar:7")
-   e.tags(no_rotate)
+   e.tags("no_rotate")
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
              level_flags="!no_tele_control", item="auto" } )
@@ -98,6 +97,16 @@ end
 ##############################################################################
 # Vestibule entries
 ##############################################################################
+
+# This replaces the hardcoded placement of a hell entrance on D:21-27.
+NAME:   hell_entry
+TAGS:   extra allow_dup luniq
+DEPTH:  D:21-27
+CHANCE: 100%
+KFEAT:  O = enter_hell
+MAP
+O
+ENDMAP
 
 default-depth: D:12-26
 

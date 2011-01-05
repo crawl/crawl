@@ -3,6 +3,7 @@
 
 #include "enum.h"
 #include "itemprop-enum.h"
+#include "terrain.h"
 
 //Bitfield for animate dead messages
 #define DEAD_ARE_WALKING 1
@@ -28,8 +29,8 @@ bool cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
 bool cast_summon_ice_beast(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_ugly_thing(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_dragon(int pow, god_type god = GOD_NO_GOD);
-bool summon_berserker(int pow, god_type god = GOD_NO_GOD, int spell = 0,
-                      bool force_hostile = false);
+bool summon_berserker(int pow, actor *caster,
+                      monster_type override_mons = MONS_PROGRAM_BUG);
 bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool force_hostile = false, bool permanent = false,
                          bool quiet = false);
@@ -52,7 +53,9 @@ bool cast_summon_greater_demon(int pow, god_type god = GOD_NO_GOD);
 bool cast_shadow_creatures(god_type god = GOD_NO_GOD);
 bool cast_summon_horrible_things(int pow, god_type god = GOD_NO_GOD);
 bool can_cast_malign_gateway();
-bool cast_malign_gateway(actor * caster, int pow, god_type god = GOD_NO_GOD);
+bool cast_malign_gateway(actor* caster, int pow, god_type god = GOD_NO_GOD);
+coord_def find_gateway_location (actor* caster, bool (
+        *environment_checker)(dungeon_feature_type) = feat_is_malign_gateway_suitable);
 
 void equip_undead(const coord_def &a, int corps, int monster, int monnum);
 int animate_remains(const coord_def &a, corpse_type class_allowed,

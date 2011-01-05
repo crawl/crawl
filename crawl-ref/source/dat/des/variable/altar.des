@@ -81,6 +81,23 @@ ENDMAP
 # II   General altars
 ######################################
 
+NAME: basic_altar
+TAGS: allow_dup extra no_monster_gen
+DEPTH: 5-
+CHANCE: 20% (Orc)
+CHANCE: 10% (Snake, Forest, Dwarf)
+CHANCE: 8% (D, Elf)
+CHANCE: 5% (Lair, Slime, Vault, Crypt)
+CHANCE: 1% (Zot)
+CHANCE: 0
+MAP
+.....
+.....
+..C..
+.....
+.....
+ENDMAP
+
 NAME: old_standard_altar
 TAGS: allow_dup
 SHUFFLE: cvxxxx
@@ -405,7 +422,7 @@ ENDMAP
 NAME:   nemelex_altar_shiori
 DEPTH:  !Lair, !Orc
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   generate_awake patrolling mini_float no_rotate
+TAGS:   generate_awake patrolling no_rotate
 TAGS:   layout_rooms layout_city layout_open layout_cross
 KFEAT:  _ = altar_nemelex_xobeh
 SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
@@ -572,7 +589,8 @@ function lugonu_item (data, triggerable, triggerer, marker, ev)
          / potion of gain intelligence q:2-3 / potion of gain strength q:2-3 / potion of gain dexterity q:2-3 \
          / potion of cure mutation q:2-3 / wand of draining w:7 / wand of polymorph other w:14 \
          / amulet of resist mutation",
-         ["No God"]="manual of Invocations / amulet of Faith"
+         Ashenzari="scroll of detect curse q:5-10 / amulet of clarity / ring of see invisible",
+         ["No God"]="manual of Invocations / amulet of Faith",
        }
          data.triggered = true
          if item[you.god()] == "no" then return else
@@ -1656,25 +1674,32 @@ ENDMAP
 
 ### Variable overflow altars ##################################################
 
-NAME:   lemuel_zombie_altar
+NAME:   lemuel_zombie_altar_kiku
 DEPTH:  D:2-18, Crypt
-TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen
-: local god = ""
-: if crawl.coinflip() then god = "kikubaaqudgha" else god = "yredelemnul" end
-: tags("temple_overflow_" .. god, "uniq_altar_" .. god)
-: kfeat("_ = altar_" .. god)
-#
-: if crawl.coinflip() then
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_kikubaaqudgha
+KFEAT:  _ = altar_kikubaaqudgha
 MONS:   rat zombie / giant bat zombie / nothing w:200
 KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
 KFEAT:  w = deep_water
-: else
+MAP
+xxxxxxxxxxxxxxxx
+xxxxwwwwwwwwxxxx
+xxxx11111111xxxx
+@............._x
+xxxx11111111xxxx
+xxxxwwwwwwwwxxxx
+xxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   lemuel_zombie_altar_yred
+DEPTH:  D:2-18, Crypt
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_yredelemnul
+KFEAT:  _ = altar_yredelemnul
 SUBST:  1 : 1Ww
 SUBST:  1 = WWw
 NSUBST: w = 2:1 / *:w
 KMONS:  1 = giant goldfish zombie / big fish zombie
 KFEAT:  1 = deep_water
-: end
 MAP
 xxxxxxxxxxxxxxxx
 xxxxwwwwwwwwxxxx

@@ -11,7 +11,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
-#include "libutil.h"
 #include "maps.h"
 #include "misc.h"
 #include "mutation.h"
@@ -447,7 +446,7 @@ static void _update_weapon(const newgame_def& ng)
 
     if (ng.weapon == WPN_UNARMED)
         _newgame_clear_item(0);
-    else
+    else if (ng.weapon != WPN_UNKNOWN)
         you.inv[0].sub_type = ng.weapon;
 }
 
@@ -1600,7 +1599,7 @@ static void _setup_generic(const newgame_def& ng)
     you.species    = ng.species;
     you.char_class = ng.job;
 
-    strlcpy(you.class_name, get_job_name(you.char_class), sizeof(you.class_name));
+    you.class_name = get_job_name(you.char_class);
 
     _species_stat_init(you.species);     // must be down here {dlb}
 
@@ -1647,6 +1646,7 @@ static void _setup_generic(const newgame_def& ng)
     _reassess_starting_skills();
     calc_total_skill_points();
     init_skill_order();
+    you.exp_available = crawl_state.game_is_zotdef()? 80 : 25;
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
@@ -1691,6 +1691,9 @@ static void _setup_generic(const newgame_def& ng)
 
     // Generate the second name of Jiyva
     fix_up_jiyva_name();
+
+    for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        you.nemelex_sacrificing = true;
 
     // Create the save file.
     you.save = new package((get_savedir_filename(you.your_name, "", "")

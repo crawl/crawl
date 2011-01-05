@@ -23,8 +23,8 @@
 #include "spl-other.h"
 #include "spl-util.h"
 #include "stuff.h"
-#include "terrain.h"
 #include "transform.h"
+#include "view.h"
 
 int allowed_deaths_door_hp(void)
 {
@@ -33,7 +33,7 @@ int allowed_deaths_door_hp(void)
     if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
         hp += you.piety / 15;
 
-    return (hp);
+    return std::max(hp, 1);
 }
 
 bool cast_deaths_door(int pow)
@@ -124,7 +124,7 @@ static spell_type _brand_spell()
 
 static spell_type _transform_spell()
 {
-    switch(you.attribute[ATTR_TRANSFORMATION])
+    switch(you.form)
     {
     case TRAN_BLADE_HANDS:
         return SPELL_BLADE_HANDS;
@@ -160,26 +160,6 @@ void extension(int pow)
     if (you.duration[DUR_SLOW] && _know_spell(SPELL_SLOW)) // heh heh
         potion_effect(POT_SLOWING, pow);
 
-/*  Removed.
-    if (you.duration[DUR_MIGHT])
-    {
-        potion_effect(POT_MIGHT, pow);
-        contamination++;
-    }
-
-    if (you.duration[DUR_BRILLIANCE])
-    {
-        potion_effect(POT_BRILLIANCE, pow);
-        contamination++;
-    }
-
-    if (you.duration[DUR_AGILITY])
-    {
-        potion_effect(POT_AGILITY, pow);
-        contamination++;
-    }
-*/
-
     if (you.duration[DUR_LEVITATION] && !you.duration[DUR_CONTROLLED_FLIGHT]
         && _know_spell(SPELL_LEVITATION))
     {
@@ -199,7 +179,7 @@ void extension(int pow)
         missile_prot(pow);
 
     if (you.duration[DUR_REGENERATION] && _know_spell(SPELL_REGENERATION)
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        && you.form != TRAN_LICH)
     {
         cast_regen(pow);
     }
@@ -245,7 +225,7 @@ void extension(int pow)
         you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100,
                               "Your transformation has been extended.");
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+        if (you.form == TRAN_LICH
             && is_good_god(you.religion))
         {
             // possible with Xom or a card
@@ -314,7 +294,7 @@ void ice_armour(int pow, bool extending)
         mpr("Your icy armour thickens.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST)
+        if (you.form == TRAN_ICE_BEAST)
             mpr("Your icy body feels more resilient.");
         else
             mpr("A film of ice covers your body!");
@@ -398,17 +378,7 @@ void cast_fly(int power)
     burden_change();
 
     if (!was_levitating)
-    {
-        if (you.fishtail)
-        {
-            mpr("Your tail turns into legs as you fly out of the water.");
-            merfolk_stop_swimming();
-        }
-        else if (you.light_flight())
-            mpr("You swoop lightly up into the air.");
-        else
-            mpr("You fly up into the air.");
-    }
+        float_player(true);
     else
         mpr("You feel more buoyant.");
 }
@@ -519,4 +489,16 @@ void cast_silence(int pow)
         you.update_beholders();
 
     learned_something_new(HINT_YOU_SILENCE);
+}
+
+void cast_liquefaction(int pow)
+{
+    flash_view_delay(BROWN, 80);
+    flash_view_delay(YELLOW, 80);
+    flash_view_delay(BROWN, 140);
+
+    mpr("The ground around you becomes liquefied!");
+
+    you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
+    invalidate_agrid(true);
 }

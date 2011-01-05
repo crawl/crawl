@@ -44,7 +44,7 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     const coord_def origin = pos();
     move_player_to_grid(dest, false, true);
 
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
 
     return (true);
 }
@@ -68,8 +68,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
 
     // Leave a purple cloud.
     if (!jump)
-        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                    kill_alignment());
+        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), this);
 
     check_redraw(oldplace);
     apply_location_effects(oldplace);
@@ -219,11 +218,13 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         if (target == origin)
             continue;
 
-        dungeon_feature_type limit = DNGN_SHALLOW_WATER;
-        if (you.permanent_flight() || you.permanent_levitation())
+        dungeon_feature_type limit;
+        if (!is_feat_dangerous(DNGN_LAVA, true))
             limit = DNGN_LAVA;
-        else if (player_likes_water(true))
+        else if (!is_feat_dangerous(DNGN_DEEP_WATER, true))
             limit = DNGN_DEEP_WATER;
+        else
+            limit = DNGN_SHALLOW_WATER;
 
         if (!in_bounds(target)
             || restrict_los && !you.see_cell(target)

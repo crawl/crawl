@@ -436,6 +436,8 @@ monster_type fill_out_corpse(const monster* mons,
     {
         corpse.props[MONSTER_HIT_DICE] = short(mons->hit_dice);
         corpse.props[MONSTER_NUMBER]   = short(mons->number);
+        // XXX: Appears to be a safe conversion?
+        corpse.props[MONSTER_MID]      = int(mons->mid);
     }
 
     corpse.colour = mons_class_colour(corpse_class);
@@ -721,7 +723,7 @@ static void _give_monster_experience(int experience, int killer_index)
 static int _calc_player_experience(monster* mons, killer_type killer,
                                    bool pet_kill, int killer_index)
 {
-    const int experience = exper_value(mons);
+    int experience = exper_value(mons);
 
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
     const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
@@ -729,8 +731,17 @@ static int _calc_player_experience(monster* mons, killer_type killer,
     const bool already_got_half_xp = testbits(mons->flags, MF_GOT_HALF_XP);
     const int half_xp = (experience + 1) / 2;
 
-    if (created_friendly || was_neutral || no_xp)
+    // We give double exp for shedu here, rather than artificially
+    // adjusting the modifier.
+    if (mons->flags & MF_BAND_MEMBER && mons_is_shedu(mons))
+        experience *= 2;
+
+    if (created_friendly || was_neutral || no_xp
+        || mons_is_shedu(mons) && shedu_pair_alive(mons))
+    {
         return (0); // No xp if monster was created friendly or summoned.
+                    // or if you've only killed one of two shedu.
+    }
     else if (YOU_KILL(killer))
     {
         if (already_got_half_xp)
@@ -1061,6 +1072,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     switch (mons->type)
     {
         case MONS_MENKAURE:
+        case MONS_BOG_MUMMY:
         case MONS_MUMMY:          pow = 1; break;
         case MONS_GUARDIAN_MUMMY: pow = 3; break;
         case MONS_MUMMY_PRIEST:   pow = 8; break;
@@ -1095,8 +1107,8 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     if (!target->alive())
         return;
 
-    if ((mons->type == MONS_MUMMY || mons->type == MONS_MENKAURE)
-        && YOU_KILL(killer))
+    if ((mons->type == MONS_MUMMY || mons->type == MONS_MENKAURE
+        || mons->type == MONS_BOG_MUMMY) && YOU_KILL(killer))
     {
         // Kiku protects you from ordinary mummy curses.
         if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance()
@@ -1281,10 +1293,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         simple_monster_message(mons, (prefix + msg).c_str());
 
     if (cloud != CLOUD_NONE)
-    {
-        place_cloud(cloud, mons->pos(), 1 + random2(3),
-                    mons->kill_alignment(), KILL_MON_MISSILE);
-    }
+        place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
 }
 
 void mons_relocated(monster* mons)
@@ -1452,7 +1461,7 @@ static std::string _killer_type_name(killer_type killer)
         return ("dismissed");
     }
     ASSERT(false);
-    return("");
+    return "";
 }
 
 static void _make_spectral_thing(monster* mons, bool quiet)
@@ -1650,7 +1659,8 @@ int monster_die(monster* mons, killer_type killer,
             _spore_goes_pop(mons, killer, killer_index, pet_kill, wizard);
     }
     else if (mons->type == MONS_FIRE_VORTEX
-             || mons->type == MONS_SPATIAL_VORTEX)
+             || mons->type == MONS_SPATIAL_VORTEX
+             || mons->type == MONS_TWISTER)
     {
         if (!silent && !mons_reset)
         {
@@ -1662,8 +1672,7 @@ int monster_die(monster* mons, killer_type killer,
         if (mons->type == MONS_FIRE_VORTEX && !wizard && !mons_reset
             && !submerged)
         {
-            place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4),
-                        mons->kill_alignment(), KILL_MON_MISSILE);
+            place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
 
         if (killer == KILL_RESET)
@@ -1680,10 +1689,7 @@ int monster_die(monster* mons, killer_type killer,
         }
 
         if (!wizard && !mons_reset && !submerged)
-        {
-            place_cloud(CLOUD_COLD, mons->pos(), 2 + random2(4),
-                        mons->kill_alignment(), KILL_MON_MISSILE);
-        }
+            place_cloud(CLOUD_COLD, mons->pos(), 2 + random2(4), mons);
 
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
@@ -2244,6 +2250,10 @@ int monster_die(monster* mons, killer_type killer,
         // And his vault can be placed again.
         you.uniq_map_names.erase("uniq_boris");
     }
+    if (mons->type == MONS_JORY && !in_transit)
+    {
+        blood_spray(mons->pos(), MONS_JORY, 50);
+    }
     else if (mons_is_kirke(mons)
              && !in_transit
              && !testbits(mons->flags, MF_WAS_NEUTRAL))
@@ -2311,6 +2321,13 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons_is_elven_twin(mons) && mons_near(mons))
     {
         elven_twin_died(mons, in_transit, killer, killer_index);
+    }
+    else if (mons_is_shedu(mons))
+    {
+        if (in_transit)
+            mons->number = 0;
+        else
+            shedu_do_resurrection(mons);
     }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
@@ -4073,6 +4090,43 @@ void monster_teleport(monster* mons, bool instan, bool silent)
         return;
     }
 
+    coord_def newpos;
+
+    if (mons_is_shedu(mons) && shedu_pair_alive(mons))
+    {
+        // find a location close to its mate instead.
+        monster* my_pair = get_shedu_pair(mons);
+        coord_def pair = my_pair->pos();
+        coord_def target;
+
+        int tries = 0;
+        while (tries++ < 1000)
+        {
+            target = coord_def(random_range(pair.x - 5, pair.x + 5),
+                               random_range(pair.y - 5, pair.y + 5));
+
+            if (grid_distance(target, pair) >= 10)
+                continue;
+
+            newpos = target;
+            break;
+        }
+
+        if (newpos.origin())
+            dprf("ERROR: Couldn't find a safe location near mate for Shedu!");
+    }
+
+    if (newpos.origin())
+        monster_random_space(mons, newpos, !mons->wont_attack());
+
+    // XXX: If the above function didn't find a good spot, return now
+    // rather than continue by slotting the monster (presumably)
+    // back into its old location (previous behaviour). This seems
+    // to be much cleaner and safer than relying on what appears to
+    // have been a mistake.
+    if (newpos.origin())
+        return;
+
     bool was_seen = !silent
         && you.can_see(mons) && !mons_is_lurking(mons);
 
@@ -4084,10 +4138,10 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // Pick the monster up.
     mgrd(oldplace) = NON_MONSTER;
 
-    coord_def newpos;
-    if (monster_random_space(mons, newpos, !mons->wont_attack()))
-        mons->moveto(newpos);
+    // Move it to its new home.
+    mons->moveto(newpos);
 
+    // And slot it back into the grid.
     mgrd(mons->pos()) = mons->mindex();
 
     // Mimics change form/colour when teleported.
@@ -4131,10 +4185,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // XXX: If silent is true, this is not an actual teleport, but
     //      the game moving a monster out of the way.
     if (!silent)
-    {
-        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                    mons->kill_alignment(), KILL_MON_MISSILE);
-    }
+        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
 
     mons->check_redraw(oldplace);
     mons->apply_location_effects(oldplace);
@@ -4334,12 +4385,17 @@ void mons_att_changed(monster* mon)
     if (mon->type == MONS_ELDRITCH_TENTACLE_SEGMENT
         || mon->type == MONS_ELDRITCH_TENTACLE)
     {
-        int base_idx = mon->type == MONS_ELDRITCH_TENTACLE ? mon->mindex() : mon->number;
+        unsigned base_idx = mon->type == MONS_ELDRITCH_TENTACLE ?
+                            mon->mindex() : mon->number;
 
         menv[base_idx].attitude = att;
         for (monster_iterator mi; mi; ++mi)
         {
-            mi->attitude = att;
+            if (mi->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+                && mi->number == base_idx)
+            {
+                mi->attitude = att;
+            }
         }
     }
 }
@@ -4356,7 +4412,7 @@ actor* forest_near_enemy(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (grd(*ai) == DNGN_TREE && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
                 return (foe);
     }
 
@@ -4367,7 +4423,7 @@ actor* forest_near_enemy(const actor *mon)
 void forest_message(const coord_def pos, const std::string msg, msg_channel_type ch)
 {
     for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
-        if (grd(*ri) == DNGN_TREE
+        if (feat_is_tree(grd(*ri))
             && cell_see_cell(you.pos(), *ri, LOS_DEFAULT)
             && cell_see_cell(pos, *ri, LOS_DEFAULT))
         {
@@ -4396,7 +4452,7 @@ void forest_damage(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (grd(*ai) == DNGN_TREE && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
             {
                 const int damage = 5 + random2(10);
                 if (foe->atype() == ACT_PLAYER)
@@ -4471,4 +4527,14 @@ int count_monsters(monster_type mtyp, bool friendlyOnly)
         }
     }
     return (count);
+}
+
+int count_allies()
+{
+    int count = 0;
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+        if (menv[mon].alive() && menv[mon].friendly())
+            count++;
+
+    return count;
 }

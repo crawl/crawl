@@ -62,6 +62,385 @@ mmmm
 ENDMAP
 
 ##############################################################################
+# Kobold bridge
+# Could perhaps use colour.
+#
+NAME:   minmay_kobold_bridge
+TAGS:   no_monster_gen
+DEPTH:  D:1-2
+ORIENT: float
+WEIGHT: 3
+MONS:   kobold / nothing w:3
+MAP
+xxxxxx@xxxxxx
+xxxx.....xxxx
+xxx.......xxx
+xxxw.....wxxx
+xxxww..1wwxxx
+xxxww...wwxxx
+xxxww1..wwxxx
+xxxww..1wwxxx
+xxxww.1.wwxxx
+xxxww...wwxxx
+xxxww1..wwxxx
+xxxw.....wxxx
+xxx.......xxx
+xxxx.....xxxx
+xxxxxx@xxxxxx
+ENDMAP
+
+##############################################################################
+# Rooms
+#
+NAME:    minmay_opposing_rooms
+DEPTH:   D:4-
+ORIENT:  float
+SHUFFLE: 0%
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxx........xxx%.%xxx
+xx......x...xx....%xx
+xx..9..xx...x......%x
+x......xx...+.......x
+@....xxxx...x......%x
+xxxxxxxxx...xx....%xx
+xxx0.0xxx...xxx%.%xxx
+xx0....xx...xxxxxxxxx
+x0......x...xxxx....@
+x.......+...xx......x
+x0......x...xx..9..xx
+xx0....xx...x......xx
+xxx0.0xxx........xxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Klotski a.k.a. what we learned from the elders.
+#
+NAME:    minmay_klotski
+SHUFFLE: }])>
+DEPTH:   D:6-12
+ORIENT:  float
+SUBST:   0 = 0.., 9 = 9., 8 = 88.
+MONS:    bush
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+x....+.........+...9x
+x1...x...0.0...x....x
+x...1x..0.0.0..x.0..x
+x1...x.0.....0.x..0.x
+x...1x..0...0..x.0..x
+x1...x.0.....0.x..0.x
+x...1x.........x.0..x
+x1...x.9.9.9.9.x....x
+x...1x8.8...8.8x9...x
+x+xxxxxxxx+xxxxxxxx+x
+x...9x$$$$$$$$$xG...x
+x.0..x$$$$$$$$$x....x
+x..0.x$$$$$$$$$x....x
+x.0..x$$$$$$$$$x....x
+x..0.xxxxxxxxxxx....x
+x.0..+....x0...+....x
+x..0.x..T.x.0..x....x
+x.0..x.T..x..0.x....x
+x9...x....x...0x...Gx
+xxxxxxxxx+x+xxxxxxxxx
+     x....x....x
+     x....x....x
+     x....x....x
+     x}...x...]x
+     xxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Statue pair
+#
+NAME:    minmay_separated_statues
+DEPTH:   D:8-16
+ORIENT:  float
+MONS:    silver statue, orange crystal statue, ice statue
+SHUFFLE: 123
+MAP
+     ......
+    ......xx
+   xxx.....xx
+  xx*xx.....xx
+ xx...xx.....xx
+xx*.1..xx..2.*xx
+ xx.....xx...xx
+  xx.....xx*xx
+   xx.....xxx
+    xx......
+     ......
+ENDMAP
+
+##############################################################################
+# Statue gallery
+#
+NAME:    minmay_statue_hallways
+DEPTH:   D:8-
+ORIENT:  float
+MONS:    orange crystal statue / silver statue / ice statue
+MAP
+       xxx            xxx            xxx
+       x1x            x1x            x1x
+       x*x            x|x            x*x
+      xx.xx          xx.xx          xx.xx
+      x...x          x...x          x...x
+     xx...xx        xx...xx        xx...xx
+   xxx.....xxx    xxx.....xxx    xxx.....xxx
+xxxx.........xxxxxx.........xxxxxx.........xxxx
+@.............................................@
+...............................................
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+...............................................
+@.............................................@
+xxxx.........xxxxxx.........xxxxxx.........xxxx
+   xxx.....xxx    xxx.....xxx    xxx.....xxx
+     xx...xx        xx...xx        xx...xx
+      x...x          x...x          x...x
+      xx.xx          xx.xx          xx.xx
+       x*x            x|x            x*x
+       x1x            x1x            x1x
+       xxx            xxx            xxx
+ENDMAP
+
+##############################################################################
+# Stone golems
+#
+NAME:   minmay_stone_box
+DEPTH:  D:10-16
+ORIENT: float
+KMONS:  " = stone golem
+KITEM:  " = any scroll / any potion
+MAP
+cccccccccc
+c{......>c
+c........c
+c........c
+c...""...c
+c...""...c
+c........c
+c........c
+c<......}c
+cccccccccc
+ENDMAP
+
+##############################################################################
+# Wavy paths in crystal walls
+#
+NAME:   minmay_wavy_crystal
+DEPTH:  D:10-
+ORIENT: float
+MAP
+bbbbbbbbbbbb@.@bbbbbb
+@...bbbbbbbb...bbbbbb
+......bbbbbb...bbbbbb
+@......bbbbb...bbbbbb
+bbbb...bbbbb...bbbbbb
+bbbbb...bbbbb...bbbbb
+bbbbb...bbbbb.....bbb
+bbbbb...bbbbbb.....bb
+bbbbb...bbb..bbb...bb
+bbbbb...bb9bb.bb....b
+bbbbb...bb|bb.bb....b
+bbbbbb...bbb.bb....bb
+bbbbbb.............bb
+bbbbbbb...........bbb
+bbbbbbbbb.......bbbbb
+bbbbbb..bbb...bbb..bb
+bbbbb.bb9bb...bb9bb.b
+bbbbb.bb|bb...bb|bb.b
+bbbbbb.bbb.....bbb.bb
+@...................@
+............b........
+@.........bbbbb.....@
+bbbbbbbbbbbbbbbbbbbbb
+ENDMAP
+
+##############################################################################
+# A traditional vault
+#
+NAME:    minmay_two_paths
+ORIENT:  float
+DEPTH:   D:12-26
+MAP
+cccccccccccccccc
+c.9.c......c.9.c
+c.c.c.c88c.c.c.c
+c.c.c.c$$c.c.c.c
+c.c.c.c%%c.c.c.c
+c.c.c.c**c.c.c.c
+c.c.9.c||c.9.c.c
+c.cccccccccccc.c
+c.cccccccccccc.c
+c.9.c......c.9.c
+c.c.c.c..c.c.c.c
+c.c.c.c..c.c.c.c
+c.c.c.c..c.c.c.c
+c.c.c.c..c.c.c.c
+c9c.9.c00c.9.c9c
+ccccccc..ccccccc
+ENDMAP
+
+##############################################################################
+# Skeleton sneak attack
+#
+NAME:   minmay_skeletal_surprise
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:18-26
+ORIENT: float
+MONS:   skeletal warrior
+KMONS:  $ = skeletal warrior / large skeleton / bone dragon w:1 / nothing w:40
+KITEM:  $ = $
+MAP
+ccccccccccccc
+c$$$ccccc$$$c
+c$$$ccccc$$$c
+c$$$ccccc$$$c
+cccc1ccc1cccc
+ccccc...ccccc
+ccccc.}.ccccc
+ccccc...ccccc
+cccc1ccc1cccc
+c$$$ccccc$$$c
+c$$$ccccc$$$c
+c$$$ccccc$$$c
+ccccccccccccc
+ENDMAP
+
+
+################################################################################
+# Staircase flavor vaults.
+#
+NAME:    minmay_staircase_windowed_small
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: )]}([{
+SUBST:   ? = cn
+SUBST:   c : c x:2 v:1 b:1
+SUBST:   n : n:18 G:1 .:1
+SUBST:   G : ...G
+MAP
+ccccccccc
+cG.GcG.Gc
+c...+.).c
+cG..c...c
+cc+cc?n?c
+cG..c...
+c...+...
+cG.Gc...
+ccccc
+ENDMAP
+
+NAME:    minmay_staircase_windowed_large
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: )]}([{
+SUBST:   c : c x:2 v:1 b:1
+SUBST:   n : n:18 G:1 .:1
+SUBST:   G : ...G
+MAP
+ccccccccccccc
+cG...GcG...Gc
+c.....c.....c
+c.....+..)..c
+c.....c.....c
+cG...GcG...Gc
+ccc+ccccnnncc
+cG...Gc.....
+c.....c.....
+c.....+.....
+c.....c.....
+cG...Gc.....
+ccccccc
+ENDMAP
+
+NAME:    minmay_staircase_statues
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  5
+SHUFFLE: )]}([{
+MAP
+G.G
+.).
+G.G
+ENDMAP
+
+NAME:    minmay_staircase_statues_hall_small
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  3
+SHUFFLE: )]}([{
+SUBST:   c : c x:2 v:1 b:1
+MAP
+   ccccc
+   cG.Gc
+   c...c
+cccc...cccc
+cG.......Gc
+c.).......+
+cG.......Gc
+cccc...cccc
+   c...c
+   cG.Gc
+   ccccc
+ENDMAP
+
+NAME:    minmay_staircase_statues_hall_large
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+WEIGHT:  2
+SHUFFLE: )]}([{, AB
+SUBST:   A = .
+SUBST:   B = G
+SUBST:   C = G.
+SUBST:   c : c x:2 v:1 b:1
+MAP
+     ccccccc
+     cB.A.Bc
+     c.....c
+     c.....c
+     c.....c
+cccccc.....cccccc
+cB.............Bc
+c................
+cA.)....C.......@
+c................
+cB.............Bc
+cccccc.....cccccc
+     c.....c
+     c.....c
+     c.....c
+     cB.A.Bc
+     ccccccc
+ENDMAP
+
+NAME:    minmay_staircase_bubble
+TAGS:    extra luniq_staircase
+DEPTH:   D:2-26
+ORIENT:  float
+SUBST:   m = mmmm.
+MAP
+ .......
+..bb.bb..
+.bb...bb.
+.b.....b.
+.m..)..m.
+.b.....b.
+.bb...bb.
+..bbmbb..
+ .......
+ENDMAP
+
+##############################################################################
 # Cavepeople
 #
 NAME:   erik_1
@@ -118,7 +497,7 @@ KITEM:   + = damaged eveningstar, damaged short sword, \
 KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
 MONS:    giant mite, scorpion
-MONS:    rat / grey rat, green rat / orange rat
+MONS:    rat / porcupine, green rat / orange rat
 MONS:    giant bat
 SHUFFLE: ?!+
 SUBST:   c:cccvvb , b=cc.
@@ -404,7 +783,7 @@ ENDMAP
 NAME:    vampire
 ORIENT:  float
 DEPTH:   D:12-26, Vault, Crypt
-MONS:    rat / grey rat / w:6 green rat / w:3 orange rat / w:20 giant bat
+MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 giant bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item
@@ -992,7 +1371,7 @@ KMONS:  7 = fire vortex
 : if you.in_branch("elf") then
 KMONS:  Z = col:gila deep elf sorcerer \
         name:deep_elf_elementalist n_rpl n_des \
-        spells:iron_shot;summon_air_elementals;sticky_flame;\
+        spells:iron_shot;summon_air_elementals;sticky_flame_range;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance race:elven | \
         robe ego:cold_resistance race:elven | \
@@ -1001,7 +1380,7 @@ KMONS:  Z = col:gila deep elf sorcerer \
 : else
 KMONS:  Z = col:gila wizard hd:15 name_descriptor \
         name:master_elementalist name_replace \
-        spells:iron_shot;summon_air_elementals;sticky_flame;\
+        spells:iron_shot;summon_air_elementals;sticky_flame_range;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance | robe ego:cold_resistance | \
         robe ego:resistance \
@@ -1152,4 +1531,279 @@ v"""""F"""""v""]""v
 v.""".v.""".v.""".v
 v.."..v4."..v.."..v
 vvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# Guardian serpents guard a snake-like passage. (nrook)
+NAME:    guardian_serpent_snake_passage
+ORIENT:  float
+DEPTH:   D:9-27
+TAGS:    no_monster_gen no_rotate
+MONS:    patrolling guardian serpent
+SHUFFLE: yY/zZ
+SUBST:   y=., Y==, Z=x, z=b
+COLOUR:  *. = lightgreen
+SUBST:   ' = .
+MAP
+            xxxxxxxxxxxxxxx
+            xxxxbbbbbbbbxxx'
+            xxbbb..*...bbbx'
+            xbb...bbbb...yY1
+            xb..bbbbbbbbbbx@
+            xb.bbxxxxxxxxxx'
+            xb..bbbbxx
+            xbb.*..bbx
+            xxbbbb..bx
+ xxxxxxxxxxxxxxxxbb.bx
+'xbbbbxxxxxxxxxxxbb.bx
+1Zz..bbbxxxxxxxbbb..bx
+@xbb...bbbbbbbbb.*.bbx
+'xxbbb...*.......bbbxx
+ xxxxbbbbbbbbbbbbbxxxx
+ENDMAP
+
+##############################################################################
+# Shantytown, noun: An area containing a collection of shacks,
+#                   shanties or makeshift dwellings. By Core Xii
+NAME:   corexii_shantytown
+DEPTH:  D:4-13
+ORIENT: float
+TAGS:   no_monster_gen no_item_gen
+NSUBST: + = 1:+ / *:=
+SUBST:  = = + x:100
+NSUBST: A = 1:+ / *:x, B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
+NSUBST: E = 1:+ / *:x, F = 1:+ / *:x, G = 1:+ / *:x, H = 1:+ / *:x
+NSUBST: I = 1:+ / *:x, J = 1:+ / *:x, K = 1:+ / *:x, L = 1:+ / *:x
+NSUBST: M = 1:+ / *:x, N = 1:+ / *:x, O = 1:+ / *:x, P = 1:+ / *:x
+NSUBST: Q = 1:+ / *:x, R = 1:+ / *:x, S = 1:+ / *:x, T = 1:+ / *:x
+NSUBST: U = 1:+ / *:x, V = 1:+ / *:x
+# There are 111 - glyphs, which leads to about 27 monsters
+SUBST:  - = 2:20 d .:50
+ITEM:   any food / any weapon / any missile / w:5 any armour / \
+        w:5 any potion / w:5 any scroll, w:1 any misc
+MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc / w:5 gnoll
+MAP
+.......................
+..1..x++x..1..x+++++x..
+.1x++x--x++x++x-----+..
+..+--A--B--C--E-----+..
+..+--A--B--C--E-----+..
+.1xxAxxBxCCx--xEExEExx.
+..1+--R....xDDx..F---+.
+..1+--R..........F---+.
+.1xxRxx.xSSSxTTx.xFx+x.
+..+--Q..S---T--T...+1..
+..+--Q..S---T--T...+1..
+.xxPxx.xxSSxxTxx.xGxx1.
+.+--P..V---U--U..G--+..
+.+--P..V---U--U..G--+..
+.xxOxx.V---xUUx..xHHxx.
+..+--O.xVVVx.....H---+.
+..+--O........xJJx---+.
+.xxNNxMMx..xKKx--xIIxx.
+.+---N--xLLx--J--I--+..
+.+---N--M--L--x++x--+..
+.x+++x++x--L--+11+--+..
+.1...1..x++x++x..x++x1.
+.......................
+ENDMAP
+
+# Cluster of small buildings with basic monsters and loot, by Core Xii
+NAME:   corexii_shack_village
+DEPTH:  D:3-9
+ORIENT: float
+TAGS:   no_monster_gen no_item_gen
+NSUBST: A = 1:+ / *:x, B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
+NSUBST: E = 1:+ / *:x, F = 1:+ / *:x, G = 1:+ / *:x, H = 1:+ / *:x
+# 39 - glyphs, leading to about 10 monsters.
+SUBST:  - = 2:20 d .:50
+SUBST:  T = T:50 V G 1 .:20
+ITEM:   any food / any weapon / any missile / w:5 any armour / w:5 any potion
+MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc
+MAP
+....................
+.1xAAx1.xxxxx111111.
+.1x--x1.B---xxxxxxx.
+.1x--x1.B---C--D--x.
+.1xAAx1.xBBBx--D--x.
+............xCCxDDx.
+..........T.........
+.11.xFFFx...........
+.xEEx---xGGx1.xHHx1.
+.x--E---G--x1.H--x1.
+.x--E---G--x1.H--x1.
+.xxxxxxxxxxx1.xxxx1.
+....................
+ENDMAP
+
+# Ice Spiral I (Lemuel)
+#
+# There is a path to the center that the freezing clouds never appear on.
+# It's pretty obvious. -LP
+NAME:    ice_spiral
+WEIGHT:  1
+ORIENT:  float
+TAGS:    no_item_gen no_monster_gen
+MONS:    ice beast / nothing
+ITEM:    nothing, nothing
+SHUFFLE: 1ef
+SUBST:   + : +=
+SUBST:   * : *$
+SUBST:   * = ***.|
+MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 2, pow_max = 4, delay = 17, start_clouds = 1, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 2, pow_max = 4, delay = 19, start_clouds = 1, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MARKER:  f = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 2, pow_max = 4, delay = 23, start_clouds = 1, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MARKER:  G = lua:props_marker { stop_explore = "a frost-covered granite \
+             statue.", feature_description = "frost-covered granite statue" }
+MAP
+mG++Gmmmmmmmmmmmmmmmmmm
+m......f..1..1...e...fm
+m....1...f..e..f...1..m
+m......e..............m
+m....f...............em
+m......1..............m
+m....1.....e.1.f......m
+m...........f.e.1....1m
+m......e..............m
+m....e......***.......m
+m......1....***.f....fm
+m.....................m
+m....f1..e1.f..1e.....m
+m....................em
+m.....................m
+m.....................m
+m....................1m
+mf..1..e..f..e..f..e..m
+mmmmmmmmmmmmmmmmmmmmmmm
+ENDMAP
+
+# Ice Spiral II (Lemuel)
+#
+# Wait for the freezing cloud to disappear, then run to the next gap,
+# then wait. It creates an agreeable sense of tension. -LP
+NAME:    ice_spiral_2
+ORIENT:  float
+DEPTH:   D:5-27, Vault
+TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
+MONS:    nothing
+ITEM:    nothing, nothing
+SHUFFLE: Bb/Mm/Mm/Mm
+COLOUR:  B = blue
+SUBST:   M=. , m=n, B=. , b=c
+SUBST:   + : +=
+SUBST:   * : *$
+MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
+              pow_min = 5, pow_max = 5, delay = 120, start_clouds = 1, \
+              size = 1, walk_dist = 0, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
+              pow_min = 9, pow_max = 9, delay = 200, start_clouds = 1, \
+              size = 1, walk_dist = 0, spread_rate= 0 }
+MARKER:  G = lua:props_marker { stop_explore = "a frost-covered granite \
+             statue.", feature_desc = "A frost-covered granite statue." }
+MAP
+mG+Gmmmmmmmmmmmmmmmmm
+mBBB111B111BeeeeeeeBm
+mmmmmmmmmmmmmmmmmmmBm
+m*****eeeeeee111B111m
+mmmmmmmmmmmmmmmmmmmmm
+ENDMAP
+
+NAME:   Flame_loot_2_lemuel
+DEPTH:  D:9-27
+ORIENT: float
+ITEM:   nothing
+SUBST:  * = |**...
+SUBST:  * : *$
+SUBST:  L = ll.
+MONS:   molten gargoyle / fire drake / lindwurm / nothing w:20
+MARKER: d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MAP
+ccccc...ccccc
+ccccc...ccccc
+ccccc...ccccc
+ccccc.d.ccccc
+ccccc...ccccc
+ccccc...ccccc
+ccccc.d.ccccc
+ccccc...ccccc
+ccccc...ccccc
+ccccc...ccccc
+c...LLlLL...c
+c..LLlllLL..c
+c.LLll*llLL.c
+cLLll***llLLc
+cLll**1**llLc
+cLlll***lllLc
+cLLlll*lllLLc
+c.LLlllllLL.c
+c..LLlllLL..c
+ccccccccccccc
+ENDMAP
+
+#############################################################################
+# The Elephants' Graveyard (by Mu.)
+#
+NAME:   elephants_graveyard_mu
+ORIENT: float
+TAGS:   no_monster_gen no_rotate no_vmirror
+DEPTH:  D:13-26, Lair:1-7
+
+  # next: we generate more dire elephants at greater depths
+  # we also turn the shallow water into deep water at the lowest depths,
+  # just in case elephants are ever allowed to drown the unwary
+: if you.absdepth() < 18 then
+MONS:   elephant, fungus, plant
+: elseif you.absdepth() < 22 then
+MONS:   elephant / dire elephant, fungus, plant
+: else
+MONS:   w:1 elephant / dire elephant, fungus, plant
+SUBST: W : w
+:end
+
+: dgn.delayed_decay(_G, '%', 'w:1 elephant corpse / w:5 elephant skeleton / nothing')
+SUBST:  . = .:69 1:1
+SUBST:  P = 3
+SUBST:  a = .2
+SUBST:  b = 23
+SUBST:  c = 3tt
+
+MAP
+............................
+............................
+............................
+............................
+........tttttttttttt........
+......tttccccccccccttt......
+.....ttcccbbbbbbbbccctt.....
+....ttccbbbaaaaaabbbcctt....
+....tccbbaaa...1aaabbcct....
+...ttcbbaa...%%...aabbctt...
+..ttccbaa..%%%%%%..aabcctt..
+..tccbba..%%%%%%%%..abbcct..
+..tcbbaa.%%.PPP%%%%.aabbct..
+..tcbaa..%%.PWPP%%%..aabct..
+..tcba1.%%%11WPP%%%%..abct..
+..tcba.%%%%11WWP%%%%%.abct..
+..tcba.%%%%.WWWP%%%%%.abct..
+..tcba..%%%.WWWP%%%%1.abct..
+..tcbaa.1%%..WWP.%%..aabct..
+..tcbbaa.%%%..WP.%%.aabbct..
+..tccbba..%%%.WW....abbcct..
+..ttccbaa......WW..aabcctt..
+...ttcbbaa......W.aabbctt...
+....tccbbaaaa..aaaabbcct....
+....ttccbbbba..abbbbcctt....
+.....ttccccca..accccctt.....
+......tttttta..atttttt......
+............................
+............1..1............
+............................
+.............@@.............
 ENDMAP

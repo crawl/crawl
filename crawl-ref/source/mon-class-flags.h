@@ -127,4 +127,7 @@ const uint64_t M_ARTIFICIAL        = (uint64_t)1<<38;
 
 // doesn't need to breathe; immune to asphyxiation and Mephitic Cloud
 const uint64_t M_UNBREATHING       = (uint64_t)1<<39;
+
+// not fully coded; causes a warning
+const uint64_t M_UNFINISHED        = (uint64_t)1<<40;
 #endif

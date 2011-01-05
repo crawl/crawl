@@ -13,6 +13,7 @@
 #include <stdlib.h>
 
 #include "externs.h"
+#include "godabil.h"
 #include "hints.h"
 #include "itemprop.h"
 #include "notes.h"
@@ -138,6 +139,9 @@ int calc_skill_cost(int skill_cost_level, int skill_level)
     if (ret > MAX_COST_LIMIT)
         ret = MAX_COST_LIMIT;
 
+    if (crawl_state.game_is_zotdef())
+        ret = ret / 3 + 1;
+
     return (ret);
 }
 
@@ -158,6 +162,8 @@ static void _change_skill_level(skill_type exsk, int n)
     if (you.skills[exsk] == 27)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        if (exsk == you.transfer_to_skill)
+            ashenzari_end_transfer(true, true);
     }
     else if (you.skills[exsk] == 1 && n > 0)
     {

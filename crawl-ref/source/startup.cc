@@ -113,7 +113,7 @@ static void _initialize()
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
     if (!crawl_state.map_stat_gen && !crawl_state.test
-        && Options.tile_title_screen)
+        && crawl_state.title_screen)
     {
         tiles.draw_title();
         tiles.update_title_msg("Loading Databases...");
@@ -123,7 +123,7 @@ static void _initialize()
     // Initialise internal databases.
     databaseSystemInit();
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (crawl_state.title_screen)
         tiles.update_title_msg("Loading Spells and Features...");
 #endif
 
@@ -131,7 +131,7 @@ static void _initialize()
     init_spell_name_cache();
     init_spell_rarities();
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (crawl_state.title_screen)
         tiles.update_title_msg("Loading maps...");
 #endif
 
@@ -147,7 +147,7 @@ static void _initialize()
     // System initialisation stuff.
     textbackground(0);
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (!Options.tile_skip_title && crawl_state.title_screen)
     {
         tiles.update_title_msg("Loading complete, press any key to start.");
         tiles.hide_title();
@@ -189,6 +189,8 @@ static void _initialize()
 
 static void _post_init(bool newc)
 {
+    ASSERT(strwidth(you.your_name) <= kNameLen);
+
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
 
@@ -268,7 +270,7 @@ static void _post_init(bool newc)
     update_player_symbol();
 
     draw_border();
-    new_level();
+    new_level(!newc);
     update_turn_count();
     update_vision_range();
     you.xray_vision = !!you.duration[DUR_SCRYING];
@@ -292,6 +294,9 @@ static void _post_init(bool newc)
         // For a newly started hints mode, turn secret doors into normal ones.
         if (Hints.hints_left)
             hints_zap_secret_doors();
+
+        if (crawl_state.game_is_zotdef())
+            fully_map_level();
     }
 
 #ifdef USE_TILE
@@ -498,7 +503,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
     std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
 
+#ifdef USE_TILE
+    const int max_col    = tiles.get_crt()->mx;
+#else
     const int max_col    = get_number_of_cols() - 1;
+#endif
     const int max_line   = get_number_of_lines() - 1;
     const int help_start = _misc_text_start_y(num_saves);
     const int help_end   = help_start + NUM_HELP_LINES + 1;

@@ -13,7 +13,6 @@
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
-#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "food.h"
@@ -22,10 +21,8 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "los.h"
 #include "message.h"
 #include "misc.h"
-#include "map_knowledge.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
@@ -33,7 +30,6 @@
 #include "ouch.h"
 #include "player.h"
 #include "shout.h"
-#include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -664,7 +660,7 @@ int airstrike(int pow, const dist &beam)
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
-        if (mons->res_wind())
+        if (mons->res_wind() > 0)
         {
             mprf("The air twists arounds and harmlessly tosses %s around.",
                  mons->name(DESC_NOCAP_THE).c_str());
@@ -697,11 +693,10 @@ int airstrike(int pow, const dist &beam)
             int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
                            + (random2(pow) / 7));
 
-            if (mons_flies(mons))
-            {
-                hurted *= 3;
-                hurted /= 2;
-            }
+            bolt pbeam;
+            pbeam.flavour = BEAM_AIR;
+            hurted = mons->beam_resists(pbeam, hurted, false);
+            // perhaps we should let the beam subtract AC and do damage too?
 
             hurted -= random2(1 + mons->ac);
 
@@ -711,52 +706,6 @@ int airstrike(int pow, const dist &beam)
             if (mons->alive())
                 print_wounds(mons);
         }
-    }
-
-    return (success);
-}
-
-bool cast_bone_shards(int power, bolt &beam)
-{
-    if (!you.weapon() || you.weapon()->base_type != OBJ_CORPSES)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return (false);
-    }
-
-    bool success = false;
-
-    const bool was_orc = (mons_genus(you.weapon()->plus) == MONS_ORC);
-
-    if (you.weapon()->sub_type != CORPSE_SKELETON)
-    {
-        mpr("The corpse collapses into a pulpy mess.");
-
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        if (was_orc)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    }
-    else
-    {
-        // Practical max of 100 * 15 + 3000 = 4500.
-        // Actual max of    200 * 15 + 3000 = 6000.
-        power *= 15;
-        power += mons_weight(you.weapon()->plus);
-
-        if (!player_tracer(ZAP_BONE_SHARDS, power, beam))
-            return (false);
-
-        mpr("The skeleton explodes into sharp fragments of bone!");
-
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        if (was_orc)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-
-        zapping(ZAP_BONE_SHARDS, power, beam);
-
-        success = true;
     }
 
     return (success);
@@ -1119,7 +1068,7 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
     if (strength > 0)
     {
         place_cloud(CLOUD_FIRE, where,
-                    strength + roll_dice(3, strength / 4), KC_YOU);
+                    strength + roll_dice(3, strength / 4), &you);
     }
 
     return (strength);
@@ -1129,30 +1078,28 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *)
 {
     UNUSED(pow);
 
-    bool did_anything = false;
-
     const int i = env.cgrid(where);
     if (i != EMPTY_CLOUD)
     {
         cloud_struct& cloud = env.cloud[i];
         if (cloud.type == CLOUD_STINK)
         {
-            did_anything = true;
-            cloud.type = CLOUD_FIRE;
-
             cloud.decay /= 2;
 
             if (cloud.decay < 1)
                 cloud.decay = 1;
         }
-        else if (cloud.type == CLOUD_POISON)
-        {
-            did_anything = true;
-            cloud.type = CLOUD_FIRE;
-        }
+        else if (cloud.type != CLOUD_POISON)
+            return false;
+
+        cloud.type = CLOUD_FIRE;
+        cloud.whose = KC_YOU;
+        cloud.killer = KILL_YOU_MISSILE;
+        cloud.source = MID_PLAYER;
+        return true;
     }
 
-    return did_anything;
+    return false;
 }
 
 static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
@@ -1224,14 +1171,14 @@ void cast_ignite_poison(int pow)
             CLOUD_FIRE, you.pos(),
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) +
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) + 1,
-            KC_YOU);
+            &you);
     }
 
     int damage = 0;
     // Player is poisonous.
     if (player_mutation_level(MUT_SPIT_POISON)
         || player_mutation_level(MUT_STINGER)
-        || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER // poison attack
+        || you.form == TRAN_SPIDER // poison attack
         || (!player_is_shapechanged()
             && (you.species == SP_GREEN_DRACONIAN       // poison breath
                 || you.species == SP_KOBOLD             // poisonous corpse
@@ -1286,10 +1233,12 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     bolt beam;
     beam.flavour = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
 
+    dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
     if (where == you.pos())
     {
         mpr("You are struck by lightning.");
-        damage = 3 + random2(5 + pow / 10);
+        damage = 1 + random2(3 + pow / 15);
+        dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
         if (you.airborne())
@@ -1302,7 +1251,9 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         return (0);
     else
     {
-        damage = 3 + random2(5 + pow/10);
+        damage = 3 + random2(5 + pow / 10 + (random2(pow) / 10));
+        dprf("%s: static discharge damage: %d",
+             mons->name(DESC_PLAIN, true).c_str(), damage);
         damage = mons_adjust_flavoured(mons, beam, damage);
 
         if (damage)
@@ -1315,7 +1266,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
 
     // Recursion to give us chain-lightning -- bwr
     // Low power slight chance added for low power characters -- bwr
-    if ((pow >= 10 && !one_chance_in(3)) || (pow >= 3 && one_chance_in(10)))
+    if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
     {
         mpr("The lightning arcs!");
         pow /= (coinflip() ? 2 : 3);
@@ -1334,11 +1285,9 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
 
 void cast_discharge(int pow)
 {
-    int num_targs = 1 + random2(1 + pow / 25);
-    int dam;
-
-    dam = apply_random_around_square(_discharge_monsters, you.pos(),
-                                     true, pow, num_targs);
+    const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
+    const int dam = apply_random_around_square(_discharge_monsters, you.pos(),
+                                               true, pow, num_targs);
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);
 
@@ -1840,165 +1789,4 @@ bool cast_sandblast(int pow, bolt &beam)
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
     return (success);
-}
-
-static void _set_tornado_durations(int powc)
-{
-    int dur = 50 + powc / 5;
-    you.duration[DUR_TORNADO] = dur;
-    you.duration[DUR_LEVITATION] =
-        std::max(dur, you.duration[DUR_LEVITATION]);
-    you.duration[DUR_CONTROLLED_FLIGHT] =
-        std::max(dur, you.duration[DUR_CONTROLLED_FLIGHT]);
-    you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
-}
-
-bool cast_tornado(int powc)
-{
-    if (you.duration[DUR_TORNADO])
-    {
-        _set_tornado_durations(powc);
-        mpr("The winds around you grow in strength.");
-        return true;
-    }
-
-    bool friendlies = false;
-    for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_ROUND); ri; ++ri)
-    {
-        const monster_info* m = env.map_knowledge(*ri).monsterinfo();
-        if (!m)
-            continue;
-        if (mons_att_wont_attack(m->attitude)
-            && mons_class_res_wind(m->type) <= 0
-            && !mons_is_projectile(m->type))
-        {
-            friendlies = true;
-        }
-    }
-
-    if (friendlies
-        && !yesno("There are friendlies around, are you sure you want to hurt them?",
-                  true, 'n'))
-    {
-        return false;
-    }
-
-    mprf("A great vortex of raging winds %s.",
-         you.is_levitating() ? "appears around you"
-                             : "appears and lifts you up");
-
-    if (you.fishtail)
-        merfolk_stop_swimming();
-
-    _set_tornado_durations(powc);
-    burden_change();
-
-    return true;
-}
-
-void tornado_damage(int dur)
-{
-    if (dur <= 0)
-        return;
-
-    // Not stored so unwielding that staff will reduce damage.
-    int pow = div_rand_round(calc_spell_power(SPELL_TORNADO, true) * dur, 10);
-    dprf("Doing tornado, dur %d, effective power %d", dur, pow);
-    const coord_def org = you.pos();
-
-    std::stack<actor*>    move_act;
-
-    distance_iterator count_i(org, false);
-    distance_iterator dam_i(org, true);
-    for (int r = 1; r <= TORNADO_RADIUS; r++)
-    {
-        int cnt_open = 0;
-        int cnt_all  = 0;
-        while (count_i && count_i.radius() == r)
-        {
-            if (!feat_is_solid(grd(*count_i)))
-                cnt_open++;
-            cnt_all++;
-            count_i++;
-        }
-        pow = pow * cnt_open / cnt_all;
-        dprf("at dist %d pow is %d", r, pow);
-        if (!pow)
-            break;
-
-        std::vector<coord_def> clouds;
-        for (; dam_i && dam_i.radius() == r; dam_i++)
-        {
-            if (grd(*dam_i) == DNGN_TREE && one_chance_in(20))
-            {
-                grd(*dam_i) = DNGN_FLOOR;
-                set_terrain_changed(*dam_i);
-                if (you.see_cell(*dam_i))
-                    mpr("A tree falls to the hurricane!");
-                did_god_conduct(DID_KILL_PLANT, 1);
-            }
-
-            if (feat_is_solid(grd(*dam_i)))
-                continue;
-
-            if (actor* victim = actor_at(*dam_i))
-            {
-                if (victim->submerged())
-                    continue;
-
-                if (!victim->res_wind())
-                {
-                    if (victim->atype() == ACT_MONSTER)
-                    {
-                        // levitate the monster so you get only one attempt at
-                        // tossing them into water/lava
-                        monster *mon = victim->as_monster();
-                        mon_enchant ench(ENCH_LEVITATION, 0, KC_YOU, 20);
-                        if (mon->has_ench(ENCH_LEVITATION))
-                            mon->update_ench(ench);
-                        else
-                            mon->add_ench(ench);
-                        behaviour_event(mon, ME_ANNOY, MHITYOU);
-                        if (mons_is_mimic(mon->type))
-                            mimic_alert(mon);
-                    }
-                    int dmg = roll_dice(6, pow) / 8;
-                    dprf("damage done: %d", dmg);
-                    victim->hurt(&you, dmg);
-                }
-
-                if (victim->alive())
-                    move_act.push(victim);
-            }
-            if ((env.cgrid(*dam_i) == EMPTY_CLOUD
-                || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
-                && x_chance_in_y(pow, 20))
-            {
-                place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2),
-                            KILL_YOU_MISSILE);
-            }
-            clouds.push_back(*dam_i);
-            swap_clouds(clouds[random2(clouds.size())], *dam_i);
-        }
-    }
-}
-
-void cancel_tornado()
-{
-    if (!you.duration[DUR_TORNADO])
-        return;
-
-    dprf("Aborting tornado.");
-    if (you.duration[DUR_TORNADO] == you.duration[DUR_LEVITATION]
-        && !you.permanent_levitation() && !you.permanent_flight())
-    {
-        you.duration[DUR_LEVITATION] = 0;
-        you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-        you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-        burden_change();
-        // NO checking for water, since this is called only during level
-        // change, and being, say, banished from above water shouldn't
-        // kill you.
-    }
-    you.duration[DUR_TORNADO] = 0;
 }

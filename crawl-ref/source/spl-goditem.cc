@@ -16,7 +16,6 @@
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
-#include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -521,14 +520,14 @@ int detect_creatures(int pow, bool telepathic)
         _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
     int creatures_found = 0;
-    const int map_radius = 8 + random2(8) + pow;
+    const int map_radius = 10 + random2(8) + pow;
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
     if (!telepathic)
         clear_map(false);
 
-    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
@@ -858,7 +857,7 @@ void stonemail(int pow)
         mpr("Your scaly armour looks firmer.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             mpr("Your stone body feels more resilient.");
         else
             mpr("A set of stone scales covers your body!");

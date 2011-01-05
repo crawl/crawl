@@ -23,6 +23,7 @@
 #include "tiledef-main.h"
 #include "tilefont.h"
 #include "tilereg.h"
+#include "tilereg-cmd.h"
 #include "tilereg-crt.h"
 #include "tilereg-dgn.h"
 #include "tilereg-doll.h"
@@ -40,6 +41,7 @@
 #include "tilereg-text.h"
 #include "tilereg-title.h"
 #include "tilesdl.h"
+#include "tileview.h"
 #include "travel.h"
 #include "view.h"
 #include "viewgeom.h"
@@ -143,6 +145,12 @@ void TilesFramework::shutdown()
     m_region_mon   = NULL;
     m_region_crt   = NULL;
     m_region_menu  = NULL;
+
+    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
+    {
+        delete (*m_tabs_it).second;
+        m_tabs.erase(m_tabs_it);
+    }
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
         m_layers[i].m_regions.clear();
@@ -315,30 +323,31 @@ bool TilesFramework::initialise()
                               Options.tile_font_stat_size, true, false);
     m_tip_font    = load_font(Options.tile_font_tip_file.c_str(),
                               Options.tile_font_tip_size, true, false);
-    int lbl_font  = load_font(Options.tile_font_lbl_file.c_str(),
+    m_lbl_font    = load_font(Options.tile_font_lbl_file.c_str(),
                               Options.tile_font_lbl_size, true, true);
 
     if (m_crt_font == -1 || m_msg_font == -1 || stat_font == -1
-        || m_tip_font == -1 || lbl_font == -1)
+        || m_tip_font == -1 || m_lbl_font == -1)
     {
         return (false);
     }
 
-    TileRegionInit init(m_image, m_fonts[lbl_font].font, TILE_X, TILE_Y);
-    m_region_tile = new DungeonRegion(init);
-    m_region_map  = new MapRegion(Options.tile_map_pixels);
-    m_region_tab  = new TabbedRegion(init);
-    m_region_inv  = new InventoryRegion(init);
-    m_region_spl  = new SpellRegion(init);
-    m_region_mem  = new MemoriseRegion(init);
-    m_region_mon  = new MonsterRegion(init);
-    m_region_skl  = new SkillRegion(init);
+    m_init = TileRegionInit(m_image, m_fonts[m_lbl_font].font, TILE_X, TILE_Y);
+    m_region_tile = new DungeonRegion(m_init);
+    m_region_tab  = new TabbedRegion(m_init);
+    m_region_inv  = new InventoryRegion(m_init);
+    m_region_spl  = new SpellRegion(m_init);
+    m_region_mem  = new MemoriseRegion(m_init);
+    m_region_mon  = new MonsterRegion(m_init);
+    m_region_skl  = new SkillRegion(m_init);
+    m_region_cmd  = new CommandRegion(m_init);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
     m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
     m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
+    m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
     m_region_tab->activate_tab(TAB_ITEM);
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
@@ -347,7 +356,6 @@ bool TilesFramework::initialise()
 
     m_region_menu = new MenuRegion(m_image, m_fonts[m_crt_font].font);
 
-    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_msg);
@@ -408,7 +416,8 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     coord_def win_start(gc.x - ox, gc.y - oy);
     coord_def win_end(gc.x + ox + 1, gc.y + oy + 1);
 
-    m_region_map->set_window(win_start, win_end);
+    if (m_region_map)
+        m_region_map->set_window(win_start, win_end);
 }
 
 void TilesFramework::load_dungeon(const coord_def &cen)
@@ -722,6 +731,7 @@ int TilesFramework::getch_ck()
 }
 
 static const int map_margin      = 2;
+static const int tab_margin      = 20;
 static const int map_stat_margin = 4;
 static const int crt_width       = 80;
 static const int crt_height      = 30;
@@ -750,7 +760,7 @@ void TilesFramework::do_layout()
     // between dungeon view on the left and status area on the right.
     // message_y_divider is the horizontal line between dungeon view on
     // the top and message window at the bottom.
-    int stat_x_divider = 0;
+    m_stat_x_divider = 0;
     int message_y_divider = 0;
 
     bool message_overlay = Options.tile_force_overlay ? true : false;
@@ -771,7 +781,7 @@ void TilesFramework::do_layout()
         available_width_in_tiles = ENV_SHOW_DIAMETER;
     }
 
-    stat_x_divider = available_width_in_tiles * m_region_tile->dx;
+    m_stat_x_divider = available_width_in_tiles * m_region_tile->dx;
 
     // Calculate message_y_divider. First off, if we have already decided to
     // use the overlay, we can place the divider to the bottom of the screen.
@@ -822,7 +832,7 @@ void TilesFramework::do_layout()
     }
 
     // Resize and place the dungeon region.
-    m_region_tile->resize_to_fit(stat_x_divider, message_y_divider);
+    m_region_tile->resize_to_fit(m_stat_x_divider, message_y_divider);
     m_region_tile->place(0, 0, 0);
 
     crawl_view.viewsz.x = m_region_tile->mx;
@@ -833,13 +843,13 @@ void TilesFramework::do_layout()
     {
        m_region_msg->place(0, 0, 0); // TODO: Maybe add an option to place
                                      // overlay at the bottom.
-       m_region_msg->resize_to_fit(stat_x_divider, Options.msg_min_height
+       m_region_msg->resize_to_fit(m_stat_x_divider, Options.msg_min_height
                                    * m_region_msg->dy);
        m_region_msg->set_overlay(message_overlay);
     }
     else
     {
-        m_region_msg->resize_to_fit(stat_x_divider, m_windowsz.y
+        m_region_msg->resize_to_fit(m_stat_x_divider, m_windowsz.y
                                     - message_y_divider);
         m_region_msg->place(0, m_region_tile->ey, 0);
     }
@@ -847,35 +857,23 @@ void TilesFramework::do_layout()
     crawl_view.msgsz.x = m_region_msg->mx;
     crawl_view.msgsz.y = m_region_msg->my;
 
-    m_region_stat->resize_to_fit(m_windowsz.x - stat_x_divider, m_windowsz.y);
-    m_region_stat->place(stat_x_divider + map_stat_margin, 0, 0);
+    m_region_stat->resize_to_fit(m_windowsz.x - m_stat_x_divider, m_windowsz.y);
+    m_region_stat->place(m_stat_x_divider + map_stat_margin, 0, 0);
 
-    // Fit the minimap into place.
-    m_region_map->dx = m_region_map->dy = Options.tile_map_pixels;
-
-    if (GXM * m_region_map->dx > m_windowsz.x - stat_x_divider)
-    {
-        m_region_map->dx = (m_windowsz.x - stat_x_divider - map_margin * 2)
-                            / GXM;
-        m_region_map->dy = m_region_map->dx;
-    }
-
-    m_region_map->resize(GXM, GYM);
-    m_region_map->place(stat_x_divider + map_stat_margin,
-                        m_region_stat->ey, map_margin);
+    m_inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
+    if (message_overlay)
+        m_inv_col = m_region_stat->sx;
 
     // If show_gold_turns isn't turned on, try turning it on if there's room.
     if (!Options.show_gold_turns)
     {
-        if (layout_statcol(message_overlay, true))
+        if (layout_statcol(true))
             Options.show_gold_turns = true;
         else
-            layout_statcol(message_overlay, false);
+            layout_statcol(false);
     }
     else
-    {
-        layout_statcol(message_overlay, true);
-    }
+        layout_statcol(true);
 
     m_region_crt->place(0, 0, 0);
     m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
@@ -885,29 +883,122 @@ void TilesFramework::do_layout()
 
     crawl_view.init_view();
 }
-
-bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
+void TilesFramework::place_minimap()
 {
-    // Assumes that the region_stat has already been placed.
-    int hud_height = 12 + (show_gold_turns ? 1 : 0);
-    m_region_stat->resize(m_region_stat->mx, hud_height);
-    crawl_view.hudsz.y = hud_height;
+    m_region_map  = new MapRegion(Options.tile_map_pixels);
+    // Fit the minimap into place.
+    m_region_map->dx = m_region_map->dy = Options.tile_map_pixels;
+
+    if (GXM * m_region_map->dx > m_windowsz.x - m_stat_x_divider)
+    {
+        m_region_map->dx = (m_windowsz.x - m_stat_x_divider - map_margin * 2)
+                            / GXM;
+        m_region_map->dy = m_region_map->dx;
+    }
+
+    m_region_map->resize(GXM, GYM);
+    if (m_region_map->dy * GYM > m_statcol_bottom - m_statcol_top)
+    {
+        delete m_region_map;
+        m_region_map = NULL;
+        return;
+    }
+
+    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
+    m_region_map->place(m_stat_x_divider + map_stat_margin,
+                        m_region_stat->ey, map_margin);
     m_region_map->place(m_region_stat->sx, m_region_stat->ey,
                         m_region_stat->ex, m_region_stat->ey + m_region_map->wy,
                         map_margin);
 
-    int inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
-    if (message_overlay)
-        inv_col = m_region_stat->sx;
+    tile_new_level(false, false);
+    m_statcol_top = m_region_map->ey + map_margin;
+}
 
-    m_region_tab->place(inv_col, m_region_map->ey);
+void TilesFramework::place_tab(int idx, int min_ln, int max_ln)
+{
+    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top - tab_margin)
+                                 / m_region_tab->dy);
+    if (lines >= min_ln)
+    {
+        TabbedRegion* region_tab = new TabbedRegion(m_init);
+        switch (idx)
+        {
+        case TAB_SPELL:
+            region_tab->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
+            break;
+        case TAB_MONSTER:
+            region_tab->set_tab_region(0, m_region_mon, TILEG_TAB_MONSTER);
+            break;
+        case TAB_COMMAND:
+            region_tab->set_tab_region(0, m_region_cmd, TILEG_TAB_COMMAND);
+            break;
+        default:
+            delete region_tab;
+            return;
+        }
+        m_tabs[idx] = region_tab;
+        region_tab->activate_tab(0);
+        m_region_tab->disable_tab(idx);
+        m_layers[LAYER_NORMAL].m_regions.push_back(region_tab);
+        region_tab->place(m_inv_col, m_statcol_bottom
+                                     - lines * m_region_tab->dy - tab_margin);
+        region_tab->resize(m_region_tab->mx, lines);
+        m_statcol_bottom = region_tab->sy;
+    }
+    else
+        m_region_tab->enable_tab(idx);
+}
+
+bool TilesFramework::layout_statcol(bool show_gold_turns)
+{
+    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
+    {
+        delete (*m_tabs_it).second;
+        m_tabs.erase(m_tabs_it);
+        m_layers[LAYER_NORMAL].m_regions.pop_back();
+    }
+
+    if (m_region_map)
+    {
+        delete m_region_map;
+        m_region_map = NULL;
+        m_layers[LAYER_NORMAL].m_regions.pop_back();
+    }
+
+    // Assumes that the region_stat has already been placed.
+    int hud_height = 12 + (show_gold_turns ? 1 : 0);
+    m_region_stat->resize(m_region_stat->mx, hud_height);
+    crawl_view.hudsz.y = hud_height;
+
+    m_statcol_top = m_region_stat->ey;
+    m_statcol_bottom = m_windowsz.y;
+
+    place_minimap();
+
+    m_region_tab->place(m_inv_col, m_statcol_top);
     m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
                                 m_windowsz.y - m_region_tab->sy);
     m_region_tab->resize(std::min(13, (int)m_region_tab->mx),
                          std::min(6, (int)m_region_tab->my));
 
     int self_inv_y = m_windowsz.y - m_region_tab->wy;
-    m_region_tab->place(inv_col, self_inv_y);
+    m_region_tab->place(m_inv_col, self_inv_y);
+
+    m_statcol_bottom = m_region_tab->sy;
+
+    // Integer divison rounded up
+    int lines = (n_common_commands - 1) / m_region_tab->mx + 1;
+    place_tab(TAB_COMMAND, lines, lines);
+
+    lines = (you.spell_no - 1) / m_region_tab->mx + 1;
+    if (you.spell_no > 0)
+        place_tab(TAB_SPELL, 1, lines);
+    else
+        m_region_tab->enable_tab(TAB_SPELL);
+
+    if (Options.tile_allow_detached_montab)
+        place_tab(TAB_MONSTER, 1, 3);
 
     int num_items = m_region_tab->mx * (m_region_tab->my - 1);
     return (num_items >= ENDOFPACK);
@@ -1071,7 +1162,7 @@ static map_feature get_cell_map_feature(const map_cell& cell)
 
 void TilesFramework::update_minimap(const coord_def& gc)
 {
-    if (!player_in_mappable_area())
+    if (!player_in_mappable_area() || !m_region_map)
         return;
 
     map_feature mf;
@@ -1095,12 +1186,14 @@ void TilesFramework::update_minimap(const coord_def& gc)
 
 void TilesFramework::clear_minimap()
 {
-    m_region_map->clear();
+    if (m_region_map)
+        m_region_map->clear();
 }
 
 void TilesFramework::update_minimap_bounds()
 {
-    m_region_map->update_bounds();
+    if (m_region_map)
+        m_region_map->update_bounds();
 }
 
 void TilesFramework::update_inventory()
@@ -1109,6 +1202,8 @@ void TilesFramework::update_inventory()
         return;
 
     m_region_tab->update();
+    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
+        (*m_tabs_it).second->update();
 }
 
 void TilesFramework::toggle_inventory_display()
@@ -1136,9 +1231,12 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
 
 void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
 {
-    // HACK.  Names cover up pan demons in a weird way.
-    if (mon->type == MONS_PANDEMONIUM_DEMON)
+    // HACK.  Large-tile monsters don't interact well with name tags.
+    if (mon->type == MONS_PANDEMONIUM_DEMON
+        || mon->type == MONS_LERNAEAN_HYDRA)
+    {
         return;
+    }
 
     const coord_def &gc = mon->pos();
 

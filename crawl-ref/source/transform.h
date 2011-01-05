@@ -11,52 +11,34 @@
 #include <set>
 
 #include "enum.h"
+#include "player.h"
 
-enum transformation_type
-{
-    TRAN_NONE,                         //    0
-    TRAN_SPIDER,
-    TRAN_BLADE_HANDS,
-    TRAN_STATUE,
-    TRAN_ICE_BEAST,
-    TRAN_DRAGON,                       //    5
-    TRAN_LICH,
-    TRAN_BAT,
-    TRAN_PIG,
-    NUM_TRANSFORMATIONS                // must remain last member {dlb}
-};
+bool form_can_wield(transformation_type form = you.form);
+bool form_can_fly(transformation_type form = you.form);
+bool form_can_swim(transformation_type form = you.form);
+bool form_likes_water(transformation_type form = you.form);
+bool form_can_butcher_barehanded(transformation_type form = you.form);
+bool form_changed_physiology(transformation_type form = you.form);
+bool form_can_wear_item(const item_def& item,
+                        transformation_type form = you.form);
 
-bool transform_can_wield(transformation_type trans);
-bool transform_can_wield();
-bool transform_can_butcher_barehanded(transformation_type tt);
-bool transform_can_fly(transformation_type trans);
-bool transform_can_fly();
-bool transform_can_swim(transformation_type trans);
-bool transform_can_swim();
+bool can_equip(equipment_type use_which, bool ignore_temporary);
+
+bool transform(int pow, transformation_type which_trans, bool force = false,
+               bool just_check = false);
 
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_wielding = false, bool skip_move = false);
 
-bool can_equip(equipment_type use_which, bool ignore_temporary);
 size_type transform_size(int psize = PSIZE_BODY);
-
-bool transform(int pow, transformation_type which_trans, bool force = false,
-               bool just_check = false);
 
 void remove_one_equip(equipment_type eq, bool meld = true,
                       bool mutation = false);
 void unmeld_one_equip(equipment_type eq);
 
-bool transform_changed_physiology(bool phys_scales = false);
-bool transform_allows_wearing_item(const item_def& item,
-                                   transformation_type transform);
 monster_type transform_mons();
 std::string blade_parts(bool terse = false);
 monster_type dragon_form_dragon_type();
-
-// Check your current transformation.
-bool transform_allows_wearing_item(const item_def& item);
-bool transform_allows_wielding(transformation_type transform);
 
 void transformation_expiration_warning();
 

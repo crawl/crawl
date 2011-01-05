@@ -12,6 +12,8 @@ dc-dngn/dngn_unseen
 
 %include dc-skills.txt
 
+%include dc-commands.txt
+
 dc-misc/todo TODO
 dc-misc/error ERROR
 
@@ -84,4 +86,17 @@ dc-misc/error ERROR
 %start
 %compose tab_selected
 %compose tab_label_skill
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_command
+%finish TAB_COMMAND
+%start
+%compose tab_mouseover
+%compose tab_label_command
+%finish
+%start
+%compose tab_selected
+%compose tab_label_command
 %finish

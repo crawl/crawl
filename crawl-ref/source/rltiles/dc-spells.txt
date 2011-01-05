@@ -33,12 +33,6 @@ iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
 magic_dart MAGIC_DART
 orb_of_destruction IOOD
 
-%sdir spells/divination
-detect_creatures DETECT_CREATURES
-detect_items DETECT_ITEMS
-detect_secret_doors DETECT_SECRET_DOORS
-detect_traps DETECT_TRAPS
-
 %sdir spells/earth
 iron_shot IRON_SHOT
 dig DIG
@@ -147,6 +141,7 @@ abjuration ABJURATION
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
 demonic_horde DEMONIC_HORDE
+malign_gateway MALIGN_GATEWAY
 recall RECALL
 sticks_to_snakes STICKS_TO_SNAKES
 summon_butterflies SUMMON_BUTTERFLIES

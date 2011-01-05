@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w
+use Encode;
 
 open FLIST, "git ls-files|" or die "Can't run git ls-files";
 
@@ -6,13 +7,15 @@ while(<FLIST>)
 {
     chomp;
     next unless -f $_;
-    next if /\.(png|ttf|ico|icns|fig|tex|eps|pdf|txt)$/i;
+    next if /\.(png|ttf|ico|icns|fig|tex|eps|pdf)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist)$/i;
     next if /\.(rb|pl)$/i;
-    next if /Makefile/i;
     next if /vcproj/;
+    next if /^\.gitmodules$/;
     next if /\.(lex|tab)\./;
     next if !/\./;
+    my $tab = /\.(rb|pl|sh)$/i; # Allow tabs for these files.
+    $tab = 1 if /Makefile/i;    # ... and for makefiles.
     undef local $/;
     open F, "<$_" or die "Can't open $_";
     my $file = $_;
@@ -21,8 +24,17 @@ while(<FLIST>)
 
     $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s;
     print "extra newlines at eof: $file\n" if s/\n+\n$/\n/s;
-    print "tab: $file\n" if s/ {0,7}\t/        /sg;
+    print "tab: $file\n" if !$tab && s/ {0,7}\t/        /sg;
     print "spaces at eol: $file\n" if s/ +\n/\n/sg;
+    print "CR: $file\n" if s/\r//sg;
+    eval{decode("UTF-8", "$_", Encode::FB_CROAK)};
+    if ($@)
+    {
+        print "invalid UTF-8: $file\n";
+        # We don't know the actual encoding, assume a Windows-using american/
+        # frenchman/german/finn.  Sorry, polacks and russkies.
+        Encode::from_to($_, "CP1252", "UTF-8");
+    }
 
     if ($_ ne $cont)
     {

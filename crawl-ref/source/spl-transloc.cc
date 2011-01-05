@@ -31,7 +31,6 @@
 #include "random.h"
 #include "spl-other.h"
 #include "spl-util.h"
-#include "stairs.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -179,7 +178,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         else
         {
             // Leave a purple cloud.
-            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
             move_player_to_grid(beam.target, false, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -237,7 +236,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         success = true;
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
         if (you.level_type == LEVEL_ABYSS)
         {
@@ -303,33 +302,10 @@ static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = 
     if (env.cgrid(cell) != EMPTY_CLOUD)
         return (true);
 
-    // But not all features.
-    switch (grd(cell))
-    {
-    case DNGN_FLOOR:
-    case DNGN_SHALLOW_WATER:
-        return (false);
-
-    case DNGN_DEEP_WATER:
-        if (you.species == SP_MERFOLK && (transform_can_swim()
-                                          || !you.transform_uncancellable))
-        {
-            return (false);
-        }
-        else
-            return (true);
-
-    case DNGN_LAVA:
+    if (cell_is_solid(cell))
         return (true);
 
-    default:
-        // Lava is really the only non-solid glyph above DNGN_MAXSOLID that is
-        // not a safe teleport location, and that's handled above.
-        if (cell_is_solid(cell))
-            return (true);
-
-        return (false);
-    }
+    return is_feat_dangerous(grd(cell), true);
 }
 
 static void _handle_teleport_update (bool large_change, bool check_ring_TC,
@@ -532,7 +508,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             else
             {
                 // Leave a purple cloud.
-                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
                 // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true);
@@ -590,7 +566,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         }
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
         move_player_to_grid(newpos, false, true);
     }
@@ -657,7 +633,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     // If we got this far, we're teleporting the player.
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
     bool large_change = you.see_cell(where);
 
@@ -687,89 +663,6 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
         else
             xom_is_stimulated(255);
     }
-}
-
-// Restricted to main dungeon for historical reasons, probably for
-// balance: otherwise you have an instant teleport from anywhere.
-int portal()
-{
-    // Disabled completely in zotdef
-    if (!player_in_branch(BRANCH_MAIN_DUNGEON)
-        || crawl_state.game_is_zotdef())
-    {
-        mpr("This spell doesn't work here.");
-        return (-1);
-    }
-    else if (grd(you.pos()) != DNGN_FLOOR)
-    {
-        mpr("You must find a clear area in which to cast this spell.");
-        return (-1);
-    }
-    else if (you.char_direction == GDT_ASCENDING)
-    {
-        // Be evil if you've got the Orb.
-        mpr("An empty arch forms before you, then disappears.");
-        return (1);
-    }
-
-    mpr("Which direction ('<<' for up, '>' for down, 'x' to quit)? ",
-        MSGCH_PROMPT);
-
-    level_id lid = level_id::current();
-    const int brdepth = branches[lid.branch].depth;
-
-    int dir_sign = 0;
-    while (dir_sign == 0)
-    {
-        const int keyin = getch();
-        switch (keyin)
-        {
-        case '<':
-            if (lid.depth == 1)
-                mpr("You can't go any further upwards with this spell.");
-            else
-                dir_sign = -1;
-            break;
-
-        case '>':
-            if (lid.depth == brdepth)
-                mpr("You can't go any further downwards with this spell.");
-            else
-                dir_sign = 1;
-            break;
-
-        case 'x':
-            canned_msg(MSG_OK);
-            return (-1);
-
-        default:
-            break;
-        }
-    }
-
-    mpr("How many levels (1-9, 'x' to quit)? ", MSGCH_PROMPT);
-
-    int amount = 0;
-    while (amount == 0)
-    {
-        const int keyin = getch();
-        if (isadigit(keyin))
-            amount = (keyin - '0') * dir_sign;
-        else if (keyin == 'x')
-        {
-            canned_msg(MSG_OK);
-            return (-1);
-        }
-    }
-
-    mpr("You fall through a mystic portal, and materialise at the "
-        "foot of a staircase.");
-    more();
-
-    lid.depth = std::max(1, std::min(brdepth, lid.depth + amount));
-    down_stairs(DNGN_STONE_STAIRS_DOWN_I, EC_UNKNOWN, &lid);
-
-    return (1);
 }
 
 bool cast_portal_projectile(int pow)
@@ -947,13 +840,13 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     }
 
     if (!found)
-        return(0);
+        return 0;
 
     coord_def origin = you.pos();
     move_player_to_grid(target, false, true);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
     return (1);
 }
@@ -1009,8 +902,7 @@ bool cast_golubrias_passage(const coord_def& where)
     {
         // lose a turn
         mpr("A powerful magic interferes with the creation of the passage.");
-        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3),
-                    KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3), &you);
         return true;
     }
 

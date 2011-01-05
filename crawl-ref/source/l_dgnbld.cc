@@ -10,7 +10,6 @@
 #include "cluautil.h"
 #include "coord.h"
 #include "coordit.h"
-#include "dungeon.h"
 #include "l_libs.h"
 #include "mapdef.h"
 #include "random.h"
@@ -873,27 +872,11 @@ LUAFN(dgn_spotty_map)
                && strchr(replace, lines(x, y-2))
                && strchr(replace, lines(x, y+2)));
 
-        if (strchr(replace, lines(x, y)))
-            lines(x, y) = fill;
-        if (strchr(replace, lines(x, y-1)))
-            lines(x, y-1) = fill;
-        if (strchr(replace, lines(x, y+1)))
-            lines(x, y+1) = fill;
-        if (strchr(replace, lines(x-1, y)))
-            lines(x-1, y) = fill;
-        if (strchr(replace, lines(x+1, y)))
-            lines(x+1, y) = fill;
-
-        if (boxy)
+        for (radius_iterator ai(coord_def(x, y), 1, boxy ? C_SQUARE : C_POINTY,
+                                NULL, false); ai; ++ai)
         {
-            if (strchr(replace, lines(x-1, y-1)))
-                lines(x-1, y-1) = fill;
-            if (strchr(replace, lines(x+1, y+1)))
-                lines(x+1, y+1) = fill;
-            if (strchr(replace, lines(x-1, y+1)))
-                lines(x-1, y+1) = fill;
-            if (strchr(replace, lines(x+1, y-1)))
-                lines(x+1, y-1) = fill;
+            if (strchr(replace, lines(*ai)))
+                lines(*ai) = fill;
         }
     }
 

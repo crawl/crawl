@@ -14,7 +14,7 @@
 #include "libutil.h"
 #include "skills2.h"
 #include "stuff.h"
-#include "tiledef-main.h"
+#include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
 
@@ -121,7 +121,6 @@ bool SkillRegion::update_tip_text(std::string& tip)
         return (false);
 
     const int flag = m_items[item_idx].flag;
-    std::vector<command_type> cmd;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You don't have this skill yet.";
     else
@@ -174,6 +173,25 @@ bool SkillRegion::update_alt_text(std::string &alt)
     return (true);
 }
 
+static int _get_aptitude_tile(const int apt)
+{
+    switch (apt)
+    {
+    case -5: return TILEI_NUM_MINUS5;
+    case -4: return TILEI_NUM_MINUS4;
+    case -3: return TILEI_NUM_MINUS3;
+    case -2: return TILEI_NUM_MINUS2;
+    case -1: return TILEI_NUM_MINUS1;
+    case  1: return TILEI_NUM_PLUS1;
+    case  2: return TILEI_NUM_PLUS2;
+    case  3: return TILEI_NUM_PLUS3;
+    case  4: return TILEI_NUM_PLUS4;
+    case  5: return TILEI_NUM_PLUS5;
+    case 0:
+    default: return TILEI_NUM_ZERO;
+    }
+}
+
 void SkillRegion::pack_buffers()
 {
     int i = 0;
@@ -188,17 +206,22 @@ void SkillRegion::pack_buffers()
                 break;
 
             InventoryTile &item = m_items[i++];
+            const skill_type skill = (skill_type) item.idx;
+
             if (item.flag & TILEI_FLAG_INVALID)
-                m_buf.add_main_tile(TILE_MESH, x, y);
+                m_buf.add_icons_tile(TILEI_MESH, x, y);
 
             if (item.quantity > 0)
-                draw_number(x, y, item.quantity);
+                draw_number(x, y, item.quantity, true);
+
+            const int apt = species_apt(skill, you.species);
+            m_buf.add_icons_tile(_get_aptitude_tile(apt), x, y);
 
             if (item.tile)
                 m_buf.add_skill_tile(item.tile, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_main_tile(TILE_CURSOR, x, y);
+                m_buf.add_icons_tile(TILEI_CURSOR, x, y);
         }
     }
 }

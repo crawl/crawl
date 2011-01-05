@@ -9,7 +9,7 @@ enum feature_property_type
     FPROP_SANCTUARY_1   = (1 << 0),
     FPROP_SANCTUARY_2   = (1 << 2),
     FPROP_BLOODY        = (1 << 3),
-    FPROP_VAULT         = (1 << 4),
+    FPROP_UNUSED_2      = (1 << 4),  // Used to be 'vault'.
     FPROP_HIGHLIGHT     = (1 << 5),  // Highlight on the X map for debugging.
     // NOTE: Bloody floor and sanctuary are exclusive.
     FPROP_UNUSED        = (1 << 6),  // used to be force_exclude

@@ -16,6 +16,8 @@
 #include "externs.h"
 
 #include "artefact.h"
+#include "coord.h"
+#include "coordit.h"
 #include "decks.h"
 #include "describe.h"
 #include "food.h"
@@ -599,6 +601,35 @@ bool item_is_stationary(const item_def &item)
             && item.plus2);
 }
 
+bool _is_affordable(const item_def &item)
+{
+    // Temp items never count.
+    if (item.flags & ISFLAG_SUMMONED)
+        return false;
+
+    // Already in our grubby mitts.
+    if (in_inventory(item))
+        return true;
+
+    // Disregard shop stuff above your reach.
+    if (in_shop(item))
+        return (int)item_value(item) < you.gold;
+
+    // An ugly special case for items on display.
+    if (in_bounds(item.pos))
+    {
+        for (adjacent_iterator ai(item.pos); ai; ++ai)
+            if (you.can_pass_through(*ai))
+                return true;
+        dprf("Seen item %s seems to be un(easily)obtainable.",
+             item.name(DESC_PLAIN).c_str());
+        return false;
+    }
+
+    // A monster has it.  Violence is the answer.
+    return true;
+}
+
 //
 // Item identification status:
 //
@@ -645,7 +676,8 @@ void set_ident_flags(item_def &item, iflags_t flags)
         }
     }
 
-    if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item))
+    if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item)
+        && _is_affordable(item))
     {
         if (item.base_type == OBJ_WEAPONS)
             you.seen_weapon[item.sub_type] |= 1 << item.special;
@@ -1053,16 +1085,15 @@ int armour_max_enchant(const item_def &item)
     const int eq_slot = get_armour_slot(item);
 
     int max_plus = MAX_SEC_ENCHANT;
-    if (eq_slot == EQ_BODY_ARMOUR || item.sub_type == ARM_CENTAUR_BARDING
+    if (eq_slot == EQ_BODY_ARMOUR)
+        max_plus = property(item, PARM_AC);
+    else if (item.sub_type == ARM_CENTAUR_BARDING
         || item.sub_type == ARM_NAGA_BARDING)
     {
         max_plus = MAX_ARM_ENCHANT;
     }
-
-    if (eq_slot == EQ_SHIELD)
-    {
+    else if (eq_slot == EQ_SHIELD)
         max_plus = 3;
-    }
 
     return (max_plus);
 }
@@ -1172,7 +1203,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
         // Don't offer wands already maximally charged.
         if (it.plus2 == ZAPCOUNT_MAX_CHARGED
             || item_ident(it, ISFLAG_KNOW_PLUSES)
-               && it.plus >= 3 * wand_charge_value(it.sub_type))
+               && it.plus >= wand_max_charges(it.sub_type))
         {
             return (false);
         }
@@ -1196,7 +1227,6 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
     return (false);
 }
 
-// Max. charges are 3 times this value.
 int wand_charge_value(int type)
 {
     switch (type)
@@ -1219,6 +1249,11 @@ int wand_charge_value(int type)
     default:
         return 8;
     }
+}
+
+int wand_max_charges(int type)
+{
+    return wand_charge_value(type) * 3;
 }
 
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
@@ -2627,9 +2662,15 @@ const char* weapon_base_name(uint8_t subtype)
     return Weapon_prop[Weapon_index[subtype]].name;
 }
 
+bool in_shop(const item_def &item)
+{
+    // yay the shop hack...
+    return (item.pos.x == 0 && item.pos.y >= 5);
+}
+
 void seen_item(const item_def &item)
 {
-    if (!is_artefact(item))
+    if (!is_artefact(item) && _is_affordable(item))
     {
         // Known brands will be set in set_item_flags().
         if (item.base_type == OBJ_WEAPONS)

@@ -134,6 +134,9 @@ static void _update_feat_at(const coord_def &gp)
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
 
+    if (liquefied(gp, false))
+        env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))
@@ -234,7 +237,7 @@ static void _update_item_at(const coord_def &gp)
 static void _update_cloud(int cloudno)
 {
     const coord_def gp = env.cloud[cloudno].pos;
-    cloud_type cloud = env.cloud[cloudno].type;
+    cloud_type cloud   = env.cloud[cloudno].type;
     env.map_knowledge(gp).set_cloud(cloud, get_cloud_colour(cloudno));
 
 #ifdef USE_TILE
@@ -281,15 +284,15 @@ static void _update_monster(const monster* mons)
     if (!mons->visible_to(&you))
     {
         // ripple effect?
-        if ((grd(gp) == DNGN_SHALLOW_WATER
-            && !mons_flies(mons)
-            && env.cgrid(gp) == EMPTY_CLOUD)
-            ||
-            (is_opaque_cloud(env.cgrid(gp))
-                 && !mons->submerged()
-                 && !mons->is_insubstantial())
-         )
+        if (grd(gp) == DNGN_SHALLOW_WATER
+                && !mons_flies(mons)
+                && env.cgrid(gp) == EMPTY_CLOUD
+            || is_opaque_cloud(env.cgrid(gp))
+                && !mons->submerged()
+                && !mons->is_insubstantial())
+        {
             env.map_knowledge(gp).set_invisible_monster();
+        }
         return;
     }
 
@@ -316,7 +319,9 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     if (!in_bounds(gp))
         return;
 
-    _update_item_at(gp);
+    const monster* mons = monster_at(gp);
+    if (mons && mons->alive())
+        _update_monster(mons);
 
     const int cloud = env.cgrid(gp);
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
@@ -325,9 +330,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
         _update_cloud(cloud);
     }
 
-    const monster* mons = monster_at(gp);
-    if (mons && mons->alive())
-        _update_monster(mons);
+    _update_item_at(gp);
 }
 
 void show_init(bool terrain_only)

@@ -650,7 +650,7 @@ void list_weapons(void)
     }
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
             wstring += "    blade " + blade_parts(true);
         else if (!you_tran_can_wear(EQ_WEAPON))
             wstring += "    (currently unavailable)";
@@ -2444,12 +2444,12 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Item Interaction (floor):\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
-
+    _add_command(cols, 1, CMD_PICKUP, "pick up items", 2);
     cols.add_formatted(
             1,
             "    (press twice for pick up menu)\n",
             false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_PICKUP_QUANTITY, "prompt for single-item quantity on pickup", 2);
 
     _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
     _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
@@ -2672,6 +2672,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>X</w>      : make Xom do something now\n"
                        "<w>z</w>      : cast spell by number/name\n"
                        "<w>W</w>      : god wrath\n"
+                       "<w>Ctrl-V</w> : toggle xray vision\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      : detect all monsters\n"

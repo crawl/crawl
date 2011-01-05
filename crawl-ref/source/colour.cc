@@ -2,6 +2,8 @@
 
 #include "colour.h"
 
+#include "areas.h"
+#include "cloud.h"
 #include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
@@ -167,6 +169,33 @@ static int _etc_waves(int, const coord_def& loc)
         return CYAN;
 }
 
+static int _etc_liquefied(int, const coord_def& loc)
+{
+    static int turns = you.num_turns;
+    static coord_def centre = find_centre_for(loc, AREA_LIQUID);
+
+    if (turns != you.num_turns || (centre-loc).abs() > 15)
+    {
+        centre = find_centre_for(loc, AREA_LIQUID);
+        turns = you.num_turns;
+    }
+
+    if (centre.origin())
+        return BROWN;
+
+    int x = loc.x - centre.x;
+    int y = loc.y - centre.y;
+    double dir = atan2(x, y)/PI;
+    double dist = sqrt(x*x + y*y);
+    bool phase = ((int)floor(dir*0.3 + dist*0.5 + (you.frame_no % 54)/2.7))&1;
+
+    if (player_in_branch(BRANCH_SWAMP))
+        return phase ? LIGHTRED : RED;
+    else
+        return phase ? YELLOW : BROWN;
+}
+
+
 static int _etc_tree(int, const coord_def& loc)
 {
     uint32_t h = loc.x;
@@ -174,18 +203,33 @@ static int _etc_tree(int, const coord_def& loc)
     h += loc.y;
     h+=h<<10; h^=h>>6;
     h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30)                        ? GREEN
-         : player_in_branch(BRANCH_SWAMP) ? BROWN
-         :                                  LIGHTGREEN;
+    return (h>>30) ? GREEN : LIGHTGREEN;
+}
+
+static int _etc_swamp_tree(int, const coord_def& loc)
+{
+    uint32_t h = loc.x;
+    h+=h<<10; h^=h>>6;
+    h += loc.y;
+    h+=h<<10; h^=h>>6;
+    h+=h<<3; h^=h>>11; h+=h<<15;
+    return (h>>30) ? GREEN : BROWN;
 }
 
 static int _etc_tornado(int, const coord_def& loc)
 {
-    int x = loc.x - you.pos().x;
-    int y = loc.y - you.pos().y;
-    double dir = atan2(x, y)/PI;
-    double dist = sqrt(x*x + y*y);
-    bool phase = ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+    bool phase;
+    coord_def center = get_cloud_originator(loc);
+    if (center.origin())
+        phase = coinflip(); // source died/went away
+    else
+    {
+        int x = loc.x - center.x;
+        int y = loc.y - center.y;
+        double dir = atan2(x, y)/PI;
+        double dist = sqrt(x*x + y*y);
+        phase = ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+    }
 
     switch(grd(loc))
     {
@@ -481,7 +525,13 @@ void init_element_colours()
                             ETC_TREE, "tree", _etc_tree
                        ));
     add_element_colour(new element_colour_calc(
+                            ETC_SWAMP_TREE, "swamp_tree", _etc_swamp_tree
+                       ));
+    add_element_colour(new element_colour_calc(
                             ETC_TORNADO, "tornado", _etc_tornado
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_LIQUEFIED, "liquefied", _etc_liquefied
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random

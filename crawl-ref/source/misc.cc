@@ -44,7 +44,6 @@
 #include "exercise.h"
 #include "fight.h"
 #include "files.h"
-#include "flood_find.h"
 #include "fprop.h"
 #include "food.h"
 #include "ghost.h"
@@ -1109,7 +1108,7 @@ bool maybe_bloodify_square(const coord_def& where)
         return (false);
 
     env.pgrid(where) |= FPROP_BLOODY;
-    return(true);
+    return true;
 }
 
 static void _maybe_bloodify_square(const coord_def& where, int amount,
@@ -1322,18 +1321,21 @@ void search_around(bool only_adjacent)
     }
 }
 
+void emergency_untransform()
+{
+    mpr("You quickly transform back into your natural form.");
+    untransform(false, true); // We're already entering the water.
+
+    if (you.species == SP_MERFOLK)
+        merfolk_start_swimming(false);
+}
+
 void merfolk_start_swimming(bool stepped)
 {
     if (you.fishtail)
         return;
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
-    {
-        mpr("You quickly transform back into your natural form.");
-        untransform(false, true); // We're already entering the water.
-    }
-    else if (stepped)
+    if (stepped)
         mpr("Your legs become a tail as you enter the water.");
     else
         mpr("Your legs become a tail as you dive into the water.");
@@ -1393,7 +1395,7 @@ bool scramble(void)
     ASSERT(!crawl_state.game_is_arena());
 
     // Statues are too stiff and heavy to scramble out of the water.
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
         return (false);
 
     int max_carry = carrying_capacity();
@@ -1838,21 +1840,20 @@ std::vector<map_malign_gateway_marker*> get_malign_gateways ()
 
 void timeout_malign_gateways (int duration)
 {
-    if (!duration)
-        return;
-
+    // Passing 0 should allow us to just touch the gateway and see
+    // if it should decay. This, in theory, should resolve the one
+    // turn delay between it timing out and being recastable. -due
     std::vector<map_malign_gateway_marker*> markers = get_malign_gateways();
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_malign_gateway_marker *mmark = markers[i];
 
-        mmark->duration -= duration;
+        if (duration)
+            mmark->duration -= duration;
 
         if (mmark->duration > 0)
-        {
-            big_cloud(CLOUD_TLOC_ENERGY, KC_OTHER, mmark->pos, 3+random2(10), 2+random2(5));
-        }
+            big_cloud(CLOUD_TLOC_ENERGY, 0, mmark->pos, 3+random2(10), 2+random2(5));
         else
         {
             monster* mons = monster_at(mmark->pos);
@@ -1867,19 +1868,23 @@ void timeout_malign_gateways (int duration)
             else if (!mmark->monster_summoned && !mons)
             {
                 bool is_player = mmark->is_player;
-                actor* caster = mmark->caster;
-                if (caster == NULL)
+                actor* caster = 0;
+                if (is_player)
                     caster = &you;
 
-                int tentacle_idx = create_monster(mgen_data(MONS_ELDRITCH_TENTACLE,
-                                                            (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
-                                                            caster,
-                                                            0,
-                                                            0,
-                                                            mmark->pos,
-                                                            MHITNOT,
-                                                            MG_FORCE_PLACE,
-                                                            mmark->god));
+                mgen_data mg = mgen_data(MONS_ELDRITCH_TENTACLE,
+                                         mmark->behaviour,
+                                         caster,
+                                         0,
+                                         0,
+                                         mmark->pos,
+                                         MHITNOT,
+                                         MG_FORCE_PLACE,
+                                         mmark->god);
+                if (!is_player)
+                    mg.non_actor_summoner = mmark->summoner_string;
+
+                int tentacle_idx = create_monster(mg);
 
                 if (tentacle_idx >= 0)
                 {
@@ -1950,6 +1955,17 @@ void bring_to_safety()
     if (you.level_type == LEVEL_ABYSS)
         return abyss_teleport(true);
 
+    if (crawl_state.game_is_zotdef() && !orb_position().origin())
+    {
+        // In ZotDef, it's not the safety of your sorry butt that matters.
+        for (distance_iterator di(orb_position(), true, false); di; ++di)
+            if (!monster_at(*di))
+            {
+                you.moveto(*di);
+                return;
+            }
+    }
+
     coord_def best_pos, pos;
     double min_threat = 1e38;
     int tries = 0;
@@ -2013,7 +2029,7 @@ void revive()
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     if (you.duration[DUR_WEAPON_BRAND])
         set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_NORMAL);
-    if (you.attribute[ATTR_TRANSFORMATION])
+    if (you.form)
         untransform();
     you.clear_beholders();
 
@@ -2079,9 +2095,9 @@ static void apply_environment_effect(const coord_def &c)
     if (testbits(env.pgrid(c), FPROP_NO_CLOUD_GEN))
         return;
     if (grid == DNGN_LAVA)
-        check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), KC_OTHER);
+        check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), 0);
     else if (grid == DNGN_SHALLOW_WATER)
-        check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), KC_OTHER);
+        check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), 0);
 }
 
 static const int Base_Sfx_Chance = 5;
@@ -2183,7 +2199,7 @@ std::string your_hand(bool plural)
 {
     std::string result;
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     default:
         mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
@@ -2345,7 +2361,7 @@ bool is_dragonkind(const actor *act)
     }
 
     if (act->atype() == ACT_PLAYER)
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
+        return (you.form == TRAN_DRAGON);
 
     // Else the actor is a monster.
     const monster* mon = act->as_monster();

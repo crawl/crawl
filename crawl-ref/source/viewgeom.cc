@@ -45,6 +45,10 @@ class _layout
         valid(false) {}
 
  protected:
+// Smart compilers can recognize some of these assertions as tautological,
+// but we do want to keep them in case something changes.
+// A discussion: http://kerneltrap.org/node/7434
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
     void _assert_validity() const
     {
 #ifndef USE_TILE
