@@ -516,6 +516,15 @@ static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;
 
+static int _save_games_start_y()
+{
+#ifdef USE_TILE
+    return SAVE_GAMES_START_Y + 4;
+#else
+    return SAVE_GAMES_START_Y;
+#endif
+}
+
 // Display more than just two saved characters if more are available
 // and there's enough space.
 static int _misc_text_start_y(int num)
@@ -561,11 +570,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
     MenuScroller* game_modes = new MenuScroller();
     game_modes->init(coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y),
                      coord_def(GAME_MODES_WIDTH,
-                               SAVE_GAMES_START_Y - 1),
+                               _save_games_start_y() - 1),
                      "game modes");
 
     MenuScroller* save_games = new MenuScroller();
-    save_games->init(coord_def(SCROLLER_MARGIN_X, SAVE_GAMES_START_Y),
+    save_games->init(coord_def(SCROLLER_MARGIN_X, _save_games_start_y()),
                      coord_def(max_col, help_start - 1),
                      "save games");
     _construct_game_modes_menu(game_modes);
@@ -587,8 +596,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
 
     tmp = new NoSelectTextItem();
     tmp->set_text("Saved games:");
-    tmp->set_bounds(coord_def(1, SAVE_GAMES_START_Y),
-                    coord_def(SCROLLER_MARGIN_X, SAVE_GAMES_START_Y + 1));
+    tmp->set_bounds(coord_def(1, _save_games_start_y()),
+                    coord_def(SCROLLER_MARGIN_X, _save_games_start_y() + 1));
     freeform->attach_item(tmp);
     tmp->set_visible(true);
 
