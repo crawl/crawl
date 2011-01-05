@@ -1656,7 +1656,7 @@ struct spell_desc
 
 {
     SPELL_SUMMON_DRAGON, "Summon Dragon",
-     SPTYP_FIRE | SPTYP_SUMMONING,
+     SPTYP_SUMMONING,
      SPFLAG_NONE,
      9,
      200,
