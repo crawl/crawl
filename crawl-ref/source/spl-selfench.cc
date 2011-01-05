@@ -102,8 +102,6 @@ static spell_type _brand_spell()
         case SPWPN_FROST:
             return SPELL_FREEZING_AURA;
         case SPWPN_VORPAL:
-            if (wpn_type == DVORP_SLICING)
-                return SPELL_TUKIMAS_VORPAL_BLADE;
             if (wpn_type == DVORP_CRUSHING)
                 return SPELL_MAXWELLS_SILVER_HAMMER;
             return NUM_SPELLS;
