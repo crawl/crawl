@@ -1633,7 +1633,7 @@ ENDMAP
 
 NAME:    minislime_mu
 DEPTH:   D:14-26, Vault
-FLAGS:   no_monster_gen no_item_gen
+TAGS:    no_monster_gen no_item_gen
 MONS:    slime creature, giant eyeball, eye of draining
 SUBST:   J = 1111111123
 KITEM:   R = royal jelly
@@ -1996,7 +1996,7 @@ ENDMAP
 
 NAME:    pandoras_box_mu
 DEPTH:   D:14-24, Vault, Crypt:1-4
-FLAGS:   no_monster_gen no_item_gen
+TAGS:    no_monster_gen no_item_gen
 MARKER:  a = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 1, size_buildup_amnt = 5, \

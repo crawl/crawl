@@ -17,7 +17,6 @@ NAME:   dungeon_sprint_mu
 DESC:   Sprint III: "The Ten Rune Challenge"
 TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 ORIENT: encompass
-FLAGS:  no_rotate no_hmirror no_vmirror
 SHUFFLE:  hnw
 SHUFFLE:  NI
 SHUFFLE:  CR

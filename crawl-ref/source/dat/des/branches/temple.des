@@ -1031,7 +1031,7 @@ ENDMAP
 NAME:    circular_temple_13
 WEIGHT:  5
 PLACE:   Temple
-FLAGS:   no_rotate
+TAGS:    no_rotate
 ORIENT:  encompass
 MAP
          ccccccccccccc
@@ -1405,7 +1405,7 @@ ENDMAP
 NAME:    cyrus_temple_forest
 WEIGHT:  3
 PLACE:   Temple
-FLAGS:   no_rotate
+TAGS:    no_rotate
 ORIENT:  encompass
 NSUBST:  . = 10:X / 34:Y / *:.
 SUBST:   X : tXY.
