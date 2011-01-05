@@ -2797,6 +2797,10 @@ static void tag_read_level(reader &th)
 
     env.turns_on_level = unmarshallInt(th);
 
+#if TAG_MAJOR_VERSION == 31
+    std::map<dungeon_feature_type, bool> stairs;
+#endif
+
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
         {
@@ -2805,6 +2809,12 @@ static void tag_read_level(reader &th)
             if (th.getMinorVersion() < TAG_MINOR_GRATE)
                 if (grd[i][j] >= DNGN_GRATE && grd[i][j] < DNGN_GRANITE_STATUE)
                     grd[i][j] = (dungeon_feature_type)(grd[i][j] + 1);
+
+            if (th.getMinorVersion() < TAG_MINOR_FIX_STAIR_MIMIC)
+            {
+                if (feat_is_branch_stairs(grd[i][j]))
+                    stairs[grd[i][j]] = true;
+            }
 #endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
@@ -2902,6 +2912,24 @@ static void tag_read_level(reader &th)
     else
 #endif
     env.density = unmarshallInt(th);
+
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_FIX_STAIR_MIMIC)
+    {
+        std::map<branch_type, level_id>::iterator stli;
+        level_id cur_level = level_id::current();
+        for (stli = stair_level.begin(); stli != stair_level.end(); stli++)
+            // It thinks we have a branch stair on this level -- maybe not, though
+            if (stli->second == cur_level)
+            {
+                if (stairs.empty()
+                    || stairs.find(branches[stli->first].entry_stairs) != stairs.end())
+                {
+                    stair_level.erase(stli);
+                }
+            }
+    }
+#endif
 }
 
 static void tag_read_level_items(reader &th)
