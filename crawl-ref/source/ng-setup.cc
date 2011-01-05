@@ -758,7 +758,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[range_skill(you.inv[1])] = 2;
         you.skills[SK_DODGING]              = 1;
         you.skills[SK_SPELLCASTING]         = 2;
-        you.skills[SK_HEXES]                = 2;
+        you.skills[SK_CHARMS]               = 2;
         break;
 
     case JOB_WIZARD:
