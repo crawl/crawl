@@ -1121,8 +1121,7 @@ enum dungeon_feature_type
 
     DNGN_FLOOR_MIN = 67,
     DNGN_FLOOR = DNGN_FLOOR_MIN,
-    DNGN_FLOOR_SPECIAL,        // currently only used for colouring bazaars
-    DNGN_FLOOR_RESERVED,
+    DNGN_FLOOR_RESERVED = 69,
     DNGN_FLOOR_MAX = DNGN_FLOOR_RESERVED,
 
     DNGN_EXIT_HELL,                    //   70

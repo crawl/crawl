@@ -165,7 +165,6 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     {
     case DNGN_UNSEEN:
         return TILE_DNGN_UNSEEN;
-    case DNGN_FLOOR_SPECIAL:
     case DNGN_ROCK_WALL:
     case DNGN_PERMAROCK_WALL:
         return TILE_WALL_NORMAL;

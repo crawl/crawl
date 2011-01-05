@@ -1538,7 +1538,7 @@ const char *dngn_feature_names[] =
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
 "deep_water", "", "", "shallow_water", "water_stuck", "floor",
-"floor_special", "floor_reserved", "exit_hell", "enter_hell",
+"", "floor_reserved", "exit_hell", "enter_hell",
 "open_door", "", "", "trap_mechanical", "trap_magical", "trap_natural",
 "undiscovered_trap", "", "enter_shop", "enter_labyrinth",
 "stone_stairs_down_i", "stone_stairs_down_ii",

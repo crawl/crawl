@@ -192,13 +192,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_FLOOR;
             break;
 
-        case DNGN_FLOOR_SPECIAL:
-            f.dchar        = DCHAR_FLOOR;
-            f.colour       = YELLOW;
-            f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
-            f.minimap      = MF_FLOOR;
-            break;
-
         case DNGN_EXIT_HELL:
             f.dchar       = DCHAR_ARCH;
             f.colour      = LIGHTRED;
