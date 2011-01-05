@@ -34,7 +34,7 @@ local function test_losight_symmetry()
       crawl.redraw_view()
       local this_p = dgn.point(x, y)
       local you_p = dgn.point(you_x, you_y)
-      dgn.grid(you_x, you_y, "floor_special")
+      dgn.fprop_changed(you_x, you_y, "highlight")
       debug.dump_map(FAILMAP)
       assert(false,
              "LOS asymmetry detected (iter #" .. checks .. "): " .. you_p ..
