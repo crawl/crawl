@@ -595,7 +595,7 @@ std::string game_state::game_type_name_for(game_type _type)
     case GAME_TYPE_SPRINT:
         return "Dungeon Sprint";
     case GAME_TYPE_ZOTDEF:
-        return "Zot Defense";
+        return "Zot Defence";
     }
 }
 

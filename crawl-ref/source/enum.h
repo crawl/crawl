@@ -45,7 +45,7 @@ enum ability_type
     ABIL_BREATHE_MEPHITIC,
 
 
-    // // zot defense abilities
+    // // zot defence abilities
     ABIL_MAKE_FUNGUS = 60,             //   60
     ABIL_MAKE_PLANT,
     ABIL_MAKE_OKLOB_SAPLING,
@@ -290,7 +290,7 @@ enum ability_type
     ABIL_HARM_PROTECTION_II, // "reliable" protection
     ABIL_RENOUNCE_RELIGION,
 
-    // Zot Defense abilities
+    // Zot Defence abilities
     ABIL_MAKE_FUNGUS = 230,
     ABIL_MAKE_PLANT,
     ABIL_MAKE_OKLOB_SAPLING,

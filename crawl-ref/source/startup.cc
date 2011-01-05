@@ -379,7 +379,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp->set_visible(true);
 
     tmp = new TextItem();
-    text = "Zot Defense";
+    text = "Zot Defence";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
