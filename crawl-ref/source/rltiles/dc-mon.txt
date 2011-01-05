@@ -55,6 +55,7 @@ gastronok MONS_GASTRONOK
 %sdir dc-mon/animals
 giant_slug MONS_GIANT_SLUG
 agate_snail MONS_AGATE_SNAIL
+agate_snail_shell MONS_AGATE_SNAIL_SHELL
 elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')
@@ -100,7 +101,9 @@ crocodile MONS_CROCODILE
 alligator_baby MONS_BABY_ALLIGATOR
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
+snapping_turtle_shell MONS_SNAPPING_TURTLE_SHELL
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
+alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
 %rim 0
 firecrab MONS_FIRECRAB
 %rim 1
