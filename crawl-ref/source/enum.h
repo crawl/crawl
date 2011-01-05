@@ -1160,10 +1160,6 @@ enum dungeon_feature_type
     DNGN_EXIT_PANDEMONIUM,             //  100
     DNGN_TRANSIT_PANDEMONIUM,          //  101
 
-    // [enne] should the special_wall be placed between minwall/maxwall?
-    DNGN_BUILDER_SPECIAL_WALL = 105,   //  105; builder() only
-    DNGN_BUILDER_SPECIAL_FLOOR,        //  106; builder() only
-
     // Entrances to various branches
     DNGN_ENTER_FIRST_BRANCH = 110,     //  110
     DNGN_ENTER_DWARVEN_HALL = DNGN_ENTER_FIRST_BRANCH,
