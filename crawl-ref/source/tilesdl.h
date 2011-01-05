@@ -108,7 +108,7 @@ public:
     void clear_minimap();
     void update_minimap_bounds();
     void toggle_inventory_display();
-    void update_inventory();
+    void update_tabs();
 
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;

@@ -1192,7 +1192,7 @@ static void _finish_delay(const delay_queue_item &delay)
     _pop_delay();
 
 #ifdef USE_TILE
-    tiles.update_inventory();
+    tiles.update_tabs();
 #endif
 }
 
