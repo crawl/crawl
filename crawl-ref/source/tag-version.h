@@ -37,7 +37,8 @@ enum tag_minor_version
     TAG_MINOR_FIX_MID         = 26, // Cope with broken monster mids.
     TAG_MINOR_MINF_MIMIC_FEAT = 27, // Keep track of mimic feat in monster info
     TAG_MINOR_FIX_STAIR_MIMIC = 28, // Fix stair mimics being counted as branch stairs
-    TAG_MINOR_VERSION         = 28, // Current version.  (Keep equal to max.)
+    TAG_MINOR_SWAMP_TREES     = 29, // Convert all trees in swamp to mangroves.
+    TAG_MINOR_VERSION         = 29, // Current version.  (Keep equal to max.)
 };
 
 #endif
