@@ -4172,11 +4172,70 @@ mons_spec mons_list::mons_by_name(std::string name) const
 //////////////////////////////////////////////////////////////////////
 // item_list
 
+item_spec::item_spec(const item_spec &other)
+    : _corpse_monster_spec(NULL)
+{
+
+    *this = other;
+}
+
+item_spec &item_spec::operator = (const item_spec &other)
+{
+    if (this != &other)
+    {
+        genweight = other.genweight;
+        base_type = other.base_type;
+        sub_type  = other.sub_type;
+        plus = other.plus;
+        plus2 = other.plus2;
+        ego = other.ego;
+        allow_uniques = other.allow_uniques;
+        level = other.level;
+        race = other.race;
+        item_special = other.item_special;
+        qty = other.qty;
+        acquirement_source = other.acquirement_source;
+        place = other.place;
+        props = other.props;
+
+        release_corpse_monster_spec();
+        if (other._corpse_monster_spec)
+            set_corpse_monster_spec(other.corpse_monster_spec());
+    }
+    return (*this);
+}
+
+item_spec::~item_spec()
+{
+    release_corpse_monster_spec();
+}
+
+void item_spec::release_corpse_monster_spec()
+{
+    delete _corpse_monster_spec;
+    _corpse_monster_spec = NULL;
+}
+
 bool item_spec::corpselike() const
 {
     return ((base_type == OBJ_CORPSES && (sub_type == CORPSE_BODY
                                           || sub_type == CORPSE_SKELETON))
             || (base_type == OBJ_FOOD && sub_type == FOOD_CHUNK));
+}
+
+const mons_spec &item_spec::corpse_monster_spec() const
+{
+    ASSERT(_corpse_monster_spec);
+    return *_corpse_monster_spec;
+}
+
+void item_spec::set_corpse_monster_spec(const mons_spec &spec)
+{
+    if (&spec != _corpse_monster_spec)
+    {
+        release_corpse_monster_spec();
+        _corpse_monster_spec = new mons_spec(spec);
+    }
 }
 
 void item_list::clear()
@@ -4463,17 +4522,6 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
                         static_cast<int>(corpse ? CORPSE_BODY :
                                          CORPSE_SKELETON));
 
-    // [ds] We're stuffing the corpse monster into the .plus field to
-    // match what we'll eventually do to the corpse item, in the grand
-    // WTF-is-this Crawl tradition.
-
-    // Is the caller happy with any corpse?
-    if (s == "any")
-    {
-        result.plus = RANDOM_MONSTER;
-        return (result);
-    }
-
     // The caller wants a specific monster, no doubt with the best of
     // motives. Let's indulge them:
     mons_list mlist;
@@ -4488,13 +4536,14 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
     mons_spec spec = mlist.get_monster(0);
     monster_type mtype = static_cast<monster_type>(spec.mid);
     if (!monster_corpse_is_valid(&mtype, s, corpse, skeleton, chunk))
+    {
+        error = make_stringf("Requested corpse '%s' is invalid",
+                             s.c_str());
         return (result);
+    }
 
     // Ok, looking good, the caller can have their requested toy.
-    result.plus = mtype;
-    if (spec.number)
-        result.plus2 = spec.number;
-
+    result.set_corpse_monster_spec(spec);
     return (result);
 }
 

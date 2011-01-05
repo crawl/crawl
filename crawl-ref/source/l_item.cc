@@ -371,7 +371,7 @@ static std::string _item_name(lua_State *ls, item_def* item)
         ndesc = description_type_by_name(lua_tostring(ls, 1));
     else if (lua_isnumber(ls, 1))
         ndesc = static_cast<description_level_type>(luaL_checkint(ls, 1));
-    bool terse = lua_toboolean(ls, 2);
+    const bool terse = lua_toboolean(ls, 2);
     return (item->name(ndesc, terse));
 }
 
@@ -380,10 +380,7 @@ static int l_item_do_name(lua_State *ls)
     UDATA_ITEM(item);
 
     if (item)
-    {
-        std::string name = _item_name(ls, item);
-        lua_pushstring(ls, name.c_str());
-    }
+        lua_pushstring(ls, _item_name(ls, item).c_str());
     else
         lua_pushnil(ls);
     return (1);

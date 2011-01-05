@@ -536,8 +536,10 @@ enum item_spec_type
     ISPEC_ACQUIREMENT = -9,
 };
 
-struct item_spec
+class mons_spec;
+class item_spec
 {
+public:
     int genweight;
 
     object_class_type base_type;
@@ -558,11 +560,24 @@ struct item_spec
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
         race(MAKE_ITEM_RANDOM_RACE), item_special(0), qty(0),
-        acquirement_source(0), place(), props()
+        acquirement_source(0), place(), props(),
+        _corpse_monster_spec(NULL)
     {
     }
 
+    item_spec(const item_spec &other);
+    item_spec &operator = (const item_spec &other);
+    ~item_spec();
+
     bool corpselike() const;
+    const mons_spec &corpse_monster_spec() const;
+    void set_corpse_monster_spec(const mons_spec &spec);
+
+private:
+    mons_spec *_corpse_monster_spec;
+
+private:
+    void release_corpse_monster_spec();
 };
 typedef std::vector<item_spec> item_spec_list;
 

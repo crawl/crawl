@@ -31,6 +31,7 @@
 #include "enum.h"
 #include "map_knowledge.h"
 #include "flood_find.h"
+#include "food.h"
 #include "fprop.h"
 #include "externs.h"
 #include "dbg-maps.h"
@@ -4090,6 +4091,38 @@ static const object_class_type _acquirement_item_classes[] = {
     OBJ_MISCELLANY
 };
 
+int dgn_item_corpse(const item_spec &ispec)
+{
+    mons_spec mspec(ispec.corpse_monster_spec());
+    const int mindex = dgn_place_monster(mspec, 0, coord_def());
+    if (invalid_monster_index(mindex))
+        return (NON_ITEM);
+
+    const int corpse_index = place_monster_corpse(&menv[mindex], true, true);
+    // Dismiss the monster we used to place the corpse.
+    monster_die(&menv[mindex], KILL_DISMISSED, NON_MONSTER, false, true);
+    if (corpse_index != -1 && corpse_index != NON_ITEM)
+    {
+        item_def &corpse(mitm[corpse_index]);
+        if (ispec.props.exists(CORPSE_NEVER_DECAYS))
+            corpse.props[CORPSE_NEVER_DECAYS].get_bool() =
+                ispec.props[CORPSE_NEVER_DECAYS].get_bool();
+
+        if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
+            turn_corpse_into_skeleton(corpse);
+        else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
+            turn_corpse_into_chunks(corpse, false, false);
+
+        if (ispec.props.exists(MONSTER_HIT_DICE))
+            corpse.props[MONSTER_HIT_DICE].get_short() =
+                ispec.props[MONSTER_HIT_DICE].get_short();
+
+        if (ispec.qty && ispec.base_type == OBJ_FOOD)
+            corpse.quantity = ispec.qty;
+    }
+    return corpse_index;
+}
+
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int level)
@@ -4137,18 +4170,11 @@ int dgn_place_item(const item_spec &spec,
     int useless_tries = 0;
 retry:
 
-    const monster_type corpse_mons =
-        spec.corpselike()?
-        resolve_corpse_monster_type(static_cast<monster_type>(spec.plus),
-                                    grd(where),
-                                    spec.place)
-        : MONS_NO_MONSTER;
-
     const int item_made =
         (acquire ?
          acquirement_create_item(base_type, spec.acquirement_source,
                                  true, where)
-         : spec.corpselike() ? item_corpse(corpse_mons, spec)
+         : spec.corpselike() ? dgn_item_corpse(spec)
          : items(spec.allow_uniques, base_type,
                   spec.sub_type, true, level, spec.race, 0,
                   spec.ego));
@@ -4389,8 +4415,11 @@ int dgn_place_monster(mons_spec &mspec,
 
             const habitat_type habitat = mons_class_primary_habitat(montype);
 
-            if (!monster_habitable_grid(montype, grd(where)))
+            if (in_bounds(where)
+                && !monster_habitable_grid(montype, grd(where)))
+            {
                 dungeon_terrain_changed(where, habitat2grid(habitat));
+            }
         }
 
         mgen_data mg(mid);
