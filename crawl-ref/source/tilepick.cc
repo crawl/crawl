@@ -4357,12 +4357,19 @@ tileidx_t tileidx_gametype(const game_type gtype)
     switch (gtype)
     {
     case GAME_TYPE_NORMAL:
+        return TILEG_STARTUP_STONESOUP;
     case GAME_TYPE_TUTORIAL:
-    case GAME_TYPE_ARENA:
-    case GAME_TYPE_SPRINT:
+        return TILEG_STARTUP_TUTORIAL;
     case GAME_TYPE_HINTS:
+        return TILEG_STARTUP_HINTS;
+    case GAME_TYPE_SPRINT:
+        return TILEG_STARTUP_SPRINT;
     case GAME_TYPE_ZOTDEF:
+        return TILEG_STARTUP_ZOTDEF;
     case GAME_TYPE_INSTRUCTIONS:
+        return TILEG_STARTUP_INSTRUCTIONS;
+    case GAME_TYPE_ARENA:
+        return TILEG_STARTUP_ARENA;
     default:
         return TILEG_ERROR;
     }
