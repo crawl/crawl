@@ -1,4 +1,4 @@
-%sdir commands
+%sdir gui/commands
 resting CMD_REST
 explore CMD_EXPLORE
 travel CMD_INTERLEVEL_TRAVEL

@@ -1,4 +1,4 @@
-%sdir spells/disciplines
+%sdir gui/spells/disciplines
 air SPELL_AIR
 conjuration SPELL_CONJURATION
 divination SPELL_DIVINATION
@@ -12,7 +12,7 @@ summoning SPELL_SUMMONING
 translocation SPELL_TRANSLOCATION
 transmutation SPELL_TRANSMUTATION
 
-%sdir spells/air
+%sdir gui/spells/air
 airstrike AIRSTRIKE
 chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
@@ -28,12 +28,12 @@ static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
 tornado TORNADO
 
-%sdir spells/conjuration
+%sdir gui/spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
 magic_dart MAGIC_DART
 orb_of_destruction IOOD
 
-%sdir spells/earth
+%sdir gui/spells/earth
 iron_shot IRON_SHOT
 dig DIG
 lees_rapid_deconstruction LEES_RAPID_DECONSTRUCTION
@@ -47,7 +47,7 @@ statue_form STATUE_FORM
 stone_arrow STONE_ARROW
 stoneskin STONESKIN
 
-%sdir spells/enchantment
+%sdir gui/spells/enchantment
 berserker_rage BERSERKER_RAGE
 cause_fear CAUSE_FEAR
 confuse CONFUSE
@@ -66,7 +66,7 @@ tame_beasts TAME_BEASTS
 tukimas_dance TUKIMAS_DANCE
 tukimas_vorpal_blade TUKIMAS_VORPAL_BLADE
 
-%sdir spells/fire
+%sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
 bolt_of_magma BOLT_OF_MAGMA
 conjure_flame CONJURE_FLAME
@@ -82,7 +82,7 @@ ring_of_flames RING_OF_FLAMES
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
 
-%sdir spells/ice
+%sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
 condensation_shield CONDENSATION_SHIELD
 ensorcelled_hibernation ENSORCELLED_HIBERNATION
@@ -97,7 +97,7 @@ ozocubus_armour OZOCUBUS_ARMOUR
 ozocubus_refrigeration OZOCUBUS_REFRIGERATION
 throw_frost THROW_FROST
 
-%sdir spells/necromancy
+%sdir gui/spells/necromancy
 agony AGONY
 animate_dead ANIMATE_DEAD
 animate_skeleton ANIMATE_SKELETON
@@ -123,7 +123,7 @@ symbol_of_torment SYMBOL_OF_TORMENT
 twisted_resurrection TWISTED_RESURRECTION
 vampiric_draining VAMPIRIC_DRAINING
 
-%sdir spells/poison
+%sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
 cure_poison CURE_POISON
 mephitic_cloud MEPHITIC_CLOUD
@@ -136,7 +136,7 @@ spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
 
-%sdir spells/summoning
+%sdir gui/spells/summoning
 abjuration ABJURATION
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
@@ -155,7 +155,7 @@ summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammals SUMMON_SMALL_MAMMALS
 summon_ugly_thing SUMMON_UGLY_THING
 
-%sdir spells/translocation
+%sdir gui/spells/translocation
 apportation APPORTATION
 banishment BANISHMENT
 blink BLINK
@@ -169,10 +169,10 @@ teleport TELEPORT
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
 
-%sdir spells/transmutation
+%sdir gui/spells/transmutation
 alter_self ALTER_SELF
 blade_hands BLADE_HANDS
 polymorph_other POLYMORPH_OTHER
 
-%sdir spells
+%sdir gui/spells
 memorise MEMORISE
