@@ -1989,6 +1989,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPIDER,
     MONS_OKLOB_SAPLING,
     MONS_BURNING_BUSH,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_213,
       MONS_UNUSED_214,
       MONS_UNUSED_215,
@@ -1996,6 +1997,7 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_217,
       MONS_UNUSED_218,
       MONS_UNUSED_219,
+#endif
     MONS_WHITE_IMP,                    //  220
     MONS_LEMURE,
     MONS_UFETUBUS,
@@ -2032,11 +2034,13 @@ enum monster_type                      // (int) menv[].type
     MONS_LOM_LOBON,
     MONS_CEREBOV,
     MONS_GLOORX_VLOQ,                  //  254
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_MOLLUSC_LORD,
       MONS_UNUSED_256,
       MONS_UNUSED_257,
       MONS_UNUSED_258,
       MONS_UNUSED_PARACELSUS,
+#endif
 // BCR - End first batch of uniques.
     MONS_NAGA_MAGE,                    //  260
     MONS_NAGA_WARRIOR,
@@ -2069,7 +2073,9 @@ enum monster_type                      // (int) menv[].type
     MONS_EROLCHA,
     MONS_DONALD,
     MONS_URUG,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_UNIQUE,              //  290
+#endif
     MONS_JOSEPH,
     MONS_SNORG, // was Anita - Snorg is correct 16jan2000 {dlb}
     MONS_ERICA,
@@ -2130,15 +2136,17 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_UNBORN_DEEP_DWARF,
     MONS_GNOME, // single vault
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_338,
       MONS_UNUSED_339,
-
+#endif
     // The Lords of Hell (also unique):
     MONS_GERYON,                       //  340
     MONS_DISPATER,
     MONS_ASMODEUS,
     MONS_ANTAEUS,
     MONS_ERESHKIGAL,                   //  344
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_345,
       MONS_UNUSED_346,
       MONS_UNUSED_347,
@@ -2150,7 +2158,7 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_353,
       MONS_UNUSED_354,
       MONS_UNUSED_355,
-
+#endif
     MONS_ANCIENT_LICH,                 //  356
     MONS_OOZE,
     MONS_KRAKEN,
@@ -2207,6 +2215,7 @@ enum monster_type                      // (int) menv[].type
     MONS_PLAYER_ILLUSION,
     MONS_HELL_DEMON,
     MONS_TWISTER,        // air miscasts
+#if TAG_MAJOR_VERISON == 31
       MONS_UNUSED_410,
       MONS_UNUSED_411,
       MONS_UNUSED_412,
@@ -2217,19 +2226,20 @@ enum monster_type                      // (int) menv[].type
       MONS_UNUSED_417,
       MONS_UNUSED_418,
       MONS_UNUSED_419,
-
+#endif
     // Lava monsters:
     MONS_LAVA_WORM,                    //  420
     MONS_LAVA_FISH,
     MONS_LAVA_SNAKE,
     MONS_SALAMANDER,                   //  423 mv: was another lava thing
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_424,
       MONS_UNUSED_425,
       MONS_UNUSED_426,
       MONS_UNUSED_427,
       MONS_UNUSED_428,
       MONS_UNUSED_429,
-
+#endif
     // Water monsters:
     MONS_BIG_FISH,                     //  430
     MONS_GIANT_GOLDFISH,
@@ -2239,9 +2249,10 @@ enum monster_type                      // (int) menv[].type
     MONS_SWAMP_WORM,                   //  435
     MONS_SHARK,
     MONS_KRAKEN_TENTACLE_SEGMENT,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_438,
       MONS_UNUSED_439,
-
+#endif
     // Monsters which move through rock:
     MONS_ROCK_WORM,
 
@@ -2251,11 +2262,12 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_STATUE,
     MONS_STATUE,
     MONS_TRAINING_DUMMY,
+#if TAG_MAJOR_VERSION == 31
       MONS_UNUSED_446,
       MONS_UNUSED_447,
       MONS_UNUSED_448,
       MONS_UNUSED_449,
-
+#endif
     // Third batch of uniques
     MONS_ROXANNE, // -- statue, too!
     MONS_SONJA,
