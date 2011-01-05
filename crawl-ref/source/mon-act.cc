@@ -3066,6 +3066,32 @@ static bool _mons_can_displace(const monster* mpusher,
     return (true);
 }
 
+static int _count_adjacent_slime_walls(const coord_def &pos)
+{
+    int count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            count++;
+
+    return (count);
+}
+
+// Returns true if the monster should try to avoid that position
+// because of taking damage from slime walls.
+static bool _check_slime_walls(const monster *mon,
+                               const coord_def &targ)
+{
+    if (!player_in_branch(BRANCH_SLIME_PITS) || mons_is_slime(mon)
+        || mon->res_acid() >= 3 || mons_intel(mon) <= I_INSECT)
+    {
+        return (false);
+    }
+    const int current_count = _count_adjacent_slime_walls(mon->pos());
+    if (_count_adjacent_slime_walls(targ) > current_count)
+        return (true);
+
+    return (false);
+}
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
@@ -3114,6 +3140,9 @@ static bool _mon_can_move_to_pos(const monster* mons,
 
     const int targ_cloud_num = env.cgrid(targ);
     if (mons_avoids_cloud(mons, targ_cloud_num))
+        return (false);
+
+    if (_check_slime_walls(mons, targ))
         return (false);
 
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
