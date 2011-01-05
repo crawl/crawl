@@ -1047,7 +1047,7 @@ ENDMAP
 #
 NAME:   slaughterhouse
 DEPTH:  Lair:7-, D:11-18
-FLAGS:  no_monster_gen
+TAGS:   no_monster_gen
 ORIENT: float
 WEIGHT: 5
 MARKER: F = lua:fog_machine { \
@@ -1337,7 +1337,7 @@ ENDMAP
 NAME:   elemental_lab_mu
 DEPTH:  D:13-26, Elf:1-6
 ORIENT: float
-FLAGS:  no_monster_gen no_item_gen no_pool_fixup
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
 MARKER: ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 1, size_buildup_amnt = 5, \
@@ -1424,7 +1424,7 @@ ENDMAP
 NAME:   ancient_champions_mu
 DEPTH:  D:15-26, Vault, Crypt
 ORIENT: float
-FLAGS:  no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 KFEAT:  ABCDEFG = metal_wall
 KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \
         name_descriptor spells:iron_shot;.;haste;pain;.;. actual_spells \
