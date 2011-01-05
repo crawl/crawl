@@ -1238,7 +1238,6 @@ bool spell_is_useless(spell_type spell, bool transient)
             return (true);
         break;
     // weapon branding is useless
-    case SPELL_TUKIMAS_VORPAL_BLADE:
     case SPELL_FIRE_BRAND:
     case SPELL_FREEZING_AURA:
     case SPELL_LETHAL_INFUSION:

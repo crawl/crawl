@@ -1151,6 +1151,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_TUKIMAS_VORPAL_BLADE, "Tukima's Vorpal Blade",
      SPTYP_CHARMS,
@@ -1163,6 +1164,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_FIRE_BRAND, "Fire Brand",

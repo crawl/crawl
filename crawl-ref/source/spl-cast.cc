@@ -1707,6 +1707,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_TAME_BEASTS:
     case SPELL_BONE_SHARDS:
     case SPELL_PORTAL:
+    case SPELL_TUKIMAS_VORPAL_BLADE:
         mpr("It appears that an accident happened to this spell.");
         return SPRET_ABORT;
 #endif
@@ -1771,11 +1772,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     // Weapon brands.
     case SPELL_SURE_BLADE:
         cast_sure_blade(powc);
-        break;
-
-    case SPELL_TUKIMAS_VORPAL_BLADE:
-        if (!brand_weapon(SPWPN_VORPAL, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_FIRE_BRAND:

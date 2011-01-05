@@ -661,10 +661,6 @@ Tukima's Dance
 
 This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on magical staves and certain wilful artefacts.
 %%%%
-Tukima's Vorpal Blade
-
-This spell bestows a lethal but temporary sharpness on a sword held by the caster. It will not affect weapons otherwise subject to special enchantments.
-%%%%
 Twisted Resurrection
 
 This spell allows its caster to imbue a mass of deceased flesh with a magical life force. Casting this spell involves the assembling of several corpses together; the greater the combined mass of flesh available, the greater the chances of success.
