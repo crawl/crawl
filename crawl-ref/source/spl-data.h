@@ -262,7 +262,7 @@ struct spell_desc
 
 {
     SPELL_INVISIBILITY, "Invisibility",
-     SPTYP_CHARMS,
+     SPTYP_CHARMS | SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      6,
      200,
