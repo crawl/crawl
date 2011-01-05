@@ -65,7 +65,6 @@ void tile_init_default_flavour()
     tile_default_flv(you.level_type, you.where_are_you, env.tile_default);
 }
 
-
 void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 {
     flv.wall    = TILE_WALL_NORMAL;

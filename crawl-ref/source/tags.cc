@@ -2744,7 +2744,12 @@ void tag_construct_level_tiles(writer &th)
 
     marshallShort(th, env.tile_names.size());
     for (unsigned int i = 0; i < env.tile_names.size(); ++i)
+    {
         marshallString(th, env.tile_names[i]);
+#ifdef DEBUG_TILE_NAMES
+        mprf("Writing '%s' into save.", env.tile_names[i].c_str());
+#endif
+    }
 
     // flavour
     marshallShort(th, env.tile_default.wall_idx);
@@ -3220,9 +3225,18 @@ void tag_read_level_tiles(reader &th)
     if (minorVersion >= TAG_MINOR_TILE_NAMES)
     {
  #endif
+        env.tile_names.clear();
         unsigned int num_tilenames = unmarshallShort(th);
         for (unsigned int i = 0; i < num_tilenames; ++i)
+        {
+#ifdef DEBUG_TILE_NAMES
+            std::string temp = unmarshallString(th);
+            mprf("Reading tile_names[%d] = %s", i, temp.c_str());
+            env.tile_names.push_back(temp);
+#else
             env.tile_names.push_back(unmarshallString(th));
+#endif
+        }
  #if TAG_MAJOR_VERSION == 31
     }
  #endif
@@ -3300,13 +3314,14 @@ void tag_read_level_tiles(reader &th)
 #ifdef USE_TILE
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
 {
-#ifdef DEBUG_TILE_NAMES
-    mprf("Index out of bounds: idx = %d, size(tile_names) = %d",
-         idx, env.tile_names.size());
-#endif
     if (idx <= 0 || idx > env.tile_names.size())
+    {
+#ifdef DEBUG_TILE_NAMES
+        mprf("Index out of bounds: idx = %d - 1, size(tile_names) = %d",
+            idx, env.tile_names.size());
+#endif
         return 0;
-
+    }
     std::string tilename = env.tile_names[idx - 1];
 
     tileidx_t tile;
@@ -3332,11 +3347,15 @@ static void _reinit_flavour_tiles()
     {
         env.tile_default.wall
             = _get_tile_from_vector(env.tile_default.wall_idx);
+        if (!env.tile_default.wall)
+            env.tile_default.wall_idx = 0;
     }
     if (env.tile_default.floor_idx)
     {
         env.tile_default.floor
             = _get_tile_from_vector(env.tile_default.floor_idx);
+        if (!env.tile_default.floor)
+            env.tile_default.floor_idx = 0;
     }
 
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
@@ -3346,16 +3365,22 @@ static void _reinit_flavour_tiles()
         {
             env.tile_flv(*ri).wall
                 = _get_tile_from_vector(env.tile_flv(*ri).wall_idx);
+            if (!env.tile_flv(*ri).wall)
+                env.tile_flv(*ri).wall_idx = 0;
         }
         if (env.tile_flv(*ri).floor_idx)
         {
             env.tile_flv(*ri).floor
                 = _get_tile_from_vector(env.tile_flv(*ri).floor_idx);
+            if (!env.tile_flv(*ri).floor)
+                env.tile_flv(*ri).floor_idx = 0;
         }
         if (env.tile_flv(*ri).feat_idx)
         {
             env.tile_flv(*ri).feat
                 = _get_tile_from_vector(env.tile_flv(*ri).feat_idx);
+            if (!env.tile_flv(*ri).feat)
+                env.tile_flv(*ri).feat_idx = 0;
         }
         tileidx_t fg, bg;
         tileidx_from_map_cell(&fg, &bg, env.map_knowledge(*ri));
