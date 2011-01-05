@@ -1035,7 +1035,7 @@ void viewwindow(bool show_updates)
 #else
     tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
     tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
-    tiles.update_inventory();
+    tiles.update_tabs();
 #endif
 
     // Reset env.show if we munged it.

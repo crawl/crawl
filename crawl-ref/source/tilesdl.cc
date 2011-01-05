@@ -1192,7 +1192,7 @@ void TilesFramework::update_minimap_bounds()
         m_region_map->update_bounds();
 }
 
-void TilesFramework::update_inventory()
+void TilesFramework::update_tabs()
 {
     if (!Options.tile_show_items || crawl_state.game_is_arena())
         return;
