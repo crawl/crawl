@@ -3203,6 +3203,7 @@ void tag_read_level_tiles(reader &th)
         || minorVersion < TAG_MINOR_TILE_NAMES
            && unmarshallInt(th) != TILE_WALL_MAX)
     {
+        env.tile_names.clear();
         dprf("DNGN tilecount has changed -- recreating tile data.");
         tag_missing_level_tiles();
         return;
