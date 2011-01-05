@@ -1099,6 +1099,7 @@ enum dungeon_feature_type
     // Can be seen through and reached past.
     DNGN_TREE,
     DNGN_ORCISH_IDOL,
+    DNGN_SWAMP_TREE,
     DNGN_GRANITE_STATUE = 21,
     DNGN_STATUE_RESERVED,
 

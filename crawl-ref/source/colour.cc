@@ -203,9 +203,17 @@ static int _etc_tree(int, const coord_def& loc)
     h += loc.y;
     h+=h<<10; h^=h>>6;
     h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30)                        ? GREEN
-         : player_in_branch(BRANCH_SWAMP) ? BROWN
-         :                                  LIGHTGREEN;
+    return (h>>30) ? GREEN : LIGHTGREEN;
+}
+
+static int _etc_swamp_tree(int, const coord_def& loc)
+{
+    uint32_t h = loc.x;
+    h+=h<<10; h^=h>>6;
+    h += loc.y;
+    h+=h<<10; h^=h>>6;
+    h+=h<<3; h^=h>>11; h+=h<<15;
+    return (h>>30) ? GREEN : BROWN;
 }
 
 static int _etc_tornado(int, const coord_def& loc)
@@ -515,6 +523,9 @@ void init_element_colours()
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_TREE, "tree", _etc_tree
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_SWAMP_TREE, "swamp_tree", _etc_swamp_tree
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_TORNADO, "tornado", _etc_tornado

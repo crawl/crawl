@@ -67,6 +67,7 @@ bool conjure_flame(int pow, const coord_def& where)
             mpr("You can't ignite solid crystal!");
             break;
         case DNGN_TREE:
+        case DNGN_SWAMP_TREE:
             mpr("The flames aren't hot enough to burn down trees!");
             break;
         default:

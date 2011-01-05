@@ -195,6 +195,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_WAX_WALL;
     case DNGN_TREE:
         return TILE_DNGN_TREE;
+    case DNGN_SWAMP_TREE:
+        return TILE_DNGN_TREE; // fixme
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
     case DNGN_LAVA:

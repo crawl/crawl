@@ -415,6 +415,7 @@ bool feat_is_water(dungeon_feature_type feat)
     return (feat == DNGN_SHALLOW_WATER
             || feat == DNGN_DEEP_WATER
             || feat == DNGN_OPEN_SEA
+            || feat == DNGN_SWAMP_TREE
             || feat == DNGN_WATER_RESERVED);
 }
 
@@ -460,6 +461,11 @@ bool feat_is_branch_stairs(dungeon_feature_type feat)
 {
     return ((feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
             || (feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS));
+}
+
+bool feat_is_tree(dungeon_feature_type feat)
+{
+    return feat == DNGN_TREE || feat == DNGN_SWAMP_TREE;
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)

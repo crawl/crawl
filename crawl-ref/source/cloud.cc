@@ -210,15 +210,14 @@ static void _spread_fire(const cloud_struct &cloud)
 
         // forest fire doesn't spread in all directions at once,
         // every neighbouring square gets a separate roll
-        if (grd(*ai) == DNGN_TREE && one_chance_in(20))
+        if (feat_is_tree(grd(*ai)) && one_chance_in(20))
         {
             if (env.markers.property_at(*ai, MAT_ANY, "veto_fire") == "veto")
                 continue;
 
             if (you.see_cell(*ai))
                 mpr("The forest fire spreads!");
-            grd(*ai) = dgn_tree_base_feature_at(*ai);
-            set_terrain_changed(*ai);
+            nuke_wall(*ai);
             _place_new_cloud(cloud.type, *ai, random2(30)+25, cloud.whose,
                               cloud.killer, cloud.source, cloud.spread_rate,
                               cloud.colour, cloud.name, cloud.tile);
