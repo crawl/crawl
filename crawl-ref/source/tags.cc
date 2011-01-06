@@ -2671,9 +2671,10 @@ void tag_construct_level_tiles(writer &th)
 
     marshallBoolean(th, true); // Tiles data included.
 
+#if TAG_MAJOR_VERSION == 31
     // Legacy version number. (What's up with this? --jpeg)
     marshallShort(th, 0);
-
+#endif
     // Map grids.
     // how many X?
     marshallShort(th, GXM);
@@ -3221,9 +3222,10 @@ void tag_read_level_tiles(reader &th)
     unsigned int rle_count = 0;
     unsigned int tile = 0;
 
+#if TAG_MAJOR_VERSION == 31
     int ver = unmarshallShort(th);
     UNUSED(ver);
-
+#endif
     // Map grids.
     // how many X?
     const int gx = unmarshallShort(th);
