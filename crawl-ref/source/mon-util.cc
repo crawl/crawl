@@ -2357,8 +2357,7 @@ habitat_type mons_class_primary_habitat(int mc)
 
 habitat_type mons_primary_habitat(const monster* mon)
 {
-    return (mons_class_primary_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                                              : mon->type));
+    return (mons_class_primary_habitat(mons_base_type(mon)));
 }
 
 habitat_type mons_class_secondary_habitat(int mc)
@@ -2373,8 +2372,7 @@ habitat_type mons_class_secondary_habitat(int mc)
 
 habitat_type mons_secondary_habitat(const monster* mon)
 {
-    return (mons_class_secondary_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                                                : mon->type));
+    return (mons_class_secondary_habitat(mons_base_type(mon)));
 }
 
 bool intelligent_ally(const monster* mon)
