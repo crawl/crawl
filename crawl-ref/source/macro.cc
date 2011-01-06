@@ -679,10 +679,10 @@ void macro_save()
       << std::endl << "# Key Mappings:" << std::endl;
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
-        char keybuf[30] = "K:";
+        char buf[30] = "K:";
         if (mc)
-            snprintf(keybuf, sizeof keybuf, "K%d:", mc);
-        write_map(f, Keymaps[mc], keybuf);
+            snprintf(buf, sizeof buf, "K%d:", mc);
+        write_map(f, Keymaps[mc], buf);
     }
 
     f << "# Command Macros:" << std::endl;

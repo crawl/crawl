@@ -2113,7 +2113,6 @@ static void tag_read_you_dungeon(reader &th)
         you.set_place_info(place_info);
     }
 
-    typedef std::set<std::string> string_set;
     typedef std::pair<string_set::iterator, bool> ssipair;
     unmarshall_container(th, you.uniq_map_tags,
                          (ssipair (string_set::*)(const std::string &))
