@@ -2216,6 +2216,193 @@ int corpse_freshness(const item_def &item)
 //
 // Generic item functions:
 //
+int get_armour_res_fire(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    int res = 0;
+
+    // intrinsic armour abilities
+    switch (arm.sub_type)
+    {
+    case ARM_DRAGON_ARMOUR:
+    case ARM_DRAGON_HIDE:
+        res += 2;
+        break;
+    case ARM_GOLD_DRAGON_ARMOUR:
+    case ARM_GOLD_DRAGON_HIDE:
+        res += 1;
+        break;
+    case ARM_ICE_DRAGON_ARMOUR:
+    case ARM_ICE_DRAGON_HIDE:
+        res -= 1;
+        break;
+    default:
+        break;
+    }
+
+    // check ego resistance
+    const int ego = get_armour_ego_type(arm);
+    if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
+        res += 1;
+
+    if (check_artp && is_artefact(arm))
+        res += artefact_wpn_property(arm, ARTP_FIRE);
+
+    return (res);
+}
+
+int get_armour_res_cold(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    int res = 0;
+
+    // intrinsic armour abilities
+    switch (arm.sub_type)
+    {
+    case ARM_ICE_DRAGON_ARMOUR:
+    case ARM_ICE_DRAGON_HIDE:
+        res += 2;
+        break;
+    case ARM_GOLD_DRAGON_ARMOUR:
+    case ARM_GOLD_DRAGON_HIDE:
+        res += 1;
+        break;
+    case ARM_DRAGON_ARMOUR:
+    case ARM_DRAGON_HIDE:
+        res -= 1;
+        break;
+    default:
+        break;
+    }
+
+    // check ego resistance
+    const int ego = get_armour_ego_type(arm);
+    if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
+        res += 1;
+
+    if (check_artp && is_artefact(arm))
+        res += artefact_wpn_property(arm, ARTP_COLD);
+
+    return (res);
+}
+
+int get_armour_res_poison(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    int res = 0;
+
+    // intrinsic armour abilities
+    switch (arm.sub_type)
+    {
+    case ARM_SWAMP_DRAGON_ARMOUR:
+    case ARM_SWAMP_DRAGON_HIDE:
+        res += 1;
+        break;
+    case ARM_GOLD_DRAGON_ARMOUR:
+    case ARM_GOLD_DRAGON_HIDE:
+        res += 1;
+        break;
+    default:
+        break;
+    }
+
+    // check ego resistance
+    if (get_armour_ego_type(arm) == SPARM_POISON_RESISTANCE)
+        res += 1;
+
+    if (check_artp && is_artefact(arm))
+        res += artefact_wpn_property(arm, ARTP_POISON);
+
+    return (res);
+}
+
+int get_armour_res_elec(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    int res = 0;
+
+    // intrinsic armour abilities
+    switch (arm.sub_type)
+    {
+    case ARM_STORM_DRAGON_ARMOUR:
+    case ARM_STORM_DRAGON_HIDE:
+        res += 1;
+        break;
+    default:
+        break;
+    }
+
+    if (check_artp && is_artefact(arm))
+        res += artefact_wpn_property(arm, ARTP_ELECTRICITY);
+
+    return (res);
+}
+
+int get_armour_life_protection(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    int res = 0;
+
+    // check for ego resistance
+    if (get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)
+        res += 1;
+
+    if (check_artp && is_artefact(arm))
+        res += artefact_wpn_property(arm, ARTP_NEGATIVE_ENERGY);
+
+    return (res);
+}
+
+int get_armour_res_magic(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    int res = 0;
+
+    // check for ego resistance
+    if (get_armour_ego_type(arm) == SPARM_MAGIC_RESISTANCE)
+        res += 30;
+
+    if (check_artp && is_artefact(arm))
+        res += artefact_wpn_property(arm, ARTP_MAGIC);
+
+    return (res);
+}
+
+bool get_armour_see_invisible(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    // check for ego resistance
+    if (get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)
+        return (true);
+
+    if (check_artp && is_artefact(arm))
+        return artefact_wpn_property(arm, ARTP_EYESIGHT);
+
+    return (false);
+}
+
+int get_armour_res_sticky_flame(const item_def &arm)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    // intrinsic armour abilities
+    switch (arm.sub_type)
+    {
+    case ARM_MOTTLED_DRAGON_ARMOUR:
+    case ARM_MOTTLED_DRAGON_HIDE:
+        return 1;
+    default:
+        return 0;
+    }
+}
+
 int property(const item_def &item, int prop_type)
 {
     weapon_type weapon_sub;

@@ -164,6 +164,15 @@ bool is_fruit(const item_def & item);
 uint32_t item_fruit_mask(const item_def &item);
 
 // generic item property functions:
+int get_armour_res_fire(const item_def &arm, bool check_artp);
+int get_armour_res_cold(const item_def &arm, bool check_artp);
+int get_armour_res_poison(const item_def &arm, bool check_artp);
+int get_armour_res_elec(const item_def &arm, bool check_artp);
+int get_armour_life_protection(const item_def &arm, bool check_artp);
+int get_armour_res_magic(const item_def &arm, bool check_artp);
+int get_armour_res_sticky_flame(const item_def &arm);
+bool get_armour_see_invisible(const item_def &arm, bool check_artp);
+
 int property(const item_def &item, int prop_type);
 bool gives_ability(const item_def &item);
 bool gives_resistance(const item_def &item);
