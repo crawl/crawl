@@ -744,7 +744,11 @@ void noise_grid::propagate_noise()
 
 #ifdef DEBUG_NOISE_PROPAGATION
     if (affected_actor_count)
+    {
+        mprf(MSGCH_WARN, "Writing noise grid with %d noise sources",
+             noises.size());
         dump_noise_grid("noise-grid.html");
+    }
 #endif
 }
 
@@ -883,6 +887,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
         _point_clamped_in_bounds(perceived_point)
         : perceived_point;
 
+#ifdef DEBUG_NOISE_PROPAGATION
     dprf("[NOISE] Noise perceived by %s at (%d,%d) centroid (%d,%d) "
          "source (%d,%d) "
          "heard at (%d,%d), distance: %d (traveled %d)",
@@ -892,6 +897,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
          noise.noise_source.x, noise.noise_source.y,
          affected_pos.x, affected_pos.y,
          cell_grid_distance, noise_travel_distance);
+#endif
     return (final_perceived_point);
 }
 
@@ -1008,6 +1014,7 @@ static void _actor_apply_noise(actor *act,
                                const noise_t &noise,
                                int noise_travel_distance)
 {
+#ifdef DEBUG_NOISE_PROPAGATION
     dprf("[NOISE] Actor %s (%d,%d) perceives noise (%d) "
          "from (%d,%d), real source (%d,%d), distance: %d, noise traveled: %d",
          act->name(DESC_PLAIN, true).c_str(),
@@ -1017,6 +1024,7 @@ static void _actor_apply_noise(actor *act,
          noise.noise_source.x, noise.noise_source.y,
          grid_distance(act->pos(), noise.noise_source),
          noise_travel_distance);
+#endif
 
     const bool player = act->is_player();
     if (player)
