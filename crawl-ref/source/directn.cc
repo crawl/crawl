@@ -1653,6 +1653,14 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         wizard_make_monster_summoned(m);
         break;
 
+    case CMD_TARGET_WIZARD_HEAL_MONSTER:
+        if (m->hit_points < m->max_hit_points)
+        {
+            m->hit_points = m->max_hit_points;
+            need_all_redraw = true;
+        }
+        break;
+
     case CMD_TARGET_WIZARD_HURT_MONSTER:
         m->hit_points = 1;
         mpr("Brought monster down to 1 HP.");
