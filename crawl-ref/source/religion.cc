@@ -1658,15 +1658,10 @@ static void _beogh_blessing_reinforcements()
     int how_many = random2(4) + 1;
 
     monster_type follower_type;
-    bool high_level;
     for (int i = 0; i < how_many; ++i)
     {
-        high_level = false;
         if (random2(you.experience_level) >= 9 && coinflip())
-        {
             follower_type = RANDOM_ELEMENT(high_xl_followers);
-            high_level = true;
-        }
         else
             follower_type = RANDOM_ELEMENT(followers);
 

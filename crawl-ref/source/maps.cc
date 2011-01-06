@@ -961,10 +961,6 @@ _random_map_in_list(const map_selector &sel,
 
     if (!chosen_map)
     {
-        int absdepth = 0;
-        if (sel.place.level_type == LEVEL_DUNGEON && sel.place.is_valid())
-            absdepth = sel.place.absdepth();
-
         const level_id &here(level_id::current());
         for (mapref_vector::const_iterator i = eligible.begin();
              i != eligible.end(); ++i)

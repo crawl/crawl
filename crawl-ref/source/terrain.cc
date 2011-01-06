@@ -883,7 +883,6 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
     const dungeon_feature_type feat = grd(pos);
 
     int item = igrd(pos);
-    bool did_destroy = false;
     while (item != NON_ITEM)
     {
         const int curr = item;
@@ -900,7 +899,6 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
             feat_destroys_item(feat, mitm[curr], true);
             item_was_destroyed(mitm[curr]);
             destroy_item(curr);
-            did_destroy = true;
         }
     }
 }

@@ -1145,7 +1145,6 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
     if (cmark->duration < 1)
         return;
 
-    const coord_def centre = cmark->pos;
     const int neffects = std::max(div_rand_round(duration, 5), 1);
 
     for (int i = 0; i < neffects; ++i)

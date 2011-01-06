@@ -1078,7 +1078,6 @@ static void _sdump_kills(dump_params &par)
 static std::string _sdump_kills_place_info(PlaceInfo place_info,
                                           std::string name = "")
 {
-    PlaceInfo   gi = you.global_info;
     std::string out;
 
     if (name.empty())

@@ -657,7 +657,6 @@ static const bool _have_appropriate_spell(const actor* target)
 
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
-    const coord_def gc = mon->pos();
     const bool shift = (mod & MOD_SHIFT);
     const bool ctrl  = (mod & MOD_CTRL);
     const bool alt   = (shift && ctrl || (mod & MOD_ALT));

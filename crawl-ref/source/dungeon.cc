@@ -2607,8 +2607,6 @@ static void _place_chance_vaults()
 
 static void _place_minivaults(void)
 {
-    const level_id curr = level_id::current();
-
     if (use_random_maps)
     {
         const map_def *vault = NULL;

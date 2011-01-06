@@ -1600,7 +1600,6 @@ bool shaft_known(int depth, bool randomly_placed)
 level_id generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id  lid   = lpos.id;
-    coord_def pos   = lpos.pos;
 
     if (lid.level_type != LEVEL_DUNGEON)
         return lid;
