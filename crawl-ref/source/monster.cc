@@ -1589,6 +1589,43 @@ bool monster::wants_armour(const item_def &item) const
     return (check_armour_size(item, body_size()));
 }
 
+// Monsters magically know the real properties of all items.
+static int _get_monster_armour_value(const monster *mon,
+                                     const item_def &item)
+{
+    // Each resistance/property counts as much as 1 point of AC.
+    // Steam has been excluded because of its general uselessness.
+    // Well, the same's true for sticky flame but... (jpeg)
+    int value  = item.armour_rating();
+        value += get_armour_res_fire(item, true);
+        value += get_armour_res_cold(item, true);
+        value += get_armour_res_elec(item, true);
+        value += get_armour_res_sticky_flame(item);
+
+    // Give a simple bonus, no matter the size of the MR bonus.
+    if (get_armour_res_magic(item, true) > 0)
+        value++;
+
+    // Poison becomes much less valuable if the monster is
+    // intrinsically resistant.
+    if (get_mons_resists(mon).poison <= 0)
+        value += get_armour_res_poison(item, true);
+
+    // Same for life protection.
+    if (mon->holiness() != MH_NATURAL)
+        value += get_armour_life_protection(item, true);
+
+    // See invisible also is only useful if not already intrinsic.
+    if (!mons_class_flag(mon->type, M_SEE_INVIS))
+        value += get_armour_see_invisible(item, true);
+
+    // Give a sizable bonus for shields of reflection.
+    if (get_armour_ego_type(item) == SPARM_REFLECTION)
+        value += 3;
+
+    return value;
+}
+
 bool monster::pickup_armour(item_def &item, int near, bool force)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -1645,36 +1682,38 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
     if (mslot == NUM_MONSTER_SLOTS)
         return (false);
 
-    int newAC = item.armour_rating();
+    int value_new = _get_monster_armour_value(this, item);
 
     // No armour yet -> get this one.
-    if (!mslot_item(mslot) && newAC > 0)
+    if (!mslot_item(mslot) && value_new > 0)
         return pickup(item, mslot, near);
 
-    // Very simplistic armour evaluation (AC comparison).
+    // Simplistic armour evaluation (comparing AC and resistances).
     if (const item_def *existing_armour = slot_item(eq, false))
     {
         if (!force)
         {
-            int oldAC = existing_armour->armour_rating();
-            if (oldAC > newAC)
+            int value_old = _get_monster_armour_value(this,
+                                                      *existing_armour);
+            if (value_old > value_new)
                 return (false);
 
-            if (oldAC == newAC)
+            if (value_old == value_new)
             {
-                // Use shopping value as a crude estimate of resistances etc.
-                // XXX: This is not really logical as many properties don't
-                //      apply to monsters (e.g. levitation, blink, berserk).
-                int oldval = item_value(*existing_armour, true);
-                int newval = item_value(item, true);
-
-                // Vastly prefer matching racial type.
+                // Prefer matching racial type.
                 if (_item_race_matches_monster(*existing_armour, this))
-                    oldval *= 2;
+                    value_old++;
                 if (_item_race_matches_monster(item, this))
-                    newval *= 2;
+                    value_new++;
 
-                if (oldval >= newval)
+                if (value_old == value_new)
+                {
+                    // If items are of the same value, use shopping
+                    // value as a further crude estimate.
+                    value_old = item_value(*existing_armour, true);
+                    value_new = item_value(item, true);
+                }
+                if (value_old >= value_new)
                     return (false);
             }
         }
@@ -3073,32 +3112,13 @@ int monster::res_fire() const
         u += scan_mon_inv_randarts(this, ARTP_FIRE);
 
         const int armour = inv[MSLOT_ARMOUR];
-        const int shld = inv[MSLOT_SHIELD];
+        const int shld   = inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-        {
-            // intrinsic armour abilities
-            switch (mitm[armour].sub_type)
-            {
-            case ARM_DRAGON_ARMOUR:      u += 2; break;
-            case ARM_GOLD_DRAGON_ARMOUR: u += 1; break;
-            case ARM_ICE_DRAGON_ARMOUR:  u -= 1; break;
-            default:                             break;
-            }
-
-            // check ego resistance
-            const int ego = get_armour_ego_type(mitm[armour]);
-            if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
-                u += 1;
-        }
+            u += get_armour_res_fire(mitm[armour], false);
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
-        {
-            // check ego resistance
-            const int ego = get_armour_ego_type(mitm[shld]);
-            if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
-                u += 1;
-        }
+            u += get_armour_res_fire(mitm[shld], false);
     }
 
     if (u < -3)
@@ -3126,32 +3146,13 @@ int monster::res_cold() const
         u += scan_mon_inv_randarts(this, ARTP_COLD);
 
         const int armour = inv[MSLOT_ARMOUR];
-        const int shld = inv[MSLOT_SHIELD];
+        const int shld   = inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-        {
-            // intrinsic armour abilities
-            switch (mitm[armour].sub_type)
-            {
-            case ARM_ICE_DRAGON_ARMOUR:  u += 2; break;
-            case ARM_GOLD_DRAGON_ARMOUR: u += 1; break;
-            case ARM_DRAGON_ARMOUR:      u -= 1; break;
-            default:                             break;
-            }
-
-            // check ego resistance
-            const int ego = get_armour_ego_type(mitm[armour]);
-            if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
-                u += 1;
-        }
+            u += get_armour_res_cold(mitm[armour], false);
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
-        {
-            // check ego resistance
-            const int ego = get_armour_ego_type(mitm[shld]);
-            if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
-                u += 1;
-        }
+            u += get_armour_res_cold(mitm[shld], false);
     }
 
     if (u < -3)
@@ -3176,11 +3177,8 @@ int monster::res_elec() const
 
         // No ego armour, but storm dragon.
         const int armour = inv[MSLOT_ARMOUR];
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
-            && mitm[armour].sub_type == ARM_STORM_DRAGON_ARMOUR)
-        {
-            u += 1;
-        }
+        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
+            u += get_armour_res_elec(mitm[armour], false);
     }
 
     // Monsters can legitimately get multiple levels of electricity resistance.
@@ -3220,29 +3218,13 @@ int monster::res_poison() const
         u += scan_mon_inv_randarts(this, ARTP_POISON);
 
         const int armour = inv[MSLOT_ARMOUR];
-        const int shld = inv[MSLOT_SHIELD];
+        const int shld   = inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-        {
-            // intrinsic armour abilities
-            switch (mitm[armour].sub_type)
-            {
-            case ARM_SWAMP_DRAGON_ARMOUR: u += 1; break;
-            case ARM_GOLD_DRAGON_ARMOUR:  u += 1; break;
-            default:                              break;
-            }
-
-            // ego armour resistance
-            if (get_armour_ego_type(mitm[armour]) == SPARM_POISON_RESISTANCE)
-                u += 1;
-        }
+            u += get_armour_res_poison(mitm[armour], false);
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
-        {
-            // ego armour resistance
-            if (get_armour_ego_type(mitm[shld]) == SPARM_POISON_RESISTANCE)
-                u += 1;
-        }
+            u += get_armour_res_poison(mitm[shld], false);
     }
 
     // Monsters can legitimately get multiple levels of poison resistance.
@@ -3303,21 +3285,13 @@ int monster::res_negative_energy() const
         u += scan_mon_inv_randarts(this, ARTP_NEGATIVE_ENERGY);
 
         const int armour = inv[MSLOT_ARMOUR];
-        const int shld = inv[MSLOT_SHIELD];
+        const int shld   = inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-        {
-            // check for ego resistance
-            if (get_armour_ego_type(mitm[armour]) == SPARM_POSITIVE_ENERGY)
-                u += 1;
-        }
+            u += get_armour_life_protection(mitm[armour], false);
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
-        {
-            // check for ego resistance
-            if (get_armour_ego_type(mitm[shld]) == SPARM_POSITIVE_ENERGY)
-                u += 1;
-        }
+            u += get_armour_life_protection(mitm[shld], false);
     }
 
     if (u > 3)
@@ -3367,20 +3341,14 @@ int monster::res_magic() const
     u /= 100;
 
     // ego armour resistance
-    const int _armour = inv[MSLOT_ARMOUR];
-    const int _shield = inv[MSLOT_SHIELD];
+    const int armour = inv[MSLOT_ARMOUR];
+    const int shld   = inv[MSLOT_SHIELD];
 
-    if (_armour != NON_ITEM
-        && get_armour_ego_type(mitm[_armour]) == SPARM_MAGIC_RESISTANCE)
-    {
-        u += 30;
-    }
+    if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
+        u += get_armour_res_magic(mitm[armour], false);
 
-    if (_shield != NON_ITEM
-        && get_armour_ego_type(mitm[_shield]) == SPARM_MAGIC_RESISTANCE)
-    {
-        u += 30;
-    }
+    if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
+        u += get_armour_res_magic(mitm[shld], false);
 
     if (has_ench(ENCH_LOWERED_MR))
         u /= 2;

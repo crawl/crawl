@@ -447,9 +447,9 @@ static int _scan_mon_inv_items(const monster* mon,
     {
         const int weapon = mon->inv[MSLOT_WEAPON];
         const int second = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
-        const int misc = mon->inv[MSLOT_MISCELLANY];
+        const int misc   = mon->inv[MSLOT_MISCELLANY];
         const int potion = mon->inv[MSLOT_POTION];
-        const int wand = mon->inv[MSLOT_WAND];
+        const int wand   = mon->inv[MSLOT_WAND];
         const int scroll = mon->inv[MSLOT_SCROLL];
 
         if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
