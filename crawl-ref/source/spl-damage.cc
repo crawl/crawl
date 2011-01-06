@@ -451,7 +451,8 @@ void cast_refrigeration(int pow, bool non_player)
     counted_monster_list affected_monsters;
 
     for (monster_iterator mi(&you); mi; ++mi)
-        _record_monster_by_name(affected_monsters, *mi);
+        if (cell_see_cell(you.pos(), mi->pos())) // not just you.can_see (Scry)
+            _record_monster_by_name(affected_monsters, *mi);
 
     if (!affected_monsters.empty())
     {
@@ -482,6 +483,9 @@ void cast_refrigeration(int pow, bool non_player)
         // (submerged, invisible) even though you get no information
         // about it.
 
+        // ... but not ones you see only via Scrying.
+        if (!cell_see_cell(you.pos(), mi->pos()))
+            continue;
         // Calculate damage and apply.
         int hurt = mons_adjust_flavoured(*mi, beam, dam_dice.roll());
         dprf("damage done: %d", hurt);
