@@ -458,7 +458,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
             // will be jumping on top of them.
             if (where == you.pos())
                 behaviour_event(*mi, ME_ALERT, MHITYOU, you.pos());
-            else if (mermaid && mons_primary_habitat(*mi) == HT_WATER
+            else if (mermaid && mons_secondary_habitat(*mi) == HT_WATER
                      && !mi->friendly())
             {
                 // Mermaids/sirens call (hostile) aquatic monsters.
