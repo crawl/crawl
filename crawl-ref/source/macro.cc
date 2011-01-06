@@ -284,7 +284,6 @@ static keyseq parse_keyseq(std::string s)
 {
     int state = 0;
     keyseq v;
-    int num;
 
     if (s.find("===") == 0)
     {
@@ -313,10 +312,7 @@ static keyseq parse_keyseq(std::string s)
                 v.push_back(c);
             }
             else if (c == '{')
-            {
                 state = 2;
-                num = 0;
-            }
             // XXX Error handling
             break;
 

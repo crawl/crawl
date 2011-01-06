@@ -2173,15 +2173,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #ifndef USE_TILE
     else if (key == "char_set" || key == "ascii_display")
     {
-        bool valid = true;
-
         if (key == "ascii_display")
         {
             char_set =
                 _read_bool(field, char_set == CSET_ASCII)?
                     CSET_ASCII
                   : CSET_IBM;
-            valid = true;
         }
         else
         {
@@ -2194,10 +2191,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             else if (field == "utf" || field == "unicode")
                 char_set = CSET_UNICODE;
             else
-            {
                 fprintf(stderr, "Bad character set: %s\n", field.c_str());
-                valid = false;
-            }
         }
     }
 #endif

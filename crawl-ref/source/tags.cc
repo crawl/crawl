@@ -3108,7 +3108,7 @@ void unmarshallMonster(reader &th, monster& m)
 static void tag_read_level_monsters(reader &th)
 {
     int i;
-    int count, icount;
+    int count;
 
     for (i = 0; i < MAX_MONSTERS; i++)
         menv[i].reset();
@@ -3128,7 +3128,7 @@ static void tag_read_level_monsters(reader &th)
     ASSERT(count >= 0 && count <= MAX_MONSTERS);
 #if TAG_MAJOR_VERSION == 31
     // how many monster inventory slots?
-    icount = unmarshallByte(th);
+    unmarshallByte(th);
 #endif
 
     for (i = 0; i < count; i++)

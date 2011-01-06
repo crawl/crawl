@@ -1358,7 +1358,6 @@ void cast_dispersal(int pow)
 
 bool cast_fragmentation(int pow, const dist& spd)
 {
-    int debris = 0;
     bool explode = false;
     bool hole    = true;
     const char *what = NULL;
@@ -1625,7 +1624,6 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.ex_size        = 2;
             grd(spd.target)     = DNGN_FLOOR;
             set_terrain_changed(spd.target);
-            debris              = DEBRIS_ROCK;
         }
         break;
 
@@ -1649,7 +1647,6 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.damage.num += 2;
             grd(spd.target)  = DNGN_FLOOR;
             set_terrain_changed(spd.target);
-            debris           = DEBRIS_METAL;
         }
         break;
 
@@ -1670,7 +1667,6 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.ex_size    = coinflip() ? 3 : 2;
             grd(spd.target) = DNGN_FLOOR;
             set_terrain_changed(spd.target);
-            debris          = DEBRIS_CRYSTAL;
         }
         break;
 

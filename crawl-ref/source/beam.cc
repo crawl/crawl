@@ -4312,7 +4312,6 @@ void bolt::affect_monster(monster* mon)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    bool hit_woke_orc = false;
     if (nasty_to(mon))
     {
         if (YOU_KILL(thrower) && final > 0)
@@ -4328,14 +4327,6 @@ void bolt::affect_monster(monster* mon)
                 remove_sanctuary(true);
 
             set_attack_conducts(conducts, mon, !okay);
-        }
-
-        if (you.religion == GOD_BEOGH && mons_genus(mon->type) == MONS_ORC
-            && mon->asleep() && YOU_KILL(thrower)
-            && !player_under_penance() && you.piety >= piety_breakpoint(2)
-            && mons_near(mon))
-        {
-            hit_woke_orc = true;
         }
     }
 
