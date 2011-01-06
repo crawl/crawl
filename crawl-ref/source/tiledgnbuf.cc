@@ -40,6 +40,7 @@ DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_floor(&im->m_textures[TEX_FLOOR]),
     m_buf_wall(&im->m_textures[TEX_WALL]),
     m_buf_feat(&im->m_textures[TEX_FEAT]),
+    m_buf_feat_trans(&im->m_textures[TEX_FEAT], 17),
     m_buf_doll(&im->m_textures[TEX_PLAYER], 17),
     m_buf_main_trans(&im->m_textures[TEX_DEFAULT], 17),
     m_buf_main(&im->m_textures[TEX_DEFAULT]),
@@ -102,7 +103,8 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 
 }
 
-void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
+void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
+                                      bool in_water)
 {
     assert(tileidx < TILE_FEAT_MAX);
 
@@ -110,6 +112,8 @@ void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
         m_buf_floor.add(tileidx, x, y);
     else if (tileidx < TILE_WALL_MAX)
         m_buf_wall.add(tileidx, x, y);
+    else if (in_water)
+        m_buf_feat_trans.add(tileidx, x, y, 0, true, false);
     else
         m_buf_feat.add(tileidx, x, y);
 }
@@ -163,6 +167,7 @@ void DungeonCellBuffer::clear()
     m_buf_floor.clear();
     m_buf_wall.clear();
     m_buf_feat.clear();
+    m_buf_feat_trans.clear();
     m_buf_doll.clear();
     m_buf_main_trans.clear();
     m_buf_main.clear();
@@ -177,6 +182,7 @@ void DungeonCellBuffer::draw()
     m_buf_floor.draw();
     m_buf_wall.draw();
     m_buf_feat.draw();
+    m_buf_feat_trans.draw();
     m_buf_main_trans.draw();
     m_buf_main.draw();
     m_buf_doll.draw();
@@ -529,7 +535,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     if (bg_idx > TILE_WALL_MAX)
         add_blood_overlay(x, y, cell);
 
-    add_dngn_tile(bg_idx, x, y);
+    add_dngn_tile(bg_idx, x, y, cell.swamp_tree_water);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
     {
