@@ -3087,10 +3087,13 @@ static bool _check_slime_walls(const monster *mon,
         return (false);
     }
     const int current_count = _count_adjacent_slime_walls(mon->pos());
-    if (_count_adjacent_slime_walls(targ) > current_count)
-        return (true);
+    const int target_count  = _count_adjacent_slime_walls(targ);
+    if (target_count <= current_count)
+        return (false);
 
-    return (false);
+    // With enough hit points monsters will consider moving
+    // onto more dangerous squares.
+    return (mon->hit_points < mon->max_hit_points / 2);
 }
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
