@@ -3086,10 +3086,18 @@ static bool _check_slime_walls(const monster *mon,
     {
         return (false);
     }
+    const int target_count = _count_adjacent_slime_walls(targ);
+    // Entirely safe.
+    if (!target_count)
+        return (false);
+
     const int current_count = _count_adjacent_slime_walls(mon->pos());
-    const int target_count  = _count_adjacent_slime_walls(targ);
     if (target_count <= current_count)
         return (false);
+
+    // The monster needs to have a purpose to risk taking damage.
+    if (!mons_is_seeking(mon))
+        return (true);
 
     // With enough hit points monsters will consider moving
     // onto more dangerous squares.
