@@ -64,7 +64,7 @@ public:
     DungeonCellBuffer(ImageManager *im);
 
     void add(const packed_cell &cell, int x, int y);
-    void add_dngn_tile(int tileidx, int x, int y);
+    void add_dngn_tile(int tileidx, int x, int y, bool in_water = false);
     void add_main_tile(int tileidx, int x, int y);
     void add_main_tile(int tileidx, int x, int y, int ox, int oy);
     void add_spell_tile(int tileidx, int x, int y);
@@ -89,6 +89,7 @@ protected:
     TileBuffer m_buf_floor;
     TileBuffer m_buf_wall;
     TileBuffer m_buf_feat;
+    SubmergedTileBuffer m_buf_feat_trans;
     SubmergedTileBuffer m_buf_doll;
     SubmergedTileBuffer m_buf_main_trans;
     TileBuffer m_buf_main;
