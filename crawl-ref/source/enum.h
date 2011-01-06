@@ -2672,6 +2672,9 @@ enum mon_inv_type           // (int) menv[].inv[]
     MSLOT_ALT_WEAPON,       // Alternate weapon, ranged or second melee weapon
                             // for monsters that can use two weapons.
     MSLOT_MISSILE,
+#if TAG_MAJOR_VERSION > 31
+    MSLOT_ALT_MISSILE,
+#endif
     MSLOT_ARMOUR,
     MSLOT_SHIELD,
     MSLOT_MISCELLANY,
