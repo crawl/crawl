@@ -2508,6 +2508,7 @@ void marshallMonster(writer &th, const monster& m)
     }
 
     marshallShort(th, m.type);
+    ASSERT(m.mid > 0);
     marshallInt(th, m.mid);
     marshallString(th, m.mname);
     marshallByte(th, m.ac);
