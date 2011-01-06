@@ -1890,9 +1890,15 @@ bool monster::pickup_item(item_def &item, int near, bool force)
 
         if (friendly())
         {
-            // Never pick up gold or misc. items, it'd only annoy the player.
-            if (itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
+            // Allies are only interested in armour and weaponry.
+            // Everything else is likely to only annoy the player
+            // because the monster either won't use the object or
+            // might use it in ways not helpful to the player.
+            if (itype != OBJ_ARMOUR && itype != OBJ_WEAPONS
+                && itype != OBJ_MISSILES)
+            {
                 return (false);
+            }
 
             // Depending on the friendly pickup toggle, your allies may not
             // pick up anything, or only stuff dropped by (other) allies.
