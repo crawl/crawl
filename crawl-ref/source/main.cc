@@ -2821,7 +2821,9 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         _player_reacts();
 
+    apply_noises();
     handle_monsters();
+    apply_noises();
 
     _check_banished();
 
