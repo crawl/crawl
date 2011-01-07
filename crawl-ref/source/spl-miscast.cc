@@ -2546,6 +2546,7 @@ void MiscastEffect::_air(int severity)
         }
         do_msg();
         break;
+
     case 1:         // rather less harmless stuff
         switch (random2(3))
         {
@@ -2602,6 +2603,8 @@ void MiscastEffect::_air(int severity)
             _big_cloud(CLOUD_POISON, 20, 8 + random2(5));
             break;
         }
+        break;
+
     case 3:         // even less harmless stuff
         switch (random2(3))
         {
