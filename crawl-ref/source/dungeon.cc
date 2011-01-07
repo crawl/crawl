@@ -7102,7 +7102,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // or landing in Labyrinths. Never land the PC inside a Pan or Lab vault.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (grd(*ri) >= DNGN_FLOOR && !map_masked(*ri, MMT_VAULT))
+        if (grd(*ri) >= DNGN_FLOOR)
         {
             found++;
             if (one_chance_in(found))
