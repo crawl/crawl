@@ -710,6 +710,8 @@ grum MONS_GRUM
 goblin MONS_GOBLIN
 hobgoblin MONS_HOBGOBLIN
 gnoll MONS_GNOLL
+gnoll_sergeant MONS_GNOLL_SERGEANT
+gnoll_shaman MONS_GNOLL_SHAMAN
 boggart MONS_BOGGART
 
 ## Spriggans ('i')
