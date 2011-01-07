@@ -6,17 +6,17 @@
 {{
 
 function gnoll_sergeant (e)
-  e.mons("gnoll name:gnoll_sergeant name_replace name_descriptor hd:3 \
-          col:cyan ; potion of healing | potion of heal wounds . \
-          halberd | glaive | whip ego:reaching w:2 | spear ego:reaching w:2 | \
-          spear | whip . \
-          ring mail | scale mail")
+  e.mons("gnoll name:gnoll_sergeant name_replace name_descriptor hd:4 \
+          col:cyan tile:mons_gnoll_sergeant; \
+          potion of healing | potion of heal wounds . \
+          spear ego:reaching w:2 good_item | spear good_item . \
+          ring mail | scale mail . buckler | shield")
 end
 
 -- XXX: Petrify for the second spell when it's implemented as a monster spell.
 function gnoll_shaman (e)
   e.mons("gnoll name:gnoll_shaman name_replace name_descriptor hd:3 \
-          col:white actual_spells \
+          col:white tile:mons_gnoll_shaman actual_spells \
           spells:corona;corona;heal_other;haste_other;heal_other;minor_healing\
           ; quarterstaff | club | whip . robe | leather armour")
 end
@@ -131,7 +131,7 @@ ENDMAP
 NAME:   gnoll_camp_huts_basic
 TAGS:   serial_gnoll_camp patrolling uniq_gnoll_camp_huts
 #       Place monsters randomly: 6 gnolls, 2 sergeants, 2 shamans and 4 dogs.
-NSUBST: . = 6:1 / 2:2 / 2:3 / 4:4 / *:.
+NSUBST: . = 7:1 / 1:2 / 2:3 / 4:4 / *:.
 MONS:   gnoll
 : gnoll_sergeant(_G)
 : gnoll_shaman(_G)
@@ -161,7 +161,7 @@ NAME:   gnoll_camp_huts_moat
 TAGS:   serial_gnoll_camp patrolling no_pool_fixup uniq_gnoll_camp_huts
 WEIGHT: 8
 #       Place monsters randomly: 4 gnolls, 2 sergeants, 2 shamans and 4 dogs.
-NSUBST: . = 4:1 / 2:2 / 2:3 / 4:4 / *:.
+NSUBST: . = 5:1 / 1:2 / 2:3 / 4:4 / *:.
 MONS:   gnoll
 : gnoll_sergeant(_G)
 : gnoll_shaman(_G)
