@@ -411,7 +411,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_HEXES:
-        book_type = BOOK_CHARMS; // heh
+        book_type = BOOK_MALEDICT;
         break;
 
     case SK_CHARMS:

@@ -808,7 +808,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1,
                            1);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
 
         // Gets some darts - this job is difficult to start off with.
         newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);

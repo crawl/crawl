@@ -356,7 +356,7 @@ enum book_type
     BOOK_CLOUDS,
     BOOK_NECROMANCY,
     BOOK_CALLINGS,
-    BOOK_CHARMS,
+    BOOK_MALEDICT,
     BOOK_AIR,
     BOOK_SKY,
     BOOK_WARP,
