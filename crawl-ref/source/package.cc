@@ -463,10 +463,10 @@ void package::read_directory(len_t start, uint8_t version)
     directory[""] = start;
 
     dprintf("package: reading directory\n");
-    chunk_reader *rd = new chunk_reader(this, start);
+    chunk_reader rd(this, start);
 
     dir_entry ch;
-    while(len_t res = rd->read(&ch, sizeof(dir_entry)))
+    while(len_t res = rd.read(&ch, sizeof(dir_entry)))
     {
         if (res != sizeof(dir_entry))
             fail("save file corrupted -- truncated directory");
@@ -475,8 +475,6 @@ void package::read_directory(len_t start, uint8_t version)
         directory[chname] = htole(ch.start);
         dprintf("* %s\n", chname.c_str());
     }
-
-    delete rd;
 }
 
 bool package::has_chunk(const std::string name)
