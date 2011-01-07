@@ -1748,6 +1748,19 @@ static void tag_read_you(reader &th)
     you.transfer_skill_points = unmarshallInt(th);
     you.transfer_total_skill_points = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 31
+        if (th.getMinorVersion() < TAG_MINOR_ENCH_SPLIT)
+        {
+            if (you.transfer_from_skill > SK_HEXES
+                && you.transfer_from_skill < NUM_SKILLS)
+            {
+                you.transfer_from_skill = (skill_type)(you.transfer_from_skill + 1);
+            }
+            if (you.transfer_to_skill > SK_HEXES
+                && you.transfer_to_skill < NUM_SKILLS)
+            {
+                you.transfer_to_skill = (skill_type)(you.transfer_to_skill + 1);
+            }
+        }
     }
 #endif
 
