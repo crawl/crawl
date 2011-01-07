@@ -105,6 +105,7 @@ void hogs_to_humans()
             orig.attitude = mi->attitude;
             define_monster(&orig);
         }
+        orig.mid = mi->mid;
 
         // Keep at same spot.
         const coord_def pos = mi->pos();
