@@ -121,12 +121,12 @@
 
 {   // Book of Enchantments (fourth one)
     SPELL_LEVITATION,
+    SPELL_TUKIMAS_DANCE,
     SPELL_SEE_INVISIBLE,
     SPELL_CAUSE_FEAR,
     SPELL_EXTENSION,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
-    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
 
@@ -333,6 +333,7 @@
     SPELL_NO_SPELL,
 },
 
+#if TAG_MAJOR_VERSION == 31
 {   // Book of Tukima
     SPELL_SURE_BLADE,
     SPELL_TUKIMAS_DANCE,
@@ -343,6 +344,7 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
+#endif
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
