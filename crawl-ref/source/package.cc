@@ -590,6 +590,7 @@ chunk_writer::~chunk_writer()
 #ifdef USE_ZLIB
         // ignore errors, they're not relevant anymore
         deflateEnd(&zs);
+        free(z_buffer);
 #endif
         return;
     }
