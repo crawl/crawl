@@ -39,7 +39,7 @@
 
 #ifdef ASSERTS
 
-void AssertFailed(const char *expr, const char *file, int line, bool save_game);
+noreturn void AssertFailed(const char *expr, const char *file, int line, bool save_game);
 
 #define ASSERT_SAVE(p)                                                  \
     do {                                                                \
