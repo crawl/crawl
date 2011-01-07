@@ -618,6 +618,8 @@ public:
     bool is_explore() const;
     bool is_any_travel() const;
 
+    std::string runmode_name() const;
+
     // Clears run state.
     void clear();
 
