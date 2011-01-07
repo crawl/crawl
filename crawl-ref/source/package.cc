@@ -67,8 +67,8 @@ static len_t htole(len_t x)
 
 struct file_header
 {
-    int32_t magic;
-    int8_t version;
+    uint32_t magic;
+    uint8_t version;
     char padding[3];
     len_t start;
 };
@@ -151,14 +151,14 @@ void package::load()
     if (htole(head.magic) != PACKAGE_MAGIC)
         fail("save file (%s) corrupted -- not a DCSS save file",
              filename.c_str());
-    if (head.version != PACKAGE_VERSION)
+    if (head.version > PACKAGE_VERSION)
         fail("save file (%s) uses an unknown format %u", filename.c_str(),
               head.version);
     off_t len = lseek(fd, 0, SEEK_END);
     if (len == -1)
         sysfail("save file (%s) is not seekable", filename.c_str());
     file_len = len;
-    read_directory(htole(head.start));
+    read_directory(htole(head.start), head.version);
 
     if (rw)
     {
@@ -457,7 +457,7 @@ void package::fsck()
     file_len = save_file_len;
 }
 
-void package::read_directory(len_t start)
+void package::read_directory(len_t start, uint8_t version)
 {
     ASSERT(directory.empty());
     directory[""] = start;
