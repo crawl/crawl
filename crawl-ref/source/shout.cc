@@ -399,7 +399,7 @@ void apply_noises()
     // the case where one set of noises wakes up monsters who then let
     // out yips of their own, modifying _noise_grid while it is in the
     // middle of propagate_noise().
-    while (_noise_grid.dirty())
+    if (_noise_grid.dirty())
     {
         noise_grid copy = _noise_grid;
         // Reset the main grid.
