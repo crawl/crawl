@@ -218,6 +218,14 @@
     #error Missing platform #define or unsupported compiler.
 #endif
 
+#if defined(__GNUC__)
+# define noreturn __attribute__ ((noreturn))
+#elif defined(_MSC_VER)
+# define noreturn __declspec(noreturn)
+#else
+# define noreturn
+#endif
+
 // =========================================================================
 //  Defines for dgamelaunch-specific things.
 // =========================================================================
@@ -455,14 +463,6 @@ template < class T >
 inline void UNUSED(const volatile T &)
 {
 }
-
-#if defined(__GNUC__)
-# define noreturn __attribute__ ((noreturn))
-#elif defined(_MSC_VER)
-# define noreturn __declspec(noreturn)
-#else
-# define noreturn
-#endif
 
 // And now headers we want precompiled
 #ifdef TARGET_COMPILER_VC
