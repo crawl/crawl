@@ -686,7 +686,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-static void _BreakStrToDebugger(const char *mesg)
+static noreturn void _BreakStrToDebugger(const char *mesg)
 {
 #if defined(USE_TILE) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
     SDL_SysWMinfo SysInfo;
@@ -715,7 +715,7 @@ static void _BreakStrToDebugger(const char *mesg)
 // AssertFailed
 //
 //---------------------------------------------------------------
-void AssertFailed(const char *expr, const char *file, int line, bool save_game)
+noreturn void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 {
     char mesg[512];
 
@@ -740,7 +740,7 @@ void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 // DEBUGSTR
 //
 //---------------------------------------------------------------
-void DEBUGSTR(const char *format, ...)
+noreturn void DEBUGSTR(const char *format, ...)
 {
     char mesg[2048];
 
