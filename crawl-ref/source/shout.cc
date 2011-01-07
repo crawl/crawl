@@ -763,6 +763,10 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
                                    base_attenuation))
         return (false);
 
+    // Diagonals cost more.
+    if ((next_pos - current_pos).abs() == 2)
+        base_attenuation = base_attenuation * 141 / 100;
+
     const int noise_turn_angle = cell.turn_angle(next_pos - current_pos);
     const int turn_attenuation =
         noise_turn_angle? (base_attenuation * (100 + noise_turn_angle * 25)
