@@ -52,7 +52,7 @@ struct noise_t
 
     noise_t(coord_def _noise_source = coord_def(),
             std::string _noise_player_msg = "",
-            int16_t _noise_intensity_millis = 0,
+            int _noise_intensity_millis = 0,
             int16_t _noise_producer_id = -1,
             uint16_t _flags = 0)
         : noise_source(_noise_source),
