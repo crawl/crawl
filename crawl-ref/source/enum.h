@@ -364,7 +364,9 @@ enum book_type
     BOOK_UNLIFE,
     BOOK_CONTROL,
     BOOK_MUTATIONS,
+#if TAG_MAJOR_VERSION == 31
     BOOK_TUKIMA,
+#endif
     BOOK_GEOMANCY,
     BOOK_EARTH,
     BOOK_WIZARDRY,

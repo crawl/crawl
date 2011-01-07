@@ -990,7 +990,9 @@ static const char* book_type_name(int booktype)
     case BOOK_UNLIFE:                 return "Unlife";
     case BOOK_CONTROL:                return "Control";
     case BOOK_MUTATIONS:              return "Morphology";
+#if TAG_MAJOR_VERSION == 31
     case BOOK_TUKIMA:                 return "Tukima";
+#endif
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
     case BOOK_WIZARDRY:               return "Wizardry";
