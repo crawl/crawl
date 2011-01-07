@@ -103,7 +103,7 @@ The contents of this text are:
                 tile_font_lbl_file, tile_font_crt_size, tile_font_stat_size,
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
                 tile_show_minihealthbar, tile_show_minimagicbar,
-                tile_show_demon_tier, tile_allow_detached_montab,
+                tile_show_demon_tier, tile_layout_priority,
 		tile_force_regenerate_levels
 5-  Character Dump.
 5-a     Items and Kills.
@@ -1314,7 +1314,8 @@ show_inventory_weights = false
 
 show_gold_turns = false
         If set to true, this option adds an extra line to the stat area
-        to display the current gold and turn counters.
+        to display the current gold and turn counters. In Tiles, this option is
+        ignored. Use the tile_layout_priority option instead.
 
 show_real_turns = false
         If set to true, the turn counter in the stat area will display absolute
@@ -1823,12 +1824,17 @@ tile_show_demon_tier = true
         tier (or difficulty rank) among demons, as is the case for non-Tiles
         builds.
 
-tile_allow_detached_montab = true
-	If set to true and there's enough space on the screen, will attempt
-        to display the monster tab all of the time in addition to the
-	inventory and spells.
-	This is a temporary option. If you're getting crashes when there are
-	monsters around, try setting this to false.
+tile_layout_priority = minimap, inventory, command, spell, gold_turn, monster
+        This option allows you to control the order in which elements are
+        placed on the right of the screen, below the stat area. On small
+        resolution, there won't be enough room for everything, so only the
+        first items will be placed. You can also remove items you don't want
+        to be permanently displayed. The inventory tab will always be placed at
+        the bottom but is initialised at a minimum size (4 lines). If you put a
+        tab before it on the option line, the tab will still be placed above it,
+        but it will have priority over it so the inventory might not be able to
+        expand to its maximum size (6 lines). The minimap is always placed
+        between the stat area and the tabs.
 
 tile_force_regenerate_levels = false
 

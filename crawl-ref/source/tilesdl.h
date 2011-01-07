@@ -95,7 +95,7 @@ public:
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
-    void do_layout();
+    void layout_statcol();
     void calculate_default_options();
     void clrscr();
 
@@ -216,14 +216,17 @@ protected:
     int m_tip_font;
     int m_lbl_font;
 
-    int m_inv_col;
+    int m_stat_col;
     int m_stat_x_divider;
     int m_statcol_top;
     int m_statcol_bottom;
 
-    bool layout_statcol(bool show_gold_turns);
-    void place_tab(int idx, int min_ln, int max_ln);
+    void do_layout();
+    int calc_tab_lines(const int num_elements);
+    void place_tab(int idx);
     void place_minimap();
+    void resize_inventory();
+    void place_gold_turns();
 
     ImageManager *m_image;
 

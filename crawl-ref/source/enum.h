@@ -3167,12 +3167,16 @@ enum skill_type
     SK_SHIELDS,
     SK_TRAPS_DOORS,
     SK_UNARMED_COMBAT,
+#if TAG_MAJOR_VERSION == 31
     // 20
     // 21
     // 22
     // 23
     // 24
     SK_SPELLCASTING = 25,
+#else
+    SK_SPELLCASTING,
+#endif
     SK_CONJURATIONS,
     SK_ENCHANTMENTS,
     SK_SUMMONINGS,
