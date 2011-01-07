@@ -686,7 +686,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-static noreturn void _BreakStrToDebugger(const char *mesg)
+static NORETURN void _BreakStrToDebugger(const char *mesg)
 {
 #if defined(USE_TILE) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
     SDL_SysWMinfo SysInfo;
@@ -703,6 +703,7 @@ static noreturn void _BreakStrToDebugger(const char *mesg)
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
+    abort();                    // just to be sure
 
 #else
     fprintf(stderr, "%s\n", mesg);
@@ -715,7 +716,7 @@ static noreturn void _BreakStrToDebugger(const char *mesg)
 // AssertFailed
 //
 //---------------------------------------------------------------
-noreturn void AssertFailed(const char *expr, const char *file, int line, bool save_game)
+NORETURN void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 {
     char mesg[512];
 
@@ -740,7 +741,7 @@ noreturn void AssertFailed(const char *expr, const char *file, int line, bool sa
 // DEBUGSTR
 //
 //---------------------------------------------------------------
-noreturn void DEBUGSTR(const char *format, ...)
+NORETURN void DEBUGSTR(const char *format, ...)
 {
     char mesg[2048];
 

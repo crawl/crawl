@@ -219,11 +219,11 @@
 #endif
 
 #if defined(__GNUC__)
-# define noreturn __attribute__ ((noreturn))
+# define NORETURN __attribute__ ((noreturn))
 #elif defined(_MSC_VER)
-# define noreturn __declspec(noreturn)
+# define NORETURN __declspec(noreturn)
 #else
-# define noreturn
+# define NORETURN
 #endif
 
 // =========================================================================

@@ -376,7 +376,7 @@ void clear_globals_on_exit()
 bool CrawlIsExiting = false;
 bool CrawlIsCrashing = false;
 
-noreturn void end(int exit_code, bool print_error, const char *format, ...)
+NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
     if (format)
@@ -441,7 +441,7 @@ noreturn void end(int exit_code, bool print_error, const char *format, ...)
     exit(exit_code);
 }
 
-noreturn void game_ended()
+NORETURN void game_ended()
 {
     if (!crawl_state.seen_hups)
         throw game_ended_condition();
@@ -449,7 +449,7 @@ noreturn void game_ended()
         end(0);
 }
 
-noreturn void game_ended_with_error(const std::string &message)
+NORETURN void game_ended_with_error(const std::string &message)
 {
     if (crawl_state.seen_hups)
         end(1);

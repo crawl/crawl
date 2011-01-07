@@ -1455,7 +1455,7 @@ static void _init_arena()
     initialise_item_descriptions();
 }
 
-noreturn void run_arena(const std::string& teams)
+NORETURN void run_arena(const std::string& teams)
 {
     _init_arena();
 

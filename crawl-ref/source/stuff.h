@@ -48,10 +48,10 @@ unsigned char get_ch();
 void cio_init();
 void cio_cleanup();
 void clear_globals_on_exit();
-noreturn void end(int exit_code, bool print_err = false,
+NORETURN void end(int exit_code, bool print_err = false,
          const char *format = NULL, ...);
-noreturn void game_ended();
-noreturn void game_ended_with_error(const std::string &message);
+NORETURN void game_ended();
+NORETURN void game_ended_with_error(const std::string &message);
 
 bool print_error_screen(const char *message, ...);
 void redraw_screen();

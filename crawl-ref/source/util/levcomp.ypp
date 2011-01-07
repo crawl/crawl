@@ -18,7 +18,7 @@ int yylex();
 
 extern int yylineno;
 
-noreturn void yyerror(const char *e)
+NORETURN void yyerror(const char *e)
 {
     if (strstr(e, lc_desfile.c_str()) == e)
         fprintf(stderr, "%s\n", e);
