@@ -31,6 +31,7 @@ Caveats/issues:
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sstream>
 
 #include "AppHdr.h"
 #include "package.h"
@@ -62,7 +63,7 @@ static len_t htole(len_t x)
 #define dprintf(...) do {} while(0)
 #endif
 
-#define PACKAGE_VERSION 0
+#define PACKAGE_VERSION 1
 #define PACKAGE_MAGIC   0x53534344 /* "DCSS" */
 
 struct file_header
@@ -77,12 +78,6 @@ struct block_header
 {
     len_t len;
     len_t next;
-};
-
-struct dir_entry
-{
-    char name[sizeof(len_t)];
-    len_t start;
 };
 
 typedef std::map<std::string, len_t> directory_t;
@@ -151,9 +146,6 @@ void package::load()
     if (htole(head.magic) != PACKAGE_MAGIC)
         fail("save file (%s) corrupted -- not a DCSS save file",
              filename.c_str());
-    if (head.version > PACKAGE_VERSION)
-        fail("save file (%s) uses an unknown format %u", filename.c_str(),
-              head.version);
     off_t len = lseek(fd, 0, SEEK_END);
     if (len == -1)
         sysfail("save file (%s) is not seekable", filename.c_str());
@@ -343,25 +335,22 @@ len_t package::write_directory()
 {
     delete_chunk("");
 
-    std::vector<dir_entry> dir;
-    dir.reserve(directory.size());
+    std::stringstream dir;
     for (directory_t::iterator i = directory.begin();
          i != directory.end(); i++)
     {
-        dir_entry ch;
-        // probably the only case ever when strncpy() does exactly the
-        // right thing
-        strncpy(ch.name, i->first.c_str(), sizeof(ch.name));
-        ch.start = htole(i->second);
-        dir.push_back(ch);
+        uint8_t name_len = i->first.length();
+        dir.write((const char*)&name_len, sizeof(name_len));
+        dir.write(&i->first[0], i->first.length());
+        len_t start = htole(i->second);
+        dir.write((const char*)&start, sizeof(len_t));
     }
 
-    ASSERT(dir.size());
-    dprintf("writing directory of size %u*%u\n", (unsigned int)dir.size(),
-            (unsigned int)sizeof(dir_entry));
+    ASSERT(dir.str().size());
+    dprintf("writing directory (%u bytes)\n", (unsigned int)dir.str().size());
     {
         chunk_writer dch(this, "");
-        dch.write(&dir.front(), dir.size() * sizeof(dir_entry));
+        dch.write(&dir.str()[0], dir.str().size());
     }
 
     return directory[""];
@@ -457,6 +446,12 @@ void package::fsck()
     file_len = save_file_len;
 }
 
+struct dir_entry0
+{
+    char name[sizeof(len_t)];
+    len_t start;
+};
+
 void package::read_directory(len_t start, uint8_t version)
 {
     ASSERT(directory.empty());
@@ -465,15 +460,40 @@ void package::read_directory(len_t start, uint8_t version)
     dprintf("package: reading directory\n");
     chunk_reader rd(this, start);
 
-    dir_entry ch;
-    while(len_t res = rd.read(&ch, sizeof(dir_entry)))
+    switch(version)
     {
-        if (res != sizeof(dir_entry))
-            fail("save file corrupted -- truncated directory");
-        std::string chname(ch.name, 4);
-        chname.resize(strlen(chname.c_str()));
-        directory[chname] = htole(ch.start);
-        dprintf("* %s\n", chname.c_str());
+    case 0:
+        dir_entry0 ch0;
+        while(len_t res = rd.read(&ch0, sizeof(dir_entry0)))
+        {
+            if (res != sizeof(dir_entry0))
+                fail("save file corrupted -- truncated directory");
+            std::string chname(ch0.name, 4);
+            chname.resize(strlen(chname.c_str()));
+            directory[chname] = htole(ch0.start);
+            dprintf("* %s\n", chname.c_str());
+        }
+        break;
+    case 1:
+        uint8_t name_len;
+        len_t bstart;
+        while(len_t res = rd.read(&name_len, sizeof(name_len)))
+        {
+            if (res != sizeof(name_len))
+                fail("save file corrupted -- truncated directory");
+            std::string chname;
+            chname.resize(name_len);
+            if (rd.read(&chname[0], name_len) != name_len)
+                fail("save file corrupted -- truncated directory");
+            if (rd.read(&bstart, sizeof(bstart)) != sizeof(bstart))
+                fail("save file corrupted -- truncated directory");
+            directory[chname] = htole(bstart);
+            dprintf("* %s\n", chname.c_str());
+        }
+        break;
+    default:
+        fail("save file (%s) uses an unknown format %u", filename.c_str(),
+             version);
     }
 }
 
@@ -554,12 +574,8 @@ chunk_writer::chunk_writer(package *parent, const std::string _name)
     ASSERT(parent);
     ASSERT(!parent->aborted);
 
-    /*
-    The save format is currently limited to 4 character names for simplicity
-    (we use 3 max).  If you want to extend this, please implement marshalling
-    of arbitrary strings in {read,write}_directory().
-    */
-    ASSERT(_name.size() <= 4);
+    // If you need more, please change {read,write}_directory().
+    ASSERT(_name.length() < 256);
 
     dprintf("chunk_writer(%s): starting\n", _name.c_str());
     pkg = parent;
