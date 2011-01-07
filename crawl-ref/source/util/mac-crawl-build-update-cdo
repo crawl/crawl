@@ -17,7 +17,8 @@ $ENV{PATH} = "$ENV{PATH}:/opt/local/bin";
 my $LASTVERFILE = "crawl-ref/last-mac-build.version";
 
 my $COMPILEDIR = "crawl-ref/source";
-my $BUILDDIR = "crawl-ref/source/build/Release";
+my $ZIPDIR = "$COMPILEDIR/mac-app-zips";
+my $BUILDDIR = "crawl-ref/source";
 my @APPS = ("Dungeon Crawl Stone Soup.app",
             "Dungeon Crawl Stone Soup - ASCII.app");
 my $ZIPNAMEFMT = 'crawl_%sosx-%s.zip';
@@ -41,6 +42,7 @@ sub main() {
     }
     build_crawl();
     my @binaries = package_build();
+    print("Zips: @binaries\n");
     upload_binaries(@binaries);
 
     save_build_version($CURRENTVERSION);
@@ -114,24 +116,22 @@ sub in_dir($$) {
   die $err if $err;
 }
 
-sub build_crawl_target($) {
-  my $target = shift;
+sub build_crawl() {
+  clean_crawl();
   in_dir($COMPILEDIR,
          sub {
-           sys_check("xcodebuild -target '$target' -configuration 'Release'");
+           sys_check("./mac/mac-release-build");
          });
 }
 
-sub build_crawl() {
-  clean_crawl();
-  build_crawl_target("Crawl Tiles");
-  build_crawl_target("Crawl ASCII");
+sub app_zips() {
+  my $zipglob = "$ZIPDIR/stone_soup-$CURRENTVERSION*.zip";
+  return glob($zipglob);
 }
 
-sub assert_app_bundles_exist() {
-  for my $app (@APPS) {
-    -d("$BUILDDIR/$app") or die "[ERR] $app was not built\n";
-  }
+sub assert_app_zips_exist() {
+  my @zips = app_zips();
+  @zips == 2 or die "[ERR] Zip files not built as expected\n";
 }
 
 sub zip_name_for_app($) {
@@ -142,24 +142,19 @@ sub zip_name_for_app($) {
 }
 
 sub create_app_zips() {
-  my $cd = getcwd();
-  goto_dir($BUILDDIR);
-
-  my @zips;
-  for my $app (@APPS) {
-    my $zipname = zip_name_for_app($app);
-    unlink($zipname) if -f $zipname;
-    sys_check("zip -r $zipname '$app'");
-    push @zips, $zipname;
+  my @zips = app_zips();
+  my @out_zips = ();
+  for my $zip (@zips) {
+    my $target =
+      "$ZIPDIR/" . zip_name_for_app($zip =~ /tiles/? 'TILES' : 'ASCII');
+    rename($zip, $target);
+    push @out_zips, $target;
   }
-
-  goto_dir($cd);
-
-  return map("$BUILDDIR/$_", @zips);
+  @out_zips
 }
 
 sub package_build() {
-  assert_app_bundles_exist();
+  assert_app_zips_exist();
   return create_app_zips();
 }
 
