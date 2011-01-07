@@ -964,7 +964,7 @@ static void _write_noise_grid_css(FILE *outf)
 
 void noise_grid::write_cell(FILE *outf, coord_def p, int ch) const
 {
-    const int intensity = cells(p).noise_intensity_millis / 1000;
+    const int intensity = std::min(25, cells(p).noise_intensity_millis / 1000);
     if (intensity)
         fprintf(outf,
                 "<span class='i%d'>&#%d;</span>",
