@@ -2995,9 +2995,7 @@ void unmarshallMonster(reader &th, monster& m)
         m.mid             = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 31
-    if (!m.mid
-        && (th.getMinorVersion() < TAG_MINOR_FIX_MID
-            || m.type == MONS_PLAYER_GHOST))
+    if (!m.mid && (th.getMinorVersion() < TAG_MINOR_FIX_MID2))
         m.set_new_monster_id();
 #endif
 
