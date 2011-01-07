@@ -27,11 +27,13 @@ public:
 
     void set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab);
     GridRegion *get_tab_region(int idx);
+    tileidx_t get_tab_tile(int idx);
     void activate_tab(int idx);
     int active_tab() const;
     int num_tabs() const;
     void enable_tab(int idx);
     void disable_tab(int idx);
+    int find_tab(std::string tab_name) const;
 
     virtual void update();
     virtual void clear();

@@ -147,10 +147,9 @@ void TilesFramework::shutdown()
     m_region_menu  = NULL;
 
     for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
-    {
         delete (*m_tabs_it).second;
-        m_tabs.erase(m_tabs_it);
-    }
+
+    m_tabs.clear();
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
         m_layers[i].m_regions.clear();
@@ -731,6 +730,10 @@ static const int tab_margin      = 20;
 static const int map_stat_margin = 4;
 static const int crt_width       = 80;
 static const int crt_height      = 30;
+static const int min_stat_height = 12;
+static const int min_inv_height  = 4;
+static const int max_inv_height  = 6;
+static const int max_mon_height  = 3;
 
 // Width of status area in characters.
 static const int stat_width      = 42;
@@ -853,23 +856,13 @@ void TilesFramework::do_layout()
     crawl_view.msgsz.x = m_region_msg->mx;
     crawl_view.msgsz.y = m_region_msg->my;
 
+    m_stat_col = m_stat_x_divider + map_stat_margin;
+
     m_region_stat->resize_to_fit(m_windowsz.x - m_stat_x_divider, m_windowsz.y);
-    m_region_stat->place(m_stat_x_divider + map_stat_margin, 0, 0);
+    m_region_stat->place(m_stat_col, 0, 0);
+    m_region_stat->resize(m_region_stat->mx, min_stat_height);
 
-    m_inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
-    if (message_overlay)
-        m_inv_col = m_region_stat->sx;
-
-    // If show_gold_turns isn't turned on, try turning it on if there's room.
-    if (!Options.show_gold_turns)
-    {
-        if (layout_statcol(true))
-            Options.show_gold_turns = true;
-        else
-            layout_statcol(false);
-    }
-    else
-        layout_statcol(true);
+    layout_statcol();
 
     m_region_crt->place(0, 0, 0);
     m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
@@ -882,8 +875,6 @@ void TilesFramework::do_layout()
 void TilesFramework::place_minimap()
 {
     m_region_map  = new MapRegion(Options.tile_map_pixels);
-    // Fit the minimap into place.
-    m_region_map->dx = m_region_map->dy = Options.tile_map_pixels;
 
     if (GXM * m_region_map->dx > m_windowsz.x - m_stat_x_divider)
     {
@@ -901,43 +892,64 @@ void TilesFramework::place_minimap()
     }
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
-    m_region_map->place(m_stat_x_divider + map_stat_margin,
-                        m_region_stat->ey, map_margin);
-    m_region_map->place(m_region_stat->sx, m_region_stat->ey,
-                        m_region_stat->ex, m_region_stat->ey + m_region_map->wy,
-                        map_margin);
+    m_region_map->place(m_stat_col, m_region_stat->ey, map_margin);
 
-    tile_new_level(false, false);
     m_statcol_top = m_region_map->ey + map_margin;
 }
 
-void TilesFramework::place_tab(int idx, int min_ln, int max_ln)
+int TilesFramework::calc_tab_lines(const int num_elements)
 {
+    // Integer divison rounded up
+    return (num_elements - 1) / m_region_tab->mx + 1;
+}
+
+void TilesFramework::place_tab(int idx)
+{
+    if (idx == -1)
+        return;
+
+    int min_ln = 1, max_ln = 1;
+    switch (idx)
+    {
+    case TAB_SPELL:
+        if (you.spell_no == 0)
+        {
+            m_region_tab->enable_tab(TAB_SPELL);
+            return;
+        }
+        max_ln = calc_tab_lines(you.spell_no);
+        break;
+    case TAB_MONSTER:
+        max_ln = max_mon_height;
+        break;
+    case TAB_COMMAND:
+        min_ln = max_ln = calc_tab_lines(n_common_commands);
+        break;
+    case TAB_SKILL:
+#if TAG_MAJOR_VERSION == 31
+// We can't actually use NUM_SKILLS, because of useless reserved numbers.
+        min_ln = max_ln = calc_tab_lines(32);
+#else
+        min_ln = max_ln = calc_tab_lines(NUM_SKILLS);
+#endif
+        break;
+    }
+
+    if (m_tabs[idx])
+        return;
+
     int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top - tab_margin)
                                  / m_region_tab->dy);
     if (lines >= min_ln)
     {
         TabbedRegion* region_tab = new TabbedRegion(m_init);
-        switch (idx)
-        {
-        case TAB_SPELL:
-            region_tab->set_tab_region(0, m_region_spl, TILEG_TAB_SPELL);
-            break;
-        case TAB_MONSTER:
-            region_tab->set_tab_region(0, m_region_mon, TILEG_TAB_MONSTER);
-            break;
-        case TAB_COMMAND:
-            region_tab->set_tab_region(0, m_region_cmd, TILEG_TAB_COMMAND);
-            break;
-        default:
-            delete region_tab;
-            return;
-        }
+        region_tab->set_tab_region(0, m_region_tab->get_tab_region(idx),
+                                   m_region_tab->get_tab_tile(idx));
         m_tabs[idx] = region_tab;
         region_tab->activate_tab(0);
         m_region_tab->disable_tab(idx);
         m_layers[LAYER_NORMAL].m_regions.push_back(region_tab);
-        region_tab->place(m_inv_col, m_statcol_bottom
+        region_tab->place(m_stat_col, m_statcol_bottom
                                      - lines * m_region_tab->dy - tab_margin);
         region_tab->resize(m_region_tab->mx, lines);
         m_statcol_bottom = region_tab->sy;
@@ -946,14 +958,51 @@ void TilesFramework::place_tab(int idx, int min_ln, int max_ln)
         m_region_tab->enable_tab(idx);
 }
 
-bool TilesFramework::layout_statcol(bool show_gold_turns)
+void TilesFramework::resize_inventory()
+{
+    int lines = std::min(max_inv_height - min_inv_height,
+                        (m_statcol_bottom - m_statcol_top) / m_region_tab->dy);
+    if (lines == 0)
+        return;
+
+    int prev_size = m_region_tab->wy;
+
+    m_region_tab->resize(m_region_tab->mx, min_inv_height + lines);
+    m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
+
+    int delta_y = m_region_tab->wy - prev_size;
+    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
+    {
+        TabbedRegion* tab = (*m_tabs_it).second;
+        tab->place(tab->sx, tab->sy - delta_y);
+    }
+
+    m_statcol_bottom -= delta_y;
+}
+
+void TilesFramework::place_gold_turns()
+{
+    if (m_statcol_bottom - m_statcol_top < m_region_stat->dy)
+        return;
+
+    Options.show_gold_turns = true;
+    int hud_height = min_stat_height + 1;
+    m_region_stat->resize(m_region_stat->mx, hud_height);
+    crawl_view.hudsz.y = hud_height;
+    if (m_region_map)
+        m_region_map->place(m_region_stat->sx, m_region_stat->ey);
+
+    m_statcol_top += m_region_stat->dy;
+}
+
+void TilesFramework::layout_statcol()
 {
     for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
     {
         delete (*m_tabs_it).second;
-        m_tabs.erase(m_tabs_it);
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
+    m_tabs.clear();
 
     if (m_region_map)
     {
@@ -961,43 +1010,41 @@ bool TilesFramework::layout_statcol(bool show_gold_turns)
         m_region_map = NULL;
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
+    Options.show_gold_turns = false;
 
-    // Assumes that the region_stat has already been placed.
-    int hud_height = 12 + (show_gold_turns ? 1 : 0);
-    m_region_stat->resize(m_region_stat->mx, hud_height);
-    crawl_view.hudsz.y = hud_height;
 
     m_statcol_top = m_region_stat->ey;
     m_statcol_bottom = m_windowsz.y;
 
-    place_minimap();
-
-    m_region_tab->place(m_inv_col, m_statcol_top);
+    // Set the inventory region to minimal size.
+    m_region_tab->place(m_stat_col, m_statcol_top);
     m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
                                 m_windowsz.y - m_region_tab->sy);
-    m_region_tab->resize(std::min(13, (int)m_region_tab->mx),
-                         std::min(6, (int)m_region_tab->my));
-
-    int self_inv_y = m_windowsz.y - m_region_tab->wy;
-    m_region_tab->place(m_inv_col, self_inv_y);
+    m_region_tab->resize(m_region_tab->mx, min_inv_height);
+    m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
 
     m_statcol_bottom = m_region_tab->sy;
 
-    // Integer divison rounded up
-    int lines = (n_common_commands - 1) / m_region_tab->mx + 1;
-    place_tab(TAB_COMMAND, lines, lines);
-
-    lines = (you.spell_no - 1) / m_region_tab->mx + 1;
-    if (you.spell_no > 0)
-        place_tab(TAB_SPELL, 1, lines);
-    else
-        m_region_tab->enable_tab(TAB_SPELL);
-
-    if (Options.tile_allow_detached_montab)
-        place_tab(TAB_MONSTER, 1, 3);
-
-    int num_items = m_region_tab->mx * (m_region_tab->my - 1);
-    return (num_items >= ENDOFPACK);
+    for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
+    {
+        std::string str = Options.tile_layout_priority[i];
+        if (str == "inventory")
+            resize_inventory();
+        else if (str == "minimap" || str == "map")
+            place_minimap();
+        else if (str == "gold_turn" || str == "gold_turns")
+            place_gold_turns();
+        else
+            place_tab(m_region_tab->find_tab(str));
+    }
+    // We stretch the minimap so it is centered in the space left.
+    if (m_region_map)
+    {
+        m_region_map->place(m_region_stat->sx, m_region_stat->ey,
+                            m_region_stat->ex, m_statcol_bottom,
+                            map_margin);
+        tile_new_level(false, false);
+    }
 }
 
 void TilesFramework::clrscr()

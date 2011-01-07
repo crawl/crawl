@@ -103,6 +103,14 @@ GridRegion *TabbedRegion::get_tab_region(int idx)
     return (m_tabs[idx].reg);
 }
 
+tileidx_t TabbedRegion::get_tab_tile(int idx)
+{
+    if (invalid_index(idx))
+        return (NULL);
+
+    return (m_tabs[idx].tile_tab);
+}
+
 void TabbedRegion::activate_tab(int idx)
 {
     if (invalid_index(idx))
@@ -345,6 +353,20 @@ bool TabbedRegion::update_alt_text(std::string &alt)
         return (false);
 
     return (get_tab_region(active_tab())->update_alt_text(alt));
+}
+
+int TabbedRegion::find_tab(std::string tab_name) const
+{
+    lowercase(tab_name);
+    std::string pluralised_name = tab_name + "s";
+    for (int i = 0, size = m_tabs.size(); i < size; ++i)
+    {
+        std::string reg_name = lowercase_string(m_tabs[i].reg->name());
+        if (tab_name == reg_name || pluralised_name == reg_name)
+            return i;
+    }
+
+    return -1;
 }
 
 #endif

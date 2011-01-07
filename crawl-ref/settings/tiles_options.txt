@@ -4,9 +4,6 @@
 # Uncomment this to continue recent versions' old saves that keep crashing.
 # tile_force_regenerate_levels = true
 
-# Uncomment this if you keep getting crashes while the monster tab is open!
-# tile_allow_detached_montab = false
-
 # tile_show_items = !?/%=([)X}+\_.
 
 # tile_title_screen = false
@@ -50,11 +47,12 @@
 
 ### Note: setting window, map or font sizes to '0' implies auto-sizing.
 
-# tile_full_screen    = true
-# tile_window_width   = 1024
-# tile_window_height  = 768
-# tile_map_pixels     = 3
-# tile_force_overlay  = true
+# tile_full_screen     = true
+# tile_window_width    = 1024
+# tile_window_height   = 768
+# tile_map_pixels      = 3
+# tile_force_overlay   = true
+# tile_layout_priority = minimap, inventory, command, spell, gold_turn, monster
 
 # tile_font_crt_file  = VeraMono.ttf
 # tile_font_crt_size  = 15
