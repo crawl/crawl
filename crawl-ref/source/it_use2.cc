@@ -341,6 +341,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             xom_is_stimulated(64 / xom_factor);
         break;
 
+    case POT_FIZZING:
     case POT_WATER:
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");

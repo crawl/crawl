@@ -727,7 +727,8 @@ i-cure-mutation POT_CURE_MUTATION
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
-i-coagulated-blood POT_BLOOD_COAGULATED POT_ID_LAST
+i-coagulated-blood POT_BLOOD_COAGULATED
+i-water POT_FIZZING POT_ID_LAST
 %back none
 %rim 1
 

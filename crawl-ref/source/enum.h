@@ -2536,6 +2536,8 @@ enum monster_type                      // (int) menv[].type
     MONS_STARCURSED_MASS,
     MONS_ANCIENT_ZYME,
     MONS_WRETCHED_STAR,
+    MONS_HOMUNCULUS,
+    MONS_SOUPLING,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -3052,6 +3054,7 @@ enum potion_type
     POT_RESISTANCE,
     POT_BLOOD,
     POT_BLOOD_COAGULATED,
+    POT_FIZZING,
     NUM_POTIONS
 };
 
@@ -3502,6 +3505,7 @@ enum spell_type
     SPELL_TORNADO,
     SPELL_STICKY_FLAME_RANGE,
     SPELL_LEDAS_LIQUEFACTION,
+    SPELL_HOMUNCULUS,
 
     NUM_SPELLS
 };
