@@ -935,9 +935,6 @@ void TilesFramework::place_tab(int idx)
         break;
     }
 
-    if (m_tabs[idx])
-        return;
-
     int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top - tab_margin)
                                  / m_region_tab->dy);
     if (lines >= min_ln)
