@@ -72,7 +72,7 @@ Features
      NOTE: F used to put down a granite Statue most of the time but occasionally
      Orange or Silver or Ice statues (1 in 100). You can reproduce this by using
      F on the map together with
-     SUBST:   F = G:100 F:1
+     SUBST:   F = G:99 F:1
      KMONS:   F = orange crystal statue / silver statue / ice statue
 
  T - Water fountain
