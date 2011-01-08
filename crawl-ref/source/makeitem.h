@@ -28,7 +28,7 @@ int items(int allow_uniques, object_class_type force_class, int force_type,
            uint32_t mapmask = 0, int force_ego = 0, int agent = -1);
 
 // Create a corpse item for the given monster with the supplied spec.
-struct item_spec;
+class item_spec;
 enum monster_type;
 int item_corpse(monster_type monster, const item_spec &ispec);
 
