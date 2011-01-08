@@ -1809,6 +1809,9 @@ bool direction_chooser::do_main_loop()
         break;
 
     case CMD_TARGET_EXCLUDE:
+        if (!just_looking)
+            break;
+
         if (you.level_type == LEVEL_LABYRINTH
             || !player_in_mappable_area())
         {
