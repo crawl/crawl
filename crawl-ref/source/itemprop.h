@@ -155,6 +155,7 @@ bool ring_has_stackable_effect(const item_def &item);
 bool food_is_meat(const item_def &item);
 bool food_is_veg(const item_def &item);
 bool is_blood_potion(const item_def &item);
+bool is_fizzing_potion (const item_def &item);
 int food_value(const item_def &item);
 int food_turns(const item_def &item);
 bool can_cut_meat(const item_def &item);

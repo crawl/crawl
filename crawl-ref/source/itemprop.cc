@@ -2153,6 +2153,14 @@ bool is_blood_potion(const item_def &item)
             || item.sub_type == POT_BLOOD_COAGULATED);
 }
 
+bool is_fizzing_potion (const item_def &item)
+{
+    if (item.base_type != OBJ_POTIONS)
+        return (false);
+
+    return (item.sub_type == POT_FIZZING);
+}
+
 // Returns food value for one turn of eating.
 int food_value(const item_def &item)
 {

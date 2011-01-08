@@ -631,6 +631,7 @@ static const char* potion_type_name(int potiontype)
     case POT_BLOOD:             return "blood";
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
     case POT_RESISTANCE:        return "resistance";
+    case POT_FIZZING:           return "fizzing liquid";
     default:                    return "bugginess";
     }
 }
