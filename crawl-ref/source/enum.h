@@ -2510,7 +2510,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPIRIT,
     MONS_PALADIN,
     MONS_APIS,
-    MONS_HOLY_DRAGON,
+    MONS_PEARL_DRAGON,
 
     // New mimics
     MONS_DOOR_MIMIC,
@@ -2791,7 +2791,7 @@ enum mon_spellbook_type
     MST_OPHAN,
     MST_SPIRIT,
     MST_PALADIN,
-    MST_HOLY_DRAGON,
+    MST_PEARL_DRAGON,
     MST_BOG_MUMMY,
     MST_SPRIGGAN_DRUID,
     MST_TENTACLED_STARSPAWN,

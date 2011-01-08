@@ -409,8 +409,7 @@ void spirit_fades (monster *spirit)
     mgen_data mon = mgen_data(static_cast<monster_type>(random_choose_weighted(
                         10, MONS_SILVER_STAR, 10, MONS_PHOENIX,
                         10, MONS_APIS,        5,  MONS_DAEVA,
-                        2,  MONS_HOLY_DRAGON,
-                        // No holy dragons
+                        2,  MONS_PEARL_DRAGON,
                       0)), SAME_ATTITUDE(spirit),
                       NULL, 0, 0, c,
                       spirit->foe, 0);
