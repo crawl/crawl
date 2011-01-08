@@ -981,7 +981,7 @@ static const char* book_type_name(int booktype)
     case BOOK_CLOUDS:                 return "Clouds";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
-    case BOOK_CHARMS:                 return "Charms";
+    case BOOK_MALEDICT:               return "Maledictions";
     case BOOK_DEMONOLOGY:             return "Demonology";
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
@@ -991,7 +991,9 @@ static const char* book_type_name(int booktype)
     case BOOK_UNLIFE:                 return "Unlife";
     case BOOK_CONTROL:                return "Control";
     case BOOK_MUTATIONS:              return "Morphology";
+#if TAG_MAJOR_VERSION == 31
     case BOOK_TUKIMA:                 return "Tukima";
+#endif
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
     case BOOK_WIZARDRY:               return "Wizardry";

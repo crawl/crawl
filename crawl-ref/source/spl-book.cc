@@ -248,7 +248,7 @@ int book_rarity(uint8_t which_book)
         return 1;
 
     case BOOK_CHANGES:
-    case BOOK_CHARMS:
+    case BOOK_MALEDICT:
         return 2;
 
     case BOOK_CONJURATIONS_I:
@@ -304,9 +304,6 @@ int book_rarity(uint8_t which_book)
     case BOOK_WARP:
     case BOOK_DRAGON:
         return 15;
-
-    case BOOK_TUKIMA:
-        return 16;
 
     case BOOK_SUMMONINGS:
         return 18;

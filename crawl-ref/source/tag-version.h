@@ -40,7 +40,8 @@ enum tag_minor_version
     TAG_MINOR_SWAMP_TREES     = 29, // Convert all trees in swamp to mangroves.
     TAG_MINOR_FIX_MID2        = 30, // Another mid bug.
     TAG_MINOR_SAVE_FORMAT     = 31, // Updated save file format (low-level)
-    TAG_MINOR_VERSION         = 31, // Current version.  (Keep equal to max.)
+    TAG_MINOR_ENCH_SPLIT      = 32, // Enchantments split.
+    TAG_MINOR_VERSION         = 32, // Current version.  (Keep equal to max.)
 };
 
 #endif
