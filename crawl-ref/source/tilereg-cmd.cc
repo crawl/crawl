@@ -180,8 +180,7 @@ void CommandRegion::update()
     if (mx * my == 0)
         return;
 
-    const int max_size = ARRAYSZ(_common_commands);
-    for (int idx = 0; idx < max_size; ++idx)
+    for (int idx = 0; idx < n_common_commands; ++idx)
     {
         const command_type cmd = _common_commands[idx];
 

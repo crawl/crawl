@@ -88,8 +88,7 @@ static const skill_type skill_display_order[] =
     SK_COLUMN_BREAK,
 };
 
-static const int ndisplayed_skills =
-            sizeof(skill_display_order) / sizeof(*skill_display_order);
+static const int ndisplayed_skills = ARRAYSZ(skill_display_order);
 
 // Skill Menu
 
