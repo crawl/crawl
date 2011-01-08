@@ -10,7 +10,7 @@ enum ev_ignore_type
     EV_IGNORE_PHASESHIFT = 2,
 };
 
-class bolt;
+struct bolt;
 
 class actor
 {
