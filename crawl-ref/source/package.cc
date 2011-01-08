@@ -575,7 +575,8 @@ chunk_writer::chunk_writer(package *parent, const std::string _name)
     ASSERT(!parent->aborted);
 
     // If you need more, please change {read,write}_directory().
-    ASSERT(_name.length() < 256);
+    ASSERT(MAX_CHUNK_NAME_LENGTH < 256);
+    ASSERT(_name.length() < MAX_CHUNK_NAME_LENGTH);
 
     dprintf("chunk_writer(%s): starting\n", _name.c_str());
     pkg = parent;

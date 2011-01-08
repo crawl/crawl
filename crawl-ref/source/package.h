@@ -13,6 +13,8 @@
 #include <zlib.h>
 #endif
 
+#define MAX_CHUNK_NAME_LENGTH 255
+
 typedef uint32_t len_t;
 
 class package;
