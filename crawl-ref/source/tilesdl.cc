@@ -1319,4 +1319,9 @@ bool TilesFramework::need_redraw() const
     return m_need_redraw;
 }
 
+int TilesFramework::to_lines(int num_tiles)
+{
+    return num_tiles * TILE_Y / get_crt_font()->char_height();
+}
+
 #endif

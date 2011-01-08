@@ -22,7 +22,6 @@
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
-#include "fontwrapper-ft.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "options.h"
@@ -613,8 +612,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     if (is_set(SKMF_SKILL_ICONS))
     {
         --help_min_coord.y;
-        help_min_coord.y *= TILE_Y;
-        help_min_coord.y /= tiles.get_crt_font()->char_height();
+        help_min_coord.y = tiles.to_lines(help_min_coord.y);
     }
 #endif
     m_help->set_bounds(help_min_coord,
