@@ -3569,7 +3569,7 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_GET)
         {
             const char *chunk = argv[2];
-            if (!*chunk || strlen(chunk) > 4)
+            if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
                 ERR("Invalid chunk name \"%s\".\n", chunk);
             if (!save.has_chunk(chunk))
                 ERR("No such chunk in the save file.\n");
@@ -3596,7 +3596,7 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_PUT)
         {
             const char *chunk = argv[2];
-            if (!*chunk || strlen(chunk) > 4)
+            if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
                 ERR("Invalid chunk name \"%s\".\n", chunk);
 
             const char *file = (argc == 4) ? argv[3] : "chunk";
@@ -3621,7 +3621,7 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_RM)
         {
             const char *chunk = argv[2];
-            if (!*chunk || strlen(chunk) > 4)
+            if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
                 ERR("Invalid chunk name \"%s\".\n", chunk);
             if (!save.has_chunk(chunk))
                 ERR("No such chunk in the save file.\n");
