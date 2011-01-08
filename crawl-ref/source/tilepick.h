@@ -12,8 +12,8 @@
 
 struct bolt;
 struct cloud_struct;
-class coord_def;
-class item_def;
+struct coord_def;
+struct item_def;
 class monster;
 struct show_type;
 

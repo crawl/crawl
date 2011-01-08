@@ -653,7 +653,7 @@ mcache_ghost::mcache_ghost(const monster* mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
-    const struct ghost_demon &ghost = *mon->ghost;
+    const class ghost_demon &ghost = *mon->ghost;
 
     unsigned int pseudo_rand = ghost.max_hp * 54321 * 54321;
 
@@ -813,7 +813,7 @@ mcache_demon::mcache_demon(const monster* mon)
 {
     ASSERT(mcache_demon::valid(mon));
 
-    const struct ghost_demon &ghost = *mon->ghost;
+    const class ghost_demon &ghost = *mon->ghost;
 
     unsigned int pseudo_rand1 = ghost.max_hp * 54321 * 54321;
     unsigned int pseudo_rand2 = ghost.ac * 54321 * 54321;

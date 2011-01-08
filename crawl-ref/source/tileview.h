@@ -12,11 +12,11 @@
 #include "tiledef_defines.h"
 
 struct cloud_struct;
-class coord_def;
-class dolls_data;
-class item_def;
+struct coord_def;
+struct dolls_data;
+struct item_def;
 class monster;
-class tile_flavour;
+struct tile_flavour;
 struct packed_cell;
 
 // Initialize the flavour and the tile env when changing or creating levels.

@@ -47,7 +47,7 @@ struct packed_cell
 // that require knowledge of the surrounding env cells.
 void pack_cell_overlays(const coord_def &gc, packed_cell *cell);
 
-class dolls_data;
+struct dolls_data;
 class mcache_entry;
 class ImageManager;
 
