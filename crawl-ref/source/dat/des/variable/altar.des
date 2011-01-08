@@ -565,30 +565,28 @@ function lugonu_item (data, triggerable, triggerer, marker, ev)
          / good_item broad axe ego:orc_slaying w:5 / scroll of immolation q:3-6 / scroll of fear q:3-6",
          Cheibriados="wand of hasting w:5 / potion of speed q:2-4 / potion of berserk rage q:2-4 \
          / good_item quick blade",
-         Elyvilon="lantern of shadows/ rod of demonology / book of Necromancy w:5 \
-         / book of Death w:5 / book of Unlife w:5 / book of Callings w:5 / book of Summonings w:5",
-         Fedhas="book of Necromancy / book of Death / book of Unlife / good_item "
-         .. weapon .. " ego:draining / good_item " .. weapon .. " ego:pain",
-         Jiyva="no",
-         Kikubaaqudgha="no",
+         Elyvilon="lantern of shadows / book of Necromancy w:5 / book of Death w:5 \
+         / book of Unlife w:5",
+         Fedhas="randbook owner:Lugonu disc:necr spell:necromutation numspells:1 \
+         / randbook owner:Lugonu disc:necr spell:simulacrum numspells:1 \
+         / randbook owner:Lugonu disc:necr spell:twisted_resurrection numspells:1",
+         Jiyva="stone q:10-20 / large rock q:2-4",
+         Kikubaaqudgha="book of Necromancy / rat corpse w:5 / kobold corpse w:5 / snake corpse w:5",
          Lugonu="no",
          Makhleb="tome of destruction / rod of demonology",
-         ["Nemelex Xobeh"]="no",
-         Okawaru="lantern of shadows / book of Callings / book of Summonings / rod of demonology \
-         / rod of summoning",
+         ["Nemelex Xobeh"]="scroll of paper q:5-10 / scroll of random uselessness q:5-10",
+         Okawaru="book of Callings / randbook owner:Lugonu disc:summ spell:summon_butterflies numspells:1 \
+         / scroll of summoning q:2-3",
          ["Sif Muna"]="staff of channeling / good_item plate mail",
          ["The Shining One"]="wand of invisibility w:20 / book of Envenomations \
-         / Young Poisoner's Handbook / rod of venom / book of Necromancy w:5 / book of Death w:5 \
-         / book of Unlife w:5",
+         / Young Poisoner's Handbook / rod of venom / potion of invisibility q:3-6",
          Trog="manual of Spellcasting w:100 / manual of Air Magic / manual of Earth Magic \
          / manual of Fire Magic / manual of Ice Magic / manual of Poison Magic / any staff / ring of wizardry",
-         Vehumet="manual of Invocations",
+         Vehumet="book of Callings / book of Power / manual of Invocations",
          Xom="manual of Invocations",
          Yredelemnul= "scroll of holy word q:2-4 / good_item " .. weapon .. " ego:holy_wrath",
-         Zin="book of Necromancy w:5 / book of Death w:5 / book of Unlife w:5 \
-         / potion of gain intelligence q:2-3 / potion of gain strength q:2-3 / potion of gain dexterity q:2-3 \
-         / potion of cure mutation q:2-3 / wand of draining w:7 / wand of polymorph other w:14 \
-         / amulet of resist mutation",
+         Zin="good_item " .. weapon .. " ego:draining / good_item " .. weapon .. " ego:pain \
+         / good_item " .. weapon .. " ego:chaos / wand of draining w:7 / wand of polymorph other w:14",
          Ashenzari="scroll of detect curse q:5-10 / amulet of clarity / ring of see invisible",
          ["No God"]="manual of Invocations / amulet of Faith",
        }
