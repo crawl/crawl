@@ -516,15 +516,6 @@ static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;
 
-static int _save_games_start_y()
-{
-#ifdef USE_TILE
-    return SAVE_GAMES_START_Y + 4;
-#else
-    return SAVE_GAMES_START_Y;
-#endif
-}
-
 // Display more than just two saved characters if more are available
 // and there's enough space.
 static int _misc_text_start_y(int num)
@@ -559,6 +550,13 @@ static void _show_startup_menu(newgame_def* ng_choice,
     const int help_start = _misc_text_start_y(num_saves);
     const int help_end   = help_start + NUM_HELP_LINES + 1;
     const int desc_y     = help_end;
+#ifdef USE_TILE
+    const int game_mode_bottom = GAME_MODES_START_Y + tiles.to_lines(NUM_GAME_TYPE);
+    const int game_save_top = help_start - 2 - tiles.to_lines(std::min(2, num_saves));
+    const int save_games_start_y = std::min<int>(game_mode_bottom, game_save_top);
+#else
+    const int save_games_start_y = SAVE_GAMES_START_Y;
+#endif
 
     clrscr();
     PrecisionMenu menu;
@@ -569,12 +567,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
     freeform->allow_focus(false);
     MenuScroller* game_modes = new MenuScroller();
     game_modes->init(coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y),
-                     coord_def(GAME_MODES_WIDTH,
-                               _save_games_start_y() - 1),
+                     coord_def(GAME_MODES_WIDTH, save_games_start_y),
                      "game modes");
 
     MenuScroller* save_games = new MenuScroller();
-    save_games->init(coord_def(SCROLLER_MARGIN_X, _save_games_start_y()),
+    save_games->init(coord_def(SCROLLER_MARGIN_X, save_games_start_y),
                      coord_def(max_col, help_start - 1),
                      "save games");
     _construct_game_modes_menu(game_modes);
@@ -594,12 +591,15 @@ static void _show_startup_menu(newgame_def* ng_choice,
     freeform->attach_item(tmp);
     tmp->set_visible(true);
 
-    tmp = new NoSelectTextItem();
-    tmp->set_text("Saved games:");
-    tmp->set_bounds(coord_def(1, _save_games_start_y()),
-                    coord_def(SCROLLER_MARGIN_X, _save_games_start_y() + 1));
-    freeform->attach_item(tmp);
-    tmp->set_visible(true);
+    if (num_saves)
+    {
+        tmp = new NoSelectTextItem();
+        tmp->set_text("Saved games:");
+        tmp->set_bounds(coord_def(1, save_games_start_y),
+                        coord_def(SCROLLER_MARGIN_X, save_games_start_y + 1));
+        freeform->attach_item(tmp);
+        tmp->set_visible(true);
+    }
 
     tmp = new NoSelectTextItem();
     std::string text = "Use the up/down keys to select the type of game "

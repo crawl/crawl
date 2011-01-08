@@ -139,6 +139,7 @@ public:
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
     CRTRegion* get_crt() { return m_region_crt; }
     const ImageManager* get_image_manager() { return m_image; }
+    int to_lines(int num_tiles);
 protected:
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
