@@ -28,8 +28,7 @@ static const command_type _common_commands[] =
     CMD_CHARACTER_DUMP
 };
 
-static const int n_common_commands =
-            sizeof(_common_commands) / sizeof(*_common_commands);
+static const int n_common_commands = ARRAYSZ(_common_commands);
 
 class CommandRegion : public GridRegion
 {
