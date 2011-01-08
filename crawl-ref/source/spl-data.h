@@ -39,7 +39,7 @@ struct spell_desc
 
 {
     SPELL_CAUSE_FEAR, "Cause Fear",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_AREA,
      5,
      200,
@@ -195,9 +195,9 @@ struct spell_desc
 
 {
     SPELL_POLYMORPH_OTHER, "Polymorph Other",
-     SPTYP_TRANSMUTATION,  // removed enchantment, wasn't needed - bwr
+     SPTYP_TRANSMUTATION | SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
-     5,
+     4,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
@@ -208,7 +208,7 @@ struct spell_desc
 
 {
     SPELL_SLOW, "Slow",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET,
      3,
      200,
@@ -221,7 +221,7 @@ struct spell_desc
 
 {
     SPELL_HASTE, "Haste",
-     SPTYP_ENCHANTMENT,
+     SPTYP_CHARMS,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_HASTY,
      6,  // lowered to 6 from 8, since it's easily available from various items
          // and Swiftness is level 2 (and gives a similar effect).  It's also
@@ -249,7 +249,7 @@ struct spell_desc
 
 {
     SPELL_CONFUSE, "Confuse",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET,
      3,
      200,
@@ -262,7 +262,7 @@ struct spell_desc
 
 {
     SPELL_INVISIBILITY, "Invisibility",
-     SPTYP_ENCHANTMENT,
+     SPTYP_CHARMS | SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      6,
      200,
@@ -341,7 +341,7 @@ struct spell_desc
 
 {
     SPELL_RING_OF_FLAMES, "Ring of Flames",
-     SPTYP_ENCHANTMENT | SPTYP_FIRE,
+     SPTYP_CHARMS | SPTYP_FIRE,
      SPFLAG_AREA,
      7,
      200,
@@ -393,7 +393,7 @@ struct spell_desc
 
 {
     SPELL_DEATHS_DOOR, "Death's Door",
-     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      8,
      200,
@@ -407,7 +407,7 @@ struct spell_desc
 #if TAG_MAJOR_VERSION == 31
 {
     SPELL_SELECTIVE_AMNESIA, "Selective Amnesia",
-     SPTYP_ENCHANTMENT,
+     SPTYP_CHARMS,
      SPFLAG_NONE,
      4,
      0,
@@ -421,7 +421,7 @@ struct spell_desc
 
 {
     SPELL_MASS_CONFUSION, "Mass Confusion",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_AREA,
      6,
      200,
@@ -486,7 +486,7 @@ struct spell_desc
 
 {
     SPELL_LEVITATION, "Levitation",
-     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
      2,
      150,
@@ -709,7 +709,7 @@ struct spell_desc
 
 {
     SPELL_ENSLAVEMENT, "Enslavement",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      4,
      200,
@@ -748,7 +748,7 @@ struct spell_desc
 
 {
     SPELL_EXTENSION, "Extension",
-     SPTYP_ENCHANTMENT,
+     SPTYP_CHARMS,
      SPFLAG_NONE,
      5,
      200,
@@ -761,7 +761,7 @@ struct spell_desc
 
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
-     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPTYP_HEXES | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      5,
      200,
@@ -903,7 +903,7 @@ struct spell_desc
 
 {
     SPELL_OZOCUBUS_ARMOUR, "Ozocubu's Armour",
-     SPTYP_ENCHANTMENT | SPTYP_ICE,
+     SPTYP_CHARMS | SPTYP_ICE,
      SPFLAG_NONE,
      3,
      200,
@@ -929,7 +929,7 @@ struct spell_desc
 
 {
     SPELL_REPEL_MISSILES, "Repel Missiles",
-     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
      2,
      200,
@@ -942,7 +942,7 @@ struct spell_desc
 
 {
     SPELL_BERSERKER_RAGE, "Berserker Rage",
-     SPTYP_ENCHANTMENT,
+     SPTYP_CHARMS,
      SPFLAG_HASTY,
      3,
      0,
@@ -1007,7 +1007,7 @@ struct spell_desc
 
 {
     SPELL_REGENERATION, "Regeneration",
-     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      3,
      200,
@@ -1088,7 +1088,7 @@ struct spell_desc
 
 {
     SPELL_TUKIMAS_DANCE, "Tukima's Dance",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_NONE,
      3,
      150,
@@ -1151,9 +1151,10 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 31
 {
     SPELL_TUKIMAS_VORPAL_BLADE, "Tukima's Vorpal Blade",
-     SPTYP_ENCHANTMENT,
+     SPTYP_CHARMS,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1163,10 +1164,11 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_FIRE_BRAND, "Fire Brand",
-     SPTYP_ENCHANTMENT | SPTYP_FIRE,
+     SPTYP_CHARMS | SPTYP_FIRE,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1179,7 +1181,7 @@ struct spell_desc
 
 {
     SPELL_FREEZING_AURA, "Freezing Aura",
-     SPTYP_ENCHANTMENT | SPTYP_ICE,
+     SPTYP_CHARMS | SPTYP_ICE,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1192,7 +1194,7 @@ struct spell_desc
 
 {
     SPELL_LETHAL_INFUSION, "Lethal Infusion",
-     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1231,7 +1233,7 @@ struct spell_desc
 
 {
     SPELL_STONEMAIL, "Stonemail",
-     SPTYP_ENCHANTMENT | SPTYP_EARTH,
+     SPTYP_CHARMS | SPTYP_EARTH,
      SPFLAG_NONE,
      6,
      200,
@@ -1257,7 +1259,7 @@ struct spell_desc
 
 {
     SPELL_SWIFTNESS, "Swiftness",
-     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_HASTY,
      2,
      200,
@@ -1270,7 +1272,7 @@ struct spell_desc
 
 {
     SPELL_FLY, "Flight",
-     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
      4,
      200,
@@ -1283,7 +1285,7 @@ struct spell_desc
 
 {
     SPELL_INSULATION, "Insulation",
-     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
      4,
      200,
@@ -1322,7 +1324,7 @@ struct spell_desc
 
 {
     SPELL_CONTROL_TELEPORT, "Control Teleport",
-     SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
+     SPTYP_CHARMS | SPTYP_TRANSLOCATION,
      SPFLAG_HELPFUL,
      4,
      200,
@@ -1335,7 +1337,7 @@ struct spell_desc
 
 {
     SPELL_POISON_WEAPON, "Poison Weapon",
-     SPTYP_ENCHANTMENT | SPTYP_POISON,
+     SPTYP_CHARMS | SPTYP_POISON,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      3,
      0,
@@ -1348,7 +1350,7 @@ struct spell_desc
 
 {
     SPELL_RESIST_POISON, "Resist Poison",
-     SPTYP_ENCHANTMENT | SPTYP_POISON,
+     SPTYP_CHARMS | SPTYP_POISON,
      SPFLAG_HELPFUL,
      4,
      200,
@@ -1361,7 +1363,7 @@ struct spell_desc
 
 {
     SPELL_PROJECTED_NOISE, "Projected Noise",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_NONE,
      2,
      0,
@@ -1558,7 +1560,7 @@ struct spell_desc
 
 {
     SPELL_DEFLECT_MISSILES, "Deflect Missiles",
-     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_HELPFUL,
      6,
      200,
@@ -1623,7 +1625,7 @@ struct spell_desc
 
 {
     SPELL_CONFUSING_TOUCH, "Confusing Touch",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_NONE,
      1,
      200,
@@ -1636,7 +1638,7 @@ struct spell_desc
 
 {
     SPELL_SURE_BLADE, "Sure Blade",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES | SPTYP_CHARMS,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1728,7 +1730,7 @@ struct spell_desc
 #if TAG_MAJOR_VERSION == 31
 {
     SPELL_TAME_BEASTS, "Tame Beasts",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_AREA,
      5,
      200,
@@ -1742,7 +1744,7 @@ struct spell_desc
 
 {
     SPELL_HIBERNATION, "Ensorcelled Hibernation",
-     SPTYP_ENCHANTMENT | SPTYP_ICE,
+     SPTYP_HEXES | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      2,
      56,
@@ -1755,7 +1757,7 @@ struct spell_desc
 
 {
     SPELL_ENGLACIATION, "Metabolic Englaciation",
-     SPTYP_ENCHANTMENT | SPTYP_ICE,
+     SPTYP_HEXES | SPTYP_ICE,
      SPFLAG_AREA,
      7,
      200,
@@ -1781,7 +1783,7 @@ struct spell_desc
 
 {
     SPELL_SEE_INVISIBLE, "See Invisible",
-     SPTYP_ENCHANTMENT,
+     SPTYP_CHARMS,
      SPFLAG_HELPFUL,
      4,
      200,
@@ -1820,7 +1822,7 @@ struct spell_desc
 
 {
     SPELL_WARP_BRAND, "Warp Weapon",
-     SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
+     SPTYP_CHARMS | SPTYP_TRANSLOCATION,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      5,     // this is high for a reason - Warp brands are very powerful.
      0,
@@ -1833,7 +1835,7 @@ struct spell_desc
 
 {
     SPELL_SILENCE, "Silence",
-     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPTYP_HEXES | SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_AREA,
      5,
      200,
@@ -1885,7 +1887,7 @@ struct spell_desc
 
 {
     SPELL_CORONA, "Corona",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
      200,
@@ -2028,7 +2030,7 @@ struct spell_desc
 
 {
     SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
-     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      5,     // fairly high level - potentially one of the best brands
      200,
@@ -2082,7 +2084,7 @@ struct spell_desc
 
 {
     SPELL_PARALYSE, "Paralyse",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      4,
      200,
@@ -2095,7 +2097,7 @@ struct spell_desc
 
 {
     SPELL_MINOR_HEALING, "Minor Healing",
-     SPTYP_ENCHANTMENT, // was SPTYP_HOLY
+     SPTYP_NONE, // was SPTYP_HOLY
      SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
      2,
      0,
@@ -2108,7 +2110,7 @@ struct spell_desc
 
 {
     SPELL_MAJOR_HEALING, "Major Healing",
-     SPTYP_ENCHANTMENT, // was SPTYP_HOLY
+     SPTYP_NONE, // was SPTYP_HOLY
      SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
      6,
      0,
@@ -2461,7 +2463,7 @@ struct spell_desc
 
 {
     SPELL_PORKALATOR, "Porkalator",
-     SPTYP_ENCHANTMENT | SPTYP_TRANSMUTATION,
+     SPTYP_HEXES | SPTYP_TRANSMUTATION,
      SPFLAG_DIR_OR_TARGET,
      5,
      200,
@@ -2513,7 +2515,7 @@ struct spell_desc
 
 {
     SPELL_HASTE_OTHER, "Haste Other",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_HASTY,
      6,
      200,
@@ -2578,7 +2580,7 @@ struct spell_desc
 
 {
     SPELL_SLEEP, "Sleep",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
      200,
@@ -2617,7 +2619,7 @@ struct spell_desc
 
 {
     SPELL_MISLEAD, "Mislead",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
      5,
      200,
@@ -2695,7 +2697,7 @@ struct spell_desc
 
 {
     SPELL_MIGHT, "Might",
-     SPTYP_ENCHANTMENT,
+     SPTYP_CHARMS,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      3,
      200,
@@ -2721,7 +2723,7 @@ struct spell_desc
 
 {
     SPELL_AWAKEN_FOREST, "Awaken Forest",
-     SPTYP_ENCHANTMENT,
+     SPTYP_HEXES,
      SPFLAG_AREA,
      6,
      200,
@@ -2760,7 +2762,7 @@ struct spell_desc
 
 {
     SPELL_TROGS_HAND, "Trog's Hand",
-    SPTYP_ENCHANTMENT,
+    SPTYP_NONE,
     SPFLAG_MONSTER,
     3,
     0,
@@ -2903,7 +2905,7 @@ struct spell_desc
 
 {
     SPELL_MIRROR_DAMAGE, "Mirror Damage",
-     SPTYP_ENCHANTMENT,
+     SPTYP_NONE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      4,
      200,

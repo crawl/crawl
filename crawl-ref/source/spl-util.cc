@@ -857,8 +857,10 @@ const char* spelltype_short_name(int which_spelltype)
     {
     case SPTYP_CONJURATION:
         return ("Conj");
-    case SPTYP_ENCHANTMENT:
-        return ("Ench");
+    case SPTYP_HEXES:
+        return ("Hex");
+    case SPTYP_CHARMS:
+        return ("Chrm");
     case SPTYP_FIRE:
         return ("Fire");
     case SPTYP_ICE:
@@ -894,8 +896,10 @@ const char* spelltype_long_name(int which_spelltype)
     {
     case SPTYP_CONJURATION:
         return ("Conjuration");
-    case SPTYP_ENCHANTMENT:
-        return ("Enchantment");
+    case SPTYP_HEXES:
+        return ("Hexes");
+    case SPTYP_CHARMS:
+        return ("Charms");
     case SPTYP_FIRE:
         return ("Fire");
     case SPTYP_ICE:
@@ -930,7 +934,8 @@ skill_type spell_type2skill(unsigned int spelltype)
     switch (spelltype)
     {
     case SPTYP_CONJURATION:    return (SK_CONJURATIONS);
-    case SPTYP_ENCHANTMENT:    return (SK_ENCHANTMENTS);
+    case SPTYP_HEXES:          return (SK_HEXES);
+    case SPTYP_CHARMS:         return (SK_CHARMS);
     case SPTYP_FIRE:           return (SK_FIRE_MAGIC);
     case SPTYP_ICE:            return (SK_ICE_MAGIC);
     case SPTYP_TRANSMUTATION:  return (SK_TRANSMUTATIONS);
@@ -1233,7 +1238,6 @@ bool spell_is_useless(spell_type spell, bool transient)
             return (true);
         break;
     // weapon branding is useless
-    case SPELL_TUKIMAS_VORPAL_BLADE:
     case SPELL_FIRE_BRAND:
     case SPELL_FREEZING_AURA:
     case SPELL_LETHAL_INFUSION:

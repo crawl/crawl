@@ -1702,10 +1702,24 @@ static void tag_read_you(reader &th)
 
     // how many skills?
     count = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_ENCH_SPLIT)
+        count++;
+#endif
     for (j = 0; j < count; ++j)
     {
 #if TAG_MAJOR_VERSION == 31
-        if (j >= NUM_SKILLS)
+        if (j == SK_CHARMS && th.getMinorVersion() < TAG_MINOR_ENCH_SPLIT)
+        {
+            you.skills[j]         = you.skills[SK_HEXES];
+            you.practise_skill[j] = you.practise_skill[SK_HEXES];
+            you.skill_points[j]   = you.skill_points[SK_HEXES];
+            you.ct_skill_points[j]= you.ct_skill_points[SK_HEXES];
+            you.skill_order[j]    = you.skill_order[SK_HEXES];
+            continue;
+        }
+
+        if (j >= NUM_SKILLS && th.getMinorVersion() < TAG_MINOR_CROSSTRAIN)
         {
             unmarshallByte(th);
             unmarshallByte(th);
@@ -1714,6 +1728,7 @@ static void tag_read_you(reader &th)
             continue;
         }
 #endif
+
         you.skills[j]          = unmarshallByte(th);
         you.practise_skill[j]  = unmarshallByte(th);
         you.skill_points[j]    = unmarshallInt(th);
@@ -1733,6 +1748,19 @@ static void tag_read_you(reader &th)
     you.transfer_skill_points = unmarshallInt(th);
     you.transfer_total_skill_points = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 31
+        if (th.getMinorVersion() < TAG_MINOR_ENCH_SPLIT)
+        {
+            if (you.transfer_from_skill > SK_HEXES
+                && you.transfer_from_skill < NUM_SKILLS)
+            {
+                you.transfer_from_skill = (skill_type)(you.transfer_from_skill + 1);
+            }
+            if (you.transfer_to_skill > SK_HEXES
+                && you.transfer_to_skill < NUM_SKILLS)
+            {
+                you.transfer_to_skill = (skill_type)(you.transfer_to_skill + 1);
+            }
+        }
     }
 #endif
 
