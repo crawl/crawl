@@ -1009,9 +1009,9 @@ hog
 
 A large, fat and very ugly pig.
 %%%%
-holy dragon
+pearl dragon
 
-A dragon imbued with the power of the Gods, it breathes blessed fire and claws with the sear of holy wrath.
+This dragon has been imbued with the power of the Gods! Its breath is blessed fire, and its claws burn with the sear of holy wrath.
 %%%%
 hound
 

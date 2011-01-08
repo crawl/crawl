@@ -535,7 +535,7 @@ int monster::halo_radius2() const
         return (29);
     case MONS_DAEVA:
         return (32);
-    case MONS_HOLY_DRAGON:
+    case MONS_PEARL_DRAGON:
         return (5);
     case MONS_OPHAN:
         return (64); // highest rank among sentient ones
