@@ -1551,7 +1551,7 @@
       }
     },
 
-    {  MST_HOLY_DRAGON,
+    {  MST_PEARL_DRAGON,
       {
        SPELL_HOLY_BREATH,
        SPELL_HOLY_BREATH,
