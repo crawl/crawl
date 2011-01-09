@@ -1451,8 +1451,7 @@ static void unmarshall_level_map_unique_ids(reader &th)
 
 static void marshall_mapdef(writer &th, const map_def &map)
 {
-    marshallStringNoMax(th, map.name);
-    map.write_full(th);
+    marshallString4(th, map.name);
     map.write_index(th);
     map.write_maplines(th);
     marshallString(th, map.description);
@@ -1461,8 +1460,7 @@ static void marshall_mapdef(writer &th, const map_def &map)
 static map_def unmarshall_mapdef(reader &th)
 {
     map_def map;
-    map.name = unmarshallStringNoMax(th);
-    map.read_full(th, false);
+    unmarshallString4(th, map.name);
     map.read_index(th);
     map.read_maplines(th);
     map.description = unmarshallString(th);
