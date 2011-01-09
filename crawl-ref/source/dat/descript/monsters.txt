@@ -565,7 +565,7 @@ Once in a very great while, there is a deep elf that scorns magic and devotes he
 %%%%
 deep elf conjurer
 
-This is an elf well-versed in destructive magic.
+This is a deep elf well-versed in destructive magic.
 %%%%
 deep elf death mage
 
