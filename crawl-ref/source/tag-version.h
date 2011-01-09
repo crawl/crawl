@@ -42,7 +42,9 @@ enum tag_minor_version
     TAG_MINOR_SAVE_FORMAT     = 31, // Updated save file format (low-level)
     TAG_MINOR_ENCH_SPLIT      = 32, // Enchantments split.
     TAG_MINOR_PEARL           = 33, // Pearl dragon armour
-    TAG_MINOR_VERSION         = 33, // Current version.  (Keep equal to max.)
+
+    NUM_TAG_MINORS,
+    TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
 
 #endif
