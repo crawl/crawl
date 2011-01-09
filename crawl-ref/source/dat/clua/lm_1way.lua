@@ -3,11 +3,10 @@
 -- One-way stair marker.
 ------------------------------------------------------------------------------
 
-OneWayStair = util.subclass(PortalDescriptor)
-OneWayStair.CLASS = "OneWayStair"
+util.subclass(PortalDescriptor, "OneWayStair")
 
 function OneWayStair:new(props)
-  local instance = self.super.new(self, props)
+  local instance = PortalDescriptor.new(self, props)
   if instance.onclimb then
     instance.onclimb = global_function(instance.onclimb)
   end
