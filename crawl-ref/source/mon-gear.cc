@@ -1760,7 +1760,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         // deliberate fall through
 
     case MONS_DEEP_DWARF_ARTIFICER:
-        item_race      = MAKE_ITEM_DWARVEN;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;
