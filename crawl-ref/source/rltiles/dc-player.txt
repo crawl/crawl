@@ -375,6 +375,7 @@ dragonsc_cyan DRAGONSC_CYAN
 dragonsc_brown DRAGONSC_BROWN
 dragonsc_blue DRAGONSC_BLUE
 dragonsc_gold DRAGONSC_GOLD
+dragonsc_pearl DRAGONSC_PEARL
 dragonarm_green DRAGONARM_GREEN
 dragonarm_white DRAGONARM_WHITE
 dragonarm_magenta DRAGONARM_MAGENTA
@@ -382,6 +383,7 @@ dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
 dragonarm_blue DRAGONARM_BLUE
 dragonarm_gold DRAGONARM_GOLD
+dragonarm_pearl DRAGONARM_PEARL
 
 aragorn ARAGORN
 aragorn2 ARAGORN2
