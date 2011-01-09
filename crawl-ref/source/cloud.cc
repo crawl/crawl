@@ -1088,9 +1088,9 @@ int actor_apply_cloud(actor *act)
     return final_damage;
 }
 
-bool is_damaging_cloud(cloud_type type, bool temp)
+bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
 {
-    if (!temp)
+    if (accept_temp_resistances)
     {
         cloud_struct cloud;
         cloud.type = type;
@@ -1106,7 +1106,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
         unwind_var<durations_t> old_durations(you.duration);
         unwind_var<transformation_type> old_form(you.form, TRAN_NONE);
         you.duration.init(0);
-        return is_damaging_cloud(type, false);
+        return is_damaging_cloud(type, true);
     }
 }
 
