@@ -1005,7 +1005,7 @@ void noise_grid::dump_noise_grid(const std::string &filename) const
     FILE *outf = fopen(filename.c_str(), "w");
     fprintf(outf, "<!DOCTYPE html><html><head>");
     _write_noise_grid_css(outf);
-    fprintf(outf, "</head>\n<body\n");
+    fprintf(outf, "</head>\n<body>\n");
     write_noise_grid(outf);
     fprintf(outf, "</body></html>\n");
     fclose(outf);
