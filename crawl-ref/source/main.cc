@@ -4271,7 +4271,7 @@ static void _compile_time_asserts()
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
-    COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
+    COMPILE_CHECK(SK_EVOCATIONS == 32           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these

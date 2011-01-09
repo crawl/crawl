@@ -1703,15 +1703,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         mass_enchantment(ENCH_FEAR, powc, MHITYOU);
         break;
 
-#if TAG_MAJOR_VERSION == 31
-    case SPELL_TAME_BEASTS:
-    case SPELL_BONE_SHARDS:
-    case SPELL_PORTAL:
-    case SPELL_TUKIMAS_VORPAL_BLADE:
-        mpr("It appears that an accident happened to this spell.");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_INTOXICATE:
         cast_intoxicate(powc);
         break;
@@ -1928,16 +1919,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     // other
-#if TAG_MAJOR_VERSION == 31
-    case SPELL_SELECTIVE_AMNESIA:
-        crawl_state.cant_cmd_repeat("You can't repeat selective amnesia.");
-
-        // Sif Muna power calls with true
-        if (!cast_selective_amnesia())
-            return (SPRET_ABORT);
-        break;
-
-#endif
     case SPELL_EXTENSION:
         extension(powc);
         break;

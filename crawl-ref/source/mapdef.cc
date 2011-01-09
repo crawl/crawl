@@ -2411,18 +2411,8 @@ void map_def::read_index(reader& inf)
     border_fill_type =
         static_cast<dungeon_feature_type>(unmarshallShort(inf));
 
-    const bool simple_chance_weight =
-        inf.getMinorVersion() < TAG_MINOR_RANGE_CHANCES;
-    if (simple_chance_weight)
-    {
-        _chance.clear(_unmarshall_map_chance(inf));
-        _weight.clear(unmarshallInt(inf));
-    }
-    else
-    {
-        _chance = range_chance_t::read(inf, _unmarshall_map_chance);
-        _weight = range_weight_t::read(inf, unmarshallInt);
-    }
+    _chance = range_chance_t::read(inf, _unmarshall_map_chance);
+    _weight = range_weight_t::read(inf, unmarshallInt);
     cache_offset = unmarshallInt(inf);
     unmarshallString4(inf, tags);
     place.load(inf);

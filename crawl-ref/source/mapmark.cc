@@ -634,40 +634,13 @@ void map_malign_gateway_marker::write(writer &out) const
 
 void map_malign_gateway_marker::read(reader &in)
 {
-    int minorVersion = in.getMinorVersion();
-
     map_marker::read(in);
     duration  = unmarshallShort(in);
     is_player = unmarshallBoolean(in);
 
-#if TAG_MAJOR_VERSION == 31
-    if (minorVersion < TAG_MINOR_MALIGN)
-        monster_summoned = true;
-    else
-#endif
     monster_summoned = unmarshallBoolean(in);
-#if TAG_MAJOR_VERSION == 31
-    if (minorVersion < TAG_MINOR_FIX_MG)
-    {
-        summoner_string = "";
-        behaviour = BEH_HOSTILE;
-    }
-    else
-    {
-#endif
     summoner_string = unmarshallString(in);
     behaviour = static_cast<beh_type>(unmarshallUByte(in));
-#if TAG_MAJOR_VERSION == 31
-    }
-#endif
-
-#if TAG_MAJOR_VERSION == 31
-    if (!is_player && minorVersion < TAG_MINOR_FIX_MG)
-    {
-        monster caster;
-        unmarshallMonster(in, caster);
-    }
-#endif
 
     god       = static_cast<god_type>(unmarshallByte(in));
     power     = unmarshallShort(in);

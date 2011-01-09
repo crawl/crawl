@@ -933,12 +933,7 @@ void TilesFramework::place_tab(int idx)
         min_ln = max_ln = calc_tab_lines(n_common_commands);
         break;
     case TAB_SKILL:
-#if TAG_MAJOR_VERSION == 31
-// We can't actually use NUM_SKILLS, because of useless reserved numbers.
-        min_ln = max_ln = calc_tab_lines(32);
-#else
         min_ln = max_ln = calc_tab_lines(NUM_SKILLS);
-#endif
         break;
     }
 
