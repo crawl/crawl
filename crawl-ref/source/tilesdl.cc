@@ -266,6 +266,9 @@ void TilesFramework::calculate_default_options()
     AUTO(Options.tile_font_tip_size, 6);
     AUTO(Options.tile_font_lbl_size, 7);
 #undef AUTO
+
+    m_tab_margin = Options.tile_font_lbl_size + 4;
+
 }
 
 bool TilesFramework::initialise()
@@ -727,7 +730,6 @@ int TilesFramework::getch_ck()
 }
 
 static const int map_margin      = 2;
-static const int tab_margin      = 20;
 static const int map_stat_margin = 4;
 static const int crt_width       = 80;
 static const int crt_height      = 30;
@@ -951,7 +953,7 @@ void TilesFramework::place_tab(int idx)
         region_tab->place(m_stat_col, m_statcol_bottom
                                      - lines * m_region_tab->dy);
         region_tab->resize(m_region_tab->mx, lines);
-        m_statcol_bottom = region_tab->sy - tab_margin;
+        m_statcol_bottom = region_tab->sy - m_tab_margin;
     }
     else
         m_region_tab->enable_tab(idx);
@@ -1021,7 +1023,7 @@ void TilesFramework::layout_statcol()
     m_region_tab->resize(m_region_tab->mx, min_inv_height);
     m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
 
-    m_statcol_bottom = m_region_tab->sy - tab_margin;
+    m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
     for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
     {
