@@ -3,13 +3,12 @@
 -- Portal descriptor markers.
 ------------------------------------------------------------------------------
 
-PortalDescriptor = { CLASS = "PortalDescriptor" }
-PortalDescriptor.__index = PortalDescriptor
+require('clua/util.lua')
+
+util.defclass("PortalDescriptor")
 
 function PortalDescriptor:new(properties)
-  local pd = { }
-  setmetatable(pd, self)
-  self.__index = self
+  local pd = util.newinstance(self)
   pd.props = properties
   return pd
 end
