@@ -890,8 +890,7 @@ void static _get_randart_properties(const item_def &item,
         && (aclass != OBJ_ARMOUR
             || (atype != ARM_DRAGON_ARMOUR
                 && atype != ARM_ICE_DRAGON_ARMOUR
-                && atype != ARM_GOLD_DRAGON_ARMOUR
-                && atype != ARM_PEARL_DRAGON_ARMOUR)))
+                && atype != ARM_GOLD_DRAGON_ARMOUR)))
     {
         proprt[ARTP_FIRE] = 1;
         if (one_chance_in(5))
