@@ -36,6 +36,8 @@ function RestrictDoor:read(marker, th)
   return self
 end
 
+dlua_register_marker_table(RestrictDoor)
+
 function RestrictDoor:on_trigger(triggerer, marker, ev)
   self.props.door_restrict = ""
 end
@@ -113,6 +115,8 @@ function LockDoor:read(marker, th)
   setmetatable(self, LockDoor)
   return self
 end
+
+dlua_register_marker_table(LockDoor)
 
 function lock_door(props)
   return LockDoor:new(props)
