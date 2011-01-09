@@ -4293,7 +4293,8 @@ tileidx_t tileidx_skill(skill_type skill, bool active)
     case SK_UNARMED_COMBAT: ch = TILEG_UNARMED_COMBAT_ON; break;
     case SK_SPELLCASTING:   ch = TILEG_SPELLCASTING_ON; break;
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
-    case SK_ENCHANTMENTS:   ch = TILEG_ENCHANTMENTS_ON; break;
+    case SK_HEXES:          ch = TILEG_ENCHANTMENTS_ON; break;
+    case SK_CHARMS:         ch = TILEG_ENCHANTMENTS_ON; break;
     case SK_SUMMONINGS:     ch = TILEG_SUMMONINGS_ON; break;
     case SK_NECROMANCY:     ch = TILEG_NECROMANCY_ON; break;
     case SK_TRANSLOCATIONS: ch = TILEG_TRANSLOCATIONS_ON; break;
