@@ -619,9 +619,17 @@ deep dwarf artificer
 
 This deep dwarf has mastered the use of magical devices.
 %%%%
+deep dwarf berserker
+
+A deep dwarf revelling in ferocity and blood-thirst.
+%%%%
 deep dwarf death knight
 
 A deep dwarf warrior-priest of Yredelemnul, chanting unholy homages.
+%%%%
+deep dwarf necromancer
+
+This deep dwarf basks in a pulsating magical aura of death.
 %%%%
 deep dwarf scion
 
