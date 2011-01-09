@@ -1149,5 +1149,3 @@ void ghost_demon::init_labrat (uint8_t force_colour)
         break;
     }
 }
-
-
