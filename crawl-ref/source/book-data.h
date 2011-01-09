@@ -263,11 +263,7 @@
 },
 
 {   // Book of the Sky
-#if TAG_MAJOR_VERSION != 31
     SPELL_SUMMON_ELEMENTAL,
-#else
-    SPELL_TORNADO, // in more books for now to get more testing
-#endif
     SPELL_INSULATION,
     SPELL_AIRSTRIKE,
     SPELL_FLY,
@@ -332,19 +328,6 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
-
-#if TAG_MAJOR_VERSION == 31
-{   // Book of Tukima
-    SPELL_SURE_BLADE,
-    SPELL_TUKIMAS_DANCE,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-},
-#endif
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
@@ -411,19 +394,6 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
-
-#if TAG_MAJOR_VERSION == 31
-{   // Book of Beasts
-    SPELL_SUMMON_SMALL_MAMMALS,
-    SPELL_STICKS_TO_SNAKES,
-    SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_DRAGON_FORM,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-},
-#endif
 
 {   // Book of Stalking
     SPELL_FULSOME_DISTILLATION,

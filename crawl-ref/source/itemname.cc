@@ -991,9 +991,6 @@ static const char* book_type_name(int booktype)
     case BOOK_UNLIFE:                 return "Unlife";
     case BOOK_CONTROL:                return "Control";
     case BOOK_MUTATIONS:              return "Morphology";
-#if TAG_MAJOR_VERSION == 31
-    case BOOK_TUKIMA:                 return "Tukima";
-#endif
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
     case BOOK_WIZARDRY:               return "Wizardry";
@@ -1153,10 +1150,6 @@ std::string sub_type_string (object_class_type type, int sub_type, bool known, i
             return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
-#if TAG_MAJOR_VERSION == 31
-        else if (sub_type == BOOK_BEASTS)
-            return "Monster Manual";
-#endif
 
         return book_type_name(sub_type);
     }
@@ -1798,10 +1791,6 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "tome of Destruction";
         else if (item_typ == BOOK_YOUNG_POISONERS)
             buff << "Young Poisoner's Handbook";
-#if TAG_MAJOR_VERSION == 31
-        else if (item_typ == BOOK_BEASTS)
-            buff << "Monster Manual";
-#endif
         else
             buff << "book of " << book_type_name(item_typ);
         break;

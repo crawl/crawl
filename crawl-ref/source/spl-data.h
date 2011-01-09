@@ -404,21 +404,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 31
-{
-    SPELL_SELECTIVE_AMNESIA, "Selective Amnesia",
-     SPTYP_CHARMS,
-     SPFLAG_NONE,
-     4,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
-
 {
     SPELL_MASS_CONFUSION, "Mass Confusion",
      SPTYP_HEXES,
@@ -1018,21 +1003,6 @@ struct spell_desc
      true
 },
 
-#if TAG_MAJOR_VERSION == 31
-{
-    SPELL_BONE_SHARDS, "Bone Shards",
-     SPTYP_NECROMANCY,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_CORPSE_VIOLATING,
-     3,
-     200,
-     6, 6,
-     0,
-     NULL,
-     true,
-     false
-},
-#endif
-
 {
     SPELL_BANISHMENT, "Banishment",
      SPTYP_TRANSLOCATION,
@@ -1150,21 +1120,6 @@ struct spell_desc
      false,
      false
 },
-
-#if TAG_MAJOR_VERSION == 31
-{
-    SPELL_TUKIMAS_VORPAL_BLADE, "Tukima's Vorpal Blade",
-     SPTYP_CHARMS,
-     SPFLAG_HELPFUL | SPFLAG_BATTLE,
-     2,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
 
 {
     SPELL_FIRE_BRAND, "Fire Brand",
@@ -1412,21 +1367,6 @@ struct spell_desc
      false,
      true
 },
-
-#if TAG_MAJOR_VERSION == 31
-{
-    SPELL_PORTAL, "Portal",
-     SPTYP_TRANSLOCATION,
-     SPFLAG_ESCAPE,
-     7,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-#endif
 
 {
     SPELL_AGONY, "Agony",
@@ -1726,21 +1666,6 @@ struct spell_desc
      false,
      false
 },
-
-#if TAG_MAJOR_VERSION == 31
-{
-    SPELL_TAME_BEASTS, "Tame Beasts",
-     SPTYP_HEXES,
-     SPFLAG_AREA,
-     5,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-#endif
 
 {
     SPELL_HIBERNATION, "Ensorcelled Hibernation",

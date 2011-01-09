@@ -5874,10 +5874,6 @@ static monsterentry mondata[] = {
     MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_LARGE
 },
 
-#if TAG_MAJOR_VERSION == 31
-AXED_MON(MONS_UNUSED_PARACELSUS)
-#endif
-
 // human uniques
 {
     MONS_TERENCE, '@', LIGHTCYAN, "Terence",

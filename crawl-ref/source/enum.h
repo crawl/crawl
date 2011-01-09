@@ -13,149 +13,6 @@
 enum ability_type
 {
     ABIL_NON_ABILITY = -1,
-#if TAG_MAJOR_VERSION == 31
-    ABIL_SPIT_POISON = 1,              //    1
-    ABIL_TELEPORTATION,
-    ABIL_BREATHE_FIRE,
-    ABIL_BLINK,
-    ABIL_BREATHE_FROST,                //    5
-    ABIL_BREATHE_POISON,
-    ABIL_BREATHE_LIGHTNING,
-    ABIL_SPIT_ACID,
-    ABIL_BREATHE_POWER,
-    ABIL_EVOKE_BERSERK,                //   10
-    ABIL_BREATHE_STICKY_FLAME,
-    ABIL_BREATHE_STEAM,
-    ABIL_FLY,
-    ABIL_HELLFIRE,
-    ABIL_THROW_FLAME,                  //   15
-    ABIL_THROW_FROST,
-    ABIL_FLY_II,
-    ABIL_DELAYED_FIREBALL,
-    ABIL_MUMMY_RESTORATION,
-    ABIL_EVOKE_TELEPORTATION,
-    ABIL_EVOKE_BLINK,
-    ABIL_RECHARGING,                   //   20
-    ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
-    ABIL_EVOKE_TURN_VISIBLE,
-    ABIL_EVOKE_LEVITATE,
-    ABIL_EVOKE_STOP_LEVITATING,
-    ABIL_END_TRANSFORMATION,           //   55
-    ABIL_STOP_FLYING,
-    ABIL_BREATHE_MEPHITIC,
-
-
-    // // zot defence abilities
-    ABIL_MAKE_FUNGUS = 60,             //   60
-    ABIL_MAKE_PLANT,
-    ABIL_MAKE_OKLOB_SAPLING,
-    ABIL_MAKE_DART_TRAP,
-    ABIL_MAKE_ICE_STATUE,
-    ABIL_MAKE_OCS,                     //   65
-    ABIL_MAKE_SILVER_STATUE,
-    ABIL_MAKE_CURSE_SKULL,
-    ABIL_MAKE_TELEPORT,
-    ABIL_MAKE_ARROW_TRAP,
-    ABIL_MAKE_BOLT_TRAP,               //   70
-    ABIL_MAKE_SPEAR_TRAP,
-    ABIL_MAKE_AXE_TRAP,
-    ABIL_MAKE_NEEDLE_TRAP,
-    ABIL_MAKE_NET_TRAP,
-    ABIL_MAKE_TELEPORT_TRAP,           //   75
-    ABIL_MAKE_ALARM_TRAP,
-    ABIL_MAKE_BLADE_TRAP,
-    ABIL_MAKE_OKLOB_CIRCLE,
-    ABIL_MAKE_ACQUIRE_GOLD,
-    ABIL_MAKE_ACQUIREMENT,             //   80
-    ABIL_MAKE_WATER,
-    ABIL_MAKE_ELECTRIC_EEL,
-    ABIL_MAKE_BAZAAR,
-    ABIL_MAKE_ALTAR,
-    ABIL_MAKE_GRENADES,                //   85
-    ABIL_MAKE_SAGE,
-    ABIL_MAKE_OKLOB_PLANT,
-    ABIL_MAKE_BURNING_BUSH,
-    ABIL_REMOVE_CURSE,
-
-    // Divine abilities
-    ABIL_ZIN_SUSTENANCE = 109,              //  109
-    ABIL_ZIN_RECITE,
-    ABIL_ZIN_VITALISATION,
-    ABIL_ZIN_IMPRISON,
-    ABIL_ZIN_SANCTUARY,
-    ABIL_ZIN_CURE_ALL_MUTATIONS,
-    ABIL_TSO_DIVINE_SHIELD = 120,           //  120
-    ABIL_TSO_CLEANSING_FLAME,
-    ABIL_TSO_SUMMON_DIVINE_WARRIOR,
-    ABIL_KIKU_RECEIVE_CORPSES = 130,        //  130
-    ABIL_YRED_INJURY_MIRROR = 139,
-    ABIL_YRED_ANIMATE_REMAINS,              //  140
-    ABIL_YRED_RECALL_UNDEAD_SLAVES,
-    ABIL_YRED_ANIMATE_DEAD,
-    ABIL_YRED_DRAIN_LIFE,
-    ABIL_YRED_ENSLAVE_SOUL,
-    // Placeholder for Animate Remains or Animate Dead.
-    ABIL_YRED_ANIMATE_REMAINS_OR_DEAD,
-    // 160 - reserved for Vehumet
-    ABIL_OKAWARU_MIGHT = 170,               //  170
-    // Okawaru no longer heals (JPEG)
-    ABIL_OKAWARU_HASTE = 172,
-    ABIL_MAKHLEB_MINOR_DESTRUCTION = 180,   //  180
-    ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
-    ABIL_MAKHLEB_MAJOR_DESTRUCTION,
-    ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,
-    ABIL_SIF_MUNA_CHANNEL_ENERGY = 190,     //  190
-    ABIL_SIF_MUNA_FORGET_SPELL,
-    ABIL_TROG_BURN_SPELLBOOKS = 199,
-    ABIL_TROG_BERSERK = 200,                //  200
-    ABIL_TROG_REGEN_MR,
-    ABIL_TROG_BROTHERS_IN_ARMS,
-    ABIL_ELYVILON_DESTROY_WEAPONS = 219,
-    ABIL_ELYVILON_LESSER_HEALING_SELF = 220, //  220
-    ABIL_ELYVILON_LESSER_HEALING_OTHERS,
-    ABIL_ELYVILON_PURIFICATION,
-    ABIL_ELYVILON_GREATER_HEALING_SELF,
-    ABIL_ELYVILON_GREATER_HEALING_OTHERS,
-    ABIL_ELYVILON_RESTORATION,              //  225
-    ABIL_ELYVILON_DIVINE_VIGOUR,
-    ABIL_LUGONU_ABYSS_EXIT,
-    ABIL_LUGONU_BEND_SPACE,
-    ABIL_LUGONU_BANISH,
-    ABIL_LUGONU_CORRUPT,                    //  230
-    ABIL_LUGONU_ABYSS_ENTER,
-    ABIL_NEMELEX_DRAW_ONE,
-    ABIL_NEMELEX_PEEK_TWO,
-    ABIL_NEMELEX_TRIPLE_DRAW,
-    ABIL_NEMELEX_MARK_FOUR,                 //  235
-    ABIL_NEMELEX_STACK_FIVE,
-    ABIL_BEOGH_SMITING,
-    ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
-    ABIL_JIYVA_CALL_JELLY,
-    ABIL_JIYVA_JELLY_PARALYSE,                // 240
-    ABIL_JIYVA_SLIMIFY,
-    ABIL_JIYVA_CURE_BAD_MUTATION,
-    ABIL_FEDHAS_FUNGAL_BLOOM,
-    ABIL_FEDHAS_SUNLIGHT,
-    ABIL_FEDHAS_RAIN,                        // 245
-    ABIL_FEDHAS_PLANT_RING,
-    ABIL_FEDHAS_SPAWN_SPORES,
-    ABIL_FEDHAS_EVOLUTION,
-    ABIL_CHEIBRIADOS_PONDEROUSIFY,
-    ABIL_CHEIBRIADOS_TIME_STEP,             // 250
-    ABIL_CHEIBRIADOS_TIME_BEND,
-    ABIL_CHEIBRIADOS_SLOUCH,
-    ABIL_ASHENZARI_SCRYING,
-    ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
-    ABIL_ASHENZARI_END_TRANSFER,            // 255
-
-    // Vampire abilities
-    ABIL_TRAN_BAT = 260,
-    ABIL_BOTTLE_BLOOD,
-
-    ABIL_HARM_PROTECTION,
-    ABIL_HARM_PROTECTION_II,                //  262
-    ABIL_RENOUNCE_RELIGION = 270,           //  270
-#else
     // Innate abilities and (Demonspawn) mutations.
     ABIL_SPIT_POISON = 1,
     ABIL_BREATHE_FIRE,
@@ -321,7 +178,6 @@ enum ability_type
     ABIL_MAKE_OKLOB_PLANT,
     ABIL_MAKE_BURNING_BUSH,
     ABIL_REMOVE_CURSE,
-#endif
 };
 
 enum activity_interrupt_type
@@ -359,9 +215,6 @@ enum attribute_type
     ATTR_DIVINE_LIGHTNING_PROTECTION,
     ATTR_DIVINE_REGENERATION,
     ATTR_DIVINE_DEATH_CHANNEL,
-#if TAG_MAJOR_VERSION == 31
-    ATTR_OBSOLETE_TRANSFORMATION,
-#endif
     ATTR_CARD_COUNTDOWN,
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
@@ -531,18 +384,12 @@ enum book_type
     BOOK_UNLIFE,
     BOOK_CONTROL,
     BOOK_MUTATIONS,
-#if TAG_MAJOR_VERSION == 31
-    BOOK_TUKIMA,
-#endif
     BOOK_GEOMANCY,
     BOOK_EARTH,
     BOOK_WIZARDRY,
     BOOK_POWER,
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,
-#if TAG_MAJOR_VERSION == 31
-    BOOK_BEASTS,
-#endif
     BOOK_STALKING,
     BOOK_BRANDS,
     BOOK_DRAGON,
@@ -612,9 +459,7 @@ enum canned_message_type
 {
     MSG_SOMETHING_APPEARS,
     MSG_NOTHING_HAPPENS,
-#if TAG_MAJOR_VERSION != 31
     MSG_YOU_UNAFFECTED,
-#endif
     MSG_YOU_RESIST,
     MSG_YOU_PARTIALLY_RESIST,
     MSG_TOO_BERSERK,
@@ -632,9 +477,6 @@ enum canned_message_type
     MSG_MANA_INCREASE,
     MSG_MANA_DECREASE,
     MSG_TOO_HUNGRY,
-#if TAG_MAJOR_VERSION == 31
-    MSG_YOU_UNAFFECTED,
-#endif
 };
 
 enum char_set_type
@@ -2156,15 +1998,6 @@ enum monster_type                      // (int) menv[].type
     MONS_SPIDER,
     MONS_OKLOB_SAPLING,
     MONS_BURNING_BUSH,
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_213,
-      MONS_UNUSED_214,
-      MONS_UNUSED_215,
-      MONS_UNUSED_216,
-      MONS_UNUSED_217,
-      MONS_UNUSED_218,
-      MONS_UNUSED_219,
-#endif
     MONS_WHITE_IMP,
     MONS_LEMURE,
     MONS_UFETUBUS,
@@ -2201,13 +2034,6 @@ enum monster_type                      // (int) menv[].type
     MONS_LOM_LOBON,
     MONS_CEREBOV,
     MONS_GLOORX_VLOQ,
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_MOLLUSC_LORD,
-      MONS_UNUSED_256,
-      MONS_UNUSED_257,
-      MONS_UNUSED_258,
-      MONS_UNUSED_PARACELSUS,
-#endif
 // BCR - End first batch of uniques.
     MONS_NAGA_MAGE,
     MONS_NAGA_WARRIOR,
@@ -2240,9 +2066,6 @@ enum monster_type                      // (int) menv[].type
     MONS_EROLCHA,
     MONS_DONALD,
     MONS_URUG,
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_UNIQUE,
-#endif
     MONS_JOSEPH,
     MONS_SNORG, // was Anita - Snorg is correct 16jan2000 {dlb}
     MONS_ERICA,
@@ -2303,29 +2126,12 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_UNBORN_DEEP_DWARF,
     MONS_GNOME, // single vault
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_338,
-      MONS_UNUSED_339,
-#endif
     // The Lords of Hell (also unique):
     MONS_GERYON,
     MONS_DISPATER,
     MONS_ASMODEUS,
     MONS_ANTAEUS,
     MONS_ERESHKIGAL,
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_345,
-      MONS_UNUSED_346,
-      MONS_UNUSED_347,
-      MONS_UNUSED_348,
-      MONS_UNUSED_349,
-      MONS_UNUSED_350,
-      MONS_UNUSED_351,
-      MONS_UNUSED_352,
-      MONS_UNUSED_353,
-      MONS_UNUSED_354,
-      MONS_UNUSED_355,
-#endif
     MONS_ANCIENT_LICH,
     MONS_OOZE,
     MONS_KRAKEN,
@@ -2382,31 +2188,11 @@ enum monster_type                      // (int) menv[].type
     MONS_PLAYER_ILLUSION,
     MONS_HELL_DEMON,
     MONS_TWISTER,        // air miscasts
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_410,
-      MONS_UNUSED_411,
-      MONS_UNUSED_412,
-      MONS_UNUSED_413,
-      MONS_UNUSED_414,
-      MONS_UNUSED_415,
-      MONS_UNUSED_416,
-      MONS_UNUSED_417,
-      MONS_UNUSED_418,
-      MONS_UNUSED_419,
-#endif
     // Lava monsters:
     MONS_LAVA_WORM,
     MONS_LAVA_FISH,
     MONS_LAVA_SNAKE,
     MONS_SALAMANDER,
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_424,
-      MONS_UNUSED_425,
-      MONS_UNUSED_426,
-      MONS_UNUSED_427,
-      MONS_UNUSED_428,
-      MONS_UNUSED_429,
-#endif
     // Water monsters:
     MONS_BIG_FISH,
     MONS_GIANT_GOLDFISH,
@@ -2416,10 +2202,6 @@ enum monster_type                      // (int) menv[].type
     MONS_SWAMP_WORM,
     MONS_SHARK,
     MONS_KRAKEN_TENTACLE_SEGMENT,
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_438,
-      MONS_UNUSED_439,
-#endif
     // Monsters which move through rock:
     MONS_ROCK_WORM,
 
@@ -2429,12 +2211,6 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_STATUE,
     MONS_STATUE,
     MONS_TRAINING_DUMMY,
-#if TAG_MAJOR_VERSION == 31
-      MONS_UNUSED_446,
-      MONS_UNUSED_447,
-      MONS_UNUSED_448,
-      MONS_UNUSED_449,
-#endif
     // Third batch of uniques
     MONS_ROXANNE, // -- statue, too!
     MONS_SONJA,
@@ -2482,13 +2258,6 @@ enum monster_type                      // (int) menv[].type
     MONS_ELDRITCH_TENTACLE_SEGMENT,
     MONS_TARANTELLA,
     MONS_SILENT_SPECTRE,
-#if TAG_MAJOR_VERSION == 31
-    MONS_WITCH,
-    MONS_EVIL_WITCH,
-    MONS_FOREST_WITCH,
-    MONS_HULDRA,
-    MONS_TROLLKONOR,
-#endif
     MONS_EIDOLON,
 
     // Spriggans:
@@ -2676,9 +2445,7 @@ enum mon_inv_type           // (int) menv[].inv[]
     MSLOT_ALT_WEAPON,       // Alternate weapon, ranged or second melee weapon
                             // for monsters that can use two weapons.
     MSLOT_MISSILE,
-#if TAG_MAJOR_VERSION > 31
     MSLOT_ALT_MISSILE,
-#endif
     MSLOT_ARMOUR,
     MSLOT_SHIELD,
     MSLOT_MISCELLANY,
@@ -2940,9 +2707,7 @@ enum mutation_type
     MUT_TOUGH_SKIN,
     MUT_WEAK,
     MUT_SLOW,
-#if TAG_MAJOR_VERSION != 31
     MUT_UNBREATHING,
-#endif
 
     // Jiyva-specific mutations
     MUT_ACIDIC_BITE,
@@ -2952,9 +2717,6 @@ enum mutation_type
     MUT_PSEUDOPODS,
     MUT_TRANSLUCENT_SKIN,
 
-#if TAG_MAJOR_VERSION == 31
-    MUT_UNBREATHING,
-#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
@@ -3172,16 +2934,7 @@ enum skill_type
     SK_SHIELDS,
     SK_TRAPS_DOORS,
     SK_UNARMED_COMBAT,
-#if TAG_MAJOR_VERSION == 31
-    // 20
-    // 21
-    // 22
-    // 23
-    // 24
-    SK_SPELLCASTING = 25,
-#else
     SK_SPELLCASTING,
-#endif
     SK_CONJURATIONS,
     SK_HEXES,
     SK_CHARMS,
@@ -3294,9 +3047,6 @@ enum spell_type
     SPELL_MINOR_HEALING,
     SPELL_MAJOR_HEALING,
     SPELL_DEATHS_DOOR,
-#if TAG_MAJOR_VERSION == 31
-    SPELL_SELECTIVE_AMNESIA,
-#endif
     SPELL_MASS_CONFUSION,
     SPELL_SMITING,
     SPELL_SUMMON_SMALL_MAMMALS,
@@ -3337,9 +3087,6 @@ enum spell_type
     SPELL_POISON_ARROW,
     SPELL_TWISTED_RESURRECTION,
     SPELL_REGENERATION,
-#if TAG_MAJOR_VERSION == 31
-    SPELL_BONE_SHARDS,
-#endif
     SPELL_BANISHMENT,
     SPELL_CIGOTUVIS_DEGENERATION,
     SPELL_STING,
@@ -3350,9 +3097,6 @@ enum spell_type
     SPELL_DEMONIC_HORDE,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_CORPSE_ROT,
-#if TAG_MAJOR_VERSION == 31
-    SPELL_TUKIMAS_VORPAL_BLADE,
-#endif
     SPELL_FIRE_BRAND,
     SPELL_FREEZING_AURA,
     SPELL_LETHAL_INFUSION,
@@ -3372,9 +3116,6 @@ enum spell_type
     SPELL_ALTER_SELF,
     SPELL_DEBUGGING_RAY,
     SPELL_RECALL,
-#if TAG_MAJOR_VERSION == 31
-    SPELL_PORTAL,
-#endif
     SPELL_AGONY,
     SPELL_SPIDER_FORM,
     SPELL_DISINTEGRATE,
@@ -3398,9 +3139,6 @@ enum spell_type
     SPELL_STICKS_TO_SNAKES,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_SUMMON_DRAGON,
-#if TAG_MAJOR_VERSION == 31
-    SPELL_TAME_BEASTS,
-#endif
     SPELL_HIBERNATION,
     SPELL_ENGLACIATION,
     SPELL_DETECT_SECRET_DOORS,
@@ -3434,9 +3172,6 @@ enum spell_type
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
-#if TAG_MAJOR_VERSION != 31
-    SPELL_NOXIOUS_CLOUD,
-#endif
     SPELL_STEAM_BALL,
     SPELL_SUMMON_UFETUBUS,
     SPELL_SUMMON_BEAST,
@@ -3492,9 +3227,6 @@ enum spell_type
     SPELL_SACRIFICE,
     SPELL_HOLY_FLAMES,
     SPELL_HOLY_BREATH,
-#if TAG_MAJOR_VERSION == 31
-    SPELL_BURN_SPELLBOOK,
-#endif
     SPELL_TROGS_HAND,
     SPELL_BROTHERS_IN_ARMS,
     SPELL_MIRROR_DAMAGE,
@@ -3504,9 +3236,7 @@ enum spell_type
     SPELL_FIRE_CLOUD,
     SPELL_STEAM_CLOUD,
     SPELL_MALIGN_GATEWAY,
-#if TAG_MAJOR_VERSION == 31
     SPELL_NOXIOUS_CLOUD,
-#endif
     SPELL_TORNADO,
     SPELL_STICKY_FLAME_RANGE,
     SPELL_LEDAS_LIQUEFACTION,

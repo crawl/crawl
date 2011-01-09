@@ -75,7 +75,7 @@ typedef skill_title_key_t stk;
 // intended for cases where things might be really awkward without it. -- bwr
 
 // NOTE: If a skill name is changed, remember to also adapt the database entry.
-const char *skills[50][6] =
+const char *skills[NUM_SKILLS][6] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
     {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},
@@ -98,14 +98,6 @@ const char *skills[50][6] =
     // STR based fighters, for DEX/martial arts titles see below.  Felids get their own cathegory, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
     {"Conjurations",   "Ruinous",       "Conjurer",        "Destroyer",       "Devastator",     "Annihilator"},
     {"Hexes",          "Vexing",        "Jinx",            "Bewitcher",       "Maledictor",     "Spellbinder"},
@@ -125,17 +117,6 @@ const char *skills[50][6] =
     // use the god titles instead, depending on piety or, in Xom's case, mood.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate"},
     {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},
-
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL}
 };
 
 const char *martial_arts_titles[6] =
