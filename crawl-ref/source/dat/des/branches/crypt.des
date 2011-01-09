@@ -705,7 +705,7 @@ MONS:   bone dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
 WEIGHT: 10
 KFEAT:  ^ = alarm trap
-SUBST:  F = G:100 F:1
+SUBST:  F = G:99 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
 {{
 function drop_walls (data, triggerable, triggerer, marker, ev)

@@ -258,7 +258,7 @@ DEPTH: 2-18, Vault, Elf
 : if you.absdepth() < 10 then
 SUBST: F = G
 : end
-SUBST: F = G:100 F:1
+SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 .........
