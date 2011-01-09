@@ -1108,7 +1108,7 @@ void down_stairs(dungeon_feature_type force_stair,
     // instances of it.
     if (you.level_type != LEVEL_DUNGEON)
     {
-        std::string lname = get_level_filename(level_id::current());
+        std::string lname = level_id::current().describe();
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str());
 #endif
