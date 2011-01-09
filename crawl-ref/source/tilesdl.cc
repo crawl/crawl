@@ -146,8 +146,8 @@ void TilesFramework::shutdown()
     m_region_crt   = NULL;
     m_region_menu  = NULL;
 
-    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
-        delete (*m_tabs_it).second;
+    for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
+        delete it->second;
 
     m_tabs.clear();
 
@@ -972,11 +972,8 @@ void TilesFramework::resize_inventory()
     m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
 
     int delta_y = m_region_tab->wy - prev_size;
-    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
-    {
-        TabbedRegion* tab = (*m_tabs_it).second;
-        tab->place(tab->sx, tab->sy - delta_y);
-    }
+    for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
+        it->second->place(it->second->sx, it->second->sy - delta_y);
 
     m_statcol_bottom -= delta_y;
 }
@@ -997,9 +994,9 @@ void TilesFramework::place_gold_turns()
 
 void TilesFramework::layout_statcol()
 {
-    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
+    for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
     {
-        delete (*m_tabs_it).second;
+        delete it->second;
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
     m_tabs.clear();
@@ -1248,8 +1245,8 @@ void TilesFramework::update_tabs()
         return;
 
     m_region_tab->update();
-    for (m_tabs_it = m_tabs.begin(); m_tabs_it != m_tabs.end(); ++m_tabs_it)
-        (*m_tabs_it).second->update();
+    for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
+        it->second->update();
 }
 
 void TilesFramework::toggle_inventory_display()
