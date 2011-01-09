@@ -217,6 +217,7 @@ protected:
     int m_tip_font;
     int m_lbl_font;
 
+    int m_tab_margin;
     int m_stat_col;
     int m_stat_x_divider;
     int m_statcol_top;
