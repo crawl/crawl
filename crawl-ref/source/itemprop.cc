@@ -2378,7 +2378,7 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
 
     int res = 0;
 
-    // Pearl dragona armour grants rN+.
+    // Pearl dragon armour grants rN+.
     if (arm.sub_type == ARM_PEARL_DRAGON_ARMOUR)
         res += 1;
 
