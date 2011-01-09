@@ -2497,7 +2497,7 @@ ENDMAP
 NAME: minivault_8
 TAGS: allow_dup
 MONS: patrolling molten gargoyle
-SUBST: F = G:100 F:1
+SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 x.x.x.x.x.x.
@@ -2561,7 +2561,7 @@ TAGS: abyss ruin_abyss
 SHUFFLE: AB, CD, EH/FG
 KFEAT: ACEH = any trap
 KITEM: ABCD = gold / nothing
-SUBST: F = G:100 F:1
+SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 ............

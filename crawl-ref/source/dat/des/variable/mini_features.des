@@ -154,7 +154,7 @@ NAME:   small_statue_alley_a
 TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  D:10-20
 WEIGHT: 7
-SUBST:  F = G:100 F:1
+SUBST:  F = G:99 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
 MAP
   xxxxxxx
