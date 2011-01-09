@@ -615,9 +615,17 @@ deep dwarf
 
 A pale and unnaturally tough-skinned dwarf.
 %%%%
+deep dwarf artificer
+
+This deep dwarf has mastered the use of magical devices.
+%%%%
 deep dwarf death knight
 
 A deep dwarf warrior-priest of Yredelemnul, chanting unholy homages.
+%%%%
+deep dwarf scion
+
+An armoured deep dwarf, formidable in melee combat.
 %%%%
 deep troll
 
