@@ -27,14 +27,16 @@ function zig()
   return dgn.persist.ziggurat
 end
 
+function callback.ziggurat_onclimb()
+  crawl.mark_milestone("zig.exit",
+                       "left a Ziggurat at level " ..
+                         zig().depth .. ".")
+  dgn.persist.ziggurat = { }
+end
+
 function cleanup_ziggurat()
   return one_way_stair {
-    onclimb = function()
-                crawl.mark_milestone("zig.exit",
-                                     "left a Ziggurat at level " ..
-                                       zig().depth .. ".")
-                dgn.persist.ziggurat = { }
-              end,
+    onclimb = "callback.ziggurat_onclimb",
     dstplace = zig().origin_level
   }
 end
@@ -76,7 +78,7 @@ function initialise_ziggurat(z, portal)
   z.origin_level = dgn.level_name(dgn.level_id())
 end
 
-function ziggurat_initialiser(portal)
+function callback.ziggurat_initialiser(portal)
   -- First ziggurat will be initialised twice.
   initialise_ziggurat(zig(), portal)
 end
@@ -87,7 +89,7 @@ end
 
 -- Increments the depth in the ziggurat when the player takes a
 -- downstair in the ziggurat.
-function zig_depth_increment()
+function callback.zig_depth_increment()
   zig().depth = zig().depth + 1
   zig().level = { }
 end
@@ -115,7 +117,7 @@ function ziggurat_portal(e, portal_only)
       dstname_abbrev = "Zig:1",
       dstorigin = "on level 1 of a ziggurat",
       floor = "stone_arch",
-      onclimb = ziggurat_initialiser
+      onclimb = "callback.ziggurat_initialiser"
     }
   end
 
@@ -179,7 +181,7 @@ local zigstair = dgn.gridmark
 local function zig_go_deeper()
   local newdepth = zig().depth + 1
   return one_way_stair {
-    onclimb = zig_depth_increment,
+    onclimb = "callback.zig_depth_increment",
     dstname = "Ziggurat:" .. newdepth,
     dstname_abbrev = "Zig:" .. newdepth,
     dstorigin = "on level " .. newdepth .. " of a ziggurat"
