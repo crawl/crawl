@@ -10,6 +10,36 @@
 #            reside in vaults.des.
 ###############################################################################
 
+{{
+function callback.ancient_champions_mu_skele_death(data, triggerable,
+                                                    triggerer, marker, ev)
+  data.skele_number = data.skele_number + 1
+
+  -- Only 7 skeles!
+  if data.skele_number > 7 then
+    return
+  end
+
+  local function get_slave (slavenum)
+    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
+    return myslaves[1]
+  end
+
+  local wall_pos = get_slave(data.skele_number)
+  if wall_pos == nil then
+    crawl.mpr("Couldn't find a slave!")
+  end
+
+  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
+
+  if you.see_cell(wall_pos.x, wall_pos.y) then
+    crawl.mpr("As the champion is destroyed, a metal wall slides away!")
+  else
+    crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
+  end
+end
+}}
+
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
 # easy or tough vaults. Also, exlucde unthemely branches with !Lair etc.
 default-depth: D:12-26
@@ -1471,36 +1501,8 @@ lua_marker("E", portal_desc { skele_slave=5 })
 lua_marker("F", portal_desc { skele_slave=6 })
 lua_marker("G", portal_desc { skele_slave=7 })
 
--- Then the actual function which does everything.
-function skele_death (data, triggerable, triggerer, marker, ev)
-  data.skele_number = data.skele_number + 1
-
-  -- Only 7 skeles!
-  if data.skele_number > 7 then
-    return
-  end
-
-  local function get_slave (slavenum)
-    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
-    return myslaves[1]
-  end
-
-  local wall_pos = get_slave(data.skele_number)
-  if wall_pos == nil then
-    crawl.mpr("Couldn't find a slave!")
-  end
-
-  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
-
-  if you.see_cell(wall_pos.x, wall_pos.y) then
-    crawl.mpr("As the champion is destroyed, a metal wall slides away!")
-  else
-    crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
-  end
-end
-
 local skele_death_marker = TriggerableFunction:new {
-  func=skele_death,
+  func="callback.ancient_champions_mu_skele_death",
   repeated=true,
   data={skele_number=0} }
 

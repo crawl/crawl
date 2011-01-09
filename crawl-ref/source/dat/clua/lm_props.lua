@@ -3,8 +3,7 @@
 -- Property markers.
 ------------------------------------------------------------------------------
 
-PropertiesDescriptor = { CLASS = "PropertiesDescriptor" }
-PropertiesDescriptor.__index = PropertiesDescriptor
+util.defclass("PropertiesDescriptor")
 
 function PropertiesDescriptor:new(properties)
   local pd = { }

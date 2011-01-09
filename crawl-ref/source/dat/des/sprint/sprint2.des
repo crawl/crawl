@@ -1,3 +1,25 @@
+{{
+function sprint2_forest_area_1_mons_gen(data, triggerable,
+                                        triggerer, marker, ev)
+    function spawn_zombie (x, y, spec)
+        local mons = dgn.create_monster(x, y, spec)
+        crawl.mpr("Murray drops in to check on your progress.")
+        return mons
+    end
+
+    if data.awoke == true then
+        return
+    end
+    local graves = dgn.find_marker_positions_by_prop("spawn_spot", 1)
+    for _, pos in ipairs(graves) do
+        local niceguy = spawn_zombie(pos.x, pos.y, "generate_awake Murray")
+    end
+
+    data.awoke = true
+end
+
+}}
+
 NAME:   the_violet_keep_of_menkaure
 DESC:   Sprint II: "The Violet Keep of Menkaure"
 TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
@@ -796,29 +818,11 @@ MARKER: + = lua:restrict_door()
 {{
 lua_marker("A", portal_desc { spawn_spot = 1 })
 
-function mons_gen (data, triggerable, triggerer, marker, ev)
-    function spawn_zombie (x, y, spec)
-        local mons = dgn.create_monster(x, y, spec)
-        crawl.mpr("Murray drops in to check on your progress.")
-        return mons
-    end
-
-    if data.awoke == true then
-        return
-    end
-    local graves = dgn.find_marker_positions_by_prop("spawn_spot", 1)
-    for _, pos in ipairs(graves) do
-        local niceguy = spawn_zombie(pos.x, pos.y, "generate_awake Murray")
-    end
-
-    data.awoke = true
-end
-
 local mons_gen_marker = TriggerableFunction:new {
     data = {
         awoke = 0
     },
-    func = mons_gen,
+    func = "sprint2_forest_area_1_mons_gen",
     repeated = true,
     props = {listen_to_slaves = true, only_at_slave = true }
     }

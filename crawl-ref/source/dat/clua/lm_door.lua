@@ -26,17 +26,13 @@ end
 
 function RestrictDoor:write(marker, th)
   RestrictDoor.super.write(self, marker, th)
-
   lmark.marshall_table(th, self.props)
 end
 
 function RestrictDoor:read(marker, th)
   RestrictDoor.super.read(self, marker, th)
-
   self.props          = lmark.unmarshall_table(th)
-
   setmetatable(self, RestrictDoor)
-
   return self
 end
 
@@ -45,11 +41,8 @@ function RestrictDoor:on_trigger(triggerer, marker, ev)
 end
 
 function restrict_door(props)
-
   local rd = RestrictDoor:new(props)
-
   rd:add_triggerer(DgnTriggerer:new{type = "door_opened"})
-
   return rd
 end
 
@@ -67,9 +60,7 @@ LockDoor.CLASS = "LockDoor"
 function LockDoor:new(props)
   props = props or { }
   local ld = self.super.new(self)
-
   ld.props = props
-
   return ld
 end
 
@@ -77,7 +68,6 @@ function LockDoor:property (marker, pname)
   if pname == "veto_open" then
      return self:check_veto(marker, pname)
   end
-
   return self.super.property(self, marker, pname)
 end
 
@@ -119,11 +109,8 @@ end
 
 function LockDoor:read(marker, th)
   LockDoor.super.read(self, marker, th)
-
   self.props          = lmark.unmarshall_table(th)
-
   setmetatable(self, LockDoor)
-
   return self
 end
 

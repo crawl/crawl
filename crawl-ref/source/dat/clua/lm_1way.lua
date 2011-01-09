@@ -3,8 +3,15 @@
 -- One-way stair marker.
 ------------------------------------------------------------------------------
 
-OneWayStair = util.subclass(PortalDescriptor)
-OneWayStair.CLASS = "OneWayStair"
+util.subclass(PortalDescriptor, "OneWayStair")
+
+function OneWayStair:new(props)
+  local instance = PortalDescriptor.new(self, props)
+  if instance.onclimb then
+    instance.onclimb = global_function(instance.onclimb)
+  end
+  return instance
+end
 
 function OneWayStair:activate(marker)
   local ev = dgn.dgn_event_type('player_climb')
