@@ -611,6 +611,14 @@ deep elf summoner
 
 This deep elf is skilled in the darker aspects of summoning.
 %%%%
+deep dwarf
+
+A pale and unnaturally tough-skinned dwarf.
+%%%%
+deep dwarf death knight
+
+A deep dwarf warrior-priest of Yredelemnul, chanting unholy homages.
+%%%%
 deep troll
 
 A stooped troll.
