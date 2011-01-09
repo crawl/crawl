@@ -256,9 +256,10 @@ void TilesFramework::calculate_default_options()
     }
     while (++auto_size < num_screen_sizes - 1);
 
+    m_map_pixels = Options.tile_map_pixels;
     // Auto pick map and font sizes if option is zero.
 #define AUTO(x,y) (x = (x) ? (x) : _screen_sizes[auto_size][(y)])
-    AUTO(Options.tile_map_pixels, 2);
+    AUTO(m_map_pixels, 2);
     AUTO(Options.tile_font_crt_size, 3);
     AUTO(Options.tile_font_stat_size, 4);
     AUTO(Options.tile_font_msg_size, 5);
@@ -872,16 +873,22 @@ void TilesFramework::do_layout()
 
     crawl_view.init_view();
 }
+
+void TilesFramework::autosize_minimap()
+{
+    const int horiz = (m_windowsz.x - m_stat_col - map_margin * 2) / GXM;
+    const int vert = (m_statcol_bottom - (m_region_map->sy ? m_region_map->sy
+                                                           : m_statcol_top)
+                     - map_margin * 2) / GYM;
+    m_region_map->dx = m_region_map->dy = std::min(horiz, vert);
+}
+
 void TilesFramework::place_minimap()
 {
-    m_region_map  = new MapRegion(Options.tile_map_pixels);
+    m_region_map  = new MapRegion(m_map_pixels);
 
-    if (GXM * m_region_map->dx > m_windowsz.x - m_stat_x_divider)
-    {
-        m_region_map->dx = (m_windowsz.x - m_stat_x_divider - map_margin * 2)
-                            / GXM;
-        m_region_map->dy = m_region_map->dx;
-    }
+    if (GXM * m_region_map->dx > m_windowsz.x - m_stat_col)
+        autosize_minimap();
 
     m_region_map->resize(GXM, GYM);
     if (m_region_map->dy * GYM > m_statcol_bottom - m_statcol_top)
@@ -894,7 +901,7 @@ void TilesFramework::place_minimap()
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
     m_region_map->place(m_stat_col, m_region_stat->ey, map_margin);
 
-    m_statcol_top = m_region_map->ey + map_margin;
+    m_statcol_top = m_region_map->ey;
 }
 
 int TilesFramework::calc_tab_lines(const int num_elements)
@@ -935,7 +942,7 @@ void TilesFramework::place_tab(int idx)
         break;
     }
 
-    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top - tab_margin)
+    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top)
                                  / m_region_tab->dy);
     if (lines >= min_ln)
     {
@@ -947,9 +954,9 @@ void TilesFramework::place_tab(int idx)
         m_region_tab->disable_tab(idx);
         m_layers[LAYER_NORMAL].m_regions.push_back(region_tab);
         region_tab->place(m_stat_col, m_statcol_bottom
-                                     - lines * m_region_tab->dy - tab_margin);
+                                     - lines * m_region_tab->dy);
         region_tab->resize(m_region_tab->mx, lines);
-        m_statcol_bottom = region_tab->sy;
+        m_statcol_bottom = region_tab->sy - tab_margin;
     }
     else
         m_region_tab->enable_tab(idx);
@@ -983,9 +990,8 @@ void TilesFramework::place_gold_turns()
         return;
 
     Options.show_gold_turns = true;
-    int hud_height = min_stat_height + 1;
-    m_region_stat->resize(m_region_stat->mx, hud_height);
-    crawl_view.hudsz.y = hud_height;
+    ++crawl_view.hudsz.y;
+    m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
     if (m_region_map)
         m_region_map->place(m_region_stat->sx, m_region_stat->ey);
 
@@ -1008,10 +1014,10 @@ void TilesFramework::layout_statcol()
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
     Options.show_gold_turns = false;
+    crawl_view.hudsz.y = min_stat_height;
 
 
     m_statcol_top = m_region_stat->ey;
-    m_statcol_bottom = m_windowsz.y;
 
     // Set the inventory region to minimal size.
     m_region_tab->place(m_stat_col, m_statcol_top);
@@ -1020,7 +1026,7 @@ void TilesFramework::layout_statcol()
     m_region_tab->resize(m_region_tab->mx, min_inv_height);
     m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
 
-    m_statcol_bottom = m_region_tab->sy;
+    m_statcol_bottom = m_region_tab->sy - tab_margin;
 
     for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
     {
@@ -1037,6 +1043,9 @@ void TilesFramework::layout_statcol()
     // We stretch the minimap so it is centered in the space left.
     if (m_region_map)
     {
+        if (!Options.tile_map_pixels)
+            autosize_minimap();
+
         m_region_map->place(m_region_stat->sx, m_region_stat->ey,
                             m_region_stat->ex, m_statcol_bottom,
                             map_margin);

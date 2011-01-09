@@ -221,10 +221,12 @@ protected:
     int m_stat_x_divider;
     int m_statcol_top;
     int m_statcol_bottom;
+    int m_map_pixels;
 
     void do_layout();
     int calc_tab_lines(const int num_elements);
     void place_tab(int idx);
+    void autosize_minimap();
     void place_minimap();
     void resize_inventory();
     void place_gold_turns();
