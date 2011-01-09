@@ -37,6 +37,8 @@ class MessageRegion;
 
 struct map_cell;
 
+typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
+
 enum key_mod
 {
     MOD_NONE  = 0x0,
@@ -198,7 +200,6 @@ protected:
     CommandRegion   *m_region_cmd;
 
     std::map<int, TabbedRegion*> m_tabs;
-    std::map<int, TabbedRegion*>::iterator m_tabs_it;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
