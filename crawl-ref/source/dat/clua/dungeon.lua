@@ -4,6 +4,7 @@
 ------------------------------------------------------------------------------
 
 require("clua/point.lua")
+require("clua/fnwrap.lua")
 
 dgn.GXM, dgn.GYM = dgn.max_bounds()
 dgn.MAX_MONSTERS = dgn.max_monsters()

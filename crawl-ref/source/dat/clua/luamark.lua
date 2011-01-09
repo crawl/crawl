@@ -4,7 +4,6 @@
 ------------------------------------------------------------------------------
 
 require('clua/lm_trig.lua')
-
 require('clua/lm_pdesc.lua')
 require('clua/lm_1way.lua')
 require('clua/lm_timed.lua')
@@ -17,6 +16,7 @@ require('clua/lm_mslav.lua')
 require('clua/lm_trove.lua')
 require('clua/lm_door.lua')
 require('clua/lm_items.lua')
+require('clua/fnwrap.lua')
 
 function dlua_marker_function(table, name)
   return table[name]
@@ -34,12 +34,20 @@ end
 
 util.namespace('lmark')
 
+local FNWRAP_TABLE_KEY = -2
+
 -- Marshalls a table comprising of keys that are strings or numbers only,
 -- and values that are strings, numbers, functions, or tables only. The table
 -- cannot have cycles, and the table's metatable is not preserved.
 function lmark.marshall_table(th, table)
   if not table then
     file.marshall(th, -1)
+    return
+  end
+
+  if getmetatable(table) == FunctionWrapper then
+    file.marshall(th, FNWRAP_TABLE_KEY)
+    table:marshall(th)
     return
   end
 
@@ -77,6 +85,10 @@ function lmark.unmarshall_table(th)
 
   if nsize == -1 then
     return nil
+  end
+
+  if nsize == FNWRAP_TABLE_KEY then
+    return FunctionWrap:unmarshall(th)
   end
 
   local ret = { }
