@@ -978,7 +978,7 @@ void game_options::reset_options()
     tile_show_minimagicbar   = true;
     tile_show_demon_tier     = true;
     tile_force_regenerate_levels = false;
-    tile_layout_priority = split_string(",", "minimap, inventory, command,"
+    tile_layout_priority = split_string(",", "minimap, inventory, "
                                              "spell, gold_turn, monster");
 #endif
 
