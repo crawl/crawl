@@ -49,15 +49,17 @@ end
 function dlua_marker_reader_fn(table)
   assert(table.CLASS, "Marker table has no CLASS property")
   local reader = MARKER_UNMARSHALL_TABLE[table.CLASS]
-  assert(reader,
-         "Marker table (" .. table.CLASS .. ") has no registered reader. " ..
-           "Perhaps you forget to call dlua_register_marker_table " ..
-           "for " .. table.CLASS .. "?")
+  if not reader then
+    assert(table.read, "Marker table (" .. table.CLASS .. ") has no " ..
+           "registered reader and no .read method.")
+    return table.read
+  end
   return reader
 end
 
 function dlua_marker_read(marker_class_name, marker_userdata, th)
-  local reader_fn = MARKER_UNMARSHALL_TABLE[marker_class_name]
+  local reader_fn =
+    MARKER_UNMARSHALL_TABLE[marker_class_name] or _G[marker_class_name].read
   return reader_fn({ }, marker_userdata, th)
 end
 

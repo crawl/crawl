@@ -44,5 +44,3 @@ end
 function portal_desc(props)
   return PortalDescriptor:new(props)
 end
-
-dlua_register_marker_table(PortalDescriptor)

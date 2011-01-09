@@ -76,8 +76,6 @@ function MonsterOnTrigger:read(marker, th)
   return self
 end
 
-dlua_register_marker_table(MonsterOnTrigger)
-
 function MonsterOnTrigger:on_trigger(triggerer, marker, ev)
   local x,     y     = marker:pos()
   local you_x, you_y = you.pos()

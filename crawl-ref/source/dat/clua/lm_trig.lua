@@ -369,8 +369,6 @@ function Triggerable:read(marker, th)
   return self
 end
 
-dlua_register_marker_table(Triggerable)
-
 --------------------------
 
 -- Convenience functions, similar to the lmark ones in lm_mslav.lua
@@ -460,8 +458,6 @@ function TriggerableFunction:read(marker, th)
   return self
 end
 
-dlua_register_marker_table(TriggerableFunction)
-
 function triggerable_function_constructor(trigger_type)
   return function (func, data, repeated, props)
            local tf = TriggerableFunction:new {
@@ -535,8 +531,6 @@ function TriggerableMessage:read(marker, th)
 
   return self
 end
-
-dlua_register_marker_table(TriggerableMessage)
 
 function message_at_spot(msg, channel, repeated, props)
   local tm = TriggerableMessage:new
@@ -848,5 +842,3 @@ function DgnTriggerer:read(marker, th)
   tr:setup()
   return tr
 end
-
-dlua_register_marker_table(DgnTriggerer)
