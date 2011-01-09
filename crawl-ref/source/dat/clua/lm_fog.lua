@@ -266,6 +266,8 @@ function FogMachine:read(marker, th)
   return self
 end
 
+dlua_register_marker_table(FogMachine)
+
 function fog_machine(pars)
   return FogMachine:new(pars)
 end
@@ -331,31 +333,12 @@ end
 -- cannot be null, and for warning and dual trigger/warning machines,
 -- the turns parameter cannot be null. All other parameters are
 -- considered optional.
-
 function warning_machine (trns, cantsee_mesg, see_mesg, see_func)
   if trns == nil or (see_mesg == nil and cantsee_mesg == nil) then
     error("WarningMachine requires turns and message!")
   end
-  local function warning_func (self, fog_machine, triggerer, marker, ev)
-    local countdown = triggerer.countdown
-    local point     = dgn.point(marker:pos())
-    if triggerer.type == "turn" and triggerer.sub_type == "tick"
-       and countdown <= self.turns
-    then
-      if not self.warning_done then
-        if self.see_message and self.see_function(point.x, point.y) then
-          crawl.mpr(self.see_message, "warning")
-        elseif self.cantsee_message then
-          crawl.mpr(self.cantsee_message, "warning")
-        end
-        self.warning_done = true
-      end
-    elseif event_name == "trigger" then
-      self.warning_done = false
-    end
-  end
   if not see_func then
-    see_func = you.see_cell
+    see_func = global_function("you.see_cell")
   end
   pars = {
     see_message = see_mesg,
@@ -364,27 +347,36 @@ function warning_machine (trns, cantsee_mesg, see_mesg, see_func)
     warning_done = false,
     see_function = see_func
   }
-  pars.func = warning_func
+  pars.func = global_function("warning_machine_warning_func")
   return pars
 end
+
+function warning_machine_warning_func(self, fog_machine, triggerer, marker, ev)
+  local countdown = triggerer.countdown
+  local point     = dgn.point(marker:pos())
+  if triggerer.type == "turn" and triggerer.sub_type == "tick"
+    and countdown <= self.turns
+  then
+    if not self.warning_done then
+      if self.see_message and self.see_function(point.x, point.y) then
+        crawl.mpr(self.see_message, "warning")
+      elseif self.cantsee_message then
+        crawl.mpr(self.cantsee_message, "warning")
+      end
+      self.warning_done = true
+    end
+  elseif event_name == "trigger" then
+    self.warning_done = false
+  end
+end
+
 
 function trigger_machine (cantsee_mesg, see_mesg, chan, see_func)
   if see_mesg == nil and cantsee_mesg == nil then
     error("Triggermachine requires a message!")
   end
-  local function trigger_func (self, fog_machine, triggerer, marker, ev)
-    local point     = dgn.point(marker:pos())
-    if triggerer.type == "turn" and triggerer.sub_type == "countdown" then
-      channel = self.channel or ""
-      if self.see_message ~= nil and self.see_function(point.x, point.y) then
-        crawl.mpr(self.see_message, channel)
-      elseif self.cantsee_message ~= nil then
-        crawl.mpr(self.cantsee_message, channel)
-      end
-    end
-  end
   if not see_func then
-    see_func = you.see_cell
+    see_func = global_function("you.see_cell")
   end
   pars = {
     channel = chan or nil,
@@ -392,8 +384,20 @@ function trigger_machine (cantsee_mesg, see_mesg, chan, see_func)
     cantsee_message = cantsee_mesg,
     see_function = see_func
   }
-  pars.func = trigger_func
+  pars.func = global_function("trigger_machine_trigger_func")
   return pars
+end
+
+function trigger_machine_trigger_func(self, fog_machine, triggerer, marker, ev)
+  local point     = dgn.point(marker:pos())
+  if triggerer.type == "turn" and triggerer.sub_type == "countdown" then
+    channel = self.channel or ""
+    if self.see_message ~= nil and self.see_function(point.x, point.y) then
+      crawl.mpr(self.see_message, channel)
+    elseif self.cantsee_message ~= nil then
+      crawl.mpr(self.cantsee_message, channel)
+    end
+  end
 end
 
 function tw_machine (warn_turns, warn_cantsee_message,
@@ -404,32 +408,8 @@ function tw_machine (warn_turns, warn_cantsee_message,
     error("TWMachine needs warning turns, warning message and "
           .. "triggering message.")
   end
-  local function tw_func (self, fog_machine, triggerer, marker, ev)
-    local point     = dgn.point(marker:pos())
-    local countdown = triggerer.countdown
-    if triggerer.type == "turn" and triggerer.sub_type == "tick"
-        and countdown <= self.warning_turns
-    then
-      if self.warning_done ~= true then
-        if self.warning_see_message and self.see_function(point.x, point.y) then
-          crawl.mpr(self.warning_see_message, "warning")
-        elseif self.warning_cantsee_message ~= nil then
-          crawl.mpr(self.warning_cantsee_message, "warning")
-        end
-        self.warning_done = true
-      end
-    elseif triggerer.type == "turn" and triggerer.sub_type == "countdown" then
-      self.warning_done = false
-      channel = self.trigger_channel or ""
-      if self.trigger_see_message and self.see_function(point.x, point.y) then
-        crawl.mpr(self.trigger_see_message, channel)
-      elseif self.trigger_cantsee_message ~= nil then
-        crawl.mpr(self.trigger_cantsee_message, channel)
-      end
-    end
-  end
   if not see_func then
-    see_func = you.see_cell
+    see_func = global_function("you.see_cell")
   end
 
   pars = {
@@ -442,7 +422,32 @@ function tw_machine (warn_turns, warn_cantsee_message,
     trigger_channel = trig_channel or nil,
     see_function = see_func
   }
-  pars.func = tw_func
+  pars.func = global_function("tw_machine_tw_func")
 
   return pars
+end
+
+function tw_machine_tw_func(self, fog_machine, triggerer, marker, ev)
+  local point     = dgn.point(marker:pos())
+  local countdown = triggerer.countdown
+  if triggerer.type == "turn" and triggerer.sub_type == "tick"
+    and countdown <= self.warning_turns
+  then
+    if self.warning_done ~= true then
+      if self.warning_see_message and self.see_function(point.x, point.y) then
+        crawl.mpr(self.warning_see_message, "warning")
+      elseif self.warning_cantsee_message ~= nil then
+        crawl.mpr(self.warning_cantsee_message, "warning")
+      end
+      self.warning_done = true
+    end
+  elseif triggerer.type == "turn" and triggerer.sub_type == "countdown" then
+    self.warning_done = false
+    channel = self.trigger_channel or ""
+    if self.trigger_see_message and self.see_function(point.x, point.y) then
+      crawl.mpr(self.trigger_see_message, channel)
+    elseif self.trigger_cantsee_message ~= nil then
+      crawl.mpr(self.trigger_cantsee_message, channel)
+    end
+  end
 end

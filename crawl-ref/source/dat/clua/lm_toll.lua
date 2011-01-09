@@ -148,6 +148,8 @@ function TollStair:read(marker, th)
   return self
 end
 
+dlua_register_marker_table(TollStair)
+
 function toll_stair(pars)
   return TollStair:new(pars)
 end

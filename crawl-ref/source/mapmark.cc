@@ -254,18 +254,18 @@ void map_lua_marker::write(writer &outf) const
 
     // Call dlua_marker_function(table, 'read')
     lua_pushstring(dlua, "read");
-    if (!dlua.callfn("dlua_marker_function", 2, 1))
+    if (!dlua.callfn("dlua_marker_reader_name", 2, 1))
         end(1, false, "lua_marker: write error: %s", dlua.error.c_str());
 
-    // Right, what's on top should be a function. Save it.
-    dlua_chunk reader(dlua);
-    if (!reader.error.empty())
-        end(1, false, "lua_marker: couldn't save read function: %s",
-            reader.error.c_str());
+    // Right, what's on top should be a table name. Save it.
+    if (!lua_isstring(dlua, -1))
+        end(1, false, "Expected marker class name (string) to save, got %s",
+            lua_typename(dlua, lua_type(dlua, -1)));
 
-    marshallString(outf, reader.compiled_chunk());
+    const std::string marker_class(lua_tostring(dlua, -1));
+    marshallString(outf, marker_class);
 
-    // Okay, saved the reader. Now ask the writer to do its thing.
+    // Okay, saved the marker's class. Now ask the writer to do its thing.
 
     // Call: dlua_marker_method(table, fname, marker)
     get_table();
@@ -284,13 +284,8 @@ void map_lua_marker::read(reader &inf)
     if (!(initialised = unmarshallByte(inf)))
         return;
 
-    lua_stack_cleaner cln(dlua);
-    // Read the Lua chunk we saved.
-    const std::string compiled = unmarshallString(inf, LUA_CHUNK_MAX_SIZE);
-
-    dlua_chunk chunk = dlua_chunk::precompiled(compiled);
-    if (chunk.load(dlua))
-        end(1, false, "lua_marker::read error: %s", chunk.error.c_str());
+    const std::string marker_class = unmarshallString(inf);
+    lua_pushstring(dlua, marker_class.c_str());
     dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
     lua_pushlightuserdata(dlua, &inf);
     if (!dlua.callfn("dlua_marker_read", 3, 1))

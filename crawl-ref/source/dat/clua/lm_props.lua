@@ -3,8 +3,7 @@
 -- Property markers.
 ------------------------------------------------------------------------------
 
-PropertiesDescriptor = { CLASS = "PropertiesDescriptor" }
-PropertiesDescriptor.__index = PropertiesDescriptor
+util.defclass("PropertiesDescriptor")
 
 function PropertiesDescriptor:new(properties)
   local pd = { }
@@ -30,3 +29,5 @@ end
 function props_marker(props)
   return PropertiesDescriptor:new(props)
 end
+
+dlua_register_marker_table(PropertiesDescriptor)
