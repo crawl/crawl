@@ -266,8 +266,6 @@ function FogMachine:read(marker, th)
   return self
 end
 
-dlua_register_marker_table(FogMachine)
-
 function fog_machine(pars)
   return FogMachine:new(pars)
 end

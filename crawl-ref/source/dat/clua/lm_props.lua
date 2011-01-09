@@ -29,5 +29,3 @@ end
 function props_marker(props)
   return PropertiesDescriptor:new(props)
 end
-
-dlua_register_marker_table(PropertiesDescriptor)
