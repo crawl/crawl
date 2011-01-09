@@ -1692,10 +1692,20 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // dwarves ('q')
     case MONS_DWARF:
         return TILEP_MONS_DWARF;
+    case MONS_DEEP_DWARF:
+        return TILEP_MONS_DEEP_DWARF;
+    case MONS_DEEP_DWARF_SCION:
+        return TILEP_MONS_DEEP_DWARF_SCION;
+    case MONS_DEEP_DWARF_ARTIFICER:
+        return TILEP_MONS_DEEP_DWARF_ARTIFICER;
     case MONS_DEEP_DWARF_BERSERKER:
         return TILEP_MONS_DEEP_DWARF_BERSERKER;
     case MONS_DEEP_DWARF_NECROMANCER:
         return TILEP_MONS_DEEP_DWARF_NECROMANCER;
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        return TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT;
+    case MONS_UNBORN_DEEP_DWARF:
+        return TILEP_MONS_UNBORN_DEEP_DWARF;
     case MONS_GNOME:
         return TILEP_MONS_GNOME;
 
@@ -3176,8 +3186,9 @@ static tileidx_t _tileidx_corpse(const item_def &item)
 
     // dwarves ('q')
     case MONS_DWARF:
-    case MONS_DEEP_DWARF:
         return TILE_CORPSE_DWARF;
+    case MONS_DEEP_DWARF:
+        return TILE_CORPSE_DEEP_DWARF;
     case MONS_GNOME:
         return TILE_CORPSE_GNOME;
 
