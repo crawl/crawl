@@ -510,7 +510,7 @@ golden_dragon MONS_GOLDEN_DRAGON
 shadow_dragon MONS_SHADOW_DRAGON
 undead/bone_dragon MONS_BONE_DRAGON
 %sdir dc-mon/holy
-eastern_dragon MONS_PEARL_DRAGON
+pearl_dragon MONS_PEARL_DRAGON
 
 ## Eyes ('G')
 %sdir dc-mon/fungi_plants
