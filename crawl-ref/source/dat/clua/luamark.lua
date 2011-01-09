@@ -65,6 +65,17 @@ util.namespace('lmark')
 
 local FNWRAP_TABLE_KEY = -2
 
+function lmark.marshall_marker(th, marker)
+  assert(marker.CLASS, "Marker does not have CLASS attribute!")
+  file.marshall_meta(th, marker.CLASS)
+  marker:write(th)
+end
+
+function lmark.unmarshall_marker(th)
+  local marker_class = file.unmarshall_meta(th)
+  return dlua_marker_read(marker_class, nil, th)
+end
+
 -- Marshalls a table comprising of keys that are strings or numbers only,
 -- and values that are strings, numbers, functions, or tables only. The table
 -- cannot have cycles, and the table's metatable is not preserved.
@@ -94,6 +105,10 @@ function lmark.marshall_table(th, table)
   file.marshall(th, nsize)
   for key, value in pairs(table) do
     if type(value) ~= 'table' then
+      if type(value) == 'function' then
+        error("Cannot marshall function in key: " .. key ..
+              ":" .. debug.traceback())
+      end
       file.marshall_meta(th, key)
       file.marshall_meta(th, value)
     end

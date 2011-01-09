@@ -139,7 +139,7 @@ function TimedMarker:read(marker, th)
   self.started = file.unmarshall_boolean(th)
   self.dur = file.unmarshall_number(th)
   self.dur2 = file.unmarshall_number(th)
-  self.msg  = file.unmarshall_fn(th)(th)
+  self.msg  = lmark.unmarshall_marker(th)
 
   if self.props.amount then
     self.toll = TollStair:new(self.props)
@@ -155,7 +155,7 @@ function TimedMarker:write(marker, th)
   file.marshall(th, self.dur)
   file.marshall(th, self.dur2)
   file.marshall(th, self.msg.read)
-  self.msg:write(th)
+  lmark.marshall_marker(self.msg)
 end
 
 function timed_marker(pars)

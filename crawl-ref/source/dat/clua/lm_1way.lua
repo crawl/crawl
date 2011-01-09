@@ -6,6 +6,14 @@
 OneWayStair = util.subclass(PortalDescriptor)
 OneWayStair.CLASS = "OneWayStair"
 
+function OneWayStair:new(props)
+  local instance = self.super.new(self, props)
+  if instance.onclimb then
+    instance.onclimb = global_function(instance.onclimb)
+  end
+  return instance
+end
+
 function OneWayStair:activate(marker)
   local ev = dgn.dgn_event_type('player_climb')
   dgn.register_listener(ev, marker, marker:pos())
