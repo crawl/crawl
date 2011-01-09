@@ -4605,7 +4605,6 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
             (glyph == 'B') ? (place ? _pick_temple_altar(*place)
                                     : DNGN_ALTAR_ZIN) :
             (glyph == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
-            (glyph == 'F') ? DNGN_GRANITE_STATUE :
             (glyph == 'I') ? DNGN_ORCISH_IDOL :
             (glyph == 'G') ? DNGN_GRANITE_STATUE :
             (glyph == 'T') ? DNGN_FOUNTAIN_BLUE :
