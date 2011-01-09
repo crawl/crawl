@@ -3,6 +3,19 @@
 -- Lua map marker handling.
 ------------------------------------------------------------------------------
 
+require('clua/fnwrap.lua')
+
+-- Every marker class must register its class name keyed to its reader
+-- function in this table.
+MARKER_UNMARSHALL_TABLE = { }
+
+function dlua_register_marker_table(table, reader)
+  if not reader then
+    reader = table.read
+  end
+  MARKER_UNMARSHALL_TABLE[table.CLASS] = reader
+end
+
 require('clua/lm_trig.lua')
 require('clua/lm_pdesc.lua')
 require('clua/lm_1way.lua')
@@ -12,11 +25,16 @@ require('clua/lm_fog.lua')
 require('clua/lm_props.lua')
 require('clua/lm_mon_prop.lua')
 require('clua/lm_monst.lua')
-require('clua/lm_mslav.lua')
 require('clua/lm_trove.lua')
 require('clua/lm_door.lua')
 require('clua/lm_items.lua')
 require('clua/fnwrap.lua')
+
+function dlua_marker_reader_name(table)
+  -- Check that the reader is actually registered for this table.
+  dlua_marker_reader_fn(table)
+  return table.CLASS
+end
 
 function dlua_marker_function(table, name)
   return table[name]
@@ -28,8 +46,19 @@ function dlua_marker_method(table, name, marker, ...)
   end
 end
 
-function dlua_marker_read(fn, marker, th)
-  return fn({ }, marker, th)
+function dlua_marker_reader_fn(table)
+  assert(table.CLASS, "Marker table has no CLASS property")
+  local reader = MARKER_UNMARSHALL_TABLE[table.CLASS]
+  assert(reader,
+         "Marker table (" .. table.CLASS .. ") has no registered reader. " ..
+           "Perhaps you forget to call dlua_register_marker_table " ..
+           "for " .. table.CLASS .. "?")
+  return reader
+end
+
+function dlua_marker_read(marker_class_name, marker_userdata, th)
+  local reader_fn = MARKER_UNMARSHALL_TABLE[marker_class_name]
+  return reader_fn({ }, marker_userdata, th)
 end
 
 util.namespace('lmark')
@@ -88,7 +117,7 @@ function lmark.unmarshall_table(th)
   end
 
   if nsize == FNWRAP_TABLE_KEY then
-    return FunctionWrap:unmarshall(th)
+    return FunctionWrapper:unmarshall(th)
   end
 
   local ret = { }

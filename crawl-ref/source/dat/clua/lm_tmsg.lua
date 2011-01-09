@@ -187,6 +187,8 @@ function TimedMessaging.read(th)
   return TimedMessaging:new(lmark.unmarshall_table(th))
 end
 
+dlua_register_marker_table(TimedMessaging)
+
 function timed_msg(pars)
   return TimedMessaging:new(pars)
 end

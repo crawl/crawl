@@ -161,3 +161,5 @@ end
 function timed_marker(pars)
   return TimedMarker:new(pars)
 end
+
+dlua_register_marker_table(TimedMarker)

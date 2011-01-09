@@ -185,6 +185,8 @@ function TroveMarker:read(marker, th)
   return self
 end
 
+dlua_register_marker_table(TroveMarker)
+
 function TroveMarker:write(marker, th)
   TroveMarker.super.write(self, marker, th)
   lmark.marshall_table(th, self.toll_item)

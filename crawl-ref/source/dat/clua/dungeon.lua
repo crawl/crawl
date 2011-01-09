@@ -5,6 +5,10 @@
 
 require("clua/point.lua")
 require("clua/fnwrap.lua")
+require('clua/util.lua')
+
+-- Namespace for callbacks (just an aid to recognising callbacks, no magic)
+util.namespace('callback')
 
 dgn.GXM, dgn.GYM = dgn.max_bounds()
 dgn.MAX_MONSTERS = dgn.max_monsters()

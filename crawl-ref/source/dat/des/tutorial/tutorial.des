@@ -4,6 +4,15 @@
 
 tutorial = {}
 
+function tutorial.messenger (data, triggerable, triggerer, marker, ev)
+  crawl.mesclr(true)
+  crawl.mpr(data.text, data.channel)
+  if data.more == true then
+    crawl.redraw_view()
+    crawl.more()
+  end
+end
+
 function tutorial.get_cmd (command)
   return "<white>" .. crawl.get_command(command) .. "</white>"
 end
@@ -17,16 +26,7 @@ function tutorial.message (text, channel, repeated, more)
 
   local data = {text=text, channel=channel, more=more}
 
-  local function messenger (data, triggerable, triggerer, marker, ev)
-      crawl.mesclr(true)
-      crawl.mpr(data.text, data.channel)
-      if data.more == true then
-        crawl.redraw_view()
-        crawl.more()
-      end
-  end
-
-  return function_at_spot(messenger, data, repeated)
+  return function_at_spot("tutorial.messenger", data, repeated)
 end
 
 function tutorial.messagestart ()
