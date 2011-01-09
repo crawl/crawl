@@ -4155,7 +4155,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SEE_INVISIBLE:            return TILEG_SEE_INVISIBLE;
     case SPELL_PETRIFY:                  return TILEG_PETRIFY;
     case SPELL_CAUSE_FEAR:               return TILEG_CAUSE_FEAR;
-    case SPELL_TAME_BEASTS:              return TILEG_TAME_BEASTS;
     case SPELL_EXTENSION:                return TILEG_EXTENSION;
     case SPELL_HASTE:                    return TILEG_HASTE;
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
@@ -4173,7 +4172,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CONTROLLED_BLINK:         return TILEG_CONTROLLED_BLINK;
     case SPELL_WARP_BRAND:               return TILEG_WARP_WEAPON;
     case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
-    case SPELL_PORTAL:                   return TILEG_PORTAL;
 
     // Summoning
     case SPELL_SUMMON_BUTTERFLIES:       return TILEG_SUMMON_BUTTERFLIES;
@@ -4200,7 +4198,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CORPSE_ROT:               return TILEG_CORPSE_ROT;
     case SPELL_LETHAL_INFUSION:          return TILEG_LETHAL_INFUSION;
     case SPELL_SUBLIMATION_OF_BLOOD:     return TILEG_SUBLIMATION_OF_BLOOD;
-    case SPELL_BONE_SHARDS:              return TILEG_BONE_SHARDS;
     case SPELL_VAMPIRIC_DRAINING:        return TILEG_VAMPIRIC_DRAINING;
     case SPELL_REGENERATION:             return TILEG_REGENERATION;
     case SPELL_ANIMATE_DEAD:             return TILEG_ANIMATE_DEAD;

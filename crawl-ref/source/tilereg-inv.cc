@@ -509,17 +509,6 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             }
         }
 
-        // For Boneshards.
-        // Special handling since skeletons have no primary action.
-        if (item.base_type == OBJ_CORPSES
-            && item.sub_type == CORPSE_SKELETON)
-        {
-            if (wielded)
-                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ", true);
-            else if (you.has_spell(SPELL_BONE_SHARDS))
-                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click] ");
-        }
-
         tip += "\n[R-Click] Describe";
         // Has to be non-equipped or non-cursed to drop.
         if (!equipped || !_is_true_equipped_item(you.inv[idx])
