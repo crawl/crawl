@@ -125,26 +125,6 @@ static void _redraw_all(void)
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
 }
 
-static std::string _uid_as_string()
-{
-#ifdef TARGET_OS_WINDOWS
-    return std::string();
-#else
-#ifndef UNIX
-    return std::string();
-#else
-#ifndef SAVE_DIR_PATH
-    return make_stringf("-%d", static_cast<int>(getuid()));
-#else
-    if (SAVE_DIR_PATH[0] != '~')
-        return make_stringf("-%d", static_cast<int>(getuid()));
-    else
-        return std::string();
-#endif
-#endif
-#endif
-}
-
 static bool _is_uid_file(const std::string &name, const std::string &ext)
 {
     std::string save_suffix = get_savedir_filename("", "", "");
