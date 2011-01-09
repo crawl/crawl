@@ -890,7 +890,8 @@ void static _get_randart_properties(const item_def &item,
         && (aclass != OBJ_ARMOUR
             || (atype != ARM_DRAGON_ARMOUR
                 && atype != ARM_ICE_DRAGON_ARMOUR
-                && atype != ARM_GOLD_DRAGON_ARMOUR)))
+                && atype != ARM_GOLD_DRAGON_ARMOUR
+                && atype != ARM_PEARL_DRAGON_ARMOUR)))
     {
         proprt[ARTP_FIRE] = 1;
         if (one_chance_in(5))
@@ -945,6 +946,7 @@ void static _get_randart_properties(const item_def &item,
     if (!done_powers
         && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_LIFE_PROTECTION)
+        && (aclass != OBJ_ARMOUR || atype != ARM_PEARL_DRAGON_ARMOUR)
         && proprt[ARTP_BRAND] != SPWPN_DRAINING
         && proprt[ARTP_BRAND] != SPWPN_VAMPIRICISM
         && proprt[ARTP_BRAND] != SPWPN_PAIN

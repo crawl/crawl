@@ -106,6 +106,10 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_ICE_DRAGON_ARMOUR,    "ice dragon armour",      9, -3,  350,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+    { ARM_PEARL_DRAGON_HIDE,    "pearl dragon hide",      3, -3,  400,
+        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+    { ARM_PEARL_DRAGON_ARMOUR,  "pearl dragon armour",    10, -2, 400,
+        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STORM_DRAGON_HIDE,    "storm dragon hide",      4, -4,  600,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",    10, -5,  600,
@@ -444,7 +448,7 @@ static food_def Food_prop[NUM_FOODS] =
 void init_properties()
 {
     // Compare with enum comments, to catch changes.
-    COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
+    COMPILE_CHECK(NUM_ARMOURS  == 39, c1);
     COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
     COMPILE_CHECK(NUM_FOODS    == 23, c4);
@@ -496,6 +500,18 @@ void do_curse_item(item_def &item, bool quiet)
         {
             mprf("Your %s glows black briefly, but repels the curse.",
                  item.name(DESC_PLAIN).c_str());
+        }
+        return;
+    }
+
+    // Neither can pearl dragon hides
+    if (item.base_type == OBJ_ARMOUR
+        && (item.sub_type == ARM_PEARL_DRAGON_HIDE || item.sub_type == ARM_PEARL_DRAGON_ARMOUR))
+    {
+        if (!quiet)
+        {
+            mprf("Your %s glows black briefly, but repels the curse.",
+                item.name(DESC_PLAIN).c_str());
         }
         return;
     }
@@ -1072,6 +1088,10 @@ bool hide2armour(item_def &item)
     case ARM_STEAM_DRAGON_HIDE:
         item.sub_type = ARM_STEAM_DRAGON_ARMOUR;
         break;
+
+    case ARM_PEARL_DRAGON_HIDE:
+        item.sub_type = ARM_PEARL_DRAGON_ARMOUR;
+        break;
     }
 
     return (true);
@@ -1113,6 +1133,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     case ARM_STORM_DRAGON_ARMOUR:
     case ARM_GOLD_DRAGON_ARMOUR:
     case ARM_SWAMP_DRAGON_ARMOUR:
+    case ARM_PEARL_DRAGON_ARMOUR:
         return (inc_made);
 
     case ARM_TROLL_HIDE:
@@ -1123,6 +1144,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     case ARM_STORM_DRAGON_HIDE:
     case ARM_GOLD_DRAGON_HIDE:
     case ARM_SWAMP_DRAGON_HIDE:
+    case ARM_PEARL_DRAGON_HIDE:
         return (true);
 
     default:
@@ -2355,6 +2377,10 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
     int res = 0;
+
+    // Pearl dragona armour grants rN+.
+    if (arm.sub_type == ARM_PEARL_DRAGON_ARMOUR)
+        res += 1;
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)

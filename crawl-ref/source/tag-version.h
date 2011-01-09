@@ -41,7 +41,8 @@ enum tag_minor_version
     TAG_MINOR_FIX_MID2        = 30, // Another mid bug.
     TAG_MINOR_SAVE_FORMAT     = 31, // Updated save file format (low-level)
     TAG_MINOR_ENCH_SPLIT      = 32, // Enchantments split.
-    TAG_MINOR_VERSION         = 32, // Current version.  (Keep equal to max.)
+    TAG_MINOR_PEARL           = 33, // Pearl dragon armour
+    TAG_MINOR_VERSION         = 33, // Current version.  (Keep equal to max.)
 };
 
 #endif

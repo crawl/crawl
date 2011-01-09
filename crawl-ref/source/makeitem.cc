@@ -431,6 +431,10 @@ void item_colour(item_def &item)
         case ARM_SWAMP_DRAGON_ARMOUR:
             item.colour = mons_class_colour(MONS_SWAMP_DRAGON);
             break;
+        case ARM_PEARL_DRAGON_HIDE:
+        case ARM_PEARL_DRAGON_ARMOUR:
+            item.colour = mons_class_colour(MONS_PEARL_DRAGON);
+            break;
         default:
             item.colour = _armour_colour(item);
             break;
@@ -2387,7 +2391,8 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_RESISTANCE:
         if (type == ARM_DRAGON_ARMOUR
             || type == ARM_ICE_DRAGON_ARMOUR
-            || type == ARM_GOLD_DRAGON_ARMOUR)
+            || type == ARM_GOLD_DRAGON_ARMOUR
+            || type == ARM_PEARL_DRAGON_ARMOUR)
         {
             return (false); // contradictory or redundant
         }
@@ -2398,6 +2403,9 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return (true);
     case SPARM_POISON_RESISTANCE:
     case SPARM_POSITIVE_ENERGY:
+        if (type == ARM_PEARL_DRAGON_ARMOUR)
+            return (false); // contradictory or redundant
+
         return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK);
 
     case SPARM_SPIRIT_SHIELD:
@@ -3531,7 +3539,9 @@ armour_type get_random_armour_type(int item_level)
                                               ARM_GOLD_DRAGON_HIDE,
                                               ARM_GOLD_DRAGON_ARMOUR,
                                               ARM_SWAMP_DRAGON_HIDE,
-                                              ARM_SWAMP_DRAGON_ARMOUR };
+                                              ARM_SWAMP_DRAGON_ARMOUR,
+                                              ARM_PEARL_DRAGON_HIDE,
+                                              ARM_PEARL_DRAGON_ARMOUR, };
 
         armtype = RANDOM_ELEMENT(morehiarmours);
 

@@ -2041,6 +2041,18 @@ static void tag_read_you_items(reader &th)
     count = unmarshallShort(th);
     ASSERT(count >= 0);
     for (j = 0; j < count && j < NUM_ARMOURS; ++j)
+#if TAG_MAJOR_VERSION == 31
+        if (th.getMinorVersion() < TAG_MINOR_PEARL)
+        {
+            if (j == ARM_PEARL_DRAGON_HIDE)
+                you.seen_armour[ARM_CENTAUR_BARDING] = unmarshallInt(th);
+            else if (j == ARM_PEARL_DRAGON_ARMOUR)
+                you.seen_armour[ARM_NAGA_BARDING] = unmarshallInt(th);
+            else
+                you.seen_armour[j] = unmarshallInt(th);
+        }
+        else
+#endif
         you.seen_armour[j] = unmarshallInt(th);
     for (j = count; j < NUM_ARMOURS; ++j)
         you.seen_armour[j] = 0;
@@ -2312,6 +2324,19 @@ void unmarshallItem(reader &th, item_def &item)
     item.base_type   = static_cast<object_class_type>(unmarshallByte(th));
     if (item.base_type == OBJ_UNASSIGNED)
         return;
+#if TAG_MAJOR_VERSION == 31
+    if (th.getMinorVersion() < TAG_MINOR_PEARL)
+    {
+        uint32_t sub_type = unmarshallUByte(th);
+        if (item.base_type == OBJ_ARMOUR
+            && (sub_type == ARM_PEARL_DRAGON_ARMOUR || sub_type == ARM_PEARL_DRAGON_HIDE))
+        {
+            sub_type += 2;
+        }
+        item.sub_type = sub_type;
+    }
+    else
+#endif
     item.sub_type    = unmarshallUByte(th);
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);

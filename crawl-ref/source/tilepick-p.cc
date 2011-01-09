@@ -209,6 +209,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_STORM_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BLUE;
     case ARM_GOLD_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GOLD;
     case ARM_SWAMP_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BROWN;
+    case ARM_PEARL_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_PEARL;
 
     case ARM_DRAGON_ARMOUR:         return TILEP_BODY_DRAGONARM_GREEN;
     case ARM_ICE_DRAGON_ARMOUR:     return TILEP_BODY_DRAGONARM_CYAN;
@@ -217,6 +218,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_STORM_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BLUE;
     case ARM_GOLD_DRAGON_ARMOUR:    return TILEP_BODY_DRAGONARM_GOLD;
     case ARM_SWAMP_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BROWN;
+    case ARM_PEARL_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONRAM_PEARL;
 
     case ARM_ANIMAL_SKIN:          return TILEP_BODY_ANIMAL_SKIN;
     case ARM_TROLL_HIDE:

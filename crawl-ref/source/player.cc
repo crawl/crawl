@@ -1902,6 +1902,9 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         // armour (checks body armour only)
         pl += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
+        // pearl dragon counts
+        pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_ARMOUR);
+
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
 

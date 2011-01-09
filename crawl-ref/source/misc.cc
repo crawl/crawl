@@ -125,7 +125,7 @@ static void _create_monster_hide(const item_def corpse)
     case MONS_STORM_DRAGON:   item.sub_type = ARM_STORM_DRAGON_HIDE;   break;
     case MONS_GOLDEN_DRAGON:  item.sub_type = ARM_GOLD_DRAGON_HIDE;    break;
     case MONS_SWAMP_DRAGON:   item.sub_type = ARM_SWAMP_DRAGON_HIDE;   break;
-
+    case MONS_PEARL_DRAGON:   item.sub_type = ARM_PEARL_DRAGON_HIDE;   break;
     case MONS_SHEEP:
     case MONS_YAK:
     default:

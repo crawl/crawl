@@ -3821,6 +3821,7 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor)
         case MONS_STORM_DRAGON:
         case MONS_GOLDEN_DRAGON:
         case MONS_SWAMP_DRAGON:
+        case MONS_PEARL_DRAGON:
         case MONS_YAK:
         case MONS_SHEEP:
             return (true);
