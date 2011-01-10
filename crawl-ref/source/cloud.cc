@@ -1110,17 +1110,33 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
     }
 }
 
+bool cloud_is_smoke(cloud_type type)
+{
+    switch (type)
+    {
+    case CLOUD_BLACK_SMOKE:
+    case CLOUD_GREY_SMOKE:
+    case CLOUD_BLUE_SMOKE:
+    case CLOUD_PURPLE_SMOKE:
+        return true;
+    default:
+        return false;
+    }
+}
+
+// Is the cloud purely cosmetic with no gameplay effect? If so, <foo>
+// is engulfed in <cloud> messages will be suppressed.
+bool cloud_is_cosmetic(cloud_type type)
+{
+    return (type == CLOUD_MIST || cloud_is_smoke(type));
+}
+
 bool is_harmless_cloud(cloud_type type)
 {
     switch (type)
     {
     case CLOUD_NONE:
-    case CLOUD_BLACK_SMOKE:
-    case CLOUD_GREY_SMOKE:
-    case CLOUD_BLUE_SMOKE:
-    case CLOUD_PURPLE_SMOKE:
     case CLOUD_TLOC_ENERGY:
-    case CLOUD_MIST:
     case CLOUD_RAIN:
     case CLOUD_MAGIC_TRAIL:
     case CLOUD_GLOOM:
@@ -1128,7 +1144,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_DEBUGGING:
         return (true);
     default:
-        return (false);
+        return (cloud_is_cosmetic(type));
     }
 }
 
@@ -1272,6 +1288,9 @@ std::string cloud_struct::cloud_name(const std::string &defname,
 void cloud_struct::announce_actor_engulfed(const actor *act,
                                            bool beneficial) const
 {
+    if (cloud_is_cosmetic(type))
+        return;
+
     if (you.can_see(act))
     {
         // Special message for unmodified rain clouds:
