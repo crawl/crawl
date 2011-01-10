@@ -136,6 +136,7 @@ static void _initialize()
 
     // Read special levels and vaults.
     read_maps();
+    run_map_global_preludes();
 
     if (crawl_state.build_db)
         end(0);
@@ -202,7 +203,7 @@ static void _post_init(bool newc)
     calc_mp();
     food_change(true);
 
-    run_map_preludes();
+    run_map_local_preludes();
 
     if (newc && you.char_direction == GDT_GAME_START)
     {

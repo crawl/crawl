@@ -63,7 +63,8 @@ void read_maps();
 void reread_maps();
 void sanity_check_maps();
 void read_map(const std::string &file);
-void run_map_preludes();
+void run_map_global_preludes();
+void run_map_local_preludes();
 void reset_map_parser();
 std::string get_descache_path(const std::string &file,
                               const std::string &ext);
