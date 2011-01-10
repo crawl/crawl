@@ -1324,7 +1324,7 @@ void add_parsed_map(const map_def &md)
     vdefs.push_back(map);
 }
 
-void run_map_preludes()
+void run_map_global_preludes()
 {
     for (int i = 0, size = global_preludes.size(); i < size; ++i)
     {
@@ -1335,6 +1335,10 @@ void run_map_preludes()
                 mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
         }
     }
+}
+
+void run_map_local_preludes()
+{
     for (int i = 0, size = vdefs.size(); i < size; ++i)
     {
         if (!vdefs[i].prelude.empty())
