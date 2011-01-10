@@ -71,6 +71,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
+#include "ng-init.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -1921,6 +1922,11 @@ bool load_ghost(bool creating_level)
 
 void restore_game(const std::string& name)
 {
+    // [ds] Set up branch depths for the current game type before
+    // trying to load the game. This is important for Sprint because
+    // it reduces the dungeon to 1 level, making D:1's place name "D"
+    // in save chunks.
+    initialise_branch_depths();
     you.save = new package((get_savedir_filename(name, "", "")
                            + SAVE_SUFFIX).c_str(), true);
 
