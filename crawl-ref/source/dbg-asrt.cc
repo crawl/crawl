@@ -697,6 +697,7 @@ static NORETURN void _BreakStrToDebugger(const char *mesg)
         fprintf(stderr, "%s", mesg);
     int* p = NULL;
     *p = 0;
+    abort();
 
 #elif defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
     fprintf(stderr, "%s", mesg);
