@@ -91,6 +91,7 @@ static TextDB AllDBs[] =
     TextDB("speak",
             "database/monspeak.txt", // monster speech
             "database/monspell.txt", // monster spellcasting speech
+            "database/monflee.txt",  // monster fleeing speech
             "database/wpnnoise.txt", // noisy weapon speech
             "database/insult.txt",   // imp/demon taunts
             "database/godspeak.txt", // god speech
