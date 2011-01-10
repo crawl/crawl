@@ -9,8 +9,10 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "coord.h"
 #include "coordit.h"
+#include "database.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
@@ -20,6 +22,7 @@
 #include "mon-iter.h"
 #include "mon-movetarget.h"
 #include "mon-pathfind.h"
+#include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
@@ -787,6 +790,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_sleeping     = mon->asleep();
+    std::string msg;
 
     if (src == MHITYOU)
         sourceWontAttack = true;
@@ -959,6 +963,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             break;
         }
 
+        msg = getSpeakString(mon->name(DESC_PLAIN) + " flee");
+
         // Assume monsters know where to run from, even if player is
         // invisible.
         mon->behaviour = BEH_FLEE;
@@ -1002,10 +1008,14 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             if (mon->friendly() && !crawl_state.game_is_arena())
             {
                 mon->foe = MHITYOU;
-                simple_monster_message(mon, " returns to your side!");
+                msg = "PLAIN:@The_monster@ returns to your side!";
             }
             else if (mon->type != MONS_KRAKEN_TENTACLE)
-                simple_monster_message(mon, " turns to fight!");
+            {
+                msg = getSpeakString(mon->name(DESC_PLAIN) + " cornered");
+                if (msg.empty())
+                    msg = "PLAIN:@The_monster@ turns to fight!";
+            }
         }
 
         mon->behaviour = BEH_CORNERED;
@@ -1063,6 +1073,9 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // unsubmerge.
         mon->behaviour = BEH_LURK;
     }
+
+    if (!msg.empty())
+        mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
     ASSERT(!crawl_state.game_is_arena()
            || mon->foe != MHITYOU && mon->target != you.pos());
