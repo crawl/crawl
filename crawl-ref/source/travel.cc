@@ -2489,7 +2489,10 @@ void start_translevel_travel_prompt()
     travel_target target = prompt_translevel_target(TPF_DEFAULT_OPTIONS,
             trans_travel_dest);
     if (target.p.id.depth <= 0)
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     start_translevel_travel(target);
 }
