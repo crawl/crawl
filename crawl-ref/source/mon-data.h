@@ -3441,7 +3441,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_OKLOB_SAPLING, 'p', LIGHTGREEN, "oklob sapling",
+    MONS_OKLOB_SAPLING, 'P', LIGHTCYAN, "oklob sapling",
     // if we decide to allow this for normal games, please remove M_NO_POLY_TO
     M_SPECIAL_ABILITY | M_STATIONARY | M_NO_POLY_TO,
     MR_RES_POISON | MR_RES_ACID,
