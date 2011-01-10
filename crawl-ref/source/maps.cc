@@ -35,6 +35,7 @@
 #include "state.h"
 #include "tags.h"
 #include "terrain.h"
+#include "tutorial.h"
 
 static map_section_type write_vault(map_def &mdef,
                                     vault_placement &,
@@ -710,10 +711,14 @@ bool map_selector::accept(const map_def &mapdef) const
     switch (sel)
     {
     case PLACE:
+        if (mapdef.has_tag_prefix("tutorial")
+            && (!crawl_state.game_is_tutorial()
+                || !mapdef.has_tag(get_tutorial_map())))
+        {
+            return (false);
+        }
         return (mapdef.is_minivault() == mini
                 && mapdef.place == place
-                && (!mapdef.has_tag("tutorial")
-                    || crawl_state.game_is_tutorial())
                 && map_matches_layout_type(mapdef)
                 && !mapdef.map_already_used());
 

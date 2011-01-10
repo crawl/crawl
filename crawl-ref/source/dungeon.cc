@@ -73,6 +73,7 @@
 #endif
 #include "traps.h"
 #include "travel.h"
+#include "tutorial.h"
 #include "hints.h"
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2510,9 +2511,12 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         }
         else if (crawl_state.game_is_tutorial())
         {
-            vault = find_map_by_name("tutorial_basic_1");
+            vault = find_map_by_name(get_tutorial_map());
             if (vault == NULL)
-                end(1, false, "Couldn't find tutorial map.");
+            {
+                end(1, false, "Couldn't find selected Tutorial map '%s'.",
+                    get_tutorial_map().c_str());
+            }
         }
         else if (crawl_state.game_is_zotdef())
             vault = random_map_for_tag("zotdef");

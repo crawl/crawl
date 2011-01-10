@@ -207,6 +207,7 @@ terrain.o \
 transform.o \
 traps.o \
 travel.o \
+tutorial.o \
 view.o \
 viewchar.o \
 viewgeom.o \
