@@ -279,7 +279,11 @@ bool TilesFramework::initialise()
 #ifdef DATA_DIR_PATH
     DATA_DIR_PATH
 #endif
+#ifdef TARGET_OS_MACOSX
+    "dat/tiles/stone_soup_icon-512x512.png";
+#else
     "dat/tiles/stone_soup_icon-32x32.png";
+#endif
 
     std::string title = CRAWL " " + Version::Long();
 
