@@ -5171,6 +5171,7 @@ void player::init()
     class_name.clear();
     type             = MONS_PLAYER;
     mid              = MID_PLAYER;
+    position.reset();
 
 #ifdef WIZARD
     wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
