@@ -7097,23 +7097,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     if (found)
         return result;
 
-    // Third pass: look for any clear terrain and abandon the idea of
-    // looking nearby now. This is used when taking transit Pandemonium gates,
-    // or landing in Labyrinths. Never land the PC inside a Pan or Lab vault.
-    for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        if (grd(*ri) >= DNGN_FLOOR)
-        {
-            found++;
-            if (one_chance_in(found))
-                result = *ri;
-        }
-    }
-
-    if (found)
-        return (result);
-
-    // Last attempt: look for marker.
+    // Look for marker with the desired feature. This is used by zigs.
     const coord_def pos(dgn_find_feature_marker(stair_to_find));
     if (in_bounds(pos))
         return (pos);
@@ -7124,6 +7108,20 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         && stair_to_find != DNGN_STONE_ARCH)
     {
         return dgn_find_nearby_stair(DNGN_STONE_ARCH, base_pos, find_closest);
+    }
+
+    // Look for any clear terrain and abandon the idea of looking
+    // nearby now. This is used when taking transit Pandemonium gates,
+    // or landing in Labyrinths. Never land the PC inside a Pan or Lab
+    // vault.
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (grd(*ri) >= DNGN_FLOOR)
+        {
+            found++;
+            if (one_chance_in(found))
+                result = *ri;
+        }
     }
 
     // FAIL
