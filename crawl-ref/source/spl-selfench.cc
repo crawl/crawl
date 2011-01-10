@@ -418,7 +418,10 @@ bool cast_selective_amnesia()
         keyin = get_ch();
 
         if (key_is_escape(keyin))
+        {
+            canned_msg(MSG_OK);
             return (false);
+        }
 
         if (keyin == '?' || keyin == '*')
         {
