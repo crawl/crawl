@@ -25,6 +25,7 @@
 #include "spl-util.h"
 #include "sprint.h"
 #include "state.h"
+#include "tutorial.h"
 
 #define MIN_START_STAT       3
 
@@ -1513,7 +1514,7 @@ static void _apply_job_colour(item_def &item)
 }
 
 static void _setup_normal_game();
-static void _setup_tutorial();
+static void _setup_tutorial(const newgame_def& ng);
 static void _setup_sprint(const newgame_def& ng);
 static void _setup_zotdef(const newgame_def& ng);
 static void _setup_hints();
@@ -1530,7 +1531,7 @@ void setup_game(const newgame_def& ng)
         _setup_normal_game();
         break;
     case GAME_TYPE_TUTORIAL:
-        _setup_tutorial();
+        _setup_tutorial(ng);
         break;
     case GAME_TYPE_SPRINT:
         _setup_sprint(ng);
@@ -1561,8 +1562,9 @@ static void _setup_normal_game()
 /**
  * Special steps that tutorial game needs;
  */
-static void _setup_tutorial()
+static void _setup_tutorial(const newgame_def& ng)
 {
+    set_tutorial_map(ng.map);
     make_hungry(0, true);
 }
 
