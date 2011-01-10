@@ -8,7 +8,7 @@ util.subclass(PortalDescriptor, "OneWayStair")
 function OneWayStair:new(props)
   local instance = PortalDescriptor.new(self, props)
   if instance.props and instance.props.onclimb then
-    instance.props.onclimb = global_function(instance.onclimb)
+    instance.props.onclimb = global_function(instance.props.onclimb)
   end
   return instance
 end
