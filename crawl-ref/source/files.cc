@@ -1926,7 +1926,7 @@ void restore_game(const std::string& name)
     // trying to load the game. This is important for Sprint because
     // it reduces the dungeon to 1 level, making D:1's place name "D"
     // in save chunks.
-    initialise_branch_depths();
+    initialise_branches_for_game_type();
     you.save = new package((get_savedir_filename(name, "", "")
                            + SAVE_SUFFIX).c_str(), true);
 
