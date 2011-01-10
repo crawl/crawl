@@ -2963,9 +2963,8 @@ void excommunication(god_type new_god)
         if (_need_water_walking())
             fall_into_a_pool(you.pos(), true, grd(you.pos()));
 
-        // Penance has to come before retribution to prevent "mollify"
         _inc_penance(old_god, 50);
-        divine_retribution(old_god);
+        // No instant retribution, the orcs could be farmed.
         break;
 
     case GOD_SIF_MUNA:
