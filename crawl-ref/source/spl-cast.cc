@@ -726,99 +726,14 @@ static bool _spell_is_utility_spell(spell_type spell_id)
                 SPTYP_CHARMS | SPTYP_TRANSLOCATION));
 }
 
-bool maybe_identify_staff(item_def &item, spell_type spell)
+void maybe_identify_staff(item_def &item)
 {
     if (item_type_known(item))
-        return (true);
+        return;
 
-    int relevant_skill = 0;
-    const bool chance = (spell != SPELL_NO_SPELL);
-    bool id_staff = false;
-
-    switch (item.sub_type)
-    {
-        case STAFF_ENERGY:
-            if (!chance) // The staff of energy only autoIDs by chance.
-                return (false);
-            relevant_skill = you.skills[SK_SPELLCASTING];
-            break;
-
-        case STAFF_WIZARDRY:
-            // Staff of wizardry auto-ids if you could know spells
-            // because the interface gives it away anyhow.
-            if (player_spell_skills())
-                id_staff = true;
-            break;
-
-        case STAFF_FIRE:
-            if (!chance || spell_typematch(spell, SPTYP_FIRE))
-                relevant_skill = you.skills[SK_FIRE_MAGIC];
-            else if (spell_typematch(spell, SPTYP_ICE))
-                relevant_skill = you.skills[SK_ICE_MAGIC];
-            break;
-
-        case STAFF_COLD:
-            if (!chance || spell_typematch(spell, SPTYP_ICE))
-                relevant_skill = you.skills[SK_ICE_MAGIC];
-            else if (spell_typematch(spell, SPTYP_FIRE))
-                relevant_skill = you.skills[SK_FIRE_MAGIC];
-            break;
-
-        case STAFF_AIR:
-            if (!chance || spell_typematch(spell, SPTYP_AIR))
-                relevant_skill = you.skills[SK_AIR_MAGIC];
-            else if (spell_typematch(spell, SPTYP_EARTH))
-                relevant_skill = you.skills[SK_EARTH_MAGIC];
-            break;
-
-        case STAFF_EARTH:
-            if (!chance || spell_typematch(spell, SPTYP_EARTH))
-                relevant_skill = you.skills[SK_EARTH_MAGIC];
-            else if (spell_typematch(spell, SPTYP_AIR))
-                relevant_skill = you.skills[SK_AIR_MAGIC];
-            break;
-
-        case STAFF_POISON:
-            if (!chance || spell_typematch(spell, SPTYP_POISON))
-                relevant_skill = you.skills[SK_POISON_MAGIC];
-            break;
-
-        case STAFF_DEATH:
-            if (!chance || spell_typematch(spell, SPTYP_NECROMANCY))
-                relevant_skill = you.skills[SK_NECROMANCY];
-            break;
-
-        case STAFF_CONJURATION:
-            if (!chance || spell_typematch(spell, SPTYP_CONJURATION))
-                relevant_skill = you.skills[SK_CONJURATIONS];
-            break;
-
-        case STAFF_ENCHANTMENT:
-            if (!chance || spell_typematch(spell, SPTYP_HEXES))
-                relevant_skill = you.skills[SK_HEXES];
-            if (!chance || spell_typematch(spell, SPTYP_CHARMS))
-                relevant_skill = std::max<int>(relevant_skill,
-                                               you.skills[SK_CHARMS]);
-            break;
-
-        case STAFF_SUMMONING:
-            if (!chance || spell_typematch(spell, SPTYP_SUMMONING))
-                relevant_skill = you.skills[SK_SUMMONINGS];
-            break;
-    }
-
-    if (chance)
-    {
-        if (you.skills[SK_SPELLCASTING] > relevant_skill)
-            relevant_skill = you.skills[SK_SPELLCASTING];
-
-        if (x_chance_in_y(relevant_skill, 100))
-            id_staff = true;
-    }
-    else if (relevant_skill >= 4)
-        id_staff = true;
-
-    if (id_staff)
+    if (player_spell_skills()
+        || item.sub_type == STAFF_POWER
+        || item.sub_type == STAFF_CHANNELING)
     {
         item_def& wpn = *you.weapon();
         set_ident_type(wpn, ID_KNOWN_TYPE);
@@ -828,17 +743,10 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
 
         you.wield_change = true;
     }
-    return (id_staff);
 }
 
-static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
+static void _spellcasting_side_effects(spell_type spell)
 {
-    if (you.weapon() && item_is_staff(*you.weapon()))
-        maybe_identify_staff(*you.weapon(), spell);
-
-    if (idonly)
-        return;
-
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
     if (!_spell_is_utility_spell(spell) && !crawl_state.is_god_acting())
@@ -1266,8 +1174,6 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spfl < spfail_chance)
         {
-            _spellcasting_side_effects(spell, true);
-
             mpr("You miscast the spell.");
             flush_input_buffer(FLUSH_ON_FAILURE);
             learned_something_new(HINT_SPELL_MISCAST);
