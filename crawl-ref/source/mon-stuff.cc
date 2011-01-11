@@ -216,8 +216,7 @@ dungeon_feature_type get_mimic_feat (const monster* mimic)
             return (DNGN_FOUNTAIN_BLUE);
         }
     default:
-        ASSERT(false);
-        break;
+        die("invalid feature mimic type");
     }
 
     return (DNGN_UNSEEN);
@@ -1462,8 +1461,7 @@ static std::string _killer_type_name(killer_type killer)
     case KILL_DISMISSED:
         return ("dismissed");
     }
-    ASSERT(false);
-    return "";
+    die("invalid killer type");
 }
 
 static void _make_spectral_thing(monster* mons, bool quiet)

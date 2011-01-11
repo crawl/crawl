@@ -2111,8 +2111,7 @@ std::string _status_mut_abilities()
                 EV_change += level - 1;
                 break;
             default:
-                ASSERT(false);
-                break;
+                die("mutation without a short desc: %d", i);
             }
         }
 

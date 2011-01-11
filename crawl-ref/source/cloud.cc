@@ -80,7 +80,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
                     || killer == KILL_MISC || killer == KILL_MON);
 
         case KC_NCATEGORIES:
-            ASSERT(false);
+            die("kill category not matching killer type");
     }
     return (false);
 }
@@ -1234,7 +1234,7 @@ kill_category cloud_struct::killer_to_whose(killer_type _killer)
             return (KC_OTHER);
 
         default:
-            ASSERT(false);
+            die("invalid killer type");
     }
     return (KC_OTHER);
 }
@@ -1246,7 +1246,7 @@ killer_type cloud_struct::whose_to_killer(kill_category _whose)
         case KC_YOU:         return KILL_YOU_MISSILE;
         case KC_FRIENDLY:    return KILL_MON_MISSILE;
         case KC_OTHER:       return KILL_MISC;
-        case KC_NCATEGORIES: ASSERT(false);
+        case KC_NCATEGORIES: die("invalid kill category");
     }
     return (KILL_NONE);
 }
@@ -1539,12 +1539,8 @@ fog_machine_data random_fog_for_place(int level_number, const level_id &place)
     case LEVEL_LABYRINTH:
         return fogs_lab_type(level_number);
     default:
-        ASSERT(false);
-        return data;
+        die("fog type not assigned");
     }
-
-    ASSERT(false);
-    return data;
 }
 
 int fogs_pan_number(int level_number)

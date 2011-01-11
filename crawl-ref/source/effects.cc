@@ -620,9 +620,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         break;
 
     default:
-        mprf(MSGCH_DIAGNOSTICS, "Invalid banished() gateway %d",
-             static_cast<int>(gate_type));
-        ASSERT(false);
+        die("Invalid banished() gateway %d", static_cast<int>(gate_type));
     }
 
     // Now figure out how we got here.
@@ -807,7 +805,7 @@ void direct_effect(monster* source, spell_type spell,
         break;
 
     default:
-        ASSERT(false);
+        die("unknown direct_effect spell: %d", spell);
     }
 
     // apply damage and handle death, where appropriate {dlb}

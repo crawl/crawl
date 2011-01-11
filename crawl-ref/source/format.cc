@@ -203,10 +203,7 @@ void formatted_string::parse_string1(
         {
             colour_stack.pop_back();
             if (colour_stack.size() < 1)
-            {
-                ASSERT(false);
-                colour_stack.push_back(LIGHTRED);
-            }
+                die("Stack underflow");
         }
         else
         {

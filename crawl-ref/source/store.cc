@@ -125,7 +125,7 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
     }
 
     case NUM_STORE_VAL_TYPES:
-        ASSERT(false);
+        die("unknown stored value type");
     }
 }
 
@@ -557,7 +557,7 @@ void CrawlStoreValue::write(writer &th) const
         break;
 
     case NUM_STORE_VAL_TYPES:
-        ASSERT(false);
+        die("unknown stored value type");
     }
 }
 
@@ -673,7 +673,7 @@ void CrawlStoreValue::read(reader &th)
         break;
 
     case NUM_STORE_VAL_TYPES:
-        ASSERT(false);
+        die("unknown stored value type");
     }
 }
 
@@ -750,7 +750,7 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
                 field = (_type) val._float; \
                 break; \
             default: \
-                ASSERT(false); \
+                die("unknown stored value type"); \
             } \
             type = (x); \
         } \
@@ -983,8 +983,7 @@ CrawlStoreValue::operator bool() const
     case SV_INT: \
         return get_int(); \
     default: \
-        ASSERT(false); \
-        return 0; \
+        die("unknown stored value type"); \
     }
 
 CrawlStoreValue::operator char() const
@@ -1145,7 +1144,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const dlua_chunk &_val)
     } \
  \
     default: \
-        ASSERT(false); \
+        die("unknown stored value type"); \
         return 0; \
     }
 

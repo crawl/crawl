@@ -1946,7 +1946,7 @@ static void _add_tentacle_overlay(const coord_def pos,
         case SOUTH: next += coord_def( 0,  1); break;
         case WEST:  next += coord_def(-1,  0); break;
         default:
-            ASSERT(false);
+            die("invalid direction");
     }
     if (!in_bounds(next))
         return;
@@ -1959,7 +1959,7 @@ static void _add_tentacle_overlay(const coord_def pos,
         case SOUTH: flag = TILE_FLAG_KRAKEN_NE; break; // NE
         case WEST:  flag = TILE_FLAG_KRAKEN_SE; break; // SE
         default:
-            ASSERT(false);
+            die("invalid direction");
     }
     env.tile_bg(grid2show(next)) |= flag;
 }
@@ -2083,7 +2083,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
             else
                 return TILEP_MONS_KRAKEN_TENTACLE_SE;
         }
-        ASSERT(false);
+        die("impossible kraken direction");
     }
 
     // Only tentacle segments from now on.
@@ -2136,7 +2136,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
             else
                 return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
         }
-        ASSERT(false);
+        die("impossible kraken direction");
     }
 
     // Okay, neither head nor next are submerged.

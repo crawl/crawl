@@ -1395,8 +1395,7 @@ static int _place_monster_aux(const mgen_data &mg,
         || mg.cls == MONS_SENSED
         || mg.cls == MONS_PLAYER)
     {
-        ASSERT(false);
-        return (-1);
+        die("unknown monster to place: %d", mons_class_name(mg.cls));
     }
 
     const monsterentry *m_ent = get_monster_data(mg.cls);
@@ -2179,8 +2178,8 @@ void roll_zombie_hp(monster* mon)
         break;
 
     default:
-        ASSERT(false);
-        break;
+        die("invalid zombie type %d (%s)", mon->type,
+            mons_class_name(mon->type));
     }
 
     mon->max_hit_points = std::max(hp, 1);
@@ -2221,8 +2220,8 @@ static void _roll_zombie_ac_ev(monster* mon)
         break;
 
     default:
-        ASSERT(false);
-        break;
+        die("invalid zombie type %d (%s)", mon->type,
+            mons_class_name(mon->type));
     }
 
     mon->ac = std::max(mon->ac + acmod, 0);

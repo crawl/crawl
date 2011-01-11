@@ -905,16 +905,12 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 
     case EQ_ALL_ARMOUR:
         // Doesn't make much sense here... be specific. -- bwr
-        ASSERT(false);
+        die("EQ_ALL_ARMOUR is not a proper slot");
         break;
 
     default:
         if (! (slot > EQ_NONE && slot < NUM_EQUIP))
-        {
-            ASSERT(false);
-
-            return (0);
-        }
+            die("invalid slot");
         if ((item = you.slot_item(slot))
             && item->sub_type == sub_type
             && (calc_unid || item_type_known(*item)))
@@ -974,10 +970,7 @@ int player_equip_ego_type(int slot, int special, bool calc_unid)
 
     default:
         if (slot < EQ_MIN_ARMOUR || slot > EQ_MAX_ARMOUR)
-        {
-            ASSERT(false);
-            return (0);
-        }
+            die("invalid slot: %d", slot);
         // Check a specific armour slot for an ego type:
         if ((item = you.slot_item(static_cast<equipment_type>(slot), melded))
             && get_armour_ego_type(*item) == special
@@ -1043,10 +1036,7 @@ bool player_equip_unrand(int unrand_index)
 
     default:
         if (slot <= EQ_NONE || slot >= NUM_EQUIP)
-        {
-            ASSERT(false);
-            return (false);
-        }
+            die("invalid slot: %d", slot);
         // Check a specific slot.
         if ((item = you.slot_item(slot))
             && is_unrandom_artefact(*item)
@@ -6242,8 +6232,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     else
     {
         // Should never happen!
-        ASSERT(false);
-        ouch(amount, NON_MONSTER, KILLED_BY_SOMETHING);
+        die("player::hurt() called for self-damage");
     }
 
     if ((flavour == BEAM_NUKE || flavour == BEAM_DISINTEGRATION) && can_bleed())

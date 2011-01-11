@@ -270,8 +270,7 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (around neck)";
                     break;
                 default:
-                    ASSERT(false);
-                    break;
+                    die("Item in an invalid slot");
                 }
             }
         }

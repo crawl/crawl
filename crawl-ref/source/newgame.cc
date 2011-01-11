@@ -2132,8 +2132,7 @@ static std::string _god_text(god_type god)
     case GOD_LUGONU:
         return "Lugonu the Unformed";
     default:
-        ASSERT(false);
-        return "";
+        die("invalid priestly god: %d", god);
     }
 }
 

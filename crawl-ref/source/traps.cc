@@ -198,9 +198,7 @@ bool trap_def::is_known(const actor* act) const
                         || intel >= I_HIGH && one_chance_in(3)));
         }
     }
-    ASSERT(false);
-
-    return (false);
+    die("invalid actor type");
 }
 
 
@@ -405,10 +403,7 @@ static bool _find_other_passage_side(coord_def& to)
         return true;
     }
     else
-    {
-        ASSERT(false);
-        return false;
-    }
+        die("Golubria's passage not found");
 }
 
 // Returns a direction string from you.pos to the
@@ -1720,7 +1715,7 @@ int num_traps_for_place(int level_number, const level_id &place)
         return _num_traps_default(level_number, place);
     case LEVEL_LABYRINTH:
     case LEVEL_PORTAL_VAULT:
-        ASSERT(false);
+        die("invalid place for traps");
         break;
     case LEVEL_ABYSS:
     default:

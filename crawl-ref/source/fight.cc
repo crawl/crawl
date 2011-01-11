@@ -1074,7 +1074,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         break;
 
     default:
-        ASSERT(false);
+        die("unknown aux attack type");
         break;
     }
 }

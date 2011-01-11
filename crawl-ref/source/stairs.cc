@@ -1290,7 +1290,7 @@ void down_stairs(dungeon_feature_type force_stair,
         }
 
         default:
-            ASSERT(false);
+            die("unknown level type");
         }
     }
 
