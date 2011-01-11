@@ -170,7 +170,7 @@ MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3
 MAP
     .......
     .41.14.
-   ................ 
+   ................
  ...ww...wwwwwwwww..
  ..ww............ww..
  ..w..5...cc...5..w..
@@ -298,7 +298,7 @@ MAP
 .cx...xxxc.
 .cx.2.+%xc.
 .cx...x%xc.
-..xxxxxxxc.
+..xxxxxxx..
 ...ccccc...
 ...........
 ENDMAP
