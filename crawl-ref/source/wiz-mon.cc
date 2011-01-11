@@ -1022,7 +1022,7 @@ void wizard_make_monster_summoned(monster* mon)
         }
 
         default:
-            DEBUGSTR("Invalid summon type choice.");
+            die("Invalid summon type choice.");
             break;
     }
 

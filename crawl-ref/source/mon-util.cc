@@ -177,10 +177,7 @@ void init_mon_name_cache()
                 continue;
             }
             else
-            {
-                DEBUGSTR("Un-handled duplicate monster name: %s", name.c_str());
-                ASSERT(false);
-            }
+                die("Un-handled duplicate monster name: %s", name.c_str());
         }
 
         Mon_Name_Cache[name] = mon;

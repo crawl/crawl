@@ -968,7 +968,7 @@ static void debug_channel_arena(msg_channel_type channel)
     case MSGCH_EXAMINE:
     case MSGCH_EXAMINE_FILTER:
     case MSGCH_TUTORIAL:
-        DEBUGSTR("Invalid channel '%s' in arena mode",
+        die("Invalid channel '%s' in arena mode",
                  channel_to_str(channel).c_str());
         break;
     default:

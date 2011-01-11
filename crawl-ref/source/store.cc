@@ -351,11 +351,11 @@ void CrawlStoreValue::unset(bool force)
     }
 
     case SV_NONE:
-        DEBUGSTR("CrawlStoreValue::unset: unsetting nothing");
+        die("CrawlStoreValue::unset: unsetting nothing");
         break;
 
     default:
-        DEBUGSTR("CrawlStoreValue::unset: unsetting invalid type");
+        die("CrawlStoreValue::unset: unsetting invalid type");
         break;
     }
 
@@ -427,7 +427,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         break;
 
      default:
-        DEBUGSTR("CrawlStoreValue has invalid type");
+        die("CrawlStoreValue has invalid type");
         break;
     }
 

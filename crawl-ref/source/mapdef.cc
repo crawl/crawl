@@ -4425,7 +4425,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         break;
 
     default:
-        DEBUGSTR("Bad base_type for ego'd item.");
+        die("Bad base_type for ego'd item.");
         return 0;
     }
 

@@ -399,7 +399,7 @@ void MiscastEffect::do_miscast()
         break;
 
     default:
-        DEBUGSTR("Invalid miscast spell discipline.");
+        die("Invalid miscast spell discipline.");
     }
 
     if (target->atype() == ACT_PLAYER)

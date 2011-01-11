@@ -2811,7 +2811,7 @@ void ShoppingList::display()
             fill_out_menu(shopmenu);
         }
         else
-            DEBUGSTR("Invalid menu action type");
+            die("Invalid menu action type");
     }
     redraw_screen();
 }
