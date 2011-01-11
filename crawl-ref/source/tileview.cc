@@ -1017,7 +1017,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (silenced(gc))
         cell.is_silenced = true;
 
-    if (grd(gc) == DNGN_SWAMP_TREE || feat_is_water(grd(gc)))
+    if (grd(gc) == DNGN_SWAMP_TREE)
         cell.swamp_tree_water = true;
 }
 
