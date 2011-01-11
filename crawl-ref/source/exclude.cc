@@ -8,6 +8,7 @@
 #include "exclude.h"
 
 #include <algorithm>
+#include <sstream>
 
 #include "cloud.h"
 #include "coord.h"
@@ -567,6 +568,11 @@ std::string exclude_set::get_exclusion_desc()
          it != exclude_roots.end(); ++it)
     {
         travel_exclude &ex = it->second;
+
+        // Don't count cloud exclusions.
+        if (strstr(ex.desc.c_str(), "cloud"))
+            continue;
+
         if (ex.desc != "")
             desc.push_back(ex.desc);
         else
