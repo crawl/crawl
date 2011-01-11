@@ -335,8 +335,8 @@ public:
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
-    int res_poison() const;
-    int res_rotting() const;
+    int res_poison(bool temp = true) const;
+    int res_rotting(bool temp = true) const;
     int res_asphyx() const;
     int res_water_drowning() const;
     int res_sticky_flame() const;

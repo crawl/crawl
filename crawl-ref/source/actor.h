@@ -238,8 +238,8 @@ public:
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
-    virtual int res_poison() const = 0;
-    virtual int res_rotting() const = 0;
+    virtual int res_poison(bool temp = true) const = 0;
+    virtual int res_rotting(bool temp = true) const = 0;
     virtual int res_asphyx() const = 0;
     virtual int res_water_drowning() const = 0;
     virtual int res_sticky_flame() const = 0;

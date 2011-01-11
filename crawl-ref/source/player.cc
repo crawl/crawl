@@ -6007,20 +6007,23 @@ int player::res_asphyx() const
     return 0;
 }
 
-int player::res_poison() const
+int player::res_poison(bool temp) const
 {
-    return (player_res_poison());
+    return (player_res_poison(true, temp));
 }
 
-int player::res_rotting() const
+int player::res_rotting(bool temp) const
 {
-    if (is_undead
-        && (is_undead != US_SEMI_UNDEAD || hunger_state < HS_SATIATED))
+    if (!is_undead)
+        return 0;
+
+    if (!temp
+        && (you.form == TRAN_LICH || is_undead == US_SEMI_UNDEAD))
     {
-        return (1);
+        return 0;
     }
 
-    return (0);
+    return 1;
 }
 
 int player::res_sticky_flame() const
