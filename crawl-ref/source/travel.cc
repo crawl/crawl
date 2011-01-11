@@ -904,9 +904,25 @@ command_type travel()
 
     command_type result = CMD_NO_CMD;
 
-    // Abort travel/explore if you're confused or a key was pressed.
-    if (kbhit() || you.confused())
+    if (kbhit())
     {
+        mprf("Key pressed, stopping %s.", you.running.runmode_name().c_str());
+        stop_running();
+        return CMD_NO_CMD;
+    }
+
+    if (you.confused())
+    {
+        mprf("You're confused, stopping %s.",
+             you.running.runmode_name().c_str());
+        stop_running();
+        return CMD_NO_CMD;
+    }
+
+    if (is_excluded(you.pos()))
+    {
+        mprf("You're in a travel-excluded area, stopping %s.",
+             you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
     }
@@ -2473,7 +2489,10 @@ void start_translevel_travel_prompt()
     travel_target target = prompt_translevel_target(TPF_DEFAULT_OPTIONS,
             trans_travel_dest);
     if (target.p.id.depth <= 0)
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     start_translevel_travel(target);
 }
@@ -4013,6 +4032,23 @@ bool runrest::is_any_travel() const
     }
 }
 
+std::string runrest::runmode_name() const
+{
+    switch (runmode)
+    {
+    case RMODE_EXPLORE:
+    case RMODE_EXPLORE_GREEDY:
+        return "explore";
+    case RMODE_INTERLEVEL:
+    case RMODE_TRAVEL:
+        return "travel";
+    default:
+        if (runmode > 0)
+            return pos.origin()? "rest" : "run";
+        return ("");
+    }
+}
+
 void runrest::rest()
 {
     // stop_running() Lua hooks will never see rest stops.
@@ -4386,5 +4422,5 @@ bool check_for_interesting_features()
     }
 
     env.map_shadow = env.map_knowledge;
-    return(discoveries.prompt_stop());
+    return discoveries.prompt_stop();
 }

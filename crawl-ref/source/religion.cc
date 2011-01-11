@@ -1229,8 +1229,7 @@ static misc_item_type _gift_type_to_deck(int gift)
     case NEM_GIFT_SUMMONING:   return (MISC_DECK_OF_SUMMONING);
     case NEM_GIFT_WONDERS:     return (MISC_DECK_OF_WONDERS);
     }
-    ASSERT(false);
-    return (NUM_MISCELLANY);
+    die("invalid gift card type");
 }
 
 static bool _give_nemelex_gift(bool forced = false)
@@ -1658,15 +1657,10 @@ static void _beogh_blessing_reinforcements()
     int how_many = random2(4) + 1;
 
     monster_type follower_type;
-    bool high_level;
     for (int i = 0; i < how_many; ++i)
     {
-        high_level = false;
         if (random2(you.experience_level) >= 9 && coinflip())
-        {
             follower_type = RANDOM_ELEMENT(high_xl_followers);
-            high_level = true;
-        }
         else
             follower_type = RANDOM_ELEMENT(followers);
 
@@ -2281,56 +2275,49 @@ bool do_god_gift(bool prayed_for, bool forced)
 
 std::string god_name(god_type which_god, bool long_name)
 {
+    if (which_god == GOD_JIYVA)
+        return (god_name_jiyva(long_name) +
+                (long_name? " the Shapeless" : ""));
+
+    if (long_name)
+    {
+        const std::string shortname = god_name(which_god, false);
+        const std::string longname =
+            getWeightedRandomisedDescription(shortname + " lastname");
+        return (longname.empty()? shortname : longname);
+    }
+
     switch (which_god)
     {
     case GOD_NO_GOD: return "No God";
     case GOD_RANDOM: return "random";
     case GOD_NAMELESS: return "nameless";
     case GOD_VIABLE: return "viable";
-    case GOD_ZIN:           return (long_name ? "Zin the Law-Giver" : "Zin");
+    case GOD_ZIN:           return "Zin";
     case GOD_SHINING_ONE:   return "The Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
     case GOD_YREDELEMNUL:
-        return (long_name ? "Yredelemnul the Dark" : "Yredelemnul");
+        return "Yredelemnul";
     case GOD_VEHUMET: return "Vehumet";
-    case GOD_OKAWARU: return (long_name ? "Warmaster Okawaru" : "Okawaru");
-    case GOD_MAKHLEB: return (long_name ? "Makhleb the Destroyer" : "Makhleb");
+    case GOD_OKAWARU: return "Okawaru";
+    case GOD_MAKHLEB: return "Makhleb";
     case GOD_SIF_MUNA:
-        return (long_name ? "Sif Muna the Loreminder" : "Sif Muna");
-    case GOD_TROG: return (long_name ? "Trog the Wrathful" : "Trog");
+        return "Sif Muna";
+    case GOD_TROG: return "Trog";
     case GOD_NEMELEX_XOBEH: return "Nemelex Xobeh";
-    case GOD_ELYVILON: return (long_name ? "Elyvilon the Healer" : "Elyvilon");
-    case GOD_LUGONU:   return (long_name ? "Lugonu the Unformed" : "Lugonu");
-    case GOD_BEOGH:    return (long_name ? "Beogh the Brigand" : "Beogh");
+    case GOD_ELYVILON: return "Elyvilon";
+    case GOD_LUGONU:   return "Lugonu";
+    case GOD_BEOGH:    return "Beogh";
     case GOD_JIYVA:
     {
         return (long_name ? god_name_jiyva(true) + " the Shapeless"
                           : god_name_jiyva(false));
     }
-    case GOD_FEDHAS:        return (long_name ? "Fedhas Madash" : "Fedhas");
-    case GOD_CHEIBRIADOS:  return (long_name ? "Cheibriados the Contemplative" : "Cheibriados");
-    case GOD_XOM:
-        if (!long_name)
-            return "Xom";
-        else
-        {
-            const char* xom_names[] = {
-                "Xom the Random", "Xom the Random Number God",
-                "Xom the Tricky", "Xom the Less-Predictable",
-                "Xom the Unpredictable", "Xom of Many Doors",
-                "Xom the Capricious", "Xom of Bloodstained Whimsey",
-                "Xom of Enforced Whimsey", "Xom of Bone-Dry Humour",
-                "Xom of Malevolent Giggling", "Xom of Malicious Giggling",
-                "Xom the Psychotic", "Xom of Gnomic Intent",
-                "Xom the Fickle", "Xom of Unknown Intention",
-                "The Xom-Meister", "Xom the Begetter of Turbulence",
-                "Xom the Begetter of Discontinuities"
-            };
-            return (one_chance_in(3) ? RANDOM_ELEMENT(xom_names)
-                    : "Xom of Chaos");
-        }
+    case GOD_FEDHAS:        return "Fedhas";
+    case GOD_CHEIBRIADOS: return "Cheibriados";
+    case GOD_XOM: return "Xom";
     case GOD_ASHENZARI:
-        return long_name ? "Ashenzari the Shackled" : "Ashenzari";
+        return "Ashenzari";
     case NUM_GODS: return "Buggy";
     }
     return ("");
@@ -2920,6 +2907,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_YREDELEMNUL:
+        you.duration[DUR_MIRROR_DAMAGE] = 0;
         if (query_da_counter(DACT_ALLY_YRED_SLAVE))
         {
             simple_god_message(" reclaims all of your granted undead slaves!",
@@ -2974,9 +2962,8 @@ void excommunication(god_type new_god)
         if (_need_water_walking())
             fall_into_a_pool(you.pos(), true, grd(you.pos()));
 
-        // Penance has to come before retribution to prevent "mollify"
         _inc_penance(old_god, 50);
-        divine_retribution(old_god);
+        // No instant retribution, the orcs could be farmed.
         break;
 
     case GOD_SIF_MUNA:
@@ -3800,7 +3787,7 @@ void handle_god_time()
             break;
 
         default:
-            DEBUGSTR("Bad god, no bishop!");
+            die("Bad god, no bishop!");
             return;
         }
 

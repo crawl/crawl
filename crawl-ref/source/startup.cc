@@ -48,14 +48,13 @@
 #include "status.h"
 #include "stuff.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
 #include "view.h"
 #include "viewchar.h"
 
 #ifdef USE_TILE
-#include "tilereg-crt.h"
+ #include "tilepick.h"
+ #include "tilereg-crt.h"
+ #include "tileview.h"
 #endif
 
 // Initialise a whole lot of stuff...
@@ -113,7 +112,7 @@ static void _initialize()
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
     if (!crawl_state.map_stat_gen && !crawl_state.test
-        && Options.tile_title_screen)
+        && crawl_state.title_screen)
     {
         tiles.draw_title();
         tiles.update_title_msg("Loading Databases...");
@@ -123,7 +122,7 @@ static void _initialize()
     // Initialise internal databases.
     databaseSystemInit();
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (crawl_state.title_screen)
         tiles.update_title_msg("Loading Spells and Features...");
 #endif
 
@@ -131,12 +130,13 @@ static void _initialize()
     init_spell_name_cache();
     init_spell_rarities();
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (crawl_state.title_screen)
         tiles.update_title_msg("Loading maps...");
 #endif
 
     // Read special levels and vaults.
     read_maps();
+    run_map_global_preludes();
 
     if (crawl_state.build_db)
         end(0);
@@ -147,7 +147,7 @@ static void _initialize()
     // System initialisation stuff.
     textbackground(0);
 #ifdef USE_TILE
-    if (Options.tile_title_screen)
+    if (!Options.tile_skip_title && crawl_state.title_screen)
     {
         tiles.update_title_msg("Loading complete, press any key to start.");
         tiles.hide_title();
@@ -203,7 +203,7 @@ static void _post_init(bool newc)
     calc_mp();
     food_change(true);
 
-    run_map_preludes();
+    run_map_local_preludes();
 
     if (newc && you.char_direction == GDT_GAME_START)
     {
@@ -270,7 +270,7 @@ static void _post_init(bool newc)
     update_player_symbol();
 
     draw_border();
-    new_level();
+    new_level(!newc);
     update_turn_count();
     update_vision_range();
     you.xray_vision = !!you.duration[DUR_SCRYING];
@@ -320,10 +320,19 @@ static void _post_init(bool newc)
  */
 static void _construct_game_modes_menu(MenuScroller* menu)
 {
+#ifdef USE_TILE
+    TextTileItem* tmp = NULL;
+#else
     TextItem* tmp = NULL;
+#endif
     std::string text;
 
+#ifdef USE_TILE
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -337,7 +346,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_TUTORIAL), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Tutorial for Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -351,7 +365,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_HINTS), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Hints mode for Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -365,7 +384,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_SPRINT), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Dungeon Sprint";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -378,8 +402,13 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_ZOTDEF), TEX_GUI));
+#else
     tmp = new TextItem();
-    text = "Zot Defense";
+#endif
+    text = "Zot Defence";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -391,7 +420,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_INSTRUCTIONS), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Instructions";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -404,7 +438,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_ARENA), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "The Arena";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -472,7 +511,7 @@ static bool _game_defined(const newgame_def& ng)
 static const int SCROLLER_MARGIN_X  = 18;
 static const int NAME_START_Y       = 5;
 static const int GAME_MODES_START_Y = 7;
-static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 2 + NUM_GAME_TYPE;
+static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 1 + NUM_GAME_TYPE;
 static const int MISC_TEXT_START_Y  = 19;
 static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
@@ -503,11 +542,22 @@ static void _show_startup_menu(newgame_def* ng_choice,
     std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
 
+#ifdef USE_TILE
+    const int max_col    = tiles.get_crt()->mx;
+#else
     const int max_col    = get_number_of_cols() - 1;
+#endif
     const int max_line   = get_number_of_lines() - 1;
     const int help_start = _misc_text_start_y(num_saves);
     const int help_end   = help_start + NUM_HELP_LINES + 1;
     const int desc_y     = help_end;
+#ifdef USE_TILE
+    const int game_mode_bottom = GAME_MODES_START_Y + tiles.to_lines(NUM_GAME_TYPE);
+    const int game_save_top = help_start - 2 - tiles.to_lines(std::min(2, num_saves));
+    const int save_games_start_y = std::min<int>(game_mode_bottom, game_save_top);
+#else
+    const int save_games_start_y = SAVE_GAMES_START_Y;
+#endif
 
     clrscr();
     PrecisionMenu menu;
@@ -518,12 +568,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
     freeform->allow_focus(false);
     MenuScroller* game_modes = new MenuScroller();
     game_modes->init(coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y),
-                     coord_def(GAME_MODES_WIDTH,
-                               GAME_MODES_START_Y + NUM_GAME_TYPE + 1),
+                     coord_def(GAME_MODES_WIDTH, save_games_start_y),
                      "game modes");
 
     MenuScroller* save_games = new MenuScroller();
-    save_games->init(coord_def(SCROLLER_MARGIN_X, SAVE_GAMES_START_Y),
+    save_games->init(coord_def(SCROLLER_MARGIN_X, save_games_start_y),
                      coord_def(max_col, help_start - 1),
                      "save games");
     _construct_game_modes_menu(game_modes);
@@ -543,12 +592,15 @@ static void _show_startup_menu(newgame_def* ng_choice,
     freeform->attach_item(tmp);
     tmp->set_visible(true);
 
-    tmp = new NoSelectTextItem();
-    tmp->set_text("Saved games:");
-    tmp->set_bounds(coord_def(1, SAVE_GAMES_START_Y),
-                    coord_def(SCROLLER_MARGIN_X, SAVE_GAMES_START_Y + 1));
-    freeform->attach_item(tmp);
-    tmp->set_visible(true);
+    if (num_saves)
+    {
+        tmp = new NoSelectTextItem();
+        tmp->set_text("Saved games:");
+        tmp->set_bounds(coord_def(1, save_games_start_y),
+                        coord_def(SCROLLER_MARGIN_X, save_games_start_y + 1));
+        freeform->attach_item(tmp);
+        tmp->set_visible(true);
+    }
 
     tmp = new NoSelectTextItem();
     std::string text = "Use the up/down keys to select the type of game "

@@ -330,6 +330,10 @@ Iskenderun's Mystic Blast
 
 This spell throws a crackling sphere of destructive energy.
 %%%%
+Leda's Liquefaction
+
+This spell liquefies the ground around the caster by shaking it rapidly, making it difficult to move through. Any attempt to move through the liquefied ground will be a very slow one.
+%%%%
 Lee's Rapid Deconstruction
 
 This spell fragments a wall into an explosion of deadly shrapnel. It can also be used directly on monsters made of wall-like substances.
@@ -656,10 +660,6 @@ As a side effect, this spell may be used to cross lava, but beware of its short 
 Tukima's Dance
 
 This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on magical staves and certain wilful artefacts.
-%%%%
-Tukima's Vorpal Blade
-
-This spell bestows a lethal but temporary sharpness on a sword held by the caster. It will not affect weapons otherwise subject to special enchantments.
 %%%%
 Twisted Resurrection
 

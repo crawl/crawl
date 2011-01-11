@@ -716,8 +716,6 @@ static int colour_msg(msg_colour_type col)
         return static_cast<int>(col);
 }
 
-#ifdef USE_COLOUR_MESSAGES
-
 // Returns a colour or MSGCOL_MUTED.
 static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
@@ -857,15 +855,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
     return (ret);
 }
 
-#else // don't use colour messages
-
-static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
-{
-    return (MSGCOL_LIGHTGREY);
-}
-
-#endif
-
 int channel_to_colour(msg_channel_type channel, int param)
 {
     return colour_msg(channel_to_msgcol(channel, param));
@@ -968,7 +957,7 @@ static void debug_channel_arena(msg_channel_type channel)
     case MSGCH_EXAMINE:
     case MSGCH_EXAMINE_FILTER:
     case MSGCH_TUTORIAL:
-        DEBUGSTR("Invalid channel '%s' in arena mode",
+        die("Invalid channel '%s' in arena mode",
                  channel_to_str(channel).c_str());
         break;
     default:

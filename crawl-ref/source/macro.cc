@@ -284,7 +284,6 @@ static keyseq parse_keyseq(std::string s)
 {
     int state = 0;
     keyseq v;
-    int num;
 
     if (s.find("===") == 0)
     {
@@ -313,10 +312,7 @@ static keyseq parse_keyseq(std::string s)
                 v.push_back(c);
             }
             else if (c == '{')
-            {
                 state = 2;
-                num = 0;
-            }
             // XXX Error handling
             break;
 
@@ -401,9 +397,9 @@ static void macro_add(macromap &mapref, keyseq key, keyseq action)
 /*
  * Remove a macro.
  */
-static void macro_del(macromap &mapref, keyseq key)
+static bool macro_del(macromap &mapref, keyseq key)
 {
-    mapref.erase(key);
+    return mapref.erase(key) != 0;
 }
 
 static void _register_expanded_keys(int num, bool reverse);
@@ -686,10 +682,10 @@ void macro_save()
             OUTS(Version::Long())); // nor the version string
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
-        char keybuf[30] = "K:";
+        char buf[30] = "K:";
         if (mc)
-            snprintf(keybuf, sizeof keybuf, "K%d:", mc);
-        write_map(f, Keymaps[mc], keybuf);
+            snprintf(buf, sizeof buf, "K%d:", mc);
+        write_map(f, Keymaps[mc], buf);
     }
 
     fprintf(f, "# Command Macros:\n");
@@ -819,9 +815,19 @@ void flush_input_buffer(int reason)
     }
 }
 
-static void _input_action_raw(keyseq* action)
+static std::string _macro_prompt_string(const std::string &macro_type)
 {
-    msgwin_prompt("Input macro action: ");
+    return make_stringf("Input %s action: ", macro_type.c_str());
+}
+
+static void _macro_prompt(const std::string &macro_type)
+{
+    msgwin_prompt(_macro_prompt_string(macro_type));
+}
+
+static void _input_action_raw(const std::string &macro_type, keyseq* action)
+{
+    _macro_prompt(macro_type);
     const int x = wherex();
     const int y = wherey();
     bool done = false;
@@ -854,11 +860,24 @@ static void _input_action_raw(keyseq* action)
     msgwin_reply(vtostr(*action));
 }
 
-static void _input_action_text(keyseq* action)
+static void _input_action_text(const std::string &macro_type, keyseq* action)
 {
     char buff[1024];
-    msgwin_get_line_autohist("Input macro action: ", buff, sizeof(buff));
+    msgwin_get_line_autohist(_macro_prompt_string(macro_type),
+                             buff, sizeof(buff));
     *action = parse_keyseq(buff);
+}
+
+static std::string _macro_type_name(bool keymap, KeymapContext keymc)
+{
+    return make_stringf("%s%s",
+                        keymap ? (keymc == KMC_DEFAULT    ? "default " :
+                                  keymc == KMC_LEVELMAP   ? "level-map " :
+                                  keymc == KMC_TARGETING  ? "targeting " :
+                                  keymc == KMC_CONFIRM    ? "confirm " :
+                                  keymc == KMC_MENU       ? "menu "
+                                  : "buggy") : "",
+                        (keymap ? "keymap" : "macro"));
 }
 
 void macro_add_query(void)
@@ -920,17 +939,10 @@ void macro_add_query(void)
 
     // reference to the appropriate mapping
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
-
-    std::string prompt = make_stringf("Input %s%s trigger key: ",
-         keymap ? (keymc == KMC_DEFAULT    ? "default " :
-                   keymc == KMC_LEVELMAP   ? "level-map " :
-                   keymc == KMC_TARGETING  ? "targeting " :
-                   keymc == KMC_CONFIRM    ? "confirm " :
-                   keymc == KMC_MENU       ? "menu "
-                                           : "buggy") : "",
-         (keymap ? "keymap" : "macro"));
-
-    msgwin_prompt(prompt);
+    const std::string macro_type = _macro_type_name(keymap, keymc);
+    const std::string trigger_prompt = make_stringf("Input %s trigger key: ",
+                                                    macro_type.c_str());
+    msgwin_prompt(trigger_prompt);
 
     keyseq key;
     mouse_control mc(MOUSE_MODE_MACRO);
@@ -938,7 +950,7 @@ void macro_add_query(void)
 
     msgwin_reply(vtostr(key));
 
-    if (mapref[key].size() > 0)
+    if (mapref.find(key) != mapref.end() && !mapref[key].empty())
     {
         std::string action = vtostr(mapref[key]);
         action = replace_all(action, "<", "<<");
@@ -950,12 +962,15 @@ void macro_add_query(void)
         input = tolower(input);
         if (input == 'a' || key_is_escape(input))
         {
-            mpr("Aborting.");
+            canned_msg(MSG_OK);
             return;
         }
         else if (input == 'c')
         {
-            mpr("Cleared.");
+            mprf("Cleared %s '%s' => '%s'.",
+                 macro_type.c_str(),
+                 vtostr(key).c_str(),
+                 vtostr(mapref[key]).c_str());
             macro_del(mapref, key);
             crawl_state.unsaved_macros = true;
             return;
@@ -964,14 +979,27 @@ void macro_add_query(void)
 
     keyseq action;
     if (raw)
-        _input_action_raw(&action);
+        _input_action_raw(macro_type, &action);
     else
-        _input_action_text(&action);
+        _input_action_text(macro_type, &action);
 
     if (action.empty())
-        macro_del(mapref, key);
+    {
+        const bool deleted_macro = macro_del(mapref, key);
+        if (deleted_macro)
+            mprf("Deleted %s for '%s'.",
+                 macro_type.c_str(),
+                 vtostr(key).c_str());
+        else
+            canned_msg(MSG_OK);
+    }
     else
+    {
         macro_add(mapref, key, action);
+        mprf("Created %s '%s' => '%s'.",
+             macro_type.c_str(),
+             vtostr(key).c_str(), vtostr(action).c_str());
+    }
 
     crawl_state.unsaved_macros = true;
     redraw_screen();

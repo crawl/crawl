@@ -56,6 +56,14 @@ dlua_chunk dlua_chunk::precompiled(const std::string &_chunk)
     return (dchunk);
 }
 
+std::string dlua_chunk::describe(const std::string &name) const
+{
+    if (chunk.empty())
+        return "";
+    return make_stringf("function %s()\n%s\nend\n",
+                        name.c_str(), chunk.c_str());
+}
+
 void dlua_chunk::write(writer& outf) const
 {
     if (empty())
@@ -163,7 +171,6 @@ int dlua_chunk::load(CLua &interp)
         lua_pop(interp, 2);
     }
     compiled = out.str();
-    chunk.clear();
     return (err);
 }
 

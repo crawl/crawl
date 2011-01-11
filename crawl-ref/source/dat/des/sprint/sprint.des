@@ -9,10 +9,9 @@
 ###############################################################################
 
 NAME:   dungeon_sprint_1
-TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 DESC:   Sprint I: "Red Sonja"
 ORIENT: encompass
-FLAGS:  no_rotate no_hmirror no_vmirror
 MARKER: L = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 5, \
              size = 4, walk_dist = 8, spread_rate= 33, \

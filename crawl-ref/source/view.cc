@@ -202,7 +202,7 @@ void update_monsters_in_view()
                 mpr(msgs[i], MSGCH_WARN);
         }
         else
-            mprf(MSGCH_WARN, "%d monsters comes into view.", size);
+            mprf(MSGCH_WARN, "%d monsters come into view.", size);
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever
@@ -779,8 +779,8 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
     cell->glyph  = ' ';
     cell->colour = DARKGREY;
 #ifdef USE_TILE
-    cell->tile_fg = 0;
-    cell->tile_bg = tileidx_out_of_bounds(you.where_are_you);
+    cell->tile.fg = 0;
+    cell->tile.bg = tileidx_out_of_bounds(you.where_are_you);
 #endif
 }
 
@@ -792,7 +792,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     cell->colour = g.col;
 
 #ifdef USE_TILE
-    tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
+    tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, gc);
 #endif
 }
 
@@ -814,10 +814,10 @@ static void _draw_player(screen_cell_t *cell,
         cell->colour |= COLFLAG_REVERSE;
 
 #ifdef USE_TILE
-    cell->tile_fg = env.tile_fg(ep) = tileidx_player();
-    cell->tile_bg = env.tile_bg(ep);
+    cell->tile.fg = env.tile_fg(ep) = tileidx_player();
+    cell->tile.bg = env.tile_bg(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
     UNUSED(anim_updates);
 #endif
@@ -832,10 +832,10 @@ static void _draw_los(screen_cell_t *cell,
     cell->colour = g.col;
 
 #ifdef USE_TILE
-    cell->tile_fg = env.tile_fg(ep);
-    cell->tile_bg = env.tile_bg(ep);
+    cell->tile.fg = env.tile_fg(ep);
+    cell->tile.bg = env.tile_bg(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
     UNUSED(anim_updates);
 #endif
@@ -865,6 +865,7 @@ void viewwindow(bool show_updates)
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
+
     if (show_updates)
         mcache.clear_nonref();
 #endif
@@ -910,6 +911,10 @@ void viewwindow(bool show_updates)
     const coord_def br = crawl_view.viewsz;
     for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
+#ifdef USE_TILE
+        cell->tile.clear();
+#endif
+
         // in grid coords
         const coord_def gc = view2grid(*ri);
         const coord_def ep = grid2show(gc);
@@ -964,19 +969,19 @@ void viewwindow(bool show_updates)
                 cell->colour = DARKGREY;
 #ifdef USE_TILE
                 if (you.see_cell(gc))
-                    cell->tile_bg |= TILE_FLAG_OOR;
+                    cell->tile.bg |= TILE_FLAG_OOR;
 #endif
             }
         }
 #ifdef USE_TILE
         // Grey out grids that cannot be reached due to beholders.
         else if (you.get_beholder(gc))
-            cell->tile_bg |= TILE_FLAG_OOR;
+            cell->tile.bg |= TILE_FLAG_OOR;
 
         else if (you.get_fearmonger(gc))
-            cell->tile_bg |= TILE_FLAG_OOR;
+            cell->tile.bg |= TILE_FLAG_OOR;
 
-        tile_apply_properties(gc, &cell->tile_fg, &cell->tile_bg);
+        tile_apply_properties(gc, cell->tile);
 #endif
 
         cell++;
@@ -992,7 +997,7 @@ void viewwindow(bool show_updates)
 #else
     tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
     tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
-    tiles.update_inventory();
+    tiles.update_tabs();
 #endif
 
     // Reset env.show if we munged it.

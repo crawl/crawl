@@ -186,7 +186,13 @@ bool dump_char(const std::string &fname, bool show_prices, bool full_id,
 
 static void _sdump_header(dump_params &par)
 {
-    par.text += " " CRAWL " version " + Version::Long();
+    std::string type = crawl_state.game_type_name();
+    if (type.empty())
+        type = CRAWL;
+    else
+        type += " DCSS";
+
+    par.text += " " + type + " version " + Version::Long();
     par.text += " character file.\n\n";
 }
 
@@ -836,7 +842,7 @@ static void _sdump_inventory(dump_params &par)
                 case OBJ_CORPSES:    text += "Carrion";         break;
 
                 default:
-                    DEBUGSTR("Bad item class");
+                    die("Bad item class");
                 }
                 text += "\n";
 
@@ -956,7 +962,8 @@ static void _sdump_spells(dump_params &par)
         SPTYP_EARTH,
         SPTYP_AIR,
         SPTYP_CONJURATION,
-        SPTYP_ENCHANTMENT,
+        SPTYP_HEXES,
+        SPTYP_CHARMS,
         SPTYP_DIVINATION,
         SPTYP_TRANSLOCATION,
         SPTYP_SUMMONING,
@@ -1073,7 +1080,6 @@ static void _sdump_kills(dump_params &par)
 static std::string _sdump_kills_place_info(PlaceInfo place_info,
                                           std::string name = "")
 {
-    PlaceInfo   gi = you.global_info;
     std::string out;
 
     if (name.empty())
@@ -1258,7 +1264,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
             {
                 if (you.pos() == coord_def(x, y))
                     fputc('@', fp);
-                else if (grd[x][y] == DNGN_FLOOR_SPECIAL)
+                else if (testbits(env.pgrid[x][y], FPROP_HIGHLIGHT))
                     fputc('?', fp);
                 else if (dist && grd[x][y] == DNGN_FLOOR
                          && travel_point_distance[x][y] > 0

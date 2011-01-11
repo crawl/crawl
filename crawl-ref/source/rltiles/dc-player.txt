@@ -117,6 +117,11 @@ cat2
 cat3
 cat4
 cat5
+cat6
+cat7
+cat8
+cat9
+cat10
 %sdir player/base
 %end_ctg
 
@@ -370,6 +375,7 @@ dragonsc_cyan DRAGONSC_CYAN
 dragonsc_brown DRAGONSC_BROWN
 dragonsc_blue DRAGONSC_BLUE
 dragonsc_gold DRAGONSC_GOLD
+dragonsc_pearl DRAGONSC_PEARL
 dragonarm_green DRAGONARM_GREEN
 dragonarm_white DRAGONARM_WHITE
 dragonarm_magenta DRAGONARM_MAGENTA
@@ -377,6 +383,7 @@ dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
 dragonarm_blue DRAGONARM_BLUE
 dragonarm_gold DRAGONARM_GOLD
+dragonarm_pearl DRAGONARM_PEARL
 
 aragorn ARAGORN
 aragorn2 ARAGORN2
@@ -975,4 +982,3 @@ drchead_purple PURPLE
 drchead_red RED
 drchead_white WHITE
 %end_ctg
-

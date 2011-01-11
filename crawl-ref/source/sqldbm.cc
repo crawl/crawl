@@ -80,10 +80,14 @@ int SQL_DBM::open(const std::string &s)
     if (!s.empty())
         dbfile = s;
 
-    if (!dbfile.empty())
+    if (dbfile.empty())
     {
-        if (dbfile.find(".db") != dbfile.length() - 3)
-            dbfile += ".db";
+        error = "No filename!";
+        return SQLITE_ERROR; // "... or missing database"
+    }
+
+    if (dbfile.find(".db") != dbfile.length() - 3)
+        dbfile += ".db";
 
 /*
 From SQLite's documentation:
@@ -97,30 +101,26 @@ From SQLite's documentation:
 ... which saves us a lot of trouble.
 */
 #ifdef ANCIENT_SQLITE
-        if (ec(sqlite3_open(
-                    dbfile.c_str(), &db
+    if (ec(sqlite3_open(
+                dbfile.c_str(), &db
 #else
-        if (ec(sqlite3_open_v2(
-                    dbfile.c_str(), &db,
-                    readonly? SQLITE_OPEN_READONLY :
-                    (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
-                    NULL
+    if (ec(sqlite3_open_v2(
+                dbfile.c_str(), &db,
+                readonly? SQLITE_OPEN_READONLY :
+                (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
+                NULL
 #endif
-                  )) != SQLITE_OK)
-        {
-            const std::string saveerr = error;
-            const int serrc = errc;
-            close();
-            error = saveerr;
-            errc  = serrc;
-            return (errc);
-        }
-
-        init_schema();
+              )) != SQLITE_OK)
+    {
+        const std::string saveerr = error;
+        const int serrc = errc;
+        close();
+        error = saveerr;
+        errc  = serrc;
+        return (errc);
     }
-    else
-        error = "No filename!";
 
+    init_schema();
     return (errc);
 }
 

@@ -9,6 +9,11 @@ struct glyph
 {
     wchar_t ch;
     unsigned short col; // XXX: real or unreal depending on context...
+
+    glyph(wchar_t _ch = ' ', unsigned short _col = LIGHTGREY)
+        : ch(_ch), col(_col)
+    {
+    }
 };
 
 std::string glyph_to_tagstr(const glyph& g);

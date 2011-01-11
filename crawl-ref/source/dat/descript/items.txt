@@ -493,7 +493,7 @@ A magical armour, made from the scales of a fire-breathing dragon. It provides g
 %%%%
 dragon hide
 
-The scaly skin of a dragon. It can be fashioned into proper armour, but even in its raw form it provides great protectiom from the effects of fire but renders its wearer susceptible to cold.
+The scaly skin of a dragon. It can be fashioned into proper armour, but even in its raw form it provides great protection from the effects of fire but renders its wearer susceptible to cold.
 %%%%
 eggplant
 
@@ -593,7 +593,7 @@ A magical armour, made from the scales of a cold-breathing dragon. It provides g
 %%%%
 ice dragon hide
 
-The scaly skin of a dragon. It can be fashioned into proper armour, but even in its raw form it provides great protectiom from the effects of cold but renders its wearer susceptible to fire.
+The scaly skin of a dragon. It can be fashioned into proper armour, but even in its raw form it provides great protection from the effects of cold but renders its wearer susceptible to fire.
 %%%%
 javelin
 
@@ -741,6 +741,14 @@ A pair of gloves.
 pear
 
 A delicious juicy fruit.
+%%%%
+pearl dragon armour
+
+A magical armour made from the light but strong and flexible scales of a pearl dragon. It provides its wearer with protection from negative energy.
+%%%%
+pearl dragon hide
+
+The scaly skin of a pearl dragon. It can be fashioned into proper armour, but even in its raw form it provides protection from negative energy to its wearer.
 %%%%
 piece of ambrosia
 

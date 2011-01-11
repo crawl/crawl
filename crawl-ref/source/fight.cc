@@ -508,7 +508,7 @@ void melee_attack::identify_mimic(actor *act)
 {
     if (act
         && act->atype() == ACT_MONSTER
-        && mons_is_mimic(act->id())
+        && mons_is_mimic(act->type)
         && you.can_see(act))
     {
         monster* mon = act->as_monster();
@@ -860,7 +860,7 @@ bool melee_attack::player_attack()
             if (blood > defender->stat_hp())
                 blood = defender->stat_hp();
 
-            bleed_onto_floor(where, defender->id(), blood, true);
+            bleed_onto_floor(where, defender->type, blood, true);
         }
 
         if (damage_done > 0 || !defender_visible && !shield_blocked)
@@ -1074,7 +1074,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         break;
 
     default:
-        ASSERT(false);
+        die("unknown aux attack type");
         break;
     }
 }
@@ -1433,10 +1433,10 @@ std::string melee_attack::attack_strength_punctuation()
 
 std::string melee_attack::evasion_margin_adverb()
 {
-    return((ev_margin <= -20) ? " completely" :
+    return (ev_margin <= -20) ? " completely" :
            (ev_margin <= -12) ? "" :
            (ev_margin <= -6)  ? " closely"
-                              : " barely");
+                              : " barely";
 }
 
 void melee_attack::player_announce_aux_hit()
@@ -2126,7 +2126,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
         && damage_done + special_damage > random2(defender->get_experience_level())
         && !defender->as_monster()->has_ench(ENCH_CONFUSION)
-        && mons_class_is_confusable(defender->id()))
+        && mons_class_is_confusable(defender->type))
     {
         if (defender->as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0,
             KC_YOU, 20+random2(30)))) // 1-3 turns
@@ -2652,7 +2652,7 @@ void melee_attack::chaos_affects_defender()
         break;
 
     default:
-        ASSERT(!"Invalid chaos effect type");
+        die("Invalid chaos effect type");
         break;
     }
 
@@ -2766,7 +2766,7 @@ void melee_attack::chaos_affects_attacker()
     if (weapon && one_chance_in(1000))
     {
         mprf("Smoke pours forth from %s!", wep_name(DESC_NOCAP_YOUR).c_str());
-        big_cloud(random_smoke_type(), KC_OTHER, attacker->pos(), 20,
+        big_cloud(random_smoke_type(), &you, attacker->pos(), 20,
                   4 + random2(8));
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,
@@ -3422,7 +3422,7 @@ bool melee_attack::apply_damage_brand()
         const int hdcheck =
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
-        if (mons_class_is_confusable(defender->id())
+        if (mons_class_is_confusable(defender->type)
             && hdcheck >= defender->get_experience_level())
         {
             // Declaring these just to pass to the enchant function.
@@ -3463,7 +3463,7 @@ bool melee_attack::apply_damage_brand()
             obvious_effect = true;
         }
         else if (defender->as_monster()->can_use_spells()
-                 && !mons_class_flag(defender->id(), M_FAKE_SPELLS))
+                 && !mons_class_flag(defender->type, M_FAKE_SPELLS))
         {
             defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                         attacker->kill_alignment(), // doesn't matter
@@ -3592,7 +3592,7 @@ bool melee_attack::chop_hydra_head(int dam,
             defender->as_monster()->number--;
 
             if (!defender->is_summoned())
-                bleed_onto_floor(defender->pos(), defender->id(),
+                bleed_onto_floor(defender->pos(), defender->type,
                                  defender->as_monster()->hit_points, true);
 
             defender->hurt(attacker, defender->as_monster()->hit_points);
@@ -3614,7 +3614,7 @@ bool melee_attack::chop_hydra_head(int dam,
             if (defender->holiness() == MH_NATURAL)
             {
                 unsigned int limit = 20;
-                if (defender->id() == MONS_LERNAEAN_HYDRA)
+                if (defender->type == MONS_LERNAEAN_HYDRA)
                     limit = 27;
 
                 if (wpn_brand == SPWPN_FLAMING)
@@ -3641,7 +3641,7 @@ bool melee_attack::decapitate_hydra(int dam, int damage_type)
 {
     if (defender->atype() == ACT_MONSTER
         && defender->as_monster()->has_hydra_multi_attack()
-        && defender->id() != MONS_SPECTRAL_THING)
+        && defender->type != MONS_SPECTRAL_THING)
     {
         const int dam_type = (damage_type != -1) ? damage_type
                                                  : attacker->damage_type();
@@ -3654,7 +3654,7 @@ bool melee_attack::decapitate_hydra(int dam, int damage_type)
 
 void melee_attack::player_sustain_passive_damage()
 {
-    if (mons_class_flag(defender->id(), M_ACID_SPLASH))
+    if (mons_class_flag(defender->type, M_ACID_SPLASH))
         weapon_acid(5);
 }
 
@@ -4353,9 +4353,9 @@ bool melee_attack::mons_attack_mons()
 
 bool melee_attack::mons_self_destructs()
 {
-    if (attacker->id() == MONS_GIANT_SPORE
-        || attacker->id() == MONS_BALL_LIGHTNING
-        || attacker->id() == MONS_ORB_OF_DESTRUCTION)
+    if (attacker->type == MONS_GIANT_SPORE
+        || attacker->type == MONS_BALL_LIGHTNING
+        || attacker->type == MONS_ORB_OF_DESTRUCTION)
     {
         attacker->as_monster()->hit_points = -1;
         // Do the explosion right now.
@@ -4552,11 +4552,11 @@ static const char *klown_attack[] =
 
 std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 {
-    if (attacker->id() == MONS_KILLER_KLOWN && attk.type == AT_HIT)
+    if (attacker->type == MONS_KILLER_KLOWN && attk.type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
-    if ((attacker->id() == MONS_KRAKEN_TENTACLE
-           || attacker->id() == MONS_ELDRITCH_TENTACLE)
+    if ((attacker->type == MONS_KRAKEN_TENTACLE
+           || attacker->type == MONS_ELDRITCH_TENTACLE)
          && attk.type == AT_TENTACLE_SLAP)
         return ("slap");
 
@@ -4607,7 +4607,7 @@ std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
                 result += " from afar";
         }
 
-        if (attacker->id() != MONS_DANCING_WEAPON)
+        if (attacker->type != MONS_DANCING_WEAPON)
         {
             result += " with ";
             result += weapon->name(DESC_NOCAP_A);
@@ -4737,11 +4737,11 @@ void melee_attack::wasp_paralyse_defender()
 {
     // [dshaligram] Adopted 4.1.2's wasp mechanics, in slightly modified
     // form.
-    if (attacker->id() == MONS_RED_WASP || one_chance_in(3))
+    if (attacker->type == MONS_RED_WASP || one_chance_in(3))
         defender->poison(attacker, coinflip() ? 2 : 1);
 
     int paralyse_roll = (damage_done > 4 ? 3 : 20);
-    if (attacker->id() == MONS_YELLOW_WASP)
+    if (attacker->type == MONS_YELLOW_WASP)
         paralyse_roll += 3;
 
     if (defender->res_poison() <= 0)
@@ -4996,7 +4996,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_FIRE:
-        if (attacker->id() == MONS_FIRE_VORTEX)
+        if (attacker->type == MONS_FIRE_VORTEX)
             attacker->as_monster()->hit_points = -10;
 
         special_damage =
@@ -5172,7 +5172,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_ACID:
-        if (attacker->id() == MONS_SPINY_WORM && defender->res_poison() <= 0)
+        if (attacker->type == MONS_SPINY_WORM && defender->res_poison() <= 0)
             defender->poison(attacker, 2 + random2(4));
         splash_defender_with_acid(3);
         break;
@@ -5567,11 +5567,11 @@ void melee_attack::mons_perform_attack_rounds()
             case AT_NONE:
             case AT_RANDOM:
             case AT_SHOOT:
-                DEBUGSTR("Invalid attack flavour for noise_factor");
+                die("Invalid attack flavour for noise_factor");
                 break;
 
             default:
-                DEBUGSTR("Unhandled attack flavour for noise_factor");
+                die("Unhandled attack flavour for noise_factor");
                 break;
             }
 
@@ -5744,7 +5744,7 @@ void melee_attack::mons_perform_attack_rounds()
                 if (blood > defender->stat_hp())
                     blood = defender->stat_hp();
 
-                bleed_onto_floor(pos, defender->id(), blood, true);
+                bleed_onto_floor(pos, defender->type, blood, true);
             }
 
             if (decapitate_hydra(damage_done,
@@ -5932,7 +5932,7 @@ bool melee_attack::mons_attack_you()
 
 int melee_attack::mons_to_hit()
 {
-    const int hd_mult = mons_class_flag(attacker->id(), M_FIGHTER)? 25 : 15;
+    const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER)? 25 : 15;
     int mhit = 18 + attacker->get_experience_level() * hd_mult / 10;
 
 #ifdef DEBUG_DIAGNOSTICS

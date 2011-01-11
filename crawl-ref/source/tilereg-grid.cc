@@ -12,7 +12,7 @@
 
 #include "libutil.h"
 #include "random.h"
-#include "tiledef-main.h"
+#include "tiledef-icons.h"
 #include "tilefont.h"
 
 InventoryTile::InventoryTile()
@@ -53,7 +53,12 @@ void GridRegion::clear()
 
 void GridRegion::on_resize()
 {
-    delete[] m_flavour;
+    if (m_flavour)
+    {
+        delete[] m_flavour;
+        m_flavour = NULL;
+    }
+
     if (mx * my <= 0)
         return;
 
@@ -129,13 +134,14 @@ bool GridRegion::place_cursor(MouseEvent &event, unsigned int &item_idx)
     return (true);
 }
 
-void GridRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
+void GridRegion::add_quad_char(char c, int x, int y,
+                               int ofs_x, int ofs_y, bool outline)
 {
     int num = c - '0';
     ASSERT(num >= 0 && num <= 9);
-    tileidx_t idx = TILE_NUM0 + num;
+    tileidx_t idx = (outline ? TILEI_NUM0_OUTLINE : TILEI_NUM0) + num;
 
-    m_buf.add_main_tile(idx, x, y, ofs_x, ofs_y);
+    m_buf.add_icons_tile(idx, x, y, ofs_x, ofs_y);
 }
 
 void GridRegion::render()
@@ -160,7 +166,7 @@ void GridRegion::render()
     draw_tag();
 }
 
-void GridRegion::draw_number(int x, int y, int num)
+void GridRegion::draw_number(int x, int y, int num, bool outline)
 {
     // If you have that many, who cares.
     if (num > 999)
@@ -176,19 +182,19 @@ void GridRegion::draw_number(int x, int y, int num)
 
     if (c100)
     {
-        add_quad_char('0' + c100, x, y, offset_x, offset_y);
+        add_quad_char('0' + c100, x, y, offset_x, offset_y, outline);
         offset_x += offset_amount;
     }
 
     int c10 = help/10;
     if (c10 || c100)
     {
-        add_quad_char('0' + c10, x, y, offset_x, offset_y);
+        add_quad_char('0' + c10, x, y, offset_x, offset_y, outline);
         offset_x += offset_amount;
     }
 
     int c1 = help % 10;
-    add_quad_char('0' + c1, x, y, offset_x, offset_y);
+    add_quad_char('0' + c1, x, y, offset_x, offset_y, outline);
 }
 
 #endif

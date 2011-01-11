@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 
 #include "skills2.h"
-#include "skills_menu.h"
 
 #include <algorithm>
 #include <cmath>
@@ -25,12 +24,13 @@
 #include "fight.h"
 #include "godabil.h"
 #include "itemprop.h"
+#include "options.h"
 #include "player.h"
 #include "species.h"
 #include "skills.h"
 #include "stuff.h"
+#include "tilepick.h"
 #include "tilereg-crt.h"
-#include "hints.h"
 
 
 typedef std::string (*string_fn)();
@@ -75,7 +75,7 @@ typedef skill_title_key_t stk;
 // intended for cases where things might be really awkward without it. -- bwr
 
 // NOTE: If a skill name is changed, remember to also adapt the database entry.
-const char *skills[50][6] =
+const char *skills[NUM_SKILLS][6] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
     {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},
@@ -98,17 +98,10 @@ const char *skills[50][6] =
     // STR based fighters, for DEX/martial arts titles see below.  Felids get their own cathegory, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
     {"Conjurations",   "Ruinous",       "Conjurer",        "Destroyer",       "Devastator",     "Annihilator"},
-    {"Enchantments",   "Charm-Maker",   "Infuser",         "Bewitcher",       "Enchanter",      "Spellbinder"},
+    {"Hexes",          "Vexing",        "Jinx",            "Bewitcher",       "Maledictor",     "Spellbinder"},
+    {"Charms",         "Charmer",       "Infuser",         "Anointer",        "Gracecrafter",   "Miracle Worker"},
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},
@@ -124,17 +117,6 @@ const char *skills[50][6] =
     // use the god titles instead, depending on piety or, in Xom's case, mood.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate"},
     {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},
-
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL}
 };
 
 const char *martial_arts_titles[6] =
@@ -181,40 +163,6 @@ JOB_PALADIN:
 
 ************************************************************* */
 
-static const skill_type skill_display_order[] =
-{
-    SK_TITLE,
-    SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES,
-    SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,
-
-    SK_BLANK_LINE,
-
-    SK_BOWS, SK_CROSSBOWS, SK_THROWING, SK_SLINGS,
-
-    SK_BLANK_LINE,
-
-    SK_ARMOUR, SK_DODGING, SK_STEALTH, SK_SHIELDS,
-
-    SK_COLUMN_BREAK, SK_TITLE,
-
-    SK_STABBING, SK_TRAPS_DOORS,
-
-    SK_BLANK_LINE,
-
-    SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS, SK_SUMMONINGS,
-    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
-    SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_POISON_MAGIC,
-
-    SK_BLANK_LINE,
-
-    SK_INVOCATIONS, SK_EVOCATIONS,
-
-    SK_COLUMN_BREAK,
-};
-
-static const int ndisplayed_skills =
-            sizeof(skill_display_order) / sizeof(*skill_display_order);
-
 int get_skill_percentage(const skill_type x)
 {
     const int needed = skill_exp_needed(you.skills[x] + 1, x);
@@ -242,23 +190,43 @@ static void _add_item(TextItem* item, MenuObject* mo, const int size,
     coord.x += size + 1;
 }
 
-#define NAME_SIZE 19
+menu_letter SkillMenuEntry::m_letter;
+SkillMenu* SkillMenuEntry::m_skm;
+
+#define NAME_SIZE 20
 #define LEVEL_SIZE 4
 #define PROGRESS_SIZE 6
 #define APTITUDE_SIZE 5
 SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
 {
-    m_name = new TextItem();
-    _add_item(m_name, ff, NAME_SIZE, coord);
-    m_name->set_highlight_colour(BROWN);
+#ifdef USE_TILE
+    if (is_set(SKMF_SKILL_ICONS))
+    {
+        m_name_tile = new TextTileItem();
+        m_name = m_name_tile;
+    }
+    else
+#endif
+        m_name = new TextItem();
 
     m_level = new NoSelectTextItem();
-    _add_item(m_level, ff, LEVEL_SIZE, coord);
-
     m_progress = new NoSelectTextItem();
-    _add_item(m_progress, ff, PROGRESS_SIZE, coord);
-
     m_aptitude = new FormattedTextItem();
+
+#ifdef USE_TILE
+    if (is_set(SKMF_SKILL_ICONS))
+    {
+        m_level->set_tile_height();
+        m_progress->set_tile_height();
+        m_aptitude->set_tile_height();
+    }
+#endif
+
+    _add_item(m_name, ff, NAME_SIZE + (is_set(SKMF_SKILL_ICONS) ? 4 : 0),
+              coord);
+    m_name->set_highlight_colour(RED);
+    _add_item(m_level, ff, LEVEL_SIZE, coord);
+    _add_item(m_progress, ff, PROGRESS_SIZE, coord);
     _add_item(m_aptitude, ff, APTITUDE_SIZE, coord);
 }
 
@@ -279,7 +247,7 @@ void SkillMenuEntry::set_skill(skill_type sk)
     }
 }
 
-skill_type SkillMenuEntry::get_skill()
+skill_type SkillMenuEntry::get_skill() const
 {
     return m_sk;
 }
@@ -292,7 +260,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     if (!keep_hotkey)
         m_name->clear_hotkeys();
 
-    if (_is_selectable())
+    if (is_selectable())
     {
         if (!keep_hotkey)
             m_name->add_hotkey(++m_letter);
@@ -308,11 +276,23 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     m_name->set_text(make_stringf("%s %-15s", _get_prefix().c_str(),
                                 skill_name(m_sk)));
     m_name->set_fg_colour(_get_colour());
+#ifdef USE_TILE
+    if (is_set(SKMF_SKILL_ICONS))
+    {
+        m_name_tile->clear_tile();
+        m_name_tile->add_tile(tile_def(tileidx_skill(m_sk,
+                                                     _get_colour() != DARKGRAY),
+                                       TEX_GUI));
+    }
+#endif
     _set_level();
 }
 
 void SkillMenuEntry::set_display()
 {
+    if (m_sk == SK_TITLE)
+        _set_title();
+
     if (is_invalid_skill(m_sk))
         return;
 
@@ -338,48 +318,7 @@ bool SkillMenuEntry::is_set(int flag) const
     return m_skm->is_set(flag);
 }
 
-COLORS SkillMenuEntry::_get_colour() const
-{
-    int ct_bonus = crosstrain_bonus(m_sk);
-
-    if (is_set(SKMF_DO_PRACTISE) && you.practise_skill[m_sk] == 0
-        || is_set(SKMF_DO_SHOW_DESC))
-        return(DARKGREY);
-    else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
-                                        || m_sk == you.transfer_to_skill))
-    {
-        return(GREEN);
-    }
-    else if (is_set(SKMF_DO_RESKILL_TO) && m_sk == you.transfer_from_skill)
-        return(WHITE);
-    else if (you.skills[m_sk] == 27)
-        return(YELLOW);
-    else if (you.practise_skill[m_sk] == 0 || you.skills[m_sk] == 0)
-        return(DARKGREY);
-    else if (ct_bonus > 1 && is_set(SKMF_DISP_APTITUDE))
-        return(LIGHTBLUE);
-    else if (is_antitrained(m_sk) && is_set(SKMF_DISP_APTITUDE))
-        return(MAGENTA);
-    else
-        return(LIGHTGREY);
-}
-
-std::string SkillMenuEntry::_get_prefix()
-{
-    int letter;
-    const std::vector<int> hotkeys = m_name->get_hotkeys();
-
-    if (hotkeys.size())
-        letter = hotkeys[0];
-    else
-        letter = ' ';
-
-    const int sign = (you.skills[m_sk] == 0 || you.skills[m_sk] == 27) ? ' '
-                                    : (you.practise_skill[m_sk]) ? '+' : '-';
-    return make_stringf("%c %c", letter, sign);
-}
-
-bool SkillMenuEntry::_is_selectable() const
+bool SkillMenuEntry::is_selectable() const
 {
     if (is_invalid_skill(m_sk))
         return false;
@@ -402,6 +341,57 @@ bool SkillMenuEntry::_is_selectable() const
     return true;
 }
 
+TextItem* SkillMenuEntry::get_name_item() const
+{
+    return m_name;
+}
+
+COLORS SkillMenuEntry::_get_colour() const
+{
+    int ct_bonus = crosstrain_bonus(m_sk);
+
+    if (is_set(SKMF_DO_SHOW_DESC))
+        return DARKGREY;
+    else if (is_set(SKMF_DO_RESKILL_TO) && m_sk == you.transfer_from_skill)
+        return WHITE;
+    else if (you.practise_skill[m_sk] == 0 && you.skills[m_sk] < 27)
+        return DARKGREY;
+    else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
+                                        || m_sk == you.transfer_to_skill))
+    {
+        return GREEN;
+    }
+    else if (you.skills[m_sk] == 27)
+        return YELLOW;
+    else if (you.skills[m_sk] == 0)
+        return DARKGREY;
+    else if (ct_bonus > 1 && is_set(SKMF_DISP_APTITUDE))
+        return LIGHTBLUE;
+    else if (is_antitrained(m_sk) && is_set(SKMF_DISP_APTITUDE))
+        return MAGENTA;
+    else
+        return LIGHTGREY;
+}
+
+std::string SkillMenuEntry::_get_prefix()
+{
+    int letter;
+    const std::vector<int> hotkeys = m_name->get_hotkeys();
+
+    if (hotkeys.size())
+        letter = hotkeys[0];
+    else
+        letter = ' ';
+
+    const int sign = (you.skills[m_sk] == 0 || you.skills[m_sk] == 27) ? ' '
+                                    : (you.practise_skill[m_sk]) ? '+' : '-';
+#ifdef USE_TILE
+    return make_stringf(" %c %c", letter, sign);
+#else
+    return make_stringf("%c %c", letter, sign);
+#endif
+}
+
 void SkillMenuEntry::_set_level()
 {
     m_level->set_text(make_stringf("%2d", you.skills[m_sk]));
@@ -410,12 +400,14 @@ void SkillMenuEntry::_set_level()
 
 void SkillMenuEntry::_set_progress()
 {
-    if (you.skills[m_sk] == 27)
+    if (you.skills[m_sk] == 27 || you.skills[m_sk] == 0)
         m_progress->set_text("");
     else
+    {
         m_progress->set_text(make_stringf("(%2d%%)",
                                           get_skill_percentage(m_sk)));
-        m_progress->set_fg_colour(CYAN);
+    }
+    m_progress->set_fg_colour(CYAN);
 }
 
 void SkillMenuEntry::_set_aptitude()
@@ -494,7 +486,7 @@ void SkillMenuEntry::_set_new_level()
         m_progress->set_fg_colour(GREEN);
     }
 
-    if (_is_selectable() || m_sk == you.transfer_from_skill)
+    if (is_selectable() || m_sk == you.transfer_from_skill)
         m_progress->set_text(make_stringf("-> %2d", new_level));
     else
         m_progress->set_text("");
@@ -534,6 +526,10 @@ void SkillMenuEntry::_clear()
     m_name->set_id(-1);
     m_name->clear_hotkeys();
     m_name->allow_highlight(false);
+#ifdef USE_TILE
+    if (is_set(SKMF_SKILL_ICONS))
+        m_name_tile->clear_tile();
+#endif
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -544,45 +540,69 @@ void SkillMenuEntry::_set_points()
 }
 #endif
 
-#define SCREEN_COL          80
-#define SCREEN_LINES        24
+#define MIN_COLS            78
+#define MIN_LINES           24
+#define TILES_COL            6
 #define CURRENT_ACTION_SIZE 24
 #define NEXT_ACTION_SIZE    15
 #define NEXT_DISPLAY_SIZE   18
 #define SHOW_ALL_SIZE       16
 SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
-    m_crosstrain(false), m_antitrain(false), m_disp_queue()
+    m_min_coord(), m_max_coord(), m_disp_queue()
 {
     SkillMenuEntry::m_skm = this;
 
-    m_start_col = (get_number_of_cols() - SCREEN_COL) / 2 + 3;
-    m_start_ln = (get_number_of_lines() - SCREEN_LINES) / 2 + 1;
+#ifdef USE_TILE
+    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 702)
+        set_flag(SKMF_SKILL_ICONS);
+#endif
 
-    m_end_col = SCREEN_COL + m_start_col;
-    m_end_ln = SCREEN_LINES + m_start_ln;
+    m_min_coord.x = 2;
+    m_min_coord.y = 1;
+
+    m_max_coord.x = MIN_COLS + 1;
+    m_max_coord.y = MIN_LINES + 1;
 
     m_ff = new MenuFreeform();
-    m_ff->init(coord_def(m_start_col, m_start_ln),
-               coord_def(m_end_col, m_end_ln), "freeform");
+    m_help = new FormattedTextItem();
+#ifdef USE_TILE
+    if (is_set(SKMF_SKILL_ICONS))
+    {
+        m_ff->set_tile_height();
+        m_max_coord.x += 2 * TILES_COL;
+    }
+#endif
+    m_ff->init(m_min_coord, m_max_coord, "freeform");
     attach_object(m_ff);
     set_active_object(m_ff);
 
     _init_title();
-    for (int ln = 0; ln < SK_ARR_LN; ++ln)
-        for (int col = 0; col < SK_ARR_COL; ++col)
+    const int col_split = MIN_COLS / 2
+                          + (is_set(SKMF_SKILL_ICONS) ? TILES_COL : 0);
+    for (int col = 0; col < SK_ARR_COL; ++col)
+        for (int ln = 0; ln < SK_ARR_LN; ++ln)
         {
-            m_skills[ln][col] = SkillMenuEntry(coord_def(m_start_col + 40*col,
-                                                         m_start_ln + 1 + ln),
+            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x
+                                                         + col_split * col,
+                                                         m_min_coord.y + 1 + ln),
                                                m_ff);
         }
 
-    m_help = new FormattedTextItem();
-    m_help->set_bounds(coord_def(m_start_col, m_end_ln - 3),
-                       coord_def(m_end_col, m_end_ln - 1));
+    coord_def help_min_coord(m_min_coord.x, 0);
+    help_min_coord.y = (m_min_coord.y + SK_ARR_LN + 2);
+#ifdef USE_TILE
+    if (is_set(SKMF_SKILL_ICONS))
+    {
+        --help_min_coord.y;
+        help_min_coord.y = tiles.to_lines(help_min_coord.y);
+    }
+#endif
+    m_help->set_bounds(help_min_coord,
+                       coord_def(m_max_coord.x, help_min_coord.y + 2));
     m_ff->attach_item(m_help);
 
     _init_disp_queue();
-    _init_footer();
+    _init_footer(coord_def(help_min_coord.x, help_min_coord.y + 2));
 
     _set_title();
     _set_skills();
@@ -607,23 +627,41 @@ bool SkillMenu::is_set(int flag) const
     return (m_flags & flag);
 }
 
+void SkillMenu::set_flag(int flag)
+{
+    m_flags |= flag;
+}
+
+void SkillMenu::clear_flag(int flag)
+{
+    m_flags &= ~flag;
+}
+
+void SkillMenu::toggle_flag(int flag)
+{
+    m_flags ^= flag;
+}
+
 void SkillMenu::change_action()
 {
     const int new_action = _get_next_action();
-    m_flags &= ~SKMF_ACTION_MASK;
-    m_flags |= new_action;
+    clear_flag(SKMF_ACTION_MASK);
+    set_flag(new_action);
     _set_help(new_action);
     _refresh_names();
     _set_footer();
-    if (!m_ff->get_active_item()->can_be_highlighted())
-        m_ff->activate_first_item();
+    if (m_ff->get_active_item() != NULL
+        && !m_ff->get_active_item()->can_be_highlighted())
+    {
+        m_ff->activate_default_item();
+    }
 }
 
 void SkillMenu::change_display()
 {
     const int new_disp = _get_next_display();
-    m_flags &= ~SKMF_DISP_MASK;
-    m_flags |= new_disp;
+    clear_flag(SKMF_DISP_MASK);
+    set_flag(new_disp);
     m_disp_queue.pop();
     m_disp_queue.push(new_disp);
     _set_help(new_disp);
@@ -631,10 +669,26 @@ void SkillMenu::change_display()
     _set_footer();
 }
 
-void SkillMenu::toggle_practise(skill_type sk)
+void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
     you.practise_skill[sk] = !you.practise_skill[sk];
-    _refresh_name(sk);
+    SkillMenuEntry* skme = _find_entry(sk);
+    skme->set_name(true);
+    const std::vector<int> hotkeys = skme->get_name_item()->get_hotkeys();
+
+    if (hotkeys.size())
+    {
+        int letter;
+        letter = hotkeys[0];
+        MenuItem* next_item = m_ff->find_item_by_hotkey(++letter);
+        if (next_item != NULL)
+        {
+            if (m_ff->get_active_item() != NULL && keyn == CK_ENTER)
+                m_ff->set_active_item(next_item);
+            else
+                m_ff->set_default_item(next_item);
+        }
+    }
 }
 
 void SkillMenu::show_description(skill_type sk)
@@ -648,7 +702,7 @@ void SkillMenu::show_description(skill_type sk)
 
 void SkillMenu::toggle_show_all()
 {
-    m_flags ^= SKMF_DISP_ALL;
+    toggle_flag(SKMF_DISP_ALL);
     _set_skills();
     _set_help(m_current_help);
     _set_footer();
@@ -669,6 +723,16 @@ void SkillMenu::set_antitrain()
     m_antitrain = true;
 }
 
+SkillMenuEntry* SkillMenu::_find_entry(skill_type sk)
+{
+    for (int col = 0; col < SK_ARR_COL; ++col)
+        for (int ln = 0; ln < SK_ARR_LN; ++ln)
+            if (m_skills[ln][col].get_skill() == sk)
+                return &m_skills[ln][col];
+
+    return NULL;
+}
+
 void SkillMenu::_init_disp_queue()
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -686,60 +750,62 @@ void SkillMenu::_init_disp_queue()
 void SkillMenu::_init_title()
 {
     m_title = new NoSelectTextItem();
-    m_title->set_bounds(coord_def(m_start_col, m_start_ln),
-                        coord_def(m_end_col, m_start_ln + 1));
+    m_title->set_bounds(m_min_coord,
+                        coord_def(m_max_coord.x, m_min_coord.y + 1));
     m_title->set_fg_colour(WHITE);
     m_ff->attach_item(m_title);
     m_title->set_visible(true);
 }
 
-void SkillMenu::_init_footer()
+void SkillMenu::_init_footer(coord_def coord)
 {
-    coord_def coord(m_start_col, m_end_ln - 1);
     m_current_action = new NoSelectTextItem();
+    m_next_action = new TextItem();
+    m_next_display = new TextItem();
+    m_show_all = new TextItem();
+
     _add_item(m_current_action, m_ff, CURRENT_ACTION_SIZE, coord);
     m_current_action->set_fg_colour(WHITE);
 
-    m_next_action = new TextItem();
     _add_item(m_next_action, m_ff, NEXT_ACTION_SIZE, coord);
-    m_next_action->set_highlight_colour(BROWN);
+    m_next_action->set_highlight_colour(RED);
     m_next_action->set_fg_colour(WHITE);
     m_next_action->add_hotkey('?');
     m_next_action->set_id(-2);
 
     if (m_disp_queue.size() > 1)
     {
-        m_next_display = new TextItem();
         _add_item(m_next_display, m_ff, NEXT_DISPLAY_SIZE, coord);
-        m_next_display->set_highlight_colour(BROWN);
+        m_next_display->set_highlight_colour(RED);
         m_next_display->set_fg_colour(WHITE);
         m_next_display->add_hotkey('!');
         m_next_display->set_id(-3);
     }
 
-    m_show_all = new TextItem();
     _add_item(m_show_all, m_ff, SHOW_ALL_SIZE, coord);
-    m_show_all->set_highlight_colour(BROWN);
+    m_show_all->set_highlight_colour(RED);
     m_show_all->set_fg_colour(WHITE);
     m_show_all->add_hotkey('*');
     m_show_all->set_id(-4);
 
 }
 
-void SkillMenu::_refresh_name(skill_type sk)
-{
-    for (int col = 0; col < SK_ARR_COL; ++col)
-        for (int ln = 0; ln < SK_ARR_LN; ++ln)
-            if (m_skills[ln][col].get_skill() == sk)
-                m_skills[ln][col].set_name(true);
-}
-
 void SkillMenu::_refresh_names()
 {
     SkillMenuEntry::m_letter = 'Z';
+    bool default_set = false;
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
-                m_skills[ln][col].set_name(false);
+        {
+            SkillMenuEntry& skme = m_skills[ln][col];
+            if (!default_set && skme.is_selectable())
+            {
+                m_ff->set_default_item(skme.get_name_item());
+                default_set = true;
+            }
+            skme.set_name(false);
+        }
+    _set_links();
 }
 
 void SkillMenu::_refresh_display()
@@ -787,12 +853,14 @@ void SkillMenu::_set_skills()
     SkillMenuEntry::m_letter = 'Z';
     m_crosstrain = false;
     m_antitrain = false;
+    bool default_set = false;
 
     int col = 0, ln = 0;
 
     for (int i = 0; i < ndisplayed_skills; ++i)
     {
         skill_type sk = skill_display_order[i];
+        SkillMenuEntry& skme = m_skills[ln][col];
 
         if (sk == SK_COLUMN_BREAK)
         {
@@ -810,17 +878,21 @@ void SkillMenu::_set_skills()
         {
             continue;
         }
-        else if (sk == SK_TITLE)
-            m_skills[ln][col].set_skill(sk);
         else
         {
-            m_skills[ln][col].set_skill(sk);
-            if (previous_active == -1)
-                previous_active = m_skills[ln][col].get_id();
+            skme.set_skill(sk);
+            if (!default_set && skme.is_selectable())
+            {
+                m_ff->set_default_item(skme.get_name_item());
+                default_set = true;
+            }
         }
         ++ln;
     }
-    m_ff->set_active_item(previous_active);
+    if (previous_active != -1)
+        m_ff->set_active_item(previous_active);
+
+    _set_links();
 }
 
 void SkillMenu::_set_help(int flag)
@@ -863,7 +935,7 @@ void SkillMenu::_set_help(int flag)
         if (flag == SKMF_DISP_PROGRESS || !m_crosstrain && !m_antitrain)
         {
             help = "The percentage of the progress done before reaching next "
-                   "level is in <cyan>cyan</cyan>.   ";
+                   "level is in <cyan>cyan</cyan>.\n";
         }
         help += "The species aptitude is in <red>red</red>. ";
         if (flag == SKMF_DISP_APTITUDE)
@@ -957,6 +1029,66 @@ void SkillMenu::_set_footer()
     m_show_all->set_text(make_stringf("[*:%-12s]", text.c_str()));
 }
 
+TextItem* SkillMenu::_find_closest_selectable(int start_ln, int col)
+{
+    int delta = 0;
+    while (1)
+    {
+        int ln_up = std::max(0, start_ln - delta);
+        int ln_down = std::min(SK_ARR_LN, start_ln + delta);
+        if (m_skills[ln_up][col].is_selectable())
+            return m_skills[ln_up][col].get_name_item();
+        else if (m_skills[ln_down][col].is_selectable())
+            return m_skills[ln_down][col].get_name_item();
+        else if (ln_up == 0 && ln_down == SK_ARR_LN)
+            return NULL;
+
+        ++delta;
+    }
+}
+
+void SkillMenu::_set_links()
+{
+    TextItem* top_left = NULL;
+    TextItem* top_right = NULL;
+    TextItem* bottom_left = NULL;
+    TextItem* bottom_right = NULL;
+
+    for (int ln = 0; ln < SK_ARR_LN; ++ln)
+    {
+        if (m_skills[ln][0].is_selectable())
+        {
+            TextItem* left = m_skills[ln][0].get_name_item();
+            left->set_link_up(NULL);
+            left->set_link_down(NULL);
+            left->set_link_right(_find_closest_selectable(ln, 1));
+            if (top_left == NULL)
+                top_left = left;
+            bottom_left = left;
+        }
+        if (m_skills[ln][1].is_selectable())
+        {
+            TextItem* right = m_skills[ln][1].get_name_item();
+            right->set_link_up(NULL);
+            right->set_link_down(NULL);
+            right->set_link_left(_find_closest_selectable(ln, 0));
+            if (top_right == NULL)
+                top_right = right;
+            bottom_right = right;
+        }
+    }
+    if (top_left != NULL)
+    {
+        top_left->set_link_up(bottom_right);
+        bottom_left->set_link_down(top_right);
+    }
+    if (top_right != NULL)
+    {
+        top_right->set_link_up(bottom_left);
+        bottom_right->set_link_down(top_left);
+    }
+}
+
 int SkillMenu::_get_next_action() const
 {
     if (is_set(SKMF_DO_PRACTISE))
@@ -977,6 +1109,16 @@ int SkillMenu::_get_next_display() const
 
 void skill_menu(bool reskilling)
 {
+#ifndef USE_TILE
+    if (get_number_of_lines() < MIN_LINES || get_number_of_cols() < MIN_COLS)
+    {
+        mprf(MSGCH_ERROR, "Terminal too small (%d, %d) to display the skill "
+             "menu; need at least (%d, %d).", get_number_of_cols(),
+             get_number_of_lines(), MIN_COLS, MIN_LINES);
+        return;
+    }
+#endif
+
     int flags = SKMF_NONE;
 
     if (reskilling)
@@ -1022,6 +1164,11 @@ void skill_menu(bool reskilling)
             case CK_DOWN:
             case CK_LEFT:
             case CK_RIGHT:
+            case CK_ENTER:
+            case 1004:
+            case 1002:
+            case 1008:
+            case 1006:
                 continue;
             default:
                 return;
@@ -1051,7 +1198,7 @@ void skill_menu(bool reskilling)
                 ASSERT(!is_invalid_skill(sk));
 
                 if (skm.is_set(SKMF_DO_PRACTISE))
-                    skm.toggle_practise(sk);
+                    skm.toggle_practise(sk, keyn);
                 else if (skm.is_set(SKMF_DO_SHOW_DESC))
                     skm.show_description(sk);
                 else if (skm.is_set(SKMF_DO_RESKILL_FROM))
@@ -1525,7 +1672,7 @@ bool crosstrain_other(skill_type sk, bool show_zero)
 
     for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
         if (you.skills[crosstrain_skills[i]] < you.skills[sk]
-            && (you.skills[crosstrain_skills[i]] != 0 || show_zero))
+            && (you.skills[crosstrain_skills[i]] > 0 || show_zero))
         {
             return true;
         }
@@ -1554,7 +1701,7 @@ bool is_antitrained(skill_type sk)
     return (you.skills[sk] < you.skills[opposite]
             || you.skills[sk] == you.skills[opposite]
                && you.skill_order[sk] > you.skill_order[opposite]
-               && you.skills[sk] != 0);
+               && you.skills[sk] > 0);
 }
 
 bool antitrain_other(skill_type sk, bool show_zero)
@@ -1563,7 +1710,7 @@ bool antitrain_other(skill_type sk, bool show_zero)
     if (opposite == SK_NONE)
         return false;
 
-    return ((you.skills[opposite] != 0 || show_zero)
+    return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
             && (you.skills[sk] > you.skills[opposite]
                 || you.skills[sk] == you.skills[opposite]
                    && you.skill_order[sk] < you.skill_order[opposite]));
@@ -1684,6 +1831,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     int tsk_points = you.skill_points[tsk];
     int fsk_ct_points = you.ct_skill_points[fsk];
     int tsk_ct_points = you.ct_skill_points[tsk];
+    int total_skill_points = you.total_skill_points;
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!simu && you.ct_skill_points[fsk] > 0)
@@ -1722,8 +1870,21 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         }
 
         total_skp_lost += skp_lost;
-        total_skp_gained += skp_gained;
         change_skill_points(fsk, -skp_lost, false);
+
+        // If reducing fighting would reduce your maxHP to 0 or below,
+        // we cancel the last step and end the transfer.
+        if (fsk == SK_FIGHTING && get_real_hp(false, true) <= 0)
+        {
+            change_skill_points(fsk, skp_lost, false);
+            total_skp_lost -= skp_lost;
+            if (!simu)
+                you.transfer_skill_points = total_skp_lost;
+            break;
+        }
+
+        total_skp_gained += skp_gained;
+
         if (fsk != tsk)
         {
             change_skill_points(tsk, skp_gained, false);
@@ -1743,6 +1904,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         you.skill_points[tsk] = tsk_points;
         you.ct_skill_points[fsk] = fsk_ct_points;
         you.ct_skill_points[tsk] = tsk_ct_points;
+        you.total_skill_points = total_skill_points;
     }
     else
     {

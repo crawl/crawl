@@ -103,7 +103,7 @@ static void _maybe_melt_player_enchantments(beam_type flavour)
 
 // NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour, std::string source,
-                       bolt *beam)
+                       bolt *beam, bool doEffects)
 {
     int resist;
     int original = hurted;
@@ -117,23 +117,24 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         kaux = beam->name;
     }
 
-    _maybe_melt_player_enchantments(flavour);
+    if (doEffects)
+        _maybe_melt_player_enchantments(flavour);
 
     switch (flavour)
     {
     case BEAM_WATER:
         hurted = resist_adjust_damage(&you, flavour,
                                       you.res_water_drowning(), hurted, true);
-        if (!hurted)
+        if (!hurted && doEffects)
             mpr("You shrug off the wave.");
         break;
 
     case BEAM_STEAM:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_steam(), hurted, true);
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("The steam scalds you terribly!");
             xom_is_stimulated(200);
@@ -143,9 +144,9 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     case BEAM_FIRE:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_fire(), hurted, true);
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("The fire burns you terribly!");
             xom_is_stimulated(200);
@@ -155,9 +156,9 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     case BEAM_COLD:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_cold(), hurted, true);
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("You feel a terrible chill!");
             xom_is_stimulated(200);
@@ -169,19 +170,19 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
                                       player_res_electricity(),
                                       hurted, true);
 
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         break;
 
     case BEAM_POISON:
         resist = player_res_poison();
 
-        if (resist <= 0)
+        if (resist <= 0 && doEffects)
             poison_player(coinflip() ? 2 : 1, source, kaux);
 
         hurted = resist_adjust_damage(&you, flavour, resist,
                                       hurted, true);
-        if (resist > 0)
+        if (resist > 0 && doEffects)
             canned_msg(MSG_YOU_RESIST);
         break;
 
@@ -191,13 +192,13 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         // arbitrary.
         resist = player_res_poison();
 
-        if (!resist)
+        if (!resist && doEffects)
             poison_player(4 + random2(3), source, kaux, true);
-        else if (!you.is_undead)
+        else if (!you.is_undead && doEffects)
             poison_player(2 + random2(3), source, kaux, true);
 
         hurted = resist_adjust_damage(&you, flavour, resist, hurted);
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         break;
 
@@ -215,16 +216,17 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         else if (resist > 0)
             hurted -= (resist * hurted) / 3;
 
-        drain_exp();
+        if (doEffects)
+            drain_exp();
         break;
 
     case BEAM_ICE:
         hurted = resist_adjust_damage(&you, flavour, player_res_cold(),
                                       hurted, true);
 
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("You feel a painful chill!");
             xom_is_stimulated(200);
@@ -235,9 +237,9 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         hurted = resist_adjust_damage(&you, flavour, player_res_fire(),
                                       hurted, true);
 
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("The lava burns you terribly!");
             xom_is_stimulated(200);
@@ -247,7 +249,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     case BEAM_ACID:
         if (player_res_acid())
         {
-            canned_msg(MSG_YOU_RESIST);
+            if (doEffects)
+                canned_msg(MSG_YOU_RESIST);
             hurted = hurted * player_acid_resist_factor() / 100;
         }
         break;
@@ -255,7 +258,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     case BEAM_MIASMA:
         if (you.res_rotting())
         {
-            canned_msg(MSG_YOU_RESIST);
+            if (doEffects)
+                canned_msg(MSG_YOU_RESIST);
             hurted = 0;
         }
         break;
@@ -271,7 +275,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         else if (rhe < -1)
             hurted = (hurted * 3) / 2;
 
-        if (hurted == 0)
+        if (hurted == 0 && doEffects)
             canned_msg(MSG_YOU_RESIST);
         break;
     }
@@ -282,15 +286,24 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         else if (you.species == SP_VAMPIRE)
             hurted += hurted / 2;
 
-        if (original && !hurted)
+        if (original && !hurted && doEffects)
             mpr("The beam of light passes harmlessly through you.");
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("The light scorches you terribly!");
             xom_is_stimulated(200);
         }
         break;
 
+    case BEAM_AIR:
+    {
+        // Airstrike.
+        if (you.res_wind() > 0)
+            hurted = 0;
+        else if (you.flight_mode())
+            hurted += hurted / 2;
+        break;
+    }
     default:
         break;
     }                           // end switch
@@ -775,6 +788,10 @@ void lose_level()
     you.redraw_experience = true;
 
     xom_is_stimulated(255);
+
+    // Kill the player if maxhp <= 0.  We can't just move the ouch() call past
+    // dec_max_hp() since it would decrease hp twice, so here's another one.
+    ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
 }
 
 bool drain_exp(bool announce_full)
@@ -1101,7 +1118,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         || death_type == KILLED_BY_LEAVING;
 
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
-        && death_type != KILLED_BY_WATER && !non_death)
+        && death_type != KILLED_BY_WATER && !non_death && you.hp_max > 0)
     {
         return;
     }
@@ -1247,7 +1264,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             const std::string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
-#ifdef USE_OPTIONAL_WIZARD_DEATH
 
             dprf("Damage: %d; Hit points: %d", dam, you.hp);
 
@@ -1258,15 +1274,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 _wizard_restore_life();
                 return;
             }
-#else  // !def USE_OPTIONAL_WIZARD_DEATH
-            mpr("Since you're a debugger, I'll let you live.");
-            mpr("Be more careful next time, okay?");
-
-            take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
-                            death_desc.c_str()), true);
-            _wizard_restore_life();
-            return;
-#endif  // USE_OPTIONAL_WIZARD_DEATH
         }
     }
 #endif  // WIZARD
@@ -1458,7 +1465,8 @@ void end_game(scorefile_entry &se)
 
     cprintf("%s", hiscore.c_str());
 
-    cprintf("\nBest Crawlers -\n");
+    cprintf("\nBest Crawlers - %s\n",
+            crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
     hiscores_print_list(get_number_of_lines() - lines - 5);

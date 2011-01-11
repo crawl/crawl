@@ -9,7 +9,7 @@ TollStair = util.subclass(OneWayStair)
 TollStair.CLASS = "TollStair"
 
 function TollStair:new(props)
-  local toll = self.super.new(self, props)
+  local toll = OneWayStair.new(self, props)
   if not props.amount or props.amount < 1 then
     error("Bad toll amount: " .. props.amount)
   end

@@ -76,6 +76,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.props["iood_caster"].get_string() = caster->as_monster()
         ? caster->name(DESC_PLAIN, true)
         : "";
+    mon.props["iood_mid"].get_int() = caster->mid;
 
     _fuzz_direction(mon, pow);
 
@@ -155,8 +156,11 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.name = "orb of destruction";
     beam.flavour = BEAM_NUKE;
     beam.attitude = mon.attitude;
-    beam.thrower = (mon.props["iood_kc"].get_byte() == KC_YOU)
-                        ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+
+    actor *caster = actor_by_mid(mon.props["iood_mid"].get_int());
+    if (!caster)        // caster is dead/gone, blame the orb itself (as its
+        caster = &mon;  // friendliness is correct)
+    beam.set_agent(caster);
     beam.colour = WHITE;
     beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.range = 1;
@@ -287,11 +291,7 @@ move_again:
         return (false);
 
     if (!no_trail)
-    {
-        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(),
-                    2 + random2(3), mon.kill_alignment(),
-                    KILL_MON_MISSILE);
-    }
+        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(), 2 + random2(3), &mon);
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
@@ -306,7 +306,7 @@ move_again:
         monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
             (monster*) victim : 0;
 
-        if (mons && mons_is_projectile(victim->id()))
+        if (mons && mons_is_projectile(victim->type))
         {
             if (mon.observable())
                 mpr("The orbs collide in a blinding explosion!");

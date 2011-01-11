@@ -24,6 +24,7 @@
 #include "tiledoll.h"
 #endif
 
+typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
 public:
@@ -92,7 +93,7 @@ public:
 
   int absdepth0; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
-  FixedVector<int, NUM_DURATIONS> duration;
+  durations_t duration;
   int rotting;
   int berserk_penalty;                // penalty for moving while berserk
 
@@ -333,6 +334,8 @@ public:
   std::vector<coord_def>    cling_to;
   // The type of a zotdef wave, if any.
   std::string zotdef_wave_name;
+  // The biggest assigned monster id so far.
+  mid_t last_mid;
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
@@ -432,7 +435,6 @@ public:
                               bool include_melded=false) const;
 
     // actor
-    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
@@ -541,6 +543,7 @@ public:
     bool is_artificial() const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
+    bool is_cloud_immune(cloud_type) const;
     int res_acid() const;
     int res_fire() const;
     int res_steam() const;
@@ -571,6 +574,7 @@ public:
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
+    int liquefying_radius2 () const;
     bool glows_naturally() const;
     bool petrified() const;
     bool incapacitated() const
@@ -583,6 +587,8 @@ public:
     void put_to_sleep(actor *, int power = 0);
     void awake();
     void check_awaken(int disturbance);
+    int beam_resists(bolt &beam, int hurted, bool doEffects,
+                     std::string source);
 
     bool can_throw_large_rocks() const;
     bool can_smell() const;
@@ -892,6 +898,8 @@ void dec_exhaust_player(int delay);
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void levitate_player(int pow);
+void float_player(bool fly);
+bool land_player();
 
 void dec_disease_player(int delay);
 

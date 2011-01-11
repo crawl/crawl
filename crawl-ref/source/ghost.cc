@@ -814,6 +814,8 @@ spell_type ghost_demon::translate_spell(spell_type spel) const
         return (SPELL_PARALYSE);
     case SPELL_EVAPORATE:
         return (SPELL_MEPHITIC_CLOUD);
+    case SPELL_STICKY_FLAME:
+        return (SPELL_STICKY_FLAME_RANGE);
     default:
         break;
     }
@@ -992,4 +994,158 @@ int ghost_level_to_rank(const int xl)
     if (xl < 26) return 5;
     if (xl < 27) return 6;
     return 7;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Laboratory rats!
+
+std::string adjective_for_labrat_colour (uint8_t l_colour)
+{
+    switch (l_colour)
+    {
+    case CYAN:           return ("armoured");
+    case YELLOW:         return ("beastly");
+    case RED:            return ("fiery");
+    case LIGHTCYAN:      return ("gaseous");
+    case LIGHTRED:       return ("parasitic");
+    case LIGHTBLUE:      return ("airborne");
+    case LIGHTMAGENTA:   return ("mutated");
+    case MAGENTA:        return ("shifting");
+    case GREEN:          return ("venomous");
+    case LIGHTGRAY:      return ("");
+    default:
+        die("invalid labrat adjective");
+        break;
+    }
+
+    return ("");
+}
+
+#ifdef USE_TILE
+int tile_offset_for_labrat_colour (uint8_t l_colour)
+{
+    switch (l_colour)
+    {
+    case LIGHTGRAY:      return (0);
+    case CYAN:           return (1);
+    case YELLOW:         return (2);
+    case RED:            return (3);
+    case LIGHTCYAN:      return (4);
+    case LIGHTRED:       return (5);
+    case LIGHTBLUE:      return (6);
+    case LIGHTMAGENTA:   return (7);
+    case MAGENTA:        return (8);
+    case GREEN:          return (9);
+    default:
+        return (0);
+    }
+}
+#endif
+
+uint8_t colour_for_labrat_adjective (std::string adjective)
+{
+    if (adjective == "armoured")    return CYAN;
+    if (adjective == "beastly")     return YELLOW;
+    if (adjective == "fiery")       return RED;
+    if (adjective == "gaseous")     return LIGHTCYAN;
+    if (adjective == "parasitic")   return LIGHTRED;
+    if (adjective == "airborne")    return LIGHTBLUE;
+    if (adjective == "mutated")     return LIGHTMAGENTA;
+    if (adjective == "shifting")    return MAGENTA;
+    if (adjective == "venomous")    return GREEN;
+    if (adjective == "plain")       return LIGHTGRAY;
+
+    return BLACK;
+}
+
+static const uint8_t labrat_colour_values[] = {
+    CYAN, YELLOW, RED, LIGHTCYAN, LIGHTRED, LIGHTBLUE, LIGHTMAGENTA, MAGENTA, GREEN
+};
+
+uint8_t _labrat_random_colour()
+{
+    return (RANDOM_ELEMENT(labrat_colour_values));
+}
+
+void ghost_demon::init_labrat (uint8_t force_colour)
+{
+    // Base init for "plain" laboratory rats. Kept in line with mon-data.h.
+    xl = 5;
+    max_hp = hit_points(xl, 3, 5);
+    ac = 5;
+    ev = 5;
+    speed = 12;
+    colour = force_colour;
+    damage = 9 + random2(3);
+
+    if (colour == BLACK)
+        colour = _labrat_random_colour();
+
+    spells.init(SPELL_NO_SPELL);
+
+    resists.elec = 0;
+    resists.poison = 0;
+    resists.fire = 0;
+    resists.sticky_flame = false;
+    resists.cold = 0;
+    resists.acid = 0;
+    resists.rotting = false;
+
+    switch (colour)
+    {
+    case CYAN: // armoured
+        ac = 20;
+        speed = 9;
+        break;
+    case YELLOW: // beastly
+        xl = 4 + random2(4);
+        ac = 2 + random2(5);
+        ev = 7 + random2(5);
+        speed = 10 + random2(8);
+        break;
+    case RED: // fiery
+        att_flav = AF_FIRE;
+        spells[0] = SPELL_FIRE_BREATH;
+        spellcaster = true;
+        resists.fire = 3;
+        resists.sticky_flame = true;
+        break;
+    case LIGHTCYAN: // gaseous
+        spells[0] = SPELL_MEPHITIC_CLOUD;
+        spellcaster = true;
+        resists.poison = 1; // otherwise it'll confuse itself
+        break;
+    case LIGHTRED: // leeching
+        att_flav = AF_VAMPIRIC;
+        break;
+    case LIGHTBLUE: // floating
+        fly = FL_LEVITATE;
+        spells[0] = SPELL_SHOCK;
+        spellcaster = true;
+        resists.elec = 1;
+        speed = 15;
+        ev = 15;
+        break;
+    case LIGHTMAGENTA: // mutated
+    {
+        att_flav = AF_MUTATE;
+        const mon_attack_type possibles[] = { AT_CLAW, AT_PECK,
+                AT_TENTACLE_SLAP, AT_TRUNK_SLAP, AT_SNAP, AT_SPLASH };
+        att_type = RANDOM_ELEMENT(possibles);
+        break;
+    }
+    case MAGENTA:
+        spells[0] = spells[1] = spells[2] = spells[3] =
+            spells[4] = spells[5] = SPELL_BLINK;
+        spellcaster = true;
+        break;
+    case GREEN:
+        att_flav = AF_POISON;
+        resists.poison = 3;
+        break;
+    case LIGHTGRAY:
+        break;
+    default:
+        break;
+    }
 }

@@ -1901,7 +1901,7 @@ std::string get_item_description(const item_def &item, bool verbose,
     case OBJ_WANDS:
         if (item_type_known(item))
         {
-            const int max_charges = 3 * wand_charge_value(item.sub_type);
+            const int max_charges = wand_max_charges(item.sub_type);
             if (item.plus < max_charges
                 || !item_ident(item, ISFLAG_KNOW_PLUSES))
             {
@@ -2099,8 +2099,7 @@ std::string get_item_description(const item_def &item, bool verbose,
         break;
 
     default:
-        DEBUGSTR("Bad item class");
-        description << "\nThis item should not exist. Mayday! Mayday!";
+        die("Bad item class");
     }
 
     if (is_unrandom_artefact(item)
@@ -2930,7 +2929,7 @@ static int _get_spell_description(const spell_type spell,
             return (BOOK_MEM);
         }
 
-    return(BOOK_NEITHER);
+    return BOOK_NEITHER;
 }
 
 void get_spell_desc(const spell_type spell, describe_info &inf)
@@ -4588,6 +4587,31 @@ void describe_skill(skill_type skill)
     print_description(data.str());
     wait_for_keypress();
 }
+
+#ifdef USE_TILE
+std::string get_command_description(const command_type cmd, bool terse)
+{
+    std::string lookup = command_to_name(cmd);
+
+    if (!terse)
+        lookup += " verbose";
+
+    std::string result = getLongDescription(lookup);
+    if (result.empty())
+    {
+        if (!terse)
+        {
+            // Try for the terse description.
+            result = get_command_description(cmd, true);
+            if (!result.empty())
+                return result + ".";
+        }
+        return command_to_name(cmd);
+    }
+
+    return result.substr(0, result.length() - 1);
+}
+#endif
 
 void alt_desc_proc::nextline()
 {

@@ -3914,6 +3914,75 @@ _Jessica_rare_
 @The_monster@ shouts @at_foe@, "You are a ghastly nuisance!"
 ## END Jessica ##
 %%%%
+############ JORY ### A powerful vampire Lord.
+silenced Jory
+
+@_Jory_silent_@
+%%%%
+Jory
+
+@_Jory_common_@
+%%%%
+_Jory_common_
+
+w:100
+@_Jory_silent_@
+
+@The_monster@ says, "Leave me alone!"
+
+@The_monster@ says, "How dare you disturb my sanctum!"
+
+@The_monster@ says, "In my tower, I enforce my rules: silence at all times."
+
+@The_monster@ says, "Be quiet! Or I'll take your tongue!"
+
+@The_monster@ hisses in an unknowable language.
+
+@The_monster@ says, "Hawthorn can't hurt me."
+
+@The_monster@ says, "Priests don't scare me."
+
+@The_monster@ says, "Get out, get out, get out!"
+
+w:2
+@The_monster@ says, "My wife rejected me, but I had my revenge."
+VISUAL:
+%%%%
+_Jory_silent_
+
+VISUAL:@The_monster@ gestures wildly at you. @player_only@
+
+VISUAL:@The_monster@ mockingly mimes being beheaded.
+
+VISUAL:@The_monster@ stares carefully at you. @player_only@
+
+VISUAL:@The_monster@ swishes his cloak stereotypically.
+
+VISUAL:@The_monster@ frowns.
+
+VISUAL:@The_monster@ is momentarily overtaken with rage!
+
+w:5
+VISUAL:@The_monster@ sheds a single tear.
+
+VISUAL:@The_monster@ gestures rudely at you. @player_only@
+
+VISUAL:@The_monster@ smirks, showing shining fangs.
+
+VISUAL:@The_monster@ demonstrates baring his neck.
+
+VISUAL:@The_monster@ hisses silently.
+
+VISUAL:@The_monster@ starts to speak, but stops.
+%%%%
+Jory killed
+
+@The_monster@ screams, "No, no!" before exploding into a cloud of blood!
+%%%%
+silent Jory killed
+
+VISUAL:@The_monster@ momentarily stares at you in horror, before exploding into a cloud of blood!
+%%%%
 ############ JOSEPH ### Hired to kill you
 Joseph
 

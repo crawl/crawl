@@ -2,6 +2,123 @@
 # snake.des: All maps and branch endings relating to the Snake Pit.
 ###############################################################################
 
+##############################################################################
+# Snake Pit entry vaults
+##############################################################################
+
+NAME:   dummy_snake_entry
+TAGS:   snake_entry
+KFEAT:  O = enter_snake_pit
+MAP
+O
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_small
+TAGS:   snake_entry
+ORIENT: float
+MONS:   naga, naga / nothing w:3
+KFEAT:  O = enter_snake_pit
+MAP
+ccc.@.ccc
+c.......c
+c.2...2.c
+.........
+@...O...@
+.........
+c.1...2.c
+c.......c
+ccc.@.ccc
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_medium
+TAGS:   snake_entry
+WEIGHT: 5
+ORIENT: float
+MONS:   naga, naga / nothing
+KFEAT:  O = enter_snake_pit
+MAP
+   ccccccc
+ ccc.....ccc
+cc2.......2cc
+c...c2.1c...c
+@...c.O.c...@
+c...c1.2c...c
+cc2.......2cc
+ ccc.....ccc
+   ccccccc
+ENDMAP
+
+NAME:   minmay_snake_entry_guardpost_large
+TAGS:   snake_entry
+WEIGHT: 2
+ORIENT: float
+MONS:   naga warrior, naga / nothing
+KFEAT:  O = enter_snake_pit
+MAP
+c@ccccccc
+c.......cc
+c..c.c..2cc
+c.........cc
+c..c.c.c..2cc
+c......2....cc
+cc2..c1O2c..2cc
+ cc....2......c
+  cc2..c.c.c..c
+   cc.........c
+    cc2..c.c..c
+     cc.......c
+      ccccccc@c
+ENDMAP
+
+NAME:   minmay_snake_entry_six_corridors
+TAGS:   snake_entry ruin_lair
+ORIENT: float
+DEPTH:  Lair:5-
+MONS:   small snake, snake, water moccasin, viper, black mamba
+KMONS:  P = plant / fungus w:1 / nothing
+SUBST:  1 = 1., 2 = 2., 3 = 3.
+SUBST:  1 = 1222233334, 2 = 122333345, 3 = 33455
+KFEAT:  O = enter_snake_pit
+MAP
+xxxx.@1xxxxxxP@xxxxx
+xxxx1.PxxxxxP..xxxxx
+xxxxx..xxxxx1.xxxxxx
+xxxxxP..xxxx..xxxxxx
+xxxxxP.1xxxx2..xxxxx
+xxxxxx..Pxxxx1Pxxxxx
+xxxxxxx2.xxxP.xxxxxx
+xxxxxxxP1xx1..xxxxxx
+xxxxxxxx...3.xxxxxxx
+xxxxxxxP1..P1.xxxxxx
+xx21xxP..PO.P..2xx1P
+P.....1.3.1.xx.....@
+@.1PxxxP..xxxx.Px1P.
+xxxxxxxx.1xxxx2xxxxx
+xxxxxxxx..Pxx..xxxxx
+xxxxxxxx..PxxP.1xxxx
+xxxxxxx1.2xxxx..xxxx
+xxxxxxxP.xxxxxx1..Px
+xxxxxxx.1xxxxxxxP...
+xxxxxx.@.Pxxxxxxxx.@
+ENDMAP
+
+NAME:   minmay_snake_entry_spellcaster
+TAGS:   snake_entry
+ORIENT: float
+DEPTH:  Lair:5-
+WEIGHT: 2
+MONS:   naga mage / guardian serpent
+KFEAT:  O = enter_snake_pit
+MAP
+...
+.O1
+...
+ENDMAP
+
+##############################################################################
+# Snake Pit specific non-ending non-entry vaults
+##############################################################################
+
 NAME:   minmay_snake_pond
 DEPTH:  Snake
 MONS:   small snake w:3 / snake / water moccasin
@@ -168,7 +285,7 @@ PLACE:   Snake:5
 TAGS:    no_rotate
 ORIENT:  southwest
 MONS:    naga, naga warrior, naga mage, greater naga
-SUBST:   1 = 11., 2 = 23., 3 = 33., 4 = 44.
+SUBST:   1 = 11., 2 = 23., 4 = 444123..
 SUBST:   c : c:20 x:4 v:1
 KITEM:   O = serpentine rune of Zot
 MAP
@@ -179,10 +296,10 @@ xxxxxxxxxxxxxxxxc......cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxc..1...cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxc...21.cxxxccccccccxxxxxx
 xxxxxxxxxxxcccccc......ccccc......cccxxxx
-xxxxxxxccccc..................1.....ccccc
+xxxxxxxccccc...2........2.....1.....ccccc
 xxxxcccc............4....................
-xxccc.........................2.1.......@
-xcc..........................1...........
+xxccc.....4.....2.....2.......2.1.......@
+xcc...............2.2........1...........
 xc..........ccccc......cccccc......cccccc
 cc..1....ccccxxxc......cxxxxccccccccxxxxx
 c.......ccxxxxxxc....1.cxxxxxxxxxxxxxxxxx
@@ -190,21 +307,21 @@ c...4...cxxxxxxxc......cxxxxxxxxxxxxxxxxx
 c.......ccxxxxxxc.1.2..cxxxxxxxxxxxxxxxxx
 cc....1..ccccxxxc......cxxxxxxxxxxxxxxxxx
 xc..........ccccc......ccccccxxxxxxxxxxxx
-xcc.........................cccccxxxxxxxx
-xxccc..............4............ccccxxxxx
-xxxxcccc..1................1.......cccxxx
-xxxxxxxccccc.........................ccxx
+xcc......4..................cccccxxxxxxxx
+xxccc...........................ccccxxxxx
+xxxxcccc..1....4...........1.......cccxxx
+xxxxxxxccccc.........4...............ccxx
 xxxxxxxxxxxcccccc......ccccc.....1....cxx
 xxxxxxxxxxxxxxxxc......cxxxcccc.......ccx
 xxxxxxxxxxxxxxxxc..1...cxxxxxxcc...4...cx
 xxxxxxxxxxxxxxxxc...21.cxxxxxxxc.......cx
 xxxxxxxxxxxxxxxxc..1...cxxxxxxcc...1...cx
 xxxxxxxxxxxxxxxxc......cxxxcccc.......ccx
-xxxxxxxxxxxcccccc......ccccc..........cxx
+xxxxxxxxxxxcccccc..4...ccccc..........cxx
 xxxxxxxccccc.........................ccxx
-xxxxcccc........1.......2.....4....cccxxx
+xxxxcccc2.......1.......2.....4....cccxxx
 xxccc........1....4.............ccccxxxxx
-xcc.........................cccccxxxxxxxx
+xcc.......4.................cccccxxxxxxxx
 xc.....1....ccccc......ccccccxxxxxxxxxxxx
 cc.......ccccxxxc....1.cxxxxxxxxxxxxxxxxx
 c....1..ccxxxxxxc.1....cxxxxxxxxxxxxxxxxx
@@ -212,9 +329,9 @@ c.......cxxxxxxxc....2.cxxxxxxxxxxxxxxxxx
 c...4...ccxxxxxxc..1...cxxxxxxxxxxxxxxxxx
 cc.......ccccxxxc2...1.cxxxxxxxxxxxxxxxxx
 xc......2...ccccc......ccccccxxxxxxxxxxxx
-xcc..1.4..........1.........cccccxxxxxxxx
+xcc..1............1.......4.cccccxxxxxxxx
 xxccc..........1.....4......1...ccccxxxxx
-xxxxcccc.....2..4..........12.4....cccxxx
+xxxxcccc.4...2..4..........12.4....cccxxx
 xxxxxxxccccc..1.....2..1....1....4..Ocxxx
 xxxxxxxxxxxcccccccccccccccccccccccccccxxx
 ENDMAP

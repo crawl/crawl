@@ -57,7 +57,7 @@ enum kill_method_type
 };
 
 int check_your_resists(int hurted, beam_type flavour, std::string source,
-                       bolt *beam = 0);
+                       bolt *beam = 0, bool doEffects = true);
 void splash_with_acid(int acid_strength, bool corrode_items = true,
                       std::string hurt_msg = "");
 void weapon_acid(int acid_strength);

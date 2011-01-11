@@ -905,16 +905,12 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 
     case EQ_ALL_ARMOUR:
         // Doesn't make much sense here... be specific. -- bwr
-        ASSERT(false);
+        die("EQ_ALL_ARMOUR is not a proper slot");
         break;
 
     default:
         if (! (slot > EQ_NONE && slot < NUM_EQUIP))
-        {
-            ASSERT(false);
-
-            return (0);
-        }
+            die("invalid slot");
         if ((item = you.slot_item(slot))
             && item->sub_type == sub_type
             && (calc_unid || item_type_known(*item)))
@@ -974,10 +970,7 @@ int player_equip_ego_type(int slot, int special, bool calc_unid)
 
     default:
         if (slot < EQ_MIN_ARMOUR || slot > EQ_MAX_ARMOUR)
-        {
-            ASSERT(false);
-            return (0);
-        }
+            die("invalid slot: %d", slot);
         // Check a specific armour slot for an ego type:
         if ((item = you.slot_item(static_cast<equipment_type>(slot), melded))
             && get_armour_ego_type(*item) == special
@@ -1043,10 +1036,7 @@ bool player_equip_unrand(int unrand_index)
 
     default:
         if (slot <= EQ_NONE || slot >= NUM_EQUIP)
-        {
-            ASSERT(false);
-            return (false);
-        }
+            die("invalid slot: %d", slot);
         // Check a specific slot.
         if ((item = you.slot_item(slot))
             && is_unrandom_artefact(*item)
@@ -1902,6 +1892,9 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         // armour (checks body armour only)
         pl += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
+        // pearl dragon counts
+        pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_ARMOUR);
+
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
 
@@ -1938,6 +1931,10 @@ int player_movement_speed(bool ignore_burden)
         mv = 7;
     else if (you.fishtail)
         mv = 6;
+
+    // moving on liquefied ground takes longer
+    if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        mv += 3;
 
     // armour
     if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
@@ -3259,7 +3256,7 @@ void level_change(bool skip_attribute_increase)
             }
         }
 
-        // // zot defense abilities; must also be updated in abil-show.cc when these levels are changed
+        // // zot defence abilities; must also be updated in abil-show.cc when these levels are changed
         if (crawl_state.game_is_zotdef())
         {
             if (you.experience_level == 1)
@@ -5038,28 +5035,27 @@ void dec_disease_player(int delay)
     }
 }
 
-void levitate_player(int pow)
+void float_player(bool fly)
 {
-    bool standing = !you.airborne();
-    mprf(MSGCH_DURATION,
-         "You feel %s buoyant.", standing ? "very" : "more");
-
-    if (standing)
+    if (you.fishtail)
     {
-        if (you.fishtail)
-        {
-            mpr("Your tail turns into legs as you levitate out of the water.");
-            merfolk_stop_swimming();
-        }
-        else
-            mpr("You gently float upwards from the floor.");
+        mprf("Your tail turns into legs as you %s out of the water.",
+             fly ? "fly" : "levitate");
+        merfolk_stop_swimming();
     }
+    else if (you.light_flight())
+        mpr("You swoop lightly up into the air.");
+    else if (fly)
+        mpr("You fly up into the air.");
+    else
+        mpr("You gently float upwards from the floor.");
 
     // Amulet of Controlled Flight can auto-ID.
-    if (!you.duration[DUR_LEVITATION]
-        && wearing_amulet(AMU_CONTROLLED_FLIGHT)
+    if (wearing_amulet(AMU_CONTROLLED_FLIGHT)
         && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
     {
+        // it's important to do this only if the amulet is not identified yet,
+        // or you'd get spammed
         item_def& amu(you.inv[you.equip[EQ_AMULET]]);
         if (!is_artefact(amu) && !item_type_known(amu))
         {
@@ -5070,9 +5066,35 @@ void levitate_player(int pow)
         }
     }
 
+    burden_change();
+}
+
+void levitate_player(int pow)
+{
+    bool standing = !you.airborne();
+    mprf(MSGCH_DURATION,
+         "You feel %s buoyant.", standing ? "very" : "more");
+
     you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
 
+    if (standing)
+        float_player(false);
+}
+
+bool land_player()
+{
+    // there was another source keeping you aloft
+    if (you.airborne())
+        return false;
+
+    mpr("You float gracefully downwards.");
     burden_change();
+    // Landing kills controlled flight.
+    you.duration[DUR_CONTROLLED_FLIGHT] = 0;
+    you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+    // Re-enter the terrain.
+    move_player_to_grid(you.pos(), false, true);
+    return true;
 }
 
 int count_worn_ego(int which_ego)
@@ -5137,6 +5159,9 @@ void player::init()
     species          = SP_UNKNOWN;
     char_class       = JOB_UNKNOWN;
     class_name.clear();
+    type             = MONS_PLAYER;
+    mid              = MID_PLAYER;
+    position.reset();
 
 #ifdef WIZARD
     wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
@@ -5234,7 +5259,7 @@ void player::init()
 
     skill_cost_level = 1;
     total_skill_points = 0;
-    exp_available    = crawl_state.game_is_zotdef()? 80 : 25;
+    exp_available = 0; // new games get 25 or 80 later
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
@@ -5311,6 +5336,7 @@ void player::init()
 
     clinging = 0;
     zotdef_wave_name.clear();
+    last_mid = 0;
 
 
     // Non-saved UI state:
@@ -5324,6 +5350,7 @@ void player::init()
 
     running.clear();
     received_weapon_warning = false;
+    bondage_level = 0;
 
     delay_queue.clear();
 
@@ -5362,6 +5389,8 @@ void player::init()
     walking             = 0;
     seen_portals        = 0;
     frame_no            = 0;
+
+    save                = 0;
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
@@ -5446,7 +5475,7 @@ player::~player()
 
 bool player::is_levitating() const
 {
-    return (duration[DUR_LEVITATION]);
+    return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
 }
 
 bool player::is_wall_clinging() const
@@ -5817,7 +5846,7 @@ int player::gdr_perc() const
         return (0);
 
     const int body_base_AC = property(*body_armour, PARM_AC);
-    return (std::max(body_base_AC - 2, 0) * 5 / 2);
+    return (std::max(body_base_AC - 2, 0) * 5);
 }
 
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
@@ -6077,7 +6106,7 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // Enchantment skill through staff of enchantment (up to 90).
     if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
-        rm += 3 * (3 + you.skills[SK_ENCHANTMENTS]);
+        rm += 3 * (3 + std::max(you.skills[SK_CHARMS], you.skills[SK_HEXES]));
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
@@ -6126,19 +6155,14 @@ flight_type player::flight_mode() const
 
 bool player::permanent_levitation() const
 {
-    // Boots of levitation keep you with DUR_LEVITATION >= 2 at
-    // all times. This is so that you can evoke stop-levitation
-    // in order to actually cancel levitation (by setting
-    // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
-    return (airborne() && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
-            && duration[DUR_LEVITATION] > 1);
+    return you.attribute[ATTR_PERM_LEVITATION]
+           && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION);
 }
 
 bool player::permanent_flight() const
 {
-    return (airborne() && wearing_amulet(AMU_CONTROLLED_FLIGHT)
-            && species == SP_KENKU && experience_level >= 15
-            && duration[DUR_LEVITATION] > 1);
+    return you.attribute[ATTR_PERM_LEVITATION]
+           && species == SP_KENKU && experience_level >= 15;
 }
 
 bool player::light_flight() const
@@ -6208,14 +6232,11 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     else
     {
         // Should never happen!
-        ASSERT(false);
-        ouch(amount, NON_MONSTER, KILLED_BY_SOMETHING);
+        die("player::hurt() called for self-damage");
     }
 
     if ((flavour == BEAM_NUKE || flavour == BEAM_DISINTEGRATION) && can_bleed())
-    {
-        blood_spray(pos(), id(), amount / 5);
-    }
+        blood_spray(pos(), type, amount / 5);
 
     return (amount);
 }
@@ -6792,6 +6813,12 @@ void player::check_awaken(int disturbance)
 {
     if (asleep() && x_chance_in_y(disturbance + 1, 50))
         awake();
+}
+
+int player::beam_resists(bolt &beam, int hurted, bool doEffects,
+                         std::string source)
+{
+    return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
 }
 
 void player::set_place_info(PlaceInfo place_info)

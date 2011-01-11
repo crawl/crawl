@@ -71,7 +71,7 @@ void lose_item_stack(const coord_def& where);
 void item_check(bool verbose);
 void request_autopickup(bool do_pickup = true);
 
-void pickup(void);
+void pickup(bool partial_quantity = false);
 
 int item_name_specialness(const item_def& item);
 void item_list_on_square(std::vector<const item_def*>& items,

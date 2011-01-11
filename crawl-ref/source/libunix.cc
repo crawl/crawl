@@ -721,7 +721,6 @@ static int curs_fg_attr(int col)
     // calculate which curses flags we need...
     unsigned int flags = 0;
 
-#ifdef USE_COLOUR_OPTS
     unsigned brand = get_brand(col);
     if (brand != CHATTR_NORMAL)
     {
@@ -745,7 +744,6 @@ static int curs_fg_attr(int col)
             fg = COLOR_WHITE;
         }
     }
-#endif
 
     // curses typically uses A_BOLD to give bright foreground colour,
     // but various termcaps may disagree
@@ -783,7 +781,6 @@ static int curs_bg_attr(int col)
 
     unsigned int flags = 0;
 
-#ifdef USE_COLOUR_OPTS
     unsigned brand = get_brand(col);
     if (brand != CHATTR_NORMAL)
     {
@@ -805,7 +802,6 @@ static int curs_bg_attr(int col)
             fg = COLOR_WHITE;
         }
     }
-#endif
 
     // curses typically uses A_BOLD to give bright foreground colour,
     // but various termcaps may disagree
