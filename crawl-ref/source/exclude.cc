@@ -65,6 +65,9 @@ bool need_auto_exclude(const monster* mon, bool sleepy)
 // exclusion.
 void set_auto_exclude(const monster* mon)
 {
+    if (!player_in_mappable_area())
+        return;
+
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
         int rad = LOS_RADIUS;
