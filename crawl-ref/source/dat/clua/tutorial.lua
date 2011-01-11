@@ -29,3 +29,13 @@ end
 function tutorial_get_cmd (command)
   return "<white>" .. crawl.get_command(command) .. "</white>"
 end
+
+function tutorial_intro (msg)
+  crawl.mesclr(true)
+  crawl.mpr(msg, "tutorial")
+  local text = "You can reread all messages at any time with "
+               .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. ".\n"
+               .. "Also, press <white>Space</white> to clear the <cyan>--more--</cyan> prompts."
+  crawl.mpr(text, "tutorial")
+  crawl.more()
+end
