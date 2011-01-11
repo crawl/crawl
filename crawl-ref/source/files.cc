@@ -1370,17 +1370,10 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 #endif
 
-    // Try to open level savefile.
-#ifdef DEBUG_LEVEL_LOAD
-    mprf(MSGCH_DIAGNOSTICS, "Try to open file %s", level_name.c_str());
-#endif
-
     // GENERATE new level when the file can't be opened:
     if (!you.save->has_chunk(level_name))
     {
-#ifdef DEBUG_LEVEL_LOAD
-        mpr("Generating new file...", MSGCH_DIAGNOSTICS);
-#endif
+        dprf("Generating new level for '%s'.", level_name.c_str());
         ASSERT(load_mode != LOAD_VISITOR);
         env.turns_on_level = -1;
 
@@ -1419,9 +1412,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
     else
     {
-#ifdef DEBUG_LEVEL_LOAD
-        mpr("Loading old file...", MSGCH_DIAGNOSTICS);
-#endif
+        dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
 
         // POST-LOAD tasks :
