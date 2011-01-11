@@ -741,15 +741,19 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line, bool sa
 }
 #endif
 
-NORETURN void die(const char *format, ...)
+#undef die
+NORETURN void die(const char *file, int line, const char *format, ...)
 {
-    char mesg[2048];
+    char tmp[2048], mesg[2048];
 
     va_list args;
 
     va_start(args, format);
-    vsnprintf(mesg, sizeof(mesg), format, args);
+    vsnprintf(tmp, sizeof(tmp), format, args);
     va_end(args);
+
+    snprintf(mesg, sizeof(mesg), "ERROR in '%s' at line %d: %s",
+             file, line, tmp);
 
     _assert_msg = mesg;
 
