@@ -710,8 +710,7 @@ static bool _mut_matches_class(mutation_type mutclass, const mutation_def& mdef)
     case RANDOM_GOOD_MUTATION:
         return (!mdef.bad);
     default:
-        ASSERT(false);
-        return (false);
+        die("invalid mutation class: %d", mutclass);
     }
 }
 
@@ -754,78 +753,62 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
 static int _handle_conflicting_mutations(mutation_type mutation,
                                          bool override)
 {
-    if (override)
-    {
-        // These are mutations which should be cleared away if forced.
-        const mutation_type override_conflict[][2] = {
-            { MUT_REGENERATION, MUT_SLOW_METABOLISM },
-            { MUT_REGENERATION, MUT_SLOW_HEALING    },
-            { MUT_ACUTE_VISION, MUT_BLURRY_VISION   },
-            { MUT_FAST,         MUT_SLOW            }
+    const int conflict[][3] = {
+        { MUT_REGENERATION,    MUT_SLOW_METABOLISM,  0},
+        { MUT_REGENERATION,    MUT_SLOW_HEALING,     0},
+        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION,    0},
+        { MUT_FAST,            MUT_SLOW,             0},
+        { MUT_FANGS,           MUT_BEAK,            -1},
+        { MUT_HOOVES,          MUT_TALONS,          -1},
+        { MUT_STRONG,          MUT_WEAK,             1},
+        { MUT_CLEVER,          MUT_DOPEY,            1},
+        { MUT_AGILE,           MUT_CLUMSY,           1},
+        { MUT_STRONG_STIFF,    MUT_FLEXIBLE_WEAK,    1},
+        { MUT_ROBUST,          MUT_FRAIL,            1},
+        { MUT_HIGH_MAGIC,      MUT_LOW_MAGIC,        1},
+        { MUT_CARNIVOROUS,     MUT_HERBIVOROUS,      1},
+        { MUT_SLOW_METABOLISM, MUT_FAST_METABOLISM,  1},
+        { MUT_REGENERATION,    MUT_SLOW_HEALING,     1},
+        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION,    1},
+        { MUT_FAST,            MUT_SLOW,             1},
         };
 
-        // If we have one of the pair, delete all levels of the other,
-        // and continue processing.
-        for (unsigned i = 0; i < ARRAYSZ(override_conflict); ++i)
-        {
-            for (int j = 0; j < 2; ++j)
-            {
-                const mutation_type a = override_conflict[i][j];
-                const mutation_type b = override_conflict[i][1-j];
-
-                if (mutation == a)
-                    while (delete_mutation(b, true, true))
-                        ;
-            }
-        }
-    }
-
-    // These are mutations which can't be traded off against each other,
-    // so we just fail.
-    const mutation_type fail_conflict[][2] = {
-        { MUT_FANGS,        MUT_BEAK            },
-        { MUT_HOOVES,       MUT_TALONS          }
-    };
-
-    for (unsigned i = 0; i < ARRAYSZ(fail_conflict); ++i)
+    // If we have one of the pair, delete all levels of the other,
+    // and continue processing.
+    for (unsigned i = 0; i < ARRAYSZ(conflict); ++i)
     {
         for (int j = 0; j < 2; ++j)
         {
-            const mutation_type a = fail_conflict[i][j];
-            const mutation_type b = fail_conflict[i][1-j];
-            if (mutation == a && you.mutation[b] > 0)
-                return (-1);    // Fail.
-        }
-    }
+            const mutation_type a = (mutation_type)conflict[i][j];
+            const mutation_type b = (mutation_type)conflict[i][1-j];
 
-    // These are mutations which trade off against each other.
-    const mutation_type simple_conflict[][2] = {
-        { MUT_STRONG,          MUT_WEAK            },
-        { MUT_CLEVER,          MUT_DOPEY           },
-        { MUT_AGILE,           MUT_CLUMSY          },
-        { MUT_STRONG_STIFF,    MUT_FLEXIBLE_WEAK   },
-        { MUT_ROBUST,          MUT_FRAIL           },
-        { MUT_HIGH_MAGIC,      MUT_LOW_MAGIC       },
-        { MUT_CARNIVOROUS,     MUT_HERBIVOROUS     },
-        { MUT_SLOW_METABOLISM, MUT_FAST_METABOLISM },
-        { MUT_REGENERATION,    MUT_SLOW_HEALING    },
-        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION   },
-        { MUT_FAST,            MUT_SLOW            }
-    };
-
-    for (unsigned i = 0; i < ARRAYSZ(simple_conflict); ++i)
-        for (int j = 0; j < 2; ++j)
-        {
-            // If we have one of the pair, delete a level of the other,
-            // and that's it.
-            const mutation_type a = simple_conflict[i][j];
-            const mutation_type b = simple_conflict[i][1-j];
             if (mutation == a && you.mutation[b] > 0)
             {
-                delete_mutation(b, true, true);
-                return (1);     // Nothing more to do.
+                int res = conflict[i][2];
+                switch(res)
+                {
+                case -1:
+                    // Fail if not forced, otherwise override.
+                    if (!override)
+                        return -1;
+                case 0:
+                    // Ignore if not forced, otherwise override.
+                    // All cases but regen:slowmeta will currently trade off.
+                    if (override)
+                        while (delete_mutation(b, true, true))
+                            ;
+                    break;
+                case 1:
+                    // If we have one of the pair, delete a level of the
+                    // other, and that's it.
+                    delete_mutation(b, true, true);
+                    return (1);     // Nothing more to do.
+                default:
+                    die("bad mutation conflict resulution");
+                }
             }
         }
+    }
 
     return (0);
 }
@@ -980,8 +963,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
         break;
 
     default:
-        ASSERT(false);
-        break;
+        die("invalid stat mutation: %d", mut);
     }
     return (stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE));
 }

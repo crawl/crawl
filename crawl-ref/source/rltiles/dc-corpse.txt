@@ -22,6 +22,7 @@ queen_ant CORPSE_QUEEN_ANT
 butterfly CORPSE_BUTTERFLY
 %back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 giant_bat CORPSE_GIANT_BAT
+raven CORPSE_RAVEN
 
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL
@@ -64,6 +65,20 @@ quokka CORPSE_QUOKKA
 grey_rat CORPSE_GREY_RAT
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
+porcupine CORPSE_PORCUPINE
+%sdir dc-mon/rat
+labrat_plain CORPSE_LABORATORY_RAT
+labrat_armoured
+labrat_beastly
+labrat_fiery
+labrat_gaseous
+labrat_leeching
+labrat_levitating
+labrat_mutated
+labrat_shifting
+labrat_venomous
+%sdir dc-mon/animals
+
 
 ## Spiders and insects ('s')
 %back dc-misc/blood_green
@@ -88,6 +103,7 @@ alligator_baby CORPSE_BABY_ALLIGATOR
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
+firecrab CORPSE_FIRECRAB
 
 ## Worms ('w')
 %back dc-misc/blood_green
@@ -192,6 +208,7 @@ orc CORPSE_ORC
 
 ## Dwarves ('q')
 unique/wiglaf CORPSE_DWARF
+deep_dwarf CORPSE_DEEP_DWARF
 gnome CORPSE_GNOME
 
 ## Ugly things ('u')
@@ -257,6 +274,9 @@ harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 kenku CORPSE_KENKU
+
+## Sky beast ('I')
+sky_beast CORPSE_SKY_BEAST
 
 ## Jellies ('J')
 %back dc-misc/blood_green

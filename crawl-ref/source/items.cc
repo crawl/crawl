@@ -1133,6 +1133,27 @@ bool pickup_single_item(int link, int qty)
         return (false);
     }
 
+    if (qty == 0 && mitm[link].quantity > 1 && mitm[link].base_type != OBJ_GOLD)
+    {
+        const std::string prompt
+                = make_stringf("Pick up how many of %s? ",
+                               mitm[link].name(DESC_NOCAP_THE,
+                                    false, false, false).c_str());
+
+        qty = prompt_for_int(prompt.c_str(), true);
+        if (qty < 1)
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+        else if (qty < mitm[link].quantity)
+        {
+            // Mark rest item as not eligible for autopickup.
+            mitm[link].flags |= ISFLAG_DROPPED;
+            mitm[link].flags &= ~ISFLAG_THROWN;
+        }
+    }
+
     if (qty < 1 || qty > mitm[link].quantity)
         qty = mitm[link].quantity;
 
@@ -1158,7 +1179,7 @@ bool pickup_single_item(int link, int qty)
     return (true);
 }
 
-void pickup()
+void pickup(bool partial_quantity)
 {
     int keyin = 'x';
 
@@ -1179,7 +1200,7 @@ void pickup()
     {
         // Deliberately allowing the player to pick up
         // a killed item here.
-        pickup_single_item(o, mitm[o].quantity);
+        pickup_single_item(o, partial_quantity ? 0 : mitm[o].quantity);
     }
     else if (Options.pickup_mode != -1
              && num_nonsquelched >= Options.pickup_mode)
@@ -3458,7 +3479,7 @@ bool get_item_by_name(item_def *item, char* specs,
                             mprf("%s (%s)", entry->name,
                                  debug_art_val_str(*item).c_str());
                         }
-                        return(true);
+                        return true;
                     }
                 }
 

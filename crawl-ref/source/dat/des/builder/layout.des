@@ -458,8 +458,6 @@ TAGS: layout allow_dup
     extend_map{width = gxm, height = gym, fill = 'x'}
     fill_area{fill = 'x'}
 
-
-    local temp_rand = crawl.random2(8)
     local wall_type_room
     local wall_type
     local rooms = {}
@@ -472,13 +470,7 @@ TAGS: layout allow_dup
     local by2 = 0
     local i, j
 
-    if temp_rand > 4 then
-        wall_type = 'x'
-    elseif temp_rand  > 2 then
-        wall_type = 'c'
-    else
-        wall_type = 'v'
-    end
+    wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
 
     if crawl.one_chance_in(100) then
         wall_type = 'b'
@@ -495,18 +487,13 @@ TAGS: layout allow_dup
             b1 = xs + 11 - crawl.random2avg(5, 2);
             b2 = ys + 11 - crawl.random2avg(5, 2);
 
-            temp_rand = crawl.random2(280);
-
-            if temp_rand > 39 and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
-                if temp_rand > 63 then
-                    wall_type_room = wall_type
-                elseif temp_rand > 54 then
-                    wall_type_room = "c"
-                elseif temp_rand > 45 then
-                    wall_type_room = "x"
-                else
-                    wall_type_room = "v"
-                end
+            if crawl.x_chance_in_y(6, 7) and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
+                wall_type_room = crawl.random_element {
+                    [wall_type] = 216,
+                    ['c'] = 9,
+                    ['x'] = 9,
+                    ['v'] = 5
+                }
 
                 if crawl.one_chance_in(250) then
                     wall_type_room = "b"
@@ -551,27 +538,30 @@ NAME: layout_misc
 ORIENT: encompass
 TAGS: layout allow_dup
 {{
-    function random_coord(g)
-        return crawl.random2(g - 20) + 10
+    function random_coord(max_x, max_y)
+        return crawl.random2(max_x - 20) + 10,
+               crawl.random2(max_y - 20) + 10
     end
 
     local gxm, gym = dgn.max_bounds()
-    local rooms = 5 + crawl.random2(20)
+    local corridors = crawl.random_range(15, 25)
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
-    while rooms > 0 do
-        join_the_dots {
-            x1 = random_coord(gxm),
-            y1 = random_coord(gym),
-            x2 = random_coord(gxm),
-            y2 = random_coord(gym)
-        }
-        rooms = rooms - 1
+    local x, y = random_coord(gxm, gym)
+    local new_x, new_y
+
+    while corridors > 0 do
+        new_x, new_y = random_coord(gxm, gym)
+
+        join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y }
+
+        x, y = new_x, new_y
+        corridors = corridors - 1
     end
 
     if not crawl.one_chance_in(4) then
-        spotty_map { boxy = crawl.coinflip(), iterations = 100 }
+        spotty_map { boxy = true, iterations = 100 }
     end
 }}
 MAP
@@ -624,25 +614,16 @@ ORIENT: encompass
 TAGS: layout allow_dup
 {{
     function make_inner_room(room, feat, treasure)
-        make_box {
+        local inner_room = {
             x1 = room.x1 + 1, y1 = room.y1 + 1,
             x2 = room.x2 - 1, y2 = room.y2 - 1,
-            wall = feat
+            wall = feat, number = 1
         }
 
-        make_box_doors {
-            x1 = room.x1 + 1, y1 = room.y1 + 1,
-            x2 = room.x2 - 1, y2 = room.y2 - 1,
-            number = 1
-        }
+        if treasure then inner_room.floor = '*' end
 
-        if treasure then
-            fill_area {
-                x1 = room.x1 + 2, y1 = room.y1 + 2,
-                x2 = room.x2 - 2, y2 = room.y2 - 2,
-                fill = '*'
-            }
-        end
+        make_box(inner_room)
+        make_box_doors(inner_room)
     end
 
     function sign(a)
@@ -714,7 +695,7 @@ TAGS: layout allow_dup
         if room.fill == '.'
            and (room.x2 - room.x1 > 5)
            and (room.y2 - room.y1 > 5)
-           and crawl.one_chance_in((100 - you.absdepth()) / 3)
+           and crawl.x_chance_in_y(3, 100 - you.absdepth())
         then
             local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
             make_inner_room(room, feat, crawl.coinflip())

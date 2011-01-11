@@ -36,7 +36,6 @@
 #include "map_knowledge.h"
 #include "fight.h"
 #include "food.h"
-#include "godabil.h"
 #include "goditem.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -1534,7 +1533,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     if (victim->atype() == ACT_PLAYER)
     {
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
         victim->moveto(pos);
         canned_msg(MSG_YOU_BLINK);
@@ -1549,8 +1548,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         mon->move_to_pos(pos);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3),
-                    victim->kill_alignment());
+        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
 
         mon->apply_location_effects(oldpos);
         mon->check_redraw(oldpos);
@@ -1574,7 +1572,7 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
 
     // A hack and code duplication, but that's easier than adding accounting
     // for each of multiple brands.
-    if (victim->id() == MONS_SIXFIRHY)
+    if (victim->type == MONS_SIXFIRHY)
     {
         if (!beam.is_tracer)
             victim->heal(10 + random2(15), false);
@@ -1590,7 +1588,7 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
     {
         if (victim->atype() == ACT_PLAYER)
             dmg_msg = "You are electrocuted!";
-        else if (victim->id() == MONS_SIXFIRHY)
+        else if (victim->type == MONS_SIXFIRHY)
             dmg_msg = victim->name(DESC_CAP_THE) + " is charged up!";
         else
             dmg_msg = "There is a sudden explosion of sparks!";
@@ -2226,7 +2224,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         break;
 
     default:
-        DEBUGSTR("Invalid launcher '%s'",
+        die("Invalid launcher '%s'",
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
@@ -3091,9 +3089,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         break;
 
     default:
-        ASSERT(false);
-        chance = 1;
-        break;
+        die("Unknown missile type");
     }
 
     // Inflate by 4 to avoid rounding errors.
@@ -4321,9 +4317,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     }
 
     // Even if not affected, it may be uncursed.
-    if (!is_enchantable_armour(arm, false)
-        || arm.plus > MAX_SEC_ENCHANT
-           && x_chance_in_y(arm.plus, MAX_ARM_ENCHANT))
+    if (!is_enchantable_armour(arm, false))
     {
         if (is_cursed)
         {
@@ -4340,10 +4334,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         {
             if (!quiet)
                 canned_msg(MSG_NOTHING_HAPPENS);
-
-            // Xom thinks it's funny if enchantment is possible but fails.
-            if (is_enchantable_armour(arm, false))
-                xom_is_stimulated(32);
 
             return (false);
         }
@@ -4780,7 +4770,7 @@ void read_scroll(int slot)
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");
-        big_cloud(random_smoke_type(), KC_YOU, you.pos(), 50, 8 + random2(8));
+        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
     case SCR_MAGIC_MAPPING:
@@ -5130,19 +5120,7 @@ void tile_item_use_floor(int idx)
 
 void tile_item_pickup(int idx, bool part)
 {
-    int quantity = mitm[idx].quantity;
-    if (part && quantity > 1)
-    {
-        quantity = prompt_for_int("Pickup how many? ", true);
-        if (quantity < 1)
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        if (quantity > mitm[idx].quantity)
-            quantity = mitm[idx].quantity;
-    }
-    pickup_single_item(idx, quantity);
+    pickup_single_item(idx, part ? 0 : -1);
 }
 
 void tile_item_drop(int idx, bool partdrop)

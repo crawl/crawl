@@ -17,7 +17,6 @@
 #include "cio.h"
 #include "dbg-util.h"
 #include "decks.h"
-#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "godpassive.h"
@@ -538,7 +537,7 @@ void wizard_tweak_object(void)
         else if (keyin == 'e')
             you.inv[item].flags = new_val;
         else
-            ASSERT(!"unhandled keyin");
+            die("unhandled keyin");
 
         // cursedness might have changed
         ash_check_bondage();

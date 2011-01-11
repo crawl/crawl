@@ -11,7 +11,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
-#include "libutil.h"
 #include "maps.h"
 #include "misc.h"
 #include "mutation.h"
@@ -26,6 +25,7 @@
 #include "spl-util.h"
 #include "sprint.h"
 #include "state.h"
+#include "tutorial.h"
 
 #define MIN_START_STAT       3
 
@@ -675,7 +675,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_ARMOUR]       = 1;
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_ENCHANTMENTS] = 2;
+        you.skills[SK_CHARMS]       = 2;
         weap_skill = 2;
         break;
 
@@ -759,7 +759,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[range_skill(you.inv[1])] = 2;
         you.skills[SK_DODGING]              = 1;
         you.skills[SK_SPELLCASTING]         = 2;
-        you.skills[SK_ENCHANTMENTS]         = 2;
+        you.skills[SK_CHARMS]               = 2;
         break;
 
     case JOB_WIZARD:
@@ -788,7 +788,7 @@ static void _give_items_skills(const newgame_def& ng)
             break;
         case BOOK_MINOR_MAGIC_III:
             you.skills[SK_SUMMONINGS]   = 1;
-            you.skills[SK_ENCHANTMENTS] = 1;
+            you.skills[SK_CONJURATIONS] = 1;
             break;
         }
         break;
@@ -809,7 +809,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1,
                            1);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
 
         // Gets some darts - this job is difficult to start off with.
         newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);
@@ -825,7 +825,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         weap_skill = 1;
         you.skills[SK_THROWING]     = 1;
-        you.skills[SK_ENCHANTMENTS] = 4;
+        you.skills[SK_HEXES]        = 4;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
@@ -1514,7 +1514,7 @@ static void _apply_job_colour(item_def &item)
 }
 
 static void _setup_normal_game();
-static void _setup_tutorial();
+static void _setup_tutorial(const newgame_def& ng);
 static void _setup_sprint(const newgame_def& ng);
 static void _setup_zotdef(const newgame_def& ng);
 static void _setup_hints();
@@ -1531,7 +1531,7 @@ void setup_game(const newgame_def& ng)
         _setup_normal_game();
         break;
     case GAME_TYPE_TUTORIAL:
-        _setup_tutorial();
+        _setup_tutorial(ng);
         break;
     case GAME_TYPE_SPRINT:
         _setup_sprint(ng);
@@ -1544,7 +1544,7 @@ void setup_game(const newgame_def& ng)
         break;
     case GAME_TYPE_ARENA:
     default:
-        ASSERT(!"Bad game type");
+        die("Bad game type");
         end(-1);
     }
 
@@ -1562,8 +1562,9 @@ static void _setup_normal_game()
 /**
  * Special steps that tutorial game needs;
  */
-static void _setup_tutorial()
+static void _setup_tutorial(const newgame_def& ng)
 {
+    set_tutorial_map(ng.map);
     make_hungry(0, true);
 }
 
@@ -1646,6 +1647,7 @@ static void _setup_generic(const newgame_def& ng)
     _reassess_starting_skills();
     calc_total_skill_points();
     init_skill_order();
+    you.exp_available = crawl_state.game_is_zotdef()? 80 : 25;
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())

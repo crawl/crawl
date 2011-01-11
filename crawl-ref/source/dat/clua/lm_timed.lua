@@ -13,7 +13,7 @@ TimedMarker.CLASS = "TimedMarker"
 function TimedMarker:new(props)
   props = props or { }
 
-  local tmarker = self.super.new(self, props)
+  local tmarker = OneWayStair.new(self, props)
 
   if not props.msg then
     error("No messaging object provided (msg = nil)")
@@ -139,7 +139,7 @@ function TimedMarker:read(marker, th)
   self.started = file.unmarshall_boolean(th)
   self.dur = file.unmarshall_number(th)
   self.dur2 = file.unmarshall_number(th)
-  self.msg  = file.unmarshall_fn(th)(th)
+  self.msg  = lmark.unmarshall_marker(th)
 
   if self.props.amount then
     self.toll = TollStair:new(self.props)
@@ -154,8 +154,7 @@ function TimedMarker:write(marker, th)
   file.marshall(th, self.started)
   file.marshall(th, self.dur)
   file.marshall(th, self.dur2)
-  file.marshall(th, self.msg.read)
-  self.msg:write(th)
+  lmark.marshall_marker(th, self.msg)
 end
 
 function timed_marker(pars)

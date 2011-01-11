@@ -1,10 +1,9 @@
-
-/* A Bison parser, made by GNU Bison 2.4.1.  */
+/* A Bison parser, made by GNU Bison 2.4.3.  */
 
 /* Skeleton interface for Bison's Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
+   2009, 2010 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -80,13 +79,14 @@
      COMMA = 296,
      COLON = 297,
      PERC = 298,
-     INTEGER = 299,
+     DASH = 299,
      CHARACTER = 300,
-     STRING = 301,
-     MAP_LINE = 302,
-     MONSTER_NAME = 303,
-     ITEM_INFO = 304,
-     LUA_LINE = 305
+     NUMBER = 301,
+     STRING = 302,
+     MAP_LINE = 303,
+     MONSTER_NAME = 304,
+     ITEM_INFO = 305,
+     LUA_LINE = 306
    };
 #endif
 /* Tokens.  */
@@ -131,13 +131,14 @@
 #define COMMA 296
 #define COLON 297
 #define PERC 298
-#define INTEGER 299
+#define DASH 299
 #define CHARACTER 300
-#define STRING 301
-#define MAP_LINE 302
-#define MONSTER_NAME 303
-#define ITEM_INFO 304
-#define LUA_LINE 305
+#define NUMBER 301
+#define STRING 302
+#define MAP_LINE 303
+#define MONSTER_NAME 304
+#define ITEM_INFO 305
+#define LUA_LINE 306
 
 
 
@@ -146,17 +147,18 @@
 typedef union YYSTYPE
 {
 
-/* Line 1676 of yacc.c  */
-#line 45 "levcomp.ypp"
+/* Line 1685 of yacc.c  */
+#line 34 "levcomp.ypp"
 
     int i;
+    double f;
     const char *text;
-    raw_range range;
+    map_chance_pair chance;
 
 
 
-/* Line 1676 of yacc.c  */
-#line 160 "levcomp.tab.h"
+/* Line 1685 of yacc.c  */
+#line 162 "levcomp.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

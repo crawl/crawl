@@ -12,4 +12,4 @@ builder   = various lua code and map snippets for technical purposes, also
             contains uniques.des and dummy.des
 sprint    = maps for the Dungeon Sprint minigame
 tutorial  = maps for the tutorial minigame
-
+zotdef    = maps for the Zot Defence minigame

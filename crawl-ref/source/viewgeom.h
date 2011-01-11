@@ -1,14 +1,15 @@
 #ifndef VIEWGEOM_H
 #define VIEWGEOM_H
 
+#include "tiledgnbuf.h"
+
 struct screen_cell_t
 {
     wchar_t glyph;
     unsigned short colour; // TODO: check if this is real colour (8 bit)
     unsigned short flash_colour;
 #ifdef USE_TILE
-    tileidx_t tile_fg;
-    tileidx_t tile_bg;
+    packed_cell tile;
 #endif
 };
 

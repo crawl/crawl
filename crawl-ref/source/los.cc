@@ -535,7 +535,7 @@ static int _imbalance(ray_def ray, const coord_def& target)
     {
         coord_def old = ray.pos();
         if (!ray.advance())
-            ASSERT(false);
+            die("can't advance ray");
         switch((ray.pos() - old).abs())
         {
         case 1:
@@ -549,8 +549,7 @@ static int _imbalance(ray_def ray, const coord_def& target)
                 imb = diags;
             break;
         default:
-            ASSERT(false);
-            break;
+            die("ray imbalance out of range");
         }
     }
     return imb;

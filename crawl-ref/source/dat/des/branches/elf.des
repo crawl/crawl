@@ -1,5 +1,5 @@
 ##############################################################################
-# elf.des: Special maps for Elf:7, arrival vaults for Elf:1, and (mini)vaults
+# elf.des: Special maps for Elf:5, arrival vaults for Elf:1, and (mini)vaults
 #          particular to the Elven Halls.
 ##############################################################################
 
@@ -327,14 +327,14 @@ ENDMAP
 
 
 ##############################################################################
-# Elf:7 branch endings
+# Elf:5 branch endings
 ##############################################################################
 
 ##############################################################################
 ## Classical elf_hall
 ##
 NAME:    elf_hall
-PLACE:   Elf:7
+PLACE:   Elf:5
 ORIENT:  northwest
 TAGS:    no_rotate
 LFLAGS:  no_tele_control
@@ -397,7 +397,7 @@ ENDMAP
 ## Alternative elf halls: gauntlets (David)
 ##
 NAME:    elf_hall_gauntlet_wide
-PLACE:   Elf:7
+PLACE:   Elf:5
 TAGS:    no_pool_fixup no_rotate
 LFLAGS:  no_tele_control
 ORIENT:  float
@@ -450,7 +450,7 @@ xxxxxxxxxxxx@@xxxxxxxxxxxx
 ENDMAP
 
 NAME:    elf_hall_gauntlet_narrow
-PLACE:   Elf:7
+PLACE:   Elf:5
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 WEIGHT:  5
@@ -514,7 +514,7 @@ ENDMAP
 ## minmay's Elf hall
 ##
 NAME:    minmay_elf_hall
-PLACE:   Elf:7
+PLACE:   Elf:5
 ORIENT:  southwest
 TAGS:    no_rotate
 LFLAGS:  no_tele_control
@@ -578,7 +578,7 @@ ENDMAP
 ## minmay's more circular hall
 ##
 NAME:    minmay_elf_hall_circle
-PLACE:   Elf:7
+PLACE:   Elf:5
 ORIENT:  float
 TAGS:    no_rotate
 LFLAGS:  no_tele_control
@@ -682,7 +682,7 @@ ENDMAP
 ##############################################################################
 # A high-level negotiation between orc and deep elf leaders (Shiori)
 NAME:     elf_orc_summit_meeting
-DEPTH:    Elf:6-7
+DEPTH:    Elf:4-5
 SHUFFLE: 12 , 45
 NSUBST:  7= 1=7 / *= 7:1 .
 NSUBST:  6= 1=6 D:1 / *= 6 .:1
@@ -694,10 +694,9 @@ MONS:    deep elf knight / w:1 deep elf high priest / \
          w:1 deep elf demonologist
 # the orcish delegation:
 MONS:    orc warlord / iron troll / w:1 fire giant / w:1 frost giant / \
-         w:1 stone giant
+         w:1 stone giant / w:1 ettin
 MONS:    orc sorcerer / orc high priest / w:5 ogre mage
-MONS:    orc knight / rock troll / ettin / w:1 orc sorcerer / \
-         w:1 orc high priest
+MONS:    orc knight / rock troll / w:1 orc sorcerer / w:1 orc high priest
 # the arbiter(s):
 MONS:    great orb of eyes / sphinx
 # The orcs might have a unique with them. He or she will likely be outclassed

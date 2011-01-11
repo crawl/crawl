@@ -15,6 +15,7 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
+#include "files.h"
 #include "fprop.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
@@ -31,14 +32,27 @@
 
 enum areaprop_flag
 {
-    APROP_SANCTUARY_1 = (1 << 0),
-    APROP_SANCTUARY_2 = (1 << 1),
-    APROP_SILENCE     = (1 << 2),
-    APROP_HALO        = (1 << 3),
+    APROP_SANCTUARY_1   = (1 << 0),
+    APROP_SANCTUARY_2   = (1 << 1),
+    APROP_SILENCE       = (1 << 2),
+    APROP_HALO          = (1 << 3),
+    APROP_LIQUID        = (1 << 4),
+    APROP_ACTUAL_LIQUID = (1 << 5),
+};
+
+struct area_centre
+{
+    area_centre_type type;
+    coord_def centre;
+    int radius;
+
+    explicit area_centre (area_centre_type t, coord_def c, int r) : type(t), centre(c), radius(r) { }
 };
 
 // currently, only 4 of 32 bits are used, but meh...
 typedef FixedArray<uint32_t, GXM, GYM> propgrid_t;
+
+static std::vector<area_centre> _agrid_centres;
 
 static propgrid_t _agrid;
 static bool _agrid_valid = false;
@@ -65,7 +79,8 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
 {
     if (act->alive() &&
         (you.entering_level
-         || act->halo_radius2() > -1 || act->silence_radius2() > -1))
+         || act->halo_radius2() > -1 || act->silence_radius2() > -1
+         || act->liquefying_radius2() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -81,6 +96,7 @@ static void _update_agrid()
     }
 
     _agrid.init(0);
+    _agrid_centres.clear();
 
     no_areas = true;
 
@@ -90,6 +106,8 @@ static void _update_agrid()
 
         if ((r = ai->silence_radius2()) >= 0)
         {
+            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
+
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
                 _set_agrid_flag(*ri, APROP_SILENCE);
             no_areas = false;
@@ -97,10 +115,29 @@ static void _update_agrid()
 
         if ((r = ai->halo_radius2()) >= 0)
         {
+            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
+
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
                  ri; ++ri)
             {
                 _set_agrid_flag(*ri, APROP_HALO);
+            }
+            no_areas = false;
+        }
+
+        if ((r = ai->liquefying_radius2()) >= 0)
+        {
+            _agrid_centres.push_back(area_centre(AREA_LIQUID, ai->pos(), r));
+
+            for (radius_iterator ri(ai->pos(),r, C_CIRCLE, ai->get_los());
+                ri; ++ri)
+            {
+                dungeon_feature_type f = grd(*ri);
+
+                _set_agrid_flag(*ri, APROP_LIQUID);
+
+                if (feat_has_solid_floor(f))
+                    _set_agrid_flag(*ri, APROP_ACTUAL_LIQUID);
             }
             no_areas = false;
         }
@@ -110,6 +147,82 @@ static void _update_agrid()
 
     _agrid_valid = true;
 }
+
+static area_centre_type _get_first_area (const coord_def& f)
+{
+    uint32_t a = _agrid(f);
+    if (a & APROP_SANCTUARY_2)
+        return AREA_SANCTUARY;
+    if (a & APROP_SANCTUARY_2)
+        return AREA_SANCTUARY;
+    if (a & APROP_SILENCE)
+        return AREA_SILENCE;
+    if (a & APROP_HALO)
+        return AREA_HALO;
+    // liquid is always applied; actual_liquid is on top
+    // of this. If we find the first, we don't care about
+    // the second.
+    if (a & APROP_LIQUID)
+        return AREA_LIQUID;
+
+    return AREA_NONE;
+}
+
+coord_def find_centre_for (const coord_def& f, area_centre_type at)
+{
+    if (!map_bounds(f))
+        return coord_def(-1, -1);
+
+    if (!_agrid_valid)
+        _update_agrid();
+
+    if (_agrid(f) == 0)
+        return coord_def(-1, -1);
+
+    if (_agrid_centres.size() == 0)
+        return coord_def(-1, -1);
+
+    coord_def possible = coord_def(-1, -1);
+    int dist = 0;
+
+    // Unspecified area type; settle for the first valid one.
+    // We checked for no aprop a bit ago.
+    if (at == AREA_NONE)
+        at = _get_first_area(f);
+
+    // on the off chance that there is an error, assert here
+    ASSERT(at != AREA_NONE);
+
+    for (unsigned int i = 0; i < _agrid_centres.size(); i++)
+    {
+        area_centre a = _agrid_centres[i];
+        if (a.type != at)
+            continue;
+
+        if (a.centre == f)
+            return (f);
+
+        int d = distance(a.centre, f);
+        if (d <= a.radius && (d <= dist || dist == 0))
+        {
+            possible = a.centre;
+            dist = d;
+        }
+    }
+
+    return (possible);
+}
+
+///////////////
+// Callback
+//
+// Thus agrid can be invalidated when loading.
+static void _agrid_callback(bool saving)
+{
+    if (!saving)
+        invalidate_agrid(true);
+}
+static SavefileCallback _register_agrid_callback(_agrid_callback);
 
 ///////////////
 // Sanctuary
@@ -422,7 +535,7 @@ int monster::halo_radius2() const
         return (29);
     case MONS_DAEVA:
         return (32);
-    case MONS_HOLY_DRAGON:
+    case MONS_PEARL_DRAGON:
         return (5);
     case MONS_OPHAN:
         return (64); // highest rank among sentient ones
@@ -441,4 +554,40 @@ int monster::halo_radius2() const
     default:
         return (4);
     }
+}
+
+//////////////////////
+// Leda's Liquefaction
+//
+
+int player::liquefying_radius2() const
+{
+    return (_silence_range(you.duration[DUR_LIQUEFYING]));
+}
+
+int monster::liquefying_radius2() const
+{
+    if (!has_ench(ENCH_LIQUEFYING))
+        return (-1);
+    const int dur = get_ench(ENCH_LIQUEFYING).duration;
+    // The below is arbitrarily chosen to make monster decay look reasonable.
+    const int moddur = BASELINE_DELAY *
+        std::max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
+    return (_silence_range(moddur));
+}
+
+bool liquefied(const coord_def& p, bool check_actual)
+{
+    if (!map_bounds(p))
+        return (false);
+
+    if (!_agrid_valid)
+        _update_agrid();
+
+    // "actually" liquified (ie, check for movement)
+    if (check_actual)
+        return (_check_agrid_flag(p, APROP_ACTUAL_LIQUID));
+    // just recoloured for consistency
+    else
+        return (_check_agrid_flag(p, APROP_LIQUID));
 }

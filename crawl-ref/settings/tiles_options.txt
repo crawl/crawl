@@ -1,6 +1,9 @@
 # This file contains options useful only for the Tiles build of Stone Soup.
 # See init.txt on how to change the optional values.
 
+# Uncomment this to continue recent versions' old saves that keep crashing.
+# tile_force_regenerate_levels = true
+
 # tile_show_items = !?/%=([)X}+\_.
 
 # tile_title_screen = false
@@ -44,11 +47,12 @@
 
 ### Note: setting window, map or font sizes to '0' implies auto-sizing.
 
-# tile_full_screen    = true
-# tile_window_width   = 1024
-# tile_window_height  = 768
-# tile_map_pixels     = 3
-# tile_force_overlay  = true
+# tile_full_screen     = true
+# tile_window_width    = 1024
+# tile_window_height   = 768
+# tile_map_pixels      = 3
+# tile_force_overlay   = true
+# tile_layout_priority = minimap, inventory, command, spell, gold_turn, monster
 
 # tile_font_crt_file  = VeraMono.ttf
 # tile_font_crt_size  = 15

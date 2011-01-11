@@ -11,9 +11,10 @@ Contents:  A. Introduction
            D. Kinds of vaults
            E. Hints for level makers
            F. Principles of vault making
+           G. How vaults are picked
 
 This document explains some basics of vault making. For actual vault work,
-you will need to look at syntax.txt. However, by simply looking at the 
+you will need to look at syntax.txt. However, by simply looking at the
 example provided here and looking through entry.des, you should be able to
 make changes or small vaults on your own.
 
@@ -22,11 +23,11 @@ A.   Introduction
 =================
 
 A game like Crawl generally uses random content. This also applies to maps,
-which are made in various ways, but all with a large random component. 
+which are made in various ways, but all with a large random component.
 However, for several reasons, it is also useful to have handmade maps: they
 can provide challenges random levels would rarely come up with; they can be
 especially thematic, for example on branch ends. Simple pre-made pieces of
-maps are called "vaults", these can provide challenge, loot, flavour or 
+maps are called "vaults", these can provide challenge, loot, flavour or
 just make the rather big levels of Crawl more interesting.
 
 These vaults come in all sizes, from mere 3x3 to level encompassing maps.
@@ -77,10 +78,10 @@ C.   The .des files
 
 All fixed level information resides in various .des files to be found inside
 folders of the dat/des directory. If you are interested in adding some vaults,
-say, start with the existing ones and modify them. If you are new to vault 
+say, start with the existing ones and modify them. If you are new to vault
 making, look at the following files:
 
-  dat/des/variable/entry 
+  dat/des/variable/entry
     entry.des        - read for a brief guide towards map making
     entry_simple.des - particularly simple entry vaults; they are ordered with
                        learning the mapsyntax in mind (all games use a premade
@@ -292,7 +293,7 @@ In wizmode, you can use the following commands
     &L "map name"   (creates that vault on the current level)
     &P "map name"   (for playtesting portal vaults)
     &~              (for jumping to a branch end).
-For both &L and &P, you don't need to specify the full name of the vault, 
+For both &L and &P, you don't need to specify the full name of the vault,
 a substring which uniquely determines the vault is enough. If a branch end
 has several alternatives, you may want to use a high WEIGHT: again.
 
@@ -324,3 +325,27 @@ ways, giving monsters special names.
 Each of these have their uses, but ask yourself each time if the vaults
 really benefits from this. If all vaults use colours, actual flavour has
 been lost.
+
+
+G.   How vaults are picked
+==========================
+
+The dungeon builder selects vaults by:
+
+1. PLACE: Before the dungeon builder starts building a level, it looks
+   for non-minivaults that are marked for the same PLACE: and places
+   them. After building the level, it looks for minivaults that are marked
+   for the same PLACE: and attempts to place them.
+
+2. TAGS: Branch entries, Pandemonium special levels, etc. are placed by
+   looking for vaults with a particular tag, for instance "mnoleg".
+
+3. DEPTH: When building a level, the dungeon builder looks for random
+   vaults that are eligible to be placed in that DEPTH range.
+
+If you do not want a vault to be randomly generated, do not assign it
+a DEPTH. If the vault is in a des file with a default-depth set, you
+can force it to have no DEPTH setting with an empty DEPTH: line.
+
+Vaults without a DEPTH: should be eligible to be selected in some
+other way, either by PLACE: or by tag.

@@ -9,6 +9,7 @@
 #define TILESDL_H
 
 #include "externs.h"
+#include "tilereg.h"
 #include "tiletex.h"
 
 class Region;
@@ -24,6 +25,7 @@ class MemoriseRegion;
 class ActorRegion;
 class MonsterRegion;
 class SkillRegion;
+class CommandRegion;
 class ActorRegion;
 class TabbedRegion;
 class MapRegion;
@@ -34,6 +36,8 @@ class StatRegion;
 class MessageRegion;
 
 struct map_cell;
+
+typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
 
 enum key_mod
 {
@@ -93,6 +97,7 @@ public:
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
+    void layout_statcol();
     void calculate_default_options();
     void clrscr();
 
@@ -105,7 +110,7 @@ public:
     void clear_minimap();
     void update_minimap_bounds();
     void toggle_inventory_display();
-    void update_inventory();
+    void update_tabs();
 
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
@@ -136,6 +141,7 @@ public:
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
     CRTRegion* get_crt() { return m_region_crt; }
     const ImageManager* get_image_manager() { return m_image; }
+    int to_lines(int num_tiles);
 protected:
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
@@ -158,6 +164,7 @@ protected:
         TAB_MEMORISE,
         TAB_MONSTER,
         TAB_SKILL,
+        TAB_COMMAND,
         TAB_MAX,
     };
 
@@ -179,6 +186,7 @@ protected:
     LayerID m_active_layer;
 
     // Normal layer
+    TileRegionInit  m_init;
     DungeonRegion   *m_region_tile;
     StatRegion      *m_region_stat;
     MessageRegion   *m_region_msg;
@@ -189,6 +197,9 @@ protected:
     MemoriseRegion  *m_region_mem;
     MonsterRegion   *m_region_mon;
     SkillRegion     *m_region_skl;
+    CommandRegion   *m_region_cmd;
+
+    std::map<int, TabbedRegion*> m_tabs;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
@@ -205,9 +216,22 @@ protected:
     int m_crt_font;
     int m_msg_font;
     int m_tip_font;
+    int m_lbl_font;
+
+    int m_tab_margin;
+    int m_stat_col;
+    int m_stat_x_divider;
+    int m_statcol_top;
+    int m_statcol_bottom;
+    int m_map_pixels;
 
     void do_layout();
-    bool layout_statcol(bool message_overlay, bool show_gold_turns);
+    int calc_tab_lines(const int num_elements);
+    void place_tab(int idx);
+    void autosize_minimap();
+    void place_minimap();
+    void resize_inventory();
+    void place_gold_turns();
 
     ImageManager *m_image;
 

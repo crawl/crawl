@@ -354,8 +354,6 @@ void cio_cleanup()
     deinit_libw32c();
 #endif
 
-    msg::deinitialise_mpr_streams();
-    clear_globals_on_exit();
     crawl_state.io_inited = false;
 }
 
@@ -375,13 +373,9 @@ void clear_globals_on_exit()
 bool CrawlIsExiting = false;
 bool CrawlIsCrashing = false;
 
-void end(int exit_code, bool print_error, const char *format, ...)
+NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
-
-    cio_cleanup();
-    databaseSystemShutdown();
-
     if (format)
     {
         va_list arg;
@@ -394,13 +388,25 @@ void end(int exit_code, bool print_error, const char *format, ...)
             error = std::string(buffer);
         else
             error = std::string(buffer) + ": " + error;
+
+        if (!error.empty() && error[error.length() - 1] != '\n')
+            error += "\n";
     }
+
+    bool need_pause = true;
+    if (exit_code && !error.empty())
+    {
+        if (print_error_screen("%s", error.c_str()))
+            need_pause = false;
+    }
+
+    cio_cleanup();
+    msg::deinitialise_mpr_streams();
+    clear_globals_on_exit();
+    databaseSystemShutdown();
 
     if (!error.empty())
     {
-        if (error[error.length() - 1] != '\n')
-            error += "\n";
-
         fprintf(stderr, "%s", error.c_str());
         error.clear();
     }
@@ -408,7 +414,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
      || defined(TARGET_OS_DOS) \
      || defined(DGL_PAUSE_AFTER_ERROR)
-    if (exit_code && !crawl_state.game_is_arena()
+    if (need_pause && exit_code && !crawl_state.game_is_arena()
         && !crawl_state.seen_hups && !crawl_state.test)
     {
         fprintf(stderr, "Hit Enter to continue...\n");
@@ -419,10 +425,20 @@ void end(int exit_code, bool print_error, const char *format, ...)
     CrawlIsExiting = true;
     if (exit_code)
         CrawlIsCrashing = true;
+
+#ifdef DEBUG_GLOBALS
+    delete real_env;         real_env = 0;
+    delete real_crawl_state; real_crawl_state = 0;
+    delete real_dlua;        real_dlua = 0;
+    delete real_clua;        real_clua = 0;
+    delete real_you;         real_you = 0;
+    delete real_Options;     real_Options = 0;
+#endif
+
     exit(exit_code);
 }
 
-void game_ended()
+NORETURN void game_ended()
 {
     if (!crawl_state.seen_hups)
         throw game_ended_condition();
@@ -430,7 +446,7 @@ void game_ended()
         end(0);
 }
 
-void game_ended_with_error(const std::string &message)
+NORETURN void game_ended_with_error(const std::string &message)
 {
     if (crawl_state.seen_hups)
         end(1);
@@ -457,8 +473,11 @@ void game_ended_with_error(const std::string &message)
 
 // Print error message on the screen.
 // Ugly, but better than not showing anything at all. (jpeg)
-void print_error_screen(const char *message, ...)
+bool print_error_screen(const char *message, ...)
 {
+    if (!crawl_state.io_inited || crawl_state.seen_hups)
+        return false;
+
     // Get complete error message.
     std::string error_msg;
     {
@@ -471,7 +490,7 @@ void print_error_screen(const char *message, ...)
         error_msg = std::string(buffer);
     }
     if (error_msg.empty())
-        return;
+        return false;
 
     // Escape '<'.
     // NOTE: This assumes that the error message doesn't contain
@@ -493,6 +512,7 @@ void print_error_screen(const char *message, ...)
     clrscr();
     formatted_string::parse_string(error_msg, false).display();
     getchm();
+    return true;
 }
 
 void redraw_screen(void)

@@ -9,6 +9,7 @@
 
 #include "mon-info.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "coord.h"
 #include "env.h"
@@ -141,6 +142,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     attitude = ATT_HOSTILE;
     pos = coord_def(0, 0);
 
+    mimic_feature = DNGN_UNSEEN;
+
     type = p_type;
     base_type = p_base_type;
 
@@ -194,6 +197,8 @@ monster_info::monster_info(const monster* m, int milev)
     mb = 0;
     attitude = ATT_HOSTILE;
     pos = grid2player(m->pos());
+
+    mimic_feature = DNGN_UNSEEN;
 
     // XXX: this doesn't take into account ENCH_TEMP_PACIF, but that's probably
     // a bug for mons_attitude, not this.
@@ -250,6 +255,9 @@ monster_info::monster_info(const monster* m, int milev)
 
         if (m->is_summoned())
             mb |= ULL1 << MB_SUMMONED;
+
+        if (mons_is_known_mimic(m) && mons_genus(type) == MONS_DOOR_MIMIC)
+            mimic_feature = get_mimic_feat(m);
     }
     else
     {
@@ -349,6 +357,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb |= ULL1 << MB_STABBABLE;
     if (mons_looks_distracted(m))
         mb |= ULL1 << MB_DISTRACTED;
+    if (liquefied(m->pos()) && !m->airborne() && !m->is_insubstantial())
+        mb |= ULL1 << MB_SLOWED;
 
     dam = mons_get_damage_level(m);
 
@@ -493,6 +503,10 @@ monster* monster_info::mon() const
 {
     int m = env.mgrid(player2grid(pos));
     ASSERT(m >= 0);
+#ifdef USE_TILE
+    if (m == NON_MONSTER)
+        return NULL;
+#endif
     return &env.mons[m];
 }
 
@@ -553,6 +567,10 @@ std::string monster_info::_core_name() const
         case MONS_UGLY_THING:
         case MONS_VERY_UGLY_THING:
             s = ugly_thing_colour_name(colour) + " " + s;
+            break;
+
+        case MONS_LABORATORY_RAT:
+            s = adjective_for_labrat_colour(colour) + " " + s;
             break;
 
         case MONS_DRACONIAN_CALLER:
@@ -899,7 +917,8 @@ void monster_info::to_string(int count, std::string& desc,
             out << pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
         }
         else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-                || type == MONS_DANCING_WEAPON || !mname.empty() || !fullname)
+                || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
+                || !mname.empty() || !fullname)
         {
             out << pluralise(mons_type_name(type, DESC_PLAIN));
         }

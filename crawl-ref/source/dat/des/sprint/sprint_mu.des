@@ -10,6 +10,26 @@
 
 : require("clua/sprint.lua")
 
+{{
+function sprint_mu_zot_mons_gen(data, triggerable, triggerer, marker, ev)
+    function spawn_zombie (x, y, spec)
+        local mons = dgn.create_monster(x, y, spec)
+        crawl.mpr("You hear a whooshing noise from somewhere close by.")
+        return mons
+    end
+
+    if data.awoke == true then
+        return
+    end
+    local graves = dgn.find_marker_positions_by_prop("spawn_spot", 1)
+    for _, pos in ipairs(graves) do
+        local niceguy = spawn_zombie(pos.x, pos.y, "generate_awake pandemonium lord")
+    end
+
+    data.awoke = true
+end
+}}
+
 ##############################################################################
 # Main sprint map, making use of subvaults (by Mu.)
 #
@@ -17,7 +37,6 @@ NAME:   dungeon_sprint_mu
 DESC:   Sprint III: "The Ten Rune Challenge"
 TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 ORIENT: encompass
-FLAGS:  no_rotate no_hmirror no_vmirror
 SHUFFLE:  hnw
 SHUFFLE:  NI
 SHUFFLE:  CR
@@ -1465,29 +1484,11 @@ KITEM: % = stone of earth elementals
 {{
 lua_marker("A", portal_desc { spawn_spot = 1 })
 
-function mons_gen (data, triggerable, triggerer, marker, ev)
-    function spawn_zombie (x, y, spec)
-        local mons = dgn.create_monster(x, y, spec)
-        crawl.mpr("You hear a whooshing noise from somewhere close by.")
-        return mons
-    end
-
-    if data.awoke == true then
-        return
-    end
-    local graves = dgn.find_marker_positions_by_prop("spawn_spot", 1)
-    for _, pos in ipairs(graves) do
-        local niceguy = spawn_zombie(pos.x, pos.y, "generate_awake pandemonium lord")
-    end
-
-    data.awoke = true
-end
-
 local mons_gen_marker = TriggerableFunction:new {
     data = {
         awoke = 0
     },
-    func = mons_gen,
+    func = "sprint_mu_zot_mons_gen",
     repeated = true,
     props = {listen_to_slaves = true, only_at_slave = true }
     }

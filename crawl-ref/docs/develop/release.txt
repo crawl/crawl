@@ -112,7 +112,7 @@ for those the list begins with step 2.
     into the folder as well.
 
 10. Update the homepage
-    Modify the Downloads page over at 
+    Modify the Downloads page over at
     http://crawl.develz.org/wordpress/downloads/ as necessary.
 
 11. Announce the release

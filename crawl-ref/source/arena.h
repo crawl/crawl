@@ -14,7 +14,7 @@ struct mgen_data;
 
 struct coord_def;
 
-void run_arena(const std::string& teams);
+NORETURN void run_arena(const std::string& teams);
 
 monster_type arena_pick_random_monster(const level_id &place, int power,
                                        int &lev_mons);

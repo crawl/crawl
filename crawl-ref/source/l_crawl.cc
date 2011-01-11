@@ -505,6 +505,8 @@ LUARET1(crawl_roll_dice, number,
         lua_gettop(ls) == 1
         ? roll_dice(1, luaL_checkint(ls, 1))
         : roll_dice(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
+                                                    luaL_checkint(ls, 2)))
 
 static int crawl_is_tiles(lua_State *ls)
 {
@@ -630,6 +632,7 @@ static const struct luaL_reg crawl_clib[] =
     { "random2avg"   ,  crawl_random2avg },
     { "coinflip",       crawl_coinflip },
     { "roll_dice",      crawl_roll_dice },
+    { "x_chance_in_y",  crawl_x_chance_in_y },
     { "random_range",   crawl_random_range },
     { "random_element", crawl_random_element },
     { "redraw_screen",  crawl_redraw_screen },

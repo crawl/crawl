@@ -12,6 +12,16 @@
 #include "mon-util.h"
 #include "mon-stuff.h"
 
+#define WRAPPED_MONSTER(ls, name)                                       \
+    MonsterWrap *___mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE); \
+    if (!___mw                                                          \
+        || !___mw->mons                                              \
+        || CLua::get_vm(ls).managed_vm && ___mw->turn != you.num_turns) \
+    {                                                                \
+        luaL_argerror(ls, 1, "Invalid monster wrapper");             \
+    } \
+    monster *name(___mw->mons)
+
 /////////////////////////////////////////////////////////////////////
 // Monster handling
 
@@ -106,8 +116,24 @@ LUAFN(l_mons_add_energy)
     mons->speed_increment += luaL_checkint(ls, 1);
     return (0);
 }
-
 MDEFN(add_energy, add_energy)
+
+#define LUANAMEFN(name, expr)                     \
+    static int l_mons_##name##_fn(lua_State *ls) {      \
+       ASSERT_DLUA;                              \
+       const monster* mons =                                    \
+           clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1)); \
+       const description_level_type dtype =                          \
+           lua_isstring(ls, 1)?                                      \
+           description_type_by_name(luaL_checkstring(ls, 1))         \
+           : DESC_PLAIN;                                             \
+       PLUARET(string, expr.c_str());             \
+    }                                             \
+    MDEFN(name, name##_fn)                        \
+
+LUANAMEFN(mname, mons->name(dtype, true))
+LUANAMEFN(mfull_name, mons->full_name(dtype, true))
+LUANAMEFN(mbase_name, mons->base_name(dtype, true))
 
 MDEF(hd)
 {
@@ -178,9 +204,6 @@ MDEF(dancing_weapon)
 static const char *_monuse_names[] =
 {
     "nothing", "open_doors", "starting_equipment", "weapons_armour"
-#if TAG_MAJOR_VERSION == 31
-    , "magic_items"
-#endif
 };
 
 static const char *_monuse_to_str(mon_itemuse_type utyp)
@@ -379,6 +402,53 @@ static int l_mons_do_has_prop(lua_State *ls)
 
 MDEFN(has_prop, do_has_prop)
 
+static int l_mons_do_add_ench(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    const char *ench_name = luaL_checkstring(ls, 1);
+    enchant_type met = name_to_ench(ench_name);
+    if (!met)
+    {
+        std::string err
+            = make_stringf("No such enchantment: %s", ench_name);
+        luaL_argerror(ls, 1, err.c_str());
+        return 0;
+    }
+
+    mons->add_ench(mon_enchant(met, luaL_checkint(ls, 2), KC_OTHER,
+                               luaL_checkint(ls, 3)));
+    return 0;
+}
+
+MDEFN(add_ench, do_add_ench)
+
+static int l_mons_do_del_ench(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    const char *ench_name = luaL_checkstring(ls, 1);
+    enchant_type met = name_to_ench(ench_name);
+    if (!met)
+    {
+        std::string err
+            = make_stringf("No such enchantment: %s", ench_name);
+        luaL_argerror(ls, 1, err.c_str());
+        return 0;
+    }
+
+    mons->del_ench(met);
+    return 0;
+}
+
+MDEFN(del_ench, do_del_ench)
+
 MDEF(you_can_see)
 {
     ASSERT_DLUA;
@@ -414,6 +484,9 @@ static MonsAccessor mons_attrs[] =
     { "targetx", l_mons_targetx },
     { "targety", l_mons_targety },
 
+    { "mname",           l_mons_mname           },
+    { "mfull_name",      l_mons_mfull_name      },
+    { "mbase_name",      l_mons_mbase_name      },
     { "energy",          l_mons_energy          },
     { "add_energy",      l_mons_add_energy      },
     { "dismiss",         l_mons_dismiss         },
@@ -424,18 +497,14 @@ static MonsAccessor mons_attrs[] =
     { "set_prop",        l_mons_set_prop        },
     { "get_prop",        l_mons_get_prop        },
     { "has_prop",        l_mons_has_prop        },
+    { "add_ench",        l_mons_add_ench        },
+    { "del_ench",        l_mons_del_ench        },
     { "you_can_see",     l_mons_you_can_see     }
 };
 
 static int monster_get(lua_State *ls)
 {
-    MonsterWrap *mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE);
-    if (!mw
-        || !mw->mons
-        || CLua::get_vm(ls).managed_vm && mw->turn != you.num_turns)
-    {
-        return (0);
-    }
+    WRAPPED_MONSTER(ls, mons);
 
     const char *attr = luaL_checkstring(ls, 2);
     if (!attr)
@@ -443,7 +512,7 @@ static int monster_get(lua_State *ls)
 
     for (unsigned i = 0; i < sizeof(mons_attrs) / sizeof(mons_attrs[0]); ++i)
         if (!strcmp(attr, mons_attrs[i].attribute))
-            return (mons_attrs[i].accessor(ls, mw->mons, attr));
+            return (mons_attrs[i].accessor(ls, mons, attr));
 
     return (0);
 }
@@ -539,6 +608,7 @@ static const struct luaL_reg mons_lib[] =
 
 void dluaopen_monsters(lua_State *ls)
 {
+    lua_stack_cleaner stack_clean(ls);
     luaL_newmetatable(ls, MONS_METATABLE);
     lua_pushstring(ls, "__index");
     lua_pushcfunction(ls, monster_get);
@@ -547,9 +617,5 @@ void dluaopen_monsters(lua_State *ls)
     lua_pushstring(ls, "__newindex");
     lua_pushcfunction(ls, monster_set);
     lua_settable(ls, -3);
-
-    // Pop the metatable off the stack.
-    lua_pop(ls, 1);
-
-    luaL_openlib(ls, "mons", mons_lib, 0);
+    luaL_register(ls, "mons", mons_lib);
 }

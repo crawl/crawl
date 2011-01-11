@@ -9,7 +9,6 @@
 #include "dgn-shoals.h"
 #include "dgn-height.h"
 #include "env.h"
-#include "flood_find.h"
 #include "fprop.h"
 #include "items.h"
 #include "itemprop.h"
@@ -291,9 +290,6 @@ static void _shoals_furniture(int margin)
 {
     if (at_branch_bottom())
     {
-        unwind_var<dungeon_feature_set> vault_exc(dgn_Vault_Excavatable_Feats);
-        dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
-
         const coord_def p = _pick_shoals_island();
         const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
         const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
@@ -318,7 +314,7 @@ static void _shoals_furniture(int margin)
         {
             vault_placement &vp(*env.level_vaults[i]);
             if (vp.map.has_tag(SHOAL_RUNE_HUT))
-                dgn_dig_vault_loose(vp);
+                vp.connect();
         }
     }
 
@@ -368,7 +364,7 @@ static int _shoals_contiguous_feature_flood(
             {
                 const coord_def adj(*ai);
                 if (in_bounds(adj) && !rmap(adj) && grd(adj) == feat
-                    && unforbidden(adj, MMT_VAULT))
+                    && !map_masked(adj, MMT_VAULT))
                 {
                     rmap(adj) = nregion;
                     visit.push_back(adj);
@@ -456,7 +452,7 @@ _shoals_point_feat_cluster(dungeon_feature_type feat,
     {
         coord_def c(*ri);
         if (!region_map(c) && grd(c) == feat
-            && unforbidden(c, MMT_VAULT))
+            && !map_masked(c, MMT_VAULT))
         {
             const int featcount =
                 _shoals_contiguous_feature_flood(region_map,
@@ -511,7 +507,7 @@ static void _shoals_make_plant_near(coord_def c, int radius,
             dgn_random_point_from(c, random2(1 + radius), _shoals_margin));
         if (!plant_place.origin()
             && !monster_at(plant_place)
-            && unforbidden(plant_place, MMT_VAULT))
+            && !map_masked(plant_place, MMT_VAULT))
         {
             const dungeon_feature_type feat(grd(plant_place));
             if (_shoals_plantworthy_feat(feat)
@@ -621,7 +617,7 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
     // To avoid plants cropping up inside vaults, mark everything inside
     // vaults as "windy".
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (!unforbidden(*ri, MMT_VAULT))
+        if (map_masked(*ri, MMT_VAULT))
             windy(*ri) = true;
 
     // Now we know the places in the wind shadow:
@@ -689,7 +685,7 @@ void dgn_shoals_generate_flora()
 void dgn_build_shoals_level(int level_number)
 {
     env.level_build_method += make_stringf(" shoals+ [%d]", level_number);
-    env.level_layout_type   = "shoals";
+    env.level_layout_types.insert("shoals");
 
     const int shoals_depth = level_id::current().depth - 1;
     if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_PORTAL_VAULT)

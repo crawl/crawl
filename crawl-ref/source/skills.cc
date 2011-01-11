@@ -13,6 +13,7 @@
 #include <stdlib.h>
 
 #include "externs.h"
+#include "godabil.h"
 #include "hints.h"
 #include "itemprop.h"
 #include "notes.h"
@@ -161,6 +162,8 @@ static void _change_skill_level(skill_type exsk, int n)
     if (you.skills[exsk] == 27)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        if (exsk == you.transfer_to_skill)
+            ashenzari_end_transfer(true, true);
     }
     else if (you.skills[exsk] == 1 && n > 0)
     {

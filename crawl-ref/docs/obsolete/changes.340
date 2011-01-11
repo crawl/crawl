@@ -54,7 +54,7 @@ Oct 30, 2000 (Brent Ross)
     -- added starting message describing chacter race/class
     -- make yesno() take a flag for "safe" cases... and option
     -- fixed the file locking mechanism
-    -- moved some SOLARIS defined stuff (which really isn't Solaris dependant) 
+    -- moved some SOLARIS defined stuff (which really isn't Solaris dependant)
        to MULTIUSER.
     -- write player_title() as interface to skill_title() which will do the
        best calculating and call skill_title (which is still needed for ghosts)
@@ -66,44 +66,44 @@ Oct 30, 2000 (Brent Ross)
     -- added Ball Lightning spell (replacing Electric Orb).
     -- fixed best_skill to use skill_points and species difficulty, instead
        of just the base level (which gave preference based on the order of
-       the skills... this will only have that happen if the skill points 
+       the skills... this will only have that happen if the skill points
        are also equal, which is much less likely).
     -- adjustments to the spellbooks, and spellbook aquirement
-    -- Warp adjustments 
+    -- Warp adjustments
         - removed bend, warp/distortion brand from play
 
         - warp brand was raised in level and the miscast effects were
           added to the spell start and end (to limit the spell should it
           ever be brought back).
 
-        - translocations also doesn't help with the miscast effects of 
-          distortion brands (it was reducing the terror wielding one, and 
-          these weapons easily outclass other brands for bonus damage and 
-          powerful effects... they should never be anywhere near usable 
-          as a reliable swap weapon, player's should have to seriously think 
+        - translocations also doesn't help with the miscast effects of
+          distortion brands (it was reducing the terror wielding one, and
+          these weapons easily outclass other brands for bonus damage and
+          powerful effects... they should never be anywhere near usable
+          as a reliable swap weapon, player's should have to seriously think
           before deciding to use one... and have to risk some real damage
           or banishment if they use them frequently).
 
         - reduced frequency of summoning "spatial vortices" as a miscast
           effect -- people were reliably getting them by dropping warp
-          branded weapons (and it's random movement makes it much less 
+          branded weapons (and it's random movement makes it much less
           a threat to the player, who will sit back and watch it mow down
           the other monsters in the room (who won't see it as a threat))
 
         - added Far Stike as a level one spell (the other spells were very
           overpowered (distortion weapons are gross and dangerous, using
           that code as "balanced" is wrong unless you're bringing over the
-          danger as well... all three of warp attacks were also range 1, which 
+          danger as well... all three of warp attacks were also range 1, which
           is silly for Warpers, who should be world-class plinkers, not close
-          combat munchkins).  It's a much limited spell that allows the player 
-          to "hit" a monster in LOS (yes, that means like striking/airstrike 
-          so it's not really another magic missle) with their weapon 
+          combat munchkins).  It's a much limited spell that allows the player
+          to "hit" a monster in LOS (yes, that means like striking/airstrike
+          so it's not really another magic missle) with their weapon
           (limits being: no magical special effects, no enchantment bonus,
           slow to cast (weapon swing is part of it, but it's also a spell
-          so it will never take less than 10), max damage limited by 
-          translocation skill and weapon, with strength bonus/penalty 
-          applied, can be resisted (maybe change this to evaded?)).  This 
-          should probably be the only translocation combat spell... let them 
+          so it will never take less than 10), max damage limited by
+          translocation skill and weapon, with strength bonus/penalty
+          applied, can be resisted (maybe change this to evaded?)).  This
+          should probably be the only translocation combat spell... let them
           go elsewhere for strong offensive.
 
         - made it so that blink will at least teleport the player to a square
@@ -117,22 +117,22 @@ Oct 30, 2000 (Brent Ross)
           fixed later, but right now I'm calling it a "feature".  Should
           it be fixed, this spell could be changes to give a higher resist
           and in insta-kill situations the monster could be allowed to
-          "scatter" to any of the immediate surrounding squares as a 
+          "scatter" to any of the immediate surrounding squares as a
           save against death (player could get this too).
-        
+
         - added Apportation, a simple utility spell that will move light
           objects to the player
-        
-        - added Evocation a high level teleport surrounding monsters 
+
+        - added Evocation a high level teleport surrounding monsters
           away spell (even if resisted the monster still might be blinked)
 
     -- fixed BUG: nagas gaining breathe fire mutation (twice in this case) seem
                   to lose the spit poison ability
 
     -- made it so that MULTIUSER will look for ~/.crawlrc (Un*x-type standard)
-    -- pain, disrupt, far strike do a minimum of 1pt of damage to make up 
+    -- pain, disrupt, far strike do a minimum of 1pt of damage to make up
        for the monsters saving throw (that 1pt is only really good early
-       on when the character can use it to help stay alive, later on it 
+       on when the character can use it to help stay alive, later on it
        means almost nothing... so it helps out begining characters, and
        makes the fact that the spell is going to be resisted fairly often
        at those levels a little less painful).
@@ -147,7 +147,7 @@ Oct 30, 2000 (Brent Ross)
        values of item_dam also occur).
     -- fix for "buggy potions"... potions ids were being generated in a wider
        range than there was descriptive words.
-    -- lowered the magic resistance of the really low level monster to allow 
+    -- lowered the magic resistance of the really low level monster to allow
        first level characters to deal with them better.
     -- enums for item_descriptions
     -- enums for monster bands
@@ -159,8 +159,8 @@ Oct 30, 2000 (Brent Ross)
     -- modified swap_monsters to handle habitats.
     -- tweaked failure rate for Trog Haste (which was in with the other haste
        and using Invocations).
-    -- power level caps for spells (checks for most spells to verify that 
-       the effect is limited in some way as protection against potential 
+    -- power level caps for spells (checks for most spells to verify that
+       the effect is limited in some way as protection against potential
        extremely high power casting).  Adjustments to spell damages/to-hit
        to work with the lower caps (that the play will run up against).
     -- added wizard command for filling up skill experience pool
@@ -173,8 +173,8 @@ Oct 30, 2000 (Brent Ross)
     * Switched to using bounds checked array classes for most arrays.
     * Fixed several places that were indexing past the end of arrays.
     * Renamed environ::sh_x, sh_y, sh_greed, sh_type, and sh_level so they start with shop.
-    * Renamed MNG NON_MONSTER, MNST MAX_MONSTERS, ITEMS MAX_ITEMS, ING NON_ITEM, 
-      CLOUDS MAX_CLOUDS, CNG EMPTY_CLOUD, and NTRAPS MAX_TRAPS. 
+    * Renamed MNG NON_MONSTER, MNST MAX_MONSTERS, ITEMS MAX_ITEMS, ING NON_ITEM,
+      CLOUDS MAX_CLOUDS, CNG EMPTY_CLOUD, and NTRAPS MAX_TRAPS.
     * Fixed end_game so that it works with filenames longer than 6 characters.
     * Disabled USE_WARPER_BETTER_WEAPON.
     * Fixed misspelled "jewelry".
@@ -199,19 +199,19 @@ Oct 30, 2000 (Brent Ross)
       due to level so that it couldn't happen again.
     * item_use::wield_weapon(): smoothed out Translocator 'save' vs distortion
       effects when wielding/unwielding.
-    * smoothed out hp bonus for fighting skill (in integer math,  always 
+    * smoothed out hp bonus for fighting skill (in integer math,  always
       divide _last_).
     * enchant weapon scrolls will affect missiles now (no branding though),
       if they aren't already heavily enchanted - same as weapons.
-    
+
     Changes:
     * Completely reworked throwing for players _and_ monsters.  Monsters are
       not nearly as good as players for the most part,  but can still be
       rather scary.   Hit Dice are (approximately) substituted for player skill,
       and monsters of high intelligence are much better shots now.
     - targeting any missile weapon benefits from high dex and throwing skill.
-      In fact, effective bow/xbow/sling skill is limited to twice one's 
-      throwing.  A warning is given on the skills screen if this limit is 
+      In fact, effective bow/xbow/sling skill is limited to twice one's
+      throwing.  A warning is given on the skills screen if this limit is
       hampering the player.
     - darts, slings, and crossbows are easy to use.  Bows and thrown weapons
       are harder,  but bows improve a _lot_ with skill.
@@ -227,12 +227,12 @@ Oct 30, 2000 (Brent Ross)
 
     * changed some of the class titles
     * updated display_mutations() so that more than 20 mutations will
-      cause a -more- prompt and screen clear. 
+      cause a -more- prompt and screen clear.
 
 28.july.2000 (Michal Valvoda)
 
     Changes in mutations::void display_mutations(void)
-    - added innate abilities and weirdness to "Mutations & Other weirdness" 
+    - added innate abilities and weirdness to "Mutations & Other weirdness"
       screen and renamed it to "Innate abilities, weirdness & mutations".
     Innate abilities are colored LIGHTBLUE
 
@@ -262,7 +262,7 @@ Oct 30, 2000 (Brent Ross)
     Made transformation, species & mutation breath weapons mutually exclusive
     (so a naga with the `breathe flame' mutation can't spit poison). THIS IS
     NOT TOTALLY DONE, but somewhat better than before.
-    
+
     + Added failure probabilities for some (not yet used) Invocations.
 
     * beam.cc:
@@ -291,7 +291,7 @@ Oct 30, 2000 (Brent Ross)
 
 
     * it_use2.cc:
-    
+
     + Added ZAP_MAGMA (for Bolt of Magma)
     + Fixed POT_MIGHT effect
 
@@ -302,7 +302,7 @@ Oct 30, 2000 (Brent Ross)
     + STAFF_SMITING no longer gives you a one-choice menu, it just does it.
     + Non-Spell Staves no longer say "This staff has no spells in it." when
       (I)nvoked, they say "Nothing appears to happen.".
-    + Less abusive message for putting on non-jewellery (with free spelling 
+    + Less abusive message for putting on non-jewellery (with free spelling
       error!)
     + Jewellery messages now feature "put on" in some places where "wear" was.
 
@@ -454,25 +454,25 @@ Oct 30, 2000 (Brent Ross)
 
 19.jun.2000 (Gordon Lipford)
      Changes:
-     
+
      * replaced old losight() function with new one.  It doesn't quite
        match the old one,  but it's close enough.
      * externalized setLOSRadius() and added normal_vision and current_vision
        fields to the player structure.  We have variable light sources, voila!
-       
+
      - Note that using a radius of 0 screws up map memory and looks really dumb.
        I am not going to try to fix this.
      - In a similar vein,  bumping into something should draw it on the map
        if you didn't know it was there already (ie you fumble blindly into a
        wall).  I'm not going to do this either.  :)
-       
+
      * changed all level 1 'handle' references to level 2 'FILE *' for better
        portability.  Whenever a function needs a File Descriptor,  I have
        substituted fileno(handle) for just 'handle'.
      * added Windows 32 bit Console support.  Screen redraws,  loading, saving,
        and highscore updates are now VERY fast on Windows machines,  even playing
        from a shared network drive.  The NT DOS VDM,  at least,  was !@$#* crap.
-       
+
 
 17.mar.2000 [Josh Fishman]
 

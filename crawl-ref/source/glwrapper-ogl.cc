@@ -261,7 +261,7 @@ void OGLShapeBuffer::add(const GLWPrim &rect)
         add_line(rect);
         break;
     default:
-        ASSERT(!"Invalid primitive type");
+        die("Invalid primitive type");
         break;
     }
 }
@@ -389,7 +389,7 @@ void OGLShapeBuffer::draw(const GLState &state)
         glDrawArrays(GL_LINES, 0, m_position_buffer.size());
         break;
     default:
-        ASSERT(!"Invalid primitive type");
+        die("Invalid primitive type");
         break;
     }
 }

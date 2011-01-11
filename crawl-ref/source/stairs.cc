@@ -1028,7 +1028,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
         mprf("You insert %s into the lock.",
              you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
-        big_cloud(CLOUD_BLUE_SMOKE, KC_YOU, you.pos(), 20, 7 + random2(7));
+        big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
         viewwindow();
         mpr("Heavy smoke blows from the lock!");
         more();
@@ -1108,7 +1108,7 @@ void down_stairs(dungeon_feature_type force_stair,
     // instances of it.
     if (you.level_type != LEVEL_DUNGEON)
     {
-        std::string lname = get_level_filename(level_id::current());
+        std::string lname = level_id::current().describe();
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str());
 #endif
@@ -1290,7 +1290,7 @@ void down_stairs(dungeon_feature_type force_stair,
         }
 
         default:
-            ASSERT(false);
+            die("unknown level type");
         }
     }
 
@@ -1358,8 +1358,16 @@ void down_stairs(dungeon_feature_type force_stair,
 
 }
 
-void new_level(void)
+void new_level(bool restore)
 {
+    print_stats_level();
+#ifdef DGL_WHEREIS
+    whereis_record();
+#endif
+
+    if (restore)
+        return;
+
     cancel_tornado();
 
     if (you.level_type == LEVEL_PORTAL_VAULT)
@@ -1372,11 +1380,6 @@ void new_level(void)
     }
     else
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
-
-    print_stats_level();
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
 }
 
 // Returns a hatch or stair (up or down)

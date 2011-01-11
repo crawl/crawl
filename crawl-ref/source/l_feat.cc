@@ -10,7 +10,6 @@
 #include "l_libs.h"
 
 #include "coord.h"
-#include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "terrain.h"

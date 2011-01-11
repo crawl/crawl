@@ -113,11 +113,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     if (type_bad && !name_check_only)
     {
-        ASSERT(!"God attempting to gift invalid type of item.");
-        mprf(MSGCH_ERROR, "%s attempting to gift invalid type of item.",
-             god_name(which_god).c_str());
-        // Prevent infinite loop in make_item_randart().
-        return (true);
+        die("%s attempting to gift invalid type of item.",
+            god_name(which_god).c_str());
     }
 
     if (type_bad)
@@ -945,6 +942,7 @@ void static _get_randart_properties(const item_def &item,
     if (!done_powers
         && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_LIFE_PROTECTION)
+        && (aclass != OBJ_ARMOUR || atype != ARM_PEARL_DRAGON_ARMOUR)
         && proprt[ARTP_BRAND] != SPWPN_DRAINING
         && proprt[ARTP_BRAND] != SPWPN_VAMPIRICISM
         && proprt[ARTP_BRAND] != SPWPN_PAIN

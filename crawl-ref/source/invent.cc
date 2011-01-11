@@ -40,6 +40,7 @@
 #include "state.h"
 
 #ifdef USE_TILE
+ #include "tiledef-icons.h"
  #include "tiledef-main.h"
  #include "tiledef-dngn.h"
  #include "tilepick.h"
@@ -141,7 +142,7 @@ bool InvEntry::is_item_art() const
 bool InvEntry::is_item_equipped() const
 {
     if (item->link == -1 || item->pos.x != -1 || item->pos.y != -1)
-        return(false);
+        return false;
 
     for (int i = 0; i < NUM_EQUIP; i++)
         if (item->link == you.equip[i])
@@ -439,10 +440,10 @@ static std::string _no_selectables_message(int item_selector)
     switch (item_selector)
     {
     case OSEL_ANY:
-        return("You aren't carrying anything.");
+        return "You aren't carrying anything.";
     case OSEL_WIELD:
     case OBJ_WEAPONS:
-        return("You aren't carrying any weapons.");
+        return "You aren't carrying any weapons.";
     case OBJ_ARMOUR:
     {
         if (_has_melded_armour())
@@ -451,44 +452,44 @@ static std::string _no_selectables_message(int item_selector)
             return("You aren't carrying any armour you can wear in your "
                    "current form.");
         else
-            return("You aren't carrying any armour.");
+            return "You aren't carrying any armour.";
     }
     case OSEL_UNIDENT:
-        return("You don't have any unidentified items.");
+        return "You don't have any unidentified items.";
     case OSEL_RECHARGE:
-        return("You aren't carrying any rechargeable items.");
+        return "You aren't carrying any rechargeable items.";
     case OSEL_ENCH_ARM:
         return("You aren't carrying any armour which can be enchanted "
                "further.");
     case OBJ_CORPSES:
     case OSEL_VAMP_EAT:
-        return("You aren't carrying any corpses which you can drain.");
+        return "You aren't carrying any corpses which you can drain.";
     case OSEL_DRAW_DECK:
-        return("You aren't carrying any decks from which to draw.");
+        return "You aren't carrying any decks from which to draw.";
     case OBJ_FOOD:
-        return("You aren't carrying any food.");
+        return "You aren't carrying any food.";
     case OBJ_POTIONS:
-        return("You aren't carrying any potions.");
+        return "You aren't carrying any potions.";
     case OBJ_SCROLLS:
     case OBJ_BOOKS:
-        return("You aren't carrying any books or scrolls.");
+        return "You aren't carrying any books or scrolls.";
     case OBJ_WANDS:
-        return("You aren't carrying any wands.");
+        return "You aren't carrying any wands.";
     case OSEL_THROWABLE:
-        return("You aren't carrying any items that might be thrown or fired.");
+        return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_BUTCHERY:
-        return("You aren't carrying any sharp implements.");
+        return "You aren't carrying any sharp implements.";
     case OSEL_EVOKABLE:
-        return("You aren't carrying any items that can be evoked.");
+        return "You aren't carrying any items that can be evoked.";
     case OSEL_FRUIT:
-        return("You aren't carrying any fruit.");
+        return "You aren't carrying any fruit.";
     case OSEL_PONDER_ARM:
-        return("You aren't carrying any armour which can be made ponderous.");
+        return "You aren't carrying any armour which can be made ponderous.";
     case OSEL_CURSED_WORN:
-        return("None of your equipped items are cursed.");
+        return "None of your equipped items are cursed.";
     }
 
-    return("You aren't carrying any such object.");
+    return "You aren't carrying any such object.";
 }
 
 void InvMenu::load_inv_items(int item_selector, int excluded_slot,
@@ -538,7 +539,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
         if (eq != EQ_NONE && you.melded[eq])
-            tileset.push_back(tile_def(TILE_MESH, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MESH, TEX_ICONS));
     }
     else
     {
@@ -573,13 +574,13 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
             // Needs to be displayed so as to not give away mimics in shallow water.
             if (ch == TILE_DNGN_SHALLOW_WATER)
             {
-                tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER,
-                                           TEX_DEFAULT));
+                tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER,
+                                           TEX_ICONS));
             }
             else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
             {
-                tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY,
-                                           TEX_DEFAULT));
+                tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER_MURKY,
+                                           TEX_ICONS));
             }
         }
     }

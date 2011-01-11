@@ -31,17 +31,21 @@ default-depth: D, Vault, Elf, Crypt
 #       from a list of thematically linked maps. This is mostly for flavour,
 #       although it may later be interesting to created serial vaults around
 #       threats.
+#       In general, we don't want more than one serial vault on a level. Use
+#       the luniq_serial in the serial vault's header map for this.
 #
 ############################################################################
 
+# Glass vaults
+#
+# Single instances of serial_glass vaults can be placed normally, so
+# we only roll numbers between 2 and 12 (non-flat distribution).
+# Sometimes we add a few rarer glass vaults to the level.
 NAME:   serial_glass
-TAGS:   allow_dup extra l_uniq
+TAGS:   allow_dup extra luniq_serial
 DEPTH:  D, Elf, Vault, Crypt
-CHANCE: 5%
+CHANCE: 3%
 {{
-  -- Single instances of serial_glass vaults can be placed normally, so
-  -- we only roll numbers between 2 and 12 (non-flat distribution).
-  -- Sometimes we add a few rarer glass vaults to the level.
   local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
   local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
   hook("post_place", function()
@@ -49,6 +53,7 @@ CHANCE: 5%
     dgn.place_maps{tag="serial_glass_rare", count=d}
   end)
 }}
+
 
 ############################################################################
 #
@@ -117,7 +122,7 @@ NAME:   small_statue_alley_a
 TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  D:10-20
 WEIGHT: 7
-SUBST:  F = G:100 F:1
+SUBST:  F = G:99 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
 MAP
   xxxxxxx
@@ -264,7 +269,7 @@ ENDMAP
 NAME:   corexii_corridor_pit
 DEPTH:  D
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   allow_dup extra luniq_mini mini_float
+TAGS:   allow_dup extra luniq_mini
 : if crawl.random2(5) == 0 then
 :   subst("l = W")
 :   subst("= = x")
@@ -289,143 +294,6 @@ x#####x
 x=xxx=x
 @.lll.@
 xxxxxxx
-ENDMAP
-
-# 3-wide hallways lined with statues, by Core Xii.
-NAME:   corexii_hall_statues_deadend
-DEPTH:  D
-WEIGHT: 1
-TAGS:   extra mini_float
-SUBST:  T = T:2 V:2 G:1
-NSUBST: ? = 1:% / *:.
-MAP
-xxxxxxxxxxxxx
-xGxxxGxxxGxxx
-@.......?.?xx
-@..........Tx
-@.......?.?xx
-xGxxxGxxxGxxx
-xxxxxxxxxxxxx
-ENDMAP
-
-NAME:   corexii_hall_statues_i
-DEPTH:  D
-WEIGHT: 2
-TAGS:   allow_dup extra mini_float
-SUBST:  T = T:1 G:4, T = T V
-MAP
-xxxxxxxxxxx
-xGxxxTxxxGx
-@.........@
-@.........@
-@.........@
-xGxxxTxxxGx
-xxxxxxxxxxx
-ENDMAP
-
-NAME:   corexii_hall_statues_l
-DEPTH:  D
-WEIGHT: 2
-TAGS:   extra mini_float
-SUBST:  T = T:1 G:2, T = T V
-MAP
-xx@@@xx
-xG...Gx
-xx...xx
-xx...xx
-xx...xx
-xT...Gx
-xx...xxxxxxxx
-xx...xxGxxxGx
-xx..........@
-xG..........@
-xx..........@
-xxxGxxxTxxxGx
-xxxxxxxxxxxxx
-ENDMAP
-
-NAME:   corexii_hall_statues_s
-DEPTH:  D
-WEIGHT: 1
-TAGS:   extra mini_float
-SUBST:  T = T:4 G:1, T = T V
-MAP
-xx@@@xx
-xG...Gx
-xx...xxxxxxxxxx
-xx...xxTxxxGxxx
-xx...........xx
-xG...........Gx
-xx...........xx
-xxxGxxxTxx...xx
-xxxxxxxxxx...xx
-        xG...Gx
-        xx@@@xx
-ENDMAP
-
-NAME:   corexii_hall_statues_u
-DEPTH:  D
-WEIGHT: 1
-TAGS:   extra mini_float
-SUBST:  T = T:4 G:1, T = T V
-MAP
-xx@@@xxxxx@@@xx
-xG...GxxxG...Gx
-xx...xxxxx...xx
-xx...xxTxx...xx
-xx...........xx
-xG...........Gx
-xx...........xx
-xxxGxxxTxxxGxxx
-xxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:   corexii_hall_statues_t
-DEPTH:  D
-WEIGHT: 1
-TAGS:   dup extra mini_float
-SUBST:  T = T:2 V:2 G:1
-MAP
-xxxxxxxxxxxxxxxxxxx
-xGxxxGxxxTxxxGxxxGx
-@.................@
-@.................@
-@.................@
-xGxxxGxx...xxGxxxGx
-xxxxxxxx...xxxxxxxx
-      xG...Gx
-      xx...xx
-      xx...xx
-      xx...xx
-      xG...Gx
-      xx@@@xx
-ENDMAP
-
-NAME:   corexii_hall_statues_x
-DEPTH:  D
-WEIGHT: 2
-TAGS:   extra mini_float
-SUBST:  T = T:3 V:3 G:1 .:3
-MAP
-      xx@@@xx
-      xG...Gx
-      xx...xx
-      xx...xx
-      xx...xx
-      xG...Gx
-xxxxxxxx...xxxxxxxx
-xGxxxGxx...xxGxxxGx
-@.................@
-@........T........@
-@.................@
-xGxxxGxx...xxGxxxGx
-xxxxxxxx...xxxxxxxx
-      xG...Gx
-      xx...xx
-      xx...xx
-      xx...xx
-      xG...Gx
-      xx@@@xx
 ENDMAP
 
 NAME:  nrook_mini_backslash
@@ -483,7 +351,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_crystal_room
-TAGS:   extra luniq_mini mini_float
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf
 NSUBST: ? = 1:b / *:?
 SUBST:  ? = bbbbb@
@@ -498,7 +366,7 @@ b?b?b?b?b
 ENDMAP
 
 NAME:    minmay_hedge_maze
-TAGS:    extra luniq_mini mini_float
+TAGS:    extra luniq_mini
 DEPTH:   D, Lair
 MONS:    bush
 SHUFFLE: ABC
@@ -560,7 +428,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_liquid_box
-TAGS:  extra luniq_mini mini_float no_monster_gen
+TAGS:  extra luniq_mini no_monster_gen
 ITEM:  potion of water / nothing
 DEPTH: D
 SUBST: w : wWWld
@@ -573,7 +441,7 @@ xx+xx
 ENDMAP
 
 NAME:  minmay_fountain_box
-TAGS:  extra luniq_mini mini_float
+TAGS:  extra luniq_mini
 DEPTH: D, Elf
 KMASK: T = no_monster_gen
 KMASK: U = no_monster_gen
@@ -591,7 +459,7 @@ xxxx+xxxx
 ENDMAP
 
 NAME:  minmay_tree_intersection
-TAGS:  extra luniq_mini mini_float
+TAGS:  extra luniq_mini
 DEPTH: D
 MAP
 xxx@xxx
@@ -697,7 +565,7 @@ x.x.x.x.x
 ENDMAP
 
 NAME:  minmay_misc_feat_encased
-TAGS:  extra mini_float luniq_mini
+TAGS:  extra luniq_mini
 DEPTH: D
 SUBST: c : bcvm
 SUBST: @ : +@
@@ -712,7 +580,7 @@ x@xxxxx
 ENDMAP
 
 NAME:  minmay_misc_feat_rugged
-TAGS:  extra mini_float luniq_mini
+TAGS:  extra luniq_mini
 DEPTH: D
 SUBST: A = x..., B = x.., C = x., D = xx.
 KPROP: BCD = no_rtele_into
@@ -755,7 +623,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_tower
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D
 NSUBST: ? = 1:@ / *:?
 SUBST:  ? = @...
@@ -864,7 +732,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_misc_feat_ornament
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf, Crypt
 MAP
 x@xxxxxxx@x
@@ -879,7 +747,7 @@ x@xxxxxxx@x
 ENDMAP
 
 NAME:   minmay_misc_feat_hallway
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Crypt
 SUBST:  G : ..GGxb
 MAP
@@ -895,7 +763,7 @@ xxx@xxx
 ENDMAP
 
 NAME:   minmay_misc_feat_alley
-TAGS:   extra mini_float luniq_mini
+TAGS:   extra luniq_mini
 DEPTH:  D, Elf, Crypt
 MAP
 xx@xx@xx
@@ -1044,6 +912,196 @@ MAP
 ......
 ENDMAP
 
+NAME:   minmay_stone_trees_small
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 6
+MAP
+.......
+..ttt..
+.tccct.
+.tccct.
+.tccct.
+..ttt..
+.......
+ENDMAP
+
+NAME:   minmay_stone_trees_medium
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 3
+MAP
+.............
+..ttt...ttt..
+.tccct.tccct.
+.tccct.tccct.
+.tccct.tccct.
+..ttt.t.ttt..
+.....ttt.....
+..ttt.t.ttt..
+.tccct.tccct.
+.tccct.tccct.
+.tccct.tccct.
+..ttt...ttt..
+.............
+ENDMAP
+
+NAME:   minmay_stone_trees_large
+TAGS:   extra luniq_mini ruin_lair
+DEPTH:  D, Vault, Lair
+WEIGHT: 1
+SUBST:  T = t.
+MAP
+...................
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...T.....T.....T...
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...T.....T.....T...
+..ttt...ttt...ttt..
+.tccct.tccct.tccct.
+.tccctTtccctTtccct.
+.tccct.tccct.tccct.
+..ttt...ttt...ttt..
+...................
+ENDMAP
+
+NAME:   minmay_crystal_water
+TAGS:   extra no_monster_gen luniq_mini
+DEPTH:  D
+MAP
+wwwwwwwww
+wbwwwwwbw
+wbwbbbwbw
+wbwwwwwbw
+wwwwwwwww
+ENDMAP
+
+NAME:   minmay_holes
+TAGS:   extra luniq_mini
+DEPTH:  D, Lair
+KFEAT:  ^ = known shaft trap
+SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
+WEIGHT: 15
+MAP
+     ....
+   ........
+  ..........
+ ....''''....
+ ...''''''...
+...'''""'''...
+...''""""''...
+...''""""''...
+...'''""'''...
+ ...''''''...
+ ....''''....
+  ..........
+   ........
+     ....
+ENDMAP
+
+NAME:   minmay_splitting_lines
+TAGS:   extra luniq_mini
+DEPTH:  D
+WEIGHT: 5
+MAP
+.....................
+.....x...x.x...x.....
+......x.x...x.x......
+...x...x.....x...x...
+....x..x.....x..x....
+.x...xxx.....xxx...x.
+..x..x..x...x..x..x..
+...xxx...x.x...xxx...
+..x...x...x...x...x..
+.x.....x..x..x.....x.
+........xxxxx........
+.x.....x..x..x.....x.
+..x...x...x...x...x..
+...xxx...x.x...xxx...
+..x..x..x...x..x..x..
+.x...xxx.....xxx...x.
+....x..x.....x..x....
+...x...x.....x...x...
+......x.x...x.x......
+.....x...x.x...x.....
+.....................
+ENDMAP
+
+NAME:   minmay_curled_crystal
+TAGS:   extra luniq_mini
+DEPTH:  D, Elf
+WEIGHT: 3
+MAP
+................
+..bb........bb..
+.b..b......b..b.
+.b............b.
+..bbbbbbbbbbbb..
+................
+ENDMAP
+
+NAME:    minmay_parallelograms
+DEPTH:   D
+WEIGHT:  2
+SHUFFLE: EFGH
+SUBST:   B : xx., C : xx., D : xx., E : xx., F : xx., G : xx., H : xx.
+MAP
+...........         ...........
+.xx.xxxxxx..       ..BBBBBB.BB.
+..xx.....xx..     ..BB.....BB..
+ ..xx.EEE.xx..   ..BB.FFF.BB..
+  ..xx.EEE.xx.. ..BB.FFF.BB..
+   ..xx.....xx...BB.....BB..
+    ..xxxxxx.xx.BB.BBBBBB..
+     .....................
+    ..CCCCCC.CC.DD.DDDDDD..
+   ..CC.....CC...DD.....DD..
+  ..CC.HHH.CC.. ..DD.GGG.DD..
+ ..CC.HHH.CC..   ..DD.GGG.DD..
+..CC.....CC..     ..DD.....DD..
+.CC.CCCCCC..       ..DDDDDD.DD.
+...........         ...........
+ENDMAP
+
+NAME:    minmay_large_rounded_square
+DEPTH:   D, Vault, Crypt
+WEIGHT:  1
+SUBST:   x : x c:2 v:1 b:1
+MAP
+     ..............
+   ...xxxxxxxxxxxx...
+  ..xxxxxxxxxxxxxxxx..
+ ..xxxxxxxxxxxxxxxxxx..
+ .xxxxxxxxxxxxxxxxxxxx.
+..xxxxxxxxxxxxxxxxxxxx..
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxxxxx.
+..xxxxxxxxxxxxxxxxxxxx..
+ .xxxxxxxxxxxxxxxxxxxx.
+ ..xxxxxxxxxxxxxxxxxx..
+  ..xxxxxxxxxxxxxxxx..
+   ...xxxxxxxxxxxx...
+     ..............
+ENDMAP
+
 
 #####################################################################
 #
@@ -1113,7 +1171,7 @@ ENDMAP
 # Unseen surprise! by due (and dpeg).
 NAME:   due_unseen_surprise
 DEPTH:  D, Elf, Crypt, Vault
-TAGS:   serial_glass_rare allow_dup no_wall_fixup l_uniq
+TAGS:   serial_glass_rare allow_dup no_wall_fixup luniq
 : if you.absdepth()<11 or crawl.random2(27)>you.absdepth() then
 SUBST:  a = %
 SUBST:  b = %**
@@ -1267,7 +1325,7 @@ ENDMAP
 
 
 NAME:  minmay_trapped_gold
-TAGS:  extra luniq_mini mini_float no_monster_gen
+TAGS:  extra luniq_mini no_monster_gen
 DEPTH: D:16-, Crypt
 KFEAT: a = axe trap / bolt trap
 KFEAT: b = blade trap
@@ -1303,7 +1361,7 @@ xxxx
 ENDMAP
 
 NAME:  minmay_bad_closet
-TAGS:  extra mini_float
+TAGS:  extra
 DEPTH: D:2-12
 : if you.absdepth() > 4 then
 ITEM:  scroll of immolation / potion of degeneration / potion of decay / \
@@ -1320,7 +1378,7 @@ xx+x
 ENDMAP
 
 NAME:    minmay_variable_closet
-TAGS:    extra mini_float allow_dup luniq_mini
+TAGS:    extra allow_dup luniq_mini
 DEPTH:   D:9-27, Vault
 ITEM:    any weapon, any missile, any armour, any food, any scroll
 ITEM:    any jewellery, any potion, any book
@@ -1339,7 +1397,7 @@ ENDMAP
 
 NAME:   secret_library_closet
 DEPTH:  D, Vault, Elf, Crypt, Snake, Spider, Dwarf, Orc
-TAGS:   mini_float allow_dup extra luniq_mini
+TAGS:   allow_dup extra luniq_mini
 ITEM:   any book w:20 / any scroll / nothing
 MAP
 x=xx
@@ -1361,7 +1419,7 @@ xx...xx
 ENDMAP
 
 NAME:   eino_tiny_chamber_secret
-TAGS:   mini_float allow_dup extra luniq_mini
+TAGS:   allow_dup extra luniq_mini
 DEPTH:  D:2-27, Elf, Vault, Crypt
 MAP
 xxxxx
@@ -1714,7 +1772,7 @@ ENDMAP
 # Flame stairs (Lemuel)
 #
 NAME:    lemuel_flame_stairs_1
-DEPTH:   D:9-26, Elf:2-6, Vault, Zot:1-4
+DEPTH:   D:9-26, Elf:2-4, Vault, Zot:1-4
 ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
@@ -1731,7 +1789,7 @@ ccccccccccc
 ENDMAP
 
 NAME:    lemuel_freeze_stairs_1
-DEPTH:   D:9-26, Elf:2-6, Vault, Zot:1-4
+DEPTH:   D:9-26, Elf:2-4, Vault, Zot:1-4
 ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \

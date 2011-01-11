@@ -50,6 +50,8 @@ private:
     int calc_duration(const monster* mons, const mon_enchant *added) const;
 };
 
+enchant_type name_to_ench(const char *name);
+
 typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
@@ -68,7 +70,6 @@ public:
     // Possibly some of these should be moved into the hash table
     std::string mname;
 
-    monster_type type;
     int hit_points;
     int max_hit_points;
     int hit_dice;
@@ -114,6 +115,8 @@ public:
     CrawlHashTable props;
 
 public:
+    void set_new_monster_id();
+
     mon_attitude_type temp_attitude() const;
 
     // Returns true if the monster is named with a proper name, or is
@@ -206,6 +209,7 @@ public:
     void ghost_init();
     void pandemon_init();
     void dancing_weapon_init();
+    void labrat_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();
@@ -215,7 +219,6 @@ public:
     actor *get_foe() const;
 
     // actor interface
-    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     god_type  deity() const;
@@ -366,6 +369,7 @@ public:
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
+    int liquefying_radius2 () const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
@@ -416,6 +420,7 @@ public:
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);
     void check_awaken(int disturbance);
+    int beam_resists(bolt &beam, int hurted, bool doEffects, std::string source = "");
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }

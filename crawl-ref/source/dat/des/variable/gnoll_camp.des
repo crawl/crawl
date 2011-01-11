@@ -1,0 +1,322 @@
+###############################################################################
+# gnoll_camp.des: This file includes a serial vault for the early, open levels
+# in main Dungeon.
+
+# Some lua shortcuts.
+{{
+
+function gnoll_sergeant (e)
+  e.mons("gnoll name:gnoll_sergeant name_replace name_descriptor hd:3 ; \
+          potion of healing | potion of heal wounds . \
+          halberd | glaive | whip ego:reaching w:2 | spear ego:reaching w:2 | \
+          spear | whip . \
+          ring mail | scale mail")
+end
+
+-- XXX: Petrify for the second spell when it's implemented as a monster spell.
+function gnoll_shaman (e)
+  e.mons("gnoll name:gnoll_shaman name_replace name_descriptor hd:3 \
+          actual_spells \
+          spells:corona;corona;heal_other;haste_other;heal_other;minor_healing\
+          ; quarterstaff | club | whip . robe | leather armour")
+end
+
+}}
+
+# The serial vault definition. CHANCE is fairly high with 10%, but a game
+# is not guaranteed to come up with one of the layouts within the depth
+# range, so the serial vault itself is probably fairly rare.
+
+NAME:   serial_gnoll_camp
+DEPTH:  D:5-10
+TAGS:   layout_open layout_caves layout_cross
+CHANCE: 10%
+{{
+  local c = 4 + crawl.random2(3)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_gnoll_camp", count=c}
+  end)
+}}
+
+# Reset default depth. This makes the vaults not generate randomly.
+default-depth:
+
+# The actual maps. More welcome! Add a DEPTH if you want to generate one
+# on its own. First off, the slightly bigger maps. Most have smaller WEIGHTs
+# so that the smaller maps get picked more often.
+
+NAME:   gnoll_camp_medium_01
+TAGS:   serial_gnoll_camp patrolling no_pool_fixup
+WEIGHT: 8
+KMASK:  w = no_monster_gen
+MONS:   gnoll
+MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3 / nothing
+: gnoll_sergeant(_G)
+: gnoll_shaman(_G)
+MONS:   jackal / hound / war dog w:1
+MAP
+.....................
+...cccccccc..........
+..xxxxxxxxxx.........
+.cxxxx...xxxc.....G..
+.cxxx.....xxc........
+.cxx.......xccccccc..
+.cxx...1...xxxxxxxxx.
+.cx.....5....2.2.2.x.
+.cxxxx.3...wxwxwxwxx.
+.cx%%+2.....5........
+.cx%%+2.....5........
+.cxxxx.4...wxwxwxwxx.
+.cx.....5....2.2.2.x.
+.cxx...1...xxxxxxxxx.
+.cxx.......xccccccc..
+.cxxx.....xxc........
+.cxxxx...xxxc.....G..
+..xxxxxxxxxx.........
+...cccccccc..........
+.....................
+ENDMAP
+
+NAME:   gnoll_camp_medium_02
+TAGS:   serial_gnoll_camp patrolling
+WEIGHT: 8
+MONS:   gnoll
+MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3
+: gnoll_sergeant(_G)
+: gnoll_shaman(_G)
+MONS:   jackal w:20 / hound / war dog w:1
+MAP
+...............
+...ccccccccc...
+..xxxxxxxxxxx..
+.cx>...T...>xc.
+.cx....4....xc.
+.cxxxx2.2xxxxc.
+.cx%%+.3.+55xc.
+.cx%%+...+55xc.
+.cxxxx...xxxxc.
+.cx.........xc.
+.cx2.1...1.2xc.
+.cx..1...1..xc.
+.cx.........xc.
+..xxxx...xxxx..
+...............
+ENDMAP
+
+NAME:   grums_kennel
+TAGS:   serial_gnoll_camp patrolling
+WEIGHT: 5
+MONS:   hound / war dog w:1 / nothing w:50
+MONS:   hound / war dog w:1
+# Grum is generated without the band. Loads of war dogs on D:5 is too harsh.
+KMONS:  3 = Grum, gnoll
+MAP
+............
+...ccc......
+..xxxxx.....
+.cx111+..2..
+.cx111+.....
+.cx111+..2..
+..xxxxx.....
+...ccc......
+............
+......x++x..
+..2..cx..xc.
+.....cx.3xc.
+..2...xxxx..
+.......cc...
+............
+ENDMAP
+
+NAME:   gnoll_camp_huts_basic
+TAGS:   serial_gnoll_camp patrolling uniq_gnoll_camp_huts
+#       Place monsters randomly: 6 gnolls, 2 sergeants, 2 shamans and 4 dogs.
+NSUBST: . = 6:1 / 2:2 / 2:3 / 4:4 / *:.
+MONS:   gnoll
+: gnoll_sergeant(_G)
+: gnoll_shaman(_G)
+MONS:   jackal / hound / war dog w:1
+MAP
+..................
+........cc........
+.......xxxx.......
+......cx..xc......
+......cx..xc......
+.......x++x.......
+...cc........cc...
+..xxxx......xxxx..
+.cx..+......+..xc.
+.cx..+......+..xc.
+..xxxx......xxxx..
+...cc........cc...
+.......x++x.......
+......cx%%xc......
+......cx%%xc......
+.......xxxx.......
+........cc........
+..................
+.
+ENDMAP
+
+NAME:   gnoll_camp_huts_moat
+TAGS:   serial_gnoll_camp patrolling no_pool_fixup uniq_gnoll_camp_huts
+WEIGHT: 8
+#       Place monsters randomly: 4 gnolls, 2 sergeants, 2 shamans and 4 dogs.
+NSUBST: . = 4:1 / 2:2 / 2:3 / 4:4 / *:.
+MONS:   gnoll
+: gnoll_sergeant(_G)
+: gnoll_shaman(_G)
+MONS:   jackal / hound / war dog w:1
+MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3
+MAP
+......................
+.41.14................
+......................
+.w...wwwwwwwwwwwwwwww.
+.w..................w.
+.w.5......cc......5.w.
+.w.......xxxx.......w.
+.w......cx..xc......w.
+.w.5....cx..xc....5.w.
+.w.......x++x.......w.
+.w...cc........cc...w.
+.w..xxxx......xxxx..w.
+.w.cx..+......+..xc.w.
+.w.cx..+......+..xc.w.
+.w..xxxx......xxxx..w.
+.w...cc........cc...w.
+.w.......x++x.......w.
+.w.5....cx%%xc....5.w.
+.w......cx%%xc......w.
+.w.......xxxx.......w.
+.w.5......cc......5.w.
+.w..................w.
+.wwwwwwwwwwwwwwwwwwww.
+......................
+ENDMAP
+
+# Small maps.
+
+NAME:    gnoll_camp_mini_basic
+TAGS:    serial_gnoll_camp patrolling allow_dup
+SHUFFLE: 34
+MONS:    gnoll, jackal / hound / war dog w:1
+: gnoll_sergeant(_G)
+: gnoll_shaman(_G)
+MAP
+.............
+...cccccc....
+..xxxxxxxx...
+.cx......x.2.
+.cx....1.x...
+.cx.3........
+.cx....1.x...
+.cx......x.2.
+..xxxxxxxx...
+...cccccc....
+.............
+ENDMAP
+
+NAME:  gnoll_camp_mini_doghouse
+TAGS:  serial_gnoll_camp patrolling allow_dup
+MONS:  gnoll, jackal / hound / war dog w:1 / nothing w:20
+MAP
+............
+...ccc......
+..xxxxx.....
+.cx222+..1..
+.cx221+.....
+.cx222+..1..
+..xxxxx.....
+...ccc......
+............
+ENDMAP
+
+NAME:  gnoll_camp_mini_loothouse
+TAGS:  serial_gnoll_camp patrolling
+MONS:  gnoll, hound / war dog
+MAP
+............
+...ccc......
+..xxxxx.....
+.cx%%.+..1..
+.cx%%2+.....
+.cx%%.+..1..
+..xxxxx.....
+...ccc......
+............
+ENDMAP
+
+NAME:   gnoll_camp_mini_secret_sergeant
+TAGS:   serial_gnoll_camp patrolling
+WEIGHT: 5
+MONS:   gnoll
+: gnoll_sergeant(_G)
+MAP
+....................
+...cccccccccc.......
+..xxxxxxxxxxxx...x..
+.cx...x........1.xc.
+.cx.>.x...1.1....xc.
+.cx...x.1.....1..xc.
+.cx.2.=..........xc.
+..=xxxxxxxxxxxxxxx..
+...cccccccccccccc...
+....................
+ENDMAP
+
+# Are they guarding or looting? Or just shopping?
+NAME:  gnoll_camp_mini_shop
+TAGS:  serial_gnoll_camp patrolling allow_dup
+MONS:  gnoll
+KFEAT: S = any shop
+MAP
+........
+..ccc...
+.xxxxx..
+.1...xc.
+.1.S.xc.
+.1...xc.
+.xxxxx..
+..ccc...
+........
+ENDMAP
+
+NAME:    gnoll_camp_mini_house
+TAGS:    serial_gnoll_camp patrolling allow_dup
+SHUFFLE: 23
+MONS:    gnoll
+: gnoll_sergeant(_G)
+: gnoll_shaman(_G)
+MONS:    war dog
+MAP
+...........
+...1..1....
+...........
+..xx++xxx..
+.cx....Txc.
+.cx....4xc.
+.cx...xxxc.
+.cx.2.+%xc.
+.cx...x%xc.
+..xxxxxxxc.
+...ccccc...
+...........
+ENDMAP
+
+NAME:    gnoll_camp_mini_hut
+TAGS:    serial_gnoll_camp patrolling allow_dup
+WEIGHT:  20
+SHUFFLE: 123
+MONS:    gnoll
+: gnoll_sergeant(_G)
+: gnoll_shaman(_G)
+MAP
+........
+..x++x..
+.cx..xc.
+.cx.1xc.
+..xxxx..
+...cc...
+........
+ENDMAP

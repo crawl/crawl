@@ -83,6 +83,11 @@
     #endif
 #endif
 
+// Use this to seed the PRNG with a bit more than just time()... which
+// leads to problems if for any reason we get started twice in the same
+// second.
+#define USE_MORE_SECURE_SEED
+
 // =========================================================================
 //  System Defines
 // =========================================================================
@@ -113,13 +118,6 @@
     #define USE_CURSES
 #endif
 
-    // Unix builds use curses/ncurses, which supports colour.
-    //
-    // This will allow using the standout attribute in curses to
-    // mark friendly monsters... results depend on the type of
-    // term used... under X Windows try "rxvt".
-    #define USE_COLOUR_OPTS
-
     // More sophisticated character handling
     #define CURSES_USE_KEYPAD
 
@@ -131,16 +129,6 @@
     // Have the utimes function to set access and modification time on
     // a file.
     #define HAVE_UTIMES
-
-    // Use this to seed the PRNG with a bit more than just time()... turning
-    // this off is perfectly okay, the game just becomes more exploitable
-    // with a bit of hacking (ie only by people who know how).
-    //
-    // For now, we'll make it default to on for Linux (who should have
-    // no problems with compiling this).
-#ifndef TARGET_COMPILER_MINGW
-    #define USE_MORE_SECURE_SEED
-#endif
 
     // Use POSIX regular expressions
 #ifndef REGEX_PCRE
@@ -213,6 +201,14 @@
     #define NEED_USLEEP
 #else
     #error Missing platform #define or unsupported compiler.
+#endif
+
+#if defined(__GNUC__)
+# define NORETURN __attribute__ ((noreturn))
+#elif defined(_MSC_VER)
+# define NORETURN __declspec(noreturn)
+#else
+# define NORETURN
 #endif
 
 // =========================================================================
@@ -384,8 +380,11 @@
 // number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000
 
-// clamp time between command inputs at 5 minutes when reporting play time.
-#define IDLE_TIME_CLAMP  (5 * 60)
+// clamp time between command inputs at 30 seconds when reporting play time.
+// Anything longer means you do something other than playing -- heck, even 30s
+// is too long as when thinking in a tight spot people re-read the inventory,
+// check monsters, etc.
+#define IDLE_TIME_CLAMP  30
 
 // Number of top scores to keep. See above for the dgamelaunch setting.
 #ifndef SCORE_FILE_ENTRIES
@@ -396,24 +395,6 @@
 // you define this option, wizard characters are still tagged as such
 // in the score file.
 // #define SCORE_WIZARD_CHARACTERS
-
-// ================================================= --------------------------
-//jmf: New defines for a bunch of optional features.
-// ================================================= --------------------------
-
-// Use special colours for various channels of messages
-#define USE_COLOUR_MESSAGES
-
-// Wizard death option (needed to test new death messages)
-#define USE_OPTIONAL_WIZARD_DEATH
-
-// bwr: define this if you want to know the pluses, "runed" status
-// of the monster's weapons in the hiscore file.
-#define HISCORE_WEAPON_DETAIL
-
-// ====================== -----------------------------------------------------
-//jmf: end of new defines
-// ====================== -----------------------------------------------------
 
 #define SAVE_SUFFIX ".cs"
 

@@ -272,7 +272,7 @@ void mcache_manager::read(reader &th)
             entry = new mcache_demon(th);
             break;
         default:
-            ASSERT(!"Invalid streamed mcache type.");
+            die("Invalid streamed mcache type.");
         case MCACHE_NULL:
             entry = NULL;
             break;
@@ -385,6 +385,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ILSUIW_WATER:
     case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_KENKU:
+    case TILEP_MONS_DEEP_DWARF_ARTIFICER:
+    case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -439,6 +441,9 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_GUARDIAN_SERPENT:
     case TILEP_MONS_NAGA_MAGE:
     case TILEP_MONS_THE_ENCHANTRESS:
+    case TILEP_MONS_DEEP_DWARF:
+    case TILEP_MONS_DEEP_DWARF_SCION:
+    case TILEP_MONS_DEEP_DWARF_BERSERKER:
         *ofs_x = 0;
         *ofs_y = 1;
         break;
@@ -452,6 +457,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_BOGGART:
     case TILEP_MONS_DEEP_ELF_FIGHTER:
     case TILEP_MONS_DEEP_ELF_SOLDIER:
+    case TILEP_MONS_DEEP_DWARF_NECROMANCER:
+    case TILEP_MONS_UNBORN_DEEP_DWARF:
         *ofs_x = 0;
         *ofs_y = 2;
         break;
@@ -651,7 +658,7 @@ mcache_ghost::mcache_ghost(const monster* mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
-    const struct ghost_demon &ghost = *mon->ghost;
+    const class ghost_demon &ghost = *mon->ghost;
 
     unsigned int pseudo_rand = ghost.max_hp * 54321 * 54321;
 
@@ -811,7 +818,7 @@ mcache_demon::mcache_demon(const monster* mon)
 {
     ASSERT(mcache_demon::valid(mon));
 
-    const struct ghost_demon &ghost = *mon->ghost;
+    const class ghost_demon &ghost = *mon->ghost;
 
     unsigned int pseudo_rand1 = ghost.max_hp * 54321 * 54321;
     unsigned int pseudo_rand2 = ghost.ac * 54321 * 54321;

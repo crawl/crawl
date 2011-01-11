@@ -37,30 +37,13 @@ void move_cloud_to(coord_def src, coord_def dest);
 void swap_clouds(coord_def p1, coord_def p2);
 
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                        kill_category whose, int spread_rate = -1,
-                        int colour = -1, std::string name = "",
-                        std::string tile = "");
-void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                        killer_type killer, int spread_rate = -1,
-                        int colour = -1, std::string name = "",
-                        std::string tile = "");
-void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                        kill_category whose, killer_type killer,
-                        int spread_rate = -1,
-                        int colour = -1, std::string name = "",
-                        std::string tile = "");
+                       const actor *agent, int spread_rate = -1,
+                       int colour = -1,
+                       std::string name = "", std::string tile = "");
 void place_cloud(cloud_type cl_type, const coord_def& ctarget,
-                  int cl_range, kill_category whose, int spread_rate = -1,
-                  int colour = -1, std::string name = "",
-                  std::string tile = "");
-void place_cloud(cloud_type cl_type, const coord_def& ctarget,
-                  int cl_range, killer_type killer, int spread_rate = -1,
-                  int colour = -1, std::string name = "",
-                  std::string tile = "");
-void place_cloud(cloud_type cl_type, const coord_def& ctarget,
-                  int cl_range, kill_category whose, killer_type killer,
-                  int spread_rate = -1, int colour = -1, std::string name = "",
-                  std::string tile = "");
+                 int cl_range, const actor *agent,
+                 int spread_rate = -1, int colour = -1, std::string name = "",
+                 std::string tile = "");
 
 void manage_clouds(void);
 
@@ -72,17 +55,18 @@ cloud_type beam2cloud(beam_type flavour);
 beam_type cloud2beam(cloud_type flavour);
 
 int resist_fraction(int resist, int bonus_res = 0);
-int  max_cloud_damage(cloud_type cl_type, int power = -1);
-void in_a_cloud(void);
+int max_cloud_damage(cloud_type cl_type, int power = -1);
+int actor_apply_cloud(actor *act);
 
 std::string cloud_name_at_index(int cloudno);
 std::string cloud_type_name(cloud_type type, bool terse = true);
 int get_cloud_colour(int cloudno);
+coord_def get_cloud_originator(const coord_def& pos);
 
 bool is_damaging_cloud(cloud_type type, bool temp = false);
 bool is_harmless_cloud(cloud_type type);
 bool in_what_cloud (cloud_type type);
-cloud_type in_what_cloud ();
+cloud_type in_what_cloud();
 
 // fog generator
 void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,

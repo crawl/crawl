@@ -31,7 +31,6 @@
 #include "random.h"
 #include "spl-other.h"
 #include "spl-util.h"
-#include "stairs.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -179,7 +178,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         else
         {
             // Leave a purple cloud.
-            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
             move_player_to_grid(beam.target, false, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -237,7 +236,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         success = true;
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
         if (you.level_type == LEVEL_ABYSS)
         {
@@ -509,7 +508,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             else
             {
                 // Leave a purple cloud.
-                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
                 // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true);
@@ -567,7 +566,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         }
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
         move_player_to_grid(newpos, false, true);
     }
@@ -634,7 +633,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     // If we got this far, we're teleporting the player.
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
     bool large_change = you.see_cell(where);
 
@@ -841,13 +840,13 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     }
 
     if (!found)
-        return(0);
+        return 0;
 
     coord_def origin = you.pos();
     move_player_to_grid(target, false, true);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
     return (1);
 }
@@ -903,8 +902,7 @@ bool cast_golubrias_passage(const coord_def& where)
     {
         // lose a turn
         mpr("A powerful magic interferes with the creation of the passage.");
-        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3),
-                    KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3), &you);
         return true;
     }
 

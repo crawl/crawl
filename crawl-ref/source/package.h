@@ -12,6 +12,8 @@
 #include <zlib.h>
 #endif
 
+#define MAX_CHUNK_NAME_LENGTH 255
+
 typedef uint32_t len_t;
 
 class package;
@@ -93,7 +95,7 @@ private:
     void free_block(len_t at, len_t size);
     void seek(len_t to);
     void fsck();
-    void read_directory(len_t start);
+    void read_directory(len_t start, uint8_t version);
     void trace_chunk(len_t start);
     void load();
     friend class chunk_writer;

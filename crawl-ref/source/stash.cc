@@ -1225,7 +1225,7 @@ const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 bool LevelStashes::shop_needs_visit(const coord_def& c) const
 {
     if (_grid_has_mimic_shop(c))
-        return(true);
+        return true;
 
     const ShopInfo *shop = find_shop(c);
     return (shop && !shop->is_visited());

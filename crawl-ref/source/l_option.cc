@@ -92,7 +92,11 @@ static int option_get(lua_State *ls)
 
     const option_handler *oh = get_handler(opt);
     if (oh)
+#ifdef DEBUG_GLOBALS
+        return (oh->handler(ls, opt, (char*)real_Options+(intptr_t)oh->data, true));
+#else
         return (oh->handler(ls, opt, oh->data, true));
+#endif
 
     return (0);
 }

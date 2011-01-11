@@ -7,6 +7,16 @@
 # vaults will be rejected at compile time, and other orientations will produce
 # weird results.
 
+# 1/3 chance to appear on D:21-27, and guaranteed on D:25.
+NAME: abyss_entry
+TAGS: extra allow_dup
+DEPTH: D:21-27
+CHANCE: 100% (D:25), 3333
+KFEAT: O = enter_abyss
+MAP
+O
+ENDMAP
+
 ###############################################################################
 # abyss random vaults
 

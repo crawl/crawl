@@ -56,7 +56,6 @@
 #include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
-#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
@@ -227,13 +226,14 @@ static void _compile_time_asserts();
 int main(int argc, char *argv[])
 {
 #ifdef DEBUG_GLOBALS
+    real_Options = new game_options();
     real_you = new player();
     real_clua = new CLua(true);
     real_dlua = new CLua(false);
     real_crawl_state = new game_state();
     real_env = new crawl_environment();
 #endif
-    _compile_time_asserts();  // Just to quiet "unused static function" warning.
+    _compile_time_asserts();  // Actually, not just compile time.
 
     init_crash_handler();
 
@@ -307,7 +307,7 @@ static void _reset_game()
 #ifdef USE_TILE
     // [ds] Don't show the title screen again, just go back to
     // the menu.
-    Options.tile_title_screen = false;
+    crawl_state.title_screen = false;
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
 #endif
 }
@@ -329,12 +329,10 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
-            print_error_screen(fe.msg.c_str());
             end(1, false, fe.msg.c_str());
         }
         catch(short_read_exception &E)
         {
-            print_error_screen("Error: truncation inside the save file.\n");
             end(1, false, "Error: truncation inside the save file.\n");
         }
     } while (Options.restart_after_game
@@ -460,7 +458,7 @@ static void _show_commandline_options_help()
     puts("  -save-version <name>  Save file version for the given player");
     puts("  -sprint               select Sprint");
     puts("  -sprint-map <name>    preselect a Sprint map");
-    puts("  -zotdef               select Zot Defense");
+    puts("  -zotdef               select Zot Defence");
     puts("");
 
     puts("Command line options override init file options, which override");
@@ -486,6 +484,9 @@ static void _show_commandline_options_help()
     puts("  -test            run test cases in ./test");
     puts("  -script <name>   run script matching <name> in ./scripts");
 #endif
+    puts("");
+    puts("Miscellaneous options:");
+    puts("  -dump-maps       write map Lua to stderr when parsing .des files");
 }
 
 static void _wanderer_startup_message()
@@ -1713,7 +1714,12 @@ void process_command(command_type cmd)
     case CMD_RUN_DOWN_RIGHT:_start_running(RDIR_DOWN_RIGHT, RMODE_START); break;
     case CMD_RUN_RIGHT:     _start_running(RDIR_RIGHT, RMODE_START);     break;
 
-    case CMD_REST: _do_rest(); break;
+#ifdef CLUA_BINDINGS
+    case CMD_AUTOFIGHT:
+        clua.callfn("hit_closest", 1, 1);
+        break;
+#endif
+    case CMD_REST:            _do_rest(); break;
 
     case CMD_GO_UPSTAIRS:     _go_upstairs();    break;
     case CMD_GO_DOWNSTAIRS:   _go_downstairs();  break;
@@ -1766,6 +1772,11 @@ void process_command(command_type cmd)
         you.turn_is_over = true;
         break;
 
+    case CMD_PICKUP:
+    case CMD_PICKUP_QUANTITY:
+        pickup(cmd != CMD_PICKUP);
+        break;
+
         // Action commands.
     case CMD_BUTCHER:              butchery();               break;
     case CMD_CAST_SPELL:           do_cast_spell_cmd(false); break;
@@ -1775,7 +1786,6 @@ void process_command(command_type cmd)
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          _do_look_around();        break;
-    case CMD_PICKUP:               pickup();                 break;
     case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read_scroll();            break;
@@ -2076,6 +2086,10 @@ static void _decrement_durations()
     // Possible reduction of silence radius.
     if (you.duration[DUR_SILENCE])
         invalidate_agrid();
+    // and liquefying radius.
+    if (you.duration[DUR_LIQUEFYING])
+        invalidate_agrid();
+
     if (_decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns."))
         you.attribute[ATTR_WAS_SILENCED] = 0;
 
@@ -2347,6 +2361,11 @@ static void _decrement_durations()
     dec_exhaust_player(delay);
     dec_haste_player(delay);
 
+    if (_decrement_a_duration(DUR_LIQUEFYING, delay, "The ground is no longer liquid beneath you."))
+    {
+        invalidate_agrid();
+    }
+
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
     {
@@ -2461,7 +2480,7 @@ static void _decrement_durations()
     // Should expire before levitation.
     if (you.duration[DUR_TORNADO])
     {
-        tornado_damage(std::min(delay, you.duration[DUR_TORNADO]));
+        tornado_damage(&you, std::min(delay, you.duration[DUR_TORNADO]));
         _decrement_a_duration(DUR_TORNADO, delay,
                               "The winds around you calm down.");
     }
@@ -2471,34 +2490,18 @@ static void _decrement_durations()
         if (!you.permanent_levitation() && !you.permanent_flight())
         {
             if (_decrement_a_duration(DUR_LEVITATION, delay,
-                                      "You float gracefully downwards.",
+                                      0,
                                       random2(6),
                                       "You are starting to lose your buoyancy!"))
             {
-                burden_change();
-                // Landing kills controlled flight.
-                you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-                // Re-enter the terrain.
-                move_player_to_grid(you.pos(), false, true);
+                land_player();
             }
         }
-        else
+        else if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
-            if (you.attribute[ATTR_LEV_UNCANCELLABLE]
-                && (you.duration[DUR_LEVITATION] -= delay) <= 0)
-            {
-                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-            }
-
-            if (!you.attribute[ATTR_LEV_UNCANCELLABLE])
-            {
-                // With permanent levitation, keep the duration above
-                // the expiration threshold.
-                you.duration[DUR_LEVITATION]
-                    = 2 * get_expiration_threshold(DUR_LEVITATION);
-            }
+            you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+            you.duration[DUR_LEVITATION] = 0;
         }
     }
 
@@ -2754,8 +2757,7 @@ static void _player_reacts()
             you_teleport_now(false, true); // to new area of the Abyss
     }
 
-    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
-        in_a_cloud();
+    actor_apply_cloud(&you);
 
     slime_wall_damage(&you, you.time_taken);
 
@@ -2851,7 +2853,9 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         _player_reacts();
 
+    apply_noises();
     handle_monsters();
+    apply_noises();
 
     _check_banished();
 
@@ -3943,7 +3947,7 @@ static void _move_player(coord_def move)
         else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
         {
             check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
-                random_range(3, 10), KC_OTHER, 0, ETC_RANDOM);
+                random_range(3, 10), &you, 0, ETC_RANDOM);
         }
 
         you.time_taken *= player_movement_speed();
@@ -3985,7 +3989,7 @@ static void _move_player(coord_def move)
         if (grd(targ) == DNGN_OPEN_SEA)
             mpr("You can't go out to sea!");
 
-        if (grd(targ) == DNGN_TREE && you.religion == GOD_FEDHAS)
+        if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
             mpr("You cannot walk through the dense trees.");
 
         stop_running();
@@ -4299,12 +4303,13 @@ static void _compile_time_asserts()
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
-    COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
+    COMPILE_CHECK(SK_EVOCATIONS == 32           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c8);
+    COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER, cmax_mon);
 
     // Make sure there's enough room in you.unique_items to hold all
     // the unrandarts.

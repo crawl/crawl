@@ -5,13 +5,36 @@
 
 util = { }
 
-function util.subclass(parent)
+function util.defclass(name)
+  local cls = { CLASS = name }
+  cls.__index = cls
+  _G[name] = cls
+  return cls
+end
+
+function util.subclass(parent, subclassname)
   -- parent should have no-arg constructor.
   local subclass = parent:new()
   subclass.super = parent
   -- Not strictly necessary - parent constructor should do this.
   subclass.__index = subclass
+  if subclassname then
+    subclass.CLASS = subclassname
+    _G[subclassname] = subclass
+  end
   return subclass
+end
+
+function util.newinstance(class)
+  local instance = { }
+  setmetatable(instance, class)
+  return instance
+end
+
+function util.callable(x)
+  return type(x) == 'function' or (type(x) == 'table'
+                                   and getmetatable(x)
+                                   and getmetatable(x).__call)
 end
 
 function util.identity(x)

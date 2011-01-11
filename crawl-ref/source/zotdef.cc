@@ -15,8 +15,6 @@
 #include "ghost.h"
 #include "items.h" // // for find_floor_item
 #include "itemname.h" // // for make_name
-#include "lev-pand.h"
-#include "los.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -25,14 +23,12 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "player.h"
-#include "religion.h"
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"
-#include "view.h"
 #include "zotdef.h"
 
 // Size of the mons_alloc array (or at least the bit of
@@ -945,13 +941,17 @@ bool create_trap(trap_type spec_type)
         return (false);
     }
     // only try to create on floor squares
-    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
-        return place_specific_trap(abild.target, spec_type);
-    else
+    if (!feat_is_floor(grid))
     {
         mpr("You can't create a trap there!");
         return (false);
     }
+    bool result = place_specific_trap(abild.target, spec_type);
+
+    if (result)
+        grd(abild.target) = env.trap[env.tgrid(abild.target)].category();
+
+    return result;
 }
 
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
