@@ -411,24 +411,6 @@
 // in the score file.
 // #define SCORE_WIZARD_CHARACTERS
 
-// ================================================= --------------------------
-//jmf: New defines for a bunch of optional features.
-// ================================================= --------------------------
-
-// Use special colours for various channels of messages
-#define USE_COLOUR_MESSAGES
-
-// Wizard death option (needed to test new death messages)
-#define USE_OPTIONAL_WIZARD_DEATH
-
-// bwr: define this if you want to know the pluses, "runed" status
-// of the monster's weapons in the hiscore file.
-#define HISCORE_WEAPON_DETAIL
-
-// ====================== -----------------------------------------------------
-//jmf: end of new defines
-// ====================== -----------------------------------------------------
-
 #define SAVE_SUFFIX ".cs"
 
 // If you are installing Crawl for multiple users, define SAVE_DIR

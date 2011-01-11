@@ -716,8 +716,6 @@ static int colour_msg(msg_colour_type col)
         return static_cast<int>(col);
 }
 
-#ifdef USE_COLOUR_MESSAGES
-
 // Returns a colour or MSGCOL_MUTED.
 static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
@@ -856,15 +854,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 
     return (ret);
 }
-
-#else // don't use colour messages
-
-static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
-{
-    return (MSGCOL_LIGHTGREY);
-}
-
-#endif
 
 int channel_to_colour(msg_channel_type channel, int param)
 {

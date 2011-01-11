@@ -1201,14 +1201,8 @@ static bool _handle_wand(monster* mons, bolt &beem)
     bolt theBeam      = mons_spells(mons, mzap, power);
     beem = _generate_item_beem(beem, theBeam, mons);
 
-#ifdef HISCORE_WEAPON_DETAIL
     beem.aux_source =
         wand.name(DESC_QUALNAME, false, true, false, false);
-#else
-    beem.aux_source =
-        wand.name(DESC_QUALNAME, false, true, false, false,
-                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-#endif
 
     const int wand_type = wand.sub_type;
     switch (wand_type)

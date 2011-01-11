@@ -1263,7 +1263,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             const std::string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
-#ifdef USE_OPTIONAL_WIZARD_DEATH
 
             dprf("Damage: %d; Hit points: %d", dam, you.hp);
 
@@ -1274,15 +1273,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 _wizard_restore_life();
                 return;
             }
-#else  // !def USE_OPTIONAL_WIZARD_DEATH
-            mpr("Since you're a debugger, I'll let you live.");
-            mpr("Be more careful next time, okay?");
-
-            take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
-                            death_desc.c_str()), true);
-            _wizard_restore_life();
-            return;
-#endif  // USE_OPTIONAL_WIZARD_DEATH
         }
     }
 #endif  // WIZARD
