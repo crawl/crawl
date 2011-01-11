@@ -360,6 +360,18 @@ bool is_exclude_root(const coord_def &p)
     return (curr_excludes.get_exclude_root(p));
 }
 
+int get_exclusion_radius(const coord_def &p)
+{
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
+    {
+        if (!exc->radius)
+            return 1;
+        else
+            return exc->radius;
+    }
+    return 0;
+}
+
 #ifdef USE_TILE
 // update Gmap for squares surrounding exclude centre
 static void _tile_exclude_gmap_update(const coord_def &p)

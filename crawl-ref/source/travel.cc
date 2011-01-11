@@ -25,7 +25,6 @@
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
-#include "map_knowledge.h"
 #include "exclude.h"
 #include "fight.h"
 #include "godabil.h"
@@ -34,6 +33,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -365,6 +365,14 @@ public:
     }
 };
 
+static bool _is_stair_exclusion(const coord_def &p)
+{
+    if (feat_stair_direction(env.map_knowledge(p).feat()) == CMD_NO_CMD)
+        return (false);
+
+    return (get_exclusion_radius(p) == 1);
+}
+
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
@@ -410,8 +418,8 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     if (ignore_hostile && _is_reseedable(c))
         return (true);
 
-    // Excluded squares are never safe.
-    if (is_excluded(c))
+    // Excluded squares are only safe if marking stairs, i.e. another level.
+    if (is_excluded(c) && !_is_stair_exclusion(c))
         return (false);
 
     if (is_trap(c) && _is_safe_trap(c))
@@ -919,7 +927,8 @@ command_type travel()
         return CMD_NO_CMD;
     }
 
-    if (is_excluded(you.pos()))
+    // Excluded squares are only safe if marking stairs, i.e. another level.
+    if (is_excluded(you.pos()) && !_is_stair_exclusion(you.pos()))
     {
         mprf("You're in a travel-excluded area, stopping %s.",
              you.running.runmode_name().c_str());
