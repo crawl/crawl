@@ -72,20 +72,6 @@ CHANCE: 1%
   end)
 }}
 
-#       Curved corridors.
-NAME:   serial_curves
-TAGS:   allow_dup extra luniq_serial
-#       Suitable for the rooms layout.
-TAGS:   layout_rooms
-DEPTH:  D, Snake
-CHANCE: 1%
-{{
-  local c = 2 + crawl.random2(3)*crawl.random2(2)
-  hook("post_place", function()
-    dgn.place_maps{tag="serial_curves", count=c}
-  end)
-}}
-
 
 ############################################################################
 #
@@ -1081,94 +1067,6 @@ MAP
 .xx.x.
 .x.xx.
 ......
-ENDMAP
-
-# Simple curved corridors, mainly for the serial_curves serial vault.
-
-NAME:   eino_curves_01
-DEPTH:  D, Snake
-WEIGHT: 1
-TAGS:   allow_dup extra serial_curves
-MAP
-  @
-x...xxxxxxxxxx
-x...xxxxxxxxxx
-x...xxxxxxxxxx
-xx...xxxxxxxxx
-xx...xxxxxxxxx
-xxx...xxxxxxxx
-xxx...xxxxxxxx
-xxxx...xxxxxxx
-xxxxx...xxxxxx
-xxxxxx...xxxxx
-xxxxxxx...xxxx
-xxxxxxxx...xxx
-xxxxxxxx...xxx
-xxxxxxxxx...xx
-xxxxxxxxx...xx
-xxxxxxxxxx...x
-xxxxxxxxxx...x
-xxxxxxxxxx...x
-           @
-ENDMAP
-
-NAME:   eino_curves_02
-DEPTH:  D, Snake
-TAGS:   allow_dup extra serial_curves
-WEIGHT: 1
-MAP
-  @
-x...xxxxxx
-x...xxxxxx
-x...xxxxxx
-xx...xxxxx
-xx...xxxxx
-xxx...xxxx
-xxxx...xxx
-xxxxx...xx
-xxxxx...xx
-xxxxxx...x
-xxxxxx...x
-xxxxxx...x
-       @
-ENDMAP
-
-NAME:   eino_curves_03
-DEPTH:  D, Snake
-TAGS:   allow_dup extra serial_curves
-WEIGHT: 1
-MAP
- xxxxxxxxxxxxx
- xxx.xxxxx.xxx
- xx...xxx...xx
- xx...xxx...xx
- x..x..x..x..x
- x.xxx.x.xxx.x
- ..xxx...xxx..
-@.xxxxx.xxxxx.@
- .xxxxx.xxxxx.
- xxxxxxxxxxxxx
-ENDMAP
-
-NAME:   eino_curves_04
-DEPTH:  D, Snake
-TAGS:   allow_dup extra serial_curves
-WEIGHT: 1
-MAP
- xxxxxxxxxxxxxxxxxx
- ...xxxxxxxxxxxxxxx
-@......xxxxxxxxxxxx
- x.......xxxxxxxxxx
- xxx......xxxxxxxxx
- xxxxxx...xxxxxxxxx
- xxxxxxx...xxxxxxxx
- xxxxxxx...xxxxxxxx
- xxxxxxxx...xxxxxxx
- xxxxxxxx......xxxx
- xxxxxxxxx........x
- xxxxxxxxxxx.......@
- xxxxxxxxxxxxxxx...
- xxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_stone_trees_small
