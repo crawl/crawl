@@ -13,6 +13,7 @@ void deferred_exclude_update();
 
 bool is_exclude_root(const coord_def &p);
 int get_exclusion_radius(const coord_def &p);
+std::string get_exclusion_desc(const coord_def &p);
 void cycle_exclude_radius(const coord_def &p);
 void del_exclude(const coord_def &p);
 void set_exclude(const coord_def &p, int radius = LOS_RADIUS,

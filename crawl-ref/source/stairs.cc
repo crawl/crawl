@@ -2,6 +2,8 @@
 
 #include "stairs.h"
 
+#include <sstream>
+
 #include "abyss.h"
 #include "areas.h"
 #include "branch.h"
@@ -75,8 +77,9 @@ bool check_annotation_exclusion_warning()
         might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
     }
-    else if (is_exclude_root(you.pos()) &&
-             feat_is_travelable_stair(grd(you.pos())))
+    else if (is_exclude_root(you.pos())
+             && feat_is_travelable_stair(grd(you.pos()))
+             && !strstr(get_exclusion_desc(you.pos()).c_str(), "cloud"))
     {
         mpr("This staircase is marked as excluded!", MSGCH_WARN);
         might_be_dangerous = true;

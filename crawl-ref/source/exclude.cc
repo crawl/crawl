@@ -372,6 +372,13 @@ int get_exclusion_radius(const coord_def &p)
     return 0;
 }
 
+std::string get_exclusion_desc(const coord_def &p)
+{
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
+        return exc->desc;
+    return "";
+}
+
 #ifdef USE_TILE
 // update Gmap for squares surrounding exclude centre
 static void _tile_exclude_gmap_update(const coord_def &p)
