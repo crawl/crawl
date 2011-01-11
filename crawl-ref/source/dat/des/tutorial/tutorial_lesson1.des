@@ -1,0 +1,325 @@
+##############################################
+# Tutorial map 1: Movement and exploration   #
+##############################################
+#
+# Important principles:
+#  - no monsters, no items
+#  - because of the above, needs to look particularly interesting
+#
+# Still TODO:
+#  * Make leaving trigger a screen recapping all movement commands
+#    rather than display the highscore etc.
+#  * Find out why the run commands don't return the vi keys and fix this.
+#  * Shorten the explanation on exclusions.
+#
+{{
+
+require("clua/tutorial.lua")
+
+tutorial_msg = {}
+
+function tutorial_msg.start ()
+    tutorial_intro("In this lesson you're going to learn how to move around and explore a level.")
+
+    local text = "You can move "
+    if crawl.is_tiles() then
+        text = text .. "by clicking somewhere with your <white>mouse</white>, or "
+    end
+    text = text .. "with the <white>arrow keys</white>. "
+           .. "To begin with, head over to that <blue>blue</blue> square to the right!"
+    crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg.go_on ()
+    return tutorial_message("You're doing great! Now, explore a bit until you reach the next blue square.")
+end
+
+function tutorial_msg.diagonal1 ()
+    local text = "You can also move diagonally, by way of the <white>number pad</white> or by using the <white>vi keys</white>.\n"
+                 .. "  Numpad:    <white>1 2 3</white>      " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
+                 .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
+                 .. "              \\|/                    " .. "\\|/\n"
+                 .. "             <white>4</white>-.-<white>6</white>                  "
+                 .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-.-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
+                 .. "              /|\\                    " .. "/|\\\n"
+                 .. "             <white>7 8 9</white>                  " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
+                 .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n"
+                 .. "For example, you can move down that corridor with <white>9</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT")
+
+    if crawl.is_tiles() then
+        text = text .. ", or again, via <white>mouse click</white>"
+    end
+
+    text = text .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.diagonal2 ()
+    local text = "Move to the upper right with <white>3</white> or " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.diagonal3 ()
+    local text = "Move to the upper left with <white>1</white> or " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.diagonal4 ()
+    local text = "Move to the lower left with <white>7</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.downstairs ()
+    local text = "When standing on a staircase leading downwards, you can enter the next level with "
+                 .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS")
+    if crawl.is_tiles() then
+      text = text .. " or with <white>Shift-Click</white> on your character"
+    end
+
+    text = text .. ".\n"
+
+    return tutorial_message(text)
+end
+
+-- The second part of the map.
+function tutorial_msg.levelmap ()
+    local text = "What's this? You've arrived in a completely different part of the level! To find out where you are, "
+
+    if crawl.is_tiles() then
+        text = text .. "have a look at the <white>minimap</white> to the right of the screen. You can have a closer look at a part of the map with a <white>right mouseclick</white> and also can travel there with a <white>leftclick</white>."
+    else
+        text = text .. "enter the overmap view with " .. tutorial_get_cmd("CMD_DISPLAY_MAP")
+               .. " and then move the cursor around to look around the level. You also can travel wherever your cursor is pointing by pressing <white>.</white> or <white>Enter</white>. Press <white>Escape</white> to return to the normal game mode."
+    end
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg.autoexplore ()
+    local text = "Exploring manually can get tedious after a while, so you might want to let that heppen automatically. Try it by pressing "
+                 .. tutorial_get_cmd("CMD_EXPLORE") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.exclusion ()
+
+    local text = "Some types of clouds and also some monsters are automatically marked as dangerous, "
+                 .. "so autotravel doesn't lead you right into danger. These '<white>exclusions</white>' "
+
+    if crawl.is_tiles() then
+        text = text .. "are shown as red X's."
+    else
+        text = text .. "are highlighted in red on the level map (" .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. ")."
+    end
+
+    text = text .. " You cannot autotravel "
+    if crawl.is_tiles() then
+        text = text .. "(including by mouseclick!) "
+    end
+
+    text = text .. "to or through excluded terrain, but in these cases manual movement is usually much safer anyway. However, autotravel will try to move you safely around the danger, so you can simply press " .. tutorial_get_cmd("CMD_EXPLORE") .. " and continue traveling."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg.autoexplore_announce ()
+    local text = "Autoexplore will stop to announce features and items. To continue traveling, press "
+                 .. tutorial_get_cmd("CMD_EXPLORE") .. " again."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.tutorial_end ()
+    return tutorial_message("Congratulations! You've completed the first lesson!\n"
+                            .. "To exit the tutorial, simply go up these stairs.")
+end
+}}
+
+NAME:    tutorial_lesson1
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_start
+DESC:    "Lesson 1: Movement and Exploration"
+BFLAGS:  islanded
+ORIENT:  encompass
+KFEAT:   ABCDEF = .
+KFEAT:   HI$ = '
+COLOUR:  ABCDEFHI$ = blue
+COLOUR:  ' = brown
+FTILE:   G' = floor_swamp, t = floor_grass
+FTILE:   ABCDEFHI$ = tutorial_pad
+MARKER:  A = lua:tutorial_msg.go_on()
+MARKER:  B = lua:tutorial_msg.diagonal1()
+MARKER:  C = lua:tutorial_msg.diagonal2()
+MARKER:  D = lua:tutorial_msg.diagonal3()
+MARKER:  E = lua:tutorial_msg.diagonal4()
+MARKER:  ) = lua:tutorial_msg.downstairs()
+MARKER:  } = lua:tutorial_msg.levelmap()
+MARKER:  F = lua:tutorial_msg.autoexplore()
+MARKER:  H = lua:tutorial_msg.exclusion()
+MARKER:  I = lua:tutorial_msg.autoexplore_announce()
+MARKER:  [ = lua:tutorial_msg.tutorial_end()
+MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
+             pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
+             size_max = 1, spread_rate = 0 }
+epilogue{{
+  tutorial_msg.start()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx.....xxxxxxxxxxxxxxxxxxxxxxx
+xx..{......A.xxxxxxxxxxxxxxxxx
+xx.....xxxxx.xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxxxxxxxxxxxx
+xxxxxxxxxx......xxxxxxxExxxxxx
+xxxxxxxxxxbbbb..xxxxxx.x.xxxxx
+xxxxxxxxxx......xxxxx.xxx.xxxx
+xxxxxxxxxx..bbbbxxxx.xxxxx.xxx
+xxxxxxxxxx.......Bxx.).xxxxDxx
+xxxxxxxxxxxxxxxxxx.xx.xxxx.xxx
+xxxxxxxxxxxxxxxxxxx.xxxxx.xxxx
+tttxxxxxxxxxxxxxxxxx.xxx.xxxxx
+ttttttxxxxxxxxxxxxxxx.x.xxxxxx
+tttttttttxxxxxxxxxxxxxCxxxxxxx
+ttttttttttttxxxxxxxxxxxxxxxxxx
+tttt'''ttttttttxxxxxxxxxxxxxxx
+ttt'''''ttttttttttxxxxxxxxxxxx
+tt''G'G''ttttttttttttxxxxxxxxx
+tt'''[''''''tttttttttttxxxxxxx
+tt''G'G''ttt'I''tttttttttxxxxx
+ttt'''''tttttttt'''ttttttttxxx
+tttt'''tttttttttttt''tttttttxx
+ttttttttttttttttttttt'tttttttt
+tttttttttttttttttttttt'ttttttt
+tttttttttttttttttttttt'ttttttt
+ttttttttttttttttttttt'tttttttt
+tttttttttttttttttttt'ttttttttt
+tttttttttttttttttt''tttttttttt
+ttttttttttttttt'''tttttttttttt
+tttttttttttttt'''''ttttttttttt
+ttttttttttttt''WWW''tttttttttt
+ttttttttttttt''WlW''tttttttttt
+ttttttttttttt''WWW''tttttttttt
+tttttttttttttt'''''ttttttttttt
+ttttttttttttttt'''tttttttttttt
+ttttttttttttttttHttttttttttttt
+tttttttttttttt''tttttttttttttt
+ttttttttttttt'tttttttttttttttt
+tttttttttttt'ttttttttttttttttt
+tttttttttttt'ttttttttttttttttt
+ttttttttttttt'tttttttttttttttt
+tttttttttttttt''ttttttt'tttttt
+tttttttttttttttt'''ttt'''ttttt
+ttttttttttttttttttt'F''}''tttt
+tttttttttttttttttttttt'''ttttt
+ttttttttttttttttttttttt'tttttt
+tttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttt
+ENDMAP
+
+{{
+-- Lua code for level 2.
+function tutorial_msg.newlevel ()
+
+    local text = "A new level! To begin with, head over to that door to the right.\n"
+                 .. "Also, remember: You can reread old messages with "
+                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
+
+    crawl.mesclr(true)
+    crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg.door ()
+    local text = "You can open a closed door by walking into it."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.shiftmove ()
+    local text = "A quicker way to 'run' through a corridor is to press <white>Shift</white> along with the vi or arrow keys. "
+                 .. "For example, try pressing " .. tutorial_get_cmd("CMD_RUN_RIGHT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.shiftmove2 ()
+    local text = "Run down this corridor with <white>Shift-9</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.secret_door_glass ()
+    local text = "It doesn't look like the corridor ends here. Try searching for a secret door with "
+                 .. tutorial_get_cmd("CMD_REST") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.water ()
+    return tutorial_message("Note how you can move through shallow but not through deep water.")
+end
+
+function tutorial_msg.secret_door_wall ()
+    local text = "A dead-end! Or, wait... is it another secret door? Try searching again with "
+                 .. tutorial_get_cmd("CMD_REST") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.upstairs ()
+    local text = "When standing on a staircase leading upwards, you can enter the previous level with "
+                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
+    if crawl.is_tiles() then
+      text = text .. " or by <white>Shift-clicking</white> on your character"
+    end
+
+    text = text .. ".\n"
+
+    return tutorial_message(text)
+end
+}}
+
+NAME:    tutorial_lesson1_level2
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson1
+PLACE:   D:2
+BFLAGS:  islanded
+ORIENT:  encompass
+KFEAT:   ABCDEF = .
+COLOUR:  ABCDEF = blue
+FTILE:   ABCDEF = tutorial_pad
+MARKER:  A = lua:tutorial_msg.door()
+MARKER:  B = lua:tutorial_msg.shiftmove()
+MARKER:  B = lua:tutorial_msg.shiftmove2()
+MARKER:  D = lua:tutorial_msg.secret_door_glass()
+MARKER:  E = lua:tutorial_msg.water()
+MARKER:  F = lua:tutorial_msg.secret_door_wall()
+MARKER:  { = lua:tutorial_msg.upstairs()
+epilogue{{
+  tutorial_msg.newlevel()
+}}
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvv.......vvvvvvvvvvvvvvvvvv
+vvvvv...(..A+..B....Cvvvvvvvvv
+vvvvv.......vvvvvvvvv.vvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvv.vvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvv.vvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvv.vvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvv.vvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv.vvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
+vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
+vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
+vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
+vvvvvvvvvvvvvvvvvvvvvvvvvvv.vv
+vvvvvvvvvvvvvvvvvvvvvvvvvv.D.v
+vvv.....vvvvvvvvvvvvvvvvvvn=nv
+vvv.....vvvvvvvvvvvvvvvvvv...v
+vvv..{..vvvvvvvvvvvvvvvvvvv.vv
+vvv.....vvvvvvvvvvvvvvvvvvv.vv
+vvv.....vvvvvvvvvvvvvvvvvvv.vv
+vvvvv=vvvvvvvvvvvvvvvvvvvvv.vv
+vvvvvFvvvvvvvvvvvvvvvvvvvvv.vv
+vvvvv.vvvvvvvvvvvvvvvvvvvv.vvv
+vvvvvv.vvvvvvvvvvvvvvvvvv.vvvv
+vvvvvvv.vvvvvvvvvvvvvvvv.vvvvv
+vvvvvvvv.vvvvvvvvvvvvvv.vvvvvv
+vvvvvvvvv.vv..WWWW..vv.vvvvvvv
+vvvvvvvvvv.v.WWwwWW.v.vvvvvvvv
+vvvvvvvvvvv..WWwwWW.Evvvvvvvvv
+vvvvvvvvvvvv.WWwwWW.vvvvvvvvvv
+vvvvvvvvvvvv..WWWW..vvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
