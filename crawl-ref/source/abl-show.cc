@@ -1665,6 +1665,7 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_POWER:        return 8;
     case ABIL_BREATHE_STICKY_FLAME: return 1;
     case ABIL_BREATHE_STEAM:        return 7;
+    case ABIL_BREATHE_POISON:       return 7;
     default:
         die("Bad breath type!");
         break;
