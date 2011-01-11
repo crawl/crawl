@@ -744,7 +744,7 @@ static int player_view_update_at(const coord_def &gc)
         bool did_exclude = false;
         if (cl.whose  == KC_OTHER
             && cl.killer == KILL_MISC
-            && !actor_cloud_immune(&you, cl))
+            && !actor_cloud_immune(&you, cl, false))
         {
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.

@@ -767,7 +767,9 @@ static int _cloud_base_damage(const actor *act,
 // Returns true if the actor is immune to cloud damage, inventory item
 // destruction, and all other cloud-type-specific side effects (i.e.
 // apart from cloud interaction with invisibility).
-bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
+// If temp is true (default), take into account temporary resistances.
+bool actor_cloud_immune(const actor *act, const cloud_struct &cloud,
+                        bool temp)
 {
     if (is_harmless_cloud(cloud.type))
         return (true);
@@ -777,21 +779,23 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
-        return act->is_fiery() || (player && you.duration[DUR_FIRE_SHIELD]);
+        return act->is_fiery()
+                || (player && temp && you.duration[DUR_FIRE_SHIELD]);
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_fire() > 0;
     case CLOUD_COLD:
-        return act->is_icy() || (player && you.mutation[MUT_PASSIVE_FREEZE]);
+        return act->is_icy()
+               || (player && you.mutation[MUT_PASSIVE_FREEZE]);
     case CLOUD_STINK:
-        return act->res_poison() > 0 || act->is_unbreathing();
+        return act->res_poison(temp) > 0 || act->is_unbreathing();
     case CLOUD_POISON:
-        return act->res_poison() > 0;
+        return act->res_poison(temp) > 0;
     case CLOUD_STEAM:
         // Players get steam cloud immunity from any res steam, which is hardly
         // fair, but this is what the old code did.
         return player && act->res_steam() > 0;
     case CLOUD_MIASMA:
-        return act->res_rotting() > 0;
+        return act->res_rotting(temp) > 0;
     default:
         return (false);
     }

@@ -3209,8 +3209,10 @@ int monster::res_water_drowning() const
     }
 }
 
-int monster::res_poison() const
+int monster::res_poison(bool temp) const
 {
+    UNUSED(temp);
+
     int u = get_mons_resists(this).poison;
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
@@ -3242,8 +3244,10 @@ int monster::res_sticky_flame() const
     return (res);
 }
 
-int monster::res_rotting() const
+int monster::res_rotting(bool temp) const
 {
+    UNUSED(temp);
+
     int res = get_mons_resists(this).rotting;
     if (holiness() != MH_NATURAL)
         res += 1;

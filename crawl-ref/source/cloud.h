@@ -63,7 +63,8 @@ std::string cloud_type_name(cloud_type type, bool terse = true);
 int get_cloud_colour(int cloudno);
 coord_def get_cloud_originator(const coord_def& pos);
 
-bool actor_cloud_immune(const actor *act, const cloud_struct &cloud);
+bool actor_cloud_immune(const actor *act, const cloud_struct &cloud,
+                        bool temp = true);
 bool is_damaging_cloud(cloud_type type, bool temp = false);
 bool is_harmless_cloud(cloud_type type);
 bool in_what_cloud (cloud_type type);
