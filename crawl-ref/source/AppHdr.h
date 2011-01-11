@@ -125,13 +125,6 @@
     #define USE_CURSES
 #endif
 
-    // Unix builds use curses/ncurses, which supports colour.
-    //
-    // This will allow using the standout attribute in curses to
-    // mark friendly monsters... results depend on the type of
-    // term used... under X Windows try "rxvt".
-    #define USE_COLOUR_OPTS
-
     // More sophisticated character handling
     #define CURSES_USE_KEYPAD
 
