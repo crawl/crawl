@@ -784,10 +784,5 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     }
 #endif
 
-#ifndef USE_COLOUR_OPTS
-    // Strip COLFLAGs for systems that can't do anything meaningful with them.
-    raw_colour &= 0xFF;
-#endif
-
     return (raw_colour);
 }
