@@ -1622,8 +1622,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         {
             // terrain blew up real good:
             beam.ex_size        = 2;
-            grd(spd.target)     = DNGN_FLOOR;
-            set_terrain_changed(spd.target);
+            nuke_wall(spd.target);
         }
         break;
 
@@ -1645,8 +1644,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         if (pow >= 80 && x_chance_in_y(pow / 5, 500) || grid == DNGN_GRATE)
         {
             beam.damage.num += 2;
-            grd(spd.target)  = DNGN_FLOOR;
-            set_terrain_changed(spd.target);
+            nuke_wall(spd.target);
         }
         break;
 
@@ -1665,8 +1663,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         if (coinflip())
         {
             beam.ex_size    = coinflip() ? 3 : 2;
-            grd(spd.target) = DNGN_FLOOR;
-            set_terrain_changed(spd.target);
+            nuke_wall(spd.target);
         }
         break;
 
@@ -1706,8 +1703,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     case DNGN_CLOSED_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
         // Doors always blow up, stone arches never do (would cause problems).
-        grd(spd.target) = DNGN_FLOOR;
-        set_terrain_changed(spd.target);
+        nuke_wall(spd.target);
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
