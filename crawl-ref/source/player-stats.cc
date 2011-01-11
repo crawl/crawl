@@ -146,8 +146,7 @@ static kill_method_type _statloss_killtype(stat_type stat)
     case STAT_DEX:
         return KILLED_BY_CLUMSINESS;
     default:
-        ASSERT(false);
-        return NUM_KILLBY;
+        die("unknown stat");
     }
 }
 
@@ -479,8 +478,7 @@ static std::string _stat_name(stat_type stat)
     case STAT_DEX:
         return ("dexterity");
     default:
-        ASSERT(false);
-        return ("BUG");
+        die("invalid stat");
     }
 }
 

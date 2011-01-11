@@ -2452,12 +2452,7 @@ static void _portal_vault_level(int level_number)
                                  true);
     }
     else
-    {
-        mprf(MSGCH_ERROR, "No maps or tags named '%s', and no backup either.",
-             level_name);
-        ASSERT(false);
-        end(-1);
-    }
+        die("No maps or tags named '%s', and no backup either.", level_name);
 
     link_items();
 

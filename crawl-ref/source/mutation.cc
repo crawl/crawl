@@ -710,8 +710,7 @@ static bool _mut_matches_class(mutation_type mutclass, const mutation_def& mdef)
     case RANDOM_GOOD_MUTATION:
         return (!mdef.bad);
     default:
-        ASSERT(false);
-        return (false);
+        die("invalid mutation class: %d", mutclass);
     }
 }
 
@@ -964,8 +963,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
         break;
 
     default:
-        ASSERT(false);
-        break;
+        die("invalid stat mutation: %d", mut);
     }
     return (stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE));
 }

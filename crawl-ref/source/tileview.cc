@@ -866,7 +866,7 @@ static int _get_door_offset(tileidx_t base_tile, bool opened = false,
         break;
     default:
         // Passed a non-door tile base, pig out now.
-        ASSERT(false);
+        die("non-door tile");
     }
 
     // If we've reached this point, we're dealing with a gate.

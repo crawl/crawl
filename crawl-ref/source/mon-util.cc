@@ -1110,8 +1110,7 @@ zombie_size_type zombie_class_size(monster_type cs)
         case MONS_SPECTRAL_THING:
             return (Z_NOZOMBIE);
         default:
-            ASSERT(false);
-            return (Z_NOZOMBIE);
+            die("invalid zombie type");
     }
 }
 
@@ -4381,7 +4380,16 @@ actor *find_agent(mid_t m, kill_category kc)
         return 0;
     case KC_NCATEGORIES:
     default:
-        ASSERT(false);
-        return 0;
+        die("invalid kill category");
     }
+}
+
+const char* mons_class_name(monster_type mc)
+{
+    // Usually, all invalids return "program bug", but since it has value of 0,
+    // it's good to tell them apart in error messages.
+    if (invalid_monster_type(mc) && mc != MONS_PROGRAM_BUG)
+        return "INVALID";
+
+    return get_monster_data(mc)->name;
 }

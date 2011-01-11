@@ -1229,8 +1229,7 @@ static misc_item_type _gift_type_to_deck(int gift)
     case NEM_GIFT_SUMMONING:   return (MISC_DECK_OF_SUMMONING);
     case NEM_GIFT_WONDERS:     return (MISC_DECK_OF_WONDERS);
     }
-    ASSERT(false);
-    return (NUM_MISCELLANY);
+    die("invalid gift card type");
 }
 
 static bool _give_nemelex_gift(bool forced = false)

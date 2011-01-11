@@ -608,7 +608,7 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
             break;
 
         default:
-            ASSERT(false);
+            die("unknown potion effect");
     }
 }
 

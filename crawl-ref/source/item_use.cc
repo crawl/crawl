@@ -3089,9 +3089,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         break;
 
     default:
-        ASSERT(false);
-        chance = 1;
-        break;
+        die("Unknown missile type");
     }
 
     // Inflate by 4 to avoid rounding errors.

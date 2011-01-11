@@ -1155,8 +1155,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     else
     {
         // Should be impossible. needs_berserk should find this case.
-        ASSERT(false);
-        return (false);
+        die("angered by no foe");
     }
 
     // If mon may be blocking targ from its victim, don't try.

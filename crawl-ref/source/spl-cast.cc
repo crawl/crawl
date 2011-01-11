@@ -1218,8 +1218,7 @@ spret_type your_spells(spell_type spell, int powc,
         return (SPRET_SUCCESS);
 
     case SPRET_FAIL:
-        ASSERT(false);
-        return (SPRET_FAIL);
+        die("_do_cast() failed with no abort");
 
     case SPRET_ABORT:
         return (SPRET_ABORT);
