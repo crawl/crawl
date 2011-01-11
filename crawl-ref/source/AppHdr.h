@@ -395,8 +395,11 @@
 // number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000
 
-// clamp time between command inputs at 5 minutes when reporting play time.
-#define IDLE_TIME_CLAMP  (5 * 60)
+// clamp time between command inputs at 30 seconds when reporting play time.
+// Anything longer means you do something other than playing -- heck, even 30s
+// is too long as when thinking in a tight spot people re-read the inventory,
+// check monsters, etc.
+#define IDLE_TIME_CLAMP  30
 
 // Number of top scores to keep. See above for the dgamelaunch setting.
 #ifndef SCORE_FILE_ENTRIES
