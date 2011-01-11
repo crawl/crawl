@@ -54,7 +54,7 @@ static len_t htole(len_t x)
         return htole32(x);
     if (sizeof(len_t) == 8)
         return htole64(x);
-    ASSERT(!"unsupported len_t size");
+    die("unsupported len_t size");
 }
 
 #ifdef DEBUG_PACKAGE

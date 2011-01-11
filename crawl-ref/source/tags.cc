@@ -933,7 +933,7 @@ void tag_read(reader &inf, tag_type tag_id)
         break;
     default:
         // I don't know how to read that!
-        ASSERT(!"unknown tag type");
+        die("unknown tag type");
     }
 }
 

@@ -1120,7 +1120,7 @@ GotoRegion TilesFramework::get_cursor_region() const
     if (TextRegion::text_mode == m_region_stat)
         return (GOTO_STAT);
 
-    ASSERT(!"Bogus region");
+    die("Bogus region");
     return (GOTO_CRT);
 }
 

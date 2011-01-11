@@ -1640,7 +1640,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case NUM_SPECIAL_WEAPONS:
     case NUM_REAL_SPECIAL_WEAPONS:
     case SPWPN_DUMMY_CRUSHING:
-        ASSERT(!"invalid brand");
+        die("invalid brand");
         break;
     }
 
@@ -2411,7 +2411,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return (type == ARM_CAP || slot == EQ_SHIELD);
 
     case NUM_SPECIAL_ARMOURS:
-        ASSERT(!"invalid armour brand");
+        die("invalid armour brand");
     }
 
     return (true);
@@ -3332,7 +3332,7 @@ void reroll_brand(item_def &item, int item_level)
         item.special = _determine_armour_ego(item, OBJ_ARMOUR, item_level);
         break;
     default:
-        ASSERT(!"can't reroll brands of this type");
+        die("can't reroll brands of this type");
     }
     item_set_appearance(item);
 }

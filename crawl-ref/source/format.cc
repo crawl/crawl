@@ -319,9 +319,7 @@ char &formatted_string::operator [] (size_t idx)
         else
             return ops[i].text[rel_idx];
     }
-    ASSERT(!"Invalid index");
-    char *invalid = NULL;
-    return *invalid;
+    die("Invalid index");
 }
 
 
