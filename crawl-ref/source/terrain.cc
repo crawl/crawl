@@ -1617,3 +1617,18 @@ const char *dungeon_feature_name(dungeon_feature_type rfeat)
 
     return dngn_feature_names[feat];
 }
+
+void nuke_wall(const coord_def& p)
+{
+    if (!in_bounds(p))
+        return;
+
+    // Blood does not transfer onto floor.
+    if (is_bloodcovered(p))
+        env.pgrid(p) &= ~(FPROP_BLOODY);
+
+    remove_mold(p);
+
+    grd(p) = (grd(p) == DNGN_SWAMP_TREE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
+    set_terrain_changed(p);
+}

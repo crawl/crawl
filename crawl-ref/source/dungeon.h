@@ -310,6 +310,5 @@ void remember_vault_placement(std::string key, const vault_placement &place);
 std::string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
-void nuke_wall(const coord_def& p);
 
 #endif
