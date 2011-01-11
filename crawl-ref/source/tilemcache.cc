@@ -272,7 +272,7 @@ void mcache_manager::read(reader &th)
             entry = new mcache_demon(th);
             break;
         default:
-            ASSERT(!"Invalid streamed mcache type.");
+            die("Invalid streamed mcache type.");
         case MCACHE_NULL:
             entry = NULL;
             break;

@@ -4041,7 +4041,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 printf("UNICODE\n");
                 end(0);
             case NUM_CSET:
-                ASSERT(!"unset charset");
+                die("unset charset");
             }
             break;
 

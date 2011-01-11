@@ -1014,7 +1014,7 @@ std::string adjective_for_labrat_colour (uint8_t l_colour)
     case GREEN:          return ("venomous");
     case LIGHTGRAY:      return ("");
     default:
-        ASSERT(!"invalid labrat adjective");
+        die("invalid labrat adjective");
         break;
     }
 

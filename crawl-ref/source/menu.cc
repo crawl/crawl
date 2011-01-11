@@ -2002,7 +2002,7 @@ bool PrecisionMenu::process_key(int key)
         focus_direction = PrecisionMenu::RIGHT;
         break;
     default:
-        ASSERT(!"Malformed return value");
+        die("Malformed return value");
         break;
     }
     if (focus_find)
@@ -2153,7 +2153,7 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
         aabb_end.y = start->get_max_coord().y;
         break;
     default:
-        ASSERT(!"Bad direction given");
+        die("Bad direction given");
     }
 
     // loop through the entries
@@ -3471,7 +3471,7 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         aabb_end.y = start->get_max_coord().y;
         break;
     default:
-        ASSERT(!"Bad direction given");
+        die("Bad direction given");
     }
 
     // loop through the entries

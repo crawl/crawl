@@ -2652,7 +2652,7 @@ void melee_attack::chaos_affects_defender()
         break;
 
     default:
-        ASSERT(!"Invalid chaos effect type");
+        die("Invalid chaos effect type");
         break;
     }
 

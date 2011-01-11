@@ -805,7 +805,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     delete_mutation(b, true, true);
                     return (1);     // Nothing more to do.
                 default:
-                    ASSERT(!"bad mutation conflict resulution");
+                    die("bad mutation conflict resulution");
                 }
             }
         }

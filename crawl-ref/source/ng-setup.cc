@@ -1544,7 +1544,7 @@ void setup_game(const newgame_def& ng)
         break;
     case GAME_TYPE_ARENA:
     default:
-        ASSERT(!"Bad game type");
+        die("Bad game type");
         end(-1);
     }
 

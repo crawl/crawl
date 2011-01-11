@@ -1734,7 +1734,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
 #endif
             // [ds] Too many normal cases trigger this ASSERT, including
             // rivers that surround a stair with deep water.
-            // ASSERT(!"Couldn't find region.");
+            // die("Couldn't find region.");
             return (false);
         }
 
@@ -5384,7 +5384,7 @@ static object_class_type _item_in_shop(shop_type shop_type)
         return (OBJ_SCROLLS);
 
     default:
-        ASSERT(!"unknown shop type");
+        die("unknown shop type");
     }
 
     return (OBJ_RANDOM);
