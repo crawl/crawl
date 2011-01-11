@@ -124,5 +124,6 @@ dungeon_feature_type feat_by_desc(std::string desc);
 dungeon_feature_type dungeon_feature_by_name(const std::string &name);
 std::vector<std::string> dungeon_feature_matches(const std::string &name);
 const char *dungeon_feature_name(dungeon_feature_type rfeat);
+void nuke_wall(const coord_def& p);
 
 #endif

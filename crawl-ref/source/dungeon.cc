@@ -7811,15 +7811,3 @@ static void _calc_density()
     dprf("Level density: %d", open);
     env.density = open;
 }
-
-void nuke_wall(const coord_def& p)
-{
-    // Blood does not transfer onto floor.
-    if (is_bloodcovered(p))
-        env.pgrid(p) &= ~(FPROP_BLOODY);
-
-    remove_mold(p);
-
-    grd(p) = (grd(p) == DNGN_SWAMP_TREE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
-    set_terrain_changed(p);
-}
