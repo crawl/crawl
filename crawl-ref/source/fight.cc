@@ -5567,11 +5567,11 @@ void melee_attack::mons_perform_attack_rounds()
             case AT_NONE:
             case AT_RANDOM:
             case AT_SHOOT:
-                DEBUGSTR("Invalid attack flavour for noise_factor");
+                die("Invalid attack flavour for noise_factor");
                 break;
 
             default:
-                DEBUGSTR("Unhandled attack flavour for noise_factor");
+                die("Unhandled attack flavour for noise_factor");
                 break;
             }
 

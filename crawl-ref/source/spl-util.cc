@@ -1133,7 +1133,7 @@ spell_type zap_type_to_spell(zap_type zap)
     case ZAP_DISINTEGRATION:
         return SPELL_DISINTEGRATE;
     default:
-        DEBUGSTR("zap_type_to_spell() only handles wand zaps for now");
+        die("zap_type_to_spell() only handles wand zaps for now");
     }
     return SPELL_NO_SPELL;
 }

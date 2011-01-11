@@ -841,7 +841,7 @@ static void _sdump_inventory(dump_params &par)
                 case OBJ_CORPSES:    text += "Carrion";         break;
 
                 default:
-                    DEBUGSTR("Bad item class");
+                    die("Bad item class");
                 }
                 text += "\n";
 

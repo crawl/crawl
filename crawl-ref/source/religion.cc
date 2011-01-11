@@ -3788,7 +3788,7 @@ void handle_god_time()
             break;
 
         default:
-            DEBUGSTR("Bad god, no bishop!");
+            die("Bad god, no bishop!");
             return;
         }
 

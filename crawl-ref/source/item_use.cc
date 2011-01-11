@@ -2224,7 +2224,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         break;
 
     default:
-        DEBUGSTR("Invalid launcher '%s'",
+        die("Invalid launcher '%s'",
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }

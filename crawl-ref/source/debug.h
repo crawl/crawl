@@ -53,9 +53,6 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line, bool sa
 
 #define VERIFY(p)       ASSERT(p)
 
-void DEBUGSTR(const char *format,...);
-void TRACE(const char *format,...);
-
 #else
 
 #define ASSERT_SAVE(p)  ((void) 0)
@@ -66,10 +63,9 @@ inline void __DUMMY_TRACE__(...)
 {
 }
 
-#define DEBUGSTR 1 ? ((void) 0) : __DUMMY_TRACE__
-#define TRACE    1 ? ((void) 0) : __DUMMY_TRACE__
-
 #endif
+
+NORETURN void die(const char *format, ...);
 
 #ifdef DEBUG
 void debuglog(const char *format, ...);

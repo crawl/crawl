@@ -682,17 +682,19 @@ void do_crash_dump()
 
 // Assertions and such
 
-#ifdef ASSERTS
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-static NORETURN void _BreakStrToDebugger(const char *mesg)
+static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 {
 #if defined(USE_TILE) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
     SDL_SysWMinfo SysInfo;
     SDL_VERSION(&SysInfo.version);
     if (SDL_GetWMInfo(&SysInfo) > 0)
-        MessageBox(SysInfo.window, mesg, "Assertion failed!", MB_OK|MB_ICONERROR);
+    {
+        MessageBox(SysInfo.window, mesg, assert ? "Assertion failed!" : "Error",
+                   MB_OK|MB_ICONERROR);
+    }
     else
         fprintf(stderr, "%s", mesg);
     int* p = NULL;
@@ -712,6 +714,7 @@ static NORETURN void _BreakStrToDebugger(const char *mesg)
 #endif
 }
 
+#ifdef ASSERTS
 //---------------------------------------------------------------
 //
 // AssertFailed
@@ -734,15 +737,11 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line, bool sa
 
     _assert_msg = mesg;
 
-    _BreakStrToDebugger(mesg);
+    _BreakStrToDebugger(mesg, true);
 }
+#endif
 
-//---------------------------------------------------------------
-//
-// DEBUGSTR
-//
-//---------------------------------------------------------------
-NORETURN void DEBUGSTR(const char *format, ...)
+NORETURN void die(const char *format, ...)
 {
     char mesg[2048];
 
@@ -752,7 +751,7 @@ NORETURN void DEBUGSTR(const char *format, ...)
     vsnprintf(mesg, sizeof(mesg), format, args);
     va_end(args);
 
-    _BreakStrToDebugger(mesg);
-}
+    _assert_msg = mesg;
 
-#endif
+    _BreakStrToDebugger(mesg, false);
+}

@@ -142,7 +142,7 @@ static spell_type _draco_type_to_breath(int drac_type)
     case MONS_PLAYER_GHOST:      return SPELL_DRACONIAN_BREATH;
 
     default:
-        DEBUGSTR("Invalid monster using draconian breath spell");
+        die("Invalid monster using draconian breath spell");
         break;
     }
 
@@ -889,10 +889,10 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         }
 
         if (!is_valid_spell(real_spell))
-            DEBUGSTR("Invalid spell #%d cast by %s", (int) real_spell,
+            die("Invalid spell #%d cast by %s", (int) real_spell,
                      mons->name(DESC_PLAIN, true).c_str());
 
-        DEBUGSTR("Unknown monster spell '%s' cast by %s",
+        die("Unknown monster spell '%s' cast by %s",
                  spell_title(real_spell),
                  mons->name(DESC_PLAIN, true).c_str());
 

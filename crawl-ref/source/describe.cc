@@ -2099,8 +2099,7 @@ std::string get_item_description(const item_def &item, bool verbose,
         break;
 
     default:
-        DEBUGSTR("Bad item class");
-        description << "\nThis item should not exist. Mayday! Mayday!";
+        die("Bad item class");
     }
 
     if (is_unrandom_artefact(item)

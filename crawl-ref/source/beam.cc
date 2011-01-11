@@ -5818,11 +5818,9 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_HOLY_LIGHT:            return ("holy light");
     case BEAM_AIR:                   return ("air");
 
-    case NUM_BEAMS:                  DEBUGSTR("invalid beam type");
-                                     return ("INVALID");
+    case NUM_BEAMS:                  die("invalid beam type");
     }
-    DEBUGSTR("unknown beam type");
-    return "UNKNOWN";
+    die("unknown beam type");
 }
 
 std::string bolt::get_source_name() const

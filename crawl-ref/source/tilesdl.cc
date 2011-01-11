@@ -1104,7 +1104,7 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         TextRegion::text_mode = m_region_stat;
         break;
     default:
-        DEBUGSTR("invalid cgotoxy region in tiles: %d", region);
+        die("invalid cgotoxy region in tiles: %d", region);
         break;
     }
 
