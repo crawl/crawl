@@ -742,9 +742,9 @@ static int player_view_update_at(const coord_def &gc)
         cloud_type   ctype = cl.type;
 
         bool did_exclude = false;
-        if (!is_harmless_cloud(ctype)
-            && cl.whose  == KC_OTHER
-            && cl.killer == KILL_MISC)
+        if (cl.whose  == KC_OTHER
+            && cl.killer == KILL_MISC
+            && !actor_cloud_immune(&you, cl))
         {
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.

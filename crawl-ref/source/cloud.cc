@@ -769,6 +769,9 @@ static int _cloud_base_damage(const actor *act,
 // apart from cloud interaction with invisibility).
 bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 {
+    if (is_harmless_cloud(cloud.type))
+        return (true);
+
     const bool player = act->is_player();
     switch (cloud.type)
     {
@@ -790,7 +793,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_MIASMA:
         return act->res_rotting() > 0;
     default:
-        return false;
+        return (false);
     }
 }
 
@@ -1095,9 +1098,9 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
         cloud_struct cloud;
         cloud.type = type;
         cloud.decay = 100;
-        return (!actor_cloud_immune(&you, cloud) &&
-                (cloud_has_negative_side_effects(type)
-                 || max_cloud_damage(type, 10) > 0));
+        return (!actor_cloud_immune(&you, cloud)
+                && (cloud_has_negative_side_effects(type)
+                    || max_cloud_damage(type, 10) > 0));
     }
     else
     {
