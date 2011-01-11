@@ -166,7 +166,7 @@ const item_def *give_mimic_item(monster* mimic)
     if (it == NON_ITEM)
         return 0;
     if (!mimic->pickup_misc(mitm[it], 0))
-        ASSERT("Mimic failed to pickup its item.");
+        die("Mimic failed to pickup its item.");
     ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
     return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
 }

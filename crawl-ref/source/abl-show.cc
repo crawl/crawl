@@ -2672,7 +2672,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     default:
-        ASSERT("invalid ability");
+        die("invalid ability");
     }
 
     return (true);

@@ -88,7 +88,7 @@ void trap_def::disarm()
 void trap_def::destroy()
 {
     if (!in_bounds(this->pos))
-        ASSERT("trap position out of bounds!");
+        die("Trap position out of bounds!");
 
     grd(this->pos) = DNGN_FLOOR;
     this->ammo_qty = 0;
