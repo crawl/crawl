@@ -36,13 +36,13 @@ end
 
 function tutorial_msg.diagonal1 ()
     local text = "You can also move diagonally, by way of the <white>number pad</white> or by using the <white>vi keys</white>.\n"
-                 .. "  Numpad:    <white>1 2 3</white>      " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
+                 .. "  Numpad:       <white>1 2 3</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
-                 .. "              \\|/                    " .. "\\|/\n"
-                 .. "             <white>4</white>-.-<white>6</white>                  "
+                 .. "                 \\|/                         " .. "\\|/\n"
+                 .. " (Try both      <white>4</white>-.-<white>6</white>          (These can   "
                  .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-.-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
-                 .. "              /|\\                    " .. "/|\\\n"
-                 .. "             <white>7 8 9</white>                  " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
+                 .. " <white>NumLock</white>         /|\\           be useful     " .. "/|\\\n"
+                 .. " on and off)    <white>7 8 9</white>          on laptops)  " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n"
                  .. "For example, you can move down that corridor with <white>9</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT")
 
