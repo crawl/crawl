@@ -21,7 +21,6 @@ const int BASE_NOISE_ATTENUATION_MILLIS = 850;
 const int NOISE_ATTENUATION_COMPLETE = 250000;
 const int LOWEST_AUDIBLE_NOISE_INTENSITY_MILLIS = 1000;
 
-int noise_attenuation_millis(const coord_def &pos);
 static inline int noise_is_audible(int noise_intensity_millis)
 {
     return noise_intensity_millis >= LOWEST_AUDIBLE_NOISE_INTENSITY_MILLIS;
@@ -40,7 +39,7 @@ struct noise_t
 
     std::string noise_player_msg;
 
-    // Millionths of noise intensity (i.e. the intensity passed to
+    // Thousandths of noise intensity (i.e. the intensity passed to
     // noisy() * 1000)
     int noise_intensity_millis;
 
