@@ -2638,7 +2638,7 @@ static bool _builder_normal(int level_number)
     // ORIENT: encompass primary vaults in other branches. Other kinds of vaults
     // can still be placed in other branches as secondary vaults.
     if (vault && (player_in_branch(BRANCH_MAIN_DUNGEON)
-               || vault->orient == MAP_ENCOMPASS))
+                  || vault->orient == MAP_ENCOMPASS))
     {
         env.level_build_method += " random_map_in_depth";
         _ensure_vault_placed_ex(_build_primary_vault(level_number, vault),

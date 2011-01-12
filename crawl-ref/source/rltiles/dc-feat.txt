@@ -124,6 +124,7 @@ dngn_trap_zot DNGN_TRAP_ZOT
 
 ## stairs
 %sdir dc-dngn/gateways
+dngn_exit_dungeon DNGN_EXIT_DUNGEON
 stone_stairs_down DNGN_STONE_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
