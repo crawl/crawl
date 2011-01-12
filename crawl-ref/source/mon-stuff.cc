@@ -2269,10 +2269,7 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons_base_type(mons) == MONS_KRAKEN)
     {
         if (_destroy_tentacles(mons) && !in_transit)
-        {
-            mpr("The kraken is slain, and its tentacles slide back "
-                "into the water like the carrion they now are.");
-        }
+            mpr("The dead kraken's tentacles slide back into the water.");
     }
     else if ((mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
                   || mons->type == MONS_KRAKEN_TENTACLE)
