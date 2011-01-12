@@ -537,6 +537,8 @@ static int crawl_get_command (lua_State *ls)
     return (1);
 }
 
+LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
+
 static int crawl_random_element(lua_State *ls)
 {
     const int table_idx = 1;

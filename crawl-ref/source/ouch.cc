@@ -76,7 +76,7 @@
 #include "xom.h"
 
 
-static void end_game(scorefile_entry &se);
+static void _end_game(scorefile_entry &se);
 static void _item_corrode(int slot);
 
 static void _maybe_melt_player_enchantments(beam_type flavour)
@@ -1325,10 +1325,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 #endif
 
-    end_game(se);
+    _end_game(se);
 }
 
-static std::string morgue_name(time_t when_crawl_got_even)
+static std::string _morgue_name(time_t when_crawl_got_even)
 {
 #ifdef SHORT_FILE_NAMES
     return "morgue";
@@ -1344,14 +1344,31 @@ static std::string morgue_name(time_t when_crawl_got_even)
 }
 
 // Delete save files on game end.
-static void delete_files()
+static void _delete_files()
 {
     you.save->unlink();
     delete you.save;
     you.save = 0;
 }
 
-void end_game(scorefile_entry &se)
+void screen_end_game(std::string text)
+{
+    _delete_files();
+
+    if (!text.empty())
+    {
+        clrscr();
+        linebreak_string2(text, 60);
+        display_tagged_block(text);
+
+        if (!crawl_state.seen_hups)
+            get_ch();
+    }
+
+    game_ended();
+}
+
+void _end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
         if (item_type_unknown(you.inv[i]))
@@ -1371,7 +1388,7 @@ void end_game(scorefile_entry &se)
         }
     }
 
-    delete_files();
+    _delete_files();
 
     // death message
     if (se.get_death_type() != KILLED_BY_LEAVING
@@ -1429,7 +1446,7 @@ void end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(morgue_name(se.get_death_time()), false, true, &se))
+    if (!dump_char(_morgue_name(se.get_death_time()), false, true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
