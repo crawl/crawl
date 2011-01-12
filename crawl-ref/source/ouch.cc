@@ -1358,7 +1358,7 @@ void screen_end_game(std::string text)
     if (!text.empty())
     {
         clrscr();
-        linebreak_string2(text, 60);
+        linebreak_string2(text, get_number_of_cols());
         display_tagged_block(text);
 
         if (!crawl_state.seen_hups)

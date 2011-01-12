@@ -7,10 +7,9 @@
 #  - because of the above, needs to look particularly interesting
 #
 # Still TODO:
-#  * Make leaving trigger a screen recapping all movement commands
-#    rather than display the highscore etc.
-#  * Find out why the run commands don't return the vi keys and fix this.
 #  * Shorten the explanation on exclusions.
+#  * Find a way to set starting attributes depending on the used
+#    tutorial map -> triggered by Lua?
 #
 {{
 
@@ -39,8 +38,8 @@ function tutorial_msg.diagonal1 ()
                  .. "  Numpad:       <white>1 2 3</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
                  .. "                 \\|/                         " .. "\\|/\n"
-                 .. " (Try both      <white>4</white>-.-<white>6</white>          (These can   "
-                 .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-.-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
+                 .. " (Try both      <w>4</w>-<w>.</w>-<w>6</w>          (These can   "
+                 .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-<w>.</w>-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
                  .. " <white>NumLock</white>         /|\\           be useful     " .. "/|\\\n"
                  .. " on and off)    <white>7 8 9</white>          on laptops)  " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n"
@@ -107,7 +106,7 @@ function tutorial_msg.exclusion ()
                  .. "so autotravel doesn't lead you right into danger. These '<white>exclusions</white>' "
 
     if crawl.is_tiles() then
-        text = text .. "are shown as red X's."
+        text = text .. "are shown as <red>red X</red>'s."
     else
         text = text .. "are highlighted in red on the level map (" .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. ")."
     end
@@ -134,7 +133,40 @@ function tutorial_msg.tutorial_end ()
 end
 
 function tutorial_msg.exit ()
-    local text = "Game over!"
+    -- A single screen recapping all commands.
+
+    local text = "<yellow>Movement commands</yellow>\n\n"
+                 .. "  Numpad:       <white>1 2 3</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
+                 .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
+                 .. "                 \\|/                         " .. "\\|/\n"
+                 .. "                <w>4</w>-<w>.</w>-<w>6</w>                       "
+                 .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-<w>.</w>-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
+                 .. "                 /|\\                         " .. "/|\\\n"
+                 .. "                <white>7 8 9</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
+                 .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n\n"
+                 .. "<white>Shift + direction</white> moves you several squares into this direction.\n\n"
+
+    if crawl.is_tiles() then
+        text = text .. "You also can move by <white>clicking</white> somewhere in sight or on the <white>minimap</white>.\n"
+    end
+
+    text = text .. "\n<yellow>Staircases</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_GO_UPSTAIRS") .. "  go back to the previous level\n"
+                .. "  " .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. "  enter the next level\n"
+
+    text = text .. "\n<yellow>Doors</yellow>\n"
+                .. "  can be opened by walking into them\n"
+                .. "  " .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "  close an open door\n"
+                .. "  " .. tutorial_get_cmd("CMD_REST") .. "  search for secret doors\n"
+
+    text = text .. "\n<yellow>Travel</yellow>\n"
+    if crawl.is_tiles() then
+        text = text .. "  mouseclick on the <white>minimap</white>\n"
+    else
+        text = text .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "  enter the level map, travel with <white>Enter</white>\n"
+    end
+    text = text .. "  " .. tutorial_get_cmd("CMD_EXPLORE") .. "  autoexplore\n\n\n"
+                .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
     return crawl.endgame(text)
 end
@@ -149,7 +181,7 @@ KFEAT:   ABCDEF = .
 KFEAT:   HI$ = '
 COLOUR:  ABCDEFHI$ = blue
 COLOUR:  ' = brown
-FTILE:   G' = floor_swamp, t = floor_grass
+FTILE:   G'[ = floor_swamp, t = floor_grass
 FTILE:   ABCDEFHI$ = tutorial_pad
 MARKER:  A = lua:tutorial_msg.go_on()
 MARKER:  B = lua:tutorial_msg.diagonal1()
@@ -238,7 +270,8 @@ function tutorial_msg.newlevel ()
 end
 
 function tutorial_msg.door ()
-    local text = "You can open a closed door by walking into it."
+    local text = "You can open a closed door by walking into it. To close an open door, press "
+                 .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "."
     return tutorial_message(text)
 end
 
@@ -259,8 +292,18 @@ function tutorial_msg.secret_door_glass ()
     return tutorial_message(text)
 end
 
+function tutorial_msg.shiftmove3 ()
+    local text = "Run down this corridor with <white>Shift-7</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
+    return tutorial_message(text)
+end
+
 function tutorial_msg.water ()
     return tutorial_message("Note how you can move through shallow but not through deep water.")
+end
+
+function tutorial_msg.shiftmove4 ()
+    local text = "Run up this corridor with <white>Shift-1</white> or " .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
+    return tutorial_message(text)
 end
 
 function tutorial_msg.secret_door_wall ()
@@ -276,7 +319,7 @@ function tutorial_msg.upstairs ()
       text = text .. " or by <white>Shift-clicking</white> on your character"
     end
 
-    text = text .. ".\n"
+    text = text .. "."
 
     return tutorial_message(text)
 end
@@ -287,15 +330,17 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
-KFEAT:   ABCDEF = .
-COLOUR:  ABCDEF = blue
-FTILE:   ABCDEF = tutorial_pad
+KFEAT:   ABCDEFGH = .
+COLOUR:  ABCDEFGH = blue
+FTILE:   ABCDEFGH = tutorial_pad
 MARKER:  A = lua:tutorial_msg.door()
 MARKER:  B = lua:tutorial_msg.shiftmove()
 MARKER:  C = lua:tutorial_msg.shiftmove2()
 MARKER:  D = lua:tutorial_msg.secret_door_glass()
-MARKER:  E = lua:tutorial_msg.water()
-MARKER:  F = lua:tutorial_msg.secret_door_wall()
+MARKER:  E = lua:tutorial_msg.shiftmove3()
+MARKER:  F = lua:tutorial_msg.water()
+MARKER:  G = lua:tutorial_msg.shiftmove4()
+MARKER:  H = lua:tutorial_msg.secret_door_wall()
 MARKER:  { = lua:tutorial_msg.upstairs()
 epilogue{{
   tutorial_msg.newlevel()
@@ -322,14 +367,14 @@ vvv..{..vvvvvvvvvvvvvvvvvvv.vv
 vvv.....vvvvvvvvvvvvvvvvvvv.vv
 vvv.....vvvvvvvvvvvvvvvvvvv.vv
 vvvvv=vvvvvvvvvvvvvvvvvvvvv.vv
-vvvvvFvvvvvvvvvvvvvvvvvvvvv.vv
+vvvvvHvvvvvvvvvvvvvvvvvvvvvEvv
 vvvvv.vvvvvvvvvvvvvvvvvvvv.vvv
 vvvvvv.vvvvvvvvvvvvvvvvvv.vvvv
 vvvvvvv.vvvvvvvvvvvvvvvv.vvvvv
 vvvvvvvv.vvvvvvvvvvvvvv.vvvvvv
 vvvvvvvvv.vv..WWWW..vv.vvvvvvv
 vvvvvvvvvv.v.WWwwWW.v.vvvvvvvv
-vvvvvvvvvvv..WWwwWW.Evvvvvvvvv
+vvvvvvvvvvvG.WWwwWW.Fvvvvvvvvv
 vvvvvvvvvvvv.WWwwWW.vvvvvvvvvv
 vvvvvvvvvvvv..WWWW..vvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
