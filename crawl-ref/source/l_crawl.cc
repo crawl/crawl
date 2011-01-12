@@ -527,8 +527,13 @@ static int crawl_get_command (lua_State *ls)
         return (1);
     }
 
-    command_type cmd = name_to_command(luaL_checkstring(ls, 1));
-    lua_pushstring(ls, command_to_string(cmd).c_str());
+    const command_type cmd = name_to_command(luaL_checkstring(ls, 1));
+
+    std::string cmd_name = command_to_string(cmd);
+    if (strcmp(cmd_name.c_str(), "<") == 0)
+        cmd_name = "<<";
+
+    lua_pushstring(ls, cmd_name.c_str());
     return (1);
 }
 
@@ -664,6 +669,7 @@ static const struct luaL_reg crawl_clib[] =
     { "is_tiles",       crawl_is_tiles },
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
+    { "endgame",        crawl_endgame },
 
     { NULL, NULL },
 };
