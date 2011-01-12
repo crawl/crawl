@@ -529,7 +529,7 @@ static int crawl_get_command (lua_State *ls)
 
     const command_type cmd = name_to_command(luaL_checkstring(ls, 1));
 
-    std::string cmd_name = command_to_string(cmd);
+    std::string cmd_name = command_to_string(cmd, true);
     if (strcmp(cmd_name.c_str(), "<") == 0)
         cmd_name = "<<";
 
