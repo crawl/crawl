@@ -541,7 +541,7 @@ void SkillMenuEntry::_set_points()
 #endif
 
 #define MIN_COLS            78
-#define MIN_LINES           24
+#define MIN_LINES           25
 #define TILES_COL            6
 #define CURRENT_ACTION_SIZE 24
 #define NEXT_ACTION_SIZE    15
@@ -553,7 +553,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     SkillMenuEntry::m_skm = this;
 
 #ifdef USE_TILE
-    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 702)
+    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 720)
         set_flag(SKMF_SKILL_ICONS);
 #endif
 
