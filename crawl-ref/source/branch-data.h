@@ -46,7 +46,7 @@ Branch branches[] = {
       true, BROWN, BROWN,
       mons_mineorc_rare, mons_mineorc_level,
       NULL, NULL, NULL, NULL,
-      'O', false, false, 5 },
+      'O', false, false, 4 },
 
     { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 3, 4, 5, 4, 0, 0,
       DNGN_ENTER_ELVEN_HALLS, DNGN_RETURN_FROM_ELVEN_HALLS,
@@ -64,7 +64,7 @@ Branch branches[] = {
       true, GREEN, BROWN,
       mons_lair_rare, mons_lair_level,
       NULL, NULL, NULL, NULL,
-      'L', false, false, 5 },
+      'L', false, false, 4 },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 2, 5, 5, 3, BFLAG_ISLANDED, 0,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
@@ -109,7 +109,7 @@ Branch branches[] = {
       false, YELLOW, BROWN,
       mons_hive_rare, mons_hive_level,
       NULL, NULL, NULL, NULL,
-      'H', false, true, 20 },
+      'H', false, true, 5 },
 
     { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 14, 19, 8, 17, 0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
