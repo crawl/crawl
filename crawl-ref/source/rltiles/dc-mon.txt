@@ -435,7 +435,11 @@ wizard MONS_WIZARD
 vault_guard MONS_VAULT_GUARD
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
-killer_klown MONS_KILLER_KLOWN
+killer_klown_blue MONS_KILLER_KLOWN
+killer_klown_green
+killer_klown_purple
+killer_klown_red
+killer_klown_yellow
 slave MONS_SLAVE
 human_slave
 ## From the Wucad Mu wizlab
