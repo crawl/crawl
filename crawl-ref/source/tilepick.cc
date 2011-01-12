@@ -1440,7 +1440,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_GLOWING_SHAPESHIFTER:
         return TILEP_MONS_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
-        return TILEP_MONS_KILLER_KLOWN;
+        return _mon_mod(TILEP_MONS_KILLER_KLOWN, colour);
     case MONS_SLAVE:
         return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
     case MONS_DEMONSPAWN:

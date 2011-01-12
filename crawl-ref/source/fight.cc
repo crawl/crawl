@@ -4555,10 +4555,12 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
     if (attacker->type == MONS_KILLER_KLOWN && attk.type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
-    if ((attacker->type == MONS_KRAKEN_TENTACLE
-           || attacker->type == MONS_ELDRITCH_TENTACLE)
-         && attk.type == AT_TENTACLE_SLAP)
+    if (attk.type == AT_TENTACLE_SLAP
+        && (attacker->type == MONS_KRAKEN_TENTACLE
+            || attacker->type == MONS_ELDRITCH_TENTACLE))
+    {
         return ("slap");
+    }
 
     static const char *attack_types[] =
     {
