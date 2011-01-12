@@ -406,6 +406,9 @@ tileidx_t tileidx_player()
     if (you.attribute[ATTR_HELD])
         ch |= TILE_FLAG_NET;
 
+    if (you.duration[DUR_POISONING])
+        ch |= TILE_FLAG_POISON;
+
     return ch;
 }
 
