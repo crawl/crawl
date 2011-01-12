@@ -25,6 +25,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
+#include "place.h"
 #include "player.h"
 #include "shopping.h"
 #include "showsymb.h"
@@ -232,6 +233,11 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
+        if (player_in_branch(BRANCH_MAIN_DUNGEON)
+            && player_branch_depth() == 1)
+        {
+            return TILE_DNGN_EXIT_DUNGEON;
+        }
         if (player_in_hell())
             return TILE_DNGN_RETURN_HELL;
         return TILE_DNGN_STONE_STAIRS_UP;
@@ -611,6 +617,11 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
             z_tile = TILEP_MONS_ZOMBIE_HYDRA
                      + std::min((int)mon->number, 5) - 1;
             break;
+        }
+        else if (_is_zombie(z_type)
+                 && mons_genus(subtype) == MONS_RAT)
+        {
+            return TILEP_MONS_ZOMBIE_RAT;
         }
         else if (_is_zombie(z_type)
                  && mons_genus(subtype) == MONS_HOUND)
