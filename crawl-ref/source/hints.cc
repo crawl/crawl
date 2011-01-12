@@ -77,7 +77,7 @@ static int _get_hints_cols()
     return crawl_view.msgsz.x;
 #else
     int ncols = get_number_of_cols();
-    return (ncols > 80? 80 : ncols);
+    return (ncols > 80 ? 80 : ncols);
 #endif
 }
 

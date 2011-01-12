@@ -285,6 +285,10 @@ function tutorial.message_pray ()
 
   return tutorial_message(text)
 end
+
+function tutorial.exit_tutorial ()
+  return crawl.endgame("")
+end
 }}
 
 NAME:    tutorial_basic_1
@@ -306,6 +310,12 @@ MARKER:  G = lua:tutorial.message_melee_attack()
 MARKER:  H = lua:tutorial.message_rest()
 MARKER:  I = lua:tutorial.message_log()
 MARKER:  J = lua:tutorial.message_monster_description()
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial.exit_tutorial" }
+MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial.exit_tutorial" }
+MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial.exit_tutorial" }
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
 FTILE:   ABCDEFGHQIJ = tutorial_pad
@@ -499,6 +509,12 @@ FTILE:   ABC = tutorial_pad
 MARKER:  A = lua:tutorial_message( "Congratulations, you have succeeded in defeating Sigmund! He is one of the many early game threats that you will face on your adventures." )
 MARKER:  B = lua:tutorial_message( "Death in Crawl is almost inevitable, sometimes you will get yourself in way over your head; often, you will die." )
 MARKER:  C = lua:tutorial_message( "How on earth did you manage to defeat or escape from that Pandemonium lord?" )
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial.exit_tutorial" }
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial.exit_tutorial" }
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial.exit_tutorial" }
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 v{.(vvvvvv....vvvvvvvvvvvvvvv

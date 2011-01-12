@@ -77,4 +77,5 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
                              int strength = 0);
 bool expose_player_to_element(beam_type flavour, int strength = 0);
 
+void screen_end_game(std::string text);
 #endif

@@ -130,7 +130,13 @@ end
 
 function tutorial_msg.tutorial_end ()
     return tutorial_message("Congratulations! You've completed the first lesson!\n"
-                            .. "To exit the tutorial, simply go up these stairs.")
+                            .. "To exit the tutorial, simply go up these stairs. Confirm the resulting prompt with an uppercase <white>Y</white>.")
+end
+
+function tutorial_msg.exit ()
+    local text = "Game over!"
+
+    return crawl.endgame(text)
 end
 }}
 
@@ -156,6 +162,11 @@ MARKER:  F = lua:tutorial_msg.autoexplore()
 MARKER:  H = lua:tutorial_msg.exclusion()
 MARKER:  I = lua:tutorial_msg.autoexplore_announce()
 MARKER:  [ = lua:tutorial_msg.tutorial_end()
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg.exit" }
+MARKER:  [ = lua:one_way_stair { desc = "exit from the tutorial", \
+                                 dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg.exit" }
 MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
              size_max = 1, spread_rate = 0 }
@@ -281,7 +292,7 @@ COLOUR:  ABCDEF = blue
 FTILE:   ABCDEF = tutorial_pad
 MARKER:  A = lua:tutorial_msg.door()
 MARKER:  B = lua:tutorial_msg.shiftmove()
-MARKER:  B = lua:tutorial_msg.shiftmove2()
+MARKER:  C = lua:tutorial_msg.shiftmove2()
 MARKER:  D = lua:tutorial_msg.secret_door_glass()
 MARKER:  E = lua:tutorial_msg.water()
 MARKER:  F = lua:tutorial_msg.secret_door_wall()
@@ -292,7 +303,7 @@ epilogue{{
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvv.......vvvvvvvvvvvvvvvvvv
-vvvvv...(..A+..B....Cvvvvvvvvv
+vvvvv..(...A+.B.....Cvvvvvvvvv
 vvvvv.......vvvvvvvvv.vvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvv.vvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvv.vvvvvv
