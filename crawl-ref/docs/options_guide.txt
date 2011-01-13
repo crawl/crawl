@@ -1824,7 +1824,7 @@ tile_show_demon_tier = true
         tier (or difficulty rank) among demons, as is the case for non-Tiles
         builds.
 
-tile_layout_priority = minimap, inventory, command, spell, gold_turn, monster
+tile_layout_priority = minimap, inventory, gold_turn, spell, monster
         This option allows you to control the order in which elements are
         placed on the right of the screen, below the stat area. On small
         resolution, there won't be enough room for everything, so only the
