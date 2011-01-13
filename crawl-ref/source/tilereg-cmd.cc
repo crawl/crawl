@@ -159,14 +159,14 @@ void CommandRegion::pack_buffers()
     }
 }
 
-static bool _command_not_applicable(const command_type cmd)
+static bool _command_not_applicable(const command_type cmd, bool safe)
 {
     switch (cmd)
     {
     case CMD_REST:
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
-        return (!i_feel_safe(false));
+        return (!safe);
     case CMD_DISPLAY_RELIGION:
         return (you.religion == GOD_NO_GOD);
     case CMD_PRAY:
@@ -187,6 +187,8 @@ void CommandRegion::update()
     if (mx * my == 0)
         return;
 
+    bool safe = i_feel_safe(false);
+
     for (int idx = 0; idx < n_common_commands; ++idx)
     {
         const command_type cmd = _common_commands[idx];
@@ -196,7 +198,7 @@ void CommandRegion::update()
         desc.idx  = cmd;
 
         // Auto-explore while monsters around etc.
-        if (_command_not_applicable(cmd))
+        if (_command_not_applicable(cmd, safe))
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);
