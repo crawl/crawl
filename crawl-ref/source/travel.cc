@@ -252,8 +252,7 @@ bool is_unknown_stair(const coord_def &p)
 
     // While the stairs out of the dungeon are not precisely known
     // to the travel cache, the player does know where they lead.
-    if (player_in_branch(BRANCH_MAIN_DUNGEON)
-        && player_branch_depth() == 1
+    if (player_branch_depth() == 1
         && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
     {
         return (false);
