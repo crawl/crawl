@@ -52,7 +52,7 @@
 # tile_window_height   = 768
 # tile_map_pixels      = 3
 # tile_force_overlay   = true
-# tile_layout_priority = minimap, inventory, gold_turn, spell, monster
+# tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
 
 # tile_font_crt_file  = VeraMono.ttf
 # tile_font_crt_size  = 15

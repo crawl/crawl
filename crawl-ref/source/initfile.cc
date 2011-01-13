@@ -964,9 +964,8 @@ void game_options::reset_options()
     tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_force_overlay    = false;
-    // XXX: put back command before spell once it is fixed.
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
-                                             "spell, monster");
+                                             "command, spell, monster");
 
     // delays
     tile_update_rate      = 1000;
