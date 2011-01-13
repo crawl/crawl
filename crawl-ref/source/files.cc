@@ -537,21 +537,14 @@ std::string canonicalise_file_separator(const std::string &path)
                            "\\", sep));
 }
 
-std::string datafile_path(std::string basename,
-                          bool croak_on_fail,
-                          bool test_base_path,
-                          bool (*thing_exists)(const std::string&))
+static std::vector<std::string> _get_base_dirs()
 {
-    basename = canonicalise_file_separator(basename);
-
-    if (test_base_path && thing_exists(basename))
-        return (basename);
-
     const std::string rawbases[] = {
 #ifdef DATA_DIR_PATH
         DATA_DIR_PATH,
 #else
         !SysEnv.crawl_dir.empty()? SysEnv.crawl_dir : "",
+        !SysEnv.crawl_base.empty()? SysEnv.crawl_base : "",
 #endif
 #ifdef TARGET_OS_MACOSX
         SysEnv.crawl_base + "../Resources/",
@@ -578,7 +571,7 @@ std::string datafile_path(std::string basename,
     };
 
     std::vector<std::string> bases;
-    for (unsigned i = 0; i < sizeof(rawbases) / sizeof(*rawbases); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(rawbases); ++i)
     {
         std::string base = rawbases[i];
         if (base.empty())
@@ -586,22 +579,32 @@ std::string datafile_path(std::string basename,
 
         if (base[base.length() - 1] != FILE_SEPARATOR)
             base += FILE_SEPARATOR;
-        bases.push_back(base);
+
+        for (unsigned p = 0; p < ARRAYSZ(prefixes); ++p)
+            bases.push_back(base + prefixes[p]);
     }
 
-#ifndef DATA_DIR_PATH
-    if (!SysEnv.crawl_base.empty())
-        bases.push_back(SysEnv.crawl_base);
-    bases.push_back("");
-#endif
+    return bases;
+}
+
+std::string datafile_path(std::string basename,
+                          bool croak_on_fail,
+                          bool test_base_path,
+                          bool (*thing_exists)(const std::string&))
+{
+    basename = canonicalise_file_separator(basename);
+
+    if (test_base_path && thing_exists(basename))
+        return (basename);
+
+    std::vector<std::string> bases = _get_base_dirs();
 
     for (unsigned b = 0, size = bases.size(); b < size; ++b)
-        for (unsigned p = 0; p < sizeof(prefixes) / sizeof(*prefixes); ++p)
-        {
-            std::string name = bases[b] + prefixes[p] + basename;
-            if (thing_exists(name))
-                return (name);
-        }
+    {
+        std::string name = bases[b] + basename;
+        if (thing_exists(name))
+            return (name);
+    }
 
     // Die horribly.
     if (croak_on_fail)
@@ -2376,4 +2379,18 @@ FILE *fopen_replace(const char *name)
     if (fd == -1)
         return 0;
     return fdopen(fd, "w");
+}
+
+std::vector<std::string> get_title_files()
+{
+    std::vector<std::string> bases = _get_base_dirs();
+    std::vector<std::string> titles;
+    for (unsigned int i = 0; i < bases.size(); ++i)
+    {
+        std::vector<std::string> files = get_dir_files(bases[i]);
+        for (unsigned int j = 0; j < files.size(); ++j)
+            if (files[j].substr(0, 6) == "title_")
+                titles.push_back(files[j]);
+    }
+    return (titles);
 }

@@ -92,6 +92,7 @@ bool is_newer(const std::string &a, const std::string &b);
 void check_newer(const std::string &target,
                  const std::string &dependency,
                  void (*action)());
+std::vector<std::string> get_title_files();
 
 
 class level_id;
