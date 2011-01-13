@@ -153,8 +153,7 @@ end
 
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
 -- weighted and balanced and have been tested extensively.
-
-local function in_radius_12 (x, y)
+function callback.volcano_in_radius_12(x, y)
   return dgn.point_in_radius(dgn.point(x, y), dgn.point(you.pos()), 12)
 end
 
@@ -164,7 +163,8 @@ local large_warning = tw_machine(3, "The air gets thick with the scent of sulphu
 
 local small_warning = tw_machine(3, nil, nil, nil, "The volcano roars to life, " ..
                                  "belching forth lava!", "The air gets thick with " ..
-                                 "the scent of sulphur.", in_radius_12)
+                                 "the scent of sulphur.",
+                                 "callback.volcano_in_radius_12")
 
 function place_large_volcano(e)
     e.kfeat("V = l")
