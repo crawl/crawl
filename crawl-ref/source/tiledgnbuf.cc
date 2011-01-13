@@ -173,7 +173,7 @@ void DungeonCellBuffer::clear()
     m_buf_main.clear();
     m_buf_spells.clear();
     m_buf_skills.clear();
-    m_buf_commands.draw();
+    m_buf_commands.clear();
     m_buf_icons.clear();
 }
 
