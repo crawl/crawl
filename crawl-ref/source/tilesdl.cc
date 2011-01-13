@@ -943,7 +943,7 @@ void TilesFramework::place_tab(int idx)
         break;
     }
 
-    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top)
+    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top - m_tab_margin)
                                  / m_region_tab->dy);
     if (lines >= min_ln)
     {
@@ -1013,7 +1013,7 @@ void TilesFramework::layout_statcol()
     }
     Options.show_gold_turns = false;
     crawl_view.hudsz.y = min_stat_height;
-
+    m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
 
     m_statcol_top = m_region_stat->ey;
 
