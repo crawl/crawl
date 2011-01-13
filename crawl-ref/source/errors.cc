@@ -13,7 +13,7 @@
 #include "libutil.h"
 #include "stuff.h"
 
-void fail(const char *msg, ...)
+NORETURN void fail(const char *msg, ...)
 {
     va_list args;
     va_start(args, msg);
@@ -25,7 +25,7 @@ void fail(const char *msg, ...)
     throw ext_fail_exception(buf);
 }
 
-void sysfail(const char *msg, ...)
+NORETURN void sysfail(const char *msg, ...)
 {
     va_list args;
     va_start(args, msg);

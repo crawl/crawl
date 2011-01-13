@@ -125,8 +125,9 @@ class map_malign_gateway_marker : public map_marker
 {
 public:
     map_malign_gateway_marker (const coord_def& pos = coord_def(0, 0),
-                    int dur = 0, bool ip = false, monster* mon = NULL,
-                    god_type gd = GOD_NO_GOD, int pow = 0);
+                    int dur = 0, bool ip = false, std::string caster = "",
+                    beh_type bh = BEH_HOSTILE, god_type gd = GOD_NO_GOD,
+                    int pow = 0);
 
     void write (writer &) const;
     void read (reader &);
@@ -139,7 +140,8 @@ public:
     int duration;
     bool is_player;
     bool monster_summoned;
-    monster* caster;
+    std::string summoner_string;
+    beh_type behaviour;
     god_type god;
     int power;
 };

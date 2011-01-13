@@ -25,7 +25,6 @@
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
-#include "map_knowledge.h"
 #include "exclude.h"
 #include "fight.h"
 #include "godabil.h"
@@ -34,6 +33,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -249,6 +249,16 @@ inline bool is_player_altar(const coord_def &c)
 bool is_unknown_stair(const coord_def &p)
 {
     dungeon_feature_type feat = env.map_knowledge(p).feat();
+
+    // While the stairs out of the dungeon are not precisely known
+    // to the travel cache, the player does know where they lead.
+    if (player_in_branch(BRANCH_MAIN_DUNGEON)
+        && player_branch_depth() == 1
+        && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
+    {
+        return (false);
+    }
+
     return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
 }
 
@@ -365,6 +375,14 @@ public:
     }
 };
 
+static bool _is_stair_exclusion(const coord_def &p)
+{
+    if (feat_stair_direction(env.map_knowledge(p).feat()) == CMD_NO_CMD)
+        return (false);
+
+    return (get_exclusion_radius(p) == 1);
+}
+
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
@@ -410,8 +428,8 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     if (ignore_hostile && _is_reseedable(c))
         return (true);
 
-    // Excluded squares are never safe.
-    if (is_excluded(c))
+    // Excluded squares are only safe if marking stairs, i.e. another level.
+    if (is_excluded(c) && !_is_stair_exclusion(c))
         return (false);
 
     if (is_trap(c) && _is_safe_trap(c))
@@ -904,9 +922,26 @@ command_type travel()
 
     command_type result = CMD_NO_CMD;
 
-    // Abort travel/explore if you're confused or a key was pressed.
-    if (kbhit() || you.confused())
+    if (kbhit())
     {
+        mprf("Key pressed, stopping %s.", you.running.runmode_name().c_str());
+        stop_running();
+        return CMD_NO_CMD;
+    }
+
+    if (you.confused())
+    {
+        mprf("You're confused, stopping %s.",
+             you.running.runmode_name().c_str());
+        stop_running();
+        return CMD_NO_CMD;
+    }
+
+    // Excluded squares are only safe if marking stairs, i.e. another level.
+    if (is_excluded(you.pos()) && !_is_stair_exclusion(you.pos()))
+    {
+        mprf("You're in a travel-excluded area, stopping %s.",
+             you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
     }
@@ -2473,7 +2508,10 @@ void start_translevel_travel_prompt()
     travel_target target = prompt_translevel_target(TPF_DEFAULT_OPTIONS,
             trans_travel_dest);
     if (target.p.id.depth <= 0)
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     start_translevel_travel(target);
 }
@@ -4010,6 +4048,23 @@ bool runrest::is_any_travel() const
         return (true);
     default:
         return (false);
+    }
+}
+
+std::string runrest::runmode_name() const
+{
+    switch (runmode)
+    {
+    case RMODE_EXPLORE:
+    case RMODE_EXPLORE_GREEDY:
+        return "explore";
+    case RMODE_INTERLEVEL:
+    case RMODE_TRAVEL:
+        return "travel";
+    default:
+        if (runmode > 0)
+            return pos.origin()? "rest" : "run";
+        return ("");
     }
 }
 

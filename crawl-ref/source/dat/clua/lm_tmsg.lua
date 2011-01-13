@@ -183,7 +183,7 @@ function TimedMessaging:write(th)
   lmark.marshall_table(th, self)
 end
 
-function TimedMessaging.read(th)
+function TimedMessaging:read(marker, th)
   return TimedMessaging:new(lmark.unmarshall_table(th))
 end
 

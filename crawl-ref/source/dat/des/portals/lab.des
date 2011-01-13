@@ -9,12 +9,14 @@
 # Labyrinth entry vaults
 
 NAME:   lab_entry_generic
-TAGS:   luniq_lab chance_lab transparent trowel_portal allow_dup extra
-# Nominal chance for labs was 1 chance in 15, but making it eligible as a
-# random vault gives this vault more opportunities to be placed, so dropping
-# chance to 2.85%.
-CHANCE: 285
-DEPTH:  12-27
+TAGS:   uniq_lab chance_lab transparent trowel_portal allow_dup extra
+# (Jan 2010) With the reduction in placement of Labyrinths to 10-20 (roughly
+# across 24 levels) and changing to game-unique, chance of NOT having a
+# Labyrinth was (1-285/10^4)^24 = ~49%. Increasing chance to 5% gives you
+# (1-500/10^4)^24 = ~29% chance of NOT placing a Labyrinth, ~71% chance
+# of getting a Labyrinth every game, skewed towards earlier depths.
+CHANCE: 500
+DEPTH:  10-20, !Orc, !Swamp, !Shoals, !Hive, !Snake, !Slime
 {{
   local messager =
     timed_msg {
@@ -294,6 +296,16 @@ MAP
 ENDMAP
 
 ############################################################################
+# Labyrinth furniture
+NAME:    lab_statue
+TAGS:    lab allow_dup
+MAP
+...
+.G.
+...
+ENDMAP
+
+############################################################################
 # Teaser: inaccessible loot
 NAME:  labyrinth_glass_1
 TAGS:  lab allow_dup
@@ -383,6 +395,18 @@ TAGS:   lab allow_dup generate_awake
 WEIGHT: 40
 KFEAT:  x = .
 KMONS:  x = hungry ghost
+MAP
+x
+ENDMAP
+
+############################################################################
+# The remains of a previous adventurer.
+# No items. Maybe the minotaur got them.
+NAME:   labyrinth_skeletal_remains
+TAGS:   lab allow_dup
+WEIGHT: 40
+KFEAT:  x = .
+: dgn.delayed_decay(_G, 'x', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
 MAP
 x
 ENDMAP

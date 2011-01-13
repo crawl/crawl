@@ -1155,8 +1155,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     else
     {
         // Should be impossible. needs_berserk should find this case.
-        ASSERT(false);
-        return (false);
+        die("angered by no foe");
     }
 
     // If mon may be blocking targ from its victim, don't try.
@@ -2536,9 +2535,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (mons->invisible())
             {
                 mons->del_ench(ENCH_INVIS);
-                place_cloud(CLOUD_RAIN, mons->pos(),
-                            2, mons->kill_alignment(),
-                            KILL_MON_MISSILE);
+                place_cloud(CLOUD_RAIN, mons->pos(), 2, mons);
             }
             // Otherwise, go invisible.
             else
@@ -2546,10 +2543,24 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_BOG_MUMMY:
+        if (one_chance_in(8))
+        {
+            // A hacky way of making these rot regularly.
+            if (mons->has_ench(ENCH_ROT))
+                break;
+
+            mon_enchant rot = mon_enchant(ENCH_ROT, 0, KC_OTHER, 10);
+            mons->add_ench(rot);
+
+            if (mons->visible_to(&you))
+                simple_monster_message(mons, " begins to rapidly decay!");
+        }
+        break;
+
     case MONS_AGATE_SNAIL:
     case MONS_SNAPPING_TURTLE:
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
-    {
         // Use the same calculations as for low-HP casting
         if (mons->hit_points < mons->max_hit_points / 4 && !one_chance_in(4)
             && !mons->has_ench(ENCH_WITHDRAWN))
@@ -2560,9 +2571,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 behaviour_event(mons, ME_CORNERED);
 
             simple_monster_message(mons, " withdraws into its shell!");
-            break;
         }
-    }
+        break;
 
     case MONS_MANTICORE:
         if (mons->has_ench(ENCH_CONFUSION))
@@ -2638,6 +2648,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_LINDWURM:
     case MONS_FIRE_DRAKE:
     case MONS_XTAHUA:
+    case MONS_FIRECRAB:
         if (spell == SPELL_NO_SPELL)
             spell = SPELL_FIRE_BREATH;
 
@@ -2651,6 +2662,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
             || one_chance_in(10))
         {
             setup_mons_cast(mons, beem, spell);
+
+            if (mons->type == MONS_FIRECRAB)
+            {
+                beem.is_big_cloud = true;
+                beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
+            }
 
             // Fire tracer.
             fire_tracer(mons, beem);

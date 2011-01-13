@@ -1255,10 +1255,12 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_ARMOUR:
         switch (item.sub_type)
         {
+        case ARM_PEARL_DRAGON_ARMOUR:
         case ARM_GOLD_DRAGON_ARMOUR:
             valued += 1600;
             break;
 
+        case ARM_PEARL_DRAGON_HIDE:
         case ARM_GOLD_DRAGON_HIDE:
             valued += 1400;
             break;
@@ -2809,7 +2811,7 @@ void ShoppingList::display()
             fill_out_menu(shopmenu);
         }
         else
-            DEBUGSTR("Invalid menu action type");
+            die("Invalid menu action type");
     }
     redraw_screen();
 }

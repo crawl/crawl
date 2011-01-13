@@ -77,7 +77,7 @@ static int _get_hints_cols()
     return crawl_view.msgsz.x;
 #else
     int ncols = get_number_of_cols();
-    return (ncols > 80? 80 : ncols);
+    return (ncols > 80 ? 80 : ncols);
 #endif
 }
 
@@ -1049,7 +1049,8 @@ void hints_gained_new_skill(skill_type skill)
     }
     // Only one message for all magic skills (except Spellcasting).
     case SK_CONJURATIONS:
-    case SK_ENCHANTMENTS:
+    case SK_CHARMS:
+    case SK_HEXES:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
     case SK_TRANSLOCATIONS:

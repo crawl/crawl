@@ -73,6 +73,7 @@ private:
 
     int    kill_source;
     actor* act_source;
+    actor* guilty;
 
     bool source_known;
     bool target_known;

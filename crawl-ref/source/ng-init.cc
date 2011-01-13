@@ -48,6 +48,14 @@ static uint8_t _random_potion_description()
     return desc;
 }
 
+void initialise_branches_for_game_type()
+{
+    if (crawl_state.game_is_sprint())
+        branches[BRANCH_MAIN_DUNGEON].depth = 1;
+    else
+        branches[BRANCH_MAIN_DUNGEON].depth = BRANCH_DUNGEON_DEPTH;
+}
+
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
@@ -72,10 +80,7 @@ void initialise_branch_depths()
     branches[BRANCH_FOREST].startdepth = -1;
     branches[BRANCH_DWARVEN_HALL].startdepth = -1;
 
-    if (crawl_state.game_is_sprint())
-        branches[BRANCH_MAIN_DUNGEON].depth = 1;
-    else
-        branches[BRANCH_MAIN_DUNGEON].depth = BRANCH_DUNGEON_DEPTH;
+    initialise_branches_for_game_type();
 }
 
 #define MAX_OVERFLOW_LEVEL 9

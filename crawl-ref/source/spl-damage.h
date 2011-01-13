@@ -28,7 +28,7 @@ bool cast_fragmentation(int powc, const dist& spd);
 int wielding_rocks();
 bool cast_sandblast(int powc, bolt &beam);
 bool cast_tornado(int powc);
-void tornado_damage(int dur);
+void tornado_damage(actor *caster, int dur);
 void cancel_tornado();
 
 #endif

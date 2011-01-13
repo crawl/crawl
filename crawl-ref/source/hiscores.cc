@@ -930,20 +930,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             // shouldn't.
             if (you.hp <= 0)
             {
-#ifdef HISCORE_WEAPON_DETAIL
                 set_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
                                  ISFLAG_IDENT_MASK);
-#else
-                // changing this to ignore the pluses to keep it short
-                unset_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
-                                   ISFLAG_IDENT_MASK);
-
-                set_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
-                                 ISFLAG_KNOW_TYPE);
-
-                // clear "runed" description text to make shorter yet
-                set_equip_desc(mitm[mons->inv[MSLOT_WEAPON]], 0);
-#endif
             }
 
             // Setting this is redundant for dancing weapons, however

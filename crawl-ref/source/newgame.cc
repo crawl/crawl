@@ -12,6 +12,7 @@
 #include "command.h"
 #include "database.h"
 #include "files.h"
+#include "hints.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -29,14 +30,14 @@
 #include "sprint.h"
 #include "state.h"
 #include "stuff.h"
-#include "hints.h"
+#include "tutorial.h"
 
 #ifdef USE_TILE
 #include "tilereg-crt.h"
 #endif
 
-static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
-                               const newgame_def& defaults);
+static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+                                 const newgame_def& defaults);
 static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
                           const newgame_def& defaults);
 static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
@@ -466,8 +467,8 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     ng->type = choice->type;
     ng->map  = choice->map;
 
-    if (ng->type == GAME_TYPE_SPRINT)
-        _choose_sprint_map(ng, choice, defaults);
+    if (ng->type == GAME_TYPE_SPRINT || ng->type == GAME_TYPE_TUTORIAL)
+        _choose_gamemode_map(ng, choice, defaults);
 
     _choose_char(ng, choice, defaults);
 
@@ -2131,8 +2132,7 @@ static std::string _god_text(god_type god)
     case GOD_LUGONU:
         return "Lugonu the Unformed";
     default:
-        ASSERT(false);
-        return "";
+        die("invalid priestly god: %d", god);
     }
 }
 
@@ -2820,12 +2820,12 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
     return (true);
 }
 
-static void _construct_sprint_map_menu(const mapref_vector& maps,
-                                       const newgame_def& defaults,
-                                       MenuFreeform* menu)
+static void _construct_gamemode_map_menu(const mapref_vector& maps,
+                                         const newgame_def& defaults,
+                                         MenuFreeform* menu)
 {
     static const int ITEMS_START_Y = 5;
-    static const int SPRINT_COLUMN_WIDTH = get_number_of_cols();
+    static const int MENU_COLUMN_WIDTH = get_number_of_cols();
     TextItem* tmp = NULL;
     std::string text;
     coord_def min_coord(0,0);
@@ -2854,8 +2854,8 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
         text += " - ";
 
         text += maps[i]->desc_or_name();
-        if (static_cast<int>(text.length()) > SPRINT_COLUMN_WIDTH - 1)
-            text = text.substr(0, SPRINT_COLUMN_WIDTH - 1);
+        if (static_cast<int>(text.length()) > MENU_COLUMN_WIDTH - 1)
+            text = text.substr(0, MENU_COLUMN_WIDTH - 1);
 
         // Add padding
         if (padding_width > text.size())
@@ -2875,11 +2875,9 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
 
         menu->attach_item(tmp);
         tmp->set_visible(true);
-        // Is this item our default sprint map?
+        // Is this item our default map?
         if (defaults.map == maps[i]->name)
-        {
             menu->set_active_item(tmp);
-        }
     }
 
     tmp = new TextItem();
@@ -2976,9 +2974,9 @@ static bool _cmp_map_by_name(const map_def* m1, const map_def* m2)
     return (m1->desc_or_name() < m2->desc_or_name());
 }
 
-static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
-                               const newgame_def& defaults,
-                               mapref_vector maps)
+static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+                                 const newgame_def& defaults,
+                                 mapref_vector maps)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -2989,7 +2987,7 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
     menu.set_active_object(freeform);
 
     std::sort(maps.begin(), maps.end(), _cmp_map_by_name);
-    _construct_sprint_map_menu(maps, defaults, freeform);
+    _construct_gamemode_map_menu(maps, defaults, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
@@ -3057,10 +3055,10 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
             return;
         case M_APTITUDES:
             list_commands('%', false, _highlight_pattern(ng));
-            return _prompt_sprint_map(ng, ng_choice, defaults, maps);
+            return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_HELP:
             list_commands('?');
-            return _prompt_sprint_map(ng, ng_choice, defaults, maps);
+            return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_DEFAULT_CHOICE:
             _set_default_choice(ng, ng_choice, defaults);
             return;
@@ -3076,8 +3074,8 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
     }
 }
 
-static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
-                                const mapref_vector& maps)
+static void _resolve_gamemode_map(newgame_def* ng, const newgame_def* ng_choice,
+                                  const mapref_vector& maps)
 {
     if (ng_choice->map == "random" || ng_choice->map.empty())
         ng->map = maps[random2(maps.size())]->name;
@@ -3085,22 +3083,33 @@ static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
         ng->map = ng_choice->map;
 }
 
-static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
-                               const newgame_def& defaults)
+static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+                                 const newgame_def& defaults)
 {
-    const mapref_vector maps = get_sprint_maps();
+    // Sprint, otherwise Tutorial.
+    const bool is_sprint = (ng_choice->type == GAME_TYPE_SPRINT);
+
+    const mapref_vector maps = (is_sprint ? get_sprint_maps()
+                                          : get_tutorial_maps());
     if (maps.empty())
-        end(1, true, "No sprint maps found.");
+    {
+        end(1, true, make_stringf("No %s maps found.",
+                                  is_sprint ? "sprint"
+                                            : "tutorial").c_str());
+    }
 
     if (ng_choice->map.empty())
     {
-        if (!crawl_state.sprint_map.empty())
+        if (is_sprint
+            && ng_choice->type == !crawl_state.sprint_map.empty())
+        {
             ng_choice->map = crawl_state.sprint_map;
+        }
         else if (maps.size() > 1)
-            _prompt_sprint_map(ng, ng_choice, defaults, maps);
+            _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         else
             ng_choice->map = maps[0]->name;
     }
 
-    _resolve_sprint_map(ng, ng_choice, maps);
+    _resolve_gamemode_map(ng, ng_choice, maps);
 }

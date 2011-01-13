@@ -65,7 +65,6 @@ void tile_init_default_flavour()
     tile_default_flv(you.level_type, you.where_are_you, env.tile_default);
 }
 
-
 void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 {
     flv.wall    = TILE_WALL_NORMAL;
@@ -227,8 +226,8 @@ void tile_clear_flavour()
     {
         env.tile_flv(*ri).floor   = 0;
         env.tile_flv(*ri).wall    = 0;
-        env.tile_flv(*ri).special = 0;
         env.tile_flv(*ri).feat    = 0;
+        env.tile_flv(*ri).special = 0;
     }
 }
 
@@ -799,7 +798,7 @@ static bool _suppress_blood(const coord_def pos)
         return (true);
 
     const dungeon_feature_type feat = grd(pos);
-    if (feat == DNGN_TREE)
+    if (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE)
         return (true);
 
     if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
@@ -867,7 +866,7 @@ static int _get_door_offset(tileidx_t base_tile, bool opened = false,
         break;
     default:
         // Passed a non-door tile base, pig out now.
-        ASSERT(false);
+        die("non-door tile");
     }
 
     // If we've reached this point, we're dealing with a gate.
@@ -959,21 +958,20 @@ static bool _top_item_is_corpse(const coord_def &gc)
             && item.sub_type == CORPSE_BODY);
 }
 
-void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
-                           tileidx_t *bg)
+void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 {
     if (is_excluded(gc))
     {
         if (is_exclude_root(gc))
-            *bg |= TILE_FLAG_EXCL_CTR;
+            cell.bg |= TILE_FLAG_EXCL_CTR;
         else
-            *bg |= TILE_FLAG_TRAV_EXCL;
+            cell.bg |= TILE_FLAG_TRAV_EXCL;
     }
 
     if (!map_bounds(gc))
         return;
 
-    _apply_variations(env.tile_flv(gc), bg, gc);
+    _apply_variations(env.tile_flv(gc), &cell.bg, gc);
 
     bool print_blood = true;
     if (haloed(gc))
@@ -985,14 +983,16 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
                  && (!mons_is_mimic(mon->type)
                      || testbits(mon->flags, MF_KNOWN_MIMIC)))
             {
-                *bg |= TILE_FLAG_HALO;
+                cell.is_haloed = true;
                 print_blood = false;
             }
         }
     }
+    else
+        cell.is_haloed = false;
 
     if (print_blood && (_suppress_blood(gc)
-                        || _suppress_blood((*bg) & TILE_FLAG_MASK)))
+                        || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
     {
         print_blood = false;
     }
@@ -1002,20 +1002,23 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
     if (print_blood)
     {
         if (is_moldy(gc))
-            *bg |= TILE_FLAG_MOLD;
+            cell.is_moldy = true;
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
-            *bg |= TILE_FLAG_BLOOD;
+            cell.is_bloody = true;
     }
 
     const dungeon_feature_type feat = grd(gc);
     if (feat_is_water(feat) || feat == DNGN_LAVA)
-        *bg |= TILE_FLAG_WATER;
+        cell.bg |= TILE_FLAG_WATER;
 
     if (is_sanctuary(gc))
-        *bg |= TILE_FLAG_SANCTUARY;
+        cell.is_sanctuary = true;
 
     if (silenced(gc))
-        *bg |= TILE_FLAG_SILENCED;
+        cell.is_silenced = true;
+
+    if (grd(gc) == DNGN_SWAMP_TREE)
+        cell.swamp_tree_water = true;
 }
 
 void tile_clear_map(const coord_def& gc)

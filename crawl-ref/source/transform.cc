@@ -379,7 +379,7 @@ monster_type transform_mons()
     case TRAN_NONE:
         return MONS_PLAYER;
     }
-    ASSERT(!"unknown transformation");
+    die("unknown transformation");
     return MONS_PLAYER;
 }
 

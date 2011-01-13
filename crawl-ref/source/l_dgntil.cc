@@ -79,11 +79,8 @@ LUAFN(dgn_lrocktile)
     MAP(ls, 1, map);
 
 #ifdef USE_TILE
-    tileidx_t tile = get_tile_idx(ls, 2);
-    map->rock_tile = tile;
-
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
+    map->rock_tile = luaL_checkstring(ls, 2);
+    PLUARET(string, map->rock_tile.c_str());
 #else
     UNUSED(map);
     PLUARET(string, "invalid");
@@ -95,11 +92,8 @@ LUAFN(dgn_lfloortile)
     MAP(ls, 1, map);
 
 #ifdef USE_TILE
-    tileidx_t tile = get_tile_idx(ls, 2);
-    map->floor_tile = tile;
-
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
+    map->floor_tile = luaL_checkstring(ls, 2);
+    PLUARET(string, map->floor_tile.c_str());
 #else
     UNUSED(map);
     PLUARET(string, "invalid");
@@ -109,12 +103,22 @@ LUAFN(dgn_lfloortile)
 LUAFN(dgn_change_rock_tile)
 {
 #ifdef USE_TILE
-    unsigned short tile = get_tile_idx(ls, 1);
-    if (tile)
-        env.tile_default.wall = tile;
+    std::string tilename = luaL_checkstring(ls, 1);
 
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
+    tileidx_t rock;
+    if (!tile_dngn_index(tilename.c_str(), &rock))
+    {
+        std::string error = "Couldn't find tile '";
+        error += tilename;
+        error += "'";
+        luaL_argerror(ls, 1, error.c_str());
+        return 0;
+    }
+    env.tile_default.wall     = rock;
+    env.tile_default.wall_idx =
+        store_tilename_get_index(tilename);
+
+    PLUARET(string, tilename.c_str());
 #else
     PLUARET(string, "invalid");
 #endif
@@ -123,12 +127,22 @@ LUAFN(dgn_change_rock_tile)
 LUAFN(dgn_change_floor_tile)
 {
 #ifdef USE_TILE
-    unsigned short tile = get_tile_idx(ls, 1);
-    if (tile)
-        env.tile_default.floor = tile;
+    std::string tilename = luaL_checkstring(ls, 1);
 
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
+    tileidx_t floor;
+    if (!tile_dngn_index(tilename.c_str(), &floor))
+    {
+        std::string error = "Couldn't find tile '";
+        error += tilename;
+        error += "'";
+        luaL_argerror(ls, 1, error.c_str());
+        return 0;
+    }
+    env.tile_default.floor     = floor;
+    env.tile_default.floor_idx =
+        store_tilename_get_index(tilename);
+
+    PLUARET(string, tilename.c_str());
 #else
     PLUARET(string, "invalid");
 #endif
@@ -168,13 +182,25 @@ LUAFN(dgn_tile_feat_changed)
 
     if (lua_isnil(ls, 3))
     {
-        env.tile_flv(c).feat = 0;
+        env.tile_flv(c).feat     = 0;
+        env.tile_flv(c).feat_idx = 0;
         return (0);
     }
 
-    unsigned short tile = get_tile_idx(ls, 3);
-    if (tile)
-        env.tile_flv(c).feat = tile;
+    std::string tilename = luaL_checkstring(ls, 3);
+
+    tileidx_t feat;
+    if (!tile_dngn_index(tilename.c_str(), &feat))
+    {
+        std::string error = "Couldn't find tile '";
+        error += tilename;
+        error += "'";
+        luaL_argerror(ls, 1, error.c_str());
+        return 0;
+    }
+    env.tile_flv(c).feat     = feat;
+    env.tile_flv(c).feat_idx =
+        store_tilename_get_index(tilename);
 #endif
 
     return (0);

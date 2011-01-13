@@ -409,7 +409,7 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             lua_pushnumber(ls, va_arg(args, int));
             break;
         case 'L':
-            ASSERT("ambiguous long in Lua push_args");
+            die("ambiguous long in Lua push_args");
             lua_pushnumber(ls, va_arg(args, long));
             break;
         case 'b':

@@ -2,21 +2,24 @@
 %prefix TILE
 
 %sdir dc-dngn
-
 dngn_unseen DNGN_UNSEEN
+%back dngn_unseen
 dc-misc/error DNGN_ERROR
+%back none
+
+%sdir dc-dngn/floor
 
 %weight 6
-floor/grey_dirt0 FLOOR_GREY_DIRT FLOOR_NORMAL
-floor/grey_dirt1
-floor/grey_dirt2
-floor/grey_dirt3
-floor/grey_dirt4
-floor/grey_dirt5
+grey_dirt0 FLOOR_GREY_DIRT FLOOR_NORMAL
+grey_dirt1
+grey_dirt2
+grey_dirt3
+grey_dirt4
+grey_dirt5
 %weight 3
-floor/grey_dirt6
+grey_dirt6
 %weight 1
-floor/grey_dirt7
+grey_dirt7
 
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
@@ -27,30 +30,30 @@ floor/grey_dirt7
 %desat 28
 %desat 29
 %desat 30
-floor/pebble_brown0 FLOOR_PEBBLE FLOOR_PEBBLE_LIGHTGRAY
-floor/pebble_brown1
-floor/pebble_brown2
-floor/pebble_brown3
-floor/pebble_brown4
-floor/pebble_brown5
-floor/pebble_brown6
-floor/pebble_brown7
-floor/pebble_brown8
+pebble_brown0 FLOOR_PEBBLE FLOOR_PEBBLE_LIGHTGRAY
+pebble_brown1
+pebble_brown2
+pebble_brown3
+pebble_brown4
+pebble_brown5
+pebble_brown6
+pebble_brown7
+pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE brown
 %hue 28 30
 %hue 29 30
 # Can't just use %repeat here, as we want the coloured versions.
-floor/pebble_brown0 FLOOR_PEBBLE_BROWN
-floor/pebble_brown1
-floor/pebble_brown2
-floor/pebble_brown3
-floor/pebble_brown4
-floor/pebble_brown5
-floor/pebble_brown6
-floor/pebble_brown7
-floor/pebble_brown8
+pebble_brown0 FLOOR_PEBBLE_BROWN
+pebble_brown1
+pebble_brown2
+pebble_brown3
+pebble_brown4
+pebble_brown5
+pebble_brown6
+pebble_brown7
+pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE blue
@@ -166,64 +169,64 @@ floor/pebble_brown8
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_WHITE
 %resetcol
 
-floor/mesh0 FLOOR_HALL
-floor/mesh1
-floor/mesh2
-floor/mesh3
+mesh0 FLOOR_HALL
+mesh1
+mesh2
+mesh3
 
-floor/hive0 FLOOR_HIVE FLOOR_ORC
-floor/hive1
-floor/hive2
-floor/hive3
+hive0 FLOOR_HIVE FLOOR_ORC
+hive1
+hive2
+hive3
 
-floor/ice0 FLOOR_ICE
-floor/ice1
-floor/ice2
-floor/ice3
+ice0 FLOOR_ICE
+ice1
+ice2
+ice3
 
-floor/lair0 FLOOR_LAIR
-floor/lair1
-floor/lair2
-floor/lair3
+lair0 FLOOR_LAIR
+lair1
+lair2
+lair3
 
-floor/bog_green0 FLOOR_SLIME
-floor/bog_green1
-floor/bog_green2
-floor/bog_green3
+bog_green0 FLOOR_SLIME
+bog_green1
+bog_green2
+bog_green3
 
-floor/snake0 FLOOR_SNAKE
-floor/snake1
-floor/snake2
-floor/snake3
+snake0 FLOOR_SNAKE
+snake1
+snake2
+snake3
 
 ## swamp also doesn't have any unique walls...
-floor/swamp0 FLOOR_SWAMP
-floor/swamp1
-floor/swamp2
-floor/swamp3
+swamp0 FLOOR_SWAMP
+swamp1
+swamp2
+swamp3
 
-floor/tomb0 FLOOR_TOMB
-floor/tomb1
-floor/tomb2
-floor/tomb3
+tomb0 FLOOR_TOMB
+tomb1
+tomb2
+tomb3
 
-floor/rect_gray0 FLOOR_VAULT
-floor/rect_gray1
-floor/rect_gray2
-floor/rect_gray3
+rect_gray0 FLOOR_VAULT
+rect_gray1
+rect_gray2
+rect_gray3
 
-floor/floor_vines0 FLOOR_VINES
-floor/floor_vines1
-floor/floor_vines2
-floor/floor_vines3
-floor/floor_vines4
-floor/floor_vines5
-floor/floor_vines6
+floor_vines0 FLOOR_VINES
+floor_vines1
+floor_vines2
+floor_vines3
+floor_vines4
+floor_vines5
+floor_vines6
 
-floor/rough_red0 FLOOR_ROUGH FLOOR_ROUGH_RED
-floor/rough_red1
-floor/rough_red2
-floor/rough_red3
+rough_red0 FLOOR_ROUGH FLOOR_ROUGH_RED
+rough_red1
+rough_red2
+rough_red3
 
 %variation FLOOR_ROUGH blue
 %hue 0 240
@@ -302,73 +305,73 @@ floor/rough_red3
 %resetcol
 
 %weight 5
-floor/floor_sand_stone0 FLOOR_SAND_STONE
-floor/floor_sand_stone1
-floor/floor_sand_stone2
-floor/floor_sand_stone3
+floor_sand_stone0 FLOOR_SAND_STONE
+floor_sand_stone1
+floor_sand_stone2
+floor_sand_stone3
 %weight 2
-floor/floor_sand_stone4
-floor/floor_sand_stone5
-floor/floor_sand_stone7
+floor_sand_stone4
+floor_sand_stone5
+floor_sand_stone7
 %weight 1
-floor/floor_sand_stone6
+floor_sand_stone6
 
 %weight 5
-floor/cobble_blood1 FLOOR_COBBLE_BLOOD
-floor/cobble_blood2
-floor/cobble_blood3
-floor/cobble_blood4
-floor/cobble_blood5
+cobble_blood1 FLOOR_COBBLE_BLOOD
+cobble_blood2
+cobble_blood3
+cobble_blood4
+cobble_blood5
 %weight 3
-floor/cobble_blood6
-floor/cobble_blood7
+cobble_blood6
+cobble_blood7
 %weight 2
-floor/cobble_blood8
-floor/cobble_blood9
-floor/cobble_blood10
-floor/cobble_blood11
+cobble_blood8
+cobble_blood9
+cobble_blood10
+cobble_blood11
 %weight 1
-floor/cobble_blood12
+cobble_blood12
 
-floor/marble_floor1 FLOOR_MARBLE
-floor/marble_floor2
-floor/marble_floor3
-floor/marble_floor4
-floor/marble_floor5
-floor/marble_floor6
+marble_floor1 FLOOR_MARBLE
+marble_floor2
+marble_floor3
+marble_floor4
+marble_floor5
+marble_floor6
 
 %weight 5
-floor/sandstone_floor0 FLOOR_SANDSTONE
-floor/sandstone_floor1
-floor/sandstone_floor2
-floor/sandstone_floor3
-floor/sandstone_floor4
+sandstone_floor0 FLOOR_SANDSTONE
+sandstone_floor1
+sandstone_floor2
+sandstone_floor3
+sandstone_floor4
 %weight 2
-floor/sandstone_floor5
+sandstone_floor5
 %weight 1
-floor/sandstone_floor6
-floor/sandstone_floor7
-floor/sandstone_floor8
-floor/sandstone_floor9
+sandstone_floor6
+sandstone_floor7
+sandstone_floor8
+sandstone_floor9
 
-floor/volcanic_floor0 FLOOR_VOLCANIC
-floor/volcanic_floor1
-floor/volcanic_floor2
-floor/volcanic_floor3
-floor/volcanic_floor4
-floor/volcanic_floor5
-floor/volcanic_floor6
+volcanic_floor0 FLOOR_VOLCANIC
+volcanic_floor1
+volcanic_floor2
+volcanic_floor3
+volcanic_floor4
+volcanic_floor5
+volcanic_floor6
 
 %weight 8
-floor/crystal_floor0 FLOOR_CRYSTAL_SQUARES
+crystal_floor0 FLOOR_CRYSTAL_SQUARES
 %weight 4
-floor/crystal_floor1
-floor/crystal_floor2
+crystal_floor1
+crystal_floor2
 %weight 2
-floor/crystal_floor3
-floor/crystal_floor4
+crystal_floor3
+crystal_floor4
 %weight 1
-floor/crystal_floor5
+crystal_floor5
 
 %sdir dc-dngn/floor/grass
 %weight 15
@@ -400,98 +403,100 @@ grass0-dirt-mix1 FLOOR_GRASS_DIRT_MIX
 grass0-dirt-mix2
 grass0-dirt-mix3
 
-%sdir dc-dngn
-floor/floor_nerves0 FLOOR_NERVES
-floor/floor_nerves1
-floor/floor_nerves2
-floor/floor_nerves3
-floor/floor_nerves4
-floor/floor_nerves5
-floor/floor_nerves6
+%sdir dc-dngn/floor
+floor_nerves0 FLOOR_NERVES
+floor_nerves1
+floor_nerves2
+floor_nerves3
+floor_nerves4
+floor_nerves5
+floor_nerves6
 
 %start
-%compose floor/grass/grass0
-%compose floor/pedestal_n
+%compose grass/grass0
+%compose pedestal_n
 %finish HALO_GRASS2
 %start
-%compose floor/grass/grass1
-%compose floor/pedestal_ne
+%compose grass/grass1
+%compose pedestal_ne
 %finish
 %start
-%compose floor/grass/grass2
-%compose floor/pedestal_e
+%compose grass/grass2
+%compose pedestal_e
 %finish
 %start
-%compose floor/grass/grass1
-%compose floor/pedestal_se
+%compose grass/grass1
+%compose pedestal_se
 %finish
 %start
-%compose floor/grass/grass0
-%compose floor/pedestal_s
+%compose grass/grass0
+%compose pedestal_s
 %finish
 %start
-%compose floor/grass/grass1
-%compose floor/pedestal_sw
+%compose grass/grass1
+%compose pedestal_sw
 %finish
 %start
-%compose floor/grass/grass2
-%compose floor/pedestal_w
+%compose grass/grass2
+%compose pedestal_w
 %finish
 %start
-%compose floor/grass/grass0
-%compose floor/pedestal_nw
+%compose grass/grass0
+%compose pedestal_nw
 %finish
-floor/pedestal_full
+
+%sdir dc-dngn/floor
+pedestal_full
 
 %start
-%compose floor/rect_gray0
-%compose floor/pedestal_n
+%compose rect_gray0
+%compose pedestal_n
 %finish HALO_VAULT
 %start
-%compose floor/rect_gray1
-%compose floor/pedestal_ne
+%compose rect_gray1
+%compose pedestal_ne
 %finish
 %start
-%compose floor/rect_gray2
-%compose floor/pedestal_e
+%compose rect_gray2
+%compose pedestal_e
 %finish
 %start
-%compose floor/rect_gray3
-%compose floor/pedestal_se
+%compose rect_gray3
+%compose pedestal_se
 %finish
 %start
-%compose floor/rect_gray2
-%compose floor/pedestal_s
+%compose rect_gray2
+%compose pedestal_s
 %finish
 %start
-%compose floor/rect_gray1
-%compose floor/pedestal_sw
+%compose rect_gray1
+%compose pedestal_sw
 %finish
 %start
-%compose floor/rect_gray0
-%compose floor/pedestal_w
+%compose rect_gray0
+%compose pedestal_w
 %finish
 %start
-%compose floor/rect_gray3
-%compose floor/pedestal_nw
+%compose rect_gray3
+%compose pedestal_nw
 %finish
-floor/pedestal_full
+pedestal_full
 
-floor/dirt0 FLOOR_DIRT
-floor/dirt1
-floor/dirt2
+dirt0 FLOOR_DIRT
+dirt1
+dirt2
 
-floor/dirt_n HALO_DIRT
-floor/dirt_ne
-floor/dirt_e
-floor/dirt_se
-floor/dirt_s
-floor/dirt_sw
-floor/dirt_w
-floor/dirt_nw
-floor/dirt_full
+dirt_n HALO_DIRT
+dirt_ne
+dirt_e
+dirt_se
+dirt_s
+dirt_sw
+dirt_w
+dirt_nw
+dirt_full
 
-floor/tutorial_pad TUTORIAL_PAD
+tutorial_pad TUTORIAL_PAD
 
 %sdir dc-dngn/floor
 limestone0 FLOOR_LIMESTONE
@@ -504,3 +509,35 @@ limestone6
 limestone7
 limestone8
 limestone9
+
+sigil_curve_N_E SIGIL_CURVE_N_E
+sigil_curve_N_W SIGIL_CURVE_N_W
+sigil_curve_S_E SIGIL_CURVE_S_E
+sigil_curve_S_W SIGIL_CURVE_S_W
+sigil_straight_E_W SIGIL_STRAIGHT_E_W
+sigil_straight_N_S SIGIL_STRAIGHT_N_S
+sigil_straight_NE_SW SIGIL_STRAIGHT_NE_SW
+sigil_straight_NW_SE SIGIL_STRAIGHT_NW_SE
+sigil_cross SIGIL_CROSS
+sigil_circle SIGIL_CIRCLE
+sigil_rhombus SIGIL_RHOMBUS
+sigil_Y_N SIGIL_Y
+sigil_Y_S SIGIL_Y_INVERTED
+sigil_Y_E SIGIL_Y_RIGHT
+sigil_Y_W SIGIL_Y_LEFT
+sigil_Y_left SIGIL_Y_LEFTLEANING
+sigil_Y_right SIGIL_Y_RIGHTLEANING
+sigil_algiz_left SIGIL_ALGIZ_LEFT
+sigil_algiz_right SIGIL_ALGIZ_RIGHT
+sigil_wide_E_NW SIGIL_STRAIGHT_E_NW
+sigil_wide_E_SW SIGIL_STRAIGHT_E_SW
+sigil_wide_W_NE SIGIL_STRAIGHT_W_NE
+sigil_wide_W_SE SIGIL_STRAIGHT_W_SE
+sigil_wide_N_SE SIGIL_STRAIGHT_N_SE
+sigil_wide_N_SW SIGIL_STRAIGHT_N_SW
+sigil_wide_S_NE SIGIL_STRAIGHT_S_NE
+sigil_wide_S_NW SIGIL_STRAIGHT_S_NW
+sigil_straight_E_W_NE_NW SIGIL_FOURWAY
+sigil_sharp_E_NE SIGIL_SHARP_E_NE
+sigil_sharp_W_SW SIGIL_SHARP_W_SW
+sigil_straight_E_NE_SW SIGIL_STRAIGHT_E_NE_SW

@@ -1,4 +1,4 @@
-%sdir skills
+%sdir gui/skills
 fighting-on FIGHTING_ON
 fighting-off FIGHTING_OFF
 short_blades-on SHORT_BLADES_ON

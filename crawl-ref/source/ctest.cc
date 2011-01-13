@@ -144,7 +144,8 @@ namespace crawl_tests
 
         flush_prev_message();
 
-        run_map_preludes();
+        run_map_global_preludes();
+        run_map_local_preludes();
         reset_test_data();
 
         init_test_bindings();

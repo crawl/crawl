@@ -70,20 +70,11 @@ colour.add_colour("disco", function(rand, x, y)
 end)
 }}
 
-# 25% chance to appear on D:21-27, and guaranteed on D:24.  Would be nice to do
-# this with a single vault, but I don't see a way to.
+# 25% chance to appear on D:21-27, and guaranteed on D:24.
 NAME: pan_entry
 TAGS: extra allow_dup
-DEPTH: D:21-27, !D:24
-CHANCE: 25%
-KFEAT: O = enter_pandemonium
-MAP
-O
-ENDMAP
-
-NAME: pan_entry_guaranteed
-TAGS: extra
-PLACE: D:24
+DEPTH: D:21-27
+CHANCE: 100% (D:24), 25%
 KFEAT: O = enter_pandemonium
 MAP
 O
@@ -603,9 +594,11 @@ ENDMAP
 # Tagging these levels also ensures they won't be generated in the main
 # dungeon.
 
-NAME: rand_demon_1
-TAGS: pan allow_dup
-MONS: pandemonium demon, random, random, random, random, random
+NAME:  rand_demon_1
+TAGS:  pan allow_dup
+MONS:  pandemonium demon, random, random, random, random, random
+SUBST: P = .:8 O:1
+KITEM: O = demonic rune of Zot
 MAP
 ............
 .xx.xx.x.xx.
@@ -613,7 +606,7 @@ MAP
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x..x.x..
-..x.x1.x.x..
+..x.x1Px.x..
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x..x.x..
@@ -623,51 +616,56 @@ ENDMAP
 
 ###################################
 
-NAME: rand_demon_2
-TAGS: pan allow_dup
-MONS: pandemonium demon, greater demon, common demon
-MONS: common demon, random, random
+NAME:  rand_demon_2
+TAGS:  pan allow_dup
+MONS:  greater demon, common demon, common demon
+SUBST: P = P:8 O:1
+KMONS: PO = pandemonium demon
+KITEM: O = demonic rune of Zot
 MAP
 ............
-.xxxxxxxx3x.
-.3.....xx.x.
-.xxxxxx4x.x.
-.xx4x..xx.x.
-.x.x.22.x.x.
-.x.x.12.x.x.
-.x.xx..x4xx.
-.x.x4xxxxxx.
-.x.xx.....3.
-.x3xxxxxxxx.
+.xxxxxxxx2x.
+.2.....xx.x.
+.xxxxxx3x.x.
+.xx3x..xx.x.
+.x.x.11.x.x.
+.x.x.P1.x.x.
+.x.xx..x3xx.
+.x.x3xxxxxx.
+.x.xx.....2.
+.x2xxxxxxxx.
 ............
 ENDMAP
 
 ###################################
 
-NAME: rand_demon_3
-TAGS: pan allow_dup
-MONS: pandemonium demon, common demon, common demon
+NAME:  rand_demon_3
+TAGS:  pan allow_dup
+MONS:  common demon, common demon
+SUBST: P = P:8 O:1
+KMONS: PO = pandemonium demon
+KITEM: O = demonic rune of Zot
 MAP
 ............
-.x.x.x3x.x..
-..x.x3x3x.x.
 .x.x.x2x.x..
-..x3x2x2x3x.
-.x3x2x1x2x3.
-..x3x2x2x3x.
-.x.x.x2x3x..
-..x.x3x3x.x.
-.x.x.x3x.x..
+..x.x2x2x.x.
+.x.x.x1x.x..
+..x2x1x1x2x.
+.x2x1xPx1x2.
+..x2x1x1x2x.
+.x.x.x1x2x..
+..x.x2x2x.x.
+.x.x.x2x.x..
 ..x.x.x.x.x.
 ............
 ENDMAP
 
 ###################################
 
-NAME: rand_demon_4
-TAGS: pan allow_dup
-MONS: pandemonium demon, any demon, any demon
-SUBST: P = O..
+NAME:  rand_demon_4
+TAGS:  pan allow_dup
+MONS:  pandemonium demon, any demon, any demon
+SUBST: P = .:8 O:1
 KITEM: O = demonic rune of Zot
 MAP
 ............
@@ -686,10 +684,10 @@ ENDMAP
 
 ###################################
 
-NAME: rand_demon_5
-TAGS: pan allow_dup
-MONS: pandemonium demon, any demon, any demon
-SUBST: P = O..
+NAME:  rand_demon_5
+TAGS:  pan allow_dup
+MONS:  pandemonium demon, any demon, any demon
+SUBST: P = .:8 O:1
 KITEM: O = demonic rune of Zot
 MAP
 ............
@@ -708,9 +706,11 @@ ENDMAP
 
 ###################################
 
-NAME: rand_demon_6
-TAGS: pan allow_dup
-MONS: pandemonium demon, any demon, any demon
+NAME:  rand_demon_6
+TAGS:  pan allow_dup
+MONS:  pandemonium demon, any demon, any demon
+SUBST: P = .:8 O:1
+KITEM: O = demonic rune of Zot
 MAP
 ............
 ............
@@ -718,7 +718,7 @@ MAP
 ............
 .3..........
 ..........2.
-.....1......
+.....1P.....
 ............
 ............
 .2.......3..
@@ -728,17 +728,20 @@ ENDMAP
 
 ###################################
 
-NAME: rand_demon_7
-TAGS: pan allow_dup
-MONS: pandemonium demon, any demon, greater demon
+NAME:  rand_demon_7
+TAGS:  pan allow_dup
+MONS:  any demon, greater demon
+SUBST: P = P:8 O:1
+KMONS: PO = pandemonium demon
+KITEM: O = demonic rune of Zot
 MAP
 ............
 .xxx....xxx.
 .x|xx=xxx|x.
 .xx=....=xx.
 ..x.x==x.x..
-..x.=12=.=..
-..=.=23=.x..
+..x.=P1=.=..
+..=.=12=.x..
 ..x.x==x.x..
 .xx=....=xx.
 .x|xxx=xx|x.
@@ -748,14 +751,16 @@ ENDMAP
 
 ###################################
 
-NAME: rand_demon_8
-TAGS: pan allow_dup
-MONS: pandemonium demon, greater demon, any demon
+NAME:  rand_demon_8
+TAGS:  pan allow_dup
+MONS:  pandemonium demon, greater demon, any demon
+SUBST: P = .:8 O:1
+KITEM: O = demonic rune of Zot
 MAP
 ............
 ....xxxxxxx.
 ..xxx....1x.
-.xx..2....x.
+.xx..2..P.x.
 .x........x.
 .xx.......x.
 ..xx33..2.x.
@@ -768,10 +773,10 @@ ENDMAP
 
 ###################################
 
-NAME: rand_demon_9
-TAGS: pan allow_dup
-MONS: pandemonium demon, any demon, greater demon
-SUBST: P = O..
+NAME:  rand_demon_9
+TAGS:  pan allow_dup
+MONS:  pandemonium demon, any demon, greater demon
+SUBST: P = .:8 O:1
 KITEM: O = demonic rune of Zot
 MAP
 ............
@@ -829,19 +834,21 @@ ENDMAP
 
 NAME:  lemuel_hellion_island
 TAGS:  pan
-MONS:  pandemonium demon, hellion
+MONS:  hellion
 SUBST: L=l.
+KMONS: O = pandemonium demon
+KITEM: O = demonic rune of Zot
 MAP
     ..LlllL..
   ..LlllllllL..
  .LlllllllllllL.
-.LlllllL2LlllllL.
-.LllllL2.2LllllL.
-LllllL2|2|2LllllL
-llllL2.212.2Lllll
-llllL.2|2|2.Lllll
-LllllL.2.2.LllllL
-.LllllL.2.LllllL.
+.LlllllL1LlllllL.
+.LllllL1.1LllllL.
+LllllL1|1|1LllllL
+llllL1.1O1.1Lllll
+llllL.1|1|1.Lllll
+LllllL.1.1.LllllL
+.LllllL.1.LllllL.
 .LlllllLLLlllllL.
  .LlllllllllllL.
   ..LlllllllL.

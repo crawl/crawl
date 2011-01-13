@@ -161,6 +161,10 @@ Jessica
 
 An evil apprentice sorceress. She entered the dungeon hoping to find a quiet, secluded place where she could study the darker arts without being disturbed.
 %%%%
+Jory
+
+Once a simple village peasant, Jory found himself transformed in undeath into a powerful creature. Through the countless centuries unlived since then, he has honed his skills in combat and magic, amassed great wealth and many possessions, and now resides in a stonily quiet Tower of Silence. He's not about to let any puny adventurers ruin his hard work, so those who encounter him should beware!
+%%%%
 Joseph
 
 Looks like a mercenary.
@@ -446,6 +450,10 @@ bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many dragons.
 %%%%
+bog mummy
+
+An undead figure preserved by the brackish waters of a bog. Though it has been reanimated by some unknown magic, this magic is not enough to prevent its decaying. It radiates a malignant curse upon all who offend it.
+%%%%
 boring beetle
 
 A large brown beetle with huge, rock-crushing mandibles.
@@ -557,7 +565,7 @@ Once in a very great while, there is a deep elf that scorns magic and devotes he
 %%%%
 deep elf conjurer
 
-This is an elf well-versed in destructive magic.
+This is a deep elf well-versed in destructive magic.
 %%%%
 deep elf death mage
 
@@ -602,6 +610,30 @@ Most of these mighty spellcasters draw power from the very Hells, but even those
 deep elf summoner
 
 This deep elf is skilled in the darker aspects of summoning.
+%%%%
+deep dwarf
+
+A pale and unnaturally tough-skinned dwarf.
+%%%%
+deep dwarf artificer
+
+This deep dwarf has mastered the use of magical devices.
+%%%%
+deep dwarf berserker
+
+A deep dwarf revelling in ferocity and blood-thirst.
+%%%%
+deep dwarf death knight
+
+A deep dwarf warrior-priest of Yredelemnul, chanting unholy homages.
+%%%%
+deep dwarf necromancer
+
+This deep dwarf basks in a pulsating magical aura of death.
+%%%%
+deep dwarf scion
+
+An armoured deep dwarf, formidable in melee combat.
 %%%%
 deep troll
 
@@ -728,6 +760,10 @@ This feline has been given sentience with magic. It uses the gift of speech to d
 fiend
 
 One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
+%%%%
+fire crab
+
+These crabs are prized for their brilliantly jewelled shells. The rarity of these shells is only enhanced by the vicious, fiery nature of the animal, and their almost supernatural ability to expel massive quantities of flames.
 %%%%
 fire elemental
 
@@ -997,9 +1033,9 @@ hog
 
 A large, fat and very ugly pig.
 %%%%
-holy dragon
+pearl dragon
 
-A dragon imbued with the power of the Gods, it breathes blessed fire and claws with the sear of holy wrath.
+This dragon has been imbued with the power of the Gods! Its breath is blessed fire, and its claws burn with the sear of holy wrath.
 %%%%
 hound
 
@@ -1124,6 +1160,10 @@ An enormous monitor lizard. It's more than capable of preying on large animals. 
 kraken
 
 A gargantuan sea monster, capable of devouring entire ships. It embraces them with its tentacles and draws them into the depths. Fortunately, the tentacles are too big to embrace a small creature like you. Wait, did I say "fortunately"?
+%%%%
+laboratory rat
+
+This poor rat was the subject of a wizard's terrible experiments! Who knows what it is capable of?
 %%%%
 large abomination
 
@@ -1279,7 +1319,7 @@ A disgusting glob of grey sludge.
 %%%%
 ophan
 
-This strange creature consits of a wheel nested inside another, both of these covered in eyes, and a strange flame flickering across its surface.
+This strange creature consists of a wheel within a wheel, and both of these are covered in eyes; strange flames flicker across both surfaces.
 %%%%
 orange crystal statue
 
@@ -1379,6 +1419,10 @@ polar bear
 
 A large and very strong bear covered in glistening white fur. If provoked, it may become angry!
 %%%%
+porcupine
+
+While it may look cute and harmless, its bite is painful and its spikes are sharp!
+%%%%
 program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the DevTeam.
@@ -1418,6 +1462,12 @@ A demon in the form of a tiger who comes to the material world in search of powe
 rat
 
 Wherever there are men, there are rats - rattus rattus. This rat has grown large and aggressive in the pestilential dungeon environment.
+%%%%
+raven
+
+This opportunistic bird sates its appetite by pecking at anything it can find. This includes such carrion as dead animals, dead monsters, and, of course, dead adventurers. The latter needn't necessarily be dead: a raven is quite happy to help you on their way to the afterlife.
+
+It has a particularly unhealthy fascination with eyeballs and things resembling eyeballs, such as pickled onions, walnuts and olives.
 %%%%
 reaper
 
@@ -1512,7 +1562,7 @@ A disturbing creature with the power to change its form. It is very rarely obser
 %%%%
 shedu
 
-A divine guardians that travels always as a pair, it has the ability to resurrect its mate from death.
+These dangerous divine guardians always travel in pairs. Each has the ability to heal the other and, if the worst is to occur, can even resurrect it.
 %%%%
 sheep
 

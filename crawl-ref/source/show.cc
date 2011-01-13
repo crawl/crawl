@@ -112,8 +112,6 @@ static void _update_feat_at(const coord_def &gp)
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
 
-    bool mimic = false;
-
     // Check for mimics
     if (monster_at(gp))
     {
@@ -122,7 +120,6 @@ static void _update_feat_at(const coord_def &gp)
         {
             feat = get_mimic_feat(mmimic);
             colour = mmimic->colour;
-            mimic = true;
         }
     }
 
@@ -133,6 +130,9 @@ static void _update_feat_at(const coord_def &gp)
 
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
+
+    if (liquefied(gp, false))
+        env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
 
     if (is_sanctuary(gp))
     {

@@ -27,7 +27,7 @@
     #endif
 #endif
 
-// length of a single zot defense cycle
+// length of a single zot defence cycle
 #define CYCLE_LENGTH 200
 
 // Waiting time before monsters arrive
@@ -65,8 +65,7 @@ enum extra_monster_index_type
     ZOT_TRAP_MISCAST,
     WIELD_MISCAST,
     MELEE_MISCAST,
-    MISC_KNOWN_MISCAST,
-    MISC_UNKNOWN_MISCAST,
+    MISC_MISCAST,
 };
 
 // number of monster enchantments
@@ -313,6 +312,7 @@ enum CHAR_ATTRIBUTES
 const char * const MONSTER_HIT_DICE = "monster-hit-dice";
 const char * const MONSTER_NUMBER = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
+const char * const MONSTER_MID = "monster-mid";
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

@@ -21,7 +21,7 @@ struct crawl_environment
     uint8_t floor_colour;
 
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
-    FixedVector< monster, MAX_MONSTERS >    mons;  // monster list
+    FixedVector< monster, MAX_MONSTERS+1 >   mons;  // monster list, plus anon
 
     feature_grid                             grid;  // terrain grid
     FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties
@@ -59,6 +59,7 @@ struct crawl_environment
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
     tile_flavour tile_default;
+    std::vector<std::string> tile_names;
 #endif
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list

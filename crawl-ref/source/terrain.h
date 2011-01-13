@@ -29,6 +29,8 @@ private:
 actor* actor_at(const coord_def& c);
 
 int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feature_type));
+bool feat_is_test (dungeon_feature_type feat, bool (*checker)(dungeon_feature_type));
+bool feat_is_test (const coord_def& c, bool (*checker)(dungeon_feature_type));
 
 bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                        dungeon_feature_type terrain);
@@ -36,6 +38,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 bool cell_is_solid(int x, int y);
 bool cell_is_solid(const coord_def &c);
 
+bool feat_is_malign_gateway_suitable (dungeon_feature_type feat);
 bool feat_is_wall(dungeon_feature_type feat);
 bool feat_is_opaque(dungeon_feature_type feat);
 bool feat_is_solid(dungeon_feature_type feat);
@@ -54,6 +57,7 @@ bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too = false);
 command_type feat_stair_direction(dungeon_feature_type feat);
 bool feat_sealable_portal(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
+bool feat_is_tree(dungeon_feature_type feat);
 
 bool feat_is_stair(dungeon_feature_type feat);
 bool feat_is_travelable_stair(dungeon_feature_type feat);
@@ -120,5 +124,6 @@ dungeon_feature_type feat_by_desc(std::string desc);
 dungeon_feature_type dungeon_feature_by_name(const std::string &name);
 std::vector<std::string> dungeon_feature_matches(const std::string &name);
 const char *dungeon_feature_name(dungeon_feature_type rfeat);
+void nuke_wall(const coord_def& p);
 
 #endif

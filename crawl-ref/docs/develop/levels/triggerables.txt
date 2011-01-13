@@ -52,7 +52,8 @@ dat/volcano.des for the full vault):
 -----------------------------
 
 {{
-local function collapse_doorways (data, triggerable, triggerer, marker, ev)
+-- Function in .des file prelude:
+function callback.collapse_doorways (data, triggerable, triggerer, marker, ev)
   if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
     return
   end
@@ -62,10 +63,13 @@ local function collapse_doorways (data, triggerable, triggerer, marker, ev)
   -- Don't collapse same doorway twice.
   triggerable:remove(marker)
 end
+}}
 
+{{
+-- Code in the actual vault:
 local collapse_marker = TriggerableFunction:new (
   {
-    func=collapse_doorways,
+    func="callback.collapse_doorways",
     repeated=true,
     props = {
       -- Only collapse one doorway at a time, randomly.
@@ -98,6 +102,11 @@ In most instances, the used parameters are "data", "triggerer" and "marker". The
 first of these allows for the storage of any function-required data persistently
 (such as the number of doorways already collapsed, the number of doorways left
 to collapse, etc).
+
+Note that the function to be triggered must be defined as a global
+function in the .des file prelude (or in a .lua file in dat/clua that
+is required() by the .des file prelude), and that the function must be
+specified by its global name.
 
 "Triggerer" is regularly used in randomised functions to determine whether or
 not the function is actually being fired. For example, if the Triggerer is not
@@ -168,16 +177,8 @@ Annotations are marked as "** <text of annotation>".
 
 From dat/volcano.des:
 
-NAME:       volcano_overflow
-WEIGHT:     10
-ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen no_rotate
-MONS:       nothing, nothing, nothing
 {{
-
-** The function takes five parameters, as noted, though only acts on two.
-
-function convert_lava (data, triggerable, triggerer, marker, ev)
+function callback.convert_lava (data, triggerable, triggerer, marker, ev)
   ** This piece of code ensures that the function is only triggered at the
   ** end of the countdown.
   if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
@@ -235,6 +236,16 @@ function convert_lava (data, triggerable, triggerer, marker, ev)
     convert_slaves_to_lava(my_slaves, true)
   end
 end
+}}
+
+NAME:       volcano_overflow
+WEIGHT:     10
+ORIENT:     encompass
+TAGS:       volcano no_item_gen no_monster_gen no_rotate
+MONS:       nothing, nothing, nothing
+{{
+
+** The function takes five parameters, as noted, though only acts on two.
 
 ** This sets up the various slaves, using a portal descriptor with the
 ** lava_phase being parameter used to locate them.
@@ -248,7 +259,7 @@ lua_marker("3", portal_desc { lava_phase=6 })
 ** table.
 -- And finally, let's convert it
 local sink_marker = TriggerableFunction:new {
-  func = convert_lava,
+  func = "callback.convert_lava",
   repeated = true,
   data = {lava_phase=0}
 }
@@ -292,6 +303,43 @@ ENDMAP
 -----------------------------
 
 From dat/float.des
+
+{{
+function callback.skele_death (data, triggerable, triggerer, marker, ev)
+  data.skele_number = data.skele_number + 1
+  ** However, as this is a monster_dies function, we don't need to worry about
+  ** it being triggered erroneously.
+
+  ** And again, using the persistent data table to store the amount of skeletal
+  ** warriors that have been destroyed.
+  -- Only 7 skeles!
+  if data.skele_number > 7 then
+    return
+  end
+
+  ** Like the overflow vault from volcano.des, this directly accesses the
+  ** network of slaves in order to find out which section of wall should be
+  ** replaced.
+  local function get_slave (slavenum)
+    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
+    return myslaves[1]
+  end
+
+  local wall_pos = get_slave(data.skele_number)
+  if wall_pos == nil then
+    crawl.mpr("Couldn't find a slave!")
+  end
+
+  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
+
+  if you.see_cell(wall_pos.x, wall_pos.y) then
+    crawl.mpr("As the champion dies, a metal wall slides away!")
+  else
+    crawl.mpr("As the champion dies, you hear a distant grinding noise.")
+  end
+end
+
+}}
 
 NAME:   ancient_champions_mu
 DEPTH:  D:15-26, Vault, Crypt
@@ -343,43 +391,8 @@ lua_marker("G", portal_desc { skele_slave=7 })
 
 ** Again, taking five parameters.
 
--- Then the actual function which does everything.
-function skele_death (data, triggerable, triggerer, marker, ev)
-  data.skele_number = data.skele_number + 1
-  ** However, as this is a monster_dies function, we don't need to worry about
-  ** it being triggered erroneously.
-
-  ** And again, using the persistent data table to store the amount of skeletal
-  ** warriors that have been destroyed.
-  -- Only 7 skeles!
-  if data.skele_number > 7 then
-    return
-  end
-
-  ** Like the overflow vault from volcano.des, this directly accesses the
-  ** network of slaves in order to find out which section of wall should be
-  ** replaced.
-  local function get_slave (slavenum)
-    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
-    return myslaves[1]
-  end
-
-  local wall_pos = get_slave(data.skele_number)
-  if wall_pos == nil then
-    crawl.mpr("Couldn't find a slave!")
-  end
-
-  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
-
-  if you.see_cell(wall_pos.x, wall_pos.y) then
-    crawl.mpr("As the champion dies, a metal wall slides away!")
-  else
-    crawl.mpr("As the champion dies, you hear a distant grinding noise.")
-  end
-end
-
 local skele_death_marker = TriggerableFunction:new {
-  func=skele_death,
+  func="callback.skele_death",
   repeated=true,
   data={skele_number=0} }
 

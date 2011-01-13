@@ -71,6 +71,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
+#include "ng-init.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -105,14 +106,7 @@ static std::vector<SavefileCallback::callback>* _callback_list = NULL;
 
 static void _save_level(const level_id& lid);
 
-static bool _get_and_validate_version(reader &inf, int &major,
-                                      int &minor, std::string* reason = 0);
-
-static bool _determine_ghost_version(FILE *ghostFile,
-                                      int &majorVersion, int &minorVersion);
-
-static void _restore_ghost(FILE *ghostFile, const std::string filename,
-                           int minorVersion);
+static bool _ghost_version_compatible(reader &ghost_reader);
 
 static bool _restore_tagged_chunk(package *save, const std::string name,
                                   tag_type tag, const char* complaint);
@@ -130,26 +124,6 @@ static void _redraw_all(void)
 
     you.redraw_status_flags =
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
-}
-
-static std::string _uid_as_string()
-{
-#ifdef TARGET_OS_WINDOWS
-    return std::string();
-#else
-#ifndef UNIX
-    return std::string();
-#else
-#ifndef SAVE_DIR_PATH
-    return make_stringf("-%d", static_cast<int>(getuid()));
-#else
-    if (SAVE_DIR_PATH[0] != '~')
-        return make_stringf("-%d", static_cast<int>(getuid()));
-    else
-        return std::string();
-#endif
-#endif
-#endif
 }
 
 static bool _is_uid_file(const std::string &name, const std::string &ext)
@@ -893,14 +867,6 @@ std::string get_save_filename(const std::string &prefix,
     // Shorten string as appropriate
     result += strip_filename_unsafe_chars(prefix).substr(0, kFileNameLen);
 
-#if TAG_MAJOR_VERSION == 31
-    // Technically we should shorten the string first.  But if
-    // MULTIUSER is set we'll have long filenames anyway. Caveat
-    // emptor.
-    if (!suppress_uid)
-        result += _uid_as_string();
-#endif
-
     result += suffix;
 
     if (!extension.empty())
@@ -923,24 +889,6 @@ std::string get_prefs_filename()
 #else
     return get_savedir_filename("start", "-ns", "prf");
 #endif
-}
-
-std::string get_level_filename(const level_id& lid)
-{
-    switch (lid.level_type)
-    {
-    default:
-    case LEVEL_DUNGEON:
-        return (make_stringf("%02d%c", lid.depth, lid.branch + 'a'));
-    case LEVEL_LABYRINTH:
-        return ("lab");
-    case LEVEL_ABYSS:
-        return ("abs");
-    case LEVEL_PANDEMONIUM:
-        return ("pan");
-    case LEVEL_PORTAL_VAULT:
-        return ("ptl");
-    }
 }
 
 static void _write_ghost_version(writer &outf)
@@ -1366,7 +1314,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
-    std::string level_name = get_level_filename(level_id::current());
+    std::string level_name = level_id::current().describe();
 
     if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
         || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
@@ -1422,17 +1370,10 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 #endif
 
-    // Try to open level savefile.
-#ifdef DEBUG_LEVEL_LOAD
-    mprf(MSGCH_DIAGNOSTICS, "Try to open file %s", level_name.c_str());
-#endif
-
     // GENERATE new level when the file can't be opened:
     if (!you.save->has_chunk(level_name))
     {
-#ifdef DEBUG_LEVEL_LOAD
-        mpr("Generating new file...", MSGCH_DIAGNOSTICS);
-#endif
+        dprf("Generating new level for '%s'.", level_name.c_str());
         ASSERT(load_mode != LOAD_VISITOR);
         env.turns_on_level = -1;
 
@@ -1451,6 +1392,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 #ifdef USE_TILE
         tile_init_default_flavour();
         tile_clear_flavour();
+        env.tile_names.clear();
 #endif
 
         _clear_env_map();
@@ -1470,9 +1412,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
     else
     {
-#ifdef DEBUG_LEVEL_LOAD
-        mpr("Loading old file...", MSGCH_DIAGNOSTICS);
-#endif
+        dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
 
         // POST-LOAD tasks :
@@ -1708,7 +1648,7 @@ static void _save_level(const level_id& lid)
     // Nail all items to the ground.
     fix_item_coordinates();
 
-    _write_tagged_chunk(get_level_filename(lid), TAG_LEVEL);
+    _write_tagged_chunk(lid.describe(), TAG_LEVEL);
 }
 
 #define SAVEFILE(file, savefn) \
@@ -1838,7 +1778,7 @@ static std::string _make_ghost_filename()
     if (you.level_type == LEVEL_PORTAL_VAULT)
         suffix = _make_portal_vault_ghost_suffix();
     else
-        suffix = get_level_filename(level_id::current());
+        suffix = replace_all(level_id::current().describe(), ":", "-");
     return get_bonefile_directory() + "bones." + suffix;
 }
 
@@ -1872,67 +1812,39 @@ bool load_ghost(bool creating_level)
 
 #endif // BONES_DIAGNOSTICS
 
-    int majorVersion;
-    int minorVersion;
-
-    const std::string cha_fil = _make_ghost_filename();
-    FILE *gfile = fopen(cha_fil.c_str(), "rb");
-
-    if (gfile == NULL)
+    const std::string ghost_filename = _make_ghost_filename();
+    reader inf(ghost_filename);
+    if (!inf.valid())
     {
         if (wiz_cmd && !creating_level)
             mpr("No ghost files for this level.", MSGCH_PROMPT);
         return (false);                 // no such ghost.
     }
 
-    if (!_determine_ghost_version(gfile, majorVersion, minorVersion))
+    if (_ghost_version_compatible(inf))
     {
-        fclose(gfile);
-#ifdef BONES_DIAGNOSTICS
-        if (do_diagnostics)
+        try
         {
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Ghost file \"%s\" seems to be invalid.", cha_fil.c_str());
-            more();
+            ghosts.clear();
+            tag_read(inf, TAG_GHOST);
+            inf.fail_if_not_eof(ghost_filename);
         }
-#endif
-        return (false);
-    }
-
-    if (majorVersion != TAG_MAJOR_VERSION || minorVersion > TAG_MINOR_VERSION)
-    {
-#ifdef BONES_DIAGNOSTICS
-        if (do_diagnostics)
+        catch (short_read_exception &short_read)
         {
-            if (majorVersion != TAG_MAJOR_VERSION)
-                mprf(MSGCH_DIAGNOSTICS,
-                     "Ghost file major version mismatch");
-            else
-                mprf(MSGCH_DIAGNOSTICS,
-                     "Ghost file minor version is too high.");
-            more();
+            mprf(MSGCH_ERROR, "Broken bones file: %s",
+                 ghost_filename.c_str());
         }
-#endif
-        fclose(gfile);
-        unlink(cha_fil.c_str());
-        return (false);
     }
+    inf.close();
 
-    ghosts.clear();
-    _restore_ghost(gfile, cha_fil, minorVersion);
-    fclose(gfile);
+    // Remove bones file - ghosts are hardly permanent.
+    unlink(ghost_filename.c_str());
 
-    // FIXME: This message will have to be shortened again as trunk reaches
-    //        0.6 state and players using old bones becomes increasingly less
-    //        likely.
     if (!debug_check_ghosts())
     {
         mprf(MSGCH_DIAGNOSTICS,
-             "Refusing to load buggy ghost from file \"%s\"! "
-             "Note that all bones files from 0.4.x are invalid, so you should "
-             "delete them. If this is a newer ghost, please submit a bug "
-             "report.",
-             cha_fil.c_str());
+             "Refusing to load buggy ghost from file \"%s\"!",
+             ghost_filename.c_str());
 
         return (false);
     }
@@ -1944,9 +1856,6 @@ bool load_ghost(bool creating_level)
              ghosts.size());
     }
 #endif
-
-    // Remove bones file - ghosts are hardly permanent.
-    unlink(cha_fil.c_str());
 
 #ifdef BONES_DIAGNOSTICS
     unsigned long unplaced_ghosts = ghosts.size();
@@ -2004,6 +1913,11 @@ bool load_ghost(bool creating_level)
 
 void restore_game(const std::string& name)
 {
+    // [ds] Set up branch depths for the current game type before
+    // trying to load the game. This is important for Sprint because
+    // it reduces the dungeon to 1 level, making D:1's place name "D"
+    // in save chunks.
+    initialise_branches_for_game_type();
     you.save = new package((get_savedir_filename(name, "", "")
                            + SAVE_SUFFIX).c_str(), true);
 
@@ -2144,9 +2058,9 @@ bool get_save_version(reader &file, int &major, int &minor)
     return (true);
 }
 
-static bool _get_and_validate_version(reader &inf, int &major,
-                                      int &minor, std::string* reason)
+static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
 {
+    int major = 0, minor = TAG_MINOR_INVALID;
     std::string dummy;
     if (reason == 0)
         reason = &dummy;
@@ -2161,13 +2075,10 @@ static bool _get_and_validate_version(reader &inf, int &major,
     {
         if (Version::ReleaseType() == Version::FINAL)
         {
-            // FIXME: The actual major version should also be handled
-            //        dynamically, but I think <major>.<minor> also
-            //        covers 0.6.2. If not, it's not a problem. (jpeg)
-            *reason = CRAWL " " + Version::Short() + " is not compatible with "
-                      "save files older than 0.7. You can continue your game "
-                      "with the appropriate older version, or you can delete "
-                      "it and start a new game.";
+            *reason = (CRAWL " " + Version::Short() + " is not compatible with "
+                       "save files from older versions. You can continue your "
+                       "game with the appropriate older version, or you can "
+                       "delete it and start a new game.");
         }
         else
         {
@@ -2192,6 +2103,7 @@ static bool _get_and_validate_version(reader &inf, int &major,
         return (false);
     }
 
+    inf.setMinorVersion(minor);
     return (true);
 }
 
@@ -2199,10 +2111,8 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
                                   tag_type tag, const char* complaint)
 {
     reader inf(save, name);
-
-    int majorVersion, minorVersion;
     std::string reason;
-    if (!_get_and_validate_version(inf, majorVersion, minorVersion, &reason))
+    if (!_tagged_chunk_version_compatible(inf, &reason))
     {
         if (!complaint)
         {
@@ -2211,18 +2121,14 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
         }
         else
         {
-            char msg[128];
-            snprintf(msg, sizeof(msg), "\n%s  %s\n", complaint, reason.c_str());
-            print_error_screen(msg);
-            end(-1, false, msg);
+            end(-1, false, "\n%s %s\n", complaint, reason.c_str());
         }
     }
 
-    crawl_state.minorVersion = minorVersion;
-
+    crawl_state.minorVersion = inf.getMinorVersion();
     try
     {
-        tag_read(inf, minorVersion, tag);
+        tag_read(inf, tag);
     }
     catch (short_read_exception &E)
     {
@@ -2233,47 +2139,39 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
     return true;
 }
 
-static bool _determine_ghost_version(FILE *ghostFile,
-                                      int &majorVersion, int &minorVersion)
+static bool _ghost_version_compatible(reader &inf)
 {
-    // Read first two bytes.
-    uint8_t buf[2];
-    if (fread(buf, 1, 2, ghostFile) != 2)
-        return (false);               // empty file?
-
-    // Otherwise, read version and validate.
-    majorVersion = buf[0];
-    minorVersion = buf[1];
-
-    reader inf(ghostFile, minorVersion);
-    // Check for the DCSS ghost signature.
-    if (unmarshallShort(inf) != GHOST_SIGNATURE)
-        return (false);
-
-    if (majorVersion == TAG_MAJOR_VERSION
-        && minorVersion <= TAG_MINOR_VERSION)
+    try
     {
-        // Discard three more 32-bit words of padding.
-        try // don't crash on corrupted ghosts
+        const int majorVersion = unmarshallUByte(inf);
+        const int minorVersion = unmarshallUByte(inf);
+
+        if (majorVersion != TAG_MAJOR_VERSION
+            || minorVersion > TAG_MINOR_VERSION)
         {
-            inf.read(NULL, 3*4);
-        }
-        catch (short_read_exception &E)
-        {
+            dprf("Ghost version mismatch: ghost was %d.%d; wanted %d.%d",
+                 majorVersion, minorVersion,
+                 TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
             return (false);
         }
-        return !feof(ghostFile);
+
+        inf.setMinorVersion(minorVersion);
+
+        // Check for the DCSS ghost signature.
+        if (unmarshallShort(inf) != GHOST_SIGNATURE)
+            return (false);
+
+        // Discard three more 32-bit words of padding.
+        inf.read(NULL, 3*4);
     }
-
-    // If its not TAG_MAJOR_VERSION, no idea!
-    return (false);
-}
-
-static void _restore_ghost(FILE *ghostFile, std::string filename, int minorVersion)
-{
-    reader inf(ghostFile, minorVersion);
-    tag_read(inf, minorVersion, TAG_GHOST);
-    inf.fail_if_not_eof(filename);
+    catch (short_read_exception &E)
+    {
+        mprf(MSGCH_ERROR,
+             "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
+             inf.filename().c_str());
+        return (false);
+    }
+    return (true);
 }
 
 void save_ghost(bool force)

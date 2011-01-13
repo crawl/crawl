@@ -3,6 +3,9 @@
  *  Summary:    Monster death functionality (kraken, uniques, and so-on).
  */
 
+#ifndef MONDEATH_H
+#define MONDEATH_H
+
 bool mons_is_pikel (monster* mons);
 void pikel_band_neutralise(bool check_tagged = false);
 
@@ -17,3 +20,12 @@ bool mons_is_kirke (monster* mons);
 void hogs_to_humans();
 
 void spirit_fades (monster *spirit);
+
+monster* get_shedu_pair (const monster* mons);
+bool shedu_pair_alive (const monster* mons);
+bool mons_is_shedu(const monster* mons);
+void shedu_do_resurrection(const monster *mons);
+// Can't constify mons, need to change numbers.
+void shedu_do_actual_resurrection (monster* mons);
+
+#endif

@@ -20,7 +20,6 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "food.h"
 #include "fprop.h"
 #include "fight.h"
@@ -32,12 +31,14 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "map_knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
@@ -71,6 +72,7 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
 static spell_type _map_wand_to_mspell(int wand_type);
+static void _shedu_movement_clamp (monster* mons);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -1199,14 +1201,8 @@ static bool _handle_wand(monster* mons, bolt &beem)
     bolt theBeam      = mons_spells(mons, mzap, power);
     beem = _generate_item_beem(beem, theBeam, mons);
 
-#ifdef HISCORE_WEAPON_DETAIL
     beem.aux_source =
         wand.name(DESC_QUALNAME, false, true, false, false);
-#else
-    beem.aux_source =
-        wand.name(DESC_QUALNAME, false, true, false, false,
-                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-#endif
 
     const int wand_type = wand.sub_type;
     switch (wand_type)
@@ -1700,11 +1696,17 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         pbolt.setup_retrace();
         viewwindow();
         pbolt.fire();
-        msg::stream << "The weapon returns "
-                    << (you.can_see(mons)?
-                          ("to " + mons->name(DESC_NOCAP_THE))
-                        : "whence it came from")
-                    << "!" << std::endl;
+
+        // Only print a message if you can see the target or the thrower.
+        // Otherwise we get "The weapon returns whence it came from!" regardless.
+        if (you.see_cell(pbolt.target) || you.can_see(mons))
+        {
+            msg::stream << "The weapon returns "
+                        << (you.can_see(mons)?
+                              ("to " + mons->name(DESC_NOCAP_THE))
+                            : "from whence it came")
+                        << "!" << std::endl;
+        }
 
         // Player saw the item return.
         if (!is_artefact(item))
@@ -1880,6 +1882,18 @@ void handle_monster_move(monster* mons)
     mons->hit_points = std::min(mons->max_hit_points,
                                    mons->hit_points);
 
+    // This seems to need to go here to actually get monsters to slow down.
+    // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
+    if (liquefied(mons->pos()) && !mons->airborne() && !mons->is_insubstantial())
+    {
+        mon_enchant me = mon_enchant(ENCH_SLOW, 0, KC_OTHER, 20);
+        if (mons->has_ench(ENCH_SLOW))
+            mons->update_ench(me);
+        else
+            mons->add_ench(me);
+        mons->calc_speed();
+    }
+
     fedhas_neutralise(mons);
 
     // Monster just summoned (or just took stairs), skip this action.
@@ -1918,7 +1932,7 @@ void handle_monster_move(monster* mons)
 
     // Memory is decremented here for a reason -- we only want it
     // decrementing once per monster "move".
-    if (mons->foe_memory > 0)
+    if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI])
         mons->foe_memory--;
 
     // Otherwise there are potential problems with summonings.
@@ -2142,6 +2156,7 @@ void handle_monster_move(monster* mons)
         {
             // Calculates mmov based on monster target.
             _handle_movement(mons);
+            _shedu_movement_clamp(mons);
 
             if (mons_is_confused(mons)
                 || mons->type == MONS_AIR_ELEMENTAL
@@ -2457,6 +2472,7 @@ static bool _jelly_divide(monster* parent)
     child->max_hit_points  = child->hit_points;
     child->speed_increment = 70 + random2(5);
     child->moveto(child_spot);
+    child->set_new_monster_id();
 
     mgrd(child->pos()) = child->mindex();
 
@@ -2588,11 +2604,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         }
 
         if (death_ooze_ate_corpse)
-        {
-            place_cloud (CLOUD_MIASMA, mons->pos(),
-                          4 + random2(5), mons->kill_alignment(),
-                          KILL_MON_MISSILE);
-        }
+            place_cloud(CLOUD_MIASMA, mons->pos(), 4 + random2(5), mons);
 
         if (death_ooze_ate_good)
             simple_monster_message(mons, " twists violently!");
@@ -3048,6 +3060,43 @@ static bool _mons_can_displace(const monster* mpusher,
     return (true);
 }
 
+static int _count_adjacent_slime_walls(const coord_def &pos)
+{
+    int count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            count++;
+
+    return (count);
+}
+
+// Returns true if the monster should try to avoid that position
+// because of taking damage from slime walls.
+static bool _check_slime_walls(const monster *mon,
+                               const coord_def &targ)
+{
+    if (!player_in_branch(BRANCH_SLIME_PITS) || mons_is_slime(mon)
+        || mon->res_acid() >= 3 || mons_intel(mon) <= I_INSECT)
+    {
+        return (false);
+    }
+    const int target_count = _count_adjacent_slime_walls(targ);
+    // Entirely safe.
+    if (!target_count)
+        return (false);
+
+    const int current_count = _count_adjacent_slime_walls(mon->pos());
+    if (target_count <= current_count)
+        return (false);
+
+    // The monster needs to have a purpose to risk taking damage.
+    if (!mons_is_seeking(mon))
+        return (true);
+
+    // With enough hit points monsters will consider moving
+    // onto more dangerous squares.
+    return (mon->hit_points < mon->max_hit_points / 2);
+}
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
@@ -3098,18 +3147,17 @@ static bool _mon_can_move_to_pos(const monster* mons,
     if (mons_avoids_cloud(mons, targ_cloud_num))
         return (false);
 
+    if (_check_slime_walls(mons, targ))
+        return (false);
+
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
     const bool flattens_trees = mons_flattens_trees(mons);
     if ((burrows && (target_grid == DNGN_ROCK_WALL
                      || target_grid == DNGN_CLEAR_ROCK_WALL))
-        || (flattens_trees && target_grid == DNGN_TREE))
+        || (flattens_trees && feat_is_tree(target_grid)))
     {
         // Don't burrow out of bounds.
         if (!in_bounds(targ))
-            return (false);
-
-        // Don't burrow at an angle (legacy behaviour).
-        if (delta.x != 0 && delta.y != 0)
             return (false);
     }
     else if (no_water && feat_is_water(target_grid))
@@ -3676,16 +3724,12 @@ static bool _monster_move(monster* mons)
 
         if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
               && burrows)
-             || (feat == DNGN_TREE && flattens_trees))
+             || (flattens_trees && feat_is_tree(feat)))
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
 
-            const dungeon_feature_type newfeat =
-                (feat == DNGN_TREE? dgn_tree_base_feature_at(target)
-                 : DNGN_FLOOR);
-            grd(target) = newfeat;
-            set_terrain_changed(target);
+            nuke_wall(target);
 
             if (flattens_trees)
             {
@@ -3780,18 +3824,11 @@ static bool _monster_move(monster* mons)
         if (mons_genus(mons->type) == MONS_EFREET
             || mons->type == MONS_FIRE_ELEMENTAL)
         {
-            place_cloud(CLOUD_FIRE, mons->pos(),
-                         2 + random2(4), mons->kill_alignment(),
-                         KILL_MON_MISSILE);
+            place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
 
-        if (mons->type == MONS_ROTTING_DEVIL
-            || mons->type == MONS_CURSE_TOE)
-        {
-            place_cloud(CLOUD_MIASMA, mons->pos(),
-                         2 + random2(3), mons->kill_alignment(),
-                         KILL_MON_MISSILE);
-        }
+        if (mons->type == MONS_ROTTING_DEVIL || mons->type == MONS_CURSE_TOE)
+            place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
 
         // Commented out, but left in as an example of gloom. {due}
         //if (mons->type == MONS_SHADOW)
@@ -3867,4 +3904,18 @@ static spell_type _map_wand_to_mspell(int wand_type)
     case WAND_POLYMORPH_OTHER: return SPELL_POLYMORPH_OTHER;
     default:                   return SPELL_NO_SPELL;
     }
+}
+
+// Keep kraken tentacles from wandering too far away from the boss monster.
+static void _shedu_movement_clamp(monster *shedu)
+{
+    if (!mons_is_shedu(shedu))
+        return;
+
+    monster *my_pair = get_shedu_pair(shedu);
+    if (!my_pair)
+        return;
+
+    if (grid_distance(shedu->pos(), my_pair->pos()) >= 10)
+        mmov = (my_pair->pos() - shedu->pos()).sgn();
 }

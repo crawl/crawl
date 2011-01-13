@@ -8,7 +8,7 @@ debug.goto_place("D:20")
 
 local function ok(corpse, pattern)
   dgn.reset_level()
-  dgn.grid(p.x, p.y, 'floor')
+  dgn.fill_grd_area(1, 1, dgn.GXM - 2, dgn.GYM - 2, 'floor')
   dgn.create_item(p.x, p.y, corpse)
 
   local items = dgn.items_at(p.x, p.y)
@@ -16,7 +16,7 @@ local function ok(corpse, pattern)
   assert(#items == 1, "Unexpected item count for '" .. corpse .. "'")
 
   local item = items[1]
-  local name = item.name(item, '')
+  local name = item.name('')
 
   pattern = pattern or corpse
   assert(string.find(name, pattern, 1, true),

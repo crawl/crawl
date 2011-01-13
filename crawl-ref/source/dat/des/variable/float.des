@@ -10,6 +10,36 @@
 #            reside in vaults.des.
 ###############################################################################
 
+{{
+function callback.ancient_champions_mu_skele_death(data, triggerable,
+                                                    triggerer, marker, ev)
+  data.skele_number = data.skele_number + 1
+
+  -- Only 7 skeles!
+  if data.skele_number > 7 then
+    return
+  end
+
+  local function get_slave (slavenum)
+    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
+    return myslaves[1]
+  end
+
+  local wall_pos = get_slave(data.skele_number)
+  if wall_pos == nil then
+    crawl.mpr("Couldn't find a slave!")
+  end
+
+  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
+
+  if you.see_cell(wall_pos.x, wall_pos.y) then
+    crawl.mpr("As the champion is destroyed, a metal wall slides away!")
+  else
+    crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
+  end
+end
+}}
+
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
 # easy or tough vaults. Also, exlucde unthemely branches with !Lair etc.
 default-depth: D:12-26
@@ -497,7 +527,7 @@ KITEM:   + = damaged eveningstar, damaged short sword, \
 KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
 MONS:    giant mite, scorpion
-MONS:    rat / grey rat, green rat / orange rat
+MONS:    rat / porcupine, green rat / orange rat
 MONS:    giant bat
 SHUFFLE: ?!+
 SUBST:   c:cccvvb , b=cc.
@@ -590,7 +620,7 @@ MONS:    mummy, patrolling guardian mummy, patrolling greater mummy
 MONS:    large zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
-SUBST:   F = G:100 F:1
+SUBST:   F = G:99 F:1
 KMONS:   F = orange crystal statue / silver statue / ice statue
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -783,7 +813,7 @@ ENDMAP
 NAME:    vampire
 ORIENT:  float
 DEPTH:   D:12-26, Vault, Crypt
-MONS:    rat / grey rat / w:6 green rat / w:3 orange rat / w:20 giant bat
+MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 giant bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item
@@ -855,14 +885,14 @@ ENDMAP
 # Oklob shooting range
 #
 # Disallowing this vault on branch starts, as brown stairs can't help there.
-# Chance for a plant to turn oklob based on dungeon level. Elf:7 is hard, but
+# Chance for a plant to turn oklob based on dungeon level. Elf:5 is hard, but
 # considered okay. Has between 1 and 3 oklob plants.
 # Single oklob at absolute depth 10, expect 2 oklobs at depth 20.
 # Rarely (2.5% chance) the whole vault is enclosed. This is the hardest case,
 # and the walls are always diggable then.
 #
 NAME:    oklob_3
-DEPTH:   D:18-26, Lair:2-, Elf:2-7
+DEPTH:   D:18-26, Lair:2-, Elf:2-5
 WEIGHT:  2
 ORIENT:  float
 SHUFFLE: ab" / AB'
@@ -1047,7 +1077,7 @@ ENDMAP
 #
 NAME:   slaughterhouse
 DEPTH:  Lair:7-, D:11-18
-FLAGS:  no_monster_gen
+TAGS:   no_monster_gen
 ORIENT: float
 WEIGHT: 5
 MARKER: F = lua:fog_machine { \
@@ -1335,9 +1365,9 @@ ENDMAP
 # Elemental Laboratory (by Mu.)
 #
 NAME:   elemental_lab_mu
-DEPTH:  D:13-26, Elf:1-6
+DEPTH:  D:13-26, Elf:1-4
 ORIENT: float
-FLAGS:  no_monster_gen no_item_gen no_pool_fixup
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
 MARKER: ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 1, size_buildup_amnt = 5, \
@@ -1371,7 +1401,7 @@ KMONS:  7 = fire vortex
 : if you.in_branch("elf") then
 KMONS:  Z = col:gila deep elf sorcerer \
         name:deep_elf_elementalist n_rpl n_des \
-        spells:iron_shot;summon_air_elementals;sticky_flame;\
+        spells:iron_shot;summon_air_elementals;sticky_flame_range;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance race:elven | \
         robe ego:cold_resistance race:elven | \
@@ -1380,7 +1410,7 @@ KMONS:  Z = col:gila deep elf sorcerer \
 : else
 KMONS:  Z = col:gila wizard hd:15 name_descriptor \
         name:master_elementalist name_replace \
-        spells:iron_shot;summon_air_elementals;sticky_flame;\
+        spells:iron_shot;summon_air_elementals;sticky_flame_range;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance | robe ego:cold_resistance | \
         robe ego:resistance \
@@ -1424,7 +1454,7 @@ ENDMAP
 NAME:   ancient_champions_mu
 DEPTH:  D:15-26, Vault, Crypt
 ORIENT: float
-FLAGS:  no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 KFEAT:  ABCDEFG = metal_wall
 KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \
         name_descriptor spells:iron_shot;.;haste;pain;.;. actual_spells \
@@ -1471,36 +1501,8 @@ lua_marker("E", portal_desc { skele_slave=5 })
 lua_marker("F", portal_desc { skele_slave=6 })
 lua_marker("G", portal_desc { skele_slave=7 })
 
--- Then the actual function which does everything.
-function skele_death (data, triggerable, triggerer, marker, ev)
-  data.skele_number = data.skele_number + 1
-
-  -- Only 7 skeles!
-  if data.skele_number > 7 then
-    return
-  end
-
-  local function get_slave (slavenum)
-    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
-    return myslaves[1]
-  end
-
-  local wall_pos = get_slave(data.skele_number)
-  if wall_pos == nil then
-    crawl.mpr("Couldn't find a slave!")
-  end
-
-  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
-
-  if you.see_cell(wall_pos.x, wall_pos.y) then
-    crawl.mpr("As the champion is destroyed, a metal wall slides away!")
-  else
-    crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
-  end
-end
-
 local skele_death_marker = TriggerableFunction:new {
-  func=skele_death,
+  func="callback.ancient_champions_mu_skele_death",
   repeated=true,
   data={skele_number=0} }
 
@@ -1745,4 +1747,65 @@ cLLlll*lllLLc
 c.LLlllllLL.c
 c..LLlllLL..c
 ccccccccccccc
+ENDMAP
+
+#############################################################################
+# The Elephants' Graveyard (by Mu.)
+#
+NAME:   elephants_graveyard_mu
+ORIENT: float
+TAGS:   no_monster_gen no_rotate no_vmirror
+DEPTH:  D:13-26, Lair:1-7
+
+  # next: we generate more dire elephants at greater depths
+  # we also turn the shallow water into deep water at the lowest depths,
+  # just in case elephants are ever allowed to drown the unwary
+: if you.absdepth() < 18 then
+MONS:   elephant, fungus, plant
+: elseif you.absdepth() < 22 then
+MONS:   elephant / dire elephant, fungus, plant
+: else
+MONS:   w:1 elephant / dire elephant, fungus, plant
+SUBST: W : w
+:end
+
+: dgn.delayed_decay(_G, '%', 'w:1 elephant corpse / w:5 elephant skeleton / nothing')
+SUBST:  . = .:69 1:1
+SUBST:  P = 3
+SUBST:  a = .2
+SUBST:  b = 23
+SUBST:  c = 3tt
+
+MAP
+............................
+............................
+............................
+............................
+........tttttttttttt........
+......tttccccccccccttt......
+.....ttcccbbbbbbbbccctt.....
+....ttccbbbaaaaaabbbcctt....
+....tccbbaaa...1aaabbcct....
+...ttcbbaa...%%...aabbctt...
+..ttccbaa..%%%%%%..aabcctt..
+..tccbba..%%%%%%%%..abbcct..
+..tcbbaa.%%.PPP%%%%.aabbct..
+..tcbaa..%%.PWPP%%%..aabct..
+..tcba1.%%%11WPP%%%%..abct..
+..tcba.%%%%11WWP%%%%%.abct..
+..tcba.%%%%.WWWP%%%%%.abct..
+..tcba..%%%.WWWP%%%%1.abct..
+..tcbaa.1%%..WWP.%%..aabct..
+..tcbbaa.%%%..WP.%%.aabbct..
+..tccbba..%%%.WW....abbcct..
+..ttccbaa......WW..aabcctt..
+...ttcbbaa......W.aabbctt...
+....tccbbaaaa..aaaabbcct....
+....ttccbbbba..abbbbcctt....
+.....ttccccca..accccctt.....
+......tttttta..atttttt......
+............................
+............1..1............
+............................
+.............@@.............
 ENDMAP

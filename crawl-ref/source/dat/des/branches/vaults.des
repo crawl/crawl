@@ -22,6 +22,20 @@
       e.subvault("O : vault8_norune")
     end
   end
+
+  -- Find the slave of the teleporter and move to it.
+  function teleporter_vault_action_fn(data, triggerable, triggerer, marker, ev)
+    local position = dgn.point(marker:pos())
+    my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                  data.teleport_spot)
+
+    if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+      crawl.mpr("Your surroundings suddenly seem different!")
+    else
+      crawl.mpr("There is a strange hissing noise.")
+    end
+  end
+
 }}
 
 ##############################################################################
@@ -298,26 +312,13 @@ ENDMAP
 # it.
 NAME:       the_teleporter
 {{
--- Find the slave of the teleporter and move to it.
-local function teleporter (data, triggerable, triggerer, marker, ev)
-  local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-    data.teleport_spot)
-
-  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
-    crawl.mpr("Your surroundings suddenly seem different!")
-  else
-    crawl.mpr("There is a strange hissing noise.")
-  end
-end
-
 -- Lua marker magic!
 local m_marker = TriggerableFunction:new {
-  func=teleporter,
+  func="teleporter_vault_action_fn",
   data = {teleport_spot=1},
   repeated=true }
 local e_marker = TriggerableFunction:new {
-  func=teleporter,
+  func="teleporter_vault_action_fn",
   data = {teleport_spot=2},
   repeated=true }
 m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })

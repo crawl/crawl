@@ -62,7 +62,6 @@ enum map_mask_type
     MMT_NO_WALL    = 0x20,    // Wall fixup should not be applied here.
     MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
     MMT_NO_TRAP    = 0x80,    // No trap generation
-    MMT_NO_SHOP    = 0x100,   // No shop generation
 };
 
 class dgn_region;
@@ -254,8 +253,6 @@ int dgn_place_monster(mons_spec &mspec,
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int level = INVALID_ABSDEPTH);
-
-dungeon_feature_type dgn_tree_base_feature_at(coord_def c);
 
 class item_list;
 void dgn_place_multiple_items(item_list &list,

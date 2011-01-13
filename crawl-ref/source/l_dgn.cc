@@ -46,17 +46,13 @@ void dgn_reset_default_depth()
 
 std::string dgn_set_default_depth(const std::string &s)
 {
-    std::vector<std::string> frags = split_string(",", s);
-    for (int i = 0, size = frags.size(); i < size; ++i)
+    try
     {
-        try
-        {
-            lc_default_depths.push_back(level_range::parse(frags[i]));
-        }
-        catch (const std::string &error)
-        {
-            return (error);
-        }
+        lc_default_depths = depth_ranges::parse_depth_ranges(s);
+    }
+    catch (const std::string &error)
+    {
+        return (error);
     }
     return ("");
 }
@@ -66,31 +62,22 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
     for (int i = s; i <= e; ++i)
     {
         const char *depth = luaL_checkstring(ls, i);
-        std::vector<std::string> frags = split_string(",", depth);
-        for (int j = 0, size = frags.size(); j < size; ++j)
+        try
         {
-            try
-            {
-                drs.push_back(level_range::parse(frags[j]));
-            }
-            catch (const std::string &error)
-            {
-                luaL_error(ls, error.c_str());
-            }
+            drs.add_depths(depth_ranges::parse_depth_ranges(depth));
+        }
+        catch (const std::string &error)
+        {
+            luaL_error(ls, error.c_str());
         }
     }
-}
-
-static std::string dgn_depth_list_string(const depth_ranges &drs)
-{
-    return (comma_separated_line(drs.begin(), drs.end(), ", ", ", "));
 }
 
 static int dgn_depth_proc(lua_State *ls, depth_ranges &dr, int s)
 {
     if (lua_gettop(ls) < s)
     {
-        PLUARET(string, dgn_depth_list_string(dr).c_str());
+        PLUARET(string, dr.describe().c_str());
     }
 
     if (lua_isnil(ls, s))
@@ -277,6 +264,14 @@ static int dgn_change_branch_flags(lua_State *ls)
     return (1);
 }
 
+static void _chance_magnitude_check(lua_State *ls, int which_par, int chance)
+{
+    if (chance < 0 || chance > CHANCE_ROLL)
+        luaL_argerror(ls, which_par,
+                      make_stringf("Chance must be in the range [0,%d]",
+                                   CHANCE_ROLL).c_str());
+}
+
 static int dgn_chance(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -284,26 +279,59 @@ static int dgn_chance(lua_State *ls)
     {
         const bool has_priority = lua_isnumber(ls, 3);
         const int chance_priority =
-            has_priority? luaL_checkint(ls, 2) : 100;
-        const int chance =
-            has_priority? luaL_checkint(ls, 3) : luaL_checkint(ls, 2);
-        if (chance < 0 || chance > CHANCE_ROLL)
-            luaL_argerror(ls, 2,
-                          make_stringf("Chance must be in the range [0,%d]",
-                                       CHANCE_ROLL).c_str());
-
-        map->chance_priority = chance_priority;
-        map->chance = chance;
+            has_priority? luaL_checkint(ls, 2) : DEFAULT_CHANCE_PRIORITY;
+        const int chance_par = 2 + has_priority;
+        const int chance = luaL_checkint(ls, chance_par);
+        _chance_magnitude_check(ls, chance_par, chance);
+        map->_chance.set_default(map_chance(chance_priority, chance));
     }
-    PLUARET(number, map->chance);
+    return 0;
 }
+
+static int dgn_depth_chance(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    const std::string depth(luaL_checkstring(ls, 2));
+    const bool has_priority = lua_gettop(ls) == 4;
+    const int chance_priority =
+        has_priority? luaL_checkint(ls, 3) : DEFAULT_CHANCE_PRIORITY;
+    const int chance_par = 3 + has_priority;
+    const int chance = luaL_checkint(ls, chance_par);
+    _chance_magnitude_check(ls, chance_par, chance);
+    try
+    {
+        map->_chance.add_range(depth, map_chance(chance_priority, chance));
+    }
+    catch (const std::string &error)
+    {
+        luaL_error(ls, error.c_str());
+    }
+    return (0);
+}
+
+#define WEIGHT(ls, n, weight) \
+    const int weight = luaL_checkint(ls, n); \
+    if (weight < 0)                          \
+        luaL_error(ls, "Bad weight: %d (must be >= 0)", weight);
 
 static int dgn_weight(lua_State *ls)
 {
     MAP(ls, 1, map);
     if (!lua_isnil(ls, 2))
-        map->weight = luaL_checkint(ls, 2);
-    PLUARET(number, map->weight);
+    {
+        WEIGHT(ls, 2, weight);
+        map->_weight.set_default(weight);
+    }
+    return 0;
+}
+
+static int dgn_depth_weight(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    const std::string depth(luaL_checkstring(ls, 2));
+    WEIGHT(ls, 3, weight);
+    map->_weight.add_range(depth, weight);
+    return 0;
 }
 
 static int dgn_orient(lua_State *ls)
@@ -1028,9 +1056,13 @@ static int lua_dgn_set_lt_callback(lua_State *ls)
 static bool _valid_border_feat (dungeon_feature_type feat)
 {
     return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
-            || (feat == DNGN_TREE || feat == DNGN_OPEN_SEA
-               || feat == DNGN_LAVA || feat == DNGN_DEEP_WATER
-               || feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR));
+            || (feat == DNGN_TREE
+               || feat == DNGN_SWAMP_TREE
+               || feat == DNGN_OPEN_SEA
+               || feat == DNGN_LAVA
+               || feat == DNGN_DEEP_WATER
+               || feat == DNGN_SHALLOW_WATER
+               || feat == DNGN_FLOOR));
 }
 
 // XXX: Currently, this is hacked so that map_def->border_fill_type is marsalled
@@ -1266,17 +1298,15 @@ static int lua_cloud_pow_max;
 static int lua_cloud_pow_rolls;
 
 static int make_a_lua_cloud(coord_def where, int garbage, int spread_rate,
-                            cloud_type ctype, kill_category whose,
-                            killer_type killer, int colour, std::string name,
-                            std::string tile)
+                            cloud_type ctype, const actor *agent, int colour,
+                            std::string name, std::string tile)
 {
     UNUSED(garbage);
 
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
-    place_cloud(ctype, where, pow, whose, killer, spread_rate, colour, name,
-                 tile);
+    place_cloud(ctype, where, pow, agent, spread_rate, colour, name, tile);
     return 1;
 }
 
@@ -1347,7 +1377,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
         return (0);
     }
 
-    if (kc == KC_NCATEGORIES)
+    if (kc == KC_NCATEGORIES || kc != KC_OTHER)
     {
         std::string error = "Invalid kill category '";
         error += kname;
@@ -1364,8 +1394,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
     }
 
     apply_area_cloud(make_a_lua_cloud, coord_def(x, y), 0, size,
-                     ctype, kc, cloud_struct::whose_to_killer(kc),
-                     spread_rate, colour, name, tile);
+                     ctype, 0, spread_rate, colour, name, tile);
 
     return (0);
 }
@@ -1375,9 +1404,7 @@ static int dgn_delete_cloud(lua_State *ls)
     COORDS(c, 1, 2);
 
     if (in_bounds(c) && env.cgrid(c) != EMPTY_CLOUD)
-    {
         delete_cloud(env.cgrid(c));
-    }
 
     return (0);
 }
@@ -1415,7 +1442,7 @@ static int dgn_place_cloud(lua_State *ls)
         return (0);
     }
 
-    if (kc == KC_NCATEGORIES)
+    if (kc == KC_NCATEGORIES || kc != KC_OTHER)
     {
         std::string error = "Invalid kill category '";
         error += kname;
@@ -1431,7 +1458,7 @@ static int dgn_place_cloud(lua_State *ls)
         return (0);
     }
 
-    place_cloud(ctype, coord_def(x, y), cl_range, kc, spread_rate, colour, name, tile);
+    place_cloud(ctype, coord_def(x, y), cl_range, 0, spread_rate, colour, name, tile);
 
     return (0);
 }
@@ -1867,7 +1894,9 @@ const struct luaL_reg dgn_dlib[] =
 { "lflags", dgn_lflags },
 { "bflags", dgn_bflags },
 { "chance", dgn_chance },
+{ "depth_chance", dgn_depth_chance },
 { "weight", dgn_weight },
+{ "depth_weight", dgn_depth_weight },
 { "welcome", dgn_welcome },
 { "orient", dgn_orient },
 { "shuffle", dgn_shuffle },

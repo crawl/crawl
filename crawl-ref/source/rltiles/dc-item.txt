@@ -364,6 +364,8 @@ gold_dragon_hide ARM_GOLD_DRAGON_HIDE
 gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_hide ARM_SWAMP_DRAGON_HIDE
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
+pearl_dragon_hide ARM_PEARL_DRAGON_HIDE
+pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
 
 cloak1_leather ARM_CLOAK
 cloak2
@@ -727,7 +729,8 @@ i-cure-mutation POT_CURE_MUTATION
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
-i-coagulated-blood POT_BLOOD_COAGULATED POT_ID_LAST
+i-coagulated-blood POT_BLOOD_COAGULATED
+i-water POT_FIZZING POT_ID_LAST
 %back none
 %rim 1
 
