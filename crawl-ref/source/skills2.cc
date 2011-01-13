@@ -22,6 +22,7 @@
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
+#include "fontwrapper-ft.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "options.h"
@@ -541,7 +542,7 @@ void SkillMenuEntry::_set_points()
 #endif
 
 #define MIN_COLS            78
-#define MIN_LINES           25
+#define MIN_LINES           24
 #define TILES_COL            6
 #define CURRENT_ACTION_SIZE 24
 #define NEXT_ACTION_SIZE    15
@@ -553,7 +554,9 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     SkillMenuEntry::m_skm = this;
 
 #ifdef USE_TILE
-    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 720)
+    const int limit = tiles.get_crt_font()->char_height() * 5
+                      + SK_ARR_LN * TILE_Y;
+    if (Options.tile_menu_icons && tiles.get_crt()->wy >= limit)
         set_flag(SKMF_SKILL_ICONS);
 #endif
 
@@ -561,7 +564,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     m_min_coord.y = 1;
 
     m_max_coord.x = MIN_COLS + 1;
-    m_max_coord.y = MIN_LINES + 1;
+    m_max_coord.y = get_number_of_lines() + 1;
 
     m_ff = new MenuFreeform();
     m_help = new FormattedTextItem();
@@ -596,6 +599,8 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
         --help_min_coord.y;
         help_min_coord.y = tiles.to_lines(help_min_coord.y);
     }
+#else
+    help_min_coord.y = std::min(help_min_coord.y, m_max_coord.y - 3);
 #endif
     m_help->set_bounds(help_min_coord,
                        coord_def(m_max_coord.x, help_min_coord.y + 2));
