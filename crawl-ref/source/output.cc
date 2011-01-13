@@ -506,7 +506,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_STEALTH,
         DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
         DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
-        STATUS_CLINGING, DUR_TORNADO,
+        STATUS_CLINGING, DUR_TORNADO, DUR_LIQUEFYING,
     };
 
     status_info inf;
@@ -2111,8 +2111,7 @@ std::string _status_mut_abilities()
                 EV_change += level - 1;
                 break;
             default:
-                ASSERT(false);
-                break;
+                die("mutation without a short desc: %d", i);
             }
         }
 

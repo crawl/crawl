@@ -811,18 +811,7 @@ void bolt::digging_wall_effect()
     if (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
         || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE)
     {
-        grd(pos()) = DNGN_FLOOR;
-        // Mark terrain as changed so travel excludes can be updated
-        // as necessary.
-        // XXX: This doesn't work for some reason: after digging
-        //      the wrong grids are marked excluded.
-        set_terrain_changed(pos());
-
-        // Blood does not transfer onto floor.
-        if (is_bloodcovered(pos()))
-            env.pgrid(pos()) &= ~(FPROP_BLOODY);
-
-        remove_mold(pos());
+        nuke_wall(pos());
 
         if (!msg_generated)
         {
@@ -853,7 +842,7 @@ void bolt::fire_wall_effect()
 {
     dungeon_feature_type feat;
     // Fire only affects wax walls and trees.
-    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat != DNGN_TREE
+    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat_is_tree(feat)
         || env.markers.property_at(pos(), MAT_ANY, "veto_fire") == "veto")
     {
         finish_beam();
@@ -879,14 +868,13 @@ void bolt::fire_wall_effect()
         else
         {
             // Destroy the wall.
-            grd(pos()) = DNGN_FLOOR;
-            set_terrain_changed(pos());
+            nuke_wall(pos());
             if (you.see_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
             else if (you.can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wax.");
-            place_cloud(CLOUD_FIRE, pos(), random2(10)+15,
-                        whose_kill(), killer());
+            ASSERT(agent()); // if this is wrong, please preserve friendliness of kc
+            place_cloud(CLOUD_FIRE, pos(), random2(10)+15, agent());
             obvious_effect = true;
         }
     }
@@ -895,8 +883,7 @@ void bolt::fire_wall_effect()
         if (is_superhot())
         {
             // Destroy the wall.
-            grd(pos()) = dgn_tree_base_feature_at(pos());
-            set_terrain_changed(pos());
+            nuke_wall(pos());
             if (you.see_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
             else if (you.can_smell())
@@ -905,8 +892,8 @@ void bolt::fire_wall_effect()
                 did_god_conduct(DID_KILL_PLANT, 1, effect_known);
             else if (whose_kill() == KC_FRIENDLY)
                 did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known);
-            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25,
-                        whose_kill(), killer(), 5);
+            ASSERT(agent());
+            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
             obvious_effect = true;
         }
     }
@@ -916,7 +903,7 @@ void bolt::fire_wall_effect()
 void bolt::elec_wall_effect()
 {
     const dungeon_feature_type feat = grd(pos());
-    if (feat == DNGN_TREE
+    if (feat_is_tree(feat)
         && env.markers.property_at(pos(), MAT_ANY, "veto_fire") != "veto")
     {
         fire_wall_effect();
@@ -976,6 +963,7 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         break;
 
     case DNGN_TREE:
+    case DNGN_SWAMP_TREE:
         if (see)
             msg = "The tree breaks and falls down!";
         else if (hear)
@@ -998,18 +986,6 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         return (false);
 }
 
-static void _nuke_wall(const coord_def& p)
-{
-    // Blood does not transfer onto floor.
-    if (is_bloodcovered(p))
-        env.pgrid(p) &= ~(FPROP_BLOODY);
-
-    remove_mold(p);
-
-    grd(p) = DNGN_FLOOR;
-    set_terrain_changed(p);
-}
-
 void bolt::nuke_wall_effect()
 {
     if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
@@ -1030,7 +1006,8 @@ void bolt::nuke_wall_effect()
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
     case DNGN_TREE:
-        _nuke_wall(pos());
+    case DNGN_SWAMP_TREE:
+        nuke_wall(pos());
         break;
 
     case DNGN_CLOSED_DOOR:
@@ -1040,7 +1017,7 @@ void bolt::nuke_wall_effect()
          std::set<coord_def> doors = connected_doors(pos());
          std::set<coord_def>::iterator it;
          for (it = doors.begin(); it != doors.end(); ++it)
-             _nuke_wall(*it);
+             nuke_wall(*it);
          break;
     }
 
@@ -1056,7 +1033,7 @@ void bolt::nuke_wall_effect()
         if (beam_source == NON_MONSTER)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
     }
-    else if (feat == DNGN_TREE)
+    else if (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE)
     {
         if (whose_kill() == KC_YOU)
             did_god_conduct(DID_KILL_PLANT, 1);
@@ -1799,7 +1776,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (doFlavouredEffects)
             {
                 if (original > 0)
-                    simple_monster_message(mons, "appears unharmed.");
+                    simple_monster_message(mons, " appears unharmed.");
                 else if (mons->observable())
                     mprf("The beam of light passes harmlessly through %s.",
                          mons->name(DESC_NOCAP_THE, true).c_str());
@@ -1815,6 +1792,23 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_SPORE:
         if (mons->type == MONS_BALLISTOMYCETE)
             hurted = 0;
+        break;
+
+    case BEAM_AIR:
+        if (mons->res_wind() > 0)
+            hurted = 0;
+        else if (mons->flight_mode())
+            hurted += hurted / 2;
+        if (!hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(mons, " is harmlessly tossed around.");
+        }
+        else if (original < hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(mons, " gets badly buffeted.");
+        }
         break;
 
     default:
@@ -2230,7 +2224,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return (false);
 
     if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL
-        && feat != DNGN_TREE)
+        && feat != DNGN_TREE && feat != DNGN_SWAMP_TREE)
     {
         return (true);
     }
@@ -2348,40 +2342,31 @@ void bolt::affect_endpoint()
     }
 
     if (name == "noxious blast")
-    {
-        big_cloud(CLOUD_STINK, whose_kill(), killer(), pos(), 0,
-                  7 + random2(5));
-    }
+        big_cloud(CLOUD_STINK, agent(), pos(), 0, 7 + random2(5));
 
     if (name == "blast of poison")
-    {
-        big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0,
-                  7 + random2(5));
-    }
+        big_cloud(CLOUD_POISON, agent(), pos(), 0, 7 + random2(5));
 
     if (origin_spell == SPELL_HOLY_BREATH)
-    {
-        big_cloud(CLOUD_HOLY_FLAMES, whose_kill(), killer(), pos(), 0,
-                  7 + random2(5));
-    }
+        big_cloud(CLOUD_HOLY_FLAMES, agent(), pos(), 0, 7 + random2(5));
+
+    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
+        big_cloud(CLOUD_FIRE, agent(), pos(), 0, 7 + random2(5));
 
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
         ASSERT(flavour == BEAM_MIASMA);
-        big_cloud(CLOUD_MIASMA, whose_kill(), killer(), pos(), 0, 9);
+        big_cloud(CLOUD_MIASMA, agent(), pos(), 0, 9);
     }
 
     if (name == "freezing blast")
-    {
-        big_cloud(CLOUD_COLD, whose_kill(), killer(), pos(),
-                  random_range(10, 15), 9);
-    }
+        big_cloud(CLOUD_COLD, agent(), pos(), random_range(10, 15), 9);
 
     if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN)
         || name == "searing blast") // monster and player red draconian breath abilities
     {
-        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), whose_kill(), killer());
+        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
     }
 }
 
@@ -2553,10 +2538,10 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
         return (B_TRUE);
     }
 
-    if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREE))
+    if (is_fiery() && (wall == DNGN_WAX_WALL || feat_is_tree(wall)))
         return (is_superhot() ? B_TRUE : B_MAYBE);
 
-    if (flavour == BEAM_ELECTRICITY && wall == DNGN_TREE)
+    if (flavour == BEAM_ELECTRICITY && feat_is_tree(wall))
         return (is_superhot() ? B_TRUE : B_MAYBE);
 
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
@@ -2570,6 +2555,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_GRANITE_STATUE
             || wall == DNGN_ORCISH_IDOL
             || wall == DNGN_TREE
+            || wall == DNGN_SWAMP_TREE
             || wall == DNGN_CLOSED_DOOR
             || wall == DNGN_DETECTED_SECRET_DOOR
             || wall == DNGN_SECRET_DOOR)
@@ -2614,39 +2600,41 @@ void bolt::affect_place_clouds()
     const dungeon_feature_type feat = grd(p);
 
     if (name == "blast of poison")
-        place_cloud(CLOUD_POISON, p, random2(4) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_POISON, p, random2(4) + 2, agent());
 
     if (origin_spell == SPELL_HOLY_BREATH)
-        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, agent());
+
+    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
+        place_cloud(CLOUD_FIRE, p,random2(4) + 2, agent());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
         || feat_is_watery(feat) && is_fiery())
     {
-        place_cloud(CLOUD_STEAM, p, 2 + random2(5), whose_kill(), killer());
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
     }
 
     if (feat_is_watery(feat) && flavour == BEAM_COLD
         && damage.num * damage.size > 35)
     {
-        place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1,
-                    whose_kill(), killer());
+        place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1, agent());
     }
 
     if (name == "great blast of cold")
-        place_cloud(CLOUD_COLD, p, random2(5) + 3, whose_kill(), killer());
+        place_cloud(CLOUD_COLD, p, random2(5) + 3, agent());
 
     if (name == "ball of steam")
-        place_cloud(CLOUD_STEAM, p, random2(5) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_STEAM, p, random2(5) + 2, agent());
 
     if (flavour == BEAM_MIASMA)
-        place_cloud(CLOUD_MIASMA, p, random2(5) + 2, whose_kill(), killer());
+        place_cloud(CLOUD_MIASMA, p, random2(5) + 2, agent());
 
     if (name == "poison gas")
-        place_cloud(CLOUD_POISON, p, random2(4) + 3, whose_kill(), killer());
+        place_cloud(CLOUD_POISON, p, random2(4) + 3, agent());
 
     if (name == "blast of choking fumes")
-        place_cloud(CLOUD_STINK, p, random2(4) + 3, whose_kill(), killer());
+        place_cloud(CLOUD_STINK, p, random2(4) + 3, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -2657,7 +2645,7 @@ void bolt::affect_place_explosion_clouds()
     if (grd(p) == DNGN_LAVA && flavour == BEAM_COLD
         || feat_is_watery(grd(p)) && is_fiery())
     {
-        place_cloud(CLOUD_STEAM, p, 2 + random2(5), whose_kill(), killer());
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
         return;
     }
 
@@ -2703,17 +2691,17 @@ void bolt::affect_place_explosion_clouds()
             break;
         }
 
-        place_cloud(cl_type, p, duration, whose_kill(), killer());
+        place_cloud(cl_type, p, duration, agent());
     }
 
     // then check for more specific explosion cloud types.
     if (name == "ice storm")
-        place_cloud(CLOUD_COLD, p, 2 + random2avg(5,2), whose_kill(), killer());
+        place_cloud(CLOUD_COLD, p, 2 + random2avg(5,2), agent());
 
     if (name == "stinking cloud")
     {
         const int duration =  1 + random2(4) + random2((ench_power / 50) + 1);
-        place_cloud(CLOUD_STINK, p, duration, whose_kill(), killer());
+        place_cloud(CLOUD_STINK, p, duration, agent());
     }
 
     if (name == "great blast of fire")
@@ -2723,7 +2711,7 @@ void bolt::affect_place_explosion_clouds()
         if (duration > 20)
             duration = 20 + random2(4);
 
-        place_cloud(CLOUD_FIRE, p, duration, whose_kill(), killer());
+        place_cloud(CLOUD_FIRE, p, duration, agent());
 
         if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {
@@ -4324,7 +4312,6 @@ void bolt::affect_monster(monster* mon)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    bool hit_woke_orc = false;
     if (nasty_to(mon))
     {
         if (YOU_KILL(thrower) && final > 0)
@@ -4340,14 +4327,6 @@ void bolt::affect_monster(monster* mon)
                 remove_sanctuary(true);
 
             set_attack_conducts(conducts, mon, !okay);
-        }
-
-        if (you.religion == GOD_BEOGH && mons_genus(mon->type) == MONS_ORC
-            && mon->asleep() && YOU_KILL(thrower)
-            && !player_under_penance() && you.piety >= piety_breakpoint(2)
-            && mons_near(mon))
-        {
-            hit_woke_orc = true;
         }
     }
 
@@ -5837,12 +5816,11 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_INK:                   return ("ink");
     case BEAM_HOLY_FLAME:            return ("cleansing flame");
     case BEAM_HOLY_LIGHT:            return ("holy light");
+    case BEAM_AIR:                   return ("air");
 
-    case NUM_BEAMS:                  DEBUGSTR("invalid beam type");
-                                     return ("INVALID");
+    case NUM_BEAMS:                  die("invalid beam type");
     }
-    DEBUGSTR("unknown beam type");
-    return "UNKNOWN";
+    die("unknown beam type");
 }
 
 std::string bolt::get_source_name() const

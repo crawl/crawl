@@ -46,6 +46,7 @@
 #include "mon-info.h"
 #include "mon-util.h"
 #include "output.h"
+#include "place.h"
 #include "player.h"
 #include "shopping.h"
 #include "show.h"
@@ -1467,7 +1468,7 @@ void direction_chooser::print_items_description() const
 void direction_chooser::print_floor_description(bool boring_too) const
 {
     const dungeon_feature_type feat = grd(target());
-    if (!boring_too && (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL))
+    if (!boring_too && feat == DNGN_FLOOR)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -1653,6 +1654,14 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         wizard_make_monster_summoned(m);
         break;
 
+    case CMD_TARGET_WIZARD_HEAL_MONSTER:
+        if (m->hit_points < m->max_hit_points)
+        {
+            m->hit_points = m->max_hit_points;
+            need_all_redraw = true;
+        }
+        break;
+
     case CMD_TARGET_WIZARD_HURT_MONSTER:
         m->hit_points = 1;
         mpr("Brought monster down to 1 HP.");
@@ -1801,6 +1810,9 @@ bool direction_chooser::do_main_loop()
         break;
 
     case CMD_TARGET_EXCLUDE:
+        if (!just_looking)
+            break;
+
         if (you.level_type == LEVEL_LABYRINTH
             || !player_in_mappable_area())
         {
@@ -2717,7 +2729,6 @@ void describe_floor()
     switch (grid)
     {
     case DNGN_FLOOR:
-    case DNGN_FLOOR_SPECIAL:
         return;
 
     case DNGN_ENTER_SHOP:
@@ -2868,6 +2879,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_GRATE:
         return ("iron grate");
     case DNGN_TREE:
+    case DNGN_SWAMP_TREE: // perhaps "mangrove" or such?
         return ("tree");
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
@@ -2886,7 +2898,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("Some shallow water");
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_FLOOR:
-    case DNGN_FLOOR_SPECIAL:
         return ("Floor");
     case DNGN_OPEN_DOOR:
         return ("open door");
@@ -2901,6 +2912,11 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
+        if (player_in_branch(BRANCH_MAIN_DUNGEON)
+            && player_branch_depth() == 1)
+        {
+            return ("staircase leading out of the dungeon");
+        }
         return ("stone staircase leading up");
     case DNGN_ENTER_HELL:
         return ("gateway to Hell");
@@ -3830,15 +3846,14 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         // Suppress "Floor." if there's something on that square that we've
         // already described.
-        if ((feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL) && !bloody
+        if (feat == DNGN_FLOOR && !bloody
             && (monster_described || item_described || cloud_described))
         {
             return;
         }
 
         msg_channel_type channel = MSGCH_EXAMINE;
-        if (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL
-            || feat_is_water(feat))
+        if (feat == DNGN_FLOOR || feat_is_water(feat))
         {
             channel = MSGCH_EXAMINE_FILTER;
         }

@@ -93,7 +93,7 @@ lua_file = lua/pickup.lua
 
 # autofight.lua allows binding both movement and attack a single key.
 # Use at your own discretion! See options_guide.txt for details.
-# lua_file = lua/autofight.lua
+lua_file = lua/autofight.lua
 
 ##### 4-  Interface #################################################
 #

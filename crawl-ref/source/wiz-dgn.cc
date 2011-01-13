@@ -199,7 +199,10 @@ static void _wizard_go_to_level(const level_pos &pos)
         abs_depth > you.absdepth0? DNGN_STONE_STAIRS_DOWN_I
                                   : DNGN_STONE_STAIRS_UP_I;
 
-    if (abs_depth > you.absdepth0 && pos.id.depth == 1
+    if (pos.id.depth == branches[pos.id.branch].depth)
+        stair_taken = DNGN_STONE_STAIRS_DOWN_I;
+
+    if (pos.id.branch != you.where_are_you && pos.id.depth == 1
         && pos.id.branch != BRANCH_MAIN_DUNGEON)
     {
         stair_taken = branches[pos.id.branch].entry_stairs;
@@ -371,7 +374,7 @@ void wizard_list_branches()
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].startdepth != - 1)
+        if (branches[i].startdepth != -1)
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
                  i, branches[i].longname, branches[i].startdepth,

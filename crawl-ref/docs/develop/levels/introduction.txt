@@ -114,12 +114,12 @@ and is always tagged "entry". A player starting a new game will usually land
 in an entry vault.
 
 Branch entry vault, or branch portal vault:
-     A map containing the entry to a branch - either a branch stair (such as
+    A map containing the entry to a branch - either a branch stair (such as
 the stair to the Orcish Mines), or a branch portal (a portal to Hell, say).
 Always tagged "<branchname>_entry".
 
 Special level:
-     A map for a location of significance in the game, such as the Ecumenical
+    A map for a location of significance in the game, such as the Ecumenical
 Temple, or the end of branches such as level 5 of the Snake Pit (Snake:5).
 Special level maps usually have a PLACE: attribute.
 
@@ -140,7 +140,7 @@ vaults) in most respects. The differences are:
 
 1. Floating vaults may be placed before the rest of the level layout
    is generated, and the rest of the level may be built around the floating
-  vault. This is never the case for minivaults.
+   vault. This is never the case for minivaults.
 
 2. Floating vaults may be placed anywhere in the map, including places
    completely separated from the rest of the level by rock. The

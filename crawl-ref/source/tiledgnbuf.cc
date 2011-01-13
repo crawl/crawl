@@ -22,15 +22,31 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 
+void packed_cell::clear()
+{
+    num_dngn_overlay = 0;
+    fg = 0;
+    bg = 0;
+
+    is_bloody = false;
+    is_silenced = false;
+    is_haloed = false;
+    is_moldy = false;
+    is_sanctuary = false;
+    swamp_tree_water = false;
+}
+
 DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_floor(&im->m_textures[TEX_FLOOR]),
     m_buf_wall(&im->m_textures[TEX_WALL]),
     m_buf_feat(&im->m_textures[TEX_FEAT]),
+    m_buf_feat_trans(&im->m_textures[TEX_FEAT], 17),
     m_buf_doll(&im->m_textures[TEX_PLAYER], 17),
     m_buf_main_trans(&im->m_textures[TEX_DEFAULT], 17),
     m_buf_main(&im->m_textures[TEX_DEFAULT]),
     m_buf_spells(&im->m_textures[TEX_GUI]),
     m_buf_skills(&im->m_textures[TEX_GUI]),
+    m_buf_commands(&im->m_textures[TEX_GUI]),
     m_buf_icons(&im->m_textures[TEX_ICONS])
 {
 }
@@ -87,7 +103,8 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 
 }
 
-void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
+void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
+                                      bool in_water)
 {
     assert(tileidx < TILE_FEAT_MAX);
 
@@ -95,6 +112,8 @@ void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
         m_buf_floor.add(tileidx, x, y);
     else if (tileidx < TILE_WALL_MAX)
         m_buf_wall.add(tileidx, x, y);
+    else if (in_water)
+        m_buf_feat_trans.add(tileidx, x, y, 0, true, false);
     else
         m_buf_feat.add(tileidx, x, y);
 }
@@ -127,6 +146,11 @@ void DungeonCellBuffer::add_skill_tile(int tileidx, int x, int y)
     m_buf_skills.add(tileidx, x, y);
 }
 
+void DungeonCellBuffer::add_command_tile(int tileidx, int x, int y)
+{
+    m_buf_commands.add(tileidx, x, y);
+}
+
 void DungeonCellBuffer::add_icons_tile(int tileidx, int x, int y)
 {
     m_buf_icons.add(tileidx, x, y);
@@ -143,11 +167,13 @@ void DungeonCellBuffer::clear()
     m_buf_floor.clear();
     m_buf_wall.clear();
     m_buf_feat.clear();
+    m_buf_feat_trans.clear();
     m_buf_doll.clear();
     m_buf_main_trans.clear();
     m_buf_main.clear();
     m_buf_spells.clear();
     m_buf_skills.clear();
+    m_buf_commands.draw();
     m_buf_icons.clear();
 }
 
@@ -156,11 +182,13 @@ void DungeonCellBuffer::draw()
     m_buf_floor.draw();
     m_buf_wall.draw();
     m_buf_feat.draw();
+    m_buf_feat_trans.draw();
     m_buf_main_trans.draw();
     m_buf_main.draw();
     m_buf_doll.draw();
     m_buf_skills.draw();
     m_buf_spells.draw();
+    m_buf_commands.draw();
     m_buf_icons.draw();
 }
 
@@ -374,20 +402,28 @@ static dungeon_feature_type _safe_feat(coord_def gc)
 
 static bool _is_seen_land(coord_def gc)
 {
-    dungeon_feature_type feat = _safe_feat(gc);
+    const dungeon_feature_type feat = _safe_feat(gc);
+
     return (feat != DNGN_UNSEEN && !feat_is_water(feat) && feat != DNGN_LAVA);
 }
 
 static bool _is_seen_shallow(coord_def gc)
 {
-    return (_safe_feat(gc) == DNGN_SHALLOW_WATER);
+    const dungeon_feature_type feat = _safe_feat(gc);
+
+    return (feat == DNGN_SHALLOW_WATER || feat == DNGN_SWAMP_TREE);
 }
 
 static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
 {
     // Any tile on water with an adjacent solid tile will get an extra
     // bit of shoreline.
-    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    dungeon_feature_type feat = env.map_knowledge(gc).feat();
+
+    // Treat trees in Swamp as though they were shallow water.
+    if (cell->swamp_tree_water && feat == DNGN_TREE)
+        feat = DNGN_SHALLOW_WATER;
+
     if (!feat_is_water(feat) && feat != DNGN_LAVA || env.grid_colours(gc))
         return;
 
@@ -469,17 +505,15 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
 
 void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell)
 {
-    const tileidx_t bg = cell.bg;
-    if (!(bg & TILE_FLAG_MISC_FLOOR))
+    if (!cell.is_bloody && !cell.is_moldy)
         return;
 
-    tileidx_t misc = bg & TILE_FLAG_MISC_FLOOR;
-    if (misc == TILE_FLAG_BLOOD)
+    if (cell.is_bloody)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
         m_buf_feat.add(TILE_BLOOD + offset, x, y);
     }
-    else if (misc == TILE_FLAG_MOLD)
+    else if (cell.is_moldy)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
         m_buf_feat.add(TILE_MOLD + offset, x, y);
@@ -491,6 +525,9 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     const tileidx_t bg = cell.bg;
     const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
 
+    if (cell.swamp_tree_water && bg_idx > TILE_DNGN_UNSEEN)
+        m_buf_feat.add(TILE_DNGN_SHALLOW_WATER, x, y);
+
     if (bg_idx >= TILE_DNGN_WAX_WALL)
         add_dngn_tile(cell.flv.floor, x, y);
 
@@ -498,7 +535,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     if (bg_idx > TILE_WALL_MAX)
         add_blood_overlay(x, y, cell);
 
-    add_dngn_tile(bg_idx, x, y);
+    add_dngn_tile(bg_idx, x, y, cell.swamp_tree_water);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
     {
@@ -524,14 +561,14 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_SW, x, y);
         }
 
-        if (bg & TILE_FLAG_HALO)
+        if (cell.is_haloed)
             m_buf_feat.add(TILE_HALO, x, y);
 
         if (!(bg & TILE_FLAG_UNSEEN))
         {
-            if ((bg & TILE_FLAG_MISC_FLOOR) == TILE_FLAG_SANCTUARY)
+            if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
-            if (bg & TILE_FLAG_SILENCED)
+            if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is

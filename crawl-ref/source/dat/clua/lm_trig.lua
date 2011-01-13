@@ -52,6 +52,8 @@
 -- events.  However, we don't need that much flexibility yet, so it's
 -- all handled inside of the Triggerable class.
 
+require('clua/lm_mslav.lua')
+
 Triggerable = { CLASS = "Triggerable" }
 Triggerable.__index = Triggerable
 
@@ -71,7 +73,7 @@ function Triggerable:new(props)
 end
 
 function Triggerable:unmangle(x)
-  if x and type(x) == 'function' then
+  if x and util.callable(x) then
     return x(self)
   else
     return x
@@ -95,9 +97,7 @@ function Triggerable:add_listener(listener)
   if not listener.func then
     error("listener has no func")
   end
-  if type(listener.func) ~= "function" then
-    error("listener.func isn't a function")
-  end
+  listener.func = global_function(listener.func, "triggerable listener")
   table.insert(self.listeners, listener)
 end
 
@@ -411,8 +411,7 @@ end
 -- A simple class to invoke an arbitrary Lua function.  Should be split out
 -- into own file if/when it becomes more complex.
 
-TriggerableFunction       = util.subclass(Triggerable)
-TriggerableFunction.CLASS = "TriggerableFunction"
+util.subclass(Triggerable, "TriggerableFunction")
 
 function TriggerableFunction:new(pars)
   pars = pars or { }
@@ -421,11 +420,9 @@ function TriggerableFunction:new(pars)
 
   if not pars.func then
     error("Must provide func to TriggerableFunction")
-  elseif type(pars.func) ~= "function" then
-    error("TriggerableFunction func must be function, not " .. type(pars.msg))
   end
 
-  tf.func     = pars.func
+  tf.func     = global_function(pars.func, "triggerable function")
   tf.repeated = pars.repeated
   tf.data     = pars.data or {}
   tf.props    = pars.props or {}
@@ -444,7 +441,7 @@ end
 function TriggerableFunction:write(marker, th)
   TriggerableFunction.super.write(self, marker, th)
 
-  file.marshall(th, self.func)
+  lmark.marshall_table(th, self.func)
   file.marshall_meta(th, self.repeated)
   lmark.marshall_table(th, self.data)
 end
@@ -452,7 +449,7 @@ end
 function TriggerableFunction:read(marker, th)
   TriggerableFunction.super.read(self, marker, th)
 
-  self.func     = file.unmarshall_fn(th)
+  self.func     = lmark.unmarshall_table(th)
   self.repeated = file.unmarshall_meta(th)
   self.data     = lmark.unmarshall_table(th)
 
@@ -469,9 +466,7 @@ function triggerable_function_constructor(trigger_type)
              repeated = repeated,
              props = props
            }
-
            tf:add_triggerer( DgnTriggerer:new { type = trigger_type } )
-
            return tf
          end
 end
@@ -605,8 +600,7 @@ end
 -- * pressure_plate: Called when someone (player or a monster) steps on a
 --      pressure plate trap.
 
-DgnTriggerer = { CLASS = "DgnTriggerer" }
-DgnTriggerer.__index = DgnTriggerer
+util.defclass("DgnTriggerer")
 
 function DgnTriggerer:new(pars)
   if not pars then
@@ -839,16 +833,12 @@ end
 function DgnTriggerer:write(marker, th)
   -- Will always be "dgn_event", so we don't need to save it.
   self.method = nil
-
   lmark.marshall_table(th, self)
 end
 
 function DgnTriggerer:read(marker, th)
   local tr = lmark.unmarshall_table(th)
-
   setmetatable(tr, DgnTriggerer)
-
   tr:setup()
-
   return tr
 end

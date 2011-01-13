@@ -50,6 +50,7 @@ zap_type spell_to_zap(spell_type spell)
     case SPELL_BOLT_OF_INACCURACY:
         return ZAP_BEAM_OF_ENERGY;
     case SPELL_STICKY_FLAME:
+    case SPELL_STICKY_FLAME_RANGE:
         return ZAP_STICKY_FLAME;
     case SPELL_DISPEL_UNDEAD:
         return ZAP_DISPEL_UNDEAD;

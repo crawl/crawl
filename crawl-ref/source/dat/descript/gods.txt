@@ -156,3 +156,131 @@ Ashenzari powers
 
 Ashenzari exhorts his followers to garb themselves with curses, rewarding followers for time spent using cursed armour, jewelry, or weapons. Ashenzari's ultimate desire, however, is not for the devotion of his followers but for knowledge of all things. Pious followers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
 %%%%
+Zin lastname
+
+Zin the Law-Giver
+%%%%
+Yredelemnul lastname
+
+Yredelemnul the Dark
+%%%%
+Okawaru lastname
+
+Warmaster Okawaru
+%%%%
+Makhleb lastname
+
+Makhleb the Destroyer
+%%%%
+Sif Muna lastname
+
+Sif Muna the Loreminder
+%%%%
+Trog lastname
+
+Trog the Wrathful
+%%%%
+Elyvilon lastname
+
+Elyvilon the Healer
+%%%%
+Lugonu lastname
+
+Lugonu the Unformed
+%%%%
+Beogh lastname
+
+Beogh the Brigand
+%%%%
+Fedhas lastname
+
+Fedhas Madash
+%%%%
+Cheibriados lastname
+
+Cheibriados the Contemplative
+%%%%
+Ashenzari lastname
+
+Ashenzari the Shackled
+%%%%
+Xom lastname
+
+w:280
+Xom of Chaos
+
+w:5
+Xom the Random
+
+w:5
+Xom the Random Number God
+
+Xom the Tricky
+
+w:5
+Xom the Less-Predictable
+
+w:5
+Xom the Unpredictable
+
+Xom of Many Doors
+
+Xom the Capricious
+
+w:5
+Xom of Bloodstained Whimsey
+
+w:5
+Xom of Enforced Whimsey
+
+Xom of Bone-Dry Humour
+
+w:5
+Xom of Malevolent Giggling
+
+w:5
+Xom of Malicious Giggling
+
+w:5
+Xom the Psychotic
+
+w:5
+Xom the Psychopath
+
+w:2
+Xom of Gnomic Intent
+
+w:2
+Xom of Ineffable Intent
+
+w:2
+Xom of Fickle Intent
+
+w:2
+Xom of Swiftly Tilting Intent
+
+w:2
+Xom of Unknown Intent
+
+Xom the Fickle
+
+Xom of Unknown Intention
+
+w:4
+The Xom-Meister
+
+w:2
+The Xom-Meister, Xom-a-lom-a-ding-dong
+
+w:2
+The Xom-Meister, Xom-o-Rama
+
+w:2
+The Xom-Meister, Xom-Xom-bo-Bom, Banana-Fana-fo-Fom
+
+w:5
+Xom the Begetter of Turbulence
+
+w:5
+Xom the Begetter of Discontinuities
+%%%%

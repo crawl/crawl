@@ -88,7 +88,7 @@ void trap_def::disarm()
 void trap_def::destroy()
 {
     if (!in_bounds(this->pos))
-        ASSERT("trap position out of bounds!");
+        die("Trap position out of bounds!");
 
     grd(this->pos) = DNGN_FLOOR;
     this->ammo_qty = 0;
@@ -198,9 +198,7 @@ bool trap_def::is_known(const actor* act) const
                         || intel >= I_HIGH && one_chance_in(3)));
         }
     }
-    ASSERT(false);
-
-    return (false);
+    die("invalid actor type");
 }
 
 
@@ -405,10 +403,7 @@ static bool _find_other_passage_side(coord_def& to)
         return true;
     }
     else
-    {
-        ASSERT(false);
-        return false;
-    }
+        die("Golubria's passage not found");
 }
 
 // Returns a direction string from you.pos to the
@@ -512,10 +507,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (triggerer.move_to_pos(to))
             {
                 if (you_trigger)
-                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), KC_YOU);
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &you);
                 else
-                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3),
-                                m->kill_alignment(), KILL_MON_MISSILE);
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), m);
                 trap_destroyed = true;
                 know_trap_destroyed = you_trigger;
             }
@@ -1601,7 +1595,6 @@ bool shaft_known(int depth, bool randomly_placed)
 level_id generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id  lid   = lpos.id;
-    coord_def pos   = lpos.pos;
 
     if (lid.level_type != LEVEL_DUNGEON)
         return lid;
@@ -1722,7 +1715,7 @@ int num_traps_for_place(int level_number, const level_id &place)
         return _num_traps_default(level_number, place);
     case LEVEL_LABYRINTH:
     case LEVEL_PORTAL_VAULT:
-        ASSERT(false);
+        die("invalid place for traps");
         break;
     case LEVEL_ABYSS:
     default:

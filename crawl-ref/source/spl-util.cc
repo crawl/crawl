@@ -82,8 +82,7 @@ static int spell_list[NUM_SPELLS];
 static struct spell_desc *_seekspell(spell_type spellid);
 static bool _cloud_helper(cloud_func func, const coord_def& where,
                           int pow, int spread_rate,
-                          cloud_type ctype, kill_category whose,
-                          killer_type killer, int colour,
+                          cloud_type ctype, const actor *agent, int colour,
                           std::string name, std::string tile);
 
 //
@@ -300,7 +299,7 @@ bool add_spell_to_memory(spell_type spell)
     take_note(Note(NOTE_LEARN_SPELL, spell));
 
 #ifdef USE_TILE
-    tiles.do_layout();
+    tiles.layout_statcol();
     redraw_screen();
 #endif
 
@@ -323,7 +322,7 @@ bool del_spell_from_memory_by_slot(int slot)
     you.spell_no--;
 
 #ifdef USE_TILE
-    tiles.do_layout();
+    tiles.layout_statcol();
     redraw_screen();
 #endif
 
@@ -747,7 +746,7 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
 // This ought to work okay for small clouds.
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
-                       kill_category whose, killer_type killer,
+                       const actor *agent,
                        int spread_rate, int colour, std::string name,
                        std::string tile)
 {
@@ -757,8 +756,8 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     int good_squares = 0;
     int neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    if (number && _cloud_helper(func, where, pow, spread_rate, ctype, whose,
-                                killer, colour, name, tile))
+    if (number && _cloud_helper(func, where, pow, spread_rate, ctype, agent,
+                                colour, name, tile))
         number--;
 
     if (number == 0)
@@ -778,7 +777,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         {
             const int aux = arrs[m][i];
             if (_cloud_helper(func, where + Compass[aux],
-                               pow, spread_rate, ctype, whose, killer, colour,
+                               pow, spread_rate, ctype, agent, colour,
                                name, tile))
             {
                 number--;
@@ -804,8 +803,8 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         int spread = number / good_squares;
         number -= spread;
         good_squares--;
-        apply_area_cloud(func, where + Compass[j], pow, spread, ctype, whose,
-                         killer, spread_rate, colour, name, tile);
+        apply_area_cloud(func, where + Compass[j], pow, spread, ctype, agent,
+                         spread_rate, colour, name, tile);
     }
 }
 
@@ -858,8 +857,10 @@ const char* spelltype_short_name(int which_spelltype)
     {
     case SPTYP_CONJURATION:
         return ("Conj");
-    case SPTYP_ENCHANTMENT:
-        return ("Ench");
+    case SPTYP_HEXES:
+        return ("Hex");
+    case SPTYP_CHARMS:
+        return ("Chrm");
     case SPTYP_FIRE:
         return ("Fire");
     case SPTYP_ICE:
@@ -895,8 +896,10 @@ const char* spelltype_long_name(int which_spelltype)
     {
     case SPTYP_CONJURATION:
         return ("Conjuration");
-    case SPTYP_ENCHANTMENT:
-        return ("Enchantment");
+    case SPTYP_HEXES:
+        return ("Hexes");
+    case SPTYP_CHARMS:
+        return ("Charms");
     case SPTYP_FIRE:
         return ("Fire");
     case SPTYP_ICE:
@@ -931,7 +934,8 @@ skill_type spell_type2skill(unsigned int spelltype)
     switch (spelltype)
     {
     case SPTYP_CONJURATION:    return (SK_CONJURATIONS);
-    case SPTYP_ENCHANTMENT:    return (SK_ENCHANTMENTS);
+    case SPTYP_HEXES:          return (SK_HEXES);
+    case SPTYP_CHARMS:         return (SK_CHARMS);
     case SPTYP_FIRE:           return (SK_FIRE_MAGIC);
     case SPTYP_ICE:            return (SK_ICE_MAGIC);
     case SPTYP_TRANSMUTATION:  return (SK_TRANSMUTATIONS);
@@ -979,16 +983,14 @@ bool is_valid_spell(spell_type spell)
 
 static bool _cloud_helper(cloud_func func, const coord_def& where,
                           int pow, int spread_rate,
-                          cloud_type ctype, kill_category whose,
-                          killer_type killer, int colour, std::string name,
-                          std::string tile)
+                          cloud_type ctype, const actor* agent, int colour,
+                          std::string name, std::string tile)
 {
     if (in_bounds(where)
         && !feat_is_solid(grd(where))
         && env.cgrid(where) == EMPTY_CLOUD)
     {
-        func(where, pow, spread_rate, ctype, whose, killer, colour, name,
-             tile);
+        func(where, pow, spread_rate, ctype, agent, colour, name, tile);
         return (true);
     }
 
@@ -1043,6 +1045,8 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
     if (player_spell
         && vehumet_supports_spell(spell)
         && you.religion == GOD_VEHUMET
+        && spell != SPELL_STICKY_FLAME
+        && spell != SPELL_FREEZE
         && !player_under_penance()
         && you.piety >= piety_breakpoint(2))
     {
@@ -1129,7 +1133,7 @@ spell_type zap_type_to_spell(zap_type zap)
     case ZAP_DISINTEGRATION:
         return SPELL_DISINTEGRATE;
     default:
-        DEBUGSTR("zap_type_to_spell() only handles wand zaps for now");
+        die("zap_type_to_spell() only handles wand zaps for now");
     }
     return SPELL_NO_SPELL;
 }
@@ -1213,10 +1217,8 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_LEVITATION:
     case SPELL_FLY:
         if (you.species == SP_KENKU && you.experience_level >= 15)
-        {
             return (true);
-        }
-        if (transient && you.duration[DUR_LEVITATION] > 0)
+        if (transient && you.is_levitating())
             return (true);
         break;
     case SPELL_REGENERATION:
@@ -1236,7 +1238,6 @@ bool spell_is_useless(spell_type spell, bool transient)
             return (true);
         break;
     // weapon branding is useless
-    case SPELL_TUKIMAS_VORPAL_BLADE:
     case SPELL_FIRE_BRAND:
     case SPELL_FREEZING_AURA:
     case SPELL_LETHAL_INFUSION:

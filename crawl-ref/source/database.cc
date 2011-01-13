@@ -68,6 +68,9 @@ static TextDB AllDBs[] =
             "descript/skills.txt",
             "descript/ability.txt",
             "descript/cards.txt",
+#ifdef USE_TILE
+            "descript/commands.txt",
+#endif
             NULL),
 
     TextDB("gamestart",
@@ -88,6 +91,7 @@ static TextDB AllDBs[] =
     TextDB("speak",
             "database/monspeak.txt", // monster speech
             "database/monspell.txt", // monster spellcasting speech
+            "database/monflee.txt",  // monster fleeing speech
             "database/wpnnoise.txt", // noisy weapon speech
             "database/insult.txt",   // imp/demon taunts
             "database/godspeak.txt", // god speech
@@ -517,20 +521,28 @@ static void _call_recursive_replacement(std::string &str, DBM *database,
                                         int &num_replacements,
                                         int recursion_depth = 0);
 
-std::string getWeightedSpeechString(const std::string &key,
-                                    const std::string &suffix,
-                                    const int weight)
+static std::string _query_weighted_randomised(DBM *database,
+                                              const std::string &key,
+                                              const std::string &suffix = "",
+                                              const int weight = -1)
 {
-    if (!SpeakDB)
+    if (!database)
         return ("");
 
-    std::string result = _getWeightedString(SpeakDB, key, suffix, weight);
+    std::string result = _getWeightedString(database, key, suffix, weight);
     if (result.empty())
         return "";
 
     int num_replacements = 0;
-    _call_recursive_replacement(result, SpeakDB, suffix, num_replacements);
+    _call_recursive_replacement(result, database, suffix, num_replacements);
     return (result);
+}
+
+std::string getWeightedSpeechString(const std::string &key,
+                                    const std::string &suffix,
+                                    const int weight)
+{
+    return _query_weighted_randomised(SpeakDB, key, suffix, weight);
 }
 
 static std::string _getRandomisedStr(DBM *database, const std::string &key,
@@ -643,6 +655,11 @@ std::string getLongDescription(const std::string &key)
         return ("");
 
     return _query_database(DescriptionDB.get(), key, true, true);
+}
+
+std::string getWeightedRandomisedDescription(const std::string &key)
+{
+    return _query_weighted_randomised(DescriptionDB, key);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,

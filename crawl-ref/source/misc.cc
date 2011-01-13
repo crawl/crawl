@@ -125,7 +125,7 @@ static void _create_monster_hide(const item_def corpse)
     case MONS_STORM_DRAGON:   item.sub_type = ARM_STORM_DRAGON_HIDE;   break;
     case MONS_GOLDEN_DRAGON:  item.sub_type = ARM_GOLD_DRAGON_HIDE;    break;
     case MONS_SWAMP_DRAGON:   item.sub_type = ARM_SWAMP_DRAGON_HIDE;   break;
-
+    case MONS_PEARL_DRAGON:   item.sub_type = ARM_PEARL_DRAGON_HIDE;   break;
     case MONS_SHEEP:
     case MONS_YAK:
     default:
@@ -1840,21 +1840,20 @@ std::vector<map_malign_gateway_marker*> get_malign_gateways ()
 
 void timeout_malign_gateways (int duration)
 {
-    if (!duration)
-        return;
-
+    // Passing 0 should allow us to just touch the gateway and see
+    // if it should decay. This, in theory, should resolve the one
+    // turn delay between it timing out and being recastable. -due
     std::vector<map_malign_gateway_marker*> markers = get_malign_gateways();
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_malign_gateway_marker *mmark = markers[i];
 
-        mmark->duration -= duration;
+        if (duration)
+            mmark->duration -= duration;
 
         if (mmark->duration > 0)
-        {
-            big_cloud(CLOUD_TLOC_ENERGY, KC_OTHER, mmark->pos, 3+random2(10), 2+random2(5));
-        }
+            big_cloud(CLOUD_TLOC_ENERGY, 0, mmark->pos, 3+random2(10), 2+random2(5));
         else
         {
             monster* mons = monster_at(mmark->pos);
@@ -1869,19 +1868,23 @@ void timeout_malign_gateways (int duration)
             else if (!mmark->monster_summoned && !mons)
             {
                 bool is_player = mmark->is_player;
-                actor* caster = mmark->caster;
-                if (caster == NULL)
+                actor* caster = 0;
+                if (is_player)
                     caster = &you;
 
-                int tentacle_idx = create_monster(mgen_data(MONS_ELDRITCH_TENTACLE,
-                                                            (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
-                                                            caster,
-                                                            0,
-                                                            0,
-                                                            mmark->pos,
-                                                            MHITNOT,
-                                                            MG_FORCE_PLACE,
-                                                            mmark->god));
+                mgen_data mg = mgen_data(MONS_ELDRITCH_TENTACLE,
+                                         mmark->behaviour,
+                                         caster,
+                                         0,
+                                         0,
+                                         mmark->pos,
+                                         MHITNOT,
+                                         MG_FORCE_PLACE,
+                                         mmark->god);
+                if (!is_player)
+                    mg.non_actor_summoner = mmark->summoner_string;
+
+                int tentacle_idx = create_monster(mg);
 
                 if (tentacle_idx >= 0)
                 {
@@ -2092,9 +2095,9 @@ static void apply_environment_effect(const coord_def &c)
     if (testbits(env.pgrid(c), FPROP_NO_CLOUD_GEN))
         return;
     if (grid == DNGN_LAVA)
-        check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), KC_OTHER);
+        check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), 0);
     else if (grid == DNGN_SHALLOW_WATER)
-        check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), KC_OTHER);
+        check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), 0);
 }
 
 static const int Base_Sfx_Chance = 5;

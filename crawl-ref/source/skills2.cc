@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 
 #include "skills2.h"
-#include "skills_menu.h"
 
 #include <algorithm>
 #include <cmath>
@@ -23,7 +22,6 @@
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
-#include "fontwrapper-ft.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "options.h"
@@ -77,7 +75,7 @@ typedef skill_title_key_t stk;
 // intended for cases where things might be really awkward without it. -- bwr
 
 // NOTE: If a skill name is changed, remember to also adapt the database entry.
-const char *skills[50][6] =
+const char *skills[NUM_SKILLS][6] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
     {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},
@@ -100,17 +98,10 @@ const char *skills[50][6] =
     // STR based fighters, for DEX/martial arts titles see below.  Felids get their own cathegory, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
     {"Conjurations",   "Ruinous",       "Conjurer",        "Destroyer",       "Devastator",     "Annihilator"},
-    {"Enchantments",   "Charm-Maker",   "Infuser",         "Bewitcher",       "Enchanter",      "Spellbinder"},
+    {"Hexes",          "Vexing",        "Jinx",            "Bewitcher",       "Maledictor",     "Spellbinder"},
+    {"Charms",         "Charmer",       "Infuser",         "Anointer",        "Gracecrafter",   "Miracle Worker"},
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},
@@ -126,17 +117,6 @@ const char *skills[50][6] =
     // use the god titles instead, depending on piety or, in Xom's case, mood.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate"},
     {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},
-
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL},
-    {NULL}
 };
 
 const char *martial_arts_titles[6] =
@@ -183,40 +163,6 @@ JOB_PALADIN:
 
 ************************************************************* */
 
-static const skill_type skill_display_order[] =
-{
-    SK_TITLE,
-    SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES,
-    SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,
-
-    SK_BLANK_LINE,
-
-    SK_BOWS, SK_CROSSBOWS, SK_THROWING, SK_SLINGS,
-
-    SK_BLANK_LINE,
-
-    SK_ARMOUR, SK_DODGING, SK_STEALTH, SK_SHIELDS,
-
-    SK_COLUMN_BREAK, SK_TITLE,
-
-    SK_STABBING, SK_TRAPS_DOORS,
-
-    SK_BLANK_LINE,
-
-    SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS, SK_SUMMONINGS,
-    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
-    SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_POISON_MAGIC,
-
-    SK_BLANK_LINE,
-
-    SK_INVOCATIONS, SK_EVOCATIONS,
-
-    SK_COLUMN_BREAK,
-};
-
-static const int ndisplayed_skills =
-            sizeof(skill_display_order) / sizeof(*skill_display_order);
-
 int get_skill_percentage(const skill_type x)
 {
     const int needed = skill_exp_needed(you.skills[x] + 1, x);
@@ -243,6 +189,9 @@ static void _add_item(TextItem* item, MenuObject* mo, const int size,
     mo->attach_item(item);
     coord.x += size + 1;
 }
+
+menu_letter SkillMenuEntry::m_letter;
+SkillMenu* SkillMenuEntry::m_skm;
 
 #define NAME_SIZE 20
 #define LEVEL_SIZE 4
@@ -645,8 +594,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     if (is_set(SKMF_SKILL_ICONS))
     {
         --help_min_coord.y;
-        help_min_coord.y *= TILE_Y;
-        help_min_coord.y /= tiles.get_crt_font()->char_height();
+        help_min_coord.y = tiles.to_lines(help_min_coord.y);
     }
 #endif
     m_help->set_bounds(help_min_coord,
@@ -1883,6 +1831,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     int tsk_points = you.skill_points[tsk];
     int fsk_ct_points = you.ct_skill_points[fsk];
     int tsk_ct_points = you.ct_skill_points[tsk];
+    int total_skill_points = you.total_skill_points;
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!simu && you.ct_skill_points[fsk] > 0)
@@ -1955,6 +1904,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         you.skill_points[tsk] = tsk_points;
         you.ct_skill_points[fsk] = fsk_ct_points;
         you.ct_skill_points[tsk] = tsk_ct_points;
+        you.total_skill_points = total_skill_points;
     }
     else
     {

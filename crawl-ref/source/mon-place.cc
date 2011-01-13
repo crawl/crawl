@@ -39,6 +39,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-damage.h"
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
@@ -567,7 +568,9 @@ monster_type pick_random_monster(const level_id &place, int power,
                       arena_veto_random_monster(mon_type)) ||
                      (crawl_state.game_is_sprint() &&
                       sprint_veto_random_abyss_monster(mon_type)) ||
-                     (force_mobile && mons_class_is_stationary(mon_type)));
+                     (force_mobile && (mons_class_is_stationary(mon_type)
+                       || mons_is_mimic(mon_type))
+                     ));
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
@@ -1334,6 +1337,12 @@ int place_monster(mgen_data mg, bool force_pos)
                 menv[band_id].flags |= MF_NO_REWARD;
                 menv[band_id].props["pikel_band"] = true;
             }
+            if (mon->type == MONS_SHEDU)
+            {
+                // We store these here for later resurrection, etc.
+                menv[band_id].number = menv[id].mid;
+                menv[id].number = menv[band_id].mid;
+            }
         }
     }
 
@@ -1362,6 +1371,18 @@ void mons_add_blame(monster* mon, const std::string &blame_string)
     blame.get_vector().push_back(blame_string);
 }
 
+static void _place_twister_clouds(monster *mon)
+{
+    // Yay for the abj_degree having a huge granularity.
+    if (mon->has_ench(ENCH_ABJ))
+    {
+        mon_enchant abj = mon->get_ench(ENCH_ABJ);
+        mon->lose_ench_duration(abj, abj.duration / 2);
+    }
+
+    tornado_damage(mon, -10);
+}
+
 static int _place_monster_aux(const mgen_data &mg,
                               bool first_band_member, bool force_pos)
 {
@@ -1374,8 +1395,7 @@ static int _place_monster_aux(const mgen_data &mg,
         || mg.cls == MONS_SENSED
         || mg.cls == MONS_PLAYER)
     {
-        ASSERT(false);
-        return (-1);
+        die("unknown monster to place: %d", mons_class_name(mg.cls));
     }
 
     const monsterentry *m_ent = get_monster_data(mg.cls);
@@ -1424,6 +1444,7 @@ static int _place_monster_aux(const mgen_data &mg,
     }
 
     // Now, actually create the monster. (Wheeee!)
+    mon->set_new_monster_id();
     mon->type         = mg.cls;
     mon->base_monster = mg.base_type;
     mon->number       = mg.number;
@@ -1605,6 +1626,9 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         mon->add_ench(ENCH_EXPLODING);
     }
+
+    if (mg.cls == MONS_TWISTER)
+        mon->add_ench(ENCH_PERM_TORNADO);
 
     if (mons_is_feat_mimic(mg.cls))
     {
@@ -1943,6 +1967,13 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->set_ghost(ghost, false);
         mon->uglything_init();
     }
+    else if (mon->type == MONS_LABORATORY_RAT)
+    {
+        ghost_demon ghost;
+        ghost.init_labrat(mg.colour);
+        mon->set_ghost(ghost, false);
+        mon->labrat_init();
+    }
     else if (mon->type == MONS_DANCING_WEAPON)
     {
         ghost_demon ghost;
@@ -1982,6 +2013,11 @@ static int _place_monster_aux(const mgen_data &mg,
         //        success before printing messages.
         handle_seen_interrupt(mon);
     }
+
+    // Area effects can produce additional messages, and thus need to be
+    // done after come in view ones.
+    if (mon->type == MONS_TWISTER)
+        _place_twister_clouds(mon);
 
     return (mon->mindex());
 }
@@ -2142,8 +2178,8 @@ void roll_zombie_hp(monster* mon)
         break;
 
     default:
-        ASSERT(false);
-        break;
+        die("invalid zombie type %d (%s)", mon->type,
+            mons_class_name(mon->type));
     }
 
     mon->max_hit_points = std::max(hp, 1);
@@ -2184,8 +2220,8 @@ static void _roll_zombie_ac_ev(monster* mon)
         break;
 
     default:
-        ASSERT(false);
-        break;
+        die("invalid zombie type %d (%s)", mon->type,
+            mons_class_name(mon->type));
     }
 
     mon->ac = std::max(mon->ac + acmod, 0);
@@ -2459,11 +2495,6 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 2 + random2(4);
         break;
 
-    case MONS_GREY_RAT:
-        band = BAND_GREY_RATS;
-        band_size = 4 + random2(6);
-        break;
-
     case MONS_GREEN_RAT:
         band = BAND_GREEN_RATS;
         band_size = 4 + random2(6);
@@ -2648,6 +2679,12 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band = BAND_ELEPHANT;
         band_size = 2 + random2(4);
         break;
+
+    case MONS_SHEDU:
+        band = BAND_SHEDU;
+        band_size = 1;
+        break;
+
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2890,9 +2927,6 @@ static monster_type _band_member(band_type band, int power)
     case BAND_WAR_DOGS:
         mon_type = MONS_WAR_DOG;
         break;
-    case BAND_GREY_RATS:
-        mon_type = MONS_GREY_RAT;
-        break;
     case BAND_GREEN_RATS:
         mon_type = MONS_GREEN_RAT;
         break;
@@ -2998,6 +3032,10 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_ELEPHANT:
         mon_type = MONS_ELEPHANT;
+        break;
+
+    case BAND_SHEDU:
+        mon_type = MONS_SHEDU;
         break;
 
     default:

@@ -221,6 +221,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                         ARM_STORM_DRAGON_ARMOUR,
                         ARM_GOLD_DRAGON_ARMOUR,
                         ARM_SWAMP_DRAGON_ARMOUR,
+                        ARM_PEARL_DRAGON_ARMOUR,
                         -1));
             }
         }
@@ -288,11 +289,12 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 random_choose_weighted(20, ARM_TROLL_LEATHER_ARMOUR,
                                        20, ARM_STEAM_DRAGON_ARMOUR,
                                        15, ARM_MOTTLED_DRAGON_ARMOUR,
-                                       15, ARM_SWAMP_DRAGON_ARMOUR,
+                                       10, ARM_SWAMP_DRAGON_ARMOUR,
                                        10, ARM_DRAGON_ARMOUR,
                                        10, ARM_ICE_DRAGON_ARMOUR,
                                         5, ARM_STORM_DRAGON_ARMOUR,
                                         5, ARM_GOLD_DRAGON_ARMOUR,
+                                        5, ARM_PEARL_DRAGON_ARMOUR,
                                         0));
         }
     }
@@ -634,7 +636,8 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     case SK_POISON_MAGIC: TRY_GIVE(STAFF_POISON);      break;
     case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
     case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
-    case SK_ENCHANTMENTS: TRY_GIVE(STAFF_ENCHANTMENT); break;
+    case SK_CHARMS:       TRY_GIVE(STAFF_ENCHANTMENT); break;
+    case SK_HEXES:        TRY_GIVE(STAFF_ENCHANTMENT); break;
     case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
 #undef TRY_GIVE
 

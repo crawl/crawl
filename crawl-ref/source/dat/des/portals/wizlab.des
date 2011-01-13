@@ -139,6 +139,258 @@ end
 function wizlab_milestone (e, wizlab_desc)
     crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", true)
 end
+
+function tukima_machine (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  local x, y = marker:pos()
+  local you_x, you_y = you.pos()
+
+  if data.weapon_count >= 5 then
+    if you.see_cell(x, y) then
+      crawl.mpr("The machine makes a dull noise.")
+    else
+      crawl.mpr("You hear a distant, dull noise.")
+    end
+    return
+  end
+
+  if (you_x == x and you_y == y) then return end
+  if dgn.mons_at(x, y) then return end
+
+  dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "black smoke", "other", -1)
+
+  if (not dgn.create_monster(x, y, "generate_awake dancing weapon")) then
+    return
+  end
+
+  data.weapon_count = data.weapon_count + 1
+
+  if you.see_cell(x, y) then
+    crawl.mpr("The machine hisses, and spits out a dancing weapon!")
+  else
+    crawl.mpr("You hear a distant hissing noise.")
+  end
+end
+
+function wizlab_eringya_grow(data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  local count = 0
+
+  if crawl.one_chance_in(5) then
+    -- Fruit!
+    for spot in iter.adjacent_iterator() do
+      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
+         and crawl.one_chance_in(3) then
+        dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
+                          .. "/ banana / strawberry q:4 / lemon / rambutan "
+                          .. "/ grape q:7 / sultana q:9 / lychee")
+        count = count + 1
+      end
+    end
+    if count > 0 then
+      crawl.mpr("Fruit sprouts up around you!")
+    end
+  else
+    for spot in iter.adjacent_iterator() do
+      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
+         and not crawl.one_chance_in(3) then
+        dgn.create_monster(spot.x, spot.y, "toadstool")
+        count = count + 1
+      end
+    end
+    if count > 0 then
+      crawl.mpr("Toadstools sprout up around you!")
+    end
+  end
+end
+
+function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
+                                        marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if data.phase == 1 then
+    data.phase = data.phase + 1
+    if you.silenced() then
+      crawl.mpr("The ground shakes.", "warning")
+    else
+      crawl.mpr("There is a faint hissing noise.", "warning")
+    end
+    return
+  elseif data.phase == 2 then
+    data.phase = data.phase + 1
+    if you.silenced() then
+      crawl.mpr("The ground shakes.", "warning")
+    else
+      crawl.mpr("There is a loud grinding noise.", "warning")
+    end
+    return
+  elseif data.phase == 3 then
+    data.phase = data.phase + 1
+    crawl.mpr("The walls fall away. The entombed are set free!", "warning")
+    for _, i in ipairs(dgn.find_marker_positions_by_prop("wall_drop", 1)) do
+      dgn.terrain_changed(i.x, i.y, "floor", false, false, false)
+      dgn.place_cloud(i.x, i.y, "black smoke", 2)
+    end
+    return
+  else
+    return
+  end
+end
+
+local function spawn_zombie (x, y, spec)
+    dgn.terrain_changed(x, y, "floor", false, false, false)
+    return dgn.create_monster(x, y, spec)
+end
+
+function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
+                                         marker, ev)
+    if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+        return
+    end
+
+    local graves = dgn.find_markers_by_prop("grave", 1)
+    local x, y
+    for _, gmarker in ipairs(graves) do
+        x, y = gmarker:pos()
+        if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
+            crawl.one_chance_in(8) then
+            spawn_zombie(x, y, "generate_awake human zombie")
+            gmarker:remove()
+        end
+    end
+end
+
+function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
+                                         marker, ev)
+    if data.door_appeared then
+        return
+    end
+
+    local mons = dgn.mons_from_index(ev:arg1())
+    if not string.find(mons.full_name, "zombie") then
+        return
+    end
+
+    data.number_killed = data.number_killed + 1
+    if #dgn.find_markers_by_prop("grave", 1) < data.number_killed then
+        local x, y = marker:pos()
+        dgn.tile_feat_changed(x, y, nil)
+        dgn.terrain_changed(x, y, "closed_door", false, false, false)
+        data.door_appeared = true
+    end
+end
+
+function wizlab_zonguldrok_awaken_wizard(data, triggerable,
+                                         triggerer, marker, ev)
+    if data.awoke == true then
+        return
+    end
+
+    local graves = dgn.find_marker_positions_by_prop("wizard_grave", 1)
+    for _, pos in ipairs(graves) do
+        local lich = spawn_zombie(pos.x, pos.y, "generate_awake ancient lich "
+                 .."col:brown name:antique_lich name_replace name_descriptor"
+                 .." tile:mons_zonguldrok_lich")
+        lich.set_prop("description", "A lich who has grown expensive over countless years.\n")
+    end
+
+    data.awoke = true
+end
+
+function wizlab_wucad_msgfn(data, triggerable, triggerer, marker, ev)
+  if data.trig == true then
+    return
+  end
+
+  if crawl.one_chance_in(3) then
+    return
+  end
+
+  if dgn.persist.wucad_mu_died == true then
+    return
+  end
+
+  if data.spot == 1 then
+    crawl.mpr("Strange, shadowy figures dance through the air in front of you.", "talk_visual")
+    data.trig = true
+  elseif data.spot == 2 then
+    crawl.mpr("This room is filled with shadowy figures, quietly meditating.", "talk_visual")
+    data.trig = true
+  elseif data.spot == 3 then
+    crawl.mpr("Here, spectral monks perform complicated, martial routines; they fade quickly.", "talk_visual")
+    data.trig = true
+  elseif data.spot == 4 then
+    if you.silenced() then
+      return
+    end
+    crawl.mpr("Faint laughter comes from somewhere. Too faint to be real.", "talk_visual")
+    data.trig = true
+  elseif data.spot == 5 then
+    if you.silenced() then
+      return
+    end
+    crawl.mpr("There is a faint scream of pain from a crouched figure. This too fades quickly.", "talk_visual")
+    data.trig = true
+  elseif data.spot == 6 then
+    crawl.mpr("Grey monks gather around the fountain. They do not speak, nor look at each other.", "talk_visual")
+    data.trig = true
+  elseif data.spot == 7 then
+    crawl.mpr("A figure sits in silent meditation. It spots you, gestures wildly, and disappears.", "talk_visual")
+    data.trig = true
+  end
+end
+
+function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if dgn.persist.wucad_mu_died == true then
+    return
+  end
+
+  local msp = "human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures" ..
+            " nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf"..
+            " dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk" ..
+            " / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures " ..
+            " nas:old_memories seen tile:mons_iron_troll_monk w:5"
+
+  local count = 0
+  for point in iter.circle_iterator(3) do
+    if crawl.one_chance_in(8) and count < 3 then
+      if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
+      else
+       local mon = dgn.create_monster(point.x, point.y, msp)
+       mon.set_prop("description", "It seems a flimsy representation of a monk;"
+                                .. " nothing more than a half-formed memory.\n")
+       count = count + 1
+      end
+    end
+  end
+
+  crawl.redraw_view()
+
+  if count == 1 then
+    crawl.mpr("One of the shadowy figures appears more solid!", "warning")
+  elseif count > 1 then
+    crawl.mpr("Shadows coalesce into solid form.", "warning")
+  end
+end
+
+function callback.wizlab_wucad_wucad_died(data, triggerable,
+                                           triggerer, marker, ev)
+  dgn.persist.wucad_mu_died = true
+  crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
+end
+
 }}
 
 default-depth: Vault:2-7, Crypt, D:22-27, Elf:5-7
@@ -314,6 +566,35 @@ x.x.x.x.x..
 .x.x.x.x.xc
 ENDMAP
 
+NAME:   enter_wizlab_7
+TAGS:   uniq_wizlab no_item_gen no_monster_gen chance_wizlab
+CHANCE: 5%
+ORIENT: float
+KFEAT:  abcd : floor
+KFEAT:  ABCD : rock_wall
+COLOUR: Aa : yellow
+COLOUR: Bb : green
+COLOUR: Cc : blue
+COLOUR: Dd : magenta
+: wizlab_portal(_G)
+MAP
+xxxxxxxxxxxxx
+x...........@
+x.xxxxxxxxxxx
+xaAbbbbbbbbax
+xaAcBBBBBBAax
+xaAcCddddcAax
+xaAcCdDDCcAax
+xaAcCdOdCcAax
+xaAcCDDdCcAax
+xaAcddddCcAax
+xaABBBBBBcAax
+xabbbbbbbbAax
+xxxxxxxxxxx.x
+@...........x
+xxxxxxxxxxxxx
+ENDMAP
+
 #
 #
 ###############################################################################
@@ -334,43 +615,8 @@ TILE:       M = dngn_machine_tukima
 MARKER:     M = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
                                   slaved_to="tukima"}
 {{
-function tukima_machine (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  local x, y = marker:pos()
-  local you_x, you_y = you.pos()
-
-  if data.weapon_count >= 5 then
-    if you.see_cell(x, y) then
-      crawl.mpr("The machine makes a dull noise.")
-    else
-      crawl.mpr("You hear a distant, dull noise.")
-    end
-    return
-  end
-
-  if (you_x == x and you_y == y) then return end
-  if dgn.mons_at(x, y) then return end
-
-  dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "black smoke", "other", -1)
-
-  if (not dgn.create_monster(x, y, "generate_awake dancing weapon")) then
-    return
-  end
-
-  data.weapon_count = data.weapon_count + 1
-
-  if you.see_cell(x, y) then
-    crawl.mpr("The machine hisses, and spits out a dancing weapon!")
-  else
-    crawl.mpr("You hear a distant hissing noise.")
-  end
-end
-
 local tukima_marker = TriggerableFunction:new {
-    func = tukima_machine,
+    func = "tukima_machine",
     repeated = true,
     data = {weapon_count=0},
 }
@@ -416,7 +662,8 @@ KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other
                     blink_other;blink_other;major_healing name:strange_machine \
                     name_replace name_descriptor hd:13 hp:120 \
                     tile:mons_statue_guardian
-KITEM:      8 = book of tukima
+# please make sure this is the book with Tukima's Dance
+KITEM:      8 = book of enchantments
 KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
                     name_replace name_descriptor hd:13 hp:120 \
@@ -518,42 +765,8 @@ LFLOORTILE: floor_grass
 ITEM:       any fixed theme book, any fixed level book, any staff
 {{
 
-function grow (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  local count = 0
-
-  if crawl.one_chance_in(5) then
-    -- Fruit!
-    for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-         and crawl.one_chance_in(3) then
-        dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
-                          .. "/ banana / strawberry q:4 / lemon / rambutan "
-                          .. "/ grape q:7 / sultana q:9 / lychee")
-        count = count + 1
-      end
-    end
-    if count > 0 then
-      crawl.mpr("Fruit sprouts up around you!")
-    end
-  else
-    for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-         and not crawl.one_chance_in(3) then
-        dgn.create_monster(spot.x, spot.y, "toadstool")
-        count = count + 1
-      end
-    end
-    if count > 0 then
-      crawl.mpr("Toadstools sprout up around you!")
-    end
-  end
-end
-
-local grow_marker = TriggerableFunction:new { func = grow, repeated = true }
+local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",
+                                              repeated = true }
 
 grow_marker:add_triggerer(DgnTriggerer:new { type="turn",
         delay_min=500, delay_max=800, })
@@ -780,42 +993,8 @@ MARKER:     ! = lua:portal_desc {wall_drop=1}
 MARKER:     = = lua:portal_desc {wall_drop=1}
 TILE:       ! = dngn_stone_wall_yellow
 {{
-
-function convert_boxes (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  if data.phase == 1 then
-    data.phase = data.phase + 1
-    if you.silenced() then
-      crawl.mpr("The ground shakes.", "warning")
-    else
-      crawl.mpr("There is a faint hissing noise.", "warning")
-    end
-    return
-  elseif data.phase == 2 then
-    data.phase = data.phase + 1
-    if you.silenced() then
-      crawl.mpr("The ground shakes.", "warning")
-    else
-      crawl.mpr("There is a loud grinding noise.", "warning")
-    end
-    return
-  elseif data.phase == 3 then
-    data.phase = data.phase + 1
-    crawl.mpr("The walls fall away. The entombed are set free!", "warning")
-    for _, i in ipairs(dgn.find_marker_positions_by_prop("wall_drop", 1)) do
-      dgn.terrain_changed(i.x, i.y, "floor", false, false, false)
-      dgn.place_cloud(i.x, i.y, "black smoke", 2)
-    end
-    return
-  else
-    return
-  end
-end
-
-local box_marker = TriggerableFunction:new {func=convert_boxes,
+local box_marker = TriggerableFunction:new {
+    func="wizlab_doroklohe_convert_boxes",
     repeated=true, data={phase=1} }
 
 box_marker:add_triggerer(DgnTriggerer:new { type="turn",
@@ -1138,65 +1317,8 @@ lua_marker("W", portal_desc { wizard_grave = 1,
         desc="Zonguldrok's gravestone",
         desc_long="A gravestone. The name 'Zonguldrok' is engraved on it in golden letters.\n"})
 
-function spawn_zombie (x, y, spec)
-    dgn.terrain_changed(x, y, "floor", false, false, false)
-    return dgn.create_monster(x, y, spec)
-end
-
-function spawn_zombies (data, triggerable, triggerer, marker, ev)
-    if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-        return
-    end
-
-    local graves = dgn.find_markers_by_prop("grave", 1)
-    local x, y
-    for _, gmarker in ipairs(graves) do
-        x, y = gmarker:pos()
-        if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
-            crawl.one_chance_in(8) then
-            spawn_zombie(x, y, "generate_awake human zombie")
-            gmarker:remove()
-        end
-    end
-end
-
-function killed_zombie (data, triggerable, triggerer, marker, ev)
-    if data.door_appeared then
-        return
-    end
-
-    local mons = dgn.mons_from_index(ev:arg1())
-    if not string.find(mons.full_name, "zombie") then
-        return
-    end
-
-    data.number_killed = data.number_killed + 1
-    if #dgn.find_markers_by_prop("grave", 1) < data.number_killed then
-        local x, y = marker:pos()
-        dgn.tile_feat_changed(x, y, nil)
-        dgn.terrain_changed(x, y, "closed_door", false, false, false)
-        data.door_appeared = true
-    end
-end
-
-function awaken_wizard (data, triggerable, triggerer, marker, ev)
-    if data.awoke == true then
-        return
-    end
-
-    local graves = dgn.find_marker_positions_by_prop("wizard_grave", 1)
-    for _, pos in ipairs(graves) do
-        local lich = spawn_zombie(pos.x, pos.y, "generate_awake ancient lich "
-                 .."col:brown name:antique_lich name_replace name_descriptor"
-                 .." tile:mons_zonguldrok_lich")
-        lich.set_prop("description", "A lich who has grown expensive over countless years.\n")
-    end
-
-    data.awoke = true
-end
-
 local zombies_appear_marker = TriggerableFunction:new {
-    func = spawn_zombies,
+    func = "wizlab_zonguldrok_spawn_zombies",
     repeated = true
 }
 
@@ -1205,7 +1327,7 @@ local zombies_killed_marker = TriggerableFunction:new {
         number_killed = 0,
         door_appeared = false
     },
-    func = killed_zombie,
+    func = "wizlab_zonguldrok_killed_zombie",
     repeated = true
 }
 
@@ -1213,7 +1335,7 @@ local wizard_appear_marker = TriggerableFunction:new {
     data = {
         awoke = false
     },
-    func = awaken_wizard,
+    func = "wizlab_zonguldrok_awaken_wizard",
     repeated = true,
     props = {listen_to_slaves = true, only_at_slave = true }
     }
@@ -1317,51 +1439,9 @@ LFLOORCOL:  white
 {{
 dgn.persist.wucad_mu_died = false
 
-local function msgfn (data, triggerable, triggerer, marker, ev)
-  if data.trig == true then
-    return
-  end
-
-  if crawl.one_chance_in(3) then
-    return
-  end
-
-  if dgn.persist.wucad_mu_died == true then
-    return
-  end
-
-  if data.spot == 1 then
-    crawl.mpr("Strange, shadowy figures dance through the air in front of you.", "talk_visual")
-    data.trig = true
-  elseif data.spot == 2 then
-    crawl.mpr("This room is filled with shadowy figures, quietly meditating.", "talk_visual")
-    data.trig = true
-  elseif data.spot == 3 then
-    crawl.mpr("Here, spectral monks perform complicated, martial routines; they fade quickly.", "talk_visual")
-    data.trig = true
-  elseif data.spot == 4 then
-    if you.silenced() then
-      return
-    end
-    crawl.mpr("Faint laughter comes from somewhere. Too faint to be real.", "talk_visual")
-    data.trig = true
-  elseif data.spot == 5 then
-    if you.silenced() then
-      return
-    end
-    crawl.mpr("There is a faint scream of pain from a crouched figure. This too fades quickly.", "talk_visual")
-    data.trig = true
-  elseif data.spot == 6 then
-    crawl.mpr("Grey monks gather around the fountain. They do not speak, nor look at each other.", "talk_visual")
-    data.trig = true
-  elseif data.spot == 7 then
-    crawl.mpr("A figure sits in silent meditation. It spots you, gestures wildly, and disappears.", "talk_visual")
-    data.trig = true
-  end
-end
-
 local function trigfn (spot)
-  return Triggerable.synchronized_markers(function_at_spot(msgfn,
+  return Triggerable.synchronized_markers(function_at_spot(
+            "wizlab_wucad_msgfn",
             { spot=spot, trig = false}, true, { only_at_slave = true,
               listen_to_slaves = true }))
 end
@@ -1374,55 +1454,16 @@ lua_marker('5', trigfn(5))
 lua_marker('6', trigfn(6))
 lua_marker('7', trigfn(7))
 
-local function summon_monks (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
 
-  if dgn.persist.wucad_mu_died == true then
-    return
-  end
-
-  local msp = "human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures" ..
-            " nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf"..
-            " dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk" ..
-            " / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures " ..
-            " nas:old_memories seen tile:mons_iron_troll_monk w:5"
-
-  local count = 0
-  for point in iter.circle_iterator(3) do
-    if crawl.one_chance_in(8) and count < 3 then
-      if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
-      else
-       local mon = dgn.create_monster(point.x, point.y, msp)
-       mon.set_prop("description", "It seems a flimsy representation of a monk;"
-                                .. " nothing more than a half-formed memory.\n")
-       count = count + 1
-      end
-    end
-  end
-
-  crawl.redraw_view()
-
-  if count == 1 then
-    crawl.mpr("One of the shadowy figures appears more solid!", "warning")
-  elseif count > 1 then
-    crawl.mpr("Shadows coalesce into solid form.", "warning")
-  end
-end
-
-local summon_marker = TriggerableFunction:new ({ func=summon_monks,
+local summon_marker = TriggerableFunction:new ({
+    func="wizlab_wucad_summon_monks",
     repeated=true })
 
 summon_marker:add_triggerer(DgnTriggerer:new {type="turn", delay_min=150,
     delay_max=400 })
 
-local function wucad_died (data, triggerable, triggerer, marker, ev)
-  dgn.persist.wucad_mu_died = true
-  crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
-end
-
-local wucad_marker = TriggerableFunction:new ({ func=wucad_died,
+local wucad_marker = TriggerableFunction:new ({
+    func="callback.wizlab_wucad_wucad_died",
     repeated=false })
 
 wucad_marker:add_triggerer(DgnTriggerer:new {type="monster_dies",
@@ -1634,19 +1675,53 @@ ENDMAP
 # Halls of the Hellbinder (by Mu.)
 NAME:       wizlab_demon
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate no_hmirror no_vmirror allow_dup
 LFLOORCOL:  red
 LROCKCOL:   red
+LFLOORTILE: floor_pebble_lightred
 COLOUR:     c = darkgrey
-COLOUR:     " = yellow
-KPROP:      ' = bloody / nothing
+COLOUR:     -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = yellow
+KFEAT:      -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = floor
 KFEAT:      _ = altar_makhleb
+KPROP:      ' = bloody / nothing
 KPROP:      _ = bloody
 TILE:       c = wall_stone_dark
-FTILE:      " = floor_snake
-LFLOORTILE: floor_pebble_lightred
+# symbols roughly corresponding to sigil shape
+FTILE:      - = sigil_straight_E_W
+FTILE:      | = sigil_straight_N_S
+FTILE:      / = sigil_straight_NE_SW
+FTILE:      \ = sigil_straight_NW_SE
+FTILE:      o = sigil_circle
+FTILE:      T = sigil_cross
+FTILE:      Y = sigil_Y
+FTILE:      ] = sigil_Y_left
+FTILE:      [ = sigil_Y_right
+FTILE:      O = sigil_rhombus
+FTILE:      Q = sigil_algiz_left
+FTILE:      R = sigil_algiz_right
+FTILE:      S = sigil_sharp_E_NE
+FTILE:      Z = sigil_sharp_W_SW
+FTILE:      K = sigil_straight_E_NE_SW
+FTILE:      X = sigil_fourway
+FTILE:      Uu = sigil_Y_inverted
+FTILE:      V = sigil_Y_leftleaning
+FTILE:      W = sigil_Y_rightleaning
+# remaining sigil patterns
+FTILE:      C = sigil_curve_S_E
+FTILE:      D = sigil_curve_S_W
+FTILE:      E = sigil_curve_N_E
+FTILE:      F = sigil_curve_N_W
+FTILE:      G = sigil_straight_E_SW
+FTILE:      H = sigil_straight_W_SE
+FTILE:      I = sigil_straight_S_NE
+FTILE:      J = sigil_straight_S_NW
+FTILE:      L = sigil_straight_N_SE
+FTILE:      M = sigil_straight_N_SW
+FTILE:      N = sigil_straight_E_NW
+FTILE:      P = sigil_straight_W_NE
 RTILE:      x = wall_undead
-MARKER:     ! = lua:fog_machine { \
+SUBST:      u = 3
+MARKER:     f = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 1, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "flame" }
@@ -1665,12 +1740,12 @@ kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "
               .." hd:20 hp:150 ; demon blade . robe")
 }}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
-KITEM:      | = rod of demonology / ring of fire / ring of protection from fire /\
+KITEM:      i = rod of demonology / ring of fire / ring of protection from fire /\
             amulet of conservation / scroll of torment / scroll of summoning /\
             demon blade w:1 / demon whip w:1 / demon trident w:1 / gold / wand of fire /\
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning
-NSUBST:     | = 2:B / *:|
+NSUBST:     i = 2:B / *:i
 :           set_random_mon_list([[imp / shadow imp / lemure / iron imp / quasit / white imp / ]]
 :                        .. [[ufetubus / midge / red devil / rotting devil / hairy devil / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
@@ -1688,14 +1763,14 @@ MAP
 cccccccccccccccccccccccccccccccccccccccccccccc
 ccccccc.cccccc...................cccccc.cccccc
 ccccc.....cccc.cc+ccccc+ccccc+cc.cccc.....cccc
-cccc.."""..ccc.c...cccc.cccc...c.ccc..."...ccc
-ccc.."..."..cc.+.A.ccc...ccc.<.+.cc.."....."cc
-ccc."...3.".cc.c...cc.....cc...c.cc.""".3.".cc
-cc.."..3.."....ccccc..c.c..ccccc.....".3."...c
-cc..".3..."....cccc..cc.cc..cccc......3."....c
-ccc.".....".cc.ccc.....4.....ccc.cc...."""""cc
-ccc.."..."..cc.cc..cccc.cccc..cc.cc...".....cc
-cccc.."""..ccc.+...............+.ccc.".....ccc
+cccc..G-H..ccc.c...cccc.cccc...c.ccc...o...ccc
+ccc../...\..cc.+.A.ccc...ccc.<.+.cc..|...../cc
+ccc.I...3.J.cc.c...cc.....cc...c.cc.-O-.3./.cc
+cc..|..u..|....ccccc..c.c..ccccc.....|.3./...c
+cc..|.3Y..|....cccc..cc.cc..cccc......3./....c
+ccc.L.....M.cc.ccc.....4.....ccc.cc....K----cc
+ccc..\.../..cc.cc..cccc.cccc..cc.cc.../.....cc
+cccc..N-P..ccc.+...............+.ccc./.....ccc
 ccccc.....cccc.ccccccccccccccccc.cccc.....cccc
 ccccccc.cccccc...................cccccc.cccccc
 ccccccc.cccccc.cccccccc.cccccccc.cccccc.cccccc
@@ -1708,21 +1783,21 @@ ccccccc.cccc..ccccccccc.ccccccccc..cccc.cccccc
 ccccccc.ccccc..cccc$$$c.c$$$cccc..ccccc.cccccc
 ccccccc.cccccc..ccc$$$+.+$$$ccc..cccccc.cccccc
 ccccccc.cc.cccc..cc$$$c.c$$$cc..cccc.cc.cccccc
-ccccccc......ccc..ccccc.ccccc..ccc.."...cccccc
-ccccccc..."...ccc..cccc.cccc..ccc.."..".cccccc
-cccccc.."..."..ccc..ccc.ccc..ccc.."..""".ccccc
-cccccc..."2"...cccc..cc.cc..cccc."2222"..ccccc
-ccccc.."2"""2"..cccc.......cccc.".........cccc
-cccccc..""2""...ccccc."4".ccccc""""""""""ccccc
-cccccc..."."....ccccc.."..ccccc........".ccccc
-ccccccc.."""....ccccc.."..ccccc.......".cccccc
-cccccccc........ccccc.....ccccc......".ccccccc
+ccccccc......ccc..ccccc.ccccc..ccc..Z...cccccc
+ccccccc...o...ccc..cccc.cccc..ccc../..O.cccccc
+cccccc..\.../..ccc..ccc.ccc..ccc../..OTO.ccccc
+cccccc...\2/...cccc..cc.cc..cccc./2222U..ccccc
+ccccc..\2CXD2/..cccc.......cccc./.........cccc
+cccccc..\|2|/...ccccc.\4/.cccccS--------Zccccc
+cccccc...Q.R....ccccc..Y..ccccc......../.ccccc
+ccccccc..ETF....ccccc..|..ccccc......./.cccccc
+cccccccc........ccccc.....ccccc......S.ccccccc
 cccccccccc......cccc..ccc..cccc......ccccccccc
 ccccccccccc.....ccc..ccccc..ccc.....cccccccccc
 cccccccccccc.....c...ccccc...c.....ccccccccccc
-cccccccccccc.."."..cc.ccc.cc.."."..ccccccccccc
-ccccccccccccc.."..cccc.c.cccc.."..cccccccccccc
-ccccccccccccc."...ccccc!ccccc...".cccccccccccc
+cccccccccccc..\./..cc.ccc.cc..\./..ccccccccccc
+ccccccccccccc..V..cccc.c.cccc..W..cccccccccccc
+ccccccccccccc./...cccccfccccc...\.cccccccccccc
 cccccccccccccc.....ccc.c.ccc.....ccccccccccccc
 ccccccccccccccc.....c.ccc.c.....cccccccccccccc
 ccccccccccccccccc.....ccc.....cccccccccccccccc
@@ -1730,20 +1805,20 @@ ccccccccccccccccccc.........cccccccccccccccccc
 ccccccccccccccccccccc.....cccccccccccccccccccc
 ccccccccccccccccccccccc+cccccccccccccccccccccc
 ccccccccccccccccccccc.....cccccccccccccccccccc
-ccccccccccccccccccc..."""...cccccccccccccccccc
-ccccccccccccccccc...""...""...cccccccccccccccc
-cccccccccccccccc.."".......""..ccccccccccccccc
-ccccccccccccccc.."..".....".."..cccccccccccccc
-ccccccccccccccc.".............".cccccccccccccc
-cccccccccccccc.."....."."....."..ccccccccccccc
-cccccccccccccc."."..."..."...".".ccccccccccccc
-ccccccccccccc.."...."..1.."...."..cccccccccccc
-ccccccccccccc.."..."".'''.""..."..cccccccccccc
-ccccccccccccc..".."xx"'_'"xx".."..cccccccccccc
-cccccccccccc....""..xx"'"xx..""....ccccccccccc
-cccccccccccc|..."..".xxxxx.".."...|ccccccccccc
-cccccccccccc||..."".........""...||ccccccccccc
-cccccccccccc|||.................|||ccccccccccc
+ccccccccccccccccccc...G"H...cccccccccccccccccc
+ccccccccccccccccc...GP...NH...cccccccccccccccc
+cccccccccccccccc..G[.......]H..ccccccccccccccc
+ccccccccccccccc../..N.....P..\..cccccccccccccc
+ccccccccccccccc.I.............J.cccccccccccccc
+cccccccccccccc..U.....G.H.....U..ccccccccccccc
+cccccccccccccc.I.J.../...\...I.J.ccccccccccccc
+ccccccccccccc..|..../..1..\....|..cccccccccccc
+ccccccccccccc..|.../\.'''./\...|..cccccccccccc
+ccccccccccccc..|../xx\'_'/xx\..|..cccccccccccc
+cccccccccccc...L./..xxN'Pxx..\.M...ccccccccccc
+cccccccccccci...W..G.xxxxx.H..V...iccccccccccc
+ccccccccccccii...NP.........NP...iiccccccccccc
+cccccccccccciii.................iiiccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 

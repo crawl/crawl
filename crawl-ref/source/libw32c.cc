@@ -1065,8 +1065,7 @@ int closedir(DIR* d)
 
 int ftruncate(int fp, int size)
 {
-    ASSERT(false);              // unimplemented
-    return 0;
+    die("unimplemented");
 }
 
 #endif /* #ifdef TARGET_COMPILER_VC */

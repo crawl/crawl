@@ -126,7 +126,9 @@ std::string item_def::name(description_level_type descrip,
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
         && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
-             & MF_NAME_SPECIES) && !(corpse_flags & MF_NAME_DEFINITE))
+               & MF_NAME_SPECIES)
+             && !(corpse_flags & MF_NAME_DEFINITE))
+             && !(corpse_flags & MF_NAME_SUFFIX)
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
         switch (descrip)
@@ -268,8 +270,7 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (around neck)";
                     break;
                 default:
-                    ASSERT(false);
-                    break;
+                    die("Item in an invalid slot");
                 }
             }
         }
@@ -629,6 +630,7 @@ static const char* potion_type_name(int potiontype)
     case POT_BLOOD:             return "blood";
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
     case POT_RESISTANCE:        return "resistance";
+    case POT_FIZZING:           return "fizzing liquid";
     default:                    return "bugginess";
     }
 }
@@ -978,7 +980,7 @@ static const char* book_type_name(int booktype)
     case BOOK_CLOUDS:                 return "Clouds";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
-    case BOOK_CHARMS:                 return "Charms";
+    case BOOK_MALEDICT:               return "Maledictions";
     case BOOK_DEMONOLOGY:             return "Demonology";
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
@@ -988,7 +990,6 @@ static const char* book_type_name(int booktype)
     case BOOK_UNLIFE:                 return "Unlife";
     case BOOK_CONTROL:                return "Control";
     case BOOK_MUTATIONS:              return "Morphology";
-    case BOOK_TUKIMA:                 return "Tukima";
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
     case BOOK_WIZARDRY:               return "Wizardry";
@@ -1148,10 +1149,6 @@ std::string sub_type_string (object_class_type type, int sub_type, bool known, i
             return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
-#if TAG_MAJOR_VERSION == 31
-        else if (sub_type == BOOK_BEASTS)
-            return "Monster Manual";
-#endif
 
         return book_type_name(sub_type);
     }
@@ -1793,10 +1790,6 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "tome of Destruction";
         else if (item_typ == BOOK_YOUNG_POISONERS)
             buff << "Young Poisoner's Handbook";
-#if TAG_MAJOR_VERSION == 31
-        else if (item_typ == BOOK_BEASTS)
-            buff << "Monster Manual";
-#endif
         else
             buff << "book of " << book_type_name(item_typ);
         break;
@@ -1890,12 +1883,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "corpse bug";
 
         if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
-            && !(name_flags & MF_NAME_SPECIES))
+            && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX)
         {
-            if (name_type == MF_NAME_SUFFIX)
-                buff << " " << _name;
-            else
-                buff << " of " << _name;
+            buff << " of " << _name;
         }
         break;
     }
@@ -2738,7 +2728,7 @@ bool is_bad_item(const item_def &item, bool temp)
             return (true);
         case RING_HUNGER:
             // Even Vampires can use this ring.
-            return (!you.is_undead);
+            return (!you.is_undead || you.is_undead == US_HUNGRY_DEAD);
         case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:

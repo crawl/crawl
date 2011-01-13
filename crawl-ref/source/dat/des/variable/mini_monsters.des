@@ -453,7 +453,7 @@ ENDMAP
 NAME:   not_minivault_9_due
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:20-27, Elf:4-7, Vault:4-8
+DEPTH:  D:20-27, Elf:3-5, Vault:4-8
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
@@ -1633,7 +1633,7 @@ ENDMAP
 
 NAME:    minislime_mu
 DEPTH:   D:14-26, Vault
-FLAGS:   no_monster_gen no_item_gen
+TAGS:    no_monster_gen no_item_gen
 MONS:    slime creature, giant eyeball, eye of draining
 SUBST:   J = 1111111123
 KITEM:   R = royal jelly
@@ -1996,7 +1996,7 @@ ENDMAP
 
 NAME:    pandoras_box_mu
 DEPTH:   D:14-24, Vault, Crypt:1-4
-FLAGS:   no_monster_gen no_item_gen
+TAGS:    no_monster_gen no_item_gen
 MARKER:  a = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 1, size_buildup_amnt = 5, \
@@ -2479,7 +2479,7 @@ NAME:    laboratory_2
 MONS:    col:lightred wizard spells:polymorph_other;paralyse;blink\
          ;bolt_of_fire;bolt_of_fire;teleport_self
 DEPTH:   D:10-26, Vault
-MONS:    col:red name:altered name_adjective rat spells:fire_breath
+MONS:    laboratory rat
 MAP
 ccccccc+cc
 c........c
@@ -2497,7 +2497,7 @@ ENDMAP
 NAME: minivault_8
 TAGS: allow_dup
 MONS: patrolling molten gargoyle
-SUBST: F = G:100 F:1
+SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 x.x.x.x.x.x.
@@ -2561,7 +2561,7 @@ TAGS: abyss ruin_abyss
 SHUFFLE: AB, CD, EH/FG
 KFEAT: ACEH = any trap
 KITEM: ABCD = gold / nothing
-SUBST: F = G:100 F:1
+SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 ............

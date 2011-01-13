@@ -14,7 +14,7 @@ function dgn.delayed_decay(e, key, itemdesc)
   -- squares.
   e.lua_marker(key,
                function ()
-                 return function_in_los(dgn.activate_item_decay, nil,
+                 return function_in_los("dgn.activate_item_decay", nil,
                                         false, nil)
                end)
 end

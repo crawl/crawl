@@ -1,0 +1,573 @@
+# Windows
+#
+# Window serial vault. The theme of this serial vault is "two floor
+# components seperated by glass". This will make the level feel a bit more
+# like a labyrinth. The vaults are divided in three groups: small, common and
+# rare. Made by co.
+#
+# I added a chance to have some additional glass vaults. dpeg
+NAME:   serial_co_window_serial
+TAGS:   allow_dup extra luniq
+DEPTH:  D, Elf, Crypt
+CHANCE: 2%
+{{
+  local s = 5 + crawl.random2(3)*crawl.random2(3)
+  local c = 3 + crawl.random2(5)
+  local r = crawl.random2(3)
+  local g = crawl.random2(6)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_co_window_small", count=s}
+    dgn.place_maps{tag="serial_co_window_common", count=c}
+    dgn.place_maps{tag="serial_co_window_rare", count=r}
+    dgn.place_maps{tag="serial_glass", count=g}
+  end)
+}}
+
+# co window small. (5)
+
+NAME:   co_window_of_opportunity_a
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_small
+NSUBST: A = 1:@ / *:x
+NSUBST: B = 1:@ / *:x
+SUBST:  X:xm
+MAP
+@...@
+xXmXx
+x...x
+x.x.x
+x.x.x
+A.x.B
+xAxBx
+  x
+ENDMAP
+
+NAME:   co_window_paths_a
+WEIGHT: 5
+TAGS:   allow_dup extra mini_float serial_co_window_small
+SUBST:  X:Xxm, X=xm
+MAP
+  x
+  x
+x@x@x
+x.X.x
+x.m.x
+x.X.x
+x@x@x
+  x
+  x
+ENDMAP
+
+NAME:   co_window_paths_b
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_small
+SUBST:  X=xm
+MAP
+  x
+  x
+x@x@x
+x.x.x
+x.X.x
+x.m.x
+x.X.x
+x.x.x
+x@x@x
+  x
+  x
+ENDMAP
+
+NAME:   co_window_corner_a
+WEIGHT: 5
+TAGS:   allow_dup extra mini_float serial_co_window_small
+SUBST:  X:Xxm, X=xm
+MAP
+    x
+    x
+    x
+..@.x@x
+....x.x
+@...X.x
+....m.x
+xxXmm.x
+x.....x
+x.xxxxx
+x.x
+x@x
+ENDMAP
+
+NAME:   co_window_cross_1
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_small
+MAP
+xxxxx@xxxxx
+xxxxx.xxxxx
+xxxxx.xxxxx
+xxxxx.xxxxx
+@...m.m...@
+xxxxx.xxxxx
+xxxxx.xxxxx
+xxxxx.xxxxx
+xxxxx@xxxxx
+ENDMAP
+
+
+# co window common. (18)
+
+NAME:   co_window_of_opportunity_b
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:Xxm, X=xm
+MAP
+@....@
+xXmmXx
+x....x
+x.xx.x
+x.xx.x
+x@xx@x
+  xx
+  xx
+ENDMAP
+
+NAME:   co_window_of_opportunity_c
+WEIGHT: 2
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:Xxm, X=xm
+MAP
+@.....@
+xXmmmXx
+x.....x
+x.xxx.x
+x.xxx.x
+x@xxx@x
+  xxx
+  xxx
+  xxx
+ENDMAP
+
+
+NAME:   co_window_corner_b
+TAGS:   allow_dup extra mini_float serial_co_window_common
+WEIGHT: 5
+SUBST:  X:Xxm, X=xm
+MAP
+     x
+     x
+     x
+..@..x@x
+.....x.x
+.....x.x
+@....X.x
+.....m.x
+xxxXmm.x
+x......x
+x.xxxxxx
+x.x
+x@x
+ENDMAP
+
+NAME:   co_window_corner_ca
+TAGS:   allow_dup extra mini_float serial_co_window_common
+WEIGHT: 2
+SUBST:  X:mx
+MAP
+      x
+      x
+      x
+...@..x@x
+......x.x
+......x.x
+@.....m.x
+......m.x
+......X.x
+xxxmmXX.x
+x.......x
+x.xxxxxxx
+x.x
+x@x
+ENDMAP
+
+NAME:   co_window_corner_cb
+WEIGHT: 2
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:mx
+MAP
+         x
+         x
+         x
+   ...@..x@x
+   ......x.x
+   ......x.x
+   @.....m.x
+   ......m.x
+   ......X.x
+xxxxxxmmXX.x
+   @.......x
+   xxxxxxxxx
+ENDMAP
+
+NAME:   co_window_paths_c
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:xm
+MAP
+  x x
+  x x
+  x x
+x@x@x@x
+x.x.x.x
+x.X.X.x
+x.m.m.x
+x.X.X.x
+x.x.x.x
+x@x@x@x
+  x x
+  x x
+  x x
+ENDMAP
+
+
+NAME:   co_window_2corner
+WEIGHT: 5
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  A : .x
+SUBST:  B : .xxxx
+MAP
+AAAAAAx@xxxxx
+AAAAAAx.xxxxx
+AAAAAAx.xxxxx
+AAAAAAx.xxxxx
+AAAAAAx.xxxxx
+AAAAAAm.....@
+xxxxxmmmxxxxx
+@.....mBBBBBB
+xxxxx.xBBBBBB
+xxxxx.xBBBBBB
+xxxxx.xBBBBBB
+xxxxx.xBBBBBB
+xxxxx@xBBBBBB
+ENDMAP
+
+NAME:   co_window_broadway_a
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxxx@@@xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...m......@
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx@@@xxxxxxxx
+ENDMAP
+
+NAME:   co_window_broadway_b
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxxx@@@xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+@......m...m......@
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx@@@xxxxxxxx
+ENDMAP
+
+NAME:   co_window_broadway_c
+WEIGHT: 3
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxxx@@@xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...m......@
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+.......m...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxxxx@@@xxxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_a
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxx@xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+@.....m.m.....@
+@.....m.m.....@
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_b
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxx@xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+@.....m.m.....@
+@.....m.m.....@
+@.....m.m.....@
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_c
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:xm
+MAP
+xxxxxxx@xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+@.....X.X.....@
+@.....m.m.....@
+@.....m.m.....@
+@.....X.X.....@
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx.xxxxxxx
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_d
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:xm
+MAP
+xxxxxxx@@xxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx..xxxxxxx
+@.....X..X.....@
+@.....m..m.....@
+@.....m..m.....@
+@.....X..X.....@
+xxxxxxx..xxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx@@xxxxxxx
+ENDMAP
+
+NAME:   co_window_unsneaky_path_e
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+SUBST:  X:xm
+MAP
+xxxxxxx@@@xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+@.....X...X.....@
+@.....m...m.....@
+@.....m...m.....@
+@.....X...X.....@
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx@@@xxxxxxx
+ENDMAP
+
+NAME:   co_window_cross_4
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxx@@@@xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+@.....m....m.....@
+@.....m....m.....@
+@.....m....m.....@
+@.....m....m.....@
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx....xxxxxxx
+xxxxxxx@@@@xxxxxxx
+ENDMAP
+
+NAME:   co_window_cross_3
+WEIGHT: 1
+TAGS:   allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxxx@@@xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+@.....m...m.....@
+@.....m...m.....@
+@.....m...m.....@
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx...xxxxxxx
+xxxxxxx@@@xxxxxxx
+ENDMAP
+
+NAME: co_window_cross_2
+WEIGHT: 1
+TAGS: allow_dup extra mini_float serial_co_window_common
+MAP
+xxxxxx@@xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+@....m..m....@
+@....m..m....@
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx..xxxxxx
+xxxxxx@@xxxxxx
+ENDMAP
+
+# co window rare. (5)
+
+NAME:   co_window_paths_d
+WEIGHT: 2
+TAGS:   luni qallow_dup extra mini_float serial_co_window_rare
+SUBST:  c : mmccb
+MAP
+   xxx
+   @x@
+ xx.x.xx
+ xx.x.xx
+ @x.x.x@
+x.x.x.x.x
+x.x.x.x.x
+x.m.m.m.x
+x.c.c.c.x
+x.m.m.m.x
+x.c.c.c.x
+x.m.m.m.x
+x.x.x.x.x
+x.x.x.x.x
+ @x.x.x@
+ xx.x.xx
+ xx.x.xx
+   @x@
+   xxx
+ENDMAP
+
+NAME:   co_window_paths_e
+WEIGHT: 2
+TAGS:   luniq allow_dup extra mini_float serial_co_window_rare
+SUBST:  c : mmccb
+MAP
+    x
+    x x
+    x@x
+  xxx.x
+  @.x.x
+xxx.x.x@x
+x.x.m.x.x
+x.x.m.x.x
+x.m.c.m.x
+@.m.c.m.@
+x.m.c.m.x
+x.x.m.x.x
+x.x.m.x.x
+x@x.x.xxx
+  x.x.@
+  x.xxx
+  x@x
+  x x
+    x
+ENDMAP
+
+NAME:   co_window_4corner_a
+WEIGHT: 3
+TAGS:   luniq allow_dup extra mini_float serial_co_window_rare
+SUBST:  c : cm
+MAP
+xxxxxx@xxxxx@xxxxxx
+xxxxxx.xxxxx.xxxxxx
+@..xxx...x...xxx..@
+xx.xxxxx.x.xxxxx.xx
+xx.xxxxx.m.xxxxx.xx
+xx.......c.......xx
+xxxxxxxmcccmxxxxxxx
+xx.......c.......xx
+xx.xxxxx.m.xxxxx.xx
+xx.xxxxx.x.xxxxx.xx
+@..xx....x...xxx..@
+xxxxx.xxxxxx.xxxxxx
+xxxxx@xxxxxx@xxxxxx
+ENDMAP
+
+NAME:   co_window_4corner_b
+WEIGHT: 3
+TAGS:   allow_dup luniq  extra mini_float serial_co_window_rare
+MAP
+xxxxx@xxxx@xxxxxxxx
+xxxxx.xxxx.xxxxxxxx
+@..xx....x.xxxxxxxx
+xx.xxxxx.m.xxxxxxxx
+xx.xxxxx.m.xxxxxxxx
+xx.......x........@
+xxxxmmxxxxxxxmmxxxx
+@........x.......xx
+xxxxxxxx.m.xxxxx.xx
+xxxxxxxx.m.xxxxx.xx
+xxxxxxxx.x....xx..@
+xxxxxxxx.xxxx.xxxxx
+xxxxxxxx@xxxx.xxxxx
+ENDMAP
+
+NAME:   co_window_sun
+WEIGHT: 3
+TAGS:   allow_dup luniq extra mini_float serial_co_window_rare
+SUBST:  c : ccccm
+MAP
+xxxx@xxxxxxx@xxxx
+xxxx.xxxxxxx.xxxx
+xxxx..xxxxx..xxxx
+xxxcm...x...mcxxx
+@..mcxx.x.xxcm..@
+xx..xxx...xxx..xx
+xxx.xxccmccxx.xxx
+xxx...cmmmc...xxx
+xxxxx.mmcmm.xxxxx
+xxx...cmmmc...xxx
+xxx.xxccmccxx.xxx
+xx..xxx...xxx..xx
+@..mcxx.x.xxcm..@
+xxxcm...x...mcxxx
+xxxx..xxxxx..xxxx
+xxxx.xxxxxxx.xxxx
+xxxx@xxxxxxx@xxxx
+ENDMAP

@@ -154,7 +154,8 @@ static void _give_wand(monster* mon, int level)
 
 static void _give_potion(monster* mon, int level)
 {
-    if (mons_species(mon->type) == MONS_VAMPIRE && one_chance_in(5))
+    if (mons_species(mon->type) == MONS_VAMPIRE
+        && (one_chance_in(5) || mon->type == MONS_JORY))
     {
         // This handles initialization of stack timer.
         const int thing_created =
@@ -649,6 +650,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_DRACONIAN_KNIGHT:
+    case MONS_JORY:
     {
         item.base_type = OBJ_WEAPONS;
 
@@ -987,7 +989,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_DAGGER;
         break;
 
-    case MONS_DEEP_DWARF_UNBORN:
+    case MONS_UNBORN_DEEP_DWARF:
         if (one_chance_in(6))
             level = MAKE_GOOD_ITEM;
         // deliberate fallthrough
@@ -1731,6 +1733,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DONALD:
     case MONS_MAUD:
     case MONS_VAMPIRE_KNIGHT:
+    case MONS_JORY:
     case MONS_VAULT_GUARD:
     {
         item.base_type = OBJ_ARMOUR;
@@ -1747,8 +1750,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         force_colour   = MAGENTA;
         // deliberate fall through
 
-    case MONS_DEEP_DWARF_UNBORN:
-        if (mon->type == MONS_DEEP_DWARF_UNBORN)
+    case MONS_UNBORN_DEEP_DWARF:
+        if (mon->type == MONS_UNBORN_DEEP_DWARF)
         {
             force_colour   = WHITE;
             if (one_chance_in(6))
@@ -1757,7 +1760,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         // deliberate fall through
 
     case MONS_DEEP_DWARF_ARTIFICER:
-        item_race      = MAKE_ITEM_DWARVEN;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;

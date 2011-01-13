@@ -484,7 +484,7 @@ int spell_enhancement(unsigned int typeflags)
     if (typeflags & SPTYP_CONJURATION)
         enhanced += player_spec_conj();
 
-    if (typeflags & SPTYP_ENCHANTMENT)
+    if (typeflags & (SPTYP_HEXES|SPTYP_CHARMS))
         enhanced += player_spec_ench();
 
     if (typeflags & SPTYP_SUMMONING)
@@ -719,103 +719,21 @@ bool cast_a_spell(bool check_range, spell_type spell)
 }                               // end cast_a_spell()
 
 // "Utility" spells for the sake of simplicity are currently ones with
-// enchantments, translocations, or divinations.
+// charms or translocations.
 static bool _spell_is_utility_spell(spell_type spell_id)
 {
     return (spell_typematch(spell_id,
-                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION));
+                SPTYP_CHARMS | SPTYP_TRANSLOCATION));
 }
 
-bool maybe_identify_staff(item_def &item, spell_type spell)
+void maybe_identify_staff(item_def &item)
 {
     if (item_type_known(item))
-        return (true);
+        return;
 
-    int relevant_skill = 0;
-    const bool chance = (spell != SPELL_NO_SPELL);
-    bool id_staff = false;
-
-    switch (item.sub_type)
-    {
-        case STAFF_ENERGY:
-            if (!chance) // The staff of energy only autoIDs by chance.
-                return (false);
-            relevant_skill = you.skills[SK_SPELLCASTING];
-            break;
-
-        case STAFF_WIZARDRY:
-            // Staff of wizardry auto-ids if you could know spells
-            // because the interface gives it away anyhow.
-            if (player_spell_skills())
-                id_staff = true;
-            break;
-
-        case STAFF_FIRE:
-            if (!chance || spell_typematch(spell, SPTYP_FIRE))
-                relevant_skill = you.skills[SK_FIRE_MAGIC];
-            else if (spell_typematch(spell, SPTYP_ICE))
-                relevant_skill = you.skills[SK_ICE_MAGIC];
-            break;
-
-        case STAFF_COLD:
-            if (!chance || spell_typematch(spell, SPTYP_ICE))
-                relevant_skill = you.skills[SK_ICE_MAGIC];
-            else if (spell_typematch(spell, SPTYP_FIRE))
-                relevant_skill = you.skills[SK_FIRE_MAGIC];
-            break;
-
-        case STAFF_AIR:
-            if (!chance || spell_typematch(spell, SPTYP_AIR))
-                relevant_skill = you.skills[SK_AIR_MAGIC];
-            else if (spell_typematch(spell, SPTYP_EARTH))
-                relevant_skill = you.skills[SK_EARTH_MAGIC];
-            break;
-
-        case STAFF_EARTH:
-            if (!chance || spell_typematch(spell, SPTYP_EARTH))
-                relevant_skill = you.skills[SK_EARTH_MAGIC];
-            else if (spell_typematch(spell, SPTYP_AIR))
-                relevant_skill = you.skills[SK_AIR_MAGIC];
-            break;
-
-        case STAFF_POISON:
-            if (!chance || spell_typematch(spell, SPTYP_POISON))
-                relevant_skill = you.skills[SK_POISON_MAGIC];
-            break;
-
-        case STAFF_DEATH:
-            if (!chance || spell_typematch(spell, SPTYP_NECROMANCY))
-                relevant_skill = you.skills[SK_NECROMANCY];
-            break;
-
-        case STAFF_CONJURATION:
-            if (!chance || spell_typematch(spell, SPTYP_CONJURATION))
-                relevant_skill = you.skills[SK_CONJURATIONS];
-            break;
-
-        case STAFF_ENCHANTMENT:
-            if (!chance || spell_typematch(spell, SPTYP_ENCHANTMENT))
-                relevant_skill = you.skills[SK_ENCHANTMENTS];
-            break;
-
-        case STAFF_SUMMONING:
-            if (!chance || spell_typematch(spell, SPTYP_SUMMONING))
-                relevant_skill = you.skills[SK_SUMMONINGS];
-            break;
-    }
-
-    if (chance)
-    {
-        if (you.skills[SK_SPELLCASTING] > relevant_skill)
-            relevant_skill = you.skills[SK_SPELLCASTING];
-
-        if (x_chance_in_y(relevant_skill, 100))
-            id_staff = true;
-    }
-    else if (relevant_skill >= 4)
-        id_staff = true;
-
-    if (id_staff)
+    if (player_spell_skills()
+        || item.sub_type == STAFF_POWER
+        || item.sub_type == STAFF_CHANNELING)
     {
         item_def& wpn = *you.weapon();
         set_ident_type(wpn, ID_KNOWN_TYPE);
@@ -825,17 +743,10 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
 
         you.wield_change = true;
     }
-    return (id_staff);
 }
 
-static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
+static void _spellcasting_side_effects(spell_type spell)
 {
-    if (you.weapon() && item_is_staff(*you.weapon()))
-        maybe_identify_staff(*you.weapon(), spell);
-
-    if (idonly)
-        return;
-
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
     if (!_spell_is_utility_spell(spell) && !crawl_state.is_god_acting())
@@ -971,6 +882,7 @@ static void _try_monster_cast(spell_type spell, int powc,
     mon->hit_dice   = you.experience_level;
     mon->set_position(you.pos());
     mon->target     = spd.target;
+    mon->mid        = MID_PLAYER;
 
     if (!spd.isTarget)
         mon->foe = MHITNOT;
@@ -1262,8 +1174,6 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spfl < spfail_chance)
         {
-            _spellcasting_side_effects(spell, true);
-
             mpr("You miscast the spell.");
             flush_input_buffer(FLUSH_ON_FAILURE);
             learned_something_new(HINT_SPELL_MISCAST);
@@ -1308,8 +1218,7 @@ spret_type your_spells(spell_type spell, int powc,
         return (SPRET_SUCCESS);
 
     case SPRET_FAIL:
-        ASSERT(false);
-        return (SPRET_FAIL);
+        die("_do_cast() failed with no abort");
 
     case SPRET_ABORT:
         return (SPRET_ABORT);
@@ -1424,15 +1333,15 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_POISONOUS_CLOUD:
-        cast_big_c(powc, CLOUD_POISON, KC_YOU, beam);
+        cast_big_c(powc, CLOUD_POISON, &you, beam);
         break;
 
     case SPELL_HOLY_BREATH:
-        cast_big_c(powc, CLOUD_HOLY_FLAMES, KC_YOU, beam);
+        cast_big_c(powc, CLOUD_HOLY_FLAMES, &you, beam);
         break;
 
     case SPELL_FREEZING_CLOUD:
-        cast_big_c(powc, CLOUD_COLD, KC_YOU, beam);
+        cast_big_c(powc, CLOUD_COLD, &you, beam);
         break;
 
     case SPELL_FIRE_STORM:
@@ -1525,6 +1434,25 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_SHATTER:
         cast_shatter(powc);
+        break;
+
+    case SPELL_LEDAS_LIQUEFACTION:
+        if (you.airborne() || you.clinging || !feat_has_solid_floor(grd(you.pos())))
+        {
+            if (you.airborne() || you.clinging)
+                mprf("You can't cast this spell without touching the ground.");
+            else
+                mprf("You need to be on clear, solid ground to cast this spell.");
+            return (SPRET_ABORT);
+        }
+
+        if (you.duration[DUR_LIQUEFYING] || liquefied(you.pos()))
+        {
+            mprf("The ground here is already liquefied! You'll have to wait.");
+            return (SPRET_ABORT);
+        }
+
+        cast_liquefaction(powc);
         break;
 
     case SPELL_SYMBOL_OF_TORMENT:
@@ -1680,14 +1608,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         mass_enchantment(ENCH_FEAR, powc, MHITYOU);
         break;
 
-#if TAG_MAJOR_VERSION == 31
-    case SPELL_TAME_BEASTS:
-    case SPELL_BONE_SHARDS:
-    case SPELL_PORTAL:
-        mpr("It appears that an accident happened to this spell.");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_INTOXICATE:
         cast_intoxicate(powc);
         break;
@@ -1748,11 +1668,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     // Weapon brands.
     case SPELL_SURE_BLADE:
         cast_sure_blade(powc);
-        break;
-
-    case SPELL_TUKIMAS_VORPAL_BLADE:
-        if (!brand_weapon(SPWPN_VORPAL, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_FIRE_BRAND:
@@ -1864,11 +1779,23 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEVITATION:
+        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        {
+            mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
+            return (SPRET_ABORT);
+        }
+
         you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
         levitate_player(powc);
         break;
 
     case SPELL_FLY:
+        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        {
+            mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
+            return (SPRET_ABORT);
+        }
+
         cast_fly(powc);
         break;
 
@@ -1897,16 +1824,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     // other
-#if TAG_MAJOR_VERSION == 31
-    case SPELL_SELECTIVE_AMNESIA:
-        crawl_state.cant_cmd_repeat("You can't repeat selective amnesia.");
-
-        // Sif Muna power calls with true
-        if (!cast_selective_amnesia())
-            return (SPRET_ABORT);
-        break;
-
-#endif
     case SPELL_EXTENSION:
         extension(powc);
         break;
@@ -2008,7 +1925,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_CORPSE_ROT:
-        corpse_rot();
+        corpse_rot(&you);
         break;
 
     case SPELL_FULSOME_DISTILLATION:

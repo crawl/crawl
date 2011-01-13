@@ -222,7 +222,7 @@ public:
 };
 
 #ifdef USE_TILE
-typedef std::pair<tileidx_t, int> map_weighted_tile;
+typedef std::pair<std::string, int> map_weighted_tile;
 class map_tile_list : public std::vector<map_weighted_tile>
 {
 public:
@@ -234,11 +234,11 @@ class tile_spec
 public:
     tile_spec(const std::string &_key, bool _fix, bool _rand, bool _last, bool _floor, bool _feat, const map_tile_list &_tiles)
         : key(_key), fix(_fix), chose_fixed(false), no_random(_rand), last_tile(_last), floor(_floor), feat(_feat),
-          fixed_tile(0), tiles(_tiles)
+          fixed_tile(""), tiles(_tiles)
     {
     }
 
-    tileidx_t get_tile();
+    std::string get_tile();
 
 public:
     std::string key;
@@ -248,7 +248,7 @@ public:
     bool last_tile;
     bool floor;
     bool feat;
-    tileidx_t fixed_tile;
+    std::string fixed_tile;
     map_tile_list tiles;
 };
 #endif
@@ -495,14 +495,14 @@ private:
     struct overlay_def
     {
         overlay_def() :
-            colour(0), rocktile(0), floortile(0), tile(0),
+            colour(0), rocktile(""), floortile(""), tile(""),
             no_random(false), last_tile(false), property(0), height(INVALID_HEIGHT),
             keyspec_idx(0)
         {}
         int colour;
-        int rocktile;
-        int floortile;
-        int tile;
+        std::string rocktile;
+        std::string floortile;
+        std::string tile;
         bool no_random;
         bool last_tile;
         int property;
@@ -536,8 +536,10 @@ enum item_spec_type
     ISPEC_ACQUIREMENT = -9,
 };
 
-struct item_spec
+class mons_spec;
+class item_spec
 {
+public:
     int genweight;
 
     object_class_type base_type;
@@ -558,11 +560,24 @@ struct item_spec
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
         race(MAKE_ITEM_RANDOM_RACE), item_special(0), qty(0),
-        acquirement_source(0), place(), props()
+        acquirement_source(0), place(), props(),
+        _corpse_monster_spec(NULL)
     {
     }
 
+    item_spec(const item_spec &other);
+    item_spec &operator = (const item_spec &other);
+    ~item_spec();
+
     bool corpselike() const;
+    const mons_spec &corpse_monster_spec() const;
+    void set_corpse_monster_spec(const mons_spec &spec);
+
+private:
+    mons_spec *_corpse_monster_spec;
+
+private:
+    void release_corpse_monster_spec();
 };
 typedef std::vector<item_spec> item_spec_list;
 
@@ -802,8 +817,6 @@ private:
     feature_spec parse_trap(std::string s, int weight);
 };
 
-typedef std::vector<level_range> depth_ranges;
-
 class map_def;
 class dlua_set_map
 {
@@ -833,6 +846,137 @@ struct map_file_place
     {
         filename.clear();
         lineno = 0;
+    }
+};
+
+const int DEFAULT_CHANCE_PRIORITY = 100;
+struct map_chance
+{
+    int chance_priority;
+    int chance;
+    map_chance() : chance_priority(-1), chance(-1) { }
+    map_chance(int _priority, int _chance)
+        : chance_priority(_priority), chance(_chance) { }
+    map_chance(int _chance)
+        : chance_priority(DEFAULT_CHANCE_PRIORITY), chance(_chance) { }
+    bool valid() const { return chance_priority >= 0 && chance >= 0; }
+    bool dummy_chance() const { return chance_priority == 0 && chance >= 0; }
+    std::string describe() const;
+    // Returns true if the vault makes the random CHANCE_ROLL.
+    bool roll() const;
+    void write(writer &) const;
+    void read(reader &);
+};
+
+// For the bison parser's token union:
+struct map_chance_pair
+{
+   int priority;
+   int chance;
+};
+
+typedef std::vector<level_range> depth_ranges_v;
+class depth_ranges
+{
+private:
+    depth_ranges_v depths;
+public:
+    static depth_ranges parse_depth_ranges(
+        const std::string &depth_ranges_string);
+    void read(reader &);
+    void write(writer &) const;
+    void clear() { depths.clear(); }
+    bool empty() const { return depths.empty(); }
+    bool is_usable_in(const level_id &lid) const;
+    void add_depth(const level_range &range) { depths.push_back(range); }
+    void add_depths(const depth_ranges &other_ranges);
+    std::string describe() const;
+};
+
+template <typename X>
+struct depth_range_X
+{
+    depth_ranges depths;
+    X depth_thing;
+    depth_range_X() : depths(), depth_thing() { }
+    depth_range_X(const std::string &depth_range_string, const X &thing)
+        : depths(depth_ranges::parse_depth_ranges(depth_range_string)),
+          depth_thing(thing)
+    {
+    }
+    bool is_usable_in(const level_id &lid) const
+    {
+        return depths.is_usable_in(lid);
+    }
+    template <typename reader_fn_type>
+    static depth_range_X read(reader &inf, reader_fn_type reader_fn)
+    {
+        depth_range_X range_x;
+        range_x.depths.read(inf);
+        range_x.depth_thing = reader_fn(inf);
+        return range_x;
+    }
+    template <typename writer_fn_type>
+    void write(writer &outf, writer_fn_type writer_fn) const
+    {
+        depths.write(outf);
+        writer_fn(outf, depth_thing);
+    }
+};
+
+template <typename X>
+class depth_ranges_X
+{
+private:
+    typedef std::vector<depth_range_X<X> > depth_range_X_v;
+
+    X default_thing;
+    depth_range_X_v depth_range_Xs;
+public:
+    depth_ranges_X() : default_thing(), depth_range_Xs() { }
+    depth_ranges_X(const X &_default_thing)
+        : default_thing(_default_thing), depth_range_Xs() { }
+    void clear(const X &_default_X = X())
+    {
+        depth_range_Xs.clear();
+        set_default(_default_X);
+    }
+    void set_default(const X &_default_X)
+    {
+        default_thing = _default_X;
+    }
+    X get_default() const { return default_thing; }
+    void add_range(const std::string &depth_range_string,
+                   const X &thing)
+    {
+        depth_range_Xs.push_back(depth_range_X<X>(depth_range_string, thing));
+    }
+    X depth_value(const level_id &lid) const
+    {
+        typename depth_range_X_v::const_iterator i = depth_range_Xs.begin();
+        for ( ; i != depth_range_Xs.end(); ++i)
+            if (i->is_usable_in(lid))
+                return i->depth_thing;
+        return default_thing;
+    }
+    template <typename reader_fn_type>
+    static depth_ranges_X read(reader &inf, reader_fn_type reader_fn)
+    {
+        depth_ranges_X ranges;
+        ranges.clear(reader_fn(inf));
+        const int count = unmarshallShort(inf);
+        for (int i = 0; i < count; ++i)
+            ranges.depth_range_Xs.push_back(
+                depth_range_X<X>::read(inf, reader_fn));
+        return ranges;
+    }
+    template <typename writer_fn_type>
+    void write(writer &outf, writer_fn_type writer_fn) const
+    {
+        writer_fn(outf, default_thing);
+        marshallShort(outf, depth_range_Xs.size());
+        for (int i = 0, size = depth_range_Xs.size(); i < size; ++i)
+            depth_range_Xs[i].write(outf, writer_fn);
     }
 };
 
@@ -873,9 +1017,12 @@ public:
     depth_ranges     depths;
     map_section_type orient;
 
-    int              chance_priority;
-    int              chance;
-    int              weight;
+    typedef depth_ranges_X<map_chance> range_chance_t;
+    typedef depth_ranges_X<int> range_weight_t;
+
+    range_chance_t   _chance;
+    range_weight_t   _weight;
+
     int              weight_depth_mult;
     int              weight_depth_div;
 
@@ -902,7 +1049,7 @@ public:
     map_def         *original;
 
     uint8_t         rock_colour, floor_colour;
-    int             rock_tile, floor_tile;
+    std::string     rock_tile, floor_tile;
 
     dungeon_feature_type border_fill_type;
 private:
@@ -922,13 +1069,18 @@ public:
 
     std::string desc_or_name() const;
 
+    std::string describe() const;
     void init();
     void reinit();
 
     void load();
     void strip();
 
+    int weight(const level_id &lid) const;
+    map_chance chance(const level_id &lid) const;
+
     bool in_map(const coord_def &p) const;
+    bool map_already_used() const;
 
     coord_def size() const { return coord_def(map.width(), map.height()); }
 
@@ -983,8 +1135,7 @@ public:
 
     bool has_depth() const;
     void add_depth(const level_range &depth);
-    void add_depths(depth_ranges::const_iterator s,
-                    depth_ranges::const_iterator e);
+    void add_depths(const depth_ranges &depth);
 
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;
@@ -1000,6 +1151,16 @@ public:
     bool has_tag(const std::string &tag) const;
     bool has_tag_prefix(const std::string &tag) const;
     bool has_tag_suffix(const std::string &suffix) const;
+
+    template <typename TagIterator>
+    bool has_any_tag(TagIterator begin, TagIterator end) const
+    {
+        for ( ; begin != end; ++begin)
+            if (has_tag(*begin))
+                return true;
+        return false;
+    }
+
     std::vector<std::string> get_tags() const;
 
     std::vector<std::string> get_shuffle_strings() const;
@@ -1066,4 +1227,5 @@ std::string mapdef_split_key_item(const std::string &s,
 
 const char *map_section_name(int msect);
 
+int store_tilename_get_index(const std::string tilename);
 #endif

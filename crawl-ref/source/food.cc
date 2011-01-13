@@ -2193,15 +2193,12 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                      * num_blood_potions_from_corpse(mons_type, chunk_type);
 
     bool start_feeding   = false;
-    bool during_feeding  = false;
     bool end_feeding     = false;
 
     if (feeding < 0)
         start_feeding = true;
     else if (feeding > 0)
         end_feeding = true;
-    else
-        during_feeding = true;
 
     switch (mons_type)
     {

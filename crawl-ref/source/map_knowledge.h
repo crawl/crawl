@@ -13,20 +13,21 @@
 #define MAP_VISIBLE_FLAG        0x40
 #define MAP_GRID_KNOWN          0xFF
 
-#define MAP_EMPHASIZE 0x100
-#define MAP_MORE_ITEMS 0x200
-#define MAP_HALOED 0x400
-#define MAP_SILENCED 0x800
-#define MAP_BLOODY 0x1000
-#define MAP_CORRODING 0x2000
+#define MAP_EMPHASIZE          0x100
+#define MAP_MORE_ITEMS         0x200
+#define MAP_HALOED             0x400
+#define MAP_SILENCED           0x800
+#define MAP_BLOODY            0x1000
+#define MAP_CORRODING         0x2000
 
 /* these flags require more space to serialize: put infrequently used ones there */
-#define MAP_EXCLUDED_STAIRS 0x10000
-#define MAP_MOLDY 0x20000
-#define MAP_GLOWING_MOLDY 0x40000
-#define MAP_SANCTUARY_1 0x80000
-#define MAP_SANCTUARY_2 0x100000
-#define MAP_WITHHELD 0x200000
+#define MAP_EXCLUDED_STAIRS  0x10000
+#define MAP_MOLDY            0x20000
+#define MAP_GLOWING_MOLDY    0x40000
+#define MAP_SANCTUARY_1      0x80000
+#define MAP_SANCTUARY_2     0x100000
+#define MAP_WITHHELD        0x200000
+#define MAP_LIQUEFIED       0x400000
 
 /*
  * A map_cell stores what the player knows about a cell.

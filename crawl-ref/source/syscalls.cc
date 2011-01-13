@@ -13,6 +13,8 @@
 // charset handling comes).
 #undef rename
 
+#include <windows.h>
+#include <wincrypt.h>
 #include <io.h>
 #else
 #include <unistd.h>
@@ -55,6 +57,45 @@ bool unlock_file(int fd)
     fl.l_len = 0;
 
     return !fcntl(fd, F_SETLK, &fl);
+#endif
+}
+
+bool read_urandom(char *buf, int len)
+{
+#ifdef TARGET_OS_WINDOWS
+    HCRYPTPROV hProvider = 0;
+
+    if (!CryptAcquireContextW(&hProvider, 0, 0, PROV_RSA_FULL,
+                              CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+    {
+        return false;
+    }
+
+    if (!CryptGenRandom(hProvider, len, (BYTE*)buf))
+    {
+        CryptReleaseContext(hProvider, 0);
+        return false;
+    }
+
+    CryptReleaseContext(hProvider, 0);
+    return true;
+#else
+    /* Try opening from various system provided (hopefully) CSPRNGs */
+    FILE* seed_f = fopen("/dev/urandom", "rb");
+    if (!seed_f)
+        seed_f = fopen("/dev/random", "rb");
+    if (!seed_f)
+        seed_f = fopen("/dev/srandom", "rb");
+    if (!seed_f)
+        seed_f = fopen("/dev/arandom", "rb");
+    if (seed_f)
+    {
+        int res = fread(buf, 1, len, seed_f);
+        fclose(seed_f);
+        return (res == len);
+    }
+
+    return false;
 #endif
 }
 

@@ -108,9 +108,7 @@ void DungeonRegion::pack_buffers()
         {
             coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
 
-            packed_cell tile_cell;
-            tile_cell.bg = vbuf_cell->tile_bg;
-            tile_cell.fg = vbuf_cell->tile_fg;
+            packed_cell tile_cell = packed_cell(vbuf_cell->tile);
             if (map_bounds(gc))
             {
                 tile_cell.flv = env.tile_flv(gc);
@@ -659,7 +657,6 @@ static const bool _have_appropriate_spell(const actor* target)
 
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
-    const coord_def gc = mon->pos();
     const bool shift = (mod & MOD_SHIFT);
     const bool ctrl  = (mod & MOD_CTRL);
     const bool alt   = (shift && ctrl || (mod & MOD_ALT));
@@ -967,7 +964,7 @@ bool DungeonRegion::update_tip_text(std::string &tip)
             const screen_cell_t *vbuf = m_vbuf;
             const coord_def vc(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
             const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
-            tip += tile_debug_string(cell.tile_fg, cell.tile_bg, 'V');
+            tip += tile_debug_string(cell.tile.fg, cell.tile.bg, 'V');
         }
 
         ret = true;

@@ -185,6 +185,7 @@ spl-monench.o \
 spl-other.o \
 spl-selfench.o \
 spl-summoning.o \
+spl-tornado.o \
 spl-transloc.o \
 spl-util.o \
 spl-wpnench.o \
@@ -206,6 +207,7 @@ terrain.o \
 transform.o \
 traps.o \
 travel.o \
+tutorial.o \
 view.o \
 viewchar.o \
 viewgeom.o \
@@ -230,6 +232,7 @@ tilemcache.o \
 tilepick.o \
 tilepick-p.o \
 tilereg.o \
+tilereg-cmd.o \
 tilereg-crt.o \
 tilereg-dgn.o \
 tilereg-doll.o \

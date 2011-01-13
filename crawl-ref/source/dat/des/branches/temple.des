@@ -835,6 +835,7 @@ NAME:   minmay_temple_entry_statues_pillars
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  c : cccxxb
+KFEAT:  O = enter_temple
 MAP
 c.G.c
 .....
@@ -847,6 +848,7 @@ NAME:   minmay_temple_entry_from_below_a
 TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 5
+KFEAT:  O = enter_temple
 MAP
       @
 ccccccncc
@@ -861,6 +863,7 @@ NAME:   minmay_temple_entry_from_below_b
 TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 2
+KFEAT:  O = enter_temple
 MAP
          @
 cccccccccnccc
@@ -877,6 +880,7 @@ NAME:   minmay_temple_entry_from_below_c
 TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 2
+KFEAT:  O = enter_temple
 MAP
         xx@xxx
        xxcncxx
@@ -892,6 +896,7 @@ NAME:   minmay_temple_entry_from_below_d
 TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 1
+KFEAT:  O = enter_temple
 MAP
         @
 xxxxxxxcnc
@@ -915,6 +920,7 @@ TAGS:   temple_entry
 ORIENT: float
 SUBST:  t : t12
 MONS:   plant, bush
+KFEAT:  O = enter_temple
 MAP
  xxxxx
 xxtttxx
@@ -1025,7 +1031,7 @@ ENDMAP
 NAME:    circular_temple_13
 WEIGHT:  5
 PLACE:   Temple
-FLAGS:   no_rotate
+TAGS:    no_rotate
 ORIENT:  encompass
 MAP
          ccccccccccccc
@@ -1399,7 +1405,7 @@ ENDMAP
 NAME:    cyrus_temple_forest
 WEIGHT:  3
 PLACE:   Temple
-FLAGS:   no_rotate
+TAGS:    no_rotate
 ORIENT:  encompass
 NSUBST:  . = 10:X / 34:Y / *:.
 SUBST:   X : tXY.

@@ -26,11 +26,13 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
+#include "noise.h"
 #include "player.h"
 #include "random.h"
 #include "skills.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "areas.h"
 #include "hints.h"
 #include "view.h"
@@ -38,6 +40,13 @@
 #include <sstream>
 
 extern int stealth;             // defined in main.cc
+
+static noise_grid _noise_grid;
+static void _actor_apply_noise(actor *act,
+                               const coord_def &apparent_source,
+                               int noise_intensity_millis,
+                               const noise_t &noise,
+                               int noise_travel_distance);
 
 void handle_monster_shouts(monster* mons, bool force)
 {
@@ -118,6 +127,9 @@ void handle_monster_shouts(monster* mons, bool force)
         break;
     case S_DEMON_TAUNT:
         default_msg_key = "__DEMON_TAUNT";
+        break;
+    case S_CAW:
+        default_msg_key = "__CAW";
         break;
     default:
         default_msg_key = "__BUGGY"; // S_LOUD, S_VERY_SOFT, etc. (loudness)
@@ -381,37 +393,64 @@ bool check_awaken(monster* mons)
     return (false);
 }
 
-// Noisy now has a messenging service for giving messages to the
-// player is appropriate.
-//
-// Returns true if the PC heard the noise.
-bool noisy(int loudness, const coord_def& where, const char *msg, int who,
-           bool mermaid)
+void apply_noises()
 {
-    bool ret = false;
+    // [ds] This copying isn't awesome, but we cannot otherwise handle
+    // the case where one set of noises wakes up monsters who then let
+    // out yips of their own, modifying _noise_grid while it is in the
+    // middle of propagate_noise().
+    if (_noise_grid.dirty())
+    {
+        noise_grid copy = _noise_grid;
+        // Reset the main grid.
+        _noise_grid.reset();
+        copy.propagate_noise();
+    }
+}
 
-    dprf("Noise %d at pos(%d,%d)", loudness, where.x, where.y);
-
+// noisy() has a messaging service for giving messages to the player
+// as appropriate.
+bool noisy(int original_loudness, const coord_def& where,
+           const char *msg, int who,
+           bool mermaid, bool message_if_unseen)
+{
     // high ambient noise makes sounds harder to hear
-    int ambient = current_level_ambient_noise();
-    if (ambient < 0) {
-        loudness += random2avg(abs(ambient), 3);
-    }
-    else {
-        loudness -= random2avg(abs(ambient), 3);
-    }
+    const int ambient = current_level_ambient_noise();
+    const int loudness =
+        ambient < 0? original_loudness + random2avg(abs(ambient), 3)
+                   : original_loudness - random2avg(abs(ambient), 3);
+
+    dprf("Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
+         loudness, original_loudness, ambient, where.x, where.y);
 
     if (loudness <= 0)
         return (false);
-
-    // [ds] Reduce noise propagation for Sprint.
-    if (crawl_state.game_is_sprint())
-        loudness = std::max(1, div_rand_round(loudness, 3));
 
     // If the origin is silenced there is no noise.
     if (silenced(where))
         return (false);
 
+    // [ds] Reduce noise propagation for Sprint.
+    const int scaled_loudness =
+        crawl_state.game_is_sprint()? std::max(1, div_rand_round(loudness, 2))
+                                    : loudness;
+
+    // Add +1 to scaled_loudness so that all squares adjacent to a
+    // sound of loudness 1 will hear the sound.
+    const std::string noise_msg(msg? msg : "");
+    _noise_grid.register_noise(
+        noise_t(where,
+                noise_msg,
+                (scaled_loudness + 1) * 1000,
+                who,
+                0 | (mermaid? NF_MERMAID : 0)
+                | (message_if_unseen? NF_MESSAGE_IF_UNSEEN : 0)));
+
+    // Some users of noisy() want an immediate answer to whether the
+    // player heard the noise. The deferred noise system also means
+    // that soft noises can be drowned out by loud noises. For both
+    // these reasons, use the simple old noise system to check if the
+    // player heard the noise:
     const int dist = loudness * loudness + 1;
     const int player_distance = distance(you.pos(), where);
 
@@ -420,59 +459,15 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
     {
         if (msg)
             mpr(msg, MSGCH_SOUND);
-
-        you.check_awaken(dist - player_distance);
-
-        if (!mermaid)
-        {
-            you.beholders_check_noise(loudness);
-            you.fearmongers_check_noise(loudness);
-        }
-
-        ret = true;
+        return (true);
     }
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (!mi->alive())
-            continue;
-
-        // Monsters put to sleep by ensorcelled hibernation will sleep
-        // at least one turn.
-        if (mi->has_ench(ENCH_SLEEPY))
-            return (false);
-
-        // Monsters arent' affected by their own noise.  We don't check
-        // where == mi->pos() since it might be caused by the
-        // Projected Noise spell.
-        if (mi->mindex() == who)
-            continue;
-
-        if (distance(mi->pos(), where) <= dist
-            && !silenced(mi->pos()))
-        {
-            // If the noise came from the character, any nearby monster
-            // will be jumping on top of them.
-            if (where == you.pos())
-                behaviour_event(*mi, ME_ALERT, MHITYOU, you.pos());
-            else if (mermaid && mons_primary_habitat(*mi) == HT_WATER
-                     && !mi->friendly())
-            {
-                // Mermaids/sirens call (hostile) aquatic monsters.
-                behaviour_event(*mi, ME_ALERT, MHITNOT, where);
-            }
-            else
-                behaviour_event(*mi, ME_DISTURB, MHITNOT, where);
-        }
-    }
-
-    return (ret);
+    return (false);
 }
 
 bool noisy(int loudness, const coord_def& where, int who,
-           bool mermaid)
+           bool mermaid, bool message_if_unseen)
 {
-    return noisy(loudness, where, NULL, who, mermaid);
+    return noisy(loudness, where, NULL, who, mermaid, message_if_unseen);
 }
 
 static const char* _player_vampire_smells_blood(int dist)
@@ -581,6 +576,488 @@ void blood_smell(int strength, const coord_def& where)
                                                 "blood-lust!");
                 }
             }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// noise machinery
+
+// Currently noise attenuation depends solely on the feature in question.
+// Walls are assumed to completely kill noise.
+int noise_attenuation_millis(const coord_def &pos)
+{
+    const dungeon_feature_type feat = grd(pos);
+    switch (feat)
+    {
+    // Closed doors are excellent at cutting off sound.
+    case DNGN_CLOSED_DOOR:
+    case DNGN_DETECTED_SECRET_DOOR:
+    case DNGN_SECRET_DOOR:
+        return BASE_NOISE_ATTENUATION_MILLIS * 8;
+    case DNGN_TREE:
+    case DNGN_SWAMP_TREE:
+        return BASE_NOISE_ATTENUATION_MILLIS * 3;
+    default:
+        if (feat_is_statue_or_idol(feat))
+            return BASE_NOISE_ATTENUATION_MILLIS * 2;
+        if (feat_is_wall(feat))
+            return NOISE_ATTENUATION_COMPLETE;
+        return BASE_NOISE_ATTENUATION_MILLIS;
+    }
+}
+
+noise_cell::noise_cell()
+    : neighbour_delta(0, 0), noise_id(-1), noise_intensity_millis(0)
+{
+}
+
+bool noise_cell::can_apply_noise(int _noise_intensity_millis) const
+{
+    return (noise_intensity_millis < _noise_intensity_millis);
+}
+
+bool noise_cell::apply_noise(int _noise_intensity_millis,
+                             int _noise_id,
+                             int _noise_travel_distance,
+                             const coord_def &_neighbour_delta)
+{
+    if (can_apply_noise(_noise_intensity_millis))
+    {
+        noise_id = _noise_id;
+        noise_intensity_millis = _noise_intensity_millis;
+        noise_travel_distance = _noise_travel_distance;
+        neighbour_delta = _neighbour_delta;
+        return (true);
+    }
+    return (false);
+}
+
+int noise_cell::turn_angle(const coord_def &next_delta) const
+{
+    if (neighbour_delta.origin())
+        return (0);
+
+    // Going in reverse?
+    if (next_delta.x == -neighbour_delta.x
+        && next_delta.y == -neighbour_delta.y)
+        return (4);
+
+    const int xdiff = std::abs(neighbour_delta.x - next_delta.x);
+    const int ydiff = std::abs(neighbour_delta.y - next_delta.y);
+    return xdiff + ydiff;
+}
+
+noise_grid::noise_grid()
+    : cells(), noises(), affected_actor_count(0)
+{
+}
+
+void noise_grid::reset()
+{
+    cells.init(noise_cell());
+    noises.clear();
+    affected_actor_count = 0;
+}
+
+void noise_grid::register_noise(const noise_t &noise)
+{
+    noise_cell &target_cell(cells(noise.noise_source));
+    if (target_cell.can_apply_noise(noise.noise_intensity_millis))
+    {
+        const int noise_index = noises.size();
+        noises.push_back(noise);
+        noises[noise_index].noise_id = noise_index;
+        cells(noise.noise_source).apply_noise(noise.noise_intensity_millis,
+                                              noise_index,
+                                              0,
+                                              coord_def(0, 0));
+    }
+}
+
+void noise_grid::propagate_noise()
+{
+    if (noises.empty())
+        return;
+
+    dprf("noise_grid: %d noises to apply", noises.size());
+    std::vector<coord_def> noise_perimeter[2];
+    int circ_index = 0;
+
+    for (int i = 0, size = noises.size(); i < size; ++i)
+        noise_perimeter[circ_index].push_back(noises[i].noise_source);
+
+    int travel_distance = 0;
+    while (!noise_perimeter[circ_index].empty())
+    {
+        const std::vector<coord_def> &perimeter(noise_perimeter[circ_index]);
+        std::vector<coord_def> &next_perimeter(noise_perimeter[!circ_index]);
+        ++travel_distance;
+        for (int i = 0, size = perimeter.size(); i < size; ++i)
+        {
+            const coord_def p(perimeter[i]);
+            const noise_cell &cell(cells(p));
+
+            if (!cell.silent())
+            {
+                apply_noise_effects(p,
+                                    cell.noise_intensity_millis,
+                                    noises[cell.noise_id],
+                                    travel_distance - 1);
+
+                const int attenuation = noise_attenuation_millis(p);
+                // If the base noise attenuation kills the noise, go no farther:
+                if (noise_is_audible(cell.noise_intensity_millis - attenuation))
+                {
+                    // [ds] Not using adjacent iterator which has
+                    // unnecessary overhead for the tight loop here.
+                    for (int xi = -1; xi <= 1; ++xi)
+                    {
+                        for (int yi = -1; yi <= 1; ++yi)
+                        {
+                            if (xi || yi)
+                            {
+                                const coord_def next_position(p.x + xi,
+                                                              p.y + yi);
+                                if (in_bounds(next_position)
+                                    && !silenced(next_position))
+                                {
+                                    if (propagate_noise_to_neighbour(
+                                            attenuation,
+                                            travel_distance,
+                                            cell, p,
+                                            next_position))
+                                    {
+                                        next_perimeter.push_back(next_position);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        noise_perimeter[circ_index].clear();
+        circ_index = !circ_index;
+    }
+
+#ifdef DEBUG_NOISE_PROPAGATION
+    if (affected_actor_count)
+    {
+        mprf(MSGCH_WARN, "Writing noise grid with %d noise sources",
+             noises.size());
+        dump_noise_grid("noise-grid.html");
+    }
+#endif
+}
+
+bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
+                                              int travel_distance,
+                                              const noise_cell &cell,
+                                              const coord_def &current_pos,
+                                              const coord_def &next_pos)
+{
+    noise_cell &neighbour(cells(next_pos));
+    if (!neighbour.can_apply_noise(cell.noise_intensity_millis -
+                                   base_attenuation))
+        return (false);
+
+    // Diagonals cost more.
+    if ((next_pos - current_pos).abs() == 2)
+        base_attenuation = base_attenuation * 141 / 100;
+
+    const int noise_turn_angle = cell.turn_angle(next_pos - current_pos);
+    const int turn_attenuation =
+        noise_turn_angle? (base_attenuation * (100 + noise_turn_angle * 25)
+                           / 100)
+        : base_attenuation;
+    const int attenuated_noise_intensity =
+        cell.noise_intensity_millis - turn_attenuation;
+    if (noise_is_audible(attenuated_noise_intensity))
+    {
+        const int neighbour_old_distance = neighbour.noise_travel_distance;
+        if (neighbour.apply_noise(attenuated_noise_intensity,
+                                  cell.noise_id,
+                                  travel_distance,
+                                  next_pos - current_pos))
+            // Return true only if we hadn't already registered this
+            // cell as a neighbour (presumably with a lower volume).
+            return (neighbour_old_distance != travel_distance);
+    }
+    return (false);
+}
+
+
+void noise_grid::apply_noise_effects(const coord_def &pos,
+                                     int noise_intensity_millis,
+                                     const noise_t &noise,
+                                     int noise_travel_distance)
+{
+    if (you.pos() == pos)
+    {
+        _actor_apply_noise(&you, noise.noise_source,
+                           noise_intensity_millis, noise,
+                           noise_travel_distance);
+        ++affected_actor_count;
+    }
+
+    if (monster *mons = monster_at(pos))
+    {
+        if (mons->alive()
+            && !mons->has_ench(ENCH_SLEEPY)
+            && mons->mindex() != noise.noise_producer_id)
+        {
+            const coord_def perceived_position =
+                noise_perceived_position(mons, pos, noise);
+            _actor_apply_noise(mons, perceived_position,
+                               noise_intensity_millis, noise,
+                               noise_travel_distance);
+            ++affected_actor_count;
+        }
+    }
+}
+
+static coord_def _point_clamped_in_bounds(const coord_def &p)
+{
+    return coord_def(
+        std::min(X_BOUND_2 - 1, std::max(X_BOUND_1 + 1, p.x)),
+        std::min(Y_BOUND_2 - 1, std::max(Y_BOUND_1 + 1, p.y)));
+}
+
+// Given an actor at affected_pos and a given noise, calculates where
+// the actor might think the noise originated.
+//
+// [ds] Let's keep this brutally simple, since the player will
+// probably not notice even if we get very clever:
+//
+//  - If the cells can see each other, return the actual source position.
+//
+//  - If the cells cannot see each other, calculate a noise source as follows:
+//
+//    Calculate a noise centroid between the noise source and the observer,
+//    weighted to the noise source if the noise has traveled in a straight line,
+//    weighted toward the observer the more the noise has deviated from a
+//    straight line.
+//
+//    Fuzz the centroid by the extra distance the noise has traveled over
+//    the straight line distance. This is where the observer will think the
+//    noise originated.
+//
+//    Thus, if the noise has traveled in a straight line, the observer
+//    will know the exact origin, 100% of the time, even if the
+//    observer is all the way across the level.
+coord_def noise_grid::noise_perceived_position(actor *act,
+                                               const coord_def &affected_pos,
+                                               const noise_t &noise) const
+{
+    const int noise_travel_distance = cells(affected_pos).noise_travel_distance;
+    if (!noise_travel_distance)
+        return (noise.noise_source);
+
+    const int cell_grid_distance =
+        grid_distance(affected_pos, noise.noise_source);
+
+    if (cell_grid_distance <= LOS_RADIUS)
+    {
+        if (act->see_cell(noise.noise_source))
+            return (noise.noise_source);
+    }
+
+    const int extra_distance_covered =
+        noise_travel_distance - cell_grid_distance;
+
+    const int source_weight = 200;
+    const int target_weight =
+        extra_distance_covered?
+        75 * extra_distance_covered / cell_grid_distance
+        : 0;
+
+    const coord_def noise_centroid =
+        target_weight?
+        (noise.noise_source * source_weight + affected_pos * target_weight)
+        / (source_weight + target_weight)
+        : noise.noise_source;
+
+    const int fuzz = extra_distance_covered;
+    const coord_def perceived_point =
+        fuzz?
+        noise_centroid + coord_def(random_range(-fuzz, fuzz, 2),
+                                   random_range(-fuzz, fuzz, 2))
+        : noise_centroid;
+
+    const coord_def final_perceived_point =
+        !in_bounds(perceived_point)?
+        _point_clamped_in_bounds(perceived_point)
+        : perceived_point;
+
+#ifdef DEBUG_NOISE_PROPAGATION
+    dprf("[NOISE] Noise perceived by %s at (%d,%d) centroid (%d,%d) "
+         "source (%d,%d) "
+         "heard at (%d,%d), distance: %d (traveled %d)",
+         act->name(DESC_PLAIN, true).c_str(),
+         final_perceived_point.x, final_perceived_point.y,
+         noise_centroid.x, noise_centroid.y,
+         noise.noise_source.x, noise.noise_source.y,
+         affected_pos.x, affected_pos.y,
+         cell_grid_distance, noise_travel_distance);
+#endif
+    return (final_perceived_point);
+}
+
+#ifdef DEBUG_NOISE_PROPAGATION
+
+#include "options.h"
+#include "viewchar.h"
+#include "math.h"
+
+// Return HTML RGB triple given a hue and assuming chroma of 0.86 (220)
+static std::string _hue_rgb(int hue)
+{
+    const int chroma = 220;
+    const double hue2 = hue / 60.0;
+    const int x = chroma * (1.0 - fabs(hue2 - floor(hue2 / 2) * 2 - 1));
+    int red = 0, green = 0, blue = 0;
+    if (hue2 < 1)
+        red = chroma, green = x;
+    else if (hue2 < 2)
+        red = x, green = chroma;
+    else if (hue2 < 3)
+        green = chroma, blue = x;
+    else if (hue2 < 4)
+        green = x, blue = chroma;
+    else
+        red = x, blue = chroma;
+    // Other hues are not generated, so skip them.
+    return make_stringf("%02x%02x%02x", red, green, blue);
+}
+
+static std::string _noise_intensity_styles()
+{
+    // Hi-intensity sound will be red (HSV 0), low intensity blue (HSV 240).
+    const int hi_hue = 0;
+    const int lo_hue = 240;
+    const int huespan = lo_hue - hi_hue;
+
+    const int max_intensity = 25;
+    std::string styles;
+    for (int intensity = 1; intensity <= max_intensity; ++intensity)
+    {
+        const int hue = lo_hue - intensity * huespan / max_intensity;
+        styles += make_stringf(".i%d { background: #%s }\n",
+                               intensity, _hue_rgb(hue).c_str());
+
+    }
+    return styles;
+}
+
+static void _write_noise_grid_css(FILE *outf)
+{
+    fprintf(outf,
+            "<style type='text/css'>\n"
+            "body { font-family: monospace; padding: 0; margin: 0; "
+            "line-height: 100%% }\n"
+            "%s\n"
+            "</style>",
+            _noise_intensity_styles().c_str());
+}
+
+void noise_grid::write_cell(FILE *outf, coord_def p, int ch) const
+{
+    const int intensity = std::min(25, cells(p).noise_intensity_millis / 1000);
+    if (intensity)
+        fprintf(outf,
+                "<span class='i%d'>&#%d;</span>",
+                intensity, ch);
+    else
+        fprintf(outf, "<span>&#%d;</span>", ch);
+}
+
+void noise_grid::write_noise_grid(FILE *outf) const
+{
+    // Duplicate the screenshot() trick.
+    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
+    char_table_bk = Options.char_table;
+
+    init_char_table(CSET_ASCII);
+    init_show_table();
+
+    fprintf(outf, "<div>\n");
+    // Write the whole map out without checking for mappedness. Handy
+    // for debugging level-generation issues.
+    for (int y = 0; y < GYM; ++y)
+    {
+        for (int x = 0; x < GXM; ++x)
+        {
+            coord_def p(x, y);
+            if (you.pos() == coord_def(x, y))
+                write_cell(outf, p, '@');
+            else
+                write_cell(outf, p, get_feature_def(grd[x][y]).symbol);
+        }
+        fprintf(outf, "<br>\n");
+    }
+    fprintf(outf, "</div>\n");
+}
+
+void noise_grid::dump_noise_grid(const std::string &filename) const
+{
+    FILE *outf = fopen(filename.c_str(), "w");
+    fprintf(outf, "<!DOCTYPE html><html><head>");
+    _write_noise_grid_css(outf);
+    fprintf(outf, "</head>\n<body>\n");
+    write_noise_grid(outf);
+    fprintf(outf, "</body></html>\n");
+    fclose(outf);
+}
+#endif
+
+static void _actor_apply_noise(actor *act,
+                               const coord_def &apparent_source,
+                               int noise_intensity_millis,
+                               const noise_t &noise,
+                               int noise_travel_distance)
+{
+#ifdef DEBUG_NOISE_PROPAGATION
+    dprf("[NOISE] Actor %s (%d,%d) perceives noise (%d) "
+         "from (%d,%d), real source (%d,%d), distance: %d, noise traveled: %d",
+         act->name(DESC_PLAIN, true).c_str(),
+         act->pos().x, act->pos().y,
+         noise_intensity_millis,
+         apparent_source.x, apparent_source.y,
+         noise.noise_source.x, noise.noise_source.y,
+         grid_distance(act->pos(), noise.noise_source),
+         noise_travel_distance);
+#endif
+
+    const bool player = act->is_player();
+    if (player)
+    {
+        const int loudness = div_rand_round(noise_intensity_millis, 1000);
+        act->check_awaken(loudness);
+        if (!(noise.noise_flags & NF_MERMAID))
+        {
+            you.beholders_check_noise(loudness);
+            you.fearmongers_check_noise(loudness);
+        }
+    }
+    else
+    {
+        monster *mons = act->as_monster();
+        // If the noise came from the character, any nearby monster
+        // will be jumping on top of them.
+        if (grid_distance(apparent_source, you.pos()) <= 3)
+            behaviour_event(mons, ME_ALERT, MHITYOU, apparent_source);
+        else if ((noise.noise_flags & NF_MERMAID)
+                 && mons_secondary_habitat(mons) == HT_WATER
+                 && !mons->friendly())
+        {
+            // Mermaids/sirens call (hostile) aquatic monsters.
+            behaviour_event(mons, ME_ALERT, MHITNOT, apparent_source);
+        }
+        else
+        {
+            behaviour_event(mons, ME_DISTURB, MHITNOT, apparent_source);
         }
     }
 }

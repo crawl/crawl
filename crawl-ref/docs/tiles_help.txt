@@ -1,3 +1,24 @@
+                  !!!IMPORTANT!!!
+
+If you keep experiencing crashes in the 0.8 development version, you can set
+some options to make Crawl more stable:
+
+tile_force_regenerate_levels = true
+
+If you're getting inexplicable crashes when loading a recent save file, try
+setting this option to true. It will cause the tiles information of existing
+levels to be regenerated, dumping the corrupt level information that's
+causing the crashes and enabling you to continue your game.
+
+
+tile_allow_detached_montab = false
+
+If you keep getting crashes while the monster tab is open, try setting this
+option to false.
+
+
+--------------------------------------------------
+
                   Tiles suggestions
 
 Crawl renders its graphics using OpenGL and SDL.  However, it needs hardware

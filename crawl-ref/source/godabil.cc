@@ -652,6 +652,7 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
         || spell == SPELL_TORNADO
+        || spell == SPELL_FREEZE
         || spell == SPELL_IGNITE_POISON
         || spell == SPELL_OZOCUBUS_REFRIGERATION)
         // Toxic Radiance does no direct damage
@@ -742,7 +743,7 @@ bool trog_burn_spellbooks()
             }
 
             const int duration = std::min(4 + count + random2(rarity/2), 23);
-            place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
+            place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
             mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
                  count == 1 ? ""  : "s",
@@ -1872,7 +1873,7 @@ int fedhas_rain(const coord_def &target)
 
             if (x_chance_in_y(expected, 20))
             {
-                place_cloud(CLOUD_RAIN, *rad, 10, KC_YOU);
+                place_cloud(CLOUD_RAIN, *rad, 10, &you);
 
                 processed_count++;
             }
@@ -2121,7 +2122,7 @@ bool fedhas_evolve_flora()
             || !mons_class_can_pass(MONS_BALLISTOMYCETE,
                                     env.grid(spelld.target)))
         {
-            if (env.grid(spelld.target) == DNGN_TREE)
+            if (feat_is_tree(env.grid(spelld.target)))
                 mprf("The tree has already reached the pinnacle of evolution.");
             else
                 mprf("You must target a plant or fungus.");

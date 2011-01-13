@@ -420,12 +420,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         viewwindow();
 
     if (delay == DELAY_WEAPON_SWAP)
-    {
-        ASSERT(!"handle_interrupted_swap() called while already swapping "
-                "weapons");
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-        return;
-    }
+        die("handle_interrupted_swap() called while already swapping weapons");
     else if (!you.turn_is_over
              && (delay == DELAY_ASCENDING_STAIRS
                  || delay == DELAY_DESCENDING_STAIRS))
@@ -1192,7 +1187,7 @@ static void _finish_delay(const delay_queue_item &delay)
     _pop_delay();
 
 #ifdef USE_TILE
-    tiles.update_inventory();
+    tiles.update_tabs();
 #endif
 }
 

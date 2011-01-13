@@ -3,8 +3,20 @@
 -- Lua map marker handling.
 ------------------------------------------------------------------------------
 
-require('clua/lm_trig.lua')
+require('clua/fnwrap.lua')
 
+-- Every marker class must register its class name keyed to its reader
+-- function in this table.
+MARKER_UNMARSHALL_TABLE = { }
+
+function dlua_register_marker_table(table, reader)
+  if not reader then
+    reader = table.read
+  end
+  MARKER_UNMARSHALL_TABLE[table.CLASS] = reader
+end
+
+require('clua/lm_trig.lua')
 require('clua/lm_pdesc.lua')
 require('clua/lm_1way.lua')
 require('clua/lm_timed.lua')
@@ -13,10 +25,16 @@ require('clua/lm_fog.lua')
 require('clua/lm_props.lua')
 require('clua/lm_mon_prop.lua')
 require('clua/lm_monst.lua')
-require('clua/lm_mslav.lua')
 require('clua/lm_trove.lua')
 require('clua/lm_door.lua')
 require('clua/lm_items.lua')
+require('clua/fnwrap.lua')
+
+function dlua_marker_reader_name(table)
+  -- Check that the reader is actually registered for this table.
+  dlua_marker_reader_fn(table)
+  return table.CLASS
+end
 
 function dlua_marker_function(table, name)
   return table[name]
@@ -28,11 +46,37 @@ function dlua_marker_method(table, name, marker, ...)
   end
 end
 
-function dlua_marker_read(fn, marker, th)
-  return fn({ }, marker, th)
+function dlua_marker_reader_fn(table)
+  assert(table.CLASS, "Marker table has no CLASS property")
+  local reader = MARKER_UNMARSHALL_TABLE[table.CLASS]
+  if not reader then
+    assert(table.read, "Marker table (" .. table.CLASS .. ") has no " ..
+           "registered reader and no .read method.")
+    return table.read
+  end
+  return reader
+end
+
+function dlua_marker_read(marker_class_name, marker_userdata, th)
+  local reader_fn =
+    MARKER_UNMARSHALL_TABLE[marker_class_name] or _G[marker_class_name].read
+  return reader_fn({ }, marker_userdata, th)
 end
 
 util.namespace('lmark')
+
+local FNWRAP_TABLE_KEY = -2
+
+function lmark.marshall_marker(th, marker)
+  assert(marker.CLASS, "Marker does not have CLASS attribute!")
+  file.marshall_meta(th, marker.CLASS)
+  marker:write(th)
+end
+
+function lmark.unmarshall_marker(th)
+  local marker_class = file.unmarshall_meta(th)
+  return dlua_marker_read(marker_class, nil, th)
+end
 
 -- Marshalls a table comprising of keys that are strings or numbers only,
 -- and values that are strings, numbers, functions, or tables only. The table
@@ -40,6 +84,12 @@ util.namespace('lmark')
 function lmark.marshall_table(th, table)
   if not table then
     file.marshall(th, -1)
+    return
+  end
+
+  if getmetatable(table) == FunctionWrapper then
+    file.marshall(th, FNWRAP_TABLE_KEY)
+    table:marshall(th)
     return
   end
 
@@ -57,6 +107,10 @@ function lmark.marshall_table(th, table)
   file.marshall(th, nsize)
   for key, value in pairs(table) do
     if type(value) ~= 'table' then
+      if type(value) == 'function' then
+        error("Cannot marshall function in key: " .. key ..
+              ":" .. debug.traceback())
+      end
       file.marshall_meta(th, key)
       file.marshall_meta(th, value)
     end
@@ -77,6 +131,10 @@ function lmark.unmarshall_table(th)
 
   if nsize == -1 then
     return nil
+  end
+
+  if nsize == FNWRAP_TABLE_KEY then
+    return FunctionWrapper:unmarshall(th)
   end
 
   local ret = { }

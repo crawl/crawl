@@ -28,6 +28,7 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
+#include "ghost.h"
 #include "initfile.h"
 #include "invent.h"
 #include "items.h"
@@ -144,6 +145,27 @@ std::string mapdef_split_key_item(const std::string &s,
 
     return ("");
 }
+
+#ifdef USE_TILE
+int store_tilename_get_index(const std::string tilename)
+{
+    if (tilename.empty())
+        return 0;
+
+    // Increase index by 1 to distinguish between first entry and none.
+    unsigned int i;
+    for (i = 0; i < env.tile_names.size(); ++i)
+        if (!strcmp(tilename.c_str(), env.tile_names[i].c_str()))
+            return (i+1);
+
+#ifdef DEBUG_TILE_NAMES
+    mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
+#endif
+    // If not found, add tile name to vector.
+    env.tile_names.push_back(tilename);
+    return (i+1);
+}
+#endif
 
 ///////////////////////////////////////////////
 // level_range
@@ -549,39 +571,64 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             }
 
 #ifdef USE_TILE
-            int floor = (*overlay)(x, y).floortile;
-            if (floor)
+            bool has_floor = false, has_rock = false;
+            std::string name = (*overlay)(x, y).floortile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).floor_idx =
+                    store_tilename_get_index(name);
+
+                tileidx_t floor;
+                tile_dngn_index(name.c_str(), &floor);
                 if (colour)
                     floor = tile_dngn_coloured(floor, colour);
                 int offset = random2(tile_dngn_count(floor));
                 env.tile_flv(gc).floor = floor + offset;
+                has_floor = true;
             }
-            int rock = (*overlay)(x, y).rocktile;
-            if (rock)
+
+            name = (*overlay)(x, y).rocktile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).wall_idx =
+                    store_tilename_get_index(name);
+
+                tileidx_t rock;
+                tile_dngn_index(name.c_str(), &rock);
                 if (colour)
                     rock = tile_dngn_coloured(rock, colour);
                 int offset = random2(tile_dngn_count(rock));
                 env.tile_flv(gc).wall = rock + offset;
+                has_rock = true;
             }
-            int tile = (*overlay)(x, y).tile;
-            if (tile)
+
+            name = (*overlay)(x, y).tile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).feat_idx =
+                    store_tilename_get_index(name);
+
+                tileidx_t feat;
+                tile_dngn_index(name.c_str(), &feat);
+
                 if (colour)
-                    tile = tile_dngn_coloured(tile, colour);
-                int offset = random2(tile_dngn_count(tile));
+                    feat = tile_dngn_coloured(feat, colour);
+
+                int offset = 0;
                 if ((*overlay)(x, y).last_tile)
-                    offset = tile_dngn_count(tile) - 1;
-                if (grd(gc) == DNGN_FLOOR && !floor)
-                    env.tile_flv(gc).floor = tile + offset;
-                else if (grd(gc) == DNGN_ROCK_WALL && !rock)
-                    env.tile_flv(gc).wall = tile + offset;
+                    offset = tile_dngn_count(feat) - 1;
+                else
+                    offset = random2(tile_dngn_count(feat));
+
+                if (!has_floor && grd(gc) == DNGN_FLOOR)
+                    env.tile_flv(gc).floor = feat + offset;
+                else if (!has_rock && grd(gc) == DNGN_ROCK_WALL)
+                    env.tile_flv(gc).wall = feat + offset;
                 else
                 {
                     if ((*overlay)(x, y).no_random)
                         offset = 0;
-                    env.tile_flv(gc).feat = tile + offset;
+                    env.tile_flv(gc).feat = feat + offset;
                 }
             }
 #endif
@@ -1309,9 +1356,9 @@ void map_lines::overlay_tiles(tile_spec &spec)
             if (spec.floor)
                 (*overlay)(pos, y).floortile = spec.get_tile();
             else if (spec.feat)
-                (*overlay)(pos, y).tile = spec.get_tile();
+                (*overlay)(pos, y).tile      = spec.get_tile();
             else
-                (*overlay)(pos, y).rocktile = spec.get_tile();
+                (*overlay)(pos, y).rocktile  = spec.get_tile();
 
             (*overlay)(pos, y).no_random = spec.no_random;
             (*overlay)(pos, y).last_tile = spec.last_tile;
@@ -1828,10 +1875,10 @@ bool map_tile_list::parse(const std::string &s, int weight)
 {
     tileidx_t idx = 0;
     if (s != "none" && !tile_dngn_index(s.c_str(), &idx))
-        return false;
+        return (false);
 
-    push_back(map_weighted_tile(idx, weight));
-    return true;
+    push_back(map_weighted_tile(s, weight));
+    return (true);
 }
 
 std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_feat)
@@ -1881,12 +1928,12 @@ std::string map_lines::add_spec_tile(const std::string &sub)
 //////////////////////////////////////////////////////////////////////////
 // tile_spec
 
-tileidx_t tile_spec::get_tile()
+std::string tile_spec::get_tile()
 {
     if (chose_fixed)
         return fixed_tile;
 
-    tileidx_t chosen = 0;
+    std::string chosen = "";
     int cweight = 0;
     for (int i = 0, size = tiles.size(); i < size; ++i)
         if (x_chance_in_y(tiles[i].second, cweight += tiles[i].second))
@@ -1895,7 +1942,7 @@ tileidx_t tile_spec::get_tile()
     if (fix)
     {
         chose_fixed = true;
-        fixed_tile = chosen;
+        fixed_tile  = chosen;
     }
     return (chosen);
 }
@@ -1976,18 +2023,105 @@ dlua_set_map::~dlua_set_map()
 }
 
 ///////////////////////////////////////////////
+// map_chance
+
+std::string map_chance::describe() const
+{
+    return make_stringf("%d:%d", chance_priority, chance);
+}
+
+bool map_chance::roll() const
+{
+    return random2(CHANCE_ROLL) < chance;
+}
+
+void map_chance::write(writer &outf) const
+{
+    marshallInt(outf, chance_priority);
+    marshallInt(outf, chance);
+}
+
+void map_chance::read(reader &inf)
+{
+    chance_priority = unmarshallInt(inf);
+    chance = unmarshallInt(inf);
+}
+
+///////////////////////////////////////////////
+// depth_ranges
+
+void depth_ranges::write(writer& outf) const
+{
+    marshallShort(outf, depths.size());
+    for (int i = 0, sz = depths.size(); i < sz; ++i)
+        depths[i].write(outf);
+}
+
+void depth_ranges::read(reader &inf)
+{
+    depths.clear();
+    const int nranges = unmarshallShort(inf);
+    for (int i = 0; i < nranges; ++i)
+    {
+        level_range lr;
+        lr.read(inf);
+        depths.push_back(lr);
+    }
+}
+
+depth_ranges depth_ranges::parse_depth_ranges(
+    const std::string &depth_range_string)
+{
+    depth_ranges ranges;
+    const std::vector<std::string> frags =
+        split_string(",", depth_range_string);
+    for (int j = 0, size = frags.size(); j < size; ++j)
+        ranges.depths.push_back(level_range::parse(frags[j]));
+    return ranges;
+}
+
+bool depth_ranges::is_usable_in(const level_id &lid) const
+{
+    bool any_matched = false;
+    for (int i = 0, sz = depths.size(); i < sz; ++i)
+    {
+        const level_range &lr = depths[i];
+        if (lr.matches(lid))
+        {
+            if (lr.deny)
+                return (false);
+            any_matched = true;
+        }
+    }
+    return (any_matched);
+}
+
+void depth_ranges::add_depths(const depth_ranges &other_depths)
+{
+    depths.insert(depths.end(),
+                  other_depths.depths.begin(),
+                  other_depths.depths.end());
+}
+
+std::string depth_ranges::describe() const
+{
+    return (comma_separated_line(depths.begin(), depths.end(), ", ", ", "));
+}
+
+///////////////////////////////////////////////
 // map_def
 //
 
+const int DEFAULT_MAP_WEIGHT = 10;
 map_def::map_def()
-    : name(), description(), tags(), place(), depths(), orient(), chance(),
-      weight(), weight_depth_mult(), weight_depth_div(), welcome_messages(),
-      map(), mons(), items(), random_mons(), prelude("dlprelude"),
-      mapchunk("dlmapchunk"), main("dlmain"),
+    : name(), description(), tags(), place(), depths(), orient(), _chance(),
+      _weight(DEFAULT_MAP_WEIGHT), weight_depth_mult(), weight_depth_div(),
+      welcome_messages(), map(), mons(), items(), random_mons(),
+      prelude("dlprelude"), mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
-      rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
-      border_fill_type(DNGN_ROCK_WALL), index_only(false), cache_offset(0L),
-      validating_map_flag(false)
+      rock_colour(BLACK), floor_colour(BLACK), rock_tile(""),
+      floor_tile(""), border_fill_type(DNGN_ROCK_WALL),
+      index_only(false), cache_offset(0L), validating_map_flag(false)
 {
     init();
 }
@@ -2025,7 +2159,7 @@ void map_def::reinit()
     welcome_messages.clear();
 
     rock_colour = floor_colour = BLACK;
-    rock_tile = floor_tile = 0;
+    rock_tile = floor_tile = "";
     border_fill_type = DNGN_ROCK_WALL;
 
     // Chance of using this level. Nonzero chance should be used
@@ -2035,19 +2169,13 @@ void map_def::reinit()
     // vault is picked, and all other vaults are ignored for that
     // random selection. weight is ignored if the vault is chosen
     // based on its chance.
-    chance = 0;
-
-    // If multiple alternative vaults have a chance, the order in which
-    // they're tested is based on chance_priority: higher priority vaults
-    // are checked first. Vaults with the same priority are tested in
-    // unspecified order.
-    chance_priority = 0;
+    _chance.clear();
 
     // Weight for this map. When selecting a map, if no map with a
     // nonzero chance is picked, one of the other eligible vaults is
     // picked with a probability of weight / (sum of weights of all
     // eligible vaults).
-    weight = 10;
+    _weight.clear(DEFAULT_MAP_WEIGHT);
 
     // How to modify weight based on absolte dungeon depth.  This
     // needs to be done in the C++ code since the map's lua code doesnt'
@@ -2058,6 +2186,17 @@ void map_def::reinit()
     // Clearing the map also zaps map transforms.
     map.clear();
     mons.clear();
+}
+
+bool map_def::map_already_used() const
+{
+    return (you.uniq_map_names.find(name) != you.uniq_map_names.end()
+            || (env.level_uniq_maps.find(name) !=
+                env.level_uniq_maps.end())
+            || has_any_tag(you.uniq_map_tags.begin(),
+                           you.uniq_map_tags.end())
+            || has_any_tag(env.level_uniq_map_tags.begin(),
+                           env.level_uniq_map_tags.end()));
 }
 
 bool map_def::valid_item_array_glyph(int gly)
@@ -2144,6 +2283,30 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     epilogue.read(inf);
 }
 
+int map_def::weight(const level_id &lid) const
+{
+    const int base_weight = _weight.depth_value(lid);
+    return (base_weight
+            + lid.absdepth() * weight_depth_mult / weight_depth_div);
+}
+
+map_chance map_def::chance(const level_id &lid) const
+{
+    return _chance.depth_value(lid);
+}
+
+std::string map_def::describe() const
+{
+    return make_stringf("Map: %s\n%s%s%s%s%s%s",
+                        name.c_str(),
+                        prelude.describe("prelude").c_str(),
+                        mapchunk.describe("mapchunk").c_str(),
+                        main.describe("main").c_str(),
+                        validate.describe("validate").c_str(),
+                        veto.describe("veto").c_str(),
+                        epilogue.describe("epilogue").c_str());
+}
+
 void map_def::strip()
 {
     if (index_only)
@@ -2172,7 +2335,7 @@ void map_def::load()
     file_lock deslock(descache_base + ".lk", "rb", false);
     const std::string loadfile = descache_base + ".dsc";
 
-    reader inf(loadfile);
+    reader inf(loadfile, TAG_MINOR_VERSION);
     if (!inf.valid())
         throw map_load_exception(name);
     inf.advance(cache_offset);
@@ -2201,6 +2364,18 @@ void map_def::write_maplines(writer &outf) const
     map.write_maplines(outf);
 }
 
+static void _marshall_map_chance(writer &th, const map_chance &chance)
+{
+    chance.write(th);
+}
+
+static map_chance _unmarshall_map_chance(reader &th)
+{
+    map_chance chance;
+    chance.read(th);
+    return chance;
+}
+
 void map_def::write_index(writer& outf) const
 {
     if (!cache_offset)
@@ -2212,9 +2387,8 @@ void map_def::write_index(writer& outf) const
     marshallShort(outf, orient);
     // XXX: This is a hack. See the comment in l_dgn.cc.
     marshallShort(outf, static_cast<short>(border_fill_type));
-    marshallInt(outf, chance_priority);
-    marshallInt(outf, chance);
-    marshallInt(outf, weight);
+    _chance.write(outf, _marshall_map_chance);
+    _weight.write(outf, marshallInt);
     marshallInt(outf, cache_offset);
     marshallString4(outf, tags);
     place.save(outf);
@@ -2231,39 +2405,30 @@ void map_def::read_index(reader& inf)
 {
     unmarshallString4(inf, name);
     unmarshallString4(inf, place_loaded_from.filename);
-    place_loaded_from.lineno   = unmarshallInt(inf);
-    orient       = static_cast<map_section_type>(unmarshallShort(inf));
+    place_loaded_from.lineno = unmarshallInt(inf);
+    orient = static_cast<map_section_type>(unmarshallShort(inf));
     // XXX: Hack. See the comment in l_dgn.cc.
     border_fill_type =
         static_cast<dungeon_feature_type>(unmarshallShort(inf));
-    chance_priority = unmarshallInt(inf);
-    chance       = unmarshallInt(inf);
-    weight       = unmarshallInt(inf);
+
+    _chance = range_chance_t::read(inf, _unmarshall_map_chance);
+    _weight = range_weight_t::read(inf, unmarshallInt);
     cache_offset = unmarshallInt(inf);
     unmarshallString4(inf, tags);
     place.load(inf);
     read_depth_ranges(inf);
     prelude.read(inf);
-    index_only   = true;
+    index_only = true;
 }
 
 void map_def::write_depth_ranges(writer& outf) const
 {
-    marshallShort(outf, depths.size());
-    for (int i = 0, sz = depths.size(); i < sz; ++i)
-        depths[i].write(outf);
+    depths.write(outf);
 }
 
 void map_def::read_depth_ranges(reader& inf)
 {
-    depths.clear();
-    const int nranges = unmarshallShort(inf);
-    for (int i = 0; i < nranges; ++i)
-    {
-        level_range lr;
-        lr.read(inf);
-        depths.push_back(lr);
-    }
+    depths.read(inf);
 }
 
 void map_def::set_file(const std::string &s)
@@ -2538,8 +2703,7 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     run_lua_epilogue(true);
 
     if (!has_depth() && !lc_default_depths.empty())
-        add_depths(lc_default_depths.begin(),
-                   lc_default_depths.end());
+        depths.add_depths(lc_default_depths);
 
     if ((place.branch == BRANCH_ECUMENICAL_TEMPLE
          && place.level_type == LEVEL_DUNGEON)
@@ -2641,29 +2805,12 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
 
 bool map_def::is_usable_in(const level_id &lid) const
 {
-    bool any_matched = false;
-    for (int i = 0, sz = depths.size(); i < sz; ++i)
-    {
-        const level_range &lr = depths[i];
-        if (lr.matches(lid))
-        {
-            if (lr.deny)
-                return (false);
-            any_matched = true;
-        }
-    }
-    return (any_matched);
+    return depths.is_usable_in(lid);
 }
 
 void map_def::add_depth(const level_range &range)
 {
-    depths.push_back(range);
-}
-
-void map_def::add_depths(depth_ranges::const_iterator s,
-                         depth_ranges::const_iterator e)
-{
-    depths.insert(depths.end(), s, e);
+    depths.add_depth(range);
 }
 
 bool map_def::has_depth() const
@@ -3533,18 +3680,22 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         }
 
         std::string tile = strip_tag_prefix(mon_str, "tile:");
-#ifdef USE_TILE
         if (!tile.empty())
         {
+#ifdef USE_TILE
             tileidx_t index;
             if (!tile_player_index(tile.c_str(), &index))
             {
                 error = make_stringf("bad tile name: \"%s\".", tile.c_str());
                 return (slot);
             }
-            mspec.props["monster_tile"] = short(index);
-        }
 #endif
+            // Store name along with the tile.
+            mspec.props["monster_tile_name"].get_string() = tile;
+#ifdef USE_TILE
+            mspec.props["monster_tile"] = short(index);
+#endif
+        }
 
         std::string name = strip_tag_prefix(mon_str, "name:");
         if (!name.empty())
@@ -3983,6 +4134,19 @@ mons_spec mons_list::mons_by_name(std::string name) const
             return (spec);
         }
     }
+    if (name.find(" laboratory rat") != std::string::npos)
+    {
+        const std::string::size_type wordend = name.find(' ');
+        const std::string first_word = name.substr(0, wordend);
+
+        const int colour = colour_for_labrat_adjective(first_word);
+        if (colour != BLACK)
+        {
+            mons_spec spec = mons_by_name(name.substr(wordend+1));
+            spec.colour = colour;
+            return (spec);
+        }
+    }
 
     mons_spec spec;
     get_zombie_type(name, spec);
@@ -3998,11 +4162,70 @@ mons_spec mons_list::mons_by_name(std::string name) const
 //////////////////////////////////////////////////////////////////////
 // item_list
 
+item_spec::item_spec(const item_spec &other)
+    : _corpse_monster_spec(NULL)
+{
+
+    *this = other;
+}
+
+item_spec &item_spec::operator = (const item_spec &other)
+{
+    if (this != &other)
+    {
+        genweight = other.genweight;
+        base_type = other.base_type;
+        sub_type  = other.sub_type;
+        plus = other.plus;
+        plus2 = other.plus2;
+        ego = other.ego;
+        allow_uniques = other.allow_uniques;
+        level = other.level;
+        race = other.race;
+        item_special = other.item_special;
+        qty = other.qty;
+        acquirement_source = other.acquirement_source;
+        place = other.place;
+        props = other.props;
+
+        release_corpse_monster_spec();
+        if (other._corpse_monster_spec)
+            set_corpse_monster_spec(other.corpse_monster_spec());
+    }
+    return (*this);
+}
+
+item_spec::~item_spec()
+{
+    release_corpse_monster_spec();
+}
+
+void item_spec::release_corpse_monster_spec()
+{
+    delete _corpse_monster_spec;
+    _corpse_monster_spec = NULL;
+}
+
 bool item_spec::corpselike() const
 {
     return ((base_type == OBJ_CORPSES && (sub_type == CORPSE_BODY
                                           || sub_type == CORPSE_SKELETON))
             || (base_type == OBJ_FOOD && sub_type == FOOD_CHUNK));
+}
+
+const mons_spec &item_spec::corpse_monster_spec() const
+{
+    ASSERT(_corpse_monster_spec);
+    return *_corpse_monster_spec;
+}
+
+void item_spec::set_corpse_monster_spec(const mons_spec &spec)
+{
+    if (&spec != _corpse_monster_spec)
+    {
+        release_corpse_monster_spec();
+        _corpse_monster_spec = new mons_spec(spec);
+    }
 }
 
 void item_list::clear()
@@ -4202,7 +4425,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         break;
 
     default:
-        DEBUGSTR("Bad base_type for ego'd item.");
+        die("Bad base_type for ego'd item.");
         return 0;
     }
 
@@ -4289,17 +4512,6 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
                         static_cast<int>(corpse ? CORPSE_BODY :
                                          CORPSE_SKELETON));
 
-    // [ds] We're stuffing the corpse monster into the .plus field to
-    // match what we'll eventually do to the corpse item, in the grand
-    // WTF-is-this Crawl tradition.
-
-    // Is the caller happy with any corpse?
-    if (s == "any")
-    {
-        result.plus = RANDOM_MONSTER;
-        return (result);
-    }
-
     // The caller wants a specific monster, no doubt with the best of
     // motives. Let's indulge them:
     mons_list mlist;
@@ -4314,13 +4526,14 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
     mons_spec spec = mlist.get_monster(0);
     monster_type mtype = static_cast<monster_type>(spec.mid);
     if (!monster_corpse_is_valid(&mtype, s, corpse, skeleton, chunk))
+    {
+        error = make_stringf("Requested corpse '%s' is invalid",
+                             s.c_str());
         return (result);
+    }
 
     // Ok, looking good, the caller can have their requested toy.
-    result.plus = mtype;
-    if (spec.number)
-        result.plus2 = spec.number;
-
+    result.set_corpse_monster_spec(spec);
     return (result);
 }
 
@@ -5226,7 +5439,7 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
         static std::string flag_list[] =
             {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
              "no_secret_doors", "no_wall_fixup", "opaque", "no_trap_gen",
-             "no_shop_gen", ""};
+             ""};
         map_mask = map_flags::parse(flag_list, s);
     }
     catch (const std::string &error)

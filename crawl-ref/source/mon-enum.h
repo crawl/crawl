@@ -149,9 +149,6 @@ enum mon_itemuse_type
     MONUSE_OPEN_DOORS,
     MONUSE_STARTING_EQUIPMENT,
     MONUSE_WEAPONS_ARMOUR,
-#if TAG_MAJOR_VERSION == 31
-    MONUSE_MAGIC_ITEMS,
-#endif
 
     NUM_MONUSE
 };
@@ -226,6 +223,7 @@ enum shout_type
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
+    S_CAW,                  // for ravens
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

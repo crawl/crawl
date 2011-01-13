@@ -4,6 +4,11 @@
 ------------------------------------------------------------------------------
 
 require("clua/point.lua")
+require("clua/fnwrap.lua")
+require('clua/util.lua')
+
+-- Namespace for callbacks (just an aid to recognising callbacks, no magic)
+util.namespace('callback')
 
 dgn.GXM, dgn.GYM = dgn.max_bounds()
 dgn.MAX_MONSTERS = dgn.max_monsters()
@@ -576,9 +581,6 @@ function dgn.place_maps(parameters)
       if map_placed_ok then
         n_placed = n_placed + 1
       else
-        if parameters.die_on_error == nil then
-          parameters.die_on_error = true
-        end
         if not parameters.die_on_error then
           return nil
         end

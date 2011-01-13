@@ -2099,8 +2099,7 @@ std::string get_item_description(const item_def &item, bool verbose,
         break;
 
     default:
-        DEBUGSTR("Bad item class");
-        description << "\nThis item should not exist. Mayday! Mayday!";
+        die("Bad item class");
     }
 
     if (is_unrandom_artefact(item)
@@ -4588,6 +4587,31 @@ void describe_skill(skill_type skill)
     print_description(data.str());
     wait_for_keypress();
 }
+
+#ifdef USE_TILE
+std::string get_command_description(const command_type cmd, bool terse)
+{
+    std::string lookup = command_to_name(cmd);
+
+    if (!terse)
+        lookup += " verbose";
+
+    std::string result = getLongDescription(lookup);
+    if (result.empty())
+    {
+        if (!terse)
+        {
+            // Try for the terse description.
+            result = get_command_description(cmd, true);
+            if (!result.empty())
+                return result + ".";
+        }
+        return command_to_name(cmd);
+    }
+
+    return result.substr(0, result.length() - 1);
+}
+#endif
 
 void alt_desc_proc::nextline()
 {

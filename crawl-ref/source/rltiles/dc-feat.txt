@@ -24,6 +24,8 @@ wall/tree2_red
 wall/tree1_dead DNGN_TREE_DEAD
 wall/tree2_dead
 
+wall/mangrove1 DNGN_SWAMP_TREE
+
 ## doors
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR
@@ -122,6 +124,7 @@ dngn_trap_zot DNGN_TRAP_ZOT
 
 ## stairs
 %sdir dc-dngn/gateways
+dngn_exit_dungeon DNGN_EXIT_DUNGEON
 stone_stairs_down DNGN_STONE_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 escape_hatch_down DNGN_ESCAPE_HATCH_DOWN

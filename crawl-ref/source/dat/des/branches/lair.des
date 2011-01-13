@@ -74,7 +74,7 @@ MONS:    w:50 nothing / w:30 giant slug / w:30 agate snail
 MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          gila monster / komodo dragon
-MONS:    green rat / grey rat / orange rat / quokka / rat
+MONS:    green rat / porcupine / orange rat / quokka / rat
 MONS:    w:90 nothing / w:30 giant frog / blink frog / giant toad /\
          spiny frog
 MONS:    elephant
@@ -154,7 +154,7 @@ MONS:   plant / bush w:2 / fungus w:2
 MONS:   crocodile / gila monster / agate snail w:5 / giant slug w:5
 MONS:   yak
 MONS:   sheep
-MONS:   rat w:2 / grey rat / green rat / quokka w:1
+MONS:   rat w:2 / porcupine / green rat / quokka w:1
 SUBST:  . = .:400 tt111123355
 SUBST:  ' = .:200 tt111123355
 SUBST:  3 : 334
