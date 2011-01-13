@@ -2034,7 +2034,7 @@ static monsterentry mondata[] = {
 // ugly things ('u')
 {
     MONS_UGLY_THING, 'u', BLACK, "ugly thing",
-    M_WARM_BLOOD | M_GLOWS_RADIATION,
+    M_WARM_BLOOD | M_GLOWS_RADIATION | M_HERD,
     MR_NO_FLAGS,
     600, 10, MONS_UGLY_THING, MONS_UGLY_THING, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2046,7 +2046,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_VERY_UGLY_THING, 'u', BLACK, "very ugly thing",
-    M_WARM_BLOOD | M_GLOWS_RADIATION,
+    M_WARM_BLOOD | M_GLOWS_RADIATION | M_HERD,
     MR_NO_FLAGS,
     830, 10, MONS_UGLY_THING, MONS_VERY_UGLY_THING, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3118,7 +3118,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SLIME_CREATURE, 'J', GREEN, "slime creature",
-    M_NO_FLAGS,
+    M_NO_FLAGS | M_HERD,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 5, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3889,7 +3889,7 @@ static monsterentry mondata[] = {
 // yaks, sheep and elephants ('Y')
 {
     MONS_SHEEP, 'Y', LIGHTGREY, "sheep",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
     900, 10, MONS_SHEEP, MONS_SHEEP, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3901,7 +3901,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_YAK, 'Y', BROWN, "yak",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
     1200, 9, MONS_YAK, MONS_YAK, MH_NATURAL, -3,
     { {AT_GORE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3913,7 +3913,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEATH_YAK, 'Y', YELLOW, "death yak",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
     1500, 8, MONS_YAK, MONS_DEATH_YAK, MH_NATURAL, -5,
     { {AT_GORE, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

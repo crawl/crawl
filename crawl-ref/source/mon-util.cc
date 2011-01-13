@@ -732,6 +732,16 @@ bool mons_is_slime(const monster* mon)
     return (mons_class_is_slime(mon->type));
 }
 
+bool herd_monster_class(int mc)
+{
+    return (mons_class_flag(mc, M_HERD));
+}
+
+bool herd_monster(const monster * mon)
+{
+    return (herd_monster_class(mon->type));
+}
+
 // Plant or fungus really
 bool mons_class_is_plant(int mc)
 {

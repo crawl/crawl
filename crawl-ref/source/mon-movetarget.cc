@@ -7,6 +7,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -802,12 +803,88 @@ void set_random_target(monster* mon)
     }
 }
 
+static void _herd_wander_target(monster * mon, dungeon_feature_type can_move)
+{
+    std::vector<monster_iterator> friends;
+    std::map<int, std::vector<coord_def> > distance_positions;
+
+    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+
+    for (monster_iterator mit; mit; ++mit)
+    {
+        if (mit->mindex() == mon->mindex()
+            || mons_genus(mit->type) != mons_genus(mon->type)
+            || grid_distance(mit->pos(), mon->pos()) > dist_thresh)
+        {
+            continue;
+        }
+
+        friends.push_back(mit);
+    }
+
+    if (friends.empty())
+        return set_random_target(mon);
+
+    for (radius_iterator r_it(mon->get_los_no_trans(), true) ; r_it; ++r_it)
+    {
+        int count = 0;
+        for (unsigned i = 0; i < friends.size(); i++)
+        {
+            if (grid_distance(friends[i]->pos(), *r_it) < HERD_COMFORT_RANGE
+                && friends[i]->see_cell_no_trans(*r_it))
+            {
+                count++;
+            }
+        }
+        if (count > 0)
+            distance_positions[count].push_back(*r_it);
+    }
+    std::map<int, std::vector<coord_def> >::reverse_iterator back =
+        distance_positions.rbegin();
+
+    if (back == distance_positions.rend())
+        return set_random_target(mon);
+
+
+    mon->target = back->second[random2(back->second.size())];
+}
+
+static bool _herd_ok(monster * mon)
+{
+    bool in_bounds = false;
+    bool intermediate_range = false;
+    int intermediate_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+
+    for (monster_iterator mit(mon); mit; ++mit)
+    {
+        if (mit->mindex() == mon->mindex())
+            continue;
+
+        if (mons_genus(mit->type) == mons_genus(mon->type) )
+        {
+            int g_dist = grid_distance(mit->pos(), mon->pos());
+            if (g_dist < HERD_COMFORT_RANGE)
+            {
+                in_bounds = true;
+                break;
+            }
+            else if (g_dist < intermediate_thresh)
+            {
+                intermediate_range = true;
+            }
+        }
+    }
+
+    return in_bounds || !intermediate_range;
+}
+
 void check_wander_target(monster* mon, bool isPacified,
                          dungeon_feature_type can_move)
 {
     // default wander behaviour
     if (mon->pos() == mon->target
-        || mons_is_batty(mon) || !isPacified && one_chance_in(20))
+        || mons_is_batty(mon) || !isPacified && one_chance_in(20)
+        || herd_monster(mon) && !_herd_ok(mon))
     {
         bool need_target = true;
 
@@ -833,7 +910,12 @@ void check_wander_target(monster* mon, bool isPacified,
         // wandering monsters at least appear to have some sort of
         // attention span.  -- bwr
         if (need_target)
-            set_random_target(mon);
+        {
+            if (herd_monster(mon))
+                _herd_wander_target(mon, can_move);
+            else
+                set_random_target(mon);
+        }
     }
 }
 
