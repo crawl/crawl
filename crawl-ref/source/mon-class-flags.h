@@ -130,4 +130,6 @@ const uint64_t M_UNBREATHING       = (uint64_t)1<<39;
 
 // not fully coded; causes a warning
 const uint64_t M_UNFINISHED        = (uint64_t)1<<40;
+
+const uint64_t M_HERD              = (uint64_t)1<<41;
 #endif
