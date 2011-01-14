@@ -80,7 +80,7 @@ function tutorial_msg2.compare_monster_desc ()
         text = text .. "via <white>mouseover</white>"
     else
         text = text .. "with " .. tutorial_get_cmd("CMD_LOOK_AROUND")
-                    .. "<w>+</w>
+                    .. "<w>+</w>"
     end
 
     text = text .. ") and compare their descriptions ("
