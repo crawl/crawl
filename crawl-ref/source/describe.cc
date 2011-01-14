@@ -2307,6 +2307,10 @@ void set_feature_quote(const std::string &raw_name,
         quote_table[raw_name] = quote;
 }
 
+static bool _in_hints_or_tutorial_mode()
+{
+    return (Hints.hints_left || crawl_state.game_is_tutorial());
+}
 
 void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 {
@@ -2314,7 +2318,7 @@ void get_item_desc(const item_def &item, describe_info &inf, bool terse)
     // so we can actually output these spells if space is scarce.
     const bool verbose = !terse || !item.has_spells();
     inf.body << get_item_description(item, verbose, false,
-                                     Hints.hints_left);
+                                     _in_hints_or_tutorial_mode());
 }
 
 // Returns true if spells can be shown to player.
@@ -2341,7 +2345,8 @@ static void _show_item_description(const item_def &item)
     const          int height    = get_number_of_lines();
 
     std::string desc =
-        get_item_description(item, true, false, Hints.hints_left);
+        get_item_description(item, true, false,
+                             _in_hints_or_tutorial_mode());
 
     int num_lines = count_desc_lines(desc, lineWidth) + 1;
 
@@ -3282,7 +3287,8 @@ static std::string _monster_stat_description(const monster_info& mi)
 
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
-                         bool &has_stat_desc, bool force_seen)
+                         bool &has_stat_desc, bool force_seen,
+                         bool noquote)
 {
     if (inf.title.empty())
         inf.title = mi.full_name(DESC_CAP_A, true);
@@ -3301,11 +3307,14 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << getLongDescription(db_name);
     }
 
-    // And quotes {due}
-    if (!mi.quote.empty())
-        inf.quote = mi.quote;
-    else
-        inf.quote = getQuoteString(db_name);
+    if (!noquote)
+    {
+        // And quotes {due}
+        if (!mi.quote.empty())
+            inf.quote = mi.quote;
+        else
+            inf.quote = getQuoteString(db_name);
+    }
 
     std::string symbol;
     symbol += get_monster_data(mi.type)->showchar;
@@ -3319,7 +3328,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         symbol_prefix += symbol;
         symbol_prefix += "_prefix";
         inf.prefix = getLongDescription(symbol_prefix);
-        quote2 = getQuoteString(symbol_prefix);
+        if (!noquote)
+            quote2 = getQuoteString(symbol_prefix);
     }
 
     if (!inf.quote.empty() && !quote2.empty())
@@ -3542,7 +3552,8 @@ void describe_monsters(const monster_info &mi, bool force_seen,
 {
     describe_info inf;
     bool has_stat_desc = false;
-    get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
+    get_monster_db_desc(mi, inf, has_stat_desc, force_seen,
+                        _in_hints_or_tutorial_mode());
 
     if (!footer.empty())
     {
