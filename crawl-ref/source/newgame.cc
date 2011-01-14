@@ -2835,9 +2835,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
     {
         if (padding_width < maps.at(i)->desc_or_name().length())
-        {
             padding_width = maps.at(i)->desc_or_name().length();
-        }
     }
     padding_width += 4; // Count the letter and " - "
 
@@ -2859,11 +2857,9 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
 
         // Add padding
         if (padding_width > text.size())
-        {
             text.append(padding_width - text.size(), ' ');
-        }
-        tmp->set_text(text);
 
+        tmp->set_text(text);
         tmp->add_hotkey(letter);
         tmp->set_id(i); // ID corresponds to location in vector
 
@@ -2880,50 +2876,54 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
             menu->set_active_item(tmp);
     }
 
-    tmp = new TextItem();
-    tmp->set_text("% - List aptitudes");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('%');
-    tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
+    // Don't overwhelm new players with aptitudes or the full list of commands!
+    if (!crawl_state.game_is_tutorial())
+    {
+        tmp = new TextItem();
+        tmp->set_text("% - List aptitudes");
+        min_coord.x = X_MARGIN;
+        min_coord.y = SPECIAL_KEYS_START_Y + 1;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('%');
+        tmp->set_id(M_APTITUDES);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
 
-    tmp = new TextItem();
-    tmp->set_text("? - Help");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 2;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('?');
-    tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Opens the help screen");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
+        tmp = new TextItem();
+        tmp->set_text("? - Help");
+        min_coord.x = X_MARGIN;
+        min_coord.y = SPECIAL_KEYS_START_Y + 2;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('?');
+        tmp->set_id(M_HELP);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Opens the help screen");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
 
-    tmp = new TextItem();
-    tmp->set_text("* - Random map");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('*');
-    tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Picks a random sprint map");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
+        tmp = new TextItem();
+        tmp->set_text("* - Random map");
+        min_coord.x = X_MARGIN + COLUMN_WIDTH;
+        min_coord.y = SPECIAL_KEYS_START_Y + 1;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('*');
+        tmp->set_id(M_RANDOM);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Picks a random sprint map");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+    }
 
     // TODO: let players escape back to first screen menu
     // Adjust the end marker to align the - because Bksp text is longer by 3
@@ -2995,10 +2995,9 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
 
     // Did we have a previous sprint map?
     if (menu.get_active_item() == NULL)
-    {
         freeform->activate_first_item();
-    }
-    _print_character_info(ng); // calls clrscr() so needs to be before attach()
+
+        _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
 #ifdef USE_TILE
     tiles.get_crt()->attach_menu(&menu);
