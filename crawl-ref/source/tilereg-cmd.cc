@@ -133,15 +133,15 @@ bool CommandRegion::update_alt_text(std::string &alt)
 
 void CommandRegion::pack_buffers()
 {
-    int i = 0;
+    unsigned int i = 0;
     for (int y = 0; y < my; y++)
     {
-        if (i >= (int)m_items.size())
+        if (i >= m_items.size())
             break;
 
         for (int x = 0; x < mx; x++)
         {
-            if (i >= (int)m_items.size())
+            if (i >= m_items.size())
                 break;
 
             m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
@@ -187,7 +187,7 @@ void CommandRegion::update()
     if (mx * my == 0)
         return;
 
-    bool safe = i_feel_safe(false);
+    const bool safe = i_feel_safe(false);
 
     for (int idx = 0; idx < n_common_commands; ++idx)
     {
