@@ -5102,7 +5102,7 @@ int count_worn_ego(int which_ego)
     int result = 0;
     for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
     {
-        if (you.equip[slot] != -1
+        if (you.equip[slot] != -1 && !you.melded[slot]
             && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
         {
             result++;
