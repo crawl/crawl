@@ -1491,7 +1491,7 @@
        SPELL_PARALYSE,
        SPELL_BLINK,
        SPELL_PAIN,
-       SPELL_BRAIN_FEED,
+       SPELL_PARALYSE,
        SPELL_BLINK
       }
     },
