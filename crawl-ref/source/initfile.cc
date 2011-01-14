@@ -3420,6 +3420,7 @@ enum commandline_option_type
     CLO_EDIT_SAVE,
     CLO_PRINT_CHARSET,
     CLO_ZOTDEF,
+    CLO_TUTORIAL,
 
     CLO_NOPS
 };
@@ -3430,7 +3431,7 @@ static const char *cmd_ops[] = {
     "mapstat", "arena", "dump-maps", "test", "script", "builddb",
     "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef",
+    "print-charset", "zotdef", "tutorial"
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4021,6 +4022,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_ZOTDEF:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_ZOTDEF;
+            break;
+
+        case CLO_TUTORIAL:
+            if (!rc_only)
+                Options.game.type = GAME_TYPE_TUTORIAL;
             break;
 
         case CLO_PRINT_CHARSET:
