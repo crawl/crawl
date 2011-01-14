@@ -1250,6 +1250,20 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 #endif
 
+    if (crawl_state.game_is_tutorial())
+    {
+        if (!non_death)
+        {
+            mprnojoin("You die...");
+            mprnojoin("In Crawl, death is a sad but common occurence. "
+                      "There's usually something that could have been done to prevent it. "
+                      "Keep trying, eventually you'll prevail!",
+                      MSGCH_TUTORIAL);
+            more();
+        }
+        screen_end_game("");
+    }
+
     crawl_state.cancel_cmd_all();
 
     // Construct scorefile entry.
@@ -1353,6 +1367,7 @@ static void _delete_files()
 
 void screen_end_game(std::string text)
 {
+    crawl_state.cancel_cmd_all();
     _delete_files();
 
     if (!text.empty())

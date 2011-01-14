@@ -12,7 +12,6 @@
 #    tutorial map -> triggered by Lua?
 #
 {{
-
 require("clua/tutorial.lua")
 
 tutorial_msg = {}
