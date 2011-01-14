@@ -2075,7 +2075,7 @@ std::string _status_mut_abilities()
                 EV_change -= level > 1 ? 1 : 0;
                 break;
             case MUT_IRIDESCENT_SCALES:
-                AC_change += 3*level;
+                AC_change += 2*level+2;
                 break;
             case MUT_LARGE_BONE_PLATES:
                 AC_change += level + 1;
