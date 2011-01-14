@@ -319,7 +319,7 @@ MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
 FTILE:   ABCDEFGHQIJ = tutorial_pad
-MONS:    training dummy tile:mons_training_dummy hp:20 ; club ego:none
+MONS:    training dummy hp:20 ; club ego:none
 epilogue{{
   tutorial.messagestart()
 }}
@@ -372,7 +372,7 @@ MARKER:  C = lua:tutorial.message_rest_reminder()
 MARKER:  D = lua:tutorial.message_memorize()
 MARKER:  E = lua:tutorial.message_magic_combat()
 MARKER:  F = lua:tutorial_message( "Rest up!" )
-MONS:    training dummy tile:mons_training_dummy hp:20 ; stone q:30
+MONS:    training dummy hp:20 ; stone q:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx(xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -425,7 +425,7 @@ MARKER:  G = lua:tutorial.message_evoke()
 MARKER:  H = lua:tutorial_message( "Here's some gold that can be spent in shops. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically." )
 MARKER:  I = lua:tutorial.message_inventory()
 MONS:    rat, rat always_corpse
-MONS:    training dummy tile:mons_training_dummy ; stone q:30
+MONS:    training dummy ; stone q:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx..3..xxxxxx....xxxx
@@ -469,7 +469,7 @@ KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
 FTILE:   ABCDEF = tutorial_pad
 MONS:    rat, rat always_corpse
-MONS:    training dummy tile:mons_training_dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
+MONS:    training dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
 MARKER:  A = lua:tutorial_message( "You may have been poisoned from the trap. Drink a potion of healing, or rest with " .. tutorial_get_cmd("CMD_REST") .. " to try to wait it out." )
 MARKER:  B = lua:tutorial_message( "Look for the secret door in the glass wall. Either wait a single turn with " .. tutorial_get_cmd("CMD_SEARCH") .. " or <white>.</white>, or search longer with " .. tutorial_get_cmd("CMD_REST") .. "." )
 MARKER:  C = lua:tutorial.message_pray()
