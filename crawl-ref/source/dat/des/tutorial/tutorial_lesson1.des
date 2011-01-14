@@ -143,7 +143,7 @@ function tutorial_msg.exit ()
                  .. "                 /|\\                         " .. "/|\\\n"
                  .. "                <white>7 8 9</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n\n"
-                 .. "<white>Shift + direction</white> moves you several squares into this direction.\n\n"
+                 .. "<white>Shift + direction</white> moves you several squares into this direction.\n"
 
     if crawl.is_tiles() then
         text = text .. "You also can move by <white>clicking</white> somewhere in sight or on the <white>minimap</white>.\n"
@@ -164,7 +164,7 @@ function tutorial_msg.exit ()
     else
         text = text .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "  enter the level map, travel with <white>Enter</white>\n"
     end
-    text = text .. "  " .. tutorial_get_cmd("CMD_EXPLORE") .. "  autoexplore\n\n\n"
+    text = text .. "  " .. tutorial_get_cmd("CMD_EXPLORE") .. "  autoexplore\n\n"
                 .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
     return crawl.endgame(text)
