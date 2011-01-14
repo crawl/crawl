@@ -382,7 +382,6 @@ public:
     bool misled() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool transient = true) const;
-    bool are_charming() const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
 

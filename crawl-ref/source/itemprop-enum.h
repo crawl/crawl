@@ -188,8 +188,7 @@ enum jewellery_type
                                        //   safely with first amulet.
     // RINGS after num_rings are for unique types for artefacts
     //   (no non-artefact version).
-    RING_CHARM,                        //   25
-
+    // Currently none.
     AMU_FIRST_AMULET = 35,
     AMU_RAGE = AMU_FIRST_AMULET,       //   35
     AMU_CLARITY,
