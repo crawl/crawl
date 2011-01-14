@@ -68,7 +68,7 @@ function global_function(fn_name, description)
   elseif type(fn_name) == 'string' then
     return FunctionWrapper:new(fn_name)
   else
-    if purpose then
+    if description then
       error("Expected global function name for " .. description ..
             ", got " .. type(fn_name) .. ":" .. debug.traceback())
     else
