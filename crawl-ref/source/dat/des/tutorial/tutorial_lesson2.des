@@ -13,7 +13,7 @@ tutorial_msg2 = {}
 
 function tutorial_msg2.start ()
     tutorial_intro("This lesson will teach you about monsters and how to kill them using melee and ranged combat.")
-    crawl.mpr("To begin with, go grab that weapon!", "tutorial")
+    crawl.mpr("First, you need a weapon! Go and grab the one lying in front of the door!", "tutorial")
 end
 
 function tutorial_msg2.pickup_weapon ()
@@ -71,6 +71,11 @@ end
 function tutorial_msg2.wait ()
     return tutorial_message("Rather than storm the room and get swarmed by monsters, you can also step back and wait (with "
                             .. tutorial_get_cmd("CMD_MOVE_NOWHERE") .. ") for them to come to you.")
+end
+
+function tutorial_msg2.resting2 ()
+    return tutorial_message("If necessary, rest up with "
+                            .. tutorial_get_cmd("CMD_REST") .. ". ")
 end
 
 function tutorial_msg2.compare_monster_desc ()
@@ -150,11 +155,11 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    "Lesson 2: Monsters and Combat"
 BFLAGS:  islanded
 ORIENT:  encompass
-KFEAT:   ABCF = .
-KFEAT:   DE = +
+KFEAT:   ABCG = .
+KFEAT:   DEF = +
 KFEAT:   n = iron_grate
-COLOUR:  deABCF = blue
-FTILE:   deABCF = tutorial_pad
+COLOUR:  deABCG = blue
+FTILE:   deABCG = tutorial_pad
 ITEM:    mace ego:none not_cursed
 ITEM:    hand axe ego:none not_cursed
 SHUFFLE: 456
@@ -168,7 +173,8 @@ MARKER:  C = lua:tutorial_msg2.resting()
 MARKER:  D = lua:tutorial_msg2.chop_corpses()
 MARKER:  e = lua:tutorial_msg2.butchery_weapon()
 MARKER:  E = lua:tutorial_msg2.wait()
-MARKER:  F = lua:tutorial_msg2.compare_monster_desc()
+MARKER:  F = lua:tutorial_msg2.resting2()
+MARKER:  G = lua:tutorial_msg2.compare_monster_desc()
 MARKER:  } = lua:tutorial_msg2.downstairs()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
                                  onclimb = "tutorial_msg2.exit" }
@@ -198,21 +204,21 @@ xx...nnnn+nnnn...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx4..+.......+...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...n...T...n.6.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...n.......n...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxFxxxxxxxxxxxxxxxxxe..xxxxxxxxxxxxxxxx
+xxxxxxxxxGxxxxxxxxxxxxxxxxxe..xxxxxxxxxxxxxxxx
 xxxxxxxxx.xxxxxxxxxxxxxxxxx.3.D....C.2..B..xxx
 xxxxxxxxx.xxxxxxxxxxxxxxxxx...xxxxxxxxxxxx.xxx
 xxxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx.xxx
 xxxxxxxxx.xxxxxx....3..xxxxx.xxxxxxxxxxxxx.xxx
 xxxxxxxxx.xxxxxx.3.....xxxxx.xxxxxxxxxxxxx.xxx
-xxxxxxxxx......+..3....E.....xxxxxxxxxxxxx1xxx
+xxxxxxxxx......F..3....E.....xxxxxxxxxxxxx1xxx
 xxxxxxxxxxxxxxxx....3..xxxxxxxxxxxxxxxxxxx.xxx
 xxxxxxxxxxxxxxxx.3.....xxxxxxxxxxxxxxxxxxx.xxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxAxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccc+ccc
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.....c
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc..d..c
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.....c
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc{.(.[c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.....c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc(.{.[c
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc
 ENDMAP
