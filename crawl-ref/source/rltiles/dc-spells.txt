@@ -172,6 +172,7 @@ warp_weapon WARP_WEAPON
 alter_self ALTER_SELF
 blade_hands BLADE_HANDS
 polymorph_other POLYMORPH_OTHER
+homunculus HOMUNCULUS
 
 %sdir gui/spells
 memorise MEMORISE
