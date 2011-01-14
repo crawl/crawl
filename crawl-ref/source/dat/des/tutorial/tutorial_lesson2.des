@@ -169,7 +169,7 @@ ITEM:    hand axe ego:none not_cursed
 SHUFFLE: 456
 MONS:    training dummy hp:20, training dummy hp:20 ; club ego:none not_cursed
 MONS:    rat always_corpse
-MONS:    wolf, porcupine, ooze
+MONS:    hound, porcupine, ooze
 MARKER:  d = lua:tutorial_msg2.pickup_weapon()
 MARKER:  A = lua:tutorial_msg2.melee()
 MARKER:  B = lua:tutorial_msg2.examine()
