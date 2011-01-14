@@ -1256,7 +1256,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             mprnojoin("You die...");
             mprnojoin("In Crawl, death is a sad but common occurence. "
-                      "There's usually something that could have been done to prevent it. "
+                      "Note that there's usually something you could have done to prevent it. "
                       "Keep trying, eventually you'll prevail!",
                       MSGCH_TUTORIAL);
             more();
