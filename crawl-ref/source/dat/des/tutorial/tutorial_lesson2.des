@@ -114,9 +114,14 @@ end
 function tutorial_msg2.exit ()
     -- A single screen recapping all commands.
 
-    local text = "<yellow>Weapons</yellow>\n"
-                 .. "  " .. tutorial_get_cmd("CMD_PICKUP") .. "  pick up an item\n"
-                 .. "  " .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "  wield a weapon\n"
+    local text = "<yellow>Weapons"
+    if not crawl.is_tiles() then
+        text = text .. " <cyan>)</cyan>"
+    end
+
+    text = text .. "</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_PICKUP") .. "  pick up an item\n"
+                .. "  " .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "  wield a weapon\n"
 
     if crawl.is_tiles() then
         text = text .. "\nYou also can do this by <white>clicking</white> on the weapon in your inventory.\n"
@@ -136,17 +141,16 @@ function tutorial_msg2.exit ()
                 .. "  " .. tutorial_get_cmd("CMD_MOVE_NOWHERE") .. "  wait, rest and search a single turn\n"
                 .. "  " .. tutorial_get_cmd("CMD_REST") .. "  wait, rest and search up to 100 turns\n"
 
-    text = text .. "\n<yellow>Corpses</yellow>\n"
+    text = text .. "\n<yellow>Corpses"
+    if not crawl.is_tiles() then
+        text = text .. " <brown>%</brown>"
+    end
+
+    text = text .. "</yellow>\n"
                 .. "  " .. tutorial_get_cmd("CMD_BUTCHER") .. "  chop a corpse into chunks\n"
                 .. "  " .. tutorial_get_cmd("CMD_EAT") .. "  eat a chunk of meat\n"
 
     return crawl.endgame(text)
-end
-
-function tutorial_msg2.exit_stairs ()
-    return one_way_stair { desc = "exit from the tutorial",
-                           dst  = "tutorial_basic1",
-                           onclimb = "tutorial_msg2.exit" }
 end
 }}
 
