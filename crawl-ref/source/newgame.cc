@@ -3025,8 +3025,10 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
                 cprintf("\nGoodbye!");
                 end(0);
                 break;
-            case ' ':
             CASE_ESCAPE
+                game_ended();
+                break;
+            case ' ':
                 return;
             default:
                 // if we get this far, we did not get a significant selection
