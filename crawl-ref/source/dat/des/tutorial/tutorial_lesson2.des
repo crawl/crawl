@@ -1,0 +1,218 @@
+#########################################
+# Tutorial map 2: Monsters and combat   #
+#########################################
+#
+# Still TODO:
+#  * The multichop prompt for several corpses looks really intimidating!
+#  * Add the xp gain tutorial trigger.
+#
+{{
+require("clua/tutorial.lua")
+
+tutorial_msg2 = {}
+
+function tutorial_msg2.start ()
+    tutorial_intro("This lesson will teach you about monsters and how to kill them using melee and ranged combat.")
+    crawl.mpr("To begin with, go grab that weapon!", "tutorial")
+end
+
+function tutorial_msg2.pickup_weapon ()
+    local text = "Pick up this weapon with " .. tutorial_get_cmd("CMD_PICKUP")
+
+    if crawl.is_tiles() then
+        text = text .. " (or by <white>clicking</white> on it in the inventory area to the right of the screen)"
+    end
+    text = text .. " and then wield it with " .. tutorial_get_cmd("CMD_WIELD_WEAPON")
+
+    if crawl.is_tiles() then
+        text = text .. " or, again, via <white>mouseclick</white>"
+    end
+
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.melee ()
+    return tutorial_message("To attack a monster with your wielded weapon, simply walk into it.")
+end
+
+function tutorial_msg2.examine ()
+    local text = "A monster wielding a weapon is more dangerous than the same monster when unarmed. "
+
+    if crawl.is_tiles() then
+        text = text .. "Most monsters will be displayed with their wielded weapon, but you can also check this by examining a monster via "
+                    .. tutorial_get_cmd("CMD_LOOK_AROUND") .. ", or by <white>mouseover</white>."
+    else
+        text = text .. "You can check whether this is the case by examining the monster with "
+                    .. tutorial_get_cmd("CMD_LOOK_AROUND") .. ", and then selecting the monster with the movement keys or via the "
+                    .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<white>+</white> shortcut directly looping through all monsters in sight."
+    end
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.resting ()
+    return tutorial_message("Very good! You can regain any lost hit points by resting with "
+                            .. tutorial_get_cmd("CMD_REST") .. ". "
+                            .. "This will make you rest and search for up to 100 turns, but will get interrupted by a number of important events.")
+end
+
+function tutorial_msg2.chop_corpses ()
+    return tutorial_message("You can chop up corpses into edible meat chunks. For that you'll need a sharp object, such as the axe over there.")
+end
+
+function tutorial_msg2.butchery_weapon ()
+    return tutorial_message("This axe was picked up automatically because you didn't have a butchering tool. "
+                            .. "Once you've chopped a corpse with " .. tutorial_get_cmd("CMD_BUTCHER")
+                            .. ", you can eat the resulting chunks with " .. tutorial_get_cmd("CMD_EAT") .. ".")
+end
+
+function tutorial_msg2.wait ()
+    return tutorial_message("Rather than storm the room and get swarmed by monsters, you can also step back and wait (with "
+                            .. tutorial_get_cmd("CMD_MOVE_NOWHERE") .. ") for them to come to you.")
+end
+
+function tutorial_msg2.compare_monster_desc ()
+    local text = "Examine these monsters ("
+
+    if crawl.is_tiles() then
+        text = text .. "via <white>mouseover</white>"
+    else
+        text = text .. "with " .. tutorial_get_cmd("CMD_LOOK_AROUND")
+                    .. "<w>+</w>
+    end
+
+    text = text .. ") and compare their descriptions ("
+
+    if crawl.is_tiles() then
+        text = text .. "<white>right mouseclick</white>"
+    else
+        text = text .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "v"
+    end
+
+    text = text .. ") to find out which of these cages is the safest to walk through."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.downstairs ()
+    return tutorial_message("Well done! Now, continue into the next level with "
+                            .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. ".")
+end
+
+function tutorial_msg2.tutorial_end ()
+    return tutorial_message("Congratulations! You're ready for combat now!\n"
+                            .. "To exit the tutorial, simply go down these stairs. Confirm the resulting prompt with an uppercase <white>Y</white>.")
+end
+
+function tutorial_msg2.exit ()
+    -- A single screen recapping all commands.
+
+    local text = "<yellow>Weapons</yellow>\n"
+                 .. "  " .. tutorial_get_cmd("CMD_PICKUP") .. "  pick up an item\n"
+                 .. "  " .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "  wield a weapon\n"
+
+    if crawl.is_tiles() then
+        text = text .. "\nYou also can do this by <white>clicking</white> on the weapon in your inventory.\n"
+    end
+
+    text = text .. "\n<yellow>Monsters</yellow>\n"
+                .. "  attack by moving into a monster\n"
+    if crawl.is_tiles() then
+        text = text .. "  " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "  examine a monster\n"
+                    .. "  " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w>  read a more detailed description\n"
+    else
+        text = text .. "  <white>mouseover</white>  examine a monster\n"
+                    .. "  <white>rightclick</white>  read a more detailed description\n"
+    end
+
+    text = text .. "\n<yellow>Resting</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_MOVE_NOWHERE") .. "  wait, rest and search a single turn\n"
+                .. "  " .. tutorial_get_cmd("CMD_REST") .. "  wait, rest and search up to 100 turns\n"
+
+    text = text .. "\n<yellow>Corpses</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_BUTCHER") .. "  chop a corpse into chunks\n"
+                .. "  " .. tutorial_get_cmd("CMD_EAT") .. "  eat a chunk of meat\n"
+
+    return crawl.endgame(text)
+end
+
+function tutorial_msg2.exit_stairs ()
+    return one_way_stair { desc = "exit from the tutorial",
+                           dst  = "tutorial_basic1",
+                           onclimb = "tutorial_msg2.exit" }
+end
+}}
+
+NAME:    tutorial_lesson2
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_start
+DESC:    "Lesson 2: Monsters and Combat"
+BFLAGS:  islanded
+ORIENT:  encompass
+KFEAT:   ABCF = .
+KFEAT:   DE = +
+KFEAT:   n = iron_grate
+COLOUR:  deABCF = blue
+FTILE:   deABCF = tutorial_pad
+ITEM:    mace ego:none not_cursed
+ITEM:    hand axe ego:none not_cursed
+SHUFFLE: 456
+MONS:    training dummy hp:20, training dummy hp:20 ; club ego:none not_cursed
+MONS:    rat always_corpse
+MONS:    wolf, porcupine, ooze
+MARKER:  d = lua:tutorial_msg2.pickup_weapon()
+MARKER:  A = lua:tutorial_msg2.melee()
+MARKER:  B = lua:tutorial_msg2.examine()
+MARKER:  C = lua:tutorial_msg2.resting()
+MARKER:  D = lua:tutorial_msg2.chop_corpses()
+MARKER:  e = lua:tutorial_msg2.butchery_weapon()
+MARKER:  E = lua:tutorial_msg2.wait()
+MARKER:  F = lua:tutorial_msg2.compare_monster_desc()
+MARKER:  } = lua:tutorial_msg2.downstairs()
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg2.exit" }
+MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg2.exit" }
+MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg2.exit" }
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg2.exit" }
+epilogue{{
+  tutorial_msg2.start()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx...}...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx.xx...xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.xxxx.xxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.xxxx.xxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxxxx.xxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxxxn+nxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxx.....xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxn+nn5......nn+nxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...nnnn+nnnn...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx4..+.......+...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...n...T...n.6.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...n.......n...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxFxxxxxxxxxxxxxxxxxe..xxxxxxxxxxxxxxxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxx.3.D....C.2..B..xxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxx...xxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxx....3..xxxxx.xxxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxx.3.....xxxxx.xxxxxxxxxxxxx.xxx
+xxxxxxxxx......+..3....E.....xxxxxxxxxxxxx1xxx
+xxxxxxxxxxxxxxxx....3..xxxxxxxxxxxxxxxxxxx.xxx
+xxxxxxxxxxxxxxxx.3.....xxxxxxxxxxxxxxxxxxx.xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxAxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccc+ccc
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.....c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc..d..c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.....c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc{.(.[c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc
+ENDMAP
