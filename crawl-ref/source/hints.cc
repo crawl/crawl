@@ -1550,11 +1550,19 @@ static bool _rare_hints_event(hints_event_type event)
     }
 }
 
+static bool _tutorial_interesting(hints_event_type event)
+{
+    if (!crawl_state.game_is_tutorial())
+        return (false);
+
+    return (event == HINT_NEW_LEVEL);
+}
+
 // Here most of the hints mode messages for various triggers are handled.
 void learned_something_new(hints_event_type seen_what, coord_def gc)
 {
     // Already learned about that.
-    if (!Hints.hints_events[seen_what])
+    if (!Hints.hints_events[seen_what] && !_tutorial_interesting(seen_what))
         return;
 
     // Don't trigger twice in the same turn.

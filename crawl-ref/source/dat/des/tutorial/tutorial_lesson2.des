@@ -97,7 +97,7 @@ function tutorial_msg2.compare_monster_desc ()
 end
 
 function tutorial_msg2.downstairs ()
-    return tutorial_message("Well done! Now, continue into the next level with "
+    return tutorial_message("You did it! Now, continue into the next level with "
                             .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. ".")
 end
 
