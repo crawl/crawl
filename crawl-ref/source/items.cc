@@ -1136,12 +1136,14 @@ bool pickup_single_item(int link, int qty)
     if (qty == 0 && mitm[link].quantity > 1 && mitm[link].base_type != OBJ_GOLD)
     {
         const std::string prompt
-                = make_stringf("Pick up how many of %s? ",
+                = make_stringf("Pick up how many of %s (g or enter for all)? ",
                                mitm[link].name(DESC_NOCAP_THE,
                                     false, false, false).c_str());
 
-        qty = prompt_for_int(prompt.c_str(), true);
-        if (qty < 1)
+        qty = prompt_for_quantity(prompt.c_str());
+        if (qty == -1)
+            qty = mitm[link].quantity;
+        else if (qty == 0)
         {
             canned_msg(MSG_OK);
             return (false);

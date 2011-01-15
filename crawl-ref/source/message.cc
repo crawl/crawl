@@ -1079,7 +1079,9 @@ void msgwin_got_input()
 int msgwin_get_line(std::string prompt, char *buf, int len,
                     input_history *mh, int (*keyproc)(int& c))
 {
-    msgwin_prompt(prompt);
+    if (prompt != "")
+        msgwin_prompt(prompt);
+
     int ret = cancelable_get_line(buf, len, mh, keyproc);
     msgwin_reply(buf);
     return ret;

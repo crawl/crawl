@@ -98,6 +98,7 @@ class game_ended_condition : public std::exception
 {
 };
 
+int prompt_for_quantity(const char *prompt);
 int prompt_for_int(const char *prompt, bool nonneg);
 
 #endif
