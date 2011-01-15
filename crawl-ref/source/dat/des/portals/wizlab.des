@@ -1440,7 +1440,7 @@ ITEM:       potion of experience, manual of fighting / manual of armour / manual
 LFLOORCOL:  white
 KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures \
             nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf \
-            dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_mon \
+            dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk \
             / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures \
             nas:old_memories seen tile:mons_iron_troll_monk w:5
 
