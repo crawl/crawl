@@ -3593,7 +3593,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (mspec.mlevel == TAG_UNFOUND)
             mspec.mlevel = 0;
 
-        mspec.hd = strip_number_tag(mon_str, "hd:");
+        mspec.hd = std::min(100, strip_number_tag(mon_str, "hd:"));
         if (mspec.hd == TAG_UNFOUND)
             mspec.hd = 0;
 
