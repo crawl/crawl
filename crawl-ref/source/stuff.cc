@@ -1067,6 +1067,26 @@ coord_def get_random_stair()
     return st[random2(st.size())];
 }
 
+
+//---------------------------------------------------------------
+//
+// prompt_for_quantity
+//
+// Returns -1 if g or enter is pressed (pickup all).
+// Else, returns quantity.
+//---------------------------------------------------------------
+int prompt_for_quantity(const char *prompt)
+{
+    msgwin_prompt(prompt);
+
+    int ch = getch_ck();
+    if (ch == CK_ENTER || ch == 'g')
+        return -1;
+
+    macro_buf_add(ch);
+    return prompt_for_int("", false);
+}
+
 //---------------------------------------------------------------
 //
 // prompt_for_int
