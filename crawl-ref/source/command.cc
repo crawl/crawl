@@ -59,7 +59,7 @@
 #include "viewchar.h"
 
 static void _adjust_item(void);
-static void _adjust_spells(void);
+static void _adjust_spell(void);
 static void _adjust_ability(void);
 
 static const char *features[] = {
@@ -284,6 +284,11 @@ static void _print_version(void)
 
 void adjust(void)
 {
+    if (!you.spell_no && your_talents(false).empty())
+    {
+        _adjust_item();
+        return;
+    }
     mpr("Adjust (i)tems, (s)pells, or (a)bilities? ", MSGCH_PROMPT);
 
     const int keyin = tolower(get_ch());
@@ -291,7 +296,7 @@ void adjust(void)
     if (keyin == 'i')
         _adjust_item();
     else if (keyin == 's')
-        _adjust_spells();
+        _adjust_spell();
     else if (keyin == 'a')
         _adjust_ability();
     else if (key_is_escape(keyin))
@@ -370,7 +375,7 @@ static void _adjust_item(void)
     swap_inv_slots(from_slot, to_slot, true);
 }
 
-static void _adjust_spells(void)
+static void _adjust_spell(void)
 {
     if (!you.spell_no)
     {
