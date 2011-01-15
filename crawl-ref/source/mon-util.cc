@@ -1845,19 +1845,19 @@ static int _serpent_of_hell_color(const monster* mon)
     switch (mon->props["serpent_of_hell_flavour"].get_int())
     {
     case BRANCH_GEHENNA:
-        return RED;
+        return ETC_FIRE;
         break;
     case BRANCH_COCYTUS:
-        return WHITE;
+        return ETC_ICE;
         break;
     case BRANCH_DIS:
-        return CYAN;
+        return ETC_IRON;
         break;
     case BRANCH_TARTARUS:
-        return MAGENTA;
+        return ETC_NECRO;
         break;
     default:
-        return RED;
+        return ETC_FIRE;
     }
 }
 
