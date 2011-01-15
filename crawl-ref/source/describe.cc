@@ -3293,7 +3293,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (inf.title.empty())
         inf.title = mi.full_name(DESC_CAP_A, true);
 
-    std::string db_name = mi.db_name();
+    std::string db_name;
+
+    if (mi.mname.empty())
+        db_name = mi.db_name();
+    else
+        db_name = mi.full_name(DESC_PLAIN, true);
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the

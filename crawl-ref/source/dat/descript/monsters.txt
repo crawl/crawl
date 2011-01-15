@@ -1914,6 +1914,10 @@ ynoxinul
 A demon with shiny metallic scales.
 %%%%
 # Vault-defined monsters
+air elemental statue
+
+A delicate statue of a kenku gliding through the air. It looks quite insubstantial.
+%%%%
 ancient champion
 
 The unfathomably ancient skeleton of a humanoid creature. It has hundreds of golden sigils etched onto its bones, and pulses with terrible, unholy power.
@@ -1926,8 +1930,11 @@ Cigotuvi's Monster
 
 This terrifying creation looks to have been constructed from the body parts of every monstrous creature imaginable.
 %%%%
-# There are multiple elemental statues but only the first will be reported
-elemental statue
+earth elemental statue
+
+A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
+%%%%
+fire elemental statue
 
 An ornate statue of an orc holding a torch aloft. The air around it shimmers.
 %%%%
@@ -1978,6 +1985,10 @@ A young woman with a fish tail in place of legs. She looks quite sick, but still
 strange machine
 
 A glistening silver machine.
+%%%%
+water elemental statue
+
+A smooth statue of a mermaid bathing in a fountain. It glistens softly.
 %%%%
 zot statue
 
