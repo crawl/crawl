@@ -12,7 +12,7 @@ require("clua/tutorial.lua")
 tutorial_msg2 = {}
 
 function tutorial_msg2.start ()
-    tutorial_intro("This lesson will teach you about monsters and how to kill them using melee and ranged combat.")
+    tutorial_intro("This lesson will teach you about monsters and how to kill them in melee and ranged combat.")
     crawl.mpr("First, you need a weapon! Go and grab the one lying in front of the door!", "tutorial")
 end
 
@@ -34,7 +34,7 @@ function tutorial_msg2.pickup_weapon ()
 end
 
 function tutorial_msg2.melee ()
-    return tutorial_message("To attack a monster with your wielded weapon, simply walk into it.")
+    return tutorial_message("To attack a monster with your bare hands or wielded weapon, simply walk into it.")
 end
 
 function tutorial_msg2.examine ()
@@ -59,11 +59,11 @@ function tutorial_msg2.resting ()
 end
 
 function tutorial_msg2.chop_corpses ()
-    return tutorial_message("You can chop up corpses into edible meat chunks. For that you'll need a sharp object, such as the axe over there.")
+    return tutorial_message("You can chop up corpses into edible meat chunks. For that you'll need a sharp object, such as the short sword over there.")
 end
 
 function tutorial_msg2.butchery_weapon ()
-    return tutorial_message("This axe was picked up automatically because you didn't have a butchering tool. "
+    return tutorial_message("This short sword was picked up automatically because you didn't have a butchering tool. "
                             .. "Once you've chopped a corpse with " .. tutorial_get_cmd("CMD_BUTCHER")
                             .. ", you can eat the resulting chunks with " .. tutorial_get_cmd("CMD_EAT") .. ".")
 end
@@ -148,7 +148,8 @@ function tutorial_msg2.exit ()
 
     text = text .. "</yellow>\n"
                 .. "  " .. tutorial_get_cmd("CMD_BUTCHER") .. "  chop a corpse into chunks\n"
-                .. "  " .. tutorial_get_cmd("CMD_EAT") .. "  eat a chunk of meat\n"
+                .. "  " .. tutorial_get_cmd("CMD_EAT") .. "  eat a chunk of meat\n\n"
+                .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
     return crawl.endgame(text)
 end
@@ -165,7 +166,7 @@ KFEAT:   n = iron_grate
 COLOUR:  deABCG = blue
 FTILE:   deABCG = tutorial_pad
 ITEM:    mace ego:none not_cursed
-ITEM:    hand axe ego:none not_cursed
+ITEM:    short sword ego:none not_cursed
 SHUFFLE: 456
 MONS:    training dummy hp:20, training dummy hp:20 ; club ego:none not_cursed
 MONS:    rat always_corpse
