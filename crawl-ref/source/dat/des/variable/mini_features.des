@@ -1879,8 +1879,9 @@ ENDMAP
 #
 #######################################################################
 
-NAME: minivault_1
-TAGS: allow_dup extra luniq_mini abyss ruin_abyss
+NAME:  minivault_1
+TAGS:  allow_dup extra luniq_mini abyss ruin_abyss
+DEPTH: D:4-
 MAP
 ............
 ..xxxx=xxx..
@@ -1930,8 +1931,11 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_10
-TAGS: mini_float extra luniq_mini
+# Modified for DCSS 0.8, as 16 good items on D:1 is too good. -dpeg
+NAME:  minivault_10
+DEPTH: D:6-26
+SUBST: * = %:30 * |:1
+TAGS:  mini_float extra luniq_mini
 MAP
 xxxx  xxxx
 x**x  x**x
@@ -2018,8 +2022,9 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_22
-TAGS: allow_dup extra luniq_mini abyss ruin_abyss
+NAME:  minivault_22
+TAGS:  allow_dup extra luniq_mini abyss ruin_abyss
+DEPTH: D:6-26
 SUBST: $ : $ *:5
 MAP
 ............
