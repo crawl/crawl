@@ -1916,8 +1916,7 @@ A demon with shiny metallic scales.
 # Vault-defined monsters
 ancient champion
 
-The unfathomably ancient skeleton of a humanoid creature. It has hundreds of
-golden sigils etched onto its bones, and pulses with terrible, unholy power.
+The unfathomably ancient skeleton of a humanoid creature. It has hundreds of golden sigils etched onto its bones, and pulses with terrible, unholy power.
 %%%%
 antique lich
 
@@ -1925,8 +1924,7 @@ A lich who has grown expensive over countless years.
 %%%%
 Cigotuvi's Monster
 
-This terrifying creation looks to have been constructed from the body parts of
-every monstrous creature imaginable.
+This terrifying creation looks to have been constructed from the body parts of every monstrous creature imaginable.
 %%%%
 # There are multiple elemental statues but only the first will be reported
 elemental statue
@@ -1943,23 +1941,15 @@ An animated mound of misshapen flesh.
 %%%%
 glowing angel
 
-A divine agent of Zin, it is a towering winged figure with an aura of brilliant
-white light. This angel's face, though, is marked by a scowl, as if its zeal
-against any real or perceived vice overshadows its goodness.
+A divine agent of Zin, it is a towering winged figure with an aura of brilliant white light. This angel's face, though, is marked by a scowl, as if its zeal against any real or perceived vice overshadows its goodness.
 %%%%
 grey elf
 
-Once considered a unique species of its own, grey elves are now more properly
-classified as a sub-species of high elf. Little exists to distinguish them from
-their high elf cousins, aside from their supposed glamour (which is probably
-more myth than fact).
+Once considered a unique species of its own, grey elves are now more properly classified as a sub-species of high elf. Little exists to distinguish them from their high elf cousins, aside from their supposed glamour (which is probably more myth than fact).
 %%%%
 hill dwarf
 
-Hill dwarves are basically just mountain dwarves who live on hills.  They are
-otherwise indistinguishable from their mountain brethren.  Once able
-adventurers, the hill dwarves no longer have any interest in dungeon delving.
-This one was captured specially for this exhibit.
+Hill dwarves are basically just mountain dwarves who live on hills.  They are otherwise indistinguishable from their mountain brethren.  Once able adventurers, the hill dwarves no longer have any interest in dungeon delving. This one was captured specially for this exhibit.
 %%%%
 human monk
 
@@ -1971,8 +1961,7 @@ It seems a flimsy representation of a monk; nothing more than a half-formed memo
 %%%%
 malarious mermaid
 
-A young woman with a fish tail in place of legs. She looks quite sick, but still
-capable of bespelling her audience.
+A young woman with a fish tail in place of legs. She looks quite sick, but still capable of bespelling her audience.
 %%%%
 pristine statue
 
@@ -1984,8 +1973,7 @@ It seems a flimsy representation of a monk; nothing more than a half-formed memo
 %%%%
 sickly siren
 
-A young woman with a fish tail in place of legs. She looks quite sick, but still
-capable of bespelling her audience.
+A young woman with a fish tail in place of legs. She looks quite sick, but still capable of bespelling her audience.
 %%%%
 strange machine
 
