@@ -1144,30 +1144,19 @@ ENDMAP
 # D3_1, branching
 NAME:  sprint_mu_d3_branching
 TAGS:  sprint_mu_d3 no_rotate no_hmirror no_vmirror no_dup
-KMONS: a = col:red generate_awake statue name:elemental name_adjective hp:50 \
+KMONS: a = col:red generate_awake statue name:fire_elemental name_adjective hp:50 \
  spells:summon_fire_elementals;cantrip
-MARKER: a = lua:MonPropsMarker:new {description="An ornate statue of an orc holding a torch aloft. " \
-        .. "The air around it shimmers.\n"}
-KMONS: H = col:blue generate_awake statue name:elemental name_adjective hp:50 \
+KMONS: H = col:blue generate_awake statue name:water_elemental name_adjective hp:50 \
  spells:summon_water_elementals;cantrip
-MARKER: H = lua:MonPropsMarker:new {description="A smooth statue of a mermaid bathing in a fountain. " \
-        .. "It glistens softly.\n"}
-KMONS: O = col:brown generate_awake statue name:elemental name_adjective hp:70 \
+KMONS: O = col:brown generate_awake statue name:earth_elemental name_adjective hp:70 \
  spells:summon_earth_elementals;cantrip
-MARKER: O = lua:MonPropsMarker:new {description="A plain statue of a dwarf wielding a pickaxe. " \
-        .. "It looks incredibly heavy.\n"}
-KMONS: d = col:lightgrey generate_awake statue name:elemental name_adjective hp:25 \
+KMONS: d = col:lightgrey generate_awake statue name:air_elemental name_adjective hp:25 \
  spells:summon_air_elementals;cantrip
-MARKER: d = lua:MonPropsMarker:new {description="A delicate statue of a kenku gliding through the air.  " \
-        .. "It looks quite insubstantial.\n"}
 KMONS: e = col:gold skeletal warrior name:ancient_champion name_replace \
        name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \
        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
        battleaxe ego:vorpal | battleaxe ego:pain | \
        w:3 executioner's axe ego:vorpal
-MARKER: e = lua:MonPropsMarker:new {description="The unfathomably ancient " \
-        .. "skeleton of a humanoid creature. It has hundreds of golden sigils " \
-        .. "etched onto its bones, and pulses with terrible, unholy power.\n"}
 KITEM: e = superb_item, superb_item
 KMONS: p = plant
 KMONS: 1 = patrolling vampire knight
@@ -1195,7 +1184,6 @@ KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
  titan zombie
 KMONS: s = boris
 KMONS: t = col:white generate_awake statue name:pristine name_adjective hp:100 ; crossbow . bolt q:50 ego:silver
-MARKER: t = lua:MonPropsMarker:new {description="An immaculately sculpted statue of an archer.\n"}
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant
@@ -1459,8 +1447,6 @@ TAGS: sprint_mu_zot no_rotate no_hmirror no_vmirror no_dup
 KMONS: T = col:magenta statue name:zot n_adj \
         spells:summon_eyeballs;polymorph_other;haste;shadow_creatures;\
         summon_small_mammals;summon_eyeballs hd:30 hp:300
-MARKER: T = lua:MonPropsMarker:new {description="This statue is profoundly " \
-        .. "disturbing.\n"}
 MARKER: T = lua:fog_machine { \
         pow_max = 15, delay_min = 100, delay_max = 150, \
         size = 1, size_buildup_amnt = 29, \
