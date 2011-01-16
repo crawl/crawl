@@ -1980,6 +1980,10 @@ static void _ruin_level(Iterator ri,
 
     for (; ri; ++ri)
     {
+        // don't alter map boundary
+        if (!in_bounds(*ri))
+            continue;
+
         /* only try to replace wall and door tiles */
         if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
         {
