@@ -34,15 +34,15 @@ end
 
 function tutorial_msg.diagonal1 ()
     local text = "You can move diagonally by way of the <white>number pad</white> (try Numlock on/off) or by using the <white>vi keys</white>.\n"
-                 .. "  Numpad:       <white>1 2 3</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
+                 .. "  Numpad:       <white>7 8 9</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
                  .. "                 \\|/                         " .. "\\|/\n"
                  .. "                <w>4</w>-<w>.</w>-<w>6</w>                       "
                  .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-<w>.</w>-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
                  .. "                 /|\\                         " .. "/|\\\n"
-                 .. "                <white>7 8 9</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
+                 .. "                <white>1 2 3</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n"
-                 .. "For example, you can move down that corridor with <white>9</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT")
+                 .. "For example, you can move down that corridor with <white>3</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT")
 
     if crawl.is_tiles() then
         text = text .. ", or again, via <white>mouse click</white>"
@@ -53,17 +53,17 @@ function tutorial_msg.diagonal1 ()
 end
 
 function tutorial_msg.diagonal2 ()
-    local text = "Move to the upper right with <white>3</white> or " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "."
+    local text = "Move to the upper right with <white>9</white> or " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.diagonal3 ()
-    local text = "Move to the upper left with <white>1</white> or " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. "."
+    local text = "Move to the upper left with <white>7</white> or " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.diagonal4 ()
-    local text = "Move to the lower left with <white>7</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. "."
+    local text = "Move to the lower left with <white>1</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. "."
     return tutorial_message(text)
 end
 
@@ -156,7 +156,7 @@ function tutorial_msg.shiftmove ()
 end
 
 function tutorial_msg.shiftmove2 ()
-    local text = "Run down this corridor with <white>Shift-9</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
+    local text = "Run down this corridor with <white>Shift-3</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
     return tutorial_message(text)
 end
 
@@ -167,7 +167,7 @@ function tutorial_msg.secret_door_glass ()
 end
 
 function tutorial_msg.shiftmove3 ()
-    local text = "Run down this corridor with <white>Shift-7</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
+    local text = "Run down this corridor with <white>Shift-1</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
     return tutorial_message(text)
 end
 
@@ -176,7 +176,7 @@ function tutorial_msg.water ()
 end
 
 function tutorial_msg.shiftmove4 ()
-    local text = "Run up this corridor with <white>Shift-1</white> or " .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
+    local text = "Run up this corridor with <white>Shift-7</white> or " .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
     return tutorial_message(text)
 end
 
@@ -202,13 +202,13 @@ function tutorial_msg.exit ()
     -- A single screen recapping all commands.
 
     local text = "<yellow>Movement commands</yellow>\n\n"
-                 .. "  Numpad:       <white>1 2 3</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
+                 .. "  Numpad:       <white>7 8 9</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
                  .. "                 \\|/                         " .. "\\|/\n"
                  .. "                <w>4</w>-<w>.</w>-<w>6</w>                       "
                  .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-<w>.</w>-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
                  .. "                 /|\\                         " .. "/|\\\n"
-                 .. "                <white>7 8 9</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
+                 .. "                <white>1 2 3</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
                  .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n\n"
                  .. "<white>Shift + direction</white> moves you several squares into this direction.\n"
 

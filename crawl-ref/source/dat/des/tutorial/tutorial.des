@@ -25,11 +25,11 @@ function tutorial.messagestart ()
     crawl.mesclr(true)
 
     if not crawl.is_tiles() then
-        crawl.mpr("You can move with  <white>1 2 3</white>    " .. "Or you can move    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " " .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n" ..
+        crawl.mpr("You can move with  <white>7 8 9</white>    " .. "Or you can move    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " " .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n" ..
 "the <white>numpad</white>:         \\|/    " .. " with <white>vi-keys</white>:       \\|/\n" ..
 "                   <white>4</white><<-><white>6</white>    " .. "                   " .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "<<->" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n" ..
 "                    /|\\    " .. "                    /|\\\n" ..
-"                   <white>7 8 9</white>    " .. "                   " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT"), "tutorial")
+"                   <white>1 2 3</white>    " .. "                   " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT"), "tutorial")
         crawl.more()
     else
         crawl.mpr("(If you want, you can see a list of movement keys by pressing " .. tutorial_get_cmd("CMD_DISPLAY_COMMANDS") .. " followed by <white>?</white>.)", "tutorial")
@@ -43,10 +43,7 @@ end
 function tutorial.message_run ()
   local text = "Great! There's another <blue>blue square</blue> further up the corridor. Head for that next."
 
--- I think this is useful information even for Tiles. (jpeg)
---  if not crawl.is_tiles() then
-    text = "Great! However, pressing the same key multiple times can be a bit tedious, and sometimes outright dangerous. There's another <blue>blue square</blue> down the corridor. You can safely 'run' to the right with " .. tutorial_get_cmd("CMD_RUN_RIGHT") .. ". Try it!"
---  end
+  text = "Great! However, pressing the same key multiple times can be a bit tedious, and sometimes outright dangerous. There's another <blue>blue square</blue> down the corridor. You can safely 'run' to the right with " .. tutorial_get_cmd("CMD_RUN_RIGHT") .. ". Try it!"
 
   return tutorial_message(text)
 end
