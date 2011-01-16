@@ -1074,7 +1074,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         mon->behaviour = BEH_LURK;
     }
 
-    if (!msg.empty())
+    if (!msg.empty() && mon->visible_to(&you))
         mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
     ASSERT(!crawl_state.game_is_arena()
