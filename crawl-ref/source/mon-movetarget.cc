@@ -803,6 +803,53 @@ void set_random_target(monster* mon)
     }
 }
 
+// Try to find a band leader for the given monster
+static monster * _active_band_leader(monster * mon)
+{
+    // Not a band member
+    if (!mon->props.exists("band_leader"))
+        return (NULL);
+
+    // Try to find our fearless leader.
+    unsigned leader_mid = mon->props["band_leader"].get_int();
+
+    return (monster_by_mid(leader_mid));
+}
+
+// Return true if a target still needs to be set. If returns false, mon->target
+// was set.
+static bool _band_wander_target(monster * mon, dungeon_feature_type can_move)
+{
+    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+    monster * band_leader = _active_band_leader(mon);
+    if (band_leader == NULL)
+        return (true);
+
+    int leader_dist = grid_distance(mon->pos(), band_leader->pos());
+    if (leader_dist > dist_thresh)
+    {
+        //mon->target = band_leader->pos();
+        return (false);
+    }
+
+    std::vector<coord_def> positions;
+
+    for (radius_iterator r_it(mon->get_los_no_trans(), mon); r_it; ++r_it)
+    {
+        int dist = grid_distance(*r_it, band_leader->pos());
+        if (dist < HERD_COMFORT_RANGE)
+        {
+            positions.push_back(*r_it);
+        }
+    }
+    if (positions.empty())
+        return (true);
+
+    mon->target = positions[random2(positions.size())];
+
+    return (false);
+}
+
 static void _herd_wander_target(monster * mon, dungeon_feature_type can_move)
 {
     std::vector<monster_iterator> friends;
@@ -878,13 +925,39 @@ static bool _herd_ok(monster * mon)
     return in_bounds || !intermediate_range;
 }
 
+// Return true if we don't have to do anything to keep within an ok distance
+// of our band leader. (If no leader exists we don't have to do anything).
+static bool _band_ok(monster * mon)
+{
+    // Don't have to worry about being close to the leader if no leader can be
+    // found.
+    monster * leader = _active_band_leader(mon);
+
+    if (!leader)
+        return (true);
+
+    int g_dist = grid_distance(leader->pos(), mon->pos());
+
+    // If in range, or sufficiently out of range we can just wander around for
+    // a while longer.
+    if (g_dist < HERD_COMFORT_RANGE
+        || g_dist >= (LOS_RADIUS + HERD_COMFORT_RANGE))
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
+
 void check_wander_target(monster* mon, bool isPacified,
                          dungeon_feature_type can_move)
 {
     // default wander behaviour
     if (mon->pos() == mon->target
         || mons_is_batty(mon) || !isPacified && one_chance_in(20)
-        || herd_monster(mon) && !_herd_ok(mon))
+        || herd_monster(mon) && !_herd_ok(mon)
+        || !_band_ok(mon))
     {
         bool need_target = true;
 
@@ -901,6 +974,12 @@ void check_wander_target(monster* mon, bool isPacified,
         // (any more), check for patrol routes instead.
         if (need_target && mon->is_patrolling())
             need_target = _handle_monster_patrolling(mon);
+
+        if (need_target
+            && _active_band_leader(mon) != NULL)
+        {
+            need_target = _band_wander_target(mon, can_move);
+        }
 
         // XXX: This is really dumb wander behaviour... instead of
         // changing the goal square every turn, better would be to
