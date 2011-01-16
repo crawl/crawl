@@ -8,6 +8,9 @@ require("clua/tutorial.lua")
 tutorial = {}
 
 function tutorial.messagestart ()
+    -- Make him hungry for the butchering tutorial.
+    crawl.tutorial_hunger(2700)
+
     crawl.mesclr(true)
     local text = "Welcome to the tutorial! We'll start with basic movement. "
 

@@ -27,6 +27,7 @@
 #include "random.h"
 #include "religion.h"
 #include "stuff.h"
+#include "tutorial.h"
 #include "view.h"
 
 #ifdef UNIX
@@ -538,6 +539,7 @@ static int crawl_get_command (lua_State *ls)
 }
 
 LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
+LUAWRAP(crawl_tutorial_hunger, set_tutorial_hunger(luaL_checkint(ls, 1)))
 
 static int crawl_random_element(lua_State *ls)
 {
@@ -672,6 +674,7 @@ static const struct luaL_reg crawl_clib[] =
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
     { "endgame",        crawl_endgame },
+    { "tutorial_hunger", crawl_tutorial_hunger },
 
     { NULL, NULL },
 };
