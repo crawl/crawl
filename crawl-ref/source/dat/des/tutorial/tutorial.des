@@ -300,7 +300,7 @@ DESC:    "Basic Tutorial"
 BFLAGS:  islanded
 KMASK:   + = no_secret_doors
 ORIENT:  encompass
-ITEM:    mace ego:none not_cursed, helmet ego:none not_cursed
+ITEM:    mace mundane not_cursed, helmet mundane not_cursed
 MARKER:  Q = lua:tutorial.message_run()
 MARKER:  A = lua:tutorial.message_diagonal1()
 MARKER:  B = lua:tutorial.message_diagonal2()
@@ -322,7 +322,7 @@ MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
 FTILE:   ABCDEFGHQIJ = tutorial_pad
-MONS:    training dummy hp:20 ; club ego:none
+MONS:    training dummy hp:20 ; club mundane
 epilogue{{
   tutorial.messagestart()
 }}
@@ -361,7 +361,7 @@ KPROP:   l = no_cloud_gen
 KMASK:   + = no_secret_doors
 ORIENT:  encompass
 PLACE:   D:2
-KITEM:   A = arrow q:25 ego:none, bow ego:none not_cursed
+KITEM:   A = arrow q:25 mundane, bow mundane not_cursed
 ITEM:    randbook disc:conjuration numspells:1 slevels:1 spell:magic_dart \
                   owner:Newbie
 KFEAT:   ABCDEF = .
@@ -404,10 +404,10 @@ ORIENT:  encompass
 PLACE:   D:3
 KFEAT:   , = .
 KPROP:   , = bloody
-ITEM:    hand axe ego:none not_cursed
+ITEM:    hand axe mundane not_cursed
 ITEM:    bread ration
 ITEM:    scroll of identify q:3, ring of slaying good_item no_uniq not_cursed
-ITEM:    cursed great sword ego:none, scroll of remove curse q:3
+ITEM:    cursed great sword mundane, scroll of remove curse q:3
 KITEM:   p = potion of healing q:3
 KITEM:   m = potion of restore abilities q:3
 KITEM:   n = potion of degeneration q:3
