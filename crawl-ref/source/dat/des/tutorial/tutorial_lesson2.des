@@ -12,6 +12,9 @@ require("clua/tutorial.lua")
 tutorial_msg2 = {}
 
 function tutorial_msg2.start ()
+    -- Make him hungry for the butchering tutorial.
+    crawl.tutorial_hunger(2700)
+
     tutorial_intro("This lesson will teach you about monsters and how to kill them in melee and ranged combat.")
     crawl.mpr("First, you need a weapon! Go and grab the one lying in front of the door!", "tutorial")
 end

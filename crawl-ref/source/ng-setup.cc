@@ -1276,9 +1276,6 @@ static void _setup_tutorial_miscs()
     // No need for Shields skill without shield.
     you.skills[SK_SHIELDS] = 0;
 
-    // Make him hungry for the butchering tutorial.
-    you.hunger = 2700;
-
     // Set Str low enough for the burdened tutorial.
     you.base_stats[STAT_STR] = 14;
 }

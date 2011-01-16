@@ -12,6 +12,7 @@
 #include "ng-setup.h"
 #include "player.h"
 #include "random.h"
+#include "state.h"
 #include "tutorial.h"
 
 mapref_vector get_tutorial_maps()
@@ -34,4 +35,12 @@ std::string get_tutorial_map()
 void set_tutorial_map(const std::string& map)
 {
     _tutorial_map = map;
+}
+
+void set_tutorial_hunger(int hunger)
+{
+    if (!crawl_state.game_is_tutorial())
+        return;
+
+    you.hunger = hunger;
 }
