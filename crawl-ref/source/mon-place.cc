@@ -1323,6 +1323,8 @@ int place_monster(mgen_data mg, bool force_pos)
         if (band_id != -1 && band_id != NON_MONSTER)
         {
             menv[band_id].flags |= MF_BAND_MEMBER;
+            menv[band_id].props["band_leader"].get_int() = menv[id].mid;
+
             // Priestly band leaders should have an entourage of the
             // same religion, unless members of that entourage already
             // have a different one.
