@@ -245,7 +245,6 @@ ENDMAP
 {{
 -- Lua code for level 2.
 function tutorial_msg.newlevel ()
-
     local text = "A new level! To begin with, head over to that door to the right.\n"
                  .. "Also, remember: You can reread old messages with "
                  .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
