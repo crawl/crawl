@@ -1574,7 +1574,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     Hints.hints_just_triggered = true;
     Hints.hints_events[seen_what] = false;
-    Hints.hints_left--;
+    if (crawl_state.game_is_hints())
+        Hints.hints_left--;
 
     switch (seen_what)
     {
