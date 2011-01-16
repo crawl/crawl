@@ -632,6 +632,8 @@ bool mons_is_object(int mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_TWISTER
+           // unloading seeds helps the species
+           || mc == MONS_GIANT_SPORE
            || mc == MONS_DANCING_WEAPON;
 }
 
