@@ -2951,7 +2951,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         text += "Tab - ";
         text += defaults.map;
 
-        // Adjust the end marker to aling the - because
+        // Adjust the end marker to align the - because
         // Tab text is longer by 2
         tmp->set_text(text);
         min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
@@ -2997,7 +2997,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     if (menu.get_active_item() == NULL)
         freeform->activate_first_item();
 
-        _print_character_info(ng); // calls clrscr() so needs to be before attach()
+    _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
 #ifdef USE_TILE
     tiles.get_crt()->attach_menu(&menu);
@@ -3007,7 +3007,9 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     highlighter->set_visible(true);
 
     textcolor(CYAN);
-    cprintf("\nYou have a choice of maps:\n\n");
+    cprintf("\nYou have a choice of %s:\n\n",
+            ng_choice->type == GAME_TYPE_TUTORIAL ? "lessons"
+                                                  : "maps");
 
     while (true)
     {

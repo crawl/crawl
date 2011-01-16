@@ -352,7 +352,7 @@ std::string hiscores_format_single_long(const scorefile_entry &se,
                                          bool verbose)
 {
     return se.hiscore_line(verbose ? scorefile_entry::DDV_VERBOSE
-                                    : scorefile_entry::DDV_NORMAL);
+                                   : scorefile_entry::DDV_NORMAL);
 }
 
 // --------------------------------------------------------------------------
