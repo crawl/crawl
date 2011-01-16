@@ -1878,6 +1878,7 @@ int monster_die(monster* mons, killer_type killer,
                 && (you.religion == GOD_MAKHLEB
                     || you.religion == GOD_SHINING_ONE
                        && (mons->is_evil() || mons->is_unholy()))
+                && !mons_is_object(mons->type)
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0)
                 && !you.duration[DUR_DEATHS_DOOR])
@@ -1895,6 +1896,7 @@ int monster_die(monster* mons, killer_type killer,
                     || you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
                        && (mons->is_evil() || mons->is_unholy()))
+                && !mons_is_object(mons->type)
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0))
             {
@@ -1910,6 +1912,7 @@ int monster_die(monster* mons, killer_type killer,
                 && gives_xp
                 && (you.religion == GOD_BEOGH
                     && random2(you.piety) >= piety_breakpoint(2))
+                && !mons_is_object(mons->type)
                 && !player_under_penance())
             {
                 bless_follower();
@@ -1940,8 +1943,7 @@ int monster_die(monster* mons, killer_type killer,
 
             // No piety loss if god gifts killed by other monsters.
             // Also, dancing weapons aren't really friendlies.
-            if (mons->friendly()
-                && mons->type != MONS_DANCING_WEAPON)
+            if (mons->friendly() && !mons_is_object(mons->type))
             {
                 const int mon_intel = mons_class_intel(mons->type) - I_ANIMAL;
 
