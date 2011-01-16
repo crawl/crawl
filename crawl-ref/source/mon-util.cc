@@ -623,6 +623,18 @@ bool mons_is_projectile(int mc)
     return (mc == MONS_ORB_OF_DESTRUCTION);
 }
 
+// Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
+// at least in some degree, golems have a chem granting them that.
+bool mons_is_object(int mc)
+{
+    return mons_is_projectile(mc)
+           || mc == MONS_BALL_LIGHTNING
+           || mc == MONS_FIRE_VORTEX
+           || mc == MONS_SPATIAL_VORTEX
+           || mc == MONS_TWISTER
+           || mc == MONS_DANCING_WEAPON;
+}
+
 bool mons_has_blood(int mc)
 {
     // XXX: Jory is hacked in here so that he can

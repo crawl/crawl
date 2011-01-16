@@ -3159,7 +3159,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 
 bool god_hates_attacking_friend(god_type god, int species)
 {
-    if (mons_is_projectile(species))
+    if (mons_is_object(species))
         return (false);
     switch (god)
     {
@@ -3545,6 +3545,14 @@ bool god_hates_cannibalism(god_type god)
 
 bool god_hates_killing(god_type god, const monster* mon)
 {
+    // Must be at least a creature of sorts.  Smacking down an enchanted
+    // weapon or disrupting a lightning doesn't count.  Technically, this
+    // might raise a concern about necromancy but zombies traditionally
+    // count as creatures and that's the average person's (even if not ours)
+    // intuition.
+    if (mons_is_object(mon->type))
+        return false;
+
     bool retval = false;
     const mon_holy_type holiness = mon->holiness();
 
