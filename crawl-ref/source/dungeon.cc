@@ -1032,9 +1032,7 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
                 env.level_map_mask(*ri) |= MMT_VAULT | MMT_NO_DOOR;
         }
         else
-        {
             _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
-        }
 
         if (!transparent)
             _mask_vault(place, MMT_OPAQUE);
@@ -1822,21 +1820,15 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     }
 
     if (!_branch_entrances_are_connected())
-    {
         throw dgn_veto_exception("A disconnected branch entrance.");
-    }
 
     if (!_add_connecting_escape_hatches())
-    {
         throw dgn_veto_exception("Failed to add connecting escape hatches.");
-    }
 
     // XXX: Interlevel connectivity fixup relies on being the last
     //      point at which a level may be vetoed.
     if (!_fixup_interlevel_connectivity())
-    {
         throw dgn_veto_exception("Failed to ensure interlevel connectivity.");
-    }
 }
 
 // Structure of OVERFLOW_TEMPLES:
@@ -1986,37 +1978,27 @@ static void _ruin_level(Iterator ri,
 
         /* only try to replace wall and door tiles */
         if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
-        {
             continue;
-        }
 
         /* don't mess with permarock */
         if (grd(*ri) == DNGN_PERMAROCK_WALL)
-        {
             continue;
-        }
 
         /* or vaults */
         if (map_masked(*ri, vault_mask))
-        {
             continue;
-        }
 
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
             if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
-            {
                 floor_count++;
-            }
         }
 
         /* chance of removing the tile is dependent on the number of adjacent
          * floor tiles */
         if (x_chance_in_y(floor_count, ruination))
-        {
             to_replace.push_back(*ri);
-        }
     }
 
     for (std::vector<coord_def>::const_iterator it = to_replace.begin();
@@ -2026,11 +2008,8 @@ static void _ruin_level(Iterator ri,
         /* only remove some doors, to preserve tactical options */
         /* XXX: should this pick a random adjacent floor type, rather than
          * just hardcoding DNGN_FLOOR? */
-        if (feat_is_wall(grd(*it)) ||
-            (coinflip() && feat_is_door(grd(*it))))
-        {
+        if (feat_is_wall(grd(*it)) || coinflip() && feat_is_door(grd(*it)))
             grd(*it) = DNGN_FLOOR;
-        }
 
         /* but remove doors if we've removed all adjacent walls */
         for (adjacent_iterator wai(*it); wai; ++wai)
@@ -2041,14 +2020,10 @@ static void _ruin_level(Iterator ri,
                 for (adjacent_iterator dai(*wai); dai; ++dai)
                 {
                     if (feat_is_wall(grd(*dai)))
-                    {
                         remove = false;
-                    }
                 }
                 if (remove)
-                {
                     grd(*wai) = DNGN_FLOOR;
-                }
             }
         }
 
@@ -2370,21 +2345,13 @@ static void _pan_level(int level_number)
 static bool _builder_by_type(int level_number, level_area_type level_type)
 {
     if (level_type == LEVEL_PORTAL_VAULT)
-    {
         _portal_vault_level(level_number);
-    }
     else if (level_type == LEVEL_LABYRINTH)
-    {
         _labyrinth_level(level_number);
-    }
     else if (level_type == LEVEL_ABYSS)
-    {
         generate_abyss();
-    }
     else if (level_type == LEVEL_PANDEMONIUM)
-    {
         _pan_level(level_number);
-    }
     else
         return true;
 
@@ -3896,9 +3863,7 @@ const map_def *dgn_safe_place_map(const map_def *mdef,
                 mdef = find_map_by_name(mapname);
             }
             else
-            {
                 return (NULL);
-            }
         }
     }
 }
@@ -4040,9 +4005,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout))
     {
         if (!is_layout)
-        {
             _build_postvault_level(place);
-        }
 
         dgn_place_stone_stairs(true);
     }
@@ -4063,13 +4026,9 @@ static void _build_postvault_level(vault_placement &place)
     // XXX: Change this so the level definition can explicitly state what
     // kind of wallification it wants.
     if (place.map.has_tag("dis"))
-    {
         _plan_4(DNGN_METAL_WALL);
-    }
     else if (player_in_branch(BRANCH_SWAMP))
-    {
         dgn_build_swamp_level(place.level_number);
-    }
     else
     {
         _build_rooms(random_range(25, 100));
@@ -6755,9 +6714,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             for (radius_iterator rad(*ri, i, C_SQUARE); rad; ++rad)
             {
                 if (grd(*rad) != DNGN_FLOOR)
-                {
                     continue;
-                }
 
                 /* make sure the iterator stays valid */
                 std::vector<coord_def> more_to_place;
@@ -6766,16 +6723,12 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                      ++it)
                 {
                     if (*rad == *it)
-                    {
                         continue;
-                    }
                     /* only place plants next to previously placed plants */
                     if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
                     {
                         if (one_chance_in(clump_density))
-                        {
                             more_to_place.push_back(*rad);
-                        }
                     }
                 }
                 to_place.insert(to_place.end(), more_to_place.begin(), more_to_place.end());
@@ -6787,9 +6740,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
              ++it)
         {
             if (*it == *ri)
-            {
                 continue;
-            }
             mg.pos = *it;
             mons_place(mgen_data(mg));
         }
