@@ -103,6 +103,80 @@ function tutorial_msg2.downstairs ()
                             .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. ".")
 end
 
+-----------------------------------------------------------
+-- Lua code for level 2.
+-----------------------------------------------------------
+function tutorial_msg2.newlevel ()
+    local text = "Now, for ranged combat! Pick up those darts on your way out.\n"
+                 .. "Also, remember: You can reread old messages with "
+                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
+
+    crawl.mesclr(true)
+    crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg2.throwing ()
+    local text = "You can fire your darts at a monster with "
+                 .. tutorial_get_cmd("CMD_FIRE")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on them in the inventory panel. "
+    end
+    text = text .. "To confirm the auto-targeted monster, press <white>f</white> a second time "
+                .. "or <white>Enter</white>."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.wield_bow ()
+    local text = "Pick up this bow with " .. tutorial_get_cmd("CMD_PICKUP")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>,"
+    end
+    text = text .. " and then wield it with " .. tutorial_get_cmd("CMD_WIELD_WEAPON")
+    if crawl.is_tiles() then
+        text = text .. " or, again, by <white>mouseclick</white>"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.firing ()
+    local text = "Firing some arrows from your wielded bow works exactly the same as throwing darts: via "
+                 .. tutorial_get_cmd("CMD_FIRE")
+    if crawl.is_tiles() then
+        text = text .. " or <white>mouseclick</white>"
+    end
+    text = text .. ". You can change the targeted monster by pressing <white>+</white> while in target mode. "
+                .. "Again, confirm your choice with <white>f</white> or <white>Enter</white>."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.quiver ()
+    local text = "To conserve ammunition, you might sometimes want to switch ammunition. "
+                 .. "To do this, press <white>(</white> when already targeting a monster (via "
+                 .. tutorial_get_cmd("CMD_FIRE")
+    if crawl.is_tiles() then
+        text = text .. " or <white>mouseclick</white>"
+    end
+    text = text .. ")."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.explore ()
+    local text = "This cave is large. Use autoexplore (" .. tutorial_get_cmd("CMD_EXPLORE")
+                 .. ") to find the exit. Shoot any bats you come across!"
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.tutorial_end ()
+    return tutorial_message("Congratulations! You've survived your first batch of monsters!\n"
+                            .. "To exit the tutorial, simply go down these stairs. Confirm the resulting prompt with an uppercase <white>Y</white>.")
+end
+
 function tutorial_msg2.exit ()
     -- A single screen recapping all commands.
 
@@ -219,80 +293,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc(.{.[c
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc
 ENDMAP
 
-{{
--- Lua code for level 2.
-function tutorial_msg2.newlevel ()
-    local text = "Now, for ranged combat! Pick up those darts on your way out.\n"
-                 .. "Also, remember: You can reread old messages with "
-                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
 
-    crawl.mesclr(true)
-    crawl.mpr(text, "tutorial")
-end
-
-function tutorial_msg2.throwing ()
-    local text = "You can fire your darts at a monster with "
-                 .. tutorial_get_cmd("CMD_FIRE")
-    if crawl.is_tiles() then
-        text = text .. " or by <white>clicking</white> on them in the inventory panel. "
-    end
-    text = text .. "To confirm the auto-targeted monster, press <white>f</white> a second time "
-                .. "or <white>Enter</white>."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg2.wield_bow ()
-    local text = "Pick up this bow with " .. tutorial_get_cmd("CMD_PICKUP")
-
-    if crawl.is_tiles() then
-        text = text .. " or by <white>mouseclick</white>,"
-    end
-    text = text .. " and then wield it with " .. tutorial_get_cmd("CMD_WIELD_WEAPON")
-    if crawl.is_tiles() then
-        text = text .. " or, again, by <white>mouseclick</white>"
-    end
-    text = text .. "."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg2.firing ()
-    local text = "Firing some arrows from your wielded bow works exactly the same as throwing darts: via "
-                 .. tutorial_get_cmd("CMD_FIRE")
-    if crawl.is_tiles() then
-        text = text .. " or <white>mouseclick</white>"
-    end
-    text = text .. ". You can change the targeted monster by pressing <white>+</white> while in target mode. "
-                .. "Again, confirm your choice with <white>f</white> or <white>Enter</white>."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg2.quiver ()
-    local text = "To conserve ammunition, you might sometimes want to switch ammunition. "
-                 .. "To do this, press <white>(</white> when already targeting a monster (via "
-                 .. tutorial_get_cmd("CMD_FIRE")
-    if crawl.is_tiles() then
-        text = text .. " or <white>mouseclick</white>"
-    end
-    text = text .. ")."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg2.explore ()
-    local text = "This cave is large. Use autoexplore (" .. tutorial_get_cmd("CMD_EXPLORE")
-                 .. ") to find the exit. Shoot any bats you come across!"
-    return tutorial_message(text)
-end
-
-function tutorial_msg2.tutorial_end ()
-    return tutorial_message("Congratulations! You've survived your first batch of monsters!\n"
-                            .. "To exit the tutorial, simply go down these stairs. Confirm the resulting prompt with an uppercase <white>Y</white>.")
-end
-}}
-
+##########################################################
+# Level 2: Ranged combat
+##########################################################
 NAME:    tutorial_lesson2_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson2
 PLACE:   D:2

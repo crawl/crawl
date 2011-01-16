@@ -131,45 +131,6 @@ function tutorial_msg.tutorial_end ()
                             .. "To exit the tutorial, simply go up these stairs. Confirm the resulting prompt with an uppercase <white>Y</white>.")
 end
 
-function tutorial_msg.exit ()
-    -- A single screen recapping all commands.
-
-    local text = "<yellow>Movement commands</yellow>\n\n"
-                 .. "  Numpad:       <white>1 2 3</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
-                 .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
-                 .. "                 \\|/                         " .. "\\|/\n"
-                 .. "                <w>4</w>-<w>.</w>-<w>6</w>                       "
-                 .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-<w>.</w>-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
-                 .. "                 /|\\                         " .. "/|\\\n"
-                 .. "                <white>7 8 9</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
-                 .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n\n"
-                 .. "<white>Shift + direction</white> moves you several squares into this direction.\n"
-
-    if crawl.is_tiles() then
-        text = text .. "You also can move by <white>clicking</white> somewhere in sight or on the <white>minimap</white>.\n"
-    end
-
-    text = text .. "\n<yellow>Staircases</yellow>\n"
-                .. "  " .. tutorial_get_cmd("CMD_GO_UPSTAIRS") .. "  go back to the previous level\n"
-                .. "  " .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. "  enter the next level\n"
-
-    text = text .. "\n<yellow>Doors</yellow>\n"
-                .. "  can be opened by walking into them\n"
-                .. "  " .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "  close an open door\n"
-                .. "  " .. tutorial_get_cmd("CMD_REST") .. "  search for secret doors\n"
-
-    text = text .. "\n<yellow>Travel</yellow>\n"
-    if crawl.is_tiles() then
-        text = text .. "  mouseclick on the <white>minimap</white>\n"
-    else
-        text = text .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "  enter the level map, travel with <white>Enter</white>\n"
-    end
-    text = text .. "  " .. tutorial_get_cmd("CMD_EXPLORE") .. "  autoexplore\n\n"
-                .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
-
-    return crawl.endgame(text)
-end
-
 -----------------------------------------------------------
 -- Lua code for level 2.
 -----------------------------------------------------------
@@ -235,6 +196,45 @@ function tutorial_msg.upstairs ()
     text = text .. "."
 
     return tutorial_message(text)
+end
+
+function tutorial_msg.exit ()
+    -- A single screen recapping all commands.
+
+    local text = "<yellow>Movement commands</yellow>\n\n"
+                 .. "  Numpad:       <white>1 2 3</white>           " .. "vi-keys:    " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. " "
+                 .. tutorial_get_cmd("CMD_MOVE_UP") .. " " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "\n"
+                 .. "                 \\|/                         " .. "\\|/\n"
+                 .. "                <w>4</w>-<w>.</w>-<w>6</w>                       "
+                 .. tutorial_get_cmd("CMD_MOVE_LEFT") .. "-<w>.</w>-" .. tutorial_get_cmd("CMD_MOVE_RIGHT") .. "\n"
+                 .. "                 /|\\                         " .. "/|\\\n"
+                 .. "                <white>7 8 9</white>                       " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. " "
+                 .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n\n"
+                 .. "<white>Shift + direction</white> moves you several squares into this direction.\n"
+
+    if crawl.is_tiles() then
+        text = text .. "You also can move by <white>clicking</white> somewhere in sight or on the <white>minimap</white>.\n"
+    end
+
+    text = text .. "\n<yellow>Staircases</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_GO_UPSTAIRS") .. "  go back to the previous level\n"
+                .. "  " .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. "  enter the next level\n"
+
+    text = text .. "\n<yellow>Doors</yellow>\n"
+                .. "  can be opened by walking into them\n"
+                .. "  " .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "  close an open door\n"
+                .. "  " .. tutorial_get_cmd("CMD_REST") .. "  search for secret doors\n"
+
+    text = text .. "\n<yellow>Travel</yellow>\n"
+    if crawl.is_tiles() then
+        text = text .. "  mouseclick on the <white>minimap</white>\n"
+    else
+        text = text .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "  enter the level map, travel with <white>Enter</white>\n"
+    end
+    text = text .. "  " .. tutorial_get_cmd("CMD_EXPLORE") .. "  autoexplore\n\n"
+                .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
+
+    return crawl.endgame(text)
 end
 }}
 
@@ -309,7 +309,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttttttttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttxx
 ENDMAP
 
-
+##########################################################
+# Level 2: Shift-move and secret doors
+##########################################################
 NAME:    tutorial_lesson1_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson1
 PLACE:   D:2
