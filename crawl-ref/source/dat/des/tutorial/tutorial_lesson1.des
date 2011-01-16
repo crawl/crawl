@@ -169,6 +169,73 @@ function tutorial_msg.exit ()
 
     return crawl.endgame(text)
 end
+
+-----------------------------------------------------------
+-- Lua code for level 2.
+-----------------------------------------------------------
+function tutorial_msg.newlevel ()
+    local text = "A new level! To begin with, head over to that door to the right.\n"
+                 .. "Also, remember: You can reread old messages with "
+                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
+
+    crawl.mesclr(true)
+    crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg.door ()
+    local text = "You can open a closed door by walking into it. To close an open door, press "
+                 .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.shiftmove ()
+    local text = "A quicker way to 'run' through a corridor is to press <white>Shift</white> along with the vi or arrow keys. "
+                 .. "For example, try pressing " .. tutorial_get_cmd("CMD_RUN_RIGHT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.shiftmove2 ()
+    local text = "Run down this corridor with <white>Shift-9</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.secret_door_glass ()
+    local text = "It doesn't look like the corridor ends here. Try searching for a secret door with "
+                 .. tutorial_get_cmd("CMD_REST") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.shiftmove3 ()
+    local text = "Run down this corridor with <white>Shift-7</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.water ()
+    return tutorial_message("Note how you can move through shallow but not through deep water.")
+end
+
+function tutorial_msg.shiftmove4 ()
+    local text = "Run up this corridor with <white>Shift-1</white> or " .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.secret_door_wall ()
+    local text = "A dead-end! Or, wait... is it another secret door? Try searching again with "
+                 .. tutorial_get_cmd("CMD_REST") .. "."
+    return tutorial_message(text)
+end
+
+function tutorial_msg.upstairs ()
+    local text = "When standing on a staircase leading upwards, you can enter the previous level with "
+                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
+    if crawl.is_tiles() then
+      text = text .. " or by <white>Shift-clicking</white> on your character"
+    end
+
+    text = text .. "."
+
+    return tutorial_message(text)
+end
 }}
 
 NAME:    tutorial_lesson1
@@ -242,72 +309,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttttttttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttxx
 ENDMAP
 
-{{
--- Lua code for level 2.
-function tutorial_msg.newlevel ()
-    local text = "A new level! To begin with, head over to that door to the right.\n"
-                 .. "Also, remember: You can reread old messages with "
-                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
-
-    crawl.mesclr(true)
-    crawl.mpr(text, "tutorial")
-end
-
-function tutorial_msg.door ()
-    local text = "You can open a closed door by walking into it. To close an open door, press "
-                 .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.shiftmove ()
-    local text = "A quicker way to 'run' through a corridor is to press <white>Shift</white> along with the vi or arrow keys. "
-                 .. "For example, try pressing " .. tutorial_get_cmd("CMD_RUN_RIGHT") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.shiftmove2 ()
-    local text = "Run down this corridor with <white>Shift-9</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.secret_door_glass ()
-    local text = "It doesn't look like the corridor ends here. Try searching for a secret door with "
-                 .. tutorial_get_cmd("CMD_REST") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.shiftmove3 ()
-    local text = "Run down this corridor with <white>Shift-7</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.water ()
-    return tutorial_message("Note how you can move through shallow but not through deep water.")
-end
-
-function tutorial_msg.shiftmove4 ()
-    local text = "Run up this corridor with <white>Shift-1</white> or " .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.secret_door_wall ()
-    local text = "A dead-end! Or, wait... is it another secret door? Try searching again with "
-                 .. tutorial_get_cmd("CMD_REST") .. "."
-    return tutorial_message(text)
-end
-
-function tutorial_msg.upstairs ()
-    local text = "When standing on a staircase leading upwards, you can enter the previous level with "
-                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
-    if crawl.is_tiles() then
-      text = text .. " or by <white>Shift-clicking</white> on your character"
-    end
-
-    text = text .. "."
-
-    return tutorial_message(text)
-end
-}}
 
 NAME:    tutorial_lesson1_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson1
