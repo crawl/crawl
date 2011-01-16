@@ -3118,7 +3118,8 @@ int items(int allow_uniques,       // not just true-false,
                                    // item_race also gives type of rune!
           uint32_t mapmask,
           int force_ego,           // desired ego/brand
-          int agent)               // acquirement agent, if not -1
+          int agent,               // acquirement agent, if not -1
+          bool mundane)            // no plusses
 {
     ASSERT(force_ego <= 0
            || force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
@@ -3265,6 +3266,13 @@ int items(int allow_uniques,       // not just true-false,
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
         break;
+    }
+
+    if (mundane)
+    {
+        item.plus    = 0;
+        item.plus2   = 0;
+        item.special = 0;
     }
 
     if (item.base_type == OBJ_WEAPONS

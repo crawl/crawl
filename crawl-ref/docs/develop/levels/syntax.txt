@@ -546,8 +546,8 @@ ITEM:     (list of items, separated by comma)
             will be given instead.
           * "randart" will force a randart.  Most of the above modifiers
             will be ignored, except for "ego" (for weapons only).
-          * "mundane" acts as a shortcut for "not_cursed" and "ego:none", and 
-            also forces the plusses to be +0.
+          * "mundane" acts as a shortcut for "ego:none" and forces the plusses
+             to be +0.
 
             WARNING: While checks are done to make sure that an armour ego
             isn't given to a weapon, a weapon ego to a missile, and so on, and

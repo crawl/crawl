@@ -4753,10 +4753,9 @@ item_spec item_list::parse_single_spec(std::string s)
 
     if (strip_tag(s, "mundane"))
     {
-        result.props["uncursed"] = bool(true);
+        result.level = ISPEC_MUNDANE;
         result.ego   = -1;
-        result.plus  = 0;
-        result.plus2 = 0;
+        result.props["uncursed"] = bool(true);
     }
     if (strip_tag(s, "damaged"))
         result.level = ISPEC_DAMAGED;
