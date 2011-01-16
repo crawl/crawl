@@ -238,7 +238,7 @@ public:
   // and restored.
   std::vector<int> beholders;
 
-  // monsterss causing fear to the player; see above
+  // monsters causing fear to the player; see above
   std::vector<int> fearmongers;
 
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
