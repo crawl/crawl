@@ -388,7 +388,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     beem.is_beam     = false;
     beem.aux_source.clear();
 
-    beem.hit        = you.dex() / 2 + roll_dice(2, you.skills[SK_THROWING] / 2 + 1);
+    beem.auto_hit   = true;
     beem.damage     = dice_def(1, 0);  // no damage, just producing clouds
     beem.ench_power = pow;               // used for duration only?
     beem.is_explosion = true;
@@ -509,8 +509,6 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
         canned_msg(MSG_OK);
         return (false);
     }
-
-    practise(EX_WILL_THROW_POTION);
 
     // Really fire.
     beem.flavour = real_flavour;
