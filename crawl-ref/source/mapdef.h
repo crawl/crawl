@@ -533,6 +533,7 @@ enum item_spec_type
     ISPEC_DAMAGED = -4,
     ISPEC_BAD     = -5,
     ISPEC_RANDART = -6,
+    ISPEC_MUNDANE = -7,
     ISPEC_ACQUIREMENT = -9,
 };
 

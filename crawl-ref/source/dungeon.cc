@@ -4134,7 +4134,7 @@ retry:
          : spec.corpselike() ? dgn_item_corpse(spec)
          : items(spec.allow_uniques, base_type,
                   spec.sub_type, true, level, spec.race, 0,
-                  spec.ego));
+                  spec.ego, -1, spec.level == ISPEC_MUNDANE));
 
     if (item_made != NON_ITEM && item_made != -1)
     {
