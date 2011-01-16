@@ -68,9 +68,6 @@ static void         _hints_describe_cloud(int x, int y);
 static void         _hints_describe_feature(int x, int y);
 static bool         _water_is_disturbed(int x, int y);
 
-//#define TUTORIAL_DEBUG
-#define HINTS_VERSION 11
-
 static int _get_hints_cols()
 {
 #ifdef USE_TILE
@@ -85,7 +82,7 @@ hints_state Hints;
 
 void save_hints(writer& outf)
 {
-    marshallInt(outf, HINTS_VERSION);
+    marshallInt(outf, HINT_EVENTS_NUM);
     marshallShort(outf, Hints.hints_type);
     for (long i = 0; i < HINT_EVENTS_NUM; ++i)
         marshallBoolean(outf, Hints.hints_events[i]);
@@ -96,7 +93,8 @@ void load_hints(reader& inf)
     Hints.hints_left = 0;
 
     int version = unmarshallInt(inf);
-    if (version != HINTS_VERSION)
+    // Discard everything if the number doesn't match.
+    if (version != HINT_EVENTS_NUM)
         return;
 
     Hints.hints_type = unmarshallShort(inf);
