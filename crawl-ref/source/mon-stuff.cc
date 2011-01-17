@@ -673,7 +673,7 @@ static int _calc_monster_experience(monster* victim, killer_type killer,
                                     int killer_index)
 {
     const int experience = exper_value(victim);
-    const bool no_xp = victim->has_ench(ENCH_ABJ) || !experience;
+    const bool no_xp = victim->has_ench(ENCH_ABJ) || !experience || victim->has_ench(ENCH_FAKE_ABJURATION);
     const bool created_friendly = testbits(victim->flags, MF_NO_REWARD);
 
     if (no_xp || !MON_KILL(killer) || invalid_monster_index(killer_index))
@@ -728,7 +728,7 @@ static int _calc_player_experience(monster* mons, killer_type killer,
 
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
     const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
-    const bool no_xp = mons->has_ench(ENCH_ABJ) || !experience;
+    const bool no_xp = mons->has_ench(ENCH_ABJ) || !experience || mons->has_ench(ENCH_FAKE_ABJURATION);
     const bool already_got_half_xp = testbits(mons->flags, MF_GOT_HALF_XP);
     const int half_xp = (experience + 1) / 2;
 
@@ -1585,6 +1585,8 @@ int monster_die(monster* mons, killer_type killer,
 
     const bool mons_reset(killer == KILL_RESET || killer == KILL_DISMISSED);
 
+    bool fake_abjuration = false;
+
     const bool submerged     = mons->submerged();
 
     bool in_transit          = false;
@@ -1609,7 +1611,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Take note!
-    if (!mons_reset && !crawl_state.game_is_arena() && MONST_INTERESTING(mons))
+    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena() && MONST_INTERESTING(mons))
     {
         take_note(Note(NOTE_KILL_MONSTER,
                        mons->type, mons->friendly(),
@@ -2180,12 +2182,27 @@ int monster_die(monster* mons, killer_type killer,
         case KILL_MISC:
             if (!silent)
             {
-                const char* msg =
-                    exploded                     ? " is blown up!" :
-                    _wounded_damaged(targ_holy)  ? " is destroyed!"
-                                                 : " dies!";
-                simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
-                                       MDAM_DEAD);
+                if (mons->has_ench(ENCH_FAKE_ABJURATION)
+                    && mons->get_ench(ENCH_FAKE_ABJURATION).duration == -1)
+                {
+                    if (mons_genus(mons->type) == MONS_SNAKE)
+                    {
+                        // Sticks to Snake
+                        simple_monster_message(mons, " withers and dies!",
+                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                    }
+
+                    fake_abjuration = true;
+                }
+                else
+                {
+                    const char* msg =
+                        exploded                     ? " is blown up!" :
+                        _wounded_damaged(targ_holy)  ? " is destroyed!"
+                                                     : " dies!";
+                    simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
+                                           MDAM_DEAD);
+                }
             }
             break;
 
@@ -2343,10 +2360,10 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     if (!wizard && !submerged)
-        _monster_die_cloud(mons, !mons_reset, silent, summoned);
+        _monster_die_cloud(mons, !mons_reset && !fake_abjuration, silent, summoned);
 
     int corpse = -1;
-    if (!mons_reset && !summoned)
+    if (!mons_reset && !summoned && !fake_abjuration)
     {
         // Have to add case for disintegration effect here? {dlb}
         int corpse2 = -1;
@@ -2374,14 +2391,14 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     unsigned int player_exp = 0, monster_exp = 0;
-    if (!mons_reset)
+    if (!mons_reset && !fake_abjuration)
     {
         player_exp = _calc_player_experience(mons, killer, pet_kill,
                                              killer_index);
         monster_exp = _calc_monster_experience(mons, killer, killer_index);
     }
 
-    if (!mons_reset && !crawl_state.game_is_arena())
+    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena())
         you.kills->record_kill(mons, killer, pet_kill);
 
     if (fake)
@@ -2416,6 +2433,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     if (!silent && !wizard && !mons_reset && corpse != -1
+        && !fake_abjuration
         && !(mons->flags & MF_KNOWN_MIMIC)
         && mons->is_shapeshifter())
     {

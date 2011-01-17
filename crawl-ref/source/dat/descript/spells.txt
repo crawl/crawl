@@ -543,7 +543,7 @@ This spell temporarily transforms the caster into a slow-moving (but extremely r
 %%%%
 Sticks to Snakes
 
-This spell uses wooden items in the caster's grasp as raw material for a powerful summoning. Note that highly enchanted items, such as wizards' staves, will not be affected.
+This spell uses wooden items in the caster's grasp as raw material for a powerful transmutation. Note that highly enchanted items, such as wizards' staves, will not be affected.
 %%%%
 Sticky Flame
 
