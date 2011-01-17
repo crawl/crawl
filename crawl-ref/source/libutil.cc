@@ -325,6 +325,22 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
     return (false);
 }
 
+std::vector<std::string> strip_multiple_tag_prefix (std::string &s, const std::string &tagprefix)
+{
+    std::vector<std::string> results;
+
+    while (true)
+    {
+        std::string this_result = strip_tag_prefix(s, tagprefix);
+        if (this_result.empty())
+            break;
+
+        results.push_back(this_result);
+    }
+
+    return results;
+}
+
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
 {
     std::string::size_type pos = s.find(tagprefix);

@@ -4474,7 +4474,7 @@ int dgn_place_monster(mons_spec &mspec,
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
 
             if (mspec.explicit_spells)
-                mons.spells = mspec.spells;
+                mons.spells = mspec.spells[random2(mspec.spells.size())];
 
             if (mspec.props.exists("monster_tile"))
             {
