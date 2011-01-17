@@ -244,7 +244,7 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
     more_str += "to toggle spell view.";
     spell_menu.set_more(formatted_string(more_str));
 
-    const bool preselect = (you.spell_no == 1);
+    const bool autoselect_first = (you.spell_no == 1);
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
@@ -262,6 +262,9 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
 
         if (spell != SPELL_NO_SPELL)
         {
+            bool preselect = (autoselect_first
+                              || you.last_cast_spell == spell);
+
             ToggleableMenuEntry* me =
                 new ToggleableMenuEntry(_spell_base_description(spell),
                                         _spell_extra_description(spell),
