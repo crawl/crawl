@@ -409,8 +409,6 @@ bool Menu::process_key(int keyin)
     {
     case 0:
         return (true);
-    case CK_ENTER:
-        return (false);
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
     CASE_ESCAPE
@@ -565,6 +563,10 @@ bool Menu::process_key(int keyin)
         repaint = true;
         break;
 
+    case CK_ENTER:
+        if (!sel.empty())
+            return (false);
+        // else fall through
     default:
         keyin  = post_process(keyin);
         lastch = keyin;
@@ -775,9 +777,16 @@ void Menu::select_items(int key, int qty)
         // by its primary hotkey (which is assumed to always be
         // hotkeys[0]), in which case, we stop selecting further
         // items.
+        const bool check_preselected = (key == CK_ENTER);
         for (int i = first_entry; i < final; ++i)
         {
-            if (is_hotkey(i, key))
+            if (check_preselected && items[i]->preselected)
+            {
+                select_index(i, qty);
+                selected = true;
+                break;
+            }
+            else if (is_hotkey(i, key))
             {
                 select_index(i, qty);
                 if (items[i]->hotkeys[0] == key)
@@ -792,7 +801,13 @@ void Menu::select_items(int key, int qty)
         {
             for (int i = 0; i < first_entry; ++i)
             {
-                if (is_hotkey(i, key))
+                if (check_preselected && items[i]->preselected)
+                {
+                    select_index(i, qty);
+                    selected = true;
+                    break;
+                }
+                else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
                     if (items[i]->hotkeys[0] == key)

@@ -244,6 +244,7 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
     more_str += "to toggle spell view.";
     spell_menu.set_more(formatted_string(more_str));
 
+    const bool preselect = (you.spell_no == 1);
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
@@ -264,7 +265,7 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
             ToggleableMenuEntry* me =
                 new ToggleableMenuEntry(_spell_base_description(spell),
                                         _spell_extra_description(spell),
-                                        MEL_ITEM, 1, letter);
+                                        MEL_ITEM, 1, letter, preselect);
 
 #ifdef USE_TILE
             me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
