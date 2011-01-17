@@ -5337,6 +5337,7 @@ void player::init()
     clinging = 0;
     zotdef_wave_name.clear();
     last_mid = 0;
+    last_cast_spell = SPELL_NO_SPELL;
 
 
     // Non-saved UI state:

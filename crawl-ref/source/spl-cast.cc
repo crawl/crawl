@@ -604,7 +604,14 @@ bool cast_a_spell(bool check_range, spell_type spell)
         {
             if (keyin == 0)
             {
-                mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
+                if (you.last_cast_spell == SPELL_NO_SPELL)
+                    mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
+                else
+                {
+                    mprf(MSGCH_PROMPT, "Casting: <w>%s</w>",
+                         spell_title(you.last_cast_spell));
+                    mpr("Confirm with . or Enter, or press ? or * to list all spells.", MSGCH_PROMPT);
+                }
 
                 keyin = get_ch();
             }
@@ -634,15 +641,20 @@ bool cast_a_spell(bool check_range, spell_type spell)
             canned_msg(MSG_OK);
             return (false);
         }
-
-        if (!isaalpha(keyin))
+        else if (keyin == '.' || keyin == CK_ENTER)
+        {
+            spell = you.last_cast_spell;
+        }
+        else if (!isaalpha(keyin))
         {
             mpr("You don't know that spell.");
             crawl_state.zero_turns_taken();
             return (false);
         }
-
-        spell = get_spell_by_letter(keyin);
+        else
+        {
+            spell = get_spell_by_letter(keyin);
+        }
     }
 
     if (spell == SPELL_NO_SPELL)
@@ -689,6 +701,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         random_uselessness();
     else
     {
+        you.last_cast_spell = spell;
         const spret_type cast_result = your_spells(spell, 0, true, check_range);
         if (cast_result == SPRET_ABORT)
         {
@@ -1082,7 +1095,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         const int range = calc_spell_range(spell, range_power, false);
 
-        std::string title = "Casting: <white>";
+        std::string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
 
