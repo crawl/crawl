@@ -310,6 +310,9 @@ bool del_spell_from_memory_by_slot(int slot)
 {
     int j;
 
+    if (you.last_cast_spell == you.spells[slot])
+        you.last_cast_spell = SPELL_NO_SPELL;
+
     you.spells[ slot ] = SPELL_NO_SPELL;
 
     for (j = 0; j < 52; j++)
@@ -333,7 +336,7 @@ bool del_spell_from_memory(spell_type spell)
 {
     int i = get_spell_slot(spell);
     if (i == -1)
-        return false;
+        return (false);
     else
         return del_spell_from_memory_by_slot(i);
 }

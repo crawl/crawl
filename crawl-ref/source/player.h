@@ -337,6 +337,10 @@ public:
   std::string zotdef_wave_name;
   // The biggest assigned monster id so far.
   mid_t last_mid;
+
+  // The last spell cast by the player.
+  spell_type last_cast_spell;
+
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
