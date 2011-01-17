@@ -73,6 +73,7 @@ public:
     int colour;
     std::vector<int> hotkeys;
     MenuEntryLevel level;
+    bool preselected;
     void *data;
 
 #ifdef USE_TILE
@@ -83,9 +84,10 @@ public:
     MenuEntry(const std::string &txt = std::string(),
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
-               int hotk = 0) :
+               int hotk = 0,
+               bool preselect = false) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
-        hotkeys(), level(lev), data(NULL)
+        hotkeys(), level(lev), preselected(preselect), data(NULL)
     {
         colour = (lev == MEL_ITEM     ?  LIGHTGREY :
                   lev == MEL_SUBTITLE ?  BLUE  :
@@ -122,7 +124,8 @@ public:
         {
             char buf[300];
             snprintf(buf, sizeof buf,
-                    " %c - %s", hotkeys[0], text.c_str());
+                    " %c %c %s", hotkeys[0], preselected ? '+' : '-',
+                                 text.c_str());
             return std::string(buf);
         }
         return text;
@@ -170,8 +173,9 @@ public:
     ToggleableMenuEntry(const std::string &txt = std::string(),
                          const std::string &alt_txt = std::string(),
                          MenuEntryLevel lev = MEL_ITEM,
-                         int qty = 0, int hotk = 0) :
-        MenuEntry(txt, lev, qty, hotk), alt_text(alt_txt) {}
+                         int qty = 0, int hotk = 0,
+                         bool preselect = false) :
+        MenuEntry(txt, lev, qty, hotk, preselect), alt_text(alt_txt) {}
 
     void toggle() { text.swap(alt_text); }
 };
