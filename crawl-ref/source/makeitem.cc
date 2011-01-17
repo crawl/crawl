@@ -2770,8 +2770,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
         {
             // total weight: 10000
             item.sub_type = random_choose_weighted(
-                1799, SCR_IDENTIFY,
-                1105, SCR_REMOVE_CURSE,
+                1800, SCR_IDENTIFY,
+                1115, SCR_REMOVE_CURSE,
                  511, SCR_DETECT_CURSE,
                  331, SCR_FEAR,
                  331, SCR_MAGIC_MAPPING,
@@ -2787,17 +2787,14 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  // Don't create ?oImmolation at low levels (encourage read-ID).
                  331, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
 
-                 220, SCR_CURSE_WEAPON,
-                 220, SCR_CURSE_ARMOUR,
-                 220, SCR_CURSE_JEWELLERY,
-
-                 161, SCR_PAPER,
+                 270, SCR_CURSE_WEAPON,
+                 270, SCR_CURSE_ARMOUR,
+                 270, SCR_CURSE_JEWELLERY,
 
                  // Medium-level scrolls.
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
                  140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
-                 140, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
 
                  // High-level scrolls.
                  140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
@@ -2810,6 +2807,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 // [ds] Zero-weights should always be at the end,
                 // since random_choose_weighted stops at the first
                 // zero weight.
+
+                (depth_mod < 4 ? 0 : 140), SCR_VULNERABILITY,
 
                 // [Cha] don't generate teleportation scrolls if in sprint
                 (crawl_state.game_is_sprint() ? 0 : 802), SCR_TELEPORTATION,
