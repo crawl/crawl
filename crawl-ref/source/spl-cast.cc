@@ -192,6 +192,9 @@ static std::string _spell_extra_description(spell_type spell)
     return desc.str();
 }
 
+// selector is a boolean function that filters spells according
+// to certain criteria. Currently used for Tiles to distinguish
+// spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, int minRange,
                 spell_selector selector)
 {
@@ -244,25 +247,38 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
     more_str += "to toggle spell view.";
     spell_menu.set_more(formatted_string(more_str));
 
-    const bool autoselect_first = (you.spell_no == 1);
+    // If there's only a single spell in the offered spell list,
+    // taking the selector function into account, preselect that one.
+    int count = 0;
+    if (you.spell_no == 1)
+        count = 1;
+    else if (selector)
+    {
+        for (int i = 0; i < 52; ++i)
+        {
+            const char letter = index_to_letter(i);
+            const spell_type spell = get_spell_by_letter(letter);
+            if (!is_valid_spell(spell) || !(*selector)(spell))
+                continue;
+
+            // Break out early if we've got > 1 spells.
+            if (++count > 1)
+                break;
+        }
+    }
+    // Preselect the first spell if it's only spell applicable.
+    const bool preselect_first = (count == 1);
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(letter);
 
-        // TODO: identify wth 'selector' is, and what
-        //       exactly this bit below does with it
-        // In tilereg.cc, _spell_selector() does some range checks,
-        // possibly duplicated. (jpeg)
-        if (is_valid_spell(spell) && selector
-            && !(*selector)(spell))
-        {
+        if (selector && is_valid_spell(spell) && !(*selector)(spell))
             continue;
-        }
 
         if (spell != SPELL_NO_SPELL)
         {
-            bool preselect = (autoselect_first
+            bool preselect = (preselect_first
                               || you.last_cast_spell == spell);
 
             ToggleableMenuEntry* me =
