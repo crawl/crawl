@@ -1405,6 +1405,7 @@ enum enchant_type
     ENCH_HELPLESS,
     ENCH_LIQUEFYING,
     ENCH_PERM_TORNADO,
+    ENCH_FAKE_ABJURATION,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.

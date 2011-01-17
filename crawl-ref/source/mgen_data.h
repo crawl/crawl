@@ -144,7 +144,8 @@ struct mgen_data
           non_actor_summoner(nas), props()
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
-               || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION);
+               || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION
+               || summon_type == SPELL_STICKS_TO_SNAKES);
     }
 
     bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }

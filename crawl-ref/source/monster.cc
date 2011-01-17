@@ -4436,17 +4436,21 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " breaks free.");
         break;
     }
+    case ENCH_FAKE_ABJURATION:
     case ENCH_ABJ:
     case ENCH_SHORT_LIVED:
         // Set duration to -1 so that monster_die() and any of its
         // callees can tell that the monster ran out of time or was
         // abjured.
-        add_ench(mon_enchant(ENCH_ABJ, 0, KC_OTHER, -1));
+        add_ench(mon_enchant(
+            (me.ench != ENCH_FAKE_ABJURATION) ?
+                ENCH_ABJ : ENCH_FAKE_ABJURATION, 0, KC_OTHER, -1));
 
         if (berserk())
             simple_monster_message(this, " is no longer berserk.");
 
-        monster_die(this, quiet ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
+        monster_die(this, (me.ench == ENCH_FAKE_ABJURATION) ? KILL_MISC :
+                            (quiet) ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
         break;
 
     case ENCH_SUBMERGED:
@@ -4637,7 +4641,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
         case ENCH_ANTIMAGIC: case ENCH_FEAR_INSPIRING:
         case ENCH_REGENERATION: case ENCH_RAISED_MR: case ENCH_MIRROR_DAMAGE:
-        case ENCH_STONESKIN: case ENCH_LIQUEFYING:
+        case ENCH_STONESKIN: case ENCH_LIQUEFYING: case ENCH_FAKE_ABJURATION:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4833,6 +4837,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LIFE_TIMER:
     case ENCH_LEVITATION:
     case ENCH_LIQUEFYING:
+    case ENCH_FAKE_ABJURATION:
         decay_enchantment(me);
         break;
 
@@ -5149,10 +5154,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             if (you.see_cell(position))
-            {
-                mprf("A nearby %s withers and dies.",
-                     name(DESC_PLAIN, false).c_str());
-            }
+                mprf("A nearby %s withers and dies.", name(DESC_PLAIN, false).c_str());
 
             monster_die(this, KILL_MISC, NON_MONSTER, true);
         }
@@ -6407,7 +6409,7 @@ static const char *enchant_names[] =
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "levitation", "helpless",
-    "liquefying", "perm_tornado", "buggy",
+    "liquefying", "perm_tornado", "fake abjuration", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6462,7 +6464,7 @@ void mon_enchant::cap_degree()
 
     // Hard cap to simulate old enum behaviour, we should really throw this
     // out entirely.
-    const int max = ench == ENCH_ABJ? 6 : 4;
+    const int max = (ench == ENCH_ABJ || ench == ENCH_FAKE_ABJURATION) ? 6 : 4;
     if (degree > max)
         degree = max;
 }
@@ -6606,6 +6608,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 30 * 10 / _mod_speed(10, mons->speed);
         break;
 
+    case ENCH_FAKE_ABJURATION:
     case ENCH_ABJ:
         if (deg >= 6)
             cturn = 1000 / _mod_speed(10, mons->speed);

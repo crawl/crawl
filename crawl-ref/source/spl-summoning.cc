@@ -222,13 +222,13 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             else
                 mon = MONS_SMALL_SNAKE;
 
-            if (create_monster(
-                    mgen_data(mon, beha, &you,
-                              dur, SPELL_STICKS_TO_SNAKES,
-                              you.pos(), MHITYOU,
-                              0, god)) != -1)
+            int mon_index = create_monster(mgen_data(mon, beha, &you,
+                              0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+            if (mon_index != -1)
             {
                 count++;
+                monster* snake = &menv[mon_index];
+                snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
             }
         }
     }
@@ -258,13 +258,13 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         if (pow > 90 && one_chance_in(3))
             mon = MONS_ANACONDA;
 
-        if (create_monster(
-                mgen_data(mon, beha, &you,
-                          dur, SPELL_STICKS_TO_SNAKES,
-                          you.pos(), MHITYOU,
-                          0, god)) != -1)
+        int mon_index = create_monster(mgen_data(mon, beha, &you,
+                          0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+        if (mon_index != -1)
         {
             count++;
+            monster* snake = &menv[mon_index];
+            snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
 

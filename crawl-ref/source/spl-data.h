@@ -1630,7 +1630,7 @@ struct spell_desc
 
 {
     SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
-     SPTYP_TRANSMUTATION | SPTYP_SUMMONING,
+     SPTYP_TRANSMUTATION,
      SPFLAG_BATTLE,
      2,
      200,

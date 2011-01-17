@@ -1917,6 +1917,10 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         blame_prefix = "animated by ";
     }
+    else if (mg.summon_type == SPELL_STICKS_TO_SNAKES)
+    {
+        blame_prefix = "transmiuted by ";
+    }
     else
     {
         blame_prefix = "created by ";
