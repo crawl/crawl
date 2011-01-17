@@ -273,24 +273,24 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
         const char letter = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(letter);
 
-        if (selector && is_valid_spell(spell) && !(*selector)(spell))
+        if (!is_valid_spell(spell))
             continue;
 
-        if (spell != SPELL_NO_SPELL)
-        {
-            bool preselect = (preselect_first
-                              || you.last_cast_spell == spell);
+        if (selector && !(*selector)(spell))
+            continue;
 
-            ToggleableMenuEntry* me =
-                new ToggleableMenuEntry(_spell_base_description(spell),
-                                        _spell_extra_description(spell),
-                                        MEL_ITEM, 1, letter, preselect);
+        bool preselect = (preselect_first
+                          || you.last_cast_spell == spell);
+
+        ToggleableMenuEntry* me =
+            new ToggleableMenuEntry(_spell_base_description(spell),
+                                    _spell_extra_description(spell),
+                                    MEL_ITEM, 1, letter, preselect);
 
 #ifdef USE_TILE
-            me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+        me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
-            spell_menu.add_entry(me);
-        }
+        spell_menu.add_entry(me);
     }
 
     while (true)
