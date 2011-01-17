@@ -1517,11 +1517,16 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VAMPIRICISM;
             else if (one_chance_in(6))
                 rc = SPWPN_VENOM;
+            else if (one_chance_in(8))
+                rc = SPWPN_ANTIMAGIC;
             break;
 
         case WPN_DEMON_WHIP:
         case WPN_DEMON_BLADE:
         case WPN_DEMON_TRIDENT:
+            if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
             if (one_chance_in(5))       // 4.9%, 7.3% blades
                 rc = SPWPN_VAMPIRICISM;
 
