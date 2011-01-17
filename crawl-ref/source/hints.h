@@ -124,11 +124,14 @@ enum hints_event_type
     HINT_HEAP_BRAND,
     HINT_TRAP_BRAND,
     HINT_LOAD_SAVED_GAME,
+    // for the tutorial
+    HINT_AUTOPICKUP_THROWN,
     HINT_EVENTS_NUM
 };
 
 struct newgame_def;
 void init_hints();
+void tutorial_init_hints();
 void pick_hints(newgame_def* choice);
 void hints_load_game(void);
 void print_hints_menu(unsigned int type);
