@@ -623,6 +623,22 @@ bool cast_a_spell(bool check_range, spell_type spell)
         {
             if (keyin == 0)
             {
+                if (you.spell_no == 1)
+                {
+                    // Set last_cast_spell to the current only spell.
+                    for (int i = 0; i < 52; ++i)
+                    {
+                        const char letter = index_to_letter(i);
+                        const spell_type spl = get_spell_by_letter(letter);
+
+                        if (!is_valid_spell(spl))
+                            continue;
+
+                        you.last_cast_spell = spl;
+                        break;
+                    }
+                }
+
                 if (you.last_cast_spell == SPELL_NO_SPELL)
                     mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
                 else
