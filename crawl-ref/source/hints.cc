@@ -101,7 +101,9 @@ void load_hints(reader& inf)
     for (long i = 0; i < HINT_EVENTS_NUM; ++i)
     {
         Hints.hints_events[i] = unmarshallBoolean(inf);
-        Hints.hints_left += Hints.hints_events[i];
+        // Don't increase for tutorial.
+        if (crawl_state.game_is_hints())
+            Hints.hints_left += Hints.hints_events[i];
     }
 }
 
@@ -154,7 +156,7 @@ void init_hints()
     Hints.hints_seen_invisible = 0;
 }
 
-// Tutorial selection screen and choice.
+// Hints mode selection screen and choice.
 void pick_hints(newgame_def* choice)
 {
     clrscr();
@@ -716,7 +718,7 @@ void hints_healing_reminder()
             if (Hints.hints_just_triggered)
                 return;
 
-            Hints.hints_just_triggered = 1;
+            Hints.hints_just_triggered = true;
 
             std::string text;
             text =  "Remember to rest between fights and to enter unexplored "
@@ -1330,31 +1332,52 @@ static bool _rare_hints_event(hints_event_type event)
     }
 }
 
+// Allow for a few specific hint mode messages.
 static bool _tutorial_interesting(hints_event_type event)
 {
-    if (!crawl_state.game_is_tutorial())
+    switch (event)
+    {
+    case HINT_NEW_LEVEL:
+    case HINT_AUTOPICKUP_THROWN:
+        return (true);
+    default:
         return (false);
+    }
+}
 
-    return (event == HINT_NEW_LEVEL);
+// A few special tutorial explanations require triggers.
+// Initialize the corresponding events, so they can get displayed.
+void tutorial_init_hints()
+{
+    // Note: Don't set hints_left because that would also trigger
+    // generic messages elsewhere. We only want a few.
+
+    Hints.hints_events.init(false);
+    for (int i = 0; i < HINT_EVENTS_NUM; ++i)
+        if (_tutorial_interesting((hints_event_type) i))
+            Hints.hints_events[i] = true;
 }
 
 // Here most of the hints mode messages for various triggers are handled.
 void learned_something_new(hints_event_type seen_what, coord_def gc)
 {
     // Already learned about that.
-    if (!Hints.hints_events[seen_what] && !_tutorial_interesting(seen_what))
+    if (!Hints.hints_events[seen_what])
         return;
 
     // Don't trigger twice in the same turn.
-    if (Hints.hints_just_triggered && !_rare_hints_event(seen_what))
+    if (Hints.hints_left && Hints.hints_just_triggered
+        && !_rare_hints_event(seen_what))
+    {
         return;
+    }
 
     std::ostringstream text;
     std::vector<command_type> cmd;
 
     Hints.hints_just_triggered = true;
     Hints.hints_events[seen_what] = false;
-    if (crawl_state.game_is_hints())
+    if (Hints.hints_left)
         Hints.hints_left--;
 
     switch (seen_what)
@@ -3203,6 +3226,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_CHARACTER_DUMP);
         break;
     }
+    case HINT_AUTOPICKUP_THROWN:
+        text << "When stepping on items you've thrown, they will be "
+                "picked up automatically.";
+        break;
     default:
         text << "You've found something new (but I don't know what)!";
     }
@@ -4074,7 +4101,7 @@ void hints_describe_item(const item_def &item)
     linebreak_string2(broken, _get_hints_cols());
     cgotoxy(1, wherey() + 2);
     display_tagged_block(broken);
-}        // hints_describe_item()
+}
 
 void hints_inscription_info(bool autoinscribe, std::string prompt)
 {

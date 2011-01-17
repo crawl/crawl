@@ -1683,7 +1683,7 @@ static void _save_game_base()
     SAVEFILE("nts", save_notes);
 
     /* hints mode */
-    if (Hints.hints_left)
+    if (Hints.hints_left || crawl_state.game_is_tutorial())
         SAVEFILE("tut", save_hints);
 
     /* messages */

@@ -1264,6 +1264,9 @@ static void _give_starting_food()
 
 static void _setup_tutorial_miscs()
 {
+    // Allow for a few specific hint mode messages.
+    tutorial_init_hints();
+
     // Give him spellcasting
     you.skills[SK_SPELLCASTING] = 3;
     you.skills[SK_CONJURATIONS] = 1;

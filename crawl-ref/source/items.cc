@@ -2736,6 +2736,9 @@ static void _do_autopickup()
                 = _interesting_explore_pickup(mitm[o]);
 
             const iflags_t iflags(mitm[o].flags);
+            if ((iflags & ISFLAG_THROWN))
+                learned_something_new(HINT_AUTOPICKUP_THROWN);
+
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
             const int result = move_item_to_player(o, num_to_take);
