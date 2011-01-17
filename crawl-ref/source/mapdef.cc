@@ -3421,44 +3421,52 @@ bool mons_list::check_mimic(const std::string &s, int *mid, bool *fix) const
     return (true);
 }
 
-void mons_list::parse_mons_spells(mons_spec &spec, const std::string &spells)
+void mons_list::parse_mons_spells(mons_spec &spec, std::vector<std::string> &spells)
 {
     spec.explicit_spells = true;
     spec.extra_monster_flags |= MF_SPELLCASTER;
-    const std::vector<std::string> spell_names(split_string(";", spells));
-    if (spell_names.size() > NUM_MONSTER_SPELL_SLOTS)
+    std::vector<std::string>::iterator spell_it;
+    for (spell_it = spells.begin(); spell_it != spells.end(); ++spell_it)
     {
-        error = make_stringf("Too many monster spells (max %d) in %s",
-                             NUM_MONSTER_SPELL_SLOTS,
-                             spells.c_str());
-        return;
-    }
-    for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
-    {
-        const std::string spname(
-            lowercase_string(replace_all_of(spell_names[i], "_", " ")));
-        if (spname.empty() || spname == "." || spname == "none"
-            || spname == "no spell")
+        monster_spells cur_spells;
+
+        const std::vector<std::string> spell_names(split_string(";", (*spell_it)));
+        if (spell_names.size() > NUM_MONSTER_SPELL_SLOTS)
         {
-            spec.spells[i] = SPELL_NO_SPELL;
+            error = make_stringf("Too many monster spells (max %d) in %s",
+                                 NUM_MONSTER_SPELL_SLOTS,
+                                 spell_it->c_str());
+            return;
         }
-        else
+        for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
         {
-            const spell_type sp(spell_by_name(spname));
-            if (sp == SPELL_NO_SPELL)
+            const std::string spname(
+                lowercase_string(replace_all_of(spell_names[i], "_", " ")));
+            if (spname.empty() || spname == "." || spname == "none"
+                || spname == "no spell")
             {
-                error = make_stringf("Unknown spell name: '%s' in '%s'",
-                                     spname.c_str(), spells.c_str());
-                return;
+                cur_spells[i] = SPELL_NO_SPELL;
             }
-            if (!is_valid_mon_spell(sp))
+            else
             {
-                error = make_stringf("Not a monster spell: '%s'",
-                                     spname.c_str());
-                return;
+                const spell_type sp(spell_by_name(spname));
+                if (sp == SPELL_NO_SPELL)
+                {
+                    error = make_stringf("Unknown spell name: '%s' in '%s'",
+                                         spname.c_str(), spell_it->c_str());
+                    return;
+                }
+                if (!is_valid_mon_spell(sp))
+                {
+                    error = make_stringf("Not a monster spell: '%s'",
+                                         spname.c_str());
+                    return;
+                }
+                cur_spells[i] = sp;
             }
-            spec.spells[i] = sp;
         }
+
+        spec.spells.push_back(cur_spells);
     }
 }
 
@@ -3475,7 +3483,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mons_spec mspec;
         std::string s = specs[i];
 
-        std::string spells(strip_tag_prefix(s, "spells:"));
+        std::vector<std::string> spells(strip_multiple_tag_prefix(s, "spells:"));
         if (!spells.empty())
         {
             parse_mons_spells(mspec, spells);

@@ -657,7 +657,7 @@ class mons_spec
     std::string non_actor_summoner;
 
     bool explicit_spells;
-    monster_spells spells;
+    std::vector<monster_spells> spells;
     unsigned long extra_monster_flags;
 
     CrawlHashTable props;
@@ -726,7 +726,7 @@ private:
     mons_spec get_zombified_monster(const std::string &name,
                                     monster_type zomb) const;
     mons_spec_slot parse_mons_spec(std::string spec);
-    void parse_mons_spells(mons_spec &slot, const std::string &spells);
+    void parse_mons_spells(mons_spec &slot, std::vector<std::string> &spells);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
     bool check_mimic(const std::string &s, int *mid, bool *fix) const;
