@@ -3193,10 +3193,6 @@ static bool _mon_can_move_to_pos(const monster* mons,
         }
     }
 
-    // Water elementals avoid fire and heat.
-    if (mons->type == MONS_WATER_ELEMENTAL && target_grid == DNGN_LAVA)
-        return (false);
-
     // Fire elementals avoid water and cold.
     if (mons->type == MONS_FIRE_ELEMENTAL && feat_is_watery(target_grid))
         return (false);
