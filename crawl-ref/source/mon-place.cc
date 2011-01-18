@@ -559,7 +559,6 @@ monster_type pick_random_monster(const level_id &place, int power,
                 count = 0;
                 do
                 {
-                    // was: random2(400) {dlb}
                     mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
                     count++;
                 }
