@@ -2732,18 +2732,24 @@ enum object_class_type                 // mitm[].base_type
     OBJ_ARMOUR,
     OBJ_WANDS,
     OBJ_FOOD,
+#if TAG_MAJOR_VERSION == 32
     OBJ_UNKNOWN_I, // (use unknown) labeled as books in invent.cc {dlb}
+#endif
     OBJ_SCROLLS,
     OBJ_JEWELLERY,
     OBJ_POTIONS,
+#if TAG_MAJOR_VERSION == 32
     OBJ_UNKNOWN_II, // (use unknown, stackable) labeled as gems in invent.cc {dlb}
+#endif
     OBJ_BOOKS,
     OBJ_STAVES,
     OBJ_ORBS,
     OBJ_MISCELLANY,
     OBJ_CORPSES,
     OBJ_GOLD, // important role as upper limit to chardump::dump_inventory() {dlb}
+#if TAG_MAJOR_VERSION == 32
     OBJ_GEMSTONES, // found in itemname.cc, labeled as miscellaneous in invent.cc {dlb}
+#endif
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,              // must remain set to 100 {dlb}
     OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()

@@ -1782,11 +1782,9 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     case OBJ_ARMOUR:     zapsym = DCHAR_FIRED_ARMOUR;  break;
     case OBJ_WANDS:      zapsym = DCHAR_FIRED_STICK;   break;
     case OBJ_FOOD:       zapsym = DCHAR_FIRED_CHUNK;   break;
-    case OBJ_UNKNOWN_I:  zapsym = DCHAR_FIRED_BURST;   break;
     case OBJ_SCROLLS:    zapsym = DCHAR_FIRED_SCROLL;  break;
     case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
     case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
-    case OBJ_UNKNOWN_II: zapsym = DCHAR_FIRED_ZAP;     break;
     case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
     case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
     default: break;

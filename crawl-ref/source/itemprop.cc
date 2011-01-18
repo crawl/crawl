@@ -2648,10 +2648,6 @@ int item_mass(const item_def &item)
         unit_mass = 100;
         break;
 
-    case OBJ_UNKNOWN_I:
-        unit_mass = 200;        // labeled "books"
-        break;
-
     case OBJ_SCROLLS:
         unit_mass = 20;
         break;
@@ -2662,10 +2658,6 @@ int item_mass(const item_def &item)
 
     case OBJ_POTIONS:
         unit_mass = 40;
-        break;
-
-    case OBJ_UNKNOWN_II:
-        unit_mass = 5;          // labeled "gems"
         break;
 
     case OBJ_BOOKS:
