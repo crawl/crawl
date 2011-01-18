@@ -22,6 +22,10 @@ int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
 double random_real();
 
+enum monster_type;
+monster_type random_choose(monster_type first, ...);
+monster_type random_choose_weighted(int weight, monster_type first, ...);
+
 int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);
 int random2limit(int max, int limit);

@@ -20,11 +20,8 @@ int random_range(int low, int high, int nrolls)
 
 // Chooses one of the numbers passed in at random. The list of numbers
 // must be terminated with -1.
-int random_choose(int first, ...)
+static int _random_choose(int first, va_list args)
 {
-    va_list args;
-    va_start(args, first);
-
     int chosen = first, count = 1, nargs = 100;
 
     while (nargs-- > 0)
@@ -37,13 +34,30 @@ int random_choose(int first, ...)
     }
 
     ASSERT(nargs > 0);
-
-    va_end(args);
     return (chosen);
 }
 
+int random_choose(int first, ...)
+{
+    va_list args;
+    va_start(args, first);
+    int chosen = _random_choose(first, args);
+    va_end(args);
+    return chosen;
+}
+
+monster_type random_choose(monster_type first, ...)
+{
+    va_list args;
+    va_start(args, first);
+    int chosen = _random_choose(first, args);
+    va_end(args);
+    return (monster_type)chosen;
+}
+
 // Chooses one of the strings passed in at random. The list of strings
-// must be terminated with NULL.
+// must be terminated with NULL.  Sadly, NULL is not -1, and 0 is popular
+// value for enums, so we need to copy the function.
 const char* random_choose_string(const char* first, ...)
 {
     va_list args;
@@ -67,11 +81,8 @@ const char* random_choose_string(const char* first, ...)
     return (chosen);
 }
 
-int random_choose_weighted(int weight, int first, ...)
+static int _random_choose_weighted(int weight, int first, va_list args)
 {
-    va_list args;
-    va_start(args, first);
-
     int chosen = first, cweight = weight, nargs = 100;
 
     while (nargs-- > 0)
@@ -87,8 +98,25 @@ int random_choose_weighted(int weight, int first, ...)
 
     ASSERT(nargs > 0);
 
-    va_end(args);
     return (chosen);
+}
+
+int random_choose_weighted(int weight, int first, ...)
+{
+    va_list args;
+    va_start(args, first);
+    int chosen = _random_choose_weighted(weight, first, args);
+    va_end(args);
+    return chosen;
+}
+
+monster_type random_choose_weighted(int weight, monster_type first, ...)
+{
+    va_list args;
+    va_start(args, first);
+    int chosen = _random_choose_weighted(weight, first, args);
+    va_end(args);
+    return (monster_type)chosen;
 }
 
 #ifndef UINT32_MAX
