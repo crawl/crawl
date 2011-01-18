@@ -195,8 +195,8 @@ static std::string _spell_extra_description(spell_type spell)
 // selector is a boolean function that filters spells according
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
-int list_spells(bool toggle_with_I, bool viewing, int minRange,
-                spell_selector selector)
+int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
+                int minRange, spell_selector selector)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
@@ -249,25 +249,29 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
 
     // If there's only a single spell in the offered spell list,
     // taking the selector function into account, preselect that one.
-    int count = 0;
-    if (you.spell_no == 1)
-        count = 1;
-    else if (selector)
+    bool preselect_first = false;
+    if (allow_preselect)
     {
-        for (int i = 0; i < 52; ++i)
+        int count = 0;
+        if (you.spell_no == 1)
+            count = 1;
+        else if (selector)
         {
-            const char letter = index_to_letter(i);
-            const spell_type spell = get_spell_by_letter(letter);
-            if (!is_valid_spell(spell) || !(*selector)(spell))
-                continue;
+            for (int i = 0; i < 52; ++i)
+            {
+                const char letter = index_to_letter(i);
+                const spell_type spell = get_spell_by_letter(letter);
+                if (!is_valid_spell(spell) || !(*selector)(spell))
+                    continue;
 
-            // Break out early if we've got > 1 spells.
-            if (++count > 1)
-                break;
+                // Break out early if we've got > 1 spells.
+                if (++count > 1)
+                    break;
+            }
         }
+        // Preselect the first spell if it's only spell applicable.
+        preselect_first = (count == 1);
     }
-    // Preselect the first spell if it's only spell applicable.
-    const bool preselect_first = (count == 1);
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
@@ -280,7 +284,7 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
             continue;
 
         bool preselect = (preselect_first
-                          || you.last_cast_spell == spell);
+                          || allow_preselect && you.last_cast_spell == spell);
 
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(_spell_base_description(spell),
