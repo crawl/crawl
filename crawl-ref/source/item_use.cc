@@ -286,7 +286,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (auto_wield)
     {
-        if (!can_wield(&you.inv[item_slot], true))
+        if (slot != -1 && !can_wield(&you.inv[slot], true))
             return (false);
 
         if (item_slot == you.equip[EQ_WEAPON]
