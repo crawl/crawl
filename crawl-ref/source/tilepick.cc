@@ -4390,6 +4390,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_EDIT_PLAYER_TILE;
     case CMD_DISPLAY_COMMANDS:
         return TILEG_CMD_DISPLAY_COMMANDS;
+    case CMD_DISPLAY_KNOWN_OBJECTS:
+        return TILEG_CMD_KNOWN_ITEMS;
     default:
         return TILEG_TODO;
     }
