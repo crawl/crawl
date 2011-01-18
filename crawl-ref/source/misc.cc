@@ -2500,3 +2500,10 @@ void entered_malign_portal(actor* act)
     else
         act->hurt(NULL, roll_dice(2, 4));
 }
+
+void handle_real_time(time_t t)
+{
+    you.real_time += std::min<time_t>(t - you.last_keypress_time,
+                                      IDLE_TIME_CLAMP);
+    you.last_keypress_time = t;
+}

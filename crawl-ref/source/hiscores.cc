@@ -43,6 +43,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "jobs.h"
 #include "options.h"
@@ -1284,10 +1285,8 @@ void scorefile_entry::init(time_t dt)
     birth_time = you.birth_time;     // start time of game
     death_time = (dt != 0 ? dt : time(NULL)); // end time of game
 
-    if (you.real_time != -1)
-        real_time = you.real_time + long(death_time - you.start_time);
-    else
-        real_time = -1;
+    handle_real_time(death_time);
+    real_time = you.real_time;
 
     num_turns = you.num_turns;
 
@@ -1316,16 +1315,13 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
 
     if (verbosity == DDV_VERBOSE)
     {
-        if (real_time > 0)
-        {
-            char scratch[INFO_SIZE];
+        char scratch[INFO_SIZE];
 
-            snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
-                     make_time_string(real_time).c_str(), num_turns);
+        snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
+                 make_time_string(real_time).c_str(), num_turns);
 
-            line += scratch;
-            line += _hiscore_newline_string();
-        }
+        line += scratch;
+        line += _hiscore_newline_string();
     }
 
     return (line);

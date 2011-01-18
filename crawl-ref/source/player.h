@@ -261,7 +261,7 @@ public:
 
   delay_queue_type delay_queue;       // pending actions
 
-  time_t        start_time;           // start time of session
+  time_t last_keypress_time;
 #if defined(WIZARD) || defined(DEBUG)
   // If set to true, then any call to ouch() which would cuase the player
   // to die automatically returns without ending the game.
