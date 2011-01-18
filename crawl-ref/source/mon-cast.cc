@@ -2785,10 +2785,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_ELEMENTAL:
     {
         if (summon_type == MONS_NO_MONSTER)
-            summon_type = static_cast<monster_type>(random_choose(
+            summon_type = random_choose(
                               MONS_EARTH_ELEMENTAL, MONS_FIRE_ELEMENTAL,
                               MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
-                              -1));
+                              -1);
 
         if (_mons_abjured(mons, monsterNearby))
             return;
