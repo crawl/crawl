@@ -388,12 +388,12 @@ static void _adjust_spell(void)
 
     int keyin = 0;
     if (Options.auto_list)
-        keyin = list_spells(false);
+        keyin = list_spells(false, false, false);
     else
     {
         keyin = get_ch();
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(false);
+            keyin = list_spells(false, false, false);
     }
 
     if (!isaalpha(keyin))
@@ -427,7 +427,7 @@ static void _adjust_spell(void)
             return;
         }
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells();
+            keyin = list_spells(true, false, false);
     }
 
     const int input_2 = keyin;

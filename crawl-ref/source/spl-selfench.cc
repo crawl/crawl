@@ -425,7 +425,7 @@ bool cast_selective_amnesia()
 
         if (keyin == '?' || keyin == '*')
         {
-            keyin = list_spells(false);
+            keyin = list_spells(false, false, false);
             redraw_screen();
         }
 
