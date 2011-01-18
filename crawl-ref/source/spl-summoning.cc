@@ -708,7 +708,7 @@ bool cast_summon_dragon(int pow, god_type god)
 
     if (you.religion == GOD_SHINING_ONE)
     {
-        // TSO doesn't like golden dagons either (poison))
+        // TSO doesn't like golden dragons either (poison).
         if (mon == MONS_SHADOW_DRAGON || mon == MONS_GOLDEN_DRAGON)
             mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
     }
