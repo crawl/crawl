@@ -2678,6 +2678,9 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     _show_item_description(item);
     _update_inscription(item);
 
+    if (allow_inscribe && crawl_state.game_is_tutorial())
+        allow_inscribe = false;
+
     // Don't ask if there aren't enough rows left
     if (wherey() <= get_number_of_lines() - 2 && in_inventory(item))
     {
