@@ -18,6 +18,7 @@
 #include "fprop.h"
 #include "exclude.h"
 #include "items.h"
+#include "mon-act.h"
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-movetarget.h"
@@ -76,6 +77,47 @@ static void _mon_check_foe_invalid(monster* mon)
 
         mon->foe = MHITNOT;
     }
+}
+
+// Monster tries to get into a firing position. Among the cells which have
+// a line of fire to the target, we choose the closest one to regain LOS as
+// fast as possible. If several cells are eligible, we choose the one closest
+// to ideal_range (too far = easier to escape, too close = easier to ambush).
+static void _set_firing_pos(monster* mon, coord_def target)
+{
+    const int ideal_range = LOS_RADIUS / 2;
+    const int current_distance = mon->pos().distance_from(target);
+
+    // We don't consider getting farther away unless already very close.
+    const int max_range = std::max(ideal_range, current_distance);
+
+    int best_distance = INT_MAX;
+    int best_distance_to_ideal_range = INT_MAX;
+    coord_def best_pos(0, 0);
+    for (radius_iterator ri(mon->get_los(), true); ri; ++ri)
+    {
+        const coord_def p(*ri);
+        const int range = p.distance_from(target);
+
+        if (range > max_range || !cell_see_cell(p, target)
+            || !mon_can_move_to_pos(mon, p - mon->pos()))
+        {
+            continue;
+        }
+
+        const int distance = p.distance_from(mon->pos());
+
+        if (distance < best_distance
+            || distance == best_distance
+               && std::abs(range - ideal_range) < best_distance_to_ideal_range)
+        {
+            best_pos = p;
+            best_distance = distance;
+            best_distance_to_ideal_range = std::abs(range - ideal_range);
+        }
+    }
+
+    mon->firing_pos = best_pos;
 }
 
 //---------------------------------------------------------------
@@ -344,6 +386,9 @@ void handle_behaviour(monster* mon)
             proxFoe = true;
         }
 
+        if (mon->pos() == mon->firing_pos)
+            mon->firing_pos.reset();
+
         // Track changes to state; attitude never changes here.
         beh_type new_beh       = mon->behaviour;
         unsigned short new_foe = mon->foe;
@@ -436,7 +481,7 @@ void handle_behaviour(monster* mon)
                     // but only for a few moves (smell and
                     // intuition only go so far).
 
-                    if ((mon->pos() == mon->target)
+                    if (mon->pos() == mon->target
                         && (!isFriendly || !crawl_state.game_is_zotdef()))
                     {   // hostiles only in Zotdef
                         if (mon->foe == MHITYOU)
@@ -466,7 +511,19 @@ void handle_behaviour(monster* mon)
 
 
                 if (mon->foe_memory <= 0)
+                {
                     new_beh = BEH_WANDER;
+                }
+                // If the player walk out of the LOS of a monster with a ranged
+                // attack, we assume it sees in which direction the player went
+                // and it tries to find a line of fire instead of following the
+                // player.
+                else if (grid_distance(mon->target, you.pos()) == 1
+                    && (mons_has_ranged_spell(mon, true)
+                        || mons_has_ranged_attack(mon)))
+                {
+                    _set_firing_pos(mon, you.pos());
+                }
 
                 break;
             }
@@ -497,6 +554,9 @@ void handle_behaviour(monster* mon)
             if (mon->foe == MHITYOU)
             {
                 // The foe is the player.
+                if (!mon->firing_pos.zero())
+                    mon->firing_pos.reset();
+
                 if (mon->type == MONS_SIREN
                     && you.beheld_by(mon)
                     && find_siren_water_target(mon))

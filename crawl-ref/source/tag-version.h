@@ -9,7 +9,8 @@ enum tag_minor_version
 {
     TAG_MINOR_INVALID         = -1,
     TAG_MINOR_RESET           = 0, // Minor tags were reset
-    TAG_MINOR_DETECTED_MONSTER= 1, // Detected monsters keep more than a flag.
+    TAG_MINOR_DETECTED_MONSTER,    // Detected monsters keep more than a flag.
+    TAG_MINOR_FIRING_POS,          // Store firing position for monsters.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

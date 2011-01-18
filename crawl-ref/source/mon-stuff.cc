@@ -2228,6 +2228,7 @@ int monster_die(monster* mons, killer_type killer,
             mons->set_transit(level_id(LEVEL_ABYSS));
             in_transit = true;
             drop_items = false;
+            mons->firing_pos.reset();
             // Make monster stop patrolling and/or travelling.
             mons->patrol_point.reset();
             mons->travel_path.clear();

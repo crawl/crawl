@@ -80,6 +80,7 @@ public:
     int speed_increment;
 
     coord_def target;
+    coord_def firing_pos;
     coord_def patrol_point;
     mutable montravel_target_type travel_target;
     std::vector<coord_def> travel_path;
