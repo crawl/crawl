@@ -191,7 +191,7 @@ void pandemonium_mons(void)
     if (one_chance_in(40))
     {
         do
-            pan_mons = random2(NUM_MONSTERS);   // was random2(400) {dlb}
+            pan_mons = random2(NUM_MONSTERS);
         while (!mons_pan(pan_mons));
     }
     mgen_data mg(static_cast<monster_type>(pan_mons));
