@@ -2305,6 +2305,8 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     {
         you.set_duration(DUR_TELEPATHY, random2(power/4), 0,
                          "You feel telepathic!");
+        detect_creatures(1 + you.duration[DUR_TELEPATHY] / 2 / BASELINE_DELAY,
+                         true);
     }
 }
 
