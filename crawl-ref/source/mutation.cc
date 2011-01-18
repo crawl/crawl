@@ -1950,7 +1950,7 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
-        const monster* mon = monster_at(*ri);
+        monster* mon = monster_at(*ri);
         if (!mon)
         {
             map_cell& cell = env.map_knowledge(*ri);
@@ -1958,7 +1958,11 @@ void check_antennae_detect()
                 cell.clear_monster();
         }
         else if (!mons_is_firewood(mon))
+        {
+            if (mons_is_unknown_mimic(mon))
+                discover_mimic(mon);
             env.map_knowledge(*ri).set_detected_monster(MONS_SENSED);
+        }
     }
 }
 
