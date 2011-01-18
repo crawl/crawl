@@ -911,7 +911,8 @@ static bool _herd_ok(monster * mon)
         if (mons_genus(mit->type) == mons_genus(mon->type) )
         {
             int g_dist = grid_distance(mit->pos(), mon->pos());
-            if (g_dist < HERD_COMFORT_RANGE)
+            if (g_dist < HERD_COMFORT_RANGE
+                && mon->see_cell_no_trans(mit->pos()))
             {
                 in_bounds = true;
                 break;
@@ -941,7 +942,7 @@ static bool _band_ok(monster * mon)
 
     // If in range, or sufficiently out of range we can just wander around for
     // a while longer.
-    if (g_dist < HERD_COMFORT_RANGE
+    if (g_dist < HERD_COMFORT_RANGE && mon->see_cell_no_trans(leader->pos())
         || g_dist >= (LOS_RADIUS + HERD_COMFORT_RANGE))
     {
         return (true);
