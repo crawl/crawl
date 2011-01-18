@@ -2732,10 +2732,6 @@ static void _player_reacts()
 
     you.check_clinging();
 
-    if (you.duration[DUR_TELEPATHY] && player_in_mappable_area())
-        detect_creatures(1 + you.duration[DUR_TELEPATHY] /
-                         (2 * BASELINE_DELAY), true);
-
     _decrement_durations();
 
     int capped_time = you.time_taken;
@@ -2771,6 +2767,10 @@ static void _player_reacts_to_monsters()
 
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
         detect_items(-1);
+
+    if (you.duration[DUR_TELEPATHY] && player_in_mappable_area())
+        detect_creatures(1 + you.duration[DUR_TELEPATHY] /
+                         (2 * BASELINE_DELAY), true);
 
     handle_starvation();
 }
