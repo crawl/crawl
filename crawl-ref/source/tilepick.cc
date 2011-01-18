@@ -494,7 +494,10 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
 
     // Override foreground for monsters/items
     if (env.map_knowledge(gc).detected_monster())
-        *fg = _tileidx_monster_base(cell.monster());
+    {
+        ASSERT(cell.monster() == MONS_SENSED);
+        *fg = _tileidx_monster_base(cell.monsterinfo()->base_type);
+    }
     else if (env.map_knowledge(gc).detected_item())
         *fg = tileidx_item(*cell.item());
     else
@@ -2396,6 +2399,17 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
             _handle_tentacle_overlay(mon->pos(), t);
             return t;
         }
+
+        case MONS_SENSED:
+        {
+            // Should be always out of LOS, though...
+            const tileidx_t t = _tileidx_monster_base(type, in_water,
+                                    mon->colour, mon->number, tile_num);
+            if (t == TILEP_MONS_PROGRAM_BUG)
+                return TILE_UNSEEN_MONSTER;
+            return t;
+        }
+
         default:
             return _tileidx_monster_base(type, in_water, mon->colour,
                                          mon->number, tile_num);
