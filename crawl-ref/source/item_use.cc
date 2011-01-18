@@ -137,8 +137,9 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
-    if (you.species == SP_CAT && (weapon->base_type == OBJ_WEAPONS
-          || weapon->base_type == OBJ_STAVES))
+    if (you.species == SP_CAT
+        && (weapon->base_type == OBJ_WEAPONS
+            || weapon->base_type == OBJ_STAVES))
     {
         SAY(mpr("You can't use weapons."));
         return (false);
@@ -147,9 +148,9 @@ bool can_wield(item_def *weapon, bool say_reason,
     // Only ogres and trolls can wield giant clubs (>= 30 aum)
     // and large rocks (60 aum).
     if (you.body_size(PSIZE_TORSO) < SIZE_LARGE
-                      && (item_mass(*weapon) >= 500
-                          || weapon->base_type == OBJ_WEAPONS
-                             && item_mass(*weapon) >= 300))
+        && (item_mass(*weapon) >= 500
+            || weapon->base_type == OBJ_WEAPONS
+               && item_mass(*weapon) >= 300))
     {
         SAY(mpr("That's too large and heavy for you to wield."));
         return (false);
@@ -285,6 +286,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (auto_wield)
     {
+        if (!can_wield(&you.inv[item_slot], true))
+            return (false);
+
         if (item_slot == you.equip[EQ_WEAPON]
             || you.equip[EQ_WEAPON] == -1
                && !_valid_weapon_swap(you.inv[item_slot]))

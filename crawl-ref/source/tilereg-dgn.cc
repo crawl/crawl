@@ -468,6 +468,10 @@ static const bool _is_appropriate_evokable(const item_def& item,
 
 static const bool _have_appropriate_evokable(const actor* target)
 {
+    // Felids cannot use wands.
+    if (you.species == SP_CAT)
+        return (false);
+
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def &item(you.inv[i]);
@@ -655,6 +659,12 @@ static const bool _have_appropriate_spell(const actor* target)
     return (false);
 }
 
+static bool _can_fire_item()
+{
+    return (you.species != SP_CAT
+            && you.m_quiver->get_fire_item() != -1);
+}
+
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
     const bool shift = (mod & MOD_SHIFT);
@@ -666,7 +676,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
         return _evoke_item_on_target(mon);
 
     // Handle firing quivered items.
-    if (shift && !ctrl && you.m_quiver->get_fire_item() != -1)
+    if (shift && !ctrl && _can_fire_item())
     {
         macro_buf_add_cmd(CMD_FIRE);
         _add_targeting_commands(mon->pos());
@@ -1050,7 +1060,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
             tip = "[L-Click] Travel\n";
     }
 
-    if (gc != you.pos())
+    if (you.species != SP_CAT && gc != you.pos())
     {
         const monster* mon = monster_at(gc);
         if (mon && you.can_see(mon))
