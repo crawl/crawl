@@ -468,7 +468,7 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool _mark_detected_creature(coord_def where, const monster* mon,
+static bool _mark_detected_creature(coord_def where, monster* mon,
                                     int fuzz_chance, int fuzz_radius)
 {
     bool found_good = false;
@@ -507,6 +507,10 @@ static bool _mark_detected_creature(coord_def where, const monster* mon,
         if (found_good)
             where = place;
     }
+
+    // Mimics are too obvious by now, even out of LOS.
+    if (mons_is_unknown_mimic(mon))
+        discover_mimic(mon);
 
     env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
