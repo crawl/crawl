@@ -828,8 +828,7 @@ static bool _band_wander_target(monster * mon, dungeon_feature_type can_move)
     int leader_dist = grid_distance(mon->pos(), band_leader->pos());
     if (leader_dist > dist_thresh)
     {
-        //mon->target = band_leader->pos();
-        return (false);
+        return (true);
     }
 
     std::vector<coord_def> positions;
@@ -842,6 +841,7 @@ static bool _band_wander_target(monster * mon, dungeon_feature_type can_move)
             positions.push_back(*r_it);
         }
     }
+
     if (positions.empty())
         return (true);
 
@@ -850,7 +850,8 @@ static bool _band_wander_target(monster * mon, dungeon_feature_type can_move)
     return (false);
 }
 
-static void _herd_wander_target(monster * mon, dungeon_feature_type can_move)
+// Returns true if a movement target still needs to be set
+static bool _herd_wander_target(monster * mon, dungeon_feature_type can_move)
 {
     std::vector<monster_iterator> friends;
     std::map<int, std::vector<coord_def> > distance_positions;
@@ -870,7 +871,7 @@ static void _herd_wander_target(monster * mon, dungeon_feature_type can_move)
     }
 
     if (friends.empty())
-        return set_random_target(mon);
+        return (true);
 
     for (radius_iterator r_it(mon->get_los_no_trans(), true) ; r_it; ++r_it)
     {
@@ -890,10 +891,10 @@ static void _herd_wander_target(monster * mon, dungeon_feature_type can_move)
         distance_positions.rbegin();
 
     if (back == distance_positions.rend())
-        return set_random_target(mon);
-
+        return (true);
 
     mon->target = back->second[random2(back->second.size())];
+    return (false);
 }
 
 static bool _herd_ok(monster * mon)
@@ -922,7 +923,7 @@ static bool _herd_ok(monster * mon)
         }
     }
 
-    return in_bounds || !intermediate_range;
+    return (in_bounds || !intermediate_range);
 }
 
 // Return true if we don't have to do anything to keep within an ok distance
@@ -975,6 +976,9 @@ void check_wander_target(monster* mon, bool isPacified,
         if (need_target && mon->is_patrolling())
             need_target = _handle_monster_patrolling(mon);
 
+        if (need_target && herd_monster(mon))
+            need_target = _herd_wander_target(mon, can_move);
+
         if (need_target
             && _active_band_leader(mon) != NULL)
         {
@@ -989,12 +993,7 @@ void check_wander_target(monster* mon, bool isPacified,
         // wandering monsters at least appear to have some sort of
         // attention span.  -- bwr
         if (need_target)
-        {
-            if (herd_monster(mon))
-                _herd_wander_target(mon, can_move);
-            else
-                set_random_target(mon);
-        }
+            set_random_target(mon);
     }
 }
 
