@@ -583,7 +583,7 @@ This spell opens a gate to the realm of Pandemonium and draws forth one of its i
 %%%%
 Summon Dragon
 
-This spell summons and binds a powerful dragon to perform the caster's bidding. 
+This spell summons and binds a powerful dragon to perform the caster's bidding.
 %%%%
 Summon Elemental
 

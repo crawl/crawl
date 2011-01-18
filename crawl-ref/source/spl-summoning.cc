@@ -679,50 +679,40 @@ bool cast_summon_dragon(int pow, god_type god)
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int chance = random2(pow);
-    
+
     if (chance >= 80 || one_chance_in(6))
-    {    
         mon = (coinflip()) ? MONS_GOLDEN_DRAGON : MONS_QUICKSILVER_DRAGON;
-    }
     else if (chance >= 40 || one_chance_in(6))
-    {
-            switch (random2(3))
-            {
-            case 0:
-                mon = MONS_IRON_DRAGON;
-                break;
-            case 1:
-                mon = MONS_SHADOW_DRAGON;
-                break;
-            default:
-                mon = MONS_STORM_DRAGON;
-                break;
-            }
-    }
+        switch (random2(3))
+        {
+        case 0:
+            mon = MONS_IRON_DRAGON;
+            break;
+        case 1:
+            mon = MONS_SHADOW_DRAGON;
+            break;
+        default:
+            mon = MONS_STORM_DRAGON;
+            break;
+        }
     else
-    {
-            mon = (coinflip()) ? MONS_DRAGON : MONS_ICE_DRAGON;
-    }
+        mon = (coinflip()) ? MONS_DRAGON : MONS_ICE_DRAGON;
     // Now check to see if you are worshipping a good god
     // and adjust dragons accordingly. No pearl dragons (word of due).
     if (you.religion == GOD_ELYVILON || you.religion == GOD_ZIN)
     {
-      // Switch away from shadow dragon to storm/iron.
-      if (mon == MONS_SHADOW_DRAGON)
-      {
-         mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
-      }
+        // Switch away from shadow dragon to storm/iron.
+        if (mon == MONS_SHADOW_DRAGON)
+            mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
     }
 
     if (you.religion == GOD_SHINING_ONE)
     {
-      // TSO doesn't like golden dagons either (poison))
-      if (mon == MONS_SHADOW_DRAGON || mon == MONS_GOLDEN_DRAGON)
-      {
-         mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
-      }
+        // TSO doesn't like golden dagons either (poison))
+        if (mon == MONS_SHADOW_DRAGON || mon == MONS_GOLDEN_DRAGON)
+            mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
     }
-    
+
     if (create_monster(
             mgen_data(mon, BEH_FRIENDLY, &you,
                       4, SPELL_SUMMON_DRAGON,
@@ -731,7 +721,6 @@ bool cast_summon_dragon(int pow, god_type god)
                       0, god)) != -1)
     {
         mpr("A dragon appears.");
-
         return (true);
     }
 
