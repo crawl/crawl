@@ -1289,7 +1289,6 @@ bool is_stackable_item(const item_def &item)
         || item.base_type == OBJ_FOOD
         || item.base_type == OBJ_SCROLLS
         || item.base_type == OBJ_POTIONS
-        || item.base_type == OBJ_UNKNOWN_II
         || item.base_type == OBJ_GOLD
         || (item.base_type == OBJ_MISCELLANY
             && item.sub_type == MISC_RUNE_OF_ZOT))
@@ -2876,18 +2875,24 @@ int get_max_subtype(object_class_type base_type)
         NUM_ARMOURS,
         NUM_WANDS,
         NUM_FOODS,
+#if TAG_MAJOR_VERSION == 32
         0,              // unknown I
+#endif
         NUM_SCROLLS,
         NUM_JEWELLERY,
         NUM_POTIONS,
+#if TAG_MAJOR_VERSION == 32
         0,              // unknown II
+#endif
         NUM_BOOKS,
         NUM_STAVES,
         1,              // Orbs         -- only one
         NUM_MISCELLANY,
         -1,              // corpses     -- handled specially
         1,              // gold         -- handled specially
+#if TAG_MAJOR_VERSION == 32
         0,              // "gemstones"  -- no items of type
+#endif
     };
     COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES, c1);
 

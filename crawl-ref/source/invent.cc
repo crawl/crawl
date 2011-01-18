@@ -976,11 +976,9 @@ std::string item_class_name(int type, bool terse)
         case OBJ_ARMOUR:     return ("armour");
         case OBJ_WANDS:      return ("wand");
         case OBJ_FOOD:       return ("food");
-        case OBJ_UNKNOWN_I:  return ("?");
         case OBJ_SCROLLS:    return ("scroll");
         case OBJ_JEWELLERY:  return ("jewellery");
         case OBJ_POTIONS:    return ("potion");
-        case OBJ_UNKNOWN_II: return ("?");
         case OBJ_BOOKS:      return ("book");
         case OBJ_STAVES:     return ("staff");
         case OBJ_ORBS:       return ("orb");
@@ -998,11 +996,9 @@ std::string item_class_name(int type, bool terse)
         case OBJ_ARMOUR:     return ("Armour");
         case OBJ_WANDS:      return ("Magical Devices");
         case OBJ_FOOD:       return ("Comestibles");
-        case OBJ_UNKNOWN_I:  return ("Books");
         case OBJ_SCROLLS:    return ("Scrolls");
         case OBJ_JEWELLERY:  return ("Jewellery");
         case OBJ_POTIONS:    return ("Potions");
-        case OBJ_UNKNOWN_II: return ("Gems");
         case OBJ_BOOKS:      return ("Books");
         case OBJ_STAVES:     return ("Magical Staves and Rods");
         case OBJ_ORBS:       return ("Orbs of Power");

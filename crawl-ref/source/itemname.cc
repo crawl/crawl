@@ -1847,10 +1847,6 @@ std::string item_def::name_aux(description_level_type desc,
         buff << "gold piece";
         break;
 
-    // not implemented
-    case OBJ_GEMSTONES:
-        break;
-
     case OBJ_CORPSES:
     {
         if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
