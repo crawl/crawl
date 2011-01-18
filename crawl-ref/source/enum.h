@@ -526,7 +526,7 @@ enum cloud_type
     CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
 
     CLOUD_RANDOM = 98,
-    CLOUD_DEBUGGING = 99,   //   99: used once as 'nonexistent cloud' {dlb}
+    CLOUD_DEBUGGING,
 };
 
 enum command_type
@@ -2751,7 +2751,7 @@ enum object_class_type                 // mitm[].base_type
     OBJ_GEMSTONES, // found in itemname.cc, labeled as miscellaneous in invent.cc {dlb}
 #endif
     NUM_OBJECT_CLASSES,
-    OBJ_UNASSIGNED = 100,              // must remain set to 100 {dlb}
+    OBJ_UNASSIGNED = 100,
     OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()
     OBJ_DETECTED,    // unknown item; item_info only
 };
@@ -2893,8 +2893,8 @@ enum shop_type // (uint8_t) env.sh_type[], item_in_shop(), in_a_shop()
     SHOP_SCROLL,
     SHOP_GENERAL,
     NUM_SHOPS, // must remain last 'regular' member {dlb}
-    SHOP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
-    SHOP_RANDOM = 255,                 // keep set at 255 for now {dlb}
+    SHOP_UNASSIGNED = 100,
+    SHOP_RANDOM,
 };
 
 // These are often addressed relative to each other (esp. delta SIZE_MEDIUM).
@@ -3262,7 +3262,7 @@ enum stat_type
   STAT_DEX,
   NUM_STATS, // added for increase_stats() {dlb}
   STAT_ALL, // must remain after NUM_STATS -- added to handle royal jelly, etc. {dlb}
-  STAT_RANDOM = 255, // leave at 255, added for increase_stats() handling {dlb}
+  STAT_RANDOM,
 };
 
 enum targeting_type
@@ -3302,10 +3302,10 @@ enum trap_type                         // env.trap_type[]
     TRAP_PLATE,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_MAX_REGULAR = TRAP_SHAFT,
-    TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
-    TRAP_INDEPTH = 253,                // Level-appropriate trap.
-    TRAP_NONTELEPORT = 254,
-    TRAP_RANDOM = 255,                 // set at 255 to avoid potential conflicts {dlb}
+    TRAP_UNASSIGNED = 100,
+    TRAP_INDEPTH,                      // Level-appropriate trap.
+    TRAP_NONTELEPORT,
+    TRAP_RANDOM,
 };
 
 enum undead_state_type                // you.is_undead
