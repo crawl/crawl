@@ -243,7 +243,7 @@ static void _post_init(bool newc)
     you.wield_change        = true;
 
     // Start timer on session.
-    you.start_time = time(NULL);
+    you.last_keypress_time = time(NULL);
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);

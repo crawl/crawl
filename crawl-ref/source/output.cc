@@ -29,6 +29,7 @@
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
@@ -1303,13 +1304,10 @@ static std::string _overview_screen_title()
 
     char time_turns[50] = "";
 
-    if (you.real_time != -1)
-    {
-        const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        snprintf(time_turns, sizeof time_turns,
-                 " Turns: %d, Time: %s",
-                 you.num_turns, make_time_string(curr, true).c_str());
-    }
+    handle_real_time();
+    snprintf(time_turns, sizeof time_turns,
+             " Turns: %d, Time: %s",
+             you.num_turns, make_time_string(you.real_time, true).c_str());
 
     int linelength = you.your_name.length() + strlen(title)
                      + strlen(species_job) + strlen(time_turns);

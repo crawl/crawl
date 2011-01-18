@@ -1439,13 +1439,10 @@ static void _experience_check()
         mpr("With the way you've been playing, I'm surprised you got this far.");
     }
 
-    if (you.real_time != -1)
-    {
-        const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        msg::stream << "Play time: " << make_time_string(curr)
-                    << " (" << you.num_turns << " turns)"
-                    << std::endl;
-    }
+    handle_real_time();
+    msg::stream << "Play time: " << make_time_string(you.real_time)
+                << " (" << you.num_turns << " turns)"
+                << std::endl;
 #ifdef DEBUG_DIAGNOSTICS
     if (wearing_amulet(AMU_THE_GOURMAND))
         mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d",
@@ -2939,17 +2936,9 @@ static command_type _get_next_cmd()
 
     _center_cursor();
 
-    const time_t before = time(NULL);
     keycode_type keyin = _get_next_keycode();
 
-    const time_t after = time(NULL);
-
-    // Clamp idle time so that play time is more meaningful.
-    if (after - before > IDLE_TIME_CLAMP)
-    {
-        you.real_time  += int(before - you.start_time) + IDLE_TIME_CLAMP;
-        you.start_time  = after;
-    }
+    handle_real_time();
 
     if (is_userfunction(keyin))
     {

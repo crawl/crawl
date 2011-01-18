@@ -42,6 +42,7 @@
 #include "itemname.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "misc.h"
 #include "mon-info.h"
 #include "mon-util.h"
 #include "mon-transit.h"
@@ -1120,17 +1121,7 @@ static void tag_construct_you(writer &th)
     // time of game start
     marshallInt(th, you.birth_time);
 
-    // real_time == -1 means game was started before this feature.
-    if (you.real_time != -1)
-    {
-        const time_t now = time(NULL);
-        you.real_time += std::min<time_t>(now - you.start_time,
-                                          IDLE_TIME_CLAMP);
-
-        // Reset start_time now that real_time is being saved out...
-        // this may just be a level save.
-        you.start_time = now;
-    }
+    handle_real_time();
 
     marshallInt(th, you.real_time);
     marshallInt(th, you.num_turns);

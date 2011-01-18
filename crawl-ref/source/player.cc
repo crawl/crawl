@@ -5355,7 +5355,7 @@ void player::init()
 
     delay_queue.clear();
 
-    start_time       = time(0);
+    last_keypress_time = time(0);
 
 
     // Volatile (same-turn) state:
