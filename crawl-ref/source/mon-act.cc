@@ -65,9 +65,6 @@
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
-static bool _mon_can_move_to_pos(const monster* mons,
-                                 const coord_def& delta,
-                                 bool just_check = false);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
@@ -380,14 +377,16 @@ static void _set_mons_move_dir(const monster* mons,
         *delta = you.pos() - mons->pos();
     }
     else
-        *delta = mons->target - mons->pos();
+    {
+        *delta = (mons->firing_pos.zero() ? mons->target : mons->firing_pos)
+                 - mons->pos();
+    }
 
     // Move the monster.
     *dir = delta->sgn();
 
     if (mons_is_fleeing(mons) && mons->travel_target != MTRAV_WALL
-        && (!mons->friendly()
-            || mons->target != you.pos()))
+        && (!mons->friendly() || mons->target != you.pos()))
     {
         *dir *= -1;
     }
@@ -437,7 +436,7 @@ static void _fill_good_move(const monster* mons, move_array* good_move)
             }
 
             (*good_move)[count_x][count_y] =
-                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
+                mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
         }
 }
 
@@ -2875,10 +2874,10 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
             // If a monster still gets stuck in a corridor it will usually be
             // because it has less than half its maximum hp.
 
-            if ((_mon_can_move_to_pos(mons, coord_def(x-1, y), true)
-                 || _mon_can_move_to_pos(mons, coord_def(x+1,y), true))
-                && (_mon_can_move_to_pos(mons, coord_def(x,y-1), true)
-                    || _mon_can_move_to_pos(mons, coord_def(x,y+1), true)))
+            if ((mon_can_move_to_pos(mons, coord_def(x-1, y), true)
+                 || mon_can_move_to_pos(mons, coord_def(x+1,y), true))
+                && (mon_can_move_to_pos(mons, coord_def(x,y-1), true)
+                    || mon_can_move_to_pos(mons, coord_def(x,y+1), true)))
             {
                 return (false);
             }
@@ -3100,8 +3099,8 @@ static bool _check_slime_walls(const monster *mon,
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
-static bool _mon_can_move_to_pos(const monster* mons,
-                                 const coord_def& delta, bool just_check)
+bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
+                         bool just_check)
 {
     const coord_def targ = mons->pos() + delta;
 
@@ -3274,7 +3273,9 @@ static bool _mon_can_move_to_pos(const monster* mons,
 static void _find_good_alternate_move(monster* mons,
                                       const move_array& good_move)
 {
-    const int current_distance = distance(mons->pos(), mons->target);
+    const coord_def target = mons->firing_pos.zero() ? mons->target
+                                                     : mons->firing_pos;
+    const int current_distance = distance(mons->pos(), target);
 
     int dir = _compass_idx(mmov);
 
@@ -3297,14 +3298,9 @@ static void _find_good_alternate_move(monster* mons,
         {
             const int newdir = (dir + 8 + mod) % 8;
             if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
-            {
-                dist[i] = distance(mons->pos()+mon_compass[newdir],
-                                   mons->target);
-            }
+                dist[i] = distance(mons->pos()+mon_compass[newdir], target);
             else
-            {
                 dist[i] = (mons_is_fleeing(mons)) ? (-FAR_AWAY) : FAR_AWAY;
-            }
         }
 
         const int dir0 = ((dir + 8 + sdir) % 8);
@@ -3665,7 +3661,7 @@ static bool _monster_move(monster* mons)
                 deep_water_available = true;
 
             good_move[count_x][count_y] =
-                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
+                mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
         }
 
     // Now we know where we _can_ move.
@@ -3864,6 +3860,7 @@ static bool _monster_move(monster* mons)
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();
+        mons->firing_pos.reset();
     }
 
     return (ret);

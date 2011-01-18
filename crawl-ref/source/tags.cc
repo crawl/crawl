@@ -2375,6 +2375,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallByte(th, m.pos().y);
     marshallByte(th, m.target.x);
     marshallByte(th, m.target.y);
+    marshallCoord(th, m.firing_pos);
     marshallCoord(th, m.patrol_point);
     int help = m.travel_target;
     marshallByte(th, help);
@@ -2786,6 +2787,10 @@ void unmarshallMonster(reader &th, monster& m)
     m.target.x        = unmarshallByte(th);
     m.target.y        = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_FIRING_POS)
+#endif
+    m.firing_pos      = unmarshallCoord(th);
     m.patrol_point    = unmarshallCoord(th);
 
     int help = unmarshallByte(th);

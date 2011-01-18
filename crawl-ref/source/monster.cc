@@ -69,8 +69,8 @@ static mon_spellbook mspell_list[] = {
 
 monster::monster()
     : hit_points(0), max_hit_points(0), hit_dice(0),
-      ac(0), ev(0), speed(0), speed_increment(0), target(), patrol_point(),
-      travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
+      ac(0), ev(0), speed(0), speed_increment(0), target(), firing_pos(),
+      patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0L), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
@@ -124,6 +124,7 @@ void monster::reset()
 
     mons_remove_from_grid(this);
     position.reset();
+    firing_pos.reset();
     patrol_point.reset();
     travel_target = MTRAV_NONE;
     travel_path.clear();
@@ -149,6 +150,7 @@ void monster::init_with(const monster& mon)
     speed_increment   = mon.speed_increment;
     position          = mon.position;
     target            = mon.target;
+    firing_pos        = mon.firing_pos;
     patrol_point      = mon.patrol_point;
     travel_target     = mon.travel_target;
     travel_path       = mon.travel_path;
@@ -4110,6 +4112,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             // Enslaved monsters stop patrolling and forget their patrol
             // point; they're supposed to follow you now.
             patrol_point.reset();
+            firing_pos.reset();
         }
         mons_att_changed(this);
         if (you.can_see(this))
