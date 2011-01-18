@@ -2221,7 +2221,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
     if (cell.item())
         flags |= MAP_SERIALIZE_ITEM;
 
-    if (cell.monster() != MONS_NO_MONSTER && !cell.detected_monster())
+    if (cell.monster() != MONS_NO_MONSTER)
         flags |= MAP_SERIALIZE_MONSTER;
 
     marshallUnsigned(th, flags);
@@ -2256,8 +2256,6 @@ void marshallMapCell(writer &th, const map_cell &cell)
 
     if (flags & MAP_SERIALIZE_MONSTER)
         marshallMonsterInfo(th, *cell.monsterinfo());
-    else if (cell.detected_monster())
-        marshallUnsigned(th, cell.monster());
 }
 
 void unmarshallMapCell(reader &th, map_cell& cell)
@@ -2314,8 +2312,10 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         unmarshallMonsterInfo(th, mi);
         cell.set_monster(mi);
     }
+#if TAG_MAJOR_VERSION == 32
     else if (cell_flags & MAP_DETECTED_MONSTER)
         cell.set_detected_monster((monster_type)unmarshallUnsigned(th));
+#endif
 
     // set this last so the other sets don't override this
     cell.flags = cell_flags;
