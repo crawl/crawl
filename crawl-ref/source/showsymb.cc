@@ -337,6 +337,8 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
                 get_feature_def(cell.monsterinfo()->mimic_feature);
             g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
         }
+        else if (show.mons == MONS_SENSED)
+            g.ch = mons_char(cell.monsterinfo()->base_type);
         else
             g.ch = mons_char(show.mons);
     }
@@ -379,6 +381,8 @@ glyph get_mons_glyph(const monster_info& mi, bool realcol)
     }
     else if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
+    else if (mi.type == MONS_SENSED)
+        g.ch = mons_char(mi.base_type);
     else
         g.ch = mons_char(mi.type);
     g.col = _get_mons_colour(mi);

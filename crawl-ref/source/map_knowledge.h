@@ -164,7 +164,8 @@ struct map_cell
     void set_detected_monster(monster_type mons)
     {
         clear_monster();
-        _mons = new monster_info(mons);
+        _mons = new monster_info(MONS_SENSED);
+        _mons->base_type = mons;
         flags |= MAP_DETECTED_MONSTER;
     }
 
