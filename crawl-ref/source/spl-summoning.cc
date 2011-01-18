@@ -670,11 +670,14 @@ bool cast_summon_ugly_thing(int pow, god_type god)
     return (false);
 }
 
-bool cast_summon_dragon(int pow, god_type god)
+bool cast_summon_dragon(actor *caster, int pow, god_type god)
 {
     // Dragons are always friendly now. Dragon type depends on power &
     // random chance.  Duration fixed at 4 (longer than hydra, less than
     // many other summons).
+
+    if (god == GOD_NO_GOD)
+        god = caster->deity();
 
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -699,32 +702,38 @@ bool cast_summon_dragon(int pow, god_type god)
         mon = (coinflip()) ? MONS_DRAGON : MONS_ICE_DRAGON;
     // Now check to see if you are worshipping a good god
     // and adjust dragons accordingly. No pearl dragons (word of due).
-    if (you.religion == GOD_ELYVILON || you.religion == GOD_ZIN)
+    if (god == GOD_ELYVILON || god == GOD_ZIN)
     {
         // Switch away from shadow dragon to storm/iron.
         if (mon == MONS_SHADOW_DRAGON)
             mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
     }
 
-    if (you.religion == GOD_SHINING_ONE)
+    if (god == GOD_SHINING_ONE)
     {
         // TSO doesn't like golden dragons either (poison).
         if (mon == MONS_SHADOW_DRAGON || mon == MONS_GOLDEN_DRAGON)
             mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
     }
 
-    if (create_monster(
-            mgen_data(mon, BEH_FRIENDLY, &you,
+    int midx;
+    if ((midx = create_monster(
+            mgen_data(mon, BEH_COPY, caster,
                       4, SPELL_SUMMON_DRAGON,
-                      you.pos(),
-                      MHITYOU,
-                      0, god)) != -1)
+                      caster->pos(),
+                      (caster->atype() == ACT_PLAYER) ? MHITYOU
+                        : caster->as_monster()->foe,
+                      0, god))) != -1)
     {
-        mpr("A dragon appears.");
+        if (you.see_cell(menv[midx].pos()))
+            mpr("A dragon appears.");
+        // Xom summoning evil dragons if you worship a good god?  Sure!
+        player_angers_monster(&menv[midx]);
         return (true);
     }
 
-    canned_msg(MSG_NOTHING_HAPPENS);
+    if (caster == &you)
+        canned_msg(MSG_NOTHING_HAPPENS);
     return (false);
 }
 

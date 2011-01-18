@@ -79,6 +79,7 @@ static spell_type search_order_third[] = {
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_SUMMON_DRAGON,
     SPELL_HAUNT,
     SPELL_SUMMON_DEMON,
     SPELL_DEMONIC_HORDE,
@@ -292,6 +293,8 @@ void ghost_demon::init_random_demon()
             spells[2] = SPELL_SMITING;
         if (one_chance_in(25))
             spells[2] = SPELL_HELLFIRE_BURST;
+        if (one_chance_in(20))
+            spells[2] = SPELL_SUMMON_DRAGON;
         if (one_chance_in(12))
             spells[2] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(12))
