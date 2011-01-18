@@ -1064,6 +1064,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_REGENERATION:
     case SPELL_CORPSE_ROT:
     case SPELL_LEDAS_LIQUEFACTION:
+    case SPELL_SUMMON_DRAGON:
         return (true);
     default:
         if (check_validity)
@@ -3335,6 +3336,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         // You may be unable to see the monster, but notice an affected tree.
         forest_message(mons->pos(), "The forest starts to sway and rumble!");
+        return;
+
+    case SPELL_SUMMON_DRAGON:
+        cast_summon_dragon(mons, mons->hit_dice * 5, god);
         return;
     }
 

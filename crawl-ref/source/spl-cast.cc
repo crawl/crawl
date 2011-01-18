@@ -1566,7 +1566,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_SUMMON_DRAGON:
-        cast_summon_dragon(powc, god);
+        cast_summon_dragon(&you, powc, god);
         break;
 
     case SPELL_TUKIMAS_DANCE:
