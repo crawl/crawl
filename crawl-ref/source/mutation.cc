@@ -1027,7 +1027,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             || which_mutation == MUT_AGILE || which_mutation == MUT_WEAK
             || which_mutation == MUT_DOPEY || which_mutation == MUT_CLUMSY)
         {
-            if (you.hunger_state > HS_SATIATED)
+            if (you.hunger_state >= HS_SATIATED)
                 rotting = false;
         }
         else
