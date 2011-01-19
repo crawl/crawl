@@ -1895,6 +1895,8 @@ bool balance_demonic_guardian()
     return (true);
 }
 
+#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
+
 // Primary function to handle and balance demonic guardians, if the tension
 // is unfavorably high and a guardian was not recently spawned, a new guardian
 // will be made, if tension is below a threshold (determined by the mutations
@@ -1907,20 +1909,23 @@ void check_demonic_guardian()
     if (!balance_demonic_guardian() &&
         you.duration[DUR_DEMONIC_GUARDIAN] == 0)
     {
-        const monster_type disallowed[] = {
-            MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
-            MONS_BLUE_DEATH, MONS_GREEN_DEATH,
-                                            MONS_CACODEMON };
-
         monster_type mt;
 
-        do
+        switch(mutlevel)
         {
-            mt = static_cast<monster_type>(MONS_WHITE_IMP +
-                                            (mutlevel-1)*5 + random2(5));
+        case 1:
+            mt = random_mons(MONS_WHITE_IMP, MONS_LEMURE, MONS_UFETUBUS,
+                             MONS_IRON_IMP, MONS_MIDGE, -1);
+            break;
+        case 2:
+            mt = random_mons(MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, -1);
+            break;
+        case 3:
+            mt = random_mons(MONS_EXECUTIONER, MONS_BALRUG, -1);
+            break;
+        default:
+            die("Invalid demonic guardian level: %d", mutlevel);
         }
-        while (std::find(disallowed, disallowed + ARRAYSZ(disallowed), mt)
-                != disallowed + ARRAYSZ(disallowed));
 
         const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
                                                       2, 0, you.pos(),
