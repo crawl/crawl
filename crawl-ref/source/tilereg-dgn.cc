@@ -984,6 +984,40 @@ bool DungeonRegion::update_tip_text(std::string &tip)
     return (ret);
 }
 
+static std::string _check_spell_evokable(const actor* target,
+                                         std::vector<command_type> &cmd)
+{
+    std::string str = "";
+    if (_have_appropriate_spell(target))
+    {
+        str += "\n[Ctrl-L-Click] Cast spell (%)";
+        cmd.push_back(CMD_CAST_SPELL);
+    }
+
+    if (_have_appropriate_evokable(target))
+    {
+        std::string key = "Alt";
+#ifdef UNIX
+        // On Unix systems the Alt key is already hogged by
+        // the application window, at least when we're not
+        // in fullscreen mode, so we use Ctrl-Shift instead.
+        if (!tiles.is_fullscreen())
+            key = "Ctrl-Shift";
+#endif
+        str += "\n[" + key + "-L-Click] Zap wand (%)";
+        cmd.push_back(CMD_EVOKE);
+    }
+
+    return str;
+}
+
+static void _add_tip(std::string &tip, std::string text)
+{
+    if (!tip.empty())
+        tip += "\n";
+    tip += text;
+}
+
 bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 {
     const bool have_reach = you.weapon()
@@ -991,6 +1025,9 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
     const int  attack_dist = have_reach ? 2 : 1;
 
     std::vector<command_type> cmd;
+    tip = "";
+
+    // Left-click first.
     if (gc == you.pos())
     {
         tip = you.your_name;
@@ -999,133 +1036,120 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
         tip += get_job_abbrev(you.char_class);
         tip += ")";
 
-        if (you.visible_igrd(gc) != NON_ITEM)
+        tip += _check_spell_evokable(&you, cmd);
+    }
+    else
+    {
+        const actor* target = actor_at(gc);
+        if (target && you.can_see(target))
         {
-            tip += "\n[L-Click] Pick up items (%)";
-            cmd.push_back(CMD_PICKUP);
-        }
+            if (abs(gc.x - you.pos().x) <= attack_dist
+                && abs(gc.y - you.pos().y) <= attack_dist)
+            {
+                if (!cell_is_solid(gc))
+                {
+                    const monster* mon = monster_at(gc);
+                    if (!mon || mon->friendly() || !mon->visible_to(&you))
+                        _add_tip(tip, "[L-Click] Move");
+                    else if (mon)
+                    {
+                        tip = mon->name(DESC_CAP_A);
+                        _add_tip(tip, "[L-Click] Attack");
+                    }
+                }
+            }
 
-        const dungeon_feature_type feat = grd(gc);
-        const command_type dir = feat_stair_direction(feat);
-        if (dir != CMD_NO_CMD)
+            if (you.species != SP_CAT
+                && you.see_cell_no_trans(target->pos())
+                && you.m_quiver->get_fire_item() != -1)
+            {
+                _add_tip(tip, "[Shift-L-Click] Fire (%)");
+                cmd.push_back(CMD_FIRE);
+            }
+
+            tip += _check_spell_evokable(target, cmd);
+        }
+        else if (!cell_is_solid(gc)) // no monster or player
         {
-            tip += "\n[Shift-L-Click] ";
-            if (feat == DNGN_ENTER_SHOP)
-                tip += "enter shop";
-            else if (feat_is_gate(feat))
-                tip += "enter gate";
-            else
-                tip += "use stairs";
+            if (adjacent(gc, you.pos()))
+                _add_tip(tip, "[L-Click] Move");
+            else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN
+                     && i_feel_safe())
+            {
+                _add_tip(tip, "[L-Click] Travel");
+            }
 
-            tip += " (%)";
-            cmd.push_back(dir);
+            if (env.map_knowledge(gc).item())
+            {
+                _add_tip(tip, "[L-Click] Pick up items (%)");
+                cmd.push_back(CMD_PICKUP);
+            }
+            const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+            const command_type dir = feat_stair_direction(feat);
+            if (dir != CMD_NO_CMD)
+            {
+                _add_tip(tip, "[Shift-L-Click] ");
+                if (feat == DNGN_ENTER_SHOP)
+                    tip += "enter shop";
+                else if (feat_is_gate(feat))
+                    tip += "enter gate";
+                else
+                    tip += "use stairs";
+
+                tip += " (%)";
+                cmd.push_back(dir);
+            }
+            else if (feat_is_altar(feat)
+                     && player_can_join_god(feat_altar_god(feat)))
+            {
+                _add_tip(tip, "[Shift-L-Click] pray on altar (%)");
+                cmd.push_back(CMD_PRAY);
+            }
+            else if (adjacent(gc, you.pos()))
+            {
+                trap_def *trap = find_trap(gc);
+                if (trap && trap->is_known()
+                    && trap->category() == DNGN_TRAP_MECHANICAL)
+                {
+                    _add_tip(tip, "[Ctrl-L-Click] Disarm");
+                }
+                else if (grd(gc) == DNGN_OPEN_DOOR
+                         && you.visible_igrd(gc) == NON_ITEM)
+                {
+                    _add_tip(tip, "[Ctrl-L-Click] Close door (%)");
+                    cmd.push_back(CMD_CLOSE_DOOR);
+                }
+            }
         }
-        else if (feat_is_altar(feat) && player_can_join_god(feat_altar_god(feat)))
+        else if (feat_is_closed_door(grd(gc)))
         {
-            tip += "\n[Shift-L-Click] pray on altar (%)";
-            cmd.push_back(CMD_PRAY);
-        }
+            if (i_feel_safe())
+                _add_tip(tip, "[L-Click] Travel");
 
+            _add_tip(tip, "[L-Click] Open door (%)");
+            cmd.push_back(CMD_OPEN_DOOR);
+        }
+    }
+
+    // Right-click.
+    if (gc == you.pos())
+    {
         // Character overview.
-        tip += "\n[R-Click] Overview (%)";
+        _add_tip(tip, "[R-Click] Overview (%)");
         cmd.push_back(CMD_RESISTS_SCREEN);
 
         // Religion.
         if (you.religion != GOD_NO_GOD)
         {
-            tip += "\n[Shift-R-Click] Religion (%)";
+            _add_tip(tip, "[Shift-R-Click] Religion (%)");
             cmd.push_back(CMD_DISPLAY_RELIGION);
         }
     }
-    else if (abs(gc.x - you.pos().x) <= attack_dist
-             && abs(gc.y - you.pos().y) <= attack_dist)
-    {
-        tip = "";
+    else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
+        _add_tip(tip, "[R-Click] Describe");
 
-        if (!cell_is_solid(gc))
-        {
-            const monster* mon = monster_at(gc);
-            if (!mon || mon->friendly() || !mon->visible_to(&you))
-                tip = "[L-Click] Move\n";
-            else if (mon)
-            {
-                tip = mon->name(DESC_CAP_A);
-                tip += "\n[L-Click] Attack\n";
-            }
-        }
-    }
-    else
-    {
-        if (i_feel_safe() && !cell_is_solid(gc))
-            tip = "[L-Click] Travel\n";
-    }
-
-    if (you.species != SP_CAT && gc != you.pos())
-    {
-        const monster* mon = monster_at(gc);
-        if (mon && you.can_see(mon))
-        {
-            if (you.see_cell_no_trans(mon->pos())
-                && you.m_quiver->get_fire_item() != -1)
-            {
-                tip += "[Shift-L-Click] Fire (%)\n";
-                cmd.push_back(CMD_FIRE);
-            }
-        }
-    }
-
-    const actor* target = actor_at(gc);
-    if (target && you.can_see(target))
-    {
-        std::string str = "";
-
-        if (_have_appropriate_spell(target))
-        {
-            str += "[Ctrl-L-Click] Cast spell (%)\n";
-            cmd.push_back(CMD_CAST_SPELL);
-        }
-
-        if (_have_appropriate_evokable(target))
-        {
-            std::string key = "Alt";
-#ifdef UNIX
-            // On Unix systems the Alt key is already hogged by
-            // the application window, at least when we're not
-            // in fullscreen mode, so we use Ctrl-Shift instead.
-            if (!tiles.is_fullscreen())
-                key = "Ctrl-Shift";
-#endif
-            str += "[" + key + "-L-Click] Zap wand (%)\n";
-            cmd.push_back(CMD_EVOKE);
-        }
-
-        if (!str.empty())
-        {
-            if (gc == you.pos())
-                tip += "\n";
-
-            tip += str;
-        }
-    }
-
-    if (gc != you.pos())
-        tip += "[R-Click] Describe";
-
-    if (!target && adjacent(gc, you.pos()))
-    {
-        trap_def *trap = find_trap(gc);
-        if (trap && trap->is_known()
-            && trap->category() == DNGN_TRAP_MECHANICAL)
-        {
-            tip += "\n[Ctrl-L-Click] Disarm";
-        }
-        else if (grd(gc) == DNGN_OPEN_DOOR)
-            tip += "\n[Ctrl-L-Click] Close door (C)";
-        else if (feat_is_closed_door(grd(gc)))
-            tip += "\n[Ctrl-L-Click] Open door (O)";
-    }
-
-    insert_commands(tip, cmd, false);
+    if (!tip.empty())
+        insert_commands(tip, cmd, false);
 
     return (true);
 }
