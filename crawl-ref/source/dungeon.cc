@@ -4179,7 +4179,9 @@ retry:
             item_colour(item);
         }
 
-        if (props.exists("uncursed"))
+        if (props.exists("cursed"))
+            do_curse_item(item);
+        else if (props.exists("uncursed"))
             do_uncurse_item(item, false);
         if (props.exists("useful") && (useless_tries++ < 10)
             && is_useless_item(item, false))
