@@ -3860,6 +3860,11 @@ static bool _monster_move(monster* mons)
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();
+        if (!mons->is_patrolling() )
+        {
+            mons->travel_target = MTRAV_NONE;
+            mons->travel_path.clear();
+        }
         mons->firing_pos.reset();
     }
 
