@@ -1229,9 +1229,9 @@ void pickup(bool partial_quantity)
             {
                 std::string prompt = "Pick up %s? ("
 #ifdef USE_TILE
-                                     "Left-click to enter menu, or press "
+                                     "L-Click for menu, or press "
 #endif
-                                     "y/n/a/*?g,/q/o)";
+                                     "(y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
                      get_menu_colour_prefix_tags(mitm[o],
@@ -1242,13 +1242,13 @@ void pickup(bool partial_quantity)
             }
 
             if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g'
-                || keyin == CK_MOUSE_CLICK)
+                || keyin == 'm' || keyin == CK_MOUSE_CLICK)
             {
                 _pickup_menu(o);
                 break;
             }
 
-            if (keyin == 'q' || key_is_escape(keyin) || keyin == 'o')
+            if (keyin == 'q' || key_is_escape(keyin))
                 break;
 
             if (keyin == 'y' || keyin == 'a')
@@ -1274,9 +1274,6 @@ void pickup(bool partial_quantity)
 
         if (!pickup_warning.empty())
             mpr(pickup_warning.c_str());
-
-        if (keyin == 'o')
-            start_explore(Options.explore_greedy);
     }
 }
 
