@@ -58,9 +58,10 @@ function tutorial_msg2.chop_corpses ()
 end
 
 function tutorial_msg2.butchery_weapon ()
-    return tutorial_message("This short sword was picked up automatically because you didn't have a butchering tool. "
-                            .. "Once you've chopped a corpse with " .. tutorial_get_cmd("CMD_BUTCHER")
-                            .. ", you can eat the resulting chunks with " .. tutorial_get_cmd("CMD_EAT") .. ".")
+    return tutorial_message("Now that you have a sharp-edged weapon, you can chop a corpse with " 
+                            .. tutorial_get_cmd("CMD_BUTCHER")
+                            .. " and then eat the resulting chunks with "
+                            .. tutorial_get_cmd("CMD_EAT") .. ".")
 end
 
 function tutorial_msg2.wait ()
