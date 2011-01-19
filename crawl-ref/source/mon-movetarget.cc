@@ -852,6 +852,9 @@ static bool _band_wander_target(monster * mon, dungeon_feature_type can_move)
 
     for (radius_iterator r_it(mon->get_los_no_trans(), mon); r_it; ++r_it)
     {
+        if (!in_bounds(*r_it))
+            continue;
+
         int dist = grid_distance(*r_it, band_leader->pos());
         if (dist < HERD_COMFORT_RANGE)
         {
@@ -864,6 +867,7 @@ static bool _band_wander_target(monster * mon, dungeon_feature_type can_move)
 
     mon->target = positions[random2(positions.size())];
 
+    ASSERT(in_bounds(mon->target));
     return (false);
 }
 
@@ -892,6 +896,9 @@ static bool _herd_wander_target(monster * mon, dungeon_feature_type can_move)
 
     for (radius_iterator r_it(mon->get_los_no_trans(), true) ; r_it; ++r_it)
     {
+        if (!in_bounds(*r_it))
+            continue;
+
         int count = 0;
         for (unsigned i = 0; i < friends.size(); i++)
         {
