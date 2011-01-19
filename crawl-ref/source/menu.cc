@@ -2637,9 +2637,8 @@ void TextItem::_wrap_text()
         size_t pos = 0;
         // find the max_line'th occurence of '\n'
         for (int i = 0; i < max_lines; ++i)
-        {
             pos = m_render_text.find('\n', pos);
-        }
+
         // Chop of all the nonfitting text
         m_render_text = m_render_text.substr(pos);
     }

@@ -772,7 +772,7 @@ void item_check(bool verbose)
         learned_something_new(HINT_MULTI_PICKUP);
 }
 
-static void _pickup_menu(int item_link)
+void pickup_menu(int item_link)
 {
     int n_did_pickup   = 0;
     int n_tried_pickup = 0;
@@ -1207,7 +1207,7 @@ void pickup(bool partial_quantity)
     else if (Options.pickup_mode != -1
              && num_nonsquelched >= Options.pickup_mode)
     {
-        _pickup_menu(o);
+        pickup_menu(o);
     }
     else
     {
@@ -1228,9 +1228,6 @@ void pickup(bool partial_quantity)
             if (keyin != 'a')
             {
                 std::string prompt = "Pick up %s? ("
-#ifdef USE_TILE
-                                     "L-Click for menu, or press "
-#endif
                                      "(y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
@@ -1244,7 +1241,7 @@ void pickup(bool partial_quantity)
             if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g'
                 || keyin == 'm' || keyin == CK_MOUSE_CLICK)
             {
-                _pickup_menu(o);
+                pickup_menu(o);
                 break;
             }
 

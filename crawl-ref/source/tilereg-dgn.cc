@@ -16,9 +16,11 @@
 #include "env.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "items.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "options.h"
@@ -815,7 +817,18 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             }
 
             if (!(event.mod & MOD_SHIFT))
+            {
+                const int o = you.visible_igrd(you.pos());
+                // More than a single item -> open menu right away.
+                if (o != NON_ITEM && mitm[o].link != NON_ITEM)
+                {
+                    pickup_menu(o);
+                    flush_prev_message();
+                    redraw_screen();
+                    return 0;
+                }
                 return command_to_key(CMD_PICKUP);
+            }
 
             const dungeon_feature_type feat = grd(gc);
             switch (feat_stair_direction(feat))
