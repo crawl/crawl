@@ -1,0 +1,210 @@
+##############################################
+# Tutorial map 3: Movement and exploration   #
+##############################################
+#
+# Still TODO:
+#  * Hook into hints mode curse trigger.
+#  * Add a trigger for _removing_ curses.
+#
+{{
+require("clua/tutorial.lua")
+
+tutorial_msg3 = {}
+
+function tutorial_msg3.start ()
+    tutorial_intro("In this lesson you're going to learn about items and how to use them.")
+--    crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg3.armour ()
+    local text = "Pick up this helmet with "
+                 .. tutorial_get_cmd("CMD_PICKUP") .. " and then wear it with "
+                 .. tutorial_get_cmd("CMD_WEAR_ARMOUR") .. "."
+
+    if crawl.is_tiles() then
+        text = text .. " Or simply <white>mouseclick</white> on it."
+    end
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg3.autopickup ()
+    local text = "Some types of items (mostly magical items and food) are picked up "
+                 .. "automatically as you step on them."
+
+    if crawl.is_tiles() then
+        text = text .. " You can recognize these items by their green frame."
+    end
+
+    text = text .. "\nYou can eat this ration with "
+                .. tutorial_get_cmd("CMD_EAT")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg3.weapon_reminder ()
+    local text = "This dagger was picked up automatically because you didn't have a sharp-edged butchering tool yet. "
+                 .. "You know the drill: Wield it with "
+                 .. tutorial_get_cmd("CMD_WIELD_WEAPON")
+
+    if crawl.is_tiles() then
+        text = text .. " or via <white>mouseclick</click>"
+    end
+
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg3.scroll_noautopickup ()
+    local text = "Autopickup doesn't happen if there's a monster around. "
+                 .. "You can pick up this scroll now with "
+                 .. tutorial_get_cmd("CMD_PICKUP")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</click>"
+    end
+
+    text = text .. ", or you can first dispatch the goblin and then come back for it afterwards. "
+                .. "Either way, you can read this scroll with " .. tutorial_get_cmd("CMD_READ")
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg3.ego_weapon ()
+    return tutorial_message("An item described as <lightblue>runed</lightblue> or <lightblue>glowing</lightblue> "
+                            .. "will always be enchanted, or have special properties, or both. "
+                            .. "You need to wield this scimitar to find out what those are.")
+end
+
+function tutorial_msg3.inventory ()
+    local text = "To find out what your cool new weapon actually does, you can access its description "
+                 .. "from your inventory with "
+                 .. tutorial_get_cmd("CMD_DISPLAY_INVENTORY")
+
+    if crawl.is_tiles() then
+        text = text .. ", or by <white>mouseover</click> or <white>rightclick</white> in the inventory panel"
+    end
+
+    text = text .. ". When doing so, you will notice that you can also employ your carried items from their "
+                .. "description screen."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg3.zombies ()
+    return tutorial_message("Now, less talk, more battle: Go forth and slay these zombies!")
+end
+
+function tutorial_msg3.downstairs ()
+    return tutorial_message("Well fought! If necessary, rest up with "
+                            .. tutorial_get_cmd("CMD_REST")
+                            .. ", then continue downwards with "
+                            ..  tutorial_get_cmd("CMD_GO_DOWNSTAIRS")
+                            .. ".")
+end
+
+function tutorial_msg3.tutorial_end ()
+    return tutorial_message("To exit the tutorial, simply go down these stairs. "
+                            .. "Confirm the resulting prompt with an uppercase <white>Y</white>.")
+end
+
+function tutorial_msg3.exit ()
+    -- A single screen recapping all commands.
+
+    local text = "<yellow>Item commands</yellow>\n\n"
+                 .. "  " .. tutorial_get_cmd("CMD_PICKUP") .. "  pick up an item\n"
+                 .. "  " .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "  wield a weapon\n"
+                 .. "  " .. tutorial_get_cmd("CMD_WEAR_ARMOUR") .. "  wear a piece of armour\n"
+                 .. "  " .. tutorial_get_cmd("CMD_EAT") .. "  eat something\n"
+                 .. "  " .. tutorial_get_cmd("CMD_READ") .. "  read a scroll\n"
+
+    text = text .. "\nUsage commands are also available from the inventory menu ("
+                .. tutorial_get_cmd("CMD_DISPLAY_INVENTORY") .. "), as are the item descriptions."
+
+    if crawl.is_tiles() then
+        text = text .. "\nAnd of course, <white>mouseclicks</white> also work.\n"
+    end
+
+    return crawl.endgame(text)
+end
+}}
+
+NAME:    tutorial_lesson3
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_start
+DESC:    "Lesson 3: Items and Inventory"
+BFLAGS:  islanded
+ORIENT:  encompass
+RTILE:   c = wall_hall
+TILE:    H = dngn_statue_skull, C = wall_undead
+KFEAT:   H = G
+KFEAT:   C = c
+KFEAT:   A = .
+KFEAT:   z = +
+COLOUR:  defghA = blue
+FTILE:   defghA = tutorial_pad
+ITEM:    helmet mundane not_cursed
+ITEM:    bread ration
+ITEM:    dagger mundane cursed
+ITEM:    scroll of remove curse
+ITEM:    scimitar ego:holy_wrath not_cursed
+MONS:    goblin ; club mundane not_cursed
+MONS:    goblin zombie, rat zombie, small snake zombie
+MARKER:  d = lua:tutorial_msg3.armour()
+MARKER:  e = lua:tutorial_msg3.autopickup()
+MARKER:  f = lua:tutorial_msg3.weapon_reminder()
+MARKER:  g = lua:tutorial_msg3.scroll_noautopickup()
+MARKER:  h = lua:tutorial_msg3.ego_weapon()
+MARKER:  A = lua:tutorial_msg3.inventory()
+MARKER:  z = lua:tutorial_msg3.zombies()
+MARKER:  } = lua:tutorial_msg3.downstairs()
+MARKER:  ) = lua:tutorial_msg3.downstairs()
+MARKER:  ] = lua:tutorial_msg3.downstairs()
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg3.exit" }
+MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg3.exit" }
+MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg3.exit" }
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg3.exit" }
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg3.exit" }
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg3.exit" }
+epilogue{{
+  tutorial_msg3.start()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx...xxxx.....xxxxxxxxxxx
+xxxxx1....xxxxxxxx.........e..xxxxxxxxxxx
+xxxxx.....xxxxxxxx.f.xxxx.....xxxx..(..xx
+xxxxx....g+..........xxxxxxx......d...{xx
+xxxxxxx.xxxxxxxxxx...xxxxxxxxxxxxx..[..xx
+xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.xxxxxxxxxxxCCCCCCCCCCCCCxxx
+xxxxxxxxxxxxx+xxxxxxxxxxxC.....3.n..)Cxxx
+xxxxxxxxxxxxT.Gccccccccccc..3.n.n..2.Cxxx
+xxxxxxxxxxxx.h..A........z.....H.4..}Cxxx
+xxxxxxxxxxxxG.Tccccccccccc2...n.n.3..Cxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxC...3...n..]Cxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxCCCCCCCCCCCCCxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
