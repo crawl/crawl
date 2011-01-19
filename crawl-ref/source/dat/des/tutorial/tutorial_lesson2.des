@@ -1,11 +1,7 @@
 #########################################
 # Tutorial map 2: Monsters and combat   #
 #########################################
-#
-# Still TODO:
-#  * The multichop prompt for several corpses looks really intimidating!
-#  * Add the xp gain tutorial trigger.
-#
+
 {{
 require("clua/tutorial.lua")
 
@@ -40,10 +36,12 @@ function tutorial_msg2.examine ()
     if crawl.is_tiles() then
         text = text .. "Most monsters will be displayed with their wielded weapon, but you can also check this by examining a monster via "
                     .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<white>+</white>, or by <white>mouseover</white>."
+                    .. " To return from the e<w>x</w>amination mode to the game mode, press <white>Escape</white>."
     else
         text = text .. "You can check whether this is the case by examining the monster with "
                     .. tutorial_get_cmd("CMD_LOOK_AROUND") .. ", and then selecting the monster with the movement keys or via the "
                     .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<white>+</white> shortcut directly looping through all monsters in sight."
+                    .. " When you're finished, press <white>Escape</white> to return to the main mode."
     end
 
     return tutorial_message(text)
@@ -73,6 +71,10 @@ end
 function tutorial_msg2.resting_reminder ()
     return tutorial_message("If necessary, rest up with "
                             .. tutorial_get_cmd("CMD_REST") .. ". ")
+end
+
+function tutorial_msg2.resting_reminder2 ()
+    return tutorial_message("Rest up!")
 end
 
 function tutorial_msg2.compare_monster_desc ()
@@ -235,10 +237,9 @@ DESC:    "Lesson 2: Monsters and Combat"
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABCFG = .
-KFEAT:   DE = +
 KFEAT:   n = iron_grate
-COLOUR:  deABCFG = blue
-FTILE:   deABCFG = tutorial_pad
+COLOUR:  deABCDEFG = blue
+FTILE:   deABCDEFG = tutorial_pad
 ITEM:    mace mundane not_cursed
 ITEM:    short sword mundane not_cursed
 SHUFFLE: 456
@@ -255,6 +256,12 @@ MARKER:  E = lua:tutorial_msg2.wait()
 MARKER:  F = lua:tutorial_msg2.resting_reminder()
 MARKER:  G = lua:tutorial_msg2.compare_monster_desc()
 MARKER:  } = lua:tutorial_msg2.downstairs()
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg2.exit" }
+MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg2.exit" }
+MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg2.exit" }
 epilogue{{
   tutorial_msg2.start()
 }}
@@ -275,14 +282,14 @@ xx4..+.......+...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...n...T...n.6.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...n.......n...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxGxxxxxxxxxxxxxxxxxe..xxxxxxxxxxxxxxxx
-xxxxxxxxx.xxxxxxxxxxxxxxxxx.3.D....C.2..B..xxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxx.3.D+...C.2..B..xxx
 xxxxxxxxx.xxxxxxxxxxxxxxxxx...xxxxxxxxxxxx.xxx
 xxxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx.xxx
-xxxxxxxxx.xxxxxx....3..xxxxx.xxxxxxxxxxxxx.xxx
-xxxxxxxxx.xxxxxx.......xxxxx.xxxxxxxxxxxxx.xxx
-xxxxxxxxx.....F+..3....E.....xxxxxxxxxxxxx1xxx
-xxxxxxxxxxxxxxxx....3..xxxxxxxxxxxxxxxxxxx.xxx
-xxxxxxxxxxxxxxxx.3.....xxxxxxxxxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxxx...3..xxxxx.xxxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxx........xxxx.xxxxxxxxxxxxx.xxx
+xxxxxxxxx.....F+..3....E+....xxxxxxxxxxxxx1xxx
+xxxxxxxxxxxxxxxx....3...xxxxxxxxxxxxxxxxxx.xxx
+xxxxxxxxxxxxxxxxx3.....xxxxxxxxxxxxxxxxxxx.xxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxAxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccc+ccc
@@ -304,9 +311,9 @@ BFLAGS:  islanded
 ORIENT:  encompass
 TILE:    G = dngn_statue_centaur
 RTILE:   x = wall_lair, c = wall_vines
-KFEAT:   ABCDEF = .
-COLOUR:  eABCDE = blue
-FTILE:   eABCDE = tutorial_pad
+KFEAT:   ABCDEFH = .
+COLOUR:  eABCDEH = blue
+FTILE:   eABCDEH = tutorial_pad
 MONS:    training dummy hp:10 ; stone q:15
 MONS:    giant bat
 ITEM:    dart mundane q:30
@@ -316,8 +323,9 @@ MARKER:  A = lua:tutorial_msg2.throwing()
 MARKER:  B = lua:tutorial_msg2.resting_reminder()
 MARKER:  e = lua:tutorial_msg2.wield_bow()
 MARKER:  C = lua:tutorial_msg2.firing()
-MARKER:  D = lua:tutorial_msg2.quiver()
-MARKER:  E = lua:tutorial_msg2.explore()
+MARKER:  D = lua:tutorial_msg2.resting_reminder2()
+MARKER:  E = lua:tutorial_msg2.quiver()
+MARKER:  H = lua:tutorial_msg2.explore()
 # This is just for atmosphere.
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
@@ -343,9 +351,9 @@ xxxxxxxxxxxxxxxxxxxxxxxc.....Gcccccxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxc..{..d..A.cxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxc.....Gccc.cxxxxxxxxxxx
 xxxxxxxxxxx..xxxxxxxxxxccccccccxc.cxxxxxxxxxxx
-xxxxxxxxxx.xxBxxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxx
+xxxxxxxxxx.xxDxxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxx
 xxxxxxxxx.xx....xxxxxxxxxxxxxxx.....xxxxxxxxxx
-xxxx....DxxwWW..lllxxxxxxxxxxx..WWW..xxxxxxxxx
+xxxx....ExxwWW..lllxxxxxxxxxxx..WWW..xxxxxxxxx
 xxll...xxxxwww.ll1llxxxxxxxxxx.WwwwW.xxxxxxxxx
 x1lll.xxxxxw1wW.lllxxxxxxxxxxx.Ww1wW.xxxxxxxxx
 xxll.xxxxxxxww.llxxxxxxxxxxxxx.WwwwW.xxxxxxxxx
@@ -355,7 +363,7 @@ xxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxxxBxxxxxxxxxxxx
 xxxxx.xxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxx
 xxxxx.xxxxxxxxx.xxxxxxxxxx.xxxxx.xxxxxxxxxxxxx
 xxxxx.xxxxxxxxxx.xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
-xxxxxExxxxxxxxxxx...xxxxxxxx...xxxxxxxxxxxxxxx
+xxxxxHxxxxxxxxxxx...xxxxxxxx...xxxxxxxxxxxxxxx
 xxx.....xxxxxxxxxxxx...f.e..xxxxxxxxxxxxxxxxxx
 x............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...x..........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
