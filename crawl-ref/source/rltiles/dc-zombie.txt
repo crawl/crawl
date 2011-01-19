@@ -14,6 +14,7 @@ zombie_fish MONS_ZOMBIE_FISH
 zombie_centaur MONS_ZOMBIE_CENTAUR
 zombie_naga MONS_ZOMBIE_NAGA
 zombie_snake MONS_ZOMBIE_SNAKE
+zombie_worm MONS_ZOMBIE_WORM
 zombie_spider MONS_ZOMBIE_SPIDER
 zombie_dragon MONS_ZOMBIE_DRAGON
 dc-mon/kraken/kraken_zombie_head MONS_ZOMBIE_KRAKEN
@@ -59,6 +60,7 @@ spectral_fish MONS_SPECTRAL_FISH
 spectral_centaur MONS_SPECTRAL_CENTAUR
 spectral_naga MONS_SPECTRAL_NAGA
 spectral_snake MONS_SPECTRAL_SNAKE
+spectral_worm MONS_SPECTRAL_WORM
 spectral_spider MONS_SPECTRAL_SPIDER
 spectral_dragon MONS_SPECTRAL_DRAGON
 spectral_hydra1 MONS_SPECTRAL_HYDRA

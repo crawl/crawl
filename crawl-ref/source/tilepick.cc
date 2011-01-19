@@ -540,6 +540,8 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
         return TILEP_MONS_SPECTRAL_NAGA;
     case TILEP_MONS_ZOMBIE_SNAKE:
         return TILEP_MONS_SPECTRAL_SNAKE;
+    case TILEP_MONS_ZOMBIE_WORM:
+        return TILEP_MONS_SPECTRAL_WORM;
     case TILEP_MONS_ZOMBIE_SPIDER:
         return TILEP_MONS_SPECTRAL_SPIDER;
     case TILEP_MONS_ZOMBIE_DRAGON:
@@ -661,7 +663,10 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
         if (_is_skeleton(z_type))
             return TILEP_MONS_SKELETON_SNAKE;
 
-        z_tile = TILEP_MONS_ZOMBIE_SNAKE;
+        if (mons_genus(subtype) == MONS_WORM)
+            z_tile = TILEP_MONS_ZOMBIE_WORM;
+        else
+            z_tile = TILEP_MONS_ZOMBIE_SNAKE;
         break;
     case MON_SHAPE_FISH:
         if (_is_skeleton(z_type))
