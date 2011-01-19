@@ -672,10 +672,9 @@ bool cast_summon_ugly_thing(int pow, god_type god)
 
 bool cast_summon_hydra(int pow, god_type god)
 {
-    // Short duration, power determines number of heads
-    // Minimum 4 heads, maximum 12.  Rare to get more than 8.
+    // Power determines number of heads. Minimum 4 heads, maximum 12.
+    // Rare to get more than 8.
     int heads;
-    int dur = (coinflip()) ? 2 : 3;
 
     // Small chance to create a huge hydra (if spell power is high enough)
     if (one_chance_in(6))
@@ -686,9 +685,10 @@ bool cast_summon_hydra(int pow, god_type god)
     if (heads < 4)
         heads = 4;
 
+    // Duration is always very short - just 1.
     if (create_monster(
             mgen_data(MONS_HYDRA, BEH_FRIENDLY, &you,
-                      dur, SPELL_SUMMON_HYDRA,
+                      1, SPELL_SUMMON_HYDRA,
                       you.pos(), MHITYOU,
                       0, god, MONS_HYDRA, heads)) != -1)
     {
