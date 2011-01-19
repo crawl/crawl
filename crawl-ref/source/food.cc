@@ -625,7 +625,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             // Shall we butcher this corpse?
             do
             {
-                mprf(MSGCH_PROMPT, "%s %s? (yc/n/a/q/?)",
+                mprf(MSGCH_PROMPT, "%s %s? [(y)es/(c)hop/(n)o/(a)ll/(q)uit/?]",
                      bottle_blood ? "Bottle" : "Butcher",
                      corpse_name.c_str());
                 repeat_prompt = false;
