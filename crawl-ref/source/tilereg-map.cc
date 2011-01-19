@@ -313,7 +313,7 @@ bool MapRegion::update_tip_text(std::string& tip)
         && (you.hunger_state > HS_STARVING || you_min_hunger())
         && i_feel_safe())
     {
-        tip += "\n[Shift-L-Click] Autoexplore";
+        tip += "\n[Shift + L-Click] Autoexplore";
     }
     return (true);
 }
