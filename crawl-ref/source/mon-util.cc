@@ -3436,6 +3436,15 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     if (!me1 || !me2)
         return (false);
 
+    // Band leaders can displace followers regardless of type considerations.
+    // -cao
+    if (m2->props.exists("band_leader"))
+    {
+        unsigned leader_mid = m2->props["band_leader"].get_int();
+        if (leader_mid == m1->mid)
+            return (true);
+    }
+
     char mchar1 = me1->showchar;
     char mchar2 = me2->showchar;
 
