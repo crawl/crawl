@@ -990,7 +990,7 @@ static std::string _check_spell_evokable(const actor* target,
     std::string str = "";
     if (_have_appropriate_spell(target))
     {
-        str += "\n[Ctrl-L-Click] Cast spell (%)";
+        str += "\n[Ctrl + L-Click] Cast spell (%)";
         cmd.push_back(CMD_CAST_SPELL);
     }
 
@@ -1004,7 +1004,7 @@ static std::string _check_spell_evokable(const actor* target,
         if (!tiles.is_fullscreen())
             key = "Ctrl-Shift";
 #endif
-        str += "\n[" + key + "-L-Click] Zap wand (%)";
+        str += "\n[" + key + " + L-Click] Zap wand (%)";
         cmd.push_back(CMD_EVOKE);
     }
 
@@ -1063,7 +1063,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
                 && you.see_cell_no_trans(target->pos())
                 && you.m_quiver->get_fire_item() != -1)
             {
-                _add_tip(tip, "[Shift-L-Click] Fire (%)");
+                _add_tip(tip, "[Shift + L-Click] Fire (%)");
                 cmd.push_back(CMD_FIRE);
             }
 
@@ -1088,7 +1088,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
             const command_type dir = feat_stair_direction(feat);
             if (dir != CMD_NO_CMD)
             {
-                _add_tip(tip, "[Shift-L-Click] ");
+                _add_tip(tip, "[Shift + L-Click] ");
                 if (feat == DNGN_ENTER_SHOP)
                     tip += "enter shop";
                 else if (feat_is_gate(feat))
@@ -1102,7 +1102,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
             else if (feat_is_altar(feat)
                      && player_can_join_god(feat_altar_god(feat)))
             {
-                _add_tip(tip, "[Shift-L-Click] pray on altar (%)");
+                _add_tip(tip, "[Shift + L-Click] pray on altar (%)");
                 cmd.push_back(CMD_PRAY);
             }
             else if (adjacent(gc, you.pos()))
@@ -1111,12 +1111,12 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
                 if (trap && trap->is_known()
                     && trap->category() == DNGN_TRAP_MECHANICAL)
                 {
-                    _add_tip(tip, "[Ctrl-L-Click] Disarm");
+                    _add_tip(tip, "[Ctrl + L-Click] Disarm");
                 }
                 else if (grd(gc) == DNGN_OPEN_DOOR
                          && you.visible_igrd(gc) == NON_ITEM)
                 {
-                    _add_tip(tip, "[Ctrl-L-Click] Close door (%)");
+                    _add_tip(tip, "[Ctrl + L-Click] Close door (%)");
                     cmd.push_back(CMD_CLOSE_DOOR);
                 }
             }
@@ -1141,7 +1141,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
         // Religion.
         if (you.religion != GOD_NO_GOD)
         {
-            _add_tip(tip, "[Shift-R-Click] Religion (%)");
+            _add_tip(tip, "[Shift + R-Click] Religion (%)");
             cmd.push_back(CMD_DISPLAY_RELIGION);
         }
     }

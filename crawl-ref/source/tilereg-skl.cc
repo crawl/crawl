@@ -135,7 +135,7 @@ bool SkillRegion::update_tip_text(std::string& tip)
     }
 #ifdef WIZARD
     if (you.wizard)
-        tip += "\n[Ctrl-L-Click] Change skill level (wizmode)";
+        tip += "\n[Ctrl + L-Click] Change skill level (wizmode)";
 #endif
 
     tip += "\n[R-Click] Describe";
