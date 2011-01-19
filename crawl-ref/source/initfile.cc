@@ -1269,6 +1269,7 @@ static std::string _find_crawlrc()
 #ifdef UNIX
         { SysEnv.home.c_str(), ".crawlrc" },
         { SysEnv.home.c_str(), "init.txt" },
+        { SysEnv.home.c_str(), ".crawl/init.txt" },
 #endif
 #ifndef DATA_DIR_PATH
         { "", "init.txt" },
