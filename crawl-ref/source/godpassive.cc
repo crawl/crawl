@@ -16,6 +16,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "math.h"
 #include "mon-stuff.h"
 #include "options.h"
 #include "player.h"
@@ -489,4 +490,23 @@ int ash_detect_portals(bool all)
 
     you.seen_portals += portals_found;
     return (portals_found);
+}
+
+monster_type ash_monster_tier(const monster *mon)
+{
+    double factor = sqrt(exp_needed(you.experience_level + 1) / 30.0);
+    int tension = exper_value(mon) / (1 + factor);
+
+    if (tension <= 0)
+        // Conjurators use melee to conserve mana, MDFis switch plates...
+        return MONS_SENSED_POPCORN;
+    else if (tension <= 5)
+        // An easy fight but not ignorable.
+        return MONS_SENSED_EASY;
+    else if (tension <= 32)
+        // Hard but reasonable.
+        return MONS_SENSED_HARD;
+    else
+        // Check all wands/jewels several times, wear brown pants...
+        return MONS_SENSED_OY_VEY_GEVALT;
 }

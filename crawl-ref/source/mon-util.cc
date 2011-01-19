@@ -647,6 +647,15 @@ bool mons_has_blood(int mc)
             || mc == MONS_JORY);
 }
 
+bool mons_is_sensed(int mc)
+{
+    return mc == MONS_SENSED
+           || mc == MONS_SENSED_POPCORN
+           || mc == MONS_SENSED_EASY
+           || mc == MONS_SENSED_HARD
+           || mc == MONS_SENSED_OY_VEY_GEVALT;
+}
+
 bool mons_behaviour_perceptible(const monster* mon)
 {
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)

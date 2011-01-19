@@ -383,6 +383,7 @@ bool cheibriados_thinks_mons_is_fast(const monster* mon);
 bool mons_is_projectile(int mc);
 bool mons_is_object(int mc);
 bool mons_has_blood(int mc);
+bool mons_is_sensed(int mc);
 
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);

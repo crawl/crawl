@@ -1393,10 +1393,10 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mons_is_unique(mg.cls) && you.unique_creatures[mg.cls]
             && !crawl_state.game_is_arena()
         || mg.cls == MONS_MERGED_SLIME_CREATURE
-        || mg.cls == MONS_SENSED
+        || mons_is_sensed(mg.cls)
         || mg.cls == MONS_PLAYER)
     {
-        die("unknown monster to place: %d", mons_class_name(mg.cls));
+        die("invalid monster to place: %s (%d)", mons_class_name(mg.cls), mg.cls);
     }
 
     const monsterentry *m_ent = get_monster_data(mg.cls);
