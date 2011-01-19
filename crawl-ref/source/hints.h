@@ -126,6 +126,7 @@ enum hints_event_type
     HINT_LOAD_SAVED_GAME,
     // for the tutorial
     HINT_AUTOPICKUP_THROWN,
+    HINT_TARGET_NO_FOE,
     HINT_EVENTS_NUM
 };
 

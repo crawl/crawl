@@ -1339,6 +1339,7 @@ static bool _tutorial_interesting(hints_event_type event)
     {
     case HINT_NEW_LEVEL:
     case HINT_AUTOPICKUP_THROWN:
+    case HINT_TARGET_NO_FOE:
         return (true);
     default:
         return (false);

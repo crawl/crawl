@@ -1111,10 +1111,19 @@ coord_def direction_chooser::find_default_target() const
                 && _find_square_wrapper(result, 1, _find_monster,
                                         false, mode, range, true))
             {
+                // Special colouring in tutorial or hints mode.
+                const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
                 mpr("All monsters which could be auto-targeted are covered by "
                     "a wall or statue which interrupts your line of fire, even "
                     "though it doesn't interrupt your line of sight.",
-                    MSGCH_PROMPT);
+                    need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT);
+
+                if (need_hint)
+                {
+                    mpr("To return to the main mode, press <w>Escape</w>.",
+                        MSGCH_TUTORIAL);
+                    Hints.hints_events[HINT_TARGET_NO_FOE] = false;
+                }
             }
         }
     }
