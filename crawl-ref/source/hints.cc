@@ -1340,6 +1340,8 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_NEW_LEVEL:
     case HINT_AUTOPICKUP_THROWN:
     case HINT_TARGET_NO_FOE:
+    case HINT_YOU_CURSED:
+    case HINT_REMOVED_CURSE:
         return (true);
     default:
         return (false);
@@ -2258,14 +2260,14 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_YOU_CURSED:
-        text << "Curses are comparatively harmless, but they do mean that "
-                "you cannot remove cursed equipment and will have to suffer "
-                "the (possibly) bad effects until you find and read a scroll "
-                "of remove curse (though if you're wielding a cursed "
-                "non-slicing weapon, you'll be unable to <w>%</w>hop up "
-                "corpses into chunks). Weapons and armour can also be "
-                "uncursed using the appropriate enchantment scrolls.";
-        cmd.push_back(CMD_BUTCHER);
+        text << "Cursed equipment, once worn or wielded, cannot be dropped or "
+                "removed. Curses can be removed by reading certain scrolls.";
+        break;
+
+    case HINT_REMOVED_CURSE:
+        text << "All the curses on your worn equipment just got cancelled. "
+                "Since cursed items are more likely to have bad properties, "
+                "the game makes a note of this, so you don't forget about it.";
         break;
 
     case HINT_YOU_HUNGRY:

@@ -396,12 +396,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (show_weff_messages)
         wield_warning();
 
-    if (Hints.hints_left)
+    if (new_wpn.cursed())
+        learned_something_new(HINT_YOU_CURSED);
+    else if (Hints.hints_left
+             && your_talents(false).size() > old_talents)
     {
-        if (new_wpn.cursed())
-            learned_something_new(HINT_YOU_CURSED);
-        else if (your_talents(false).size() > old_talents)
-            learned_something_new(HINT_NEW_ABILITY_ITEM);
+        learned_something_new(HINT_NEW_ABILITY_ITEM);
     }
 
     // Time calculations.
