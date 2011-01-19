@@ -79,6 +79,22 @@ static void _mon_check_foe_invalid(monster* mon)
     }
 }
 
+static bool _mon_tries_regain_los(monster* mon)
+{
+    // Only intelligent monsters with ranged attack will try to regain LOS.
+    if (mons_intel(mon) < I_NORMAL
+        || !mons_has_ranged_spell(mon, true) && !mons_has_ranged_attack(mon))
+    {
+        return false;
+    }
+
+    // Any special case should go here.
+
+    // Randomize it a bit to make it less predictable.
+    return (mons_intel(mon) == I_NORMAL && !one_chance_in(10)
+            || mons_intel(mon) == I_HIGH && !one_chance_in(20));
+}
+
 // Monster tries to get into a firing position. Among the cells which have
 // a line of fire to the target, we choose the closest one to regain LOS as
 // fast as possible. If several cells are eligible, we choose the one closest
@@ -519,8 +535,7 @@ void handle_behaviour(monster* mon)
                 // and it tries to find a line of fire instead of following the
                 // player.
                 else if (grid_distance(mon->target, you.pos()) <= 1
-                    && (mons_has_ranged_spell(mon, true)
-                        || mons_has_ranged_attack(mon)))
+                         && _mon_tries_regain_los(mon))
                 {
                     _set_firing_pos(mon, you.pos());
                 }
