@@ -5122,7 +5122,12 @@ void tile_item_use_floor(int idx)
 
 void tile_item_pickup(int idx, bool part)
 {
-    pickup_single_item(idx, part ? 0 : -1);
+    if (part)
+    {
+        pickup_menu(idx);
+        return;
+    }
+    pickup_single_item(idx, -1);
 }
 
 void tile_item_drop(int idx, bool partdrop)

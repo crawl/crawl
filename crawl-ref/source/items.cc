@@ -780,8 +780,11 @@ void pickup_menu(int item_link)
     std::vector<const item_def*> items;
     item_list_on_square(items, item_link, false);
 
+    std::string prompt = "Select items to pick up or press _ for help";
+    if (items.size() == 1 && items[0]->quantity > 1)
+        prompt = "Select pick up quantity by entering a number, then select the item";
     std::vector<SelItem> selected =
-        select_items(items, "Select items to pick up or press _ for help");
+        select_items(items, prompt.c_str());
     redraw_screen();
 
     std::string pickup_warning;
