@@ -828,6 +828,23 @@ static bool _band_wander_target(monster * mon, dungeon_feature_type can_move)
     int leader_dist = grid_distance(mon->pos(), band_leader->pos());
     if (leader_dist > dist_thresh)
     {
+        monster_pathfind mp;
+        mp.set_range(1000);
+
+        if (mp.init_pathfind(mon, band_leader->pos()))
+        {
+            mon->travel_path = mp.calc_waypoints();
+            if (!mon->travel_path.empty())
+            {
+                // Okay then, we found a path.  Let's use it!
+                mon->target = mon->travel_path[0];
+                mon->travel_target = MTRAV_PATROL;
+                return (false);
+            }
+            else
+                return (true);
+        }
+
         return (true);
     }
 
