@@ -1,11 +1,7 @@
 ##############################################
 # Tutorial map 3: Movement and exploration   #
 ##############################################
-#
-# Still TODO:
-#  * Hook into hints mode curse trigger.
-#  * Add a trigger for _removing_ curses.
-#
+
 {{
 require("clua/tutorial.lua")
 
@@ -72,6 +68,12 @@ function tutorial_msg3.scroll_noautopickup ()
     text = text .. ", or you can first dispatch the goblin and then come back for it afterwards. "
                 .. "Either way, you can read this scroll with " .. tutorial_get_cmd("CMD_READ")
 
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</click>"
+    end
+
+    text = text .. "."
+
     return tutorial_message(text)
 end
 
@@ -90,14 +92,14 @@ function tutorial_msg3.inventory ()
         text = text .. ", or by <white>mouseover</click> or <white>rightclick</white> in the inventory panel"
     end
 
-    text = text .. ". When doing so, you will notice that you can also employ your carried items from their "
-                .. "description screen."
+    text = text .. ". When doing so, you will notice that you the item commands also work from the item "
+                .. "description screens."
 
     return tutorial_message(text)
 end
 
-function tutorial_msg3.zombies ()
-    return tutorial_message("Now, less talk, more battle: Go forth and slay these zombies!")
+function tutorial_msg3.battle ()
+    return tutorial_message("Time to test your new weapon in battle!")
 end
 
 function tutorial_msg3.downstairs ()
@@ -139,28 +141,24 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    "Lesson 3: Items and Inventory"
 BFLAGS:  islanded
 ORIENT:  encompass
-RTILE:   c = wall_hall
-TILE:    H = dngn_statue_skull, C = wall_undead
-KFEAT:   H = G
-KFEAT:   C = c
 KFEAT:   A = .
-KFEAT:   z = +
+KFEAT:   B = +
 COLOUR:  defghA = blue
 FTILE:   defghA = tutorial_pad
 ITEM:    helmet mundane not_cursed
 ITEM:    bread ration
 ITEM:    dagger mundane cursed
 ITEM:    scroll of remove curse
-ITEM:    scimitar ego:holy_wrath not_cursed
+ITEM:    scimitar ego:venom not_cursed
 MONS:    goblin ; club mundane not_cursed
-MONS:    goblin zombie, rat zombie, small snake zombie
+MONS:    rat, giant cockroach, kobold ; nothing
 MARKER:  d = lua:tutorial_msg3.armour()
 MARKER:  e = lua:tutorial_msg3.autopickup()
 MARKER:  f = lua:tutorial_msg3.weapon_reminder()
 MARKER:  g = lua:tutorial_msg3.scroll_noautopickup()
 MARKER:  h = lua:tutorial_msg3.ego_weapon()
 MARKER:  A = lua:tutorial_msg3.inventory()
-MARKER:  z = lua:tutorial_msg3.zombies()
+MARKER:  B = lua:tutorial_msg3.battle()
 MARKER:  } = lua:tutorial_msg3.downstairs()
 MARKER:  ) = lua:tutorial_msg3.downstairs()
 MARKER:  ] = lua:tutorial_msg3.downstairs()
@@ -194,14 +192,15 @@ xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.xxxxxxxxxxxCCCCCCCCCCCCCxxx
-xxxxxxxxxxxxx+xxxxxxxxxxxC.....3.n..)Cxxx
-xxxxxxxxxxxxT.Gccccccccccc..3.n.n..2.Cxxx
-xxxxxxxxxxxx.h..A........z.....H.4..}Cxxx
-xxxxxxxxxxxxG.Tccccccccccc2...n.n.3..Cxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxC...3...n..]Cxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxCCCCCCCCCCCCCxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.xxxxxxxxxxtttttttttttttttxx
+xxxxxxxxxxttx+xttxxxxxxxtttttttttttttttxx
+xxxxxxxxxttt...tttttttttttt....3.t.]tttxx
+xxxxxxxxxtt.T.G.tttttttttt..3.t.t..2.ttxx
+xxxxxxxxxtt..h..A.......B......T.4..}ttxx
+xxxxxxxxxtt.G.T.tttttttttt2...t.t.3..ttxx
+xxxxxxxxxttt...tttttttttttt..3...t.)tttxx
+xxxxxxxxxtttttttttxxxxxxtttttttttttttttxx
+xxxxxxxxxxxtttttttxxxxxxtttttttttttttttxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -127,6 +127,7 @@ enum hints_event_type
     // for the tutorial
     HINT_AUTOPICKUP_THROWN,
     HINT_TARGET_NO_FOE,
+    HINT_REMOVED_CURSE,
     HINT_EVENTS_NUM
 };
 

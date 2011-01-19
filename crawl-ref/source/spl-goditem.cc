@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -616,7 +617,10 @@ bool remove_curse()
     }
 
     if (success)
+    {
         mpr("You feel as if something is helping you.");
+        learned_something_new(HINT_REMOVED_CURSE);
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
