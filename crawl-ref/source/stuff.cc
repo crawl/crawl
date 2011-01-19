@@ -801,7 +801,11 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             return (true);
         else if (!noprompt)
         {
-            const std::string pr = "[Y]es or [N]o only, please.";
+            bool upper = (!safe && (crawl_state.game_is_tutorial()
+                                    || crawl_state.game_is_tutorial()));
+            const std::string pr
+                = make_stringf("%s[Y]es or [N]o only, please.",
+                               upper ? "Uppercase " : "");
             if (message)
                 mpr(pr);
             else
@@ -853,11 +857,11 @@ static std::string _list_allowed_keys(char yes1, char yes2,
                                       bool allow_all = false)
 {
     std::string result = " [";
-                result += (lowered ? "y" : "Y");
+                result += (lowered ? "(y)es" : "(Y)es");
                 result += _list_alternative_yes(yes1, yes2, lowered);
                 if (allow_all)
-                    result += (lowered? "/a" : "/A");
-                result += (lowered ? "/n/q" : "/N/Q");
+                    result += (lowered? "/(a)ll" : "/(A)ll");
+                result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
                 result += "]";
 
     return (result);
@@ -912,12 +916,20 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
             if (tmp == 'A')
                 return 2;
             else
-                mprf("Choose [Y]es%s, [N]o, [Q]uit, or [A]ll!",
+            {
+                bool upper = (!safe && (crawl_state.game_is_tutorial()
+                                        || crawl_state.game_is_tutorial()));
+                mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
+                     upper ? "uppercase " : "",
                      _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
+            }
         }
         else
         {
-            mprf("[Y]es%s, [N]o or [Q]uit only, please.",
+            bool upper = (!safe && (crawl_state.game_is_tutorial()
+                                    || crawl_state.game_is_tutorial()));
+            mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
+                 upper ? "Uppercase " : "",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
         }
     }
