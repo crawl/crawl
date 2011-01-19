@@ -2311,6 +2311,10 @@ enum monster_type                      // (int) menv[].type
     MONS_TEST_SPAWNER,
 
     // Add new monsters here:
+    MONS_SENSED_POPCORN,
+    MONS_SENSED_EASY,
+    MONS_SENSED_HARD,
+    MONS_SENSED_OY_VEY_GEVALT,
 
     NUM_MONSTERS,                      // used for polymorph
 

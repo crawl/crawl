@@ -42,5 +42,6 @@ void ash_check_bondage();
 bool ash_id_item(item_def& item, bool silent = true);
 void ash_id_inventory();
 int ash_detect_portals(bool all);
+monster_type ash_monster_tier(const monster *mon);
 
 #endif

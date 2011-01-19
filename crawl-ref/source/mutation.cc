@@ -30,6 +30,7 @@
 #include "env.h"
 #include "format.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "itemprop.h"
 #include "macro.h"
 #include "menu.h"
@@ -1977,7 +1978,10 @@ void check_antennae_detect()
             {
                 if (mons_is_unknown_mimic(mon))
                     discover_mimic(mon);
-                env.map_knowledge(*ri).set_detected_monster(MONS_SENSED);
+                monster_type mc = MONS_SENSED;
+                if (you.religion == GOD_ASHENZARI && !player_under_penance())
+                    mc = ash_monster_tier(mon);
+                env.map_knowledge(*ri).set_detected_monster(mc);
             }
         }
     }
