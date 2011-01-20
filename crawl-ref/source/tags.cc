@@ -2408,6 +2408,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallByte(th, m.god);
     marshallByte(th, m.attitude);
     marshallShort(th, m.foe);
+    marshallInt(th, m.foe_memory);
     marshallShort(th, m.damage_friendly);
     marshallShort(th, m.damage_total);
 
@@ -2826,6 +2827,11 @@ void unmarshallMonster(reader &th, monster& m)
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
     m.foe      = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_FOE_MEMORY)
+#endif
+    m.foe_memory = unmarshallInt(th);
+
     unmarshallShort(th);
     unmarshallShort(th);
 
