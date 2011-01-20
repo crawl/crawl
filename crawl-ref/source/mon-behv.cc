@@ -424,7 +424,9 @@ void handle_behaviour(monster* mon)
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
             {
-                if (crawl_state.game_is_arena() || !proxPlayer || isNeutral || patrolling
+                if (crawl_state.game_is_arena()
+                    || !proxPlayer && !isFriendly
+                    || isNeutral || patrolling
                     || mon->type == MONS_GIANT_SPORE)
                 {
                     new_beh = BEH_WANDER;
