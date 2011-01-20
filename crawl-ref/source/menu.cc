@@ -564,16 +564,16 @@ bool Menu::process_key(int keyin)
         break;
 
     case CK_ENTER:
-        if (!sel.empty())
+        if (!(flags & MF_PRESELECTED) || !sel.empty())
             return (false);
         // else fall through
     default:
-        keyin  = post_process(keyin);
-        lastch = keyin;
-
         // If no selection at all is allowed, exit now.
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return (false);
+
+        keyin  = post_process(keyin);
+        lastch = keyin;
 
         if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
         {
