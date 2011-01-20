@@ -438,7 +438,9 @@ void handle_behaviour(monster* mon)
             }
 
             // Foe gone out of LOS?
-            if (!proxFoe)
+            if (!proxFoe
+                && !(mon->friendly() && mon->is_travelling()
+                     && mon->travel_target == MTRAV_PLAYER))
             {
                 // Maybe the foe is just invisible.
                 if (mon->target.origin() && afoe && mon->near_foe())
@@ -473,7 +475,7 @@ void handle_behaviour(monster* mon)
                     break;
                 }
 
-                if (isFriendly)
+                if (isFriendly && mon->foe != MHITYOU)
                 {
                     if (patrolling || crawl_state.game_is_arena())
                     {
@@ -527,7 +529,8 @@ void handle_behaviour(monster* mon)
                 }
 
 
-                if (mon->foe_memory <= 0)
+                if (mon->foe_memory <= 0
+                    && !(mon->friendly() && mon->foe == MHITYOU))
                 {
                     new_beh = BEH_WANDER;
                 }
@@ -541,10 +544,11 @@ void handle_behaviour(monster* mon)
                     _set_firing_pos(mon, you.pos());
                 }
 
-                break;
+                if (!isFriendly)
+                    break;
             }
 
-            ASSERT(proxFoe && mon->foe != MHITNOT);
+            ASSERT((proxFoe || isFriendly) && mon->foe != MHITNOT);
 
             // Monster can see foe: set memory in case it loses sight.
             // Hack: smarter monsters will tend to pursue the player longer.
