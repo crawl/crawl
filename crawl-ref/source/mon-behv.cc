@@ -103,6 +103,8 @@ static void _set_firing_pos(monster* mon, coord_def target)
 {
     const int ideal_range = LOS_RADIUS / 2;
     const int current_distance = mon->pos().distance_from(target);
+    const los_type los = mons_has_los_ability(mon->type) ? LOS_DEFAULT
+                                                         : LOS_NO_TRANS;
 
     // We don't consider getting farther away unless already very close.
     const int max_range = std::max(ideal_range, current_distance);
@@ -116,7 +118,7 @@ static void _set_firing_pos(monster* mon, coord_def target)
         const int range = p.distance_from(target);
 
         if (!in_bounds(p) || range > max_range
-            || !cell_see_cell(p, target, LOS_DEFAULT)
+            || !cell_see_cell(p, target, los)
             || !mon_can_move_to_pos(mon, p - mon->pos()))
         {
             continue;
@@ -576,8 +578,15 @@ void handle_behaviour(monster* mon)
             if (mon->foe == MHITYOU)
             {
                 // The foe is the player.
-                if (!mon->firing_pos.zero())
+
+                // If monster is currently getting into firing position and
+                // see the player and can attack him, clear firing_pos.
+                if (!mon->firing_pos.zero()
+                    && mons_has_los_ability(mon->type)
+                       || mon->see_cell_no_trans(mon->target))
+                {
                     mon->firing_pos.reset();
+                }
 
                 if (mon->type == MONS_SIREN
                     && you.beheld_by(mon)
@@ -586,7 +595,7 @@ void handle_behaviour(monster* mon)
                     break;
                 }
 
-                if (try_pathfind(mon, can_move))
+                if (mon->firing_pos.zero() && try_pathfind(mon, can_move))
                     break;
 
                 // Whew. If we arrived here, path finding didn't yield anything
