@@ -177,7 +177,7 @@ end
 
 function tutorial_msg2.tutorial_end ()
     return tutorial_message("Congratulations! You've survived your first batch of monsters!\n"
-                            .. "To exit the tutorial, simply go down these stairs. Confirm the resulting prompt with an uppercase <white>Y</white>.")
+                            .. "To exit the tutorial, simply go down these stairs.")
 end
 
 function tutorial_msg2.exit ()
