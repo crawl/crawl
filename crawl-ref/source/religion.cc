@@ -571,7 +571,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     {
     case GOD_ZIN:
         snprintf(info, INFO_SIZE, "you donate money%s",
-                 verbose ? " (by praying at an altar)" : "");
+                 verbose ? " (by <w>p</w>raying at an altar)" : "");
 
         likes.push_back(info);
         break;
@@ -586,6 +586,11 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_NEMELEX_XOBEH:
         snprintf(info, INFO_SIZE, "you sacrifice items%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
+        likes.push_back(info);
+        break;
+
+    case GOD_ASHENZARI:
+        snprintf(info, INFO_SIZE, "you obtain runes of Zot");
         likes.push_back(info);
         break;
 
