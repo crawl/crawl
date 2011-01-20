@@ -1511,7 +1511,7 @@ static void _got_item(item_def& item, int quant)
 
         if (you.religion == GOD_ASHENZARI)
         {
-            mprf(MSGCH_GOD, "You learn the power of this rune.");
+            simple_god_message(" appreciates your discovery of this rune.");
             // Important!  This should _not_ be scaled by bondage level, as
             // otherwise people would curse just before picking up.
             for (int i = 0; i < 10; i++)
