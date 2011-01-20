@@ -272,6 +272,12 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         // Preselect the first spell if it's only spell applicable.
         preselect_first = (count == 1);
     }
+    if (allow_preselect || preselect_first
+                           && you.last_cast_spell != SPELL_NO_SPELL)
+    {
+        spell_menu.set_flags(spell_menu.get_flags() | MF_PRESELECTED);
+    }
+
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
