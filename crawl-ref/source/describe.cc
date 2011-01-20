@@ -2898,7 +2898,7 @@ static int _get_spell_description(const spell_type spell,
     else if (god_likes_spell(spell, you.religion))
     {
         description += god_name(you.religion)
-                       + " appreciates the use of this spell.\n";
+                       + " supports the use of this spell.\n";
     }
     if (item && !player_can_memorise_from_spellbook(*item))
     {
