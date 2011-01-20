@@ -89,6 +89,12 @@ static bool _mon_tries_regain_los(monster* mon)
     }
 
     // Any special case should go here.
+    if (mons_class_flag(mon->type, M_FIGHTER)
+        && !(mon->type == MONS_CENTAUR_WARRIOR)
+        && !(mon->type == MONS_YAKTAUR_CAPTAIN))
+    {
+        return false;
+    }
 
     // Randomize it a bit to make it less predictable.
     return (mons_intel(mon) == I_NORMAL && !one_chance_in(10)
