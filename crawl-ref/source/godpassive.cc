@@ -185,7 +185,8 @@ void jiyva_slurp_bonus(int item_value, int *js)
         return;
 
     if (you.piety >= piety_breakpoint(1)
-        && x_chance_in_y(you.piety, MAX_PIETY))
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && you.is_undead != US_UNDEAD)
     {
         //same as a sultana
         lessen_hunger(70, true);
