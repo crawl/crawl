@@ -1805,8 +1805,8 @@ MAP
 .x0x.xx.+.xx==xx..
 .x0xx9xxxxxG..Gxx.
 .xx*x.|xxxG....Gx.
-..xxxxxx.x*.8..|x.
-..xxxxxx.x|..8.*x.
+..xxxxxx.x*.9..|x.
+..xxxxxx.x|..9.*x.
 .xx0.9|xxxG....Gx.
 .x..xxxxxxxG..Gxx.
 .x0xx0x.+.xx==xx..
@@ -1828,7 +1828,7 @@ MAP
 ..x..x..0..x..x..
 ..xx..xx.xx..xx..
  ..x..xx.xx..x..
- ..x00..8xx00x..
+ ..x00..9xx00x..
  ..x..xxxxx..x..
 ..xx..xxxxx..xx..
 ..x..x..0..x.0x..
