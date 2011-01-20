@@ -186,7 +186,8 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
     // All monsters can find the Orb in Zotdef
-    const int range = (crawl_state.game_is_zotdef() ? 1000 : mons_tracking_range(mon));
+    const int range = (crawl_state.game_is_zotdef() || mon->friendly() ? 1000 : mons_tracking_range(mon));
+
     if (range > 0 && dist > dist_range(range))
     {
         mon->travel_target = MTRAV_UNREACHABLE;
