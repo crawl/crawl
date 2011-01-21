@@ -549,23 +549,29 @@ int TilesFramework::getch_ck()
 
                 if (tip_loc != m_cur_loc)
                 {
-                    m_region_msg->alt_text().clear();
-                    for (unsigned int i = 0;
-                         i < m_layers[m_active_layer].m_regions.size(); ++i)
-                    {
-                        Region *reg = m_layers[m_active_layer].m_regions[i];
-                        if (!reg->inside(m_mouse.x, m_mouse.y))
-                            continue;
-                        if (reg->update_alt_text(m_region_msg->alt_text()))
-                        {
-                            break;
-                        }
-                    }
+                    set_need_redraw();
 
-                    if (prev_alt != m_region_msg->alt_text())
+                    // FIXME: I've no idea what the ~ is doing there, though
+                    // it does mean the compiler complains about comparing
+                    // signed and unsigned values, but without it, the alt.
+                    // text gets displayed if I last did a mouseclick, which
+                    // is exactly what I'm trying to avoid here. (jpeg)
+                    if (m_last_tick_moved != ~0)
                     {
-                        prev_alt = m_region_msg->alt_text();
-                        set_need_redraw();
+                        m_region_msg->alt_text().clear();
+                        for (unsigned int i = 0;
+                            i < m_layers[m_active_layer].m_regions.size(); ++i)
+                        {
+                            Region *reg = m_layers[m_active_layer].m_regions[i];
+                            if (!reg->inside(m_mouse.x, m_mouse.y))
+                                continue;
+
+                            if (reg->update_alt_text(m_region_msg->alt_text()))
+                                break;
+                        }
+
+                        if (prev_alt != m_region_msg->alt_text())
+                            prev_alt = m_region_msg->alt_text();
                     }
                 }
             }
@@ -654,7 +660,7 @@ int TilesFramework::getch_ck()
                     event.mouse_event.held = m_buttons_held;
                     event.mouse_event.mod  = m_key_mod;
                     key = handle_mouse(event.mouse_event);
-                    m_last_tick_moved = ticks;
+                    m_last_tick_moved = ~0;
                 }
                 break;
 
@@ -664,7 +670,7 @@ int TilesFramework::getch_ck()
                     event.mouse_event.held = m_buttons_held;
                     event.mouse_event.mod  = m_key_mod;
                     key = handle_mouse(event.mouse_event);
-                    m_last_tick_moved = ticks;
+                    m_last_tick_moved = ~0;
                 }
                 break;
 
