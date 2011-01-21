@@ -260,13 +260,26 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
 
         show = cell.monster();
         if (cell.detected_monster())
-            g.col = Options.detected_monster_colour;
+        {
+            const monster_info* mi = cell.monsterinfo();
+            ASSERT(mi);
+            ASSERT(mi->type == MONS_SENSED);
+            if (mons_is_sensed(mi->base_type))
+                g.col = mons_class_colour(mi->base_type);
+            else
+                g.col = Options.detected_monster_colour;
+        }
         else if (!coloured)
             g.col = DARKGRAY;
-        else if (const monster_info* mi = cell.monsterinfo())
-            g.col = _get_mons_colour(*mi);
         else
-            g.col = mons_class_colour(show.mons);
+        {
+            const monster_info* mi = cell.monsterinfo();
+            ASSERT(mi);
+            g.col = _get_mons_colour(*mi);
+        }
+//	// FIXME: please re-enable this if the assert above can fail
+//      else
+//          g.col = mons_class_colour(show.mons);
 
         break;
 
