@@ -379,7 +379,7 @@ A heavy piece of wood, to be held or thrown. Coshing someone on the head while t
 %%%%
 corpse
 
-A corpse.
+A corpse. You can butcher it to produce edible meat chunks.
 %%%%
 crossbow
 
