@@ -4373,6 +4373,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_EXPLORE;
     case CMD_INTERLEVEL_TRAVEL:
         return TILEG_CMD_INTERLEVEL_TRAVEL;
+    case CMD_SEARCH:
+        return TILEG_CMD_SEARCH;
     case CMD_SEARCH_STASHES:
         return TILEG_CMD_SEARCH_STASHES;
     case CMD_REPLAY_MESSAGES:
@@ -4389,14 +4391,14 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_SKILLS;
     case CMD_DISPLAY_CHARACTER_STATUS:
         return TILEG_CMD_DISPLAY_CHARACTER_STATUS;
+    case CMD_DISPLAY_KNOWN_OBJECTS:
+        return TILEG_CMD_KNOWN_ITEMS;
     case CMD_SAVE_GAME_NOW:
         return TILEG_CMD_SAVE_GAME_NOW;
     case CMD_EDIT_PLAYER_TILE:
         return TILEG_CMD_EDIT_PLAYER_TILE;
     case CMD_DISPLAY_COMMANDS:
         return TILEG_CMD_DISPLAY_COMMANDS;
-    case CMD_DISPLAY_KNOWN_OBJECTS:
-        return TILEG_CMD_KNOWN_ITEMS;
     default:
         return TILEG_TODO;
     }
