@@ -483,6 +483,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
+        learned_something_new(HINT_LEVITATING);
         return (false);
     }
 

@@ -1348,6 +1348,7 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
     case HINT_MULTI_PICKUP:
+    case HINT_LEVITATING:
         return (true);
     default:
         return (false);
@@ -2676,9 +2677,22 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_NEW_ABILITY_ITEM:
-        text << "That item you just equipped granted you a new ability. "
-                "Press <w>%</w> to take a look at your abilities or to "
-                "use one of them.";
+        // Specialcase levitation because it's a guaranteed trigger in the
+        // tutorial.
+        if (player_evokable_levitation())
+        {
+            text << "Levitation will allow you to cross deep water or lava. To "
+                    "activate it, select the corresponding ability in the ability "
+                    "menu (<w>%</w>). Once levitating, keep an eye on the status "
+                    "line and messages as it will eventually time out and may "
+                    "cause you to fall into water and drown.";
+        }
+        else
+        {
+            text << "That item you just equipped granted you a new ability. "
+                    "Press <w>%</w> to take a look at your abilities or to "
+                    "use one of them.";
+        }
         cmd.push_back(CMD_USE_ABILITY);
         break;
 
@@ -2686,6 +2700,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Equipping this item affects your resistances. Check the "
                 "overview screen (<w>%</w>) for details.";
         cmd.push_back(CMD_RESISTS_SCREEN);
+        break;
+
+    case HINT_LEVITATING:
+        if (player_evokable_levitation())
+        {
+            text << "To stop levitating, use the corresponding ability "
+                    "in the ability menu (<w>%</w>).";
+            cmd.push_back(CMD_USE_ABILITY);
+        }
         break;
 
     case HINT_CONVERT:

@@ -942,6 +942,7 @@ void down_stairs(dungeon_feature_type force_stair,
         && !feat_is_gate(stair_find))
     {
         mpr("You're floating high up above the floor!");
+        learned_something_new(HINT_LEVITATING);
         return;
     }
 
