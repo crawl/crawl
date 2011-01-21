@@ -293,16 +293,14 @@ inline bool is_stash(const LevelStashes *ls, const coord_def& p)
     return s && s->enabled;
 }
 
-static bool _is_monster_blocked(const coord_def& c)
+static bool _monster_blocks_travel(const monster_info *mons)
 {
-    const monster* mons = monster_at(c);
+    // [ds] No need to check if the monster is a known mimic, since it
+    // won't even be a monster_info if it's an unknown mimic.
     return (mons
-            && mons->visible_to(&you)
-            && mons_is_stationary(mons)
+            && mons_class_is_stationary(mons->type)
             && !fedhas_passthrough(mons)
-            && mons_was_seen(mons)
-            && !mons_is_unknown_mimic(mons)
-            && !travel_kill_monster(mons));
+            && !travel_kill_monster(mons->type));
 }
 
 /*
@@ -321,11 +319,12 @@ static bool _is_reseedable(const coord_def& c)
     if (is_excluded(c))
         return (true);
 
-    const dungeon_feature_type grid = env.map_knowledge(c).feat();
+    map_cell &cell(env.map_knowledge(c));
+    const dungeon_feature_type grid = cell.feat();
     return (feat_is_water(grid)
             || grid == DNGN_LAVA
             || is_trap(c)
-            || _is_monster_blocked(c)
+            || _monster_blocks_travel(cell.monsterinfo())
             || (g_Slime_Wall_Check && slime_wall_neighbour(c)));
 }
 
@@ -411,15 +410,15 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     // plant/fungus checks.
     const map_cell& levelmap_cell = env.map_knowledge(c);
 
-    // Travel will not voluntarily cross squares blocked by immobile monsters.
-    // TODO: do this properly based only on map_knowledge instead of this bizarre manner
-    if (!ignore_hostile
-        && levelmap_cell.monster() != MONS_NO_MONSTER
-        && _is_monster_blocked(c)
-        // _is_monster_blocked can only return true if monster_at(c) != NULL
-        && monster_at(c)->type == levelmap_cell.monster())
+    // Travel will not voluntarily cross squares blocked by immobile
+    // monsters.
+    if (!ignore_hostile)
     {
-        return (false);
+        const monster_info *minfo = levelmap_cell.monsterinfo();
+        if (minfo && _monster_blocks_travel(minfo))
+        {
+            return (false);
+        }
     }
 
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
@@ -440,9 +439,9 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     return (feat_is_traversable(grid));
 }
 
-// Returns true if the location at (x,y) is monster-free and contains no clouds.
-// Travel uses this to check if the square the player is about to move to is
-// safe.
+// Returns true if the location at (x,y) is monster-free and contains
+// no clouds. Travel uses this to check if the square the player is
+// about to move to is safe.
 static bool _is_safe_move(const coord_def& c)
 {
     if (const monster* mon = monster_at(c))
@@ -453,7 +452,7 @@ static bool _is_safe_move(const coord_def& c)
             && mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && mons_is_stationary(mon)
             && !fedhas_passthrough(mon)
-            && !travel_kill_monster(mon))
+            && !travel_kill_monster(mon->type))
         {
             return (false);
         }
@@ -2341,9 +2340,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
     }
 }
 
-bool travel_kill_monster(const monster* mons)
+bool travel_kill_monster(monster_type mons)
 {
-    if (mons->type != MONS_TOADSTOOL)
+    if (mons != MONS_TOADSTOOL)
         return (false);
 
     if (!wielded_weapon_check(you.weapon(), true))

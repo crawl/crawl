@@ -1956,17 +1956,29 @@ void check_antennae_detect()
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
+        map_cell& cell = env.map_knowledge(*ri);
         if (!mon)
         {
-            map_cell& cell = env.map_knowledge(*ri);
             if (cell.detected_monster())
                 cell.clear_monster();
         }
         else if (!mons_is_firewood(mon))
         {
-            if (mons_is_unknown_mimic(mon))
-                discover_mimic(mon);
-            env.map_knowledge(*ri).set_detected_monster(MONS_SENSED);
+            // [ds] If the PC remembers the correct monster at this
+            // square, don't trample it with MONS_SENSED. Forgetting
+            // legitimate monster memory affects travel, which can
+            // path around mimics correctly only if it can actually
+            // *see* them in monster memory -- overwriting the mimic
+            // with MONS_SENSED causes travel to bounce back and
+            // forth, since every time it leaves LOS of the mimic, the
+            // mimic is forgotten (replaced by MONS_SENSED).
+            const monster_type remembered_monster = cell.monster();
+            if (remembered_monster != mon->type)
+            {
+                if (mons_is_unknown_mimic(mon))
+                    discover_mimic(mon);
+                env.map_knowledge(*ri).set_detected_monster(MONS_SENSED);
+            }
         }
     }
 }
