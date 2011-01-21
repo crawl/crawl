@@ -131,3 +131,12 @@ CMD_AUTOFIGHT verbose
 
 Move towards the closest hostile monster and attack it with your wielded weapon.
 %%%%
+%%%%
+CMD_SEARCH
+
+Wait a single turn
+%%%%
+CMD_SEARCH verbose
+
+Spend a single turn waiting, resting and searching.
+%%%%
