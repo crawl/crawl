@@ -396,13 +396,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (show_weff_messages)
         wield_warning();
 
-    if (new_wpn.cursed())
-        learned_something_new(HINT_YOU_CURSED);
-    else if (Hints.hints_left
-             && your_talents(false).size() > old_talents)
-    {
-        learned_something_new(HINT_NEW_ABILITY_ITEM);
-    }
+    check_item_hint(new_wpn, old_talents);
 
     // Time calculations.
     you.time_taken /= 2;
@@ -3326,8 +3320,7 @@ bool puton_item(int item_slot)
     // Actually equip the item.
     equip_item(hand_used, item_slot);
 
-    if (Hints.hints_left && your_talents(false).size() > old_talents)
-        learned_something_new(HINT_NEW_ABILITY_ITEM);
+    check_item_hint(you.inv[item_slot], old_talents);
 
     // Putting on jewellery is as fast as wielding weapons.
     you.time_taken /= 2;

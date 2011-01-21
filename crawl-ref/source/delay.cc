@@ -1234,8 +1234,7 @@ static void _armour_wear_effects(const int item_slot)
 
     equip_item(eq_slot, item_slot);
 
-    if (Hints.hints_left && your_talents(false).size() > old_talents)
-        learned_something_new(HINT_NEW_ABILITY_ITEM);
+    check_item_hint(you.inv[item_slot], old_talents);
 }
 
 static command_type _get_running_command()

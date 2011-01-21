@@ -1,7 +1,10 @@
 ##############################################
 # Tutorial map 3: Movement and exploration   #
 ##############################################
-
+#
+# TODO:
+#  * special trigger for evoking levitation, status, and danger of drowning
+#
 {{
 require("clua/tutorial.lua")
 
@@ -148,7 +151,9 @@ end
 function tutorial_msg3.weapon_swap2 ()
     return tutorial_message("Use "
                             .. tutorial_get_cmd("CMD_WEAPON_SWAP")
-                            .. " to switch between melee and ranged combat, as needed, to fight these bats.")
+                            .. " to switch between melee and ranged combat ("
+                            ..  tutorial_get_cmd("CMD_FIRE") .. "<w>f</w>)"
+                            .. ", as needed, to fight these bats.")
 end
 
 function tutorial_msg3.quantified_drop ()
@@ -306,18 +311,13 @@ MONS:    giant bat
 MONS:    kobold ; dart ego:none q:10
 MONS:    jackal
 MARKER:  ^ = lua:props_marker {poisoned_needle_trap="true", force_hit="true"}
-# trigger for poison
 MARKER:  d = lua:tutorial_msg3.potion()
-# trigger for pickup menu
 MARKER:  A = lua:tutorial_msg3.weapon_swap()
 MARKER:  B = lua:tutorial_msg3.weapon_swap2()
-# trigger for xlevel stat gain prompt
 MARKER:  e = lua:tutorial_msg3.quantified_drop()
 MARKER:  f = lua:tutorial_msg3.jewellery()
-# trigger for wearing an item with activatable ability -> a
 # trigger for interacting with floor while levitating
 MARKER:  g = lua:tutorial_msg3.artefact_armour()
-# trigger for wearing an item conferring resistances -> %
 MARKER:  } = lua:tutorial_msg3.tutorial_end()
 MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
                                  desc = "exit from the tutorial", \
