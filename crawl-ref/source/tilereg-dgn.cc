@@ -1039,6 +1039,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 
     std::vector<command_type> cmd;
     tip = "";
+    bool has_monster = false;
 
     // Left-click first.
     if (gc == you.pos())
@@ -1051,11 +1052,12 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 
         tip += _check_spell_evokable(&you, cmd);
     }
-    else
+    else // non-player squares
     {
         const actor* target = actor_at(gc);
         if (target && you.can_see(target))
         {
+            has_monster = true;
             if (abs(gc.x - you.pos().x) <= attack_dist
                 && abs(gc.y - you.pos().y) <= attack_dist)
             {
@@ -1091,48 +1093,6 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
             {
                 _add_tip(tip, "[L-Click] Travel");
             }
-
-            if (env.map_knowledge(gc).item())
-            {
-                _add_tip(tip, "[L-Click] Pick up items (%)");
-                cmd.push_back(CMD_PICKUP);
-            }
-            const dungeon_feature_type feat = env.map_knowledge(gc).feat();
-            const command_type dir = feat_stair_direction(feat);
-            if (dir != CMD_NO_CMD)
-            {
-                _add_tip(tip, "[Shift + L-Click] ");
-                if (feat == DNGN_ENTER_SHOP)
-                    tip += "enter shop";
-                else if (feat_is_gate(feat))
-                    tip += "enter gate";
-                else
-                    tip += "use stairs";
-
-                tip += " (%)";
-                cmd.push_back(dir);
-            }
-            else if (feat_is_altar(feat)
-                     && player_can_join_god(feat_altar_god(feat)))
-            {
-                _add_tip(tip, "[Shift + L-Click] pray on altar (%)");
-                cmd.push_back(CMD_PRAY);
-            }
-            else if (adjacent(gc, you.pos()))
-            {
-                trap_def *trap = find_trap(gc);
-                if (trap && trap->is_known()
-                    && trap->category() == DNGN_TRAP_MECHANICAL)
-                {
-                    _add_tip(tip, "[Ctrl + L-Click] Disarm");
-                }
-                else if (grd(gc) == DNGN_OPEN_DOOR
-                         && you.visible_igrd(gc) == NON_ITEM)
-                {
-                    _add_tip(tip, "[Ctrl + L-Click] Close door (%)");
-                    cmd.push_back(CMD_CLOSE_DOOR);
-                }
-            }
         }
         else if (feat_is_closed_door(grd(gc)))
         {
@@ -1141,6 +1101,38 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 
             _add_tip(tip, "[L-Click] Open door (%)");
             cmd.push_back(CMD_OPEN_DOOR);
+        }
+    }
+
+    // These apply both on the same square as the player's and elsewhere.
+    if (!has_monster)
+    {
+        if (env.map_knowledge(gc).item())
+        {
+            _add_tip(tip, "[L-Click] Pick up items (%)");
+            cmd.push_back(CMD_PICKUP);
+        }
+
+        const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+        const command_type dir = feat_stair_direction(feat);
+        if (dir != CMD_NO_CMD)
+        {
+            _add_tip(tip, "[Shift + L-Click] ");
+            if (feat == DNGN_ENTER_SHOP)
+                tip += "enter shop";
+            else if (feat_is_gate(feat))
+                tip += "enter gate";
+            else
+                tip += "use stairs";
+
+            tip += " (%)";
+            cmd.push_back(dir);
+        }
+        else if (feat_is_altar(feat)
+                 && player_can_join_god(feat_altar_god(feat)))
+        {
+            _add_tip(tip, "[Shift + L-Click] pray on altar (%)");
+            cmd.push_back(CMD_PRAY);
         }
     }
 
