@@ -1342,6 +1342,12 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_TARGET_NO_FOE:
     case HINT_YOU_CURSED:
     case HINT_REMOVED_CURSE:
+    case HINT_YOU_POISON:
+    case HINT_YOU_SICK:
+    case HINT_CHOOSE_STAT:
+    case HINT_NEW_ABILITY_ITEM:
+    case HINT_ITEM_RESISTANCES:
+    case HINT_MULTI_PICKUP:
         return (true);
     default:
         return (false);
@@ -2170,15 +2176,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_CHOOSE_STAT:
-        text << "Every third level you may choose what stat to invest in, "
+        text << "Every third level you get to choose a stat to raise: "
                 "Strength, Dexterity, or Intelligence. <w>Strength</w> "
-                "influences the amount you can carry, and increases the damage "
+                "affects the amount you can carry as well as the damage "
                 "you deal in melee. <w>Dexterity</w> increases your evasion "
-                "and thus influences your chance of dodging attacks or traps. "
-                "<w>Intelligence</w> increases your success in casting spells "
-                "and decreases the amount by which you hunger when you do so.\n"
-                "Note that it is generally recommended to raise all your "
-                "stats to a minimum of 8, so as to prevent death by stat loss.";
+                "and makes it easier to dodge attacks or traps. "
+                "<w>Intelligence</w> makes it easier to cast spells and "
+                "reduces the amount by which you hunger when you do so.\n";
         break;
 
     case HINT_YOU_ENCHANTED:
@@ -2191,52 +2195,36 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_YOU_SICK:
-        // Hack: reset hints_just_triggered, to force recursive calling of
-        // learned_something_new().
-        Hints.hints_just_triggered = false;
-        learned_something_new(HINT_YOU_ENCHANTED);
-        Hints.hints_just_triggered = true;
-        text << "Chunks and corpses that are described as "
-                "<brown>contaminated</brown> can make you sick when eating "
-                "them. However, there's only a chance of this happening and "
-                "food is sufficiently rare in the dungeon that you'll "
-                "sometimes have to dine on them anyway and hope for the best.\n"
-                "While sick, your hitpoints won't regenerate and sometimes "
-                "an attribute may decrease. It wears off with time (";
-
-        if (!i_feel_safe())
-            text << "find a quiet corner and ";
-
-        text << "wait with <w>%</w>"
-#ifdef USE_TILE
-                " or by clicking into the stats area"
-#endif
-                "), or you could <w>%</w>uaff a potion of healing.\n"
-                "Note that if a chunk makes you sick, you won't get any "
-                "nutrition out of it.";
-
+        if (crawl_state.game_is_hints())
+        {
+            // Hack: reset hints_just_triggered, to force recursive calling of
+            // learned_something_new(). Don't do this for the tutorial!
+            Hints.hints_just_triggered = false;
+            learned_something_new(HINT_YOU_ENCHANTED);
+            Hints.hints_just_triggered = true;
+        }
+        text << "Chunks that are described as <brown>contaminated</brown> will "
+                "occasionally make you sick when eaten. However, since is food is "
+                "scarce in the dungeon, you'll sometimes have to risk it.\n"
+                "While sick, your hitpoints won't regenerate and your attributes "
+                "may decrease. Sickness wears off with time, so you should wait it "
+                "out with %. Note that if a chunk makes you sick, you won't get "
+                "any nutrition out of it.";
         cmd.push_back(CMD_REST);
-        cmd.push_back(CMD_QUAFF);
         break;
 
     case HINT_YOU_POISON:
-        // Hack: reset hints_just_triggered, to force recursive calling of
-        // learned_something_new().
-        Hints.hints_just_triggered = false;
-        learned_something_new(HINT_YOU_ENCHANTED);
-        Hints.hints_just_triggered = true;
-        text << "Poison will slowly reduce your HP. It wears off with time (";
-
-        if (!i_feel_safe())
-            text << "find a quiet corner and ";
-
-        text << "wait with <w>%</w>"
-#ifdef USE_TILE
-                "or by clicking onto the stats area"
-#endif
-                "), or you could <w>%</w>uaff a potion of healing. ";
+        if (crawl_state.game_is_hints())
+        {
+            // Hack: reset hints_just_triggered, to force recursive calling of
+            // learned_something_new(). Don't do this for the tutorial!
+            Hints.hints_just_triggered = false;
+            learned_something_new(HINT_YOU_ENCHANTED);
+            Hints.hints_just_triggered = true;
+        }
+        text << "Poison will slowly reduce your HP. You can try to wait it out "
+                "with <w>%</w>, but it's usually safer to quaff a potion of healing.";
         cmd.push_back(CMD_REST);
-        cmd.push_back(CMD_QUAFF);
         break;
 
     case HINT_YOU_ROTTING:
@@ -2325,18 +2313,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_MULTI_PICKUP:
         text << "There's a more comfortable way to pick up several items at "
-                "the same time. If you press <w>%</w> or <w>g</w> "
+                "the same time: Type <w>%</w><w>%</w> "
 #ifdef USE_TILE
-                ", or click your left mouse button "
+                "or <w>click</w> on the player doll "
 #endif
-                "twice you can choose items from a menu"
-#ifdef USE_TILE
-                ", either by pressing their letter, or by clicking the "
-                "corresponding lines in the menu"
-#endif
-                ".\nThis takes fewer keystrokes but has no influence on the "
-                "number of turns needed. Multi-pickup will be interrupted by "
-                "monsters or other dangerous events.";
+                "to enter the pickup menu. To leave the menu, confirm your "
+                "selection with <w>Enter</w>.";
+        cmd.push_back(CMD_PICKUP);
         cmd.push_back(CMD_PICKUP);
         break;
 
@@ -2693,11 +2676,16 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_NEW_ABILITY_ITEM:
-        text << "That item you just equipped granted you a new ability "
-                "(un-equipping the item will remove the ability). "
+        text << "That item you just equipped granted you a new ability. "
                 "Press <w>%</w> to take a look at your abilities or to "
                 "use one of them.";
         cmd.push_back(CMD_USE_ABILITY);
+        break;
+
+    case HINT_ITEM_RESISTANCES:
+        text << "Equipping this item affects your resistances. Check the "
+                "overview screen (<w>%</w>) for details.";
+        cmd.push_back(CMD_RESISTS_SCREEN);
         break;
 
     case HINT_CONVERT:
@@ -3384,6 +3372,24 @@ static std::string _hints_throw_stuff(const item_def &item)
 
     insert_commands(result, CMD_FIRE, 0);
     return (result);
+}
+
+// num_old_talents describes the number of activatable abilities you had
+// before putting on this item.
+void check_item_hint(const item_def &item, unsigned int num_old_talents)
+{
+    if (item.cursed())
+        learned_something_new(HINT_YOU_CURSED);
+    else if (Hints.hints_events[HINT_NEW_ABILITY_ITEM]
+             && your_talents(false).size() > num_old_talents)
+    {
+        learned_something_new(HINT_NEW_ABILITY_ITEM);
+    }
+    else if (Hints.hints_events[HINT_ITEM_RESISTANCES]
+             && gives_resistance(item))
+    {
+        learned_something_new(HINT_ITEM_RESISTANCES);
+    }
 }
 
 // Explains the most important commands necessary to use an item, and mentions

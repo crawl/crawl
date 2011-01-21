@@ -768,7 +768,7 @@ void item_check(bool verbose)
     else if (!done_init_line)
         strm << "There are many items here." << std::endl;
 
-    if (items.size() > 5)
+    if (items.size() > 2)
         learned_something_new(HINT_MULTI_PICKUP);
 }
 

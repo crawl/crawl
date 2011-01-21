@@ -128,6 +128,7 @@ enum hints_event_type
     HINT_AUTOPICKUP_THROWN,
     HINT_TARGET_NO_FOE,
     HINT_REMOVED_CURSE,
+    HINT_ITEM_RESISTANCES,
     HINT_EVENTS_NUM
 };
 
@@ -159,6 +160,7 @@ void print_hints_skills_info(void);
 void print_hints_skills_description_info(void);
 
 // Additional information for tutorial players.
+void check_item_hint(const item_def &item, unsigned int num_old_talents);
 void hints_describe_item(const item_def &item);
 void hints_inscription_info(bool autoinscribe, std::string prompt);
 bool hints_pos_interesting(int x, int y);
