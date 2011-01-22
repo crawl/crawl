@@ -4147,7 +4147,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
             altars.push_back(altar);
         es_flags |= ES_ALTAR;
     }
-    // Would checking for a makrer for all discovered cells slow things
+    // Would checking for a marker for all discovered cells slow things
     // down too much?
     else if (feat_is_statue_or_idol(feat))
     {
@@ -4298,7 +4298,8 @@ std::vector<std::string> explore_discoveries::apply_quantities(
 {
     static const char *feature_plural_qualifiers[] =
     {
-        " leading ", " back to ", " to ", " of ", " in ", NULL
+        " leading ", " back to ", " to ", " of ", " in ", " out of",
+        " from ", " back into ", NULL
     };
 
     std::vector<std::string> things;
