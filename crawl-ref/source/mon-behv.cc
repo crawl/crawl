@@ -449,7 +449,9 @@ void handle_behaviour(monster* mon)
 
             // Foe gone out of LOS?
             if (!proxFoe
-                && !(mon->friendly() && mon->is_travelling()
+                && !(mon->friendly()
+                     && mon->foe == MHITYOU
+                     && mon->is_travelling()
                      && mon->travel_target == MTRAV_PLAYER))
             {
                 // Maybe the foe is just invisible.
@@ -609,7 +611,8 @@ void handle_behaviour(monster* mon)
                 // the traditional way.
 
                 // Sometimes, your friends will wander a bit.
-                if (isFriendly && one_chance_in(8))
+                if (isFriendly && one_chance_in(8)
+                    && mon->foe == MHITYOU && proxFoe)
                 {
                     set_random_target(mon);
                     mon->foe = MHITNOT;
