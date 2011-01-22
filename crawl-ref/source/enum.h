@@ -1332,7 +1332,6 @@ enum duration_type
     DUR_SCRYING,
     DUR_TORNADO,
     DUR_LIQUEFYING,
-
     NUM_DURATIONS
 };
 
@@ -1402,11 +1401,16 @@ enum enchant_type
     ENCH_ATTACHED,
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
     ENCH_LEVITATION,
+    ENCH_DAZED,         // Dazed - less chance of acting each turn.
+    ENCH_MUTE,          // Permanently silenced.
+    ENCH_BLIND,         // Permanently blind (everything is invisible).
+    ENCH_DUMB,          // Permanently dumb (as in, 'struck dumb').
+    ENCH_MAD,           // Permanently mad.
+    ENCH_CORONA_ZIN,    // Zin's silver light.
     ENCH_HELPLESS,
     ENCH_LIQUEFYING,
     ENCH_PERM_TORNADO,
     ENCH_FAKE_ABJURATION,
-
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2110,6 +2114,10 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_STATUE,
     MONS_STATUE,
     MONS_TRAINING_DUMMY,
+    MONS_SALT_PILLAR,
+      MONS_UNUSED_447,
+      MONS_UNUSED_448,
+      MONS_UNUSED_449,
 
     // Demons:
     MONS_IMP,
@@ -2791,6 +2799,16 @@ enum operation_types
 enum orb_type
 {
     ORB_ZOT,
+};
+
+enum recite_type
+{
+    RECITE_GENERIC,
+    RECITE_CHAOTIC,
+    RECITE_IMPURE,
+    RECITE_HERETIC,
+    RECITE_UNHOLY,
+    RECITE_ALLY,
 };
 
 enum size_part_type

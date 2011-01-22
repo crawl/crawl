@@ -64,6 +64,7 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_ROT:
         return ULL1 << MB_ROTTING;
     case ENCH_CORONA:
+    case ENCH_CORONA_ZIN:
         return ULL1 << MB_GLOWING;
     case ENCH_SLOW:
         return ULL1 << MB_SLOWED;
@@ -120,6 +121,18 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_ATTACHED;
     case ENCH_HELPLESS:
         return ULL1 << MB_HELPLESS;
+    case ENCH_BLEED:
+        return ULL1 << MB_BLEEDING;
+    case ENCH_DAZED:
+        return ULL1 << MB_DAZED;
+    case ENCH_MUTE:
+        return ULL1 << MB_MUTE;
+    case ENCH_BLIND:
+        return ULL1 << MB_BLIND;
+    case ENCH_DUMB:
+        return ULL1 << MB_DUMB;
+    case ENCH_MAD:
+        return ULL1 << MB_MAD;
     default:
         return 0;
     }
@@ -846,10 +859,14 @@ static std::string _verbose_info0(const monster_info& mi)
 
     if (mi.is(MB_PETRIFIED))
         return ("petrified");
+    if (mi.is(MB_DUMB))
+        return ("dumb");
     if (mi.is(MB_PARALYSED))
         return ("paralysed");
     if (mi.is(MB_PETRIFYING))
         return ("petrifying");
+    if (mi.is(MB_MAD))
+        return ("mad");
     if (mi.is(MB_CONFUSED))
         return ("confused");
     if (mi.is(MB_FLEEING))
@@ -867,8 +884,16 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("burning");
     if (mi.is(MB_ROTTING))
         return ("rotting");
+    if (mi.is(MB_BLEEDING))
+        return ("bleeding");
     if (mi.is(MB_INVISIBLE))
         return ("invisible");
+    if (mi.is(MB_DAZED))
+        return ("dazed");
+    if (mi.is(MB_MUTE))
+        return ("mute");
+    if (mi.is(MB_BLIND))
+        return ("blind");
 
     return ("");
 }
@@ -1042,6 +1067,16 @@ std::vector<std::string> monster_info::attributes() const
     }
     if (is(MB_ATTACHED))
         v.push_back("attached and sucking blood");
+    if (is(MB_DAZED))
+        v.push_back("dazed");
+    if (is(MB_MUTE))
+        v.push_back("permanently mute");
+    if (is(MB_BLIND))
+        v.push_back("permanently blind");
+    if (is(MB_DUMB))
+        v.push_back("stupefied");
+    if (is(MB_MAD))
+        v.push_back("lost in madness");
     return v;
 }
 

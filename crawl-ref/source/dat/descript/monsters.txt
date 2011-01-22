@@ -1403,6 +1403,10 @@ pile of gold coins
 
 An apparently harmless pile of gold coins hides a nasty venomous shapechanging predator.
 %%%%
+pillar of salt
+
+A large pillar of salt that is quickly crumbling away.
+%%%%
 Pit Fiend
 
 A huge winged fiend with incredibly tough skin.

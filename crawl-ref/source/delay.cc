@@ -21,6 +21,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
+#include "exercise.h"
 #include "enum.h"
 #include "fprop.h"
 #include "exclude.h"
@@ -46,6 +47,7 @@
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
+#include "shout.h"
 #include "spl-other.h"
 #include "spl-util.h"
 #include "spl-selfench.h"
@@ -81,25 +83,20 @@ static void _handle_macro_delay();
 static void _finish_delay(const delay_queue_item &delay);
 static const char *_activity_interrupt_name(activity_interrupt_type ai);
 
-static int _zin_recite_to_monsters(coord_def where, int pow, int, actor *)
+static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
 {
-    return (zin_recite_to_single_monster(where, false, pow));
+    return (zin_recite_to_single_monster(where, false, prayertype));
 }
 
-static std::string _get_zin_recite_speech(const std::string key, int weight)
+static std::string _get_zin_recite_speech(int trits[], size_t len, int prayertype, int step)
 {
-    seed_rng(weight + you.pos().x + you.pos().y);
-    const std::string str = getSpeakString("zin_recite_speech_" + key);
+    const std::string str = zin_recite_text(trits, len, prayertype, step);
 
     if (str.empty())
     {
         // In case nothing is found.
-        if (key == "start")
-            return ("begin reciting the Axioms of Law.");
-
-        return ("reciting");
+        return ("mumble mumble buggy mumble");
     }
-
     return (str);
 }
 
@@ -259,9 +256,9 @@ void stop_delay(bool stop_stair_travel)
         break;
 
     case DELAY_RECITE:
-        mprf(MSGCH_PLAIN, "You stop %s.",
-             _get_zin_recite_speech("other",
-                                you.num_turns + delay.duration).c_str());
+        mprf(MSGCH_PLAIN, "Your recitation of %s is interrupted.",
+             _get_zin_recite_speech(delay.trits, delay.len, delay.parm1, -1).c_str());
+        mpr("You feel short of breath.");
         _pop_delay();
         break;
 
@@ -651,11 +648,20 @@ void handle_delay()
             break;
 
         case DELAY_RECITE:
-            mprf(MSGCH_PLAIN, "You %s",
-                 _get_zin_recite_speech("start", you.num_turns + delay.duration).c_str());
-            if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
-                viewwindow();
+        {
+            // We need to handle training here.
+            const ability_def& abil = get_ability_def(ABIL_ZIN_RECITE);
+            practise(EX_USED_ABIL, abil.ability);
+
+            // We don't actually start reciting on this turn, because we haven't "said" anything yet.
+            delay.len = 7;
+            for (size_t n = 0; n < delay.len; n++)
+                delay.trits[n] = random2(3);
+            mprf(MSGCH_PLAIN, "You clear your throat and prepare to recite %s.",
+                 _get_zin_recite_speech(delay.trits, delay.len, delay.parm1, -1).c_str());
+
             break;
+        }
 
         default:
             break;
@@ -794,10 +800,7 @@ void handle_delay()
     }
     else if (delay.type == DELAY_RECITE)
     {
-        if (zin_check_recite_to_monsters() < 1 // You've lost your audience...
-            || Options.hp_warning && you.hp*Options.hp_warning <= you.hp_max
-               && delay.parm2*Options.hp_warning > you.hp_max
-            || you.hp*2 < delay.parm2) // ...or significant health drop.
+        if (you.hp*2 < delay.parm2) // ...or significant health drop.
         {
             stop_delay();
             return;
@@ -857,12 +860,34 @@ void handle_delay()
             break;
 
         case DELAY_RECITE:
-            mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
-                 _get_zin_recite_speech("other", you.num_turns + delay.duration+1).c_str());
+        {
+            mprf(MSGCH_MULTITURN_ACTION, "\"%s\"",
+                 _get_zin_recite_speech(delay.trits, delay.len, delay.parm1, delay.duration).c_str());
             if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
                 viewwindow();
-            break;
 
+            const std::string shout_verb = you.shout_verb();
+
+            int noise_level = 12; // "shout"
+
+            // Tweak volume for different kinds of vocalisation.
+            if (shout_verb == "roar")
+                noise_level = 18;
+
+            else if (shout_verb == "hiss")
+                noise_level = 8;
+            else if (shout_verb == "squeak")
+                noise_level = 4;
+            else if (shout_verb == "__NONE")
+                noise_level = 0;
+            else if (shout_verb == "yell")
+                noise_level = 14;
+            else if (shout_verb == "scream")
+                noise_level = 16;
+
+            noisy(noise_level, you.pos());
+            break;
+        }
         case DELAY_MULTIDROP:
             drop_item(items_for_multidrop[0].slot,
                       items_for_multidrop[0].quantity);
@@ -984,10 +1009,14 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_RECITE:
-        mprf(MSGCH_PLAIN, "You finish %s.",
-             _get_zin_recite_speech("other", you.num_turns + delay.duration).c_str());
+    {
+        std::string closure[] = {" \"Amen!\"", " \"Glory to Zin!\"", " \"And thus was it written.\"", " \"So sayeth Zin.\"", " \"Purity be upon you all.\""};
+        mprf(MSGCH_PLAIN, "You finish reciting %s.%s",
+             _get_zin_recite_speech(const_cast<int*>(delay.trits), delay.len, delay.parm1, -1).c_str(),
+             (one_chance_in(9)) ? closure[random2(5)].c_str() : "");
+        mpr("You feel short of breath.");
         break;
-
+    }
     case DELAY_PASSWALL:
     {
         mpr("You finish merging with the rock.");
