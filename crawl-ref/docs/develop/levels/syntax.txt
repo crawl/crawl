@@ -533,7 +533,9 @@ ITEM:     (list of items, separated by comma)
             from being randomly being made racial.  Has no effect if the item
             can't take that kind of racial setting.
             NOTE: Can result in a non-racial item if used with "any" and the
-            chosen item isn't compatible with the desired race.
+            chosen item isn't compatible with the desired race. If race is not
+            explicitly set, this can result in boots being replaced by a
+            barding.
           * "ego:ego_name", where "ego_name" is something like  "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego.  The item must be fully specified, so
