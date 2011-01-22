@@ -2946,7 +2946,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_ENTER_DIS:
         return ("gateway to the Iron City of Dis");
     case DNGN_ENTER_GEHENNA:
-        return ("gateway to Gehenna");
+        return ("gateway to the ashen plains of Gehenna");
     case DNGN_ENTER_COCYTUS:
         return ("gateway to the freezing wastes of Cocytus");
     case DNGN_ENTER_TARTARUS:
