@@ -765,8 +765,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_QUEEN_ANT;
 
     // batty monsters ('b')
-    case MONS_GIANT_BAT:
-        return TILEP_MONS_GIANT_BAT;
+    case MONS_MEGABAT:
+        return TILEP_MONS_MEGABAT;
     case MONS_BUTTERFLY:
         return _mon_mod(TILEP_MONS_BUTTERFLY, colour);
     case MONS_RAVEN:
@@ -3072,8 +3072,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_QUEEN_ANT;
 
     // batty monsters ('b')
-    case MONS_GIANT_BAT:
-        return TILE_CORPSE_GIANT_BAT;
+    case MONS_MEGABAT:
+        return TILE_CORPSE_MEGABAT;
     case MONS_BUTTERFLY:
         return TILE_CORPSE_BUTTERFLY;
     case MONS_RAVEN:

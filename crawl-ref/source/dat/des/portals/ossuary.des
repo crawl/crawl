@@ -814,11 +814,11 @@ MONS:   mummy
 KFEAT:  F = floor
 COLOUR: F = cyan
 KMONS:  F = rat simulacrum / goblin simulacrum / kobold simulacrum /\
-            giant bat simulacrum / nothing w:80
+            megabat simulacrum / nothing w:80
 KFEAT:  S = floor
 COLOUR: S = green
 KMONS:  S = spectral rat / spectral goblin / spectral kobold /\
-            spectral giant bat / nothing w:80
+            spectral megabat / nothing w:80
 # Loot.
 ITEM:   any potion / any scroll / nothing w:1
 #

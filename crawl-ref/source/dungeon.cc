@@ -4438,7 +4438,7 @@ int dgn_place_monster(mons_spec &mspec,
             && (mg.cls < NUM_MONSTERS || mg.cls == RANDOM_MONSTER))
         {
             const monster_type habitat_target =
-                mg.cls == RANDOM_MONSTER ? MONS_GIANT_BAT : mg.cls;
+                mg.cls == RANDOM_MONSTER ? MONS_MEGABAT : mg.cls;
             place = find_newmons_square_contiguous(habitat_target, where, 0);
         }
 

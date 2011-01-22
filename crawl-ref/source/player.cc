@@ -476,7 +476,7 @@ bool is_player_same_species(const int mon, bool transform)
         {
         // Unique monsters.
         case TRAN_BAT:
-            return (mon == MONS_GIANT_BAT);
+            return (mon == MONS_MEGABAT);
         case TRAN_ICE_BEAST:
             return (mon == MONS_ICE_BEAST);
         // Compare with monster *species*.

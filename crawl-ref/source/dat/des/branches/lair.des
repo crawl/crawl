@@ -287,7 +287,7 @@ ENDMAP
 NAME:   due_lair_maze_entry_diamond
 TAGS:   lair_entry
 MONS:   plant / fungus
-MONS:   w:100 giant bat / w:100 rat / w:30 green rat / gila monster /\
+MONS:   w:100 megabat / w:100 rat / w:30 green rat / gila monster /\
         yak / nothing
 ORIENT: float
 SUBST:  . = G:20 B:15 .

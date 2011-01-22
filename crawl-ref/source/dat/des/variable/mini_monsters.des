@@ -876,7 +876,7 @@ ENDMAP
 NAME:   kilobyte_rumbling_trees
 DEPTH:  D:14-20, Elf, Lair:4-8
 MONS:   patrolling spriggan druid
-MONS:   black bear / bear / grizzly bear / giant bat w:20
+MONS:   black bear / bear / grizzly bear / megabat w:20
 FTILE:  .t1@ = floor_lair
 MAP
 ttttt       tttt@t

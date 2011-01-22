@@ -825,7 +825,7 @@ giant ant
 
 A black ant with poisonous pincers, about the size of a large dog.
 %%%%
-giant bat
+megabat
 
 A huge black bat.
 %%%%

@@ -13,7 +13,7 @@ soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
-giant_bat MONS_GIANT_BAT
+megabat MONS_MEGABAT
 butterfly MONS_BUTTERFLY
 butterfly1
 butterfly2

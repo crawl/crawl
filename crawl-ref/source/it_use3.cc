@@ -677,7 +677,7 @@ static bool _box_of_beasts(item_def &box)
         {
             int temp_rand = random2(11);
 
-            beasty = ((temp_rand == 0) ? MONS_GIANT_BAT :
+            beasty = ((temp_rand == 0) ? MONS_MEGABAT :
                       (temp_rand == 1) ? MONS_HOUND :
                       (temp_rand == 2) ? MONS_JACKAL :
                       (temp_rand == 3) ? MONS_RAT :
