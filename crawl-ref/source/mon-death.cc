@@ -468,6 +468,10 @@ void shedu_do_resurrection (const monster* mons)
     if (!my_pair)
         return;
 
+    // Wake the other one up if it's asleep.
+    if (my_pair->asleep())
+        behaviour_event(my_pair, ME_DISTURB, MHITNOT, my_pair->pos());
+
     if (you.can_see(my_pair))
         simple_monster_message(my_pair, " ceases action and prepares to resurrect its fallen mate.");
 
