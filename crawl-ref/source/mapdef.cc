@@ -4777,6 +4777,10 @@ item_spec item_list::parse_single_spec(std::string s)
     if (strip_tag(s, "useful"))
         result.props["useful"] = bool(true);
 
+    const short charges = strip_number_tag(s, "charges:");
+    if (charges >= 0)
+        result.props["charges"].get_int() = charges;
+
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
     if (strip_tag(s, "allow_uniq"))

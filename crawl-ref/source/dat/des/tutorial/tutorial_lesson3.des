@@ -482,8 +482,8 @@ FTILE:   $ABCdefg = tutorial_pad
 KFEAT:   ' = .
 COLOUR:  ' = red
 KFEAT:   S = distillery shop
-ITEM:    wand of fire
-ITEM:    wand of digging
+ITEM:    wand of fire charges:12
+ITEM:    wand of digging charges:15
 ITEM:    gold q:120
 ITEM:    amulet of inaccuracy mundane not_cursed
 ITEM:    scroll of identify q:3
