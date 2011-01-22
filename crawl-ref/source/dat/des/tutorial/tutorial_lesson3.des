@@ -106,7 +106,8 @@ function tutorial_msg3.inventory ()
 end
 
 function tutorial_msg3.battle ()
-    return tutorial_message("Time to test your new weapon in battle!")
+    return tutorial_message("Once you've successfully managed to poison a monster, it is sometimes best to retreat "
+                            .. "and let the poison do the work.")
 end
 
 function tutorial_msg3.secret_shortcut ()
