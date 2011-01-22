@@ -568,12 +568,14 @@ bool Menu::process_key(int keyin)
             return (false);
         // else fall through
     default:
+        // Even if we do return early, lastch needs to be set first,
+        // as it's sometimes checked when leaving a menu.
+        keyin  = post_process(keyin);
+        lastch = keyin;
+
         // If no selection at all is allowed, exit now.
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return (false);
-
-        keyin  = post_process(keyin);
-        lastch = keyin;
 
         if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
         {
