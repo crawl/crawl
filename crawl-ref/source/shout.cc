@@ -412,7 +412,7 @@ void apply_noises()
 // as appropriate.
 bool noisy(int original_loudness, const coord_def& where,
            const char *msg, int who,
-           bool mermaid, bool message_if_unseen)
+           bool mermaid, bool message_if_unseen, bool fake_noise)
 {
     // high ambient noise makes sounds harder to hear
     const int ambient = current_level_ambient_noise();
@@ -426,8 +426,9 @@ bool noisy(int original_loudness, const coord_def& where,
     if (loudness <= 0)
         return (false);
 
-    // If the origin is silenced there is no noise.
-    if (silenced(where))
+    // If the origin is silenced there is no noise, unless we're
+    // faking it.
+    if (silenced(where) && !fake_noise)
         return (false);
 
     // [ds] Reduce noise propagation for Sprint.
@@ -457,7 +458,7 @@ bool noisy(int original_loudness, const coord_def& where,
     // Message the player.
     if (player_distance <= dist && player_can_hear(where))
     {
-        if (msg)
+        if (msg && !fake_noise)
             mpr(msg, MSGCH_SOUND);
         return (true);
     }
@@ -468,6 +469,12 @@ bool noisy(int loudness, const coord_def& where, int who,
            bool mermaid, bool message_if_unseen)
 {
     return noisy(loudness, where, NULL, who, mermaid, message_if_unseen);
+}
+
+// This fakes noise even through silence.
+bool fake_noisy(int loudness, const coord_def& where)
+{
+    return noisy(loudness, where, NULL, -1, false, false, true);
 }
 
 static const char* _player_vampire_smells_blood(int dist)
