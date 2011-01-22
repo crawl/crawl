@@ -1,5 +1,5 @@
-#!/usr/bin/perl -w
-
+#!/usr/bin/env perl
+use warnings;
 use strict;
 
 # Intended to read FAQ.txt (input file in the database format) and
