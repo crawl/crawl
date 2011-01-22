@@ -663,6 +663,9 @@ bool monster::can_speak()
         return (false);
     }
 
+    if (has_ench(ENCH_MUTE))
+        return (false);
+
     // Does it have the proper vocal equipment?
     const mon_body_shape shape = get_mon_shape(this);
     return (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA);
@@ -2756,12 +2759,15 @@ bool monster::confused_by_you() const
         return false;
 
     const mon_enchant me = get_ench(ENCH_CONFUSION);
-    return (me.ench == ENCH_CONFUSION && me.who == KC_YOU);
+    const mon_enchant me2 = get_ench(ENCH_MAD);
+
+    return ((me.ench == ENCH_CONFUSION && me.who == KC_YOU) ||
+            (me2.ench == ENCH_MAD && me2.who == KC_YOU));
 }
 
 bool monster::paralysed() const
 {
-    return (has_ench(ENCH_PARALYSIS));
+    return (has_ench(ENCH_PARALYSIS) || has_ench(ENCH_DUMB));
 }
 
 bool monster::cannot_act() const
@@ -2783,7 +2789,7 @@ bool monster::asleep() const
 
 bool monster::backlit(bool check_haloed, bool self_halo) const
 {
-    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME))
+    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_CORONA_ZIN))
         return (true);
     if (check_haloed)
         return (haloed() && (self_halo || halo_radius2() == -1));
@@ -4092,6 +4098,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_CONFUSION:
+    case ENCH_MAD:
         if (type == MONS_TRAPDOOR_SPIDER && has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
 
@@ -4397,7 +4404,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CORONA:
-        if (!quiet)
+    case ENCH_CORONA_ZIN:
+    if (!quiet)
         {
             if (visible_to(&you))
                 simple_monster_message(this, " stops glowing.");
@@ -4545,6 +4553,42 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         apply_location_effects(pos(), me.killer(), me.kill_agent());
         break;
 
+    case ENCH_DAZED:
+        if (!quiet && alive())
+                simple_monster_message(this, " is no longer dazed.");
+        break;
+
+    //The following should never happen, but just in case...
+
+    case ENCH_MUTE:
+        if (!quiet && alive())
+                simple_monster_message(this, " is no longer mute.");
+        break;
+
+    case ENCH_BLIND:
+        if (!quiet && alive())
+            simple_monster_message(this, " is no longer blind.");
+
+        // Reevaluate behaviour.
+        behaviour_event(this, ME_EVAL);
+        break;
+
+    case ENCH_DUMB:
+        if (!quiet && alive())
+            simple_monster_message(this, " is no longer stupefied.");
+
+        // Reevaluate behaviour.
+        behaviour_event(this, ME_EVAL);
+        break;
+
+    case ENCH_MAD:
+        if (!quiet && alive())
+            simple_monster_message(this, " is no longer mad.");
+
+        // Reevaluate behaviour.
+        behaviour_event(this, ME_EVAL);
+        break;
+
     default:
         break;
     }
@@ -4644,7 +4688,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
         case ENCH_ANTIMAGIC: case ENCH_FEAR_INSPIRING:
         case ENCH_REGENERATION: case ENCH_RAISED_MR: case ENCH_MIRROR_DAMAGE:
-        case ENCH_STONESKIN: case ENCH_LIQUEFYING: case ENCH_FAKE_ABJURATION:
+        case ENCH_STONESKIN: case ENCH_LIQUEFYING:
+        case ENCH_CORONA_ZIN: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4839,6 +4884,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_LEVITATION:
+    case ENCH_DAZED:
     case ENCH_LIQUEFYING:
     case ENCH_FAKE_ABJURATION:
         decay_enchantment(me);
@@ -4850,8 +4896,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SILENCE:
-        invalidate_agrid();
         decay_enchantment(me);
+        invalidate_agrid();
         break;
 
     case ENCH_BATTLE_FRENZY:
@@ -5157,7 +5203,15 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             if (you.see_cell(position))
-                mprf("A nearby %s withers and dies.", name(DESC_PLAIN, false).c_str());
+
+            {
+                if (type == MONS_SALT_PILLAR)
+                     mprf("The %s crumbles away.",
+                     name(DESC_PLAIN, false).c_str());
+                else
+                     mprf("A nearby %s withers and dies.",
+                     name(DESC_PLAIN, false).c_str());
+            }
 
             monster_die(this, KILL_MISC, NON_MONSTER, true);
         }
@@ -5393,6 +5447,41 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me, true);
         break;
     }
+
+    //This is like Corona, but if silver harms them, it sticky flame levels of damage.
+    case ENCH_CORONA_ZIN:
+
+        if ((this->holiness() == MH_UNDEAD && !this->is_insubstantial()) || this->is_chaotic())
+        {
+            bolt beam;
+            beam.flavour = BEAM_LIGHT;
+            int dam = roll_dice(2, 4) - 1;
+
+            //Double damage to vampires - it's silver and it's light!
+
+            int newdam = mons_adjust_flavoured(this, beam, dam, false);
+
+            if (dam < newdam)
+                simple_monster_message(this, "'s flesh is horribly charred!");
+            else if (dam > 0)
+                simple_monster_message(this, "'s flesh is seared.");
+
+            // We don't have a reasonable agent to give.
+            // Don't clean up the monster in order to credit properly.
+            hurt(NULL, dam, BEAM_LIGHT, false);
+
+            dprf("Zin's Corona damage: %d", dam);
+
+            // Credit the kill.
+            if (hit_points < 1)
+            {
+                monster_die(this, me.killer(), me.kill_agent());
+                break;
+            }
+        }
+
+        decay_enchantment(me, true);
+        break;
 
     default:
         break;
@@ -5685,8 +5774,13 @@ bool monster::visible_to(const actor *looker) const
 {
     bool sense_invis = looker->atype() == ACT_MONSTER
                        && mons_sense_invis(looker->as_monster());
-    bool vis = !invisible() || looker->can_see_invisible()
+
+    bool blind = looker->atype() == ACT_MONSTER
+                 && looker->as_monster()->has_ench(ENCH_BLIND);
+
+    bool vis = !blind && !invisible() || looker->can_see_invisible()
                || sense_invis && adjacent(pos(), looker->pos());
+
     return (vis && (this == looker || !submerged()));
 }
 
@@ -6411,8 +6505,9 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "guardian_timer", "levitation", "helpless",
-    "liquefying", "perm_tornado", "fake abjuration", "buggy",
+    "withdrawn", "attached", "guardian_timer", "levitation",
+    "dazed", "mute", "blind", "dumb", "mad", "corona_zin",
+    "helpless", "liquefying", "perm_tornado", "fake_abjuration", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6553,6 +6648,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_PETRIFIED:
         cturn = std::max(8, 150 / (1 + modded_speed(mons, 5)));
         break;
+    case ENCH_DAZED:
     case ENCH_PETRIFYING:
         cturn = 50 / _mod_speed(10, mons->speed);
         break;
@@ -6574,6 +6670,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn += 1000 / _mod_speed(250, mons->speed);
         break;
     case ENCH_CORONA:
+    case ENCH_CORONA_ZIN:
         if (deg > 1)
             cturn = 1000 * (deg - 1) / _mod_speed(200, mons->speed);
         cturn += 1000 / _mod_speed(100, mons->speed);

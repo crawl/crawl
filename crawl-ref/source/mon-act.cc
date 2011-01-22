@@ -2065,6 +2065,13 @@ void handle_monster_move(monster* mons)
             continue;
         }
 
+        if (mons->has_ench(ENCH_DAZED) && one_chance_in(5))
+        {
+            simple_monster_message(mons, " is lost in a daze.");
+            mons->speed_increment -= non_move_energy;
+            continue;
+        }
+
         handle_behaviour(mons);
 
         // handle_behaviour() could make the monster leave the level.

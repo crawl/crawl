@@ -1614,7 +1614,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_SPIRIT)
         mon->add_ench(ENCH_FADING_AWAY);
 
-    if (mg.cls == MONS_TOADSTOOL)
+    if (mg.cls == MONS_TOADSTOOL || mg.cls == MONS_SALT_PILLAR)
     {
         // This enchantment is a timer that counts down until death.
         // It should last longer than the lifespan of a corpse, to avoid

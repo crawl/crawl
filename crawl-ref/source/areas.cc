@@ -471,6 +471,7 @@ int monster::silence_radius2() const
 
     if (!has_ench(ENCH_SILENCE))
         return (-1);
+
     const int dur = get_ench(ENCH_SILENCE).duration;
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY *

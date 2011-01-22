@@ -63,6 +63,11 @@ enum monster_info_flags
     MB_WITHDRAWN,
     MB_ATTACHED,
     MB_HELPLESS,
+    MB_DAZED,
+    MB_MUTE,
+    MB_BLIND,
+    MB_DUMB,
+    MB_MAD
 };
 
 struct monster_info_base

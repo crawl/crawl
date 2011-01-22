@@ -155,8 +155,10 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
 
-    if (hploss)
+    if (hploss && caster != HOLY_WORD_ZIN)
         simple_monster_message(mons, " convulses!");
+    if (hploss && caster == HOLY_WORD_ZIN)
+        simple_monster_message(mons, " is blasted by Zin's holy word!");
 
     mons->hurt(attacker, hploss, BEAM_MISSILE, false);
 

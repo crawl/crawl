@@ -330,6 +330,8 @@ struct delay_queue_item
     int         parm1;
     int         parm2;
     bool        started;
+    int         trits[6];
+    size_t      len;
 };
 
 
