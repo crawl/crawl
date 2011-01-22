@@ -801,8 +801,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             return (true);
         else if (!noprompt)
         {
-            bool upper = (!safe && (crawl_state.game_is_tutorial()
-                                    || crawl_state.game_is_tutorial()));
+            bool upper = (!safe && crawl_state.game_is_hints_tutorial());
             const std::string pr
                 = make_stringf("%s[Y]es or [N]o only, please.",
                                upper ? "Uppercase " : "");
@@ -917,8 +916,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
                 return 2;
             else
             {
-                bool upper = (!safe && (crawl_state.game_is_tutorial()
-                                        || crawl_state.game_is_tutorial()));
+                bool upper = (!safe && crawl_state.game_is_hints_tutorial());
                 mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
                      upper ? "uppercase " : "",
                      _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
@@ -926,8 +924,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
         }
         else
         {
-            bool upper = (!safe && (crawl_state.game_is_tutorial()
-                                    || crawl_state.game_is_tutorial()));
+            bool upper = (!safe && crawl_state.game_is_hints_tutorial());
             mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
                  upper ? "Uppercase " : "",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());

@@ -170,6 +170,7 @@ public:
     bool game_is_sprint() const;
     bool game_is_zotdef() const;
     bool game_is_hints() const;
+    bool game_is_hints_tutorial() const;
 
     // Save subdirectory used for games such as Sprint.
     std::string game_type_name() const;
