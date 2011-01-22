@@ -1325,7 +1325,7 @@ MARKER:  G = lua:fog_machine { \
 COLOUR: #vG = red
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
-            door_description_suffix=" to Gehenna", \
+            door_description_suffix=" to the ashen plains of Gehenna", \
             door_description_noun="gateway", \
          })
 MARKER: # = lua:restrict_door()
