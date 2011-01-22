@@ -689,7 +689,42 @@ void hints_dissection_reminder(bool healthy)
     }
 }
 
+static bool _advise_use_healing_potion()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &obj(you.inv[i]);
+
+        if (!obj.defined())
+            continue;
+
+        if (obj.base_type != OBJ_POTIONS)
+            continue;
+
+        if (!item_type_known(obj))
+            continue;
+
+        if (obj.sub_type == POT_HEALING
+            || obj.sub_type == POT_HEAL_WOUNDS)
+        {
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
+void hints_healing_check()
+{
+    if (2*you.hp <= you.hp_max
+        && _advise_use_healing_potion())
+    {
+        learned_something_new(HINT_HEALING_POTIONS);
+    }
+}
+
 // Occasionally remind injured characters of resting.
+// FIXME: This is currently UNUSED!
 void hints_healing_reminder()
 {
     if (!Hints.hints_left)
@@ -1349,6 +1384,8 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_ITEM_RESISTANCES:
     case HINT_MULTI_PICKUP:
     case HINT_LEVITATING:
+    case HINT_INACCURACY:
+    case HINT_HEALING_POTIONS:
         return (true);
     default:
         return (false);
@@ -2527,6 +2564,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_DISPLAY_MAP);
         break;
 
+    case HINT_HEALING_POTIONS:
+        text << "Your hit points are getting dangerously low. Retreat and/or "
+                "quaffing a potion of heal wounds or healing might be a good idea.";
+        break;
+
     case HINT_NEED_HEALING:
         text << "If you're low on hitpoints or magic and there's no urgent "
                 "need to move, you can rest for a bit. Ideally, you should "
@@ -2709,6 +2751,17 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "in the ability menu (<w>%</w>).";
             cmd.push_back(CMD_USE_ABILITY);
         }
+        break;
+
+    case HINT_INACCURACY:
+        text << "Not all items are useful, and some of them are outright "
+                "harmful. Press <w>%</w> ";
+#ifdef USE_TILE
+        text << "or <w>click</w> on your equipped amulet to remove it.";
+#else
+        text << "to remove your amulet.";
+#endif
+        cmd.push_back(CMD_REMOVE_JEWELLERY);
         break;
 
     case HINT_CONVERT:

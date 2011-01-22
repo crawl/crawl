@@ -4,11 +4,6 @@
 #
 # TODO:
 #  * customize shop contents
-#  * set wand charges
-#  * triggers for
-#    - wearing inaccuracy
-#    - trying to step into a fire cloud
-#    - healing reminder (run away) etc.
 {{
 require("clua/tutorial.lua")
 
@@ -255,8 +250,7 @@ end
 
 function tutorial_msg3.amulet ()
     local text = "Amulets are another type of jewellery and can be put on with "
-                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY") .. " and removed again with "
-                 .. tutorial_get_cmd("CMD_REMOVE_JEWELLERY")
+                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
     if crawl.is_tiles() then
         text = text .. ". Alternatively, either can be done by <white>mouseclick</click>"
     end

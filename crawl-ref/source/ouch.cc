@@ -1174,6 +1174,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 dungeon_events.fire_event(DET_HP_WARNING);
             }
 
+            hints_healing_check();
+
             _xom_checks_damage(death_type, dam, death_source);
 
             // for note taking
