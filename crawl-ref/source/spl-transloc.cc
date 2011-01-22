@@ -27,6 +27,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-util.h"
+#include "orb.h"
 #include "player.h"
 #include "random.h"
 #include "shout.h"
@@ -763,8 +764,7 @@ bool cast_apportation(int pow, bolt& beam)
     {
         if (item_is_orb(item))
         {
-            noisy(30, where);
-            mpr("The orb shrieks and resists your pull!", MSGCH_ORB);
+            orb_pickup_noise(where, 30);
             return (true);
         }
         else
@@ -782,17 +782,19 @@ bool cast_apportation(int pow, bolt& beam)
 
     if (item_is_orb(item))
     {
-        noisy(30, where);
+        fake_noisy(30, where);
 
         // There's also a 1-in-6 flat chance of apport failing.
         if (one_chance_in(6))
         {
-            mpr("The orb shrieks and becomes a dead weight against your magic!", MSGCH_ORB);
+            orb_pickup_noise(where, 30, "The orb shrieks and becomes a dead weight against your magic!",
+                             "The orb lets out a furious burst of light and becomes a dead weight against your magic!");
             return (true);
         }
         else // Otherwise it's just a noisy little shiny thing
         {
-            mpr("The orb shrieks as your magic touches it!", MSGCH_ORB);
+            orb_pickup_noise(where, 30, "The orb shrieks as your magic touches it!",
+                             "The orb lets out a furious burst of light as your magic touches it!");
         }
     }
 

@@ -49,6 +49,7 @@
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "place.h"
 #include "player.h"
 #include "quiver.h"
@@ -67,6 +68,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "xom.h"
@@ -1742,8 +1744,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         // Take a note!
         _check_note_item(item);
 
-        noisy(30, you.pos());
-        mpr("The orb lets out a hideous shriek!", MSGCH_ORB);
+        orb_pickup_noise(you.pos(), 30);
+
         mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
 
         you.char_direction = GDT_ASCENDING;
