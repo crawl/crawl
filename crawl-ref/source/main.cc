@@ -213,6 +213,7 @@ static void _take_starting_note();
 static void _startup_hints_mode();
 
 static void _compile_time_asserts();
+static void _handle_wizard_command(void);
 
 //
 //  It all starts here. Some initialisations are run first, then straight
@@ -428,6 +429,10 @@ static void _show_commandline_options_help()
     puts("  -sprint-map <name>    preselect a Sprint map");
     puts("  -tutorial             select the Tutorial");
     puts("  -zotdef               select Zot Defence");
+#ifdef WIZARD
+    puts("  -wizard               allow access to wizard mode");
+#endif
+
     puts("");
 
     puts("Command line options override init file options, which override");
@@ -733,7 +738,10 @@ static void _handle_wizard_command(void)
     int wiz_command;
 
     // WIZ_NEVER gives protection for those who have wiz compiles,
-    // and don't want to risk their characters.
+    // and don't want to risk their characters. Also, and hackishly,
+    // it's used to prevent access for non-authorised users to wizard
+    // builds in dgamelaunch builds unlses the game is started with the
+    // -wizard flag.
     if (Options.wiz_mode == WIZ_NEVER)
         return;
 

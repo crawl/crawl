@@ -914,7 +914,12 @@ void game_options::reset_options()
     no_dark_brand      = true;
 
 #ifdef WIZARD
+#ifdef DGAMELAUNCH
+    if (wiz_mode != WIZ_NO)
+        wiz_mode         = WIZ_NEVER;
+#else
     wiz_mode         = WIZ_NO;
+#endif
     terp_files.clear();
 #endif
 
@@ -2569,6 +2574,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // wiz_mode is recognised as a legal key in all compiles -- bwr
 #ifdef WIZARD
+    #ifndef DGAMELAUNCH
         if (field == "never")
             wiz_mode = WIZ_NEVER;
         else if (field == "no")
@@ -2580,6 +2586,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             report_error (
                 make_stringf("Unknown wiz_mode option: %s\n", field.c_str()));
         }
+    #endif
 #endif
     }
     else if (key == "ban_pickup")
@@ -3421,6 +3428,7 @@ enum commandline_option_type
     CLO_PRINT_CHARSET,
     CLO_ZOTDEF,
     CLO_TUTORIAL,
+    CLO_WIZARD,
 
     CLO_NOPS
 };
@@ -3431,7 +3439,7 @@ static const char *cmd_ops[] = {
     "mapstat", "arena", "dump-maps", "test", "script", "builddb",
     "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef", "tutorial"
+    "print-charset", "zotdef", "tutorial", "wizard"
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4027,6 +4035,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_TUTORIAL:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_TUTORIAL;
+            break;
+
+        case CLO_WIZARD:
+#ifdef WIZARD
+            if (!rc_only)
+                Options.wiz_mode = WIZ_NO;
+#endif
             break;
 
         case CLO_PRINT_CHARSET:
