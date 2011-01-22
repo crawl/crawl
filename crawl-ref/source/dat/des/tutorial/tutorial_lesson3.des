@@ -307,7 +307,7 @@ ITEM:    meat ration q:50
 ITEM:    ring of levitation
 ITEM:    cloak unrand:ratskin_cloak
 MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_cursed 
-MONS:    giant bat
+MONS:    megabat
 MONS:    kobold ; dart ego:none q:10
 MONS:    jackal
 MARKER:  ^ = lua:props_marker {poisoned_needle_trap="true", force_hit="true"}

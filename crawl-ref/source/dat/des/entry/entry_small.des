@@ -811,7 +811,7 @@ ENDMAP
 ##############################################################################
 NAME:   dpeg_entry_chase
 TAGS:   entry no_monster_gen no_pool_fixup no_rotate
-MONS:   kobold, hobgoblin / goblin / giant bat
+MONS:   kobold, hobgoblin / goblin / megabat
 ITEM:   stone, dart
 ORIENT: float
 SUBST:  w : w l:1
@@ -1354,7 +1354,7 @@ ENDMAP
 ##############################################################################
 NAME:    dpeg_entry_ratfight
 TAGS:    entry
-MONS:    rat, goblin, giant bat
+MONS:    rat, goblin, megabat
 ORIENT:  float
 SHUFFLE: [{(
 SUBST:   X = x=
@@ -1856,7 +1856,7 @@ ENDMAP
 NAME:    dpeg_entry_subterranean_lakeside_camping
 TAGS:    entry no_monster_gen
 ORIENT:  float
-MONS:    goblin, rat, giant bat
+MONS:    goblin, rat, megabat
 SHUFFLE: {[(
 SUBST:   ? : . w ?:40, ' : . x ':40
 SUBST:   ? = .w, ' = .x
@@ -2371,7 +2371,7 @@ NAME:    onia_entry_handbag
 TAGS:    entry
 ORIENT:  float
 MONS:    w:30 rat / ooze / small snake
-MONS:    giant bat / w:6 small snake / w:2 snake / w:2 jackal / w:4 giant cockroach
+MONS:    megabat / w:6 small snake / w:2 snake / w:2 jackal / w:4 giant cockroach
 SUBST:   ! = $%%% , ? = ..~
 SHUFFLE: {[, [<(
 MAP

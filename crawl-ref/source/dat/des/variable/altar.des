@@ -1691,7 +1691,7 @@ NAME:   lemuel_zombie_altar_kiku
 DEPTH:  D:2-18, Crypt
 TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_kikubaaqudgha
 KFEAT:  _ = altar_kikubaaqudgha
-MONS:   rat zombie / giant bat zombie / nothing w:200
+MONS:   rat zombie / megabat zombie / nothing w:200
 KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
 KFEAT:  w = deep_water
 MAP

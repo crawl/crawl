@@ -2473,7 +2473,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (spell_cast == SPELL_SUMMON_SMALL_MAMMALS)
                 rats[0] = MONS_QUOKKA;
 
-            const monster_type mon = (one_chance_in(3) ? MONS_GIANT_BAT
+            const monster_type mon = (one_chance_in(3) ? MONS_MEGABAT
                                                        : RANDOM_ELEMENT(rats));
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons,

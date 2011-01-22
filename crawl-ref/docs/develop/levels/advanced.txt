@@ -441,7 +441,7 @@ This example is from sewer.des:
 
 {{
 function sewer_random_monster_list(e)
-  e.set_random_mon_list("giant bat w:20 / giant newt w:20 / small snake / \
+  e.set_random_mon_list("megabat w:20 / giant newt w:20 / small snake / \
                          ooze / worm / snake / giant mosquito w:15")
 end
 }}

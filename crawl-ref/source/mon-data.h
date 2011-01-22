@@ -272,10 +272,10 @@ static monsterentry mondata[] = {
 
 // batty monsters ('b')
 {
-    MONS_GIANT_BAT, 'b', LIGHTGREY, "giant bat",
+    MONS_MEGABAT, 'b', LIGHTGREY, "megabat",
     M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY,
     MR_NO_FLAGS,
-    150, 4, MONS_GIANT_BAT, MONS_GIANT_BAT, MH_NATURAL, -1,
+    150, 4, MONS_MEGABAT, MONS_MEGABAT, MH_NATURAL, -1,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 2, 3, 0 },
     1, 14, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
@@ -299,7 +299,7 @@ static monsterentry mondata[] = {
     MONS_VAMPIRE_BAT, 'b', DARKGREY, "vampire bat",
     M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY | M_NO_POLY_TO,
     MR_NO_FLAGS,
-    150, 8, MONS_GIANT_BAT, MONS_VAMPIRE_BAT, MH_NATURAL, -1,
+    150, 8, MONS_MEGABAT, MONS_VAMPIRE_BAT, MH_NATURAL, -1,
     { {AT_HIT, AF_DRAIN_XP, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 2, 3, 0 },
     1, 14, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,

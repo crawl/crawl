@@ -185,7 +185,7 @@ NAME:    elethiomel_entry_diamonds
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  west
 WEIGHT:  2
-MONS:    rat, goblin, giant bat, kobold
+MONS:    rat, goblin, megabat, kobold
 ITEM:    sausage / beef jerky, nothing, nothing
 SHUFFLE: {[(, 234, ef~
 MAP

@@ -316,7 +316,7 @@ KFEAT:   ABCDEFH = .
 COLOUR:  eABCDEH = blue
 FTILE:   eABCDEH = tutorial_pad
 MONS:    training dummy hp:10 ; stone q:15
-MONS:    giant bat
+MONS:    megabat
 ITEM:    dart mundane q:30
 ITEM:    bow mundane not_cursed
 ITEM:    arrow mundane q:30

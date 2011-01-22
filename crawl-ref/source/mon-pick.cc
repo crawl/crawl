@@ -481,7 +481,7 @@ int mons_standard_level(int mcls)
     case MONS_SMALL_SNAKE:
         return 2;
 
-    case MONS_GIANT_BAT:
+    case MONS_MEGABAT:
     case MONS_KOBOLD:
     case MONS_RAT:
         return 4;
@@ -748,7 +748,7 @@ int mons_standard_rare(int mcls)
     case MONS_SALAMANDER:
         return 500;
 
-    case MONS_GIANT_BAT:
+    case MONS_MEGABAT:
     case MONS_GIANT_FROG:
     case MONS_GOBLIN:
     case MONS_HILL_GIANT:
@@ -1285,7 +1285,7 @@ int mons_lair_level(int mcls)
     switch (mcls)
     {
     case MONS_GIANT_GECKO:
-    case MONS_GIANT_BAT:
+    case MONS_MEGABAT:
     case MONS_JACKAL:
     case MONS_GIANT_NEWT:
     case MONS_RAT:
@@ -1386,7 +1386,7 @@ int mons_lair_rare(int mcls)
     case MONS_RAT:
         return 200;
 
-    case MONS_GIANT_BAT:
+    case MONS_MEGABAT:
     case MONS_GIANT_TOAD:
     case MONS_GIANT_FROG:
     case MONS_PORCUPINE:
@@ -1513,7 +1513,7 @@ int mons_swamp_level(int mcls)
 
     switch (mcls)
     {
-    case MONS_GIANT_BAT:
+    case MONS_MEGABAT:
     case MONS_GIANT_BLOWFLY:
     case MONS_GIANT_FROG:
     case MONS_GIANT_AMOEBA:
@@ -1589,7 +1589,7 @@ int mons_swamp_rare(int mcls)
     case MONS_GIANT_BLOWFLY:
         return 100;
 
-    case MONS_GIANT_BAT:
+    case MONS_MEGABAT:
     case MONS_FUNGUS:
         return 99;
 
@@ -1668,7 +1668,7 @@ int mons_shoals_level(int mcls)
     switch (mcls)
     {
     case MONS_BUTTERFLY:
-    case MONS_GIANT_BAT:
+    case MONS_MEGABAT:
         break;
 
     case MONS_MERFOLK:
@@ -1723,7 +1723,7 @@ int mons_shoals_rare(int mcls)
         return 40;
 
     case MONS_HIPPOGRIFF:
-    case MONS_GIANT_BAT:
+    case MONS_MEGABAT:
     case MONS_BUTTERFLY:
     case MONS_SHARK:
         return 35;
