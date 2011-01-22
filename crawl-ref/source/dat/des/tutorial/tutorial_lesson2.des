@@ -241,7 +241,7 @@ KFEAT:   ABCFG = .
 KFEAT:   n = iron_grate
 COLOUR:  deABCDEFG = blue
 FTILE:   deABCDEFG = tutorial_pad
-ITEM:    mace mundane not_cursed
+ITEM:    quarterstaff mundane not_cursed
 ITEM:    short sword mundane not_cursed
 SHUFFLE: 456
 MONS:    training dummy hp:20, training dummy hp:25 ; club mundane not_cursed

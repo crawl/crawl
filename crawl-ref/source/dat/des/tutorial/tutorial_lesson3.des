@@ -20,12 +20,12 @@ function tutorial_msg3.start ()
 end
 
 function tutorial_msg3.armour ()
-    local text = "Pick up this helmet with "
-                 .. tutorial_get_cmd("CMD_PICKUP") .. " and then wear it with "
+    local text = "Pick up these boots with "
+                 .. tutorial_get_cmd("CMD_PICKUP") .. " and then wear them with "
                  .. tutorial_get_cmd("CMD_WEAR_ARMOUR") .. "."
 
     if crawl.is_tiles() then
-        text = text .. " Or simply <white>mouseclick</white> on it."
+        text = text .. " Or simply <white>mouseclick</white> on them."
     end
 
     return tutorial_message(text)
@@ -344,7 +344,7 @@ KFEAT:   AC = .
 KFEAT:   B = +
 COLOUR:  defghAC = blue
 FTILE:   defghAC = tutorial_pad
-ITEM:    helmet mundane not_cursed
+ITEM:    pair of boots mundane not_cursed
 ITEM:    bread ration
 ITEM:    dagger mundane cursed
 ITEM:    scroll of remove curse q:2
