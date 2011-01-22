@@ -6276,7 +6276,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SENSED_POPCORN, '{', LIGHTGRAY, "trivial sensed monster",
+    MONS_SENSED_TRIVIAL, '{', LIGHTGRAY, "trivial sensed monster",
     M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
@@ -6300,7 +6300,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SENSED_HARD, '{', RED, "tough sensed monster",
+    MONS_SENSED_TOUGH, '{', RED, "tough sensed monster",
     M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
@@ -6312,7 +6312,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SENSED_OY_VEY_GEVALT, '{', LIGHTRED, "nasty sensed monster",
+    MONS_SENSED_NASTY, '{', LIGHTRED, "nasty sensed monster",
     M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,

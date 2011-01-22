@@ -499,14 +499,14 @@ monster_type ash_monster_tier(const monster *mon)
 
     if (tension <= 0)
         // Conjurators use melee to conserve mana, MDFis switch plates...
-        return MONS_SENSED_POPCORN;
+        return MONS_SENSED_TRIVIAL;
     else if (tension <= 5)
         // An easy fight but not ignorable.
         return MONS_SENSED_EASY;
     else if (tension <= 32)
         // Hard but reasonable.
-        return MONS_SENSED_HARD;
+        return MONS_SENSED_TOUGH;
     else
         // Check all wands/jewels several times, wear brown pants...
-        return MONS_SENSED_OY_VEY_GEVALT;
+        return MONS_SENSED_NASTY;
 }
