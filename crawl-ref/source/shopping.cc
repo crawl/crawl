@@ -481,13 +481,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         int key = getchm();
 
         if (key == '\\')
-        {
-            if (!check_item_knowledge(true))
-            {
-                _shop_print("You don't recognise anything yet!", 1);
-                _shop_more();
-            }
-        }
+            check_item_knowledge();
         else if (key == 'x' || key_is_escape(key) || key == CK_MOUSE_CMD)
             break;
         else if (key == '\r' || key == CK_MOUSE_CLICK)
