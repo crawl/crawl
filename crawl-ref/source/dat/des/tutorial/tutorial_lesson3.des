@@ -165,6 +165,10 @@ function tutorial_msg3.weapon_swap2 ()
                             .. ", as needed, to fight these bats.")
 end
 
+function tutorial_msg3.retreat_reminder ()
+    return tutorial_message("Keep in mind that you can retreat to minimize the number of foes you are fighting at a time.")
+end
+
 function tutorial_msg3.quantified_drop ()
     local text = "These meat rations weigh too much. Note the <lightred>burden status</lightred> to the right of the screen!\n"
                  .. "You can drop them again with "
@@ -238,9 +242,9 @@ function tutorial_msg3.wand_digging ()
     local text = "If you simply want to shoot into a straight direction, you can "
                  .. "press <w>Shift</w> together with the direction keys.\n"
                  .. "Try which of the walls in the cardinal directions you can destroy! "
-                 .. "Use " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w>"
+                 .. "Use " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w> "
     if crawl.is_tiles() then
-        text = text .. " or <white>mouseover</white>/<white>rightclick</white> "
+        text = text .. "or <white>mouseover</white>/<white>rightclick</white> "
     end
     text = text .. "to check the wall types. \n"
                 .. "(You can look up the direction keys in the command help help with <w>??</w>.)"
@@ -402,11 +406,11 @@ PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ^ = needle trap
-KFEAT:   ABC = .
-COLOUR:  ABCdefg = blue
+KFEAT:   ABCD = .
+COLOUR:  ABCDdefg = blue
 COLOUR:  .1234 = brown
 FTILE:   .{})=^1234 = floor_swamp, t = floor_grass
-FTILE:   ABCdefg = tutorial_pad
+FTILE:   ABCDdefg = tutorial_pad
 ITEM:    potion of healing
 ITEM:    meat ration q:50
 ITEM:    ring of levitation
@@ -415,11 +419,12 @@ MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_c
 MONS:    megabat
 MONS:    kobold ; dart ego:none q:10
 MONS:    jackal
-MARKER:  C = lua:tutorial_msg3.shortcut()
+MARKER:  D = lua:tutorial_msg3.shortcut()
 MARKER:  ^ = lua:props_marker {poisoned_needle_trap="true", force_hit="true"}
 MARKER:  d = lua:tutorial_msg3.potion()
 MARKER:  A = lua:tutorial_msg3.weapon_swap()
 MARKER:  B = lua:tutorial_msg3.weapon_swap2()
+MARKER:  C = lua:tutorial_msg3.retreat_reminder()
 MARKER:  e = lua:tutorial_msg3.quantified_drop()
 MARKER:  f = lua:tutorial_msg3.jewellery()
 MARKER:  g = lua:tutorial_msg3.artefact_armour()
@@ -430,7 +435,7 @@ MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt..[ttttttttt
-tttttttttttttttttttttttttttttttttttt..C(...ttttttttt
+tttttttttttttttttttttttttttttttttttt..D(...ttttttttt
 ttttttttttttttttttttttttttttttttttt.tttt..{.tttttttt
 tttttttttttttttttttttttttttttttttt.tttttt^tttttttttt
 ttttttttttttttttttttttttttttttttt.).ttttttdttttttttt
@@ -451,7 +456,7 @@ wtttttttwwwwwwwwwwwW.WwwwwwwtwwwwwtttttttttttttAtttt
 wwwtttttwwww3..wwwwwWWWwwwwtttttttt.2.tttttttttt.ttt
 wwwwwwwwwww...}g3.wwwWWWttttttttt.2....tt.t..tt.tttt
 wwwwwwwwwwwww3...wwww....tttttt..tt...t..tBtt..ttttt
-tttttwwwwwwwwwwwwwww......ttt..ttttttttttttttttttttt
+tttttwwwwwwwwwwwwwww.....Cttt..ttttttttttttttttttttt
 ttttttttttwwwwwwwwt....ttt...ttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -476,7 +481,7 @@ FTILE:   $ABCdefg = tutorial_pad
 KFEAT:   ' = .
 COLOUR:  ' = red
 KFEAT:   S = distillery shop
-ITEM:    wand of fire charges:12
+ITEM:    wand of fire charges:9
 ITEM:    wand of digging charges:15
 ITEM:    gold q:120
 ITEM:    amulet of inaccuracy mundane not_cursed
