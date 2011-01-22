@@ -603,8 +603,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
-#ifndef DGAMELAUNCH
-static std::string _user_home_dir()
+std::string user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
     char home[MAX_PATH];
@@ -618,11 +617,10 @@ static std::string _user_home_dir()
     return (home);
 }
 
-static std::string _user_home_subpath(const std::string subpath)
+std::string user_home_subpath(const std::string subpath)
 {
-    return catpath(_user_home_dir(), subpath);
+    return catpath(user_home_dir(), subpath);
 }
-#endif
 
 #if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
 static std::string _resolve_dir(const char* path, const char* suffix)
@@ -633,7 +631,7 @@ static std::string _resolve_dir(const char* path, const char* suffix)
     if (path[0] != '~')
         return std::string(path) + suffix;
     else
-        return _user_home_subpath(std::string(path + 1) + suffix);
+        return user_home_subpath(std::string(path + 1) + suffix);
 #endif
 }
 #endif
@@ -658,7 +656,7 @@ void game_options::reset_options()
     if (macro_dir.empty())
     {
 #ifdef UNIX
-        macro_dir = _user_home_subpath(".crawl");
+        macro_dir = user_home_subpath(".crawl");
 #else
         macro_dir = "settings/";
 #endif
@@ -670,7 +668,7 @@ void game_options::reset_options()
     morgue_dir = _resolve_dir(SAVE_DIR_PATH, "/morgue/");
 #elif defined(TARGET_OS_MACOSX)
     const std::string tmp_path_base =
-        _user_home_subpath("Library/Application Support/" CRAWL);
+        user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
     if (SysEnv.macro_dir.empty())

@@ -213,7 +213,10 @@ static void _take_starting_note();
 static void _startup_hints_mode();
 
 static void _compile_time_asserts();
+
+#ifdef WIZARD
 static void _handle_wizard_command(void);
+#endif
 
 //
 //  It all starts here. Some initialisations are run first, then straight
