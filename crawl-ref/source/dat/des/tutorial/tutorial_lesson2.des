@@ -110,12 +110,23 @@ end
 -- Lua code for level 2.
 -----------------------------------------------------------
 function tutorial_msg2.newlevel ()
-    local text = "Now, for ranged combat! Pick up those darts on your way out.\n"
-                 .. "Also, remember: You can reread old messages with "
+    local text = "Remember: You can reread old messages with "
                  .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
 
     crawl.mesclr(true)
     crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg2.darts ()
+    local text = "Now, for ranged combat! Pick up these darts with "
+                 .. tutorial_get_cmd("CMD_PICKUP")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>,"
+    end
+    text = text .. " and continue."
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg2.throwing ()
@@ -131,18 +142,8 @@ function tutorial_msg2.throwing ()
 end
 
 function tutorial_msg2.wield_bow ()
-    local text = "Pick up this bow with " .. tutorial_get_cmd("CMD_PICKUP")
-
-    if crawl.is_tiles() then
-        text = text .. " or by <white>mouseclick</white>,"
-    end
-    text = text .. " and then wield it with " .. tutorial_get_cmd("CMD_WIELD_WEAPON")
-    if crawl.is_tiles() then
-        text = text .. " or, again, by <white>mouseclick</white>"
-    end
-    text = text .. "."
-
-    return tutorial_message(text)
+    return tutorial_message("Pick up this bow and wield it with "
+                 .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. ".")
 end
 
 function tutorial_msg2.firing ()
@@ -314,14 +315,15 @@ ORIENT:  encompass
 TILE:    G = dngn_statue_centaur
 RTILE:   x = wall_lair, c = wall_vines
 KFEAT:   ABCDEFH = .
-COLOUR:  eABCDEH = blue
-FTILE:   eABCDEH = tutorial_pad
+COLOUR:  deABCDEH = blue
+FTILE:   deABCDEH = tutorial_pad
 MONS:    training dummy hp:10 ; stone q:15
 MONS:    megabat
 MONS:    rat always_corpse
 ITEM:    dart mundane q:30
 ITEM:    bow mundane not_cursed
 ITEM:    arrow mundane q:30
+MARKER:  d = lua:tutorial_msg2.darts()
 MARKER:  A = lua:tutorial_msg2.throwing()
 MARKER:  B = lua:tutorial_msg2.resting_reminder()
 MARKER:  e = lua:tutorial_msg2.wield_bow()
@@ -370,11 +372,11 @@ xxxxxHxxxxxxxxxxx..xxxxxxxxxxxxx....xxxxxxxxxx
 xxx.....xxxxxxxxxxx..f.e..xxxxxx...3.xxxxxxxxx
 x............xxxxxxxxxxxxx...xx......xxxxxxxx
 xx...x..........xxxxxxxxxxxxx..xx.3.xxxxxxxxxx
-x..........F........xxxxxxxxxxxxxxxxxxxxxxxxxx
+x............F......xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx...tt.........xx.2.xxxxxxxxxxxxxxxxxxxxxxxx
 xx....ttt..........x....xxxxxxxxxxxxxxxxxxxxxx
-x.......tt........xxx.F..xxxxxxxxxxxxxxxxxxxxx
-xxx.F.......x..F2.xxxx...xxxxxxxxxxxxxxxxxxxxx
+x.......tt........xxx....xxxxxxxxxxxxxxxxxxxxx
+xxx.F.......x...2.xxxx...xxxxxxxxxxxxxxxxxxxxx
 xx.........xx.......xxx.xxxxxxxxxxxxxxxxxxxxxx
 xxx.2..x......x....xxxxx.xxxxxxxxxxxxxxxxxxxxx
 xxxx.....2..x.x..xxxxxxx]xxxxxxxxxxxxxxxxxxxxx
