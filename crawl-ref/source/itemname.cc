@@ -2163,7 +2163,7 @@ bool identified_item_names(const item_def *it1,
          < it2->name(DESC_PLAIN, false, true, false, false, flags);
 }
 
-bool check_item_knowledge(bool quiet, bool inverted)
+bool check_item_knowledge(bool quiet, bool unknown_items)
 {
     std::vector<const item_def*> items;
 
@@ -2173,15 +2173,15 @@ bool check_item_knowledge(bool quiet, bool inverted)
     const int idx_to_maxtype[5] = { NUM_WANDS, NUM_SCROLLS,
                                     NUM_JEWELLERY, NUM_POTIONS, NUM_STAVES };
 
-    bool has_unknown_items = false;
+    bool needs_inversion = false;
     for (int i = 0; i < 5; i++)
         for (int j = 0; j < idx_to_maxtype[i]; j++)
         {
             if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (inverted ? type_ids[i][j] != ID_KNOWN_TYPE
-                         : type_ids[i][j] == ID_KNOWN_TYPE)
+            if (unknown_items ? type_ids[i][j] != ID_KNOWN_TYPE
+                              : type_ids[i][j] == ID_KNOWN_TYPE)
             {
                 item_def* ptmp = new item_def;
                 if (ptmp != 0)
@@ -2195,23 +2195,26 @@ bool check_item_knowledge(bool quiet, bool inverted)
                     items.push_back(ptmp);
                 }
             }
-            else if (!inverted)
-                has_unknown_items = true;
+            else
+                needs_inversion = true;
         }
 
-    if (items.empty())
+    if (!unknown_items && items.empty())
     {
-        if (!quiet)
-            mpr("You don't recognise anything yet!");
-        return (false);
+        check_item_knowledge(quiet, true);
+        return (true);
     }
 
     std::sort(items.begin(), items.end(), identified_item_names);
     InvMenu menu;
 
-    if (inverted)
-        menu.set_title("Items not yet recognised: (toggle with -)");
-    else if (has_unknown_items)
+    if (unknown_items)
+    {
+        menu.set_title(make_stringf("Items not yet recognised: %s",
+                                    needs_inversion ? "(toggle with -)"
+                                                    : ""));
+    }
+    else if (needs_inversion)
         menu.set_title("You recognise: (toggle with -)");
     else
         menu.set_title("You recognise all items:");
@@ -2228,8 +2231,8 @@ bool check_item_knowledge(bool quiet, bool inverted)
     {
          delete *iter;
     }
-    if (last_char == '-' && (inverted || has_unknown_items))
-        check_item_knowledge(quiet, !inverted);
+    if (last_char == '-' && needs_inversion)
+        check_item_knowledge(quiet, !unknown_items);
 
     return (true);
 }
