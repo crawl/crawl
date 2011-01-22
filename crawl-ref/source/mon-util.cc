@@ -650,10 +650,10 @@ bool mons_has_blood(int mc)
 bool mons_is_sensed(int mc)
 {
     return mc == MONS_SENSED
-           || mc == MONS_SENSED_POPCORN
+           || mc == MONS_SENSED_TRIVIAL
            || mc == MONS_SENSED_EASY
-           || mc == MONS_SENSED_HARD
-           || mc == MONS_SENSED_OY_VEY_GEVALT;
+           || mc == MONS_SENSED_TOUGH
+           || mc == MONS_SENSED_NASTY;
 }
 
 bool mons_behaviour_perceptible(const monster* mon)
