@@ -211,6 +211,11 @@ death_cob MONS_DEATH_COB /*'%'*/
 %sdir dc-mon/holy
 silver_star MONS_SILVER_STAR /*'*'*/
 
+### Abyssal horrors ('*')
+%sdir dc-mon/abyss
+ancient_zyme MONS_ANCIENT_ZYME
+lurking_horror MONS_LURKING_HORROR
+
 ### Demonic monsters
 ## Arch demons ('&')
 %sdir dc-mon/unique
