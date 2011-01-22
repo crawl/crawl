@@ -1619,7 +1619,7 @@
 
     {  MST_SHEDU,
       {
-       SPELL_RESURRECT,
+       SPELL_HEAL_OTHER,
        SPELL_NO_SPELL,
        SPELL_HEAL_OTHER,
        SPELL_NO_SPELL,
