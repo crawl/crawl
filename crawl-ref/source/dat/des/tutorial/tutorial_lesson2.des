@@ -93,7 +93,7 @@ function tutorial_msg2.compare_monster_desc ()
     if crawl.is_tiles() then
         text = text .. "<white>right mouseclick</white>"
     else
-        text = text .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "v"
+        text = text .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w>"
     end
 
     text = text .. ") to find out which of these cages is the safest to walk through."
