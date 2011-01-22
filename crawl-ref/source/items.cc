@@ -55,6 +55,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
+#include "shout.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1741,8 +1742,10 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         // Take a note!
         _check_note_item(item);
 
-        if (!quiet)
-            mpr("Now all you have to do is get back out of the dungeon!");
+        noisy(30, you.pos());
+        mpr("The orb lets out a hideous shriek!", MSGCH_ORB);
+        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
+
         you.char_direction = GDT_ASCENDING;
         xom_is_stimulated(255, XM_INTRIGUED);
     }

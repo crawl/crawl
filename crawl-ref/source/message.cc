@@ -785,10 +785,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTRED;
             break;
 
-        case MSGCH_TUTORIAL:
-            ret = MSGCOL_MAGENTA;
-            break;
-
         case MSGCH_MONSTER_SPELL:
         case MSGCH_MONSTER_ENCHANT:
         case MSGCH_FRIEND_SPELL:
@@ -796,6 +792,8 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTMAGENTA;
             break;
 
+        case MSGCH_TUTORIAL:
+        case MSGCH_ORB:
         case MSGCH_BANISHMENT:
             ret = MSGCOL_MAGENTA;
             break;
@@ -956,6 +954,7 @@ static void debug_channel_arena(msg_channel_type channel)
     case MSGCH_MULTITURN_ACTION:
     case MSGCH_EXAMINE:
     case MSGCH_EXAMINE_FILTER:
+    case MSGCH_ORB:
     case MSGCH_TUTORIAL:
         die("Invalid channel '%s' in arena mode",
                  channel_to_str(channel).c_str());
