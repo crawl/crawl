@@ -409,7 +409,7 @@ KFEAT:   ^ = needle trap
 KFEAT:   ABCD = .
 COLOUR:  ABCDdefg = blue
 COLOUR:  .1234 = brown
-FTILE:   =.{})^1234 = floor_swamp, t = floor_grass
+FTILE:   .{})^1234 = floor_swamp, t = floor_grass
 FTILE:   ABCDdefg = tutorial_pad
 ITEM:    potion of healing
 ITEM:    meat ration q:50
