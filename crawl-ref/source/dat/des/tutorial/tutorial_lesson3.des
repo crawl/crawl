@@ -109,6 +109,15 @@ function tutorial_msg3.battle ()
     return tutorial_message("Time to test your new weapon in battle!")
 end
 
+function tutorial_msg3.secret_shortcut ()
+    return tutorial_message("Yes, this is a secret door! You can use this path as a shortcut to the next level.")
+end
+
+function tutorial_msg3.shortcut ()
+    return tutorial_message("If you absolutely want to, you can skip this level and directly go the next. "
+                            .. "However, it is recommended that you play this one at least once.")
+end
+
 function tutorial_msg3.downstairs ()
     return tutorial_message("Well fought! If necessary, rest up with "
                             .. tutorial_get_cmd("CMD_REST")
@@ -331,10 +340,10 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    "Lesson 3: Items and Inventory"
 BFLAGS:  islanded
 ORIENT:  encompass
-KFEAT:   A = .
+KFEAT:   AC = .
 KFEAT:   B = +
-COLOUR:  defghA = blue
-FTILE:   defghA = tutorial_pad
+COLOUR:  defghAC = blue
+FTILE:   defghAC = tutorial_pad
 ITEM:    helmet mundane not_cursed
 ITEM:    bread ration
 ITEM:    dagger mundane cursed
@@ -349,8 +358,8 @@ MARKER:  g = lua:tutorial_msg3.scroll_noautopickup()
 MARKER:  h = lua:tutorial_msg3.ego_weapon()
 MARKER:  A = lua:tutorial_msg3.inventory()
 MARKER:  B = lua:tutorial_msg3.battle()
+MARKER:  C = lua:tutorial_msg3.secret_shortcut()
 MARKER:  } = lua:tutorial_msg3.downstairs()
-MARKER:  ) = lua:tutorial_msg3.downstairs()
 MARKER:  ] = lua:tutorial_msg3.downstairs()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
                                  onclimb = "tutorial_msg3.exit" }
@@ -369,19 +378,19 @@ xxxxx1....xxxxxxxx.........e..xxxxxxxxxxx
 xxxxx.....xxxxxxxx.f.xxxx.....xxxx..(..xx
 xxxxx....g+..........xxxxxxx......d...{xx
 xxxxxxx.xxxxxxxxxx...xxxxxxxxxxxxx..[..xx
-xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx=xxxx
+xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxCxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.).xxx
 xxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx.xxxxxxxxxxtttttttttttttttxx
 xxxxxxxxxxttx+xttxxxxxxxtttttttttttttttxx
-xxxxxxxxxttt...tttttttttttt....3.t.]tttxx
-xxxxxxxxxtt.T.G.tttttttttt..3.t.t..2.ttxx
-xxxxxxxxxtt..h..A.......B......T.4..}ttxx
-xxxxxxxxxtt.G.T.tttttttttt2...t.t.3..ttxx
-xxxxxxxxxttt...tttttttttttt..3...t.)tttxx
+xxxxxxxxxttt...tttttttttttt....3.t..tttxx
+xxxxxxxxxtt.T.G.tttttttttt..3.t.t..2}ttxx
+xxxxxxxxxtt..h..A.......B......T.4..tttxx
+xxxxxxxxxtt.G.T.tttttttttt2...t.t.3.]ttxx
+xxxxxxxxxttt...tttttttttttt..3...t..tttxx
 xxxxxxxxxtttttttttxxxxxxtttttttttttttttxx
-xxxxxxxxxxxtttttttxxxxxxtttttttttttttttxx
+xxxxxxxxxxttttttttxxxxxxtttttttttttttttxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -398,11 +407,11 @@ PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ^ = needle trap
-KFEAT:   AB = .
-COLOUR:  ABdefg = blue
-COLOUR:  . = brown
-FTILE:   .{}^1234 = floor_swamp, t = floor_grass
-FTILE:   ABdefg = tutorial_pad
+KFEAT:   ABC = .
+COLOUR:  ABCdefg = blue
+COLOUR:  .1234 = brown
+FTILE:   .{})=^1234 = floor_swamp, t = floor_grass
+FTILE:   ABCdefg = tutorial_pad
 ITEM:    potion of healing
 ITEM:    meat ration q:50
 ITEM:    ring of levitation
@@ -411,6 +420,7 @@ MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_c
 MONS:    megabat
 MONS:    kobold ; dart ego:none q:10
 MONS:    jackal
+MARKER:  C = lua:tutorial_msg3.shortcut()
 MARKER:  ^ = lua:props_marker {poisoned_needle_trap="true", force_hit="true"}
 MARKER:  d = lua:tutorial_msg3.potion()
 MARKER:  A = lua:tutorial_msg3.weapon_swap()
@@ -424,12 +434,12 @@ epilogue{{
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttt...ttttttttt
-ttttttttttttttttttttttttttttttttttttttt..{.ttttttttt
-tttttttttttttttttttttttttttttttttttttttt....tttttttt
-ttttttttttttttttttttttttttttttttttttttttt^tttttttttt
-ttttttttttttttttttttttttttttttttttttttttttdttttttttt
-ttttttttttttttttttttttttttttttttttttttttttt.tttttttt
+tttttttttttttttttttttttttttttttttttttttt..[ttttttttt
+tttttttttttttttttttttttttttttttttttt..C(...ttttttttt
+ttttttttttttttttttttttttttttttttttt.tttt..{.tttttttt
+tttttttttttttttttttttttttttttttttt.tttttt^tttttttttt
+ttttttttttttttttttttttttttttttttt.).ttttttdttttttttt
+tttttttttttttttttttttttttttttttttt.tttttttt.tttttttt
 ttttttttttttttttttttttttttttttttttttttttttt.tttttttt
 tttttttttttttttttttttttttttttttttttttttttttt.ttttttt
 tttttttttttttttttttttttttttttttttttttttttttt..tttttt
@@ -512,7 +522,7 @@ epilogue{{
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XX{.$...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XX.(XXXAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXX....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
