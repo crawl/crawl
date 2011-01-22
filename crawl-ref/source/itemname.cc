@@ -2163,7 +2163,7 @@ bool identified_item_names(const item_def *it1,
          < it2->name(DESC_PLAIN, false, true, false, false, flags);
 }
 
-bool check_item_knowledge(bool quiet, bool unknown_items)
+void check_item_knowledge(bool unknown_items)
 {
     std::vector<const item_def*> items;
 
@@ -2201,8 +2201,9 @@ bool check_item_knowledge(bool quiet, bool unknown_items)
 
     if (!unknown_items && items.empty())
     {
-        check_item_knowledge(quiet, true);
-        return (true);
+        // Directly skip ahead to unknown items.
+        check_item_knowledge(true);
+        return;
     }
 
     std::sort(items.begin(), items.end(), identified_item_names);
@@ -2232,9 +2233,7 @@ bool check_item_knowledge(bool quiet, bool unknown_items)
          delete *iter;
     }
     if (last_char == '-' && needs_inversion)
-        check_item_knowledge(quiet, !unknown_items);
-
-    return (true);
+        check_item_knowledge(!unknown_items);
 }
 
 

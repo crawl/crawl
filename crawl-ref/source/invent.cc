@@ -1743,10 +1743,8 @@ int prompt_invent_item(const char *prompt,
 
             if (allow_list_known && keyin == '\\')
             {
-                if (check_item_knowledge(true))
-                    keyin = '?';
-                else
-                    mpr("You don't recognise anything yet!");
+                check_item_knowledge();
+                keyin = '?';
             }
 
             need_getch  = false;
@@ -1800,13 +1798,9 @@ int prompt_invent_item(const char *prompt,
         }
         else if (allow_list_known && keyin == '\\')
         {
-                if (check_item_knowledge(true))
-                {
-                    keyin = '?';
-                    need_getch = false;
-                }
-                else
-                    mpr("You don't recognise anything yet!");
+            check_item_knowledge();
+            keyin = '?';
+            need_getch = false;
         }
         else if (isaalpha(keyin))
         {
