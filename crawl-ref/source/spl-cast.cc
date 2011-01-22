@@ -1979,7 +1979,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_APPORTATION:
-        if (!cast_apportation(powc, beam.target))
+        if (!cast_apportation(powc, beam))
             return (SPRET_ABORT);
         break;
 

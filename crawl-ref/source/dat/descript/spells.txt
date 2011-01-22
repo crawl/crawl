@@ -30,6 +30,8 @@ This spell raises an inert skeleton to a state of unlife, even if that skeleton 
 Apportation
 
 This spell allows the caster to pull the top item or group of similar items from a distant pile to the floor near the caster. The mass of the target item(s) will make the task more difficult, with some items too massive to ever be moved by this spell. Using this spell on a group of items can be risky; insufficient power will cause some of the items to be lost in the infinite void.
+
+Extremely powerful magical items, such as the Orb of Zot, may actively resist the pull of this spell.
 %%%%
 Banishment
 

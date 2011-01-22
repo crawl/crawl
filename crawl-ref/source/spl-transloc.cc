@@ -29,6 +29,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
+#include "shout.h"
 #include "spl-other.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -694,8 +695,10 @@ bool cast_portal_projectile(int pow)
     return (true);
 }
 
-bool cast_apportation(int pow, const coord_def& where)
+bool cast_apportation(int pow, bolt& beam)
 {
+    const coord_def where = beam.target;
+
     if (you.trans_wall_blocking(where))
     {
         mpr("Something is in the way.");
@@ -758,15 +761,40 @@ bool cast_apportation(int pow, const coord_def& where)
 
     if (max_units <= 0)
     {
-        mpr("The mass is resisting your pull.");
-        return (true);
+        if (item_is_orb(item))
+        {
+            noisy(30, where);
+            mpr("The orb shrieks and resists your pull!", MSGCH_ORB);
+            return (true);
+        }
+        else
+        {
+            mpr("The mass is resisting your pull.");
+            return (true);
+        }
     }
 
     // We need to modify the item *before* we move it, because
     // move_top_item() might change the location, or merge
     // with something at our position.
-    mprf("Yoink! You pull the item%s to yourself.",
+    mprf("Yoink! You pull the item%s towards yourself.",
          (item.quantity > 1) ? "s" : "");
+
+    if (item_is_orb(item))
+    {
+        noisy(30, where);
+
+        // There's also a 1-in-6 flat chance of apport failing.
+        if (one_chance_in(6))
+        {
+            mpr("The orb shrieks and becomes a dead weight against your magic!", MSGCH_ORB);
+            return (true);
+        }
+        else // Otherwise it's just a noisy little shiny thing
+        {
+            mpr("The orb shrieks as your magic touches it!", MSGCH_ORB);
+        }
+    }
 
     if (max_units < item.quantity)
     {
@@ -782,6 +810,30 @@ bool cast_apportation(int pow, const coord_def& where)
         remove_item_stationary(item);
         if (monster* mons = monster_at(where))
             mons->del_ench(ENCH_HELD, true);
+    }
+
+    if (item_is_orb(item))
+    {
+        // The orb drags its heels.
+        beam.is_tracer = true;
+        beam.aimed_at_spot = true;
+        beam.fire();
+
+        // The actual number of squares it needs to traverse to get to you.
+        unsigned int dist = beam.path_taken.size();
+
+        // The maximum number of squares the orb will actually move.
+        unsigned int max_dist = (pow / 10) - 1;
+
+        if (max_dist < dist)
+        {
+            coord_def new_spot = beam.path_taken[beam.path_taken.size()-max_dist];
+
+            move_top_item(where, new_spot);
+            origin_set(new_spot);
+            return (true);
+        }
+        // if power is high enough it'll just come straight to you
     }
 
     // Actually move the item.
