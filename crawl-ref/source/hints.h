@@ -130,6 +130,8 @@ enum hints_event_type
     HINT_REMOVED_CURSE,
     HINT_ITEM_RESISTANCES,
     HINT_LEVITATING,
+    HINT_INACCURACY,
+    HINT_HEALING_POTIONS,
     HINT_EVENTS_NUM
 };
 
@@ -148,6 +150,7 @@ void hints_death_screen(void);
 void hints_finished(void);
 
 void hints_dissection_reminder(bool healthy);
+void hints_healing_check();
 void hints_healing_reminder(void);
 
 void taken_new_item(object_class_type item_type);

@@ -93,6 +93,14 @@ void identify(int power, int item_slot)
 
         id_used--;
 
+        if (item.base_type == OBJ_JEWELLERY
+            && item.sub_type == AMU_INACCURACY
+            && item_slot == you.equip[EQ_AMULET]
+            && !item_known_cursed(item))
+        {
+            learned_something_new(HINT_INACCURACY);
+        }
+
         if (Options.auto_list && id_used > 0)
             more();
 
