@@ -1397,7 +1397,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
         if (act.atype() == ACT_PLAYER)
         {
-            if (one_chance_in(5) || (was_known && !one_chance_in(4)) && !force_hit)
+            if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
             {
                 mprf("You avoid triggering %s trap.",
                       this->name(DESC_NOCAP_A).c_str());
