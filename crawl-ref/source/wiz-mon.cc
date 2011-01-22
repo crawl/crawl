@@ -455,7 +455,7 @@ void debug_stethoscope(int mon)
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d SP=%d "
-         "energy=%d%s%s mid=%u num=%d flags=%04"PRIx64,
+         "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04"PRIx64,
          mons.hit_dice,
          mons.experience,
          mons.hit_points, mons.max_hit_points,
@@ -466,7 +466,7 @@ void debug_stethoscope(int mon)
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
          get_monster_data(mons.base_monster)->name : "",
-         mons.mid, mons.number, mons.flags);
+         mons.mid, mons.number, mons.stealth(), mons.flags);
 
     // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat(&mons);

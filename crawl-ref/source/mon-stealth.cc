@@ -10,7 +10,18 @@
 
 static int _clamp_stealth (int stealth)
 {
-    return std::min(-3, std::max(3, stealth));
+    if (stealth > 3)
+    {
+        return (3);
+    }
+    else if (stealth < -3)
+    {
+        return (-3);
+    }
+    else
+    {
+        return (stealth);
+    }
 }
 
 // Monster stealth is a value between:
@@ -25,7 +36,7 @@ static int _clamp_stealth (int stealth)
 //
 int monster::stealth() const
 {
-    int base_stealth = -(std::max((int) body_size() - 3, 3));
+    int base_stealth = -(std::min((int) body_size(), 6) - 3);
 
     int actual_stealth = base_stealth;
 
@@ -58,6 +69,10 @@ int monster::stealth() const
     // unstealthy.
     if (glows_naturally() || halo_radius2() != -1)
         actual_stealth -= 3;
+
+    // Some specific overrides
+    if (type == MONS_UNSEEN_HORROR)
+        actual_stealth = 3;
 
     return _clamp_stealth(actual_stealth);
 }
