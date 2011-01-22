@@ -137,6 +137,7 @@ mon-pick.o \
 mon-place.o \
 mon-project.o \
 mon-speak.o \
+mon-stealth.o \
 mon-stuff.o \
 mon-transit.o \
 mon-util.o \

@@ -25,6 +25,8 @@
 #include "tiledoll.h"
 #endif
 
+int check_stealth(void);
+
 typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
@@ -604,6 +606,7 @@ public:
 
     int stat_hp() const     { return hp; }
     int stat_maxhp() const  { return hp_max; }
+    int stealth() const     { return check_stealth(); }
 
     int shield_bonus() const;
     int shield_block_penalty() const;
@@ -723,8 +726,6 @@ bool wearing_amulet(jewellery_type which_am, bool calc_unid = true,
 int burden_change(void);
 
 int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
-
-int check_stealth(void);
 
 int player_energy(void);
 

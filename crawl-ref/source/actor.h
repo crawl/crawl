@@ -210,6 +210,8 @@ public:
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
 
+    virtual int stealth () const = 0;
+
     virtual bool can_throw_large_rocks() const = 0;
 
     virtual int armour_class() const = 0;
