@@ -771,8 +771,25 @@ void item_check(bool verbose)
     else if (!done_init_line)
         strm << "There are many items here." << std::endl;
 
-    if (items.size() > 2)
-        learned_something_new(HINT_MULTI_PICKUP);
+    if (items.size() > 2
+        && (crawl_state.game_is_tutorial() || crawl_state.game_is_hints()))
+    {
+        // If there are 2 or more non-corpse items here, we might need
+        // a hint.
+        int count = 0;
+        for (unsigned int i = 0; i < items.size(); ++i)
+        {
+            item_def it(*items[i]);
+            if (it.base_type == OBJ_CORPSES)
+                continue;
+
+            if (++count > 1)
+            {
+                learned_something_new(HINT_MULTI_PICKUP);
+                break;
+            }
+        }
+    }
 }
 
 void pickup_menu(int item_link)
