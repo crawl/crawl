@@ -135,7 +135,7 @@ struct monster_info : public monster_info_base
     monster* mon() const;
 
     /* only real equipment is visible, miscellany is for mimic items */
-    std::auto_ptr<item_def> inv[6];
+    std::auto_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
     union
     {

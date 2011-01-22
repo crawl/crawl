@@ -456,7 +456,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (type_known)
     {
-        for (unsigned i = 0; i < 5; ++i)
+        for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             bool ok;
             if (m->inv[i] == NON_ITEM)
