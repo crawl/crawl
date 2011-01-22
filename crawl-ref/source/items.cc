@@ -771,8 +771,7 @@ void item_check(bool verbose)
     else if (!done_init_line)
         strm << "There are many items here." << std::endl;
 
-    if (items.size() > 2
-        && (crawl_state.game_is_tutorial() || crawl_state.game_is_hints()))
+    if (items.size() > 2 && crawl_state.game_is_hints_tutorial())
     {
         // If there are 2 or more non-corpse items here, we might need
         // a hint.
