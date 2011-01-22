@@ -88,7 +88,7 @@ KFEAT:  O = enter_slime_pits
 MARKER: + = lua:restrict_door({ \
             door_open_prompt="This door is covered in warnings. Open " .. \
                              "it anyway?", \
-            door_description_prefix="warning scrawled " \
+            door_description_prefix="warning-scrawled " \
          })
 MAP
 ccccc
