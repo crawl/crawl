@@ -497,6 +497,8 @@ ITEM:     (list of items, separated by comma)
           Modifiers:
           * "q:N" sets the item quantity to N (if N > 0). Does nothing
              if the item is not stackable.
+          * "charges:N" sets the number of charges for wands. Does no checks
+            against the maximum number of charges.
           * "no_uniq" prevents the item from being turned into an artefact.
           * "good_item" makes the builder try to make the item a good one
             (acquirement quality). This is independent of the level's depth,
@@ -555,8 +557,7 @@ ITEM:     (list of items, separated by comma)
             missiles, no other checking is done.  Thus it is possible to create
             a demonic weapon of holy wrath or a helmet of running.
 
-          Limitations: You can't specify specific pluses or number of
-          charges.
+          Limitations: You can't specify specific pluses.
 
           Corpses
           -------

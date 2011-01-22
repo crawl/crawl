@@ -4189,6 +4189,9 @@ retry:
             destroy_item(item, true);
             goto retry;
         }
+        if (item.base_type == OBJ_WANDS && props.exists("charges"))
+            item.plus = props["charges"].get_int();
+
         return (item_made);
     }
 
