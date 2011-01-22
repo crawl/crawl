@@ -1590,6 +1590,7 @@ int monster_die(monster* mons, killer_type killer,
     const bool submerged     = mons->submerged();
 
     bool in_transit          = false;
+    bool was_banished        = false;
 
     if (!crawl_state.game_is_arena())
         _check_kill_milestone(mons, killer, killer_index);
@@ -2219,7 +2220,10 @@ int monster_die(monster* mons, killer_type killer,
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
                 if (!mons->is_summoned())
+                {
                     drop_items = false;
+                    was_banished = true;
+                }
                 break;
             }
 
@@ -2227,6 +2231,7 @@ int monster_die(monster* mons, killer_type killer,
             mons->flags |= MF_BANISHED;
             mons->set_transit(level_id(LEVEL_ABYSS));
             in_transit = true;
+            was_banished = true;
             drop_items = false;
             mons->firing_pos.reset();
             // Make monster stop patrolling and/or travelling.
@@ -2341,7 +2346,7 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons_is_shedu(mons))
     {
-        if (in_transit)
+        if (was_banished) // Don't try resurrecting them.
             mons->number = 0;
         else
             shedu_do_resurrection(mons);
