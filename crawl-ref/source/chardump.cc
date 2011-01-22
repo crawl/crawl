@@ -1435,6 +1435,8 @@ void whereis_record(const char *status)
 
 #ifdef DGL_TURN_TIMESTAMPS
 
+#include <sys/stat.h>
+
 // File-format version for timestamp files. Crawl will never append to a
 const uint32_t DGL_TIMESTAMP_VERSION = 1;
 const int VERSION_SIZE = sizeof(DGL_TIMESTAMP_VERSION);
