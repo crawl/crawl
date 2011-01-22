@@ -10,11 +10,13 @@
 #include "coordit.h"
 #include "dgnevent.h"
 #include "dgn-overview.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
 #include "itemprop.h"
+#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -290,6 +292,38 @@ static void _update_monster(const monster* mons)
         {
             env.map_knowledge(gp).set_invisible_monster();
         }
+
+        // maybe show unstealthy invis monsters
+        if (!x_chance_in_y(mons->stealth() + 4, 7))
+        {
+            // TODO: This should make a seed of gp.x, gp.y and you.num_turns
+            // and seed the RNG with it, thus making the whole thing
+            // deterministic and result in holding <Escape> not allowing you to
+            // determine realibly where a monster is.
+
+            // Maybe mark their square.
+            if (mons->stealth() <= -2 || mons->stealth() <= 2 && one_chance_in(4))
+                env.map_knowledge(gp).set_invisible_monster();
+
+            // Exceptionally stealthy monsters have a higher chance of
+            // not leaving any other trails.
+            if (mons->stealth() == 1 && one_chance_in(3)
+                || mons->stealth() == 2 && coinflip()
+                || mons->stealth() == 3)
+            {
+                return;
+            }
+
+            // Otherwise just indicate that there's a monster nearby
+            coord_def new_pos = gp + Compass[random2(8)];
+            if (monster_habitable_grid(MONS_HUMAN, grd(new_pos)) && coinflip())
+                env.map_knowledge(new_pos).set_invisible_monster();
+
+            new_pos = gp + Compass[random2(8)];
+            if (monster_habitable_grid(MONS_HUMAN, grd(new_pos)) && one_chance_in(3))
+                env.map_knowledge(new_pos).set_invisible_monster();
+        }
+
         return;
     }
 
