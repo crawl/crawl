@@ -77,7 +77,6 @@ dngn_statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
 dngn_crumbled_column DNGN_CRUMBLED_COLUMN
 dngn_granite_stump DNGN_GRANITE_STUMP
-dngn_zot_pillar DNGN_ZOT_PILLAR
 
 ## Features only used in certain minivaults
 %sdir dc-dngn/vaults
