@@ -2362,7 +2362,12 @@ void mark_milestone(const std::string &type,
         // Suppress duplicate milestones on the same turn.
         || (lastturn == you.num_turns
             && lasttype == type
-            && lastmilestone == milestone))
+            && lastmilestone == milestone)
+#ifndef SCORE_WIZARD_MODE
+        // Don't mark milestones in wizmode
+        || you.wizard
+#endif
+        )
     {
         return;
     }
