@@ -752,7 +752,7 @@ static void _handle_wizard_command(void)
     {
         mpr("WARNING: ABOUT TO ENTER WIZARD MODE!", MSGCH_WARN);
 
-#ifndef SCORE_WIZARD_MODE
+#ifndef SCORE_WIZARD_CHARACTERS
         mpr("If you continue, your game will not be scored!", MSGCH_WARN);
 #endif
 
