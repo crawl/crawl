@@ -2180,6 +2180,12 @@ void check_item_knowledge(bool unknown_items)
             if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
+            // Potions of fizzing liquid are not something that
+            // need to be identified, because they never randomly
+            // generate! [due]
+            if (i == 3 && j == POT_FIZZING)
+                continue;
+
             if (unknown_items ? type_ids[i][j] != ID_KNOWN_TYPE
                               : type_ids[i][j] == ID_KNOWN_TYPE)
             {
