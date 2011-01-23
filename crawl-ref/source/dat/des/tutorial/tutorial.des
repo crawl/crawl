@@ -9,7 +9,7 @@ tutorial = {}
 
 function tutorial.messagestart ()
     -- Make him hungry for the butchering tutorial.
-    crawl.tutorial_hunger(2700)
+    crawl.tutorial_hunger(3200)
 
     crawl.mesclr(true)
     local text = "Welcome to the tutorial! We'll start with basic movement. "

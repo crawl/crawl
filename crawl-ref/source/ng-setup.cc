@@ -1267,9 +1267,10 @@ static void _setup_tutorial_miscs()
     // Allow for a few specific hint mode messages.
     tutorial_init_hints();
 
-    // Give him spellcasting
+    // Give him a few bonus skills to make things easier.
     you.skills[SK_SPELLCASTING] = 3;
     you.skills[SK_CONJURATIONS] = 1;
+    you.skills[SK_INVOCATIONS] = 3;
 
     // Give him some mana to play around with.
     inc_max_mp(2);
