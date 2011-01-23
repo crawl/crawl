@@ -355,7 +355,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             mpr("You feel more experienced!");
 
             you.experience = 1 + exp_needed(2 + you.experience_level);
-            level_change();
+
+            // Deferred calling level_change() into item_use.cc:3919, after
+            // dec_inv_item_quantity. This prevents using SIGHUP to get infinite
+            // potions of experience. Confer Mantis #3245. [due]
         }
         else
             mpr("A flood of memories washes over you.");
