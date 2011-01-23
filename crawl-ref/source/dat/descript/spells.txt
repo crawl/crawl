@@ -665,7 +665,7 @@ As a side effect, this spell may be used to cross lava, but beware of its short 
 %%%%
 Tukima's Dance
 
-This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on magical staves and certain wilful artefacts.
+This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on certain wilful artefacts; any abilities that require evocation skill won't be used either.
 %%%%
 Twisted Resurrection
 
