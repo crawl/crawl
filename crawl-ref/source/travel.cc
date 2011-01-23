@@ -314,9 +314,9 @@ static bool _monster_blocks_travel(const monster_info *mons)
  *       colour the level map. It does not affect pathing of actual
  *       travel/explore.
  */
-static bool _is_reseedable(const coord_def& c)
+static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 {
-    if (is_excluded(c))
+    if (!ignore_danger && is_excluded(c))
         return (true);
 
     map_cell &cell(env.map_knowledge(c));
@@ -324,8 +324,8 @@ static bool _is_reseedable(const coord_def& c)
     return (feat_is_water(grid)
             || grid == DNGN_LAVA
             || is_trap(c)
-            || _monster_blocks_travel(cell.monsterinfo())
-            || (g_Slime_Wall_Check && slime_wall_neighbour(c)));
+            || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
+            || g_Slime_Wall_Check && slime_wall_neighbour(c));
 }
 
 struct cell_travel_safety
@@ -384,7 +384,8 @@ static bool _is_stair_exclusion(const coord_def &p)
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
-bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
+                          bool ignore_danger)
 {
     if (!in_bounds(c))
         return (false);
@@ -412,22 +413,20 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 
     // Travel will not voluntarily cross squares blocked by immobile
     // monsters.
-    if (!ignore_hostile)
+    if (!ignore_danger && !ignore_hostile)
     {
         const monster_info *minfo = levelmap_cell.monsterinfo();
         if (minfo && _monster_blocks_travel(minfo))
-        {
             return (false);
-        }
     }
 
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
     // navigated over if the player is willing to take damage, or levitate.
-    if (ignore_hostile && _is_reseedable(c))
+    if (ignore_hostile && _is_reseedable(c, true))
         return (true);
 
     // Excluded squares are only safe if marking stairs, i.e. another level.
-    if (is_excluded(c) && !_is_stair_exclusion(c))
+    if (!ignore_danger && is_excluded(c) && !_is_stair_exclusion(c))
         return (false);
 
     if (is_trap(c) && _is_safe_trap(c))
@@ -1170,9 +1169,9 @@ FixedVector<coord_def, GXM * GYM> travel_pathfind::circumference[2];
 travel_pathfind::travel_pathfind()
     : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
       floodout(false), double_flood(false), ignore_hostile(false),
-      annotate_map(false), ls(NULL), need_for_greed(false),
-      unexplored_place(), greedy_place(), unexplored_dist(0),
-      greedy_dist(0), refdist(NULL), reseed_points(),
+      ignore_danger(false), annotate_map(false), ls(NULL),
+      need_for_greed(false), unexplored_place(), greedy_place(),
+      unexplored_dist(0), greedy_dist(0), refdist(NULL), reseed_points(),
       features(NULL), point_distance(travel_point_distance),
       points(0), next_iter_points(0), traveled_distance(0),
       circ_index(0)
@@ -1330,7 +1329,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
-        && !is_travelsafe_square(start, false)
+        && !is_travelsafe_square(start, false, ignore_danger)
         && !is_trap(start))          // player likes pain
     {
         return coord_def();
@@ -1414,8 +1413,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
                 for (unsigned i = 0, size = reseed_points.size(); i < size; ++i)
                     circumference[!circ_index][i] = reseed_points[i];
 
-                next_iter_points = reseed_points.size();
-                ignore_hostile = true;
+                next_iter_points  = reseed_points.size();
+                ignore_hostile    = true;
             }
         }
     } // for (; points > 0 ...
@@ -1511,7 +1510,7 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
         && is_greed_inducing_square(c)
-        && is_travelsafe_square(c, ignore_hostile))
+        && is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {
         greedy_place = c;
         greedy_dist  = traveled_distance;
@@ -1581,11 +1580,11 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
         return (true);
     }
-    else if (!is_travelsafe_square(dc, ignore_hostile))
+    else if (!is_travelsafe_square(dc, ignore_hostile, ignore_danger))
     {
         // This point is not okay to travel on, but if this is a
         // trap, we'll want to put it on the feature vector anyway.
-        if (_is_reseedable(dc)
+        if (_is_reseedable(dc, ignore_danger)
             && !point_distance[dc.x][dc.y]
             && dc != start)
         {
@@ -4408,15 +4407,24 @@ int click_travel(const coord_def &gc, bool force)
     if (cmd)
         return cmd;
 
-    if (i_feel_safe())
+    if ((!is_excluded(gc) || _is_stair_exclusion(gc))
+        && (!is_excluded(you.pos()) || _is_stair_exclusion(you.pos()))
+        && i_feel_safe(false, false, false, false))
     {
-        start_travel(gc);
-        return CK_MOUSE_CMD;
+        monster *mon = monster_at(gc);
+        // Autotravel will refuse to move across stationary monsters,
+        // so handle these specially.
+        if (!mon || !mons_class_is_stationary(mon->type))
+        {
+            start_travel(gc);
+            return CK_MOUSE_CMD;
+        }
     }
 
     // If not safe, then take one step towards the click.
     travel_pathfind tp;
     tp.set_src_dst(you.pos(), gc);
+    tp.set_ignore_danger();
     const coord_def dest = tp.pathfind(RMODE_TRAVEL);
 
     if (!dest.x && !dest.y)

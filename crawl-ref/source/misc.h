@@ -60,17 +60,20 @@ std::string weird_sound();
 
 bool mons_can_hurt_player(const monster* mon, const bool want_move = false);
 bool mons_is_safe(const monster* mon, const bool want_move = false,
-                  const bool consider_user_options = true);
+                  const bool consider_user_options = true,
+                  const bool check_dist = true);
 
 std::vector<monster* > get_nearby_monsters(bool want_move = false,
                                            bool just_check = false,
                                            bool dangerous_only = false,
                                            bool consider_user_options = true,
                                            bool require_visible = true,
+                                           bool check_dist = true,
                                            int range = -1);
 
 bool i_feel_safe(bool announce = false, bool want_move = false,
-                 bool just_monsters = false, int range = -1);
+                 bool just_monsters = false, bool check_dist = true,
+                 int range = -1);
 
 bool there_are_monsters_nearby(bool dangerous_only = false,
                                bool require_visible = true,

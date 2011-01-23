@@ -2221,7 +2221,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
         // Since you can't see the monster, assume it's not a friend.
         return (mode != TARG_FRIEND
                 && _mon_exposed(mon)
-                && i_feel_safe(false, false, true, range));
+                && i_feel_safe(false, false, true, true, range));
     }
 
     return (true);
