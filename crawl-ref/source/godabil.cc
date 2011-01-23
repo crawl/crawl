@@ -461,7 +461,7 @@ int* zin_check_recite_to_single_monster(const coord_def& where)
     if (mons_intel(mon) < I_NORMAL
         && (holiness == MH_NATURAL || holiness == MH_PLANT)
         && mon->type != MONS_UGLY_THING
-        && mon->type != MONS_UGLY_THING
+        && mon->type != MONS_VERY_UGLY_THING
         && mon->type != MONS_DEATH_DRAKE)
     {
         eligibility[RECITE_IMPURE] = 0;
