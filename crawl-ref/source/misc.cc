@@ -1543,28 +1543,36 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     return (false);
 }
 
+// Returns true if a monster can be considered safe regardless
+// of distance.
+static bool _mons_is_always_safe(const monster *mon)
+{
+    return (mon->wont_attack()
+            || mons_class_flag(mon->type, M_NO_EXP_GAIN)
+               && mon->type != MONS_KRAKEN_TENTACLE
+            || mon->withdrawn()
+            || mon->type == MONS_BALLISTOMYCETE && mon->number == 0);
+}
+
 bool mons_is_safe(const monster* mon, const bool want_move,
-                  const bool consider_user_options)
+                  const bool consider_user_options, bool check_dist)
 {
     if (mons_is_unknown_mimic(mon))
         return (true);
 
     int  dist    = grid_distance(you.pos(), mon->pos());
 
-    bool is_safe = (mon->wont_attack()
-                    || mons_class_flag(mon->type, M_NO_EXP_GAIN)
-                       && mon->type != MONS_KRAKEN_TENTACLE
-                    || mon->pacified() && dist > 1
-                    || mon->withdrawn()
-                    || mon->type == MONS_BALLISTOMYCETE && mon->number == 0
+    bool is_safe = (_mons_is_always_safe(mon)
+                    || check_dist
+                       && (mon->pacified() && dist > 1
 #ifdef WIZARD
-                    // Wizmode skill setting enforces hiddenness.
-                    || you.skills[SK_STEALTH] > 27 && dist > 2
+                           // Wizmode skill setting enforces hiddenness.
+                           || you.skills[SK_STEALTH] > 27 && dist > 2
 #endif
-                       // Only seen through glass walls or within water?
-                       // Assuming that there are no water-only/lava-only
-                       // monsters capable of throwing or zapping wands.
-                    || !mons_can_hurt_player(mon, want_move));
+                           // Only seen through glass walls or within water?
+                           // Assuming that there are no water-only/lava-only
+                           // monsters capable of throwing or zapping wands.
+                           || !mons_can_hurt_player(mon, want_move)));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
@@ -1605,6 +1613,7 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
                                            bool dangerous_only,
                                            bool consider_user_options,
                                            bool require_visible,
+                                           bool check_dist,
                                            int range)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -1624,7 +1633,8 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
                 && !mon->submerged()
                 && !mons_is_unknown_mimic(mon)
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
-                                                     consider_user_options)))
+                                                     consider_user_options,
+                                                     check_dist)))
             {
                 mons.push_back(mon);
                 if (just_check) // stop once you find one
@@ -1644,7 +1654,8 @@ static bool _exposed_monsters_nearby(bool want_move)
     return (false);
 }
 
-bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
+bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
+                 bool check_dist, int range)
 {
     if (!just_monsters)
     {
@@ -1673,7 +1684,8 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 
     // Monster check.
     std::vector<monster* > visible =
-        get_nearby_monsters(want_move, !announce, true, true, true, range);
+        get_nearby_monsters(want_move, !announce, true, true, true,
+                            check_dist, range);
 
     // Announce the presence of monsters (Eidolos).
     std::string msg;

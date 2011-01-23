@@ -1096,7 +1096,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
         }
         else if (feat_is_closed_door(grd(gc)))
         {
-            if (i_feel_safe())
+            if (!adjacent(gc, you.pos()) && i_feel_safe())
                 _add_tip(tip, "[L-Click] Travel");
 
             _add_tip(tip, "[L-Click] Open door (%)");
