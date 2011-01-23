@@ -11,7 +11,6 @@ tutorial_msg3 = {}
 
 function tutorial_msg3.start ()
     tutorial_intro("In this lesson you're going to learn about items and how to use them.")
---    crawl.mpr(text, "tutorial")
 end
 
 function tutorial_msg3.armour ()
