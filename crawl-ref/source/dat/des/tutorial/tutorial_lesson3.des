@@ -171,7 +171,7 @@ end
 function tutorial_msg3.quantified_drop ()
     local text = "These meat rations weigh too much. Note the <lightred>burden status</lightred> to the right of the screen!\n"
                  .. "You can drop them again with "
-                 .. tutorial_get_cmd("CMD_DROP") .. ", or you can only drop e.g. 20, by typing " 
+                 .. tutorial_get_cmd("CMD_DROP") .. ", or you can only drop e.g. 20, by typing "
                  .. tutorial_get_cmd("CMD_DROP") .. ", <white>20</white>, selecting the meat rations, and confirming with <white>Enter</white>."
 
     return tutorial_message(text)
@@ -414,7 +414,7 @@ ITEM:    potion of healing
 ITEM:    meat ration q:50
 ITEM:    ring of levitation
 ITEM:    cloak unrand:ratskin_cloak
-MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_cursed 
+MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_cursed
 MONS:    megabat
 MONS:    kobold ; dart ego:none q:10
 MONS:    jackal

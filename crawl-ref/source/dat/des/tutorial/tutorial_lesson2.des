@@ -58,7 +58,7 @@ function tutorial_msg2.chop_corpses ()
 end
 
 function tutorial_msg2.butchery_weapon ()
-    return tutorial_message("Now that you have a sharp-edged weapon, you can chop a corpse with " 
+    return tutorial_message("Now that you have a sharp-edged weapon, you can chop a corpse with "
                             .. tutorial_get_cmd("CMD_BUTCHER")
                             .. " and then eat the resulting chunks with "
                             .. tutorial_get_cmd("CMD_EAT") .. ".")

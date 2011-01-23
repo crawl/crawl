@@ -277,10 +277,6 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
             ASSERT(mi);
             g.col = _get_mons_colour(*mi);
         }
-//	// FIXME: please re-enable this if the assert above can fail
-//      else
-//          g.col = mons_class_colour(show.mons);
-
         break;
 
     case SH_CLOUD:
@@ -292,7 +288,6 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
             g.col = cell.cloud_colour();
         else
             g.col = DARKGRAY;
-
         break;
 
     case SH_FEATURE:
