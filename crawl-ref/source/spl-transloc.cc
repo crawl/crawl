@@ -821,15 +821,23 @@ bool cast_apportation(int pow, bolt& beam)
         beam.aimed_at_spot = true;
         beam.fire();
 
+        // Pop the orb's location off the end
+        beam.path_taken.pop_back();
+
         // The actual number of squares it needs to traverse to get to you.
         unsigned int dist = beam.path_taken.size();
 
-        // The maximum number of squares the orb will actually move.
-        unsigned int max_dist = (pow / 10) - 1;
+        // The maximum number of squares the orb will actually move, always
+        // at least one square.
+        unsigned int max_dist = std::max((pow / 10) - 1, 1);
 
-        if (max_dist < dist)
+        dprf("Orb apport dist=%d, max_dist=%d", dist, max_dist);
+
+        if (max_dist <= dist)
         {
             coord_def new_spot = beam.path_taken[beam.path_taken.size()-max_dist];
+
+            dprf("Orb apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
             move_top_item(where, new_spot);
             origin_set(new_spot);
