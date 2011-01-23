@@ -5135,8 +5135,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_TRAINING_DUMMY, '8', LIGHTGREY, "training dummy",
-    M_STATIONARY | M_SPEAKS,
-    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
+    M_STATIONARY,
+    MR_NO_FLAGS,
     0, 10, MONS_STATUE, MONS_STATUE, MH_NONLIVING, MAG_IMMUNE,
     { {AT_WEAP_ONLY, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 0, 0, 6 },
