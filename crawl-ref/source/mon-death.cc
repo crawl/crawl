@@ -1,7 +1,11 @@
-/*
- *  File:       mon-death.cc
- *  Summary:    Monster death functionality (kraken, uniques, and so-on).
- */
+/**
+ * @file
+ * @section DESCRIPTION
+ *
+ * File: mon-death.cc.
+ * Summary: Contains monster death functionality, including Dowan and Duvessa,
+ *          Kirke, Pikel, shedu and spirits.
+**/
 
 #include "AppHdr.h"
 #include "mon-death.h"
@@ -26,7 +30,15 @@
 #include "transform.h"
 #include "view.h"
 
-// Pikel and band.
+/**
+ * Determine if a specified monster is Pikel.
+ *
+ * Checks both the monster type and the "original_name" prop, thus allowing
+ * Pikelness to be transferred through polymorph.
+ *
+ * @param mons    The monster to be checked.
+ * @returns       True if the monster is Pikel, otherwise false.
+**/
 bool mons_is_pikel (monster* mons)
 {
     return (mons->type == MONS_PIKEL
@@ -34,6 +46,15 @@ bool mons_is_pikel (monster* mons)
                 && mons->props["original_name"].get_string() == "Pikel"));
 }
 
+/**
+ * Perform neutralisation for members of Pikel's band upon Pikel's 'death'.
+ *
+ * This neutralisation occurs in multiple instances: when Pikel is neutralised,
+ * enslaved, leaves the level and leaves behind some slaves, when Pikel dies,
+ * when Pikel is banished.
+ *
+ * @param check_tagged    If True, monsters leaving the level are ignored.
+**/
 void pikel_band_neutralise (bool check_tagged)
 {
     bool message_made = false;
@@ -65,7 +86,15 @@ void pikel_band_neutralise (bool check_tagged)
     }
 }
 
-// Kirke and band
+/**
+ * Determine if a monster is Kirke.
+ *
+ * As with mons_is_pikel, tracks Kirke via type and original name, thus allowing
+ * tracking through polymorph.
+ *
+ * @param mons    The monster to check.
+ * @returns       True if Kirke, false otherwise.
+**/
 bool mons_is_kirke (monster* mons)
 {
     return (mons->type == MONS_KIRKE
@@ -73,6 +102,14 @@ bool mons_is_kirke (monster* mons)
                 && mons->props["original_name"].get_string() == "Kirke"));
 }
 
+/**
+ * Convert hogs to neutral humans.
+ *
+ * Called upon Kirke's death. This does not track members of her band that
+ * have been transferred across levels. Non-hogs are ignored. If a monster has
+ * an ORIG_MONSTER_KEY prop, it will be returned to its previous state,
+ * otherwise it will be converted to a neutral human.
+**/
 void hogs_to_humans()
 {
     // Simplification: if, in a rare event, another hog which was not created
@@ -185,8 +222,14 @@ void hogs_to_humans()
         untransform();
 }
 
-
-// Dowan and Duvessa
+/**
+ * Determine if a monster is Dowan.
+ *
+ * Tracks through type and original_name, thus tracking through polymorph.
+ *
+ * @param mons    The monster to check.
+ * @returns       True if Dowan, otherwise false.
+**/
 bool mons_is_dowan(const monster* mons)
 {
     return (mons->type == MONS_DOWAN
@@ -194,6 +237,14 @@ bool mons_is_dowan(const monster* mons)
                 && mons->props["original_name"].get_string() == "Dowan"));
 }
 
+/**
+ * Determine if a monster is Duvessa.
+ *
+ * Tracks through type and original_name, thus tracking through polymorph.
+ *
+ * @param mons    The monster to check.
+ * @returns       True if Duvessa, otherwise false.
+**/
 bool mons_is_duvessa(const monster* mons)
 {
     return (mons->type == MONS_DUVESSA
@@ -201,11 +252,33 @@ bool mons_is_duvessa(const monster* mons)
                 && mons->props["original_name"].get_string() == "Duvessa"));
 }
 
+/**
+ * Determine if a monster is either Dowan or Duvessa.
+ *
+ * Tracks through type and original_name, thus tracking through polymorph. A
+ * wrapper around mons_is_dowan and mons_is_duvessa. Used to determine if a
+ * death function should be called for the monster in question.
+ *
+ * @param mons    The monster to check.
+ * @returns       True if either Dowan or Duvessa, otherwise false.
+**/
 bool mons_is_elven_twin(const monster* mons)
 {
     return (mons_is_dowan(mons) || mons_is_duvessa(mons));
 }
 
+/**
+ * Perform functional changes Dowan or Duvessa upon the other's death.
+ *
+ * This functional is called when either Dowan or Duvessa are killed or
+ * banished. It performs a variety of changes in both attitude, spells, flavour,
+ * speech, etc.
+ *
+ * @param twin          The monster who died.
+ * @param in_transit    True if banished, otherwise false.
+ * @param killer        The kill-type related to twin.
+ * @param killer_index  The index of the actor who killed twin.
+**/
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index)
 {
     // Sometimes, if you pacify one twin near a staircase, they leave
@@ -312,7 +385,13 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     }
 }
 
-// If you pacify one twin, the other also pacifies.
+/**
+ * Pacification effects for Dowan and Duvessa.
+ *
+ * As twins, pacifying one pacifies the other.
+ *
+ * @param twin    The orignial monster pacified.
+**/
 void elven_twins_pacify (monster* twin)
 {
     bool found_duvessa = false;
@@ -358,7 +437,15 @@ void elven_twins_pacify (monster* twin)
     mons_pacify(mons, ATT_NEUTRAL);
 }
 
-// And if you attack a pacified elven twin, the other will unpacify.
+/**
+ * Unpacification effects for Dowan and Duvessa.
+ *
+ * If they are both pacified and you attack one, the other will not remain
+ * neutral. This is both for flavour (they do things together), and
+ * functionality (so Dowan does not begin beating on Duvessa, etc).
+ *
+ * @param twin    The monster attacked.
+**/
 void elven_twins_unpacify (monster* twin)
 {
     bool found_duvessa = false;
@@ -394,8 +481,15 @@ void elven_twins_unpacify (monster* twin)
     behaviour_event(mons, ME_WHACK, MHITYOU, you.pos(), false);
 }
 
-// Spirits
-
+/**
+ * Spirit death effects.
+ *
+ * When a spirit dies of "nautral" causes, ie, it's FADING_AWAY timer runs out,
+ * it summons a high-level monster. This function is only called for spirits
+ * that have died as a result of the FADING_AWAY timer enchantment running out.
+ *
+ * @param spirit    The monster that died.
+**/
 void spirit_fades (monster *spirit)
 {
 
@@ -431,7 +525,17 @@ void spirit_fades (monster *spirit)
 
 }
 
-// Shedu
+/**
+ * Determine a shedu's pair by index.
+ *
+ * The index of a shedu's pair is stored as mons->number. This function attempts
+ * to return a pointer to that monster. If that monster doesn't exist, or is
+ * dead, returns NULL.
+ *
+ * @param mons    The monster whose pair we're searching for. Assumed to be a
+ *                 shedu.
+ * @returns        Either a monster* or NULL if a monster was not found.
+**/
 monster* get_shedu_pair (const monster* mons)
 {
     monster* pair = monster_by_mid(mons->number);
@@ -441,6 +545,14 @@ monster* get_shedu_pair (const monster* mons)
     return (NULL);
 }
 
+/**
+ * Determine if a shedu's pair is alive.
+ *
+ * A simple function that checks the return value of get_shedu_pair is not null.
+ *
+ * @param mons    The monster whose pair we are searching for.
+ * @returns        True if the pair is alive, False otherwise.
+**/
 bool shedu_pair_alive (const monster* mons)
 {
     if (get_shedu_pair(mons) == NULL)
@@ -449,6 +561,13 @@ bool shedu_pair_alive (const monster* mons)
     return (true);
 }
 
+/**
+ * Determine if a monster is or was a shedu.
+ *
+ * @param mons    The monster to check.
+ * @returns        Either True if the monster is or was a shedu, otherwise
+ *                 False.
+**/
 bool mons_is_shedu(const monster* mons)
 {
     return (mons->type == MONS_SHEDU
@@ -456,6 +575,16 @@ bool mons_is_shedu(const monster* mons)
                 && mons->props["original_name"].get_string() == "shedu"));
 }
 
+/**
+ * Initial resurrection functionality for Shedu.
+ *
+ * This function is called when a shedu dies. It attempt to find that shedu's
+ * pair, wake them if necessary, and then begin the resurrection process by
+ * giving them the ENCH_PREPARING_RESURRECT enchantment timer. If a pair does
+ * not exist (ie, this is the second shedu to have died), nothing happens.
+ *
+ * @param mons    The shedu who died.
+**/
 void shedu_do_resurrection (const monster* mons)
 {
     if (!mons_is_shedu(mons))
@@ -478,6 +607,17 @@ void shedu_do_resurrection (const monster* mons)
     my_pair->add_ench(ENCH_PREPARING_RESURRECT);
 }
 
+/**
+ * Perform resurrection of a shedu.
+ *
+ * This function is called when the ENCH_PREPARING_RESURRECT timer runs out. It
+ * determines if there is a viable corpse (of which there will always be one),
+ * where that corpse is (if it is not in line of sight, no resurrection occurs;
+ * if it is in your pack, it is resurrected "from" your pack, etc), and then
+ * perform the actual resurrection by creating a new shedu monster.
+ *
+ * @param mons    The shedu who is to perform the resurrection.
+**/
 void shedu_do_actual_resurrection (monster* mons)
 {
     // Here is where we actually recreate the dead
