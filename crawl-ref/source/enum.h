@@ -2803,12 +2803,12 @@ enum orb_type
 
 enum recite_type
 {
-    RECITE_GENERIC,
     RECITE_CHAOTIC,
     RECITE_IMPURE,
     RECITE_HERETIC,
     RECITE_UNHOLY,
     RECITE_ALLY,
+    NUM_RECITE_TYPES
 };
 
 enum size_part_type

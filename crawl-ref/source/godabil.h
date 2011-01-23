@@ -14,7 +14,6 @@ struct bolt;
 
 std::string zin_recite_text(int* trits, size_t len, int prayertype, int step);
 bool zin_sustenance(bool actual = true);
-int* zin_check_recite_to_single_monster(const coord_def& where);
 bool zin_check_able_to_recite();
 int zin_check_recite_to_monsters(bool recite);
 int zin_recite_to_single_monster(const coord_def& where,

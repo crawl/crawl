@@ -369,32 +369,25 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
     return (recite);
 }
 
+typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
 // Check whether this monster might be influenced by Recite.
 // Returns 0, if no monster found.
 // Returns 1, if eligible monster found.
 // Returns -1, if monster already affected or too dumb to understand.
-int* zin_check_recite_to_single_monster(const coord_def& where)
+int zin_check_recite_to_single_monster(const coord_def& where,
+                                       recite_counts &eligibility)
 {
-
     monster* mon = monster_at(where);
-
-    int *eligibility = new int[6]();
-    eligibility[RECITE_GENERIC] = 0;
 
     //Can't recite at nothing!
     if (mon == NULL)
-    {
-        return (eligibility);
-    }
+        return 0;
 
     const mon_holy_type holiness = mon->holiness();
 
     //Can't recite at plants or golems.
     if (holiness == MH_PLANT || holiness == MH_NONLIVING)
-    {
-        eligibility[RECITE_GENERIC] = -1;
-        return (eligibility);
-    }
+        return -1;
 
     //Recitations are based on monster::is_unclean, but are NOT identical to it,
     //because that lumps all forms of uncleanliness together. We want to specify.
@@ -538,16 +531,11 @@ int* zin_check_recite_to_single_monster(const coord_def& where)
     }
 
     //Checking to see whether they were eligible for anything at all.
-    if (eligibility[RECITE_CHAOTIC] > 0
-        || eligibility[RECITE_IMPURE] > 0
-        || eligibility[RECITE_HERETIC] > 0
-        || eligibility[RECITE_UNHOLY] > 0
-        || eligibility[RECITE_ALLY] > 0)
-    {
-        eligibility[RECITE_GENERIC]++;
-    }
+    for (int i = 0; i < NUM_RECITE_TYPES; i++)
+        if (eligibility[i] > 0)
+            return 1;
 
-    return(eligibility);
+    return 0;
 }
 
 // Check whether there are monsters who might be influenced by Recite.
@@ -581,17 +569,15 @@ int zin_check_recite_to_monsters(bool recite)
 
     for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
-        int *retval = 0;
-        retval = zin_check_recite_to_single_monster(*ri);
-
-        if (retval[RECITE_GENERIC] == 0)
-            continue;
-
-        if (retval[RECITE_GENERIC] == -1)
+        recite_counts retval;
+        switch(zin_check_recite_to_single_monster(*ri, retval))
         {
+        case -1:
             found_ineligible = true;
+        case 0:
             continue;
         }
+
         if (retval[RECITE_CHAOTIC] > 0)
         {
             eligible_chaotic++;
@@ -651,10 +637,9 @@ int zin_check_recite_to_monsters(bool recite)
                                (eligible_heretic > 0)  ?  RECITE_HERETIC  :
                                (eligible_unholy > 0)   ?  RECITE_UNHOLY   :
                                (eligible_ally > 0)     ?  RECITE_ALLY     :
-                                                                             RECITE_GENERIC;
-    // If we got this far, we're actually reciting:
-    you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
-
+                                                          NUM_RECITE_TYPES;
+        // If we got this far, we're actually reciting:
+        you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
         return (prayertype);
     }
     //But often, you'll have multiple options...
@@ -770,17 +755,18 @@ int zin_recite_to_single_monster(const coord_def& where,
     int power;
     int resist;
     int check;
-    int* eligibility = 0;
+    recite_counts eligibility;
     int degree;
     int spellpower;
     int affected = 0;
     int pain = 0;
 
-    eligibility = zin_check_recite_to_single_monster(where);
+    if (zin_check_recite_to_single_monster(where, eligibility) < 1)
+        return 0;
 
     // First check: are they even eligible for this kind of recitation?
     // (Monsters that have been hurt by recitation aren't eligible.)
-    if (eligibility[prayertype] < 1 || eligibility[RECITE_GENERIC] < 1)
+    if (eligibility[prayertype] < 1)
         return(0);
 
     // Second check: because this affects the whole screen over several turns,
