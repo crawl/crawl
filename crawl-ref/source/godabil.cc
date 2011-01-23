@@ -356,7 +356,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
                                (prayertype == RECITE_HERETIC)  ?  "Apostates"     :
                                (prayertype == RECITE_UNHOLY)   ?  "Anathema"      :
                                (prayertype == RECITE_ALLY)     ?  "Alliances"     :
-                                                                                     "Bugginess";
+                                                                  "Bugginess";
         std::ostringstream numbers;
         numbers << chapter;
         numbers << ":";
@@ -402,8 +402,12 @@ int* zin_check_recite_to_single_monster(const coord_def& where)
     //Anti-chaos prayer:
 
     //Hits some specific insane or shapeshifted uniques.
-    if (mon->type == MONS_CRAZY_YIUF || mon->type == MONS_PSYCHE || mon->type == MONS_GASTRONOK)
+    if (mon->type == MONS_CRAZY_YIUF
+        || mon->type == MONS_PSYCHE
+        || mon->type == MONS_GASTRONOK)
+    {
         eligibility[RECITE_CHAOTIC]++;
+    }
 
     //Hits monsters that have chaotic spells memorized.
     if (mon->has_chaotic_spell() && mon->is_actual_spellcaster())
@@ -454,9 +458,14 @@ int* zin_check_recite_to_single_monster(const coord_def& where)
         eligibility[RECITE_IMPURE]++;
 
     //Sanity check: if a monster is 'really' natural, don't consider it impure.
-    if (mons_intel(mon) < I_NORMAL && (holiness == MH_NATURAL || holiness == MH_PLANT)
-        && mon->type != MONS_UGLY_THING && mon->type != MONS_UGLY_THING  && mon->type != MONS_DEATH_DRAKE)
+    if (mons_intel(mon) < I_NORMAL
+        && (holiness == MH_NATURAL || holiness == MH_PLANT)
+        && mon->type != MONS_UGLY_THING
+        && mon->type != MONS_UGLY_THING
+        && mon->type != MONS_DEATH_DRAKE)
+    {
         eligibility[RECITE_IMPURE] = 0;
+    }
 
     // Anti-unholy prayer
 
@@ -467,10 +476,11 @@ int* zin_check_recite_to_single_monster(const coord_def& where)
     // Anti-heretic prayer
     // Pro-ally prayer
 
-    // Sleeping or paralyzed monsters will wake up or still perceive their surroundings, respectively.
-    // So, you can still recite to them.
+    // Sleeping or paralyzed monsters will wake up or still perceive their
+    // surroundings, respectively.  So, you can still recite to them.
 
-    if (mons_intel(mon) >= I_NORMAL && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
+    if (mons_intel(mon) >= I_NORMAL
+        && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
     {
         // In the eyes of Zin, everyone is a sinner until proven otherwise!
         eligibility[RECITE_HERETIC]++;
@@ -490,15 +500,24 @@ int* zin_check_recite_to_single_monster(const coord_def& where)
         // (The above mean that worshipers will be treated as
         // priests for reciting, even if they aren't actually.)
 
-        // Sanity check: monsters that you can't convert anyways, don't get recited against.
-        if ((mon->is_unclean() || mon->is_chaotic() || mon->is_evil() || mon->is_unholy()) && eligibility[RECITE_HERETIC] <= 1)
+        // Sanity check: monsters that you can't convert anyways, don't get
+        // recited against.
+        if ((mon->is_unclean()
+             || mon->is_chaotic()
+             || mon->is_evil()
+             || mon->is_unholy())
+            && eligibility[RECITE_HERETIC] <= 1)
+        {
             eligibility[RECITE_HERETIC] = 0;
+        }
 
-        // Sanity check: monsters that won't attack you, and aren't priests/evil, don't get recited against.
+        // Sanity check: monsters that won't attack you, and aren't
+        // priests/evil, don't get recited against.
         if (mon->wont_attack() && eligibility[RECITE_HERETIC] <= 1)
             eligibility[RECITE_HERETIC] = 0;
 
-        // Sanity check: monsters that are holy, know holy spells, or worship holy gods aren't heretics.
+        // Sanity check: monsters that are holy, know holy spells, or worship
+        // holy gods aren't heretics.
         if (mon->is_holy() || is_good_god(mon->god))
             eligibility[RECITE_HERETIC] = 0;
 
@@ -506,19 +525,27 @@ int* zin_check_recite_to_single_monster(const coord_def& where)
         if (mon->friendly())
             eligibility[RECITE_ALLY]++;
 
-        //Holy friendlies get a boost.
-        if ((mon->is_holy() || is_good_god(mon->god)) && eligibility[RECITE_ALLY] > 0)
+        // Holy friendlies get a boost.
+        if ((mon->is_holy() || is_good_god(mon->god))
+            && eligibility[RECITE_ALLY] > 0)
+        {
             eligibility[RECITE_ALLY]++;
+        }
 
-        //Worshipers of Zin get another boost.
+        // Worshipers of Zin get another boost.
         if (mon->god == GOD_ZIN && eligibility[RECITE_ALLY] > 0)
             eligibility[RECITE_ALLY]++;
     }
 
     //Checking to see whether they were eligible for anything at all.
-    if (eligibility[RECITE_CHAOTIC] > 0 || eligibility[RECITE_IMPURE] > 0 || eligibility[RECITE_HERETIC] > 0
-        || eligibility[RECITE_UNHOLY] > 0 || eligibility[RECITE_ALLY] > 0)
+    if (eligibility[RECITE_CHAOTIC] > 0
+        || eligibility[RECITE_IMPURE] > 0
+        || eligibility[RECITE_HERETIC] > 0
+        || eligibility[RECITE_UNHOLY] > 0
+        || eligibility[RECITE_ALLY] > 0)
+    {
         eligibility[RECITE_GENERIC]++;
+    }
 
     return(eligibility);
 }
