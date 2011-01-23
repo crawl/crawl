@@ -103,7 +103,7 @@ void load_hints(reader& inf)
 // Override init file definition for some options.
 void init_hints_options()
 {
-    if (crawl_state.game_is_hints())
+    if (!crawl_state.game_is_hints())
         return;
 
     // Clear possible debug messages before messing
@@ -722,7 +722,7 @@ void hints_healing_check()
 // FIXME: This is currently UNUSED!
 void hints_healing_reminder()
 {
-    if (crawl_state.game_is_hints())
+    if (!crawl_state.game_is_hints())
         return;
 
     if (you.duration[DUR_POISONING] && 2*you.hp < you.hp_max)
@@ -834,7 +834,7 @@ void taken_new_item(object_class_type item_type)
 // Give a special message if you gain a skill you didn't have before.
 void hints_gained_new_skill(skill_type skill)
 {
-    if (crawl_state.game_is_hints())
+    if (!crawl_state.game_is_hints())
         return;
 
     learned_something_new(HINT_SKILL_RAISE);
