@@ -3929,7 +3929,7 @@ void seen_monster(monster* mons)
 
     if (!mons_is_mimic(mons->type))
     {
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_monster_seen(*mons);
 
         if (MONST_INTERESTING(mons))

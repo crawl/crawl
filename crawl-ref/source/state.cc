@@ -220,7 +220,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             mpr(text, MSGCH_WARN);
         }
 
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_monster_seen(*mon);
 #else
         formatted_string fs(channel_to_colour(MSGCH_WARN));

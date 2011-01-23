@@ -1542,7 +1542,7 @@ inline static void _monster_warning(activity_interrupt_type ai,
         const_cast<monster* >(mon)->seen_context = "just seen";
     }
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_monster_seen(*mon);
 }
 
@@ -1561,7 +1561,7 @@ void autotoggle_autopickup(bool off)
                  "Deactivating autopickup; reactivate with <w>%s</w>.",
                  command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
         }
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
         {
             learned_something_new(HINT_INVISIBLE_DANGER);
             Hints.hints_seen_invisible = you.num_turns;

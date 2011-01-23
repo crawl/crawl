@@ -1459,7 +1459,7 @@ void _end_game(scorefile_entry &se)
         flush_prev_message();
         viewwindow(); // don't do for leaving/winning characters
 
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_death_screen();
     }
 

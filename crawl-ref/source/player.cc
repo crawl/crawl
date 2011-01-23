@@ -3363,9 +3363,8 @@ void level_change(bool skip_attribute_increase)
 
     redraw_skill(you.your_name, player_title());
 
-    // Increase tutorial time-out now that it's actually become useful
-    // for a longer time.
-    if (Hints.hints_left && you.experience_level >= 7)
+    // Hints mode arbitrarily ends at xp 7.
+    if (crawl_state.game_is_hints() && you.experience_level >= 7)
         hints_finished();
 }
 

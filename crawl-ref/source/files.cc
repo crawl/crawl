@@ -1682,8 +1682,8 @@ static void _save_game_base()
     /* notes */
     SAVEFILE("nts", save_notes);
 
-    /* hints mode */
-    if (Hints.hints_left || crawl_state.game_is_tutorial())
+    /* tutorial/hints mode */
+    if (crawl_state.game_is_hints_tutorial())
         SAVEFILE("tut", save_hints);
 
     /* messages */

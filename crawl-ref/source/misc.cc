@@ -1423,7 +1423,7 @@ bool go_berserk(bool intentional, bool potion)
         return (false);
     }
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
 
     mpr("A red film seems to cover your vision as you go berserk!");

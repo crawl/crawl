@@ -553,7 +553,7 @@ public:
         {
             cgotoxy(use_first_col() ? 2 : 1, last_row, GOTO_MSG);
             textcolor(channel_to_colour(MSGCH_PROMPT));
-            if (Hints.hints_left)
+            if (crawl_state.game_is_hints())
             {
                 std::string more_str = "--more-- Press Space ";
 #ifdef USE_TILE

@@ -593,8 +593,9 @@ void do_cast_spell_cmd(bool force)
         return;
     }
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         Hints.hints_spell_counter++;
+
     if (!cast_a_spell(!force))
         flush_input_buffer(FLUSH_ON_FAILURE);
 }

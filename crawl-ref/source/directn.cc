@@ -3779,7 +3779,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
         debug_stethoscope(mgrd(where));
 #endif
-        if (Hints.hints_left && hints_monster_interesting(mon))
+        if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {
             std::string msg;
 #ifdef USE_TILE
@@ -3825,7 +3825,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
     std::string feature_desc = feature_description(where, true);
     const bool bloody = is_bloodcovered(where);
-    if (Hints.hints_left && hints_pos_interesting(where.x, where.y))
+    if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
     {
 #ifdef USE_TILE
         feature_desc += " (<w>Right-click</w> for more information.)";

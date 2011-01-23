@@ -1241,9 +1241,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
 
-    if (Hints.hints_left && your_talents(false).size() > old_talents)
+    if (crawl_state.game_is_hints()
+        && your_talents(false).size() > old_talents)
+    {
         learned_something_new(HINT_NEW_ABILITY_MUT);
-
+    }
     return (true);
 }
 

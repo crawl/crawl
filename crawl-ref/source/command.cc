@@ -2594,7 +2594,7 @@ void list_commands(int hotkey, bool do_redraw_screen,
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    if (Hints.hints_left || crawl_state.game_is_tutorial())
+    if (crawl_state.game_is_hints_tutorial())
         _add_formatted_hints_help(cols);
     else
         _add_formatted_keyhelp(cols);

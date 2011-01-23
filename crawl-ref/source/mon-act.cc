@@ -3465,7 +3465,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     // this message to avoid confusion.
     if (mons->seen_context == _just_seen && !you.see_cell(f))
         simple_monster_message(mons, " moves out of view.");
-    else if (Hints.hints_left && (mons->flags & MF_WAS_IN_VIEW)
+    else if (crawl_state.game_is_hints() && (mons->flags & MF_WAS_IN_VIEW)
              && !you.see_cell(f))
     {
         learned_something_new(HINT_MONSTER_LEFT_LOS, mons->pos());

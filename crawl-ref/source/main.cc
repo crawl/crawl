@@ -390,7 +390,7 @@ static void _launch_game()
     if (game_start)
     {
         // TODO: convert this to the hints mode
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             _startup_hints_mode();
         _take_starting_note();
     }
@@ -1927,7 +1927,7 @@ void process_command(command_type cmd)
 
     case CMD_NO_CMD:
     default:
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
         {
            std::string msg = "Unknown command. (For a list of commands type "
                              "<w>?\?<lightgrey>.)";
@@ -2814,7 +2814,7 @@ void world_reacts()
     }
 
 #ifdef USE_TILE
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
     {
         tiles.clear_text_tags(TAG_TUTORIAL);
         tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);

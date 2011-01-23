@@ -756,7 +756,7 @@ static int player_view_update_at(const coord_def &gc)
     }
 
     // Print hints mode messages for features in LOS.
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())

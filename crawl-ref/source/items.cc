@@ -1747,7 +1747,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         mpr(get_menu_colour_prefix_tags(you.inv[freeslot],
                                         DESC_INVENTORY).c_str());
     }
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
     {
         taken_new_item(item.base_type);
         if (is_artefact(item) || get_equip_desc(item) != ISFLAG_NO_DESC)
