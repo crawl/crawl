@@ -434,7 +434,6 @@ const ability_def& get_ability_def(ability_type abil)
     return (_get_ability_def(abil));
 }
 
-
 bool string_matches_ability_name(const std::string& key)
 {
     for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
@@ -2165,7 +2164,6 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_ZIN_IMPRISON:
     {
-
         beam.range = LOS_RADIUS;
         if (!spell_direction(spd, beam))
             return (false);
@@ -2184,7 +2182,8 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        power = 3 + roll_dice(3, 10 * (3 + you.skills[SK_INVOCATIONS]) / (3 + mons->hit_dice)) / 3;
+        power = 3 + roll_dice(3, 10 * (3 + you.skills[SK_INVOCATIONS])
+                                    / (3 + mons->hit_dice)) / 3;
 
         if (!cast_imprison(power, mons, -GOD_ZIN))
             return (false);
