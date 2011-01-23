@@ -164,13 +164,13 @@ void tornado_damage(actor *caster, int dur)
     WindSystem winds(org);
 
     std::stack<actor*>    move_act;
+    int cnt_open = 0;
+    int cnt_all  = 0;
 
     distance_iterator count_i(org, false);
     distance_iterator dam_i(org, true);
     for (int r = 1; r <= TORNADO_RADIUS; r++)
     {
-        int cnt_open = 0;
-        int cnt_all  = 0;
         while (count_i && count_i.radius() == r)
         {
             if (winds.has_wind(*count_i))
@@ -178,9 +178,9 @@ void tornado_damage(actor *caster, int dur)
             cnt_all++;
             count_i++;
         }
-        pow = pow * cnt_open / cnt_all;
-        dprf("at dist %d pow is %d", r, pow);
-        if (!pow)
+        int rpow = pow * cnt_open / cnt_all;
+        dprf("at dist %d pow is %d", r, rpow);
+        if (!rpow)
             break;
 
         std::vector<coord_def> clouds;
@@ -231,7 +231,7 @@ void tornado_damage(actor *caster, int dur)
                         if (standing)
                             float_player(false);
                     }
-                    int dmg = roll_dice(6, pow) / 8;
+                    int dmg = roll_dice(6, rpow) / 8;
                     if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
@@ -247,7 +247,7 @@ void tornado_damage(actor *caster, int dur)
             }
             if ((env.cgrid(*dam_i) == EMPTY_CLOUD
                 || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
-                && x_chance_in_y(pow, 20))
+                && x_chance_in_y(rpow, 20))
             {
                 place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), caster);
             }
