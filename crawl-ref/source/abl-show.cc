@@ -2149,12 +2149,14 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_ZIN_RECITE:
     {
-	int prayertype = zin_check_recite_to_monsters(true);
-    	if (prayertype > 0)
+        int prayertype = zin_check_recite_to_monsters(true);
+        if (prayertype > 0)
             start_delay(DELAY_RECITE, 3, prayertype, you.hp);
-    	else
+        else
+        {
             mpr("That recitation seems somehow inappropriate.");
             return (false);
+        }
         break;
     }
     case ABIL_ZIN_VITALISATION:
