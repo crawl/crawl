@@ -3921,6 +3921,10 @@ void drink(int slot)
 
     if (you.species != SP_VAMPIRE)
         lessen_hunger(40, true);
+
+    // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
+    if (potion.sub_type == POT_EXPERIENCE)
+        level_change();
 }
 
 static bool _drink_fountain()
