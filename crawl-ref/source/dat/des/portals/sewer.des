@@ -1000,11 +1000,11 @@ ENDMAP
 
 ############################################################################
 # Cracked pipes. by co
-# Most of the time the player will move between the pipes through cracks
+# Most of the time the player will move between the pipes through cracks,
 # these will be filled with rats. Only two of the paths will be generated
 # each map, but all three pipes will be accessable on all instances.
-# One map in three, will end in harder rat nest containing a dangerous
-# orange rat. The rat nest also contains cheese and more loot.
+# One map in three, will end in a harder rat nest containing a dangerous
+# orange rat. The harder rat nest also contains cheese and more loot.
 #
 NAME:    sewer_co_cracked_pipes
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
@@ -1015,14 +1015,7 @@ MONS:    giant newt / small snake w:5 / \
          snake w:2 / nothing w:4
 KMONS:   2 = snake / big fish
 KFEAT:   2 = W
-COLOUR:  2 = green
-#      loot
-SUBST:   e = !!!!!?????%
-KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
-         potion of magic / potion of speed w:5 / potion of brilliance w:5
-KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
-         scroll of blinking w:3 / scroll of magic mapping w:3 /\
-         scroll of recharging w:2 / scroll of fog w:3
+COLOUR:  2 = lightgreen
 #      generate first path.
 SHUFFLE: BC/DE/FG
 NSUBST:  B = 1:. / *:c
@@ -1037,15 +1030,17 @@ SUBST:   LMKJ = c
 SUBST:   . = .W
 SUBST:   V = .WWWW
 SUBST:   X = xx"
-#      Sometimes there's a ratnest in the end.
+#      Sometimes there's a rat nest in the end.
 : if crawl.one_chance_in(3) then
 NSUBST:  Y = 2:. /*:c
+SUBST:   d = e
 KMONS:   Z = nothing w:60 / rat w:2 / grey rat / green rat w:7
 KITEM:   Z = cheese w:2 / nothing
 KMONS:   R = orange rat
 KFEAT:   ' = .
 : else
 SUBST:   Y = c
+SUBST:   d = x
 KFEAT:   Z = x
 KFEAT:   R = x
 KFEAT:   ' = x
@@ -1054,6 +1049,13 @@ KFEAT:   ' = x
 KPROP:   " = no_tele_into
 KMONS:   " = nothing w:50 / rat / grey rat / green rat w:5
 KPROP:   w = no_tele_into
+#      loot
+SUBST:   e = !!!!!?????%
+KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
+         potion of magic / potion of speed w:5 / potion of brilliance w:5
+KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
+         scroll of blinking w:3 / scroll of magic mapping w:3 /\
+         scroll of recharging w:2 / scroll of fog w:3
 : sewer_setup(_G)
 epilogue{{
 sewer_milestone(_G)
@@ -1061,7 +1063,7 @@ sewer_milestone(_G)
 MAP
                         xxxxxxxxxxxxx
                         xxxxx''xxxxxx
-                        xxx'eeeee'xxx
+                        xxx'ddddd'xxx
                         xxxZZZZZZZ'xx
                         xx'ZZZRZZZZ'x
                         x'ZZZZZZZZ'xx
