@@ -389,6 +389,8 @@ int zin_check_recite_to_single_monster(const coord_def& where,
     if (holiness == MH_PLANT || holiness == MH_NONLIVING)
         return -1;
 
+    eligibility.init(0);
+
     //Recitations are based on monster::is_unclean, but are NOT identical to it,
     //because that lumps all forms of uncleanliness together. We want to specify.
 
@@ -530,6 +532,13 @@ int zin_check_recite_to_single_monster(const coord_def& where,
             eligibility[RECITE_ALLY]++;
     }
 
+#ifdef DEBUG_DIAGNOSTICS
+    std::string elig;
+    for (int i = 0; i < NUM_RECITE_TYPES; i++)
+        elig[i] += '0' + eligibility[i];
+    dprf("Eligibility: %s", elig.c_str());
+#endif
+
     //Checking to see whether they were eligible for anything at all.
     for (int i = 0; i < NUM_RECITE_TYPES; i++)
         if (eligibility[i] > 0)
@@ -556,16 +565,21 @@ bool zin_check_able_to_recite()
         return (true);
 }
 
-int zin_check_recite_to_monsters(bool recite)
+
+static const char* zin_book_desc[NUM_RECITE_TYPES] =
+{
+    "Abominations (harms the forces of chaos and mutation)",
+    "Ablutions (harms the unclean and walking corpses)",
+    "Apostates (harms the faithless and heretics)",
+    "Anathema (harms all types of demons and undead)",
+    "Alliances (blesses intelligent allies)",
+};
+
+int zin_check_recite_to_monsters(recite_type *prayertype)
 {
     bool found_ineligible = false;
     bool found_eligible = false;
-    int eligible_chaotic = 0;
-    int eligible_impure = 0;
-    int eligible_heretic = 0;
-    int eligible_unholy = 0;
-    int eligible_ally = 0;
-    int eligible_types = 0;
+    recite_counts count(0);
 
     for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
@@ -578,170 +592,80 @@ int zin_check_recite_to_monsters(bool recite)
             continue;
         }
 
-        if (retval[RECITE_CHAOTIC] > 0)
-        {
-            eligible_chaotic++;
-            found_eligible = true;
-        }
-        if (retval[RECITE_IMPURE] > 0)
-        {
-            eligible_impure++;
-            found_eligible = true;
-        }
-        if (retval[RECITE_HERETIC] > 0)
-        {
-            eligible_heretic++;
-            found_eligible = true;
-        }
-        if (retval[RECITE_UNHOLY] > 0)
-        {
-            eligible_unholy++;
-            found_eligible = true;
-        }
-        if (retval[RECITE_ALLY] > 0)
-        {
-            eligible_ally++;
-            found_eligible = true;
-        }
+        for (int i = 0; i < NUM_RECITE_TYPES; i++)
+            if (retval[i] > 0)
+                count[i]++, found_eligible = true;
     }
 
-    if (found_eligible == 0 && found_ineligible == 0)
+    if (!found_eligible && !found_ineligible)
     {
         dprf("No audience found!");
         return (0);
     }
-    else if (found_eligible == 0 && found_ineligible == 1)
+    else if (!found_eligible && found_ineligible)
     {
         dprf("No sensible audience found!");
         return (-1);
     }
-    else if (recite == 0)
-        return(1);
 
-    if (eligible_chaotic > 0)
-        eligible_types++;
-    if (eligible_impure > 0)
-        eligible_types++;
-    if (eligible_heretic > 0)
-        eligible_types++;
-    if (eligible_unholy > 0)
-        eligible_types++;
-    if (eligible_ally > 0)
-        eligible_types++;
+    if (!prayertype)
+        return (1);
+
+    int eligible_types = 0;
+    for (int i = 0; i < NUM_RECITE_TYPES; i++)
+        if (count[i] > 0)
+            eligible_types++;
 
     //If there's only one eligible recitation, and we're actually reciting, then perform it.
     if (eligible_types == 1)
     {
-        const int prayertype = (eligible_chaotic > 0)  ?  RECITE_CHAOTIC  :
-                               (eligible_impure > 0)   ?  RECITE_IMPURE   :
-                               (eligible_heretic > 0)  ?  RECITE_HERETIC  :
-                               (eligible_unholy > 0)   ?  RECITE_UNHOLY   :
-                               (eligible_ally > 0)     ?  RECITE_ALLY     :
-                                                          NUM_RECITE_TYPES;
+        for (int i = 0; i < NUM_RECITE_TYPES; i++)
+            if (count[i] > 0)
+                *prayertype = (recite_type)i;
+
         // If we got this far, we're actually reciting:
         you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
-        return (prayertype);
+        return 1;
     }
+
     //But often, you'll have multiple options...
-    else
+    mesclr();
+
+    mprf(MSGCH_PROMPT, "Recite a passage from which book of the Axioms of Law?");
+
+    int menu_cnt = 0;
+    recite_type letters[NUM_RECITE_TYPES];
+
+    for (int i = 0; i < NUM_RECITE_TYPES; i++)
     {
-        mesclr();
-
-        mprf(MSGCH_PROMPT, "Recite a passage from which book of the Axioms of Law?");
-
-        int prayertype;
-
-        int menu_count = 0;
-        std::string menu_letters [5] = {"a", "b", "c", "d", "e"};
-
-        std::string chaotic_letter;
-        std::string impure_letter;
-        std::string heretic_letter;
-        std::string unholy_letter;
-        std::string ally_letter;
-
-        if (eligible_chaotic > 0)
+        if (count[i] > 0 && i != RECITE_ALLY) // no ally recite yet
         {
-             chaotic_letter = menu_letters[menu_count];
-             mprf("%-4s[%s] - Abominations (harms the forces of chaos and mutation)", "", chaotic_letter.c_str());
-             menu_count++;
+            mprf("    [%c] - %s", 'a' + menu_cnt, zin_book_desc[i]);
+            letters[menu_cnt++] = (recite_type)i;
         }
-        if (eligible_impure > 0)
-        {
-             impure_letter = menu_letters[menu_count];
-             mprf("%-4s[%s] - Ablutions (harms the unclean and walking corpses)", "", impure_letter.c_str());
-             menu_count++;
-        }
-        if (eligible_heretic > 0)
-        {
-             heretic_letter = menu_letters[menu_count];
-             mprf("%-4s[%s] - Apostates (harms the faithless and heretics)", "", heretic_letter.c_str());
-             menu_count++;
-        }
-        if (eligible_unholy > 0)
-        {
-             unholy_letter = menu_letters[menu_count];
-             mprf("%-4s[%s] - Anathema (harms all types of demons and undead)", "", unholy_letter.c_str());
-             menu_count++;
-        }
-/**
-//Commented out because no ally recite yet.
-        if (eligible_ally > 0)
-        {
-             ally_letter = menu_letters[menu_count];
-             mprf("%-4s[%s] - Alliances (blesses intelligent allies)", "", ally_letter.c_str());
-             menu_count++;
-        }
-**/
-        flush_prev_message();
-
-        while (true)
-        {
-            int keyn = tolower(getch_ck());
-
-            if (keyn == *chaotic_letter.c_str())
-            {
-                prayertype = RECITE_CHAOTIC;
-                break;
-            }
-            else if (keyn == *impure_letter.c_str())
-            {
-                prayertype = RECITE_IMPURE;
-                break;
-            }
-            else if (keyn == *heretic_letter.c_str())
-            {
-                prayertype = RECITE_HERETIC;
-                break;
-            }
-            else if (keyn == *unholy_letter.c_str())
-            {
-                prayertype = RECITE_UNHOLY;
-                break;
-            }
-/**
-//Commented out because no ally recite yet.
-            else if (keyn == *ally_letter.c_str())
-            {
-                prayertype = RECITE_ALLY;
-                break;
-            }
-**/
-            else
-            {
-                prayertype = 0;
-                break;
-            }
-        }
-        if (prayertype)
-        // If we got this far, we're actually reciting and are out of breath from it:
-            you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
-        return (prayertype);
     }
+    flush_prev_message();
+
+    while (true)
+    {
+        int keyn = tolower(getch_ck());
+
+        if (keyn >= 'a' && keyn < 'a' + menu_cnt)
+        {
+            *prayertype = letters[keyn - 'a'];
+            break;
+        }
+        else
+            return 0;
+    }
+    // If we got this far, we're actually reciting and are out of breath from it:
+    you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
+    return 1;
 }
 
 int zin_recite_to_single_monster(const coord_def& where,
-                                 bool imprisoned, int prayertype)
+                                 bool imprisoned,
+                                 recite_type prayertype)
 {
     // That's a pretty good sanity check, I guess.
     if (you.religion != GOD_ZIN)
