@@ -120,6 +120,8 @@ CHOWN = chown 2>/dev/null
 PNGCRUSH = $(COPY)
 PNGCRUSH_LABEL = COPY
 ADVPNG = advpng -z -4
+DOXYGEN = doxygen
+DOXYGEN_CONF = crawl.doxy
 
 export AR
 export RANLIB
@@ -1090,6 +1092,10 @@ $(GAME): $(GAME_DEPENDS)
 debug: all
 profile: all
 wizard: all
+
+doxy: doxygen
+doxygen:
+	$(DOXYGEN) $(DOXYGEN_CONF)
 
 $(UTIL)%.o: $(UTIL)%.cc .cflags
 ifdef NO_INLINE_DEPGEN
