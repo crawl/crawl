@@ -189,7 +189,6 @@ struct hints_state
 
     bool hints_just_triggered;
     unsigned int hints_type;
-    unsigned int hints_left;
 };
 
 extern hints_state Hints;

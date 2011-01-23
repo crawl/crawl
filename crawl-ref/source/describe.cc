@@ -2265,7 +2265,7 @@ void describe_feature_wide(const coord_def& pos)
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
     wait_for_keypress();
@@ -2307,18 +2307,13 @@ void set_feature_quote(const std::string &raw_name,
         quote_table[raw_name] = quote;
 }
 
-static bool _in_hints_or_tutorial_mode()
-{
-    return (Hints.hints_left || crawl_state.game_is_tutorial());
-}
-
 void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 {
     // Don't use verbose descriptions if terse and the item contains spells,
     // so we can actually output these spells if space is scarce.
     const bool verbose = !terse || !item.has_spells();
     inf.body << get_item_description(item, verbose, false,
-                                     _in_hints_or_tutorial_mode());
+                                     crawl_state.game_is_hints_tutorial());
 }
 
 // Returns true if spells can be shown to player.
@@ -2346,7 +2341,7 @@ static void _show_item_description(const item_def &item)
 
     std::string desc =
         get_item_description(item, true, false,
-                             _in_hints_or_tutorial_mode());
+                             crawl_state.game_is_hints_tutorial());
 
     int num_lines = count_desc_lines(desc, lineWidth) + 1;
 
@@ -2358,7 +2353,7 @@ static void _show_item_description(const item_def &item)
         desc = get_item_description(item, true, false, true);
 
     print_description(desc);
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_describe_item(item);
 
     if (_can_show_spells(item))
@@ -2742,8 +2737,11 @@ void inscribe_item(item_def &item, bool msgwin)
             prompt = "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
 
-            if (Hints.hints_left && wherey() <= get_number_of_lines() - 5)
+            if (crawl_state.game_is_hints()
+                && wherey() <= get_number_of_lines() - 5)
+            {
                 hints_inscription_info(need_autoinscribe, prompt);
+            }
         }
 
     keyin = (prompt != "" ? getch_ck() : 'i');
@@ -3561,7 +3559,7 @@ void describe_monsters(const monster_info &mi, bool force_seen,
     describe_info inf;
     bool has_stat_desc = false;
     get_monster_db_desc(mi, inf, has_stat_desc, force_seen,
-                        _in_hints_or_tutorial_mode());
+                        crawl_state.game_is_hints_tutorial());
 
     if (!footer.empty())
     {
@@ -3577,7 +3575,7 @@ void describe_monsters(const monster_info &mi, bool force_seen,
 
     // TODO enne - this should really move into get_monster_db_desc
     // and an additional tutorial string added to describe_info.
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_describe_monster(mi, has_stat_desc);
 
     if (wait_until_key_pressed)

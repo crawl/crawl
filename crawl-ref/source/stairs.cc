@@ -644,7 +644,7 @@ void up_stairs(dungeon_feature_type force_stair,
         bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
                             false, 'n') || !_check_carrying_orb());
 
-        if (!stay && Hints.hints_left)
+        if (!stay && crawl_state.game_is_hints())
         {
             if (!yesno("Are you *sure*?  Doing so will end the game!", false,
                        'n'))

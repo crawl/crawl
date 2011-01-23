@@ -90,8 +90,6 @@ void save_hints(writer& outf)
 
 void load_hints(reader& inf)
 {
-    Hints.hints_left = 0;
-
     int version = unmarshallInt(inf);
     // Discard everything if the number doesn't match.
     if (version != HINT_EVENTS_NUM)
@@ -99,18 +97,13 @@ void load_hints(reader& inf)
 
     Hints.hints_type = unmarshallShort(inf);
     for (long i = 0; i < HINT_EVENTS_NUM; ++i)
-    {
         Hints.hints_events[i] = unmarshallBoolean(inf);
-        // Don't increase for tutorial.
-        if (crawl_state.game_is_hints())
-            Hints.hints_left += Hints.hints_events[i];
-    }
 }
 
 // Override init file definition for some options.
 void init_hints_options()
 {
-    if (!Hints.hints_left)
+    if (crawl_state.game_is_hints())
         return;
 
     // Clear possible debug messages before messing
@@ -132,7 +125,6 @@ void init_hints()
     // This is rather backwards: If (true) an event still needs to be
     // triggered, if (false) the relevant message was already printed.
     Hints.hints_events.init(true);
-    Hints.hints_left = HINT_EVENTS_NUM;
 
     // Used to compare which fighting means was used most often.
     // XXX: This gets reset with every save, which seems odd.
@@ -211,7 +203,7 @@ void pick_hints(newgame_def* choice)
 
 void hints_load_game()
 {
-    if (!Hints.hints_left)
+    if (!crawl_state.game_is_hints())
         return;
 
     learned_something_new(HINT_LOAD_SAVED_GAME);
@@ -357,7 +349,7 @@ void hints_starting_screen()
 // Called each turn from _input. Better name welcome.
 void hints_new_turn()
 {
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
     {
         Hints.hints_just_triggered = false;
 
@@ -412,7 +404,6 @@ void hints_new_turn()
 // Once a hints mode character dies, offer some last playing hints.
 void hints_death_screen()
 {
-    Hints.hints_left = 0;
     std::string text;
 
     mpr("Condolences! Your character's premature death is a sad, but "
@@ -551,7 +542,8 @@ void hints_finished()
 {
     std::string text;
 
-    Hints.hints_left = 0;
+    crawl_state.type = GAME_TYPE_NORMAL;
+
     text =  "Congrats! You survived until the end of the hint mode - be sure "
             "to try the other ones as well. Note that the command help screen "
             "(<w>%?</w>) will look very different from now on. Here's a last "
@@ -648,7 +640,10 @@ void hints_finished()
 // Occasionally remind religious characters of sacrifices.
 void hints_dissection_reminder(bool healthy)
 {
-    if (Hints.hints_just_triggered || !Hints.hints_left)
+    if (!crawl_state.game_is_hints())
+        return;
+
+    if (Hints.hints_just_triggered)
         return;
 
     // When hungry, give appropriate message or at least don't suggest
@@ -727,7 +722,7 @@ void hints_healing_check()
 // FIXME: This is currently UNUSED!
 void hints_healing_reminder()
 {
-    if (!Hints.hints_left)
+    if (crawl_state.game_is_hints())
         return;
 
     if (you.duration[DUR_POISONING] && 2*you.hp < you.hp_max)
@@ -839,7 +834,7 @@ void taken_new_item(object_class_type item_type)
 // Give a special message if you gain a skill you didn't have before.
 void hints_gained_new_skill(skill_type skill)
 {
-    if (!Hints.hints_left)
+    if (crawl_state.game_is_hints())
         return;
 
     learned_something_new(HINT_SKILL_RAISE);
@@ -1016,7 +1011,6 @@ void hints_monster_seen(const monster& mon)
     stop_running();
 
     Hints.hints_events[HINT_SEEN_MONSTER] = false;
-    Hints.hints_left--;
     Hints.hints_just_triggered = true;
 
     std::string text = "That ";
@@ -1129,7 +1123,6 @@ void hints_first_item(const item_def &item)
     stop_running();
 
     Hints.hints_events[HINT_SEEN_FIRST_OBJECT] = false;
-    Hints.hints_left--;
     Hints.hints_just_triggered = true;
 
     std::string text = "That ";
@@ -1318,7 +1311,6 @@ static std::string _describe_portal(const coord_def &gc)
 #define DELAY_EVENT \
 { \
     Hints.hints_events[seen_what] = true; \
-    Hints.hints_left++; \
     return; \
 }
 
@@ -1396,9 +1388,6 @@ static bool _tutorial_interesting(hints_event_type event)
 // Initialize the corresponding events, so they can get displayed.
 void tutorial_init_hints()
 {
-    // Note: Don't set hints_left because that would also trigger
-    // generic messages elsewhere. We only want a few.
-
     Hints.hints_events.init(false);
     for (int i = 0; i < HINT_EVENTS_NUM; ++i)
         if (_tutorial_interesting((hints_event_type) i))
@@ -1408,12 +1397,16 @@ void tutorial_init_hints()
 // Here most of the hints mode messages for various triggers are handled.
 void learned_something_new(hints_event_type seen_what, coord_def gc)
 {
+    if (!crawl_state.game_is_hints_tutorial())
+        return;
+
     // Already learned about that.
     if (!Hints.hints_events[seen_what])
         return;
 
     // Don't trigger twice in the same turn.
-    if (Hints.hints_left && Hints.hints_just_triggered
+    // Not required in the tutorial.
+    if (crawl_state.game_is_hints() && Hints.hints_just_triggered
         && !_rare_hints_event(seen_what))
     {
         return;
@@ -1422,10 +1415,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     std::ostringstream text;
     std::vector<command_type> cmd;
 
-    Hints.hints_just_triggered = true;
+    Hints.hints_just_triggered    = true;
     Hints.hints_events[seen_what] = false;
-    if (Hints.hints_left)
-        Hints.hints_left--;
 
     switch (seen_what)
     {
@@ -2904,7 +2895,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             // Don't trigger if the wielded weapon is cursed.
             Hints.hints_events[seen_what] = true;
-            Hints.hints_left++;
             return;
         }
 

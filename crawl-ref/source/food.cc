@@ -259,7 +259,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
         if (!gloved_butcher)
         {
             mpr("You don't carry any weapon you could use for butchering.");
-            if (Hints.hints_left)
+            if (crawl_state.game_is_hints())
             {
                 mpr("You should pick up the first knife, dagger, sword or axe "
                     "you find so you can use it to butcher corpses.",

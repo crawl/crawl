@@ -813,7 +813,7 @@ bool melee_attack::player_attack()
     if (ev_margin >= 0)
     {
         did_hit = true;
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             Hints.hints_melee_counter++;
 
         const bool shield_blocked = attack_shield_blocked(true);

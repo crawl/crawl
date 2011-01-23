@@ -309,7 +309,7 @@ void handle_monster_shouts(monster* mons, bool force)
     const int  noise_level = get_shout_noise_level(s_type);
     const bool heard       = noisy(noise_level, mons->pos(), mons->mindex());
 
-    if (Hints.hints_left && (heard || you.can_see(mons)))
+    if (crawl_state.game_is_hints() && (heard || you.can_see(mons)))
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 

@@ -2781,7 +2781,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
     abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE
                             | MF_ALWAYS_SHOW_MORE);
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
     {
         // XXX: This could be buggy if you manage to pick up lots and
         // lots of abilities during hints mode.

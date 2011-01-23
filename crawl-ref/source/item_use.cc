@@ -2956,7 +2956,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else
     {
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             Hints.hints_throw_counter++;
 
         // Dropping item copy, since the launched item might be different.
