@@ -1629,6 +1629,12 @@ bool check_warning_inscriptions(const item_def& item,
             if (equip != -1 && item.link == equip)
                 return (check_old_item_warning(item, oper));
         }
+        else if (oper == OPER_REMOVE || oper == OPER_TAKEOFF)
+        {
+            // Don't ask if it will fail anyway.
+            if (item.cursed())
+                return (true);
+        }
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
