@@ -2363,7 +2363,7 @@ void mark_milestone(const std::string &type,
         || (lastturn == you.num_turns
             && lasttype == type
             && lastmilestone == milestone)
-#ifndef SCORE_WIZARD_MODE
+#ifndef SCORE_WIZARD_CHARACTERS
         // Don't mark milestones in wizmode
         || you.wizard
 #endif
