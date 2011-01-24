@@ -5267,10 +5267,7 @@ void tile_item_use(int idx)
         case OBJ_MISCELLANY:
         case OBJ_WANDS:
             // Wield any unwielded item of these types.
-            if (!equipped
-                && (type == OBJ_WEAPONS || type == OBJ_STAVES || is_deck(item)
-                    || type == OBJ_MISCELLANY
-                       && item.sub_type == MISC_LANTERN_OF_SHADOWS))
+            if (!equipped && item_is_wieldable(item))
             {
                 wield_weapon(true, idx);
                 return;

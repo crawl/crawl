@@ -238,6 +238,7 @@ void init_item_sort_comparators(item_sort_comparators &list,
 
 bool prompt_failed(int retval, std::string msg = "");
 
+bool item_is_wieldable(const item_def &item);
 bool item_is_evokable(const item_def &item, bool known = false,
                       bool all_wands = false, bool msg = false);
 bool needs_handle_warning(const item_def &item, operation_types oper);
