@@ -1181,16 +1181,17 @@ int zin_recite_to_single_monster(const coord_def& where,
     }
 }
 
-// This is an unholy hybrid of banishment code and toadstool code.
 void zin_saltify(monster* mon)
 {
     const coord_def where = mon->pos();
     const monster_type pillar_type = mons_species(mon->type);
 
-    // It's not actually banished... but this is an easy way to make it not leave a corpse, for now.
-    mon->flags |= MF_BANISHED;
     simple_monster_message(mon, " is turned into a pillar of salt by the wrath of Zin!");
-    monster_die(mon, KILL_YOU, NON_MONSTER);
+
+    // If the monster leaves a corpse when it dies, destroy the corpse.
+    int corpse = monster_die(mon, KILL_YOU, NON_MONSTER);
+    if (corpse != -1)
+        destroy_item(corpse);
 
     const int pillar = create_monster(
                         mgen_data(MONS_SALT_PILLAR,
