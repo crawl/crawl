@@ -121,7 +121,8 @@ PNGCRUSH = $(COPY)
 PNGCRUSH_LABEL = COPY
 ADVPNG = advpng -z -4
 DOXYGEN = doxygen
-DOXYGEN_CONF = crawl.doxy
+DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
+DOXYGEN_ALL_CONF = crawl_all.doxy
 
 export AR
 export RANLIB
@@ -1093,9 +1094,13 @@ debug: all
 profile: all
 wizard: all
 
-doxy: doxygen
-doxygen:
-	$(DOXYGEN) $(DOXYGEN_CONF)
+doxy-simple: doxygen-simple
+doxygen-simple:
+	$(DOXYGEN) $(DOXYGEN_SIMPLE_CONF)
+
+doxy-all: doxygen-all
+doxygen-all:
+	$(DOXYGEN) $(DOXYGEN_ALL_CONF)
 
 $(UTIL)%.o: $(UTIL)%.cc .cflags
 ifdef NO_INLINE_DEPGEN
