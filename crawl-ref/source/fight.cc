@@ -6196,8 +6196,12 @@ int weapon_str_weight(object_class_type wpn_class, int wpn_type)
     }
 
     // whips are special cased (because they are not much like maces)
-    if (wpn_type == WPN_WHIP || wpn_type == WPN_DEMON_WHIP)
+    if (wpn_type == WPN_WHIP
+        || wpn_type == WPN_DEMON_WHIP
+        || wpn_type == WPN_SACRED_SCOURGE)
+    {
         ret = 2;
+    }
     else if (wpn_type == WPN_QUICK_BLADE) // high dex is very good for these
         ret = 1;
 
