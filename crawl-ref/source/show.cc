@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @section DESCRIPTION
+ *
+ * Filename: show.cc
+ * Summary: updates the screen via map_knowledge.
+**/
+
 #include "AppHdr.h"
 
 #include <stdint.h>
@@ -266,6 +274,35 @@ static void _check_monster_pos(const monster* mons)
     }
 }
 
+/**
+ * Determine if a location is valid to present a { glyph.
+ *
+ * @param where    The location being queried.
+ * @param mons     The moster being mimicked.
+ * @returns        True if valid, otherwise False.
+*/
+static bool _valid_invis_spot (const coord_def &where, const monster* mons)
+{
+    monster *mons_at = monster_at(where);
+
+    if (mons_at && mons_at != mons)
+        return (false);
+
+    if (monster_habitable_grid(mons, grd(where)))
+        return (true);
+
+    return (false);
+}
+
+/**
+ * Update map knowledge for monsters
+ *
+ * This function updates the map_knowledge grid with a monster_info if relevant.
+ * If the monster is not currently visible to the player, the map knowledge will
+ * be upated with a disturbance if necessary.
+ *
+ * @param mons    The monster at the relevant location.
+**/
 static void _update_monster(const monster* mons)
 {
     _check_monster_pos(mons);
@@ -316,11 +353,11 @@ static void _update_monster(const monster* mons)
 
             // Otherwise just indicate that there's a monster nearby
             coord_def new_pos = gp + Compass[random2(8)];
-            if (monster_habitable_grid(MONS_HUMAN, grd(new_pos)) && coinflip())
+            if (_valid_invis_spot(new_pos, mons) && coinflip())
                 env.map_knowledge(new_pos).set_invisible_monster();
 
             new_pos = gp + Compass[random2(8)];
-            if (monster_habitable_grid(MONS_HUMAN, grd(new_pos)) && one_chance_in(3))
+            if (_valid_invis_spot(new_pos, mons) && one_chance_in(3))
                 env.map_knowledge(new_pos).set_invisible_monster();
         }
 
