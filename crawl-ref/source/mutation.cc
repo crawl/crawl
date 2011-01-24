@@ -1903,10 +1903,12 @@ void check_demonic_guardian()
                              MONS_IRON_IMP, MONS_MIDGE, -1);
             break;
         case 2:
-            mt = random_mons(MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, -1);
+            mt = random_mons(MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_IRON_DEVIL,
+                             MONS_BLUE_DEVIL, MONS_HAIRY_DEVIL, -1);
             break;
         case 3:
-            mt = random_mons(MONS_EXECUTIONER, MONS_BALRUG, -1);
+            mt = random_mons(MONS_EXECUTIONER, MONS_BALRUG, MONS_ICE_DEVIL,
+                             MONS_SOUL_EATER, MONS_SUN_DEMON, -1);
             break;
         default:
             die("Invalid demonic guardian level: %d", mutlevel);
