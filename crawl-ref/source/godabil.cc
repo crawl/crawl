@@ -1032,7 +1032,7 @@ int zin_recite_to_single_monster(const coord_def& where,
             }
             else
             {
-                zin_saltify(where, mon);
+                zin_saltify(mon);
             }
 
         }
@@ -1103,7 +1103,7 @@ int zin_recite_to_single_monster(const coord_def& where,
             }
             else
             {
-                zin_saltify(where, mon);
+                zin_saltify(mon);
             }
         }
 
@@ -1168,7 +1168,7 @@ int zin_recite_to_single_monster(const coord_def& where,
             }
             else
             {
-                zin_saltify(where, mon);
+                zin_saltify(mon);
             }
 
         }
@@ -1182,9 +1182,11 @@ int zin_recite_to_single_monster(const coord_def& where,
 }
 
 // This is an unholy hybrid of banishment code and toadstool code.
-// In the future it would be nice if pillars of salt got renamed ("an orc-shaped pillar of salt").
-void zin_saltify(const coord_def& where, monster* mon)
+void zin_saltify(monster* mon)
 {
+    const coord_def where = mon->pos();
+    const monster_type pillar_type = mons_species(mon->type);
+
     // It's not actually banished... but this is an easy way to make it not leave a corpse, for now.
     mon->flags |= MF_BANISHED;
     simple_monster_message(mon, " is turned into a pillar of salt by the wrath of Zin!");
@@ -1200,9 +1202,7 @@ void zin_saltify(const coord_def& where, monster* mon)
                                   MHITNOT,
                                   MG_FORCE_PLACE,
                                   GOD_NO_GOD,
-                                  MONS_SALT_PILLAR,
-                                  0,
-                                  WHITE),
+                                  pillar_type),
                                   false);
 
     if (pillar != -1)
