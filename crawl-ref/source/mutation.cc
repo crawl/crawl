@@ -1623,12 +1623,12 @@ static bool _slot_is_unique(const mutation_type mut[],
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
     int NUM_BODY_SLOTS = 1;
-    int ct_of_tier[] = { 0, 2, 3, 1 };
+    int ct_of_tier[] = { 0, 1, 3, 1 };
     // 1 in 10 chance to create a monstrous set
     if (one_chance_in(10))
     {
         NUM_BODY_SLOTS = 3;
-        ct_of_tier[1] = 1;
+        ct_of_tier[1] = 0;
         ct_of_tier[2] = 5;
     }
 
@@ -1639,8 +1639,6 @@ try_again:
     int absfacet = 0;
     int scales = 0;
     int slots_lost = 0;
-    int fire_breath = 0;
-    int poison_breath = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
 
@@ -1672,12 +1670,6 @@ try_again:
                 if (_is_covering(m))
                     ++scales;
 
-                if (i == 0 && m == MUT_SPIT_POISON)
-                    poison_breath++;
-
-                if (i == 0 && m == MUT_BREATHE_FLAMES)
-                    fire_breath++;
-
                 if (m == MUT_COLD_RESISTANCE)
                     ice_elemental++;
 
@@ -1705,13 +1697,7 @@ try_again:
     if (slots_lost != NUM_BODY_SLOTS)
         goto try_again;
 
-    if (fire_breath + poison_breath > 1)
-        goto try_again;
-
     if (ice_elemental + fire_elemental > 1)
-        goto try_again;
-
-    if (fire_breath + ice_elemental > 1)
         goto try_again;
 
     return ret;
