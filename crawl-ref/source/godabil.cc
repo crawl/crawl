@@ -663,9 +663,31 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     return 1;
 }
 
-int zin_recite_to_single_monster(const coord_def& where,
-                                 bool imprisoned,
-                                 recite_type prayertype)
+enum zin_eff
+{
+    ZIN_NOTHING,
+    ZIN_SLEEP,
+    ZIN_DAZE,
+    ZIN_CONFUSE,
+    ZIN_FEAR,
+    ZIN_PARALYSE,
+    ZIN_BLEED,
+    ZIN_SMITE,
+    ZIN_BLIND,
+    ZIN_CORONA,
+    ZIN_ANTIMAGIC,
+    ZIN_MUTE,
+    ZIN_MAD,
+    ZIN_DUMB,
+    ZIN_IGNITE_CHAOS,
+    ZIN_SALTIFY,
+    ZIN_ROT,
+    ZIN_HOLY_WORD,
+};
+
+bool zin_recite_to_single_monster(const coord_def& where,
+                                  bool imprisoned,
+                                  recite_type prayertype)
 {
     // That's a pretty good sanity check, I guess.
     if (you.religion != GOD_ZIN)
@@ -673,512 +695,464 @@ int zin_recite_to_single_monster(const coord_def& where,
 
     monster* mon = monster_at(where);
 
-    if (mon == NULL)
-        return (0);
+    if (!mon)
+        return false;
 
-    int power;
-    int resist;
-    int check;
     recite_counts eligibility;
-    int degree;
-    int spellpower;
-    int affected = 0;
-    int pain = 0;
+    bool affected = false;
 
     if (zin_check_recite_to_single_monster(where, eligibility) < 1)
-        return 0;
+        return false;
 
     // First check: are they even eligible for this kind of recitation?
     // (Monsters that have been hurt by recitation aren't eligible.)
     if (eligibility[prayertype] < 1)
-        return(0);
+        return false;
 
     // Second check: because this affects the whole screen over several turns,
     // its effects are staggered. There's a 50% chance per monster, per turn,
     // that nothing will happen - so the cumulative odds of nothing happening
     // are one in eight, since you recite three times.
     if (coinflip())
-        return(0);
+        return false;
 
     // Resistance is now based on HD. You can affect up to (30+30)/2 = 30 'power' (HD).
-    power = ((skill_bump(SK_INVOCATIONS) + (you.piety*1.5)/10))/2;
-
-    resist = mon->get_experience_level();
-
-    check = power - resist;
-
+    int power = (skill_bump(SK_INVOCATIONS) + you.piety * 3 / 20) / 2;
     // Old recite was mostly deterministic, which is bad.
-    // Here we introduce a random factor: your check is decreased by 0 to 5.
-    check -= random2(6);
+    int resist = mon->get_experience_level() + random2(6);
+    int check = power - resist;
 
     // We abort if we didn't *beat* their HD - but first we might get a cute message.
-    if (mon->can_speak())
+    if (mon->can_speak() && one_chance_in(5))
     {
         if (check < -10)
-        {
-            if (one_chance_in(5))
             simple_monster_message(mon, " guffaws at your puny god.");
-        }
         else if (check < -5)
-        {
-            if (one_chance_in(5))
             simple_monster_message(mon, " sneers at your recitation.");
-        }
     }
 
-    if (check < 1)
-    {
-        return(0);
-    }
-    else
-    {
-        // To what degree are they eligible for this prayertype?
-        degree = eligibility[prayertype];
-        spellpower = power * 2 + degree * 20;
+    if (check <= 0)
+        return false;
 
-        if (prayertype == RECITE_ALLY)
-        {
+    // To what degree are they eligible for this prayertype?
+    int degree = eligibility[prayertype];
+    bool minor = degree <= ((prayertype == RECITE_HERETIC) ? 2 : 1);
+    int spellpower = power * 2 + degree * 20;
+    zin_eff effect = ZIN_NOTHING;
+
+    switch (prayertype)
+    {
+    case RECITE_ALLY:
         // Stub. Not implemented yet.
-        }
+        break;
 
-        if (prayertype == RECITE_HERETIC && degree == 1 && !mon->asleep())
+    case RECITE_HERETIC:
+        if (degree == 1)
         {
-        // This is the path for 'conversion' effects.
-        // Their degree is only 1 if they weren't a priest,
-        // a worshiper of an evil or chaotic god, etc.
+            if (mon->asleep())
+                break;
+            // This is the path for 'conversion' effects.
+            // Their degree is only 1 if they weren't a priest,
+            // a worshiper of an evil or chaotic god, etc.
 
-        // Right now, it only has the 'failed conversion' effects, though.
-
-        // This branch can't hit sleeping monsters - until they wake up.
+            // Right now, it only has the 'failed conversion' effects, though.
+            // This branch can't hit sleeping monsters - until they wake up.
 
             if (check < 5)
             {
-/**                if (one_chance_in(4))
-                   {
-
-// Sleep doesn't really work well. This should be more 'forceful'. But how?
-                    if (mon->can_sleep())
-                    {
-                        mon->put_to_sleep(NULL, 0);
-                        simple_monster_message(mon, " nods off for a moment.");
-                        affected++;
-                    }
-                }
+#if 0
+                // Sleep doesn't really work well. This should be more
+                // 'forceful'. But how?
+                if (one_chance_in(4))
+                    effect = ZIN_SLEEP;
                 else
-                {
-**/
-
-                    if ( mon->add_ench(mon_enchant(ENCH_DAZED, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is dazed by your recitation.");
-                        affected++;
-                    }
-//                }
+#endif
+                    effect = ZIN_DAZE;
             }
             else if (check < 10)
             {
                 if (coinflip())
-                {
-                    if (mons_class_is_confusable(mon->type) && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is confused by your recitation.");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_CONFUSE;
                 else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is dazed by your recitation.");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_DAZE;
             }
             else if (check < 15)
             {
                 if (one_chance_in(3))
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_FEAR, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is terrified by your recitation.");
-                        behaviour_event(mon, ME_SCARE, MHITNOT, you.pos());
-                        affected++;
-                    }
-                }
+                    effect = ZIN_FEAR;
                 else
-                {
-                    if (mons_class_is_confusable(mon->type) && mon->add_ench(mon_enchant(ENCH_CONFUSION, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is confused by your recitation.");
-                        affected++;
-                    }
-                }
-
-
+                    effect = ZIN_CONFUSE;
             }
             else
             {
                 if (one_chance_in(3))
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is awed by your recitation.");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_PARALYSE;
                 else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_FEAR, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is terrified by your recitation.");
-                        behaviour_event(mon, ME_SCARE, MHITNOT, you.pos());
-                        affected++;
-                    }
-                }
-
+                    effect = ZIN_FEAR;
             }
         }
-
-        if (prayertype == RECITE_HERETIC && degree > 1)
+        else
         {
-        // This is the path for 'smiting' effects.
-        // Their degree is only greater than 1 if
-        // they're unable to be redeemed.
-
+            // This is the path for 'smiting' effects.
+            // Their degree is only greater than 1 if
+            // they're unable to be redeemed.
             if (check < 5)
             {
-                if (coinflip() && mon->can_bleed() && mon->add_ench(mon_enchant(ENCH_BLEED, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                {
-                    mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU, (degree + random2(spellpower)) * 10));
-                    (degree == 2) ? simple_monster_message(mon, "'s eyes and ears begin to bleed.")
-                                  : simple_monster_message(mon, " bleeds profusely from its eyes and ears.");
-                    affected++;
-                    pain++;
-                }
+                if (coinflip())
+                    effect = ZIN_BLEED;
                 else
-                {
-                    mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
-                    (degree == 2) ? simple_monster_message(mon, " is smitten by the wrath of Zin.")
-                                  : simple_monster_message(mon, " is blasted by the fury of Zin!");
-                    if (mon->alive())
-                        print_wounds(mon);
-                    affected++;
-                    pain++;
-                }
+                    effect = ZIN_SMITE;
             }
             else if (check < 10)
             {
                 if (one_chance_in(3))
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is struck blind by the wrath of Zin!");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_BLIND;
                 else if (coinflip())
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is limned with silver light.");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_CORONA;
                 else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        (degree == 2) ? simple_monster_message(mon, " quails at your recitation.")
-                                      : simple_monster_message(mon, " looks feeble and powerless before your recitation.");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_ANTIMAGIC;
             }
             else if (check < 15)
             {
                 if (one_chance_in(3))
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is struck blind by the wrath of Zin!");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_BLIND;
                 else if (coinflip())
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is aghast at the heresy of your recitation.");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_PARALYSE;
                 else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is struck mute by the wrath of Zin!");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_MUTE;
             }
             else
             {
                 if (coinflip())
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_MAD, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is driven mad by the wrath of Zin!");
-                        affected++;
-                    }
-                }
+                    effect = ZIN_MAD;
                 else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is left stupefied by the wrath of Zin!");
-                        affected++;
-                    }
-                }
-
+                    effect = ZIN_DUMB;
             }
         }
+        break;
 
-        if (prayertype == RECITE_CHAOTIC)
+    case RECITE_CHAOTIC:
+        if (check < 5)
         {
-            if (check < 5)
-            {
-                if (coinflip() && mon->can_bleed() && mon->add_ench(mon_enchant(ENCH_BLEED, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                {
-                    mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU, (degree + random2(spellpower)) * 10));
-                    (degree == 1) ? simple_monster_message(mon, "'s flesh is covered in bleeding sores.")
-                                  : simple_monster_message(mon, "'s chaotic flesh erupts into weeping sores!");
-                    affected++;
-                    pain++;
-
-                }
-                else
-                {
-                    mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
-                    (degree == 1) ? simple_monster_message(mon, " is smitten by the wrath of Zin.")
-                                  : simple_monster_message(mon, " is blasted by the fury of Zin!");
-                    if (mon->alive())
-                        print_wounds(mon);
-                    affected++;
-                    pain++;
-                }
-            }
-            else if (check < 10)
-            {
-               if (coinflip())
-               {
-                    if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is limned with silver light.");
-                        affected++;
-                    }
-                }
-                else
-                {
-                    mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
-                    (degree == 1) ? simple_monster_message(mon, " is smitten by the wrath of Zin.")
-                                  : simple_monster_message(mon, " is blasted by the fury of Zin!");
-                    if (mon->alive())
-                        print_wounds(mon);
-                    affected++;
-                    pain++;
-                }
-            }
-            else if (check < 15)
-            {
-                if (coinflip())
-                {
-                    // Ignite chaos!
-
-                    bolt beam;
-                    dice_def dam_dice(0, 5 + spellpower/7);  // Dice added below if applicable.
-                    dam_dice.num = degree;
-
-                    int damage = dam_dice.roll();
-                    if (damage > 0)
-                    {
-                        mon->hurt(&you, damage, BEAM_MISSILE, false);
-
-                        if (mon->alive())
-                        {
-                           (damage > 50) ? simple_monster_message(mon, "'s chaotic flesh sizzles and spatters!") :
-                           (damage > 25) ? simple_monster_message(mon, "'s flesh bubbles and boils.")            :
-                                        simple_monster_message(mon, "'s flesh runs like molten wax.");
-
-                            print_wounds(mon);
-                            behaviour_event(mon, ME_WHACK, MHITYOU);
-                            affected++;
-                            pain++;
-                        }
-                        else
-                        {
-                            simple_monster_message(mon, " melts away into a sizzling puddle of chaotic flesh.");
-                            monster_die(mon, KILL_YOU, NON_MONSTER);
-                        }
-                    }
-                }
-                else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is limned with silver light.");
-                        affected++;
-                    }
-                }
-            }
+            // nastier -- fallthrough if immune
+            if (coinflip() && mon->can_bleed())
+                effect = ZIN_BLEED;
             else
-            {
-                zin_saltify(mon);
-            }
-
+                effect = ZIN_SMITE;
         }
-
-        if (prayertype == RECITE_IMPURE)
+        else if (check < 10)
         {
-            // We don't check rotting resistance for sickness or rotting, because this is divine punishment.
-            // We do check whether a monster can bleed, because it has to have blood to do that...
-
-            if (check < 5)
-            {
-                if (coinflip() && mon->can_bleed() && mon->add_ench(mon_enchant(ENCH_BLEED, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                {
-                    mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU, (degree + random2(spellpower)) * 10));
-                    (degree == 1) ? simple_monster_message(mon, "'s flesh is covered in bleeding sores.")
-                                  : simple_monster_message(mon, "'s impure flesh erupts into weeping sores!");
-                    affected++;
-                    pain++;
-
-                }
-                else
-                {
-                    mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
-                    (degree == 1) ? simple_monster_message(mon, " is smitten by the wrath of Zin.")
-                                  : simple_monster_message(mon, " is blasted by the fury of Zin!");
-                    if (mon->alive())
-                        print_wounds(mon);
-                    affected++;
-                    pain++;
-                }
-            }
-            else if (check < 10)
-            {
-                if (coinflip() && mon->add_ench(mon_enchant(ENCH_ROT, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                {
-                    mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU, (degree + random2(spellpower)) * 10));
-                    (degree == 1) ? simple_monster_message(mon, "'s flesh begins to rot away.")
-                                  : simple_monster_message(mon, "'s impure flesh sloughs off of it!");
-                    affected++;
-                    pain++;
-                }
-                else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is limned with silver light.");
-                        affected++;
-                    }
-                }
-
-            }
-            else if (check < 15)
-            {
-                if ((mon->holiness() == MH_UNDEAD || mon->holiness() == MH_DEMONIC) && coinflip())
-                {
-                    holy_word_monsters(where, spellpower, HOLY_WORD_ZIN);
-                    affected++;
-                    pain++;
-                }
-                else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is limned with silver light.");
-                        affected++;
-                    }
-                }
-            }
+            if (coinflip())
+                effect = ZIN_CORONA;
             else
-            {
-                zin_saltify(mon);
-            }
+                effect = ZIN_SMITE;
         }
-
-        if (prayertype == RECITE_UNHOLY)
+        else if (check < 15)
         {
-            if (check < 5)
-            {
-                if (mons_intel(mon) > I_PLANT && coinflip())
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is dazed by your recitation.");
-                        affected++;
-                    }
-                }
-                else
-                {
-                    if (mons_class_is_confusable(mon->type) && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " stumbles about in disarray.");
-                        affected++;
-                    }
-                }
-            }
-            else if (check < 10)
-            {
-                if (coinflip() && mon->add_ench(mon_enchant(ENCH_FEAR, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                {
-                    (degree == 1) ? simple_monster_message(mon, " tries to escape the wrath of Zin.")
-                                  : simple_monster_message(mon, " flees in terror at the wrath of Zin!");
-                    behaviour_event(mon, ME_SCARE, MHITNOT, you.pos());
-                    affected++;
-                }
-                else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is limned with silver light.");
-                        affected++;
-                    }
-                }
-            }
-
-    // Half of the time, the anti-unholy prayer will be capped at this level of effect.
-
-            else if (check < 15 || coinflip())
-            {
-                if (coinflip())
-                {
-                    holy_word_monsters(where, spellpower, HOLY_WORD_ZIN);
-                    affected++;
-                    pain++;
-                }
-                else
-                {
-                    if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU, (degree + random2(spellpower)) * 10)))
-                    {
-                        simple_monster_message(mon, " is limned with silver light.");
-                        affected++;
-                    }
-                }
-            }
+            if (coinflip())
+                effect = ZIN_IGNITE_CHAOS;
             else
-            {
-                zin_saltify(mon);
-            }
-
+                effect = ZIN_CORONA;
         }
+        else
+            effect = ZIN_SALTIFY;
+        break;
 
-        // Monsters that have been affected may shout.
-        if (affected > 0 && one_chance_in(3) && mon->alive() && mons_shouts(mon->type, false) != S_SILENT)
-            force_monster_shout(mon);
+    case RECITE_IMPURE:
+        // We don't check rotting resistance for sickness or rotting, because this is divine punishment.
+        // FIXME: that's totally wrong for skeletons, mummies, ghosts, ...
+        // We do check whether a monster can bleed, because it has to have blood to do that...
+        if (check < 5)
+        {
+            if (coinflip() && mon->can_bleed())
+                effect = ZIN_BLEED;
+            else
+                effect = ZIN_SMITE;
+        }
+        else if (check < 10)
+        {
+            if (coinflip())
+                effect = ZIN_ROT;
+            else
+                effect = ZIN_CORONA;
+        }
+        else if (check < 15)
+        {
+            if (mon->undead_or_demonic() && coinflip())
+                effect = ZIN_HOLY_WORD;
+            else
+                effect = ZIN_CORONA;
+        }
+        else
+            effect = ZIN_SALTIFY;
+        break;
 
-    return (1);
+    case RECITE_UNHOLY:
+        if (check < 5)
+        {
+            if (mons_intel(mon) > I_PLANT && coinflip())
+                effect = ZIN_DAZE;
+            else
+                effect = ZIN_CONFUSE;
+        }
+        else if (check < 10)
+        {
+            if (coinflip())
+                effect = ZIN_FEAR;
+            else
+                effect = ZIN_CORONA;
+        }
+        // Half of the time, the anti-unholy prayer will be capped at this
+        // level of effect.
+        else if (check < 15 || coinflip())
+        {
+            if (coinflip())
+                effect = ZIN_HOLY_WORD;
+            else
+                effect = ZIN_CORONA;
+        }
+        else
+            effect = ZIN_SALTIFY;
+        break;
+
+    case NUM_RECITE_TYPES:
+        die("invalid recite type");
     }
+
+    // And the actual effects...
+    switch(effect)
+    {
+    case ZIN_NOTHING:
+        break;
+
+    case ZIN_SLEEP:
+        if (mon->can_sleep())
+        {
+            mon->put_to_sleep(&you, 0);
+            simple_monster_message(mon, " nods off for a moment.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_DAZE:
+        if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, KC_YOU,
+                          (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is dazed by your recitation.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_CONFUSE:
+        if (mons_class_is_confusable(mon->type)
+            && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree,
+                   KC_YOU, (degree + random2(spellpower)) * 10)))
+        {
+            if (prayertype == RECITE_HERETIC)
+                simple_monster_message(mon, " is confused by your recitation.");
+            else
+                simple_monster_message(mon, " stumbles about in disarray.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_FEAR:
+        if (mon->add_ench(mon_enchant(ENCH_FEAR, degree, KC_YOU,
+                          (degree + random2(spellpower)) * 10)))
+        {
+            if (prayertype == RECITE_HERETIC)
+                simple_monster_message(mon, " is terrified by your recitation.");
+            else if (minor)
+                simple_monster_message(mon, " tries to escape the wrath of Zin.");
+            else
+                simple_monster_message(mon, " flees in terror at the wrath of Zin!");
+            behaviour_event(mon, ME_SCARE, MHITNOT, you.pos());
+            affected = true;
+        }
+        break;
+
+    case ZIN_PARALYSE:
+        if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
+                              (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, minor ?
+                " is awed by your recitation." :
+                " is aghast at the heresy of your recitation.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_BLEED:
+        if (mon->can_bleed()
+            && mon->add_ench(mon_enchant(ENCH_BLEED, degree, KC_YOU,
+                                         (degree + random2(spellpower)) * 10)))
+        {
+            mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10));
+            switch(prayertype)
+            {
+            case RECITE_HERETIC:
+                if (minor)
+                    simple_monster_message(mon, "'s eyes and ears begin to bleed.");
+                else
+                    simple_monster_message(mon, " bleeds profusely from its eyes and ears.");
+                break;
+            case RECITE_CHAOTIC:
+                if (minor)
+                    simple_monster_message(mon, "'s flesh is covered in bleeding sores.");
+                else
+                    simple_monster_message(mon, "'s chaotic flesh erupts into weeping sores!");
+                break;
+            case RECITE_IMPURE:
+                if (minor)
+                    simple_monster_message(mon, "'s flesh is covered in bleeding sores.");
+                else
+                    simple_monster_message(mon, "'s impure flesh erupts into weeping sores!");
+                break;
+            default:
+                die("bad recite bleed");
+            }
+            affected = true;
+        }
+        break;
+
+    case ZIN_SMITE:
+        mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
+        if (minor)
+            simple_monster_message(mon, " is smitten by the wrath of Zin.");
+        else
+            simple_monster_message(mon, " is blasted by the fury of Zin!");
+        if (mon->alive())
+            print_wounds(mon);
+        affected = true;
+        break;
+
+    case ZIN_BLIND:
+        if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is struck blind by the wrath of Zin!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_CORONA:
+        if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is limned with silver light.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_ANTIMAGIC:
+        if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            ASSERT(prayertype == RECITE_HERETIC);
+            simple_monster_message(mon, minor ?
+                        " quails at your recitation." :
+                        " looks feeble and powerless before your recitation.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_MUTE:
+        if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is struck mute by the wrath of Zin!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_MAD:
+        if (mon->add_ench(mon_enchant(ENCH_MAD, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is driven mad by the wrath of Zin!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_DUMB:
+        if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is left stupefied by the wrath of Zin!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_IGNITE_CHAOS:
+        ASSERT(prayertype == RECITE_CHAOTIC);
+        {
+            bolt beam;
+            dice_def dam_dice(0, 5 + spellpower/7);  // Dice added below if applicable.
+            dam_dice.num = degree;
+
+            int damage = dam_dice.roll();
+            if (damage > 0)
+            {
+                mon->hurt(&you, damage, BEAM_MISSILE, false);
+
+                if (mon->alive())
+                {
+                    simple_monster_message(mon,
+                      (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
+                      (damage < 50) ? "'s flesh bubbles and boils."            :
+                                      "'s flesh runs like molten wax.");
+
+                    print_wounds(mon);
+                    behaviour_event(mon, ME_WHACK, MHITYOU);
+                    affected = true;
+                }
+                else
+                {
+                    simple_monster_message(mon,
+                        " melts away into a sizzling puddle of chaotic flesh.");
+                    monster_die(mon, KILL_YOU, NON_MONSTER);
+                }
+            }
+        }
+        break;
+
+    case ZIN_SALTIFY:
+        zin_saltify(mon);
+        break;
+
+    case ZIN_ROT:
+        ASSERT(prayertype == RECITE_IMPURE);
+        if (mon->add_ench(mon_enchant(ENCH_ROT, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10));
+            simple_monster_message(mon,
+                minor ? "'s flesh begins to rot away."
+                      : "'s impure flesh sloughs off of it!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_HOLY_WORD:
+        holy_word_monsters(where, spellpower, HOLY_WORD_ZIN);
+        affected = true;
+        break;
+    }
+
+    // Monsters that have been affected may shout.
+    if (affected
+        && one_chance_in(3)
+        && mon->alive()
+        && !mon->asleep()
+        && !mon->cannot_move()
+        && mons_shouts(mon->type, false) != S_SILENT)
+    {
+        force_monster_shout(mon);
+    }
+
+    return true;
 }
 
 void zin_saltify(monster* mon)
