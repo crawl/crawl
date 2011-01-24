@@ -123,6 +123,7 @@ ADVPNG = advpng -z -4
 DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
+DOXYGEN_HTML_GEN = html/
 
 export AR
 export RANLIB
@@ -1086,6 +1087,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
 	$(RM) scores $(GAME) core $(DEPENDENCY_MKF)
 	$(RM) -r mac-app-zips
+	$(RM) -r $(DOXYGEN_HTML_GEN)
 
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
