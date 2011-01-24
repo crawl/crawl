@@ -1184,7 +1184,10 @@ int zin_recite_to_single_monster(const coord_def& where,
 void zin_saltify(monster* mon)
 {
     const coord_def where = mon->pos();
-    const monster_type pillar_type = mons_species(mon->type);
+    const monster_type pillar_type =
+        mons_is_zombified(mon) ? mons_zombie_base(mon)
+                               : mons_species(mon->type);
+    const int hd = mon->get_experience_level();
 
     simple_monster_message(mon, " is turned into a pillar of salt by the wrath of Zin!");
 
@@ -1209,7 +1212,7 @@ void zin_saltify(monster* mon)
     if (pillar != -1)
     {
         // Enemies with more HD leave longer-lasting pillars of salt.
-        int time_left = (random2(8) + mon->get_experience_level()) * 10;
+        int time_left = (random2(8) + hd) * 10;
         mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, KC_OTHER, time_left);
         env.mons[pillar].update_ench(temp_en);
     }
