@@ -296,7 +296,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             item_slot = 1;      // backup is 'b'
         }
 
-        if (slot >= 0)         // allow external override
+        if (slot != -1)         // allow external override
             item_slot = slot;
     }
 
