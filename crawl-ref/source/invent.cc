@@ -1072,9 +1072,7 @@ static bool _item_class_selected(const item_def &i, int selector)
     }
     case OBJ_WEAPONS:
     case OSEL_WIELD:
-        return (itype == OBJ_WEAPONS || itype == OBJ_STAVES || is_deck(i)
-                || itype == OBJ_MISCELLANY
-                   && i.sub_type == MISC_LANTERN_OF_SHADOWS);
+        return (item_is_wieldable(i));
 
     case OSEL_BUTCHERY:
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
@@ -1848,6 +1846,15 @@ bool prompt_failed(int retval, std::string msg)
     crawl_state.cancel_cmd_repeat();
 
     return (true);
+}
+
+// Most items are wieldable, but this function check for items that needs to be
+// wielded to be used normally.
+bool item_is_wieldable(const item_def &item)
+{
+    const int type = item.base_type;
+    return (type == OBJ_WEAPONS || type == OBJ_STAVES || is_deck(item)
+            || type == OBJ_MISCELLANY && type == MISC_LANTERN_OF_SHADOWS);
 }
 
 bool item_is_evokable(const item_def &item, bool known, bool all_wands,
