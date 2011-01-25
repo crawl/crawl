@@ -1619,7 +1619,7 @@ struct spell_desc
     SPELL_IGNITE_POISON, "Ignite Poison",
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
      SPFLAG_AREA | SPFLAG_BATTLE,
-     6,
+     5,
      200,
      -1, -1,
      0,
