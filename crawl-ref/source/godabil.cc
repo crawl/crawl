@@ -75,7 +75,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
 {
 
     //'prayertype':
-    //This is in enum.h; there are currently five prayers and 0 is a generic one that will probably cause a crash right now.
+    //This is in enum.h; there are currently five prayers.
 
     //'step':
     //-1: We're either starting or stopping, so we just want the passage name.
@@ -201,9 +201,9 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         "rebuked",
     };
 
-    std::string sinner = sinner_text[trits[3] + (prayertype-1)*3];
-    std::string sin[2] = {sin_text[trits[6] + (prayertype-1)*3], long_sin_text[trits[6] + (prayertype-1)*3]};
-    std::string antisin[2] = {antisin_text[trits[6] + (prayertype-1)*3], long_antisin_text[trits[6] + (prayertype-1)*3]};
+    std::string sinner = sinner_text[trits[3] + prayertype*3];
+    std::string sin[2] = {sin_text[trits[6] + prayertype*3], long_sin_text[trits[6] + prayertype*3]};
+    std::string antisin[2] = {antisin_text[trits[6] + prayertype*3], long_antisin_text[trits[6] + prayertype*3]};
     std::string smite[2] = {smite_text[(trits[4] + trits[5] * 3)], smote_text[(trits[4] + trits[5] * 3)]};
 
     std::string turn[4] = {"This is only here because of arrays starting from 0.", "Zin is a buggy god", "Please report this", "This isn't right at all"};
