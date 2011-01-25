@@ -1065,6 +1065,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CORPSE_ROT:
     case SPELL_LEDAS_LIQUEFACTION:
     case SPELL_SUMMON_DRAGON:
+    case SPELL_SUMMON_HYDRA:
         return (true);
     default:
         if (check_validity)
@@ -3340,6 +3341,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_DRAGON:
         cast_summon_dragon(mons, mons->hit_dice * 5, god);
+        return;
+    case SPELL_SUMMON_HYDRA:
+        cast_summon_hydra(mons, mons->hit_dice * 5, god);
         return;
     }
 

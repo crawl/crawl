@@ -670,7 +670,7 @@ bool cast_summon_ugly_thing(int pow, god_type god)
     return (false);
 }
 
-bool cast_summon_hydra(int pow, god_type god)
+bool cast_summon_hydra(actor *caster, int pow, god_type god)
 {
     // Power determines number of heads. Minimum 4 heads, maximum 12.
     // Rare to get more than 8.
@@ -686,13 +686,18 @@ bool cast_summon_hydra(int pow, god_type god)
         heads = 4;
 
     // Duration is always very short - just 1.
-    if (create_monster(
-            mgen_data(MONS_HYDRA, BEH_FRIENDLY, &you,
-                      1, SPELL_SUMMON_HYDRA,
-                      you.pos(), MHITYOU,
-                      0, god, MONS_HYDRA, heads)) != -1)
+    int midx;
+    if ((midx = create_monster(
+            mgen_data(MONS_HYDRA, BEH_COPY, caster,
+                      1, SPELL_SUMMON_HYDRA, caster->pos(),
+                      (caster->atype() == ACT_PLAYER) ?
+                          MHITYOU : caster->as_monster()->foe,
+                      0, (god == GOD_NO_GOD) ? caster->deity() : god,
+                      MONS_HYDRA, heads))) != -1)
     {
-        mpr("A hydra appears.");
+        if (you.see_cell(menv[midx].pos()))
+            mpr("A hydra appears.");
+        player_angers_monster(&menv[midx]); // currently no-op
         return (true);
     }
 
