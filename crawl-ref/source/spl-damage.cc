@@ -1058,7 +1058,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
     return strength;
 }
 
-static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
+static int _ignite_poison_objects(coord_def where, int pow, int, actor *actor)
 {
     UNUSED(pow);
 
@@ -1072,13 +1072,13 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
     if (strength > 0)
     {
         place_cloud(CLOUD_FIRE, where,
-                    strength + roll_dice(3, strength / 4), &you);
+                    strength + roll_dice(3, strength / 4), actor);
     }
 
     return (strength);
 }
 
-static int _ignite_poison_clouds(coord_def where, int pow, int, actor *)
+static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
 {
     UNUSED(pow);
 
@@ -1097,24 +1097,29 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *)
             return false;
 
         cloud.type = CLOUD_FIRE;
-        cloud.whose = KC_YOU;
-        cloud.killer = KILL_YOU_MISSILE;
-        cloud.source = MID_PLAYER;
+        cloud.whose = (actor->is_player()) ? KC_YOU : (actor->as_monster()->friendly()) ? KC_FRIENDLY : KC_OTHER;
+        cloud.killer = (actor->is_player()) ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+        cloud.source = (actor->is_player()) ? MID_PLAYER : actor->mid;
         return true;
     }
 
     return false;
 }
 
-static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
+static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 {
+
     bolt beam;
     beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
 
     dice_def dam_dice(0, 5 + pow/7);  // Dice added below if applicable.
 
+    // If a monster casts Ignite Poison, it can't hit itself.
+    // This doesn't apply to the other functions: it can ignite
+    // clouds or items where it's standing!
+
     monster* mon = monster_at(where);
-    if (mon == NULL)
+    if (mon == NULL || actor->pos() == where)
         return (0);
 
     // Monsters which have poison corpses or poisonous attacks.
@@ -1141,11 +1146,24 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
 
         dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
 
-        if (!_player_hurt_monster(*mon, damage))
+        mon->hurt(actor, damage);
+
+        if (mon->alive())
         {
+            if (actor->is_player())
+                behaviour_event(mon, ME_WHACK, MHITYOU);
+            else
+                behaviour_event(mon, ME_WHACK, actor->mid);
+
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);
-            behaviour_event(mon, ME_ALERT);
+            print_wounds(mon);
+        }
+        else
+        {
+            monster_die(mon,
+                        (actor->is_player()) ? KILL_YOU : KILL_MON,
+                        (actor->is_player()) ? NON_MONSTER : actor->mid);
         }
 
         return (1);
@@ -1154,9 +1172,15 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
     return (0);
 }
 
-void cast_ignite_poison(int pow)
+// The self effects of Ignite Poison are beautiful and
+// shouldn't be thrown out. Let's save them for a monster
+// version of the spell!
+
+static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
 {
-    flash_view(RED);
+
+    if (actor->is_player() || where != you.pos())
+        return (0);
 
     int totalstrength = 0;
 
@@ -1175,7 +1199,7 @@ void cast_ignite_poison(int pow)
             CLOUD_FIRE, you.pos(),
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) +
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) + 1,
-            &you);
+            actor);
     }
 
     int damage = 0;
@@ -1210,7 +1234,7 @@ void cast_ignite_poison(int pow)
         else
             mpr("The poison in your system burns!");
 
-        ouch(damage, NON_MONSTER, KILLED_BY_TARGETING);
+        ouch(damage, actor->as_monster()->mindex(), KILLED_BY_MONSTER, actor->as_monster()->name(DESC_NOCAP_A).c_str());
 
         if (you.duration[DUR_POISONING] > 0)
         {
@@ -1219,9 +1243,22 @@ void cast_ignite_poison(int pow)
         }
     }
 
-    apply_area_visible(_ignite_poison_clouds, pow);
-    apply_area_visible(_ignite_poison_objects, pow);
-    apply_area_visible(_ignite_poison_monsters, pow);
+    if (damage || totalstrength)
+        return (1);
+    else
+        return (0);
+}
+
+void cast_ignite_poison(int pow)
+{
+    flash_view(RED);
+
+    apply_area_visible(_ignite_poison_clouds, pow, false, &you);
+    apply_area_visible(_ignite_poison_objects, pow, false, &you);
+    apply_area_visible(_ignite_poison_monsters, pow, false, &you);
+// Not currently relevant - nothing will ever happen as long as
+// the actor is &you.
+    apply_area_visible(_ignite_poison_player, pow, false, &you);
 
 #ifndef USE_TILE
     delay(100); // show a brief flash
