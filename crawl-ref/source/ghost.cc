@@ -81,6 +81,7 @@ static spell_type search_order_third[] = {
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
     SPELL_HAUNT,
+    SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,
     SPELL_DEMONIC_HORDE,
     SPELL_HASTE,
@@ -293,6 +294,8 @@ void ghost_demon::init_random_demon()
             spells[2] = SPELL_SMITING;
         if (one_chance_in(25))
             spells[2] = SPELL_HELLFIRE_BURST;
+        if (one_chance_in(22))
+            spells[2] = SPELL_SUMMON_HYDRA;
         if (one_chance_in(20))
             spells[2] = SPELL_SUMMON_DRAGON;
         if (one_chance_in(12))
