@@ -527,7 +527,7 @@ int mons_standard_level(int mcls)
         return 9;
 
     case MONS_DEEP_ELF_SOLDIER:
-    case MONS_GIANT_BEETLE:
+    case MONS_GOLIATH_BEETLE:
     case MONS_GIANT_FROG:
     case MONS_GIANT_SPORE:
     case MONS_MUMMY:
@@ -803,7 +803,7 @@ int mons_standard_rare(int mcls)
         return 53;
 
     case MONS_BIG_KOBOLD:
-    case MONS_GIANT_BEETLE:
+    case MONS_GOLIATH_BEETLE:
     case MONS_GIANT_BLOWFLY:
     case MONS_GIANT_COCKROACH:
     case MONS_GIANT_GECKO:
@@ -1317,7 +1317,7 @@ int mons_lair_level(int mcls)
 
     case MONS_WATER_MOCCASIN:
     case MONS_BUTTERFLY:
-    case MONS_GIANT_BEETLE:
+    case MONS_GOLIATH_BEETLE:
     case MONS_GIANT_SLUG:
     case MONS_HIPPOGRIFF:
     case MONS_PLANT:
@@ -1466,7 +1466,7 @@ int mons_lair_rare(int mcls)
     case MONS_POLAR_BEAR:
         return 15;
 
-    case MONS_GIANT_BEETLE:
+    case MONS_GOLIATH_BEETLE:
     case MONS_SCORPION:
     case MONS_OKLOB_PLANT:
     case MONS_STEAM_DRAGON:
@@ -1849,7 +1849,7 @@ int mons_spidernest_level(int mcls)
 
     case MONS_YELLOW_WASP:
     case MONS_RED_WASP:
-    case MONS_GIANT_BEETLE:
+    case MONS_GOLIATH_BEETLE:
         mlev += 2;
         break;
 
@@ -1899,7 +1899,7 @@ int mons_spidernest_rare(int mcls)
     case MONS_RED_WASP:
         return 20;
 
-    case MONS_GIANT_BEETLE:
+    case MONS_GOLIATH_BEETLE:
     case MONS_BORING_BEETLE:
     case MONS_BOULDER_BEETLE:
     case MONS_GIANT_CENTIPEDE:

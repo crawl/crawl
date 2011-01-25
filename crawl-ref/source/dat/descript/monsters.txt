@@ -829,7 +829,7 @@ megabat
 
 A huge black bat.
 %%%%
-giant beetle
+goliath beetle
 
 A huge black beetle with great crunching mandibles and very hard chitinous armour.
 %%%%

@@ -1133,7 +1133,7 @@ ENDMAP
 NAME:  einodemon_crawler_minivault
 TAGS:  patrolling mini_float
 MONS:  demonic crawler
-MONS:  giant beetle / boulder beetle w:8 / demonic crawler w:2 / \
+MONS:  goliath beetle / boulder beetle w:8 / demonic crawler w:2 / \
        nothing
 MAP
 ..........

@@ -1847,7 +1847,7 @@ static monster_type _pick_swarmer()
     static monster_type swarmers[] =
     {
         MONS_KILLER_BEE, MONS_SCORPION, MONS_WORM,
-        MONS_GIANT_MOSQUITO, MONS_GIANT_BEETLE, MONS_GIANT_BLOWFLY,
+        MONS_GIANT_MOSQUITO, MONS_GOLIATH_BEETLE, MONS_GIANT_BLOWFLY,
         MONS_WOLF_SPIDER, MONS_BUTTERFLY, MONS_YELLOW_WASP,
         MONS_WORKER_ANT,
     };
