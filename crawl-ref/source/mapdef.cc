@@ -5355,7 +5355,7 @@ feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
         err = make_stringf("bad trap name: '%s'", s.c_str());
 
     feature_spec fspec(known ? 1 : -1, weight);
-    fspec.trap = trap;
+    fspec.trap.reset(new trap_spec(static_cast<trap_type>(trap)));
     return (fspec);
 }
 
@@ -5370,7 +5370,7 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
         err = make_stringf("bad shop type: '%s'", s.c_str());
 
     feature_spec fspec(-1, weight);
-    fspec.shop = shop;
+    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop)));
     return (fspec);
 }
 
@@ -5514,7 +5514,54 @@ map_flags &keyed_mapspec::get_mask()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// feature_slot
+// feature_spec and feature_slot
+
+feature_spec::feature_spec ()
+{
+    genweight = 0;
+    feat = 0;
+    glyph = -1;
+    shop.reset(NULL);
+    trap.reset(NULL);
+}
+
+feature_spec::feature_spec (int f, int wt)
+{
+    genweight = wt;
+    feat = f;
+    glyph = -1;
+    shop.reset(NULL);
+    trap.reset(NULL);
+}
+
+feature_spec::feature_spec(const feature_spec &other)
+{
+    init_with(other);
+}
+
+feature_spec& feature_spec::operator = (const feature_spec& other)
+{
+    if (this != &other)
+        init_with(other);
+    return (*this);
+}
+
+void feature_spec::init_with (const feature_spec& other)
+{
+    genweight = other.genweight;
+    feat = other.feat;
+    glyph = other.glyph;
+
+    if (other.trap.get())
+        trap.reset(new trap_spec(*other.trap));
+    else
+        trap.reset(NULL);
+
+    if (other.shop.get())
+        shop.reset(new shop_spec(*other.shop));
+    else
+        shop.reset(NULL);
+}
 
 feature_slot::feature_slot() : feats(), fix_slot(false)
 {

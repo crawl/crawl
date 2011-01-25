@@ -736,19 +736,34 @@ private:
     std::string error;
 };
 
+struct shop_spec
+{
+    shop_type sh_type;
+
+    shop_spec (shop_type sh)
+        : sh_type(static_cast<shop_type>(sh)) { }
+};
+
+struct trap_spec
+{
+    trap_type tr_type;
+    trap_spec (trap_type tr)
+        : tr_type(static_cast<trap_type>(tr)) { }
+};
+
 struct feature_spec
 {
     int genweight;
     int feat;
-    int shop;
-    int trap;
+    std::auto_ptr<shop_spec> shop;
+    std::auto_ptr<trap_spec> trap;
     int glyph;
 
-    feature_spec(int f, int wt = 10)
-        : genweight(wt), feat(f), shop(-1),
-          trap(-1), glyph(-1)
-    { }
-    feature_spec() : genweight(0), feat(0), shop(-1), trap(-1), glyph(-1) { }
+    feature_spec();
+    feature_spec(int f, int wt = 10);
+    feature_spec(const feature_spec& other);
+    feature_spec& operator = (const feature_spec& other);
+    void init_with (const feature_spec& other);
 };
 
 typedef std::vector<feature_spec> feature_spec_list;

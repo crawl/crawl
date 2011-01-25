@@ -4596,11 +4596,11 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
     if (mapsp)
     {
         feature_spec f = mapsp->get_feat();
-        if (f.trap >= 0)
+        if (f.trap.get())
         {
             // f.feat == 1 means trap is generated known.
             if (f.feat == 1)
-                return trap_category(static_cast<trap_type>(f.trap));
+                return trap_category(static_cast<trap_type>(f.trap.get()->tr_type));
             else
                 return (DNGN_UNDISCOVERED_TRAP);
         }
@@ -4608,7 +4608,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
             return static_cast<dungeon_feature_type>(f.feat);
         else if (f.glyph >= 0)
             return map_feature_at(NULL, c, f.glyph);
-        else if (f.shop >= 0)
+        else if (f.shop.get())
             return (DNGN_ENTER_SHOP);
 
         return (DNGN_FLOOR);
@@ -4621,12 +4621,12 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
                                 keyed_mapspec& mapsp)
 {
     const feature_spec f = mapsp.get_feat();
-    if (f.trap >= 0)
+    if (f.trap.get())
     {
         const trap_type trap =
-            (f.trap == TRAP_INDEPTH)
+            (f.trap.get()->tr_type == TRAP_INDEPTH)
                 ? random_trap_for_place(place.level_number)
-                : static_cast<trap_type>(f.trap);
+                : static_cast<trap_type>(f.trap.get()->tr_type);
 
         place_specific_trap(where, trap);
 
@@ -4642,8 +4642,8 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     {
         _vault_grid_glyph(place, where, f.glyph);
     }
-    else if (f.shop >= 0)
-        place_spec_shop(place.level_number, where, f.shop);
+    else if (f.shop.get())
+        place_spec_shop(place.level_number, where, f.shop.get()->sh_type);
     else
         grd(where) = DNGN_FLOOR;
 
