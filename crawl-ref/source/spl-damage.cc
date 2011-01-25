@@ -1097,9 +1097,9 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
             return false;
 
         cloud.type = CLOUD_FIRE;
-        cloud.whose = (actor->is_player()) ? KC_YOU : (actor->as_monster()->friendly()) ? KC_FRIENDLY : KC_OTHER;
-        cloud.killer = (actor->is_player()) ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
-        cloud.source = (actor->is_player()) ? MID_PLAYER : actor->mid;
+        cloud.whose = actor->kill_alignment();
+        cloud.killer = actor->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+        cloud.source = actor->mid;
         return true;
     }
 
@@ -1108,7 +1108,6 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
 
 static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 {
-
     bolt beam;
     beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
 
@@ -1119,7 +1118,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
     // clouds or items where it's standing!
 
     monster* mon = monster_at(where);
-    if (mon == NULL || actor->pos() == where)
+    if (mon == NULL || mon == actor)
         return (0);
 
     // Monsters which have poison corpses or poisonous attacks.
@@ -1150,10 +1149,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 
         if (mon->alive())
         {
-            if (actor->is_player())
-                behaviour_event(mon, ME_WHACK, MHITYOU);
-            else
-                behaviour_event(mon, ME_WHACK, actor->mid);
+            behaviour_event(mon, ME_WHACK, actor->mindex());
 
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);
@@ -1162,8 +1158,8 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
         else
         {
             monster_die(mon,
-                        (actor->is_player()) ? KILL_YOU : KILL_MON,
-                        (actor->is_player()) ? NON_MONSTER : actor->mid);
+                        actor->is_player() ? KILL_YOU : KILL_MON,
+                        actor->mindex());
         }
 
         return (1);
@@ -1234,7 +1230,8 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
         else
             mpr("The poison in your system burns!");
 
-        ouch(damage, actor->as_monster()->mindex(), KILLED_BY_MONSTER, actor->as_monster()->name(DESC_NOCAP_A).c_str());
+        ouch(damage, actor->as_monster()->mindex(), KILLED_BY_MONSTER,
+             actor->as_monster()->name(DESC_NOCAP_A).c_str());
 
         if (you.duration[DUR_POISONING] > 0)
         {
