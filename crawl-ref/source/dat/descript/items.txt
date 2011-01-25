@@ -131,7 +131,7 @@ A crossbow bolt.
 %%%%
 book of air
 
-A book of magic spells.
+A book of magic spells. You feel a faint breeze as you open the pages.
 %%%%
 book of annihilations
 
@@ -171,7 +171,7 @@ A book of magic spells.
 %%%%
 book of death
 
-A book of magic spells.
+A black book containing spells written in a hasty scrawl.
 %%%%
 book of demonology
 
@@ -199,15 +199,15 @@ A book of magic spells.
 %%%%
 book of fire
 
-A book of magic spells.
+A completely scorched book of magic spells.
 %%%%
 book of flames
 
-A book of magic spells.
+A slightly seared book of magic spells.
 %%%%
 book of frost
 
-A book of magic spells.
+A book of magic spells, cold to the touch.
 %%%%
 book of geomancy
 
@@ -223,7 +223,7 @@ A book of magic spells.
 %%%%
 book of ice
 
-A book of magic spells.
+A book of magic spells. An icy wind chills you for a second as you open it.
 %%%%
 book of minor magic
 
@@ -235,7 +235,7 @@ A book of magic spells.
 %%%%
 book of necromancy
 
-A book of magic spells.
+A dusty tome of forbidden magic.
 %%%%
 book of party tricks
 
@@ -271,7 +271,7 @@ A book of magic spells.
 %%%%
 book of the sky
 
-A book of magic spells.
+A book of magic spells. Sparks fly from the pages.
 %%%%
 book of the tempests
 
@@ -291,7 +291,7 @@ A book of magic spells.
 %%%%
 book of unlife
 
-A book of magic spells.
+A book of magic spells, filled with sigils for binding the dead.
 %%%%
 book of war chants
 
