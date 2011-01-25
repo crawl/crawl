@@ -136,7 +136,7 @@ dc-mon/kraken/kraken_head CORPSE_KRAKEN /*'x'*/
 jellyfish CORPSE_JELLYFISH /*'J'*/
 
 ## Beetles ('B')
-giant_beetle CORPSE_GIANT_BEETLE
+goliath_beetle CORPSE_GOLIATH_BEETLE
 boring_beetle CORPSE_BORING_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 

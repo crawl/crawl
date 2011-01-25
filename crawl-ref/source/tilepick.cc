@@ -1123,8 +1123,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ANGEL;
 
     // beetles ('B')
-    case MONS_GIANT_BEETLE:
-        return TILEP_MONS_GIANT_BEETLE;
+    case MONS_GOLIATH_BEETLE:
+        return TILEP_MONS_GOLIATH_BEETLE;
     case MONS_BOULDER_BEETLE:
         return TILEP_MONS_BOULDER_BEETLE;
     case MONS_BORING_BEETLE:
@@ -3352,8 +3352,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_MOTH_OF_WRATH;
 
     // beetles ('B')
-    case MONS_GIANT_BEETLE:
-        return TILE_CORPSE_GIANT_BEETLE;
+    case MONS_GOLIATH_BEETLE:
+        return TILE_CORPSE_GOLIATH_BEETLE;
     case MONS_BOULDER_BEETLE:
         return TILE_CORPSE_BOULDER_BEETLE;
     case MONS_BORING_BEETLE:

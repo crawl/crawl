@@ -656,7 +656,7 @@ MONS:     (list of monsters)
 
           Individual monsters may be prefixed with the "generate_awake"
           (without the quotes). Use this sparingly:
-              MONS: generate_awake giant beetle
+              MONS: generate_awake goliath beetle
 
           Individual monsters may be prefixed with the "patrolling"
           (without the quotes). Use this sparingly:

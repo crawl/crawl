@@ -1895,7 +1895,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BUMBLEBEE,
     MONS_YELLOW_WASP,
     MONS_RED_WASP,
-    MONS_GIANT_BEETLE,
+    MONS_GOLIATH_BEETLE,
     MONS_BORING_BEETLE,
     MONS_BOULDER_BEETLE,
     MONS_GIANT_COCKROACH,

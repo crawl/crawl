@@ -141,7 +141,7 @@ jellyfish MONS_JELLYFISH /*'J'*/
 
 ## Beetles ('B')
 %sdir dc-mon/animals
-giant_beetle MONS_GIANT_BEETLE
+goliath_beetle MONS_GOLIATH_BEETLE
 boring_beetle MONS_BORING_BEETLE
 boulder_beetle MONS_BOULDER_BEETLE
 
