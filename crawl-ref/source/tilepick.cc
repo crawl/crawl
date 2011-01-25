@@ -757,8 +757,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // insects ('a')
     case MONS_GIANT_COCKROACH:
         return TILEP_MONS_GIANT_COCKROACH;
-    case MONS_GIANT_ANT:
-        return TILEP_MONS_GIANT_ANT;
+    case MONS_WORKER_ANT:
+        return TILEP_MONS_WORKER_ANT;
     case MONS_SOLDIER_ANT:
         return TILEP_MONS_SOLDIER_ANT;
     case MONS_QUEEN_ANT:
@@ -3068,8 +3068,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // insects ('a')
     case MONS_GIANT_COCKROACH:
         return TILE_CORPSE_GIANT_COCKROACH;
-    case MONS_GIANT_ANT:
-        return TILE_CORPSE_GIANT_ANT;
+    case MONS_WORKER_ANT:
+        return TILE_CORPSE_WORKER_ANT;
     case MONS_SOLDIER_ANT:
         return TILE_CORPSE_SOLDIER_ANT;
     case MONS_QUEEN_ANT:

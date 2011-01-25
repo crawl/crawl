@@ -438,7 +438,7 @@ static void _yak_wave(int power)
 static void _insect_wave(int power)
 {
     wave_name("INSECT WAVE");
-    monster_type insects[] = {MONS_GIANT_ANT, MONS_KILLER_BEE, MONS_YELLOW_WASP,
+    monster_type insects[] = {MONS_WORKER_ANT, MONS_KILLER_BEE, MONS_YELLOW_WASP,
                 MONS_GIANT_BEETLE, MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
                 MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_BUMBLEBEE, MONS_REDBACK,
                 MONS_GIANT_BLOWFLY, MONS_RED_WASP, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,

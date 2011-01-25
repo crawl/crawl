@@ -504,7 +504,7 @@ int mons_standard_level(int mcls)
         return 7;
 
     case MONS_FUNGUS:
-    case MONS_GIANT_ANT:
+    case MONS_WORKER_ANT:
     case MONS_GIANT_EYEBALL:
     case MONS_HOUND:
     case MONS_IGUANA:
@@ -766,7 +766,7 @@ int mons_standard_rare(int mcls)
         return 99;
 
     case MONS_CENTAUR_WARRIOR:
-    case MONS_GIANT_ANT:
+    case MONS_WORKER_ANT:
     case MONS_SNAKE:
         return 80;
 

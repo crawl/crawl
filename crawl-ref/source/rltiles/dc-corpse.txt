@@ -14,7 +14,7 @@
 ## Insects ('a')
 %back dc-misc/blood_green
 giant_cockroach CORPSE_GIANT_COCKROACH
-giant_ant CORPSE_GIANT_ANT
+worker_ant CORPSE_WORKER_ANT
 soldier_ant CORPSE_SOLDIER_ANT
 queen_ant CORPSE_QUEEN_ANT
 

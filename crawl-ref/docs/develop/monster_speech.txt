@@ -832,7 +832,7 @@ APPENDIX: List of monster glyphs
 
 Lowercase letters:
 ------------------
-a   giant ant, soldier ant, queen ant
+a   worker ant, soldier ant, queen ant
 b   giant bat, butterfly
 c   centaur (warrior), yaktaur (captain)
 d   all draconians

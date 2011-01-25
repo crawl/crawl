@@ -152,7 +152,7 @@ ENDMAP
 NAME: minivault_29
 TAGS: allow_dup
 MONS: patrolling queen ant, patrolling soldier ant
-MONS: patrolling giant ant, ant larva
+MONS: patrolling worker ant, ant larva
 MAP
 .3......3...
 ...x.xx.x.2.
@@ -171,7 +171,7 @@ ENDMAP
 NAME:   zaba_anthell
 DEPTH:  D:12-19, Lair:2-, Hive
 TAGS:   no_rotate
-MONS:   queen ant, soldier ant, giant ant, soldier ant / w:20 giant ant
+MONS:   queen ant, soldier ant, worker ant, soldier ant / w:20 worker ant
 SUBST:  ? = . x
 MAP
      ?  ? ? ?  ?
@@ -194,7 +194,7 @@ ENDMAP
 NAME:  zaba_antful_of_joy
 DEPTH: D:10-17, Lair, Hive
 TAGS:  no_rotate
-MONS:  queen ant, giant ant w:5 / soldier ant, giant ant / nothing w:5
+MONS:  queen ant, worker ant w:5 / soldier ant, worker ant / nothing w:5
 KFEAT: ^ = alarm trap / .
 MAP
     xxxxxxxxxxx
@@ -239,7 +239,7 @@ ENDMAP
 
 NAME:   minmay_another_anthill
 DEPTH:  D:10-21, Lair:3-, Hive, Snake:1-3
-MONS:   patrolling ant larva, giant ant, soldier ant, patrolling queen ant
+MONS:   patrolling ant larva, worker ant, soldier ant, patrolling queen ant
 SUBST:  a = 1223........x
 MAP
   .. .... .. .

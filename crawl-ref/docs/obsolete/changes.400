@@ -1625,13 +1625,13 @@ changed to give_bad_mutation?
 
 == 223. scrolls of fear won't auto-identify if nobody is scared by them.
 
-== 224. "Killed by giant ant" when smitten from afar by Orc priest?
+== 224. "Killed by worker ant" when smitten from afar by Orc priest?
 
 > very subtle.  Death_source can be zero,  since it is an index into
 > the monster array.   But I didn't think it could be - if killed by
 > monster#0,  scores like this would be generated:
 :4:0:89:Methea:0:6:3::3:14:3:0:0:0::2:0:0:0:0:
-> which would be translated to "killed by a giant ant"
+> which would be translated to "killed by a worker ant"
 
 == 225. Don't generate monsters in LOS?
 

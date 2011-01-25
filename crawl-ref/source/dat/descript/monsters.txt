@@ -821,7 +821,7 @@ giant amoeba
 
 A pulsating lump of protoplasm.
 %%%%
-giant ant
+worker ant
 
 A black ant with poisonous pincers, about the size of a large dog.
 %%%%
@@ -1644,7 +1644,7 @@ A large belligerent reptile, armoured in a carapace. Its neck is surprisingly ex
 %%%%
 soldier ant
 
-A giant ant with large mandibles and a vicious sting.
+A worker ant with large mandibles and a vicious sting.
 %%%%
 soul eater
 

@@ -70,7 +70,7 @@ TAGS:    hive_entry
 ORIENT:  float
 ITEM:    honeycomb, royal jelly
 MONS:    killer bee larva / killer bee, queen bee
-MONS:    giant ant / soldier ant, queen ant
+MONS:    worker ant / soldier ant, queen ant
 MONS:    yellow wasp / nothing, red wasp / yellow wasp
 MONS:    bumblebee
 SHUFFLE: XY, VW, 34/56
