@@ -1884,7 +1884,7 @@ enum monster_type                      // (int) menv[].type
 
     MONS_BUTTERFLY,
     MONS_ANT_LARVA,
-    MONS_GIANT_ANT,
+    MONS_WORKER_ANT,
     MONS_SOLDIER_ANT,
     MONS_QUEEN_ANT,
     MONS_KILLER_BEE_LARVA,

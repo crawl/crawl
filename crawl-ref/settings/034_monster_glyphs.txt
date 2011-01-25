@@ -104,7 +104,7 @@ mon_glyph = giant slug : green m
 mon_glyph = giant snail : lightgreen m
 
 # other natural monsters
-mon_glyph = giant ant : darkgrey
+mon_glyph = worker ant : darkgrey
 mon_glyph = queen ant : darkgrey
 mon_glyph = giant bat : darkgrey
 mon_glyph = yaktaur : lightred
@@ -242,7 +242,7 @@ mon_glyph = Frederick : darkgrey
 # monster                 old colour     new colour
 # -------                 ----------     ----------
 # other natural monsters
-# giant ant               darkgrey       red
+# worker ant               darkgrey       red
 # queen ant               darkgrey       lightgrey
 # giant bat               darkgrey       lightgrey
 # yaktaur                 lightred       red

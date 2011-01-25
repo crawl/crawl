@@ -8,7 +8,7 @@ dc-misc/error MONS_PROGRAM_BUG
 
 ## Insects ('a')
 giant_cockroach MONS_GIANT_COCKROACH
-giant_ant MONS_GIANT_ANT
+worker_ant MONS_WORKER_ANT
 soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
 

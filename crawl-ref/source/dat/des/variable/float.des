@@ -685,7 +685,7 @@ NAME:   zaba_anthole
 ORIENT: float
 TAGS:   allow_dup
 DEPTH:  D:3-9, Lair
-MONS:   giant ant / nothing w:5
+MONS:   worker ant / nothing w:5
 MAP
    @
  xx+xx

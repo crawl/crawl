@@ -139,7 +139,7 @@ function volcano_setup (e, metal, subvault)
     end
     if subvault == nil then
         e.set_random_mon_list([[hog / fire elemental / fire vortex /
-                                giant ant / bumblebee / fire drake / lindwurm /
+                                worker ant / bumblebee / fire drake / lindwurm /
                                 imp / redback / manticore / hell hound /
                                 hell hog / ghoul / flayed ghost /
                                 pulsating lump / toenail golem / efreet /
@@ -379,7 +379,7 @@ function fiery_guardians (e)
     -- We are now going to use a mixed pack.
     if crawl.one_chance_in(3) then
         -- "Lair"-esque fire-themed monster pack.
-        e.mons("hog / giant ant / redback w:1 / bumblebee w:1 / manticore")
+        e.mons("hog / worker ant / redback w:1 / bumblebee w:1 / manticore")
         e.mons("fire drake / lindwurm w:1")
         return
     end
