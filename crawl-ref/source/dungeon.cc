@@ -5248,6 +5248,8 @@ void place_spec_shop(int level_number,
              stocked[k] = 0;
     }
 
+    coord_def stock_loc = coord_def(0, 5+i);
+
     for (j = 0; j < plojy; j++)
     {
         if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
@@ -5277,9 +5279,18 @@ void place_spec_shop(int level_number,
         while (true)
         {
             const int subtype = representative? j : OBJ_RANDOM;
-            orb = items(1, _item_in_shop(env.shop[i].type), subtype, true,
-                         one_chance_in(4)? MAKE_GOOD_ITEM : item_level,
-                         MAKE_ITEM_RANDOM_RACE);
+
+            if (!spec->items.empty())
+            {
+                orb = dgn_place_item(spec->items.random_item_weighted(),
+                        stock_loc, item_level);
+            }
+            else
+            {
+                orb = items(1, _item_in_shop(env.shop[i].type), subtype, true,
+                             one_chance_in(4)? MAKE_GOOD_ITEM : item_level,
+                             MAKE_ITEM_RANDOM_RACE);
+            }
 
             // Try for a better selection.
             if (orb != NON_ITEM && _need_varied_selection(env.shop[i].type))
@@ -5295,7 +5306,8 @@ void place_spec_shop(int level_number,
                 && mitm[orb].base_type != OBJ_GOLD
                 && (env.shop[i].type != SHOP_GENERAL_ANTIQUE
                     || (mitm[orb].base_type != OBJ_MISSILES
-                        && mitm[orb].base_type != OBJ_FOOD)))
+                        && mitm[orb].base_type != OBJ_FOOD
+                        && spec->items.empty())))
             {
                 break;
             }
@@ -5320,7 +5332,7 @@ void place_spec_shop(int level_number,
             item.plus = 7;
 
         // Set object 'position' (gah!) & ID status.
-        item.pos.set(0, 5+i);
+        item.pos = stock_loc;
 
         if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
             && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
