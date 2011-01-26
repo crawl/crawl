@@ -834,6 +834,12 @@ void taken_new_item(object_class_type item_type)
 // Give a special message if you gain a skill you didn't have before.
 void hints_gained_new_skill(skill_type skill)
 {
+    if (crawl_state.game_is_tutorial()
+        && skill == SK_SPELLCASTING)
+    {
+        learned_something_new(HINT_GAINED_SPELLCASTING);
+        return;
+    }
     if (!crawl_state.game_is_hints())
         return;
 
@@ -1378,6 +1384,9 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_LEVITATING:
     case HINT_INACCURACY:
     case HINT_HEALING_POTIONS:
+    case HINT_GAINED_SPELLCASTING:
+    case HINT_FUMBLING_SHALLOW_WATER:
+    case HINT_EATING_ROTTEN_FOOD:
         return (true);
     default:
         return (false);
@@ -3287,6 +3296,16 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_AUTOPICKUP_THROWN:
         text << "When stepping on items you've thrown, they will be "
                 "picked up automatically.";
+        break;
+    case HINT_GAINED_SPELLCASTING:
+        text << "Great, from now on you'll be able to cast spells!\n"
+                "Press <w>%</w> to manage your skill set.";
+        cmd.push_back(CMD_DISPLAY_SKILLS);
+        break;
+    case HINT_FUMBLING_SHALLOW_WATER:
+        text << "Fighting in shallow water will sometimes cause you to slip "
+                "and fumble your attack. If possible, try to fight on "
+                "firm ground.";
         break;
     default:
         text << "You've found something new (but I don't know what)!";
