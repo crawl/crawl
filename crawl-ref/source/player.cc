@@ -3791,6 +3791,8 @@ void display_char_status()
         else
             mpr("You are illuminated by a small divine halo.");
     }
+    else if (you.haloed())
+        mpr("An external divine halo illuminates you.");
 
     if (you.species == SP_VAMPIRE)
         _display_vampire_status();
