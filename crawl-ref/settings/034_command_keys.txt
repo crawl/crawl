@@ -22,4 +22,3 @@ bindkey = [c]  CMD_CLOSE_DOOR
 bindkey = [o]  CMD_OPEN_DOOR
 bindkey = [D]  CMD_BUTCHER
 bindkey = [t]  CMD_FIRE
-bindkey = [g]  CMD_PICKUP

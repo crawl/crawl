@@ -1159,7 +1159,7 @@ bool pickup_single_item(int link, int qty)
     if (qty == 0 && mitm[link].quantity > 1 && mitm[link].base_type != OBJ_GOLD)
     {
         const std::string prompt
-                = make_stringf("Pick up how many of %s (g or enter for all)? ",
+                = make_stringf("Pick up how many of %s (; or enter for all)? ",
                                mitm[link].name(DESC_NOCAP_THE,
                                     false, false, false).c_str());
 
@@ -1202,6 +1202,15 @@ bool pickup_single_item(int link, int qty)
     }
 
     return (true);
+}
+
+bool player_on_single_stack()
+{
+    int o = you.visible_igrd(you.pos());
+    if (o == NON_ITEM)
+        return false;
+    else
+        return (mitm[o].link == NON_ITEM && mitm[o].quantity > 1);
 }
 
 void pickup(bool partial_quantity)

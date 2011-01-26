@@ -1081,7 +1081,7 @@ coord_def get_random_stair()
 //
 // prompt_for_quantity
 //
-// Returns -1 if g or enter is pressed (pickup all).
+// Returns -1 if ; or enter is pressed (pickup all).
 // Else, returns quantity.
 //---------------------------------------------------------------
 int prompt_for_quantity(const char *prompt)
@@ -1089,7 +1089,7 @@ int prompt_for_quantity(const char *prompt)
     msgwin_prompt(prompt);
 
     int ch = getch_ck();
-    if (ch == CK_ENTER || ch == 'g')
+    if (ch == CK_ENTER || ch == ';')
         return -1;
 
     macro_buf_add(ch);

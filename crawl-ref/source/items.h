@@ -71,6 +71,7 @@ void lose_item_stack(const coord_def& where);
 void item_check(bool verbose);
 void request_autopickup(bool do_pickup = true);
 
+bool player_on_single_stack();
 void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
