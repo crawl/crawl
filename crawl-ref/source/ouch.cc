@@ -71,6 +71,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
+#include "tutorial.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
@@ -1252,20 +1253,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 #endif
 
-    if (crawl_state.game_is_tutorial())
-    {
-        if (!non_death)
-        {
-            mprnojoin("You die...");
-            mprnojoin("In Crawl, death is a sad but common occurence. "
-                      "Note that there's usually something you could have done to prevent it. "
-                      "Keep trying, eventually you'll prevail!",
-                      MSGCH_TUTORIAL);
-            more();
-        }
-        screen_end_game("");
-    }
-
     crawl_state.cancel_cmd_all();
 
     // Construct scorefile entry.
@@ -1292,6 +1279,14 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         }
     }
 #endif  // WIZARD
+
+    if (crawl_state.game_is_tutorial())
+    {
+        if (!non_death)
+            tutorial_death_message();
+
+        screen_end_game("");
+    }
 
     // Okay, so you're dead.
     take_note(Note(NOTE_DEATH, you.hp, you.hp_max,

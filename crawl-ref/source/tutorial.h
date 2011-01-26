@@ -17,4 +17,6 @@ std::string get_tutorial_map();
 
 // Set player hunger from the tutorial map.
 void set_tutorial_hunger(int hunger);
+
+void tutorial_death_message();
 #endif
