@@ -97,6 +97,61 @@ enum ability_flag_type
     ABFLAG_STAT_DRAIN     = 0x00020000  // stat drain
 };
 
+struct generic_cost
+{
+    int base, add, rolls;
+
+    generic_cost(int num)
+        : base(num), add(num == 0 ? 0 : (num + 1) / 2 + 1), rolls(1)
+    {
+    }
+    generic_cost(int num, int _add, int _rolls = 1)
+        : base(num), add(_add), rolls(_rolls)
+    {
+    }
+    static generic_cost fixed(int fixed)
+    {
+        return generic_cost(fixed, 0, 1);
+    }
+    static generic_cost range(int low, int high, int _rolls = 1)
+    {
+        return generic_cost(low, high - low + 1, _rolls);
+    }
+
+    int cost() const;
+
+    operator bool () const { return base > 0 || add > 0; }
+};
+
+struct scaling_cost
+{
+    int value;
+
+    scaling_cost(int permille) : value(permille) {}
+
+    static scaling_cost fixed(int fixed)
+    {
+        return scaling_cost(-fixed);
+    }
+
+    int cost(int max) const;
+
+    operator bool () const { return value != 0; }
+};
+
+// Structure for representing an ability:
+struct ability_def
+{
+    ability_type        ability;
+    const char *        name;
+    unsigned int        mp_cost;        // magic cost of ability
+    scaling_cost        hp_cost;        // hit point cost of ability
+    unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
+    generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
+    unsigned int        flags;          // used for additonal cost notices
+    unsigned int        xp_cost;        // hit point cost of ability
+};
+
 static int  _find_ability_slot(ability_type which_ability);
 static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
