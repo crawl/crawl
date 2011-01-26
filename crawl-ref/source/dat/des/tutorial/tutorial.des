@@ -11,6 +11,11 @@ function tutorial.messagestart ()
     -- Make him hungry for the butchering tutorial.
     crawl.tutorial_hunger(3200)
 
+    -- Give him a few bonus skills to make things easier.
+    crawl.tutorial_skill("spellcasting", 3)
+    crawl.tutorial_skill("conjurations", 1)
+    crawl.tutorial_skill("invocations", 3)
+
     crawl.mesclr(true)
     local text = "Welcome to the tutorial! We'll start with basic movement. "
 

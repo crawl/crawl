@@ -20,5 +20,4 @@ void newgame_give_item(object_class_type base, int sub_type,
 struct newgame_def;
 void setup_game(const newgame_def& ng);
 void unfocus_stats();
-
 #endif
