@@ -5152,6 +5152,16 @@ void place_spec_shop(int level_number,
                       const coord_def& where,
                       int force_s_type, bool representative)
 {
+    shop_spec spec(static_cast<shop_type>(force_s_type));
+    place_spec_shop (level_number, where, &spec, representative);
+}
+
+void place_spec_shop(int level_number,
+                      const coord_def& where,
+                      shop_spec* spec, bool representative)
+{
+    int force_s_type = static_cast<int>(spec->sh_type);
+
     int orb = 0;
     int i = 0;
     int j = 0;                  // loop variable
