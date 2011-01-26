@@ -94,10 +94,6 @@ MARKER:  e = lua:tutorial_msg5.ring_power()
 MARKER:  C = lua:tutorial_msg5.undead()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
                                  onclimb = "tutorial_msg5.exit" }
-MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
-                                 onclimb = "tutorial_msg5.exit" }
-MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
-                                 onclimb = "tutorial_msg5.exit" }
 MARKER:  } = lua:tutorial_msg5.tutorial_end()
 MARKER:  ) = lua:tutorial_msg5.tutorial_end()
 MARKER:  ] = lua:tutorial_msg5.tutorial_end()
