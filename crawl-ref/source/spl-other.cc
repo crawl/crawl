@@ -72,7 +72,8 @@ bool cast_sublimation_of_blood(int pow)
 
             inc_mp(7 + random2(7), false);
 
-            split_potions_into_decay(wielded, 1, false);
+            dec_inv_item_quantity(wielded, 1);
+            remove_oldest_blood_potion(you.inv[wielded]);
         }
         else
             wielded = -1;
