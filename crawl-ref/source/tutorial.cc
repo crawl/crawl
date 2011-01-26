@@ -7,11 +7,9 @@
 
 #include "externs.h"
 #include "maps.h"
-#include "mon-util.h"
+#include "message.h"
 #include "mpr.h"
-#include "ng-setup.h"
 #include "player.h"
-#include "random.h"
 #include "state.h"
 #include "tutorial.h"
 
@@ -43,4 +41,16 @@ void set_tutorial_hunger(int hunger)
         return;
 
     you.hunger = hunger;
+}
+
+void tutorial_death_message()
+{
+    mprnojoin("You die...");
+    mprnojoin("In Crawl, death is a sad but common occurence. "
+              "Note that there's usually something you could have done to "
+              "survive, for example by using some kind of item, running away, "
+              "resting between fights, or by avoiding combat entirely. "
+              "Keep trying, eventually you'll prevail!",
+              MSGCH_TUTORIAL);
+    more();
 }
