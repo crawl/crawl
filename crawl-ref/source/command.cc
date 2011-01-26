@@ -284,11 +284,6 @@ static void _print_version(void)
 
 void adjust(void)
 {
-    if (!you.spell_no && your_talents(false).empty())
-    {
-        _adjust_item();
-        return;
-    }
     mpr("Adjust (i)tems, (s)pells, or (a)bilities? ", MSGCH_PROMPT);
 
     const int keyin = tolower(get_ch());
