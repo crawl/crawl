@@ -999,13 +999,13 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 break;
             case RECITE_CHAOTIC:
                 if (minor)
-                    simple_monster_message(mon, "'s flesh is covered in bleeding sores.");
+                    simple_monster_message(mon, "'s chaotic flesh is covered in bleeding sores.");
                 else
                     simple_monster_message(mon, "'s chaotic flesh erupts into weeping sores!");
                 break;
             case RECITE_IMPURE:
                 if (minor)
-                    simple_monster_message(mon, "'s flesh is covered in bleeding sores.");
+                    simple_monster_message(mon, "'s impure flesh is covered in bleeding sores.");
                 else
                     simple_monster_message(mon, "'s impure flesh erupts into weeping sores!");
                 break;
@@ -1100,8 +1100,8 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 {
                     simple_monster_message(mon,
                       (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
-                      (damage < 50) ? "'s flesh bubbles and boils."            :
-                                      "'s flesh runs like molten wax.");
+                      (damage < 50) ? "'s chaotic flesh bubbles and boils."    :
+                                      "'s chaotic flesh runs like molten wax.");
 
                     print_wounds(mon);
                     behaviour_event(mon, ME_WHACK, MHITYOU);
@@ -1129,8 +1129,8 @@ bool zin_recite_to_single_monster(const coord_def& where,
             mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU,
                                       (degree + random2(spellpower)) * 10));
             simple_monster_message(mon,
-                minor ? "'s flesh begins to rot away."
-                      : "'s impure flesh sloughs off of it!");
+                minor ? "'s impure flesh begins to rot away."
+                      : "'s impure flesh sloughs off!");
             affected = true;
         }
         break;
