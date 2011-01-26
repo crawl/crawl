@@ -2113,7 +2113,7 @@ bool drop_item(int item_dropped, int quant_drop)
     if (item_dropped == you.equip[EQ_WEAPON]
         && quant_drop >= you.inv[item_dropped].quantity)
     {
-        if (!wield_weapon(true, PROMPT_GOT_SPECIAL))
+        if (!wield_weapon(true, SLOT_BARE_HANDS))
             return (false);
     }
 

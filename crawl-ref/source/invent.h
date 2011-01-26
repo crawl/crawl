@@ -33,6 +33,8 @@ enum object_selector
     OSEL_CURSED_WORN = -15,
 };
 
+#define SLOT_BARE_HANDS      -2
+
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
 #define PROMPT_NOTHING       -3

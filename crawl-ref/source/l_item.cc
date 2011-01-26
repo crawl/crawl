@@ -172,7 +172,7 @@ static int l_item_do_remove(lua_State *ls)
 
     bool result = false;
     if (eq == EQ_WEAPON)
-        result = wield_weapon(true, -1);
+        result = wield_weapon(true, SLOT_BARE_HANDS);
     else if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
         result = remove_ring(item->link);
     else

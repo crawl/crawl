@@ -305,12 +305,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // If the swap slot has a bad (but valid) item in it,
     // the swap will be to bare hands.
-    const bool good_swap = (item_slot == PROMPT_GOT_SPECIAL
+    const bool good_swap = (item_slot == SLOT_BARE_HANDS
                             || _valid_weapon_swap(you.inv[item_slot]));
 
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
-    if (item_slot != PROMPT_GOT_SPECIAL
+    if (item_slot != SLOT_BARE_HANDS
         && (!auto_wield || !you.inv[item_slot].defined() || !good_swap))
     {
         if (!auto_wield)
@@ -321,7 +321,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                             true, true, true, '-', -1, NULL, OPER_WIELD);
         }
         else
-            item_slot = PROMPT_GOT_SPECIAL;
+            item_slot = SLOT_BARE_HANDS;
     }
 
     if (prompt_failed(item_slot))
@@ -341,7 +341,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
-    if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
+    if (item_slot == SLOT_BARE_HANDS)
     {
         if (const item_def* wpn = you.weapon())
         {
@@ -2396,7 +2396,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
-        if (!wield_weapon(true, PROMPT_GOT_SPECIAL, true, false, false))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false))
             return (false);
 
         unwielded = true;
@@ -5261,7 +5261,7 @@ void tile_item_use_secondary(int idx)
     }
     else if (you.equip[EQ_WEAPON] == idx)
     {
-        wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+        wield_weapon(true, SLOT_BARE_HANDS);
     }
     else if (_valid_weapon_swap(item))
     {
@@ -5296,7 +5296,7 @@ void tile_item_use(int idx)
         && (item.base_type == OBJ_ARMOUR
             || item.base_type == OBJ_JEWELLERY))
     {
-        wield_weapon(true, PROMPT_GOT_SPECIAL);
+        wield_weapon(true, SLOT_BARE_HANDS);
         return;
     }
 
@@ -5323,7 +5323,7 @@ void tile_item_use(int idx)
             }
             // Unwield wielded items.
             if (equipped)
-                wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+                wield_weapon(true, SLOT_BARE_HANDS);
             return;
 
         case OBJ_MISSILES:
