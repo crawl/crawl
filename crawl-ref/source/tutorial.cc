@@ -4,14 +4,15 @@
  */
 
 #include "AppHdr.h"
+#include "tutorial.h"
 
 #include "externs.h"
 #include "maps.h"
 #include "message.h"
 #include "mpr.h"
 #include "player.h"
+#include "skills.h"
 #include "state.h"
-#include "tutorial.h"
 
 mapref_vector get_tutorial_maps()
 {
@@ -41,6 +42,25 @@ void set_tutorial_hunger(int hunger)
         return;
 
     you.hunger = hunger;
+}
+
+void set_tutorial_skill(const char *skill, int level)
+{
+    if (!crawl_state.game_is_tutorial())
+        return;
+
+    bool need_exercise_check = true;
+    if (strcmp(skill, "spellcasting") == 0)
+        you.skills[SK_SPELLCASTING] = level;
+    else if (strcmp(skill, "conjurations") == 0)
+        you.skills[SK_CONJURATIONS] = level;
+    else if (strcmp(skill, "invocations") == 0)
+        you.skills[SK_INVOCATIONS] = level;
+    else
+        need_exercise_check = false;
+
+    if (need_exercise_check)
+        reassess_starting_skills();
 }
 
 void tutorial_death_message()

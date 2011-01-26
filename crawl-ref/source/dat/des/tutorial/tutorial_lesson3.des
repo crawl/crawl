@@ -273,7 +273,7 @@ function tutorial_msg3.go_shopping ()
                  .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. " mode"
 
     if crawl.is_tiles() then
-        text = text .. " or by<white>clicking</white> on the <white>minimap</white>"
+        text = text .. " or by <white>clicking</white> on the <white>minimap</white>"
     end
     text = text .. "."
 

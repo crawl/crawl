@@ -8,6 +8,7 @@ require("clua/tutorial.lua")
 tutorial_msg4 = {}
 
 function tutorial_msg4.start ()
+    crawl.tutorial_skill("invocations", 4)
     tutorial_intro("In this lesson you're going to learn about gods and how to use their powers.")
 end
 

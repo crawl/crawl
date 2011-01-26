@@ -1267,11 +1267,6 @@ static void _setup_tutorial_miscs()
     // Allow for a few specific hint mode messages.
     tutorial_init_hints();
 
-    // Give him a few bonus skills to make things easier.
-    you.skills[SK_SPELLCASTING] = 3;
-    you.skills[SK_CONJURATIONS] = 1;
-    you.skills[SK_INVOCATIONS] = 3;
-
     // Give him some mana to play around with.
     inc_max_mp(2);
 
@@ -1405,64 +1400,6 @@ static void _give_basic_knowledge(job_type which_job)
 
     default:
         break;
-    }
-}
-
-// Characters are actually granted skill points, not skill levels.
-// Here we take racial aptitudes into account in determining final
-// skill levels.
-static void _reassess_starting_skills()
-{
-    // Zotdef: all skills turned off, but not those with no
-    // skill points (makes it too hard to learn a new skill
-    // otherwise)
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-    {
-        skill_type sk = static_cast<skill_type>(i);
-        if (crawl_state.game_is_zotdef())
-            you.practise_skill[i] = !you.skills[sk];
-        if (you.skills[sk] == 0
-            && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
-        {
-            continue;
-        }
-
-        // Grant the amount of skill points required for a human.
-        you.skill_points[sk] = skill_exp_needed(you.skills[sk], sk,
-        static_cast<species_type>(SP_HUMAN)) + 1;
-
-        // Find out what level that earns this character.
-        you.skills[sk] = 0;
-
-        for (int lvl = 1; lvl <= 8; ++lvl)
-        {
-            if (you.skill_points[sk] > skill_exp_needed(lvl, sk))
-                you.skills[sk] = lvl;
-            else
-                break;
-        }
-
-        // Vampires should always have Unarmed Combat skill.
-        if (you.species == SP_VAMPIRE && sk == SK_UNARMED_COMBAT
-            && you.skills[sk] < 1)
-        {
-            you.skill_points[sk] = skill_exp_needed(1, sk);
-            you.skills[sk] = 1;
-        }
-
-        // Wanderers get at least 1 level in their skills.
-        if (you.char_class == JOB_WANDERER && you.skills[sk] < 1)
-        {
-            you.skill_points[sk] = skill_exp_needed(1, sk);
-            you.skills[sk] = 1;
-        }
-
-        // Spellcasters should always have Spellcasting skill.
-        if (sk == SK_SPELLCASTING && you.skills[sk] < 1)
-        {
-            you.skill_points[sk] = skill_exp_needed(1, sk);
-            you.skills[sk] = 1;
-        }
     }
 }
 
@@ -1645,7 +1582,7 @@ static void _setup_generic(const newgame_def& ng)
     _racialise_starting_equipment();
     initialise_item_descriptions();
 
-    _reassess_starting_skills();
+    reassess_starting_skills();
     calc_total_skill_points();
     init_skill_order();
     you.exp_available = crawl_state.game_is_zotdef()? 80 : 25;
