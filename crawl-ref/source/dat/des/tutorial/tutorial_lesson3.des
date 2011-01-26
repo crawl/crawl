@@ -148,11 +148,11 @@ function tutorial_msg3.weapon_swap ()
 end
 
 function tutorial_msg3.weapon_swap2 ()
-    return tutorial_message("Use "
-                            .. tutorial_get_cmd("CMD_WEAPON_SWAP")
-                            .. " to switch between melee and ranged combat ("
+    return tutorial_message("Use ranged combat ("
                             ..  tutorial_get_cmd("CMD_FIRE") .. "<w>f</w>)"
-                            .. ", as needed, to fight these bats.")
+                            .. " to soften up an enemy, then use "
+                            .. tutorial_get_cmd("CMD_WEAPON_SWAP")
+                            .. " to switch to melee once it's reached you.")
 end
 
 function tutorial_msg3.retreat_reminder ()
@@ -231,7 +231,7 @@ end
 function tutorial_msg3.wand_digging ()
     local text = "If you simply want to shoot into a straight direction, you can "
                  .. "press <w>Shift</w> together with the direction keys.\n"
-                 .. "Try which of the walls in the cardinal directions you can destroy! "
+                 .. "Try which of the nearby walls you can destroy! "
                  .. "Use " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w> "
     if crawl.is_tiles() then
         text = text .. "or <white>mouseover</white>/<white>rightclick</white> "
@@ -267,7 +267,7 @@ function tutorial_msg3.go_shopping ()
                  .. tutorial_get_cmd("CMD_SEARCH_STASHES")
                  .. ", and then enter \"<w>shop</w>\". Select the result to start "
                  .. "traveling. If travel is interrupted, type "
-                 .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. " <w>Enter</w> to "
+                 .. tutorial_get_cmd("CMD_MAP_GOTO_LEVEL") .. " <w>Enter</w> to "
                  .. "continue traveling.\n"
                  .. "You can then return here via "
                  .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. " mode"
@@ -400,14 +400,13 @@ COLOUR:  ABCDdefg = blue
 COLOUR:  .1234 = brown
 FTILE:   .{})^1234 = floor_swamp, t = floor_grass
 FTILE:   ABCDdefg = tutorial_pad
-ITEM:    potion of healing
+ITEM:    potion of healing q:1
 ITEM:    meat ration q:50
 ITEM:    ring of levitation
 ITEM:    cloak unrand:ratskin_cloak
 MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_cursed
-MONS:    megabat
-MONS:    kobold ; dart ego:none q:10
 MONS:    jackal
+MONS:    kobold ; dart ego:none q:10
 MARKER:  ^ = lua:props_marker {poisoned_needle_trap="true", force_hit="true"}
 MARKER:  d = lua:tutorial_msg3.potion()
 MARKER:  A = lua:tutorial_msg3.weapon_swap()
@@ -436,16 +435,16 @@ tttttttttttttttttttttttttttttttttttttttttttt...twwww
 ttttttttttttttttttttttttttttttttttttttttttttwWWwwwww
 tttttttttttttt..tttttttttttttttttttttttttwwwwW...ttw
 ttttttttttttt...t..ttttttttttttttttttttwwwwwt..1tttt
-ttttttttttt...f.4.ttt.tttttttttttttttwwwwttttt...ttt
-tttttttttt....4..e..4..ttttttttttttwwwwwwwtttttt.ttt
-ttttttttt..wwwwww....t4.ttttttttwwwwwwwttttttttt.ttt
-ttttttttt.wwwwwwwwW4..ttttwwwwwwwwwwwtttttttttt.tttt
+ttttttttttt...f.2.ttt.tttttttttttttttwwwwttttt...ttt
+tttttttttt....2..e..2..ttttttttttttwwwwwwwtttttt.ttt
+ttttttttt..wwwwww....t2.ttttttttwwwwwwwttttttttt.ttt
+ttttttttt.wwwwwwwwW2..ttttwwwwwwwwwwwtttttttttt.tttt
 wtttttttwwwwwwwwwwwW.WwwwwwwtwwwwwtttttttttttttAtttt
-wwwtttttwwww3..wwwwwWWWwwwwtttttttt.2.tttttttttt.ttt
-wwwwwwwwwww...}g3.wwwWWWttttttttt.2....tt.t..tt.tttt
-wwwwwwwwwwwww3...wwww....tttttt..tt...t..tBtt..ttttt
+wwwtttttwwww3..wwwwwWWWwwwwttttttttttttttttttttt.ttt
+wwwwwwwwwww..g}.3.wwwWWWttttttttt..2..ttttt..tt.tttt
+wwwwwwwwwwwww3...wwww....tttttt..ttttt....Btt..ttttt
 tttttwwwwwwwwwwwwwww.....Cttt..ttttttttttttttttttttt
-ttttttttttwwwwwwwwt....ttt...ttttttttttttttttttttttt
+ttttttttttwwwwwwwwt....ttt..2ttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttt

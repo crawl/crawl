@@ -2207,8 +2207,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_CHOOSE_STAT:
         text << "Every third level you get to choose a stat to raise: "
                 "Strength, Dexterity, or Intelligence. <w>Strength</w> "
-                "affects the amount you can carry as well as the damage "
-                "you deal in melee. <w>Dexterity</w> increases your evasion "
+                "affects the amount you can carry and makes it easier to "
+                "wear heavy armour. <w>Dexterity</w> increases your evasion "
                 "and makes it easier to dodge attacks or traps. "
                 "<w>Intelligence</w> makes it easier to cast spells and "
                 "reduces the amount by which you hunger when you do so.\n";
@@ -2252,7 +2252,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             Hints.hints_just_triggered = true;
         }
         text << "Poison will slowly reduce your HP. You can try to wait it out "
-                "with <w>%</w>, but it's usually safer to quaff a potion of healing.";
+                "with <w>%</w>, but if you're low on hit points it's usually safer "
+                "to quaff a potion of healing.";
         cmd.push_back(CMD_REST);
         break;
 

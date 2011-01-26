@@ -74,10 +74,6 @@ function tutorial_msg2.resting_reminder ()
                             .. tutorial_get_cmd("CMD_REST") .. ". ")
 end
 
-function tutorial_msg2.resting_reminder2 ()
-    return tutorial_message("Rest up!")
-end
-
 function tutorial_msg2.compare_monster_desc ()
     local text = "Examine these monsters ("
 
@@ -246,7 +242,7 @@ ITEM:    quarterstaff mundane not_cursed
 ITEM:    short sword mundane not_cursed
 SHUFFLE: 456
 MONS:    training dummy hp:15
-MONS:    training dummy hp:30 ; club mundane not_cursed
+MONS:    training dummy hp:30 ; whip mundane not_cursed
 MONS:    rat always_corpse
 MONS:    hound, porcupine, ooze
 MARKER:  d = lua:tutorial_msg2.pickup_weapon()
@@ -328,9 +324,8 @@ MARKER:  A = lua:tutorial_msg2.throwing()
 MARKER:  B = lua:tutorial_msg2.resting_reminder()
 MARKER:  e = lua:tutorial_msg2.wield_bow()
 MARKER:  C = lua:tutorial_msg2.firing()
-MARKER:  D = lua:tutorial_msg2.resting_reminder2()
-MARKER:  E = lua:tutorial_msg2.quiver()
-MARKER:  H = lua:tutorial_msg2.explore()
+MARKER:  D = lua:tutorial_msg2.quiver()
+MARKER:  E = lua:tutorial_msg2.explore()
 # This is just for atmosphere.
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
@@ -356,9 +351,9 @@ xxxxxxxxxxxxxxxxxxxxxxxc.....Gcccccxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxc..{..d..A.cxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxc.....Gccc.cxxxxxxxxxxx
 xxxxxxxxxxx..xxxxxxxxxxccccccccxc.cxxxxxxxxxxx
-xxxxxxxxxx.xxDxxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxx
+xxxxxxxxxx.xxBxxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxx
 xxxxxxxxx.xx....xxxxxxxxxxxxxxx.....xxxxxxxxxx
-xxxx....ExxwWW..lllxxxxxxxxxxx..WWW..xxxxxxxxx
+xxxx....DxxwWW..lllxxxxxxxxxxx..WWW..xxxxxxxxx
 xxll...xxxxwww.ll1llxxxxxxxxxx.WwwwW.xxxxxxxxx
 x1lll.xxxxxw1wW.lllxxxxxxxxxxx.Ww1wW.xxxxxxxxx
 xxll.xxxxxxxww.llxxxxxxxxxxxxx.WwwwW.xxxxxxxxx
@@ -368,11 +363,11 @@ xxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxxxBxxxxxxxxxxxx
 xxxxx.xxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxx
 xxxxx.xxxxxxxxx.xxxxxxxxxx.xxxxxx.xxxxxxxxxxxx
 xxxxx.xxxxxxxxxx.xxxxxxxxxxxxxxxx.xxxxxxxxxxxx
-xxxxxHxxxxxxxxxxx..xxxxxxxxxxxxx....xxxxxxxxxx
-xxx.....xxxxxxxxxxx..f.e..xxxxxx...3.xxxxxxxxx
-x............xxxxxxxxxxxxx...xx......xxxxxxxx
-xx...x..........xxxxxxxxxxxxx..xx.3.xxxxxxxxxx
-x............F......xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxExxxxxxxxxxx..xxxxxxxxxxxxxxx..xx.3xxxxxx
+xxx.....xxxxxxxxxxx..f.e..xxxxxxxxxx......xxxx
+x............xxxxxxxxxxxxx...xxxxxxxxx..3.xxx
+xx...x..........xxxxxxxxxxxxx...xxx...xxxxxxxx
+x............F......xxxxxxxxxxxx...xxxxxxxxxxx
 xxx...tt.........xx.2.xxxxxxxxxxxxxxxxxxxxxxxx
 xx....ttt..........x....xxxxxxxxxxxxxxxxxxxxxx
 x.......tt........xxx....xxxxxxxxxxxxxxxxxxxxx

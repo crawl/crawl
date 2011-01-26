@@ -1281,7 +1281,7 @@ static void _setup_tutorial_miscs()
     you.skills[SK_SHIELDS] = 0;
 
     // Set Str low enough for the burdened tutorial.
-    you.base_stats[STAT_STR] = 14;
+    you.base_stats[STAT_STR] = 12;
 }
 
 static void _mark_starting_books()
