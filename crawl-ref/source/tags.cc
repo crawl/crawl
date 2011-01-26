@@ -670,7 +670,7 @@ void marshallString(writer &th, const std::string &data, int maxSize)
     th.write(data.c_str(), len);
 }
 
-// To pass to marsahllMap
+// To pass to marshallMap
 static void marshallStringNoMax(writer &th, const std::string &data)
 {
     marshallString(th, data);
