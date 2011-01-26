@@ -1015,6 +1015,22 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     }
 }
 
+static void _pain_recover_mp(int dam)
+{
+    if (you.mutation[MUT_POWERED_BY_PAIN]
+        && (you.magic_points < you.max_magic_points))
+    {
+        if (random2(dam) > 5 * player_mutation_level(MUT_POWERED_BY_PAIN)
+            || dam >= you.hp_max / 2)
+        {
+            int gain_mp = roll_dice(3, 5 * player_mutation_level(MUT_POWERED_BY_PAIN));
+
+            mpr("You focus.");
+            inc_mp(gain_mp, false);
+        }
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1186,6 +1202,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
+            _pain_recover_mp(dam);
 
             return;
         } // else hp <= 0
