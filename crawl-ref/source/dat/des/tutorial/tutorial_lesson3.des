@@ -139,7 +139,7 @@ function tutorial_msg3.weapon_swap ()
     local text = "It is possible to quickly switch between two weapons in slots a and b. "
                  .. "First, you need to adjust your main weapon to slot a. To do that, press "
                  .. tutorial_get_cmd("CMD_ADJUST_INVENTORY")
-                 .. ", select your scimitar, and then enter <w>a</w> into the subsequent prompt.\n"
+                 .. "<w>i</w>, select your scimitar, and then enter <w>a</w> into the subsequent prompt.\n"
                  .. "Follow the same steps to set the sling to slot <w>b</w>. "
                  .. "Once that is done you can toggle between both of them with "
                  .. tutorial_get_cmd("CMD_WEAPON_SWAP") .. "."
