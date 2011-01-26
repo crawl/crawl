@@ -2187,17 +2187,36 @@ std::string shop_name(const coord_def& where)
 
     const shop_type type = cshop->type;
 
-    uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
-        | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
-        | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
+    std::string sh_name = "";
 
-    std::string sh_name = apostrophise(make_name(seed, false)) + " ";
+    if (!cshop->shop_name.empty())
+    {
+        sh_name += apostrophise(cshop->shop_name) + " ";
+    }
+    else
+    {
+        uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
+            | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
+            | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
 
-    sh_name += shop_type_name(type);
+        sh_name += apostrophise(make_name(seed, false)) + " ";
+    }
 
-    std::string sh_suffix = shop_type_suffix(type, where);
-    if (!sh_suffix.empty())
-        sh_name += " " + sh_suffix;
+    if (!cshop->shop_type_name.empty())
+        sh_name += cshop->shop_type_name;
+    else
+        sh_name += shop_type_name(type);
+
+    if (!cshop->shop_suffix_name.empty())
+    {
+        sh_name += " " + cshop->shop_suffix_name;
+    }
+    else
+    {
+        std::string sh_suffix = shop_type_suffix(type, where);
+        if (!sh_suffix.empty())
+            sh_name += " " + sh_suffix;
+    }
 
     return (sh_name);
 }

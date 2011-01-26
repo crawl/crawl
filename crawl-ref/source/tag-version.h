@@ -12,6 +12,7 @@ enum tag_minor_version
     TAG_MINOR_DETECTED_MONSTER,    // Detected monsters keep more than a flag.
     TAG_MINOR_FIRING_POS,          // Store firing position for monsters.
     TAG_MINOR_FOE_MEMORY,          // Save monster's foe_memory.
+    TAG_MINOR_SHOPS,               // Store shop_name and shop_type_name in shop_struct.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
