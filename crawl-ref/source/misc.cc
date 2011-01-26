@@ -2409,3 +2409,14 @@ void handle_real_time(time_t t)
                                       IDLE_TIME_CLAMP);
     you.last_keypress_time = t;
 }
+
+std::string part_stack_string(const int num, const int total)
+{
+    if (num == total)
+        return "Your";
+
+    std::string ret  = uppercase_first(number_in_words(num));
+                ret += " of your";
+
+    return ret;
+}

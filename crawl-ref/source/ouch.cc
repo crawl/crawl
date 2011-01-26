@@ -499,17 +499,6 @@ static int _get_target_class(beam_type flavour)
     return (target_class);
 }
 
-static std::string _part_stack_string(const int num, const int total)
-{
-    if (num == total)
-        return "Your";
-
-    std::string ret  = uppercase_first(number_in_words(num));
-                ret += " of your";
-
-    return ret;
-}
-
 // XXX: These expose functions could use being reworked into a real system...
 // the usage and implementation is currently very hacky.
 // Handles the destruction of inventory items from the elements.
@@ -605,14 +594,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 {
                 case OBJ_SCROLLS:
                     mprf("%s %s catch%s fire!",
-                         _part_stack_string(num_dest, quantity).c_str(),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "es" : "");
                     break;
 
                 case OBJ_POTIONS:
                     mprf("%s %s freeze%s and shatter%s!",
-                         _part_stack_string(num_dest, quantity).c_str(),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "s" : "",
                          (num_dest == 1) ? "s" : "");
@@ -623,14 +612,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                     if (flavour == BEAM_DEVOUR_FOOD)
                         break;
                     mprf("%s %s %s covered with spores!",
-                         _part_stack_string(num_dest, quantity).c_str(),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
                      break;
 
                 default:
                     mprf("%s %s %s destroyed!",
-                         _part_stack_string(num_dest, quantity).c_str(),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
                      break;
