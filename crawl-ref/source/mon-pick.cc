@@ -587,6 +587,7 @@ int mons_standard_level(int mcls)
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:
+    case MONS_DOOR_MIMIC:
         return 15;
 
     case MONS_BLINK_FROG:
@@ -898,6 +899,7 @@ int mons_standard_rare(int mcls)
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:
+    case MONS_DOOR_MIMIC:
         return 30;
 
     case MONS_FLAYED_GHOST:
@@ -2129,6 +2131,7 @@ int mons_crypt_level(int mcls)
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:
+    case MONS_DOOR_MIMIC:
         mlev += 5;
         break;
 
@@ -2209,6 +2212,7 @@ int mons_crypt_rare(int mcls)
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:
+    case MONS_DOOR_MIMIC:
         return 8;
 
     case MONS_ABOMINATION_SMALL:
