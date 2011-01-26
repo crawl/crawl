@@ -294,10 +294,6 @@ bool curse_an_item(bool destroy_potions, bool quiet)
     if (item == ENDOFPACK)
         return (false);
 
-    // Curse item.
-    if (destroy_potions && !quiet) // Just for mummies.
-        mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
-
     if (you.inv[item].base_type == OBJ_POTIONS)
     {
         int amount;
@@ -1126,7 +1122,8 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
             return;
         }
 
-        curse_an_item(true);
+        mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
+        curse_an_item(false);
     }
     else
     {
