@@ -104,15 +104,6 @@ function tutorial_msg3.battle ()
                             .. "and let the poison do the work.")
 end
 
-function tutorial_msg3.secret_shortcut ()
-    return tutorial_message("Yes, this is a secret door! You can use this path as a shortcut to the next level.")
-end
-
-function tutorial_msg3.shortcut ()
-    return tutorial_message("If you absolutely want to, you can skip this level and directly go the next. "
-                            .. "However, it is recommended that you play this one at least once.")
-end
-
 function tutorial_msg3.downstairs ()
     return tutorial_message("Well fought! If necessary, rest up with "
                             .. tutorial_get_cmd("CMD_REST")
@@ -356,7 +347,6 @@ MARKER:  g = lua:tutorial_msg3.scroll_noautopickup()
 MARKER:  h = lua:tutorial_msg3.ego_weapon()
 MARKER:  A = lua:tutorial_msg3.inventory()
 MARKER:  B = lua:tutorial_msg3.battle()
-MARKER:  C = lua:tutorial_msg3.secret_shortcut()
 MARKER:  } = lua:tutorial_msg3.downstairs()
 MARKER:  ] = lua:tutorial_msg3.downstairs()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
@@ -376,9 +366,9 @@ xxxxx1....xxxxxxxx.........e..xxxxxxxxxxx
 xxxxx.....xxxxxxxx.f.xxxx.....xxxx..(..xx
 xxxxx....g+..........xxxxxxx......d...{xx
 xxxxxxx.xxxxxxxxxx...xxxxxxxxxxxxx..[..xx
-xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx=xxxx
-xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxCxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.).xxx
+xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx.xxxxxxxxxxtttttttttttttttxx
 xxxxxxxxxxttx+xttxxxxxxxtttttttttttttttxx
@@ -418,7 +408,6 @@ MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_c
 MONS:    megabat
 MONS:    kobold ; dart ego:none q:10
 MONS:    jackal
-MARKER:  D = lua:tutorial_msg3.shortcut()
 MARKER:  ^ = lua:props_marker {poisoned_needle_trap="true", force_hit="true"}
 MARKER:  d = lua:tutorial_msg3.potion()
 MARKER:  A = lua:tutorial_msg3.weapon_swap()
@@ -433,12 +422,12 @@ epilogue{{
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttt..[ttttttttt
-tttttttttttttttttttttttttttttttttttt..D(...ttttttttt
-ttttttttttttttttttttttttttttttttttt.tttt..{.tttttttt
-tttttttttttttttttttttttttttttttttt.tttttt^tttttttttt
-ttttttttttttttttttttttttttttttttt.).ttttttdttttttttt
-tttttttttttttttttttttttttttttttttt.tttttttt.tttttttt
+tttttttttttttttttttttttttttttttttttttttt...ttttttttt
+ttttttttttttttttttttttttttttttttttttttt..{.ttttttttt
+tttttttttttttttttttttttttttttttttttttttt....tttttttt
+ttttttttttttttttttttttttttttttttttttttttt^tttttttttt
+ttttttttttttttttttttttttttttttttttttttttttdttttttttt
+ttttttttttttttttttttttttttttttttttttttttttt.tttttttt
 ttttttttttttttttttttttttttttttttttttttttttt.tttttttt
 tttttttttttttttttttttttttttttttttttttttttttt.ttttttt
 tttttttttttttttttttttttttttttttttttttttttttt..tttttt
@@ -520,8 +509,8 @@ epilogue{{
 }}
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XX{.$...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XX.(XXXAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XX..$...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XX{.XXXAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXX....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
