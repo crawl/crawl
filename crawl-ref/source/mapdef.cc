@@ -1,8 +1,10 @@
-/*
+/**
+ * @file
+ * @section DESCRIPTION
+ *
  *  File:       mapdef.cc
  *  Summary:    Support code for Crawl des files.
- *  Created by: dshaligram on Wed Nov 22 08:41:20 2006 UTC
- */
+**/
 
 #include "AppHdr.h"
 
@@ -5342,6 +5344,17 @@ void keyed_mapspec::parse_features(const std::string &s)
     }
 }
 
+/**
+ * Convert a trap string into a trap_spec.
+ *
+ * This function converts an incoming trap specification string from a vault
+ * into a trap_spec.
+ *
+ * @params s      The string to be parsed.
+ * @params weight The weight of this string.
+ * @returns       A feature_spec with the contained, parsed trap_spec stored via
+ *                std::auto_ptr as feature_spec->trap.
+**/
 feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
 {
     strip_tag(s, "trap");
@@ -5359,6 +5372,17 @@ feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
     return (fspec);
 }
 
+/**
+ * Convert a shop string into a shop_spec.
+ *
+ * This function converts an incoming shop specification string from a vault
+ * into a shop_spec.
+ *
+ * @params s      The string to be parsed.
+ * @params weight The weight of this string.
+ * @returns       A feature_spec with the contained, parsed shop_spec stored via
+ *                std::auto_ptr as feature_spec->shop.
+**/
 feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
 {
     strip_tag(s, "shop");
