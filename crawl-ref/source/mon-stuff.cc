@@ -244,7 +244,7 @@ int get_mimic_colour(const monster* mimic)
 }
 
 // Monster curses a random player inventory item.
-bool curse_an_item(bool decay_potions, bool quiet)
+bool curse_an_item(bool destroy_potions, bool quiet)
 {
     // allowing these would enable mummy scumming
     if (you.religion == GOD_ASHENZARI)
@@ -280,11 +280,8 @@ bool curse_an_item(bool decay_potions, bool quiet)
                 continue;
             }
 
-            if (you.inv[i].base_type == OBJ_POTIONS
-                && (!decay_potions || you.inv[i].sub_type == POT_DECAY))
-            {
+            if (you.inv[i].base_type == OBJ_POTIONS && !destroy_potions)
                 continue;
-            }
 
             // Item is valid for cursing, so we'll give it a chance.
             count++;
@@ -298,27 +295,31 @@ bool curse_an_item(bool decay_potions, bool quiet)
         return (false);
 
     // Curse item.
-    if (decay_potions && !quiet) // Just for mummies.
+    if (destroy_potions && !quiet) // Just for mummies.
         mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
 
     if (you.inv[item].base_type == OBJ_POTIONS)
     {
         int amount;
-        // Decay at least two of the stack.
+        // Destroy at least two of the stack.
         if (you.inv[item].quantity <= 2)
             amount = you.inv[item].quantity;
         else
             amount = 2 + random2(you.inv[item].quantity - 1);
 
-        split_potions_into_decay(item, amount);
+
+        dec_inv_item_quantity(item, amount);
+
+        // We're being nice here, and only destroy the *oldest* potions.
+        if (is_blood_potion(you.inv[item]))
+            for (int i = 0; i < amount; i++)
+                remove_oldest_blood_potion(you.inv[item]);
 
         if (item_value(you.inv[item], true) / amount > 2)
             xom_is_stimulated(32 * amount);
     }
     else
-    {
         do_curse_item(you.inv[item], false);
-    }
 
     return (true);
 }

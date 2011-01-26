@@ -39,7 +39,6 @@ bool can_bottle_blood_from_corpse(int mons_class);
 int num_blood_potions_from_corpse(int mons_class, int chunk_type = -1);
 void turn_corpse_into_blood_potions (item_def &item);
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
-void split_potions_into_decay(int obj, int amount, bool need_msg = true);
 
 void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false, bool smell_alert = true);
