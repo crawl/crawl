@@ -1,0 +1,136 @@
+##############################################
+# Tutorial map 5: Magic and Spellcasting     #
+##############################################
+#
+# TODO:
+#  * trigger for gaining Spellcasting
+#
+{{
+require("clua/tutorial.lua")
+
+tutorial_msg5 = {}
+
+function tutorial_msg5.start ()
+    tutorial_intro("In this lesson you're going to learn how to learn and cast spells.")
+end
+
+function tutorial_msg5.train_spellcasting ()
+    return tutorial_message("You cannot cast spells yet as you don't have the Spellcasting skill yet. "
+                            .. "Read some scrolls (with "
+                            .. tutorial_get_cmd("CMD_READ") .. ") to train it to level 1.")
+end
+
+function tutorial_msg5.spellbook ()
+    return tutorial_message("You can memorise a spell from carried spellbooks with "
+                            .. tutorial_get_cmd("CMD_MEMORISE_SPELL") .. ".")
+end
+
+function tutorial_msg5.spellcasting ()
+    local text = "You can cast spells with "
+                 .. tutorial_get_cmd("CMD_CAST_SPELL")
+
+    if crawl.is_tiles() then
+        text = text .. ", by <white>clicking</white> on the spell tile, or by "
+                    .. "pressing <white>Ctrl</white> + <white>leftclick</white> on the monster"
+    end
+    text = text .. ". Once you are out of magic points, retreat and rest with "
+                .. tutorial_get_cmd("CMD_REST") .. " to regain them."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg5.ring_power ()
+    local text = "Put on this ring with "
+                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</click>"
+    end
+    text = text .. ", and then rest up to your new full potential."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg5.undead ()
+    return tutorial_message("Other than for other monsters, with undead it is "
+                            .. "impossible to tell how wounded they are.")
+end
+
+function tutorial_msg5.tutorial_end ()
+    return tutorial_message("Well done! To exit the tutorial, simply go down these stairs.")
+end
+
+function tutorial_msg5.exit ()
+    -- A single screen recapping all commands.
+
+    local text = "<yellow>Commands</yellow>\n"
+                 .. "  " .. tutorial_get_cmd("CMD_MEMORISE_SPELL") .. "  learn a new spell\n"
+                 .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
+                 .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest to regain magic points\n"
+                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
+    text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
+
+    return crawl.endgame(text)
+end
+}}
+
+NAME:    tutorial_lesson5
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_start
+DESC:    "Lesson 5: Magic and Spellcasting"
+BFLAGS:  islanded
+ORIENT:  encompass
+KFEAT:   ABC = .
+COLOUR:  ABCde = blue
+FTILE:   ABCde = tutorial_pad
+KITEM:   A = scroll of fog q:4, scroll of random uselessness q:4, scroll of curse armour q:4, \
+         scroll of remove curse q:4
+ITEM:    randbook numspells:1 spell:magic_dart
+ITEM:    ring of magical power not_cursed
+MONS:    training dummy ; stone q:20
+MONS:    megabat skeleton
+MARKER:  A = lua:tutorial_msg5.train_spellcasting()
+MARKER:  d = lua:tutorial_msg5.spellbook()
+MARKER:  B = lua:tutorial_msg5.spellcasting()
+MARKER:  e = lua:tutorial_msg5.ring_power()
+MARKER:  C = lua:tutorial_msg5.undead()
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg5.exit" }
+MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg5.exit" }
+MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 onclimb = "tutorial_msg5.exit" }
+MARKER:  } = lua:tutorial_msg5.tutorial_end()
+MARKER:  ) = lua:tutorial_msg5.tutorial_end()
+MARKER:  ] = lua:tutorial_msg5.tutorial_end()
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg5.exit" }
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg5.exit" }
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg5.exit" }
+epilogue{{
+  tutorial_msg5.start()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.d.........A.......{..xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxx...x.2.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxx.....xxx..xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxBxxxxxxxxxxx.2..xxxxxx.xx)xxxxxxxxxxxxx
+xxxxxxxxxxxxx..wwwxxxxxxxx....xxxxxxx..}xxxxxxxxxxxxx
+xxxxxxxxxxxxx..ww1xxxxxxx.xxxxxxxxxxxxx]xxxxxxxxxxxxx
+xxxxxxxxxxxxx..wwwxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx......e.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
