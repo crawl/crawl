@@ -4642,7 +4642,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
         _vault_grid_glyph(place, where, f.glyph);
     }
     else if (f.shop.get())
-        place_spec_shop(place.level_number, where, f.shop.get()->sh_type);
+        place_spec_shop(place.level_number, where, f.shop.get());
     else
         grd(where) = DNGN_FLOOR;
 
@@ -5180,6 +5180,15 @@ void place_spec_shop(int level_number,
     for (j = 0; j < 3; j++)
         env.shop[i].keeper_name[j] = 1 + random2(200);
 
+    if (!spec->name.empty())
+        env.shop[i].shop_name = spec->name;
+
+    if (!spec->type.empty())
+        env.shop[i].shop_type_name = spec->type;
+
+    if (!spec->suffix.empty())
+        env.shop[i].shop_suffix_name = spec->suffix;
+
     env.shop[i].level = level_number * 2;
 
     env.shop[i].type = static_cast<shop_type>(
@@ -5214,9 +5223,21 @@ void place_spec_shop(int level_number,
         env.shop[i].greed = factor;
     }
 
+    if (spec->greed != -1)
+    {
+        dprf("Shop spec overrides greed: %d becomes %d.", env.shop[i].greed, spec->greed);
+        env.shop[i].greed = spec->greed;
+    }
+
     int plojy = 5 + random2avg(12, 3);
     if (representative)
         plojy = env.shop[i].type == SHOP_WAND? NUM_WANDS : 16;
+
+    if (spec->num_items != -1)
+    {
+        dprf("Shop spec overrides number of items: %d becomes %d.", plojy, spec->num_items);
+        plojy = spec->num_items;
+    }
 
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.

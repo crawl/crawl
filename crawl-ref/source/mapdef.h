@@ -739,9 +739,14 @@ private:
 struct shop_spec
 {
     shop_type sh_type;
+    std::string name;
+    std::string type;
+    std::string suffix;
+    int greed;
+    int num_items;
 
-    shop_spec (shop_type sh)
-        : sh_type(static_cast<shop_type>(sh)) { }
+    shop_spec (shop_type sh, std::string n="", std::string t="", std::string s="", int g=-1, int ni=-1)
+        : sh_type(sh), name(n), type(t), suffix(s), greed(g), num_items(ni) { }
 };
 
 struct trap_spec
