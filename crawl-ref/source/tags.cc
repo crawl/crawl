@@ -2080,6 +2080,9 @@ static void tag_construct_level(writer &th)
         marshallByte(th, env.shop[i].pos.y);
         marshallByte(th, env.shop[i].greed);
         marshallByte(th, env.shop[i].level);
+        marshallString(th, env.shop[i].shop_name);
+        marshallString(th, env.shop[i].shop_type_name);
+        marshallString(th, env.shop[i].shop_suffix_name);
     }
 
     marshallCoord(th, env.sanctuary_pos);
@@ -2692,6 +2695,16 @@ static void tag_read_level(reader &th)
         env.shop[i].pos.y = unmarshallByte(th);
         env.shop[i].greed = unmarshallByte(th);
         env.shop[i].level = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() >= TAG_MINOR_SHOPS)
+        {
+#endif
+        env.shop[i].shop_name = unmarshallString(th);
+        env.shop[i].shop_type_name = unmarshallString(th);
+        env.shop[i].shop_suffix_name = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 32
+        }
+#endif
         env.tgrid(env.shop[i].pos) = i;
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)
