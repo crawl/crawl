@@ -8,20 +8,20 @@ function tutorial_messenger (data, triggerable, triggerer, marker, ev)
 
   crawl.mesclr(true)
   crawl.mpr(data.text, data.channel)
-  if data.more == true then
-    crawl.redraw_view()
-    crawl.more()
+  if data.onetime == true then
+    triggerable:remove(marker)
   end
 end
 
-function tutorial_message (text, more)
-  if more == nil then
-    more = false
+function tutorial_message (text, onetime)
+  -- defaults to true
+  if onetime == nil then
+    onetime = true
   else
-    more = true
+    onetime = false
   end
 
-  local data = {text=text, channel="tutorial", more=more}
+  local data = {text=text, channel="tutorial", onetime=onetime}
 
   return function_at_spot('tutorial_messenger', data, true)
 end
