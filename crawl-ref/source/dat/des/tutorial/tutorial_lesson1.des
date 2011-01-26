@@ -94,7 +94,7 @@ function tutorial_msg.levelmap ()
 end
 
 function tutorial_msg.autoexplore ()
-    local text = "Exploring manually can get tedious after a while, so you might want to let that heppen automatically. Try it by pressing "
+    local text = "Exploring manually can get tedious after a while, so you might want to let that happen automatically. Try it by pressing "
                  .. tutorial_get_cmd("CMD_EXPLORE") .. "."
     return tutorial_message(text)
 end
