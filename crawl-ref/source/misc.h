@@ -121,4 +121,5 @@ void maybe_id_ring_TC();
 void entered_malign_portal(actor* act);
 
 void handle_real_time(time_t t = time(0));
+std::string part_stack_string(const int num, const int total);
 #endif

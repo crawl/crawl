@@ -307,6 +307,12 @@ bool curse_an_item(bool destroy_potions, bool quiet)
         else
             amount = 2 + random2(you.inv[item].quantity - 1);
 
+        const std::string item_name = you.inv[item].name(DESC_PLAIN);
+        const int quantity = you.inv[item].quantity;
+        mprf("%s %s rot%s away!",
+             part_stack_string(amount, quantity).c_str(),
+             item_name.c_str(),
+             (amount == 1) ? "s" : "");
 
         dec_inv_item_quantity(item, amount);
 
