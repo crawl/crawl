@@ -235,8 +235,10 @@ void level_clear_vault_memory();
 void level_welcome_messages();
 void run_map_epilogues ();
 
+struct trap_spec;
+bool place_specific_trap(const coord_def& where, trap_type trap_spec);
+bool place_specific_trap(const coord_def& where, trap_spec* spec);
 
-bool place_specific_trap(const coord_def& where, trap_type spec_type);
 void place_spec_shop(int level_number, const coord_def& where,
                      int force_s_type, bool representative = false);
 bool seen_replace_feat(dungeon_feature_type replace,

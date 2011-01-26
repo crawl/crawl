@@ -4623,16 +4623,15 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     const feature_spec f = mapsp.get_feat();
     if (f.trap.get())
     {
-        const trap_type trap =
-            (f.trap.get()->tr_type == TRAP_INDEPTH)
-                ? random_trap_for_place(place.level_number)
-                : static_cast<trap_type>(f.trap.get()->tr_type);
-
-        place_specific_trap(where, trap);
+        trap_spec* spec = f.trap.get();
+        if (spec && spec->tr_type == TRAP_INDEPTH)
+            place_specific_trap(where, random_trap_for_place(place.level_number));
+        else if (spec)
+            place_specific_trap(where, spec);
 
         // f.feat == 1 means trap is generated known.
         if (f.feat == 1)
-            grd(where) = trap_category(trap);
+            grd(where) = trap_category(spec->tr_type);
     }
     else if (f.feat >= 0)
     {
@@ -6544,6 +6543,15 @@ static void _roguey_level(int level_number)
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type)
 {
+    trap_spec spec(spec_type);
+
+    return place_specific_trap(where, &spec);
+}
+
+bool place_specific_trap(const coord_def& where, trap_spec* spec)
+{
+    trap_type spec_type = spec->tr_type;
+
     if (spec_type == TRAP_RANDOM || spec_type == TRAP_NONTELEPORT
         || spec_type == TRAP_SHAFT && !is_valid_shaft_level())
     {
