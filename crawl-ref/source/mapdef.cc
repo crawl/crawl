@@ -45,6 +45,7 @@
 #include "mon-util.h"
 #include "place.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-book.h"
@@ -4243,6 +4244,37 @@ void item_list::clear()
     items.clear();
 }
 
+item_spec item_list::random_item ()
+{
+    if (items.size() <= 0)
+    {
+        const item_spec none;
+        return (none);
+    }
+
+    return (get_item(random2(size())));
+}
+
+typedef std::pair<item_spec, int> item_pair;
+
+item_spec item_list::random_item_weighted ()
+{
+    const item_spec none;
+
+    std::vector<item_pair> pairs;
+    for (int i = 0, sz = size(); i < sz; ++i)
+    {
+        item_spec item = get_item(i);
+        pairs.push_back(item_pair(item, item.genweight));
+    }
+
+    item_spec* rn_item = random_choose_weighted(pairs);
+    if (rn_item)
+        return (*rn_item);
+
+    return (none);
+}
+
 item_spec item_list::pick_item(item_spec_slot &slot)
 {
     int cumulative = 0;
@@ -5385,6 +5417,8 @@ feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
 **/
 feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
 {
+    std::string orig(s);
+
     strip_tag(s, "shop");
     trim_string(s);
 
@@ -5400,14 +5434,34 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
     if (greed == TAG_UNFOUND)
         greed = -1;
 
-    lowercase(s);
+    std::vector<std::string> parts = split_string(";", s);
+    std::string main_part = parts[0];
 
-    const int shop = str_to_shoptype(s);
+    const int shop = str_to_shoptype(main_part);
     if (shop == -1)
         err = make_stringf("bad shop type: '%s'", s.c_str());
 
+    if (parts.size() > 2)
+    {
+        err = make_stringf("too many semi-colons for '%s' spec", orig.c_str());
+    }
+
+    item_list items;
+    if (parts.size() == 2)
+    {
+        std::string item_list = parts[1];
+        std::vector<std::string> str_items = split_string("|", item_list);
+        for (int i = 0, sz = str_items.size(); i < sz; ++i)
+        {
+            err = items.add_item(str_items[i]);
+            if (!err.empty())
+                break;
+        }
+    }
+
     feature_spec fspec(-1, weight);
     fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name, shop_type_name, shop_suffix_name, greed, num_items));
+    fspec.shop->items = items;
     return (fspec);
 }
 

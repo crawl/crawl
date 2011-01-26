@@ -590,6 +590,8 @@ public:
     void clear();
 
     item_spec get_item(int index);
+    item_spec random_item ();
+    item_spec random_item_weighted ();
     size_t size() const { return items.size(); }
     bool empty() const { return items.empty(); }
 
@@ -744,9 +746,10 @@ struct shop_spec
     std::string suffix;
     int greed;
     int num_items;
+    item_list items;
 
     shop_spec (shop_type sh, std::string n="", std::string t="", std::string s="", int g=-1, int ni=-1)
-        : sh_type(sh), name(n), type(t), suffix(s), greed(g), num_items(ni) { }
+        : sh_type(sh), name(n), type(t), suffix(s), greed(g), num_items(ni), items() { }
 };
 
 struct trap_spec
