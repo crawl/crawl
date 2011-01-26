@@ -2595,7 +2595,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         return false;
     case CMD_WEAPON_SWAP:
         redraw_screen();
-        wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+        wield_weapon(true, SLOT_BARE_HANDS);
         return false;
     case CMD_QUIVER_ITEM:
         redraw_screen();

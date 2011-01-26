@@ -284,7 +284,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
     {
         if (you.has_claws() || form_can_butcher_barehanded())
         {
-            butcher_tool = -1;
+            butcher_tool = SLOT_BARE_HANDS;
             return (true);
         }
         else
@@ -346,7 +346,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     if (wpn_switch)
     {
         std::string tool;
-        if (butchering_tool == -1)
+        if (butchering_tool == SLOT_BARE_HANDS)
         {
             tool = "unarmed";
         }
@@ -556,7 +556,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     bool wpn_switch     = false;
     bool removed_gloves = false;
-    int butcher_tool    = -1;
+    int butcher_tool    = SLOT_BARE_HANDS;
 
     if (!can_butcher)
     {
@@ -565,7 +565,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             !gloved_butcher)
             return (false);
 
-        if (butcher_tool == -1 && gloved_butcher)
+        if (butcher_tool == SLOT_BARE_HANDS && gloved_butcher)
             removed_gloves = true;
         else if (you.equip[EQ_WEAPON] != butcher_tool)
             wpn_switch = true;
