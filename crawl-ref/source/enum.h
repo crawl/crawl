@@ -1406,7 +1406,7 @@ enum enchant_type
     ENCH_BLIND,         // Permanently blind (everything is invisible).
     ENCH_DUMB,          // Permanently dumb (as in, 'struck dumb').
     ENCH_MAD,           // Permanently mad.
-    ENCH_CORONA_ZIN,    // Zin's silver light.
+    ENCH_SILVER_CORONA, // Zin's silver light.
     ENCH_HELPLESS,
     ENCH_LIQUEFYING,
     ENCH_PERM_TORNADO,

@@ -1037,7 +1037,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case ZIN_SILVER_CORONA:
-        if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU,
+        if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, degree, KC_YOU,
                                       (degree + random2(spellpower)) * 10)))
         {
             simple_monster_message(mon, " is limned with silver light.");
