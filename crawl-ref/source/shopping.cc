@@ -174,7 +174,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
             "/<w>R-Click</w>"
 #endif
             "] exit            [<w>!</w>] %s   %s",
-            (viewing ? "to select items " : "to examine items"),
+            (viewing ? "to buy items " : "to examine items"),
             pkeys.c_str()));
 
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
