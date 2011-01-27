@@ -6532,8 +6532,9 @@ static const char *enchant_names[] =
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "levitation",
-    "dazed", "mute", "blind", "dumb", "mad", "corona_zin",
-    "helpless", "liquefying", "perm_tornado", "fake_abjuration", "buggy",
+    "helpless", "liquefying", "perm_tornado", "fake_abjuration",
+    "dazed", "mute", "blind", "dumb", "mad", "silver_corona",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
