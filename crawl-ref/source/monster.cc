@@ -3257,8 +3257,34 @@ int monster::res_rotting(bool temp) const
     UNUSED(temp);
 
     int res = get_mons_resists(this).rotting;
-    if (holiness() != MH_NATURAL)
-        res += 1;
+    if (res)
+        return res;
+    switch(holiness())
+    {
+    case MH_NATURAL:
+    case MH_PLANT: // was 1 before.  Gardening shows it should be -1 instead...
+        res = 0;
+        break;
+    case MH_UNDEAD:
+        if (mons_base_char(type) == 'n'
+            || type == MONS_ZOMBIE_SMALL
+            || type == MONS_ZOMBIE_LARGE)
+        {
+            res = 1;
+        }
+        else
+            res = 3;
+        break;
+    case MH_DEMONIC:
+    case MH_HOLY:
+        res = 1;
+        break;
+    case MH_NONLIVING:
+        res = 3;
+        break;
+    }
+    if (is_insubstantial())
+        res = 3;
     return (res);
 }
 
