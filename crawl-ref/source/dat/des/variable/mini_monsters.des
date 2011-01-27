@@ -877,7 +877,7 @@ NAME:   kilobyte_rumbling_trees
 DEPTH:  D:14-20, Elf, Lair:4-8
 MONS:   patrolling spriggan druid
 MONS:   black bear / bear / grizzly bear / megabat w:20
-FTILE:  .t1@ = floor_lair
+FTILE:  .t1@ = floor_moss
 MAP
 ttttt       tttt@t
 tttttt tt ttttt2tt
@@ -895,7 +895,7 @@ ENDMAP
 # And for now, something woody (1KB)
 NAME:   forest_paths
 DEPTH:  D, Lair
-FTILE:  .t0@*123 = floor_lair
+FTILE:  .t0@*123 = floor_moss
 : if you.absdepth()>15 then
 MONS:   spriggan, spriggan druid, spriggan rider
 SUBST:  0=1
