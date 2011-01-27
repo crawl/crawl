@@ -5422,6 +5422,8 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
     strip_tag(s, "shop");
     trim_string(s);
 
+    bool use_all = strip_tag(s, "use_all");
+
     std::string shop_name = replace_all_of(strip_tag_prefix(s, "name:"), "_", " ");
     std::string shop_type_name = replace_all_of(strip_tag_prefix(s, "type:"), "_", " ");
     std::string shop_suffix_name = replace_all_of(strip_tag_prefix(s, "suffix:"), "_", " ");
@@ -5460,7 +5462,7 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
     }
 
     feature_spec fspec(-1, weight);
-    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name, shop_type_name, shop_suffix_name, greed, num_items));
+    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name, shop_type_name, shop_suffix_name, greed, num_items, use_all));
     fspec.shop->items = items;
     return (fspec);
 }

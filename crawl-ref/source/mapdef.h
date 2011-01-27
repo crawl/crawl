@@ -747,9 +747,12 @@ struct shop_spec
     int greed;
     int num_items;
     item_list items;
+    bool use_all;
 
-    shop_spec (shop_type sh, std::string n="", std::string t="", std::string s="", int g=-1, int ni=-1)
-        : sh_type(sh), name(n), type(t), suffix(s), greed(g), num_items(ni), items() { }
+    shop_spec (shop_type sh, std::string n="", std::string t="",
+               std::string s="", int g=-1, int ni=-1, bool u=false)
+        : sh_type(sh), name(n), type(t), suffix(s),
+          greed(g), num_items(ni), items(), use_all(u) { }
 };
 
 struct trap_spec
