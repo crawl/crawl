@@ -155,13 +155,12 @@ function tutorial_msg2.firing ()
 end
 
 function tutorial_msg2.quiver ()
-    local text = "To conserve ammunition, you might sometimes want to switch ammunition. "
-                 .. "To do this, press <white>(</white> when already targeting a monster (via "
-                 .. tutorial_get_cmd("CMD_FIRE")
+    local text = "To conserve ammunition, you might sometimes want to switch ammunition, "
+                 .. "which you can do by pressing <white>(</white> "
     if crawl.is_tiles() then
-        text = text .. " or <white>mouseclick</white>"
+        text = text .. " or simply <white>clicking</white> on another ammunition tile"
     end
-    text = text .. ")."
+    text = text .. "."
 
     return tutorial_message(text)
 end
