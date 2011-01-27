@@ -550,7 +550,7 @@ void handle_behaviour(monster* mon)
                 // attack, we assume it sees in which direction the player went
                 // and it tries to find a line of fire instead of following the
                 // player.
-                else if (grid_distance(mon->target, you.pos()) <= 1
+                else if (grid_distance(mon->target, you.pos()) == 1
                          && _mon_tries_regain_los(mon))
                 {
                     _set_firing_pos(mon, you.pos());
