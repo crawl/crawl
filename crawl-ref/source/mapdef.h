@@ -1,7 +1,10 @@
-/*
+/**
+ * @defgroup mapdef Map Parsing
+ * @brief Parse .des files into map objects.
+ * @section DESCRIPTION
+ *
  * mapdef.h:
  * Header for map structures used by the level compiler.
- * Created by: dshaligram on Wed Nov 22 08:41:20 2006 UTC
  *
  * NOTE: When we refer to map, this could be a full map, filling an entire
  * level or a minivault that occupies just a portion of the level.
@@ -738,16 +741,45 @@ private:
     std::string error;
 };
 
+/**
+ * @class shop_spec
+ * @ingroup mapdef
+ * @brief Specify how to create a shop.
+ *
+ * This specification struct is used when converting a vault-specified shop from
+ * a string into something the builder can use to actually create and place a
+ * shop.
+**/
 struct shop_spec
 {
-    shop_type sh_type;
-    std::string name;
-    std::string type;
-    std::string suffix;
-    int greed;
-    int num_items;
-    item_list items;
-    bool use_all;
+    shop_type sh_type;  /**< One of the shop_type enum values. */
+
+    std::string name;   /**< If provided, this is apostrophised and used as the
+                          *  shop keeper's name, ie, Plog as a name becomes
+                          *  Plog's. */
+
+    std::string type;   /**< If provided, this is used as the shop type name,
+                          *  ie, Hide, Antique, Wand, etc. */
+
+    std::string suffix; /**< If provided, this is used as the shop suffix,
+                          *  ie, Shop, Boutique, Parlour, etc. */
+
+    int greed;          /**< If provided, this value is used for price
+                          *  calculation. The higher the greed, the more
+                          *  inflation applied to prices. */
+
+    int num_items;      /**< Cap the number of items in a shop at this. */
+
+    item_list items;    /**< If provided, and `use_all` is false, items will be
+                          *  selected at random from the list and used to
+                          *  populate the shop. If `use_all` is true, the items
+                          *  contained will be placed precisely and in order. If
+                          *  the number of items contained is less than
+                          *  specified, random items according to the shop's
+                          *  type will be used to fill in the rest of the stock.
+                          *  */
+
+    bool use_all;       /**< True if all items in `items` should be used. */
 
     shop_spec (shop_type sh, std::string n="", std::string t="",
                std::string s="", int g=-1, int ni=-1, bool u=false)
@@ -755,20 +787,38 @@ struct shop_spec
           greed(g), num_items(ni), items(), use_all(u) { }
 };
 
+/**
+ * @class trap_spec
+ * @ingroup mapdef
+ * @brief Specify how to create a trap.
+ *
+ * This specification struct is used when converting a vault-specified trap
+ * string into something that the builder can use to place a trap.
+**/
 struct trap_spec
 {
-    trap_type tr_type;
+    trap_type tr_type; /*> One of the trap_type enum values. */
     trap_spec (trap_type tr)
         : tr_type(static_cast<trap_type>(tr)) { }
 };
 
+
+/**
+ * @class feature_spec
+ * @ingroup mapdef
+ * @brief Specify how to create a feature.
+ *
+ * This specification struct is used firstly when a feature is specified in
+ * vault code (any feature), and secondly, if that feature is either a trap or a
+ * shop, as a container for a std::auto_ptr to that shop_spec or trap_spec.
+**/
 struct feature_spec
 {
-    int genweight;
-    int feat;
-    std::auto_ptr<shop_spec> shop;
-    std::auto_ptr<trap_spec> trap;
-    int glyph;
+    int genweight;                 /**> The weight of this specific feature. */
+    int feat;                      /**> The specific feature being placed. */
+    std::auto_ptr<shop_spec> shop; /**> A pointer to a shop_spec. */
+    std::auto_ptr<trap_spec> trap; /**> A pointer to a trap_spec. */
+    int glyph;                     /**> What glyph to use instead. */
 
     feature_spec();
     feature_spec(int f, int wt = 10);
