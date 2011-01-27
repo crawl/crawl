@@ -5233,6 +5233,12 @@ void place_spec_shop(int level_number,
     if (representative)
         plojy = env.shop[i].type == SHOP_WAND? NUM_WANDS : 16;
 
+    if (spec->use_all && !spec->items.empty())
+    {
+        dprf("Shop spec wants all items placed: %d becomes %d.", plojy, spec->items.size());
+        plojy = (int) spec->items.size();
+    }
+
     if (spec->num_items != -1)
     {
         dprf("Shop spec overrides number of items: %d becomes %d.", plojy, spec->num_items);
@@ -5280,10 +5286,14 @@ void place_spec_shop(int level_number,
         {
             const int subtype = representative? j : OBJ_RANDOM;
 
-            if (!spec->items.empty())
+            if (!spec->items.empty() && !spec->use_all)
             {
                 orb = dgn_place_item(spec->items.random_item_weighted(),
                         stock_loc, item_level);
+            }
+            else if (!spec->items.empty() && spec->use_all && j < (int)spec->items.size())
+            {
+                orb = dgn_place_item(spec->items.get_item(j), stock_loc, item_level);
             }
             else
             {
