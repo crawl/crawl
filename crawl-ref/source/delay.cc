@@ -309,19 +309,25 @@ void stop_delay(bool stop_stair_travel)
 
         const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
-        mpr("All blood oozes out of the corpse!");
-
-        bleed_onto_floor(you.pos(), static_cast<monster_type>(item.plus),
-                         delay.duration, false);
-
-        if (mons_skeleton(item.plus) && one_chance_in(3))
-            turn_corpse_into_skeleton(item);
-        else
+        // Don't skeletonize a corpse if it's no longer there!
+        if (mitm[delay.parm1].defined()
+            && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
+            && mitm[ delay.parm1 ].pos == you.pos())
         {
-            if (delay.parm1)
-                dec_inv_item_quantity(delay.parm2, 1);
+            mpr("All blood oozes out of the corpse!");
+
+            bleed_onto_floor(you.pos(), static_cast<monster_type>(item.plus),
+                             delay.duration, false);
+
+            if (mons_skeleton(item.plus) && one_chance_in(3))
+                turn_corpse_into_skeleton(item);
             else
-                dec_mitm_item_quantity(delay.parm2, 1);
+            {
+                if (delay.parm1)
+                    dec_inv_item_quantity(delay.parm2, 1);
+                else
+                    dec_mitm_item_quantity(delay.parm2, 1);
+            }
         }
 
         if (was_orc)
@@ -378,7 +384,9 @@ void stop_delay(bool stop_stair_travel)
 
 static bool _is_butcher_delay(int delay)
 {
-    return (delay == DELAY_BUTCHER || delay == DELAY_BOTTLE_BLOOD);
+    return (delay == DELAY_BUTCHER
+            || delay == DELAY_BOTTLE_BLOOD
+            || delay == DELAY_FEED_VAMPIRE);
 }
 
 void stop_butcher_delay()
@@ -531,7 +539,8 @@ bool is_being_butchered(const item_def &item, bool just_first)
     for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
     {
         if (you.delay_queue[i].type == DELAY_BUTCHER
-            || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD)
+            || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD
+            || you.delay_queue[i].type == DELAY_FEED_VAMPIRE)
         {
             const item_def &corpse = mitm[ you.delay_queue[i].parm1 ];
             if (&corpse == &item)
@@ -562,7 +571,8 @@ bool is_butchering()
         return (false);
 
     const delay_queue_item &delay = you.delay_queue.front();
-    return (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD);
+    return (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD
+            || delay.type == DELAY_FEED_VAMPIRE);
 }
 
 bool player_stair_delay()
