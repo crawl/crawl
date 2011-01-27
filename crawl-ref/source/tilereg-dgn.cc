@@ -1107,7 +1107,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
     // These apply both on the same square as the player's and elsewhere.
     if (!has_monster)
     {
-        if (env.map_knowledge(gc).item())
+        if (you.see_cell(gc) && env.map_knowledge(gc).item())
         {
             _add_tip(tip, "[L-Click] Pick up items (%)");
             cmd.push_back(CMD_PICKUP);
@@ -1150,8 +1150,11 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
             cmd.push_back(CMD_DISPLAY_RELIGION);
         }
     }
-    else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
+    else if (you.see_cell(gc)
+             && env.map_knowledge(gc).feat() != DNGN_UNSEEN)
+    {
         _add_tip(tip, "[R-Click] Describe");
+    }
 
     if (!tip.empty())
         insert_commands(tip, cmd, false);

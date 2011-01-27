@@ -22,6 +22,9 @@ MessageRegion::MessageRegion(FontWrapper *font) :
 
 int MessageRegion::handle_mouse(MouseEvent &event)
 {
+    if (m_overlay)
+        return 0;
+
     // TODO enne - mouse scrolling here should mouse scroll up through
     // the message history in the message pane, without going to the CRT.
 
