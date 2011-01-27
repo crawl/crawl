@@ -1354,7 +1354,7 @@ PLACE:      Temple
 ORIENT:     encompass
 WEIGHT:     3
 LFLOORCOL:  green
-LFLOORTILE: floor_lair
+LFLOORTILE: floor_moss
 SUBST:      t = t:18 1:1 .:1
 MONS:       plant / bush w:1 / fungus w:1
 MAP

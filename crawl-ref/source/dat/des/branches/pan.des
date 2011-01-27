@@ -964,7 +964,7 @@ MONS:   red devil ; katana good_item ego:distortion
 RTILE:  x = wall_zot_blue / wall_zot_green / wall_zot_cyan / wall_zot_red /\
             wall_zot_magenta / wall_zot_yellow
 # alas, floor tiles are not distinguished from walls enough, commenting out:
-# FTILE: . = floor_lair / floor_dirt / floor_hive / floor_rough_red /\
+# FTILE: . = floor_moss / floor_dirt / floor_hive / floor_rough_red /\
 #            floor_snake / floor_swamp
 KFEAT:  _ = floor
 FTILE:  _ = floor_hall

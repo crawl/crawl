@@ -332,7 +332,7 @@ NAME:   kilobyte_entry_exit_the_forest
 TAGS:   entry no_rotate no_pool_fixup
 ORIENT: northwest
 MONS:   plant
-FTILE:  .t1 = floor_lair
+FTILE:  .t1 = floor_moss
 KMASK:  W = no_monster_gen
 KMASK:  w = no_monster_gen
 MAP
@@ -506,7 +506,7 @@ MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
 KPROP:  ' = no_rtele_into
 SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
-FTILE:  .1234567t = floor_lair
+FTILE:  .1234567t = floor_moss
 COLOUR: . = green
 SUBST:  " = .
 MAP
