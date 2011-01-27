@@ -674,7 +674,7 @@ enum zin_eff
     ZIN_BLEED,
     ZIN_SMITE,
     ZIN_BLIND,
-    ZIN_CORONA,
+    ZIN_SILVER_CORONA,
     ZIN_ANTIMAGIC,
     ZIN_MUTE,
     ZIN_MAD,
@@ -808,7 +808,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 if (one_chance_in(3))
                     effect = ZIN_BLIND;
                 else if (coinflip())
-                    effect = ZIN_CORONA;
+                    effect = ZIN_SILVER_CORONA;
                 else
                     effect = ZIN_ANTIMAGIC;
             }
@@ -843,7 +843,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         else if (check < 10)
         {
             if (coinflip())
-                effect = ZIN_CORONA;
+                effect = ZIN_SILVER_CORONA;
             else
                 effect = ZIN_SMITE;
         }
@@ -852,7 +852,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
             if (coinflip())
                 effect = ZIN_IGNITE_CHAOS;
             else
-                effect = ZIN_CORONA;
+                effect = ZIN_SILVER_CORONA;
         }
         else
             effect = ZIN_SALTIFY;
@@ -874,14 +874,14 @@ bool zin_recite_to_single_monster(const coord_def& where,
             if (coinflip() && mon->res_rotting() > 1)
                 effect = ZIN_ROT;
             else
-                effect = ZIN_CORONA;
+                effect = ZIN_SILVER_CORONA;
         }
         else if (check < 15)
         {
             if (mon->undead_or_demonic() && coinflip())
                 effect = ZIN_HOLY_WORD;
             else
-                effect = ZIN_CORONA;
+                effect = ZIN_SILVER_CORONA;
         }
         else
             effect = ZIN_SALTIFY;
@@ -900,7 +900,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
             if (coinflip())
                 effect = ZIN_FEAR;
             else
-                effect = ZIN_CORONA;
+                effect = ZIN_SILVER_CORONA;
         }
         // Half of the time, the anti-unholy prayer will be capped at this
         // level of effect.
@@ -909,7 +909,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
             if (coinflip())
                 effect = ZIN_HOLY_WORD;
             else
-                effect = ZIN_CORONA;
+                effect = ZIN_SILVER_CORONA;
         }
         else
             effect = ZIN_SALTIFY;
@@ -1036,7 +1036,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         }
         break;
 
-    case ZIN_CORONA:
+    case ZIN_SILVER_CORONA:
         if (mon->add_ench(mon_enchant(ENCH_CORONA_ZIN, degree, KC_YOU,
                                       (degree + random2(spellpower)) * 10)))
         {
