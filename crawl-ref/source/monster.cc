@@ -2789,7 +2789,7 @@ bool monster::asleep() const
 
 bool monster::backlit(bool check_haloed, bool self_halo) const
 {
-    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_CORONA_ZIN))
+    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_SILVER_CORONA))
         return (true);
     if (check_haloed)
         return (haloed() && (self_halo || halo_radius2() == -1));
@@ -4430,7 +4430,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CORONA:
-    case ENCH_CORONA_ZIN:
+    case ENCH_SILVER_CORONA:
     if (!quiet)
         {
             if (visible_to(&you))
@@ -4715,7 +4715,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ANTIMAGIC: case ENCH_FEAR_INSPIRING:
         case ENCH_REGENERATION: case ENCH_RAISED_MR: case ENCH_MIRROR_DAMAGE:
         case ENCH_STONESKIN: case ENCH_LIQUEFYING:
-        case ENCH_CORONA_ZIN: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
+        case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -5475,7 +5475,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     }
 
     //This is like Corona, but if silver harms them, it sticky flame levels of damage.
-    case ENCH_CORONA_ZIN:
+    case ENCH_SILVER_CORONA:
 
         if ((this->holiness() == MH_UNDEAD && !this->is_insubstantial()) || this->is_chaotic())
         {
@@ -6696,7 +6696,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn += 1000 / _mod_speed(250, mons->speed);
         break;
     case ENCH_CORONA:
-    case ENCH_CORONA_ZIN:
+    case ENCH_SILVER_CORONA:
         if (deg > 1)
             cturn = 1000 * (deg - 1) / _mod_speed(200, mons->speed);
         cturn += 1000 / _mod_speed(100, mons->speed);

@@ -64,7 +64,7 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_ROT:
         return ULL1 << MB_ROTTING;
     case ENCH_CORONA:
-    case ENCH_CORONA_ZIN:
+    case ENCH_SILVER_CORONA:
         return ULL1 << MB_GLOWING;
     case ENCH_SLOW:
         return ULL1 << MB_SLOWED;
