@@ -1137,7 +1137,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case ZIN_HOLY_WORD:
-        holy_word_monsters(where, spellpower, HOLY_WORD_ZIN);
+        holy_word_monsters(where, spellpower, HOLY_WORD_ZIN, &you);
         affected = true;
         break;
     }
