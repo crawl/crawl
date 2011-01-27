@@ -3258,7 +3258,7 @@ int monster::res_rotting(bool temp) const
 
     int res = get_mons_resists(this).rotting;
     if (res)
-        return res;
+        return (1);
     switch(holiness())
     {
     case MH_NATURAL:
