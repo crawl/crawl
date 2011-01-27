@@ -859,9 +859,9 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case RECITE_IMPURE:
-        // We don't check rotting resistance for sickness or rotting, because this is divine punishment.
-        // FIXME: that's totally wrong for skeletons, mummies, ghosts, ...
-        // We do check whether a monster can bleed, because it has to have blood to do that...
+        // Many creatures normally resistant to rotting are still affected,
+        // because this is divine punishment.  Those with no real flesh are
+        // immune, of course.
         if (check < 5)
         {
             if (coinflip() && mon->can_bleed())
@@ -871,7 +871,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         }
         else if (check < 10)
         {
-            if (coinflip())
+            if (coinflip() && mon->res_rotting() > 1)
                 effect = ZIN_ROT;
             else
                 effect = ZIN_CORONA;
@@ -1123,7 +1123,8 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_ROT:
         ASSERT(prayertype == RECITE_IMPURE);
-        if (mon->add_ench(mon_enchant(ENCH_ROT, degree, KC_YOU,
+        if (mon->res_rotting() <= 1
+            && mon->add_ench(mon_enchant(ENCH_ROT, degree, KC_YOU,
                                       (degree + random2(spellpower)) * 10)))
         {
             mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU,
