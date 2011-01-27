@@ -1401,16 +1401,16 @@ enum enchant_type
     ENCH_ATTACHED,
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
     ENCH_LEVITATION,
+    ENCH_HELPLESS,
+    ENCH_LIQUEFYING,
+    ENCH_PERM_TORNADO,
+    ENCH_FAKE_ABJURATION,
     ENCH_DAZED,         // Dazed - less chance of acting each turn.
     ENCH_MUTE,          // Permanently silenced.
     ENCH_BLIND,         // Permanently blind (everything is invisible).
     ENCH_DUMB,          // Permanently dumb (as in, 'struck dumb').
     ENCH_MAD,           // Permanently mad.
     ENCH_SILVER_CORONA, // Zin's silver light.
-    ENCH_HELPLESS,
-    ENCH_LIQUEFYING,
-    ENCH_PERM_TORNADO,
-    ENCH_FAKE_ABJURATION,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
