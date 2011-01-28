@@ -5386,8 +5386,8 @@ void keyed_mapspec::parse_features(const std::string &s)
  * This function converts an incoming trap specification string from a vault
  * into a trap_spec.
  *
- * @params s      The string to be parsed.
- * @params weight The weight of this string.
+ * @param s       The string to be parsed.
+ * @param weight  The weight of this string.
  * @returns       A feature_spec with the contained, parsed trap_spec stored via
  *                std::auto_ptr as feature_spec->trap.
 **/
@@ -5414,10 +5414,10 @@ feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
  * This function converts an incoming shop specification string from a vault
  * into a shop_spec.
  *
- * @params s      The string to be parsed.
- * @params weight The weight of this string.
- * @returns       A feature_spec with the contained, parsed shop_spec stored via
- *                std::auto_ptr as feature_spec->shop.
+ * @param s      The string to be parsed.
+ * @param weight The weight of this string.
+ * @returns      A feature_spec with the contained, parsed shop_spec stored via
+ *               std::auto_ptr as feature_spec->shop.
 **/
 feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
 {
