@@ -29,7 +29,7 @@
 #include "sha256.h"
 #endif
 
-void seed_rng(unsigned long* seed_key, size_t num_keys)
+void seed_rng(uint32_t* seed_key, size_t num_keys)
 {
     // MT19937 -- see mt19937ar.cc for details/licence
     init_by_array(seed_key, num_keys);
@@ -44,7 +44,7 @@ void seed_rng(unsigned long* seed_key, size_t num_keys)
     srand(seed_key[0]);
 }
 
-void seed_rng(long seed)
+void seed_rng(uint32_t seed)
 {
     // MT19937 -- see mt19937ar.cc for details/licence
     init_genrand(seed);
@@ -61,11 +61,11 @@ void seed_rng(long seed)
 
 void seed_rng()
 {
-    unsigned long seed = time(NULL);
+    uint32_t seed = time(NULL);
 #ifdef USE_MORE_SECURE_SEED
 
     /* (at least) 256-bit wide seed */
-    unsigned long seed_key[8];
+    uint32_t seed_key[8];
 
 #ifdef UNIX
     struct tms  buf;
