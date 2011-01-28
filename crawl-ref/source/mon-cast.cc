@@ -1212,7 +1212,7 @@ static bool _animate_dead_okay()
     if (crawl_state.game_is_arena())
         return (true);
 
-    if (is_butchering())
+    if (is_butchering() || is_vampire_feeding())
         return (false);
 
     if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)

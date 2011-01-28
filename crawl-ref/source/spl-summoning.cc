@@ -1697,6 +1697,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             if (!_animatable_remains(*si))
                 continue;
 
+            const bool was_draining = is_being_drained(*si);
             const bool was_butchering = is_being_butchered(*si);
 
             success = _raise_remains(a, si.link(), beha, hitting, as, nas,
@@ -1706,9 +1707,11 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             if (actual && success)
             {
                 // Ignore quiet.
-                if (was_butchering)
+                if (was_butchering || was_draining)
                 {
-                    mprf("The corpse you are butchering rises to %s!",
+                    mprf("The corpse you are %s rises to %s!",
+                         was_draining ? "drinking from"
+                                      : "butchering",
                          beha == BEH_FRIENDLY ? "join your ranks"
                                               : "attack");
                 }
