@@ -68,7 +68,7 @@ bool make_book_theme_randart(item_def &book,
                              int disc1 = 0, int disc2 = 0,
                              int num_spells = -1, int max_levels = -1,
                              spell_type incl_spell = SPELL_NO_SPELL,
-                             std::string owner = "");
+                             std::string title = "", std::string owner = "");
 void make_book_Roxanne_special(item_def *book);
 
 bool book_has_title(const item_def &book);

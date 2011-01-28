@@ -4144,13 +4144,18 @@ retry:
 
         if (props.exists("make_book_theme_randart"))
         {
+            std::string owner = props["randbook_owner"].get_string();
+            if (owner == "player")
+                owner = you.your_name;
+
             make_book_theme_randart(item,
                 props["randbook_disc1"].get_short(),
                 props["randbook_disc2"].get_short(),
                 props["randbook_num_spells"].get_short(),
                 props["randbook_slevels"].get_short(),
                 spell_by_name(props["randbook_spell"].get_string()),
-                props["randbook_owner"].get_string());
+                props["randbook_title"].get_string(),
+                owner);
         }
 
         // Remove unsuitable inscriptions such as {god gift}.

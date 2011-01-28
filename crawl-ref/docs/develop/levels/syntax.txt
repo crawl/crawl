@@ -612,8 +612,7 @@ ITEM:     (list of items, separated by comma)
             included in the book. Note: specifying two spell schools doesn't
             mean that they will both definitely be included, just that they
             might be.
-          * "numspells:number" a number of spells to include in the book. Will
-            not always be followed.
+          * "numspells:number" maximum number of spells to include in the book.
           * "slevels:max_levels" the total, combined level of spells to include
             in the book. "slevels:6" will use three level two spells, two level
             three spells, a level two and a level four spell, and so on.
@@ -621,7 +620,10 @@ ITEM:     (list of items, separated by comma)
             replaced with " " and will be parsed as such.
           * "owner:name" will be used to generate the title of the book if
             provided. For example, "owner:Roxanne" may create "Roxanne's
-            Treatise on Mountains".
+            Treatise on Mountains". You can use the keyword "player" (i.e. 
+            "owner:player") to use the player's name instead.
+          * "title:title" will define the title of the book, e.g. "Treatise on
+            Mountains" in the example above.
 
           NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
