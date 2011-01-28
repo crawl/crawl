@@ -281,7 +281,7 @@ static void _check_monster_pos(const monster* mons)
  * @param mons     The moster being mimicked.
  * @returns        True if valid, otherwise False.
 */
-static bool _valid_invis_spot (const coord_def &where, const monster* mons)
+static bool _valid_invis_spot(const coord_def &where, const monster* mons)
 {
     monster *mons_at = monster_at(where);
 
@@ -292,6 +292,24 @@ static bool _valid_invis_spot (const coord_def &where, const monster* mons)
         return (true);
 
     return (false);
+}
+
+static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
+{
+    if (die <= 1)
+        return 0;
+
+    struct
+    {
+        uint32_t mid;
+        uint32_t id;
+        uint32_t seed;
+    } data;
+    data.mid = mons->mid;
+    data.id  = id;
+    data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
+
+    return hash(&data, sizeof(data)) % die;
 }
 
 /**
@@ -330,21 +348,29 @@ static void _update_monster(const monster* mons)
             env.map_knowledge(gp).set_invisible_monster();
         }
 
-        // maybe show unstealthy invis monsters
-        if (!x_chance_in_y(mons->stealth() + 4, 7))
+        if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
         {
-            // TODO: This should make a seed of gp.x, gp.y and you.num_turns
-            // and seed the RNG with it, thus making the whole thing
-            // deterministic and result in holding <Escape> not allowing you to
-            // determine realibly where a monster is.
+            you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
+            you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
+        }
+
+        // maybe show unstealthy invis monsters
+        if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
+        {
+            // We cannot use regular randomness here, otherwise redrawing the
+            // screen would give out the real position.  We need to save the
+            // seed too -- but it needs to be regenerated every turn.
 
             // Maybe mark their square.
-            if (mons->stealth() <= -2 || mons->stealth() <= 2 && one_chance_in(4))
+            if (mons->stealth() <= -2 || mons->stealth() <= 2
+                && !_hashed_rand(mons, 1, 4))
+            {
                 env.map_knowledge(gp).set_invisible_monster();
+            }
 
             // Exceptionally stealthy monsters have a higher chance of
             // not leaving any other trails.
-            if (mons->stealth() == 1 && one_chance_in(3)
+            if (mons->stealth() == 1 && !_hashed_rand(mons, 2, 3)
                 || mons->stealth() == 2 && coinflip()
                 || mons->stealth() == 3)
             {
@@ -352,12 +378,12 @@ static void _update_monster(const monster* mons)
             }
 
             // Otherwise just indicate that there's a monster nearby
-            coord_def new_pos = gp + Compass[random2(8)];
-            if (_valid_invis_spot(new_pos, mons) && coinflip())
+            coord_def new_pos = gp + Compass[_hashed_rand(mons, 3, 8)];
+            if (_valid_invis_spot(new_pos, mons) && _hashed_rand(mons, 4, 2))
                 env.map_knowledge(new_pos).set_invisible_monster();
 
-            new_pos = gp + Compass[random2(8)];
-            if (_valid_invis_spot(new_pos, mons) && one_chance_in(3))
+            new_pos = gp + Compass[_hashed_rand(mons, 5, 8)];
+            if (_valid_invis_spot(new_pos, mons) && !_hashed_rand(mons, 6, 3))
                 env.map_knowledge(new_pos).set_invisible_monster();
         }
 

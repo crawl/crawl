@@ -242,6 +242,8 @@ enum attribute_type
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
     ATTR_PERM_LEVITATION,      // Kenku flight or boots of lev are on.
+    ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
+    ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     NUM_ATTRIBUTES
 };
 

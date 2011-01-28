@@ -8,6 +8,8 @@ void pop_rng_state();
 
 void cf_setseed();
 
-unsigned long random_int();
+uint32_t random_int();
+
+uint32_t hash(const void *data, int len);
 
 #endif
