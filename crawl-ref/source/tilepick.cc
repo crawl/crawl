@@ -1080,10 +1080,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // flying insects ('y')
     case MONS_YELLOW_WASP:
         return TILEP_MONS_YELLOW_WASP;
-    case MONS_GIANT_MOSQUITO:
-        return TILEP_MONS_GIANT_MOSQUITO;
-    case MONS_GIANT_BLOWFLY:
-        return TILEP_MONS_GIANT_BLOWFLY;
+    case MONS_VAMPIRE_MOSQUITO:
+        return TILEP_MONS_VAMPIRE_MOSQUITO;
     case MONS_RED_WASP:
         return TILEP_MONS_RED_WASP;
     case MONS_GHOST_MOTH:
@@ -3338,10 +3336,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SPINY_WORM;
 
     // flying insects ('y')
-    case MONS_GIANT_MOSQUITO:
-        return TILE_CORPSE_GIANT_MOSQUITO;
-    case MONS_GIANT_BLOWFLY:
-        return TILE_CORPSE_GIANT_BLOWFLY;
+    case MONS_VAMPIRE_MOSQUITO:
+        return TILE_CORPSE_VAMPIRE_MOSQUITO;
     case MONS_YELLOW_WASP:
         return TILE_CORPSE_YELLOW_WASP;
     case MONS_RED_WASP:

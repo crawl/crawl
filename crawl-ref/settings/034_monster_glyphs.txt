@@ -116,7 +116,7 @@ mon_glyph = scorpion : darkgrey
 mon_glyph = killer bee larva : lightgrey
 mon_glyph = spiny worm : darkgrey
 mon_glyph = goliath beetle : darkgrey
-mon_glyph = giant mosquito : darkgrey
+mon_glyph = vampire mosquito : darkgrey
 mon_glyph = cyclops : brown
 mon_glyph = death ooze : darkgrey
 mon_glyph = big kobold : red
@@ -254,7 +254,7 @@ mon_glyph = Frederick : darkgrey
 # killer bee larva        lightgrey      yellow
 # spiny worm              darkgrey       lightgreen
 # goliath beetle            darkgrey       blue
-# giant mosquito          darkgrey       white
+# vampire mosquito          darkgrey       white
 # cyclops                 brown          yellow
 # death ooze              darkgrey       magenta
 # big kobold              red            yellow

@@ -1892,8 +1892,10 @@ enum monster_type                      // (int) menv[].type
     MONS_KILLER_BEE_LARVA,
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
-    MONS_GIANT_MOSQUITO,
+    MONS_VAMPIRE_MOSQUITO,
+#if TAG_MAJOR_VERSION == 32
     MONS_GIANT_BLOWFLY,
+#endif
     MONS_BUMBLEBEE,
     MONS_YELLOW_WASP,
     MONS_RED_WASP,

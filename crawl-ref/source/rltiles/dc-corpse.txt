@@ -117,8 +117,7 @@ rock_worm CORPSE_ROCK_WORM
 giant_leech CORPSE_GIANT_LEECH
 
 ## Wasps ('y')
-giant_blowfly CORPSE_GIANT_BLOWFLY
-giant_mosquito CORPSE_GIANT_MOSQUITO
+vampire_mosquito CORPSE_VAMPIRE_MOSQUITO
 yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
 ghost_moth CORPSE_GHOST_MOTH

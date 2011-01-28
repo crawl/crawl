@@ -66,8 +66,8 @@ end
 {{
 function spiders_nest_random_monster_set(e)
   e.set_random_mon_list("giant cockroach / giant mite / scorpion / redback / \
-                         wolf spider / trapdoor spider / giant mosquito / \
-                         giant blowfly / yellow wasp / red wasp / \
+                         wolf spider / trapdoor spider / vampire mosquito / \
+                         vampire mosquito / yellow wasp / red wasp / \
                          goliath beetle / boring beetle / boulder beetle / \
                          giant centipede / emperor scorpion / jumping spider / \
                          tarantella / ghost moth w:2 / demonic crawler w:2")

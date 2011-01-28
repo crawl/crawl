@@ -706,8 +706,8 @@ ORIENT: float
 DEPTH:  D:5-12, Elf, Vault
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
-MONS:   bumblebee / giant centipede / giant mite w:30 / giant mosquito
-MONS:   giant blowfly / scorpion / redback w:5
+MONS:   bumblebee / giant centipede / giant mite w:30 / vampire mosquito
+MONS:   vampire mosquito / scorpion / redback w:5
 MAP
 cccccccc+cccccccc
 c...............c
@@ -939,10 +939,10 @@ KFEAT: F = w:150 w / w:70 W / ~ / . / x
 KFEAT: G = x / . / w / W
 KFEAT: H = . / W
 KMONS: D = Plant / w:200 nothing
-KMONS: E = w:2 slime creature / swamp worm / giant blowfly /\
-           w:2 giant mosquito / w:1 electric eel / w:1000 nothing
-KMONS: F = w:2 slime creature / swamp worm / giant blowfly /\
-           w:2 giant mosquito / w:2 electric eel / w:1000 nothing
+KMONS: E = w:2 slime creature / swamp worm / vampire mosquito /\
+           w:2 vampire mosquito / w:1 electric eel / w:1000 nothing
+KMONS: F = w:2 slime creature / swamp worm / vampire mosquito /\
+           w:2 vampire mosquito / w:2 electric eel / w:1000 nothing
 KMONS: H = swamp drake / swamp dragon / hydra / w:20 nothing
 KITEM: H = any good_item / any potion / w:20 nothing / gold
 MAP

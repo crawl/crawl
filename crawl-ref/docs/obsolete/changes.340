@@ -841,7 +841,7 @@ Oct 30, 2000 (Brent Ross)
      * spell::surge_power() -- replaced successive tests with one complex
        conditional to reduce number of tests required;
      * spells2::summon_swarm() cleaned-up to make creature selection
-       clearer; added giant mosquito; red wasp -> wolf spider
+       clearer; added vampire mosquito; red wasp -> wolf spider
        [reversion]; killer bee larvae -> scorpion [as commented];
      * spells2::summon_undead() cleaned-up by replacing successive
        conditional calls to rand2() with one switch call to rand2() per

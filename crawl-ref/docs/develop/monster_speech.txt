@@ -859,7 +859,7 @@ u   (very) ugly thing
 v   all vortices, and insubstantial wisp
 w   all worms and larvae
 x   unseen horror, small abomination
-y   wasps, giant mosquito, giant blowfly, moth of wrath
+y   wasps, vampire mosquito, vampire mosquito, moth of wrath
 z   small zombie/skeleton/simulacrum, skeletal warrior, flying skull,
     curse skull, and curse toe
 
