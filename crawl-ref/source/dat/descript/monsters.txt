@@ -1807,7 +1807,7 @@ These creatures are usually unseen by the eyes of most, and those few who have s
 %%%%
 vampire
 
-A powerful undead.
+A powerful blood-drinking undead.
 %%%%
 vampire knight
 
