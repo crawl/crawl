@@ -2528,8 +2528,8 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size += 1 + random2(3);
         break;
 
-    case MONS_GIANT_MOSQUITO:
-        band = BAND_GIANT_MOSQUITOES;
+    case MONS_VAMPIRE_MOSQUITO:
+        band = BAND_VAMPIRE_MOSQUITOES;
         band_size = 1 + random2(3);
         break;
 
@@ -2953,8 +2953,8 @@ static monster_type _band_member(band_type band, int power)
     case BAND_HELL_HOGS:
         mon_type = MONS_HELL_HOG;
         break;
-    case BAND_GIANT_MOSQUITOES:
-        mon_type = MONS_GIANT_MOSQUITO;
+    case BAND_VAMPIRE_MOSQUITOES:
+        mon_type = MONS_VAMPIRE_MOSQUITO;
         break;
     case BAND_BOGGARTS:
         mon_type = MONS_BOGGART;

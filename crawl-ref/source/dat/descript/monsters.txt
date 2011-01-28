@@ -833,10 +833,6 @@ goliath beetle
 
 A huge black beetle with great crunching mandibles and very hard chitinous armour.
 %%%%
-giant blowfly
-
-A huge and irritating fly.
-%%%%
 giant toad
 
 A very large and vicious-looking carnivorous toad. Its knobbly brown skin blends in with the rough rock of your surroundings.
@@ -877,9 +873,9 @@ giant mite
 
 A large arachnid with vicious poisoned mouth-parts.
 %%%%
-giant mosquito
+vampire mosquito
 
-A huge, bloated mosquito. It looks diseased.
+This unfortunate and now massive creature once fed upon the blood of a vampire. Now it wants to feed upon yours.
 %%%%
 giant newt
 

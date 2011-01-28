@@ -248,9 +248,9 @@ KFEAT:     N = w / w:5 .
 KFEAT:     Z = w
 KMONS:     Z = plant / w:3 nothing
 KFEAT:     V = w
-KMONS:     V = killer bee w:20 / nothing w:6 / giant blowfly w:1
+KMONS:     V = killer bee w:20 / nothing w:6 / vampire mosquito w:1
 MONS:      plant / nothing w:3
-MONS:      killer bee w:20 / nothing w:6 / giant blowfly w:1
+MONS:      killer bee w:20 / nothing w:6 / vampire mosquito w:1
 KFEAT:     O = enter_hive
 MAP
      ....  ...NNNZNN.

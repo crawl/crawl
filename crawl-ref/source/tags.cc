@@ -2785,6 +2785,11 @@ void unmarshallMonster(reader &th, monster& m)
     if (m.type == MONS_NO_MONSTER)
         return;
 
+#if TAG_MAJOR_VERSION == 32
+    if (m.type == MONS_GIANT_BLOWFLY)
+        m.type = MONS_VAMPIRE_MOSQUITO;
+#endif
+
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th, 100);

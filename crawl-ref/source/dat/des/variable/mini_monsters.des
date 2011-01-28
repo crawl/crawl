@@ -72,7 +72,7 @@ SHUFFLE: 11%
 MONS:    killer bee / nothing w:5
 SUBST:   % = %*
 : else
-MONS:    giant mosquito / nothing
+MONS:    vampire mosquito / nothing
 : end
 MAP
 xxxxxx
@@ -426,7 +426,7 @@ NAME:  pond
 DEPTH: D:8-27, Lair
 MONS:  plant w:30 / fungus
 MONS:  giant frog w:30 / giant toad / snake / rat / green rat / swamp drake w:2
-MONS:  giant mosquito
+MONS:  vampire mosquito
 SUBST: ! : w.
 SUBST: 2 : 23
 SUBST: 2 = 2.
@@ -1066,7 +1066,7 @@ ENDMAP
 
 NAME:   minmay_beelzebubs_servants
 DEPTH:  D:6-12
-MONS:   hairy devil / nothing, giant blowfly / nothing
+MONS:   hairy devil / nothing, vampire mosquito / nothing
 MAP
 ........................
 ..xxxx....xxxx....xxxx..
@@ -2002,7 +2002,7 @@ MARKER:  a = lua:fog_machine { \
                  size = 1, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "black smoke" \
              }
-KMONS:   a = giant mosquito
+KMONS:   a = vampire mosquito
 KMONS:   b = green death
 KMONS:   c = reaper
 KMONS:   d = soul eater

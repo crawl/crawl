@@ -42,7 +42,7 @@ NAME:   minmay_swamp_entry_swarm
 TAGS:   swamp_entry mini_float
 WEIGHT: 5
 SUBST:  W = 1WWWWW, t = ttt., T = tttW, W = WWWwww., 1 = 111WWW, ' = W
-KMONS:  1 = giant mosquito / giant blowfly w:1
+KMONS:  1 = vampire mosquito / vampire mosquito w:1
 KFEAT:  1 = w / W
 KFEAT:  O = enter_swamp
 KFEAT:  t = swamp_tree
