@@ -310,9 +310,10 @@ void stop_delay(bool stop_stair_travel)
         const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
 
         // Don't skeletonize a corpse if it's no longer there!
-        if (mitm[delay.parm1].defined()
-            && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
-            && mitm[ delay.parm1 ].pos == you.pos())
+        if (delay.parm1
+            || (item.defined()
+                && item.base_type == OBJ_CORPSES
+                && item.pos == you.pos()))
         {
             mpr("All blood oozes out of the corpse!");
 
@@ -531,6 +532,24 @@ bool delay_is_run(delay_type delay)
     return (delay == DELAY_RUN || delay == DELAY_REST || delay == DELAY_TRAVEL);
 }
 
+bool is_being_drained(const item_def &item)
+{
+    if (!you_are_delayed())
+        return (false);
+
+    const delay_queue_item &delay = you.delay_queue.front();
+
+    if (delay.type == DELAY_FEED_VAMPIRE)
+    {
+        const item_def &corpse = mitm[ delay.parm2 ];
+
+        if (&corpse == &item)
+            return (true);
+    }
+
+    return (false);
+}
+
 bool is_being_butchered(const item_def &item, bool just_first)
 {
     if (!you_are_delayed())
@@ -539,8 +558,7 @@ bool is_being_butchered(const item_def &item, bool just_first)
     for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
     {
         if (you.delay_queue[i].type == DELAY_BUTCHER
-            || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD
-            || you.delay_queue[i].type == DELAY_FEED_VAMPIRE)
+            || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD)
         {
             const item_def &corpse = mitm[ you.delay_queue[i].parm1 ];
             if (&corpse == &item)
@@ -571,8 +589,7 @@ bool is_butchering()
         return (false);
 
     const delay_queue_item &delay = you.delay_queue.front();
-    return (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD
-            || delay.type == DELAY_FEED_VAMPIRE);
+    return (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD);
 }
 
 bool player_stair_delay()
@@ -695,11 +712,16 @@ void handle_delay()
         // * engorged ("alive")
         // * bat form runs out due to becoming full
         // * corpse becomes poisonous as the Vampire loses poison resistance
-        if (you.hunger_state == HS_ENGORGED
+        // * corpse disappears for some reason (e.g. animated by a monster)
+        if ((!delay.parm1                                         // on floor
+             && ( !(mitm[ delay.parm2 ].defined())                // missing
+                 || mitm[ delay.parm2 ].base_type != OBJ_CORPSES  // noncorpse
+                 || mitm[ delay.parm2 ].pos != you.pos()) )       // elsewhere
+            || you.hunger_state == HS_ENGORGED
             || you.hunger_state > HS_SATIATED && player_in_bat_form()
-            || you.hunger_state >= HS_SATIATED
-               && mitm[delay.parm1].defined()
-               && is_poisonous(mitm[delay.parm1]))
+            || (you.hunger_state >= HS_SATIATED
+               && mitm[delay.parm2].defined()
+               && is_poisonous(mitm[delay.parm2])) )
         {
             // Messages handled in _food_change() in food.cc.
             stop_delay();
