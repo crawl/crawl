@@ -1741,7 +1741,7 @@ void process_command(command_type cmd)
 
     case CMD_INSPECT_FLOOR:
         request_autopickup();
-        if (player_on_single_stack())
+        if (player_on_single_stack() && !you.running)
             pickup(true);
         break;
     case CMD_SHOW_TERRAIN: toggle_show_terrain(); break;
