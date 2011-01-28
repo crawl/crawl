@@ -5839,7 +5839,18 @@ int player::armour_class() const
     AC += player_mutation_level(MUT_GELATINOUS_BODY) ? (player_mutation_level(MUT_GELATINOUS_BODY) == 3 ? 200 : 100) : 0;   // +1, +1, +2
     return (AC / 100);
 }
-
+ /**
+  * Guaranteed damage reduction.
+  *
+  * The percentage of the damage received that is guaranteed to be reduced
+  * by the armour. As the AC roll is done before GDR is applied, GDR is only
+  * useful when the AC roll is inferior to it. Therefore a higher GDR means
+  * more damage reduced, but also more often.
+  *
+  * \f[ GDR = 14 \times (base\_AC - 2)^\frac{1}{2} \f]
+  *
+  * \return GDR as a percentage.
+  **/
 int player::gdr_perc() const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
