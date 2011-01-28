@@ -106,6 +106,9 @@ function trove.get_trove_item(e, value, base_item)
             item.plus1 = shop_plus1
             item.plus2 = false
           end
+        elseif item.base_type == "book" and string.find(item.sub_type, "manual") then
+            item.plus1 = shop_plus1
+            item.plus2 = false
         else
           item.plus1 = false
           item.plus2 = false
