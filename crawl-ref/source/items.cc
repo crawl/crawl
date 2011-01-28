@@ -1942,10 +1942,16 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
                 item_def copy = item;
                 merge_item_stacks(copy, *si, quant_drop);
 
-                // If the items on the floor already have a nonzero slot,
-                // leave it as such, otherwise set the slot.
-                if (mark_dropped && !si->slot)
-                    si->slot = index_to_letter(item.link);
+                if (mark_dropped)
+                {
+                    // If the items on the floor already have a nonzero slot,
+                    // leave it as such, otherwise set the slot.
+                    if (!si->slot)
+                        si->slot = index_to_letter(item.link);
+
+                    si->flags |= ISFLAG_DROPPED;
+                    si->flags &= ~ISFLAG_THROWN;
+                }
                 return (true);
             }
         }
