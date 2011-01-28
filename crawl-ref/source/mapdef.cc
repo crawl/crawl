@@ -4904,6 +4904,9 @@ item_spec item_list::parse_single_spec(std::string s)
             return (result);
         }
 
+        const std::string title = replace_all_of(strip_tag_prefix(s, "title:"),
+                                                "_", " ");
+
         const std::string spell = replace_all_of(strip_tag_prefix(s, "spell:"),
                                                 "_", " ");
         if (!spell.empty() && spell_by_name(spell) == SPELL_NO_SPELL)
@@ -4919,6 +4922,7 @@ item_spec item_list::parse_single_spec(std::string s)
         result.props["randbook_num_spells"] = num_spells;
         result.props["randbook_slevels"] = slevels;
         result.props["randbook_spell"] = spell;
+        result.props["randbook_title"] = title;
         result.props["randbook_owner"] = owner;
 
         result.base_type = OBJ_BOOKS;

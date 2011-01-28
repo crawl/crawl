@@ -2111,7 +2111,8 @@ static void _remove_nondiscipline_spells(spell_type chosen_spells[],
 //       forget them.
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels,
-                             spell_type incl_spell, std::string owner)
+                             spell_type incl_spell, std::string title,
+                             std::string owner)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -2123,9 +2124,11 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     if (!is_random_artefact(book))
     {
-        // Store spell and owner for later use.
+        // Store spell, title and owner for later use.
         if (incl_spell != SPELL_NO_SPELL)
             book.props["spell"].get_int() = incl_spell;
+        if (!title.empty())
+            book.props["title"].get_string() = title;
         if (!owner.empty())
             book.props["owner"].get_string() = owner;
 
@@ -2178,6 +2181,9 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     // Re-read spell and owner, if applicable.
     if (incl_spell == SPELL_NO_SPELL && book.props.exists("spell"))
         incl_spell = (spell_type) book.props["spell"].get_int();
+
+    if (title.empty() && book.props.exists("title"))
+        title = book.props["title"].get_string();
 
     if (owner.empty() && book.props.exists("owner"))
         owner = book.props["owner"].get_string();
@@ -2420,12 +2426,17 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     else
         book.props["is_named"].get_bool() = false;
 
-    // Sometimes use a completely random title.
     std::string bookname = "";
-    if (owner == "Xom" && !one_chance_in(20))
-        bookname = getRandNameString("Xom_book_title");
-    else if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
-        bookname = getRandNameString("random_book_title");
+    if (!title.empty())
+        bookname = title;
+    else
+    {
+        // Sometimes use a completely random title.
+        if (owner == "Xom" && !one_chance_in(20))
+            bookname = getRandNameString("Xom_book_title");
+        else if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
+            bookname = getRandNameString("random_book_title");
+    }
 
     if (!bookname.empty())
         name += getRandNameString("book_noun") + " of " + bookname;

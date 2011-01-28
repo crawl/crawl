@@ -83,7 +83,7 @@ COLOUR:  ABCde = blue
 FTILE:   ABCde = tutorial_pad
 KITEM:   A = scroll of fog q:4, scroll of random uselessness q:4, scroll of curse armour q:4, \
          scroll of remove curse q:4
-ITEM:    randbook numspells:1 spell:magic_dart
+ITEM:    randbook numspells:1 spell:magic_dart title:An_Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
 MONS:    training dummy ; stone q:20
 MONS:    megabat skeleton
