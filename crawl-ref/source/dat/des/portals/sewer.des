@@ -1106,18 +1106,16 @@ MAP
 ENDMAP
 
 ############################################################################
-# Scannered pipes. by co
+# Scattered pipes. by co
 # The loot is often at the end of the pipes, with guarding monsters.
 #
 NAME:    sewer_co_scattered_pipes
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 KMONS:   P = plant / nothing
-KFEAT:   P = W / .
-COLOUR:  P = green
 #      pipe monsters.
 KFEAT:   1 = W
-COLOUR:  1 = green
+COLOUR:  1 = lightgreen
 KMONS:   1 = giant newt / small snake w:5 /  generate_awake small snake w:5 / \
          snake w:7 / big fish w:5
 SUBST:   1 = 1111W
@@ -1127,7 +1125,7 @@ SUBST:   2 = 222222W.
 #      loot
 SUBST:   e = !!!?????%WWW
 KFEAT:   !?% = W
-COLOUR:  !?% = green
+COLOUR:  !?% = lightgreen
 KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
          potion of magic / potion of speed w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
@@ -1186,6 +1184,4 @@ xxxxxwwwwwwwwwwwwwwwwwwwwwwxxxxxX..PB.2.Xxxx
 xxxxxYwwwwwwwwwwwwwwwwwwwwYxxxxxX.2..e..Xxxx
 xxxxxxYwwwwwwYYYYwwwYYYwwYxxxxxxxX.....Xxxxx
 xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
+
