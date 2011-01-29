@@ -5122,7 +5122,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         && !mon->has_ench(ENCH_STICKY_FLAME)
                         && coinflip())
                     {
-                        mprf("%s catches on fire!", mon->name(DESC_CAP_A).c_str());
+                        mprf("%s catches fire!", mon->name(DESC_CAP_A).c_str());
                         const int dur = me.degree/2 + 1 + random2(me.degree);
                         mon->add_ench(mon_enchant(ENCH_STICKY_FLAME, dur,
                                                   me.who));
