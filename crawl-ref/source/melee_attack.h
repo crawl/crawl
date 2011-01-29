@@ -114,8 +114,8 @@ private:
     std::string atk_name(description_level_type desc) const;
     std::string def_name(description_level_type desc) const;
     std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
-                         unsigned long ignore_flags = ISFLAG_KNOW_CURSE
-                                                    | ISFLAG_KNOW_PLUSES) const;
+                         iflags_t ignore_flags = ISFLAG_KNOW_CURSE
+                                               | ISFLAG_KNOW_PLUSES) const;
 
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();

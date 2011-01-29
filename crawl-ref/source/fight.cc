@@ -439,7 +439,7 @@ std::string melee_attack::def_name(description_level_type desc) const
 }
 
 std::string melee_attack::wep_name(description_level_type desc,
-                                   unsigned long ignore_flags) const
+                                   iflags_t ignore_flags) const
 {
     ASSERT(weapon != NULL);
 

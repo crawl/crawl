@@ -2026,7 +2026,7 @@ static int _player_armour_racial_bonus(const item_def& item)
         return 0;
 
     int racial_bonus = 0;
-    const unsigned long armour_race = get_equip_race(item);
+    const iflags_t armour_race = get_equip_race(item);
 
     // get the armour race value that corresponds to the character's race:
     const iflags_t racial_type
