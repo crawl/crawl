@@ -176,7 +176,7 @@ public:
     map_colour_list colours;
 };
 
-typedef std::pair<unsigned long, int> map_weighted_fprop;
+typedef std::pair<feature_property_type, int> map_weighted_fprop;
 class map_fprop_list : public std::vector<map_weighted_fprop>
 {
 public:
@@ -198,12 +198,12 @@ public:
     {
     }
 
-    unsigned long get_property();
+    feature_property_type get_property();
 
 public:
     std::string key;
     bool fix;
-    unsigned long fixed_prop;
+    feature_property_type fixed_prop;
     map_fprop_list fprops;
 };
 
