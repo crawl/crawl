@@ -42,7 +42,7 @@ void scale_dice(dice_def &dice, int threshold = 24);
 class rng_save_excursion
 {
 public:
-    rng_save_excursion(long seed) { push_rng_state(); seed_rng(seed); }
+    rng_save_excursion(uint32_t seed) { push_rng_state(); seed_rng(seed); }
     rng_save_excursion()          { push_rng_state(); }
     ~rng_save_excursion()         { pop_rng_state(); }
 };
@@ -71,7 +71,7 @@ public:
 // nodes will get different results.
 class defer_rand
 {
-    std::vector<unsigned long> bits;
+    std::vector<uint32_t> bits;
     std::map<int, defer_rand> children;
 
     bool x_chance_in_y_contd(int x, int y, int index);
