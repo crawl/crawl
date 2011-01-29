@@ -541,6 +541,7 @@ static int crawl_get_command (lua_State *ls)
 LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_tutorial_hunger, set_tutorial_hunger(luaL_checkint(ls, 1)))
 LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_checkint(ls, 2)))
+LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 
 static int crawl_random_element(lua_State *ls)
 {
@@ -678,6 +679,7 @@ static const struct luaL_reg crawl_clib[] =
 
     { "tutorial_hunger", crawl_tutorial_hunger },
     { "tutorial_skill",  crawl_tutorial_skill },
+    { "tutorial_hint",   crawl_tutorial_hint },
 
     { NULL, NULL },
 };
