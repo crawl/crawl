@@ -622,7 +622,7 @@ static bool _check_buggy_deck(item_def& deck)
         return (true);
     }
 
-    if (static_cast<long>(num_cards) > deck.plus)
+    if (num_cards > deck.plus)
     {
         if (deck.plus == 0)
             strm << "Deck was created with zero cards???" << std::endl;

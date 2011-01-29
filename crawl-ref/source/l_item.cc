@@ -31,7 +31,7 @@
 struct item_wrapper
 {
     item_def *item;
-    long turn;
+    int turn;
 
     bool valid() const { return turn == you.num_turns; }
 };
