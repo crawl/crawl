@@ -1265,7 +1265,11 @@ static void _give_starting_food()
 static void _setup_tutorial_miscs()
 {
     // Allow for a few specific hint mode messages.
+    // A few more will be initialised by the tutorial map.
     tutorial_init_hints();
+
+    // No gold to begin with.
+    you.gold = 0;
 
     // Give him some mana to play around with.
     inc_max_mp(2);
