@@ -7,6 +7,7 @@
 #include "tutorial.h"
 
 #include "externs.h"
+#include "hints.h"
 #include "maps.h"
 #include "message.h"
 #include "mpr.h"
@@ -61,6 +62,23 @@ void set_tutorial_skill(const char *skill, int level)
 
     if (need_exercise_check)
         reassess_starting_skills();
+}
+
+// FIXME: There's got to be a less hacky solution!
+void tutorial_init_hint(const char* hintstr)
+{
+    hints_event_type hint = HINT_EVENTS_NUM;
+    if (strcmp(hintstr, "HINT_NEW_LEVEL") == 0)
+        hint = HINT_NEW_LEVEL;
+    else if (strcmp(hintstr, "HINT_YOU_CURSED") == 0)
+        hint = HINT_YOU_CURSED;
+    else if (strcmp(hintstr, "HINT_REMOVED_CURSE") == 0)
+        hint = HINT_REMOVED_CURSE;
+    else if (strcmp(hintstr, "HINT_MULTI_PICKUP") == 0)
+        hint = HINT_MULTI_PICKUP;
+
+    if (hint != HINT_EVENTS_NUM)
+        Hints.hints_events[hint] = true;
 }
 
 void tutorial_death_message()

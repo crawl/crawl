@@ -11,6 +11,9 @@ tutorial_msg3 = {}
 
 function tutorial_msg3.start ()
     tutorial_intro("In this lesson you're going to learn about items and how to use them.")
+    crawl.tutorial_hint("HINT_MULTI_PICKUP")
+    crawl.tutorial_hint("HINT_YOU_CURSED")
+    crawl.tutorial_hint("HINT_REMOVED_CURSE")
 end
 
 function tutorial_msg3.armour ()

@@ -1370,17 +1370,13 @@ static bool _tutorial_interesting(hints_event_type event)
 {
     switch (event)
     {
-    case HINT_NEW_LEVEL:
     case HINT_AUTOPICKUP_THROWN:
     case HINT_TARGET_NO_FOE:
-    case HINT_YOU_CURSED:
-    case HINT_REMOVED_CURSE:
     case HINT_YOU_POISON:
     case HINT_YOU_SICK:
     case HINT_CHOOSE_STAT:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
-    case HINT_MULTI_PICKUP:
     case HINT_LEVITATING:
     case HINT_INACCURACY:
     case HINT_HEALING_POTIONS:
