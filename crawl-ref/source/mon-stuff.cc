@@ -1589,7 +1589,8 @@ int monster_die(monster* mons, killer_type killer,
 
     const bool mons_reset(killer == KILL_RESET || killer == KILL_DISMISSED);
 
-    bool fake_abjuration = false;
+    bool fake_abjuration = (mons->has_ench(ENCH_FAKE_ABJURATION)
+                     && mons->get_ench(ENCH_FAKE_ABJURATION).duration == -1);
 
     const bool submerged     = mons->submerged();
 
@@ -2187,8 +2188,7 @@ int monster_die(monster* mons, killer_type killer,
         case KILL_MISC:
             if (!silent)
             {
-                if (mons->has_ench(ENCH_FAKE_ABJURATION)
-                    && mons->get_ench(ENCH_FAKE_ABJURATION).duration == -1)
+                if (fake_abjuration)
                 {
                     if (mons_genus(mons->type) == MONS_SNAKE)
                     {
@@ -2196,8 +2196,6 @@ int monster_die(monster* mons, killer_type killer,
                         simple_monster_message(mons, " withers and dies!",
                             MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                     }
-
-                    fake_abjuration = true;
                 }
                 else
                 {
