@@ -348,6 +348,10 @@ static void _update_monster(const monster* mons)
             env.map_knowledge(gp).set_invisible_monster();
         }
 
+        // Being submerged isnot the same as invisibility.
+        if (mons->submerged())
+            return;
+
         if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
         {
             you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
