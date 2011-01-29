@@ -388,7 +388,6 @@ Renounce your faith. This will make your character leave your god (and usually a
 Request Jelly
 
 Create a neutral jelly that will wander the floor and digest items.
-#
 %%%%
 Slimify
 
@@ -397,3 +396,16 @@ Coat a wielded weapon or your fists with slime, turning the next living or undea
 Cure Bad Mutation
 
 Remove a randomly selected bad mutation.
+%%%%
+# Ashenzari
+Scrying
+
+Gain astral sight to see through walls. This is not enough to let you target spells and abilities, even those that work through glass.
+%%%%
+Transfer Knowledge
+
+Sacrifice part of one of your skills to improve another.
+%%%%
+End Transfer Knowledge
+
+Abort an ongoing skill transfer.
