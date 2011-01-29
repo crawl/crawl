@@ -798,6 +798,16 @@ void ghost_demon::add_spells()
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         spells[i] = translate_spell(spells[i]);
+
+    spellcaster = has_spells();
+}
+
+bool ghost_demon::has_spells() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (spells[i] != SPELL_NO_SPELL)
+            return true;
+    return false;
 }
 
 // When passed the number for a player spell, returns the equivalent
