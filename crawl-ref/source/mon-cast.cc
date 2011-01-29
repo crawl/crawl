@@ -780,7 +780,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon and purple draconian
         beam.colour     = random_colour();
-        beam.name       = "bolt of energy";
+        beam.name       = "bolt of dispelling energy";
         beam.short_name = "energy";
         beam.damage     = dice_def(3, 20);
         beam.hit        = 16 + power / 25;
