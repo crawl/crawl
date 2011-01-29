@@ -637,9 +637,9 @@ static int l_item_do_inc_quantity (lua_State *ls)
 
 IDEFN(inc_quantity, do_inc_quantity)
 
-unsigned long str_to_item_status_flags (std::string flag)
+iflags_t str_to_item_status_flags (std::string flag)
 {
-    unsigned long flags = 0;
+    iflags_t flags = 0;
     if (flag.find("curse") != std::string::npos)
         flags &= ISFLAG_KNOW_CURSE;
     // type is dealt with using item_type_known.
@@ -676,7 +676,7 @@ static int l_item_do_identified (lua_State *ls)
         else
         {
             const bool check_type = strip_tag(flags, "type");
-            const unsigned long item_flags = str_to_item_status_flags(flags);
+            iflags_t item_flags = str_to_item_status_flags(flags);
             known_status = ((item_flags || check_type)
                             && (!item_flags || item_ident(*item, item_flags))
                             && (!check_type || item_type_known(*item)));

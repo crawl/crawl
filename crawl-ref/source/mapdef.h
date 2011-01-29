@@ -663,7 +663,7 @@ class mons_spec
 
     bool explicit_spells;
     std::vector<monster_spells> spells;
-    unsigned long extra_monster_flags;
+    uint64_t extra_monster_flags;
 
     CrawlHashTable props;
 
@@ -678,7 +678,7 @@ class mons_spec
           colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
           abjuration_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
-          extra_monster_flags(0L), props()
+          extra_monster_flags(0), props()
     {
     }
 };

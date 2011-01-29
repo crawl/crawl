@@ -150,7 +150,7 @@ void hogs_to_humans()
         const float hp
             = (float) mi->hit_points / (float) mi->max_hit_points;
         // Preserve some flags.
-        const unsigned long preserve_flags =
+        const uint64_t preserve_flags =
             mi->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
         // Preserve enchantments.
         mon_enchant_list enchantments = mi->enchantments;
