@@ -400,15 +400,46 @@ static void _print_stats_wp(int y)
 
         text = wpn.name(DESC_INVENTORY, true, false, true);
     }
-    else if (you.form == TRAN_BLADE_HANDS)
-    {
-        col = RED;
-        text = "Blade Hands";
-    }
     else
     {
         col = LIGHTGREY;
-        text = "Nothing wielded";
+        text = (you.has_claws(false) > 0) ? "Claws" : "Nothing wielded";
+
+        switch (you.form)
+        {
+            case TRAN_SPIDER:
+                col = LIGHTGREEN;
+                text = "Sharp fangs (venom)";
+                break;
+            case TRAN_BLADE_HANDS:
+                col = RED;
+                text = "Blade hands";
+                break;
+            case TRAN_STATUE:
+                col = LIGHTGREY;
+                text = (you.has_claws(false) > 0) ? "Stone claws" : "Stone fists";
+                break;
+            case TRAN_ICE_BEAST:
+                col = WHITE;
+                text = "Ice fists (freeze)";
+                break;
+            case TRAN_DRAGON:
+                col = GREEN;
+                text = "Tooth and claw";
+                break;
+            case TRAN_LICH:
+                col = MAGENTA;
+                text = (you.has_claws(false) > 0) ? "Claws (drain)" : "Nothing wielded (drain)";
+                break;
+            case TRAN_BAT:
+            case TRAN_PIG:
+                col = LIGHTGREY;
+                text = "Bite";
+                break;
+            case TRAN_NONE:
+            default:
+                break;
+        }
     }
     cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
