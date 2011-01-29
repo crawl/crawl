@@ -1984,6 +1984,10 @@ static void _add_tentacle_overlay(const coord_def pos,
     if (!in_bounds(next))
         return;
 
+    const coord_def next_showpos(grid2show(next));
+    if (!show_bounds(next_showpos))
+        return;
+
     tile_flags flag;
     switch (dir)
     {
@@ -1994,7 +1998,7 @@ static void _add_tentacle_overlay(const coord_def pos,
         default:
             die("invalid direction");
     }
-    env.tile_bg(grid2show(next)) |= flag;
+    env.tile_bg(next_showpos) |= flag;
 }
 
 static void _handle_tentacle_overlay(const coord_def pos,
