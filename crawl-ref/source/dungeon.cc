@@ -4154,8 +4154,8 @@ retry:
                 props["randbook_num_spells"].get_short(),
                 props["randbook_slevels"].get_short(),
                 spell_by_name(props["randbook_spell"].get_string()),
-                props["randbook_title"].get_string(),
-                owner);
+                owner,
+                props["randbook_title"].get_string());
         }
 
         // Remove unsuitable inscriptions such as {god gift}.

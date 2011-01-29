@@ -2111,8 +2111,8 @@ static void _remove_nondiscipline_spells(spell_type chosen_spells[],
 //       forget them.
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels,
-                             spell_type incl_spell, std::string title,
-                             std::string owner)
+                             spell_type incl_spell, std::string owner,
+                             std::string title)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
