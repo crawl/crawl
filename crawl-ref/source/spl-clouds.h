@@ -10,7 +10,7 @@ void big_cloud(cloud_type cl_type, const actor *agent, const coord_def& where,
                int pow, int size, int spread_rate = -1, int colour = -1,
                std::string name = "", std::string tile = "");
 
-int cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam);
+bool cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam);
 
 void cast_ring_of_flames(int power);
 void manage_fire_shield(int delay);

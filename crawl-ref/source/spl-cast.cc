@@ -1393,15 +1393,18 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_POISONOUS_CLOUD:
-        cast_big_c(powc, CLOUD_POISON, &you, beam);
+        if (!cast_big_c(powc, CLOUD_POISON, &you, beam))
+            return SPRET_ABORT;
         break;
 
     case SPELL_HOLY_BREATH:
-        cast_big_c(powc, CLOUD_HOLY_FLAMES, &you, beam);
+        if (!cast_big_c(powc, CLOUD_HOLY_FLAMES, &you, beam))
+            return SPRET_ABORT;
         break;
 
     case SPELL_FREEZING_CLOUD:
-        cast_big_c(powc, CLOUD_COLD, &you, beam);
+        if (!cast_big_c(powc, CLOUD_COLD, &you, beam))
+            return SPRET_ABORT;
         break;
 
     case SPELL_FIRE_STORM:
