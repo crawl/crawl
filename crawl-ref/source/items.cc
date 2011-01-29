@@ -1279,7 +1279,10 @@ void pickup(bool partial_quantity)
             }
 
             if (keyin == 'q' || key_is_escape(keyin))
+            {
+                canned_msg(MSG_OK);
                 break;
+            }
 
             if (keyin == 'y' || keyin == 'a')
             {
