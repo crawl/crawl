@@ -217,7 +217,7 @@ function tutorial_msg3.enter_shop ()
     text = text .. ". You can switch to description mode with <w>!</w> "
                 .. "and confirm your selection with <w>Enter</w>."
 
-    return tutorial_message(text)
+    return tutorial_message(text, false)
 end
 
 function tutorial_msg3.wand_fire ()
@@ -465,31 +465,38 @@ PLACE:   D:3
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABC = .
-COLOUR:  $ABCdefg = blue
-FTILE:   $ABCdefg = tutorial_pad
+COLOUR:  ABCdefgh = blue
+FTILE:   ABCdefgh = tutorial_pad
 # TODO: Highlight tiles.
 KFEAT:   ' = .
 COLOUR:  ' = red
-KFEAT:   S = distillery shop
+KFEAT:   S = general shop use_all ; \
+         potion of healing | potion of heal wounds |  potion of heal wounds q:2 | potion of might | \
+         wand of paralysis | ring mail | buckler ego:none | ring of slaying | scroll of enchant weapon II
+ITEM:    gold q:25
 ITEM:    wand of fire charges:9
 ITEM:    wand of digging charges:15
-ITEM:    gold q:120
+ITEM:    gold q:180
 ITEM:    amulet of inaccuracy mundane not_cursed
 ITEM:    scroll of identify q:3
 ITEM:    scroll of enchant armour q:3
 ITEM:    scroll of recharging q:3
 SHUFFLE: hij
-MONS:    goblin ; club | dagger ego:none
-MONS:    gnoll ; spear | mace | flail | halberd ego:none
-MONS:    hound
-MARKER:  $ = lua:tutorial_msg3.gold()
+MONS:    gnoll ; spear ego:none | mace ego:none
+#MONS:    ogre ; giant club ego:none
+MONS:    imp
+MONS:    gnoll ; flail ego:none | spiked flail ego:none | halberd ego:none . \
+         leather armour ego:fire_resistance | ring mail ego:fire_resistance
+MONS:    orc ; scimitar ego:none | battleaxe ego:none | halberd ego:none . \
+         ring mail ego:fire_resistance | chain mail ego:fire_resistance
+MARKER:  d = lua:tutorial_msg3.gold()
 MARKER:  A = lua:tutorial_msg3.shop()
 MARKER:  S = lua:tutorial_msg3.enter_shop()
-MARKER:  d = lua:tutorial_msg3.wand_fire()
+MARKER:  e = lua:tutorial_msg3.wand_fire()
 # fire cloud trigger
-MARKER:  e = lua:tutorial_msg3.wand_digging()
-MARKER:  f = lua:tutorial_msg3.go_shopping()
-MARKER:  g = lua:tutorial_msg3.amulet()
+MARKER:  f = lua:tutorial_msg3.wand_digging()
+MARKER:  g = lua:tutorial_msg3.go_shopping()
+MARKER:  h = lua:tutorial_msg3.amulet()
 # inaccuracy trigger
 MARKER:  B = lua:tutorial_msg3.scroll_id()
 MARKER:  C = lua:tutorial_msg3.item_use()
@@ -511,7 +518,7 @@ epilogue{{
 }}
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XX..$...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XX..d...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XX{.XXXAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -520,22 +527,22 @@ XXXXX.S..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXX....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXX...XXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXX......d.XXXXXXXXX.hij.XXXXXXXXXXXXXXXX.].}.).X
-XXXXXXXXXXXX...XXXXXXXXX.....XXXXXXXXXXXXXXXX..3.3..X
-XXXXXXXXXXXXX+XXXXXXXXXXXXBXXXXXXXXXXXXXXXXXX...2...X
-XXXXXXXXXXXXX.XXXXXXXXXXX...XXXXXXXXXXXXXXXXX.2...2.X
-XXXXXXXXXXXXX.XXXXXXXvXX..g..XXvXXXXXXXXXXXXX...1...X
+XXXXXXX......e.XXXXXXXXX.ijk.XXXXXXXXXXXXXXXX.].}.).X
+XXXXXXXXXXXX...XXXXXXXXX.....XXXXXXXXXXXXXXXX..4.4..X
+XXXXXXXXXXXXX+XXXXXXXXXXXXBXXXXXXXXXXXXXXXXXX...3...X
+XXXXXXXXXXXXX.XXXXXXXXXXX...XXXXXXXXXXXXXXXXX.3...3.X
+XXXXXXXXXXXXX.XXXXXXXvXX..h..XXvXXXXXXXXXXXXX...2...X
 XXXXXXXXXXXXX.XXXXXXXXvXXXxXXXvXXXXXXXXXXXXXXXXX+XXXX
 XXXXXXXXXXXXX.XXXXXXXXXvXXxXXvXXXXXXXXXXXXXXXXXX.XXXX
 XXXXXXXXXXXXX.XXXXXXXXXXvXxXvXXXXXXXXXXXXXXXXXXXCXXXX
 XXXXXXXXXXX.....XXXXXXXX.'''.XXXXXXXXXXXXXXXXXXX.XXXX
-XXXXXXXXXXX..1............e........XXXXXXXXXXXXX.XXXX
+XXXXXXXXXXX..1............f........XXXXXXXXXXXXX.XXXX
 XXXXXXXXXXX.....XXXXXXXX.'''.XXXXXX..XXXXXXXXXX.XXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXbXcXaXXXXXXXX.XXXXXXXXX.XXXXX
 XXXXXXXXXXXXXXXXXXXXXXXbXXcXXaXXXXX..XXXXXXXXXX.XXXXX
 XXXXXXXXXXXXXXXXXXXXXXbXXXcXXX.....XXXXXXXXXXXX.XXXXX
-XXXXXXXXXXXXXXXXXXXXXbXXXXcXXG..T...............XXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXX..f...XXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...GXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXbXXXXcXXG$$T...............XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXX$$g$..XXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX$$$GXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
