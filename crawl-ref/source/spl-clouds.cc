@@ -161,11 +161,17 @@ bool stinking_cloud(int pow, bolt &beem)
     return (true);
 }
 
-int cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam)
+bool cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam)
 {
+    if (cell_is_solid(beam.target))
+    {
+        mpr("You can't place clouds on a wall.");
+        return false;
+    }
+
     big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
     noisy(2, beam.target);
-    return (1);
+    return true;
 }
 
 void big_cloud(cloud_type cl_type, const actor *agent,
