@@ -258,7 +258,7 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
       0, 0, 125, 0, ABFLAG_BREATH },
-    { ABIL_BREATHE_POWER, "Breathe Power", 0, 0, 125, 0, ABFLAG_BREATH },
+    { ABIL_BREATHE_POWER, "Breathe Energy", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame",
       0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
@@ -2044,7 +2044,7 @@ static bool _do_ability(const ability_def& abil)
                 (you.form == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
-                         "You spit a bolt of incandescent energy."))
+                         "You spit a bolt of dispelling energy."))
             {
                 return (false);
             }

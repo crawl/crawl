@@ -276,7 +276,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_PURPLE_DRACONIAN:
-        result += "You can breathe bolts of incandescent energy.\n";
+        result += "You can breathe bolts of energy.\n";
         result += "You can dispel enchantments when you breathe energy.\n";
         scale_type = "rich purple";
         have_any = true;
