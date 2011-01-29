@@ -3941,7 +3941,7 @@ static void _move_player(coord_def move)
         _open_door(move.x, move.y, false);
         you.prev_move = move;
     }
-    if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
+    else if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
     {
         if (!_prompt_dangerous_portal(grd(targ)))
         {
