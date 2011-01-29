@@ -63,10 +63,10 @@ const u32 k[] = {
        (y)[2] = (unsigned char)(((x)>>8)&255); (y)[3] = (unsigned char)((x)&255); }
 
 #define LOAD32H(x, y)                            \
-     { x = ((unsigned long)((y)[0] & 255)<<24) | \
-           ((unsigned long)((y)[1] & 255)<<16) | \
-           ((unsigned long)((y)[2] & 255)<<8)  | \
-           ((unsigned long)((y)[3] & 255)); }
+     { x = ((uint32_t)((y)[0] & 255)<<24) | \
+           ((uint32_t)((y)[1] & 255)<<16) | \
+           ((uint32_t)((y)[2] & 255)<<8)  | \
+           ((uint32_t)((y)[3] & 255)); }
 
 void sha256chunk(const char* chunk, sha256state* ss);
 
@@ -176,7 +176,7 @@ void pop_sha256_state()
     pop_mt_state();
 }
 
-unsigned long sha256_genrand()
+uint32_t sha256_genrand()
 {
     u32 &mt_block_index = effective_state.mt_block_index;
     u32 *mt_sha256_block = effective_state.mt_sha256_block;
@@ -220,7 +220,7 @@ void reset_sha256_state()
 {
 }
 
-unsigned long sha256_genrand()
+uint32_t sha256_genrand()
 {
     return genrand_int32();
 }
