@@ -423,7 +423,7 @@ Blows and Bruises
 w:1
 Damage Dealing
 %%%%
-Enchantment
+Charms
 
 Enchantment
 
@@ -452,6 +452,18 @@ the Blaze
 Ignition
 
 the Arsonist
+%%%%
+Hexes
+
+Hexes
+
+Curses
+
+Malediction
+
+the Oath
+
+Execration
 %%%%
 Ice
 
