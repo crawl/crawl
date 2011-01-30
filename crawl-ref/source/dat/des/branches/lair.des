@@ -1445,7 +1445,7 @@ PLACE:  Lair:$
 ORIENT: float
 MONS:   giant frog / giant toad / spiny frog
 MONS:   blink frog
-MONS:   vampire mosquito w:40 / vampire mosquito
+MONS:   vampire mosquito
 MONS:   plant
 SUBST:  p = 44W2
 SUBST:  w = W:40 w:10 1:2 3:1 4:5
