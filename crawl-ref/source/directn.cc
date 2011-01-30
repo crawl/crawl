@@ -2058,23 +2058,30 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
     if (mons && mons->visible_to(&you))
     {
-        monster_info mi(mons);
-        // First priority: monsters.
-        if (examine_mons && !mons_is_unknown_mimic(mons))
+        if (mons_is_item_mimic(mons->type) && mons_is_unknown_mimic(mons))
+            get_item_desc(get_mimic_item(mons), inf, examine_mons);
+        else if (mons_is_feat_mimic(mons->type) && mons_is_unknown_mimic(mons))
+            get_feature_desc(c, inf);
+        else
         {
-            // If examine_mons is true (currently only for the Tiles
-            // mouse-over information), set monster's
-            // equipment/woundedness/enchantment description as title.
-            std::string desc         = get_monster_equipment_desc(mi) + ".\n";
-            const std::string wounds = mi.wounds_description_sentence();
-            if (!wounds.empty())
-                desc += wounds + "\n";
-            desc += _get_monster_desc(mi);
+            monster_info mi(mons);
+            // First priority: monsters.
+            if (examine_mons)
+            {
+                // If examine_mons is true (currently only for the Tiles
+                // mouse-over information), set monster's
+                // equipment/woundedness/enchantment description as title.
+                std::string desc         = get_monster_equipment_desc(mi) + ".\n";
+                const std::string wounds = mi.wounds_description_sentence();
+                if (!wounds.empty())
+                    desc += wounds + "\n";
+                desc += _get_monster_desc(mi);
 
-            inf.title = desc;
+                inf.title = desc;
+            }
+            bool temp = false;
+            get_monster_db_desc(mi, inf, temp);
         }
-        bool temp = false;
-        get_monster_db_desc(mi, inf, temp);
     }
     else if (oid != NON_ITEM)
     {
