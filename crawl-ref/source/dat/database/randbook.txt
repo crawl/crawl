@@ -425,17 +425,18 @@ Damage Dealing
 %%%%
 Charms
 
-Enchantment
+Enhancements
 
-Bewitchment
+Talismans
 
-Infatuation
+Good Luck
 
-w:1
-Glamour
+Protection
 
-w:1
-Fascination
+w:3
+Self-Knowledge
+
+Improving Self
 %%%%
 Fire
 
@@ -464,6 +465,18 @@ Malediction
 the Oath
 
 Execration
+
+Enchantment
+
+Bewitchment
+
+w:1
+Glamour
+
+w:1
+Fascination
+
+Beguiling
 %%%%
 Ice
 
