@@ -2018,9 +2018,9 @@ std::string get_terse_square_desc(const coord_def &gc)
     {
         const monster& mons = *monster_at(gc);
 
-        if (mons_is_item_mimic(mons.type) && !mons_is_known_mimic(&mons))
+        if (mons_is_item_mimic(mons.type) && mons_is_unknown_mimic(&mons))
             desc = get_mimic_item(&mons).name(DESC_PLAIN);
-        else if (mons_is_feat_mimic(mons.type) && !mons_is_known_mimic(&mons))
+        else if (mons_is_feat_mimic(mons.type) && mons_is_unknown_mimic(&mons))
             desc = feature_description(gc, false, DESC_PLAIN, false);
         else
             desc = mons.full_name(DESC_PLAIN, true);
@@ -2211,11 +2211,8 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     }
 
     // Unknown mimics don't count as monsters, either.
-    if (mons_is_mimic(mon->type)
-        && !mons_is_known_mimic(mon))
-    {
+    if (mons_is_unknown_mimic(mon))
         return (false);
-    }
 
     // Don't target submerged monsters.
     if (mode != TARG_HOSTILE_SUBMERGED && mon->submerged())
@@ -2693,7 +2690,7 @@ static void _describe_feature(const coord_def& where, bool oos)
     if (feature_mimic_at(where))
     {
         monster* mimic_mons = monster_at(where);
-        if (!mons_is_known_mimic(mimic_mons))
+        if (mons_is_unknown_mimic(mimic_mons))
             grid = get_mimic_feat(mimic_mons);
     }
 
@@ -3190,7 +3187,7 @@ std::string feature_description(const coord_def& where, bool covering,
     if (feature_mimic_at(where))
     {
         mimic_mons = monster_at(where);
-        if (!mons_is_known_mimic(mimic_mons))
+        if (mons_is_unknown_mimic(mimic_mons))
         {
             grid = get_mimic_feat(mimic_mons);
             mimic = true;

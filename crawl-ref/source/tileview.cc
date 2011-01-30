@@ -648,7 +648,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
 
     if (mons_is_item_mimic(mon->type))
     {
-        if (!mons_is_known_mimic(mon))
+        if (mons_is_unknown_mimic(mon))
         {
             // If necessary add item brand.
             if (you.visible_igrd(gc) != NON_ITEM)

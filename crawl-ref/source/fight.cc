@@ -6056,7 +6056,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     // Check if the player is fighting with something unsuitable,
     // or someone unsuitable.
     if (you.can_see(defender)
-        && (!mons_is_mimic(defender->type) || mons_is_known_mimic(defender))
+        && !mons_is_unknown_mimic(defender)
         && !wielded_weapon_check(attk.weapon))
     {
         you.turn_is_over = false;
