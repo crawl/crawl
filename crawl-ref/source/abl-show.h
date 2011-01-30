@@ -21,8 +21,6 @@ struct talent
     bool is_invocation;
 };
 
-const ability_def& get_ability_def(ability_type);
-
 const std::string make_cost_description(ability_type ability);
 const char* ability_name(ability_type ability);
 std::vector<const char*> get_ability_names();

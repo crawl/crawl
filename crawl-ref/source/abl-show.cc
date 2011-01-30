@@ -484,11 +484,6 @@ static const ability_def& _get_ability_def(ability_type abil)
     return (Ability_List[0]);
 }
 
-const ability_def& get_ability_def(ability_type abil)
-{
-    return (_get_ability_def(abil));
-}
-
 bool string_matches_ability_name(const std::string& key)
 {
     for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
