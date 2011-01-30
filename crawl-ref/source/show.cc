@@ -126,7 +126,7 @@ static void _update_feat_at(const coord_def &gp)
     if (monster_at(gp))
     {
         const monster* mmimic = monster_at(gp);
-        if (mons_is_feat_mimic(mmimic->type) && !mons_is_known_mimic(mmimic))
+        if (mons_is_feat_mimic(mmimic->type) && mons_is_unknown_mimic(mmimic))
         {
             feat = get_mimic_feat(mmimic);
             colour = mmimic->colour;
