@@ -3320,6 +3320,9 @@ void level_change(bool skip_attribute_increase)
                 mpr("Your Zot abilities now extend through the making of teleport traps.", MSGCH_INTRINSIC_GAIN);
         }
 
+#if TAG_MAJOR_VERSION == 32
+        note_montiers();
+#endif
         // add hp and mp adjustments - GDL
         inc_max_hp(hp_adjust);
         inc_max_mp(mp_adjust);
@@ -5357,6 +5360,11 @@ void player::init()
     delay_queue.clear();
 
     last_keypress_time = time(0);
+
+#if TAG_MAJOR_VERSION == 32
+    for (unsigned int i = 0; i < ARRAYSZ(montiers); i++)
+        montiers[i] = 0;
+#endif
 
 
     // Volatile (same-turn) state:

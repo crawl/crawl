@@ -1156,6 +1156,11 @@ static void tag_construct_you(writer &th)
 
     marshallString(th, you.zotdef_wave_name);
 
+#if TAG_MAJOR_VERSION == 32
+    for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
+        marshallInt(th, you.montiers[k]);
+#endif
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -1756,6 +1761,12 @@ static void tag_read_you(reader &th)
     you.friendly_pickup = unmarshallByte(th);
 
     you.zotdef_wave_name = unmarshallString(th);
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_MON_TIER_STATS)
+        for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
+            you.montiers[k] = unmarshallInt(th);
+#endif
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",

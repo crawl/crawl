@@ -212,5 +212,8 @@ void debuff_monster(monster* mons);
 int exp_rate(int killer);
 int count_monsters(monster_type mtyp, bool friendlyOnly);
 int count_allies();
+#if TAG_MAJOR_VERSION == 32
+void note_montiers();
+#endif
 
 #endif
