@@ -671,11 +671,12 @@ static void _give_items_skills(const newgame_def& ng)
                            ARM_ROBE);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
 
-        you.skills[SK_FIGHTING]     = 3;
+        you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_CHARMS]       = 2;
+        you.skills[SK_HEXES]        = 2;
         weap_skill = 2;
         break;
 
@@ -759,7 +760,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[range_skill(you.inv[1])] = 2;
         you.skills[SK_DODGING]              = 1;
         you.skills[SK_SPELLCASTING]         = 2;
-        you.skills[SK_CHARMS]               = 2;
+        you.skills[SK_HEXES]                = 2;
         break;
 
     case JOB_WIZARD:
