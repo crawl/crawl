@@ -64,6 +64,7 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_ROT:
         return ULL1 << MB_ROTTING;
     case ENCH_CORONA:
+    case ENCH_SILVER_CORONA:
         return ULL1 << MB_GLOWING;
     case ENCH_SLOW:
         return ULL1 << MB_SLOWED;
@@ -120,6 +121,18 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_ATTACHED;
     case ENCH_HELPLESS:
         return ULL1 << MB_HELPLESS;
+    case ENCH_BLEED:
+        return ULL1 << MB_BLEEDING;
+    case ENCH_DAZED:
+        return ULL1 << MB_DAZED;
+    case ENCH_MUTE:
+        return ULL1 << MB_MUTE;
+    case ENCH_BLIND:
+        return ULL1 << MB_BLIND;
+    case ENCH_DUMB:
+        return ULL1 << MB_DUMB;
+    case ENCH_MAD:
+        return ULL1 << MB_MAD;
     default:
         return 0;
     }
@@ -532,7 +545,7 @@ std::string monster_info::_core_name() const
     case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
     case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-    case MONS_SPECTRAL_THING:
+    case MONS_SPECTRAL_THING:   case MONS_SALT_PILLAR:
         nametype = base_type;
         break;
 
@@ -687,6 +700,9 @@ std::string monster_info::common_name(description_level_type desc) const
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
         ss << " simulacrum";
+        break;
+    case MONS_SALT_PILLAR:
+        ss << " shaped pillar of salt";
         break;
     default:
         break;
@@ -846,10 +862,14 @@ static std::string _verbose_info0(const monster_info& mi)
 
     if (mi.is(MB_PETRIFIED))
         return ("petrified");
+    if (mi.is(MB_DUMB))
+        return ("dumb");
     if (mi.is(MB_PARALYSED))
         return ("paralysed");
     if (mi.is(MB_PETRIFYING))
         return ("petrifying");
+    if (mi.is(MB_MAD))
+        return ("mad");
     if (mi.is(MB_CONFUSED))
         return ("confused");
     if (mi.is(MB_FLEEING))
@@ -867,8 +887,16 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("burning");
     if (mi.is(MB_ROTTING))
         return ("rotting");
+    if (mi.is(MB_BLEEDING))
+        return ("bleeding");
     if (mi.is(MB_INVISIBLE))
         return ("invisible");
+    if (mi.is(MB_DAZED))
+        return ("dazed");
+    if (mi.is(MB_MUTE))
+        return ("mute");
+    if (mi.is(MB_BLIND))
+        return ("blind");
 
     return ("");
 }
@@ -1042,6 +1070,16 @@ std::vector<std::string> monster_info::attributes() const
     }
     if (is(MB_ATTACHED))
         v.push_back("attached and sucking blood");
+    if (is(MB_DAZED))
+        v.push_back("dazed");
+    if (is(MB_MUTE))
+        v.push_back("permanently mute");
+    if (is(MB_BLIND))
+        v.push_back("permanently blind");
+    if (is(MB_DUMB))
+        v.push_back("stupefied");
+    if (is(MB_MAD))
+        v.push_back("lost in madness");
     return v;
 }
 

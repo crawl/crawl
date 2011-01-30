@@ -12,11 +12,14 @@
 
 struct bolt;
 
+std::string zin_recite_text(int* trits, size_t len, int prayertype, int step);
 bool zin_sustenance(bool actual = true);
-int zin_check_recite_to_single_monster(const coord_def& where);
-int zin_check_recite_to_monsters();
-int zin_recite_to_single_monster(const coord_def& where,
-                                 bool imprisoned = false, int pow = -1);
+bool zin_check_able_to_recite();
+int zin_check_recite_to_monsters(recite_type *prayertype);
+bool zin_recite_to_single_monster(const coord_def& where,
+                                  bool imprisoned,
+                                  recite_type prayertype);
+void zin_saltify(monster* mon);
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
 bool zin_remove_all_mutations();

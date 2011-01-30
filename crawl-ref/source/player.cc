@@ -6035,16 +6035,22 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
-    if (!is_undead)
-        return 0;
-
-    if (!temp
-        && (you.form == TRAN_LICH || is_undead == US_SEMI_UNDEAD))
+    switch(is_undead)
     {
+    case US_ALIVE:
         return 0;
-    }
 
-    return 1;
+    case US_HUNGRY_DEAD:
+        return 1; // rottable by Zin, not by necromancy
+
+    case US_SEMI_UNDEAD:
+        return temp ? 1 : 0;
+
+    case US_UNDEAD:
+        if (!temp && you.form == TRAN_LICH)
+            return 0;
+        return 3; // full immunity
+    }
 }
 
 int player::res_sticky_flame() const
@@ -6633,7 +6639,8 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monster* mon = looker->as_monster();
-    return (!invisible()
+    return (!mon->has_ench(ENCH_BLIND)
+            && !invisible()
             || in_water()
             || mon->can_see_invisible()
             || mons_sense_invis(mon)

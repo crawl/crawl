@@ -1334,7 +1334,6 @@ enum duration_type
     DUR_SCRYING,
     DUR_TORNADO,
     DUR_LIQUEFYING,
-
     NUM_DURATIONS
 };
 
@@ -1408,7 +1407,12 @@ enum enchant_type
     ENCH_LIQUEFYING,
     ENCH_PERM_TORNADO,
     ENCH_FAKE_ABJURATION,
-
+    ENCH_DAZED,         // Dazed - less chance of acting each turn.
+    ENCH_MUTE,          // Permanently silenced.
+    ENCH_BLIND,         // Permanently blind (everything is invisible).
+    ENCH_DUMB,          // Permanently dumb (as in, 'struck dumb').
+    ENCH_MAD,           // Permanently mad.
+    ENCH_SILVER_CORONA, // Zin's silver light.
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2319,6 +2323,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED_EASY,
     MONS_SENSED_TOUGH,
     MONS_SENSED_NASTY,
+    MONS_SALT_PILLAR,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2801,6 +2806,16 @@ enum operation_types
 enum orb_type
 {
     ORB_ZOT,
+};
+
+enum recite_type
+{
+    RECITE_CHAOTIC,
+    RECITE_IMPURE,
+    RECITE_HERETIC,
+    RECITE_UNHOLY,
+    RECITE_ALLY,
+    NUM_RECITE_TYPES
 };
 
 enum size_part_type
