@@ -387,6 +387,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_KENKU:
     case TILEP_MONS_DEEP_DWARF_ARTIFICER:
     case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
+    case TILEP_MONS_KOBOLD:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -397,6 +398,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
     case TILEP_MONS_SPRIGGAN_DEFENDER:
     case TILEP_MONS_SPRIGGAN_BERSERKER:
+    case TILEP_MONS_BIG_KOBOLD:
         *ofs_x = -1;
         *ofs_y = 0;
         break;
@@ -462,11 +464,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 0;
         *ofs_y = 2;
         break;
-    case TILEP_MONS_GOBLIN:
-    case TILEP_MONS_IJYB:
-        *ofs_x = -2;
-        *ofs_y = 4;
-        break;
     // Shift upwards and to the left.
     case TILEP_MONS_DEEP_ELF_MAGE:
     case TILEP_MONS_DEEP_ELF_SUMMONER:
@@ -482,9 +479,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -3;
         break;
     case TILEP_MONS_MAURICE:
-        *ofs_x = -2;
-        *ofs_y = -2;
-        break;
     case TILEP_MONS_SONJA:
         *ofs_x = -2;
         *ofs_y = -2;
@@ -507,15 +501,12 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -1;
         *ofs_y = 3;
         break;
+    case TILEP_MONS_GOBLIN:
+    case TILEP_MONS_IJYB:
+        *ofs_x = -2;
+        *ofs_y = 4;
+        break;
     // Shift downwards and to the right.
-    case TILEP_MONS_BIG_KOBOLD:
-        *ofs_x = -1;
-        *ofs_y = 0;
-        break;
-    case TILEP_MONS_KOBOLD:
-        *ofs_x = 0;
-        *ofs_y = 0;
-        break;
     case TILEP_MONS_ETTIN:
         *ofs_x = 2;
         *ofs_y = 1;
@@ -529,13 +520,13 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 4;
         *ofs_y = 1;
         break;
-    case TILEP_MONS_ZOMBIE_SMALL:
-        *ofs_x = 4;
-        *ofs_y = 3;
-        break;
     case TILEP_MONS_HALFLING:
         *ofs_x = 4;
         *ofs_y = 2;
+        break;
+    case TILEP_MONS_ZOMBIE_SMALL:
+        *ofs_x = 4;
+        *ofs_y = 3;
         break;
     case TILEP_MONS_HUMAN:
         *ofs_x = 5;
