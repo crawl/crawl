@@ -258,7 +258,8 @@ void stop_delay(bool stop_stair_travel)
 
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "Your recitation of %s is interrupted.",
-             _get_zin_recite_speech(delay.trits, delay.len, delay.parm1, -1).c_str());
+             _get_zin_recite_speech(delay.trits, delay.len,
+                                    delay.parm1, -1).c_str());
         mpr("You feel short of breath.");
         _pop_delay();
         break;
@@ -685,8 +686,8 @@ void handle_delay()
             for (size_t n = 0; n < delay.len; n++)
                 delay.trits[n] = random2(3);
             mprf(MSGCH_PLAIN, "You clear your throat and prepare to recite %s.",
-                 _get_zin_recite_speech(delay.trits, delay.len, delay.parm1, -1).c_str());
-
+                 _get_zin_recite_speech(delay.trits, delay.len,
+                                        delay.parm1, -1).c_str());
             break;
         }
 
@@ -894,7 +895,8 @@ void handle_delay()
         case DELAY_RECITE:
         {
             mprf(MSGCH_MULTITURN_ACTION, "\"%s\"",
-                 _get_zin_recite_speech(delay.trits, delay.len, delay.parm1, delay.duration).c_str());
+                 _get_zin_recite_speech(delay.trits, delay.len,
+                                        delay.parm1, delay.duration).c_str());
             if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
                 viewwindow();
 
@@ -920,6 +922,7 @@ void handle_delay()
             noisy(noise_level, you.pos());
             break;
         }
+
         case DELAY_MULTIDROP:
             drop_item(items_for_multidrop[0].slot,
                       items_for_multidrop[0].quantity);
@@ -1042,13 +1045,24 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_RECITE:
     {
-        std::string closure[] = {" \"Amen!\"", " \"Glory to Zin!\"", " \"And thus was it written.\"", " \"So sayeth Zin.\"", " \"Purity be upon you all.\""};
-        mprf(MSGCH_PLAIN, "You finish reciting %s.%s",
-             _get_zin_recite_speech(const_cast<int*>(delay.trits), delay.len, delay.parm1, -1).c_str(),
-             (one_chance_in(9)) ? closure[random2(5)].c_str() : "");
+        std::string speech =
+            _get_zin_recite_speech(const_cast<int*>(delay.trits), delay.len,
+                                   delay.parm1, -1);
+        speech += ".";
+        if (one_chance_in(9))
+        {
+            const std::string closure = getSpeakString("recite_closure");
+            if (!closure.empty() && one_chance_in(3))
+            {
+                speech += " ";
+                speech += closure;
+            }
+        }
+        mprf(MSGCH_PLAIN, "You finish reciting %s", speech.c_str());
         mpr("You feel short of breath.");
         break;
     }
+
     case DELAY_PASSWALL:
     {
         mpr("You finish merging with the rock.");
