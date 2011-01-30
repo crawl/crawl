@@ -306,7 +306,7 @@ static const ability_def Ability_List[] =
     // INVOCATIONS:
     // Zin
     { ABIL_ZIN_SUSTENANCE, "Sustenance", 0, 0, 0, 0, ABFLAG_PIETY },
-    { ABIL_ZIN_RECITE, "Recite", 3, 0, 0, 0, ABFLAG_DELAY },
+    { ABIL_ZIN_RECITE, "Recite", 0, 0, 0, 0, ABFLAG_BREATH | ABFLAG_DELAY },
     { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 2, ABFLAG_CONF_OK },
     { ABIL_ZIN_IMPRISON, "Imprison", 5, 0, 125, 8, ABFLAG_NONE },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
@@ -482,6 +482,11 @@ static const ability_def& _get_ability_def(ability_type abil)
     }
 
     return (Ability_List[0]);
+}
+
+const ability_def& get_ability_def(ability_type abil)
+{
+    return (_get_ability_def(abil));
 }
 
 bool string_matches_ability_name(const std::string& key)
@@ -884,7 +889,7 @@ const std::string make_detailed_cost_description(ability_type ability)
         ret << "nothing.";
 
     if (abil.flags & ABFLAG_BREATH)
-        ret << "\nIt is a breathing attack and needs some time between uses.";
+        ret << "\nYou must catch your breath between uses of this ability.";
 
     if (abil.flags & ABFLAG_DELAY)
         ret << "\nIt takes some time before being effective.";
@@ -1455,13 +1460,16 @@ static bool _check_ability_possible(const ability_def& abil,
     {
     case ABIL_ZIN_RECITE:
     {
-        const int result = zin_check_recite_to_monsters();
-        if (result < 0)
+        if (!zin_check_able_to_recite())
+            return (false);
+
+        const int result = zin_check_recite_to_monsters(0);
+        if (result == -1)
         {
             mpr("There's no appreciative audience!");
             return (false);
         }
-        else if (result < 1)
+        else if (result == 0)
         {
             mpr("There's no-one here to preach to!");
             return (false);
@@ -2194,9 +2202,17 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ZIN_RECITE:
-        start_delay(DELAY_RECITE, 3, -1, you.hp);
+    {
+        recite_type prayertype;
+        if (zin_check_recite_to_monsters(&prayertype))
+            start_delay(DELAY_RECITE, 3, prayertype, you.hp);
+        else
+        {
+            mpr("That recitation seems somehow inappropriate.");
+            return (false);
+        }
         break;
-
+    }
     case ABIL_ZIN_VITALISATION:
         zin_vitalisation();
         break;
@@ -2213,18 +2229,13 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        const int retval = zin_check_recite_to_single_monster(beam.target);
+        monster* mons = monster_at(beam.target);
 
-        if (retval <= 0)
+        if (mons == NULL)
         {
-            if (retval == 0)
-                mpr("There is no monster there to imprison!");
-            else
-                mpr("There's no appreciative subject!");
+            mpr("There is no monster there to imprison!");
             return (false);
         }
-
-        monster* mons = monster_at(beam.target);
 
         power = 3 + roll_dice(3, 10 * (3 + you.skills[SK_INVOCATIONS])
                                     / (3 + mons->hit_dice)) / 3;

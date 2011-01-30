@@ -29,7 +29,7 @@ static duration_def duration_data[] =
     { DUR_BERSERK, true,
       BLUE, "Berserk", "berserking", "You are possessed by a berserker rage." },
     { DUR_BREATH_WEAPON, false,
-      YELLOW, "BWpn", "short of breath", "You are short of breath." },
+      YELLOW, "Breath", "short of breath", "You are short of breath." },
     { DUR_BRILLIANCE, false,
       0, "", "brilliant", "You are brilliant." },
     { DUR_CONF, false,

@@ -2505,7 +2505,7 @@ mon_attitude_type mons_attitude(const monster* m)
 
 bool mons_is_confused(const monster* m, bool class_too)
 {
-    return (m->has_ench(ENCH_CONFUSION)
+    return ((m->has_ench(ENCH_CONFUSION) || m->has_ench(ENCH_MAD))
             && (class_too || !mons_class_flag(m->type, M_CONFUSED)));
 }
 

@@ -1682,8 +1682,10 @@ bool player_in_a_dangerous_place(bool *invis)
 static void _drop_tomb(const coord_def& pos, bool premature)
 {
     int count = 0;
+    bool zin = false;
 
     monster* mon = monster_at(pos);
+
     // Don't wander on duty!
     if (mon)
         mon->behaviour = BEH_SEEK;
@@ -1691,9 +1693,37 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     bool seen_change = false;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        if (grd(*ai) == DNGN_ROCK_WALL)
+
+        // "Normal" tomb
+        if (grd(*ai) == DNGN_ROCK_WALL &&
+            env.markers.property_at(*ai, MAT_ANY, "prison") != "Zin")
         {
             grd(*ai) = DNGN_FLOOR;
+            set_terrain_changed(*ai);
+            count++;
+            if (you.see_cell(*ai))
+                seen_change = true;
+        }
+
+        // Zin's Imprison.
+        if (grd(*ai) == DNGN_METAL_WALL &&
+            env.markers.property_at(*ai, MAT_ANY, "prison") == "Zin")
+        {
+            zin = true;
+
+            std::vector<map_marker*> markers = env.markers.get_markers_at(*ai);
+            for (int i = 0, size = markers.size(); i < size; ++i)
+            {
+                map_marker *mark = markers[i];
+                if (mark->property("prison") == "Zin")
+                    env.markers.remove(mark);
+            }
+
+            env.markers.clear_need_activate();
+
+            grd(*ai) = DNGN_FLOOR;
+            env.grid_colours(*ai) = 0;
+
             set_terrain_changed(*ai);
             count++;
             if (you.see_cell(*ai))
@@ -1703,11 +1733,15 @@ static void _drop_tomb(const coord_def& pos, bool premature)
 
     if (count)
     {
-        if (seen_change)
+        if (seen_change && !zin)
             mprf("The walls disappear%s!",
                  premature ? " prematurely" : "");
-        else
-        {
+        else if (seen_change && zin)
+            mprf("Zin %s %s %s.",
+            (mon) ? "releases" : "dismisses",
+            (mon) ? mon->name(DESC_NOCAP_THE).c_str() : "the silver walls,",
+            (mon) ? "from its prison" : "but there is nothing inside them");
+        else {
             if (!silenced(you.pos()))
                 mpr("You hear a deep rumble.", MSGCH_SOUND);
             else
@@ -1830,18 +1864,20 @@ void timeout_tombs(int duration)
             monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
                                                       : NULL;
+/**
+
             monster* mon_targ =
                 !invalid_monster_index(cmark->target) ? &menv[cmark->target]
                                                       : NULL;
-
-            // Zin's Imprison ability.
+            // Zin's Imprison ability - does nothing special for now.
             if (cmark->source == -GOD_ZIN && mon_targ
                 && mon_targ == mon_entombed)
             {
                 zin_recite_to_single_monster(mon_targ->pos(), true);
             }
+**/
             // A monster's Tomb of Doroklohe spell.
-            else if (mon_src
+            if (mon_src
                 && mon_src == mon_entombed)
             {
                 mon_src->lose_energy(EUT_SPELL);

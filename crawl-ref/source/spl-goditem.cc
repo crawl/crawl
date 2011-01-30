@@ -711,6 +711,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
     bool proceed;
 
+    // We need to get this now because we won't be able to see
+    // the monster once the walls go up!
+    monster* mon = monster_at(where);
+    std::string target = mon->name(DESC_NOCAP_THE);
+
     if (force_full)
     {
         bool success = true;
@@ -737,11 +742,17 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
             }
         }
 
-        if (!success)
+        if (!success && !force_full)
         {
             mpr("Half-formed walls emerge from the floor, then retract.");
             return (false);
         }
+        if (!success && force_full)
+        {
+            mprf("You need more space to imprison %s.", target.c_str());
+            return (false);
+        }
+
     }
 
     for (adjacent_iterator ai(where); ai; ++ai)
@@ -775,7 +786,22 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
                 ptrap->destroy();
 
             // Actually place the wall.
-            grd(*ai) = DNGN_ROCK_WALL;
+
+            // Currently this means Zin, so silver walls.
+            if (force_full)
+            {
+                grd(*ai) = DNGN_METAL_WALL;
+                env.grid_colours(*ai) = LIGHTGREY;
+
+                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
+                marker->set_property("feature_description", "A gleaming silver wall");
+                marker->set_property("prison", "Zin");
+                env.markers.add(marker);
+            }
+            else
+            {
+                grd(*ai) = DNGN_ROCK_WALL;
+            }
             set_terrain_changed(*ai);
             number_built++;
         }
@@ -783,9 +809,14 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
     if (number_built > 0)
     {
-        mpr("Walls emerge from the floor!");
+        if (!force_full)
+            mpr("Walls emerge from the floor!");
+        else if (force_full)
+            mprf("Zin imprisons %s with walls of pure silver!", target.c_str());
+
         you.update_beholders();
         you.update_fearmongers();
+        env.markers.clear_need_activate();
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
