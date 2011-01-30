@@ -460,7 +460,7 @@ function TroveMarker:check_veto(marker, pname)
       return
     else
       crawl.mpr("You don't have the item" .. self:plural() ..
-                " to give!")
+                " to give! Perhaps you haven't completely identified the item yet?")
       return "veto"
     end
   end
