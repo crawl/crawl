@@ -565,7 +565,6 @@ bool zin_check_able_to_recite()
         return (true);
 }
 
-
 static const char* zin_book_desc[NUM_RECITE_TYPES] =
 {
     "Abominations (harms the forces of chaos and mutation)",
@@ -975,9 +974,9 @@ bool zin_recite_to_single_monster(const coord_def& where,
         if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
                               (degree + random2(spellpower)) * 10)))
         {
-            simple_monster_message(mon, minor ?
-                " is awed by your recitation." :
-                " is aghast at the heresy of your recitation.");
+            simple_monster_message(mon,
+                minor ? " is awed by your recitation."
+                      : " is aghast at the heresy of your recitation.");
             affected = true;
         }
         break;
@@ -989,25 +988,22 @@ bool zin_recite_to_single_monster(const coord_def& where,
         {
             mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU,
                                       (degree + random2(spellpower)) * 10));
-            switch(prayertype)
+            switch (prayertype)
             {
             case RECITE_HERETIC:
-                if (minor)
-                    simple_monster_message(mon, "'s eyes and ears begin to bleed.");
-                else
-                    simple_monster_message(mon, " bleeds profusely from its eyes and ears.");
+                simple_monster_message(mon,
+                    minor ? "'s eyes and ears begin to bleed."
+                          : " bleeds profusely from its eyes and ears.");
                 break;
             case RECITE_CHAOTIC:
-                if (minor)
-                    simple_monster_message(mon, "'s chaotic flesh is covered in bleeding sores.");
-                else
-                    simple_monster_message(mon, "'s chaotic flesh erupts into weeping sores!");
+                simple_monster_message(mon,
+                    minor ? "'s chaotic flesh is covered in bleeding sores."
+                          : "'s chaotic flesh erupts into weeping sores!");
                 break;
             case RECITE_IMPURE:
-                if (minor)
-                    simple_monster_message(mon, "'s impure flesh is covered in bleeding sores.");
-                else
-                    simple_monster_message(mon, "'s impure flesh erupts into weeping sores!");
+                simple_monster_message(mon,
+                    minor ? "'s impure flesh is covered in bleeding sores."
+                          : "'s impure flesh erupts into weeping sores!");
                 break;
             default:
                 die("bad recite bleed");
@@ -1050,9 +1046,9 @@ bool zin_recite_to_single_monster(const coord_def& where,
                                       (degree + random2(spellpower)) * 10)))
         {
             ASSERT(prayertype == RECITE_HERETIC);
-            simple_monster_message(mon, minor ?
-                        " quails at your recitation." :
-                        " looks feeble and powerless before your recitation.");
+            simple_monster_message(mon,
+                minor ? " quails at your recitation."
+                      : " looks feeble and powerless before your recitation.");
             affected = true;
         }
         break;
@@ -1079,7 +1075,8 @@ bool zin_recite_to_single_monster(const coord_def& where,
         if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, KC_YOU,
                                       (degree + random2(spellpower)) * 10)))
         {
-            simple_monster_message(mon, " is left stupefied by the wrath of Zin!");
+            simple_monster_message(mon,
+                " is left stupefied by the wrath of Zin!");
             affected = true;
         }
         break;
@@ -1100,8 +1097,8 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 {
                     simple_monster_message(mon,
                       (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
-                      (damage < 50) ? "'s chaotic flesh bubbles and boils."    :
-                                      "'s chaotic flesh runs like molten wax.");
+                      (damage < 50) ? "'s chaotic flesh bubbles and boils."
+                                    : "'s chaotic flesh runs like molten wax.");
 
                     print_wounds(mon);
                     behaviour_event(mon, ME_WHACK, MHITYOU);
