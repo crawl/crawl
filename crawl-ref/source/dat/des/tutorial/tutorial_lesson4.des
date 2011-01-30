@@ -1,74 +1,121 @@
 ##############################################
-# Tutorial map 4: Gods and divine abilities  #
+# Tutorial map 4: Magic and Spellcasting     #
 ##############################################
-
+#
+# TODO:
+#  * put Evaporate in the first book along with Magic Dart
+#  * trigger when trying to walk into a cloud
+#  * trigger on "might hit yourself" prompt
+#
 {{
 require("clua/tutorial.lua")
 
 tutorial_msg4 = {}
 
 function tutorial_msg4.start ()
-    crawl.tutorial_skill("invocations", 4)
-    tutorial_intro("In this lesson you're going to learn about gods and how to use their powers.")
+    tutorial_intro("In this lesson you're going to learn how to learn and cast spells.")
+    crawl.tutorial_hint("HINT_NEW_LEVEL")
 end
 
-function tutorial_msg4.secret_door ()
-    return tutorial_message("There's got to be an entrance to the temple! "
-                            .. "Try searching the glass walls for secret doors with "
-                            .. tutorial_get_cmd("CMD_REST") .. ".")
-end
-
-function tutorial_msg4.altars ()
-    local text = "Try praying at both of these altars with "
-                 .. tutorial_get_cmd("CMD_PRAY")
-
+function tutorial_msg4.train_spellcasting ()
+    local text = "You cannot cast spells yet as you don't have the Spellcasting skill yet. "
+                 .. "Read some scrolls (with "
+                 .. tutorial_get_cmd("CMD_READ")
     if crawl.is_tiles() then
-        text = text .. " or <white>Shift</white> + <white>leftclick</white> "
+        text = text .. " or by <white>mouseclick</white>"
     end
-
-    text = text .. "to get an idea what these two battle gods offer you. "
-                .. "If you press <w>!</w> "
-    if crawl.is_tiles() then
-        text = text .. "or <white>rightclick</white> "
-    end
-    text = text .. "on the religion screen, you can see a more detailed description.\n"
-                .. "Once you've decided which of them you want to follow, pray at the "
-                .. "corresponding altar once more and confirm your choice with an "
-                .. "uppercase <w>Y</w>."
+    text = text .. ") to train it to level 1."
 
     return tutorial_message(text)
 end
 
-function tutorial_msg4.religion ()
-    local text = "Have a look at your current religious standing with "
-                 .. tutorial_get_cmd("CMD_DISPLAY_RELIGION")
-
+function tutorial_msg4.spellbook ()
+    local text = "You can memorise a spell from carried spellbooks with "
+                 .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
     if crawl.is_tiles() then
-        text = text .. " or <white>Shift</white> + <white>rightclick</white> on the player tile"
+        text = text .. " or by <white>clicking</white> on the memorisation tab "
+                    .. "and selecting the spell tile"
     end
-
-    text = text .. ". Again, pressing <w>!</w> "
-    if crawl.is_tiles() then
-        text = text .. "or <white>rightclicking</white> "
-    end
-    text = text .. "will bring up a more detailed description of your god."
+    text = text .. "."
 
     return tutorial_message(text)
 end
 
-function tutorial_msg4.piety_on_kill ()
-    return tutorial_message("Some gods really like it if you kill monsters in their name. Let the slaughter commence!")
+function tutorial_msg4.spellcasting ()
+    local text = "You can cast spells with "
+                 .. tutorial_get_cmd("CMD_CAST_SPELL")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on the spell tile"
+    end
+    text = text .. ". Once you are out of magic points, retreat and rest with "
+                .. tutorial_get_cmd("CMD_REST") .. " to regain them."
+
+    return tutorial_message(text)
 end
 
-function tutorial_msg4.sacrificing ()
-    return tutorial_message("Praying on corpses with "
-                            .. tutorial_get_cmd("CMD_PRAY")
-                            .. " will sacrifice them to your god. Try it!")
+function tutorial_msg4.ring_power ()
+    local text = "Put on this ring with "
+                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</click>"
+    end
+    text = text .. ", and then rest up to your new full potential."
+
+    return tutorial_message(text)
 end
 
-function tutorial_msg4.divine_ability ()
-    return tutorial_message("For tougher monsters, you may want to make use of your god's powers with <w>a</w>. "
-                            .. "Use the <w>!</w> toggle to read the ability descriptions.")
+function tutorial_msg4.undead ()
+    local text = "Other than for other monsters, with undead it is "
+                 .. "impossible to tell how wounded they are."
+
+    if crawl.is_tiles() then
+        text = text .. "\nIncidentally, you can also cast spells by pressing "
+                    .. "<white>Ctrl</white> + <white>leftclick</white> on the monster."
+    end
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.spell_success ()
+    return tutorial_message("To check your spell proficiency, press "
+                            .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
+                            .. ". Compare your spell success rates before "
+                            .. "and after putting on this ring.")
+end
+
+function tutorial_msg4.evaporate ()
+    return tutorial_message("Bad potions can be launched at monsters by way "
+                            .. "of the Evaporate spell. When that spell is "
+                            .. "memorised, examining a potion gives a hint of "
+                            .. "the clouds it can produce.\n"
+                            .. "Buy the potions to make use of them!")
+end
+
+function tutorial_msg4.aiming_clouds ()
+    local text = "When casting Evaporate (with "
+                 .. tutorial_get_cmd("CMD_CAST_SPELL")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on the spell tile"
+    end
+
+    text = text .. "), you need to first select a potion to vaporise and "
+                .. "then select a target for the resulting clouds. For the "
+                .. "latter, you can directly aim at monsters, but you also "
+                .. "can target any other square within both line of sight "
+                .. "and spell range.\n"
+                .. "Note that the spell will expand into a cloud on the "
+                .. "first monster in its path."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.spell_hunger ()
+    return tutorial_message("Spellcasting can make really hungry. Spell hunger "
+                            .. "is higher for more difficult spells and can be "
+                            .. "reduced by high Intelligence and by training the "
+                            .. "Spellcasting skill.")
 end
 
 function tutorial_msg4.tutorial_end ()
@@ -79,15 +126,11 @@ function tutorial_msg4.exit ()
     -- A single screen recapping all commands.
 
     local text = "<yellow>Commands</yellow>\n"
-                 .. "  " .. tutorial_get_cmd("CMD_PRAY") .. "  pray at an altar to join a god, or sacrifice a corpse\n"
-                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_RELIGION") .. "  check your religious standing\n"
-                 .. "  " .. tutorial_get_cmd("CMD_USE_ABILITY") .. "  use a divine ability\n\n"
-                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_OVERMAP") .. "  display an overview of the dungeon\n"
-                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_COMMANDS") .. "<w>/</w>  search the description database\n"
-
-    if crawl.is_tiles() then
-        text = text .. "\nA <white>rightclick</white> on the player tile will also bring up the religion screen.\n\n"
-    end
+                 .. "  " .. tutorial_get_cmd("CMD_MEMORISE_SPELL") .. "  learn a new spell\n"
+                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. "  check spell proficiency\n"
+                 .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
+                 .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest to regain magic points\n"
+                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
     text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
     return crawl.endgame(text)
@@ -96,34 +139,35 @@ end
 
 NAME:    tutorial_lesson4
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_start
-DESC:    "Lesson 4: Gods and Divine Abilities"
+DESC:    "Lesson 4: Magic and Spellcasting"
 BFLAGS:  islanded
 ORIENT:  encompass
-KFEAT:   ABDZ = .
-KFEAT:   CE = +
-COLOUR:  ABDZ = blue
-FTILE:   ABDZ = tutorial_pad
-NSUBST:  M = 1:= / *:m
-NSUBST:  _ = 1:X / *:Y
-KFEAT:   X = altar_trog
-KFEAT:   Y = altar_makhleb
-ITEM:    spear ego:none not_cursed
-MONS:    rat always_corpse
-MONS:    hobgoblin ; dagger | short sword | spear | mace ego:none
-MONS:    goblin ; sling ego:none . stone q:10
-MARKER:  A = lua:tutorial_msg4.secret_door()
-MARKER:  = = lua:tutorial_msg4.altars()
-MARKER:  B = lua:tutorial_msg4.religion()
-MARKER:  C = lua:tutorial_msg4.piety_on_kill()
-# trigger: regaining power (Makhleb)
-MARKER:  D = lua:tutorial_msg4.sacrificing()
-MARKER:  E = lua:tutorial_msg4.divine_ability()
-# trigger: berserk exhaustion (Trog), mp regain (Makhleb)
+KFEAT:   ABCDE = .
+KFEAT:   S = distillery shop count:8 ; \
+         potion of slowing | w:20 potion of confusion | potion of poison | potion of paralysis
+COLOUR:  ABCDEdeg = blue
+FTILE:   ABCDEdeg = tutorial_pad
+KITEM:   A = scroll of fog q:4, scroll of random uselessness q:4, scroll of curse armour q:4, \
+         scroll of remove curse q:4
+KITEM:   E = randbook numspells:1 spell:evaporate title:First_Steps_to_Cloud-Casting owner:player, \
+         randbook numspells:1 spell:magic_dart title:An_Introduction_to_Spellcasting owner:player
+ITEM:    ring of magical power not_cursed
+ITEM:    ring of wizardry not_cursed
+ITEM:    gold q:20
+ITEM:    bread ration
+MONS:    training dummy ; stone q:20
+MONS:    megabat skeleton, goblin skeleton
+MONS:    rat, goblin
+MARKER:  A = lua:tutorial_msg4.train_spellcasting()
+MARKER:  E = lua:tutorial_msg4.spellbook()
+MARKER:  B = lua:tutorial_msg4.spellcasting()
+MARKER:  d = lua:tutorial_msg4.ring_power()
+MARKER:  C = lua:tutorial_msg4.undead()
+MARKER:  e = lua:tutorial_msg4.spell_success()
+MARKER:  S = lua:tutorial_msg4.evaporate()
+MARKER:  D = lua:tutorial_msg4.aiming_clouds()
+MARKER:  g = lua:tutorial_msg4.spell_hunger()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
-                                 onclimb = "tutorial_msg4.exit" }
-MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
-                                 onclimb = "tutorial_msg4.exit" }
-MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
                                  onclimb = "tutorial_msg4.exit" }
 MARKER:  } = lua:tutorial_msg4.tutorial_end()
 MARKER:  ) = lua:tutorial_msg4.tutorial_end()
@@ -142,32 +186,34 @@ epilogue{{
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx............2.E......xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxx...xxxxxx.xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx..1...xxxxxxxxxxxxxxxx.xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx...3..xxxxxxxxxxxxxxxxDxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx2....1xxxxxxxxxxxxxx.1...xxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx.....1.xxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx.xxxxxx.........C...1...xxxxxxx
-xxxxxxxxxxxxxxxxx}.xxx.xxxxxx.xxxxxxxxx.......xxxxxxx
-xxxxxxxxxxxxxxxxx).....xxxxxx.xxxxxxxxxx....1xxxxxxxx
-xxxxxxxxxxxxxxxxx].xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxBxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxtt..G.G..ttxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxt........txxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx..mmmMmmm..xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx..mT...Tm..xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx..M._._.M..xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx..mT...Tm..xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx..mmmmmmm..xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxt.........txxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxtt..G.G..ttxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxAxxxxxxxxxxxxxxxxxxx.xxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx....d..xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx.[.{.(.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.E.........A.......{..xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxx...x.2.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxx.....xxx..e.xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxBxxxxxxxxxxx.2..xxxxxxxx.....xxxxxxxxxx
+xxxxxxxxxxxxx..wwwxxxxxxxx....xxxxxxxxxxxxx.3...xxxxx
+xxxxxxxxxxxxx..ww1xxxxxxx.xxxxxxxxxxxxxxxx.......xxxx
+xxxxxxxxxxxxx..wwwxxxxx..xxxxxxxxxxxxxxxxx.2...xxxxxx
+xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxx.fxxxxxxx
+xxxxxxxxxxxxx......d.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.S.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx}xxxxxxx4...xxxDxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx).....5g...4...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx]xxxxxx..4...xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
