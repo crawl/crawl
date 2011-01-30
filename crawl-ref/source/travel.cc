@@ -4411,10 +4411,10 @@ int click_travel(const coord_def &gc, bool force)
         && (!is_excluded(you.pos()) || _is_stair_exclusion(you.pos()))
         && i_feel_safe(false, false, false, false))
     {
-        monster *mon = monster_at(gc);
-        // Autotravel will refuse to move across stationary monsters,
-        // so handle these specially.
-        if (!mon || !mons_class_is_stationary(mon->type))
+        map_cell &cell(env.map_knowledge(gc));
+        // If there's a monster that would block travel,
+        // don't start traveling.
+        if (!_monster_blocks_travel(cell.monsterinfo()))
         {
             start_travel(gc);
             return CK_MOUSE_CMD;
