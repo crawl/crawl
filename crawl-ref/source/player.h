@@ -247,6 +247,10 @@ public:
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
 
+#if TAG_MAJOR_VERSION == 32
+  int montiers[5]; // four monster tiers, plus corpse count
+#endif
+
 
   // Non-saved UI state:
   unsigned short prev_targ;

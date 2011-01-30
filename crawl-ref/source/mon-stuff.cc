@@ -28,6 +28,9 @@
 #include "food.h"
 #include "godabil.h"
 #include "godconduct.h"
+#if TAG_MAJOR_VERSION == 32
+#include "godpassive.h"
+#endif
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -582,6 +585,11 @@ int place_monster_corpse(const monster* mons, bool silent,
         return (-1);
     }
 
+#if TAG_MAJOR_VERSION == 32
+    // Ok, so there's a corpse (possibly exploded/drowned), count it.
+    you.montiers[4]++;
+#endif
+
     int o = get_item_slot();
 
     // Zotdef corpse creation forces cleanup, otherwise starvation
@@ -671,6 +679,19 @@ static void _check_kill_milestone(const monster* mons,
                        + ".");
     }
 }
+
+#if TAG_MAJOR_VERSION == 32
+void note_montiers()
+{
+    char buf[128];
+    snprintf(buf, sizeof(buf), "Killed monsters: %d trivial, %d easy, "
+        "%d tough, %d nasty; %d corpses", you.montiers[0], you.montiers[1],
+        you.montiers[2], you.montiers[3], you.montiers[4]);
+    take_note(Note(NOTE_MESSAGE, 0, 0, buf));
+    for (unsigned int i = 0; i < ARRAYSZ(you.montiers); i++)
+        you.montiers[i] = 0;
+}
+#endif
 
 static int _calc_monster_experience(monster* victim, killer_type killer,
                                     int killer_index)
@@ -1615,6 +1636,15 @@ int monster_die(monster* mons, killer_type killer,
         ASSERT(!crawl_state.game_is_arena());
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
     }
+
+#if TAG_MAJOR_VERSION == 32
+    if (gives_xp)
+    {
+        int tier = ash_monster_tier(mons) - MONS_SENSED_TRIVIAL;
+        ASSERT(tier >= 0 && tier <= 3);
+        you.montiers[tier]++;
+    }
+#endif
 
     // Take note!
     if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena() && MONST_INTERESTING(mons))
