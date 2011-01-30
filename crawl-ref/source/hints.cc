@@ -2153,10 +2153,24 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_NEW_LEVEL:
-        text << "Well done! Reaching a new experience level is always a nice "
-                "event: you get more health and magic points, and "
-                "occasionally increases to your attributes (strength, "
-                "dexterity, intelligence).";
+        if (you.skills[SK_SPELLCASTING])
+        {
+            text << "Gaining an experience level allows you to learn more "
+                    "difficult spells. Time to memorise your second spell "
+                    "with <w>%</w>"
+#ifdef USE_TILE
+                 << " or by <w>clicking</w> on it in the memorisation tab"
+#endif
+                 << ".";
+            cmd.push_back(CMD_MEMORISE_SPELL);
+        }
+        else
+        {
+            text << "Well done! Reaching a new experience level is always a "
+                    "nice event: you get more health and magic points, and "
+                    "occasionally increases to your attributes (strength, "
+                    "dexterity, intelligence).";
+        }
 
         if (Hints.hints_type == HINT_MAGIC_CHAR)
         {
