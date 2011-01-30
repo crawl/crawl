@@ -763,6 +763,18 @@ Beogh
 
 Lugonu
 %%%%
+recite_closure
+
+"Amen!"
+
+"Glory to Zin!"
+
+"And thus was it written."
+
+"So sayeth Zin."
+
+"Purity be upon you all."
+%%%%
 ######################################
 # Welcome messages on game restoration
 ######################################
