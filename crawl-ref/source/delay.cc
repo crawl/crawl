@@ -678,8 +678,7 @@ void handle_delay()
         case DELAY_RECITE:
         {
             // We need to handle training here.
-            const ability_def& abil = get_ability_def(ABIL_ZIN_RECITE);
-            practise(EX_USED_ABIL, abil.ability);
+            practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
 
             // We don't actually start reciting on this turn, because we haven't "said" anything yet.
             delay.len = 7;
