@@ -271,7 +271,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...the law of the land, and his word is law!");
             break;
         case 13:
-            turn[1] = make_stringf("Thus the people made the convent of %s with...", antisin[1].c_str());
+            turn[1] = make_stringf("Thus the people made the covenant of %s with...", antisin[1].c_str());
             turn[2] = make_stringf("...Zin, and all was good, for they knew that the...");
             turn[3] = make_stringf("...%s would trouble them no longer.", sinner.c_str());
             break;
@@ -333,12 +333,12 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         case 25:
             turn[1] = make_stringf("When the law of the land faltered, Zin rose...");
             turn[2] = make_stringf("...from his silver throne, and the %s were...", sinner.c_str());
-            turn[3] = make_stringf("%s. And it was thusly that the law was made good.", smite[1].c_str());
+            turn[3] = make_stringf("%s. And it was thus that the law was made good.", smite[1].c_str());
             break;
         case 26:
             turn[1] = make_stringf("Zin descended from on high in a silver chariot...");
             turn[2] = make_stringf("...to %s the %s for their...", smite[0].c_str(), sinner.c_str());
-            turn[3] = make_stringf("...%s, and thus was judgment was rendered.", sin[1].c_str());
+            turn[3] = make_stringf("...%s, and thus judgement was rendered.", sin[1].c_str());
             break;
         case 27:
             turn[1] = make_stringf("The %s stood before Zin, and in that instant...", sinner.c_str());
