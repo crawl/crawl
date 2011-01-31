@@ -639,7 +639,9 @@ Excruciating
 w:5
 Lethal
 %%%%
-Enchantment adj
+Charms adj
+
+Charming
 
 Enchanting
 
