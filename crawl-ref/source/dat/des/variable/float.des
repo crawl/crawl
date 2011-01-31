@@ -1456,6 +1456,12 @@ DEPTH:  D:15-26, Vault, Crypt
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen
 KFEAT:  ABCDEFG = metal_wall
+ ## This is for gretell's benefit
+ KMONS: Z = col:gold skeletal warrior name:ancient_champion name_replace \
+ name_descriptor spells:iron_shot;.;haste;pain;.;. \
+ spells:bolt_of_draining;.;haste;throw_frost;.;. \
+ spells:venom_bolt;.;haste;haunt;.;. \
+ spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells
 KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \
         name_descriptor spells:iron_shot;.;haste;pain;.;. actual_spells \
         ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
