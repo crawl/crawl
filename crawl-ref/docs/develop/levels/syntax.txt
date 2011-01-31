@@ -606,14 +606,21 @@ ITEM:     (list of items, separated by comma)
           You can further specify artefact spell books using "randbook" and any
           combination of the following tags:
 
+          * "numspells:number" maximum number of spells to include in the book.
+            A book may contain at most 8 spells.
+          * "owner:name" will be used to make the title include the apostrophised
+            owner (or author) of the book if provided. For example, "owner:Roxanne" 
+            may create "Roxanne's Treatise on Mountains". You can use the keyword 
+            "player" (i.e. "owner:player") to use the player's name instead.
+
+          In addition, themed books allow the use of the following tags:
+
           * "disc:spell_school", the first spell school that should be included
             in the book. For example, "disc:earth" or "disc:ice".
           * "disc2:spell_school" an optional second spell school that can be
             included in the book. Note: specifying two spell schools doesn't
             mean that they will both definitely be included, just that they
             might be.
-          * "numspells:number" maximum number of spells to include in the book.
-            A book may contain at most 8 spells.
           * "slevels:max_levels" the total, combined level of spells to include
             in the book. "slevels:6" will use three level two spells, two level
             three spells, a level two and a level four spell, and so on.
@@ -621,12 +628,7 @@ ITEM:     (list of items, separated by comma)
             Spells must be separated by "|" without spaces. Within a spell name,
             all of "_" will be replaced with " " and will be parsed as such.
             A book may contain at most 8 spells.
-          * "owner:name" will be used to generate the title of the book if
-            provided. For example, "owner:Roxanne" may create "Roxanne's
-            Treatise on Mountains". You can use the keyword "player" (i.e. 
-            "owner:player") to use the player's name instead.
-          * "title:title" will define the title of the book, e.g. "Treatise on
-            Mountains" in the example above.
+          * "title:title" will define the title of the book.
 
           NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
