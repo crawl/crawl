@@ -108,6 +108,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld);
 static void _equip_jewellery_effect(item_def &item);
 static void _unequip_jewellery_effect(item_def &item, bool mesg);
+static void _equip_use_warning(const item_def& item);
 
 static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
                           bool msg)
@@ -121,6 +122,9 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
     ASSERT(slot == eq
            || eq == EQ_RINGS
               && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING));
+
+    if (msg)
+        _equip_use_warning(item);
 
     if (slot == EQ_WEAPON)
         _equip_weapon_effect(item, msg);
@@ -375,7 +379,7 @@ static void _unequip_artefact_effect(const item_def &item,
     }
 }
 
-static void _equip_weapon_use_warning(const item_def& item)
+static void _equip_use_warning(const item_def& item)
 {
     if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
         mpr("You really shouldn't be using a holy item like this.");
@@ -446,9 +450,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_STAVES:
     {
-        if (showMsgs)
-            _equip_weapon_use_warning(item);
-
         set_ident_flags(item, ISFLAG_KNOW_CURSE);
         if (item.sub_type == STAFF_POWER)
         {
@@ -487,9 +488,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_WEAPONS:
     {
-        if (showMsgs)
-            _equip_weapon_use_warning(item);
-
         // Call unrandart equip func before item is identified.
         if (artefact)
             _equip_artefact_effect(item, &showMsgs);
