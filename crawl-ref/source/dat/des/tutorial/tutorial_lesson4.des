@@ -3,7 +3,6 @@
 ##############################################
 #
 # TODO:
-#  * put Evaporate in the first book along with Magic Dart
 #  * trigger when trying to walk into a cloud
 #  * trigger on "might hit yourself" prompt
 #
@@ -145,12 +144,11 @@ ORIENT:  encompass
 KFEAT:   ABCDE = .
 KFEAT:   S = distillery shop count:8 ; \
          potion of slowing | w:20 potion of confusion | potion of poison | potion of paralysis
-COLOUR:  ABCDEdeg = blue
-FTILE:   ABCDEdeg = tutorial_pad
+COLOUR:  ABCDdefh = blue
+FTILE:   ABCDdefh = tutorial_pad
 KITEM:   A = scroll of fog q:4, scroll of random uselessness q:4, scroll of curse armour q:4, \
          scroll of remove curse q:4
-KITEM:   E = randbook numspells:1 spell:evaporate title:First_Steps_to_Cloud-Casting owner:player, \
-         randbook numspells:1 spell:magic_dart title:An_Introduction_to_Spellcasting owner:player
+ITEM:    randbook numspells:2 spells:magic_dart|evaporate title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
 ITEM:    ring of wizardry not_cursed
 ITEM:    gold q:20
@@ -159,14 +157,14 @@ MONS:    training dummy ; stone q:20
 MONS:    megabat skeleton, goblin skeleton
 MONS:    rat, goblin
 MARKER:  A = lua:tutorial_msg4.train_spellcasting()
-MARKER:  E = lua:tutorial_msg4.spellbook()
+MARKER:  d = lua:tutorial_msg4.spellbook()
 MARKER:  B = lua:tutorial_msg4.spellcasting()
-MARKER:  d = lua:tutorial_msg4.ring_power()
+MARKER:  e = lua:tutorial_msg4.ring_power()
 MARKER:  C = lua:tutorial_msg4.undead()
-MARKER:  e = lua:tutorial_msg4.spell_success()
+MARKER:  f = lua:tutorial_msg4.spell_success()
 MARKER:  S = lua:tutorial_msg4.evaporate()
 MARKER:  D = lua:tutorial_msg4.aiming_clouds()
-MARKER:  g = lua:tutorial_msg4.spell_hunger()
+MARKER:  h = lua:tutorial_msg4.spell_hunger()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
                                  onclimb = "tutorial_msg4.exit" }
 MARKER:  } = lua:tutorial_msg4.tutorial_end()
@@ -188,18 +186,18 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.E.........A.......{..xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.d.........A.......{..xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxx...x.2.xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.xxxxxxxxxxx.....xxx..e.xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxx.....xxx..f.xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxBxxxxxxxxxxx.2..xxxxxxxx.....xxxxxxxxxx
 xxxxxxxxxxxxx..wwwxxxxxxxx....xxxxxxxxxxxxx.3...xxxxx
 xxxxxxxxxxxxx..ww1xxxxxxx.xxxxxxxxxxxxxxxx.......xxxx
 xxxxxxxxxxxxx..wwwxxxxx..xxxxxxxxxxxxxxxxx.2...xxxxxx
-xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxx.fxxxxxxx
-xxxxxxxxxxxxx......d.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
+xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxx.gxxxxxxx
+xxxxxxxxxxxxx......e.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
@@ -211,7 +209,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx}xxxxxxx4...xxxDxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx).....5g...4...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx).....5h...4...xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx]xxxxxx..4...xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
