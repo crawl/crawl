@@ -1237,7 +1237,8 @@ void artefact_wpn_properties(const item_def &item,
                              artefact_known_props_t &known)
 {
     ASSERT(is_artefact(item));
-    ASSERT(item.props.exists(KNOWN_PROPS_KEY));
+    if (!item.props.exists(KNOWN_PROPS_KEY))
+        return;
 
     const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
     ASSERT(_val.get_type() == SV_VEC);
