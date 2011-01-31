@@ -436,7 +436,17 @@ Protection
 w:3
 Self-Knowledge
 
+w:3
 Improving Self
+
+Aid
+
+Buffs
+
+w:1
+Benedictions
+
+Boosts
 %%%%
 Fire
 
@@ -641,7 +651,15 @@ Lethal
 %%%%
 Charms adj
 
-Charming
+Helpful
+
+Lucky
+
+Assistive
+
+Boosting
+%%%%
+Hexes adj
 
 Enchanting
 
