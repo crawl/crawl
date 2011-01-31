@@ -318,7 +318,7 @@ This spell conjures forth a raging blizzard of ice, sleet and freezing gasses.
 %%%%
 Ignite Poison
 
-This spell attempts to convert all poison within the caster's view into liquid flame. It is very effective against poisonous creatures or those carrying poison potions. The caster nor his gear are not affected.
+This spell attempts to convert all poison within the caster's view into liquid flame. It is very effective against poisonous creatures or those carrying poison potions. The caster and his gear are not affected.
 %%%%
 Insulation
 
