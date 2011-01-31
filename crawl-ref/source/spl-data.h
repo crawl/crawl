@@ -130,7 +130,7 @@ struct spell_desc
 
 {
     SPELL_DIG, "Dig",
-     SPTYP_TRANSMUTATION | SPTYP_EARTH,
+     SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      4,
      200,
@@ -1773,7 +1773,7 @@ struct spell_desc
 
 {
     SPELL_SHATTER, "Shatter",
-     SPTYP_TRANSMUTATION | SPTYP_EARTH,
+     SPTYP_EARTH,
      SPFLAG_AREA,
      9,
      200,
@@ -1851,7 +1851,7 @@ struct spell_desc
 
 {
     SPELL_FRAGMENTATION, "Lee's Rapid Deconstruction",
-     SPTYP_TRANSMUTATION | SPTYP_EARTH,
+     SPTYP_EARTH,
      SPFLAG_GRID,
      5,
      200,
@@ -1877,7 +1877,7 @@ struct spell_desc
 
 {
     SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
-     SPTYP_TRANSMUTATION | SPTYP_EARTH,
+     SPTYP_HEXES | SPTYP_EARTH,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
