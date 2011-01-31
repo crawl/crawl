@@ -658,7 +658,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
                 env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
         }
     }
-    else if (mons_is_stationary(mon))
+    else if (mons_is_stationary(mon) && mon->type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
         if (you.visible_igrd(gc) != NON_ITEM)
