@@ -613,11 +613,14 @@ ITEM:     (list of items, separated by comma)
             mean that they will both definitely be included, just that they
             might be.
           * "numspells:number" maximum number of spells to include in the book.
+            A book may contain at most 8 spells.
           * "slevels:max_levels" the total, combined level of spells to include
             in the book. "slevels:6" will use three level two spells, two level
             three spells, a level two and a level four spell, and so on.
-          * "spell:spell" a spell to include in the book. All of "_" will be
-            replaced with " " and will be parsed as such.
+          * "spells:spell_1|spell_2" a list of spells to include in the book.
+            Spells must be separated by "|" without spaces. Within a spell name,
+            all of "_" will be replaced with " " and will be parsed as such.
+            A book may contain at most 8 spells.
           * "owner:name" will be used to generate the title of the book if
             provided. For example, "owner:Roxanne" may create "Roxanne's
             Treatise on Mountains". You can use the keyword "player" (i.e. 

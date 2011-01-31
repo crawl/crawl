@@ -4148,12 +4148,17 @@ retry:
             if (owner == "player")
                 owner = you.your_name;
 
+            std::vector<spell_type> spells;
+            CrawlVector spell_list = props["randbook_spells"].get_vector();
+            for (unsigned int i = 0; i < spell_list.size(); ++i)
+                spells.push_back((spell_type) spell_list[i].get_int());
+
             make_book_theme_randart(item,
+                spells,
                 props["randbook_disc1"].get_short(),
                 props["randbook_disc2"].get_short(),
                 props["randbook_num_spells"].get_short(),
                 props["randbook_slevels"].get_short(),
-                spell_by_name(props["randbook_spell"].get_string()),
                 owner,
                 props["randbook_title"].get_string());
         }

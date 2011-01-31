@@ -2042,6 +2042,16 @@ static void _get_weighted_spells(bool completely_random, god_type god,
     int spells_left = spells.size();
     while (book_pos < num_spells && max_levels > 0 && spells_left > 0)
     {
+        if (chosen_spells[book_pos] != SPELL_NO_SPELL)
+        {
+            spell_type spell = chosen_spells[book_pos];
+            spell_weights[spell]  = 0;
+            max_levels           -= spell_difficulty(spell);
+            spells_left--;
+            book_pos++;
+            continue;
+        }
+
         spell_type spell =
             (spell_type) choose_random_weighted(spell_weights,
                                                 spell_weights + NUM_SPELLS);
@@ -2095,6 +2105,32 @@ static void _remove_nondiscipline_spells(spell_type chosen_spells[],
     }
 }
 
+static void _add_included_spells(spell_type chosen_spells[SPELLBOOK_SIZE],
+                                 std::vector<spell_type> incl_spells)
+{
+    for (unsigned int i = 0; i < incl_spells.size(); ++i)
+    {
+        spell_type incl_spell = incl_spells[i];
+
+        if (incl_spell == SPELL_NO_SPELL)
+            continue;
+
+        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+        {
+            // Already included.
+            if (chosen_spells[j] == incl_spell)
+                break;
+
+            if (chosen_spells[j] == SPELL_NO_SPELL)
+            {
+                // Add to spells.
+                chosen_spells[j] = incl_spell;
+                break;
+            }
+        }
+    }
+}
+
 // Takes a book of any type, a spell discipline or two, the number of spells
 // (up to 8), the total spell levels of all spells, a spell that absolutely
 // has to be included, and the name of whomever the book should be named after.
@@ -2104,6 +2140,19 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels,
                              spell_type incl_spell, std::string owner,
                              std::string title)
+{
+    std::vector<spell_type> spells;
+    if (incl_spell != SPELL_NO_SPELL)
+        spells.push_back(incl_spell);
+    return make_book_theme_randart(book, spells, disc1, disc2,
+                                   num_spells, max_levels, owner, title);
+}
+
+bool make_book_theme_randart(item_def &book,
+                             std::vector<spell_type> incl_spells,
+                             int disc1, int disc2,
+                             int num_spells, int max_levels,
+                             std::string owner, std::string title)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -2118,7 +2167,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
     if (max_levels == -1)
-        max_levels = 100;
+        max_levels = 255;
 
     if (disc1 == 0 && disc2 == 0)
     {
@@ -2170,25 +2219,10 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
         chosen_spells[i] = SPELL_NO_SPELL;
 
+    _add_included_spells(chosen_spells, incl_spells);
+
     _get_weighted_spells(completely_random, god, disc1, disc2,
                          num_spells, max_levels, spells, chosen_spells);
-
-    if (!is_valid_spell(incl_spell))
-        incl_spell = SPELL_NO_SPELL;
-    else
-    {
-        bool is_included = false;
-        for (int i = 0; i < SPELLBOOK_SIZE; i++)
-        {
-            if (chosen_spells[i] == incl_spell)
-            {
-                is_included = true;
-                break;
-            };
-        }
-        if (!is_included)
-            chosen_spells[0] = incl_spell;
-    }
 
     std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
@@ -2253,8 +2287,13 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         max2 = max1;
 
     // Remove spells that don't fit either discipline.
-    _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2,
-                                 incl_spell);
+    _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2);
+    _add_included_spells(chosen_spells, incl_spells);
+
+    // Resort spells.
+    if (!incl_spells.empty())
+        std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
+    ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     // ... and change disc1 and disc2 accordingly.
     disc1 = 1 << max1;
