@@ -4907,12 +4907,22 @@ item_spec item_list::parse_single_spec(std::string s)
         const std::string title = replace_all_of(strip_tag_prefix(s, "title:"),
                                                 "_", " ");
 
-        const std::string spell = replace_all_of(strip_tag_prefix(s, "spell:"),
-                                                "_", " ");
-        if (!spell.empty() && spell_by_name(spell) == SPELL_NO_SPELL)
+        const std::string spells = strip_tag_prefix(s, "spells:");
+
+        std::vector<std::string> spell_list = split_string("|", spells);
+        CrawlVector &incl_spells
+            = result.props["randbook_spells"].new_vector(SV_INT);
+
+        for (unsigned int i = 0; i < spell_list.size(); ++i)
         {
-            error = make_stringf("Bad spell: %s", spell.c_str());
-            return (result);
+            std::string spell_name = replace_all_of(spell_list[i], "_", " ");
+            spell_type spell = spell_by_name(spell_name);
+            if (spell == SPELL_NO_SPELL)
+            {
+                error = make_stringf("Bad spell: %s", spell_list[i].c_str());
+                return (result);
+            }
+            incl_spells.push_back(spell);
         }
 
         const std::string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
@@ -4921,7 +4931,6 @@ item_spec item_list::parse_single_spec(std::string s)
         result.props["randbook_disc2"] = disc2;
         result.props["randbook_num_spells"] = num_spells;
         result.props["randbook_slevels"] = slevels;
-        result.props["randbook_spell"] = spell;
         result.props["randbook_title"] = title;
         result.props["randbook_owner"] = owner;
 
