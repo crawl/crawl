@@ -241,7 +241,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Book of Charms
+{   // Book of Maledictions
     SPELL_CORONA,
     SPELL_SURE_BLADE,
     SPELL_HIBERNATION,
