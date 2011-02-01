@@ -144,7 +144,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         "sacrilege",
     };
 
-    std::string antisin_text[12] = {
+    std::string virtue_text[12] = {
         "ordered",
         "harmonic",
         "lawful",
@@ -159,7 +159,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         "obedient",
     };
 
-    std::string long_antisin_text[12] =
+    std::string long_virtue_text[12] =
     {
         "order",
         "harmony",
@@ -203,7 +203,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
 
     std::string sinner = sinner_text[trits[3] + prayertype*3];
     std::string sin[2] = {sin_text[trits[6] + prayertype*3], long_sin_text[trits[6] + prayertype*3]};
-    std::string antisin[2] = {antisin_text[trits[6] + prayertype*3], long_antisin_text[trits[6] + prayertype*3]};
+    std::string virtue[2] = {virtue_text[trits[6] + prayertype*3], long_virtue_text[trits[6] + prayertype*3]};
     std::string smite[2] = {smite_text[(trits[4] + trits[5] * 3)], smote_text[(trits[4] + trits[5] * 3)]};
 
     std::string turn[4] = {"This is only here because of arrays starting from 0.", "Zin is a buggy god", "Please report this", "This isn't right at all"};
@@ -217,18 +217,18 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 2:
             turn[1] = make_stringf("The voice of Zin, pure and clear, did say that the %s...", sinner.c_str());
-            turn[2] = make_stringf("...were not %s! And hearing this, the people rose up...", antisin[0].c_str());
-            turn[3] = make_stringf("...and embraced %s, for they feared his wrath.", antisin[1].c_str());
+            turn[2] = make_stringf("...were not %s! And hearing this, the people rose up...", virtue[0].c_str());
+            turn[3] = make_stringf("...and embraced %s, for they feared his wrath.", virtue[1].c_str());
             break;
         case 3:
-            turn[1] = make_stringf("Zin spoke of the doctrine of %s, and...", antisin[1].c_str());
+            turn[1] = make_stringf("Zin spoke of the doctrine of %s, and...", virtue[1].c_str());
             turn[2] = make_stringf("...he saw the %s filled with fear, for they were...", sinner.c_str());
             turn[3] = make_stringf("%s and knew his wrath would come for them.", sin[0].c_str());
             break;
         case 4:
             turn[1] = make_stringf("And so Zin bade the %s to come...", sinner.c_str());
             turn[2] = make_stringf("...before his altar, that he may pass judgement...");
-            turn[3] = make_stringf("...upon those who are not %s.", antisin[0].c_str());
+            turn[3] = make_stringf("...upon those who are not %s.", virtue[0].c_str());
             break;
         case 5:
             turn[1] = make_stringf("To the devout, Zin provideth. From...");
@@ -238,16 +238,16 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         case 6:
             turn[1] = make_stringf("Zin saw the %s of the %s, and...", sin[1].c_str(), sinner.c_str());
             turn[2] = make_stringf("...he was displeased, for did he not say that those...");
-            turn[3] = make_stringf("...who did not become %s would be %s?", antisin[0].c_str(), smite[1].c_str());
+            turn[3] = make_stringf("...who did not become %s would be %s?", virtue[0].c_str(), smite[1].c_str());
             break;
         case 7:
-            turn[1] = make_stringf("Zin said that %s shall be the law of the land, and...", antisin[1].c_str());
+            turn[1] = make_stringf("Zin said that %s shall be the law of the land, and...", virtue[1].c_str());
             turn[2] = make_stringf("...those who turn to %s will be %s. This was fair...", sin[1].c_str(), smite[1].c_str());
             turn[3] = make_stringf("...and just, and not a voice dissented.");
             break;
         case 8:
             turn[1] = make_stringf("Damned, damned be the %s and all...", sinner.c_str());
-            turn[2] = make_stringf("...else who abandon %s! Let them...", antisin[1].c_str());
+            turn[2] = make_stringf("...else who abandon %s! Let them...", virtue[1].c_str());
             turn[3] = make_stringf("...be %s by the jurisprudence of Zin!", smite[1].c_str());
             break;
         case 9:
@@ -267,11 +267,11 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 12:
             turn[1] = make_stringf("It is just that the %s shall be %s...", sinner.c_str(), smite[1].c_str());
-            turn[2] = make_stringf("...in due time, for %s is what Zin has declared...", antisin[1].c_str());
+            turn[2] = make_stringf("...in due time, for %s is what Zin has declared...", virtue[1].c_str());
             turn[3] = make_stringf("...the law of the land, and his word is law!");
             break;
         case 13:
-            turn[1] = make_stringf("Thus the people made the covenant of %s with...", antisin[1].c_str());
+            turn[1] = make_stringf("Thus the people made the covenant of %s with...", virtue[1].c_str());
             turn[2] = make_stringf("...Zin, and all was good, for they knew that the...");
             turn[3] = make_stringf("...%s would trouble them no longer.", sinner.c_str());
             break;
@@ -292,33 +292,33 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 17:
             turn[1] = make_stringf("The law of Zin demands thee be...");
-            turn[2] = make_stringf("...%s, and that the punishment for %s...", antisin[0].c_str(), sin[1].c_str());
+            turn[2] = make_stringf("...%s, and that the punishment for %s...", virtue[0].c_str(), sin[1].c_str());
             turn[3] = make_stringf("...shall be swift and harsh!");
             break;
         case 18:
             turn[1] = make_stringf("It was then that Zin bade them...");
-            turn[2] = make_stringf("...not to stray from %s, lest...", antisin[1].c_str());
+            turn[2] = make_stringf("...not to stray from %s, lest...", virtue[1].c_str());
             turn[3] = make_stringf("...they become as damned as the %s.", sinner.c_str());
             break;
         case 19:
-            turn[1] = make_stringf("Only the %s shall be judged worthy, and...", antisin[0].c_str());
+            turn[1] = make_stringf("Only the %s shall be judged worthy, and...", virtue[0].c_str());
             turn[2] = make_stringf("...all the %s will be found wanting. Such is...", sinner.c_str());
             turn[3] = make_stringf("...the word of Zin, and such is the law!");
             break;
         case 20:
-            turn[1] = make_stringf("To those who would swear an oath of %s on my altar, I bring ye...", antisin[1].c_str());
+            turn[1] = make_stringf("To those who would swear an oath of %s on my altar, I bring ye...", virtue[1].c_str());
             turn[2] = make_stringf("...salvation. To the rest - ye %s and the...", sinner.c_str());
             turn[3] = make_stringf("...%s - the name of Zin shall be thy damnation.", sin[0].c_str());
             break;
         case 21:
             turn[1] = make_stringf("And Zin did decree that he would protect the people...");
             turn[2] = make_stringf("...from %s in all its forms, and preserve...", sin[1].c_str());
-            turn[3] = make_stringf("...them in their %s for all the days to come.", antisin[1].c_str());
+            turn[3] = make_stringf("...them in their %s for all the days to come.", virtue[1].c_str());
             break;
         case 22:
             turn[1] = make_stringf("Zin provideth for those who would...");
             turn[2] = make_stringf("...enter his holy bosom, and live...");
-            turn[3] = make_stringf("...in %s, for that is his way.", antisin[1].c_str());
+            turn[3] = make_stringf("...in %s, for that is his way.", virtue[1].c_str());
             break;
         case 23:
             turn[1] = make_stringf("Zin hath not damned the %s, but it is...", sinner.c_str());
