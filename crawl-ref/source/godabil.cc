@@ -870,7 +870,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         }
         else if (check < 10)
         {
-            if (coinflip() && mon->res_rotting() > 1)
+            if (coinflip() && mon->res_rotting() <= 1)
                 effect = ZIN_ROT;
             else
                 effect = ZIN_SILVER_CORONA;
