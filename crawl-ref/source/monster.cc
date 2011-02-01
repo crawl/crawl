@@ -5487,10 +5487,14 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             int newdam = mons_adjust_flavoured(this, beam, dam, false);
 
-            if (dam < newdam)
-                simple_monster_message(this, "'s flesh is horribly charred!");
-            else if (dam > 0)
-                simple_monster_message(this, "'s flesh is seared.");
+            if (newdam > 0)
+            {
+                std::string msg = mons_has_flesh(this) ? "'s flesh" : "";
+                msg += " is ";
+                msg += (dam < newdam) ? " is horribly charred!"
+                                      : " is seared.";
+                simple_monster_message(this, msg.c_str());
+            }
 
             // We don't have a reasonable agent to give.
             // Don't clean up the monster in order to credit properly.
