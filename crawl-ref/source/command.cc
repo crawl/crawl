@@ -774,6 +774,8 @@ static const char *targeting_help_1 =
     "<w>\"</w>: get debugging information about a portal\n"
     "<w>~</w>: polymorph monster to specific type\n"
     "<w>,</w>: bring down the monster to 1 hp\n"
+    "<w>Ctrl-B</w>: banish monster\n"
+    "<w>Ctrl-K</w>: kill monster\n"
 #endif
 ;
 

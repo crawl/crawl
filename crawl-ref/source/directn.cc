@@ -1677,6 +1677,14 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         flush_prev_message();
         break;
 
+    case CMD_TARGET_WIZARD_BANISH_MONSTER:
+        m->banish();
+        break;
+
+    case CMD_TARGET_WIZARD_KILL_MONSTER:
+        monster_die(m, KILL_YOU, NON_MONSTER);
+        break;
+
     default:
         break;
     }
