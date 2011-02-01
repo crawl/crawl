@@ -192,7 +192,7 @@ This spell reveals traps in the caster's vicinity.
 %%%%
 Dig
 
-This spell forms tunnels through unworked rock.
+This spell forms tunnels through unworked rock by liquefying it.
 %%%%
 Disintegrate
 
