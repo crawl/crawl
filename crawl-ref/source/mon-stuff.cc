@@ -1740,10 +1740,12 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_DISMISSED;
         }
 
-        if (!silent && !hard_reset)
+        int w_idx = mons->inv[MSLOT_WEAPON];
+        bool summoned_it = w_idx != NON_ITEM && mitm[w_idx].flags & ISFLAG_SUMMONED;
+
+        if (!silent && !hard_reset && !was_banished)
         {
-            int w_idx = mons->inv[MSLOT_WEAPON];
-            if (w_idx != NON_ITEM && !(mitm[w_idx].flags & ISFLAG_SUMMONED))
+            if (summoned_id)
             {
                 simple_monster_message(mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
@@ -1751,6 +1753,11 @@ int monster_die(monster* mons, killer_type killer,
             }
             else
                 killer = KILL_RESET;
+        }
+
+        if (was_banished && !summoned_id)
+        {
+            destroy_item(w_idx);
         }
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
