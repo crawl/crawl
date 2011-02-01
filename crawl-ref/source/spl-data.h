@@ -130,7 +130,7 @@ struct spell_desc
 
 {
     SPELL_DIG, "Dig",
-     SPTYP_EARTH,
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      4,
      200,
