@@ -986,7 +986,7 @@ ENDMAP
 
 NAME:   minmay_holes
 TAGS:   extra luniq_mini
-DEPTH:  D:5-, Lair
+DEPTH:  D:5-26, Lair:1-7
 KFEAT:  ^ = known shaft trap
 SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
 WEIGHT: 15
