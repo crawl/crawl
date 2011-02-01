@@ -2226,7 +2226,7 @@ static bool _do_ability(const ability_def& abil)
 
         monster* mons = monster_at(beam.target);
 
-        if (mons == NULL)
+        if (mons == NULL || !you.can_see(mons))
         {
             mpr("There is no monster there to imprison!");
             return (false);
