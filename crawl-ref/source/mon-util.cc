@@ -607,9 +607,12 @@ bool mons_has_flesh(const monster* mon)
     // 1. (12) flesh -- (the soft tissue of the body of a vertebrate:
     //    mainly muscle tissue and fat)
     // 3. pulp, flesh -- (a soft moist part of a fruit)
-    // yet I exclude sense 3 anyway but include arthropods, molluscs
-    // and even jellies.
-    return (mon->holiness() != MH_PLANT && mon->holiness() != MH_NONLIVING);
+    // yet I exclude sense 3 anyway but include arthropods and molluscs.
+    return (mon->holiness() != MH_PLANT
+            && mon->holiness() != MH_NONLIVING
+            && mons_base_char(mon->type) != 'G'  // eyes
+            && mons_base_char(mon->type) != 'J'  // jellies
+            && mons_base_char(mon->type) != '%');// cobs (plant!)
 }
 
 // Difference in speed between monster and the player for Cheibriados'
