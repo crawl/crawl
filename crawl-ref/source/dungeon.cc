@@ -6073,7 +6073,8 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
 
         maybe_bloodify_square(start);
 #ifdef WIZARD
-        env.pgrid(start) |= FPROP_HIGHLIGHT;
+        if (you.wizard)
+            env.pgrid(start) |= FPROP_HIGHLIGHT;
 #endif
         bleed_onto_floor(start, MONS_HUMAN, 150, true, false);
 
@@ -6087,7 +6088,8 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
                 maybe_bloodify_square(pos);
             }
 #ifdef WIZARD
-            env.pgrid(pos) |= FPROP_HIGHLIGHT;
+            if (you.wizard)
+                env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
 
             if (step >= 10 && one_chance_in(7))
@@ -6154,7 +6156,8 @@ static void _vitrify_wall_neighbours(const coord_def& pos, bool first)
         {
             grd(p) = static_cast<dungeon_feature_type>(grd(p) + clear_plus);
 #ifdef WIZARD
-            env.pgrid(p) |= FPROP_HIGHLIGHT;
+            if (you.wizard)
+                env.pgrid(p) |= FPROP_HIGHLIGHT;
 #endif
             // Always continue vitrification if there are adjacent
             // walls other than continuing in the same direction.
@@ -6191,7 +6194,8 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
 
         grd(pos) = static_cast<dungeon_feature_type>(grd(pos) + clear_plus);
 #ifdef WIZARD
-        env.pgrid(pos) |= FPROP_HIGHLIGHT;
+        if (you.wizard)
+            env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
         _vitrify_wall_neighbours(pos, true);
     }

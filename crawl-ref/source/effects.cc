@@ -1658,8 +1658,9 @@ void change_labyrinth(bool msg)
 
 #ifdef WIZARD
     // Remove old highlighted areas to make place for the new ones.
-    for (rectangle_iterator ri(1); ri; ++ri)
-        env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
+    if (you.wizard)
+        for (rectangle_iterator ri(1); ri; ++ri)
+            env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
 #endif
 
     // How many switches we'll be doing.
@@ -1761,9 +1762,12 @@ void change_labyrinth(bool msg)
                  (int) old_grid, c.x, c.y, (int) grd(p), p.x, p.y);
         }
 #ifdef WIZARD
-        // Highlight the switched grids.
-        env.pgrid(c) |= FPROP_HIGHLIGHT;
-        env.pgrid(p) |= FPROP_HIGHLIGHT;
+        if (you.wizard)
+        {
+            // Highlight the switched grids.
+            env.pgrid(c) |= FPROP_HIGHLIGHT;
+            env.pgrid(p) |= FPROP_HIGHLIGHT;
+        }
 #endif
 
         // Shift blood some of the time.
