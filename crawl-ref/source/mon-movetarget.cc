@@ -361,8 +361,9 @@ bool find_siren_water_target(monster* mon)
     monster_pathfind mp;
 #ifdef WIZARD
     // Remove old highlighted areas to make place for the new ones.
-    for (rectangle_iterator ri(1); ri; ++ri)
-        env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
+    if (you.wizard)
+        for (rectangle_iterator ri(1); ri; ++ri)
+            env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
 #endif
 
     if (mp.init_pathfind(mon, best_target))
@@ -372,8 +373,9 @@ bool find_siren_water_target(monster* mon)
         if (!mon->travel_path.empty())
         {
 #ifdef WIZARD
-            for (unsigned int i = 0; i < mon->travel_path.size(); i++)
-                env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
+            if (you.wizard)
+                for (unsigned int i = 0; i < mon->travel_path.size(); i++)
+                    env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
 #endif
 #ifdef DEBUG_PATHFIND
             mprf("Found a path to (%d, %d) with %d surrounding water squares",
