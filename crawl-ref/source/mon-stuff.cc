@@ -1610,8 +1610,7 @@ int monster_die(monster* mons, killer_type killer,
 
     const bool mons_reset(killer == KILL_RESET || killer == KILL_DISMISSED);
 
-    bool fake_abjuration = (mons->has_ench(ENCH_FAKE_ABJURATION)
-                     && mons->get_ench(ENCH_FAKE_ABJURATION).duration == -1);
+    bool fake_abjuration = (mons->has_ench(ENCH_FAKE_ABJURATION));
 
     const bool submerged     = mons->submerged();
 
