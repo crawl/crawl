@@ -1744,7 +1744,7 @@ int monster_die(monster* mons, killer_type killer,
 
         if (!silent && !hard_reset && !was_banished)
         {
-            if (summoned_id)
+            if (summoned_it)
             {
                 simple_monster_message(mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
@@ -1754,7 +1754,7 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
 
-        if (was_banished && !summoned_id)
+        if (was_banished && !summoned_it)
         {
             destroy_item(w_idx);
         }
