@@ -1556,6 +1556,9 @@ kmons ("    1 = col:silver patrolling wizard name:" .. string.gsub(wizname, " ",
          .. " quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution"
          .. " | dagger ego:freezing")
 }}
+MARKER:     1 = lua:MonPropsMarker:new {description="This strange wizard has " \
+            .. "attained mastery over clouds, and his mystic gestures are as " \
+            .. "deft as they are foreboding.\n"}
 KMONS:      * = w:5 vapour / w:20 air elemental
 SUBST:      . = .:120 *
 MARKER:     ! = lua:fog_machine { \
@@ -1727,6 +1730,9 @@ kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "
               .." spells:call_imp;summon_demon;haste;hellfire;blink_away;throw_flame"
               .." hd:20 hp:150 ; demon blade . robe")
 }}
+MARKER:     1 = lua:MonPropsMarker:new {description="A mighty spellcaster, " \
+            .. "wreathed in arcane energies, and muttering the most profane incantations " \
+            .. "you might ever have heard.\n"}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      i = rod of demonology / ring of fire / ring of protection from fire /\
             amulet of conservation / scroll of torment / scroll of summoning /\
