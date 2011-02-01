@@ -1,0 +1,210 @@
+Spell schools
+=============
+
+With recent changes to the spell schools, it has become important to
+specifically state what is and what is not included under the purview of a
+specific school.
+
+This document is essentially vague in order to distill the complete "schoolness"
+of the individual schools. It uses specific examples of things that would and
+would not be included in a school to explain them.
+
+Of course, as Crawl is fluid, so too are the schools fluid: these are not
+specific rules inasmuch as they are guidelines. They will be subject to change,
+to argument, to discussion and to disagreements.
+
+In summary: we should paint the bike shed green.
+
+None
+====
+
+This is a school reserved for spells with no type.
+
+Conjuration
+===========
+
+Conjuration is the act of producing something from nothing.
+
+This includes: creation of projectiles (such as Magic Dart), creation of clouds
+(such as Mephitic Cloud), and all instances where something is created from
+nothing.
+
+This does not include: transmutations (creating something from something else),
+or spells that are specifically flavoured so as not to be conjurations.
+
+Hexes
+=====
+
+Hexes are spells that affect things and monsters. In some instances these
+effects may be primarily negative, but in others they could be seen as
+beneficial.
+
+This includes: slowing monsters, paralysing monsters, confusing monsters, etc.
+
+This specifically includes: weapon branding spells.
+
+Charms
+======
+
+Charms are things that positively affect yourself. In most instances these
+effect are primarily positive.
+
+This includes: hasting yourself, becoming invisible, extending current status
+effects, berserk rage, etc.
+
+Fire
+====
+
+All spells involving fire of any kind.
+
+This includes: conjurations of fire, spells involving heat or burning, etc.
+
+Ice
+===
+
+All spells involving ice or cold of any kind.
+
+This includes: conjurations of ice, spells involving freezing or cooling, etc.
+
+Transmutation
+=============
+
+Transmutation is the act of converting one thing into another thing. This may
+also include the fundamental change of the state of a thing, whether or not that
+change is permanent.
+
+This includes: converting your body into another form, converting corpses into
+potions, polymorphing creatures into other creatures, altering yourself by
+giving mutations.
+
+This specifically includes: the act of Digging and Liquefaction: converting
+parts of the ground (or walls) into liquid.
+
+This specifically excludes: branding spells: You are not changing the
+fundamental state of the weapon. It also excludes explosive deconstruction
+spells, such as Shatter, Sandblast and Lee's Rapid Deconstruction: you are
+breaking the object into pieces, rather than transmuting it into pieces. The
+fundamental state of the object remains the same -- if you could put all the
+pieces back together.
+
+Caveat: there was a trend towards including the Transmutation spell in most
+schools relating to Earth. Think very carefully about whether a new Earth spell
+belongs in this school before adding it.
+
+Necromancy
+==========
+
+Necromancy is primarily the act of talking to the dead for divinatory purposes.
+In the Crawl mythos, it is any type of magic that involves death, undeath,
+corpses, causing unholy pain, or the act of draining life force, and most
+unholiness in general.
+
+This includes: all spells relating to the raising of corpses as undead, be they
+as zombies, spectral creatures, simulacra or skeletons; bolts of draining, pain,
+vampiric draining, revivification; fulsome distillation; etc.
+
+This specifically includes: regeneration. The flavour of this spell is that your
+wounds are reanimated by necromantic magic. This act is considered unholy by its
+very nature.
+
+This specifically excludes: Fedhas's ability to hasten the decay of corpses.
+This is a) a divine act, though not specifically a holy one, and b) flavoured as
+though the natural process of decay has been quickened, rather than the corpse
+being unnaturally decayed.
+
+Summoning
+=========
+
+Summoning involves the magical transportation of creatures from another place to
+here. This is specifically not the creation of these beings, as when they are
+"killed" they return to where they came from, and if the summoning finishes
+while they are still alive, they also return to where they came from.
+
+This "place" is undefined as far as Crawl's mythos is concerned. Indeed, it
+varies from spell to spell: some of them specifically summon creatures from the
+Hells (such as demons and devils: this is historically accurate as far as
+Demonology and the summoning of devils is concerned), or from the Abyss (as per
+the flavour of Summon Horrible Things), whereas others are non-specific.
+
+This specifically includes: all monsters that are not considered to be "here",
+that is, all monsters that have been brought here from another place.
+
+This specifically excludes: monsters that have been transmuted from something.
+In these instances the monsters are either short-formed (ie, they revert back to
+their previous form, or to nothing), or short-lived (ie, they die shortly after
+being created).
+
+All summoned monsters are Abjurable; all transmuted monsters are not.
+
+While Summoning is currently limited to the summoning of monsters, it is not
+far-fetched to believe that it could be extended to summons of other types. This
+could even be the summoning of specific areas of land (such as a section of the
+Swamp, as proposed in the 'Summon Swamp' spell).
+
+Divination
+==========
+
+Divination is the act of learning something through magical means. In these
+instances this information would be the location of a monster, or information
+about that monster, that is not otherwise attainable through natural means, or
+that is specifically obtained through an act of divination.
+
+There are no player-learnable Divination spells. The skill itself no longer
+exists, though the spell-type flag does for purposes of cards, God abilities,
+etc.
+
+Translocation
+=============
+
+This is the act of moving something through magical means, sometimes via
+portals. This may specifically be described as indirect movement via magic,
+wherein moving something from point A to point C is done by magic, avoiding
+interaction with point B, as opposed to direct, continuous movement, which goes
+from point A, to point B, finally to point C.
+
+This includes teleportation, the indirect movement from one place to another, and
+blinking, which is the same but for shorter distances. It also includes the
+creation of portals of any description, such as banishment (the creation of a
+portal to the Abyss), Malign Gateway (the creation of a portal to an undefined
+location), and Portal Projectile (the creation of a portal to a specific, nearby
+location).
+
+This also specifically includes spells which cause things to be continuously
+moved from one location to another, such as Apportation, though in this instance
+the spell is not specifically flavoured as such.
+
+Poison
+======
+
+All spells involving poison of any kind.
+
+This includes: the poisoning of weapons, the creation of poisoned projectiles
+(in combination with the Conjuration school), or anything involving poison.
+
+This specifically excludes: acid and acid-related spells.
+
+Earth
+=====
+
+All spells involving the earth specifically as an element.
+
+This includes: spells that affect the earth or earth-based substances.
+
+Air
+===
+
+All spells involving the air specifically as an element.
+
+This includes: the act of levitation, the ability to repel missiles (presumably
+by manipulating air flow, though not currently flavoured as such), the creation
+of clouds (in combination with the relevant element and the school of
+Conjurations), etc.
+
+This also specifically includes electricity and electrical forces.
+
+Holy
+====
+
+These spells specifically involve holy acts, usually defined within the scope of
+the "good" Gods (Zin, Elyvilon, The Shining One). These spells are currently
+only available as monster spells.
