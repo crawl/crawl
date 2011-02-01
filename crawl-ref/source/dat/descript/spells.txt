@@ -224,7 +224,7 @@ This spell tries to lower its target's metabolic rate, inducing hypothermic hibe
 %%%%
 Evaporate
 
-This spell heats a potion causing it to explode into a large cloud when thrown. The potion must be thrown immediately, as part of the spell, for this to work.
+This spell heats a potion to the point that it explodes when thrown. The resultant steam is then transmuted into a large cloud, the type of which varies from potion to potion. Of course, the volatile potion must be thrown immediately for the spell to work.
 %%%%
 Excruciating Wounds
 
