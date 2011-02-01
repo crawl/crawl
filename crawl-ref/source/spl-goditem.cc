@@ -733,7 +733,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             // Make sure we have a legitimate tile.
             proceed = false;
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
 
             if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
@@ -764,7 +764,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         // Make sure we have a legitimate tile.
         proceed = false;
         for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                 proceed = true;
 
         if (proceed)
