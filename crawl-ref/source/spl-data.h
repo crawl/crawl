@@ -1864,7 +1864,7 @@ struct spell_desc
 
 {
     SPELL_SANDBLAST, "Sandblast",
-     SPTYP_TRANSMUTATION | SPTYP_EARTH,
+     SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      50,
