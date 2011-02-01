@@ -373,6 +373,7 @@ bool mons_is_stationary(const monster* mon);
 bool mons_class_is_firewood(int mc);
 bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
+bool mons_has_flesh(const monster* mon);
 
 bool herd_monster_class(int mc);
 bool herd_monster(const monster * mon);
