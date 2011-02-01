@@ -347,7 +347,6 @@ bool mons_is_fleeing_sanctuary(const monster* m);
 bool mons_was_seen(const monster* m);
 bool mons_is_known_mimic(const monster* m);
 bool mons_is_unknown_mimic(const monster* m);
-bool mons_is_skeletal(int mc);
 bool mons_class_is_slime(int mc);
 bool mons_is_slime(const monster* mon);
 bool mons_class_is_plant(int mc);
