@@ -35,9 +35,12 @@ or spells that are specifically flavoured so as not to be conjurations.
 Hexes
 =====
 
-Hexes are spells that affect things and monsters. In some instances these
-effects may be primarily negative, but in others they could be seen as
-beneficial.
+Hexes are spells that affect things and monsters (usually negatively). They
+never do direct damage nor change fundamental state of anything.
+
+If we had spells that bestow a curse on someone or something, make an item
+zap anyone who touched it, enlarge a person or give him a nasty itch, they
+would be all hexes. Beguiling and illusions also belong here.
 
 This includes: slowing monsters, paralysing monsters, confusing monsters, etc.
 
@@ -46,8 +49,12 @@ This specifically includes: weapon branding spells.
 Charms
 ======
 
-Charms are things that positively affect yourself. In most instances these
-effect are primarily positive.
+Charms are things that positively affect yourself, having amulet ("charm")-like
+effects. They all have a lasting effect, and never affect anyone else except
+for direct contact with the warded person (RoF, RMsl, ...).
+
+These are wards or enhancements: give you a resistance, let you move or heal
+faster, let you have more control on magic affecting you, make you stronger.
 
 This includes: hasting yourself, becoming invisible, extending current status
 effects, berserk rage, etc.
