@@ -720,13 +720,16 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         mon = monster_at(where);
         targname = mon->name(DESC_NOCAP_THE);
         bool success = true;
+        bool none_vis = true;
 
         for (adjacent_iterator ai(where); ai; ++ai)
         {
             // The tile is occupied.
-            if (actor_at(*ai))
+            if (actor *fatass = actor_at(*ai))
             {
                 success = false;
+                if (you.can_see(fatass))
+                    none_vis = false;
                 break;
             }
 
@@ -739,13 +742,16 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
             {
                 success = false;
+                none_vis = false;
                 break;
             }
         }
 
         if (!success)
         {
-            mprf("You need more space to imprison %s.", targname.c_str());
+            mprf(none_vis ? "You briefly glimpse something next to %s."
+                          : "You need more space to imprison %s.",
+                 targname.c_str());
             return (false);
         }
 
