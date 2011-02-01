@@ -334,7 +334,7 @@ This spell throws a crackling sphere of destructive energy.
 %%%%
 Leda's Liquefaction
 
-This spell liquefies the ground around the caster by shaking it rapidly, making it difficult to move through. Any attempt to move through the liquefied ground will be a very slow one.
+This spell liquefies the ground around the caster, making it difficult to move through. Any attempt to move through the liquefied ground will be a very slow one.
 %%%%
 Lee's Rapid Deconstruction
 
