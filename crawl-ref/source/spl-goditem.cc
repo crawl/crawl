@@ -697,7 +697,7 @@ bool detect_curse(int scroll, bool suppress_msg)
     return (true);
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool force_full)
+static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -710,14 +710,15 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
     };
 
     bool proceed;
+    monster *mon;
+    std::string targname;
 
-    // We need to get this now because we won't be able to see
-    // the monster once the walls go up!
-    monster* mon = monster_at(where);
-    std::string target = mon->name(DESC_NOCAP_THE);
-
-    if (force_full)
+    if (zin)
     {
+        // We need to get this now because we won't be able to see
+        // the monster once the walls go up!
+        mon = monster_at(where);
+        targname = mon->name(DESC_NOCAP_THE);
         bool success = true;
 
         for (adjacent_iterator ai(where); ai; ++ai)
@@ -742,14 +743,9 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
             }
         }
 
-        if (!success && !force_full)
+        if (!success)
         {
-            mpr("Half-formed walls emerge from the floor, then retract.");
-            return (false);
-        }
-        if (!success && force_full)
-        {
-            mprf("You need more space to imprison %s.", target.c_str());
+            mprf("You need more space to imprison %s.", targname.c_str());
             return (false);
         }
 
@@ -758,7 +754,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!force_full && one_chance_in(pow / 5))
+        if (!zin && one_chance_in(pow / 5))
             continue;
 
         // The tile is occupied.
@@ -787,9 +783,9 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
             // Actually place the wall.
 
-            // Currently this means Zin, so silver walls.
-            if (force_full)
+            if (zin)
             {
+                // Make the walls silver.
                 grd(*ai) = DNGN_METAL_WALL;
                 env.grid_colours(*ai) = LIGHTGREY;
 
@@ -809,10 +805,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
     if (number_built > 0)
     {
-        if (!force_full)
+        if (!zin)
             mpr("Walls emerge from the floor!");
-        else if (force_full)
-            mprf("Zin imprisons %s with walls of pure silver!", target.c_str());
+        else
+            mprf("Zin imprisons %s with walls of pure silver!", targname.c_str());
 
         you.update_beholders();
         you.update_fearmongers();
