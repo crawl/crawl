@@ -133,6 +133,19 @@ function tutorial_msg4.forget_spell ()
                 .. "the book will be destroyed, so you'll need other spellbooks "
                 .. "to learn new spells."
 
+    crawl.mesclr(true)
+    crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg4.memorise2 ()
+    local text = "Again, memorise a new spell with "
+                 .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on the memorisation tab "
+                    .. "and selecting the spell tile"
+    end
+    text = text .. "."
+
     return tutorial_message(text)
 end
 
@@ -172,7 +185,7 @@ end
 function tutorial_msg4.exit ()
     -- A single screen recapping all commands.
 
-    local text = "<yellow>Commands</yellow>\n"
+    local text = "<yellow>Spellcasting commands</yellow>\n"
                  .. "  " .. tutorial_get_cmd("CMD_MEMORISE_SPELL") .. "  learn a new spell\n"
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. "  check spell proficiency\n"
                  .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
@@ -180,6 +193,8 @@ function tutorial_msg4.exit ()
                  .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest to regain magic points\n"
                  .. "  " .. tutorial_get_cmd("CMD_SHOUT") .. "  order allies\n"
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
+                 .. "\n<yellow>Other commands</yellow>\n"
+                 .. "  " .. tutorial_get_cmd("CMD_REMOVE_ARMOUR") .. "  take off armour\n"
     text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
     return crawl.endgame(text)
@@ -266,11 +281,11 @@ KFEAT:   B = .
 COLOUR:  dB = blue
 FTILE:   dB = tutorial_pad
 ITEM:    randbook numspells:1 spells:summon_small_mammals title:Simple_Steps_to_Summoning owner:player
-MONS:    hobgoblin ; whip ego:none . shield . ring mail race:none
-MONS:	 rat
+MONS:    hobgoblin ; whip ego:none . shield not_cursed . ring mail race:none not_cursed
+MONS:    rat
 MONS:    goblin
 # FIXME: Put this in the epilogue.
-MARKER:  d = lua:tutorial_msg4.forget_spell()
+MARKER:  d = lua:tutorial_msg4.memorise2()
 MARKER:  A = lua:tutorial_msg4.order_allies()
 MARKER:  B = lua:tutorial_msg4.heavy_armour()
 MARKER:  } = lua:tutorial_msg4.tutorial_end()

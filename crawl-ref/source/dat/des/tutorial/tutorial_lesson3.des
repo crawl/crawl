@@ -1,9 +1,7 @@
 ##############################################
 # Tutorial map 3: Movement and exploration   #
 ##############################################
-#
-# TODO:
-#  * customize shop contents
+
 {{
 require("clua/tutorial.lua")
 
@@ -62,7 +60,7 @@ end
 
 function tutorial_msg3.scroll_noautopickup ()
     local text = "Autopickup doesn't happen if there's a monster around. "
-                 .. "You can pick up this scroll now with "
+                 .. "You can pick up these scrolls now with "
                  .. tutorial_get_cmd("CMD_PICKUP")
 
     if crawl.is_tiles() then
@@ -119,12 +117,14 @@ end
 -- Lua code for level 2.
 -----------------------------------------------------------
 function tutorial_msg3.command_help ()
-    return tutorial_message("If the many commands are too confusing, you can also look them up "
-                            .. "in the command help ("
-                            .. tutorial_get_cmd("CMD_DISPLAY_COMMANDS")
-                            .. "<w>?</w>).\n"
-                            .. "Also, remember: You can reread old messages with "
-                            .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. ".")
+    local text = "If the many commands are too confusing, you can also look them up "
+                 .. "in the command help ("
+                 .. tutorial_get_cmd("CMD_DISPLAY_COMMANDS")
+                 .. "<w>?</w>).\n"
+                 .. "Also, remember: You can reread old messages with "
+                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
+    crawl.mesclr(true)
+    crawl.mpr(text, "tutorial")
 end
 
 function tutorial_msg3.potion ()
@@ -239,7 +239,7 @@ function tutorial_msg3.wand_digging ()
     if crawl.is_tiles() then
         text = text .. "or <white>mouseover</white>/<white>rightclick</white> "
     end
-    text = text .. "to check the wall types. \n"
+    text = text .. "to check the wall types. "
                 .. "(You can look up the direction keys in the command help help with <w>??</w>.)"
 
     return tutorial_message(text)
@@ -342,7 +342,7 @@ ITEM:    dagger mundane cursed
 ITEM:    scroll of remove curse q:2
 ITEM:    scimitar race:none ego:venom not_cursed
 MONS:    goblin ; nothing
-MONS:    rat, giant cockroach, gnoll ; nothing
+MONS:    rat, giant cockroach, hobgoblin ; nothing
 MARKER:  d = lua:tutorial_msg3.armour()
 MARKER:  e = lua:tutorial_msg3.autopickup()
 MARKER:  f = lua:tutorial_msg3.weapon_reminder()
@@ -400,13 +400,15 @@ ORIENT:  encompass
 KFEAT:   ^ = needle trap
 KFEAT:   ABCD = .
 COLOUR:  ABCDdefg = blue
-COLOUR:  .1234 = brown
-FTILE:   .{})^1234 = floor_swamp, t = floor_grass
+COLOUR:  .1234h = brown
+FTILE:   .{})^1234h = floor_swamp, t = floor_grass
 FTILE:   ABCDdefg = tutorial_pad
 ITEM:    potion of healing q:1
 ITEM:    meat ration q:50
 ITEM:    ring of levitation
 ITEM:    cloak unrand:ratskin_cloak
+# Some more stones, in case that goblin was under-equipped.
+ITEM:    stone q:20
 MONS:    goblin ; sling ego:none not_cursed . stone q:30 . dagger ego:none not_cursed
 MONS:    jackal
 MONS:    kobold ; dart ego:none q:10
@@ -440,7 +442,7 @@ tttttttttttttt..tttttttttttttttttttttttttwwwwW...ttw
 ttttttttttttt...t..ttttttttttttttttttttwwwwwt..1tttt
 ttttttttttt...f.2.ttt.tttttttttttttttwwwwttttt...ttt
 tttttttttt....2..e..2..ttttttttttttwwwwwwwtttttt.ttt
-ttttttttt..wwwwww....t2.ttttttttwwwwwwwttttttttt.ttt
+ttttttttt..wwwwww....t2.ttttttttwwwwwwwttttttttthttt
 ttttttttt.wwwwwwwwW2..ttttwwwwwwwwwwwtttttttttt.tttt
 wtttttttwwwwwwwwwwwW.WwwwwwwtwwwwwtttttttttttttAtttt
 wwwtttttwwww3..wwwwwWWWwwwwttttttttttttttttttttt.ttt
@@ -473,17 +475,16 @@ COLOUR:  ' = red
 KFEAT:   S = general shop use_all ; \
          potion of healing | potion of heal wounds |  potion of heal wounds q:2 | potion of might | \
          wand of paralysis | ring mail | buckler ego:none | ring of slaying | scroll of enchant weapon II
-ITEM:    gold q:25
-ITEM:    wand of fire charges:9
+ITEM:    gold q:40
+ITEM:    wand of flame charges:9
 ITEM:    wand of digging charges:15
 ITEM:    gold q:180
 ITEM:    amulet of inaccuracy mundane not_cursed
 ITEM:    scroll of identify q:3
 ITEM:    scroll of enchant armour q:3
 ITEM:    scroll of recharging q:3
-SHUFFLE: hij
+SHUFFLE: ijk
 MONS:    gnoll ; spear ego:none | mace ego:none
-#MONS:    ogre ; giant club ego:none
 MONS:    imp
 MONS:    gnoll ; flail ego:none | spiked flail ego:none | halberd ego:none . \
          leather armour ego:fire_resistance | ring mail ego:fire_resistance
@@ -529,17 +530,17 @@ XXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX.XXXX...XXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXX......e.XXXXXXXXX.ijk.XXXXXXXXXXXXXXXX.].}.).X
 XXXXXXXXXXXX...XXXXXXXXX.....XXXXXXXXXXXXXXXX..4.4..X
-XXXXXXXXXXXXX+XXXXXXXXXXXXBXXXXXXXXXXXXXXXXXX...3...X
+XXXXXXXXXXXXX+XXXXXXXXXXXXBXXXXXXXXXXXXXXXXXX...2...X
 XXXXXXXXXXXXX.XXXXXXXXXXX...XXXXXXXXXXXXXXXXX.3...3.X
-XXXXXXXXXXXXX.XXXXXXXvXX..h..XXvXXXXXXXXXXXXX...2...X
+XXXXXXXXXXXXX.XXXXXXXvXX..h..XXvXXXXXXXXXXXXX...3...X
 XXXXXXXXXXXXX.XXXXXXXXvXXXxXXXvXXXXXXXXXXXXXXXXX+XXXX
 XXXXXXXXXXXXX.XXXXXXXXXvXXxXXvXXXXXXXXXXXXXXXXXX.XXXX
 XXXXXXXXXXXXX.XXXXXXXXXXvXxXvXXXXXXXXXXXXXXXXXXXCXXXX
 XXXXXXXXXXX.....XXXXXXXX.'''.XXXXXXXXXXXXXXXXXXX.XXXX
 XXXXXXXXXXX..1............f........XXXXXXXXXXXXX.XXXX
 XXXXXXXXXXX.....XXXXXXXX.'''.XXXXXX..XXXXXXXXXX.XXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXbXcXaXXXXXXXX.XXXXXXXXX.XXXXX
-XXXXXXXXXXXXXXXXXXXXXXXbXXcXXaXXXXX..XXXXXXXXXX.XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXbXcXxXXXXXXXX.XXXXXXXXX.XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXbXXcXXxXXXXX..XXXXXXXXXX.XXXXX
 XXXXXXXXXXXXXXXXXXXXXXbXXXcXXX.....XXXXXXXXXXXX.XXXXX
 XXXXXXXXXXXXXXXXXXXXXbXXXXcXXG$$T...............XXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXX$$g$..XXXXXXXXXXXXXXXXXX
