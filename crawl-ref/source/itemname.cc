@@ -120,12 +120,14 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    // note: only the 32 lower bits of monster flags are passed,
-    // as we don't have support for 64 bit props
-    iflags_t corpse_flags;
+    monster_flag_type corpse_flags;
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
-        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
+#if TAG_MAJOR_VERSION == 32
+        && !(((corpse_flags = (int64_t)props[CORPSE_NAME_TYPE_KEY])
+#else
+        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
+#endif
                & MF_NAME_SPECIES)
              && !(corpse_flags & MF_NAME_DEFINITE))
              && !(corpse_flags & MF_NAME_SUFFIX)
@@ -3381,7 +3383,11 @@ std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
         return ("");
 
     if (name_type != NULL)
-        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int();
+#if TAG_MAJOR_VERSION == 32
+        *name_type = (int64_t)corpse.props[CORPSE_NAME_TYPE_KEY];
+#else
+        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
+#endif
 
     return (corpse.props[CORPSE_NAME_KEY].get_string());
 }
