@@ -424,6 +424,11 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              are for weird internal uses (like the shoalhut vaults).
           * "unrand": Don't pick this vault randomly by DEPTH.  Can still be
              picked by tag or PLACE.
+          * "transparent": Marks the vault as potentially passable for the
+             purposes of level connectivity.  By default, vaults are considered
+             non-passable regardless of their contents.  With this tag, the
+             actual terrain of the vault affects its passability as seen by the
+             dungeon builder.
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
           (FLAGS just controls how the vault is placed); should only be used
