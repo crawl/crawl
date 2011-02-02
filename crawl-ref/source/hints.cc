@@ -192,8 +192,9 @@ void pick_hints(newgame_def* choice)
 
         switch (keyn)
         {
-        case 'X':
         CASE_ESCAPE
+            game_ended();
+        case 'X':
             cprintf("\nGoodbye!");
             end(0);
             return;
