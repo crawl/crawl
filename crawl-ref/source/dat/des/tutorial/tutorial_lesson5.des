@@ -159,22 +159,22 @@ MARKER:  E = lua:tutorial_msg5.burn_book()
 MARKER:  F = lua:tutorial_msg5.berserk()
 MARKER:  H = lua:tutorial_msg5.exhaustion()
 MARKER:  I = lua:tutorial_msg5.berserk2()
-MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  onclimb = "tutorial_msg5.exit" }
-MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  onclimb = "tutorial_msg5.exit" }
-MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  [ = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  onclimb = "tutorial_msg5.exit" }
 MARKER:  } = lua:tutorial_msg5.tutorial_end()
 MARKER:  ) = lua:tutorial_msg5.tutorial_end()
 MARKER:  ] = lua:tutorial_msg5.tutorial_end()
-MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg5.exit" }
-MARKER:  ) = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg5.exit" }
-MARKER:  ] = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg5.exit" }
 epilogue{{

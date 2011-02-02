@@ -255,11 +255,11 @@ MARKER:  E = lua:tutorial_msg2.wait()
 MARKER:  F = lua:tutorial_msg2.resting_reminder()
 MARKER:  G = lua:tutorial_msg2.compare_monster_desc()
 MARKER:  } = lua:tutorial_msg2.downstairs()
-MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  onclimb = "tutorial_msg2.exit" }
-MARKER:  ( = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  onclimb = "tutorial_msg2.exit" }
-MARKER:  [ = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  [ = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  onclimb = "tutorial_msg2.exit" }
 epilogue{{
   tutorial_msg2.start()
@@ -333,13 +333,13 @@ MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 10, \
 MARKER:  } = lua:tutorial_msg2.tutorial_end()
 MARKER:  ) = lua:tutorial_msg2.tutorial_end()
 MARKER:  ] = lua:tutorial_msg2.tutorial_end()
-MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg2.exit" }
-MARKER:  ) = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg2.exit" }
-MARKER:  ] = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg2.exit" }
 epilogue{{
