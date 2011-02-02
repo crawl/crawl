@@ -1740,11 +1740,16 @@ int monster_die(monster* mons, killer_type killer,
         }
 
         int w_idx = mons->inv[MSLOT_WEAPON];
-        bool summoned_it = w_idx != NON_ITEM && mitm[w_idx].flags & ISFLAG_SUMMONED;
+        ASSERT(w_idx != NON_ITEM);
+
+        // XXX: This can probably become mons->is_summoned(): there's no
+        // feasible way for a dancing weapon to "drop" it's weapon and somehow
+        // gain a summoned one, or vice versa.
+        bool summoned_it = mitm[w_idx].flags & ISFLAG_SUMMONED;
 
         if (!silent && !hard_reset && !was_banished)
         {
-            if (summoned_it)
+            if (!summoned_it)
             {
                 simple_monster_message(mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
@@ -1754,10 +1759,11 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
 
-        if (was_banished && !summoned_it)
+        if (was_banished && !summoned_it && !hard_reset)
         {
             if (is_unrandom_artefact(mitm[w_idx]))
                 set_unique_item_status(mitm[w_idx], UNIQ_LOST_IN_ABYSS);
+
             destroy_item(w_idx);
         }
     }
