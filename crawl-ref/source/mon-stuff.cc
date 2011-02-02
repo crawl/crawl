@@ -2268,7 +2268,6 @@ int monster_die(monster* mons, killer_type killer,
                 if (!mons->is_summoned())
                 {
                     drop_items = false;
-                    was_banished = true;
                 }
                 break;
             }
@@ -2277,7 +2276,6 @@ int monster_die(monster* mons, killer_type killer,
             mons->flags |= MF_BANISHED;
             mons->set_transit(level_id(LEVEL_ABYSS));
             in_transit = true;
-            was_banished = true;
             drop_items = false;
             mons->firing_pos.reset();
             // Make monster stop patrolling and/or travelling.
@@ -2411,7 +2409,7 @@ int monster_die(monster* mons, killer_type killer,
                                  YOU_KILL(killer) || pet_kill);
     }
 
-    if (!wizard && !submerged)
+    if (!wizard && !submerged && !was_banished)
         _monster_die_cloud(mons, !mons_reset && !fake_abjuration, silent, summoned);
 
     int corpse = -1;
