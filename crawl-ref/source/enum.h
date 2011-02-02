@@ -82,7 +82,7 @@ enum ability_type
     // Xom, Vehumet = 90
     // Okawaru
     ABIL_OKAWARU_HEROISM = 100,
-    ABIL_OKAWARU_HASTE,
+    ABIL_OKAWARU_FINESSE,
     // Makhleb
     ABIL_MAKHLEB_MINOR_DESTRUCTION = 110,
     ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
@@ -1337,6 +1337,7 @@ enum duration_type
     DUR_TORNADO,
     DUR_LIQUEFYING,
     DUR_HEROISM,
+    DUR_FINESSE,
     NUM_DURATIONS
 };
 

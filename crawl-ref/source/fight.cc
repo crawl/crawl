@@ -4134,6 +4134,15 @@ void melee_attack::player_apply_attack_delay()
 {
     final_attack_delay = player_calc_attack_delay().roll();
 
+    if (you.duration[DUR_FINESSE])
+    {
+        ASSERT(!you.duration[DUR_BERSERK]);
+        // Need to undo haste by hand.
+        if (you.duration[DUR_HASTE])
+            you.time_taken = haste_mul(you.time_taken);
+        you.time_taken /= 2;
+    }
+
     you.time_taken =
         std::max(2, div_rand_round(you.time_taken * final_attack_delay, 10));
 

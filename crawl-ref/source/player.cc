@@ -3753,7 +3753,13 @@ static void _display_attack_delay()
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     // We could also compute the variance if desired.
-    const int avg = static_cast<int>(round(10 * delay.expected()));
+    int avg = static_cast<int>(round(10 * delay.expected()));
+
+    // Haste wasn't counted here, but let's show finesse.
+    // Can't be done in the above function because of interactions with
+    // haste and caps.
+    if (you.duration[DUR_FINESSE])
+        avg = std::max(20, avg / 2);
 
     std::string msg = "Your attack speed is " + _attack_delay_desc(avg) + ".";
 
