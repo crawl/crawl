@@ -230,7 +230,7 @@ MARKER:  f = lua:tutorial_msg4.spell_success()
 MARKER:  S = lua:tutorial_msg4.evaporate()
 MARKER:  D = lua:tutorial_msg4.aiming_clouds()
 MARKER:  h = lua:tutorial_msg4.spell_hunger()
-MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  onclimb = "tutorial_msg4.exit" }
 epilogue{{
   tutorial_msg4.start()
@@ -290,13 +290,13 @@ MARKER:  B = lua:tutorial_msg4.heavy_armour()
 MARKER:  } = lua:tutorial_msg4.tutorial_end()
 MARKER:  ) = lua:tutorial_msg4.tutorial_end()
 MARKER:  ] = lua:tutorial_msg4.tutorial_end()
-MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg4.exit" }
-MARKER:  ) = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg4.exit" }
-MARKER:  ] = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg4.exit" }
 epilogue{{

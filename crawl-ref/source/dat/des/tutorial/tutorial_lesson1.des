@@ -269,10 +269,10 @@ MARKER:  F = lua:tutorial_msg.autoexplore()
 MARKER:  H = lua:tutorial_msg.exclusion()
 MARKER:  I = lua:tutorial_msg.autoexplore_announce()
 MARKER:  [ = lua:tutorial_msg.tutorial_end()
-MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson1", \
                                  onclimb = "tutorial_msg.exit" }
 MARKER:  [ = lua:one_way_stair { desc = "exit from the tutorial", \
-                                 dst  = "tutorial_basic1", \
+                                 dst  = "tutorial_lesson1", \
                                  onclimb = "tutorial_msg.exit" }
 MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
