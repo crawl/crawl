@@ -42,10 +42,12 @@ Terrain
 
 Features
 --------
- @ - entry point - must be on outside edge. If you use ORIENT: float, and do
-     not use any @, the dungeon builder will connect at least one floorspace on
-     the edge of your map to the rest of the level; if there is no floorspace
-     on the edge of your map, it will be isolated.
+ @ - Entry point - must be on outside edge. This point will be connected to the
+     rest of the level with a corridor for both normal vaults and minivaults.
+     If a normal vault, or a minivault tagged 'mini_float', has no entry points
+     defined, random traversable squares on its edge will be chosen and
+     connected, as if they had the @ glyph.
+
  }{ - Stone stairs - You must be able to reach these from each other. The
       { upstair is also the stair on which the player will enter the
       dungeon for entry vaults.
