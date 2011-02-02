@@ -157,7 +157,7 @@ end
 
 function tutorial_msg2.quiver ()
     local text = "To conserve ammunition, you might sometimes want to switch ammunition, "
-                 .. "which you can do by pressing <white>(</white> "
+                 .. "which you can do by pressing <white>(</white>"
     if crawl.is_tiles() then
         text = text .. " or simply <white>clicking</white> on another ammunition tile"
     end
@@ -208,7 +208,7 @@ function tutorial_msg2.exit ()
                 .. "  " .. tutorial_get_cmd("CMD_FIRE") .. "<w>+</w>  target another monster\n"
 
     if crawl.is_tiles() then
-        text = text .. "\nYou can also fire an item by <white>clicking</white> on it and then confirming the target with <w>Enter</w>\n"
+        text = text .. "\nYou can also fire an item by <white>clicking</white> on it and then confirming the target with <w>Enter</w>.\n"
     end
 
     text = text .. "\n<yellow>Resting</yellow>\n"

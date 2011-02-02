@@ -8,8 +8,9 @@
 #
 # Still TODO:
 #  * Shorten the explanation on exclusions.
-#  * Find a way to set starting attributes depending on the used
-#    tutorial map -> triggered by Lua?
+#  * Maybe send the player back to the entrance?
+#  * The numbers for running may be confusing because they only apply
+#    for the numpad. Shift + num row may trigger other commands instead.
 #
 {{
 require("clua/tutorial.lua")
@@ -127,8 +128,16 @@ function tutorial_msg.autoexplore_announce ()
 end
 
 function tutorial_msg.tutorial_end ()
-    return tutorial_message("Congratulations! You've completed the first lesson!\n"
-                            .. "To exit the tutorial, simply go up these stairs. Confirm the resulting prompt with an uppercase <white>Y</white>.")
+	local text = "Congratulations! You've completed the first lesson!\n"
+                 .. "To exit the tutorial, simply go up these stairs with "
+				 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
+    if crawl.is_tiles() then
+      text = text .. " or by <white>Shift-clicking</white> on your character"
+    end
+
+    text = text .. ". Confirm the resulting prompt with an uppercase <white>Y</white>."
+
+    return tutorial_message(text)
 end
 
 -----------------------------------------------------------
