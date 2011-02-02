@@ -1314,7 +1314,7 @@ static void _equip_jewellery_effect(item_def &item)
         // Berserk is possible with a Battlelust card or with a moth of wrath
         // that affects you while donning the amulet.
         int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW]
-                     + you.duration[DUR_BERSERK];
+                     + you.duration[DUR_BERSERK] + you.duration[DUR_FINESSE];
         if (you.duration[DUR_TELEPORT])
             amount += 30 + random2(150);
         if (amount)
@@ -1340,10 +1340,14 @@ static void _equip_jewellery_effect(item_def &item)
                 mpr("You feel strangely stable.", MSGCH_DURATION);
             if (you.duration[DUR_BERSERK])
                 mpr("You violently calm down.", MSGCH_DURATION);
+            // my thesaurus says this usage is correct
+            if (you.duration[DUR_FINESSE])
+                mpr("Your hands get arrested.", MSGCH_DURATION);
             you.duration[DUR_HASTE] = 0;
             you.duration[DUR_SLOW] = 0;
             you.duration[DUR_TELEPORT] = 0;
             you.duration[DUR_BERSERK] = 0;
+            you.duration[DUR_FINESSE] = 0;
         }
         break;
 

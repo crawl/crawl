@@ -202,7 +202,7 @@ public:
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              std::string source = "") = 0;
 
-    virtual int  skill(skill_type sk, bool skill_bump = false) const
+    virtual int  skill(skill_type sk) const
     {
         return (0);
     }

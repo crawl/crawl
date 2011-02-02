@@ -1541,7 +1541,7 @@ static bool _nasty_stasis(const item_def &item, operation_types oper)
             && item.base_type == OBJ_JEWELLERY
             && item.sub_type == AMU_STASIS
             && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-                || you.duration[DUR_TELEPORT]));
+                || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE]));
 }
 
 bool needs_handle_warning(const item_def &item, operation_types oper)
@@ -1640,7 +1640,7 @@ bool check_warning_inscriptions(const item_def& item,
         if (_nasty_stasis(item, oper))
             prompt += std::string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
-                         you.duration[DUR_HASTE] ? "hasted" : "slowed");
+                         you.duration[DUR_SLOW] ? "slowed" : "hasted");
         prompt += "?";
         return (yesno(prompt.c_str(), false, 'n')
                 && check_old_item_warning(item, oper));

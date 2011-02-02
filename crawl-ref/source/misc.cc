@@ -1318,6 +1318,8 @@ bool go_berserk(bool intentional, bool potion)
 
     mpr("A red film seems to cover your vision as you go berserk!");
 
+    you.duration[DUR_FINESSE] = 0; // Totally incompatible.
+
     if (you.religion == GOD_CHEIBRIADOS)
     {
         // Che makes berserk not speed you up.

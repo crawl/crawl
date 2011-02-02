@@ -362,6 +362,8 @@ COLORS SkillMenuEntry::_get_colour() const
     {
         return GREEN;
     }
+    else if (you.skill(m_sk) > you.skills[m_sk])
+        return LIGHTBLUE;
     else if (you.skills[m_sk] == 27)
         return YELLOW;
     else if (you.skills[m_sk] == 0)
@@ -395,7 +397,7 @@ std::string SkillMenuEntry::_get_prefix()
 
 void SkillMenuEntry::_set_level()
 {
-    m_level->set_text(make_stringf("%2d", you.skills[m_sk]));
+    m_level->set_text(make_stringf("%2d", you.skill(m_sk)));
     m_level->set_fg_colour(_get_colour());
 }
 

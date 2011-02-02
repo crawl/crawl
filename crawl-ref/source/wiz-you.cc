@@ -776,6 +776,8 @@ static const char* dur_names[] =
     "scrying",
     "tornado",
     "liquefying",
+    "heroism",
+    "finesse",
 };
 
 void wizard_edit_durations(void)
