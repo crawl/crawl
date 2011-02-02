@@ -46,6 +46,7 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
     case SV_BYTE:
     case SV_SHORT:
     case SV_INT:
+    case SV_INT64:
     case SV_FLOAT:
         val = other.val;
         break;
@@ -165,6 +166,12 @@ CrawlStoreValue::CrawlStoreValue(const int &_val)
     get_int() = _val;
 }
 
+CrawlStoreValue::CrawlStoreValue(const int64_t &_val)
+    : type(SV_INT), flags(SFLAG_UNSET)
+{
+    get_int64() = _val;
+}
+
 CrawlStoreValue::CrawlStoreValue(const float &_val)
     : type(SV_FLOAT), flags(SFLAG_UNSET)
 {
@@ -272,6 +279,10 @@ void CrawlStoreValue::unset(bool force)
 
     case SV_INT:
         val._int = 0;
+        break;
+
+    case SV_INT64:
+        val._int64 = 0;
         break;
 
     case SV_FLOAT:
@@ -394,6 +405,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
     case SV_BYTE:
     case SV_SHORT:
     case SV_INT:
+    case SV_INT64:
     case SV_FLOAT:
         val = other.val;
         break;
@@ -484,6 +496,10 @@ void CrawlStoreValue::write(writer &th) const
 
     case SV_INT:
         marshallInt(th, val._int);
+        break;
+
+    case SV_INT64:
+        marshallSigned(th, val._int64);
         break;
 
     case SV_FLOAT:
@@ -585,6 +601,10 @@ void CrawlStoreValue::read(reader &th)
 
     case SV_INT:
         val._int = unmarshallInt(th);
+        break;
+
+    case SV_INT64:
+        val._int64 = unmarshallSigned(th);
         break;
 
     case SV_FLOAT:
@@ -746,6 +766,9 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
             case SV_INT: \
                 field = (_type) val._int; \
                 break; \
+            case SV_INT64: \
+                field = (_type) val._int64; \
+                break; \
             case SV_FLOAT: \
                 field = (_type) val._float; \
                 break; \
@@ -797,6 +820,11 @@ short &CrawlStoreValue::get_short()
 int &CrawlStoreValue::get_int()
 {
     GET_VAL(SV_INT, int, val._int, 0);
+}
+
+int64_t &CrawlStoreValue::get_int64()
+{
+    GET_VAL(SV_INT64, int64_t, val._int64, 0);
 }
 
 float &CrawlStoreValue::get_float()
@@ -889,6 +917,12 @@ int CrawlStoreValue::get_int() const
     return val._int;
 }
 
+int64_t CrawlStoreValue::get_int64() const
+{
+    GET_CONST_SETUP(SV_INT64);
+    return val._int64;
+}
+
 float CrawlStoreValue::get_float() const
 {
     GET_CONST_SETUP(SV_FLOAT);
@@ -956,6 +990,7 @@ CrawlStoreValue::operator char&()                  { return get_byte();       }
 CrawlStoreValue::operator short&()                 { return get_short();      }
 CrawlStoreValue::operator float&()                 { return get_float();      }
 CrawlStoreValue::operator int&()                   { return get_int();        }
+CrawlStoreValue::operator int64_t&()               { return get_int64();      }
 CrawlStoreValue::operator std::string&()           { return get_string();     }
 CrawlStoreValue::operator coord_def&()             { return get_coord();      }
 CrawlStoreValue::operator CrawlHashTable&()        { return get_table();      }
@@ -999,6 +1034,24 @@ CrawlStoreValue::operator short() const
 CrawlStoreValue::operator int() const
 {
     CONST_INT_CAST();
+}
+
+CrawlStoreValue::operator int64_t() const
+{
+    // Allow upgrading but not downgrading.
+    switch (type)
+    {
+    case SV_BYTE:
+        return get_byte();
+    case SV_SHORT:
+        return get_short();
+    case SV_INT:
+        return get_int();
+    case SV_INT64:
+        return get_int64();
+    default:
+        die("unknown stored value type");
+    }
 }
 
 CrawlStoreValue::operator float() const
@@ -1049,6 +1102,12 @@ CrawlStoreValue &CrawlStoreValue::operator = (const short &_val)
 CrawlStoreValue &CrawlStoreValue::operator = (const int &_val)
 {
     get_int() = _val;
+    return (*this);
+}
+
+CrawlStoreValue &CrawlStoreValue::operator = (const int64_t &_val)
+{
+    get_int64() = _val;
     return (*this);
 }
 
@@ -1139,6 +1198,12 @@ CrawlStoreValue &CrawlStoreValue::operator = (const dlua_chunk &_val)
     case SV_INT: \
     { \
         int &temp = get_int(); \
+        temp op; \
+        return temp; \
+    } \
+    case SV_INT64: \
+    { \
+        int64_t &temp = get_int64(); \
         temp op; \
         return temp; \
     } \
