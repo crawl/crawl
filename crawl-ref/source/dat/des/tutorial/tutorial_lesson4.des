@@ -126,7 +126,7 @@ function tutorial_msg4.forget_spell ()
                  .. tutorial_get_cmd("CMD_READ")
 
     if crawl.is_tiles() then
-        text = text .. " or by <white>mouseclick</click>"
+        text = text .. " or by <white>rightclicking</click> on it"
     end
 
     text = text .. ", and select the spell you want to forget. In the process, "
@@ -284,7 +284,6 @@ ITEM:    randbook numspells:1 spells:summon_small_mammals title:Simple_Steps_to_
 MONS:    hobgoblin ; whip ego:none . shield not_cursed . ring mail race:none not_cursed
 MONS:    rat
 MONS:    goblin
-# FIXME: Put this in the epilogue.
 MARKER:  d = lua:tutorial_msg4.memorise2()
 MARKER:  A = lua:tutorial_msg4.order_allies()
 MARKER:  B = lua:tutorial_msg4.heavy_armour()
