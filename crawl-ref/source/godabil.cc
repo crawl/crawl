@@ -1374,7 +1374,7 @@ void tso_divine_shield()
                      35 + (you.skills[SK_INVOCATIONS] * 4) / 3);
 
     // shield bonus up to 8
-    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
+    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skill(SK_SHIELDS) / 5;
 
     you.redraw_armour_class = true;
 }
@@ -3383,4 +3383,15 @@ bool ashenzari_end_transfer(bool finished, bool force)
     you.transfer_skill_points = 0;
     you.transfer_total_skill_points = 0;
     return true;
+}
+
+void okawaru_heroism(int pow)
+{
+    mprf(MSGCH_DURATION, you.duration[DUR_HEROISM]
+         ? "You feel more confident with your borrowed prowess."
+         : "You gain the combat prowess of a mighty hero.");
+
+    you.increase_duration(DUR_HEROISM, 35 + random2(pow), 80);
+    you.redraw_evasion      = true;
+    you.redraw_armour_class = true;
 }

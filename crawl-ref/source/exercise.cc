@@ -44,7 +44,7 @@ static skill_type _abil_skill(ability_type abil)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_ZIN_RECITE:
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-    case ABIL_OKAWARU_MIGHT:
+    case ABIL_OKAWARU_HEROISM:
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
@@ -117,7 +117,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         return (1);
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-    case ABIL_OKAWARU_MIGHT:
+    case ABIL_OKAWARU_HEROISM:
     case ABIL_JIYVA_CALL_JELLY:
         return (1 + random2(3));
 

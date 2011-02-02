@@ -2304,6 +2304,12 @@ static void _decrement_durations()
                           "Quad Damage is wearing off.");
     _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
                           "Your dark mirror aura disappears.");
+    if (_decrement_a_duration(DUR_HEROISM, delay,
+                          "You feel like a meek peon again."))
+    {
+	    you.redraw_evasion      = true;
+	    you.redraw_armour_class = true;
+    }
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
@@ -3321,7 +3327,7 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     int skill = you.dex()
-                + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
+                + (you.skill(SK_TRAPS_DOORS) + you.skill(SK_STEALTH)) / 2;
 
     std::string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
                                         "door_berserk_verb_open");
@@ -3556,7 +3562,7 @@ static void _close_door(coord_def move)
         }
 
         int skill = you.dex()
-                    + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
+                    + (you.skill(SK_TRAPS_DOORS) + you.skill(SK_STEALTH)) / 2;
 
         if (you.berserk())
         {

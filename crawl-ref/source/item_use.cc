@@ -1314,7 +1314,7 @@ int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
     // Adjust for shields skill.
     if (speed_adjust > 100)
         speed_adjust -= ((speed_adjust - 100) * 5 / 10)
-                            * you.skills[SK_SHIELDS] / 27;
+                            * you.skill(SK_SHIELDS) / 27;
 
     return (speed_adjust);
 }
@@ -1327,7 +1327,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
     const int  str_weight   = weapon_str_weight(launcher);
     const int  dex_weight   = 10 - str_weight;
     const skill_type launcher_skill = range_skill(launcher);
-    const int shoot_skill = you.skills[launcher_skill];
+    const int shoot_skill = you.skill(launcher_skill);
     const int bow_brand = get_weapon_brand(launcher);
 
     int speed_base = 10 * property(launcher, PWPN_SPEED);
@@ -1353,7 +1353,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
     {
         int speed_adjust = 105; // Analogous to buckler and one-handed weapon.
         speed_adjust -= ((speed_adjust - 100) * 5 / 10)
-                            * you.skills[SK_THROWING] / 27;
+                            * you.skill(SK_THROWING) / 27;
 
         // Also reduce the speed cap.
         speed_base = speed_base * speed_adjust / 100;
@@ -1661,7 +1661,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     monster* mons = victim->as_monster();
 
-    const int skill = you.skills[SK_THROWING];
+    const int skill = you.skill(SK_THROWING);
     const item_def* wp = agent->weapon();
     ASSERT(wp && wp->sub_type == WPN_BLOWGUN);
     const int enchantment = wp->plus;
@@ -2524,7 +2524,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // [jpeg] Throwing now only affects actual throwing weapons,
         // i.e. not launched ones. (Sep 10, 2007)
 
-        shoot_skill = you.skills[launcher_skill];
+        shoot_skill = you.skill(launcher_skill);
         effSkill    = shoot_skill;
 
         const int speed = launcher_final_speed(launcher, you.shield());
@@ -2772,7 +2772,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 }
             }
 
-            exHitBonus = you.skills[SK_THROWING] * 2;
+            exHitBonus = you.skill(SK_THROWING) * 2;
 
             baseDam = property(item, PWPN_DAMAGE);
 
@@ -2794,7 +2794,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
 
             exDamBonus =
-                (10 * (you.skills[SK_THROWING] / 2 + you.strength() - 10)) / 12;
+                (10 * (you.skill(SK_THROWING) / 2 + you.strength() - 10)) / 12;
 
             // Now, exDamBonus is a multiplier.  The full multiplier
             // is applied to base damage, but only a third is applied
@@ -2818,13 +2818,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             case MI_DART:
                 // Darts also using throwing skills, now.
                 exHitBonus += skill_bump(SK_THROWING);
-                exDamBonus += you.skills[SK_THROWING] * 3 / 5;
+                exDamBonus += you.skill(SK_THROWING) * 3 / 5;
                 break;
 
             case MI_JAVELIN:
                 // Javelins use throwing skill.
                 exHitBonus += skill_bump(SK_THROWING);
-                exDamBonus += you.skills[SK_THROWING] * 3 / 5;
+                exDamBonus += you.skill(SK_THROWING) * 3 / 5;
 
                 // Adjust for strength and dex.
                 exDamBonus = str_adjust_thrown_damage(exDamBonus);
@@ -2861,7 +2861,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // ID check
         if (!teleport
             && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-            && x_chance_in_y(you.skills[SK_THROWING], 100))
+            && x_chance_in_y(you.skill(SK_THROWING), 100))
         {
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
             set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_PLUSES);
@@ -3691,7 +3691,7 @@ void zap_wand(int slot)
         beam.range = tracer_range;
         if (!player_tracer(beam.effect_known ? type_zapped
                                              : ZAP_DEBUGGING_RAY,
-                           2 * (you.skills[SK_EVOCATIONS] - 1),
+                           2 * (you.skill(SK_EVOCATIONS) - 1),
                            beam, beam.effect_known ? 0 : 17))
         {
             return;
@@ -3727,7 +3727,7 @@ void zap_wand(int slot)
 #endif
 
     // zapping() updates beam.
-    zapping(type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam);
+    zapping(type_zapped, 30 + roll_dice(2, you.skill(SK_EVOCATIONS)), beam);
 
     // Take off a charge.
     wand.plus--;
@@ -3753,7 +3753,7 @@ void zap_wand(int slot)
 
     if (item_type_known(wand)
         && (item_ident(wand, ISFLAG_KNOW_PLUSES)
-            || you.skills[SK_EVOCATIONS] > 5 + random2(15)))
+            || you.skill(SK_EVOCATIONS) > 5 + random2(15)))
     {
         if (!item_ident(wand, ISFLAG_KNOW_PLUSES))
         {
@@ -5365,7 +5365,7 @@ void tile_item_use(int idx)
         case OBJ_BOOKS:
             if (item.sub_type == BOOK_MANUAL
                 || item.sub_type == BOOK_DESTRUCTION
-                || you.skills[SK_SPELLCASTING] == 0)
+                || you.skill(SK_SPELLCASTING) == 0)
             {
                 if (check_warning_inscriptions(item, OPER_READ))
                     handle_read_book(idx);
