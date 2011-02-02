@@ -466,12 +466,12 @@ monster_type fill_out_corpse(const monster* mons,
     if (mons && !mons->mname.empty())
     {
         corpse.props[CORPSE_NAME_KEY] = mons->mname;
-        corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = mons->flags;
+        corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = mons->flags;
     }
     else if (mons_is_unique(mtype))
     {
         corpse.props[CORPSE_NAME_KEY] = mons_type_name(mtype, DESC_PLAIN);
-        corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = 0;
+        corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
     }
 
     return (corpse_class);
