@@ -195,8 +195,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY },
     // Okawaru
-    { ABIL_OKAWARU_MIGHT, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_OKAWARU_HASTE },
+    { ABIL_OKAWARU_HEROISM, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_OKAWARU_HASTE },
     // Makhleb
     { ABIL_NON_ABILITY, ABIL_MAKHLEB_MINOR_DESTRUCTION,
       ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, ABIL_MAKHLEB_MAJOR_DESTRUCTION,
@@ -335,7 +335,7 @@ static const ability_def Ability_List[] =
       2, 0, 100, 0, ABFLAG_NONE },
 
     // Okawaru
-    { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, ABFLAG_NONE },
+    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 1, ABFLAG_NONE },
     { ABIL_OKAWARU_HASTE, "Haste",
       5, 0, 100, generic_cost::fixed(5), ABFLAG_NONE },
 
@@ -1130,7 +1130,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_RECITE:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-    case ABIL_OKAWARU_MIGHT:
+    case ABIL_OKAWARU_HEROISM:
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_LUGONU_ABYSS_EXIT:
@@ -2318,8 +2318,15 @@ static bool _do_ability(const ability_def& abil)
         inc_mp(1 + random2(you.skills[SK_INVOCATIONS] / 4 + 2), false);
         break;
 
-    case ABIL_OKAWARU_MIGHT:
-        potion_effect(POT_MIGHT, you.skills[SK_INVOCATIONS] * 8);
+    case ABIL_OKAWARU_HEROISM:
+        mprf(MSGCH_DURATION, you.duration[DUR_HEROISM]
+             ? "You feel more confident with your borrowed prowess."
+             : "You gain the combat prowess of a mighty hero.");
+
+        you.increase_duration(DUR_HEROISM,
+            35 + random2(you.skills[SK_INVOCATIONS] * 8), 80);
+        you.redraw_evasion      = true;
+        you.redraw_armour_class = true;
         break;
 
     case ABIL_OKAWARU_HASTE:

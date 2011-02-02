@@ -619,10 +619,10 @@ int stepdown_value(int base_value, int stepping, int first_step,
 
 }
 
-int skill_bump(int skill)
+int skill_bump(skill_type skill)
 {
-    return ((you.skills[skill] < 3) ? you.skills[skill] * 2
-                                    : you.skills[skill] + 3);
+    int sk = you.skill(skill);
+    return sk < 3 ? sk * 2 : sk + 3;
 }
 
 // This gives (default div = 20, shift = 3):

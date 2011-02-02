@@ -3436,7 +3436,7 @@ void monster::poison(actor *agent, int amount, bool force)
                    force);
 }
 
-int monster::skill(skill_type sk, bool) const
+int monster::skill(skill_type sk) const
 {
     switch (sk)
     {

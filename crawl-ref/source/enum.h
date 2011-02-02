@@ -81,7 +81,7 @@ enum ability_type
     ABIL_YRED_ANIMATE_REMAINS_OR_DEAD,
     // Xom, Vehumet = 90
     // Okawaru
-    ABIL_OKAWARU_MIGHT = 100,
+    ABIL_OKAWARU_HEROISM = 100,
     ABIL_OKAWARU_HASTE,
     // Makhleb
     ABIL_MAKHLEB_MINOR_DESTRUCTION = 110,
@@ -1336,6 +1336,7 @@ enum duration_type
     DUR_SCRYING,
     DUR_TORNADO,
     DUR_LIQUEFYING,
+    DUR_HEROISM,
     NUM_DURATIONS
 };
 
@@ -2974,6 +2975,7 @@ enum skill_type
     SK_SHIELDS,
     SK_TRAPS_DOORS,
     SK_UNARMED_COMBAT,
+    SK_LAST_MUNDANE = SK_UNARMED_COMBAT,
     SK_SPELLCASTING,
     SK_CONJURATIONS,
     SK_HEXES,

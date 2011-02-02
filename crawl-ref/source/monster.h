@@ -302,7 +302,7 @@ public:
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
 
-    int  skill(skill_type skill, bool skill_bump = false) const;
+    int  skill(skill_type skill) const;
 
     void attacking(actor *other);
     bool can_go_berserk() const;

@@ -166,8 +166,8 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
 {
     int your_to_hit;
 
-    your_to_hit = 13 + you.dex() / 2 + you.skills[SK_UNARMED_COMBAT] / 2
-                  + you.skills[SK_FIGHTING] / 5;
+    your_to_hit = 13 + you.dex() / 2 + you.skill(SK_UNARMED_COMBAT) / 2
+                  + you.skill(SK_FIGHTING) / 5;
 
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
@@ -213,7 +213,7 @@ random_var calc_your_attack_delay()
 static bool player_fights_well_unarmed(int heavy_armour_penalty)
 {
     return (you.burden_state == BS_UNENCUMBERED
-            && x_chance_in_y(you.skills[SK_UNARMED_COMBAT], 20)
+            && x_chance_in_y(you.skill(SK_UNARMED_COMBAT), 20)
             && x_chance_in_y(2, 1 + heavy_armour_penalty));
 }
 
@@ -1026,7 +1026,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     case UNAT_PUNCH:
         aux_attack = aux_verb = "punch";
-        aux_damage = 5 + you.skills[SK_UNARMED_COMBAT] / 3;
+        aux_damage = 5 + you.skill(SK_UNARMED_COMBAT) / 3;
 
         if (you.form == TRAN_BLADE_HANDS)
         {
@@ -1045,7 +1045,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     case UNAT_BITE:
         aux_attack = aux_verb = "bite";
         aux_damage += you.has_usable_fangs() * 2
-                      + you.skills[SK_UNARMED_COMBAT] / 5;
+                      + you.skill(SK_UNARMED_COMBAT) / 5;
         noise_factor = 75;
 
         // prob of vampiric bite:
@@ -1523,9 +1523,9 @@ int melee_attack::player_hits_monster()
 
     if (to_hit >= evasion && helpful_evasion > evasion
         || ((defender->cannot_act() || defender->asleep())
-            && !one_chance_in(10 + you.skills[SK_STABBING]))
+            && !one_chance_in(10 + you.skill(SK_STABBING)))
         || defender->as_monster()->petrifying()
-            && !one_chance_in(2 + you.skills[SK_STABBING]))
+            && !one_chance_in(2 + you.skill(SK_STABBING)))
     {
         defender->as_monster()->add_ench(ENCH_HELPLESS);
         return (1);
@@ -1583,7 +1583,7 @@ int melee_attack::player_apply_weapon_skill(int damage)
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                    || weapon->base_type == OBJ_STAVES))
     {
-        damage *= 25 + (random2(you.skills[ wpn_skill ] + 1));
+        damage *= 25 + (random2(you.skill(wpn_skill) + 1));
         damage /= 25;
     }
 
@@ -1594,7 +1594,7 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
 {
     const int base = aux? 40 : 30;
 
-    damage *= base + (random2(you.skills[SK_FIGHTING] + 1));
+    damage *= base + (random2(you.skill(SK_FIGHTING) + 1));
     damage /= base;
 
     return (damage);
@@ -1669,7 +1669,7 @@ void melee_attack::player_weapon_auto_id()
         && weapon->base_type == OBJ_WEAPONS
         && !is_range_weapon(*weapon)
         && !item_ident(*weapon, ISFLAG_KNOW_PLUSES)
-        && x_chance_in_y(you.skills[ wpn_skill ], 100))
+        && x_chance_in_y(you.skill(wpn_skill), 100))
     {
         set_ident_flags(*weapon, ISFLAG_KNOW_PLUSES);
         mprf("You are wielding %s.", weapon->name(DESC_NOCAP_A).c_str());
@@ -1694,7 +1694,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     {
     case SK_SHORT_BLADES:
     {
-        int bonus = (you.dex() * (you.skills[SK_STABBING] + 1)) / 5;
+        int bonus = (you.dex() * (you.skill(SK_STABBING) + 1)) / 5;
 
         if (weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
@@ -1705,12 +1705,12 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     // fall through
     ok_weaps:
     case SK_LONG_BLADES:
-        damage *= 10 + you.skills[SK_STABBING] /
+        damage *= 10 + you.skill(SK_STABBING) /
                        (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 2));
         damage /= 10;
         // fall through
     default:
-        damage *= 12 + you.skills[SK_STABBING] / stab_bonus;
+        damage *= 12 + you.skill(SK_STABBING) / stab_bonus;
         damage /= 12;
     }
 
@@ -1745,7 +1745,7 @@ int melee_attack::player_stab(int damage)
         if (defender->asleep())
         {
             // Sleeping moster wakes up when stabbed but may be groggy.
-            if (x_chance_in_y(you.skills[SK_STABBING] + you.dex() + 1, 200))
+            if (x_chance_in_y(you.skill(SK_STABBING) + you.dex() + 1, 200))
             {
                 int stun = random2(you.dex() + 1);
 
@@ -1770,7 +1770,7 @@ int melee_attack::player_apply_monster_ac(int damage)
         if (defender->armour_class() > 0)
         {
             const int ac = defender->armour_class()
-                - random2(you.skills[SK_STABBING] / stab_bonus);
+                - random2(you.skill(SK_STABBING) / stab_bonus);
 
             if (ac > 0)
                 damage -= random2(1 + ac);
@@ -3658,9 +3658,9 @@ void melee_attack::player_sustain_passive_damage()
         weapon_acid(5);
 }
 
-int melee_attack::player_staff_damage(int skill)
+int melee_attack::player_staff_damage(skill_type skill)
 {
-    return (random2(5*(you.skills[skill] + you.skills[SK_EVOCATIONS])/4));
+    return (random2(5*(you.skill(skill) + you.skill(SK_EVOCATIONS))/4));
 }
 
 void melee_attack::emit_nodmg_hit_message()
@@ -3679,13 +3679,13 @@ void melee_attack::player_apply_staff_damage()
     if (!weapon || !item_is_staff(*weapon))
         return;
 
-    if (random2(15) > you.skills[SK_EVOCATIONS])
+    if (random2(15) > you.skill(SK_EVOCATIONS))
         return;
 
     switch (weapon->sub_type)
     {
     case STAFF_AIR:
-        if (damage_done + you.skills[SK_AIR_MAGIC] <= random2(20))
+        if (damage_done + you.skill(SK_AIR_MAGIC) <= random2(20))
             break;
 
         special_damage =
@@ -3752,7 +3752,7 @@ void melee_attack::player_apply_staff_damage()
     case STAFF_POISON:
     {
         // Base chance at 50% -- like mundane weapons.
-        if (coinflip() || x_chance_in_y(you.skills[SK_POISON_MAGIC], 8))
+        if (coinflip() || x_chance_in_y(you.skill(SK_POISON_MAGIC), 8))
         {
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
@@ -3765,7 +3765,7 @@ void melee_attack::player_apply_staff_damage()
         if (defender->res_negative_energy())
             break;
 
-        if (x_chance_in_y(you.skills[SK_NECROMANCY] + 1, 8))
+        if (x_chance_in_y(you.skill(SK_NECROMANCY) + 1, 8))
         {
             special_damage = player_staff_damage(SK_NECROMANCY);
 
@@ -3917,17 +3917,17 @@ int melee_attack::player_to_hit(bool random_factor)
         your_to_hit -= 5;
 
     // fighting contribution
-    your_to_hit += maybe_random2(1 + you.skills[SK_FIGHTING], random_factor);
+    your_to_hit += maybe_random2(1 + you.skill(SK_FIGHTING), random_factor);
 
     // weapon skill contribution
     if (weapon)
     {
         if (wpn_skill != SK_FIGHTING)
         {
-            if (you.skills[wpn_skill] < 1 && player_in_a_dangerous_place())
+            if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place())
                 xom_is_stimulated(14); // Xom thinks that is mildly amusing.
 
-            your_to_hit += maybe_random2(you.skills[wpn_skill] + 1,
+            your_to_hit += maybe_random2(you.skill(wpn_skill) + 1,
                                          random_factor);
         }
     }
@@ -3935,7 +3935,7 @@ int melee_attack::player_to_hit(bool random_factor)
     {                       // ...you must be unarmed
         your_to_hit += species_has_claws(you.species) ? 4 : 2;
 
-        your_to_hit += maybe_random2(1 + you.skills[SK_UNARMED_COMBAT],
+        your_to_hit += maybe_random2(1 + you.skill(SK_UNARMED_COMBAT),
                                      random_factor);
     }
 
@@ -4102,7 +4102,7 @@ void melee_attack::player_stab_check()
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)
     {
-        stab_attempt = x_chance_in_y(you.skills[SK_STABBING] + you.dex() + 1,
+        stab_attempt = x_chance_in_y(you.skill(SK_STABBING) + you.dex() + 1,
                                      roll);
     }
 }
@@ -4149,7 +4149,7 @@ random_var melee_attack::player_weapon_speed()
                    || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = constant(property(*weapon, PWPN_SPEED));
-        attack_delay -= constant(you.skills[wpn_skill] / 2);
+        attack_delay -= constant(you.skill(wpn_skill) / 2);
 
         min_delay = property(*weapon, PWPN_SPEED) / 2;
 
@@ -4196,7 +4196,7 @@ random_var melee_attack::player_unarmed_speed()
     {
         unarmed_delay =
             rv::max(unarmed_delay
-                     - constant(you.skills[SK_UNARMED_COMBAT]
+                     - constant(you.skill(SK_UNARMED_COMBAT)
                                 / (player_in_bat_form() ? 3 : 5)),
                     constant(min_delay));
     }
@@ -4253,10 +4253,10 @@ int melee_attack::player_calc_base_unarmed_damage()
     if (player_in_bat_form())
     {
         // Bats really don't do a lot of damage.
-        damage += you.skills[SK_UNARMED_COMBAT] / 5;
+        damage += you.skill(SK_UNARMED_COMBAT) / 5;
     }
     else
-        damage += you.skills[SK_UNARMED_COMBAT];
+        damage += you.skill(SK_UNARMED_COMBAT);
 
     return (damage);
 }

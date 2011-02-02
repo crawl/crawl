@@ -42,7 +42,7 @@ private:
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value);
 int stat_mult(int stat_level, int value, int div = 20, int shift = 3);
-int skill_bump(int skill);
+int skill_bump(skill_type skill);
 unsigned char get_ch();
 
 void cio_init();

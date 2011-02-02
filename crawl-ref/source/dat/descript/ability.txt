@@ -197,7 +197,7 @@ If you get this description, it is a bug.
 # Okawaru
 Might
 
-Temporarily increase your Strength and damage output.
+Temporarily increase all of your combat skills, including the ability to sneak around or avoid traps. 
 %%%%
 Haste
 
