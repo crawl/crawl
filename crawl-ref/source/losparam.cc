@@ -25,10 +25,14 @@ opacity_type opacity_default::operator()(const coord_def& p) const
         return OPC_HALF;
     else if (f == DNGN_TREE || f == DNGN_SWAMP_TREE)
         return OPC_HALF;
-    else if (monster_at(p) && monster_at(p)->type == MONS_BUSH)
-        return OPC_HALF;
-    else
-        return OPC_CLEAR;
+    if (const monster *mon = monster_at(p))
+    {
+        if (mon->type == MONS_BUSH)
+            return OPC_HALF;
+        if (mon->type == MONS_DOOR_MIMIC)
+            return OPC_OPAQUE;
+    }
+    return OPC_CLEAR;
 }
 
 opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
