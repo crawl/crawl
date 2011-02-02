@@ -1371,6 +1371,15 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
         speed = 2 * speed / 3;
     }
 
+    if (you.duration[DUR_FINESSE])
+    {
+        ASSERT(!you.duration[DUR_BERSERK]);
+        // Need to undo haste by hand.
+        if (you.duration[DUR_HASTE])
+            speed = haste_mul(speed);
+        speed /= 2;
+    }
+
     return (speed);
 }
 

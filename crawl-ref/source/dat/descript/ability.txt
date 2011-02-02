@@ -199,9 +199,9 @@ Might
 
 Temporarily increase all of your combat skills, including the ability to sneak around or avoid traps. 
 %%%%
-Haste
+Finesse
 
-Greatly increase your movement speed. Hasting yourself will increase your magical contamination, and may eventually cause glowing.
+Greatly increase your combat speed, with no loss of accuracy. This unnatural effect causes small amounts of magic contamination, prolonged exposure to which may be bad for your health.
 %%%%
 # Makhleb
 Minor Destruction

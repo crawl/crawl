@@ -123,6 +123,8 @@ static duration_def duration_data[] =
       "The ground has become liquefied beneath your feet." },
     { DUR_HEROISM, false,
       LIGHTBLUE, "Hero", "heroism", "You posess the skills of a mighty hero." },
+    { DUR_FINESSE, false,
+      LIGHTBLUE, "Finesse", "finesse", "Your blows are lightning fast." },
 };
 
 static int duration_index[NUM_DURATIONS];

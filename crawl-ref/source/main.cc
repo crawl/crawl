@@ -2310,6 +2310,7 @@ static void _decrement_durations()
 	    you.redraw_evasion      = true;
 	    you.redraw_armour_class = true;
     }
+    _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
