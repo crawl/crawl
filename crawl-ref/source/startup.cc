@@ -865,7 +865,7 @@ static void _choose_arena_teams(newgame_def* choice,
 
     char buf[80];
     if (cancelable_get_line(buf, sizeof(buf)))
-        end(0);
+        game_ended();
     choice->arena_teams = buf;
     if (choice->arena_teams.empty())
         choice->arena_teams = defaults.arena_teams;

@@ -405,7 +405,7 @@ static bool _reroll_random(newgame_def* ng)
     cprintf("\nDo you want to play this combination? (ynq) [y]");
     char c = getchm();
     if (key_is_escape(c) || tolower(c) == 'q')
-        end(0);
+        game_ended();
     return (tolower(c) == 'n');
 }
 
@@ -885,10 +885,11 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
             switch (keyn)
             {
             case 'X':
-            CASE_ESCAPE
                 cprintf("\nGoodbye!");
                 end(0);
                 return;
+            CASE_ESCAPE
+                    game_ended();
             case CK_BKSP:
                 ng_choice->species = SP_UNKNOWN;
                 return;
@@ -1251,10 +1252,11 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
             switch (keyn)
             {
             case 'X':
-            CASE_ESCAPE
                 cprintf("\nGoodbye!");
                 end(0);
                 return;
+            CASE_ESCAPE
+                game_ended();
             case CK_BKSP:
                 ng_choice->job = JOB_UNKNOWN;
                 return;
