@@ -838,6 +838,17 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         if (monster* mon = monster_at(src))
         {
             mon->moveto(dst);
+            if (mon->type == MONS_ELDRITCH_TENTACLE)
+            {
+                if (mon->props.exists("base_position"))
+                {
+                    coord_def delta = dst - src;
+                    coord_def base_pos = mon->props["base_position"].get_coord();
+                    base_pos += delta;
+                    mon->props["base_position"].get_coord() = base_pos;
+                }
+
+            }
             mgrd(dst) = mgrd(src);
             mgrd(src) = NON_MONSTER;
         }
