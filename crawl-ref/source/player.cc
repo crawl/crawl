@@ -6035,8 +6035,9 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
-    switch(is_undead)
+    switch (is_undead)
     {
+	default:
     case US_ALIVE:
         return 0;
 
