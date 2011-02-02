@@ -359,7 +359,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "mini_float": applicable only to minivaults, requests that
              the dungeon builder pick random exits from the minivault and
              connect it to the rest of the level, similar to the exit behaviour
-             for floating vaults.
+             for floating vaults. Has no effect if the minivault has explicitly
+             defined exits (the @ glyph).
           * "no_monster_gen": Prevents random monster generation at the time of
              the vault's creation. Highly advised for entry vaults with a
              player-hostile geography, MUST-HAVE for those with water/lava.
