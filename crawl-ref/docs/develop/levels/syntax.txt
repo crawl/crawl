@@ -379,9 +379,9 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              "luniq_BAR" is only relevant when used with "allow_dup".
           * "branch_entry" eg. "orc_entry", "lair_entry" etc.
              If chosen, these maps will contain the stairs for that branch.
-             Use "O" to place the stairs. If a branch has very few entries,
-             a dummy entry is advisable to make sure the player doesn't get
-             bored of the same few entries recycled ad nauseam.
+             If a branch has very few entries, a dummy entry is advisable to
+             make sure the player doesn't get bored of the same few entries
+             recycled ad nauseam.
              Note: if any TAG argument contains an "entry", the vault will
                    be no longer eligible for random placement. (Currently,
                    this just affects your choice of BAR when using uniq_BAR.)
