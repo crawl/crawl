@@ -1017,7 +1017,7 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skills[SK_TRAPS_DOORS] + 2) <= random2(you.absdepth0 + 5))
+    if (random2(you.skill(SK_TRAPS_DOORS) + 2) <= random2(you.absdepth0 + 5))
     {
         mpr("You failed to disarm the trap.");
         if (random2(you.dex()) > 5 + random2(5 + you.absdepth0))
@@ -1072,10 +1072,10 @@ void remove_net_from(monster* mon)
         invis = 3 + random2(5);
 
     bool net_destroyed = false;
-    if (random2(you.skills[SK_TRAPS_DOORS] + 2) + paralys
+    if (random2(you.skill(SK_TRAPS_DOORS) + 2) + paralys
            <= random2(2*mon->body_size(PSIZE_BODY) + 3) + invis)
     {
-        if (one_chance_in(you.skills[SK_TRAPS_DOORS] + you.dex()/2))
+        if (one_chance_in(you.skill(SK_TRAPS_DOORS) + you.dex()/2))
         {
             mitm[net].plus--;
             mpr("You tear at the net.");

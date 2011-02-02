@@ -2242,6 +2242,9 @@ void handle_time()
     if (you.duration[DUR_HASTE] && x_chance_in_y(6, 10))
         added_contamination++;
 
+    if (you.duration[DUR_FINESSE] && x_chance_in_y(4, 10))
+        added_contamination++;
+
     bool mutagenic_randart = false;
     if (const int artefact_glow = scan_artefacts(ARTP_MUTAGENIC))
     {

@@ -2119,7 +2119,7 @@ int player_adjusted_shield_evasion_penalty(int scale)
     const int base_shield_penalty = -property(*shield, PARM_EVASION);
     return std::max(0,
                     (base_shield_penalty * scale
-                     - you.skills[SK_SHIELDS] * scale
+                     - you.skill(SK_SHIELDS) * scale
                      / (5 + player_evasion_size_factor())));
 }
 
@@ -2160,7 +2160,7 @@ int player_adjusted_body_armour_evasion_penalty(int scale)
 
     return ((base_ev_penalty
              + std::max(0, 3 * base_ev_penalty - you.strength()))
-            * (45 - you.skills[SK_ARMOUR])
+            * (45 - you.skill(SK_ARMOUR))
             * scale
             / 45);
 }
@@ -2296,7 +2296,7 @@ int player_evasion(ev_ignore_type evit)
     const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
 
     const int dodge_bonus =
-        (7 + you.skills[SK_DODGING] * ev_dex) * scale
+        (7 + you.skill(SK_DODGING) * ev_dex) * scale
         / (20 - size_factor);
 
     // [ds] Dodging penalty for being in high EVP armour, almost
@@ -2429,7 +2429,7 @@ int player_shield_class(void)   //jmf: changes for new spell
 
         // bonus applied only to base, see above for effect:
         shield += base_shield * 100;
-        shield += base_shield * 5 * you.skills[SK_SHIELDS];
+        shield += base_shield * 5 * you.skill(SK_SHIELDS);
         shield += base_shield * racial_bonus * 10 / 3;
 
         shield += item.plus * 100;
@@ -2445,14 +2445,14 @@ int player_shield_class(void)   //jmf: changes for new spell
     {
         if (you.duration[DUR_MAGIC_SHIELD])
         {
-            stat   =  600 + you.skills[SK_EVOCATIONS] * 50;
-            shield += 300 + you.skills[SK_EVOCATIONS] * 25;
+            stat   =  600 + you.skill(SK_EVOCATIONS) * 50;
+            shield += 300 + you.skill(SK_EVOCATIONS) * 25;
         }
 
         if (!you.duration[DUR_FIRE_SHIELD]
             && you.duration[DUR_CONDENSATION_SHIELD])
         {
-            shield += 300 + (you.skills[SK_ICE_MAGIC] * 25);
+            shield += 300 + (you.skill(SK_ICE_MAGIC) * 25);
             stat    = std::max(stat, you.intel() * 38);
         }
     }
@@ -3463,7 +3463,7 @@ int check_stealth(void)
         break;
     }
 
-    stealth += you.skills[SK_STEALTH] * race_mod;
+    stealth += you.skill(SK_STEALTH) * race_mod;
 
     if (you.burden_state > BS_UNENCUMBERED)
         stealth /= you.burden_state;
@@ -3753,7 +3753,13 @@ static void _display_attack_delay()
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     // We could also compute the variance if desired.
-    const int avg = static_cast<int>(round(10 * delay.expected()));
+    int avg = static_cast<int>(round(10 * delay.expected()));
+
+    // Haste wasn't counted here, but let's show finesse.
+    // Can't be done in the above function because of interactions with
+    // haste and caps.
+    if (you.duration[DUR_FINESSE])
+        avg = std::max(20, avg / 2);
 
     std::string msg = "Your attack speed is " + _attack_delay_desc(avg) + ".";
 
@@ -4438,6 +4444,7 @@ int get_real_hp(bool trans, bool rotted)
     int hitp;
 
     hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
+    // Important: we shouldn't add Heroism boosts here.
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) /
             (you.species == SP_CAT ? 7 : 5);
 
@@ -5685,15 +5692,18 @@ void player::shield_block_succeeded(actor *foe)
     practise(EX_SHIELD_BLOCK);
 }
 
-int player::skill(skill_type sk, bool bump) const
+int player::skill(skill_type sk) const
 {
-    return (bump? skill_bump(sk) : skills[sk]);
+    if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
+        return std::min(skills[sk] + 10, 27);
+
+    return skills[sk];
 }
 
 // only for purposes of detection, not disarming
 int player::traps_skill() const
 {
-    int val = skills[SK_TRAPS_DOORS];
+    int val = skill(SK_TRAPS_DOORS);
 
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
         val += you.piety / 15;
@@ -5729,7 +5739,7 @@ int player::armour_class() const
 
         // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
         // Armour Skill + racial_skill_bonus / 2.
-        AC += ac_value * (44 + 2 * skills[SK_ARMOUR] + racial_bonus) / 44;
+        AC += ac_value * (44 + 2 * skill(SK_ARMOUR) + racial_bonus) / 44;
         AC += item.plus * 100;
 
         // The deformed don't fit into body armour very well.
@@ -6137,7 +6147,7 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // Enchantment skill through staff of enchantment (up to 90).
     if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
-        rm += 3 * (3 + std::max(you.skills[SK_CHARMS], you.skills[SK_HEXES]));
+        rm += 3 * (3 + std::max(you.skill(SK_CHARMS), you.skill(SK_HEXES)));
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);

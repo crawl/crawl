@@ -32,6 +32,7 @@
 #include "exercise.h"
 #include "food.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "items.h"
 #include "item_use.h"
 #include "it_use2.h"
@@ -195,8 +196,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY },
     // Okawaru
-    { ABIL_OKAWARU_MIGHT, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_OKAWARU_HASTE },
+    { ABIL_OKAWARU_HEROISM, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_OKAWARU_FINESSE },
     // Makhleb
     { ABIL_NON_ABILITY, ABIL_MAKHLEB_MINOR_DESTRUCTION,
       ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, ABIL_MAKHLEB_MAJOR_DESTRUCTION,
@@ -335,9 +336,8 @@ static const ability_def Ability_List[] =
       2, 0, 100, 0, ABFLAG_NONE },
 
     // Okawaru
-    { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_OKAWARU_HASTE, "Haste",
-      5, 0, 100, generic_cost::fixed(5), ABFLAG_NONE },
+    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 1, ABFLAG_NONE },
+    { ABIL_OKAWARU_FINESSE, "Finesse", 5, 0, 100, 4, ABFLAG_NONE },
 
     // Makhleb
     { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
@@ -1130,7 +1130,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_RECITE:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-    case ABIL_OKAWARU_MIGHT:
+    case ABIL_OKAWARU_HEROISM:
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_LUGONU_ABYSS_EXIT:
@@ -1220,13 +1220,13 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_FEDHAS_SPAWN_SPORES:
     case ABIL_YRED_DRAIN_LIFE:
     case ABIL_CHEIBRIADOS_SLOUCH:
+    case ABIL_OKAWARU_FINESSE:
         invoc = true;
         failure = 60 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_ELYVILON_RESTORATION:
-    case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
     case ABIL_FEDHAS_RAIN:
@@ -2318,12 +2318,32 @@ static bool _do_ability(const ability_def& abil)
         inc_mp(1 + random2(you.skills[SK_INVOCATIONS] / 4 + 2), false);
         break;
 
-    case ABIL_OKAWARU_MIGHT:
-        potion_effect(POT_MIGHT, you.skills[SK_INVOCATIONS] * 8);
+    case ABIL_OKAWARU_HEROISM:
+        mprf(MSGCH_DURATION, you.duration[DUR_HEROISM]
+             ? "You feel more confident with your borrowed prowess."
+             : "You gain the combat prowess of a mighty hero.");
+
+        you.increase_duration(DUR_HEROISM,
+            35 + random2(you.skills[SK_INVOCATIONS] * 8), 80);
+        you.redraw_evasion      = true;
+        you.redraw_armour_class = true;
         break;
 
-    case ABIL_OKAWARU_HASTE:
-        potion_effect(POT_SPEED, you.skills[SK_INVOCATIONS] * 8);
+    case ABIL_OKAWARU_FINESSE:
+        if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.",
+				 20, "%s makes your neck tingle."))
+        {
+            return (false);
+        }
+
+        mprf(MSGCH_DURATION, you.duration[DUR_FINESSE]
+             ? "Your hands get new energy."
+             : "You can now deal lightning-fast blows.");
+
+        you.increase_duration(DUR_FINESSE,
+            40 + random2(you.skills[SK_INVOCATIONS] * 8), 80);
+
+        did_god_conduct(DID_HASTY, 8); // Currently irrelevant.
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
