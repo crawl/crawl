@@ -1615,7 +1615,7 @@ int monster_die(monster* mons, killer_type killer,
     const bool submerged     = mons->submerged();
 
     bool in_transit          = false;
-    bool was_banished        = false;
+    bool was_banished        = (killer == KILL_RESET);
 
     if (!crawl_state.game_is_arena())
         _check_kill_milestone(mons, killer, killer_index);
