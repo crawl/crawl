@@ -117,6 +117,54 @@ function tutorial_msg4.spell_hunger ()
                             .. "Spellcasting skill.")
 end
 
+function tutorial_msg4.forget_spell ()
+	local text = "You can't memorise any new spells yet. You can gain new spell "
+                 .. "slots by gaining an experience level or by raising your "
+                 .. "Spellcasting skill. If you don't want to wait, you can also "
+                 .. "<w>forget a spell</w> to make place for a new one. "
+                 .. "To do this, read a spellbook with "
+                 .. tutorial_get_cmd("CMD_READ")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</click>"
+    end
+
+    text = text .. ", and select the spell you want to forget. In the process, "
+                .. "the book will be destroyed, so you'll need other spellbooks "
+                .. "to learn new spells."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.order_allies ()
+    return tutorial_message("Try to let your allies kill that hobgoblin! If necessary, "
+							.. "you can order them about with "
+                            .. tutorial_get_cmd("CMD_SHOUT") 
+							.. ".")
+end
+
+function tutorial_msg4.heavy_armour ()
+	local text = "Heavy armour really hampers spellcasting. Try putting on that "
+				 .. "mail and shield (with "
+                 .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on them)"
+    end
+
+	text = text .. ", and compare your spellcasting success rates with "
+				.. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. ". "
+				.. "You can take armour off again with "
+                 .. tutorial_get_cmd("CMD_REMOVE_ARMOUR")
+
+    if crawl.is_tiles() then
+        text = text .. " or, again, via <white>mouseclick</white>"
+    end
+	text = text .. "."
+
+    return tutorial_message(text)
+end
+
 function tutorial_msg4.tutorial_end ()
     return tutorial_message("Well done! To exit the tutorial, simply go down these stairs.")
 end
@@ -128,7 +176,9 @@ function tutorial_msg4.exit ()
                  .. "  " .. tutorial_get_cmd("CMD_MEMORISE_SPELL") .. "  learn a new spell\n"
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. "  check spell proficiency\n"
                  .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
+                 .. "  " .. tutorial_get_cmd("CMD_READ") .. "  read a book, for descriptions or to forget a spell\n"
                  .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest to regain magic points\n"
+                 .. "  " .. tutorial_get_cmd("CMD_SHOUT") .. "  order allies\n"
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
     text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
@@ -167,18 +217,6 @@ MARKER:  D = lua:tutorial_msg4.aiming_clouds()
 MARKER:  h = lua:tutorial_msg4.spell_hunger()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_basic1", \
                                  onclimb = "tutorial_msg4.exit" }
-MARKER:  } = lua:tutorial_msg4.tutorial_end()
-MARKER:  ) = lua:tutorial_msg4.tutorial_end()
-MARKER:  ] = lua:tutorial_msg4.tutorial_end()
-MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
-                                 desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg4.exit" }
-MARKER:  ) = lua:one_way_stair { dst  = "tutorial_basic1", \
-                                 desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg4.exit" }
-MARKER:  ] = lua:one_way_stair { dst  = "tutorial_basic1", \
-                                 desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg4.exit" }
 epilogue{{
   tutorial_msg4.start()
 }}
@@ -212,6 +250,69 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxx}xxxxxxx4...xxxDxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx).....5h...4...xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx]xxxxxx..4...xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##########################################################
+# Level 2: Forgetting spells, allies.
+##########################################################
+NAME:    tutorial_lesson4_level2
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson4
+PLACE:   D:2
+BFLAGS:  islanded
+ORIENT:  encompass
+KFEAT:   T = fountain_blood
+KFEAT:   A = +
+KFEAT:   B = .
+COLOUR:  dB = blue
+FTILE:   dB = tutorial_pad
+ITEM:    randbook numspells:1 spells:summon_small_mammals title:Simple_Steps_to_Summoning owner:player
+MONS:    hobgoblin ; whip ego:none . shield . ring mail race:none
+MONS:	 rat
+MONS:    goblin
+# FIXME: Put this in the epilogue.
+MARKER:  d = lua:tutorial_msg4.forget_spell()
+MARKER:  A = lua:tutorial_msg4.order_allies()
+MARKER:  B = lua:tutorial_msg4.heavy_armour()
+MARKER:  } = lua:tutorial_msg4.tutorial_end()
+MARKER:  ) = lua:tutorial_msg4.tutorial_end()
+MARKER:  ] = lua:tutorial_msg4.tutorial_end()
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg4.exit" }
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg4.exit" }
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_basic1", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg4.exit" }
+epilogue{{
+  tutorial_msg4.forget_spell()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.....xxxx.T..xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.xxxxx.xx.....[xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxx.+..d..{xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxAxxxxxxxxx.....(xxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxx.T..xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxBxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxx....3.]xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxx..2.....3xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx......+......2.)xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx..2....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx...}xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
