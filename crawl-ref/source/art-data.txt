@@ -939,10 +939,12 @@ ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
 APPEAR:  weird-looking armour
 OBJ:     OBJ_ARMOUR/ARM_PLATE_MAIL
-PLUS:    +10
+PLUS:    +15
 COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
 TILE_EQ: maxwell
+BRAND:   SPARM_PRESERVATION
+MAGIC:   50
 BOOL:    nospell, notelep, cursed
 DESC:    A weird-looking armour.
 

@@ -1524,7 +1524,7 @@ int player_res_acid(bool calc_unid, bool items)
         if (wearing_amulet(AMU_RESIST_CORROSION, calc_unid, true))
             res++;
 
-        if (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION))
+        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION))
             res++;
     }
 
@@ -3847,7 +3847,7 @@ void display_char_status()
 bool player_item_conserve(bool calc_unid)
 {
     return (player_equip(EQ_AMULET, AMU_CONSERVATION, calc_unid)
-            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION));
+            || player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION));
 }
 
 int player_mental_clarity(bool calc_unid, bool items)
@@ -3889,7 +3889,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
             return (true);
         // else fall-through
     case AMU_CONSERVATION:
-        return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0);
+        return (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PRESERVATION));
     case AMU_THE_GOURMAND:
         return (player_mutation_level(MUT_GOURMAND) > 0);
     default:
