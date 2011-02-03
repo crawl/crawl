@@ -10,6 +10,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "jobs.h"
 #include "maps.h"
 #include "misc.h"
@@ -390,16 +391,9 @@ void newgame_make_item(int slot, equipment_type eqslot,
     // If the character is restricted in wearing armour of equipment
     // slot eqslot, hand out replacement instead.
     if (item.base_type == OBJ_ARMOUR && replacement != -1
-        && !you_can_wear(eqslot))
+        && !can_wear_armour(item, false, true))
     {
-        // Don't replace shields with bucklers for large races or
-        // draconians.
-        if (sub_type != ARM_SHIELD
-            || you.body_size(PSIZE_TORSO) < SIZE_LARGE
-               && !player_genus(GENPC_DRACONIAN))
-        {
-            item.sub_type = replacement;
-        }
+        item.sub_type = replacement;
     }
 
     if (eqslot != EQ_NONE && you.equip[eqslot] == -1)
@@ -486,7 +480,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
 
-        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
+        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER, ARM_SHIELD);
 
         int curr = 3;
         if (you_can_wear(EQ_HELMET))
