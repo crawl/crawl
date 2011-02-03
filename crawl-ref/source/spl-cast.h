@@ -66,8 +66,6 @@ int spell_enhancement(unsigned int typeflags);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 
-void maybe_identify_staff(item_def &item);
-
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 

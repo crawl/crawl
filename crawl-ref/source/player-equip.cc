@@ -450,7 +450,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_STAVES:
     {
-        set_ident_flags(item, ISFLAG_KNOW_CURSE);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
+
         if (item.sub_type == STAFF_POWER)
         {
             int mp = item.special - you.elapsed_time / POWER_DECAY;
@@ -465,21 +467,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                 canned_msg(MSG_MANA_INCREASE);
 
             calc_mp();
-        }
-        maybe_identify_staff(item);
-
-        // Automatically identify rods; you can do this by wielding and then
-        // evoking them, so do it automatically instead. We don't need to give
-        // a message either, as the game will do that automatically. {due}
-        if (item_is_rod(item))
-        {
-            if (!item_type_known(item))
-            {
-                set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
-                set_ident_flags(item, ISFLAG_KNOW_TYPE);
-            }
-            if (!item_ident(item, ISFLAG_KNOW_PLUSES))
-                set_ident_flags(item, ISFLAG_KNOW_PLUSES);
         }
 
         _wield_cursed(item, known_cursed);
