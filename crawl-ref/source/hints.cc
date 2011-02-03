@@ -1375,7 +1375,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_TARGET_NO_FOE:
     case HINT_YOU_POISON:
     case HINT_YOU_SICK:
-    case HINT_CHOOSE_STAT:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
     case HINT_LEVITATING:
@@ -2170,7 +2169,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             text << "Well done! Reaching a new experience level is always a "
                     "nice event: you get more health and magic points, and "
                     "occasionally increases to your attributes (strength, "
-                    "dexterity, intelligence).";
+                    "intelligence, dexterity).";
         }
 
         if (Hints.hints_type == HINT_MAGIC_CHAR)
@@ -2226,12 +2225,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CHOOSE_STAT:
         text << "Every third level you get to choose a stat to raise: "
-                "Strength, Dexterity, or Intelligence. <w>Strength</w> "
-                "affects the amount you can carry and makes it easier to "
-                "wear heavy armour. <w>Dexterity</w> increases your evasion "
-                "and makes it easier to dodge attacks or traps. "
+                "Strength, Intelligence, or Dexterity. "
+                "<w>Strength</w> affects the amount you can carry and makes it "
+                "easier to ear heavy armour. "
                 "<w>Intelligence</w> makes it easier to cast spells and "
-                "reduces the amount by which you hunger when you do so.\n";
+                "reduces the amount by which you hunger when you do so. "
+                "<w>Dexterity</w> increases your evasion "
+                "and makes it easier to dodge attacks or traps.\n";
         break;
 
     case HINT_YOU_ENCHANTED:

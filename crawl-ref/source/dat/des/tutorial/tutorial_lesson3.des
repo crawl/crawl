@@ -10,6 +10,7 @@ tutorial_msg3 = {}
 function tutorial_msg3.start ()
     tutorial_intro("In this lesson you're going to learn about items and how to use them.")
     crawl.tutorial_hint("HINT_MULTI_PICKUP")
+    crawl.tutorial_hint("HINT_CHOOSE_STAT")
     crawl.tutorial_hint("HINT_YOU_CURSED")
     crawl.tutorial_hint("HINT_REMOVED_CURSE")
 end
@@ -102,7 +103,7 @@ end
 
 function tutorial_msg3.battle ()
     return tutorial_message("Once you've successfully managed to poison a monster, it is sometimes best to retreat "
-                            .. "and let the poison do the work.")
+                            .. "and let the poison do the work. Also retreat to heal, if necessary.")
 end
 
 function tutorial_msg3.downstairs ()
@@ -140,9 +141,9 @@ end
 
 function tutorial_msg3.weapon_swap ()
     local text = "It is possible to quickly switch between two weapons in slots a and b. "
-                 .. "First, you need to adjust your main weapon to slot a. To do that, press "
+                 .. "First, you need to adjust your main weapon to slot a. To do that, type "
                  .. tutorial_get_cmd("CMD_ADJUST_INVENTORY")
-                 .. "<w>i</w>, select your scimitar, and then enter <w>a</w> into the subsequent prompt.\n"
+                 .. "<w>i</w>, select your scimitar, and then enter <w>a</w> at the subsequent prompt.\n"
                  .. "Follow the same steps to set the sling to slot <w>b</w>. "
                  .. "Once that is done you can toggle between both of them with "
                  .. tutorial_get_cmd("CMD_WEAPON_SWAP") .. "."
@@ -209,7 +210,7 @@ end
 
 function tutorial_msg3.enter_shop ()
     local text = "To enter this shop, press "
-                 .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS")
+                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
 
     if crawl.is_tiles() then
         text = text .. " or <white>Shift</white> + <white>mouseclick</white>"
@@ -249,7 +250,7 @@ function tutorial_msg3.amulet ()
     local text = "Amulets are another type of jewellery and can be put on with "
                  .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
     if crawl.is_tiles() then
-        text = text .. ". Alternatively, either can be done by <white>mouseclick</click>"
+        text = text .. " or by <white>mouseclick</click>"
     end
     text = text .. ".\nSome types of jewellery, when equipped, don't identify "
                 .. "automatically. For that, you'll need a scroll of identify."
@@ -269,9 +270,7 @@ function tutorial_msg3.go_shopping ()
                  .. "for it. Type "
                  .. tutorial_get_cmd("CMD_SEARCH_STASHES")
                  .. ", and then enter \"<w>shop</w>\". Select the result to start "
-                 .. "traveling. If travel is interrupted, type "
-                 .. tutorial_get_cmd("CMD_MAP_GOTO_LEVEL") .. " <w>Enter</w> to "
-                 .. "continue traveling.\n"
+                 .. "traveling.\n"
                  .. "You can then return here via "
                  .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. " mode"
 
@@ -365,8 +364,8 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx...xxxx.....xxxxxxxxxxx
-xxxxx1....xxxxxxxx.........e..xxxxxxxxxxx
-xxxxx.....xxxxxxxx.f.xxxx.....xxxx..(..xx
+xxxxx.....xxxxxxxx.........e..xxxxxxxxxxx
+xxxxx1....xxxxxxxx.f.xxxx.....xxxx..(..xx
 xxxxx....g+..........xxxxxxx......d...{xx
 xxxxxxx.xxxxxxxxxx...xxxxxxxxxxxxx..[..xx
 xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

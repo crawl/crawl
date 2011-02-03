@@ -55,14 +55,26 @@ function tutorial_msg2.resting ()
 end
 
 function tutorial_msg2.chop_corpses ()
-    return tutorial_message("You can chop up corpses into edible meat chunks. For that you'll need a sharp object, such as the short sword over there.")
+    return tutorial_message("You can chop up corpses into edible meat chunks. For that you'll need a sharp object, such as that short sword.")
 end
 
 function tutorial_msg2.butchery_weapon ()
-    return tutorial_message("Now that you have a sharp-edged weapon, you can chop a corpse with "
-                            .. tutorial_get_cmd("CMD_BUTCHER")
-                            .. " and then eat the resulting chunks with "
-                            .. tutorial_get_cmd("CMD_EAT") .. ".")
+    local text = "Now that you have a sharp-edged weapon, you can chop a corpse with "
+                 .. tutorial_get_cmd("CMD_BUTCHER")
+
+    if crawl.is_tiles() then
+        text = text .. " or <white>Shift + mouseclick</white>,"
+    end
+
+    text = text .. " and then eat the resulting chunks with "
+                .. tutorial_get_cmd("CMD_EAT")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg2.wait ()
@@ -139,8 +151,15 @@ function tutorial_msg2.throwing ()
 end
 
 function tutorial_msg2.wield_bow ()
-    return tutorial_message("Pick up this bow and wield it with "
-                 .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. ".")
+    local text = "Pick up this bow and wield it with "
+                 .. tutorial_get_cmd("CMD_WIELD_WEAPON")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg2.firing ()
@@ -167,9 +186,9 @@ function tutorial_msg2.quiver ()
 end
 
 function tutorial_msg2.explore ()
-    local text = "This cave is large. Use autoexplore (" .. tutorial_get_cmd("CMD_EXPLORE")
-                 .. ") to find the exit. Shoot any bats you come across!"
-    return tutorial_message(text)
+    return tutorial_message("This cave is large. Use autoexplore ("
+                            .. tutorial_get_cmd("CMD_EXPLORE")
+                            .. ") to find the exit. Shoot any bats you come across!")
 end
 
 function tutorial_msg2.tutorial_end ()
