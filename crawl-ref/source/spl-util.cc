@@ -308,11 +308,13 @@ bool add_spell_to_memory(spell_type spell)
 
 bool del_spell_from_memory_by_slot(int slot)
 {
+    ASSERT(slot >= 0 && slot < MAX_KNOWN_SPELLS);
     int j;
 
     if (you.last_cast_spell == you.spells[slot])
         you.last_cast_spell = SPELL_NO_SPELL;
 
+    mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
     you.spells[ slot ] = SPELL_NO_SPELL;
 
     for (j = 0; j < 52; j++)
