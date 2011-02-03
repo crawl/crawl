@@ -5995,6 +5995,17 @@ void melee_attack::chaos_affect_actor(actor *victim)
 
 ///////////////////////////////////////////////////////////////////////////
 
+static bool _is_melee_weapon(const item_def *weapon)
+{
+    if (weapon->base_type == OBJ_STAVES)
+        return (true);
+
+    if (weapon->base_type != OBJ_WEAPONS)
+        return (false);
+
+    return (!is_range_weapon(*weapon));
+}
+
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool weapon_warning  = false;
@@ -6003,9 +6014,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     if (weapon)
     {
         if (needs_handle_warning(*weapon, OPER_ATTACK)
-            || weapon->base_type != OBJ_STAVES
-               && (weapon->base_type != OBJ_WEAPONS
-                   || is_range_weapon(*weapon)))
+            || !_is_melee_weapon(weapon))
         {
             weapon_warning = true;
         }
@@ -6013,7 +6022,10 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     else if (you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
              && you_tran_can_wear(EQ_WEAPON))
     {
-        unarmed_warning = true;
+        const int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
+        const item_def &wpn = you.inv[weap];
+        if (_is_melee_weapon(&wpn))
+            unarmed_warning = true;
     }
 
     if (!you.received_weapon_warning && !you.confused()
