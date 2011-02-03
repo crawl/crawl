@@ -360,7 +360,7 @@ COLORS SkillMenuEntry::_get_colour() const
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
                                         || m_sk == you.transfer_to_skill))
     {
-        return GREEN;
+        return LIGHTBLUE;
     }
     else if (you.skill(m_sk) > you.skills[m_sk])
         return LIGHTBLUE;
@@ -369,7 +369,7 @@ COLORS SkillMenuEntry::_get_colour() const
     else if (you.skills[m_sk] == 0)
         return DARKGREY;
     else if (ct_bonus > 1 && is_set(SKMF_DISP_APTITUDE))
-        return LIGHTBLUE;
+        return GREEN;
     else if (is_antitrained(m_sk) && is_set(SKMF_DISP_APTITUDE))
         return MAGENTA;
     else
@@ -431,13 +431,13 @@ void SkillMenuEntry::_set_aptitude()
     if (crosstrain_other(m_sk, show_all) || ct_bonus > 1)
     {
         m_skm->set_crosstrain();
-        text += "<lightblue>";
+        text += "<green>";
         text += crosstrain_other(m_sk, show_all) ? "*" : " ";
 
         if ( ct_bonus > 1)
             text += make_stringf("+%d", ct_bonus * 2);
 
-        text += "</lightblue>";
+        text += "</green>";
     }
     else if (antitrain_other(m_sk, show_all) || is_antitrained(m_sk))
     {
@@ -469,7 +469,7 @@ void SkillMenuEntry::_set_reskill_progress()
         text = "";
 
     m_progress->set_text(text);
-    m_progress->set_fg_colour(GREEN);
+    m_progress->set_fg_colour(LIGHTBLUE);
 }
 
 void SkillMenuEntry::_set_new_level()
@@ -486,7 +486,7 @@ void SkillMenuEntry::_set_new_level()
     {
         new_level = transfer_skill_points(you.transfer_from_skill, m_sk,
                                           you.transfer_skill_points, true);
-        m_progress->set_fg_colour(GREEN);
+        m_progress->set_fg_colour(LIGHTBLUE);
     }
 
     if (is_selectable() || m_sk == you.transfer_from_skill)
@@ -935,7 +935,7 @@ void SkillMenu::_set_help(int flag)
     case SKMF_DO_RESKILL_TO:
         help = "Select a skill as the destination of the knowledge transfer. "
                "The chosen skill will be raised to the level showned in "
-               "<green>green</green>.";
+               "<lightblue>blue</lightblue>.";
         break;
     case SKMF_DISP_PROGRESS:
     case SKMF_DISP_APTITUDE:
@@ -948,13 +948,13 @@ void SkillMenu::_set_help(int flag)
         if (flag == SKMF_DISP_APTITUDE)
         {
             if (m_crosstrain)
-                help += "Crosstraining is in <blue>blue</blue>. ";
+                help += "Crosstraining is in <green>green</green>. ";
             if (m_antitrain)
                 help += "Antitraining is in <magenta>magenta</magenta>. ";
             if (m_crosstrain && !m_antitrain)
             {
                 help += "The skill responsible for the bonus is marked with "
-                        "'<blue>*</blue>'.";
+                        "'<green>*</green>'.";
             }
             else if (!m_crosstrain && m_antitrain)
             {
@@ -970,7 +970,7 @@ void SkillMenu::_set_help(int flag)
         break;
     case SKMF_DISP_RESKILL:
         help = "The progress of the knowledge transfer is displayed in "
-               "<green>green</green> in front of the skill receiving the "
+               "<lightblue>blue</lightblue> in front of the skill receiving the "
                "knowledge. The donating skill is marked with '*'.";
         break;
     default:
