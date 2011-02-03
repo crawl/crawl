@@ -2306,8 +2306,8 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_HEROISM, delay,
                           "You feel like a meek peon again."))
     {
-	    you.redraw_evasion      = true;
-	    you.redraw_armour_class = true;
+            you.redraw_evasion      = true;
+            you.redraw_armour_class = true;
     }
     _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
 

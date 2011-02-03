@@ -128,9 +128,9 @@ function tutorial_msg.autoexplore_announce ()
 end
 
 function tutorial_msg.tutorial_end ()
-	local text = "Congratulations! You've completed the first lesson!\n"
+        local text = "Congratulations! You've completed the first lesson!\n"
                  .. "To exit the tutorial, simply go up these stairs with "
-				 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
+                                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
     if crawl.is_tiles() then
       text = text .. " or by <white>Shift-clicking</white> on your character"
     end

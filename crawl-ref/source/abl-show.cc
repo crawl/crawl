@@ -2331,7 +2331,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_OKAWARU_FINESSE:
         if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.",
-				 20, "%s makes your neck tingle."))
+                                 20, "%s makes your neck tingle."))
         {
             return (false);
         }
