@@ -55,7 +55,8 @@ std::string god_title(god_type which_god, species_type which_species);
 void describe_god(god_type which_god, bool give_title);
 
 void describe_feature_wide(const coord_def& pos);
-void get_feature_desc(const coord_def &gc, describe_info &inf);
+void get_feature_desc(const coord_def &gc, describe_info &inf, 
+                      bool noquote = false);
 
 void set_feature_desc_long(const std::string &raw_name,
                            const std::string &desc);

@@ -1730,7 +1730,7 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
 //
 //---------------------------------------------------------------
 std::string get_item_description(const item_def &item, bool verbose,
-                                  bool dump, bool noquote)
+                                 bool dump, bool noquote)
 {
     if (dump)
         noquote = true;
@@ -2166,7 +2166,7 @@ static std::string _get_feature_description_wide(int feat)
     return std::string();
 }
 
-void get_feature_desc(const coord_def &pos, describe_info &inf)
+void get_feature_desc(const coord_def &pos, describe_info &inf, bool noquote)
 {
     dungeon_feature_type feat = grd(pos);
     bool mimic = false;
@@ -2245,7 +2245,8 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     if (!custom_desc)
         inf.body << _get_feature_description_wide(grd(pos));
 
-    inf.quote = getQuoteString(db_name);
+    if (!noquote)
+        inf.quote = getQuoteString(db_name);
 
     // Quotes don't care about custom descriptions.
     if (props.exists(QUOTE_KEY))
@@ -2260,7 +2261,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 void describe_feature_wide(const coord_def& pos)
 {
     describe_info inf;
-    get_feature_desc(pos, inf);
+    get_feature_desc(pos, inf, crawl_state.game_is_hints_tutorial());
     print_description(inf);
 
     mouse_control mc(MOUSE_MODE_MORE);
