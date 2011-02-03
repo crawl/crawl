@@ -2114,7 +2114,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_librarian
-TAGS:   mini_float no_monster_gen no_item_gen no_trap_gen
+TAGS:   no_monster_gen no_item_gen no_trap_gen
 DEPTH:  D:9-27
 : if you.absdepth() > 24 then
 MONS:   ancient lich w:50 / greater mummy

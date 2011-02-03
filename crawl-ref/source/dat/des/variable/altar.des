@@ -1248,7 +1248,7 @@ ENDMAP
 
 NAME:   lemuel_blue_sif_altar
 DEPTH:  D:2-18, Elf, Vault
-TAGS:   no_monster_gen mini_float temple_overflow_sif_muna uniq_altar_sif_muna
+TAGS:   no_monster_gen temple_overflow_sif_muna uniq_altar_sif_muna
 COLOUR: . = blue
 FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
 KFEAT:  _ = altar_sif_muna
