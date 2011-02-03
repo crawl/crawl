@@ -4677,7 +4677,11 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     switch (vgrid)
     {
     case '@':
-        place.exits.push_back(where);
+    case '=':
+    case '+':
+        if (_map_feat_is_on_edge(place, where))
+            place.exits.push_back(where);
+
         break;
     case '^':
         place_specific_trap(where, TRAP_RANDOM);
@@ -4685,14 +4689,6 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     case '~':
         place_specific_trap(where, random_trap_for_place(place.level_number));
         break;
-    }
-
-    if ((vgrid == '=' || vgrid == '+')
-        && (where.x == place.pos.x || where.y == place.pos.y
-            || where.x == place.pos.x + place.size.x - 1
-            || where.y == place.pos.y + place.size.y - 1))
-    {
-        place.exits.push_back(where);
     }
 
     // Then, handle grids that place "stuff" {dlb}:
