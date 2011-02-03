@@ -2398,7 +2398,7 @@ void marshallMonster(writer &th, const monster& m)
     for (unsigned int i = 0; i < m.travel_path.size(); i++)
         marshallCoord(th, m.travel_path[i]);
 
-    marshallInt(th, m.flags);
+    marshallUnsigned(th, m.flags);
     marshallInt(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
@@ -2830,7 +2830,12 @@ void unmarshallMonster(reader &th, monster& m)
     for (int i = 0; i < len; ++i)
         m.travel_path.push_back(unmarshallCoord(th));
 
-    m.flags      = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_MFLAGS64)
+        m.flags      = unmarshallInt(th);
+    else
+#endif
+    m.flags      = unmarshallUnsigned(th);
     m.experience = unmarshallInt(th);
 
     m.enchantments.clear();

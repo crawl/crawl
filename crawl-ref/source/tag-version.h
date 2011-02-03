@@ -14,6 +14,7 @@ enum tag_minor_version
     TAG_MINOR_FOE_MEMORY,          // Save monster's foe_memory.
     TAG_MINOR_SHOPS,               // Store shop_name and shop_type_name in shop_struct.
     TAG_MINOR_MON_TIER_STATS,      // Gather stats about monsters people kill.
+    TAG_MINOR_MFLAGS64,            // Extend mon.flags to 64 bits.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
