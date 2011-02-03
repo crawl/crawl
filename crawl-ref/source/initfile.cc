@@ -100,7 +100,7 @@ static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
     "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
     "friend_spell", "friend_enchant", "monster_damage", "monster_target",
     "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
-    "examine_filter", "diagnostic", "error", "tutorial"
+    "examine_filter", "diagnostic", "error", "tutorial", "orb"
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -603,7 +603,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
-static std::string _user_home_dir()
+std::string user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
     char home[MAX_PATH];
@@ -617,14 +617,9 @@ static std::string _user_home_dir()
     return (home);
 }
 
-static std::string _user_home_subpath(const std::string subpath)
+std::string user_home_subpath(const std::string subpath)
 {
-    return catpath(_user_home_dir(), subpath);
-}
-
-static std::string _user_home_crawl_subpath(const std::string subpath)
-{
-    return _user_home_subpath(catpath(".crawl", subpath));
+    return catpath(user_home_dir(), subpath);
 }
 
 #if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
@@ -636,7 +631,7 @@ static std::string _resolve_dir(const char* path, const char* suffix)
     if (path[0] != '~')
         return std::string(path) + suffix;
     else
-        return _user_home_subpath(std::string(path + 1) + suffix);
+        return user_home_subpath(std::string(path + 1) + suffix);
 #endif
 }
 #endif
@@ -661,7 +656,7 @@ void game_options::reset_options()
     if (macro_dir.empty())
     {
 #ifdef UNIX
-        macro_dir = _user_home_crawl_subpath("");
+        macro_dir = user_home_subpath(".crawl");
 #else
         macro_dir = "settings/";
 #endif
@@ -673,7 +668,7 @@ void game_options::reset_options()
     morgue_dir = _resolve_dir(SAVE_DIR_PATH, "/morgue/");
 #elif defined(TARGET_OS_MACOSX)
     const std::string tmp_path_base =
-        _user_home_subpath("Library/Application Support/" CRAWL);
+        user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
     if (SysEnv.macro_dir.empty())
@@ -919,13 +914,18 @@ void game_options::reset_options()
     no_dark_brand      = true;
 
 #ifdef WIZARD
+#ifdef DGAMELAUNCH
+    if (wiz_mode != WIZ_NO)
+        wiz_mode         = WIZ_NEVER;
+#else
     wiz_mode         = WIZ_NO;
+#endif
     terp_files.clear();
 #endif
 
 #ifdef USE_TILE
     strcpy(tile_show_items, "!?/%=([)x}+\\_.");
-    tile_title_screen    = true;
+    tile_skip_title      = false;
     tile_menu_icons      = true;
 
     // minimap colours
@@ -969,6 +969,8 @@ void game_options::reset_options()
     tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_force_overlay    = false;
+    tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
+                                             "command, spell, monster");
 
     // delays
     tile_update_rate      = 1000;
@@ -982,6 +984,7 @@ void game_options::reset_options()
     tile_show_minihealthbar  = true;
     tile_show_minimagicbar   = true;
     tile_show_demon_tier     = true;
+    tile_force_regenerate_levels = false;
 #endif
 
     // map each colour to itself as default
@@ -2175,15 +2178,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #ifndef USE_TILE
     else if (key == "char_set" || key == "ascii_display")
     {
-        bool valid = true;
-
         if (key == "ascii_display")
         {
             char_set =
                 _read_bool(field, char_set == CSET_ASCII)?
                     CSET_ASCII
                   : CSET_IBM;
-            valid = true;
         }
         else
         {
@@ -2196,10 +2196,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             else if (field == "utf" || field == "unicode")
                 char_set = CSET_UNICODE;
             else
-            {
                 fprintf(stderr, "Bad character set: %s\n", field.c_str());
-                valid = false;
-            }
         }
     }
 #endif
@@ -2330,13 +2327,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         add_cset_override(cs, field);
     }
     else if (key == "feature" || key == "dungeon")
-    {
         split_parse(field, ";", &game_options::add_feature_override);
-    }
     else if (key == "mon_glyph")
-    {
         split_parse(field, ",", &game_options::add_mon_glyph_override);
-    }
     else CURSES_OPTION(friend_brand);
     else CURSES_OPTION(neutral_brand);
     else CURSES_OPTION(stab_brand);
@@ -2351,15 +2344,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else CURSES_OPTION(heap_brand);
     else COLOUR_OPTION(status_caption_colour);
     else if (key == "arena_teams")
-    {
         game.arena_teams = field;
-    }
     // [ds] Allow changing map only if the map hasn't been set on the
     // command-line.
     else if (key == "map" && crawl_state.sprint_map.empty())
-    {
         game.map = field;
-    }
     // [ds] For dgamelaunch setups, the player should *not* be able to
     // set game type in their rc; the only way to set game type for
     // DGL builds should be the command-line options.
@@ -2372,13 +2361,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     }
     else if (key == "species" || key == "race")
-    {
         game.species = _str_to_species(field);
-    }
     else if (key == "background" || key == "job" || key == "class")
-    {
         game.job = _str_to_job(field);
-    }
     else if (key == "weapon")
     {
         // Choose this weapon for backgrounds that get choice.
@@ -2418,9 +2403,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             assign_item_slot = SS_BACKWARD;
     }
     else if (key == "fire_order")
-    {
         set_fire_order(field, plus_equal);
-    }
     else if (key == "pizza")
     {
         // field is already cleaned up from trim_string()
@@ -2440,9 +2423,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
 #ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")
-    {
         morgue_dir = field;
-    }
 #endif
 #endif
     else BOOL_OPTION(show_gold_turns);
@@ -2473,13 +2454,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(ood_interesting, 0, 500);
     else INT_OPTION(rare_interesting, 0, 99);
     else if (key == "note_monsters")
-    {
         append_vector(note_monsters, split_string(",", field));
-    }
     else if (key == "note_messages")
-    {
         append_vector(note_messages, split_string(",", field));
-    }
     else if (key == "note_hp_percent")
     {
         note_hp_percent = atoi(field.c_str());
@@ -2500,9 +2477,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         SysEnv.crawl_dir = field;
     }
     else if (key == "macro_dir")
-    {
         macro_dir = field;
-    }
 #endif
 #endif
     else BOOL_OPTION(auto_list);
@@ -2599,6 +2574,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // wiz_mode is recognised as a legal key in all compiles -- bwr
 #ifdef WIZARD
+    #ifndef DGAMELAUNCH
         if (field == "never")
             wiz_mode = WIZ_NEVER;
         else if (field == "no")
@@ -2610,6 +2586,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             report_error (
                 make_stringf("Unknown wiz_mode option: %s\n", field.c_str()));
         }
+    #endif
 #endif
     }
     else if (key == "ban_pickup")
@@ -2641,9 +2618,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         }
     }
     else if (key == "note_items")
-    {
         append_vector(note_items, split_string(",", field));
-    }
 
 #ifndef _MSC_VER
     // break if-else chain on broken Microsoft compilers with stupid nesting limits
@@ -2654,7 +2629,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         if (field.empty())
         {
-            report_error("Autoinscirbe string is empty");
+            report_error("Autoinscribe string is empty");
             return;
         }
 
@@ -2701,9 +2676,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(autoinscribe_cursed);
 #ifndef DGAMELAUNCH
     else if (key == "map_file_name")
-    {
         map_file_name = field;
-    }
 #endif
     else if (key == "hp_colour" || key == "hp_color")
     {
@@ -2799,9 +2772,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(pickup_dropped);
 #ifdef WIZARD
     else if (key == "fsim_kit")
-    {
         append_vector(fsim_kit, split_string(",", field));
-    }
     else if (key == "fsim_rounds")
     {
         fsim_rounds = atol(field.c_str());
@@ -2811,25 +2782,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             fsim_rounds = 500000L;
     }
     else if (key == "fsim_mons")
-    {
         fsim_mons = field;
-    }
     else if (key == "fsim_str")
-    {
         fsim_str = atoi(field.c_str());
-    }
     else if (key == "fsim_int")
-    {
         fsim_int = atoi(field.c_str());
-    }
     else if (key == "fsim_dex")
-    {
         fsim_dex = atoi(field.c_str());
-    }
     else if (key == "fsim_xl")
-    {
         fsim_xl = atoi(field.c_str());
-    }
 #endif // WIZARD
     else if (key == "sort_menus")
     {
@@ -2898,9 +2859,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         }
     }
     else if (key == "drop_filter")
-    {
         append_vector(drop_filter, split_string(",", field));
-    }
     else if (key == "travel_avoid_terrain")
     {
         std::vector<std::string> seg = split_string(",", field);
@@ -2908,39 +2867,27 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             prevent_travel_to(seg[i]);
     }
     else if (key == "tc_reachable")
-    {
         tc_reachable = str_to_colour(field, tc_reachable);
-    }
     else if (key == "tc_excluded")
-    {
         tc_excluded = str_to_colour(field, tc_excluded);
-    }
     else if (key == "tc_exclude_circle")
     {
         tc_exclude_circle =
             str_to_colour(field, tc_exclude_circle);
     }
     else if (key == "tc_dangerous")
-    {
         tc_dangerous = str_to_colour(field, tc_dangerous);
-    }
     else if (key == "tc_disconnected")
-    {
         tc_disconnected = str_to_colour(field, tc_disconnected);
-    }
     else if (key == "auto_exclude")
-    {
         append_vector(auto_exclude, split_string(",", field));
-    }
     else BOOL_OPTION(classic_item_colours);
     else BOOL_OPTION(item_colour);
     else BOOL_OPTION_NAMED("item_color", item_colour);
     else BOOL_OPTION(easy_exit_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
-    {
         item_stack_summary_minimum = atoi(field.c_str());
-    }
     else if (key == "explore_stop")
     {
         if (!plus_equal && !minus_equal)
@@ -2963,9 +2910,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             explore_stop_prompt |= new_conditions;
     }
     else if (key == "explore_stop_pickup_ignore")
-    {
         append_vector(explore_stop_pickup_ignore, split_string(",", field));
-    }
     else if (key == "explore_item_greed")
     {
         explore_item_greed = atoi(field.c_str());
@@ -3040,9 +2985,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(menu_colour_shops);
     else BOOL_OPTION_NAMED("menu_color_shops", menu_colour_shops);
     else if (key == "message_colour" || key == "message_color")
-    {
         add_message_colour_mappings(field);
-    }
     else if (key == "dump_order")
     {
         if (!plus_equal)
@@ -3129,9 +3072,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             default_target = false;
     }
     else if (key == "darken_beyond_range")
-    {
         darken_beyond_range = _read_bool(field, darken_beyond_range);
-    }
     else if (key == "drop_mode")
     {
         if (field.find("multi") != std::string::npos)
@@ -3156,135 +3097,63 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 #ifdef USE_TILE
     else if (key == "tile_show_items")
-    {
         strncpy(tile_show_items, field.c_str(), 18);
-    }
-    else BOOL_OPTION(tile_title_screen);
+    else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
     else if (key == "tile_player_col")
-    {
-        tile_player_col =
-               str_to_tile_colour(field);
-    }
+        tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
-    {
-        tile_monster_col =
-               str_to_tile_colour(field);
-    }
+        tile_monster_col = str_to_tile_colour(field);
     else if (key == "tile_neutral_col")
-    {
-        tile_neutral_col =
-               str_to_tile_colour(field);
-    }
+        tile_neutral_col = str_to_tile_colour(field);
     else if (key == "tile_friendly_col")
-    {
-        tile_friendly_col =
-               str_to_tile_colour(field);
-    }
+        tile_friendly_col = str_to_tile_colour(field);
     else if (key == "tile_plant_col")
-    {
-        tile_plant_col =
-               str_to_tile_colour(field);
-    }
+        tile_plant_col = str_to_tile_colour(field);
     else if (key == "tile_item_col")
-    {
-        tile_item_col =
-               str_to_tile_colour(field);
-    }
+        tile_item_col = str_to_tile_colour(field);
     else if (key == "tile_unseen_col")
-    {
-        tile_unseen_col =
-               str_to_tile_colour(field);
-    }
+        tile_unseen_col = str_to_tile_colour(field);
     else if (key == "tile_floor_col")
-    {
-        tile_floor_col =
-               str_to_tile_colour(field);
-    }
+        tile_floor_col = str_to_tile_colour(field);
     else if (key == "tile_wall_col")
-    {
-        tile_wall_col =
-               str_to_tile_colour(field);
-    }
+        tile_wall_col = str_to_tile_colour(field);
     else if (key == "tile_mapped_wall_col")
-    {
-        tile_mapped_wall_col =
-               str_to_tile_colour(field);
-    }
+        tile_mapped_wall_col = str_to_tile_colour(field);
     else if (key == "tile_door_col")
-    {
-        tile_door_col =
-               str_to_tile_colour(field);
-    }
+        tile_door_col = str_to_tile_colour(field);
     else if (key == "tile_downstairs_col")
-    {
-        tile_downstairs_col =
-               str_to_tile_colour(field);
-    }
+        tile_downstairs_col = str_to_tile_colour(field);
     else if (key == "tile_upstairs_col")
-    {
-        tile_upstairs_col =
-               str_to_tile_colour(field);
-    }
+        tile_upstairs_col = str_to_tile_colour(field);
     else if (key == "tile_feature_col")
-    {
-        tile_feature_col =
-               str_to_tile_colour(field);
-    }
+        tile_feature_col = str_to_tile_colour(field);
     else if (key == "tile_trap_col")
-    {
-        tile_trap_col =
-               str_to_tile_colour(field);
-    }
+        tile_trap_col = str_to_tile_colour(field);
     else if (key == "tile_water_col")
-    {
-        tile_water_col =
-               str_to_tile_colour(field);
-    }
+        tile_water_col = str_to_tile_colour(field);
     else if (key == "tile_lava_col")
-    {
-        tile_lava_col =
-               str_to_tile_colour(field);
-    }
+        tile_lava_col = str_to_tile_colour(field);
     else if (key == "tile_excluded_col")
-    {
-        tile_excluded_col =
-               str_to_tile_colour(field);
-    }
+        tile_excluded_col = str_to_tile_colour(field);
     else if (key == "tile_excl_centre_col" || key == "tile_excl_center_col")
-    {
-        tile_excl_centre_col =
-               str_to_tile_colour(field);
-    }
+        tile_excl_centre_col = str_to_tile_colour(field);
     else if (key == "tile_window_col")
-    {
-        tile_window_col =
-                str_to_tile_colour(field);
-    }
+        tile_window_col = str_to_tile_colour(field);
     else if (key == "tile_font_crt_file")
-    {
         tile_font_crt_file = field;
-    }
     else INT_OPTION(tile_font_crt_size, 1, INT_MAX);
     else if (key == "tile_font_msg_file")
-    {
         tile_font_msg_file = field;
-    }
     else INT_OPTION(tile_font_msg_size, 1, INT_MAX);
     else if (key == "tile_font_stat_file")
-    {
         tile_font_stat_file = field;
-    }
     else INT_OPTION(tile_font_stat_size, 1, INT_MAX);
     else if (key == "tile_font_tip_file")
-    {
         tile_font_tip_file = field;
-    }
     else INT_OPTION(tile_font_tip_size, 1, INT_MAX);
     else if (key == "tile_font_lbl_file")
-    {
         tile_font_lbl_file = field;
-    }
     else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
     else INT_OPTION(tile_key_repeat_delay, 0, INT_MAX);
     else if (key == "tile_full_screen")
@@ -3299,16 +3168,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(tile_show_minihealthbar);
     else BOOL_OPTION(tile_show_minimagicbar);
     else BOOL_OPTION(tile_show_demon_tier);
+    else BOOL_OPTION(tile_force_regenerate_levels);
+    else if (key == "tile_layout_priority")
+        tile_layout_priority = split_string(",", field.c_str());
     else if (key == "tile_tag_pref")
-    {
         tile_tag_pref = _str_to_tag_pref(field.c_str());
-    }
 #endif // USE_TILE
 
     else if (key == "bindkey")
-    {
         _bindkey(field);
-    }
     else if (key == "constant")
     {
         if (variables.find(field) == variables.end())
@@ -3544,6 +3412,7 @@ enum commandline_option_type
     CLO_MACRO,
     CLO_MAPSTAT,
     CLO_ARENA,
+    CLO_DUMP_MAPS,
     CLO_TEST,
     CLO_SCRIPT,
     CLO_BUILDDB,
@@ -3558,6 +3427,8 @@ enum commandline_option_type
     CLO_EDIT_SAVE,
     CLO_PRINT_CHARSET,
     CLO_ZOTDEF,
+    CLO_TUTORIAL,
+    CLO_WIZARD,
 
     CLO_NOPS
 };
@@ -3565,9 +3436,10 @@ enum commandline_option_type
 static const char *cmd_ops[] = {
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "test", "script", "builddb", "help", "version",
-    "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
-    "sprint-map", "edit-save", "print-charset", "zotdef",
+    "mapstat", "arena", "dump-maps", "test", "script", "builddb",
+    "help", "version", "seed", "save-version", "sprint",
+    "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
+    "print-charset", "zotdef", "tutorial", "wizard"
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -3706,7 +3578,7 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_GET)
         {
             const char *chunk = argv[2];
-            if (!*chunk || strlen(chunk) > 4)
+            if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
                 ERR("Invalid chunk name \"%s\".\n", chunk);
             if (!save.has_chunk(chunk))
                 ERR("No such chunk in the save file.\n");
@@ -3733,7 +3605,7 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_PUT)
         {
             const char *chunk = argv[2];
-            if (!*chunk || strlen(chunk) > 4)
+            if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
                 ERR("Invalid chunk name \"%s\".\n", chunk);
 
             const char *file = (argc == 4) ? argv[3] : "chunk";
@@ -3758,7 +3630,7 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_RM)
         {
             const char *chunk = argv[2];
-            if (!*chunk || strlen(chunk) > 4)
+            if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
                 ERR("Invalid chunk name \"%s\".\n", chunk);
             if (!save.has_chunk(chunk))
                 ERR("No such chunk in the save file.\n");
@@ -3989,6 +3861,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
             break;
 
+        case CLO_DUMP_MAPS:
+            crawl_state.dump_maps = true;
+            break;
+
         case CLO_TEST:
             crawl_state.test = true;
             if (next_is_param)
@@ -4156,6 +4032,18 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 Options.game.type = GAME_TYPE_ZOTDEF;
             break;
 
+        case CLO_TUTORIAL:
+            if (!rc_only)
+                Options.game.type = GAME_TYPE_TUTORIAL;
+            break;
+
+        case CLO_WIZARD:
+#ifdef WIZARD
+            if (!rc_only)
+                Options.wiz_mode = WIZ_NO;
+#endif
+            break;
+
         case CLO_PRINT_CHARSET:
             if (rc_only)
                 break;
@@ -4174,7 +4062,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 printf("UNICODE\n");
                 end(0);
             case NUM_CSET:
-                ASSERT(!"unset charset");
+                die("unset charset");
             }
             break;
 

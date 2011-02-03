@@ -56,7 +56,6 @@
 #include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
-#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
@@ -215,6 +214,10 @@ static void _startup_hints_mode();
 
 static void _compile_time_asserts();
 
+#ifdef WIZARD
+static void _handle_wizard_command(void);
+#endif
+
 //
 //  It all starts here. Some initialisations are run first, then straight
 //  to new_game and then input.
@@ -227,13 +230,14 @@ static void _compile_time_asserts();
 int main(int argc, char *argv[])
 {
 #ifdef DEBUG_GLOBALS
+    real_Options = new game_options();
     real_you = new player();
     real_clua = new CLua(true);
     real_dlua = new CLua(false);
     real_crawl_state = new game_state();
     real_env = new crawl_environment();
 #endif
-    _compile_time_asserts();  // Just to quiet "unused static function" warning.
+    _compile_time_asserts();  // Actually, not just compile time.
 
     init_crash_handler();
 
@@ -307,7 +311,7 @@ static void _reset_game()
 #ifdef USE_TILE
     // [ds] Don't show the title screen again, just go back to
     // the menu.
-    Options.tile_title_screen = false;
+    crawl_state.title_screen = false;
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
 #endif
 }
@@ -329,12 +333,10 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
-            print_error_screen(fe.msg.c_str());
             end(1, false, fe.msg.c_str());
         }
         catch(short_read_exception &E)
         {
-            print_error_screen("Error: truncation inside the save file.\n");
             end(1, false, "Error: truncation inside the save file.\n");
         }
     } while (Options.restart_after_game
@@ -372,11 +374,8 @@ static void _launch_game()
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
-    if (!crawl_state.game_is_tutorial()
-        && !crawl_state.game_is_sprint() && game_start)
-    {
+    if (game_start)
        _announce_goal_message();
-    }
 
     _god_greeting_message(game_start);
 
@@ -391,7 +390,7 @@ static void _launch_game()
     if (game_start)
     {
         // TODO: convert this to the hints mode
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             _startup_hints_mode();
         _take_starting_note();
     }
@@ -431,7 +430,12 @@ static void _show_commandline_options_help()
     puts("  -save-version <name>  Save file version for the given player");
     puts("  -sprint               select Sprint");
     puts("  -sprint-map <name>    preselect a Sprint map");
-    puts("  -zotdef               select Zot Defense");
+    puts("  -tutorial             select the Tutorial");
+    puts("  -zotdef               select Zot Defence");
+#ifdef WIZARD
+    puts("  -wizard               allow access to wizard mode");
+#endif
+
     puts("");
 
     puts("Command line options override init file options, which override");
@@ -457,6 +461,9 @@ static void _show_commandline_options_help()
     puts("  -test            run test cases in ./test");
     puts("  -script <name>   run script matching <name> in ./scripts");
 #endif
+    puts("");
+    puts("Miscellaneous options:");
+    puts("  -dump-maps       write map Lua to stderr when parsing .des files");
 }
 
 static void _wanderer_startup_message()
@@ -478,7 +485,13 @@ static void _wanderer_startup_message()
 // A one-liner upon game start to mention the orb.
 static void _announce_goal_message()
 {
-    mprf(MSGCH_PLAIN,"<yellow>%s</yellow>", getMiscString("welcome_spam").c_str());
+    std::string type = crawl_state.game_type_name();
+    if (crawl_state.game_is_hints())
+        type = "Hints";
+    if (!type.empty())
+        type = " " + type;
+    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>",
+         getMiscString("welcome_spam" + type).c_str());
 }
 
 static void _god_greeting_message(bool game_start)
@@ -728,7 +741,10 @@ static void _handle_wizard_command(void)
     int wiz_command;
 
     // WIZ_NEVER gives protection for those who have wiz compiles,
-    // and don't want to risk their characters.
+    // and don't want to risk their characters. Also, and hackishly,
+    // it's used to prevent access for non-authorised users to wizard
+    // builds in dgamelaunch builds unlses the game is started with the
+    // -wizard flag.
     if (Options.wiz_mode == WIZ_NEVER)
         return;
 
@@ -736,7 +752,7 @@ static void _handle_wizard_command(void)
     {
         mpr("WARNING: ABOUT TO ENTER WIZARD MODE!", MSGCH_WARN);
 
-#ifndef SCORE_WIZARD_MODE
+#ifndef SCORE_WIZARD_CHARACTERS
         mpr("If you continue, your game will not be scored!", MSGCH_WARN);
 #endif
 
@@ -1041,23 +1057,6 @@ static void _update_place_info()
     PlaceInfo& curr_PlaceInfo = you.get_place_info();
     curr_PlaceInfo += delta;
     curr_PlaceInfo.assert_validity();
-}
-
-static void _update_diag_counters()
-{
-    diag_counter_t act = DC_OTHER;
-
-    if (you.walking == 1)
-        act = DC_WALK_ORTHO;
-    else if (you.walking == 2)
-        act = DC_WALK_DIAG;
-    else if (!apply_berserk_penalty) // a fancy name for "attacking"
-        act = DC_FIGHT;
-
-    bool ae = (you.running == RMODE_EXPLORE)
-              || (you.running == RMODE_EXPLORE_GREEDY);
-    you.dcounters[0][ae][act]++;
-    you.dcounters[1][ae][act]+=you.time_taken;
 }
 
 //
@@ -1434,7 +1433,7 @@ static void _experience_check()
     mprf("You are a level %d %s %s.",
          you.experience_level,
          species_name(you.species).c_str(),
-         you.class_name);
+         you.class_name.c_str());
 
     if (you.experience_level < 27)
     {
@@ -1451,13 +1450,10 @@ static void _experience_check()
         mpr("With the way you've been playing, I'm surprised you got this far.");
     }
 
-    if (you.real_time != -1)
-    {
-        const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        msg::stream << "Play time: " << make_time_string(curr)
-                    << " (" << you.num_turns << " turns)"
-                    << std::endl;
-    }
+    handle_real_time();
+    msg::stream << "Play time: " << make_time_string(you.real_time)
+                << " (" << you.num_turns << " turns)"
+                << std::endl;
 #ifdef DEBUG_DIAGNOSTICS
     if (wearing_amulet(AMU_THE_GOURMAND))
         mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d",
@@ -1695,7 +1691,12 @@ void process_command(command_type cmd)
     case CMD_RUN_DOWN_RIGHT:_start_running(RDIR_DOWN_RIGHT, RMODE_START); break;
     case CMD_RUN_RIGHT:     _start_running(RDIR_RIGHT, RMODE_START);     break;
 
-    case CMD_REST: _do_rest(); break;
+#ifdef CLUA_BINDINGS
+    case CMD_AUTOFIGHT:
+        clua.callfn("hit_closest", 1, 1);
+        break;
+#endif
+    case CMD_REST:            _do_rest(); break;
 
     case CMD_GO_UPSTAIRS:     _go_upstairs();    break;
     case CMD_GO_DOWNSTAIRS:   _go_downstairs();  break;
@@ -1738,7 +1739,11 @@ void process_command(command_type cmd)
             StashTrack.no_stash();
         break;
 
-    case CMD_INSPECT_FLOOR: request_autopickup(); break;
+    case CMD_INSPECT_FLOOR:
+        request_autopickup();
+        if (player_on_single_stack() && !you.running)
+            pickup(true);
+        break;
     case CMD_SHOW_TERRAIN: toggle_show_terrain(); break;
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
@@ -1746,6 +1751,11 @@ void process_command(command_type cmd)
     case CMD_SEARCH:
         search_around();
         you.turn_is_over = true;
+        break;
+
+    case CMD_PICKUP:
+    case CMD_PICKUP_QUANTITY:
+        pickup(cmd != CMD_PICKUP);
         break;
 
         // Action commands.
@@ -1757,7 +1767,6 @@ void process_command(command_type cmd)
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          _do_look_around();        break;
-    case CMD_PICKUP:               pickup();                 break;
     case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read_scroll();            break;
@@ -1803,7 +1812,7 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_INVENTORY:        get_invent(OSEL_ANY);           break;
     case CMD_DISPLAY_KNOWN_OBJECTS:    check_item_knowledge();         break;
     case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
-    case CMD_DISPLAY_SKILLS:           show_skills(); redraw_screen(); break;
+    case CMD_DISPLAY_SKILLS:           skill_menu(); redraw_screen();  break;
     case CMD_EXPERIENCE_CHECK:         _experience_check();            break;
     case CMD_FULL_VIEW:                full_describe_view();           break;
     case CMD_INSCRIBE_ITEM:            prompt_inscribe_item();         break;
@@ -1922,7 +1931,7 @@ void process_command(command_type cmd)
 
     case CMD_NO_CMD:
     default:
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
         {
            std::string msg = "Unknown command. (For a list of commands type "
                              "<w>?\?<lightgrey>.)";
@@ -2058,6 +2067,10 @@ static void _decrement_durations()
     // Possible reduction of silence radius.
     if (you.duration[DUR_SILENCE])
         invalidate_agrid();
+    // and liquefying radius.
+    if (you.duration[DUR_LIQUEFYING])
+        invalidate_agrid();
+
     if (_decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns."))
         you.attribute[ATTR_WAS_SILENCED] = 0;
 
@@ -2164,7 +2177,7 @@ static void _decrement_durations()
 
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+        && you.form != TRAN_NONE)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
@@ -2291,6 +2304,13 @@ static void _decrement_durations()
                           "Quad Damage is wearing off.");
     _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
                           "Your dark mirror aura disappears.");
+    if (_decrement_a_duration(DUR_HEROISM, delay,
+                          "You feel like a meek peon again."))
+    {
+            you.redraw_evasion      = true;
+            you.redraw_armour_class = true;
+    }
+    _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
@@ -2328,6 +2348,11 @@ static void _decrement_durations()
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);
+
+    if (_decrement_a_duration(DUR_LIQUEFYING, delay, "The ground is no longer liquid beneath you."))
+    {
+        invalidate_agrid();
+    }
 
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
@@ -2443,7 +2468,7 @@ static void _decrement_durations()
     // Should expire before levitation.
     if (you.duration[DUR_TORNADO])
     {
-        tornado_damage(std::min(delay, you.duration[DUR_TORNADO]));
+        tornado_damage(&you, std::min(delay, you.duration[DUR_TORNADO]));
         _decrement_a_duration(DUR_TORNADO, delay,
                               "The winds around you calm down.");
     }
@@ -2453,34 +2478,18 @@ static void _decrement_durations()
         if (!you.permanent_levitation() && !you.permanent_flight())
         {
             if (_decrement_a_duration(DUR_LEVITATION, delay,
-                                      "You float gracefully downwards.",
+                                      0,
                                       random2(6),
                                       "You are starting to lose your buoyancy!"))
             {
-                burden_change();
-                // Landing kills controlled flight.
-                you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-                // Re-enter the terrain.
-                move_player_to_grid(you.pos(), false, true);
+                land_player();
             }
         }
-        else
+        else if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
-            if (you.attribute[ATTR_LEV_UNCANCELLABLE]
-                && (you.duration[DUR_LEVITATION] -= delay) <= 0)
-            {
-                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-            }
-
-            if (!you.attribute[ATTR_LEV_UNCANCELLABLE])
-            {
-                // With permanent levitation, keep the duration above
-                // the expiration threshold.
-                you.duration[DUR_LEVITATION]
-                    = 2 * get_expiration_threshold(DUR_LEVITATION);
-            }
+            you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+            you.duration[DUR_LEVITATION] = 0;
         }
     }
 
@@ -2573,7 +2582,7 @@ static void _decrement_durations()
 
 static void _check_banished()
 {
-    if (you.banished)
+    if (you.banished && !crawl_state.game_is_zotdef())
     {
         you.banished = false;
         if (you.level_type != LEVEL_ABYSS)
@@ -2736,16 +2745,11 @@ static void _player_reacts()
             you_teleport_now(false, true); // to new area of the Abyss
     }
 
-    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
-        in_a_cloud();
+    actor_apply_cloud(&you);
 
     slime_wall_damage(&you, you.time_taken);
 
     you.check_clinging();
-
-    if (you.duration[DUR_TELEPATHY] && player_in_mappable_area())
-        detect_creatures(1 + you.duration[DUR_TELEPATHY] /
-                         (2 * BASELINE_DELAY), true);
 
     _decrement_durations();
 
@@ -2783,6 +2787,10 @@ static void _player_reacts_to_monsters()
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
         detect_items(-1);
 
+    if (you.duration[DUR_TELEPATHY] && player_in_mappable_area())
+        detect_creatures(1 + you.duration[DUR_TELEPATHY] /
+                         (2 * BASELINE_DELAY), true);
+
     handle_starvation();
 }
 
@@ -2817,7 +2825,7 @@ void world_reacts()
     }
 
 #ifdef USE_TILE
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
     {
         tiles.clear_text_tags(TAG_TUTORIAL);
         tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
@@ -2833,7 +2841,9 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         _player_reacts();
 
+    apply_noises();
     handle_monsters();
+    apply_noises();
 
     _check_banished();
 
@@ -2902,7 +2912,7 @@ void world_reacts()
     if (you.num_turns != -1)
     {
         // Zotdef: Time only passes in the main dungeon
-        if (you.num_turns < LONG_MAX)
+        if (you.num_turns < INT_MAX)
         {
             if (!crawl_state.game_is_zotdef()
                 || you.where_are_you == BRANCH_MAIN_DUNGEON
@@ -2948,17 +2958,9 @@ static command_type _get_next_cmd()
 
     _center_cursor();
 
-    const time_t before = time(NULL);
     keycode_type keyin = _get_next_keycode();
 
-    const time_t after = time(NULL);
-
-    // Clamp idle time so that play time is more meaningful.
-    if (after - before > IDLE_TIME_CLAMP)
-    {
-        you.real_time  += int(before - you.start_time) + IDLE_TIME_CLAMP;
-        you.start_time  = after;
-    }
+    handle_real_time();
 
     if (is_userfunction(keyin))
     {
@@ -3326,7 +3328,7 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     int skill = you.dex()
-                + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
+                + (you.skill(SK_TRAPS_DOORS) + you.skill(SK_STEALTH)) / 2;
 
     std::string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
                                         "door_berserk_verb_open");
@@ -3561,7 +3563,7 @@ static void _close_door(coord_def move)
         }
 
         int skill = you.dex()
-                    + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
+                    + (you.skill(SK_TRAPS_DOORS) + you.skill(SK_STEALTH)) / 2;
 
         if (you.berserk())
         {
@@ -3925,7 +3927,7 @@ static void _move_player(coord_def move)
         else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
         {
             check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
-                random_range(3, 10), KC_OTHER, 0, ETC_RANDOM);
+                random_range(3, 10), &you, 0, ETC_RANDOM);
         }
 
         you.time_taken *= player_movement_speed();
@@ -3946,7 +3948,7 @@ static void _move_player(coord_def move)
         _open_door(move.x, move.y, false);
         you.prev_move = move;
     }
-    if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
+    else if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
     {
         if (!_prompt_dangerous_portal(grd(targ)))
         {
@@ -3967,7 +3969,7 @@ static void _move_player(coord_def move)
         if (grd(targ) == DNGN_OPEN_SEA)
             mpr("You can't go out to sea!");
 
-        if (grd(targ) == DNGN_TREE && you.religion == GOD_FEDHAS)
+        if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
             mpr("You cannot walk through the dense trees.");
 
         stop_running();
@@ -4029,7 +4031,6 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
-    _update_diag_counters();
     you.check_clinging();
 }
 
@@ -4282,12 +4283,13 @@ static void _compile_time_asserts()
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
     COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
-    COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
+    COMPILE_CHECK(SK_EVOCATIONS == 32           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c8);
+    COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER, cmax_mon);
 
     // Make sure there's enough room in you.unique_items to hold all
     // the unrandarts.

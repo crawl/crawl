@@ -16,4 +16,15 @@ enum harm_protection_type
     HPT_RELIABLE_PRAYING_PLUS_ANYTIME,
     NUM_HPTS
 };
+
+enum nemelex_gift_types
+{
+    NEM_GIFT_ESCAPE = 0,
+    NEM_GIFT_DESTRUCTION,
+    NEM_GIFT_DUNGEONS,
+    NEM_GIFT_SUMMONING,
+    NEM_GIFT_WONDERS,
+    NUM_NEMELEX_GIFT_TYPES,
+};
+
 #endif

@@ -10,8 +10,8 @@
 
 #include "tiledef_defines.h"
 
-class dolls_data;
-class item_def;
+struct dolls_data;
+struct item_def;
 
 // Player equipment lookup
 tileidx_t tilep_equ_weapon(const item_def &item);

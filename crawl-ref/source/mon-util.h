@@ -347,7 +347,6 @@ bool mons_is_fleeing_sanctuary(const monster* m);
 bool mons_was_seen(const monster* m);
 bool mons_is_known_mimic(const monster* m);
 bool mons_is_unknown_mimic(const monster* m);
-bool mons_is_skeletal(int mc);
 bool mons_class_is_slime(int mc);
 bool mons_is_slime(const monster* mon);
 bool mons_class_is_plant(int mc);
@@ -374,11 +373,17 @@ bool mons_is_stationary(const monster* mon);
 bool mons_class_is_firewood(int mc);
 bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
+bool mons_has_flesh(const monster* mon);
+
+bool herd_monster_class(int mc);
+bool herd_monster(const monster * mon);
 
 int cheibriados_monster_player_speed_delta(const monster* mon);
 bool cheibriados_thinks_mons_is_fast(const monster* mon);
 bool mons_is_projectile(int mc);
+bool mons_is_object(int mc);
 bool mons_has_blood(int mc);
+bool mons_is_sensed(int mc);
 
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
@@ -433,7 +438,12 @@ int scan_mon_inv_randarts(const monster* mon,
 bool player_or_mon_in_sanct(const monster* mons);
 
 int get_dist_to_nearest_monster();
+actor *actor_by_mid(mid_t m);
+monster *monster_by_mid(mid_t m);
 
 bool mons_is_tentacle(int mc);
+void init_anon();
+actor *find_agent(mid_t m, kill_category kc);
+const char* mons_class_name(monster_type mc);
 
 #endif

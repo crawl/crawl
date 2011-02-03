@@ -26,7 +26,6 @@ PLUARET(type, expr);             \
 
 BRANCHFN(floorcol, number, br.floor_colour)
 BRANCHFN(rockcol, number, br.rock_colour)
-BRANCHFN(has_shops, boolean, br.shop_chance > 0)
 BRANCHFN(has_uniques, boolean, br.has_uniques)
 BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES
@@ -35,11 +34,10 @@ BRANCHFN(parent_branch, string,
 
 static void _push_level_id(lua_State *ls, const level_id &lid)
 {
-    // We're skipping the constructor; naughty, but level_id has no
-    // virtual methods and no dynamically allocated memory.
-    level_id *nlev =
-    static_cast<level_id*>(lua_newuserdata(ls, sizeof(level_id)));
-    *nlev = lid;
+    // [ds] Should really set up a metatable to delete (FIXME).
+    level_id *nlev = static_cast<level_id*>(
+        lua_newuserdata(ls, sizeof(level_id)));
+    new (nlev) level_id(lid);
 }
 
 level_id dlua_level_id(lua_State *ls, int ndx)
@@ -89,12 +87,12 @@ LUAFN(dgn_set_level_type_name)
     if (!lua_isstring(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected string for level type name");
-        return(0);
+        return 0;
     }
 
     you.level_type_name = luaL_checkstring(ls, 1);
 
-    return(0);
+    return 0;
 }
 
 LUAFN(dgn_set_level_type_name_abbrev)
@@ -103,12 +101,12 @@ LUAFN(dgn_set_level_type_name_abbrev)
     {
         luaL_argerror(ls, 1, "Expected string for level type name "
                       "abbreviation");
-        return(0);
+        return 0;
     }
 
     you.level_type_name_abbrev = luaL_checkstring(ls, 1);
 
-    return(0);
+    return 0;
 }
 
 LUAFN(dgn_set_level_type_origin)
@@ -116,19 +114,18 @@ LUAFN(dgn_set_level_type_origin)
     if (!lua_isstring(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected string for level type origin");
-        return(0);
+        return 0;
     }
 
     you.level_type_origin = luaL_checkstring(ls, 1);
 
-    return(0);
+    return 0;
 }
 
 const struct luaL_reg dgn_level_dlib[] =
 {
 { "br_floorcol", dgn_br_floorcol },
 { "br_rockcol", dgn_br_rockcol },
-{ "br_has_shops", dgn_br_has_shops },
 { "br_has_uniques", dgn_br_has_uniques },
 { "br_parent_branch", dgn_br_parent_branch },
 

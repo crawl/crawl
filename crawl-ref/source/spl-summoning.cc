@@ -130,7 +130,7 @@ bool cast_summon_small_mammals(int pow, god_type god)
     for (int i = 0; i < count; ++i)
     {
         if (x_chance_in_y(10, pow + 1))
-            mon = coinflip() ? MONS_GIANT_BAT : MONS_RAT;
+            mon = coinflip() ? MONS_MEGABAT : MONS_RAT;
         else
             mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
 
@@ -222,13 +222,13 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             else
                 mon = MONS_SMALL_SNAKE;
 
-            if (create_monster(
-                    mgen_data(mon, beha, &you,
-                              dur, SPELL_STICKS_TO_SNAKES,
-                              you.pos(), MHITYOU,
-                              0, god)) != -1)
+            int mon_index = create_monster(mgen_data(mon, beha, &you,
+                              0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+            if (mon_index != -1)
             {
                 count++;
+                monster* snake = &menv[mon_index];
+                snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
             }
         }
     }
@@ -258,13 +258,13 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         if (pow > 90 && one_chance_in(3))
             mon = MONS_ANACONDA;
 
-        if (create_monster(
-                mgen_data(mon, beha, &you,
-                          dur, SPELL_STICKS_TO_SNAKES,
-                          you.pos(), MHITYOU,
-                          0, god)) != -1)
+        int mon_index = create_monster(mgen_data(mon, beha, &you,
+                          0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+        if (mon_index != -1)
         {
             count++;
+            monster* snake = &menv[mon_index];
+            snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
 
@@ -326,11 +326,11 @@ bool cast_summon_swarm(int pow, god_type god)
     for (int i = 0; i < how_many; ++i)
     {
         const monster_type swarmers[] = {
-            MONS_KILLER_BEE,   MONS_KILLER_BEE,    MONS_KILLER_BEE,
-            MONS_SCORPION,     MONS_WORM,          MONS_GIANT_MOSQUITO,
-            MONS_GIANT_BEETLE, MONS_GIANT_BLOWFLY, MONS_WOLF_SPIDER,
-            MONS_BUTTERFLY,    MONS_YELLOW_WASP,   MONS_GIANT_ANT,
-            MONS_GIANT_ANT,    MONS_GIANT_ANT
+            MONS_KILLER_BEE,     MONS_KILLER_BEE,    MONS_KILLER_BEE,
+            MONS_SCORPION,       MONS_WORM,          MONS_VAMPIRE_MOSQUITO,
+            MONS_GOLIATH_BEETLE, MONS_WOLF_SPIDER,   MONS_BUTTERFLY,
+            MONS_YELLOW_WASP,    MONS_WORKER_ANT,    MONS_WORKER_ANT,
+            MONS_WORKER_ANT
         };
 
         const monster_type mon = RANDOM_ELEMENT(swarmers);
@@ -670,25 +670,34 @@ bool cast_summon_ugly_thing(int pow, god_type god)
     return (false);
 }
 
-bool cast_summon_dragon(int pow, god_type god)
+bool cast_summon_hydra(actor *caster, int pow, god_type god)
 {
-    // Removed the chance of multiple dragons.  One should be more than
-    // enough, and if it isn't, the player can cast again. - bwr
-    const bool friendly = (random2(pow) > 5);
+    // Power determines number of heads. Minimum 4 heads, maximum 12.
+    // Rare to get more than 8.
+    int heads;
 
-    if (create_monster(
-            mgen_data(MONS_DRAGON,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                      3, SPELL_SUMMON_DRAGON,
-                      you.pos(),
-                      MHITYOU,
-                      0, god)) != -1)
+    // Small chance to create a huge hydra (if spell power is high enough)
+    if (one_chance_in(6))
+        heads = std::min((random2(pow) / 6), 12);
+    else
+        heads = std::min((random2(pow) / 6), 8);
+
+    if (heads < 4)
+        heads = 4;
+
+    // Duration is always very short - just 1.
+    int midx;
+    if ((midx = create_monster(
+            mgen_data(MONS_HYDRA, BEH_COPY, caster,
+                      1, SPELL_SUMMON_HYDRA, caster->pos(),
+                      (caster->atype() == ACT_PLAYER) ?
+                          MHITYOU : caster->as_monster()->foe,
+                      0, (god == GOD_NO_GOD) ? caster->deity() : god,
+                      MONS_HYDRA, heads))) != -1)
     {
-        mpr("A dragon appears.");
-
-        if (!friendly)
-            mpr("It doesn't look very happy.");
-
+        if (you.see_cell(menv[midx].pos()))
+            mpr("A hydra appears.");
+        player_angers_monster(&menv[midx]); // currently no-op
         return (true);
     }
 
@@ -696,78 +705,153 @@ bool cast_summon_dragon(int pow, god_type god)
     return (false);
 }
 
+bool cast_summon_dragon(actor *caster, int pow, god_type god)
+{
+    // Dragons are always friendly now. Dragon type depends on power &
+    // random chance.  Duration fixed at 4 (longer than hydra, less than
+    // many other summons).
+
+    if (god == GOD_NO_GOD)
+        god = caster->deity();
+
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    const int chance = random2(pow);
+
+    if (chance >= 80 || one_chance_in(6))
+        mon = (coinflip()) ? MONS_GOLDEN_DRAGON : MONS_QUICKSILVER_DRAGON;
+    else if (chance >= 40 || one_chance_in(6))
+        switch (random2(3))
+        {
+        case 0:
+            mon = MONS_IRON_DRAGON;
+            break;
+        case 1:
+            mon = MONS_SHADOW_DRAGON;
+            break;
+        default:
+            mon = MONS_STORM_DRAGON;
+            break;
+        }
+    else
+        mon = (coinflip()) ? MONS_DRAGON : MONS_ICE_DRAGON;
+    // Now check to see if you are worshipping a good god
+    // and adjust dragons accordingly. No pearl dragons (word of due).
+    if (god == GOD_ELYVILON || god == GOD_ZIN)
+    {
+        // Switch away from shadow dragon to storm/iron.
+        if (mon == MONS_SHADOW_DRAGON)
+            mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
+    }
+
+    if (god == GOD_SHINING_ONE)
+    {
+        // TSO doesn't like golden dragons either (poison).
+        if (mon == MONS_SHADOW_DRAGON || mon == MONS_GOLDEN_DRAGON)
+            mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
+    }
+
+    int midx;
+    if ((midx = create_monster(
+            mgen_data(mon, BEH_COPY, caster,
+                      4, SPELL_SUMMON_DRAGON,
+                      caster->pos(),
+                      (caster->atype() == ACT_PLAYER) ? MHITYOU
+                        : caster->as_monster()->foe,
+                      0, god))) != -1)
+    {
+        if (you.see_cell(menv[midx].pos()))
+            mpr("A dragon appears.");
+        // Xom summoning evil dragons if you worship a good god?  Sure!
+        player_angers_monster(&menv[midx]);
+        return (true);
+    }
+
+    if (caster == &you)
+        canned_msg(MSG_NOTHING_HAPPENS);
+    return (false);
+}
+
+// This assumes that the specified monster can go berserk.
+static void _make_mons_berserk_summon(monster* mon)
+{
+    mon->go_berserk(false);
+    mon_enchant berserk = mon->get_ench(ENCH_BERSERK);
+    mon_enchant abj = mon->get_ench(ENCH_ABJ);
+
+    // Let Trog's gifts berserk longer, and set the abjuration timeout
+    // to the berserk timeout.
+    berserk.duration = berserk.duration * 3 / 2;
+    berserk.maxduration = berserk.duration;
+    abj.duration = abj.maxduration = berserk.duration;
+    mon->update_ench(berserk);
+    mon->update_ench(abj);
+}
+
 // This is actually one of Trog's wrath effects.
-bool summon_berserker(int pow, god_type god, int spell,
-                      bool force_hostile)
+bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    if (pow <= 100)
-    {
-        // bears
-        mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_GRIZZLY_BEAR;
-    }
-    else if (pow <= 140)
-    {
-        // ogres
-        mon = (one_chance_in(3) ? MONS_TWO_HEADED_OGRE : MONS_OGRE);
-    }
-    else if (pow <= 180)
-    {
-        // trolls
-        switch (random2(8))
-        {
-        case 0:
-            mon = MONS_DEEP_TROLL;
-            break;
-        case 1:
-        case 2:
-            mon = MONS_IRON_TROLL;
-            break;
-        case 3:
-        case 4:
-            mon = MONS_ROCK_TROLL;
-            break;
-        default:
-            mon = MONS_TROLL;
-            break;
-        }
-    }
+    if (override_mons != MONS_PROGRAM_BUG)
+        mon = override_mons;
     else
     {
-        // giants
-        mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
+        if (pow <= 100)
+        {
+            // bears
+            mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_GRIZZLY_BEAR;
+        }
+        else if (pow <= 140)
+        {
+            // ogres
+            mon = (one_chance_in(3) ? MONS_TWO_HEADED_OGRE : MONS_OGRE);
+        }
+        else if (pow <= 180)
+        {
+            // trolls
+            switch (random2(8))
+            {
+            case 0:
+                mon = MONS_DEEP_TROLL;
+                break;
+            case 1:
+            case 2:
+                mon = MONS_IRON_TROLL;
+                break;
+            case 3:
+            case 4:
+                mon = MONS_ROCK_TROLL;
+                break;
+            default:
+                mon = MONS_TROLL;
+                break;
+            }
+        }
+        else
+        {
+            // giants
+            mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
+        }
     }
 
-    mgen_data mg(mon, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, dur, spell, you.pos(),
-                 MHITYOU, 0, god);
+    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
+                 caster ? caster->pos() : you.pos(),
+                 (caster && caster->atype() == ACT_MONSTER)
+                     ? ((monster*)caster)->foe : MHITYOU,
+                 0, GOD_TROG);
 
-    if (force_hostile)
-        mg.non_actor_summoner = "the rage of " + god_name(god, false);
+    if (!caster)
+        mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
 
     const int mons = create_monster(mg);
 
     if (mons == -1)
         return (false);
 
-    monster* summon = &menv[mons];
-
-    summon->go_berserk(false);
-    mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
-    mon_enchant abj = summon->get_ench(ENCH_ABJ);
-
-    // Let Trog's gifts berserk longer, and set the abjuration
-    // timeout to the berserk timeout.
-    berserk.duration = berserk.duration * 3 / 2;
-    berserk.maxduration = berserk.duration;
-    abj.duration = abj.maxduration = berserk.duration;
-    summon->update_ench(berserk);
-    summon->update_ench(abj);
-
-    player_angers_monster(summon);
+    _make_mons_berserk_summon(&menv[mons]);
     return (true);
 }
 
@@ -824,6 +908,71 @@ bool summon_holy_warrior(int pow, god_type god, int spell,
                                           0,
                                       !force_hostile, quiet);
 }
+
+static bool _can_weapon_dance(item_def* wpn)
+{
+    if (!wpn
+        || (wpn->base_type != OBJ_WEAPONS && wpn->base_type != OBJ_STAVES)
+        || is_range_weapon(*wpn)
+        || is_special_unrandom_artefact(*wpn))
+    {
+        return false;
+    }
+    return true;
+}
+
+// Mass Tukima's dance
+bool cast_tukimas_dance_party(actor *caster, int pow, god_type god, bool force_hostile)
+{
+    bool some_weapon_was_animated = false;
+    const int dur = std::min(2 + (random2(pow) / 5), 6);
+
+    radius_iterator ri(caster->pos(), 6, C_ROUND,
+                       caster->get_los_no_trans());
+    //iterate over all weapons in view
+    for (; ri; ++ri)
+        for (stack_iterator si(*ri) ; si ; ++ si)
+            if (si->base_type == OBJ_WEAPONS || si->base_type == OBJ_STAVES)
+            {
+                if (!_can_weapon_dance(&*si))
+                {
+                    mprf("%s flop%s limply for a second.",
+                    si->name(DESC_CAP_THE).c_str(),
+                    si->quantity > 1 ? "" : "s");
+                    continue;
+                }
+                //attempt to animate weapon
+                item_def wpn = *si;
+
+                // Cursed weapons become hostile.
+                const bool friendly = !force_hostile && !wpn.cursed();
+                mgen_data mg(MONS_DANCING_WEAPON,
+                             friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                             caster,
+                             dur,
+                             SPELL_TUKIMAS_DANCE,
+                             *ri,
+                             MHITYOU,
+                             // mgen_flag_type - might be MG_PLAYER_MADE or MG_FORCE_PLACE
+                             0,
+                             // if you animate the weapon, your god gets mad
+                             // if it poisons/drains stuff
+                             god);
+                mg.props[TUKIMA_WEAPON] = wpn;
+                int mons = create_monster(mg);
+                bool success = (mons != -1);
+                some_weapon_was_animated |= success;
+
+                //remove weapon from ground if animated
+                if (success)
+                    destroy_item(si->index());
+            }
+
+    return some_weapon_was_animated;
+
+    //TODO: add awesome disco lighting and rename the spell "Tukima's rave"
+}
+
 
 // This function seems to have very little regard for encapsulation.
 bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
@@ -1123,16 +1272,22 @@ bool cast_shadow_creatures(god_type god)
 
 bool can_cast_malign_gateway()
 {
+    timeout_malign_gateways(0);
+
     return count_malign_gateways() < 1;
 }
 
-bool cast_malign_gateway(actor * caster, int pow, god_type god)
+coord_def find_gateway_location (actor* caster, bool (*environment_checker)(dungeon_feature_type))
 {
-    bool success = false;
     coord_def point = coord_def(0, 0);
+
+    bool xray = you.xray_vision;
+    you.xray_vision = false;
 
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
+
+    bool check_environment = (environment_checker != NULL);
 
     for (unsigned i = 0; i < 8; ++i)
     {
@@ -1145,8 +1300,7 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         for (int t = 0; t < tries; t++)
         {
             test = caster->pos() + (delta * (2+t+random2(4)));
-            if (!in_bounds(test) || !(env.grid(test) == DNGN_FLOOR
-                                       || env.grid(test) == DNGN_SHALLOW_WATER)
+            if (!in_bounds(test) || check_environment && !feat_is_test(test, environment_checker)
                 || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
@@ -1160,24 +1314,35 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         if (!found_spot)
             continue;
 
-        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
-        env.markers.add(new map_malign_gateway_marker(test,
-                                            malign_gateway_duration,
-                                            caster->atype() == ACT_PLAYER,
-                                            caster->atype() == ACT_PLAYER ? NULL : caster->as_monster(),
-                                            god,
-                                            pow));
-        env.markers.clear_need_activate();
-        env.grid(test) = DNGN_TEMP_PORTAL;
-
         point = test;
-        success = true;
-
         break;
     }
 
+    you.xray_vision = xray;
+
+    return (point);
+}
+
+bool cast_malign_gateway(actor * caster, int pow, god_type god)
+{
+    coord_def point = find_gateway_location(caster);
+    bool success = (point != coord_def(0, 0));
+
+    bool is_player = (caster->atype() == ACT_PLAYER);
+
     if (success)
     {
+        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+        env.markers.add(new map_malign_gateway_marker(point,
+                                malign_gateway_duration,
+                                is_player,
+                                is_player ? "" : caster->as_monster()->full_name(DESC_NOCAP_A, true),
+                                is_player ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
+                                god,
+                                pow));
+        env.markers.clear_need_activate();
+        env.grid(point) = DNGN_TEMP_PORTAL;
+
         noisy(10, point);
         mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
 
@@ -1193,7 +1358,7 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
     else if (caster->atype() == ACT_PLAYER)
     {
         // We don't care if monsters fail to cast it.
-        mpr("Such a gateway cannot be opened in such a cramped space!");
+        mpr("A gateway cannot be opened in this cramped space!");
     }
 
     return (success);
@@ -1518,6 +1683,11 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         roll_zombie_hp(&menv[mons]);
     }
 
+    if (item.props.exists("ev"))
+        menv[mons].ev = item.props["ev"].get_int();
+    if (item.props.exists("ac"))
+        menv[mons].ac = item.props["ac"].get_int();
+
     if (is_named_corpse(item))
     {
         uint64_t name_type = 0;
@@ -1592,6 +1762,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             if (!_animatable_remains(*si))
                 continue;
 
+            const bool was_draining = is_being_drained(*si);
             const bool was_butchering = is_being_butchered(*si);
 
             success = _raise_remains(a, si.link(), beha, hitting, as, nas,
@@ -1601,9 +1772,11 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             if (actual && success)
             {
                 // Ignore quiet.
-                if (was_butchering)
+                if (was_butchering || was_draining)
                 {
-                    mprf("The corpse you are butchering rises to %s!",
+                    mprf("The corpse you are %s rises to %s!",
+                         was_draining ? "drinking from"
+                                      : "butchering",
                          beha == BEH_FRIENDLY ? "join your ranks"
                                               : "attack");
                 }
@@ -1640,7 +1813,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     int number_seen   = 0;
     int motions       = 0;
 
-    radius_iterator ri(caster->pos(), 6, C_SQUARE,
+    radius_iterator ri(caster->pos(), 7, C_ROUND,
                        caster->get_los_no_trans());
 
     for (; ri; ++ri)
@@ -1933,7 +2106,7 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
             create_monster(
                 mgen_data(mon,
                           BEH_FRIENDLY, &you,
-                          5, SPELL_HAUNT,
+                          3, SPELL_HAUNT,
                           where, mi, MG_FORCE_BEH, god));
 
         if (mons != -1)

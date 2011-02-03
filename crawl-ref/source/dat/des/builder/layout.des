@@ -20,6 +20,40 @@
         end
     end
 
+    function spotty_stairs(mapgrd)
+        local gxm, gym = dgn.max_bounds()
+
+        local in_slime = you.in_branch("slime")
+        local elevator = not in_slime
+
+        local stairs = { '}', ')', ']', '(', '[' }
+
+        local make_floor = function (x, y)
+            mapgrd[x][y] = '.'
+        end
+
+        if not elevator then table.insert(stairs, '{') end
+
+        for i, glyph in ipairs(stairs) do
+            local x, y
+            repeat
+                x = crawl.random_range(5, gxm - 5)
+                y = crawl.random_range(5, gym - 5)
+            until mapgrd[x][y] == 'x' and mapgrd[x + 1][y] == 'x'
+
+            mapgrd[x][y] = glyph
+
+            apply_circle(x, y, 4, 1, 1, 1, make_floor)
+
+            if in_slime then
+                apply_circle(x, y, 8, 2, 1, 1, make_floor)
+            end
+
+            if elevator and glyph == '}' then
+                mapgrd[x + 1][y] = '{'
+            end
+        end
+    end
 }}
 
 ##############################################################
@@ -424,8 +458,6 @@ TAGS: layout allow_dup
     extend_map{width = gxm, height = gym, fill = 'x'}
     fill_area{fill = 'x'}
 
-
-    local temp_rand = crawl.random2(8)
     local wall_type_room
     local wall_type
     local rooms = {}
@@ -438,13 +470,7 @@ TAGS: layout allow_dup
     local by2 = 0
     local i, j
 
-    if temp_rand > 4 then
-        wall_type = 'x'
-    elseif temp_rand  > 2 then
-        wall_type = 'c'
-    else
-        wall_type = 'v'
-    end
+    wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
 
     if crawl.one_chance_in(100) then
         wall_type = 'b'
@@ -461,18 +487,13 @@ TAGS: layout allow_dup
             b1 = xs + 11 - crawl.random2avg(5, 2);
             b2 = ys + 11 - crawl.random2avg(5, 2);
 
-            temp_rand = crawl.random2(280);
-
-            if temp_rand > 39 and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
-                if temp_rand > 63 then
-                    wall_type_room = wall_type
-                elseif temp_rand > 54 then
-                    wall_type_room = "c"
-                elseif temp_rand > 45 then
-                    wall_type_room = "x"
-                else
-                    wall_type_room = "v"
-                end
+            if crawl.x_chance_in_y(6, 7) and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
+                wall_type_room = crawl.random_element {
+                    [wall_type] = 216,
+                    ['c'] = 9,
+                    ['x'] = 9,
+                    ['v'] = 5
+                }
 
                 if crawl.one_chance_in(250) then
                     wall_type_room = "b"
@@ -517,27 +538,184 @@ NAME: layout_misc
 ORIENT: encompass
 TAGS: layout allow_dup
 {{
-    function random_coord(g)
-        return crawl.random2(g - 20) + 10
+    function random_coord(max_x, max_y)
+        return crawl.random2(max_x - 20) + 10,
+               crawl.random2(max_y - 20) + 10
     end
 
     local gxm, gym = dgn.max_bounds()
-    local rooms = 5 + crawl.random2(20)
+    local corridors = crawl.random_range(15, 25)
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
-    while rooms > 0 do
-        join_the_dots {
-            x1 = random_coord(gxm),
-            y1 = random_coord(gym),
-            x2 = random_coord(gxm),
-            y2 = random_coord(gym)
-        }
-        rooms = rooms - 1
+    local x, y = random_coord(gxm, gym)
+    local new_x, new_y
+
+    while corridors > 0 do
+        new_x, new_y = random_coord(gxm, gym)
+
+        join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y }
+
+        x, y = new_x, new_y
+        corridors = corridors - 1
     end
 
     if not crawl.one_chance_in(4) then
-        spotty_map { boxy = crawl.coinflip(), iterations = 100 }
+        spotty_map { boxy = true, iterations = 100 }
+    end
+}}
+MAP
+ENDMAP
+
+NAME: layout_caves
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    local gxm, gym = dgn.max_bounds()
+
+    extend_map { width = gxm, height = gym, fill = 'x' }
+
+    spotty_stairs(mapgrd)
+
+    local iterations
+
+    if you.at_branch_bottom() then
+        iterations = 600 + crawl.random2(600)
+    else
+        iterations = 100 + crawl.random2(500)
+    end
+
+    spotty_map { boxy = false, iterations = iterations }
+}}
+MAP
+ENDMAP
+
+NAME: layout_spotty
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    local gxm, gym = dgn.max_bounds()
+
+    extend_map { width = gxm, height = gym, fill = 'x' }
+
+    spotty_stairs(mapgrd)
+
+    local boxy = crawl.coinflip()
+    local iterations = 200 + crawl.random2(boxy and 750 or 1500)
+
+    spotty_map { boxy = boxy, iterations = iterations }
+}}
+MAP
+ENDMAP
+
+## This replaces dungeon.cc:_roguey_level.
+NAME: layout_roguey
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    function make_inner_room(room, feat, treasure)
+        local inner_room = {
+            x1 = room.x1 + 1, y1 = room.y1 + 1,
+            x2 = room.x2 - 1, y2 = room.y2 - 1,
+            wall = feat, number = 1
+        }
+
+        if treasure then inner_room.floor = '*' end
+
+        make_box(inner_room)
+        make_box_doors(inner_room)
+    end
+
+    function sign(a)
+        return a > 0 and 1 or a < 0 and -1 or 0
+    end
+
+    function link_rooms(r1, r2, sideways)
+        local x1, y1, x2, y2
+        if sideways then
+            x1 = r1.x2
+            y1 = crawl.random_range(r1.y1 + 1, r1.y2 - 1)
+            x2 = r2.x1
+            y2 = crawl.random_range(r2.y1 + 1, r2.y2 - 1)
+        else
+            x1 = crawl.random_range(r1.x1 + 1, r1.x2 - 1)
+            y1 = r1.y2
+            x2 = crawl.random_range(r2.x1 + 1, r2.x2 - 1)
+            y2 = r2.y1
+        end
+
+        while x1 ~= x2 or y1 ~= y2 do
+            if crawl.coinflip() then
+                x1 = x1 + sign(x2 - x1)
+            else
+                y1 = y1 + sign(y2 - y1)
+            end
+
+            mapgrd[x1][y1] = '.'
+        end
+    end
+
+    local gxm, gym = dgn.max_bounds()
+
+    extend_map { width = gxm, height = gym, fill = 'x' }
+
+    local rows = 5
+    local cols = 5
+    local special = -1
+
+    if crawl.one_chance_in(10) and dgn.map_by_tag('special_room', true) then
+        special = crawl.random_range(1, rows * cols)
+    end
+
+    local rooms = {}
+
+    for y = 0, cols - 1 do
+        for x = 0, rows - 1 do
+            local room = {
+                x1 = x * 13 + 8 + crawl.random2(4),
+                y1 = y * 11 + 8 + crawl.random2(4),
+            }
+
+            room.x2 = room.x1 + 3 + crawl.random2(8)
+            room.y2 = room.y1 + 3 + crawl.random2(6)
+
+            room.fill = '.'
+
+            table.insert(rooms, room)
+        end
+    end
+
+    for i, room in ipairs(rooms) do
+        if i == special then
+            room.fill = 'O'
+        end
+
+        fill_area(room)
+
+        if room.fill == '.'
+           and (room.x2 - room.x1 > 5)
+           and (room.y2 - room.y1 > 5)
+           and crawl.x_chance_in_y(you.absdepth() - 9, 220)
+        then
+            local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
+            make_inner_room(room, feat, crawl.coinflip())
+        end
+    end
+
+    for i, room in ipairs(rooms) do
+        -- There is a neighbour on the right, connect to it.
+        if i % cols ~= 0 then
+            link_rooms(room, rooms[i + 1], true)
+        end
+
+        -- There is a neighbour below, connect to it.
+        if i + cols <= #rooms then
+            link_rooms(room, rooms[i + cols], false)
+        end
+    end
+
+    if special ~= -1 then
+        _G.subvault('O : special_room')
     end
 }}
 MAP

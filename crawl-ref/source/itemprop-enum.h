@@ -5,19 +5,19 @@
 
 enum armour_type
 {
-    ARM_ROBE,                    //    0
+    ARM_ROBE,
     ARM_LEATHER_ARMOUR,
     ARM_RING_MAIL,
     ARM_SCALE_MAIL,
     ARM_CHAIN_MAIL,
-    ARM_SPLINT_MAIL,             //    5
+    ARM_SPLINT_MAIL,
     ARM_BANDED_MAIL,
     ARM_PLATE_MAIL,
 
     ARM_CLOAK,
 
     ARM_CAP,
-    ARM_WIZARD_HAT,              //   10
+    ARM_WIZARD_HAT,
     ARM_HELMET,
 
     ARM_GLOVES,
@@ -25,36 +25,40 @@ enum armour_type
     ARM_BOOTS,
 
     ARM_BUCKLER,
-    ARM_SHIELD,                  //   15
+    ARM_SHIELD,
     ARM_LARGE_SHIELD,
     ARM_MAX_RACIAL = ARM_LARGE_SHIELD,
 
     ARM_CRYSTAL_PLATE_MAIL,
+    ARM_MIN_UNBRANDED = ARM_CRYSTAL_PLATE_MAIL,
 
     ARM_ANIMAL_SKIN,
 
     ARM_TROLL_HIDE,
-    ARM_TROLL_LEATHER_ARMOUR,    //   20
+    ARM_TROLL_LEATHER_ARMOUR,
 
     ARM_DRAGON_HIDE,
     ARM_DRAGON_ARMOUR,
     ARM_ICE_DRAGON_HIDE,
     ARM_ICE_DRAGON_ARMOUR,
-    ARM_STEAM_DRAGON_HIDE,       //   25
+    ARM_STEAM_DRAGON_HIDE,
     ARM_STEAM_DRAGON_ARMOUR,
     ARM_MOTTLED_DRAGON_HIDE,
     ARM_MOTTLED_DRAGON_ARMOUR,
     ARM_STORM_DRAGON_HIDE,
-    ARM_STORM_DRAGON_ARMOUR,     //   30
+    ARM_STORM_DRAGON_ARMOUR,
     ARM_GOLD_DRAGON_HIDE,
     ARM_GOLD_DRAGON_ARMOUR,
     ARM_SWAMP_DRAGON_HIDE,
     ARM_SWAMP_DRAGON_ARMOUR,
+    ARM_PEARL_DRAGON_HIDE,
+    ARM_PEARL_DRAGON_ARMOUR,
+    ARM_MAX_UNBRANDED = ARM_PEARL_DRAGON_ARMOUR,
 
-    ARM_CENTAUR_BARDING,         //   35
+    ARM_CENTAUR_BARDING,
     ARM_NAGA_BARDING,
 
-    NUM_ARMOURS                  //   37
+    NUM_ARMOURS
 };
 
 enum armour_property_type
@@ -184,8 +188,7 @@ enum jewellery_type
                                        //   safely with first amulet.
     // RINGS after num_rings are for unique types for artefacts
     //   (no non-artefact version).
-    RING_CHARM,                        //   25
-
+    // Currently none.
     AMU_FIRST_AMULET = 35,
     AMU_RAGE = AMU_FIRST_AMULET,       //   35
     AMU_CLARITY,
@@ -293,32 +296,34 @@ enum rune_type
 
 enum scroll_type
 {
-    SCR_IDENTIFY,                      //    0
+    SCR_IDENTIFY,
     SCR_TELEPORTATION,
     SCR_FEAR,
     SCR_NOISE,
     SCR_REMOVE_CURSE,
-    SCR_DETECT_CURSE,                  //   5
+    SCR_DETECT_CURSE,
     SCR_SUMMONING,
     SCR_ENCHANT_WEAPON_I,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
-    SCR_RANDOM_USELESSNESS,            //   10
+    SCR_RANDOM_USELESSNESS,
     SCR_CURSE_WEAPON,
     SCR_CURSE_ARMOUR,
     SCR_IMMOLATION,
     SCR_BLINKING,
-    SCR_PAPER,                         //   15
+#if TAG_MAJOR_VERSION == 32
+    SCR_PAPER,
+#endif
     SCR_MAGIC_MAPPING,
     SCR_FOG,
     SCR_ACQUIREMENT,
     SCR_ENCHANT_WEAPON_II,
-    SCR_VORPALISE_WEAPON,              //   20
+    SCR_VORPALISE_WEAPON,
     SCR_RECHARGING,
     SCR_ENCHANT_WEAPON_III,
     SCR_HOLY_WORD,
     SCR_VULNERABILITY,
-    SCR_SILENCE,                       //   25
+    SCR_SILENCE,
     SCR_AMNESIA,
     SCR_CURSE_JEWELLERY,
     NUM_SCROLLS

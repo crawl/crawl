@@ -27,6 +27,7 @@
  #include "tilebuf.h"
  #include "tilefont.h"
  #include "tiledef-dngn.h"
+ #include "tiledef-icons.h"
  #include "tiledef-main.h"
  #include "tiledef-player.h"
  #include "tilepick.h"
@@ -408,8 +409,6 @@ bool Menu::process_key(int keyin)
     {
     case 0:
         return (true);
-    case CK_ENTER:
-        return (false);
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
     CASE_ESCAPE
@@ -564,7 +563,13 @@ bool Menu::process_key(int keyin)
         repaint = true;
         break;
 
+    case CK_ENTER:
+        if (!(flags & MF_PRESELECTED) || !sel.empty())
+            return (false);
+        // else fall through
     default:
+        // Even if we do return early, lastch needs to be set first,
+        // as it's sometimes checked when leaving a menu.
         keyin  = post_process(keyin);
         lastch = keyin;
 
@@ -774,9 +779,16 @@ void Menu::select_items(int key, int qty)
         // by its primary hotkey (which is assumed to always be
         // hotkeys[0]), in which case, we stop selecting further
         // items.
+        const bool check_preselected = (key == CK_ENTER);
         for (int i = first_entry; i < final; ++i)
         {
-            if (is_hotkey(i, key))
+            if (check_preselected && items[i]->preselected)
+            {
+                select_index(i, qty);
+                selected = true;
+                break;
+            }
+            else if (is_hotkey(i, key))
             {
                 select_index(i, qty);
                 if (items[i]->hotkeys[0] == key)
@@ -791,7 +803,13 @@ void Menu::select_items(int key, int qty)
         {
             for (int i = 0; i < first_entry; ++i)
             {
-                if (is_hotkey(i, key))
+                if (check_preselected && items[i]->preselected)
+                {
+                    select_index(i, qty);
+                    selected = true;
+                    break;
+                }
+                else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
                     if (items[i]->hotkeys[0] == key)
@@ -901,7 +919,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
             item = mitm[m->inv[MSLOT_WEAPON]];
 
         tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
-        tileset.push_back(tile_def(TILE_ANIMATED_WEAPON, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_ANIMATED_WEAPON, TEX_ICONS));
     }
     else if (mons_is_draconian(m->type))
     {
@@ -926,15 +944,15 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!fake && !mons_flies(m))
     {
         if (ch == TILE_DNGN_LAVA)
-            tileset.push_back(tile_def(TILE_MASK_LAVA, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_LAVA, TEX_ICONS));
         else if (ch == TILE_DNGN_SHALLOW_WATER)
-            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER, TEX_ICONS));
         else if (ch == TILE_DNGN_DEEP_WATER)
-            tileset.push_back(tile_def(TILE_MASK_DEEP_WATER, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_DEEP_WATER, TEX_ICONS));
         else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
-            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS));
         else if (ch == TILE_DNGN_DEEP_WATER_MURKY)
-            tileset.push_back(tile_def(TILE_MASK_DEEP_WATER_MURKY, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MASK_DEEP_WATER_MURKY, TEX_ICONS));
     }
 
     if (mons_can_display_wounds(m))
@@ -946,19 +964,19 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         {
         case MDAM_DEAD:
         case MDAM_ALMOST_DEAD:
-            tileset.push_back(tile_def(TILE_MDAM_ALMOST_DEAD, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_ALMOST_DEAD, TEX_ICONS));
             break;
         case MDAM_SEVERELY_DAMAGED:
-            tileset.push_back(tile_def(TILE_MDAM_SEVERELY_DAMAGED, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_SEVERELY_DAMAGED, TEX_ICONS));
             break;
         case MDAM_HEAVILY_DAMAGED:
-            tileset.push_back(tile_def(TILE_MDAM_HEAVILY_DAMAGED, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_HEAVILY_DAMAGED, TEX_ICONS));
             break;
         case MDAM_MODERATELY_DAMAGED:
-            tileset.push_back(tile_def(TILE_MDAM_MODERATELY_DAMAGED, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_MODERATELY_DAMAGED, TEX_ICONS));
             break;
         case MDAM_LIGHTLY_DAMAGED:
-            tileset.push_back(tile_def(TILE_MDAM_LIGHTLY_DAMAGED, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MDAM_LIGHTLY_DAMAGED, TEX_ICONS));
             break;
         case MDAM_OKAY:
         default:
@@ -968,15 +986,15 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     }
 
     if (m->friendly())
-        tileset.push_back(tile_def(TILE_HEART, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_HEART, TEX_ICONS));
     else if (m->good_neutral())
-        tileset.push_back(tile_def(TILE_GOOD_NEUTRAL, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_GOOD_NEUTRAL, TEX_ICONS));
     else if (m->neutral())
-        tileset.push_back(tile_def(TILE_NEUTRAL, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_NEUTRAL, TEX_ICONS));
     else if (mons_looks_stabbable(m))
-        tileset.push_back(tile_def(TILE_STAB_BRAND, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_STAB_BRAND, TEX_ICONS));
     else if (mons_looks_distracted(m))
-        tileset.push_back(tile_def(TILE_MAY_STAB_BRAND, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_MAY_STAB_BRAND, TEX_ICONS));
 
     return (true);
 }
@@ -995,7 +1013,7 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     tileset.push_back(tile_def(tile, get_dngn_tex(tile)));
 
     if (in_bounds(pos) && is_unknown_stair(pos))
-        tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEI_NEW_STAIR, TEX_ICONS));
 
     return (true);
 }
@@ -2001,7 +2019,7 @@ bool PrecisionMenu::process_key(int key)
         focus_direction = PrecisionMenu::RIGHT;
         break;
     default:
-        ASSERT(!"Malformed return value");
+        die("Malformed return value");
         break;
     }
     if (focus_find)
@@ -2152,7 +2170,7 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
         aabb_end.y = start->get_max_coord().y;
         break;
     default:
-        ASSERT(!"Bad direction given");
+        die("Bad direction given");
     }
 
     // loop through the entries
@@ -2306,7 +2324,8 @@ void PrecisionMenu::draw_menu()
 
 MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
                       m_allow_highlight(true), m_dirty(false), m_visible(false),
-                      m_item_id(-1)
+                      m_link_left(NULL), m_link_right(NULL), m_link_up(NULL),
+                      m_link_down(NULL), m_item_id(-1)
 {
 #ifdef USE_TILE
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
@@ -2321,6 +2340,13 @@ MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
 MenuItem::~MenuItem()
 {
 }
+
+#ifdef USE_TILE
+void MenuItem::set_tile_height()
+{
+    m_unit_height_pixels = TILE_Y;
+}
+#endif
 
 /**
  * Override this if you use eg funky different sized fonts, tiles etc
@@ -2429,10 +2455,62 @@ void MenuItem::add_hotkey(int key)
     m_hotkeys.push_back(key);
 }
 
+void MenuItem::clear_hotkeys()
+{
+    m_hotkeys.clear();
+}
+
 const std::vector<int>& MenuItem::get_hotkeys() const
 {
     return m_hotkeys;
 }
+
+void MenuItem::set_link_left(MenuItem* item)
+{
+    m_link_left = item;
+}
+
+void MenuItem::set_link_right(MenuItem* item)
+{
+    m_link_right = item;
+}
+
+void MenuItem::set_link_up(MenuItem* item)
+{
+    m_link_up = item;
+}
+
+void MenuItem::set_link_down(MenuItem* item)
+{
+    m_link_down = item;
+}
+
+MenuItem* MenuItem::get_link_left() const
+{
+    return m_link_left;
+}
+
+MenuItem* MenuItem::get_link_right() const
+{
+    return m_link_right;
+}
+
+MenuItem* MenuItem::get_link_up() const
+{
+    return m_link_up;
+}
+
+MenuItem* MenuItem::get_link_down() const
+{
+    return m_link_down;
+}
+
+#ifdef USE_TILE
+int MenuItem::get_vertical_offset() const
+{
+    return m_unit_height_pixels / 2 - tiles.get_crt_font()->char_height() / 2;
+}
+#endif
 
 #ifdef USE_TILE
 TextItem::TextItem() : m_font_buf(tiles.get_crt_font())
@@ -2478,7 +2556,7 @@ void TextItem::render()
         m_font_buf.clear();
         // TODO: handle m_bg_colour
         m_font_buf.add(m_render_text, term_colours[m_fg_colour],
-                       m_min_coord.x, m_min_coord.y);
+                       m_min_coord.x, m_min_coord.y + get_vertical_offset());
         m_dirty = false;
     }
     m_font_buf.draw();
@@ -2561,9 +2639,8 @@ void TextItem::_wrap_text()
         size_t pos = 0;
         // find the max_line'th occurence of '\n'
         for (int i = 0; i < max_lines; ++i)
-        {
             pos = m_render_text.find('\n', pos);
-        }
+
         // Chop of all the nonfitting text
         m_render_text = m_render_text.substr(pos);
     }
@@ -2590,6 +2667,39 @@ bool NoSelectTextItem::can_be_highlighted() const
     return false;
 }
 
+void FormattedTextItem::render()
+{
+    if (!m_visible)
+        return;
+
+#ifdef USE_TILE
+    if (m_dirty)
+    {
+        m_font_buf.clear();
+        // FIXME: m_fg_colour doesn't work here while it works in console.
+        textcolor(m_fg_colour);
+        m_font_buf.add(formatted_string::parse_string(m_render_text, true,
+                                                      NULL, m_fg_colour),
+                       m_min_coord.x, m_min_coord.y + get_vertical_offset());
+        m_dirty = false;
+    }
+    m_font_buf.draw();
+#else
+    // Clean the drawing area first
+    // clear_to_end_of_line does not work for us
+    std::string white_space(m_max_coord.x - m_min_coord.x, ' ');
+    for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
+    {
+        cgotoxy(m_min_coord.x, m_min_coord.y + i);
+        cprintf("%s", white_space.c_str());
+    }
+
+    cgotoxy(m_min_coord.x, m_min_coord.y);
+    textcolor(m_fg_colour);
+    display_tagged_block(m_render_text);
+#endif
+}
+
 #ifdef USE_TILE
 TextTileItem::TextTileItem()
 {
@@ -2613,10 +2723,10 @@ void TextTileItem::set_bounds(const coord_def &min_coord, const coord_def &max_c
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
     m_min_coord.x = (min_coord.x - 1) * m_unit_width_pixels;
-    m_max_coord.x = (max_coord.x - 1) * m_unit_height_pixels;
-    // TODO: get the tile height from somewhere cleaner
-    m_min_coord.y = (min_coord.y - 1) * 32;
-    m_max_coord.y = (max_coord.y - 1) * 32;
+    m_max_coord.x = (max_coord.x - 1) * m_unit_width_pixels;
+    m_min_coord.y = (min_coord.y - 1) * TILE_Y;
+    m_max_coord.y = (max_coord.y - 1) * TILE_Y;
+    set_tile_height();
 }
 
 void TextTileItem::render()
@@ -2638,11 +2748,10 @@ void TextTileItem::render()
         }
         // center the text
         // TODO wrap / chop the text
-        const int y_coord = (m_max_coord.y - m_min_coord.y) / 2
-                            - m_unit_height_pixels / 2;
         const int tile_offset = (m_tiles.size() > 0) ? 32 : 0;
         m_font_buf.add(m_text, term_colours[m_fg_colour],
-                       m_min_coord.x + tile_offset, m_min_coord.y + y_coord);
+                       m_min_coord.x + tile_offset,
+                       m_min_coord.y + get_vertical_offset());
 
 
         m_dirty = false;
@@ -2766,6 +2875,13 @@ MenuObject::~MenuObject()
 {
 }
 
+#ifdef USE_TILE
+void MenuObject::set_tile_height()
+{
+    m_unit_height_pixels = TILE_Y;
+}
+#endif
+
 void MenuObject::init(const coord_def& min_coord, const coord_def& max_coord,
               const std::string& name)
 {
@@ -2832,7 +2948,7 @@ MenuItem* MenuObject::_find_item_by_mouse_coords(const coord_def& pos)
     return NULL;
 }
 
-MenuItem* MenuObject::select_item_by_hotkey(int key)
+MenuItem* MenuObject::find_item_by_hotkey(int key)
 {
     // browse through all the Entries
     std::vector<MenuItem*>::iterator it;
@@ -2844,13 +2960,18 @@ MenuItem* MenuObject::select_item_by_hotkey(int key)
             ++hot_iterator)
         {
             if (key == *hot_iterator)
-            {
-                select_item(*it);
                 return *it;
-            }
         }
     }
     return NULL;
+}
+
+MenuItem* MenuObject::select_item_by_hotkey(int key)
+{
+    MenuItem* item = find_item_by_hotkey(key);
+    if (item)
+        select_item(item);
+    return item;
 }
 
 std::vector<MenuItem*> MenuObject::get_selected_items()
@@ -2903,7 +3024,7 @@ bool MenuObject::is_visible() const
 
 
 
-MenuFreeform::MenuFreeform(): m_active_item(NULL)
+MenuFreeform::MenuFreeform(): m_active_item(NULL), m_default_item(NULL)
 {
 }
 
@@ -2920,6 +3041,16 @@ MenuFreeform::~MenuFreeform()
     m_entries.clear();
 }
 
+void MenuFreeform::set_default_item(MenuItem* item)
+{
+    m_default_item = item;
+}
+
+void MenuFreeform::activate_default_item()
+{
+    m_active_item = m_default_item;
+}
+
 MenuObject::InputReturnValue MenuFreeform::process_input(int key)
 {
     if (!m_allow_focus || !m_visible)
@@ -2932,7 +3063,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             // nothing to process
             return MenuObject::INPUT_NO_ACTION;
         }
-        else
+        else if (m_default_item == NULL)
         {
             // pick the first item possible
             for (std::vector<MenuItem*>::iterator it = m_entries.begin();
@@ -2946,6 +3077,19 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             }
         }
     }
+
+    if (m_active_item == NULL && m_default_item != NULL)
+        switch (key)
+        {
+        case CK_UP:
+        case CK_DOWN:
+        case CK_LEFT:
+        case CK_RIGHT:
+        case CK_ENTER:
+            set_active_item(m_default_item);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+
 
     MenuItem* find_entry = NULL;
     switch (key)
@@ -3301,12 +3445,18 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
     switch (dir)
     {
     case UP:
+        if (start->get_link_up())
+            return start->get_link_up();
+
         aabb_start.x = start->get_min_coord().x;
         aabb_end.x = start->get_max_coord().x;
         aabb_start.y = 0; // top of screen
         aabb_end.y = start->get_min_coord().y;
         break;
     case DOWN:
+        if (start->get_link_down())
+            return start->get_link_down();
+
         aabb_start.x = start->get_min_coord().x;
         aabb_end.x = start->get_max_coord().x;
         aabb_start.y = start->get_max_coord().y;
@@ -3318,12 +3468,18 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         aabb_end.y = 32767;
         break;
     case LEFT:
+        if (start->get_link_left())
+            return start->get_link_left();
+
         aabb_start.x = 0; // left of screen
         aabb_end.x = start->get_min_coord().x;
         aabb_start.y = start->get_min_coord().y;
         aabb_end.y = start->get_max_coord().y;
         break;
     case RIGHT:
+        if (start->get_link_right())
+            return start->get_link_right();
+
         aabb_start.x = start->get_max_coord().x;
         // we again want a value that is always larger then the width of screen
         aabb_end.x = 32767;
@@ -3331,7 +3487,7 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         aabb_end.y = start->get_max_coord().y;
         break;
     default:
-        ASSERT(!"Bad direction given");
+        die("Bad direction given");
     }
 
     // loop through the entries

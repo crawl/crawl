@@ -93,11 +93,11 @@ lua_file = lua/pickup.lua
 
 # autofight.lua allows binding both movement and attack a single key.
 # Use at your own discretion! See options_guide.txt for details.
-# lua_file = lua/autofight.lua
+lua_file = lua/autofight.lua
 
 ##### 4-  Interface #################################################
 #
-##### 4-a	Picking up and Dropping ###############
+##### 4-a       Picking up and Dropping ###############
 #
 autopickup = $?!+"/%
 
@@ -118,13 +118,13 @@ drop_filter = useless_item
 # drop_filter = skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 
-##### 4-b	Targetting ############################
+##### 4-b       Targetting ############################
 #
 # default_target = false
 # target_unshifted_dirs = true
 # darken_beyond_range = false
 
-##### 4-c	Passive Sightings #####################
+##### 4-c       Passive Sightings #####################
 #
 # detected_monster_colour = lightred
 # detected_item_colour = green
@@ -132,7 +132,7 @@ drop_filter = useless_item
 # colour_map = false
 # clean_map = true
 
-##### 4-d	Branding ##############################
+##### 4-d       Branding ##############################
 #
 # friend_brand       = hi:green
 # neutral_brand      = hi:lightgrey
@@ -143,13 +143,13 @@ drop_filter = useless_item
 # trap_item_brand    = reverse
 # verbose_monster_pane = false
 
-##### 4-e	Level Map Functions ###################
+##### 4-e       Level Map Functions ###################
 #
 # level_map_cursor_step = 7
 # level_map_title = false
 # item_colour = false
 
-##### 4-f	Viewport Options  ###################
+##### 4-f       Viewport Options  ###################
 #
 # view_max_width   = 33
 # view_max_height  = 21
@@ -162,7 +162,7 @@ drop_filter = useless_item
 # scroll_margin_y  = 2
 # scroll_margin    = 2
 
-##### 4-g	Travel and Exploration #################
+##### 4-g       Travel and Exploration #################
 #
 # travel_delay = 20
 # explore_delay = -1
@@ -199,7 +199,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
 #rest_wait_both = true
 
-##### 4-h	Stashes ###############################
+##### 4-h       Stashes ###############################
 #
 
 # 14 filters out corpses
@@ -208,7 +208,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # annotate_item_class = true
 # annotate_item_dropped = true
 
-##### 4-i	Command Enhancements ##################
+##### 4-i       Command Enhancements ##################
 #
 # auto_list     = false
 # easy_open     = false
@@ -228,7 +228,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness, charged
 
-##### 4-j	Messages and Display Enhancements #####
+##### 4-j       Messages and Display Enhancements #####
 #
 # hp_warning = 30
 # mp_warning = 0
@@ -327,18 +327,18 @@ force_more_message = You are starting to lose your buoyancy
 force_more_message = interdimensional caravan
 force_more_message = distant snort
 
-##### 4-k	Firing Commands #######################
+##### 4-k       Firing Commands #######################
 #
 # fire_items_start = a
 # fire_order = launcher, return
 # fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger / club
 # fire_order += inscribed
 
-##### 4-l	Channels ##############################
+##### 4-l       Channels ##############################
 #
 # channel.multiturn = mute
 
-##### 4-m	Inscriptions ##########################
+##### 4-m       Inscriptions ##########################
 #
 # autoinscribe = bad_item.*potion:!q
 # autoinscribe = potion.*mutation:!q
@@ -347,20 +347,20 @@ force_more_message = distant snort
 # autoinscribe_cursed = false
 # autoinscribe = fruit:!e
 
-##### 4-n	Macro related Options #################
+##### 4-n       Macro related Options #################
 #
 # flush.failure = false
 # flush.command = true
 # flush.message = true
 
-##### 4-t	Tile related Options ##################
+##### 4-t       Tile related Options ##################
 
 # All tiles specific options are in the external file
 include = tiles_options.txt
 
 ##### 5-  Dump File #################################################
 #
-##### 5-a	Items and Kill List ###################
+##### 5-a       Items and Kill List ###################
 #
 # kill_map = friend:you, other:you
 # dump_kill_places = (single | all | none)
@@ -372,7 +372,7 @@ include = tiles_options.txt
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
 # dump_book_spells = false
 
-##### 5-b	Notes #################################
+##### 5-b       Notes #################################
 #
 # user_note_prefix=@@@
 ood_interesting = 8
@@ -392,7 +392,7 @@ note_monsters = orb of fire, ancient lich, Sigmund
 
 ##### 6-  Miscellaneous #############################################
 #
-##### 6-a	All OS ################################
+##### 6-a       All OS ################################
 #
 # mouse_input      = true
 # wiz_mode         = no
@@ -412,7 +412,7 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any,
 # feature, mon_glyph
 
-##### 6-b	DOS and Windows #######################
+##### 6-b       DOS and Windows #######################
 #
 # dos_use_background_intensity = true
 # background = black

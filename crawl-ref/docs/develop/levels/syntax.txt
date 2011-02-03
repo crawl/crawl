@@ -42,10 +42,15 @@ Terrain
 
 Features
 --------
- @ - entry point - must be on outside edge. If you use ORIENT: float, and do
-     not use any @, the dungeon builder will connect at least one floorspace on
-     the edge of your map to the rest of the level; if there is no floorspace
-     on the edge of your map, it will be isolated.
+ @ - Entry point - must be on outside edge. This point will be connected to the
+     rest of the level with a corridor for both normal vaults and minivaults.
+     If a normal vault, or a minivault tagged 'mini_float', has no entry points
+     defined, random traversable squares on its edge will be chosen and
+     connected, as if they had the @ glyph.
+
+     The + and = glyphs, when placed on the edge of the map, are also considered
+     entry points.
+
  }{ - Stone stairs - You must be able to reach these from each other. The
       { upstair is also the stair on which the player will enter the
       dungeon for entry vaults.
@@ -72,7 +77,7 @@ Features
      NOTE: F used to put down a granite Statue most of the time but occasionally
      Orange or Silver or Ice statues (1 in 100). You can reproduce this by using
      F on the map together with
-     SUBST:   F = G:100 F:1
+     SUBST:   F = G:99 F:1
      KMONS:   F = orange crystal statue / silver statue / ice statue
 
  T - Water fountain
@@ -210,22 +215,20 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           have no DEPTH: constraint. Note that maps without a DEPTH: constraint
           cannot be selected as random vaults or minivaults.
 
-CHANCE:   <priority>:<roll> or <roll>
+CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
 
           CHANCE allows you to control the probability that your map
           is used on any given level with an absolute roll.
 
           There are two ways to specify the CHANCE roll:
 
-          CHANCE: 500
+          CHANCE: 501
           or
-          CHANCE: 5%
+          CHANCE: 5.01%
 
           If specified as a raw number, the chance of selecting the
           vault is <number> in 10000. If specified as a percentage,
           the chance of selecting the vault is <perc> * 100 in 10000.
-          Note that CHANCE accepts only integers, no fractions or
-          decimals.
 
           CHANCE is useful for random vaults with a DEPTH (or
           default-depth) setting that want to ensure a certain chance
@@ -244,7 +247,7 @@ CHANCE:   <priority>:<roll> or <roll>
           This specifies a CHANCE of 80%, which means the dummy will
           be used in 80% of vault placement attempts.
 
-          The Lua equivalent of the two CHANCE forms is:
+          The Lua equivalent of the two simple CHANCE forms is:
 
           : chance(<number>)
           : chance(<priority>, <number>)
@@ -273,12 +276,44 @@ CHANCE:   <priority>:<roll> or <roll>
           tagged chance_xxx, then one map of that set will be used
           when the chance is met.
 
+          In some cases you'd like to set a different CHANCE based on where
+          the vault is being placed. For instance:
+
+          NAME: ziggurat_portal
+          CHANCE: 5% (Pan), 2% (D:*, Lair:2-4), 3%
+
+          If you specify a depth range in parentheses after a chance
+          spec, that spec applies only in that depth range. Each
+          chance's depth range will be checked in the order specified,
+          with the exception of the default chance (3% in this example)
+          which is always checked last.
+
+          The Lua equivalent of depth-constrained CHANCE:
+          CHANCE: 2% (D:*, Lair:2-4), 0 : 50% (Geh)
+          is as:
+          : depth_chance("D:*, Lair:2-4", 200)
+          : depth_chance("Geh", 0, 5000)
+
+
 WEIGHT:   (number with 10 being default)
           For entry vaults and any other vaults randomly picked from among
           a set, this type of line affects the likelihood of the given vault
           being picked in a given game. The default WEIGHT: is 10. The
           likelihood of a vault getting picked is:
           [vault's WEIGHT: / sum of all WEIGHT:s of vaults of that type]
+
+          As with CHANCE, you may constrain weights to apply only in certain
+          depths:
+
+          WEIGHT: 100 (D:2-4), 20 (Crypt, Zot)
+
+          (Note that the default weight is always 10 unless explicitly
+          changed)
+
+          The Lua equivalent of a depth-constrained WEIGHT:
+          WEIGHT: 100 (D:2-4)
+          is
+          : depth_weight("D:2-4", 100)
 
 PLACE:    Used to specify certain special levels. Existing special levels
           include most branch ends.
@@ -327,7 +362,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "mini_float": applicable only to minivaults, requests that
              the dungeon builder pick random exits from the minivault and
              connect it to the rest of the level, similar to the exit behaviour
-             for floating vaults.
+             for floating vaults. Has no effect if the minivault has explicitly
+             defined exits (the @ glyph).
           * "no_monster_gen": Prevents random monster generation at the time of
              the vault's creation. Highly advised for entry vaults with a
              player-hostile geography, MUST-HAVE for those with water/lava.
@@ -340,8 +376,6 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              use this tag.
           * "no_trap_gen": Prevents random trap generation at the time of the
              vault's creation.
-          * "no_shop_gen": Prevents random shop generation at the time of the
-             vault's creation.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game.
           * "luniq": specifies that this vault can be used only once on a
@@ -351,9 +385,9 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              "luniq_BAR" is only relevant when used with "allow_dup".
           * "branch_entry" eg. "orc_entry", "lair_entry" etc.
              If chosen, these maps will contain the stairs for that branch.
-             Use "O" to place the stairs. If a branch has very few entries,
-             a dummy entry is advisable to make sure the player doesn't get
-             bored of the same few entries recycled ad nauseam.
+             If a branch has very few entries, a dummy entry is advisable to
+             make sure the player doesn't get bored of the same few entries
+             recycled ad nauseam.
              Note: if any TAG argument contains an "entry", the vault will
                    be no longer eligible for random placement. (Currently,
                    this just affects your choice of BAR when using uniq_BAR.)
@@ -394,6 +428,13 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              vaults generated during the game.  Use this if the vault
              is predictable (like the Vault:8 and Slime:6 vaults) or
              are for weird internal uses (like the shoalhut vaults).
+          * "unrand": Don't pick this vault randomly by DEPTH.  Can still be
+             picked by tag or PLACE.
+          * "transparent": Marks the vault as potentially passable for the
+             purposes of level connectivity.  By default, vaults are considered
+             non-passable regardless of their contents.  With this tag, the
+             actual terrain of the vault affects its passability as seen by the
+             dungeon builder.
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
           (FLAGS just controls how the vault is placed); should only be used
@@ -467,6 +508,8 @@ ITEM:     (list of items, separated by comma)
           Modifiers:
           * "q:N" sets the item quantity to N (if N > 0). Does nothing
              if the item is not stackable.
+          * "charges:N" sets the number of charges for wands. Does no checks
+            against the maximum number of charges.
           * "no_uniq" prevents the item from being turned into an artefact.
           * "good_item" makes the builder try to make the item a good one
             (acquirement quality). This is independent of the level's depth,
@@ -483,7 +526,7 @@ ITEM:     (list of items, separated by comma)
             vault's level number).
           * "damaged" sets the item plusses to -1..-4.
           * "cursed" gets a curse plus plusses as in "damaged".
-          * "uncursed" forces an item to have any curse placed on it to be
+          * "not_cursed" forces an item to have any curse placed on it to be
             removed.
           * "any" by itself gives a random choice; you can combine "any" with
             "good_item."
@@ -501,7 +544,9 @@ ITEM:     (list of items, separated by comma)
             from being randomly being made racial.  Has no effect if the item
             can't take that kind of racial setting.
             NOTE: Can result in a non-racial item if used with "any" and the
-            chosen item isn't compatible with the desired race.
+            chosen item isn't compatible with the desired race. If race is not
+            explicitly set, this can result in boots being replaced by a
+            barding.
           * "ego:ego_name", where "ego_name" is something like  "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego.  The item must be fully specified, so
@@ -516,6 +561,8 @@ ITEM:     (list of items, separated by comma)
             will be given instead.
           * "randart" will force a randart.  Most of the above modifiers
             will be ignored, except for "ego" (for weapons only).
+          * "mundane" acts as a shortcut for "ego:none" and forces the plusses
+             to be +0.
 
             WARNING: While checks are done to make sure that an armour ego
             isn't given to a weapon, a weapon ego to a missile, and so on, and
@@ -523,8 +570,7 @@ ITEM:     (list of items, separated by comma)
             missiles, no other checking is done.  Thus it is possible to create
             a demonic weapon of holy wrath or a helmet of running.
 
-          Limitations: You can't specify specific pluses or number of
-          charges.
+          Limitations: You can't specify specific pluses.
 
           Corpses
           -------
@@ -571,22 +617,29 @@ ITEM:     (list of items, separated by comma)
           You can further specify artefact spell books using "randbook" and any
           combination of the following tags:
 
+          * "numspells:number" maximum number of spells to include in the book.
+            A book may contain at most 8 spells.
+          * "owner:name" will be used to make the title include the apostrophised
+            owner (or author) of the book if provided. For example, "owner:Roxanne" 
+            may create "Roxanne's Treatise on Mountains". You can use the keyword 
+            "player" (i.e. "owner:player") to use the player's name instead.
+
+          In addition, themed books allow the use of the following tags:
+
           * "disc:spell_school", the first spell school that should be included
             in the book. For example, "disc:earth" or "disc:ice".
           * "disc2:spell_school" an optional second spell school that can be
             included in the book. Note: specifying two spell schools doesn't
             mean that they will both definitely be included, just that they
             might be.
-          * "numspells:number" a number of spells to include in the book. Will
-            not always be followed.
           * "slevels:max_levels" the total, combined level of spells to include
             in the book. "slevels:6" will use three level two spells, two level
             three spells, a level two and a level four spell, and so on.
-          * "spell:spell" a spell to include in the book. All of "_" will be
-            replaced with " " and will be parsed as such.
-          * "owner:name" will be used to generate the title of the book if
-            provided. For example, "owner:Roxanne" may create "Roxanne's
-            Treatise on Mountains".
+          * "spells:spell_1|spell_2" a list of spells to include in the book.
+            Spells must be separated by "|" without spaces. Within a spell name,
+            all of "_" will be replaced with " " and will be parsed as such.
+            A book may contain at most 8 spells.
+          * "title:title" will define the title of the book.
 
           NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
@@ -621,7 +674,7 @@ MONS:     (list of monsters)
 
           Individual monsters may be prefixed with the "generate_awake"
           (without the quotes). Use this sparingly:
-              MONS: generate_awake giant beetle
+              MONS: generate_awake goliath beetle
 
           Individual monsters may be prefixed with the "patrolling"
           (without the quotes). Use this sparingly:
@@ -1162,7 +1215,6 @@ KMASK:    Z = no_monster_gen
              symbol. MUST-HAVE for those with water/lava symbols in
              entry vaults.
           * "no_trap_gen": Prevents random trap generation on that symbol.
-          * "no_shop_gen": Prevents random shop generation on that symbol.
           * "no_pool_fixup": prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.
           * "no_wall_fixup": prevents (rock) walls from being converted to

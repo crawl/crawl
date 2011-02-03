@@ -7,6 +7,10 @@ A bloodstained altar of Trog
 
 An altar to Trog the Wrathful, crudely made by what seem to be the hands of giants and covered with bloodstains.
 %%%%
+A blossoming altar of Fedhas
+
+An altar to Fedhas Madash, covered in vibrant and colourful plant life.
+%%%%
 A burning altar of Makhleb
 
 An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are visible in the flames.
@@ -79,7 +83,7 @@ A gateway leading out of the Abyss
 
 A gateway out of this accursed place, shimmering and shifting in the impermanent landscape.
 %%%%
-A gateway to Gehenna
+A gateway to the ashen valley of Gehenna
 
 You can feel the heat. Gehenna seems to be made out of nothing but flames, lava and hellfire.
 %%%%
@@ -143,6 +147,10 @@ A portal to somewhere
 
 A gash-like tear in reality that looks into some terrifying, starry otherworld. Thankfully, the magic that opened this portal prevents its vacuum from consuming and swallowing everything in sight.
 %%%%
+A radiant altar of Vehumet
+
+An altar, ablaze in the lights of Iskenderun and promising great destructive powers to those who would follow Vehumet.
+%%%%
 A rock wall
 
 This wall consists of simple rock.
@@ -166,10 +174,6 @@ This crystal altar shattered to pieces when Ashenzari was cursed centuries ago. 
 A shimmering altar of Xom
 
 This altar constantly shimmers in all visible colours and probably some invisible ones, too, matching the whims of Xom the Unpredictable, to whom it is dedicated.
-%%%%
-A shining altar of Vehumet
-
-An altar, ablaze in the lights of Iskenderun and promising great destructive powers to those who would follow Vehumet.
 %%%%
 A shop
 
@@ -295,6 +299,10 @@ It's a trap!
 A tree
 
 While the dungeon is filled with dim magic light, in most places it is not bright enough to sustain any larger plants. It is uneven, though, and there are spots where, with the grace of Fedhas, trees as big as those on the surface can grow underground.
+%%%%
+A viscous altar of Jiyva
+
+A slimy, ever-shifting altar to Jiyva. You're not sure what it's made from, and you don't really want to know.
 %%%%
 A wall of green crystal
 

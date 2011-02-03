@@ -127,7 +127,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         return (false);
     }
 
-    std::string prompt = "Do you wish to have your weapon ";
+    std::string prompt = "Do you wish to have " + wpn.name(DESC_NOCAP_YOUR)
+                       + " ";
     if (brand == SPWPN_PAIN)
         prompt += "bloodied with pain";
     else if (brand == SPWPN_DISTORTION)
@@ -724,6 +725,44 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
     return (relative_gain);
 }
 
+static bool _check_nemelex_sacrificing_item_type(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_ARMOUR:
+        return (you.nemelex_sacrificing[NEM_GIFT_ESCAPE]);
+
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+    case OBJ_MISSILES:
+        return (you.nemelex_sacrificing[NEM_GIFT_DESTRUCTION]);
+
+    case OBJ_CORPSES:
+        return (you.nemelex_sacrificing[NEM_GIFT_SUMMONING]);
+
+    case OBJ_POTIONS:
+        if (is_blood_potion(item))
+            return (you.nemelex_sacrificing[NEM_GIFT_SUMMONING]);
+        return (you.nemelex_sacrificing[NEM_GIFT_WONDERS]);
+
+    case OBJ_FOOD:
+        if (item.sub_type == FOOD_CHUNK)
+            return (you.nemelex_sacrificing[NEM_GIFT_SUMMONING]);
+    // else fall through
+    case OBJ_WANDS:
+    case OBJ_SCROLLS:
+        return (you.nemelex_sacrificing[NEM_GIFT_WONDERS]);
+
+    case OBJ_JEWELLERY:
+    case OBJ_BOOKS:
+    case OBJ_MISCELLANY:
+        return (you.nemelex_sacrificing[NEM_GIFT_DUNGEONS]);
+
+    default:
+        return false;
+    }
+}
+
 static void _offer_items()
 {
     if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
@@ -764,6 +803,14 @@ static void _offer_items()
                 num_disliked++;
                 disliked_item = &item;
             }
+            continue;
+        }
+
+        // Skip items you don't want to sacrifice right now.
+        if (you.religion == GOD_NEMELEX_XOBEH
+            && !_check_nemelex_sacrificing_item_type(item))
+        {
+            i = next;
             continue;
         }
 

@@ -17,7 +17,6 @@
 #include "cio.h"
 #include "dbg-util.h"
 #include "decks.h"
-#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "godpassive.h"
@@ -168,7 +167,7 @@ void wizard_create_spec_object()
     }
     else if (class_wanted == OBJ_GOLD)
     {
-        int amount = debug_prompt_for_int("How much gold? ", true);
+        int amount = prompt_for_int("How much gold? ", true);
         if (amount <= 0)
         {
             canned_msg(MSG_OK);
@@ -208,7 +207,7 @@ void wizard_create_spec_object()
         dummy.type = mon;
 
         if (mons_genus(mon) == MONS_HYDRA)
-            dummy.number = debug_prompt_for_int("How many heads? ", false);
+            dummy.number = prompt_for_int("How many heads? ", false);
 
         if (fill_out_corpse(&dummy, dummy.type,
                             mitm[thing_created], true) == -1)
@@ -421,7 +420,7 @@ static void _tweak_randart(item_def &item)
 
     case ARTP_VAL_POS:
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
-        val = debug_prompt_for_int("New value? ", true);
+        val = prompt_for_int("New value? ", true);
 
         if (val < 0)
         {
@@ -434,7 +433,7 @@ static void _tweak_randart(item_def &item)
         break;
     case ARTP_VAL_ANY:
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
-        val = debug_prompt_for_int("New value? ", false);
+        val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
@@ -538,7 +537,7 @@ void wizard_tweak_object(void)
         else if (keyin == 'e')
             you.inv[item].flags = new_val;
         else
-            ASSERT(!"unhandled keyin");
+            die("unhandled keyin");
 
         // cursedness might have changed
         ash_check_bondage();
@@ -887,7 +886,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         return;
     }
 
-    const int num_itrs = debug_prompt_for_int("How many iterations? ", true);
+    const int num_itrs = prompt_for_int("How many iterations? ", true);
 
     if (num_itrs == 0)
     {
@@ -1005,7 +1004,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             you.your_name.c_str(), player_title().c_str(),
             you.experience_level,
             species_name(you.species).c_str(),
-            you.class_name, godname.c_str());
+            you.class_name.c_str(), godname.c_str());
 
     // Print player equipment.
     const int e_order[] =

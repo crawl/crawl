@@ -10,8 +10,8 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "jobs.h"
-#include "libutil.h"
 #include "maps.h"
 #include "misc.h"
 #include "mutation.h"
@@ -26,6 +26,7 @@
 #include "spl-util.h"
 #include "sprint.h"
 #include "state.h"
+#include "tutorial.h"
 
 #define MIN_START_STAT       3
 
@@ -395,16 +396,9 @@ void newgame_make_item(int slot, equipment_type eqslot,
     // If the character is restricted in wearing armour of equipment
     // slot eqslot, hand out replacement instead.
     if (item.base_type == OBJ_ARMOUR && replacement != -1
-        && !you_can_wear(eqslot))
+        && !can_wear_armour(item, false, true))
     {
-        // Don't replace shields with bucklers for large races or
-        // draconians.
-        if (sub_type != ARM_SHIELD
-            || you.body_size(PSIZE_TORSO) < SIZE_LARGE
-               && !player_genus(GENPC_DRACONIAN))
-        {
-            item.sub_type = replacement;
-        }
+        item.sub_type = replacement;
     }
 
     if (eqslot != EQ_NONE && you.equip[eqslot] == -1)
@@ -452,7 +446,7 @@ static void _update_weapon(const newgame_def& ng)
 
     if (ng.weapon == WPN_UNARMED)
         _newgame_clear_item(0);
-    else
+    else if (ng.weapon != WPN_UNKNOWN)
         you.inv[0].sub_type = ng.weapon;
 }
 
@@ -491,7 +485,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
 
-        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
+        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER, ARM_SHIELD);
 
         int curr = 3;
         if (you_can_wear(EQ_HELMET))
@@ -676,11 +670,12 @@ static void _give_items_skills(const newgame_def& ng)
                            ARM_ROBE);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
 
-        you.skills[SK_FIGHTING]     = 3;
+        you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_ENCHANTMENTS] = 2;
+        you.skills[SK_CHARMS]       = 2;
+        you.skills[SK_HEXES]        = 2;
         weap_skill = 2;
         break;
 
@@ -764,7 +759,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[range_skill(you.inv[1])] = 2;
         you.skills[SK_DODGING]              = 1;
         you.skills[SK_SPELLCASTING]         = 2;
-        you.skills[SK_ENCHANTMENTS]         = 2;
+        you.skills[SK_HEXES]                = 2;
         break;
 
     case JOB_WIZARD:
@@ -793,7 +788,7 @@ static void _give_items_skills(const newgame_def& ng)
             break;
         case BOOK_MINOR_MAGIC_III:
             you.skills[SK_SUMMONINGS]   = 1;
-            you.skills[SK_ENCHANTMENTS] = 1;
+            you.skills[SK_CONJURATIONS] = 1;
             break;
         }
         break;
@@ -814,7 +809,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1,
                            1);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
 
         // Gets some darts - this job is difficult to start off with.
         newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);
@@ -830,7 +825,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         weap_skill = 1;
         you.skills[SK_THROWING]     = 1;
-        you.skills[SK_ENCHANTMENTS] = 4;
+        you.skills[SK_HEXES]        = 4;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
@@ -1273,9 +1268,12 @@ static void _give_starting_food()
 
 static void _setup_tutorial_miscs()
 {
-    // Give him spellcasting
-    you.skills[SK_SPELLCASTING] = 3;
-    you.skills[SK_CONJURATIONS] = 1;
+    // Allow for a few specific hint mode messages.
+    // A few more will be initialised by the tutorial map.
+    tutorial_init_hints();
+
+    // No gold to begin with.
+    you.gold = 0;
 
     // Give him some mana to play around with.
     inc_max_mp(2);
@@ -1285,11 +1283,8 @@ static void _setup_tutorial_miscs()
     // No need for Shields skill without shield.
     you.skills[SK_SHIELDS] = 0;
 
-    // Make him hungry for the butchering tutorial.
-    you.hunger = 2700;
-
     // Set Str low enough for the burdened tutorial.
-    you.base_stats[STAT_STR] = 14;
+    you.base_stats[STAT_STR] = 12;
 }
 
 static void _mark_starting_books()
@@ -1416,64 +1411,6 @@ static void _give_basic_knowledge(job_type which_job)
     }
 }
 
-// Characters are actually granted skill points, not skill levels.
-// Here we take racial aptitudes into account in determining final
-// skill levels.
-static void _reassess_starting_skills()
-{
-    // Zotdef: all skills turned off, but not those with no
-    // skill points (makes it too hard to learn a new skill
-    // otherwise)
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-    {
-        skill_type sk = static_cast<skill_type>(i);
-        if (crawl_state.game_is_zotdef())
-            you.practise_skill[i] = !you.skills[sk];
-        if (you.skills[sk] == 0
-            && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
-        {
-            continue;
-        }
-
-        // Grant the amount of skill points required for a human.
-        you.skill_points[sk] = skill_exp_needed(you.skills[sk], sk,
-        static_cast<species_type>(SP_HUMAN)) + 1;
-
-        // Find out what level that earns this character.
-        you.skills[sk] = 0;
-
-        for (int lvl = 1; lvl <= 8; ++lvl)
-        {
-            if (you.skill_points[sk] > skill_exp_needed(lvl, sk))
-                you.skills[sk] = lvl;
-            else
-                break;
-        }
-
-        // Vampires should always have Unarmed Combat skill.
-        if (you.species == SP_VAMPIRE && sk == SK_UNARMED_COMBAT
-            && you.skills[sk] < 1)
-        {
-            you.skill_points[sk] = skill_exp_needed(1, sk);
-            you.skills[sk] = 1;
-        }
-
-        // Wanderers get at least 1 level in their skills.
-        if (you.char_class == JOB_WANDERER && you.skills[sk] < 1)
-        {
-            you.skill_points[sk] = skill_exp_needed(1, sk);
-            you.skills[sk] = 1;
-        }
-
-        // Spellcasters should always have Spellcasting skill.
-        if (sk == SK_SPELLCASTING && you.skills[sk] < 1)
-        {
-            you.skill_points[sk] = skill_exp_needed(1, sk);
-            you.skills[sk] = 1;
-        }
-    }
-}
-
 // For items that get a random colour, give them a more thematic one.
 static void _apply_job_colour(item_def &item)
 {
@@ -1523,7 +1460,7 @@ static void _apply_job_colour(item_def &item)
 }
 
 static void _setup_normal_game();
-static void _setup_tutorial();
+static void _setup_tutorial(const newgame_def& ng);
 static void _setup_sprint(const newgame_def& ng);
 static void _setup_zotdef(const newgame_def& ng);
 static void _setup_hints();
@@ -1540,7 +1477,7 @@ void setup_game(const newgame_def& ng)
         _setup_normal_game();
         break;
     case GAME_TYPE_TUTORIAL:
-        _setup_tutorial();
+        _setup_tutorial(ng);
         break;
     case GAME_TYPE_SPRINT:
         _setup_sprint(ng);
@@ -1553,7 +1490,7 @@ void setup_game(const newgame_def& ng)
         break;
     case GAME_TYPE_ARENA:
     default:
-        ASSERT(!"Bad game type");
+        die("Bad game type");
         end(-1);
     }
 
@@ -1571,8 +1508,9 @@ static void _setup_normal_game()
 /**
  * Special steps that tutorial game needs;
  */
-static void _setup_tutorial()
+static void _setup_tutorial(const newgame_def& ng)
 {
+    set_tutorial_map(ng.map);
     make_hungry(0, true);
 }
 
@@ -1608,7 +1546,7 @@ static void _setup_generic(const newgame_def& ng)
     you.species    = ng.species;
     you.char_class = ng.job;
 
-    strlcpy(you.class_name, get_job_name(you.char_class), sizeof(you.class_name));
+    you.class_name = get_job_name(you.char_class);
 
     _species_stat_init(you.species);     // must be down here {dlb}
 
@@ -1652,9 +1590,10 @@ static void _setup_generic(const newgame_def& ng)
     _racialise_starting_equipment();
     initialise_item_descriptions();
 
-    _reassess_starting_skills();
+    reassess_starting_skills();
     calc_total_skill_points();
     init_skill_order();
+    you.exp_available = crawl_state.game_is_zotdef()? 80 : 25;
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
@@ -1699,6 +1638,9 @@ static void _setup_generic(const newgame_def& ng)
 
     // Generate the second name of Jiyva
     fix_up_jiyva_name();
+
+    for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        you.nemelex_sacrificing = true;
 
     // Create the save file.
     you.save = new package((get_savedir_filename(you.your_name, "", "")

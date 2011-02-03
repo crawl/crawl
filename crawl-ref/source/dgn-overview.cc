@@ -88,6 +88,11 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
     if (you.level_type != LEVEL_DUNGEON)
         return;
 
+    // Or mimics. This could provide mimic information leak, but is safer
+    // than storing the mimic as a branch stair, etc.
+    if (feature_mimic_at(pos))
+        return;
+
     const god_type god = feat_altar_god(which_thing);
     if (god != GOD_NO_GOD)
         _seen_altar(god, pos);
@@ -356,6 +361,11 @@ static std::string _get_seen_branches(bool display)
     {
         snprintf(buffer, sizeof(buffer),
                         "<yellow>Dungeon</yellow> <darkgrey>(1/1)</darkgrey>");
+    }
+    else if (crawl_state.game_is_zotdef())
+    {
+        snprintf(buffer, sizeof(buffer),
+                        "<yellow>Zot</yellow>     <darkgrey>(1/1)</darkgrey>");
     }
     else
     {

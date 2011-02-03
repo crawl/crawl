@@ -9,6 +9,7 @@
 
 #include "mon-info.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "coord.h"
 #include "env.h"
@@ -63,6 +64,7 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_ROT:
         return ULL1 << MB_ROTTING;
     case ENCH_CORONA:
+    case ENCH_SILVER_CORONA:
         return ULL1 << MB_GLOWING;
     case ENCH_SLOW:
         return ULL1 << MB_SLOWED;
@@ -119,6 +121,18 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_ATTACHED;
     case ENCH_HELPLESS:
         return ULL1 << MB_HELPLESS;
+    case ENCH_BLEED:
+        return ULL1 << MB_BLEEDING;
+    case ENCH_DAZED:
+        return ULL1 << MB_DAZED;
+    case ENCH_MUTE:
+        return ULL1 << MB_MUTE;
+    case ENCH_BLIND:
+        return ULL1 << MB_BLIND;
+    case ENCH_DUMB:
+        return ULL1 << MB_DUMB;
+    case ENCH_MAD:
+        return ULL1 << MB_MAD;
     default:
         return 0;
     }
@@ -140,6 +154,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mb = 0;
     attitude = ATT_HOSTILE;
     pos = coord_def(0, 0);
+
+    mimic_feature = DNGN_UNSEEN;
 
     type = p_type;
     base_type = p_base_type;
@@ -194,6 +210,8 @@ monster_info::monster_info(const monster* m, int milev)
     mb = 0;
     attitude = ATT_HOSTILE;
     pos = grid2player(m->pos());
+
+    mimic_feature = DNGN_UNSEEN;
 
     // XXX: this doesn't take into account ENCH_TEMP_PACIF, but that's probably
     // a bug for mons_attitude, not this.
@@ -250,6 +268,9 @@ monster_info::monster_info(const monster* m, int milev)
 
         if (m->is_summoned())
             mb |= ULL1 << MB_SUMMONED;
+
+        if (mons_is_known_mimic(m) && mons_genus(type) == MONS_DOOR_MIMIC)
+            mimic_feature = get_mimic_feat(m);
     }
     else
     {
@@ -349,6 +370,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb |= ULL1 << MB_STABBABLE;
     if (mons_looks_distracted(m))
         mb |= ULL1 << MB_DISTRACTED;
+    if (liquefied(m->pos()) && !m->airborne() && !m->is_insubstantial())
+        mb |= ULL1 << MB_SLOWED;
 
     dam = mons_get_damage_level(m);
 
@@ -446,7 +469,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (type_known)
     {
-        for (unsigned i = 0; i < 5; ++i)
+        for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             bool ok;
             if (m->inv[i] == NON_ITEM)
@@ -493,6 +516,10 @@ monster* monster_info::mon() const
 {
     int m = env.mgrid(player2grid(pos));
     ASSERT(m >= 0);
+#ifdef USE_TILE
+    if (m == NON_MONSTER)
+        return NULL;
+#endif
     return &env.mons[m];
 }
 
@@ -500,8 +527,8 @@ std::string monster_info::db_name() const
 {
     if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON].get())
     {
-        unsigned long ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
-        bool          use_inscrip  = false;
+        iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
+        bool     use_inscrip  = false;
         return (inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
                           ignore_flags));
     }
@@ -518,7 +545,7 @@ std::string monster_info::_core_name() const
     case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
     case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-    case MONS_SPECTRAL_THING:
+    case MONS_SPECTRAL_THING:   case MONS_SALT_PILLAR:
         nametype = base_type;
         break;
 
@@ -555,6 +582,10 @@ std::string monster_info::_core_name() const
             s = ugly_thing_colour_name(colour) + " " + s;
             break;
 
+        case MONS_LABORATORY_RAT:
+            s = adjective_for_labrat_colour(colour) + " " + s;
+            break;
+
         case MONS_DRACONIAN_CALLER:
         case MONS_DRACONIAN_MONK:
         case MONS_DRACONIAN_ZEALOT:
@@ -569,8 +600,8 @@ std::string monster_info::_core_name() const
         case MONS_DANCING_WEAPON:
             if (inv[MSLOT_WEAPON].get())
             {
-                unsigned long ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
-                bool          use_inscrip  = true;
+                iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
+                bool     use_inscrip  = true;
                 const item_def& item = *inv[MSLOT_WEAPON];
                 s = (item.name(DESC_PLAIN, false, false, use_inscrip, false,
                                   ignore_flags));
@@ -669,6 +700,9 @@ std::string monster_info::common_name(description_level_type desc) const
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
         ss << " simulacrum";
+        break;
+    case MONS_SALT_PILLAR:
+        ss << " shaped pillar of salt";
         break;
     default:
         break;
@@ -828,10 +862,14 @@ static std::string _verbose_info0(const monster_info& mi)
 
     if (mi.is(MB_PETRIFIED))
         return ("petrified");
+    if (mi.is(MB_DUMB))
+        return ("dumb");
     if (mi.is(MB_PARALYSED))
         return ("paralysed");
     if (mi.is(MB_PETRIFYING))
         return ("petrifying");
+    if (mi.is(MB_MAD))
+        return ("mad");
     if (mi.is(MB_CONFUSED))
         return ("confused");
     if (mi.is(MB_FLEEING))
@@ -849,8 +887,16 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("burning");
     if (mi.is(MB_ROTTING))
         return ("rotting");
+    if (mi.is(MB_BLEEDING))
+        return ("bleeding");
     if (mi.is(MB_INVISIBLE))
         return ("invisible");
+    if (mi.is(MB_DAZED))
+        return ("dazed");
+    if (mi.is(MB_MUTE))
+        return ("mute");
+    if (mi.is(MB_BLIND))
+        return ("blind");
 
     return ("");
 }
@@ -899,7 +945,8 @@ void monster_info::to_string(int count, std::string& desc,
             out << pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
         }
         else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-                || type == MONS_DANCING_WEAPON || !mname.empty() || !fullname)
+                || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
+                || !mname.empty() || !fullname)
         {
             out << pluralise(mons_type_name(type, DESC_PLAIN));
         }
@@ -1023,6 +1070,16 @@ std::vector<std::string> monster_info::attributes() const
     }
     if (is(MB_ATTACHED))
         v.push_back("attached and sucking blood");
+    if (is(MB_DAZED))
+        v.push_back("dazed");
+    if (is(MB_MUTE))
+        v.push_back("permanently mute");
+    if (is(MB_BLIND))
+        v.push_back("permanently blind");
+    if (is(MB_DUMB))
+        v.push_back("stupefied");
+    if (is(MB_MAD))
+        v.push_back("lost in madness");
     return v;
 }
 

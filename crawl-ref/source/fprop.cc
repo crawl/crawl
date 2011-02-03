@@ -53,6 +53,8 @@ feature_property_type str_to_fprop(const std::string &str)
 {
     if (str == "bloody")
         return (FPROP_BLOODY);
+    if (str == "highlight")
+        return (FPROP_HIGHLIGHT);
     if (str == "mold")
         return (FPROP_MOLD);
     if (str == "no_cloud_gen")

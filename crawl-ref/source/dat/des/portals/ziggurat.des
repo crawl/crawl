@@ -74,6 +74,7 @@ MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
+KPROP:   1Omn = no_rtele_into
 SHUFFLE: 123x
 SUBST:   1=1..., 2=2., x=.
 : ziggurat_portal(_G)
@@ -96,16 +97,18 @@ MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
+KPROP:   1Omn; = no_rtele_into
 SHUFFLE: 123x
 SUBST:   1=1..., 2=2., x=.
+SUBST:   ;=.
 : ziggurat_portal(_G)
 MAP
     ...
    ..n..
   .nnnnn.
- ..n.1.n..
+ ..n;1;n..
 ..nn1O1nn..
- ..n.1.n..
+ ..n;1;n..
   .nnnnn.
    ..n..
     ...
@@ -137,13 +140,15 @@ NAME:    enter_shallow_ziggurat_c
 CHANCE:  1%
 TAGS:    chance_shallow_zig extra luniq_zig
 MONS:    angel / nothing w:20
+KPROP:   1Omn; = no_rtele_into
+SUBST:   ;=.
 : ziggurat_portal(_G)
 MAP
     ...
    ..m..
   ..mmm..
  ..mm1mm..
-..mm.O.mm..
+..mm;O;mm..
  ..mm1mm..
   ..mmm..
    ..m..
@@ -154,14 +159,16 @@ NAME:    enter_shallow_ziggurat_d
 CHANCE:  1%
 TAGS:    chance_shallow_zig extra luniq_zig
 MONS:    angel / nothing w:20
+KPROP:   1Omn; = no_rtele_into
+SUBST:   ;=.
 : ziggurat_portal(_G)
 MAP
     ...
    ..n..
   .nnnnn.
- ..n.1.n..
-..nn.O.nn..
- ..n.1.n..
+ ..n;1;n..
+..nn;O;nn..
+ ..n;1;n..
   .nnnnn.
    ..n..
     ...

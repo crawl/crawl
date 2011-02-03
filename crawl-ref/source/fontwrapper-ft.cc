@@ -549,17 +549,19 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     int sx, sy; // box starting location, uses extra buffer
     int tx, ty; // text starting location
 
-    tx = px - wx / 2;
-    sx = tx - buffer;
     if (tooltip)
     {
         sy = py + outline;
         ty = sy + buffer;
+        tx = px - 20;
+        sx = tx - buffer;
     }
     else
     {
         ty = py - wy - outline;
         sy = ty - buffer;
+        tx = px - wx / 2;
+        sx = tx - buffer;
     }
     // box ending position
     int ex = tx + wx + buffer;

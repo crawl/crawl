@@ -1,10 +1,10 @@
 Developers on IRC
 =================
 
-Some of the Crawl develoeprs hang out on the ##crawl-dev IRC channel on
+Some of the Crawl developers hang out on the ##crawl-dev IRC channel on
 freenode (irc://freenode/##crawl-dev).  You can ask them development related
 questions.  Also, users with +v have commit access, so if you have a patch
-which is read to commit you can poke them about it.
+which is ready to commit you can poke them about it.
 
 Chatzilla and Crawl's bug tracking system
 =========================================

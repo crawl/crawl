@@ -259,7 +259,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
         if (!gloved_butcher)
         {
             mpr("You don't carry any weapon you could use for butchering.");
-            if (Hints.hints_left)
+            if (crawl_state.game_is_hints())
             {
                 mpr("You should pick up the first knife, dagger, sword or axe "
                     "you find so you can use it to butcher corpses.",
@@ -282,12 +282,9 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
     }
     else if (item_slot == PROMPT_GOT_SPECIAL)
     {
-        if (you.has_claws()
-            || transform_can_butcher_barehanded(
-                    static_cast<transformation_type>(
-                        you.attribute[ATTR_TRANSFORMATION])))
+        if (you.has_claws() || form_can_butcher_barehanded())
         {
-            butcher_tool = -1;
+            butcher_tool = SLOT_BARE_HANDS;
             return (true);
         }
         else
@@ -349,7 +346,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     if (wpn_switch)
     {
         std::string tool;
-        if (butchering_tool == -1)
+        if (butchering_tool == SLOT_BARE_HANDS)
         {
             tool = "unarmed";
         }
@@ -486,11 +483,9 @@ bool butchery(int which_corpse, bool bottle_blood)
     if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
+        learned_something_new(HINT_LEVITATING);
         return (false);
     }
-
-    const transformation_type transform =
-        static_cast<transformation_type>(you.attribute[ATTR_TRANSFORMATION]);
 
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
@@ -498,7 +493,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool teeth_butcher    = (you.has_usable_fangs() == 3
                              && you.species != SP_VAMPIRE);
 
-    bool barehand_butcher = (transform_can_butcher_barehanded(transform)
+    bool barehand_butcher = (form_can_butcher_barehanded(you.form)
                                  || you.has_claws())
                              && !player_wearing_slot(EQ_GLOVES);
 
@@ -561,7 +556,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     bool wpn_switch     = false;
     bool removed_gloves = false;
-    int butcher_tool    = -1;
+    int butcher_tool    = SLOT_BARE_HANDS;
 
     if (!can_butcher)
     {
@@ -570,7 +565,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             !gloved_butcher)
             return (false);
 
-        if (butcher_tool == -1 && gloved_butcher)
+        if (butcher_tool == SLOT_BARE_HANDS && gloved_butcher)
             removed_gloves = true;
         else if (you.equip[EQ_WEAPON] != butcher_tool)
             wpn_switch = true;
@@ -631,7 +626,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             // Shall we butcher this corpse?
             do
             {
-                mprf(MSGCH_PROMPT, "%s %s? (yc/n/a/q/?)",
+                mprf(MSGCH_PROMPT, "%s %s? [(y)es/(c)hop/(n)o/(a)ll/(q)uit/?]",
                      bottle_blood ? "Bottle" : "Butcher",
                      corpse_name.c_str());
                 repeat_prompt = false;
@@ -929,8 +924,7 @@ bool food_change(bool suppress_message)
                         "longer.", MSGCH_DURATION);
                     you.duration[DUR_BERSERK] = 1;
                 }
-                int transform = you.attribute[ATTR_TRANSFORMATION];
-                if (transform != TRAN_NONE && transform != TRAN_BAT
+                if (you.form != TRAN_NONE && you.form != TRAN_BAT
                     && you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
                     mpr("Your blood-deprived body can't sustain your "
@@ -2200,15 +2194,12 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                      * num_blood_potions_from_corpse(mons_type, chunk_type);
 
     bool start_feeding   = false;
-    bool during_feeding  = false;
     bool end_feeding     = false;
 
     if (feeding < 0)
         start_feeding = true;
     else if (feeding > 0)
         end_feeding = true;
-    else
-        during_feeding = true;
 
     switch (mons_type)
     {

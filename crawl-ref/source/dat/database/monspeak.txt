@@ -3914,6 +3914,75 @@ _Jessica_rare_
 @The_monster@ shouts @at_foe@, "You are a ghastly nuisance!"
 ## END Jessica ##
 %%%%
+############ JORY ### A powerful vampire Lord.
+silenced Jory
+
+@_Jory_silent_@
+%%%%
+Jory
+
+@_Jory_common_@
+%%%%
+_Jory_common_
+
+w:100
+@_Jory_silent_@
+
+@The_monster@ says, "Leave me alone!"
+
+@The_monster@ says, "How dare you disturb my sanctum!"
+
+@The_monster@ says, "In my tower, I enforce my rules: silence at all times."
+
+@The_monster@ says, "Be quiet! Or I'll take your tongue!"
+
+@The_monster@ hisses in an unknowable language.
+
+@The_monster@ says, "Hawthorn can't hurt me."
+
+@The_monster@ says, "Priests don't scare me."
+
+@The_monster@ says, "Get out, get out, get out!"
+
+w:2
+@The_monster@ says, "My wife rejected me, but I had my revenge."
+VISUAL:
+%%%%
+_Jory_silent_
+
+VISUAL:@The_monster@ gestures wildly at you. @player_only@
+
+VISUAL:@The_monster@ mockingly mimes being beheaded.
+
+VISUAL:@The_monster@ stares carefully at you. @player_only@
+
+VISUAL:@The_monster@ swishes his cloak stereotypically.
+
+VISUAL:@The_monster@ frowns.
+
+VISUAL:@The_monster@ is momentarily overtaken with rage!
+
+w:5
+VISUAL:@The_monster@ sheds a single tear.
+
+VISUAL:@The_monster@ gestures rudely at you. @player_only@
+
+VISUAL:@The_monster@ smirks, showing shining fangs.
+
+VISUAL:@The_monster@ demonstrates baring his neck.
+
+VISUAL:@The_monster@ hisses silently.
+
+VISUAL:@The_monster@ starts to speak, but stops.
+%%%%
+Jory killed
+
+@The_monster@ screams, "No, no!" before exploding into a cloud of blood!
+%%%%
+silent Jory killed
+
+VISUAL:@The_monster@ momentarily stares at you in horror, before exploding into a cloud of blood!
+%%%%
 ############ JOSEPH ### Hired to kill you
 Joseph
 
@@ -5139,6 +5208,85 @@ _Terence_rare_
 
 ## END Terence ###
 %%%%
+############ TUKIMA ### A spectral dancer
+# Cantrip messages
+Tukima_self_buff
+
+@_Tukima_self_buff_@
+%%%%
+Tukima_other_buff
+
+@_Tukima_other_buff@
+%%%%
+Tukima_debuff
+
+@_Tukima_debuff_@
+%%%%
+_Tukima_self_buff_
+
+Tukima performs a graceful pirouette.
+
+Tukima cartwheels!
+
+Tukima extends her arms.
+
+%%%%
+_Tukima_other_buff_
+
+Tukima beats her extended leg.
+
+A look of regret passes over Tukima's face.
+
+Tukima twirls.
+
+%%%%
+_Tukima_debuff_
+
+You feel light on your feet.
+
+You feel strangely compelled to dance the "Siva Afi."
+
+You feel compelled to twirl your non-existent dancing partner!
+
+Some annoying song lyrics get stuck in your head!
+
+%%%%
+Tukima
+
+@_tukima_common_@
+
+w:4
+@_tukima_rare_@
+
+%%%%
+_tukima_common_
+
+@The_monster@ exclaims, "I never get tired of watching this."
+
+@The_monster@ asks, "Have you ever felt haunted by the need to dance?"
+
+@The_monster@ explains, "If I could tell you what I felt, there would be no point in dancing it..."
+
+@The_monster@ chuckles, "Your body is so clumsy! Shall I rid you of it?"
+
+@The_monster@ calls, "Will you, won't you, will you join the dance?"
+
+@The_monster@ asks, "Would you care for a dance?"
+
+%%%%
+_tukima_rare_
+
+@The_monster@ wistfully exclaims, "I've searched so long for a dance partner..."
+
+@The_monster@ pleads, "Your soul could dance with me forever!"
+
+%%%%
+Tukima killed
+
+@The_monster@ whispers, "I'll be waiting for you..."
+
+## END Tukima ##
+%%%%
 ############ URUG ### An orc hired to kill you
 Urug
 
@@ -6056,28 +6204,6 @@ beogh_converted_orc_reaction_battle_follower
 beogh_converted_orc_reaction_speech_follower
 
 @beogh_converted_orc_reaction_speech@
-%%%%
-##################################
-# ring of charms conversion speech
-##################################
-# on sight
-charm_converted_reaction_sight
-
-@The_monster@ stares at you in amazement and grins.
-
-@The_monster@ relaxes @possessive@ fighting stance and waves to you.
-
-@The_monster@ holds @possessive@ arms out to greet you.
-%%%%
-charm_converted_speech_sight
-
-@Pronoun@ shouts, "I'll follow you gladly!"
-
-@Pronoun@ shouts, "Hello, friend!"
-
-@Pronoun@ asks, "Tell me more about your plans... let's go there together!"
-
-@Pronoun@ says, "I'm so glad you are here now!"
 %%%%
 #################################
 # Monsters who worship Zin

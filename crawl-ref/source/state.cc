@@ -29,8 +29,8 @@ game_state::game_state()
       terminal_resized(false), io_inited(false), need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
       map_stat_gen(false), type(GAME_TYPE_NORMAL), arena_suspended(false),
-      test(false), script(false), build_db(false), tests_selected(),
-      unicode_ok(false), show_more_prompt(true),
+      dump_maps(false), test(false), script(false), build_db(false),
+      tests_selected(), unicode_ok(false), show_more_prompt(true),
       glyph2strfn(NULL), multibyte_strlen(NULL),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
@@ -38,6 +38,8 @@ game_state::game_state()
       level_annotation_shown(false),
 #ifndef USE_TILE
       mlist_targeting(false),
+#else
+      title_screen(true),
 #endif
       darken_range(-1), unsaved_macros(false), mon_act(NULL)
 {
@@ -218,7 +220,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             mpr(text, MSGCH_WARN);
         }
 
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_monster_seen(*mon);
 #else
         formatted_string fs(channel_to_colour(MSGCH_WARN));
@@ -530,6 +532,11 @@ bool game_state::player_is_dead() const
     return (updating_scores && !need_save);
 }
 
+bool game_state::game_standard_levelgen() const
+{
+    return (game_is_normal() || game_is_hints());
+}
+
 bool game_state::game_is_normal() const
 {
     ASSERT(type < NUM_GAME_TYPE);
@@ -566,6 +573,11 @@ bool game_state::game_is_hints() const
     return type == GAME_TYPE_HINTS;
 }
 
+bool game_state::game_is_hints_tutorial() const
+{
+    return (game_is_hints() || game_is_tutorial());
+}
+
 std::string game_state::game_type_name() const
 {
     return game_type_name_for(type);
@@ -586,9 +598,9 @@ std::string game_state::game_type_name_for(game_type _type)
     case GAME_TYPE_ARENA:
         return "Arena";
     case GAME_TYPE_SPRINT:
-        return "Sprint";
+        return "Dungeon Sprint";
     case GAME_TYPE_ZOTDEF:
-        return "Zot Defense";
+        return "Zot Defence";
     }
 }
 

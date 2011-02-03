@@ -203,10 +203,7 @@ void formatted_string::parse_string1(
         {
             colour_stack.pop_back();
             if (colour_stack.size() < 1)
-            {
-                ASSERT(false);
-                colour_stack.push_back(LIGHTRED);
-            }
+                die("Stack underflow in string \"%s\"", s.c_str());
         }
         else
         {
@@ -319,9 +316,7 @@ char &formatted_string::operator [] (size_t idx)
         else
             return ops[i].text[rel_idx];
     }
-    ASSERT(!"Invalid index");
-    char *invalid = NULL;
-    return *invalid;
+    die("Invalid index");
 }
 
 

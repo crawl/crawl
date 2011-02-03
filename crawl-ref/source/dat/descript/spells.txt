@@ -30,6 +30,8 @@ This spell raises an inert skeleton to a state of unlife, even if that skeleton 
 Apportation
 
 This spell allows the caster to pull the top item or group of similar items from a distant pile to the floor near the caster. The mass of the target item(s) will make the task more difficult, with some items too massive to ever be moved by this spell. Using this spell on a group of items can be risky; insufficient power will cause some of the items to be lost in the infinite void.
+
+Extremely powerful magical items, such as the Orb of Zot, may actively resist the pull of this spell.
 %%%%
 Banishment
 
@@ -222,7 +224,7 @@ This spell tries to lower its target's metabolic rate, inducing hypothermic hibe
 %%%%
 Evaporate
 
-This spell heats a potion causing it to explode into a large cloud when thrown. The potion must be thrown immediately, as part of the spell, for this to work.
+This spell heats a potion to the point that it explodes when thrown. The resultant steam is then transmuted into a large cloud, the type of which varies from potion to potion. Of course, the volatile potion must be thrown immediately for the spell to work.
 %%%%
 Excruciating Wounds
 
@@ -316,7 +318,7 @@ This spell conjures forth a raging blizzard of ice, sleet and freezing gasses.
 %%%%
 Ignite Poison
 
-This spell attempts to convert all poison within the caster's view into liquid flame. It is very effective against poisonous creatures or those carrying poison potions. It is also an amazingly painful way to eliminate poison from one's own system.
+This spell attempts to convert all poison within the caster's view into liquid flame. It is very effective against poisonous creatures or those carrying poison potions. The caster and his gear are not affected.
 %%%%
 Insulation
 
@@ -329,6 +331,10 @@ This spell hides a creature from the sight of others.
 Iskenderun's Mystic Blast
 
 This spell throws a crackling sphere of destructive energy.
+%%%%
+Leda's Liquefaction
+
+This spell liquefies the ground around the caster, making it difficult to move through. Any attempt to move through the liquefied ground will be a very slow one.
 %%%%
 Lee's Rapid Deconstruction
 
@@ -511,7 +517,7 @@ This spell will electrically charge missiles held by the caster. They will retai
 Silence
 
 This spell eliminates all sound near the caster. This makes reading scrolls, casting spells, praying or yelling in the caster's vicinity impossible. (Applies to caster too, of course.) This spell will not hide your presence, since its oppressive, unnatural effect will almost certainly alert any living creature that something is very wrong.
-Silence starts out with a radius depending on power, which will then shrink, eventually covering only the caster, before the effect times out.
+Silence starts out with a radius depending on power, which will then shrink, eventually covering only the caster, before the effect times out. Some creatures, such as demons, cast magic without speaking and so will be unaffected, and those with innate magical abilities will also still be able to use them.
 %%%%
 Simulacrum
 
@@ -539,7 +545,7 @@ This spell temporarily transforms the caster into a slow-moving (but extremely r
 %%%%
 Sticks to Snakes
 
-This spell uses wooden items in the caster's grasp as raw material for a powerful summoning. Note that highly enchanted items, such as wizards' staves, will not be affected.
+This spell uses wooden items in the caster's grasp as raw material for a powerful transmutation. Note that highly enchanted items, such as wizards' staves, will not be affected.
 %%%%
 Sticky Flame
 
@@ -579,7 +585,7 @@ This spell opens a gate to the realm of Pandemonium and draws forth one of its i
 %%%%
 Summon Dragon
 
-This spell summons and binds a powerful dragon to perform the caster's bidding. Beware, for the summons may succeed even as the binding fails.
+This spell summons and binds a powerful dragon to perform the caster's bidding.
 %%%%
 Summon Elemental
 
@@ -592,6 +598,10 @@ This spell calls forth one of the greater demons of Pandemonium to serve the cas
 Summon Horrible Things
 
 This spell opens a gate to the Abyss and calls through one or more hideous abominations from that dreadful place. The powers who answer this invocation require of casters a portion of their intellect in exchange for this service.
+%%%%
+Summon Hydra
+
+This spell summons a hydra to fight alongside the caster.
 %%%%
 Summon Ice Beast
 
@@ -655,11 +665,11 @@ As a side effect, this spell may be used to cross lava, but beware of its short 
 %%%%
 Tukima's Dance
 
-This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on magical staves and certain wilful artefacts.
+This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on certain wilful artefacts; any abilities that require evocation skill won't be used either.
 %%%%
-Tukima's Vorpal Blade
+Tukima's Dance Party
 
-This spell bestows a lethal but temporary sharpness on a sword held by the caster. It will not affect weapons otherwise subject to special enchantments.
+I'm afraid only weapons are invited to this party.
 %%%%
 Twisted Resurrection
 

@@ -16,6 +16,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "math.h"
 #include "mon-stuff.h"
 #include "options.h"
 #include "player.h"
@@ -184,7 +185,8 @@ void jiyva_slurp_bonus(int item_value, int *js)
         return;
 
     if (you.piety >= piety_breakpoint(1)
-        && x_chance_in_y(you.piety, MAX_PIETY))
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && you.is_undead != US_UNDEAD)
     {
         //same as a sultana
         lessen_hunger(70, true);
@@ -337,7 +339,6 @@ static bool _jewel_auto_id(const item_def& item)
     case RING_TELEPORTATION:
     case RING_MAGICAL_POWER:
     case RING_LEVITATION:
-    case RING_CHARM:
     case AMU_RAGE:
     case AMU_GUARDIAN_SPIRIT:
         return true;
@@ -502,4 +503,23 @@ int ash_detect_portals(bool all)
 
     you.seen_portals += portals_found;
     return (portals_found);
+}
+
+monster_type ash_monster_tier(const monster *mon)
+{
+    double factor = sqrt(exp_needed(you.experience_level + 1) / 30.0);
+    int tension = exper_value(mon) / (1 + factor);
+
+    if (tension <= 0)
+        // Conjurators use melee to conserve mana, MDFis switch plates...
+        return MONS_SENSED_TRIVIAL;
+    else if (tension <= 5)
+        // An easy fight but not ignorable.
+        return MONS_SENSED_EASY;
+    else if (tension <= 32)
+        // Hard but reasonable.
+        return MONS_SENSED_TOUGH;
+    else
+        // Check all wands/jewels several times, wear brown pants...
+        return MONS_SENSED_NASTY;
 }

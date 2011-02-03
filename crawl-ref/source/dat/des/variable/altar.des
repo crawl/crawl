@@ -34,6 +34,154 @@
 #
 ###############################################################################
 
+{{
+function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
+                                                 triggerer, marker, ev)
+
+  if data.triggered == true then
+    return
+  end
+
+  local m = dgn.find_marker_positions_by_prop("slave_name", "altar")[1]
+  if m ~= nil then
+    local x, y = m:xy()
+
+    if not you.see_cell(x, y) then
+      return
+    end
+
+  local weapon = util.random_from({"short sword", "sabre",
+                 "long sword", "scimitar", "glaive", "bardiche",
+                 "broad axe", "battleaxe", "quarterstaff",
+                 "lajatang", "morningstar", "great mace"})
+  local item = { Beogh="good_item battleaxe ego:orc_slaying / disc of storms \
+         / good_item broad axe ego:orc_slaying w:5 / scroll of immolation q:3-6 / scroll of fear q:3-6",
+         Cheibriados="wand of hasting w:5 / potion of speed q:2-4 / potion of berserk rage q:2-4 \
+         / good_item quick blade",
+         Elyvilon="lantern of shadows / book of Necromancy w:5 / book of Death w:5 \
+         / book of Unlife w:5",
+         Fedhas="randbook owner:Lugonu disc:necr spell:necromutation numspells:1 \
+         / randbook owner:Lugonu disc:necr spell:simulacrum numspells:1 \
+         / randbook owner:Lugonu disc:necr spell:twisted_resurrection numspells:1",
+         Jiyva="stone q:10-20 / large rock q:2-4",
+         Kikubaaqudgha="book of Necromancy / rat corpse w:5 / kobold corpse w:5 / snake corpse w:5",
+         Lugonu="no",
+         Makhleb="tome of destruction / rod of demonology",
+         ["Nemelex Xobeh"]="scroll of paper q:5-10 / scroll of random uselessness q:5-10",
+         Okawaru="book of Callings / randbook owner:Lugonu disc:summ spell:summon_butterflies numspells:1 \
+         / scroll of summoning q:2-3",
+         ["Sif Muna"]="staff of channeling / good_item plate mail",
+         ["The Shining One"]="wand of invisibility w:20 / book of Envenomations \
+         / Young Poisoner's Handbook / rod of venom / potion of invisibility q:3-6",
+         Trog="manual of Spellcasting w:100 / manual of Air Magic / manual of Earth Magic \
+         / manual of Fire Magic / manual of Ice Magic / manual of Poison Magic / any staff / ring of wizardry",
+         Vehumet="book of Callings / book of Power / manual of Invocations",
+         Xom="manual of Invocations",
+         Yredelemnul= "scroll of holy word q:2-4 / good_item " .. weapon .. " ego:holy_wrath",
+         Zin="good_item " .. weapon .. " ego:draining / good_item " .. weapon .. " ego:pain \
+         / good_item " .. weapon .. " ego:chaos / wand of draining w:7 / wand of polymorph other w:14",
+         Ashenzari="scroll of detect curse q:5-10 / amulet of clarity / ring of see invisible",
+         ["No God"]="manual of Invocations / amulet of Faith",
+       }
+         data.triggered = true
+         if item[you.god()] == "no" then return else
+            dgn.place_cloud(x, y, "purple smoke", 1)
+            dgn.create_item(x, y, item[you.god()])
+            crawl.god_speaks("Lugonu", "An item emerges from the Abyss! Perhaps it is an incitement to worship... or even an insult?")
+         end
+  end
+end
+
+function callback.tgw_kikubaaqudgha_kill_human(data, triggerable,
+                                                triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 3 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  local m = dgn.find_marker_positions_by_prop("slave_name", "zombie")[1]
+  if m ~= nil then
+    local _x, _y = m:xy()
+
+    if not you.see_cell(_x, _y) then
+      return
+    end
+        dgn.place_cloud(_x, _y, "foul pestilence", 4)
+        crawl.god_speaks("Kikubaaqudgha",
+                         "Miasma emanates from the human's flesh.")
+    data.triggered = true
+  end
+end
+
+function callback.tgw_kikubaaqudgha_zombify(data, triggerable,
+                                            triggerer, marker, ev)
+  local pt = dgn.find_marker_positions_by_prop("slave_name", "zombie")
+  if #pt == 0 then
+    return
+  end
+
+  for carrion in iter.stash_iterator(pt[1].x, pt[1].y) do
+    if string.find(carrion.name(), 'human corpse') then
+      carrion.destroy()
+    end
+  end
+
+  -- Won't place the monster if there's a cloud there
+  dgn.delete_cloud(pt[1].x, pt[1].y)
+
+  dgn.create_monster(pt[1].x, pt[1].y, "generate_awake human zombie")
+  if you.see_cell(pt[1].x, pt[1].y) then
+    crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
+  end
+end
+
+function callback.trog_book_convert_book(data, triggerable,
+                                          triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 3 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  local m = dgn.find_marker_positions_by_prop("slave_name", "trog_book")[1]
+  if m ~= nil then
+    local _x, _y = m:xy()
+
+    -- Only burn the book when you see both the altar and the book. This gives
+    -- sneaky players the opportunity to apport the book.
+    if not you.see_cell(_x, _y) then
+      return
+    end
+
+    for book in iter.stash_iterator(_x, _y) do
+      if string.find(book.name(), 'book') then
+        book.destroy()
+        dgn.place_cloud(_x, _y, "flame", 15)
+        crawl.god_speaks("Trog", "The spellbook bursts into flames! "
+                              .. "Trog roars with delight!")
+      end
+    end
+    data.triggered = true
+  end
+end
+
+}}
+
 default-depth: D
 
 ######################################
@@ -80,6 +228,23 @@ ENDMAP
 ######################################
 # II   General altars
 ######################################
+
+NAME: basic_altar
+TAGS: allow_dup extra no_monster_gen
+DEPTH: 5-
+CHANCE: 20% (Orc)
+CHANCE: 10% (Snake, Forest, Dwarf)
+CHANCE: 8% (D, Elf)
+CHANCE: 5% (Lair, Slime, Vault, Crypt)
+CHANCE: 1% (Zot)
+CHANCE: 0
+MAP
+.....
+.....
+..C..
+.....
+.....
+ENDMAP
 
 NAME: old_standard_altar
 TAGS: allow_dup
@@ -241,7 +406,7 @@ DEPTH: 2-18, Vault, Elf
 : if you.absdepth() < 10 then
 SUBST: F = G
 : end
-SUBST: F = G:100 F:1
+SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 .........
@@ -405,7 +570,7 @@ ENDMAP
 NAME:   nemelex_altar_shiori
 DEPTH:  !Lair, !Orc
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   generate_awake patrolling mini_float no_rotate
+TAGS:   generate_awake patrolling no_rotate
 TAGS:   layout_rooms layout_city layout_open layout_cross
 KFEAT:  _ = altar_nemelex_xobeh
 SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
@@ -526,64 +691,11 @@ KFEAT:  _ = altar_lugonu
 MARKER: _ = lua:portal_desc {slave_name="altar"}
 
 {{
-function lugonu_item (data, triggerable, triggerer, marker, ev)
-
-  if data.triggered == true then
-    return
-  end
-
-  local m = dgn.find_marker_positions_by_prop("slave_name", "altar")[1]
-  if m ~= nil then
-    local x, y = m:xy()
-
-    if not you.see_cell(x, y) then
-      return
-    end
-
-  local weapon = util.random_from({"short sword", "sabre",
-                 "long sword", "scimitar", "glaive", "bardiche",
-                 "broad axe", "battleaxe", "quarterstaff",
-                 "lajatang", "morningstar", "great mace"})
-  local item = { Beogh="good_item battleaxe ego:orc_slaying / disc of storms \
-         / good_item broad axe ego:orc_slaying w:5 / scroll of immolation q:3-6 / scroll of fear q:3-6",
-         Cheibriados="wand of hasting w:5 / potion of speed q:2-4 / potion of berserk rage q:2-4 \
-         / good_item quick blade",
-         Elyvilon="lantern of shadows/ rod of demonology / book of Necromancy w:5 \
-         / book of Death w:5 / book of Unlife w:5 / book of Callings w:5 / book of Summonings w:5",
-         Fedhas="book of Necromancy / book of Death / book of Unlife / good_item "
-         .. weapon .. " ego:draining / good_item " .. weapon .. " ego:pain",
-         Jiyva="no",
-         Kikubaaqudgha="no",
-         Lugonu="no",
-         Makhleb="tome of destruction / rod of demonology",
-         ["Nemelex Xobeh"]="no",
-         Okawaru="lantern of shadows / book of Callings / book of Summonings / rod of demonology \
-         / rod of summoning",
-         ["Sif Muna"]="staff of channeling / good_item plate mail",
-         ["The Shining One"]="wand of invisibility w:20 / book of Envenomations \
-         / Young Poisoner's Handbook / rod of venom / book of Necromancy w:5 / book of Death w:5 \
-         / book of Unlife w:5",
-         Trog="manual of Spellcasting w:100 / manual of Air Magic / manual of Earth Magic \
-         / manual of Fire Magic / manual of Ice Magic / manual of Poison Magic / any staff / ring of wizardry",
-         Vehumet="manual of Invocations",
-         Xom="manual of Invocations",
-         Yredelemnul= "scroll of holy word q:2-4 / good_item " .. weapon .. " ego:holy_wrath",
-         Zin="book of Necromancy w:5 / book of Death w:5 / book of Unlife w:5 \
-         / potion of gain intelligence q:2-3 / potion of gain strength q:2-3 / potion of gain dexterity q:2-3 \
-         / potion of cure mutation q:2-3 / wand of draining w:7 / wand of polymorph other w:14 \
-         / amulet of resist mutation",
-         ["No God"]="manual of Invocations / amulet of Faith"
-       }
-         data.triggered = true
-         if item[you.god()] == "no" then return else
-            dgn.place_cloud(x, y, "purple smoke", 1)
-            dgn.create_item(x, y, item[you.god()])
-            crawl.god_speaks("Lugonu", "An item emerges from the Abyss! Perhaps it is an incitement to worship... or even an insult?")
-         end
-  end
-end
-
-local tm = TriggerableFunction:new{func=lugonu_item, repeated=true, data={turns=you.turns(), tc=0, triggered=false} }
+local tm = TriggerableFunction:new{
+  func="callback.tgw_lugonu_bribe_lugonu_item",
+  repeated=true,
+  data={turns=you.turns(),
+  tc=0, triggered=false} }
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 }}
@@ -638,13 +750,12 @@ NAME:   cheibriados_altar_3
 TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
 DEPTH:  D:2-6
 KFEAT:  _ = altar_cheibriados
-ITEM:   potion of slowing
 ITEM:   apple, pear, orange, banana
 SUBST:  e : efgh
 MAP
-.d.
-e_e
-.d.
+...
+d_d
+...
 ENDMAP
 
 # Golems are slow and they protect an altar to the slow god. (Lemuel)
@@ -848,8 +959,8 @@ NAME:   fedhas_altar_4
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas mini_float
 DEPTH:  D:2-20
 KFEAT:  C = altar_fedhas
-FTILE:  . = floor_lair
-FTILE:  t = floor_lair
+FTILE:  . = floor_moss
+FTILE:  t = floor_moss
 MAP
 xxxxxxxxxxxxxxx
 xxxtttttttxxxxx
@@ -952,62 +1063,17 @@ TAGS:   uniq_altar_kikubaaqudgha temple_overflow_kikubaaqudgha
 DEPTH:  D:2-10
 KFEAT:  _ = altar_kikubaaqudgha
 {{
-function kill_human (data, triggerable, triggerer, marker, ev)
-  if data.turns ~= you.turns() then
-    data.tc = data.tc + 1
-    data.turns = you.turns()
-  end
-
-  if data.tc < 3 then
-    return
-  end
-
-  if data.triggered == true then
-    return
-  end
-
-  local m = dgn.find_marker_positions_by_prop("slave_name", "zombie")[1]
-  if m ~= nil then
-    local _x, _y = m:xy()
-
-    if not you.see_cell(_x, _y) then
-      return
-    end
-        dgn.place_cloud(_x, _y, "foul pestilence", 4)
-        crawl.god_speaks("Kikubaaqudgha",
-                         "Miasma emanates from the human's flesh.")
-    data.triggered = true
-  end
-end
-
-local tm = TriggerableFunction:new{func=kill_human, repeated=true,
-                                   data={turns=you.turns(), tc=0, triggered=false} }
+local tm = TriggerableFunction:new{
+  func="callback.tgw_kikubaaqudgha_kill_human",
+  repeated=true,
+  data={turns=you.turns(), tc=0, triggered=false} }
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 }}
 
 {{
-function zombify (data, triggerable, triggerer, marker, ev)
-  local pt = dgn.find_marker_positions_by_prop("slave_name", "zombie")
-  if #pt == 0 then
-    return
-  end
-
-  for carrion in iter.stash_iterator(pt[1].x, pt[1].y) do
-    if string.find(carrion.name(), 'human corpse') then
-      carrion.destroy()
-    end
-  end
-
-  -- Won't place the monster if there's a cloud there
-  dgn.delete_cloud(pt[1].x, pt[1].y)
-
-  dgn.create_monster(pt[1].x, pt[1].y, "generate_awake human zombie")
-  if you.see_cell(pt[1].x, pt[1].y) then
-    crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
-  end
-end
-local tm = TriggerableFunction:new{func=zombify, repeated=false}
+local tm = TriggerableFunction:new{
+  func="callback.tgw_kikubaaqudgha_zombify", repeated=false}
 tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dslave"})
 lua_marker('_', tm)
 }}
@@ -1182,7 +1248,7 @@ ENDMAP
 
 NAME:   lemuel_blue_sif_altar
 DEPTH:  D:2-18, Elf, Vault
-TAGS:   no_monster_gen mini_float temple_overflow_sif_muna uniq_altar_sif_muna
+TAGS:   no_monster_gen temple_overflow_sif_muna uniq_altar_sif_muna
 COLOUR: . = blue
 FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
 KFEAT:  _ = altar_sif_muna
@@ -1296,43 +1362,8 @@ TAGS:   uniq_altar_trog temple_overflow_trog
 DEPTH:  D:2-10, Orc
 KFEAT:  _ = altar_trog
 {{
-function convert_book (data, triggerable, triggerer, marker, ev)
-  if data.turns ~= you.turns() then
-    data.tc = data.tc + 1
-    data.turns = you.turns()
-  end
-
-  if data.tc < 3 then
-    return
-  end
-
-  if data.triggered == true then
-    return
-  end
-
-  local m = dgn.find_marker_positions_by_prop("slave_name", "trog_book")[1]
-  if m ~= nil then
-    local _x, _y = m:xy()
-
-    -- Only burn the book when you see both the altar and the book. This gives
-    -- sneaky players the opportunity to apport the book.
-    if not you.see_cell(_x, _y) then
-      return
-    end
-
-    for book in iter.stash_iterator(_x, _y) do
-      if string.find(book.name(), 'book') then
-        book.destroy()
-        dgn.place_cloud(_x, _y, "flame", 15)
-        crawl.god_speaks("Trog", "The spellbook bursts into flames! "
-                              .. "Trog roars with delight!")
-      end
-    end
-    data.triggered = true
-  end
-end
-
-local tm = TriggerableFunction:new{func=convert_book, repeated=true, data={turns=you.turns(), tc=0, triggered=false} }
+local tm = TriggerableFunction:new{func="callback.trog_book_convert_book",
+  repeated=true, data={turns=you.turns(), tc=0, triggered=false} }
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 }}
@@ -1612,12 +1643,11 @@ TAGS:   no_item_gen no_monster_gen temple_overflow_zin
 KFEAT:  _ = altar_zin
 COLOUR: G = lightgray
 COLOUR: c = white
-MONS:   angel god:zin
+MONS:   angel god:zin name:glowing name_adjective
 : local za_desc = "A divine agent of Zin, it is a towering winged figure " ..
 :   "with an aura of brilliant white light. This angel's face, though, " ..
 :   "is marked by a scowl, as if its zeal against any real or perceived " ..
 :   "vice overshadows its goodness.\n"
-MARKER: 1 = lua:MonPropsMarker:new {speech_key="zin_priest"; description=za_desc}
 DEPTH:  2-27
 MAP
 xxxxxxxxx
@@ -1656,25 +1686,32 @@ ENDMAP
 
 ### Variable overflow altars ##################################################
 
-NAME:   lemuel_zombie_altar
+NAME:   lemuel_zombie_altar_kiku
 DEPTH:  D:2-18, Crypt
-TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen
-: local god = ""
-: if crawl.coinflip() then god = "kikubaaqudgha" else god = "yredelemnul" end
-: tags("temple_overflow_" .. god, "uniq_altar_" .. god)
-: kfeat("_ = altar_" .. god)
-#
-: if crawl.coinflip() then
-MONS:   rat zombie / giant bat zombie / nothing w:200
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_kikubaaqudgha
+KFEAT:  _ = altar_kikubaaqudgha
+MONS:   rat zombie / megabat zombie / nothing w:200
 KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
 KFEAT:  w = deep_water
-: else
+MAP
+xxxxxxxxxxxxxxxx
+xxxxwwwwwwwwxxxx
+xxxx11111111xxxx
+@............._x
+xxxx11111111xxxx
+xxxxwwwwwwwwxxxx
+xxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   lemuel_zombie_altar_yred
+DEPTH:  D:2-18, Crypt
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_yredelemnul
+KFEAT:  _ = altar_yredelemnul
 SUBST:  1 : 1Ww
 SUBST:  1 = WWw
 NSUBST: w = 2:1 / *:w
 KMONS:  1 = giant goldfish zombie / big fish zombie
 KFEAT:  1 = deep_water
-: end
 MAP
 xxxxxxxxxxxxxxxx
 xxxxwwwwwwwwxxxx

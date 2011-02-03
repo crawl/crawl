@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @section DESCRIPTION
+ *
+ * Filename: show.cc
+ * Summary: updates the screen via map_knowledge.
+**/
+
 #include "AppHdr.h"
 
 #include <stdint.h>
@@ -10,11 +18,13 @@
 #include "coordit.h"
 #include "dgnevent.h"
 #include "dgn-overview.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
 #include "itemprop.h"
+#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -112,17 +122,14 @@ static void _update_feat_at(const coord_def &gp)
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
 
-    bool mimic = false;
-
     // Check for mimics
     if (monster_at(gp))
     {
         const monster* mmimic = monster_at(gp);
-        if (mons_is_feat_mimic(mmimic->type) && !mons_is_known_mimic(mmimic))
+        if (mons_is_feat_mimic(mmimic->type) && mons_is_unknown_mimic(mmimic))
         {
             feat = get_mimic_feat(mmimic);
             colour = mmimic->colour;
-            mimic = true;
         }
     }
 
@@ -133,6 +140,9 @@ static void _update_feat_at(const coord_def &gp)
 
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
+
+    if (liquefied(gp, false))
+        env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
 
     if (is_sanctuary(gp))
     {
@@ -234,7 +244,7 @@ static void _update_item_at(const coord_def &gp)
 static void _update_cloud(int cloudno)
 {
     const coord_def gp = env.cloud[cloudno].pos;
-    cloud_type cloud = env.cloud[cloudno].type;
+    cloud_type cloud   = env.cloud[cloudno].type;
     env.map_knowledge(gp).set_cloud(cloud, get_cloud_colour(cloudno));
 
 #ifdef USE_TILE
@@ -264,6 +274,53 @@ static void _check_monster_pos(const monster* mons)
     }
 }
 
+/**
+ * Determine if a location is valid to present a { glyph.
+ *
+ * @param where    The location being queried.
+ * @param mons     The moster being mimicked.
+ * @returns        True if valid, otherwise False.
+*/
+static bool _valid_invis_spot(const coord_def &where, const monster* mons)
+{
+    monster *mons_at = monster_at(where);
+
+    if (mons_at && mons_at != mons)
+        return (false);
+
+    if (monster_habitable_grid(mons, grd(where)))
+        return (true);
+
+    return (false);
+}
+
+static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
+{
+    if (die <= 1)
+        return 0;
+
+    struct
+    {
+        uint32_t mid;
+        uint32_t id;
+        uint32_t seed;
+    } data;
+    data.mid = mons->mid;
+    data.id  = id;
+    data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
+
+    return hash(&data, sizeof(data)) % die;
+}
+
+/**
+ * Update map knowledge for monsters
+ *
+ * This function updates the map_knowledge grid with a monster_info if relevant.
+ * If the monster is not currently visible to the player, the map knowledge will
+ * be upated with a disturbance if necessary.
+ *
+ * @param mons    The monster at the relevant location.
+**/
 static void _update_monster(const monster* mons)
 {
     _check_monster_pos(mons);
@@ -281,15 +338,59 @@ static void _update_monster(const monster* mons)
     if (!mons->visible_to(&you))
     {
         // ripple effect?
-        if ((grd(gp) == DNGN_SHALLOW_WATER
-            && !mons_flies(mons)
-            && env.cgrid(gp) == EMPTY_CLOUD)
-            ||
-            (is_opaque_cloud(env.cgrid(gp))
-                 && !mons->submerged()
-                 && !mons->is_insubstantial())
-         )
+        if (grd(gp) == DNGN_SHALLOW_WATER
+                && !mons_flies(mons)
+                && env.cgrid(gp) == EMPTY_CLOUD
+            || is_opaque_cloud(env.cgrid(gp))
+                && !mons->submerged()
+                && !mons->is_insubstantial())
+        {
             env.map_knowledge(gp).set_invisible_monster();
+        }
+
+        // Being submerged isnot the same as invisibility.
+        if (mons->submerged())
+            return;
+
+        if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
+        {
+            you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
+            you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
+        }
+
+        // maybe show unstealthy invis monsters
+        if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
+        {
+            // We cannot use regular randomness here, otherwise redrawing the
+            // screen would give out the real position.  We need to save the
+            // seed too -- but it needs to be regenerated every turn.
+
+            // Maybe mark their square.
+            if (mons->stealth() <= -2 || mons->stealth() <= 2
+                && !_hashed_rand(mons, 1, 4))
+            {
+                env.map_knowledge(gp).set_invisible_monster();
+            }
+
+            // Exceptionally stealthy monsters have a higher chance of
+            // not leaving any other trails.
+            if (mons->stealth() == 1 && !_hashed_rand(mons, 2, 3)
+                || mons->stealth() == 2 && coinflip()
+                || mons->stealth() == 3)
+            {
+                return;
+            }
+
+            // Otherwise just indicate that there's a monster nearby
+            coord_def new_pos = gp + Compass[_hashed_rand(mons, 3, 8)];
+            if (_valid_invis_spot(new_pos, mons) && _hashed_rand(mons, 4, 2))
+                env.map_knowledge(new_pos).set_invisible_monster();
+
+            new_pos = gp + Compass[_hashed_rand(mons, 5, 8)];
+            if (_valid_invis_spot(new_pos, mons) && !_hashed_rand(mons, 6, 3))
+                env.map_knowledge(new_pos).set_invisible_monster();
+        }
+
         return;
     }
 
@@ -316,7 +417,9 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     if (!in_bounds(gp))
         return;
 
-    _update_item_at(gp);
+    const monster* mons = monster_at(gp);
+    if (mons && mons->alive())
+        _update_monster(mons);
 
     const int cloud = env.cgrid(gp);
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
@@ -325,9 +428,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
         _update_cloud(cloud);
     }
 
-    const monster* mons = monster_at(gp);
-    if (mons && mons->alive())
-        _update_monster(mons);
+    _update_item_at(gp);
 }
 
 void show_init(bool terrain_only)

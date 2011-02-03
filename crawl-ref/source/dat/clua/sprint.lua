@@ -2,7 +2,7 @@
 -- Functions for Sprint
 -------------------
 
-function acq_on_sight_trig(data, triggerable, triggerer, marker, ev)
+function callback.acq_on_sight_trig(data, triggerable, triggerer, marker, ev)
   if data.triggered == true then
     return
  end
@@ -33,7 +33,9 @@ acq_on_sight_count = 0
 function acq_on_sight(e, glyph, type)
   acq_on_sight_count = acq_on_sight_count + 1
   local m_name = "acq_on_sight_" .. acq_on_sight_count
-  local tm = TriggerableFunction:new{func=acq_on_sight_trig, repeated=true,
+  local tm = TriggerableFunction:new{
+    func="callback.acq_on_sight_trig",
+    repeated=true,
     data={triggered=false, acq_type=type, slave_name=m_name} }
   tm:add_triggerer(DgnTriggerer:new{type="player_los"})
   e.lua_marker(glyph, tm)

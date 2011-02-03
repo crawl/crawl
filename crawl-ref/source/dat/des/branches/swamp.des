@@ -5,7 +5,8 @@
 ###############################################################################
 # Swamp entries
 ##############################################################################3
-# The only Swamp entry... mist leaking from the stairs.
+
+# This is basically the dummy balancer.
 NAME:   swamp_mist
 TAGS:   swamp_entry
 KFEAT:  O = enter_swamp
@@ -16,7 +17,7 @@ MAP
 O
 ENDMAP
 
-# No longer the only swamp entry! This one gives a taste of what's "to come".
+# Scenery, no threat.
 NAME:   swamp_mist_pool
 TAGS:   swamp_entry no_pool_fixup
 KFEAT:  O = enter_swamp
@@ -24,6 +25,7 @@ MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 1, walk_dist = 1, spread_rate= 33 }
 SUBST:  '= t.., "= tw, t=ttw, w=Ww
+KFEAT:  t = swamp_tree
 validate {{ return glyphs_connected("O", "@") }}
 MAP
        @
@@ -34,6 +36,100 @@ MAP
  't"wwwww"t'
   't"www"t'
    't"wt@
+ENDMAP
+
+NAME:   minmay_swamp_entry_swarm
+TAGS:   swamp_entry mini_float
+WEIGHT: 5
+SUBST:  W = 1WWWWW, t = ttt., T = tttW, W = WWWwww., 1 = 111WWW, ' = W
+KMONS:  1 = vampire mosquito
+KFEAT:  1 = w / W
+KFEAT:  O = enter_swamp
+KFEAT:  t = swamp_tree
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MAP
+   ttttt
+  tTTTTTt
+ tTT111TTt
+tTT11111TTt
+tT1111111Tt
+tTWWWOWWWTt
+tTWWW'WWWTt
+tTTWW'WWTTt
+ tTTW'WTTt
+  tTT'TTt
+ENDMAP
+
+NAME:   minmay_swamp_entry_wisps
+TAGS:   swamp_entry
+WEIGHT: 2
+MONS:   insubstantial wisp / nothing
+KFEAT:  O = enter_swamp
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MAP
+111
+1O1
+111
+ENDMAP
+
+NAME:   minmay_swamp_entry_reptiles
+TAGS:   swamp_entry
+WEIGHT: 5
+MONS:   swamp drake / komodo dragon / hydra / swamp dragon
+MONS:   baby alligator / crocodile / iguana / giant newt
+KFEAT:  O = enter_swamp
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MAP
+2.1
+.O.
+2.2
+ENDMAP
+
+NAME:   minmay_swamp_entry_worms
+TAGS:   swamp_entry
+SUBST:  T = tww
+KMONS:  w = swamp worm / giant leech / nothing w:89
+KFEAT:  w = w / W
+KFEAT:  O = enter_swamp
+KFEAT:  t = swamp_tree
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MAP
+ ttttt
+ttTTTtt
+tTwwwTt
+tTwOWW@
+tTwwwTt
+ttTTTtt
+ ttttt
+ENDMAP
+
+NAME:   minmay_swamp_entry_eels
+TAGS:   swamp_entry
+WEIGHT: 2
+KMONS:  w = electric eel / nothing w:40
+KFEAT:  w = w / W
+KFEAT:  O = enter_swamp
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MAP
+  .....
+ .......
+...www...
+..wwwww..
+..wwOww..
+..wwwWw..
+...www...
+ .......
+  .....
 ENDMAP
 
 ###############################################################################
@@ -79,6 +175,7 @@ TAGS:   no_pool_fixup allow_dup extra luniq_pool
 DEPTH:  Swamp
 WEIGHT: 500
 SUBST:  '=Wt, "=wwt
+KFEAT:  t = swamp_tree
 MAP
 "'ttt'
 '""w"tt
@@ -93,6 +190,7 @@ TAGS:   no_pool_fixup allow_dup extra luniq_pool
 DEPTH:  Swamp
 WEIGHT: 500
 SUBST:  "=ttttw
+KFEAT:  t = swamp_tree
 MAP
   t""tt
  ""www"t
@@ -110,6 +208,7 @@ KMONS:  1 = patrolling swamp drake
 KFEAT:  1 = deep_water
 WEIGHT: 500
 SUBST:  "=ttttw, '=ttW
+KFEAT:  t = swamp_tree
 MAP
   't't'
  tt"""t'
@@ -137,6 +236,7 @@ MONS:    hydra / nothing
 SHUFFLE: 12
 SUBST:   ' = t
 KITEM:   O = decaying rune of Zot
+KFEAT:   t = swamp_tree
 MAP
        @
        2
@@ -173,6 +273,7 @@ SUBST:   1=111., 2=2., 3=333., 4=4., L=l.
 SHUFFLE: Od, 123, lw
 SUBST:   l=l .:2, '=.t, "=tc, _=c.
 KITEM:   O = decaying rune of Zot
+KFEAT:   t = swamp_tree
 MAP
    @       @
    1'       2'
@@ -201,7 +302,7 @@ PLACE:   Swamp:5
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
-MONS:    fire drake / lindwurm w:3
+MONS:    fire drake / lindwurm w:3 / fire crab w:3
 SHUFFLE: OX
 SUBST:   S = llw, L = ll.
 SUBST:   ' = t., " = t
@@ -209,6 +310,7 @@ MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \
              size = 1, walk_dist = 1, spread_rate= 3 }
 KFEAT:   XR = lava
+KFEAT:   t = swamp_tree
 KITEM:   O = decaying rune of Zot
 MAP
                              @      .@
@@ -247,6 +349,7 @@ KMONS:   ? = swamp worm simulacrum / giant goldfish simulacrum / electric eel \
 MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly / ice dragon w:5
 SUBST:   X = tt., RY = wWwww., Q=t
 KITEM:   O = decaying rune of Zot
+KFEAT:   t = swamp_tree
 MAP
                wwttttttttt
         @.  @ wwttcccccctt
@@ -295,6 +398,7 @@ MONS:    spectral swamp drake / swamp drake zombie
 MONS:    death drake / plant / w:5 oklob plant
 MONS:    insubstantial wisp
 MONS:    phantom
+MONS:    bog mummy
 SHUFFLE: OX
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
@@ -309,13 +413,14 @@ KMONS:   ? = big fish zombie
 KMONS:   ! = swamp worm zombie
 KFEAT:   ? = deep_water
 KFEAT:   ! = deep_water
+KFEAT:   t = swamp_tree
 SUBST:   X=. , Y:w , 6=66. , 1=13 , .=W... , "=tc, '=.w
 MAP
-    ?w......w?w"tt     tt
-    w?ww..ww?wwc"tt   ttt
+    ?w7.....w?w"tt     tt
+    w?ww.7ww?wwc"tt   ttt
     "wWWwww?w?cc"ttt tttt
    '""cWw?w?ccc"ttttttttt
-   't"c..wwcccc"""ttttttt
+   't"c7.wwcccc"""ttttttt
    tttc...ccccccccccc"ttt
   ttt"cc....cccc6666c"ttt
   ttt"cc....cccO6666cc"tt
@@ -352,6 +457,7 @@ SUBST:   a=c, b=', " = ttw, u = wwwwwWWWWxxx., ' = W.
 SHUFFLE: 12
 SUBST:   1=1111., 2=2222., 3=3333.
 KITEM:   O = decaying rune of Zot
+KFEAT:   t = swamp_tree
 MAP
                t
     x   "t     t"   x        t

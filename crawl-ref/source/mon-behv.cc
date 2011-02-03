@@ -9,17 +9,21 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "coord.h"
 #include "coordit.h"
+#include "database.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
 #include "items.h"
+#include "mon-act.h"
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-movetarget.h"
 #include "mon-pathfind.h"
+#include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
@@ -73,6 +77,72 @@ static void _mon_check_foe_invalid(monster* mon)
 
         mon->foe = MHITNOT;
     }
+}
+
+static bool _mon_tries_regain_los(monster* mon)
+{
+    // Only intelligent monsters with ranged attack will try to regain LOS.
+    if (mons_intel(mon) < I_NORMAL
+        || !mons_has_ranged_spell(mon, true) && !mons_has_ranged_attack(mon))
+    {
+        return false;
+    }
+
+    // Any special case should go here.
+    if (mons_class_flag(mon->type, M_FIGHTER)
+        && !(mon->type == MONS_CENTAUR_WARRIOR)
+        && !(mon->type == MONS_YAKTAUR_CAPTAIN))
+    {
+        return false;
+    }
+
+    // Randomize it a bit to make it less predictable.
+    return (mons_intel(mon) == I_NORMAL && !one_chance_in(10)
+            || mons_intel(mon) == I_HIGH && !one_chance_in(20));
+}
+
+// Monster tries to get into a firing position. Among the cells which have
+// a line of fire to the target, we choose the closest one to regain LOS as
+// fast as possible. If several cells are eligible, we choose the one closest
+// to ideal_range (too far = easier to escape, too close = easier to ambush).
+static void _set_firing_pos(monster* mon, coord_def target)
+{
+    const int ideal_range = LOS_RADIUS / 2;
+    const int current_distance = mon->pos().distance_from(target);
+    const los_type los = mons_has_los_ability(mon->type) ? LOS_DEFAULT
+                                                         : LOS_NO_TRANS;
+
+    // We don't consider getting farther away unless already very close.
+    const int max_range = std::max(ideal_range, current_distance);
+
+    int best_distance = INT_MAX;
+    int best_distance_to_ideal_range = INT_MAX;
+    coord_def best_pos(0, 0);
+    for (radius_iterator ri(mon->get_los(), true); ri; ++ri)
+    {
+        const coord_def p(*ri);
+        const int range = p.distance_from(target);
+
+        if (!in_bounds(p) || range > max_range
+            || !cell_see_cell(p, target, los)
+            || !mon_can_move_to_pos(mon, p - mon->pos()))
+        {
+            continue;
+        }
+
+        const int distance = p.distance_from(mon->pos());
+
+        if (distance < best_distance
+            || distance == best_distance
+               && std::abs(range - ideal_range) < best_distance_to_ideal_range)
+        {
+            best_pos = p;
+            best_distance = distance;
+            best_distance_to_ideal_range = std::abs(range - ideal_range);
+        }
+    }
+
+    mon->firing_pos = best_pos;
 }
 
 //---------------------------------------------------------------
@@ -135,9 +205,10 @@ void handle_behaviour(monster* mon)
     // Zotdef rotting
     if (crawl_state.game_is_zotdef())
     {
-        if (!isFriendly && !isNeutral && orb_position() == mon->pos())
+        if (!isFriendly && !isNeutral && orb_position() == mon->pos()
+            && mon->speed)
         {
-            int loss = div_rand_round(10, mon->speed);
+            const int loss = div_rand_round(10, mon->speed);
             if (loss)
             {
                 mpr("Your flesh rots away as the Orb of Zot is desecrated.",
@@ -206,6 +277,11 @@ void handle_behaviour(monster* mon)
         {
             proxPlayer = true;
         }
+
+        // Ash penance makes monsters very likely to target you through
+        // invisibility, depending on their intelligence.
+        if (you.penance[GOD_ASHENZARI] && x_chance_in_y(intel, 6))
+            proxPlayer = true;
     }
 
     // Zotdef: immobile allies forget targets that are out of sight
@@ -335,6 +411,9 @@ void handle_behaviour(monster* mon)
             proxFoe = true;
         }
 
+        if (mon->pos() == mon->firing_pos)
+            mon->firing_pos.reset();
+
         // Track changes to state; attitude never changes here.
         beh_type new_beh       = mon->behaviour;
         unsigned short new_foe = mon->foe;
@@ -353,7 +432,9 @@ void handle_behaviour(monster* mon)
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
             {
-                if (crawl_state.game_is_arena() || !proxPlayer || isNeutral || patrolling
+                if (crawl_state.game_is_arena()
+                    || !proxPlayer && !isFriendly
+                    || isNeutral || patrolling
                     || mon->type == MONS_GIANT_SPORE)
                 {
                     new_beh = BEH_WANDER;
@@ -367,7 +448,11 @@ void handle_behaviour(monster* mon)
             }
 
             // Foe gone out of LOS?
-            if (!proxFoe)
+            if (!proxFoe
+                && !(mon->friendly()
+                     && mon->foe == MHITYOU
+                     && mon->is_travelling()
+                     && mon->travel_target == MTRAV_PLAYER))
             {
                 // Maybe the foe is just invisible.
                 if (mon->target.origin() && afoe && mon->near_foe())
@@ -402,7 +487,7 @@ void handle_behaviour(monster* mon)
                     break;
                 }
 
-                if (isFriendly)
+                if (isFriendly && mon->foe != MHITYOU)
                 {
                     if (patrolling || crawl_state.game_is_arena())
                     {
@@ -427,7 +512,7 @@ void handle_behaviour(monster* mon)
                     // but only for a few moves (smell and
                     // intuition only go so far).
 
-                    if ((mon->pos() == mon->target)
+                    if (mon->pos() == mon->target
                         && (!isFriendly || !crawl_state.game_is_zotdef()))
                     {   // hostiles only in Zotdef
                         if (mon->foe == MHITYOU)
@@ -436,8 +521,11 @@ void handle_behaviour(monster* mon)
                                 mon->target = PLAYER_POS;  // infallible tracking in zotdef
                             else
                             {
-                                if (one_chance_in(you.skills[SK_STEALTH] / 3))
+                                if (one_chance_in(you.skill(SK_STEALTH) / 3)
+                                    || you.penance[GOD_ASHENZARI] && coinflip())
+                                {
                                     mon->target = you.pos();
+                                }
                                 else
                                     mon->foe_memory = 0;
                             }
@@ -453,13 +541,26 @@ void handle_behaviour(monster* mon)
                 }
 
 
-                if (mon->foe_memory <= 0)
+                if (mon->foe_memory <= 0
+                    && !(mon->friendly() && mon->foe == MHITYOU))
+                {
                     new_beh = BEH_WANDER;
+                }
+                // If the player walk out of the LOS of a monster with a ranged
+                // attack, we assume it sees in which direction the player went
+                // and it tries to find a line of fire instead of following the
+                // player.
+                else if (grid_distance(mon->target, you.pos()) == 1
+                         && _mon_tries_regain_los(mon))
+                {
+                    _set_firing_pos(mon, you.pos());
+                }
 
-                break;
+                if (!isFriendly)
+                    break;
             }
 
-            ASSERT(proxFoe && mon->foe != MHITNOT);
+            ASSERT((proxFoe || isFriendly) && mon->foe != MHITNOT);
 
             // Monster can see foe: set memory in case it loses sight.
             // Hack: smarter monsters will tend to pursue the player longer.
@@ -485,6 +586,16 @@ void handle_behaviour(monster* mon)
             if (mon->foe == MHITYOU)
             {
                 // The foe is the player.
+
+                // If monster is currently getting into firing position and
+                // see the player and can attack him, clear firing_pos.
+                if (!mon->firing_pos.zero()
+                    && mons_has_los_ability(mon->type)
+                       || mon->see_cell_no_trans(mon->target))
+                {
+                    mon->firing_pos.reset();
+                }
+
                 if (mon->type == MONS_SIREN
                     && you.beheld_by(mon)
                     && find_siren_water_target(mon))
@@ -492,7 +603,7 @@ void handle_behaviour(monster* mon)
                     break;
                 }
 
-                if (try_pathfind(mon, can_move))
+                if (mon->firing_pos.zero() && try_pathfind(mon, can_move))
                     break;
 
                 // Whew. If we arrived here, path finding didn't yield anything
@@ -500,7 +611,8 @@ void handle_behaviour(monster* mon)
                 // the traditional way.
 
                 // Sometimes, your friends will wander a bit.
-                if (isFriendly && one_chance_in(8))
+                if (isFriendly && one_chance_in(8)
+                    && mon->foe == MHITYOU && proxFoe)
                 {
                     set_random_target(mon);
                     mon->foe = MHITNOT;
@@ -778,6 +890,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_sleeping     = mon->asleep();
+    std::string msg;
 
     if (src == MHITYOU)
         sourceWontAttack = true;
@@ -950,6 +1063,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             break;
         }
 
+        msg = getSpeakString(mon->name(DESC_PLAIN) + " flee");
+
         // Assume monsters know where to run from, even if player is
         // invisible.
         mon->behaviour = BEH_FLEE;
@@ -993,10 +1108,14 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             if (mon->friendly() && !crawl_state.game_is_arena())
             {
                 mon->foe = MHITYOU;
-                simple_monster_message(mon, " returns to your side!");
+                msg = "PLAIN:@The_monster@ returns to your side!";
             }
             else if (mon->type != MONS_KRAKEN_TENTACLE)
-                simple_monster_message(mon, " turns to fight!");
+            {
+                msg = getSpeakString(mon->name(DESC_PLAIN) + " cornered");
+                if (msg.empty())
+                    msg = "PLAIN:@The_monster@ turns to fight!";
+            }
         }
 
         mon->behaviour = BEH_CORNERED;
@@ -1054,6 +1173,9 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // unsubmerge.
         mon->behaviour = BEH_LURK;
     }
+
+    if (!msg.empty() && mon->visible_to(&you))
+        mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
     ASSERT(!crawl_state.game_is_arena()
            || mon->foe != MHITYOU && mon->target != you.pos());

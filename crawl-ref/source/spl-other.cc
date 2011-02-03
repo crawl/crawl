@@ -72,7 +72,8 @@ bool cast_sublimation_of_blood(int pow)
 
             inc_mp(7 + random2(7), false);
 
-            split_potions_into_decay(wielded, 1, false);
+            remove_oldest_blood_potion(you.inv[wielded]);
+            dec_inv_item_quantity(wielded, 1);
         }
         else
             wielded = -1;
@@ -516,9 +517,9 @@ void cast_stoneskin(int pow)
         return;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
+    if (you.form != TRAN_NONE
+        && you.form != TRAN_STATUE
+        && you.form != TRAN_BLADE_HANDS)
     {
         mpr("This spell does not affect your current form.");
         return;
@@ -534,7 +535,7 @@ void cast_stoneskin(int pow)
         mpr("Your skin feels harder.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             mpr("Your stone body feels more resilient.");
         else
             mpr("Your skin hardens.");

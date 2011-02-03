@@ -88,7 +88,7 @@ void trap_def::disarm()
 void trap_def::destroy()
 {
     if (!in_bounds(this->pos))
-        ASSERT("trap position out of bounds!");
+        die("Trap position out of bounds!");
 
     grd(this->pos) = DNGN_FLOOR;
     this->ammo_qty = 0;
@@ -198,9 +198,7 @@ bool trap_def::is_known(const actor* act) const
                         || intel >= I_HIGH && one_chance_in(3)));
         }
     }
-    ASSERT(false);
-
-    return (false);
+    die("invalid actor type");
 }
 
 
@@ -405,10 +403,7 @@ static bool _find_other_passage_side(coord_def& to)
         return true;
     }
     else
-    {
-        ASSERT(false);
-        return false;
-    }
+        die("Golubria's passage not found");
 }
 
 // Returns a direction string from you.pos to the
@@ -444,7 +439,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // Zot def - player never sets off known traps
     if (crawl_state.game_is_zotdef() && you_trigger && you_know)
     {
-        mpr("You step safely past the trap");
+        mpr("You step safely past the trap.");
         return;
     }
 
@@ -512,10 +507,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (triggerer.move_to_pos(to))
             {
                 if (you_trigger)
-                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), KC_YOU);
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &you);
                 else
-                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3),
-                                m->kill_alignment(), KILL_MON_MISSILE);
+                    place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), m);
                 trap_destroyed = true;
                 know_trap_destroyed = you_trigger;
             }
@@ -1023,7 +1017,7 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skills[SK_TRAPS_DOORS] + 2) <= random2(you.absdepth0 + 5))
+    if (random2(you.skill(SK_TRAPS_DOORS) + 2) <= random2(you.absdepth0 + 5))
     {
         mpr("You failed to disarm the trap.");
         if (random2(you.dex()) > 5 + random2(5 + you.absdepth0))
@@ -1078,10 +1072,10 @@ void remove_net_from(monster* mon)
         invis = 3 + random2(5);
 
     bool net_destroyed = false;
-    if (random2(you.skills[SK_TRAPS_DOORS] + 2) + paralys
+    if (random2(you.skill(SK_TRAPS_DOORS) + 2) + paralys
            <= random2(2*mon->body_size(PSIZE_BODY) + 3) + invis)
     {
-        if (one_chance_in(you.skills[SK_TRAPS_DOORS] + you.dex()/2))
+        if (one_chance_in(you.skill(SK_TRAPS_DOORS) + you.dex()/2))
         {
             mitm[net].plus--;
             mpr("You tear at the net.");
@@ -1145,7 +1139,7 @@ static int damage_or_escape_net(int hold)
         if (brand == SPWPN_FLAMING || brand == SPWPN_VORPAL)
             damage++;
     }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (you.form == TRAN_BLADE_HANDS)
         damage += 2;
     else if (you.has_usable_claws())
     {
@@ -1225,7 +1219,7 @@ void free_self_from_net()
         // For previously undamaged nets this takes at least 2 and at most
         // 8 turns.
         bool can_slice =
-            (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+            (you.form == TRAN_BLADE_HANDS)
             || (you.weapon() && can_cut_meat(*you.weapon()));
 
         int damage = -do_what;
@@ -1403,7 +1397,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
         if (act.atype() == ACT_PLAYER)
         {
-            if (one_chance_in(5) || (was_known && !one_chance_in(4)) && !force_hit)
+            if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
             {
                 mprf("You avoid triggering %s trap.",
                       this->name(DESC_NOCAP_A).c_str());
@@ -1601,7 +1595,6 @@ bool shaft_known(int depth, bool randomly_placed)
 level_id generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id  lid   = lpos.id;
-    coord_def pos   = lpos.pos;
 
     if (lid.level_type != LEVEL_DUNGEON)
         return lid;
@@ -1722,7 +1715,7 @@ int num_traps_for_place(int level_number, const level_id &place)
         return _num_traps_default(level_number, place);
     case LEVEL_LABYRINTH:
     case LEVEL_PORTAL_VAULT:
-        ASSERT(false);
+        die("invalid place for traps");
         break;
     case LEVEL_ABYSS:
     default:

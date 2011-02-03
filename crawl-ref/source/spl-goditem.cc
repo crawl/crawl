@@ -16,7 +16,7 @@
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
-#include "godpassive.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -37,7 +37,7 @@
 #include "traps.h"
 #include "view.h"
 
-void identify(int power, int item_slot)
+int identify(int power, int item_slot, std::string *pre_msg)
 {
     int id_used = 1;
 
@@ -53,7 +53,7 @@ void identify(int power, int item_slot)
                                            OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return;
+            return(-1);
 
         item_def& item(you.inv[item_slot]);
 
@@ -65,6 +65,9 @@ void identify(int power, int item_slot)
             item_slot = -1;
             continue;
         }
+
+        if (pre_msg)
+            mpr(pre_msg->c_str());
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -93,6 +96,14 @@ void identify(int power, int item_slot)
 
         id_used--;
 
+        if (item.base_type == OBJ_JEWELLERY
+            && item.sub_type == AMU_INACCURACY
+            && item_slot == you.equip[EQ_AMULET]
+            && !item_known_cursed(item))
+        {
+            learned_something_new(HINT_INACCURACY);
+        }
+
         if (Options.auto_list && id_used > 0)
             more();
 
@@ -100,6 +111,7 @@ void identify(int power, int item_slot)
         item_slot = -1;
     }
     while (id_used > 0);
+    return(1);
 }
 
 static bool _mons_hostile(const monster* mon)
@@ -469,7 +481,7 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool _mark_detected_creature(coord_def where, const monster* mon,
+static bool _mark_detected_creature(coord_def where, monster* mon,
                                     int fuzz_chance, int fuzz_radius)
 {
     bool found_good = false;
@@ -509,6 +521,10 @@ static bool _mark_detected_creature(coord_def where, const monster* mon,
             where = place;
     }
 
+    // Mimics are too obvious by now, even out of LOS.
+    if (mons_is_unknown_mimic(mon))
+        discover_mimic(mon);
+
     env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
     return (found_good);
@@ -521,14 +537,14 @@ int detect_creatures(int pow, bool telepathic)
         _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
     int creatures_found = 0;
-    const int map_radius = 8 + random2(8) + pow;
+    const int map_radius = 10 + random2(8) + pow;
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
     if (!telepathic)
         clear_map(false);
 
-    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
@@ -613,7 +629,10 @@ bool remove_curse()
     }
 
     if (success)
+    {
         mpr("You feel as if something is helping you.");
+        learned_something_new(HINT_REMOVED_CURSE);
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -678,7 +697,7 @@ bool detect_curse(int scroll, bool suppress_msg)
     return (true);
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool force_full)
+static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -687,48 +706,61 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
     int number_built = 0;
 
     const dungeon_feature_type safe_tiles[] = {
-        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
+        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
     };
 
     bool proceed;
+    monster *mon;
+    std::string targname;
 
-    if (force_full)
+    if (zin)
     {
+        // We need to get this now because we won't be able to see
+        // the monster once the walls go up!
+        mon = monster_at(where);
+        targname = mon->name(DESC_NOCAP_THE);
         bool success = true;
+        bool none_vis = true;
 
         for (adjacent_iterator ai(where); ai; ++ai)
         {
             // The tile is occupied.
-            if (actor_at(*ai))
+            if (actor *fatass = actor_at(*ai))
             {
                 success = false;
+                if (you.can_see(fatass))
+                    none_vis = false;
                 break;
             }
 
             // Make sure we have a legitimate tile.
             proceed = false;
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
 
             if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
             {
                 success = false;
+                none_vis = false;
                 break;
             }
         }
 
         if (!success)
         {
-            mpr("Half-formed walls emerge from the floor, then retract.");
+            mprf(none_vis ? "You briefly glimpse something next to %s."
+                          : "You need more space to imprison %s.",
+                 targname.c_str());
             return (false);
         }
+
     }
 
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!force_full && one_chance_in(pow / 5))
+        if (!zin && one_chance_in(pow / 5))
             continue;
 
         // The tile is occupied.
@@ -738,7 +770,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
         // Make sure we have a legitimate tile.
         proceed = false;
         for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                 proceed = true;
 
         if (proceed)
@@ -756,7 +788,22 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
                 ptrap->destroy();
 
             // Actually place the wall.
-            grd(*ai) = DNGN_ROCK_WALL;
+
+            if (zin)
+            {
+                // Make the walls silver.
+                grd(*ai) = DNGN_METAL_WALL;
+                env.grid_colours(*ai) = LIGHTGREY;
+
+                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
+                marker->set_property("feature_description", "A gleaming silver wall");
+                marker->set_property("prison", "Zin");
+                env.markers.add(marker);
+            }
+            else
+            {
+                grd(*ai) = DNGN_ROCK_WALL;
+            }
             set_terrain_changed(*ai);
             number_built++;
         }
@@ -764,9 +811,14 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
     if (number_built > 0)
     {
-        mpr("Walls emerge from the floor!");
+        if (!zin)
+            mpr("Walls emerge from the floor!");
+        else
+            mprf("Zin imprisons %s with walls of pure silver!", targname.c_str());
+
         you.update_beholders();
         you.update_fearmongers();
+        env.markers.clear_need_activate();
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -858,7 +910,7 @@ void stonemail(int pow)
         mpr("Your scaly armour looks firmer.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             mpr("Your stone body feels more resilient.");
         else
             mpr("A set of stone scales covers your body!");

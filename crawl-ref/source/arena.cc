@@ -1451,11 +1451,12 @@ int arena_cull_items()
 
 static void _init_arena()
 {
-    run_map_preludes();
+    run_map_global_preludes();
+    run_map_local_preludes();
     initialise_item_descriptions();
 }
 
-void run_arena(const std::string& teams)
+NORETURN void run_arena(const std::string& teams)
 {
     _init_arena();
 

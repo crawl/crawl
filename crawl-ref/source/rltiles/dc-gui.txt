@@ -8,9 +8,21 @@
 # idx == 0 must be invalid
 dc-dngn/dngn_unseen
 
+%sdir gui/startup
+stonesoup STARTUP_STONESOUP
+tutorial STARTUP_TUTORIAL
+hints_mode STARTUP_HINTS
+dungeon_sprint STARTUP_SPRINT
+zot_defence STARTUP_ZOTDEF
+instructions STARTUP_INSTRUCTIONS
+arena STARTUP_ARENA
+tavern TAVERN
+
 %include dc-spells.txt
 
 %include dc-skills.txt
+
+%include dc-commands.txt
 
 dc-misc/todo TODO
 dc-misc/error ERROR
@@ -84,4 +96,17 @@ dc-misc/error ERROR
 %start
 %compose tab_selected
 %compose tab_label_skill
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_command
+%finish TAB_COMMAND
+%start
+%compose tab_mouseover
+%compose tab_label_command
+%finish
+%start
+%compose tab_selected
+%compose tab_label_command
 %finish

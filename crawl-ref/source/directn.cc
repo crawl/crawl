@@ -46,6 +46,7 @@
 #include "mon-info.h"
 #include "mon-util.h"
 #include "output.h"
+#include "place.h"
 #include "player.h"
 #include "shopping.h"
 #include "show.h"
@@ -1110,10 +1111,19 @@ coord_def direction_chooser::find_default_target() const
                 && _find_square_wrapper(result, 1, _find_monster,
                                         false, mode, range, true))
             {
+                // Special colouring in tutorial or hints mode.
+                const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
                 mpr("All monsters which could be auto-targeted are covered by "
                     "a wall or statue which interrupts your line of fire, even "
                     "though it doesn't interrupt your line of sight.",
-                    MSGCH_PROMPT);
+                    need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT);
+
+                if (need_hint)
+                {
+                    mpr("To return to the main mode, press <w>Escape</w>.",
+                        MSGCH_TUTORIAL);
+                    Hints.hints_events[HINT_TARGET_NO_FOE] = false;
+                }
             }
         }
     }
@@ -1467,7 +1477,7 @@ void direction_chooser::print_items_description() const
 void direction_chooser::print_floor_description(bool boring_too) const
 {
     const dungeon_feature_type feat = grd(target());
-    if (!boring_too && (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL))
+    if (!boring_too && feat == DNGN_FLOOR)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -1653,10 +1663,26 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         wizard_make_monster_summoned(m);
         break;
 
+    case CMD_TARGET_WIZARD_HEAL_MONSTER:
+        if (m->hit_points < m->max_hit_points)
+        {
+            m->hit_points = m->max_hit_points;
+            need_all_redraw = true;
+        }
+        break;
+
     case CMD_TARGET_WIZARD_HURT_MONSTER:
         m->hit_points = 1;
         mpr("Brought monster down to 1 HP.");
         flush_prev_message();
+        break;
+
+    case CMD_TARGET_WIZARD_BANISH_MONSTER:
+        m->banish();
+        break;
+
+    case CMD_TARGET_WIZARD_KILL_MONSTER:
+        monster_die(m, KILL_YOU, NON_MONSTER);
         break;
 
     default:
@@ -1801,6 +1827,9 @@ bool direction_chooser::do_main_loop()
         break;
 
     case CMD_TARGET_EXCLUDE:
+        if (!just_looking)
+            break;
+
         if (you.level_type == LEVEL_LABYRINTH
             || !player_in_mappable_area())
         {
@@ -1997,9 +2026,9 @@ std::string get_terse_square_desc(const coord_def &gc)
     {
         const monster& mons = *monster_at(gc);
 
-        if (mons_is_item_mimic(mons.type) && !mons_is_known_mimic(&mons))
+        if (mons_is_item_mimic(mons.type) && mons_is_unknown_mimic(&mons))
             desc = get_mimic_item(&mons).name(DESC_PLAIN);
-        else if (mons_is_feat_mimic(mons.type) && !mons_is_known_mimic(&mons))
+        else if (mons_is_feat_mimic(mons.type) && mons_is_unknown_mimic(&mons))
             desc = feature_description(gc, false, DESC_PLAIN, false);
         else
             desc = mons.full_name(DESC_PLAIN, true);
@@ -2037,23 +2066,30 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
     if (mons && mons->visible_to(&you))
     {
-        monster_info mi(mons);
-        // First priority: monsters.
-        if (examine_mons && !mons_is_unknown_mimic(mons))
+        if (mons_is_item_mimic(mons->type) && mons_is_unknown_mimic(mons))
+            get_item_desc(get_mimic_item(mons), inf, examine_mons);
+        else if (mons_is_feat_mimic(mons->type) && mons_is_unknown_mimic(mons))
+            get_feature_desc(c, inf);
+        else
         {
-            // If examine_mons is true (currently only for the Tiles
-            // mouse-over information), set monster's
-            // equipment/woundedness/enchantment description as title.
-            std::string desc         = get_monster_equipment_desc(mi) + ".\n";
-            const std::string wounds = mi.wounds_description_sentence();
-            if (!wounds.empty())
-                desc += wounds + "\n";
-            desc += _get_monster_desc(mi);
+            monster_info mi(mons);
+            // First priority: monsters.
+            if (examine_mons)
+            {
+                // If examine_mons is true (currently only for the Tiles
+                // mouse-over information), set monster's
+                // equipment/woundedness/enchantment description as title.
+                std::string desc         = get_monster_equipment_desc(mi) + ".\n";
+                const std::string wounds = mi.wounds_description_sentence();
+                if (!wounds.empty())
+                    desc += wounds + "\n";
+                desc += _get_monster_desc(mi);
 
-            inf.title = desc;
+                inf.title = desc;
+            }
+            bool temp = false;
+            get_monster_db_desc(mi, inf, temp);
         }
-        bool temp = false;
-        get_monster_db_desc(mi, inf, temp);
     }
     else if (oid != NON_ITEM)
     {
@@ -2183,11 +2219,8 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     }
 
     // Unknown mimics don't count as monsters, either.
-    if (mons_is_mimic(mon->type)
-        && !mons_is_known_mimic(mon))
-    {
+    if (mons_is_unknown_mimic(mon))
         return (false);
-    }
 
     // Don't target submerged monsters.
     if (mode != TARG_HOSTILE_SUBMERGED && mon->submerged())
@@ -2200,7 +2233,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
         // Since you can't see the monster, assume it's not a friend.
         return (mode != TARG_FRIEND
                 && _mon_exposed(mon)
-                && i_feel_safe(false, false, true, range));
+                && i_feel_safe(false, false, true, true, range));
     }
 
     return (true);
@@ -2665,7 +2698,7 @@ static void _describe_feature(const coord_def& where, bool oos)
     if (feature_mimic_at(where))
     {
         monster* mimic_mons = monster_at(where);
-        if (!mons_is_known_mimic(mimic_mons))
+        if (mons_is_unknown_mimic(mimic_mons))
             grid = get_mimic_feat(mimic_mons);
     }
 
@@ -2717,7 +2750,6 @@ void describe_floor()
     switch (grid)
     {
     case DNGN_FLOOR:
-    case DNGN_FLOOR_SPECIAL:
         return;
 
     case DNGN_ENTER_SHOP:
@@ -2868,6 +2900,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_GRATE:
         return ("iron grate");
     case DNGN_TREE:
+    case DNGN_SWAMP_TREE: // perhaps "mangrove" or such?
         return ("tree");
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
@@ -2886,7 +2919,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("Some shallow water");
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_FLOOR:
-    case DNGN_FLOOR_SPECIAL:
         return ("Floor");
     case DNGN_OPEN_DOOR:
         return ("open door");
@@ -2901,6 +2933,11 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
+        if (player_in_branch(BRANCH_MAIN_DUNGEON)
+            && player_branch_depth() == 1)
+        {
+            return ("staircase leading out of the dungeon");
+        }
         return ("stone staircase leading up");
     case DNGN_ENTER_HELL:
         return ("gateway to Hell");
@@ -2921,7 +2958,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_ENTER_DIS:
         return ("gateway to the Iron City of Dis");
     case DNGN_ENTER_GEHENNA:
-        return ("gateway to Gehenna");
+        return ("gateway to the ashen valley of Gehenna");
     case DNGN_ENTER_COCYTUS:
         return ("gateway to the freezing wastes of Cocytus");
     case DNGN_ENTER_TARTARUS:
@@ -3158,7 +3195,7 @@ std::string feature_description(const coord_def& where, bool covering,
     if (feature_mimic_at(where))
     {
         mimic_mons = monster_at(where);
-        if (!mons_is_known_mimic(mimic_mons))
+        if (mons_is_unknown_mimic(mimic_mons))
         {
             grid = get_mimic_feat(mimic_mons);
             mimic = true;
@@ -3754,7 +3791,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
         debug_stethoscope(mgrd(where));
 #endif
-        if (Hints.hints_left && hints_monster_interesting(mon))
+        if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {
             std::string msg;
 #ifdef USE_TILE
@@ -3800,7 +3837,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
     std::string feature_desc = feature_description(where, true);
     const bool bloody = is_bloodcovered(where);
-    if (Hints.hints_left && hints_pos_interesting(where.x, where.y))
+    if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
     {
 #ifdef USE_TILE
         feature_desc += " (<w>Right-click</w> for more information.)";
@@ -3830,15 +3867,14 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         // Suppress "Floor." if there's something on that square that we've
         // already described.
-        if ((feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL) && !bloody
+        if (feat == DNGN_FLOOR && !bloody
             && (monster_described || item_described || cloud_described))
         {
             return;
         }
 
         msg_channel_type channel = MSGCH_EXAMINE;
-        if (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL
-            || feat_is_water(feat))
+        if (feat == DNGN_FLOOR || feat_is_water(feat))
         {
             channel = MSGCH_EXAMINE_FILTER;
         }

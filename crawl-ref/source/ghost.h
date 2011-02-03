@@ -17,6 +17,12 @@
 mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour);
 mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav);
 
+#ifdef USE_TILE
+int tile_offset_for_labrat_colour(uint8_t l_colour);
+#endif
+std::string adjective_for_labrat_colour(uint8_t l_colour);
+uint8_t colour_for_labrat_adjective(std::string adjective);
+
 class ghost_demon
 {
 public:
@@ -44,12 +50,14 @@ public:
 
 public:
     ghost_demon();
+    bool has_spells() const;
     void reset();
     void init_random_demon();
     void init_player_ghost();
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
                          uint8_t force_colour = BLACK);
     void init_dancing_weapon(const item_def& weapon, int power);
+    void init_labrat (uint8_t force_colour = BLACK);
     void ugly_thing_to_very_ugly_thing();
 
 public:

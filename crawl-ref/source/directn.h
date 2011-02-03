@@ -159,7 +159,7 @@ private:
     // Can be modified by the targeting_behaviour.
     void print_top_prompt() const;
 
-    // Press: ? - help, Shift-Dir - straight line, t - giant bat
+    // Press: ? - help, Shift-Dir - straight line, t - megabat
     void print_key_hints() const;
 
     // Here: An orc wizard, wielding a glowing orcish dagger, and wearing

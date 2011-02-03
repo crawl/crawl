@@ -251,15 +251,15 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Vehumet
     { "gain magical power from killing",
       "Vehumet is aiding your destructive magics.",
-      "Vehumet is extending the range of your conjurations.",
+      "Vehumet is extending the range of your destructive magics.",
       "Vehumet is reducing the cost of your expensive destructive magics.",
       "" },
     // Okawaru
-    { "give your body great, but temporary strength",
+    { "gain great but temporary skills",
       "",
       "",
       "",
-      "haste yourself" },
+      "speed up your combat" },
     // Makhleb
     { "gain power from killing",
       "harness Makhleb's destructive might",
@@ -366,15 +366,15 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Vehumet
     { "gain magical power from killing",
       "Vehumet will no longer aid your destructive magics.",
-      "Vehumet will no longer extend the range of your conjurations.",
+      "Vehumet will no longer extend the range of your destructive magics.",
       "Vehumet will no longer reduce the cost of your destructive magics.",
       "" },
     // Okawaru
-    { "give your body great, but temporary strength",
+    { "gain great but temporary skills",
       "",
       "",
       "",
-      "haste yourself" },
+      "speed up your combat" },
     // Makhleb
     { "gain power from killing",
       "harness Makhleb's destructive might",
@@ -571,7 +571,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     {
     case GOD_ZIN:
         snprintf(info, INFO_SIZE, "you donate money%s",
-                 verbose ? " (by praying at an altar)" : "");
+                 verbose ? " (by <w>p</w>raying at an altar)" : "");
 
         likes.push_back(info);
         break;
@@ -586,6 +586,11 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_NEMELEX_XOBEH:
         snprintf(info, INFO_SIZE, "you sacrifice items%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
+        likes.push_back(info);
+        break;
+
+    case GOD_ASHENZARI:
+        snprintf(info, INFO_SIZE, "you obtain runes of Zot");
         likes.push_back(info);
         break;
 
@@ -1143,29 +1148,29 @@ static bool _need_missile_gift(bool forced)
 
 void get_pure_deck_weights(int weights[])
 {
-    weights[0] = you.sacrifice_value[OBJ_ARMOUR] + 1;
-    weights[1] = you.sacrifice_value[OBJ_WEAPONS]
-                 + you.sacrifice_value[OBJ_STAVES]
-                 + you.sacrifice_value[OBJ_MISSILES] + 1;
-    weights[2] = you.sacrifice_value[OBJ_MISCELLANY]
-                 + you.sacrifice_value[OBJ_JEWELLERY]
-                 + you.sacrifice_value[OBJ_BOOKS];
-    weights[3] = you.sacrifice_value[OBJ_CORPSES] / 2;
-    weights[4] = you.sacrifice_value[OBJ_POTIONS]
-                 + you.sacrifice_value[OBJ_SCROLLS]
-                 + you.sacrifice_value[OBJ_WANDS]
-                 + you.sacrifice_value[OBJ_FOOD];
+    weights[NEM_GIFT_ESCAPE]      = you.sacrifice_value[OBJ_ARMOUR] + 1;
+    weights[NEM_GIFT_DESTRUCTION] = you.sacrifice_value[OBJ_WEAPONS]
+                                    + you.sacrifice_value[OBJ_STAVES]
+                                    + you.sacrifice_value[OBJ_MISSILES] + 1;
+    weights[NEM_GIFT_DUNGEONS]    = you.sacrifice_value[OBJ_MISCELLANY]
+                                    + you.sacrifice_value[OBJ_JEWELLERY]
+                                    + you.sacrifice_value[OBJ_BOOKS];
+    weights[NEM_GIFT_SUMMONING]   = you.sacrifice_value[OBJ_CORPSES] / 2;
+    weights[NEM_GIFT_WONDERS]     = you.sacrifice_value[OBJ_POTIONS]
+                                    + you.sacrifice_value[OBJ_SCROLLS]
+                                    + you.sacrifice_value[OBJ_WANDS]
+                                    + you.sacrifice_value[OBJ_FOOD];
 }
 
 static void _update_sacrifice_weights(int which)
 {
     switch (which)
     {
-    case 0:
+    case NEM_GIFT_ESCAPE:
         you.sacrifice_value[OBJ_ARMOUR] /= 5;
         you.sacrifice_value[OBJ_ARMOUR] *= 4;
         break;
-    case 1:
+    case NEM_GIFT_DESTRUCTION:
         you.sacrifice_value[OBJ_WEAPONS]  /= 5;
         you.sacrifice_value[OBJ_STAVES]   /= 5;
         you.sacrifice_value[OBJ_MISSILES] /= 5;
@@ -1173,18 +1178,18 @@ static void _update_sacrifice_weights(int which)
         you.sacrifice_value[OBJ_STAVES]   *= 4;
         you.sacrifice_value[OBJ_MISSILES] *= 4;
         break;
-    case 2:
+    case NEM_GIFT_DUNGEONS:
         you.sacrifice_value[OBJ_MISCELLANY] /= 5;
         you.sacrifice_value[OBJ_JEWELLERY]  /= 5;
         you.sacrifice_value[OBJ_BOOKS]      /= 5;
         you.sacrifice_value[OBJ_MISCELLANY] *= 4;
         you.sacrifice_value[OBJ_JEWELLERY]  *= 4;
         you.sacrifice_value[OBJ_BOOKS]      *= 4;
-    case 3:
+    case NEM_GIFT_SUMMONING:
         you.sacrifice_value[OBJ_CORPSES] /= 5;
         you.sacrifice_value[OBJ_CORPSES] *= 4;
         break;
-    case 4:
+    case NEM_GIFT_WONDERS:
         you.sacrifice_value[OBJ_POTIONS] /= 5;
         you.sacrifice_value[OBJ_SCROLLS] /= 5;
         you.sacrifice_value[OBJ_WANDS]   /= 5;
@@ -1204,8 +1209,9 @@ static void _show_pure_deck_chances()
 
     get_pure_deck_weights(weights);
 
-    float total = (float) (weights[0] + weights[1] + weights[2] + weights[3]
-                           + weights[4]);
+    float total = 0;
+    for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        total += (float) weights[i];
 
     mprf(MSGCH_DIAGNOSTICS, "Pure cards chances: "
          "escape %0.2f%%, destruction %0.2f%%, dungeons %0.2f%%,"
@@ -1217,6 +1223,19 @@ static void _show_pure_deck_chances()
          (float)weights[4] / total * 100.0);
 }
 #endif
+
+static misc_item_type _gift_type_to_deck(int gift)
+{
+    switch (gift)
+    {
+    case NEM_GIFT_ESCAPE:      return (MISC_DECK_OF_ESCAPE);
+    case NEM_GIFT_DESTRUCTION: return (MISC_DECK_OF_DESTRUCTION);
+    case NEM_GIFT_DUNGEONS:    return (MISC_DECK_OF_DUNGEONS);
+    case NEM_GIFT_SUMMONING:   return (MISC_DECK_OF_SUMMONING);
+    case NEM_GIFT_WONDERS:     return (MISC_DECK_OF_WONDERS);
+    }
+    die("invalid gift card type");
+}
 
 static bool _give_nemelex_gift(bool forced = false)
 {
@@ -1235,17 +1254,10 @@ static bool _give_nemelex_gift(bool forced = false)
         misc_item_type gift_type;
 
         // Make a pure deck.
-        const misc_item_type pure_decks[] = {
-            MISC_DECK_OF_ESCAPE,
-            MISC_DECK_OF_DESTRUCTION,
-            MISC_DECK_OF_DUNGEONS,
-            MISC_DECK_OF_SUMMONING,
-            MISC_DECK_OF_WONDERS
-        };
         int weights[5];
         get_pure_deck_weights(weights);
         const int choice = choose_random_weighted(weights, weights+5);
-        gift_type = pure_decks[choice];
+        gift_type = _gift_type_to_deck(choice);
 #if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
         _show_pure_deck_chances();
 #endif
@@ -1650,15 +1662,10 @@ static void _beogh_blessing_reinforcements()
     int how_many = random2(4) + 1;
 
     monster_type follower_type;
-    bool high_level;
     for (int i = 0; i < how_many; ++i)
     {
-        high_level = false;
         if (random2(you.experience_level) >= 9 && coinflip())
-        {
             follower_type = RANDOM_ELEMENT(high_xl_followers);
-            high_level = true;
-        }
         else
             follower_type = RANDOM_ELEMENT(followers);
 
@@ -2273,56 +2280,49 @@ bool do_god_gift(bool prayed_for, bool forced)
 
 std::string god_name(god_type which_god, bool long_name)
 {
+    if (which_god == GOD_JIYVA)
+        return (god_name_jiyva(long_name) +
+                (long_name? " the Shapeless" : ""));
+
+    if (long_name)
+    {
+        const std::string shortname = god_name(which_god, false);
+        const std::string longname =
+            getWeightedRandomisedDescription(shortname + " lastname");
+        return (longname.empty()? shortname : longname);
+    }
+
     switch (which_god)
     {
     case GOD_NO_GOD: return "No God";
     case GOD_RANDOM: return "random";
     case GOD_NAMELESS: return "nameless";
     case GOD_VIABLE: return "viable";
-    case GOD_ZIN:           return (long_name ? "Zin the Law-Giver" : "Zin");
+    case GOD_ZIN:           return "Zin";
     case GOD_SHINING_ONE:   return "The Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
     case GOD_YREDELEMNUL:
-        return (long_name ? "Yredelemnul the Dark" : "Yredelemnul");
+        return "Yredelemnul";
     case GOD_VEHUMET: return "Vehumet";
-    case GOD_OKAWARU: return (long_name ? "Warmaster Okawaru" : "Okawaru");
-    case GOD_MAKHLEB: return (long_name ? "Makhleb the Destroyer" : "Makhleb");
+    case GOD_OKAWARU: return "Okawaru";
+    case GOD_MAKHLEB: return "Makhleb";
     case GOD_SIF_MUNA:
-        return (long_name ? "Sif Muna the Loreminder" : "Sif Muna");
-    case GOD_TROG: return (long_name ? "Trog the Wrathful" : "Trog");
+        return "Sif Muna";
+    case GOD_TROG: return "Trog";
     case GOD_NEMELEX_XOBEH: return "Nemelex Xobeh";
-    case GOD_ELYVILON: return (long_name ? "Elyvilon the Healer" : "Elyvilon");
-    case GOD_LUGONU:   return (long_name ? "Lugonu the Unformed" : "Lugonu");
-    case GOD_BEOGH:    return (long_name ? "Beogh the Brigand" : "Beogh");
+    case GOD_ELYVILON: return "Elyvilon";
+    case GOD_LUGONU:   return "Lugonu";
+    case GOD_BEOGH:    return "Beogh";
     case GOD_JIYVA:
     {
         return (long_name ? god_name_jiyva(true) + " the Shapeless"
                           : god_name_jiyva(false));
     }
-    case GOD_FEDHAS:        return (long_name ? "Fedhas Madash" : "Fedhas");
-    case GOD_CHEIBRIADOS:  return (long_name ? "Cheibriados the Contemplative" : "Cheibriados");
-    case GOD_XOM:
-        if (!long_name)
-            return "Xom";
-        else
-        {
-            const char* xom_names[] = {
-                "Xom the Random", "Xom the Random Number God",
-                "Xom the Tricky", "Xom the Less-Predictable",
-                "Xom the Unpredictable", "Xom of Many Doors",
-                "Xom the Capricious", "Xom of Bloodstained Whimsey",
-                "Xom of Enforced Whimsey", "Xom of Bone-Dry Humour",
-                "Xom of Malevolent Giggling", "Xom of Malicious Giggling",
-                "Xom the Psychotic", "Xom of Gnomic Intent",
-                "Xom the Fickle", "Xom of Unknown Intention",
-                "The Xom-Meister", "Xom the Begetter of Turbulence",
-                "Xom the Begetter of Discontinuities"
-            };
-            return (one_chance_in(3) ? RANDOM_ELEMENT(xom_names)
-                    : "Xom of Chaos");
-        }
+    case GOD_FEDHAS:        return "Fedhas";
+    case GOD_CHEIBRIADOS: return "Cheibriados";
+    case GOD_XOM: return "Xom";
     case GOD_ASHENZARI:
-        return long_name ? "Ashenzari the Shackled" : "Ashenzari";
+        return "Ashenzari";
     case NUM_GODS: return "Buggy";
     }
     return ("");
@@ -2912,6 +2912,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_YREDELEMNUL:
+        you.duration[DUR_MIRROR_DAMAGE] = 0;
         if (query_da_counter(DACT_ALLY_YRED_SLAVE))
         {
             simple_god_message(" reclaims all of your granted undead slaves!",
@@ -2966,9 +2967,8 @@ void excommunication(god_type new_god)
         if (_need_water_walking())
             fall_into_a_pool(you.pos(), true, grd(you.pos()));
 
-        // Penance has to come before retribution to prevent "mollify"
         _inc_penance(old_god, 50);
-        divine_retribution(old_god);
+        // No instant retribution, the orcs could be farmed.
         break;
 
     case GOD_SIF_MUNA:
@@ -3164,7 +3164,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 
 bool god_hates_attacking_friend(god_type god, int species)
 {
-    if (mons_is_projectile(species))
+    if (mons_is_object(species))
         return (false);
     switch (god)
     {
@@ -3268,7 +3268,7 @@ bool player_can_join_god(god_type which_god)
 bool transformed_player_can_join_god(god_type which_god)
 {
     if ((is_good_god(which_god) || which_god == GOD_FEDHAS)
-        && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+        && you.form == TRAN_LICH)
     {
         return (false);
     }
@@ -3550,6 +3550,14 @@ bool god_hates_cannibalism(god_type god)
 
 bool god_hates_killing(god_type god, const monster* mon)
 {
+    // Must be at least a creature of sorts.  Smacking down an enchanted
+    // weapon or disrupting a lightning doesn't count.  Technically, this
+    // might raise a concern about necromancy but zombies traditionally
+    // count as creatures and that's the average person's (even if not ours)
+    // intuition.
+    if (mons_is_object(mon->type))
+        return false;
+
     bool retval = false;
     const mon_holy_type holiness = mon->holiness();
 
@@ -3792,7 +3800,7 @@ void handle_god_time()
             break;
 
         default:
-            DEBUGSTR("Bad god, no bishop!");
+            die("Bad god, no bishop!");
             return;
         }
 

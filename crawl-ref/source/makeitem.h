@@ -25,17 +25,12 @@ int create_item_named(std::string name, coord_def pos,
 
 int items(int allow_uniques, object_class_type force_class, int force_type,
            bool dont_place, int item_level, int item_race,
-           uint32_t mapmask = 0, int force_ego = 0, int agent = -1);
-
-// Create a corpse item for the given monster with the supplied spec.
-struct item_spec;
-enum monster_type;
-int item_corpse(monster_type monster, const item_spec &ispec);
+           uint32_t mapmask = 0, int force_ego = 0, int agent = -1,
+           bool mundane = false);
 
 void item_colour(item_def &item);
 void init_rod_mp(item_def &item, int ncharges = -1, int item_level = -1);
 
-int wand_max_charges(int subtype);
 jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
 armour_type get_random_body_armour_type(int level);

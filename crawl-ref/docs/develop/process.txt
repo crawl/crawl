@@ -23,7 +23,7 @@ inappropriate before the e-mail address is approved.
 There are also two other non-discussion mailing lists: crawl-ref-commits
 and crawl-ref-builds. crawl-ref-commits generates automatic summary
 messages of code changes, and can and should be used for reviewing commits.
-Commit messages also document development and decisions. People with new 
+Commit messages also document development and decisions. People with new
 commit access will be on moderation on c-r-c, but their messages will be
 approved and they will be added to the list when the administrator(s) get
 around to it.

@@ -74,7 +74,7 @@ MONS:    w:50 nothing / w:30 giant slug / w:30 agate snail
 MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          gila monster / komodo dragon
-MONS:    green rat / grey rat / orange rat / quokka / rat
+MONS:    green rat / porcupine / orange rat / quokka / rat
 MONS:    w:90 nothing / w:30 giant frog / blink frog / giant toad /\
          spiny frog
 MONS:    elephant
@@ -142,6 +142,63 @@ xxx??x111xxx?x
 xxxxxxxx??xxxx
 x?xxxx?xxxxx?x
 xxxxxxxxx?xxxx
+ENDMAP
+
+################################################################################
+# Grove Lair entry
+#
+NAME:   minmay_lair_entry_grove
+TAGS:   lair_entry
+ORIENT: float
+MONS:   plant / bush w:2 / fungus w:2
+MONS:   crocodile / gila monster / agate snail w:5 / giant slug w:5
+MONS:   yak
+MONS:   sheep
+MONS:   rat w:2 / porcupine / green rat / quokka w:1
+SUBST:  . = .:400 tt111123355
+SUBST:  ' = .:200 tt111123355
+SUBST:  3 : 334
+KFEAT:  O = enter_lair
+validate {{ return has_exit_from_glyph('O') }}
+MAP
+     .....
+   .........
+  ...........
+ .............
+ .....'''.....
+.....'''''.....
+....'''''''....
+....'''O'''....
+....'''''''....
+.....'''''.....
+ .....'''.....
+ .............
+  ...........
+   .........
+     .....
+ENDMAP
+
+################################################################################
+# Lava Lair entry
+#
+NAME:   minmay_lair_entry_lava
+TAGS:   lair_entry no_monster_gen
+ORIENT: float
+KMONS:  1 = lava worm / lava snake / lava fish
+KFEAT:  1 = l
+KMONS:  2 = fire drake
+SUBST:  L = l.
+KFEAT:  O = enter_lair
+MAP
+.........
+...1Lll..
+..lllllL.
+..ll2Ll1.
+.LlLOLll.
+.lllLlll.
+.ll1lll..
+..lllL...
+.........
 ENDMAP
 
 ################################################################################
@@ -230,7 +287,7 @@ ENDMAP
 NAME:   due_lair_maze_entry_diamond
 TAGS:   lair_entry
 MONS:   plant / fungus
-MONS:   w:100 giant bat / w:100 rat / w:30 green rat / gila monster /\
+MONS:   w:100 megabat / w:100 rat / w:30 green rat / gila monster /\
         yak / nothing
 ORIENT: float
 SUBST:  . = G:20 B:15 .
@@ -815,6 +872,57 @@ x?//.././///x??xl/x
 ENDMAP
 
 ################################################################################
+# Drake nest (minmay)
+#
+NAME:   minmay_lair_drake_nest
+DEPTH:  Lair:4-
+MONS:   fire drake / nothing w:20, plant w:20 / fungus w:1 / bush w:1
+SUBST:  . = ...2
+SUBST:  . = ...%
+MAP
+   ...
+  .....
+ .......
+...111...
+...111...
+...111...
+ .......
+  .....
+   ...
+ENDMAP
+
+################################################################################
+# Venomous thicket (minmay)
+#
+NAME:   minmay_lair_venomous_thicket
+TAGS:   ruin_lair
+DEPTH:  Lair
+ORIENT: north
+MONS:   black mamba / spiny frog / wolf spider / spiny worm
+MONS:   gila monster / komodo dragon / yellow wasp
+MONS:   giant mite / giant centipede
+MONS:   plant / fungus w:2 / bush w:1
+SUBST:  4 = 444. t:2, . = ...4 t:2
+SUBST:  1 = 1., 2 = 2., 3 = 3.
+MAP
+xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx
+xxxxxxx4444xxxxxxx
+xxxxx4441..34xxxxx
+xxxx444.3.1.44xxxx
+xxxx4.31.3.3.4xxxx
+xxx4.2.3444.144xxx
+xxx.3.444444324xxx
+xxx2..4444444.4xxx
+xxx43.444444434xxx
+xxx442.444444.4xxx
+xx444..344443..4xx
+xx44..........3.xx
+..3..3....3.......
+ENDMAP
+
+################################################################################
 #       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
@@ -933,6 +1041,155 @@ Xx%%%xx1x.
 Xx|%%xxxx
 XxxxxxXXX
 XXXXXXX
+ENDMAP
+
+################################################################################
+# Oklob-based vaults.
+#
+NAME:   minmay_lair_oklob_chamber_tiny
+TAGS:   luniq_oklob uniq_oklobchamber no_monster_gen
+DEPTH:  Lair
+ORIENT: north
+WEIGHT: 4
+MONS:   plant, oklob plant
+NSUBST: ? = 1:2 / *:?
+SUBST:  ? = ....x11$$%%*|
+MAP
+xxxx
+x??x
+x??x
+x11x
+....
+ ..
+ENDMAP
+
+NAME:   minmay_lair_oklob_chamber_small
+TAGS:   luniq_oklob uniq_oklobchamber no_monster_gen
+DEPTH:  Lair
+ORIENT: north
+WEIGHT: 3
+MONS:   plant, oklob plant
+NSUBST: ? = 2:2 / *:?
+SUBST:  ? = ....x11$$%%*|
+MAP
+xxxxx
+x???x
+x???x
+x???x
+x111x
+.....
+ ...
+ENDMAP
+
+NAME:   minmay_lair_oklob_chamber_medium
+TAGS:   luniq_oklob uniq_oklobchamber no_monster_gen
+DEPTH:  Lair
+ORIENT: north
+WEIGHT: 2
+MONS:   plant, oklob plant
+NSUBST: ? = 3:2 / *:?
+SUBST:  ? = ....x11$$%%*|
+MAP
+xxxxxx
+x????x
+x????x
+x????x
+x????x
+x1111x
+......
+ ....
+ENDMAP
+
+NAME:   minmay_lair_oklob_chamber_large
+TAGS:   luniq_oklob uniq_oklobchamber no_monster_gen
+DEPTH:  Lair
+ORIENT: north
+WEIGHT: 1
+MONS:   plant, oklob plant
+NSUBST: ? = 4:2 / *:?
+SUBST:  ? = ....x11$$%%*|
+MAP
+xxxxxxx
+x?????x
+x?????x
+x?????x
+x?????x
+x?????x
+x11111x
+.......
+ .....
+ENDMAP
+
+NAME:   minmay_lair_oklob_bushes_tiny
+TAGS:   luniq_oklob uniq_oklobbushes
+DEPTH:  Lair
+WEIGHT: 4
+MONS:   oklob plant, bush
+MAP
+ ...
+.222.
+.212.
+.222.
+ ...
+ENDMAP
+
+NAME:   minmay_lair_oklob_bushes_small
+TAGS:   luniq_oklob uniq_oklobbushes
+DEPTH:  Lair
+WEIGHT: 3
+MONS:   oklob plant, bush
+MAP
+  ...
+ .....
+..222..
+..212..
+..222..
+ .....
+  ...
+ENDMAP
+
+NAME:   minmay_lair_oklob_bushes_medium
+TAGS:   luniq_oklob uniq_oklobbushes
+DEPTH:  Lair
+WEIGHT: 2
+MONS:   oklob plant, bush
+MAP
+    ...
+  .......
+ .........
+ .........
+....222....
+....212....
+....222....
+ .........
+ .........
+  .......
+    ...
+ENDMAP
+
+NAME:   minmay_lair_oklob_bushes_large
+TAGS:   luniq_oklob uniq_oklobbushes
+DEPTH:  Lair
+WEIGHT: 1
+MONS:   oklob plant, bush
+MAP
+       ...
+    .........
+   ...........
+  .............
+ ...............
+ ...............
+ ...............
+.......222.......
+.......212.......
+.......222.......
+ ...............
+ ...............
+ ...............
+  .............
+   ...........
+    .........
+       ...
 ENDMAP
 
 ################################################################################
@@ -1188,7 +1445,7 @@ PLACE:  Lair:$
 ORIENT: float
 MONS:   giant frog / giant toad / spiny frog
 MONS:   blink frog
-MONS:   giant mosquito w:40 / giant blowfly
+MONS:   vampire mosquito
 MONS:   plant
 SUBST:  p = 44W2
 SUBST:  w = W:40 w:10 1:2 3:1 4:5
@@ -1223,4 +1480,45 @@ MAP
   .........wwwwww.........
     ...................
         ...........
+ENDMAP
+
+################################################################################
+# See https://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:branch:forest.
+#
+NAME:   minmay_lair_end_enchanted_forest
+PLACE:  Lair:$
+ORIENT: northwest
+MONS:   black bear / bear / grizzly bear, wolf, spriggan
+MONS:   spriggan rider / spriggan druid
+SUBST:  T : T:20 .:1 t:1
+SUBST:  T = t.
+SUBST:  2 = 2., 3 = 3., 4 = 4., . = .:190 1
+MAP
+ttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttT.I.Ttttttt....ttttttttt.....ttTTtttttTT
+ttttttttt3....TTT....ttT...TTT....ttT.2222TTtt..@
+tttttttTT.3.3....TTttttttT..3...TttttttTT222..ttT
+tttttT.....4..3TtttttttttT3...3ttttttttt22ttttttt
+ttttt..ttT3.3.TtttttttttT....3.tttttttt..tttttttT
+tttt.ttttttttttttttttttt....tt..TttT...TT.tttttt
+tttT2ttttttttttttttttT...TTttttt.....ttttT.Tttt
+ttT22tttT.4TtttttttT....tttttttttTTttttttt..ttT
+tt22ttt..3..tttttt..TTT.ttttttttttttttttttt.tt
+tt22tttT..3.ttttT.Tttttt.22tttttttttttttttT.tt
+tt2tttttt..TtttT2TtttttttT22TttttttttttttT.ttt
+tt2ttttttt.TtTT22tttttttttT222ttttttttttt.tttt
+tt..tttttTT..222Ttttttttttttt22ttTTTTtt..TtttT
+ttT.tttt.....TTT222TttttttttttT...TT...TttttT
+ttt..tt...TTttttttt..TTttttttttt..3...Tttttt
+tttT....TtttttttttttT@   TTttttt34.3.ttttttT
+ttttT..tttttttttttttT      TTttttT..tttttT
+ttttT..TtttttttttttT          ttttttttt
+ttttt...ttttttttttT            ttttttt
+tttttT..TttttttT                 TTT
+ttttttt.@ttT
+ttttttT
+tttT
+tT
+t
 ENDMAP

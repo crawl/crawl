@@ -1,0 +1,332 @@
+##############################################
+# Tutorial map 4: Magic and Spellcasting     #
+##############################################
+#
+# TODO:
+#  * trigger when trying to walk into a cloud
+#  * trigger on "might hit yourself" prompt
+#
+{{
+require("clua/tutorial.lua")
+
+tutorial_msg4 = {}
+
+function tutorial_msg4.start ()
+    tutorial_intro("In this lesson you're going to learn how to learn and cast spells.")
+    crawl.tutorial_hint("HINT_NEW_LEVEL")
+end
+
+function tutorial_msg4.train_spellcasting ()
+    local text = "You cannot cast spells yet as you don't have the Spellcasting skill yet. "
+                 .. "Read some scrolls (with "
+                 .. tutorial_get_cmd("CMD_READ")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>"
+    end
+    text = text .. ") to train it to level 1."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.spellbook ()
+    local text = "You can memorise a spell from carried spellbooks with "
+                 .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on the memorisation tab "
+                    .. "and selecting the spell tile"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.spellcasting ()
+    local text = "You can cast spells with "
+                 .. tutorial_get_cmd("CMD_CAST_SPELL")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on the spell tile"
+    end
+    text = text .. ". Once you are out of magic points, retreat and rest with "
+                .. tutorial_get_cmd("CMD_REST") .. " to regain them."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.ring_power ()
+    local text = "Put on this ring with "
+                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</click>"
+    end
+    text = text .. ", and then rest up to your new full potential."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.undead ()
+    local text = "Other than for other monsters, with undead it is "
+                 .. "impossible to tell how wounded they are."
+
+    if crawl.is_tiles() then
+        text = text .. "\nIncidentally, you can also cast spells by pressing "
+                    .. "<white>Ctrl</white> + <white>leftclick</white> on the monster."
+    end
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.spell_success ()
+    return tutorial_message("To check your spell proficiency, press "
+                            .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
+                            .. ". Compare your spell success rates before "
+                            .. "and after putting on this ring.")
+end
+
+function tutorial_msg4.evaporate ()
+    return tutorial_message("Bad potions can be launched at monsters by way "
+                            .. "of the Evaporate spell. When that spell is "
+                            .. "memorised, examining a potion gives a hint of "
+                            .. "the clouds it can produce.\n"
+                            .. "Buy the potions to make use of them!")
+end
+
+function tutorial_msg4.aiming_clouds ()
+    local text = "When casting Evaporate (with "
+                 .. tutorial_get_cmd("CMD_CAST_SPELL")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on the spell tile"
+    end
+
+    text = text .. "), you need to first select a potion to vaporise and "
+                .. "then select a target for the resulting clouds. For the "
+                .. "latter, you can directly aim at monsters, but you also "
+                .. "can target any other square within both line of sight "
+                .. "and spell range.\n"
+                .. "Note that the spell will expand into a cloud on the "
+                .. "first monster in its path."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.spell_hunger ()
+    return tutorial_message("Spellcasting can make really hungry. Spell hunger "
+                            .. "is higher for more difficult spells and can be "
+                            .. "reduced by high Intelligence and by training the "
+                            .. "Spellcasting skill.")
+end
+
+function tutorial_msg4.forget_spell ()
+        local text = "You can't memorise any new spells yet. You can gain new spell "
+                 .. "slots by gaining an experience level or by raising your "
+                 .. "Spellcasting skill. If you don't want to wait, you can also "
+                 .. "<w>forget a spell</w> to make place for a new one. "
+                 .. "To do this, read a spellbook with "
+                 .. tutorial_get_cmd("CMD_READ")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>rightclicking</click> on it"
+    end
+
+    text = text .. ", and select the spell you want to forget. In the process, "
+                .. "the book will be destroyed, so you'll need other spellbooks "
+                .. "to learn new spells."
+
+    crawl.mesclr(true)
+    crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg4.memorise2 ()
+    local text = "Again, memorise a new spell with "
+                 .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on the memorisation tab "
+                    .. "and selecting the spell tile"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.order_allies ()
+    return tutorial_message("Try to let your allies kill that hobgoblin! If necessary, "
+                                                        .. "you can order them about with "
+                            .. tutorial_get_cmd("CMD_SHOUT")
+                                                        .. ".")
+end
+
+function tutorial_msg4.heavy_armour ()
+        local text = "Heavy armour really hampers spellcasting. Try putting on that "
+                                 .. "mail and shield (with "
+                 .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on them)"
+    end
+
+        text = text .. ", and compare your spellcasting success rates with "
+                                .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. ". "
+                                .. "You can take armour off again with "
+                 .. tutorial_get_cmd("CMD_REMOVE_ARMOUR")
+
+    if crawl.is_tiles() then
+        text = text .. " or, again, via <white>mouseclick</white>"
+    end
+        text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.tutorial_end ()
+    return tutorial_message("Well done! To exit the tutorial, simply go down these stairs.")
+end
+
+function tutorial_msg4.exit ()
+    -- A single screen recapping all commands.
+
+    local text = "<yellow>Spellcasting commands</yellow>\n"
+                 .. "  " .. tutorial_get_cmd("CMD_MEMORISE_SPELL") .. "  learn a new spell\n"
+                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. "  check spell proficiency\n"
+                 .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
+                 .. "  " .. tutorial_get_cmd("CMD_READ") .. "  read a book, for descriptions or to forget a spell\n"
+                 .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest to regain magic points\n"
+                 .. "  " .. tutorial_get_cmd("CMD_SHOUT") .. "  order allies\n"
+                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
+                 .. "\n<yellow>Other commands</yellow>\n"
+                 .. "  " .. tutorial_get_cmd("CMD_REMOVE_ARMOUR") .. "  take off armour\n"
+    text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
+
+    return crawl.endgame(text)
+end
+}}
+
+NAME:    tutorial_lesson4
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_start
+DESC:    "Lesson 4: Magic and Spellcasting"
+BFLAGS:  islanded
+ORIENT:  encompass
+KFEAT:   ABCDE = .
+KFEAT:   S = distillery shop count:8 ; \
+         potion of slowing | w:20 potion of confusion | potion of poison | potion of paralysis
+COLOUR:  ABCDdefh = blue
+FTILE:   ABCDdefh = tutorial_pad
+KITEM:   A = scroll of fog q:4, scroll of random uselessness q:4, scroll of curse armour q:4, \
+         scroll of remove curse q:4
+ITEM:    randbook numspells:2 spells:magic_dart|evaporate title:Introduction_to_Spellcasting owner:player
+ITEM:    ring of magical power not_cursed
+ITEM:    ring of wizardry not_cursed
+ITEM:    gold q:20
+ITEM:    bread ration
+MONS:    training dummy ; stone q:20
+MONS:    megabat skeleton, goblin skeleton
+MONS:    rat, goblin
+MARKER:  A = lua:tutorial_msg4.train_spellcasting()
+MARKER:  d = lua:tutorial_msg4.spellbook()
+MARKER:  B = lua:tutorial_msg4.spellcasting()
+MARKER:  e = lua:tutorial_msg4.ring_power()
+MARKER:  C = lua:tutorial_msg4.undead()
+MARKER:  f = lua:tutorial_msg4.spell_success()
+MARKER:  S = lua:tutorial_msg4.evaporate()
+MARKER:  D = lua:tutorial_msg4.aiming_clouds()
+MARKER:  h = lua:tutorial_msg4.spell_hunger()
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson4", \
+                                 onclimb = "tutorial_msg4.exit" }
+epilogue{{
+  tutorial_msg4.start()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.d.........A.......{..xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxx...x.2.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxx.....xxx..f.xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxBxxxxxxxxxxx.2..xxxxxxxx.....xxxxxxxxxx
+xxxxxxxxxxxxx..wwwxxxxxxxx....xxxxxxxxxxxxx.3...xxxxx
+xxxxxxxxxxxxx..ww1xxxxxxx.xxxxxxxxxxxxxxxx.......xxxx
+xxxxxxxxxxxxx..wwwxxxxx..xxxxxxxxxxxxxxxxx.2...xxxxxx
+xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxx.gxxxxxxx
+xxxxxxxxxxxxx......e.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.S.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx}xxxxxxx4...xxxDxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx).....5h...4...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx]xxxxxx..4...xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##########################################################
+# Level 2: Forgetting spells, allies.
+##########################################################
+NAME:    tutorial_lesson4_level2
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson4
+PLACE:   D:2
+BFLAGS:  islanded
+ORIENT:  encompass
+KFEAT:   T = fountain_blood
+KFEAT:   A = +
+KFEAT:   B = .
+COLOUR:  dB = blue
+FTILE:   dB = tutorial_pad
+ITEM:    randbook numspells:1 spells:summon_small_mammals title:Simple_Steps_to_Summoning owner:player
+MONS:    hobgoblin ; whip ego:none . shield not_cursed . ring mail race:none not_cursed
+MONS:    rat
+MONS:    goblin
+MARKER:  d = lua:tutorial_msg4.memorise2()
+MARKER:  A = lua:tutorial_msg4.order_allies()
+MARKER:  B = lua:tutorial_msg4.heavy_armour()
+MARKER:  } = lua:tutorial_msg4.tutorial_end()
+MARKER:  ) = lua:tutorial_msg4.tutorial_end()
+MARKER:  ] = lua:tutorial_msg4.tutorial_end()
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson4", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg4.exit" }
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson4", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg4.exit" }
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson4", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg4.exit" }
+epilogue{{
+  tutorial_msg4.forget_spell()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.....xxxx.T..xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.xxxxx.xx.....[xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxx.+..d..{xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxAxxxxxxxxx.....(xxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxx.T..xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxBxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxx....3.]xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxx..2.....3xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx......+......2.)xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx..2....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx...}xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

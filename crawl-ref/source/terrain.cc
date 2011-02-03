@@ -66,6 +66,21 @@ int count_neighbours_with_func (const coord_def& c, bool (*checker)(dungeon_feat
     return count;
 }
 
+bool feat_is_test (dungeon_feature_type feat, bool (*checker)(dungeon_feature_type))
+{
+    return (checker(feat));
+}
+
+bool feat_is_test (const coord_def& c, bool (*checker)(dungeon_feature_type))
+{
+    return (checker(grd(c)));
+}
+
+bool feat_is_malign_gateway_suitable (dungeon_feature_type feat)
+{
+    return (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER);
+}
+
 bool feat_is_wall(dungeon_feature_type feat)
 {
     return (feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL);
@@ -400,6 +415,7 @@ bool feat_is_water(dungeon_feature_type feat)
     return (feat == DNGN_SHALLOW_WATER
             || feat == DNGN_DEEP_WATER
             || feat == DNGN_OPEN_SEA
+            || feat == DNGN_SWAMP_TREE
             || feat == DNGN_WATER_RESERVED);
 }
 
@@ -445,6 +461,11 @@ bool feat_is_branch_stairs(dungeon_feature_type feat)
 {
     return ((feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
             || (feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS));
+}
+
+bool feat_is_tree(dungeon_feature_type feat)
+{
+    return feat == DNGN_TREE || feat == DNGN_SWAMP_TREE;
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
@@ -817,6 +838,17 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         if (monster* mon = monster_at(src))
         {
             mon->moveto(dst);
+            if (mon->type == MONS_ELDRITCH_TENTACLE)
+            {
+                if (mon->props.exists("base_position"))
+                {
+                    coord_def delta = dst - src;
+                    coord_def base_pos = mon->props["base_position"].get_coord();
+                    base_pos += delta;
+                    mon->props["base_position"].get_coord() = base_pos;
+                }
+
+            }
             mgrd(dst) = mgrd(src);
             mgrd(src) = NON_MONSTER;
         }
@@ -833,6 +865,11 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     // Move terrain colours and properties.
     env.pgrid(dst) = env.pgrid(src);
     env.grid_colours(dst) = env.grid_colours(src);
+#ifdef USE_TILE
+    env.tile_bk_fg(dst) = env.tile_bk_fg(src);
+    env.tile_bk_bg(dst) = env.tile_bk_bg(src);
+    env.tile_flv(dst) = env.tile_flv(src);
+#endif
 
     // Move vault masks.
     env.level_map_mask(dst) = env.level_map_mask(src);
@@ -862,7 +899,6 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
     const dungeon_feature_type feat = grd(pos);
 
     int item = igrd(pos);
-    bool did_destroy = false;
     while (item != NON_ITEM)
     {
         const int curr = item;
@@ -879,7 +915,6 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
             feat_destroys_item(feat, mitm[curr], true);
             item_was_destroyed(mitm[curr]);
             destroy_item(curr);
-            did_destroy = true;
         }
     }
 }
@@ -1299,12 +1334,11 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     bool escape = false;
     coord_def empty;
 
-    if (you.species == SP_MERFOLK && terrain == DNGN_DEEP_WATER
-        && (!transform_can_swim() || !you.fishtail)
-        && !you.transform_uncancellable)
+    if (species_likes_water() && terrain == DNGN_DEEP_WATER
+        && !form_likes_water() && !you.transform_uncancellable)
     {
         // These can happen when we enter deep water directly -- bwr
-        merfolk_start_swimming();
+        emergency_untransform();
         return (false);
     }
 
@@ -1364,7 +1398,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     }
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        if (you.form == TRAN_STATUE)
             mpr("You sink like a stone!");
         else
             mpr("You try to escape, but your burden drags you down!");
@@ -1512,13 +1546,13 @@ const char *dngn_feature_names[] =
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"open_sea", "tree", "orcish_idol", "", "", "",
+"open_sea", "tree", "orcish_idol", "swamp_tree", "", "",
 "granite_statue", "statue_reserved_1", "statue_reserved_2",
 "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
 "deep_water", "", "", "shallow_water", "water_stuck", "floor",
-"floor_special", "floor_reserved", "exit_hell", "enter_hell",
+"", "floor_reserved", "exit_hell", "enter_hell",
 "open_door", "", "", "trap_mechanical", "trap_magical", "trap_natural",
 "undiscovered_trap", "", "enter_shop", "enter_labyrinth",
 "stone_stairs_down_i", "stone_stairs_down_ii",
@@ -1527,7 +1561,7 @@ const char *dngn_feature_names[] =
 "", "enter_dis", "enter_gehenna", "enter_cocytus",
 "enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
 "enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"", "", "", "builder_special_wall", "builder_special_floor", "",
+"", "", "", "", "", "",
 "", "", "enter_dwarven_hall", "enter_orcish_mines", "enter_hive", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
@@ -1598,4 +1632,19 @@ const char *dungeon_feature_name(dungeon_feature_type rfeat)
         return (NULL);
 
     return dngn_feature_names[feat];
+}
+
+void nuke_wall(const coord_def& p)
+{
+    if (!in_bounds(p))
+        return;
+
+    // Blood does not transfer onto floor.
+    if (is_bloodcovered(p))
+        env.pgrid(p) &= ~(FPROP_BLOODY);
+
+    remove_mold(p);
+
+    grd(p) = (grd(p) == DNGN_SWAMP_TREE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
+    set_terrain_changed(p);
 }

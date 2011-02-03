@@ -27,11 +27,12 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-util.h"
+#include "orb.h"
 #include "player.h"
 #include "random.h"
+#include "shout.h"
 #include "spl-other.h"
 #include "spl-util.h"
-#include "stairs.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -57,7 +58,8 @@ static bool _abyss_blocks_teleport(bool cblink)
 // If wizard_blink is set, all restriction are ignored (except for
 // a monster being at the target spot), and the player gains no
 // contamination.
-int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
+int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
+          std::string *pre_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -73,17 +75,29 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
     // yes, there is a logic to this ordering {dlb}:
     if (item_blocks_teleport(true, true) && !wizard_blink)
+    {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         canned_msg(MSG_STRANGE_STASIS);
+    }
     else if (you.level_type == LEVEL_ABYSS
              && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
     {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         mpr("The power of the Abyss keeps you in your place!");
     }
     else if (you.confused() && !wizard_blink)
+    {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         random_blink(false);
+    }
     else if (!allow_control_teleport(true) && !wizard_blink)
     {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         mpr("A powerful magic interferes with your control of the blink.");
         if (high_level_controlled_blink)
             return (cast_semi_controlled_blink(pow));
@@ -160,6 +174,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             }
         }
 
+        if (pre_msg)
+            mpr(pre_msg->c_str());
+
         // Allow wizard blink to send player into walls, in case the
         // user wants to alter that grid to something else.
         if (wizard_blink && feat_is_solid(grd(beam.target)))
@@ -179,7 +196,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         else
         {
             // Leave a purple cloud.
-            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
             move_player_to_grid(beam.target, false, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -237,7 +254,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         success = true;
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
         if (you.level_type == LEVEL_ABYSS)
         {
@@ -509,7 +526,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             else
             {
                 // Leave a purple cloud.
-                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
                 // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true);
@@ -567,7 +584,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         }
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
         move_player_to_grid(newpos, false, true);
     }
@@ -634,7 +651,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     // If we got this far, we're teleporting the player.
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
     bool large_change = you.see_cell(where);
 
@@ -666,89 +683,6 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     }
 }
 
-// Restricted to main dungeon for historical reasons, probably for
-// balance: otherwise you have an instant teleport from anywhere.
-int portal()
-{
-    // Disabled completely in zotdef
-    if (!player_in_branch(BRANCH_MAIN_DUNGEON)
-        || crawl_state.game_is_zotdef())
-    {
-        mpr("This spell doesn't work here.");
-        return (-1);
-    }
-    else if (grd(you.pos()) != DNGN_FLOOR)
-    {
-        mpr("You must find a clear area in which to cast this spell.");
-        return (-1);
-    }
-    else if (you.char_direction == GDT_ASCENDING)
-    {
-        // Be evil if you've got the Orb.
-        mpr("An empty arch forms before you, then disappears.");
-        return (1);
-    }
-
-    mpr("Which direction ('<<' for up, '>' for down, 'x' to quit)? ",
-        MSGCH_PROMPT);
-
-    level_id lid = level_id::current();
-    const int brdepth = branches[lid.branch].depth;
-
-    int dir_sign = 0;
-    while (dir_sign == 0)
-    {
-        const int keyin = getch();
-        switch (keyin)
-        {
-        case '<':
-            if (lid.depth == 1)
-                mpr("You can't go any further upwards with this spell.");
-            else
-                dir_sign = -1;
-            break;
-
-        case '>':
-            if (lid.depth == brdepth)
-                mpr("You can't go any further downwards with this spell.");
-            else
-                dir_sign = 1;
-            break;
-
-        case 'x':
-            canned_msg(MSG_OK);
-            return (-1);
-
-        default:
-            break;
-        }
-    }
-
-    mpr("How many levels (1-9, 'x' to quit)? ", MSGCH_PROMPT);
-
-    int amount = 0;
-    while (amount == 0)
-    {
-        const int keyin = getch();
-        if (isadigit(keyin))
-            amount = (keyin - '0') * dir_sign;
-        else if (keyin == 'x')
-        {
-            canned_msg(MSG_OK);
-            return (-1);
-        }
-    }
-
-    mpr("You fall through a mystic portal, and materialise at the "
-        "foot of a staircase.");
-    more();
-
-    lid.depth = std::max(1, std::min(brdepth, lid.depth + amount));
-    down_stairs(DNGN_STONE_STAIRS_DOWN_I, EC_UNKNOWN, &lid);
-
-    return (1);
-}
-
 bool cast_portal_projectile(int pow)
 {
     dist target;
@@ -778,8 +712,10 @@ bool cast_portal_projectile(int pow)
     return (true);
 }
 
-bool cast_apportation(int pow, const coord_def& where)
+bool cast_apportation(int pow, bolt& beam)
 {
+    const coord_def where = beam.target;
+
     if (you.trans_wall_blocking(where))
     {
         mpr("Something is in the way.");
@@ -842,15 +778,41 @@ bool cast_apportation(int pow, const coord_def& where)
 
     if (max_units <= 0)
     {
-        mpr("The mass is resisting your pull.");
-        return (true);
+        if (item_is_orb(item))
+        {
+            orb_pickup_noise(where, 30);
+            return (true);
+        }
+        else
+        {
+            mpr("The mass is resisting your pull.");
+            return (true);
+        }
     }
 
     // We need to modify the item *before* we move it, because
     // move_top_item() might change the location, or merge
     // with something at our position.
-    mprf("Yoink! You pull the item%s to yourself.",
+    mprf("Yoink! You pull the item%s towards yourself.",
          (item.quantity > 1) ? "s" : "");
+
+    if (item_is_orb(item))
+    {
+        fake_noisy(30, where);
+
+        // There's also a 1-in-6 flat chance of apport failing.
+        if (one_chance_in(6))
+        {
+            orb_pickup_noise(where, 30, "The orb shrieks and becomes a dead weight against your magic!",
+                             "The orb lets out a furious burst of light and becomes a dead weight against your magic!");
+            return (true);
+        }
+        else // Otherwise it's just a noisy little shiny thing
+        {
+            orb_pickup_noise(where, 30, "The orb shrieks as your magic touches it!",
+                             "The orb lets out a furious burst of light as your magic touches it!");
+        }
+    }
 
     if (max_units < item.quantity)
     {
@@ -866,6 +828,38 @@ bool cast_apportation(int pow, const coord_def& where)
         remove_item_stationary(item);
         if (monster* mons = monster_at(where))
             mons->del_ench(ENCH_HELD, true);
+    }
+
+    if (item_is_orb(item))
+    {
+        // The orb drags its heels.
+        beam.is_tracer = true;
+        beam.aimed_at_spot = true;
+        beam.fire();
+
+        // Pop the orb's location off the end
+        beam.path_taken.pop_back();
+
+        // The actual number of squares it needs to traverse to get to you.
+        unsigned int dist = beam.path_taken.size();
+
+        // The maximum number of squares the orb will actually move, always
+        // at least one square.
+        unsigned int max_dist = std::max((pow / 10) - 1, 1);
+
+        dprf("Orb apport dist=%d, max_dist=%d", dist, max_dist);
+
+        if (max_dist <= dist)
+        {
+            coord_def new_spot = beam.path_taken[beam.path_taken.size()-max_dist];
+
+            dprf("Orb apport: new spot is %d/%d", new_spot.x, new_spot.y);
+
+            move_top_item(where, new_spot);
+            origin_set(new_spot);
+            return (true);
+        }
+        // if power is high enough it'll just come straight to you
     }
 
     // Actually move the item.
@@ -924,13 +918,13 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     }
 
     if (!found)
-        return(0);
+        return 0;
 
     coord_def origin = you.pos();
     move_player_to_grid(target, false, true);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
     return (1);
 }
@@ -986,8 +980,7 @@ bool cast_golubrias_passage(const coord_def& where)
     {
         // lose a turn
         mpr("A powerful magic interferes with the creation of the passage.");
-        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3),
-                    KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3), &you);
         return true;
     }
 

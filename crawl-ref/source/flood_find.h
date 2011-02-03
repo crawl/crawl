@@ -13,7 +13,8 @@ template <typename fgrd, typename bound_check>
 class flood_find : public travel_pathfind
 {
 public:
-    flood_find(const fgrd &f, const bound_check &bc);
+    flood_find(const fgrd &f, const bound_check &bc, bool avoid_vaults = false,
+                                                bool _check_traversable = true);
 
     void add_feat(int feat);
     void add_point(const coord_def &pos);
@@ -27,7 +28,7 @@ public:
 protected:
     bool path_flood(const coord_def &c, const coord_def &dc);
 protected:
-    bool point_hunt, want_exit;
+    bool point_hunt, want_exit, no_vault, check_traversable;
     bool needed_features[NUM_FEATURES];
     std::vector<coord_def> needed_points;
     bool left_vault;
@@ -38,8 +39,10 @@ protected:
 };
 
 template <typename fgrd, typename bound_check>
-flood_find<fgrd, bound_check>::flood_find(const fgrd &f, const bound_check &bc)
+flood_find<fgrd, bound_check>::flood_find(const fgrd &f, const bound_check &bc,
+                                     bool avoid_vaults, bool _check_traversable)
     : travel_pathfind(), point_hunt(false), want_exit(false),
+      no_vault(avoid_vaults), check_traversable(_check_traversable),
       needed_features(), needed_points(), left_vault(true), vaults(NULL),
       fgrid(f), bcheck(bc)
 {
@@ -118,6 +121,9 @@ bool flood_find<fgrd, bound_check>::path_flood(
         return (false);
     }
 
+    if (no_vault && (*vaults)[dc.x][dc.y])
+        return false;
+
     if (!needed_points.empty())
     {
         std::vector<coord_def>::iterator i =
@@ -150,7 +156,7 @@ bool flood_find<fgrd, bound_check>::path_flood(
         return (true);
     }
 
-    if (!feat_is_traversable(feat)
+    if (check_traversable && !feat_is_traversable(feat)
         && feat != DNGN_SECRET_DOOR
         && !feat_is_trap(feat))
     {

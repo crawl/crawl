@@ -31,7 +31,7 @@
 struct item_wrapper
 {
     item_def *item;
-    long turn;
+    int turn;
 
     bool valid() const { return turn == you.num_turns; }
 };
@@ -172,7 +172,7 @@ static int l_item_do_remove(lua_State *ls)
 
     bool result = false;
     if (eq == EQ_WEAPON)
-        result = wield_weapon(true, -1);
+        result = wield_weapon(true, SLOT_BARE_HANDS);
     else if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP)
         result = remove_ring(item->link);
     else
@@ -371,7 +371,7 @@ static std::string _item_name(lua_State *ls, item_def* item)
         ndesc = description_type_by_name(lua_tostring(ls, 1));
     else if (lua_isnumber(ls, 1))
         ndesc = static_cast<description_level_type>(luaL_checkint(ls, 1));
-    bool terse = lua_toboolean(ls, 2);
+    const bool terse = lua_toboolean(ls, 2);
     return (item->name(ndesc, terse));
 }
 
@@ -380,10 +380,7 @@ static int l_item_do_name(lua_State *ls)
     UDATA_ITEM(item);
 
     if (item)
-    {
-        std::string name = _item_name(ls, item);
-        lua_pushstring(ls, name.c_str());
-    }
+        lua_pushstring(ls, _item_name(ls, item).c_str());
     else
         lua_pushnil(ls);
     return (1);
@@ -640,9 +637,9 @@ static int l_item_do_inc_quantity (lua_State *ls)
 
 IDEFN(inc_quantity, do_inc_quantity)
 
-unsigned long str_to_item_status_flags (std::string flag)
+iflags_t str_to_item_status_flags (std::string flag)
 {
-    unsigned long flags = 0;
+    iflags_t flags = 0;
     if (flag.find("curse") != std::string::npos)
         flags &= ISFLAG_KNOW_CURSE;
     // type is dealt with using item_type_known.
@@ -679,7 +676,7 @@ static int l_item_do_identified (lua_State *ls)
         else
         {
             const bool check_type = strip_tag(flags, "type");
-            const unsigned long item_flags = str_to_item_status_flags(flags);
+            iflags_t item_flags = str_to_item_status_flags(flags);
             known_status = ((item_flags || check_type)
                             && (!item_flags || item_ident(*item, item_flags))
                             && (!check_type || item_type_known(*item)));

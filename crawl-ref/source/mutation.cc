@@ -30,6 +30,7 @@
 #include "env.h"
 #include "format.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "itemprop.h"
 #include "macro.h"
 #include "menu.h"
@@ -716,8 +717,7 @@ static bool _mut_matches_class(mutation_type mutclass, const mutation_def& mdef)
     case RANDOM_GOOD_MUTATION:
         return (!mdef.bad);
     default:
-        ASSERT(false);
-        return (false);
+        die("invalid mutation class: %d", mutclass);
     }
 }
 
@@ -760,78 +760,62 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
 static int _handle_conflicting_mutations(mutation_type mutation,
                                          bool override)
 {
-    if (override)
-    {
-        // These are mutations which should be cleared away if forced.
-        const mutation_type override_conflict[][2] = {
-            { MUT_REGENERATION, MUT_SLOW_METABOLISM },
-            { MUT_REGENERATION, MUT_SLOW_HEALING    },
-            { MUT_ACUTE_VISION, MUT_BLURRY_VISION   },
-            { MUT_FAST,         MUT_SLOW            }
+    const int conflict[][3] = {
+        { MUT_REGENERATION,    MUT_SLOW_METABOLISM,  0},
+        { MUT_REGENERATION,    MUT_SLOW_HEALING,     0},
+        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION,    0},
+        { MUT_FAST,            MUT_SLOW,             0},
+        { MUT_FANGS,           MUT_BEAK,            -1},
+        { MUT_HOOVES,          MUT_TALONS,          -1},
+        { MUT_STRONG,          MUT_WEAK,             1},
+        { MUT_CLEVER,          MUT_DOPEY,            1},
+        { MUT_AGILE,           MUT_CLUMSY,           1},
+        { MUT_STRONG_STIFF,    MUT_FLEXIBLE_WEAK,    1},
+        { MUT_ROBUST,          MUT_FRAIL,            1},
+        { MUT_HIGH_MAGIC,      MUT_LOW_MAGIC,        1},
+        { MUT_CARNIVOROUS,     MUT_HERBIVOROUS,      1},
+        { MUT_SLOW_METABOLISM, MUT_FAST_METABOLISM,  1},
+        { MUT_REGENERATION,    MUT_SLOW_HEALING,     1},
+        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION,    1},
+        { MUT_FAST,            MUT_SLOW,             1},
         };
 
-        // If we have one of the pair, delete all levels of the other,
-        // and continue processing.
-        for (unsigned i = 0; i < ARRAYSZ(override_conflict); ++i)
-        {
-            for (int j = 0; j < 2; ++j)
-            {
-                const mutation_type a = override_conflict[i][j];
-                const mutation_type b = override_conflict[i][1-j];
-
-                if (mutation == a)
-                    while (delete_mutation(b, true, true))
-                        ;
-            }
-        }
-    }
-
-    // These are mutations which can't be traded off against each other,
-    // so we just fail.
-    const mutation_type fail_conflict[][2] = {
-        { MUT_FANGS,        MUT_BEAK            },
-        { MUT_HOOVES,       MUT_TALONS          }
-    };
-
-    for (unsigned i = 0; i < ARRAYSZ(fail_conflict); ++i)
+    // If we have one of the pair, delete all levels of the other,
+    // and continue processing.
+    for (unsigned i = 0; i < ARRAYSZ(conflict); ++i)
     {
         for (int j = 0; j < 2; ++j)
         {
-            const mutation_type a = fail_conflict[i][j];
-            const mutation_type b = fail_conflict[i][1-j];
-            if (mutation == a && you.mutation[b] > 0)
-                return (-1);    // Fail.
-        }
-    }
+            const mutation_type a = (mutation_type)conflict[i][j];
+            const mutation_type b = (mutation_type)conflict[i][1-j];
 
-    // These are mutations which trade off against each other.
-    const mutation_type simple_conflict[][2] = {
-        { MUT_STRONG,          MUT_WEAK            },
-        { MUT_CLEVER,          MUT_DOPEY           },
-        { MUT_AGILE,           MUT_CLUMSY          },
-        { MUT_STRONG_STIFF,    MUT_FLEXIBLE_WEAK   },
-        { MUT_ROBUST,          MUT_FRAIL           },
-        { MUT_HIGH_MAGIC,      MUT_LOW_MAGIC       },
-        { MUT_CARNIVOROUS,     MUT_HERBIVOROUS     },
-        { MUT_SLOW_METABOLISM, MUT_FAST_METABOLISM },
-        { MUT_REGENERATION,    MUT_SLOW_HEALING    },
-        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION   },
-        { MUT_FAST,            MUT_SLOW            }
-    };
-
-    for (unsigned i = 0; i < ARRAYSZ(simple_conflict); ++i)
-        for (int j = 0; j < 2; ++j)
-        {
-            // If we have one of the pair, delete a level of the other,
-            // and that's it.
-            const mutation_type a = simple_conflict[i][j];
-            const mutation_type b = simple_conflict[i][1-j];
             if (mutation == a && you.mutation[b] > 0)
             {
-                delete_mutation(b, true, true);
-                return (1);     // Nothing more to do.
+                int res = conflict[i][2];
+                switch(res)
+                {
+                case -1:
+                    // Fail if not forced, otherwise override.
+                    if (!override)
+                        return -1;
+                case 0:
+                    // Ignore if not forced, otherwise override.
+                    // All cases but regen:slowmeta will currently trade off.
+                    if (override)
+                        while (delete_mutation(b, true, true))
+                            ;
+                    break;
+                case 1:
+                    // If we have one of the pair, delete a level of the
+                    // other, and that's it.
+                    delete_mutation(b, true, true);
+                    return (1);     // Nothing more to do.
+                default:
+                    die("bad mutation conflict resulution");
+                }
             }
         }
+    }
 
     return (0);
 }
@@ -986,8 +970,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
         break;
 
     default:
-        ASSERT(false);
-        break;
+        die("invalid stat mutation: %d", mut);
     }
     return (stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE));
 }
@@ -1051,7 +1034,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             || which_mutation == MUT_AGILE || which_mutation == MUT_WEAK
             || which_mutation == MUT_DOPEY || which_mutation == MUT_CLUMSY)
         {
-            if (you.hunger_state > HS_SATIATED)
+            if (you.hunger_state >= HS_SATIATED)
                 rotting = false;
         }
         else
@@ -1182,6 +1165,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]++;
 
+    // More than three messages, need to give them by hand.
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
@@ -1190,21 +1174,44 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         gain_msg = false;
         break;
 
-        // FIXME: these cases should be handled better.
+    default:
+        break;
+    }
+
+    // For all those scale mutations.
+    you.redraw_armour_class = true;
+
+    notify_stat_change("gaining a mutation");
+
+    if (gain_msg)
+        mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
+
+    // Do post-mutation effects.
+    switch (mutat)
+    {
+    case MUT_FRAIL:
+    case MUT_ROBUST:
+    case MUT_RUGGED_BROWN_SCALES:
+        calc_hp();
+        break;
+
+    case MUT_LOW_MAGIC:
+    case MUT_HIGH_MAGIC:
+        calc_mp();
+        break;
+
+    case MUT_PASSIVE_MAPPING:
+        add_daction(DACT_REAUTOMAP);
+        break;
+
     case MUT_HOOVES:
     case MUT_TALONS:
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        gain_msg = false;
-
         // Hooves and talons force boots off at 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
             remove_one_equip(EQ_BOOTS, false, true);
         break;
 
     case MUT_CLAWS:
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        gain_msg = false;
-
         // Gloves aren't prevented until level 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
@@ -1213,9 +1220,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_HORNS:
     case MUT_BEAK:
     case MUT_ANTENNAE:
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        gain_msg = false;
-
         // Horns, beaks, and antennae force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
@@ -1227,8 +1231,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     case MUT_ACUTE_VISION:
         // We might have to turn autopickup back on again.
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        gain_msg = false;
         autotoggle_autopickup(false);
         break;
 
@@ -1240,33 +1242,16 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
     }
 
-    // For all those scale mutations.
-    you.redraw_armour_class = true;
-
-    notify_stat_change("losing a mutation");
-
-    if (gain_msg)
-        mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
-
-    // Do post-mutation effects.
-    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
-        || mutat == MUT_RUGGED_BROWN_SCALES)
-    {
-        calc_hp();
-    }
-    if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
-        calc_mp();
-    if (mutat == MUT_PASSIVE_MAPPING)
-        add_daction(DACT_REAUTOMAP);
-
     // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
 
-    if (Hints.hints_left && your_talents(false).size() > old_talents)
+    if (crawl_state.game_is_hints()
+        && your_talents(false).size() > old_talents)
+    {
         learned_something_new(HINT_NEW_ABILITY_MUT);
-
+    }
     return (true);
 }
 
@@ -1535,15 +1520,13 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
       { 2, 2, 2 } },
     // Regular facets
-    { 3, { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
-      { 1, 2, 3 } },
-    { 3, { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
-      { 1, 2, 2 } },
+    { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+      { 2, 2, 3 } },
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
           MUT_NEGATIVE_ENERGY_RESISTANCE },
-      { 3, 3, 3 } },
+      { 2, 2, 3 } },
     { 3, { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 3, 3, 3 } },
@@ -1552,7 +1535,7 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
       { 1, 2, 2 } },
     { 2, { MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING },
-      { 2, 2, 2 } },
+      { 1, 2, 2 } },
     { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
       { 2, 2, 2 } },
     { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
@@ -1563,10 +1546,8 @@ static const facet_def _demon_facets[] =
       { 2, 2, 2 } },
     { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
       { 2, 2, 2 } },
-    { 1, { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
-      { 1, 1, 1 } },
-    { 1, { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
-      { 1, 1, 1 } },
+    { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
+      { 2, 2, 2 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { 1, 1, 1 } },
@@ -1650,12 +1631,12 @@ static bool _slot_is_unique(const mutation_type mut[],
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
     int NUM_BODY_SLOTS = 1;
-    int ct_of_tier[] = { 0, 2, 3, 1 };
+    int ct_of_tier[] = { 0, 1, 3, 1 };
     // 1 in 10 chance to create a monstrous set
     if (one_chance_in(10))
     {
         NUM_BODY_SLOTS = 3;
-        ct_of_tier[1] = 1;
+        ct_of_tier[1] = 0;
         ct_of_tier[2] = 5;
     }
 
@@ -1666,8 +1647,6 @@ try_again:
     int absfacet = 0;
     int scales = 0;
     int slots_lost = 0;
-    int fire_breath = 0;
-    int poison_breath = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
 
@@ -1699,16 +1678,10 @@ try_again:
                 if (_is_covering(m))
                     ++scales;
 
-                if (i == 0 && m == MUT_SPIT_POISON)
-                    poison_breath++;
-
-                if (i == 0 && m == MUT_BREATHE_FLAMES)
-                    fire_breath++;
-
                 if (m == MUT_COLD_RESISTANCE)
                     ice_elemental++;
 
-                if (m == MUT_THROW_FLAMES)
+                if (m == MUT_CONSERVE_SCROLLS)
                     fire_elemental++;
 
                 if (m == MUT_CLAWS && i == 2
@@ -1732,13 +1705,7 @@ try_again:
     if (slots_lost != NUM_BODY_SLOTS)
         goto try_again;
 
-    if (fire_breath + poison_breath > 1)
-        goto try_again;
-
     if (ice_elemental + fire_elemental > 1)
-        goto try_again;
-
-    if (fire_breath + ice_elemental > 1)
         goto try_again;
 
     return ret;
@@ -1921,6 +1888,8 @@ bool balance_demonic_guardian()
     return (true);
 }
 
+#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
+
 // Primary function to handle and balance demonic guardians, if the tension
 // is unfavorably high and a guardian was not recently spawned, a new guardian
 // will be made, if tension is below a threshold (determined by the mutations
@@ -1933,20 +1902,25 @@ void check_demonic_guardian()
     if (!balance_demonic_guardian() &&
         you.duration[DUR_DEMONIC_GUARDIAN] == 0)
     {
-        const monster_type disallowed[] = {
-            MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
-            MONS_BLUE_DEATH, MONS_GREEN_DEATH,
-                                            MONS_CACODEMON };
-
         monster_type mt;
 
-        do
+        switch(mutlevel)
         {
-            mt = static_cast<monster_type>(MONS_WHITE_IMP +
-                                            (mutlevel-1)*5 + random2(5));
+        case 1:
+            mt = random_mons(MONS_WHITE_IMP, MONS_LEMURE, MONS_UFETUBUS,
+                             MONS_IRON_IMP, MONS_MIDGE, -1);
+            break;
+        case 2:
+            mt = random_mons(MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_IRON_DEVIL,
+                             MONS_BLUE_DEVIL, MONS_HAIRY_DEVIL, -1);
+            break;
+        case 3:
+            mt = random_mons(MONS_EXECUTIONER, MONS_BALRUG, MONS_ICE_DEVIL,
+                             MONS_SOUL_EATER, MONS_SUN_DEMON, -1);
+            break;
+        default:
+            die("Invalid demonic guardian level: %d", mutlevel);
         }
-        while (std::find(disallowed, disallowed + ARRAYSZ(disallowed), mt)
-                != disallowed + ARRAYSZ(disallowed));
 
         const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
                                                       2, 0, you.pos(),
@@ -1976,15 +1950,34 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
-        const monster* mon = monster_at(*ri);
+        monster* mon = monster_at(*ri);
+        map_cell& cell = env.map_knowledge(*ri);
         if (!mon)
         {
-            map_cell& cell = env.map_knowledge(*ri);
             if (cell.detected_monster())
                 cell.clear_monster();
         }
         else if (!mons_is_firewood(mon))
-            env.map_knowledge(*ri).set_detected_monster(MONS_SENSED);
+        {
+            // [ds] If the PC remembers the correct monster at this
+            // square, don't trample it with MONS_SENSED. Forgetting
+            // legitimate monster memory affects travel, which can
+            // path around mimics correctly only if it can actually
+            // *see* them in monster memory -- overwriting the mimic
+            // with MONS_SENSED causes travel to bounce back and
+            // forth, since every time it leaves LOS of the mimic, the
+            // mimic is forgotten (replaced by MONS_SENSED).
+            const monster_type remembered_monster = cell.monster();
+            if (remembered_monster != mon->type)
+            {
+                if (mons_is_unknown_mimic(mon))
+                    discover_mimic(mon);
+                monster_type mc = MONS_SENSED;
+                if (you.religion == GOD_ASHENZARI && !player_under_penance())
+                    mc = ash_monster_tier(mon);
+                env.map_knowledge(*ri).set_detected_monster(mc);
+            }
+        }
     }
 }
 

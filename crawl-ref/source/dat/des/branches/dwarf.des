@@ -275,7 +275,7 @@ KFEAT:   q = alarm trap
 MARKER:  + = lua:restrict_door()
 ITEM:    box of beasts / empty ebony casket
 ITEM:    any weapon
-ITEM:    amulet of faith / ring of wizardry unrand:ring_of_charms w:5 / \
+ITEM:    amulet of faith / \
          any jewellery / any weapon ego:holy_wrath / any weapon / \
          potion of experience w:1 / potion of porridge / any potion / \
          scroll of holy word / scroll of torment / any scroll
@@ -323,8 +323,7 @@ MONS:   patrolling deep dwarf
 NSUBST: X = 2:= / *:x
 MARKER: = = lua:restrict_door()
 SUBST:  * = **d
-ITEM:   staff of death / scroll of torment / necronomicon w:1 / \
-        ring of wizardry unrand:ring_of_charms w:5
+ITEM:   staff of death / scroll of torment / necronomicon w:1
 : dhfh.colors(_G)
 MAP
 cccccccccccccccccccc@cccccccccccccccccccc
@@ -379,7 +378,7 @@ KMONS:  1 = patrolling deep dwarf berserker w:5 / \
             patrolling deep dwarf scion / patrolling deep dwarf death knight w:5 / \
             patrolling deep dwarf artificer / patrolling deep dwarf necromancer w:5
 KMONS:  2 = patrolling deep dwarf death knight / \
-            patrolling deep dwarf unborn w:2
+            patrolling unborn deep dwarf w:2
 MAP
 cccc  cccc
 c*.c  c.*c
@@ -403,7 +402,7 @@ SUBST:  1 = 2 w:2 / 1 / .
 KMONS:  1 = patrolling deep dwarf berserker / \
             patrolling deep dwarf scion w:7 / patrolling deep dwarf death knight / \
             patrolling deep dwarf artificer w:5 / patrolling deep dwarf necromancer w:3
-KMONS:  2 = patrolling deep dwarf death knight / patrolling deep dwarf unborn
+KMONS:  2 = patrolling deep dwarf death knight / patrolling unborn deep dwarf
 MAP
 cccc  cccc
 c*.c  c.*c
@@ -428,7 +427,7 @@ KMONS:  1 = patrolling deep dwarf berserker / \
             patrolling deep dwarf scion w:1 / patrolling deep dwarf death knight / \
             patrolling deep dwarf artificer w:1 / patrolling deep dwarf necromancer w:1
 KMONS:  2 = patrolling deep dwarf death knight w:3 / \
-            patrolling deep dwarf unborn
+            patrolling unborn deep dwarf
 MAP
 cccc  cccc
 c*.c  c.*c
@@ -502,7 +501,7 @@ MAP
 ENDMAP
 
 NAME:     dhfh_hall
-TAGS:     extra no_monster_gen no_item_gen no_wall_fixup no_shop_gen
+TAGS:     extra no_monster_gen no_item_gen no_wall_fixup
 ORIENT:   float
 PLACE:    Dwarf:1
 NSUBST:   s = 1:= / *:c
@@ -518,11 +517,11 @@ SUBVAULT: A : dhfh_hall_right
 SUBVAULT: B : dhfh_hall_right
 SUBVAULT: C : dhfh_hall_right
 SUBVAULT: D : dhfh_hall_right
-KMONS:    1 = patrolling deep dwarf unborn w:5 / \
+KMONS:    1 = patrolling unborn deep dwarf w:5 / \
               patrolling deep dwarf death knight / patrolling deep dwarf necromancer
 KMONS:    2 = shadow wraith / freezing wraith / troll / rock troll w:5 / \
               patrolling deep dwarf death knight w:3 / patrolling deep dwarf necromancer w:2 / \
-              patrolling deep dwarf unborn w:1
+              patrolling unborn deep dwarf w:1
 MAP
  ccccccccccc
  c....O....c
@@ -549,7 +548,7 @@ cccccc.ccccsc.c
 ENDMAP
 
 NAME:   dhfh_barracks_1
-TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
+TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks
 ORIENT: float
 CHANCE: 50%
 DEPTH:  Dwarf:1
@@ -613,7 +612,7 @@ xxxxxxxxxxxxc.?.c........c
 ENDMAP
 
 NAME:   dhfh_barracks_2
-TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks no_shop_gen
+TAGS:   extra uniq_dhfh_barracks chance_dhfh_barracks
 ORIENT: float
 CHANCE: 50%
 DEPTH:  Dwarf:1

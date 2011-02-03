@@ -167,7 +167,7 @@ CHANGES TO pr31:
 * bugfix: fight::you_attack() change in to hit bonus for sure blade changed from "5 + random2(10)" to "5 + random2limit(you.sure_blade, 25)" [Daniel] and changed messages in player::display_char_status()
 * bugfix: food::eating() case FOOD_PIZZA to properly display the "Mmmm..." string prior to the name of player's favorite kind of pizza
 * bugfix: for some reason Red Draconians were the only Draconians that did not get a tailslap attack in fight.cc -- now they do
-* bugfix: general change of "if (mons_near(o) && menv[o].enchantment[2] != ENCH_INVIS)" to "if (mons_near(o) && ( menv[o].enchantment[2] != ENCH_INVIS) || player_see_invis() ) )" -> simple_monster_message() where appropriate and some bugfixes with where checks were not applied against messages 
+* bugfix: general change of "if (mons_near(o) && menv[o].enchantment[2] != ENCH_INVIS)" to "if (mons_near(o) && ( menv[o].enchantment[2] != ENCH_INVIS) || player_see_invis() ) )" -> simple_monster_message() where appropriate and some bugfixes with where checks were not applied against messages
 * bugfix: in abilities, moved some spells cast to positions prior to exercising so players would not get potential skill increase (and application) during act of casting
 * bugfix: in acr::input() you.delay was decrementing from 2 to 0 ... fixed by making an if-else rather than if-if situation
 * bugfix: in beam::beam() wand_id for LIGHTGREY (TELEPORTATION), WHITE (DISINTEGRATION), LIGHTRED (ENSLAVEMENT), BEAM_SLEEP only set to 1 for monsters that player can see
@@ -435,7 +435,7 @@ CHANGES TO pr31:
 * player::you_are_draconian() -> player::player_genus(), now uses switch (don't use comparatives!) and broadened to cover other cases
 * possible bugfix: fight::monster_polymorph() - first two parameters were of type unsigned char when they should have been of type int (MONS_foo definitely falls outside range [0,255]) -- also double-checked types of old_foo variables used within the function itself
 * propagated effects::lose_stat() throughout codebase
-* propagation of silenced() to cover instances of "You hear ..." messages << bang.cc - 
+* propagation of silenced() to cover instances of "You hear ..." messages << bang.cc -
 * pulled out all the code relating to MONS_TUNNELING_WORM and MONS_WORM_TAIL -- haphazard and deprecated (monster never appeared)
 * pulled out all the code relating to the QUOKKA, SWORD, GUARDIAN ROBOT, and DORGI -- all were deprecated a long time ago
 * recoded dungeon::special_room() for efficiency -- was filling monster arrays on each and every loop-through (sheesh!)
@@ -559,4 +559,3 @@ CHANGES TO pr31:
 * added in Jesse's Mac-specific files
 * borrowed a couple tweaks from Gordon
 * fixed a few minor things in spells4.cc and added some small annotations
-

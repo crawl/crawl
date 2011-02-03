@@ -13,7 +13,7 @@
 extern const VColour term_colours[MAX_TERM_COLOUR];
 
 class FontBuffer;
-class VColour;
+struct VColour;
 class formatted_string;
 
 class FontWrapper

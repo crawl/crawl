@@ -23,13 +23,13 @@
 #include "coord.h"
 #include "describe.h"
 #include "format.h"
-#include "fight.h"
 #include "godabil.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
@@ -400,15 +400,48 @@ static void _print_stats_wp(int y)
 
         text = wpn.name(DESC_INVENTORY, true, false, true);
     }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-    {
-        col = RED;
-        text = "Blade Hands";
-    }
     else
     {
         col = LIGHTGREY;
-        text = "Nothing wielded";
+        text = (you.has_claws(false) > 0) ? "Claws" : "Nothing wielded";
+        if (you.species == SP_CAT)
+            text = "Tooth and claw";
+
+        switch (you.form)
+        {
+            case TRAN_SPIDER:
+                col = LIGHTGREEN;
+                text = "Fangs (venom)";
+                break;
+            case TRAN_BLADE_HANDS:
+                col = RED;
+                text = "Blade " + blade_parts(true);
+                break;
+            case TRAN_STATUE:
+                col = LIGHTGREY;
+                text = (you.has_claws(false) > 0) ? "Stone claws" : "Stone fists";
+                break;
+            case TRAN_ICE_BEAST:
+                col = WHITE;
+                text = "Ice fists (freeze)";
+                break;
+            case TRAN_DRAGON:
+                col = GREEN;
+                text = "Tooth and claw";
+                break;
+            case TRAN_LICH:
+                col = MAGENTA;
+                text += " (drain)";
+                break;
+            case TRAN_BAT:
+            case TRAN_PIG:
+                col = LIGHTGREY;
+                text = "Teeth";
+                break;
+            case TRAN_NONE:
+            default:
+                break;
+        }
     }
     cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
@@ -507,7 +540,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_STEALTH,
         DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
         DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
-        STATUS_CLINGING, DUR_TORNADO,
+        STATUS_CLINGING, DUR_TORNADO, DUR_LIQUEFYING, DUR_HEROISM,
+        DUR_FINESSE,
     };
 
     status_info inf;
@@ -713,9 +747,7 @@ static std::string _level_description_string_hud()
     }
     // Definite articles
     else if (place.level_type == LEVEL_ABYSS)
-    {
         short_name.insert(0, "The ");
-    }
     return short_name;
 }
 
@@ -1279,7 +1311,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
         }
         else if (e_order[i] == EQ_WEAPON
-                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+                 && you.form == TRAN_BLADE_HANDS)
         {
             snprintf(buf, sizeof buf, "%s  - Blade Hands", slot);
         }
@@ -1323,17 +1355,14 @@ static std::string _overview_screen_title()
     snprintf(species_job, sizeof species_job,
              "(%s %s)",
              species_name(you.species).c_str(),
-             you.class_name);
+             you.class_name.c_str());
 
     char time_turns[50] = "";
 
-    if (you.real_time != -1)
-    {
-        const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        snprintf(time_turns, sizeof time_turns,
-                 " Turns: %d, Time: %s",
-                 you.num_turns, make_time_string(curr, true).c_str());
-    }
+    handle_real_time();
+    snprintf(time_turns, sizeof time_turns,
+             " Turns: %d, Time: %s",
+             you.num_turns, make_time_string(you.real_time, true).c_str());
 
     int linelength = you.your_name.length() + strlen(title)
                      + strlen(species_job) + strlen(time_turns);
@@ -1860,7 +1889,7 @@ std::string _status_mut_abilities()
         DUR_MAGIC_SHIELD, DUR_FIRE_SHIELD, DUR_POISONING, STATUS_SICK,
         STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,
         DUR_SURE_BLADE, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
-        DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_TORNADO,
+        DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_TORNADO, DUR_HEROISM, DUR_FINESSE,
     };
 
     status_info inf;
@@ -2104,7 +2133,7 @@ std::string _status_mut_abilities()
                 EV_change -= level > 1 ? 1 : 0;
                 break;
             case MUT_IRIDESCENT_SCALES:
-                AC_change += 3*level;
+                AC_change += 2*level+2;
                 break;
             case MUT_LARGE_BONE_PLATES:
                 AC_change += level + 1;
@@ -2140,8 +2169,7 @@ std::string _status_mut_abilities()
                 EV_change += level - 1;
                 break;
             default:
-                ASSERT(false);
-                break;
+                die("mutation without a short desc: %d", i);
             }
         }
 

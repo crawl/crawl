@@ -23,8 +23,8 @@
 #include "spl-other.h"
 #include "spl-util.h"
 #include "stuff.h"
-#include "terrain.h"
 #include "transform.h"
+#include "view.h"
 
 int allowed_deaths_door_hp(void)
 {
@@ -33,7 +33,7 @@ int allowed_deaths_door_hp(void)
     if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
         hp += you.piety / 15;
 
-    return (hp);
+    return std::max(hp, 1);
 }
 
 bool cast_deaths_door(int pow)
@@ -102,8 +102,6 @@ static spell_type _brand_spell()
         case SPWPN_FROST:
             return SPELL_FREEZING_AURA;
         case SPWPN_VORPAL:
-            if (wpn_type == DVORP_SLICING)
-                return SPELL_TUKIMAS_VORPAL_BLADE;
             if (wpn_type == DVORP_CRUSHING)
                 return SPELL_MAXWELLS_SILVER_HAMMER;
             return NUM_SPELLS;
@@ -124,7 +122,7 @@ static spell_type _brand_spell()
 
 static spell_type _transform_spell()
 {
-    switch(you.attribute[ATTR_TRANSFORMATION])
+    switch(you.form)
     {
     case TRAN_BLADE_HANDS:
         return SPELL_BLADE_HANDS;
@@ -160,26 +158,6 @@ void extension(int pow)
     if (you.duration[DUR_SLOW] && _know_spell(SPELL_SLOW)) // heh heh
         potion_effect(POT_SLOWING, pow);
 
-/*  Removed.
-    if (you.duration[DUR_MIGHT])
-    {
-        potion_effect(POT_MIGHT, pow);
-        contamination++;
-    }
-
-    if (you.duration[DUR_BRILLIANCE])
-    {
-        potion_effect(POT_BRILLIANCE, pow);
-        contamination++;
-    }
-
-    if (you.duration[DUR_AGILITY])
-    {
-        potion_effect(POT_AGILITY, pow);
-        contamination++;
-    }
-*/
-
     if (you.duration[DUR_LEVITATION] && !you.duration[DUR_CONTROLLED_FLIGHT]
         && _know_spell(SPELL_LEVITATION))
     {
@@ -199,7 +177,7 @@ void extension(int pow)
         missile_prot(pow);
 
     if (you.duration[DUR_REGENERATION] && _know_spell(SPELL_REGENERATION)
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        && you.form != TRAN_LICH)
     {
         cast_regen(pow);
     }
@@ -245,7 +223,7 @@ void extension(int pow)
         you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100,
                               "Your transformation has been extended.");
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+        if (you.form == TRAN_LICH
             && is_good_god(you.religion))
         {
             // possible with Xom or a card
@@ -314,7 +292,7 @@ void ice_armour(int pow, bool extending)
         mpr("Your icy armour thickens.");
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST)
+        if (you.form == TRAN_ICE_BEAST)
             mpr("Your icy body feels more resilient.");
         else
             mpr("A film of ice covers your body!");
@@ -398,17 +376,7 @@ void cast_fly(int power)
     burden_change();
 
     if (!was_levitating)
-    {
-        if (you.fishtail)
-        {
-            mpr("Your tail turns into legs as you fly out of the water.");
-            merfolk_stop_swimming();
-        }
-        else if (you.light_flight())
-            mpr("You swoop lightly up into the air.");
-        else
-            mpr("You fly up into the air.");
-    }
+        float_player(true);
     else
         mpr("You feel more buoyant.");
 }
@@ -431,12 +399,12 @@ void cast_teleport_control(int power)
                           "You feel in control.");
 }
 
-bool cast_selective_amnesia()
+int cast_selective_amnesia(std::string *pre_msg)
 {
     if (you.spell_no == 0)
     {
         canned_msg(MSG_NO_SPELLS);
-        return (false);
+        return (0);
     }
 
     int keyin = 0;
@@ -450,11 +418,14 @@ bool cast_selective_amnesia()
         keyin = get_ch();
 
         if (key_is_escape(keyin))
-            return (false);
+        {
+            canned_msg(MSG_OK);
+            return (-1);
+        }
 
         if (keyin == '?' || keyin == '*')
         {
-            keyin = list_spells(false);
+            keyin = list_spells(false, false, false);
             redraw_screen();
         }
 
@@ -473,6 +444,9 @@ bool cast_selective_amnesia()
             break;
     }
 
+    if (pre_msg)
+        mpr(pre_msg->c_str());
+
     const int ep_gain = spell_mana(spell);
     del_spell_from_memory_by_slot(slot);
 
@@ -483,7 +457,7 @@ bool cast_selective_amnesia()
             "it unravels.");
     }
 
-    return (true);
+    return (1);
 }
 
 void cast_see_invisible(int pow)
@@ -519,4 +493,16 @@ void cast_silence(int pow)
         you.update_beholders();
 
     learned_something_new(HINT_YOU_SILENCE);
+}
+
+void cast_liquefaction(int pow)
+{
+    flash_view_delay(BROWN, 80);
+    flash_view_delay(YELLOW, 80);
+    flash_view_delay(BROWN, 140);
+
+    mpr("The ground around you becomes liquefied!");
+
+    you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
+    invalidate_agrid(true);
 }

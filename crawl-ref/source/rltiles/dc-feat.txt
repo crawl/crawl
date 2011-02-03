@@ -24,6 +24,8 @@ wall/tree2_red
 wall/tree1_dead DNGN_TREE_DEAD
 wall/tree2_dead
 
+wall/mangrove1 DNGN_SWAMP_TREE
+
 ## doors
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR
@@ -75,7 +77,6 @@ dngn_statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
 dngn_crumbled_column DNGN_CRUMBLED_COLUMN
 dngn_granite_stump DNGN_GRANITE_STUMP
-dngn_zot_pillar DNGN_ZOT_PILLAR
 
 ## Features only used in certain minivaults
 %sdir dc-dngn/vaults
@@ -122,6 +123,7 @@ dngn_trap_zot DNGN_TRAP_ZOT
 
 ## stairs
 %sdir dc-dngn/gateways
+dngn_exit_dungeon DNGN_EXIT_DUNGEON
 stone_stairs_down DNGN_STONE_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
@@ -376,7 +378,7 @@ dngn_altar_cheibriados_06
 dngn_altar_cheibriados_04
 dngn_altar_cheibriados_03
 dngn_altar_cheibriados_02
-dngn_altar DNGN_ALTAR_ASHENZARI
+dngn_altar_ashenzari DNGN_ALTAR_ASHENZARI
 
 %sdir dc-dngn
 dngn_blue_fountain DNGN_FOUNTAIN DNGN_BLUE_FOUNTAIN
@@ -415,3 +417,8 @@ dc-misc/mold_small2
 dc-misc/mold_small3
 dc-misc/mold_small4
 effect/silenced SILENCED
+%shrink 0
+dc-mon/kraken/corner_piece_NW KRAKEN_OVERLAY_NW
+dc-mon/kraken/corner_piece_NE KRAKEN_OVERLAY_NE
+dc-mon/kraken/corner_piece_SE KRAKEN_OVERLAY_SE
+dc-mon/kraken/corner_piece_SW KRAKEN_OVERLAY_SW

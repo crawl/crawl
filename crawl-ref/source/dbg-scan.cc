@@ -317,6 +317,9 @@ void debug_mons_scan()
             }
         }
 
+    ASSERT(you.type == MONS_PLAYER);
+    ASSERT(you.mid == MID_PLAYER);
+
     std::vector<int> floating_mons;
     bool             is_floating[MAX_MONSTERS];
 
@@ -328,6 +331,7 @@ void debug_mons_scan()
         if (!m->alive())
             continue;
 
+        ASSERT(m->mid > 0);
         coord_def pos = m->pos();
 
         if (!in_bounds(pos))

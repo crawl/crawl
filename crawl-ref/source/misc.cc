@@ -44,7 +44,6 @@
 #include "exercise.h"
 #include "fight.h"
 #include "files.h"
-#include "flood_find.h"
 #include "fprop.h"
 #include "food.h"
 #include "ghost.h"
@@ -126,7 +125,7 @@ static void _create_monster_hide(const item_def corpse)
     case MONS_STORM_DRAGON:   item.sub_type = ARM_STORM_DRAGON_HIDE;   break;
     case MONS_GOLDEN_DRAGON:  item.sub_type = ARM_GOLD_DRAGON_HIDE;    break;
     case MONS_SWAMP_DRAGON:   item.sub_type = ARM_SWAMP_DRAGON_HIDE;   break;
-
+    case MONS_PEARL_DRAGON:   item.sub_type = ARM_PEARL_DRAGON_HIDE;   break;
     case MONS_SHEEP:
     case MONS_YAK:
     default:
@@ -968,116 +967,6 @@ void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
     }
 }
 
-// A variation of the mummy curse:
-// Instead of trashing the entire stack, split the stack and only turn part
-// of it into POT_DECAY.
-void split_potions_into_decay(int obj, int amount, bool need_msg)
-{
-    ASSERT(obj != -1);
-    item_def &potion = you.inv[obj];
-
-    ASSERT(potion.defined());
-    ASSERT(potion.base_type == OBJ_POTIONS);
-    ASSERT(amount > 0);
-    ASSERT(amount <= potion.quantity);
-
-    // Output decay message.
-    if (need_msg && get_ident_type(OBJ_POTIONS, POT_DECAY) == ID_KNOWN_TYPE)
-        _potion_stack_changed_message(potion, amount, "decay%s");
-
-    if (you.equip[EQ_WEAPON] == obj)
-        you.wield_change = true;
-    you.redraw_quiver = true;
-
-    if (is_blood_potion(potion))
-    {
-        // We're being nice here, and only decay the *oldest* potions.
-        for (int i = 0; i < amount; i++)
-            remove_oldest_blood_potion(potion);
-    }
-
-    // Try to merge into existing stacks of decayed potions.
-    for (int m = 0; m < ENDOFPACK; m++)
-    {
-        if (you.inv[m].base_type == OBJ_POTIONS
-            && you.inv[m].sub_type == POT_DECAY)
-        {
-            if (potion.quantity == amount)
-            {
-                if (you.equip[EQ_WEAPON] == obj)
-                    you.equip[EQ_WEAPON] = -1;
-
-                destroy_item(potion);
-            }
-            else
-                you.inv[obj].quantity -= amount;
-
-            you.inv[m].quantity += amount;
-            return;
-        }
-    }
-
-    // Else, if entire stack affected just change subtype.
-    if (amount == potion.quantity)
-    {
-        you.inv[obj].sub_type = POT_DECAY;
-        unset_ident_flags(you.inv[obj], ISFLAG_IDENT_MASK); // all different
-        return;
-    }
-
-    // Else, create new stack in inventory.
-    int freeslot = find_free_slot(you.inv[obj]);
-    if (freeslot >= 0 && freeslot < ENDOFPACK
-        && !you.inv[freeslot].defined())
-    {
-        item_def &item   = you.inv[freeslot];
-        item.link        = freeslot;
-        item.slot        = index_to_letter(item.link);
-        item.base_type   = OBJ_POTIONS;
-        item.sub_type    = POT_DECAY;
-        item.quantity    = amount;
-        // Keep description as it was.
-        item.plus        = potion.plus;
-        item.plus2       = 0;
-        item.special     = 0;
-        item.flags       = 0;
-        item.colour      = potion.colour;
-        item.inscription.clear();
-        item.pos.set(-1, -1);
-
-        you.inv[obj].quantity -= amount;
-        return;
-    }
-    // Okay, inventory is full.
-
-    // Check whether we can merge with an existing stack on the floor.
-    for (stack_iterator si(you.pos()); si; ++si)
-    {
-        if (si->base_type == OBJ_POTIONS && si->sub_type == POT_DECAY)
-        {
-            dec_inv_item_quantity(obj, amount);
-            inc_mitm_item_quantity(si->index(), amount);
-            return;
-        }
-    }
-
-    item_def potion2;
-    potion2.base_type = OBJ_POTIONS;
-    potion2.sub_type  = POT_DECAY;
-    // Keep description as it was.
-    potion2.plus      = potion.plus;
-    potion2.quantity  = amount;
-    potion2.colour    = potion.colour;
-    potion2.plus2     = 0;
-    potion2.flags     = 0;
-    potion2.special   = 0;
-
-    copy_item_to_grid(potion2, you.pos());
-
-    // Is decreased even if the decay stack goes splat.
-    dec_inv_item_quantity(obj, amount);
-}
-
 static bool allow_bleeding_on_square(const coord_def& where)
 {
     // No bleeding onto sanctuary ground, please.
@@ -1109,7 +998,7 @@ bool maybe_bloodify_square(const coord_def& where)
         return (false);
 
     env.pgrid(where) |= FPROP_BLOODY;
-    return(true);
+    return true;
 }
 
 static void _maybe_bloodify_square(const coord_def& where, int amount,
@@ -1322,18 +1211,21 @@ void search_around(bool only_adjacent)
     }
 }
 
+void emergency_untransform()
+{
+    mpr("You quickly transform back into your natural form.");
+    untransform(false, true); // We're already entering the water.
+
+    if (you.species == SP_MERFOLK)
+        merfolk_start_swimming(false);
+}
+
 void merfolk_start_swimming(bool stepped)
 {
     if (you.fishtail)
         return;
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS)
-    {
-        mpr("You quickly transform back into your natural form.");
-        untransform(false, true); // We're already entering the water.
-    }
-    else if (stepped)
+    if (stepped)
         mpr("Your legs become a tail as you enter the water.");
     else
         mpr("Your legs become a tail as you dive into the water.");
@@ -1393,7 +1285,7 @@ bool scramble(void)
     ASSERT(!crawl_state.game_is_arena());
 
     // Statues are too stiff and heavy to scramble out of the water.
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
         return (false);
 
     int max_carry = carrying_capacity();
@@ -1421,10 +1313,12 @@ bool go_berserk(bool intentional, bool potion)
         return (false);
     }
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
 
     mpr("A red film seems to cover your vision as you go berserk!");
+
+    you.duration[DUR_FINESSE] = 0; // Totally incompatible.
 
     if (you.religion == GOD_CHEIBRIADOS)
     {
@@ -1541,28 +1435,36 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     return (false);
 }
 
+// Returns true if a monster can be considered safe regardless
+// of distance.
+static bool _mons_is_always_safe(const monster *mon)
+{
+    return (mon->wont_attack()
+            || mons_class_flag(mon->type, M_NO_EXP_GAIN)
+               && mon->type != MONS_KRAKEN_TENTACLE
+            || mon->withdrawn()
+            || mon->type == MONS_BALLISTOMYCETE && mon->number == 0);
+}
+
 bool mons_is_safe(const monster* mon, const bool want_move,
-                  const bool consider_user_options)
+                  const bool consider_user_options, bool check_dist)
 {
     if (mons_is_unknown_mimic(mon))
         return (true);
 
     int  dist    = grid_distance(you.pos(), mon->pos());
 
-    bool is_safe = (mon->wont_attack()
-                    || mons_class_flag(mon->type, M_NO_EXP_GAIN)
-                       && mon->type != MONS_KRAKEN_TENTACLE
-                    || mon->pacified() && dist > 1
-                    || mon->withdrawn()
-                    || mon->type == MONS_BALLISTOMYCETE && mon->number == 0
+    bool is_safe = (_mons_is_always_safe(mon)
+                    || check_dist
+                       && (mon->pacified() && dist > 1
 #ifdef WIZARD
-                    // Wizmode skill setting enforces hiddenness.
-                    || you.skills[SK_STEALTH] > 27 && dist > 2
+                           // Wizmode skill setting enforces hiddenness.
+                           || you.skills[SK_STEALTH] > 27 && dist > 2
 #endif
-                       // Only seen through glass walls or within water?
-                       // Assuming that there are no water-only/lava-only
-                       // monsters capable of throwing or zapping wands.
-                    || !mons_can_hurt_player(mon, want_move));
+                           // Only seen through glass walls or within water?
+                           // Assuming that there are no water-only/lava-only
+                           // monsters capable of throwing or zapping wands.
+                           || !mons_can_hurt_player(mon, want_move)));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
@@ -1603,6 +1505,7 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
                                            bool dangerous_only,
                                            bool consider_user_options,
                                            bool require_visible,
+                                           bool check_dist,
                                            int range)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -1622,7 +1525,8 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
                 && !mon->submerged()
                 && !mons_is_unknown_mimic(mon)
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
-                                                     consider_user_options)))
+                                                     consider_user_options,
+                                                     check_dist)))
             {
                 mons.push_back(mon);
                 if (just_check) // stop once you find one
@@ -1642,7 +1546,8 @@ static bool _exposed_monsters_nearby(bool want_move)
     return (false);
 }
 
-bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
+bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
+                 bool check_dist, int range)
 {
     if (!just_monsters)
     {
@@ -1671,7 +1576,8 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 
     // Monster check.
     std::vector<monster* > visible =
-        get_nearby_monsters(want_move, !announce, true, true, true, range);
+        get_nearby_monsters(want_move, !announce, true, true, true,
+                            check_dist, range);
 
     // Announce the presence of monsters (Eidolos).
     std::string msg;
@@ -1778,8 +1684,10 @@ bool player_in_a_dangerous_place(bool *invis)
 static void _drop_tomb(const coord_def& pos, bool premature)
 {
     int count = 0;
+    bool zin = false;
 
     monster* mon = monster_at(pos);
+
     // Don't wander on duty!
     if (mon)
         mon->behaviour = BEH_SEEK;
@@ -1787,9 +1695,37 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     bool seen_change = false;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        if (grd(*ai) == DNGN_ROCK_WALL)
+
+        // "Normal" tomb
+        if (grd(*ai) == DNGN_ROCK_WALL &&
+            env.markers.property_at(*ai, MAT_ANY, "prison") != "Zin")
         {
             grd(*ai) = DNGN_FLOOR;
+            set_terrain_changed(*ai);
+            count++;
+            if (you.see_cell(*ai))
+                seen_change = true;
+        }
+
+        // Zin's Imprison.
+        if (grd(*ai) == DNGN_METAL_WALL &&
+            env.markers.property_at(*ai, MAT_ANY, "prison") == "Zin")
+        {
+            zin = true;
+
+            std::vector<map_marker*> markers = env.markers.get_markers_at(*ai);
+            for (int i = 0, size = markers.size(); i < size; ++i)
+            {
+                map_marker *mark = markers[i];
+                if (mark->property("prison") == "Zin")
+                    env.markers.remove(mark);
+            }
+
+            env.markers.clear_need_activate();
+
+            grd(*ai) = DNGN_FLOOR;
+            env.grid_colours(*ai) = 0;
+
             set_terrain_changed(*ai);
             count++;
             if (you.see_cell(*ai))
@@ -1799,11 +1735,15 @@ static void _drop_tomb(const coord_def& pos, bool premature)
 
     if (count)
     {
-        if (seen_change)
+        if (seen_change && !zin)
             mprf("The walls disappear%s!",
                  premature ? " prematurely" : "");
-        else
-        {
+        else if (seen_change && zin)
+            mprf("Zin %s %s %s.",
+            (mon) ? "releases" : "dismisses",
+            (mon) ? mon->name(DESC_NOCAP_THE).c_str() : "the silver walls,",
+            (mon) ? "from its prison" : "but there is nothing inside them");
+        else {
             if (!silenced(you.pos()))
                 mpr("You hear a deep rumble.", MSGCH_SOUND);
             else
@@ -1838,21 +1778,20 @@ std::vector<map_malign_gateway_marker*> get_malign_gateways ()
 
 void timeout_malign_gateways (int duration)
 {
-    if (!duration)
-        return;
-
+    // Passing 0 should allow us to just touch the gateway and see
+    // if it should decay. This, in theory, should resolve the one
+    // turn delay between it timing out and being recastable. -due
     std::vector<map_malign_gateway_marker*> markers = get_malign_gateways();
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_malign_gateway_marker *mmark = markers[i];
 
-        mmark->duration -= duration;
+        if (duration)
+            mmark->duration -= duration;
 
         if (mmark->duration > 0)
-        {
-            big_cloud(CLOUD_TLOC_ENERGY, KC_OTHER, mmark->pos, 3+random2(10), 2+random2(5));
-        }
+            big_cloud(CLOUD_TLOC_ENERGY, 0, mmark->pos, 3+random2(10), 2+random2(5));
         else
         {
             monster* mons = monster_at(mmark->pos);
@@ -1867,19 +1806,23 @@ void timeout_malign_gateways (int duration)
             else if (!mmark->monster_summoned && !mons)
             {
                 bool is_player = mmark->is_player;
-                actor* caster = mmark->caster;
-                if (caster == NULL)
+                actor* caster = 0;
+                if (is_player)
                     caster = &you;
 
-                int tentacle_idx = create_monster(mgen_data(MONS_ELDRITCH_TENTACLE,
-                                                            (is_player) ? BEH_FRIENDLY : attitude_creation_behavior(mmark->caster->attitude),
-                                                            caster,
-                                                            0,
-                                                            0,
-                                                            mmark->pos,
-                                                            MHITNOT,
-                                                            MG_FORCE_PLACE,
-                                                            mmark->god));
+                mgen_data mg = mgen_data(MONS_ELDRITCH_TENTACLE,
+                                         mmark->behaviour,
+                                         caster,
+                                         0,
+                                         0,
+                                         mmark->pos,
+                                         MHITNOT,
+                                         MG_FORCE_PLACE,
+                                         mmark->god);
+                if (!is_player)
+                    mg.non_actor_summoner = mmark->summoner_string;
+
+                int tentacle_idx = create_monster(mg);
 
                 if (tentacle_idx >= 0)
                 {
@@ -1923,18 +1866,20 @@ void timeout_tombs(int duration)
             monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
                                                       : NULL;
+/**
+
             monster* mon_targ =
                 !invalid_monster_index(cmark->target) ? &menv[cmark->target]
                                                       : NULL;
-
-            // Zin's Imprison ability.
+            // Zin's Imprison ability - does nothing special for now.
             if (cmark->source == -GOD_ZIN && mon_targ
                 && mon_targ == mon_entombed)
             {
                 zin_recite_to_single_monster(mon_targ->pos(), true);
             }
+**/
             // A monster's Tomb of Doroklohe spell.
-            else if (mon_src
+            if (mon_src
                 && mon_src == mon_entombed)
             {
                 mon_src->lose_energy(EUT_SPELL);
@@ -1949,6 +1894,17 @@ void bring_to_safety()
 {
     if (you.level_type == LEVEL_ABYSS)
         return abyss_teleport(true);
+
+    if (crawl_state.game_is_zotdef() && !orb_position().origin())
+    {
+        // In ZotDef, it's not the safety of your sorry butt that matters.
+        for (distance_iterator di(orb_position(), true, false); di; ++di)
+            if (!monster_at(*di))
+            {
+                you.moveto(*di);
+                return;
+            }
+    }
 
     coord_def best_pos, pos;
     double min_threat = 1e38;
@@ -2013,7 +1969,7 @@ void revive()
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     if (you.duration[DUR_WEAPON_BRAND])
         set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_NORMAL);
-    if (you.attribute[ATTR_TRANSFORMATION])
+    if (you.form)
         untransform();
     you.clear_beholders();
 
@@ -2079,9 +2035,9 @@ static void apply_environment_effect(const coord_def &c)
     if (testbits(env.pgrid(c), FPROP_NO_CLOUD_GEN))
         return;
     if (grid == DNGN_LAVA)
-        check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), KC_OTHER);
+        check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), 0);
     else if (grid == DNGN_SHALLOW_WATER)
-        check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), KC_OTHER);
+        check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), 0);
 }
 
 static const int Base_Sfx_Chance = 5;
@@ -2183,7 +2139,7 @@ std::string your_hand(bool plural)
 {
     std::string result;
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     default:
         mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
@@ -2349,7 +2305,7 @@ bool is_dragonkind(const actor *act)
     }
 
     if (act->atype() == ACT_PLAYER)
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
+        return (you.form == TRAN_DRAGON);
 
     // Else the actor is a monster.
     const monster* mon = act->as_monster();
@@ -2495,4 +2451,22 @@ void entered_malign_portal(actor* act)
         ouch(roll_dice(2, 4), NON_MONSTER, KILLED_BY_WILD_MAGIC, "a malign gateway");
     else
         act->hurt(NULL, roll_dice(2, 4));
+}
+
+void handle_real_time(time_t t)
+{
+    you.real_time += std::min<time_t>(t - you.last_keypress_time,
+                                      IDLE_TIME_CLAMP);
+    you.last_keypress_time = t;
+}
+
+std::string part_stack_string(const int num, const int total)
+{
+    if (num == total)
+        return "Your";
+
+    std::string ret  = uppercase_first(number_in_words(num));
+                ret += " of your";
+
+    return ret;
 }

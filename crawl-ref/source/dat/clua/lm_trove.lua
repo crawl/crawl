@@ -282,9 +282,9 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
   if position == "inventory" then
     if dry_run ~= nil then crawl.mpr("Checking inventory.") end
     iter_table = items.inventory()
-  else
-    if dry_run ~= nil then crawl.mpr("Checking " .. position.x .. "/" .. position.y) end
-    iter_table = dgn.items_at(position.x, position.y)
+  --else
+  --  if dry_run ~= nil then crawl.mpr("Checking " .. position.x .. "/" .. position.y) end
+  --  iter_table = dgn.items_at(position.x, position.y)
   end
 
   if #iter_table == 0 then
@@ -456,17 +456,12 @@ function TroveMarker:check_veto(marker, pname)
   if crawl.yesno("This trove needs " .. self:item_name() ..
                  " to function. Give it the item" ..
                  self:plural() .. "?", true, "n") then
-    if self:check_item(marker, pname, dgn.point(_x, _y)) == true then
+    if self:check_item(marker, pname, "inventory") == true then
       return
     else
-      if self:check_item(marker, pname, "inventory") == true then
-        self:note_payed(self:item_name())
-        return
-      else
-        crawl.mpr("You don't have the item" .. self:plural() ..
-                  " to give!")
-        return "veto"
-      end
+      crawl.mpr("You don't have the item" .. self:plural() ..
+                " to give! Perhaps you haven't completely identified the item yet?")
+      return "veto"
     end
   end
   return "veto"

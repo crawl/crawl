@@ -17,6 +17,7 @@ struct activity_interrupt_data;
 bool go_berserk(bool intentional, bool potion = false);
 void search_around(bool only_adjacent = false);
 
+void emergency_untransform();
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 void trackers_init_new_level(bool transit);
@@ -38,7 +39,6 @@ bool can_bottle_blood_from_corpse(int mons_class);
 int num_blood_potions_from_corpse(int mons_class, int chunk_type = -1);
 void turn_corpse_into_blood_potions (item_def &item);
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
-void split_potions_into_decay(int obj, int amount, bool need_msg = true);
 
 void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false, bool smell_alert = true);
@@ -59,17 +59,20 @@ std::string weird_sound();
 
 bool mons_can_hurt_player(const monster* mon, const bool want_move = false);
 bool mons_is_safe(const monster* mon, const bool want_move = false,
-                  const bool consider_user_options = true);
+                  const bool consider_user_options = true,
+                  const bool check_dist = true);
 
 std::vector<monster* > get_nearby_monsters(bool want_move = false,
                                            bool just_check = false,
                                            bool dangerous_only = false,
                                            bool consider_user_options = true,
                                            bool require_visible = true,
+                                           bool check_dist = true,
                                            int range = -1);
 
 bool i_feel_safe(bool announce = false, bool want_move = false,
-                 bool just_monsters = false, int range = -1);
+                 bool just_monsters = false, bool check_dist = true,
+                 int range = -1);
 
 bool there_are_monsters_nearby(bool dangerous_only = false,
                                bool require_visible = true,
@@ -116,4 +119,7 @@ void swap_with_monster(monster* mon_to_swap);
 void maybe_id_ring_TC();
 
 void entered_malign_portal(actor* act);
+
+void handle_real_time(time_t t = time(0));
+std::string part_stack_string(const int num, const int total);
 #endif

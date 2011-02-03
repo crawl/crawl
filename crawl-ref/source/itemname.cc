@@ -65,7 +65,7 @@ bool is_vowel(const char chr)
 // quant_name is useful since it prints out a different number of items
 // than the item actually contains.
 std::string quant_name(const item_def &item, int quant,
-                        description_level_type des, bool terse)
+                       description_level_type des, bool terse)
 {
     // item_name now requires a "real" item, so we'll mangle a tmp
     item_def tmp = item;
@@ -120,13 +120,17 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    // note: only the 32 lower bits of monster flags are passed,
-    // as we don't have support for 64 bit props
-    iflags_t corpse_flags;
+    monster_flag_type corpse_flags;
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
-        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
-             & MF_NAME_SPECIES) && !(corpse_flags & MF_NAME_DEFINITE))
+#if TAG_MAJOR_VERSION == 32
+        && !(((corpse_flags = (int64_t)props[CORPSE_NAME_TYPE_KEY])
+#else
+        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
+#endif
+               & MF_NAME_SPECIES)
+             && !(corpse_flags & MF_NAME_DEFINITE))
+             && !(corpse_flags & MF_NAME_SUFFIX)
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
         switch (descrip)
@@ -283,8 +287,7 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (on tentacle)";
                 break;
                 default:
-                    ASSERT(false);
-                    break;
+                    die("Item in an invalid slot");
                 }
             }
         }
@@ -644,6 +647,7 @@ static const char* potion_type_name(int potiontype)
     case POT_BLOOD:             return "blood";
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
     case POT_RESISTANCE:        return "resistance";
+    case POT_FIZZING:           return "fizzing liquid";
     default:                    return "bugginess";
     }
 }
@@ -993,7 +997,7 @@ static const char* book_type_name(int booktype)
     case BOOK_CLOUDS:                 return "Clouds";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
-    case BOOK_CHARMS:                 return "Charms";
+    case BOOK_MALEDICT:               return "Maledictions";
     case BOOK_DEMONOLOGY:             return "Demonology";
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
@@ -1003,7 +1007,6 @@ static const char* book_type_name(int booktype)
     case BOOK_UNLIFE:                 return "Unlife";
     case BOOK_CONTROL:                return "Control";
     case BOOK_MUTATIONS:              return "Morphology";
-    case BOOK_TUKIMA:                 return "Tukima";
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
     case BOOK_WIZARDRY:               return "Wizardry";
@@ -1163,8 +1166,6 @@ std::string sub_type_string (object_class_type type, int sub_type, bool known, i
             return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
-        else if (sub_type == BOOK_BEASTS)
-            return "Monster Manual";
 
         return book_type_name(sub_type);
     }
@@ -1806,8 +1807,6 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "tome of Destruction";
         else if (item_typ == BOOK_YOUNG_POISONERS)
             buff << "Young Poisoner's Handbook";
-        else if (item_typ == BOOK_BEASTS)
-            buff << "Monster Manual";
         else
             buff << "book of " << book_type_name(item_typ);
         break;
@@ -1865,10 +1864,6 @@ std::string item_def::name_aux(description_level_type desc,
         buff << "gold piece";
         break;
 
-    // not implemented
-    case OBJ_GEMSTONES:
-        break;
-
     case OBJ_CORPSES:
     {
         if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
@@ -1901,12 +1896,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "corpse bug";
 
         if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
-            && !(name_flags & MF_NAME_SPECIES))
+            && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX)
         {
-            if (name_type == MF_NAME_SUFFIX)
-                buff << " " << _name;
-            else
-                buff << " of " << _name;
+            buff << " of " << _name;
         }
         break;
     }
@@ -2188,7 +2180,7 @@ bool identified_item_names(const item_def *it1,
          < it2->name(DESC_PLAIN, false, true, false, false, flags);
 }
 
-bool check_item_knowledge(bool quiet, bool inverted)
+void check_item_knowledge(bool unknown_items)
 {
     std::vector<const item_def*> items;
 
@@ -2198,15 +2190,21 @@ bool check_item_knowledge(bool quiet, bool inverted)
     const int idx_to_maxtype[5] = { NUM_WANDS, NUM_SCROLLS,
                                     NUM_JEWELLERY, NUM_POTIONS, NUM_STAVES };
 
-    bool has_unknown_items = false;
+    bool needs_inversion = false;
     for (int i = 0; i < 5; i++)
         for (int j = 0; j < idx_to_maxtype[i]; j++)
         {
             if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (inverted ? type_ids[i][j] != ID_KNOWN_TYPE
-                         : type_ids[i][j] == ID_KNOWN_TYPE)
+            // Potions of fizzing liquid are not something that
+            // need to be identified, because they never randomly
+            // generate! [due]
+            if (i == 3 && j == POT_FIZZING)
+                continue;
+
+            if (unknown_items ? type_ids[i][j] != ID_KNOWN_TYPE
+                              : type_ids[i][j] == ID_KNOWN_TYPE)
             {
                 item_def* ptmp = new item_def;
                 if (ptmp != 0)
@@ -2220,23 +2218,27 @@ bool check_item_knowledge(bool quiet, bool inverted)
                     items.push_back(ptmp);
                 }
             }
-            else if (!inverted)
-                has_unknown_items = true;
+            else
+                needs_inversion = true;
         }
 
-    if (items.empty())
+    if (!unknown_items && items.empty())
     {
-        if (!quiet)
-            mpr("You don't recognise anything yet!");
-        return (false);
+        // Directly skip ahead to unknown items.
+        check_item_knowledge(true);
+        return;
     }
 
     std::sort(items.begin(), items.end(), identified_item_names);
     InvMenu menu;
 
-    if (inverted)
-        menu.set_title("Items not yet recognised: (toggle with -)");
-    else if (has_unknown_items)
+    if (unknown_items)
+    {
+        menu.set_title(make_stringf("Items not yet recognised: %s",
+                                    needs_inversion ? "(toggle with -)"
+                                                    : ""));
+    }
+    else if (needs_inversion)
         menu.set_title("You recognise: (toggle with -)");
     else
         menu.set_title("You recognise all items:");
@@ -2253,10 +2255,8 @@ bool check_item_knowledge(bool quiet, bool inverted)
     {
          delete *iter;
     }
-    if (last_char == '-' && (inverted || has_unknown_items))
-        check_item_knowledge(quiet, !inverted);
-
-    return (true);
+    if (last_char == '-' && needs_inversion)
+        check_item_knowledge(!unknown_items);
 }
 
 
@@ -2749,7 +2749,7 @@ bool is_bad_item(const item_def &item, bool temp)
             return (true);
         case RING_HUNGER:
             // Even Vampires can use this ring.
-            return (!you.is_undead);
+            return (!you.is_undead || you.is_undead == US_HUNGRY_DEAD);
         case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
@@ -2850,7 +2850,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
-            if (!temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+            if (!temp && you.form == TRAN_LICH
                 && you.species != SP_DEMONSPAWN)
             {
                 return (false);
@@ -3071,7 +3071,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == FOOD_CHUNK
             && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
                 || you.has_spell(SPELL_SIMULACRUM)
-                || !temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH))
+                || !temp && you.form == TRAN_LICH))
         {
             return (false);
         }
@@ -3085,8 +3085,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type != CORPSE_SKELETON)
             return (false);
 
-        if (you.has_spell(SPELL_BONE_SHARDS)
-            || you.has_spell(SPELL_ANIMATE_DEAD)
+        if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
             || you.religion == GOD_YREDELEMNUL && !you.penance[GOD_YREDELEMNUL]
                && you.piety >= piety_breakpoint(0))
@@ -3399,7 +3398,11 @@ std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
         return ("");
 
     if (name_type != NULL)
-        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int();
+#if TAG_MAJOR_VERSION == 32
+        *name_type = (int64_t)corpse.props[CORPSE_NAME_TYPE_KEY];
+#else
+        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
+#endif
 
     return (corpse.props[CORPSE_NAME_KEY].get_string());
 }

@@ -19,7 +19,7 @@ function randomise_colours(e)
         "floor_normal", "floor_hall", "floor_hive", "floor_ice", "floor_lair",
         "floor_orc", "floor_snake", "floor_swamp", "floor_tomb", "floor_vault",
         "floor_vines", "floor_rough_red", "floor_sand_stone", "floor_grass",
-        "floor_nerves", "floor_dirt"
+        "floor_nerves", "floor_dirt", "floor_moss",
     }
 
     e.lrockcol(util.random_from(colours))
