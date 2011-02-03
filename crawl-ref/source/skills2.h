@@ -97,25 +97,26 @@ enum skill_menu_flags
     SKMF_NONE            = 0,
 
 //Actions
-    SKMF_DO_PRACTISE     = 0x001,
-    SKMF_DO_SHOW_DESC    = 0x002,
-    SKMF_DO_RESKILL_FROM = 0x004,
-    SKMF_DO_RESKILL_TO   = 0x008,
-    SKMF_ACTION_MASK     = 0x00F,
+    SKMF_DO_PRACTISE     = 0x0001,
+    SKMF_DO_SHOW_DESC    = 0x0002,
+    SKMF_DO_RESKILL_FROM = 0x0004,
+    SKMF_DO_RESKILL_TO   = 0x0008,
+    SKMF_ACTION_MASK     = 0x000F,
 
 //Display
-    SKMF_DISP_PROGRESS   = 0x010,
-    SKMF_DISP_RESKILL    = 0x020,
-    SKMF_DISP_NEW_LEVEL  = 0x040,
-    SKMF_DISP_POINTS     = 0x080,
-    SKMF_DISP_MASK       = 0x0F0,
-    SKMF_DISP_ALL        = 0x100,
-    SKMF_DISP_APTITUDE   = 0x200,
+    SKMF_DISP_PROGRESS   = 0x0010,
+    SKMF_DISP_RESKILL    = 0x0020,
+    SKMF_DISP_NEW_LEVEL  = 0x0040,
+    SKMF_DISP_POINTS     = 0x0080,
+    SKMF_DISP_MASK       = 0x00F0,
+    SKMF_DISP_ALL        = 0x0100,
+    SKMF_DISP_APTITUDE   = 0x0200,
 
 //Ashenzari transfer knowledge ability set this flag.
-    SKMF_RESKILLING      = 0x400,
+    SKMF_RESKILLING      = 0x0400,
 
-    SKMF_SKILL_ICONS     = 0x800,
+    SKMF_SKILL_ICONS     = 0x0800,
+    SKMF_SIMPLE          = 0x1000, // Simple mode for tutorial and hint mode.
 };
 
 class SkillMenu;
