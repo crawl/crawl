@@ -34,6 +34,8 @@ default-depth: D, Vault, Elf, Crypt
 #       In general, we don't want more than one serial vault on a level. Use
 #       the luniq_serial in the serial vault's header map for this.
 #
+#       Elaborate serial vaults should go into their. des files.
+#
 ############################################################################
 
 # Glass vaults
@@ -44,7 +46,7 @@ default-depth: D, Vault, Elf, Crypt
 NAME:   serial_glass
 TAGS:   allow_dup extra luniq_serial
 DEPTH:  D, Elf, Vault, Crypt
-CHANCE: 3%
+CHANCE: 1%
 {{
   local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
   local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
