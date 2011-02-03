@@ -1184,9 +1184,10 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         get_square_desc(gc, inf, true, false);
     }
     else if (grid_appearance(gc) != DNGN_FLOOR
-             && !feat_is_wall(grid_appearance(gc)))
+             && !feat_is_wall(grid_appearance(gc))
+             && !feat_is_tree(grid_appearance(gc)))
     {
-        get_feature_desc(gc, inf);
+        get_feature_desc(gc, inf, true);
     }
     else
     {
