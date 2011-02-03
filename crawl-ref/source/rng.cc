@@ -7,13 +7,18 @@
 
 #include "rng.h"
 
+#include "endianness.h"
 #include "mt19937ar.h"
+#include "syscalls.h"
 
 #ifdef USE_MORE_SECURE_SEED
 
+#ifdef UNIX
 // for times()
 #include <sys/times.h>
+#endif
 
+#undef rename
 // for getpid()
 #include <sys/types.h>
 #include <unistd.h>
@@ -24,7 +29,7 @@
 #include "sha256.h"
 #endif
 
-void seed_rng(unsigned long* seed_key, size_t num_keys)
+void seed_rng(uint32_t* seed_key, size_t num_keys)
 {
     // MT19937 -- see mt19937ar.cc for details/licence
     init_by_array(seed_key, num_keys);
@@ -39,7 +44,7 @@ void seed_rng(unsigned long* seed_key, size_t num_keys)
     srand(seed_key[0]);
 }
 
-void seed_rng(long seed)
+void seed_rng(uint32_t seed)
 {
     // MT19937 -- see mt19937ar.cc for details/licence
     init_genrand(seed);
@@ -56,30 +61,21 @@ void seed_rng(long seed)
 
 void seed_rng()
 {
-    unsigned long seed = time(NULL);
+    uint32_t seed = time(NULL);
 #ifdef USE_MORE_SECURE_SEED
 
     /* (at least) 256-bit wide seed */
-    unsigned long seed_key[8];
+    uint32_t seed_key[8];
 
+#ifdef UNIX
     struct tms  buf;
-    seed += times(&buf) + getpid();
+    seed += times(&buf);
+#endif
+
+    seed += getpid();
     seed_key[0] = seed;
 
-    /* Try opening from various system provided (hopefully) CSPRNGs */
-    FILE* seed_f = fopen("/dev/urandom", "rb");
-    if (!seed_f)
-        seed_f = fopen("/dev/random", "rb");
-    if (!seed_f)
-        seed_f = fopen("/dev/srandom", "rb");
-    if (!seed_f)
-        seed_f = fopen("/dev/arandom", "rb");
-    if (seed_f)
-    {
-        fread(&seed_key[1], sizeof(unsigned long), 7, seed_f);
-        fclose(seed_f);
-    }
-
+    read_urandom((char*)(&seed_key[1]), sizeof(seed_key[0]) * 7);
     seed_rng(seed_key, 8);
 
 #else
@@ -88,7 +84,7 @@ void seed_rng()
 }
 
 // MT19937 -- see mt19937ar.cc for details
-unsigned long random_int(void)
+uint32_t random_int(void)
 {
 #ifndef MORE_HARDENED_PRNG
     return (genrand_int32());
@@ -113,4 +109,50 @@ void pop_rng_state()
 #else
     pop_sha256_state();
 #endif
+}
+
+//-----------------------------------------------------------------------------
+// MurmurHash2, by Austin Appleby
+uint32_t hash(const void *data, int len)
+{
+    // 'm' and 'r' are mixing constants generated offline.
+    // They're not really 'magic', they just happen to work well.
+    const uint32_t m = 0x5bd1e995;
+
+    // Initialize the hash to a 'random' value
+    uint32_t h = len;
+
+    const uint8_t *d = (const uint8_t*)data;
+    // Mix 4 bytes at a time into the hash
+    while(len >= 4)
+    {
+        uint32_t k = htole32(*(uint32_t *)d);
+
+        k *= m;
+        k ^= k >> 24;
+        k *= m;
+
+        h *= m;
+        h ^= k;
+
+        d += 4;
+        len -= 4;
+    }
+
+    // Handle the last few bytes of the input array
+    switch(len)
+    {
+    case 3: h ^= (uint32_t)d[2] << 16;
+    case 2: h ^= (uint32_t)d[1] << 8;
+    case 1: h ^= (uint32_t)d[0];
+            h *= m;
+    };
+
+    // Do a few final mixes of the hash to ensure the last few
+    // bytes are well-incorporated.
+    h ^= h >> 13;
+    h *= m;
+    h ^= h >> 15;
+
+    return h;
 }

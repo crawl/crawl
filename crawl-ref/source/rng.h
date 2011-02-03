@@ -2,12 +2,14 @@
 #define RNG_H
 
 void seed_rng();
-void seed_rng(long seed);
+void seed_rng(uint32_t seed);
 void push_rng_state();
 void pop_rng_state();
 
 void cf_setseed();
 
-unsigned long random_int();
+uint32_t random_int();
+
+uint32_t hash(const void *data, int len);
 
 #endif

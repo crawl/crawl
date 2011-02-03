@@ -91,6 +91,9 @@ std::string place_name(unsigned short place, bool long_name,
             if (branch == you.level_type
                 && !you.level_type_origin.empty())
             {
+                if (!long_name)
+                    return upcase_first(you.level_type_name_abbrev);
+
                 std::string desc;
 
                 size_t space = you.level_type_origin.find(" ");
@@ -99,7 +102,7 @@ std::string place_name(unsigned short place, bool long_name,
                 else
                     desc += you.level_type_origin.substr(space + 1);
 
-                return long_name ? desc : upcase_first(you.level_type_name_abbrev);
+                return desc;
             }
             else
             {

@@ -161,6 +161,10 @@ Jessica
 
 An evil apprentice sorceress. She entered the dungeon hoping to find a quiet, secluded place where she could study the darker arts without being disturbed.
 %%%%
+Jory
+
+Once a simple village peasant, Jory found himself transformed in undeath into a powerful creature. Through the countless centuries unlived since then, he has honed his skills in combat and magic, amassed great wealth and many possessions, and now resides in a stonily quiet Tower of Silence. He's not about to let any puny adventurers ruin his hard work, so those who encounter him should beware!
+%%%%
 Joseph
 
 Looks like a mercenary.
@@ -306,6 +310,11 @@ A mean-looking human fighter who likes to kill, and not much else.
 Tiamat
 
 A powerful dragon with mighty wings. Her scales seem to shimmer and change colour as you watch.
+
+%%%%
+Tukima
+
+A spectre of unearthly beauty, dancing through the air without stopping to rest or take a bow.
 %%%%
 Urug
 
@@ -446,6 +455,10 @@ bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many dragons.
 %%%%
+bog mummy
+
+An undead figure preserved by the brackish waters of a bog. Though it has been reanimated by some unknown magic, this magic is not enough to prevent its decaying. It radiates a malignant curse upon all who offend it.
+%%%%
 boring beetle
 
 A large brown beetle with huge, rock-crushing mandibles.
@@ -557,7 +570,7 @@ Once in a very great while, there is a deep elf that scorns magic and devotes he
 %%%%
 deep elf conjurer
 
-This is an elf well-versed in destructive magic.
+This is a deep elf well-versed in destructive magic.
 %%%%
 deep elf death mage
 
@@ -602,6 +615,30 @@ Most of these mighty spellcasters draw power from the very Hells, but even those
 deep elf summoner
 
 This deep elf is skilled in the darker aspects of summoning.
+%%%%
+deep dwarf
+
+A pale and unnaturally tough-skinned dwarf.
+%%%%
+deep dwarf artificer
+
+This deep dwarf has mastered the use of magical devices.
+%%%%
+deep dwarf berserker
+
+A deep dwarf revelling in ferocity and blood-thirst.
+%%%%
+deep dwarf death knight
+
+A deep dwarf warrior-priest of Yredelemnul, chanting unholy homages.
+%%%%
+deep dwarf necromancer
+
+This deep dwarf basks in a pulsating magical aura of death.
+%%%%
+deep dwarf scion
+
+An armoured deep dwarf, formidable in melee combat.
 %%%%
 deep troll
 
@@ -707,7 +744,7 @@ This one is remarkably plain looking.
 %%%%
 ettin
 
-A two-headed giant.
+A two-headed giant, able to land devastating blows left and right.
 %%%%
 Executioner
 
@@ -728,6 +765,10 @@ This feline has been given sentience with magic. It uses the gift of speech to d
 fiend
 
 One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
+%%%%
+fire crab
+
+These crabs are prized for their brilliantly jewelled shells. The rarity of these shells is only enhanced by the vicious, fiery nature of the animal, and their almost supernatural ability to expel massive quantities of flames.
 %%%%
 fire elemental
 
@@ -785,21 +826,17 @@ giant amoeba
 
 A pulsating lump of protoplasm.
 %%%%
-giant ant
+worker ant
 
 A black ant with poisonous pincers, about the size of a large dog.
 %%%%
-giant bat
+megabat
 
 A huge black bat.
 %%%%
-giant beetle
+goliath beetle
 
 A huge black beetle with great crunching mandibles and very hard chitinous armour.
-%%%%
-giant blowfly
-
-A huge and irritating fly.
 %%%%
 giant toad
 
@@ -841,9 +878,9 @@ giant mite
 
 A large arachnid with vicious poisoned mouth-parts.
 %%%%
-giant mosquito
+vampire mosquito
 
-A huge, bloated mosquito. It looks diseased.
+This unfortunate and now massive creature once fed upon the blood of a vampire. Now it wants to feed upon yours.
 %%%%
 giant newt
 
@@ -876,6 +913,10 @@ A shapeshifter which has lost control over its transformations, and is constantl
 gnoll
 
 A taller and better-equipped relative of goblins and orcs, somewhat doglike in appearance.
+%%%%
+gnome
+
+A small, stout humanoid said to be good at finding its way through underground passages. Once commonly found in dungeons across the world, gnomes are now on the verge of extinction. This one may be the last of its kind.
 %%%%
 goblin
 
@@ -993,9 +1034,9 @@ hog
 
 A large, fat and very ugly pig.
 %%%%
-holy dragon
+pearl dragon
 
-A dragon imbued with the power of the Gods, it breathes blessed fire and claws with the sear of holy wrath.
+This dragon has been imbued with the power of the Gods! Its breath is blessed fire, and its claws burn with the sear of holy wrath.
 %%%%
 hound
 
@@ -1120,6 +1161,10 @@ An enormous monitor lizard. It's more than capable of preying on large animals. 
 kraken
 
 A gargantuan sea monster, capable of devouring entire ships. It embraces them with its tentacles and draws them into the depths. Fortunately, the tentacles are too big to embrace a small creature like you. Wait, did I say "fortunately"?
+%%%%
+laboratory rat
+
+This poor rat was the subject of a wizard's terrible experiments! Who knows what it is capable of?
 %%%%
 large abomination
 
@@ -1275,7 +1320,7 @@ A disgusting glob of grey sludge.
 %%%%
 ophan
 
-This strange creature consits of a wheel nested inside another, both of these covered in eyes, and a strange flame flickering across its surface.
+This strange creature consists of a wheel within a wheel, and both of these are covered in eyes; strange flames flicker across both surfaces.
 %%%%
 orange crystal statue
 
@@ -1359,6 +1404,10 @@ pile of gold coins
 
 An apparently harmless pile of gold coins hides a nasty venomous shapechanging predator.
 %%%%
+pillar of salt
+
+A large pillar of salt that is quickly crumbling away.
+%%%%
 Pit Fiend
 
 A huge winged fiend with incredibly tough skin.
@@ -1374,6 +1423,10 @@ The apparition of an unfortunate adventurer.
 polar bear
 
 A large and very strong bear covered in glistening white fur. If provoked, it may become angry!
+%%%%
+porcupine
+
+While it may look cute and harmless, its bite is painful and its spikes are sharp!
 %%%%
 program bug
 
@@ -1414,6 +1467,12 @@ A demon in the form of a tiger who comes to the material world in search of powe
 rat
 
 Wherever there are men, there are rats - rattus rattus. This rat has grown large and aggressive in the pestilential dungeon environment.
+%%%%
+raven
+
+This opportunistic bird sates its appetite by pecking at anything it can find. This includes such carrion as dead animals, dead monsters, and, of course, dead adventurers. The latter needn't necessarily be dead: a raven is quite happy to help you on their way to the afterlife.
+
+It has a particularly unhealthy fascination with eyeballs and things resembling eyeballs, such as pickled onions, walnuts and olives.
 %%%%
 reaper
 
@@ -1508,7 +1567,7 @@ A disturbing creature with the power to change its form. It is very rarely obser
 %%%%
 shedu
 
-A divine guardians that travels always as a pair, it has the ability to resurrect its mate from death.
+These dangerous divine guardians always travel in pairs. Each has the ability to heal the other and, if the worst is to occur, can even resurrect it.
 %%%%
 sheep
 
@@ -1590,7 +1649,7 @@ A large belligerent reptile, armoured in a carapace. Its neck is surprisingly ex
 %%%%
 soldier ant
 
-A giant ant with large mandibles and a vicious sting.
+A worker ant with large mandibles and a vicious sting.
 %%%%
 soul eater
 
@@ -1743,13 +1802,17 @@ ugly thing
 
 An ugly thing. According to legend, this mutated creature is the otherworldly spawn of a wizard's breeding experiment. Yuck.
 %%%%
+unborn deep dwarf
+
+This deep dwarf has honed its empathy with the powers of earth and death at the cost of its natural life force, transcending mortality in the peculiar dwarven fashion.
+%%%%
 unseen horror
 
 These creatures are usually unseen by the eyes of most, and those few who have seen them would rather not have.
 %%%%
 vampire
 
-A powerful undead.
+A powerful blood-drinking undead.
 %%%%
 vampire knight
 
@@ -1858,4 +1921,85 @@ A giant wasp covered with thick plates of yellow chitinous armour.
 ynoxinul
 
 A demon with shiny metallic scales.
+%%%%
+# Vault-defined monsters
+air elemental statue
+
+A delicate statue of a kenku gliding through the air. It looks quite insubstantial.
+%%%%
+ancient champion
+
+The unfathomably ancient skeleton of a humanoid creature. It has hundreds of golden sigils etched onto its bones, and pulses with terrible, unholy power.
+%%%%
+antique lich
+
+A lich who has grown expensive over countless years.
+%%%%
+Cigotuvi's Monster
+
+This terrifying creation looks to have been constructed from the body parts of every monstrous creature imaginable.
+%%%%
+earth elemental statue
+
+A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
+%%%%
+fire elemental statue
+
+An ornate statue of an orc holding a torch aloft. The air around it shimmers.
+%%%%
+firespitter statue
+
+Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes.
+%%%%
+flesh golem
+
+An animated mound of misshapen flesh.
+%%%%
+glowing angel
+
+A divine agent of Zin, it is a towering winged figure with an aura of brilliant white light. This angel's face, though, is marked by a scowl, as if its zeal against any real or perceived vice overshadows its goodness.
+%%%%
+grey elf
+
+Once considered a unique species of its own, grey elves are now more properly classified as a sub-species of high elf. Little exists to distinguish them from their high elf cousins, aside from their supposed glamour (which is probably more myth than fact).
+%%%%
+hill dwarf
+
+Hill dwarves are basically just mountain dwarves who live on hills. They are otherwise indistinguishable from their mountain brethren. Once able adventurers, the hill dwarves no longer have any interest in dungeon delving. This one was captured specially for this exhibit.
+%%%%
+human monk
+
+It seems a flimsy representation of a monk; nothing more than a half-formed memory.
+%%%%
+iron troll monk
+
+It seems a flimsy representation of a monk; nothing more than a half-formed memory.
+%%%%
+malarious mermaid
+
+A young woman with a fish tail in place of legs. She looks quite sick, but still capable of bespelling her audience.
+%%%%
+pristine statue
+
+An immaculately sculpted statue of an archer.
+%%%%
+rock troll monk
+
+It seems a flimsy representation of a monk; nothing more than a half-formed memory.
+%%%%
+sickly siren
+
+A young woman with a fish tail in place of legs. She looks quite sick, but still capable of bespelling her audience.
+%%%%
+strange machine
+
+A glistening silver machine.
+%%%%
+water elemental statue
+
+A smooth statue of a mermaid bathing in a fountain. It glistens softly.
+%%%%
+zot statue
+
+This statue is profoundly disturbing.
 %%%%

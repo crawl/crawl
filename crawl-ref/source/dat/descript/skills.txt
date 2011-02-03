@@ -102,11 +102,17 @@ Being skilled in a magical "school" makes it easier to learn and cast spells of 
 
 Conjurations are battle oriented spells, all dealing damage in various ways.
 %%%%
-Enchantments
+Hexes
 
 Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
 
-Enchantments try to affect nearby beings in manifold possibilities. This includes a list of beneficial self-enchantments, like Haste.
+Hexes try to bestow various enchantments on nearby things. While none do direct damage, being ensorcelled can effectively take an opponent out of combat. Sadly, Hexes suffer greatly from spell resistance when cast on living beings.
+%%%%
+Charms
+
+Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+
+Charms provide you with a number of self-enhancing auras.
 %%%%
 Summonings
 

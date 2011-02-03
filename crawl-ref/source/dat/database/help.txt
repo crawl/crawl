@@ -18,10 +18,10 @@ The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 
 <h>Category shortcuts</w>
 You can quickly select items by type by pressing:
-<w>!</w>   potions      <w>(</w>   weapons         <w>[</w>   armour       <w>=</w> or <w>"</w>   jewellery 
+<w>!</w>   potions      <w>(</w>   weapons         <w>[</w>   armour       <w>=</w> or <w>"</w>   jewellery
 <w>?</w>   scrolls      <w>)</w>   ammunition      <w>/</w>   wands        <w>:</w> or <w>+</w>   books
 <w>%</w>   food         <w>&</w>   carrion (corpses, skeletons, useless chunks)
-Global selects:  <w>,</w>   select all      <w>*</w>   invert all        <w>-</w>   deselect all     
+Global selects:  <w>,</w>   select all      <w>*</w>   invert all        <w>-</w>   deselect all
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
 narrows the range of items to be (de)selected. The default are useless items.
 %%%%
@@ -130,6 +130,7 @@ interlevel-travel.branch.prompt
  <w><<</w>      : Go up the nearest stairs.
  <w>></w>      : Go down the nearest stairs.
  <w>Ctrl-P</w> : Travel to a level in the branch above this one.
+ <w>^</w>      : Travel to the entrance of the branch you select.
  <w>*</w>      : Show available waypoints (if any are set).
  <w>0</w>-<w>9</w>    : Go to the numbered waypoint.
 %%%%

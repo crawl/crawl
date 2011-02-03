@@ -27,6 +27,8 @@
 #include "spl-book.h"
 #include "stuff.h"
 #include "tiledef-dngn.h"
+#include "tiledef-icons.h"
+#include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tilepick.h"
 #include "viewgeom.h"
@@ -86,16 +88,16 @@ void InventoryRegion::pack_buffers()
                     m_buf.add_main_tile(TILE_ITEM_SLOT_EQUIP, x, y);
 
                 if (item.flag & TILEI_FLAG_MELDED)
-                    m_buf.add_main_tile(TILE_MESH, x, y);
+                    m_buf.add_icons_tile(TILEI_MESH, x, y);
             }
             else if (item.flag & TILEI_FLAG_CURSE)
                 m_buf.add_main_tile(TILE_ITEM_SLOT_CURSED, x, y);
 
             if (item.flag & TILEI_FLAG_SELECT)
-                m_buf.add_main_tile(TILE_ITEM_SLOT_SELECTED, x, y);
+                m_buf.add_icons_tile(TILEI_ITEM_SLOT_SELECTED, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_main_tile(TILE_CURSOR, x, y);
+                m_buf.add_icons_tile(TILEI_CURSOR, x, y);
 
             if (item.tile)
                 m_buf.add_main_tile(item.tile, x, y);
@@ -107,10 +109,10 @@ void InventoryRegion::pack_buffers()
                 m_buf.add_main_tile(item.special, x, y, 0, 0);
 
             if (item.flag & TILEI_FLAG_TRIED)
-                m_buf.add_main_tile(TILE_TRIED, x, y, 0, TILE_Y / 2);
+                m_buf.add_icons_tile(TILEI_TRIED, x, y, 0, TILE_Y / 2);
 
             if (item.flag & TILEI_FLAG_INVALID)
-                m_buf.add_main_tile(TILE_MESH, x, y);
+                m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
     }
 }
@@ -142,12 +144,12 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
             if (event.mod & MOD_SHIFT)
                 tile_item_use_floor(idx);
             else
-                tile_item_pickup(idx);
+                tile_item_pickup(idx, (event.mod & MOD_CTRL));
         }
         else
         {
             if (event.mod & MOD_SHIFT)
-                tile_item_drop(idx);
+                tile_item_drop(idx, (event.mod & MOD_CTRL));
             else if (event.mod & MOD_CTRL)
                 tile_item_use_secondary(idx);
             else
@@ -292,11 +294,16 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
         tip += "\n[L-Click] Pick up (%)";
         cmd.push_back(CMD_PICKUP);
+        if (item.quantity > 1)
+        {
+            tip += "\n[Ctrl + L-Click] Partial pick up (%)";
+            cmd.push_back(CMD_PICKUP_QUANTITY);
+        }
         if (item.base_type == OBJ_CORPSES
             && item.sub_type != CORPSE_SKELETON
             && !food_is_rotten(item))
         {
-            tip += "\n[Shift-L-Click] ";
+            tip += "\n[Shift + L-Click] ";
             if (can_bottle_blood_from_corpse(item.plus))
                 tip += "Bottle blood";
             else
@@ -306,7 +313,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
             if (you.species == SP_VAMPIRE)
             {
-                tip += "\n\n[Shift-R-Click] Drink blood (e)";
+                tip += "\n\n[Shift + R-Click] Drink blood (e)";
                 cmd.push_back(CMD_EAT);
             }
         }
@@ -314,7 +321,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                  && you.is_undead != US_UNDEAD
                  && you.species != SP_VAMPIRE)
         {
-            tip += "\n[Shift-R-Click] Eat (e)";
+            tip += "\n[Shift + R-Click] Eat (e)";
             cmd.push_back(CMD_EAT);
         }
     }
@@ -337,7 +344,8 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
         if (_can_use_item(item, equipped))
         {
-            tip += "\n[L-Click] ";
+            std::string tip_prefix = "\n[L-Click] ";
+            std::string tmp = "";
             if (equipped)
             {
                 if (wielded && type != OBJ_MISCELLANY && !item_is_rod(item))
@@ -357,18 +365,21 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
-                _handle_wield_tip(tip, cmd);
-                if (is_throwable(&you, item))
+                if (you.species != SP_CAT)
                 {
-                    tip += "\n[Ctrl-L-Click] Fire (f)";
-                    cmd.push_back(CMD_FIRE);
+                    _handle_wield_tip(tmp, cmd);
+                    if (is_throwable(&you, item))
+                    {
+                        tmp += "\n[Ctrl + L-Click] Fire (f)";
+                        cmd.push_back(CMD_FIRE);
+                    }
                 }
                 break;
             case OBJ_WEAPONS + EQUIP_OFFSET:
-                _handle_wield_tip(tip, cmd, "", true);
+                _handle_wield_tip(tmp, cmd, "", true);
                 if (is_throwable(&you, item))
                 {
-                    tip += "\n[Ctrl-L-Click] Fire (f)";
+                    tmp += "\n[Ctrl + L-Click] Fire (f)";
                     cmd.push_back(CMD_FIRE);
                 }
                 break;
@@ -376,64 +387,73 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 if (item.sub_type >= MISC_DECK_OF_ESCAPE
                     && item.sub_type <= MISC_DECK_OF_DEFENCE)
                 {
-                    _handle_wield_tip(tip, cmd);
+                    _handle_wield_tip(tmp, cmd);
                     break;
                 }
-                tip += "Evoke (V)";
+                tmp += "Evoke (V)";
                 cmd.push_back(CMD_EVOKE);
                 break;
             case OBJ_MISCELLANY + EQUIP_OFFSET:
                 if (item.sub_type >= MISC_DECK_OF_ESCAPE
                     && item.sub_type <= MISC_DECK_OF_DEFENCE)
                 {
-                    tip += "Draw a card (%)\n";
+                    tmp += "Draw a card (%)";
                     cmd.push_back(CMD_EVOKE_WIELDED);
-                    _handle_wield_tip(tip, cmd, "[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                     break;
                 }
                 // else fall-through
             case OBJ_STAVES + EQUIP_OFFSET: // rods - other staves handled above
-                tip += "Evoke (%)\n";
+                tmp += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE_WIELDED);
-                _handle_wield_tip(tip, cmd, "[Ctrl-L-Click]", true);
+                _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
-                tip += "Wear (%)";
-                cmd.push_back(CMD_WEAR_ARMOUR);
+                if (you.species != SP_CAT)
+                {
+                    tmp += "Wear (%)";
+                    cmd.push_back(CMD_WEAR_ARMOUR);
+                }
                 break;
             case OBJ_ARMOUR + EQUIP_OFFSET:
-                tip += "Take off (%)";
+                tmp += "Take off (%)";
                 cmd.push_back(CMD_REMOVE_ARMOUR);
                 break;
             case OBJ_JEWELLERY:
-                tip += "Put on (%)";
+                tmp += "Put on (%)";
                 cmd.push_back(CMD_WEAR_JEWELLERY);
                 break;
             case OBJ_JEWELLERY + EQUIP_OFFSET:
-                tip += "Remove (%)";
+                tmp += "Remove (%)";
                 cmd.push_back(CMD_REMOVE_JEWELLERY);
                 break;
             case OBJ_MISSILES:
-                tip += "Fire (%)";
-                cmd.push_back(CMD_FIRE);
-
-                if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
-                else if (item.sub_type == MI_STONE
-                            && you.has_spell(SPELL_SANDBLAST)
-                         || item.sub_type == MI_ARROW
-                            && you.has_spell(SPELL_STICKS_TO_SNAKES))
+                if (you.species != SP_CAT)
                 {
-                    // For Sandblast and Sticks to Snakes,
-                    // respectively.
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]");
+                    tmp += "Fire (%)";
+                    cmd.push_back(CMD_FIRE);
+
+                    if (wielded)
+                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
+                    else if (item.sub_type == MI_STONE
+                                && you.has_spell(SPELL_SANDBLAST)
+                            || item.sub_type == MI_ARROW
+                                && you.has_spell(SPELL_STICKS_TO_SNAKES))
+                    {
+                        // For Sandblast and Sticks to Snakes,
+                        // respectively.
+                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
+                    }
                 }
                 break;
             case OBJ_WANDS:
-                tip += "Evoke (%)";
-                cmd.push_back(CMD_EVOKE);
-                if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                if (you.species != SP_CAT)
+                {
+                    tmp += "Evoke (%)";
+                    cmd.push_back(CMD_EVOKE);
+                    if (wielded)
+                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
+                }
                 break;
             case OBJ_BOOKS:
                 if (item_type_known(item)
@@ -444,73 +464,65 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                     if (player_can_memorise_from_spellbook(item)
                         || has_spells_to_memorise(true))
                     {
-                        tip += "Memorise (%)";
+                        tmp += "Memorise (%)";
                         cmd.push_back(CMD_MEMORISE_SPELL);
                     }
                     if (wielded)
-                        _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                     break;
                 }
                 // else fall-through
             case OBJ_SCROLLS:
-                tip += "Read (%)";
+                tmp += "Read (%)";
                 cmd.push_back(CMD_READ);
                 if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_POTIONS:
-                tip += "Quaff (%)";
+                tmp += "Quaff (%)";
                 cmd.push_back(CMD_QUAFF);
                 // For Sublimation of Blood.
                 if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 else if (item_type_known(item)
                          && is_blood_potion(item)
                          && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
                 {
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]");
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
                 }
                 break;
             case OBJ_FOOD:
-                tip += "Eat (%)";
+                tmp += "Eat (%)";
                 cmd.push_back(CMD_EAT);
                 // For Sublimation of Blood.
                 if (wielded)
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 else if (item.sub_type == FOOD_CHUNK
                          && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
                 {
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]");
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
                 }
                 break;
             case OBJ_CORPSES:
                 if (you.species == SP_VAMPIRE)
                 {
-                    tip += "Drink blood (%)";
+                    tmp += "Drink blood (%)";
                     cmd.push_back(CMD_EAT);
                 }
 
                 if (wielded)
                 {
                     if (you.species == SP_VAMPIRE)
-                        tip += "\n";
-                    _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
+                        tmp += "\n";
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 }
                 break;
             default:
-                tip += "Use";
+                tmp += "Use";
             }
-        }
 
-        // For Boneshards.
-        // Special handling since skeletons have no primary action.
-        if (item.base_type == OBJ_CORPSES
-            && item.sub_type == CORPSE_SKELETON)
-        {
-            if (wielded)
-                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
-            else if (you.has_spell(SPELL_BONE_SHARDS))
-                _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]");
+            if (!tmp.empty())
+                tip += tip_prefix + tmp;
         }
 
         tip += "\n[R-Click] Describe";
@@ -518,8 +530,13 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         if (!equipped || !_is_true_equipped_item(you.inv[idx])
             || !you.inv[idx].cursed())
         {
-            tip += "\n[Shift-L-Click] Drop (%)";
+            tip += "\n[Shift + L-Click] Drop (%)";
             cmd.push_back(CMD_DROP);
+            if (you.inv[idx].quantity > 1)
+            {
+                tip += "\n[Ctrl-Shift + L-Click] Drop quantity (%#)";
+                cmd.push_back(CMD_DROP);
+            }
         }
     }
 

@@ -1,0 +1,114 @@
+NAME:   dungeon_sprint_fedhas
+TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+DESC:   Sprint IV: "Fedhas' Mad Dash"
+ORIENT: encompass
+SUBVAULT: o : temple
+KMONS:  A = fungus
+KMONS:  B = spriggan hd:3
+KMONS:  C = oklob sapling hp:7
+KMONS:  D = oklob sapling hp:15 name:wizard n_suf spells:magic_dart;.;cantrip;magic_dart actual_spells
+KMONS:  E = scorpion
+KMONS:  F = wandering mushroom
+KMONS:  G = burning bush
+KMONS:  H = killer bee
+KMONS:  I = bumblebee
+KMONS:  L = oklob plant
+KMONS:  J = spriggan druid
+KMONS:  M = oklob plant hp:30 name:conjurer n_suf spells:stone_arrow;.;.;.;iskenderun's_mystic_blast actual_spells
+KMONS:  N = giant spore
+KMONS:  O = oklob plant hp:30 name:summoner n_suf spells:call_imp;.;.;summon_swarm actual_spells
+KMONS:  P = oklob plant hp:30 name:shifter n_suf spells:blink_other;blink_other actual_spells
+KMONS:  Q = demonic crawler
+KMONS:  R = spriggan rider
+KMONS:  T = spriggan
+KMONS:  U = spriggan berserker
+KMONS:  V = Agnes
+KMONS:  W = spriggan defender
+KMONS:  X = spriggan rider ; bow unrand:storm_bow . arrow
+KMONS:  Y = bush
+KMONS:  a = yellow wasp
+KMONS:  b = ghost moth
+KMONS:  d = oklob plant name:meteorologist n_suf spells:sunray;.;.;airstrike actual_spells
+KMONS:  e = oklob plant name:demonologist n_suf spells:summon_demon;.;.;summon_demon;.;malign_gateway actual_spells
+KMONS:  f = oklob plant name:annihilator n_suf spells:poison_arrow;orb_of_destruction;.;.;bolt_of_cold actual_spells
+KMONS:  g = the Enchantress
+KMONS:  h = moth of wrath
+KMONS:  i = queen bee
+KMONS:  m = green rat
+KMONS:  n = worker ant
+KMONS:  u = grey rat
+KITEM:  j = piece of ambrosia q:3
+KITEM:  k = honeycomb q:3
+KITEM:  n = ring of invisibility
+KITEM:  M = any book
+KITEM:  # = Orb of Zot
+KFEAT:  Z = any shop
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccccccccccccccccccccccccccx
+xc{[(Ac....uc.$$$$coooooooooooooc.*+$BBc.E..ccZcc|ccccx
+xcAA..+.%...+.c%%.+ooooooooooooo+.Dc$E$c.F.G+*|cc+ccccx
+xcAAAAc...m.cCcn..coooooooooooooc..ccc+cc.**ccZc$$ccccx
+xccccccccccccccc+ccoooooooooooooc.*ccZZ$+..Fccccc..R.cx
+xcIH.t........+...coooooooooooooccccccccccccccccc...Zcx
+xckH....t.....c$C$ccccccccccccccccccc..L.%*ccc....Tt.cx
+xcIH...t..t..ccccccttttt..t*ccc.+.*+.....*%+Q+..Tt..Zcx
+xcc+cccc+ccccccC|+......t..tccM.c.Nc.A....Pcccccccccccx
+xc*.c$$$$+......Fct..ttt.tJ.ccc.cc+cc.A.O..cccccccccccx
+xcL*cG|cccG...L..c.tt.*t.$$t+..$ct.tccccccccccccccccccx
+xcccccccccccccccccccccccccccccccc.....ccccccccccccccccx
+xckj....................ccccccc..t..t....cccccccccccccx
+xcZa..N...............Y.ccccc.U.t......t...tccccccccccx
+xcZQ..........T......XY..........t.V...Z.Z..W|ccccccccx
+xcZb..................Y...ccccccccccccccccccccccccccccx
+xccccccccccc+cccccccccccccccccccccccccccccccccccccccccx
+xccccccP.........ccccc..ccccc..AZZccc...e|ccccccccccccx
+xcccccc.......A.dccc.R..+......O.%cc...Y.U+nccccccccccx
+xcccccccc.A....cccccaQa.cccccY....+.....f|ccccccccccccx
+xcccccccccc...cccccc$$$$ccccccccccccccccccccccccccccccx
+xcccccccccc....cccc$$$$$cccccZZZcL.L.L.L.L.L.cccccccccx
+xcccccccccc........$$$$$+$$$$Z$Z+............+.......cx
+xcccccccccc........$$$$$cccccZZZc.L.L.L.L.L.Lccccccc.cx
+xccccccccccccccccccccccccccccccccccccccccccccccccccc.cx
+xcc........t.Wt..t..t.Rt..t.Ut..t..t..t..t.Wt..t..t..cx
+xcc.g..........................J.......J.............cx
+xcc........t.Jt..t..t.Rt..t.Ut..t..t..t..t.Wt..t..t..cx
+xccc++++ccccccccccccccccccccccccccccccccccccccccccccccx
+xcc......cccccccccccccc.....ccccc....cccccc...h..cccccx
+xcc......ccccccccc.......h........b................Wtcx
+xccc.......e...............i...............ccccccc..#cx
+xccc.Q..........a........R........U................Wtcx
+xccc..............cccccc.....cccc....cccccc...h..cccccx
+xccc.......f......ccccccccccccccccccccccccccccccccccccx
+xcccccccccccccccccccccccccccccccccccccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   sprint_temple
+TAGS:   temple no_rotate no_hmirror no_vmirror
+KFEAT:  A = altar_cheibriados
+KFEAT:  B = altar_zin
+KFEAT:  C = altar_elyvilon
+KFEAT:  D = altar_shining_one
+KFEAT:  E = altar_okawaru
+KFEAT:  F = altar_yredelemnul
+KFEAT:  G = altar_kikubaaqudgha
+KFEAT:  H = altar_trog
+KFEAT:  I = altar_lugonu
+KFEAT:  J = altar_nemelex_xobeh
+KFEAT:  K = altar_xom
+KFEAT:  L = altar_beogh
+KFEAT:  M = altar_jiyva
+KFEAT:  N = altar_vehumet
+KFEAT:  O = altar_sif_muna
+KFEAT:  P = altar_makhleb
+KMONS:  X = oklob sapling name:priest n_suf spells:cantrip;.;cantrip;smiting priest_spells
+
+MAP
+.T.........T.
+.A.B.C.D.E.F.
+..M.NXO.P.T..
+.G.H.I.J.K.L.
+.T.........T.
+ENDMAP

@@ -139,7 +139,7 @@ function volcano_setup (e, metal, subvault)
     end
     if subvault == nil then
         e.set_random_mon_list([[hog / fire elemental / fire vortex /
-                                giant ant / bumblebee / fire drake / lindwurm /
+                                worker ant / bumblebee / fire drake / lindwurm /
                                 imp / redback / manticore / hell hound /
                                 hell hog / ghoul / flayed ghost /
                                 pulsating lump / toenail golem / efreet /
@@ -153,8 +153,7 @@ end
 
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
 -- weighted and balanced and have been tested extensively.
-
-local function in_radius_12 (x, y)
+function callback.volcano_in_radius_12(x, y)
   return dgn.point_in_radius(dgn.point(x, y), dgn.point(you.pos()), 12)
 end
 
@@ -164,7 +163,8 @@ local large_warning = tw_machine(3, "The air gets thick with the scent of sulphu
 
 local small_warning = tw_machine(3, nil, nil, nil, "The volcano roars to life, " ..
                                  "belching forth lava!", "The air gets thick with " ..
-                                 "the scent of sulphur.", in_radius_12)
+                                 "the scent of sulphur.",
+                                 "callback.volcano_in_radius_12")
 
 function place_large_volcano(e)
     e.kfeat("V = l")
@@ -379,7 +379,7 @@ function fiery_guardians (e)
     -- We are now going to use a mixed pack.
     if crawl.one_chance_in(3) then
         -- "Lair"-esque fire-themed monster pack.
-        e.mons("hog / giant ant / redback w:1 / bumblebee w:1 / manticore")
+        e.mons("hog / worker ant / redback w:1 / bumblebee w:1 / manticore")
         e.mons("fire drake / lindwurm w:1")
         return
     end
@@ -403,8 +403,90 @@ function fiery_guardians (e)
     e.mons("hell hound / hog / toenail golem / fire elemental / imp")
     e.mons(hellknight)
     return
-
 end
+
+function volcano_caves_collapse_doorways(data, triggerable, triggerer,
+                                         marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  local x, y = marker:pos()
+  local you_x, you_y = you.pos()
+
+  if you_x == x and you_y == y then
+    crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
+              "warning")
+    return
+  end
+
+  if you.see_cell(marker:pos()) then
+    crawl.mpr("The volcano erupts! Nearby, a roof collapses.", "warning")
+  else
+    crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
+              "warning")
+  end
+  dgn.terrain_changed(x, y, "stone_wall", false, false, false)
+  dgn.colour_at(x, y, "lightred")
+  dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "grey smoke", "other", -1)
+
+  -- Don't collapse same doorway twice.
+  triggerable:remove(marker)
+end
+
+
+function volcano_overflow_convert_lava(data, triggerable,
+                                       triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  data.lava_phase = data.lava_phase + 1
+  local lp = data.lava_phase
+  local my_slaves = {}
+
+  -- So we don't have to duplicate code too much.
+  local function convert_slaves_to_lava (mslaves, opposite)
+   local yp = dgn.point(you.pos())
+    for _, pos in ipairs(mslaves) do
+      if pos ~= yp then
+        if opposite then
+          dgn.terrain_changed(pos.x, pos.y, "floor", false, false, false)
+        else
+          dgn.terrain_changed(pos.x, pos.y, "lava", false, false, false)
+        end
+      end
+    end
+  end
+
+  if lp == 1 then
+    crawl.mpr("The ground shudders ominously.", "warning")
+  elseif lp == 2 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
+    crawl.mpr("In the distance, the volcano explodes with a roar! Lava spreads "
+               .. "onto the path.", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 3 then
+    crawl.mpr("The air is thick with the scent of sulphur.", "warning")
+  elseif lp == 4 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 4)
+    crawl.mpr("There is another distant roar. More lava overflows!", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 5 then
+    crawl.mpr("The ground moves violently!", "warning")
+  elseif lp == 6 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    crawl.mpr("The volcano erupts again! A thin layer of lava overflows to " ..
+              "fill the cavern.", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 7 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
+              "over!", "warning")
+    convert_slaves_to_lava(my_slaves, true)
+  end
+end
+
 }}
 
 default-depth: Lair:1-8, Orc:1-4, Hive:1
@@ -683,7 +765,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       statues in statue_cache aren't, so I'm taking that as a precedent.
 KMONS:  G = statue name:firespitter name_adjective \
         tile:mons_firespitter_statue generate_awake \
-        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+        spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: G = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 12 items, 6 gold.
 :       volcano_setup(_G, false, true)
@@ -708,7 +790,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 :       fiery_guardians(_G)
 KMONS:  F = statue name:firespitter name_adjective \
         tile:mons_firespitter_statue generate_awake \
-        spells:throw_flame;sticky_flame;.;bolt_of_magma;fireball;.
+        spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: F = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 10 items.
 :       volcano_setup(_G, false, true)
@@ -1165,37 +1247,9 @@ TAGS:       volcano no_item_gen no_monster_gen no_rotate
 LFLAGS:     no_tele_control
 :           volcano_setup(_G, true)
 {{
-local function collapse_doorways (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  local x, y = marker:pos()
-  local you_x, you_y = you.pos()
-
-  if you_x == x and you_y == y then
-    crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
-              "warning")
-    return
-  end
-
-  if you.see_cell(marker:pos()) then
-    crawl.mpr("The volcano erupts! Nearby, a roof collapses.", "warning")
-  else
-    crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
-              "warning")
-  end
-  dgn.terrain_changed(x, y, "stone_wall", false, false, false)
-  dgn.colour_at(x, y, "lightred")
-  dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "grey smoke", "other", -1)
-
-  -- Don't collapse same doorway twice.
-  triggerable:remove(marker)
-end
-
 local collapse_marker = TriggerableFunction:new (
   {
-    func=collapse_doorways,
+    func="volcano_caves_collapse_doorways",
     repeated=true,
     props = {
       -- Only collapse one doorway at a time, randomly.
@@ -1226,20 +1280,20 @@ volcano_milestone(_G)
 }}
 MAP
                cccc ccc
-             ccc<XcccZcccccc
-           cccZcccXRRX1ccZZccc
-           c<XXZZccXXZccZ1X<cc
-           ccc1RRZcZXccXRRXcccc
-          cc<ccZXXccMcXZZXccZZcc
-         ccZXZccZMcY.cMccccZ1X<c
+             cccXXcccZcccccc
+           cccZccc<RRX1ccZZccc
+           cXX<ZZccXXZccZ1XXcc
+           ccc1RRZcZXccXRR<cccc
+          ccXccZXXccMcXZZXccZZcc
+         ccZ<ZccZMcY.cMccccZ1<Xc
         ccZ121ZcccY...ccMXXRRccc
        ccZXRRRRccY....Y.cccccc
        cZXXXXXccY..A<....ccZZccc
        ccZRRXXXM.....YcccMXRR1Zcc
-        cccZXcccMY..YMc1ccZXXXX<c
+        cccZXcccMY..YMc1ccZXXX<Xc
           ccccXXccYcccZXXcccZZccc
            ccZXXZccccZXRRXZcccc
-          ccZRRX1XX<cccZZXZcc
+          ccZRRX1<XXcccZZ<Zcc
            ccZXZXZccc cccMcc
             ccccXcc     ccc
              ccccc
@@ -1325,58 +1379,6 @@ ORIENT:     encompass
 TAGS:       volcano no_item_gen no_monster_gen no_rotate
 MONS:       nothing, nothing, nothing
 {{
-
-function convert_lava (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  data.lava_phase = data.lava_phase + 1
-  local lp = data.lava_phase
-  local my_slaves = {}
-
-  -- So we don't have to duplicate code too much.
-  local function convert_slaves_to_lava (mslaves, opposite)
-   local yp = dgn.point(you.pos())
-    for _, pos in ipairs(mslaves) do
-      if pos ~= yp then
-        if opposite then
-          dgn.terrain_changed(pos.x, pos.y, "floor", false, false, false)
-        else
-          dgn.terrain_changed(pos.x, pos.y, "lava", false, false, false)
-        end
-      end
-    end
-  end
-
-  if lp == 1 then
-    crawl.mpr("The ground shudders ominously.", "warning")
-  elseif lp == 2 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
-    crawl.mpr("In the distance, the volcano explodes with a roar! Lava spreads "
-               .. "onto the path.", "warning")
-    convert_slaves_to_lava(my_slaves)
-  elseif lp == 3 then
-    crawl.mpr("The air is thick with the scent of sulphur.", "warning")
-  elseif lp == 4 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 4)
-    crawl.mpr("There is another distant roar. More lava overflows!", "warning")
-    convert_slaves_to_lava(my_slaves)
-  elseif lp == 5 then
-    crawl.mpr("The ground moves violently!", "warning")
-  elseif lp == 6 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
-    crawl.mpr("The volcano erupts again! A thin layer of lava overflows to " ..
-              "fill the cavern.", "warning")
-    convert_slaves_to_lava(my_slaves)
-  elseif lp == 7 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
-    crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
-              "over!", "warning")
-    convert_slaves_to_lava(my_slaves, true)
-  end
-end
-
 -- So we know what to convert.
 lua_marker("1", portal_desc { lava_phase=2 })
 lua_marker("2", portal_desc { lava_phase=4 })
@@ -1384,7 +1386,7 @@ lua_marker("3", portal_desc { lava_phase=6 })
 
 -- And finally, let's convert it
 local sink_marker = TriggerableFunction:new {
-  func = convert_lava,
+  func = "volcano_overflow_convert_lava",
   repeated = true,
   data = {lava_phase=0}
 }

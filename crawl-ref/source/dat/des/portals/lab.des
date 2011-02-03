@@ -9,12 +9,14 @@
 # Labyrinth entry vaults
 
 NAME:   lab_entry_generic
-TAGS:   luniq_lab chance_lab transparent trowel_portal allow_dup extra
-# Nominal chance for labs was 1 chance in 15, but making it eligible as a
-# random vault gives this vault more opportunities to be placed, so dropping
-# chance to 2.85%.
-CHANCE: 285
-DEPTH:  12-27
+TAGS:   uniq_lab chance_lab transparent trowel_portal allow_dup extra
+# (Jan 2010) With the reduction in placement of Labyrinths to 10-20 (roughly
+# across 24 levels) and changing to game-unique, chance of NOT having a
+# Labyrinth was (1-285/10^4)^24 = ~49%. Increasing chance to 5% gives you
+# (1-500/10^4)^24 = ~29% chance of NOT placing a Labyrinth, ~71% chance
+# of getting a Labyrinth every game, skewed towards earlier depths.
+CHANCE: 500
+DEPTH:  10-20, !Orc, !Swamp, !Shoals, !Hive, !Snake, !Slime
 {{
   local messager =
     timed_msg {
@@ -69,16 +71,16 @@ NAME:    labyrinth_watery
 TAGS:    minotaur generate_loot no_pool_fixup allow_dup
 MONS:    patrolling minotaur
 SHUFFLE: def
-SUBST:   d=~, e=~, f=., c:vvc
+SUBST:   d=~, e=~, f=., b:vvb
 MAP
 .........
-.ccccccc.
-.cwwwwwc.
-.cww<wwc.
-.cwdefwc.
-.ccc1ccc.
-.c.....c.
-.ccc+ccc.
+.bbbbbbb.
+.bwwwwwb.
+.bww<wwb.
+.bwdefwb.
+.bbb1bbb.
+.b.....b.
+.bbb+bbb.
 .........
 ENDMAP
 
@@ -101,18 +103,18 @@ ENDMAP
 NAME:  labyrinth_spiral
 TAGS:  minotaur generate_loot allow_dup
 MONS:  patrolling minotaur
-SUBST: c : cvz, z = vc
+SUBST: b : bvz, z = vb
 MAP
 ............
-.cccccccccc.
-.c........c.
-.c.cccccc.c.
-.c.c<1..c.c.
-.c.cccc.c.c.
-.c......c.c.
-.cccccccc.c.
-..........c.
-.cccccccccc.
+.bbbbbbbbbb.
+.b........b.
+.b.bbbbbb.b.
+.b.b<1..b.b.
+.b.bbbb.b.b.
+.b......b.b.
+.bbbbbbbb.b.
+..........b.
+.bbbbbbbbbb.
 ............
 ENDMAP
 
@@ -122,19 +124,19 @@ NAME:   labyrinth_hidden_loot
 TAGS:   minotaur generate_loot allow_dup
 MONS:   patrolling minotaur, minotaur zombie
 SUBST:  d = 2%*
-SUBST:  c : cvv
+SUBST:  b : bvv
 MAP
 ............
-.cccccccccc.
-.cxxxxdxxxc.
-.cxxxx=xxxc.
-.cxx..U.xxc.
-.cd=U...xxc.
-.cxx...U=dc.
-.cxx.<..xxc.
-.cxxxx+xxxc.
-.cxxxx1xxxc.
-.ccccc+cccc.
+.bbbbbbbbbb.
+.bxxxxdxxxb.
+.bxxxx=xxxb.
+.bxx..U.xxb.
+.bd=U...xxb.
+.bxx...U=db.
+.bxx.<..xxb.
+.bxxxx+xxxb.
+.bxxxx1xxxb.
+.bbbbb+bbbb.
 ............
 ENDMAP
 
@@ -143,31 +145,31 @@ ENDMAP
 NAME:    labyrinth_mini_lab
 TAGS:    minotaur generate_loot allow_dup
 SHUFFLE: def, ghi, klm
-SUBST:   d : c, e : ., f : c
-SUBST:   g : c, h : ., i : c
+SUBST:   d : b, e : ., f : b
+SUBST:   g : b, h : ., i : b
 SUBST:   k = <, l = ., m = .
 KMONS:   < = patrolling minotaur
 KFEAT:   < = <
-SUBST:   c : vvc
+SUBST:   b : vvb
 
 # should not be necessary
 validate {{ return has_exit_from_glyph('<') }}
 
 MAP
 ...............
-.ccccccccccccc.
-.cm....k....lc.
-.cgceccccdccfc.
-.c.c.........c.
-.c.cccfc.ccccc.
-.c.....c.c...c.
-.ccecc.c.h.cfc.
-.c...c.c.iicfc.
-.c.c.c.c.f.cfc.
-.c.c.g.c.c.cfc.
-.c.c.cdchc.cfc.
-.c.c.......gfc.
-.cdcccecccccfc.
+.bbbbbbbbbbbbb.
+.bm....k....lb.
+.bgbebbbbdbbfb.
+.b.b.........b.
+.b.bbbfb.bbbbb.
+.b.....b.b...b.
+.bbebb.b.h.bfb.
+.b...b.b.iibfb.
+.b.b.b.b.f.bfb.
+.b.b.g.b.b.bfb.
+.b.b.bdbhb.bfb.
+.b.b.......gfb.
+.bdbbbebbbbbfb.
 ...............
 ENDMAP
 
@@ -176,21 +178,21 @@ ENDMAP
 NAME:    labyrinth_trapped
 TAGS:    minotaur generate_loot allow_dup
 MONS:    patrolling minotaur
-NSUBST:  g = 1:. / *:c
+NSUBST:  g = 1:. / *:b
 NSUBST:  D = 1:. / *:D
 KFEAT:   d = axe trap / dart trap / needle trap / blade trap
 KFEAT:   D = teleport trap
-SUBST:   c : vvc
+SUBST:   b : vvb
 WEIGHT:  2
 MAP
 ..............
-.cccccccccccc.
-.g.dddD+.cccc.
-.c.ccccc.cccc.
-.g.dddD+.+1<c.
-.c.ccccc.cccc.
-.g.dddD+.cccc.
-.cccccccccccc.
+.bbbbbbbbbbbb.
+.g.dddD+.bbbb.
+.b.bbbbb.bbbb.
+.g.dddD+.+1<b.
+.b.bbbbb.bbbb.
+.g.dddD+.bbbb.
+.bbbbbbbbbbbb.
 ..............
 ENDMAP
 
@@ -294,6 +296,16 @@ MAP
 ENDMAP
 
 ############################################################################
+# Labyrinth furniture
+NAME:    lab_statue
+TAGS:    lab allow_dup
+MAP
+...
+.G.
+...
+ENDMAP
+
+############################################################################
 # Teaser: inaccessible loot
 NAME:  labyrinth_glass_1
 TAGS:  lab allow_dup
@@ -383,6 +395,18 @@ TAGS:   lab allow_dup generate_awake
 WEIGHT: 40
 KFEAT:  x = .
 KMONS:  x = hungry ghost
+MAP
+x
+ENDMAP
+
+############################################################################
+# The remains of a previous adventurer.
+# No items. Maybe the minotaur got them.
+NAME:   labyrinth_skeletal_remains
+TAGS:   lab allow_dup
+WEIGHT: 40
+KFEAT:  x = .
+: dgn.delayed_decay(_G, 'x', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
 MAP
 x
 ENDMAP

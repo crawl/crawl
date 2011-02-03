@@ -209,6 +209,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_STORM_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BLUE;
     case ARM_GOLD_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GOLD;
     case ARM_SWAMP_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BROWN;
+    case ARM_PEARL_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_PEARL;
 
     case ARM_DRAGON_ARMOUR:         return TILEP_BODY_DRAGONARM_GREEN;
     case ARM_ICE_DRAGON_ARMOUR:     return TILEP_BODY_DRAGONARM_CYAN;
@@ -217,6 +218,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_STORM_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BLUE;
     case ARM_GOLD_DRAGON_ARMOUR:    return TILEP_BODY_DRAGONARM_GOLD;
     case ARM_SWAMP_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_BROWN;
+    case ARM_PEARL_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_PEARL;
 
     case ARM_ANIMAL_SKIN:          return TILEP_BODY_ANIMAL_SKIN;
     case ARM_TROLL_HIDE:
@@ -372,7 +374,7 @@ tileidx_t tileidx_player()
     int ch = TILEP_PLAYER;
 
     // Handle shapechange first
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
         // animals
         case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
@@ -382,7 +384,20 @@ tileidx_t tileidx_player()
         case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
         case TRAN_STATUE:    ch = TILEP_TRAN_STATUE;    break;
         case TRAN_DRAGON:    ch = TILEP_TRAN_DRAGON;    break;
-        case TRAN_LICH:      ch = TILEP_TRAN_LICH;      break;
+        case TRAN_LICH:
+        {
+            switch (you.species)
+            {
+            case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
+            case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
+            case SP_CAT:     ch = TILEP_TRAN_LICH_FELID;    break;
+            default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
+            }
+            break;
+        }
+        // no special tile
+        case TRAN_BLADE_HANDS: break;
+        case TRAN_NONE: break;
     }
 
     if (you.airborne())
@@ -390,6 +405,9 @@ tileidx_t tileidx_player()
 
     if (you.attribute[ATTR_HELD])
         ch |= TILE_FLAG_NET;
+
+    if (you.duration[DUR_POISONING])
+        ch |= TILE_FLAG_POISON;
 
     return ch;
 }

@@ -63,7 +63,7 @@
       }
     },
 
-    {  MST_DEEP_DWARF_UNBORN,
+    {  MST_UNBORN_DEEP_DWARF,
       {
        SPELL_AGONY,
        SPELL_DISPEL_UNDEAD,
@@ -506,7 +506,7 @@
 
     {  MST_SMOKE_DEMON,
       {
-       SPELL_STICKY_FLAME,
+       SPELL_STICKY_FLAME_RANGE,
        SPELL_STEAM_BALL,
        SPELL_NO_SPELL,
        SPELL_SMITING,
@@ -542,7 +542,7 @@
        SPELL_BOLT_OF_FIRE,
        SPELL_FIREBALL,
        SPELL_NO_SPELL,
-       SPELL_STICKY_FLAME,
+       SPELL_STICKY_FLAME_RANGE,
        SPELL_SMITING,
        SPELL_TELEPORT_SELF
       }
@@ -605,7 +605,7 @@
 
     {  MST_DEEP_ELF_CONJURER_II,
       {
-       SPELL_STICKY_FLAME,
+       SPELL_STICKY_FLAME_RANGE,
        SPELL_ISKENDERUNS_MYSTIC_BLAST,
        SPELL_INVISIBILITY,
        SPELL_STONE_ARROW,
@@ -991,7 +991,7 @@
     {  MST_DRAC_SCORCHER,
       {
        SPELL_BOLT_OF_FIRE,
-       SPELL_STICKY_FLAME,
+       SPELL_STICKY_FLAME_RANGE,
        SPELL_NO_SPELL,
        SPELL_FIREBALL,
        SPELL_HELLFIRE,
@@ -1183,6 +1183,17 @@
        SPELL_ANIMATE_DEAD,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_TUKIMA,
+      {
+       SPELL_TUKIMAS_DANCE_PARTY,
+       SPELL_SWIFTNESS,
+       SPELL_CORONA,
+       SPELL_BLINK,
+       SPELL_CANTRIP,
+       SPELL_CANTRIP
       }
     },
 
@@ -1491,7 +1502,7 @@
        SPELL_PARALYSE,
        SPELL_BLINK,
        SPELL_PAIN,
-       SPELL_BRAIN_FEED,
+       SPELL_PARALYSE,
        SPELL_BLINK
       }
     },
@@ -1551,7 +1562,7 @@
       }
     },
 
-    {  MST_HOLY_DRAGON,
+    {  MST_PEARL_DRAGON,
       {
        SPELL_HOLY_BREATH,
        SPELL_HOLY_BREATH,
@@ -1592,6 +1603,39 @@
        SPELL_BOLT_OF_FIRE,
        SPELL_HOLY_FLAMES,
        SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_BOG_MUMMY,
+      {
+       SPELL_THROW_FROST,
+       SPELL_SLOW,
+       SPELL_NO_SPELL,
+       SPELL_CORPSE_ROT,
+       SPELL_CORPSE_ROT,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_JORY,
+      {
+       SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+       SPELL_CAUSE_FEAR,
+       SPELL_BLINK,
+       SPELL_BRAIN_FEED,
+       SPELL_PAIN,
+       SPELL_VAMPIRIC_DRAINING,
+      }
+    },
+
+    {  MST_SHEDU,
+      {
+       SPELL_HEAL_OTHER,
+       SPELL_NO_SPELL,
+       SPELL_HEAL_OTHER,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
       }
     },
 

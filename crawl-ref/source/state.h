@@ -56,6 +56,7 @@ struct game_state
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
 
+    bool dump_maps;         // Dump map Lua to stderr on fresh parse.
     bool test;              // Set if we want to run self-tests and exit.
     bool script;            // Set if we want to run a Lua script and exit.
     bool build_db;          // Set if we want to rebuild the db and exit.
@@ -92,6 +93,8 @@ struct game_state
     // This is global because the monster pane uses this when
     // drawing.
     bool mlist_targeting;
+#else
+    bool title_screen;
 #endif
 
     // Range beyond which view should be darkend, -1 == disabled.
@@ -160,12 +163,14 @@ public:
     void dump();
     bool player_is_dead() const;
 
+    bool game_standard_levelgen() const;
     bool game_is_normal() const;
     bool game_is_tutorial() const;
     bool game_is_arena() const;
     bool game_is_sprint() const;
     bool game_is_zotdef() const;
     bool game_is_hints() const;
+    bool game_is_hints_tutorial() const;
 
     // Save subdirectory used for games such as Sprint.
     std::string game_type_name() const;

@@ -142,7 +142,7 @@ DEPTH:  8-9, 10-13, !Lair, !Slime
 : place_unique(_G, "Erolcha")
 
 NAME:   uniq_eustachio
-DEPTH:  8-9, 10-13, !Lair, !Slime
+DEPTH:  4-10, !Lair, !Slime
 : place_unique(_G, "Eustachio")
 
 NAME:   uniq_frances
@@ -170,7 +170,7 @@ DEPTH:  8-9, 10-13, !Lair, !Slime
 : place_unique(_G, "Grum band")
 
 NAME:   uniq_grinder
-DEPTH:  6-10, !Lair, !Slime
+DEPTH:  3-6, !Lair, !Slime
 : place_unique(_G, "Grinder")
 
 NAME:   uniq_harold

@@ -77,6 +77,9 @@ extern "C" int stricmp(const char *str1, const char *str2);
 #endif
 size_t strlcpy(char *dst, const char *src, size_t n);
 
+int strwidth(const char *s);
+int strwidth(const std::string &s);
+
 // String "tags"
 #define TAG_UNFOUND -20404
 bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);
@@ -84,6 +87,7 @@ bool strip_suffix(std::string &s, const std::string &suffix);
 int strip_number_tag(std::string &s, const std::string &tagprefix);
 bool strip_bool_tag(std::string &s, const std::string &name,
                     bool defval = false);
+std::vector<std::string> strip_multiple_tag_prefix(std::string &s, const std::string &tagprefix);
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix);
 
 std::string article_a(const std::string &name, bool lowercase = true);

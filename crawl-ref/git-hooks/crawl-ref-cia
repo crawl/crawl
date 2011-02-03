@@ -158,6 +158,7 @@ close DIFF;
 ($user) = $author =~ /<(.*?)@/;
 
 # HACK to convert CIA's idea of committeers names to match the IRC handles
+# Developers:
 $user =~ s/stefanor/sorear/;
 $user =~ s/evktalo/Keskitalo/;
 $user =~ s/dploog/dpeg/;
@@ -169,11 +170,15 @@ $user =~ s/ottochar/pointless_/;
 $user =~ s/enne\.?walker/Enne/;
 $user =~ s/steven/neunon/;
 $user =~ s/scintilla/greensnark/;
-$user =~ s/homelesspete/Twinge/;
-$user =~ s/yobbobandana/yobbo/;
 $user =~ s/burnhamrobertp/Cryp71c/;
 $user =~ s/^muu+$/Mu/i;
 $user =~ s/raphael.langella/galehar/;
+
+# Other regular contributorss
+$user =~ s/chriscampbell89/MarvinPA/;
+$user =~ s/homelesspete/Twinge/;
+$user =~ s/yobbobandana/yobbo/;
+$user =~ s/thevalrus/valrus/;
 
 $rev = substr($commit, 0, 12);
 

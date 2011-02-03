@@ -3,6 +3,24 @@
 #     wizmode only, for testing various things.
 ##############################################################################
 
+{{
+function pressure_test_stepped(data, triggerable, triggerer, marker, ev)
+  crawl.mpr("trap triggered")
+  if data.triggered == true then
+    return
+  end
+  local victname
+  local m = dgn.mons_at(marker:pos())
+  if (m ~= nil) then
+    victname = m.name
+  else
+    victname = "you"
+  end
+  data.triggered = true
+  crawl.mpr("trap sprung by " .. victname)
+end
+}}
+
 default-depth: Zot:27
 
 NAME:   feat_test
@@ -46,31 +64,30 @@ ENDMAP
 NAME:   pressure_test
 WEIGHT: 0
 KFEAT:  ^ = pressure plate trap
-: function stepped(data, triggerable, triggerer, marker, ev)
-:   crawl.mpr("trap triggered")
-:   if data.triggered == true then
-:     return
-:   end
-:
-:   local victname
-:   local m = dgn.mons_at(marker:pos())
-:   if (m ~= nil) then
-:     victname = m.name
-:   else
-:     victname = "you"
-:   end
-:
-:   data.triggered = true
-:   crawl.mpr("trap sprung by " .. victname)
-: end
-:
-: -- need to make it repeated since there may be a monster under the grate
-: local tm = TriggerableFunction:new{func=stepped, repeated=true,
-:              data={triggered=false}}
-: tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
-: lua_marker('^', tm)
+{{
+-- need to make it repeated since there may be a monster under the grate
+local tm = TriggerableFunction:new{func="pressure_test_stepped",
+                                   repeated=true,
+                                   data={triggered=false} }
+tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+lua_marker('^', tm)
+}}
 MAP
 ...
 .^.
 ...
+ENDMAP
+
+#################################################
+# a portal vault testing area
+NAME:       pvault_test_a
+ORIENT:     encompass
+TAGS:       pvault_test allow_dup no_rotate
+KFEAT:      A = exit_portal_vault
+MAP
+A...A
+.....
+.....
+.....
+A...A
 ENDMAP

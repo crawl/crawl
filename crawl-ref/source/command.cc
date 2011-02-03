@@ -59,7 +59,7 @@
 #include "viewchar.h"
 
 static void _adjust_item(void);
-static void _adjust_spells(void);
+static void _adjust_spell(void);
 static void _adjust_ability(void);
 
 static const char *features[] = {
@@ -291,7 +291,7 @@ void adjust(void)
     if (keyin == 'i')
         _adjust_item();
     else if (keyin == 's')
-        _adjust_spells();
+        _adjust_spell();
     else if (keyin == 'a')
         _adjust_ability();
     else if (key_is_escape(keyin))
@@ -370,7 +370,7 @@ static void _adjust_item(void)
     swap_inv_slots(from_slot, to_slot, true);
 }
 
-static void _adjust_spells(void)
+static void _adjust_spell(void)
 {
     if (!you.spell_no)
     {
@@ -383,12 +383,12 @@ static void _adjust_spells(void)
 
     int keyin = 0;
     if (Options.auto_list)
-        keyin = list_spells(false);
+        keyin = list_spells(false, false, false);
     else
     {
         keyin = get_ch();
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(false);
+            keyin = list_spells(false, false, false);
     }
 
     if (!isaalpha(keyin))
@@ -422,7 +422,7 @@ static void _adjust_spells(void)
             return;
         }
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells();
+            keyin = list_spells(true, false, false);
     }
 
     const int input_2 = keyin;
@@ -658,7 +658,7 @@ void list_weapons(void)
     }
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
             wstring += "    blade " + blade_parts(true);
         else if (!you_tran_can_wear(EQ_WEAPON))
             wstring += "    (currently unavailable)";
@@ -769,18 +769,21 @@ static const char *targeting_help_1 =
 #ifdef WIZARD
     " \n"
     "<h>Wizard targeting commands:</h>\n"
+    "<w>D</w>: get debugging information about the monster\n"
     "<w>g</w>: give item to monster\n"
-    "<w>s</w>: force monster to shout or speak\n"
-    "<w>S</w>: make monster a summoned monster\n"
     "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
+    "<w>Ctrl-H</w>: heal the monster to full hit points\n"
     "<w>P</w>: apply divine blessing to monster\n"
     "<w>m</w>: move monster or player\n"
     "<w>M</w>: cause spell miscast for monster or player\n"
+    "<w>s</w>: force monster to shout or speak\n"
+    "<w>S</w>: make monster a summoned monster\n"
     "<w>w</w>: calculate shortest path to any point on the map\n"
-    "<w>D</w>: get debugging information about the monster\n"
     "<w>\"</w>: get debugging information about a portal\n"
     "<w>~</w>: polymorph monster to specific type\n"
     "<w>,</w>: bring down the monster to 1 hp\n"
+    "<w>Ctrl-B</w>: banish monster\n"
+    "<w>Ctrl-K</w>: kill monster\n"
 #endif
 ;
 
@@ -2225,22 +2228,14 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "on) or vi keys:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
+    _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  \\|/        \\|/", 0);
     _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
                          CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  /|\\        /|\\", 0);
-    _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
+    _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
-/*
-            "                 <w>1 2 3      y k u\n"
-            "                  \\|/        \\|/\n"
-            "                 <w>4</w>-<w>5</w>-<w>6</w>"
-                     "      <w>h</w>-<w>.</w>-<w>l</w>\n"
-            "                  /|\\        /|\\\n"
-            "                 <w>7 8 9      b j n\n"
-*/
 
     cols.add_formatted(
             0,
@@ -2402,7 +2397,11 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
 
 
-    _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile");
+    _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile and");
+    cols.add_formatted(1, "         pickup part of a single stack\n",
+                       false, true, _cmdhelp_textfilter);
+
+
     _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
     _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
                          CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
@@ -2453,7 +2452,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
             true, true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
-
     cols.add_formatted(
             1,
             "    (press twice for pick up menu)\n",
@@ -2604,7 +2602,7 @@ void list_commands(int hotkey, bool do_redraw_screen,
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints_tutorial())
         _add_formatted_hints_help(cols);
     else
         _add_formatted_keyhelp(cols);
@@ -2680,6 +2678,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>X</w>      : make Xom do something now\n"
                        "<w>z</w>      : cast spell by number/name\n"
                        "<w>W</w>      : god wrath\n"
+                       "<w>Ctrl-V</w> : toggle xray vision\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      : detect all monsters\n"

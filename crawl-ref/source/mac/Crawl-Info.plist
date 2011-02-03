@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleDisplayName</key>
+	<string>%NAME%</string>
 	<key>CFBundleIdentifier</key>
 	<string>net.sourceforge.crawl-ref</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -16,20 +15,17 @@
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-	<key>LSMinimumSystemVersionByArchitecture</key>
-	<dict>
-		<key>x86_64</key>
-		<string>10.6.0</string>
-		<key>i386</key>
-		<string>10.4.0</string>
-		<key>ppc</key>
-		<string>10.4.0</string>
-	</dict>
+        <key>CFBundleVersion</key>
+        <string>%VERSION%</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.4.2</string>
+	<key>LSMultipleInstancesProhibited</key>
+	<true/>
+	<key>LSRequiresNativeExecution</key>
+	<true/>
+	<key>NSAppleScriptEnabled</key>
+	<false/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright %YEAR%, Crawl DevTeam</string>
 </dict>
 </plist>

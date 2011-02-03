@@ -1052,7 +1052,23 @@
    "Your control of surrounding life forces weakens.",
    "Your control of surrounding life forces weakens."},
 
-  "pbd"
+  "powered by death"
+},
+
+{ MUT_POWERED_BY_PAIN,            0,  3, false, false,
+  "powered by pain",
+
+  {"You sometimes regain a little magical energy from taking damage.",
+   "You sometimes regain magical energy from taking damage.",
+   "You sometimes regain a lot of magical energy from taking damage."},
+
+  {"You feel energised by your suffering.",
+   "You feel even more energised by your suffering.",
+   "You feel completely energised by your suffering."},
+
+  {"", "", ""},
+
+  "powered by pain"
 },
 
 // Jiyva only mutations
@@ -1192,9 +1208,9 @@
 { MUT_IRIDESCENT_SCALES,                2,  3, false,  true,
   NULL,
 
-  {"You are partially covered in iridescent scales (AC +3).",
+  {"You are partially covered in iridescent scales (AC +4).",
    "You are mostly covered in iridescent scales (AC +6).",
-   "You are completely covered in iridescent scales (AC +9)."},
+   "You are completely covered in iridescent scales (AC +8)."},
 
   {"Iridescent scales grow over part of your body.",
    "Iridescent scales spread over more of your body.",

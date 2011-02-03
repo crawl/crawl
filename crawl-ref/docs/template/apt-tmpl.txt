@@ -16,7 +16,7 @@ are the aptitude values shown in version 0.6 and older.)
  -5  (238)  abysmal aptitude
  -4  (200)  very poor aptitude (learning half as fast as Humans)
  -3  (168)  poor aptitude
- -2  (141)  bad aptitude 
+ -2  (141)  bad aptitude
  -1  (119)  slightly disfavoured aptitude
   0  (100)  standard aptitude (Humans)
  +1   (84)  slightly favoured aptitude
@@ -25,7 +25,7 @@ are the aptitude values shown in version 0.6 and older.)
  +4   (50)  outstanding aptitude (learning twice as fast as Humans)
  +5   (42)  exceptional aptitude
 
-Please note that many things affect how quickly a character will actually 
+Please note that many things affect how quickly a character will actually
 learn a skill. Thus, the numbers below are good enough for comparisons among
 species, but not necessarily among skills.
 
@@ -39,12 +39,12 @@ General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
 --------------------------   -----------------------     ----------------------
 Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
 Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
-Sth - Stealth                LBl - Long Blades           Enc - Enchantments
-Stb - Stabbing               M&F - Maces & Flails        Sum - Summonings
-Shd - Shields                Axs - Axes                  Nec - Necromancy
-T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
-                             Stv - Staves                Trm - Transmutations
-Inv - Invocations            UC  - Unarmed Combat
+Sth - Stealth                LBl - Long Blades           Hex - Hexes
+Stb - Stabbing               M&F - Maces & Flails        Cha - Charms
+Shd - Shields                Axs - Axes                  Sum - Summonings
+T&D - Traps & Doors          Pla - Polearms              Nec - Necromancy
+                             Stv - Staves                Trl - Translocations
+Inv - Invocations            UC  - Unarmed Combat        Trm - Transmutations
 Evo - Evocations
                              Thr - Throwing              Fir - Fire Magic
                              Slg - Slings                Ice - Ice Magic
@@ -64,5 +64,5 @@ changes to the template in docs/template/apt-tmpl.txt.
 ----------------------------------------------------------------------
 
 
-                 Spc Coj Enc Sum Nec Trl Trm       Fir Ice Air Ear Poi
+                 Spc Coj Hex Cha Sum Nec Trl Trm   Fir Ice Air Ear Poi
 ----------------------------------------------------------------------

@@ -43,6 +43,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "jobs.h"
 #include "options.h"
@@ -352,7 +353,7 @@ std::string hiscores_format_single_long(const scorefile_entry &se,
                                          bool verbose)
 {
     return se.hiscore_line(verbose ? scorefile_entry::DDV_VERBOSE
-                                    : scorefile_entry::DDV_NORMAL);
+                                   : scorefile_entry::DDV_NORMAL);
 }
 
 // --------------------------------------------------------------------------
@@ -930,20 +931,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             // shouldn't.
             if (you.hp <= 0)
             {
-#ifdef HISCORE_WEAPON_DETAIL
                 set_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
                                  ISFLAG_IDENT_MASK);
-#else
-                // changing this to ignore the pluses to keep it short
-                unset_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
-                                   ISFLAG_IDENT_MASK);
-
-                set_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
-                                 ISFLAG_KNOW_TYPE);
-
-                // clear "runed" description text to make shorter yet
-                set_equip_desc(mitm[mons->inv[MSLOT_WEAPON]], 0);
-#endif
             }
 
             // Setting this is redundant for dancing weapons, however
@@ -1296,10 +1285,8 @@ void scorefile_entry::init(time_t dt)
     birth_time = you.birth_time;     // start time of game
     death_time = (dt != 0 ? dt : time(NULL)); // end time of game
 
-    if (you.real_time != -1)
-        real_time = you.real_time + long(death_time - you.start_time);
-    else
-        real_time = -1;
+    handle_real_time(death_time);
+    real_time = you.real_time;
 
     num_turns = you.num_turns;
 
@@ -1328,16 +1315,13 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
 
     if (verbosity == DDV_VERBOSE)
     {
-        if (real_time > 0)
-        {
-            char scratch[INFO_SIZE];
+        char scratch[INFO_SIZE];
 
-            snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
-                     make_time_string(real_time).c_str(), num_turns);
+        snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
+                 make_time_string(real_time).c_str(), num_turns);
 
-            line += scratch;
-            line += _hiscore_newline_string();
-        }
+        line += scratch;
+        line += _hiscore_newline_string();
     }
 
     return (line);
@@ -2378,7 +2362,12 @@ void mark_milestone(const std::string &type,
         // Suppress duplicate milestones on the same turn.
         || (lastturn == you.num_turns
             && lasttype == type
-            && lastmilestone == milestone))
+            && lastmilestone == milestone)
+#ifndef SCORE_WIZARD_CHARACTERS
+        // Don't mark milestones in wizmode
+        || you.wizard
+#endif
+        )
     {
         return;
     }

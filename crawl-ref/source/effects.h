@@ -43,7 +43,8 @@ void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
 
 void random_uselessness(int scroll_slot = -1);
 
-bool recharge_wand(const int item_slot = -1, bool known = true);
+int recharge_wand(const int item_slot = -1, bool known = true,
+                  std::string *pre_msg = NULL);
 
 void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
 

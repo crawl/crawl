@@ -39,7 +39,7 @@
 
 #ifdef ASSERTS
 
-void AssertFailed(const char *expr, const char *file, int line, bool save_game);
+NORETURN void AssertFailed(const char *expr, const char *file, int line, bool save_game);
 
 #define ASSERT_SAVE(p)                                                  \
     do {                                                                \
@@ -53,9 +53,6 @@ void AssertFailed(const char *expr, const char *file, int line, bool save_game);
 
 #define VERIFY(p)       ASSERT(p)
 
-void DEBUGSTR(const char *format,...);
-void TRACE(const char *format,...);
-
 #else
 
 #define ASSERT_SAVE(p)  ((void) 0)
@@ -66,10 +63,10 @@ inline void __DUMMY_TRACE__(...)
 {
 }
 
-#define DEBUGSTR 1 ? ((void) 0) : __DUMMY_TRACE__
-#define TRACE    1 ? ((void) 0) : __DUMMY_TRACE__
-
 #endif
+
+NORETURN void die(const char *file, int line, const char *format, ...);
+#define die(...) die(__FILE__, __LINE__, __VA_ARGS__)
 
 #ifdef DEBUG
 void debuglog(const char *format, ...);

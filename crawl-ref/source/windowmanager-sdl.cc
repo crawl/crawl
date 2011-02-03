@@ -494,6 +494,9 @@ int SDLWrapper::wait_event(wm_event *event)
         _translate_event(sdlevent.motion, event->mouse_event);
         break;
     case SDL_MOUSEBUTTONUP:
+        event->type = WM_MOUSEBUTTONUP;
+        _translate_event(sdlevent.button, event->mouse_event);
+        break;
     case SDL_MOUSEBUTTONDOWN:
         event->type = WM_MOUSEBUTTONDOWN;
         _translate_event(sdlevent.button, event->mouse_event);

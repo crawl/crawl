@@ -13,6 +13,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "beam.h"
 #include "effects.h"
@@ -221,6 +222,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_LEVITATION:
+        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        {
+            mprf(MSGCH_WARN, "This potion isn't strong enough to pull you from the ground!");
+            break;
+        }
+
         you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
         levitate_player(pow);
         break;
@@ -334,6 +341,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             xom_is_stimulated(64 / xom_factor);
         break;
 
+    case POT_FIZZING:
     case POT_WATER:
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
@@ -347,10 +355,15 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             mpr("You feel more experienced!");
 
             you.experience = 1 + exp_needed(2 + you.experience_level);
-            level_change();
+
+            // Deferred calling level_change() into item_use.cc:3919, after
+            // dec_inv_item_quantity. This prevents using SIGHUP to get infinite
+            // potions of experience. Confer Mantis #3245. [due]
         }
         else
             mpr("A flood of memories washes over you.");
+        you.exp_available = std::min(you.exp_available +
+                                     750 * you.experience_level, MAX_EXP_POOL);
         break;                  // I'll let this slip past robe of archmagi
 
     case POT_MAGIC:

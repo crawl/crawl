@@ -5,12 +5,29 @@ util.namespace('test')
 
 test.FAILMAP = 'level-fail.map'
 
+function test.eq(actual_value, expected_value, extra)
+  if extra then
+    assert(actual_value == expected_value,
+           "Expected '" .. expected_value .. "', " ..
+             "but got '" .. actual_value .. "': " .. extra)
+  else
+    assert(actual_value == expected_value,
+           "Expected '" .. expected_value .. "', " ..
+             "but got '" .. actual_value .. "'")
+  end
+end
+
 function test.map_assert(condition, message)
   if not condition then
     debug.dump_map(test.FAILMAP)
     assert(false, message .. " (map dumped to " .. test.FAILMAP .. ")")
   end
   return condition
+end
+
+function test.place_items_at(point, item_spec)
+  dgn.create_item(point.x, point.y, item_spec)
+  return dgn.items_at(point.x, point.y)
 end
 
 function test.find_monsters(mname)

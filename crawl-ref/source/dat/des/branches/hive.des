@@ -70,7 +70,7 @@ TAGS:    hive_entry
 ORIENT:  float
 ITEM:    honeycomb, royal jelly
 MONS:    killer bee larva / killer bee, queen bee
-MONS:    giant ant / soldier ant, queen ant
+MONS:    worker ant / soldier ant, queen ant
 MONS:    yellow wasp / nothing, red wasp / yellow wasp
 MONS:    bumblebee
 SHUFFLE: XY, VW, 34/56
@@ -248,9 +248,9 @@ KFEAT:     N = w / w:5 .
 KFEAT:     Z = w
 KMONS:     Z = plant / w:3 nothing
 KFEAT:     V = w
-KMONS:     V = killer bee w:20 / nothing w:6 / giant blowfly w:1
+KMONS:     V = killer bee w:20 / nothing w:6 / vampire mosquito w:1
 MONS:      plant / nothing w:3
-MONS:      killer bee w:20 / nothing w:6 / giant blowfly w:1
+MONS:      killer bee w:20 / nothing w:6 / vampire mosquito w:1
 KFEAT:     O = enter_hive
 MAP
      ....  ...NNNZNN.
@@ -798,4 +798,83 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaa3a3a2a3aR2aaxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaa3a3a2aaaaaxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    beehive_diamond
+PLACE:   Hive:2
+ORIENT:  encompass
+TAGS:    no_rotate
+SHUFFLE: {([
+SUBST:   A = a:3 .:2, B = a:3 x:2, ' = . 1:3 d:1
+KMONS:   1 = killer bee
+KMONS:   2 = queen bee
+KMONS:   3 = oklob plant
+ITEM:    honeycomb / royal jelly w:4
+KITEM:   1 = nothing / honeycomb w:5 / royal jelly w:2
+KITEM:   2 = nothing / royal jelly
+: spotty_map { boxy = false, iterations = 400 + crawl.random2(300) }
+MAP
+                   aaaaa
+                  aa*|*aa
+                  a3*|*3a
+                  a3*|*3a
+                  aaa=aaa
+                aaa11211aaa
+               aa'''111'''aa
+             aaa''a''A''a''aaa
+            aa'''aaa'''aaa'''aa
+          aaa''a''a''a''a''a''aaa
+         aa'''aaa'''aaa'''aaa'''aa
+       aaa''a''a''a''a''a''a''a''aaa
+       a'''aaa'''aaa'''aaa'''aaa'''a
+      xx'a''a''a''a''a''a''a''a''a'xx
+    xxxxaaa'''aaa'''aaa'''aaa'''aaaxxxx
+   xxxBx'a''a''a''a''a''a''a''a''a'xBxxx
+   xxBBB'''aaa'''aaa'''aaa'''aaa'''BBBxx
+   xxxBx'a''a''a''a''a''a''a''a''a'xBxxx
+   xxxxxaaa'''aaa'''aaa'''aaa'''aaaxxxxx
+   xxxBx'a''a''a''a''a''a''a''a''a'xBxxx
+   xxBBB'''aaa'''aaa'''aaa'''aaa'''BBBxx
+   xxxBx'A''a''a''a''a''a''a''a''A'xBxxx
+   xxxxxAAA'''aaa'''aaa'''aaa'''AAAxxxxx
+   xxxxx.A''A''a''a''a''a''a''A''A.xxxxx
+   xxxxx...AAA'''aaa'''aaa'''AAA...xxxxx
+ xxxxxxxxx..A''A''a''a''a''A''A..xxxxxxxxx
+xxxxxxxxxxx...AAA...aaa...AAA...xxxxxxxxxxx
+xxxxxxxxxxxxx..A..A..a..A..A..xxxxxxxxxxxxx
+xxxxxxxxxxxxxx...............xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx{xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.x.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.xxx.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx.xxxxx.xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxx.xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx(xxxxxxxxxxxxx[xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

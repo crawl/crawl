@@ -121,6 +121,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         clone->del_ench(ENCH_CHARM);
         clone->del_ench(ENCH_STICKY_FLAME);
         clone->del_ench(ENCH_CORONA);
+        clone->del_ench(ENCH_SILVER_CORONA);
 
         behaviour_event(clone, ME_ALERT, MHITNOT, caster->pos());
 
@@ -147,7 +148,7 @@ static void _init_player_illusion_properties(monsterentry *me)
     // the effects of their Necromutation spell. This is important
     // since Necromutation users presumably also have Dispel Undead
     // available to them. :P
-    if (transform_changed_physiology() && me->holiness == MH_UNDEAD)
+    if (form_changed_physiology() && me->holiness == MH_UNDEAD)
         me->holiness = MH_NATURAL;
 }
 
@@ -301,6 +302,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     ASSERT(!actor_at(pos));
 
     *mons          = *orig;
+    mons->set_new_monster_id();
     mons->set_position(pos);
     mgrd(pos)    = mons->mindex();
 

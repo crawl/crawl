@@ -36,7 +36,6 @@
 #include "map_knowledge.h"
 #include "fight.h"
 #include "food.h"
-#include "godabil.h"
 #include "goditem.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -91,10 +90,13 @@
 static bool _drink_fountain();
 static bool _handle_enchant_weapon(enchant_stat_type which_stat,
                                    bool quiet = false);
-static bool _handle_enchant_armour(int item_slot = -1);
+static int _handle_enchant_armour(int item_slot = -1,
+                                  std::string *pre_msg = NULL);
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, std::string& err);
+
+static bool _is_cancellable_scroll(scroll_type scroll);
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -138,8 +140,9 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
-    if (you.species == SP_CAT && (weapon->base_type == OBJ_WEAPONS
-          || weapon->base_type == OBJ_STAVES))
+    if (you.species == SP_CAT
+        && (weapon->base_type == OBJ_WEAPONS
+            || weapon->base_type == OBJ_STAVES))
     {
         SAY(mpr("You can't use weapons."));
         return (false);
@@ -148,9 +151,9 @@ bool can_wield(item_def *weapon, bool say_reason,
     // Only ogres and trolls can wield giant clubs (>= 30 aum)
     // and large rocks (60 aum).
     if (you.body_size(PSIZE_TORSO) < SIZE_LARGE
-                      && (item_mass(*weapon) >= 500
-                          || weapon->base_type == OBJ_WEAPONS
-                             && item_mass(*weapon) >= 300))
+        && (item_mass(*weapon) >= 500
+            || weapon->base_type == OBJ_WEAPONS
+               && item_mass(*weapon) >= 300))
     {
         SAY(mpr("That's too large and heavy for you to wield."));
         return (false);
@@ -250,13 +253,6 @@ static bool _valid_weapon_swap(const item_def &item)
         return (false);
     }
 
-    // Bone Shards.
-    if (item.base_type == OBJ_CORPSES)
-    {
-        return (item.sub_type == CORPSE_SKELETON
-                && you.has_spell(SPELL_BONE_SHARDS));
-    }
-
     // Sublimation of Blood.
     if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
         return (false);
@@ -293,6 +289,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (auto_wield)
     {
+        if (slot >= 0 && !can_wield(&you.inv[slot], true))
+            return (false);
+
         if (item_slot == you.equip[EQ_WEAPON]
             || you.equip[EQ_WEAPON] == -1
                && !_valid_weapon_swap(you.inv[item_slot]))
@@ -306,12 +305,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // If the swap slot has a bad (but valid) item in it,
     // the swap will be to bare hands.
-    const bool good_swap = (item_slot == PROMPT_GOT_SPECIAL
+    const bool good_swap = (item_slot == SLOT_BARE_HANDS
                             || _valid_weapon_swap(you.inv[item_slot]));
 
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
-    if (item_slot != PROMPT_GOT_SPECIAL
+    if (item_slot != SLOT_BARE_HANDS
         && (!auto_wield || !you.inv[item_slot].defined() || !good_swap))
     {
         if (!auto_wield)
@@ -322,7 +321,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                             true, true, true, '-', -1, NULL, OPER_WIELD);
         }
         else
-            item_slot = PROMPT_GOT_SPECIAL;
+            item_slot = SLOT_BARE_HANDS;
     }
 
     if (prompt_failed(item_slot))
@@ -342,7 +341,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
-    if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
+    if (item_slot == SLOT_BARE_HANDS)
     {
         if (const item_def* wpn = you.weapon())
         {
@@ -400,13 +399,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (show_weff_messages)
         wield_warning();
 
-    if (Hints.hints_left)
-    {
-        if (new_wpn.cursed())
-            learned_something_new(HINT_YOU_CURSED);
-        else if (your_talents(false).size() > old_talents)
-            learned_something_new(HINT_NEW_ABILITY_ITEM);
-    }
+    check_item_hint(new_wpn, old_talents);
 
     // Time calculations.
     you.time_taken /= 2;
@@ -1201,7 +1194,7 @@ static bool _fire_warn_if_impossible()
     }
 
     // If you can't wield it, you can't throw it.
-    if (!transform_can_wield())
+    if (!form_can_wield())
     {
         canned_msg(MSG_PRESENT_FORM);
         return (true);
@@ -1336,7 +1329,7 @@ int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
     // Adjust for shields skill.
     if (speed_adjust > 100)
         speed_adjust -= ((speed_adjust - 100) * 5 / 10)
-                            * you.skills[SK_SHIELDS] / 27;
+                            * you.skill(SK_SHIELDS) / 27;
 
     return (speed_adjust);
 }
@@ -1349,7 +1342,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
     const int  str_weight   = weapon_str_weight(launcher);
     const int  dex_weight   = 10 - str_weight;
     const skill_type launcher_skill = range_skill(launcher);
-    const int shoot_skill = you.skills[launcher_skill];
+    const int shoot_skill = you.skill(launcher_skill);
     const int bow_brand = get_weapon_brand(launcher);
 
     int speed_base = 10 * property(launcher, PWPN_SPEED);
@@ -1375,7 +1368,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
     {
         int speed_adjust = 105; // Analogous to buckler and one-handed weapon.
         speed_adjust -= ((speed_adjust - 100) * 5 / 10)
-                            * you.skills[SK_THROWING] / 27;
+                            * you.skill(SK_THROWING) / 27;
 
         // Also reduce the speed cap.
         speed_base = speed_base * speed_adjust / 100;
@@ -1391,6 +1384,15 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
         // Speed nerf as per 4.1. Even with the nerf, bows of speed are the
         // best bows, bar none.
         speed = 2 * speed / 3;
+    }
+
+    if (you.duration[DUR_FINESSE])
+    {
+        ASSERT(!you.duration[DUR_BERSERK]);
+        // Need to undo haste by hand.
+        if (you.duration[DUR_HASTE])
+            speed = haste_mul(speed);
+        speed /= 2;
     }
 
     return (speed);
@@ -1556,7 +1558,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     if (victim->atype() == ACT_PLAYER)
     {
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
         victim->moveto(pos);
         canned_msg(MSG_YOU_BLINK);
@@ -1571,8 +1573,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         mon->move_to_pos(pos);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3),
-                    victim->kill_alignment());
+        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
 
         mon->apply_location_effects(oldpos);
         mon->check_redraw(oldpos);
@@ -1596,7 +1597,7 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
 
     // A hack and code duplication, but that's easier than adding accounting
     // for each of multiple brands.
-    if (victim->id() == MONS_SIXFIRHY)
+    if (victim->type == MONS_SIXFIRHY)
     {
         if (!beam.is_tracer)
             victim->heal(10 + random2(15), false);
@@ -1612,7 +1613,7 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
     {
         if (victim->atype() == ACT_PLAYER)
             dmg_msg = "You are electrocuted!";
-        else if (victim->id() == MONS_SIXFIRHY)
+        else if (victim->type == MONS_SIXFIRHY)
             dmg_msg = victim->name(DESC_CAP_THE) + " is charged up!";
         else
             dmg_msg = "There is a sudden explosion of sparks!";
@@ -1684,7 +1685,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     monster* mons = victim->as_monster();
 
-    const int skill = you.skills[SK_THROWING];
+    const int skill = you.skill(SK_THROWING);
     const item_def* wp = agent->weapon();
     ASSERT(wp && wp->sub_type == WPN_BLOWGUN);
     const int enchantment = wp->plus;
@@ -1806,11 +1807,9 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     case OBJ_ARMOUR:     zapsym = DCHAR_FIRED_ARMOUR;  break;
     case OBJ_WANDS:      zapsym = DCHAR_FIRED_STICK;   break;
     case OBJ_FOOD:       zapsym = DCHAR_FIRED_CHUNK;   break;
-    case OBJ_UNKNOWN_I:  zapsym = DCHAR_FIRED_BURST;   break;
     case OBJ_SCROLLS:    zapsym = DCHAR_FIRED_SCROLL;  break;
     case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
     case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
-    case OBJ_UNKNOWN_II: zapsym = DCHAR_FIRED_ZAP;     break;
     case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
     case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
     default: break;
@@ -2248,7 +2247,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         break;
 
     default:
-        DEBUGSTR("Invalid launcher '%s'",
+        die("Invalid launcher '%s'",
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
@@ -2421,7 +2420,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
-        if (!wield_weapon(true, PROMPT_GOT_SPECIAL, true, false, false))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false))
             return (false);
 
         unwielded = true;
@@ -2549,7 +2548,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // [jpeg] Throwing now only affects actual throwing weapons,
         // i.e. not launched ones. (Sep 10, 2007)
 
-        shoot_skill = you.skills[launcher_skill];
+        shoot_skill = you.skill(launcher_skill);
         effSkill    = shoot_skill;
 
         const int speed = launcher_final_speed(launcher, you.shield());
@@ -2797,7 +2796,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 }
             }
 
-            exHitBonus = you.skills[SK_THROWING] * 2;
+            exHitBonus = you.skill(SK_THROWING) * 2;
 
             baseDam = property(item, PWPN_DAMAGE);
 
@@ -2819,7 +2818,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
 
             exDamBonus =
-                (10 * (you.skills[SK_THROWING] / 2 + you.strength() - 10)) / 12;
+                (10 * (you.skill(SK_THROWING) / 2 + you.strength() - 10)) / 12;
 
             // Now, exDamBonus is a multiplier.  The full multiplier
             // is applied to base damage, but only a third is applied
@@ -2843,13 +2842,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             case MI_DART:
                 // Darts also using throwing skills, now.
                 exHitBonus += skill_bump(SK_THROWING);
-                exDamBonus += you.skills[SK_THROWING] * 3 / 5;
+                exDamBonus += you.skill(SK_THROWING) * 3 / 5;
                 break;
 
             case MI_JAVELIN:
                 // Javelins use throwing skill.
                 exHitBonus += skill_bump(SK_THROWING);
-                exDamBonus += you.skills[SK_THROWING] * 3 / 5;
+                exDamBonus += you.skill(SK_THROWING) * 3 / 5;
 
                 // Adjust for strength and dex.
                 exDamBonus = str_adjust_thrown_damage(exDamBonus);
@@ -2886,7 +2885,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // ID check
         if (!teleport
             && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-            && x_chance_in_y(you.skills[SK_THROWING], 100))
+            && x_chance_in_y(you.skill(SK_THROWING), 100))
         {
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
             set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_PLUSES);
@@ -2984,7 +2983,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else
     {
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             Hints.hints_throw_counter++;
 
         // Dropping item copy, since the launched item might be different.
@@ -3113,9 +3112,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         break;
 
     default:
-        ASSERT(false);
-        chance = 1;
-        break;
+        die("Unknown missile type");
     }
 
     // Inflate by 4 to avoid rounding errors.
@@ -3499,8 +3496,7 @@ bool puton_item(int item_slot)
     // Actually equip the item.
     equip_item(hand_used, item_slot);
 
-    if (Hints.hints_left && your_talents(false).size() > old_talents)
-        learned_something_new(HINT_NEW_ABILITY_ITEM);
+    check_item_hint(you.inv[item_slot], old_talents);
 
     // Putting on jewellery is as fast as wielding weapons.
     you.time_taken /= 2;
@@ -3874,7 +3870,7 @@ void zap_wand(int slot)
         beam.range = tracer_range;
         if (!player_tracer(beam.effect_known ? type_zapped
                                              : ZAP_DEBUGGING_RAY,
-                           2 * (you.skills[SK_EVOCATIONS] - 1),
+                           2 * (you.skill(SK_EVOCATIONS) - 1),
                            beam, beam.effect_known ? 0 : 17))
         {
             return;
@@ -3910,7 +3906,7 @@ void zap_wand(int slot)
 #endif
 
     // zapping() updates beam.
-    zapping(type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam);
+    zapping(type_zapped, 30 + roll_dice(2, you.skill(SK_EVOCATIONS)), beam);
 
     // Take off a charge.
     wand.plus--;
@@ -3936,7 +3932,7 @@ void zap_wand(int slot)
 
     if (item_type_known(wand)
         && (item_ident(wand, ISFLAG_KNOW_PLUSES)
-            || you.skills[SK_EVOCATIONS] > 5 + random2(15)))
+            || you.skill(SK_EVOCATIONS) > 5 + random2(15)))
     {
         if (!item_ident(wand, ISFLAG_KNOW_PLUSES))
         {
@@ -4065,7 +4061,8 @@ void drink(int slot)
     }
 
     if (alreadyknown && potion.sub_type == POT_BERSERK_RAGE
-        && !berserk_check_wielded_weapon())
+        && (!berserk_check_wielded_weapon()
+            || !you.can_go_berserk(true, true)))
     {
         return;
     }
@@ -4106,6 +4103,10 @@ void drink(int slot)
 
     if (you.species != SP_VAMPIRE)
         lessen_hunger(40, true);
+
+    // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
+    if (potion.sub_type == POT_EXPERIENCE)
+        level_change();
 }
 
 static bool _drink_fountain()
@@ -4497,9 +4498,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     }
 
     // Even if not affected, it may be uncursed.
-    if (!is_enchantable_armour(arm, false)
-        || arm.plus > MAX_SEC_ENCHANT
-           && x_chance_in_y(arm.plus, MAX_ARM_ENCHANT))
+    if (!is_enchantable_armour(arm, false))
     {
         if (is_cursed)
         {
@@ -4516,10 +4515,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         {
             if (!quiet)
                 canned_msg(MSG_NOTHING_HAPPENS);
-
-            // Xom thinks it's funny if enchantment is possible but fails.
-            if (is_enchantable_armour(arm, false))
-                xom_is_stimulated(32);
 
             return (false);
         }
@@ -4539,7 +4534,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     return (true);
 }
 
-static bool _handle_enchant_armour(int item_slot)
+static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
 {
     do
     {
@@ -4549,7 +4544,7 @@ static bool _handle_enchant_armour(int item_slot)
                                            OSEL_ENCH_ARM, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return (false);
+            return (-1);
 
         item_def& arm(you.inv[item_slot]);
 
@@ -4564,17 +4559,20 @@ static bool _handle_enchant_armour(int item_slot)
         }
 
         // Okay, we may actually (attempt to) enchant something.
+        if (pre_msg)
+            mpr(pre_msg->c_str());
+
         int ac_change;
         bool result = enchant_armour(ac_change, false, arm);
 
         if (ac_change)
             you.redraw_armour_class = true;
 
-        return (result);
+        return (result ? 1 : 0);
     }
     while (true);
 
-    return (false);
+    return (0);
 }
 
 static void handle_read_book(int item_slot)
@@ -4681,7 +4679,7 @@ static bool _scroll_modify_item(item_def scroll)
         {
             // Might still fail because of already high enchantment.
             // (If so, already prints the "Nothing happens" message.)
-            if (_handle_enchant_armour(item_slot))
+            if (_handle_enchant_armour(item_slot) > 0)
                 return (true);
             get_type_id_props()["SCR_EA"] = item.name(DESC_PLAIN, false,
                                                       false, false);
@@ -4729,6 +4727,13 @@ static void _vulnerability_scroll()
 
     you.set_duration(DUR_LOWERED_MR, 40, 0,
                      "Magic dampens, then quickly surges around you.");
+}
+
+bool _is_cancellable_scroll(scroll_type scroll)
+{
+    return (scroll == SCR_IDENTIFY
+            || scroll == SCR_BLINKING || scroll == SCR_RECHARGING
+            || scroll == SCR_ENCHANT_ARMOUR || scroll == SCR_AMNESIA);
 }
 
 void read_scroll(int slot)
@@ -4848,6 +4853,9 @@ void read_scroll(int slot)
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
+    // ... but some scrolls may still be cancelled afterwards.
+    bool cancel_scroll = false;
+
     // Imperfect vision prevents players from reading actual content {dlb}:
     if (player_mutation_level(MUT_BLURRY_VISION)
         && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5))
@@ -4858,10 +4866,15 @@ void read_scroll(int slot)
         return;
     }
 
+    // For cancellable scrolls leave printing this message to their
+    // respective functions.
+    std::string pre_succ_msg = "As you read the scroll, it crumbles to dust.";
     if (which_scroll != SCR_PAPER
-        && (which_scroll != SCR_IMMOLATION || you.confused()))
+        && (you.confused()
+            || (which_scroll != SCR_IMMOLATION
+                && !_is_cancellable_scroll(which_scroll))))
     {
-        mpr("As you read the scroll, it crumbles to dust.");
+        mpr(pre_succ_msg.c_str());
         // Actual removal of scroll done afterwards. -- bwr
     }
 
@@ -4900,7 +4913,17 @@ void read_scroll(int slot)
         break;
 
     case SCR_BLINKING:
-        blink(1000, false);
+        // XXX Because some checks in blink() are made before player get to
+        // choose target location it is possible "abuse" scrolls' free
+        // cancelling to get some normally hidden information (i.e. presence
+        // of (unidentified) -TELE gear).
+        if (!alreadyknown)
+        {
+            mpr(pre_succ_msg.c_str());
+            blink(1000, false);
+        }
+        else
+            cancel_scroll = (blink(1000, false, false, &pre_succ_msg) == -1);
         break;
 
     case SCR_TELEPORTATION:
@@ -4956,7 +4979,7 @@ void read_scroll(int slot)
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");
-        big_cloud(random_smoke_type(), KC_YOU, you.pos(), 50, 8 + random2(8));
+        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
     case SCR_MAGIC_MAPPING:
@@ -5084,34 +5107,37 @@ void read_scroll(int slot)
     case SCR_IDENTIFY:
         if (!item_type_known(scroll))
         {
+            mpr(pre_succ_msg.c_str());
             id_the_scroll = _scroll_modify_item(scroll);
             if (!id_the_scroll)
                 tried_on_item = true;
         }
         else
-            identify(-1);
+            cancel_scroll = (identify(-1, -1, &pre_succ_msg) == -1);
         break;
 
     case SCR_RECHARGING:
         if (!item_type_known(scroll))
         {
+            mpr(pre_succ_msg.c_str());
             id_the_scroll = _scroll_modify_item(scroll);
             if (!id_the_scroll)
                 tried_on_item = true;
         }
         else
-            recharge_wand(-1);
+            cancel_scroll = (recharge_wand(-1, true, &pre_succ_msg) == -1);
         break;
 
     case SCR_ENCHANT_ARMOUR:
         if (!item_type_known(scroll))
         {
+            mpr(pre_succ_msg.c_str());
             id_the_scroll = _scroll_modify_item(scroll);
             if (!id_the_scroll)
                 tried_on_item = true;
         }
         else
-            _handle_enchant_armour(-1);
+            cancel_scroll = (_handle_enchant_armour(-1, &pre_succ_msg) == -1);
         break;
 
     case SCR_CURSE_ARMOUR:
@@ -5189,14 +5215,22 @@ void read_scroll(int slot)
             canned_msg(MSG_NOTHING_HAPPENS);
             id_the_scroll = false;
         }
-        else
+        else if (!alreadyknown)
+        {
+            mpr(pre_succ_msg.c_str());
             cast_selective_amnesia();
+        }
+        else
+            cancel_scroll = (cast_selective_amnesia(&pre_succ_msg) == -1);
         break;
 
     default:
         mpr("Read a buggy scroll, please report this.");
         break;
     }
+
+    if (cancel_scroll)
+        you.turn_is_over = false;
 
     set_ident_type(scroll, id_the_scroll ? ID_KNOWN_TYPE :
                            tried_on_item ? ID_TRIED_ITEM_TYPE
@@ -5208,7 +5242,8 @@ void read_scroll(int slot)
         if (id_the_scroll)
             set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
-        dec_inv_item_quantity(item_slot, 1);
+        if (!cancel_scroll)
+            dec_inv_item_quantity(item_slot, 1);
     }
 
     if (!alreadyknown && dangerous)
@@ -5304,14 +5339,31 @@ void tile_item_use_floor(int idx)
     }
 }
 
-void tile_item_pickup(int idx)
+void tile_item_pickup(int idx, bool part)
 {
-    pickup_single_item(idx, mitm[idx].quantity);
+    if (part)
+    {
+        pickup_menu(idx);
+        return;
+    }
+    pickup_single_item(idx, -1);
 }
 
-void tile_item_drop(int idx)
+void tile_item_drop(int idx, bool partdrop)
 {
-    drop_item(idx, you.inv[idx].quantity);
+    int quantity = you.inv[idx].quantity;
+    if (partdrop && quantity > 1)
+    {
+        quantity = prompt_for_int("Drop how many? ", true);
+        if (quantity < 1)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        if (quantity > you.inv[idx].quantity)
+            quantity = you.inv[idx].quantity;
+    }
+    drop_item(idx, quantity);
 }
 
 static bool _prompt_eat_bad_food(const item_def food)
@@ -5388,7 +5440,7 @@ void tile_item_use_secondary(int idx)
     }
     else if (you.equip[EQ_WEAPON] == idx)
     {
-        wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+        wield_weapon(true, SLOT_BARE_HANDS);
     }
     else if (_valid_weapon_swap(item))
     {
@@ -5423,7 +5475,7 @@ void tile_item_use(int idx)
         && (item.base_type == OBJ_ARMOUR
             || item.base_type == OBJ_JEWELLERY))
     {
-        wield_weapon(true, PROMPT_GOT_SPECIAL);
+        wield_weapon(true, SLOT_BARE_HANDS);
         return;
     }
 
@@ -5437,10 +5489,7 @@ void tile_item_use(int idx)
         case OBJ_MISCELLANY:
         case OBJ_WANDS:
             // Wield any unwielded item of these types.
-            if (!equipped
-                && (type == OBJ_WEAPONS || type == OBJ_STAVES || is_deck(item)
-                    || type == OBJ_MISCELLANY
-                       && item.sub_type == MISC_LANTERN_OF_SHADOWS))
+            if (!equipped && item_is_wieldable(item))
             {
                 wield_weapon(true, idx);
                 return;
@@ -5453,7 +5502,7 @@ void tile_item_use(int idx)
             }
             // Unwield wielded items.
             if (equipped)
-                wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+                wield_weapon(true, SLOT_BARE_HANDS);
             return;
 
         case OBJ_MISSILES:
@@ -5495,7 +5544,7 @@ void tile_item_use(int idx)
         case OBJ_BOOKS:
             if (item.sub_type == BOOK_MANUAL
                 || item.sub_type == BOOK_DESTRUCTION
-                || you.skills[SK_SPELLCASTING] == 0)
+                || you.skill(SK_SPELLCASTING) == 0)
             {
                 if (check_warning_inscriptions(item, OPER_READ))
                     handle_read_book(idx);

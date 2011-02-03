@@ -72,7 +72,8 @@ bool is_unknown_stair(const coord_def &p);
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
                      std::vector<coord_def>* coords = NULL);
 
-bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false);
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false,
+                          bool ignore_danger = false);
 
 /* ***********************************************************************
  * Initiates explore - the character runs around the level to map it. Note
@@ -112,7 +113,7 @@ bool can_travel_to(const level_id &lid);
 bool can_travel_interlevel();
 bool prompt_stop_explore(int es_why);
 
-bool travel_kill_monster(const monster* mons);
+bool travel_kill_monster(monster_type mons);
 
 enum translevel_prompt_flags
 {
@@ -514,6 +515,11 @@ public:
     // RMODE_EXPLORE_GREEDY.
     const coord_def unexplored_square() const;
 
+    inline void set_ignore_danger()
+    {
+        ignore_danger = true;
+    }
+
 protected:
     bool is_greed_inducing_square(const coord_def &c) const;
     bool path_examine_point(const coord_def &c);
@@ -545,6 +551,10 @@ protected:
     // Set true in the second part of a double floodfill to completely ignore
     // hostile squares.
     bool ignore_hostile;
+
+    // Set to true for Tiles mode clicking, so you can move one step
+    // at a time through excluded areas and around stationary monsters.
+    bool ignore_danger;
 
     // If true, use magic numbers in point distance array which can be
     // used to colour the level-map.

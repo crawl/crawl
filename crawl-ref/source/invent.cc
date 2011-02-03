@@ -40,6 +40,7 @@
 #include "state.h"
 
 #ifdef USE_TILE
+ #include "tiledef-icons.h"
  #include "tiledef-main.h"
  #include "tiledef-dngn.h"
  #include "tilepick.h"
@@ -141,7 +142,7 @@ bool InvEntry::is_item_art() const
 bool InvEntry::is_item_equipped() const
 {
     if (item->link == -1 || item->pos.x != -1 || item->pos.y != -1)
-        return(false);
+        return false;
 
     for (int i = 0; i < NUM_EQUIP; i++)
         if (item->link == you.equip[i])
@@ -439,10 +440,10 @@ static std::string _no_selectables_message(int item_selector)
     switch (item_selector)
     {
     case OSEL_ANY:
-        return("You aren't carrying anything.");
+        return "You aren't carrying anything.";
     case OSEL_WIELD:
     case OBJ_WEAPONS:
-        return("You aren't carrying any weapons.");
+        return "You aren't carrying any weapons.";
     case OBJ_ARMOUR:
     {
         if (_has_melded_armour())
@@ -451,44 +452,44 @@ static std::string _no_selectables_message(int item_selector)
             return("You aren't carrying any armour you can wear in your "
                    "current form.");
         else
-            return("You aren't carrying any armour.");
+            return "You aren't carrying any armour.";
     }
     case OSEL_UNIDENT:
-        return("You don't have any unidentified items.");
+        return "You don't have any unidentified items.";
     case OSEL_RECHARGE:
-        return("You aren't carrying any rechargeable items.");
+        return "You aren't carrying any rechargeable items.";
     case OSEL_ENCH_ARM:
         return("You aren't carrying any armour which can be enchanted "
                "further.");
     case OBJ_CORPSES:
     case OSEL_VAMP_EAT:
-        return("You aren't carrying any corpses which you can drain.");
+        return "You aren't carrying any corpses which you can drain.";
     case OSEL_DRAW_DECK:
-        return("You aren't carrying any decks from which to draw.");
+        return "You aren't carrying any decks from which to draw.";
     case OBJ_FOOD:
-        return("You aren't carrying any food.");
+        return "You aren't carrying any food.";
     case OBJ_POTIONS:
-        return("You aren't carrying any potions.");
+        return "You aren't carrying any potions.";
     case OBJ_SCROLLS:
     case OBJ_BOOKS:
-        return("You aren't carrying any books or scrolls.");
+        return "You aren't carrying any books or scrolls.";
     case OBJ_WANDS:
-        return("You aren't carrying any wands.");
+        return "You aren't carrying any wands.";
     case OSEL_THROWABLE:
-        return("You aren't carrying any items that might be thrown or fired.");
+        return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_BUTCHERY:
-        return("You aren't carrying any sharp implements.");
+        return "You aren't carrying any sharp implements.";
     case OSEL_EVOKABLE:
-        return("You aren't carrying any items that can be evoked.");
+        return "You aren't carrying any items that can be evoked.";
     case OSEL_FRUIT:
-        return("You aren't carrying any fruit.");
+        return "You aren't carrying any fruit.";
     case OSEL_PONDER_ARM:
-        return("You aren't carrying any armour which can be made ponderous.");
+        return "You aren't carrying any armour which can be made ponderous.";
     case OSEL_CURSED_WORN:
-        return("None of your equipped items are cursed.");
+        return "None of your equipped items are cursed.";
     }
 
-    return("You aren't carrying any such object.");
+    return "You aren't carrying any such object.";
 }
 
 void InvMenu::load_inv_items(int item_selector, int excluded_slot,
@@ -538,7 +539,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
         if (eq != EQ_NONE && you.melded[eq])
-            tileset.push_back(tile_def(TILE_MESH, TEX_DEFAULT));
+            tileset.push_back(tile_def(TILEI_MESH, TEX_ICONS));
     }
     else
     {
@@ -573,13 +574,13 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
             // Needs to be displayed so as to not give away mimics in shallow water.
             if (ch == TILE_DNGN_SHALLOW_WATER)
             {
-                tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER,
-                                           TEX_DEFAULT));
+                tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER,
+                                           TEX_ICONS));
             }
             else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
             {
-                tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY,
-                                           TEX_DEFAULT));
+                tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER_MURKY,
+                                           TEX_ICONS));
             }
         }
     }
@@ -975,11 +976,9 @@ std::string item_class_name(int type, bool terse)
         case OBJ_ARMOUR:     return ("armour");
         case OBJ_WANDS:      return ("wand");
         case OBJ_FOOD:       return ("food");
-        case OBJ_UNKNOWN_I:  return ("?");
         case OBJ_SCROLLS:    return ("scroll");
         case OBJ_JEWELLERY:  return ("jewellery");
         case OBJ_POTIONS:    return ("potion");
-        case OBJ_UNKNOWN_II: return ("?");
         case OBJ_BOOKS:      return ("book");
         case OBJ_STAVES:     return ("staff");
         case OBJ_ORBS:       return ("orb");
@@ -997,11 +996,9 @@ std::string item_class_name(int type, bool terse)
         case OBJ_ARMOUR:     return ("Armour");
         case OBJ_WANDS:      return ("Magical Devices");
         case OBJ_FOOD:       return ("Comestibles");
-        case OBJ_UNKNOWN_I:  return ("Books");
         case OBJ_SCROLLS:    return ("Scrolls");
         case OBJ_JEWELLERY:  return ("Jewellery");
         case OBJ_POTIONS:    return ("Potions");
-        case OBJ_UNKNOWN_II: return ("Gems");
         case OBJ_BOOKS:      return ("Books");
         case OBJ_STAVES:     return ("Magical Staves and Rods");
         case OBJ_ORBS:       return ("Orbs of Power");
@@ -1075,9 +1072,7 @@ static bool _item_class_selected(const item_def &i, int selector)
     }
     case OBJ_WEAPONS:
     case OSEL_WIELD:
-        return (itype == OBJ_WEAPONS || itype == OBJ_STAVES || is_deck(i)
-                || itype == OBJ_MISCELLANY
-                   && i.sub_type == MISC_LANTERN_OF_SHADOWS);
+        return (item_is_wieldable(i));
 
     case OSEL_BUTCHERY:
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
@@ -1546,7 +1541,7 @@ static bool _nasty_stasis(const item_def &item, operation_types oper)
             && item.base_type == OBJ_JEWELLERY
             && item.sub_type == AMU_STASIS
             && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-                || you.duration[DUR_TELEPORT]));
+                || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE]));
 }
 
 bool needs_handle_warning(const item_def &item, operation_types oper)
@@ -1633,6 +1628,12 @@ bool check_warning_inscriptions(const item_def& item,
                 }
             }
         }
+        else if (oper == OPER_REMOVE || oper == OPER_TAKEOFF)
+        {
+            // Don't ask if it will fail anyway.
+            if (item.cursed())
+                return (true);
+        }
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
@@ -1640,7 +1641,7 @@ bool check_warning_inscriptions(const item_def& item,
         if (_nasty_stasis(item, oper))
             prompt += std::string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
-                         you.duration[DUR_HASTE] ? "hasted" : "slowed");
+                         you.duration[DUR_SLOW] ? "slowed" : "hasted");
         prompt += "?";
         return (yesno(prompt.c_str(), false, 'n')
                 && check_old_item_warning(item, oper));
@@ -1747,10 +1748,8 @@ int prompt_invent_item(const char *prompt,
 
             if (allow_list_known && keyin == '\\')
             {
-                if (check_item_knowledge(true))
-                    keyin = '?';
-                else
-                    mpr("You don't recognise anything yet!");
+                check_item_knowledge();
+                keyin = '?';
             }
 
             need_getch  = false;
@@ -1804,13 +1803,9 @@ int prompt_invent_item(const char *prompt,
         }
         else if (allow_list_known && keyin == '\\')
         {
-                if (check_item_knowledge(true))
-                {
-                    keyin = '?';
-                    need_getch = false;
-                }
-                else
-                    mpr("You don't recognise anything yet!");
+            check_item_knowledge();
+            keyin = '?';
+            need_getch = false;
         }
         else if (isaalpha(keyin))
         {
@@ -1852,6 +1847,15 @@ bool prompt_failed(int retval, std::string msg)
     crawl_state.cancel_cmd_repeat();
 
     return (true);
+}
+
+// Most items are wieldable, but this function check for items that needs to be
+// wielded to be used normally.
+bool item_is_wieldable(const item_def &item)
+{
+    const int type = item.base_type;
+    return (type == OBJ_WEAPONS || type == OBJ_STAVES || is_deck(item)
+            || type == OBJ_MISCELLANY && type == MISC_LANTERN_OF_SHADOWS);
 }
 
 bool item_is_evokable(const item_def &item, bool known, bool all_wands,

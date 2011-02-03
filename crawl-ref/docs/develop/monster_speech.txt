@@ -832,7 +832,7 @@ APPENDIX: List of monster glyphs
 
 Lowercase letters:
 ------------------
-a   giant ant, soldier ant, queen ant
+a   worker ant, soldier ant, queen ant
 b   giant bat, butterfly
 c   centaur (warrior), yaktaur (captain)
 d   all draconians
@@ -859,7 +859,7 @@ u   (very) ugly thing
 v   all vortices, and insubstantial wisp
 w   all worms and larvae
 x   unseen horror, small abomination
-y   wasps, giant mosquito, giant blowfly, moth of wrath
+y   wasps, moths, mosquitoes
 z   small zombie/skeleton/simulacrum, skeletal warrior, flying skull,
     curse skull, and curse toe
 

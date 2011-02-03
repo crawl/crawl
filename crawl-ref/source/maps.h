@@ -24,8 +24,8 @@ bool map_safe_vault_place(const map_def &md,
                           const coord_def &c,
                           const coord_def &size);
 
-int vault_main(vault_placement &vp, const map_def *vault,
-               bool check_place = false);
+map_section_type vault_main(vault_placement &vp, const map_def *vault,
+                            bool check_place = false);
 
 bool resolve_subvault(map_def &vault);
 
@@ -48,6 +48,7 @@ const map_def *random_map_for_tag(const std::string &tag,
                                   bool check_chance = false);
 mapref_vector random_chance_maps_in_depth(const level_id &place);
 
+void dump_map(const map_def &map);
 void add_parsed_map(const map_def &md);
 
 std::vector<std::string> find_map_matches(const std::string &name);
@@ -62,7 +63,8 @@ void read_maps();
 void reread_maps();
 void sanity_check_maps();
 void read_map(const std::string &file);
-void run_map_preludes();
+void run_map_global_preludes();
+void run_map_local_preludes();
 void reset_map_parser();
 std::string get_descache_path(const std::string &file,
                               const std::string &ext);
@@ -89,7 +91,7 @@ extern point_vector      map_anchor_points;
 // Use dgn_map_parameters to modify:
 extern string_vector     map_parameters;
 
-const int              MAP_CACHE_VERSION = 1015;
+const int              MAP_CACHE_VERSION = 1017;
 
 class dgn_map_parameters
 {

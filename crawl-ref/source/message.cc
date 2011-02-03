@@ -553,7 +553,7 @@ public:
         {
             cgotoxy(use_first_col() ? 2 : 1, last_row, GOTO_MSG);
             textcolor(channel_to_colour(MSGCH_PROMPT));
-            if (Hints.hints_left)
+            if (crawl_state.game_is_hints())
             {
                 std::string more_str = "--more-- Press Space ";
 #ifdef USE_TILE
@@ -716,8 +716,6 @@ static int colour_msg(msg_colour_type col)
         return static_cast<int>(col);
 }
 
-#ifdef USE_COLOUR_MESSAGES
-
 // Returns a colour or MSGCOL_MUTED.
 static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
@@ -787,10 +785,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTRED;
             break;
 
-        case MSGCH_TUTORIAL:
-            ret = MSGCOL_MAGENTA;
-            break;
-
         case MSGCH_MONSTER_SPELL:
         case MSGCH_MONSTER_ENCHANT:
         case MSGCH_FRIEND_SPELL:
@@ -798,6 +792,8 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTMAGENTA;
             break;
 
+        case MSGCH_TUTORIAL:
+        case MSGCH_ORB:
         case MSGCH_BANISHMENT:
             ret = MSGCOL_MAGENTA;
             break;
@@ -856,15 +852,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 
     return (ret);
 }
-
-#else // don't use colour messages
-
-static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
-{
-    return (MSGCOL_LIGHTGREY);
-}
-
-#endif
 
 int channel_to_colour(msg_channel_type channel, int param)
 {
@@ -967,8 +954,9 @@ static void debug_channel_arena(msg_channel_type channel)
     case MSGCH_MULTITURN_ACTION:
     case MSGCH_EXAMINE:
     case MSGCH_EXAMINE_FILTER:
+    case MSGCH_ORB:
     case MSGCH_TUTORIAL:
-        DEBUGSTR("Invalid channel '%s' in arena mode",
+        die("Invalid channel '%s' in arena mode",
                  channel_to_str(channel).c_str());
         break;
     default:
@@ -1090,7 +1078,9 @@ void msgwin_got_input()
 int msgwin_get_line(std::string prompt, char *buf, int len,
                     input_history *mh, int (*keyproc)(int& c))
 {
-    msgwin_prompt(prompt);
+    if (prompt != "")
+        msgwin_prompt(prompt);
+
     int ret = cancelable_get_line(buf, len, mh, keyproc);
     msgwin_reply(buf);
     return ret;
@@ -1243,6 +1233,8 @@ void flush_prev_message()
 
 void mesclr(bool force)
 {
+    if (!crawl_state.io_inited)
+        return;
     // Unflushed message will be lost with clear_messages,
     // so they shouldn't really exist, but some of the delay
     // code appears to do this intentionally.
@@ -1318,6 +1310,8 @@ static bool _pre_more()
 
 void more(bool user_forced)
 {
+    if (!crawl_state.io_inited)
+        return;
     flush_prev_message();
     msgwin.more(false, user_forced);
     mesclr();

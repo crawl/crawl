@@ -10,15 +10,22 @@ enum ev_ignore_type
     EV_IGNORE_PHASESHIFT = 2,
 };
 
+struct bolt;
+
 class actor
 {
 public:
     virtual ~actor();
 
-    virtual monster_type  id() const = 0;
+    monster_type type;
+    mid_t        mid;
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
+    virtual bool is_player() const
+    {
+        return atype() == ACT_PLAYER;
+    }
     virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
     virtual const monster* as_monster() const = 0;
@@ -179,7 +186,7 @@ public:
     virtual void teleport(bool right_now = false,
                           bool abyss_shift = false,
                           bool wizard_tele = false) = 0;
-    virtual void poison(actor *attacker, int amount = 1) = 0;
+    virtual void poison(actor *attacker, int amount = 1, bool force = false) = 0;
     virtual bool sicken(int amount) = 0;
     virtual void paralyse(actor *attacker, int strength) = 0;
     virtual void petrify(actor *attacker, int strength) = 0;
@@ -192,14 +199,18 @@ public:
     virtual bool can_sleep() const;
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
+    virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
+                             std::string source = "") = 0;
 
-    virtual int  skill(skill_type sk, bool skill_bump = false) const
+    virtual int  skill(skill_type sk) const
     {
         return (0);
     }
 
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
+
+    virtual int stealth () const = 0;
 
     virtual bool can_throw_large_rocks() const = 0;
 
@@ -225,11 +236,12 @@ public:
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid() const = 0;
     virtual int res_fire() const = 0;
+    virtual int res_holy_fire() const;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
-    virtual int res_poison() const = 0;
-    virtual int res_rotting() const = 0;
+    virtual int res_poison(bool temp = true) const = 0;
+    virtual int res_rotting(bool temp = true) const = 0;
     virtual int res_asphyx() const = 0;
     virtual int res_water_drowning() const = 0;
     virtual int res_sticky_flame() const = 0;
@@ -266,6 +278,8 @@ public:
     virtual int halo_radius2() const = 0;
     // Squared silence radius.
     virtual int silence_radius2() const = 0;
+    // Squared liquefying radius
+    virtual int liquefying_radius2 () const = 0;
     virtual bool glows_naturally() const = 0;
 
     virtual bool petrified() const = 0;

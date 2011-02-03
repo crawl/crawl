@@ -146,8 +146,7 @@ static kill_method_type _statloss_killtype(stat_type stat)
     case STAT_DEX:
         return KILLED_BY_CLUMSINESS;
     default:
-        ASSERT(false);
-        return NUM_KILLBY;
+        die("unknown stat");
     }
 }
 
@@ -286,7 +285,7 @@ static int _strength_modifier()
     result -= player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
 
     // transformations
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     case TRAN_STATUE:          result +=  2; break;
     case TRAN_DRAGON:          result += 10; break;
@@ -357,7 +356,7 @@ static int _dex_modifier()
     result -= player_mutation_level(MUT_ROUGH_BLACK_SCALES);
 
     // transformations
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     case TRAN_SPIDER: result +=  5; break;
     case TRAN_STATUE: result -=  2; break;
@@ -479,8 +478,7 @@ static std::string _stat_name(stat_type stat)
     case STAT_DEX:
         return ("dexterity");
     default:
-        ASSERT(false);
-        return ("BUG");
+        die("invalid stat");
     }
 }
 

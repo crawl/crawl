@@ -12,6 +12,7 @@
 #include "command.h"
 #include "database.h"
 #include "files.h"
+#include "hints.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -29,14 +30,14 @@
 #include "sprint.h"
 #include "state.h"
 #include "stuff.h"
-#include "hints.h"
+#include "tutorial.h"
 
 #ifdef USE_TILE
 #include "tilereg-crt.h"
 #endif
 
-static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
-                               const newgame_def& defaults);
+static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+                                 const newgame_def& defaults);
 static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
                           const newgame_def& defaults);
 static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
@@ -404,7 +405,7 @@ static bool _reroll_random(newgame_def* ng)
     cprintf("\nDo you want to play this combination? (ynq) [y]");
     char c = getchm();
     if (key_is_escape(c) || tolower(c) == 'q')
-        end(0);
+        game_ended();
     return (tolower(c) == 'n');
 }
 
@@ -466,8 +467,8 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     ng->type = choice->type;
     ng->map  = choice->map;
 
-    if (ng->type == GAME_TYPE_SPRINT)
-        _choose_sprint_map(ng, choice, defaults);
+    if (ng->type == GAME_TYPE_SPRINT || ng->type == GAME_TYPE_TUTORIAL)
+        _choose_gamemode_map(ng, choice, defaults);
 
     _choose_char(ng, choice, defaults);
 
@@ -884,10 +885,11 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
             switch (keyn)
             {
             case 'X':
-            CASE_ESCAPE
                 cprintf("\nGoodbye!");
                 end(0);
                 return;
+            CASE_ESCAPE
+                    game_ended();
             case CK_BKSP:
                 ng_choice->species = SP_UNKNOWN;
                 return;
@@ -1250,10 +1252,11 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
             switch (keyn)
             {
             case 'X':
-            CASE_ESCAPE
                 cprintf("\nGoodbye!");
                 end(0);
                 return;
+            CASE_ESCAPE
+                game_ended();
             case CK_BKSP:
                 ng_choice->job = JOB_UNKNOWN;
                 return;
@@ -2131,8 +2134,7 @@ static std::string _god_text(god_type god)
     case GOD_LUGONU:
         return "Lugonu the Unformed";
     default:
-        ASSERT(false);
-        return "";
+        die("invalid priestly god: %d", god);
     }
 }
 
@@ -2820,12 +2822,12 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
     return (true);
 }
 
-static void _construct_sprint_map_menu(const mapref_vector& maps,
-                                       const newgame_def& defaults,
-                                       MenuFreeform* menu)
+static void _construct_gamemode_map_menu(const mapref_vector& maps,
+                                         const newgame_def& defaults,
+                                         MenuFreeform* menu)
 {
     static const int ITEMS_START_Y = 5;
-    static const int SPRINT_COLUMN_WIDTH = get_number_of_cols();
+    static const int MENU_COLUMN_WIDTH = get_number_of_cols();
     TextItem* tmp = NULL;
     std::string text;
     coord_def min_coord(0,0);
@@ -2835,9 +2837,7 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
     {
         if (padding_width < maps.at(i)->desc_or_name().length())
-        {
             padding_width = maps.at(i)->desc_or_name().length();
-        }
     }
     padding_width += 4; // Count the letter and " - "
 
@@ -2854,16 +2854,14 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
         text += " - ";
 
         text += maps[i]->desc_or_name();
-        if (static_cast<int>(text.length()) > SPRINT_COLUMN_WIDTH - 1)
-            text = text.substr(0, SPRINT_COLUMN_WIDTH - 1);
+        if (static_cast<int>(text.length()) > MENU_COLUMN_WIDTH - 1)
+            text = text.substr(0, MENU_COLUMN_WIDTH - 1);
 
         // Add padding
         if (padding_width > text.size())
-        {
             text.append(padding_width - text.size(), ' ');
-        }
-        tmp->set_text(text);
 
+        tmp->set_text(text);
         tmp->add_hotkey(letter);
         tmp->set_id(i); // ID corresponds to location in vector
 
@@ -2875,57 +2873,59 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
 
         menu->attach_item(tmp);
         tmp->set_visible(true);
-        // Is this item our default sprint map?
+        // Is this item our default map?
         if (defaults.map == maps[i]->name)
-        {
             menu->set_active_item(tmp);
-        }
     }
 
-    tmp = new TextItem();
-    tmp->set_text("% - List aptitudes");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('%');
-    tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
+    // Don't overwhelm new players with aptitudes or the full list of commands!
+    if (!crawl_state.game_is_tutorial())
+    {
+        tmp = new TextItem();
+        tmp->set_text("% - List aptitudes");
+        min_coord.x = X_MARGIN;
+        min_coord.y = SPECIAL_KEYS_START_Y + 1;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('%');
+        tmp->set_id(M_APTITUDES);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
 
-    tmp = new TextItem();
-    tmp->set_text("? - Help");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 2;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('?');
-    tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Opens the help screen");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
+        tmp = new TextItem();
+        tmp->set_text("? - Help");
+        min_coord.x = X_MARGIN;
+        min_coord.y = SPECIAL_KEYS_START_Y + 2;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('?');
+        tmp->set_id(M_HELP);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Opens the help screen");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
 
-    tmp = new TextItem();
-    tmp->set_text("* - Random map");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('*');
-    tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Picks a random sprint map");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
+        tmp = new TextItem();
+        tmp->set_text("* - Random map");
+        min_coord.x = X_MARGIN + COLUMN_WIDTH;
+        min_coord.y = SPECIAL_KEYS_START_Y + 1;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('*');
+        tmp->set_id(M_RANDOM);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Picks a random sprint map");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+    }
 
     // TODO: let players escape back to first screen menu
     // Adjust the end marker to align the - because Bksp text is longer by 3
@@ -2953,7 +2953,7 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
         text += "Tab - ";
         text += defaults.map;
 
-        // Adjust the end marker to aling the - because
+        // Adjust the end marker to align the - because
         // Tab text is longer by 2
         tmp->set_text(text);
         min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
@@ -2976,9 +2976,9 @@ static bool _cmp_map_by_name(const map_def* m1, const map_def* m2)
     return (m1->desc_or_name() < m2->desc_or_name());
 }
 
-static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
-                               const newgame_def& defaults,
-                               mapref_vector maps)
+static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+                                 const newgame_def& defaults,
+                                 mapref_vector maps)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -2989,7 +2989,7 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
     menu.set_active_object(freeform);
 
     std::sort(maps.begin(), maps.end(), _cmp_map_by_name);
-    _construct_sprint_map_menu(maps, defaults, freeform);
+    _construct_gamemode_map_menu(maps, defaults, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
@@ -2997,9 +2997,8 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
 
     // Did we have a previous sprint map?
     if (menu.get_active_item() == NULL)
-    {
         freeform->activate_first_item();
-    }
+
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
 #ifdef USE_TILE
@@ -3010,7 +3009,9 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
     highlighter->set_visible(true);
 
     textcolor(CYAN);
-    cprintf("\nYou have a choice of maps:\n\n");
+    cprintf("\nYou have a choice of %s:\n\n",
+            ng_choice->type == GAME_TYPE_TUTORIAL ? "lessons"
+                                                  : "maps");
 
     while (true)
     {
@@ -3028,8 +3029,10 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
                 cprintf("\nGoodbye!");
                 end(0);
                 break;
-            case ' ':
             CASE_ESCAPE
+                game_ended();
+                break;
+            case ' ':
                 return;
             default:
                 // if we get this far, we did not get a significant selection
@@ -3057,10 +3060,10 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
             return;
         case M_APTITUDES:
             list_commands('%', false, _highlight_pattern(ng));
-            return _prompt_sprint_map(ng, ng_choice, defaults, maps);
+            return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_HELP:
             list_commands('?');
-            return _prompt_sprint_map(ng, ng_choice, defaults, maps);
+            return _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         case M_DEFAULT_CHOICE:
             _set_default_choice(ng, ng_choice, defaults);
             return;
@@ -3076,8 +3079,8 @@ static void _prompt_sprint_map(newgame_def* ng, newgame_def* ng_choice,
     }
 }
 
-static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
-                                const mapref_vector& maps)
+static void _resolve_gamemode_map(newgame_def* ng, const newgame_def* ng_choice,
+                                  const mapref_vector& maps)
 {
     if (ng_choice->map == "random" || ng_choice->map.empty())
         ng->map = maps[random2(maps.size())]->name;
@@ -3085,22 +3088,33 @@ static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
         ng->map = ng_choice->map;
 }
 
-static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
-                               const newgame_def& defaults)
+static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+                                 const newgame_def& defaults)
 {
-    const mapref_vector maps = get_sprint_maps();
+    // Sprint, otherwise Tutorial.
+    const bool is_sprint = (ng_choice->type == GAME_TYPE_SPRINT);
+
+    const mapref_vector maps = (is_sprint ? get_sprint_maps()
+                                          : get_tutorial_maps());
     if (maps.empty())
-        end(1, true, "No sprint maps found.");
+    {
+        end(1, true, make_stringf("No %s maps found.",
+                                  is_sprint ? "sprint"
+                                            : "tutorial").c_str());
+    }
 
     if (ng_choice->map.empty())
     {
-        if (!crawl_state.sprint_map.empty())
+        if (is_sprint
+            && ng_choice->type == !crawl_state.sprint_map.empty())
+        {
             ng_choice->map = crawl_state.sprint_map;
+        }
         else if (maps.size() > 1)
-            _prompt_sprint_map(ng, ng_choice, defaults, maps);
+            _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         else
             ng_choice->map = maps[0]->name;
     }
 
-    _resolve_sprint_map(ng, ng_choice, maps);
+    _resolve_gamemode_map(ng, ng_choice, maps);
 }

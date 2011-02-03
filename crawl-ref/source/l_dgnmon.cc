@@ -136,7 +136,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
                 err = make_stringf("mon #%d: Can't use Lab or Portal as a "
                                    "monster place.", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());
-                return(0);
+                return 0;
             }
             name = mon.place.describe();
         }
@@ -148,7 +148,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
                 err = make_stringf("mon #%d: can't use random monster in "
                                    "list specifying random monsters", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());
-                return(0);
+                return 0;
             }
             if (mon.mid == -1)
                 mon.mid = MONS_PROGRAM_BUG;

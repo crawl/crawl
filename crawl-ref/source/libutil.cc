@@ -325,6 +325,22 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
     return (false);
 }
 
+std::vector<std::string> strip_multiple_tag_prefix (std::string &s, const std::string &tagprefix)
+{
+    std::vector<std::string> results;
+
+    while (true)
+    {
+        std::string this_result = strip_tag_prefix(s, tagprefix);
+        if (this_result.empty())
+            break;
+
+        results.push_back(this_result);
+    }
+
+    return results;
+}
+
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
 {
     std::string::size_type pos = s.find(tagprefix);
@@ -477,7 +493,8 @@ std::string pluralise(const std::string &name,
         return name.substr(0, name.length() - 1) + "i";
     }
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
-             || ends_with(name, "folk") || ends_with(name, "shedu")
+             || ends_with(name, "folk") || ends_with(name, "kenku")
+             || ends_with(name, "shedu")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
     {
@@ -502,7 +519,7 @@ std::string pluralise(const std::string &name,
     }
     else if (name == "foot")
         return "feet";
-    else if (name == "ophan" || name == "cherub")
+    else if (name == "ophan" || name == "cherub" || name == "seraph")
     {
         // unlike "angel" which is fully assimilated and "cherub" which may be
         // pluralized both ways, "ophan" always uses hebrew pluralization
@@ -831,6 +848,19 @@ size_t strlcpy(char *dst, const char *src, size_t n)
     }
 
     return s - src - 1;
+}
+
+// Stubs for now.  With Unicode, the width may be different from length in
+// bytes due to UTF (any of these) -- and counting characters is not enough,
+// too, because of combining characters and CJK double-widths.
+int strwidth(const char *s)
+{
+    return strlen(s);
+}
+
+int strwidth(const std::string &s)
+{
+    return s.length();
 }
 
 #ifdef TARGET_OS_WINDOWS

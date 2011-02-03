@@ -159,13 +159,9 @@ void MapRegion::render()
 
 void MapRegion::recenter()
 {
-    // adjust offsets to center map
+    // adjust offsets to center map.
     ox = (wx - dx * (m_max_gx - m_min_gx)) / 2;
     oy = (wy - dy * (m_max_gy - m_min_gy)) / 2;
-#if 0
-    // Not needed? (jpeg)
-    m_dirty = true;
-#endif
 }
 
 void MapRegion::set(const coord_def &gc, map_feature f)
@@ -317,7 +313,7 @@ bool MapRegion::update_tip_text(std::string& tip)
         && (you.hunger_state > HS_STARVING || you_min_hunger())
         && i_feel_safe())
     {
-        tip += "\n[Shift-L-Click] Autoexplore";
+        tip += "\n[Shift + L-Click] Autoexplore";
     }
     return (true);
 }

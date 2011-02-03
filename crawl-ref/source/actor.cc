@@ -71,7 +71,7 @@ bool actor::is_habitable(const coord_def &_pos) const
 {
     //Just for players for now.
     if (atype() == ACT_PLAYER && can_cling_to(_pos))
-        return(true);
+        return true;
 
     return is_habitable_feat(grd(_pos));
 }
@@ -82,6 +82,16 @@ bool actor::handle_trap()
     if (trap)
         trap->trigger(*this);
     return (trap != NULL);
+}
+
+
+int actor::res_holy_fire() const
+{
+    if (is_evil() || is_unholy())
+        return (-1);
+    else if (is_holy())
+        return (3);
+    return (0);
 }
 
 int actor::check_res_magic(int power)

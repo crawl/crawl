@@ -11,6 +11,8 @@
 #include "tag-version.h"
 #include <stdint.h>
 
+#define HERD_COMFORT_RANGE 6
+
 enum corpse_effect_type
 {
     CE_NOCORPSE,        //    0
@@ -117,7 +119,7 @@ enum mon_summon_type
     MON_SUMM_AID,     // Divine aid
 };
 
-#include "mon-class-flags.h"
+#include "mon-flags.h"
 
 enum mon_intel_type             // Must be in increasing intelligence order
 {
@@ -147,9 +149,6 @@ enum mon_itemuse_type
     MONUSE_OPEN_DOORS,
     MONUSE_STARTING_EQUIPMENT,
     MONUSE_WEAPONS_ARMOUR,
-#if TAG_MAJOR_VERSION == 31
-    MONUSE_MAGIC_ITEMS,
-#endif
 
     NUM_MONUSE
 };
@@ -224,6 +223,7 @@ enum shout_type
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
+    S_CAW,                  // for ravens
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

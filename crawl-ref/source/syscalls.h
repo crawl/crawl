@@ -19,10 +19,18 @@
 bool lock_file(int fd, bool write, bool wait = false);
 bool unlock_file(int fd);
 
+bool read_urandom(char *buf, int len);
+
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
 int fdatasync(int fd);
 # endif
+#endif
+
+// This check is way underinclusive.
+#if !defined(TARGET_OS_LINUX) && !defined(TARGET_OS_WINDOWS) && !defined(TARGET_OS_NETBSD) && !defined(TARGET_OS_SOLARIS)
+# define NEED_FAKE_FDATASYNC
+int fdatasync(int fd);
 #endif
 
 #endif

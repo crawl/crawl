@@ -109,7 +109,7 @@ static dungeon_feature_type _abyss_proto_feature()
 void generate_abyss()
 {
     env.level_build_method += " abyss";
-    env.level_layout_type   = "abyss";
+    env.level_layout_types.insert("abyss");
 
 #ifdef DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS,
@@ -235,12 +235,9 @@ static void _abyss_erase_stairs_from(const vault_placement *vp)
     }
 }
 
-static bool _abyss_place_map(const map_def *mdef,
-                             bool clobber,
-                             bool make_no_exits = false,
-                             const coord_def &where = INVALID_COORD)
+static bool _abyss_place_map(const map_def *mdef)
 {
-    const bool did_place = dgn_safe_place_map(mdef, clobber, make_no_exits, where);
+    const bool did_place = dgn_safe_place_map(mdef, false, false, INVALID_COORD);
     if (did_place)
         _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
 
@@ -254,7 +251,7 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
-        return (_abyss_place_map(map, false, false, INVALID_COORD));
+        return (_abyss_place_map(map));
     }
     return (false);
 }
@@ -313,7 +310,7 @@ static bool _abyss_square_accepts_items(const map_mask &abyss_genlevel_mask,
     return (abyss_genlevel_mask(p)
             && grd(p) == DNGN_FLOOR
             && igrd(p) == NON_ITEM
-            && unforbidden(p, MMT_VAULT));
+            && !map_masked(p, MMT_VAULT));
 }
 
 static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
@@ -511,7 +508,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     {
         const coord_def p(*ri);
 
-        if (!abyss_genlevel_mask(p) || !unforbidden(p, MMT_VAULT))
+        if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
             continue;
 
         if (x_chance_in_y(floor_density, 100))
@@ -551,7 +548,7 @@ static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
         if (!map)
             break;
 
-        if (_abyss_place_map(map, false, false)
+        if (_abyss_place_map(map)
             && !one_chance_in(2 + (++vaults_placed)))
         {
             break;
@@ -716,6 +713,11 @@ static void _abyss_wipe_square_at(coord_def p)
 
     env.pgrid(p)          = 0;
     env.grid_colours(p)   = 0;
+#ifdef USE_TILE
+    env.tile_bk_fg(p) = 0;
+    env.tile_bk_bg(p) = 0;
+    // FIXME: need to clear tile_flavour as well
+#endif
 
     env.level_map_mask(p) = 0;
     env.level_map_ids(p)  = INVALID_MAP_INDEX;
@@ -1148,7 +1150,6 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
     if (cmark->duration < 1)
         return;
 
-    const coord_def centre = cmark->pos;
     const int neffects = std::max(div_rand_round(duration, 5), 1);
 
     for (int i = 0; i < neffects; ++i)

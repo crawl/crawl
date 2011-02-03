@@ -50,6 +50,7 @@ enum store_val_type
     SV_LEV_POS,
     SV_MONST,
     SV_LUA,
+    SV_INT64,
     NUM_STORE_VAL_TYPES
 };
 
@@ -72,6 +73,7 @@ union StoreUnion
     short _short;
     int   _int;
     float _float;
+    int64_t _int64;
     void* ptr;
 };
 
@@ -89,6 +91,7 @@ public:
     CrawlStoreValue(const char &val);
     CrawlStoreValue(const short &val);
     CrawlStoreValue(const int &val);
+    CrawlStoreValue(const int64_t &val);
     CrawlStoreValue(const float &val);
     CrawlStoreValue(const std::string &val);
     CrawlStoreValue(const char* val);
@@ -125,6 +128,7 @@ public:
     char           &get_byte();
     short          &get_short();
     int            &get_int();
+    int64_t        &get_int64();
     float          &get_float();
     std::string    &get_string();
     coord_def      &get_coord();
@@ -140,6 +144,7 @@ public:
     char           get_byte()      const;
     short          get_short()     const;
     int            get_int()       const;
+    int64_t        get_int64()     const;
     float          get_float()     const;
     std::string    get_string()    const;
     coord_def      get_coord()     const;
@@ -151,20 +156,6 @@ public:
     const item_def&       get_item()   const;
     const monster&       get_monster() const;
     const dlua_chunk&     get_lua() const;
-
-#if 0
-    // These don't actually exist
-    void set_bool(const bool val);
-    void set_byte(const char val);
-    void set_short(const short val);
-    void set_int(const int val);
-    void set_float(const float val);
-    void set_string(const std::string &val);
-    void set_coord(const coord_def &val);
-    void set_table(const CrawlHashTable &val);
-    void set_vector(const CrawlVector &val);
-    void set_item(const item_def &val);
-#endif
 
 public:
     // NOTE: All operators will assert if the value is of the wrong
@@ -188,6 +179,7 @@ public:
     operator char&();
     operator short&();
     operator int&();
+    operator int64_t&();
     operator float&();
     operator std::string&();
     operator coord_def&();
@@ -203,6 +195,7 @@ public:
     operator char()        const;
     operator short()       const;
     operator int()         const;
+    operator int64_t()     const;
     operator float()       const;
     operator std::string() const;
     operator coord_def()   const;
@@ -214,6 +207,7 @@ public:
     CrawlStoreValue &operator = (const char &val);
     CrawlStoreValue &operator = (const short &val);
     CrawlStoreValue &operator = (const int &val);
+    CrawlStoreValue &operator = (const int64_t &val);
     CrawlStoreValue &operator = (const float &val);
     CrawlStoreValue &operator = (const std::string &val);
     CrawlStoreValue &operator = (const char* val);

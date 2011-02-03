@@ -42,7 +42,6 @@ struct Branch
     const char* longname;       // "The Pits of Slime"
     const char* abbrevname;     // "Slime"
     const char* entry_message;
-    int shop_chance;       // How likely a level is to have shops (percent)
     bool has_uniques;
     uint8_t floor_colour;          // Zot needs special handling.
     uint8_t rock_colour;
@@ -52,7 +51,6 @@ struct Branch
     trap_type (*rand_trap_function)(int);
     int       (*num_fogs_function)(int);
     void      (*rand_fog_function)(int,fog_machine_data&);
-    int altar_chance;            // in percent
     int travel_shortcut;         // Which key to press for travel.
     bool any_upstair_exits;      // any upstair exits the branch (Hell branches)
     bool dangerous_bottom_level; // bottom level is more dangerous than normal

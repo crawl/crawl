@@ -433,6 +433,11 @@ ettin
  His heart this night shall kitchen my bread.'"
     -Joseph Jacobs, _The Red Ettin_
 %%%%
+fire crab
+
+"The planet brought forth scintillating jewelled scuttling crabs, which [they] ate, smashing their shells with iron mallets; tall aspiring trees with breathtaking slenderness and colour which [they] cut down and burned the crab meat with."
+    -Douglas Adams, The Hitch-hiker's Guide to the Galaxy
+%%%%
 flying skull
 
 "Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most excellent fancy. He hath bore me on his back a thousand times, and now how abhorr'd in my imagination it is! My gorge rises at it."
@@ -617,6 +622,11 @@ phantom
 "Who wondrous things concerning our welfare, And straunge phantomes doth lett us ofte foresee."
     -Spenser, _The Faerie Queene_ II. xii. 47
 %%%%
+pillar of salt
+
+"Then the LORD rained brimstone and fire on Sodom and Gomorrah, from the LORD out of the heavens. So He overthrew those cities, all the plain, all the inhabitants of the cities, and what grew on the ground. But his wife looked back behind him, and she became a pillar of salt."
+    -Genesis 19:24-26 (New King James Version)
+%%%%
 player ghost
 
 "Know thyself."
@@ -642,6 +652,11 @@ rakshasa
 
 "He is brilliant, yet utterly corrupt. Like rotten mackerel by moonlight, he both shines and stinks."
     -John Randolph
+%%%%
+raven
+
+"The Hatter opened his eyes very wide on hearing this; but all he said was 'Why is a raven like a writing-desk?'"
+    -Lewis Carroll, Alice's Adventures in Wonderland
 %%%%
 shadow
 
@@ -681,3 +696,21 @@ worm
    And its hero, the Conqueror Worm."
     -Edgar Allan Poe
 %%%%
+####################################################
+# Vaults
+####################################################
+Cigotuvi's Monster
+
+"I beheld the wretch - the miserable monster whom I had
+ created. He held up the curtain of the bed; and his eyes, if
+ eyes they may be called, were fixed on me. His jaws opened,
+ and he muttered some inarticulate sounds, while a grin
+ wrinkled his cheeks."
+  -Mary Shelley, "Frankenstein"
+%%%%
+strange machine
+
+"The machine had stood there a long time. It was several
+ hundred feet long and could run on a thimbleful of earth or
+ water. It had been working seven and a half million years."
+  -Sweet Their Blood and Sticky, Albert Teichner

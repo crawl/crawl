@@ -431,6 +431,10 @@ void item_colour(item_def &item)
         case ARM_SWAMP_DRAGON_ARMOUR:
             item.colour = mons_class_colour(MONS_SWAMP_DRAGON);
             break;
+        case ARM_PEARL_DRAGON_HIDE:
+        case ARM_PEARL_DRAGON_ARMOUR:
+            item.colour = mons_class_colour(MONS_PEARL_DRAGON);
+            break;
         default:
             item.colour = _armour_colour(item);
             break;
@@ -1513,11 +1517,16 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VAMPIRICISM;
             else if (one_chance_in(6))
                 rc = SPWPN_VENOM;
+            else if (one_chance_in(8))
+                rc = SPWPN_ANTIMAGIC;
             break;
 
         case WPN_DEMON_WHIP:
         case WPN_DEMON_BLADE:
         case WPN_DEMON_TRIDENT:
+            if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
             if (one_chance_in(5))       // 4.9%, 7.3% blades
                 rc = SPWPN_VAMPIRICISM;
 
@@ -1636,7 +1645,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case NUM_SPECIAL_WEAPONS:
     case NUM_REAL_SPECIAL_WEAPONS:
     case SPWPN_DUMMY_CRUSHING:
-        ASSERT(!"invalid brand");
+        die("invalid brand");
         break;
     }
 
@@ -2398,13 +2407,16 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return (true);
     case SPARM_POISON_RESISTANCE:
     case SPARM_POSITIVE_ENERGY:
+        if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
+            return (false); // contradictory or redundant
+
         return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK);
 
     case SPARM_SPIRIT_SHIELD:
         return (type == ARM_CAP || slot == EQ_SHIELD);
 
     case NUM_SPECIAL_ARMOURS:
-        ASSERT(!"invalid armour brand");
+        die("invalid armour brand");
     }
 
     return (true);
@@ -2574,7 +2586,9 @@ static int _random_wand_subtype()
     return rc;
 }
 
-int wand_max_charges(int subtype)
+// This differs quite a bit from the maximum amount allowed
+// when recharging wands. (See wand_max_charges() for that.)
+static int _wand_max_initial_charges(int subtype)
 {
     switch (subtype)
     {
@@ -2599,7 +2613,7 @@ static void _generate_wand_item(item_def& item, int force_type)
         item.sub_type = _random_wand_subtype();
 
     // Generate charges randomly...
-    item.plus = random2avg(wand_max_charges(item.sub_type), 3);
+    item.plus = random2avg(_wand_max_initial_charges(item.sub_type), 3);
 
     // ...but 0 charges is silly
     if (item.plus == 0)
@@ -2696,6 +2710,7 @@ static void _generate_potion_item(item_def& item, int force_type,
         do
         {
             // total weight is NOT 10000
+            // fizzing potions are not generated {due jan2011}
             stype = random_choose_weighted(2815, POT_HEALING,
                                             1407, POT_HEAL_WOUNDS,
                                              900, POT_RESTORE_ABILITIES,
@@ -2760,8 +2775,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
         {
             // total weight: 10000
             item.sub_type = random_choose_weighted(
-                1799, SCR_IDENTIFY,
-                1105, SCR_REMOVE_CURSE,
+                1800, SCR_IDENTIFY,
+                1115, SCR_REMOVE_CURSE,
                  511, SCR_DETECT_CURSE,
                  331, SCR_FEAR,
                  331, SCR_MAGIC_MAPPING,
@@ -2777,17 +2792,14 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  // Don't create ?oImmolation at low levels (encourage read-ID).
                  331, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
 
-                 220, SCR_CURSE_WEAPON,
-                 220, SCR_CURSE_ARMOUR,
-                 220, SCR_CURSE_JEWELLERY,
-
-                 161, SCR_PAPER,
+                 270, SCR_CURSE_WEAPON,
+                 270, SCR_CURSE_ARMOUR,
+                 270, SCR_CURSE_JEWELLERY,
 
                  // Medium-level scrolls.
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
                  140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
-                 140, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
 
                  // High-level scrolls.
                  140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
@@ -2800,6 +2812,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 // [ds] Zero-weights should always be at the end,
                 // since random_choose_weighted stops at the first
                 // zero weight.
+
+                (depth_mod < 4 ? 0 : 140), SCR_VULNERABILITY,
 
                 // [Cha] don't generate teleportation scrolls if in sprint
                 (crawl_state.game_is_sprint() ? 0 : 802), SCR_TELEPORTATION,
@@ -3108,7 +3122,8 @@ int items(int allow_uniques,       // not just true-false,
                                    // item_race also gives type of rune!
           uint32_t mapmask,
           int force_ego,           // desired ego/brand
-          int agent)               // acquirement agent, if not -1
+          int agent,               // acquirement agent, if not -1
+          bool mundane)            // no plusses
 {
     ASSERT(force_ego <= 0
            || force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
@@ -3257,6 +3272,13 @@ int items(int allow_uniques,       // not just true-false,
         break;
     }
 
+    if (mundane)
+    {
+        item.plus    = 0;
+        item.plus2   = 0;
+        item.special = 0;
+    }
+
     if (item.base_type == OBJ_WEAPONS
           && !is_weapon_brand_ok(item.sub_type, item.special, false)
         || item.base_type == OBJ_ARMOUR
@@ -3289,7 +3311,7 @@ int items(int allow_uniques,       // not just true-false,
         {
             itempos = random_in_bounds();
             found = (grd(itempos) == DNGN_FLOOR
-                     && unforbidden(itempos, mapmask));
+                     && !map_masked(itempos, mapmask));
         }
         if (!found)
         {
@@ -3302,64 +3324,6 @@ int items(int allow_uniques,       // not just true-false,
 
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
-    return (p);
-}
-
-static bool _item_corpse_def(monster_type mons, item_def &item,
-                             const item_spec &ispec)
-{
-    const monster_type created_mons = fill_out_corpse(NULL, mons, item);
-
-    if (created_mons == MONS_NO_MONSTER)
-        return (false);
-
-    if (ispec.props.exists(CORPSE_NEVER_DECAYS))
-        item.props[CORPSE_NEVER_DECAYS].get_bool() =
-            ispec.props[CORPSE_NEVER_DECAYS].get_bool();
-
-    if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
-        turn_corpse_into_skeleton(item);
-    else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(item, false, false);
-
-    if (ispec.props.exists(MONSTER_HIT_DICE))
-        item.props[MONSTER_HIT_DICE].get_short() =
-            ispec.props[MONSTER_HIT_DICE].get_short();
-
-    // Hydra heads:
-    if (ispec.plus2)
-        item.props[MONSTER_NUMBER].get_short() = ispec.plus2;
-
-    if (ispec.qty && ispec.base_type == OBJ_FOOD)
-        item.quantity = ispec.qty;
-
-    return (true);
-}
-
-// Creates a corpse item and returns its item index, or NON_ITEM if it
-// fails. The corpse is not linked into the item grid; nor is the
-// item's position set to anything meaningful.
-int item_corpse(monster_type mons, const item_spec &ispec)
-{
-    if (mons != MONS_NO_MONSTER)
-        mons = mons_species(mons);
-
-    if (mons == MONS_NO_MONSTER
-        || !mons_class_can_leave_corpse(mons))
-    {
-        return (NON_ITEM);
-    }
-
-    const int p = get_item_slot(10);
-    if (p == NON_ITEM)
-        return (NON_ITEM);
-
-    item_def &item(mitm[p]);
-    if (!_item_corpse_def(mons, item, ispec))
-    {
-        item.clear();
-        return (NON_ITEM);
-    }
     return (p);
 }
 
@@ -3380,7 +3344,7 @@ void reroll_brand(item_def &item, int item_level)
         item.special = _determine_armour_ego(item, OBJ_ARMOUR, item_level);
         break;
     default:
-        ASSERT(!"can't reroll brands of this type");
+        die("can't reroll brands of this type");
     }
     item_set_appearance(item);
 }
@@ -3586,7 +3550,9 @@ armour_type get_random_armour_type(int item_level)
                                               ARM_GOLD_DRAGON_HIDE,
                                               ARM_GOLD_DRAGON_ARMOUR,
                                               ARM_SWAMP_DRAGON_HIDE,
-                                              ARM_SWAMP_DRAGON_ARMOUR };
+                                              ARM_SWAMP_DRAGON_ARMOUR,
+                                              ARM_PEARL_DRAGON_HIDE,
+                                              ARM_PEARL_DRAGON_ARMOUR, };
 
         armtype = RANDOM_ELEMENT(morehiarmours);
 

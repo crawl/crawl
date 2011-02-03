@@ -44,7 +44,7 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     const coord_def origin = pos();
     move_player_to_grid(dest, false, true);
 
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
 
     return (true);
 }
@@ -68,8 +68,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
 
     // Leave a purple cloud.
     if (!jump)
-        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                    kill_alignment());
+        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), this);
 
     check_redraw(oldplace);
     apply_location_effects(oldplace);

@@ -2,6 +2,8 @@
 
 #include "stairs.h"
 
+#include <sstream>
+
 #include "abyss.h"
 #include "areas.h"
 #include "branch.h"
@@ -75,8 +77,9 @@ bool check_annotation_exclusion_warning()
         might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
     }
-    else if (is_exclude_root(you.pos()) &&
-             feat_is_travelable_stair(grd(you.pos())))
+    else if (is_exclude_root(you.pos())
+             && feat_is_travelable_stair(grd(you.pos()))
+             && !strstr(get_exclusion_desc(you.pos()).c_str(), "cloud"))
     {
         mpr("This staircase is marked as excluded!", MSGCH_WARN);
         might_be_dangerous = true;
@@ -641,7 +644,7 @@ void up_stairs(dungeon_feature_type force_stair,
         bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
                             false, 'n') || !_check_carrying_orb());
 
-        if (!stay && Hints.hints_left)
+        if (!stay && crawl_state.game_is_hints())
         {
             if (!yesno("Are you *sure*?  Doing so will end the game!", false,
                        'n'))
@@ -874,8 +877,9 @@ void down_stairs(dungeon_feature_type force_stair,
                  entry_cause_type entry_cause, const level_id* force_dest)
 {
     const level_id old_level = level_id::current();
+    const dungeon_feature_type old_feat = grd(you.pos());
     const dungeon_feature_type stair_find =
-        force_stair? force_stair : grd(you.pos());
+        force_stair? force_stair : old_feat;
 
     const bool shaft = (!force_stair
                             && get_trap_type(you.pos()) == TRAP_SHAFT
@@ -938,6 +942,7 @@ void down_stairs(dungeon_feature_type force_stair,
         && !feat_is_gate(stair_find))
     {
         mpr("You're floating high up above the floor!");
+        learned_something_new(HINT_LEVITATING);
         return;
     }
 
@@ -1027,7 +1032,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
         mprf("You insert %s into the lock.",
              you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
-        big_cloud(CLOUD_BLUE_SMOKE, KC_YOU, you.pos(), 20, 7 + random2(7));
+        big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
         viewwindow();
         mpr("Heavy smoke blows from the lock!");
         more();
@@ -1107,7 +1112,7 @@ void down_stairs(dungeon_feature_type force_stair,
     // instances of it.
     if (you.level_type != LEVEL_DUNGEON)
     {
-        std::string lname = get_level_filename(level_id::current());
+        std::string lname = level_id::current().describe();
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str());
 #endif
@@ -1289,7 +1294,7 @@ void down_stairs(dungeon_feature_type force_stair,
         }
 
         default:
-            ASSERT(false);
+            die("unknown level type");
         }
     }
 
@@ -1317,6 +1322,8 @@ void down_stairs(dungeon_feature_type force_stair,
     save_game_state();
 
     new_level();
+
+    moveto_location_effects(old_feat);
 
     // Clear list of beholding monsters.
     you.clear_beholders();
@@ -1355,8 +1362,16 @@ void down_stairs(dungeon_feature_type force_stair,
 
 }
 
-void new_level(void)
+void new_level(bool restore)
 {
+    print_stats_level();
+#ifdef DGL_WHEREIS
+    whereis_record();
+#endif
+
+    if (restore)
+        return;
+
     cancel_tornado();
 
     if (you.level_type == LEVEL_PORTAL_VAULT)
@@ -1369,11 +1384,6 @@ void new_level(void)
     }
     else
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
-
-    print_stats_level();
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
 }
 
 // Returns a hatch or stair (up or down)

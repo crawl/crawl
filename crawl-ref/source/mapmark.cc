@@ -254,18 +254,18 @@ void map_lua_marker::write(writer &outf) const
 
     // Call dlua_marker_function(table, 'read')
     lua_pushstring(dlua, "read");
-    if (!dlua.callfn("dlua_marker_function", 2, 1))
+    if (!dlua.callfn("dlua_marker_reader_name", 2, 1))
         end(1, false, "lua_marker: write error: %s", dlua.error.c_str());
 
-    // Right, what's on top should be a function. Save it.
-    dlua_chunk reader(dlua);
-    if (!reader.error.empty())
-        end(1, false, "lua_marker: couldn't save read function: %s",
-            reader.error.c_str());
+    // Right, what's on top should be a table name. Save it.
+    if (!lua_isstring(dlua, -1))
+        end(1, false, "Expected marker class name (string) to save, got %s",
+            lua_typename(dlua, lua_type(dlua, -1)));
 
-    marshallString(outf, reader.compiled_chunk());
+    const std::string marker_class(lua_tostring(dlua, -1));
+    marshallString(outf, marker_class);
 
-    // Okay, saved the reader. Now ask the writer to do its thing.
+    // Okay, saved the marker's class. Now ask the writer to do its thing.
 
     // Call: dlua_marker_method(table, fname, marker)
     get_table();
@@ -284,13 +284,8 @@ void map_lua_marker::read(reader &inf)
     if (!(initialised = unmarshallByte(inf)))
         return;
 
-    lua_stack_cleaner cln(dlua);
-    // Read the Lua chunk we saved.
-    const std::string compiled = unmarshallString(inf, LUA_CHUNK_MAX_SIZE);
-
-    dlua_chunk chunk = dlua_chunk::precompiled(compiled);
-    if (chunk.load(dlua))
-        end(1, false, "lua_marker::read error: %s", chunk.error.c_str());
+    const std::string marker_class = unmarshallString(inf);
+    lua_pushstring(dlua, marker_class.c_str());
     dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
     lua_pushlightuserdata(dlua, &inf);
     if (!dlua.callfn("dlua_marker_read", 3, 1))
@@ -613,10 +608,10 @@ std::string map_tomb_marker::debug_describe() const
 // map_malign_gateway_marker
 
 map_malign_gateway_marker::map_malign_gateway_marker(const coord_def &p,
-                                 int dur, bool ip, monster* mon, god_type gd,
-                                 int pow)
+                                 int dur, bool ip, std::string sum, beh_type b,
+                                 god_type gd, int pow)
     : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), monster_summoned(false),
-      caster(mon), god(gd), power(pow)
+      summoner_string(sum), behaviour(b), god(gd), power(pow)
 {
 }
 
@@ -626,9 +621,9 @@ void map_malign_gateway_marker::write(writer &out) const
     marshallShort(out, duration);
     marshallBoolean(out, is_player);
     marshallBoolean(out, monster_summoned);
-    if (!is_player)
-        marshallMonster(out, *caster);
-    marshallByte(out, god);
+    marshallString(out, summoner_string);
+    marshallUByte(out, behaviour);
+    marshallUByte(out, god);
     marshallShort(out, power);
 }
 
@@ -638,18 +633,10 @@ void map_malign_gateway_marker::read(reader &in)
     duration  = unmarshallShort(in);
     is_player = unmarshallBoolean(in);
 
-#if TAG_MAJOR_VERSION == 31
-    int minorVersion = in.getMinorVersion();
-    if (minorVersion < TAG_MINOR_MALIGN)
-        monster_summoned = true;
-    else
-#endif
     monster_summoned = unmarshallBoolean(in);
+    summoner_string = unmarshallString(in);
+    behaviour = static_cast<beh_type>(unmarshallUByte(in));
 
-    if (!is_player)
-        unmarshallMonster(in, *caster);
-    else
-        caster = NULL;
     god       = static_cast<god_type>(unmarshallByte(in));
     power     = unmarshallShort(in);
 }
@@ -663,7 +650,7 @@ map_marker *map_malign_gateway_marker::read(reader &in, map_marker_type)
 
 map_marker *map_malign_gateway_marker::clone() const
 {
-    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos, duration, is_player, caster, god, power);
+    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos, duration, is_player, summoner_string, behaviour, god, power);
     return (mark);
 }
 
@@ -942,10 +929,8 @@ void map_markers::write(writer &outf) const
     }
 }
 
-void map_markers::read(reader &inf, int minorVersion)
+void map_markers::read(reader &inf)
 {
-    UNUSED(minorVersion);
-
     clear();
 
     const int cooky = unmarshallInt(inf);

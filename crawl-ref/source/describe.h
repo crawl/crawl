@@ -78,7 +78,8 @@ void describe_monsters(const monster_info &mi, bool force_seen = false,
                        bool wait_until_key_pressed = true);
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
-                         bool &has_stat_desc, bool force_seen = false);
+                         bool &has_stat_desc, bool force_seen = false,
+                         bool noquote = false);
 
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled, const item_def* item = NULL);
@@ -89,6 +90,11 @@ std::string get_ghost_description(const monster_info &mi, bool concise = false);
 std::string get_skill_description(skill_type skill, bool need_title = false);
 
 void describe_skill(skill_type skill);
+
+#ifdef USE_TILE
+std::string get_command_description(const command_type cmd,
+                                    bool terse);
+#endif
 
 void print_description(const std::string &desc);
 void print_description(const describe_info &inf);

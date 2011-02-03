@@ -1901,7 +1901,7 @@ std::string get_item_description(const item_def &item, bool verbose,
     case OBJ_WANDS:
         if (item_type_known(item))
         {
-            const int max_charges = 3 * wand_charge_value(item.sub_type);
+            const int max_charges = wand_max_charges(item.sub_type);
             if (item.plus < max_charges
                 || !item_ident(item, ISFLAG_KNOW_PLUSES))
             {
@@ -2099,8 +2099,7 @@ std::string get_item_description(const item_def &item, bool verbose,
         break;
 
     default:
-        DEBUGSTR("Bad item class");
-        description << "\nThis item should not exist. Mayday! Mayday!";
+        die("Bad item class");
     }
 
     if (is_unrandom_artefact(item)
@@ -2266,7 +2265,7 @@ void describe_feature_wide(const coord_def& pos)
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
     wait_for_keypress();
@@ -2308,14 +2307,13 @@ void set_feature_quote(const std::string &raw_name,
         quote_table[raw_name] = quote;
 }
 
-
 void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 {
     // Don't use verbose descriptions if terse and the item contains spells,
     // so we can actually output these spells if space is scarce.
     const bool verbose = !terse || !item.has_spells();
     inf.body << get_item_description(item, verbose, false,
-                                     Hints.hints_left);
+                                     crawl_state.game_is_hints_tutorial());
 }
 
 // Returns true if spells can be shown to player.
@@ -2342,7 +2340,8 @@ static void _show_item_description(const item_def &item)
     const          int height    = get_number_of_lines();
 
     std::string desc =
-        get_item_description(item, true, false, Hints.hints_left);
+        get_item_description(item, true, false,
+                             crawl_state.game_is_hints_tutorial());
 
     int num_lines = count_desc_lines(desc, lineWidth) + 1;
 
@@ -2354,7 +2353,7 @@ static void _show_item_description(const item_def &item)
         desc = get_item_description(item, true, false, true);
 
     print_description(desc);
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_describe_item(item);
 
     if (_can_show_spells(item))
@@ -2596,7 +2595,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         return false;
     case CMD_WEAPON_SWAP:
         redraw_screen();
-        wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+        wield_weapon(true, SLOT_BARE_HANDS);
         return false;
     case CMD_QUIVER_ITEM:
         redraw_screen();
@@ -2674,8 +2673,11 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     _show_item_description(item);
     _update_inscription(item);
 
+    if (allow_inscribe && crawl_state.game_is_tutorial())
+        allow_inscribe = false;
+
     // Don't ask if there aren't enough rows left
-    if (wherey() <= get_number_of_lines() - 2)
+    if (wherey() <= get_number_of_lines() - 2 && in_inventory(item))
     {
         cgotoxy(1, wherey() + 2);
         return _actions_prompt(item, allow_inscribe);
@@ -2735,8 +2737,11 @@ void inscribe_item(item_def &item, bool msgwin)
             prompt = "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
 
-            if (Hints.hints_left && wherey() <= get_number_of_lines() - 5)
+            if (crawl_state.game_is_hints()
+                && wherey() <= get_number_of_lines() - 5)
+            {
                 hints_inscription_info(need_autoinscribe, prompt);
+            }
         }
 
     keyin = (prompt != "" ? getch_ck() : 'i');
@@ -2891,7 +2896,7 @@ static int _get_spell_description(const spell_type spell,
     else if (god_likes_spell(spell, you.religion))
     {
         description += god_name(you.religion)
-                       + " appreciates the use of this spell.\n";
+                       + " supports the use of this spell.\n";
     }
     if (item && !player_can_memorise_from_spellbook(*item))
     {
@@ -2930,7 +2935,7 @@ static int _get_spell_description(const spell_type spell,
             return (BOOK_MEM);
         }
 
-    return(BOOK_NEITHER);
+    return BOOK_NEITHER;
 }
 
 void get_spell_desc(const spell_type spell, describe_info &inf)
@@ -3283,12 +3288,18 @@ static std::string _monster_stat_description(const monster_info& mi)
 
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
-                         bool &has_stat_desc, bool force_seen)
+                         bool &has_stat_desc, bool force_seen,
+                         bool noquote)
 {
     if (inf.title.empty())
         inf.title = mi.full_name(DESC_CAP_A, true);
 
-    std::string db_name = mi.db_name();
+    std::string db_name;
+
+    if (mi.mname.empty())
+        db_name = mi.db_name();
+    else
+        db_name = mi.full_name(DESC_PLAIN, true);
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
@@ -3302,11 +3313,14 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << getLongDescription(db_name);
     }
 
-    // And quotes {due}
-    if (!mi.quote.empty())
-        inf.quote = mi.quote;
-    else
-        inf.quote = getQuoteString(db_name);
+    if (!noquote)
+    {
+        // And quotes {due}
+        if (!mi.quote.empty())
+            inf.quote = mi.quote;
+        else
+            inf.quote = getQuoteString(db_name);
+    }
 
     std::string symbol;
     symbol += get_monster_data(mi.type)->showchar;
@@ -3320,7 +3334,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         symbol_prefix += symbol;
         symbol_prefix += "_prefix";
         inf.prefix = getLongDescription(symbol_prefix);
-        quote2 = getQuoteString(symbol_prefix);
+        if (!noquote)
+            quote2 = getQuoteString(symbol_prefix);
     }
 
     if (!inf.quote.empty() && !quote2.empty())
@@ -3455,9 +3470,13 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 #ifdef DEBUG_DIAGNOSTICS
     if (mi.pos.origin())
         return; // not a real monster
-    struct monster& mons = *mi.mon();
+    monster& mons = *mi.mon();
+
+    inf.body << "\nMonster health: "
+             << mons.hit_points << "/" << mons.max_hit_points << "\n";
+
     const actor *mfoe = mons.get_foe();
-    inf.body << "\nMonster foe: "
+    inf.body << "Monster foe: "
              << (mfoe? mfoe->name(DESC_PLAIN, true)
                  : "(none)");
 
@@ -3539,7 +3558,8 @@ void describe_monsters(const monster_info &mi, bool force_seen,
 {
     describe_info inf;
     bool has_stat_desc = false;
-    get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
+    get_monster_db_desc(mi, inf, has_stat_desc, force_seen,
+                        crawl_state.game_is_hints_tutorial());
 
     if (!footer.empty())
     {
@@ -3555,7 +3575,7 @@ void describe_monsters(const monster_info &mi, bool force_seen,
 
     // TODO enne - this should really move into get_monster_db_desc
     // and an additional tutorial string added to describe_info.
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_describe_monster(mi, has_stat_desc);
 
     if (wait_until_key_pressed)
@@ -4073,14 +4093,38 @@ static void _detailed_god_description(god_type which_god)
                          "Evocations skill help here, as the power of Nemelex's "
                          "abilities is governed by Evocations instead of "
                          "Invocations. The type of the deck gifts strongly "
-                         "depends on the dominating item class sacrificed:\n"
-                         "  decks of Escape      -- armour\n"
-                         "  decks of Destruction -- weapons and ammunition\n"
-                         "  decks of Dungeons    -- jewellery, books, "
-                                                    "miscellaneous items\n"
-                         "  decks of Summoning   -- corpses, chunks, blood\n"
-                         "  decks of Wonders     -- consumables: food, potions, "
-                                                    "scrolls, wands\n";
+                         "depends on the dominating item class sacrificed:\n";
+
+                for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+                {
+                    const bool active = you.nemelex_sacrificing[i];
+                    std::string desc = "";
+                    switch (i)
+                    {
+                    case NEM_GIFT_ESCAPE:
+                        desc = "decks of Escape      -- armour";
+                        break;
+                    case NEM_GIFT_DESTRUCTION:
+                        desc = "decks of Destruction -- weapons and ammunition";
+                        break;
+                    case NEM_GIFT_DUNGEONS:
+                        desc = "decks of Dungeons    -- jewellery, books, "
+                                                    "miscellaneous items";
+                        break;
+                    case NEM_GIFT_SUMMONING:
+                        desc = "decks of Summoning   -- corpses, chunks, blood";
+                        break;
+                    case NEM_GIFT_WONDERS:
+                        desc = "decks of Wonders     -- consumables: food, potions, "
+                                                    "scrolls, wands";
+                        break;
+                    }
+                    broken += make_stringf(" %c %s%s%s\n",
+                                           'a' + (char) i,
+                                           active ? "+ " : "- <darkgrey>",
+                                           desc.c_str(),
+                                           active ? "" : "</darkgrey>");
+                }
             }
         default:
             break;
@@ -4110,7 +4154,14 @@ static void _detailed_god_description(god_type which_god)
     mouse_control mc(MOUSE_MODE_MORE);
 
     const int keyin = getchm();
-    if (keyin == '!' || keyin == CK_MOUSE_CMD)
+    if (you.religion == GOD_NEMELEX_XOBEH
+        && keyin >= 'a' && keyin < 'a' + (char) NUM_NEMELEX_GIFT_TYPES)
+    {
+        const int num = keyin - 'a';
+        you.nemelex_sacrificing[num] = !you.nemelex_sacrificing[num];
+        _detailed_god_description(which_god);
+    }
+    else if (keyin == '!' || keyin == CK_MOUSE_CMD)
         describe_god(which_god, true);
 }
 
@@ -4556,6 +4607,31 @@ void describe_skill(skill_type skill)
     print_description(data.str());
     wait_for_keypress();
 }
+
+#ifdef USE_TILE
+std::string get_command_description(const command_type cmd, bool terse)
+{
+    std::string lookup = command_to_name(cmd);
+
+    if (!terse)
+        lookup += " verbose";
+
+    std::string result = getLongDescription(lookup);
+    if (result.empty())
+    {
+        if (!terse)
+        {
+            // Try for the terse description.
+            result = get_command_description(cmd, true);
+            if (!result.empty())
+                return result + ".";
+        }
+        return command_to_name(cmd);
+    }
+
+    return result.substr(0, result.length() - 1);
+}
+#endif
 
 void alt_desc_proc::nextline()
 {

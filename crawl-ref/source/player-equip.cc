@@ -108,6 +108,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld);
 static void _equip_jewellery_effect(item_def &item);
 static void _unequip_jewellery_effect(item_def &item, bool mesg);
+static void _equip_use_warning(const item_def& item);
 
 static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
                           bool msg)
@@ -121,6 +122,9 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
     ASSERT(slot == eq
            || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
            || eq == EQ_RINGS && you.species == SP_OCTOPUS);
+
+    if (msg)
+        _equip_use_warning(item);
 
     if (slot == EQ_WEAPON)
         _equip_weapon_effect(item, msg);
@@ -340,12 +344,13 @@ static void _unequip_artefact_effect(const item_def &item,
         you.attribute[ATTR_NOISES] = 0;
 
     if (proprt[ARTP_LEVITATE] != 0
-        && you.duration[DUR_LEVITATION] > 2
+        && you.duration[DUR_LEVITATION]
         && !you.attribute[ATTR_LEV_UNCANCELLABLE]
         && !you.permanent_levitation()
         && !player_evokable_levitation())
     {
-        you.duration[DUR_LEVITATION] = 1;
+        you.duration[DUR_LEVITATION] = 0;
+        land_player();
     }
 
     if (proprt[ARTP_INVISIBLE] != 0
@@ -374,7 +379,7 @@ static void _unequip_artefact_effect(const item_def &item,
     }
 }
 
-static void _equip_weapon_use_warning(const item_def& item)
+static void _equip_use_warning(const item_def& item)
 {
     if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
         mpr("You really shouldn't be using a holy item like this.");
@@ -445,9 +450,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_STAVES:
     {
-        if (showMsgs)
-            _equip_weapon_use_warning(item);
-
         set_ident_flags(item, ISFLAG_KNOW_CURSE);
         if (item.sub_type == STAFF_POWER)
         {
@@ -463,11 +465,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                 canned_msg(MSG_MANA_INCREASE);
 
             calc_mp();
-            set_ident_type(item, ID_KNOWN_TYPE);
-            set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
         }
-        else
-            maybe_identify_staff(item);
+        maybe_identify_staff(item);
 
         // Automatically identify rods; you can do this by wielding and then
         // evoking them, so do it automatically instead. We don't need to give
@@ -489,9 +488,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_WEAPONS:
     {
-        if (showMsgs)
-            _equip_weapon_use_warning(item);
-
         // Call unrandart equip func before item is identified.
         if (artefact)
             _equip_artefact_effect(item, &showMsgs);
@@ -560,7 +556,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
                 case SPWPN_DRAGON_SLAYING:
                     mpr(player_genus(GENPC_DRACONIAN)
-                        || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+                        || you.form == TRAN_DRAGON
                             ? "You feel a sudden desire to commit suicide."
                             : "You feel a sudden desire to slay dragons!");
                     break;
@@ -1018,11 +1014,9 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_LEVITATION:
-        if (you.duration[DUR_LEVITATION] && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-            && !player_evokable_levitation())
-        {
-            you.duration[DUR_LEVITATION] = 1;
-        }
+        if (you.species != SP_KENKU || you.experience_level < 15)
+            you.attribute[ATTR_PERM_LEVITATION] = 0;
+        land_player();
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1291,7 +1285,7 @@ static void _equip_jewellery_effect(item_def &item)
         break;
 
     case AMU_CONTROLLED_FLIGHT:
-        if (you.duration[DUR_LEVITATION]
+        if (you.is_levitating()
             && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
         {
             ident = ID_KNOWN_TYPE;
@@ -1320,7 +1314,7 @@ static void _equip_jewellery_effect(item_def &item)
         // Berserk is possible with a Battlelust card or with a moth of wrath
         // that affects you while donning the amulet.
         int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW]
-                     + you.duration[DUR_BERSERK];
+                     + you.duration[DUR_BERSERK] + you.duration[DUR_FINESSE];
         if (you.duration[DUR_TELEPORT])
             amount += 30 + random2(150);
         if (amount)
@@ -1346,10 +1340,14 @@ static void _equip_jewellery_effect(item_def &item)
                 mpr("You feel strangely stable.", MSGCH_DURATION);
             if (you.duration[DUR_BERSERK])
                 mpr("You violently calm down.", MSGCH_DURATION);
+            // my thesaurus says this usage is correct
+            if (you.duration[DUR_FINESSE])
+                mpr("Your hands get arrested.", MSGCH_DURATION);
             you.duration[DUR_HASTE] = 0;
             you.duration[DUR_SLOW] = 0;
             you.duration[DUR_TELEPORT] = 0;
             you.duration[DUR_BERSERK] = 0;
+            you.duration[DUR_FINESSE] = 0;
         }
         break;
 
@@ -1464,7 +1462,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
             && !you.attribute[ATTR_LEV_UNCANCELLABLE]
             && !player_evokable_levitation())
         {
-            you.duration[DUR_LEVITATION] = 1;
+            you.duration[DUR_LEVITATION] = 0;
+            land_player();
         }
         break;
 

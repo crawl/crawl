@@ -12,7 +12,6 @@
 #include "chardump.h"
 #include "dungeon.h"
 #include "env.h"
-#include "flood_find.h"
 #include "map_knowledge.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -421,7 +420,8 @@ static void _write_mapgen_stats()
 void generate_map_stats()
 {
     // We have to run map preludes ourselves.
-    run_map_preludes();
+    run_map_global_preludes();
+    run_map_local_preludes();
     mg_build_levels(SysEnv.map_gen_iters);
     _write_mapgen_stats();
 }

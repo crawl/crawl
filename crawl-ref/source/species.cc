@@ -408,7 +408,7 @@ monster_type player_species_to_mons_species(species_type species)
     case SP_UNKNOWN:
     case SP_RANDOM:
     case SP_VIABLE:
-        ASSERT(!"player of an invalid species");
+        die("player of an invalid species");
     default:
         return (MONS_PROGRAM_BUG);
     }

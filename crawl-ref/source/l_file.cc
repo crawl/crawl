@@ -31,17 +31,13 @@ static int file_marshall(lua_State *ls)
     if (lua_gettop(ls) != 2)
         luaL_error(ls, "Need two arguments: tag header and value");
     writer &th(*static_cast<writer*>(lua_touserdata(ls, 1)));
+    ASSERT(!lua_isfunction(ls, 2));
     if (lua_isnumber(ls, 2))
         marshallInt(th, luaL_checklong(ls, 2));
     else if (lua_isboolean(ls, 2))
         marshallByte(th, lua_toboolean(ls, 2));
     else if (lua_isstring(ls, 2))
         marshallString(th, lua_tostring(ls, 2));
-    else if (lua_isfunction(ls, 2))
-    {
-        dlua_chunk chunk(ls);
-        marshallString(th, chunk.compiled_chunk());
-    }
     return (0);
 }
 
@@ -72,23 +68,12 @@ static int file_unmarshall_string(lua_State *ls)
     return (1);
 }
 
-static int file_unmarshall_fn(lua_State *ls)
-{
-    if (lua_gettop(ls) != 1)
-        luaL_error(ls, "Need reader as one argument");
-    reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
-    const std::string s(unmarshallString(th, LUA_CHUNK_MAX_SIZE));
-    dlua_chunk chunk = dlua_chunk::precompiled(s);
-    if (chunk.load(dlua))
-        lua_pushnil(ls);
-    return (1);
-}
-
 enum lua_persist_type
 {
     LPT_NONE,
     LPT_NUMBER,
     LPT_STRING,
+    // [ds] No longer supported for save portability:
     LPT_FUNCTION,
     LPT_NIL,
     LPT_BOOLEAN,
@@ -108,8 +93,6 @@ static int file_marshall_meta(lua_State *ls)
         ptype = LPT_BOOLEAN;
     else if (lua_isstring(ls, 2))
         ptype = LPT_STRING;
-    else if (lua_isfunction(ls, 2))
-        ptype = LPT_FUNCTION;
     else if (lua_isnil(ls, 2))
         ptype = LPT_NIL;
     else
@@ -135,8 +118,6 @@ static int file_unmarshall_meta(lua_State *ls)
             return file_unmarshall_number(ls);
         case LPT_STRING:
             return file_unmarshall_string(ls);
-        case LPT_FUNCTION:
-            return file_unmarshall_fn(ls);
         case LPT_NIL:
             lua_pushnil(ls);
             return (1);
@@ -215,7 +196,6 @@ static const struct luaL_reg file_dlib[] =
     { "unmarshall_boolean", file_unmarshall_boolean },
     { "unmarshall_number", file_unmarshall_number },
     { "unmarshall_string", file_unmarshall_string },
-    { "unmarshall_fn", file_unmarshall_fn },
     { "writefile", _file_writefile },
     { "datadir_files", _file_datadir_files },
     { "datadir_files_recursive", _file_datadir_files_recursive },

@@ -92,6 +92,7 @@ bool is_newer(const std::string &a, const std::string &b);
 void check_newer(const std::string &target,
                  const std::string &dependency,
                  void (*action)());
+std::vector<std::string> get_title_files();
 
 
 class level_id;
@@ -126,8 +127,6 @@ public:
 
 void save_ghost(bool force = false);
 bool load_ghost(bool creating_level);
-
-std::string get_level_filename(const level_id& lid);
 
 FILE *lk_open(const char *mode, const std::string &file);
 void lk_close(FILE *handle, const char *mode, const std::string &file);

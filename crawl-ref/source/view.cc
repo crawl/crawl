@@ -75,7 +75,7 @@
 
 crawl_view_geometry crawl_view;
 
-void handle_seen_interrupt(monster* mons)
+void handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
 {
     if (mons_is_unknown_mimic(mons))
         return;
@@ -96,7 +96,7 @@ void handle_seen_interrupt(monster* mons)
         && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
             || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
     {
-        interrupt_activity(AI_SEE_MONSTER, aid);
+        interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
     }
     seen_monster(mons);
 }
@@ -140,7 +140,6 @@ void seen_monsters_react()
         good_god_follower_attitude_change(*mi);
         beogh_follower_convert(*mi);
         slime_convert(*mi);
-        passive_enslavement_convert(*mi);
 
         // XXX: Hack for triggering Duvessa's going berserk.
         if (mi->props.exists("duvessa_berserk"))
@@ -162,6 +161,7 @@ void seen_monsters_react()
 void update_monsters_in_view()
 {
     int num_hostile = 0;
+    std::vector<std::string> msgs;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -179,7 +179,7 @@ void update_monsters_in_view()
             }
             else if (mi->visible_to(&you))
             {
-                handle_seen_interrupt(*mi);
+                handle_seen_interrupt(*mi, &msgs);
                 seen_monster(*mi);
             }
             else
@@ -191,6 +191,18 @@ void update_monsters_in_view()
         // If the monster hasn't been seen by the time that the player
         // gets control back then seen_context is out of date.
         mi->seen_context.clear();
+    }
+
+    if (!msgs.empty())
+    {
+        int size = msgs.size();
+        if (size <= 6)
+        {
+            for (int i = 0; i < size; i++)
+                mpr(msgs[i], MSGCH_WARN);
+        }
+        else
+            mprf(MSGCH_WARN, "%d monsters come into view.", size);
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever
@@ -438,6 +450,24 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     }
 
     return (did_map);
+}
+
+void fully_map_level()
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        bool ok = false;
+        for (adjacent_iterator ai(*ri, false); ai; ++ai)
+            if (grd(*ai) >= DNGN_MINSEE)
+                ok = true;
+        if (!ok)
+            continue;
+        set_terrain_visible(*ri);
+        env.map_knowledge(*ri).set_feature(grd(*ri));
+        if (igrd(*ri) != NON_ITEM)
+            env.map_knowledge(*ri).set_detected_item();
+        env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
+    }
 }
 
 // Is the given monster near (in LOS of) the player?
@@ -711,9 +741,9 @@ static int player_view_update_at(const coord_def &gc)
         cloud_type   ctype = cl.type;
 
         bool did_exclude = false;
-        if (!is_harmless_cloud(ctype)
-            && cl.whose  == KC_OTHER
-            && cl.killer == KILL_MISC)
+        if (cl.whose  == KC_OTHER
+            && cl.killer == KILL_MISC
+            && is_damaging_cloud(cl.type, false))
         {
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.
@@ -726,7 +756,7 @@ static int player_view_update_at(const coord_def &gc)
     }
 
     // Print hints mode messages for features in LOS.
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
@@ -786,8 +816,8 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
     cell->glyph  = ' ';
     cell->colour = DARKGREY;
 #ifdef USE_TILE
-    cell->tile_fg = 0;
-    cell->tile_bg = tileidx_out_of_bounds(you.where_are_you);
+    cell->tile.fg = 0;
+    cell->tile.bg = tileidx_out_of_bounds(you.where_are_you);
 #endif
 }
 
@@ -799,7 +829,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     cell->colour = g.col;
 
 #ifdef USE_TILE
-    tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
+    tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, gc);
 #endif
 }
 
@@ -821,10 +851,10 @@ static void _draw_player(screen_cell_t *cell,
         cell->colour |= COLFLAG_REVERSE;
 
 #ifdef USE_TILE
-    cell->tile_fg = env.tile_fg(ep) = tileidx_player();
-    cell->tile_bg = env.tile_bg(ep);
+    cell->tile.fg = env.tile_fg(ep) = tileidx_player();
+    cell->tile.bg = env.tile_bg(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
     UNUSED(anim_updates);
 #endif
@@ -839,10 +869,10 @@ static void _draw_los(screen_cell_t *cell,
     cell->colour = g.col;
 
 #ifdef USE_TILE
-    cell->tile_fg = env.tile_fg(ep);
-    cell->tile_bg = env.tile_bg(ep);
+    cell->tile.fg = env.tile_fg(ep);
+    cell->tile.bg = env.tile_bg(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
     UNUSED(anim_updates);
 #endif
@@ -872,6 +902,7 @@ void viewwindow(bool show_updates)
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
+
     if (show_updates)
         mcache.clear_nonref();
 #endif
@@ -917,6 +948,10 @@ void viewwindow(bool show_updates)
     const coord_def br = crawl_view.viewsz;
     for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
+#ifdef USE_TILE
+        cell->tile.clear();
+#endif
+
         // in grid coords
         const coord_def gc = view2grid(*ri);
         const coord_def ep = grid2show(gc);
@@ -971,19 +1006,19 @@ void viewwindow(bool show_updates)
                 cell->colour = DARKGREY;
 #ifdef USE_TILE
                 if (you.see_cell(gc))
-                    cell->tile_bg |= TILE_FLAG_OOR;
+                    cell->tile.bg |= TILE_FLAG_OOR;
 #endif
             }
         }
 #ifdef USE_TILE
         // Grey out grids that cannot be reached due to beholders.
         else if (you.get_beholder(gc))
-            cell->tile_bg |= TILE_FLAG_OOR;
+            cell->tile.bg |= TILE_FLAG_OOR;
 
         else if (you.get_fearmonger(gc))
-            cell->tile_bg |= TILE_FLAG_OOR;
+            cell->tile.bg |= TILE_FLAG_OOR;
 
-        tile_apply_properties(gc, &cell->tile_fg, &cell->tile_bg);
+        tile_apply_properties(gc, cell->tile);
 #endif
 
         cell++;
@@ -999,7 +1034,7 @@ void viewwindow(bool show_updates)
 #else
     tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
     tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
-    tiles.update_inventory();
+    tiles.update_tabs();
 #endif
 
     // Reset env.show if we munged it.

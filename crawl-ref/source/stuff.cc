@@ -357,8 +357,6 @@ void cio_cleanup()
     deinit_libw32c();
 #endif
 
-    msg::deinitialise_mpr_streams();
-    clear_globals_on_exit();
     crawl_state.io_inited = false;
 }
 
@@ -378,13 +376,9 @@ void clear_globals_on_exit()
 bool CrawlIsExiting = false;
 bool CrawlIsCrashing = false;
 
-void end(int exit_code, bool print_error, const char *format, ...)
+NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
-
-    cio_cleanup();
-    databaseSystemShutdown();
-
     if (format)
     {
         va_list arg;
@@ -397,13 +391,25 @@ void end(int exit_code, bool print_error, const char *format, ...)
             error = std::string(buffer);
         else
             error = std::string(buffer) + ": " + error;
+
+        if (!error.empty() && error[error.length() - 1] != '\n')
+            error += "\n";
     }
+
+    bool need_pause = true;
+    if (exit_code && !error.empty())
+    {
+        if (print_error_screen("%s", error.c_str()))
+            need_pause = false;
+    }
+
+    cio_cleanup();
+    msg::deinitialise_mpr_streams();
+    clear_globals_on_exit();
+    databaseSystemShutdown();
 
     if (!error.empty())
     {
-        if (error[error.length() - 1] != '\n')
-            error += "\n";
-
         fprintf(stderr, "%s", error.c_str());
         error.clear();
     }
@@ -411,7 +417,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
      || defined(TARGET_OS_DOS) \
      || defined(DGL_PAUSE_AFTER_ERROR)
-    if (exit_code && !crawl_state.game_is_arena()
+    if (need_pause && exit_code && !crawl_state.game_is_arena()
         && !crawl_state.seen_hups && !crawl_state.test)
     {
         fprintf(stderr, "Hit Enter to continue...\n");
@@ -422,10 +428,20 @@ void end(int exit_code, bool print_error, const char *format, ...)
     CrawlIsExiting = true;
     if (exit_code)
         CrawlIsCrashing = true;
+
+#ifdef DEBUG_GLOBALS
+    delete real_env;         real_env = 0;
+    delete real_crawl_state; real_crawl_state = 0;
+    delete real_dlua;        real_dlua = 0;
+    delete real_clua;        real_clua = 0;
+    delete real_you;         real_you = 0;
+    delete real_Options;     real_Options = 0;
+#endif
+
     exit(exit_code);
 }
 
-void game_ended()
+NORETURN void game_ended()
 {
     if (!crawl_state.seen_hups)
         throw game_ended_condition();
@@ -433,7 +449,7 @@ void game_ended()
         end(0);
 }
 
-void game_ended_with_error(const std::string &message)
+NORETURN void game_ended_with_error(const std::string &message)
 {
     if (crawl_state.seen_hups)
         end(1);
@@ -460,8 +476,11 @@ void game_ended_with_error(const std::string &message)
 
 // Print error message on the screen.
 // Ugly, but better than not showing anything at all. (jpeg)
-void print_error_screen(const char *message, ...)
+bool print_error_screen(const char *message, ...)
 {
+    if (!crawl_state.io_inited || crawl_state.seen_hups)
+        return false;
+
     // Get complete error message.
     std::string error_msg;
     {
@@ -474,7 +493,7 @@ void print_error_screen(const char *message, ...)
         error_msg = std::string(buffer);
     }
     if (error_msg.empty())
-        return;
+        return false;
 
     // Escape '<'.
     // NOTE: This assumes that the error message doesn't contain
@@ -496,6 +515,7 @@ void print_error_screen(const char *message, ...)
     clrscr();
     formatted_string::parse_string(error_msg, false).display();
     getchm();
+    return true;
 }
 
 void redraw_screen(void)
@@ -599,10 +619,10 @@ int stepdown_value(int base_value, int stepping, int first_step,
 
 }
 
-int skill_bump(int skill)
+int skill_bump(skill_type skill)
 {
-    return ((you.skills[skill] < 3) ? you.skills[skill] * 2
-                                    : you.skills[skill] + 3);
+    int sk = you.skill(skill);
+    return sk < 3 ? sk * 2 : sk + 3;
 }
 
 // This gives (default div = 20, shift = 3):
@@ -781,7 +801,10 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             return (true);
         else if (!noprompt)
         {
-            const std::string pr = "[Y]es or [N]o only, please.";
+            bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+            const std::string pr
+                = make_stringf("%s[Y]es or [N]o only, please.",
+                               upper ? "Uppercase " : "");
             if (message)
                 mpr(pr);
             else
@@ -833,11 +856,11 @@ static std::string _list_allowed_keys(char yes1, char yes2,
                                       bool allow_all = false)
 {
     std::string result = " [";
-                result += (lowered ? "y" : "Y");
+                result += (lowered ? "(y)es" : "(Y)es");
                 result += _list_alternative_yes(yes1, yes2, lowered);
                 if (allow_all)
-                    result += (lowered? "/a" : "/A");
-                result += (lowered ? "/n/q" : "/N/Q");
+                    result += (lowered? "/(a)ll" : "/(A)ll");
+                result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
                 result += "]";
 
     return (result);
@@ -892,12 +915,18 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
             if (tmp == 'A')
                 return 2;
             else
-                mprf("Choose [Y]es%s, [N]o, [Q]uit, or [A]ll!",
+            {
+                bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+                mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
+                     upper ? "uppercase " : "",
                      _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
+            }
         }
         else
         {
-            mprf("[Y]es%s, [N]o or [Q]uit only, please.",
+            bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+            mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
+                 upper ? "Uppercase " : "",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
         }
     }
@@ -1045,4 +1074,50 @@ coord_def get_random_stair()
     if (!st.size())
         return coord_def();        // sanity check: shouldn't happen
     return st[random2(st.size())];
+}
+
+
+//---------------------------------------------------------------
+//
+// prompt_for_quantity
+//
+// Returns -1 if ; or enter is pressed (pickup all).
+// Else, returns quantity.
+//---------------------------------------------------------------
+int prompt_for_quantity(const char *prompt)
+{
+    msgwin_prompt(prompt);
+
+    int ch = getch_ck();
+    if (ch == CK_ENTER || ch == ';')
+        return -1;
+
+    macro_buf_add(ch);
+    return prompt_for_int("", false);
+}
+
+//---------------------------------------------------------------
+//
+// prompt_for_int
+//
+// If nonneg, then it returns a non-negative number or -1 on fail
+// If !nonneg, then it returns an integer, and 0 on fail
+//
+//---------------------------------------------------------------
+int prompt_for_int(const char *prompt, bool nonneg)
+{
+    char specs[80];
+
+    msgwin_get_line(prompt, specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return (nonneg ? -1 : 0);
+
+    char *end;
+    int   ret = strtol(specs, &end, 10);
+
+    if (ret < 0 && nonneg || ret == 0 && end == specs)
+        ret = (nonneg ? -1 : 0);
+
+    return (ret);
 }

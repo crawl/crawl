@@ -71,233 +71,1123 @@ bool zin_sustenance(bool actual)
             && (!actual || you.hunger_state == HS_STARVING));
 }
 
-// Monsters cannot be affected in these states.
-// (All results of Recite, plus stationary and friendly + stupid;
-// note that berserk monsters are also hasted.)
-static bool _zin_recite_mons_useless(const monster* mon)
+std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
 {
-    const mon_holy_type holiness = mon->holiness();
 
-    return (mons_intel(mon) < I_NORMAL
-            || !mon->is_holy()
-               && holiness != MH_NATURAL
-               && holiness != MH_UNDEAD
-               && holiness != MH_DEMONIC
-            || mons_is_stationary(mon)
-            || mons_is_fleeing(mon)
-            || mon->asleep()
-            || mon->wont_attack()
-            || mon->neutral()
-            || mons_is_confused(mon)
-            || mon->paralysed()
-            || mon->withdrawn()
-            || mon->has_ench(ENCH_BERSERK)
-            || mon->has_ench(ENCH_INSANE) // already insane, Zin is redundant
-            || mon->has_ench(ENCH_BATTLE_FRENZY)
-            || mon->has_ench(ENCH_HASTE));
+    //'prayertype':
+    //This is in enum.h; there are currently five prayers.
+
+    //'step':
+    //-1: We're either starting or stopping, so we just want the passage name.
+    //2/1/0: That many rounds are left. So, if step = 2, we want to show the passage #1/3.
+
+    //That's too confusing, so:
+
+    if (step > -1)
+        step = abs(step-3);
+
+    //We change it to turn 1, turn 2, turn 3.
+
+    //'trits' && 'len':
+    //To have deterministic passages we need to store a random seed. Ours consists of an array of trinary bits.
+
+    //Yes, really.
+
+    int chapter = 1 + trits[0] + trits[1] * 3 + trits[2] * 9;
+    int verse = 1 + trits[3] + trits[4] * 3 + trits[5] * 9 + trits[6] * 27;
+
+    std::string sinner_text[12] =
+    {
+        "hordes of the Abyss",
+        "bastard children of Xom",
+        "amorphous wretches",
+        "fetid masses",
+        "agents of filth",
+        "squalid dregs",
+        "unbelievers",
+        "heretics",
+        "guilty",
+        "legions of the damned",
+        "servants of Hell",
+        "forces of darkness",
+    };
+
+ std::string sin_text[12] =
+    {
+        "chaotic",
+        "discordant",
+        "anarchic",
+        "unclean",
+        "impure",
+        "contaminated",
+        "unfaithful",
+        "disloyal",
+        "doubting",
+        "profane",
+        "blasphemous",
+        "sacrilegious",
+    };
+
+    std::string long_sin_text[12] =
+    {
+        "chaos",
+        "discord",
+        "anarchy",
+        "uncleanliness",
+        "impurity",
+        "contamination",
+        "unfaithfulness",
+        "disloyalty",
+        "doubt",
+        "profanity",
+        "blasphemy",
+        "sacrilege",
+    };
+
+    std::string virtue_text[12] = {
+        "ordered",
+        "harmonic",
+        "lawful",
+        "clean",
+        "pure",
+        "hygienic",
+        "faithful",
+        "loyal",
+        "believing",
+        "reverent",
+        "pious",
+        "obedient",
+    };
+
+    std::string long_virtue_text[12] =
+    {
+        "order",
+        "harmony",
+        "lawfulness",
+        "cleanliness",
+        "purity",
+        "hygiene",
+        "faithfulness",
+        "loyalty",
+        "belief",
+        "reverence",
+        "piety",
+        "obedience",
+    };
+
+    std::string smite_text[9] =
+    {
+        "purify",
+        "censure",
+        "condemn",
+        "strike down",
+        "expel",
+        "oust",
+        "smite",
+        "castigate",
+        "rebuke",
+    };
+
+    std::string smote_text[9] =
+    {
+        "purified",
+        "censured",
+        "condemned",
+        "struck down",
+        "expelled",
+        "ousted",
+        "smote",
+        "castigated",
+        "rebuked",
+    };
+
+    std::string sinner = sinner_text[trits[3] + prayertype*3];
+    std::string sin[2] = {sin_text[trits[6] + prayertype*3], long_sin_text[trits[6] + prayertype*3]};
+    std::string virtue[2] = {virtue_text[trits[6] + prayertype*3], long_virtue_text[trits[6] + prayertype*3]};
+    std::string smite[2] = {smite_text[(trits[4] + trits[5] * 3)], smote_text[(trits[4] + trits[5] * 3)]};
+
+    std::string turn[4] = {"This is only here because of arrays starting from 0.", "Zin is a buggy god", "Please report this", "This isn't right at all"};
+
+    switch (chapter)
+    {
+        case 1:
+            turn[1] = make_stringf("It was the word of Zin that there would not be %s...", sin[1].c_str());
+            turn[2] = make_stringf("...and did not the people suffer until they %s...", smite[1].c_str());
+            turn[3] = make_stringf("...the %s, after which all was well?", sinner.c_str());
+            break;
+        case 2:
+            turn[1] = make_stringf("The voice of Zin, pure and clear, did say that the %s...", sinner.c_str());
+            turn[2] = make_stringf("...were not %s! And hearing this, the people rose up...", virtue[0].c_str());
+            turn[3] = make_stringf("...and embraced %s, for they feared his wrath.", virtue[1].c_str());
+            break;
+        case 3:
+            turn[1] = make_stringf("Zin spoke of the doctrine of %s, and...", virtue[1].c_str());
+            turn[2] = make_stringf("...he saw the %s filled with fear, for they were...", sinner.c_str());
+            turn[3] = make_stringf("%s and knew his wrath would come for them.", sin[0].c_str());
+            break;
+        case 4:
+            turn[1] = make_stringf("And so Zin bade the %s to come...", sinner.c_str());
+            turn[2] = make_stringf("...before his altar, that he may pass judgement...");
+            turn[3] = make_stringf("...upon those who are not %s.", virtue[0].c_str());
+            break;
+        case 5:
+            turn[1] = make_stringf("To the devout, Zin provideth. From...");
+            turn[2] = make_stringf("...the rest - ye %s, ye...", sinner.c_str());
+            turn[3] = make_stringf("...guilty of %s - he taketh.", sin[1].c_str());
+            break;
+        case 6:
+            turn[1] = make_stringf("Zin saw the %s of the %s, and...", sin[1].c_str(), sinner.c_str());
+            turn[2] = make_stringf("...he was displeased, for did he not say that those...");
+            turn[3] = make_stringf("...who did not become %s would be %s?", virtue[0].c_str(), smite[1].c_str());
+            break;
+        case 7:
+            turn[1] = make_stringf("Zin said that %s shall be the law of the land, and...", virtue[1].c_str());
+            turn[2] = make_stringf("...those who turn to %s will be %s. This was fair...", sin[1].c_str(), smite[1].c_str());
+            turn[3] = make_stringf("...and just, and not a voice dissented.");
+            break;
+        case 8:
+            turn[1] = make_stringf("Damned, damned be the %s and all...", sinner.c_str());
+            turn[2] = make_stringf("...else who abandon %s! Let them...", virtue[1].c_str());
+            turn[3] = make_stringf("...be %s by the jurisprudence of Zin!", smite[1].c_str());
+            break;
+        case 9:
+            turn[1] = make_stringf("And he said to all in attendance, 'Which of ye...");
+            turn[2] = make_stringf("...number among the %s? Come before Zin, that...", sinner.c_str());
+            turn[3] = make_stringf("...I may %s you now for your %s!'", smite[0].c_str(), sin[1].c_str());
+            break;
+        case 10:
+            turn[1] = make_stringf("Yea, I say unto thee, bring forth...");
+            turn[2] = make_stringf("...the %s that they may know...", sinner.c_str());
+            turn[3] = make_stringf("...the wrath of Zin, and thus be %s!", smite[1].c_str());
+            break;
+        case 11:
+            turn[1] = make_stringf("In a great set of silver scales are weighed the...");
+            turn[2] = make_stringf("...souls of the %s, and with their %s...", sinner.c_str(), sin[1].c_str());
+            turn[3] = make_stringf("...ways, the balance hath tipped against them!");
+            break;
+        case 12:
+            turn[1] = make_stringf("It is just that the %s shall be %s...", sinner.c_str(), smite[1].c_str());
+            turn[2] = make_stringf("...in due time, for %s is what Zin has declared...", virtue[1].c_str());
+            turn[3] = make_stringf("...the law of the land, and his word is law!");
+            break;
+        case 13:
+            turn[1] = make_stringf("Thus the people made the covenant of %s with...", virtue[1].c_str());
+            turn[2] = make_stringf("...Zin, and all was good, for they knew that the...");
+            turn[3] = make_stringf("...%s would trouble them no longer.", sinner.c_str());
+            break;
+        case 14:
+            turn[1] = make_stringf("%s the %s? %s them for their...", uppercase_first(smite[0]).c_str(), sinner.c_str(), uppercase_first(smite[0]).c_str());
+            turn[2] = make_stringf("...%s he did! Zin %s them again...", sin[1].c_str(), smite[1].c_str());
+            turn[3] = make_stringf("...and again, and again!");
+            break;
+        case 15:
+            turn[1] = make_stringf("And lo, the wrath of Zin did find...");
+            turn[2] = make_stringf("...them wherever they hid, and he did %s...", smite[0].c_str());
+            turn[3] = make_stringf("...the %s for their %s!", sinner.c_str(), sin[1].c_str());
+            break;
+        case 16:
+            turn[1] = make_stringf("Seeing the remains of the %s, Zin...", sinner.c_str());
+            turn[2] = make_stringf("...looked out upon his handiwork, and declared...");
+            turn[3] = make_stringf("...that it was good that they had been %s.", smite[1].c_str());
+            break;
+        case 17:
+            turn[1] = make_stringf("The law of Zin demands thee be...");
+            turn[2] = make_stringf("...%s, and that the punishment for %s...", virtue[0].c_str(), sin[1].c_str());
+            turn[3] = make_stringf("...shall be swift and harsh!");
+            break;
+        case 18:
+            turn[1] = make_stringf("It was then that Zin bade them...");
+            turn[2] = make_stringf("...not to stray from %s, lest...", virtue[1].c_str());
+            turn[3] = make_stringf("...they become as damned as the %s.", sinner.c_str());
+            break;
+        case 19:
+            turn[1] = make_stringf("Only the %s shall be judged worthy, and...", virtue[0].c_str());
+            turn[2] = make_stringf("...all the %s will be found wanting. Such is...", sinner.c_str());
+            turn[3] = make_stringf("...the word of Zin, and such is the law!");
+            break;
+        case 20:
+            turn[1] = make_stringf("To those who would swear an oath of %s on my altar, I bring ye...", virtue[1].c_str());
+            turn[2] = make_stringf("...salvation. To the rest - ye %s and the...", sinner.c_str());
+            turn[3] = make_stringf("...%s - the name of Zin shall be thy damnation.", sin[0].c_str());
+            break;
+        case 21:
+            turn[1] = make_stringf("And Zin did decree that he would protect the people...");
+            turn[2] = make_stringf("...from %s in all its forms, and preserve...", sin[1].c_str());
+            turn[3] = make_stringf("...them in their %s for all the days to come.", virtue[1].c_str());
+            break;
+        case 22:
+            turn[1] = make_stringf("Zin provideth for those who would...");
+            turn[2] = make_stringf("...enter his holy bosom, and live...");
+            turn[3] = make_stringf("...in %s, for that is his way.", virtue[1].c_str());
+            break;
+        case 23:
+            turn[1] = make_stringf("Zin hath not damned the %s, but it is...", sinner.c_str());
+            turn[2] = make_stringf("...they that have damned themselves for their %s, for...", sin[1].c_str());
+            turn[3] = make_stringf("...did Zin not decree that to be %s was wrong?", sin[0].c_str());
+            break;
+        case 24:
+            turn[1] = make_stringf("And Zin, furious at their %s, held...", sin[1].c_str());
+            turn[2] = make_stringf("...aloft a silver sceptre! The %s...", sinner.c_str());
+            turn[3] = make_stringf("were %s, and thus the way of things was maintained.", smite[1].c_str());
+            break;
+        case 25:
+            turn[1] = make_stringf("When the law of the land faltered, Zin rose...");
+            turn[2] = make_stringf("...from his silver throne, and the %s were...", sinner.c_str());
+            turn[3] = make_stringf("%s. And it was thus that the law was made good.", smite[1].c_str());
+            break;
+        case 26:
+            turn[1] = make_stringf("Zin descended from on high in a silver chariot...");
+            turn[2] = make_stringf("...to %s the %s for their...", smite[0].c_str(), sinner.c_str());
+            turn[3] = make_stringf("...%s, and thus judgement was rendered.", sin[1].c_str());
+            break;
+        case 27:
+            turn[1] = make_stringf("The %s stood before Zin, and in that instant...", sinner.c_str());
+            turn[2] = make_stringf("...they knew they would be found guilty of %s - for...", sin[1].c_str());
+            turn[3] = make_stringf("...that is the word of Zin, and his word is law.");
+            break;
+    }
+
+    std::string recite = "Hail Satan.";
+
+    if (step == -1)
+    {
+        std::string bookname = (prayertype == RECITE_CHAOTIC)  ?  "Abominations"  :
+                               (prayertype == RECITE_IMPURE)   ?  "Ablutions"     :
+                               (prayertype == RECITE_HERETIC)  ?  "Apostates"     :
+                               (prayertype == RECITE_UNHOLY)   ?  "Anathema"      :
+                               (prayertype == RECITE_ALLY)     ?  "Alliances"     :
+                                                                  "Bugginess";
+        std::ostringstream numbers;
+        numbers << chapter;
+        numbers << ":";
+        numbers << verse;
+        recite = bookname + " " + numbers.str();
+    }
+    else
+        recite = turn[step];
+
+    return (recite);
 }
 
+typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
 // Check whether this monster might be influenced by Recite.
 // Returns 0, if no monster found.
 // Returns 1, if eligible monster found.
 // Returns -1, if monster already affected or too dumb to understand.
-int zin_check_recite_to_single_monster(const coord_def& where)
+int zin_check_recite_to_single_monster(const coord_def& where,
+                                       recite_counts &eligibility)
 {
     monster* mon = monster_at(where);
 
+    //Can't recite at nothing!
     if (mon == NULL)
-        return (0);
+        return 0;
 
-    if (!_zin_recite_mons_useless(mon))
-        return (1);
+    const mon_holy_type holiness = mon->holiness();
 
-    return (-1);
+    //Can't recite at plants or golems.
+    if (holiness == MH_PLANT || holiness == MH_NONLIVING)
+        return -1;
+
+    eligibility.init(0);
+
+    //Recitations are based on monster::is_unclean, but are NOT identical to it,
+    //because that lumps all forms of uncleanliness together. We want to specify.
+
+    //Anti-chaos prayer:
+
+    //Hits some specific insane or shapeshifted uniques.
+    if (mon->type == MONS_CRAZY_YIUF
+        || mon->type == MONS_PSYCHE
+        || mon->type == MONS_GASTRONOK)
+    {
+        eligibility[RECITE_CHAOTIC]++;
+    }
+
+    //Hits monsters that have chaotic spells memorized.
+    if (mon->has_chaotic_spell() && mon->is_actual_spellcaster())
+        eligibility[RECITE_CHAOTIC]++;
+
+    //Hits monsters with 'innate' chaos.
+    if (mon->is_chaotic())
+        eligibility[RECITE_CHAOTIC]++;
+
+    //Hits monsters that are worshipers of a chaotic god.
+    if (is_chaotic_god(mon->god))
+        eligibility[RECITE_CHAOTIC]++;
+
+    //Hits (again) monsters that are priests of a chaotic god.
+    if (is_chaotic_god(mon->god) && mon->is_priest())
+        eligibility[RECITE_CHAOTIC]++;
+
+    //Anti-impure prayer:
+
+    //Hits monsters that have unclean spells memorized.
+    if (mon->has_unclean_spell())
+        eligibility[RECITE_IMPURE]++;
+
+    //Hits monsters that desecrate the dead.
+    if (mons_eats_corpses(mon))
+        eligibility[RECITE_IMPURE]++;
+
+    //Hits corporeal undead, which are a perversion of natural form.
+    if (holiness == MH_UNDEAD && !mon->is_insubstantial())
+        eligibility[RECITE_IMPURE]++;
+
+    //Hits monsters that have these brands.
+    if (mon->has_attack_flavour(AF_VAMPIRIC))
+        eligibility[RECITE_IMPURE]++;
+    if (mon->has_attack_flavour(AF_DISEASE))
+        eligibility[RECITE_IMPURE]++;
+    if (mon->has_attack_flavour(AF_HUNGER))
+        eligibility[RECITE_IMPURE]++;
+    if (mon->has_attack_flavour(AF_ROT))
+        eligibility[RECITE_IMPURE]++;
+    if (mon->has_attack_flavour(AF_STEAL))
+        eligibility[RECITE_IMPURE]++;
+    if (mon->has_attack_flavour(AF_STEAL_FOOD))
+        eligibility[RECITE_IMPURE]++;
+
+    //Death drakes and rotting devils get a bump to uncleanliness.
+    if (mon->type == MONS_ROTTING_DEVIL || mon->type == MONS_DEATH_DRAKE)
+        eligibility[RECITE_IMPURE]++;
+
+    //Sanity check: if a monster is 'really' natural, don't consider it impure.
+    if (mons_intel(mon) < I_NORMAL
+        && (holiness == MH_NATURAL || holiness == MH_PLANT)
+        && mon->type != MONS_UGLY_THING
+        && mon->type != MONS_VERY_UGLY_THING
+        && mon->type != MONS_DEATH_DRAKE)
+    {
+        eligibility[RECITE_IMPURE] = 0;
+    }
+
+    // Anti-unholy prayer
+
+    // Hits monsters that are undead or demonic.
+    if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
+        eligibility[RECITE_UNHOLY]++;
+
+    // Anti-heretic prayer
+    // Pro-ally prayer
+
+    // Sleeping or paralyzed monsters will wake up or still perceive their
+    // surroundings, respectively.  So, you can still recite to them.
+
+    if (mons_intel(mon) >= I_NORMAL
+        && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
+    {
+        // In the eyes of Zin, everyone is a sinner until proven otherwise!
+        eligibility[RECITE_HERETIC]++;
+
+        // Any priest is a heretic...
+        if (mon->is_priest())
+            eligibility[RECITE_HERETIC]++;
+
+        // ...but chaotic gods are worse...
+        if (is_evil_god(mon->god))
+            eligibility[RECITE_HERETIC]++;
+
+        // ...as are evil gods.
+        if (is_evil_god(mon->god) || mon->god == GOD_NAMELESS)
+            eligibility[RECITE_HERETIC]++;
+
+        // (The above mean that worshipers will be treated as
+        // priests for reciting, even if they aren't actually.)
+
+        // Sanity check: monsters that you can't convert anyways, don't get
+        // recited against.
+        if ((mon->is_unclean()
+             || mon->is_chaotic()
+             || mon->is_evil()
+             || mon->is_unholy())
+            && eligibility[RECITE_HERETIC] <= 1)
+        {
+            eligibility[RECITE_HERETIC] = 0;
+        }
+
+        // Sanity check: monsters that won't attack you, and aren't
+        // priests/evil, don't get recited against.
+        if (mon->wont_attack() && eligibility[RECITE_HERETIC] <= 1)
+            eligibility[RECITE_HERETIC] = 0;
+
+        // Sanity check: monsters that are holy, know holy spells, or worship
+        // holy gods aren't heretics.
+        if (mon->is_holy() || is_good_god(mon->god))
+            eligibility[RECITE_HERETIC] = 0;
+
+        // Any friendly that meets the above requirements is counted as an ally.
+        if (mon->friendly())
+            eligibility[RECITE_ALLY]++;
+
+        // Holy friendlies get a boost.
+        if ((mon->is_holy() || is_good_god(mon->god))
+            && eligibility[RECITE_ALLY] > 0)
+        {
+            eligibility[RECITE_ALLY]++;
+        }
+
+        // Worshipers of Zin get another boost.
+        if (mon->god == GOD_ZIN && eligibility[RECITE_ALLY] > 0)
+            eligibility[RECITE_ALLY]++;
+    }
+
+#ifdef DEBUG_DIAGNOSTICS
+    std::string elig;
+    for (int i = 0; i < NUM_RECITE_TYPES; i++)
+        elig[i] += '0' + eligibility[i];
+    dprf("Eligibility: %s", elig.c_str());
+#endif
+
+    //Checking to see whether they were eligible for anything at all.
+    for (int i = 0; i < NUM_RECITE_TYPES; i++)
+        if (eligibility[i] > 0)
+            return 1;
+
+    return 0;
 }
 
 // Check whether there are monsters who might be influenced by Recite.
+// If 'recite' is false, we're just checking whether we can.
+// If it's true, we're actually reciting and need to present a menu.
+
 // Returns 0, if no monsters found.
 // Returns 1, if eligible audience found.
 // Returns -1, if entire audience already affected or too dumb to understand.
-int zin_check_recite_to_monsters()
+bool zin_check_able_to_recite()
 {
-    bool found_monsters = false;
+    if (you.duration[DUR_BREATH_WEAPON])
+    {
+        mpr("You're too short of breath to recite.");
+        return (false);
+    }
+
+        return (true);
+}
+
+static const char* zin_book_desc[NUM_RECITE_TYPES] =
+{
+    "Abominations (harms the forces of chaos and mutation)",
+    "Ablutions (harms the unclean and walking corpses)",
+    "Apostates (harms the faithless and heretics)",
+    "Anathema (harms all types of demons and undead)",
+    "Alliances (blesses intelligent allies)",
+};
+
+int zin_check_recite_to_monsters(recite_type *prayertype)
+{
+    bool found_ineligible = false;
+    bool found_eligible = false;
+    recite_counts count(0);
 
     for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
-        const int retval = zin_check_recite_to_single_monster(*ri);
+        recite_counts retval;
+        switch(zin_check_recite_to_single_monster(*ri, retval))
+        {
+        case -1:
+            found_ineligible = true;
+        case 0:
+            continue;
+        }
 
-        if (retval == -1)
-            found_monsters = true;
-
-        // Check if audience can listen.
-        if (retval == 1)
-            return (1);
+        for (int i = 0; i < NUM_RECITE_TYPES; i++)
+            if (retval[i] > 0)
+                count[i]++, found_eligible = true;
     }
 
-    if (!found_monsters)
+    if (!found_eligible && !found_ineligible)
+    {
         dprf("No audience found!");
-    else
+        return (0);
+    }
+    else if (!found_eligible && found_ineligible)
+    {
         dprf("No sensible audience found!");
+        return (-1);
+    }
 
-   // No use preaching to the choir, nor to common animals.
-   if (found_monsters)
-       return (-1);
+    if (!prayertype)
+        return (1);
 
-   // Sorry, no audience found!
-   return (0);
+    int eligible_types = 0;
+    for (int i = 0; i < NUM_RECITE_TYPES; i++)
+        if (count[i] > 0)
+            eligible_types++;
+
+    //If there's only one eligible recitation, and we're actually reciting, then perform it.
+    if (eligible_types == 1)
+    {
+        for (int i = 0; i < NUM_RECITE_TYPES; i++)
+            if (count[i] > 0)
+                *prayertype = (recite_type)i;
+
+        // If we got this far, we're actually reciting:
+        you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
+        return 1;
+    }
+
+    //But often, you'll have multiple options...
+    mesclr();
+
+    mprf(MSGCH_PROMPT, "Recite a passage from which book of the Axioms of Law?");
+
+    int menu_cnt = 0;
+    recite_type letters[NUM_RECITE_TYPES];
+
+    for (int i = 0; i < NUM_RECITE_TYPES; i++)
+    {
+        if (count[i] > 0 && i != RECITE_ALLY) // no ally recite yet
+        {
+            mprf("    [%c] - %s", 'a' + menu_cnt, zin_book_desc[i]);
+            letters[menu_cnt++] = (recite_type)i;
+        }
+    }
+    flush_prev_message();
+
+    while (true)
+    {
+        int keyn = tolower(getch_ck());
+
+        if (keyn >= 'a' && keyn < 'a' + menu_cnt)
+        {
+            *prayertype = letters[keyn - 'a'];
+            break;
+        }
+        else
+            return 0;
+    }
+    // If we got this far, we're actually reciting and are out of breath from it:
+    you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
+    return 1;
 }
 
-// Power is maximum 50.
-int zin_recite_to_single_monster(const coord_def& where,
-                                 bool imprisoned, int pow)
+enum zin_eff
 {
+    ZIN_NOTHING,
+    ZIN_SLEEP,
+    ZIN_DAZE,
+    ZIN_CONFUSE,
+    ZIN_FEAR,
+    ZIN_PARALYSE,
+    ZIN_BLEED,
+    ZIN_SMITE,
+    ZIN_BLIND,
+    ZIN_SILVER_CORONA,
+    ZIN_ANTIMAGIC,
+    ZIN_MUTE,
+    ZIN_MAD,
+    ZIN_DUMB,
+    ZIN_IGNITE_CHAOS,
+    ZIN_SALTIFY,
+    ZIN_ROT,
+    ZIN_HOLY_WORD,
+};
+
+bool zin_recite_to_single_monster(const coord_def& where,
+                                  bool imprisoned,
+                                  recite_type prayertype)
+{
+    // That's a pretty good sanity check, I guess.
     if (you.religion != GOD_ZIN)
         return (0);
 
     monster* mon = monster_at(where);
 
-    if (mon == NULL)
-        return (0);
+    if (!mon)
+        return false;
 
-    if (_zin_recite_mons_useless(mon))
-        return (0);
+    recite_counts eligibility;
+    bool affected = false;
 
-    // nothing happens
-    if (!imprisoned && coinflip())
-        return (0);
+    if (zin_check_recite_to_single_monster(where, eligibility) < 1)
+        return false;
 
-    // up to (60 + 40)/2 = 50
-    if (pow == -1)
-        pow = (2 * skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
+    // First check: are they even eligible for this kind of recitation?
+    // (Monsters that have been hurt by recitation aren't eligible.)
+    if (eligibility[prayertype] < 1)
+        return false;
 
-    const mon_holy_type holiness = mon->holiness();
-    bool impressible = true;
-    int resist;
+    // Second check: because this affects the whole screen over several turns,
+    // its effects are staggered. There's a 50% chance per monster, per turn,
+    // that nothing will happen - so the cumulative odds of nothing happening
+    // are one in eight, since you recite three times.
+    if (coinflip())
+        return false;
 
-    if (mon->is_holy())
-        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
-    else
+    // Resistance is now based on HD. You can affect up to (30+30)/2 = 30 'power' (HD).
+    int power = (skill_bump(SK_INVOCATIONS) + you.piety * 3 / 20) / 2;
+    // Old recite was mostly deterministic, which is bad.
+    int resist = mon->get_experience_level() + random2(6);
+    int check = power - resist;
+
+    // We abort if we didn't *beat* their HD - but first we might get a cute message.
+    if (mon->can_speak() && one_chance_in(5))
     {
-        resist = mon->res_magic();
-
-        if (holiness == MH_UNDEAD)
-        {
-            impressible = false;
-            pow -= 2 + random2(3);
-        }
-        else if (holiness == MH_DEMONIC)
-        {
-            impressible = false;
-            pow -= 3 + random2(5);
-        }
-
-        if (mon->is_unclean() || mon->is_chaotic())
-            impressible = false;
+        if (check < -10)
+            simple_monster_message(mon, " guffaws at your puny god.");
+        else if (check < -5)
+            simple_monster_message(mon, " sneers at your recitation.");
     }
 
-    pow -= resist;
+    if (check <= 0)
+        return false;
 
-    if (pow > 0)
-        pow = random2avg(pow, 2);
+    // To what degree are they eligible for this prayertype?
+    int degree = eligibility[prayertype];
+    bool minor = degree <= ((prayertype == RECITE_HERETIC) ? 2 : 1);
+    int spellpower = power * 2 + degree * 20;
+    zin_eff effect = ZIN_NOTHING;
 
-    if (pow <= 0) // Uh oh...
+    switch (prayertype)
     {
-        if (!imprisoned && one_chance_in(resist + 1))
-            return (0);  // nothing happens, whew!
+    case RECITE_ALLY:
+        // Stub. Not implemented yet.
+        break;
 
-        if (!one_chance_in(4)
-             && mon->add_ench(mon_enchant(ENCH_HASTE, 0, KC_YOU,
-                                          (16 + random2avg(13, 2)) * 10)))
+    case RECITE_HERETIC:
+        if (degree == 1)
         {
+            if (mon->asleep())
+                break;
+            // This is the path for 'conversion' effects.
+            // Their degree is only 1 if they weren't a priest,
+            // a worshiper of an evil or chaotic god, etc.
 
-            simple_monster_message(mon, " speeds up in annoyance!");
-        }
-        else if (!one_chance_in(3)
-                 && mon->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, KC_YOU,
-                                              (16 + random2avg(13, 2)) * 10)))
-        {
-            simple_monster_message(mon, " goes into a battle-frenzy!");
-        }
-        else if (!one_chance_in(3)
-                 && mons_shouts(mon->type, false) != S_SILENT)
-        {
-            force_monster_shout(mon);
-        }
-        else
-            return (0); // nothing happens
+            // Right now, it only has the 'failed conversion' effects, though.
+            // This branch can't hit sleeping monsters - until they wake up.
 
-        // Bad effects stop the recital.
-        stop_delay();
-        return (1);
-    }
-
-    switch (pow)
-    {
-        case 0:
-            return (0); // handled above
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            if (!mons_class_is_confusable(mon->type)
-                || !mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
-                                              (16 + random2avg(13, 2)) * 10)))
+            if (check < 5)
             {
-                return (0);
+#if 0
+                // Sleep doesn't really work well. This should be more
+                // 'forceful'. But how?
+                if (one_chance_in(4))
+                    effect = ZIN_SLEEP;
+                else
+#endif
+                    effect = ZIN_DAZE;
             }
-            simple_monster_message(mon, " looks confused.");
-            break;
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-            if (!mon->can_hibernate())
-                return (0);
-            mon->hibernate();
-            simple_monster_message(mon, " falls asleep!");
-            break;
-        case 9:
-        case 10:
-        case 11:
-        case 12:
-            if (!impressible
-                || !mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
-                                  (16 + random2avg(13, 2)) * 10)))
+            else if (check < 10)
             {
-                return (0);
+                if (coinflip())
+                    effect = ZIN_CONFUSE;
+                else
+                    effect = ZIN_DAZE;
             }
-            simple_monster_message(mon, " seems impressed!");
-            break;
-        case 13:
-        case 14:
-        case 15:
-            if (!mon->add_ench(ENCH_FEAR))
-                return (0);
-            simple_monster_message(mon, " turns to flee.");
-            break;
-        case 16:
-        case 17:
-            if (!mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
-                               (16 + random2avg(13, 2)) * 10)))
+            else if (check < 15)
             {
-                return (0);
+                if (one_chance_in(3))
+                    effect = ZIN_FEAR;
+                else
+                    effect = ZIN_CONFUSE;
             }
-            simple_monster_message(mon, " freezes in fright!");
-            break;
-        default:
-            if (mon->is_holy())
-                good_god_holy_attitude_change(mon);
             else
             {
-                if (!impressible)
-                    return (0);
-                simple_monster_message(mon, " seems fully impressed!");
-                mons_pacify(mon);
+                if (one_chance_in(3))
+                    effect = ZIN_PARALYSE;
+                else
+                    effect = ZIN_FEAR;
             }
-            break;
+        }
+        else
+        {
+            // This is the path for 'smiting' effects.
+            // Their degree is only greater than 1 if
+            // they're unable to be redeemed.
+            if (check < 5)
+            {
+                if (coinflip())
+                    effect = ZIN_BLEED;
+                else
+                    effect = ZIN_SMITE;
+            }
+            else if (check < 10)
+            {
+                if (one_chance_in(3))
+                    effect = ZIN_BLIND;
+                else if (coinflip())
+                    effect = ZIN_SILVER_CORONA;
+                else
+                    effect = ZIN_ANTIMAGIC;
+            }
+            else if (check < 15)
+            {
+                if (one_chance_in(3))
+                    effect = ZIN_BLIND;
+                else if (coinflip())
+                    effect = ZIN_PARALYSE;
+                else
+                    effect = ZIN_MUTE;
+            }
+            else
+            {
+                if (coinflip())
+                    effect = ZIN_MAD;
+                else
+                    effect = ZIN_DUMB;
+            }
+        }
+        break;
+
+    case RECITE_CHAOTIC:
+        if (check < 5)
+        {
+            // nastier -- fallthrough if immune
+            if (coinflip() && mon->can_bleed())
+                effect = ZIN_BLEED;
+            else
+                effect = ZIN_SMITE;
+        }
+        else if (check < 10)
+        {
+            if (coinflip())
+                effect = ZIN_SILVER_CORONA;
+            else
+                effect = ZIN_SMITE;
+        }
+        else if (check < 15)
+        {
+            if (coinflip())
+                effect = ZIN_IGNITE_CHAOS;
+            else
+                effect = ZIN_SILVER_CORONA;
+        }
+        else
+            effect = ZIN_SALTIFY;
+        break;
+
+    case RECITE_IMPURE:
+        // Many creatures normally resistant to rotting are still affected,
+        // because this is divine punishment.  Those with no real flesh are
+        // immune, of course.
+        if (check < 5)
+        {
+            if (coinflip() && mon->can_bleed())
+                effect = ZIN_BLEED;
+            else
+                effect = ZIN_SMITE;
+        }
+        else if (check < 10)
+        {
+            if (coinflip() && mon->res_rotting() <= 1)
+                effect = ZIN_ROT;
+            else
+                effect = ZIN_SILVER_CORONA;
+        }
+        else if (check < 15)
+        {
+            if (mon->undead_or_demonic() && coinflip())
+                effect = ZIN_HOLY_WORD;
+            else
+                effect = ZIN_SILVER_CORONA;
+        }
+        else
+            effect = ZIN_SALTIFY;
+        break;
+
+    case RECITE_UNHOLY:
+        if (check < 5)
+        {
+            if (mons_intel(mon) > I_PLANT && coinflip())
+                effect = ZIN_DAZE;
+            else
+                effect = ZIN_CONFUSE;
+        }
+        else if (check < 10)
+        {
+            if (coinflip())
+                effect = ZIN_FEAR;
+            else
+                effect = ZIN_SILVER_CORONA;
+        }
+        // Half of the time, the anti-unholy prayer will be capped at this
+        // level of effect.
+        else if (check < 15 || coinflip())
+        {
+            if (coinflip())
+                effect = ZIN_HOLY_WORD;
+            else
+                effect = ZIN_SILVER_CORONA;
+        }
+        else
+            effect = ZIN_SALTIFY;
+        break;
+
+    case NUM_RECITE_TYPES:
+        die("invalid recite type");
     }
 
-    return (1);
+    // And the actual effects...
+    switch(effect)
+    {
+    case ZIN_NOTHING:
+        break;
+
+    case ZIN_SLEEP:
+        if (mon->can_sleep())
+        {
+            mon->put_to_sleep(&you, 0);
+            simple_monster_message(mon, " nods off for a moment.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_DAZE:
+        if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, KC_YOU,
+                          (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is dazed by your recitation.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_CONFUSE:
+        if (mons_class_is_confusable(mon->type)
+            && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree,
+                   KC_YOU, (degree + random2(spellpower)) * 10)))
+        {
+            if (prayertype == RECITE_HERETIC)
+                simple_monster_message(mon, " is confused by your recitation.");
+            else
+                simple_monster_message(mon, " stumbles about in disarray.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_FEAR:
+        if (mon->add_ench(mon_enchant(ENCH_FEAR, degree, KC_YOU,
+                          (degree + random2(spellpower)) * 10)))
+        {
+            if (prayertype == RECITE_HERETIC)
+                simple_monster_message(mon, " is terrified by your recitation.");
+            else if (minor)
+                simple_monster_message(mon, " tries to escape the wrath of Zin.");
+            else
+                simple_monster_message(mon, " flees in terror at the wrath of Zin!");
+            behaviour_event(mon, ME_SCARE, MHITNOT, you.pos());
+            affected = true;
+        }
+        break;
+
+    case ZIN_PARALYSE:
+        if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
+                              (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon,
+                minor ? " is awed by your recitation."
+                      : " is aghast at the heresy of your recitation.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_BLEED:
+        if (mon->can_bleed()
+            && mon->add_ench(mon_enchant(ENCH_BLEED, degree, KC_YOU,
+                                         (degree + random2(spellpower)) * 10)))
+        {
+            mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10));
+            switch (prayertype)
+            {
+            case RECITE_HERETIC:
+                simple_monster_message(mon,
+                    minor ? "'s eyes and ears begin to bleed."
+                          : " bleeds profusely from its eyes and ears.");
+                break;
+            case RECITE_CHAOTIC:
+                simple_monster_message(mon,
+                    minor ? "'s chaotic flesh is covered in bleeding sores."
+                          : "'s chaotic flesh erupts into weeping sores!");
+                break;
+            case RECITE_IMPURE:
+                simple_monster_message(mon,
+                    minor ? "'s impure flesh is covered in bleeding sores."
+                          : "'s impure flesh erupts into weeping sores!");
+                break;
+            default:
+                die("bad recite bleed");
+            }
+            affected = true;
+        }
+        break;
+
+    case ZIN_SMITE:
+        if (minor)
+            simple_monster_message(mon, " is smitten by the wrath of Zin.");
+        else
+            simple_monster_message(mon, " is blasted by the fury of Zin!");
+        mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
+        if (mon->alive())
+            print_wounds(mon);
+        affected = true;
+        break;
+
+    case ZIN_BLIND:
+        if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is struck blind by the wrath of Zin!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_SILVER_CORONA:
+        if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is limned with silver light.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_ANTIMAGIC:
+        if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            ASSERT(prayertype == RECITE_HERETIC);
+            simple_monster_message(mon,
+                minor ? " quails at your recitation."
+                      : " looks feeble and powerless before your recitation.");
+            affected = true;
+        }
+        break;
+
+    case ZIN_MUTE:
+        if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is struck mute by the wrath of Zin!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_MAD:
+        if (mon->add_ench(mon_enchant(ENCH_MAD, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon, " is driven mad by the wrath of Zin!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_DUMB:
+        if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            simple_monster_message(mon,
+                " is left stupefied by the wrath of Zin!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_IGNITE_CHAOS:
+        ASSERT(prayertype == RECITE_CHAOTIC);
+        {
+            bolt beam;
+            dice_def dam_dice(0, 5 + spellpower/7);  // Dice added below if applicable.
+            dam_dice.num = degree;
+
+            int damage = dam_dice.roll();
+            if (damage > 0)
+            {
+                mon->hurt(&you, damage, BEAM_MISSILE, false);
+
+                if (mon->alive())
+                {
+                    simple_monster_message(mon,
+                      (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
+                      (damage < 50) ? "'s chaotic flesh bubbles and boils."
+                                    : "'s chaotic flesh runs like molten wax.");
+
+                    print_wounds(mon);
+                    behaviour_event(mon, ME_WHACK, MHITYOU);
+                    affected = true;
+                }
+                else
+                {
+                    simple_monster_message(mon,
+                        " melts away into a sizzling puddle of chaotic flesh.");
+                    monster_die(mon, KILL_YOU, NON_MONSTER);
+                }
+            }
+        }
+        break;
+
+    case ZIN_SALTIFY:
+        zin_saltify(mon);
+        break;
+
+    case ZIN_ROT:
+        ASSERT(prayertype == RECITE_IMPURE);
+        if (mon->res_rotting() <= 1
+            && mon->add_ench(mon_enchant(ENCH_ROT, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10)))
+        {
+            mon->add_ench(mon_enchant(ENCH_SICK, degree, KC_YOU,
+                                      (degree + random2(spellpower)) * 10));
+            simple_monster_message(mon,
+                minor ? "'s impure flesh begins to rot away."
+                      : "'s impure flesh sloughs off!");
+            affected = true;
+        }
+        break;
+
+    case ZIN_HOLY_WORD:
+        holy_word_monsters(where, spellpower, HOLY_WORD_ZIN, &you);
+        affected = true;
+        break;
+    }
+
+    // Monsters that have been affected may shout.
+    if (affected
+        && one_chance_in(3)
+        && mon->alive()
+        && !mon->asleep()
+        && !mon->cannot_move()
+        && mons_shouts(mon->type, false) != S_SILENT)
+    {
+        force_monster_shout(mon);
+    }
+
+    return true;
+}
+
+void zin_saltify(monster* mon)
+{
+    const coord_def where = mon->pos();
+    const monster_type pillar_type =
+        mons_is_zombified(mon) ? mons_zombie_base(mon)
+                               : mons_species(mon->type);
+    const int hd = mon->get_experience_level();
+
+    simple_monster_message(mon, " is turned into a pillar of salt by the wrath of Zin!");
+
+    // If the monster leaves a corpse when it dies, destroy the corpse.
+    int corpse = monster_die(mon, KILL_YOU, NON_MONSTER);
+    if (corpse != -1)
+        destroy_item(corpse);
+
+    const int pillar = create_monster(
+                        mgen_data(MONS_SALT_PILLAR,
+                                  BEH_HOSTILE,
+                                  0,
+                                  0,
+                                  0,
+                                  where,
+                                  MHITNOT,
+                                  MG_FORCE_PLACE,
+                                  GOD_NO_GOD,
+                                  pillar_type),
+                                  false);
+
+    if (pillar != -1)
+    {
+        // Enemies with more HD leave longer-lasting pillars of salt.
+        int time_left = (random2(8) + hd) * 10;
+        mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, KC_OTHER, time_left);
+        env.mons[pillar].update_ench(temp_en);
+    }
 }
 
 static bool _kill_duration(duration_type dur)
@@ -484,7 +1374,7 @@ void tso_divine_shield()
                      35 + (you.skills[SK_INVOCATIONS] * 4) / 3);
 
     // shield bonus up to 8
-    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
+    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skill(SK_SHIELDS) / 5;
 
     you.redraw_armour_class = true;
 }
@@ -673,10 +1563,10 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
         || spell == SPELL_TORNADO
+        || spell == SPELL_FREEZE
         || spell == SPELL_IGNITE_POISON
-        || spell == SPELL_OZOCUBUS_REFRIGERATION
+        || spell == SPELL_OZOCUBUS_REFRIGERATION)
         // Toxic Radiance does no direct damage
-        || spell == SPELL_BONE_SHARDS)
     {
         return (true);
     }
@@ -764,7 +1654,7 @@ bool trog_burn_spellbooks()
             }
 
             const int duration = std::min(4 + count + random2(rarity/2), 23);
-            place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
+            place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
             mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
                  count == 1 ? ""  : "s",
@@ -1894,7 +2784,7 @@ int fedhas_rain(const coord_def &target)
 
             if (x_chance_in_y(expected, 20))
             {
-                place_cloud(CLOUD_RAIN, *rad, 10, KC_YOU);
+                place_cloud(CLOUD_RAIN, *rad, 10, &you);
 
                 processed_count++;
             }
@@ -2143,7 +3033,7 @@ bool fedhas_evolve_flora()
             || !mons_class_can_pass(MONS_BALLISTOMYCETE,
                                     env.grid(spelld.target)))
         {
-            if (env.grid(spelld.target) == DNGN_TREE)
+            if (feat_is_tree(env.grid(spelld.target)))
                 mprf("The tree has already reached the pinnacle of evolution.");
             else
                 mprf("You must target a plant or fungus.");
@@ -2440,36 +3330,34 @@ bool ashenzari_transfer_knowledge()
         if (!ashenzari_end_transfer())
             return false;
 
-    you.transfer_from_skill = select_skill();
-    if (you.transfer_from_skill == SK_NONE)
+    while(true)
     {
-        redraw_screen();
-        return false;
-    }
+        skill_menu(true);
+        if (is_invalid_skill(you.transfer_from_skill))
+        {
+            redraw_screen();
+            return false;
+        }
 
-    int fsk_points = you.skill_points[you.transfer_from_skill];
-    int skp_max; // maximum number of skill points transferrable.
+        you.transfer_skill_points = skill_transfer_amount(
+                                                    you.transfer_from_skill);
 
-    skp_max = fsk_points / 2;
-    skp_max = std::max(skp_max, 1000);
-    if (skp_max > fsk_points)
-        skp_max = fsk_points;
+        skill_menu(true);
+        if (is_invalid_skill(you.transfer_to_skill))
+        {
+            you.transfer_from_skill = SK_NONE;
+            you.transfer_skill_points = 0;
+            continue;
+        }
 
-    you.transfer_skill_points = skp_max;
-    you.transfer_to_skill = select_skill();
-    if (you.transfer_to_skill == SK_NONE)
-    {
-        you.transfer_from_skill = SK_NONE;
-        you.transfer_skill_points = 0;
-        redraw_screen();
-        return false;
+        break;
     }
 
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(you.transfer_from_skill),
          skill_name(you.transfer_to_skill));
 
-    you.transfer_total_skill_points = skp_max;
+    you.transfer_total_skill_points = you.transfer_skill_points;
 
     redraw_screen();
     return true;

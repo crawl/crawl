@@ -35,10 +35,44 @@
 #include "state.h"
 #include "travel.h"
 #include "hiscores.h"
+#include "zotdef.h"
 
-#ifdef ASSERTS
-static std::string _assert_msg;
+#if defined(USE_TILE) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
+#define NOCOMM            /* Comm driver APIs and definitions */
+#define NOLOGERROR        /* LogError() and related definitions */
+#define NOPROFILER        /* Profiler APIs */
+#define NOLFILEIO         /* _l* file I/O routines */
+#define NOOPENFILE        /* OpenFile and related definitions */
+#define NORESOURCE        /* Resource management */
+#define NOATOM            /* Atom management */
+#define NOLANGUAGE        /* Character test routines */
+#define NOLSTRING         /* lstr* string management routines */
+#define NODBCS            /* Double-byte character set routines */
+#define NOKEYBOARDINFO    /* Keyboard driver routines */
+#define NOCOLOR           /* COLOR_* color values */
+#define NODRAWTEXT        /* DrawText() and related definitions */
+#define NOSCALABLEFONT    /* Truetype scalable font support */
+#define NOMETAFILE        /* Metafile support */
+#define NOSYSTEMPARAMSINFO /* SystemParametersInfo() and SPI_* definitions */
+#define NODEFERWINDOWPOS  /* DeferWindowPos and related definitions */
+#define NOKEYSTATES       /* MK_* message key state flags */
+#define NOWH              /* SetWindowsHook and related WH_* definitions */
+#define NOCLIPBOARD       /* Clipboard APIs and definitions */
+#define NOICONS           /* IDI_* icon IDs */
+#define NOMDI             /* MDI support */
+#define NOCTLMGR          /* Control management and controls */
+#define NOHELP            /* Help support */
+#define WIN32_LEAN_AND_MEAN /* No cryptography etc */
+#define NONLS             /* All NLS defines and routines */
+#define NOSERVICE         /* All Service Controller routines, SERVICE_ equates, etc. */
+#define NOKANJI           /* Kanji support stuff. */
+#define NOMCX             /* Modem Configuration Extensions */
+#include <windows.h>
+#undef max
+#include <SDL/SDL_syswm.h>
 #endif
+
+static std::string _assert_msg;
 
 static void _dump_compilation_info(FILE* file)
 {
@@ -101,26 +135,10 @@ static void _dump_player(FILE *file)
     fprintf(file, "Player:\n");
     fprintf(file, "{{{{{{{{{{{\n");
 
-    bool name_overrun = true;
-    for (int i = 0; i < 30; ++i)
-    {
-        if (you.class_name[i] == '\0')
-        {
-            name_overrun = false;
-            break;
-        }
-    }
-
-    if (name_overrun)
-    {
-        fprintf(file, "job_name runs past end of buffer.\n");
-        you.class_name[29] = '\0';
-    }
-
     fprintf(file, "Name:       [%s]\n", you.your_name.c_str());
     fprintf(file, "Species:    %s\n", species_name(you.species).c_str());
     fprintf(file, "Job:        %s\n\n", get_job_name(you.char_class));
-    fprintf(file, "class_name: %s\n\n", you.class_name);
+    fprintf(file, "class_name: %s\n\n", you.class_name.c_str());
 
     fprintf(file, "HP: %d/%d; base: %d/%d\n", you.hp, you.hp_max,
             you.base_hp, you.base_hp2);
@@ -566,10 +584,8 @@ void do_crash_dump()
 
     set_msg_dump_file(file);
 
-#ifdef ASSERTS
     if (!_assert_msg.empty())
         fprintf(file, "%s\n\n", _assert_msg.c_str());
-#endif
 
     _dump_ver_stuff(file);
 
@@ -615,6 +631,9 @@ void do_crash_dump()
     crawl_state.dump();
     _dump_player(file);
 
+    if (crawl_state.game_is_zotdef())
+        fprintf(file, "ZotDef wave data: %s\n", zotdef_debug_wave_desc().c_str());
+
     // Next item and monster scans.  Any messages will be sent straight to
     // the file because of set_msg_dump_file()
 #ifdef DEBUG_ITEM_SCAN
@@ -646,9 +665,7 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
-#ifdef ASSERTS
     mark_milestone("crash", _assert_msg, false, t);
-#endif
 
     if (file != stderr)
         fclose(file);
@@ -659,17 +676,31 @@ void do_crash_dump()
 
 // Assertions and such
 
-#ifdef ASSERTS
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-static void _BreakStrToDebugger(const char *mesg)
+static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 {
-#if defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
+#if defined(USE_TILE) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
+    SDL_SysWMinfo SysInfo;
+    SDL_VERSION(&SysInfo.version);
+    if (SDL_GetWMInfo(&SysInfo) > 0)
+    {
+        MessageBox(SysInfo.window, mesg, assert ? "Assertion failed!" : "Error",
+                   MB_OK|MB_ICONERROR);
+    }
+    else
+        fprintf(stderr, "%s", mesg);
+    int* p = NULL;
+    *p = 0;
+    abort();
+
+#elif defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
     fprintf(stderr, "%s", mesg);
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
+    abort();                    // just to be sure
 
 #else
     fprintf(stderr, "%s\n", mesg);
@@ -677,12 +708,13 @@ static void _BreakStrToDebugger(const char *mesg)
 #endif
 }
 
+#ifdef ASSERTS
 //---------------------------------------------------------------
 //
 // AssertFailed
 //
 //---------------------------------------------------------------
-void AssertFailed(const char *expr, const char *file, int line, bool save_game)
+NORETURN void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 {
     char mesg[512];
 
@@ -699,25 +731,25 @@ void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 
     _assert_msg = mesg;
 
-    _BreakStrToDebugger(mesg);
+    _BreakStrToDebugger(mesg, true);
 }
+#endif
 
-//---------------------------------------------------------------
-//
-// DEBUGSTR
-//
-//---------------------------------------------------------------
-void DEBUGSTR(const char *format, ...)
+#undef die
+NORETURN void die(const char *file, int line, const char *format, ...)
 {
-    char mesg[2048];
+    char tmp[2048], mesg[2048];
 
     va_list args;
 
     va_start(args, format);
-    vsnprintf(mesg, sizeof(mesg), format, args);
+    vsnprintf(tmp, sizeof(tmp), format, args);
     va_end(args);
 
-    _BreakStrToDebugger(mesg);
-}
+    snprintf(mesg, sizeof(mesg), "ERROR in '%s' at line %d: %s",
+             file, line, tmp);
 
-#endif
+    _assert_msg = mesg;
+
+    _BreakStrToDebugger(mesg, false);
+}

@@ -7,6 +7,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -185,7 +186,8 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
     // All monsters can find the Orb in Zotdef
-    const int range = (crawl_state.game_is_zotdef() ? 1000 : mons_tracking_range(mon));
+    const int range = (crawl_state.game_is_zotdef() || mon->friendly() ? 1000 : mons_tracking_range(mon));
+
     if (range > 0 && dist > dist_range(range))
     {
         mon->travel_target = MTRAV_UNREACHABLE;
@@ -359,8 +361,9 @@ bool find_siren_water_target(monster* mon)
     monster_pathfind mp;
 #ifdef WIZARD
     // Remove old highlighted areas to make place for the new ones.
-    for (rectangle_iterator ri(1); ri; ++ri)
-        env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
+    if (you.wizard)
+        for (rectangle_iterator ri(1); ri; ++ri)
+            env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
 #endif
 
     if (mp.init_pathfind(mon, best_target))
@@ -370,8 +373,9 @@ bool find_siren_water_target(monster* mon)
         if (!mon->travel_path.empty())
         {
 #ifdef WIZARD
-            for (unsigned int i = 0; i < mon->travel_path.size(); i++)
-                env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
+            if (you.wizard)
+                for (unsigned int i = 0; i < mon->travel_path.size(); i++)
+                    env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
 #endif
 #ifdef DEBUG_PATHFIND
             mprf("Found a path to (%d, %d) with %d surrounding water squares",
@@ -802,12 +806,187 @@ void set_random_target(monster* mon)
     }
 }
 
+// Try to find a band leader for the given monster
+static monster * _active_band_leader(monster * mon)
+{
+    // Not a band member
+    if (!mon->props.exists("band_leader"))
+        return (NULL);
+
+    // Try to find our fearless leader.
+    unsigned leader_mid = mon->props["band_leader"].get_int();
+
+    return (monster_by_mid(leader_mid));
+}
+
+// Return true if a target still needs to be set. If returns false, mon->target
+// was set.
+static bool _band_wander_target(monster * mon, dungeon_feature_type can_move)
+{
+    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+    monster * band_leader = _active_band_leader(mon);
+    if (band_leader == NULL)
+        return (true);
+
+    int leader_dist = grid_distance(mon->pos(), band_leader->pos());
+    if (leader_dist > dist_thresh)
+    {
+        monster_pathfind mp;
+        mp.set_range(1000);
+
+        if (mp.init_pathfind(mon, band_leader->pos()))
+        {
+            mon->travel_path = mp.calc_waypoints();
+            if (!mon->travel_path.empty())
+            {
+                // Okay then, we found a path.  Let's use it!
+                mon->target = mon->travel_path[0];
+                mon->travel_target = MTRAV_PATROL;
+                return (false);
+            }
+            else
+                return (true);
+        }
+
+        return (true);
+    }
+
+    std::vector<coord_def> positions;
+
+    for (radius_iterator r_it(mon->get_los_no_trans(), mon); r_it; ++r_it)
+    {
+        if (!in_bounds(*r_it))
+            continue;
+
+        int dist = grid_distance(*r_it, band_leader->pos());
+        if (dist < HERD_COMFORT_RANGE)
+        {
+            positions.push_back(*r_it);
+        }
+    }
+
+    if (positions.empty())
+        return (true);
+
+    mon->target = positions[random2(positions.size())];
+
+    ASSERT(in_bounds(mon->target));
+    return (false);
+}
+
+// Returns true if a movement target still needs to be set
+static bool _herd_wander_target(monster * mon, dungeon_feature_type can_move)
+{
+    std::vector<monster_iterator> friends;
+    std::map<int, std::vector<coord_def> > distance_positions;
+
+    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+
+    for (monster_iterator mit; mit; ++mit)
+    {
+        if (mit->mindex() == mon->mindex()
+            || mons_genus(mit->type) != mons_genus(mon->type)
+            || grid_distance(mit->pos(), mon->pos()) > dist_thresh)
+        {
+            continue;
+        }
+
+        friends.push_back(mit);
+    }
+
+    if (friends.empty())
+        return (true);
+
+    for (radius_iterator r_it(mon->get_los_no_trans(), true) ; r_it; ++r_it)
+    {
+        if (!in_bounds(*r_it))
+            continue;
+
+        int count = 0;
+        for (unsigned i = 0; i < friends.size(); i++)
+        {
+            if (grid_distance(friends[i]->pos(), *r_it) < HERD_COMFORT_RANGE
+                && friends[i]->see_cell_no_trans(*r_it))
+            {
+                count++;
+            }
+        }
+        if (count > 0)
+            distance_positions[count].push_back(*r_it);
+    }
+    std::map<int, std::vector<coord_def> >::reverse_iterator back =
+        distance_positions.rbegin();
+
+    if (back == distance_positions.rend())
+        return (true);
+
+    mon->target = back->second[random2(back->second.size())];
+    return (false);
+}
+
+static bool _herd_ok(monster * mon)
+{
+    bool in_bounds = false;
+    bool intermediate_range = false;
+    int intermediate_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+
+    for (monster_iterator mit(mon); mit; ++mit)
+    {
+        if (mit->mindex() == mon->mindex())
+            continue;
+
+        if (mons_genus(mit->type) == mons_genus(mon->type) )
+        {
+            int g_dist = grid_distance(mit->pos(), mon->pos());
+            if (g_dist < HERD_COMFORT_RANGE
+                && mon->see_cell_no_trans(mit->pos()))
+            {
+                in_bounds = true;
+                break;
+            }
+            else if (g_dist < intermediate_thresh)
+            {
+                intermediate_range = true;
+            }
+        }
+    }
+
+    return (in_bounds || !intermediate_range);
+}
+
+// Return true if we don't have to do anything to keep within an ok distance
+// of our band leader. (If no leader exists we don't have to do anything).
+static bool _band_ok(monster * mon)
+{
+    // Don't have to worry about being close to the leader if no leader can be
+    // found.
+    monster * leader = _active_band_leader(mon);
+
+    if (!leader)
+        return (true);
+
+    int g_dist = grid_distance(leader->pos(), mon->pos());
+
+    // If in range, or sufficiently out of range we can just wander around for
+    // a while longer.
+    if (g_dist < HERD_COMFORT_RANGE && mon->see_cell_no_trans(leader->pos())
+        || g_dist >= (LOS_RADIUS + HERD_COMFORT_RANGE))
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
+
 void check_wander_target(monster* mon, bool isPacified,
                          dungeon_feature_type can_move)
 {
     // default wander behaviour
     if (mon->pos() == mon->target
-        || mons_is_batty(mon) || !isPacified && one_chance_in(20))
+        || mons_is_batty(mon) || !isPacified && one_chance_in(20)
+        || herd_monster(mon) && !_herd_ok(mon)
+        || !_band_ok(mon))
     {
         bool need_target = true;
 
@@ -824,6 +1003,15 @@ void check_wander_target(monster* mon, bool isPacified,
         // (any more), check for patrol routes instead.
         if (need_target && mon->is_patrolling())
             need_target = _handle_monster_patrolling(mon);
+
+        if (need_target && herd_monster(mon))
+            need_target = _herd_wander_target(mon, can_move);
+
+        if (need_target
+            && _active_band_leader(mon) != NULL)
+        {
+            need_target = _band_wander_target(mon, can_move);
+        }
 
         // XXX: This is really dumb wander behaviour... instead of
         // changing the goal square every turn, better would be to

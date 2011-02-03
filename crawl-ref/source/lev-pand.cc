@@ -18,6 +18,8 @@
 #include "mon-pick.h"
 #include "random.h"
 
+#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
+
 void init_pandemonium(void)
 {
     int pc = 0;
@@ -112,8 +114,18 @@ void init_pandemonium(void)
 
         if (one_chance_in(10))
         {
-            env.mons_alloc[pc] =
-                static_cast<monster_type>(MONS_HELLION + random2(10));
+            env.mons_alloc[pc] = random_mons(
+                                    MONS_HELLION,
+                                    MONS_ROTTING_DEVIL,
+                                    MONS_TORMENTOR,
+                                    MONS_REAPER,
+                                    MONS_SOUL_EATER,
+                                    MONS_HAIRY_DEVIL,
+                                    MONS_ICE_DEVIL,
+                                    MONS_BLUE_DEVIL,
+                                    MONS_BEAST,
+                                    MONS_IRON_DEVIL,
+                                    -1);
         }
 
         if (one_chance_in(30))
@@ -127,27 +139,28 @@ void init_pandemonium(void)
 
         if (one_chance_in(20))
         {
-            env.mons_alloc[pc] =
-                static_cast<monster_type>(MONS_DEMONIC_CRAWLER + random2(5));
+            env.mons_alloc[pc] = random_mons(
+                                    MONS_DEMONIC_CRAWLER,
+                                    MONS_SUN_DEMON,
+                                    MONS_SHADOW_IMP,
+                                    MONS_SHADOW_DEMON,
+                                    MONS_LOROCYPROCA,
+                                    -1);
         }
-    }
 
-    if (one_chance_in(8))
-    {
-        env.mons_alloc[7] =
-            static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
-    }
-
-    if (one_chance_in(5))
-    {
-        env.mons_alloc[8] =
-            static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
-    }
-
-    if (one_chance_in(3))
-    {
-        env.mons_alloc[9] =
-            static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
+        // The last three slots have a good chance of big badasses.
+        if (pc == 7 && one_chance_in(8)
+         || pc == 8 && one_chance_in(5)
+         || pc == 9 && one_chance_in(3))
+        {
+            env.mons_alloc[pc] = random_mons(
+                    MONS_EXECUTIONER,
+                    MONS_GREEN_DEATH,
+                    MONS_BLUE_DEATH,
+                    MONS_BALRUG,
+                    MONS_CACODEMON,
+                    -1);
+        }
     }
 
     if (one_chance_in(10))
@@ -178,7 +191,7 @@ void pandemonium_mons(void)
     if (one_chance_in(40))
     {
         do
-            pan_mons = random2(NUM_MONSTERS);   // was random2(400) {dlb}
+            pan_mons = random2(NUM_MONSTERS);
         while (!mons_pan(pan_mons));
     }
     mgen_data mg(static_cast<monster_type>(pan_mons));

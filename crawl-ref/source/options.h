@@ -321,7 +321,7 @@ public:
 
 #ifdef USE_TILE
     char        tile_show_items[20]; // show which item types in tile inventory
-    bool        tile_title_screen;   // display title screen?
+    bool        tile_skip_title;     // wait for a key at title screen?
     bool        tile_menu_icons;     // display icons in menus?
     // minimap colours
     char        tile_player_col;
@@ -372,6 +372,8 @@ public:
     bool        tile_show_minihealthbar;
     bool        tile_show_minimagicbar;
     bool        tile_show_demon_tier;
+    bool        tile_force_regenerate_levels;
+    std::vector<std::string> tile_layout_priority;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;
@@ -440,6 +442,9 @@ private:
     static const std::string interrupt_prefix;
 };
 
+#ifdef DEBUG_GLOBALS
+#define Options (*real_Options)
+#endif
 extern game_options  Options;
 
 #endif

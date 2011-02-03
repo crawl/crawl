@@ -104,7 +104,7 @@ mon_glyph = giant slug : green m
 mon_glyph = giant snail : lightgreen m
 
 # other natural monsters
-mon_glyph = giant ant : darkgrey
+mon_glyph = worker ant : darkgrey
 mon_glyph = queen ant : darkgrey
 mon_glyph = giant bat : darkgrey
 mon_glyph = yaktaur : lightred
@@ -115,8 +115,8 @@ mon_glyph = quokka : lightgrey
 mon_glyph = scorpion : darkgrey
 mon_glyph = killer bee larva : lightgrey
 mon_glyph = spiny worm : darkgrey
-mon_glyph = giant beetle : darkgrey
-mon_glyph = giant mosquito : darkgrey
+mon_glyph = goliath beetle : darkgrey
+mon_glyph = vampire mosquito : darkgrey
 mon_glyph = cyclops : brown
 mon_glyph = death ooze : darkgrey
 mon_glyph = big kobold : red
@@ -242,7 +242,7 @@ mon_glyph = Frederick : darkgrey
 # monster                 old colour     new colour
 # -------                 ----------     ----------
 # other natural monsters
-# giant ant               darkgrey       red
+# worker ant               darkgrey       red
 # queen ant               darkgrey       lightgrey
 # giant bat               darkgrey       lightgrey
 # yaktaur                 lightred       red
@@ -253,8 +253,8 @@ mon_glyph = Frederick : darkgrey
 # scorpion                darkgrey       lightgrey
 # killer bee larva        lightgrey      yellow
 # spiny worm              darkgrey       lightgreen
-# giant beetle            darkgrey       blue
-# giant mosquito          darkgrey       white
+# goliath beetle            darkgrey       blue
+# vampire mosquito          darkgrey       white
 # cyclops                 brown          yellow
 # death ooze              darkgrey       magenta
 # big kobold              red            yellow

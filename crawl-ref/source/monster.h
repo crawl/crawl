@@ -51,6 +51,8 @@ private:
     int calc_duration(const monster* mons, const mon_enchant *added) const;
 };
 
+enchant_type name_to_ench(const char *name);
+
 typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
@@ -69,7 +71,6 @@ public:
     // Possibly some of these should be moved into the hash table
     std::string mname;
 
-    monster_type type;
     int hit_points;
     int max_hit_points;
     int hit_dice;
@@ -79,6 +80,7 @@ public:
     int speed_increment;
 
     coord_def target;
+    coord_def firing_pos;
     coord_def patrol_point;
     mutable montravel_target_type travel_target;
     std::vector<coord_def> travel_path;
@@ -115,6 +117,8 @@ public:
     CrawlHashTable props;
 
 public:
+    void set_new_monster_id();
+
     mon_attitude_type temp_attitude() const;
 
     // Returns true if the monster is named with a proper name, or is
@@ -207,6 +211,7 @@ public:
     void ghost_init();
     void pandemon_init();
     void dancing_weapon_init();
+    void labrat_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();
@@ -216,7 +221,6 @@ public:
     actor *get_foe() const;
 
     // actor interface
-    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     god_type  deity() const;
@@ -298,7 +302,7 @@ public:
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
 
-    int  skill(skill_type skill, bool skill_bump = false) const;
+    int  skill(skill_type skill) const;
 
     void attacking(actor *other);
     bool can_go_berserk() const;
@@ -332,8 +336,8 @@ public:
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
-    int res_poison() const;
-    int res_rotting() const;
+    int res_poison(bool temp = true) const;
+    int res_rotting(bool temp = true) const;
     int res_asphyx() const;
     int res_water_drowning() const;
     int res_sticky_flame() const;
@@ -367,6 +371,7 @@ public:
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
+    int liquefying_radius2 () const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
@@ -396,7 +401,7 @@ public:
     int armour_class() const;
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
 
-    void poison(actor *agent, int amount = 1);
+    void poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int strength);
     bool bleed(int amount, int degree);
     void paralyse(actor *, int str);
@@ -417,9 +422,11 @@ public:
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);
     void check_awaken(int disturbance);
+    int beam_resists(bolt &beam, int hurted, bool doEffects, std::string source = "");
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }
+    int stealth () const;
 
     int shield_bonus() const;
     int shield_block_penalty() const;
