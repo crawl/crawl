@@ -195,7 +195,7 @@ Animate Remains or Dead
 If you get this description, it is a bug.
 %%%%
 # Okawaru
-Might
+Heroism
 
 Temporarily increase all of your combat skills, including the ability to sneak around or avoid traps.
 %%%%
