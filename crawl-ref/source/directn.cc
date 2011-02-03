@@ -2099,7 +2099,8 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             get_item_desc(mitm[oid], inf, examine_mons);
     }
     else if (show_floor || grid_appearance(c) != DNGN_FLOOR
-                           && !feat_is_wall(grid_appearance(c)))
+                           && !feat_is_wall(grid_appearance(c))
+                           && !feat_is_tree(grid_appearance(c)))
     {
         // Third priority: features.
         get_feature_desc(c, inf);
