@@ -404,16 +404,18 @@ static void _print_stats_wp(int y)
     {
         col = LIGHTGREY;
         text = (you.has_claws(false) > 0) ? "Claws" : "Nothing wielded";
+        if (you.species == SP_CAT)
+            text = "Tooth and claw";
 
         switch (you.form)
         {
             case TRAN_SPIDER:
                 col = LIGHTGREEN;
-                text = "Sharp fangs (venom)";
+                text = "Fangs (venom)";
                 break;
             case TRAN_BLADE_HANDS:
                 col = RED;
-                text = "Blade hands";
+                text = "Blade " + blade_parts(true);
                 break;
             case TRAN_STATUE:
                 col = LIGHTGREY;
@@ -429,12 +431,12 @@ static void _print_stats_wp(int y)
                 break;
             case TRAN_LICH:
                 col = MAGENTA;
-                text = (you.has_claws(false) > 0) ? "Claws (drain)" : "Nothing wielded (drain)";
+                text += " (drain)";
                 break;
             case TRAN_BAT:
             case TRAN_PIG:
                 col = LIGHTGREY;
-                text = "Bite";
+                text = "Teeth";
                 break;
             case TRAN_NONE:
             default:
