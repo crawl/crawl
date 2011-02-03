@@ -3703,7 +3703,10 @@ static bool _grid_needs_exit(const coord_def& c)
 static bool _map_feat_is_on_edge(const vault_placement &place,
                                  const coord_def &c)
 {
-    for (adjacent_iterator ai(c, false); ai; ++ai)
+    if (!place.map.in_map(c - place.pos))
+        return false;
+
+    for (adjacent_iterator ai(c); ai; ++ai)
         if (!place.map.in_map(*ai - place.pos))
             return true;
 
