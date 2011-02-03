@@ -2955,6 +2955,9 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
 
     if (item_is_rod(item))
         init_rod_mp(item, -1, item_level);
+
+    if (one_chance_in(16))
+        do_curse_item(item);
 }
 
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
