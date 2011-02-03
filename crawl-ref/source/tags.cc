@@ -1310,6 +1310,7 @@ static void tag_construct_you_dungeon(writer &th)
 
 static void marshall_follower(writer &th, const follower &f)
 {
+    ASSERT(!invalid_monster_type(f.mons.type));
     marshallMonster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         marshallItem(th, f.items[i]);
@@ -1355,6 +1356,9 @@ static m_transit_list unmarshall_follower_list(reader &th)
     {
         follower f;
         unmarshall_follower(th, f);
+#if TAG_MAJOR_VERSION == 32
+        if (f.mons.type != MONS_NO_MONSTER)
+#endif
         mlist.push_back(f);
     }
 
