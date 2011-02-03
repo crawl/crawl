@@ -52,7 +52,7 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
 //
 
 newgame_def::newgame_def()
-    : name(), type(GAME_TYPE_UNSPECIFIED),
+    : name(), type(GAME_TYPE_NORMAL),
       species(SP_UNKNOWN), job(JOB_UNKNOWN),
       weapon(WPN_UNKNOWN), book(SBT_NONE),
       religion(GOD_NO_GOD), wand(SWT_NO_SELECTION),
@@ -508,8 +508,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
 
     ASSERT(is_good_name(ng->name, false, false)
            && job_allowed(ng->species, ng->job)
-           && ng->type != NUM_GAME_TYPE
-           && ng->type != GAME_TYPE_UNSPECIFIED);
+           && ng->type != NUM_GAME_TYPE);
 
     write_newgame_options_file(*choice);
 
