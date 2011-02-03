@@ -48,6 +48,9 @@ Features
      defined, random traversable squares on its edge will be chosen and
      connected, as if they had the @ glyph.
 
+     The + and = glyphs, when placed on the edge of the map, are also considered
+     entry points.
+
  }{ - Stone stairs - You must be able to reach these from each other. The
       { upstair is also the stair on which the player will enter the
       dungeon for entry vaults.
