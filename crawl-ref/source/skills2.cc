@@ -514,7 +514,8 @@ void SkillMenuEntry::_set_title()
     m_level->set_fg_colour(BLUE);
     m_progress->set_fg_colour(BLUE);
 
-    m_aptitude->set_text("<blue>Apt </blue>");
+    if (!is_set(SKMF_SIMPLE))
+        m_aptitude->set_text("<blue>Apt </blue>");
 }
 
 void SkillMenuEntry::_clear()
@@ -789,12 +790,14 @@ void SkillMenu::_init_footer(coord_def coord)
         m_next_display->set_id(-3);
     }
 
-    _add_item(m_show_all, m_ff, SHOW_ALL_SIZE, coord);
-    m_show_all->set_highlight_colour(RED);
-    m_show_all->set_fg_colour(WHITE);
-    m_show_all->add_hotkey('*');
-    m_show_all->set_id(-4);
-
+    if (!is_set(SKMF_SIMPLE))
+    {
+        _add_item(m_show_all, m_ff, SHOW_ALL_SIZE, coord);
+        m_show_all->set_highlight_colour(RED);
+        m_show_all->set_fg_colour(WHITE);
+        m_show_all->add_hotkey('*');
+        m_show_all->set_id(-4);
+    }
 }
 
 void SkillMenu::_refresh_names()
@@ -944,7 +947,10 @@ void SkillMenu::_set_help(int flag)
             help = "The percentage of the progress done before reaching next "
                    "level is in <cyan>cyan</cyan>.\n";
         }
-        help += "The species aptitude is in <red>red</red>. ";
+
+        if (!is_set(SKMF_SIMPLE))
+            help += "The species aptitude is in <red>red</red>. ";
+
         if (flag == SKMF_DISP_APTITUDE)
         {
             if (m_crosstrain)
@@ -1147,8 +1153,10 @@ void skill_menu(bool reskilling)
             flags |= SKMF_DISP_RESKILL;
     }
 
-    // For now, aptitudes are always showned.
-    flags |= SKMF_DISP_APTITUDE;
+    if (crawl_state.game_is_hints_tutorial())
+        flags |= SKMF_SIMPLE;
+    else
+        flags |= SKMF_DISP_APTITUDE;
 
 #ifdef DEBUG_DIAGNOSTICS
     flags |= SKMF_DISP_ALL;
