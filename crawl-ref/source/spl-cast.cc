@@ -786,25 +786,6 @@ static bool _spell_is_utility_spell(spell_type spell_id)
                 SPTYP_CHARMS | SPTYP_TRANSLOCATION));
 }
 
-void maybe_identify_staff(item_def &item)
-{
-    if (item_type_known(item))
-        return;
-
-    if (player_spell_skills()
-        || item.sub_type == STAFF_POWER
-        || item.sub_type == STAFF_CHANNELING)
-    {
-        item_def& wpn = *you.weapon();
-        set_ident_type(wpn, ID_KNOWN_TYPE);
-        set_ident_flags(wpn, ISFLAG_IDENT_MASK);
-        mprf("You are wielding %s.", wpn.name(DESC_NOCAP_A).c_str());
-        more();
-
-        you.wield_change = true;
-    }
-}
-
 static void _spellcasting_side_effects(spell_type spell)
 {
     // If you are casting while a god is acting, then don't do conducts.
