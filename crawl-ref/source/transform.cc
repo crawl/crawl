@@ -393,6 +393,8 @@ std::string blade_parts(bool terse)
 {
     if (you.species == SP_CAT)
         return terse ? "paws" : "front paws";
+    if (you.species == SP_OCTOPUS)
+        return "tentacles";
     return "hands";
 }
 
