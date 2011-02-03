@@ -70,17 +70,24 @@ function tutorial_msg4.undead ()
 
     if crawl.is_tiles() then
         text = text .. "\nIncidentally, you can also cast spells by pressing "
-                    .. "<white>Ctrl</white> + <white>leftclick</white> on the monster."
+                    .. "<white>Ctrl + leftclick</white> on the monster."
     end
 
     return tutorial_message(text)
 end
 
 function tutorial_msg4.spell_success ()
-    return tutorial_message("To check your spell proficiency, press "
-                            .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
-                            .. ". Compare your spell success rates before "
-                            .. "and after putting on this ring.")
+    local text = "To check your spell proficiency, press "
+                 .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
+
+    if crawl.is_tiles() then
+        text = text .. " or <white>mouseover</white> over your memorised spells"
+    end
+
+    text = text .. ". Compare your spell success rates before "
+                .. "and after wielding this staff."
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg4.evaporate ()
@@ -157,23 +164,28 @@ function tutorial_msg4.order_allies ()
 end
 
 function tutorial_msg4.heavy_armour ()
-        local text = "Heavy armour really hampers spellcasting. Try putting on that "
-                                 .. "mail and shield (with "
+    local text = "Heavy armour really hampers spellcasting. Try putting on that "
+                 .. "mail and shield (with "
                  .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
 
     if crawl.is_tiles() then
         text = text .. " or by <white>clicking</white> on them)"
     end
 
-        text = text .. ", and compare your spellcasting success rates with "
-                                .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. ". "
-                                .. "You can take armour off again with "
-                 .. tutorial_get_cmd("CMD_REMOVE_ARMOUR")
+    text = text .. ", and compare your spellcasting success rates with "
+                .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseovering</white> your memorised spells"
+    end
+
+    text = text .. ". You can take armour off again with "
+                .. tutorial_get_cmd("CMD_REMOVE_ARMOUR")
 
     if crawl.is_tiles() then
         text = text .. " or, again, via <white>mouseclick</white>"
     end
-        text = text .. "."
+    text = text .. "."
 
     return tutorial_message(text)
 end
@@ -189,12 +201,19 @@ function tutorial_msg4.exit ()
                  .. "  " .. tutorial_get_cmd("CMD_MEMORISE_SPELL") .. "  learn a new spell\n"
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. "  check spell proficiency\n"
                  .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
-                 .. "  " .. tutorial_get_cmd("CMD_READ") .. "  read a book, for descriptions or to forget a spell\n"
-                 .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest to regain magic points\n"
-                 .. "  " .. tutorial_get_cmd("CMD_SHOUT") .. "  order allies\n"
-                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
-                 .. "\n<yellow>Other commands</yellow>\n"
-                 .. "  " .. tutorial_get_cmd("CMD_REMOVE_ARMOUR") .. "  take off armour\n"
+
+    if crawl.is_tiles() then
+        text = text .. "\nYou can also learn new spells via the <w>memorisation tab</w>.\n"
+                    .. "You can cast memorised spells via <w>leftclick</w>, and read their descriptions\n"
+                    .. "and check your spell proficiency by <w>mouseover</w> or <w>rightclick</w>.\n\n"
+    end
+
+    text = text .. "  " .. tutorial_get_cmd("CMD_READ") .. "  read a book, for descriptions or to forget a spell\n"
+                .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest up to 100 turns to regain magic points and health\n"
+                .. "  " .. tutorial_get_cmd("CMD_SHOUT") .. "  order allies\n"
+                .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
+                .. "\n<yellow>Other commands</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_REMOVE_ARMOUR") .. "  take off armour\n"
     text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
     return crawl.endgame(text)
@@ -215,7 +234,7 @@ KITEM:   A = scroll of fog q:4, scroll of random uselessness q:4, scroll of curs
          scroll of remove curse q:4
 ITEM:    randbook numspells:2 spells:magic_dart|evaporate title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
-ITEM:    ring of wizardry not_cursed
+ITEM:    staff of wizardry not_cursed
 ITEM:    gold q:20
 ITEM:    bread ration
 MONS:    training dummy ; stone q:20
@@ -281,7 +300,7 @@ KFEAT:   B = .
 COLOUR:  dB = blue
 FTILE:   dB = tutorial_pad
 ITEM:    randbook numspells:1 spells:summon_small_mammals title:Simple_Steps_to_Summoning owner:player
-MONS:    hobgoblin ; whip ego:none . shield not_cursed . ring mail race:none not_cursed
+MONS:    hobgoblin ; shield not_cursed . ring mail race:none not_cursed
 MONS:    rat
 MONS:    goblin
 MARKER:  d = lua:tutorial_msg4.memorise2()

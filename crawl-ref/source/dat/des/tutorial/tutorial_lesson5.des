@@ -108,7 +108,7 @@ end
 function tutorial_msg5.exit ()
     -- A single screen recapping all commands.
 
-    local text = "<yellow>Commands</yellow>\n"
+    local text = "<yellow>Religious commands</yellow>\n"
                  .. "  " .. tutorial_get_cmd("CMD_PRAY") .. "  pray at an altar to join a god, or sacrifice a corpse\n"
                  .. "  " .. tutorial_get_cmd("CMD_USE_ABILITY") .. "  use a divine ability\n"
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_RELIGION") .. "  check your religious standing\n"
@@ -146,9 +146,9 @@ NSUBST:  M = 1:= / *:m
 ITEM:    mace ego:none not_cursed
 ITEM:    book of clouds
 MONS:    rat always_corpse
-MONS:    hobgoblin ; short sword ego:none | mace ego:none
-MONS:    gnoll ; flail ego:none
-MONS:    goblin ; sling ego:none . stone q:10
+MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
+MONS:    gnoll ; flail ego:none not_cursed
+MONS:    orc wizard spells:magic_dart;.;haste;.;blink;.
 MARKER:  A = lua:tutorial_msg5.secret_door()
 MARKER:  = = lua:tutorial_msg5.dungeon_overview()
 MARKER:  _ = lua:tutorial_msg5.altar()
@@ -182,20 +182,20 @@ epilogue{{
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxx})]xxxxxx
-xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxx...xxxxxx
-xxxxxx....C......1.....xxxxxxxxxxxxxxxxxxx.xxxxxxx
-xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxxxx.xxxxxxx
-xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxx.xxxxxx
-xxxxxx.xxxxxxxxxxxxDxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
-xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.x.xxx
+xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx....C......1.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.xxxxxxxxxxxxDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.x}xxx
 xtt..G.G..ttxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx.1...xx
-xt........txxxxxxxx.xxxxxxxxxxxxxxxxxxxxxx.....4.x
-x..mmmMmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxx.2..1...x
+xt........txxxxxxxx.xxxxxxxxxxxxxxxxxxxxxx.....2.x
+x..mmmMmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxx.2..1..)x
 x..mYbbbYm..xxxxxxxExxxxxxxxxxxxxx..I.........2.xx
 x..Mbb_bbM..xxxxxxx.xxxxxxxxxxxxxx.xxxxxxx.1....xx
 x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxx.xxxxxxxx..4.xxx
-x..mmmmmmm..xxxxxxx.xxxxxxxxxxxxxx.xxxxxxxxx..xxxx
+x..mmmmmmm..xxxxxxx.xxxxxxxxxxxxxx.xxxxxxxxx.]xxxx
 xt.........txxxxxxxexxxxxxxxxxxxxxHxxxxxxxxxxxxxxx
 xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
 xxxxxxAxxxxxxxxxx............F....3..xxxxxxxxxxxxx

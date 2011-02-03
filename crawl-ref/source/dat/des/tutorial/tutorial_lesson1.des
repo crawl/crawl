@@ -165,7 +165,7 @@ function tutorial_msg.shiftmove ()
 end
 
 function tutorial_msg.shiftmove2 ()
-    local text = "Run down this corridor with <white>Shift-3</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
+    local text = "Run down this corridor with <white>Shift-Numpad3</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
     return tutorial_message(text)
 end
 
@@ -176,7 +176,7 @@ function tutorial_msg.secret_door_glass ()
 end
 
 function tutorial_msg.shiftmove3 ()
-    local text = "Run down this corridor with <white>Shift-1</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
+    local text = "Run down this corridor with <white>Shift-Numpad1</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
     return tutorial_message(text)
 end
 
@@ -185,7 +185,7 @@ function tutorial_msg.water ()
 end
 
 function tutorial_msg.shiftmove4 ()
-    local text = "Run up this corridor with <white>Shift-7</white> or " .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
+    local text = "Run up this corridor with <white>Shift-Numpad7</white> or " .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
     return tutorial_message(text)
 end
 
