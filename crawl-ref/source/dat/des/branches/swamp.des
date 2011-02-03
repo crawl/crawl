@@ -92,7 +92,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_swamp_entry_worms
-TAGS:   swamp_entry mini_float
+TAGS:   swamp_entry
 SUBST:  T = tww
 KMONS:  w = swamp worm / giant leech / nothing w:89
 KFEAT:  w = w / W

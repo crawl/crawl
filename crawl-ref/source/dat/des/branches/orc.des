@@ -682,7 +682,6 @@ ENDMAP
 # Orcish barracks (minmay)
 #
 NAME:   minmay_orc_barracks
-TAGS:   mini_float
 DEPTH:  Orc:2-
 MONS:   orc / orc warrior w:2, orc knight / orc warlord
 SUBST:  c : cx
