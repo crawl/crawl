@@ -865,6 +865,11 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     // Move terrain colours and properties.
     env.pgrid(dst) = env.pgrid(src);
     env.grid_colours(dst) = env.grid_colours(src);
+#ifdef USE_TILE
+    env.tile_bk_fg(dst) = env.tile_bk_fg(src);
+    env.tile_bk_bg(dst) = env.tile_bk_bg(src);
+    env.tile_flv(dst) = env.tile_flv(src);
+#endif
 
     // Move vault masks.
     env.level_map_mask(dst) = env.level_map_mask(src);
