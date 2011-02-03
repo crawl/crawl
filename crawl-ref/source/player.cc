@@ -5695,7 +5695,7 @@ void player::shield_block_succeeded(actor *foe)
 int player::skill(skill_type sk) const
 {
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        return std::min(skills[sk] + 10, 27);
+        return std::min(skills[sk] + 5, 27);
 
     return skills[sk];
 }
