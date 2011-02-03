@@ -118,7 +118,7 @@ function tutorial_msg4.spell_hunger ()
 end
 
 function tutorial_msg4.forget_spell ()
-	local text = "You can't memorise any new spells yet. You can gain new spell "
+        local text = "You can't memorise any new spells yet. You can gain new spell "
                  .. "slots by gaining an experience level or by raising your "
                  .. "Spellcasting skill. If you don't want to wait, you can also "
                  .. "<w>forget a spell</w> to make place for a new one. "
@@ -151,29 +151,29 @@ end
 
 function tutorial_msg4.order_allies ()
     return tutorial_message("Try to let your allies kill that hobgoblin! If necessary, "
-							.. "you can order them about with "
-                            .. tutorial_get_cmd("CMD_SHOUT") 
-							.. ".")
+                                                        .. "you can order them about with "
+                            .. tutorial_get_cmd("CMD_SHOUT")
+                                                        .. ".")
 end
 
 function tutorial_msg4.heavy_armour ()
-	local text = "Heavy armour really hampers spellcasting. Try putting on that "
-				 .. "mail and shield (with "
+        local text = "Heavy armour really hampers spellcasting. Try putting on that "
+                                 .. "mail and shield (with "
                  .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
 
     if crawl.is_tiles() then
         text = text .. " or by <white>clicking</white> on them)"
     end
 
-	text = text .. ", and compare your spellcasting success rates with "
-				.. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. ". "
-				.. "You can take armour off again with "
+        text = text .. ", and compare your spellcasting success rates with "
+                                .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. ". "
+                                .. "You can take armour off again with "
                  .. tutorial_get_cmd("CMD_REMOVE_ARMOUR")
 
     if crawl.is_tiles() then
         text = text .. " or, again, via <white>mouseclick</white>"
     end
-	text = text .. "."
+        text = text .. "."
 
     return tutorial_message(text)
 end
