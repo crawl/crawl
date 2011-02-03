@@ -2944,8 +2944,8 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     //menu->attach_item(tmp);
     //tmp->set_visible(true);
 
-    // Only add tab entry if we have a previous wand choice
-    if (defaults.type == GAME_TYPE_SPRINT
+    // Only add tab entry if we have a previous map choice
+    if (crawl_state.game_is_sprint()
         && !defaults.map.empty() && _char_defined(defaults))
     {
         tmp = new TextItem();
