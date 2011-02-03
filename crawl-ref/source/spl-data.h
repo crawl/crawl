@@ -1072,7 +1072,7 @@ struct spell_desc
 {   SPELL_TUKIMAS_DANCE_PARTY, "Tukima's Dance Party",
      SPTYP_HEXES,
      SPFLAG_NONE,
-     6,
+     9,
      200,
      -1,-1,
      0,
