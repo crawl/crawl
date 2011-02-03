@@ -713,6 +713,11 @@ static void _abyss_wipe_square_at(coord_def p)
 
     env.pgrid(p)          = 0;
     env.grid_colours(p)   = 0;
+#ifdef USE_TILE
+    env.tile_bk_fg(p) = 0;
+    env.tile_bk_bg(p) = 0;
+    // FIXME: need to clear tile_flavour as well
+#endif
 
     env.level_map_mask(p) = 0;
     env.level_map_ids(p)  = INVALID_MAP_INDEX;
