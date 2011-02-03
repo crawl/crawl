@@ -3092,7 +3092,7 @@ std::vector<talent> your_talents(bool check_confused)
         && !you.attribute[ATTR_PERM_LEVITATION]
         && you.experience_level >= 5
         && (you.experience_level >= 15 || !you.airborne())
-        && !form_changed_physiology())
+        && (!form_changed_physiology() || you.form == TRAN_LICH))
     {
         // Kenku can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
@@ -3106,7 +3106,8 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_FLY_II, check_confused);
     }
 
-    if (you.attribute[ATTR_PERM_LEVITATION] && !form_changed_physiology()
+    if (you.attribute[ATTR_PERM_LEVITATION]
+        && (!form_changed_physiology() || you.form == TRAN_LICH)
         && you.species == SP_KENKU && you.experience_level >= 5)
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);

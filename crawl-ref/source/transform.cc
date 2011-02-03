@@ -42,6 +42,12 @@ bool form_can_wield(transformation_type form)
 
 bool form_can_fly(transformation_type form)
 {
+    if (form == TRAN_LICH
+        && you.species == SP_KENKU
+        && (you.experience_level >= 15 || you.airborne()))
+    {
+        return 1;
+    }
     return (form == TRAN_DRAGON || form == TRAN_BAT);
 }
 
