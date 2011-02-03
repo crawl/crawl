@@ -651,7 +651,7 @@ static void _hints_inspect_kill()
 
 static std::string _milestone_kill_verb(killer_type killer)
 {
-    return (killer == KILL_RESET ? "banished " : "killed ");
+    return (killer == KILL_BANISHED ? "banished " : "killed ");
 }
 
 static void _check_kill_milestone(const monster* mons,
@@ -936,7 +936,8 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
 {
     if (you.religion == GOD_YREDELEMNUL && mons_enslaved_body_and_soul(mons)
         && mons_near(mons) && killer != KILL_RESET
-        && killer != KILL_DISMISSED)
+        && killer != KILL_DISMISSED
+        && killer != KILL_BANISHED)
     {
         yred_make_enslaved_soul(mons, player_under_penance());
         return (true);
@@ -1059,7 +1060,7 @@ static void _fire_monster_death_event(monster* mons,
 
     // Banished monsters aren't technically dead, so no death event
     // for them.
-    if (killer == KILL_RESET)
+    if (killer == KILL_BANISHED)
         return;
 
     dungeon_events.fire_event(
@@ -1088,6 +1089,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         // Mummy sent to the Abyss wasn't actually killed, so no curse.
         case KILL_RESET:
         case KILL_DISMISSED:
+        case KILL_BANISHED:
             return;
 
         default:
@@ -1211,7 +1213,7 @@ static bool _spore_goes_pop(monster* mons, killer_type killer,
                             int killer_index, bool pet_kill, bool wizard)
 {
     if (mons->hit_points > 0 || mons->hit_points <= -15 || wizard
-        || killer == KILL_RESET || killer == KILL_DISMISSED)
+        || killer == KILL_RESET || killer == KILL_DISMISSED || killer == KILL_BANISHED)
     {
         return (false);
     }
@@ -1485,6 +1487,12 @@ static std::string _killer_type_name(killer_type killer)
         return ("reset");
     case KILL_DISMISSED:
         return ("dismissed");
+    case KILL_BANISHED:
+        return ("banished");
+    case KILL_UNSUMMONED:
+        return ("unsummoned");
+    case KILL_TIMEOUT:
+        return ("timeout");
     }
     die("invalid killer type");
 }
@@ -1603,6 +1611,8 @@ int monster_die(monster* mons, killer_type killer,
     const bool summoned      = mons->is_summoned(&duration, &summon_type);
     const int monster_killed = mons->mindex();
     const bool hard_reset    = testbits(mons->flags, MF_HARD_RESET);
+    bool unsummoned          = killer == KILL_UNSUMMONED;
+    bool timeout             = killer == KILL_TIMEOUT;
     const bool gives_xp      = (!summoned && !mons_class_flag(mons->type,
                                                               M_NO_EXP_GAIN));
 
@@ -1615,7 +1625,7 @@ int monster_die(monster* mons, killer_type killer,
     const bool submerged     = mons->submerged();
 
     bool in_transit          = false;
-    bool was_banished        = (killer == KILL_RESET);
+    bool was_banished        = (killer == KILL_BANISHED);
 
     if (!crawl_state.game_is_arena())
         _check_kill_milestone(mons, killer, killer_index);
@@ -1699,7 +1709,7 @@ int monster_die(monster* mons, killer_type killer,
              || mons->type == MONS_SPATIAL_VORTEX
              || mons->type == MONS_TWISTER)
     {
-        if (!silent && !mons_reset)
+        if (!silent && !mons_reset && !was_banished)
         {
             simple_monster_message(mons, " dissipates!",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
@@ -1707,7 +1717,7 @@ int monster_die(monster* mons, killer_type killer,
         }
 
         if (mons->type == MONS_FIRE_VORTEX && !wizard && !mons_reset
-            && !submerged)
+            && !submerged && !was_banished)
         {
             place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
@@ -1718,14 +1728,14 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_SIMULACRUM_SMALL
              || mons->type == MONS_SIMULACRUM_LARGE)
     {
-        if (!silent && !mons_reset)
+        if (!silent && !mons_reset && !was_banished)
         {
             simple_monster_message(mons, " vapourises!",
                                    MSGCH_MONSTER_DAMAGE,  MDAM_DEAD);
             silent = true;
         }
 
-        if (!wizard && !mons_reset && !submerged)
+        if (!wizard && !mons_reset && !submerged && !was_banished)
             place_cloud(CLOUD_COLD, mons->pos(), 2 + random2(4), mons);
 
         if (killer == KILL_RESET)
@@ -1769,7 +1779,7 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
-        if (!silent && !mons_reset && !mons->has_ench(ENCH_SEVERED))
+        if (!silent && !mons_reset && !mons->has_ench(ENCH_SEVERED) && !was_banished)
         {
             mpr("With a roar, the tentacle is hauled back through the portal!",
                 MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
@@ -2253,6 +2263,7 @@ int monster_die(monster* mons, killer_type killer,
             }
             break;
 
+        case KILL_BANISHED:
         case KILL_RESET:
             // Monster doesn't die, just goes back to wherever it came from.
             // This must only be called by monsters running out of time (or
@@ -2284,6 +2295,8 @@ int monster_die(monster* mons, killer_type killer,
             mons->travel_target = MTRAV_NONE;
             break;
 
+        case KILL_TIMEOUT:
+        case KILL_UNSUMMONED:
         case KILL_DISMISSED:
             break;
 
@@ -2410,10 +2423,10 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     if (!wizard && !submerged && !was_banished)
-        _monster_die_cloud(mons, !mons_reset && !fake_abjuration, silent, summoned);
+        _monster_die_cloud(mons, !mons_reset && !fake_abjuration && !unsummoned && !timeout, silent, summoned);
 
     int corpse = -1;
-    if (!mons_reset && !summoned && !fake_abjuration)
+    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned && !timeout)
     {
         // Have to add case for disintegration effect here? {dlb}
         int corpse2 = -1;
@@ -2441,14 +2454,14 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     unsigned int player_exp = 0, monster_exp = 0;
-    if (!mons_reset && !fake_abjuration)
+    if (!mons_reset && !fake_abjuration && !timeout && !unsummoned)
     {
         player_exp = _calc_player_experience(mons, killer, pet_kill,
                                              killer_index);
         monster_exp = _calc_monster_experience(mons, killer, killer_index);
     }
 
-    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena())
+    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena() && !unsummoned && !timeout)
         you.kills->record_kill(mons, killer, pet_kill);
 
     if (fake)
@@ -2484,6 +2497,8 @@ int monster_die(monster* mons, killer_type killer,
 
     if (!silent && !wizard && !mons_reset && corpse != -1
         && !fake_abjuration
+        && !timeout
+        && !unsummoned
         && !(mons->flags & MF_KNOWN_MIMIC)
         && mons->is_shapeshifter())
     {

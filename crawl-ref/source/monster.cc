@@ -2648,7 +2648,7 @@ void monster::banish(const std::string &)
         return;
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
-    monster_die(this, KILL_RESET, NON_MONSTER);
+    monster_die(this, KILL_BANISHED, NON_MONSTER);
 
     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)

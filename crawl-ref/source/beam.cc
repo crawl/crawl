@@ -5610,7 +5610,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
 killer_type bolt::killer() const
 {
     if (flavour == BEAM_BANISH)
-        return (KILL_RESET);
+        return (KILL_BANISHED);
 
     switch (thrower)
     {
