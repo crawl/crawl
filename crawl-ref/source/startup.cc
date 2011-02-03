@@ -503,7 +503,7 @@ static int _find_save(const std::vector<player_save_info>& chars,
 
 static bool _game_defined(const newgame_def& ng)
 {
-    return (ng.type != GAME_TYPE_UNSPECIFIED
+    return (ng.type != NUM_GAME_TYPE
             && ng.species != SP_UNKNOWN
             && ng.job != JOB_UNKNOWN);
 }
@@ -656,13 +656,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
     bool full_name = !input_string.empty();
 
     int save = _find_save(chars, input_string);
-    if (crawl_state.type != GAME_TYPE_UNSPECIFIED)
-    {
-        menu.set_active_object(game_modes);
-        game_modes->set_active_item(crawl_state.type);
-
-    }
-    else if (save != -1)
+    if (save != -1)
     {
         menu.set_active_object(save_games);
         // save game id is offset by NUM_GAME_TYPE
@@ -887,8 +881,7 @@ bool startup_step()
 
     // Setup base game type *before* reading startup prefs -- the prefs file
     // may be in a game-specific subdirectory.
-    if (crawl_state.type == GAME_TYPE_UNSPECIFIED)
-        crawl_state.type = choice.type;
+    crawl_state.type = choice.type;
 
     newgame_def defaults = read_startup_prefs();
 

@@ -309,7 +309,7 @@ static game_type _str_to_gametype(const std::string& s)
         if (s == gametype_to_str(t))
             return (t);
     }
-    return (GAME_TYPE_UNSPECIFIED);
+    return (NUM_GAME_TYPE);
 }
 #endif
 
