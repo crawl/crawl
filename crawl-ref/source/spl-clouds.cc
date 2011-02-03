@@ -163,10 +163,10 @@ bool stinking_cloud(int pow, bolt &beem)
 
 bool cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam)
 {
-    if (distance(beam.target, you.pos()) > beam.range
+    if (grid_distance(beam.target, you.pos()) > beam.range
         || !in_bounds(beam.target))
     {
-        mpr("That's too far away.");
+        mpr("That is beyond the maximum range.");
         return false;
     }
 
