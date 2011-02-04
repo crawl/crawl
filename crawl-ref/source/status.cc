@@ -66,7 +66,7 @@ static duration_def duration_data[] =
       0, "", "paralysed", "You are paralysed." },
     { DUR_PETRIFIED, false,
       0, "", "petrified", "You are petrified." },
-    { DUR_PRAYER, false,
+    { DUR_JELLY_PRAYER, false,
       WHITE, "Pray", "praying", "You are praying." },
     { DUR_REPEL_MISSILES, true,
       BLUE, "RMsl", "repel missiles", "You are protected from missiles." },

@@ -340,8 +340,6 @@ void pray()
     // almost all prayers take time
     you.turn_is_over = true;
 
-    const bool was_praying = !!you.duration[DUR_PRAYER];
-
     bool something_happened = false;
     const god_type altar_god = feat_altar_god(grd(you.pos()));
     if (altar_god != GOD_NO_GOD)
@@ -402,7 +400,7 @@ void pray()
     }
 
     mprf(MSGCH_PRAY, "You %s prayer to %s.",
-         was_praying ? "renew your" : "offer a",
+         you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
     if (player_under_penance())
@@ -423,14 +421,7 @@ void pray()
         break;
 
     case GOD_JIYVA:
-        you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
-                                     + (random2(you.piety) / 20);
-
-        if (!player_under_penance())
-            if (you.piety > 130)
-                you.duration[DUR_PRAYER] *= 3;
-            else if (you.piety > 70)
-                you.duration[DUR_PRAYER] *= 2;
+        you.duration[DUR_JELLY_PRAYER] = 200;
 
         if (jiyva_can_paralyse_jellies())
             jiyva_paralyse_jellies();
@@ -446,12 +437,6 @@ void pray()
         _offer_items();
 
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
-}
-
-void end_prayer(void)
-{
-    mpr("Your prayer is over.", MSGCH_PRAY, you.religion);
-    you.duration[DUR_PRAYER] = 0;
 }
 
 static int _gold_to_donation(int gold)

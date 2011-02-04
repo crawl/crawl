@@ -1284,7 +1284,7 @@ enum duration_type
     DUR_LIQUID_FLAMES,
     DUR_ICY_ARMOUR,
     DUR_REPEL_MISSILES,
-    DUR_PRAYER,
+    DUR_JELLY_PRAYER,
     DUR_PIETY_POOL,             // distribute piety over time
     DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
     DUR_DIVINE_STAMINA,         // duration of Zin's Divine Stamina

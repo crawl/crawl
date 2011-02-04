@@ -2780,9 +2780,6 @@ void lose_piety(int pgn)
         }
     }
 
-    if (!god_accepts_prayer(you.religion) && you.duration[DUR_PRAYER])
-        end_prayer();
-
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(HINT_GOD_DISPLEASED);
 
@@ -2841,7 +2838,6 @@ void excommunication(god_type new_god)
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
-    you.duration[DUR_PRAYER] = 0;
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.piety = 0;
     you.piety_hysteresis = 0;
@@ -3020,6 +3016,9 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_JIYVA:
+        // Actually, doesn't unparalyze jellies.
+        you.duration[DUR_JELLY_PRAYER] = 0;
+
         if (query_da_counter(DACT_ALLY_SLIME))
         {
             mpr("All of your fellow slimes turn on you.", MSGCH_MONSTER_ENCHANT);
