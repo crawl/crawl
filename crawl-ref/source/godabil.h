@@ -28,7 +28,6 @@ bool zin_sanctuary();
 void tso_divine_shield();
 void tso_remove_divine_shield();
 
-bool elyvilon_destroy_weapons();
 void elyvilon_purification();
 bool elyvilon_divine_vigour();
 void elyvilon_remove_divine_vigour();

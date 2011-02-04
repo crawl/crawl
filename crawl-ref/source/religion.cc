@@ -174,7 +174,7 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " glow% slightly [brighter ]and disappear%.",
         " glow% with a rainbow of weird colours and disappear%.",
     },
-    // Elyvilon (no sacrifices, but used for weapon destruction)
+    // Elyvilon
     {
         " barely shimmer% and break% into pieces.",
         " shimmer% and break% into pieces.",
@@ -537,8 +537,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_ELYVILON:
         snprintf(info, INFO_SIZE, "you destroy weapons (especially unholy and "
                                   "evil ones)%s",
-                 verbose ? " via the <w>a</w> command (inscribe items with "
-                           "<w>!D</w> to prevent their accidental destruction)"
+                 verbose ? " via the <w>p</w> command (inscribe items with "
+                           "<w>!p</w> to prevent their accidental destruction)"
                          : "");
 
         likes.push_back(info);
@@ -848,7 +848,8 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_ELYVILON:
-        dislikes.push_back("you kill living things while praying");
+        dislikes.push_back("you kill living things while asking for sparing "
+                           "your life yourself");
         break;
 
     case GOD_YREDELEMNUL:
@@ -3029,6 +3030,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ELYVILON:
+        you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
 
@@ -3138,6 +3140,17 @@ static std::string _sacrifice_message(std::string msg,
 void print_sacrifice_message(god_type god, const item_def &item,
                              piety_gain_t piety_gain, bool your)
 {
+    if (god == GOD_ELYVILON && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+    {
+        // Weapons blessed by TSO don't get destroyed but are instead
+        // returned whence they came. (jpeg)
+        simple_god_message(
+            make_stringf(" %sreclaims %s.",
+                         piety_gain ? "gladly " : "",
+                         item.name(DESC_NOCAP_THE).c_str()).c_str(),
+            GOD_SHINING_ONE);
+	return;
+    }
     const std::string itname = item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE);
     mpr(_sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
                            itname.find("glowing") != std::string::npos,
@@ -3191,7 +3204,11 @@ bool god_likes_items(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN: case GOD_BEOGH: case GOD_NEMELEX_XOBEH: case GOD_ASHENZARI:
+    case GOD_ZIN:
+    case GOD_BEOGH:
+    case GOD_NEMELEX_XOBEH:
+    case GOD_ASHENZARI:
+    case GOD_ELYVILON:
         return (true);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
@@ -3218,6 +3235,13 @@ bool god_likes_item(god_type god, const item_def& item)
     {
     case GOD_ZIN:
         return (item.base_type == OBJ_GOLD);
+
+    case GOD_ELYVILON:
+        if (item_is_stationary(item)) // Held in a net?
+            return false;
+        return (item.base_type == OBJ_WEAPONS
+             || item.base_type == OBJ_STAVES
+             || item.base_type == OBJ_MISSILES);
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
@@ -3641,47 +3665,53 @@ bool god_hates_spell(spell_type spell, god_type god)
     return (false);
 }
 
-harm_protection_type god_protects_from_harm(god_type god, bool actual)
+bool god_can_protect_from_harm(god_type god)
 {
-    const int min_piety = piety_breakpoint(0);
-    bool praying = (you.duration[DUR_PRAYER]
-                    && random2(piety_scale(you.piety)) >= min_piety);
-    bool reliable = (!actual || you.duration[DUR_PRAYER])
-                    && you.piety > 130;
-    bool anytime = (one_chance_in(10) ||
-                    x_chance_in_y(piety_scale(you.piety), 1000));
-    bool penance = (you.penance[god] > 0);
-
-    // If actual is true, return HPT_NONE if the given god can protect
-    // the player from harm, but doesn't actually do so.
     switch (god)
     {
     case GOD_BEOGH:
-        if (!penance && (!actual || anytime))
-            return (HPT_ANYTIME);
-        break;
+        return !you.penance[god];
     case GOD_ZIN:
     case GOD_SHINING_ONE:
-        if (!actual || anytime)
-            return (HPT_ANYTIME);
-        break;
     case GOD_ELYVILON:
-        if (!actual || praying || reliable || anytime)
-        {
-            if (you.piety >= min_piety)
-            {
-                return (reliable) ? HPT_RELIABLE_PRAYING_PLUS_ANYTIME
-                                  : HPT_PRAYING_PLUS_ANYTIME;
-            }
-            else
-                return (HPT_ANYTIME);
-        }
-        break;
+        return true;
     default:
-        break;
+        return false;
     }
+}
 
-    return (HPT_NONE);
+int elyvilon_lifesaving()
+{
+    if (you.religion != GOD_ELYVILON)
+        return 0;
+
+    if (you.piety < piety_breakpoint(0))
+        return 0;
+
+    return you.piety > 130 ? 2 : 1;
+}
+
+
+bool god_protects_from_harm()
+{
+    if (you.duration[DUR_LIFESAVING])
+        switch (elyvilon_lifesaving())
+        {
+        case 1:
+            if (random2(piety_scale(you.piety)) >= piety_breakpoint(0))
+                return true;
+            break;
+        case 2:
+            // Reliable lifesaving is costly.
+            lose_piety(21 + random2(20));
+            return true;
+        }
+
+    if (god_can_protect_from_harm(you.religion))
+        if (one_chance_in(10) || x_chance_in_y(piety_scale(you.piety), 1000))
+            return true;
+
+    return false;
 }
 
 // Returns true if the player can use the good gods' passive piety gain.

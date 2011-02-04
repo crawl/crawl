@@ -97,7 +97,7 @@ enum ability_type
     ABIL_TROG_REGEN_MR,
     ABIL_TROG_BROTHERS_IN_ARMS,
     // Elyvilon
-    ABIL_ELYVILON_DESTROY_WEAPONS = 140,
+    ABIL_ELYVILON_LIFESAVING = 140,
     ABIL_ELYVILON_LESSER_HEALING_SELF,
     ABIL_ELYVILON_LESSER_HEALING_OTHERS,
     ABIL_ELYVILON_PURIFICATION,
@@ -143,8 +143,6 @@ enum ability_type
     ABIL_ASHENZARI_END_TRANSFER,
 
     // General divine (pseudo) abilities.
-    ABIL_HARM_PROTECTION = 220,
-    ABIL_HARM_PROTECTION_II, // "reliable" protection
     ABIL_RENOUNCE_RELIGION,
 
     // Zot Defence abilities
@@ -1338,6 +1336,7 @@ enum duration_type
     DUR_LIQUEFYING,
     DUR_HEROISM,
     DUR_FINESSE,
+    DUR_LIFESAVING,
     NUM_DURATIONS
 };
 

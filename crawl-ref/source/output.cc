@@ -541,7 +541,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
         DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
         STATUS_CLINGING, DUR_TORNADO, DUR_LIQUEFYING, DUR_HEROISM,
-        DUR_FINESSE,
+        DUR_FINESSE, DUR_LIFESAVING,
     };
 
     status_info inf;
@@ -1869,6 +1869,7 @@ std::string _status_mut_abilities()
         STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,
         DUR_SURE_BLADE, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
         DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_TORNADO, DUR_HEROISM, DUR_FINESSE,
+        DUR_LIFESAVING,
     };
 
     status_info inf;
