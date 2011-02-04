@@ -34,6 +34,7 @@
 #include "view.h"
 
 static void _offer_items();
+static void _zin_donate_gold();
 
 static bool _confirm_pray_sacrifice(god_type god)
 {
@@ -230,12 +231,13 @@ static bool _altar_prayer()
     // Different message from when first joining a religion.
     mpr("You prostrate yourself in front of the altar and pray.");
 
-    if (you.religion == GOD_XOM)
-        return (false);
-
     god_acting gdact;
 
     bool did_bless = false;
+
+    // donate gold to gain piety distributed over time
+    if (you.religion == GOD_ZIN)
+        _zin_donate_gold();
 
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
@@ -408,8 +410,19 @@ void pray()
     else
         mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
 
-    if (you.religion == GOD_JIYVA)
+    switch(you.religion)
     {
+    case GOD_ZIN:
+        //jmf: this "good" god will feed you (a la Nethack)
+        if (zin_sustenance())
+        {
+            god_speaks(you.religion, "Your stomach feels content.");
+            set_hunger(6000, true);
+            lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+        }
+        break;
+
+    case GOD_JIYVA:
         you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
                                      + (random2(you.piety) / 20);
 
@@ -418,15 +431,19 @@ void pray()
                 you.duration[DUR_PRAYER] *= 3;
             else if (you.piety > 70)
                 you.duration[DUR_PRAYER] *= 2;
+
+        if (jiyva_can_paralyse_jellies())
+            jiyva_paralyse_jellies();
+        break;
+
+    default:
+        ;
     }
 
     // Gods who like fresh corpses, Kikuites, Beoghites, Nemelexites and
     // Ashenzariites offer the items they're standing on.
     if (altar_god == GOD_NO_GOD)
         _offer_items();
-
-    if (!was_praying)
-        do_god_gift(true);
 
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
@@ -797,14 +814,6 @@ static void _offer_items()
     int i = you.visible_igrd(you.pos());
 
     god_acting gdact;
-
-    // donate gold to gain piety distributed over time
-    if (you.religion == GOD_ZIN)
-    {
-        _zin_donate_gold();
-
-        return; // doesn't accept anything else for sacrifice
-    }
 
     if (i == NON_ITEM) // nothing to sacrifice
         return;

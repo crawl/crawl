@@ -107,7 +107,7 @@ void religion_turn_end();
 int get_tension(god_type god = you.religion);
 int get_monster_tension(const monster* mons, god_type god = you.religion);
 
-bool do_god_gift(bool prayed_for = false, bool forced = false);
+bool do_god_gift(bool forced = false);
 
 std::vector<god_type> temple_god_list();
 std::vector<god_type> nontemple_god_list();
