@@ -855,9 +855,15 @@ bool cast_apportation(int pow, bolt& beam)
 
             dprf("Orb apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
-            move_top_item(where, new_spot);
-            origin_set(new_spot);
-            return (true);
+            if (feat_virtually_destroys_item(grd(new_spot), item))
+                return (true);
+
+            else
+            {
+                move_top_item(where, new_spot);
+                origin_set(new_spot);
+                return (true);
+            }
         }
         // if power is high enough it'll just come straight to you
     }

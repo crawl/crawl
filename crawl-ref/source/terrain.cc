@@ -695,6 +695,33 @@ bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
     }
 }
 
+// For checking whether items would be inaccessible when they wouldn't technically be 
+// destroyed - ignores Merfolk/Fedhas ability to access items in deep water.
+bool feat_virtually_destroys_item(dungeon_feature_type feat, const item_def &item,
+                                  bool noisy)
+{
+    switch (feat)
+    {
+    case DNGN_SHALLOW_WATER:
+        if (noisy)
+            mprf(MSGCH_SOUND, "You hear a splash.");
+        return (false);
+
+    case DNGN_DEEP_WATER:
+        if (noisy)
+        mprf(MSGCH_SOUND, "You hear a splash.");
+        return (true);
+
+    case DNGN_LAVA:
+        if (noisy)
+            mprf(MSGCH_SOUND, "You hear a sizzling splash.");
+        return (true);
+
+    default:
+        return (false);
+    }
+}
+
 static coord_def _dgn_find_nearest_square(
     const coord_def &pos,
     void *thing,
