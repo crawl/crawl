@@ -914,7 +914,10 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     }
 
     if (!found)
-        return 0;
+    {
+        random_blink(false);
+        return (1);
+    }
 
     coord_def origin = you.pos();
     move_player_to_grid(target, false, true);
