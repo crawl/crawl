@@ -3359,7 +3359,7 @@ void set_god_ability_slots()
                 {
                     _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_SELF,
                                             'a' + num++);
-                    _set_god_ability_helper(ABIL_ELYVILON_LIFESAVING, 'P');
+                    _set_god_ability_helper(ABIL_ELYVILON_LIFESAVING, 'p');
                 }
                 else if (god_abilities[you.religion][i]
                             == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
