@@ -2578,6 +2578,9 @@ static void _decrement_durations()
     {
         you.xray_vision = false;
     }
+
+    _decrement_a_duration(DUR_LIFESAVING, delay,
+                          "Your divine protection fades away.");
 }
 
 static void _check_banished()

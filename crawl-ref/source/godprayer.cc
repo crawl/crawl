@@ -12,6 +12,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "goditem.h"
 #include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -81,15 +82,6 @@ std::string god_prayer_reaction()
 
 bool god_accepts_prayer(god_type god)
 {
-    harm_protection_type hpt = god_protects_from_harm(god, false);
-
-    if (hpt == HPT_PRAYING
-        || hpt == HPT_PRAYING_PLUS_ANYTIME
-        || hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
-    {
-        return (true);
-    }
-
     if (god_likes_fresh_corpses(god))
         return (true);
 
@@ -104,6 +96,7 @@ bool god_accepts_prayer(god_type god)
     case GOD_JIYVA:
         return (jiyva_can_paralyse_jellies());
 
+    case GOD_ELYVILON:
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
     case GOD_ASHENZARI:
@@ -410,49 +403,27 @@ void pray()
          was_praying ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
-    you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
-                                 + (random2(you.piety) / 20);
-
     if (player_under_penance())
         simple_god_message(" demands penance!");
     else
-    {
         mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
 
-        if (you.piety > 130)
-            you.duration[DUR_PRAYER] *= 3;
-        else if (you.piety > 70)
-            you.duration[DUR_PRAYER] *= 2;
-    }
+    if (you.religion == GOD_JIYVA)
+    {
+        you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
+                                     + (random2(you.piety) / 20);
 
-    // Assume for now that gods who like fresh corpses and/or butchery
-    // don't use prayer for anything else.
-    if (you.religion == GOD_ZIN
-        || you.religion == GOD_KIKUBAAQUDGHA
-        || you.religion == GOD_BEOGH
-        || you.religion == GOD_NEMELEX_XOBEH
-        || you.religion == GOD_JIYVA
-        || you.religion == GOD_ASHENZARI
-        || god_likes_fresh_corpses(you.religion))
-    {
-        you.duration[DUR_PRAYER] = 1;
-    }
-    else if (you.religion == GOD_ELYVILON
-        || you.religion == GOD_YREDELEMNUL)
-    {
-        you.duration[DUR_PRAYER] = 20;
+        if (!player_under_penance())
+            if (you.piety > 130)
+                you.duration[DUR_PRAYER] *= 3;
+            else if (you.piety > 70)
+                you.duration[DUR_PRAYER] *= 2;
     }
 
     // Gods who like fresh corpses, Kikuites, Beoghites, Nemelexites and
     // Ashenzariites offer the items they're standing on.
-    if (altar_god == GOD_NO_GOD
-        && (god_likes_fresh_corpses(you.religion)
-            || you.religion == GOD_BEOGH
-            || you.religion == GOD_NEMELEX_XOBEH
-            || you.religion == GOD_ASHENZARI))
-    {
+    if (altar_god == GOD_NO_GOD)
         _offer_items();
-    }
 
     if (!was_praying)
         do_god_gift(true);
@@ -578,10 +549,38 @@ static void _ashenzari_sac_scroll(const item_def& item)
         destroy_item(it, true); // can't happen
 }
 
+// Is the destroyed weapon valuable enough to gain piety by doing so?
+// Unholy and evil weapons are handled specially.
+static bool _destroyed_valuable_weapon(int value, int type)
+{
+    // Artefacts, including most randarts.
+    if (random2(value) >= random2(250))
+        return (true);
+
+    // Medium valuable items are more likely to net piety at low piety,
+    // more so for missiles, since they're worth less as single items.
+    if (random2(value) >= random2((type == OBJ_MISSILES) ? 10 : 100)
+        && one_chance_in(1 + you.piety / 50))
+    {
+        return (true);
+    }
+
+    // If not for the above, missiles shouldn't yield piety.
+    if (type == OBJ_MISSILES)
+        return (false);
+
+    // Weapons, on the other hand, are always acceptable to boost low
+    // piety.
+    if (you.piety < piety_breakpoint(0) || player_under_penance())
+        return (true);
+
+    return (false);
+}
+
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.).  Does not modify the actual item in any way.
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
-       int *js)
+       int *js, bool first)
 {
     piety_gain_t relative_piety_gain = PIETY_NONE;
 
@@ -600,6 +599,33 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     {
         switch (you.religion)
         {
+        case GOD_ELYVILON:
+        {
+            const int value = item_value(item) / item.quantity;
+            const bool unholy_weapon = is_unholy_item(item);
+            const bool evil_weapon = is_evil_item(item);
+
+            if (unholy_weapon || evil_weapon)
+            {
+                relative_piety_gain = PIETY_SOME;
+                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
+
+                // Print this in addition to the above!
+                if (first)
+                {
+                    simple_god_message(make_stringf(
+                                 " welcomes the destruction of %s %s weapon%s.",
+                                 item.quantity == 1 ? "this" : "these",
+                                 desc_weapon,
+                                 item.quantity == 1 ? ""     : "s").c_str(),
+                                 GOD_ELYVILON);
+                }
+            }
+            else if (_destroyed_valuable_weapon(value, item.base_type))
+                relative_piety_gain = PIETY_SOME;
+            break;
+        }
+
         case GOD_BEOGH:
         {
             const int item_orig = item.orig_monnum - 1;
@@ -711,7 +737,7 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
     piety_gain_t relative_gain = PIETY_NONE;
     for (int j = 0; j < item.quantity; ++j)
     {
-        const piety_gain_t gain = _sacrifice_one_item_noncount(item, js);
+        const piety_gain_t gain = _sacrifice_one_item_noncount(item, js, !j);
 
         // Update piety gain if necessary.
         if (gain != PIETY_NONE)
