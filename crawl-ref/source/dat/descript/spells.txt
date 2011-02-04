@@ -13,7 +13,7 @@ This spell causes the air around a creature to twist itself into a whirling vort
 %%%%
 Alistair's Intoxication
 
-This spell works by converting a small portion of brain matter into alcohol. It affects all intelligent humanoids within the caster's view (presumably including the caster). It is frequently used as an icebreaker at wizard parties.
+This spell works by converting a small portion of brain matter into alcohol, confusing all intelligent humanoids within the caster's view (although poison-resistant creatures will suffer no negative effects). It is strongly focused on the caster, however, and so poison resistance will not protect them. It is frequently used as an icebreaker at wizard parties.
 %%%%
 Alter Self
 
