@@ -163,8 +163,8 @@ void hints_first_item(const item_def& item);
 void learned_something_new(hints_event_type seen_what,
                            coord_def gc = coord_def());
 formatted_string hints_abilities_info(void);
-void print_hints_skills_info(void);
-void print_hints_skills_description_info(void);
+std::string hints_skills_info(void);
+std::string hints_skills_description_info(void);
 
 // Additional information for tutorial players.
 void check_item_hint(const item_def &item, unsigned int num_old_talents);
