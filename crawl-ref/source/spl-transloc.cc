@@ -202,10 +202,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
                 contaminate_player(1, true);
-
-
-            if (!wizard_blink && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-                remove_condensation_shield();
         }
     }
 
@@ -263,9 +259,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
                 you.pet_target = MHITNOT;
         }
     }
-
-    if (success && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
 }
 
 // This function returns true if the player can use controlled teleport
@@ -395,9 +388,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     // (like picking up/dropping an item).
     viewwindow();
     StashTrack.update_stash(you.pos());
-
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
 
     if (you.level_type == LEVEL_ABYSS)
     {
