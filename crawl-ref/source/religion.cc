@@ -2005,17 +2005,9 @@ static int _give_first_conjuration_book()
     return (book);
 }
 
-bool do_god_gift(bool prayed_for, bool forced)
+bool do_god_gift(bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
-
-    // Zin and Jiyva worshippers are the only ones who can pray to ask their
-    // god for stuff.  Jiyva also gives regular gifts.
-    if (prayed_for && you.religion != GOD_ZIN && you.religion != GOD_JIYVA
-        || !prayed_for && you.religion == GOD_ZIN)
-    {
-        return (false);
-    }
 
     god_acting gdact;
 
@@ -2028,26 +2020,12 @@ bool do_god_gift(bool prayed_for, bool forced)
 
     // Consider a gift if we don't have a timeout and weren't already
     // praying when we prayed.
-    if (forced
-        || !player_under_penance() && !you.gift_timeout
-        || prayed_for && (you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
+    if (forced || !player_under_penance() && !you.gift_timeout)
     {
         // Remember to check for water/lava.
         switch (you.religion)
         {
         default:
-            break;
-
-        case GOD_ZIN:
-            //jmf: this "good" god will feed you (a la Nethack)
-            if (forced || prayed_for && zin_sustenance())
-            {
-                god_speaks(you.religion, "Your stomach feels content.");
-                set_hunger(6000, true);
-                lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
-                _inc_gift_timeout(30 + random2avg(10, 2));
-                success = true;
-            }
             break;
 
         case GOD_NEMELEX_XOBEH:
@@ -2135,10 +2113,7 @@ bool do_god_gift(bool prayed_for, bool forced)
             break;
 
         case GOD_JIYVA:
-            if (prayed_for && jiyva_can_paralyse_jellies())
-                jiyva_paralyse_jellies();
-            else if (forced
-                     || you.piety > 80 && random2(you.piety) > 50
+            if (forced || you.piety > 80 && random2(you.piety) > 50
                          && one_chance_in(4) && you.gift_timeout == 0
                          && you.can_safely_mutate())
             {
@@ -3149,7 +3124,7 @@ void print_sacrifice_message(god_type god, const item_def &item,
                          piety_gain ? "gladly " : "",
                          item.name(DESC_NOCAP_THE).c_str()).c_str(),
             GOD_SHINING_ONE);
-	return;
+        return;
     }
     const std::string itname = item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE);
     mpr(_sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
