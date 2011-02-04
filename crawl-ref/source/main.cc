@@ -2091,10 +2091,7 @@ static void _decrement_durations()
         remove_regen(you.attribute[ATTR_DIVINE_REGENERATION]);
     }
 
-    if (you.duration[DUR_PRAYER] > 1)
-        you.duration[DUR_PRAYER]--;
-    else if (you.duration[DUR_PRAYER] == 1)
-        end_prayer();
+    _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");
 
     if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {
