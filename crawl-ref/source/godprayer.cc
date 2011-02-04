@@ -33,7 +33,7 @@
 #include "terrain.h"
 #include "view.h"
 
-static void _offer_items();
+static bool _offer_items();
 static void _zin_donate_gold();
 
 static bool _confirm_pray_sacrifice(god_type god)
@@ -226,6 +226,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     return (true);
 }
 
+// Prayer at your god's altar.
 static bool _altar_prayer()
 {
     // Different message from when first joining a religion.
@@ -324,8 +325,6 @@ static bool _altar_prayer()
         return (did_bless);
     }
 
-    _offer_items();
-
     return (did_bless);
 }
 
@@ -337,8 +336,8 @@ void pray()
         return;
     }
 
-    // almost all prayers take time
-    you.turn_is_over = true;
+    // only successful prayer takes time
+    you.turn_is_over = false;
 
     bool something_happened = false;
     const god_type altar_god = feat_altar_god(grd(you.pos()));
@@ -346,7 +345,6 @@ void pray()
     {
         if (you.flight_mode() == FL_LEVITATE)
         {
-            you.turn_is_over = false;
             mpr("You are floating high above the altar.");
             return;
         }
@@ -354,17 +352,19 @@ void pray()
         if (you.religion != GOD_NO_GOD && altar_god == you.religion)
         {
             something_happened = _altar_prayer();
+            // at least "prostrating" took time
+            you.turn_is_over = true;
         }
         else if (altar_god != GOD_NO_GOD)
         {
             if (you.species == SP_DEMIGOD)
             {
-                you.turn_is_over = false;
                 mpr("Sorry, a being of your status cannot worship here.");
                 return;
             }
 
             god_pitch(feat_altar_god(grd(you.pos())));
+            you.turn_is_over = true;
             return;
         }
     }
@@ -376,26 +376,6 @@ void pray()
              you.is_undead ? "un" : "");
 
         // Zen meditation is timeless.
-        you.turn_is_over = false;
-        return;
-    }
-    else if (!god_accepts_prayer(you.religion))
-    {
-        if (!something_happened)
-        {
-            simple_god_message(" ignores your prayer.");
-            you.turn_is_over = false;
-        }
-        return;
-    }
-
-    // Beoghites and Nemelexites can abort now instead of offering
-    // something they don't want to lose.
-    if (altar_god == GOD_NO_GOD
-        && (you.religion == GOD_BEOGH ||  you.religion == GOD_NEMELEX_XOBEH)
-        && !_confirm_pray_sacrifice(you.religion))
-    {
-        you.turn_is_over = false;
         return;
     }
 
@@ -417,6 +397,7 @@ void pray()
             god_speaks(you.religion, "Your stomach feels content.");
             set_hunger(6000, true);
             lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+            something_happened = true;
         }
         break;
 
@@ -425,17 +406,18 @@ void pray()
 
         if (jiyva_can_paralyse_jellies())
             jiyva_paralyse_jellies();
+        something_happened = true;
         break;
 
     default:
         ;
     }
 
-    // Gods who like fresh corpses, Kikuites, Beoghites, Nemelexites and
-    // Ashenzariites offer the items they're standing on.
-    if (altar_god == GOD_NO_GOD)
-        _offer_items();
+    // All sacrifices affect items you're standing on.
+    something_happened |= _offer_items();
 
+    if (something_happened)
+        you.turn_is_over = true;
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
 
@@ -791,17 +773,17 @@ static bool _check_nemelex_sacrificing_item_type(const item_def& item)
     }
 }
 
-static void _offer_items()
+static bool _offer_items()
 {
     if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
-        return;
+        return false;
+
+    if (!_confirm_pray_sacrifice(you.religion))
+        return false;
 
     int i = you.visible_igrd(you.pos());
 
     god_acting gdact;
-
-    if (i == NON_ITEM) // nothing to sacrifice
-        return;
 
     int num_sacced = 0;
     int num_disliked = 0;
@@ -913,4 +895,8 @@ static void _offer_items()
         else if (you.religion == GOD_ASHENZARI)
             simple_god_message(" can corrupt only scrolls of remove curse.");
     }
+    if (num_sacced == 0 && you.religion == GOD_ELYVILON)
+        mpr("There are no weapons here to destroy!");
+
+    return (num_sacced > 0);
 }
