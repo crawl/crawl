@@ -548,10 +548,10 @@ void SkillMenuEntry::_set_points()
 #define MIN_COLS            80
 #define MIN_LINES           24
 #define TILES_COL            6
-#define CURRENT_ACTION_SIZE 24
-#define NEXT_ACTION_SIZE    15
-#define NEXT_DISPLAY_SIZE   18
-#define SHOW_ALL_SIZE       16
+#define CURRENT_ACTION_SIZE 25
+#define NEXT_ACTION_SIZE    16
+#define NEXT_DISPLAY_SIZE   19
+#define SHOW_ALL_SIZE       17
 SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     m_min_coord(), m_max_coord(), m_disp_queue()
 {
@@ -567,7 +567,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     m_min_coord.x = 1;
     m_min_coord.y = 1;
 
-    m_max_coord.x = MIN_COLS;
+    m_max_coord.x = MIN_COLS + 1;
     m_max_coord.y = get_number_of_lines() + 1;
 
     m_ff = new MenuFreeform();
@@ -595,7 +595,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
                                                m_ff);
         }
 
-    coord_def help_min_coord(m_min_coord.x, 0);
+    coord_def help_min_coord(m_min_coord.x + 1, 0);
     help_min_coord.y = (m_min_coord.y + SK_ARR_LN + 2);
 #ifdef USE_TILE
     if (is_set(SKMF_SKILL_ICONS))
@@ -624,7 +624,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     m_ff->attach_item(m_help);
 
     _init_disp_queue();
-    _init_footer(coord_def(help_min_coord.x, help_min_coord.y + help_height));
+    _init_footer(coord_def(m_min_coord.x, help_min_coord.y + help_height));
 
     _set_title();
     _set_skills();
@@ -1026,7 +1026,7 @@ void SkillMenu::_set_footer()
     else if (is_set(SKMF_DO_RESKILL_TO))
         text = "select destination";
 
-    m_current_action->set_text(make_stringf("[a-%c:%-18s]",
+    m_current_action->set_text(make_stringf("[a-%c: %s]",
                                             SkillMenuEntry::m_letter.letter,
                                             text.c_str()));
 
@@ -1043,7 +1043,7 @@ void SkillMenu::_set_footer()
         text = "transfer";
     }
 
-    m_next_action->set_text(make_stringf("[?:%-11s]", text.c_str()));
+    m_next_action->set_text(make_stringf("[?: %s]", text.c_str()));
 
     if (m_disp_queue.size() > 1)
     {
@@ -1063,11 +1063,11 @@ void SkillMenu::_set_footer()
             text = "";
         }
 
-        m_next_display->set_text(make_stringf("[!:show %-9s]", text.c_str()));
+        m_next_display->set_text(make_stringf("[!: show %s]", text.c_str()));
     }
 
     text = is_set(SKMF_DISP_ALL) ? "hide unknown" : "show all";
-    m_show_all->set_text(make_stringf("[*:%-12s]", text.c_str()));
+    m_show_all->set_text(make_stringf("[*: %s]", text.c_str()));
 }
 
 TextItem* SkillMenu::_find_closest_selectable(int start_ln, int col)
