@@ -24,6 +24,7 @@
 #include "fight.h"
 #include "fontwrapper-ft.h"
 #include "godabil.h"
+#include "hints.h"
 #include "itemprop.h"
 #include "options.h"
 #include "player.h"
@@ -514,7 +515,7 @@ void SkillMenuEntry::_set_title()
     m_level->set_fg_colour(BLUE);
     m_progress->set_fg_colour(BLUE);
 
-    if (!is_set(SKMF_SIMPLE))
+    if (is_set(SKMF_DISP_APTITUDE))
         m_aptitude->set_text("<blue>Apt </blue>");
 }
 
@@ -544,7 +545,7 @@ void SkillMenuEntry::_set_points()
 }
 #endif
 
-#define MIN_COLS            78
+#define MIN_COLS            80
 #define MIN_LINES           24
 #define TILES_COL            6
 #define CURRENT_ACTION_SIZE 24
@@ -563,10 +564,10 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
         set_flag(SKMF_SKILL_ICONS);
 #endif
 
-    m_min_coord.x = 2;
+    m_min_coord.x = 1;
     m_min_coord.y = 1;
 
-    m_max_coord.x = MIN_COLS + 1;
+    m_max_coord.x = MIN_COLS;
     m_max_coord.y = get_number_of_lines() + 1;
 
     m_ff = new MenuFreeform();
@@ -588,7 +589,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
         {
-            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x
+            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x + 1
                                                          + col_split * col,
                                                          m_min_coord.y + 1 + ln),
                                                m_ff);
@@ -605,12 +606,25 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 #else
     help_min_coord.y = std::min(help_min_coord.y, m_max_coord.y - 3);
 #endif
+
+    int help_height;
+    if (is_set(SKMF_SIMPLE))
+    {
+        // We just assume that the player won't learn too many skill while
+        // in tutorial/hint mode.
+        help_min_coord.y -= 4;
+        help_height = 6;
+    }
+    else
+        help_height = 2;
+
     m_help->set_bounds(help_min_coord,
-                       coord_def(m_max_coord.x, help_min_coord.y + 2));
+                       coord_def(m_max_coord.x,
+                                 help_min_coord.y + help_height));
     m_ff->attach_item(m_help);
 
     _init_disp_queue();
-    _init_footer(coord_def(help_min_coord.x, help_min_coord.y + 2));
+    _init_footer(coord_def(help_min_coord.x, help_min_coord.y + help_height));
 
     _set_title();
     _set_skills();
@@ -924,11 +938,20 @@ void SkillMenu::_set_help(int flag)
     switch (flag)
     {
     case SKMF_DO_PRACTISE:
-        help = "Press the letter of a skill to choose whether you want to "
-               "practise it. Skills marked with '-' will train very slowly.";
+        if (is_set(SKMF_SIMPLE))
+            help = hints_skills_info();
+        else
+        {
+            help = "Press the letter of a skill to choose whether you want to "
+                   "practise it. Skills marked with '-' will train very "
+                   "slowly.";
+        }
         break;
     case SKMF_DO_SHOW_DESC:
-        help = "Press the letter of a skill to read its description.";
+        if (is_set(SKMF_SIMPLE))
+            help = hints_skills_description_info();
+        else
+            help = "Press the letter of a skill to read its description.";
         break;
     case SKMF_DO_RESKILL_FROM:
         help = "Select a skill as the source of the knowledge transfer. The "
@@ -942,14 +965,19 @@ void SkillMenu::_set_help(int flag)
         break;
     case SKMF_DISP_PROGRESS:
     case SKMF_DISP_APTITUDE:
+        if (is_set(SKMF_SIMPLE))
+        {
+            help = hints_skills_info();
+            break;
+        }
+
         if (flag == SKMF_DISP_PROGRESS || !m_crosstrain && !m_antitrain)
         {
             help = "The percentage of the progress done before reaching next "
                    "level is in <cyan>cyan</cyan>.\n";
         }
 
-        if (!is_set(SKMF_SIMPLE))
-            help += "The species aptitude is in <red>red</red>. ";
+        help += "The species aptitude is in <red>red</red>. ";
 
         if (flag == SKMF_DISP_APTITUDE)
         {

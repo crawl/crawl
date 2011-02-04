@@ -3352,7 +3352,7 @@ formatted_string hints_abilities_info()
 
 // Explains the basics of the skill screen. Don't bother the player with the
 // aptitude information. (Toggling is still possible, of course.)
-void print_hints_skills_info()
+std::string hints_skills_info()
 {
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
     std::ostringstream text;
@@ -3368,10 +3368,10 @@ void print_hints_skills_info()
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    formatted_string::parse_string(text.str(), false).display();
+    return text.str();
 }
 
-void print_hints_skills_description_info()
+std::string hints_skills_description_info()
 {
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
     std::ostringstream text;
@@ -3385,7 +3385,7 @@ void print_hints_skills_description_info()
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    formatted_string::parse_string(text.str(), false).display();
+    return text.str();
 }
 
 // A short explanation of Crawl's target mode and its most important commands.
