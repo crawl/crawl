@@ -54,9 +54,8 @@ std::string get_item_description(const item_def &item, bool verbose,
 std::string god_title(god_type which_god, species_type which_species);
 void describe_god(god_type which_god, bool give_title);
 
-void describe_feature_wide(const coord_def& pos);
-void get_feature_desc(const coord_def &gc, describe_info &inf, 
-                      bool noquote = false);
+void describe_feature_wide(const coord_def& pos, bool show_quote = false);
+void get_feature_desc(const coord_def &gc, describe_info &inf);
 
 void set_feature_desc_long(const std::string &raw_name,
                            const std::string &desc);
@@ -76,11 +75,11 @@ void append_missile_info(std::string &description);
 
 void describe_monsters(const monster_info &mi, bool force_seen = false,
                        const std::string &footer = "",
-                       bool wait_until_key_pressed = true);
+                       bool wait_until_key_pressed = true,
+                       bool show_quote = false);
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
-                         bool &has_stat_desc, bool force_seen = false,
-                         bool noquote = false);
+                         bool &has_stat_desc, bool force_seen = false);
 
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled, const item_def* item = NULL);
@@ -100,7 +99,11 @@ std::string get_command_description(const command_type cmd,
 void print_description(const std::string &desc);
 void print_description(const describe_info &inf);
 
+void print_quote (const describe_info &inf);
+void print_quote (const std::string &desc);
+
 template<class T> void process_description(T &proc, const describe_info &inf);
+template<class T> void process_quote(T &proc, const describe_info &inf);
 
 void trim_randart_inscrip(item_def& item);
 std::string artefact_auto_inscription(const item_def& item);
@@ -159,7 +162,6 @@ inline void process_description(T &proc, const describe_info &inf)
     const int prefix_lines = count_desc_lines(inf.prefix, line_width);
     const int footer_lines = count_desc_lines(inf.footer, line_width)
                              + (inf.footer.empty() ? 0 : 1);
-    const int quote_lines  = count_desc_lines(inf.quote, line_width);
 
     // Maybe skip the body if body + title would be too many lines.
     if (inf.title.empty())
@@ -190,18 +192,6 @@ inline void process_description(T &proc, const describe_info &inf)
     {
         desc = inf.prefix + desc;
         num_lines += prefix_lines;
-    }
-
-    // Prefer the footer over the quote.
-    if (num_lines + footer_lines + quote_lines + 1 <= height)
-    {
-        if (!desc.empty())
-        {
-            desc += "\n";
-            num_lines++;
-        }
-        desc = desc + inf.quote;
-        num_lines += quote_lines;
     }
 
     if (!inf.footer.empty() && num_lines + footer_lines <= height)
@@ -273,7 +263,103 @@ inline void process_description(T &proc, const describe_info &inf)
     }
 }
 
+template<class T>
+inline void process_quote(T &proc, const describe_info &inf)
+{
+    const unsigned int line_width = proc.width();
+    const          int height     = proc.height();
+
+    std::string desc;
+
+    // How many lines is the title; we also seem to be adding 1 to
+    // start with.
+    int num_lines = count_desc_lines(inf.title, line_width) + 1;
+
+    int body_lines   = count_desc_lines(inf.quote, line_width);
+
+    // Maybe skip the body if body + title would be too many lines.
+    if (inf.title.empty())
+    {
+        desc = inf.quote;
+        // There is a default 1 line addition for some reason.
+        num_lines = body_lines + 1;
+    }
+    else if (body_lines + num_lines + 2 <= height)
+    {
+        desc = inf.title + "\n\n";
+        desc += inf.quote;
+        // Got 2 lines from the two \ns that weren't counted yet.
+        num_lines += body_lines + 2;
+    }
+    else
+        desc = inf.title + "\n";
+
+    if (num_lines <= height)
+    {
+        const int bottom_line = std::min(std::max(24, num_lines + 2),
+                                         height);
+        const int newlines = bottom_line - num_lines;
+
+        if (newlines >= 0)
+        {
+            desc.append(newlines, '\n');
+        }
+    }
+
+    std::string::size_type nextLine = std::string::npos;
+    unsigned int  currentPos = 0;
+
+    while (currentPos < desc.length())
+    {
+        if (currentPos != 0)
+            proc.nextline();
+
+        // See if '\n' is within one line_width.
+        nextLine = desc.find('\n', currentPos);
+
+        if (nextLine >= currentPos && nextLine < currentPos + line_width)
+        {
+            proc.print(desc.substr(currentPos, nextLine-currentPos));
+            currentPos = nextLine + 1;
+            continue;
+        }
+
+        // Handle real line breaks.  No substitutions necessary, just update
+        // the counts.
+        nextLine = desc.find('\n', currentPos);
+        if (nextLine >= currentPos && nextLine < currentPos + line_width)
+        {
+            proc.print(desc.substr(currentPos, nextLine-currentPos));
+            currentPos = nextLine + 1;
+            continue;
+        }
+
+        // No newline -- see if rest of string will fit.
+        if (currentPos + line_width >= desc.length())
+        {
+            proc.print(desc.substr(currentPos));
+            return;
+        }
 
 
+        // Ok, try to truncate at space.
+        nextLine = desc.rfind(' ', currentPos + line_width);
+
+        if (nextLine > 0)
+        {
+            proc.print(desc.substr(currentPos, nextLine - currentPos));
+            currentPos = nextLine + 1;
+            continue;
+        }
+
+        // Oops.  Just truncate.
+        nextLine = currentPos + line_width;
+
+        nextLine = std::min(inf.body.str().length(), nextLine);
+
+        proc.print(desc.substr(currentPos, nextLine - currentPos));
+        currentPos = nextLine;
+    }
+}
 
 #endif

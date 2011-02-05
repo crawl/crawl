@@ -123,6 +123,13 @@ void print_description(const std::string &body)
     print_description(inf);
 }
 
+void print_quote (const std::string &body)
+{
+    describe_info inf;
+    inf.quote = body;
+    print_quote(inf);
+}
+
 class default_desc_proc
 {
 public:
@@ -148,6 +155,15 @@ void print_description(const describe_info &inf)
 
     default_desc_proc proc;
     process_description<default_desc_proc>(proc, inf);
+}
+
+void print_quote (const describe_info &inf)
+{
+    clrscr();
+    textcolor(LIGHTGREY);
+
+    default_desc_proc proc;
+    process_quote<default_desc_proc>(proc, inf);
 }
 
 const char* jewellery_base_ability_string(int subtype)
@@ -2166,7 +2182,7 @@ static std::string _get_feature_description_wide(int feat)
     return std::string();
 }
 
-void get_feature_desc(const coord_def &pos, describe_info &inf, bool noquote)
+void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
     dungeon_feature_type feat = grd(pos);
     bool mimic = false;
@@ -2245,8 +2261,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool noquote)
     if (!custom_desc)
         inf.body << _get_feature_description_wide(grd(pos));
 
-    if (!noquote)
-        inf.quote = getQuoteString(db_name);
+    inf.quote = getQuoteString(db_name);
 
     // Quotes don't care about custom descriptions.
     if (props.exists(QUOTE_KEY))
@@ -2258,18 +2273,53 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool noquote)
     }
 }
 
-void describe_feature_wide(const coord_def& pos)
+static bool _print_toggle_message (const describe_info &inf)
+{
+    if (inf.quote.empty())
+    {
+        mouse_control mc(MOUSE_MODE_MORE);
+        getchm();
+        return (false);
+    }
+    else
+    {
+        const int bottom_line = std::min(30, get_number_of_lines());
+        cgotoxy(1, bottom_line);
+        formatted_string::parse_string(
+#ifndef USE_TILE
+            "Press '<w>!</w>'"
+#else
+            "<w>Right-click</w>"
+#endif
+            " to toggle between the overview and the extended description.").display();
+
+        mouse_control mc(MOUSE_MODE_MORE);
+        const int keyin = getchm();
+
+        if (keyin == '!' || keyin == CK_MOUSE_CMD)
+        {
+            return (true);
+        }
+
+        return (false);
+    }
+}
+
+void describe_feature_wide(const coord_def& pos, bool show_quote)
 {
     describe_info inf;
-    get_feature_desc(pos, inf, crawl_state.game_is_hints_tutorial());
-    print_description(inf);
+    get_feature_desc(pos, inf);
 
-    mouse_control mc(MOUSE_MODE_MORE);
+    if (show_quote)
+        print_quote(inf);
+    else
+        print_description(inf);
 
     if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
-    wait_for_keypress();
+    if (_print_toggle_message(inf))
+        describe_feature_wide(pos, not show_quote);
 }
 
 void set_feature_desc_long(const std::string &raw_name,
@@ -3289,8 +3339,7 @@ static std::string _monster_stat_description(const monster_info& mi)
 
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
-                         bool &has_stat_desc, bool force_seen,
-                         bool noquote)
+                         bool &has_stat_desc, bool force_seen)
 {
     if (inf.title.empty())
         inf.title = mi.full_name(DESC_CAP_A, true);
@@ -3314,14 +3363,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << getLongDescription(db_name);
     }
 
-    if (!noquote)
-    {
-        // And quotes {due}
-        if (!mi.quote.empty())
-            inf.quote = mi.quote;
-        else
-            inf.quote = getQuoteString(db_name);
-    }
+    // And quotes {due}
+    if (!mi.quote.empty())
+        inf.quote = mi.quote;
+    else
+        inf.quote = getQuoteString(db_name);
 
     std::string symbol;
     symbol += get_monster_data(mi.type)->showchar;
@@ -3335,8 +3381,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         symbol_prefix += symbol;
         symbol_prefix += "_prefix";
         inf.prefix = getLongDescription(symbol_prefix);
-        if (!noquote)
-            quote2 = getQuoteString(symbol_prefix);
+        quote2 = getQuoteString(symbol_prefix);
     }
 
     if (!inf.quote.empty() && !quote2.empty())
@@ -3555,12 +3600,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
 void describe_monsters(const monster_info &mi, bool force_seen,
                        const std::string &footer,
-                       bool wait_until_key_pressed)
+                       bool wait_until_key_pressed,
+                       bool show_quote)
 {
     describe_info inf;
     bool has_stat_desc = false;
-    get_monster_db_desc(mi, inf, has_stat_desc, force_seen,
-                        crawl_state.game_is_hints_tutorial());
+    get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
 
     if (!footer.empty())
     {
@@ -3570,17 +3615,25 @@ void describe_monsters(const monster_info &mi, bool force_seen,
             inf.footer += "\n" + footer;
     }
 
-    print_description(inf);
+    if (show_quote)
+    {
+        print_quote(inf);
+    }
+    else
+    {
+        print_description(inf);
+
+        // TODO enne - this should really move into get_monster_db_desc
+        // and an additional tutorial string added to describe_info.
+        if (crawl_state.game_is_hints())
+            hints_describe_monster(mi, has_stat_desc);
+    }
+
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    // TODO enne - this should really move into get_monster_db_desc
-    // and an additional tutorial string added to describe_info.
-    if (crawl_state.game_is_hints())
-        hints_describe_monster(mi, has_stat_desc);
-
-    if (wait_until_key_pressed)
-        wait_for_keypress();
+    if (wait_until_key_pressed && _print_toggle_message(inf))
+        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, not show_quote);
 }
 
 static const char* xl_rank_names[] = {
