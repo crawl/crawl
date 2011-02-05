@@ -1187,7 +1187,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
              && !feat_is_wall(grid_appearance(gc))
              && !feat_is_tree(grid_appearance(gc)))
     {
-        get_feature_desc(gc, inf, true);
+        get_feature_desc(gc, inf);
     }
     else
     {
