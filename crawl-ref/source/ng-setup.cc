@@ -489,9 +489,9 @@ static void _give_items_skills(const newgame_def& ng)
             curr++;
         }
 
-        // Small species get stones, the others nets.
+        // Small species get darts, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
+            newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
         else
         {
             newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
