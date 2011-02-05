@@ -99,7 +99,7 @@ bool cast_summon_butterflies(int pow, god_type god)
 {
     bool success = false;
 
-    const int how_many = std::max(15, 4 + random2(3) + random2(pow) / 10);
+    const int how_many = std::min(15, 3 + random2(3) + random2(pow) / 10);
 
     for (int i = 0; i < how_many; ++i)
     {
