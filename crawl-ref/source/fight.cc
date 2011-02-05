@@ -237,7 +237,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     }
 
     // confused (but not perma-confused)
-    if (def && mons_is_confused (def, false))
+    if (def && mons_is_confused(def, false))
         unchivalric = UCAT_CONFUSED;
 
     // allies
