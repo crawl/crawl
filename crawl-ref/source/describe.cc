@@ -2201,13 +2201,12 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
-    inf.body << desc;
+    inf.title = desc;
     if (!ends_with(desc, ".") && !ends_with(desc, "!")
         && !ends_with(desc, "?"))
     {
-        inf.body << ".";
+        inf.title += ".";
     }
-    inf.body << "\n\n";
 
     // If we couldn't find a description in the database then see if
     // the feature's base name is different.
