@@ -2248,12 +2248,6 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_CONDENSATION_SHIELD, delay))
         remove_condensation_shield();
 
-    if (you.duration[DUR_CONDENSATION_SHIELD] && player_res_cold() < 0)
-    {
-        mpr("You feel very cold.");
-        ouch(2 + random2avg(13, 2), NON_MONSTER, KILLED_BY_FREEZING);
-    }
-
     if (_decrement_a_duration(DUR_MAGIC_SHIELD, delay,
                               "Your magical shield disappears."))
     {
