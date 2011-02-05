@@ -998,7 +998,11 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 if (minor)
                     simple_monster_message(mon, "'s eyes and ears begin to bleed.");
                 else
-                    mprf("%s bleeds profusely from %s eyes and ears.", mon->name(DESC_CAP_THE).c_str(), mons_pronoun(mon->type, PRONOUN_NOCAP_POSSESSIVE));
+                {
+                    mprf("%s bleeds profusely from %s eyes and ears.",
+                         mon->name(DESC_CAP_THE).c_str(),
+                         mons_pronoun(mon->type, PRONOUN_NOCAP_POSSESSIVE));
+                }
                 break;
             case RECITE_CHAOTIC:
                 simple_monster_message(mon,
