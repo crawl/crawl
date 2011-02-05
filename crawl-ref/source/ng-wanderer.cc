@@ -304,12 +304,11 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_CONJURATIONS:
-        switch (random2(6))
+        switch (random2(5))
         {
         case 0:
             book_type = BOOK_MINOR_MAGIC_I;
             break;
-
         case 1:
             book_type = BOOK_MINOR_MAGIC_II;
             break;
@@ -321,9 +320,6 @@ static void _give_wanderer_book(skill_type skill, int & slot)
             break;
         case 4:
             book_type = BOOK_YOUNG_POISONERS;
-            break;
-        case 5:
-            book_type = BOOK_STALKING;
             break;
         }
         break;
@@ -349,13 +345,16 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_TRANSMUTATIONS:
-        switch (random2(2))
+        switch (random2(3))
         {
         case 0:
             book_type = BOOK_GEOMANCY;
             break;
         case 1:
             book_type = BOOK_CHANGES;
+            break;
+        case 2:
+            book_type = BOOK_STALKING;
             break;
         }
         break;
@@ -399,15 +398,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_POISON_MAGIC:
-        switch (random2(2))
-        {
-        case 0:
-            book_type = BOOK_STALKING;
-            break;
-        case 1:
-            book_type = BOOK_YOUNG_POISONERS;
-            break;
-        }
+        book_type = BOOK_YOUNG_POISONERS;
         break;
 
     case SK_HEXES:
