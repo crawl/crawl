@@ -226,14 +226,14 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("%s and knew his wrath would come for them.", sin[0].c_str());
             break;
         case 4:
-            turn[1] = make_stringf("And so Zin bade the %s to come...", sinner.c_str());
-            turn[2] = make_stringf("...before his altar, that he may pass judgement...");
+            turn[1] = make_stringf("And so Zin bade the %s to come before...", sinner.c_str());
+            turn[2] = make_stringf("...his altar, that he may pass judgement...");
             turn[3] = make_stringf("...upon those who are not %s.", virtue[0].c_str());
             break;
         case 5:
-            turn[1] = make_stringf("To the devout, Zin provideth. From...");
-            turn[2] = make_stringf("...the rest - ye %s, ye...", sinner.c_str());
-            turn[3] = make_stringf("...guilty of %s - he taketh.", sin[1].c_str());
+            turn[1] = make_stringf("To the devout, Zin provideth. From the rest...");
+            turn[2] = make_stringf("...ye %s, ye guilty...", sinner.c_str());
+            turn[3] = make_stringf("...of %s, he taketh.", sin[1].c_str());
             break;
         case 6:
             turn[1] = make_stringf("Zin saw the %s of the %s, and...", sin[1].c_str(), sinner.c_str());
@@ -246,8 +246,8 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...and just, and not a voice dissented.");
             break;
         case 8:
-            turn[1] = make_stringf("Damned, damned be the %s and all...", sinner.c_str());
-            turn[2] = make_stringf("...else who abandon %s! Let them...", virtue[1].c_str());
+            turn[1] = make_stringf("Damned, damned be the %s and...", sinner.c_str());
+            turn[2] = make_stringf("...all else who abandon %s! Let them...", virtue[1].c_str());
             turn[3] = make_stringf("...be %s by the jurisprudence of Zin!", smite[1].c_str());
             break;
         case 9:
@@ -262,7 +262,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 11:
             turn[1] = make_stringf("In a great set of silver scales are weighed the...");
-            turn[2] = make_stringf("...souls of the %s, and with their %s...", sinner.c_str(), sin[1].c_str());
+            turn[2] = make_stringf("...souls of the %s, and with their %s...", sinner.c_str(), sin[0].c_str());
             turn[3] = make_stringf("...ways, the balance hath tipped against them!");
             break;
         case 12:
@@ -291,8 +291,8 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...that it was good that they had been %s.", smite[1].c_str());
             break;
         case 17:
-            turn[1] = make_stringf("The law of Zin demands thee be...");
-            turn[2] = make_stringf("...%s, and that the punishment for %s...", virtue[0].c_str(), sin[1].c_str());
+            turn[1] = make_stringf("The law of Zin demands thee...");
+            turn[2] = make_stringf("...be %s, and that the punishment for %s...", virtue[0].c_str(), sin[1].c_str());
             turn[3] = make_stringf("...shall be swift and harsh!");
             break;
         case 18:
@@ -306,9 +306,9 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...the word of Zin, and such is the law!");
             break;
         case 20:
-            turn[1] = make_stringf("To those who would swear an oath of %s on my altar, I bring ye...", virtue[1].c_str());
-            turn[2] = make_stringf("...salvation. To the rest - ye %s and the...", sinner.c_str());
-            turn[3] = make_stringf("...%s - the name of Zin shall be thy damnation.", sin[0].c_str());
+            turn[1] = make_stringf("To those who would swear an oath of %s on my altar...", virtue[1].c_str());
+            turn[2] = make_stringf("...I bring ye salvation. To the rest, ye %s...", sinner.c_str());
+            turn[3] = make_stringf("...and the %s, the name of Zin shall be thy damnation.", sin[0].c_str());
             break;
         case 21:
             turn[1] = make_stringf("And Zin did decree that he would protect the people...");
@@ -321,19 +321,19 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...in %s, for that is his way.", virtue[1].c_str());
             break;
         case 23:
-            turn[1] = make_stringf("Zin hath not damned the %s, but it is...", sinner.c_str());
-            turn[2] = make_stringf("...they that have damned themselves for their %s, for...", sin[1].c_str());
+            turn[1] = make_stringf("Zin hath not damned the %s, but it is they...", sinner.c_str());
+            turn[2] = make_stringf("...that have damned themselves for their %s, for...", sin[1].c_str());
             turn[3] = make_stringf("...did Zin not decree that to be %s was wrong?", sin[0].c_str());
             break;
         case 24:
             turn[1] = make_stringf("And Zin, furious at their %s, held...", sin[1].c_str());
             turn[2] = make_stringf("...aloft a silver sceptre! The %s...", sinner.c_str());
-            turn[3] = make_stringf("were %s, and thus the way of things was maintained.", smite[1].c_str());
+            turn[3] = make_stringf("...were %s, and thus the way of things was maintained.", smite[1].c_str());
             break;
         case 25:
             turn[1] = make_stringf("When the law of the land faltered, Zin rose...");
             turn[2] = make_stringf("...from his silver throne, and the %s were...", sinner.c_str());
-            turn[3] = make_stringf("%s. And it was thus that the law was made good.", smite[1].c_str());
+            turn[3] = make_stringf("...%s. And it was thus that the law was made good.", smite[1].c_str());
             break;
         case 26:
             turn[1] = make_stringf("Zin descended from on high in a silver chariot...");
@@ -342,8 +342,8 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 27:
             turn[1] = make_stringf("The %s stood before Zin, and in that instant...", sinner.c_str());
-            turn[2] = make_stringf("...they knew they would be found guilty of %s - for...", sin[1].c_str());
-            turn[3] = make_stringf("...that is the word of Zin, and his word is law.");
+            turn[2] = make_stringf("...they knew they would be found guilty of %s...", sin[1].c_str());
+            turn[3] = make_stringf("...for that is the word of Zin, and his word is law.");
             break;
     }
 
@@ -382,6 +382,10 @@ int zin_check_recite_to_single_monster(const coord_def& where,
     //Can't recite at nothing!
     if (mon == NULL)
         return 0;
+
+    // Can't recite if they were recently recited to.
+    if (mon->has_ench(ENCH_RECITE_TIMER))
+        return -1;
 
     const mon_holy_type holiness = mon->holiness();
 
@@ -991,9 +995,10 @@ bool zin_recite_to_single_monster(const coord_def& where,
             switch (prayertype)
             {
             case RECITE_HERETIC:
-                simple_monster_message(mon,
-                    minor ? "'s eyes and ears begin to bleed."
-                          : " bleeds profusely from its eyes and ears.");
+                if (minor)
+                    simple_monster_message(mon, "'s eyes and ears begin to bleed.");
+                else
+                    mprf("%s bleeds profusely from %s eyes and ears.", mon->name(DESC_CAP_THE).c_str(), mons_pronoun(mon->type, PRONOUN_NOCAP_POSSESSIVE));
                 break;
             case RECITE_CHAOTIC:
                 simple_monster_message(mon,
@@ -1138,6 +1143,11 @@ bool zin_recite_to_single_monster(const coord_def& where,
         affected = true;
         break;
     }
+
+    // Recite time, to prevent monsters from being recited against
+    // more than once in a given recite instance.
+    if (affected)
+        mon->add_ench(mon_enchant(ENCH_RECITE_TIMER, degree, KC_YOU, 40));
 
     // Monsters that have been affected may shout.
     if (affected

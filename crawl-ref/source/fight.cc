@@ -237,12 +237,8 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     }
 
     // confused (but not perma-confused)
-    if (def
-        && def->has_ench(ENCH_CONFUSION)
-        && !mons_class_flag(def->type, M_CONFUSED))
-    {
+    if (def && mons_is_confused (def, false))
         unchivalric = UCAT_CONFUSED;
-    }
 
     // allies
     if (def && def->friendly())
