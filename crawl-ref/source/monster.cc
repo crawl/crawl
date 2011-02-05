@@ -4913,6 +4913,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DAZED:
     case ENCH_LIQUEFYING:
     case ENCH_FAKE_ABJURATION:
+    case ENCH_RECITE_TIMER:
         decay_enchantment(me);
         break;
 
@@ -6537,7 +6538,7 @@ static const char *enchant_names[] =
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "levitation",
     "helpless", "liquefying", "perm_tornado", "fake_abjuration",
-    "dazed", "mute", "blind", "dumb", "mad", "silver_corona",
+    "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "buggy",
 };
 

@@ -257,9 +257,7 @@ void stop_delay(bool stop_stair_travel)
         break;
 
     case DELAY_RECITE:
-        mprf(MSGCH_PLAIN, "Your recitation of %s is interrupted.",
-             _get_zin_recite_speech(delay.trits, delay.len,
-                                    delay.parm1, -1).c_str());
+        mprf(MSGCH_PLAIN, "Your recitation is interrupted.");
         mpr("You feel short of breath.");
         _pop_delay();
         break;

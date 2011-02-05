@@ -1416,6 +1416,7 @@ enum enchant_type
     ENCH_DUMB,          // Permanently dumb (as in, 'struck dumb').
     ENCH_MAD,           // Permanently mad.
     ENCH_SILVER_CORONA, // Zin's silver light.
+    ENCH_RECITE_TIMER,  // Was recited against.
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
