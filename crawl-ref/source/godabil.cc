@@ -251,8 +251,8 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...be %s by the jurisprudence of Zin!", smite[1].c_str());
             break;
         case 9:
-            turn[1] = make_stringf("And he said to all in attendance, 'Which of ye...");
-            turn[2] = make_stringf("...number among the %s? Come before Zin, that...", sinner.c_str());
+            turn[1] = make_stringf("And Zin said to all in attendance, 'Which of ye...");
+            turn[2] = make_stringf("...number among the %s? Come before me, that...", sinner.c_str());
             turn[3] = make_stringf("...I may %s you now for your %s!'", smite[0].c_str(), sin[1].c_str());
             break;
         case 10:
