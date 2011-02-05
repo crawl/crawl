@@ -1623,7 +1623,7 @@ autoinscribe = <regex>:<inscription>
 
         Another use of autoinscription is making sure that you don't
         lose charges of important wands accidentally, as in
-             autoinscribe = wand of healing:!z
+             autoinscribe = wand of healing:!V
 
         The menu colour prefixes (evil_item etc.) can also be used here.
         For example:
