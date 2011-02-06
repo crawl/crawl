@@ -3185,7 +3185,7 @@ static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 
 int cheibriados_slouch(int pow)
 {
-    return (apply_area_visible(_slouch_monsters, pow, false, &you));
+    return (apply_area_visible(_slouch_monsters, pow, true, &you));
 }
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip

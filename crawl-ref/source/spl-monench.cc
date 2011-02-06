@@ -48,7 +48,7 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
 
 void cast_mass_sleep(int pow)
 {
-    apply_area_visible(_sleep_monsters, pow);
+    apply_area_visible(_sleep_monsters, pow, true);
 }
 
 bool backlight_monsters(coord_def where, int pow, int garbage)
