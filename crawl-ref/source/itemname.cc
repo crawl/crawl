@@ -657,7 +657,6 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_CURSE_JEWELLERY:    return "curse jewellery";
     case SCR_IMMOLATION:         return "immolation";
     case SCR_BLINKING:           return "blinking";
-    case SCR_PAPER:              return "paper";
     case SCR_MAGIC_MAPPING:      return "magic mapping";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
@@ -2888,7 +2887,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
-        case SCR_PAPER:
         case SCR_RANDOM_USELESSNESS:
         case SCR_NOISE:
             return (true);
