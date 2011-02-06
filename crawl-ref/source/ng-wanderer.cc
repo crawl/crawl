@@ -52,6 +52,10 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         you.inv[slot].sub_type = WPN_SHORT_SWORD;
         break;
 
+    case SK_LONG_BLADES:
+        you.inv[slot].sub_type = WPN_FALCHION;
+        break;
+
     case SK_MACES_FLAILS:
         you.inv[slot].sub_type = WPN_MACE;
         break;
@@ -213,7 +217,8 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
     int str_size = sizeof(str_weapons) / sizeof(skill_type);
 
     const skill_type dex_weapons[] =
-        { SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
+        { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
+          SK_POLEARMS };
 
     int dex_size = sizeof(dex_weapons) / sizeof(skill_type);
 
@@ -524,8 +529,8 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
 {
     const skill_type combined_weapon_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
-          SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
-
+          SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
+          SK_POLEARMS };
 
     int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
 
@@ -556,6 +561,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
+    case SK_LONG_BLADES:
         _give_wanderer_weapon(slot, skill, 3);
         slot++;
         break;
@@ -679,7 +685,8 @@ static void _wanderer_decent_equipment(skill_type & skill,
 {
     const skill_type combined_weapon_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
-          SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
+          SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
+          SK_POLEARMS };
 
     int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
 
@@ -738,6 +745,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
+    case SK_LONG_BLADES:
         _give_wanderer_weapon(slot, skill, 0);
         slot++;
         break;
