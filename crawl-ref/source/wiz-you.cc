@@ -493,9 +493,9 @@ bool wizard_add_mutation()
         const char* msg;
 
         if (you.mutation[MUT_MUTATION_RESISTANCE] == 3)
-            msg = "You are immune to mutations, remove immunity?";
+            msg = "You are immune to mutations; remove immunity?";
         else
-            msg = "You are resistant to mutations, remove resistance?";
+            msg = "You are resistant to mutations; remove resistance?";
 
         if (yesno(msg, true, 'n'))
         {
