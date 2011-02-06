@@ -17,8 +17,8 @@ function tutorial_msg4.start ()
 end
 
 function tutorial_msg4.train_spellcasting ()
-    local text = "You cannot cast spells yet as you don't have the Spellcasting skill yet. "
-                 .. "Read some scrolls (with "
+    local text = "You cannot cast spells yet as you don't have the Spellcasting "
+                 .. "skill yet. Read some scrolls (with "
                  .. tutorial_get_cmd("CMD_READ")
     if crawl.is_tiles() then
         text = text .. " or by <white>mouseclick</white>"
@@ -157,10 +157,9 @@ function tutorial_msg4.memorise2 ()
 end
 
 function tutorial_msg4.order_allies ()
-    return tutorial_message("Try to let your allies kill that hobgoblin! If necessary, "
-                                                        .. "you can order them about with "
-                            .. tutorial_get_cmd("CMD_SHOUT")
-                                                        .. ".")
+    return tutorial_message("Try to let your allies kill that hobgoblin! If "
+                            .. "necessary, you can order them about with "
+                            .. tutorial_get_cmd("CMD_SHOUT") .. ".")
 end
 
 function tutorial_msg4.heavy_armour ()
@@ -191,7 +190,8 @@ function tutorial_msg4.heavy_armour ()
 end
 
 function tutorial_msg4.tutorial_end ()
-    return tutorial_message("Well done! To exit the tutorial, simply go down these stairs.")
+    return tutorial_message("Well done! To exit the tutorial, simply go down "
+                            .. "these stairs.")
 end
 
 function tutorial_msg4.exit ()

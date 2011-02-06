@@ -18,9 +18,11 @@ function tutorial_msg5.secret_door ()
 end
 
 function tutorial_msg5.dungeon_overview ()
-    return tutorial_message("Trog is just one of many gods. In a real game, you can check "
+    return tutorial_message("Trog is just one of many gods. In a real game, you "
+                            .. "can check "
                             .. tutorial_get_cmd("CMD_DISPLAY_OVERMAP")
-                            .. " for a list of all altars and other interesting features found so far.")
+                            .. " for a list of all altars and other interesting "
+                            .. "features found so far.")
 end
 
 function tutorial_msg5.altar ()
@@ -47,7 +49,8 @@ function tutorial_msg5.religion ()
                  .. tutorial_get_cmd("CMD_DISPLAY_RELIGION")
 
     if crawl.is_tiles() then
-        text = text .. " or <white>Shift</white> + <white>rightclick</white> on the player tile"
+        text = text .. " or <white>Shift</white> + <white>rightclick</white> on "
+                    .. "the player tile"
     end
 
     text = text .. ". Again, pressing <w>!</w> "
@@ -60,7 +63,8 @@ function tutorial_msg5.religion ()
 end
 
 function tutorial_msg5.piety_on_kill ()
-    return tutorial_message("Some gods really like it if you kill monsters in their name. Let the slaughter begin!")
+    return tutorial_message("Some gods really like it if you kill monsters in "
+                            .. "their name. Let the slaughter begin!")
 end
 
 function tutorial_msg5.sacrificing ()

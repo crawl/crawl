@@ -28,8 +28,8 @@ function tutorial_msg3.armour ()
 end
 
 function tutorial_msg3.autopickup ()
-    local text = "Some types of items (mostly magical items and food) are picked up "
-                 .. "automatically as you step on them."
+    local text = "Some types of items (mostly magical items and food) are picked "
+                 .. "up automatically as you step on them."
 
     if crawl.is_tiles() then
         text = text .. " You can recognize these items by their green frame."
@@ -46,7 +46,8 @@ function tutorial_msg3.autopickup ()
 end
 
 function tutorial_msg3.weapon_reminder ()
-    local text = "This dagger was picked up automatically because you didn't have a sharp-edged butchering tool yet. "
+    local text = "This dagger was picked up automatically because you didn't "
+                 .. "have a sharp-edged butchering tool yet. "
                  .. "You know the drill: Wield it with "
                  .. tutorial_get_cmd("CMD_WIELD_WEAPON")
 
@@ -68,8 +69,10 @@ function tutorial_msg3.scroll_noautopickup ()
         text = text .. " or by <white>mouseclick</click>,"
     end
 
-    text = text .. " or you can first dispatch the goblin and then come back for it afterwards. "
-                .. "Either way, you can read this scroll with " .. tutorial_get_cmd("CMD_READ")
+    text = text .. " or you can first dispatch the goblin and then come back for "
+                .. "it afterwards. "
+                .. "Either way, you can read this scroll with "
+                .. tutorial_get_cmd("CMD_READ")
 
     if crawl.is_tiles() then
         text = text .. " or by <white>mouseclick</click>"
@@ -81,29 +84,33 @@ function tutorial_msg3.scroll_noautopickup ()
 end
 
 function tutorial_msg3.ego_weapon ()
-    return tutorial_message("An item described as <lightblue>runed</lightblue> or <lightblue>glowing</lightblue> "
-                            .. "will always be enchanted, or have special properties, or both. "
-                            .. "You need to wield this scimitar to find out what those are.")
+    return tutorial_message("An item described as <lightblue>runed</lightblue> "
+                            .. "or <lightblue>glowing</lightblue> will always be "
+                            .. "enchanted, or have special properties, or both. "
+                            .. "You need to wield this scimitar to find out what "
+                            .. "those are.")
 end
 
 function tutorial_msg3.inventory ()
-    local text = "To find out what your cool new weapon actually does, you can access its description "
-                 .. "from your inventory with "
+    local text = "To find out what your cool new weapon actually does, you can "
+                 .. "access its description from your inventory with "
                  .. tutorial_get_cmd("CMD_DISPLAY_INVENTORY")
 
     if crawl.is_tiles() then
-        text = text .. ", or by <white>mouseover</click> or <white>rightclick</white> in the inventory panel"
+        text = text .. ", or by <white>mouseover</click> or <white>rightclick</white> "
+                    .. "in the inventory panel"
     end
 
-    text = text .. ". When doing so, you will notice that all the item commands also work from the item "
-                .. "description screens."
+    text = text .. ". When doing so, you will notice that all the item commands "
+                .. "also work from the item escription screens."
 
     return tutorial_message(text)
 end
 
 function tutorial_msg3.battle ()
-    return tutorial_message("Once you've successfully managed to poison a monster, it is sometimes best to retreat "
-                            .. "and let the poison do the work. Also retreat to heal, if necessary.")
+    return tutorial_message("Once you've successfully managed to poison a monster, "
+                            .. "it is sometimes best to retreat and let the poison "
+                            .. "do the work. Also retreat to heal, if necessary.")
 end
 
 function tutorial_msg3.downstairs ()
@@ -118,8 +125,8 @@ end
 -- Lua code for level 2.
 -----------------------------------------------------------
 function tutorial_msg3.command_help ()
-    local text = "If the many commands are too confusing, you can also look them up "
-                 .. "in the command help ("
+    local text = "If the many commands are too confusing, you can also look them "
+                 .. "up in the command help ("
                  .. tutorial_get_cmd("CMD_DISPLAY_COMMANDS")
                  .. "<w>?</w>).\n"
                  .. "Also, remember: You can reread old messages with "
@@ -140,10 +147,12 @@ function tutorial_msg3.potion ()
 end
 
 function tutorial_msg3.weapon_swap ()
-    local text = "It is possible to quickly switch between two weapons in slots a and b. "
-                 .. "First, you need to adjust your main weapon to slot a. To do that, type "
+    local text = "It is possible to quickly switch between two weapons in slots "
+                 .. "a and b. First, you need to adjust your main weapon to slot "
+                 .. "a. To do that, type "
                  .. tutorial_get_cmd("CMD_ADJUST_INVENTORY")
-                 .. "<w>i</w>, select your scimitar, and then enter <w>a</w> at the subsequent prompt.\n"
+                 .. "<w>i</w>, select your scimitar, and then enter <w>a</w> at "
+                 .. "the subsequent prompt.\n"
                  .. "Follow the same steps to set the sling to slot <w>b</w>. "
                  .. "Once that is done you can toggle between both of them with "
                  .. tutorial_get_cmd("CMD_WEAPON_SWAP") .. "."
@@ -160,14 +169,18 @@ function tutorial_msg3.weapon_swap2 ()
 end
 
 function tutorial_msg3.retreat_reminder ()
-    return tutorial_message("Keep in mind that you can retreat to minimize the number of foes you are fighting at a time.")
+    return tutorial_message("Keep in mind that you can retreat to minimize the "
+                            .. "number of foes you are fighting at a time.")
 end
 
 function tutorial_msg3.quantified_drop ()
-    local text = "These meat rations weigh too much. Note the <lightred>burden status</lightred> to the right of the screen!\n"
+    local text = "These meat rations weigh too much. Note the <lightred>burden status</lightred> "
+                 .. "to the right of the screen!\n"
                  .. "You can drop them again with "
-                 .. tutorial_get_cmd("CMD_DROP") .. ", or you can only drop e.g. 20, by typing "
-                 .. tutorial_get_cmd("CMD_DROP") .. ", <white>20</white>, selecting the meat rations, and confirming with <white>Enter</white>."
+                 .. tutorial_get_cmd("CMD_DROP") .. ", or you can only drop "
+                 .. "e.g. 20, by typing "
+                 .. tutorial_get_cmd("CMD_DROP") .. ", <white>20</white>, selecting "
+                 .. "the meat rations, and confirming with <white>Enter</white>."
 
     return tutorial_message(text)
 end
@@ -201,11 +214,13 @@ end
 -----------------------------------------------------------
 
 function tutorial_msg3.gold ()
-    return tutorial_message("Gold has no weight, cannot be dropped, and can be spent in shops.")
+    return tutorial_message("Gold has no weight, cannot be dropped, and can be "
+                            .. "spent in shops.")
 end
 
 function tutorial_msg3.shop ()
-    return tutorial_message("Shops offer a variety of items, but don't accept merchandise from anyone.")
+    return tutorial_message("Shops offer a variety of items, but don't accept "
+                            .. "merchandise from anyone.")
 end
 
 function tutorial_msg3.enter_shop ()
@@ -241,7 +256,8 @@ function tutorial_msg3.wand_digging ()
         text = text .. "or <white>mouseover</white>/<white>rightclick</white> "
     end
     text = text .. "to check the wall types. "
-                .. "(You can look up the direction keys in the command help help with <w>??</w>.)"
+                .. "(You can look up the direction keys in the command help help "
+                .. "with <w>??</w>.)"
 
     return tutorial_message(text)
 end
@@ -260,8 +276,8 @@ end
 
 function tutorial_msg3.scroll_id ()
     return tutorial_message("These three scrolls can be used to enchant armour, "
-                            .. "recharge wands, and identify items. Try working out "
-                            .. "which is which.")
+                            .. "recharge wands, and identify items. Try working "
+                            .. "out which is which.")
 end
 
 function tutorial_msg3.go_shopping ()
@@ -283,12 +299,13 @@ function tutorial_msg3.go_shopping ()
 end
 
 function tutorial_msg3.item_use ()
-    return tutorial_message("There are some nasty monsters behind that door. Remember to "
-                            .. "use the items you just bought!")
+    return tutorial_message("There are some nasty monsters behind that door. "
+                            .. "Remember to use the items you just bought!")
 end
 
 function tutorial_msg3.tutorial_end ()
-    return tutorial_message("Well done! To exit the tutorial, simply go down these stairs.")
+    return tutorial_message("Well done! To exit the tutorial, simply go down "
+                            .. "these stairs.")
 end
 
 function tutorial_msg3.exit ()
