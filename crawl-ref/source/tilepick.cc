@@ -4385,8 +4385,14 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_EXPLORE;
     case CMD_INTERLEVEL_TRAVEL:
         return TILEG_CMD_INTERLEVEL_TRAVEL;
+    case CMD_AUTOFIGHT:
+        return TILEG_CMD_AUTOFIGHT;
     case CMD_SEARCH:
         return TILEG_CMD_SEARCH;
+    case CMD_USE_ABILITY:
+        return TILEG_CMD_USE_ABILITY;
+    case CMD_PRAY:
+        return TILEG_CMD_PRAY;
     case CMD_SEARCH_STASHES:
         return TILEG_CMD_SEARCH_STASHES;
     case CMD_REPLAY_MESSAGES:
@@ -4411,6 +4417,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_EDIT_PLAYER_TILE;
     case CMD_DISPLAY_COMMANDS:
         return TILEG_CMD_DISPLAY_COMMANDS;
+    case CMD_CHARACTER_DUMP:
+        return TILEG_CMD_CHARACTER_DUMP;
     default:
         return TILEG_TODO;
     }
