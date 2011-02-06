@@ -947,7 +947,7 @@
 { MUT_ICEMAIL,                    0,  1, false, false,
   NULL,
 
-  {"A meltable icy envelope protects you from harm (AC +", "", ""},
+  {"A meltable icy envelope protects you from harm and freezing vapours (AC +", "", ""},
   {"An icy envelope takes form around you.", "", ""},
   {"", "", ""},
 
