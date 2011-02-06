@@ -3757,7 +3757,7 @@ static void _move_player(coord_def move)
                                  "and next to ";
                         prompt += (dangerous == DNGN_LAVA ? "lava"
                                                           : "deep water");
-                        prompt += "? ";
+                        prompt += "?";
 
             if (!yesno(prompt.c_str(), false, 'n'))
             {

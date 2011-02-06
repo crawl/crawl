@@ -374,7 +374,7 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
     const bool rotten = food_is_rotten(mitm[corpse_id]);
 
     if (is_forbidden_food(mitm[corpse_id])
-        && !yesno("Desecrating this corpse would be a sin.  Continue anyway?",
+        && !yesno("Desecrating this corpse would be a sin. Continue anyway?",
                   false, 'n'))
     {
         return false;

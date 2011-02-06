@@ -524,7 +524,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                 continue;
             else
             {
-                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n) ",
+                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n)",
                          total_purchase);
 
                 if (_shop_yesno(info, 'n'))

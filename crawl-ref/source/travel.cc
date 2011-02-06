@@ -2131,13 +2131,13 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                             || i == BRANCH_SHOALS
                             || i == BRANCH_SNAKE_PIT))
                     {
-                        msg += "Branch not generated this game.  ";
+                        msg += "Branch not generated this game. ";
                     }
 
                     if (target.entry_stairs == NUM_FEATURES
                         && br[i] != BRANCH_MAIN_DUNGEON)
                     {
-                        msg += "Branch has no entry stairs.  ";
+                        msg += "Branch has no entry stairs. ";
                     }
 
                     if (!msg.empty())
