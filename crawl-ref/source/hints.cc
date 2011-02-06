@@ -2227,7 +2227,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Every third level you get to choose a stat to raise: "
                 "Strength, Intelligence, or Dexterity. "
                 "<w>Strength</w> affects the amount you can carry and makes it "
-                "easier to ear heavy armour. "
+                "easier to wear heavy armour. "
                 "<w>Intelligence</w> makes it easier to cast spells and "
                 "reduces the amount by which you hunger when you do so. "
                 "<w>Dexterity</w> increases your evasion "
@@ -2737,22 +2737,34 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             text << "Levitation will allow you to cross deep water or lava. To "
                     "activate it, select the corresponding ability in the ability "
-                    "menu (<w>%</w>). Once levitating, keep an eye on the status "
-                    "line and messages as it will eventually time out and may "
-                    "cause you to fall into water and drown.";
+                    "menu (<w>%</w>"
+#ifdef USE_TILE
+                    " or via <w>mouseclick</w> in the <w>command panel</w>"
+#endif
+                    "). Once levitating, keep an eye on the status line and messages "
+                    "as it will eventually time out and may cause you to fall "
+                    "into water and drown.";
         }
         else
         {
             text << "That item you just equipped granted you a new ability. "
-                    "Press <w>%</w> to take a look at your abilities or to "
-                    "use one of them.";
+                    "Press <w>%</w> "
+#ifdef USE_TILE
+                    "(or <w>click</w> in the <w>command panel</w>) "
+#endif
+                    "to take a look at your abilities or to use one of them.";
         }
         cmd.push_back(CMD_USE_ABILITY);
         break;
 
     case HINT_ITEM_RESISTANCES:
         text << "Equipping this item affects your resistances. Check the "
-                "overview screen (<w>%</w>) for details.";
+                "overview screen (<w>%</w>"
+#ifdef USE_TILE
+                " or click on the <w>character overview button</w> in the "
+                "command panel"
+#endif
+                ") for details.";
         cmd.push_back(CMD_RESISTS_SCREEN);
         break;
 
@@ -3310,7 +3322,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     case HINT_GAINED_SPELLCASTING:
         text << "Great, from now on you'll be able to cast spells!\n"
-                "Press <w>%</w> to manage your skill set.";
+                "Press <w>%</w> "
+#ifdef USE_TILE
+             << "(or click on the <w>skill button</w> in the command panel) "
+#endif
+             << "to manage your skill set.";
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
     case HINT_FUMBLING_SHALLOW_WATER:

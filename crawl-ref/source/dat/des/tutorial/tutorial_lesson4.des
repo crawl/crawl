@@ -17,7 +17,7 @@ function tutorial_msg4.start ()
 end
 
 function tutorial_msg4.train_spellcasting ()
-    local text = "You cannot cast spells yet as you don't have the Spellcasting "
+    local text = "You cannot cast spells yet because you don't have the Spellcasting "
                  .. "skill yet. Read some scrolls (with "
                  .. tutorial_get_cmd("CMD_READ")
     if crawl.is_tiles() then
@@ -48,7 +48,11 @@ function tutorial_msg4.spellcasting ()
         text = text .. " or by <white>clicking</white> on the spell tile"
     end
     text = text .. ". Once you are out of magic points, retreat and rest with "
-                .. tutorial_get_cmd("CMD_REST") .. " to regain them."
+                .. tutorial_get_cmd("CMD_REST")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white> in the command panel"
+    end
+    text = text .. " to regain them."
 
     return tutorial_message(text)
 end
