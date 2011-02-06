@@ -2,10 +2,10 @@
 resting CMD_REST
 explore CMD_EXPLORE
 travel CMD_INTERLEVEL_TRAVEL
-# autofight
+autofight CMD_AUTOFIGHT
 waiting CMD_SEARCH
-# ability
-# prayer
+ability CMD_USE_ABILITY
+pray CMD_PRAY
 stash_search CMD_SEARCH_STASHES
 message_history CMD_REPLAY_MESSAGES
 overview CMD_RESISTS_SCREEN
@@ -18,4 +18,5 @@ known_items CMD_KNOWN_ITEMS
 quicksave CMD_SAVE_GAME_NOW
 doll_editor CMD_EDIT_PLAYER_TILE
 help CMD_DISPLAY_COMMANDS
-# chardump
+chardump CMD_CHARACTER_DUMP
+
