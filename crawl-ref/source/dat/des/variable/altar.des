@@ -67,7 +67,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Kikubaaqudgha="book of Necromancy / rat corpse w:5 / kobold corpse w:5 / snake corpse w:5",
          Lugonu="no",
          Makhleb="tome of destruction / rod of demonology",
-         ["Nemelex Xobeh"]="scroll of paper q:5-10 / scroll of random uselessness q:5-10",
+         ["Nemelex Xobeh"]="scroll of random uselessness q:5-10",
          Okawaru="book of Callings / randbook owner:Lugonu disc:summ spell:summon_butterflies numspells:1 \
          / scroll of summoning q:2-3",
          ["Sif Muna"]="staff of channeling / good_item plate mail",
