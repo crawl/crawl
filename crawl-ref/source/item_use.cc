@@ -4699,13 +4699,15 @@ void read_scroll(int slot)
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     std::string pre_succ_msg = "As you read the scroll, it crumbles to dust.";
-    if (which_scroll != SCR_PAPER
-        && (you.confused()
-            || (which_scroll != SCR_IMMOLATION
-                && !_is_cancellable_scroll(which_scroll))))
+    if (which_scroll != SCR_PAPER)
     {
-        mpr(pre_succ_msg.c_str());
-        // Actual removal of scroll done afterwards. -- bwr
+        if (you.confused()
+            || (which_scroll != SCR_IMMOLATION
+                && !_is_cancellable_scroll(which_scroll)))
+        {
+            mpr(pre_succ_msg.c_str());
+            // Actual removal of scroll done afterwards. -- bwr
+        }
     }
 
     const bool dangerous = player_in_a_dangerous_place();
