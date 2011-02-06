@@ -112,7 +112,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         "forces of darkness",
     };
 
- std::string sin_text[12] =
+    std::string sin_text[12] =
     {
         "chaotic",
         "discordant",
