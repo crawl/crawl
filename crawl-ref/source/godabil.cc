@@ -223,7 +223,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         case 3:
             turn[1] = make_stringf("Zin spoke of the doctrine of %s, and...", virtue[1].c_str());
             turn[2] = make_stringf("...he saw the %s filled with fear, for they were...", sinner.c_str());
-            turn[3] = make_stringf("%s and knew his wrath would come for them.", sin[0].c_str());
+            turn[3] = make_stringf("...%s and knew his wrath would come for them.", sin[0].c_str());
             break;
         case 4:
             turn[1] = make_stringf("And so Zin bade the %s to come before...", sinner.c_str());
