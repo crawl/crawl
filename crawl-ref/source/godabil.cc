@@ -144,7 +144,8 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         "sacrilege",
     };
 
-    std::string virtue_text[12] = {
+    std::string virtue_text[12] =
+    {
         "ordered",
         "harmonic",
         "lawful",
