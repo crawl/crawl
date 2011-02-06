@@ -5491,7 +5491,6 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (newdam > 0)
             {
                 std::string msg = mons_has_flesh(this) ? "'s flesh" : "";
-                msg += " is ";
                 msg += (dam < newdam) ? " is horribly charred!"
                                       : " is seared.";
                 simple_monster_message(this, msg.c_str());
