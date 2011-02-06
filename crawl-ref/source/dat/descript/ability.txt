@@ -125,7 +125,19 @@ Revert to your normal form, with a short delay.
 # Zin
 Recite
 
-Preach to monsters about Zin's laws which can lead to various results. It works best on humanoids, worse on undead and demons, and not at all on beasts.
+Preach to monsters about Zin's laws which can lead to various results. It works best on those especially repugnant to Zin -- undead, demons, the insane, unclean creatures of all sorts and those who worship other gods. It has no effect on ordinary beasts.
+
+There are five books you can preach from:
+
+* Book of Abominations: This book deals with the very thing most abhorrent to Zin -- chaos in all its form.  The recitations will invoke Zin's most powerful smittance.
+
+* Book of Ablutions: Those impure are nearly as loathed by the Law Giver, recitations from this book will deal damage to such creatures.
+
+* Book of Apostates: Those who do not worship Zin but do no other evil will be dealt with least harshly, the recitations from this book merely sow confusion.  Yet those who dare to believe in a god alien to Zin may be permanently deprived of means of spreading their foul faith.
+
+* Book of Anathema: The demons and the undead are hated by Zin, this book gives you means to rebuke them.
+
+* Book of Alliances: This book contains recitations meant to be said to your fellows. Yet the time has not came yet -- Zin bides you to not love your friends while there are enemies to hate.
 %%%%
 Vitalisation
 
