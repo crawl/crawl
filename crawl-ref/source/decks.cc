@@ -1660,7 +1660,7 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
 
 static void _mass_drain(int pow)
 {
-    apply_area_visible(_drain_monsters, pow);
+    apply_area_visible(_drain_monsters, pow, true);
 }
 
 // Return true if it was a "genuine" draw, i.e., there was a monster

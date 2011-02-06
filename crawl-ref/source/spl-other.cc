@@ -322,7 +322,7 @@ void cast_intoxicate(int pow)
         mpr("Your head spins!");
     }
 
-    apply_area_visible(_intoxicate_monsters, pow);
+    apply_area_visible(_intoxicate_monsters, pow, true);
 }
 
 // The intent of this spell isn't to produce helpful potions
