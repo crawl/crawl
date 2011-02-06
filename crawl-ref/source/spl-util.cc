@@ -528,13 +528,21 @@ const char *spell_title(spell_type spell)
 // Apply a function-pointer to all visible squares
 // Returns summation of return values from passed in function.
 int apply_area_visible(cell_func cf, int power,
-                       bool pass_through_trans, actor *agent)
+                       bool pass_through_trans, actor *agent,
+                       bool affect_scryed)
 {
     int rv = 0;
+
+    bool xray = you.xray_vision;
+
+    if (!affect_scryed)
+        you.xray_vision = false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         if (pass_through_trans || you.see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
+
+    you.xray_vision = xray;
 
     return (rv);
 }
