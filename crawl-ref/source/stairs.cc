@@ -646,7 +646,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
         if (!stay && crawl_state.game_is_hints())
         {
-            if (!yesno("Are you *sure*?  Doing so will end the game!", false,
+            if (!yesno("Are you *sure*? Doing so will end the game!", false,
                        'n'))
             {
                 stay = true;

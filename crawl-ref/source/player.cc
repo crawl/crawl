@@ -804,7 +804,7 @@ bool berserk_check_wielded_weapon()
     {
         std::string prompt = "Do you really want to go berserk while "
                              "wielding " + weapon.name(DESC_NOCAP_YOUR)
-                             + "? ";
+                             + "?";
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
