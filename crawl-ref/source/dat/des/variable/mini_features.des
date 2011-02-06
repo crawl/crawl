@@ -1369,8 +1369,7 @@ DEPTH: D:2-12
 ITEM:  scroll of immolation / potion of degeneration / potion of decay / \
        potion of strong poison / potion of poison
 : else
-ITEM:  scroll of paper / scroll of random uselessness / \
-       potion of degeneration / potion of poison
+ITEM:  scroll of random uselessness / potion of degeneration / potion of poison
 : end
 MAP
 xxxx
