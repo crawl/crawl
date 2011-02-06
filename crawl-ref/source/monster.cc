@@ -3039,6 +3039,13 @@ bool monster::is_unclean() const
     if (has_chaotic_spell() && is_actual_spellcaster())
         return (true);
 
+    corpse_effect_type ce = mons_corpse_effect(type);
+    if ((ce == CE_HCL || ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_GOOD
+         || ce == CE_MUTAGEN_BAD || ce == CE_RANDOM) && !is_chaotic())
+    {
+        return true;
+    }
+
     return (false);
 }
 
