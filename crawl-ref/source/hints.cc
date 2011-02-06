@@ -3364,7 +3364,7 @@ std::string hints_skills_info()
         "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
         "will increase at a decidedly slower rate and ease training of others. "
         "Press <w>?</w> to read your skills' descriptions.";
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string2(broken, std::min(80, _get_hints_cols()));
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
