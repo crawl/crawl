@@ -2426,7 +2426,7 @@ int monster_die(monster* mons, killer_type killer,
         _monster_die_cloud(mons, !mons_reset && !fake_abjuration && !unsummoned && !timeout, silent, summoned);
 
     int corpse = -1;
-    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned && !timeout)
+    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned && !timeout && !was_banished)
     {
         // Have to add case for disintegration effect here? {dlb}
         int corpse2 = -1;
