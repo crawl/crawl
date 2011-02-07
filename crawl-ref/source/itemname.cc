@@ -641,6 +641,9 @@ static const char* scroll_type_name(int scrolltype)
 {
     switch (static_cast<scroll_type>(scrolltype))
     {
+#if TAG_MAJOR_VERSION == 32
+    case SCR_PAPER:              return "old paper";
+#endif
     case SCR_IDENTIFY:           return "identify";
     case SCR_TELEPORTATION:      return "teleportation";
     case SCR_FEAR:               return "fear";
