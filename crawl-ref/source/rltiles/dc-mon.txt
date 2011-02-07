@@ -105,7 +105,7 @@ snapping_turtle_shell MONS_SNAPPING_TURTLE_SHELL
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
 %rim 0
-firecrab MONS_FIRECRAB
+fire_crab MONS_FIRE_CRAB
 %rim 1
 
 ## Worms and larvae ('w')

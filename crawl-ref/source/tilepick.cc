@@ -1018,8 +1018,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BABY_ALLIGATOR;
     case MONS_ALLIGATOR:
         return TILEP_MONS_ALLIGATOR;
-    case MONS_FIRECRAB:
-        return TILEP_MONS_FIRECRAB;
+    case MONS_FIRE_CRAB:
+        return TILEP_MONS_FIRE_CRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -3304,8 +3304,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
         return TILE_CORPSE_ALLIGATOR_SNAPPING_TURTLE;
-    case MONS_FIRECRAB:
-        return TILE_CORPSE_FIRECRAB;
+    case MONS_FIRE_CRAB:
+        return TILE_CORPSE_FIRE_CRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
