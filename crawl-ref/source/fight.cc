@@ -4162,12 +4162,9 @@ random_var melee_attack::player_weapon_speed()
         if (wpn_skill == SK_SHORT_BLADES && min_delay > 5)
             min_delay = 5;
 
-        // Using both hands can get a weapon up to speed 7
-        if ((hands == HANDS_TWO || hand_half_bonus)
-            && min_delay > 7)
-        {
+        // All weapons have min delay 7 or better
+        if (min_delay > 7)
             min_delay = 7;
-        }
 
         // never go faster than speed 3 (ie 3 attacks per round)
         if (min_delay < 3)
