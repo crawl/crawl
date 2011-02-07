@@ -4557,10 +4557,6 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
               && mon->type != MONS_PULSATING_LUMP);
         break;
 
-    case BEAM_ENSLAVE_UNDEAD:
-        rc = (mon->holiness() == MH_UNDEAD && mon->attitude != ATT_FRIENDLY);
-        break;
-
     case BEAM_ENSLAVE_SOUL:
         rc = (mon->holiness() == MH_NATURAL && mon->attitude != ATT_FRIENDLY);
         break;
@@ -4720,32 +4716,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             obvious_effect = true;
         mon->hurt(agent(), damage.roll());
         return (MON_AFFECTED);
-
-    case BEAM_ENSLAVE_UNDEAD:
-    {
-        const god_type god =
-            (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                          : GOD_NO_GOD;
-        dprf("HD: %d; pow: %d", mon->hit_dice, ench_power);
-
-        obvious_effect = true;
-        if (player_will_anger_monster(mon))
-        {
-            simple_monster_message(mon, " is repulsed!");
-            return (MON_OTHER);
-        }
-
-        simple_monster_message(mon, " is enslaved.");
-
-        // Wow, permanent enslaving!
-        mon->attitude = ATT_FRIENDLY;
-        behaviour_event(mon, ME_ALERT, MHITNOT);
-        mons_att_changed(mon);
-
-        mons_make_god_gift(mon, god);
-
-        return (MON_AFFECTED);
-    }
 
     case BEAM_ENSLAVE_SOUL:
     {
@@ -5536,8 +5506,8 @@ bool bolt::nasty_to(const monster* mon) const
         return (mon->holiness() == MH_NATURAL);
     }
 
-    // dispel undead / control undead
-    if (flavour == BEAM_DISPEL_UNDEAD || flavour == BEAM_ENSLAVE_UNDEAD)
+    // dispel undead
+    if (flavour == BEAM_DISPEL_UNDEAD)
         return (mon->holiness() == MH_UNDEAD);
 
     // pain / agony
@@ -5788,7 +5758,9 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_CHARM:                 return ("enslave");
     case BEAM_BANISH:                return ("banishment");
     case BEAM_DEGENERATE:            return ("degeneration");
+#if TAG_MAJOR_VERSION == 32
     case BEAM_ENSLAVE_UNDEAD:        return ("enslave undead");
+#endif
     case BEAM_ENSLAVE_SOUL:          return ("enslave soul");
     case BEAM_PAIN:                  return ("pain");
     case BEAM_DISPEL_UNDEAD:         return ("dispel undead");

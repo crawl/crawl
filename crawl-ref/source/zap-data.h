@@ -700,6 +700,7 @@
     6
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     ZAP_ENSLAVE_UNDEAD,
     "",
@@ -715,6 +716,7 @@
     false,
     0
 },
+#endif
 
 {
     ZAP_ENSLAVE_SOUL,

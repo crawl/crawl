@@ -304,7 +304,9 @@ enum beam_type                  // beam[].flavour
     BEAM_CHARM,
     BEAM_BANISH,
     BEAM_DEGENERATE,
+#if TAG_MAJOR_VERSION == 32
     BEAM_ENSLAVE_UNDEAD,
+#endif
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
@@ -3349,7 +3351,9 @@ enum zap_type
     ZAP_BREATHE_ACID,
     ZAP_BREATHE_POISON,
     ZAP_BREATHE_POWER,
+#if TAG_MAJOR_VERSION == 32
     ZAP_ENSLAVE_UNDEAD,
+#endif
     ZAP_AGONY,
     ZAP_DISINTEGRATION,
     ZAP_BREATHE_STEAM,
