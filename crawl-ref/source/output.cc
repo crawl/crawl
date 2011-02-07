@@ -2133,7 +2133,7 @@ std::string _status_mut_abilities()
                 AC_change += level;
                 break;
             case MUT_THIN_SKELETAL_STRUCTURE:
-                Dex_change += level;
+                Dex_change += 2 * level;
                 Str_change -= level;
                 break;
             case MUT_YELLOW_SCALES:
