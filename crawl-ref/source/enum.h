@@ -1893,7 +1893,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DANCING_WEAPON,
     MONS_HARPY,
     MONS_RAVEN,
-    MONS_FIRECRAB,
+    MONS_FIRE_CRAB,
     MONS_HOMUNCULUS,
     MONS_SOUPLING,
 

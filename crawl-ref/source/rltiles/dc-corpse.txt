@@ -103,7 +103,7 @@ alligator_baby CORPSE_BABY_ALLIGATOR
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
-firecrab CORPSE_FIRECRAB
+fire_crab CORPSE_FIRE_CRAB
 
 ## Worms ('w')
 %back dc-misc/blood_green
