@@ -405,7 +405,7 @@ static void _print_stats_wp(int y)
         col = LIGHTGREY;
         text = (you.has_claws(false) > 0) ? "Claws" : "Nothing wielded";
         if (you.species == SP_CAT)
-            text = "Tooth and claw";
+            text = "Teeth and claws";
 
         switch (you.form)
         {
@@ -427,7 +427,7 @@ static void _print_stats_wp(int y)
                 break;
             case TRAN_DRAGON:
                 col = GREEN;
-                text = "Tooth and claw";
+                text = "Teeth and claws";
                 break;
             case TRAN_LICH:
                 col = MAGENTA;
