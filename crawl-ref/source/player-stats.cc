@@ -352,7 +352,7 @@ static int _dex_modifier()
     result += player_mutation_level(MUT_FLEXIBLE_WEAK)
               - player_mutation_level(MUT_STRONG_STIFF);
 
-    result += player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    result += 2 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     result -= player_mutation_level(MUT_ROUGH_BLACK_SCALES);
 
     // transformations
