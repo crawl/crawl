@@ -1433,8 +1433,7 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(2))
         {
         case 0:
-            mpr("You feel slightly disoriented.");
-            forget_map(10 + random2(10));
+            mpr("You feel a little dazed.");
             break;
         case 1:
             potion_effect(POT_CONFUSION, 10);
@@ -1456,8 +1455,12 @@ void MiscastEffect::_divination_you(int severity)
                 mpr("You have a terrible headache.");
             break;
         case 1:
-            mpr("You feel lost.");
-            forget_map(40 + random2(40));
+            mpr("You lose your focus.");
+            if (you.magic_points > 0)
+            {
+                dec_mp(3 + random2(10));
+                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+            }
             break;
         }
 
@@ -1465,17 +1468,17 @@ void MiscastEffect::_divination_you(int severity)
         break;
 
     case 3:         // nasty
-        switch (random2(3))
+        switch (random2(2))
         {
         case 0:
-            if (!forget_spell())
-                mpr("You get a splitting headache.");
+            mpr("You lose concentration completely!");
+            if (you.magic_points > 0)
+            {
+                dec_mp(5 + random2(20));
+                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+            }
             break;
         case 1:
-            mpr("You feel completely lost.");
-            forget_map(100);
-            break;
-        case 2:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life.");
             else if (_lose_stat(STAT_INT, 3 + random2(3)))

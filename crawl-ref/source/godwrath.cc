@@ -819,6 +819,10 @@ static bool _sif_muna_retribution()
         break;
 
     case 7:
+        if (!forget_spell())
+            mpr("You get a splitting headache.");
+		break;
+
     case 8:
         if (you.magic_points > 0)
         {
