@@ -450,6 +450,10 @@ std::string pluralise(const std::string &name,
         // Vortex; vortexes is legal, but the classic plural is cooler.
         return name.substr(0, name.length() - 2) + "ices";
     }
+    else if (ends_with(name, "mosquito"))
+    {
+        return name + "es";
+    }
     else if (ends_with(name, "cyclops"))
     {
         return name.substr(0, name.length() - 1) + "es";
