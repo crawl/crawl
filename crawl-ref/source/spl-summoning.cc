@@ -333,7 +333,14 @@ bool cast_summon_swarm(int pow, god_type god)
             MONS_WORKER_ANT
         };
 
-        const monster_type mon = RANDOM_ELEMENT(swarmers);
+        monster_type mon = MONS_NO_MONSTER;
+
+        // If you worship a good god, don't summon an evil/unclean
+        // swarmer (in this case, the vampire mosquito).
+        do
+            mon = RANDOM_ELEMENT(swarmers);
+        while (player_will_anger_monster(mon));
+
         const bool friendly = (random2(pow) > 7);
 
         if (create_monster(
