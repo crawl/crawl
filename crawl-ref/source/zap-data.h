@@ -782,6 +782,7 @@
     0 // Explosion does the noise.
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     ZAP_CONTROL_DEMON,
     "",
@@ -797,6 +798,7 @@
     false,
     0
 },
+#endif
 
 {
     ZAP_ORB_OF_FRAGMENTATION,
