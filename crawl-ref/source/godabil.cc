@@ -228,8 +228,8 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 4:
             turn[1] = make_stringf("And so Zin bade the %s to come before...", sinner.c_str());
-            turn[2] = make_stringf("...his altar, that he may pass judgement...");
-            turn[3] = make_stringf("...upon those who are not %s.", virtue[0].c_str());
+            turn[2] = make_stringf("...his altar, that he might pass judgement...");
+            turn[3] = make_stringf("...upon those who were not %s.", virtue[0].c_str());
             break;
         case 5:
             turn[1] = make_stringf("To the devout, Zin provideth. From the rest...");
