@@ -656,7 +656,7 @@ struct spell_desc
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
-     SPFLAG_UNCLEAN | SPFLAG_BATTLE,
+     SPFLAG_BATTLE,
      6,
      200,
      -1, -1,
