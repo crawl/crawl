@@ -213,7 +213,7 @@ static startup_wand_type _str_to_wand(const std::string& str)
 
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
-int str_to_summon_type (const std::string &str)
+int str_to_summon_type(const std::string &str)
 {
     if (str == "clone")
         return (MON_SUMM_CLONE);

@@ -19,7 +19,7 @@ enum drop_mode_type
     DM_MULTI,
 };
 
-int str_to_summon_type (const std::string &str);
+int str_to_summon_type(const std::string &str);
 std::string gametype_to_str(game_type type);
 
 std::string read_init_file(bool runscript = false);
