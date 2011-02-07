@@ -376,25 +376,12 @@ static void _wucad_pluses(item_def *item)
 
 static void _WUCAD_MU_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _wucad_miscast(&you, 9, 90);
     _wucad_pluses(item);
-}
-
-static void _WUCAD_MU_unequip(const item_def *item, bool *show_msgs)
-{
-    _wucad_miscast(&you, 9, 90);
 }
 
 static void _WUCAD_MU_world_reacts(item_def *item)
 {
     _wucad_pluses(item);
-}
-
-static void _WUCAD_MU_melee_effect(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied)
-{
-    if (one_chance_in(9))
-        _wucad_miscast(attacker, random2(9), random2(70));
 }
 
 static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
