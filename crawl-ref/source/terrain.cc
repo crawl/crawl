@@ -34,6 +34,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "species.h"
 #include "spl-transloc.h"
 #include "stuff.h"
 #include "env.h"
@@ -1361,7 +1362,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     bool escape = false;
     coord_def empty;
 
-    if (species_likes_water() && terrain == DNGN_DEEP_WATER
+    if (species_likes_water(you.species) && terrain == DNGN_DEEP_WATER
         && !form_likes_water() && !you.transform_uncancellable)
     {
         // These can happen when we enter deep water directly -- bwr

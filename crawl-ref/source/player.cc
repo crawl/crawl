@@ -425,15 +425,11 @@ bool player_in_hell(void)
             && is_hell_subbranch(you.where_are_you));
 }
 
-bool species_likes_water()
-{
-    return (you.species == SP_MERFOLK || you.species == SP_GREY_DRACONIAN);
-}
-
 bool player_likes_water(bool permanently)
 {
     return (!permanently && beogh_water_walk()
-            || (species_likes_water() || !permanently) && form_likes_water());
+            || (species_likes_water(you.species) || !permanently)
+                && form_likes_water());
 }
 
 bool player_in_bat_form()
