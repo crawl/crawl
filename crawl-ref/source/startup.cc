@@ -541,6 +541,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
 {
     std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
+    static int type = GAME_TYPE_UNSPECIFIED;
 
 #ifdef USE_TILE
     const int max_col    = tiles.get_crt()->mx;
@@ -656,7 +657,12 @@ static void _show_startup_menu(newgame_def* ng_choice,
     bool full_name = !input_string.empty();
 
     int save = _find_save(chars, input_string);
-    if (save != -1)
+    if (type != GAME_TYPE_UNSPECIFIED)
+    {
+        menu.set_active_object(game_modes);
+        game_modes->set_active_item(type);
+    }
+    else if (save != -1)
     {
         menu.set_active_object(save_games);
         // save game id is offset by NUM_GAME_TYPE
@@ -759,8 +765,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
             else
             {
                 // Menu might have changed selection -- sync name.
-                int id = menu.get_active_item()->get_id();
-                switch (id)
+                type = menu.get_active_item()->get_id();
+                switch (type)
                 {
                 case GAME_TYPE_ARENA:
                     input_string = "";
@@ -781,7 +787,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                     break;
 
                 default:
-                    int save_number = id - NUM_GAME_TYPE;
+                    int save_number = type - NUM_GAME_TYPE;
                     input_string = chars.at(save_number).name;
                     full_name = true;
                     break;
