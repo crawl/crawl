@@ -5,7 +5,7 @@ Swift, strong and bulky, they need more food than other species.
 %%%%
 Deep Dwarf
 
-They live deep down and cannot regenerate, but they are resilient and have tools to heal.
+They live deep underground and cannot regenerate health naturally, but they are resilient and have tools to heal.
 %%%%
 Deep Elf
 
@@ -17,7 +17,7 @@ They will never follow a god, but Demigods make up for this with divine attribut
 %%%%
 Demonspawn
 
-Demonspawn are half human, half demon. They acquire demonic and strong mutations as they grow.
+Demonspawn are half human, half demon. They acquire strong demonic mutations as they grow.
 %%%%
 Draconian
 
@@ -33,7 +33,7 @@ An undead, damned to rot eternally. They are always looking for rotten food to e
 %%%%
 Halfling
 
-Small and somewhat fragile, their perks are slings and stealth.
+Small but hardy, they excel with slings. They have a limited resistance to mutagenic effects.
 %%%%
 High Elf
 
@@ -41,7 +41,7 @@ Proud elves, who can cast spells as well as they can fight with the sword.
 %%%%
 Hill Orc
 
-Orcs are good at all professions. Hated by most, orcs are very proud and many of them feel superior.
+Orcs are skilled in close combat, and often dabble in offensive magic. Hated by most, orcs are very proud and many of them feel superior.
 %%%%
 Human
 
@@ -53,7 +53,7 @@ Bird-men who love to fight, both with weapons and spells. They are quite fragile
 %%%%
 Kobold
 
-Small, mischievous but very competent. They can and will eat anything.
+Small, mischievous and a little fragile, but multi-talented. They can and will eat anything.
 %%%%
 Merfolk
 
@@ -77,7 +77,7 @@ A hybrid; human from the chest up, with a scaly, muscular torso trailing off lik
 %%%%
 Ogre
 
-Large and strong, they're mostly seen as brutes. Casting ogres have been spotted, however.
+Large and strong, they're mostly seen as brutes. Ogres are very comfortable with the basics of magic, however.
 %%%%
 Sludge Elf
 
@@ -93,5 +93,5 @@ Large brutes, ready to maim anything with their claws, never thinking twice. The
 %%%%
 Vampire
 
-Shifting between the states of life and undeath, they're accomplished thieves, stabbers and casters.
+Shifting between the states of life and undeath, they're accomplished stabbers and casters.
 %%%%
