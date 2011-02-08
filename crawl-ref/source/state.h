@@ -53,6 +53,7 @@ struct game_state
     bool map_stat_gen;      // Set if we're generating stats on maps.
 
     game_type type;
+    game_type last_type;
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
 
