@@ -1613,13 +1613,12 @@ in small villages. They live simple lives and have simple interests.
 Sometimes a particularly restless Halfling will leave his or her village
 in search of adventure.
 
-Halflings are very small and are among the least robust of any character
-species. Although only average at most fighting skills, they can use
-short blades well and are good at all forms of missile combat. They are
-also very stealthy and good at dodging and stabbing, but are poor at
-magic (except enchantments and, for some reason, translocations). They
-advance in levels as rapidly as Humans. Halflings cannot wield large
-weapons.
+Halflings are very small but surprisingly hardy for their size, even
+having an innate resistance to mutagenic effects. Although only average
+at most fighting skills, they can use short blades well and excel in
+ranged combat with slings. They are also very stealthy and dextrous, but
+are poor at magic (except for charms and translocations). They advance in
+levels as rapidly as Humans. Halflings cannot wield large weapons.
 
 Kobolds
 -------
@@ -1627,12 +1626,13 @@ Kobolds are small, ugly creatures with few redeeming features. They are
 not the sort of people you would want to spend much time with, unless
 you happened to be a Kobold yourself.
 
-They have poor abilities and similar aptitudes to Halflings, except for
-a tendency to be stronger and less agile. Also, they are better than
-Halflings at using some types of magic, particularly summonings and
-necromancy. They often live as scavengers, surviving on carrion (which
-they can eat even when not hungry), but are carnivorous and can only eat
-meat. Kobolds advance in levels as quickly as Humans.
+They tend to be stronger and less agile than Halflings, and are more
+talented at using most types of magic, particularly summonings and
+necromancy. They are competent in combat, especially with short blades,
+maces, or crossbows, and are also very adept at using magical devices.
+They often live as scavengers, surviving on carrion (which they can eat
+even when not hungry), but are carnivorous and can only eat meat. Kobolds
+advance in levels as quickly as Humans.
 
 Spriggans
 ---------
