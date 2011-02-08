@@ -2749,6 +2749,8 @@ static void _player_reacts()
 
     you.check_clinging();
 
+    _decrement_durations();
+
     int capped_time = you.time_taken;
     if (you.walking && capped_time > BASELINE_DELAY)
         capped_time = BASELINE_DELAY;
@@ -2788,8 +2790,6 @@ static void _player_reacts_to_monsters()
                          (2 * BASELINE_DELAY), true);
 
     handle_starvation();
-
-    _decrement_durations();
 }
 
 static void _update_golubria_traps()
