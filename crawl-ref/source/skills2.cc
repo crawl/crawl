@@ -1963,9 +1963,9 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
             dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
 #endif
 
-        if (you.transfer_skill_points <= 0)
+        if (you.transfer_skill_points == 0 || you.skills[tsk] == 27)
             ashenzari_end_transfer(true);
-        else if (you.transfer_skill_points > 0)
+        else
             dprf("%d skill points left to transfer", you.transfer_skill_points);
     }
     return new_level;
