@@ -2804,6 +2804,9 @@ static int _card_power(deck_rarity_type rarity)
     else if (rarity == DECK_RARITY_LEGENDARY)
         result += 300;
 
+    if (result < 0)
+        result = 0;
+
     return (result);
 }
 
