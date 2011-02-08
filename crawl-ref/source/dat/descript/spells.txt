@@ -669,7 +669,7 @@ This spell causes a weapon held in the caster's hand to dance into the air and s
 %%%%
 Tukima's Dance Party
 
-I'm afraid only weapons are invited to this party.
+This spell causes weapons on the ground near the caster to all leap into the air and dance together.
 %%%%
 Twisted Resurrection
 
