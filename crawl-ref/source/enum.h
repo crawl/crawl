@@ -1339,6 +1339,7 @@ enum duration_type
     DUR_HEROISM,
     DUR_FINESSE,
     DUR_LIFESAVING,
+    DUR_PARALYSIS_IMMUNITY,
     NUM_DURATIONS
 };
 

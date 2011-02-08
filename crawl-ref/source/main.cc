@@ -2303,6 +2303,8 @@ static void _decrement_durations()
     }
     _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
 
+    _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
+
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
         _decrement_a_duration(DUR_PARALYSIS, delay);
@@ -2312,6 +2314,8 @@ static void _decrement_durations()
         {
             mpr("You can move again.", MSGCH_DURATION);
             you.redraw_evasion = true;
+            you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
+                                                   * BASELINE_DELAY;
         }
     }
 
