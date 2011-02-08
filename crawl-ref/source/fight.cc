@@ -5386,7 +5386,8 @@ bool melee_attack::do_trample()
             // don't even print a message
             return false;
 
-        int size_diff = attacker->body_size() - defender->body_size();
+        int size_diff =
+            attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
         if (!x_chance_in_y(size_diff + 3, 6))
             break;
 
