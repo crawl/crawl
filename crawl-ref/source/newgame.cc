@@ -204,7 +204,7 @@ undead_state_type get_undead_state(const species_type sp)
     }
 }
 
-static void _choose_tutorial_character(newgame_def* ng_choice)
+void choose_tutorial_character(newgame_def* ng_choice)
 {
     ng_choice->species = SP_HIGH_ELF;
     ng_choice->job = JOB_FIGHTER;
@@ -415,7 +415,7 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
     const newgame_def ng_reset = *ng;
 
     if (ng->type == GAME_TYPE_TUTORIAL)
-        _choose_tutorial_character(choice);
+        choose_tutorial_character(choice);
     else if (ng->type == GAME_TYPE_HINTS)
         pick_hints(choice);
 

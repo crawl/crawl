@@ -198,6 +198,7 @@ static void _post_init(bool newc)
     macro_init();
 
     crawl_state.need_save = true;
+    crawl_state.last_type = crawl_state.type;
 
     calc_hp();
     calc_mp();
@@ -905,10 +906,20 @@ bool startup_step()
 
 
 #ifndef DGAMELAUNCH
+    if (crawl_state.last_type == GAME_TYPE_TUTORIAL
+        || crawl_state.last_type == GAME_TYPE_SPRINT)
+    {
+        choice.type = crawl_state.last_type;
+        crawl_state.type = crawl_state.last_type;
+        crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
+        choice.name = defaults.name;
+        if (choice.type == GAME_TYPE_TUTORIAL)
+            choose_tutorial_character(&choice);
+    }
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
-    if (!is_good_name(choice.name, false, false)
+    else if (!is_good_name(choice.name, false, false)
         && choice.type != GAME_TYPE_ARENA)
     {
         _show_startup_menu(&choice, defaults);
