@@ -1457,16 +1457,6 @@ flight_type mons_flies(const monster* mon, bool temp)
     return (ret);
 }
 
-bool mons_class_amphibious(int mc)
-{
-    return (mons_class_habitat(mc) == HT_AMPHIBIOUS);
-}
-
-bool mons_amphibious(const monster* mon)
-{
-    return (mons_class_amphibious(mons_base_type(mon)));
-}
-
 bool mons_class_flattens_trees(int mc)
 {
     return (mc == MONS_LERNAEAN_HYDRA);

@@ -35,7 +35,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         return;
 
     const bool flies         = mons_flies(mon);
-    const bool amphibious    = mons_amphibious(mon);
+    const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
     const habitat_type habit = mons_primary_habitat(mon);
 
     for (radius_iterator ri(mon->pos(), 2, true, false); ri; ++ri)
@@ -63,8 +63,11 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 
         // A flying monster has an advantage over a non-flying one.
         // Same for a swimming one.
-        if (!flies && mons_flies(m) || !amphibious && mons_amphibious(m))
+        if (!flies && mons_flies(m)
+            || !amphibious && mons_habitat(m) == HT_AMPHIBIOUS)
+        {
             continue;
+        }
 
         if (m->travel_target == MTRAV_NONE)
             m->travel_target = MTRAV_UNREACHABLE;
@@ -992,8 +995,9 @@ void check_wander_target(monster* mon, bool isPacified,
 
         if (!can_move)
         {
-            can_move = (mons_amphibious(mon) ? DNGN_DEEP_WATER
-                                             : DNGN_SHALLOW_WATER);
+            can_move =
+                (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
+                                                     : DNGN_SHALLOW_WATER;
         }
 
         if (mon->is_travelling())

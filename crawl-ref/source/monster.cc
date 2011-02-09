@@ -244,7 +244,7 @@ bool monster::floundering() const
             // Can't use monster_habitable_grid() because that'll return
             // true for non-water monsters in shallow water.
             && mons_primary_habitat(this) != HT_WATER
-            && !mons_amphibious(this)
+            && mons_habitat(this) != HT_AMPHIBIOUS
             && !mons_flies(this)
             && !extra_balanced());
 }
