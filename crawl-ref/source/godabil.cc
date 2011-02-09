@@ -202,12 +202,18 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         "rebuked",
     };
 
-    std::string sinner = sinner_text[trits[3] + prayertype*3];
-    std::string sin[2] = {sin_text[trits[6] + prayertype*3], long_sin_text[trits[6] + prayertype*3]};
-    std::string virtue[2] = {virtue_text[trits[6] + prayertype*3], long_virtue_text[trits[6] + prayertype*3]};
-    std::string smite[2] = {smite_text[(trits[4] + trits[5] * 3)], smitten_text[(trits[4] + trits[5] * 3)]};
+    std::string sinner = sinner_text[trits[3] + prayertype * 3];
+    std::string sin[2] = {sin_text[trits[6] + prayertype * 3],
+                          long_sin_text[trits[6] + prayertype * 3]};
+    std::string virtue[2] = {virtue_text[trits[6] + prayertype * 3],
+                             long_virtue_text[trits[6] + prayertype * 3]};
+    std::string smite[2] = {smite_text[(trits[4] + trits[5] * 3)],
+                            smitten_text[(trits[4] + trits[5] * 3)]};
 
-    std::string turn[4] = {"This is only here because of arrays starting from 0.", "Zin is a buggy god.", "Please report this.", "This isn't right at all."};
+    std::string turn[4] = {"This is only here because of arrays starting from 0.",
+                           "Zin is a buggy god.",
+                           "Please report this.",
+                           "This isn't right at all."};
 
     switch (chapter)
     {
