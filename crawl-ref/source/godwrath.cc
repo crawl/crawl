@@ -1406,7 +1406,7 @@ static void _god_smites_you(god_type god, const char *message,
         if (death_type != KILLED_BY_BEOGH_SMITING
             && death_type != KILLED_BY_TSO_SMITING)
         {
-            aux = "smote by " + god_name(god);
+            aux = "smitten by " + god_name(god);
         }
 
         // If there's a message, display it before smiting.

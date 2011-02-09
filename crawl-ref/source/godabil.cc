@@ -189,7 +189,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         "rebuke",
     };
 
-    std::string smote_text[9] =
+    std::string smitten_text[9] =
     {
         "purified",
         "censured",
@@ -197,7 +197,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         "struck down",
         "expelled",
         "ousted",
-        "smote",
+        "smitten",
         "castigated",
         "rebuked",
     };
@@ -205,7 +205,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
     std::string sinner = sinner_text[trits[3] + prayertype*3];
     std::string sin[2] = {sin_text[trits[6] + prayertype*3], long_sin_text[trits[6] + prayertype*3]};
     std::string virtue[2] = {virtue_text[trits[6] + prayertype*3], long_virtue_text[trits[6] + prayertype*3]};
-    std::string smite[2] = {smite_text[(trits[4] + trits[5] * 3)], smote_text[(trits[4] + trits[5] * 3)]};
+    std::string smite[2] = {smite_text[(trits[4] + trits[5] * 3)], smitten_text[(trits[4] + trits[5] * 3)]};
 
     std::string turn[4] = {"This is only here because of arrays starting from 0.", "Zin is a buggy god.", "Please report this.", "This isn't right at all."};
 
@@ -213,7 +213,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
     {
         case 1:
             turn[1] = make_stringf("It was the word of Zin that there would not be %s...", sin[1].c_str());
-            turn[2] = make_stringf("...and did not the people suffer until they %s...", smite[1].c_str());
+            turn[2] = make_stringf("...and did not the people suffer until they had %s...", smite[1].c_str());
             turn[3] = make_stringf("...the %s, after which all was well?", sinner.c_str());
             break;
         case 2:
@@ -278,7 +278,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 14:
             turn[1] = make_stringf("%s the %s? %s them for their...", uppercase_first(smite[0]).c_str(), sinner.c_str(), uppercase_first(smite[0]).c_str());
-            turn[2] = make_stringf("...%s he did! Zin %s them again...", sin[1].c_str(), smite[1].c_str());
+            turn[2] = make_stringf("...%s he will! Zin will %s them again...", sin[1].c_str(), smite[0].c_str());
             turn[3] = make_stringf("...and again, and again!");
             break;
         case 15:
