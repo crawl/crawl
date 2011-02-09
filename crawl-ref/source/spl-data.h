@@ -1610,7 +1610,7 @@ struct spell_desc
      1, 4,
      0,
      NULL,
-     false,
+     true,
      false
 },
 

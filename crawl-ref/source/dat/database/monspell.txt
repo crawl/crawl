@@ -61,6 +61,14 @@ Animate Dead cast gestures
 
 @The_monster@ throws @possessive@ @arms@ wide.
 %%%%
+Flame Tongue cast
+
+@The_monster@ issues a gush of flame.
+
+@The_monster@ emits a jet of flame.
+
+@The_monster@ lets out a tongue of flame.
+%%%%
 Lesser Healing cast real
 
 __NEXT
