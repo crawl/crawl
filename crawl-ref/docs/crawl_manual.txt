@@ -98,9 +98,9 @@ that is already attached to a save game will continue that game.
 Otherwise, enter a new name, and you will proceed to choose a species and
 background for a new character.
 
-You can make these two choices in either order, and you can randomize
+You can make these two choices in either order, and you can randomise
 your choice of background, species, or both if you would rather have the
-game decide for you. If both are randomized, you will be prompted with
+game decide for you. If both are randomised, you will be prompted with
 the chosen combination before the game starts.
 
 The choice of species affects several important characteristics, in
@@ -129,7 +129,7 @@ skills), and also helps determine equipment and hit/magic points at start.
 
 Some species are slower than humans in most/all skills. For some
 backgrounds these species may seem to have very few starting skills
-because they haven't quite  earned the first level of several of their
+because they haven't quite earned the first level of several of their
 skills (Centaurs are notable in this regard... although non-human
 Wanderers can appear to start with no skills at all). This isn't a bug
 or an oversight, these species with these backgrounds are just
@@ -201,12 +201,12 @@ Next come your defences. For all of them, more is better.
 Armour Class: Abbreviated to "AC". When something injures you, your AC
               reduces the amount of damage you suffer.
 
-Shield:       Abbreviated to "SH". This number is a measure of how good
-              your shield (if any) is at blocking attacks.
-
 Evasion:      Abbreviated to "EV". This helps you avoid being hit by
               unpleasant things (but will not reduce the amount of
               damage you suffer if you do get hit).
+
+Shield:       Abbreviated to "SH". This number is a measure of how good
+              your shield (if any) is at blocking attacks.
 
 Your hero's primary attributes are Strength, Dexterity, Intelligence:
 
@@ -227,9 +227,10 @@ Dexterity:    Abbreviated to "Dex". Affects your accuracy in combat,
 They grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or using appropriate artefacts or abilities.
 
-If any one of these drops to zero for some reason, you die. This can be
-a nasty and deadly surprise. As a rule of thumb, you are safe from this
-type of death if all of your attributes are at least 7.
+If any one of these drops to zero for some reason, you will not die
+immediately. But you will experience very unpleasant effects: running
+around with no strength or intelligence is going to cause you problems
+before long.
 
 Upon gaining Levels 3, 6, 9, etc., you get to choose an attribute to
 raise. Increases without choice can also occur; which levels give an
@@ -775,10 +776,9 @@ must be activated with the 'a' command.
 You can wear armour with the 'W' command, and take it off with the 'T'
 command. With '[' you can have a quick look at your current gear.
 
-Most armours can be improved by reading the appropriate scroll. Be aware
-that the bonus limit for all normal pieces of gear is +2, except for
-body armour and bardings, which can go to +8 and for shields, which can
-go to +3.
+Most armours can be improved by reading the appropriate scroll. Body
+armour can be enchanted up to the base value of AC it provides, bardings
+can go to +8, and shields can go to +3. Other gear is limited to +2.
 
 % Food and Carrion
 ------------------
@@ -947,8 +947,7 @@ armour or weapons of his own kind.
 
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a
 character of these species might find a Centaur or Naga barding. Note
-that these bardings can be enchanted to +8, like body armours and
-unlike all other gear.
+that these bardings can be enchanted to +8, unlike most other gear.
 
 Artefacts
 ---------
@@ -1532,11 +1531,10 @@ Mountain Dwarves
   Polearms usually are too big for them to wield comfortably and so
   make quite bad weapons for Mountain Dwarves.
 
-  In general, they are not capable of dealing with magic, and are
-  suspectible to charms and enchantments. However, they are very
-  proficient at earth and fire magics. Thus, many a Mountain Dwarf
-  started career as an elementalist in those schools. They advance in
-  levels at a similar rate to Deep Elves.
+  In general, they are rather more resistant to magic than capable of
+  using it themselves. However, they are very proficient at earth and fire
+  magics. Thus, many a Mountain Dwarf started career as an elementalist
+  in those schools. They advance in levels at a similar rate to Deep Elves.
 
 Deep Dwarves
   Deep Dwarves are a species who, unlike their Mountain Dwarf relatives,
@@ -1571,8 +1569,8 @@ Hill Orcs are Orcs from the upper world who, jealous of the riches which
 their cousins the Cave Orcs possess below the ground, descend in search
 of plunder and adventure.
 
-Hill Orcs are as robust as the Mountain Dwarves, and similarly have
-trouble with magic. Their forte is brute-force fighting, and they are
+Hill Orcs are as robust as the Mountain Dwarves, but have very low reserves
+of magical energy. Their forte is brute-force fighting, and they are
 skilled at using most hand weapons (with the exception of short blades,
 at which they are only fair), although they are not particularly good at
 using missile weapons. They prefer to use their own weapons. Orcs are
@@ -1987,7 +1985,7 @@ their advantage in melee or missile combat.
 
 Arcane Marksmen:
 ----------------
-Arcane Marksmen specialize in dealing ranged damage via enchanted
+Arcane Marksmen specialise in dealing ranged damage via enchanted
 weapons. Initially, they may choose either elemental damage types or
 translocation effects. Additionally, they have spells which will aid
 in staying at a distance and defend against other ranged weapon users.
@@ -2354,16 +2352,16 @@ Dungeon interaction:
     or * direction      square, else opens/closes door if there is one,
                         else attacks without move (even if no monster is
                         seen).
-    <                   Use staircase to go higher, also enters shops.
-    >                   Use staircase to go deeper, also enters branch.
-    ;                   Examine occupied tile, also causes auto-pickup.
+    <                   Use staircase to go higher or enter a shop or portal.
+    >                   Use staircase to go deeper or enter a shop or portal.
+    ;                   Examine occupied tile and auto-pickup eligible items.
     x                   Examine surroundings, see below. Has '?' help.
     X                   Examine level map, see below. Has '?' help.
     Ctrl-X              Lists all monsters, items and features in sight.
                         You may read their descriptions and travel to
                         an item or feature.
     Ctrl-O              Show dungeon overview (branches, shops, etc.).
-    !                   Annotate current level: you can enter any text.
+    !                   Annotate current level. You can enter any text.
                         This annotation is then listed in the dungeon
                         overview (Ctrl-O) and also shown whenever you
                         enter that level again. If you use this command
@@ -2459,12 +2457,12 @@ Other game-playing commands:
     a                   Use special ability.
     p                   Pray (or renew an existing prayer).
     z                   Cast a spell. Should the spell demand monsters as
-                        target but there are none within range, casting
+                        targets but there are none within range, casting
                         will be stopped. In this case, neither turns nor
                         magic are used. If you want to cast the spell
                         nonetheless, use Z.
     Z                   Cast a spell, regardless of range limitations.
-    I                   List spells.
+    I                   List spells memorised.
     t                   Tell commands to allies, or shout (with tt).
     Ctrl-A              Toggle autopickup. Note that encounters with
                         invisible monsters always turns autopickup off.
@@ -2684,23 +2682,20 @@ Slow            All actions are slowed.
 
 Special enchantments:
 ---------------------
-BWpn            Some characters have a breath weapon (like Nagas or
-                experienced Draconians), which will show "BWpn" when
-                used. Further breaths have to wait until this
-                disappears.
+Breath          Some abilites (like Draconian breath weapons and Naga
+                poison spit) require you to catch your breath in between
+                uses. These abilities cannot be re-used until the Breath
+                status disappears.
 Invis           You are invisible. This can cause glowing, if used too
                 much.
 Tele            You are about to teleport, i.e. feeling "unstable".
                 If you are about to teleport, another teleport (by any
                 source) will cancel it.
-Lev             You levitate, i.e. hover a few inches above the ground.
-                While enough to cross water and lava, movement is not
-                completely controlled. It will usually time out.
+Lev             You levitate a few inches above the ground. While this is
+                enough to cross water and lava, movement is not completely
+                controlled. It will usually time out.
 Fly             You fly, gaining the benefits of levitation with none of
-                the drawbacks. This is only accessible for experienced
-                Kenku, lucky Draconians, characters using Dragon form,
-                or those levitating and wearing an amulet of controlled
-                flight. Flying provides a speed bonus to swiftness.
+                the drawbacks. Flying provides a speed bonus to swiftness.
 Held            You are held in a net: you cannot move freely and
                 will instead only try to fight your way out of the net.
 Mesm            You are mesmerised: you cannot move away from the monster(s)
@@ -2708,13 +2703,12 @@ Mesm            You are mesmerised: you cannot move away from the monster(s)
 Fire            You are plagued with sticky fire. It will time out,
                 probably burning scrolls in the process. Drop the most
                 important ones!
-Regen           You regenerate: hit points will increase at an
-                unnaturally fast rate. This is only shown for temporary
-                regeneration.
-Glow            You glow from mutagenic radiation: you can mutate
-                anytime soon - usually with a bad outcome. The colour
-                indicates the severity: the first level (grey) is only
-                a warning - no mutation will occur from this.
+Regen           You regenerate hit points at an unnaturally fast rate. This
+                is only shown for temporary regeneration.
+Glow            You glow from mutagenic radiation. This can mutate you over
+                time, usually with a bad outcome. The colour indicates the
+                severity: the first level (grey) is only a warning, and no
+                mutation will occur from it.
 RMsl            You repel missiles, i.e. there's a good chance to evade
                 them.
 DMsl            You deflect missiles, i.e. there's a great chance to
@@ -2729,8 +2723,8 @@ Touch           Your hands are glowing, and any monster you touch might
                 become confused.
 Blade           You are bonded with your blade, so it strikes more
                 accurately.
--MR             You are vulnerable to magic.
-MR              You are more resistant to magic.
+-MR             You are more vulnerable to hostile enchantments.
+MR              You are more resistant to hostile enchantments.
 There are several more enchantment messages for various spells. The
 description of the spell causing the enchantment will explain these.
 
@@ -2822,7 +2816,7 @@ Here, one has to negotiate between two concurrent objectives: terseness
 for better use of limited line lengths versus verboseness for easier
 reading. The default inscriptions use the following general ideas:
   rXXX   signifies a resistance
-  +XXX   signifies an ability you can invoke via the 'a' command
+  +XXX   signifies an ability you can evoke via the 'a' command
   -XXX   signifies a suppressed ability
   XXX+   is a stronger version of property XXX
   XX+6   means a boost to some numerical stat (similar with XX-2, etc.)
@@ -2854,10 +2848,10 @@ Stlth+    higher stealth boost
 rCorr     resist corrosion
 rMut      resist mutation
 
-+Lev      can invoke levitation
-+Inv      can invoke invisibility
-+Blink    can invoke blink
-+Rage     can invoke berserk
++Lev      can evoke levitation
++Inv      can evoke invisibility
++Blink    can evoke blink
++Rage     can evoke berserk
 
 *RAGE     uncontrolled berserk (anger)
 *TELE     random teleporting
