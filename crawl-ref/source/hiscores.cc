@@ -1941,12 +1941,12 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_TSO_SMITING:
-        desc += terse? "smote by Shining One" : "Smote by the Shining One";
+        desc += terse? "smitten by Shining One" : "Smitten by the Shining One";
         needs_damage = true;
         break;
 
     case KILLED_BY_BEOGH_SMITING:
-        desc += terse? "smote by Beogh" : "Smote by Beogh";
+        desc += terse? "smitten by Beogh" : "Smitten by Beogh";
         needs_damage = true;
         break;
 
