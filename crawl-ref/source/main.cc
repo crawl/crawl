@@ -2012,6 +2012,26 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     return false;
 }
 
+static void _decrement_paralysis(int delay)
+{
+    _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
+
+    if (you.duration[DUR_PARALYSIS] || you.petrified())
+    {
+        _decrement_a_duration(DUR_PARALYSIS, delay);
+        _decrement_a_duration(DUR_PETRIFIED, delay);
+
+        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
+        {
+            mpr("You can move again.", MSGCH_DURATION);
+            you.redraw_evasion = true;
+            you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
+                                                   * BASELINE_DELAY;
+        }
+    }
+}
+
+
 //  Perhaps we should write functions like: update_liquid_flames(), etc.
 //  Even better, we could have a vector of callback functions (or
 //  objects) which get installed at some point.
@@ -2302,22 +2322,6 @@ static void _decrement_durations()
             you.redraw_armour_class = true;
     }
     _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
-
-    _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
-
-    if (you.duration[DUR_PARALYSIS] || you.petrified())
-    {
-        _decrement_a_duration(DUR_PARALYSIS, delay);
-        _decrement_a_duration(DUR_PETRIFIED, delay);
-
-        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
-        {
-            mpr("You can move again.", MSGCH_DURATION);
-            you.redraw_evasion = true;
-            you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
-                                                   * BASELINE_DELAY;
-        }
-    }
 
     _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
                           ((std::string("Your ") + your_hand(true)) +
@@ -2790,6 +2794,8 @@ static void _player_reacts_to_monsters()
                          (2 * BASELINE_DELAY), true);
 
     handle_starvation();
+    _decrement_paralysis(you.time_taken);
+
 }
 
 static void _update_golubria_traps()
