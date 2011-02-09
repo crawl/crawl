@@ -233,7 +233,10 @@ bool monster::submerged() const
 
 bool monster::extra_balanced() const
 {
-    return (mons_genus(type) == MONS_NAGA);
+    const dungeon_feature_type grid = grd(pos());
+    return (grid == DNGN_SHALLOW_WATER
+            && (mons_genus(type) == MONS_NAGA             // tails, not feet
+                || body_size(PSIZE_BODY) > SIZE_MEDIUM));
 }
 
 bool monster::floundering() const
@@ -244,7 +247,9 @@ bool monster::floundering() const
             // Can't use monster_habitable_grid() because that'll return
             // true for non-water monsters in shallow water.
             && mons_primary_habitat(this) != HT_WATER
-            && mons_habitat(this) != HT_AMPHIBIOUS
+            // Use real_amphibious to detect giant non-water monsters in
+            // deep water, who flounder despite being treated as amphibious.
+            && mons_habitat(this, true) != HT_AMPHIBIOUS
             && !mons_flies(this)
             && !extra_balanced());
 }
