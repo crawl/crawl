@@ -4595,16 +4595,19 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
 
 int enchant_to_int(const item_def &item)
 {
+    if (is_random_artefact(item))
+        return 4;
+
     switch (item.flags & ISFLAG_COSMETIC_MASK)
     {
+        default:
+            return 0;
         case ISFLAG_EMBROIDERED_SHINY:
             return 1;
         case ISFLAG_RUNED:
             return 2;
         case ISFLAG_GLOWING:
             return 3;
-        default:
-            return (is_random_artefact(item) ? 4 : 0);
     }
 }
 
