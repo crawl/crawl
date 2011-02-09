@@ -247,6 +247,12 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
      { // add touch or range-setting spells here
         case SPELL_SANDBLAST:
             break;
+        case SPELL_FLAME_TONGUE:
+            // HD:1 monsters would get range 2, HD:2 -- 3, other 4, let's
+            // use the mighty Throw Flame for big ranges.
+            // Here, we have HD:1 -- 1, HD:2+ -- 2.
+            beam.range = (power >= 20) ? 2 : 1;
+            break;
         default:
         beam.range = spell_range(spell_cast, power, true, false);
      }
@@ -377,6 +383,15 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         // Be careful with this one.
         // Having allies mutate you is infuriating.
         beam.foe_ratio = 1000;
+        break;
+
+    case SPELL_FLAME_TONGUE:
+        beam.name     = "flame";
+        beam.damage   = dice_def(3, 3 + power / 12);
+        beam.colour   = RED;
+        beam.flavour  = BEAM_FIRE;
+        beam.hit      = 7 + power / 6;
+        beam.is_beam  = true;
         break;
 
     case SPELL_VENOM_BOLT:
