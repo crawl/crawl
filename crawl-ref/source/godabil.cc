@@ -1488,9 +1488,7 @@ bool trog_burn_spellbooks()
 
     for (stack_iterator si(you.pos()); si; ++si)
     {
-        if (si->base_type == OBJ_BOOKS
-            && si->sub_type != BOOK_MANUAL
-            && si->sub_type != BOOK_DESTRUCTION)
+        if (item_is_spellbook(*si))
         {
             mpr("Burning your own feet might not be such a smart idea!");
             return (false);
@@ -1507,12 +1505,8 @@ bool trog_burn_spellbooks()
         int rarity = 0;
         for (stack_iterator si(*ri); si; ++si)
         {
-            if (si->base_type != OBJ_BOOKS
-                || si->sub_type == BOOK_MANUAL
-                || si->sub_type == BOOK_DESTRUCTION)
-            {
+            if (!item_is_spellbook(*si))
                 continue;
-            }
 
             // If a grid is blocked, books lying there will be ignored.
             // Allow bombing of monsters.

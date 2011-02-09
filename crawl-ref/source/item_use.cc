@@ -5357,9 +5357,7 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_BOOKS:
-            if (item.sub_type == BOOK_MANUAL
-                || item.sub_type == BOOK_DESTRUCTION
-                || you.skill(SK_SPELLCASTING) == 0)
+            if (!item_is_spellbook(item) || you.skill(SK_SPELLCASTING) == 0)
             {
                 if (check_warning_inscriptions(item, OPER_READ))
                     handle_read_book(idx);

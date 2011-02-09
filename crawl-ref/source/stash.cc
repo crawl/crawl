@@ -84,11 +84,7 @@ std::string stash_annotate_item(const char *s,
 {
     std::string text = userdef_annotate_item(s, item, exclusive);
 
-    if (item->base_type == OBJ_BOOKS
-            && item_type_known(*item)
-            && item->sub_type != BOOK_MANUAL
-            && item->sub_type != BOOK_DESTRUCTION
-        || count_staff_spells(*item, true) > 1)
+    if (item->has_spells())
     {
         formatted_string fs;
         item_def dup = *item;
