@@ -357,11 +357,9 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     if (path.empty())
         return path;
 
-    dungeon_feature_type can_move;
-    if (mons_amphibious(mons))
-        can_move = DNGN_DEEP_WATER;
-    else
-        can_move = DNGN_SHALLOW_WATER;
+    dungeon_feature_type can_move =
+        (mons_habitat(mons) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
+                                              : DNGN_SHALLOW_WATER;
 
     std::vector<coord_def> waypoints;
     pos = path[0];
@@ -446,7 +444,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     // (The resulting path might not be optimal but it will lead to a path
     // a monster of such habits is likely to prefer.)
     // Only tested for shallow water since they can't enter deep water anyway.
-    if (!airborne && !mons_class_amphibious(mt)
+    if (!airborne && !mons_class_habitat(mt) == HT_AMPHIBIOUS
         && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
     {
         return (2);
