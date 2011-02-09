@@ -53,8 +53,9 @@ bool form_can_fly(transformation_type form)
 
 bool form_can_swim(transformation_type form)
 {
-    return (you.species == SP_MERFOLK && !form_changed_physiology(form)
-            || form == TRAN_ICE_BEAST);
+    return ((you.species == SP_MERFOLK && !form_changed_physiology(form))
+             || form == TRAN_ICE_BEAST                    // made of ice
+             || you.body_size(PSIZE_BODY) >= SIZE_GIANT);
 }
 
 bool form_likes_water(transformation_type form)
