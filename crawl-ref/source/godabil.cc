@@ -210,7 +210,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
     std::string smite[2] = {smite_text[(trits[4] + trits[5] * 3)],
                             smitten_text[(trits[4] + trits[5] * 3)]};
 
-    std::string turn[4] = {"This is only here because of arrays starting from 0.",
+    std::string turn[4] = {"This is only here because arrays start from 0.",
                            "Zin is a buggy god.",
                            "Please report this.",
                            "This isn't right at all."};
