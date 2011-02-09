@@ -11,7 +11,7 @@ static job_type jobs_order[] = {
     JOB_FIGHTER,            JOB_GLADIATOR,
     JOB_MONK,               JOB_BERSERKER,
     // religious professions (incl. Berserker above)
-    JOB_PALADIN,            JOB_PRIEST,
+    JOB_PRIEST,
     JOB_HEALER,             JOB_CHAOS_KNIGHT,
     JOB_CRUSADER,
     // general and niche spellcasters (incl. Crusader above)
@@ -38,7 +38,11 @@ job_type get_job(const int index)
 
 static const char * Job_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr",
-      "Gl", "Ne", "Pa", "As", "Be", "Hu",
+      "Gl", "Ne",
+#if TAG_MAJOR_VERSION == 32
+      "Pa",
+#endif
+      "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr",
       "VM",
       "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "AM" };
@@ -46,7 +50,10 @@ static const char * Job_Abbrev_List[ NUM_JOBS ] =
 static const char * Job_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest",
       "Gladiator", "Necromancer",
-      "Paladin", "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
+#if TAG_MAJOR_VERSION == 32
+      "Paladin",
+#endif
+     "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
       "Earth Elementalist", "Crusader",
       "Venom Mage",

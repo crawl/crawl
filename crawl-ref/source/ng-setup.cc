@@ -117,7 +117,6 @@ static void _give_last_paycheck(job_type which_job)
         you.gold = 20;
         break;
 
-    case JOB_PALADIN:
     case JOB_MONK:
         you.gold = 0;
         break;
@@ -153,7 +152,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_FIGHTER:           s =  8; i =  0; d =  4; hp = 15; mp = 0; break;
     case JOB_BERSERKER:         s =  9; i = -1; d =  4; hp = 15; mp = 0; break;
     case JOB_GLADIATOR:         s =  7; i =  0; d =  5; hp = 14; mp = 0; break;
-    case JOB_PALADIN:           s =  7; i =  2; d =  3; hp = 14; mp = 0; break;
 
     case JOB_CRUSADER:          s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
@@ -552,26 +550,6 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_DODGING]++;
             you.skills[SK_ARMOUR] = 1; // for the eventual dragon scale mail :)
         }
-        break;
-
-    case JOB_PALADIN:
-        you.religion = GOD_SHINING_ONE;
-        you.piety = 28;
-
-        // Equipment.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_FALCHION);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_RING_MAIL,
-                           ARM_ROBE);
-        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
-        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEALING);
-
-        // Skills.
-        you.skills[(player_effectively_in_light_armour()
-                    ? SK_DODGING : SK_ARMOUR)] = 2;
-        you.skills[SK_FIGHTING]    = 2;
-        you.skills[SK_SHIELDS]     = 2;
-        you.skills[SK_LONG_BLADES] = 3;
-        you.skills[SK_INVOCATIONS] = 2;
         break;
 
     case JOB_PRIEST:
