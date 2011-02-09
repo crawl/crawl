@@ -391,12 +391,13 @@ static void _print_stats_wp(int y)
     if (you.weapon())
     {
         const item_def& wpn = *you.weapon();
-        col = wpn.colour;
 
         const std::string prefix = menu_colour_item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
+        else
+            col = LIGHTGREY;
 
         text = wpn.name(DESC_INVENTORY, true, false, true);
     }
@@ -462,12 +463,13 @@ static void _print_stats_qv(int y)
     if (q != -1)
     {
         const item_def& quiver = you.inv[q];
-        col = quiver.colour;
         const std::string prefix = menu_colour_item_prefix(quiver);
         const int prefcol =
             menu_colour(quiver.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
+        else
+            col = LIGHTGREY;
         text = quiver.name(DESC_INVENTORY, true);
     }
     else
@@ -1267,10 +1269,13 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int item_idx   = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
             const bool melded    = !player_wearing_slot(e_order[i]);
+            const std::string prefix = menu_colour_item_prefix(item);
+            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
+            const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
             const char* colname  = melded ? "darkgrey"
-                                          : colour_to_str(item.colour).c_str();
+                                          : colour_to_str(col).c_str();
 
             const char equip_char = index_to_letter(item_idx);
 
