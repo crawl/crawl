@@ -573,7 +573,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_YELLOW_DRACONIAN,SK_EVOCATIONS,      0),
 
     // SP_GREY_DRACONIAN
-    APT(SP_GREY_DRACONIAN,  SK_FIGHTING,       -1),
+    APT(SP_GREY_DRACONIAN,  SK_FIGHTING,        1),
     APT(SP_GREY_DRACONIAN,  SK_SHORT_BLADES,    0),
     APT(SP_GREY_DRACONIAN,  SK_LONG_BLADES,     0),
     APT(SP_GREY_DRACONIAN,  SK_AXES,            0),
