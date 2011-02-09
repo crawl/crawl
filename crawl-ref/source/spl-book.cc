@@ -417,11 +417,8 @@ void mark_had_book(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
-    if (book.book_number() == BOOK_MANUAL
-        || book.book_number() == BOOK_DESTRUCTION)
-    {
+    if (!item_is_spellbook(book))
         return;
-    }
 
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
@@ -609,13 +606,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
 
 bool player_can_memorise(const item_def &book)
 {
-    if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL
-        || book.sub_type == BOOK_DESTRUCTION)
-    {
-        return (false);
-    }
-
-    if (!player_spell_levels())
+    if (!item_is_spellbook(book) || !player_spell_levels())
         return (false);
 
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
@@ -662,11 +653,8 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         item_def& book(you.inv[i]);
 
-        if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_DESTRUCTION
-            || book.sub_type == BOOK_MANUAL)
-        {
+        if (!item_is_spellbook(book))
             continue;
-        }
 
         num_books++;
 

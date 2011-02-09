@@ -1919,11 +1919,8 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
 
     if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
     {
-        if (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL
-            && item.sub_type != BOOK_DESTRUCTION)
-        {
+        if (item_is_spellbook(item))
             destroy_spellbook(item);
-        }
 
         item_was_destroyed(item, NON_MONSTER);
 
@@ -3006,9 +3003,7 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return ((base_type == OBJ_BOOKS && item_type_known(*this)
-               && sub_type != BOOK_DESTRUCTION
-               && sub_type != BOOK_MANUAL)
+    return (item_is_spellbook(*this) && item_type_known(*this)
             || count_staff_spells(*this, true) > 1);
 }
 
@@ -3825,7 +3820,7 @@ item_info get_item_info(const item_def& item)
         ii.special = item.special; // appearance
         break;
     case OBJ_BOOKS:
-        if (item_type_known(item) || item.sub_type == BOOK_MANUAL || item.sub_type == BOOK_DESTRUCTION)
+        if (item_type_known(item) || !item_is_spellbook(item))
             ii.sub_type = item.sub_type;
         ii.special = item.special; // appearance
         break;

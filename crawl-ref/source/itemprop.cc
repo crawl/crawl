@@ -2089,6 +2089,12 @@ bool item_is_corpse(const item_def &item)
     return (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
 }
 
+bool item_is_spellbook(const item_def &item)
+{
+    return (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL
+            && item.sub_type != BOOK_DESTRUCTION);
+}
+
 //
 // Ring functions:
 

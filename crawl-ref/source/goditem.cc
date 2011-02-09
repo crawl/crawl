@@ -492,9 +492,7 @@ bool is_spellbook_type(const item_def& item, bool book_or_rod,
                        bool (*suitable)(spell_type spell, god_type god),
                        god_type god)
 {
-    const bool is_spellbook = (item.base_type == OBJ_BOOKS
-                                  && item.sub_type != BOOK_MANUAL
-                                  && item.sub_type != BOOK_DESTRUCTION);
+    const bool is_spellbook = item_is_spellbook(item);
     const bool is_rod = item_is_rod(item);
 
     if (!is_spellbook && !is_rod)
@@ -650,12 +648,8 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_TROG:
-        if (item.base_type == OBJ_BOOKS
-            && item.sub_type != BOOK_MANUAL
-            && item.sub_type != BOOK_DESTRUCTION)
-        {
+        if (item_is_spellbook(item))
             return (DID_SPELL_MEMORISE);
-        }
         break;
 
     case GOD_FEDHAS:

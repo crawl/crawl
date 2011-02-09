@@ -146,6 +146,8 @@ bool item_is_unique_rune(const item_def &item);
 bool item_is_orb(const item_def &orb);
 
 bool item_is_corpse(const item_def &item);
+bool item_is_spellbook(const item_def &item);
+
 
 // ring functions:
 int  ring_has_pluses(const item_def &item);
