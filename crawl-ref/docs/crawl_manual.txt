@@ -1756,26 +1756,24 @@ on the part of the player.
       especially good in the arts of poison and without deficiencies in
       other magic realms.
 
-  Yellow Draconians have sulphurous breath. Unlike other Draconians,
-      they need no time to gain back their breath. They are acid
-      resistant, too.
+  Yellow Draconians have sulphurous breath, and later gain an acidic bite
+      attack. They are acid resistant, too.
 
-  Grey Draconians have no particular weaknesses or strengths when it
-      comes to learning, and they get no breath weapon. Their scales,
-      however, become particularly hard over time, they gain more HP
-      than other Draconians, and they grow a spiked tail, making them
-      particularly fit for battle.
+  Grey Draconians have no breath weapon, but also no need to even breathe
+      at all, allowing them to survive in deep water. They are stealthy and
+      good at stabbing.
 
-  Black Draconians command lightning bolts and are naturally insulated.
-      They are good at air magic but feel cumbersome with earth magic.
+  Black Draconians can unleash huge electrical discharges, and are naturally
+      insulated. They are good at air magic but feel cumbersome with earth 
+      magic.
 
   Mottled Draconians are somewhat in touch with fire, yet are not weak
-      with ice. Their breath consists of special sticky fire which
-      burns the target.
+      with ice. They can spit globs of sticky flame a short distance.
 
   Purple Draconians are highly adapted to all spellcasting in general,
       and to enchantments in particular. They are a bit better at
-      evoking things than most other Draconians.
+      evoking things than most other Draconians. They can breathe
+      dispelling energy which strips those it hits of their enchantments.
 
   Pale Draconians are slightly biased towards fire magic, and have no
       restrictions otherwise. They breathe steam and, like their
