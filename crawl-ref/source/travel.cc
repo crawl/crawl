@@ -126,8 +126,7 @@ const int8_t IMPASSABLE  = 0;
 const int8_t FORBIDDEN   = -1;
 
 // Map of terrain types that are traversable.
-// Should be [NUM_FEATURES], but we're paranoid here.
-static int8_t traversable_terrain[256];
+static FixedVector<int8_t,NUM_FEATURES> traversable_terrain;
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
