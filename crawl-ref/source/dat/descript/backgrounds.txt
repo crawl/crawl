@@ -71,10 +71,6 @@ Necromancer
 
 Necromancers are wizards specializing in the practice of death magic. They start out with the Pain spell.
 %%%%
-Paladin
-
-Paladins are righteous warriors joining the Shining One's crusade against evil.
-%%%%
 Priest
 
 Priests are followers of Zin, Yredelemnul, or the orc god Beogh.
