@@ -2985,15 +2985,10 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
     dungeon_events.fire_position_event(DET_DOOR_OPENED, pos);
 }
 
-static bool _habitat_okay(const monster* mons, dungeon_feature_type targ)
-{
-    return (monster_habitable_grid(mons, targ));
-}
-
 static bool _no_habitable_adjacent_grids(const monster* mon)
 {
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-        if (_habitat_okay(mon, grd(*ai)))
+        if (monster_habitable_grid(mon, grd(*ai)))
             return (false);
 
     return (true);
@@ -3169,7 +3164,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     else if (no_water && feat_is_water(target_grid))
         return (false);
     else if (!mons_can_traverse(mons, targ, false)
-             && !_habitat_okay(mons, target_grid))
+             && !monster_habitable_grid(mons, target_grid))
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.
@@ -3395,8 +3390,11 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     const coord_def c = mon->pos();
     const coord_def n = mon->pos() + delta;
 
-    if (!_habitat_okay(mon, grd(n)) || !_habitat_okay(m2, grd(c)))
+    if (!monster_habitable_grid(mon, grd(n))
+        || !monster_habitable_grid(m2, grd(c)))
+    {
         return (false);
+    }
 
     // Okay, do the swap!
     _swim_or_move_energy(mon);
