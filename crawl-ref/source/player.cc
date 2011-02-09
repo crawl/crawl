@@ -5536,8 +5536,10 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-
-    return (species == SP_MERFOLK || !permanently) && form_can_swim();
+    return (species == SP_MERFOLK
+            || body_size(PSIZE_BODY) >= SIZE_GIANT
+            || !permanently)
+                && form_can_swim();
 }
 
 int player::visible_igrd(const coord_def &where) const
