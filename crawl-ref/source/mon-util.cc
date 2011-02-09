@@ -2373,15 +2373,25 @@ mon_intel_type mons_intel(const monster* mon)
     return (mons_class_intel(newmon.type));
 }
 
-habitat_type mons_class_habitat(int mc)
+habitat_type mons_class_habitat(int mc, bool real_amphibious)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me ? me->habitat : HT_LAND);
+    habitat_type ht = (me ? me->habitat
+                          : get_monster_data(MONS_PROGRAM_BUG)->habitat);
+    if (!real_amphibious)
+    {
+        // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
+        size_type st = (me ? me->size
+                           : get_monster_data(MONS_PROGRAM_BUG)->size);
+        if (ht == HT_LAND && st >= SIZE_GIANT)
+            ht = HT_AMPHIBIOUS;
+    }
+    return (ht);
 }
 
-habitat_type mons_habitat(const monster* mon)
+habitat_type mons_habitat(const monster* mon, bool real_amphibious)
 {
-    return (mons_class_habitat(mons_base_type(mon)));
+    return (mons_class_habitat(mons_base_type(mon), real_amphibious));
 }
 
 habitat_type mons_class_primary_habitat(int mc)
