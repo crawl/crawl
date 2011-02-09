@@ -3597,6 +3597,10 @@ armour_type get_random_armour_type(int item_level)
 // Sets item appearance to match brands, if any.
 void item_set_appearance(item_def &item)
 {
+    // Artefact appearance overrides cosmetic flags anyway.
+    if (is_artefact(item))
+        return;
+
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return;
 

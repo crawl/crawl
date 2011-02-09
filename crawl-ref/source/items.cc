@@ -630,62 +630,49 @@ void request_autopickup(bool do_pickup)
     will_autopickup = do_pickup;
 }
 
+bool item_is_branded(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        return (get_weapon_brand(item) != SPWPN_NORMAL);
+    case OBJ_ARMOUR:
+        return (get_armour_ego_type(item) != SPARM_NORMAL);
+    case OBJ_MISSILES:
+        return (get_ammo_brand(item) != SPMSL_NORMAL);
+    default:
+        return (false);
+    }
+}
+
 // 2 - artefact, 1 - glowing/runed, 0 - mundane
 int item_name_specialness(const item_def& item)
 {
-    // All jewellery is worth looking at.
-    // And we can always tell from the name if it's an artefact.
-    if (item.base_type == OBJ_JEWELLERY)
-        return (is_artefact(item) ? 2 : 1);
-
     if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_MISSILES)
+        && item.base_type != OBJ_MISSILES && item.base_type != OBJ_JEWELLERY)
     {
         return 0;
-    }
-    if (item_type_known(item))
-    {
-        if (is_artefact(item))
-            return 2;
-
-        // XXX Unite with l_item_branded() in clua.cc
-        bool branded = false;
-        switch (item.base_type)
-        {
-        case OBJ_WEAPONS:
-            branded = get_weapon_brand(item) != SPWPN_NORMAL;
-            break;
-        case OBJ_ARMOUR:
-            branded = get_armour_ego_type(item) != SPARM_NORMAL;
-            break;
-        case OBJ_MISSILES:
-            branded = get_ammo_brand(item) != SPMSL_NORMAL;
-            break;
-        default:
-            break;
-        }
-        return (branded ? 1 : 0);
-    }
-
-    std::string itname = item.name(DESC_PLAIN, false, false, false);
-    lowercase(itname);
-
-    // FIXME Maybe we should replace this with a test of ISFLAG_COSMETIC_MASK?
-    const bool item_runed = itname.find("runed ") != std::string::npos;
-    const bool heav_runed = itname.find("heavily ") != std::string::npos;
-    const bool item_glows = itname.find("glowing") != std::string::npos;
-
-    if (item_glows || item_runed && !heav_runed
-        || get_equip_desc(item) == ISFLAG_EMBROIDERED_SHINY)
-    {
-        return 1;
     }
 
     // You can tell something is an artefact, because it'll have a
     // description which rules out anything else.
-    // XXX: Fixedarts and unrandarts might upset the apple-cart, though.
     if (is_artefact(item))
         return 2;
+
+    // All jewellery is worth looking at.
+    // Even if it's identified and boring? --JPEG
+    if (item.base_type == OBJ_JEWELLERY)
+        return 1;
+
+    if (item_type_known(item))
+    {
+        if (item_is_branded(item))
+            return 1;
+        return 0;
+    }
+
+    if (item.flags & ISFLAG_COSMETIC_MASK)
+        return 1;
 
     return 0;
 }

@@ -512,22 +512,7 @@ IDEF(branded)
     if (!item || !item->defined() || !item_type_known(*item))
         return (0);
 
-    bool branded = false;
-    switch (item->base_type)
-    {
-    case OBJ_WEAPONS:
-        branded = get_weapon_brand(*item) != SPWPN_NORMAL;
-        break;
-    case OBJ_ARMOUR:
-        branded = get_armour_ego_type(*item) != SPARM_NORMAL;
-        break;
-    case OBJ_MISSILES:
-        branded = get_ammo_brand(*item) != SPMSL_NORMAL;
-        break;
-    default:
-        break;
-    }
-    lua_pushboolean(ls, branded);
+    lua_pushboolean(ls, item_is_branded(*item));
     return (1);
 }
 
