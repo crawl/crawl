@@ -1353,6 +1353,7 @@ static bool write_dump(const std::string &fname, dump_params &par)
         fputs(par.text.c_str(), handle);
         fclose(handle);
         succeeded = true;
+        mprf("Char dumped to '%s'.", file_name.c_str());
     }
     else
         mprf(MSGCH_ERROR, "Error opening file '%s'", file_name.c_str());
