@@ -6,6 +6,7 @@
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
+#include "player-stats.h"
 #include "skills2.h"
 #include "transform.h"
 
@@ -217,6 +218,7 @@ static void _describe_sickness(status_info* inf);
 static void _describe_speed(status_info* inf);
 static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
+static void _describe_stat_zero(status_info* inf, stat_type st);
 
 void fill_status_info(int status, status_info* inf)
 {
@@ -416,6 +418,16 @@ void fill_status_info(int status, status_info* inf)
                                            dur_expiring(DUR_TRANSFORMATION));
             _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
         }
+        break;
+
+    case STATUS_STR_ZERO:
+        _describe_stat_zero(inf, STAT_STR);
+        break;
+    case STATUS_INT_ZERO:
+        _describe_stat_zero(inf, STAT_INT);
+        break;
+    case STATUS_DEX_ZERO:
+        _describe_stat_zero(inf, STAT_DEX);
         break;
 
     default:
@@ -752,4 +764,19 @@ static void _describe_transform(status_info* inf)
 
     inf->light_colour = dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
+}
+
+static const char* s0_names[NUM_STATS] = { "Collapse", "Brainless", "Clumsy", };
+
+static void _describe_stat_zero(status_info* inf, stat_type st)
+{
+    if (you.stat_zero[st])
+    {
+        inf->light_colour = you.stat(st) ? LIGHTRED : RED;
+        inf->light_text   = s0_names[st];
+        inf->short_text   = make_stringf("lost %s", stat_desc(st, SD_NAME));
+        inf->long_text    = make_stringf(you.stat(st) ?
+                "You are recovering from loss of %s." : "You have no %s!",
+                stat_desc(st, SD_NAME));
+    }
 }
