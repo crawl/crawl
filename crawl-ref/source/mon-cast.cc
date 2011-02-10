@@ -2803,6 +2803,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         //Instead, handle above in handle_mon_spell
         //so nothing happens if no weapons animated.
         mpr("Haunting music fills the air, and weapons rise to join the dance!");
+        noisy(12, mons->pos(), mons->mindex());
         return;
 
     case SPELL_ANIMATE_DEAD:
