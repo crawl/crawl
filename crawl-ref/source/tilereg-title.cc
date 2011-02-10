@@ -10,6 +10,7 @@
 
 #include "tilereg-title.h"
 
+#include "cio.h"
 #include "files.h"
 #include "libutil.h"
 #include "macro.h"
@@ -55,8 +56,7 @@ void TitleRegion::render()
 
 void TitleRegion::run()
 {
-    mouse_control mc(MOUSE_MODE_MORE);
-    getchm();
+    getch_ck();
 }
 
 /**
@@ -69,4 +69,11 @@ void TitleRegion::update_message(std::string message)
     m_font_buf.add(message, VColour::white, 0, 0);
 }
 
+int TitleRegion::handle_mouse(MouseEvent &event)
+{
+    if (event.event == MouseEvent::RELEASE)
+        return CK_MOUSE_CLICK;
+    else
+        return 0;
+}
 #endif
