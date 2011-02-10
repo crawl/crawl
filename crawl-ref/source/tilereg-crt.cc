@@ -30,7 +30,7 @@ int CRTRegion::handle_mouse(MouseEvent &event)
     int ret_val = 0;
     if (m_attached_menu == NULL)
     {
-        if (event.event == MouseEvent::PRESS
+        if (event.event == MouseEvent::RELEASE
             && event.button == MouseEvent::LEFT)
         {
             ret_val = CK_MOUSE_CLICK;
