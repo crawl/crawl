@@ -54,6 +54,7 @@ struct game_state
 
     game_type type;
     game_type last_type;
+    bool last_game_won;
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
 

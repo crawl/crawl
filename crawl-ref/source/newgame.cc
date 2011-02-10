@@ -2832,6 +2832,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     std::string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
+    bool activate_next = false;
 
     unsigned int padding_width = 0;
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
@@ -2873,9 +2874,20 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
 
         menu->attach_item(tmp);
         tmp->set_visible(true);
-        // Is this item our default map?
-        if (defaults.map == maps[i]->name)
+
+        if (activate_next)
+        {
             menu->set_active_item(tmp);
+            activate_next = false;
+        }
+        // Is this item our default map?
+        else if (defaults.map == maps[i]->name)
+        {
+            if (crawl_state.last_game_won)
+                activate_next = true;
+            else
+                menu->set_active_item(tmp);
+        }
     }
 
     // Don't overwhelm new players with aptitudes or the full list of commands!
