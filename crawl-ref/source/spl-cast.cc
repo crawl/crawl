@@ -1574,6 +1574,7 @@ static spret_type _do_cast(spell_type spell, int powc,
             mpr("Haunting music fills the air, and weapons rise to join the dance!");
         else
             mpr("Strange music fills the air, but nothing else happens.");
+        noisy(12, you.pos(), MHITYOU);
         break;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
