@@ -3118,7 +3118,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
 
-        if (mons->type == MONS_TUKIMA)
+        if (mons->type == MONS_TERPSICHORE)
         {
             std::string dance_compulsion = "";
             bool has_mon_foe = !invalid_monster_index(mons->foe);
