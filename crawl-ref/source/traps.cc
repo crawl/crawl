@@ -1544,12 +1544,12 @@ trap_type random_trap(dungeon_feature_type feat)
 
 bool is_valid_shaft_level(const level_id &place)
 {
-    if (crawl_state.game_is_sprint())
+    if (crawl_state.test
+        || crawl_state.game_is_sprint()
+        || crawl_state.game_is_zotdef())
+    {
         return (false);
-
-    // Zot def - no shafts
-    if (crawl_state.game_is_zotdef())
-        return (false);
+    }
 
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
