@@ -889,6 +889,7 @@ void untransform(bool skip_wielding, bool skip_move)
     {
         mpr("You fall off the wall.");
         you.clinging = false;
+        you.cling_to.clear();
         move_player_to_grid(you.pos(), false, true);
     }
 
