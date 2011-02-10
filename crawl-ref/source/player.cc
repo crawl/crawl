@@ -5507,23 +5507,27 @@ bool player::can_cling_to(const coord_def& p) const
     if (!can_pass_through_feat(grd(p)))
         return (false);
 
-    for (radius_iterator ri(p, 1, C_CIRCLE, NULL, true);
-         ri; ++ri)
-    {
-        if (feat_is_wall(env.grid(*ri)))
-        {
-            for (radius_iterator ri2(*ri, 1, C_CIRCLE, NULL, false);
-                 ri2; ++ri2)
-            {
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            for (orth_adjacent_iterator ai2(*ai, false); ai2; ++ai2)
                 for (int i = 0, size = cling_to.size(); i < size; ++i)
-                {
-                    if (cling_to[i] == *ri2)
+                    if (cling_to[i] == *ai2)
                         return (true);
-                }
-            }
-        }
-    }
-    return (false);
+
+        return (false);
+}
+
+void player::check_clinging()
+{
+    if (you.form != TRAN_SPIDER)
+        return;
+
+    you.cling_to.clear();
+    for (orth_adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            you.cling_to.push_back(*ai);
+
+    you.clinging = (you.cling_to.size() > 0) ? true : false;
 }
 
 bool player::in_water() const
@@ -6998,20 +7002,4 @@ void player::goto_place(const level_id &lid)
         where_are_you = static_cast<branch_type>(lid.branch);
         absdepth0 = absdungeon_depth(lid.branch, lid.depth);
     }
-}
-
-void player::check_clinging()
-{
-    int walls = 0;
-    if (you.form == TRAN_SPIDER)
-    {
-        you.cling_to.clear();
-        for (radius_iterator ri(you.pos(), 1, C_CIRCLE, NULL, true); ri; ++ri)
-            if (feat_is_wall(env.grid(*ri)))
-            {
-                you.cling_to.push_back(*ri);
-                walls++;
-            }
-    }
-    you.clinging = (walls > 0) ? true : false;
 }
