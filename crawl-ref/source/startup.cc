@@ -199,6 +199,7 @@ static void _post_init(bool newc)
 
     crawl_state.need_save = true;
     crawl_state.last_type = crawl_state.type;
+    crawl_state.last_game_won = false;
 
     calc_hp();
     calc_mp();

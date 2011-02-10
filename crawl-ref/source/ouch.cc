@@ -1504,6 +1504,9 @@ void _end_game(scorefile_entry &se)
     if (!crawl_state.seen_hups)
         get_ch();
 
+    if (se.get_death_type() == KILLED_BY_WINNING)
+        crawl_state.last_game_won = true;
+
     game_ended();
 }
 
