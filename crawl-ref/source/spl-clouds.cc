@@ -89,7 +89,7 @@ bool conjure_flame(int pow, const coord_def& where)
     monster* mons = monster_at(where);
     if (mons)
     {
-        if (you.can_see(mons))
+        if (you.can_see(mons) && !mons_is_unknown_mimic(mons))
         {
             mpr("You can't place the cloud on a creature.");
             return (false);
