@@ -1954,7 +1954,10 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         // Perform the real level up
         check_skill_level_change(fsk);
         check_skill_level_change(tsk);
-        you.transfer_skill_points -= total_skp_lost;
+        if (you.transfer_skill_points - total_skp_lost < 0)
+            you.transfer_skill_points = 0;
+        else
+            you.transfer_skill_points -= total_skp_lost;
 
         dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
         dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
