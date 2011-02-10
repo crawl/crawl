@@ -659,10 +659,14 @@ int item_name_specialness(const item_def& item)
     if (is_artefact(item))
         return 2;
 
-    // All jewellery is worth looking at.
-    // Even if it's identified and boring? --JPEG
+    // All unknown jewellery is worth looking at.
     if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (is_useless_item(item))
+            return 0;
+
         return 1;
+    }
 
     if (item_type_known(item))
     {
