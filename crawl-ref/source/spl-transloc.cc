@@ -215,7 +215,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    bool success = false;
     coord_def target;
 
     if (item_blocks_teleport(true, true))
@@ -240,14 +239,12 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         mpr("You may select the general direction of your translocation.");
         cast_semi_controlled_blink(100);
         maybe_id_ring_TC();
-        success = true;
     }
     else
     {
         canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
         move_player_to_grid(target, false, true);
-        success = true;
 
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
