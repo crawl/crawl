@@ -2334,7 +2334,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED_TOUGH,
     MONS_SENSED_NASTY,
     MONS_SALT_PILLAR,
-    MONS_TUKIMA,
+    MONS_TERPSICHORE,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2569,7 +2569,7 @@ enum mon_spellbook_type
     MST_SERPENT_OF_HELL_DIS,
     MST_NERGALLE,
     MST_JORY,
-    MST_TUKIMA,
+    MST_TERPSICHORE,
 
     MST_GHOST, // special
     MST_TEST_SPAWNER,

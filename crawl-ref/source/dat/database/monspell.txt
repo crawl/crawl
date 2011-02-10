@@ -304,7 +304,7 @@ You see a slight glow in a spot of thin air.
 Someone prays in loud words.
 
 %%%%
-Tukima cast targeted
+Terpsichore cast targeted
 
 @The_monster@ looks at @target@ while chanting.
 
@@ -313,18 +313,18 @@ Tukima cast targeted
 @The_monster@ casts a spell at @target@.
 
 %%%%
-Tukima cast
+Terpsichore cast
 
-Tukima weaves a pattern with her spectral knives.
+@The_monster@ weaves a pattern with her spectral knives.
 
-Tukima jumps to perform a pas de chat.
+@The_monster@ jumps to perform a pas de chat.
 
-Tukima leaps into a pas de poisson!
+@The_monster@ leaps into a pas de poisson!
 
-Tukima performs a soubresaut!
+@The_monster@ performs a soubresaut!
 
 %%%%
-unseen Tukima cast
+unseen Terpsichore cast
 
 You hear spectral shoes clatter against the floor.
 

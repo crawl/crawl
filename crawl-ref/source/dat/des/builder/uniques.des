@@ -307,6 +307,10 @@ NAME:   uniq_urug
 DEPTH:  10-16, !Lair, !Slime
 : place_unique(_G, "Urug")
 
+NAME:   uniq_terpsichore
+DEPTH:  15-25, !Lair, !Slime, Blade
+: place_unique(_G, "Terpsichore band")
+
 NAME:   uniq_wiglaf
 DEPTH:  17-27, !Lair, !Slime
 : place_unique(_G, "Wiglaf")
