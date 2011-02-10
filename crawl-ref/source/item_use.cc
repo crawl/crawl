@@ -4698,7 +4698,9 @@ void read_scroll(int slot)
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
-    std::string pre_succ_msg = "As you read the scroll, it crumbles to dust.";
+    std::string pre_succ_msg =
+            make_stringf("As you read the %s, it crumbles to dust.",
+                          scroll.name(DESC_QUALNAME).c_str());
     if (you.confused()
         || (which_scroll != SCR_IMMOLATION
             && !_is_cancellable_scroll(which_scroll)))
