@@ -1838,9 +1838,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_CHARACTER_DUMP:
-        if (dump_char(you.your_name, false))
-            mpr("Char dumped successfully.");
-        else
+        if (!dump_char(you.your_name, false))
             mpr("Char dump unsuccessful! Sorry about that.");
         break;
 
