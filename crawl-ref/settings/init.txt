@@ -59,7 +59,6 @@
 #
 # name = Delilah
 # remember_name = false
-# use_old_selection_order = true
 # weapon = (short sword | falchion | hand axe | spear | mace | trident | random)
 # book = (fire | ice | summ | random)
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
