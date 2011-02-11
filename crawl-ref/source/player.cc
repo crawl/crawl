@@ -544,20 +544,25 @@ monster_type player_mons(bool transform)
 void update_vision_range()
 {
     you.normal_vision = LOS_RADIUS;
-    you.current_vision = you.normal_vision;
+    int nom   = 1;
+    int denom = 1;
 
     // Nightstalker gives -1/-2/-3.
     if (player_mutation_level(MUT_NIGHTSTALKER))
-        you.current_vision -= player_mutation_level(MUT_NIGHTSTALKER);
+    {
+        nom *= LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER);
+        denom *= LOS_RADIUS;
+    }
 
     // Lantern of shadows.
     if (you.attribute[ATTR_SHADOWS])
-        you.current_vision -= 2;
+        nom *= 3, denom *= 4;
 
     // the Darkness spell.
     if (you.duration[DUR_DARKNESS])
-        you.current_vision -= 2;
+        nom *= 3, denom *= 4;
 
+    you.current_vision = (you.normal_vision * nom + denom / 2) / denom;
     ASSERT(you.current_vision > 0);
     set_los_radius(you.current_vision);
 }
