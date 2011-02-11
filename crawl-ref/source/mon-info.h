@@ -67,7 +67,8 @@ enum monster_info_flags
     MB_MUTE,
     MB_BLIND,
     MB_DUMB,
-    MB_MAD
+    MB_MAD,
+    MB_CLINGING,
 };
 
 struct monster_info_base

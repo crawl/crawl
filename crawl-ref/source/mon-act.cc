@@ -2361,6 +2361,7 @@ void handle_monster_move(monster* mons)
         }
         you.update_beholder(mons);
         you.update_fearmonger(mons);
+        mons->check_clinging();
 
         // Reevaluate behaviour, since the monster's surroundings have
         // changed (it may have moved, or died for that matter).  Don't

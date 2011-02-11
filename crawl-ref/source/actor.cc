@@ -3,6 +3,8 @@
 #include "actor.h"
 #include "areas.h"
 #include "artefact.h"
+#include "coord.h"
+#include "coordit.h"
 #include "env.h"
 #include "itemprop.h"
 #include "los.h"
@@ -11,6 +13,7 @@
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "traps.h"
 
 actor::~actor()
@@ -69,8 +72,7 @@ bool actor::can_pass_through(const coord_def &c) const
 
 bool actor::is_habitable(const coord_def &_pos) const
 {
-    //Just for players for now.
-    if (atype() == ACT_PLAYER && can_cling_to(_pos))
+    if (can_cling_to(_pos))
         return true;
 
     return is_habitable_feat(grd(_pos));
@@ -224,4 +226,43 @@ bool actor_slime_wall_immune(const actor *act)
     return (act->atype() == ACT_PLAYER?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
             : act->res_acid() == 3);
+}
+
+bool actor::is_wall_clinging() const
+{
+    return (clinging);
+}
+
+bool actor::can_cling_to(const coord_def& p) const
+{
+    if (!in_bounds(p))
+        return (false);
+
+    if (!is_wall_clinging())
+        return (false);
+
+    if (!can_pass_through_feat(grd(p)))
+        return (false);
+
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            for (orth_adjacent_iterator ai2(*ai, false); ai2; ++ai2)
+                for (int i = 0, size = cling_to.size(); i < size; ++i)
+                    if (cling_to[i] == *ai2)
+                        return (true);
+
+        return (false);
+}
+
+void actor::check_clinging()
+{
+    if (!can_cling_to_walls())
+        return;
+
+    cling_to.clear();
+    for (orth_adjacent_iterator ai(pos()); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            cling_to.push_back(*ai);
+
+    clinging = (cling_to.size() > 0) ? true : false;
 }

@@ -409,7 +409,7 @@ void fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_CLINGING:
-        if (you.clinging)
+        if (you.is_wall_clinging())
         {
             inf->light_text   = "Cling";
             inf->short_text   = "clinging";
@@ -601,7 +601,8 @@ static void _describe_speed(status_info* inf)
         inf->long_text = "Your actions are hasted.";
         _mark_expiring(inf, dur_expiring(DUR_HASTE));
     }
-    if (liquefied(you.pos(), true) && !you.airborne() && !you.clinging)
+    if (liquefied(you.pos(), true) && !you.airborne()
+        && !you.is_wall_clinging())
     {
         inf->light_colour = BROWN;
         inf->light_text   = "SlowM";

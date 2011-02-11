@@ -38,6 +38,8 @@ void set_terrain_changed(int x, int y)
     dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
 
     los_terrain_changed(coord_def(x,y));
+
+    check_clinging();
 }
 
 void set_terrain_mapped(int x, int y)

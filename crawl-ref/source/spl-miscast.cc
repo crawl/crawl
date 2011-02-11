@@ -958,7 +958,8 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
-            if (target->atype() == ACT_PLAYER && !liquefied(you.pos()) && !you.airborne() && !you.clinging)
+            if (target->atype() == ACT_PLAYER && !liquefied(you.pos())
+                && !you.airborne() && !you.is_wall_clinging())
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
                 levitate_player(20);

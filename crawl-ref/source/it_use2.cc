@@ -222,7 +222,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_LEVITATION:
-        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        if (liquefied(you.pos()) && !you.airborne() && !you.is_wall_clinging())
         {
             mprf(MSGCH_WARN, "This potion isn't strong enough to pull you from the ground!");
             break;

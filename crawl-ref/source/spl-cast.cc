@@ -1481,9 +1481,10 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        if (you.airborne() || you.clinging || !feat_has_solid_floor(grd(you.pos())))
+        if (you.airborne() || you.is_wall_clinging()
+            || !feat_has_solid_floor(grd(you.pos())))
         {
-            if (you.airborne() || you.clinging)
+            if (you.airborne() || you.is_wall_clinging())
                 mprf("You can't cast this spell without touching the ground.");
             else
                 mprf("You need to be on clear, solid ground to cast this spell.");
@@ -1835,7 +1836,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEVITATION:
-        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        if (liquefied(you.pos()) && !you.airborne() && !you.is_wall_clinging())
         {
             mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
             return (SPRET_ABORT);
@@ -1846,7 +1847,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_FLY:
-        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        if (liquefied(you.pos()) && !you.airborne() && !you.is_wall_clinging())
         {
             mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
             return (SPRET_ABORT);
