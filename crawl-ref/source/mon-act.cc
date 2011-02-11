@@ -222,8 +222,7 @@ static void _swim_or_move_energy(monster* mon)
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-                      && !(mon->airborne() || mon->is_wall_clinging())) ? EUT_SWIM
-                                                                        : EUT_MOVE);
+                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE);
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -1883,7 +1882,7 @@ void handle_monster_move(monster* mons)
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
-    if (liquefied(mons->pos()) && !mons->airborne() && !mons->is_insubstantial())
+    if (liquefied(mons->pos()) && mons->ground_level() && !mons->is_insubstantial())
     {
         mon_enchant me = mon_enchant(ENCH_SLOW, 0, KC_OTHER, 20);
         if (mons->has_ench(ENCH_SLOW))

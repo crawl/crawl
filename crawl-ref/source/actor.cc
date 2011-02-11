@@ -28,8 +28,7 @@ bool actor::has_equipped(equipment_type eq, int sub_type) const
 
 bool actor::will_trigger_shaft() const
 {
-    return (!(airborne() || is_wall_clinging())
-            && total_weight() > 0 && is_valid_shaft_level()
+    return (ground_level() && total_weight() > 0 && is_valid_shaft_level()
             // let's pretend that they always make their saving roll
             && !(atype() == ACT_MONSTER
                  && mons_is_elven_twin(static_cast<const monster* >(this))));

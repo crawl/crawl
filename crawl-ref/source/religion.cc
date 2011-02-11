@@ -970,7 +970,7 @@ void dec_penance(int val)
 
 static bool _need_water_walking()
 {
-    return (!you.airborne() && you.species != SP_MERFOLK
+    return (you.ground_level() && you.species != SP_MERFOLK
             && grd(you.pos()) == DNGN_DEEP_WATER);
 }
 

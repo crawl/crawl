@@ -1618,8 +1618,7 @@ static bool _activate_talent(const talent& tal)
     }
 
     if ((tal.which == ABIL_EVOKE_LEVITATE || tal.which == ABIL_TRAN_BAT)
-        && liquefied(you.pos())
-        && !you.airborne() && !you.is_wall_clinging())
+        && liquefied(you.pos()) && !you.ground_level())
     {
         mpr("You can't escape from the ground with such puny magic!", MSGCH_WARN);
         crawl_state.zero_turns_taken();

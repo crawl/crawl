@@ -444,7 +444,7 @@ bool player::fumbles_attack(bool verbose)
     bool did_fumble = false;
 
     // Fumbling in shallow water.
-    if (floundering() || (liquefied(pos()) && !airborne() && !clinging))
+    if (floundering() || liquefied(pos()) && ground_level())
     {
         if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
