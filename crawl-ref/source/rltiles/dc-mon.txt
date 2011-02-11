@@ -546,8 +546,8 @@ kenku MONS_KENKU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
 
-## Beasts ('I')
-%sdir dc-mon
+## Various beasts ('I')
+%sdir dc-mon/animals
 ice_beast MONS_ICE_BEAST
 sky_beast MONS_SKY_BEAST
 
