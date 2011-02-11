@@ -4319,7 +4319,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SLOW:
-        if (!quiet && !(liquefied(pos()) && !airborne() && !is_insubstantial()))
+        if (!quiet && !(liquefied(pos()) && ground_level() && !is_insubstantial()))
             simple_monster_message(this, " is no longer moving slowly.");
         calc_speed();
         break;
@@ -5166,7 +5166,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(grd(pos())) && !(airborne() || is_wall_clinging()))
+        if (feat_is_watery(grd(pos())) && ground_level())
         {
             if (mons_near(this) && visible_to(&you))
             {
@@ -5662,7 +5662,8 @@ void monster::calc_speed()
 {
     speed = mons_real_base_speed(type);
 
-    bool is_liquefied = (liquefied(pos()) && !airborne() && !is_insubstantial());
+    bool is_liquefied = (liquefied(pos()) && ground_level()
+                         && !is_insubstantial());
 
     // Going berserk on liquid ground doesn't speed you up any.
     if (!is_liquefied && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
@@ -6055,7 +6056,7 @@ bool monster::do_shaft()
             return (false);
         }
 
-        if (airborne() || is_wall_clinging() || total_weight() == 0)
+        if (!ground_level() || total_weight() == 0)
         {
             if (mons_near(this))
             {

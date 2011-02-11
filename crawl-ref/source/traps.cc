@@ -458,7 +458,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             || trig_knows && !mons_is_fleeing(m) && !m->pacified())
         {
             // No message for flying monsters to avoid message spam.
-            if (you_know && !(triggerer.airborne() || triggerer.is_wall_clinging()))
+            if (you_know && triggerer.ground_level())
                 simple_monster_message(m, " carefully avoids the shaft.");
             return;
         }
@@ -471,8 +471,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         return;
     }
     // Only magical traps affect flying critters.
-    if ((triggerer.airborne() || triggerer.is_wall_clinging())
-        && this->category() != DNGN_TRAP_MAGICAL)
+    if (!triggerer.ground_level() && this->category() != DNGN_TRAP_MAGICAL)
     {
         if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");

@@ -294,7 +294,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             return;
     }
 
-    if (!you.airborne() && !you.can_cling_to(you.pos()))
+    if (you.ground_level())
     {
         if (you.species == SP_MERFOLK)
         {
@@ -384,6 +384,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     if (!you.running)
         check_for_interesting_features();
 
+    you.check_clinging();
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
 
@@ -1929,7 +1930,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 6;
 
     // moving on liquefied ground takes longer
-    if (liquefied(you.pos()) && !you.airborne() && !you.is_wall_clinging())
+    if (liquefied(you.pos()) && you.ground_level())
         mv += 3;
 
     // armour
@@ -5500,7 +5501,7 @@ void player::clear_clinging()
 
 bool player::in_water() const
 {
-    return (!airborne() && !beogh_water_walk() && !is_wall_clinging()
+    return (ground_level() && !beogh_water_walk()
             && feat_is_water(grd(pos())));
 }
 
@@ -6899,7 +6900,7 @@ bool player::do_shaft()
 
         handle_items_on_shaft(pos(), false);
 
-        if (airborne() || is_wall_clinging() || total_weight() == 0)
+        if (!ground_level() || total_weight() == 0)
             return (true);
 
         force_stair = DNGN_TRAP_NATURAL;

@@ -959,7 +959,7 @@ void MiscastEffect::_enchantment(int severity)
         {
         case 0:
             if (target->atype() == ACT_PLAYER && !liquefied(you.pos())
-                && !you.airborne() && !you.is_wall_clinging())
+                && you.ground_level())
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
                 levitate_player(20);
@@ -2281,8 +2281,7 @@ void MiscastEffect::_ice(int severity)
 
 static bool _on_floor(actor* target)
 {
-    return (!(target->airborne() || target->is_wall_clinging())
-            && grd(target->pos()) == DNGN_FLOOR);
+    return (target->ground_level() && grd(target->pos()) == DNGN_FLOOR);
 }
 
 void MiscastEffect::_earth(int severity)

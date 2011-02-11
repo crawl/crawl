@@ -2450,7 +2450,7 @@ tileidx_t tileidx_monster(const monster* mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if (mons_flies(mons) && !_tentacle_tile_not_levitating(ch))
+    if (!mons->ground_level() && !_tentacle_tile_not_levitating(ch))
         ch |= TILE_FLAG_FLYING;
     if (mons->has_ench(ENCH_HELD))
         ch |= TILE_FLAG_NET;
