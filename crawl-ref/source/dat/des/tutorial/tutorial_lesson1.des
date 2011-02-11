@@ -277,6 +277,11 @@ function tutorial_msg.exit ()
 
     return crawl.endgame(text)
 end
+
+function tutorial_msg.win ()
+    dgn.mark_game_won()
+    return tutorial_msg.exit()
+end
 }}
 
 NAME:    tutorial_lesson1
@@ -305,7 +310,7 @@ MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson1", \
                                  onclimb = "tutorial_msg.exit" }
 MARKER:  [ = lua:one_way_stair { desc = "exit from the tutorial", \
                                  dst  = "tutorial_lesson1", \
-                                 onclimb = "tutorial_msg.exit" }
+                                 onclimb = "tutorial_msg.win" }
 MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
              size_max = 1, spread_rate = 0 }
