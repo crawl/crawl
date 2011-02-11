@@ -1286,6 +1286,13 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (you.species == SP_CAT)
             return (true);
         break;
+    case SPELL_DARKNESS:
+        // mere corona is not enough, but divine light blocks it completely
+        if (transient && you.haloed())
+            return true;
+        if (you.religion == GOD_SHINING_ONE && player_under_penance())
+            return true;
+        break;
     default:
         break; // quash unhandled constants warnings
     }

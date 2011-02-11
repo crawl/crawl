@@ -554,6 +554,11 @@ void update_vision_range()
     if (you.attribute[ATTR_SHADOWS])
         you.current_vision -= 2;
 
+    // the Darkness spell.
+    if (you.duration[DUR_DARKNESS])
+        you.current_vision -= 2;
+
+    ASSERT(you.current_vision > 0);
     set_los_radius(you.current_vision);
 }
 
