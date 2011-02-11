@@ -780,6 +780,7 @@ static const char* dur_names[] =
     "finesse",
     "lifesaving",
     "paralysis immunity",
+    "darkness",
 };
 
 void wizard_edit_durations(void)

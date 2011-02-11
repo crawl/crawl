@@ -1994,6 +1994,11 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
+    case SPELL_DARKNESS:
+        if (!cast_darkness(powc))
+            return (SPRET_ABORT);
+        break;
+
     default:
         return (SPRET_NONE);
     }

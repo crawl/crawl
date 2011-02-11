@@ -2578,6 +2578,18 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_LIFESAVING, delay,
                           "Your divine protection fades away.");
+
+    if (_decrement_a_duration(DUR_DARKNESS, delay,
+                          "The ambient light returns to normal.")
+        || you.haloed())
+    {
+        if (you.duration[DUR_DARKNESS])
+        {
+            you.duration[DUR_DARKNESS] = 0;
+            mpr("The divine light dispels your darkness!");
+        }
+        update_vision_range();
+    }
 }
 
 static void _check_banished()

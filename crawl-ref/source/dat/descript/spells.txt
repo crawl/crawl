@@ -147,6 +147,10 @@ Cure Poison
 
 This spell removes poison from the caster's system.
 %%%%
+Darkness
+
+This spell dims the light of the dungeon, reducing the range of vision. The area affected is quite large and it doesn't have sharp edges, thus the effect is unlikely to alert anyone not very close to the caster.
+%%%%
 Death Channel
 
 This spell raises living creatures slain by the caster into a state of unliving slavery as spectral things. Note that spectral things can follow you beyond the level they were created on.

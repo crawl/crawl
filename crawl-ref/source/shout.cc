@@ -372,8 +372,9 @@ bool check_awaken(monster* mons)
 
     // If you've been tagged with Corona or are Glowing, the glow
     // makes you extremely unstealthy.
+    // The darker it is, the bigger the penalty.
     if (you.backlit() && you.visible_to(mons))
-        mons_perc += 50;
+        mons_perc += 50 * LOS_RADIUS / you.current_vision;
 
     if (mons_perc < 0)
         mons_perc = 0;

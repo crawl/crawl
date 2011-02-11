@@ -545,3 +545,21 @@ void cast_stoneskin(int pow)
 
     you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
 }
+
+bool cast_darkness(int pow)
+{
+    if (you.haloed())
+    {
+        mpr("It would have no effect in that bright light!");
+        return false;
+    }
+
+    if (you.duration[DUR_DARKNESS])
+        mprf(MSGCH_DURATION, "It gets a bit darker.");
+    else
+        mprf(MSGCH_DURATION, "It gets dark.");
+    you.increase_duration(DUR_DARKNESS, 15 + random2(1 + pow/3), 100);
+    update_vision_range();
+
+    return true;
+}
