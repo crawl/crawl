@@ -181,6 +181,11 @@ public:
 
     static std::string game_type_name_for(game_type gt);
 
+    inline void mark_last_game_won()
+    {
+        last_game_won = true;
+    }
+
     friend class mon_acting;
 };
 

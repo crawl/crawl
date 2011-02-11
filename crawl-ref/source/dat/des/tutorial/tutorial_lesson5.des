@@ -171,6 +171,11 @@ function tutorial_msg5.exit ()
 
     return crawl.endgame(text)
 end
+
+function tutorial_msg5.win ()
+    dgn.mark_game_won()
+    return tutorial_msg5.exit()
+end
 }}
 
 NAME:    tutorial_lesson5
@@ -214,13 +219,13 @@ MARKER:  ) = lua:tutorial_msg5.tutorial_end()
 MARKER:  ] = lua:tutorial_msg5.tutorial_end()
 MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg5.exit" }
+                                 onclimb = "tutorial_msg5.win" }
 MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg5.exit" }
+                                 onclimb = "tutorial_msg5.win" }
 MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg5.exit" }
+                                 onclimb = "tutorial_msg5.win" }
 epilogue{{
   tutorial_msg5.start()
 }}
