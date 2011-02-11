@@ -1929,7 +1929,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 6;
 
     // moving on liquefied ground takes longer
-    if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+    if (liquefied(you.pos()) && !you.airborne() && !you.is_wall_clinging())
         mv += 3;
 
     // armour
@@ -5492,43 +5492,10 @@ bool player::is_levitating() const
     return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
 }
 
-bool player::is_wall_clinging() const
+void player::clear_clinging()
 {
-    return (clinging);
-}
-
-bool player::can_cling_to(const coord_def& p) const
-{
-    if (!in_bounds(p))
-        return (false);
-
-    if (!is_wall_clinging())
-        return (false);
-
-    if (!can_pass_through_feat(grd(p)))
-        return (false);
-
-    for (orth_adjacent_iterator ai(p); ai; ++ai)
-        if (feat_is_wall(env.grid(*ai)))
-            for (orth_adjacent_iterator ai2(*ai, false); ai2; ++ai2)
-                for (int i = 0, size = cling_to.size(); i < size; ++i)
-                    if (cling_to[i] == *ai2)
-                        return (true);
-
-        return (false);
-}
-
-void player::check_clinging()
-{
-    if (you.form != TRAN_SPIDER)
-        return;
-
+    you.clinging = false;
     you.cling_to.clear();
-    for (orth_adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (feat_is_wall(env.grid(*ai)))
-            you.cling_to.push_back(*ai);
-
-    you.clinging = (you.cling_to.size() > 0) ? true : false;
 }
 
 bool player::in_water() const

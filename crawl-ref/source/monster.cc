@@ -3420,16 +3420,6 @@ bool monster::is_levitating() const
     return (flight_mode() == FL_LEVITATE);
 }
 
-bool monster::is_wall_clinging() const
-{
-    return (0);
-}
-
-bool monster::can_cling_to(const coord_def& p) const
-{
-    return (0);
-}
-
 int monster::mons_species() const
 {
     return ::mons_species(type);
@@ -6530,6 +6520,11 @@ reach_type monster::reach_range() const
     if (attk.flavour == AF_REACH && attk.damage)
         return (REACH_KNIGHT);
     return (REACH_NONE);
+}
+
+bool monster::can_cling_to_walls() const
+{
+    return mons_genus(type) == MONS_SPIDER;
 }
 
 /////////////////////////////////////////////////////////////////////////

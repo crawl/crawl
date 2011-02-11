@@ -885,11 +885,10 @@ void untransform(bool skip_wielding, bool skip_move)
     }
     calc_hp();
 
-    if (you.clinging)
+    if (you.is_wall_clinging())
     {
         mpr("You fall off the wall.");
-        you.clinging = false;
-        you.cling_to.clear();
+        you.clear_clinging();
         move_player_to_grid(you.pos(), false, true);
     }
 

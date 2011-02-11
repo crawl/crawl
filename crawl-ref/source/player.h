@@ -335,10 +335,6 @@ public:
   // The save file itself.
   package *save;
 
-  // Is player clinging to the wall?
-  bool clinging;
-  // Array of walls which player is currently clinging to.
-  std::vector<coord_def>    cling_to;
   // The type of a zotdef wave, if any.
   std::string zotdef_wave_name;
   // The biggest assigned monster id so far.
@@ -384,9 +380,8 @@ public:
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
-    bool is_wall_clinging() const;
-    bool can_cling_to(const coord_def& p) const;
-    void check_clinging();
+    bool can_cling_to_walls() const;
+    void clear_clinging();
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;

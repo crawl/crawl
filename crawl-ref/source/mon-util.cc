@@ -3588,7 +3588,7 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
     if (_mons_can_pass_door(mon, p))
         return (true);
 
-    if (!mon->is_habitable_feat(env.grid(p)))
+    if (!mon->is_habitable(p))
         return (false);
 
     // Your friends only know about doors you know about, unless they feel
@@ -4458,4 +4458,11 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
+}
+
+void check_clinging()
+{
+    you.check_clinging();
+    for (monster_iterator mi; mi; ++mi)
+        mi->check_clinging();
 }
