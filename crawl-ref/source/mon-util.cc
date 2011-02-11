@@ -4170,7 +4170,12 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_ARACHNID);
     case 'u': // mutated type, not enough info to determine shape
         return (MON_SHAPE_MISC);
-    case 't': // turtles
+    case 't': // crocodiles/turtles
+        if (type == MONS_SNAPPING_TURTLE 
+            || type == MONS_ALLIGATOR_SNAPPING_TURTLE)
+        {
+            return (MON_SHAPE_QUADRUPED_TAILLESS);
+        }
         return (MON_SHAPE_QUADRUPED);
     case 'v': // vortices
         return (MON_SHAPE_MISC);

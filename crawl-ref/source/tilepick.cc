@@ -554,7 +554,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
                    + (z_tile - TILEP_MONS_ZOMBIE_HYDRA);
         }
     }
-    return TILEP_ERROR;
+    return TILEP_MONS_SPECTRAL_SMALL;
 }
 
 static tileidx_t _tileidx_monster_zombified(const monster* mon)
@@ -625,15 +625,17 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
                      + std::min((int)mon->number, 5) - 1;
             break;
         }
-        else if (_is_zombie(z_type)
-                 && mons_genus(subtype) == MONS_RAT)
+        else if (_is_zombie(z_type))
         {
-            return TILEP_MONS_ZOMBIE_RAT;
-        }
-        else if (_is_zombie(z_type)
-                 && mons_genus(subtype) == MONS_HOUND)
-        {
-            return TILEP_MONS_ZOMBIE_HOUND;
+            if (mons_genus(subtype) == MONS_RAT)
+                return TILEP_MONS_ZOMBIE_RAT;
+            else if (mons_genus(subtype) == MONS_HOUND)
+                return TILEP_MONS_ZOMBIE_HOUND;
+            else if (mons_genus(subtype) == MONS_GIANT_NEWT
+                     || mons_genus(subtype) == MONS_CROCODILE)
+            {
+                return TILEP_MONS_ZOMBIE_LIZARD;
+            }
         }
         // else fall-through
     case MON_SHAPE_QUADRUPED_TAILLESS:
