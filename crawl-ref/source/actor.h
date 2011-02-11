@@ -259,6 +259,7 @@ public:
     virtual bool can_cling_to(const coord_def& p) const;
     virtual void check_clinging();
     virtual bool airborne() const;
+    virtual bool ground_level() const;
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;

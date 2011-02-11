@@ -45,6 +45,14 @@ bool actor::airborne() const
     return (is_levitating() || (flight_mode() == FL_FLY && !cannot_move()));
 }
 
+/**
+ * Check if the actor is on the ground (or in water).
+ */
+bool actor::ground_level() const
+{
+    return (!airborne() && !is_wall_clinging());
+}
+
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const
