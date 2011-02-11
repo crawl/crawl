@@ -79,7 +79,6 @@ labrat_shifting
 labrat_venomous
 %sdir dc-mon/animals
 
-
 ## Spiders and insects ('s')
 %back dc-misc/blood_green
 giant_centipede CORPSE_GIANT_CENTIPEDE
@@ -274,10 +273,12 @@ minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 kenku CORPSE_KENKU
 
-## Sky beast ('I')
+## Various beasts ('I')
+%sdir dc-mon/animals
 sky_beast CORPSE_SKY_BEAST
 
 ## Jellies ('J')
+%sdir dc-mon
 %back dc-misc/blood_green
 giant_amoeba CORPSE_GIANT_AMOEBA
 
