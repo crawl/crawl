@@ -90,7 +90,8 @@ static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
 #endif
-static bool write_dump(const std::string &fname, dump_params &);
+static bool _write_dump(const std::string &fname, dump_params &,
+                        bool print_dump_path = false);
 
 struct dump_section_handler
 {
@@ -180,7 +181,7 @@ bool dump_char(const std::string &fname, bool show_prices, bool full_id,
         dump_section(par);
     }
 
-    return write_dump(fname, par);
+    return _write_dump(fname, par, se == NULL);
 }
 
 static void _sdump_header(dump_params &par)
@@ -1239,7 +1240,7 @@ const char *hunger_level(void)
                                  : (vamp ? "almost alive" : "completely stuffed"));
 }
 
-static std::string morgue_directory()
+std::string morgue_directory()
 {
     std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
                        !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
@@ -1323,7 +1324,8 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool write_dump(const std::string &fname, dump_params &par)
+static bool _write_dump(const std::string &fname, dump_params &par,
+                        bool print_dump_path)
 {
     bool succeeded = false;
 
@@ -1353,7 +1355,8 @@ static bool write_dump(const std::string &fname, dump_params &par)
         fputs(par.text.c_str(), handle);
         fclose(handle);
         succeeded = true;
-        mprf("Char dumped to '%s'.", file_name.c_str());
+        if (print_dump_path)
+            mprf("Char dumped to '%s'.", file_name.c_str());
     }
     else
         mprf(MSGCH_ERROR, "Error opening file '%s'", file_name.c_str());
