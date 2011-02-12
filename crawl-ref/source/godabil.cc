@@ -293,9 +293,9 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...were %s for their %s!", smite[1].c_str(), sin[1].c_str());
             break;
         case 16:
-            turn[1] = make_stringf("Seeing the remains of the %s, Zin...", sinner.c_str());
-            turn[2] = make_stringf("...looked out upon his handiwork, and declared...");
-            turn[3] = make_stringf("...that it was good that they had been %s.", smite[1].c_str());
+            turn[1] = make_stringf("Zin looked out upon the remains of the %s...", sinner.c_str());
+            turn[2] = make_stringf("...and declared it good that they had been...");
+            turn[3] = make_stringf("...%s. And thus justice was done.", smite[1].c_str());
             break;
         case 17:
             turn[1] = make_stringf("The law of Zin demands thee...");
