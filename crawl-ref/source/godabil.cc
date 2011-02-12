@@ -219,7 +219,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
     {
         case 1:
             turn[1] = make_stringf("It was the word of Zin that there would not be %s...", sin[1].c_str());
-            turn[2] = make_stringf("...and did not the people suffer until they had %s...", smite[1].c_str());
+            turn[2] = make_stringf("...and did the people not suffer until they had %s...", smite[1].c_str());
             turn[3] = make_stringf("...the %s, after which all was well?", sinner.c_str());
             break;
         case 2:
