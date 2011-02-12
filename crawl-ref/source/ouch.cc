@@ -1500,8 +1500,10 @@ void _end_game(scorefile_entry &se)
     // "- 5" gives us an extra line in case the description wraps on a line.
     hiscores_print_list(get_number_of_lines() - lines - 5);
 
+#ifndef USE_DGAMELAUNCH
     cprintf("\nYou can find your morgue file in the '%s' directory.",
             morgue_directory().c_str());
+#endif
 
     // just to pause, actual value returned does not matter {dlb}
     if (!crawl_state.seen_hups)
