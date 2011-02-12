@@ -1866,18 +1866,6 @@ void timeout_tombs(int duration)
             monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
                                                       : NULL;
-/**
-
-            monster* mon_targ =
-                !invalid_monster_index(cmark->target) ? &menv[cmark->target]
-                                                      : NULL;
-            // Zin's Imprison ability - does nothing special for now.
-            if (cmark->source == -GOD_ZIN && mon_targ
-                && mon_targ == mon_entombed)
-            {
-                zin_recite_to_single_monster(mon_targ->pos(), true);
-            }
-**/
             // A monster's Tomb of Doroklohe spell.
             if (mon_src
                 && mon_src == mon_entombed)
