@@ -641,7 +641,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     //But often, you'll have multiple options...
     mesclr();
 
-    mprf(MSGCH_PROMPT, "Recite a passage from which book of the Axioms of Law?");
+    mpr("Recite a passage from which book of the Axioms of Law?", MSGCH_PROMPT);
 
     int menu_cnt = 0;
     recite_type letters[NUM_RECITE_TYPES];
