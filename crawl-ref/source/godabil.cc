@@ -318,14 +318,14 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...and the %s, the name of Zin shall be thy damnation.", sin[0].c_str());
             break;
         case 21:
-            turn[1] = make_stringf("And Zin did decree that he would protect the people...");
-            turn[2] = make_stringf("...from %s in all its forms, and preserve...", sin[1].c_str());
-            turn[3] = make_stringf("...them in their %s for all the days to come.", virtue[1].c_str());
+            turn[1] = make_stringf("And Zin decreed that the people would be...");
+            turn[2] = make_stringf("...protected from %s in all its forms, and...", sin[1].c_str());
+            turn[3] = make_stringf("...preserved in their %s for all the days to come.", virtue[1].c_str());
             break;
         case 22:
-            turn[1] = make_stringf("Zin provideth for those who would...");
-            turn[2] = make_stringf("...enter his holy bosom, and live...");
-            turn[3] = make_stringf("...in %s, for that is Zin's way.", virtue[1].c_str());
+            turn[1] = make_stringf("For those who would enter Zin's holy bosom...");
+            turn[2] = make_stringf("...and live in %s, Zin provideth. Such is...", virtue[1].c_str());
+            turn[3] = make_stringf("...the covenant, and such is the way of things.");
             break;
         case 23:
             turn[1] = make_stringf("Zin hath not damned the %s, but it is they...", sinner.c_str());
