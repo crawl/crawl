@@ -594,7 +594,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
         recite_counts retval;
-        switch(zin_check_recite_to_single_monster(*ri, retval))
+        switch (zin_check_recite_to_single_monster(*ri, retval))
         {
         case -1:
             found_ineligible = true;
@@ -696,7 +696,6 @@ enum zin_eff
 };
 
 bool zin_recite_to_single_monster(const coord_def& where,
-                                  bool imprisoned,
                                   recite_type prayertype)
 {
     // That's a pretty good sanity check, I guess.

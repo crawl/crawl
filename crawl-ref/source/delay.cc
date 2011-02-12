@@ -86,7 +86,7 @@ static const char *_activity_interrupt_name(activity_interrupt_type ai);
 static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
 {
     ASSERT(prayertype >= 0 && prayertype < NUM_RECITE_TYPES);
-    return zin_recite_to_single_monster(where, false, (recite_type)prayertype);
+    return (zin_recite_to_single_monster(where, (recite_type)prayertype));
 }
 
 static std::string _get_zin_recite_speech(int trits[], size_t len, int prayertype, int step)
