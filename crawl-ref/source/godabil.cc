@@ -230,7 +230,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         case 3:
             turn[1] = make_stringf("Zin spoke of the doctrine of %s, and...", virtue[1].c_str());
             turn[2] = make_stringf("...saw the %s filled with fear, for they were...", sinner.c_str());
-            turn[3] = make_stringf("...%s and knew his wrath would come for them.", sin[0].c_str());
+            turn[3] = make_stringf("...%s and knew Zin's wrath would come for them.", sin[0].c_str());
             break;
         case 4:
             turn[1] = make_stringf("And so Zin bade the %s to come before...", sinner.c_str());
@@ -244,8 +244,8 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 6:
             turn[1] = make_stringf("Zin saw the %s of the %s, and...", sin[1].c_str(), sinner.c_str());
-            turn[2] = make_stringf("...was displeased, for did he not say that those...");
-            turn[3] = make_stringf("...who did not become %s would be %s?", virtue[0].c_str(), smite[1].c_str());
+            turn[2] = make_stringf("...was displeased, for did the law not say that...");
+            turn[3] = make_stringf("...those who did not become %s would be %s?", virtue[0].c_str(), smite[1].c_str());
             break;
         case 7:
             turn[1] = make_stringf("Zin said that %s shall be the law of the land, and...", virtue[1].c_str());
@@ -283,8 +283,8 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             turn[3] = make_stringf("...%s would trouble them no longer.", sinner.c_str());
             break;
         case 14:
-            turn[1] = make_stringf("%s the %s? %s them for their...", uppercase_first(smite[0]).c_str(), sinner.c_str(), uppercase_first(smite[0]).c_str());
-            turn[2] = make_stringf("...%s he will! Zin will %s them again...", sin[1].c_str(), smite[0].c_str());
+            turn[1] = make_stringf("What of the %s? %s for their...", sinner.c_str(), uppercase_first(smite[1]).c_str());
+            turn[2] = make_stringf("...%s they shall be! Zin will %s them again...", sin[1].c_str(), smite[0].c_str());
             turn[3] = make_stringf("...and again, and again!");
             break;
         case 15:
@@ -325,7 +325,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
         case 22:
             turn[1] = make_stringf("Zin provideth for those who would...");
             turn[2] = make_stringf("...enter his holy bosom, and live...");
-            turn[3] = make_stringf("...in %s, for that is his way.", virtue[1].c_str());
+            turn[3] = make_stringf("...in %s, for that is Zin's way.", virtue[1].c_str());
             break;
         case 23:
             turn[1] = make_stringf("Zin hath not damned the %s, but it is they...", sinner.c_str());
@@ -339,7 +339,7 @@ std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
             break;
         case 25:
             turn[1] = make_stringf("When the law of the land faltered, Zin rose...");
-            turn[2] = make_stringf("...from his silver throne, and the %s were...", sinner.c_str());
+            turn[2] = make_stringf("...from the silver throne, and the %s were...", sinner.c_str());
             turn[3] = make_stringf("...%s. And it was thus that the law was made good.", smite[1].c_str());
             break;
         case 26:
