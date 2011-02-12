@@ -801,9 +801,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 env.markers.add(marker);
             }
             else
-            {
                 grd(*ai) = DNGN_ROCK_WALL;
-            }
+
             set_terrain_changed(*ai);
             number_built++;
         }
@@ -811,10 +810,13 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
     if (number_built > 0)
     {
-        if (!zin)
-            mpr("Walls emerge from the floor!");
+        if (zin)
+        {
+            mprf("Zin imprisons %s with walls of pure silver!",
+                 targname.c_str());
+        }
         else
-            mprf("Zin imprisons %s with walls of pure silver!", targname.c_str());
+            mpr("Walls emerge from the floor!");
 
         you.update_beholders();
         you.update_fearmongers();
@@ -832,7 +834,7 @@ bool entomb(int pow)
     if (crawl_state.game_is_zotdef())
     {
         mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
-        return false;
+        return (false);
     }
 
     return (_do_imprison(pow, you.pos(), false));
@@ -842,8 +844,7 @@ bool cast_imprison(int pow, monster* mons, int source)
 {
     if (_do_imprison(pow, mons->pos(), true))
     {
-        const int tomb_duration = BASELINE_DELAY
-            * pow;
+        const int tomb_duration = BASELINE_DELAY * pow;
         env.markers.add(new map_tomb_marker(mons->pos(),
                                             tomb_duration,
                                             source,
