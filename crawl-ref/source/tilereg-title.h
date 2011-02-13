@@ -18,7 +18,7 @@ public:
     virtual void clear() {};
     virtual void run();
 
-    virtual int handle_mouse(MouseEvent &event);
+    virtual int handle_mouse(MouseEvent &event) { return 0; }
 
     void update_message(std::string message);
 

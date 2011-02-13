@@ -3220,7 +3220,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         }
         return INPUT_NO_ACTION;
     }
-    if (me.event == MouseEvent::RELEASE && me.button == MouseEvent::LEFT)
+    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
         find_item = _find_item_by_mouse_coords(coord_def(me.px,
                                                         me.py));
@@ -3724,7 +3724,7 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
         return INPUT_NO_ACTION;
     }
 
-    if (me.event == MouseEvent::RELEASE && me.button == MouseEvent::LEFT)
+    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
         find_item = _find_item_by_mouse_coords(coord_def(me.px,
                                                         me.py));
