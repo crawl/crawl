@@ -477,6 +477,7 @@ olgreb OLGREB
 ## axes
 axe_trog AXE_TROG
 arga ARGA
+demon_axe DEMON_AXE
 ## launchers
 blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK

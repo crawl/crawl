@@ -100,7 +100,7 @@ int   fit_item_throwable_size(const item_def &item, size_type size);
 int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
                      bool hide_hidden = false);
 
-hands_reqd_type  hands_reqd(const item_def &item, size_type size);
+hands_reqd_type hands_reqd(const item_def &item, size_type size);
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
                            size_type size);
 
@@ -146,6 +146,8 @@ bool item_is_unique_rune(const item_def &item);
 bool item_is_orb(const item_def &orb);
 
 bool item_is_corpse(const item_def &item);
+bool item_is_spellbook(const item_def &item);
+
 
 // ring functions:
 int  ring_has_pluses(const item_def &item);

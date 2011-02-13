@@ -11,6 +11,7 @@
 #include "newgame_def.h"
 
 undead_state_type get_undead_state(const species_type sp);
+void choose_tutorial_character(newgame_def* ng_choice);
 
 bool choose_game(newgame_def *ng, newgame_def* choice,
                  const newgame_def& defaults);

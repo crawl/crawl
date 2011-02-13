@@ -2099,7 +2099,8 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             get_item_desc(mitm[oid], inf, examine_mons);
     }
     else if (show_floor || grid_appearance(c) != DNGN_FLOOR
-                           && !feat_is_wall(grid_appearance(c)))
+                           && !feat_is_wall(grid_appearance(c))
+                           && !feat_is_tree(grid_appearance(c)))
     {
         // Third priority: features.
         get_feature_desc(c, inf);
@@ -3394,6 +3395,9 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
 {
     std::vector<std::string> descs;
 
+    if (mi.is(MB_CLINGING))
+        descs.push_back("clinging");
+
     if (mi.is(MB_MESMERIZING))
         descs.push_back("mesmerising");
 
@@ -3443,6 +3447,9 @@ static std::string _get_monster_desc(const monster_info& mi)
 {
     std::string text    = "";
     std::string pronoun = mi.pronoun(PRONOUN_CAP);
+
+    if (mi.is(MB_CLINGING))
+        text += pronoun + " is clinging to the wall.\n";
 
     if (mi.is(MB_MESMERIZING))
         text += "You are mesmerised by her song.\n";

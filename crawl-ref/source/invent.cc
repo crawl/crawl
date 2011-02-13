@@ -1503,7 +1503,7 @@ bool check_old_item_warning(const item_def& item,
 
     // now ask
     prompt += old_item.name(DESC_INVENTORY);
-    prompt += '?';
+    prompt += "?";
     return yesno(prompt.c_str(), false, 'n');
 }
 

@@ -4868,11 +4868,12 @@ void read_scroll(int slot)
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
-    std::string pre_succ_msg = "As you read the scroll, it crumbles to dust.";
-    if (which_scroll != SCR_PAPER
-        && (you.confused()
-            || (which_scroll != SCR_IMMOLATION
-                && !_is_cancellable_scroll(which_scroll))))
+    std::string pre_succ_msg =
+            make_stringf("As you read the %s, it crumbles to dust.",
+                          scroll.name(DESC_QUALNAME).c_str());
+    if (you.confused()
+        || (which_scroll != SCR_IMMOLATION
+            && !_is_cancellable_scroll(which_scroll)))
     {
         mpr(pre_succ_msg.c_str());
         // Actual removal of scroll done afterwards. -- bwr
@@ -4880,18 +4881,14 @@ void read_scroll(int slot)
 
     const bool dangerous = player_in_a_dangerous_place();
 
-    // Scrolls of paper are also exempted from this handling {dlb}:
-    if (which_scroll != SCR_PAPER)
+    if (you.confused())
     {
-        if (you.confused())
-        {
-            random_uselessness(item_slot);
-            dec_inv_item_quantity(item_slot, 1);
-            return;
-        }
-
-        practise(EX_WILL_READ_SCROLL);
+        random_uselessness(item_slot);
+        dec_inv_item_quantity(item_slot, 1);
+        return;
     }
+
+    practise(EX_WILL_READ_SCROLL);
 
     // It is the exception, not the rule, that the scroll will not
     // be identified. {dlb}
@@ -4901,13 +4898,6 @@ void read_scroll(int slot)
     bool bad_effect = false; // for Xom: result is bad (or at least dangerous)
     switch (which_scroll)
     {
-    case SCR_PAPER:
-        // Remember, paper scrolls handled as special case above, too.
-        mpr("This scroll appears to be blank.");
-        if (player_mutation_level(MUT_BLURRY_VISION) == 3)
-            id_the_scroll = false;
-        break;
-
     case SCR_RANDOM_USELESSNESS:
         random_uselessness(item_slot);
         break;
@@ -5237,14 +5227,11 @@ void read_scroll(int slot)
                                          : ID_TRIED_TYPE);
 
     // Finally, destroy and identify the scroll.
-    if (which_scroll != SCR_PAPER)
-    {
-        if (id_the_scroll)
-            set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
+    if (id_the_scroll)
+        set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
-        if (!cancel_scroll)
-            dec_inv_item_quantity(item_slot, 1);
-    }
+    if (!cancel_scroll)
+        dec_inv_item_quantity(item_slot, 1);
 
     if (!alreadyknown && dangerous)
     {
@@ -5542,9 +5529,7 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_BOOKS:
-            if (item.sub_type == BOOK_MANUAL
-                || item.sub_type == BOOK_DESTRUCTION
-                || you.skill(SK_SPELLCASTING) == 0)
+            if (!item_is_spellbook(item) || you.skill(SK_SPELLCASTING) == 0)
             {
                 if (check_warning_inscriptions(item, OPER_READ))
                     handle_read_book(idx);

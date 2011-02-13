@@ -3,6 +3,8 @@
 #include "actor.h"
 #include "areas.h"
 #include "artefact.h"
+#include "coord.h"
+#include "coordit.h"
 #include "env.h"
 #include "itemprop.h"
 #include "los.h"
@@ -11,6 +13,7 @@
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "traps.h"
 
 actor::~actor()
@@ -25,8 +28,7 @@ bool actor::has_equipped(equipment_type eq, int sub_type) const
 
 bool actor::will_trigger_shaft() const
 {
-    return (!(airborne() || is_wall_clinging())
-            && total_weight() > 0 && is_valid_shaft_level()
+    return (ground_level() && total_weight() > 0 && is_valid_shaft_level()
             // let's pretend that they always make their saving roll
             && !(atype() == ACT_MONSTER
                  && mons_is_elven_twin(static_cast<const monster* >(this))));
@@ -40,6 +42,14 @@ level_id actor::shaft_dest(bool known = false) const
 bool actor::airborne() const
 {
     return (is_levitating() || (flight_mode() == FL_FLY && !cannot_move()));
+}
+
+/**
+ * Check if the actor is on the ground (or in water).
+ */
+bool actor::ground_level() const
+{
+    return (!airborne() && !is_wall_clinging());
 }
 
 bool actor::can_wield(const item_def* item, bool ignore_curse,
@@ -69,8 +79,7 @@ bool actor::can_pass_through(const coord_def &c) const
 
 bool actor::is_habitable(const coord_def &_pos) const
 {
-    //Just for players for now.
-    if (atype() == ACT_PLAYER && can_cling_to(_pos))
+    if (can_cling_to(_pos))
         return true;
 
     return is_habitable_feat(grd(_pos));
@@ -224,4 +233,64 @@ bool actor_slime_wall_immune(const actor *act)
     return (act->atype() == ACT_PLAYER?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
             : act->res_acid() == 3);
+}
+/*
+ * Accessor method to the clinging member.
+ *
+ * @returns The value of clinging.
+ */
+bool actor::is_wall_clinging() const
+{
+    return (clinging);
+}
+
+/*
+ * Check a cell to see if actor can keep clinging if it moves to it.
+ *
+ * @param p Coordinates of the cell checked.
+ * @returns Whether the actor can cling.
+ */
+bool actor::can_cling_to(const coord_def& p) const
+{
+    if (!in_bounds(p))
+        return (false);
+
+    if (!is_wall_clinging())
+        return (false);
+
+    if (!can_pass_through_feat(grd(p)))
+        return (false);
+
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            for (orth_adjacent_iterator ai2(*ai, false); ai2; ++ai2)
+                for (int i = 0, size = cling_to.size(); i < size; ++i)
+                    if (cling_to[i] == *ai2)
+                        return (true);
+
+        return (false);
+}
+
+/*
+ * Update the clinging status of an actor.
+ *
+ * It checks adjacent orthogonal walls to see if the actor can cling to them.
+ *
+ * @returns True if actor has fallen from the wall.
+ */
+bool actor::check_clinging()
+{
+    if (!can_cling_to_walls())
+        return false;
+
+    bool was_clinging = clinging;
+
+    cling_to.clear();
+    for (orth_adjacent_iterator ai(pos()); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            cling_to.push_back(*ai);
+
+    clinging = (cling_to.size() > 0) ? true : false;
+
+    return was_clinging && !clinging;
 }

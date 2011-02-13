@@ -1398,7 +1398,11 @@ void load_messages(reader& inf)
 
 void replay_messages(void)
 {
-    formatted_scroller hist(MF_START_AT_END, "");
+    formatted_scroller hist(MF_START_AT_END | MF_ALWAYS_SHOW_MORE, "");
+    hist.set_more(formatted_string::parse_string(
+                        "<cyan>[up/<< : Page up.    down/Space/> : Page down."
+                        "                           Esc exits.]</cyan>"));
+
     const store_t msgs = messages.get_store();
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
@@ -1421,6 +1425,7 @@ void replay_messages(void)
                 hist.add_item_formatted_string(line);
             }
         }
+
     hist.show();
 }
 

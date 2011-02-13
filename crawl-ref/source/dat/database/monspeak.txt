@@ -5210,37 +5210,37 @@ _Terence_rare_
 %%%%
 ############ TUKIMA ### A spectral dancer
 # Cantrip messages
-Tukima_self_buff
+Terpsichore_self_buff
 
-@_Tukima_self_buff_@
+@_Terpsichore_self_buff_@
 %%%%
-Tukima_other_buff
+Terpsichore_other_buff
 
-@_Tukima_other_buff@
+@_Terpsichore_other_buff@
 %%%%
-Tukima_debuff
+Terpsichore_debuff
 
-@_Tukima_debuff_@
+@_Terpsichore_debuff_@
 %%%%
-_Tukima_self_buff_
+_Terpsichore_self_buff_
 
-Tukima performs a graceful pirouette.
+@The_monster@ performs a graceful pirouette.
 
-Tukima cartwheels!
+@The_monster@ cartwheels!
 
-Tukima extends her arms.
-
-%%%%
-_Tukima_other_buff_
-
-Tukima beats her extended leg.
-
-A look of regret passes over Tukima's face.
-
-Tukima twirls.
+@The_monster@ extends her arms.
 
 %%%%
-_Tukima_debuff_
+_Terpsichore_other_buff_
+
+@The_monster@ beats her extended leg.
+
+A look of regret passes over @the_monster@'s face.
+
+@The_monster@ twirls.
+
+%%%%
+_Terpsichore_debuff_
 
 You feel light on your feet.
 
@@ -5251,15 +5251,15 @@ You feel compelled to twirl your non-existent dancing partner!
 Some annoying song lyrics get stuck in your head!
 
 %%%%
-Tukima
+Terpsichore
 
-@_tukima_common_@
+@_terpsichore_common_@
 
 w:4
-@_tukima_rare_@
+@_terpsichore_rare_@
 
 %%%%
-_tukima_common_
+_terpsichore_common_
 
 @The_monster@ exclaims, "I never get tired of watching this."
 
@@ -5274,18 +5274,18 @@ _tukima_common_
 @The_monster@ asks, "Would you care for a dance?"
 
 %%%%
-_tukima_rare_
+_terpsichore_rare_
 
 @The_monster@ wistfully exclaims, "I've searched so long for a dance partner..."
 
 @The_monster@ pleads, "Your soul could dance with me forever!"
 
 %%%%
-Tukima killed
+Terpsichore killed
 
 @The_monster@ whispers, "I'll be waiting for you..."
 
-## END Tukima ##
+## END Terpsichore ##
 %%%%
 ############ URUG ### An orc hired to kill you
 Urug

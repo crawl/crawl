@@ -1228,7 +1228,7 @@ void scorefile_entry::init(time_t dt)
     const int statuses[] = {
         DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
         STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR, STATUS_BURDEN,
-        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
+        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_JELLY_PRAYER,
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
         DUR_INVIS, DUR_CONF, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
@@ -1941,12 +1941,12 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_TSO_SMITING:
-        desc += terse? "smote by Shining One" : "Smote by the Shining One";
+        desc += terse? "smitten by Shining One" : "Smitten by the Shining One";
         needs_damage = true;
         break;
 
     case KILLED_BY_BEOGH_SMITING:
-        desc += terse? "smote by Beogh" : "Smote by Beogh";
+        desc += terse? "smitten by Beogh" : "Smitten by Beogh";
         needs_damage = true;
         break;
 

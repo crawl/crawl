@@ -204,7 +204,7 @@ undead_state_type get_undead_state(const species_type sp)
     }
 }
 
-static void _choose_tutorial_character(newgame_def* ng_choice)
+void choose_tutorial_character(newgame_def* ng_choice)
 {
     ng_choice->species = SP_HIGH_ELF;
     ng_choice->job = JOB_FIGHTER;
@@ -415,7 +415,7 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
     const newgame_def ng_reset = *ng;
 
     if (ng->type == GAME_TYPE_TUTORIAL)
-        _choose_tutorial_character(choice);
+        choose_tutorial_character(choice);
     else if (ng->type == GAME_TYPE_HINTS)
         pick_hints(choice);
 
@@ -1618,9 +1618,9 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
 {
     std::vector<weapon_choice> weapons;
 
-    weapon_type startwep[5] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
-                                WPN_HAND_AXE, WPN_SPEAR };
-    for (int i = 0; i < 5; ++i)
+    weapon_type startwep[6] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
+                                WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION };
+    for (int i = 0; i < 6; ++i)
     {
         weapon_choice wp;
         wp.first = startwep[i];
@@ -2832,6 +2832,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     std::string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
+    bool activate_next = false;
 
     unsigned int padding_width = 0;
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
@@ -2873,9 +2874,20 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
 
         menu->attach_item(tmp);
         tmp->set_visible(true);
-        // Is this item our default map?
-        if (defaults.map == maps[i]->name)
+
+        if (activate_next)
+        {
             menu->set_active_item(tmp);
+            activate_next = false;
+        }
+        // Is this item our default map?
+        else if (defaults.map == maps[i]->name)
+        {
+            if (crawl_state.last_game_won)
+                activate_next = true;
+            else
+                menu->set_active_item(tmp);
+        }
     }
 
     // Don't overwhelm new players with aptitudes or the full list of commands!
@@ -2944,8 +2956,8 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     //menu->attach_item(tmp);
     //tmp->set_visible(true);
 
-    // Only add tab entry if we have a previous wand choice
-    if (defaults.type == GAME_TYPE_SPRINT
+    // Only add tab entry if we have a previous map choice
+    if (crawl_state.game_is_sprint()
         && !defaults.map.empty() && _char_defined(defaults))
     {
         tmp = new TextItem();

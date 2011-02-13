@@ -123,6 +123,13 @@ void print_description(const std::string &body)
     print_description(inf);
 }
 
+void print_quote (const std::string &body)
+{
+    describe_info inf;
+    inf.quote = body;
+    print_quote(inf);
+}
+
 class default_desc_proc
 {
 public:
@@ -148,6 +155,15 @@ void print_description(const describe_info &inf)
 
     default_desc_proc proc;
     process_description<default_desc_proc>(proc, inf);
+}
+
+void print_quote (const describe_info &inf)
+{
+    clrscr();
+    textcolor(LIGHTGREY);
+
+    default_desc_proc proc;
+    process_quote<default_desc_proc>(proc, inf);
 }
 
 const char* jewellery_base_ability_string(int subtype)
@@ -1730,7 +1746,7 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
 //
 //---------------------------------------------------------------
 std::string get_item_description(const item_def &item, bool verbose,
-                                  bool dump, bool noquote)
+                                 bool dump, bool noquote)
 {
     if (dump)
         noquote = true;
@@ -2185,13 +2201,12 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
-    inf.body << desc;
+    inf.title = desc;
     if (!ends_with(desc, ".") && !ends_with(desc, "!")
         && !ends_with(desc, "?"))
     {
-        inf.body << ".";
+        inf.title += ".";
     }
-    inf.body << "\n\n";
 
     // If we couldn't find a description in the database then see if
     // the feature's base name is different.
@@ -2257,18 +2272,53 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     }
 }
 
-void describe_feature_wide(const coord_def& pos)
+static bool _print_toggle_message (const describe_info &inf)
+{
+    if (inf.quote.empty())
+    {
+        mouse_control mc(MOUSE_MODE_MORE);
+        getchm();
+        return (false);
+    }
+    else
+    {
+        const int bottom_line = std::min(30, get_number_of_lines());
+        cgotoxy(1, bottom_line);
+        formatted_string::parse_string(
+#ifndef USE_TILE
+            "Press '<w>!</w>'"
+#else
+            "<w>Right-click</w>"
+#endif
+            " to toggle between the overview and the extended description.").display();
+
+        mouse_control mc(MOUSE_MODE_MORE);
+        const int keyin = getchm();
+
+        if (keyin == '!' || keyin == CK_MOUSE_CMD)
+        {
+            return (true);
+        }
+
+        return (false);
+    }
+}
+
+void describe_feature_wide(const coord_def& pos, bool show_quote)
 {
     describe_info inf;
     get_feature_desc(pos, inf);
-    print_description(inf);
 
-    mouse_control mc(MOUSE_MODE_MORE);
+    if (show_quote)
+        print_quote(inf);
+    else
+        print_description(inf);
 
     if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
-    wait_for_keypress();
+    if (_print_toggle_message(inf))
+        describe_feature_wide(pos, not show_quote);
 }
 
 void set_feature_desc_long(const std::string &raw_name,
@@ -3288,8 +3338,7 @@ static std::string _monster_stat_description(const monster_info& mi)
 
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
-                         bool &has_stat_desc, bool force_seen,
-                         bool noquote)
+                         bool &has_stat_desc, bool force_seen)
 {
     if (inf.title.empty())
         inf.title = mi.full_name(DESC_CAP_A, true);
@@ -3313,14 +3362,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << getLongDescription(db_name);
     }
 
-    if (!noquote)
-    {
-        // And quotes {due}
-        if (!mi.quote.empty())
-            inf.quote = mi.quote;
-        else
-            inf.quote = getQuoteString(db_name);
-    }
+    // And quotes {due}
+    if (!mi.quote.empty())
+        inf.quote = mi.quote;
+    else
+        inf.quote = getQuoteString(db_name);
 
     std::string symbol;
     symbol += get_monster_data(mi.type)->showchar;
@@ -3334,8 +3380,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         symbol_prefix += symbol;
         symbol_prefix += "_prefix";
         inf.prefix = getLongDescription(symbol_prefix);
-        if (!noquote)
-            quote2 = getQuoteString(symbol_prefix);
+        quote2 = getQuoteString(symbol_prefix);
     }
 
     if (!inf.quote.empty() && !quote2.empty())
@@ -3554,12 +3599,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
 void describe_monsters(const monster_info &mi, bool force_seen,
                        const std::string &footer,
-                       bool wait_until_key_pressed)
+                       bool wait_until_key_pressed,
+                       bool show_quote)
 {
     describe_info inf;
     bool has_stat_desc = false;
-    get_monster_db_desc(mi, inf, has_stat_desc, force_seen,
-                        crawl_state.game_is_hints_tutorial());
+    get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
 
     if (!footer.empty())
     {
@@ -3569,17 +3614,25 @@ void describe_monsters(const monster_info &mi, bool force_seen,
             inf.footer += "\n" + footer;
     }
 
-    print_description(inf);
+    if (show_quote)
+    {
+        print_quote(inf);
+    }
+    else
+    {
+        print_description(inf);
+
+        // TODO enne - this should really move into get_monster_db_desc
+        // and an additional tutorial string added to describe_info.
+        if (crawl_state.game_is_hints())
+            hints_describe_monster(mi, has_stat_desc);
+    }
+
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    // TODO enne - this should really move into get_monster_db_desc
-    // and an additional tutorial string added to describe_info.
-    if (crawl_state.game_is_hints())
-        hints_describe_monster(mi, has_stat_desc);
-
-    if (wait_until_key_pressed)
-        wait_for_keypress();
+    if (wait_until_key_pressed && _print_toggle_message(inf))
+        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, not show_quote);
 }
 
 static const char* xl_rank_names[] = {
@@ -3836,6 +3889,12 @@ static std::string _religion_help(god_type god)
         }
         break;
     }
+
+    case GOD_ELYVILON:
+        result += "You can pray to destroy weapons on the ground in "
+                + apostrophise(god_name(god)) + " name. Inscribe them "
+                + "with !p, !* or =p to avoid sacrificing them accidentally.";
+        break;
 
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
@@ -4297,31 +4356,28 @@ void describe_god(god_type which_god, bool give_title)
         // his life.
         bool have_any = false;
 
-        if (harm_protection_type hpt =
-                god_protects_from_harm(which_god, false))
+        if (god_can_protect_from_harm(which_god))
         {
             have_any = true;
 
-            int prayer_prot = 0;
+            int prot_chance = 10 + you.piety/10; // chance * 100
+            const char *when = "";
 
-            if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME
-                || hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
+            switch (elyvilon_lifesaving())
             {
-                prayer_prot = 100 - 3000/you.piety;
+            case 1:
+                when = ", especially when called upon";
+                prot_chance += 100 - 3000/you.piety;
+                break;
+            case 2:
+                when = ", and always does so when called upon";
+                prot_chance = 100;
             }
-
-            int prot_chance = 10 + you.piety/10 + prayer_prot; // chance * 100
 
             const char *how = (prot_chance >= 85) ? "carefully" :
                               (prot_chance >= 55) ? "often" :
                               (prot_chance >= 25) ? "sometimes"
                                                   : "occasionally";
-            const char *when =
-                (hpt == HPT_PRAYING)              ? " during prayer" :
-                (hpt == HPT_PRAYING_PLUS_ANYTIME) ? ", especially during prayer" :
-                (hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
-                                                  ? ", and always does so during prayer"
-                                                  : "";
 
             std::string buf = god_name(which_god);
             buf += " ";
@@ -4330,9 +4386,7 @@ void describe_god(god_type which_god, bool give_title)
             buf += when;
             buf += ".";
 
-            _print_final_god_abil_desc(which_god, buf,
-                (hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME) ?
-                    ABIL_HARM_PROTECTION_II : ABIL_HARM_PROTECTION);
+            _print_final_god_abil_desc(which_god, buf, ABIL_NON_ABILITY);
         }
 
         if (which_god == GOD_ZIN)
@@ -4373,15 +4427,6 @@ void describe_god(god_type which_god, bool give_title)
                               + " to burn spellbooks in your surroundings.";
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_TROG_BURN_SPELLBOOKS);
-        }
-        else if (which_god == GOD_ELYVILON)
-        {
-            have_any = true;
-            std::string buf = "You can destroy weapons on the ground in "
-                              + apostrophise(god_name(which_god))
-                              + " name.";
-            _print_final_god_abil_desc(which_god, buf,
-                                       ABIL_ELYVILON_DESTROY_WEAPONS);
         }
         else if (which_god == GOD_JIYVA)
         {

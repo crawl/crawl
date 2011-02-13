@@ -458,7 +458,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             || trig_knows && !mons_is_fleeing(m) && !m->pacified())
         {
             // No message for flying monsters to avoid message spam.
-            if (you_know && !(triggerer.airborne() || triggerer.is_wall_clinging()))
+            if (you_know && triggerer.ground_level())
                 simple_monster_message(m, " carefully avoids the shaft.");
             return;
         }
@@ -471,8 +471,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         return;
     }
     // Only magical traps affect flying critters.
-    if ((triggerer.airborne() || triggerer.is_wall_clinging())
-        && this->category() != DNGN_TRAP_MAGICAL)
+    if (!triggerer.ground_level() && this->category() != DNGN_TRAP_MAGICAL)
     {
         if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");
@@ -1544,12 +1543,12 @@ trap_type random_trap(dungeon_feature_type feat)
 
 bool is_valid_shaft_level(const level_id &place)
 {
-    if (crawl_state.game_is_sprint())
+    if (crawl_state.test
+        || crawl_state.game_is_sprint()
+        || crawl_state.game_is_zotdef())
+    {
         return (false);
-
-    // Zot def - no shafts
-    if (crawl_state.game_is_zotdef())
-        return (false);
+    }
 
     if (place.level_type != LEVEL_DUNGEON)
         return (false);

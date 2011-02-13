@@ -958,7 +958,8 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
-            if (target->atype() == ACT_PLAYER && !liquefied(you.pos()) && !you.airborne() && !you.clinging)
+            if (target->atype() == ACT_PLAYER && !liquefied(you.pos())
+                && you.ground_level())
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
                 levitate_player(20);
@@ -1433,8 +1434,7 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(2))
         {
         case 0:
-            mpr("You feel slightly disoriented.");
-            forget_map(10 + random2(10));
+            mpr("You feel a little dazed.");
             break;
         case 1:
             potion_effect(POT_CONFUSION, 10);
@@ -1456,8 +1456,12 @@ void MiscastEffect::_divination_you(int severity)
                 mpr("You have a terrible headache.");
             break;
         case 1:
-            mpr("You feel lost.");
-            forget_map(40 + random2(40));
+            mpr("You lose your focus.");
+            if (you.magic_points > 0)
+            {
+                dec_mp(3 + random2(10));
+                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+            }
             break;
         }
 
@@ -1465,17 +1469,17 @@ void MiscastEffect::_divination_you(int severity)
         break;
 
     case 3:         // nasty
-        switch (random2(3))
+        switch (random2(2))
         {
         case 0:
-            if (!forget_spell())
-                mpr("You get a splitting headache.");
+            mpr("You lose concentration completely!");
+            if (you.magic_points > 0)
+            {
+                dec_mp(5 + random2(20));
+                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+            }
             break;
         case 1:
-            mpr("You feel completely lost.");
-            forget_map(100);
-            break;
-        case 2:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life.");
             else if (_lose_stat(STAT_INT, 3 + random2(3)))
@@ -2277,8 +2281,7 @@ void MiscastEffect::_ice(int severity)
 
 static bool _on_floor(actor* target)
 {
-    return (!(target->airborne() || target->is_wall_clinging())
-            && grd(target->pos()) == DNGN_FLOOR);
+    return (target->ground_level() && grd(target->pos()) == DNGN_FLOOR);
 }
 
 void MiscastEffect::_earth(int severity)

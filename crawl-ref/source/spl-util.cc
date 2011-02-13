@@ -308,11 +308,13 @@ bool add_spell_to_memory(spell_type spell)
 
 bool del_spell_from_memory_by_slot(int slot)
 {
+    ASSERT(slot >= 0 && slot < MAX_KNOWN_SPELLS);
     int j;
 
     if (you.last_cast_spell == you.spells[slot])
         you.last_cast_spell = SPELL_NO_SPELL;
 
+    mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
     you.spells[ slot ] = SPELL_NO_SPELL;
 
     for (j = 0; j < 52; j++)
@@ -526,13 +528,21 @@ const char *spell_title(spell_type spell)
 // Apply a function-pointer to all visible squares
 // Returns summation of return values from passed in function.
 int apply_area_visible(cell_func cf, int power,
-                       bool pass_through_trans, actor *agent)
+                       bool pass_through_trans, actor *agent,
+                       bool affect_scryed)
 {
     int rv = 0;
+
+    bool xray = you.xray_vision;
+
+    if (!affect_scryed)
+        you.xray_vision = false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         if (pass_through_trans || you.see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
+
+    you.xray_vision = xray;
 
     return (rv);
 }
@@ -1275,6 +1285,13 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_TUKIMAS_DANCE:
         if (you.species == SP_CAT)
             return (true);
+        break;
+    case SPELL_DARKNESS:
+        // mere corona is not enough, but divine light blocks it completely
+        if (transient && you.haloed())
+            return true;
+        if (you.religion == GOD_SHINING_ONE && player_under_penance())
+            return true;
         break;
     default:
         break; // quash unhandled constants warnings

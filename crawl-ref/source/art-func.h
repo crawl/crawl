@@ -26,9 +26,13 @@
 #include "env.h"           // For storm bow env.cgrid
 #include "food.h"          // For evokes
 #include "godconduct.h"    // did_god_conduct.
+#include "coord.h"
+#include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
+#include "mon-info.h"
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "mon-stuff.h"     // For Scythe of Curses cursing items
+#include "player.h"
 #include "spl-cast.h"      // For evokes
 #include "spl-miscast.h"   // For Staff of Wucad Mu miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
@@ -376,25 +380,12 @@ static void _wucad_pluses(item_def *item)
 
 static void _WUCAD_MU_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _wucad_miscast(&you, 9, 90);
     _wucad_pluses(item);
-}
-
-static void _WUCAD_MU_unequip(const item_def *item, bool *show_msgs)
-{
-    _wucad_miscast(&you, 9, 90);
 }
 
 static void _WUCAD_MU_world_reacts(item_def *item)
 {
     _wucad_pluses(item);
-}
-
-static void _WUCAD_MU_melee_effect(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied)
-{
-    if (one_chance_in(9))
-        _wucad_miscast(attacker, random2(9), random2(70));
 }
 
 static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
@@ -539,4 +530,76 @@ static void _RCLOUDS_world_reacts(item_def *item)
 static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "A thin mist springs up around you!");
+}
+
+///////////////////////////////////////////////////
+
+static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
+                                    actor* defender, bool mondied)
+{
+    if (one_chance_in(10))
+        cast_summon_demon(50+random2(100), you.religion);
+
+    did_god_conduct(DID_UNHOLY, 3);
+}
+
+static void _DEMON_AXE_world_reacts(item_def *item)
+{
+    std::vector<monster_info> targets;
+    get_monster_info(targets);
+
+    int dist = LOS_RADIUS + 1;
+
+    if (targets.empty())
+        return;
+
+    monster* closest = NULL;
+
+    std::vector<monster_info>::const_iterator mi;
+
+    for (mi = targets.begin(); mi != targets.end(); ++mi)
+    {
+        if (grid_distance(you.pos(), mi->mon()->pos()) < dist
+            && you.possible_beholder(mi->mon()))
+        {
+            dist = grid_distance(you.pos(), mi->mon()->pos());
+            closest = mi->mon();
+        }
+    }
+
+    if (!closest)
+        return;
+
+    if (!you.beheld_by(closest))
+    {
+         mprf("Visions of slaying %s flood into your mind.",
+              closest->name(DESC_NOCAP_THE).c_str());
+
+         // The monsters (if any) currently mesmerising the player do not include
+         // this monster. To avoid trapping the player, all other beholders
+         // are removed.
+
+         you.clear_beholders();
+    }
+
+    if (you.confused())
+    {
+        mpr("Your confusion fades away as the thirst for blood takes over your mind.");
+        you.duration[DUR_CONF] = 0;
+    }
+
+    you.add_beholder(closest, true);
+}
+
+static void _DEMON_AXE_unequip(const item_def *item, bool *show_msgs)
+{
+    if (you.beheld())
+    {
+        // This shouldn't clear mermaids and sirens, but we lack the information
+        // why they behold us -- usually, it's due to the axe.  Since unwielding
+        // it costs scrolls of rem curse, we might say getting the demon away is
+        // enough of a shock to get you back to senses.
+        you.clear_beholders();
+        mpr("Your thirst for blood fades away.");
+    }
 }

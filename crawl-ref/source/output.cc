@@ -391,12 +391,13 @@ static void _print_stats_wp(int y)
     if (you.weapon())
     {
         const item_def& wpn = *you.weapon();
-        col = wpn.colour;
 
         const std::string prefix = menu_colour_item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
+        else
+            col = LIGHTGREY;
 
         text = wpn.name(DESC_INVENTORY, true, false, true);
     }
@@ -405,7 +406,7 @@ static void _print_stats_wp(int y)
         col = LIGHTGREY;
         text = (you.has_claws(false) > 0) ? "Claws" : "Nothing wielded";
         if (you.species == SP_CAT)
-            text = "Tooth and claw";
+            text = "Teeth and claws";
 
         switch (you.form)
         {
@@ -427,7 +428,7 @@ static void _print_stats_wp(int y)
                 break;
             case TRAN_DRAGON:
                 col = GREEN;
-                text = "Tooth and claw";
+                text = "Teeth and claws";
                 break;
             case TRAN_LICH:
                 col = MAGENTA;
@@ -462,12 +463,13 @@ static void _print_stats_qv(int y)
     if (q != -1)
     {
         const item_def& quiver = you.inv[q];
-        col = quiver.colour;
         const std::string prefix = menu_colour_item_prefix(quiver);
         const int prefcol =
             menu_colour(quiver.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
+        else
+            col = LIGHTGREY;
         text = quiver.name(DESC_INVENTORY, true);
     }
     else
@@ -527,7 +529,8 @@ static void _get_status_lights(std::vector<status_light>& out)
 #endif
 
     const int statuses[] = {
-        STATUS_BURDEN, STATUS_HUNGER, DUR_PRAYER, DUR_TELEPORT,
+        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+        STATUS_BURDEN, STATUS_HUNGER, DUR_JELLY_PRAYER, DUR_TELEPORT,
         DUR_DEATHS_DOOR, DUR_QUAD_DAMAGE, DUR_DEFLECT_MISSILES,
         DUR_REPEL_MISSILES, STATUS_REGENERATION, DUR_BERSERK,
         DUR_RESIST_POISON, DUR_RESIST_COLD, DUR_RESIST_FIRE,
@@ -541,7 +544,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
         DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
         STATUS_CLINGING, DUR_TORNADO, DUR_LIQUEFYING, DUR_HEROISM,
-        DUR_FINESSE,
+        DUR_FINESSE, DUR_LIFESAVING, DUR_DARKNESS,
     };
 
     status_info inf;
@@ -1288,10 +1291,13 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int item_idx   = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
             const bool melded    = !player_wearing_slot(e_order[i]);
+            const std::string prefix = menu_colour_item_prefix(item);
+            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
+            const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
             const char* colname  = melded ? "darkgrey"
-                                          : colour_to_str(item.colour).c_str();
+                                          : colour_to_str(col).c_str();
 
             const char equip_char = index_to_letter(item_idx);
 
@@ -1878,9 +1884,9 @@ std::string _status_mut_abilities()
 
     const int statuses[] = {
         DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
-        STATUS_BURDEN,
+        STATUS_BURDEN, STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         DUR_BREATH_WEAPON, STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR,
-        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
+        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_JELLY_PRAYER,
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
         DUR_INVIS, DUR_CONF, DUR_EXHAUSTED, DUR_MIGHT, DUR_BRILLIANCE,
@@ -1890,6 +1896,7 @@ std::string _status_mut_abilities()
         STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,
         DUR_SURE_BLADE, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
         DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_TORNADO, DUR_HEROISM, DUR_FINESSE,
+        DUR_LIFESAVING, DUR_DARKNESS,
     };
 
     status_info inf;
@@ -2158,7 +2165,7 @@ std::string _status_mut_abilities()
                 AC_change += level;
                 break;
             case MUT_THIN_SKELETAL_STRUCTURE:
-                Dex_change += level;
+                Dex_change += 2 * level;
                 Str_change -= level;
                 break;
             case MUT_YELLOW_SCALES:

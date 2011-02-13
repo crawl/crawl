@@ -89,7 +89,7 @@ bool conjure_flame(int pow, const coord_def& where)
     monster* mons = monster_at(where);
     if (mons)
     {
-        if (you.can_see(mons))
+        if (you.can_see(mons) && !mons_is_unknown_mimic(mons))
         {
             mpr("You can't place the cloud on a creature.");
             return (false);
@@ -163,10 +163,10 @@ bool stinking_cloud(int pow, bolt &beem)
 
 bool cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam)
 {
-    if (distance(beam.target, you.pos()) > beam.range
+    if (distance(beam.target, you.pos()) > dist_range(beam.range)
         || !in_bounds(beam.target))
     {
-        mpr("That's too far away.");
+        mpr("That is beyond the maximum range.");
         return false;
     }
 

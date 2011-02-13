@@ -115,7 +115,11 @@ bool player::floundering() const
 
 bool player::extra_balanced() const
 {
-    return (species == SP_NAGA && !form_changed_physiology());
+    const dungeon_feature_type grid = grd(pos());
+    return (grid == DNGN_SHALLOW_WATER
+             && (species == SP_NAGA                      // tails, not feet
+                 || body_size(PSIZE_BODY) > SIZE_MEDIUM)
+                    && !form_changed_physiology());
 }
 
 int player::get_experience_level() const
@@ -449,7 +453,7 @@ bool player::fumbles_attack(bool verbose)
     bool did_fumble = false;
 
     // Fumbling in shallow water.
-    if (floundering() || (liquefied(pos()) && !airborne() && !clinging))
+    if (floundering() || liquefied(pos()) && ground_level())
     {
         if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
@@ -613,4 +617,9 @@ bool player::can_go_berserk(bool intentional, bool potion) const
 bool player::berserk() const
 {
     return (duration[DUR_BERSERK]);
+}
+
+bool player::can_cling_to_walls() const
+{
+    return you.form == TRAN_SPIDER;
 }

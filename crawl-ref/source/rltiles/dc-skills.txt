@@ -39,8 +39,10 @@ spellcasting-on SPELLCASTING_ON
 spellcasting-off SPELLCASTING_OFF
 conjurations-on CONJURATIONS_ON
 conjurations-off CONJURATIONS_OFF
-enchantments-on ENCHANTMENTS_ON
-enchantments-off ENCHANTMENTS_OFF
+hexes-on HEXES_ON
+hexes-off HEXES_OFF
+charms-on CHARMS_ON
+charms-off CHARMS_OFF
 summonings-on SUMMONINGS_ON
 summonings-off SUMMONINGS_OFF
 necromancy-on NECROMANCY_ON

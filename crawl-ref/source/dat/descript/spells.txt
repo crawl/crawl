@@ -13,7 +13,7 @@ This spell causes the air around a creature to twist itself into a whirling vort
 %%%%
 Alistair's Intoxication
 
-This spell works by converting a small portion of brain matter into alcohol. It affects all intelligent humanoids within the caster's view (presumably including the caster). It is frequently used as an icebreaker at wizard parties.
+This spell works by converting a small portion of brain matter into alcohol, confusing all intelligent humanoids within the caster's view (although poison-resistant creatures will suffer no negative effects). It is strongly focused on the caster, however, and so poison resistance will not protect them. It is frequently used as an icebreaker at wizard parties.
 %%%%
 Alter Self
 
@@ -146,6 +146,10 @@ This spell rapidly accelerates the decomposition of any corpses lying around the
 Cure Poison
 
 This spell removes poison from the caster's system.
+%%%%
+Darkness
+
+This spell dims the light of the dungeon, reducing the range of vision. The area affected is quite large and it doesn't have sharp edges, thus the effect is unlikely to alert anyone not very close to the caster.
 %%%%
 Death Channel
 
@@ -545,7 +549,7 @@ This spell temporarily transforms the caster into a slow-moving (but extremely r
 %%%%
 Sticks to Snakes
 
-This spell uses wooden items in the caster's grasp as raw material for a powerful transmutation. Note that highly enchanted items, such as wizards' staves, will not be affected.
+This spell uses wooden items in the caster's grasp as raw material for a powerful transmutation. Note that magical artefacts will not be affected.
 %%%%
 Sticky Flame
 
@@ -669,7 +673,7 @@ This spell causes a weapon held in the caster's hand to dance into the air and s
 %%%%
 Tukima's Dance Party
 
-I'm afraid only weapons are invited to this party.
+This spell causes weapons on the ground near the caster to all leap into the air and dance together.
 %%%%
 Twisted Resurrection
 

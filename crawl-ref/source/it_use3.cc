@@ -669,36 +669,29 @@ static bool _box_of_beasts(item_def &box)
 
     if (x_chance_in_y(60 + you.skills[SK_EVOCATIONS], 100))
     {
-        monster_type beasty = MONS_NO_MONSTER;
+        const monster_type beasts[] = {
+            MONS_MEGABAT,   MONS_HOUND,     MONS_JACKAL,
+            MONS_RAT,       MONS_ICE_BEAST, MONS_SNAKE,
+            MONS_YAK,       MONS_BUTTERFLY, MONS_WATER_MOCCASIN,
+            MONS_CROCODILE, MONS_HELL_HOUND
+        };
 
-        // If you worship a good god, don't summon an evil beast (in
+        monster_type mon = MONS_NO_MONSTER;
+
+        // If you worship a good god, don't summon an unholy beast (in
         // this case, the hell hound).
         do
-        {
-            int temp_rand = random2(11);
+            mon = RANDOM_ELEMENT(beasts);
+        while (player_will_anger_monster(mon));
 
-            beasty = ((temp_rand == 0) ? MONS_MEGABAT :
-                      (temp_rand == 1) ? MONS_HOUND :
-                      (temp_rand == 2) ? MONS_JACKAL :
-                      (temp_rand == 3) ? MONS_RAT :
-                      (temp_rand == 4) ? MONS_ICE_BEAST :
-                      (temp_rand == 5) ? MONS_SNAKE :
-                      (temp_rand == 6) ? MONS_YAK :
-                      (temp_rand == 7) ? MONS_BUTTERFLY :
-                      (temp_rand == 8) ? MONS_WATER_MOCCASIN :
-                      (temp_rand == 9) ? MONS_CROCODILE
-                                       : MONS_HELL_HOUND);
-        }
-        while (player_will_anger_monster(beasty));
-
-        beh_type beha = BEH_FRIENDLY;
-
-        if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
-            beha = BEH_HOSTILE;
+        const bool friendly = (!one_chance_in(you.skills[SK_EVOCATIONS] + 5));
 
         if (create_monster(
-                mgen_data(beasty, beha, &you, 2 + random2(4), 0,
-                          you.pos(), MHITYOU)) != -1)
+                mgen_data(mon,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                          2 + random2(4), 0,
+                          you.pos(),
+                          MHITYOU)) != -1)
         {
             success = true;
 

@@ -50,7 +50,6 @@ Gods
 Character
 ---------
 * New species: Felids, sentient cats.
-* Prevent save file corruption for overly long player names.
 * Overhaul Draconians, now more interesting.
 * Stalker background changed to Transmutation-based Stabber.
 * Only cancel levitation once the last equipped +Lev item is removed.
@@ -120,7 +119,6 @@ Spells
 * New spell: Tornado, level 9 Air spell.
 * Prevent passwalling into deep water/lava if it would kill you.
 * Teleportation interrupts Passwall.
-* Disallow targeting Passwall at self, thereby wasting a turn.
 * Fix weapon grinding via Shadow Creatures in the Hall of Blades.
 * Animate Dead no longer animates through walls.
 * Don't prompt for casting auto-hit spells "in direction" of allies.
@@ -200,7 +198,6 @@ Monsters
 Levels
 ------
 * New game mode: 'Zot Defence'.
-* Fix crashes on entering new levels with restart_after_game = true.
 * Use a random Temple map if original temple is no longer available.
 * Fix portal vaults not being deleted after leaving.
 * Make entering portal vaults from Hell work correctly.
@@ -309,6 +306,22 @@ Options
 * New console option: 'show_player_species' (default false), uses appropriate monster glyph.
 * New option: 'show_real_turns' (default off).
 
+
+Stone Soup 0.7.2 (20110207)
+---------------------------
+* Fix crashes on entering new levels with restart_after_game = true.
+* Fix crash with off-level map viewing.
+* Fix a crash when Jiyva worshippers spawn jellies for non-monster-damage.
+* Fix crash when trying to throw a quivered dancing weapon.
+* Fix problems with Unicode locales other than en_US.UTF-8.
+* Fix near-uselessness on ARM.
+* Fix save corruption for too long player names.
+* Don't trap teleporting merfolk in a couple of temples.
+* Disallow targeting passwall at self.
+* Fix stat boosting armour not losing bonus when melding.
+* Fix weapon acquirement not considering some rare weapons.
+* Disable Trowel card in portal vaults, labyrinths, Pan and the Abyss.
+* A variety of other bug fixes.
 
 Stone Soup 0.7.1 (20100724)
 ---------------------------

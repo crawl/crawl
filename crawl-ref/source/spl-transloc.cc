@@ -202,10 +202,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
                 contaminate_player(1, true);
-
-
-            if (!wizard_blink && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-                remove_condensation_shield();
         }
     }
 
@@ -219,7 +215,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    bool success = false;
     coord_def target;
 
     if (item_blocks_teleport(true, true))
@@ -244,14 +239,12 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         mpr("You may select the general direction of your translocation.");
         cast_semi_controlled_blink(100);
         maybe_id_ring_TC();
-        success = true;
     }
     else
     {
         canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
         move_player_to_grid(target, false, true);
-        success = true;
 
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
@@ -263,9 +256,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
                 you.pet_target = MHITNOT;
         }
     }
-
-    if (success && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
 }
 
 // This function returns true if the player can use controlled teleport
@@ -395,9 +385,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     // (like picking up/dropping an item).
     viewwindow();
     StashTrack.update_stash(you.pos());
-
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
 
     if (you.level_type == LEVEL_ABYSS)
     {
@@ -855,9 +842,15 @@ bool cast_apportation(int pow, bolt& beam)
 
             dprf("Orb apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
-            move_top_item(where, new_spot);
-            origin_set(new_spot);
-            return (true);
+            if (feat_virtually_destroys_item(grd(new_spot), item))
+                return (true);
+
+            else
+            {
+                move_top_item(where, new_spot);
+                origin_set(new_spot);
+                return (true);
+            }
         }
         // if power is high enough it'll just come straight to you
     }
@@ -918,7 +911,10 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     }
 
     if (!found)
-        return 0;
+    {
+        random_blink(false);
+        return (1);
+    }
 
     coord_def origin = you.pos();
     move_player_to_grid(target, false, true);

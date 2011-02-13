@@ -337,7 +337,7 @@ static void _maybe_leave_water(const cloud_struct& c)
 
         if (grd(c.pos) != feat)
         {
-            if (you.pos() == c.pos && !you.airborne())
+            if (you.pos() == c.pos && you.ground_level())
                 mpr("The rain has left you waist-deep in water!");
             dungeon_terrain_changed(c.pos, feat);
         }
@@ -787,7 +787,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->res_holy_fire() > 0;
     case CLOUD_COLD:
         return act->is_icy()
-               || (player && you.mutation[MUT_PASSIVE_FREEZE]);
+               || (player && you.mutation[MUT_ICEMAIL]);
     case CLOUD_STINK:
         return act->res_poison() > 0 || act->is_unbreathing();
     case CLOUD_POISON:

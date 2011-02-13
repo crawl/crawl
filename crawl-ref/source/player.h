@@ -335,10 +335,6 @@ public:
   // The save file itself.
   package *save;
 
-  // Is player clinging to the wall?
-  bool clinging;
-  // Array of walls which player is currently clinging to.
-  std::vector<coord_def>    cling_to;
   // The type of a zotdef wave, if any.
   std::string zotdef_wave_name;
   // The biggest assigned monster id so far.
@@ -384,9 +380,8 @@ public:
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
-    bool is_wall_clinging() const;
-    bool can_cling_to(const coord_def& p) const;
-    void check_clinging();
+    bool can_cling_to_walls() const;
+    void clear_clinging();
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;
@@ -409,16 +404,17 @@ public:
     bool travelling_light() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monster* mon);
+    void add_beholder(const monster* mon, bool axe = false);
     bool beheld() const;
     bool beheld_by(const monster* mon) const;
     monster* get_beholder(const coord_def &pos) const;
     monster* get_any_beholder() const;
     void remove_beholder(const monster* mon);
     void clear_beholders();
-    void beholders_check_noise(int loudness);
+    void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();
     void update_beholder(const monster* mon);
+    bool possible_beholder(const monster* mon) const;
 
     // Dealing with fearmongers. Implemented in fearmonger.cc.
     bool add_fearmonger(const monster* mon);
@@ -428,7 +424,7 @@ public:
     monster* get_any_fearmonger() const;
     void remove_fearmonger(const monster* mon);
     void clear_fearmongers();
-    void fearmongers_check_noise(int loudness);
+    void fearmongers_check_noise(int loudness, bool axe = false);
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
@@ -769,7 +765,6 @@ int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
 
 bool player_likes_chunks(bool permanently = false);
-bool species_likes_water();
 bool player_likes_water(bool permanently = false);
 
 int player_mutation_level(mutation_type mut);

@@ -12,6 +12,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "goditem.h"
 #include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -32,7 +33,8 @@
 #include "terrain.h"
 #include "view.h"
 
-static void _offer_items();
+static bool _offer_items();
+static void _zin_donate_gold();
 
 static bool _confirm_pray_sacrifice(god_type god)
 {
@@ -81,15 +83,6 @@ std::string god_prayer_reaction()
 
 bool god_accepts_prayer(god_type god)
 {
-    harm_protection_type hpt = god_protects_from_harm(god, false);
-
-    if (hpt == HPT_PRAYING
-        || hpt == HPT_PRAYING_PLUS_ANYTIME
-        || hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
-    {
-        return (true);
-    }
-
     if (god_likes_fresh_corpses(god))
         return (true);
 
@@ -104,6 +97,7 @@ bool god_accepts_prayer(god_type god)
     case GOD_JIYVA:
         return (jiyva_can_paralyse_jellies());
 
+    case GOD_ELYVILON:
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
     case GOD_ASHENZARI:
@@ -232,17 +226,19 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     return (true);
 }
 
+// Prayer at your god's altar.
 static bool _altar_prayer()
 {
     // Different message from when first joining a religion.
     mpr("You prostrate yourself in front of the altar and pray.");
 
-    if (you.religion == GOD_XOM)
-        return (false);
-
     god_acting gdact;
 
     bool did_bless = false;
+
+    // donate gold to gain piety distributed over time
+    if (you.religion == GOD_ZIN)
+        _zin_donate_gold();
 
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
@@ -329,8 +325,6 @@ static bool _altar_prayer()
         return (did_bless);
     }
 
-    _offer_items();
-
     return (did_bless);
 }
 
@@ -342,10 +336,8 @@ void pray()
         return;
     }
 
-    // almost all prayers take time
-    you.turn_is_over = true;
-
-    const bool was_praying = !!you.duration[DUR_PRAYER];
+    // only successful prayer takes time
+    you.turn_is_over = false;
 
     bool something_happened = false;
     const god_type altar_god = feat_altar_god(grd(you.pos()));
@@ -353,7 +345,6 @@ void pray()
     {
         if (you.flight_mode() == FL_LEVITATE)
         {
-            you.turn_is_over = false;
             mpr("You are floating high above the altar.");
             return;
         }
@@ -361,17 +352,19 @@ void pray()
         if (you.religion != GOD_NO_GOD && altar_god == you.religion)
         {
             something_happened = _altar_prayer();
+            // at least "prostrating" took time
+            you.turn_is_over = true;
         }
         else if (altar_god != GOD_NO_GOD)
         {
             if (you.species == SP_DEMIGOD)
             {
-                you.turn_is_over = false;
                 mpr("Sorry, a being of your status cannot worship here.");
                 return;
             }
 
             god_pitch(feat_altar_god(grd(you.pos())));
+            you.turn_is_over = true;
             return;
         }
     }
@@ -383,87 +376,49 @@ void pray()
              you.is_undead ? "un" : "");
 
         // Zen meditation is timeless.
-        you.turn_is_over = false;
-        return;
-    }
-    else if (!god_accepts_prayer(you.religion))
-    {
-        if (!something_happened)
-        {
-            simple_god_message(" ignores your prayer.");
-            you.turn_is_over = false;
-        }
-        return;
-    }
-
-    // Beoghites and Nemelexites can abort now instead of offering
-    // something they don't want to lose.
-    if (altar_god == GOD_NO_GOD
-        && (you.religion == GOD_BEOGH ||  you.religion == GOD_NEMELEX_XOBEH)
-        && !_confirm_pray_sacrifice(you.religion))
-    {
-        you.turn_is_over = false;
         return;
     }
 
     mprf(MSGCH_PRAY, "You %s prayer to %s.",
-         was_praying ? "renew your" : "offer a",
+         you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
          god_name(you.religion).c_str());
-
-    you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
-                                 + (random2(you.piety) / 20);
 
     if (player_under_penance())
         simple_god_message(" demands penance!");
     else
-    {
         mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
 
-        if (you.piety > 130)
-            you.duration[DUR_PRAYER] *= 3;
-        else if (you.piety > 70)
-            you.duration[DUR_PRAYER] *= 2;
-    }
-
-    // Assume for now that gods who like fresh corpses and/or butchery
-    // don't use prayer for anything else.
-    if (you.religion == GOD_ZIN
-        || you.religion == GOD_KIKUBAAQUDGHA
-        || you.religion == GOD_BEOGH
-        || you.religion == GOD_NEMELEX_XOBEH
-        || you.religion == GOD_JIYVA
-        || you.religion == GOD_ASHENZARI
-        || god_likes_fresh_corpses(you.religion))
+    switch(you.religion)
     {
-        you.duration[DUR_PRAYER] = 1;
-    }
-    else if (you.religion == GOD_ELYVILON
-        || you.religion == GOD_YREDELEMNUL)
-    {
-        you.duration[DUR_PRAYER] = 20;
+    case GOD_ZIN:
+        //jmf: this "good" god will feed you (a la Nethack)
+        if (zin_sustenance())
+        {
+            god_speaks(you.religion, "Your stomach feels content.");
+            set_hunger(6000, true);
+            lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+            something_happened = true;
+        }
+        break;
+
+    case GOD_JIYVA:
+        you.duration[DUR_JELLY_PRAYER] = 200;
+
+        if (jiyva_can_paralyse_jellies())
+            jiyva_paralyse_jellies();
+        something_happened = true;
+        break;
+
+    default:
+        ;
     }
 
-    // Gods who like fresh corpses, Kikuites, Beoghites, Nemelexites and
-    // Ashenzariites offer the items they're standing on.
-    if (altar_god == GOD_NO_GOD
-        && (god_likes_fresh_corpses(you.religion)
-            || you.religion == GOD_BEOGH
-            || you.religion == GOD_NEMELEX_XOBEH
-            || you.religion == GOD_ASHENZARI))
-    {
-        _offer_items();
-    }
+    // All sacrifices affect items you're standing on.
+    something_happened |= _offer_items();
 
-    if (!was_praying)
-        do_god_gift(true);
-
+    if (something_happened)
+        you.turn_is_over = true;
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
-}
-
-void end_prayer(void)
-{
-    mpr("Your prayer is over.", MSGCH_PRAY, you.religion);
-    you.duration[DUR_PRAYER] = 0;
 }
 
 static int _gold_to_donation(int gold)
@@ -578,10 +533,38 @@ static void _ashenzari_sac_scroll(const item_def& item)
         destroy_item(it, true); // can't happen
 }
 
+// Is the destroyed weapon valuable enough to gain piety by doing so?
+// Unholy and evil weapons are handled specially.
+static bool _destroyed_valuable_weapon(int value, int type)
+{
+    // Artefacts, including most randarts.
+    if (random2(value) >= random2(250))
+        return (true);
+
+    // Medium valuable items are more likely to net piety at low piety,
+    // more so for missiles, since they're worth less as single items.
+    if (random2(value) >= random2((type == OBJ_MISSILES) ? 10 : 100)
+        && one_chance_in(1 + you.piety / 50))
+    {
+        return (true);
+    }
+
+    // If not for the above, missiles shouldn't yield piety.
+    if (type == OBJ_MISSILES)
+        return (false);
+
+    // Weapons, on the other hand, are always acceptable to boost low
+    // piety.
+    if (you.piety < piety_breakpoint(0) || player_under_penance())
+        return (true);
+
+    return (false);
+}
+
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.).  Does not modify the actual item in any way.
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
-       int *js)
+       int *js, bool first)
 {
     piety_gain_t relative_piety_gain = PIETY_NONE;
 
@@ -600,6 +583,33 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     {
         switch (you.religion)
         {
+        case GOD_ELYVILON:
+        {
+            const int value = item_value(item) / item.quantity;
+            const bool unholy_weapon = is_unholy_item(item);
+            const bool evil_weapon = is_evil_item(item);
+
+            if (unholy_weapon || evil_weapon)
+            {
+                relative_piety_gain = PIETY_SOME;
+                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
+
+                // Print this in addition to the above!
+                if (first)
+                {
+                    simple_god_message(make_stringf(
+                                 " welcomes the destruction of %s %s weapon%s.",
+                                 item.quantity == 1 ? "this" : "these",
+                                 desc_weapon,
+                                 item.quantity == 1 ? ""     : "s").c_str(),
+                                 GOD_ELYVILON);
+                }
+            }
+            else if (_destroyed_valuable_weapon(value, item.base_type))
+                relative_piety_gain = PIETY_SOME;
+            break;
+        }
+
         case GOD_BEOGH:
         {
             const int item_orig = item.orig_monnum - 1;
@@ -711,7 +721,7 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
     piety_gain_t relative_gain = PIETY_NONE;
     for (int j = 0; j < item.quantity; ++j)
     {
-        const piety_gain_t gain = _sacrifice_one_item_noncount(item, js);
+        const piety_gain_t gain = _sacrifice_one_item_noncount(item, js, !j);
 
         // Update piety gain if necessary.
         if (gain != PIETY_NONE)
@@ -763,25 +773,17 @@ static bool _check_nemelex_sacrificing_item_type(const item_def& item)
     }
 }
 
-static void _offer_items()
+static bool _offer_items()
 {
     if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
-        return;
+        return false;
+
+    if (!_confirm_pray_sacrifice(you.religion))
+        return false;
 
     int i = you.visible_igrd(you.pos());
 
     god_acting gdact;
-
-    // donate gold to gain piety distributed over time
-    if (you.religion == GOD_ZIN)
-    {
-        _zin_donate_gold();
-
-        return; // doesn't accept anything else for sacrifice
-    }
-
-    if (i == NON_ITEM) // nothing to sacrifice
-        return;
 
     int num_sacced = 0;
     int num_disliked = 0;
@@ -893,4 +895,8 @@ static void _offer_items()
         else if (you.religion == GOD_ASHENZARI)
             simple_god_message(" can corrupt only scrolls of remove curse.");
     }
+    if (num_sacced == 0 && you.religion == GOD_ELYVILON)
+        mpr("There are no weapons here to destroy!");
+
+    return (num_sacced > 0);
 }

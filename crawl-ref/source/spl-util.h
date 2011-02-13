@@ -100,7 +100,8 @@ typedef int cloud_func(coord_def where, int pow, int spreadrate,
                        std::string name, std::string tile);
 
 int apply_area_visible(cell_func cf, int power,
-                       bool pass_through_trans = false, actor *agent = NULL);
+                       bool pass_through_trans = false, actor *agent = NULL,
+                       bool affect_scryed = false);
 
 int apply_area_square(cell_func cf, const coord_def& where, int power,
                       actor *agent = NULL);

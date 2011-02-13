@@ -2426,7 +2426,7 @@ int monster_die(monster* mons, killer_type killer,
         _monster_die_cloud(mons, !mons_reset && !fake_abjuration && !unsummoned && !timeout, silent, summoned);
 
     int corpse = -1;
-    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned && !timeout)
+    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned && !timeout && !was_banished)
     {
         // Have to add case for disintegration effect here? {dlb}
         int corpse2 = -1;
@@ -3138,11 +3138,6 @@ void corrode_monster(monster* mons)
         }
 }
 
-static bool _habitat_okay(const monster* mons, dungeon_feature_type targ)
-{
-    return (monster_habitable_grid(mons, targ));
-}
-
 // This doesn't really swap places, it just sets the monster's
 // position equal to the player (the player has to be moved afterwards).
 // It also has a slight problem with the fact that if the player is
@@ -3175,7 +3170,7 @@ bool swap_places(monster* mons)
 bool swap_places(monster* mons, const coord_def &loc)
 {
     ASSERT(map_bounds(loc));
-    ASSERT(_habitat_okay(mons, grd(loc)));
+    ASSERT(monster_habitable_grid(mons, grd(loc)));
 
     if (monster_at(loc))
     {
@@ -3222,7 +3217,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     }
 
     // First try: move monster onto your position.
-    bool swap = !monster_at(loc) && _habitat_okay(mons, grd(loc));
+    bool swap = !monster_at(loc) && monster_habitable_grid(mons, grd(loc));
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
@@ -3230,7 +3225,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         int num_found = 0;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!monster_at(*ai) && _habitat_okay(mons, grd(*ai))
+            if (!monster_at(*ai) && monster_habitable_grid(mons, grd(*ai))
                 && one_chance_in(++num_found))
             {
                 loc = *ai;

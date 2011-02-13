@@ -61,13 +61,29 @@ public:
     size_t size() const { return SIZE; }
 
     // ----- Access -----
-    TYPE& operator[](unsigned long index) {
-        ASSERT(index < SIZE);
+    TYPE& operator[](unsigned long index)
+    {
+#ifdef ASSERTS
+        if (index >= SIZE)
+        {
+            // Intentionally printed as signed, it's very, very unlikely we'd
+            // have a genuine big number here, but underflows are common.
+            die("FixedVector out of bounds (%ld / %ld)", (signed long)index,
+                SIZE);
+        }
+#endif
         return mData[index];
     }
 
-    const TYPE& operator[](unsigned long index) const {
-        ASSERT(index < SIZE);
+    const TYPE& operator[](unsigned long index) const
+    {
+#ifdef ASSERTS
+        if (index >= SIZE)
+        {
+            die("FixedVector out of bounds (%ld / %ld)", (signed long)index,
+                SIZE);
+        }
+#endif
         return mData[index];
     }
 

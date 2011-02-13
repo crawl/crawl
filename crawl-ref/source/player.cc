@@ -294,7 +294,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             return;
     }
 
-    if (!you.airborne() && !you.can_cling_to(you.pos()))
+    if (you.ground_level())
     {
         if (you.species == SP_MERFOLK)
         {
@@ -384,6 +384,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     if (!you.running)
         check_for_interesting_features();
 
+    you.check_clinging();
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
 
@@ -425,15 +426,11 @@ bool player_in_hell(void)
             && is_hell_subbranch(you.where_are_you));
 }
 
-bool species_likes_water()
-{
-    return (you.species == SP_MERFOLK || you.species == SP_GREY_DRACONIAN);
-}
-
 bool player_likes_water(bool permanently)
 {
     return (!permanently && beogh_water_walk()
-            || (species_likes_water() || !permanently) && form_likes_water());
+            || (species_likes_water(you.species) || !permanently)
+                && form_likes_water());
 }
 
 bool player_in_bat_form()
@@ -547,16 +544,26 @@ monster_type player_mons(bool transform)
 void update_vision_range()
 {
     you.normal_vision = LOS_RADIUS;
-    you.current_vision = you.normal_vision;
+    int nom   = 1;
+    int denom = 1;
 
     // Nightstalker gives -1/-2/-3.
     if (player_mutation_level(MUT_NIGHTSTALKER))
-        you.current_vision -= player_mutation_level(MUT_NIGHTSTALKER);
+    {
+        nom *= LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER);
+        denom *= LOS_RADIUS;
+    }
 
     // Lantern of shadows.
     if (you.attribute[ATTR_SHADOWS])
-        you.current_vision -= 2;
+        nom *= 3, denom *= 4;
 
+    // the Darkness spell.
+    if (you.duration[DUR_DARKNESS])
+        nom *= 3, denom *= 4;
+
+    you.current_vision = (you.normal_vision * nom + denom / 2) / denom;
+    ASSERT(you.current_vision > 0);
     set_los_radius(you.current_vision);
 }
 
@@ -819,7 +826,7 @@ bool berserk_check_wielded_weapon()
     {
         std::string prompt = "Do you really want to go berserk while "
                              "wielding " + weapon.name(DESC_NOCAP_YOUR)
-                             + "? ";
+                             + "?";
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
@@ -1941,7 +1948,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 6;
 
     // moving on liquefied ground takes longer
-    if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+    if (liquefied(you.pos()) && you.ground_level())
         mv += 3;
 
     // armour
@@ -3042,7 +3049,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 3))
                     hp_adjust++;
 
-                  if (!(you.experience_level % 3))
+                if (!(you.experience_level % 3))
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
@@ -3825,9 +3832,10 @@ void display_char_status()
         _display_vampire_status();
 
     static int statuses[] = {
+        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         DUR_TRANSFORMATION, STATUS_BURDEN, DUR_SAGE, DUR_BARGAIN,
         DUR_BREATH_WEAPON, DUR_LIQUID_FLAMES, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
-        DUR_REPEL_MISSILES, DUR_DEFLECT_MISSILES, DUR_PRAYER,
+        DUR_REPEL_MISSILES, DUR_DEFLECT_MISSILES, DUR_JELLY_PRAYER,
         STATUS_REGENERATION, DUR_SWIFTNESS, DUR_RESIST_POISON,
         DUR_RESIST_COLD, DUR_RESIST_FIRE, DUR_INSULATION, DUR_STONEMAIL,
         DUR_TELEPORT, DUR_CONTROL_TELEPORT,
@@ -5515,44 +5523,15 @@ bool player::is_levitating() const
     return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
 }
 
-bool player::is_wall_clinging() const
+void player::clear_clinging()
 {
-    return (clinging);
-}
-
-bool player::can_cling_to(const coord_def& p) const
-{
-    if (!in_bounds(p))
-        return (false);
-
-    if (!is_wall_clinging())
-        return (false);
-
-    if (!can_pass_through_feat(grd(p)))
-        return (false);
-
-    for (radius_iterator ri(p, 1, C_CIRCLE, NULL, true);
-         ri; ++ri)
-    {
-        if (feat_is_wall(env.grid(*ri)))
-        {
-            for (radius_iterator ri2(*ri, 1, C_CIRCLE, NULL, false);
-                 ri2; ++ri2)
-            {
-                for (int i = 0, size = cling_to.size(); i < size; ++i)
-                {
-                    if (cling_to[i] == *ri2)
-                        return (true);
-                }
-            }
-        }
-    }
-    return (false);
+    you.clinging = false;
+    you.cling_to.clear();
 }
 
 bool player::in_water() const
 {
-    return (!airborne() && !beogh_water_walk() && !is_wall_clinging()
+    return (ground_level() && !beogh_water_walk()
             && feat_is_water(grd(pos())));
 }
 
@@ -5560,8 +5539,10 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-
-    return (species == SP_MERFOLK || !permanently) && form_can_swim();
+    return (species == SP_MERFOLK
+            || body_size(PSIZE_BODY) >= SIZE_GIANT
+            || !permanently)
+                && form_can_swim();
 }
 
 int player::visible_igrd(const coord_def &where) const
@@ -6373,9 +6354,12 @@ void player::paralyse(actor *who, int str)
     if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
         return;
 
-    if (!(who && who->as_monster() && who->as_monster()->type == MONS_RED_WASP) &&
-        duration[DUR_PARALYSIS])
+    if (!(who && who->as_monster() && who->as_monster()->type == MONS_RED_WASP)
+        && (duration[DUR_PARALYSIS] || duration[DUR_PARALYSIS_IMMUNITY]))
+    {
+        canned_msg(MSG_YOU_RESIST);
         return;
+    }
 
     int &paralysis(duration[DUR_PARALYSIS]);
 
@@ -6963,7 +6947,7 @@ bool player::do_shaft()
 
         handle_items_on_shaft(pos(), false);
 
-        if (airborne() || is_wall_clinging() || total_weight() == 0)
+        if (!ground_level() || total_weight() == 0)
             return (true);
 
         force_stair = DNGN_TRAP_NATURAL;
@@ -7034,20 +7018,4 @@ void player::goto_place(const level_id &lid)
         where_are_you = static_cast<branch_type>(lid.branch);
         absdepth0 = absdungeon_depth(lid.branch, lid.depth);
     }
-}
-
-void player::check_clinging()
-{
-    int walls = 0;
-    if (you.form == TRAN_SPIDER)
-    {
-        you.cling_to.clear();
-        for (radius_iterator ri(you.pos(), 1, C_CIRCLE, NULL, true); ri; ++ri)
-            if (feat_is_wall(env.grid(*ri)))
-            {
-                you.cling_to.push_back(*ri);
-                walls++;
-            }
-    }
-    you.clinging = (walls > 0) ? true : false;
 }

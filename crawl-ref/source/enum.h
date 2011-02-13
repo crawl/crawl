@@ -97,7 +97,7 @@ enum ability_type
     ABIL_TROG_REGEN_MR,
     ABIL_TROG_BROTHERS_IN_ARMS,
     // Elyvilon
-    ABIL_ELYVILON_DESTROY_WEAPONS = 140,
+    ABIL_ELYVILON_LIFESAVING = 140,
     ABIL_ELYVILON_LESSER_HEALING_SELF,
     ABIL_ELYVILON_LESSER_HEALING_OTHERS,
     ABIL_ELYVILON_PURIFICATION,
@@ -143,8 +143,6 @@ enum ability_type
     ABIL_ASHENZARI_END_TRANSFER,
 
     // General divine (pseudo) abilities.
-    ABIL_HARM_PROTECTION = 220,
-    ABIL_HARM_PROTECTION_II, // "reliable" protection
     ABIL_RENOUNCE_RELIGION,
 
     // Zot Defence abilities
@@ -306,7 +304,9 @@ enum beam_type                  // beam[].flavour
     BEAM_CHARM,
     BEAM_BANISH,
     BEAM_DEGENERATE,
+#if TAG_MAJOR_VERSION == 32
     BEAM_ENSLAVE_UNDEAD,
+#endif
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
@@ -882,7 +882,7 @@ enum conduct_type
     DID_KILL_PLANT,                       // Fedhas
     DID_PLANT_KILLED_BY_SERVANT,          // Fedhas
     DID_HASTY,                            // Cheibriados
-    DID_GLUTTONY,                         // Cheibriados
+    DID_GLUTTONY,                         // unused, previously Cheibriados
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
     DID_SOULED_FRIEND_DIED,               // Zin
@@ -1286,7 +1286,7 @@ enum duration_type
     DUR_LIQUID_FLAMES,
     DUR_ICY_ARMOUR,
     DUR_REPEL_MISSILES,
-    DUR_PRAYER,
+    DUR_JELLY_PRAYER,
     DUR_PIETY_POOL,             // distribute piety over time
     DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
     DUR_DIVINE_STAMINA,         // duration of Zin's Divine Stamina
@@ -1338,6 +1338,9 @@ enum duration_type
     DUR_LIQUEFYING,
     DUR_HEROISM,
     DUR_FINESSE,
+    DUR_LIFESAVING,
+    DUR_PARALYSIS_IMMUNITY,
+    DUR_DARKNESS,
     NUM_DURATIONS
 };
 
@@ -1417,6 +1420,7 @@ enum enchant_type
     ENCH_DUMB,          // Permanently dumb (as in, 'struck dumb').
     ENCH_MAD,           // Permanently mad.
     ENCH_SILVER_CORONA, // Zin's silver light.
+    ENCH_RECITE_TIMER,  // Was recited against.
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -1901,7 +1905,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DANCING_WEAPON,
     MONS_HARPY,
     MONS_RAVEN,
-    MONS_FIRECRAB,
+    MONS_FIRE_CRAB,
     MONS_HOMUNCULUS,
     MONS_SOUPLING,
 
@@ -2341,7 +2345,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED_TOUGH,
     MONS_SENSED_NASTY,
     MONS_SALT_PILLAR,
-    MONS_TUKIMA,
+    MONS_TERPSICHORE,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2576,7 +2580,7 @@ enum mon_spellbook_type
     MST_SERPENT_OF_HELL_DIS,
     MST_NERGALLE,
     MST_JORY,
-    MST_TUKIMA,
+    MST_TERPSICHORE,
 
     MST_GHOST, // special
     MST_TEST_SPAWNER,
@@ -3229,6 +3233,7 @@ enum spell_type
     SPELL_HOMUNCULUS,
     SPELL_SUMMON_HYDRA,
     SPELL_TUKIMAS_DANCE_PARTY,
+    SPELL_DARKNESS,
 
     NUM_SPELLS
 };
@@ -3360,11 +3365,15 @@ enum zap_type
     ZAP_BREATHE_ACID,
     ZAP_BREATHE_POISON,
     ZAP_BREATHE_POWER,
+#if TAG_MAJOR_VERSION == 32
     ZAP_ENSLAVE_UNDEAD,
+#endif
     ZAP_AGONY,
     ZAP_DISINTEGRATION,
     ZAP_BREATHE_STEAM,
+#if TAG_MAJOR_VERSION == 32
     ZAP_CONTROL_DEMON,
+#endif
     ZAP_ORB_OF_FRAGMENTATION,
     ZAP_THROW_ICICLE,
     ZAP_ICE_STORM,

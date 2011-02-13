@@ -218,11 +218,7 @@ static void _change_skill_level(skill_type exsk, int n)
         take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
     if (you.skills[exsk] == 27)
-    {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
-        if (exsk == you.transfer_to_skill)
-            ashenzari_end_transfer(true, true);
-    }
     else if (you.skills[exsk] == 1 && n > 0)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
@@ -282,9 +278,6 @@ static void _change_skill_level(skill_type exsk, int n)
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     if (best != old_best_skill || old_best_skill == exsk)
         redraw_skill(you.your_name, player_title());
-
-    if (you.weapon() && item_is_staff(*you.weapon()))
-        maybe_identify_staff(*you.weapon());
 
     // TODO: also identify rings of wizardry.
 }

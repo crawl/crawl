@@ -9,8 +9,6 @@
 # Still TODO:
 #  * Shorten the explanation on exclusions.
 #  * Maybe send the player back to the entrance?
-#  * The numbers for running may be confusing because they only apply
-#    for the numpad. Shift + num row may trigger other commands instead.
 #
 {{
 require("clua/tutorial.lua")
@@ -18,7 +16,8 @@ require("clua/tutorial.lua")
 tutorial_msg = {}
 
 function tutorial_msg.start ()
-    tutorial_intro("In this lesson you're going to learn how to move around and explore a level.")
+    tutorial_intro("In this lesson you're going to learn how to move around and "
+                   .. "explore a level.")
 
     local text = "You can move "
     if crawl.is_tiles() then
@@ -30,7 +29,8 @@ function tutorial_msg.start ()
 end
 
 function tutorial_msg.go_on ()
-    return tutorial_message("You're doing great! Now, explore a bit until you reach the next blue square.")
+    return tutorial_message("You're doing great! Now, explore a bit until you "
+                            .. "reach the next blue square.")
 end
 
 function tutorial_msg.diagonal1 ()
@@ -54,22 +54,26 @@ function tutorial_msg.diagonal1 ()
 end
 
 function tutorial_msg.diagonal2 ()
-    local text = "Move to the upper right with <white>9</white> or " .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "."
+    local text = "Move to the upper right with <white>9</white> or "
+                 .. tutorial_get_cmd("CMD_MOVE_UP_RIGHT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.diagonal3 ()
-    local text = "Move to the upper left with <white>7</white> or " .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. "."
+    local text = "Move to the upper left with <white>7</white> or "
+                 .. tutorial_get_cmd("CMD_MOVE_UP_LEFT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.diagonal4 ()
-    local text = "Move to the lower left with <white>1</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. "."
+    local text = "Move to the lower left with <white>1</white> or "
+                 .. tutorial_get_cmd("CMD_MOVE_DOWN_LEFT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.downstairs ()
-    local text = "When standing on a staircase leading downwards, you can enter the next level with "
+    local text = "When standing on a staircase leading downwards, you can enter "
+                 .. "the next level with "
                  .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS")
     if crawl.is_tiles() then
       text = text .. " or with <white>Shift-Click</white> on your character"
@@ -82,33 +86,44 @@ end
 
 -- The second part of the map.
 function tutorial_msg.levelmap ()
-    local text = "What's this? You've arrived in a completely different part of the level! To find out where you are, "
+    local text = "What's this? You've arrived in a completely different part of "
+                 .. "the level! To find out where you are, "
 
     if crawl.is_tiles() then
-        text = text .. "have a look at the <white>minimap</white> to the right of the screen. You can have a closer look at a part of the map with a <white>right mouseclick</white> and also can travel there with a <white>leftclick</white>."
+        text = text .. "have a look at the <white>minimap</white> to the right of "
+                    .. "the screen. You can have a closer look at a part of the "
+                    .. "map with a <white>right mouseclick</white> and also can "
+                    .. "travel there with a <white>leftclick</white>."
     else
-        text = text .. "enter the overmap view with " .. tutorial_get_cmd("CMD_DISPLAY_MAP")
-               .. " and then move the cursor around to look around the level. You also can travel wherever your cursor is pointing by pressing <white>.</white> or <white>Enter</white>. Press <white>Escape</white> to return to the normal game mode."
+        text = text .. "enter the overmap view with "
+                    .. tutorial_get_cmd("CMD_DISPLAY_MAP")
+                    .. " and then move the cursor around to look around the level. "
+                    .. "You also can travel wherever your cursor is pointing by "
+                    .. "pressing <white>.</white> or <white>Enter</white>. "
+                    .. "Press <white>Escape</white> to return to the normal game mode."
     end
 
     return tutorial_message(text)
 end
 
 function tutorial_msg.autoexplore ()
-    local text = "Exploring manually can get tedious after a while, so you might want to let that happen automatically. Try it by pressing "
-                 .. tutorial_get_cmd("CMD_EXPLORE") .. "."
-    return tutorial_message(text)
+    return tutorial_message("Exploring manually can get tedious after a while, "
+                            .. "so you might want to let that happen automatically. "
+                            .. "Try it by pressing "
+                            .. tutorial_get_cmd("CMD_EXPLORE") .. ".")
 end
 
 function tutorial_msg.exclusion ()
 
-    local text = "Some types of clouds and also some monsters are automatically marked as dangerous, "
-                 .. "so autotravel doesn't lead you right into danger. These '<white>exclusions</white>' "
+    local text = "Some types of clouds and also some monsters are automatically "
+                 .. "marked as dangerous, so autotravel doesn't lead you right "
+                 .. "into danger. These '<white>exclusions</white>' "
 
     if crawl.is_tiles() then
         text = text .. "are shown as <red>red X</red>'s."
     else
-        text = text .. "are highlighted in red on the level map (" .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. ")."
+        text = text .. "are highlighted in red on the level map ("
+                    .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. ")."
     end
 
     text = text .. " You cannot autotravel "
@@ -116,21 +131,30 @@ function tutorial_msg.exclusion ()
         text = text .. "(including by mouseclick!) "
     end
 
-    text = text .. "to or through excluded terrain, but in these cases manual movement is usually much safer anyway. However, autotravel will try to move you safely around the danger, so you can simply press " .. tutorial_get_cmd("CMD_EXPLORE") .. " and continue traveling."
+    text = text .. "to or through excluded terrain, but in these cases manual "
+                .. "movement is usually much safer anyway. However, autotravel "
+                .. "will try to move you safely around the danger, so you can "
+                .. "simply press " .. tutorial_get_cmd("CMD_EXPLORE")
+                .. " and continue traveling."
 
     return tutorial_message(text)
 end
 
 function tutorial_msg.autoexplore_announce ()
-    local text = "Autoexplore will stop to announce features and items. To continue traveling, press "
-                 .. tutorial_get_cmd("CMD_EXPLORE") .. " again."
+    local text = "Autoexplore will stop to announce features and items. To travel "
+                 .. "directly to the stairs, you can "
+    if crawl.is_tiles() then
+        text = text .. "click on them or you can "
+    end
+    text = text .. "press "
+                .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "<w><< Enter</w>."
     return tutorial_message(text)
 end
 
 function tutorial_msg.tutorial_end ()
-        local text = "Congratulations! You've completed the first lesson!\n"
+    local text = "Congratulations! You've completed the first lesson!\n"
                  .. "To exit the tutorial, simply go up these stairs with "
-                                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
+                 .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
     if crawl.is_tiles() then
       text = text .. " or by <white>Shift-clicking</white> on your character"
     end
@@ -153,50 +177,57 @@ function tutorial_msg.newlevel ()
 end
 
 function tutorial_msg.door ()
-    local text = "You can open a closed door by walking into it. To close an open door, press "
+    local text = "You can open a closed door by walking into it. To close an open "
+                 .. "door, press "
                  .. tutorial_get_cmd("CMD_CLOSE_DOOR") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.shiftmove ()
-    local text = "A quicker way to 'run' through a corridor is to press <white>Shift</white> along with the vi or arrow keys. "
+    local text = "A quicker way to 'run' through a corridor is to press "
+                 .. "<white>Shift</white> along with the vi or arrow keys. "
                  .. "For example, try pressing " .. tutorial_get_cmd("CMD_RUN_RIGHT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.shiftmove2 ()
-    local text = "Run down this corridor with <white>Shift-3</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
+    local text = "Run down this corridor with <white>Shift-Numpad3</white> or "
+                 .. tutorial_get_cmd("CMD_RUN_DOWN_RIGHT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.secret_door_glass ()
-    local text = "It doesn't look like the corridor ends here. Try searching for a secret door with "
-                 .. tutorial_get_cmd("CMD_REST") .. "."
-    return tutorial_message(text)
+    return tutorial_message("It doesn't look like the corridor ends here. Try "
+                            .. "searching for a secret door with "
+                            .. tutorial_get_cmd("CMD_REST") .. ".")
 end
 
 function tutorial_msg.shiftmove3 ()
-    local text = "Run down this corridor with <white>Shift-1</white> or " .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
+    local text = "Run down this corridor with <white>Shift-Numpad1</white> or "
+                 .. tutorial_get_cmd("CMD_RUN_DOWN_LEFT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.water ()
-    return tutorial_message("Note how you can move through shallow but not through deep water.")
+    return tutorial_message("Note how you can move through shallow but not "
+                            .. "through deep water.")
 end
 
 function tutorial_msg.shiftmove4 ()
-    local text = "Run up this corridor with <white>Shift-7</white> or " .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
+    local text = "Run up this corridor with <white>Shift-Numpad7</white> or "
+                 .. tutorial_get_cmd("CMD_RUN_UP_LEFT") .. "."
     return tutorial_message(text)
 end
 
 function tutorial_msg.secret_door_wall ()
-    local text = "A dead-end! Or, wait... is it another secret door? Try searching again with "
-                 .. tutorial_get_cmd("CMD_REST") .. "."
-    return tutorial_message(text)
+    return tutorial_message("A dead-end! Or, wait... is it another secret door? "
+                            .. "Try searching again with "
+                            .. tutorial_get_cmd("CMD_REST") .. ".")
 end
 
 function tutorial_msg.upstairs ()
-    local text = "When standing on a staircase leading upwards, you can enter the previous level with "
+    local text = "When standing on a staircase leading upwards, you can enter "
+                 .. "the previous level with "
                  .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
     if crawl.is_tiles() then
       text = text .. " or by <white>Shift-clicking</white> on your character"
@@ -228,6 +259,7 @@ function tutorial_msg.exit ()
     text = text .. "\n<yellow>Staircases</yellow>\n"
                 .. "  " .. tutorial_get_cmd("CMD_GO_UPSTAIRS") .. "  go back to the previous level\n"
                 .. "  " .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. "  enter the next level\n"
+                .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "<w><<</w>/<w>></w>" .. "  travel to the nearest up/downstairs\n"
 
     text = text .. "\n<yellow>Doors</yellow>\n"
                 .. "  can be opened by walking into them\n"
@@ -240,10 +272,15 @@ function tutorial_msg.exit ()
     else
         text = text .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "  enter the level map, travel with <white>Enter</white>\n"
     end
-    text = text .. "  " .. tutorial_get_cmd("CMD_EXPLORE") .. "  autoexplore\n\n"
+    text = text .. "  " .. tutorial_get_cmd("CMD_EXPLORE") .. "  autoexplore\n"
                 .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
     return crawl.endgame(text)
+end
+
+function tutorial_msg.win ()
+    dgn.mark_game_won()
+    return tutorial_msg.exit()
 end
 }}
 
@@ -273,7 +310,7 @@ MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson1", \
                                  onclimb = "tutorial_msg.exit" }
 MARKER:  [ = lua:one_way_stair { desc = "exit from the tutorial", \
                                  dst  = "tutorial_lesson1", \
-                                 onclimb = "tutorial_msg.exit" }
+                                 onclimb = "tutorial_msg.win" }
 MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
              size_max = 1, spread_rate = 0 }

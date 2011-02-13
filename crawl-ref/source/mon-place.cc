@@ -1280,11 +1280,8 @@ int place_monster(mgen_data mg, bool force_pos)
     // Zotdef change - banding allowed on stairs for extra challenge!
     // Frequency reduced, though, and only after 2K turns.
     if (id >= MAX_MONSTERS - 30
-        || (mg.proximity == PROX_NEAR_STAIRS
-            && !crawl_state.game_is_zotdef()
-            && coinflip())
-        || (crawl_state.game_is_zotdef() && you.num_turns<2000)
-        )
+        || (mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef())
+        || (crawl_state.game_is_zotdef() && you.num_turns<2000))
         return (id);
 
     // Not PROX_NEAR_STAIRS, so it will be part of a band, if there is any.
@@ -2654,9 +2651,9 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 3;
         break;
 
-    case MONS_TUKIMA:
+    case MONS_TERPSICHORE:
         natural_leader = true;
-        band = BAND_TUKIMA;
+        band = BAND_TERPSICHORE;
         band_size = 1 + random_range(1, 3);
         break;
 
@@ -2912,7 +2909,7 @@ static monster_type _band_member(band_type band, int power)
                  (temp_rand == 1) ? MONS_DEEP_ELF_SORCERER      // 1 in 16
                                   : MONS_DEEP_ELF_DEATH_MAGE);  // 1 in 16
         break;
-    case BAND_TUKIMA:
+    case BAND_TERPSICHORE:
         mon_type = MONS_DANCING_WEAPON;
         if (one_chance_in(4))
             mon_type = MONS_PHANTOM;

@@ -251,7 +251,8 @@ void handle_behaviour(monster* mon)
     }
 
     const dungeon_feature_type can_move =
-        (mons_amphibious(mon)) ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
+        (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
+                                             : DNGN_SHALLOW_WATER;
 
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
@@ -1038,8 +1039,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
                 && !you.see_cell(mon->pos()))
             {
                 const dungeon_feature_type can_move =
-                    (mons_amphibious(mon)) ? DNGN_DEEP_WATER
-                                           : DNGN_SHALLOW_WATER;
+                    (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
+                                                         : DNGN_SHALLOW_WATER;
 
                 try_pathfind(mon, can_move);
             }

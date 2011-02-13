@@ -233,7 +233,10 @@ bool monster::submerged() const
 
 bool monster::extra_balanced() const
 {
-    return (mons_genus(type) == MONS_NAGA);
+    const dungeon_feature_type grid = grd(pos());
+    return (grid == DNGN_SHALLOW_WATER
+            && (mons_genus(type) == MONS_NAGA             // tails, not feet
+                || body_size(PSIZE_BODY) > SIZE_MEDIUM));
 }
 
 bool monster::floundering() const
@@ -244,7 +247,9 @@ bool monster::floundering() const
             // Can't use monster_habitable_grid() because that'll return
             // true for non-water monsters in shallow water.
             && mons_primary_habitat(this) != HT_WATER
-            && !mons_amphibious(this)
+            // Use real_amphibious to detect giant non-water monsters in
+            // deep water, who flounder despite being treated as amphibious.
+            && mons_habitat(this, true) != HT_AMPHIBIOUS
             && !mons_flies(this)
             && !extra_balanced());
 }
@@ -3039,6 +3044,13 @@ bool monster::is_unclean() const
     if (has_chaotic_spell() && is_actual_spellcaster())
         return (true);
 
+    corpse_effect_type ce = mons_corpse_effect(type);
+    if ((ce == CE_HCL || ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_GOOD
+         || ce == CE_MUTAGEN_BAD || ce == CE_RANDOM) && !is_chaotic())
+    {
+        return true;
+    }
+
     return (false);
 }
 
@@ -3406,16 +3418,6 @@ bool monster::is_levitating() const
 {
     // Checking class flags is not enough - see mons_flies().
     return (flight_mode() == FL_LEVITATE);
-}
-
-bool monster::is_wall_clinging() const
-{
-    return (0);
-}
-
-bool monster::can_cling_to(const coord_def& p) const
-{
-    return (0);
 }
 
 int monster::mons_species() const
@@ -4317,7 +4319,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SLOW:
-        if (!quiet && !(liquefied(pos()) && !airborne() && !is_insubstantial()))
+        if (!quiet && !(liquefied(pos()) && ground_level() && !is_insubstantial()))
             simple_monster_message(this, " is no longer moving slowly.");
         calc_speed();
         break;
@@ -4913,6 +4915,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DAZED:
     case ENCH_LIQUEFYING:
     case ENCH_FAKE_ABJURATION:
+    case ENCH_RECITE_TIMER:
         decay_enchantment(me);
         break;
 
@@ -5163,7 +5166,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(grd(pos())) && !(airborne() || is_wall_clinging()))
+        if (feat_is_watery(grd(pos())) && ground_level())
         {
             if (mons_near(this) && visible_to(&you))
             {
@@ -5490,7 +5493,6 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (newdam > 0)
             {
                 std::string msg = mons_has_flesh(this) ? "'s flesh" : "";
-                msg += " is ";
                 msg += (dam < newdam) ? " is horribly charred!"
                                       : " is seared.";
                 simple_monster_message(this, msg.c_str());
@@ -5660,7 +5662,8 @@ void monster::calc_speed()
 {
     speed = mons_real_base_speed(type);
 
-    bool is_liquefied = (liquefied(pos()) && !airborne() && !is_insubstantial());
+    bool is_liquefied = (liquefied(pos()) && ground_level()
+                         && !is_insubstantial());
 
     // Going berserk on liquid ground doesn't speed you up any.
     if (!is_liquefied && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
@@ -6053,7 +6056,7 @@ bool monster::do_shaft()
             return (false);
         }
 
-        if (airborne() || is_wall_clinging() || total_weight() == 0)
+        if (!ground_level() || total_weight() == 0)
         {
             if (mons_near(this))
             {
@@ -6520,6 +6523,11 @@ reach_type monster::reach_range() const
     return (REACH_NONE);
 }
 
+bool monster::can_cling_to_walls() const
+{
+    return mons_genus(type) == MONS_SPIDER;
+}
+
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 
@@ -6537,7 +6545,7 @@ static const char *enchant_names[] =
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "levitation",
     "helpless", "liquefying", "perm_tornado", "fake_abjuration",
-    "dazed", "mute", "blind", "dumb", "mad", "silver_corona",
+    "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "buggy",
 };
 
