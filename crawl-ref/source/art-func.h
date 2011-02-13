@@ -537,51 +537,50 @@ static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
                                     actor* defender, bool mondied)
 {
-   if (one_chance_in(10))
-      cast_summon_demon(50+random2(100), you.religion);
+    if (one_chance_in(10))
+        cast_summon_demon(50+random2(100), you.religion);
 
-   did_god_conduct(DID_UNHOLY, 3);
+    did_god_conduct(DID_UNHOLY, 3);
 }
 
 static void _DEMON_AXE_world_reacts(item_def *item)
 {
-   std::vector<monster_info> targets;
+    std::vector<monster_info> targets;
+    get_monster_info(targets);
 
-   get_monster_info(targets);
+    int dist = LOS_RADIUS + 1;
 
-   int dist = LOS_RADIUS + 1;
+    if (targets.empty())
+        return;
 
-   if (targets.empty())
-      return;
+    monster* closest = NULL;
 
-   monster* closest = NULL;
+    std::vector<monster_info>::const_iterator mi;
 
-   std::vector<monster_info>::const_iterator mi;
+    for (mi = targets.begin(); mi != targets.end(); ++mi)
+    {
+        if (grid_distance(you.pos(), mi->mon()->pos()) < dist
+            && you.possible_beholder(mi->mon()))
+        {
+            dist = grid_distance(you.pos(), mi->mon()->pos());
+            closest = mi->mon();
+        }
+    }
 
-   for (mi = targets.begin(); mi != targets.end(); ++mi)
-   {
-     if (grid_distance(you.pos(), mi->mon()->pos()) < dist
-         && you.possible_beholder(mi->mon()))
-     {
-         dist = grid_distance(you.pos(), mi->mon()->pos());
-         closest = mi->mon();
-     }
-  }
+    if (!closest)
+        return;
 
-  if (!closest)
-     return;
+    if (!you.beheld_by(closest))
+    {
+         mprf("Visions of slaying %s flood into your mind.",
+              closest->name(DESC_NOCAP_THE).c_str());
+    }
 
-  if (!you.beheld_by(closest))
-  {
-      mprf("Visions of slaying %s flood into your mind.",
-          closest->name(DESC_NOCAP_THE).c_str());
-  }
+    if (you.confused())
+    {
+        mpr("Your confusion fades away as the thirst for blood takes over your mind.");
+        you.duration[DUR_CONF] = 0;
+    }
 
-  if (you.confused())
-  {
-     mpr("Your confusion fades away as the thirst for blood takes over your mind.");
-     you.duration[DUR_CONF] = 0;
-  }
-
-  you.add_beholder(closest, true);
+    you.add_beholder(closest, true);
 }
