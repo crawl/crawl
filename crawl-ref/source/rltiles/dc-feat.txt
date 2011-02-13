@@ -2,36 +2,36 @@
 %prefix TILE
 %startvalue TILE_WALL_MAX tiledef-wall.h
 
-%sdir dc-dngn
-
-wall/tree1 DNGN_TREE
-wall/tree2
+%sdir dc-dngn/trees
+tree1 DNGN_TREE
+tree2
 
 %variation DNGN_TREE yellow
-wall/tree1_yellow DNGN_TREE_YELLOW
-wall/tree2_yellow
+tree1_yellow DNGN_TREE_YELLOW
+tree2_yellow
 
 %variation DNGN_TREE lightred
-wall/tree1_lightred DNGN_TREE_LIGHTRED
-wall/tree2_lightred
+tree1_lightred DNGN_TREE_LIGHTRED
+tree2_lightred
 
 %variation DNGN_TREE red
-wall/tree1_red DNGN_TREE_RED
-wall/tree2_red
+tree1_red DNGN_TREE_RED
+tree2_red
 
 # this may need to change, but it should make things a bit simpler
 %variation DNGN_TREE darkgray
-wall/tree1_dead DNGN_TREE_DEAD
-wall/tree2_dead
+tree1_dead DNGN_TREE_DEAD
+tree2_dead
 
 %weight 10
-wall/mangrove1 DNGN_SWAMP_TREE
+mangrove1 DNGN_SWAMP_TREE
 %weight 8
-wall/mangrove2
+mangrove2
 %weight 5
-wall/mangrove3
+mangrove3
 
 ## doors
+%sdir dc-dngn
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
