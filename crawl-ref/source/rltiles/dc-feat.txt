@@ -24,7 +24,12 @@ wall/tree2_red
 wall/tree1_dead DNGN_TREE_DEAD
 wall/tree2_dead
 
+%weight 10
 wall/mangrove1 DNGN_SWAMP_TREE
+%weight 8
+wall/mangrove2
+%weight 5
+wall/mangrove3
 
 ## doors
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
