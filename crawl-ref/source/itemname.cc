@@ -3187,12 +3187,11 @@ static const std::string _item_prefix(const item_def &item, bool temp,
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
-        if (item_is_equipped(item, true))
-            prefixes.push_back("equipped");
         if (is_artefact(item))
             prefixes.push_back("artefact");
-        break;
+        // fall through
 
+    case OBJ_STAVES:
     case OBJ_MISSILES:
         if (item_is_equipped(item, true))
             prefixes.push_back("equipped");
