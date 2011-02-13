@@ -234,12 +234,22 @@ bool actor_slime_wall_immune(const actor *act)
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
             : act->res_acid() == 3);
 }
-
+/*
+ * Accessor method to the clinging member.
+ *
+ * @returns The value of clinging.
+ */
 bool actor::is_wall_clinging() const
 {
     return (clinging);
 }
 
+/*
+ * Check a cell to see if actor can keep clinging if it moves to it.
+ *
+ * @param p Coordinates of the cell checked.
+ * @returns Whether the actor can cling.
+ */
 bool actor::can_cling_to(const coord_def& p) const
 {
     if (!in_bounds(p))
@@ -261,10 +271,19 @@ bool actor::can_cling_to(const coord_def& p) const
         return (false);
 }
 
-void actor::check_clinging()
+/*
+ * Update the clinging status of an actor.
+ *
+ * It checks adjacent orthogonal walls to see if the actor can cling to them.
+ *
+ * @returns True if actor has fallen from the wall.
+ */
+bool actor::check_clinging()
 {
     if (!can_cling_to_walls())
-        return;
+        return false;
+
+    bool was_clinging = clinging;
 
     cling_to.clear();
     for (orth_adjacent_iterator ai(pos()); ai; ++ai)
@@ -272,4 +291,6 @@ void actor::check_clinging()
             cling_to.push_back(*ai);
 
     clinging = (cling_to.size() > 0) ? true : false;
+
+    return was_clinging && !clinging;
 }
