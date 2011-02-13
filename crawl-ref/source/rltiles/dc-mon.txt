@@ -461,9 +461,10 @@ paladin MONS_PALADIN
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
+%sdir dc-mon/unique
+mennas MONS_MENNAS
 
 ## Giants ('C')
-%sdir dc-mon/unique
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
 iron_giant MONS_IRON_GIANT
