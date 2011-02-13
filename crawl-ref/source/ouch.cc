@@ -1016,10 +1016,10 @@ static void _pain_recover_mp(int dam)
     if (you.mutation[MUT_POWERED_BY_PAIN]
         && (you.magic_points < you.max_magic_points))
     {
-        if (random2(dam) > 5 * player_mutation_level(MUT_POWERED_BY_PAIN)
+        if (random2(dam) > 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN)
             || dam >= you.hp_max / 2)
         {
-            int gain_mp = roll_dice(3, 5 * player_mutation_level(MUT_POWERED_BY_PAIN));
+            int gain_mp = roll_dice(3, 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN));
 
             mpr("You focus.");
             inc_mp(gain_mp, false);
