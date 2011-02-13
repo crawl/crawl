@@ -105,7 +105,7 @@ snapping_turtle_shell MONS_SNAPPING_TURTLE_SHELL
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
 %rim 0
-firecrab MONS_FIRECRAB
+fire_crab MONS_FIRE_CRAB
 %rim 1
 
 ## Worms and larvae ('w')
@@ -461,9 +461,10 @@ paladin MONS_PALADIN
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
+%sdir dc-mon/unique
+mennas MONS_MENNAS
 
 ## Giants ('C')
-%sdir dc-mon/unique
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
 iron_giant MONS_IRON_GIANT
@@ -546,8 +547,8 @@ kenku MONS_KENKU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
 
-## Beasts ('I')
-%sdir dc-mon
+## Various beasts ('I')
+%sdir dc-mon/animals
 ice_beast MONS_ICE_BEAST
 sky_beast MONS_SKY_BEAST
 

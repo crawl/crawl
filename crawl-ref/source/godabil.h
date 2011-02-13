@@ -17,7 +17,6 @@ bool zin_sustenance(bool actual = true);
 bool zin_check_able_to_recite();
 int zin_check_recite_to_monsters(recite_type *prayertype);
 bool zin_recite_to_single_monster(const coord_def& where,
-                                  bool imprisoned,
                                   recite_type prayertype);
 void zin_saltify(monster* mon);
 bool zin_vitalisation();
@@ -28,7 +27,6 @@ bool zin_sanctuary();
 void tso_divine_shield();
 void tso_remove_divine_shield();
 
-bool elyvilon_destroy_weapons();
 void elyvilon_purification();
 bool elyvilon_divine_vigour();
 void elyvilon_remove_divine_vigour();

@@ -14,6 +14,7 @@
 #include "describe.h"
 #include "env.h"
 #include "food.h"
+#include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -215,7 +216,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
     if (equipped && item.cursed())
     {
         // Misc. items/rods can always be evoked, cursed or not.
-        if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
+        if (item_is_evokable(item))
             return (true);
 
         // You can't unwield/fire a wielded cursed weapon/staff
@@ -348,7 +349,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             std::string tmp = "";
             if (equipped)
             {
-                if (wielded && type != OBJ_MISCELLANY && !item_is_rod(item))
+                if (wielded && !item_is_evokable(item))
                 {
                     if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
                         || type == OBJ_WEAPONS || type == OBJ_STAVES)
@@ -456,9 +457,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 }
                 break;
             case OBJ_BOOKS:
-                if (item_type_known(item)
-                    && item.sub_type != BOOK_MANUAL
-                    && item.sub_type != BOOK_DESTRUCTION
+                if (item_type_known(item) && item_is_spellbook(item)
                     && can_learn_spell(true))
                 {
                     if (player_can_memorise_from_spellbook(item)

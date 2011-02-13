@@ -179,11 +179,9 @@ bool give_monster_proper_name(monster* mon, bool orcs_only = true);
 flight_type mons_class_flies(int mc);
 flight_type mons_flies(const monster* mon, bool temp = true);
 
-bool mons_class_amphibious(int mc);
 bool mons_class_flattens_trees(int mc);
-int mons_class_res_wind(int mc);
-bool mons_amphibious(const monster* mon);
 bool mons_flattens_trees(const monster* mon);
+int mons_class_res_wind(int mc);
 bool mons_class_wall_shielded(int mc);
 bool mons_wall_shielded(const monster* mon);
 
@@ -243,8 +241,8 @@ mon_intel_type mons_intel(const monster* mon);
 
 // Use mons_habitat() and mons_primary_habitat() wherever possible,
 // since the class variants do not handle zombies correctly.
-habitat_type mons_class_habitat(int mc);
-habitat_type mons_habitat(const monster* mon);
+habitat_type mons_class_habitat(int mc, bool real_amphibious = false);
+habitat_type mons_habitat(const monster* mon, bool real_amphibious = false);
 habitat_type mons_class_primary_habitat(int mc);
 habitat_type mons_primary_habitat(const monster* mon);
 habitat_type mons_class_secondary_habitat(int mc);
@@ -445,5 +443,6 @@ bool mons_is_tentacle(int mc);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
+void check_clinging();
 
 #endif

@@ -222,8 +222,7 @@ static void _swim_or_move_energy(monster* mon)
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-                      && !(mon->airborne() || mon->is_wall_clinging())) ? EUT_SWIM
-                                                                        : EUT_MOVE);
+                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE);
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -1883,7 +1882,7 @@ void handle_monster_move(monster* mons)
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
-    if (liquefied(mons->pos()) && !mons->airborne() && !mons->is_insubstantial())
+    if (liquefied(mons->pos()) && mons->ground_level() && !mons->is_insubstantial())
     {
         mon_enchant me = mon_enchant(ENCH_SLOW, 0, KC_OTHER, 20);
         if (mons->has_ench(ENCH_SLOW))
@@ -2361,6 +2360,7 @@ void handle_monster_move(monster* mons)
         }
         you.update_beholder(mons);
         you.update_fearmonger(mons);
+        mons->check_clinging();
 
         // Reevaluate behaviour, since the monster's surroundings have
         // changed (it may have moved, or died for that matter).  Don't
@@ -2985,15 +2985,10 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
     dungeon_events.fire_position_event(DET_DOOR_OPENED, pos);
 }
 
-static bool _habitat_okay(const monster* mons, dungeon_feature_type targ)
-{
-    return (monster_habitable_grid(mons, targ));
-}
-
 static bool _no_habitable_adjacent_grids(const monster* mon)
 {
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-        if (_habitat_okay(mon, grd(*ai)))
+        if (monster_habitable_grid(mon, grd(*ai)))
             return (false);
 
     return (true);
@@ -3169,7 +3164,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     else if (no_water && feat_is_water(target_grid))
         return (false);
     else if (!mons_can_traverse(mons, targ, false)
-             && !_habitat_okay(mons, target_grid))
+             && !monster_habitable_grid(mons, target_grid))
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.
@@ -3395,8 +3390,11 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     const coord_def c = mon->pos();
     const coord_def n = mon->pos() + delta;
 
-    if (!_habitat_okay(mon, grd(n)) || !_habitat_okay(m2, grd(c)))
+    if (!monster_habitable_grid(mon, grd(n))
+        || !monster_habitable_grid(m2, grd(c)))
+    {
         return (false);
+    }
 
     // Okay, do the swap!
     _swim_or_move_energy(mon);

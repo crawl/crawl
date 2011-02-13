@@ -370,8 +370,10 @@ monster_info::monster_info(const monster* m, int milev)
         mb |= ULL1 << MB_STABBABLE;
     if (mons_looks_distracted(m))
         mb |= ULL1 << MB_DISTRACTED;
-    if (liquefied(m->pos()) && !m->airborne() && !m->is_insubstantial())
+    if (liquefied(m->pos()) && m->ground_level() && !m->is_insubstantial())
         mb |= ULL1 << MB_SLOWED;
+    if (m->is_wall_clinging())
+        mb |= ULL1 << MB_CLINGING;
 
     dam = mons_get_damage_level(m);
 

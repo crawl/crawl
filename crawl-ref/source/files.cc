@@ -38,6 +38,7 @@
 
 #include "abyss.h"
 #include "act-iter.h"
+#include "areas.h"
 #include "artefact.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -1640,6 +1641,8 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         ash_detect_portals(player_in_mappable_area());
     }
+    // Initialize halos, etc.
+    invalidate_agrid(true);
 
     return just_created_level;
 }

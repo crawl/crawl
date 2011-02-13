@@ -1141,19 +1141,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             dec_mp(you.magic_points);
         }
 
-        if (dam >= you.hp)
+        if (dam >= you.hp && god_protects_from_harm())
         {
-            if (harm_protection_type hpt = god_protects_from_harm(you.religion))
-            {
-                simple_god_message(" protects you from harm!");
-
-                if (you.duration[DUR_PRAYER]
-                    && hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
-                {
-                    lose_piety(21 + random2(20));
-                }
-                return;
-            }
+            simple_god_message(" protects you from harm!");
+            return;
         }
 
         you.turn_damage += dam;
@@ -1509,9 +1500,17 @@ void _end_game(scorefile_entry &se)
     // "- 5" gives us an extra line in case the description wraps on a line.
     hiscores_print_list(get_number_of_lines() - lines - 5);
 
+#ifndef USE_DGAMELAUNCH
+    cprintf("\nYou can find your morgue file in the '%s' directory.",
+            morgue_directory().c_str());
+#endif
+
     // just to pause, actual value returned does not matter {dlb}
     if (!crawl_state.seen_hups)
         get_ch();
+
+    if (se.get_death_type() == KILLED_BY_WINNING)
+        crawl_state.last_game_won = true;
 
     game_ended();
 }

@@ -243,7 +243,8 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SAPROVOROUS]     = 1;
         break;
     case SP_HALFLING:
-        you.mutation[MUT_SLOW_METABOLISM] = 1;
+        you.mutation[MUT_SLOW_METABOLISM]     = 1;
+        you.mutation[MUT_MUTATION_RESISTANCE] = 1;
         break;
     case SP_MINOTAUR:
         you.mutation[MUT_HORNS] = 2;
@@ -494,9 +495,9 @@ static void _give_items_skills(const newgame_def& ng)
             curr++;
         }
 
-        // Small species get stones, the others nets.
+        // Small species get darts, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
+            newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
         else
         {
             newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
@@ -726,7 +727,6 @@ static void _give_items_skills(const newgame_def& ng)
         switch (you.species)
         {
         case SP_HALFLING:
-        case SP_KOBOLD:
             newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
                                30);
@@ -737,6 +737,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
+        case SP_KOBOLD:
             newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25);
 
@@ -1021,7 +1022,6 @@ static void _give_items_skills(const newgame_def& ng)
             break;
 
         case SP_HALFLING:
-        case SP_KOBOLD:
             newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
                                30, 1);
@@ -1037,6 +1037,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
+        case SP_KOBOLD:
             newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
 

@@ -225,6 +225,10 @@ book of ice
 
 A book of magic spells. An icy wind chills you for a second as you open it.
 %%%%
+book of maledictions
+
+A book of magic spells.
+%%%%
 book of minor magic
 
 A book of magic spells.

@@ -4321,12 +4321,17 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 
         const int item_made = items(spec.allow_uniques, spec.base_type,
                                      spec.sub_type, true, item_level,
-                                     spec.race, 0, spec.ego);
+                                     spec.race, 0, spec.ego, -1,
+                                     spec.level == ISPEC_MUNDANE);
 
         if (item_made != NON_ITEM && item_made != -1)
         {
             item_def &item(mitm[item_made]);
 
+            if (spec.props.exists("cursed"))
+                do_curse_item(item);
+            else if (spec.props.exists("uncursed"))
+                do_uncurse_item(item, false);
             if (spec.props.exists("useful") && (useless_tries++ < 10)
                 && is_useless_item(item, false))
             {

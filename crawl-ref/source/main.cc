@@ -1838,9 +1838,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_CHARACTER_DUMP:
-        if (dump_char(you.your_name, false))
-            mpr("Char dumped successfully.");
-        else
+        if (!dump_char(you.your_name, false))
             mpr("Char dump unsuccessful! Sorry about that.");
         break;
 
@@ -2012,6 +2010,26 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     return false;
 }
 
+static void _decrement_paralysis(int delay)
+{
+    _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
+
+    if (you.duration[DUR_PARALYSIS] || you.petrified())
+    {
+        _decrement_a_duration(DUR_PARALYSIS, delay);
+        _decrement_a_duration(DUR_PETRIFIED, delay);
+
+        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
+        {
+            mpr("You can move again.", MSGCH_DURATION);
+            you.redraw_evasion = true;
+            you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
+                                                   * BASELINE_DELAY;
+        }
+    }
+}
+
+
 //  Perhaps we should write functions like: update_liquid_flames(), etc.
 //  Even better, we could have a vector of callback functions (or
 //  objects) which get installed at some point.
@@ -2091,10 +2109,7 @@ static void _decrement_durations()
         remove_regen(you.attribute[ATTR_DIVINE_REGENERATION]);
     }
 
-    if (you.duration[DUR_PRAYER] > 1)
-        you.duration[DUR_PRAYER]--;
-    else if (you.duration[DUR_PRAYER] == 1)
-        end_prayer();
+    _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");
 
     if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {
@@ -2251,12 +2266,6 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_CONDENSATION_SHIELD, delay))
         remove_condensation_shield();
 
-    if (you.duration[DUR_CONDENSATION_SHIELD] && player_res_cold() < 0)
-    {
-        mpr("You feel very cold.");
-        ouch(2 + random2avg(13, 2), NON_MONSTER, KILLED_BY_FREEZING);
-    }
-
     if (_decrement_a_duration(DUR_MAGIC_SHIELD, delay,
                               "Your magical shield disappears."))
     {
@@ -2311,18 +2320,6 @@ static void _decrement_durations()
             you.redraw_armour_class = true;
     }
     _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
-
-    if (you.duration[DUR_PARALYSIS] || you.petrified())
-    {
-        _decrement_a_duration(DUR_PARALYSIS, delay);
-        _decrement_a_duration(DUR_PETRIFIED, delay);
-
-        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
-        {
-            mpr("You can move again.", MSGCH_DURATION);
-            you.redraw_evasion = true;
-        }
-    }
 
     _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
                           ((std::string("Your ") + your_hand(true)) +
@@ -2578,6 +2575,21 @@ static void _decrement_durations()
     {
         you.xray_vision = false;
     }
+
+    _decrement_a_duration(DUR_LIFESAVING, delay,
+                          "Your divine protection fades away.");
+
+    if (_decrement_a_duration(DUR_DARKNESS, delay,
+                          "The ambient light returns to normal.")
+        || you.haloed())
+    {
+        if (you.duration[DUR_DARKNESS])
+        {
+            you.duration[DUR_DARKNESS] = 0;
+            mpr("The divine light dispels your darkness!");
+        }
+        update_vision_range();
+    }
 }
 
 static void _check_banished()
@@ -2792,6 +2804,8 @@ static void _player_reacts_to_monsters()
                          (2 * BASELINE_DELAY), true);
 
     handle_starvation();
+    _decrement_paralysis(you.time_taken);
+
 }
 
 static void _update_golubria_traps()
@@ -3737,14 +3751,6 @@ static void _move_player(coord_def move)
         return;
     }
 
-    // Checking if player will be clinging
-    // Changing "cling" status at this moment allows proper further evaluations
-    // of grid dangerousness. But, if movement is terminated further in this
-    // function, you have to call you.check_clinging() to restore former status.
-    // Most probably can be done in less awkward way.
-    if (you.is_wall_clinging())
-        you.clinging = you.can_cling_to(you.pos() + move);
-
     // When confused, sometimes make a random move
     if (you.confused())
     {
@@ -3763,12 +3769,11 @@ static void _move_player(coord_def move)
                                  "and next to ";
                         prompt += (dangerous == DNGN_LAVA ? "lava"
                                                           : "deep water");
-                        prompt += "? ";
+                        prompt += "?";
 
             if (!yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
-                you.check_clinging();
                 return;
             }
         }
@@ -3789,7 +3794,6 @@ static void _move_player(coord_def move)
             apply_berserk_penalty = true;
             crawl_state.cancel_cmd_repeat();
 
-            you.check_clinging();
             return;
         }
     }
@@ -3798,10 +3802,7 @@ static void _move_player(coord_def move)
 
     // You can't walk out of bounds!
     if (!in_bounds(targ))
-    {
-        you.check_clinging();
         return;
-    }
 
     const dungeon_feature_type targ_grid = grd(targ);
     monster* targ_monst = monster_at(targ);
@@ -3853,7 +3854,6 @@ static void _move_player(coord_def move)
     {
         // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
-        you.check_clinging();
         return;
     }
 
@@ -3918,7 +3918,6 @@ static void _move_player(coord_def move)
         {
             stop_running();
             you.turn_is_over = false;
-            you.check_clinging();
             return;
         }
 
@@ -3951,17 +3950,13 @@ static void _move_player(coord_def move)
     else if (!targ_pass && grd(targ) == DNGN_TEMP_PORTAL && !attacking)
     {
         if (!_prompt_dangerous_portal(grd(targ)))
-        {
-            you.check_clinging();
             return;
-        }
 
         you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
 
         entered_malign_portal(&you);
-        you.check_clinging();
         return;
     }
     else if (!targ_pass && !attacking)
@@ -3976,21 +3971,18 @@ static void _move_player(coord_def move)
         move.reset();
         you.turn_is_over = false;
         crawl_state.cancel_cmd_repeat();
-        you.check_clinging();
         return;
     }
     else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());
-        you.check_clinging();
         return;
     }
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_NOCAP_THE, true).c_str());
-        you.check_clinging();
         return;
     }
 
@@ -4031,7 +4023,6 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
-    you.check_clinging();
 }
 
 

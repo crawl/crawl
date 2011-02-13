@@ -125,7 +125,19 @@ Revert to your normal form, with a short delay.
 # Zin
 Recite
 
-Preach to monsters about Zin's laws which can lead to various results. It works best on humanoids, worse on undead and demons, and not at all on beasts.
+Preach to monsters about Zin's laws which can lead to various results. It works best on those especially repugnant to Zin - undead, demons, the insane, unclean creatures of all sorts and those who worship other gods. It has no effect on ordinary beasts.
+
+There are five books you can preach from:
+
+* Book of Abominations: This book deals with the very thing most abhorrent to Zin - chaos in all its forms. The recitations will invoke Zin's most powerful smiting.
+
+* Book of Ablutions: The impure are nearly as loathed by the Law-Giver. Recitations from this book will deal damage to such creatures.
+
+* Book of Apostates: Those who do not worship Zin but do no other evil will be dealt with least harshly. The recitations from this book merely sow confusion. Yet those who dare to believe in a god alien to Zin may be permanently deprived of means to spread their foul faith.
+
+* Book of Anathema: Demons and the undead are hated by Zin. This book gives you means to rebuke them.
+
+* Book of Alliances: This book contains recitations meant for your fellows. Yet the time has not come yet - Zin bids you to not love your friends while there are enemies to hate.
 %%%%
 Vitalisation
 
@@ -247,9 +259,11 @@ Brothers in Arms
 Summon huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
-Destroy Weapons
+Divine Protection
 
-Destroy all weapons on the ground. In order to prevent a weapon from being accidentally destroyed, use the !D inscription.
+Beseech Elyvilon to save your life. If you would have died, The Healer may undo the killing blow. Especially pious individuals may be certain of this help, although in that case it costs piety -- if you would actually have died, as merely asking is free.
+
+Beware, killing others while asking for being spared yourself is a major sin!
 %%%%
 Lesser Healing
 

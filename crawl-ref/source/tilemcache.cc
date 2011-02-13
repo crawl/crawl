@@ -369,6 +369,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SKELETAL_WARRIOR:
     case TILEP_MONS_ANGEL:
     case TILEP_MONS_CHERUB:
+    case TILEP_MONS_MENNAS:
     case TILEP_MONS_MERFOLK:
     case TILEP_MONS_MERFOLK_WATER:
     case TILEP_MONS_MERFOLK_JAVELINEER:
@@ -404,11 +405,20 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_TIAMAT:
+    case TILEP_MONS_TIAMAT+1:
+    case TILEP_MONS_TIAMAT+2:
+    case TILEP_MONS_TIAMAT+3:
+    case TILEP_MONS_TIAMAT+4:
+    case TILEP_MONS_TIAMAT+5:
+    case TILEP_MONS_TIAMAT+6:
+    case TILEP_MONS_TIAMAT+7:
+    case TILEP_MONS_TIAMAT+8:
         *ofs_x = -2;
         *ofs_y = 0;
         break;
     // Shift to the right.
     case TILEP_MONS_DEMONSPAWN:
+    case TILEP_MONS_DONALD:
         *ofs_x = 1;
         *ofs_y = 0;
         break;
@@ -478,7 +488,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -1;
         *ofs_y = -3;
         break;
-    case TILEP_MONS_MAURICE:
     case TILEP_MONS_SONJA:
         *ofs_x = -2;
         *ofs_y = -2;

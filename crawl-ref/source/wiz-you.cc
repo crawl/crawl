@@ -493,9 +493,9 @@ bool wizard_add_mutation()
         const char* msg;
 
         if (you.mutation[MUT_MUTATION_RESISTANCE] == 3)
-            msg = "You are immune to mutations, remove immunity?";
+            msg = "You are immune to mutations; remove immunity?";
         else
-            msg = "You are resistant to mutations, remove resistance?";
+            msg = "You are resistant to mutations; remove resistance?";
 
         if (yesno(msg, true, 'n'))
         {
@@ -778,6 +778,9 @@ static const char* dur_names[] =
     "liquefying",
     "heroism",
     "finesse",
+    "lifesaving",
+    "paralysis immunity",
+    "darkness",
 };
 
 void wizard_edit_durations(void)
@@ -954,7 +957,7 @@ void wizard_get_god_gift (void)
         return;
     }
 
-    if (!do_god_gift(false, true))
+    if (!do_god_gift(true))
         mpr("Nothing happens.");
 }
 

@@ -793,25 +793,6 @@ static bool _spell_is_utility_spell(spell_type spell_id)
                 SPTYP_CHARMS | SPTYP_TRANSLOCATION));
 }
 
-void maybe_identify_staff(item_def &item)
-{
-    if (item_type_known(item))
-        return;
-
-    if (player_spell_skills()
-        || item.sub_type == STAFF_POWER
-        || item.sub_type == STAFF_CHANNELING)
-    {
-        item_def& wpn = *you.weapon();
-        set_ident_type(wpn, ID_KNOWN_TYPE);
-        set_ident_flags(wpn, ISFLAG_IDENT_MASK);
-        mprf("You are wielding %s.", wpn.name(DESC_NOCAP_A).c_str());
-        more();
-
-        you.wield_change = true;
-    }
-}
-
 static void _spellcasting_side_effects(spell_type spell)
 {
     // If you are casting while a god is acting, then don't do conducts.
@@ -1507,9 +1488,9 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        if (you.airborne() || you.clinging || !feat_has_solid_floor(grd(you.pos())))
+        if (!you.ground_level() || !feat_has_solid_floor(grd(you.pos())))
         {
-            if (you.airborne() || you.clinging)
+            if (!you.ground_level())
                 mprf("You can't cast this spell without touching the ground.");
             else
                 mprf("You need to be on clear, solid ground to cast this spell.");
@@ -1600,6 +1581,7 @@ static spret_type _do_cast(spell_type spell, int powc,
             mpr("Haunting music fills the air, and weapons rise to join the dance!");
         else
             mpr("Strange music fills the air, but nothing else happens.");
+        noisy(12, you.pos(), MHITYOU);
         break;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
@@ -1860,7 +1842,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEVITATION:
-        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        if (liquefied(you.pos()) && you.ground_level())
         {
             mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
             return (SPRET_ABORT);
@@ -1871,7 +1853,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_FLY:
-        if (liquefied(you.pos()) && !you.airborne() && !you.clinging)
+        if (liquefied(you.pos()) && you.ground_level())
         {
             mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
             return (SPRET_ABORT);
@@ -2016,6 +1998,11 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_GOLUBRIAS_PASSAGE:
         if (!cast_golubrias_passage(beam.target))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_DARKNESS:
+        if (!cast_darkness(powc))
             return (SPRET_ABORT);
         break;
 

@@ -1375,7 +1375,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_TARGET_NO_FOE:
     case HINT_YOU_POISON:
     case HINT_YOU_SICK:
-    case HINT_CHOOSE_STAT:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
     case HINT_LEVITATING:
@@ -2170,7 +2169,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             text << "Well done! Reaching a new experience level is always a "
                     "nice event: you get more health and magic points, and "
                     "occasionally increases to your attributes (strength, "
-                    "dexterity, intelligence).";
+                    "intelligence, dexterity).";
         }
 
         if (Hints.hints_type == HINT_MAGIC_CHAR)
@@ -2226,12 +2225,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CHOOSE_STAT:
         text << "Every third level you get to choose a stat to raise: "
-                "Strength, Dexterity, or Intelligence. <w>Strength</w> "
-                "affects the amount you can carry and makes it easier to "
-                "wear heavy armour. <w>Dexterity</w> increases your evasion "
-                "and makes it easier to dodge attacks or traps. "
+                "Strength, Intelligence, or Dexterity. "
+                "<w>Strength</w> affects the amount you can carry and makes it "
+                "easier to wear heavy armour. "
                 "<w>Intelligence</w> makes it easier to cast spells and "
-                "reduces the amount by which you hunger when you do so.\n";
+                "reduces the amount by which you hunger when you do so. "
+                "<w>Dexterity</w> increases your evasion "
+                "and makes it easier to dodge attacks or traps.\n";
         break;
 
     case HINT_YOU_ENCHANTED:
@@ -2737,22 +2737,34 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             text << "Levitation will allow you to cross deep water or lava. To "
                     "activate it, select the corresponding ability in the ability "
-                    "menu (<w>%</w>). Once levitating, keep an eye on the status "
-                    "line and messages as it will eventually time out and may "
-                    "cause you to fall into water and drown.";
+                    "menu (<w>%</w>"
+#ifdef USE_TILE
+                    " or via <w>mouseclick</w> in the <w>command panel</w>"
+#endif
+                    "). Once levitating, keep an eye on the status line and messages "
+                    "as it will eventually time out and may cause you to fall "
+                    "into water and drown.";
         }
         else
         {
             text << "That item you just equipped granted you a new ability. "
-                    "Press <w>%</w> to take a look at your abilities or to "
-                    "use one of them.";
+                    "Press <w>%</w> "
+#ifdef USE_TILE
+                    "(or <w>click</w> in the <w>command panel</w>) "
+#endif
+                    "to take a look at your abilities or to use one of them.";
         }
         cmd.push_back(CMD_USE_ABILITY);
         break;
 
     case HINT_ITEM_RESISTANCES:
         text << "Equipping this item affects your resistances. Check the "
-                "overview screen (<w>%</w>) for details.";
+                "overview screen (<w>%</w>"
+#ifdef USE_TILE
+                " or click on the <w>character overview button</w> in the "
+                "command panel"
+#endif
+                ") for details.";
         cmd.push_back(CMD_RESISTS_SCREEN);
         break;
 
@@ -3310,7 +3322,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     case HINT_GAINED_SPELLCASTING:
         text << "Great, from now on you'll be able to cast spells!\n"
-                "Press <w>%</w> to manage your skill set.";
+                "Press <w>%</w> "
+#ifdef USE_TILE
+             << "(or click on the <w>skill button</w> in the command panel) "
+#endif
+             << "to manage your skill set.";
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
     case HINT_FUMBLING_SHALLOW_WATER:
@@ -3352,7 +3368,7 @@ formatted_string hints_abilities_info()
 
 // Explains the basics of the skill screen. Don't bother the player with the
 // aptitude information. (Toggling is still possible, of course.)
-void print_hints_skills_info()
+std::string hints_skills_info()
 {
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
     std::ostringstream text;
@@ -3364,14 +3380,14 @@ void print_hints_skills_info()
         "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
         "will increase at a decidedly slower rate and ease training of others. "
         "Press <w>?</w> to read your skills' descriptions.";
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string2(broken, std::min(80, _get_hints_cols()));
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    formatted_string::parse_string(text.str(), false).display();
+    return text.str();
 }
 
-void print_hints_skills_description_info()
+std::string hints_skills_description_info()
 {
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
     std::ostringstream text;
@@ -3385,7 +3401,7 @@ void print_hints_skills_description_info()
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    formatted_string::parse_string(text.str(), false).display();
+    return text.str();
 }
 
 // A short explanation of Crawl's target mode and its most important commands.

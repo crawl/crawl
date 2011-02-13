@@ -38,6 +38,7 @@ iron_shot IRON_SHOT
 dig DIG
 lees_rapid_deconstruction LEES_RAPID_DECONSTRUCTION
 lehudibs_crystal_spear LEHUDIBS_CRYSTAL_SPEAR
+leda's_liquefaction LEDAS_LIQUEFACTION
 maxwells_silver_hammer MAXWELLS_SILVER_HAMMER
 passwall PASSWALL
 petrify PETRIFY
@@ -145,9 +146,11 @@ recall RECALL
 sticks_to_snakes STICKS_TO_SNAKES
 summon_butterflies SUMMON_BUTTERFLIES
 summon_demon SUMMON_DEMON
+summon_dragon SUMMON_DRAGON
 summon_elemental SUMMON_ELEMENTAL
 summon_greater_demon SUMMON_GREATER_DEMON
 summon_horrible_things SUMMON_HORRIBLE_THINGS
+summon_hydra SUMMON_HYDRA
 summon_ice_beast SUMMON_ICE_BEAST
 summon_scorpions SUMMON_SCORPIONS
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
@@ -161,8 +164,8 @@ blink BLINK
 controlled_blink CONTROLLED_BLINK
 controlled_teleport CONTROLLED_TELEPORT
 dispersal DISPERSAL
+passage_of_golubria PASSAGE_OF_GOLUBRIA
 phase_shift PHASE_SHIFT
-portal PORTAL
 portal_projectile PORTAL_PROJECTILE
 teleport TELEPORT
 teleport_other TELEPORT_OTHER

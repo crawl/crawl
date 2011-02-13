@@ -69,6 +69,7 @@ static spell_type search_order_conj[] = {
     SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
     SPELL_HIBERNATION,
+    SPELL_FLAME_TONGUE,
     SPELL_CORONA,
     SPELL_NO_SPELL,                        // end search
 };
@@ -80,6 +81,7 @@ static spell_type search_order_third[] = {
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
+    SPELL_TUKIMAS_DANCE_PARTY,
     SPELL_HAUNT,
     SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,

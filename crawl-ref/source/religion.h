@@ -66,7 +66,9 @@ bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
 bool god_likes_spell(spell_type spell, god_type god);
 bool god_hates_spell(spell_type spell, god_type god);
-harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
+bool god_can_protect_from_harm(god_type god);
+int elyvilon_lifesaving();
+bool god_protects_from_harm();
 bool jiyva_is_dead();
 bool fedhas_protects(const monster* target);
 bool fedhas_protects_species(int mc);
@@ -105,7 +107,7 @@ void religion_turn_end();
 int get_tension(god_type god = you.religion);
 int get_monster_tension(const monster* mons, god_type god = you.religion);
 
-bool do_god_gift(bool prayed_for = false, bool forced = false);
+bool do_god_gift(bool forced = false);
 
 std::vector<god_type> temple_god_list();
 std::vector<god_type> nontemple_god_list();

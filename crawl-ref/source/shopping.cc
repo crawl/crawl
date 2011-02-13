@@ -524,7 +524,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                 continue;
             else
             {
-                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n) ",
+                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n)",
                          total_purchase);
 
                 if (_shop_yesno(info, 'n'))
@@ -1745,7 +1745,6 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_CURSE_ARMOUR:
             case SCR_CURSE_WEAPON:
             case SCR_CURSE_JEWELLERY:
-            case SCR_PAPER:
             case SCR_IMMOLATION:
                 valued++;
                 break;

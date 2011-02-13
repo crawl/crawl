@@ -1879,6 +1879,8 @@ LUAFN(dgn_apply_tide)
     return (0);
 }
 
+LUAWRAP(dgn_mark_game_won, crawl_state.mark_last_game_won())
+
 const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
@@ -1987,6 +1989,8 @@ const struct luaL_reg dgn_dlib[] =
 { "fill_grd_area", dgn_fill_grd_area },
 
 { "apply_tide", dgn_apply_tide },
+
+{ "mark_game_won", dgn_mark_game_won },
 
 { NULL, NULL }
 };

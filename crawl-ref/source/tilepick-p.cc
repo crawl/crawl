@@ -400,7 +400,7 @@ tileidx_t tileidx_player()
         case TRAN_NONE: break;
     }
 
-    if (you.airborne())
+    if (!you.ground_level())
         ch |= TILE_FLAG_FLYING;
 
     if (you.attribute[ATTR_HELD])

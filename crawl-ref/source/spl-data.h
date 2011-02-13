@@ -656,7 +656,7 @@ struct spell_desc
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
-     SPFLAG_UNCLEAN | SPFLAG_BATTLE,
+     SPFLAG_BATTLE,
      6,
      200,
      -1, -1,
@@ -1610,7 +1610,7 @@ struct spell_desc
      1, 4,
      0,
      NULL,
-     false,
+     true,
      false
 },
 
@@ -1749,7 +1749,7 @@ struct spell_desc
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      1,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
@@ -2882,6 +2882,19 @@ struct spell_desc
 {
     SPELL_SUMMON_HYDRA, "Summon Hydra",
      SPTYP_SUMMONING,
+     SPFLAG_NONE,
+     7,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_DARKNESS, "Darkness",
+     SPTYP_HEXES,
      SPFLAG_NONE,
      7,
      200,

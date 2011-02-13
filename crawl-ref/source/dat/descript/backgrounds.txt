@@ -53,7 +53,7 @@ Gladiators are ready for the arena with light armour, shield, nets and a weapon 
 %%%%
 Healer
 
-Healers are followers of Elyvilon, ready to heal themselves and others. The latter will possibly pacify beasts and brutes, thereby yielding experience.
+Healers are followers of Elyvilon, ready to heal themselves and others. Such healing will possibly pacify beasts and brutes, yielding experience.
 %%%%
 Hunter
 

@@ -252,8 +252,7 @@ function setup_loot (e)
     e.item("any")
     e.item([[potion of decay / potion of degeneration / potion of mutation /
              scroll of immolation / scroll of curse weapon / scroll of curse armour /
-             potion of confusion / potion of paralysis / scroll of paper /
-             scroll of random uselessness]])
+             potion of confusion / potion of paralysis / scroll of random uselessness]])
 end
 
 -- #

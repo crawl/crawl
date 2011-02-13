@@ -11,6 +11,7 @@
 
 #include "mon-util.h"
 
+#include "act-iter.h"
 #include "artefact.h"
 #include "beam.h"
 #include "colour.h"
@@ -1218,7 +1219,8 @@ bool mons_class_can_use_stairs(int mc)
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && !mons_is_tentacle(mc)
             && mc != MONS_SILENT_SPECTRE
-            && mc != MONS_PLAYER_GHOST);
+            && mc != MONS_PLAYER_GHOST
+            && mc != MONS_GERYON);
 }
 
 bool mons_can_use_stairs(const monster* mon)
@@ -1454,16 +1456,6 @@ flight_type mons_flies(const monster* mon, bool temp)
         ret = FL_LEVITATE;
 
     return (ret);
-}
-
-bool mons_class_amphibious(int mc)
-{
-    return (mons_class_habitat(mc) == HT_AMPHIBIOUS);
-}
-
-bool mons_amphibious(const monster* mon)
-{
-    return (mons_class_amphibious(mons_base_type(mon)));
 }
 
 bool mons_class_flattens_trees(int mc)
@@ -2382,15 +2374,25 @@ mon_intel_type mons_intel(const monster* mon)
     return (mons_class_intel(newmon.type));
 }
 
-habitat_type mons_class_habitat(int mc)
+habitat_type mons_class_habitat(int mc, bool real_amphibious)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me ? me->habitat : HT_LAND);
+    habitat_type ht = (me ? me->habitat
+                          : get_monster_data(MONS_PROGRAM_BUG)->habitat);
+    if (!real_amphibious)
+    {
+        // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
+        size_type st = (me ? me->size
+                           : get_monster_data(MONS_PROGRAM_BUG)->size);
+        if (ht == HT_LAND && st >= SIZE_GIANT)
+            ht = HT_AMPHIBIOUS;
+    }
+    return (ht);
 }
 
-habitat_type mons_habitat(const monster* mon)
+habitat_type mons_habitat(const monster* mon, bool real_amphibious)
 {
-    return (mons_class_habitat(mons_base_type(mon)));
+    return (mons_class_habitat(mons_base_type(mon), real_amphibious));
 }
 
 habitat_type mons_class_primary_habitat(int mc)
@@ -3320,7 +3322,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     {
         switch (mon_type)
         {
-        case MONS_TUKIMA:
+        case MONS_TERPSICHORE:
         case MONS_JESSICA:
         case MONS_PSYCHE:
         case MONS_JOSEPHINE:
@@ -3587,7 +3589,7 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
     if (_mons_can_pass_door(mon, p))
         return (true);
 
-    if (!mon->is_habitable_feat(env.grid(p)))
+    if (!mon->is_habitable(p))
         return (false);
 
     // Your friends only know about doors you know about, unless they feel
@@ -4169,7 +4171,12 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_ARACHNID);
     case 'u': // mutated type, not enough info to determine shape
         return (MON_SHAPE_MISC);
-    case 't': // turtles
+    case 't': // crocodiles/turtles
+        if (type == MONS_SNAPPING_TURTLE
+            || type == MONS_ALLIGATOR_SNAPPING_TURTLE)
+        {
+            return (MON_SHAPE_QUADRUPED_TAILLESS);
+        }
         return (MON_SHAPE_QUADRUPED);
     case 'v': // vortices
         return (MON_SHAPE_MISC);
@@ -4452,4 +4459,18 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
+}
+
+/*
+ * Update the clinging status of all actors.
+ *
+ * Called at game load (because clinging status isn't saved) and whenever
+ * terrain is change. If actor has fallen from the wall (because it has been
+ * dug for example), apply location effects.
+ */
+void check_clinging()
+{
+    for (actor_iterator ai; ai; ++ai)
+        if (ai->check_clinging())
+            ai->apply_location_effects(ai->pos());
 }

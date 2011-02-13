@@ -1660,7 +1660,7 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
 
 static void _mass_drain(int pow)
 {
-    apply_area_visible(_drain_monsters, pow);
+    apply_area_visible(_drain_monsters, pow, true);
 }
 
 // Return true if it was a "genuine" draw, i.e., there was a monster
@@ -2803,6 +2803,9 @@ static int _card_power(deck_rarity_type rarity)
         result += 150;
     else if (rarity == DECK_RARITY_LEGENDARY)
         result += 300;
+
+    if (result < 0)
+        result = 0;
 
     return (result);
 }

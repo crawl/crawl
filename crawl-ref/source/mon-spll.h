@@ -1186,7 +1186,7 @@
       }
     },
 
-    {  MST_TUKIMA,
+    {  MST_TERPSICHORE,
       {
        SPELL_TUKIMAS_DANCE_PARTY,
        SPELL_SWIFTNESS,

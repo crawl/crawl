@@ -366,7 +366,7 @@ MARKER: C=feat:enter_cocytus
 MARKER: T=feat:enter_tartarus
 SUBST:  D=A, G=A, C=A, T=A
 MONS:   Geryon
-: if crawl.one_chance_in(8) then
+: if crawl.one_chance_in(4) then
 MONS:   Murray
 NSUBST: . = 1:2 / *:.
 : end
@@ -448,7 +448,7 @@ SUBVAULT: E : vestibule_geryon
 SHUFFLE:  ABCD
 SUBST:    ABCDE = .
 : if crawl.coinflip() then
-  : if crawl.one_chance_in(8) then
+  : if crawl.one_chance_in(4) then
 MONS:   Murray
 NSUBST: : = 1:1 / *:.
   : else

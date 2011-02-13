@@ -126,8 +126,7 @@ const int8_t IMPASSABLE  = 0;
 const int8_t FORBIDDEN   = -1;
 
 // Map of terrain types that are traversable.
-// Should be [NUM_FEATURES], but we're paranoid here.
-static int8_t traversable_terrain[256];
+static FixedVector<int8_t,NUM_FEATURES> traversable_terrain;
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -2131,13 +2130,13 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                             || i == BRANCH_SHOALS
                             || i == BRANCH_SNAKE_PIT))
                     {
-                        msg += "Branch not generated this game.  ";
+                        msg += "Branch not generated this game. ";
                     }
 
                     if (target.entry_stairs == NUM_FEATURES
                         && br[i] != BRANCH_MAIN_DUNGEON)
                     {
-                        msg += "Branch has no entry stairs.  ";
+                        msg += "Branch has no entry stairs. ";
                     }
 
                     if (!msg.empty())

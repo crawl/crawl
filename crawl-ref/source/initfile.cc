@@ -145,6 +145,8 @@ static weapon_type _str_to_weapon(const std::string &str)
 {
     if (str == "shortsword" || str == "short sword")
         return (WPN_SHORT_SWORD);
+    else if (str == "falchion")
+        return (WPN_FALCHION);
     else if (str == "mace")
         return (WPN_MACE);
     else if (str == "ankus")
@@ -169,6 +171,8 @@ static std::string _weapon_to_str(int weapon)
     {
     case WPN_SHORT_SWORD:
         return "short sword";
+    case WPN_FALCHION:
+        return "falchion";
     case WPN_MACE:
         return "mace";
     case WPN_ANKUS:
@@ -209,7 +213,7 @@ static startup_wand_type _str_to_wand(const std::string& str)
 
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
-int str_to_summon_type (const std::string &str)
+int str_to_summon_type(const std::string &str)
 {
     if (str == "clone")
         return (MON_SUMM_CLONE);

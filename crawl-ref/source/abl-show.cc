@@ -258,7 +258,7 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
       0, 0, 125, 0, ABFLAG_BREATH },
-    { ABIL_BREATHE_POWER, "Breathe Power", 0, 0, 125, 0, ABFLAG_BREATH },
+    { ABIL_BREATHE_POWER, "Breathe Energy", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame",
       0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
@@ -363,7 +363,7 @@ static const ability_def Ability_List[] =
       0, 0, 100, generic_cost::range(5, 6), ABFLAG_NONE },
 
     // Elyvilon
-    { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons",
+    { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
       0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_ELYVILON_LESSER_HEALING_SELF, "Lesser Self-Healing",
       1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
@@ -432,10 +432,6 @@ static const ability_def Ability_List[] =
       0, 0, 0, 10, ABFLAG_NONE },
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
       0, 0, 0, 0, ABFLAG_NONE },
-
-    { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
-      0, 0, 0, 0, ABFLAG_PIETY },
 
     // // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, ABFLAG_NONE, 10 },
@@ -1143,7 +1139,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     // These don't train anything.
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
-    case ABIL_ELYVILON_DESTROY_WEAPONS:
+    case ABIL_ELYVILON_LIFESAVING:
     case ABIL_TROG_BURN_SPELLBOOKS:
     case ABIL_FEDHAS_FUNGAL_BLOOM:
     case ABIL_CHEIBRIADOS_PONDEROUSIFY:
@@ -1622,8 +1618,7 @@ static bool _activate_talent(const talent& tal)
     }
 
     if ((tal.which == ABIL_EVOKE_LEVITATE || tal.which == ABIL_TRAN_BAT)
-        && liquefied(you.pos())
-        && !you.airborne() && !you.clinging)
+        && liquefied(you.pos()) && !you.ground_level())
     {
         mpr("You can't escape from the ground with such puny magic!", MSGCH_WARN);
         crawl_state.zero_turns_taken();
@@ -2048,7 +2043,7 @@ static bool _do_ability(const ability_def& abil)
                 (you.form == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
-                         "You spit a bolt of incandescent energy."))
+                         "You spit a bolt of dispelling energy."))
             {
                 return (false);
             }
@@ -2435,9 +2430,17 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         break;
 
-    case ABIL_ELYVILON_DESTROY_WEAPONS:
-        if (!elyvilon_destroy_weapons())
-            return (false);
+    case ABIL_ELYVILON_LIFESAVING:
+        if (you.duration[DUR_LIFESAVING])
+            mpr("You renew your call for help.");
+        else
+        {
+            mprf("You beseech %s to protect your life.",
+                 god_name(you.religion).c_str());
+        }
+        // Might be a decrease, this is intentional (like Yred).
+        you.duration[DUR_LIFESAVING] = 9 * BASELINE_DELAY
+                     + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
         break;
 
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
@@ -2686,11 +2689,6 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_JIYVA_CURE_BAD_MUTATION:
         jiyva_remove_bad_mutation();
-        break;
-
-    case ABIL_HARM_PROTECTION:
-    case ABIL_HARM_PROTECTION_II:
-        // Activated via prayer elsewhere.
         break;
 
     case ABIL_CHEIBRIADOS_PONDEROUSIFY:
@@ -3133,9 +3131,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_TELEPORTATION, check_confused);
 
     // Religious abilities.
-    if (you.religion == GOD_ELYVILON)
-        _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused);
-    else if (you.religion == GOD_TROG)
+    if (you.religion == GOD_TROG)
         _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
     else if (you.religion == GOD_FEDHAS)
         _add_talent(talents, ABIL_FEDHAS_FUNGAL_BLOOM, check_confused);
@@ -3163,6 +3159,9 @@ std::vector<talent> your_talents(bool check_confused)
                     {
                         _add_talent(talents,
                                     ABIL_ELYVILON_LESSER_HEALING_SELF,
+                                    check_confused);
+                        _add_talent(talents,
+                                    ABIL_ELYVILON_LIFESAVING,
                                     check_confused);
                     }
                     else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
@@ -3359,6 +3358,7 @@ void set_god_ability_slots()
                 {
                     _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_SELF,
                                             'a' + num++);
+                    _set_god_ability_helper(ABIL_ELYVILON_LIFESAVING, 'p');
                 }
                 else if (god_abilities[you.religion][i]
                             == ABIL_ELYVILON_GREATER_HEALING_OTHERS)

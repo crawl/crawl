@@ -417,11 +417,8 @@ void mark_had_book(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
-    if (book.book_number() == BOOK_MANUAL
-        || book.book_number() == BOOK_DESTRUCTION)
-    {
+    if (!item_is_spellbook(book))
         return;
-    }
 
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
@@ -609,13 +606,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
 
 bool player_can_memorise(const item_def &book)
 {
-    if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL
-        || book.sub_type == BOOK_DESTRUCTION)
-    {
-        return (false);
-    }
-
-    if (!player_spell_levels())
+    if (!item_is_spellbook(book) || !player_spell_levels())
         return (false);
 
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
@@ -646,6 +637,45 @@ bool player_can_memorise(const item_def &book)
 typedef std::vector<spell_type>   spell_list;
 typedef std::map<spell_type, int> spells_to_books;
 
+static void _index_book(item_def& book, spells_to_books &book_hash,
+                        unsigned int &num_unreadable, bool &book_errors)
+{
+    if (!player_can_memorise_from_spellbook(book))
+    {
+        inscribe_book_highlevel(book);
+        num_unreadable++;
+        return;
+    }
+
+    mark_had_book(book);
+    set_ident_flags(book, ISFLAG_KNOW_TYPE);
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+
+    int spells_in_book = 0;
+    for (int j = 0; j < SPELLBOOK_SIZE; j++)
+    {
+        if (!is_valid_spell_in_book(book, j))
+            continue;
+
+        const spell_type spell = which_spell_in_book(book, j);
+
+        spells_in_book++;
+
+        // XXX: If same spell is in two different dangerous spellbooks,
+        // how to decide which one to use?
+        spells_to_books::iterator it = book_hash.find(spell);
+        if (it == book_hash.end() || is_dangerous_spellbook(it->second))
+            book_hash[spell] = book.sub_type;
+    }
+
+    if (spells_in_book == 0)
+    {
+        mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
+             "file a bug report.", book.name(DESC_PLAIN).c_str());
+        book_errors = true;
+    }
+}
+
 static bool _get_mem_list(spell_list &mem_spells,
                           spells_to_books &book_hash,
                           unsigned int &num_unreadable,
@@ -654,6 +684,7 @@ static bool _get_mem_list(spell_list &mem_spells,
                           spell_type current_spell = SPELL_NO_SPELL)
 {
     bool          book_errors    = false;
+    unsigned int  num_on_ground  = 0;
     unsigned int  num_books      = 0;
                   num_unreadable = 0;
 
@@ -662,48 +693,26 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         item_def& book(you.inv[i]);
 
-        if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_DESTRUCTION
-            || book.sub_type == BOOK_MANUAL)
-        {
+        if (!item_is_spellbook(book))
             continue;
-        }
 
         num_books++;
+        _index_book(book, book_hash, num_unreadable, book_errors);
+    }
 
-        if (!player_can_memorise_from_spellbook(book))
-        {
-            inscribe_book_highlevel(book);
-            num_unreadable++;
+    // We also check the ground
+    std::vector<const item_def*> items;
+    item_list_on_square(items, you.visible_igrd(you.pos()));
+
+    for (unsigned int i = 0; i < items.size(); ++i)
+    {
+        item_def book(*items[i]);
+        if (!item_is_spellbook(book) || !item_type_known(book))
             continue;
-        }
 
-        mark_had_book(book);
-        set_ident_flags(book, ISFLAG_KNOW_TYPE);
-        set_ident_flags(book, ISFLAG_IDENT_MASK);
-
-        int spells_in_book = 0;
-        for (int j = 0; j < SPELLBOOK_SIZE; j++)
-        {
-            if (!is_valid_spell_in_book(book, j))
-                continue;
-
-            const spell_type spell = which_spell_in_book(book, j);
-
-            spells_in_book++;
-
-            // XXX: If same spell is in two different dangerous spellbooks,
-            // how to decide which one to use?
-            spells_to_books::iterator it = book_hash.find(spell);
-            if (it == book_hash.end() || is_dangerous_spellbook(it->second))
-                book_hash[spell] = book.sub_type;
-        }
-
-        if (spells_in_book == 0)
-        {
-            mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
-                 "file a bug report.", book.name(DESC_PLAIN).c_str());
-            book_errors = true;
-        }
+        num_books++;
+        num_on_ground++;
+        _index_book(book, book_hash, num_unreadable, book_errors);
     }
 
     if (book_errors)
@@ -719,8 +728,9 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         if (!just_check)
         {
-            mpr("All of the spellbooks you're carrying are beyond your "
-                "current level of comprehension.", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "All of the spellbooks%s are beyond your "
+                 "current level of comprehension.",
+                 num_on_ground == 0 ? " you're carrying" : "");
         }
         return (false);
     }

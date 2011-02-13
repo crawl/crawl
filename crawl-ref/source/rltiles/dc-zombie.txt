@@ -15,6 +15,7 @@ zombie_centaur MONS_ZOMBIE_CENTAUR
 zombie_naga MONS_ZOMBIE_NAGA
 zombie_snake MONS_ZOMBIE_SNAKE
 zombie_worm MONS_ZOMBIE_WORM
+zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_spider MONS_ZOMBIE_SPIDER
 zombie_dragon MONS_ZOMBIE_DRAGON
 dc-mon/kraken/kraken_zombie_head MONS_ZOMBIE_KRAKEN

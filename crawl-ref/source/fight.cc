@@ -237,12 +237,8 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     }
 
     // confused (but not perma-confused)
-    if (def
-        && def->has_ench(ENCH_CONFUSION)
-        && !mons_class_flag(def->type, M_CONFUSED))
-    {
+    if (def && mons_is_confused(def, false))
         unchivalric = UCAT_CONFUSED;
-    }
 
     // allies
     if (def && def->friendly())
@@ -4188,12 +4184,9 @@ random_var melee_attack::player_weapon_speed()
         if (wpn_skill == SK_SHORT_BLADES && min_delay > 5)
             min_delay = 5;
 
-        // Using both hands can get a weapon up to speed 7
-        if ((hands == HANDS_TWO || hand_half_bonus)
-            && min_delay > 7)
-        {
+        // All weapons have min delay 7 or better
+        if (min_delay > 7)
             min_delay = 7;
-        }
 
         // never go faster than speed 3 (ie 3 attacks per round)
         if (min_delay < 3)
@@ -5415,7 +5408,8 @@ bool melee_attack::do_trample()
             // don't even print a message
             return false;
 
-        int size_diff = attacker->body_size() - defender->body_size();
+        int size_diff =
+            attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
         if (!x_chance_in_y(size_diff + 3, 6))
             break;
 
@@ -6017,6 +6011,17 @@ void melee_attack::chaos_affect_actor(actor *victim)
 
 ///////////////////////////////////////////////////////////////////////////
 
+static bool _is_melee_weapon(const item_def *weapon)
+{
+    if (weapon->base_type == OBJ_STAVES)
+        return (true);
+
+    if (weapon->base_type != OBJ_WEAPONS)
+        return (false);
+
+    return (!is_range_weapon(*weapon));
+}
+
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool weapon_warning  = false;
@@ -6025,9 +6030,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     if (weapon)
     {
         if (needs_handle_warning(*weapon, OPER_ATTACK)
-            || weapon->base_type != OBJ_STAVES
-               && (weapon->base_type != OBJ_WEAPONS
-                   || is_range_weapon(*weapon)))
+            || !_is_melee_weapon(weapon))
         {
             weapon_warning = true;
         }
@@ -6035,7 +6038,10 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     else if (you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
              && you_tran_can_wear(EQ_WEAPON))
     {
-        unarmed_warning = true;
+        const int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
+        const item_def &wpn = you.inv[weap];
+        if (_is_melee_weapon(&wpn))
+            unarmed_warning = true;
     }
 
     if (!you.received_weapon_warning && !you.confused()

@@ -551,7 +551,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             switch (speci)
         {
             case SP_DEEP_DWARF:
-            case SP_KOBOLD:
             case SP_NAGA:
             case SP_BASE_DRACONIAN:
             case SP_MUMMY:
@@ -762,6 +761,30 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             case SP_DEMIGOD:
             case SP_DEMONSPAWN:
             case SP_MUMMY:
+                return (CC_UNRESTRICTED);
+
+            default:
+                return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
+                        : CC_RESTRICTED);
+            }
+        case WPN_FALCHION:
+            switch (ng.species)
+            {
+            case SP_HUMAN:
+            case SP_HILL_ORC:
+            case SP_MERFOLK:
+            case SP_NAGA:
+            case SP_CENTAUR:
+            case SP_MINOTAUR:
+            case SP_HIGH_ELF:
+            case SP_SLUDGE_ELF:
+            case SP_MOUNTAIN_DWARF:
+            case SP_DEEP_DWARF:
+            case SP_KENKU:
+            case SP_DEMIGOD:
+            case SP_DEMONSPAWN:
+            case SP_MUMMY:
+            case SP_VAMPIRE:
                 return (CC_UNRESTRICTED);
 
             default:

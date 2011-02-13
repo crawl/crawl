@@ -12,15 +12,28 @@ function tutorial_msg5.start ()
 end
 
 function tutorial_msg5.secret_door ()
-    return tutorial_message("There's got to be an entrance to the temple! "
-                            .. "Try searching the glass walls for secret doors with "
-                            .. tutorial_get_cmd("CMD_REST") .. ".")
+    local text = "There's got to be an entrance to the temple! Try searching "
+                 .. "the glass walls for secret doors with "
+                 .. tutorial_get_cmd("CMD_REST")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white> in the command panel"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg5.dungeon_overview ()
-    return tutorial_message("Trog is just one of many gods. In a real game, you can check "
-                            .. tutorial_get_cmd("CMD_DISPLAY_OVERMAP")
-                            .. " for a list of all altars and other interesting features found so far.")
+    local text = "Trog is just one of many gods. In a real game, you check "
+                 .. tutorial_get_cmd("CMD_DISPLAY_OVERMAP")
+    if crawl.is_tiles() then
+        text = text .. " or click on the <w>dungeon overmap button</w> "
+                    .. "in the command panel"
+    end
+    text = text .. " for a list of all altars and other interesting features "
+                .. "found so far."
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg5.altar ()
@@ -28,10 +41,11 @@ function tutorial_msg5.altar ()
                  .. tutorial_get_cmd("CMD_PRAY")
 
     if crawl.is_tiles() then
-        text = text .. " or <white>Shift</white> + <white>leftclick</white> "
+        text = text .. " (or by clicking in the <w>command panel</w> or "
+                    .. "<white>Shift-clicking</white> on your character)"
     end
 
-    text = text .. "to get an idea what a god offers you, and to join the faith. "
+    text = text .. " to get an idea what a god offers you, and to join the faith. "
                 .. "If you press <w>!</w> "
     if crawl.is_tiles() then
         text = text .. "or <white>rightclick</white> "
@@ -47,7 +61,8 @@ function tutorial_msg5.religion ()
                  .. tutorial_get_cmd("CMD_DISPLAY_RELIGION")
 
     if crawl.is_tiles() then
-        text = text .. " or <white>Shift</white> + <white>rightclick</white> on the player tile"
+        text = text .. " (or via the <w>religion button</w> in the command panel, "
+                    .. "or by <white>Shift-rightclicking</white> on the player tile)"
     end
 
     text = text .. ". Again, pressing <w>!</w> "
@@ -60,43 +75,70 @@ function tutorial_msg5.religion ()
 end
 
 function tutorial_msg5.piety_on_kill ()
-    return tutorial_message("Some gods really like it if you kill monsters in their name. Let the slaughter begin!")
+    return tutorial_message("Some gods really like it if you kill monsters in "
+                            .. "their name. Let the slaughter begin!")
 end
 
 function tutorial_msg5.sacrificing ()
-    return tutorial_message("Praying on corpses with "
-                            .. tutorial_get_cmd("CMD_PRAY")
-                            .. " will sacrifice them to Trog. Try it!")
+    local text = "Praying on corpses with "
+                 .. tutorial_get_cmd("CMD_PRAY")
+    if crawl.is_tiles() then
+        text = text .. " or via the <white>command panel</white>"
+    end
+    text = text .. " will sacrifice them to Trog. Try it!"
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg5.burn_book ()
-    return tutorial_message("Trog will like it if you burn this book (with "
-                            .. tutorial_get_cmd("CMD_USE_ABILITY")
-                            .. "). Sometimes, you might want to wait (with "
-                            .. tutorial_get_cmd("CMD_MOVE_NOWHERE")
-                            .. ") for a monster to step on it before doing so.")
+    local text = "Trog will like it if you burn that book (with "
+                 .. tutorial_get_cmd("CMD_USE_ABILITY")
+    if crawl.is_tiles() then
+        text = text .. " or via the <white>command panel</white>"
+    end
+    text = text .. "). Sometimes, you might want to wait (with "
+                .. tutorial_get_cmd("CMD_MOVE_NOWHERE")
+                .. ") for a monster to step on it before doing so."
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg5.berserk ()
-    return tutorial_message("Against particularly tough foes, you may want to use "
-                            .. "Trog's Berserk power with "
-                            .. tutorial_get_cmd("CMD_USE_ABILITY")
-                            .. ".")
+    local text = "Against particularly tough foes, you may want to use "
+                 .. "Trog's Berserk power with "
+                 .. tutorial_get_cmd("CMD_USE_ABILITY")
+    if crawl.is_tiles() then
+        text = text .. " or via the <white>command panel</white>"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
 end
 
 function tutorial_msg5.exhaustion ()
-    return tutorial_message("A berserker rage is truly exhausting. While fatigued, "
-                            .. "you cannot berserk again and are also slowed. "
-                            .. "It's best to rest with "
-                            .. tutorial_get_cmd("CMD_REST")
-                            .. " until you feel fit again.")
+    local text = "A berserker rage is truly exhausting. While fatigued, "
+                 .. "you cannot berserk again and are also slowed. "
+                 .. "It's best to rest with "
+                 .. tutorial_get_cmd("CMD_REST")
+
+    if crawl.is_tiles() then
+        text = text .. " (or via the <white>command panel</white>)"
+    end
+    text = text .. " until you feel fit again."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg5.hunger ()
+    return tutorial_message("You cannot berserk while hungry, so you should "
+                            .. "always carry some food with you. This means that "
+                            .. "sometimes you'll have to decide between butchering "
+                            .. "a corpse or sacrificing it to Trog.")
 end
 
 function tutorial_msg5.berserk2 ()
     return tutorial_message("Berserk is also really useful against multiple enemies "
-                            .. "- as long as you don't run out of steam in-between. "
-                            .. "You're likely to be hungry afterwards, so you might "
-                            .. "want to wait with sacrificing until after you've eaten.")
+                            .. "- as long as you don't run out of steam in-between.")
 end
 
 function tutorial_msg5.tutorial_end ()
@@ -108,7 +150,7 @@ end
 function tutorial_msg5.exit ()
     -- A single screen recapping all commands.
 
-    local text = "<yellow>Commands</yellow>\n"
+    local text = "<yellow>Religious commands</yellow>\n"
                  .. "  " .. tutorial_get_cmd("CMD_PRAY") .. "  pray at an altar to join a god, or sacrifice a corpse\n"
                  .. "  " .. tutorial_get_cmd("CMD_USE_ABILITY") .. "  use a divine ability\n"
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_RELIGION") .. "  check your religious standing\n"
@@ -129,6 +171,11 @@ function tutorial_msg5.exit ()
 
     return crawl.endgame(text)
 end
+
+function tutorial_msg5.win ()
+    dgn.mark_game_won()
+    return tutorial_msg5.exit()
+end
 }}
 
 NAME:    tutorial_lesson5
@@ -136,19 +183,20 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    "Lesson 5: Gods and Divine Abilities"
 BFLAGS:  islanded
 ORIENT:  encompass
-KFEAT:   bABCDEHI = .
+KFEAT:   bABCDEHIJ = .
 KFEAT:   F = +
-COLOUR:  ABCDEHI = blue
-FTILE:   ABCDEHI = tutorial_pad
+COLOUR:  ABCDEHIJ = blue
+FTILE:   ABCDEHIJ = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
-NSUBST:  M = 1:= / *:m
+NSUBST:  M = 2:= / *:m
 ITEM:    mace ego:none not_cursed
 ITEM:    book of clouds
+ITEM:    dagger ego:none not_cursed
 MONS:    rat always_corpse
-MONS:    hobgoblin ; short sword ego:none | mace ego:none
-MONS:    gnoll ; flail ego:none
-MONS:    goblin ; sling ego:none . stone q:10
+MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
+MONS:    gnoll ; flail ego:none not_cursed
+MONS:    orc wizard spells:magic_dart;.;.;.;blink;blink
 MARKER:  A = lua:tutorial_msg5.secret_door()
 MARKER:  = = lua:tutorial_msg5.dungeon_overview()
 MARKER:  _ = lua:tutorial_msg5.altar()
@@ -158,7 +206,8 @@ MARKER:  D = lua:tutorial_msg5.sacrificing()
 MARKER:  E = lua:tutorial_msg5.burn_book()
 MARKER:  F = lua:tutorial_msg5.berserk()
 MARKER:  H = lua:tutorial_msg5.exhaustion()
-MARKER:  I = lua:tutorial_msg5.berserk2()
+MARKER:  I = lua:tutorial_msg5.hunger()
+MARKER:  J = lua:tutorial_msg5.berserk2()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  onclimb = "tutorial_msg5.exit" }
 MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson5", \
@@ -170,35 +219,35 @@ MARKER:  ) = lua:tutorial_msg5.tutorial_end()
 MARKER:  ] = lua:tutorial_msg5.tutorial_end()
 MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg5.exit" }
+                                 onclimb = "tutorial_msg5.win" }
 MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg5.exit" }
+                                 onclimb = "tutorial_msg5.win" }
 MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg5.exit" }
+                                 onclimb = "tutorial_msg5.win" }
 epilogue{{
   tutorial_msg5.start()
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxx})]xxxxxx
-xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxx...xxxxxx
-xxxxxx....C......1.....xxxxxxxxxxxxxxxxxxx.xxxxxxx
-xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxxxx.xxxxxxx
-xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxx.xxxxxx
-xxxxxx.xxxxxxxxxxxxDxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
-xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.x.xxx
-xtt..G.G..ttxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx.1...xx
-xt........txxxxxxxx.xxxxxxxxxxxxxxxxxxxxxx.....4.x
-x..mmmMmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxx.2..1...x
-x..mYbbbYm..xxxxxxxExxxxxxxxxxxxxx..I.........2.xx
-x..Mbb_bbM..xxxxxxx.xxxxxxxxxxxxxx.xxxxxxx.1....xx
-x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxx.xxxxxxxx..4.xxx
-x..mmmmmmm..xxxxxxx.xxxxxxxxxxxxxx.xxxxxxxxx..xxxx
-xt.........txxxxxxxexxxxxxxxxxxxxxHxxxxxxxxxxxxxxx
-xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
-xxxxxxAxxxxxxxxxx............F....3..xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxx.x}xxx
+xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxxxx.....xx
+xxxxxx....C......1.....xxxxxxxxxxxxxxxxxx....1...x
+xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxx...2....)x
+xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxJ....1....1xxx
+xxxxxx.xxxxxxxxxxxxDxxxxxxxxxxxxxxx.xxxxx...2...xx
+xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxxxx..4.xxx
+xtt..G.G..ttxxxxxxx.xxxxxxxxxxxxxxxx..xxxxxx.]xxxx
+xt........txxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
+x..mmmMmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxx...xxxxxxxx
+x..mYbbbYm..xxxxxxxExxxxxxxxxxxxxxxxxx..1.f.xxxxxx
+x..Mbb_bbM..xxxxxxx.xxxxxxxxxxxxxxxxxxx..1...xxxxx
+x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxx
+x..mmmmmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
+xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxIxxxx
+xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxx..xxxxx
+xxxxxxAxxxxxxxxxx............F.....3.H.....xxxxxxx
 xxxxxx.xxxxxxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
 xxxxxx.xxxxxxxxxx.2...xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
