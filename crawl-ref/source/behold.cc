@@ -220,7 +220,7 @@ bool player::possible_beholder(const monster* mon) const
         return (false);
 
     return (mon->alive() && !mon->submerged()
-         && see_cell(mon->pos()) && mon->see_cell(pos())
+         && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())
          && !mon->wont_attack() && !mon->pacified()
          && (mons_genus(mon->type) == MONS_MERMAID
          && !silenced(pos()) && !silenced(mon->pos())
