@@ -7,6 +7,7 @@
 
 #include "shout.h"
 
+#include "artefact.h"
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
@@ -1045,8 +1046,8 @@ static void _actor_apply_noise(actor *act,
         act->check_awaken(loudness);
         if (!(noise.noise_flags & NF_MERMAID))
         {
-            you.beholders_check_noise(loudness);
-            you.fearmongers_check_noise(loudness);
+            you.beholders_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
+            you.fearmongers_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
         }
     }
     else

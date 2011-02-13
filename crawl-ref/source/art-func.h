@@ -574,6 +574,12 @@ static void _DEMON_AXE_world_reacts(item_def *item)
     {
          mprf("Visions of slaying %s flood into your mind.",
               closest->name(DESC_NOCAP_THE).c_str());
+
+         // The monsters (if any) currently mesmerising the player do not include
+         // this monster. To avoid trapping the player, all other beholders
+         // are removed.
+
+         you.clear_beholders();
     }
 
     if (you.confused())
