@@ -7,6 +7,7 @@
 
 #include "player.h"
 
+#include "artefact.h"
 #include "coord.h"
 #include "debug.h"
 #include "env.h"
@@ -19,9 +20,9 @@
 #include "areas.h"
 
 // Add a monster to the list of beholders.
-void player::add_beholder(const monster* mon)
+void player::add_beholder(const monster* mon, bool axe)
 {
-    if (is_sanctuary(you.pos()))
+    if (is_sanctuary(you.pos()) && !axe)
     {
         if (you.can_see(mon))
         {
@@ -39,8 +40,11 @@ void player::add_beholder(const monster* mon)
     {
         you.set_duration(DUR_MESMERISED, 7, 12);
         beholders.push_back(mon->mindex());
-        mprf(MSGCH_WARN, "You are mesmerised by %s!",
-                         mon->name(DESC_NOCAP_THE).c_str());
+        if (!axe)
+        {
+            mprf(MSGCH_WARN, "You are mesmerised by %s!",
+                             mon->name(DESC_NOCAP_THE).c_str());
+        }
     }
     else
     {
@@ -110,8 +114,11 @@ void player::clear_beholders()
 }
 
 // Possibly end mesmerisation if a loud noise happened.
-void player::beholders_check_noise(int loudness)
+void player::beholders_check_noise(int loudness, bool axe)
 {
+   if (axe)
+       return;
+
     if (loudness >= 20 && beheld())
     {
         mprf("For a moment, you cannot hear the mermaid%s!",
@@ -166,7 +173,7 @@ void player::update_beholders()
     for (int i = beholders.size() - 1; i >= 0; i--)
     {
         const monster* mon = &menv[beholders[i]];
-        if (!_possible_beholder(mon))
+        if (!possible_beholder(mon))
         {
             beholders.erase(beholders.begin() + i);
             removed = true;
@@ -180,7 +187,7 @@ void player::update_beholders()
 // Update a single beholder.
 void player::update_beholder(const monster* mon)
 {
-    if (_possible_beholder(mon))
+    if (possible_beholder(mon))
         return;
     for (unsigned int i = 0; i < beholders.size(); i++)
         if (beholders[i] == mon->mindex())
@@ -207,18 +214,20 @@ void player::_removed_beholder()
 
 // Helper function that checks whether the given monster is a possible
 // beholder.
-bool player::_possible_beholder(const monster* mon) const
+bool player::possible_beholder(const monster* mon) const
 {
     if (crawl_state.game_is_arena())
         return (false);
 
-    return (mon->alive() && mons_genus(mon->type) == MONS_MERMAID
+    return (mon->alive() && !mon->submerged()
+         && see_cell(mon->pos()) && mon->see_cell(pos())
+         && !mon->wont_attack() && !mon->pacified()
+         && (mons_genus(mon->type) == MONS_MERMAID
          && !silenced(pos()) && !silenced(mon->pos())
          && !mon->has_ench(ENCH_MUTE)
-         && see_cell(mon->pos()) && mon->see_cell(pos())
-         && !mon->submerged() && !mon->confused()
+         && !mon->confused()
          && !mon->asleep() && !mon->cannot_move()
-         && !mon->wont_attack() && !mon->pacified()
          && !mon->berserk() && !mons_is_fleeing(mon)
-         && !is_sanctuary(you.pos()));
+         && !is_sanctuary(you.pos())
+         || player_equip_unrand(UNRAND_DEMON_AXE)));
 }

@@ -404,16 +404,17 @@ public:
     bool travelling_light() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monster* mon);
+    void add_beholder(const monster* mon, bool axe = false);
     bool beheld() const;
     bool beheld_by(const monster* mon) const;
     monster* get_beholder(const coord_def &pos) const;
     monster* get_any_beholder() const;
     void remove_beholder(const monster* mon);
     void clear_beholders();
-    void beholders_check_noise(int loudness);
+    void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();
     void update_beholder(const monster* mon);
+    bool possible_beholder(const monster* mon) const;
 
     // Dealing with fearmongers. Implemented in fearmonger.cc.
     bool add_fearmonger(const monster* mon);
