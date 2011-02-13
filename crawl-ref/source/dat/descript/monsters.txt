@@ -385,7 +385,7 @@ A placid, sacred bull of Elyvilon. Beware, evildoers, as surely it will turn on 
 %%%%
 azure jelly
 
-A frosty blob of bright blue cytoplasm.
+An extremely cold blob of bright blue cytoplasm, forming bits of frost in the air around it.
 %%%%
 baby alligator
 
