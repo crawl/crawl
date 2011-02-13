@@ -1169,7 +1169,7 @@ APPEAR:   bloodied obsidian axe
 OBJ:      OBJ_WEAPONS/WPN_BROAD_AXE
 PLUS:     +12/+15
 COLOUR:   ETC_UNHOLY
-TILE:     demon_axe
+TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:    1
