@@ -165,7 +165,6 @@ controlled_blink CONTROLLED_BLINK
 controlled_teleport CONTROLLED_TELEPORT
 dispersal DISPERSAL
 phase_shift PHASE_SHIFT
-portal PORTAL
 portal_projectile PORTAL_PROJECTILE
 teleport TELEPORT
 teleport_other TELEPORT_OTHER
