@@ -915,6 +915,7 @@ static void debug_downtick_xl(int newxl)
         you.hp     = std::max(5, you.hp);
         you.hp_max = std::max(5, you.hp_max);
 
+        you.experience = exp_needed(you.experience_level + 1) - 1;
         lose_level();
     }
 
