@@ -751,7 +751,6 @@ void lose_level()
         return;
     }
 
-    you.experience = exp_needed(you.experience_level + 1) - 1;
     you.experience_level--;
 
     mprf(MSGCH_WARN,
