@@ -2755,8 +2755,11 @@ void level_change(bool skip_attribute_increase)
     // directly sometimes {dlb}
     you.redraw_experience = true;
 
+    while (you.experience < exp_needed(you.experience_level + 1))
+        lose_level();
+
     while (you.experience_level < 27
-           && you.experience > exp_needed(you.experience_level + 2))
+           && you.experience >= exp_needed(you.experience_level + 2))
     {
         if (!skip_attribute_increase && !wiz_cmd)
         {
@@ -3362,7 +3365,7 @@ void level_change(bool skip_attribute_increase)
         learned_something_new(HINT_NEW_LEVEL);
     }
 
-    while (you.experience > exp_needed(you.max_level + 2))
+    while (you.experience >= exp_needed(you.max_level + 2))
     {
         ASSERT(you.experience_level == 27);
         ASSERT(you.max_level < 127);
