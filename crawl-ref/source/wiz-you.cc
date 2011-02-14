@@ -900,7 +900,7 @@ static void debug_uptick_xl(int newxl)
 {
     while (newxl > you.experience_level)
     {
-        you.experience = 1 + exp_needed(2 + you.experience_level);
+        you.experience = 1 + exp_needed(1 + you.experience_level);
         level_change(true);
     }
 }
@@ -915,7 +915,7 @@ static void debug_downtick_xl(int newxl)
         you.hp     = std::max(5, you.hp);
         you.hp_max = std::max(5, you.hp_max);
 
-        you.experience = exp_needed(you.experience_level + 1) - 1;
+        you.experience = exp_needed(you.experience_level) - 1;
         level_change();
     }
 

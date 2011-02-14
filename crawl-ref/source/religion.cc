@@ -4095,7 +4095,7 @@ int get_tension(god_type god)
 
     // Divides by 1 at level 1, 200 at level 27.
     const int exp_lev  = you.get_experience_level();
-    const int exp_need = exp_needed(exp_lev + 1);
+    const int exp_need = exp_needed(exp_lev);
     const int factor   = (int)ceil(sqrt(exp_need / 30.0));
     const int div      = 1 + factor;
 

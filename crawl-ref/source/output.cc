@@ -1587,7 +1587,7 @@ static std::vector<formatted_string> _get_overview_stats()
     else
         lives[0] = 0;
 
-    int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
+    int xp_needed = (exp_needed(you.experience_level + 1) - you.experience) + 1;
     snprintf(buf, sizeof buf,
              "Exp: %d/%u (%d)%s\n"
              "God: %s\n"

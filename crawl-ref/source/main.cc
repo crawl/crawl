@@ -648,7 +648,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'W': wizard_god_wrath();                    break;
 
     case 'x':
-        you.experience = 1 + exp_needed(2 + you.experience_level);
+        you.experience = 1 + exp_needed(1 + you.experience_level);
         level_change();
         break;
 
@@ -1437,10 +1437,10 @@ static void _experience_check()
 
     if (you.experience_level < 27)
     {
-        int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
+        int xp_needed = (exp_needed(you.experience_level+1)-you.experience)+1;
         mprf("Level %d requires %d experience (%d point%s to go!)",
               you.experience_level + 1,
-              exp_needed(you.experience_level + 2) + 1,
+              exp_needed(you.experience_level + 1) + 1,
               xp_needed,
               (xp_needed > 1) ? "s" : "");
     }

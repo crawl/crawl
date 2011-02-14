@@ -2034,7 +2034,7 @@ static void _experience_card(int power, deck_rarity_type rarity)
     if (you.experience_level < 27)
     {
         mpr("You feel more experienced.");
-        const unsigned long xp_cap = 1 + exp_needed(2 + you.experience_level);
+        const unsigned long xp_cap = 1 + exp_needed(1 + you.experience_level);
 
         // power_level 2 means automatic level gain.
         if (power_level == 2)
