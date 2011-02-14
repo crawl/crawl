@@ -3389,6 +3389,14 @@ void adjust_level(int diff, bool just_xp)
         you.experience = std::max(you.experience, exp_needed(27));
     else
     {
+        while (diff < 0 && you.experience >= exp_needed(27))
+        {
+            // Having XP for level 53 and going back to 26 due to a single
+            // card would mean your felid is not going to get any extra lives
+            // in foreseable future.
+            you.experience -= exp_needed(27) - exp_needed(26);
+            diff++;
+        }
         int old_min = exp_needed(you.experience_level);
         int old_max = exp_needed(you.experience_level + 1);
         int new_min = exp_needed(you.experience_level + diff);
