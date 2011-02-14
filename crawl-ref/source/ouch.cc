@@ -851,10 +851,7 @@ bool drain_exp(bool announce_full)
         dprf("You lose %d experience points, %d from pool.",
              exp_drained, pool_drained);
 
-        you.redraw_experience = true;
-
-        if (you.experience < exp_needed(you.experience_level + 1))
-            lose_level();
+        level_change();
 
         return (true);
     }
