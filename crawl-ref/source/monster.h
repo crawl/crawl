@@ -401,7 +401,7 @@ public:
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
 
     void poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int strength);
+    bool sicken(int strength, bool unused = true);
     bool bleed(int amount, int degree);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);

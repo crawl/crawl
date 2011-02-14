@@ -5628,8 +5628,10 @@ kill_category monster::kill_alignment() const
     return (friendly() ? KC_FRIENDLY : KC_OTHER);
 }
 
-bool monster::sicken(int amount)
+bool monster::sicken(int amount, bool unused)
 {
+    UNUSED(unused);
+
     if (res_rotting() || (amount /= 2) < 1)
         return (false);
 

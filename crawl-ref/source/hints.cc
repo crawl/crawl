@@ -1375,6 +1375,7 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_TARGET_NO_FOE:
     case HINT_YOU_POISON:
     case HINT_YOU_SICK:
+    case HINT_CONTAMINATED_CHUNK:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
     case HINT_LEVITATING:
@@ -2243,6 +2244,21 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_DISPLAY_COMMANDS);
         break;
 
+    case HINT_CONTAMINATED_CHUNK:
+        text << "Chunks that are described as <brown>contaminated</brown> will "
+                "occasionally make you sick when eaten. However, since food is "
+                "scarce in the dungeon, you'll sometimes have to risk it. "
+                "Note that if a chunk makes you sick, you won't get any nutrition "
+                "out of it.";
+
+        // Break if we've seen the sickness hint before.
+        if (!Hints.hints_events[HINT_YOU_SICK])
+            break;
+
+        // Mark HINT_YOU_SICK as seen, and fall through.
+        text << "\n";
+        Hints.hints_events[HINT_YOU_SICK] = false;
+
     case HINT_YOU_SICK:
         if (crawl_state.game_is_hints())
         {
@@ -2252,13 +2268,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             learned_something_new(HINT_YOU_ENCHANTED);
             Hints.hints_just_triggered = true;
         }
-        text << "Chunks that are described as <brown>contaminated</brown> will "
-                "occasionally make you sick when eaten. However, since is food is "
-                "scarce in the dungeon, you'll sometimes have to risk it.\n"
-                "While sick, your hitpoints won't regenerate and your attributes "
+        text << "While sick, your hitpoints won't regenerate and your attributes "
                 "may decrease. Sickness wears off with time, so you should wait it "
-                "out with %. Note that if a chunk makes you sick, you won't get "
-                "any nutrition out of it.";
+                "out with %.";
         cmd.push_back(CMD_REST);
         break;
 

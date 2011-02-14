@@ -92,6 +92,7 @@ enum hints_event_type
     HINT_YOU_RESIST,
     // status changes
     HINT_YOU_ENCHANTED,
+    HINT_CONTAMINATED_CHUNK,
     HINT_YOU_SICK,
     HINT_YOU_POISON,
     HINT_YOU_ROTTING,

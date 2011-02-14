@@ -6579,7 +6579,7 @@ int player::has_usable_pseudopods(bool allow_tran) const
     return (has_pseudopods(allow_tran));
 }
 
-bool player::sicken(int amount)
+bool player::sicken(int amount, bool allow_hint)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6599,7 +6599,8 @@ bool player::sicken(int amount)
     if (disease > 210 * BASELINE_DELAY)
         disease = 210 * BASELINE_DELAY;
 
-    learned_something_new(HINT_YOU_SICK);
+    if (allow_hint)
+        learned_something_new(HINT_YOU_SICK);
     return (true);
 }
 
