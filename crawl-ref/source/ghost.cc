@@ -822,10 +822,6 @@ spell_type ghost_demon::translate_spell(spell_type spel) const
         return (SPELL_BLINK);        // approximate
     case SPELL_DEMONIC_HORDE:
         return (SPELL_CALL_IMP);
-    case SPELL_AGONY:
-    case SPELL_SYMBOL_OF_TORMENT:
-        // Too powerful to give ghosts Torment for Agony?  Nah.
-        return (SPELL_SYMBOL_OF_TORMENT);
     case SPELL_DELAYED_FIREBALL:
         return (SPELL_FIREBALL);
     case SPELL_PETRIFY:
