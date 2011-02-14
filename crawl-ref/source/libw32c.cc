@@ -721,7 +721,7 @@ int vk_translate(WORD VirtCode, CHAR c, DWORD cKeys)
 
 int m_getch()
 {
-    return getch();
+    return getchk();
 }
 
 static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
@@ -825,7 +825,7 @@ int getch_ck(void)
     return key;
 }
 
-int getch(void)
+int getchk(void)
 {
     int c = getch_ck();
     return key_to_command(c);

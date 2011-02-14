@@ -29,7 +29,7 @@
 
 int m_getch()
 {
-    return getch();
+    return getchk();
 }
 
 void set_mouse_enabled(bool enabled)
@@ -154,7 +154,7 @@ int getch_ck()
     return (tiles.getch_ck());
 }
 
-int getch()
+int getchk()
 {
     return getch_ck();
 }
