@@ -20,6 +20,7 @@ class crawl_view_buffer;
 int get_number_of_lines();
 int get_number_of_cols();
 
+int getchk();
 int getch_ck(void);
 int clrscr(void);
 void cprintf(const char *format,...);
@@ -30,7 +31,6 @@ int kbhit(void);
 int putch(unsigned char chr);
 int putwch(unsigned chr);
 void put_colour_ch(int colour, unsigned ch);
-int translate_keypad(int keyin);
 int wherex(void);
 int wherey(void);
 void puttext(int x, int y, const crawl_view_buffer &vbuf);

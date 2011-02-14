@@ -48,7 +48,7 @@ inline void enable_smart_cursor(bool) { }
 inline bool is_smart_cursor_enabled() { return false; }
 
 
-extern "C" int getch();
+extern "C" int getchk();
 int getch_ck();
 int clrscr();
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);

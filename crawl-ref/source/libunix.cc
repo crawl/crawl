@@ -231,34 +231,44 @@ static int proc_mouse_event(int c, const MEVENT *me)
 }
 #endif
 
-static int raw_m_getch()
+int getchk()
 {
-    const int c = getch();
-    switch (c)
+    wint_t c;
+    switch (get_wch(&c))
     {
-#ifdef NCURSES_MOUSE_VERSION
-    case KEY_MOUSE:
-    {
-        MEVENT me;
-        getmouse(&me);
-        return (proc_mouse_event(c, &me));
-    }
-#endif
-    default:
+    case ERR:
+        debuglog("get_wch: ERR\n");
         // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
         // but the alternative is to explicitly check for -1 everywhere where
         // we might otherwise spin in a tight keyboard input loop.
-        return (c == -1? ESCAPE : c);
+        return ESCAPE;
+    case OK:
+        debuglog("get_wch: OK %d[%04X]\n", c, c);
+        // a normal (printable) key
+        return c;
     }
+    debuglog("get_wch: FUNC - %d[%04X]\n", c, c);
+
+    return -c;
 }
 
 int m_getch()
 {
     int c;
     do
-        c = raw_m_getch();
-    while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
-           && !crawl_state.mouse_enabled);
+    {
+        c = getchk();
+
+#ifdef NCURSES_MOUSE_VERSION
+        if (c == -KEY_MOUSE)
+        {
+            MEVENT me;
+            getmouse(&me);
+            c = proc_mouse_event(c, &me);
+        }
+#endif
+    } while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+             && !crawl_state.mouse_enabled);
 
     return (c);
 }
@@ -270,17 +280,17 @@ int getch_ck()
     {
     // [dshaligram] MacOS ncurses returns 127 for backspace.
     case 127:
-    case KEY_BACKSPACE: return CK_BKSP;
-    case KEY_DC:    return CK_DELETE;
-    case KEY_HOME:  return CK_HOME;
-    case KEY_PPAGE: return CK_PGUP;
-    case KEY_END:   return CK_END;
-    case KEY_NPAGE: return CK_PGDN;
-    case KEY_UP:    return CK_UP;
-    case KEY_DOWN:  return CK_DOWN;
-    case KEY_LEFT:  return CK_LEFT;
-    case KEY_RIGHT: return CK_RIGHT;
-    default:        return c;
+    case -KEY_BACKSPACE: return CK_BKSP;
+    case -KEY_DC:    return CK_DELETE;
+    case -KEY_HOME:  return CK_HOME;
+    case -KEY_PPAGE: return CK_PGUP;
+    case -KEY_END:   return CK_END;
+    case -KEY_NPAGE: return CK_PGDN;
+    case -KEY_UP:    return CK_UP;
+    case -KEY_DOWN:  return CK_DOWN;
+    case -KEY_LEFT:  return CK_LEFT;
+    case -KEY_RIGHT: return CK_RIGHT;
+    default:         return c;
     }
 }
 
@@ -374,59 +384,59 @@ static void unixcurses_defkeys(void)
 {
 #ifdef NCURSES_VERSION
     // keypad 0-9 (only if the "application mode" was successfully initialised)
-    define_key("\033Op", 1000);
-    define_key("\033Oq", 1001);
-    define_key("\033Or", 1002);
-    define_key("\033Os", 1003);
-    define_key("\033Ot", 1004);
-    define_key("\033Ou", 1005);
-    define_key("\033Ov", 1006);
-    define_key("\033Ow", 1007);
-    define_key("\033Ox", 1008);
-    define_key("\033Oy", 1009);
+    define_key("\033Op", -1000);
+    define_key("\033Oq", -1001);
+    define_key("\033Or", -1002);
+    define_key("\033Os", -1003);
+    define_key("\033Ot", -1004);
+    define_key("\033Ou", -1005);
+    define_key("\033Ov", -1006);
+    define_key("\033Ow", -1007);
+    define_key("\033Ox", -1008);
+    define_key("\033Oy", -1009);
 
     // non-arrow keypad keys (for macros)
-    define_key("\033OM", 1010); // Enter
-    define_key("\033OP", 1011); // NumLock
-    define_key("\033OQ", 1012); // /
-    define_key("\033OR", 1013); // *
-    define_key("\033OS", 1014); // -
-    define_key("\033Oj", 1015); // *
-    define_key("\033Ok", 1016); // +
-    define_key("\033Ol", 1017); // +
-    define_key("\033Om", 1018); // .
-    define_key("\033On", 1019); // .
-    define_key("\033Oo", 1020); // -
+    define_key("\033OM", -1010); // Enter
+    define_key("\033OP", -1011); // NumLock
+    define_key("\033OQ", -1012); // /
+    define_key("\033OR", -1013); // *
+    define_key("\033OS", -1014); // -
+    define_key("\033Oj", -1015); // *
+    define_key("\033Ok", -1016); // +
+    define_key("\033Ol", -1017); // +
+    define_key("\033Om", -1018); // .
+    define_key("\033On", -1019); // .
+    define_key("\033Oo", -1020); // -
 
     // variants.  Ugly curses won't allow us to return the same code...
-    define_key("\033[1~", 1031); // Home
-    define_key("\033[4~", 1034); // End
-    define_key("\033[E",  1040); // center arrow
+    define_key("\033[1~", -1031); // Home
+    define_key("\033[4~", -1034); // End
+    define_key("\033[E",  -1040); // center arrow
 #endif
 }
 
 int unixcurses_get_vi_key(int keyin)
 {
-    switch (keyin)
+    switch (-keyin)
     {
-    // 1001..1009: passed without change
-    case 1031: return 1007;
-    case 1034: return 1001;
-    case 1040: return 1005;
+    // -1001..-1009: passed without change
+    case 1031: return -1007;
+    case 1034: return -1001;
+    case 1040: return -1005;
 
-    case KEY_HOME:   return 1007;
-    case KEY_END:    return 1001;
-    case KEY_DOWN:   return 1002;
-    case KEY_UP:     return 1008;
-    case KEY_LEFT:   return 1004;
-    case KEY_RIGHT:  return 1006;
-    case KEY_NPAGE:  return 1003;
-    case KEY_PPAGE:  return 1009;
-    case KEY_A1:     return 1007;
-    case KEY_A3:     return 1009;
-    case KEY_B2:     return 1005;
-    case KEY_C1:     return 1001;
-    case KEY_C3:     return 1003;
+    case KEY_HOME:   return -1007;
+    case KEY_END:    return -1001;
+    case KEY_DOWN:   return -1002;
+    case KEY_UP:     return -1008;
+    case KEY_LEFT:   return -1004;
+    case KEY_RIGHT:  return -1006;
+    case KEY_NPAGE:  return -1003;
+    case KEY_PPAGE:  return -1009;
+    case KEY_A1:     return -1007;
+    case KEY_A3:     return -1009;
+    case KEY_B2:     return -1005;
+    case KEY_C1:     return -1001;
+    case KEY_C3:     return -1003;
     case KEY_SHOME:  return 'Y';
     case KEY_SEND:   return 'B';
     case KEY_SLEFT:  return 'H';

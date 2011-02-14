@@ -1074,13 +1074,13 @@ bool deck_stack()
             }
 
             // Hand-hacked implementation, instead of using Menu. Oh well.
-            const int c = getch();
+            const int c = getchk();
             if (c == CK_ENTER)
             {
                 cgotoxy(1,11);
                 textcolor(LIGHTGREY);
                 cprintf("Are you sure? (press y or Y to confirm)");
-                if (toupper(getch()) == 'Y')
+                if (toupper(getchk()) == 'Y')
                     break;
 
                 cgotoxy(1,11);

@@ -258,7 +258,7 @@ void wizard_set_hunger_state()
 
     mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
 
-    const int c = tolower(getch());
+    const int c = tolower(getchk());
 
     // Values taken from food.cc.
     switch (c)

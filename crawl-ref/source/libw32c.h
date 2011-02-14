@@ -34,7 +34,7 @@ int wherex(void);
 int wherey(void);
 void putch(char c);
 void putwch(wchar_t c);
-int getch(void);
+int getchk(void);
 int getch_ck(void);
 int kbhit(void);
 void delay(int ms);
