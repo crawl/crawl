@@ -141,8 +141,7 @@ enum KEYS
     CK_BKSP   = 8,
     CK_ESCAPE = ESCAPE,
 
-    // 128 is off-limits because it's the code that's used when running
-    CK_DELETE = 129,
+    CK_DELETE = -255,
 
     // This sequence of enums should not be rearranged.
     CK_UP,
@@ -191,7 +190,7 @@ enum KEYS
     CK_CTRL_TAB,
 
     // Mouse codes.
-    CK_MOUSE_MOVE  = 10001,
+    CK_MOUSE_MOVE  = -10009,
     CK_MOUSE_CMD,
     CK_MOUSE_B1,
     CK_MOUSE_B2,
