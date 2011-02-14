@@ -968,8 +968,8 @@ SUBST:   V = *
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.......xccccccxxxxxxx.........................................w"..xxx
-x.{...{.xc....cbbbbbxx................xxx...................."w......x
-x.......++.U..++.].++.....'''....'l'....xxx................."ww".....x
+x.(...{.xc....cbbbbbxx................xxx...................."w......x
+x.......++.U..++.].++.....'''....'l'....xxx................."ww"..)..x
 x...[...xc....cbbbbbxx...'''..''lllll'....xx...bbEbbEb......"ww"....xx
 x.......xcccccccxxxxxx.......'llllllll.....x...bd...9b...."www".....xx
 xxxxxxxxxxxxxxxxxxxxxx.......'lllllll'.....x...E.....E.."ww.w".....xxx
