@@ -1384,6 +1384,8 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
     case HINT_EATING_ROTTEN_FOOD:
+    case HINT_SPELL_MISCAST:
+    case HINT_CLOUD_WARNING:
         return (true);
     default:
         return (false);
@@ -1408,6 +1410,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     // Already learned about that.
     if (!Hints.hints_events[seen_what])
+        return;
+
+    // Don't give at the beginning of your spellcasting career.
+    if (seen_what == HINT_SPELL_MISCAST && you.max_magic_points <= 2)
         return;
 
     // Don't trigger twice in the same turn.
@@ -3148,6 +3154,20 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SPELL_MISCAST:
     {
+        if (!crawl_state.game_is_hints())
+        {
+            text << "Miscasting a spell can have nasty consequences, "
+                    "particularly for the more difficult spells. Your chance "
+                    "of successfully casting a spell increases with your magic "
+                    "skills, and can also be improved with the help of some "
+                    "items. Use the <w>%</w> command "
+#ifdef USE_TILE
+                    "or mouse over the spell tiles "
+#endif
+                    "to check your current success rates.";
+            cmd.push_back(CMD_DISPLAY_SPELLS);
+            break;
+        }
         text << "You just miscast a spell. ";
 
         const item_def *shield = you.slot_item(EQ_SHIELD, false);
@@ -3345,6 +3365,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Fighting in shallow water will sometimes cause you to slip "
                 "and fumble your attack. If possible, try to fight on "
                 "firm ground.";
+        break;
+    case HINT_CLOUD_WARNING:
+        text << "Rather than step into this cloud and hurt yourself, you should "
+                "try to step around it or wait it out with <w>%</w> or <w>%</w>.";
+        cmd.push_back(CMD_MOVE_NOWHERE);
+        cmd.push_back(CMD_REST);
         break;
     default:
         text << "You've found something new (but I don't know what)!";
