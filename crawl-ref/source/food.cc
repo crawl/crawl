@@ -1792,8 +1792,11 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         else
         {
             mpr("There is something wrong with this meat.");
-            if (you.sicken(50 + random2(100)))
+            if (you.sicken(50 + random2(100), false))
+            {
+                learned_something_new(HINT_CONTAMINATED_CHUNK);
                 xom_is_stimulated(random2(100));
+            }
         }
         break;
 

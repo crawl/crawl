@@ -524,7 +524,7 @@ public:
     int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
     void poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int amount);
+    bool sicken(int amount, bool allow_hint = true);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
