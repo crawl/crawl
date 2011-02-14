@@ -353,8 +353,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (you.experience_level < 27)
         {
             mpr("You feel more experienced!");
-
-            you.experience = 1 + exp_needed(1 + you.experience_level);
+            adjust_level(1, true);
 
             // Deferred calling level_change() into item_use.cc:3919, after
             // dec_inv_item_quantity. This prevents using SIGHUP to get infinite

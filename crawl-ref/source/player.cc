@@ -3381,6 +3381,34 @@ void level_change(bool skip_attribute_increase)
         hints_finished();
 }
 
+void adjust_level(int diff, bool just_xp)
+{
+    if (you.experience_level + diff < 1)
+        you.experience = 0;
+    else if (you.experience_level + diff >= 27)
+        you.experience = std::max(you.experience, exp_needed(27));
+    else
+    {
+        int old_min = exp_needed(you.experience_level);
+        int old_max = exp_needed(you.experience_level + 1);
+        int new_min = exp_needed(you.experience_level + diff);
+        int new_max = exp_needed(you.experience_level + 1 + diff);
+        dprf("XP before: %d\n", you.experience);
+        dprf("%4.2f of %d..%d to %d..%d",
+             (you.experience - old_min) * 1.0 / (old_max - old_min),
+             old_min, old_max, new_min, new_max);
+
+        you.experience = ((uint64_t)(new_max - new_min))
+                       * (you.experience - old_min)
+                       / (old_max - old_min)
+                       + new_min;
+        dprf("XP after: %d\n", you.experience);
+    }
+
+    if (!just_xp)
+        level_change();
+}
+
 // Here's a question for you: does the ordering of mods make a difference?
 // (yes) -- are these things in the right order of application to stealth?
 // - 12mar2000 {dlb}

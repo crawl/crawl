@@ -834,6 +834,7 @@ inline bool player_can_handle_equipment()
 }
 
 void level_change(bool skip_attribute_increase = false);
+void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,
                    species_type species = SP_UNKNOWN);

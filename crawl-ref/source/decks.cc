@@ -2032,24 +2032,7 @@ static void _experience_card(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
 
     if (you.experience_level < 27)
-    {
         mpr("You feel more experienced.");
-        const unsigned long xp_cap = 1 + exp_needed(1 + you.experience_level);
-
-        // power_level 2 means automatic level gain.
-        if (power_level == 2)
-            you.experience = xp_cap;
-        else
-        {
-            // Likely to give a level gain (power of ~500 is reasonable
-            // at high levels even for non-Nemelexites, so 50,000 XP.)
-            // But not guaranteed.
-            // Overrides archmagi effect, like potions of experience.
-            you.experience += power * 100;
-            if (you.experience > xp_cap)
-                you.experience = xp_cap;
-        }
-    }
     else
         mpr("You feel knowledgeable.");
 
@@ -2058,7 +2041,23 @@ static void _experience_card(int power, deck_rarity_type rarity)
     if (power_level >= 2 || you.exp_available > FULL_EXP_POOL)
         you.exp_available = FULL_EXP_POOL;
 
-    level_change();
+    // After level 27, boosts you get don't get increased (matters for
+    // charging V:8 with no rN+++ and for felids).
+    const int xp_cap = exp_needed(1 + you.experience_level)
+                     - exp_needed(you.experience_level);
+
+    // power_level 2 means automatic level gain.
+    if (power_level == 2 && you.experience_level < 27)
+        adjust_level(1);
+    else
+    {
+        // Likely to give a level gain (power of ~500 is reasonable
+        // at high levels even for non-Nemelexites, so 50,000 XP.)
+        // But not guaranteed.
+        // Overrides archmagi effect, like potions of experience.
+        you.experience += std::min(xp_cap, power * 100);
+        level_change();
+    }
 }
 
 static void _remove_bad_mutation()
@@ -2884,7 +2883,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
     case CARD_FLIGHT:           _flight_card(power, rarity); break;
     case CARD_TOMB:             entomb(power); break;
-    case CARD_WRAITH:           drain_exp(false); lose_level(); break;
+    case CARD_WRAITH:           adjust_level(-1); break;
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_CRUSADE:          _crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;
