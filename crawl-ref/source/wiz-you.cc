@@ -898,11 +898,8 @@ void wizard_edit_durations(void)
 
 static void debug_uptick_xl(int newxl)
 {
-    while (newxl > you.experience_level)
-    {
-        you.experience = 1 + exp_needed(1 + you.experience_level);
-        level_change(true);
-    }
+    you.experience = exp_needed(newxl);
+    level_change(true);
 }
 
 static void debug_downtick_xl(int newxl)

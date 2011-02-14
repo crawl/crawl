@@ -2832,12 +2832,7 @@ static void _pay_ability_costs(const ability_def& abil, int xpcost)
                       "power out of control");
     }
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
-    {
-        you.experience = exp_needed(you.experience_level - 1) - 1;
-        lose_level();   // takes you back to 1xp before the current level
-        lose_level();   // so need to do this twice.
-    }
-
+        adjust_level(-1);
 
     if (food_cost)
         make_hungry(food_cost, false, true);
