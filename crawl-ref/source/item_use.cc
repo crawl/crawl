@@ -4407,6 +4407,12 @@ static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
 
 static void handle_read_book(int item_slot)
 {
+    if (you.berserk())
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return;
+    }
+
     item_def& book(you.inv[item_slot]);
 
     if (book.sub_type == BOOK_DESTRUCTION)
