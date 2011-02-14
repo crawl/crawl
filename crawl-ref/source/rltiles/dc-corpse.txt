@@ -145,8 +145,10 @@ giant_toad CORPSE_GIANT_TOAD
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 
+## Various beasts ('I')
+sky_beast CORPSE_SKY_BEAST
+
 ## Snakes ('S')
-%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 small_snake CORPSE_SMALL_SNAKE
 snake CORPSE_SNAKE
 black_mamba CORPSE_BLACK_MAMBA
@@ -272,10 +274,6 @@ harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 kenku CORPSE_KENKU
-
-## Various beasts ('I')
-%sdir dc-mon/animals
-sky_beast CORPSE_SKY_BEAST
 
 ## Jellies ('J')
 %sdir dc-mon
