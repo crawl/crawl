@@ -1,27 +1,27 @@
 [submodule "crawl-ref/source/contrib/sqlite"]
 	path = crawl-ref/source/contrib/sqlite
-	url = git://gitorious.org/crawl/crawl-sqlite.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/sqlite
 [submodule "crawl-ref/source/contrib/lua"]
 	path = crawl-ref/source/contrib/lua
-	url = git://gitorious.org/crawl/crawl-lua.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/lua
 [submodule "crawl-ref/source/contrib/luajit"]
 	path = crawl-ref/source/contrib/luajit
-	url = git://gitorious.org/crawl/crawl-luajit.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/luajit
 [submodule "crawl-ref/source/contrib/pcre"]
 	path = crawl-ref/source/contrib/pcre
-	url = git://gitorious.org/crawl/crawl-pcre.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/pcre
 [submodule "crawl-ref/source/contrib/freetype"]
 	path = crawl-ref/source/contrib/freetype
-	url = git://gitorious.org/crawl/crawl-freetype.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/freetype
 [submodule "crawl-ref/source/contrib/sdl"]
 	path = crawl-ref/source/contrib/sdl
-	url = git://gitorious.org/crawl/crawl-sdl.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/sdl
 [submodule "crawl-ref/source/contrib/sdl-image"]
 	path = crawl-ref/source/contrib/sdl-image
-	url = git://gitorious.org/crawl/crawl-sdl-image.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/sdl-image
 [submodule "crawl-ref/source/contrib/libpng"]
 	path = crawl-ref/source/contrib/libpng
-	url = git://gitorious.org/crawl/crawl-libpng.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/libpng
 [submodule "crawl-ref/source/contrib/zlib"]
 	path = crawl-ref/source/contrib/zlib
-	url = git://gitorious.org/crawl/crawl-zlib.git
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/zlib
