@@ -4,7 +4,7 @@
 # Most of this should be self-explanatory. A unique vault can be defined by
 #
 # NAME:   uniq_linley
-# DEPTH:  D:1-27, !Orc
+# DEPTH:  D:2-27, !Orc
 # WEIGHT: 10
 # TAGS:   place_unique
 # MONS:   Linley
@@ -25,7 +25,7 @@
 # inline function place_unique in this case, reducing to
 #
 # NAME:   uniq_linley
-# DEPTH:  D:1-27, !Orc
+# DEPTH:  D:2-27, !Orc
 # : place_unique(_G, "Linley")
 #
 # The WEIGHT line was skipped as 10 is the default.
@@ -42,6 +42,9 @@
 # unless you want to make that unique appear more or less frequent on purpose.
 # You can use multiple vaults that are tagged "uniq_<name>", with different
 # weights for each of the vaults. See uniq_ribbit for examples of all this.
+#
+# Note also that uniques are never placed on D:1, so specifying placement there
+# will only cause confusion.
 #
 # As a final caveat, you.branches[you.where_are_you].has_uniques is still
 # checked before vaults are even considered; unique vaults with depths that
@@ -178,11 +181,11 @@ DEPTH:  10-16, !Slime
 : place_unique(_G, "Harold")
 
 NAME:   uniq_iyjb
-DEPTH:  1-7
+DEPTH:  2-7
 : place_unique(_G, "Ijyb")
 
 NAME:   uniq_jessica
-DEPTH:  1-3
+DEPTH:  2-3
 : place_unique(_G, "Jessica")
 
 NAME:   uniq_joseph
@@ -288,7 +291,7 @@ DEPTH:  17-27, Orc:4, !Lair, !Slime
 : place_unique(_G, "Saint Roka band")
 
 NAME:   uniq_sigmund
-DEPTH:  1-7
+DEPTH:  2-7
 : place_unique(_G, "Sigmund")
 
 NAME:   uniq_snorg
@@ -300,7 +303,7 @@ DEPTH:  10-16, !Lair, !Slime
 : place_unique(_G, "Sonja")
 
 NAME:   uniq_terence
-DEPTH:  1-3
+DEPTH:  2-3
 : place_unique(_G, "Terence")
 
 NAME:   uniq_urug
