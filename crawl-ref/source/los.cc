@@ -914,10 +914,14 @@ static void _handle_los_change()
     invalidate_agrid();
 }
 
+static bool _mons_block_sight(const monster* mons)
+{
+    return (mons->type == MONS_BUSH || mons->type == MONS_DOOR_MIMIC);
+}
+
 void los_actor_moved(const actor* act, const coord_def& oldpos)
 {
-    if (act->atype() == ACT_MONSTER
-        && act->as_monster()->type == MONS_BUSH)
+    if (act->atype() == ACT_MONSTER && _mons_block_sight(act->as_monster()))
     {
         invalidate_los_around(oldpos);
         invalidate_los_around(act->pos());
@@ -927,7 +931,7 @@ void los_actor_moved(const actor* act, const coord_def& oldpos)
 
 void los_monster_died(const monster* mon)
 {
-    if (mon->type == MONS_BUSH)
+    if (_mons_block_sight(mon))
     {
         invalidate_los_around(mon->pos());
         _handle_los_change();
