@@ -2856,8 +2856,7 @@ void world_reacts()
         _player_reacts();
 
     apply_noises();
-    handle_monsters();
-    apply_noises();
+    handle_monsters(true);
 
     _check_banished();
 

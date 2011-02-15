@@ -2392,7 +2392,7 @@ void handle_monster_move(monster* mons)
 // This is the routine that controls monster AI.
 //
 //---------------------------------------------------------------
-void handle_monsters()
+void handle_monsters(bool with_noise)
 {
     // Keep track of monsters that have already moved and don't allow
     // them to move again.
@@ -2420,6 +2420,10 @@ void handle_monsters()
             break;
         }
     }
+
+    // Process noises now (before clearing the sleep flag).
+    if (with_noise)
+        apply_noises();
 
     // Clear one-turn deep sleep flag.
     // XXX: With the current handling, it would be cleaner to
