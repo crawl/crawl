@@ -6399,6 +6399,13 @@ void player::paralyse(actor *who, int str)
 
     int &paralysis(duration[DUR_PARALYSIS]);
 
+    if (!paralysis && who)
+    {
+        take_note(Note(NOTE_PARALYSIS, str, 0,
+                       who->name(DESC_NOCAP_A).c_str()));
+    }
+
+
     mprf("You %s the ability to move!",
          paralysis ? "still haven't" : "suddenly lose");
 
