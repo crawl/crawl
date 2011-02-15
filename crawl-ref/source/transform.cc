@@ -213,6 +213,7 @@ static bool _mutations_prevent_wearing(const item_def& item)
 
     if (is_hard_helmet(item)
         && (player_mutation_level(MUT_HORNS)
+            || player_mutation_level(MUT_ANTENNAE)
             || player_mutation_level(MUT_BEAK)))
     {
         return (true);
@@ -227,6 +228,10 @@ static bool _mutations_prevent_wearing(const item_def& item)
     }
 
     if (eqslot == EQ_GLOVES && player_mutation_level(MUT_CLAWS) >= 3)
+        return (true);
+
+    if (eqslot == EQ_HELMET && (player_mutation_level(MUT_HORNS) == 3
+        || player_mutation_level(MUT_ANTENNAE) == 3))
         return (true);
 
     return (false);
