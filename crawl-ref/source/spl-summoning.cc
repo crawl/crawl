@@ -959,7 +959,7 @@ bool cast_tukimas_dance_party(actor *caster, int pow, god_type god, bool force_h
                              dur,
                              SPELL_TUKIMAS_DANCE,
                              *ri,
-                             MHITYOU,
+                             (caster == &you) ? MHITYOU : caster->as_monster()->foe,
                              // mgen_flag_type - might be MG_PLAYER_MADE or MG_FORCE_PLACE
                              0,
                              // if you animate the weapon, your god gets mad
