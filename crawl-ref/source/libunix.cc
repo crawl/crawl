@@ -180,8 +180,6 @@ static void termio_init()
 
     tcsetattr(0, TCSAFLUSH, &game_term);
 
-    setlocale(LC_ALL, "");
-
     crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
 }
 
