@@ -367,7 +367,7 @@ void fill_status_info(int status, status_info* inf)
         if (handle_pbd_corpses(false) > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = "PbD";
+            inf->light_text   = "Regen+";
         }
         break;
 

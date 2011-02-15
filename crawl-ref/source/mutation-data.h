@@ -1022,9 +1022,9 @@
 { MUT_POWERED_BY_DEATH,           0,  3, false, false,
   "powered by death",
 
-  {"You slowly steal the life force of defeated enemies.",
-   "You steal the life force of defeated enemies.",
-   "You quickly steal the life force of defeated enemies."},
+  {"You can steal the life force of nearby defeated enemies.",
+   "You can steal the life force of defeated enemies.",
+   "You can steal the life force of all defeated enemies in sight."},
 
   {"A wave of death washes over you.",
    "The wave of death grows in power.",
