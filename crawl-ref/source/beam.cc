@@ -3260,7 +3260,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_PARALYSIS:
-        potion_effect(POT_PARALYSIS, ench_power);
+        you.paralyse(agent(), 2 + random2(6));
         obvious_effect = true;
         break;
 

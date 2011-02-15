@@ -6374,6 +6374,14 @@ void player::confuse(actor *who, int str)
     confuse_player(str);
 }
 
+/*
+ * Paralyse the player for str turns.
+ *
+ *  Duration is capped at 13.
+ *
+ * @param who Pointer to the actor who paralysed the player.
+ * @param str The number of turns the paralysis will last.
+ */
 void player::paralyse(actor *who, int str)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -6383,7 +6391,7 @@ void player::paralyse(actor *who, int str)
         return;
 
     if (!(who && who->as_monster() && who->as_monster()->type == MONS_RED_WASP)
-        && (duration[DUR_PARALYSIS] || duration[DUR_PARALYSIS_IMMUNITY]))
+        && who && (duration[DUR_PARALYSIS] || duration[DUR_PARALYSIS_IMMUNITY]))
     {
         canned_msg(MSG_YOU_RESIST);
         return;
