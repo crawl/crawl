@@ -4136,7 +4136,7 @@ void melee_attack::player_apply_attack_delay()
         // Need to undo haste by hand.
         if (you.duration[DUR_HASTE])
             you.time_taken = haste_mul(you.time_taken);
-        you.time_taken /= 2;
+        you.time_taken = div_rand_round(you.time_taken, 2);
     }
 
     you.time_taken =
