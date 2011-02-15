@@ -1018,7 +1018,9 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
                      dur, SPELL_TUKIMAS_DANCE,
                      you.pos(),
                      MHITYOU,
-                     0, god);
+                     0, god,
+                     MONS_NO_MONSTER, 0, BLACK,
+                     pow);
         mg.props[TUKIMA_WEAPON] = cp;
 
         if (force_hostile)

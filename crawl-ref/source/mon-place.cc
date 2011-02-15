@@ -1986,7 +1986,8 @@ static int _place_monster_aux(const mgen_data &mg,
         // Dancing weapons are placed at pretty high power.  Remember, the
         // player is fighting them one-on-one, while he will often summon
         // several.
-        ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)), 180);
+        ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+                                  mg.summoner ? mg.power : 180);
         mon->set_ghost(ghost);
         mon->dancing_weapon_init();
     }
@@ -3188,9 +3189,12 @@ int mons_place(mgen_data mg)
         break;
     case LEVEL_DUNGEON:
     default:
-        mg.power = you.absdepth0;
-        if (crawl_state.game_is_zotdef())
+        if (mg.cls == MONS_DANCING_WEAPON && mg.summoner)
+            ; // It's an animated weapon, don't touch the power
+        else if (crawl_state.game_is_zotdef())
             mg.power =  you.num_turns / (CYCLE_LENGTH * 3);
+        else
+            mg.power = you.absdepth0;
         break;
     }
 
