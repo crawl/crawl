@@ -635,7 +635,11 @@ bool you_can_wear(int eq, bool special_armour)
         return (true);
 
     case EQ_HELMET:
-        // Anyone can wear caps.
+        // No caps or hats with Horns 3 or Antennae 3.
+        if (player_mutation_level(MUT_HORNS) == 3
+            || player_mutation_level(MUT_ANTENNAE) == 3)
+            return(false);
+        // Anyone else can wear caps.
         if (special_armour)
             return (true);
         if (player_mutation_level(MUT_HORNS)
@@ -733,6 +737,12 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     {
         if (eq == EQ_GLOVES && you.has_claws(false) >= 3)
             return (false);
+
+        if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) >= 3)
+            return (false);
+
+        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) >= 3)
+            return (false); 
 
         if (eq == EQ_BOOTS
             && (you.fishtail

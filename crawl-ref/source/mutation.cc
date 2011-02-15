@@ -1212,8 +1212,13 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_HORNS:
-    case MUT_BEAK:
     case MUT_ANTENNAE:
+        // Horns & Antennae 3 removes all headgear.  Same algorithm as with
+        // glove removal.
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
+            remove_one_equip(EQ_HELMET, false, true);
+        // Intentional fall-through
+    case MUT_BEAK:
         // Horns, beaks, and antennae force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])

@@ -652,7 +652,22 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (slot == EQ_HELMET)
     {
-        // Soft helmets (caps and wizard hats) always fit.
+        // Horns 3 & Antennae 3 mutations disallow all headgear
+        if (player_mutation_level(MUT_HORNS) == 3)
+        {
+          if (verbose)
+                mpr("You can't wear any headgear with your large horns!");
+
+            return (false);
+        }
+          if (player_mutation_level(MUT_ANTENNAE) == 3)
+        {
+          if (verbose)
+                mpr("You can't wear any headgear with your large antennae!");
+
+            return (false);
+        }
+        // Soft helmets (caps and wizard hats) always fit, otherwise.
         if (!is_hard_helmet(item))
             return (true);
 

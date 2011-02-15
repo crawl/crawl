@@ -115,7 +115,8 @@ static armour_type _pick_wearable_armour(const armour_type arm)
         break;
     }
 
-    // Mutation specific problems (horns allow caps).
+    // Mutation specific problems (horns and antennae allow caps, but not 
+    // Horns 3 or Antennae 3 (checked below)).
     if (result == ARM_BOOTS && !player_has_feet()
         || result == ARM_GLOVES && you.has_claws(false) >= 3)
     {
@@ -132,7 +133,12 @@ static armour_type _pick_wearable_armour(const armour_type arm)
             || you.mutation[MUT_HORNS]
             || you.mutation[MUT_ANTENNAE]))
     {
-        result = coinflip() ? ARM_CAP : ARM_WIZARD_HAT;
+        // Check for Horns 3 & Antennae 3 - Don't give a cap if those mutation
+        // levels have been reached.
+        if (you.mutation[MUT_HORNS] <= 2 || you.mutation[MUT_ANTENNAE] <= 2)
+          result = coinflip() ? ARM_CAP : ARM_WIZARD_HAT;
+        else
+          result = NUM_ARMOURS;
     }
 
     return (result);
