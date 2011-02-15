@@ -1634,16 +1634,19 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         // Add extra stairs to get to exactly three.
         for (int s = num_stairs; s < 3; s++)
         {
-            coord_def gc = _dgn_random_point_in_bounds(DNGN_FLOOR, MMT_VAULT,
-                                                       DNGN_UNSEEN);
+            const uint32_t mask = preserve_vault_stairs ? MMT_VAULT : 0;
+            coord_def gc = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_UNSEEN);
 
-            dprf("Adding stair %d at (%d,%d)", s, gc.x, gc.y);
-            // base gets fixed up to be the right stone stair below...
-            grd(gc) = base;
-            stair_list[num_stairs++] = gc;
+            if (!gc.origin())
+            {
+                dprf("Adding stair %d at (%d,%d)", s, gc.x, gc.y);
+                // base gets fixed up to be the right stone stair below...
+                grd(gc) = base;
+                stair_list[num_stairs++] = gc;
+            }
+            else
+                success = false;
         }
-
-        ASSERT(num_stairs == 3);
 
         // Ensure uniqueness of three stairs.
         for (int s = 0; s < 4; s++)
