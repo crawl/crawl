@@ -2067,6 +2067,9 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             done_damage = true;
         }
 
+        if (you.duration[DUR_PARALYSIS])
+            desc += "\n             ... while paralysed";
+
         if (death_type == KILLED_BY_LEAVING
             || death_type == KILLED_BY_WINNING)
         {
