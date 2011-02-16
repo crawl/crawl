@@ -829,7 +829,7 @@ MONS:    orc / nothing
 #
 : local brnd = crawl.random2(8)
 : if brnd > 5 then
-MONS:    orc wizard, orc sorcerer 
+MONS:    orc wizard, orc sorcerer
 : elseif brnd > 2 then
 MONS:    orc priest, orc high priest
 : else
@@ -869,8 +869,8 @@ MONS:    ogre / nothing, two-headed ogre / nothing, ogre mage / nothing
 KMONS:   S = ogre / nothing
 KFEAT:   S = any shop
 MAP
-  ..........@.........  
- ...................... 
+  ..........@.........
+ ......................
 ...xxxxxxxx..xxxxxxxx...
 ..xxxx............xxxx..
 ..xx.......11.......xx..
@@ -881,8 +881,8 @@ MAP
 ..xx.......11.......xx..
 ..xxxx............xxxx..
 ...xxxxxxxx..xxxxxxxx...
- ...................... 
-  ....................  
+ ......................
+  ....................
 ENDMAP
 
 ##################################################
@@ -890,16 +890,16 @@ NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
 PLACE:   Orc:4
 MONS:    orc warrior w:1 ; crossbow . bolt | halberd | war axe | spiked flail /\
-         orc w:10 ; crossbow . bolt | trident | hand axe | mace 
+         orc w:10 ; crossbow . bolt | trident | hand axe | mace
 MONS:    orc warrior ; crossbow . bolt | glaive | broad axe | battleaxe | great mace
-MONS:    orc knight ; crossbow . bolt | glaive | broad axe | great mace 
+MONS:    orc knight ; crossbow . bolt | glaive | broad axe | great mace
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1 / nothing w:21
 SUBST:   3 = 23
 KFEAT:   S = any shop
 MAP
-  ...............@...............  
- ................................. 
+  ...............@...............
+ .................................
 ...cc..cc..cc...ccc...cc..cc..cc...
 ..cc..........wwcccww..........cc..
 ..c..5.......wwwcccwww.......5..c..
@@ -914,21 +914,21 @@ MAP
 ..c..5.......wwwcccwww.......5..c..
 ..cc..........wwcccww..........cc..
 ...cc..cc..cc...ccc...cc..cc..cc...
- ................................. 
-  ...............................  
+ .................................
+  ...............................
 ENDMAP
 
 ##################################################
 NAME:    st_orc_mages
-TAGS:    no_item_gen no_monster_gen 
+TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:4
 MONS:    orc / nothing, orc wizard / nothing, orc sorcerer
 MONS:    orc priest / nothing, orc high priest, orc warrior
 KFEAT:   S = any shop
 SHUFFLE: 23/45
 MAP
-  ...................  
- ...ccccccccccccccc...  
+  ...................
+ ...ccccccccccccccc...
 ...cc4.4...6...4.4cc...
 ..cc4.2.4..6..4.2.4cc..
 ..c..4.2.ccccc.2.4..c..
@@ -946,13 +946,13 @@ MAP
 ..c..4.2.ccccc.2.4..c..
 ..cc4.2.4..6..4.2.4cc..
 ...cc4.4...6...4.4cc...
- ...ccccccccccccccc... 
-  ...................  
+ ...ccccccccccccccc...
+  ...................
 ENDMAP
 
 ##################################################
 NAME:    st_orc_pillars
-TAGS:    no_item_gen no_monster_gen 
+TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:4
 MONS:    orc / nothing, orc warrior / nothing, orc knight / nothing
 MONS:    orc priest / nothing, orc high priest
@@ -979,13 +979,13 @@ ENDMAP
 
 ##################################################
 NAME:    st_orc_congregation
-TAGS:    no_item_gen no_monster_gen 
+TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:4
 MONS:    orc / nothing, orc warrior / nothing, orc priest / nothing
 MONS:    orc wizard / nothing, orc knight, orc high priest, orc sorcerer
 KMONS:   V = orc warlord
 KFEAT:   V = T
-# This one has a lot more high level orcs than the rest, 
+# This one has a lot more high level orcs than the rest,
 # so instead of adding more shops, guarantees good shops.
 KFEAT:   S = general shop
 KFEAT:   A = antique armour shop
@@ -1017,20 +1017,20 @@ xccccccccc.11...11.cccccccccx
 xccccccccc.11...11.cccccccccx
 xccccccccc.1.....1.cccccccccx
 xccccccccccc.....cccccccccccx
-          .........  
+          .........
             ..@..
 ENDMAP
 
 ##################################################
 NAME:    st_orc_open
-TAGS:    no_item_gen no_monster_gen 
+TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:4
 MONS:    ogre, two-headed ogre, troll, rock troll w:19 / iron troll w:1
 MONS:    ogre mage, hill giant w:14 / ettin w:1, cyclops w:29 / stone giant w:1
 KFEAT:   S = any shop
 MAP
- ..... 
-..111..  .... .... 
+ .....
+..111..  .... ....
 ..151....4....3S3..
 ..111.....321..3..11
  .......2.252......1
@@ -1043,7 +1043,7 @@ ENDMAP
 
 ##################################################
 NAME:    st_orc_elflike
-TAGS:    no_item_gen no_monster_gen 
+TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:4
 MONS:    orc high priest, orc sorcerer, orc knight
 MONS:    orc warrior, orc priest, orc wizard

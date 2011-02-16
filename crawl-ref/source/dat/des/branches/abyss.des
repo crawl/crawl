@@ -139,7 +139,7 @@ MAP
 mm.mm
 m.O.m
 mm.mm
- mmm 
+ mmm
 ENDMAP
 
 NAME:  evilmike_abyss_exit_plants
@@ -150,7 +150,7 @@ SUBST: . = .:100 1
 MONS:  plant col:any, bush col:any
 # TODO: Tiles!
 MAP
- ....... 
+ .......
 .........
 ..11111..
 ..12221..
@@ -158,7 +158,7 @@ MAP
 ..12221..
 ..11111..
 .........
- ....... 
+ .......
 ENDMAP
 
 NAME:  evilmike_abyss_exit_teleports
@@ -226,13 +226,13 @@ KFEAT: O = exit_abyss
 KFEAT: n = stone_arch
 MAP
     x
-    x   
-  ..x.. 
-  .nxn. 
+    x
+  ..x..
+  .nxn.
 xxxxxxxxx
-  .Oxn. 
-  ..x.. 
- .  x   
+  .Oxn.
+  ..x..
+ .  x
 @   x
 ENDMAP
 
@@ -252,7 +252,7 @@ xxx=x=x=x=xxx
   xnxnxnxnx
  xxxxxxxxxxx
   x x x x x
-    x   x 
+    x   x
 ENDMAP
 
 NAME:  evilmike_abyss_exit_6
@@ -373,7 +373,7 @@ MONS:  smoke demon, deep elf priest
 MAP
        ccc
      ccc1ccc
-   ccc.....ccc 
+   ccc.....ccc
   cc.........cc
   c....2......c
  cc...........cc
@@ -385,7 +385,7 @@ cc..2..........cc
  cc...........cc
   c....2......c
   cc.........cc
-   ccc.....ccc 
+   ccc.....ccc
      ccc1ccc
        ccc
 ENDMAP
