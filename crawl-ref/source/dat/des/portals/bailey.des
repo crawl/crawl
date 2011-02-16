@@ -467,9 +467,9 @@ MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
 ITEM:   potion of healing / potion of heal wounds / potion of magic / nothing /\
         potion of might w:5 / potion of speed w:2 / potion of berserk rage w:3
-ITEM:   potion of experience q:2 w:30 / potion of cure mutation q:3 w:30 /\
-        potion of gain intelligence q:8 / potion of gain strength q:8 /\
-        potion of gain dexterity q:8
+ITEM:   potion of experience q:1 w:30 / potion of cure mutation q:2 w:30 /\
+        potion of gain intelligence q:6 / potion of gain strength q:6 /\
+        potion of gain dexterity q:6
 : bailey_setup(_G)
 epilogue{{
 bailey_milestone(_G)
@@ -815,7 +815,7 @@ bailey_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xA........................................x
+xA.......................................<x
 x.........................................x
 x.........................................x
 x.........................................x
@@ -851,7 +851,7 @@ x.........................................x
 x.........................................x
 x.........................................x
 x.........................................x
-x........................................<x
+x<.......................................<x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
