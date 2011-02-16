@@ -213,10 +213,7 @@ static void _dgn_unregister_vault(const map_def &map);
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask);
 
 // Returns true if the given square is okay for use by any character,
-// but always false for squares in non-transparent vaults. This
-// function returns sane results only immediately after dungeon generation
-// (specifically, saving and restoring a game discards information on the
-// vaults used in the current level).
+// but always false for squares in non-transparent vaults.
 static bool _dgn_square_is_passable(const coord_def &c);
 
 static coord_def _dgn_random_point_in_bounds(
