@@ -1051,17 +1051,16 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         _mask_vault(place, MMT_NO_TRAP);
 
     // Now do per-square by-symbol masking.
-    for (rectangle_iterator ri(place.pos, place.pos + place.size - 1); ri; ++ri)
-        if (place.map.in_map(*ri - place.pos))
-        {
-            const keyed_mapspec *spec = place.map.mapspec_at(*ri - place.pos);
+    for (vault_place_iterator vi(place); vi; ++vi)
+    {
+        const keyed_mapspec *spec = place.map.mapspec_at(*vi - place.pos);
 
-            if (spec != NULL)
-            {
-                env.level_map_mask(*ri) |= (short)spec->map_mask.flags_set;
-                env.level_map_mask(*ri) &= ~((short)spec->map_mask.flags_unset);
-            }
+        if (spec != NULL)
+        {
+            env.level_map_mask(*vi) |= (short)spec->map_mask.flags_set;
+            env.level_map_mask(*vi) &= ~((short)spec->map_mask.flags_unset);
         }
+    }
 
     set_branch_flags(place.map.branch_flags.flags_set, true);
     unset_branch_flags(place.map.branch_flags.flags_unset, true);
