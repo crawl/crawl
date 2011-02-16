@@ -39,6 +39,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "files.h"
+#include "ghost.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -4525,6 +4526,14 @@ int dgn_place_monster(mons_spec &mspec,
 
             if (mons.is_priest() && mons.god == GOD_NO_GOD)
                 mons.god = GOD_NAMELESS;
+
+            if (mons.type == MONS_DANCING_WEAPON)
+            {
+                item_def *wpn = mons.mslot_item(MSLOT_WEAPON);
+                ASSERT(wpn);
+                mons.ghost->init_dancing_weapon(*wpn, 180);
+                mons.dancing_weapon_init();
+            }
         }
         return (mindex);
     }
