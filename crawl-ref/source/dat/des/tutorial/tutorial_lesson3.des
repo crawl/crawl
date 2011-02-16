@@ -440,7 +440,7 @@ COLOUR:  ABCDdefg = blue
 COLOUR:  .1234h = brown
 FTILE:   .{})^1234h = floor_swamp, t = floor_grass
 FTILE:   ABCDdefg = tutorial_pad
-ITEM:    potion of healing q:1
+ITEM:    potion of healing q:2
 ITEM:    meat ration q:50
 ITEM:    ring of levitation
 ITEM:    cloak unrand:ratskin_cloak

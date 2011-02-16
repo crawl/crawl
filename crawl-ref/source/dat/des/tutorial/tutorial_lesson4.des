@@ -144,8 +144,7 @@ function tutorial_msg4.forget_spell ()
                 .. "the book will be destroyed, so you'll need other spellbooks "
                 .. "to learn new spells."
 
-    crawl.mesclr(true)
-    crawl.mpr(text, "tutorial")
+    return tutorial_message(text)
 end
 
 function tutorial_msg4.memorise2 ()
@@ -304,17 +303,18 @@ PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   T = fountain_blood
-KFEAT:   A = +
-KFEAT:   B = .
-COLOUR:  dB = blue
-FTILE:   dB = tutorial_pad
+KFEAT:   AC = .
+KFEAT:   B = +
+COLOUR:  dAC = blue
+FTILE:   dAC = tutorial_pad
 ITEM:    randbook numspells:1 spells:summon_small_mammals title:Simple_Steps_to_Summoning owner:player
 MONS:    hobgoblin ; shield not_cursed . ring mail race:none not_cursed
 MONS:    rat
 MONS:    goblin
+MARKER:  A = lua:tutorial_msg4.forget_spell()
 MARKER:  d = lua:tutorial_msg4.memorise2()
-MARKER:  A = lua:tutorial_msg4.order_allies()
-MARKER:  B = lua:tutorial_msg4.heavy_armour()
+MARKER:  B = lua:tutorial_msg4.order_allies()
+MARKER:  C = lua:tutorial_msg4.heavy_armour()
 MARKER:  } = lua:tutorial_msg4.tutorial_end()
 MARKER:  ) = lua:tutorial_msg4.tutorial_end()
 MARKER:  ] = lua:tutorial_msg4.tutorial_end()
@@ -327,9 +327,6 @@ MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson4", \
 MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg4.win" }
-epilogue{{
-  tutorial_msg4.forget_spell()
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -339,16 +336,16 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.....xxxx.T..xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.xxxxx.xx.....[xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxxxxxx.+..d..{xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxAxxxxxxxxx.....(xxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxx.T..xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.xxxxx.xx.....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxx.+..d......xxxxxxxxxxxxxxx
+xxxxxxxxxxxxBxxxxxxxxx.....xxxx.Axxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxx.T..xxxxxx.xxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxx..xxxxxxxx.xxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx...xxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx{([xxxxxxxxxx
 xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxBxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxCxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxxxxx....3.]xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxxxx..2.....3xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx......+......2.)xxxxxxxxxxxxxxxxxx
