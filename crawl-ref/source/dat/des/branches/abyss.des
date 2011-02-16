@@ -86,6 +86,8 @@ ENDMAP
 
 ###############################################################################
 # abyss rune vaults
+###############################################################################
+
 NAME: abyss_rune_001
 TAGS: abyss_rune allow_dup
 KITEM: O = abyssal rune of Zot
@@ -119,12 +121,290 @@ ENDMAP
 
 ###############################################################################
 # abyss exit vaults
-NAME: abyss_exit_001
+###############################################################################
+
+NAME: abyss_exit_lava
 TAGS: abyss_exit allow_dup
 MAP
 l.l
 .O.
 l.l
+ENDMAP
+
+NAME:  evilmike_abyss_exit_glass
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MAP
+ mmm@
+mm.mm
+m.O.m
+mm.mm
+ mmm 
+ENDMAP
+
+NAME:  evilmike_abyss_exit_plants
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: 1 = 112.
+SUBST: . = .:100 1
+MONS:  plant col:any, bush col:any
+# TODO: Tiles!
+MAP
+ ....... 
+.........
+..11111..
+..12221..
+..12O21..
+..12221..
+..11111..
+.........
+ ....... 
+ENDMAP
+
+NAME:  evilmike_abyss_exit_teleports
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KFEAT: ^ = teleport trap
+SUBST: ^ = ^:40 . x:5,  . = .:80 ^ x
+SUBST: x:xcv
+MAP
+.....
+.^^^.
+.^O^.
+.^^^.
+.....
+ENDMAP
+
+NAME:  evilmike_abyss_exit_1
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MAP
+x+x
++O+
+x+x
+ENDMAP
+
+NAME:  evilmike_abyss_exit_2
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: x = x:30 c:20 v:20 m:3 b:3
+MAP
+  @ xxxx
+ x.xxxxxxx
+xx.x.....xx
+xx.x.xxx.xx
+xx.x.xOx.xx
+xx.x.x.x.xx
+xx.x...x.xx
+xx.xxxxx.xx
+xx.......xx
+ xxxxxxxxx
+  xxxxxxx
+ENDMAP
+
+NAME:  evilmike_abyss_exit_3
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: . = ..Wwl
+MAP
+     .
+    ...
+   .....
+  .......
+ .........@
+.....O.....
+ .........
+  .......
+   .....
+    ...
+     .
+ENDMAP
+
+NAME:  evilmike_abyss_exit_4
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KFEAT: n = stone_arch
+MAP
+    x
+    x   
+  ..x.. 
+  .nxn. 
+xxxxxxxxx
+  .Oxn. 
+  ..x.. 
+ .  x   
+@   x
+ENDMAP
+
+NAME:   evilmike_abyss_exit_5
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+KFEAT:  n = stone_arch
+NSUBST: n = 1:O / *:n, = = 1:+ / *:=
+MAP
+    x   x
+  x x x x x
+ xxxxxxxxxxx
+  xnxnxnxnx
+xxx=x=x=x=xxx
+  x.........@
+xxx=x=x=x=xxx
+  xnxnxnxnx
+ xxxxxxxxxxx
+  x x x x x
+    x   x 
+ENDMAP
+
+NAME:  evilmike_abyss_exit_6
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: X: .x, x: xxxccvlw, .: ...W
+MAP
+  x x x
+ x x x x x
+xxxxxxxxx x
+xX.XxX.Xxx x
+x.x.x.x.x x
+@XxX.XxOxx x
+xxxxxxxxx x
+ x x x x x
+  x x x
+ENDMAP
+
+NAME:  evilmike_abyss_exit_7
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: x:xxcv
+MAP
+xx.xx
+x.x.x
+.xOx.
+x.x.x
+xx.xx
+ENDMAP
+
+NAME:   evilmike_abyss_exit_kraken
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+NSUBST: w = 1:m / *:w
+KFEAT:  m = w
+KMONS:  m = kraken
+SUBST:  Z = wY, Y = wW, W = w., w=WWw
+MAP
+..WWWWWWW..
+.WYYYYYYYW.
+WYZZZZZZZYW
+WYZwwwwwZYW
+WYZwwwwwZYW
+WYZwwOwwZYW
+WYZwwwwwZYW
+WYZwwwwwZYW
+WYZZZZZZZYW
+.WYYYYYYYW.
+..WWWWWWW..
+ENDMAP
+
+# Fog machine parameters are the same as that swamp entry vault; you pretty
+# much can't avoid the fog here, so I hope you have rMut.
+NAME:   evilmike_abyss_exit_mutagenic
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+MARKER: O = lua:fog_machine {                               \
+                pow_min = 8, pow_max = 12, delay = 25,      \
+                size = 1, walk_dist = 1, spread_rate = 33,  \
+                cloud_type = "mutagenic fog"                \
+            }
+MAP
+...
+.O.
+...
+ENDMAP
+
+# Make sure to close the doors if you don't like what you see behind them...
+NAME:   evilmike_abyss_exit_vortex
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+KFEAT:  n = stone_arch
+SUBST:  x:xxxcv, 1=1., g:G.
+SUBST:  G:Gb.
+MONS:   spatial vortex
+NSUBST: n = 1:O / *:n
+MAP
+     xxxxx
+     x111x
+     x1n1x
+     x111x
+    @x+++x@
+xxxxx.....xxxxx
+x111+..g..+111x
+x1n1+.gGg.+1n1x
+x111+..g..+111x
+xxxxx.....xxxxx
+    @x+++x@
+     x111x
+     x1n1x
+     x111x
+     xxxxx
+ENDMAP
+
+NAME:  evilmike_abyss_exit_chaos
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MONS:  chaos spawn
+SUBST: 1 = 11., n : nc, c = cvb
+MAP
+ ccncc
+cc.1.cccccc
+c.1.1.c.1.cccc
+n1.O..+......+@
+c.1.1.c.1.cccc
+cc.1.cccccc
+ ccncc
+ENDMAP
+
+# This one is really, really weird...
+NAME:  evilmike_abyss_exit_smiterflies
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KMONS: O = generate_awake statue spells:summon_butterflies;summon_butterflies;\
+           summon_butterflies;summon_butterflies;summon_butterflies; \
+           tile:mons_statue_mage col:lightblue
+MONS:  smoke demon, deep elf priest
+MAP
+       ccc
+     ccc1ccc
+   ccc.....ccc 
+  cc.........cc
+  c....2......c
+ cc...........cc
+ c.............c
+cc..2..........cc
+c1......O.......+@
+cc..2..........cc
+ c.............c
+ cc...........cc
+  c....2......c
+  cc.........cc
+   ccc.....ccc 
+     ccc1ccc
+       ccc
+ENDMAP
+
+NAME:  evilmike_abyss_exit_disperse
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: . = .:100 2
+MONS:  centaur; bow . arrow ego:dispersal, plant
+MAP
+     xxx xxx xxx
+   xxx1xxx1xxx1x
+ xxx....x...x..xxx
+xx...............x
+x1.Ox............+@
+xx...............x
+ xxx....x...x..xxx
+   xxx1xxx1xxx1x
+     xxx xxx xxx
 ENDMAP
 
 ###################################################################
