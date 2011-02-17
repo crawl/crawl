@@ -1826,13 +1826,11 @@ bool kiku_receive_corpses(int pow, coord_def where)
         // Create corpse object.
         monster dummy;
         dummy.type = mon_type;
+        define_monster(&dummy);
         int index_of_corpse_created = get_item_slot();
 
         if (index_of_corpse_created == NON_ITEM)
             break;
-
-        if (mons_genus(mon_type) == MONS_HYDRA)
-            dummy.number = random2(20) + 1;
 
         int valid_corpse = fill_out_corpse(&dummy,
                                            dummy.type,
