@@ -5272,7 +5272,7 @@ void tile_item_eat_floor(int idx)
         || mitm[idx].base_type == OBJ_FOOD
             && you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE)
     {
-        if (can_ingest(mitm[idx].base_type, mitm[idx].sub_type, false)
+        if (can_ingest(mitm[idx], false)
             && _prompt_eat_bad_food(mitm[idx]))
         {
             eat_floor_item(idx);
