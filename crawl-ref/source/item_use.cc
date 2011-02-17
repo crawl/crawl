@@ -4502,7 +4502,6 @@ static bool _scroll_modify_item(item_def scroll)
     case SCR_IDENTIFY:
         if (!fully_identified(item))
         {
-            mpr("This is a scroll of identify!");
             identify(-1, item_slot);
             return (true);
         }
@@ -4749,6 +4748,9 @@ void read_scroll(int slot)
     bool tried_on_item = false; // used to modify item (?EA, ?RC, ?ID)
 
     bool bad_effect = false; // for Xom: result is bad (or at least dangerous)
+
+    int prev_quantity = you.inv[item_slot].quantity;
+
     switch (which_scroll)
     {
     case SCR_RANDOM_USELESSNESS:
@@ -5083,8 +5085,17 @@ void read_scroll(int slot)
     if (id_the_scroll)
         set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
+    std::string scroll_name = scroll.name(DESC_QUALNAME).c_str();
+
     if (!cancel_scroll)
         dec_inv_item_quantity(item_slot, 1);
+
+    if (id_the_scroll && !alreadyknown && which_scroll != SCR_ACQUIREMENT)
+    {
+        mprf("It %s a %s.",
+             you.inv[item_slot].quantity < prev_quantity ? "was" : "is",
+             scroll_name.c_str());
+    }
 
     if (!alreadyknown && dangerous)
     {
