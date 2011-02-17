@@ -14,6 +14,7 @@
 #include "mon-behv.h"
 #include "ouch.h"
 #include "player.h"
+#include "shout.h"
 #include "spl-cast.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -162,6 +163,7 @@ void tornado_damage(actor *caster, int dur)
         pow = div_rand_round(pow * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
+    noisy(25, org, caster->mindex());
     WindSystem winds(org);
 
     std::stack<actor*>    move_act;
