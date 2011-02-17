@@ -136,7 +136,7 @@ bool cast_tornado(int powc)
     }
 
     mprf("A great vortex of raging winds %s.",
-         you.is_levitating() ? "appears around you"
+         you.airborne() ? "appears around you"
                              : "appears and lifts you up");
 
     if (you.fishtail)
