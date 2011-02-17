@@ -1790,6 +1790,9 @@ bool kiku_receive_corpses(int pow, coord_def where)
         if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
             spaces_for_corpses++;
     }
+    // floating over lava, heavy tomb abuse, etc
+    if (!spaces_for_corpses)
+        spaces_for_corpses++;
 
     int percent_chance_a_square_receives_extra_corpse = // can be > 100
         int(float(expected_extra_corpses) / float(spaces_for_corpses) * 100.0);
