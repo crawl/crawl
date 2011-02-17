@@ -3924,9 +3924,11 @@ void drink(int slot)
     {
         set_ident_flags(potion, ISFLAG_IDENT_MASK);
         set_ident_type(potion, ID_KNOWN_TYPE);
+        mpr("It was a " + potion.name(DESC_QUALNAME) + ".");
     }
-    else
+    else if (!alreadyknown)
     {
+        // Because all potions are identified upon quaffing we never come here.
         set_ident_type(potion, ID_TRIED_TYPE);
     }
 
