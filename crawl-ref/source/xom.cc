@@ -2649,10 +2649,17 @@ static void _xom_zero_miscast()
             messages.push_back("You trip over your bandages.");
     }
 
-    if (you.form != TRAN_SPIDER)
     {
         std::string str = "A monocle briefly appears over your ";
         str += coinflip() ? "right" : "left";
+        if (you.form == TRAN_SPIDER)
+            if (coinflip())
+                str += " primary";
+            else
+            {
+                str += random_choose_string(" front", " middle", " rear");
+                str += " secondary";
+            }
         str += " eye.";
         messages.push_back(str);
     }
