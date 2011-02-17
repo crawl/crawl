@@ -4051,10 +4051,10 @@ static const object_class_type _acquirement_item_classes[] = {
     OBJ_MISCELLANY
 };
 
-int dgn_item_corpse(const item_spec &ispec)
+int dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
     mons_spec mspec(ispec.corpse_monster_spec());
-    const int mindex = dgn_place_monster(mspec, 0, coord_def());
+    const int mindex = dgn_place_monster(mspec, 0, where);
     if (invalid_monster_index(mindex))
         return (NON_ITEM);
 
@@ -4134,7 +4134,7 @@ retry:
         (acquire ?
          acquirement_create_item(base_type, spec.acquirement_source,
                                  true, where)
-         : spec.corpselike() ? dgn_item_corpse(spec)
+         : spec.corpselike() ? dgn_item_corpse(spec, where)
          : items(spec.allow_uniques, base_type,
                   spec.sub_type, true, level, spec.race, 0,
                   spec.ego, -1, spec.level == ISPEC_MUNDANE));
