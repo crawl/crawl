@@ -2,6 +2,7 @@
 
 #include "spl-damage.h"
 
+#include "areas.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -203,24 +204,28 @@ void tornado_damage(actor *caster, int dur)
                 if (victim->submerged())
                     continue;
 
+                bool leda = liquefied(victim->pos()) && victim->ground_level();
                 if (!victim->res_wind())
                 {
                     if (victim->atype() == ACT_MONSTER)
                     {
-                        // levitate the monster so you get only one attempt at
-                        // tossing them into water/lava
                         monster *mon = victim->as_monster();
-                        mon_enchant ench(ENCH_LEVITATION, 0,
-                                         caster->kill_alignment(), 20);
-                        if (mon->has_ench(ENCH_LEVITATION))
-                            mon->update_ench(ench);
-                        else
-                            mon->add_ench(ench);
+                        if (!leda)
+                        {
+                            // levitate the monster so you get only one attempt
+                            // at tossing them into water/lava
+                            mon_enchant ench(ENCH_LEVITATION, 0,
+                                             caster->kill_alignment(), 20);
+                            if (mon->has_ench(ENCH_LEVITATION))
+                                mon->update_ench(ench);
+                            else
+                                mon->add_ench(ench);
+                        }
                         behaviour_event(mon, ME_ANNOY, caster->mindex());
                         if (mons_is_mimic(mon->type))
                             mimic_alert(mon);
                     }
-                    else
+                    else if (!leda)
                     {
                         bool standing = !you.airborne();
                         if (standing)
@@ -242,7 +247,7 @@ void tornado_damage(actor *caster, int dur)
                         victim->hurt(caster, dmg);
                 }
 
-                if (victim->alive())
+                if (victim->alive() && !leda)
                     move_act.push(victim);
             }
             if ((env.cgrid(*dam_i) == EMPTY_CLOUD
