@@ -515,6 +515,9 @@ static int _acquirement_weapon_subtype(bool divine)
         {
             if (acqweight < 500)
                 acqweight = 500;
+            // Quick blades get unproportionately hit by damage weighting.
+            if (i == WPN_QUICK_BLADE)
+                acqweight = acqweight * 25 / 9;
             int damage = property(item_considered, PWPN_DAMAGE);
             if (!two_handed)
                 damage = damage * 3 / 2;
