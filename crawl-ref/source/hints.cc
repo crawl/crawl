@@ -1383,7 +1383,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
-    case HINT_EATING_ROTTEN_FOOD:
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
         return (true);
@@ -2431,12 +2430,20 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_ROTTEN_FOOD:
+        if (!crawl_state.game_is_hints())
+        {
+            text << "One or more of the chunks or corpses you carry has "
+                    "started to rot. While some species can eat rotten "
+                    "meat, you can't.";
+            break;
+        }
         text << "One or more of the chunks or corpses you carry has started "
-                "to rot. Few species can digest these safely, so you might "
-                "just as well <w>%</w>rop them now. When selecting items from "
-                "a menu, there's a shortcut (<w>&</w>) to select all corpses, "
-                "skeletons, and rotten chunks in your inventory at once.";
-         cmd.push_back(CMD_DROP);
+                "to rot. Few species can digest these, so you might just as "
+                "well <w>%</w>rop them now."
+                "When selecting items from a menu, there's a shortcut "
+                "(<w>&</w>) to select all items in your inventory at once "
+                "that are useless to you.";
+        cmd.push_back(CMD_DROP);
         break;
 
     case HINT_MAKE_CHUNKS:
