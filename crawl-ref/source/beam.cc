@@ -2306,7 +2306,7 @@ void bolt::affect_endpoint()
     if (is_tracer)
         return;
 
-    if (!is_explosion && !noise_generated)
+    if (!is_explosion && !noise_generated && loudness)
     {
         noisy(loudness, pos(), beam_source);
         noise_generated = true;

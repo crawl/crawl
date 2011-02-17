@@ -1167,7 +1167,7 @@ spret_type your_spells(spell_type spell, int powc,
     const int  loudness        = spell_noise(spell);
 
     // Make some noise if it's actually the player casting.
-    if (god == GOD_NO_GOD)
+    if (god == GOD_NO_GOD && loudness)
         noisy(loudness, you.pos());
 
     if (allow_fail)
