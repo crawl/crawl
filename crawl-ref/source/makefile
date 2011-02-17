@@ -1090,7 +1090,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
 $(GAME): $(GAME_DEPENDS)
-	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
 profile: all
