@@ -34,7 +34,19 @@
 #include "transform.h"
 #include "xom.h"
 
-// From an actual potion, pow == 40 -- bwr
+/*
+ * Apply the effect of a potion to the player.
+ *
+ * This is called when the player quaff a potion, but also for some cards,
+ * beams, sparkling fountains, god effects and miscasts.
+ *
+ * @param pot_eff   The potion type.
+ * @param pow       The power of the effect. 40 for actual potions.
+ * @param drank_it  Wether the player actually quaffed (potions and fountains).
+ * @param was_known Wether the potion was already identified.
+ *
+ * @return If the potion was identified.
+ */
 bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 {
 
@@ -438,7 +450,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
     }
 
-    return (effect);
+    return (!was_known && effect);
 }
 
 bool unwield_item(bool showMsgs)
