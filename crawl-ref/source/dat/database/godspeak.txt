@@ -775,6 +775,57 @@ recite_closure
 
 "Purity be upon you all."
 %%%%
+##########################
+# Xom's response to prayer
+##########################
+Xom prayer
+
+Xom slaps you with a @_trout_species_@ trout!
+
+Xom toots happily.
+
+Xom says: I'm watching you, my @_xom_child_@ child.
+
+You hear crickets chirping.
+
+w:1
+You feel someone pinching you. As you turn, you see no one.
+
+w:1
+Xom says: "Amen!".
+%%%%
+_trout_species_
+
+rainbow
+
+flathead
+
+cutthroat
+
+bull
+
+silver
+%%%%
+_xom_child_
+
+misbegotten
+
+bastard
+
+ugly
+
+red-headed step
+
+silly
+
+worthless
+
+prodigal
+
+insane
+
+naughty
+%%%%
 ######################################
 # Welcome messages on game restoration
 ######################################

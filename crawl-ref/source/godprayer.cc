@@ -7,6 +7,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "coordit.h"
+#include "database.h"
 #include "effects.h"
 #include "env.h"
 #include "food.h"
@@ -383,7 +384,9 @@ void pray()
          you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
-    if (player_under_penance())
+    if (you.religion == GOD_XOM)
+        mpr(getSpeakString("Xom prayer"), MSGCH_GOD);
+    else if (player_under_penance())
         simple_god_message(" demands penance!");
     else
         mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
