@@ -675,24 +675,23 @@ void tilep_job_default(int job, dolls_data *doll)
 #endif
 
         case JOB_CHAOS_KNIGHT:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
-            parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_PLUME;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
+            parts[TILEP_PART_BODY]  = TILEP_BODY_MESH_BLACK;
+            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_SHORT_DARKBROWN;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_CLOWN; // Xom
             break;
 
         case JOB_DEATH_KNIGHT:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
+            parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_BLACK3;
             parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_PLUME;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_OFS;
+            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_BLACK;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
         case JOB_ABYSSAL_KNIGHT:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
+            parts[TILEP_PART_BODY]  = TILEP_BODY_SHOULDER_PAD;
             parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
             parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_PLUME;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
         case JOB_BERSERKER:
@@ -844,11 +843,10 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_HUNTER:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_ARMOUR2;
-            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BROWN;
-            parts[TILEP_PART_HAND1] = TILEP_HAND1_BOW;
-            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_BROWN;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN;
+            parts[TILEP_PART_BODY]  = TILEP_BODY_LEGOLAS;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_FEATHER_GREEN;
+            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_DARKGREEN;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN3;
             break;
 
         case JOB_GLADIATOR:
