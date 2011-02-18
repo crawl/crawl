@@ -385,7 +385,7 @@ static void _add_targeting_commands(const coord_def& pos)
     for (int i = 0; i < std::abs(delta.y); i++)
         macro_buf_add_cmd(cmd);
 
-    macro_buf_add_cmd(CMD_TARGET_MOUSE_MOVE);
+    macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
 }
 
 static const bool _is_appropriate_spell(spell_type spell,
