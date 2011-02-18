@@ -1632,10 +1632,9 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
                 continue;
             break;
         case WPN_SPEAR:
-            // Non-small gladiators and merfolk get tridents.
-            if (ng->job == JOB_GLADIATOR
-                  && species_size(ng->species, PSIZE_BODY) >= SIZE_MEDIUM
-                || ng->species == SP_MERFOLK)
+            // Non-small gladiators and fighters get tridents.
+            if ((ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
+                  && species_size(ng->species, PSIZE_BODY) >= SIZE_MEDIUM)
             {
                 wp.first = WPN_TRIDENT;
             }

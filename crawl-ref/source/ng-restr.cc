@@ -776,6 +776,8 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
                         : CC_RESTRICTED);
             }
         case WPN_FALCHION:
+            if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR)
+                return (CC_BANNED);
             switch (ng.species)
             {
             case SP_HUMAN:
@@ -801,9 +803,8 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             }
 
         case WPN_TRIDENT:
-            if (ng.species != SP_MERFOLK
-                && (ng.job != JOB_GLADIATOR
-                    || species_size(ng.species, PSIZE_BODY) < SIZE_MEDIUM))
+            if (ng.job != JOB_GLADIATOR && ng.job != JOB_FIGHTER
+                || species_size(ng.species, PSIZE_BODY) < SIZE_MEDIUM)
             {
                 return (CC_BANNED);
             }
