@@ -1970,7 +1970,8 @@ enum main_dir
 };
 
 static void _add_tentacle_overlay(const coord_def pos,
-                                  const main_dir dir)
+                                  const main_dir dir,
+                                  bool is_kraken = true)
 {
     coord_def next = pos;
     switch (dir)
@@ -1992,10 +1993,30 @@ static void _add_tentacle_overlay(const coord_def pos,
     tile_flags flag;
     switch (dir)
     {
-        case NORTH: flag = TILE_FLAG_KRAKEN_SW; break; // SW
-        case EAST:  flag = TILE_FLAG_KRAKEN_NW; break; // NW
-        case SOUTH: flag = TILE_FLAG_KRAKEN_NE; break; // NE
-        case WEST:  flag = TILE_FLAG_KRAKEN_SE; break; // SE
+        case NORTH: // SW
+            if (is_kraken)
+                flag = TILE_FLAG_KRAKEN_SW;
+            else
+                flag = TILE_FLAG_ELDRITCH_SW;
+            break;
+        case EAST: // NW
+            if (is_kraken)
+                flag = TILE_FLAG_KRAKEN_NW;
+            else
+                flag = TILE_FLAG_ELDRITCH_NW;
+            break;
+        case SOUTH: // NE
+            if (is_kraken)
+                flag = TILE_FLAG_KRAKEN_NE;
+            else
+                flag = TILE_FLAG_ELDRITCH_NE;
+            break;
+        case WEST: // SE
+            if (is_kraken)
+                flag = TILE_FLAG_KRAKEN_SE;
+            else
+                flag = TILE_FLAG_ELDRITCH_SE;
+            break;
         default:
             die("invalid direction");
     }
@@ -2003,7 +2024,8 @@ static void _add_tentacle_overlay(const coord_def pos,
 }
 
 static void _handle_tentacle_overlay(const coord_def pos,
-                                     const tileidx_t tile)
+                                     const tileidx_t tile,
+                                     bool is_kraken = true)
 {
     switch (tile)
     {
@@ -2011,121 +2033,155 @@ static void _handle_tentacle_overlay(const coord_def pos,
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW:
-        _add_tentacle_overlay(pos, NORTH);
+        _add_tentacle_overlay(pos, NORTH, is_kraken);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE:
-        _add_tentacle_overlay(pos, EAST);
+        _add_tentacle_overlay(pos, EAST, is_kraken);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE:
-        _add_tentacle_overlay(pos, SOUTH);
+        _add_tentacle_overlay(pos, SOUTH, is_kraken);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW:
-        _add_tentacle_overlay(pos, WEST);
+        _add_tentacle_overlay(pos, WEST, is_kraken);
         break;
     // diagonals
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE:
-        _add_tentacle_overlay(pos, NORTH);
-        _add_tentacle_overlay(pos, SOUTH);
+        _add_tentacle_overlay(pos, NORTH, is_kraken);
+        _add_tentacle_overlay(pos, SOUTH, is_kraken);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW:
-        _add_tentacle_overlay(pos, EAST);
-        _add_tentacle_overlay(pos, WEST);
+        _add_tentacle_overlay(pos, EAST, is_kraken);
+        _add_tentacle_overlay(pos, WEST, is_kraken);
         break;
     // other
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW:
-        _add_tentacle_overlay(pos, NORTH);
-        _add_tentacle_overlay(pos, EAST);
+        _add_tentacle_overlay(pos, NORTH, is_kraken);
+        _add_tentacle_overlay(pos, EAST, is_kraken);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE:
-        _add_tentacle_overlay(pos, EAST);
-        _add_tentacle_overlay(pos, SOUTH);
+        _add_tentacle_overlay(pos, EAST, is_kraken);
+        _add_tentacle_overlay(pos, SOUTH, is_kraken);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW:
-        _add_tentacle_overlay(pos, SOUTH);
-        _add_tentacle_overlay(pos, WEST);
+        _add_tentacle_overlay(pos, SOUTH, is_kraken);
+        _add_tentacle_overlay(pos, WEST, is_kraken);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW:
-        _add_tentacle_overlay(pos, NORTH);
-        _add_tentacle_overlay(pos, WEST);
+        _add_tentacle_overlay(pos, NORTH, is_kraken);
+        _add_tentacle_overlay(pos, WEST, is_kraken);
         break;
     }
 }
 
+static bool _mons_is_tentacle_end(const int mtype)
+{
+    return (mtype == MONS_KRAKEN_TENTACLE
+            || mtype == MONS_ELDRITCH_TENTACLE);
+}
+
+static bool _mons_is_tentacle_segment(const int mtype)
+{
+    return (mtype == MONS_KRAKEN_TENTACLE_SEGMENT
+            || mtype == MONS_ELDRITCH_TENTACLE_SEGMENT);
+}
+
+static bool _mons_is_kraken_tentacle(const int mtype)
+{
+    return (mtype == MONS_KRAKEN_TENTACLE
+            || mtype == MONS_KRAKEN_TENTACLE_SEGMENT);
+}
+
 static tileidx_t _tileidx_tentacle(const monster *mon)
 {
-    ASSERT(mon->type == MONS_KRAKEN_TENTACLE
-           || mon->type == MONS_KRAKEN_TENTACLE_SEGMENT);
+    ASSERT(mons_is_tentacle(mon->type));
 
     // If the tentacle is submerged, we shouldn't even get here.
     ASSERT(!mon->submerged());
 
-    // Get the parent tentacle.
-    ASSERT(mon->props.exists("inwards"));
-    const int h_idx = mon->props["inwards"].get_int();
-    ASSERT(!invalid_monster_index(h_idx));
-    const monster head = menv[h_idx];
-
-    // Get head and tentacle positions.
-    const coord_def t_pos = mon->pos();  // tentacle position
-    const coord_def h_pos = head.pos();  // head position
-    ASSERT(adjacent(t_pos, h_pos));
-
-    const bool head_in_water =
-                    (head.type == MONS_KRAKEN
-                     || head.type == MONS_ZOMBIE_LARGE
-                     || _tentacle_pos_unknown(&head, mon->pos()));
-
-    // Tentacle end only requires checking of head position.
-    if (mon->type == MONS_KRAKEN_TENTACLE)
+    // Get tentacle position.
+    const coord_def t_pos = mon->pos();
+    // No parent tentacle, or the connection to the head is unknown.
+    bool no_head_connect  = false;
+    coord_def h_pos       = coord_def(); // head position
+    if (mon->props.exists("inwards"))
     {
-        if (head_in_water)
-            return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
+        // Get the parent tentacle.
+        const int h_idx = mon->props["inwards"].get_int();
+        monster *head = NULL;
+        if (h_idx == -1) // mon == head
+            no_head_connect = true;
+        else
+        {
+            ASSERT(!invalid_monster_index(h_idx));
+            head = &menv[h_idx];
+            h_pos = head->pos();  // head position
+            ASSERT(adjacent(t_pos, h_pos));
+        }
+        if (!no_head_connect)
+        {
+            no_head_connect = (head->type == MONS_KRAKEN
+                               || head->type == MONS_ZOMBIE_LARGE
+                               || head->type == MONS_SPECTRAL_THING
+                               || _tentacle_pos_unknown(head, mon->pos()));
+        }
 
-        ASSERT(head.type == MONS_KRAKEN_TENTACLE_SEGMENT);
+        // Tentacle end only requires checking of head position.
+        if (_mons_is_tentacle_end(mon->type))
+        {
+            if (no_head_connect)
+                return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
 
-        // Different handling according to relative positions.
-        if (h_pos.x == t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_N;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_S;
+            ASSERT(_mons_is_tentacle_segment(head->type));
+
+            // Different handling according to relative positions.
+            if (h_pos.x == t_pos.x)
+            {
+                if (h_pos.y < t_pos.y)
+                    return TILEP_MONS_KRAKEN_TENTACLE_N;
+                else
+                    return TILEP_MONS_KRAKEN_TENTACLE_S;
+            }
+            else if (h_pos.y == t_pos.y)
+            {
+                if (h_pos.x < t_pos.x)
+                    return TILEP_MONS_KRAKEN_TENTACLE_W;
+                else
+                    return TILEP_MONS_KRAKEN_TENTACLE_E;
+            }
+            else if (h_pos.x < t_pos.x)
+            {
+                if (h_pos.y < t_pos.y)
+                    return TILEP_MONS_KRAKEN_TENTACLE_NW;
+                else
+                    return TILEP_MONS_KRAKEN_TENTACLE_SW;
+            }
+            else if (h_pos.x > t_pos.x)
+            {
+                if (h_pos.y < t_pos.y)
+                    return TILEP_MONS_KRAKEN_TENTACLE_NE;
+                else
+                    return TILEP_MONS_KRAKEN_TENTACLE_SE;
+            }
+            die("impossible kraken direction");
         }
-        else if (h_pos.y == t_pos.y)
-        {
-            if (h_pos.x < t_pos.x)
-                return TILEP_MONS_KRAKEN_TENTACLE_W;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_E;
-        }
-        else if (h_pos.x < t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_NW;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SW;
-        }
-        else if (h_pos.x > t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_NE;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SE;
-        }
-        die("impossible kraken direction");
+        // Only tentacle segments from now on.
+        ASSERT(_mons_is_tentacle_segment(mon->type));
     }
-
-    // Only tentacle segments from now on.
-    ASSERT(mon->type == MONS_KRAKEN_TENTACLE_SEGMENT);
+    else
+    {
+        ASSERT(!_mons_is_kraken_tentacle(mon->type));
+        if (_mons_is_tentacle_end(mon->type))
+            return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
+    }
 
     // For segments, we also need the next segment (or end piece).
     ASSERT(mon->props.exists("outwards"));
@@ -2134,17 +2190,17 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     const monster next = menv[n_idx];
 
     const coord_def n_pos = next.pos();  // next position
-    if (head_in_water && next.submerged())
+    if (no_head_connect && next.submerged())
     {
         // Both head and next are submerged.
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
     }
 
-    if (head_in_water || _tentacle_pos_unknown(&next, mon->pos()))
+    if (no_head_connect || _tentacle_pos_unknown(&next, mon->pos()))
     {
         // One segment end goes into water, the other
         // into the direction of head or next.
-        const coord_def s_pos = (head_in_water ? n_pos : h_pos);
+        const coord_def s_pos = (no_head_connect ? n_pos : h_pos);
 
         if (s_pos.x == t_pos.x)
         {
@@ -2266,7 +2322,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
         || n_pos.x == t_pos.x && n_pos.y < t_pos.y
            && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
     {
-        _add_tentacle_overlay(t_pos, WEST);
+        _add_tentacle_overlay(t_pos, WEST, _mons_is_kraken_tentacle(mon->type));
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
     }
     if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
@@ -2320,6 +2376,14 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     }
 
     return TILEP_MONS_PROGRAM_BUG;
+}
+
+static bool _tentacle_tile_not_levitating(tileidx_t tile)
+{
+    // All tiles between these two enums feature tentacles
+    // emerging from water.
+    return (tile >= TILEP_FIRST_TENTACLE_IN_WATER
+            && tile <= TILEP_LAST_TENTACLE_IN_WATER);
 }
 
 static tileidx_t _tileidx_monster_no_props(const monster* mon)
@@ -2414,9 +2478,19 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
 
         case MONS_KRAKEN_TENTACLE:
         case MONS_KRAKEN_TENTACLE_SEGMENT:
+        case MONS_ELDRITCH_TENTACLE:
+        case MONS_ELDRITCH_TENTACLE_SEGMENT:
         {
-            const tileidx_t t = _tileidx_tentacle(mon);
-            _handle_tentacle_overlay(mon->pos(), t);
+            const tileidx_t t    = _tileidx_tentacle(mon);
+            const bool is_kraken = _mons_is_kraken_tentacle(mon->type);
+            _handle_tentacle_overlay(mon->pos(), t, is_kraken);
+
+            if (!is_kraken && _tentacle_tile_not_levitating(t))
+            {
+                // t += TILEP_MONS_ELDRITCH_TENTACLE_N;
+                // t -= TILEP_MONS_KRAKEN_TENTACLE_N;
+            }
+
             return t;
         }
 
@@ -2435,14 +2509,6 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
                                          mon->number, tile_num);
         }
     }
-}
-
-static bool _tentacle_tile_not_levitating(tileidx_t tile)
-{
-    // All tiles between these two enums feature tentacles
-    // emerging from water.
-    return (tile >= TILEP_FIRST_TENTACLE_IN_WATER
-            && tile <= TILEP_LAST_TENTACLE_IN_WATER);
 }
 
 tileidx_t tileidx_monster(const monster* mons)
