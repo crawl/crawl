@@ -1187,7 +1187,8 @@ void skill_menu(bool reskilling)
         flags |= SKMF_DISP_APTITUDE;
 
 #ifdef DEBUG_DIAGNOSTICS
-    flags |= SKMF_DISP_ALL;
+    if (!crawl_state.game_is_hints_tutorial())
+        flags |= SKMF_DISP_ALL;
 #endif
 
     clrscr();
