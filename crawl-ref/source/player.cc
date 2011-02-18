@@ -6152,6 +6152,7 @@ int player_res_magic(bool calc_unid, bool temp)
         rm = you.experience_level * 4;
         break;
     case SP_NAGA:
+    case SP_MUMMY:
         rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
