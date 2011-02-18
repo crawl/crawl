@@ -1916,7 +1916,7 @@ The Gladiator has been trained to fight in the ring, and so is versed
 in the art of fighting, but is not so good at anything else. In fact,
 Gladiators have never learned anything except bashing monsters with
 heavy things. They start with a nasty weapon, a small shield, light
-armour, a helmet (if they can wear one) and some nets or stones.
+armour, a helmet (if they can wear one) and some nets or darts.
 
 Monks:
 ------
