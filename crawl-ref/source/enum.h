@@ -1642,6 +1642,8 @@ enum job_type
     JOB_WANDERER,
     JOB_ARTIFICER,                     //   Greenberg/Bane
     JOB_ARCANE_MARKSMAN,
+    JOB_DEATH_KNIGHT,
+    JOB_ABYSSAL_KNIGHT,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

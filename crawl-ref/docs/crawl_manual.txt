@@ -145,7 +145,7 @@ impression about the weaknesses and strengths of the different species.
 
 For some combinations of species and background, you must make further
 choices before starting the game: For example, you must pick a starting
-god for Chaos Knights, and a starting weapon for Gladiators.
+book for Conjurers, and a starting weapon for Gladiators.
 
 You can choose a tutorial from the species and background selection
 screens by pressing 'Ctrl-T'. Three different tutorial combinations are
@@ -1135,7 +1135,8 @@ You will be asked afterwards if you really want to attend this circle.
 Note that the good gods will not accept demonic or undead devotees.
 
 If you like to start the game with a religion, choose your background
-from Healer, Priest, Berserker or Chaos Knight.
+from Healer, Priest, Berserker, Chaos Knight, Abyssal Knight or Death
+Knight.
 
 
 ------------------------------------------------------------------------
@@ -1934,11 +1935,9 @@ skins.
 
 Priests:
 --------
-Priests serve either Zin, the ancient and revered God of Law, or
-Yredelemnul, the rather less pleasant God of Death. In addition, Hill
-Orcs may choose to follow the Orc god Beogh instead. Priests enter the
-dungeon with a traditional weapon and a priestly robe. Those who serve
-Zin also get a few healing potions.
+Priests serve Zin, the ancient and revered God of Law. Hill Orcs may
+choose to follow the Orc god Beogh instead. Priests enter the dungeon
+with a traditional weapon and a priestly robe.
 
 Healers:
 --------
@@ -1949,14 +1948,20 @@ and experience that way.
 
 Chaos Knights:
 --------------
-The Chaos Knight is a fighter who chooses to serve one of the Gods of
-Chaos. There are three choices: Xom, Makhleb or Lugonu. Xom is a very
-unpredictable (and possibly psychotic) entity who rewards or punishes
-according to whim. Makhleb the Destroyer is a more purposeful God, who
-appreciates destruction and offers a variety of very violent powers to
-the faithful. Lugonu the Unformed rules over the Abyss, and grants
-followers some control over that unpleasant place in return for
-spreading death and disorder.
+The Chaos Knight is a plaything of Xom. Xom is a very unpredictable
+(and possibly psychotic) entity who rewards or punishes according to whim.
+
+Death Knight:
+-------------
+The Death Knight is a fighter who aligns him or herself with the powers
+of death and worships Yredelemnul the Dark, who will soon grant the
+ability to re-animate the dead.
+
+Abyssal Knight:
+---------------
+The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of
+the Abyss. They are granted some power over the Abyss, and must spread
+death and disorder in return.
 
 Crusaders:
 ----------

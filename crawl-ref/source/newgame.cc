@@ -1712,6 +1712,8 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_FIGHTER:
     case JOB_GLADIATOR:
     case JOB_CHAOS_KNIGHT:
+    case JOB_DEATH_KNIGHT:
+    case JOB_ABYSSAL_KNIGHT:
     case JOB_CRUSADER:
     case JOB_REAVER:
     case JOB_WARPER:
@@ -2123,16 +2125,8 @@ static std::string _god_text(god_type god)
     {
     case GOD_ZIN:
         return "Zin (for traditional priests)";
-    case GOD_YREDELEMNUL:
-        return "Yredelemnul (for priests of death)";
     case GOD_BEOGH:
         return "Beogh (for priests of Orcs)";
-    case GOD_XOM:
-        return "Xom of Chaos";
-    case GOD_MAKHLEB:
-        return "Makhleb the Destroyer";
-    case GOD_LUGONU:
-        return "Lugonu the Unformed";
     default:
         die("invalid priestly god: %d", god);
     }
@@ -2462,7 +2456,7 @@ static void _resolve_god(newgame_def* ng, const newgame_def* ng_choice,
 static bool _choose_god(newgame_def* ng, newgame_def* ng_choice,
                         const newgame_def& defaults)
 {
-    if (ng->job != JOB_PRIEST && ng->job != JOB_CHAOS_KNIGHT)
+    if (ng->job != JOB_PRIEST)
         return (true);
 
     std::vector<god_choice> gods;
