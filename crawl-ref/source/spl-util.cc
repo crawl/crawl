@@ -263,6 +263,11 @@ int get_spell_slot(spell_type spell)
     return -1;
 }
 
+int get_spell_letter(spell_type spell)
+{
+    return index_to_letter(get_spell_slot(spell));
+}
+
 spell_type get_spell_by_letter(char letter)
 {
     ASSERT(isaalpha(letter));

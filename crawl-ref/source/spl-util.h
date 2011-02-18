@@ -57,6 +57,7 @@ spschool_flag_type school_by_name(std::string name);
 
 int get_spell_slot_by_letter(char letter);
 int get_spell_slot(spell_type spell);
+int get_spell_letter(spell_type spell);
 spell_type get_spell_by_letter(char letter);
 
 bool add_spell_to_memory(spell_type spell);

@@ -585,23 +585,32 @@ static bool _spell_selector(spell_type spell)
 // TODO: Cast spells which target a particular cell.
 static bool _cast_spell_on_target(actor* target)
 {
-    ASSERT(_spell_target == NULL);
     _spell_target = target;
-
+    spell_type spell;
     int letter;
+
+    if (you.last_cast_spell != SPELL_NO_SPELL
+        && _is_appropriate_spell(you.last_cast_spell, target))
     {
-        // Prevent the spell letter from being recorded twice.
-        pause_all_key_recorders pause;
-
-        letter = list_spells(true, false, true, -1, _spell_selector);
+        spell = you.last_cast_spell;
+        letter = get_spell_letter(spell);
     }
+    else
+    {
+        {
+            // Prevent the spell letter from being recorded twice.
+            pause_all_key_recorders pause;
 
-    _spell_target = NULL;
+            letter = list_spells(true, false, true, -1, _spell_selector);
+        }
 
-    if (letter == 0)
-        return (false);
+        _spell_target = NULL;
 
-    const spell_type spell = get_spell_by_letter(letter);
+        if (letter == 0)
+            return (false);
+
+        spell = get_spell_by_letter(letter);
+    }
 
     ASSERT(is_valid_spell(spell));
     ASSERT(_is_appropriate_spell(spell, target));
