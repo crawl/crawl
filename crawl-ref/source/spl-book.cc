@@ -26,6 +26,7 @@
 #include "format.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1278,6 +1279,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     if (random2(40) + random2(40) + random2(40) < chance)
     {
         mpr("You fail to memorise the spell.");
+        learned_something_new(HINT_MEMORISE_FAILURE);
         you.turn_is_over = true;
 
         if (book == BOOK_NECRONOMICON)
