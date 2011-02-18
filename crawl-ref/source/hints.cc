@@ -835,12 +835,6 @@ void taken_new_item(object_class_type item_type)
 // Give a special message if you gain a skill you didn't have before.
 void hints_gained_new_skill(skill_type skill)
 {
-    if (crawl_state.game_is_tutorial()
-        && skill == SK_SPELLCASTING)
-    {
-        learned_something_new(HINT_GAINED_SPELLCASTING);
-        return;
-    }
     if (!crawl_state.game_is_hints())
         return;
 
@@ -1383,6 +1377,7 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
+    case HINT_MEMORISE_FAILURE:
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
         return (true);
@@ -3365,8 +3360,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
              << "(or click on the <w>skill button</w> in the command panel) "
 #endif
-             << "to manage your skill set.";
+             << "to have a look at your skills and manage their training.";
         cmd.push_back(CMD_DISPLAY_SKILLS);
+        break;
+    case HINT_MEMORISE_FAILURE:
+        text << "At low skills, spells may be difficult to learn or cast. "
+                "For now, just keep trying!";
         break;
     case HINT_FUMBLING_SHALLOW_WATER:
         text << "Fighting in shallow water will sometimes cause you to slip "

@@ -273,6 +273,7 @@ static void _change_skill_level(skill_type exsk, int n)
         && best_spell == SK_SPELLCASTING && n > 0)
     {
         mpr("You're starting to get the hang of this magic thing.");
+        learned_something_new(HINT_GAINED_SPELLCASTING);
     }
 
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
