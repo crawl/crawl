@@ -1,11 +1,11 @@
 ## Kraken head ('X') and tentacles ('w')
-%sdir dc-mon/kraken
+%sdir dc-mon/animals
 kraken_head MONS_KRAKEN_HEAD
 
 ## Tentacles/segments emerging from water
 
 ## Tentacle ends
-%sdir dc-mon/kraken/tentacles
+%sdir dc-mon/kraken/kraken_ends
 
 kraken_tentacle1 MONS_KRAKEN_TENTACLE_WATER
 %syn FIRST_TENTACLE_IN_WATER
@@ -16,7 +16,7 @@ kraken_tentacle5
 kraken_tentacle6
 
 ## Segments
-%sdir dc-mon/kraken/segments
+%sdir dc-mon/kraken/kraken_segments
 
 ## Tentacle segments ending in water
 kraken_tentacle_segment_water_N MONS_KRAKEN_TENTACLE_SEGMENT_N
@@ -31,7 +31,7 @@ kraken_tentacle_segment_water_water MONS_KRAKEN_TENTACLE_SEGMENT_WATER
 %syn LAST_TENTACLE_IN_WATER
 
 ## Tentacles connected to another segment
-%sdir dc-mon/kraken/tentacles
+%sdir dc-mon/kraken/kraken_ends
 kraken_tentacle_N MONS_KRAKEN_TENTACLE_N
 kraken_tentacle_S MONS_KRAKEN_TENTACLE_S
 kraken_tentacle_E MONS_KRAKEN_TENTACLE_E
@@ -42,7 +42,7 @@ kraken_tentacle_SE MONS_KRAKEN_TENTACLE_SE
 kraken_tentacle_SW MONS_KRAKEN_TENTACLE_SW
 
 ## Fully connected tentacle segments
-%sdir dc-mon/kraken/segments
+%sdir dc-mon/kraken/kraken_segments
 
 ### (a) straight ones
 kraken_tentacle_segment_E_W MONS_KRAKEN_TENTACLE_SEGMENT_E_W

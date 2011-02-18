@@ -18,7 +18,7 @@ zombie_worm MONS_ZOMBIE_WORM
 zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_spider MONS_ZOMBIE_SPIDER
 zombie_dragon MONS_ZOMBIE_DRAGON
-dc-mon/kraken/kraken_zombie_head MONS_ZOMBIE_KRAKEN
+zombie_kraken_head MONS_ZOMBIE_KRAKEN
 zombie_hydra1 MONS_ZOMBIE_HYDRA
 zombie_hydra2
 zombie_hydra3

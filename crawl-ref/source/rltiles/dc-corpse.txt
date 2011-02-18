@@ -129,7 +129,7 @@ giant_goldfish CORPSE_GIANT_GOLDFISH
 electric_eel CORPSE_ELECTRIC_EEL
 #lava_fish CORPSE_LAVA_FISH
 shark CORPSE_SHARK
-dc-mon/kraken/kraken_head CORPSE_KRAKEN /*'x'*/
+kraken_head CORPSE_KRAKEN /*'x'*/
 %back dc-misc/blood_green
 jellyfish CORPSE_JELLYFISH /*'J'*/
 
