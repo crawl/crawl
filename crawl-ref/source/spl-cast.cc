@@ -836,7 +836,6 @@ static bool _vampire_cannot_cast(spell_type spell)
     // Satiated or less
     switch (spell)
     {
-    case SPELL_ALTER_SELF:
     case SPELL_BERSERKER_RAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_CURE_POISON:
@@ -991,7 +990,6 @@ static void _maybe_cancel_repeat(spell_type spell)
     {
     case SPELL_DELAYED_FIREBALL:
     case SPELL_TUKIMAS_DANCE:
-    case SPELL_ALTER_SELF:
         crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
                                                  spell_title(spell)));
         break;
@@ -1792,23 +1790,11 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_ALTER_SELF:
-        if (!enough_hp(you.hp_max / 2, true))
-        {
-            mpr("Your body is in too poor a condition for this spell "
-                 "to function.");
-            return (SPRET_ABORT);
-        }
-
-        mpr("Your body is suffused with transfigurative energy!");
-
-        set_hp(1 + random2(you.hp), false);
-
-        if (mutate(RANDOM_MUTATION, false))
-            did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3));
-        else
-            mpr("Odd... you don't feel any different.");
-        break;
+        mpr("You feel quite happy just as you are, actually.");
+        return SPRET_ABORT;
+#endif
 
     // General enhancement.
     case SPELL_BERSERKER_RAGE:
