@@ -86,7 +86,8 @@ bool cast_sublimation_of_blood(int pow)
             mpr("A conflicting enchantment prevents the spell from "
                 "coming into effect.");
         }
-        else if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
+        else if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED
+                 || you.is_undead == US_UNDEAD)
         {
             mpr("You don't have enough blood to draw power from your "
                 "own body.");
