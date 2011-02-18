@@ -679,9 +679,13 @@ void print_stats(void)
         cprintf("%d/%d (%d) ",
                 you.skill_cost_level, you.exp_available, you.experience);
 #else
-        cprintf("Exp Pool: ");
+        cprintf("XL: ");
+        textcolor(HUD_VALUE_COLOUR);
+        cprintf("%2d ", you.experience_level);
+        textcolor(Options.status_caption_colour);
+        cprintf("Exp: ");
         textcolor(_get_exp_pool_colour(you.exp_available));
-        cprintf("%-6d", you.exp_available);
+        cprintf("%-5d", you.exp_available);
 #endif
         you.redraw_experience = false;
     }
@@ -775,9 +779,7 @@ void print_stats_level()
 
 void redraw_skill(const std::string &your_name, const std::string &job_name)
 {
-    char lvl[9];
-    sprintf(lvl, "Level %d ", you.experience_level);
-    std::string title = your_name + " the " + lvl + job_name;
+    std::string title = your_name + " the " + job_name;
 
     unsigned int in_len = title.length();
     const unsigned int WIDTH = crawl_view.hudsz.x;
@@ -815,7 +817,7 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
 #endif
 
     // Line 2:
-    // Level N Minotaur [of God]
+    // Minotaur [of God] [Piety]
     textcolor(YELLOW);
     cgotoxy(1, 2, GOTO_STAT);
     std::string species = species_name(you.species);
