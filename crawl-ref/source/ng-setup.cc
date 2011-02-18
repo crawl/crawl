@@ -1100,12 +1100,9 @@ static void _give_items_skills(const newgame_def& ng)
         break;
     }
 
-    // Deep Dwarves get healing potions and wand of healing (3).
+    // Deep Dwarves get a wand of healing (5).
     if (you.species == SP_DEEP_DWARF)
-    {
-        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS, -1, 2);
-        newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEALING, -1, 1, 3);
-    }
+        newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEALING, -1, 1, 5);
 
     // Zotdef: everyone gets a bonus two potions of healing
     if (crawl_state.game_is_zotdef())
