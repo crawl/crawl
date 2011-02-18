@@ -1179,11 +1179,6 @@ spret_type your_spells(spell_type spell, int powc,
 
             // This will cause failure and increase the miscast effect.
             spfl = -you.penance[GOD_SIF_MUNA];
-
-            // Reduced penance reduction here because casting spells
-            // is a player controllable act. - bwr
-            if (one_chance_in(12))
-                dec_penance(GOD_SIF_MUNA, 1);
         }
         else if (spell_typematch(spell, SPTYP_NECROMANCY)
                  && you.religion != GOD_KIKUBAAQUDGHA
