@@ -108,6 +108,10 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             switch (speci)
         {
             case SP_DEMIGOD:
+            case SP_DEMONSPAWN:
+            case SP_MUMMY:
+            case SP_GHOUL:
+            case SP_VAMPIRE:
                 return (CC_BANNED);
             case SP_DEEP_ELF:
             case SP_DEEP_DWARF:
@@ -118,8 +122,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_OGRE:
             case SP_TROLL:
             case SP_KENKU:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
             case SP_CAT:
                 return (CC_RESTRICTED);
             default:
@@ -127,6 +129,36 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         }
 
         case JOB_CHAOS_KNIGHT:
+            switch (speci)
+        {
+            case SP_DEMIGOD:
+                return (CC_BANNED);
+            case SP_DEEP_ELF:
+            case SP_SPRIGGAN:
+            case SP_NAGA:
+            case SP_KENKU:
+            case SP_CAT:
+                return (CC_RESTRICTED);
+            default:
+                return (CC_UNRESTRICTED);
+        }
+
+        case JOB_DEATH_KNIGHT:
+            switch (speci)
+        {
+            case SP_DEMIGOD:
+                return (CC_BANNED);
+            case SP_DEEP_ELF:
+            case SP_SPRIGGAN:
+            case SP_NAGA:
+            case SP_KENKU:
+            case SP_CAT:
+                return (CC_RESTRICTED);
+            default:
+                return (CC_UNRESTRICTED);
+        }
+
+        case JOB_ABYSSAL_KNIGHT:
             switch (speci)
         {
             case SP_DEMIGOD:
@@ -826,11 +858,6 @@ char_choice_restriction religion_restriction(god_type god,
                 return (CC_BANNED);
             switch (ng.species)
             {
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-                return (CC_BANNED);
             case SP_SLUDGE_ELF:
             case SP_MOUNTAIN_DWARF:
             case SP_SPRIGGAN:
@@ -839,123 +866,6 @@ char_choice_restriction religion_restriction(god_type god,
             case SP_OGRE:
                 return (CC_UNRESTRICTED);
             default:
-                return (CC_RESTRICTED);
-        }
-
-        case GOD_YREDELEMNUL:
-            if (ng.job != JOB_PRIEST)
-                return (CC_BANNED);
-            switch (ng.species)
-            {
-            case SP_HILL_ORC:
-                // Restrict in favour of Beogh.
-                return (CC_RESTRICTED);
-
-            case SP_DEEP_ELF:
-            case SP_KENKU:
-                // Unrestrict these as Zin is worse.
-                return (CC_UNRESTRICTED);
-
-            case SP_HUMAN:
-            case SP_HIGH_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_CAT:
-                return (CC_UNRESTRICTED);
-            default:
-                if (species_genus(ng.species) == GENPC_DRACONIAN)
-                    return (CC_UNRESTRICTED);
-                return (CC_RESTRICTED);
-            }
-
-        case GOD_XOM:
-            if (ng.job != JOB_CHAOS_KNIGHT)
-                return (CC_BANNED);
-            switch (ng.species)
-            {
-            case SP_MOUNTAIN_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_DEMONSPAWN:
-            case SP_CAT:
-                return (CC_UNRESTRICTED);
-            default:
-                if (species_genus(ng.species) == GENPC_DRACONIAN)
-                    return (CC_UNRESTRICTED);
-                return (CC_RESTRICTED);
-            }
-
-        case GOD_MAKHLEB:
-            if (ng.job != JOB_CHAOS_KNIGHT)
-                return (CC_BANNED);
-            switch (ng.species)
-            {
-            case SP_HUMAN:
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_NAGA:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_CAT:
-                return (CC_UNRESTRICTED);
-            default:
-                if (species_genus(ng.species) == GENPC_DRACONIAN)
-                    return (CC_UNRESTRICTED);
-                return (CC_RESTRICTED);
-            }
-
-        case GOD_LUGONU:
-            if (ng.job != JOB_CHAOS_KNIGHT)
-                return (CC_BANNED);
-            switch (ng.species)
-            {
-            case SP_HUMAN:
-            case SP_MOUNTAIN_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_SPRIGGAN:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_DEMONSPAWN:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-                return (CC_UNRESTRICTED);
-            default:
-                if (species_genus(ng.species) == GENPC_DRACONIAN)
-                    return (CC_UNRESTRICTED);
                 return (CC_RESTRICTED);
             }
 

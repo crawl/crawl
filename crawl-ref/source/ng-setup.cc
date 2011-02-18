@@ -155,6 +155,8 @@ static void _jobs_stat_init(job_type which_job)
 
     case JOB_CRUSADER:          s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
+    case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 1; break;
+    case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
     case JOB_REAVER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
     case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 2; break;
@@ -563,9 +565,6 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        if (you.religion == GOD_ZIN)
-            newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
-
         you.skills[SK_FIGHTING]    = 2;
         you.skills[SK_INVOCATIONS] = 5;
         you.skills[SK_DODGING]     = 1;
@@ -573,17 +572,18 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_CHAOS_KNIGHT:
-    {
+        you.religion = GOD_XOM;
+        you.piety = 100;
+        you.gift_timeout = std::max(5, random2(40) + random2(40));
+
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
                            2, 2);
         _update_weapon(ng);
 
-        you.religion = ng.religion;
-
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE, 1, you.religion == GOD_XOM ? 2 : 0);
 
-        you.skills[SK_FIGHTING] = 3;
+        you.skills[SK_FIGHTING] = 4;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
@@ -591,35 +591,49 @@ static void _give_items_skills(const newgame_def& ng)
         else
             you.skills[SK_ARMOUR]++;
         weap_skill = 2;
-
-        if (you.religion == GOD_XOM)
-        {
-            you.skills[SK_FIGHTING]++;
-            // The new (piety-aware) Xom uses piety in his own special way...
-            // (Namely, 100 is neutral.)
-            you.piety = 100;
-
-            // The new Xom also uses gift_timeout in his own special way...
-            // (Namely, a countdown to becoming bored.)
-            you.gift_timeout = std::max(5, random2(40) + random2(40));
-        }
-        else // Makhleb or Lugonu
-        {
-            you.skills[SK_INVOCATIONS] = 2;
-
-            if (you.religion == GOD_LUGONU)
-            {
-                // Chaos Knights of Lugonu start in the Abyss.  We need
-                // to mark this unusual occurrence, so the player
-                // doesn't get early access to OOD items, etc.
-                you.char_direction = GDT_GAME_START;
-                you.piety = 38;
-            }
-            else
-                you.piety = 25;
-        }
         break;
-    }
+	
+    case JOB_DEATH_KNIGHT:
+        you.religion = GOD_YREDELEMNUL;
+        you.piety = 28;
+
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
+                          2, 2);
+        _update_weapon(ng);
+
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                              ARM_ROBE);
+
+        you.skills[SK_FIGHTING]    = 2;
+        you.skills[SK_ARMOUR]      = 1;
+        you.skills[SK_DODGING]     = 1;
+        you.skills[SK_INVOCATIONS] = 3;
+        weap_skill = 2;
+        break;
+
+    case JOB_ABYSSAL_KNIGHT:
+        you.religion = GOD_LUGONU;
+        you.char_direction = GDT_GAME_START;
+        you.piety = 38;
+
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
+                          2, 2);
+        _update_weapon(ng);
+
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                              ARM_ROBE);
+
+        you.skills[SK_FIGHTING]    = 3;
+        you.skills[SK_ARMOUR]      = 1;
+        you.skills[SK_DODGING]     = 1;
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+
+        you.skills[SK_INVOCATIONS] = 2;
+        weap_skill = 2;
+        break;
 
     case JOB_HEALER:
         you.religion = GOD_ELYVILON;
@@ -628,7 +642,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.equip[EQ_WEAPON] = -1;
 
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
         you.skills[SK_FIGHTING]       = 2;

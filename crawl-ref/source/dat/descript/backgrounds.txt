@@ -1,4 +1,8 @@
 %%%%
+Abyssal Knight
+
+Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to spread corruption and chaos.
+%%%%
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their book of Air provides them with flexibility to survive.
@@ -21,7 +25,7 @@ Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a 
 %%%%
 Chaos Knight
 
-Chaos Knights follow one of the three chaos gods: Xom, Makhleb, or Lugonu.
+Chaos Knights are playthings of the unpredictable Xom, and are subject to the god's constantly changing moods.
 %%%%
 Conjurer
 
@@ -30,6 +34,10 @@ Conjurers confront problems with damaging spells. They can choose whether they w
 Crusader
 
 Crusaders are melee fighters who can boost themselves in battle with spells from the book of War Chants.
+%%%%
+Death Knight
+
+Death Knights are melee fighters who command the undead in the name of Yredelemnul the Dark.
 %%%%
 Earth Elementalist
 
@@ -73,7 +81,7 @@ Necromancers are wizards specializing in the practice of death magic. They start
 %%%%
 Priest
 
-Priests are followers of Zin, Yredelemnul, or the orc god Beogh.
+Priests are followers of Zin, spreading the god's word to the Dungeon's inhabitants. Hill Orcs can follow the orc god Beogh.
 %%%%
 Reaver
 

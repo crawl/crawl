@@ -11,9 +11,9 @@ static job_type jobs_order[] = {
     JOB_FIGHTER,            JOB_GLADIATOR,
     JOB_MONK,               JOB_BERSERKER,
     // religious professions (incl. Berserker above)
-    JOB_PRIEST,
-    JOB_HEALER,             JOB_CHAOS_KNIGHT,
-    JOB_CRUSADER,
+    JOB_CHAOS_KNIGHT,       JOB_DEATH_KNIGHT,
+    JOB_ABYSSAL_KNIGHT,     JOB_PRIEST,
+    JOB_HEALER,             JOB_CRUSADER,
     // general and niche spellcasters (incl. Crusader above)
     JOB_REAVER,             JOB_WARPER,
     JOB_WIZARD,             JOB_CONJURER,
@@ -45,7 +45,8 @@ static const char * Job_Abbrev_List[ NUM_JOBS ] =
       "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr",
       "VM",
-      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "AM" };
+      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "AM",
+      "DK", "AK" };
 
 static const char * Job_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest",
@@ -53,12 +54,13 @@ static const char * Job_Name_List[ NUM_JOBS ] =
 #if TAG_MAJOR_VERSION == 32
       "Paladin",
 #endif
-     "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
+      "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
       "Earth Elementalist", "Crusader",
       "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
-      "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman" };
+      "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman",
+      "Death Knight", "Abyssal Knight" };
 
 const char *get_job_abbrev(int which_job)
 {
