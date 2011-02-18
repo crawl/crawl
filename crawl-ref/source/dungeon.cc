@@ -4041,15 +4041,18 @@ static void _build_postvault_level(vault_placement &place)
     }
 }
 
-static const object_class_type _acquirement_item_classes[] = {
-    OBJ_WEAPONS,
-    OBJ_ARMOUR,
-    OBJ_WEAPONS,
+static const object_class_type _acquirement_item_classes[] =
+{
     OBJ_JEWELLERY,
     OBJ_BOOKS,
+    OBJ_MISCELLANY,
+    OBJ_WEAPONS,
+    OBJ_ARMOUR,
+    OBJ_WANDS,
     OBJ_STAVES,
-    OBJ_MISCELLANY
 };
+#define NC_KITTEHS           3
+#define NC_LESSER_LIFE_FORMS ARRAYSZ(_acquirement_item_classes)
 
 int dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
@@ -4124,7 +4127,11 @@ int dgn_place_item(const item_spec &spec,
         }
 
         if (adjust_type && base_type == OBJ_RANDOM)
-            base_type = RANDOM_ELEMENT(_acquirement_item_classes);
+        {
+            base_type = _acquirement_item_classes[random2(
+                            you.species == SP_CAT ? NC_KITTEHS :
+                            NC_LESSER_LIFE_FORMS)];
+        }
     }
 
     int useless_tries = 0;
