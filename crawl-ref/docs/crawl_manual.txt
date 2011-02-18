@@ -1951,13 +1951,13 @@ Chaos Knights:
 The Chaos Knight is a plaything of Xom. Xom is a very unpredictable
 (and possibly psychotic) entity who rewards or punishes according to whim.
 
-Death Knight:
+Death Knights:
 -------------
 The Death Knight is a fighter who aligns him or herself with the powers
 of death and worships Yredelemnul the Dark, who will soon grant the
 ability to re-animate the dead.
 
-Abyssal Knight:
+Abyssal Knights:
 ---------------
 The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of
 the Abyss. They are granted some power over the Abyss, and must spread
