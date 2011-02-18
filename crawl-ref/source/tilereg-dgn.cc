@@ -672,13 +672,14 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     const bool shift = (mod & MOD_SHIFT);
     const bool ctrl  = (mod & MOD_CTRL);
     const bool alt   = (shift && ctrl || (mod & MOD_ALT));
+    const item_def* weapon = you.weapon();
 
     // Handle evoking items at monster.
     if (alt && _have_appropriate_evokable(mon))
         return _evoke_item_on_target(mon);
 
     // Handle firing quivered items.
-    if (shift && !ctrl && _can_fire_item())
+    if (_can_fire_item() && !ctrl && (shift || is_range_weapon(*weapon)))
     {
         macro_buf_add_cmd(CMD_FIRE);
         _add_targeting_commands(mon->pos());
@@ -692,7 +693,6 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
-        const item_def* weapon = you.weapon();
         const coord_def delta  = you.pos() - mon->pos();
         const int       x_dist = std::abs(delta.x);
         const int       y_dist = std::abs(delta.y);
