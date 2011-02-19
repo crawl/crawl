@@ -962,8 +962,10 @@ static const char* book_type_name(int booktype)
     switch (static_cast<book_type>(booktype))
     {
     case BOOK_MINOR_MAGIC_I:
+#if TAG_MAJOR_VERSION == 32
     case BOOK_MINOR_MAGIC_II:
     case BOOK_MINOR_MAGIC_III:
+#endif
         return "Minor Magic";
     case BOOK_CONJURATIONS_I:
     case BOOK_CONJURATIONS_II:
@@ -1925,15 +1927,14 @@ std::string item_def::name_aux(description_level_type desc,
         case OBJ_BOOKS:
             switch (item_typ)
             {
-            case BOOK_MINOR_MAGIC_I:
-                buff << " [flame]";
-                break;
+#if TAG_MAJOR_VERSION == 32
             case BOOK_MINOR_MAGIC_II:
                 buff << " [frost]";
                 break;
             case BOOK_MINOR_MAGIC_III:
                 buff << " [summ]";
                 break;
+#endif
             case BOOK_CONJURATIONS_I:
                 buff << " [fire]";
                 break;

@@ -242,8 +242,6 @@ int book_rarity(uint8_t which_book)
     switch (which_book)
     {
     case BOOK_MINOR_MAGIC_I:
-    case BOOK_MINOR_MAGIC_II:
-    case BOOK_MINOR_MAGIC_III:
     case BOOK_HINDERANCE:
     case BOOK_CANTRIPS: //jmf: added 04jan2000
         return 1;
@@ -317,6 +315,12 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_DESTRUCTION:
         return 30;
+
+#if TAG_MAJOR_VERSION == 32
+    case BOOK_MINOR_MAGIC_II:
+    case BOOK_MINOR_MAGIC_III:
+        return 100;
+#endif
 
     default:
         return 1;
@@ -453,16 +457,8 @@ void mark_had_book(int booktype)
 
     you.had_book[booktype] = true;
 
-    if (booktype == BOOK_MINOR_MAGIC_I
-        || booktype == BOOK_MINOR_MAGIC_II
-        || booktype == BOOK_MINOR_MAGIC_III)
-    {
-        you.had_book[BOOK_MINOR_MAGIC_I]   = true;
-        you.had_book[BOOK_MINOR_MAGIC_II]  = true;
-        you.had_book[BOOK_MINOR_MAGIC_III] = true;
-    }
-    else if (booktype == BOOK_CONJURATIONS_I
-             || booktype == BOOK_CONJURATIONS_II)
+    if (booktype == BOOK_CONJURATIONS_I
+        || booktype == BOOK_CONJURATIONS_II)
     {
         you.had_book[BOOK_CONJURATIONS_I]  = true;
         you.had_book[BOOK_CONJURATIONS_II] = true;

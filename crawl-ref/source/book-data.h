@@ -1,14 +1,15 @@
 {   // Minor Magic I (fire)
     SPELL_MAGIC_DART,
-    SPELL_SUMMON_SMALL_MAMMALS,
     SPELL_THROW_FLAME,
     SPELL_BLINK,
+    SPELL_CALL_IMP,
+    SPELL_REPEL_MISSILES,
     SPELL_SLOW,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_CONJURE_FLAME,
     SPELL_NO_SPELL,
 },
 
+#if TAG_MAJOR_VERSION == 32
 {   // Minor Magic II (ice)
     SPELL_MAGIC_DART,
     SPELL_THROW_FROST,
@@ -30,6 +31,7 @@
     SPELL_MEPHITIC_CLOUD,
     SPELL_NO_SPELL,
 },
+#endif
 
 {   // Book of Conjurations I - Fire and Earth
     SPELL_MAGIC_DART,
