@@ -1380,6 +1380,7 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_MEMORISE_FAILURE:
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
+    case HINT_ANIMATE_CORPSE_SKELETON:
         return (true);
     default:
         return (false);
@@ -3377,6 +3378,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "try to step around it or wait it out with <w>%</w> or <w>%</w>.";
         cmd.push_back(CMD_MOVE_NOWHERE);
         cmd.push_back(CMD_REST);
+        break;
+    case HINT_ANIMATE_CORPSE_SKELETON:
+        text << "As long as a monster has a skeleton, Animate Skeleton also "
+                "works on unskeletalized corpses.";
         break;
     default:
         text << "You've found something new (but I don't know what)!";

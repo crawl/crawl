@@ -156,9 +156,16 @@ function tutorial_msg4.memorise2 ()
         text = text .. " or by <white>clicking</white> on the memorisation tab "
                     .. "and selecting the spell tile"
     end
-    text = text .. "."
+    text = text .. ". And then raise yourself an undead army!"
 
     return tutorial_message(text)
+end
+
+function tutorial_msg4.displace_allies ()
+    return tutorial_message("Did you notice you can swap positions with your "
+                            .. "allies by moving into them? Among other things, "
+                            .. "displacing a friendly creature can be a good "
+                            .. "way to escape a fight.")
 end
 
 function tutorial_msg4.order_allies ()
@@ -206,8 +213,8 @@ function tutorial_msg4.resting_reminder ()
         text = text .. " or by <white>mouseclick</white> in the command panel"
     end
     text = text .. ".\n"
-                .. "Also, you can swap positions with an adjacent ally by "
-                .. "moving in its direction."
+                .. "Also, undead don't breathe, so you can cast Evaporate "
+                .. "without harming your allies."
 
     return tutorial_message(text)
 end
@@ -323,23 +330,24 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
-KFEAT:   ABCD = .
-COLOUR:  dABCD = blue
-FTILE:   dABCD = tutorial_pad
+KFEAT:   ABCDE = .
+COLOUR:  dABCDE = blue
+FTILE:   dABCDE = tutorial_pad
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
 ITEM:    never_decay megabat skeleton
 ITEM:    never_decay goblin; nothing skeleton
 ITEM:    never_decay small snake skeleton
 ITEM:    never_decay jackal skeleton
-MONS:    hobgoblin ; shield not_cursed . ring mail race:none not_cursed
+MONS:    hobgoblin always_corpse; shield not_cursed . ring mail race:none not_cursed
 MONS:    rat
 MONS:    goblin
 MONS:    gnoll; nothing
 MARKER:  A = lua:tutorial_msg4.forget_spell()
 MARKER:  d = lua:tutorial_msg4.memorise2()
-MARKER:  B = lua:tutorial_msg4.order_allies()
-MARKER:  C = lua:tutorial_msg4.heavy_armour()
-MARKER:  D = lua:tutorial_msg4.resting_reminder()
+MARKER:  B = lua:tutorial_msg4.displace_allies()
+MARKER:  C = lua:tutorial_msg4.order_allies()
+MARKER:  D = lua:tutorial_msg4.heavy_armour()
+MARKER:  E = lua:tutorial_msg4.resting_reminder()
 MARKER:  } = lua:tutorial_msg4.tutorial_end()
 MARKER:  ) = lua:tutorial_msg4.tutorial_end()
 MARKER:  ] = lua:tutorial_msg4.tutorial_end()
@@ -360,20 +368,20 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx......xxxx.T..xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx..xxxx..xx.egf.xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxBxxxxxx..+.gde.....xxxxxxxxxxxxxxx
-xxxxxxxxxxx+++xxxxxxxx.fhh.xxxx.Axxxxxxxxxxxxx
+xxxxxxxxxxx......B.xxxx.T..xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx......B...x.egf.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxCCCxxxx...+.gde.....xxxxxxxxxxxxxxx
+xxxxxxxxxxx+++xxxxx..x.fhh.xxxx.Axxxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxx.T..xxxxxx.xxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxx..xxxxxxxx.xxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx...xxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx{([xxxxxxxxxx
 xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxCxxxxxxx.2..xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxDxxxxxxx.2..xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxxGx.....4]xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxGf+...2....xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx...Deg+......3.)xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx...Eeg+......3.)xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxGh+...3....xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxGx.....2}xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx2...xxxxxxxxxxxxxxxxxxxxxx
