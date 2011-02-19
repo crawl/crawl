@@ -448,6 +448,7 @@ static void _update_weapon(const newgame_def& ng)
 static void _give_items_skills(const newgame_def& ng)
 {
     int weap_skill = 0;
+    int curr;
 
     switch (you.char_class)
     {
@@ -482,7 +483,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER, ARM_SHIELD);
 
-        int curr = 3;
+        curr = 3;
         if (you_can_wear(EQ_HELMET))
         {
             newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET);
@@ -509,12 +510,28 @@ static void _give_items_skills(const newgame_def& ng)
     }
 
     case JOB_MONK:
-        you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
+        // Equipment.
+        curr = 0;
+        if (ng.weapon == WPN_QUARTERSTAFF)
+        {
+            newgame_make_item(curr++, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+            _update_weapon(ng);
+        }
+        else
+            you.equip[EQ_WEAPON] = -1;
 
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(curr, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
         you.skills[SK_FIGHTING]       = 3;
-        you.skills[SK_UNARMED_COMBAT] = 4;
+
+        if (ng.weapon == WPN_QUARTERSTAFF)
+        {
+            you.skills[SK_STAVES] = 3;
+            you.skills[SK_UNARMED_COMBAT] = 1;
+        }
+        else
+            you.skills[SK_UNARMED_COMBAT] = 4;
+
         you.skills[SK_DODGING]        = 3;
         you.skills[SK_STEALTH]        = 2;
         break;

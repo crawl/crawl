@@ -654,11 +654,13 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     switch (wpn)
     {
         case WPN_UNARMED:
-            if (species_has_claws(ng.species))
+            if (species_has_claws(ng.species) || ng.job == JOB_MONK)
                 return (CC_UNRESTRICTED);
             return (CC_BANNED);
 
         case WPN_SHORT_SWORD:
+            if (ng.job == JOB_MONK)
+                return (CC_BANNED);
             switch (ng.species)
             {
             case SP_NAGA:
@@ -683,12 +685,16 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
             // Maces and hand axes usually share the same restrictions.
         case WPN_MACE:
+            if (ng.job == JOB_MONK)
+                return (CC_BANNED);
             if (ng.species == SP_TROLL)
                 return (CC_UNRESTRICTED);
             if (ng.species == SP_VAMPIRE)
                 return (CC_RESTRICTED);
             // else fall-through
         case WPN_HAND_AXE:
+            if (ng.job == JOB_MONK)
+                return (CC_BANNED);
             switch (ng.species)
             {
             case SP_HUMAN:
@@ -711,6 +717,8 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             }
 
         case WPN_SPEAR:
+            if (ng.job == JOB_MONK)
+                return (CC_BANNED);
             switch (ng.species)
             {
             case SP_HUMAN:
@@ -780,6 +788,11 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             // Both are polearms, right?
             return (weapon_restriction(WPN_SPEAR, ng));
 
+        case WPN_QUARTERSTAFF:
+            if (ng.job == JOB_MONK)
+                return (CC_UNRESTRICTED);
+            else
+                return (CC_BANNED);
         case WPN_ANKUS:
             if (species_genus(ng.species) == GENPC_OGREISH)
                 return (CC_UNRESTRICTED);
