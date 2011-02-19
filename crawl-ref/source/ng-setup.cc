@@ -938,7 +938,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_STEALTH]        = 2;
         you.skills[SK_STABBING]       = 2;
         you.skills[SK_SPELLCASTING]   = 1;
-        you.skills[SK_TRANSMUTATIONS] = 1;
+        you.skills[SK_TRANSMUTATIONS] = 2;
         break;
 
     case JOB_ASSASSIN:
@@ -1372,7 +1372,6 @@ static void _give_basic_knowledge(job_type which_job)
 
     switch (which_job)
     {
-    case JOB_STALKER:
     case JOB_ASSASSIN:
     case JOB_VENOM_MAGE:
         set_ident_type(OBJ_POTIONS, POT_POISON, ID_KNOWN_TYPE);
