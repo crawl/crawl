@@ -2388,7 +2388,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "religion")
     {
-        // Choose god for Chaos Knights or Priests.
+        // Choose god for Priests.
         game.religion = (field == "random") ? GOD_RANDOM : str_to_god(field);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
