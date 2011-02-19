@@ -158,7 +158,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 1; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
-    case JOB_REAVER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
     case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 2; break;
     case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 12; mp = 1; break;
 
@@ -665,23 +664,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_CHARMS]       = 2;
         you.skills[SK_HEXES]        = 2;
         weap_skill = 2;
-        break;
-
-    case JOB_REAVER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _update_weapon(ng);
-
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS,
-                           start_to_book(BOOK_CONJURATIONS_I, ng.book));
-
-        you.skills[SK_FIGHTING]     = 2;
-        you.skills[SK_ARMOUR]       = 1;
-        you.skills[SK_DODGING]      = 1;
-        you.skills[SK_SPELLCASTING] = 1;
-        you.skills[SK_CONJURATIONS] = 2;
-        weap_skill = 3;
         break;
 
     case JOB_WARPER:
@@ -1309,7 +1291,6 @@ static void _give_basic_spells(job_type which_job)
         }
         // intentional fall-through
     case JOB_CONJURER:
-    case JOB_REAVER:
         which_spell = SPELL_MAGIC_DART;
         break;
     case JOB_VENOM_MAGE:

@@ -1969,11 +1969,6 @@ The Crusader is a decent fighter who can use the magical arts of
 enchantment to become more dangerous in battle. Crusaders start out
 lightly armed and armoured, but equipped with a book of martial spells.
 
-Reavers:
---------
-Reavers are warriors who learn the magics of destruction in order to
-complement their deadliness in hand combat.
-
 Warpers:
 --------
 Warpers specialise in translocation magic, and are experts in travelling

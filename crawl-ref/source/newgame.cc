@@ -1698,7 +1698,6 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_DEATH_KNIGHT:
     case JOB_ABYSSAL_KNIGHT:
     case JOB_CRUSADER:
-    case JOB_REAVER:
     case JOB_WARPER:
         break;
     default:
@@ -2089,7 +2088,6 @@ static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
 {
     switch (ng->job)
     {
-    case JOB_REAVER:
     case JOB_CONJURER:
         return (_choose_book(ng, ng_choice, defaults, BOOK_CONJURATIONS_I, 2));
     default:

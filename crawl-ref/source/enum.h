@@ -1637,7 +1637,9 @@ enum job_type
     JOB_CHAOS_KNIGHT,
     JOB_TRANSMUTER,
     JOB_HEALER,
+#if TAG_MAJOR_VERSION == 32
     JOB_REAVER,
+#endif
     JOB_STALKER,
     JOB_MONK,
     JOB_WARPER,

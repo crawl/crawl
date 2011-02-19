@@ -373,7 +373,7 @@ static job_type _str_to_job(const std::string &str)
         job = get_job_by_name(str.c_str());
 
 #if TAG_MAJOR_VERSION == 32
-    if (job == JOB_PALADIN)
+    if (job == JOB_PALADIN || job == JOB_REAVER)
         job = JOB_UNKNOWN;
 #endif
 

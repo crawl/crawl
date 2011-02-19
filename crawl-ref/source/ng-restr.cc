@@ -215,32 +215,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
                 return (CC_UNRESTRICTED);
         }
 
-        case JOB_REAVER:
-            switch (speci)
-        {
-            case SP_HUMAN:
-            case SP_SLUDGE_ELF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_NAGA:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_BASE_DRACONIAN:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
-        }
-
         case JOB_WIZARD:
             switch (speci)
         {
