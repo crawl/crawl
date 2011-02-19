@@ -1998,9 +1998,8 @@ first several levels.
 Wizards:
 --------
 A Wizard is a magician who does not specialise in any area of magic.
-Wizards start with a variety of magical skills and with either Magic
-Dart or Summon Small Mammals in memory, depending on their starting
-book.
+Wizards start with a variety of magical skills and with Magic Dart
+memorised.
 
 Conjurers:
 ----------

@@ -665,25 +665,6 @@ char_choice_restriction book_restriction(startup_book_type booktype,
         }
             break;
 
-        case SBT_SUMM: // Summoning
-            switch (ng.species)
-        {
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_KOBOLD:
-            case SP_NAGA:
-            case SP_OGRE:
-            case SP_KENKU:
-            case SP_MUMMY:
-            case SP_VAMPIRE:
-            case SP_CAT:
-                return (CC_UNRESTRICTED);
-
-            default:
-                return (CC_RESTRICTED);
-        }
-            break;
-
         default:
             return (CC_RESTRICTED);
     }

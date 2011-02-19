@@ -754,31 +754,14 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(1, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
 
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS,
-                           start_to_book(BOOK_MINOR_MAGIC_I, ng.book));
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MINOR_MAGIC_I);
 
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_STEALTH]        = 2;
         you.skills[SK_SPELLCASTING]   = 3;
-        // All three starting books contain Translocations spells.
         you.skills[SK_TRANSLOCATIONS] = 1;
-
-        // The other two schools depend on the chosen book.
-        switch (you.inv[2].sub_type)
-        {
-        case BOOK_MINOR_MAGIC_I:
-            you.skills[SK_CONJURATIONS] = 1;
-            you.skills[SK_FIRE_MAGIC]   = 1;
-            break;
-        case BOOK_MINOR_MAGIC_II:
-            you.skills[SK_CONJURATIONS] = 1;
-            you.skills[SK_ICE_MAGIC]    = 1;
-            break;
-        case BOOK_MINOR_MAGIC_III:
-            you.skills[SK_SUMMONINGS]   = 1;
-            you.skills[SK_CONJURATIONS] = 1;
-            break;
-        }
+        you.skills[SK_CONJURATIONS]   = 1;
+        you.skills[SK_SUMMONINGS]     = 1;
         break;
 
     case JOB_CONJURER:

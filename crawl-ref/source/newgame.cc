@@ -519,22 +519,6 @@ int start_to_book(int firstbook, int booktype)
 {
     switch (firstbook)
     {
-    case BOOK_MINOR_MAGIC_I:
-        switch (booktype)
-        {
-        case SBT_FIRE:
-            return (BOOK_MINOR_MAGIC_I);
-
-        case SBT_COLD:
-            return (BOOK_MINOR_MAGIC_II);
-
-        case SBT_SUMM:
-            return (BOOK_MINOR_MAGIC_III);
-
-        default:
-            return (-1);
-        }
-
     case BOOK_CONJURATIONS_I:
         switch (booktype)
         {
@@ -1758,8 +1742,6 @@ static std::string _startup_book_name(startup_book_type book)
         return "Fire";
     case SBT_COLD:
         return "Cold";
-    case SBT_SUMM:
-        return "Summoning";
     case SBT_RANDOM:
         return "Random";
     case SBT_VIABLE:
@@ -2110,8 +2092,6 @@ static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
     case JOB_REAVER:
     case JOB_CONJURER:
         return (_choose_book(ng, ng_choice, defaults, BOOK_CONJURATIONS_I, 2));
-    case JOB_WIZARD:
-        return (_choose_book(ng, ng_choice, defaults, BOOK_MINOR_MAGIC_I, 3));
     default:
         return (true);
     }

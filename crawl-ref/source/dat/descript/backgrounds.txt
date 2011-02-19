@@ -113,5 +113,5 @@ Warpers start with a weapon of their choice and a Blinking scroll. They can lear
 %%%%
 Wizard
 
-Wizards get to choose which book of Minor Magic they start with. They have higher magical reserves than any other background.
+Wizards start with a book of Minor Magic, containing a wide range of spells. They have higher magical reserves than any other background.
 %%%%

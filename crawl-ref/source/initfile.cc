@@ -131,8 +131,6 @@ static startup_book_type _str_to_book(const std::string& str)
         return (SBT_FIRE);
     if (str == "frost" || str == "cold" || str == "ice")
         return (SBT_COLD);
-    if (str == "summ" || str == "summoning")
-        return (SBT_SUMM);
     if (str == "random")
         return (SBT_RANDOM);
     if (str == "viable")
@@ -1420,7 +1418,6 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "book = %s\n",
                 prefs.book == SBT_FIRE ? "fire" :
                 prefs.book == SBT_COLD ? "cold" :
-                prefs.book == SBT_SUMM ? "summ" :
                 prefs.book == SBT_RANDOM ? "random" :
                 "viable");
     }
