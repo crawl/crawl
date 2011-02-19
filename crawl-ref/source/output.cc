@@ -200,7 +200,7 @@ void update_turn_count()
         return;
     }
 
-    cgotoxy(19+6, 8, GOTO_STAT);
+    cgotoxy(19+6, 9, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
@@ -657,21 +657,9 @@ void print_stats(void)
             _print_stat(static_cast<stat_type>(i), 19, 5 + i);
     you.redraw_stats.init(false);
 
-    int yhack = 0;
-
-    // If Options.show_gold_turns, line 8 is Gold and Turns
-    if (Options.show_gold_turns)
-    {
-        // Increase y-value for all following lines.
-        yhack = 1;
-        cgotoxy(1+6, 8, GOTO_STAT);
-        textcolor(HUD_VALUE_COLOUR);
-        cprintf("%-6d", you.gold);
-    }
-
     if (you.redraw_experience)
     {
-        cgotoxy(1,8 + yhack, GOTO_STAT);
+        cgotoxy(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
 #ifdef DEBUG_DIAGNOSTICS
         cprintf("XP: ");
@@ -688,6 +676,18 @@ void print_stats(void)
         cprintf("%-5d", you.exp_available);
 #endif
         you.redraw_experience = false;
+    }
+
+    int yhack = 0;
+
+    // If Options.show_gold_turns, line 9 is Gold and Turns
+    if (Options.show_gold_turns)
+    {
+        // Increase y-value for all following lines.
+        yhack = 1;
+        cgotoxy(1+6, 9, GOTO_STAT);
+        textcolor(HUD_VALUE_COLOUR);
+        cprintf("%-6d", you.gold);
     }
 
     if (you.wield_change)
@@ -762,10 +762,7 @@ static std::string _level_description_string_hud()
 
 void print_stats_level()
 {
-    int ypos = 8;
-    if (Options.show_gold_turns)
-        ypos++;
-    cgotoxy(19, ypos, GOTO_STAT);
+    cgotoxy(19, 8, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOUR);
     cprintf("Place: ");
 
@@ -867,10 +864,10 @@ void draw_border(void)
 
     if (Options.show_gold_turns)
     {
-        cgotoxy(1, 8, GOTO_STAT); cprintf("Gold:");
-        cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
+        cgotoxy(1, 9, GOTO_STAT); cprintf("Gold:");
+        cgotoxy(19, 9, GOTO_STAT); cprintf("Turn:");
     }
-    // Line 9 (or 8) is exp pool, Level
+    // Line 8 is exp pool, Level
 }
 
 // ----------------------------------------------------------------------
