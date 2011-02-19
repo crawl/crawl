@@ -1282,14 +1282,6 @@ static void _give_basic_spells(job_type which_job)
     switch (which_job)
     {
     case JOB_WIZARD:
-        if (!you.skills[SK_CONJURATIONS])
-        {
-            // Wizards who start with Minor Magic III (summoning) have no
-            // Conjurations skill, and thus get another starting spell.
-            which_spell = SPELL_SUMMON_SMALL_MAMMALS;
-            break;
-        }
-        // intentional fall-through
     case JOB_CONJURER:
         which_spell = SPELL_MAGIC_DART;
         break;
