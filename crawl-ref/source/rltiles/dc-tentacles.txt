@@ -5,7 +5,7 @@ kraken_head MONS_KRAKEN_HEAD
 ## Tentacles/segments emerging from water
 
 ## Tentacle ends
-%sdir dc-mon/kraken/kraken_ends
+%sdir dc-mon/tentacles/kraken_ends
 
 kraken_tentacle1 MONS_KRAKEN_TENTACLE_WATER
 %syn FIRST_TENTACLE_IN_WATER
@@ -16,7 +16,7 @@ kraken_tentacle5
 kraken_tentacle6
 
 ## Segments
-%sdir dc-mon/kraken/kraken_segments
+%sdir dc-mon/tentacles/kraken_segments
 
 ## Tentacle segments ending in water
 kraken_tentacle_segment_water_water MONS_KRAKEN_TENTACLE_SEGMENT_WATER
@@ -31,7 +31,7 @@ kraken_tentacle_segment_water_SW MONS_KRAKEN_TENTACLE_SEGMENT_SW
 %syn LAST_TENTACLE_IN_WATER
 
 ## Tentacles connected to another segment
-%sdir dc-mon/kraken/kraken_ends
+%sdir dc-mon/tentacles/kraken_ends
 kraken_tentacle_N MONS_KRAKEN_TENTACLE_N
 kraken_tentacle_S MONS_KRAKEN_TENTACLE_S
 kraken_tentacle_E MONS_KRAKEN_TENTACLE_E
@@ -42,7 +42,7 @@ kraken_tentacle_SE MONS_KRAKEN_TENTACLE_SE
 kraken_tentacle_SW MONS_KRAKEN_TENTACLE_SW
 
 ## Fully connected tentacle segments
-%sdir dc-mon/kraken/kraken_segments
+%sdir dc-mon/tentacles/kraken_segments
 
 ### (a) straight ones
 kraken_tentacle_segment_E_W MONS_KRAKEN_TENTACLE_SEGMENT_E_W
@@ -71,7 +71,7 @@ kraken_tentacle_segment_W_SE MONS_KRAKEN_TENTACLE_SEGMENT_W_SE
 ## Eldritch tentacles
 
 ## Tentacle segments ending in the portal
-%sdir dc-mon/kraken/eldritch_portal
+%sdir dc-mon/tentacles/eldritch_portal
 eldritch_tentacle_portal_N MONS_ELDRITCH_TENTACLE_PORTAL_N
 eldritch_tentacle_portal_S MONS_ELDRITCH_TENTACLE_PORTAL_S
 eldritch_tentacle_portal_E MONS_ELDRITCH_TENTACLE_PORTAL_E
@@ -82,7 +82,7 @@ eldritch_tentacle_portal_SE MONS_ELDRITCH_TENTACLE_PORTAL_SE
 eldritch_tentacle_portal_SW MONS_ELDRITCH_TENTACLE_PORTAL_SW
 
 ## Tentacles connected to another segment
-%sdir dc-mon/kraken/eldritch_ends
+%sdir dc-mon/tentacles/eldritch_ends
 eldritch_tentacle_N MONS_ELDRITCH_TENTACLE_N
 eldritch_tentacle_S MONS_ELDRITCH_TENTACLE_S
 eldritch_tentacle_E MONS_ELDRITCH_TENTACLE_E
@@ -93,7 +93,7 @@ eldritch_tentacle_SE MONS_ELDRITCH_TENTACLE_SE
 eldritch_tentacle_SW MONS_ELDRITCH_TENTACLE_SW
 
 ## Fully connected tentacle segments
-%sdir dc-mon/kraken/eldritch_segments
+%sdir dc-mon/tentacles/eldritch_segments
 
 ### (a) straight ones
 eldritch_tentacle_segment_E_W MONS_ELDRITCH_TENTACLE_SEGMENT_E_W
