@@ -136,7 +136,7 @@ shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
 %rim 1
 
-%include dc-kraken.txt
+%include dc-tentacles.txt
 
 ## Beetles ('B')
 %sdir dc-mon/animals
