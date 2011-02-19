@@ -589,7 +589,7 @@ static bool _cast_spell_on_target(actor* target)
     spell_type spell;
     int letter;
 
-    if (you.last_cast_spell != SPELL_NO_SPELL
+    if (is_valid_spell(you.last_cast_spell)
         && _is_appropriate_spell(you.last_cast_spell, target))
     {
         spell = you.last_cast_spell;
