@@ -297,6 +297,7 @@ TAGS:   no_monster_gen no_rotate
 : else
 TAGS:   no_monster_gen no_pool_fixup no_rotate
 : end
+KPROP:  C = no_rtele_into
 MAP
    .........
   ...wwwww...
@@ -457,15 +458,17 @@ MONS: patrolling Daeva / patrolling Angel
 MONS:  patrolling Angel
 : end
 KFEAT: _ = altar_elyvilon / altar_zin / altar_shining_one
+KPROP: >"1_ = no_rtele_into
+SUBST: " = .
 MAP
    .....
   ..xmx..
  ..xx>xx..
-..xxx.xxx..
+..xxx"xxx..
 .xxxx1xxxx.
-.m>.._..>m.
-.xxxx.xxxx.
-..xxx.xxx..
+.m>""_"">m.
+.xxxx"xxxx.
+..xxx"xxx..
  ..xx>xx..
   ..xmx..
    .....
@@ -485,6 +488,7 @@ SUBST: L = l.
 SUBST: _ = _ P:1
 KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
+KPROP: 1234_ = no_rtele_into
 MAP
   ..LLllLL....
   .LllllllLLL..
@@ -572,6 +576,7 @@ DEPTH:  !Lair, !Orc
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   generate_awake patrolling no_rotate
 TAGS:   layout_rooms layout_city layout_open layout_cross
+KPROP:  abcdefghBR' = no_rtele_into
 KFEAT:  _ = altar_nemelex_xobeh
 SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
 SUBST:  G:GTUVblw> , C=c
@@ -730,6 +735,7 @@ NAME:    cheibriados_altar_2
 TAGS:    uniq_altar_cheibriados
 DEPTH:   D:2-20
 WEIGHT:  1
+KPROP:   1 = no_rtele_into
 KFEAT:   _ = altar_cheibriados
 MONS:    giant slug, agate snail, elephant slug
 SUBST:   1 : 1:50 2:30 3:10 4:10
@@ -982,6 +988,7 @@ TAGS:    no_item_gen no_monster_gen
 TAGS:    temple_overflow_fedhas uniq_altar_fedhas
 DEPTH:   Lair, D:2-20
 KFEAT:   _ = altar_fedhas
+KPROP:   xzd3P = no_rtele_into
 MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
 KITEM:   d = apple / apricot / orange / pear / grape / strawberry / nothing w:70
 KFEAT:   d = floor
@@ -992,6 +999,7 @@ SHUFFLE: PQR
 SUBST:   Q = 115, R = 11125
 : end
 SUBST:   P = 112
+SUBST:   z = .
 SHUFFLE: ...", TU
 SUBST:   T = xt, U = xx
 SUBST:   " = .....6
@@ -1005,7 +1013,7 @@ ccccccccccccccccccccccc
 cxxxxxxxxxxxxxxxxxxxxxc
 cxxxxxxxxxxxxxxPxxd3xxc
 cxxxxxxxxxxxxxxPddddxxc
-cxxxxxxxxxxxxxxPPPx.dxc
+cxxxxxxxxxxxxxxPPPxzdxc
 cxxxxxxx.......xxPPxxxc
 cxxxxxx..wwdww..xxPPxxc
 cxxxxx..wwwdwww..xxxPxc
@@ -1081,6 +1089,7 @@ MARKER: h = lua:portal_desc {slave_name="zombie"}
 MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
 KFEAT:  h = .
 KMONS:  h = generate_awake Human hp:12 ; nothing
+KPROP:  h = no_rtele_into
 TILE:   m = dngn_transparent_wall_darkgray
 MAP
 xxxxxxx
@@ -1337,6 +1346,7 @@ TAGS:   no_item_gen no_monster_gen patrolling
 TAGS:   temple_overflow_trog uniq_altar_trog
 DEPTH:  D:2-9
 KFEAT:  _ = altar_trog
+KPROP:  1 = no_rtele_into
 MONS:   moth of wrath, rat / worm w:5
 ITEM:   any weapon
 NSUBST: M = 4:d / *:.
@@ -1641,6 +1651,7 @@ ENDMAP
 NAME:   zin_angel
 TAGS:   no_item_gen no_monster_gen temple_overflow_zin
 KFEAT:  _ = altar_zin
+KPROP:  1 = no_rtele_into
 COLOUR: G = lightgray
 COLOUR: c = white
 MONS:   angel god:zin name:glowing name_adjective
