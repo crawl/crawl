@@ -592,7 +592,7 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
         weap_skill = 2;
         break;
-	
+
     case JOB_DEATH_KNIGHT:
         you.religion = GOD_YREDELEMNUL;
         you.piety = 28;
