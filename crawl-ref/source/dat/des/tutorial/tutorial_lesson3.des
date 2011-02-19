@@ -102,7 +102,7 @@ function tutorial_msg3.inventory ()
     end
 
     text = text .. ". When doing so, you will notice that all the item commands "
-                .. "also work from the item escription screens."
+                .. "also work from the item description screens."
 
     return tutorial_message(text)
 end
