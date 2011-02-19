@@ -765,20 +765,26 @@ bool prompt_eat_inventory_item(int slot)
     return (true);
 }
 
-static bool _eat_check(bool check_hunger = true)
+static bool _eat_check(bool check_hunger = true, bool silent = false)
 {
     if (you.is_undead == US_UNDEAD)
     {
-        mpr("You can't eat.");
-        crawl_state.zero_turns_taken();
+        if (!silent)
+        {
+            mpr("You can't eat.");
+            crawl_state.zero_turns_taken();
+        }
         return (false);
     }
 
     if (check_hunger && you.hunger >= 11000)
     {
-        mprf("You're too full to %s anything.",
-             you.species == SP_VAMPIRE ? "drain" : "eat");
-        crawl_state.zero_turns_taken();
+        if (!silent)
+        {
+            mprf("You're too full to %s anything.",
+                 you.species == SP_VAMPIRE ? "drain" : "eat");
+            crawl_state.zero_turns_taken();
+        }
         return (false);
     }
     return (true);
@@ -2561,7 +2567,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
     bool survey_says = false;
 
     // [ds] These redundant checks are now necessary - Lua might be calling us.
-    if (!_eat_check(check_hunger))
+    if (!_eat_check(check_hunger, suppress_msg))
         return (false);
 
     if (you.species == SP_VAMPIRE)
