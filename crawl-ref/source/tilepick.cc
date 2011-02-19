@@ -2481,17 +2481,17 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         case MONS_ELDRITCH_TENTACLE:
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
         {
-            const tileidx_t t    = _tileidx_tentacle(mon);
+            tileidx_t tile = _tileidx_tentacle(mon);
             const bool is_kraken = _mons_is_kraken_tentacle(mon->type);
-            _handle_tentacle_overlay(mon->pos(), t, is_kraken);
+            _handle_tentacle_overlay(mon->pos(), tile, is_kraken);
 
-            if (!is_kraken && _tentacle_tile_not_levitating(t))
+            if (!is_kraken && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N)
             {
-                // t += TILEP_MONS_ELDRITCH_TENTACLE_N;
-                // t -= TILEP_MONS_KRAKEN_TENTACLE_N;
+                tile += TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_N;
+                tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
             }
 
-            return t;
+            return tile;
         }
 
         case MONS_SENSED:
