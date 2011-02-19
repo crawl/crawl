@@ -210,7 +210,7 @@ struct spell_desc
     SPELL_SLOW, "Slow",
      SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET,
-     3,
+     2,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
