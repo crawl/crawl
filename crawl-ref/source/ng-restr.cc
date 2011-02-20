@@ -654,9 +654,16 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     switch (wpn)
     {
         case WPN_UNARMED:
-            if (species_has_claws(ng.species) || ng.job == JOB_MONK)
+            if (!species_has_claws(ng.species) && ng.job != JOB_MONK)
+                return (CC_BANNED);
+            switch (ng.species)
+            {
+            case SP_DEEP_ELF:
+            case SP_HIGH_ELF:
+                return (CC_RESTRICTED);
+            default:
                 return (CC_UNRESTRICTED);
-            return (CC_BANNED);
+            }
 
         case WPN_SHORT_SWORD:
             if (ng.job == JOB_MONK)
@@ -789,10 +796,20 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return (weapon_restriction(WPN_SPEAR, ng));
 
         case WPN_QUARTERSTAFF:
-            if (ng.job == JOB_MONK)
-                return (CC_UNRESTRICTED);
-            else
+            if (ng.job != JOB_MONK)
                 return (CC_BANNED);
+            switch (ng.species)
+            {
+            case SP_HALFLING:
+            case SP_MERFOLK:
+            case SP_SPRIGGAN:
+            case SP_TROLL:
+            case SP_VAMPIRE:
+                return (CC_RESTRICTED);
+            default:
+                return(CC_UNRESTRICTED);
+            }
+
         case WPN_ANKUS:
             if (species_genus(ng.species) == GENPC_OGREISH
                 && ng.job != JOB_MONK)
