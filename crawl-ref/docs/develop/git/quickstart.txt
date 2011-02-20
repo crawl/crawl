@@ -44,7 +44,6 @@ Using git for crawl-ref
 
 1. Clone the crawl-ref repository (analogous to svn checkout):
 
-   Developers (anyone with commit rights to the git repo):
    $ git clone git@gitorious.org:crawl/crawl.git
 
    "git clone" clones Crawl's entie git repository to your machine. When
