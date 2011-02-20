@@ -1042,8 +1042,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TWISTER;
 
     // elementals ('E')
-//    case MONS_AIR_ELEMENTAL:
-//        return TILEP_MONS_AIR_ELEMENTAL;
+    case MONS_AIR_ELEMENTAL:
+        return TILEP_MONS_AIR_ELEMENTAL;
     case MONS_EARTH_ELEMENTAL:
         return TILEP_MONS_EARTH_ELEMENTAL;
     case MONS_FIRE_ELEMENTAL:
