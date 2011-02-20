@@ -400,7 +400,10 @@ tileidx_t tileidx_player()
         case TRAN_NONE: break;
     }
 
-    if (!you.ground_level())
+    // Currently, the flying flag is only used for not drawing the tile in the
+    // water. in_water() checks Beogh's water walking. If the flying flag is
+    // used for something else, we would need to add an in_water flag.
+    if (!you.in_water())
         ch |= TILE_FLAG_FLYING;
 
     if (you.attribute[ATTR_HELD])
