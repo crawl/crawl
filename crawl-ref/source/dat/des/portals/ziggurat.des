@@ -138,7 +138,7 @@ ENDMAP
 
 NAME:    enter_shallow_ziggurat_c
 CHANCE:  1%
-TAGS:    chance_shallow_zig extra luniq_zig
+TAGS:    chance_shallow_zig extra luniq_zig no_trap_gen
 MONS:    angel / nothing w:20
 KPROP:   1Omn; = no_rtele_into
 SUBST:   ;=.
@@ -157,7 +157,7 @@ ENDMAP
 
 NAME:    enter_shallow_ziggurat_d
 CHANCE:  1%
-TAGS:    chance_shallow_zig extra luniq_zig
+TAGS:    chance_shallow_zig extra luniq_zig no_trap_gen
 MONS:    angel / nothing w:20
 KPROP:   1Omn; = no_rtele_into
 SUBST:   ;=.
