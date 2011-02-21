@@ -929,7 +929,7 @@ static bool _can_weapon_dance(item_def* wpn)
 }
 
 // Mass Tukima's dance
-bool cast_tukimas_dance_party(actor *caster, int pow, god_type god, bool force_hostile)
+bool cast_tukimas_ball(actor *caster, int pow, god_type god, bool force_hostile)
 {
     bool some_weapon_was_animated = false;
     const int dur = std::min(2 + (random2(pow) / 5), 6);

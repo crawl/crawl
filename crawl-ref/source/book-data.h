@@ -130,7 +130,7 @@
     SPELL_EXTENSION,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
-    SPELL_TUKIMAS_DANCE_PARTY,
+    SPELL_TUKIMAS_BALL,
 },
 
 {   // Young Poisoner's Handbook

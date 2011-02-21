@@ -1069,7 +1069,7 @@ struct spell_desc
      false
 },
 
-{   SPELL_TUKIMAS_DANCE_PARTY, "Tukima's Dance Party",
+{   SPELL_TUKIMAS_BALL, "Tukima's Ball",
      SPTYP_HEXES,
      SPFLAG_NONE,
      9,
