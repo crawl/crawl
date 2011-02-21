@@ -70,6 +70,20 @@ kraken_tentacle_segment_W_SE MONS_KRAKEN_TENTACLE_SEGMENT_W_SE
 
 ## Eldritch tentacles
 
+## Tentacle ends
+%sdir dc-mon/tentacles/eldritch_ends
+
+eldritch_tentacle1 MONS_ELDRITCH_TENTACLE_PORTAL
+eldritch_tentacle2
+eldritch_tentacle3
+eldritch_tentacle4
+eldritch_tentacle5
+eldritch_tentacle6
+eldritch_tentacle7
+eldritch_tentacle8
+eldritch_tentacle9
+eldritch_tentacle10
+
 ## Tentacle segments ending in the portal
 %sdir dc-mon/tentacles/eldritch_portal
 eldritch_tentacle_portal_N MONS_ELDRITCH_TENTACLE_PORTAL_N

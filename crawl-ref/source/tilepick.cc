@@ -2140,8 +2140,11 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
         if (_mons_is_tentacle_end(mon->type))
         {
             if (no_head_connect)
-                return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
-
+            {
+                if (_mons_is_kraken_tentacle(mon->type))
+                    return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
+                return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
+            }
             ASSERT(_mons_is_tentacle_segment(head->type));
 
             // Different handling according to relative positions.
@@ -2182,7 +2185,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     {
         ASSERT(!_mons_is_kraken_tentacle(mon->type));
         if (_mons_is_tentacle_end(mon->type))
-            return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
+            return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
     }
 
     // For segments, we also need the next segment (or end piece).
@@ -2487,7 +2490,8 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
             const bool is_kraken = _mons_is_kraken_tentacle(mon->type);
             _handle_tentacle_overlay(mon->pos(), tile, is_kraken);
 
-            if (!is_kraken && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N)
+            if (!is_kraken && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
+                && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
             {
                 tile += TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
