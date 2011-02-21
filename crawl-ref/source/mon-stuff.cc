@@ -2951,6 +2951,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (old_mon_caught)
         check_net_will_hold_monster(mons);
 
+    mons->check_clinging(false);
+
     if (!force_beh)
         player_angers_monster(mons);
 

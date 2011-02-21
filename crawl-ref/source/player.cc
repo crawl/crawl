@@ -285,7 +285,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
     // Terrain effects.
-    if (is_feat_dangerous(new_grid) && !you.can_cling_to(you.pos()))
+    if (is_feat_dangerous(new_grid) && !you.is_wall_clinging())
     {
         // Lava and dangerous deep water (ie not merfolk).
         const coord_def& entry = (stepped) ? old_pos : you.pos();
@@ -364,6 +364,9 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(in_bounds(p));
 
+    if (!stepped)
+        you.clear_clinging();
+
     // assuming that entering the same square means coming from above (levitate)
     const coord_def old_pos = you.pos();
     const bool from_above = (old_pos == p);
@@ -385,7 +388,6 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     if (!you.running)
         check_for_interesting_features();
 
-    you.check_clinging();
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
 
@@ -5550,12 +5552,6 @@ player::~player()
 bool player::is_levitating() const
 {
     return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
-}
-
-void player::clear_clinging()
-{
-    you.clinging = false;
-    you.cling_to.clear();
 }
 
 bool player::in_water() const

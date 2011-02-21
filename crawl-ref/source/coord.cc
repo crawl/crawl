@@ -2,8 +2,12 @@
 
 #include "coord.h"
 
+#include "areas.h"
+#include "coordit.h"
+#include "env.h"
 #include "random.h"
 #include "state.h"
+#include "terrain.h"
 #include "viewgeom.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -93,4 +97,30 @@ coord_def player2grid(const coord_def &pc)
 coord_def grid2player(const coord_def &gc)
 {
     return (gc - you.pos());
+}
+
+bool coord_def::can_cling(bool already_clinging) const
+{
+    if (!already_clinging && liquefied(*this))
+        return false;
+
+    for (orth_adjacent_iterator ai(*this); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            return true;
+
+    return false;
+}
+
+bool coord_def::can_cling_to(const coord_def& p) const
+{
+    if (!in_bounds(p))
+        return false;
+
+    for (orth_adjacent_iterator ai(*this); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            for (orth_adjacent_iterator ai2(p, false); ai2; ++ai2)
+                if (feat_is_wall(env.grid(*ai2)) && distance(*ai, *ai2) <= 1)
+                    return true;
+
+        return false;
 }

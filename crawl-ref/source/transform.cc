@@ -681,7 +681,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     switch (which_trans)
     {
     case TRAN_SPIDER:
-        you.check_clinging();
+        you.check_clinging(false);
         break;
 
     case TRAN_STATUE:
@@ -773,6 +773,7 @@ void untransform(bool skip_wielding, bool skip_move)
         mpr("Your transformation has ended.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, -5, true,
                      "losing the spider transformation");
+        you.check_clinging(false);
         break;
 
     case TRAN_BAT:
@@ -889,13 +890,6 @@ void untransform(bool skip_wielding, bool skip_move)
             you.hp = you.hp_max;
     }
     calc_hp();
-
-    if (you.is_wall_clinging())
-    {
-        mpr("You fall off the wall.");
-        you.clear_clinging();
-        move_player_to_grid(you.pos(), false, true);
-    }
 
     if (!skip_wielding)
         handle_interrupted_swap(true, false, true);

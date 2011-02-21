@@ -4471,6 +4471,5 @@ const char* mons_class_name(monster_type mc)
 void check_clinging()
 {
     for (actor_iterator ai; ai; ++ai)
-        if (ai->check_clinging())
-            ai->apply_location_effects(ai->pos());
+        ai->check_clinging(false);
 }
