@@ -121,6 +121,8 @@ void monster::reset()
     behaviour       = BEH_SLEEP;
     foe             = MHITNOT;
     number          = 0;
+    damage_friendly = 0;
+    damage_total    = 0;
 
     mons_remove_from_grid(this);
     position.reset();

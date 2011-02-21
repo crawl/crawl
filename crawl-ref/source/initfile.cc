@@ -822,6 +822,7 @@ void game_options::reset_options()
     show_waypoints         = true;
     item_colour            = true;
 
+    background_colour      = BLACK;
     // [ds] Default to jazzy colours.
     detected_item_colour   = GREEN;
     detected_monster_colour= LIGHTRED;
