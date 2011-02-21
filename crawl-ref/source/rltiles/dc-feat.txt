@@ -424,7 +424,12 @@ dc-misc/mold_small4
 effect/silenced SILENCED
 %shrink 0
 %sdir dc-mon/tentacles/kraken_corners
-corner_piece_NW KRAKEN_OVERLAY_NW
-corner_piece_NE KRAKEN_OVERLAY_NE
-corner_piece_SE KRAKEN_OVERLAY_SE
-corner_piece_SW KRAKEN_OVERLAY_SW
+kraken_corner_NW KRAKEN_OVERLAY_NW
+kraken_corner_NE KRAKEN_OVERLAY_NE
+kraken_corner_SE KRAKEN_OVERLAY_SE
+kraken_corner_SW KRAKEN_OVERLAY_SW
+%sdir dc-mon/tentacles/eldritch_corners
+eldritch_corner_NW ELDRITCH_OVERLAY_NW
+eldritch_corner_NE ELDRITCH_OVERLAY_NE
+eldritch_corner_SE ELDRITCH_OVERLAY_SE
+eldritch_corner_SW ELDRITCH_OVERLAY_SW
