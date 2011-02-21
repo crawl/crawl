@@ -807,7 +807,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             case SP_VAMPIRE:
                 return (CC_RESTRICTED);
             default:
-                return(CC_UNRESTRICTED);
+                return (CC_UNRESTRICTED);
             }
 
         case WPN_ANKUS:
