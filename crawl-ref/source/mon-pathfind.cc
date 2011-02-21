@@ -17,11 +17,11 @@
 // monster_pathfind
 
 // The pathfinding is an implementation of the A* algorithm. Beginning at the
-// destination square we check all neighbours of a given grid, estimate the
+// monster position we check all neighbours of a given grid, estimate the
 // distance needed for any shortest path including this grid and push the
 // result into a hash. We can then easily access all points with the shortest
 // distance estimates and then check _their_ neighbours and so on.
-// The algorithm terminates once we reach the monster position since - because
+// The algorithm terminates once we reach the destination since - because
 // of the sorting of grids by shortest distance in the hash - there can be no
 // path between start and target that is shorter than the current one. There
 // could be other paths that have the same length but that has no real impact.
@@ -98,9 +98,8 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
 {
     mons   = mon;
 
-    // We're doing a reverse search from target to monster.
-    start  = dest;
-    target = mon->pos();
+    start  = mon->pos();
+    target = dest;
     pos    = start;
     allow_diagonals   = diag;
     traverse_unmapped = pass_unmapped;
@@ -134,14 +133,12 @@ bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool diag,
 
 bool monster_pathfind::start_pathfind(bool msg)
 {
-    // NOTE: We never do any traversable() check for the starting square
-    //       (target). This means that even if the target cannot be reached
+    // NOTE: We never do any traversable() check for the target square.
+    //       This means that even if the target cannot be reached
     //       we may still find a path leading adjacent to this position, which
     //       is desirable if e.g. the player is hovering over deep water
     //       surrounded by shallow water or floor, or if a foe is hiding in
     //       a wall.
-    //       If the surrounding squares also are not traversable, we return
-    //       early that no path could be found.
 
     max_length = min_length = grid_distance(pos, target);
     for (int i = 0; i < GXM; i++)
@@ -210,7 +207,7 @@ bool monster_pathfind::calc_path_to_neighbours()
         if (!in_bounds(npos))
             continue;
 
-        if (!traversable(npos))
+        if (!traversable(npos) && npos != target)
             continue;
 
         // Ignore this grid if it takes us above the allowed distance.
@@ -331,7 +328,7 @@ std::vector<coord_def> monster_pathfind::backtrack()
         mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
                                               pos.x, pos.y);
 #endif
-        path.push_back(pos);
+        path.insert(path.begin(), pos);
 
         if (pos.x == 0 && pos.y == 0)
             break;
