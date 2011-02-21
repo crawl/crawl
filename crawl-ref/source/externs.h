@@ -260,6 +260,10 @@ struct coord_def
     {
         return (xi == x && yi == y);
     }
+
+    bool can_cling(bool already_clinging) const;
+    bool can_cling_to(const coord_def& p) const;
+
 };
 const coord_def INVALID_COORD(-1, -1);
 

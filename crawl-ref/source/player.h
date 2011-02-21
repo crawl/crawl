@@ -382,7 +382,6 @@ public:
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool can_cling_to_walls() const;
-    void clear_clinging();
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;

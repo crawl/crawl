@@ -1753,6 +1753,7 @@ void process_command(command_type cmd)
     case CMD_MOVE_NOWHERE:
     case CMD_SEARCH:
         search_around();
+        you.check_clinging(false);
         you.turn_is_over = true;
         break;
 
@@ -2764,8 +2765,6 @@ static void _player_reacts()
 
     slime_wall_damage(&you, you.time_taken);
 
-    you.check_clinging();
-
     _decrement_durations();
 
     int capped_time = you.time_taken;
@@ -2806,6 +2805,7 @@ static void _player_reacts_to_monsters()
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);
 
+    you.check_clinging(false);
     handle_starvation();
     _decrement_paralysis(you.time_taken);
 
@@ -3936,6 +3936,7 @@ static void _move_player(coord_def move)
 
         move_player_to_grid(targ, true, false);
 
+        you.check_clinging(true);
         you.walking = move.abs();
         you.prev_move = move;
         move.reset();
