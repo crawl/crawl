@@ -5239,6 +5239,7 @@ void player::init()
 
     // Long-term state:
     elapsed_time     = 0;
+    elapsed_time_at_last_input = 0;
 
     hp               = 0;
     hp_max           = 0;
