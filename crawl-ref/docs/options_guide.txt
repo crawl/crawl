@@ -1318,8 +1318,9 @@ show_gold_turns = false
         ignored. Use the tile_layout_priority option instead.
 
 show_real_turns = false
-        If set to true, the turn counter in the stat area will display absolute
-        turns instead of player turns.
+        If set to true, the turn counter in the stat area will display game
+        turns instead of player turns. A second number is displayed in
+        parenthesis, showing the duration of the last action.
 
 show_beam = true
         When performing actions such as throwing or zapping, you can

@@ -1185,6 +1185,9 @@ static void _input()
 
         crawl_state.waiting_for_command = false;
 
+        if (!crawl_state.is_replaying_keys())
+            you.elapsed_time_at_last_input = you.elapsed_time;
+
         if (cmd != CMD_PREV_CMD_AGAIN && cmd != CMD_NO_CMD
             && !crawl_state.is_replaying_keys())
         {

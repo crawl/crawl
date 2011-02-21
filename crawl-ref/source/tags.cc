@@ -1726,6 +1726,7 @@ static void tag_read_you(reader &th)
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
+    you.elapsed_time_at_last_input = you.elapsed_time;
 
     // time of character creation
     you.birth_time = unmarshallInt(th);

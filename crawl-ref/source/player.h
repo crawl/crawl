@@ -45,6 +45,7 @@ public:
 
   // Long-term state:
   int elapsed_time;        // total amount of elapsed time in the game
+  int elapsed_time_at_last_input; // used for elapsed_time delta display
 
   int hp;
   int hp_max;

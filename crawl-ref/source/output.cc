@@ -205,7 +205,12 @@ void update_turn_count()
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
     if (Options.show_real_turns)
-       cprintf("%.1f", you.elapsed_time / 10.0);
+    {
+       cprintf("%.1f (%.1f)%s", you.elapsed_time / 10.0,
+               (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
+               // extra spaces to erase excess if previous output was longer
+               "    ");
+    }
     else
         cprintf("%d", you.num_turns);
     textcolor(LIGHTGREY);
