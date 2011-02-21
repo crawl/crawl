@@ -1013,7 +1013,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // fire_tracer, or beam.
     switch (spell_cast)
     {
-    case SPELL_TUKIMAS_DANCE_PARTY:
+    case SPELL_TUKIMAS_BALL:
     case SPELL_STICKS_TO_SNAKES:
     case SPELL_SUMMON_SMALL_MAMMALS:
     case SPELL_VAMPIRIC_DRAINING:
@@ -1649,12 +1649,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             return (true);
         }
         // Try to animate weapons: if none are animated, pretend we didn't cast it.
-        if (spell_cast == SPELL_TUKIMAS_DANCE_PARTY)
+        if (spell_cast == SPELL_TUKIMAS_BALL)
         {
-            //friendly monsters cannot cast tukima's dance party for now.
+            //friendly monsters cannot cast tukima's ball for now.
             if (mons->friendly())
                 return false;
-            if (!cast_tukimas_dance_party(mons, 100, GOD_NO_GOD ,true))
+            if (!cast_tukimas_ball(mons, 100, GOD_NO_GOD ,true))
                 return false;
         }
 
@@ -2798,7 +2798,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_TUKIMAS_DANCE_PARTY:
+    case SPELL_TUKIMAS_BALL:
         //Tukima's dance NOT handled here.
         //Instead, handle above in handle_mon_spell
         //so nothing happens if no weapons animated.

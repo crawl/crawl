@@ -177,14 +177,14 @@ unseen Holy Flames cast
 
 Blessed flames are called forth!
 %%%%
-Tukima's Dance Party cast
+Tukima's Ball
 
 @The_monster@ hums a lilting melody.
 
 @The_monster@ sings a lively tune!
 
 %%%%
-unseen Tukima's Dance Party cast
+unseen Tukima's Ball
 
 You hear someone hum a lilting melody!
 
