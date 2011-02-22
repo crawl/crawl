@@ -501,7 +501,7 @@ ENDMAP
 # are not all the same sizes.
 #
 # about 24 |
-NAME:     vault8_rooms
+NAME:     vault8_classical_rooms
 TAGS:     vault8_quadrant_prize
 SHUFFLE:  AC/BD, EG/FH, IKN/MJL
 SUBST:    A=., B=xx=, C=+, D=x, E=+, F=xx=, G=., H=x
@@ -624,9 +624,8 @@ ENDMAP
 
 
 ##############################################################################
-# Vault:8 - Cross Quadrant
 # about 2 |
-NAME: vault8_cross
+NAME: vault8_classical_cross
 TAGS: vault8_quadrant
 NSUBST:  U = 1:. / *:xxxx=
 NSUBST:  V = 1:. / *:xxxx=
@@ -660,10 +659,9 @@ xxx........-....-.......xxx
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Diamond Quadrant
 # about 4 |
-NAME: vault8_diamond
-TAGS: vault8_quadrant
+NAME:    vault8_classical_diamond
+TAGS:    vault8_quadrant
 SHUFFLE: !_
 SUBST:   ! = | * .:20
 SUBST:   _ = 8 9 .:20
@@ -697,9 +695,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Stripes Quadrant
 # about 5 |
-NAME: vault8_stripes
+NAME: vault8_classical_stripes
 TAGS: vault8_quadrant
 # double use of Y=Y. and Z=Z. for decreasing variance
 SUBST:   Y = Y ., Z = Z .
@@ -736,9 +733,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Clover Quadrant (by Mu.)
 # about 4 |
-NAME:   vault8_clover
+NAME:   vault8_mu_clover
 TAGS:   vault8_quadrant
 SUBST:  Q = 8 9 .:20
 NSUBST: ? = 1:O / *:*
@@ -772,9 +768,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Triangles Quadrant (by Mu.)
 # about 19 |
-NAME:   vault8_triangles
+NAME:   vault8_mu_triangles
 TAGS:   vault8_quadrant_prize
 SUBST:  Q = 8 9 .:20
 NSUBST: ? = 1:O / *:|
@@ -809,9 +804,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Not Diamond Quadrant (by Mu.)
 # about 8 |
-NAME:   vault8_not_diamond
+NAME:   vault8_mu_not_diamond
 TAGS:   vault8_quadrant
 SUBST:  Q = 8 9 *:20
 : vault8_loot(_G)
@@ -843,24 +837,23 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Boxes (by Mu.)
 # about 11 |
-NAME:   vault8_boxes
-TAGS:   vault8_quadrant
-NSUBST: a = 1:+ / *:x
-NSUBST: b = 1:+ / *:x
-NSUBST: c = 1:+ / *:x
-NSUBST: d = 1:+ / *:x
-NSUBST: e = 1:+ / *:x
-NSUBST: f = 1:+ / *:x
-NSUBST: g = 1:+ / *:x
-SHUFFLE:        ABCDEFG
-SUBST:  ABC = Q
-SUBST:  D = |*$Q
-SUBST:  E = |
-SUBST:  F = *
-NSUBST: G = 1:O / *:Q
-SUBST:  Q = 8 9 .:20
+NAME:    vault8_mu_boxes
+TAGS:    vault8_quadrant
+NSUBST:  a = 1:+ / *:x
+NSUBST:  b = 1:+ / *:x
+NSUBST:  c = 1:+ / *:x
+NSUBST:  d = 1:+ / *:x
+NSUBST:  e = 1:+ / *:x
+NSUBST:  f = 1:+ / *:x
+NSUBST:  g = 1:+ / *:x
+SHUFFLE: ABCDEFG
+SUBST:   ABC = Q
+SUBST:   D = |*$Q
+SUBST:   E = |
+SUBST:   F = *
+NSUBST:  G = 1:O / *:Q
+SUBST:   Q = 8 9 .:20
 : vault8_loot(_G)
 : vault8_rune(_G)
 MAP
@@ -890,9 +883,8 @@ x..........xxexx..........x
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Corners Quadrant (by Mu.)
 # about 25 |
-NAME:   vault8_corners
+NAME:   vault8_mu_corners
 TAGS:   vault8_quadrant_prize
 SUBST:  Q = 8 9 .:10
 NSUBST: $ = 1:O / *:$
@@ -927,9 +919,8 @@ a.......xQQxxx$$$$xx.x$$$$x
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Flips Quadrant (by Mu.)
 # about 21 |
-NAME:   vault8_flips
+NAME:   vault8_mu_flips
 TAGS:   vault8_quadrant_prize
 NSUBST: ; = 3:l / 3:z / 3:A / *:.
 SUBST:  Q = 8 9
@@ -968,9 +959,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxa
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Construction Quadrant (by Mu.)
 # about 21 |
-NAME:   vault8_construction
+NAME:   vault8_mu_construction
 TAGS:   vault8_quadrant_prize
 NSUBST: $ = 1:O / *:$
 SUBST:  $ = |*$.
@@ -1007,9 +997,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Vault:8 - Long Quadrant (by Mu.)
 # about 8 |
-NAME:   vault8_long
+NAME:   vault8_mu_long
 TAGS:   vault8_quadrant
 SUBST:  Q = 8 9 .:10
 NSUBST: $ = 1:O / *:$
@@ -1040,5 +1029,712 @@ x....QQQ............$$$x..x
 x..xxxxxxxxxxxxxxxxxxxxx..x
 x.........................x
 x.........................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 19 *, 14 monsters
+NAME:   vault8_minmay_circular_pillars
+TAGS:   vault8_quadrant
+NSUBST: a = 1:+ / *:x, b = 1:+ / *:x, c = 1:+ / *:x, d = 1:+ / *:x
+NSUBST: O = 1:O / *:*
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxx9..9xxxx9...9xxxx9.....
+xx......xx.......xx.......x
+x9..xx......xbx......xx...x
+x..xxxx....xx*xx....xxxx..x
+x..xxxx....b*O*b....xxxx..x
+x9..xx9....xx*xx....9xx..9x
+xx..........xbx..........xx
+xxx.....................xxx
+xxx..xax...9...9...xcx..xxx
+xx..xx*xx.........xx*xx..xx
+x9..a*O*a.........c*O*c..9x
+xx..xx*xx.........xx*xx..xx
+xxx..xax...9...9...xcx..xxx
+xxx.....................xxx
+xx..........xdx..........xx
+x9..xx9....xx*xx....9xx..9x
+x..xxxx....d*O*d....xxxx..x
+x..xxxx....xx*xx....xxxx..x
+x9..xx......xdx......xx..9x
+xx......xx.......xx......xx
+xxx9..9xxxx9...9xxxx9..9xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 20 *, 12 monsters
+NAME:   vault8_minmay_hexagonal
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx9............9.....
+xxxxxx....................x
+xxxxx...xxxxx.xxxxx.......x
+xxxx...xx9.......9xx......x
+xxxx..xx...........xx.....x
+xxx...x...xxx.xxx...x.....x
+xx...xx..xx9...9xx..xx....x
+xx..xx...x.......x...xx...x
+x9..x9..xx..***..xx..9x..9x
+x..xx..xx9.*****.9xx..xx..x
+x..........**O**..........x
+x..xx..xx9.*****.9xx..xx..x
+x9..x9..xx..***..xx..9x..9x
+xx..xx...x.......x...xx..xx
+xx...xx..xx9...9xx..xx...xx
+xxx...x...xxx.xxx...x...xxx
+xxxx..xx...........xx..xxxx
+xxxx...xx9.......9xx...xxxx
+xxxxx...xxxxx.xxxxx...xxxxx
+xxxxxx...............xxxxxx
+xxxxxxx9...........9xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 15 *, 10 monsters
+NAME:  vault8_minmay_subdivision
+TAGS:  vault8_quadrant
+SUBST: 9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x*....x....*xxx*....x.....
+x.....x.....xxx.....x.....x
+x.....x.....xxx.....x.....x
+x....9x9....xxx....9x9....x
+xxxxxx.xxxxx...xxxxx.xxxxxx
+x....9x9....xxx....9x9....x
+x.....x.....xxx.....x.....x
+x.....x.....xxx.....x.....x
+x*....x....*xxx*....x....*x
+xxxxxx.xxxxx9.9xxxxx.xxxxxx
+xxxxxx.xxxxx.O.xxxxx.xxxxxx
+xxxxxx.xxxxx9.9xxxxx.xxxxxx
+x*....x....*xxx*....x....*x
+x.....x.....xxx.....x.....x
+x.....x.....xxx.....x.....x
+x....9x9....xxx....9x9....x
+xxxxxx.xxxxx...xxxxx.xxxxxx
+x....9x9....xxx....9x9....x
+x.....x.....xxx.....x.....x
+x.....x.....xxx.....x.....x
+x*....x....*xxx*....x....*x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 14 *, 8 monsters
+NAME:   vault8_minmay_triangle_fans
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx.....9xxxx.....9xxxx.
+xxxx..x....xxx..x....xxx..x
+xxx...xx...xx...xx...xx...x
+xx....xxx..x....xxx..x....x
+x....9xxxx.....9xxxx......x
+x.xxxx9.....xxxx9.....xxxxx
+x..xxx....x..xxx....x..xxxx
+x...xx...xx...xx...xx...xxx
+x....x..xxx....x..xxx....xx
+x......xxxx9.....xxxx9....x
+x.........................x
+xxxxx.....9xxxx.....9xxxx.x
+xxxx..x....xxx..x....xxx..x
+xxx...xx...xx...xx...xx...x
+xx....xxx..x....xxx..x....x
+x....9xxxx.....9xxxx......x
+x*xxxx9.....xxxx9.....xxxxx
+x**xxx....x..xxx....x..xxxx
+x***xx...xx...xx...xx...xxx
+x****x..xxx....x..xxx....xx
+xO****.xxxx9.....xxxx9....x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 18 |, 12 *, 21 monsters
+NAME:   vault8_minmay_slanted
+TAGS:   vault8_quadrant_prize
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xO|||||||||.....9.....xxxxx
+x||||||xxxx..9..9..xxxx***x
+x|||xxxx..9..9..xxxx......x
+xxxxx.....9..xxxx.........x
+x.........xxxx..9.........x
+x......xxxx..9..9..xxxx999x
+x999xxxx..9..9..xxxx......x
+x.........9..xxxx.........x
+x.........xxxx..9.....xxxxx
+x......xxxx..9..9..xxxx***x
+x***xxxx..9..9..xxxx......x
+xxxxx.....9..xxxx.........x
+x.........xxxx..9.........x
+x......xxxx..9..9..xxxx999x
+x999xxxx..9..9..xxxx......x
+x.........9..xxxx.........x
+x.........xxxx..9.....xxxxx
+x......xxxx..9..9..xxxxxxxx
+x***xxxx..9..9..xxxxxxxxxxx
+xxxxx.....9..xxxxxxxxxxxxxx
+ .........xxxxxxxxxxxxxxxxx
+  xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 16 |, 14 *, 20 monsters
+NAME:    vault8_minmay_not_circular
+TAGS:    vault8_quadrant_prize
+SHUFFLE: abcd
+SUBST:   a : ., b : x .:1, c : x .:1, d : x .:1
+SUBST:   9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+  xxxxxxxxxxxxxxxxxxxxxxxxx
+ .................xxxxxxxxx
+x...................9xxxxxx
+x.....................9xxxx
+x.......9xxcccccxx.....9xxx
+x....9xxxx9.....9xxxx...xxx
+x...9xx9...........9xx..9xx
+x...xx...............xx..xx
+x..9x9...xxaaaaaxx...9x..xx
+x..xx..xxx9.....9xxx..xx.*x
+x..d9.xx9..|||||..9xx.9b.*x
+x..d..b...|||O|||...d..b.*x
+x..d9.xx9..|||||..9xx.9b.*x
+x..xx..xxx9.....9xxx..xx.*x
+xx..x9...xxcccccxx...9x..xx
+xx..xx...............xx..xx
+xx9..xx9...........9xx..9xx
+xxx...xxxx9.....9xxxx...xxx
+xxx9.....xxaaaaaxx.....9xxx
+xxxx9.................9xxxx
+xxxxxx9.............9xxxxxx
+xxxxxxxxx*********xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 8 |, 11 monsters
+NAME:   vault8_minmay_pillar_box
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........................x
+x.x.x.x.x.x.x.x.x.x.x.x.x.x
+x.........................x
+x.x.xx9xx..xx9xx..xx9xx.x.x
+x...xx.xx..xx.xx..xx.xx...x
+x.x.9.|....9.|.9....|.9.x.x
+x...xx.xx..xx.xx..xx.xx...x
+x.x.xx.xx..xx.xx..xx.xx.x.x
+x...9...9..xx.xx..9...9...x
+x.x.xx.xx..x...x..xx.xx.x.x
+x...xx|xx..x.O.x..xx|xx...x
+x.x.xx.xx..x...x..xx.xx.x.x
+x...9...9..xx.xx..9...9...x
+x.x.xx.xx..xx.xx..xx.xx.x.x
+x...xx.xx..xx.xx..xx.xx...x
+x.x.9.|....9.|.9....|.9.x.x
+x...xx.xx..xx.xx..xx.xx...x
+x.x.xx9xx..xx9xx..xx9xx.x.x
+x.........................x
+x.x.x.x.x.x.x.x.x.x.x.x.x.x
+x.........................
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 20 *, 15 monsters
+NAME:   vault8_minmay_partial_spiral
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........................x
+x.........................x
+x..x99xxxxxxxxxxxxxxxxxx..x
+x..x................9..9..x
+x..x................9..9..x
+x..x99x99xxxxxxxxxxxx..x..x
+x..x..x..........9..9..x..x
+x..x..x..........9..9..x..x
+x..x..x99xxxxxxxxx..x..x..x
+x..x..x..x*******x..x..x..x
+x..x..x..+***O***x..x..x..x
+x..x..x..x*******x..x..x..x
+x..x..xxxxxxxxxxxx99x..x..x
+x..9..9.............x..x..x
+x..9..9.............x..x..x
+x..xxxxxxxxxxxxxxx99x99x..x
+x..9...................x..x
+x..9...................x..x
+x..xxxxxxxxxxxxxxxxxx99x..x
+x.........................x
+x.........................
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 3 |, 24 *, 18 monsters
+NAME:   vault8_minmay_x
+TAGS:   vault8_quadrant_prize
+SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:|
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+  xxxxxxxxxxxxxxxxxxxxxxxxx
+ .........................x
+x..xx9...............9xx..x
+x..xxx...............xxx..x
+x..9xxx.............xxx9..x
+x....xxx...........xxx....x
+x.....xxx.........xxx.....x
+x......xxx9999999xxx......x
+x......9xxx*****xxx9......x
+x......9*xxx***xxx*9......x
+x......9**xxxOxxx**9......x
+x......9**OxxxxxO**9......x
+x......9**xxxOxxx**9......x
+x......9*xxx***xxx*9......x
+x......9xxx*****xxx9......x
+x......xxx9999999xxx......x
+x.....xxx.........xxx.....x
+x....xxx...........xxx....x
+x..9xxx.............xxx9..x
+x..xxx...............xxx..x
+x..xx9...............9xx..x
+x.........................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 8 |, 20 *, 16 monsters
+NAME:   vault8_minmay_split_x
+TAGS:   vault8_quadrant_prize
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xx9......9xxxxxxx9........
+x9.........xxxxx..........x
+x..xxxxx....xxx....xxxxx..x
+x..xxx..x...9x9...x..xxx..x
+x..xx|...x.......x...|xx..x
+x..x..9...x.....x...9..x..x
+x..x...9..x.....x..9...x..x
+x...x...|xx9...9xx|...x...x
+x9...x..xxxx***xxxx..x...9x
+xx....xxxxx*****xxxxx....xx
+xxx9..xxxxx**O**xxxxx..9xxx
+xx....xxxxx*****xxxxx....xx
+x9...x..xxxx***xxxx..x...9x
+x...x...|xx9...9xx|...x...x
+x..x...9..x.....x..9...x..x
+x..x..9...x.....x...9..x..x
+x..xx|...x.......x...|xx..x
+x..xxx..x...9x9...x..xxx..x
+x..xxxxx....xxx....xxxxx..x
+x9.........xxxxx.........9x
+xx9......9xxxxxxx9......9xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 2 |, 18 *, 16 monsters
+NAME:   vault8_minmay_grid2
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:|
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xO.xx**xx**xx**xx**xx**xxOx
+xxx..xx..xx..xx..xx..xx..xx
+xxx.9xx9.xx..xx..xx.9xx9.xx
+x..xx..xx..xx..xx..xx..xx*x
+x..xx..xx..xx..xx..xx..xx*x
+xxx.9xx9.xx..xx..xx.9xx9.xx
+xxx..xx.9xx9.xx.9xx9.xx..xx
+x..xx..xx..xx..xx..xx..xx*x
+x..xx..xx..xx..xx..xx..xx*x
+xxx..xx.9xx9.xx.9xx9.xx..xx
+xxx..xx.9xx9.xx.9xx9.xx..xx
+x..xx..xx..xx..xx..xx..xx*x
+x..xx..xx..xx..xx..xx..xx*x
+xxx..xx.9xx9.xx.9xx9.xx..xx
+xxx.9xx9.xx..xx..xx.9xx9.xx
+x..xx..xx..xx..xx..xx..xx*x
+x..xx..xx..xx..xx..xx..xx*x
+xxx.9xx9.xx..xx..xx.9xx9.xx
+xxx..xx..xx..xx..xx..xx..xx
+x..xx..xx..xx..xx..xx..xx.x
+ ..xx..xx..xx..xx..xx..xxOx
+  xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 2 |, 15 *, 14 monsters
+NAME:   vault8_minmay_pluses
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:|
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x.....x......x......x.....
+x.........................x
+x.........................x
+x.....x......x......x.....x
+xx...xxx9999xxx9999xxx...xx
+x.....x......x......x.....x
+x.....9......x......9.....x
+x.....9.....*x......9.....x
+x.....9....**x......9.....x
+x.....x...**Ox......x.....x
+xx...xxxxxxxxxxxxxxxxx...xx
+x.....x...**OxO**...x.....x
+x.....9....**x**....9.....x
+x.....9.....*x*.....9.....x
+x.....9......x......9.....x
+x.....x......x......x.....x
+xx...xxx9999xxx9999xxx...xx
+x.....x......x......x.....x
+x.........................x
+x.........................x
+x.....x......x......x.....x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 14 *, 9 monsters
+NAME:   vault8_minmay_broken_diamonds
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x..xx....9xx...xx9....xx..
+x........xx.....xx........x
+xx......xx...x...xx......xx
+xxx....xx....xx...xx....xxx
+x9xx...x......xx...x...xx9x
+x..xx..........xx.....xx..x
+x...xx...xx....9xx........x
+x.........xx..9xx...x....xx
+x......x...xx9xx...xxx...xx
+xx....xxx...xxx...xx9xx...x
+xx...xx9xx...x...xx9..xx..x
+x...xx..9xx.......xx......x
+x..xx....9xx...x...xx....xx
+x9.......xx....xx...x...xxx
+xx......xx......xx.....xx9x
+xxx....xx...xx..9xx...xx..x
+x*xx...x.....xx9xx........x
+x**xx.....x...xxx...x....xx
+x***xx...xx....x....xx...xx
+x****...xx...........xx...x
+xO****.xx9..xx...xx..9xx..x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 17 *, 10 monsters
+NAME:   vault8_minmay_smooth_crossroads
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:*
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x9...*Ox9.....9x9........9
+x....**x.......x...x......x
+x....*xx...x...x...xx.....x
+x....*x....x...x....x.....x
+x....xx....x...x....xx....x
+x..xxx....xx...xx....xxx..x
+x.xx......x.....x......xxxx
+x........xx.....xx.......9x
+x9.....xxx.......xxx......x
+xxxxxxxx.....9.....xxxx...x
+x9..........9x9..........9x
+x...xxxx.....9.....xxxxxxxx
+x......xxx.......xxx.....9x
+x9.......xx.....xx........x
+xxxx......x.....x......xx.x
+xO*xxx....xx...xx....xxx..x
+x****xx....x...x....xx....x
+x.....x....x...x....x*....x
+x.....xx...x...x...xx*....x
+x......x...x.......x**....x
+x9........9x9.....9xO*...9x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 14 *, 10 monsters
+NAME:   vault8_minmay_diagonal_split
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x9xxx9.......x9...........
+x..xxx...xx...x...........x
+x...xxx..9xx...x..........x
+x....xxx...xx...x9........x
+x.x9..xxx...xx...x........x
+x.xx...xxx...xx...x.......x
+x..xx...xxx...xx...x......x
+x...xx...xxx...xx...x.....x
+xx...xx...xxx...xx...x9...x
+x9x...xx...xxx9..xx...x...x
+x..x...xx...9.9...xx...x..x
+x...x...xx..9xxx...xx...x9x
+x...9x...xx...xxx...xx...xx
+x.....x...xx...xxx...xx...x
+x......x...xx...xxx...xx..x
+x.......x...xx...xxx...xx.x
+x*.......x...xx...xxx..9x.x
+x**......9x...xx...xxx....x
+x***.......x...xx9..xxx...x
+x****.......x...xx...xxx..x
+xO****......9x.......9xxx9x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 82 $, 16 monsters
+NAME:    vault8_minmay_loops
+TAGS:    vault8_quadrant
+SHUFFLE: ae / bf / cg / dh
+SUBST:   a = +, e = ., bcdfgh = x
+SUBST:   9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx$$$$$$$$$xxxxx...
+xxx....xxx$$$$$$$xxx......x
+xx.9xx9.xxx$$$$$xxx.9xx9.xx
+xx.xxxx.xxxx$$$xxxx.xxxx.xx
+xx.xxxx.xxxxx$xxxxx.xxxx.xx
+xx.9xx9..xxxx+xxxx..9xx9.xx
+xxx......9xx9.9xx9......xxx
+x$xxxx9.............9xxxx$x
+x$$xxxx....9xax9....xxxx$$x
+x$$$xxx....xxexx....xxx$$$x
+x$$$$+.....dhOfb.....+$$$$x
+x$$$xxx....xxgxx....xxx$$$x
+x$$xxxx....9xcx9....xxxx$$x
+x$xxxx9.............9xxxx$x
+xxx......9xx9.9xx9......xxx
+xx.9xx9..xxxx+xxxx..9xx9.xx
+xx.xxxx.xxxxx$xxxxx.xxxx.xx
+xx.xxxx.xxxx$$$xxxx.xxxx.xx
+xx.9xx9.xxx$$$$$xxx.9xx9.xx
+xxx....xxx$$$$$$$xxx....xxx
+xxxxxxxxx$$$$$$$$$xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 31 *, 18 $, 20 monsters
+NAME:    vault8_minmay_connected_circles
+TAGS:    vault8_quadrant_prize
+SUBST:   9 = 8 9 .:20
+NSUBST:  * = 1:O / *:*
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xx$9$xxxxxx.9xxxxxxxxxxxx.
+x$.$.$xxxx9...xxxxxxxxxx.xx
+x9$.$9xxxx...9xxxxxxxxx.xxx
+x$.$.$xxx.x9.xxxxxxxxx.xxxx
+xx$9$xxx.xxxx.xxx.9.x.xxxxx
+xxx.xxx.xx$9xx.x.....xxxxxx
+xxxx.x.xx$.$9xx.9...9xxxxxx
+xxx.9.xxx9$.$xxx.....xxxxxx
+xx.....x.x9$xxxxx.9.x.xxxxx
+xx9...9.xxxxxxxxxx.xxx.xxxx
+xx.....x.xxxxxxxx.xxxxx.9xx
+xxx.9.xxx.xxxxxx.xxxxx9...x
+xxxxxxxxxx.xxxx.xxxxx....9x
+xxx9*.*xxxx.9x.xxxxx.xx9.xx
+xx.*.*.*xx9...xxxxx.xxxxxxx
+x.*.*.*.*x...9xxxx.xxx*9xxx
+x*.*.*.*9xx9.xx.9.xxx*.*9xx
+x9*.*.*.*x.xxx.....xx9*.*xx
+x*.*.*.*..xxxx9...9x.x9*xxx
+xx*.*.*.xxxxxx......xxxxxxx
+xxx*.*9xxxxxxxx.9.xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 20 *, 20 monsters
+NAME:   vault8_minmay_plus_grid
+TAGS:   vault8_quadrant
+NSUBST: * = 1:O / *:*
+SUBST:  * = 9 8 *:20 .
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.x.*.x.xxx.x.*.x.xxx..
+x.x.*.x.xxx.x.*.x.xxx.x...x
+x*.x.xxx.x.*.x.xxx.x.*.x.xx
+x.xxx.x.*.x.xxx.x.*.x.xxx.x
+xx.x.*.x.xxx.x.*.x.xxx.x.*x
+x.*.x.xxx.x.*.x.xxx.x.*.x.x
+xx.xxx.x.*.x.xxx.x.*.x.xxxx
+xxx.x.*.x.xxx.x.*.x.xxx.x.x
+xx.*.x.xxx.x.*.x.xxx.x.*.xx
+x.x.xxx.x.*.x.xxx.x.*.x.xxx
+xxxx.x.*.x.xxx.x.*.x.xxx.xx
+x.x.*.x.xxx.x.*.x.xxx.x.*.x
+x*.x.xxx.x.*.x.xxx.x.*.x.xx
+x.xxx.x.*.x.xxx.x.*.x.xxx.x
+xx.x.*.x.xxx.x.*.x.xxx.x.*x
+x.*.x.xxx.x.*.x.xxx.x.*.x.x
+xx.xxx.x.*.x.xxx.x.*.x.xxxx
+xxx.x.*.x.xxx.x.*.x.xxx.x.x
+xx.*.x.xxx.x.*.x.xxx.x.*.xx
+x.x.xxx.x.*.x.xxx.x.*.x.xxx
+xxxx.x.*.x.xxx.x.*.x.xxx.xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 14 *, 12 monsters
+NAME:   vault8_minmay_curved1
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:*
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x.................xxxxxx..
+x.xxxx....xxxx.......xx...x
+x...9xxx....9xxx.........xx
+x.....9xx.....9xx.......xxx
+x......9x......9x.......xxx
+x.......xx......xx.......xx
+x.......9x......9x.......xx
+x........x.......x9......xx
+x.xxxx...xxxxx.**xx.......x
+x...9xxx..xxxxxxO*x9......x
+x.....9xx*xxxxxxx*xx9.....x
+x......9x*Oxxxxxx..xxx9...x
+x.......xx**.xxxxx...xxxx.x
+xx......9x.......x........x
+xx.......x9......x9.......x
+xx.......xx......xx.......x
+xxx*......x9......x9......x
+xxx*O.....xx9.....xx9.....x
+xxxx**.....xxx9....xxx9...x
+xxxxxx.......xxxx....xxxx.x
+xxxxxxxxx.................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 11 |, 12 *, 15 monsters
+NAME:   vault8_minmay_curved2
+TAGS:   vault8_quadrant_prize
+SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:|
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x......x|**.....9xxx......
+x......xO|*.....xx9.......x
+x......xx|*....9x........xx
+x...x...xxx....xx........xx
+x...x..........x9......9xxx
+x...x9........9x.....9xxx9x
+x...xx........xx...xxxx9..x
+x....x9......9x..xxx9.....x
+x....xx9....9xx.xx9.......x
+x.....xxx99xxx..x9........x
+x.......xxxx...xx.........x
+x..............x9.....x***x
+x...xxxx.......x9.....x||*x
+x.....9xxx.....xx.....xxO|x
+x.......9xx.....x9.....xxxx
+xxxx.....9x.....xx9.......x
+x|Oxx.....xx.....xxx9.....x
+x*||x.....9x.......xxxx...x
+x***x.....9x..............x
+x.........xx..............x
+x........9x...............x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# 18 *, 20 monsters
+NAME:   vault8_minmay_broken_lines
+TAGS:   vault8_quadrant
+SUBST:  9 = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x.9.x.x.x.x.x.x.x.9.x.x...
+x*x.x.x.x.x.x.x.x.x.x.x...x
+x*x.x.x.9.x.9.x.x.x.9.x.x.x
+x*x.9.x.x.x.x.x.x.x.x.x.x.x
+x*x.x.x.x.9.x.x.9.x.x.9.x.x
+x*x.x.9.x.x.x.x.x.x.x.x.x.x
+x*x.x.x.x.x.x.9.x.x.x.9.x.x
+x*x.x.x.9.x.x.x.x.9.9.x.x.x
+x*x.x.x.x.x.9.x.x.x.x.x.x.x
+x*x.x.x.x.x.x.x.x.x.x.x.9.x
+xOx.x.x.x.x.x.9.x.x.x.x.x.x
+x*x.9.x.x.9.x.x.x.9.x.x.x.x
+x*x.x.x.x.x.x.x.x.x.x.9.x.x
+x*x.x.x.9.x.x.9.x.x.x.x.x.x
+x*x.x.x.x.x.x.x.x.x.x.x.9.x
+x*x.x.9.x.9.x.x.9.x.9.x.x.x
+x*x.9.x.x.x.9.x.x.x.x.9.x.x
+x*x.x.x.x.x.x.9.x.x.x.x.x.x
+x*x.x.9.x.x.x.x.x.x.x.x.x.x
+x*x.x.x.x.x.x.x.x.9.x.x.9.x
+x.9.x.x.x.9.9.x.x.x.9.x.x.x
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
