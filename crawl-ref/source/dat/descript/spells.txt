@@ -298,7 +298,7 @@ This spell heals a large amount of damage to the caster's body.
 %%%%
 Haste
 
-This spell speeds the actions of a creature.
+This spell speeds the actions of a creature. Hasting yourself will increase your magical contamination.
 %%%%
 Haunt
 
@@ -330,7 +330,7 @@ This spell protects the caster from electric shocks.
 %%%%
 Invisibility
 
-This spell hides a creature from the sight of others.
+This spell hides a creature from the sight of others. While invisible you will gain magical contamination, which may eventually cause enough glow to make you visible again.
 %%%%
 Iskenderun's Mystic Blast
 
