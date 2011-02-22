@@ -253,7 +253,8 @@ bool monster::floundering() const
             // deep water, who flounder despite being treated as amphibious.
             && mons_habitat(this, true) != HT_AMPHIBIOUS
             && !mons_flies(this)
-            && !extra_balanced());
+            && !extra_balanced()
+            && !is_wall_clinging());
 }
 
 bool monster::can_pass_through_feat(dungeon_feature_type grid) const
