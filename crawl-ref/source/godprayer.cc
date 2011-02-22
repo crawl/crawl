@@ -395,13 +395,8 @@ void pray()
     {
     case GOD_ZIN:
         //jmf: this "good" god will feed you (a la Nethack)
-        if (zin_sustenance())
-        {
-            god_speaks(you.religion, "Your stomach feels content.");
-            set_hunger(6000, true);
-            lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+        if (do_zin_sustenance())
             something_happened = true;
-        }
         break;
 
     case GOD_JIYVA:

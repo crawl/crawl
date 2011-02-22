@@ -2254,6 +2254,17 @@ bool do_god_gift(bool forced)
     return (success);
 }
 
+bool do_zin_sustenance()
+{
+    if (!zin_sustenance())
+        return false;
+    god_speaks(you.religion, "Your stomach feels content.");
+    set_hunger(6000, true);
+    lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+    _inc_gift_timeout(30 + random2avg(10, 2));
+    return true;
+}
+
 std::string god_name(god_type which_god, bool long_name)
 {
     if (which_god == GOD_JIYVA)
