@@ -3427,15 +3427,12 @@ void make_mons_leave_level(monster* mon)
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed)
 {
+    // If no distance, then trivially true
     if (p1 == p2)
         return (true);
 
     if (distance(p1, p2) > get_los_radius_sq())
         return (false);
-
-    // If no distance, then trivially true
-    if (p1 == p2)
-        return (true);
 
     // XXX: Hack to improve results for now. See FIXME above.
     ray_def ray;
