@@ -388,6 +388,49 @@ xxxx+xxxxx...xxxxx+xxxx
    xxxxxxx.@.xxxxxxx
 ENDMAP
 
+NAME:  goddamned_bats
+DEPTH: D:3-12, Lair:1-3, Orc:1-2
+# Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
+# and tera is understandable, but come on, even mili is lacking.
+KMONS:  1 = megabat
+KMONS:  2 = bat name:microbat n_rpl n_spe col:magenta
+# Can we spell them this way?  Please?
+KMONS:  3 = bat name:fruity n_adj n_spe col:lightmagenta
+KMONS:  4 = bat name:giga n_adj n_spe hd:4 col:brown
+# Way harder than the rest here.
+KMONS:  5 = vampire bat
+# In RL, they sit put, not moving a finger.  Lazy bastards.
+KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_spe n_zom
+# The only here without a basis in reality.
+KMONS:  7 = megabat simulacrum name:ice_bat n_rpl n_spe n_zom
+# There are actual "ghost bats" too, but near-extinct, while ghost-faceds
+# have a number of species and are widespread.
+KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_spe n_zom
+# Just an US WW2 military project, but that's good enough.
+KMONS:  9 = bat name:fire_bat n_rpl n_spe spells:flame_tongue col:lightred
+MAP
+       xxxxx
+      xxxxxxx
+     xxxx7xxx
+    xxxxx.xxx
+   xxx9..xxx
+  xxx9...xxx
+  xx.9..xxxxx
+  xxx....xxxx
+  xx88.xx.xxxx
+  xxxxxxxx.xxxx
+ xxxxxxxxx...xx
+xxx.4xxxx..x..xx
+xxx12.xxx.xx...xx
+xxxx.xxx.xxxx6..x
+xxxxx.xx.xxxx66.x
+xx33.x...xxxxx.xxx
+xxxxxxx...xxxxx.xx
+ xxxx21xx.xxxxx5xx
+  xxxxxxx.xxxxxxx
+    xxxx@xx
+ENDMAP
+
 # This vault can be highly OOD, which is why lindwurms are used in the
 # first place; unlike most dragon-types, lindwurms are flightless.
 NAME:   minmay_lindwurm_lava
