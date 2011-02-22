@@ -1426,7 +1426,7 @@ KFEAT:  _ = altar_vehumet
 MARKER: + = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 10, pow_max = 12, delay = 30, \
              size = 3, walk_dist = 1, spread_rate= 0 }
-KITEM:  + = book of conjurations [Fire] / book of conjurations [Ice]
+KITEM:  + = book of conjurations [Fire+Earth] / book of conjurations [Ice+Air]
 MAP
 ......
 ._....
