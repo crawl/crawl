@@ -689,8 +689,10 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
         MessageBox(SysInfo.window, mesg, assert ? "Assertion failed!" : "Error",
                    MB_OK|MB_ICONERROR);
     }
-    else
-        fprintf(stderr, "%s", mesg);
+    // Print the message to STDERR in addition to the above message box,
+    // so it's in the message history if we call Crawl from a shell.
+    fprintf(stderr, "%s", mesg);
+
     int* p = NULL;
     *p = 0;
     abort();
