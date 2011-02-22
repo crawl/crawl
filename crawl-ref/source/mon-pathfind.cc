@@ -123,6 +123,7 @@ bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool diag,
     target = dest;
     pos    = start;
     allow_diagonals = diag;
+    clinging = mons->is_wall_clinging();
 
     // Easy enough. :P
     if (start == target)
@@ -177,6 +178,7 @@ bool monster_pathfind::calc_path_to_neighbours()
 {
     coord_def npos;
     int distance, old_dist, total;
+    clinging = mons->can_cling_to_walls() && cell_is_clingable(pos, clinging);
 
     // For each point, we look at all neighbour points. Check the orthogonals
     // last, so that, should an orthogonal and a diagonal direction have the
@@ -366,7 +368,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
-        if (can_go_straight(pos, path[i], can_move))
+        if (can_go_straight(pos, path[i], can_move) && mons_traversable(path[i]))
             continue;
         else
         {
@@ -400,7 +402,7 @@ bool monster_pathfind::traversable(const coord_def& p)
         return (false);
 
     if (mons)
-        return mons_traversable(p);
+        return mons_traversable(p) || clinging && cell_can_cling_to(pos, p);
 
     return feat_has_solid_floor(grd(p));
 }
@@ -409,7 +411,8 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    return (mons_can_traverse(mons, p));
+    return (mons_can_traverse(mons, p)
+            || mons->can_cling_to_walls() && cell_can_cling_to(pos, p));
 }
 
 int monster_pathfind::travel_cost(coord_def npos)
@@ -434,14 +437,16 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     }
 
     const monster_type mt = mons_base_type(mons);
-    const bool airborne = mons_airborne(mt, -1, false);
+    const bool ground_level = !mons_airborne(mt, -1, false)
+                              && !(mons->can_cling_to_walls()
+                                   && cell_can_cling_to(pos, npos));
 
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.
     // (The resulting path might not be optimal but it will lead to a path
     // a monster of such habits is likely to prefer.)
     // Only tested for shallow water since they can't enter deep water anyway.
-    if (!airborne && !mons_class_habitat(mt) == HT_AMPHIBIOUS
+    if (ground_level && !mons_class_habitat(mt) == HT_AMPHIBIOUS
         && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
     {
         return (2);
@@ -466,7 +471,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
 
         // Mechanical traps can be avoided by flying, as can shafts, and
         // tele traps are never traversable anyway.
-        if (knows_trap && !airborne)
+        if (knows_trap && ground_level)
             return (2);
     }
 
