@@ -203,9 +203,7 @@ const uint64_t MF_INTERLEVEL_FOLLOWER = BIT(29); // will travel with the player 
                                       // of where the monster is at on the level
 const uint64_t MF_DEMONIC_GUARDIAN    = BIT(30); // is a demonic_guardian
 const uint64_t MF_NAME_SPECIES        = BIT(31); // mname should be used for corpses as well,
-                                      // preventing "human corpse of halfling"
-    // Note: at least name flags get passed in a 32-bit variable
-    // (fill_out_corpse()), and perhaps other flags as well. Be
-    // careful when extending.
+const uint64_t MF_NAME_ZOMBIE         = BIT(32); // mname replaces zombies/skeletons, use
+                                      // only for already zombified monsters
 
 #endif
