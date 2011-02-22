@@ -78,7 +78,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_SIF_MUNA:
-    case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
         // The magic gods: no weapons, no preventing spellcasting.
         if (item.base_type == OBJ_WEAPONS)
@@ -176,8 +175,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return (false);
         break;
 
-    case GOD_SIF_MUNA:
     case GOD_KIKUBAAQUDGHA:
+        // Necromancy god.
+        if (item.base_type == OBJ_WEAPONS && brand != SPWPN_PAIN)
+            return (false);
+    case GOD_SIF_MUNA:
     case GOD_VEHUMET:
         // The magic gods: no preventing spellcasting.
         if (artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING))
