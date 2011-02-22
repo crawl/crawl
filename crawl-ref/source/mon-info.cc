@@ -313,6 +313,8 @@ monster_info::monster_info(const monster* m, int milev)
     }
     else if (m->flags & MF_NAME_DEFINITE)
         mb |= ULL1 << MB_NAME_THE;
+    if (m->flags & MF_NAME_ZOMBIE)
+        mb |= ULL1 << MB_NAME_ZOMBIE;
 
     if (m->has_ench(ENCH_HELPLESS))
         mb |= ench_to_mb(*m, ENCH_HELPLESS);
@@ -663,7 +665,7 @@ std::string monster_info::common_name(description_level_type desc) const
     if (is(MB_SUBMERGED))
         ss << "submerged ";
 
-    if (type == MONS_SPECTRAL_THING)
+    if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE))
         ss << "spectral ";
 
     if (type == MONS_BALLISTOMYCETE)
@@ -693,15 +695,18 @@ std::string monster_info::common_name(description_level_type desc) const
     {
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
-        ss << " zombie";
+        if (!is(MB_NAME_ZOMBIE))
+            ss << " zombie";
         break;
     case MONS_SKELETON_SMALL:
     case MONS_SKELETON_LARGE:
-        ss << " skeleton";
+        if (!is(MB_NAME_ZOMBIE))
+            ss << " skeleton";
         break;
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
-        ss << " simulacrum";
+        if (!is(MB_NAME_ZOMBIE))
+            ss << " simulacrum";
         break;
     case MONS_SALT_PILLAR:
         ss << " shaped pillar of salt";

@@ -841,6 +841,9 @@ MONS:     (list of monsters)
           also prevent turning articles into definite unless where forced by
           name_definite or grammar.
 
+          name_zombie can be used to redefine already zombified monsters
+          (including skeletons, simulacra and spectrals).
+
           For instances where space in definitions is limited, you can use
           abbreviated forms of these tags:
 
@@ -850,6 +853,7 @@ MONS:     (list of monsters)
               name_species    -> n_spe
               name_descriptor -> n_des
               name_definite   -> n_the
+              name_zombie     -> n_zom
 
           Monster names should be used very sparingly.
 
