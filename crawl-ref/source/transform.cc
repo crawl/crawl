@@ -384,7 +384,7 @@ monster_type transform_mons()
     case TRAN_LICH:
         return MONS_LICH;
     case TRAN_BAT:
-        return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_MEGABAT;
+        return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
     case TRAN_PIG:
         return MONS_HOG;
     case TRAN_BLADE_HANDS:
