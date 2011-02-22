@@ -1599,7 +1599,10 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
         }
 
         if (entry->base_type != aclass
-            || (atype != OBJ_RANDOM && entry->sub_type != atype))
+            || atype != OBJ_RANDOM && entry->sub_type != atype
+               && (aclass != OBJ_WEAPONS
+                   || weapon_skill(entry->base_type, atype) !=
+                      weapon_skill(entry->base_type, entry->sub_type)))
         {
             continue;
         }
