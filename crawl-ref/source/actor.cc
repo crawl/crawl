@@ -255,7 +255,7 @@ bool actor::can_cling_to(const coord_def& p) const
     if (!is_wall_clinging() || !can_pass_through_feat(grd(p)))
         return false;
 
-    return pos().can_cling_to(p);
+    return cell_can_cling_to(pos(), p);
 }
 
 /*
@@ -271,7 +271,7 @@ void actor::check_clinging(bool stepped)
 {
     bool was_clinging = clinging;
 
-    clinging = can_cling_to_walls() && pos().can_cling(clinging);
+    clinging = can_cling_to_walls() && cell_is_clingable(pos(), clinging);
 
     if (!stepped && was_clinging && !clinging)
     {
