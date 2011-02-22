@@ -1936,10 +1936,10 @@ std::string item_def::name_aux(description_level_type desc,
                 break;
 #endif
             case BOOK_CONJURATIONS_I:
-                buff << " [fire]";
+                buff << " [fire/earth]";
                 break;
             case BOOK_CONJURATIONS_II:
-                buff << " [ice]";
+                buff << " [ice/air]";
                 break;
             }
             break;
