@@ -40,6 +40,8 @@ bool cast_deaths_door(int pow)
 {
     if (you.is_undead)
         mpr("You're already dead!");
+    else if (you.duration[DUR_EXHAUSTED])
+	    mpr("You are too exhausted to enter Death's door!");
     else if (you.duration[DUR_DEATHS_DOOR])
         mpr("Your appeal for an extension has been denied.");
     else

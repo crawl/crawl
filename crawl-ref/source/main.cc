@@ -2557,10 +2557,13 @@ static void _decrement_durations()
             you.redraw_hit_points = true;
         }
 
-        _decrement_a_duration(DUR_DEATHS_DOOR, delay,
+        if (_decrement_a_duration(DUR_DEATHS_DOOR, delay,
                               "Your life is in your own hands again!",
                               random2(6),
-                              "Your time is quickly running out!");
+                              "Your time is quickly running out!"))
+        {
+            you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
+        }
     }
 
     if (_decrement_a_duration(DUR_DIVINE_STAMINA, delay))
