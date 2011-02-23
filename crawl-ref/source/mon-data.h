@@ -5881,7 +5881,7 @@ static monsterentry mondata[] = {
 // numbers!
 {
     MONS_GRINDER, '5', BLUE, "Grinder",
-    M_UNIQUE | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS,
+    M_UNIQUE | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS | M_NO_HT_WAND,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 11, MONS_IMP, MONS_SHADOW_IMP, MH_DEMONIC, -3,
     { {AT_HIT, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
