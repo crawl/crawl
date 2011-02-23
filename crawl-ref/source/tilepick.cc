@@ -2180,9 +2180,13 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     }
     else
     {
-        ASSERT(!_mons_is_kraken_tentacle(mon->type));
         if (_mons_is_tentacle_end(mon->type))
+        {
+            // Can only happen during the database search.
+            if (_mons_is_kraken_tentacle(mon->type))
+                return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
             return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
+        }
     }
 
     // For segments, we also need the next segment (or end piece).
