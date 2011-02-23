@@ -566,11 +566,10 @@ c...c...c...c
 ccBcccBcccBcc
 ENDMAP
 
-NAME:   minmay_temple_entry_steam
+NAME:   minmay_temple_entry_mist
 TAGS:   temple_entry
 ORIENT: float
-# This steam is essentially harmless; hopefully players will figure that out.
-MARKER: l = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
+MARKER: l = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
         pow_max = 3, delay = 10, start_clouds = 1, size_min = 1, \
         size_max = 3, spread_rate = -1 }
 KMASK:  W = no_monster_gen
@@ -578,11 +577,11 @@ KMASK:  l = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 ..WWW..
-.WWlWW.
+.WWWWW.
 WWWWWWW
-WlWOWlW
+WWWOWWW
 WWWWWWW
-.WWlWW.
+.WWWWW.
 ..WWW..
 ENDMAP
 
