@@ -2294,9 +2294,7 @@ static bool _print_toggle_message (const describe_info &inf)
         const int keyin = getchm();
 
         if (keyin == '!' || keyin == CK_MOUSE_CMD)
-        {
             return (true);
-        }
 
         return (false);
     }
@@ -3630,7 +3628,7 @@ void describe_monsters(const monster_info &mi, bool force_seen,
     mouse_control mc(MOUSE_MODE_MORE);
 
     if (wait_until_key_pressed && _print_toggle_message(inf))
-        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, not show_quote);
+        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, !show_quote);
 }
 
 static const char* xl_rank_names[] = {
