@@ -26,7 +26,8 @@
 game_state::game_state()
     : game_crashed(false), game_wants_emergency_save(false),
       mouse_enabled(false), waiting_for_command(false),
-      terminal_resized(false), io_inited(false), need_save(false),
+      terminal_resized(false), last_winch(0), io_inited(false),
+      need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
       map_stat_gen(false), type(GAME_TYPE_NORMAL),
       last_type(GAME_TYPE_UNSPECIFIED), arena_suspended(false),
@@ -463,6 +464,9 @@ void game_state::dump()
     fprintf(stderr, "seen_hups: %d, map_stat_gen: %d, type: %d, "
                   "arena_suspended: %d, unicode_ok: %d\n",
             seen_hups, map_stat_gen, type, arena_suspended, unicode_ok);
+    if (last_winch)
+        fprintf(stderr, "Last resize was %ld seconds ago.\n",
+                (long int)(time(0) - last_winch));
 
     fprintf(stderr, "\n");
 
