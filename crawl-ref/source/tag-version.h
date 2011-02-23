@@ -15,6 +15,7 @@ enum tag_minor_version
     TAG_MINOR_SHOPS,               // Store shop_name and shop_type_name in shop_struct.
     TAG_MINOR_MON_TIER_STATS,      // Gather stats about monsters people kill.
     TAG_MINOR_MFLAGS64,            // Extend mon.flags to 64 bits.
+    TAG_MINOR_ENCH_MID,            // Store sources of monster enchantments.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
