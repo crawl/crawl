@@ -2270,7 +2270,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     }
 }
 
-static bool _print_toggle_message (const describe_info &inf)
+static bool _print_toggle_message(const describe_info &inf)
 {
     if (inf.quote.empty())
     {

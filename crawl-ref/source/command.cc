@@ -1310,7 +1310,8 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
 }
 
 // Does not wait for keypress; the caller must do that if necessary.
-static void _do_description(std::string key, std::string type,
+// Returns true if we need to wait for keypress.
+static bool _do_description(std::string key, std::string type,
                             std::string footer = "")
 {
     describe_info inf;
@@ -1356,7 +1357,7 @@ static void _do_description(std::string key, std::string type,
         {
             monster_info mi(mon_num);
             describe_monsters(mi, true);
-            return;
+            return (false);
         }
         else
         {
@@ -1428,6 +1429,7 @@ static void _do_description(std::string key, std::string type,
     inf.title  = key;
 
     print_description(inf);
+    return (true);
 }
 
 // Reads all questions from database/FAQ.txt, outputs them in the form of
@@ -1697,8 +1699,8 @@ static void _find_description(bool *again, std::string *error_inout)
     }
     else if (key_list.size() == 1)
     {
-        _do_description(key_list[0], type);
-        wait_for_keypress();
+        if (_do_description(key_list[0], type))
+            wait_for_keypress();
         return;
     }
 
@@ -1709,6 +1711,9 @@ static void _find_description(bool *again, std::string *error_inout)
         footer += "'.  To see non-exact matches, press space.";
 
         _do_description(regex, type, footer);
+        // FIXME: This results in an *additional* getchm(). We might have
+        // to check for this eventuality way over in describe.cc and
+        // _print_toggle_message. (jpeg)
         if (getchm() != ' ')
             return;
     }
@@ -1847,8 +1852,8 @@ static void _find_description(bool *again, std::string *error_inout)
             else
                 key = *((std::string*) sel[0]->data);
 
-            _do_description(key, type);
-            wait_for_keypress();
+            if (_do_description(key, type))
+                wait_for_keypress();
         }
     }
 }
