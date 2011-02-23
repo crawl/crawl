@@ -323,6 +323,7 @@ int getch_ck()
 
 static void handle_sigwinch(int)
 {
+    crawl_state.last_winch = time(0);
     if (crawl_state.waiting_for_command)
         handle_terminal_resize();
     else

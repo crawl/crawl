@@ -42,6 +42,7 @@ struct game_state
     bool waiting_for_command; // True when the game is waiting for a command.
     bool terminal_resized;   // True if the term was resized and we need to
                              // take action to handle it.
+    time_t last_winch;       // Time of last resize, for crash dumps.
 
     bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game has started.
