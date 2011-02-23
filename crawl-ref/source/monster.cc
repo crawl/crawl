@@ -4948,16 +4948,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (mons_is_zombified(this))
             break;
 
-        // We don't have a reasonable agent to give.
-        // Don't clean up the monster in order to credit properly.
-        hurt(NULL, 1 + random2(5), BEAM_NONE, false);
-
-        // Credit the kill.
-        if (hit_points < 1)
-        {
-            monster_die(this, me.killer(), me.kill_agent());
-            break;
-        }
+        hurt(me.agent(), 1 + random2(5), BEAM_NONE);
         break;
 
     case ENCH_HELD:
@@ -5129,10 +5120,6 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            // We don't have a reasonable agent to give.
-            // Don't clean up the monster in order to credit properly.
-            hurt(NULL, dam, BEAM_POISON, false);
-
 #ifdef DEBUG_DIAGNOSTICS
             // For debugging, we don't have this silent.
             simple_monster_message(this, " takes poison damage.",
@@ -5140,12 +5127,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             mprf(MSGCH_DIAGNOSTICS, "poison damage: %d", dam);
 #endif
 
-            // Credit the kill.
-            if (hit_points < 1)
-            {
-                monster_die(this, me.killer(), me.kill_agent());
-                break;
-            }
+            hurt(me.agent(), dam, BEAM_POISON);
         }
 
         decay_enchantment(me, true);
@@ -5155,7 +5137,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     {
         if (hit_points > 1 && one_chance_in(3))
         {
-            hurt(NULL, 1); // nonlethal so we don't care about agent
+            hurt(me.agent(), 1);
             if (hit_points < max_hit_points && coinflip())
                 --max_hit_points;
         }
@@ -5183,10 +5165,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (dam > 0)
         {
             simple_monster_message(this, " burns!");
-            // We don't have a reasonable agent to give.
-            // Don't clean up the monster in order to credit properly.
-            hurt(NULL, dam, BEAM_NAPALM, false);
-
             dprf("sticky flame damage: %d", dam);
 
             if (type == MONS_SHEEP)
@@ -5210,12 +5188,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                 }
             }
 
-            // Credit the kill.
-            if (hit_points < 1)
-            {
-                monster_die(this, me.killer(), me.kill_agent());
-                break;
-            }
+            hurt(me.agent(), dam, BEAM_NAPALM);
         }
 
         decay_enchantment(me, true);
@@ -5410,10 +5383,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             env.pgrid(base_position) |= FPROP_BLOODY;
         }
-        // We don't have a reasonable agent to give.
-        // Don't clean up the monster in order to credit properly.
-        //hurt(NULL, dam, BEAM_NAPALM, false);
-        hurt(NULL, 20);
+        hurt(me.agent(), 20);
     }
 
     break;
@@ -5468,7 +5438,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam < hit_points)
         {
-            hurt(NULL, dam);
+            hurt(me.agent(), dam);
 
             dprf("hit_points: %d ; bleed damage: %d ; degree: %d",
                  hit_points, dam, me.degree);
@@ -5499,18 +5469,8 @@ void monster::apply_enchantment(const mon_enchant &me)
                 simple_monster_message(this, msg.c_str());
             }
 
-            // We don't have a reasonable agent to give.
-            // Don't clean up the monster in order to credit properly.
-            hurt(NULL, dam, BEAM_LIGHT, false);
-
             dprf("Zin's Corona damage: %d", dam);
-
-            // Credit the kill.
-            if (hit_points < 1)
-            {
-                monster_die(this, me.killer(), me.kill_agent());
-                break;
-            }
+            hurt(me.agent(), dam, BEAM_LIGHT);
         }
 
         decay_enchantment(me, true);
