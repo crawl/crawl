@@ -147,6 +147,12 @@ static void _give_wand(monster* mon, int level)
 
             if (wand.sub_type == WAND_LIGHTNING)
                 wand.sub_type = (coinflip() ? WAND_FLAME : WAND_FROST);
+
+            if (wand.sub_type == WAND_PARALYSIS)
+                wand.sub_type = WAND_SLOWING;
+
+            if (wand.sub_type == WAND_DRAINING)
+                wand.sub_type = WAND_POLYMORPH_OTHER;
         }
 
         wand.flags = 0;
