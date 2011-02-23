@@ -1356,7 +1356,7 @@ static bool _do_description(std::string key, std::string type,
             && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
         {
             monster_info mi(mon_num);
-            describe_monsters(mi, true);
+            describe_monsters(mi, true, footer);
             return (false);
         }
         else
