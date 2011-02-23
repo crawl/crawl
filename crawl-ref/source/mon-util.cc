@@ -4420,6 +4420,12 @@ bool mons_is_tentacle(int mc)
             || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
 }
 
+bool mons_is_tentacle_segment(int mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
+            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+}
+
 void init_anon()
 {
     monster &mon = menv[ANON_FRIENDLY_MONSTER];

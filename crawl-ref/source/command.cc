@@ -34,6 +34,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
@@ -1748,11 +1749,24 @@ static void _find_description(bool *again, std::string *error_inout)
             if (mons_is_mimic(m_type))
                 continue;
 
+            // No proper monster, and causes crashes in Tiles.
+            if (mons_is_tentacle_segment(m_type))
+                continue;
+
             // NOTE: Initializing the demon_ghost part of (very) ugly
             // things and player ghosts is taken care of in define_monster().
             fake_mon.type = m_type;
             fake_mon.props["fake"] = true;
-            define_monster(&fake_mon);
+            // HACK: Set an arbitrary humanoid monster as base type.
+            if (mons_class_is_zombified(m_type))
+            {
+                monster_type base_type = MONS_GOBLIN;
+                if (zombie_class_size(m_type) == Z_BIG)
+                    base_type = MONS_HILL_GIANT;
+                define_zombie(&fake_mon, base_type, m_type);
+            }
+            else
+                define_monster(&fake_mon);
 
             // FIXME: This doesn't generate proper draconian monsters.
             monster_list.push_back(fake_mon);
