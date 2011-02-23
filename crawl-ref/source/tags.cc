@@ -2357,6 +2357,7 @@ static void marshall_mon_enchant(writer &th, const mon_enchant &me)
     marshallShort(th, me.ench);
     marshallShort(th, me.degree);
     marshallShort(th, me.who);
+    marshallInt(th, me.source);
     marshallShort(th, me.duration);
     marshallShort(th, me.maxduration);
 }
@@ -2367,6 +2368,10 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     me.ench        = static_cast<enchant_type>(unmarshallShort(th));
     me.degree      = unmarshallShort(th);
     me.who         = static_cast<kill_category>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_ENCH_MID)
+#endif
+    me.source      = unmarshallInt(th);
     me.duration    = unmarshallShort(th);
     me.maxduration = unmarshallShort(th);
     return (me);
