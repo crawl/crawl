@@ -101,6 +101,7 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
     start  = mon->pos();
     target = dest;
     pos    = start;
+    clinging          = mon->is_wall_clinging();
     allow_diagonals   = diag;
     traverse_unmapped = pass_unmapped;
 
@@ -123,7 +124,6 @@ bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool diag,
     target = dest;
     pos    = start;
     allow_diagonals = diag;
-    clinging = mons->is_wall_clinging();
 
     // Easy enough. :P
     if (start == target)
@@ -178,7 +178,12 @@ bool monster_pathfind::calc_path_to_neighbours()
 {
     coord_def npos;
     int distance, old_dist, total;
-    clinging = mons->can_cling_to_walls() && cell_is_clingable(pos, clinging);
+    if (mons)
+    {
+        // Is this supposed to override the initial setting?
+        clinging = mons->can_cling_to_walls()
+                   && cell_is_clingable(pos, clinging);
+    }
 
     // For each point, we look at all neighbour points. Check the orthogonals
     // last, so that, should an orthogonal and a diagonal direction have the
