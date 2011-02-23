@@ -580,7 +580,7 @@ void blood_smell(int strength, const coord_def& where)
                 else
                 {
                     mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1,
-                                             KC_OTHER, dur));
+                                             0, dur));
                     simple_monster_message(*mi, " is consumed with "
                                                 "blood-lust!");
                 }

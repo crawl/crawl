@@ -308,7 +308,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
         return 0;
     }
 
-    mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
+    mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
     return 1;
 }
 

@@ -2896,7 +2896,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
     case CARD_TROWEL:      rc = _trowel_card(power, rarity); break;
     case CARD_SPADE:   your_spells(SPELL_DIG, random2(power/4), false); break;
-    case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power, MHITYOU); break;
+    case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power); break;
     case CARD_TORMENT: torment(TORMENT_CARDS, you.pos()); break;
 
     case CARD_VENOM:

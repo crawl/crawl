@@ -915,7 +915,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         }
         else
         {
-            poison_monster(mons, cloud.whose);
+            poison_monster(mons, find_agent(cloud.source, cloud.whose));
         }
         return true;
 
@@ -928,7 +928,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         }
         else
         {
-            miasma_monster(mons, cloud.whose);
+            miasma_monster(mons, find_agent(cloud.source, cloud.whose));
         }
         break;
 

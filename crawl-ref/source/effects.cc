@@ -3046,9 +3046,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
                     time_left *= 10;
 
-                    mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, KC_OTHER,
-                                        time_left);
-
+                    mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
                     env.mons[mushroom].update_ench(temp_en);
                 }
 

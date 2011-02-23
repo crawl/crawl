@@ -4558,7 +4558,7 @@ static void _vulnerability_scroll()
     // First cast antimagic on yourself.
     antimagic();
 
-    mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, KC_YOU, 40);
+    mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 40);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
@@ -4794,7 +4794,7 @@ void read_scroll(int slot)
     case SCR_FEAR:
     {
         int fear_influenced = 0;
-        mass_enchantment(ENCH_FEAR, 1000, MHITYOU, NULL, &fear_influenced);
+        mass_enchantment(ENCH_FEAR, 1000, NULL, &fear_influenced);
         id_the_scroll = fear_influenced;
         break;
     }

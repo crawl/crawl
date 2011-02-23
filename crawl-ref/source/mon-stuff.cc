@@ -3090,7 +3090,7 @@ void slimify_monster(monster* mon, bool hostile)
     mons_att_changed(mon);
 }
 
-void corrode_monster(monster* mons)
+void corrode_monster(monster* mons, const actor* evildoer)
 {
     item_def *has_shield = mons->mslot_item(MSLOT_SHIELD);
     item_def *has_armour = mons->mslot_item(MSLOT_ARMOUR);
@@ -3131,15 +3131,15 @@ void corrode_monster(monster* mons)
     else if (!one_chance_in(3) && !(has_shield || has_armour)
              && mons->can_bleed() && !mons->res_acid())
     {
-                mons->add_ench(mon_enchant(ENCH_BLEED, 3, KC_OTHER, (5 + random2(5))*10));
+        mons->add_ench(mon_enchant(ENCH_BLEED, 3, evildoer, (5 + random2(5))*10));
 
-                if (you.can_see(mons))
-                {
-                        mprf("%s writhes in agony as %s flesh is eaten away!",
-                             mons->name(DESC_CAP_THE).c_str(),
-                             mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
-            }
+        if (you.can_see(mons))
+        {
+            mprf("%s writhes in agony as %s flesh is eaten away!",
+                 mons->name(DESC_CAP_THE).c_str(),
+                 mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
         }
+    }
 }
 
 // This doesn't really swap places, it just sets the monster's
@@ -4169,7 +4169,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             if (!silent)
                 simple_monster_message(mons, " looks slightly unstable.");
 
-            mons->add_ench(mon_enchant(ENCH_TP, 0, KC_OTHER,
+            mons->add_ench(mon_enchant(ENCH_TP, 0, 0,
                                            random_range(20, 30)));
         }
 

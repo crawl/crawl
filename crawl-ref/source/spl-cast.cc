@@ -1650,7 +1650,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_CAUSE_FEAR:
-        mass_enchantment(ENCH_FEAR, powc, MHITYOU);
+        mass_enchantment(ENCH_FEAR, powc);
         break;
 
     case SPELL_INTOXICATE:
@@ -1658,7 +1658,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_MASS_CONFUSION:
-        mass_enchantment(ENCH_CONFUSION, powc, MHITYOU);
+        mass_enchantment(ENCH_CONFUSION, powc);
         break;
 
     case SPELL_ENGLACIATION:
@@ -1666,7 +1666,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_CONTROL_UNDEAD:
-        mass_enchantment(ENCH_CHARM, powc, MHITYOU);
+        mass_enchantment(ENCH_CHARM, powc);
         break;
 
     case SPELL_ABJURATION:
