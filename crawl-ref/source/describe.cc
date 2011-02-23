@@ -1374,9 +1374,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
             break;
         case SPARM_ARCHMAGI:
             description += "It increases the power of its wearer's "
-                "magical spells in most disciplines save for Transmutations "
-                "and pure Translocations. It also makes the spells affected "
-                "less likely to suffer a miscast.";
+                "magical spells.";
             break;
 
         case SPARM_PRESERVATION:

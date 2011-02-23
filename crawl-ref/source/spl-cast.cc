@@ -542,12 +542,8 @@ int spell_enhancement(unsigned int typeflags)
         enhanced -= 2;
 
     // Mostly preserving the old behaviour.
-    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI)
-        && !(typeflags & SPTYP_TRANSMUTATION)
-        && typeflags != SPTYP_TRANSLOCATION)
-    {
+    if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         enhanced++;
-    }
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)

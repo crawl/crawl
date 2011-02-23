@@ -2421,13 +2421,11 @@ int player_mag_abil(bool is_weighted)
     // Brilliance Potion
     ma += 6 * (you.duration[DUR_BRILLIANCE] ? 1 : 0);
 
+    // Rings
     ma += 3 * player_equip(EQ_RINGS, RING_WIZARDRY);
 
     // Staves
     ma += 4 * player_equip(EQ_STAFF, STAFF_WIZARDRY);
-
-    // armour of the Archmagi (checks body armour only)
-    ma += 2 * player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI);
 
     return ((is_weighted) ? ((ma * you.intel()) / 10) : ma);
 }
