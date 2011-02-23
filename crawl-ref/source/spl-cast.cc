@@ -1866,7 +1866,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
-        cast_sublimation_of_blood(powc);
+        if (!cast_sublimation_of_blood(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_DEATHS_DOOR:
