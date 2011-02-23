@@ -737,7 +737,7 @@ TAGS:   temple_entry
 DEPTH:  D:7
 WEIGHT: 1
 ORIENT: float
-MONS:   plant, oklob plant
+MONS:   plant, oklob sapling
 KFEAT:  O = enter_temple
 MAP
 ....1..
