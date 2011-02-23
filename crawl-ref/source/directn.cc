@@ -1686,8 +1686,9 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         break;
 
     default:
-        break;
+        return;
     }
+    redraw_screen();
 #endif
 }
 
