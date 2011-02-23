@@ -2093,12 +2093,6 @@ static bool _mons_is_tentacle_end(const int mtype)
             || mtype == MONS_ELDRITCH_TENTACLE);
 }
 
-static bool _mons_is_tentacle_segment(const int mtype)
-{
-    return (mtype == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mtype == MONS_ELDRITCH_TENTACLE_SEGMENT);
-}
-
 static bool _mons_is_kraken_tentacle(const int mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
@@ -2148,7 +2142,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
                     return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
                 return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
             }
-            ASSERT(_mons_is_tentacle_segment(head->type));
+            ASSERT(mons_is_tentacle_segment(head->type));
 
             // Different handling according to relative positions.
             if (h_pos.x == t_pos.x)
@@ -2182,7 +2176,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
             die("impossible kraken direction");
         }
         // Only tentacle segments from now on.
-        ASSERT(_mons_is_tentacle_segment(mon->type));
+        ASSERT(mons_is_tentacle_segment(mon->type));
     }
     else
     {
