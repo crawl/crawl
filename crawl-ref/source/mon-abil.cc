@@ -1071,7 +1071,7 @@ static bool _orc_battle_cry(monster* chief)
                     else
                     {
                         mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, level,
-                                                  KC_OTHER, dur));
+                                                 chief, dur));
                     }
 
                     affected++;
@@ -2550,7 +2550,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (mons->has_ench(ENCH_ROT))
                 break;
 
-            mon_enchant rot = mon_enchant(ENCH_ROT, 0, KC_OTHER, 10);
+            mon_enchant rot = mon_enchant(ENCH_ROT, 0, 0, 10);
             mons->add_ench(rot);
 
             if (mons->visible_to(&you))

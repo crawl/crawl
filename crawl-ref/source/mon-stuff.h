@@ -97,7 +97,7 @@ void slimify_monster(monster* mons, bool hostile = false);
 
 bool mon_can_be_slimified(monster* mons);
 
-void corrode_monster(monster* mons);
+void corrode_monster(monster* mons, const actor* evildoer);
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);

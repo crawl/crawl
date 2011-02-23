@@ -217,7 +217,7 @@ void tornado_damage(actor *caster, int dur)
                             // levitate the monster so you get only one attempt
                             // at tossing them into water/lava
                             mon_enchant ench(ENCH_LEVITATION, 0,
-                                             caster->kill_alignment(), 20);
+                                             caster, 20);
                             if (mon->has_ench(ENCH_LEVITATION))
                                 mon->update_ench(ench);
                             else

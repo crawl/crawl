@@ -2601,9 +2601,9 @@ void monster::go_frenzy()
     props["old_attitude"] = short(attitude);
 
     attitude = ATT_NEUTRAL;
-    add_ench(mon_enchant(ENCH_INSANE, 0, KC_OTHER, duration * 10));
-    add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
-    add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
+    add_ench(mon_enchant(ENCH_INSANE, 0, 0, duration * 10));
+    add_ench(mon_enchant(ENCH_HASTE, 0, 0, duration * 10));
+    add_ench(mon_enchant(ENCH_MIGHT, 0, 0, duration * 10));
     mons_att_changed(this);
 
     if (simple_monster_message(this, " flies into a frenzy!"))
@@ -2626,7 +2626,7 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
 
     const int duration = 16 + random2avg(13, 2);
-    add_ench(mon_enchant(ENCH_BERSERK, 0, KC_OTHER, duration * 10));
+    add_ench(mon_enchant(ENCH_BERSERK, 0, 0, duration * 10));
     if (simple_monster_message(this, " goes berserk!"))
         // Xom likes monsters going berserk.
         xom_is_stimulated(friendly() ? 32 : 128);
@@ -3437,8 +3437,7 @@ void monster::poison(actor *agent, int amount, bool force)
     if (!(amount /= 2))
         amount = 1;
 
-    poison_monster(this, agent ? agent->kill_alignment() : KC_OTHER, amount,
-                   force);
+    poison_monster(this, agent, amount, force);
 }
 
 int monster::skill(skill_type sk) const
@@ -3528,8 +3527,7 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
         }
     }
 
-    add_ench(mon_enchant(ENCH_ROT, std::min(amount, 4),
-                         agent->kill_alignment()));
+    add_ench(mon_enchant(ENCH_ROT, std::min(amount, 4), agent));
 
     return (true);
 }
@@ -4486,7 +4484,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // abjured.
         add_ench(mon_enchant(
             (me.ench != ENCH_FAKE_ABJURATION) ?
-                ENCH_ABJ : ENCH_FAKE_ABJURATION, 0, KC_OTHER, -1));
+                ENCH_ABJ : ENCH_FAKE_ABJURATION, 0, 0, -1));
 
         if (berserk())
             simple_monster_message(this, " is no longer berserk.");
@@ -4858,8 +4856,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             simple_monster_message(this, " is no longer in an insane frenzy.");
             const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
         }
         break;
 
@@ -4868,8 +4866,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             simple_monster_message(this, " is no longer berserk.");
             const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
         }
         break;
 
@@ -5203,9 +5201,9 @@ void monster::apply_enchantment(const mon_enchant &me)
                         mprf("%s catches fire!", mon->name(DESC_CAP_A).c_str());
                         const int dur = me.degree/2 + 1 + random2(me.degree);
                         mon->add_ench(mon_enchant(ENCH_STICKY_FLAME, dur,
-                                                  me.who));
+                                                  me.agent()));
                         mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
-                                                  me.who));
+                                                  me.agent()));
                         behaviour_event(mon, ME_SCARE, me.who);
                         xom_is_stimulated(128);
                     }
@@ -5527,7 +5525,7 @@ void monster::mark_summoned(int longevity, bool mark_items, int summon_type)
 {
     add_ench(mon_enchant(ENCH_ABJ, longevity));
     if (summon_type != 0)
-        add_ench(mon_enchant(ENCH_SUMMON, summon_type, KC_OTHER, INT_MAX));
+        add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 
     if (mark_items)
     {
@@ -5644,12 +5642,12 @@ bool monster::sicken(int amount, bool unused)
         mprf("%s looks sick.", name(DESC_CAP_THE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_SICK, 0, KC_OTHER, amount * 10));
+    add_ench(mon_enchant(ENCH_SICK, 0, 0, amount * 10));
 
     return (true);
 }
 
-bool monster::bleed(int amount, int degree)
+bool monster::bleed(const actor* agent, int amount, int degree)
 {
     if (!has_ench(ENCH_BLEED) && you.can_see(this))
     {
@@ -5657,7 +5655,7 @@ bool monster::bleed(int amount, int degree)
              pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_BLEED, degree, KC_OTHER, amount * 10));
+    add_ench(mon_enchant(ENCH_BLEED, degree, agent, amount * 10));
 
     return (true);
 }
@@ -6572,19 +6570,32 @@ enchant_type name_to_ench(const char *name)
     return ENCH_NONE;
 }
 
-mon_enchant::mon_enchant(enchant_type e, int deg, kill_category whose,
+mon_enchant::mon_enchant(enchant_type e, int deg, const actor* a,
                          int dur)
-    : ench(e), degree(deg), duration(dur), maxduration(0), who(whose)
+    : ench(e), degree(deg), duration(dur), maxduration(0)
 {
+    if (a)
+    {
+        who = a->kill_alignment();
+        source = a->mid;
+    }
+    else
+    {
+        who = KC_OTHER;
+        source = 0;
+    }
 }
 
 mon_enchant::operator std::string () const
 {
-    return make_stringf("%s (%d:%d%s)",
+    const actor *a = agent();
+    return make_stringf("%s (%d:%d%s %s)",
                         _mons_enchantment_name(ench),
                         degree,
                         duration,
-                        kill_category_desc(who));
+                        kill_category_desc(who),
+                        source == MID_ANON_FRIEND ? "anon friend" :
+                            a ? a->name(DESC_PLAIN, true).c_str() : "N/A");
 }
 
 const char *mon_enchant::kill_category_desc(kill_category k) const
@@ -6593,9 +6604,10 @@ const char *mon_enchant::kill_category_desc(kill_category k) const
             k == KC_FRIENDLY? " pet" : "");
 }
 
-void mon_enchant::merge_killer(kill_category k)
+void mon_enchant::merge_killer(kill_category k, mid_t m)
 {
-    who = who < k? who : k;
+    if (who >= k) // prefer the new one
+        who = k, source = m;
 }
 
 void mon_enchant::cap_degree()
@@ -6618,7 +6630,7 @@ mon_enchant &mon_enchant::operator += (const mon_enchant &other)
         degree   += other.degree;
         cap_degree();
         duration += other.duration;
-        merge_killer(other.who);
+        merge_killer(other.who, other.source);
     }
     return (*this);
 }
@@ -6640,6 +6652,11 @@ killer_type mon_enchant::killer() const
 int mon_enchant::kill_agent() const
 {
     return (who == KC_FRIENDLY? ANON_FRIENDLY_MONSTER : 0);
+}
+
+actor* mon_enchant::agent() const
+{
+    return find_agent(source, who);
 }
 
 int mon_enchant::modded_speed(const monster* mons, int hdplus) const

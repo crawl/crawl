@@ -15,19 +15,21 @@ public:
     enchant_type  ench;
     int           degree;
     int           duration, maxduration;
-    kill_category who;      // Who set this enchantment?
+    kill_category who;      // Source's alignment.
+    mid_t         source;   // Who set this enchantment?
 
 public:
     mon_enchant(enchant_type e = ENCH_NONE, int deg = 0,
-                kill_category whose = KC_OTHER,
+                const actor *whose = 0,
                 int dur = 0);
 
     killer_type killer() const;
     int kill_agent() const;
+    actor* agent() const;
 
     operator std::string () const;
     const char *kill_category_desc(kill_category) const;
-    void merge_killer(kill_category who);
+    void merge_killer(kill_category who, mid_t whos);
     void cap_degree();
 
     void set_duration(const monster* mons, const mon_enchant *exist);
@@ -402,7 +404,7 @@ public:
 
     void poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int strength, bool unused = true);
-    bool bleed(int amount, int degree);
+    bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
     void slow_down(actor *, int str);

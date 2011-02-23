@@ -187,7 +187,7 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
                 continue;
             target->add_ench(mon_enchant(ench,
                                          0,
-                                         creator->kill_alignment(),
+                                         creator,
                                          you.duration[i]));
         }
     }

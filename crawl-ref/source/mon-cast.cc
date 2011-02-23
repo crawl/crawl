@@ -2186,8 +2186,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             }
 
             if (actual
-                && m->add_ench(mon_enchant(ENCH_FEAR, 0,
-                                           mons->kill_alignment())))
+                && m->add_ench(mon_enchant(ENCH_FEAR, 0, mons)))
             {
                 retval = 1;
 
@@ -2407,7 +2406,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         simple_monster_message(mons,
                                " kneels in prayer and is bathed in unholy energy.",
                                MSGCH_MONSTER_SPELL);
-        mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, KC_OTHER,
+        mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, mons,
                        20 * BASELINE_DELAY));
         return;
 
@@ -2426,8 +2425,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (dur > 100)
             dur = 100;
         dur *= BASELINE_DELAY;
-        mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, KC_OTHER, dur));
-        mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, KC_OTHER, dur));
+        mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, mons, dur));
+        mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
         dprf("Trog's Hand cast (dur: %d aut)", dur);
         return;
     }
@@ -2446,7 +2445,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_STONESKIN:
     {
         const int power = (mons->hit_dice * 15) / 10;
-        mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, KC_OTHER,
+        mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, mons,
                        10 + (2*random2(power))));
         return;
     }
@@ -2461,7 +2460,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (player_in_branch(BRANCH_SHOALS))
         {
             const int tide_duration = random_range(80, 200, 2);
-            mons->add_ench(mon_enchant(ENCH_TIDE, 0, KC_OTHER,
+            mons->add_ench(mon_enchant(ENCH_TIDE, 0, mons,
                                           tide_duration * 10));
             mons->props[TIDE_CALL_TURN].get_int() = you.num_turns;
             if (simple_monster_message(
@@ -3399,7 +3398,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AWAKEN_FOREST:
         duration = 50 + random2(mons->hit_dice * 20);
 
-        mons->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, KC_OTHER, duration));
+        mons->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, mons, duration));
         // Actually, it's a boolean marker... save for a sanity check.
         env.forest_awoken_until = you.elapsed_time + duration;
 

@@ -377,13 +377,10 @@ void cast_toxic_radiance(bool non_player)
             // this check should not be !mons->invisible().
             if (!mi->has_ench(ENCH_INVIS))
             {
-                kill_category kc = KC_YOU;
-                if (non_player)
-                    kc = KC_OTHER;
-                bool affected =
-                    poison_monster(*mi, kc, 1, false, false);
+                const actor* agent = non_player ? 0 : &you;
+                bool affected = poison_monster(*mi, agent, 1, false, false);
 
-                if (coinflip() && poison_monster(*mi, kc, false, false))
+                if (coinflip() && poison_monster(*mi, agent, false, false))
                     affected = true;
 
                 if (affected)

@@ -1581,9 +1581,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         else if (res <= 0 && doFlavouredEffects)
-        {
-            corrode_monster(mons);
-        }
+            corrode_monster(mons, pbolt.agent());
         break;
     }
 
@@ -1602,7 +1600,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         else if (res <= 0 && doFlavouredEffects && !one_chance_in(3))
-            poison_monster(mons, pbolt.whose_kill());
+            poison_monster(mons, pbolt.agent());
 
         break;
     }
@@ -1620,11 +1618,11 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                 // Poison arrow can poison any living thing regardless of
                 // poison resistance. - bwr
                 if (mons->has_lifeforce())
-                    poison_monster(mons, pbolt.whose_kill(), 2, true);
+                    poison_monster(mons, pbolt.agent(), 2, true);
             }
         }
         else if (doFlavouredEffects)
-            poison_monster(mons, pbolt.whose_kill(), 4);
+            poison_monster(mons, pbolt.agent(), 4);
 
         break;
 
@@ -1666,7 +1664,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (!doFlavouredEffects)
                 return (hurted);
 
-            miasma_monster(mons, pbolt.whose_kill());
+            miasma_monster(mons, pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_UNCLEAN, 2, pbolt.effect_known);
@@ -1883,7 +1881,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 // If m_succumbed is non-NULL, will be set to the number of monsters that
 // were enchanted. If m_attempted is non-NULL, will be set to the number of
 // monsters that we tried to enchant.
-void mass_enchantment(enchant_type wh_enchant, int pow, int origin,
+void mass_enchantment(enchant_type wh_enchant, int pow,
                        int *m_succumbed, int *m_attempted)
 {
     bool did_msg = false;
@@ -1894,8 +1892,6 @@ void mass_enchantment(enchant_type wh_enchant, int pow, int origin,
         *m_attempted = 0;
 
     pow = std::min(pow, 200);
-
-    const kill_category kc = (origin == MHITYOU ? KC_YOU : KC_OTHER);
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
@@ -1908,7 +1904,7 @@ void mass_enchantment(enchant_type wh_enchant, int pow, int origin,
         if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow, &did_msg))
             continue;
 
-        if (mi->add_ench(mon_enchant(wh_enchant, 0, kc)))
+        if (mi->add_ench(mon_enchant(wh_enchant, 0, &you)))
         {
             if (m_succumbed)
                 ++*m_succumbed;
@@ -1927,7 +1923,7 @@ void mass_enchantment(enchant_type wh_enchant, int pow, int origin,
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
-                behaviour_event(*mi, ME_SCARE, origin);
+                behaviour_event(*mi, ME_SCARE, MHITYOU);
         }
     }
 
@@ -1985,8 +1981,7 @@ void bolt::apply_bolt_petrify(monster* mons)
     }
 }
 
-static bool _curare_hits_monster(actor *agent, monster* mons,
-                                 kill_category who, int levels)
+static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 {
     if (!mons->alive())
         return (false);
@@ -1994,7 +1989,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons,
     if (mons->res_poison() > 0)
         return (false);
 
-    poison_monster(mons, who, levels, false);
+    poison_monster(mons, agent, levels, false);
 
     int hurted = 0;
 
@@ -2013,14 +2008,14 @@ static bool _curare_hits_monster(actor *agent, monster* mons,
         enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
 
     // Deities take notice.
-    if (who == KC_YOU)
+    if (agent == &you)
         did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (hurted > 0);
 }
 
 // Actually poisons a monster (with message).
-bool poison_monster(monster* mons, kill_category who, int levels,
+bool poison_monster(monster* mons, const actor *who, int levels,
                     bool force, bool verbose)
 {
     if (!mons->alive())
@@ -2042,11 +2037,11 @@ bool poison_monster(monster* mons, kill_category who, int levels,
                                    old_pois.degree > 0 ? " looks even sicker."
                                                        : " is poisoned.");
         }
-        behaviour_event(mons, ME_ANNOY, (who == KC_YOU) ? MHITYOU : MHITNOT);
+        behaviour_event(mons, ME_ANNOY, who ? who->mindex() : MHITNOT);
     }
 
     // Finally, take care of deity preferences.
-    if (who == KC_YOU)
+    if (who == &you)
         did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (new_pois.degree > old_pois.degree);
@@ -2054,7 +2049,7 @@ bool poison_monster(monster* mons, kill_category who, int levels,
 
 // Actually poisons, rots, and/or slows a monster with miasma (with
 // message).
-bool miasma_monster(monster* mons, kill_category who)
+bool miasma_monster(monster* mons, const actor* who)
 {
     if (!mons->alive())
         return (false);
@@ -2084,7 +2079,7 @@ bool miasma_monster(monster* mons, kill_category who)
 }
 
 // Actually napalms a monster (with message).
-bool napalm_monster(monster* mons, kill_category who, int levels,
+bool napalm_monster(monster* mons, const actor *who, int levels,
                     bool verbose)
 {
     if (!mons->alive())
@@ -2102,7 +2097,8 @@ bool napalm_monster(monster* mons, kill_category who, int levels,
     {
         if (verbose)
             simple_monster_message(mons, " is covered in liquid flames!");
-        behaviour_event(mons, ME_WHACK, who == KC_YOU ? MHITYOU : MHITNOT);
+        ASSERT(who);
+        behaviour_event(mons, ME_WHACK, who->mindex());
     }
 
     return (new_flame.degree > old_flame.degree);
@@ -4035,7 +4031,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (name == "sticky flame" || name == "splash of liquid fire")
     {
         const int levels = std::min(4, 1 + random2(mon->hit_dice) / 2);
-        napalm_monster(mon, whose_kill(), levels);
+        napalm_monster(mon, agent(), levels);
 
         if (name == "splash of liquid fire")
         {
@@ -4047,7 +4043,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
                 {
                     mprf("The sticky flame splashes onto %s!",
                          mi->name(DESC_NOCAP_THE).c_str());
-                    napalm_monster(*mi, whose_kill(), levels);
+                    napalm_monster(*mi, agent(), levels);
                 }
             }
         }
@@ -4063,7 +4059,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (item->special == SPMSL_CURARE)
         {
             if (ench_power == AUTOMATIC_HIT
-                && _curare_hits_monster(agent(), mon, whose_kill(), 2)
+                && _curare_hits_monster(agent(), mon, 2)
                 && !mon->alive())
             {
                 wake_mimic = false;
@@ -4731,7 +4727,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         obvious_effect = true;
         const int duration = you.skills[SK_INVOCATIONS] * 3 / 4 + 2;
-        mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, KC_YOU, duration * 10));
+        mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, agent(), duration * 10));
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
         return (MON_AFFECTED);
     }
@@ -4798,7 +4794,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_UNAFFECTED);
 
     case BEAM_SLOW:
-        obvious_effect = do_slow_monster(mon, whose_kill());
+        obvious_effect = do_slow_monster(mon, agent());
         return (MON_AFFECTED);
 
     case BEAM_HASTE:
@@ -4878,7 +4874,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (!mons_class_is_confusable(mon->type))
             return (MON_UNAFFECTED);
 
-        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, whose_kill())))
+        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent())))
         {
             // FIXME: Put in an exception for things you won't notice
             // becoming confused.

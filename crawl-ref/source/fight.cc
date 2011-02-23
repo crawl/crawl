@@ -939,7 +939,9 @@ bool melee_attack::player_attack()
         if (apply_bleeding && defender->can_bleed()
             && degree > 0 && damage_done > 0)
         {
-            defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
+            defender->as_monster()->bleed(&you,
+                                          3 + roll_dice(degree, 3),
+                                          degree);
         }
     }
 
@@ -1354,11 +1356,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             mprf("%s is splashed with acid.",
                  defender->name(DESC_CAP_THE).c_str());
-                 corrode_monster(defender->as_monster());
+                 corrode_monster(defender->as_monster(), &you);
         }
 
         if (damage_brand == SPWPN_VENOM && coinflip())
-            poison_monster(defender->as_monster(), KC_YOU);
+            poison_monster(defender->as_monster(), &you);
 
         // Normal vampiric biting attack, not if already got stabbing special.
         if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
@@ -2125,7 +2127,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         && mons_class_is_confusable(defender->type))
     {
         if (defender->as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-            KC_YOU, 20+random2(30)))) // 1-3 turns
+            &you, 20+random2(30)))) // 1-3 turns
         {
             mprf("%s is stunned!", defender->name(DESC_CAP_THE).c_str());
         }
@@ -3462,7 +3464,7 @@ bool melee_attack::apply_damage_brand()
                  && !mons_class_flag(defender->type, M_FAKE_SPELLS))
         {
             defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                        attacker->kill_alignment(), // doesn't matter
+                        attacker, // doesn't matter
                         random2(damage_done * 2) * BASELINE_DELAY));
             special_damage_message =
                     apostrophise(defender->name(DESC_CAP_THE))
@@ -3752,7 +3754,7 @@ void melee_attack::player_apply_staff_damage()
         {
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
-            poison_monster(defender->as_monster(), KC_YOU);
+            poison_monster(defender->as_monster(), &you);
         }
         break;
     }
@@ -4730,8 +4732,7 @@ void melee_attack::mons_do_napalm()
         {
             napalm_monster(
                 defender->as_monster(),
-                attacker->as_monster()->friendly() ?
-                KC_FRIENDLY : KC_OTHER,
+                attacker,
                 std::min(4, 1 + random2(attacker->get_experience_level())/2));
         }
     }
@@ -4762,7 +4763,7 @@ void melee_attack::splash_monster_with_acid(int strength)
     special_damage += roll_dice(2, 4);
     if (defender_visible)
         mprf("%s is splashed with acid.", defender->name(DESC_CAP_THE).c_str());
-    corrode_monster(defender->as_monster());
+    corrode_monster(defender->as_monster(), attacker);
 }
 
 void melee_attack::splash_defender_with_acid(int strength)
@@ -5329,7 +5330,7 @@ void melee_attack::mons_do_eyeball_confusion()
             mprf("The eyeballs on your body gaze at %s.",
                  mon->name(DESC_NOCAP_THE).c_str());
 
-            mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+            mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you,
                                       30 + random2(100)));
         }
     }
