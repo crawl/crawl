@@ -407,6 +407,11 @@ void pray()
         something_happened = true;
         break;
 
+    case GOD_FEDHAS:
+        if (fedhas_fungal_bloom())
+            something_happened = true;
+        break;
+
     default:
         ;
     }

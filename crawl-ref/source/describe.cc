@@ -4459,8 +4459,8 @@ void describe_god(god_type which_god, bool give_title)
         {
             have_any = true;
             _print_final_god_abil_desc(which_god,
-                                       "You can speed up decomposition.",
-                                       ABIL_FEDHAS_FUNGAL_BLOOM);
+                                       "You can pray to speed up decomposition.",
+                                       ABIL_NON_ABILITY);
             _print_final_god_abil_desc(which_god,
                                        "You can walk through plants and "
                                        "fire through allied plants.",
