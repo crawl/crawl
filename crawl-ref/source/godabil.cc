@@ -2076,6 +2076,20 @@ int fedhas_fungal_bloom()
     if (kills)
         mprf("That felt like a moral victory.");
 
+    if (processed_count)
+    {
+        simple_god_message(" appreciates your contribution to the "
+                           "ecosystem.", GOD_FEDHAS);
+        // Doubling the expected value per sacrifice to approximate the
+        // extra piety gain blood god worshipers get for the initial kill.
+        // -cao
+
+        int piety_gain = 0;
+        for (int i = 0; i < processed_count * 2; i++)
+            piety_gain += random2(15); // avg 1.4 piety per corpse
+        gain_piety(piety_gain, 10);
+    }
+
     return (processed_count);
 }
 

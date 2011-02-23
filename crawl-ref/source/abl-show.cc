@@ -410,7 +410,6 @@ static const ability_def Ability_List[] =
       8, 0, 200, 15, ABFLAG_NONE },
 
     // Fedhas
-    { ABIL_FEDHAS_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_FEDHAS_EVOLUTION, "Evolution", 2, 0, 0, 0, ABFLAG_VARIABLE_FRUIT},
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight", 2, 0, 50, 0, ABFLAG_NONE},
     { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 0, ABFLAG_FRUIT},
@@ -1141,7 +1140,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_ELYVILON_LIFESAVING:
     case ABIL_TROG_BURN_SPELLBOOKS:
-    case ABIL_FEDHAS_FUNGAL_BLOOM:
     case ABIL_CHEIBRIADOS_PONDEROUSIFY:
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
     case ABIL_ASHENZARI_END_TRANSFER:
@@ -2582,30 +2580,6 @@ static bool _do_ability(const ability_def& abil)
         recall(2);
         break;
 
-    case ABIL_FEDHAS_FUNGAL_BLOOM:
-    {
-        const int count = fedhas_fungal_bloom();
-
-        if (!count)
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return (false);
-        }
-
-        simple_god_message(" appreciates your contribution to the "
-                           "ecosystem.", GOD_FEDHAS);
-
-        // Doubling the expected value per sacrifice to approximate the
-        // extra piety gain blood god worshipers get for the initial kill.
-        // -cao
-
-        int piety_gain = 0;
-        for (int i = 0; i < count * 2; i++)
-            piety_gain += random2(15); // avg 1.4 piety per corpse
-        gain_piety(piety_gain, 10);
-        break;
-    }
-
     case ABIL_FEDHAS_SUNLIGHT:
         if (!fedhas_sunlight())
         {
@@ -3129,8 +3103,6 @@ std::vector<talent> your_talents(bool check_confused)
     // Religious abilities.
     if (you.religion == GOD_TROG)
         _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
-    else if (you.religion == GOD_FEDHAS)
-        _add_talent(talents, ABIL_FEDHAS_FUNGAL_BLOOM, check_confused);
     else if (you.religion == GOD_CHEIBRIADOS)
         _add_talent(talents, ABIL_CHEIBRIADOS_PONDEROUSIFY, check_confused);
     else if (you.transfer_skill_points > 0)
