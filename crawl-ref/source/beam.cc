@@ -1898,10 +1898,13 @@ void mass_enchantment(enchant_type wh_enchant, int pow,
         if (mi->has_ench(wh_enchant))
             continue;
 
-        if (m_attempted)
+        bool resisted = _monster_resists_mass_enchantment(*mi, wh_enchant,
+                                                          pow, &did_msg);
+
+        if (m_attempted && did_msg)
             ++*m_attempted;
 
-        if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow, &did_msg))
+        if (resisted)
             continue;
 
         if (mi->add_ench(mon_enchant(wh_enchant, 0, &you)))
