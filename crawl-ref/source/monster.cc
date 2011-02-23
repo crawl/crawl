@@ -241,20 +241,29 @@ bool monster::extra_balanced() const
                 || body_size(PSIZE_BODY) > SIZE_MEDIUM));
 }
 
+/*
+ * Monster floundering conditions.
+ *
+ * Floundering reduce the movement speed and can cause the monster to fumble
+ * its attacks. It can be caused by water or by Leda's liquefaction.
+ *
+ * @return Whether the monster is floundering.
+ */
 bool monster::floundering() const
 {
     const dungeon_feature_type grid = grd(pos());
-    return (feat_is_water(grid)
-            && !cannot_fight()
-            // Can't use monster_habitable_grid() because that'll return
-            // true for non-water monsters in shallow water.
-            && mons_primary_habitat(this) != HT_WATER
-            // Use real_amphibious to detect giant non-water monsters in
-            // deep water, who flounder despite being treated as amphibious.
-            && mons_habitat(this, true) != HT_AMPHIBIOUS
-            && !mons_flies(this)
-            && !extra_balanced()
-            && !is_wall_clinging());
+    return liquefied(pos())
+           || (feat_is_water(grid)
+               // Can't use monster_habitable_grid() because that'll return
+               // true for non-water monsters in shallow water.
+               && mons_primary_habitat(this) != HT_WATER
+               // Use real_amphibious to detect giant non-water monsters in
+               // deep water, who flounder despite being treated as amphibious.
+               && mons_habitat(this, true) != HT_AMPHIBIOUS
+               && !extra_balanced())
+           && !cannot_fight()
+           && !mons_flies(this)
+           && !is_wall_clinging();
 }
 
 bool monster::can_pass_through_feat(dungeon_feature_type grid) const
@@ -2553,8 +2562,10 @@ bool monster::fumbles_attack(bool verbose)
         {
             if (you.can_see(this))
             {
-                mprf("%s splashes around in the water.",
-                     name(DESC_CAP_THE).c_str());
+                mpr(name(DESC_CAP_THE)
+                    + (liquefied(pos())
+                       ? " becomes momentarily stuck in the liquid earth."
+                       : " splashes around in the water."));
             }
             else if (player_can_hear(pos(), LOS_RADIUS))
                 mpr("You hear a splashing noise.", MSGCH_SOUND);
@@ -5633,12 +5644,8 @@ void monster::calc_speed()
         speed *= 2;
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);
-    if (has_ench(ENCH_SLOW) || (is_liquefied && !has_ench(ENCH_LIQUEFYING)))
+    if (has_ench(ENCH_SLOW))
         speed = haste_div(speed);
-    // If the monster cast it, it has more control and is there not
-    // as slow as when the player casts it.
-    else if (is_liquefied && has_ench(ENCH_LIQUEFYING))
-        speed -= 2;
 }
 
 // Check speed and speed_increment sanity.
@@ -6105,17 +6112,16 @@ monster_type monster::get_mislead_type() const
 
 int monster::action_energy(energy_use_type et) const
 {
-    const bool swift = has_ench(ENCH_SWIFT);
-
     if (const monsterentry *me = find_monsterentry())
     {
         const mon_energy_usage &mu = me->energy_usage;
+        int move_cost;
         switch (et)
         {
-        case EUT_MOVE:    return mu.move - (swift ? 2 : 0);
-        // Amphibious monster speed boni are now dealt with using swim_energy,
+        case EUT_MOVE:    move_cost = mu.move; break;
+        // Amphibious monster speed boni are now dealt with using SWIM_ENERGY,
         // rather than here.
-        case EUT_SWIM:    return mu.swim - (swift ? 2 : 0);
+        case EUT_SWIM:    move_cost = mu.swim; break;
         case EUT_MISSILE: return mu.missile;
         case EUT_ITEM:    return mu.item;
         case EUT_SPECIAL: return mu.special;
@@ -6123,6 +6129,22 @@ int monster::action_energy(energy_use_type et) const
         case EUT_ATTACK:  return mu.attack;
         case EUT_PICKUP:  return mu.pickup_percent;
         }
+
+        if (has_ench(ENCH_SWIFT))
+            move_cost -= 2;
+
+        // Floundering monsters get the same penalty as the player, except that
+        // player get penalty on entering water, while monster get the penalty
+        // when leaving it.
+        if (floundering())
+            move_cost += 3 + random2(8);
+
+        // If the monster cast it, it has more control and is there not
+        // as slow as when the player casts it.
+        if (has_ench(ENCH_LIQUEFYING))
+            move_cost -= 2;
+
+        return move_cost;
     }
     return 10;
 }
