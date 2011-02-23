@@ -384,13 +384,6 @@ void pray()
          you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
-    if (you.religion == GOD_XOM)
-        mpr(getSpeakString("Xom prayer"), MSGCH_GOD);
-    else if (player_under_penance())
-        simple_god_message(" demands penance!");
-    else
-        mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
-
     switch(you.religion)
     {
     case GOD_ZIN:
@@ -418,6 +411,13 @@ void pray()
 
     // All sacrifices affect items you're standing on.
     something_happened |= _offer_items();
+
+    if (you.religion == GOD_XOM)
+        mpr(getSpeakString("Xom prayer"), MSGCH_GOD);
+    else if (player_under_penance())
+        simple_god_message(" demands penance!");
+    else
+        mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
 
     if (something_happened)
         you.turn_is_over = true;
