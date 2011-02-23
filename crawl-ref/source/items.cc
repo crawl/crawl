@@ -1394,18 +1394,6 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
     if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
         return (false);
 
-    if (item1.base_type == OBJ_POTIONS)
-    {
-        // Thanks to mummy cursing, we can have potions of decay
-        // that don't look alike... so we don't stack potions
-        // if either isn't identified and they look different.  -- bwr
-        if (item1.plus != item2.plus
-            && (!item_type_known(item1) || !item_type_known(item2)))
-        {
-            return (false);
-        }
-    }
-
     // The inscriptions can differ if one of them is blank, but if they
     // are differing non-blank inscriptions then don't stack.
     if (item1.inscription != item2.inscription
