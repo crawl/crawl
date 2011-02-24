@@ -234,12 +234,17 @@ bool monster::submerged() const
     return (false);
 }
 
-bool monster::extra_balanced() const
+bool monster::extra_balanced_at(const coord_def p) const
 {
-    const dungeon_feature_type grid = grd(pos());
+    const dungeon_feature_type grid = grd(p);
     return (grid == DNGN_SHALLOW_WATER
             && (mons_genus(type) == MONS_NAGA             // tails, not feet
                 || body_size(PSIZE_BODY) > SIZE_MEDIUM));
+}
+
+bool monster::extra_balanced() const
+{
+    return extra_balanced_at(pos());
 }
 
 /*
@@ -248,12 +253,13 @@ bool monster::extra_balanced() const
  * Floundering reduce the movement speed and can cause the monster to fumble
  * its attacks. It can be caused by water or by Leda's liquefaction.
  *
- * @return Whether the monster is floundering.
+ * @param pos Coordinates of position to check.
+ * @return Whether the monster would be floundering at p.
  */
-bool monster::floundering() const
+bool monster::floundering_at(const coord_def p) const
 {
-    const dungeon_feature_type grid = grd(pos());
-    return liquefied(pos())
+    const dungeon_feature_type grid = grd(p);
+    return liquefied(p)
            || (feat_is_water(grid)
                // Can't use monster_habitable_grid() because that'll return
                // true for non-water monsters in shallow water.
@@ -261,10 +267,17 @@ bool monster::floundering() const
                // Use real_amphibious to detect giant non-water monsters in
                // deep water, who flounder despite being treated as amphibious.
                && mons_habitat(this, true) != HT_AMPHIBIOUS
-               && !extra_balanced())
+               && !extra_balanced_at(p))
            && !cannot_fight()
            && !mons_flies(this)
-           && !is_wall_clinging();
+           && !(can_cling_to_walls() && cell_is_clingable(p));
+}
+
+bool monster::floundering() const
+{
+    // We recheck wall_clinging just to be sure. There might be some cases,
+    // where a cell is clingable and the monster is not clinging.
+    return floundering_at(pos()) && !is_wall_clinging();
 }
 
 bool monster::can_pass_through_feat(dungeon_feature_type grid) const

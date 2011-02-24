@@ -366,8 +366,11 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
-        if (can_go_straight(pos, path[i], can_move) && mons_traversable(path[i]))
+        if (can_go_straight(mons, pos, path[i], can_move)
+            && mons_traversable(path[i]))
+        {
             continue;
+        }
         else
         {
             pos = path[i-1];

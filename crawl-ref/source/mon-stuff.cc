@@ -3424,8 +3424,8 @@ void make_mons_leave_level(monster* mon)
 // FIXME: This is used for monster movement. It should instead be
 //        something like exists_ray(p1, p2, opacity_monmove(mons)),
 //        where opacity_monmove() is fixed to include opacity_immob.
-bool can_go_straight(const coord_def& p1, const coord_def& p2,
-                     dungeon_feature_type allowed)
+bool can_go_straight(const monster* mon, const coord_def& p1,
+                     const coord_def& p2, dungeon_feature_type allowed)
 {
     // If no distance, then trivially true
     if (p1 == p2)
@@ -3447,8 +3447,11 @@ bool can_go_straight(const coord_def& p1, const coord_def& p2,
     {
         ASSERT(map_bounds(ray.pos()));
         dungeon_feature_type feat = env.grid(ray.pos());
-        if (feat >= DNGN_UNSEEN && feat <= max_disallowed)
+        if (feat >= DNGN_UNSEEN && feat <= max_disallowed
+            || mon->floundering_at(ray.pos()))
+        {
             return (false);
+        }
     }
 
     return (true);
