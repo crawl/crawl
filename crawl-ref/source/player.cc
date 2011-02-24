@@ -5402,7 +5402,6 @@ void player::init()
     fearmongers.clear();
     dactions.clear();
 
-    clinging = 0;
     zotdef_wave_name.clear();
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
