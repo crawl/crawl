@@ -909,9 +909,9 @@ bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_POISON:
         if (player)
         {
-            // We don't track the source of the cloud so we can't
-            // assign blame.
-            poison_player(1, "", cloud.cloud_name());
+            const actor* agent = find_agent(cloud.source, cloud.whose);
+            poison_player(1, agent ? agent->name(DESC_NOCAP_A) : "",
+                          cloud.cloud_name());
         }
         else
         {
@@ -923,8 +923,11 @@ bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_MIASMA:
         if (player)
         {
-            // We'd want to blame it to a specific monster...
-            miasma_player(cloud.cloud_name());
+            const actor* agent = find_agent(cloud.source, cloud.whose);
+            if (agent)
+                miasma_player(agent->name(DESC_NOCAP_A), cloud.cloud_name());
+            else
+                miasma_player(cloud.cloud_name());
         }
         else
         {
