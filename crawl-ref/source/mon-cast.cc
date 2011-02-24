@@ -1525,6 +1525,15 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     continue;
                 }
 
+                // Same limitations as player.
+                if (spell_cast == SPELL_LEDAS_LIQUEFACTION
+                    && (!mons->stand_on_solid_ground()
+                        || liquefied(mons->pos())))
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
+
                 // Monsters shouldn't cast BiA before going berserk.
                 // Thematically, they are berserkers, they rush into
                 // battle without thinking. Stopping before berserk to
