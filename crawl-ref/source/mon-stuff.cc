@@ -3448,7 +3448,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
         ASSERT(map_bounds(ray.pos()));
         dungeon_feature_type feat = env.grid(ray.pos());
         if (feat >= DNGN_UNSEEN && feat <= max_disallowed
-            || mon->floundering_at(ray.pos()))
+            || mons_intel(mon) >= I_NORMAL && mon->floundering_at(ray.pos()))
         {
             return (false);
         }
