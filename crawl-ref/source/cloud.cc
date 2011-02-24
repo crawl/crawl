@@ -1217,9 +1217,9 @@ static const char *_verbose_cloud_names[] =
     "roaring flames", "noxious fumes", "freezing vapours", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
-    "a cloud of scalding steam", "a thick gloom", "ink", "blessed fire",
-    "a dark miasma", "thin mist", "seething chaos", "the rain",
-    "a mutagenic fog", "magical condensation", "raging winds",
+    "a cloud of scalding steam", "thick gloom", "ink", "blessed fire",
+    "dark miasma", "thin mist", "seething chaos", "the rain",
+    "mutagenic fog", "magical condensation", "raging winds",
 };
 
 std::string cloud_type_name(cloud_type type, bool terse)
