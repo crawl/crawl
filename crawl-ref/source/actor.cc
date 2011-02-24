@@ -275,8 +275,11 @@ void actor::check_clinging(bool stepped)
 
     if (!stepped && was_clinging && !clinging)
     {
-        if (can_see(this))
-            mpr(name(DESC_CAP_THE) + " fall off the wall.");
+        if (you.can_see(this))
+        {
+            mprf("%s fall%s off the wall.", name(DESC_CAP_THE).c_str(),
+                 is_player() ? "" : "s");
+        }
         apply_location_effects(pos());
     }
 }
