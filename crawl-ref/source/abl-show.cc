@@ -811,11 +811,6 @@ const std::string make_cost_description(ability_type ability)
         ret << "None";
 
     return (ret.str());
-    // If we haven't output anything so far, then the effect has no cost
-    if (ret.str().empty())
-        ret << "None";
-
-    return (ret.str());
 }
 
 static std::string _get_food_amount_str(int value)
