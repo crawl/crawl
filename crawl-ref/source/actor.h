@@ -316,8 +316,6 @@ protected:
     // These are here for memory management reasons...
     los_glob los;
     los_glob los_no_trans;
-
-    bool clinging; //!< Wether the actor is clinging to the wall.
 };
 
 // Identical to actor->kill_alignment(), but returns KC_OTHER if the actor

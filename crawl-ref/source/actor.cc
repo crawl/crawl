@@ -241,7 +241,7 @@ bool actor_slime_wall_immune(const actor *act)
  */
 bool actor::is_wall_clinging() const
 {
-    return (clinging);
+    return props.exists("clinging") && props["clinging"].get_bool();
 }
 
 /*
@@ -269,9 +269,14 @@ bool actor::can_cling_to(const coord_def& p) const
  */
 void actor::check_clinging(bool stepped)
 {
-    bool was_clinging = clinging;
+    bool was_clinging = is_wall_clinging();
+    bool clinging = can_cling_to_walls()
+                    && cell_is_clingable(pos(), was_clinging);
 
-    clinging = can_cling_to_walls() && cell_is_clingable(pos(), clinging);
+    if (can_cling_to_walls())
+        props["clinging"] = clinging;
+    else if (props.exists("clinging"))
+        props.erase("clinging");
 
     if (!stepped && was_clinging && !clinging)
     {
@@ -286,5 +291,5 @@ void actor::check_clinging(bool stepped)
 
 void actor::clear_clinging()
 {
-    clinging = false;
+    props["clinging"] = false;
 }
