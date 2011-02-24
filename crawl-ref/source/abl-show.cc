@@ -1162,7 +1162,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
     case ABIL_ASHENZARI_SCRYING:
-    case ABIL_KIKU_TORMENT:
         invoc = true;
         failure = 160 - you.piety;      // starts at 60%
         break;
@@ -1184,7 +1183,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_BEOGH_SMITING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_SIF_MUNA_FORGET_SPELL:
-    case ABIL_KIKU_RECEIVE_CORPSES:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_ELYVILON_GREATER_HEALING_SELF:
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
@@ -1193,6 +1191,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_FEDHAS_PLANT_RING:
         invoc = true;
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    case ABIL_KIKU_RECEIVE_CORPSES:
+        invoc = true;
+        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_NECROMANCY]);
         break;
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
@@ -1210,6 +1213,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_BANISH:
         invoc = true;
         failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    case ABIL_KIKU_TORMENT:
+        invoc = true;
+        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_NECROMANCY]);
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -2258,7 +2266,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
-        kiku_receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
+        kiku_receive_corpses(you.skills[SK_NECROMANCY] * 4, you.pos());
         break;
 
     case ABIL_KIKU_TORMENT:
