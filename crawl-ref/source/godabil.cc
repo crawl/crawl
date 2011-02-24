@@ -635,7 +635,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
 
         // If we got this far, we're actually reciting:
         you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
-        return 1;
+        return (1);
     }
 
     //But often, you'll have multiple options...
@@ -666,11 +666,11 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
             break;
         }
         else
-            return 0;
+            return (0);
     }
     // If we got this far, we're actually reciting and are out of breath from it:
     you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
-    return 1;
+    return (1);
 }
 
 enum zin_eff
@@ -700,30 +700,30 @@ bool zin_recite_to_single_monster(const coord_def& where,
 {
     // That's a pretty good sanity check, I guess.
     if (you.religion != GOD_ZIN)
-        return (0);
+        return (false);
 
     monster* mon = monster_at(where);
 
     if (!mon)
-        return false;
+        return (false);
 
     recite_counts eligibility;
     bool affected = false;
 
     if (zin_check_recite_to_single_monster(where, eligibility) < 1)
-        return false;
+        return (false);
 
     // First check: are they even eligible for this kind of recitation?
     // (Monsters that have been hurt by recitation aren't eligible.)
     if (eligibility[prayertype] < 1)
-        return false;
+        return (false);
 
     // Second check: because this affects the whole screen over several turns,
     // its effects are staggered. There's a 50% chance per monster, per turn,
     // that nothing will happen - so the cumulative odds of nothing happening
     // are one in eight, since you recite three times.
     if (coinflip())
-        return false;
+        return (false);
 
     // Resistance is now based on HD. You can affect up to (30+30)/2 = 30 'power' (HD).
     int power = (skill_bump(SK_INVOCATIONS) + you.piety * 3 / 20) / 2;
@@ -741,7 +741,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
     }
 
     if (check <= 0)
-        return false;
+        return (false);
 
     // To what degree are they eligible for this prayertype?
     int degree = eligibility[prayertype];
@@ -929,7 +929,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
     }
 
     // And the actual effects...
-    switch(effect)
+    switch (effect)
     {
     case ZIN_NOTHING:
         break;
@@ -954,8 +954,8 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_CONFUSE:
         if (mons_class_is_confusable(mon->type)
-            && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree,
-                   &you, (degree + random2(spellpower)) * 10)))
+            && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
+                             (degree + random2(spellpower)) * 10)))
         {
             if (prayertype == RECITE_HERETIC)
                 simple_monster_message(mon, " is confused by your recitation.");
@@ -982,7 +982,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_PARALYSE:
         if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you,
-                              (degree + random2(spellpower)) * 10)))
+                          (degree + random2(spellpower)) * 10)))
         {
             simple_monster_message(mon,
                 minor ? " is awed by your recitation."
@@ -994,10 +994,10 @@ bool zin_recite_to_single_monster(const coord_def& where,
     case ZIN_BLEED:
         if (mon->can_bleed()
             && mon->add_ench(mon_enchant(ENCH_BLEED, degree, &you,
-                                         (degree + random2(spellpower)) * 10)))
+                             (degree + random2(spellpower)) * 10)))
         {
             mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
-                                      (degree + random2(spellpower)) * 10));
+                          (degree + random2(spellpower)) * 10));
             switch (prayertype)
             {
             case RECITE_HERETIC:
@@ -1040,7 +1040,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_BLIND:
         if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, &you,
-                                      (degree + random2(spellpower)) * 10)))
+                          (degree + random2(spellpower)) * 10)))
         {
             simple_monster_message(mon, " is struck blind by the wrath of Zin!");
             affected = true;
@@ -1049,7 +1049,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_SILVER_CORONA:
         if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, degree, &you,
-                                      (degree + random2(spellpower)) * 10)))
+                          (degree + random2(spellpower)) * 10)))
         {
             simple_monster_message(mon, " is limned with silver light.");
             affected = true;
@@ -1058,7 +1058,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_ANTIMAGIC:
         if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, &you,
-                                      (degree + random2(spellpower)) * 10)))
+                          (degree + random2(spellpower)) * 10)))
         {
             ASSERT(prayertype == RECITE_HERETIC);
             simple_monster_message(mon,
@@ -1070,7 +1070,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_MUTE:
         if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, &you,
-                                      (degree + random2(spellpower)) * 10)))
+                          (degree + random2(spellpower)) * 10)))
         {
             simple_monster_message(mon, " is struck mute by the wrath of Zin!");
             affected = true;
@@ -1079,7 +1079,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_MAD:
         if (mon->add_ench(mon_enchant(ENCH_MAD, degree, &you,
-                                      (degree + random2(spellpower)) * 10)))
+                          (degree + random2(spellpower)) * 10)))
         {
             simple_monster_message(mon, " is driven mad by the wrath of Zin!");
             affected = true;
@@ -1088,10 +1088,9 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     case ZIN_DUMB:
         if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, &you,
-                                      (degree + random2(spellpower)) * 10)))
+                          (degree + random2(spellpower)) * 10)))
         {
-            simple_monster_message(mon,
-                " is left stupefied by the wrath of Zin!");
+            simple_monster_message(mon, " is left stupefied by the wrath of Zin!");
             affected = true;
         }
         break;
@@ -1137,10 +1136,10 @@ bool zin_recite_to_single_monster(const coord_def& where,
         ASSERT(prayertype == RECITE_IMPURE);
         if (mon->res_rotting() <= 1
             && mon->add_ench(mon_enchant(ENCH_ROT, degree, &you,
-                                      (degree + random2(spellpower)) * 10)))
+                             (degree + random2(spellpower)) * 10)))
         {
             mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
-                                      (degree + random2(spellpower)) * 10));
+                          (degree + random2(spellpower)) * 10));
             simple_monster_message(mon,
                 minor ? "'s impure flesh begins to rot away."
                       : "'s impure flesh sloughs off!");
@@ -1170,7 +1169,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         force_monster_shout(mon);
     }
 
-    return true;
+    return (true);
 }
 
 void zin_saltify(monster* mon)
