@@ -101,7 +101,6 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
     start  = mon->pos();
     target = dest;
     pos    = start;
-    clinging          = mon->is_wall_clinging();
     allow_diagonals   = diag;
     traverse_unmapped = pass_unmapped;
 
@@ -178,12 +177,6 @@ bool monster_pathfind::calc_path_to_neighbours()
 {
     coord_def npos;
     int distance, old_dist, total;
-    if (mons)
-    {
-        // Is this supposed to override the initial setting?
-        clinging = mons->can_cling_to_walls()
-                   && cell_is_clingable(pos, clinging);
-    }
 
     // For each point, we look at all neighbour points. Check the orthogonals
     // last, so that, should an orthogonal and a diagonal direction have the
@@ -407,7 +400,7 @@ bool monster_pathfind::traversable(const coord_def& p)
         return (false);
 
     if (mons)
-        return mons_traversable(p) || clinging && cell_can_cling_to(pos, p);
+        return mons_traversable(p);
 
     return feat_has_solid_floor(grd(p));
 }
@@ -416,8 +409,9 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    return (mons_can_traverse(mons, p)
-            || mons->can_cling_to_walls() && cell_can_cling_to(pos, p));
+    return mons_can_traverse(mons, p) || mons->can_cling_to_walls()
+                                         && cell_is_clingable(pos)
+                                         && cell_can_cling_to(pos, p);
 }
 
 int monster_pathfind::travel_cost(coord_def npos)
@@ -444,6 +438,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     const monster_type mt = mons_base_type(mons);
     const bool ground_level = !mons_airborne(mt, -1, false)
                               && !(mons->can_cling_to_walls()
+                                   && cell_is_clingable(pos)
                                    && cell_can_cling_to(pos, npos));
 
     // Travelling through water, entering or leaving water is more expensive

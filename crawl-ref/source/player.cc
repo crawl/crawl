@@ -323,7 +323,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
             const bool will_cling = you.can_cling_to_walls()
-                                    && cell_is_clingable(you.pos(), false);
+                                    && cell_is_clingable(you.pos());
 
             if (!feat_is_water(old_feat))
             {
