@@ -106,7 +106,8 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     // next turn, and even extend that flag to neighbouring
     // monsters of similar movement restrictions.
 
-    bool need_pathfind = !can_go_straight(mon->pos(), PLAYER_POS, can_move);
+    bool need_pathfind = !can_go_straight(mon, mon->pos(), PLAYER_POS,
+                                          can_move);
 
     // Smart monsters that can fire through obstacles won't use
     // pathfinding.
@@ -159,7 +160,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
         const coord_def targ = mon->travel_path[len - 1];
 
         // Current target still valid?
-        if (can_go_straight(targ, PLAYER_POS, can_move))
+        if (can_go_straight(mon, targ, PLAYER_POS, can_move))
         {
             // Did we reach the target?
             if (mon->pos() == mon->travel_path[0])
@@ -173,7 +174,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
                     return (true);
                 }
             }
-            else if (can_go_straight(mon->pos(), mon->travel_path[0],
+            else if (can_go_straight(mon, mon->pos(), mon->travel_path[0],
                                      can_move))
             {
                 mon->target = mon->travel_path[0];
@@ -519,7 +520,7 @@ static bool _handle_monster_travelling(monster* mon,
     }
 
     // Can we still see our next waypoint?
-    if (!can_go_straight(mon->pos(), mon->travel_path[0], can_move))
+    if (!can_go_straight(mon, mon->pos(), mon->travel_path[0], can_move))
     {
 #ifdef DEBUG_PATHFIND
         mpr("Can't see waypoint grid.");
@@ -537,7 +538,7 @@ static bool _handle_monster_travelling(monster* mon,
         const int size = mon->travel_path.size();
         for (int i = size - 1; i >= 0; --i)
         {
-            if (can_go_straight(mon->pos(), mon->travel_path[i], can_move))
+            if (can_go_straight(mon, mon->pos(), mon->travel_path[i], can_move))
             {
                 mon->target = mon->travel_path[i];
                 erase = i;
