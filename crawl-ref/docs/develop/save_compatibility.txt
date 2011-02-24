@@ -27,6 +27,12 @@ rarely is bad.
 
 2. HOW
 
+[note added by galehar]
+First, if you're adding a property to one of the actor, player or monster
+class, consider storing it in the props hash (declared in actor.h). Especially
+if the property is temporary or not applied to all monsters. Also, it won't
+create any save compatibility issues.
+
 If you are changing any of the code in tags.cc (which implements load
 and save for savefiles), you probably need to be concerned about save
 compatibility.  Any code which uses the marshall* and unmarshall*
