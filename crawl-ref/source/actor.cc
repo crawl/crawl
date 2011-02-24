@@ -52,6 +52,12 @@ bool actor::ground_level() const
     return (!airborne() && !is_wall_clinging());
 }
 
+bool actor::stand_on_solid_ground() const
+{
+    return ground_level() && feat_has_solid_floor(grd(pos()))
+           && !feat_is_water(grd(pos()));
+}
+
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const

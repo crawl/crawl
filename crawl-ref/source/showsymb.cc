@@ -90,8 +90,11 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
     if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
         colour = ETC_WAVES;
 
-    if (feat_has_solid_floor(feat) && cell.flags & MAP_LIQUEFIED)
+    if (feat_has_solid_floor(feat) && !feat_is_water(feat)
+        && cell.flags & MAP_LIQUEFIED)
+    {
         colour = ETC_LIQUEFIED;
+    }
 
     if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
     {

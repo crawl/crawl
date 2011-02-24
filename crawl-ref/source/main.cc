@@ -2350,6 +2350,9 @@ static void _decrement_durations()
     dec_exhaust_player(delay);
     dec_haste_player(delay);
 
+    if (you.duration[DUR_LIQUEFYING] && !you.stand_on_solid_ground())
+        you.duration[DUR_LIQUEFYING] = 1;
+
     if (_decrement_a_duration(DUR_LIQUEFYING, delay, "The ground is no longer liquid beneath you."))
     {
         invalidate_agrid();
