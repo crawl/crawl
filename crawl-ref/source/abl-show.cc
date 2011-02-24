@@ -88,13 +88,13 @@ enum ability_flag_type
     ABFLAG_PERMANENT_MP   = 0x00000080, // costs permanent MPs
     ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
     ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
-    ABFLAG_VARIABLE_FRUIT = 0x00000400,  // ability requires fruit or piety
-    ABFLAG_HEX_MISCAST    = 0X00000800, // // severity 3 enchantment miscast
-    ABFLAG_TLOC_MISCAST   = 0X00001000, // // severity 3 translocation miscast
-    ABFLAG_NECRO_MISCAST_MINOR = 0X00002000, // // severity 2 necro miscast
-    ABFLAG_NECRO_MISCAST  = 0X00004000, // // severity 3 necro miscast
-    ABFLAG_TMIG_MISCAST   = 0X00008000, // // severity 3 transmigration miscast
-    ABFLAG_LEVEL_DRAIN    = 0X00010000, // // drains 2 levels
+    ABFLAG_VARIABLE_FRUIT = 0x00000400, // ability requires fruit or piety
+    ABFLAG_HEX_MISCAST    = 0x00000800, // severity 3 enchantment miscast
+    ABFLAG_TLOC_MISCAST   = 0x00001000, // severity 3 translocation miscast
+    ABFLAG_NECRO_MISCAST_MINOR = 0x00002000, // severity 2 necro miscast
+    ABFLAG_NECRO_MISCAST  = 0x00004000, // severity 3 necro miscast
+    ABFLAG_TMIG_MISCAST   = 0x00008000, // severity 3 transmigration miscast
+    ABFLAG_LEVEL_DRAIN    = 0x00010000, // drains 2 levels
     ABFLAG_STAT_DRAIN     = 0x00020000  // stat drain
 };
 
@@ -698,6 +698,7 @@ const std::string make_cost_description(ability_type ability)
             ret << " Permanent";
         ret << " HP";
     }
+
     if (abil.xp_cost)
     {
         if (!ret.str().empty())
@@ -769,8 +770,9 @@ const std::string make_cost_description(ability_type ability)
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << "Instant"; // not really a cost, more of a bonus -bwr
+        ret << "Instant"; // not really a cost, more of a bonus - bwr
     }
+
     if (abil.flags & ABFLAG_FRUIT)
     {
         if (!ret.str().empty())
@@ -778,6 +780,7 @@ const std::string make_cost_description(ability_type ability)
 
         ret << "Fruit";
     }
+
     if (abil.flags & ABFLAG_VARIABLE_FRUIT)
     {
         if (!ret.str().empty())
@@ -792,12 +795,12 @@ const std::string make_cost_description(ability_type ability)
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << "Level drain";      // //
+        ret << "Level drain";
     }
 
     if (abil.flags & ABFLAG_STAT_DRAIN)
     {
-        if(!ret.str().empty())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Stat drain";
