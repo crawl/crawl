@@ -1681,20 +1681,14 @@ void nuke_wall(const coord_def& p)
 /*
  * Check if an actor can cling to a cell.
  *
- * Wall clinging is done only on orthogonal walls. Leda's liquefaction prevents
- * wall clinging, unless the actor is already clinging. In that case, it is
- * unaffected by the spell.
+ * Wall clinging is done only on orthogonal walls.
  *
  * @param pos The coordinates of the cell.
- * @param already_clinging Whether the actor is already clinging to a wall.
  *
  * @return Whether the cell is clingable.
  */
-bool cell_is_clingable(const coord_def pos, bool already_clinging)
+bool cell_is_clingable(const coord_def pos)
 {
-    if (!already_clinging && liquefied(pos))
-        return false;
-
     for (orth_adjacent_iterator ai(pos); ai; ++ai)
         if (feat_is_wall(env.grid(*ai)))
             return true;

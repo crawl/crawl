@@ -42,9 +42,6 @@ protected:
     // Our destination, and the current position we're looking at.
     coord_def start, target, pos;
 
-    // Can the actor cling at the current positon.
-    bool clinging;
-
     // If false, do not move diagonally along the path.
     bool allow_diagonals;
 

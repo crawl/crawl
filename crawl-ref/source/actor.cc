@@ -270,8 +270,7 @@ bool actor::can_cling_to(const coord_def& p) const
 void actor::check_clinging(bool stepped)
 {
     bool was_clinging = is_wall_clinging();
-    bool clinging = can_cling_to_walls()
-                    && cell_is_clingable(pos(), was_clinging);
+    bool clinging = can_cling_to_walls() && cell_is_clingable(pos());
 
     if (can_cling_to_walls())
         props["clinging"] = clinging;
