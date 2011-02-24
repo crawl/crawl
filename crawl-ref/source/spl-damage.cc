@@ -591,7 +591,7 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
 
     if (mons == NULL || mons->submerged())
     {
-        canned_msg(MSG_NOTHING_THERE);
+        mpr("There's nothing close enough!");
         // If there's no monster there, you still pay the costs in
         // order to prevent locating invisible/submerged monsters.
         return (true);
