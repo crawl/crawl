@@ -433,7 +433,7 @@ static const ability_def Ability_List[] =
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
       0, 0, 0, 0, ABFLAG_NONE },
 
-    // // zot defence abilities
+    // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, ABFLAG_NONE, 10 },
     { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, ABFLAG_NONE, 5 },
     { ABIL_MAKE_PLANT, "Make plant", 0, 0, 0, 0, ABFLAG_NONE, 2},
@@ -571,7 +571,7 @@ int count_relevant_monsters(const ability_def& abil)
     monster_type mtyp = _monster_for_ability(abil);
     if (mtyp == MONS_PROGRAM_BUG)
         return 0;
-    return count_monsters(mtyp, true);        /* Friendly ones only */
+    return count_monsters(mtyp, true);        // Friendly ones only
 }
 
 trap_type trap_for_ability(const ability_def& abil)
@@ -789,7 +789,6 @@ const std::string make_cost_description(ability_type ability)
         ret << "Fruit or Piety";
     }
 
-
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
     {
         if (!ret.str().empty())
@@ -962,7 +961,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 0;
         break;
 
-    // // begin zot defence abilities
+    // begin zot defence abilities
     case ABIL_MAKE_FUNGUS:
     case ABIL_MAKE_PLANT:
     case ABIL_MAKE_OKLOB_PLANT:
@@ -1769,7 +1768,7 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
-    /* Begin ZotDef allies */
+    // Begin ZotDef allies
     case ABIL_MAKE_PLANT:
     case ABIL_MAKE_OKLOB_SAPLING:
     case ABIL_MAKE_OKLOB_PLANT:
@@ -1782,13 +1781,13 @@ static bool _do_ability(const ability_def& abil)
         if (!create_zotdef_ally(_monster_for_ability(abil), _zd_mons_description_for_ability(abil).c_str()))
             return (false);
         break;
-    /* End ZotDef Allies */
+    // End ZotDef Allies
 
     case ABIL_MAKE_TELEPORT:
         you_teleport_now(true, true);
-        break; // //
+        break;
 
-    /* ZotDef traps */
+    // ZotDef traps
     case ABIL_MAKE_TELEPORT_TRAP:
         if (you.pos().distance_from(orb_position()) < 10)
         {
@@ -1807,7 +1806,7 @@ static bool _do_ability(const ability_def& abil)
         if (!create_trap(trap_for_ability(abil)))
             return false;
         break;
-    /* End ZotDef traps */
+    // End ZotDef traps
 
     case ABIL_MAKE_OKLOB_CIRCLE:
         args.top_prompt = "Center oklob circle where?";
@@ -1823,18 +1822,18 @@ static bool _do_ability(const ability_def& abil)
             place_monster(mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, &you, 0, 0,
                           *ai, you.pet_target), true);
         }
-        break; // //
+        break;
 
     case ABIL_MAKE_ACQUIRE_GOLD:
-        acquirement(OBJ_GOLD, AQ_SCROLL); // //
+        acquirement(OBJ_GOLD, AQ_SCROLL);
         break;
 
     case ABIL_MAKE_ACQUIREMENT:
-        acquirement(OBJ_RANDOM, AQ_SCROLL); // //
+        acquirement(OBJ_RANDOM, AQ_SCROLL);
         break;
 
     case ABIL_MAKE_WATER:
-        create_pond(you.pos(), 3, false); // //
+        create_pond(you.pos(), 3, false);
         break;
 
     case ABIL_MAKE_BAZAAR:
@@ -2942,7 +2941,7 @@ std::vector<talent> your_talents(bool check_confused)
 {
     std::vector<talent> talents;
 
-    // // zot defence abilities; must also be updated in player.cc when these levels are changed
+    // zot defence abilities; must also be updated in player.cc when these levels are changed
     if (crawl_state.game_is_zotdef())
     {
         if (you.experience_level >= 1)

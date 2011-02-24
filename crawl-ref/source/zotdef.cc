@@ -13,8 +13,8 @@
 #include "externs.h"
 #include "files.h"
 #include "ghost.h"
-#include "items.h" // // for find_floor_item
-#include "itemname.h" // // for make_name
+#include "items.h" // for find_floor_item
+#include "itemname.h" // for make_name
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
