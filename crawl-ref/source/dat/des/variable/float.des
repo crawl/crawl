@@ -1483,7 +1483,7 @@ KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
         | great sword ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain \
         | triple sword ego:vorpal | executioner's axe ego:vorpal
 SHUFFLE: 123
-KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_rtele_into
+KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_tele_into
 KITEM:  w = acquire weapon
 KITEM:  r = acquire armour
 NSUBST: $ = 1:w / 1:r / 4:| / *:$
