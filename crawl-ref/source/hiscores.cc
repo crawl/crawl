@@ -913,6 +913,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_BEAM
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_SPORE
+            || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_REFLECTION)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
@@ -986,9 +987,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             killerpath = "";
         }
     }
-    else if (death_type == KILLED_BY_DISINT)
+    else if (death_type == KILLED_BY_DISINT
+             || death_type == KILLED_BY_CLOUD)
     {
-        death_source_name = dsrc_name ? dsrc_name : "you";
+        death_source_name = dsrc_name ? dsrc_name :
+                            dsrc == MHITYOU ? "you" :
+                            "";
         indirectkiller = killerpath = "";
     }
     else
@@ -1677,13 +1681,22 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_CLOUD:
-        if (auxkilldata.empty())
-            desc += terse? "cloud" : "Engulfed by a cloud";
+        ASSERT(!auxkilldata.empty()); // there are no nameless clouds
+        if (terse)
+            if (death_source_name.empty())
+                desc += "cloud of " + auxkilldata;
+            else
+                desc += "cloud of " +auxkilldata + " [" +
+                        death_source_name == "you" ? "self" : death_source_name
+                        + "]";
         else
         {
-            snprintf(scratch, sizeof(scratch), "%scloud of %s",
-                      terse? "" : "Engulfed by a ",
-                      auxkilldata.c_str());
+            snprintf(scratch, sizeof(scratch), "Engulfed by %s%s %s",
+                death_source_name.empty() ? "a" :
+                  death_source_name == "you" ? "own" :
+                  apostrophise(death_source_name).c_str(),
+                death_source_name.empty() ? " cloud of" : "",
+                auxkilldata.c_str());
             desc += scratch;
         }
         needs_damage = true;
