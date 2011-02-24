@@ -1258,12 +1258,17 @@ KPROP:    x = bloody
              feature (usually lava).  Does not stop fog generators or clouds
              entering from nearby squares.
           * "no_rtele_into": Prevents random teleport from chosing to use this
-             square. Should be used sparingly.
+             square. Use this to prevent nasty situations like the player
+             ending up in a closet (for example, because your map randomises
+             wall/floor so much that closets may occur) or an extremely dense
+             monster array (like a hellion island).
           * "no_ctele_into": Prevents controlled teleportation into this square.
              Will instead generate the message "A strong magical force throws
-             you back!". Should be used sparingly.
+             you back!".
           * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
              in one flag, and disallows both random and controlled teleports.
+             Use this for vaults with loot where the player is not supposed to 
+             get it by teleporting alone.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
 
