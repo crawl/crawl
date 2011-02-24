@@ -71,6 +71,7 @@ enum ability_type
     ABIL_TSO_SUMMON_DIVINE_WARRIOR,
     // Kiku
     ABIL_KIKU_RECEIVE_CORPSES = 70,
+    ABIL_KIKU_TORMENT,
     // Yredelemnul
     ABIL_YRED_INJURY_MIRROR = 80,
     ABIL_YRED_ANIMATE_REMAINS,

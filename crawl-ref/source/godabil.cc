@@ -1875,6 +1875,28 @@ bool kiku_receive_corpses(int pow, coord_def where)
     }
 }
 
+bool kiku_take_corpse()
+{
+    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+    {
+        item_def &item(mitm[i]);
+
+        if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
+            continue;
+        // should only fresh corpses count?
+
+        // only nets currently, but let's check anyway...
+        if (item_is_stationary(item))
+            continue;
+
+        item_was_destroyed(item);
+        destroy_item(i);
+        return true;
+    }
+
+    return false;
+}
+
 bool fedhas_passthrough_class(const monster_type mc)
 {
     return (you.religion == GOD_FEDHAS
