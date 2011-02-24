@@ -2374,7 +2374,7 @@ KMONS:  l = fire elemental / nothing w:40
 KFEAT:  l = l
 KMONS:  1 = patrolling Azrael; scimitar unrand:scimitar_of_flaming_death, \
             patrolling efreet; scimitar unrand:scimitar_of_flaming_death
-KPROP:  1' = no_rtele_into
+KPROP:  1' = no_tele_into
 SUBST:  v : vc
 SUBST:  ' = .
 MAP
@@ -2402,7 +2402,7 @@ WEIGHT: 3
 MONS:   wizard, orange crystal statue / silver statue
 KMONS:  3 = lich / ancient lich
 KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage
-KPROP:  32' = no_rtele_into
+KPROP:  32' = no_tele_into
 SUBST:  ' = .
 MAP
 .......             .......
