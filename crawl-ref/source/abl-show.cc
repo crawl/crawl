@@ -185,7 +185,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DIVINE_WARRIOR },
     // Kikubaaqudgha
     { ABIL_KIKU_RECEIVE_CORPSES, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+      ABIL_NON_ABILITY, ABIL_KIKU_TORMENT },
     // Yredelemnul
     { ABIL_YRED_ANIMATE_REMAINS_OR_DEAD, ABIL_YRED_RECALL_UNDEAD_SLAVES,
       ABIL_NON_ABILITY, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
@@ -322,6 +322,7 @@ static const ability_def Ability_List[] =
 
     // Kikubaaqudgha
     { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses", 3, 0, 50, 2, ABFLAG_NONE },
+    { ABIL_KIKU_TORMENT, "Torment", 4, 0, 0, 8, ABFLAG_NONE },
 
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, ABFLAG_PIETY },
@@ -1161,6 +1162,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
     case ABIL_ASHENZARI_SCRYING:
+    case ABIL_KIKU_TORMENT:
         invoc = true;
         failure = 160 - you.piety;      // starts at 60%
         break;
@@ -2257,6 +2259,16 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_KIKU_RECEIVE_CORPSES:
         kiku_receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
+        break;
+
+    case ABIL_KIKU_TORMENT:
+        if (!kiku_take_corpse())
+        {
+            mpr("There are no corpses to sacrifice!");
+            return false;
+        }
+        simple_god_message(" torments the living!");
+        torment(TORMENT_KIKUBAAQUDGHA, you.pos());
         break;
 
     case ABIL_YRED_INJURY_MIRROR:

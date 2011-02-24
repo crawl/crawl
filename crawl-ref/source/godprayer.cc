@@ -92,9 +92,6 @@ bool god_accepts_prayer(god_type god)
     case GOD_ZIN:
         return (zin_sustenance(false));
 
-    case GOD_KIKUBAAQUDGHA:
-        return (you.piety >= piety_breakpoint(4));
-
     case GOD_JIYVA:
         return (jiyva_can_paralyse_jellies());
 
@@ -863,13 +860,6 @@ static bool _offer_items()
 #if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
         _show_pure_deck_chances();
 #endif
-    }
-
-    if (num_sacced > 0 && you.religion == GOD_KIKUBAAQUDGHA)
-    {
-        simple_god_message(" torments the living!");
-        torment(TORMENT_KIKUBAAQUDGHA, you.pos());
-        lose_piety(random_range(8, 12));
     }
 
     // Explanatory messages if nothing the god likes is sacrificed.
