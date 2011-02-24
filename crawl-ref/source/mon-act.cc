@@ -3142,11 +3142,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return (false);
     }
 
-    // Effectively slows down monster movement across water.
-    // Fire elementals can't cross at all.
     bool no_water = false;
-    if (mons->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
-        no_water = true;
 
     const int targ_cloud_num = env.cgrid(targ);
     if (mons_avoids_cloud(mons, targ_cloud_num))
