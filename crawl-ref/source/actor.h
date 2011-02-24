@@ -261,6 +261,7 @@ public:
     virtual void clear_clinging();
     virtual bool airborne() const;
     virtual bool ground_level() const;
+    virtual bool stand_on_solid_ground() const;
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;

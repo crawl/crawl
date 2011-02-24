@@ -136,7 +136,7 @@ static void _update_agrid()
 
                 _set_agrid_flag(*ri, APROP_LIQUID);
 
-                if (feat_has_solid_floor(f))
+                if (feat_has_solid_floor(f) && !feat_is_water(f))
                     _set_agrid_flag(*ri, APROP_ACTUAL_LIQUID);
             }
             no_areas = false;

@@ -1470,7 +1470,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        if (!you.ground_level() || !feat_has_solid_floor(grd(you.pos())))
+        if (!you.stand_on_solid_ground())
         {
             if (!you.ground_level())
                 mprf("You can't cast this spell without touching the ground.");
