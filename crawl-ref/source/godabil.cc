@@ -1032,6 +1032,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
             simple_monster_message(mon, " is smitten by the wrath of Zin.");
         else
             simple_monster_message(mon, " is blasted by the fury of Zin!");
+        // XXX: This duplicates code in cast_smiting().
         mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
         if (mon->alive())
             print_wounds(mon);
