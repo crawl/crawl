@@ -465,7 +465,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_SHIELDS]  = 2;
 
-        weap_skill = 2;
+        weap_skill = (you.species == SP_CAT) ? 4 : 2;
 
         you.skills[(player_effectively_in_light_armour()
                    ? SK_DODGING : SK_ARMOUR)] = 3;
