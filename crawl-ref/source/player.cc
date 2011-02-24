@@ -322,18 +322,28 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         {
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
+            const bool will_cling = you.can_cling_to_walls()
+                                    && cell_is_clingable(you.pos(), false);
 
             if (!feat_is_water(old_feat))
             {
-                mprf("You %s the %s water.",
-                     stepped ? "enter" : "fall into",
-                     new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                if (stepped && will_cling)
+                {
+                    mpr("You slowly cross the shallow water and cling to the "
+                        "wall.");
+                }
+                else
+                {
+                    mprf("You %s the %s water.",
+                         stepped ? "enter" : "fall into",
+                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                }
             }
 
             if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
                 mpr("You sink to the bottom.");
 
-            if (!feat_is_water(old_feat))
+            if (!feat_is_water(old_feat) && !will_cling)
             {
                 mpr("Moving in this stuff is going to be slow.");
                 if (you.invisible())
