@@ -19,8 +19,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case JOB_FIGHTER:
             switch (speci)
         {
-            case SP_CAT:
-                return (CC_BANNED);
             case SP_DEEP_ELF:
             case SP_SLUDGE_ELF:
             case SP_MERFOLK:
@@ -62,6 +60,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case JOB_MONK:
             switch (speci)
         {
+            case SP_CAT:
+                return (CC_BANNED);
             case SP_HIGH_ELF:
             case SP_DEEP_ELF:
             case SP_MOUNTAIN_DWARF:
