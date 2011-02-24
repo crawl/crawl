@@ -689,6 +689,10 @@ void canned_msg(canned_message_type which_message)
         mpr("There's nothing there!");
         crawl_state.cancel_cmd_repeat();
         break;
+    case MSG_NOTHING_CLOSE_ENOUGH:
+        mpr("There's nothing close enough!");
+        crawl_state.cancel_cmd_repeat();
+        break;
     case MSG_SPELL_FIZZLES:
         mpr("The spell fizzles.");
         break;
