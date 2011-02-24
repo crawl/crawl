@@ -310,6 +310,8 @@ public:
 
     coord_def position;
 
+    CrawlHashTable props;
+
 protected:
     // These are here for memory management reasons...
     los_glob los;

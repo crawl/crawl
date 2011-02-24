@@ -74,11 +74,12 @@ monster::monster()
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0L), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
-      god(GOD_NO_GOD), ghost(), seen_context(""), props()
+      god(GOD_NO_GOD), ghost(), seen_context("")
 
 {
     type = MONS_NO_MONSTER;
     travel_path.clear();
+    props.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
 }

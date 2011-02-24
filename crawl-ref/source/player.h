@@ -235,8 +235,6 @@ public:
   PlaceInfo global_info;
   player_quiver* m_quiver;
 
-  CrawlHashTable props;
-
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
   std::vector<int> beholders;

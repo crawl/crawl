@@ -116,8 +116,6 @@ public:
     int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
     int damage_total;
 
-    CrawlHashTable props;
-
 public:
     void set_new_monster_id();
 
