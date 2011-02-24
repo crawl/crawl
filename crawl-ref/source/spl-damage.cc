@@ -505,8 +505,9 @@ bool vampiric_drain(int pow, monster* mons)
 {
     if (mons == NULL || mons->submerged())
     {
-        mpr("There isn't anything there!");
-        // Cost to disallow freely locating invisible monsters.
+        mpr("There's nothing close enough!");
+        // Cost to disallow freely locating invisible/submerged
+        // monsters.
         return (true);
     }
 
@@ -590,9 +591,9 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
 
     if (mons == NULL || mons->submerged())
     {
-        mpr("There isn't anything close enough!");
+        canned_msg(MSG_NOTHING_THERE);
         // If there's no monster there, you still pay the costs in
-        // order to prevent locating invisible monsters.
+        // order to prevent locating invisible/submerged monsters.
         return (true);
     }
 

@@ -685,6 +685,10 @@ void canned_msg(canned_message_type which_message)
         mpr("Why would you want to do that?");
         crawl_state.cancel_cmd_repeat();
         break;
+    case MSG_NOTHING_THERE:
+        mpr("There's nothing there!");
+        crawl_state.cancel_cmd_repeat();
+        break;
     case MSG_SPELL_FIZZLES:
         mpr("The spell fizzles.");
         break;

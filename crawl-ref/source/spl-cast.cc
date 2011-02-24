@@ -1434,8 +1434,12 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // LOS spells
     case SPELL_SMITING:
-        if (!cast_smiting(powc, beam.target))
+        if (!cast_smiting(powc,
+                          monster_at(spd.isTarget ? beam.target
+                                                  : you.pos() + spd.delta)))
+        {
             return (SPRET_ABORT);
+        }
         break;
 
     case SPELL_AIRSTRIKE:

@@ -472,6 +472,9 @@ enum canned_message_type
     MSG_CANNOT_DO_YET,
     MSG_OK,
     MSG_UNTHINKING_ACT,
+#if TAG_MAJOR_VERSION != 32
+    MSG_NOTHING_THERE,
+#endif
     MSG_SPELL_FIZZLES,
     MSG_HUH,
     MSG_EMPTY_HANDED,
@@ -481,6 +484,9 @@ enum canned_message_type
     MSG_MANA_INCREASE,
     MSG_MANA_DECREASE,
     MSG_TOO_HUNGRY,
+#if TAG_MAJOR_VERSION == 32
+    MSG_NOTHING_THERE,
+#endif
 };
 
 enum char_set_type
