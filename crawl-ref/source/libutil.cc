@@ -538,6 +538,9 @@ std::string apostrophise(const std::string &name)
     if (name.empty())
         return (name);
 
+    if (name == "you" || name == "You")
+        return (name + "r");
+
     if (name == "it" || name == "It")
         return (name + "s");
 
