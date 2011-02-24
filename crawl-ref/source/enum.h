@@ -474,6 +474,7 @@ enum canned_message_type
     MSG_UNTHINKING_ACT,
 #if TAG_MAJOR_VERSION != 32
     MSG_NOTHING_THERE,
+    MSG_NOTHING_CLOSE_ENOUGH,
 #endif
     MSG_SPELL_FIZZLES,
     MSG_HUH,
@@ -486,6 +487,7 @@ enum canned_message_type
     MSG_TOO_HUNGRY,
 #if TAG_MAJOR_VERSION == 32
     MSG_NOTHING_THERE,
+    MSG_NOTHING_CLOSE_ENOUGH,
 #endif
 };
 
