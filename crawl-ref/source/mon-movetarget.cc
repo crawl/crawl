@@ -61,6 +61,10 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         if (mons_primary_habitat(m) != habit)
             continue;
 
+        // Wall clinging monsters use different pathfinding.
+        if (mon->can_cling_to_walls() != m->can_cling_to_walls())
+            continue;
+
         // A flying monster has an advantage over a non-flying one.
         // Same for a swimming one.
         if (!flies && mons_flies(m)
