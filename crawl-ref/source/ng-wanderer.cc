@@ -290,18 +290,18 @@ static skill_type _weighted_skill_roll()
 
 static void _give_wanderer_book(skill_type skill, int & slot)
 {
-    int book_type = BOOK_MINOR_MAGIC_I;
+    int book_type = BOOK_MINOR_MAGIC;
     switch((int)skill)
     {
     case SK_SPELLCASTING:
-        book_type = BOOK_MINOR_MAGIC_I;
+        book_type = BOOK_MINOR_MAGIC;
         break;
 
     case SK_CONJURATIONS:
         switch (random2(4))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_I;
+            book_type = BOOK_MINOR_MAGIC;
             break;
         case 1:
             book_type = BOOK_CONJURATIONS_I;
@@ -319,7 +319,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         switch (random2(2))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_I;
+            book_type = BOOK_MINOR_MAGIC;
             break;
         case 1:
             book_type = BOOK_CALLINGS;
