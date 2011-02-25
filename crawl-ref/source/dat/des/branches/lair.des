@@ -12,7 +12,7 @@
 ################################################################################
 # Dummy Lair entry
 NAME:   lair_0_dummy
-TAGS:   lair_entry dummy
+TAGS:   lair_entry
 WEIGHT: 30
 ORIENT: float
 KFEAT:  O = enter_lair
