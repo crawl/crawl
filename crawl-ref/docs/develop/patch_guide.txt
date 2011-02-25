@@ -73,7 +73,7 @@ Tip 1:  The code is roughly divided into files according to functionality that
         is reflected in the file names, so mon-gear.cc, mon-stuff.cc
         and mon-util.cc all handle code relating to monsters, while spl-data.h,
         spl-cast.cc and spl-summoning.cc deal with spells. Note that related
-        code can still be found in other files, too, but these are a good 
+        code can still be found in other files, too, but these are a good
         starting point.
 
 Tip 2:  Start out with the simple, generic stuff where you only have to copy

@@ -1765,7 +1765,7 @@ on the part of the player.
       good at stabbing.
 
   Black Draconians can unleash huge electrical discharges, and are naturally
-      insulated. They are good at air magic but feel cumbersome with earth 
+      insulated. They are good at air magic but feel cumbersome with earth
       magic.
 
   Mottled Draconians are somewhat in touch with fire, yet are not weak

@@ -136,8 +136,8 @@ ccccccwwwwwwwcccccc
 cTwwwwwwwwwwwwwwwTc
 cTwwwwwwwwwwwwwwwTc
 ccccccccwwwcccccccc
- CCCCCccwwwccCCCCC 
-   CCCcwwwwwcCCCC 
+ CCCCCccwwwccCCCCC
+   CCCcwwwwwcCCCC
     ..wwwwwww..
      .wwwKwww.
      ..wwwww..
@@ -188,22 +188,22 @@ KMONS:  O = tentacled monstrosity / large abomination / chaos spawn
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
             spells:smiting;blink_other;invisibility;malign_gateway;blink priest_spells ; \
             robe . quarterstaff ego:distortion | dagger ego:distortion
-MARKER: L = lua:MonPropsMarker:new { description= \ 
+MARKER: L = lua:MonPropsMarker:new { description= \
                "An insane follower of Lugonu. Years of living in the abyss have clearly " ..\
                "taken their toll on this one's feeble mind.", \
                quote='"And when you look long into an abyss, the abyss also looks into you."\n \
                \ \ \ -Friedrich Nietzche, "Beyond Good and Evil", 1886' }
 MAP
 ''''' ''''' '''''
-'bbb'''bbb'''bbb' 
-'bAbbbbbAbbbbbAb' 
+'bbb'''bbb'''bbb'
+'bAbbbbbAbbbbbAb'
 'bblblblblblblbb''
 'Gb...........bbb'
 @'+.....L._b..+Ob'
 'Gb...........bbb'
 'bblblblblblblbb''
-'bAbbbbbAbbbbbAb' 
-'bbb'''bbb'''bbb' 
+'bAbbbbbAbbbbbAb'
+'bbb'''bbb'''bbb'
 ''''' ''''' '''''
 ENDMAP
 
@@ -217,7 +217,7 @@ SUBST:  ' = .
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
             spells:smiting;blink_other;invisibility;malign_gateway;blink priest_spells ; \
             robe . quarterstaff ego:distortion | dagger ego:distortion
-MARKER: L = lua:MonPropsMarker:new { description= \ 
+MARKER: L = lua:MonPropsMarker:new { description= \
                "An insane follower of Lugonu. Years of living in the abyss have clearly " ..\
                "taken their toll on this one's feeble mind.", \
                quote='"And when you look long into an abyss, the abyss also looks into you."\n \
@@ -249,7 +249,7 @@ MARKER: ! = lua:fog_machine { \
 SUBST:  ! = ., X = x., x = xc
 MONS:   megabat, chaos spawn, dragon / ice dragon
 MONS:   ogre mage, hill giant
-MAP      
+MAP
  cccX X X
 cc.ccX X X
 c.O2cxx X X
@@ -318,17 +318,17 @@ MONS:   ettin ; giant spiked club ego:distortion | giant club ego:distortion . \
 SUBST:  x = xxxcccn, . = ...W
 NSUBST: 1 = 4:1 / *:0
 MAP
-    xxx.xx  
- xxxx.xx.xx 
+    xxx.xx
+ xxxx.xx.xx
  x1x.x1xx.xx
  xx.xxx.xx.x
 xx.xx1x.x1xx
 x.xx1O.xx.xx
 xx.xx.xx.xxx
  xx.xxxxx1xx
- x1x.x1x.xx 
- xxxx.x.xx  
-    xxxxx   
+ x1x.x1x.xx
+ xxxx.x.xx
+    xxxxx
 ENDMAP
 
 NAME:  evilmike_abyss_rune_curve
@@ -342,7 +342,7 @@ xxxxxXXXX
 .......xxxXX
 ..Y......xxXX
 .......1..xxx
-....Y...x.1Ox  
+....Y...x.1Ox
 .......1..xxx
 ..Y......xxXX
 .......xxxXX
@@ -366,7 +366,7 @@ MAP
 .cccccGcc3ccGcc....cc..
 ........ccc...cccccc...
 .......................
-ENDMAP    
+ENDMAP
 
 
 ###############################################################################
@@ -615,7 +615,7 @@ XxxxxxxxX
 XXXxxxXXX
 ENDMAP
 
-# Orange crystal and silver statue are very rare here... 
+# Orange crystal and silver statue are very rare here...
 # I want most characters to be able to actually use this exit
 NAME:  evilmike_abyss_exit_13
 TAGS:  abyss_exit allow_dup
