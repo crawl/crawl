@@ -953,7 +953,7 @@ void monster_info::to_string(int count, std::string& desc,
         }
         else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
                 || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
-                || !mname.empty() || !fullname)
+                || !fullname)
         {
             out << pluralise(mons_type_name(type, DESC_PLAIN));
         }
