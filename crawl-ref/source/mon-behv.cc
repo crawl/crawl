@@ -591,8 +591,8 @@ void handle_behaviour(monster* mon)
                 // If monster is currently getting into firing position and
                 // see the player and can attack him, clear firing_pos.
                 if (!mon->firing_pos.zero()
-                    && mons_has_los_ability(mon->type)
-                       || mon->see_cell_no_trans(mon->target))
+                    && (mons_has_los_ability(mon->type)
+                        || mon->see_cell_no_trans(mon->target)))
                 {
                     mon->firing_pos.reset();
                 }
