@@ -1,14 +1,8 @@
-Date: Thu, 24 Sep 2009 14:36:41 +0530
-From: Darshan Shaligram <scintilla@gmail.com>
-To: crawl-ref-discuss@lists.sourceforge.net
-Subject: [Crawl-ref-discuss] git quickstart
-
-This is for those who haven't used git before and need a
-crash-course on basic operations. I'll keep this as simple as
-possible, and focus specifically on crawl-ref, rather than git in
-general. I've also added links to the official git docs at the end,
-which you can read instead of, or in addition to this, if you're
-inclined.
+This is for those who haven't used git before and need a crash-course
+on basic operations. I'll keep this as simple as possible, and focus
+specifically on working on Stone Soup, rather than git in general.
+I've also added links to the official git docs at the end, which you
+can read instead of, or in addition to this, if you're inclined.
 
 Installing git
 --------------
@@ -26,8 +20,8 @@ Windows: Install msysgit (http://code.google.com/p/msysgit/).
 TortoiseGit is apparently pretty usable now for those who want
 Windows explorer integration, but I have not used it myself.
 
-Using git for crawl-ref
------------------------
+Using git for crawl
+-------------------
 
 0. Basic git settings:
 
@@ -37,12 +31,11 @@ Using git for crawl-ref
    Set your email address:
    $ git config --global user.email "jdoe@users.sourceforge.net"
 
-   This assumes that you're using git only for crawl-ref on gitorious,
-   and you don't mind making your gitorious id your default email id
-   for all git work. If you're already using git for other things, you
-   don't need this crash-course anyway. :P
+   This sets your default e-mail id for all git work on your system. You
+   can use any e-mail address you have. In the above, John Doe is still
+   using his old sourceforge id as a spam-catching measure.
 
-1. Clone the crawl-ref repository (analogous to svn checkout):
+1. Clone the crawl repository from gitorious (analogous to svn checkout):
 
    $ git clone git@gitorious.org:crawl/crawl.git
 
@@ -79,7 +72,7 @@ Using git for crawl-ref
 
    You can accept all the default options and use an empty passphrase
    for convenience (don't do this on an account you share with other
-   people, or they can commit to crawl-ref too :P)
+   people, or they can commit to the repository too :P)
 
    Once the key is generated, you'll have two files id_rsa, and
    id_rsa.pub in your ~/.ssh (the .ssh directory in your home
@@ -136,9 +129,9 @@ Using git for crawl-ref
 4. Committing a change to the 'master' branch:
 
    git's master branch is the equivalent of svn trunk. Immediately
-   after cloning a repository, the cloned crawl-ref repo will be on
-   the master branch. You can check what branch you're working on at
-   any time with:
+   after cloning a repository, the cloned crawl repo will be on the
+   master branch. You can check what branch you're working on at any
+   time with:
 
    $ git branch
 
@@ -327,7 +320,14 @@ from origin.
    corresponding branches on gitorious. This is important to
    remember; if you had local commits on master, they would also be
    pushed to gitorious. This behaviour can be changed (the option
-   is called "push.default") if it bothers you.
+   is called "push.default") if it bothers you, or you can do:
+
+   git push <remote> <local branch>:<remote branch>
+
+   So for instance, if I am working on 'master' locally, but want to push
+   to a remote branch called 'fixes-for-upstream', I could do:
+
+   git push github master:fixes-for-upstream
 
    Once you're done working on 0.5, you can switch back to "master"
    with:
@@ -482,45 +482,3 @@ http://www.kernel.org/pub/software/scm/git/docs/gittutorial.html
 
 Another crash course for svn users:
 http://git-scm.org/course/svn.html
-
-------------------------------------------------------------------------------
-From: Steven Noonan <steven@uplinklabs.net>
-To: crawl-ref-discuss@lists.sourceforge.net
-Subject: Re: [Crawl-ref-discuss] git quickstart
-
-On Thu, Sep 24, 2009 at 2:06 AM, Darshan Shaligram <scintilla@gmail.com> wr=
-ote:
-> =A0 Right, we're ready to push our fix to SF. But now that we have
-> =A0 multiple local branches, let's first ask git what it plans to do
-> =A0 when we push:
->
-> =A0 $ git push --dry-run -v
-> =A0 Pushing to ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/cra=
-wl-ref/crawl-ref
-> =A0 To ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/c=
-rawl-ref
-> =A0 =A0=3D [up to date] =A0 =A0 =A0master -> master
-> =A0 =A0 =A0b05bb66..976e722 =A0stone_soup-0.5 -> stone_soup-0.5
->
-> =A0 So git wants to push the local master and stone_soup-0.5 branches
-> =A0 to the corresponding branches on SF; the master branch has no new
-> =A0 local changes, whereas the 0.5 branch does (the new change is
-> =A0 976e722).
->
-> =A0 By default, git-push will push *all* your local branches to the
-> =A0 corresponding branches on Sourceforge. This is important to
-> =A0 remember; if you had local commits on master, they would also be
-> =A0 pushed to SF. This behaviour can be changed (the option is called
-> =A0 "push.default") if it bothers you.
->
-
-There's another way of specifying where to push:
-
-git push <remote> <local branch>:<remote branch>
-
-So for instance, if I am working on 'master' locally, but want to push
-to a remote branch called 'fixes-for-upstream', I could do:
-
-git push github master:fixes-for-upstream
-
-- Steven
