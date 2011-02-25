@@ -245,7 +245,7 @@ could be used in conjunction with
 To prevent a variable from being changed you can make it a constant:
     constant = useless
 
-This is usefull if you wish to prevent an included file from altering
+This is useful if you wish to prevent an included file from altering
 a variable.
 
 See settings/standard_colours.txt and settings/food_colouring.txt
