@@ -388,7 +388,7 @@ bool feat_is_secret_door(dungeon_feature_type feat)
 
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
 {
-    return (feat >= DNGN_ORCISH_IDOL && feat <= DNGN_STATUE_RESERVED);
+    return (feat >= DNGN_ORCISH_IDOL && feat <= DNGN_GRANITE_STATUE);
 }
 
 bool feat_is_rock(dungeon_feature_type feat)
@@ -1576,8 +1576,10 @@ const char *dngn_feature_names[] =
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
 "open_sea", "tree", "orcish_idol", "swamp_tree", "", "",
-"granite_statue", "statue_reserved_1", "statue_reserved_2",
-"", "", "", "", "", "", "", "",
+"granite_statue", "", "", "", "", "", "", "", "", "",
+#if TAG_MAJOR_VERSION == 32
+"",
+#endif
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
 "deep_water", "", "", "shallow_water", "water_stuck", "floor",
