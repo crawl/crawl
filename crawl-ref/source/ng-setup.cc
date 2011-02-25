@@ -753,7 +753,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(1, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
 
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MINOR_MAGIC_I);
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MINOR_MAGIC);
 
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_STEALTH]        = 2;

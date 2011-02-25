@@ -4942,7 +4942,7 @@ item_spec item_list::parse_single_spec(std::string s)
 
         result.base_type = OBJ_BOOKS;
         // This is changed in make_book_theme_randart.
-        result.sub_type = BOOK_MINOR_MAGIC_I;
+        result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
         return (result);

@@ -356,7 +356,7 @@ enum beam_type                  // beam[].flavour
 
 enum book_type
 {
-    BOOK_MINOR_MAGIC_I,
+    BOOK_MINOR_MAGIC,
 #if TAG_MAJOR_VERSION == 32
     BOOK_MINOR_MAGIC_II,
     BOOK_MINOR_MAGIC_III,

@@ -241,7 +241,7 @@ int book_rarity(uint8_t which_book)
 {
     switch (which_book)
     {
-    case BOOK_MINOR_MAGIC_I:
+    case BOOK_MINOR_MAGIC:
     case BOOK_HINDERANCE:
     case BOOK_CANTRIPS: //jmf: added 04jan2000
         return 1;
