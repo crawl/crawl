@@ -98,7 +98,7 @@ A: If you've got trouble even reaching the Temple, you might want to try a game 
 
 Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
 
-For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stonesoup forum (https://crawl.develz.org/tavern/) or on the rec.games.roguelike.misc group, so other players can comment on your equipment, skills or spell selection.
+For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/) or on the rec.games.roguelike.misc group, so other players can comment on your equipment, skills or spell selection.
 
 Please try to trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list). If you're playing online on one of the public servers, you can join the ##crawl channel of the freenode IRC, where you will find helpful souls who will even watch you and give hints.
 %%%%
@@ -256,7 +256,7 @@ A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org, y
 
 Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an explanation about how to play online.
 
-You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Stonesoup forum (https://crawl.develz.org/tavern/), or in one of the other forums linked on the website.
+You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Stone Soup forum (https://crawl.develz.org/tavern/), or in one of the other forums linked on the website.
 %%%%
 ##############################################
 # Questions about the development process.
@@ -267,7 +267,7 @@ When will development reach the "stable" version 1.0?
 %%%%
 A:version
 
-A: Actually, by now we consider Stonesoup to be reasonably stable for a game of such active development, so please don't get hung up about the 0.X versioning and give it a try.
+A: Actually, by now we consider Stone Soup to be reasonably stable for a game of such active development, so please don't get hung up about the 0.X versioning and give it a try.
 
 We've mostly kept the versioning for historic reasons and because it might cause undue confusion. We might decide to change that at some point, but maybe we won't.
 %%%%
