@@ -278,6 +278,14 @@ bool check_moveto(const coord_def& p, const std::string &move_verb)
             && _check_moveto_trap(p, move_verb));
 }
 
+static void _splash()
+{
+    if (you.can_swim())
+        noisy(4, you.pos(), "Floosh!");
+    else if (!beogh_water_walk())
+        noisy(8, you.pos(), "Splash!");
+}
+
 void moveto_location_effects(dungeon_feature_type old_feat,
                              bool stepped, bool allow_shift,
                              const coord_def& old_pos)
@@ -311,12 +319,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
 
         if (feat_is_water(new_grid) && !stepped)
-        {
-            if (you.can_swim())
-                noisy(4, you.pos(), "Floosh!");
-            else if (!beogh_water_walk())
-                noisy(8, you.pos(), "Splash!");
-        }
+            _splash();
 
         if (feat_is_water(new_grid) && !you.can_swim() && !beogh_water_walk())
         {
@@ -351,6 +354,12 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
         }
     }
+    else if (feat_is_water(new_grid) && you.is_wall_clinging()
+             && !cell_is_clingable(you.pos()))
+    {
+        _splash();
+    }
+
 
     // Icy shield goes down over lava.
     if (new_grid == DNGN_LAVA)
