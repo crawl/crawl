@@ -811,7 +811,7 @@ bool drain_exp(bool announce_full)
 
     unsigned int total_exp = exp_needed(you.experience_level + 1)
                                   - exp_needed(you.experience_level);
-    unsigned int exp_drained = (total_exp * (10 + random2(11))) / 100;
+    unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
     unsigned int pool_drained = std::min(exp_drained,
                                      (unsigned int)you.exp_available);
 
