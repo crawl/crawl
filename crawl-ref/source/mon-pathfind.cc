@@ -56,7 +56,9 @@ int mons_tracking_range(const monster* mon)
 
     if (range)
     {
-        if (mons_is_native_in_branch(mon))
+        if (mon->can_cling_to_walls())
+            range += 4;
+        else if (mons_is_native_in_branch(mon))
             range += 3;
         else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
             range++;
