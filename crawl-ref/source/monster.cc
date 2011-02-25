@@ -2972,6 +2972,13 @@ bool monster::heal(int amount, bool max_too)
         hit_points = max_hit_points;
     }
 
+    if (hit_points == max_hit_points)
+    {
+        // Clear the damage blame if it goes away completely.
+        damage_friendly = 0;
+        damage_total = 0;
+    }
+
     return (success);
 }
 
