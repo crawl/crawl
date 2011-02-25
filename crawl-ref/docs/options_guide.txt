@@ -104,7 +104,7 @@ The contents of this text are:
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
                 tile_show_minihealthbar, tile_show_minimagicbar,
                 tile_show_demon_tier, tile_layout_priority,
-		tile_force_regenerate_levels
+                tile_force_regenerate_levels
 5-  Character Dump.
 5-a     Items and Kills.
                 kill_map, dump_kill_places, dump_item_origins,
@@ -1839,7 +1839,7 @@ tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
 
 tile_force_regenerate_levels = false
 
-	If set to true, this will cause the tiles information of existing
+        If set to true, this will cause the tiles information of existing
         levels to be regenerated when loading the level, thus repairing
         save files where this information has become corrupted.
 

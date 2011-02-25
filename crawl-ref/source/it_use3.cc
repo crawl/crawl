@@ -308,7 +308,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
     // Note: This assumes that the Vestibule has not been changed.
     bool rc = false;
 
-    if (silenced(you.pos())) 
+    if (silenced(you.pos()))
     {
         mpr("You can't produce a sound!");
         return false;

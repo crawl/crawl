@@ -620,8 +620,8 @@ ITEM:     (list of items, separated by comma)
           * "numspells:number" maximum number of spells to include in the book.
             A book may contain at most 8 spells.
           * "owner:name" will be used to make the title include the apostrophised
-            owner (or author) of the book if provided. For example, "owner:Roxanne" 
-            may create "Roxanne's Treatise on Mountains". You can use the keyword 
+            owner (or author) of the book if provided. For example, "owner:Roxanne"
+            may create "Roxanne's Treatise on Mountains". You can use the keyword
             "player" (i.e. "owner:player") to use the player's name instead.
 
           In addition, themed books allow the use of the following tags:
@@ -1267,7 +1267,7 @@ KPROP:    x = bloody
              you back!".
           * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
              in one flag, and disallows both random and controlled teleports.
-             Use this for vaults with loot where the player is not supposed to 
+             Use this for vaults with loot where the player is not supposed to
              get it by teleporting alone.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
