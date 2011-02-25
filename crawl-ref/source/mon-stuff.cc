@@ -770,29 +770,22 @@ static int _calc_player_experience(monster* mons, killer_type killer,
                     // or if you've only killed one of two shedu.
     }
 
-    if (mons->damage_total)
+    if (!mons->damage_total)
     {
-        dprf("Damage ratio: %1.1f/%d (%d%%)",
-             0.5 * mons->damage_friendly, mons->damage_total,
-             50 * mons->damage_friendly / mons->damage_total);
-        experience = (experience * mons->damage_friendly / mons->damage_total
-                      + 1) / 2;
-        // All deaths of hostiles grant at least 50% XP in ZotDef.
-        if (crawl_state.game_is_zotdef() && experience < half_xp)
-            experience = half_xp;
+        mprf(MSGCH_WARN, "Error, exp for monster with no damage: %s",
+             mons->name(DESC_PLAIN, true).c_str());
+        return 0;
     }
-    else
-    {
-        // We need to eradicate all such cases, as they lead to incorrect
-        // calculation if the monster took some damage beforehand.
-        dprf("Granting xp for non-damage kill.");
-        if (YOU_KILL(killer))
-            ;
-        else if (pet_kill)
-            experience = half_xp;
-        else
-            experience = 0;
-    }
+
+    dprf("Damage ratio: %1.1f/%d (%d%%)",
+         0.5 * mons->damage_friendly, mons->damage_total,
+         50 * mons->damage_friendly / mons->damage_total);
+    experience = (experience * mons->damage_friendly / mons->damage_total
+                  + 1) / 2;
+
+    // All deaths of hostiles grant at least 50% XP in ZotDef.
+    if (crawl_state.game_is_zotdef() && experience < half_xp)
+        experience = half_xp;
 
     // Note: This doesn't happen currently since monsters with
     //       MF_GOT_HALF_XP have always gone through pacification,
@@ -2335,6 +2328,19 @@ int monster_die(monster* mons, killer_type killer,
             mons->foe = MHITYOU;
         else if (!invalid_monster_index(killer_index))
             mons->foe = killer_index;
+    }
+
+    // Make sure that the monster looks dead.
+    if (mons->alive() && !in_transit && (!summoned || duration > 0))
+    {
+        dprf("Granting xp for non-damage kill.");
+        if (YOU_KILL(killer))
+            mons->damage_friendly += mons->hit_points * 2;
+        else if (pet_kill)
+            mons->damage_friendly += mons->hit_points;
+        mons->damage_total += mons->hit_points;
+
+        mons->hit_points = -1;
     }
 
     if (!silent && !wizard && you.see_cell(mons->pos()))
