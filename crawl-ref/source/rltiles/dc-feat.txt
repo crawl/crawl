@@ -54,24 +54,33 @@ dngn_stone_arch DNGN_STONE_ARCH
 
 %sdir dc-dngn/statues
 dngn_orcish_idol DNGN_ORCISH_IDOL
-%weight 20
-dngn_granite_statue DNGN_GRANITE_STATUE
+# dungeon statues
 %weight 5
-dngn_statue_dwarf_axe
+dngn_statue_dwarf_axe DNGN_GRANITE_STATUE
 %weight 3
 dngn_statue_dwarf_mace
 %weight 2
 dngn_statue_dwarf_sword
-%weight 8
+%weight 5
 dngn_statue_centaur
 %syn DNGN_STATUE_CENTAUR
+%weight 3
+dngn_statue_centaur2
+%weight 8
+dngn_statue_mermaid
+%syn DNGN_STATUE_MERMAID
+dngn_statue_naga
+%syn DNGN_STATUE_NAGA
 dngn_statue_dragon
 %syn DNGN_STATUE_DRAGON
+dngn_statue_head
 dngn_statue_eye
 %weight 5
 dngn_statue_snail
 dngn_statue_troll
 %syn DNGN_STATUE_TROLL
+dngn_statue_cat
+%syn DNGN_STATUE_CAT
 %weight 3
 dngn_statue_skull
 %syn DNGN_STATUE_SKULL
@@ -80,6 +89,7 @@ dngn_statue_elephant
 %weight 1
 dngn_statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
+# damaged statues
 dngn_crumbled_column DNGN_CRUMBLED_COLUMN
 dngn_granite_stump DNGN_GRANITE_STUMP
 

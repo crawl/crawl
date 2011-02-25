@@ -382,7 +382,17 @@ tileidx_t tileidx_player()
         case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
         // non-animals
         case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
-        case TRAN_STATUE:    ch = TILEP_TRAN_STATUE;    break;
+        case TRAN_STATUE:
+        {
+            switch (you.species)
+            {
+            case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
+            case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
+            case SP_CAT:     ch = TILEP_TRAN_STATUE_FELID;    break;
+            default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
+            }
+            break;
+        }
         case TRAN_DRAGON:    ch = TILEP_TRAN_DRAGON;    break;
         case TRAN_LICH:
         {

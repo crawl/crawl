@@ -56,7 +56,7 @@ static bool _in_water(const packed_cell &cell)
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
-static void _lichform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
+static void _transform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
                                  bool in_water)
 {
     const int item = you.equip[EQ_WEAPON];
@@ -93,9 +93,11 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
         if (fg_idx >= TILEP_TRAN_LICH_EQUIP_FIRST
-            && fg_idx <= TILEP_TRAN_LICH_EQUIP_LAST)
+                && fg_idx <= TILEP_TRAN_LICH_EQUIP_LAST
+            || fg_idx >= TILEP_TRAN_STATUE_EQUIP_FIRST
+                && fg_idx <= TILEP_TRAN_STATUE_EQUIP_LAST)
         {
-            _lichform_add_weapon(m_buf_doll, x, y, in_water);
+            _transform_add_weapon(m_buf_doll, x, y, in_water);
         }
     }
 
