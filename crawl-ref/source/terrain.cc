@@ -1576,10 +1576,7 @@ const char *dngn_feature_names[] =
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
 "open_sea", "tree", "orcish_idol", "swamp_tree", "", "",
-"granite_statue", "", "", "", "", "", "", "", "", "",
-#if TAG_MAJOR_VERSION == 32
-"",
-#endif
+"granite_statue", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
 "deep_water", "", "", "shallow_water", "water_stuck", "floor",
