@@ -804,6 +804,7 @@ int player_evokable_invis();
 int player_spell_levels(void);
 
 int player_sust_abil(bool calc_unid = true);
+int player_warding(bool calc_unid = true);
 
 int player_teleport(bool calc_unid = true);
 

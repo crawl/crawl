@@ -1262,7 +1262,7 @@ This staff provides a reservoir of magical power to its wielder.
 %%%%
 staff of summoning
 
-This staff increases the power of summonings cast by its wielder.
+This staff increases the power of summonings cast by its wielder, and wards him or her from the attacks of summoned creatures. If the wielder is skilled in evocations, they can attempt to dismiss summoned creatures that they strike.
 %%%%
 staff of wizardry
 
