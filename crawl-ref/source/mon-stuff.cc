@@ -2331,7 +2331,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Make sure that the monster looks dead.
-    if (mons->alive() && !in_transit && (!summoned || duration > 0))
+    if (mons->alive() && (!summoned || duration > 0))
     {
         dprf("Granting xp for non-damage kill.");
         if (YOU_KILL(killer))
@@ -2340,7 +2340,8 @@ int monster_die(monster* mons, killer_type killer,
             mons->damage_friendly += mons->hit_points;
         mons->damage_total += mons->hit_points;
 
-        mons->hit_points = -1;
+        if (!in_transit) // banishment only
+            mons->hit_points = -1;
     }
 
     if (!silent && !wizard && you.see_cell(mons->pos()))
