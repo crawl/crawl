@@ -1375,7 +1375,6 @@ void tso_divine_shield()
     if (!you.duration[DUR_DIVINE_SHIELD])
     {
         if (you.shield()
-            || you.duration[DUR_FIRE_SHIELD]
             || you.duration[DUR_CONDENSATION_SHIELD])
         {
             mprf("Your shield is strengthened by %s's divine power.",
