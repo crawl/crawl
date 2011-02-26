@@ -1234,7 +1234,7 @@ This staff increases the power of conjurations cast by its wielder.
 %%%%
 staff of death
 
-This staff increases the power of necromantic spells cast by its wielder. If the wielder is skilled in both evocations and necromancy, they can inflict great pain on those living souls they strike.
+This staff increases the power of necromantic spells cast by its wielder, and protects him or her from negative energy. If the wielder is skilled in both evocations and necromancy, they can inflict great pain on those living souls they strike.
 %%%%
 staff of earth
 

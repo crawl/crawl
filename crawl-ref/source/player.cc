@@ -1939,6 +1939,8 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         // Che bonus
         pl += che_boost(CB_RNEG);
+
+        pl += player_equip(EQ_STAFF, STAFF_DEATH, calc_unid);
     }
 
     // undead/demonic power
