@@ -321,7 +321,7 @@ static bool _jewel_auto_id(const item_def& item)
 
     // Yay, such lists tend to get out of sync very fast...
     // Fortunately, this one doesn't have to be too accurate.
-    switch(item.sub_type)
+    switch (item.sub_type)
     {
     case RING_REGENERATION:
         return (player_mutation_level(MUT_SLOW_HEALING) < 3);
@@ -336,8 +336,8 @@ static bool _jewel_auto_id(const item_def& item)
     case RING_WIZARDRY:
         return !!player_spell_skills();
     case AMU_THE_GOURMAND:
-        return (player_mutation_level(MUT_HERBIVOROUS) < 3
-                && you.species != SP_MUMMY);
+        return (you.species != SP_MUMMY
+                && player_mutation_level(MUT_HERBIVOROUS) < 3);
     case RING_INVISIBILITY:
     case RING_TELEPORTATION:
     case RING_MAGICAL_POWER:
@@ -432,7 +432,7 @@ void ash_id_inventory()
 
 static bool is_ash_portal(dungeon_feature_type feat)
 {
-    switch(feat)
+    switch (feat)
     {
     case DNGN_ENTER_HELL:
     case DNGN_ENTER_LABYRINTH:
