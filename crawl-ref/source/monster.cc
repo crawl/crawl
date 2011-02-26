@@ -170,6 +170,8 @@ void monster::init_with(const monster& mon)
     foe_memory        = mon.foe_memory;
     god               = mon.god;
     props             = mon.props;
+    damage_friendly   = mon.damage_friendly;
+    damage_total      = mon.damage_total;
 
     if (mon.ghost.get())
         ghost.reset(new ghost_demon(*mon.ghost));
