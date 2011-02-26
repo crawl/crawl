@@ -335,6 +335,9 @@ static bool _jewel_auto_id(const item_def& item)
         return (you.religion != GOD_NO_GOD);
     case RING_WIZARDRY:
         return !!player_spell_skills();
+    case AMU_THE_GOURMAND:
+        return (player_mutation_level(MUT_HERBIVOROUS) < 3
+                && you.species != SP_MUMMY);
     case RING_INVISIBILITY:
     case RING_TELEPORTATION:
     case RING_MAGICAL_POWER:

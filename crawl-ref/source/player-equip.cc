@@ -1269,6 +1269,13 @@ static void _equip_jewellery_effect(item_def &item)
     case AMU_THE_GOURMAND:
         // What's this supposed to achieve? (jpeg)
         you.duration[DUR_GOURMAND] = 0;
+
+        if (you.species != SP_MUMMY
+            && player_mutation_level(MUT_HERBIVOROUS) < 3)
+        {
+            mpr("You feel a craving for the dungeon's cuisine.");
+            ident = ID_KNOWN_TYPE;
+        }
         break;
 
     case AMU_CONTROLLED_FLIGHT:
