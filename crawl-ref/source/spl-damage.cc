@@ -1416,7 +1416,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     beam.aux_source.clear();
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
-    beam.damage = dice_def(0, 5 + pow / 10);
+    beam.damage = dice_def(0, 5 + pow / 5);
 
     const dungeon_feature_type grid = grd(spd.target);
 
