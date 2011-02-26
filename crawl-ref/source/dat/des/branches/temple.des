@@ -1223,7 +1223,7 @@ tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 # 8 gods
-NAME:    minmay_temple_alley_garden
+NAME:    jpeg_temple_alley_garden
 PLACE:   Temple
 TAGS:    no_rotate
 WEIGHT:  5
@@ -1265,7 +1265,7 @@ tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 # 12 gods
-NAME:    minmay_temple_clearing_a
+NAME:    jpeg_temple_clearing_a
 WEIGHT:  2
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1306,7 +1306,7 @@ ttttttt'tt.....tt""ttt""tt.....tt'ttttttt
 ENDMAP
 
 # 9 gods
-NAME:    minmay_temple_clearing_b
+NAME:    jpeg_temple_clearing_b
 WEIGHT:  2
 PLACE:   Temple
 TAGS:    no_rotate
