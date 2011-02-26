@@ -2520,6 +2520,17 @@ int player_sust_abil(bool calc_unid)
     return (sa);
 }
 
+int player_warding(bool calc_unid)
+{
+    int ward = 0;
+
+    ward += player_equip(EQ_AMULET, AMU_WARDING, calc_unid);
+
+    ward += player_equip(EQ_STAFF, STAFF_SUMMONING, calc_unid);
+
+    return (ward);
+}
+
 int carrying_capacity(burden_state_type bs)
 {
     // Yuck.  We need this for gameplay - it nerfs small forms too much
@@ -5678,10 +5689,7 @@ int calc_hunger(int food_cost)
 
 int player::warding() const
 {
-    if (wearing_amulet(AMU_WARDING))
-        return (30);
-
-    return (0);
+    return (30 * player_warding());
 }
 
 bool player::paralysed() const

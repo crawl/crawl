@@ -1695,7 +1695,7 @@ static std::vector<formatted_string> _get_overview_resistances(
 
 
     const int rinvi = you.can_see_invisible(calc_unid);
-    const int rward = wearing_amulet(AMU_WARDING, calc_unid);
+    const int rward = player_warding(calc_unid);
     const int rcons = player_item_conserve(calc_unid);
     const int rcorr = player_res_corr(calc_unid);
     const int rclar = player_mental_clarity(calc_unid);
@@ -1709,7 +1709,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSpirit.Shd : %s\n"
              ,
              _determine_colour_string(rinvi, 1), _itosym1(rinvi),
-             _determine_colour_string(rward, 1), _itosym1(rward),
+             _determine_colour_string(rward, 2), _itosym2(rward),
              _determine_colour_string(rcons, 1), _itosym1(rcons),
              _determine_colour_string(rcorr, 1), _itosym1(rcorr),
              _determine_colour_string(rclar, 1), _itosym1(rclar),
