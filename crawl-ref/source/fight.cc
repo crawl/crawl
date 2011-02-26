@@ -4372,7 +4372,7 @@ bool melee_attack::mons_self_destructs()
         || attacker->type == MONS_BALL_LIGHTNING
         || attacker->type == MONS_ORB_OF_DESTRUCTION)
     {
-        attacker->as_monster()->hit_points = -1;
+        attacker->as_monster()->suicide();
         // Do the explosion right now.
         monster_die(attacker->as_monster(), KILL_MON, attacker->mindex());
         return (true);
@@ -5013,7 +5013,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_FIRE:
         if (attacker->type == MONS_FIRE_VORTEX)
-            attacker->as_monster()->hit_points = -10;
+            attacker->as_monster()->suicide(-10);
 
         special_damage =
             resist_adjust_damage(defender,
@@ -5155,7 +5155,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                 break;
 
             if (--(attacker->as_monster()->hit_dice) <= 0)
-                attacker->as_monster()->hit_points = -1;
+                attacker->as_monster()->suicide();
 
             if (defender_visible)
             {

@@ -1693,7 +1693,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         if (mons->type == MONS_BALL_LIGHTNING)
-            mons->hit_points = -1;
+            mons->suicide();
 
         // FINALLY! determine primary spell effects {dlb}:
         if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)

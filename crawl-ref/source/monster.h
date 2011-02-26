@@ -415,10 +415,12 @@ public:
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
     bool heal(int amount, bool max_too = false);
+    void blame_damage(const actor *attacker, int amount);
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool abyss_shift = false,
                   bool wizard_tele = false);
+    void suicide(int hp = -1);
 
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);

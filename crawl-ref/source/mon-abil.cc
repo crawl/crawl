@@ -2277,7 +2277,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->attitude == ATT_HOSTILE
             && distance(you.pos(), mons->pos()) <= 5)
         {
-            mons->hit_points = -1;
+            mons->suicide();
             used = true;
             break;
         }
@@ -2290,7 +2290,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
             if (mons->can_see(*targ) && !feat_is_solid(grd(targ->pos())))
             {
-                mons->hit_points = -1;
+                mons->suicide();
                 used = true;
                 break;
             }
