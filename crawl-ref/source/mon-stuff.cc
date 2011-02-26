@@ -2490,8 +2490,11 @@ int monster_die(monster* mons, killer_type killer,
         monster_exp = _calc_monster_experience(mons, killer, killer_index);
     }
 
-    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena() && !unsummoned && !timeout)
+    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena()
+        && !unsummoned && !timeout && !in_transit)
+    {
         you.kills->record_kill(mons, killer, pet_kill);
+    }
 
     if (fake)
     {
