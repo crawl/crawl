@@ -2982,6 +2982,21 @@ bool monster::heal(int amount, bool max_too)
     return (success);
 }
 
+void monster::blame_damage(const actor* attacker, int amount)
+{
+    damage_total = std::min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
+    if (attacker)
+        damage_friendly = std::min<int>(MAX_DAMAGE_COUNTER * 2,
+                      damage_friendly + amount * exp_rate(attacker->mindex()));
+}
+
+void monster::suicide(int hp)
+{
+    if (hit_points > 0)
+        blame_damage(NULL, hit_points);
+    hit_points = hp;
+}
+
 mon_holy_type monster::holiness() const
 {
     if (testbits(flags, MF_FAKE_UNDEAD))
@@ -3624,10 +3639,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
                              coord_def(0, 0), initial_damage);
 
-        damage_total = std::min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
-        if (agent)
-            damage_friendly = std::min<int>(MAX_DAMAGE_COUNTER * 2,
-                          damage_friendly + amount * exp_rate(agent->mindex()));
+        blame_damage(agent, amount);
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
@@ -5230,7 +5242,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SHORT_LIVED:
         // This should only be used for ball lightning -- bwr
         if (decay_enchantment(me))
-            hit_points = -1;
+            suicide();
         break;
 
     case ENCH_SLOWLY_DYING:
@@ -5255,16 +5267,12 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FADING_AWAY:
         // Summon a nasty!
         if (decay_enchantment(me))
-        {
             spirit_fades(this);
-        }
         break;
 
     case ENCH_PREPARING_RESURRECT:
         if (decay_enchantment(me))
-        {
             shedu_do_actual_resurrection(this);
-        }
         break;
 
     case ENCH_SPORE_PRODUCTION:
