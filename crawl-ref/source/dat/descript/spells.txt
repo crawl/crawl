@@ -153,7 +153,7 @@ This spell dims the light of the dungeon, reducing the range of vision. The area
 %%%%
 Death Channel
 
-This spell raises living creatures slain by the caster into a state of unliving slavery as spectral things. Note that spectral things can follow you beyond the level they were created on.
+This spell raises living creatures slain by the caster and his or her allies into a state of unliving slavery as spectral things.
 %%%%
 Death's Door
 

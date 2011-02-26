@@ -1531,7 +1531,7 @@ static void _make_spectral_thing(monster* mons, bool quiet)
         const int spectre =
             create_monster(
                 mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
-                    0, 0, mons->pos(), MHITYOU,
+                    6, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
                     0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
                     mons->type, mons->number));
 
@@ -2250,6 +2250,12 @@ int monster_die(monster* mons, killer_type killer,
                 {
                     // Randomly bless the follower who killed.
                     bless_follower(killer_mon);
+                }
+
+                if (you.duration[DUR_DEATH_CHANNEL]
+                    && gives_xp && was_visible)
+                {
+                    _make_spectral_thing(mons, !death_message);
                 }
             }
             break;
