@@ -1490,7 +1490,7 @@ struct spell_desc
     SPELL_DEATH_CHANNEL, "Death Channel",
      SPTYP_NECROMANCY,
      SPFLAG_HELPFUL,
-     8,
+     7,
      200,
      -1, -1,
      0,
