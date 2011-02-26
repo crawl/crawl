@@ -3754,7 +3754,8 @@ void melee_attack::player_apply_staff_damage()
         {
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
-            poison_monster(defender->as_monster(), &you);
+            defender->poison(attacker, 2, defender->has_lifeforce()
+                             && x_chance_in_y(you.skill(SK_POISON_MAGIC), 16));
         }
         break;
     }
