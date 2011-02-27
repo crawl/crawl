@@ -864,9 +864,9 @@ bat_form TRAN_BAT
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
 ice_form TRAN_ICE_BEAST
-statue_form TRAN_STATUE_HUMANOID
-statue_form_centaur TRAN_STATUE_CENTAUR
+statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
+statue_form_centaur TRAN_STATUE_CENTAUR
 statue_form_naga TRAN_STATUE_NAGA
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
