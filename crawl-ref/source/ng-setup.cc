@@ -155,11 +155,11 @@ static void _jobs_stat_init(job_type which_job)
 
     case JOB_CRUSADER:          s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
-    case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 1; break;
+    case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 2; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
     case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 2; break;
-    case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 12; mp = 1; break;
+    case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 13; mp = 2; break;
 
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
     case JOB_STALKER:           s =  2; i =  4; d =  6; hp = 12; mp = 1; break;
@@ -597,7 +597,7 @@ static void _give_items_skills(const newgame_def& ng)
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ROBE, 1, you.religion == GOD_XOM ? 2 : 0);
+                           ARM_ROBE, 1, 2);
 
         you.skills[SK_FIGHTING] = 4;
         you.skills[SK_ARMOUR]   = 1;
@@ -611,10 +611,10 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_DEATH_KNIGHT:
         you.religion = GOD_YREDELEMNUL;
-        you.piety = 28;
+        you.piety = 35;
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
-                          2, 2);
+                          1, 1);
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
@@ -657,12 +657,12 @@ static void _give_items_skills(const newgame_def& ng)
 
         you.equip[EQ_WEAPON] = -1;
 
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
         you.skills[SK_FIGHTING]       = 2;
-        you.skills[SK_DODGING]        = 1;
+        you.skills[SK_DODGING]        = 2;
         you.skills[SK_INVOCATIONS]    = 4;
         break;
 
