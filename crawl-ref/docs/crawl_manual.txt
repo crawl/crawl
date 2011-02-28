@@ -777,8 +777,8 @@ You can wear armour with the 'W' command, and take it off with the 'T'
 command. With '[' you can have a quick look at your current gear.
 
 Most armours can be improved by reading the appropriate scroll. Body
-armour can be enchanted up to the base value of AC it provides, bardings
-can go to +8, and shields can go to +3. Other gear is limited to +2.
+armour and bardings can be enchanted up to the base value of AC they
+provide. Shields can be enchanted up to +3. Other gear is limited to +2.
 
 % Food and Carrion
 ------------------

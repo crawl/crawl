@@ -1105,13 +1105,10 @@ int armour_max_enchant(const item_def &item)
     const int eq_slot = get_armour_slot(item);
 
     int max_plus = MAX_SEC_ENCHANT;
-    if (eq_slot == EQ_BODY_ARMOUR)
-        max_plus = property(item, PARM_AC);
-    else if (item.sub_type == ARM_CENTAUR_BARDING
+    if (eq_slot == EQ_BODY_ARMOUR
+        || item.sub_type == ARM_CENTAUR_BARDING
         || item.sub_type == ARM_NAGA_BARDING)
-    {
-        max_plus = MAX_ARM_ENCHANT;
-    }
+        max_plus = property(item, PARM_AC);
     else if (eq_slot == EQ_SHIELD)
         max_plus = 3;
 
