@@ -1637,8 +1637,8 @@ static std::vector<formatted_string> _get_overview_resistances(
 {
     char buf[1000];
 
-    // 3 columns, splits at columns 21, 38
-    column_composer cols(3, 21, 38);
+    // 3 columns, splits at columns 21, 39
+    column_composer cols(3, 21, 39);
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
