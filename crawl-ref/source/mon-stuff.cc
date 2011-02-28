@@ -2760,15 +2760,17 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     bool slimified = false;
     if (you.religion == GOD_JIYVA
-                 && (targetc == MONS_DEATH_OOZE
-                     || targetc == MONS_OOZE
-                     || targetc == MONS_JELLY
-                     || targetc == MONS_BROWN_OOZE
-                     || targetc == MONS_SLIME_CREATURE
-                     || targetc == MONS_GIANT_AMOEBA
-                     || targetc == MONS_ACID_BLOB
-                     || targetc == MONS_AZURE_JELLY))
+        && (targetc == MONS_DEATH_OOZE
+            || targetc == MONS_OOZE
+            || targetc == MONS_JELLY
+            || targetc == MONS_BROWN_OOZE
+            || targetc == MONS_SLIME_CREATURE
+            || targetc == MONS_GIANT_AMOEBA
+            || targetc == MONS_ACID_BLOB
+            || targetc == MONS_AZURE_JELLY))
+    {
         slimified = true;
+    }
 
     std::string new_name = "";
     if (mons->type == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
@@ -2822,7 +2824,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // the actual polymorphing:
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
-                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_MIMIC);
+                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_MIMIC
+                           | MF_SPELLCASTER);
 
     std::string name;
 
@@ -2854,7 +2857,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     const monster_type real_targetc =
         (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER)) ? MONS_GLOWING_SHAPESHIFTER :
         (mons->has_ench(ENCH_SHAPESHIFTER))         ? MONS_SHAPESHIFTER
-                                                       : targetc;
+                                                    : targetc;
 
     const god_type god =
         (player_will_anger_monster(real_targetc)
@@ -2884,7 +2887,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     mon_enchant charm     = mons->get_ench(ENCH_CHARM);
     mon_enchant temp_pacif= mons->get_ench(ENCH_TEMP_PACIF);
     mon_enchant shifter   = mons->get_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                              ENCH_SHAPESHIFTER);
+                                           ENCH_SHAPESHIFTER);
     mon_enchant sub       = mons->get_ench(ENCH_SUBMERGED);
     mon_enchant summon    = mons->get_ench(ENCH_SUMMON);
     mon_enchant tp        = mons->get_ench(ENCH_TP);
@@ -4630,7 +4633,7 @@ void forest_damage(const actor *mon)
 
 void debuff_monster(monster* mon)
 {
-        // List of magical enchantments which will be dispelled.
+    // List of magical enchantments which will be dispelled.
     const enchant_type lost_enchantments[] = {
         ENCH_SLOW,
         ENCH_HASTE,

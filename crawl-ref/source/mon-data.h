@@ -1799,7 +1799,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_LABORATORY_RAT, 'r', BLACK, "laboratory rat",
-    M_WARM_BLOOD | M_SPELLCASTER,
+    M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS,
     MR_NO_FLAGS,
     300, 10, MONS_RAT, MONS_LABORATORY_RAT, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
