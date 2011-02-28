@@ -3,7 +3,6 @@
 
 int allowed_deaths_door_hp(void);
 bool cast_deaths_door(int pow);
-void extension(int pow);
 void remove_ice_armour();
 void ice_armour(int pow, bool extending);
 void missile_prot(int pow);
