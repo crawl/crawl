@@ -51,6 +51,8 @@ bool cast_sublimation_of_blood(int pow)
         if (you.inv[wielded].base_type == OBJ_FOOD
             && you.inv[wielded].sub_type == FOOD_CHUNK)
         {
+            success = true;
+
             mpr("The chunk of flesh you are holding crumbles to dust.");
 
             mpr("A flood of magical energy pours into your mind!");
@@ -64,6 +66,8 @@ bool cast_sublimation_of_blood(int pow)
         }
         else if (is_blood_potion(you.inv[wielded]))
         {
+            success = true;
+
             mprf("The blood within %s froths and boils.",
                  you.inv[wielded].quantity > 1 ? "one of your flasks"
                                                : "the flask you are holding");
