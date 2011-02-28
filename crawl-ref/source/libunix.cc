@@ -466,6 +466,7 @@ int unixcurses_get_vi_key(int keyin)
     case KEY_SEND:   return 'B';
     case KEY_SLEFT:  return 'H';
     case KEY_SRIGHT: return 'L';
+    case KEY_BTAB:   return CK_SHIFT_TAB;
     }
     return keyin;
 }

@@ -1698,6 +1698,9 @@ void process_command(command_type cmd)
     case CMD_AUTOFIGHT:
         clua.callfn("hit_closest", 0, 0);
         break;
+    case CMD_AUTOFIGHT_NOMOVE:
+        clua.callfn("hit_adjacent", 0, 0);
+        break;
 #endif
     case CMD_REST:            _do_rest(); break;
 

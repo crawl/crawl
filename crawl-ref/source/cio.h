@@ -158,6 +158,7 @@ enum KEYS
 
     CK_PGUP,
     CK_PGDN,
+    CK_TAB_TILE, // unused
 
     CK_SHIFT_UP,
     CK_SHIFT_DOWN,
@@ -172,6 +173,7 @@ enum KEYS
 
     CK_SHIFT_PGUP,
     CK_SHIFT_PGDN,
+    CK_SHIFT_TAB,
 
     CK_CTRL_UP,
     CK_CTRL_DOWN,
@@ -186,6 +188,7 @@ enum KEYS
 
     CK_CTRL_PGUP,
     CK_CTRL_PGDN,
+    CK_CTRL_TAB,
 
     // Mouse codes.
     CK_MOUSE_MOVE  = 10001,
