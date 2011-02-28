@@ -2884,8 +2884,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     monster_spells spl    = mons->spells;
     const bool need_save_spells
             = (!name.empty()
-               && (!mons->can_use_spells()
-                   || mons->is_actual_spellcaster()));
+               && (!mons->can_use_spells() || mons->is_actual_spellcaster())
+               && targetc != MONS_PULSATING_LUMP);
 
     // deal with mons_sec
     mons->type         = targetc;
