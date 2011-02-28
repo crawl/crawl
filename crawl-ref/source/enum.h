@@ -653,6 +653,7 @@ enum command_type
 
 #ifdef CLUA_BINDINGS
     CMD_AUTOFIGHT,
+    CMD_AUTOFIGHT_NOMOVE,
 #endif
 
 #ifdef USE_TILE
