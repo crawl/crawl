@@ -586,27 +586,32 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         case GOD_ELYVILON:
         {
             const int value = item_value(item) / item.quantity;
+            const bool valuable_weapon =
+                _destroyed_valuable_weapon(value, item.base_type);
             const bool unholy_weapon = is_unholy_item(item);
             const bool evil_weapon = is_evil_item(item);
 
-            if (unholy_weapon || evil_weapon)
+            if (valuable_weapon || unholy_weapon || evil_weapon)
             {
-                relative_piety_gain = PIETY_SOME;
-                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
-
-                // Print this in addition to the above!
-                if (first)
+                if (unholy_weapon || evil_weapon)
                 {
-                    simple_god_message(make_stringf(
+                    const char *desc_weapon = evil_weapon ? "evil" : "unholy";
+
+                    // Print this in addition to the above!
+                    if (first)
+                    {
+                        simple_god_message(make_stringf(
                                  " welcomes the destruction of %s %s weapon%s.",
                                  item.quantity == 1 ? "this" : "these",
                                  desc_weapon,
                                  item.quantity == 1 ? ""     : "s").c_str(),
                                  GOD_ELYVILON);
+                    }
                 }
-            }
-            else if (_destroyed_valuable_weapon(value, item.base_type))
+
+                gain_piety(1);
                 relative_piety_gain = PIETY_SOME;
+            }
             break;
         }
 
