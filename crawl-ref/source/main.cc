@@ -1696,7 +1696,7 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
-        clua.callfn("hit_closest", 1, 1);
+        clua.callfn("hit_closest", 0, 0);
         break;
 #endif
     case CMD_REST:            _do_rest(); break;
