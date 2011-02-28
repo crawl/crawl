@@ -1199,7 +1199,7 @@ static void _append_non_item(std::string &desc, std::string key)
     }
     else
     {
-        desc += "\nOdd, this spell can't be found anywhere.  Please "
+        desc += "\nOdd, this spell can't be found anywhere. Please "
                 "file a bug report.";
     }
 
@@ -1212,7 +1212,7 @@ static void _append_non_item(std::string &desc, std::string key)
         if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER))
         {
             desc += "\n\nYou aren't in wizard mode, so you shouldn't be "
-                    "seeing this entry.  Please file a bug report.";
+                    "seeing this entry. Please file a bug report.";
         }
     }
 }
@@ -1708,7 +1708,7 @@ static void _find_description(bool *again, std::string *error_inout)
     {
         std::string footer = "This entry is an exact match for '";
         footer += regex;
-        footer += "'.  To see non-exact matches, press space.";
+        footer += "'. To see non-exact matches, press space.";
 
         _do_description(regex, type, footer);
         // FIXME: This results in an *additional* getchm(). We might have
