@@ -2754,16 +2754,12 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (can_see && MONST_INTERESTING(mons))
         need_note = true;
 
-    std::string new_name = "";
-    if (mons->type == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
-        str_polymon = " grows a second head";
-    else
-    {
-        if (mons->is_shapeshifter())
-            str_polymon = " changes into ";
-        else if (targetc == MONS_PULSATING_LUMP)
-            str_polymon = " degenerates into ";
-        else if (you.religion == GOD_JIYVA
+    bool degenerated = false;
+    if (targetc == MONS_PULSATING_LUMP)
+        degenerated = true;
+
+    bool slimified = false;
+    if (you.religion == GOD_JIYVA
                  && (targetc == MONS_DEATH_OOZE
                      || targetc == MONS_OOZE
                      || targetc == MONS_JELLY
@@ -2772,6 +2768,18 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                      || targetc == MONS_GIANT_AMOEBA
                      || targetc == MONS_ACID_BLOB
                      || targetc == MONS_AZURE_JELLY))
+        slimified = true;
+
+    std::string new_name = "";
+    if (mons->type == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
+        str_polymon = " grows a second head";
+    else
+    {
+        if (mons->is_shapeshifter())
+            str_polymon = " changes into ";
+        else if (degenerated)
+            str_polymon = " degenerates into ";
+        else if (slimified)
         {
             // Message used for the Slimify ability.
             str_polymon = " quivers uncontrollably and liquefies into ";
@@ -2885,7 +2893,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     const bool need_save_spells
             = (!name.empty()
                && (!mons->can_use_spells() || mons->is_actual_spellcaster())
-               && targetc != MONS_PULSATING_LUMP);
+               && !degenerated && !slimified);
 
     // deal with mons_sec
     mons->type         = targetc;
