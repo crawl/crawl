@@ -6146,7 +6146,7 @@ int monster::action_energy(energy_use_type et) const
     if (const monsterentry *me = find_monsterentry())
     {
         const mon_energy_usage &mu = me->energy_usage;
-        int move_cost;
+        int move_cost = 0;
         switch (et)
         {
         case EUT_MOVE:    move_cost = mu.move; break;
