@@ -1861,9 +1861,11 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     // other
+#if TAG_MAJOR_VERSION == 32
     case SPELL_EXTENSION:
-        extension(powc);
-        break;
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_BORGNJORS_REVIVIFICATION:
         cast_revivification(powc);

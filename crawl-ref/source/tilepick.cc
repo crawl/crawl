@@ -4278,7 +4278,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SEE_INVISIBLE:            return TILEG_SEE_INVISIBLE;
     case SPELL_PETRIFY:                  return TILEG_PETRIFY;
     case SPELL_CAUSE_FEAR:               return TILEG_CAUSE_FEAR;
+#if TAG_MAJOR_VERSION == 32
     case SPELL_EXTENSION:                return TILEG_EXTENSION;
+#endif
     case SPELL_HASTE:                    return TILEG_HASTE;
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
     case SPELL_MASS_CONFUSION:           return TILEG_MASS_CONFUSION;
