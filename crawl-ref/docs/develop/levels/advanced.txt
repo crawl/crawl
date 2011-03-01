@@ -509,11 +509,11 @@ anonymous functions (an anonymous function that takes no parameters is
 called a Lua chunk):
 
 function mapchunk()
-  map(".....")
+  map("1...1")
   map(".www.")
   map(".wGw.")
   map(".www.")
-  map(".....")
+  map("1...1")
 end
 
 function main()
