@@ -1005,10 +1005,12 @@ struct spell_desc
      true
 },
 
+// Monster-only, players can use Lugonu's ability
 {
     SPELL_BANISHMENT, "Banishment",
      SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_CHAOTIC,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_CHAOTIC
+     | SPFLAG_MONSTER,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
