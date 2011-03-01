@@ -1097,7 +1097,6 @@ ENDMAP
 
 NAME:   ice_cave_statue_garden_01
 TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
-LFLAGS: no_tele_control
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast
@@ -1117,7 +1116,10 @@ lua_marker('m', portal_desc { teleport_spot=1})
 }}
 COLOUR: M = yellow
 TILE:   M = dngn_the_teleporter_ice_cave
-SUBST:  Mm = .
+KPROP:  -2!m_| = no_tele_into
+SUBST:  Mm- = .
+SUBST:  ! = *
+SUBST:  _ = <
 : dgn.set_random_mon_list("ice beast w:90 / nothing")
 : ice_cave_colours(_G)
 epilogue{{
@@ -1125,18 +1127,18 @@ ice_cave_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
-xxx.........xxxxxxxxxxxccccccccccccc.........ccc
-xx...G.M.G...xxxxxxxxxxcccccccccccc...G.|.G...cc
-xx....*.*....xxxxxxxxxxcccccccccccc....*.*....cc
-x......*......xxxxxxxxxccccccccccc......*......c
-x.1..G.1.G..1.xxxxxxxxxccccccccccc....2...2....c
-x.............xxxxxxxxxccccccccccc.............c
-xx..1.....1..xxxxxxxxxxcccccccccccc...........cc
-xx...........xxxxxxxxxxcccccccccccc...........cc
-xx.1...A...1.xxxxxxxxxxcccccccccccc.....m.....cc
-xxx.........xxxxxxxxxxxccccccccccccc.........ccc
-xxxx...<...xxxxxxxxxxxxcccccccccccccc...<...cccc
-xxxxx.....xxxxxxxxxxxxxccccccccccccccc.....ccccc
+xxx.........xxxxxxxxxxxccccccccccccc---------ccc
+xx...G.M.G...xxxxxxxxxxcccccccccccc---G-|-G---cc
+xx....*.*....xxxxxxxxxxcccccccccccc----!-!----cc
+x......*......xxxxxxxxxccccccccccc------!------c
+x.1..G.1.G..1.xxxxxxxxxccccccccccc----2---2----c
+x.............xxxxxxxxxccccccccccc-------------c
+xx..1.....1..xxxxxxxxxxcccccccccccc-----------cc
+xx...........xxxxxxxxxxcccccccccccc-----------cc
+xx.1...A...1.xxxxxxxxxxcccccccccccc-----m-----cc
+xxx.........xxxxxxxxxxxccccccccccccc---------ccc
+xxxx...<...xxxxxxxxxxxxcccccccccccccc---_---cccc
+xxxxx.....xxxxxxxxxxxxxccccccccccccccc-----ccccc
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 ENDMAP
 
