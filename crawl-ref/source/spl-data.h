@@ -1503,10 +1503,11 @@ struct spell_desc
      true
 },
 
+// Monster-only, players can use Kiku's ability
 {
     SPELL_SYMBOL_OF_TORMENT, "Symbol of Torment",
      SPTYP_NECROMANCY,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_MONSTER,
      6,
      0,
      -1, -1,

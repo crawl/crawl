@@ -872,12 +872,6 @@ bool spell_is_uncastable(spell_type spell, std::string &msg)
         return (true);
     }
 
-    if (spell == SPELL_SYMBOL_OF_TORMENT && player_res_torment(true, false))
-    {
-        msg = "To torment others, one must first know what torment means.";
-        return (true);
-    }
-
     if (_vampire_cannot_cast(spell))
     {
         msg = "Your current blood level is not sufficient to cast that spell.";
@@ -1478,9 +1472,11 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_liquefaction(powc);
         break;
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_SYMBOL_OF_TORMENT:
-        torment(TORMENT_SPELL, you.pos());
-        break;
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_OZOCUBUS_REFRIGERATION:
         cast_refrigeration(powc);
