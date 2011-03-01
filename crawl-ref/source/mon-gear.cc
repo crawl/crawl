@@ -1908,6 +1908,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_MARA:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
+    case MONS_SPRIGGAN_AIR_MAGE:
     case MONS_SPRIGGAN_DEFENDER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
