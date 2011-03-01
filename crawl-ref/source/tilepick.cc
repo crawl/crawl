@@ -4289,7 +4289,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_APPORTATION:              return TILEG_APPORTATION;
     case SPELL_PORTAL_PROJECTILE:        return TILEG_PORTAL_PROJECTILE;
     case SPELL_BLINK:                    return TILEG_BLINK;
+#if TAG_MAJOR_VERSION == 32
     case SPELL_BANISHMENT:               return TILEG_BANISHMENT;
+#endif
     case SPELL_CONTROL_TELEPORT:         return TILEG_CONTROLLED_TELEPORT;
     case SPELL_TELEPORT_OTHER:           return TILEG_TELEPORT_OTHER;
     case SPELL_TELEPORT_SELF:            return TILEG_TELEPORT;
