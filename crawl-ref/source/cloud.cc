@@ -223,7 +223,7 @@ static void _spread_fire(const cloud_struct &cloud)
                               cloud.colour, cloud.name, cloud.tile);
             if (cloud.whose == KC_YOU)
                 did_god_conduct(DID_KILL_PLANT, 1);
-            else if (cloud.whose == KC_FRIENDLY)
+            else if (cloud.whose == KC_FRIENDLY && !crawl_state.game_is_arena())
                 did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1);
         }
 
