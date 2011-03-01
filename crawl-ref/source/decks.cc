@@ -141,9 +141,9 @@ const deck_archetype deck_of_enchantments[] = {
 const deck_archetype deck_of_summoning[] = {
     { CARD_CRUSADE,         {5, 5, 5} },
     { CARD_SUMMON_ANIMAL,   {5, 5, 5} },
-    { CARD_SUMMON_DEMON,    {5, 5, 5} },
+    { CARD_SUMMON_DEMON,    {4, 4, 4} },
     { CARD_SUMMON_WEAPON,   {5, 5, 5} },
-    { CARD_SUMMON_FLYING,   {5, 5, 5} },
+    { CARD_SUMMON_FLYING,   {4, 4, 4} },
     { CARD_SUMMON_SKELETON, {5, 5, 5} },
     { CARD_SUMMON_UGLY,     {5, 5, 5} },
     END_OF_DECK
