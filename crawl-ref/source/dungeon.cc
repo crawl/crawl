@@ -2513,6 +2513,196 @@ static int _setup_temple_altars(CrawlHashTable &temple)
     return ((int) god_list.size());
 }
 
+struct map_component
+{
+    int label;
+
+
+    map_component()
+    {
+        min_equivalent = NULL;
+    }
+    map_component * min_equivalent;
+
+
+    coord_def min_coord;
+    coord_def max_coord;
+
+    coord_def seed_position;
+
+    void start_component(const coord_def & pos, int in_label)
+    {
+        seed_position = pos;
+        min_coord = pos;
+        max_coord = pos;
+
+        label = in_label;
+        min_equivalent = NULL;
+    }
+
+    void add_coord(const coord_def & pos)
+    {
+        if (pos.x < min_coord.x)
+            min_coord.x = pos.x;
+        if (pos.x > max_coord.x)
+            max_coord.x = pos.x;
+        if (pos.y < min_coord.y)
+            min_coord.y = pos.y;
+        if (pos.y > max_coord.y)
+            max_coord.y = pos.y;
+    }
+
+    void merge_region(const map_component & existing)
+    {
+        add_coord(existing.min_coord);
+        add_coord(existing.max_coord);
+    }
+};
+
+int min_transitive_label(map_component & component)
+{
+
+    map_component * current = &component;
+
+
+    int label;
+    while (current)
+    {
+        label = current->label;
+
+        current = current->min_equivalent;
+    }
+
+    return label;
+}
+
+// 8-way connected component analysis on the current level map.
+template<typename comp>
+static void _ccomps_8(FixedArray<int, GXM, GYM > & intermediate_map,
+                      std::vector<map_component> & components,
+                      comp & connected)
+{
+    std::map<int, map_component> intermediate_components;
+
+    intermediate_map.init(0);
+
+    unsigned adjacent_size = 4;
+    coord_def offsets[4] = {coord_def(-1, 0), coord_def(-1, -1), coord_def(0, -1), coord_def(1, -1)};
+
+    int next_label = 1;
+
+
+    // Pass 1, for each point, check the upper/left adjacent squares for labels
+    // if a labels are found, use the min connected label, else assign a new
+    // label and start a new component
+    for (rectangle_iterator pos(1); pos; ++pos)
+    {
+        if (connected(*pos))
+        {
+            int absolute_min_label = INT_MAX;
+            std::set<int> neighbor_labels;
+            for (unsigned i = 0; i < adjacent_size; i++)
+            {
+                coord_def test = *pos + offsets[i];
+                if (in_bounds(test) && intermediate_map(test) != 0)
+                {
+                    int neighbor_label = intermediate_map(test);
+                    if (neighbor_labels.insert(neighbor_label).second)
+                    {
+                        int trans = min_transitive_label(intermediate_components[neighbor_label]);
+
+                        if (trans < absolute_min_label)
+                            absolute_min_label = trans;
+                    }
+                }
+            }
+
+            int label;
+            if (neighbor_labels.empty())
+            {
+                intermediate_components[next_label].start_component(*pos, next_label);
+                label = next_label;
+                next_label++;
+            }
+            else
+            {
+                //mprf("neighbor size %d", neighbor_labels.size());
+                label = absolute_min_label;
+                map_component * absolute_min = &intermediate_components[absolute_min_label];
+
+                absolute_min->add_coord(*pos);
+                for (std::set<int>::iterator i = neighbor_labels.begin(); i != neighbor_labels.end();i++)
+                {
+                    map_component * current = &intermediate_components[*i];
+
+                    while (current && current != absolute_min)
+                    {
+                        absolute_min->merge_region(*current);
+                        map_component * next = current->min_equivalent;
+                        current->min_equivalent = absolute_min;
+                        current = next;
+                    }
+                }
+            }
+            intermediate_map(*pos) = label;
+        }
+    }
+
+    int reindexed_label = 1;
+    // Reindex root labels, and move them to output
+    for (std::map<int, map_component>::iterator i = intermediate_components.begin(); i != intermediate_components.end(); ++i)
+    {
+        if (i->second.min_equivalent == NULL)
+        {
+            i->second.label = reindexed_label++;
+            components.push_back(i->second);
+        }
+    }
+
+    // Pass 2, mark new labels on the grid
+    for (rectangle_iterator pos(1); pos; ++pos)
+    {
+        int label = intermediate_map(*pos);
+        if (label  != 0)
+        {
+            intermediate_map(*pos) = min_transitive_label(intermediate_components[label]);
+        }
+    }
+}
+
+bool non_solid_wall(const coord_def & pos)
+{
+    return !feat_is_wall(env.grid(pos));
+}
+struct adjacency_test
+{
+    adjacency_test()
+    {
+        adjacency.init(0);
+    }
+    FixedArray<int, GXM, GYM> adjacency;
+    bool operator()(const coord_def & pos)
+    {
+        return (non_solid_wall(pos) && adjacency(pos) == 0);
+    }
+};
+
+// Connectivity checks to make sure that the parts of a bubble are not
+// obstructed by slime wall adjacent squares
+static void _slime_connectivity_fixup()
+{
+    FixedArray<int, GXM, GYM> connectivity_map;
+    std::vector<map_component> components;
+    _ccomps_8(connectivity_map, components, non_solid_wall);
+
+    FixedArray<int, GXM, GYM> non_adjacent_connectivity;
+    std::vector<map_component> non_adj_components;
+    adjacency_test adjacent_check;
+
+
+    _ccomps_8(non_adjacent_connectivity, non_adj_components, adjacent_check);
+}
+
 // Returns false if we should skip further generation, and true
 // otherwise.
 static bool _builder_by_branch(int level_number)
@@ -2530,9 +2720,13 @@ static bool _builder_by_branch(int level_number)
     switch (you.where_are_you)
     {
     case BRANCH_HIVE:
-    case BRANCH_SLIME_PITS:
     case BRANCH_ORCISH_MINES:
         _caves_level(level_number);
+        return false;
+
+    case BRANCH_SLIME_PITS:
+        _caves_level(level_number);
+        _slime_connectivity_fixup();
         return false;
 
     case BRANCH_SHOALS:
