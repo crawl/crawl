@@ -532,7 +532,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
-        case SPELL_SYMBOL_OF_TORMENT:
             rc = true;
             break;
         default:
@@ -572,7 +571,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
-        case SPELL_SYMBOL_OF_TORMENT:
             rc = true;
             break;
         default:

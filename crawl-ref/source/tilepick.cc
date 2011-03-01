@@ -4340,7 +4340,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_EXCRUCIATING_WOUNDS:      return TILEG_EXCRUCIATING_WOUNDS;
     case SPELL_CONTROL_UNDEAD:           return TILEG_CONTROL_UNDEAD;
     case SPELL_BOLT_OF_DRAINING:         return TILEG_BOLT_OF_DRAINING;
+#if TAG_MAJOR_VERSION == 32
     case SPELL_SYMBOL_OF_TORMENT:        return TILEG_SYMBOL_OF_TORMENT;
+#endif
     case SPELL_DEATHS_DOOR:              return TILEG_DEATHS_DOOR;
     case SPELL_DEATH_CHANNEL:            return TILEG_DEATH_CHANNEL;
 
