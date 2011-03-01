@@ -1452,7 +1452,7 @@ ENDMAP
 # Ancient Champions (by Mu., lua by due)
 #
 NAME:   ancient_champions_mu
-DEPTH:  D:15-26, Vault, Crypt
+DEPTH:  D:15-26, Vault:1-7, Crypt:1-4
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen
 KFEAT:  ABCDEFG = metal_wall
