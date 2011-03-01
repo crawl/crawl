@@ -621,3 +621,31 @@ X.......A.......X
 X...............X
 XXXXXXXXXXXXXXXXX
 ENDMAP
+
+
+NAME: arena_forest
+TAGS: arena_forest no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X.tttt...tttttttX
+Xt....ttB.ttttttX
+Xt.ttttttt.tttttX
+Xtt.tttttt.tttttX
+Xtt.ttttt.tt..ttX
+Xtt.tttt....ttttX
+Xttt.tt..tttttttX
+Xtttt...O...ttttX
+Xttttttt..tt.tttX
+Xtttt....tttt.ttX
+Xtt..tt.ttttt.ttX
+Xttttt.tttttt.ttX
+Xttttt.ttttttt.tX
+Xtttttt.Att....tX
+Xttttttt...tttt.X
+XXXXXXXXXXXXXXXXX
+ENDMAP
