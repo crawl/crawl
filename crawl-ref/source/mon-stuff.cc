@@ -1581,7 +1581,7 @@ int monster_die(monster* mons, killer_type killer,
     // Same for silencers.
     mons->del_ench(ENCH_SILENCE);
 
-    // For the case when shop mimic was killed before player discovered him
+    // For the case when shop mimic was killed before player discovered him.
     if (mons->type == MONS_SHOP_MIMIC)
         StashTrack.remove_shop(mons->pos());
 
@@ -3077,8 +3077,20 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
     return (target);
 }
 
+static void _mimic_update_stash(const monster* mons)
+{
+    if (mons_is_mimic(mons->type))
+    {
+        if (mons->type == MONS_SHOP_MIMIC)
+            StashTrack.remove_shop(mons->pos());
+        else
+            StashTrack.update_stash(mons->pos());
+    }
+}
+
 bool monster_blink(monster* mons, bool quiet)
 {
+    _mimic_update_stash(mons);
     coord_def near = _random_monster_nearby_habitable_space(*mons, false,
                                                             true);
 
@@ -4227,7 +4239,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
                 simple_monster_message(mons, " looks slightly unstable.");
 
             mons->add_ench(mon_enchant(ENCH_TP, 0, 0,
-                                           random_range(20, 30)));
+                                       random_range(20, 30)));
         }
 
         return;
@@ -4270,12 +4282,12 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (newpos.origin())
         return;
 
-    bool was_seen = !silent
-        && you.can_see(mons) && !mons_is_lurking(mons);
+    bool was_seen = !silent && you.can_see(mons) && !mons_is_lurking(mons);
 
     if (!silent)
         simple_monster_message(mons, " disappears!");
 
+    _mimic_update_stash(mons);
     const coord_def oldplace = mons->pos();
 
     // Pick the monster up.
@@ -4291,7 +4303,10 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (mons_is_mimic(mons->type))
     {
         monster_type old_type = mons->type;
-        mons->type   = static_cast<monster_type>(
+        // Feature mimics also turn into item mimics on teleport. This is
+        // probably not intentional, but new features randomly appearing
+        // would be even more of a give-away than new items. (jpeg)
+        mons->type = static_cast<monster_type>(
                                          MONS_GOLD_MIMIC + random2(5));
         mons->destroy_inventory();
         give_mimic_item(mons);
