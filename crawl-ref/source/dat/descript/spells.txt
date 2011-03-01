@@ -15,10 +15,6 @@ Alistair's Intoxication
 
 This spell works by converting a small portion of brain matter into alcohol, confusing all intelligent humanoids within the caster's view (although poison-resistant creatures will suffer no negative effects). It is strongly focused on the caster, however, and so poison resistance will not protect them. It is frequently used as an icebreaker at wizard parties.
 %%%%
-Alter Self
-
-This spell causes aberrations to form in the caster's body, leaving the caster in a weakened state (though it is not fatal in and of itself). It may fail to affect those who are already heavily mutated.
-%%%%
 Animate Dead
 
 This spell causes the dead to rise up and serve the caster; every corpse within a certain distance of the caster is affected. By means of this spell, powerful casters could press into service an army of the mindless undead. Note that zombies are incapable of leaving the level they were created on.
@@ -32,10 +28,6 @@ Apportation
 This spell allows the caster to pull the top item or group of similar items from a distant pile to the floor near the caster. The mass of the target item(s) will make the task more difficult, with some items too massive to ever be moved by this spell. Using this spell on a group of items can be risky; insufficient power will cause some of the items to be lost in the infinite void.
 
 Extremely powerful magical items, such as the Orb of Zot, may actively resist the pull of this spell.
-%%%%
-Banishment
-
-This spell banishes one creature to the Abyss. This magic cannot be used to relocate the caster.
 %%%%
 Berserker Rage
 
@@ -206,10 +198,6 @@ Dispersal
 
 This spell tries to teleport away any monsters directly beside the caster.
 %%%%
-Disrupt
-
-This spell disrupts space around another creature, causing injury.
-%%%%
 Dragon Form
 
 This spell temporarily transforms the caster into a great, fire-breathing dragon.
@@ -230,16 +218,6 @@ Excruciating Wounds
 
 This spell temporarily infuses the weapon held by the caster with the essence of pain itself. It will not affect weapons which are otherwise subject to special enchantments. Note that unlike other brands, pain can not be made permanent by reading a scroll of vorpalise weapon.
 %%%%
-Extension
-
-This spell extends the duration of most spells influencing the caster. Be wary that using it slowly contaminates you with magical energy.
-
-You must know the inner workings of a spell to be able to extend it.
-%%%%
-Exploding Ammunition
-
-This spell will make ammunition held by the caster extremely unstable. With proper handling, they can still be stored indefinitely, though.
-%%%%
 Fire Brand
 
 This spell sets a weapon or launcher held by the caster ablaze. It will not affect weapons otherwise subject to special enchantments.
@@ -252,10 +230,6 @@ Fireball
 
 This spell hurls an exploding bolt of fire. This spell does not cost additional spell levels if the learner already knows Delayed Fireball.
 %%%%
-Flame Ammunition
-
-This spell will make ammunition held by the caster ignite themselves upon being launched. This flammability lasts until the missile is used, at that point it burns away completely.
-%%%%
 Flame Tongue
 
 This spell creates a short burst of flame.
@@ -263,10 +237,6 @@ This spell creates a short burst of flame.
 Flight
 
 This spell grants to the caster the ability to fly through the air.
-%%%%
-Fragmentation
-
-This spell creates a concussive explosion within a large body of rock (or other hard material), to the detriment of any who happen to be standing nearby.
 %%%%
 Freeze
 
@@ -279,10 +249,6 @@ This spell surrounds a weapon or launcher held by the caster with an aura of fre
 Freezing Cloud
 
 This spell conjures up a large cloud of lethally cold vapour.
-%%%%
-Frost Ammunition
-
-This spell will freeze ammunition held by the caster. Such missiles will shatter upon use, but won't thaw before that.
 %%%%
 Fulsome Distillation
 
@@ -430,10 +396,6 @@ Phase Shift
 
 This spell allows the caster to phase in and out of the material plane, allowing them to occasionally avoid blows entirely.
 %%%%
-Poison Ammunition
-
-This spell envenoms missile ammunition held by the caster. The poison is permanent.
-%%%%
 Poison Arrow
 
 This spell hurls a magical arrow coated with the most vile and noxious toxin. No living thing is completely immune to its effects, and even the undead will take damage from the physical component of the spell.
@@ -458,10 +420,6 @@ Projected Noise
 
 This spell produces a noise emanating from a place of the caster's own choosing.
 %%%%
-Reaping Ammunition
-
-This spell will infuse missiles held by the caster with necromantic magic which may create zombies from enemies slain by them. This magic will last as long as the missiles last.
-%%%%
 Recall
 
 This spell is greatly prized by summoners and necromancers, as it allows the caster to recall any friendly creatures nearby to a position adjacent to the caster.
@@ -477,10 +435,6 @@ This spell reduces the chance of projectile attacks striking the caster. Even po
 Resist Poison
 
 This spell protects the caster from exposure to all poisons for a period of time.
-%%%%
-Returning Ammunition
-
-This spell will cause the wielded missiles to return to the caster after being fired. This power is permanent.
 %%%%
 Ring of Flames
 
@@ -505,10 +459,6 @@ This spell causes a burst of concussive force around the caster, which will dama
 Shock
 
 This spell throws a bouncing bolt of electricity.
-%%%%
-Shocking Ammunition
-
-This spell will electrically charge missiles held by the caster. They will retain the charge even after use.
 %%%%
 Silence
 
@@ -627,10 +577,6 @@ Swiftness
 
 This spell imbues its caster with the ability to achieve great movement speeds. Flying spellcasters can move even faster.
 %%%%
-Symbol of Torment
-
-This spell calls on the powers of Hell to cause agonising injury to any living thing in the caster's vicinity. It carries within itself a degree of danger, for any brave enough to invoke it, for the Symbol also affects its caller and indeed will not function if he or she is immune to its terrible effects. Despite its ominous power, this spell is never lethal.
-%%%%
 Teleport Other
 
 This spell randomly translocates another creature.
@@ -675,10 +621,6 @@ However, attempting to drain an undead or demonic creature will backfire on the 
 Venom Bolt
 
 This spell throws a bolt of poison.
-%%%%
-Warp Ammunition
-
-This spell will infuse missiles held by the caster with translocational energy. That energy does not dissipate with time.
 %%%%
 Warp Weapon
 
