@@ -1355,8 +1355,7 @@ static void _give_basic_knowledge(job_type which_job)
         break;
 
     case JOB_ARTIFICER:
-        if (!item_is_rod(you.inv[2]))
-            set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE);
         break;
 
     default:
