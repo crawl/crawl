@@ -73,10 +73,6 @@ Bolt of Magma
 
 This spell hurls a sizzling bolt of molten rock.
 %%%%
-Bone Shards
-
-This spell uses the bones of a skeleton to dispense a lethal spray of slicing fragments, allowing its caster to dispense with conjurations in favour of necromancy alone to provide a low-level yet very powerful offensive spell. The use of a large and heavy skeleton (by wielding it) amplifies this spell's effect.
-%%%%
 Borgnjor's Revivification
 
 This spell instantly heals any and all wounds suffered by the caster, but also permanently lessens his or her resilience to injury - to a degree dependent on (and inversely related to) magical skill.
@@ -638,10 +634,6 @@ This spell imbues its caster with the ability to achieve great movement speeds. 
 Symbol of Torment
 
 This spell calls on the powers of Hell to cause agonising injury to any living thing in the caster's vicinity. It carries within itself a degree of danger, for any brave enough to invoke it, for the Symbol also affects its caller and indeed will not function if he or she is immune to its terrible effects. Despite its ominous power, this spell is never lethal.
-%%%%
-Tame Beasts
-
-This spell attempts to tame animals in the caster's vicinity. It works best on animals amenable to domestication.
 %%%%
 Teleport Other
 
