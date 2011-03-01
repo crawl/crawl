@@ -2345,6 +2345,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SALT_PILLAR,
     MONS_TERPSICHORE,
     MONS_BAT,
+    MONS_SPRIGGAN_AIR_MAGE,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2529,6 +2530,7 @@ enum mon_spellbook_type
     MST_PEARL_DRAGON,
     MST_BOG_MUMMY,
     MST_SPRIGGAN_DRUID,
+    MST_SPRIGGAN_AIR_MAGE,
     MST_TENTACLED_STARSPAWN,
     MST_LURKING_HORROR,
     MST_STARCURSED_MASS,

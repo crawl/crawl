@@ -1687,6 +1687,10 @@ spriggan
 
 A small humanoid, resembling a human or elf except for the size. They move at a great speed, and love playing dirty tricks on people.
 %%%%
+spriggan air mage
+
+Ever noticed the wind always blows in your eyes and in the backs of some? These guys have something to do with that.
+%%%%
 spriggan assassin
 
 These masters of stealth have mastered the art of delivering a quick blade right under your fifth rib as well.

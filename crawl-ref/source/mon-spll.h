@@ -1474,6 +1474,17 @@
       }
     },
 
+    {  MST_SPRIGGAN_AIR_MAGE,
+      {
+       SPELL_AIRSTRIKE,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_SWIFTNESS,
+       SPELL_SHOCK,
+       SPELL_NO_SPELL,
+       SPELL_HASTE
+      }
+    },
+
     { MST_THE_ENCHANTRESS,
       {
        SPELL_PARALYSE,
