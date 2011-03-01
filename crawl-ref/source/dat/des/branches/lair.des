@@ -1329,7 +1329,8 @@ PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
 ORIENT: southeast
 MONS:   plant
-MONS:   spiny worm, brain worm, worm, giant leech, lindwurm, dragon
+MONS:   spiny worm, brain worm, worm, giant leech, lindwurm
+KMONS:  7 = dragon
 KMONS:  8 = giant firefly
 KMONS:  9 = rock worm
 KFEAT:  9 = rock_wall
