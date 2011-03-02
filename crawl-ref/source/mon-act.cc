@@ -1089,7 +1089,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_DEMON:
-    case SPELL_SUMMON_ELEMENTAL:
     case SPELL_SUMMON_SWARM:
         _rod_fired_pre(mons, nice_spell);
         mons_cast(mons, beem, mzap, false);
