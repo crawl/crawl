@@ -2585,6 +2585,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & intermediate_map,
     std::map<int, map_component> intermediate_components;
 
     intermediate_map.init(0);
+    components.clear();
 
     unsigned adjacent_size = 4;
     coord_def offsets[4] = {coord_def(-1, 0), coord_def(-1, -1), coord_def(0, -1), coord_def(1, -1)};
