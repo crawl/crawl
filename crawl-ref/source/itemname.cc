@@ -2788,6 +2788,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_TORMENT:
             return (!player_mutation_level(MUT_TORMENT_RESISTANCE)
                     || !temp && you.species == SP_VAMPIRE);
+        case SCR_HOLY_WORD:
+            return (you.undead_or_demonic());
         default:
             return (false);
         }
