@@ -1524,7 +1524,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         FixedVector<coord_def, max_stairs>& stair_list = (i == 0 ? up_stairs
                                                                  : down_stairs);
 
-        unsigned int num_stairs;
+        unsigned int num_stairs, needed_stairs;
         dungeon_feature_type base;
         dungeon_feature_type replace;
         if (i == 0)
@@ -1532,12 +1532,18 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             num_stairs = num_up_stairs;
             replace = DNGN_FLOOR;
             base = DNGN_STONE_STAIRS_UP_I;
+            needed_stairs = 3;
         }
         else
         {
             num_stairs = num_down_stairs;
             replace = DNGN_FLOOR;
             base = DNGN_STONE_STAIRS_DOWN_I;
+
+            if (at_branch_bottom() && you.where_are_you != BRANCH_MAIN_DUNGEON)
+                needed_stairs = 0;
+            else
+                needed_stairs = 3;
         }
 
         // In Zot, don't create extra escape hatches, in order to force
@@ -1545,18 +1551,18 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         if (player_in_branch(BRANCH_HALL_OF_ZOT))
             replace = DNGN_GRANITE_STATUE;
 
-        if (num_stairs > 3)
+        if (num_stairs > needed_stairs)
         {
             // Find pairwise stairs that are connected and turn one of them
             // into an escape hatch of the appropriate type.
             for (unsigned int s1 = 0; s1 < num_stairs; s1++)
             {
-                if (num_stairs <= 3)
+                if (num_stairs <= needed_stairs)
                     break;
 
                 for (unsigned int s2 = s1 + 1; s2 < num_stairs; s2++)
                 {
-                    if (num_stairs <= 3)
+                    if (num_stairs <= needed_stairs)
                         break;
 
                     if (preserve_vault_stairs
@@ -1590,7 +1596,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             }
 
             // If that doesn't work, remove random stairs.
-            while (num_stairs > 3)
+            while (num_stairs > needed_stairs)
             {
                 int remove = random2(num_stairs);
                 if (preserve_vault_stairs)
@@ -1616,7 +1622,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             }
         }
 
-        if (num_stairs > 3 && preserve_vault_stairs)
+        if (num_stairs > needed_stairs && preserve_vault_stairs)
         {
             success = false;
             continue;
@@ -1629,7 +1635,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             continue;
 
         // Add extra stairs to get to exactly three.
-        for (int s = num_stairs; s < 3; s++)
+        for (unsigned int s = num_stairs; s < needed_stairs; s++)
         {
             const uint32_t mask = preserve_vault_stairs ? MMT_VAULT : 0;
             coord_def gc = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_UNSEEN);
