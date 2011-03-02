@@ -657,7 +657,7 @@ struct spell_desc
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
      SPFLAG_BATTLE,
-     6,
+     5,
      200,
      -1, -1,
      0,
