@@ -1351,6 +1351,8 @@ static int _disperse_monster(monster* mon, int pow)
 {
     if (!mon)
         return (0);
+    if (mons_is_projectile(mon->type))
+        return (0);
 
     if (mons_genus(mon->type) == MONS_BLINK_FROG)
     {

@@ -872,12 +872,6 @@ bool spell_is_uncastable(spell_type spell, std::string &msg)
         return (true);
     }
 
-    if (spell == SPELL_SYMBOL_OF_TORMENT && player_res_torment(true, false))
-    {
-        msg = "To torment others, one must first know what torment means.";
-        return (true);
-    }
-
     if (_vampire_cannot_cast(spell))
     {
         msg = "Your current blood level is not sufficient to cast that spell.";
@@ -1132,8 +1126,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
         {
-            if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_POLYMORPH_OTHER
-                || spell == SPELL_BANISHMENT)
+            if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_POLYMORPH_OTHER)
             {
                 mpr("Sorry, this spell works on others only.");
             }
@@ -1277,17 +1270,6 @@ spret_type your_spells(spell_type spell, int powc,
     return (SPRET_SUCCESS);
 }
 
-// Special-cased preconditions.
-static bool _spell_zap_abort(spell_type spell, const bolt& beam)
-{
-    if (spell == SPELL_BANISHMENT && beam.target == you.pos())
-    {
-        mpr("You cannot banish yourself!");
-        return (true);
-    }
-    return (false);
-}
-
 // Special-cased after-effects.
 static void _spell_zap_effect(spell_type spell)
 {
@@ -1308,8 +1290,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
     {
-        if (_spell_zap_abort(spell, beam))
-            return (SPRET_ABORT);
         if (!zapping(zap, spell_zap_power(spell, powc), beam, true))
             return (SPRET_ABORT);
 
@@ -1492,9 +1472,11 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_liquefaction(powc);
         break;
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_SYMBOL_OF_TORMENT:
-        torment(TORMENT_SPELL, you.pos());
-        break;
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_OZOCUBUS_REFRIGERATION:
         cast_refrigeration(powc);
@@ -1861,9 +1843,11 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     // other
+#if TAG_MAJOR_VERSION == 32
     case SPELL_EXTENSION:
-        extension(powc);
-        break;
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_BORGNJORS_REVIVIFICATION:
         cast_revivification(powc);

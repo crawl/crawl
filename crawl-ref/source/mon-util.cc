@@ -4139,6 +4139,8 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID);
     case 'h': // hounds
         return (MON_SHAPE_QUADRUPED);
+    case 'i': // spriggans
+        return (MON_SHAPE_HUMANOID);
     case 'j': // snails
         return (MON_SHAPE_SNAIL);
     case 'k': // killer bees

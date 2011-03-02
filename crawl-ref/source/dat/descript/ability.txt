@@ -171,7 +171,7 @@ Summon an Angel or Daeva, powerful warriors against evil. They may be blessed by
 # Kikubaaqudgha
 Receive Corpses
 
-Create one or more reanimatable monster corpses near yourself. The number and freshness of these are dependent on Invocations skill.
+Create one or more reanimatable monster corpses near yourself. The number and freshness of these are dependent on Necromancy skill.
 %%%%
 Torment
 

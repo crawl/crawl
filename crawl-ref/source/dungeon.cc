@@ -2396,7 +2396,13 @@ static void _portal_vault_level(int level_number)
             lowercase(name);
             name = replace_all(name, " ", "_");
 
+            // Allow finding e.g. "sewer_kobolds" with just "kobolds".
             vault = find_map_by_name(you.level_type_tag + "_" + name);
+
+            // Allow finding the map with the full name.
+            if (!vault && find_map_by_name(name))
+                if (find_map_by_name(name)->has_tag(you.level_type_tag))
+                    vault = find_map_by_name(name);
 
             if (!vault)
                 mprf(MSGCH_DIAGNOSTICS, "No such %s, try again.",
