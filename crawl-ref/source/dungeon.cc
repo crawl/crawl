@@ -2668,6 +2668,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & intermediate_map,
             intermediate_map(*pos) = min_transitive_label(intermediate_components[label]);
         }
     }
+    mprf("components %d", components.size());
 }
 
 bool non_solid_wall(const coord_def & pos)
@@ -2687,6 +2688,55 @@ struct adjacency_test
     }
 };
 
+#include <fstream>
+void write_conn_map(FixedArray<int, GXM, GYM> & conn_map, std::string fname)
+{
+    std::ofstream fout(fname.c_str());
+
+    for (int i =0; i < conn_map.height();i++)
+    {
+        for (int j = 0; j < conn_map.width(); j++)
+        {
+            fout.width(3);
+            if (conn_map[j][i] == 0)
+            {
+                fout << "#";
+            }
+            else
+                fout << conn_map[j][i];
+        }
+        fout << std::endl;
+    }
+    fout.close();
+}
+
+struct dummy_estimate
+{
+    bool operator() (const coord_def & pos)
+        {
+        return 0;
+        }
+};
+
+struct adjacent_costs
+{
+    FixedArray<int, GXM, GYM> * adjacency;
+    int operator()(const coord_def & pos)
+    {
+        return (*adjacency)(pos);
+    }
+
+};
+
+struct label_match
+{
+    FixedArray<int, GXM, GYM> * labels;
+    int target_label;
+    bool operator()(const coord_def & pos)
+    {
+        return ((*labels)(pos) == target_label);    }
+};
+
 // Connectivity checks to make sure that the parts of a bubble are not
 // obstructed by slime wall adjacent squares
 static void _slime_connectivity_fixup()
@@ -2695,11 +2745,110 @@ static void _slime_connectivity_fixup()
     std::vector<map_component> components;
     _ccomps_8(connectivity_map, components, non_solid_wall);
 
+    write_conn_map(connectivity_map, "basic_conn.txt");
     FixedArray<int, GXM, GYM> non_adjacent_connectivity;
     std::vector<map_component> non_adj_components;
     adjacency_test adjacent_check;
 
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
 
+        int count = 0;
+        if (feat_is_wall(env.grid(*ri)))
+        {
+            count = DISCONNECT_DIST;
+        }
+        else
+        {
+            for (adjacent_iterator adj(*ri); adj; ++adj)
+            {
+                if (feat_is_wall(env.grid(*adj)))
+                {
+                    count++;
+                }
+            }
+        }
+        adjacent_check.adjacency(*ri) = count;
+    }
+
+    _ccomps_8(non_adjacent_connectivity, non_adj_components, adjacent_check);
+
+    // For each component in the unrestricted map...
+    for (unsigned i = 0; i < components.size(); i++)
+    {
+        mprf("label %d bounds %d %d, %d %d mapped to: ", components[i].label, components[i].min_coord.x, components[i].min_coord.y, components[i].max_coord.x, components[i].max_coord.y);
+        // Collect the components in the restricted connectivity map that
+        // occupy part of the current component
+        std::map<int, map_component *> present;
+        for (rectangle_iterator ri(components[i].min_coord, components[i].max_coord); ri; ++ri)
+        {
+            int new_label = non_adjacent_connectivity(*ri);
+            if (components[i].label == connectivity_map(*ri) && new_label != 0)
+            {
+                // the bit with new_label - 1 is foolish.
+                present[new_label] = &non_adj_components[new_label-1];
+            }
+        }
+
+        // Set one restricted component as the base point, and search to all
+        // other restricted components
+        std::map<int, map_component * >::iterator target_components = present.begin();
+        map_component * base_component = target_components->second;;
+        target_components++;
+/*
+        template<typename valid_T, typename cost_T, typename est_T>
+        void search_astar(const coord_def & start,
+                          valid_T & valid_target,
+                          cost_T & connection_cost,
+                          est_T & cost_estimate,
+                          std::set<position_node> & visited,
+                          std::vector<std::set<position_node>::iterator > & candidates,
+                          int connect_mode = 8)
+*/
+        mprf("sub %d", base_component->label);
+        adjacent_costs connection_costs;
+        connection_costs.adjacency = &adjacent_check.adjacency;
+
+        label_match valid_label;
+        valid_label.labels = &non_adjacent_connectivity;
+
+        dummy_estimate dummy;
+
+        for ( ; target_components != present.end(); target_components++)
+        {
+            // searching.
+            mprf("sub %d", target_components->second->label);
+
+            valid_label.target_label = target_components->second->label;
+
+            std::vector<std::set<position_node>::iterator >path;
+            std::set<position_node> visited;
+            search_astar(base_component->seed_position, valid_label, connection_costs, dummy, visited, path);
+
+
+            const position_node * current = &(*path[0]);
+
+            while (current)
+            {
+                if (adjacent_check.adjacency(current->pos) > 0)
+                {
+                    for (adjacent_iterator adj_it(current->pos); adj_it; ++adj_it)
+                    {
+                        if (feat_is_wall(env.grid(*adj_it)))
+                        {
+                            env.grid(*adj_it) = DNGN_FLOOR;
+                        }
+                    }
+                    adjacent_check.adjacency(current->pos) = 0;
+                }
+                current = current->last;
+            }
+
+        }
+
+    }
+
+    write_conn_map(non_adjacent_connectivity, "wall_restricted.txt");
     _ccomps_8(non_adjacent_connectivity, non_adj_components, adjacent_check);
 }
 
