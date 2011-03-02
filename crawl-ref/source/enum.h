@@ -2345,6 +2345,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SALT_PILLAR,
     MONS_TERPSICHORE,
     MONS_BAT,
+    MONS_SPRIGGAN_AIR_MAGE,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2529,6 +2530,7 @@ enum mon_spellbook_type
     MST_PEARL_DRAGON,
     MST_BOG_MUMMY,
     MST_SPRIGGAN_DRUID,
+    MST_SPRIGGAN_AIR_MAGE,
     MST_TENTACLED_STARSPAWN,
     MST_LURKING_HORROR,
     MST_STARCURSED_MASS,
@@ -3054,7 +3056,9 @@ enum spell_type
     SPELL_ENSLAVEMENT,
     SPELL_ANIMATE_DEAD,
     SPELL_PAIN,
+#if TAG_MAJOR_VERSION == 32
     SPELL_EXTENSION,
+#endif
     SPELL_CONTROL_UNDEAD,
     SPELL_ANIMATE_SKELETON,
     SPELL_VAMPIRIC_DRAINING,
@@ -3348,7 +3352,9 @@ enum zap_type
     ZAP_PAIN,
     ZAP_STICKY_FLAME,
     ZAP_DISPEL_UNDEAD,
+#if TAG_MAJOR_VERSION == 32
     ZAP_BONE_SHARDS,
+#endif
     ZAP_BANISHMENT,
     ZAP_DEGENERATION,
     ZAP_STING,

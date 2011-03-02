@@ -657,7 +657,7 @@ struct spell_desc
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
      SPFLAG_BATTLE,
-     6,
+     5,
      200,
      -1, -1,
      0,
@@ -731,6 +731,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_EXTENSION, "Extension",
      SPTYP_CHARMS,
@@ -743,6 +744,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
@@ -1003,10 +1005,11 @@ struct spell_desc
      true
 },
 
+// Monster-only, players can use Lugonu's ability
 {
     SPELL_BANISHMENT, "Banishment",
      SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_CHAOTIC,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -1020,7 +1023,7 @@ struct spell_desc
     SPELL_CIGOTUVIS_DEGENERATION, "Cigotuvi's Degeneration",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC
-     | SPFLAG_CORPSE_VIOLATING,
+         | SPFLAG_CORPSE_VIOLATING,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -1499,10 +1502,11 @@ struct spell_desc
      true
 },
 
+// Monster-only, players can use Kiku's ability
 {
     SPELL_SYMBOL_OF_TORMENT, "Symbol of Torment",
      SPTYP_NECROMANCY,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_MONSTER,
      6,
      0,
      -1, -1,

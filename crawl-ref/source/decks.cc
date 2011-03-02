@@ -141,9 +141,9 @@ const deck_archetype deck_of_enchantments[] = {
 const deck_archetype deck_of_summoning[] = {
     { CARD_CRUSADE,         {5, 5, 5} },
     { CARD_SUMMON_ANIMAL,   {5, 5, 5} },
-    { CARD_SUMMON_DEMON,    {5, 5, 5} },
+    { CARD_SUMMON_DEMON,    {4, 4, 4} },
     { CARD_SUMMON_WEAPON,   {5, 5, 5} },
-    { CARD_SUMMON_FLYING,   {5, 5, 5} },
+    { CARD_SUMMON_FLYING,   {4, 4, 4} },
     { CARD_SUMMON_SKELETON, {5, 5, 5} },
     { CARD_SUMMON_UGLY,     {5, 5, 5} },
     END_OF_DECK
@@ -2710,34 +2710,29 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 static void _summon_flying(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
-    const bool friendly = (power_level > 0 || !one_chance_in(4));
 
     const monster_type flytypes[] = {
         MONS_BUTTERFLY, MONS_BUMBLEBEE, MONS_INSUBSTANTIAL_WISP,
-        MONS_VAPOUR, MONS_YELLOW_WASP, MONS_RED_WASP
+        MONS_VAMPIRE_MOSQUITO, MONS_VAPOUR, MONS_YELLOW_WASP,
+        MONS_RED_WASP
     };
 
     // Choose what kind of monster.
-    // Be nice and don't summon friendly invisibles.
+    // Be nice and don't summon invisibles with no SInv.
     monster_type result = MONS_PROGRAM_BUG;
     do
-        result = flytypes[random2(4) + power_level];
-    while (friendly && mons_class_flag(result, M_INVIS)
-           && !you.can_see_invisible());
+        result = flytypes[random2(5) + power_level];
+    while (mons_class_flag(result, M_INVIS) && !you.can_see_invisible());
 
     for (int i = 0; i < power_level * 5 + 2; ++i)
     {
+        const bool friendly = (!one_chance_in(power_level + 4));
+
         create_monster(
             mgen_data(result,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                       std::min(power/50 + 1, 6), 0,
                       you.pos(), MHITYOU));
-    }
-
-    if (mons_class_flag(result, M_INVIS) && !you.can_see_invisible()
-        && !friendly)
-    {
-        mpr("Whatever you just summoned cannot be friendly.");
     }
 }
 

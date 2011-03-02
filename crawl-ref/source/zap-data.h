@@ -422,6 +422,7 @@
     0
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     ZAP_BONE_SHARDS,
     "spray of bone shards",
@@ -441,6 +442,7 @@
     false,
     3
 },
+#endif
 
 {
     ZAP_BANISHMENT,

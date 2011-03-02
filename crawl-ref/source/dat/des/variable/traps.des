@@ -85,7 +85,7 @@ ENDMAP
 #
 NAME:   grate_trap
 ORIENT: float
-TAGS:   allow_dup extra luniq_grate_trap layout_rooms layout_cave
+TAGS:   allow_dup extra luniq_grate_trap layout_rooms layout_caves
 KFEAT:  ^ = pressure plate trap
 {{
 local tm = TriggerableFunction:new{func="callback.grate_trap_stepped",

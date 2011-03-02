@@ -53,7 +53,8 @@ bool summon_animals(int pow)
         MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
         MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR,
         MONS_AGATE_SNAIL, MONS_BORING_BEETLE, MONS_GILA_MONSTER,
-        MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND
+        MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND,
+        MONS_ELEPHANT, MONS_HIPPOGRIFF, MONS_GRIFFON
     };
 
     int count = 0;
@@ -315,7 +316,7 @@ bool cast_summon_scorpions(int pow, god_type god)
 }
 
 // Creates a mixed swarm of typical swarming animals.
-// Number, duration and friendlinesss depend on spell power.
+// Number and duration depend on spell power.
 bool cast_summon_swarm(int pow, god_type god)
 {
     bool success = false;
@@ -341,11 +342,8 @@ bool cast_summon_swarm(int pow, god_type god)
             mon = RANDOM_ELEMENT(swarmers);
         while (player_will_anger_monster(mon));
 
-        const bool friendly = (random2(pow) > 7);
-
         if (create_monster(
-                mgen_data(mon,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                mgen_data(mon, BEH_FRIENDLY, &you,
                           dur, SPELL_SUMMON_SWARM,
                           you.pos(),
                           MHITYOU,

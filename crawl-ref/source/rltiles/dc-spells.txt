@@ -63,7 +63,6 @@ projected_noise PROJECTED_NOISE
 see_invisible SEE_INVISIBLE
 slow SLOW
 sure_blade SURE_BLADE
-tame_beasts TAME_BEASTS
 tukimas_dance TUKIMAS_DANCE
 
 %sdir gui/spells/fire
@@ -102,7 +101,6 @@ agony AGONY
 animate_dead ANIMATE_DEAD
 animate_skeleton ANIMATE_SKELETON
 bolt_of_draining BOLT_OF_DRAINING
-bone_shards BONE_SHARDS
 borgnjors_revivification BORGNJORS_REVIVIFICATION
 cigotuvis_degeneration CIGOTUVIS_DEGENERATION
 control_undead CONTROL_UNDEAD
