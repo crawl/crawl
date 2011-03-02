@@ -175,7 +175,7 @@ A black book containing spells written in a hasty scrawl.
 %%%%
 book of demonology
 
-When touching this book, you hear faint screams of tortured souls. Each and every page is about demons, demons of all kinds and sizes, and how to unleash them unto this unsuspecting world. Many wizards have proven too weak to stand the power of this tome. You are not sure whether you hear the screams of the countless victims, which have been eaten, maimed and raped by the demons. Or do you scream yet?
+When touching this book, you hear faint screams of tortured souls. Each and every page is about demons, demons of all kinds and sizes, and how to unleash them unto this unsuspecting world. Many wizards have proven too weak to stand the power of this tome. You are not sure whether you hear the screams of the countless victims, which have been eaten, and maimed by the demons. Or do you scream yet?
 %%%%
 book of divinations
 
