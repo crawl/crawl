@@ -585,7 +585,7 @@ bool vampiric_drain(int pow, monster* mons)
     return (true);
 }
 
-bool burn_freeze(int pow, beam_type flavour, monster* mons)
+bool cast_freeze(int pow, monster* mons)
 {
     pow = std::min(25, pow);
 
@@ -606,13 +606,7 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("You %s %s.",
-             (flavour == BEAM_FIRE)        ? "burn" :
-             (flavour == BEAM_COLD)        ? "freeze" :
-             (flavour == BEAM_MISSILE)     ? "crush" :
-             (flavour == BEAM_ELECTRICITY) ? "zap"
-                                           : "______",
-             mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You freeze %s.", mons->name(DESC_NOCAP_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
     }
@@ -623,7 +617,7 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
         return (false);
 
     bolt beam;
-    beam.flavour = flavour;
+    beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
     const int orig_hurted = roll_dice(1, 3 + pow / 3);
@@ -632,17 +626,14 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
 
     if (mons->alive())
     {
-        mons->expose_to_element(flavour, orig_hurted);
+        mons->expose_to_element(BEAM_COLD, orig_hurted);
         print_wounds(mons);
 
-        if (flavour == BEAM_COLD)
+        const int cold_res = mons->res_cold();
+        if (cold_res <= 0)
         {
-            const int cold_res = mons->res_cold();
-            if (cold_res <= 0)
-            {
-                const int stun = (1 - cold_res) * random2(2 + pow/5);
-                mons->speed_increment -= stun;
-            }
+            const int stun = (1 - cold_res) * random2(2 + pow/5);
+            mons->speed_increment -= stun;
         }
     }
 
