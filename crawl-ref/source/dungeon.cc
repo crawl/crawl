@@ -1700,8 +1700,11 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
             bool found_feature = false;
             for (rectangle_iterator ri(0); ri; ++ri)
             {
-                if (grd(*ri) == feat)
+                if (grd(*ri) == feat
+                    && travel_point_distance[ri->x][ri->y] == nzones)
+                {
                     found_feature = true;
+                }
             }
 
             if (found_feature)
