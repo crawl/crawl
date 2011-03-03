@@ -873,6 +873,13 @@ int runes_in_pack(std::vector<int> &runes)
     return num_runes;
 }
 
+static bool _is_portal_exit(dungeon_feature_type stair)
+{
+    return stair == DNGN_EXIT_HELL
+        || stair == DNGN_EXIT_ABYSS
+        || stair == DNGN_EXIT_PORTAL_VAULT;
+}
+
 void down_stairs(dungeon_feature_type force_stair,
                  entry_cause_type entry_cause, const level_id* force_dest)
 {
@@ -1110,12 +1117,10 @@ void down_stairs(dungeon_feature_type force_stair,
 
     // When going downstairs into a special level, delete any previous
     // instances of it.
-    if (you.level_type != LEVEL_DUNGEON)
+    if (you.level_type != LEVEL_DUNGEON && !_is_portal_exit(stair_find))
     {
         std::string lname = level_id::current().describe();
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str());
-#endif
+        dprf("Deleting: %s", lname.c_str());
         you.save->delete_chunk(lname);
     }
 
