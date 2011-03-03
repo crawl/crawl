@@ -193,6 +193,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	BUILD_ZLIB = YesPlease
 	DEFINES_L += -DWINMM_PLAY_SOUNDS
 	EXTRA_LIBS += -lwinmm
+	EXTRA_LIBS += -static-libstdc++
 	ifdef TILES
 		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/lib/libSDLmain.a -mwindows
 		BUILD_FREETYPE = YesPlease
