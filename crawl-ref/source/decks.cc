@@ -157,6 +157,7 @@ const deck_archetype deck_of_wonders[] = {
     { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_HELIX,      {5, 5, 5} },
     { CARD_SAGE,       {5, 5, 5} },
+    { CARD_ALCHEMIST,  {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -346,6 +347,7 @@ const char* card_name(card_type card)
     case CARD_WRAITH:          return "the Wraith";
     case CARD_CURSE:           return "the Curse";
     case CARD_SWINE:           return "the Swine";
+    case CARD_ALCHEMIST:       return "the Alchemist";
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -2777,6 +2779,49 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     }
 }
 
+static bool _alchemist_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    int gold_used = std::min(you.gold, random2avg(100, 2) * (1 + power_level));
+
+    // Do nothing if health and magic are both full
+    if ((you.hp == you.hp_max && you.magic_points == you.max_magic_points)
+       || gold_used == 0)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return(false);
+    }
+
+    you.del_gold(gold_used);
+    mpr("Some of your gold vanishes!");
+    dprf("%d gold available to spend.", gold_used);
+
+    // Spend some gold to increase health
+    if (you.hp < you.hp_max)
+    {
+        int hp = std::min(gold_used / (4 - power_level), you.hp_max - you.hp);
+        inc_hp(hp, false);
+        gold_used -= hp;
+        mpr("You feel better.");
+        dprf("Gained %d health, %d gold remaining.", hp, gold_used);
+    }
+
+    // Spend some gold to increase magic
+    if (you.magic_points < you.max_magic_points)
+    {
+        int mp = std::min(gold_used / 2, you.max_magic_points - you.magic_points);
+        inc_mp(mp, false);
+        gold_used -= mp;
+        mpr("You feel your power returning.");
+        dprf("Gained %d magic, %d gold remaining.", mp, gold_used);
+    }
+
+    // Add back any remaining gold
+    you.add_gold(gold_used);
+
+    return (true);
+}
+
 static int _card_power(deck_rarity_type rarity)
 {
     int result = 0;
@@ -2893,6 +2938,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SPADE:   your_spells(SPELL_DIG, random2(power/4), false); break;
     case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power); break;
     case CARD_TORMENT: torment(TORMENT_CARDS, you.pos()); break;
+    case CARD_ALCHEMIST:   rc = _alchemist_card(power, rarity); break;
 
     case CARD_VENOM:
         if (coinflip())
