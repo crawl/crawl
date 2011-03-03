@@ -268,6 +268,26 @@ c...O...c
 ccccccccc
 ENDMAP
 
+#########################################
+# Crystal gate, Pan only
+# No allow_dup to prevent scumming.
+NAME:    bzr_crystal_pan
+TAGS:    extra
+DEPTH:   Pan
+COLOUR:  b = lightmagenta
+COLOUR:  . = magenta
+FTILE:   b.O = floor_crystal_squares
+RTILE:   b = dngn_crystal_lightmagenta
+: place_bazaar_portal(_G)
+: set_feature_name("green_crystal_wall", "wall of crystal")
+MAP
+bb.bb
+b...b
+..O..
+b...b
+bb.bb
+ENDMAP
+
 ###############################################################################
 # Bazaar layouts.
 #
