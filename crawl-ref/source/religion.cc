@@ -1603,12 +1603,14 @@ static int _tso_blessing_extend_stay(monster* mon)
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
-    // [ds] Disabling permanence for balance reasons, but extending
-    // duration increase.  These numbers are tenths of a player turn.
-    // Holy monsters get a much bigger boost than random beasties.
-    const int base_increase = mon->is_holy() ? 1100 : 500;
-    const int increase = base_increase + random2(base_increase);
-    return _increase_ench_duration(mon, abj, increase);
+    // These numbers are tenths of a player turn. Holy monsters get a
+    // much bigger boost than random beasties, which get at most double
+    // their current summon duration.
+    if (mon->is_holy())
+        return _increase_ench_duration(mon, abj, 1100 + random2(1100));
+    else
+        return _increase_ench_duration(mon, abj, std::min(abj.duration,
+                                                          500 + random2(500)));
 }
 
 static bool _tso_blessing_friendliness(monster* mon)
