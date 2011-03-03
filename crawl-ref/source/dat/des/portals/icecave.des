@@ -600,8 +600,8 @@ ITEM:    ring of ice / staff of cold
 ITEM:    manual of ice magic
 ITEM:    nothing
 : else
-ITEM:    book of ice / book of frost / book of minor magic [frost]
-ITEM:    book of ice / book of frost / book of minor magic [frost]
+ITEM:    book of ice / book of frost / book of conjurations [ice+air]
+ITEM:    book of ice / book of frost / book of conjurations [ice+air]
 : end
 ITEM:    cap ego:cold_resistance w:9 / \
          pair of gloves ego:cold_resistance w:9 / \
