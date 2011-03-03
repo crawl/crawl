@@ -2698,7 +2698,9 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power,
                        bool force_beh)
 {
-    ASSERT(!(mons->flags & MF_TAKING_STAIRS));
+    // Don't attempt to polymorph a monster that is busy using the stairs.
+    if (mons->flags & MF_TAKING_STAIRS)
+        return (false);
     ASSERT(!(mons->flags & MF_BANISHED) || you.level_type == LEVEL_ABYSS);
 
     std::string str_polymon;
