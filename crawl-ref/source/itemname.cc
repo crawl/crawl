@@ -2070,7 +2070,7 @@ CrawlHashTable& get_type_id_props()
 }
 
 void set_ident_type(item_def &item, item_type_id_state_type setting,
-                     bool force)
+                    bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
         return;
