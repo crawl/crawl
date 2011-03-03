@@ -463,9 +463,9 @@ It may contain the following cards: the Portal, the Warp, Swap, Velocity, the To
 %%%%
 deck of wonders
 
-A deck of highly mysterious and magical cards, which can permanently alter the drawer's physical and mental condition, for better or worse.
+A deck of highly mysterious and magical cards, which can alter the drawer's physical and mental condition, for better or worse.
 
-It may contain the following cards: the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage.
+It may contain the following cards: the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
 
