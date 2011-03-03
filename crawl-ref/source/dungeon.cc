@@ -2559,9 +2559,8 @@ struct map_component
     }
 };
 
-int min_transitive_label(map_component & component)
+static int _min_transitive_label(map_component & component)
 {
-
     map_component * current = &component;
 
 
@@ -2578,13 +2577,13 @@ int min_transitive_label(map_component & component)
 
 // 8-way connected component analysis on the current level map.
 template<typename comp>
-static void _ccomps_8(FixedArray<int, GXM, GYM > & intermediate_map,
+static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
                       std::vector<map_component> & components,
                       comp & connected)
 {
     std::map<int, map_component> intermediate_components;
 
-    intermediate_map.init(0);
+    connectivity_map.init(0);
     components.clear();
 
     unsigned adjacent_size = 4;
@@ -2605,12 +2604,12 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & intermediate_map,
             for (unsigned i = 0; i < adjacent_size; i++)
             {
                 coord_def test = *pos + offsets[i];
-                if (in_bounds(test) && intermediate_map(test) != 0)
+                if (in_bounds(test) && connectivity_map(test) != 0)
                 {
-                    int neighbor_label = intermediate_map(test);
+                    int neighbor_label = connectivity_map(test);
                     if (neighbor_labels.insert(neighbor_label).second)
                     {
-                        int trans = min_transitive_label(intermediate_components[neighbor_label]);
+                        int trans = _min_transitive_label(intermediate_components[neighbor_label]);
 
                         if (trans < absolute_min_label)
                             absolute_min_label = trans;
@@ -2627,12 +2626,12 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & intermediate_map,
             }
             else
             {
-                //mprf("neighbor size %d", neighbor_labels.size());
                 label = absolute_min_label;
                 map_component * absolute_min = &intermediate_components[absolute_min_label];
 
                 absolute_min->add_coord(*pos);
-                for (std::set<int>::iterator i = neighbor_labels.begin(); i != neighbor_labels.end();i++)
+                for (std::set<int>::iterator i = neighbor_labels.begin();
+                     i != neighbor_labels.end();i++)
                 {
                     map_component * current = &intermediate_components[*i];
 
@@ -2645,13 +2644,14 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & intermediate_map,
                     }
                 }
             }
-            intermediate_map(*pos) = label;
+            connectivity_map(*pos) = label;
         }
     }
 
     int reindexed_label = 1;
     // Reindex root labels, and move them to output
-    for (std::map<int, map_component>::iterator i = intermediate_components.begin(); i != intermediate_components.end(); ++i)
+    for (std::map<int, map_component>::iterator i = intermediate_components.begin();
+         i != intermediate_components.end(); ++i)
     {
         if (i->second.min_equivalent == NULL)
         {
@@ -2663,19 +2663,22 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & intermediate_map,
     // Pass 2, mark new labels on the grid
     for (rectangle_iterator pos(1); pos; ++pos)
     {
-        int label = intermediate_map(*pos);
+        int label = connectivity_map(*pos);
         if (label  != 0)
         {
-            intermediate_map(*pos) = min_transitive_label(intermediate_components[label]);
+            connectivity_map(*pos) = _min_transitive_label(intermediate_components[label]);
         }
     }
     mprf("components %d", components.size());
 }
 
-bool non_solid_wall(const coord_def & pos)
+// Is this square a wall, or does it belong to a vault? both are considered to
+// block connectivity.
+static bool _passable_square(const coord_def & pos)
 {
-    return !feat_is_wall(env.grid(pos));
+    return (!feat_is_wall(env.grid(pos)) && !(env.level_map_mask(pos) & MMT_VAULT));
 }
+
 struct adjacency_test
 {
     adjacency_test()
@@ -2685,7 +2688,7 @@ struct adjacency_test
     FixedArray<int, GXM, GYM> adjacency;
     bool operator()(const coord_def & pos)
     {
-        return (non_solid_wall(pos) && adjacency(pos) == 0);
+        return (_passable_square(pos) && adjacency(pos) == 0);
     }
 };
 
@@ -2714,9 +2717,9 @@ void write_conn_map(FixedArray<int, GXM, GYM> & conn_map, std::string fname)
 struct dummy_estimate
 {
     bool operator() (const coord_def & pos)
-        {
-        return 0;
-        }
+    {
+        return (0);
+    }
 };
 
 struct adjacent_costs
@@ -2735,18 +2738,29 @@ struct label_match
     int target_label;
     bool operator()(const coord_def & pos)
     {
-        return ((*labels)(pos) == target_label);    }
+        return ((*labels)(pos) == target_label);
+    }
 };
 
 // Connectivity checks to make sure that the parts of a bubble are not
 // obstructed by slime wall adjacent squares
 static void _slime_connectivity_fixup()
 {
+    // Generate a connectivity map considering any non wall, non vault square
+    // passable
     FixedArray<int, GXM, GYM> connectivity_map;
     std::vector<map_component> components;
-    _ccomps_8(connectivity_map, components, non_solid_wall);
+    _ccomps_8(connectivity_map, components, _passable_square);
 
     write_conn_map(connectivity_map, "basic_conn.txt");
+
+    // Next we will generate a connectivity map with the above restrictions,
+    // and also considering wall adjacent squares unpassable. But first we
+    // build a map of how many walls are adjacent to each square in the level.
+    // Walls/vault squares are flagged with DISCONNECT_DIST in this map.
+    // This will be used to build the connectivity map, then later the adjacent
+    // counts will define the costs of a search used to connect components in
+    // the basic connectivity map that are broken apart in the restricted map
     FixedArray<int, GXM, GYM> non_adjacent_connectivity;
     std::vector<map_component> non_adj_components;
     adjacency_test adjacent_check;
@@ -2755,7 +2769,7 @@ static void _slime_connectivity_fixup()
     {
 
         int count = 0;
-        if (feat_is_wall(env.grid(*ri)))
+        if (!_passable_square(*ri))
         {
             count = DISCONNECT_DIST;
         }
@@ -2765,8 +2779,17 @@ static void _slime_connectivity_fixup()
             {
                 if (feat_is_wall(env.grid(*adj)))
                 {
-                    count++;
+                    // Not allowed to damage vault squares, so mark them
+                    // inaccessible
+                    if (env.level_map_mask(*adj) & MMT_VAULT)
+                    {
+                        count = DISCONNECT_DIST;
+                        break;
+                    }
+                    else
+                        count++;
                 }
+
             }
         }
         adjacent_check.adjacency(*ri) = count;
@@ -2774,10 +2797,11 @@ static void _slime_connectivity_fixup()
 
     _ccomps_8(non_adjacent_connectivity, non_adj_components, adjacent_check);
 
-    // For each component in the unrestricted map...
+    // Now that we have both connectivity maps, go over each component in the
+    // unrestricted map and connect any separate components in the restricted
+    // map that it was broken up into.
     for (unsigned i = 0; i < components.size(); i++)
     {
-        mprf("label %d bounds %d %d, %d %d mapped to: ", components[i].label, components[i].min_coord.x, components[i].min_coord.y, components[i].max_coord.x, components[i].max_coord.y);
         // Collect the components in the restricted connectivity map that
         // occupy part of the current component
         std::map<int, map_component *> present;
@@ -2794,19 +2818,15 @@ static void _slime_connectivity_fixup()
         // Set one restricted component as the base point, and search to all
         // other restricted components
         std::map<int, map_component * >::iterator target_components = present.begin();
+
+        // No non-wall adjacent squares in this component? This probably
+        // shouldn't happen, but just move on.
+        if (target_components == present.end())
+            continue;
+
         map_component * base_component = target_components->second;;
         target_components++;
-/*
-        template<typename valid_T, typename cost_T, typename est_T>
-        void search_astar(const coord_def & start,
-                          valid_T & valid_target,
-                          cost_T & connection_cost,
-                          est_T & cost_estimate,
-                          std::set<position_node> & visited,
-                          std::vector<std::set<position_node>::iterator > & candidates,
-                          int connect_mode = 8)
-*/
-        mprf("sub %d", base_component->label);
+
         adjacent_costs connection_costs;
         connection_costs.adjacency = &adjacent_check.adjacency;
 
@@ -2815,18 +2835,20 @@ static void _slime_connectivity_fixup()
 
         dummy_estimate dummy;
 
+        // Now search from our base component to the other components, and
+        // clear out the path found
         for ( ; target_components != present.end(); target_components++)
         {
-            // searching.
-            mprf("sub %d", target_components->second->label);
-
             valid_label.target_label = target_components->second->label;
 
             std::vector<std::set<position_node>::iterator >path;
             std::set<position_node> visited;
-            search_astar(base_component->seed_position, valid_label, connection_costs, dummy, visited, path);
+            search_astar(base_component->seed_position, valid_label,
+                         connection_costs, dummy, visited, path);
 
 
+            // Did the search, now remove any walls adjacent to squares in
+            // the path.
             const position_node * current = &(*path[0]);
 
             while (current)
@@ -2837,6 +2859,13 @@ static void _slime_connectivity_fixup()
                     {
                         if (feat_is_wall(env.grid(*adj_it)))
                         {
+                            // This shouldn't happen since vault adjacent
+                            // squares should have adjacency of DISCONNECT_DIST
+                            // but oh well
+                            if (env.level_map_mask(*adj_it) & MMT_VAULT)
+                            {
+                                mprf("Whoops, nicked a vault in slime connectivity fixup");
+                            }
                             env.grid(*adj_it) = DNGN_FLOOR;
                         }
                     }
