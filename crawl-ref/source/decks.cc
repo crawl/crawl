@@ -119,7 +119,7 @@ const deck_archetype deck_of_destruction[] = {
     { CARD_HAMMER,  {5, 5, 5} },
     { CARD_SPARK,   {5, 5, 5} },
     { CARD_PAIN,    {5, 5, 5} },
-    { CARD_TORMENT, {1, 3, 5} },
+    { CARD_TORMENT, {0, 2, 4} },
     END_OF_DECK
 };
 
@@ -153,7 +153,7 @@ const deck_archetype deck_of_wonders[] = {
     { CARD_POTION,     {5, 5, 5} },
     { CARD_FOCUS,      {1, 1, 2} },
     { CARD_SHUFFLE,    {0, 1, 2} },
-    { CARD_EXPERIENCE, {5, 5, 5} },
+    { CARD_EXPERIENCE, {3, 4, 5} },
     { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_HELIX,      {5, 5, 5} },
     { CARD_SAGE,       {5, 5, 5} },
