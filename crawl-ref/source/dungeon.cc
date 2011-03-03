@@ -2669,7 +2669,6 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
             connectivity_map(*pos) = _min_transitive_label(intermediate_components[label]);
         }
     }
-    mprf("components %d", components.size());
 }
 
 // Is this square a wall, or does it belong to a vault? both are considered to
@@ -2691,28 +2690,6 @@ struct adjacency_test
         return (_passable_square(pos) && adjacency(pos) == 0);
     }
 };
-
-#include <fstream>
-void write_conn_map(FixedArray<int, GXM, GYM> & conn_map, std::string fname)
-{
-    std::ofstream fout(fname.c_str());
-
-    for (int i =0; i < conn_map.height();i++)
-    {
-        for (int j = 0; j < conn_map.width(); j++)
-        {
-            fout.width(3);
-            if (conn_map[j][i] == 0)
-            {
-                fout << "#";
-            }
-            else
-                fout << conn_map[j][i];
-        }
-        fout << std::endl;
-    }
-    fout.close();
-}
 
 struct dummy_estimate
 {
@@ -2751,8 +2728,6 @@ static void _slime_connectivity_fixup()
     FixedArray<int, GXM, GYM> connectivity_map;
     std::vector<map_component> components;
     _ccomps_8(connectivity_map, components, _passable_square);
-
-    write_conn_map(connectivity_map, "basic_conn.txt");
 
     // Next we will generate a connectivity map with the above restrictions,
     // and also considering wall adjacent squares unpassable. But first we
@@ -2877,9 +2852,6 @@ static void _slime_connectivity_fixup()
         }
 
     }
-
-    write_conn_map(non_adjacent_connectivity, "wall_restricted.txt");
-    _ccomps_8(non_adjacent_connectivity, non_adj_components, adjacent_check);
 }
 
 // Returns false if we should skip further generation, and true
