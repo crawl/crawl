@@ -1009,21 +1009,6 @@ bool deck_stack()
     const int num_cards    = cards_in_deck(deck);
     const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
-    std::vector<card_type> draws;
-    std::vector<uint8_t>   flags;
-    for (int i = 0; i < num_cards; ++i)
-    {
-        uint8_t   _flags;
-        card_type card = _draw_top_card(deck, false, _flags);
-
-        if (i < num_to_stack)
-        {
-            draws.push_back(card);
-            flags.push_back(_flags | CFLAG_SEEN | CFLAG_MARKED);
-        }
-        // Rest of deck is discarded.
-    }
-
     if (num_cards == 1)
         mpr("There's only one card left!");
     else if (num_cards < 5)
@@ -1036,6 +1021,22 @@ bool deck_stack()
              num_cards);
     }
     more();
+
+    std::vector<card_type> draws;
+    std::vector<uint8_t>   flags;
+    for (int i = 0; i < num_cards; ++i)
+    {
+        uint8_t   _flags;
+        card_type card = get_card_and_flags(deck, i, _flags);
+        // card_type card = _draw_top_card(deck, false, _flags);
+
+        if (i < num_to_stack)
+        {
+            draws.push_back(card);
+            flags.push_back(_flags | CFLAG_SEEN | CFLAG_MARKED);
+        }
+        // Rest of deck is discarded.
+    }
 
     if (draws.size() > 1)
     {
@@ -1096,6 +1097,11 @@ bool deck_stack()
         redraw_screen();
     }
 
+    for (unsigned int i = 0; i < draws.size(); ++i)
+    {
+        uint8_t   _flags;
+        _draw_top_card(deck, false, _flags);
+    }
     deck.plus2 = -num_to_stack;
     for (unsigned int i = 0; i < draws.size(); ++i)
     {

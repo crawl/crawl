@@ -1573,6 +1573,27 @@ static bool _compare_card_names(card_type a, card_type b)
 // describe_misc_item
 //
 //---------------------------------------------------------------
+static bool _check_buggy_deck(const item_def &deck, std::string &desc)
+{
+    if (!is_deck(deck))
+    {
+        desc += "This isn't a deck at all!\n";
+        return (true);
+    }
+
+    const CrawlHashTable &props = deck.props;
+
+    if (!props.exists("cards")
+        || props["cards"].get_type() != SV_VEC
+        || props["cards"].get_vector().get_type() != SV_BYTE
+        || cards_in_deck(deck) == 0)
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
 static std::string _describe_deck(const item_def &item)
 {
     std::string description;
@@ -1580,6 +1601,9 @@ static std::string _describe_deck(const item_def &item)
     description.reserve(100);
 
     description += "\n";
+
+    if (_check_buggy_deck(item, description))
+        return "";
 
     const std::vector<card_type> drawn_cards = get_drawn_cards(item);
     if (!drawn_cards.empty())
