@@ -934,16 +934,6 @@ static void _try_monster_cast(spell_type spell, int powc,
 }
 #endif // WIZARD
 
-static beam_type _spell_to_beam_type(spell_type spell)
-{
-    switch (spell)
-    {
-    case SPELL_FREEZE: return BEAM_COLD;
-    default: break;
-    }
-    return BEAM_NONE;
-}
-
 static int _setup_evaporate_cast()
 {
     int rc = prompt_invent_item("Throw which potion?", MT_INVLIST, OBJ_POTIONS);
@@ -1299,10 +1289,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     switch (spell)
     {
-    // spells using burn_freeze()
     case SPELL_FREEZE:
     {
-        if (!burn_freeze(powc, _spell_to_beam_type(spell),
+        if (!cast_freeze(powc,
                          monster_at(spd.isTarget ? beam.target
                                                  : you.pos() + spd.delta)))
         {
@@ -1310,6 +1299,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         }
         break;
     }
+
     case SPELL_SANDBLAST:
         if (!cast_sandblast(powc, beam))
             return (SPRET_ABORT);
