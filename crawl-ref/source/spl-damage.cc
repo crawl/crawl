@@ -713,16 +713,6 @@ int airstrike(int pow, const dist &beam)
     return (success);
 }
 
-enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
-{
-    DEBRIS_METAL,           //    0
-    DEBRIS_ROCK,
-    DEBRIS_STONE,
-    DEBRIS_WOOD,
-    DEBRIS_CRYSTAL,
-    NUM_DEBRIS
-};          // jmf: ...and I'll actually implement the items Real Soon Now...
-
 // Just to avoid typing this over and over.
 // Returns true if monster died. -- bwr
 static bool _player_hurt_monster(monster& m, int damage,
