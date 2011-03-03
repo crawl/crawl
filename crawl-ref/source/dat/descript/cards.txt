@@ -261,6 +261,11 @@ the Swine card
 This card will make you turn pink and root for truffles.
 It is usually only found in Nemelex Xobeh's deck of punishment.
 %%%%
+the Alchemist card
+
+This card transmutes some of your gold into health and magical energy.
+It is usually found in decks of changes and wonders.
+%%%%
 # deck of oddities (random card, along with a few others)
 the Bargain card
 
