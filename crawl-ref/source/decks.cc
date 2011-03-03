@@ -1930,25 +1930,19 @@ static void _potion_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     potion_type pot_effects[] = {
-        POT_HEAL_WOUNDS, POT_HEAL_WOUNDS, POT_HEAL_WOUNDS,
-        POT_HEALING, POT_HEALING, POT_HEALING,
-        POT_RESTORE_ABILITIES, POT_RESTORE_ABILITIES,
-        POT_POISON, POT_CONFUSION, POT_DEGENERATION
+        POT_AGILITY, POT_AGILITY, POT_BRILLIANCE,
+        POT_BRILLIANCE, POT_MIGHT, POT_MIGHT,
+        POT_HEALING, POT_HEALING, POT_CONFUSION,
+        POT_SLOWING, POT_PARALYSIS
     };
 
     potion_type pot = RANDOM_ELEMENT(pot_effects);
 
     if (power_level >= 1 && coinflip())
-        pot = (coinflip() ? POT_CURE_MUTATION : POT_MUTATION);
+        pot = (coinflip() ? POT_MAGIC : POT_INVISIBILITY);
 
-    if (power_level >= 2 && one_chance_in(5))
-    {
-        // +1 to a random stat.
-        const potion_type gain_stat_pots[] = {
-            POT_GAIN_STRENGTH, POT_GAIN_DEXTERITY, POT_GAIN_INTELLIGENCE
-        };
-        pot = RANDOM_ELEMENT(gain_stat_pots);
-    }
+    if (power_level >= 2 && coinflip())
+        pot = (coinflip() ? POT_SPEED : POT_RESISTANCE);
 
     potion_effect(pot, random2(power/4));
 }
