@@ -14,7 +14,7 @@ Breaks save compatibility with the 0.7 release.
 * New and improved save file format.
 * Nerf Haste.
 * Greatly improve player Draconians.
-* Replace Selective Amnesia with forgetting spells by book destruction.
+* Replace Selective Amnesia spell with scroll, and book destruction.
 * Many interface improvements.
 * Improved heavy armour.
 
@@ -29,6 +29,8 @@ Gods
 * Yredelemnul accepts kills of artificial beings (golems, gargoyles).
 * Tone down Kiku's mummy death curse protection.
 * Kikubaaqudgha protects followers from ordinary mummy curses.
+* Invoking Elyvilon's protection is now an ability.
+* Destroying weapons in Elyvilon's name is now a prayer.
 * Elyvilon allows destruction of staves.
 * Clarified Ely's healing/pacification messaging.
 * Zin protects from Hell effects, chance depending on piety.
@@ -43,6 +45,7 @@ Gods
 * Jiyva no longer provides "amulet of conservation" effect.
 * Trog extending your rage doesn't cause glow.
 * Fedhas cares about trees burnt down in forest fires.
+* Fedhas's corpse decomposition is now activated by prayer.
 * Sif Muna punishes destruction of spellbooks.
 * Add penance welcome messages.
 * New wizmode command '&W' to force god wrath.
@@ -67,7 +70,7 @@ Character
 * Allow Merfolk/Kenku to blink over deep water.
 * Allow Kenku to stop flying.
 * Apply terrain change to player when banished.
-* Bring Merfolk HP to Human HP levels.
+* Bring Merfolk HP down to Human HP levels.
 
 Interface
 ---------
