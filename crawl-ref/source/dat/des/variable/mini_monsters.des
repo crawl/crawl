@@ -393,16 +393,16 @@ DEPTH: D:3-12, Lair:1-3, Orc:1-2
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
 KMONS:  1 = megabat
-KMONS:  2 = bat name:microbat n_rpl n_spe col:magenta
+KMONS:  2 = bat name:microbat n_rpl n_spe col:magenta tile:mons_microbat
 # Can we spell them this way?  Please?
-KMONS:  3 = bat name:fruity n_adj n_spe col:lightmagenta
-KMONS:  4 = bat name:giga n_adj n_spe hd:4 col:brown
+KMONS:  3 = bat name:fruity n_adj n_spe col:lightmagenta tile:mons_fruity_bat
+KMONS:  4 = bat name:giga n_adj n_spe hd:4 col:brown tile:mons_gigabat
 # Way harder than the rest here.
 KMONS:  5 = vampire bat
 # In RL, they sit put, not moving a finger.  Lazy bastards.
 KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_spe n_zom
 # The only here without a basis in reality.
-KMONS:  7 = megabat simulacrum name:ice_bat n_rpl n_spe n_zom
+KMONS:  7 = megabat simulacrum name:ice_bat n_rpl n_spe n_zom tile:mons_ice_bat
 # There are actual "ghost bats" too, but near-extinct, while ghost-faceds
 # have a number of species and are widespread.
 KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_spe n_zom

@@ -23,6 +23,14 @@ butterfly4
 butterfly5
 butterfly6
 raven MONS_RAVEN
+%sdir dc-mon/vault
+%rim 0
+microbat MONS_MICROBAT
+%rim 1
+gigabat MONS_GIGABAT
+fruity_bat MONS_FRUITY_BAT
+ice_bat MONS_ICE_BAT
+%sdir dc-mon/animals
 
 ## Hounds and hogs ('h')
 jackal MONS_JACKAL
