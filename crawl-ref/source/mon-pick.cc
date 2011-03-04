@@ -81,6 +81,7 @@ bool mons_abyss(int mcls)
     case MONS_EXECUTIONER:
     case MONS_EYE_OF_DEVASTATION:
     case MONS_EYE_OF_DRAINING:
+    case MONS_FIRE_BAT:
     case MONS_FIRE_ELEMENTAL:
     case MONS_FLAMING_CORPSE:
     case MONS_FLAYED_GHOST:
@@ -246,6 +247,7 @@ int mons_rare_abyss(int mcls)
     case MONS_EYE_OF_DRAINING:
     case MONS_FLAMING_CORPSE:
     case MONS_LICH:
+    case MONS_FIRE_BAT:
         return 14;
 
     case MONS_INSUBSTANTIAL_WISP:

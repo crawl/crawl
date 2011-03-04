@@ -407,7 +407,7 @@ KMONS:  7 = megabat simulacrum name:ice_bat n_rpl n_spe n_zom
 # have a number of species and are widespread.
 KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_spe n_zom
 # Just an US WW2 military project, but that's good enough.
-KMONS:  9 = bat name:fire_bat n_rpl n_spe spells:flame_tongue col:lightred
+KMONS:  9 = fire bat hd:1
 KMONS:  0 = bat zombie name:rotten_bat n_rpl n_spe n_zom
 MAP
        xxxxx

@@ -2526,6 +2526,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 1 + random2(3);
         break;
 
+    case MONS_FIRE_BAT:
+        band = BAND_FIRE_BATS;
+        band_size = 1 + random2(3);
+        break;
+
     case MONS_DEEP_TROLL:
         band = BAND_DEEP_TROLLS;
         band_size = 3 + random2(3);
@@ -2958,6 +2963,9 @@ static monster_type _band_member(band_type band, int power)
         break;
     case BAND_VAMPIRE_MOSQUITOES:
         mon_type = MONS_VAMPIRE_MOSQUITO;
+        break;
+    case BAND_FIRE_BATS:
+        mon_type = MONS_FIRE_BAT;
         break;
     case BAND_BOGGARTS:
         mon_type = MONS_BOGGART;
