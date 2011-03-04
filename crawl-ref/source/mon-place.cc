@@ -349,11 +349,13 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
-    if (crawl_state.game_is_arena() ||
-        (crawl_state.game_is_sprint() &&
-         you.level_type == LEVEL_DUNGEON &&
-         you.char_direction == GDT_DESCENDING))
+    if (crawl_state.game_is_arena()
+        || (crawl_state.game_is_sprint()
+            && you.level_type == LEVEL_DUNGEON
+            && you.char_direction == GDT_DESCENDING))
+    {
         return;
+    }
 
 #ifdef DEBUG_MON_CREATION
     mpr("in spawn_random_monsters()", MSGCH_DIAGNOSTICS);
@@ -385,7 +387,7 @@ void spawn_random_monsters()
         return;
     }
 
-    // Place normal dungeon monsters,  but not in player LOS.
+    // Place normal dungeon monsters, but not in player LOS.
     if (you.level_type == LEVEL_DUNGEON && x_chance_in_y(5, rate))
     {
         dprf("Placing monster, rate: %d, turns here: %d",
@@ -563,13 +565,12 @@ monster_type pick_random_monster(const level_id &place, int power,
                     count++;
                 }
                 while (mons_abyss(mon_type) == 0 && count < 2000);
-            } while ((crawl_state.game_is_arena() &&
-                      arena_veto_random_monster(mon_type)) ||
-                     (crawl_state.game_is_sprint() &&
-                      sprint_veto_random_abyss_monster(mon_type)) ||
-                     (force_mobile && (mons_class_is_stationary(mon_type)
-                       || mons_is_mimic(mon_type))
-                     ));
+            } while ((crawl_state.game_is_arena()
+                          && arena_veto_random_monster(mon_type))
+                      || (crawl_state.game_is_sprint()
+                          && sprint_veto_random_abyss_monster(mon_type))
+                      || (force_mobile && (mons_class_is_stationary(mon_type)
+                                           || mons_is_mimic(mon_type))));
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
@@ -1050,9 +1051,7 @@ int place_monster(mgen_data mg, bool force_pos)
     {
         branch_type b;
         if (!find_mon_place_near_stairs(mg.pos, &stair_type, b))
-        {
             mg.proximity = PROX_AWAY_FROM_PLAYER;
-        }
     } // end proximity check
 
     if (mg.cls == MONS_PROGRAM_BUG)
