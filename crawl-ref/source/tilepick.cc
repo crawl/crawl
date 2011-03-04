@@ -1,4 +1,5 @@
 /*
+/*
  *  File:       tilepick.cc
  *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
  */
@@ -1496,7 +1497,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // See tileidx_feature.
     case MONS_DOOR_MIMIC:
     case MONS_PORTAL_MIMIC:
-    case MONS_TRAP_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:
@@ -2468,7 +2468,6 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
 
         // Feature mimics get drawn with the dungeon, see tileidx_feature.
         case MONS_SHOP_MIMIC:
-        case MONS_TRAP_MIMIC:
         case MONS_PORTAL_MIMIC:
         case MONS_DOOR_MIMIC:
         case MONS_STAIR_MIMIC:

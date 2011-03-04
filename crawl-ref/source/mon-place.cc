@@ -1664,10 +1664,6 @@ static int _place_monster_aux(const mgen_data &mg,
             break;
         }
 
-        case MONS_TRAP_MIMIC:
-            mon->props["trap_type"] = static_cast<short>(random_trap(DNGN_TRAP_MECHANICAL));
-            break;
-
         // Needs a more complicated block.
         case MONS_SHOP_MIMIC:
         {

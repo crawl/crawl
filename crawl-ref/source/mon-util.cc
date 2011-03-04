@@ -170,7 +170,6 @@ void init_mon_name_cache()
                 || mon == MONS_PORTAL_MIMIC
                 || mon == MONS_SHOP_MIMIC
                 || mon == MONS_STAIR_MIMIC
-                || mon == MONS_TRAP_MIMIC
                 || mon == MONS_FOUNTAIN_MIMIC
                 || mon == MONS_MARA_FAKE)
             {

@@ -583,7 +583,6 @@ int mons_standard_level(int mcls)
     case MONS_SKELETAL_WARRIOR:
     case MONS_WEAPON_MIMIC:
     case MONS_PORTAL_MIMIC:
-    case MONS_TRAP_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:
@@ -895,7 +894,6 @@ int mons_standard_rare(int mcls)
     case MONS_YELLOW_WASP:
     case MONS_ELEPHANT:
     case MONS_PORTAL_MIMIC:
-    case MONS_TRAP_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:
@@ -2121,7 +2119,6 @@ int mons_crypt_level(int mcls)
     case MONS_LICH:
     case MONS_CURSE_SKULL:
     case MONS_PORTAL_MIMIC:
-    case MONS_TRAP_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:
@@ -2202,7 +2199,6 @@ int mons_crypt_rare(int mcls)
 
     case MONS_ANCIENT_LICH:
     case MONS_PORTAL_MIMIC:
-    case MONS_TRAP_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
     case MONS_FOUNTAIN_MIMIC:

@@ -183,7 +183,7 @@ const item_def &get_mimic_item(const monster* mimic)
     return (mitm[mimic->inv[MSLOT_MISCELLANY]]);
 }
 
-dungeon_feature_type get_mimic_feat (const monster* mimic)
+dungeon_feature_type get_mimic_feat(const monster* mimic)
 {
     switch (mimic->type)
     {
@@ -194,8 +194,6 @@ dungeon_feature_type get_mimic_feat (const monster* mimic)
             return (DNGN_ENTER_PORTAL_VAULT);
         else
             return (DNGN_ENTER_LABYRINTH);
-    case MONS_TRAP_MIMIC:
-        return (DNGN_TRAP_MECHANICAL);
     case MONS_STAIR_MIMIC:
         if (mimic->props.exists("stair_type"))
         {
