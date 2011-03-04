@@ -15,6 +15,4 @@
 bool potion_effect(potion_type pot_eff, int pow,
                    bool drank_it = false, bool was_known = true);
 
-bool unwield_item(bool showMsgs = true);
-
 #endif

@@ -1494,3 +1494,30 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
     // Must occur after ring is removed. -- bwr
     calc_mp();
 }
+
+bool unwield_item(bool showMsgs)
+{
+    if (!you.weapon())
+        return (false);
+
+    if (you.berserk())
+    {
+        if (showMsgs)
+            canned_msg(MSG_TOO_BERSERK);
+        return (false);
+    }
+
+    item_def& item = *you.weapon();
+
+    const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
+
+    if (is_weapon && !safe_to_remove(item))
+        return (false);
+
+    unequip_item(EQ_WEAPON, showMsgs);
+
+    you.wield_change     = true;
+    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+
+    return (true);
+}
