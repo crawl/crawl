@@ -2705,15 +2705,15 @@ struct spell_desc
 
 {
     SPELL_TROGS_HAND, "Trog's Hand",
-    SPTYP_NONE,
-    SPFLAG_MONSTER,
-    3,
-    0,
-    -1, -1,
-    0,
-    NULL,
-    false,
-    false
+     SPTYP_NONE,
+     SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
 },
 
 {
