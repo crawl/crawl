@@ -1027,8 +1027,7 @@ bool deck_stack()
     for (int i = 0; i < num_cards; ++i)
     {
         uint8_t   _flags;
-        card_type card = get_card_and_flags(deck, i, _flags);
-        // card_type card = _draw_top_card(deck, false, _flags);
+        card_type card = _draw_top_card(deck, false, _flags);
 
         if (i < num_to_stack)
         {
@@ -1037,6 +1036,20 @@ bool deck_stack()
         }
         // Rest of deck is discarded.
     }
+
+    // Re-add the cards, with changed flags, in case the game is closed
+    // while the swapping takes place, so we don't leak information about
+    // the deck.
+    // If it does get closed, the order of the top five cards will be
+    // unchanged, but the deck will be marked as stacked. (jpeg)
+    for (unsigned int i = 0; i < draws.size(); ++i)
+    {
+        _push_top_card(deck, draws[draws.size() - 1 - i],
+                       flags[flags.size() - 1 - i]);
+    }
+    deck.plus2 = -num_to_stack;
+    props["num_marked"] = static_cast<char>(num_to_stack);
+    you.wield_change = true;
 
     if (draws.size() > 1)
     {
@@ -1096,21 +1109,17 @@ bool deck_stack()
         }
         redraw_screen();
     }
-
+    // Remove the cards again, and add them
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
         uint8_t   _flags;
         _draw_top_card(deck, false, _flags);
     }
-    deck.plus2 = -num_to_stack;
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
         _push_top_card(deck, draws[draws.size() - 1 - i],
                        flags[flags.size() - 1 - i]);
     }
-
-    props["num_marked"] = static_cast<char>(num_to_stack);
-    you.wield_change = true;
 
     _check_buggy_deck(deck);
 
