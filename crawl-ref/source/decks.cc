@@ -2792,43 +2792,45 @@ static bool _alchemist_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     int gold_used = std::min(you.gold, random2avg(100, 2) * (1 + power_level));
-
-    // Do nothing if health and magic are both full
-    if ((you.hp == you.hp_max && you.magic_points == you.max_magic_points)
-       || gold_used == 0)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return(false);
-    }
+    bool done_stuff = false;
 
     you.del_gold(gold_used);
-    mpr("Some of your gold vanishes!");
     dprf("%d gold available to spend.", gold_used);
 
-    // Spend some gold to increase health
-    if (you.hp < you.hp_max)
+    // Spend some gold to regain health
+    int hp = std::min(gold_used / 3, you.hp_max - you.hp);
+    if (hp > 0)
     {
-        int hp = std::min(gold_used / (4 - power_level), you.hp_max - you.hp);
         inc_hp(hp, false);
-        gold_used -= hp;
+        gold_used -= hp * 2;
+        done_stuff = true;
         mpr("You feel better.");
         dprf("Gained %d health, %d gold remaining.", hp, gold_used);
     }
 
-    // Spend some gold to increase magic
-    if (you.magic_points < you.max_magic_points)
+    // Maybe spend some more gold to regain magic
+    if (x_chance_in_y(power_level + 1, 5))
     {
-        int mp = std::min(gold_used / 2, you.max_magic_points - you.magic_points);
-        inc_mp(mp, false);
-        gold_used -= mp;
-        mpr("You feel your power returning.");
-        dprf("Gained %d magic, %d gold remaining.", mp, gold_used);
+        int mp = std::min(gold_used / 6, you.max_magic_points - you.magic_points);
+        if (mp > 0)
+        {
+            inc_mp(mp, false);
+            gold_used -= mp * 4;
+            done_stuff = true;
+            mpr("You feel your power returning.");
+            dprf("Gained %d magic, %d gold remaining.", mp, gold_used);
+        }
     }
+
+    if (done_stuff)
+        mpr("Some of your gold vanishes!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     // Add back any remaining gold
     you.add_gold(gold_used);
 
-    return (true);
+    return (done_stuff);
 }
 
 static int _card_power(deck_rarity_type rarity)
