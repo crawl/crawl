@@ -520,7 +520,7 @@ KPROP:   'tCD<> = no_rtele_into
 : if rnd == 0 then
 KFEAT:   C = altar_beogh
 SUBST:   D=I, G=I
-KMONS:   3 = orc warrior / orc priest
+KMONS:   3 = orc warrior
 KMONS:   1 = orc / nothing
 KMONS:   2 = orc wizard / orc / nothing
 : elseif rnd == 1 then
