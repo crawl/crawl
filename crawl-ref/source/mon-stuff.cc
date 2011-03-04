@@ -782,6 +782,7 @@ static int _calc_player_experience(monster* mons, killer_type killer,
          50 * mons->damage_friendly / mons->damage_total);
     experience = (experience * mons->damage_friendly / mons->damage_total
                   + 1) / 2;
+    ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
 
     // All deaths of hostiles grant at least 50% XP in ZotDef.
     if (crawl_state.game_is_zotdef() && experience < half_xp)
