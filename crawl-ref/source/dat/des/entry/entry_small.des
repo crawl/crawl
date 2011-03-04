@@ -409,11 +409,12 @@ WEIGHT: 2
 ORIENT: float
 MONS:   kobold; dart ego:dispersal q:3
 MAP
-xxxxxxxxxx..
-=.llllll{l@.
-x.xxxxxx=x..
-x1xxxxxx....
-xxx
+xxxxxxxxx=x..
+x.llllll{.l@.
+x.llllll>.l..
+x1xxxxxxx=x..
+x=xxxxxx.....
+.............
 ENDMAP
 
 ##############################################################
