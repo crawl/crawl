@@ -222,6 +222,7 @@ static monsterentry mondata[] = {
 
 #if TAG_MAJOR_VERSION == 32
     AXED_MON(MONS_GIANT_BLOWFLY)
+    AXED_MON(MONS_TRAP_MIMIC)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -4438,19 +4439,6 @@ static monsterentry mondata[] = {
     M_FIGHTER,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_DOOR_MIMIC, MONS_PORTAL_MIMIC, MH_NONLIVING, -3,
-    { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12},
-       AT_NO_ATK },
-    { 8, 3, 5, 0 },
-    5, 1, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
-},
-
-{
-    MONS_TRAP_MIMIC, '^', LIGHTCYAN, "trap mimic",
-    M_FIGHTER,
-    MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
-    0, 13, MONS_DOOR_MIMIC, MONS_TRAP_MIMIC, MH_NONLIVING, -3,
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12},
        AT_NO_ATK },
     { 8, 3, 5, 0 },
