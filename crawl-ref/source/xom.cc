@@ -1184,10 +1184,6 @@ static int _xom_do_potion(bool debug = false)
             if (!you.can_go_berserk(false))
                 has_effect = false;
             break;
-        case POT_EXPERIENCE:
-            if (you.experience_level == 27)
-                has_effect = false;
-            break;
         default:
             break;
         }
