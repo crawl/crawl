@@ -4381,7 +4381,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_WEAPON_MIMIC, ')', BLACK, "mimic",
+    MONS_WEAPON_MIMIC, ')', BLACK, "weapon mimic",
     M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_WEAPON_MIMIC, MH_NONLIVING, -3,
@@ -4394,7 +4394,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_ARMOUR_MIMIC, '[', BLACK, "mimic",
+    MONS_ARMOUR_MIMIC, '[', BLACK, "armour mimic",
     M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_ARMOUR_MIMIC, MH_NONLIVING, -3,
@@ -4407,7 +4407,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SCROLL_MIMIC, '?', LIGHTGREY, "mimic",
+    MONS_SCROLL_MIMIC, '?', LIGHTGREY, "scroll mimic",
     M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_SCROLL_MIMIC, MH_NONLIVING, -3,
@@ -4420,7 +4420,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_POTION_MIMIC, '!', BLACK, "mimic",
+    MONS_POTION_MIMIC, '!', BLACK, "potion mimic",
     M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_POTION_MIMIC, MH_NONLIVING, -3,
