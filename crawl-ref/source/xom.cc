@@ -27,7 +27,6 @@
 #include "env.h"
 #include "feature.h"
 #include "goditem.h"
-#include "it_use2.h"
 #include "item_use.h" // for safe_to_remove_or_wear()
 #include "itemprop.h"
 #include "items.h"
@@ -51,6 +50,7 @@
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills2.h"

@@ -32,7 +32,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
