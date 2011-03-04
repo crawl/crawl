@@ -2348,6 +2348,7 @@ enum monster_type                      // (int) menv[].type
     MONS_TERPSICHORE,
     MONS_BAT,
     MONS_SPRIGGAN_AIR_MAGE,
+    MONS_FIRE_BAT,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2451,6 +2452,7 @@ enum mon_spellbook_type
     MST_RAKSHASA,
     MST_GREAT_ORB_OF_EYES,
     MST_KRAKEN,
+    MST_FIRE_BAT,
     MST_ORC_SORCERER,
     MST_STEAM_DRAGON,
     MST_HELL_KNIGHT_I,
