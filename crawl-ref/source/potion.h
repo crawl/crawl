@@ -1,6 +1,6 @@
 /*
- *  File:       it_use2.h
- *  Summary:    Functions for using wands, potions, and weapon/armour removal.
+ *  File:       potion.h
+ *  Summary:    Potion and potion-like effects.
  *  Written by: Linley Henzell
  */
 

@@ -17,7 +17,6 @@
 #include "delay.h"
 #include "env.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"

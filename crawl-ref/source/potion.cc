@@ -1,12 +1,12 @@
 /*
- *  File:       it_use2.cc
- *  Summary:    Functions for using wands, potions, and weapon/armour removal.
+ *  File:       potion.cc
+ *  Summary:    Potion and potion-like effects.
  *  Written by: Linley Henzell
  */
 
 #include "AppHdr.h"
 
-#include "it_use2.h"
+#include "potion.h"
 
 #include <stdio.h>
 #include <string.h>
