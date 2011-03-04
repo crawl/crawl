@@ -1,5 +1,4 @@
 /*
-/*
  *  File:       tilepick.cc
  *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
  */
@@ -382,18 +381,53 @@ tileidx_t tileidx_feature(const coord_def &gc)
     {
     case DNGN_SECRET_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
-        {
-            coord_def door;
-            dungeon_feature_type door_feat;
-            find_secret_door_info(gc, &door_feat, &door);
+    {
+        coord_def door;
+        dungeon_feature_type door_feat;
+        find_secret_door_info(gc, &door_feat, &door);
 
-            // If surrounding tiles from a secret door are using tile
-            // overrides, then use that tile for the secret door.
-            if (env.tile_flv(door).feat)
-                return (env.tile_flv(door).feat);
-            else
-                return (_tileidx_feature_base(door_feat));
+        // If surrounding tiles from a secret door are using tile
+        // overrides, then use that tile for the secret door.
+        if (env.tile_flv(door).feat)
+            return (env.tile_flv(door).feat);
+        else
+            return (_tileidx_feature_base(door_feat));
+    }
+    case DNGN_CLOSED_DOOR:
+    {
+        const coord_def left(gc.x - 1, gc.y);
+        const coord_def right(gc.x + 1, gc.y);
+
+        bool door_left  = feat_is_closed_door(grd(left));
+        bool door_right = feat_is_closed_door(grd(right));
+
+        if ((!door_left || !door_right))
+        {
+            monster* m_left  = monster_at(left);
+            monster* m_right = monster_at(right);
+            if (m_left && m_left->type == MONS_DOOR_MIMIC
+                && mons_is_unknown_mimic(m_left))
+            {
+                door_left = true;
+            }
+            if (m_right && m_right->type == MONS_DOOR_MIMIC
+                && mons_is_unknown_mimic(m_right))
+            {
+                door_right = true;
+            }
         }
+
+        if (door_left || door_right)
+        {
+            if (door_left && door_right)
+                return TILE_DNGN_GATE_CLOSED_MIDDLE;
+            else if (door_left)
+                return TILE_DNGN_GATE_CLOSED_RIGHT;
+            else
+                return TILE_DNGN_GATE_CLOSED_LEFT;
+        }
+        return (_tileidx_feature_base(feat));
+    }
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
