@@ -570,18 +570,20 @@ int mons_standard_level(int mcls)
     case MONS_TRAPDOOR_SPIDER:
         return 14;
 
-    case MONS_ARMOUR_MIMIC:
     case MONS_BRAIN_WORM:
     case MONS_CYCLOPS:
     case MONS_EFREET:
     case MONS_EYE_OF_DEVASTATION:
-    case MONS_GOLD_MIMIC:
     case MONS_HYDRA:
     case MONS_MOTTLED_DRAGON:
+    case MONS_SKELETAL_WARRIOR:
+    // item mimics
+    case MONS_ARMOUR_MIMIC:
+    case MONS_GOLD_MIMIC:
     case MONS_POTION_MIMIC:
     case MONS_SCROLL_MIMIC:
-    case MONS_SKELETAL_WARRIOR:
     case MONS_WEAPON_MIMIC:
+    // feature mimics
     case MONS_PORTAL_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
@@ -870,7 +872,6 @@ int mons_standard_rare(int mcls)
     case MONS_GIANT_SLUG:
         return 32;
 
-    case MONS_ARMOUR_MIMIC:
     case MONS_WATER_MOCCASIN:
     case MONS_DRAGON:
     case MONS_ETTIN:
@@ -878,21 +879,24 @@ int mons_standard_rare(int mcls)
     case MONS_CROCODILE:
     case MONS_GIANT_MITE:
     case MONS_GNOLL:
-    case MONS_GOLD_MIMIC:
     case MONS_KOMODO_DRAGON:
     case MONS_MUMMY:
     case MONS_NECROPHAGE:
-    case MONS_POTION_MIMIC:
-    case MONS_SCROLL_MIMIC:
     case MONS_QUASIT:
     case MONS_SKELETAL_WARRIOR:
     case MONS_SMALL_SNAKE:
     case MONS_SOUL_EATER:
     case MONS_SPINY_WORM:
     case MONS_VAMPIRE:
-    case MONS_WEAPON_MIMIC:
     case MONS_YELLOW_WASP:
     case MONS_ELEPHANT:
+    // item mimics
+    case MONS_ARMOUR_MIMIC:
+    case MONS_GOLD_MIMIC:
+    case MONS_POTION_MIMIC:
+    case MONS_SCROLL_MIMIC:
+    case MONS_WEAPON_MIMIC:
+    // feature mimics
     case MONS_PORTAL_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
@@ -2118,6 +2122,7 @@ int mons_crypt_level(int mcls)
     case MONS_ANCIENT_LICH:
     case MONS_LICH:
     case MONS_CURSE_SKULL:
+    // feature mimics
     case MONS_PORTAL_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
@@ -2198,6 +2203,7 @@ int mons_crypt_rare(int mcls)
         return 10;
 
     case MONS_ANCIENT_LICH:
+    // feature mimics
     case MONS_PORTAL_MIMIC:
     case MONS_STAIR_MIMIC:
     case MONS_SHOP_MIMIC:
