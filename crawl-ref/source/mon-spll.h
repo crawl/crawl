@@ -528,11 +528,11 @@
 
     {  MST_CACODEMON,
       {
-       SPELL_CALL_IMP,
-       SPELL_CALL_IMP,
+       SPELL_ENERGY_BOLT,
+       SPELL_SLOW,
        SPELL_CALL_IMP,
        SPELL_POLYMORPH_OTHER,
-       SPELL_DIG,
+       SPELL_NO_SPELL,
        SPELL_SUMMON_DEMON
       }
     },
