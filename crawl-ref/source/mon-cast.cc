@@ -1286,7 +1286,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     const bool wizard = mons->is_actual_spellcaster();
     god_type god = (priest || !(priest || wizard)) ? mons->god : GOD_NO_GOD;
 
-    if (silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
+    if ((silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
         && (priest || wizard || spellcasting_poly
             || mons_class_flag(mons->type, M_SPELL_NO_SILENT)))
     {
