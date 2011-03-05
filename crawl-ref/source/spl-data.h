@@ -77,7 +77,7 @@ struct spell_desc
 },
 
 {
-     SPELL_APPORTATION, "Apportation",
+    SPELL_APPORTATION, "Apportation",
      SPTYP_TRANSLOCATION,
      SPFLAG_TARG_OBJ | SPFLAG_NOT_SELF,
      1,
@@ -235,7 +235,7 @@ struct spell_desc
 },
 
 {
-     SPELL_PETRIFY, "Petrify",
+    SPELL_PETRIFY, "Petrify",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      4,
@@ -327,7 +327,7 @@ struct spell_desc
 },
 
 {
-     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
+    SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      3,
@@ -587,7 +587,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK, "Blink",
+    SPELL_BLINK, "Blink",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE,
      2,
@@ -600,7 +600,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK_RANGE, "Blink Range", // XXX needs better name
+    SPELL_BLINK_RANGE, "Blink Range", // XXX needs better name
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE | SPFLAG_MONSTER,
      2,
@@ -613,7 +613,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK_AWAY, "Blink Away",
+    SPELL_BLINK_AWAY, "Blink Away",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE | SPFLAG_MONSTER,
      2,
@@ -626,7 +626,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK_CLOSE, "Blink Close",
+    SPELL_BLINK_CLOSE, "Blink Close",
      SPTYP_TRANSLOCATION,
      SPFLAG_MONSTER,
      2,
@@ -706,7 +706,7 @@ struct spell_desc
 },
 
 {
-   SPELL_ANIMATE_DEAD, "Animate Dead",
+    SPELL_ANIMATE_DEAD, "Animate Dead",
      SPTYP_NECROMANCY,
      SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_CORPSE_VIOLATING,
      4,
@@ -1072,7 +1072,8 @@ struct spell_desc
      false
 },
 
-{   SPELL_TUKIMAS_BALL, "Tukima's Ball",
+{
+    SPELL_TUKIMAS_BALL, "Tukima's Ball",
      SPTYP_HEXES,
      SPFLAG_NONE,
      9,
@@ -1621,7 +1622,7 @@ struct spell_desc
 },
 
 {
-     SPELL_PASSWALL, "Passwall",
+    SPELL_PASSWALL, "Passwall",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR | SPFLAG_ESCAPE | SPFLAG_NOT_SELF,
      3,
@@ -2287,7 +2288,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK_OTHER_CLOSE, "Blink Other Close",
+    SPELL_BLINK_OTHER_CLOSE, "Blink Other Close",
      SPTYP_TRANSLOCATION,
      SPFLAG_TARGET | SPFLAG_MONSTER,
      2,
