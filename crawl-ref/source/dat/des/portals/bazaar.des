@@ -1603,7 +1603,7 @@ NAME:    bazaar_jpeg_triangle_bulge
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  1
-SHUFFLE: ABC
+SHUFFLE: AB
 SUBST:   A = <, B = >
 KFEAT:   C = any shop
 : bazaar_epilogue(_G)
