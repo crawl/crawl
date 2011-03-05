@@ -2134,7 +2134,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         beem.aux_source  = "bolt of electricity";
         beem.range       = 8;
         beem.damage      = dice_def(3, 6);
-        beem.hit         = 50;
+        beem.hit         = 35;
         beem.colour      = LIGHTCYAN;
         beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_ELECTRICITY;
