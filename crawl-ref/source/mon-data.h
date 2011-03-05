@@ -416,7 +416,7 @@ static monsterentry mondata[] = {
 {
     MONS_BLACK_DRACONIAN, 'd', BLUE, "black draconian",
     M_COLD_BLOOD | M_SPEAKS,
-    MR_RES_ELEC,
+    mrd(MR_RES_ELEC, 2),
     900, 10, MONS_DRACONIAN, MONS_BLACK_DRACONIAN, MH_NATURAL, -2,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 5, 4, 0 },
@@ -1068,7 +1068,7 @@ static monsterentry mondata[] = {
     MONS_SPRIGGAN_AIR_MAGE, 'i', LIGHTCYAN, "spriggan air mage",
     M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS | M_SPELLCASTER | M_ACTUAL_SPELLS
         | M_DEFLECT_MISSILES,
-    MR_RES_ELEC,
+    mrd(MR_RES_ELEC, 2),
     200, 10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, -7,
     { {AT_HIT, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 2, 2, 0 },
@@ -2152,7 +2152,7 @@ static monsterentry mondata[] = {
 { // miscast only
     MONS_TWISTER, 'v', ETC_AIR, "twister",
     M_CONFUSED | M_INSUBSTANTIAL | M_BATTY | M_NO_POLY_TO,
-    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
+    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | mrd(MR_RES_ELEC, 3),
     0, 5, MONS_FIRE_VORTEX, MONS_TWISTER, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 0, 0, 10000 },
@@ -2404,7 +2404,7 @@ static monsterentry mondata[] = {
 {
     MONS_CURSE_SKULL, 'z', LIGHTCYAN, "curse skull",
     M_SPELLCASTER | M_SEE_INVIS | M_STATIONARY | M_SPEAKS | M_NOISY_SPELLS,
-    MR_RES_ELEC | MR_RES_HELLFIRE | mrd(MR_RES_COLD, 2),
+    mrd(MR_RES_ELEC | MR_RES_COLD, 2) | MR_RES_HELLFIRE,
     0, 50, MONS_LICH, MONS_CURSE_SKULL, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 13, 0, 0, 66 },
@@ -2417,7 +2417,7 @@ static monsterentry mondata[] = {
 {
     MONS_CURSE_TOE, 'z', YELLOW, "curse toe",
     M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS,
-    MR_RES_ELEC | MR_RES_HELLFIRE | MR_RES_COLD,
+    mrd(MR_RES_ELEC, 2) | MR_RES_HELLFIRE | MR_RES_COLD,
     0, 60, MONS_LICH, MONS_CURSE_TOE, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 0, 0, 77 },
@@ -2430,7 +2430,7 @@ static monsterentry mondata[] = {
 {
     MONS_ANGEL, 'A', WHITE, "Angel",
     M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS_LIGHT,
-    MR_RES_POISON | MR_RES_ELEC,
+    MR_RES_POISON | mrd(MR_RES_ELEC, 2),
     0, 10, MONS_ANGEL, MONS_ANGEL, MH_HOLY, -8,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK,
        AT_NO_ATK },
@@ -2444,7 +2444,7 @@ static monsterentry mondata[] = {
     MONS_CHERUB, 'A', WHITE, "Cherub",
     M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS_LIGHT
         | M_UNFINISHED,
-    MR_RES_POISON | MR_RES_ELEC,
+    MR_RES_POISON | mrd(MR_RES_ELEC, 2),
     0, 10, MONS_ANGEL, MONS_CHERUB, MH_HOLY, -8,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK,
        AT_NO_ATK },
@@ -4072,7 +4072,7 @@ static monsterentry mondata[] = {
 {
     MONS_ELECTRIC_EEL, ';', LIGHTBLUE, "electric eel",
     M_COLD_BLOOD | M_SPECIAL_ABILITY | M_SUBMERGES,
-    MR_RES_ELEC,
+    mrd(MR_RES_ELEC, 2),
     300, 19, MONS_ELECTRIC_EEL, MONS_ELECTRIC_EEL, MH_NATURAL, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
@@ -4517,8 +4517,8 @@ static monsterentry mondata[] = {
 {
     MONS_ELDRITCH_TENTACLE, 'w', BLACK, "eldritch tentacle",
     M_NO_POLY_TO | M_STATIONARY | M_SEE_INVIS,
-    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON | MR_RES_COLD, 3)
-        | MR_RES_ELEC | MR_RES_STICKY_FLAME | MR_RES_ACID,
+    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC, 3)
+        | MR_RES_STICKY_FLAME | MR_RES_ACID,
     0, 10, MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE, MH_NONLIVING, MAG_IMMUNE,
     { {AT_TENTACLE_SLAP, AF_CHAOS, 30}, {AT_CLAW, AF_CHAOS, 40}, AT_NO_ATK,
        AT_NO_ATK },
@@ -4531,8 +4531,8 @@ static monsterentry mondata[] = {
 {
     MONS_ELDRITCH_TENTACLE_SEGMENT, '*', BLACK, "eldritch tentacle segment",
     M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO | M_SEE_INVIS,
-    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON | MR_RES_COLD, 3)
-        | MR_RES_ELEC | MR_RES_STICKY_FLAME | MR_RES_ACID,
+    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC, 3)
+        | MR_RES_STICKY_FLAME | MR_RES_ACID,
     0, 10, MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE_SEGMENT, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 16, 5, 5, 0 },
@@ -4608,7 +4608,7 @@ static monsterentry mondata[] = {
 {
     MONS_IRON_IMP, '5', CYAN, "iron imp",
     M_SPEAKS,
-    MR_RES_POISON | MR_RES_ELEC | MR_RES_HELLFIRE | MR_RES_COLD,
+    MR_RES_POISON | mrd(MR_RES_ELEC, 2) | MR_RES_HELLFIRE | MR_RES_COLD,
     0, 14, MONS_IRON_IMP, MONS_IRON_IMP, MH_DEMONIC, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
@@ -4744,7 +4744,7 @@ static monsterentry mondata[] = {
 {
     MONS_IRON_DEVIL, '3', CYAN, "iron devil",
     M_NO_FLAGS,
-    MR_RES_POISON | MR_RES_ELEC | MR_RES_HELLFIRE | MR_RES_COLD,
+    MR_RES_POISON | mrd(MR_RES_ELEC, 2) | MR_RES_HELLFIRE | MR_RES_COLD,
     0, 10, MONS_IRON_DEVIL, MONS_IRON_DEVIL, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 14}, {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
@@ -4781,7 +4781,7 @@ static monsterentry mondata[] = {
 {
     MONS_YNOXINUL, '3', LIGHTCYAN, "ynoxinul",
     M_SPELLCASTER | M_SENSE_INVIS,
-    MR_RES_ELEC | MR_RES_POISON | MR_RES_COLD,
+    mrd(MR_RES_ELEC, 2) | MR_RES_POISON | MR_RES_COLD,
     0, 12, MONS_YNOXINUL, MONS_YNOXINUL, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 3, 5, 0 },
@@ -4980,7 +4980,7 @@ static monsterentry mondata[] = {
 {
     MONS_BLUE_DEATH, '1', BLUE, "Blue Death",
     M_SPELLCASTER | M_SEE_INVIS,
-    MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 2) | MR_RES_ELEC,
+    MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD | MR_RES_ELEC, 2),
     0, 13, MONS_BLUE_DEATH, MONS_BLUE_DEATH, MH_DEMONIC, -9,
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
     { 12, 3, 5, 0 },
@@ -5179,7 +5179,7 @@ static monsterentry mondata[] = {
 {
     MONS_GARGOYLE, '9', LIGHTGREY, "gargoyle",
     M_ARTIFICIAL,
-    MR_RES_POISON | MR_RES_ELEC,
+    MR_RES_POISON | mrd(MR_RES_ELEC, 2),
     0, 26, MONS_GARGOYLE, MONS_GARGOYLE, MH_NONLIVING, -6,
     { {AT_BITE, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 6}, {AT_CLAW, AF_PLAIN, 6},
        AT_NO_ATK },
@@ -5192,7 +5192,7 @@ static monsterentry mondata[] = {
 {
     MONS_METAL_GARGOYLE, '9', CYAN, "metal gargoyle",
     M_ARTIFICIAL,
-    MR_RES_POISON | MR_RES_ELEC,
+    MR_RES_POISON | mrd(MR_RES_ELEC, 2),
     0, 18, MONS_GARGOYLE, MONS_METAL_GARGOYLE, MH_NONLIVING, -6,
     { {AT_BITE, AF_PLAIN, 19}, {AT_CLAW, AF_PLAIN, 10},
       {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK },
@@ -5272,8 +5272,7 @@ static monsterentry mondata[] = {
     MONS_ORB_OF_FIRE, '*', RED, "orb of fire",
     M_SPELLCASTER | M_SEE_INVIS | M_INSUBSTANTIAL | M_GLOWS_LIGHT
         | M_GLOWS_RADIATION,
-    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON, 3) | MR_RES_COLD
-        | MR_RES_ELEC,
+    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON | MR_RES_ELEC, 3) | MR_RES_COLD,
     0, 13, MONS_ORB_OF_FIRE, MONS_ORB_OF_FIRE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 30, 0, 0, 150 },
@@ -5285,8 +5284,8 @@ static monsterentry mondata[] = {
 { // not an actual monster, used by a spell
     MONS_ORB_OF_DESTRUCTION, '*', WHITE, "orb of destruction",
     M_INSUBSTANTIAL | M_GLOWS_LIGHT | M_NO_EXP_GAIN | M_NO_POLY_TO,
-    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON | MR_RES_COLD, 3)
-        | MR_RES_ELEC | MR_RES_STICKY_FLAME | MR_RES_ACID,
+    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC, 3)
+        | MR_RES_STICKY_FLAME | MR_RES_ACID,
     0, 0, MONS_ORB_OF_DESTRUCTION, MONS_ORB_OF_DESTRUCTION, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 0, 0, 1000 /* unkillable */ },
@@ -5298,7 +5297,7 @@ static monsterentry mondata[] = {
 {
     MONS_BLESSED_TOE, '*', YELLOW, "blessed toe",
     M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_UNFINISHED,
-    MR_RES_ELEC | MR_RES_POISON | MR_RES_COLD,
+    mrd(MR_RES_ELEC, 2) | MR_RES_POISON | MR_RES_COLD,
     0, 65, MONS_BLESSED_TOE, MONS_BLESSED_TOE, MH_HOLY, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 0, 0, 77 },
@@ -5311,8 +5310,7 @@ static monsterentry mondata[] = {
     MONS_SILVER_STAR, '*', ETC_SILVER, "silver star",
     M_SPELLCASTER | M_SEE_INVIS | M_INSUBSTANTIAL | M_GLOWS_LIGHT
         | M_UNFINISHED,
-    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON, 3) | MR_RES_COLD
-        | MR_RES_ELEC,
+    mrd(MR_RES_FIRE | MR_RES_HELLFIRE | MR_RES_POISON | MR_RES_ELEC, 3) | MR_RES_COLD,
     0, 13, MONS_SILVER_STAR, MONS_SILVER_STAR, MH_HOLY, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 30, 0, 0, 150 },
@@ -5340,7 +5338,7 @@ static monsterentry mondata[] = {
     MONS_MENNAS, 'A', ETC_SILVER, "Mennas",
     M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS
         | M_GLOWS_LIGHT | M_UNIQUE,
-    MR_RES_POISON | MR_RES_ELEC,
+    MR_RES_POISON | mrd(MR_RES_ELEC, 2),
     0, 10, MONS_ANGEL, MONS_ANGEL, MH_HOLY, -8,
     { {AT_HIT, AF_PLAIN, 30}, {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK,
        AT_NO_ATK },
@@ -5404,7 +5402,7 @@ static monsterentry mondata[] = {
 {
     MONS_ANTAEUS, 'C', LIGHTCYAN, "Antaeus",
     M_UNIQUE | M_FIGHTER | M_SPELLCASTER | M_SPEAKS,
-    MR_RES_ELEC | MR_VUL_FIRE | mrd(MR_RES_COLD, 2),
+    mrd(MR_RES_ELEC | MR_RES_COLD, 2) | MR_VUL_FIRE,
     0, 15, MONS_HILL_GIANT, MONS_TITAN, MH_DEMONIC, -9,
     { {AT_HIT, AF_COLD, 75}, {AT_HIT, AF_COLD, 30}, AT_NO_ATK, AT_NO_ATK },
     { 22, 0, 0, 700 },
@@ -5629,7 +5627,7 @@ static monsterentry mondata[] = {
     // May be re-spawned after his death.
     MONS_BORIS, 'L', RED, "Boris",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS,
-    MR_RES_COLD | MR_RES_ELEC,
+    MR_RES_COLD | mrd(MR_RES_ELEC, 2),
     0, 15, MONS_LICH, MONS_LICH, MH_UNDEAD, -11,
     { {AT_HIT, AF_PLAIN, 25}, {AT_TOUCH, AF_DRAIN_XP, 15}, AT_NO_ATK,
        AT_NO_ATK },
@@ -5655,7 +5653,7 @@ static monsterentry mondata[] = {
 {
     MONS_KHUFU, 'M', LIGHTRED, "Khufu",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS | M_UNIQUE,
-    MR_RES_COLD | MR_RES_ELEC,
+    MR_RES_COLD | mrd(MR_RES_ELEC, 2),
     0, 20, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 18, 0, 0, 240 },
@@ -5882,7 +5880,7 @@ static monsterentry mondata[] = {
 {
     MONS_MURRAY, 'z', LIGHTRED, "Murray",
     M_UNIQUE | M_SPELLCASTER | M_SEE_INVIS | M_NOISY_SPELLS | M_SPEAKS,
-    MR_RES_ELEC | MR_RES_HELLFIRE | mrd(MR_RES_COLD, 2),
+    mrd(MR_RES_ELEC | MR_RES_COLD, 2) | MR_RES_HELLFIRE,
     0, 10, MONS_LICH, MONS_CURSE_SKULL, MH_UNDEAD, MAG_IMMUNE,
     { {AT_BITE, AF_PLAIN, 20}, {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
     { 14, 0, 0, 180 },
@@ -6196,7 +6194,7 @@ static monsterentry mondata[] = {
 {
     MONS_MNOLEG, '&', LIGHTGREEN, "Mnoleg",
     M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS,
-    MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE,
+    mrd(MR_RES_ELEC, 2) | MR_RES_POISON | MR_RES_FIRE,
     0, 15, MONS_PANDEMONIUM_DEMON, MONS_PANDEMONIUM_DEMON, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 35}, {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK },
     { 17, 0, 0, 250 },
@@ -6232,7 +6230,7 @@ static monsterentry mondata[] = {
 {
     MONS_GLOORX_VLOQ, '&', LIGHTGREY, "Gloorx Vloq",
     M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS,
-    MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC,
+    MR_RES_POISON | MR_RES_COLD | mrd(MR_RES_ELEC, 2),
     0, 15, MONS_PANDEMONIUM_DEMON, MONS_PANDEMONIUM_DEMON, MH_DEMONIC, -14,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 16, 0, 0, 350 },
@@ -6257,7 +6255,7 @@ static monsterentry mondata[] = {
 {
     MONS_DISPATER, '&', MAGENTA, "Dispater",
     M_UNIQUE | M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS,
-    MR_RES_ELEC | MR_RES_POISON | MR_RES_HELLFIRE | MR_RES_COLD,
+    mrd(MR_RES_ELEC, 3) | MR_RES_POISON | MR_RES_HELLFIRE | MR_RES_COLD,
     0, 15, MONS_HELL_DEMON, MONS_HELL_DEMON, MH_DEMONIC, -10,
     { {AT_HIT, AF_PLAIN, 50}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 16, 0, 0, 450 },
@@ -6281,7 +6279,7 @@ static monsterentry mondata[] = {
 {
     MONS_ERESHKIGAL, '&', WHITE, "Ereshkigal",
     M_UNIQUE | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS,
-    MR_RES_ELEC | MR_RES_POISON | MR_RES_COLD,
+    mrd(MR_RES_ELEC, 2) | MR_RES_POISON | MR_RES_COLD,
     0, 15, MONS_HELL_DEMON, MONS_HELL_DEMON, MH_DEMONIC, -10,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 18, 0, 0, 250 },
