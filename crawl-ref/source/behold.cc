@@ -19,20 +19,40 @@
 #include "stuff.h"
 #include "areas.h"
 
+static bool _mermaid_beholder (const monster* mons)
+{
+    return (mons_genus(mons->type) == MONS_MERMAID);
+}
+
 // Add a monster to the list of beholders.
 void player::add_beholder(const monster* mon, bool axe)
 {
     if (is_sanctuary(you.pos()) && !axe)
     {
-        if (you.can_see(mon))
+        if (_mermaid_beholder(mon))
         {
-            mprf("%s's singing sounds muted, and has no effect on you.",
-                 mon->name(DESC_CAP_THE).c_str());
+            if (you.can_see(mon))
+            {
+                mprf("%s's singing sounds muted, and has no effect on you.",
+                     mon->name(DESC_CAP_THE).c_str());
+            }
+            else
+            {
+                mpr("The melody is strangely muted, and has no effect on you.");
+            }
         }
         else
         {
-            mpr("The melody is strangely muted, and has no effect on you.");
+            if (you.can_see(mon))
+            {
+                mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_CAP_THE).c_str());
+            }
+            else
+            {
+                mpr("Your mesmeriser suddenly seems less interesting!");
+            }
         }
+
         return;
     }
 
@@ -121,8 +141,7 @@ void player::beholders_check_noise(int loudness, bool axe)
 
     if (loudness >= 20 && beheld())
     {
-        mprf("For a moment, you cannot hear the mermaid%s!",
-             beholders.size() > 1 ? "s" : "");
+        mprf("For a moment, your mind becomes perfectly clear!");
         clear_beholders();
         _removed_beholder();
     }
@@ -138,13 +157,27 @@ static void _removed_beholder_msg(const monster* mon)
 
     if (is_sanctuary(you.pos()) && !mons_is_fleeing(mon))
     {
-        if (you.can_see(mon))
+        if (_mermaid_beholder(mon))
         {
-            mprf("%s's singing becomes strangely muted.",
-                 mon->name(DESC_CAP_THE).c_str());
+            if (you.can_see(mon))
+            {
+                mprf("%s's singing becomes strangely muted.",
+                     mon->name(DESC_CAP_THE).c_str());
+            }
+            else
+                mpr("Something's singing becomes strangely muted.");
         }
         else
-            mpr("Something's singing becomes strangely muted.");
+        {
+            if (you.can_see(mon))
+            {
+                mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_CAP_THE).c_str());
+            }
+            else
+            {
+                mpr("Your mesmeriser suddenly seems less interesting!");
+            }
+        }
 
         return;
     }
@@ -153,15 +186,30 @@ static void _removed_beholder_msg(const monster* mon)
     {
         if (silenced(you.pos()) || silenced(mon->pos()))
         {
-            mprf("You can no longer hear %s's singing!",
-                 mon->name(DESC_NOCAP_THE).c_str());
+            if (_mermaid_beholder(mon))
+            {
+                mprf("You can no longer hear %s's singing!",
+                     mon->name(DESC_NOCAP_THE).c_str());
+            }
+            else
+            {
+                mpr("The silence clears your mind.");
+            }
             return;
         }
-        mprf("%s stops singing.", mon->name(DESC_CAP_THE).c_str());
+
+        if (_mermaid_beholder(mon))
+            mprf("%s stops singing.", mon->name(DESC_CAP_THE).c_str());
+        else
+            mprf("%s is no longer quite as mesmerising!", mon->name(DESC_CAP_THE).c_str());
+
         return;
     }
 
-    mpr("Something stops singing.");
+    if (_mermaid_beholder(mon))
+        mpr("Something stops singing.");
+    else
+        mpr("Your mesmeriser is now quite boring!");
 }
 
 // Update all beholders' status after changes.
