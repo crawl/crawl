@@ -153,7 +153,7 @@ For a short duration gain safety in a divine refuge. While you are inside the sa
 %%%%
 Cure All Mutations
 
-Cure all your mutations.
+Cure all your mutations - but only once.
 %%%%
 # The Shining One
 Divine Shield
