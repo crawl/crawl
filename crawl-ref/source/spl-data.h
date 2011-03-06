@@ -2913,6 +2913,19 @@ struct spell_desc
 },
 
 {
+    SPELL_MESMERISE, "Mesmerise",
+     SPTYP_HEXES,
+     SPFLAG_AREA,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
