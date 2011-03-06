@@ -75,13 +75,13 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          / Young Poisoner's Handbook / rod of venom / potion of invisibility q:3-6",
          Trog="manual of Spellcasting w:100 / manual of Air Magic / manual of Earth Magic \
          / manual of Fire Magic / manual of Ice Magic / manual of Poison Magic / any staff / ring of wizardry",
-         Vehumet="book of Callings / book of Power / manual of Invocations",
+         Vehumet="book of Callings / book of Power / randbook owner:Lugonu disc:conj spell:magic_dart numspells:1",
          Xom="manual of Invocations",
          Yredelemnul= "scroll of holy word q:2-4 / good_item " .. weapon .. " ego:holy_wrath",
          Zin="good_item " .. weapon .. " ego:draining / good_item " .. weapon .. " ego:pain \
          / good_item " .. weapon .. " ego:chaos / wand of draining w:7 / wand of polymorph other w:14",
          Ashenzari="scroll of detect curse q:5-10 / amulet of clarity / ring of see invisible",
-         ["No God"]="manual of Invocations / amulet of Faith",
+         ["No God"]="amulet of Faith",
        }
          data.triggered = true
          if item[you.god()] == "no" then return else
