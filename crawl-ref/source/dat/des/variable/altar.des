@@ -753,18 +753,6 @@ MAP
 .......
 ENDMAP
 
-NAME:   cheibriados_altar_3
-TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
-DEPTH:  D:2-6
-KFEAT:  _ = altar_cheibriados
-ITEM:   apple, pear, orange, banana
-SUBST:  e : efgh
-MAP
-...
-d_d
-...
-ENDMAP
-
 # Golems are slow and they protect an altar to the slow god. (Lemuel)
 NAME:  golem_altar_1
 DEPTH: 8-12
