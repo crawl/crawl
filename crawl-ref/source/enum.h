@@ -2586,6 +2586,7 @@ enum mon_spellbook_type
     MST_NERGALLE,
     MST_JORY,
     MST_TERPSICHORE,
+    MST_EIDOLON,
 
     MST_GHOST, // special
     MST_TEST_SPAWNER,
