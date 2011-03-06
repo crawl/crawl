@@ -1740,6 +1740,7 @@ enum map_marker_type
     MAT_WIZ_PROPS,
     MAT_TOMB,
     MAT_MALIGN,
+    MAT_PHOENIX,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };
