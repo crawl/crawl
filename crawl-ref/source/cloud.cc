@@ -1282,17 +1282,17 @@ void cloud_struct::set_killer(killer_type _killer)
 
     switch (killer)
     {
-        case KILL_YOU:
-            killer = KILL_YOU_MISSILE;
-            break;
+    case KILL_YOU:
+        killer = KILL_YOU_MISSILE;
+        break;
 
-        case KILL_MON:
-            killer = KILL_MON_MISSILE;
-            break;
+    case KILL_MON:
+        killer = KILL_MON_MISSILE;
+        break;
 
-        default:
-            break;
-     }
+    default:
+        break;
+    }
 }
 
 std::string cloud_struct::cloud_name(const std::string &defname,

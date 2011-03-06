@@ -137,7 +137,7 @@ bool cast_tornado(int powc)
 
     mprf("A great vortex of raging winds %s.",
          you.airborne() ? "appears around you"
-                             : "appears and lifts you up");
+                        : "appears and lifts you up");
 
     if (you.fishtail)
         merfolk_stop_swimming();
