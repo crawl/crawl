@@ -2114,9 +2114,6 @@ static bool _mons_vampiric_drain(monster *mons)
 **/
 static int _mons_mesmerise(monster* mons, bool actual)
 {
-    // FIXME: This doesn't actually work properly for some odd reason. The
-    //        player becomes bespelled, but immediately breaks out of it. Why?
-
     bool already_mesmerised = you.beheld_by(mons);
 
     if (!you.visible_to(mons)             // Don't mesmerise while invisible.
