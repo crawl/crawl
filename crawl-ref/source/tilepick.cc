@@ -4178,6 +4178,11 @@ tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance)
                 ch = TILE_CLOUD_GLOOM;
                 break;
 
+            case CLOUD_TORNADO:
+                ch = get_tornado_phase(cl.pos) ? TILE_CLOUD_BLUE_SMOKE
+                                               : TILE_CLOUD_GREY_SMOKE;
+                break;
+
             default:
                 ch = TILE_CLOUD_GREY_SMOKE;
                 break;
