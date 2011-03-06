@@ -1661,6 +1661,17 @@
       }
     },
 
+    {  MST_EIDOLON,
+      {
+       SPELL_PAIN,
+       SPELL_CAUSE_FEAR,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

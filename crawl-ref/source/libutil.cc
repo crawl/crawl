@@ -511,9 +511,10 @@ std::string pluralise(const std::string &name,
         // ending with sh (except fish, which are caught in the previous check).
         return name + "es";
     }
-    else if (ends_with(name, "simulacrum"))
+    else if (ends_with(name, "simulacrum") || ends_with(name, "eidolon"))
     {
-        // simulacrum -> simulacra
+        // simulacrum -> simulacra (correct Latin pluralisation)
+        // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
     }
     else if (ends_with(name, "efreet"))
