@@ -62,6 +62,7 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
+static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 
@@ -1043,6 +1044,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HAUNT:
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_CAUSE_FEAR:
+    case SPELL_MESMERISE:
     case SPELL_HOLY_WORD:
     case SPELL_DRAIN_LIFE:
     case SPELL_SUMMON_GREATER_DEMON:
@@ -2095,6 +2097,69 @@ static bool _mons_vampiric_drain(monster *mons)
     return (true);
 }
 
+/**
+ * Maybe mesmerise the player.
+ *
+ * This function decides whether or not it is possible for the player to become
+ * mesmerised by mons. It will return a variety of values depending on whether
+ * or not this can succeed or has succeeded; finally, it will add mons to the
+ * player's list of beholders.
+ *
+ * @param mons      The monster doing the mesmerisation.
+ * @param actual    Whether or not we are actually casting the spell. If false,
+ *                  no messages are emitted.
+ * @returns         0 if the player could be mesmerised but wasn't, 1 if the
+ *                  player was mesmerised, -1 if the player couldn't be
+ *                  mesmerised.
+**/
+static int _mons_mesmerise(monster* mons, bool actual)
+{
+    // FIXME: This doesn't actually work properly for some odd reason. The
+    //        player becomes bespelled, but immediately breaks out of it. Why?
+
+    bool already_mesmerised = you.beheld_by(mons);
+
+    if (!you.visible_to(mons)             // Don't mesmerise while invisible.
+        || (!you.can_see(mons)            // Or if we are, and you're aren't
+            && !already_mesmerised)       // already mesmerised by us.
+        || !player_can_hear(mons->pos())  // Or if you're silenced, or we are.
+        || you.berserk()                  // Or if you're berserk.
+        || mons->has_ench(ENCH_CONFUSION) // Or we're confused,
+        || mons_is_fleeing(mons)          // fleeing,
+        || mons->pacified()               // pacified,
+        || mons->friendly())              // or friendly!
+    {
+        return (-1);
+    }
+
+    // Messages can be simple: if the monster is invisible, it won't try to
+    // bespell you. If you're already mesmerised, then we don't need to spam
+    // you with messages. Otherwise, it's trying!
+    if (actual && !already_mesmerised && you.can_see(mons))
+    {
+        simple_monster_message(mons, " attempts to bespell you!");
+
+        flash_view(LIGHTMAGENTA);
+    }
+
+    const int pow = std::min(mons->hit_dice * 12, 200);
+
+    // Don't spam mesmerisation if you're already mesmerised,
+    // or don't mesmerise at all if you fail a check.
+    if (you.check_res_magic(pow) > 0 || !(mons->foe == MHITYOU
+        && !already_mesmerised && coinflip()))
+    {
+        if (actual)
+            canned_msg(MSG_YOU_RESIST);
+
+        return (0);
+    }
+
+    you.add_beholder(mons);
+
+    return (1);
+}
+
 // Check whether targets might be scared.
 // Returns 0, if targets can be scared but the attempt failed or wasn't made.
 // Returns 1, if targets are scared.
@@ -2961,6 +3026,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_HOLY_WORD:
         holy_word(0, mons->mindex(), mons->pos());
+        return;
+
+    case SPELL_MESMERISE:
+        _mons_mesmerise(mons);
         return;
 
     case SPELL_CAUSE_FEAR:
