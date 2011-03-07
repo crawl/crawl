@@ -202,28 +202,24 @@ ccc+ccc
 ENDMAP
 
 ##############################################################
-# FIXME
 NAME:    minmay_entry_shattered_statue
 TAGS:    entry
 ORIENT:  float
-ITEM:    stone q:8 w:1 / stone q:7 w:2 / stone q:6 w:4 / stone q:5 w:8 / \
-         stone q:4 / stone q:3 w:8 / stone q:2 w:4 / stone q:1 w:2 / nothing w:1
-ITEM:    stone q:6 w:1 / stone q:5 w:2 / stone q:4 w:4 / stone q:3 w:8 / \
-         stone q:2 / stone q:1 w:8 / nothing w:7
-ITEM:    stone q:4 w:1 / stone q:3 w:2 / stone q:2 w:4 / stone q:1 w:8 / \
-         nothing w:25
-ITEM:    stone q:2 w:1 / stone q:1 w:2 / nothing w:37
-ITEM:    stone q:1 w:1 / nothing w:39
-#TILE:    G = dngn_granite_stump
+ITEM:    stone q:4 / stone q:2 / nothing
+ITEM:    stone q:3 w:5 / stone q:1 / nothing
+ITEM:    stone q:2 w:5 / stone q:1 w:5 / nothing
+ITEM:    stone q:1 w:5 / nothing
+ITEM:    stone q:1 w:1 / nothing w:20
+TILE:    G = dngn_granite_stump
 SHUFFLE: {[(
-#:        dgn.set_feature_desc_short("granite statue",
-#:                                   "granite stump")
-#:        dgn.set_feature_desc_long("granite statue",
-#:                                  "This stump of granite was probably " ..
-#:                                  "a statue at some point in the past.")
-#: lua_marker("G", portal_desc { stump = 1,
-#        desc="granite stump",
-#        desc_long="This stump of granite was probably a statue at some point in the past.\n"})
+:        dgn.set_feature_desc_short("granite statue",
+:                                   "granite stump")
+:        dgn.set_feature_desc_long("granite statue",
+:                                  "This stump of granite was probably " ..
+:                                  "a statue at some point in the past.")
+: lua_marker("G", portal_desc { stump = 1,
+:        desc="granite stump",
+:        desc_long="This stump of granite was probably a statue at some point in the past.\n"})
 MAP
    xxxxxxx
   xx.....xx
