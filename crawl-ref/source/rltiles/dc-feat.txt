@@ -287,6 +287,8 @@ ink_wave_W WAVE_INK_W
 #full
 ink_full WAVE_INK_FULL
 %shrink 1
+liquefaction1 LIQUEFACTION
+liquefaction2
 
 %sdir dc-dngn/gateways
 dngn_entrance DNGN_UNSEEN_ENTRANCE
