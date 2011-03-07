@@ -1219,7 +1219,7 @@ MONS:       purple draconian / deep elf mage spells:iskenderun's_mystic_blast \
 MONS:       statue tile:mons_statue_mage spells:iskenderun's_mystic_blast;orb_of\
             _destruction col:lightmagenta
 KITEM:      D = star_item, star_item / superb_item, star_item
-KITEM:      E = randbook disc:conjuration owner:Iskenderun spell:iskenderun's_mystic\
+KITEM:      E = randbook disc:conjuration owner:Iskenderun spells:iskenderun's_mystic\
                 _blast, randbook disc:conjuration owner:Iskenderun, any book
 KITEM:      F = any book good_item, any book good_item, any book
 KMONS:      DEF = purple draconian

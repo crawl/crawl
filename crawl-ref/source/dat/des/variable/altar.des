@@ -60,22 +60,23 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          / good_item quick blade",
          Elyvilon="lantern of shadows / book of Necromancy w:5 / book of Death w:5 \
          / book of Unlife w:5",
-         Fedhas="randbook owner:Lugonu disc:necr spell:necromutation numspells:1 \
-         / randbook owner:Lugonu disc:necr spell:simulacrum numspells:1 \
-         / randbook owner:Lugonu disc:necr spell:twisted_resurrection numspells:1",
+         Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 \
+         / randbook owner:Lugonu spells:simulacrum|twisted_resurrection numspells:2 \
+         / randbook owner:Lugonu spells:animate_dead|sublimation_of_blood numspells:2",
          Jiyva="stone q:10-20 / large rock q:2-4",
          Kikubaaqudgha="book of Necromancy / rat corpse w:5 / kobold corpse w:5 / snake corpse w:5",
          Lugonu="no",
          Makhleb="tome of destruction / rod of demonology",
          ["Nemelex Xobeh"]="scroll of random uselessness q:5-10",
-         Okawaru="book of Callings / randbook owner:Lugonu disc:summ spell:summon_butterflies numspells:1 \
+         Okawaru="book of Callings / randbook owner:Lugonu spells:summon_butterflies numspells:1 \
          / scroll of summoning q:2-3",
          ["Sif Muna"]="staff of channeling / good_item plate mail",
          ["The Shining One"]="wand of invisibility w:20 / book of Envenomations \
          / Young Poisoner's Handbook / rod of venom / potion of invisibility q:3-6",
          Trog="manual of Spellcasting w:100 / manual of Air Magic / manual of Earth Magic \
          / manual of Fire Magic / manual of Ice Magic / manual of Poison Magic / any staff / ring of wizardry",
-         Vehumet="book of Callings / book of Power / randbook owner:Lugonu disc:conj spell:magic_dart numspells:1",
+         Vehumet="book of Callings w:5 / book of Power w:5 \
+         / randbook owner:Lugonu spells:magic_dart numspells:1",
          Xom="manual of Invocations",
          Yredelemnul= "scroll of holy word q:2-4 / good_item " .. weapon .. " ego:holy_wrath",
          Zin="good_item " .. weapon .. " ego:draining / good_item " .. weapon .. " ego:pain \
