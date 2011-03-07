@@ -2837,7 +2837,7 @@ struct spell_desc
 {
     SPELL_HOLY_BREATH, "Holy Breath",
      SPTYP_CONJURATION | SPTYP_HOLY,
-     SPFLAG_GRID | SPFLAG_AREA,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      5,
      200,
      6, 6,
