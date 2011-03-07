@@ -5132,8 +5132,8 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if (defender->holiness() == MH_UNDEAD)
             break;
 
-        if (one_chance_in(20) || (damage_done > 0 && coinflip()))
-            defender->make_hungry(400, false);
+        if (one_chance_in(20) || (damage_done > 0))
+            defender->make_hungry(you.hunger / 4, false);
         break;
 
     case AF_BLINK:
