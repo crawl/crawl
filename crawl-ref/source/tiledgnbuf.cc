@@ -28,11 +28,12 @@ void packed_cell::clear()
     fg = 0;
     bg = 0;
 
-    is_bloody = false;
-    is_silenced = false;
-    is_haloed = false;
-    is_moldy = false;
-    is_sanctuary = false;
+    is_bloody        = false;
+    is_silenced      = false;
+    is_haloed        = false;
+    is_moldy         = false;
+    is_sanctuary     = false;
+    is_liquefied     = false;
     swamp_tree_water = false;
 }
 
@@ -57,7 +58,7 @@ static bool _in_water(const packed_cell &cell)
 }
 
 static void _transform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
-                                 bool in_water)
+                                  bool in_water)
 {
     const int item = you.equip[EQ_WEAPON];
     if (item == -1)
@@ -507,10 +508,12 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
 
 void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell)
 {
-    if (!cell.is_bloody && !cell.is_moldy)
-        return;
-
-    if (cell.is_bloody)
+    if (cell.is_liquefied)
+    {
+        int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
+        m_buf_feat.add(TILE_LIQUEFACTION + offset, x, y);
+    }
+    else if (cell.is_bloody)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
         m_buf_feat.add(TILE_BLOOD + offset, x, y);

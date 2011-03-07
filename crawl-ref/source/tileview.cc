@@ -991,18 +991,20 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     else
         cell.is_haloed = false;
 
-    if (print_blood && (_suppress_blood(gc)
-                        || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
+    if (liquefied(gc, true))
+        cell.is_liquefied = true;
+    else if (print_blood && (_suppress_blood(gc)
+                             || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
     {
         print_blood = false;
     }
 
-    // Mold has the same restrictions as blood
-    // but mold takes precendence over blood.
+    // Mold has the same restrictions as blood but takes precedence.
     if (print_blood)
     {
         if (is_moldy(gc))
             cell.is_moldy = true;
+        // Corpses have a blood puddle of their own.
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
             cell.is_bloody = true;
     }
