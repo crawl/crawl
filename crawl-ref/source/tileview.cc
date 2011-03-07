@@ -733,11 +733,11 @@ unsigned int num_tile_rays = 0;
 struct tile_ray
 {
     coord_def ep;
-    bool in_range;
+    aff_type in_range;
 };
 FixedVector<tile_ray, 30> tile_ray_vec;
 
-void tile_place_ray(const coord_def &gc, bool in_range)
+void tile_place_ray(const coord_def &gc, aff_type in_range)
 {
     // Record rays for later.  The curses version just applies
     // rays directly to the screen.  The tiles version doesn't have
@@ -754,8 +754,8 @@ void tile_draw_rays(bool reset_count)
 {
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
-        tileidx_t flag = tile_ray_vec[i].in_range ? TILE_FLAG_RAY
-                                                  : TILE_FLAG_RAY_OOR;
+        tileidx_t flag = tile_ray_vec[i].in_range > 0 ? TILE_FLAG_RAY
+                                                      : TILE_FLAG_RAY_OOR;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 

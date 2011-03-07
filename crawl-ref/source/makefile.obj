@@ -204,6 +204,7 @@ stuff.o \
 syscalls.o \
 tags.o \
 tagstring.o \
+target.o \
 teleport.o \
 terrain.o \
 transform.o \

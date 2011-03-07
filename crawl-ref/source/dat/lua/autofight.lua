@@ -34,7 +34,7 @@ end
 local function reaching(dx, dy)
   local wp = items.equipped_at("weapon")
   if wp and wp.ego_type == "reaching" then
-    return dx*dx + dy*dy <= 5
+    return dx*dx + dy*dy <= 8
   else
     return nil
   end
