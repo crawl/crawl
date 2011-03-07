@@ -1024,6 +1024,18 @@ static bool _spellcasting_aborted(spell_type spell,
     return (false);
 }
 
+targetter* _spell_targetter(spell_type spell, int pow, int range)
+{
+    switch(spell)
+    {
+    case SPELL_FIRE_STORM:
+        return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
+        break;
+    default:
+        return 0;
+    }
+}
+
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
@@ -1063,6 +1075,9 @@ spret_type your_spells(spell_type spell, int powc,
 
     int potion = -1;
 
+    if (!powc)
+        powc = calc_spell_power(spell, true);
+
     // XXX: This handles only some of the cases where spells need
     // targeting.  There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
@@ -1100,6 +1115,8 @@ spret_type your_spells(spell_type spell, int powc,
 
         const int range = calc_spell_range(spell, range_power, false);
 
+        targetter *hitfunc = _spell_targetter(spell, powc, range);
+
         std::string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
@@ -1107,11 +1124,16 @@ spret_type your_spells(spell_type spell, int powc,
         if (!spell_direction(spd, beam, dir, targ, range,
                              needs_path, true, dont_cancel_me, prompt,
                              title.c_str(),
-                             testbits(flags, SPFLAG_NOT_SELF)))
+                             testbits(flags, SPFLAG_NOT_SELF),
+                             hitfunc))
         {
+            if (hitfunc)
+                delete hitfunc;
             return (SPRET_ABORT);
         }
 
+        if (hitfunc)
+            delete hitfunc;
         beam.range = calc_spell_range(spell, powc, true);
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
@@ -1129,13 +1151,8 @@ spret_type your_spells(spell_type spell, int powc,
 
     // Enhancers only matter for calc_spell_power() and spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
-    if (powc == 0 || allow_fail)
+    if (allow_fail)
         _surge_power(spell);
-
-    // Added this so that the passed in powc can have meaning. - bwr
-    // Remember that most holy spells don't yet use powc!
-    if (powc == 0)
-        powc = calc_spell_power(spell, true);
 
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()

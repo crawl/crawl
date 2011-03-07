@@ -835,7 +835,8 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       int range,
                       bool needs_path, bool may_target_monster,
                       bool may_target_self, const char *target_prefix,
-                      const char* top_prompt, bool cancel_at_self)
+                      const char* top_prompt, bool cancel_at_self,
+                      targetter *hitfunc)
 {
     if (range < 1)
         range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
@@ -853,6 +854,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
         args.top_prompt = top_prompt;
     args.behaviour = NULL;
     args.cancel_at_self = cancel_at_self;
+    args.hitfunc = hitfunc;
 
     direction(spelld, args);
 

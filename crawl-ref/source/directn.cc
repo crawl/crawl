@@ -429,7 +429,7 @@ void direction_chooser::describe_cell() const
 
 #ifndef USE_TILE
 static void _draw_ray_glyph(const coord_def &pos, int colour,
-                            int glych, int mcol, bool in_range)
+                            int glych, int mcol)
 {
     if (const monster* mons = monster_at(pos))
     {
@@ -439,6 +439,11 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
             glych  = get_cell_glyph(pos).ch;
             colour = mcol;
         }
+    }
+    if (pos == you.pos())
+    {
+        glych = mons_char(you.symbol);
+        colour = mcol;
     }
     const coord_def vp = grid2view(pos);
     cgotoxy(vp.x, vp.y, GOTO_DNGN);
@@ -504,7 +509,8 @@ direction_chooser::direction_chooser(dist& moves_,
     top_prompt(args.top_prompt),
     behaviour(args.behaviour),
     cancel_at_self(args.cancel_at_self),
-    show_floor_desc(args.show_floor_desc)
+    show_floor_desc(args.show_floor_desc),
+    hitfunc(args.hitfunc)
 {
     if (!behaviour)
         behaviour = &stock_behaviour;
@@ -1162,6 +1168,40 @@ void direction_chooser::draw_beam_if_needed()
     // Clear the old beam if necessary.
     viewwindow(false);
 
+    // Use the new API if implemented.
+    if (hitfunc)
+    {
+        if (!hitfunc->valid_aim(target()))
+        {
+#ifdef USE_TILE
+            viewwindow();
+#endif
+            return;
+        }
+
+        hitfunc->set_aim(target());
+        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+            if (aff_type aff = hitfunc->is_affected(*ri))
+            {
+#ifdef USE_TILE
+                tile_place_ray(*ri, aff);
+#else
+                int bcol = BLACK;
+                if (aff < 0)
+                    bcol = DARKGREY;
+                else if (aff < AFF_YES)
+                    bcol = MAGENTA;
+                else
+                    bcol = LIGHTMAGENTA;
+                _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
+#endif
+            }
+#ifdef USE_TILE
+        viewwindow();
+#endif
+        return;
+    }
+
     // If we don't have a new beam to show, we're done.
     if (!show_beam || !have_beam)
     {
@@ -1190,15 +1230,15 @@ void direction_chooser::draw_beam_if_needed()
 
         const bool inrange = in_range(p);
 #ifdef USE_TILE
-        tile_place_ray(p, inrange);
+        tile_place_ray(p, inrange ? AFF_MAYBE : AFF_NO);
 #else
         const int bcol = inrange ? MAGENTA : DARKGREY;
-        _draw_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE, inrange);
+        _draw_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE);
 #endif
     }
     textcolor(LIGHTGREY);
 #ifdef USE_TILE
-    tile_place_ray(target(), in_range(ray.pos()));
+    tile_place_ray(target(), in_range(ray.pos()) ? AFF_MAYBE : AFF_NO);
 
     // In tiles, we need to refresh the window to get the beam drawn.
     viewwindow();
@@ -1207,6 +1247,8 @@ void direction_chooser::draw_beam_if_needed()
 
 bool direction_chooser::in_range(const coord_def& p) const
 {
+    if (hitfunc)
+        return hitfunc->valid_aim(p);
     return (range < 0 || distance(p, you.pos()) <= range*range + 1);
 }
 
@@ -1985,6 +2027,8 @@ bool direction_chooser::choose_direction()
                              opc_solid, BDS_DEFAULT);
         need_beam_redraw = have_beam;
     }
+    if (hitfunc)
+        need_beam_redraw = true;
 
     mesclr();
     msgwin_set_temporary(true);

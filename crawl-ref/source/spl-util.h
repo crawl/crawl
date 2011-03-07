@@ -9,6 +9,7 @@
 #define SPL_UTIL_H
 
 #include "enum.h"
+#include "target.h"
 
 enum spschool_flag_type
 {
@@ -138,7 +139,8 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       bool may_target_self = false,
                       const char *target_prefix = NULL,
                       const char *prompt = NULL,
-                      bool cancel_at_self = false);
+                      bool cancel_at_self = false,
+                      targetter *hitfunc = NULL);
 
 skill_type spell_type2skill (unsigned int which_spelltype);
 
