@@ -9,6 +9,7 @@ Breaks save compatibility with the 0.7 release.
 * New game mode: Zot Defence, a tower defence mini-game.
 * New god: Ashenzari, god of divinations.
 * New species: Felids, sentient cats.
+* New spells: Malign Gateway, Tornado, Leda's Liquefaction, Summon Dragon, Summon Hydra, Tukima's Ball, Darkness
 * Removed spells: Bone Shards, Tame Beasts, Portal, Alter Self, Extension.
 * Split Enchantments into Hexes (harm foes) and Charms (self-buffs).
 * Replace Selective Amnesia spell with scroll, and book destruction.
@@ -24,7 +25,6 @@ Gods
 * Fix gods sometimes missing from the game due to some temple vaults.
 * Except for Jiyva, prayer is now only used for (piety-gaining) sacrifices. Other effects are abilities.
 * Gods ignore kills of dancing weapons, ball lightning and vortices.
-* Extending Necromutation results in excommunication for followers of good gods.
 * Beefed up Cheibriados' wrath.
 * Don't give piety for eating with Chei.
 * Make Cheibriados warn you when putting on boots of running or "rage.
@@ -36,7 +36,7 @@ Gods
 * Fedhas cares about trees burnt down in forest fires.
 * Fedhas's corpse decomposition is now activated by prayer.
 * Followers of Jiyva gain food, hp and mp on jellies slurping items.
-* Jiyva no longer provides "amulet of conservation" effect.
+* Jiyva no longer provides duplicate conservation and resist corrosion effects.
 * Allow the player more control over what items to sacrifice to Nemelex (on the '^!' screen).
 * Use Necromancy skill for Kikubaaqudgha's invocations.
 * Tone down Kiku's mummy death curse protection.
@@ -64,9 +64,9 @@ Gods
 Character
 ---------
 * New species: Felids, sentient cats.
-* Double GDR from body armour. New GDR formula: 14 * (baseAC-2)^(1/2).
+* Increase GDR from body armour. New GDR formula: 14 * (baseAC-2)^(1/2).
 * Assign xp from monster kills proportional to the damage dealt by player/allies out of total damage.
-* Prevent chain paralysis: When coming out of a paralysis, you're immune for 1d3 turns.
+* Prevent chain paralysis: When coming out of paralysis, you're immune for 1d3 turns.
 * Remove Paladins and Reavers.
 * Remove Chaos Knight of Makhleb.
 * Split out CK/Lugonu -> Abyssal Knight, Pr/Yredelemnul -> Death Knight.
@@ -168,7 +168,7 @@ Spells
 * Removed Bone Shards, Tame Beasts, Portal, Alter Self, Extension.
 * New spell: Passage of Golubria (Trloc 5).
 * New spell: Malign Gateway (Summ/Trloc 7).
-* New spell: Tornad (Air/Conj 9).
+* New spell: Tornado (Air/Conj 9).
 * New spell: Leda's Liquefaction (Trmut/Earth 4), area slowing effect.
 * New spell: Summon Dragon (Summ 9).
 * New spell: Summon Hydra (Summ 7), summons short-lived 4-12 headed hydra.
@@ -232,7 +232,7 @@ Spells
 * Reduce Haunt duration
 * Increase Sandblast to range 2 without stones, range 3 with.
 * Boost Stone Arrow damage from 2d12 at 50 power to 3d11.
-* Change Necromancy spell levels: Control Undead: 6 -> 5, Borgnjor's: 5 -> 7, Death Channel: 9 -> 8.
+* Change Necromancy spell levels: Control Undead: 6 -> 5, Borgnjor's: 5 -> 7, Death Channel: 9 -> 7.
 * Cheapen Translocation spells: Teleport Other: 4 -> 3, Warp Weapon: 7 -> 5, Dispersal: 7 -> 6.
 * Reduce Ring of Flames level 8 -> 7.
 * Make Silence Hex/Air.
@@ -289,14 +289,13 @@ Monsters
 * Implement snail/turtle shells; withdrawing into such a shell adds extra protection.
 * Print 'zot!' sound when a friendly monster triggers a zot trap outside LOS.
 * Make zombified monsters retain their stats (at least HD and HP).
-* Boost ettins to hit as hard as dual-wielding stone giants. Move them deeper.
 * Boring beetles may now burrow along diagonals.
 * Monsters respect glowing when deciding whether to cast Invisibility.
 * Ugly things may mutate if adjacent to a monster glowing with radiation.
 * Make good and strict neutral monsters not choose nearby foes.
 * Disallow armour mimics from taking the forms of hides.
 * Fix monsters getting not the same bonuses from dragon hides as players.
-* Naga/serpent glyph changes. (See 'settings/060_monster_glyphs.txt'.)
+* Naga/serpent glyph changes. (See 'settings/071_monster_glyphs.txt'.)
 * Refactor monster vamp draining.
 * Tweak Grinder's spells, weapon, and reduce depth (6-10 -> 3-6).
 * Don't give Grinder a high-tier wand, nor Ijyb in Sprint.
@@ -348,12 +347,12 @@ Items
 * New items: scroll of curse jewellery, scroll of amnesia.
 * Antimagic weapon brand.
 * Remove scrolls of paper, rods of discovery.
-* Doubled guaranteed damage reduction from armour.
-* Armour can be enchanted up to a bonus equivalent of its base AC.
+* Increase the guaranteed damage reduction from armour.
+* Body armour can be enchanted up to a bonus equivalent to its base AC.
 * Enchant armour scrolls don't fail because of high bonus anymore.
 * Disable equipment corrosion from slime walls.
 * Remove the robe of the Archmagi's experience penalty.
-* Remove wizardry effect from Archmagi, boost Tmut/Tloc spells.
+* Remove wizardry effect from Archmagi, allow it to enhance Tmut/Tloc spells.
 * Autopickup weapons subjected to Tukima's Dance.
 * Disallow blowing Geryon's horn when silenced.
 * Fix breakage of blood potion stacks when partially eaten by jellies.
@@ -364,7 +363,7 @@ Items
 * Fix permafood being coloured brown like contaminated chunks.
 * Inscribe "was cursed" for items uncursed using ?enchant foo.
 * Fix an information leak about magic resistance from unidentified items.
-* Identify staff types on wield, just like weapons and rods do.
+* Remove random staff ID over time, identify staff types on wield, just like weapons and rods do.
 * Give staves and rods a chance to be generate cursed.
 * Allow staves of poison to affect monsters with rPois; Olgreb is 1/4 irresistible.
 * Give the staff of death rN+.
@@ -388,14 +387,13 @@ Items
 * More detailed corrosion resistance reporting.
 * Mention butchery requirement for food in corpse description.
 * Tweak blood potion descriptions to mention nutrition for non-herbivores.
-* Remove random staff ID over time.
 * Disable generation of missiles and bows of reaping.
 * Remove scrolls of recharging's effect on weapons of electrocution.
 * Stop the generation of racial missiles.
 * Make ball of energy stat loss now drains between 1 and 2/3 max Int.
 * Improve some unrandart weapons: add brands, more damage.
 * Improve Maxwell's Patent Armour: AC+15, +preservation ego, +MR.
-* Improve Staff of Wucad Mu: remove miscast effects.
+* Improve Staff of Wucad Mu: remove miscast effects except for when channeling.
 * Make potions of experience give some xp for skills as well.
 * Fix acquirement hardly ever generating "plain" crystal plates and dragon armour.
 * Make acquirement's "redundant armour" check consider things seen rather than worn.
