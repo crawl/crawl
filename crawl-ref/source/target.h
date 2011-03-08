@@ -71,4 +71,18 @@ public:
     aff_type is_affected(coord_def loc);
 };
 
+class targetter_cloud : public targetter
+{
+public:
+    targetter_cloud(const actor* act, int range = LOS_RADIUS,
+                    int count_min = 8, int count_max = 10);
+    bool set_aim(coord_def a);
+    bool valid_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+    int range2;
+    int cnt_min, cnt_max;
+    std::map<coord_def, aff_type> seen;
+    std::vector<std::vector<coord_def> > queue;
+};
+
 #endif

@@ -79,10 +79,6 @@ static int spell_list[NUM_SPELLS];
 #define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
 static struct spell_desc *_seekspell(spell_type spellid);
-static bool _cloud_helper(cloud_func func, const coord_def& where,
-                          int pow, int spread_rate,
-                          cloud_type ctype, const actor *agent, int colour,
-                          std::string name, std::string tile);
 
 //
 //             BEGIN PUBLIC FUNCTIONS
@@ -755,73 +751,35 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
     return (rv);
 }
 
-// apply_area_cloud:
-// Try to make a realistic cloud by expanding from a point, filling empty
-// floor tiles until we run out of material (passed in as number).
-// We really need some sort of a queue structure, since ideally I'd like
-// to do a (shallow) breadth-first-search of the dungeon floor.
-// This ought to work okay for small clouds.
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
                        const actor *agent,
                        int spread_rate, int colour, std::string name,
                        std::string tile)
 {
-    if (!in_bounds(where))
+    if (number <= 0)
         return;
 
-    int good_squares = 0;
-    int neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-
-    if (number && _cloud_helper(func, where, pow, spread_rate, ctype, agent,
-                                colour, name, tile))
-        number--;
-
-    if (number == 0)
+    targetter_cloud place(0, 0, number, number);
+    debuglog("in apply_area_cloud(%d)\n", number);
+    if (!place.set_aim(where))
         return;
-
-    // These indices depend on the order in Compass (see main.cc)
-    int compass_order_orth[4] = { 2, 6, 4, 0 };
-    int compass_order_diag[4] = { 1, 3, 5, 7 };
-
-    int* const arrs[2] = { compass_order_orth, compass_order_diag };
-
-    for (int m = 0; m < 2; ++m)
+    unsigned int dist = 0;
+    while (number > 0)
     {
-        // Randomise, but do orthogonals first and diagonals later.
-        std::random_shuffle(arrs[m], arrs[m] + 4);
-        for (int i = 0; i < 4 && number; ++i)
-        {
-            const int aux = arrs[m][i];
-            if (_cloud_helper(func, where + Compass[aux],
-                               pow, spread_rate, ctype, agent, colour,
-                               name, tile))
-            {
-                number--;
-                good_squares++;
-                neighbours[aux]++;
-            }
-        }
-    }
+        while (place.queue[dist].empty())
+            if (++dist >= place.queue.size())
+                return;
+        std::vector<coord_def> &q = place.queue[dist];
+        int el = random2(q.size());
+        coord_def c = q[el];
+        q[el] = q[q.size() - 1];
+        q.pop_back();
 
-    // Get a random permutation.
-    int perm[8];
-    for (int i = 0; i < 8; ++i)
-        perm[i] = i;
-    std::random_shuffle(perm, perm+8);
-    for (int i = 0; i < 8 && number; i++)
-    {
-        // Spread (in random order.)
-        const int j = perm[i];
-
-        if (neighbours[j] == 0)
+        if (place.seen[c] <= 0)
             continue;
-
-        int spread = number / good_squares;
-        number -= spread;
-        good_squares--;
-        apply_area_cloud(func, where + Compass[j], pow, spread, ctype, agent,
-                         spread_rate, colour, name, tile);
+        func(c, pow, spread_rate, ctype, agent, colour, name, tile);
+        number--;
     }
 }
 
@@ -998,22 +956,6 @@ bool is_valid_spell(spell_type spell)
 {
     return (spell > SPELL_NO_SPELL && spell < NUM_SPELLS
             && spell_list[spell] != -1);
-}
-
-static bool _cloud_helper(cloud_func func, const coord_def& where,
-                          int pow, int spread_rate,
-                          cloud_type ctype, const actor* agent, int colour,
-                          std::string name, std::string tile)
-{
-    if (in_bounds(where)
-        && !feat_is_solid(grd(where))
-        && env.cgrid(where) == EMPTY_CLOUD)
-    {
-        func(where, pow, spread_rate, ctype, agent, colour, name, tile);
-        return (true);
-    }
-
-    return (false);
 }
 
 static bool _spell_range_varies(spell_type spell)
