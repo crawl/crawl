@@ -4422,11 +4422,17 @@ static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
     return (0);
 }
 
-static void handle_read_book(int item_slot)
+static void _handle_read_book(int item_slot)
 {
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
+        return;
+    }
+
+    if (you.stat_zero[STAT_INT])
+    {
+        mpr("Reading books requires mental cohesion, which you lack.");
         return;
     }
 
@@ -4602,12 +4608,6 @@ void read_scroll(int slot)
         return;
     }
 
-    if (you.stat_zero[STAT_INT])
-    {
-        mpr("Reading requires mental cohesion, which you lack.");
-        return;
-    }
-
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
@@ -4636,7 +4636,7 @@ void read_scroll(int slot)
     // Here we try to read a book {dlb}:
     if (scroll.base_type == OBJ_BOOKS)
     {
-        handle_read_book(item_slot);
+        _handle_read_book(item_slot);
         return;
     }
 
@@ -4707,6 +4707,15 @@ void read_scroll(int slot)
 
     // ... but some scrolls may still be cancelled afterwards.
     bool cancel_scroll = false;
+
+    if (you.stat_zero[STAT_INT] && !one_chance_in(5))
+    {
+        // mpr("You stumble in your attempt to read the scroll. Nothing happens!");
+        // mpr("Your reading takes too long for the scroll to take effect.");
+        // mpr("Your low mental capacity makes reading really difficult. You give up!");
+        mpr("You try to decipher the scroll, but fail in the attempt.");
+        return;
+    }
 
     // Imperfect vision prevents players from reading actual content {dlb}:
     if (player_mutation_level(MUT_BLURRY_VISION)
@@ -5396,7 +5405,7 @@ void tile_item_use(int idx)
             if (!item_is_spellbook(item) || you.skill(SK_SPELLCASTING) == 0)
             {
                 if (check_warning_inscriptions(item, OPER_READ))
-                    handle_read_book(idx);
+                    _handle_read_book(idx);
             } // else it's a spellbook
             else if (check_warning_inscriptions(item, OPER_MEMORISE))
                 learn_spell(); // offers all spells, might not be what we want
