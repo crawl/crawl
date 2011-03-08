@@ -58,6 +58,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "player-equip.h"
+#include "player-stats.h"
 #include "potion.h"
 #include "quiver.h"
 #include "religion.h"
@@ -383,6 +384,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return (false);
     }
 
+    // Check for stat losses.
+    if (!safe_to_remove_or_wear(new_wpn, false))
+        return (false);
+
     // Unwield any old weapon.
     if (you.weapon() && !unwield_item(show_weff_messages))
         return (false);
@@ -544,7 +549,6 @@ void wear_armour(int slot) // slot is for tiles
     else if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
         return;
 
-    // Wear the armour.
     do_wear_armour(armour_wear_2, false);
 }
 
@@ -803,6 +807,9 @@ bool do_wear_armour(int item, bool quiet)
 
     you.turn_is_over = true;
 
+    if (!safe_to_remove_or_wear(invitem, false))
+        return (false);
+
     const int delay = armour_equip_delay(invitem);
     if (delay)
         start_delay(DELAY_ARMOUR_ON, delay, item);
@@ -855,7 +862,7 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (!safe_to_remove(invitem))
+    if (!safe_to_remove_or_wear(invitem, true))
         return (false);
 
     bool removed_cloak = false;
@@ -3176,6 +3183,108 @@ static int _prompt_ring_to_remove(int new_ring)
 // Checks whether a to-be-worn or to-be-removed item affects
 // character stats and whether wearing/removing it could be fatal.
 // If so, warns the player, or just returns false if quiet is true.
+bool safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet)
+{
+    if (remove && !safe_to_remove(item, quiet))
+        return (false);
+
+    int prop_str = 0;
+    int prop_dex = 0;
+    int prop_int = 0;
+    if (item.base_type == OBJ_JEWELLERY
+        && item_ident(item, ISFLAG_KNOW_PLUSES))
+    {
+        switch (item.sub_type)
+        {
+        case RING_STRENGTH:
+            if (item.plus != 0)
+                prop_str = item.plus;
+            break;
+        case RING_DEXTERITY:
+            if (item.plus != 0)
+                prop_dex = item.plus;
+            break;
+        case RING_INTELLIGENCE:
+            if (item.plus != 0)
+                prop_int = item.plus;
+            break;
+        default:
+            break;
+        }
+    }
+    else if (item.base_type == OBJ_ARMOUR && item_type_known(item))
+    {
+        switch (item.special)
+        {
+        case SPARM_STRENGTH:
+            prop_str = 3;
+            break;
+        case SPARM_INTELLIGENCE:
+            prop_int = 3;
+            break;
+        case SPARM_DEXTERITY:
+            prop_dex = 3;
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (is_artefact(item))
+    {
+        prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
+        prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
+        prop_dex += artefact_known_wpn_property(item, ARTP_DEXTERITY);
+    }
+
+    if (!remove)
+    {
+        prop_str *= -1;
+        prop_int *= -1;
+        prop_dex *= -1;
+    }
+    stat_type red_stat = NUM_STATS;
+    if (prop_str >= you.strength())
+        red_stat = STAT_STR;
+    else if (prop_int >= you.intel())
+        red_stat = STAT_INT;
+    else if (prop_dex >= you.dex())
+        red_stat = STAT_DEX;
+
+    if (red_stat == NUM_STATS)
+        return (true);
+
+    if (quiet)
+        return (false);
+
+    std::string verb = "";
+    if (remove)
+    {
+        if (item.base_type == OBJ_WEAPONS)
+            verb = "Unwield";
+        else
+            verb = "Remov";
+    }
+    else
+    {
+        if (item.base_type == OBJ_WEAPONS)
+            verb = "Wield";
+        else
+            verb = "Wear";
+    }
+
+    std::string prompt = make_stringf("%sing this item will reduce your %s to zero or below. Continue?", 
+                                      verb.c_str(), stat_desc(red_stat, SD_NAME));
+    if (!yesno(prompt.c_str(), true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+    return (true);
+}
+
+// Checks whether removing an item would cause levitation to end and the
+// player to fall to their death.
 bool safe_to_remove(const item_def &item, bool quiet)
 {
     item_info inf = get_item_info(item);
@@ -3257,6 +3366,10 @@ static bool _swap_rings(int ring_slot)
     if (!remove_ring(unwanted, false))
         return (false);
 
+    // Check for stat loss.
+    if (!safe_to_remove_or_wear(you.inv[ring_slot], false))
+        return (false);
+
     // Put on the new ring.
     start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
 
@@ -3319,12 +3432,20 @@ bool puton_item(int item_slot)
             return (false);
         }
 
+        // Check for stat loss.
+        if (!safe_to_remove_or_wear(item, false))
+            return (false);
+
         // Put on the new amulet.
         start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
 
         // Assume it's going to succeed.
         return (true);
     }
+
+    // Check for stat loss.
+    if (!safe_to_remove_or_wear(item, false))
+        return (false);
 
     equipment_type hand_used;
 
@@ -3500,7 +3621,7 @@ bool remove_ring(int slot, bool announce)
     ring_wear_2 = you.equip[hand_used];
 
     // Remove the ring.
-    if (!safe_to_remove(you.inv[ring_wear_2]))
+    if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
         return (false);
 
     mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_NOCAP_YOUR).c_str());
