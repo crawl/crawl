@@ -574,7 +574,7 @@ bool melee_attack::attack()
     // it's in. Zotdef: allow a 5% chance of a hit anyway
     if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
         && mons_wall_shielded(defender->as_monster())
-        && !one_chance_in(20))
+        && (!crawl_state.game_is_zotdef() || !one_chance_in(20)))
     {
         std::string feat_name = raw_feature_description(grd(defender->pos()));
 
