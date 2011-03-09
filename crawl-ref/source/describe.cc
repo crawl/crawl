@@ -1269,8 +1269,6 @@ static std::string _describe_ammo(const item_def &item)
         description += ".";
     }
 
-    description += _corrosion_resistance_string(item);
-
     return (description);
 }
 

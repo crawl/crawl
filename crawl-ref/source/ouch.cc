@@ -409,7 +409,6 @@ static void _item_corrode(int slot)
         break;
 
     case OBJ_WEAPONS:
-    case OBJ_MISSILES:
         if (get_equip_race(item) == ISFLAG_DWARVEN && !one_chance_in(5))
         {
             it_resists = true;
