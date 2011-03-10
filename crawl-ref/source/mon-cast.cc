@@ -2531,9 +2531,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_TIDE:
         if (player_in_branch(BRANCH_SHOALS))
         {
-            const int tide_duration = random_range(80, 200, 2);
+            const int tide_duration = BASELINE_DELAY
+                * random_range(80, 200, 2);
             mons->add_ench(mon_enchant(ENCH_TIDE, 0, mons,
-                                          tide_duration * 10));
+                                       tide_duration));
             mons->props[TIDE_CALL_TURN].get_int() = you.num_turns;
             if (simple_monster_message(
                     mons,
