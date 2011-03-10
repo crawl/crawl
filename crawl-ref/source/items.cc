@@ -3842,7 +3842,7 @@ item_info get_item_info(const item_def& item)
             if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
                 ii.sub_type = MISC_DECK_OF_ESCAPE;
             else if (item.sub_type >= MISC_CRYSTAL_BALL_OF_ENERGY && item.sub_type <= MISC_CRYSTAL_BALL_OF_SEEING)
-                ii.sub_type = MISC_CRYSTAL_BALL_OF_FIXATION;
+                ii.sub_type = MISC_CRYSTAL_BALL_OF_ENERGY;
             else if (item.sub_type >= MISC_BOX_OF_BEASTS && item.sub_type <= MISC_EMPTY_EBONY_CASKET)
                 ii.sub_type = MISC_BOX_OF_BEASTS;
             else

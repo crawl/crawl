@@ -865,7 +865,9 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DECK_OF_DEFENCE:     return "deck of defence";
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:   return "crystal ball of energy";
-        case MISC_CRYSTAL_BALL_OF_FIXATION: return "crystal ball of fixation";
+#if TAG_MAJOR_VERSION == 32
+        case MISC_CRYSTAL_BALL_OF_FIXATION: return "old crystal ball";
+#endif
         case MISC_CRYSTAL_BALL_OF_SEEING:   return "crystal ball of seeing";
         case MISC_BOX_OF_BEASTS:            return "box of beasts";
         case MISC_EMPTY_EBONY_CASKET:       return "empty ebony casket";
@@ -899,7 +901,9 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DECK_OF_DEFENCE:
             return "deck of cards";
         case MISC_CRYSTAL_BALL_OF_ENERGY:
+#if TAG_MAJOR_VERSION == 32
         case MISC_CRYSTAL_BALL_OF_FIXATION:
+#endif
         case MISC_CRYSTAL_BALL_OF_SEEING:
             return "crystal ball";
         case MISC_BOX_OF_BEASTS:
@@ -2750,8 +2754,6 @@ bool is_bad_item(const item_def &item, bool temp)
         default:
             return (false);
         }
-    case OBJ_MISCELLANY:
-        return (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION);
 
     default:
         return (false);
@@ -2767,8 +2769,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         // Use-IDing these is extremely dangerous!
         if (item.base_type == OBJ_MISCELLANY
             && (item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION))
+                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY))
         {
             return (true);
         }

@@ -393,10 +393,6 @@ crystal ball of energy
 
 A magical device which can be used to restore one's reserves of magical energy, but the use of which carries the risk of draining all of those energies completely. This risk varies inversely with the proportion of their maximum energy which the user possesses; a user near his or her full potential will find this item most beneficial.
 %%%%
-crystal ball of fixation
-
-A dangerous item which hypnotises anyone so unwise as to gaze into it, leaving them helpless for a significant length of time.
-%%%%
 crystal ball of seeing
 
 A magical device which allows one to see the layout of one's surroundings. It requires a degree of magical ability to be used reliably, otherwise it can produce unpredictable and possibly harmful results.
