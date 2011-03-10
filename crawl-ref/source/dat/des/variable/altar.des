@@ -554,9 +554,9 @@ DEPTH:  D:7-20, Crypt
 MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
 MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/\
         w:5 troll skeleton
-MONS:   mummy, wight, wraith, necrophage, ghoul
+MONS:   mummy, wight, wraith, necrophage
 NSUBST: ? = 1:_ / *:1
-SUBST:  1 = 1:25 2 3 4:8 5:6 6:4 7:2
+SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_kikubaaqudgha / altar_yredelemnul
 KMONS:  _ = human zombie
 MAP
