@@ -361,13 +361,12 @@ formatted_string describe_mutations()
     {
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
-        int ac = 3 + (you.experience_level / 3);
         std::ostringstream num;
-        num << ac;
+        num << 3 + you.experience_level / 3;
         result += "Your " + scale_type + " scales are hard (AC +" + num.str() + ").\n";
-        have_any = true;
 
         result += "Your body does not fit into most forms of armour.\n";
+        have_any = true;
     }
 
     result += "</lightblue>";
