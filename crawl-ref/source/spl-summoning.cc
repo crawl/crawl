@@ -528,7 +528,7 @@ bool cast_summon_elemental(int pow, god_type god,
 
     while (true)
     {
-        mpr("Summon from material in which direction? ", MSGCH_PROMPT);
+        mpr("Summon from material in which direction?", MSGCH_PROMPT);
 
         direction_chooser_args args;
         args.restricts = DIR_DIR;
