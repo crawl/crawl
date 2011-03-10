@@ -178,7 +178,6 @@ sea_snake MONS_SEA_SNAKE
 salamander MONS_SALAMANDER
 
 ## Bears ('U')
-bear MONS_BEAR
 black_bear MONS_BLACK_BEAR
 grizzly_bear MONS_GRIZZLY_BEAR
 polar_bear MONS_POLAR_BEAR
