@@ -2493,10 +2493,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_TROGS_HAND:
     {
-        int dur = 5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1);
-        if (dur > 100)
-            dur = 100;
-        dur *= BASELINE_DELAY;
+        const int dur = BASELINE_DELAY
+            * std::min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
         mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, mons, dur));
         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
         dprf("Trog's Hand cast (dur: %d aut)", dur);
