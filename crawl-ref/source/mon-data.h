@@ -1406,7 +1406,7 @@ static monsterentry mondata[] = {
     M_NO_FLAGS,
     MR_RES_COLD,
     500, 10, MONS_GHOUL, MONS_GHOUL, MH_UNDEAD, -5,
-    { {AT_CLAW, AF_ROT, 30}, {AT_CLAW, AF_ROT, 30}, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_ROT, 30}, {AT_CLAW, AF_ROT, 30}, AT_NO_ATK, AT_NO_ATK },
     { 14, 8, 5, 0 },
     4, 10, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_SILENT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
