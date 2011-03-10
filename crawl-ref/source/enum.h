@@ -1859,7 +1859,9 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_TOAD,
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
+#if TAG_MAJOR_VERSION == 32
     MONS_BEAR,
+#endif
     MONS_GRIZZLY_BEAR,
     MONS_POLAR_BEAR,
     MONS_BLACK_BEAR,

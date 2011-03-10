@@ -1328,7 +1328,6 @@ int mons_lair_level(int mcls)
     case MONS_SPINY_FROG:
     case MONS_WAR_DOG:
     case MONS_YELLOW_WASP:
-    case MONS_BEAR:
         mlev += 3;
         break;
 
@@ -1465,7 +1464,6 @@ int mons_lair_rare(int mcls)
         return 20;
 
     case MONS_BLACK_BEAR:
-    case MONS_BEAR:
     case MONS_GRIZZLY_BEAR:
     case MONS_POLAR_BEAR:
         return 15;
@@ -2320,7 +2318,7 @@ int mons_forest_level(int mcls)
     {
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_DRUID:
-    case MONS_BEAR:
+    case MONS_GRIZZLY_BEAR:
     case MONS_WOLF:
         mlev++;
         break;
@@ -2349,7 +2347,7 @@ int mons_forest_rare(int mcls)
 
     case MONS_SPRIGGAN_DRUID:
     case MONS_SPRIGGAN_RIDER:
-    case MONS_BEAR:
+    case MONS_GRIZZLY_BEAR:
     case MONS_WOLF:
         return 40;
 

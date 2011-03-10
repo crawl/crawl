@@ -387,7 +387,7 @@ static void _frog_wave(int power)
 static void _bear_wave(int power)
 {
     wave_name("BEAR WAVE");
-    monster_type bears[] = {MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
+    monster_type bears[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
                  MONS_BLACK_BEAR, END};
     monster_type boss[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, END};
     _zotdef_fill_from_list(bears, 0, power); // full

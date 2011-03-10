@@ -223,6 +223,7 @@ static monsterentry mondata[] = {
 #if TAG_MAJOR_VERSION == 32
     AXED_MON(MONS_GIANT_BLOWFLY)
     AXED_MON(MONS_TRAP_MIMIC)
+    AXED_MON(MONS_BEAR)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -3712,23 +3713,10 @@ static monsterentry mondata[] = {
 
 // bears ('U')
 {
-    MONS_BEAR, 'U', BROWN, "bear",
-    M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS,
-    MR_NO_FLAGS,
-    1000, 10, MONS_BEAR, MONS_BEAR, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 6}, {AT_CLAW, AF_PLAIN, 6},
-       AT_NO_ATK },
-    { 7, 3, 3, 0 },
-    4, 4, MST_BERSERK_ESCAPE, CE_CLEAN, Z_BIG, S_GROWL,
-    I_ANIMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
-},
-
-{
     MONS_GRIZZLY_BEAR, 'U', LIGHTGREY, "grizzly bear",
     M_WARM_BLOOD | M_SPELLCASTER| M_FAKE_SPELLS,
     MR_NO_FLAGS,
-    1100, 10, MONS_BEAR, MONS_GRIZZLY_BEAR, MH_NATURAL, -3,
+    1100, 10, MONS_GRIZZLY_BEAR, MONS_GRIZZLY_BEAR, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
        AT_NO_ATK },
     { 7, 4, 4, 0 },
@@ -3741,7 +3729,7 @@ static monsterentry mondata[] = {
     MONS_POLAR_BEAR, 'U', WHITE, "polar bear",
     M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS,
     MR_RES_COLD,
-    1200, 12, MONS_BEAR, MONS_POLAR_BEAR, MH_NATURAL, -3,
+    1200, 12, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
        AT_NO_ATK },
     { 7, 5, 3, 0 },
@@ -3754,7 +3742,7 @@ static monsterentry mondata[] = {
     MONS_BLACK_BEAR, 'U', BLUE, "black bear",
     M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS,
     MR_NO_FLAGS,
-    800, 9, MONS_BEAR, MONS_BLACK_BEAR, MH_NATURAL, -3,
+    800, 9, MONS_GRIZZLY_BEAR, MONS_BLACK_BEAR, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 4}, {AT_CLAW, AF_PLAIN, 4}, {AT_CLAW, AF_PLAIN, 4},
        AT_NO_ATK },
     { 6, 3, 3, 0 },

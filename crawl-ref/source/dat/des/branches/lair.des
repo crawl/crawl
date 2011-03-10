@@ -1198,7 +1198,7 @@ ENDMAP
 NAME:   minmay_lair_goldilocks
 WEIGHT: 5
 DEPTH:  Lair
-MONS:   black bear, bear, grizzly bear
+MONS:   black bear, grizzly bear, polar bear
 ITEM:   potion of porridge / honeycomb
 MAP
 .......
@@ -1380,7 +1380,7 @@ PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
 ORIENT: southeast
 MONS:   plant
-MONS:   bear, grizzly bear, polar bear, black bear
+MONS:   grizzly bear, polar bear, black bear
 SUBST:  X = xx.
 SUBST:  P = 1111.
 KITEM:  % = honeycomb q:3 / star_item
@@ -1488,7 +1488,7 @@ ENDMAP
 NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
-MONS:   black bear / bear / grizzly bear, wolf, spriggan
+MONS:   black bear / grizzly bear, wolf, spriggan
 MONS:   spriggan rider / spriggan druid
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = t.

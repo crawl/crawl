@@ -764,12 +764,12 @@ KMONS:  I = ice statue
 : if you.level_type_tag() == "ice_cave_hard" then
 MONS:   ice devil / blue devil / nothing w:7
 # FIXME: I can't quite make up more simulacrums
-MONS:   grizzly bear simulacrum / bear simulacrum / dragon simulacrum /\
+MONS:   grizzly bear simulacrum w:20 / dragon simulacrum /\
         human simulacrum / golden dragon simulacrum w:1
 MONS:   ice fiend
 : else
 MONS:   ice devil w:2 / blue devil / nothing
-MONS:   grizzly bear simulacrum / bear simulacrum / human simulacrum /\
+MONS:   grizzly bear simulacrum w:20 / human simulacrum /\
         swamp dragon simulacrum w:1
 MONS:   necromancer
 : end
