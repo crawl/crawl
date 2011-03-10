@@ -1836,6 +1836,7 @@ MAP
 ENDMAP
 
 NAME: megacathedral
+ORIENT: float
 DEPTH: D:8-14
 MONS: wraith / freezing wraith w:2
 MONS: eidolon
