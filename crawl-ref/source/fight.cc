@@ -3461,6 +3461,7 @@ bool melee_attack::apply_damage_brand()
             obvious_effect = true;
         }
         else if (defender->as_monster()->can_use_spells()
+                 && !defender->as_monster()->is_priest()
                  && !mons_class_flag(defender->type, M_FAKE_SPELLS))
         {
             defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
