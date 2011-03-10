@@ -416,8 +416,7 @@ static bool _efreet_flask(int slot)
 static bool _is_crystal_ball(const item_def &item)
 {
     return (item.base_type == OBJ_MISCELLANY
-            && (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
+            && (item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
                 || item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING));
 }
 
@@ -770,18 +769,6 @@ static bool _ball_of_energy(void)
     return (ret);
 }
 
-static bool _ball_of_fixation(void)
-{
-    mpr("You gaze into the crystal ball.");
-    mpr("You are mesmerised by a rainbow of scintillating colours!");
-
-    const int duration = random_range(15, 40);
-    you.set_duration(DUR_PARALYSIS, duration);
-    you.set_duration(DUR_SLOW,      duration);
-
-    return (true);
-}
-
 bool evoke_item(int slot)
 {
     if (you.berserk())
@@ -972,10 +959,12 @@ bool evoke_item(int slot)
                 pract = 1, ident = true;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case MISC_CRYSTAL_BALL_OF_FIXATION:
-            if (_ball_of_fixation())
-                pract = 1, ident = true;
+            mpr("Nothing happens.");
+            pract = 0, ident = true;
             break;
+#endif
 
         case MISC_DISC_OF_STORMS:
             if (disc_of_storms())

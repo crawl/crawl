@@ -691,7 +691,9 @@ static int _acquirement_misc_subtype()
     }
     while (result == MISC_HORN_OF_GERYON
            || result == MISC_RUNE_OF_ZOT
+#if TAG_MAJOR_VERSION == 32
            || result == MISC_CRYSTAL_BALL_OF_FIXATION
+#endif
            || result == MISC_EMPTY_EBONY_CASKET
            || result == MISC_QUAD_DAMAGE
            || result == MISC_DECK_OF_PUNISHMENT);

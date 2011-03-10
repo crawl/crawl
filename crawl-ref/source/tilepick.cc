@@ -3730,9 +3730,6 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_EMPTY_EBONY_CASKET:
         return TILE_MISC_EMPTY_EBONY_CASKET;
 
-    case MISC_CRYSTAL_BALL_OF_FIXATION:
-        return TILE_MISC_CRYSTAL_BALL_OF_FIXATION;
-
     case MISC_DISC_OF_STORMS:
         return TILE_MISC_DISC_OF_STORMS;
 

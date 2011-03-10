@@ -2687,7 +2687,6 @@ int item_mass(const item_def &item)
         case MISC_BOTTLED_EFREET:
         case MISC_CRYSTAL_BALL_OF_SEEING:
         case MISC_CRYSTAL_BALL_OF_ENERGY:
-        case MISC_CRYSTAL_BALL_OF_FIXATION:
             unit_mass = 150;
             break;
 
