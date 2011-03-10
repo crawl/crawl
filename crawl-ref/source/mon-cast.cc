@@ -2516,7 +2516,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     {
         const int power = (mons->hit_dice * 15) / 10;
         mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, mons,
-                       10 + (2*random2(power))));
+                       10 + (2 * random2(power))));
         return;
     }
 
