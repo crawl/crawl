@@ -44,6 +44,10 @@ function callback.cathedral_bats (data, triggerable, triggerer, marker, ev)
     return
   end
 
+  if data.bat_count > 10 then
+    return
+  end
+
   local x, y = marker:pos()
   local you_x, you_y = you.pos()
 
@@ -51,10 +55,6 @@ function callback.cathedral_bats (data, triggerable, triggerer, marker, ev)
   if dgn.mons_at(x, y) then return end
 
   if (not dgn.create_monster(x, y, "generate_awake megabat / generate_awake w:2 fire bat")) then
-    return
-  end
-
-  if data.bat_count > 10 then
     return
   end
 
