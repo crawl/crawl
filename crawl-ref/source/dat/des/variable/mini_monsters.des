@@ -402,7 +402,7 @@ KMONS:  5 = vampire bat
 # In RL, they sit put, not moving a finger.  Lazy bastards.
 KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_spe n_zom
 # The only here without a basis in reality.
-KMONS:  7 = megabat simulacrum name:ice_bat n_rpl n_spe n_zom tile:mons_ice_bat
+KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_spe n_zom
 # There are actual "ghost bats" too, but near-extinct, while ghost-faceds
 # have a number of species and are widespread.
 KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_spe n_zom

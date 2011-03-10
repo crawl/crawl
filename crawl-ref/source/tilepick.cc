@@ -595,15 +595,18 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
 static tileidx_t _tileidx_monster_zombified(const monster* mon)
 {
     const int z_type = mon->type;
+    const int subtype = mons_zombie_base(mon);
 
     // TODO: Add tiles and code for these as well.
     switch (z_type)
     {
-    case MONS_SIMULACRUM_SMALL: return TILEP_MONS_SIMULACRUM_SMALL;
-    case MONS_SIMULACRUM_LARGE: return TILEP_MONS_SIMULACRUM_LARGE;
+    case MONS_SIMULACRUM_SMALL:
+        if (subtype == MONS_BAT)
+            return TILEP_MONS_ICE_BAT;
+        return TILEP_MONS_SIMULACRUM_SMALL;
+    case MONS_SIMULACRUM_LARGE:
+        return TILEP_MONS_SIMULACRUM_LARGE;
     }
-
-    const int subtype = (int) mons_zombie_base(mon);
 
     if (subtype == MONS_KRAKEN)
         return TILEP_MONS_ZOMBIE_KRAKEN;
