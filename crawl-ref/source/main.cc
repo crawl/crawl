@@ -3222,7 +3222,7 @@ static void _open_door(coord_def move, bool check_confused)
             door_move.delta = move;
         else
         {
-            mpr("Which direction? ", MSGCH_PROMPT);
+            mpr("Which direction?", MSGCH_PROMPT);
             direction_chooser_args args;
             args.restricts = DIR_DIR;
             direction(door_move, args);
@@ -3493,7 +3493,7 @@ static void _close_door(coord_def move)
             door_move.delta = move;
         else
         {
-            mpr("Which direction? ", MSGCH_PROMPT);
+            mpr("Which direction?", MSGCH_PROMPT);
             direction_chooser_args args;
             args.restricts = DIR_DIR;
             direction(door_move, args);
