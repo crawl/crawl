@@ -676,7 +676,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
             && result < STAFF_FIRST_ROD
             && !one_chance_in(4)))
     {
-        result = coinflip() ? STAFF_STRIKING : random_rod_subtype();
+        result = random_rod_subtype();
     }
 
     return (result);
