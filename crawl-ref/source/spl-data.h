@@ -2926,6 +2926,19 @@ struct spell_desc
 },
 
 {
+    SPELL_MELEE, "melee",
+     0,
+     SPFLAG_TESTING,
+     1,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

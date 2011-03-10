@@ -1484,7 +1484,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     continue;
 
                 // Setup the spell.
-                setup_mons_cast(mons, beem, spell_cast);
+                if (spell_cast != SPELL_MELEE)
+                    setup_mons_cast(mons, beem, spell_cast);
 
                 // Try to find a nearby ally to haste, heal
                 // resurrect, or sacrifice itself for.
@@ -1637,7 +1638,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
 
         // Should the monster *still* not have a spell, well, too bad {dlb}:
-        if (spell_cast == SPELL_NO_SPELL)
+        if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_MELEE)
             return (false);
 
         // Friendly monsters don't use polymorph other, for fear of harming

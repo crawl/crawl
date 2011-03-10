@@ -3205,10 +3205,6 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
 // affect the target.
 bool mons_has_los_ability(monster_type mon_type)
 {
-    // These two have Torment, but are handled specially.
-    if (mon_type == MONS_FIEND || mon_type == MONS_PIT_FIEND)
-        return (true);
-
     // These eyes only need LOS, as well.  (The other eyes use spells.)
     if (mon_type == MONS_GIANT_EYEBALL
         || mon_type == MONS_EYE_OF_DRAINING
@@ -3393,9 +3389,6 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 // unimpeded LOS to the player.
 static bool _mons_has_smite_attack(const monster* mons)
 {
-    if (mons->type == MONS_FIEND)
-        return (true);
-
     const monster_spells &hspell_pass = mons->spells;
     for (unsigned i = 0; i < hspell_pass.size(); ++i)
         if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT

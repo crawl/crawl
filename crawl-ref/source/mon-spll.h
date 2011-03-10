@@ -427,6 +427,28 @@
       }
     },
 
+    {  MST_FIEND,
+      {
+       SPELL_HELLFIRE,
+       SPELL_HELLFIRE,
+       SPELL_NO_SPELL,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_PIT_FIEND,
+      {
+       SPELL_HELLFIRE,
+       SPELL_HELLFIRE,
+       SPELL_MELEE,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_ICE_FIEND,
       {
        SPELL_BOLT_OF_COLD,
