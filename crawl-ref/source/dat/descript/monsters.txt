@@ -828,7 +828,7 @@ Does this bat merely possess the visage of a ghost, or is it a ghost itself?
 %%%%
 ghoul
 
-An undead humanoid creature, created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
+An undead humanoid creature with vicious claws, created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
 %%%%
 giant amoeba
 

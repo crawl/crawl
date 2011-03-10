@@ -141,8 +141,8 @@ function volcano_setup (e, metal, subvault)
         e.set_random_mon_list([[hog / fire elemental / fire vortex /
                                 worker ant / bumblebee / fire drake / lindwurm /
                                 imp / redback / manticore / hell hound /
-                                hell hog / ghoul / flayed ghost /
-                                pulsating lump / toenail golem / efreet /
+                                hell hog / flayed ghost / pulsating lump /
+                                toenail golem / efreet /
                                 vampire]])
     end
 end
@@ -286,7 +286,7 @@ end
 -- surrounding either a lindwurm, fire drake, or manticore.
 --
 -- Demonic "packs" usually consist high chance of imps, toenail golems
--- and pulsating lumps, lower chance of red devils, hell hounds and ghouls
+-- and pulsating lumps, lower chance of red devils and hell hounds
 -- which are then surrounding either a hell hog, a hell knight (with
 -- watered-down equipment), flayed ghost or flaming corpse.
 --
@@ -386,7 +386,7 @@ function fiery_guardians (e)
     if crawl.one_chance_in(3) then
         -- "Demonic" fire-themed monster pack.
         e.mons("imp w:20 / pulsating lump / toenail golem / hell hound w:9 / \
-                ghoul w:9 / red devil ; trident ego:flaming")
+                / red devil ; trident ego:flaming")
         e.mons("efreet / flaming corpse / flayed ghost / hell hog / vampire / " .. hellknight)
         return
     end
