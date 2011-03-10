@@ -3001,7 +3001,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         if (mons->type == MONS_SPRIGGAN_BERSERKER)
         {
-            monster_type berserkers[4] = { MONS_BLACK_BEAR, MONS_BEAR, MONS_GRIZZLY_BEAR,
+            monster_type berserkers[3] = { MONS_BLACK_BEAR, MONS_GRIZZLY_BEAR,
                                            MONS_POLAR_BEAR };
             to_summon = RANDOM_ELEMENT(berserkers);
         }
@@ -3121,9 +3121,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(static_cast<monster_type>(random_choose_weighted(
                             10, MONS_WOLF,
-                             4, MONS_BEAR,
-                             1, MONS_GRIZZLY_BEAR,
-                             4, MONS_BLACK_BEAR,
+                             3, MONS_GRIZZLY_BEAR,
+                             6, MONS_BLACK_BEAR,
                              // no polar bears
                           0)), SAME_ATTITUDE(mons),
                           mons, duration, spell_cast, mons->pos(),

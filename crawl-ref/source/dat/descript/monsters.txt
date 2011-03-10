@@ -403,10 +403,6 @@ Balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
-bear
-
-A common cave bear. If provoked, it may become angry!
-%%%%
 beast
 
 A weird and hideous cross between beast and human.
