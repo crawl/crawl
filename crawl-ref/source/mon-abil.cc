@@ -2244,64 +2244,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             mons->go_berserk(true);
         break;
 
-    case MONS_PIT_FIEND:
-        if (one_chance_in(3))
-            break;
-        // deliberate fall through
-    case MONS_FIEND:
-        if (mons->has_ench(ENCH_CONFUSION))
-            break;
-
-        if (player_or_mon_in_sanct(mons))
-            break;
-
-        // Friendly fiends won't use torment, preferring hellfire
-        // (right now there is no way a monster can predict how
-        // badly they'll damage the player with torment) -- GDL
-
-        // Well, I guess you could allow it if the player is torment
-        // resistant, but there's a very good reason torment resistant
-        // players can't cast Torment themselves, and allowing your
-        // allies to cast it would just introduce harmless Torment
-        // through the backdoor. Thus, shouldn't happen. (jpeg)
-        if (one_chance_in(4))
-        {
-            spell_type spell_cast = SPELL_NO_SPELL;
-
-            switch (random2(4))
-            {
-            case 0:
-                if (!mons->friendly())
-                {
-                    make_mons_stop_fleeing(mons);
-                    spell_cast = SPELL_SYMBOL_OF_TORMENT;
-                    _mons_cast_abil(mons, beem, spell_cast);
-                    used = true;
-                    break;
-                }
-                // deliberate fallthrough -- see above
-            case 1:
-            case 2:
-            case 3:
-                spell_cast = SPELL_HELLFIRE;
-                setup_mons_cast(mons, beem, spell_cast);
-
-                // Fire tracer.
-                fire_tracer(mons, beem);
-
-                // Good idea?
-                if (mons_should_fire(beem))
-                {
-                    make_mons_stop_fleeing(mons);
-
-                    _mons_cast_abil(mons, beem, spell_cast);
-                    used = true;
-                }
-                break;
-            }
-        }
-        break;
-
     case MONS_IMP:
     case MONS_PHANTOM:
     case MONS_INSUBSTANTIAL_WISP:

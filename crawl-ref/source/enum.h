@@ -2468,6 +2468,8 @@ enum mon_spellbook_type
     MST_ORC_PRIEST,
     MST_ORC_HIGH_PRIEST,
     MST_MOTTLED_DRAGON,
+    MST_FIEND,
+    MST_PIT_FIEND,
     MST_ICE_FIEND,
     MST_SHADOW_FIEND,
     MST_TORMENTOR,
@@ -3245,6 +3247,7 @@ enum spell_type
     SPELL_TUKIMAS_BALL,
     SPELL_DARKNESS,
     SPELL_MESMERISE,
+    SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
 
     NUM_SPELLS
 };
