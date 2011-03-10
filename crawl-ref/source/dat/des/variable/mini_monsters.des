@@ -409,6 +409,7 @@ KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_spe n_zom
 # Just an US WW2 military project, but that's good enough.
 KMONS:  9 = fire bat hd:1
 KMONS:  0 = bat zombie name:rotten_bat n_rpl n_spe n_zom
+KMONS:  A = bat name:phase n_adj n_spe col:lightgreen spells:blink tile:mons_phase_bat
 MAP
        xxxxx
       xxxxxxx
@@ -420,7 +421,7 @@ MAP
   xxx....xxxx
   xx88.xx.xxxx
   xxxxxxxx.xxxx
- xxxxxxxxx...xx
+ xxxxxxxxx.AAxx
 xxx.4xxxx..x..xx
 xxx12.xxx.xx...xx
 xxxx.xxx.xxxx6..x
