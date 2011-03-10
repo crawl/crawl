@@ -1416,6 +1416,10 @@ phantom
 
 A transparent man-like undead spirit.
 %%%%
+phase bat
+
+This bat travels through more dimensions than the average bat.
+%%%%
 phoenix
 
 A bird of myth and legend, said to die in flames and be reborn from the ashes.
