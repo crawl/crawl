@@ -1,12 +1,29 @@
 ##############################################################################
 # The Hall of Blades
 ##############################################################################
+# Guarantee a single rare base type with a brand
+{{
+
+function hall_of_blades_weapon(e)
+
+  local weapon = util.random_from({"quick blade", "double sword",
+                 "executioner's axe", "eveningstar", "bardiche",
+                 "lajatang"})
+
+  local ego = util.random_from({"vorpal", "flaming", "freezing",
+              "electrocution", "vampiricism", "draining", "venom"})
+
+  e.mons("dancing weapon; good_item " .. weapon .. " ego:" .. ego .. "")
+end
+
+}}
 
 NAME:    hall_of_blades
 PLACE:   Blade
-ORIENT:  north
-TAGS:    no_rotate no_dump
+ORIENT:  encompass
+TAGS:    no_dump
 MONS:    dancing weapon
+ : hall_of_blades_weapon(_G)
 SHUFFLE: cv
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -21,12 +38,11 @@ xxxc.........ccc............ccc............ccc...........ccccc....cxxx
 xxxc..........c..............c..............c.............ccc.....cxxx
 xxxc......................................................ccc.....cxxx
 xxxc.......................................................c......cxxx
+xxxc.......................................................1......cxxx
 xxxc..............................................................cxxx
+xxxc.....................................................1.2.1....cxxx
 xxxc..............................................................cxxx
-xxxc..............................................................cxxx
-xxxc..............................................................cxxx
-xxxc..............................................................cxxx
-xxxc..............................................................cxxx
+xxxc.......................................................1......cxxx
 xxxc.......................................................c......cxxx
 xxxc......................................................ccc.....cxxx
 xxxc..........c..............c..............c.............ccc.....cxxx
@@ -37,7 +53,7 @@ xxxc..........c..............c..............c..............c......cxxx
 xxxc..............................................................cxxx
 xxxc.......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxx
 xxxcc.....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxx
-xxxccc...ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
-xxxcccc.............................cccccccccccccccccccccccccccccccxxx
-xxxcccccccccccccccccccccccccccccc.@.cccccccccccccccccccccccccccccccxxx
+xxxccc[{(ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
+xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

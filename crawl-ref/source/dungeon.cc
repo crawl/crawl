@@ -1354,8 +1354,6 @@ static int _num_mons_wanted(level_area_type level_type)
 
     if (player_in_hell())
         mon_wanted += roll_dice(3, 8);
-    else if (player_in_branch(BRANCH_HALL_OF_BLADES))
-        mon_wanted += roll_dice(6, 8);
 
     if (mon_wanted > 60)
         mon_wanted = 60;
