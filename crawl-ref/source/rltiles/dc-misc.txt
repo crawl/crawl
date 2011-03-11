@@ -73,6 +73,9 @@ dc-dngn/water/ink_full CLOUD_INK
 
 cloud_gloom CLOUD_GLOOM
 
+tornado1 CLOUD_RAGING_WINDS_0
+tornado2 CLOUD_RAGING_WINDS_1
+
 %sdir dc-mon
 fungi_plants/giant_spore SPORE_OVERLAY
 
