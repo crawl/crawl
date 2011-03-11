@@ -714,7 +714,7 @@ TAGS:   no_item_gen no_rotate
 PLACE:  Crypt:5
 MARKER: m = lua:portal_desc {wall_phase = 1}
 SUBST:  m : mnn
-MONS:   lich / ancient lich
+MONS:   patrolling lich / patrolling ancient lich
 MONS:   bone dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
 WEIGHT: 10
