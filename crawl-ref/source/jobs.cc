@@ -4,38 +4,6 @@
 
 #include "options.h"
 
-// First plain fighters, then religious fighters, then spell-casting
-// fighters, then primary spell-casters, then stabbers and shooters. (MM)
-static job_type jobs_order[] = {
-    // fighters
-    JOB_FIGHTER,            JOB_GLADIATOR,
-    JOB_MONK,               JOB_BERSERKER,
-    // religious professions (incl. Berserker above)
-    JOB_CHAOS_KNIGHT,       JOB_DEATH_KNIGHT,
-    JOB_ABYSSAL_KNIGHT,     JOB_PRIEST,
-    JOB_HEALER,             JOB_CRUSADER,
-    // general and niche spellcasters (incl. Crusader above)
-    JOB_WARPER,
-    JOB_WIZARD,             JOB_CONJURER,
-    JOB_ENCHANTER,          JOB_SUMMONER,
-    JOB_NECROMANCER,        JOB_TRANSMUTER,
-    JOB_FIRE_ELEMENTALIST,  JOB_ICE_ELEMENTALIST,
-    JOB_AIR_ELEMENTALIST,   JOB_EARTH_ELEMENTALIST,
-    // poison specialists and stabbers
-    JOB_VENOM_MAGE,         JOB_STALKER,
-    JOB_ASSASSIN,
-    JOB_HUNTER,             JOB_ARTIFICER,
-    JOB_ARCANE_MARKSMAN,    JOB_WANDERER
-};
-
-job_type get_job(const int index)
-{
-    if (index < 0 || index >= ng_num_jobs())
-        return (JOB_UNKNOWN);
-
-    return (jobs_order[index]);
-}
-
 static const char * Job_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr",
       "Gl", "Ne",
@@ -129,13 +97,6 @@ job_type get_job_by_name(const char *name)
     }
 
     return (cl);
-}
-
-int ng_num_jobs()
-{
-    // The list musn't be longer than the number of actual jobs.
-    COMPILE_CHECK(ARRAYSZ(jobs_order) <= NUM_JOBS, c1);
-    return ARRAYSZ(jobs_order);
 }
 
 bool is_valid_job(job_type job)

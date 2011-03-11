@@ -283,9 +283,9 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
     case JOB_VIABLE:
     {
         int good_choices = 0;
-        for (int i = 0; i < ng_num_jobs(); i++)
+        for (int i = 0; i < NUM_JOBS; i++)
         {
-            job_type job = get_job(i);
+            job_type job = job_type(i);
             if (is_good_combination(ng->species, job, true)
                 && one_chance_in(++good_choices))
             {
@@ -300,15 +300,15 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
         if (ng->species == SP_UNKNOWN)
         {
             // any job will do
-            ng->job = get_job(random2(ng_num_jobs()));
+            ng->job = job_type(random2(NUM_JOBS));
         }
         else
         {
             // Pick a random legal character.
             int good_choices = 0;
-            for (int i = 0; i < ng_num_jobs(); i++)
+            for (int i = 0; i < NUM_JOBS; i++)
             {
-                job_type job = get_job(i);
+                job_type job = job_type(i);
                 if (is_good_combination(ng->species, job, false)
                     && one_chance_in(++good_choices))
                 {
@@ -948,26 +948,25 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     }
 }
 
-/**
- * Helper for _choose_job
- * constructs the menu used and highlights the previous job if there is one
- */
-static void _construct_backgrounds_menu(const newgame_def* ng,
-                                        const newgame_def& defaults,
-                                        MenuFreeform* menu)
+void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
+                       MenuFreeform* menu, menu_letter &letter)
 {
-    static const int ITEMS_IN_COLUMN = 10;
-    // Construct the menu, 3 columns
-    TextItem* tmp = NULL;
+    TextItem* tmp = new NoSelectTextItem();
     std::string text;
-    coord_def min_coord(0,0);
-    coord_def max_coord(0,0);
+    tmp->set_text(name);
+    coord_def min_coord(2 + position.x, 3 + position.y);
+    coord_def max_coord(min_coord.x + width, min_coord.y + 1);
+    tmp->set_bounds(min_coord, max_coord);
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
-    for (int i = 0; i < ng_num_jobs(); ++i)
+    for (unsigned int i = 0; i < ARRAYSZ(jobs); ++i)
     {
-        const job_type job = get_job(i);
+        job_type &job = jobs[i];
+        if (job == JOB_UNKNOWN)
+            break;
+
         tmp = new TextItem();
-        text.clear();
 
         if (ng->species == SP_UNKNOWN
             || job_allowed(ng->species, job) == CC_UNRESTRICTED)
@@ -991,20 +990,17 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         }
         else
         {
-            text = index_to_letter(i);
+            text = letter;
             text += " - ";
             text += get_job_name(job);
         }
-        // fill the text entry to end of column - 1
-        text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
+
         tmp->set_text(text);
-        min_coord.x = X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH;
-        min_coord.y = 3 + i % ITEMS_IN_COLUMN;
-        max_coord.x = min_coord.x + tmp->get_text().size();
-        max_coord.y = min_coord.y + 1;
+        ++min_coord.y;
+        ++max_coord.y;
         tmp->set_bounds(min_coord, max_coord);
 
-        tmp->add_hotkey(index_to_letter(i));
+        tmp->add_hotkey(letter++);
         tmp->set_id(job);
         tmp->set_description_text(getGameStartDescription(get_job_name(job)));
 
@@ -1015,14 +1011,63 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
             menu->set_active_item(tmp);
         }
     }
+}
+
+/**
+ * Helper for _choose_job
+ * constructs the menu used and highlights the previous job if there is one
+ */
+static void _construct_backgrounds_menu(const newgame_def* ng,
+                                        const newgame_def& defaults,
+                                        MenuFreeform* menu)
+{
+    job_group jobs_order[] =
+    {
+        {
+            "WARRIOR:",
+            coord_def(0, 0), 15,
+            {JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN,
+             JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
+        },
+        {
+            "ADVENTURER:",
+            coord_def(0, 7), 15,
+            {JOB_ARTIFICER, JOB_WANDERER, JOB_UNKNOWN, JOB_UNKNOWN,
+             JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
+        },
+        {
+            "ZEALOT:",
+            coord_def(15, 0), 20,
+            {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
+             JOB_DEATH_KNIGHT, JOB_PRIEST, JOB_HEALER, JOB_UNKNOWN,
+             JOB_UNKNOWN, JOB_UNKNOWN}
+        },
+        {
+            "BATTLEMAGE:",
+            coord_def(35, 0), 21,
+            {JOB_CRUSADER, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_STALKER,
+             JOB_ARCANE_MARKSMAN, JOB_WARPER, JOB_UNKNOWN, JOB_UNKNOWN,
+             JOB_UNKNOWN}
+        },
+        {
+            "MAGE:",
+            coord_def(56, 0), 23,
+            {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+             JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
+             JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE}
+        }
+    };
+
+    menu_letter letter = 'a';
+    for (unsigned int i = 0; i < ARRAYSZ(jobs_order); ++i)
+        jobs_order[i].attach(ng, defaults, menu, letter);
 
     // Add all the special button entries
-    tmp = new TextItem();
+    TextItem* tmp = new TextItem();
     tmp->set_text("+ - Viable background");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
+    coord_def min_coord = coord_def(X_MARGIN, SPECIAL_KEYS_START_Y);
+    coord_def max_coord = coord_def(min_coord.x + tmp->get_text().size(),
+                                    min_coord.y + 1);
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
@@ -1144,13 +1189,10 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
 
     if (_char_defined(defaults))
     {
-        text.clear();
-        text = "Tab - ";
-        text += _char_description(defaults).c_str();
-        // Adjust the end marker to aling the - because
+        // Adjust the end marker to align the - because
         // Tab text is longer by 2
         tmp = new TextItem();
-        tmp->set_text(text);
+        tmp->set_text("Tab - " + _char_description(defaults));
         min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
         min_coord.y = SPECIAL_KEYS_START_Y + 3;
         max_coord.x = min_coord.x + tmp->get_text().size();
@@ -1179,8 +1221,8 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(0,0), coord_def(get_number_of_cols(),
-                   get_number_of_lines()), "freeform");
+    freeform->init(coord_def(0,0), coord_def(get_number_of_cols() + 1,
+                   get_number_of_lines() + 1), "freeform");
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
