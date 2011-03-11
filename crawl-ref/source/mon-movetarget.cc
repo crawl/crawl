@@ -150,8 +150,13 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
 
     // If the target is "unreachable" (the monster already tried,
     // and failed, to find a path), there's a chance of trying again.
-    if (_target_is_unreachable(mon) && !one_chance_in(12))
+    // The chance is higher for wall clinging monsters to help them avoid
+    // shallow water.
+    if (_target_is_unreachable(mon) && !one_chance_in(12)
+        && !(mon->can_cling_to_walls() && one_chance_in(4)))
+    {
         return (false);
+    }
 
 #ifdef DEBUG_PATHFIND
     mprf("%s: Player out of reach! What now?",
