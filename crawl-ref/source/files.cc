@@ -93,6 +93,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
+#include "view.h"
 #include "viewgeom.h"
 
 #include <dirent.h>
@@ -1159,9 +1160,12 @@ static bool _grab_follower_at(const coord_def &pos)
          fmenv->name(DESC_CAP_THE, true).c_str(),
          dest.describe().c_str());
 #endif
+    bool could_see = you.can_see(fmenv);
     fmenv->set_transit(dest);
     fmenv->destroy_inventory();
     monster_cleanup(fmenv);
+    if (could_see)
+        view_update_at(pos);
     return (true);
 }
 
