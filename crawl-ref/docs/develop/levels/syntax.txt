@@ -441,7 +441,7 @@ LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
           for vaults with ORIENT encompass or with PLACE. Causes a level's
           flags to be set when the level is first created. These flags can
           later be altered using Lua markers; for examples, look at the slime
-          pit vault in lair.des, and the vaults in hell.des and elf.des.
+          pit vault in slime.des, and the vaults in hell.des.
 
           Valid flags are:
           * no_tele_control - prevents the player from using teleport control
