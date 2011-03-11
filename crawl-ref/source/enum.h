@@ -2427,8 +2427,6 @@ enum mon_inv_type           // (int) menv[].inv[]
     NUM_MONSTER_SLOTS
 };
 
-#include "mon-mst.h"
-
 enum mutation_type
 {
     // body slot facets
