@@ -31,15 +31,6 @@ sub bad_line
     {
         print STDERR "* $filename\n";
         $reported_filename = $filename;
-
-        $skip = $filename =~ /\.(png|ttf|ico|icns|fig|tex|eps|pdf)$/i
-             || $filename =~ /\.(sln|vim|pbxproj|vsprops|plist)$/i
-             || $filename =~ /vcproj/
-             || $filename =~ /^\.gitmodules$/
-             || $filename =~ /\.(lex|tab)\./
-             || $filename !~ /\./;
-        $tab =  $filename =~ /\.(rb|pl|sh)$/i
-             || $filename =~ /Makefile/i;
     }
     print STDERR "  + $why (line $lineno)\n";
     #print STDERR "$_\n" unless $noquote;
@@ -57,6 +48,15 @@ while (<DIFF>)
     {
         was_last;
         $filename = $1;
+
+        $skip = $filename =~ /\.(png|ttf|ico|icns|fig|tex|eps|pdf)$/i
+             || $filename =~ /\.(sln|vim|pbxproj|vsprops|plist)$/i
+             || $filename =~ /vcproj/
+             || $filename =~ /^\.gitmodules$/
+             || $filename =~ /\.(lex|tab)\./
+             || $filename !~ /\./;
+        $tab =  $filename =~ /\.(rb|pl|sh)$/i
+             || $filename =~ /Makefile/i;
         next;
     }
     if (/^@@ -\S+ \+(\d+)/)
