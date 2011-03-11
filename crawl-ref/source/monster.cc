@@ -5913,7 +5913,8 @@ void monster::check_redraw(const coord_def &old) const
     {
         if (see_new)
             view_update_at(pos());
-        if (see_old)
+        // Don't leave a trail if we can see the monster move in.
+        if (see_old || (pos() - old).rdist() <= 1)
             view_update_at(old);
         update_screen();
     }
