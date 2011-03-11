@@ -872,7 +872,7 @@ LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html
-GENERATED_FILES := art-data.h $(RLTILES)/dc-unrand.txt
+GENERATED_FILES := art-data.h art-enum.h mon-mst.h $(RLTILES)/dc-unrand.txt
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
@@ -1162,7 +1162,12 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 #############################################################################
 # Build unrandart data
 art-data.h: art-data.txt util/art-data.pl art-func.h
-	@util/art-data.pl
+	$(QUIET_GEN)util/art-data.pl
+
+art-enum.h: art-data.h
+
+mon-mst.h: mon-spll.h util/gen-mst.pl
+	$(QUIET_GEN)util/gen-mst.pl
 
 $(RLTILES)/dc-unrand.txt: art-data.h
 
