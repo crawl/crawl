@@ -262,17 +262,6 @@
       }
     },
 
-    {  MST_FIRE_BAT,
-      {
-       SPELL_FLAME_TONGUE,
-       SPELL_FLAME_TONGUE,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_ORC_SORCERER,
       {
        SPELL_BOLT_OF_FIRE,
