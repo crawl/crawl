@@ -297,5 +297,6 @@ void actor::check_clinging(bool stepped)
 
 void actor::clear_clinging()
 {
-    props["clinging"] = false;
+    if (props.exists("clinging"))
+        props["clinging"] = false;
 }

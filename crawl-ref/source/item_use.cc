@@ -1561,14 +1561,15 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         return (false);
 
     const coord_def oldpos = victim->pos();
+    victim->clear_clinging();
 
     if (victim->atype() == ACT_PLAYER)
     {
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
-        victim->moveto(pos);
         canned_msg(MSG_YOU_BLINK);
+        move_player_to_grid(pos, false, true);
     }
     else
     {
