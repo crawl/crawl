@@ -54,16 +54,6 @@
 #include <algorithm>
 #include <queue>
 
-struct mon_spellbook
-{
-    mon_spellbook_type type;
-    spell_type spells[NUM_MONSTER_SPELL_SLOTS];
-};
-
-static mon_spellbook mspell_list[] = {
-#include "mon-spll.h"
-};
-
 // Macro that saves some typing, nothing more.
 #define smc get_monster_data(mc)
 
@@ -3711,7 +3701,7 @@ void monster::pandemon_init()
     else
         colour = ghost->colour;
 
-    load_spells(MST_GHOST);
+    load_ghost_spells();
 }
 
 void monster::set_new_monster_id()
@@ -3738,7 +3728,7 @@ void monster::ghost_init()
     foe_memory      = 0;
     colour          = ghost->colour;
     number          = MONS_NO_MONSTER;
-    load_spells(MST_GHOST);
+    load_ghost_spells();
 
     inv.init(NON_ITEM);
     enchantments.clear();
@@ -3792,7 +3782,7 @@ void monster::labrat_init ()
     speed_increment = 70;
     colour          = ghost->colour;
 
-    load_spells(MST_GHOST);
+    load_ghost_spells();
 }
 
 void monster::uglything_mutate(uint8_t force_colour)
@@ -3925,38 +3915,22 @@ void monster::set_transit(const level_id &dest)
     add_monster_to_transit(dest, *this);
 }
 
-void monster::load_spells(mon_spellbook_type book)
+void monster::load_ghost_spells()
 {
-    spells.init(SPELL_NO_SPELL);
-    if (book == MST_NO_SPELLS || book == MST_GHOST && !ghost.get())
+    if (!ghost.get())
+    {
+        spells.init(SPELL_NO_SPELL);
         return;
-
-    dprf("%s: loading spellbook #%d", name(DESC_PLAIN, true).c_str(),
-         static_cast<int>(book));
-
-    if (book == MST_GHOST)
-        spells = ghost->spells;
-    else
-    {
-        for (unsigned int i = 0; i < ARRAYSZ(mspell_list); ++i)
-        {
-            if (mspell_list[i].type == book)
-            {
-                for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-                    spells[j] = mspell_list[i].spells[j];
-                break;
-            }
-        }
     }
+
+    spells = ghost->spells;
+
 #ifdef DEBUG_DIAGNOSTICS
-    // Only for ghosts, too spammy to use for all monsters.
-    if (book == MST_GHOST)
+    dprf("Ghost spells:");
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
     {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-        {
-            mprf(MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
-                  i, spells[i], spell_title(spells[i]));
-        }
+        mprf(MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
+             i, spells[i], spell_title(spells[i]));
     }
 #endif
 }

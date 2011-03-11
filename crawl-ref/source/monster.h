@@ -216,7 +216,7 @@ public:
     void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();
     void destroy_inventory();
-    void load_spells(mon_spellbook_type spellbook);
+    void load_ghost_spells();
 
     actor *get_foe() const;
 

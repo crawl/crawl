@@ -57,6 +57,19 @@ mon_display monster_symbols[NUM_MONSTERS];
 static bool initialised_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
+#include "mon-mst.h"
+
+struct mon_spellbook
+{
+    mon_spellbook_type type;
+    spell_type spells[NUM_MONSTER_SPELL_SLOTS];
+};
+
+static mon_spellbook mspell_list[] =
+{
+#include "mon-spll.h"
+};
+
 #include "mon-data.h"
 
 #define MONDATASIZE ARRAYSZ(mondata)
@@ -1811,7 +1824,30 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     return (retval);
 }
 
-static void _get_spells(mon_spellbook_type& book, monster* mon)
+void _mons_load_spells(monster* mon, mon_spellbook_type book)
+{
+    if (book = MST_GHOST)
+        return mon->load_ghost_spells();
+
+    mon->spells.init(SPELL_NO_SPELL);
+    if (book == MST_NO_SPELLS)
+        return;
+
+    dprf("%s: loading spellbook #%d", mon->name(DESC_PLAIN, true).c_str(),
+         static_cast<int>(book));
+
+    for (unsigned int i = 0; i < ARRAYSZ(mspell_list); ++i)
+    {
+        if (mspell_list[i].type == book)
+        {
+            for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+                mon->spells[j] = mspell_list[i].spells[j];
+            break;
+        }
+    }
+}
+
+static void _get_spells(mon_spellbook_type book, monster* mon)
 {
     if (book == MST_NO_SPELLS && mons_class_flag(mon->type, M_SPELLCASTER))
     {
@@ -1824,7 +1860,7 @@ static void _get_spells(mon_spellbook_type& book, monster* mon)
         }
     }
 
-    mon->load_spells(book);
+    _mons_load_spells(mon, book);
 
     // (Dumb) special casing to give ogre mages Haste Other. -cao
     if (mon->type == MONS_OGRE_MAGE)
@@ -1902,7 +1938,6 @@ void define_monster(monster* mons)
     int col                   = mons_class_colour(mcls);
     int hd                    = mons_class_hit_dice(mcls);
     int speed                 = mons_real_base_speed(mcls);
-    mon_spellbook_type spells = MST_NO_SPELLS;
     int hp, hp_max, ac, ev;
 
     mons->mname.clear();
@@ -2054,8 +2089,7 @@ void define_monster(monster* mons)
 
     mons->bind_melee_flags();
 
-    spells = m->sec;
-    _get_spells(spells, mons);
+    _get_spells((mon_spellbook_type)m->sec, mons);
     mons->bind_spell_flags();
 
     // Reset monster enchantments.

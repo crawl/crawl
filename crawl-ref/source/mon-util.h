@@ -145,7 +145,7 @@ struct monsterentry
 
     int8_t AC; // armour class
     int8_t ev; // evasion
-    mon_spellbook_type sec;
+    int sec;   // spellbook
     corpse_effect_type corpse_thingy;
     zombie_size_type   zombie_size;
     shout_type         shouts;
@@ -287,8 +287,6 @@ char mons_base_char(int mc);
 
 int mons_class_colour(int mc);
 int mons_colour(const monster* mon);
-
-void mons_load_spells(monster* mon, mon_spellbook_type book);
 
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
