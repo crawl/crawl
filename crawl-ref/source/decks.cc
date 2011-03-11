@@ -2544,12 +2544,6 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                             && !mi->is_summoned()
                             && !mi->is_shapeshifter())
                     {
-                        // Prevent assertion if the monster was
-                        // previously worshipping a different god,
-                        // rather than already worshipping your god or
-                        // being an atheist.
-                        mi->god = GOD_NO_GOD;
-
                         mons_make_god_gift(*mi, is_good_god(you.religion) ?
                                            GOD_SHINING_ONE : GOD_BEOGH);
                     }
