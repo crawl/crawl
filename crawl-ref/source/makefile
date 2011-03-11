@@ -873,7 +873,7 @@ DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html
 GENERATED_HEADERS := art-enum.h #the rest are private
-GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h $(RLTILES)/dc-unrand.txt
+GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h $(RLTILES)/dc-unrand.txt build.h compflag.h
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
@@ -1077,7 +1077,7 @@ clean: clean-rltiles
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
-	    build.h compflag.h .contrib-libs .cflags
+	    .contrib-libs .cflags
 	$(RM) -r build-win
 	$(RM) -r build
 
@@ -1179,7 +1179,7 @@ mon-util.o: mon-mst.h
 #
 
 .PHONY: rltile-build
-rltile-build: .contrib-libs $(GENERATED_FILES)
+rltile-build: .contrib-libs $(RLTILES)/dc-unrand.txt
 	+$(MAKE) -C $(RLTILES) all
 
 $(TILEDEFSRCS): rltile-build
