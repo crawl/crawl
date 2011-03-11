@@ -29,7 +29,7 @@ struct packed_cell
     bool swamp_tree_water;
 
     packed_cell() : num_dngn_overlay(0), is_bloody(false), is_silenced(false),
-                    is_haloed(false), is_moldy(false), is_sanctuary(false), 
+                    is_haloed(false), is_moldy(false), is_sanctuary(false),
                     is_liquefied(false), swamp_tree_water (false) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
