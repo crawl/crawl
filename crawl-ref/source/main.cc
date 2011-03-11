@@ -2814,7 +2814,6 @@ static void _player_reacts_to_monsters()
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);
 
-    you.check_clinging(false);
     handle_starvation();
     _decrement_paralysis(you.time_taken);
 

@@ -1411,6 +1411,7 @@ void mons_relocated(monster* mons)
         }
 
     }
+    mons->clear_clinging();
 }
 
 static int _destroy_tentacle(int tentacle_idx, monster* origin)
