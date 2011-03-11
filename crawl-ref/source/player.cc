@@ -5147,7 +5147,10 @@ void float_player(bool fly)
     else if (fly)
         mpr("You fly up into the air.");
     else
-        mpr("You gently float upwards from the floor.");
+    {
+        mprf("You gently float upwards from the %s.",
+             you.is_wall_clinging() ? "wall" : "floor");
+    }
 
     // Amulet of Controlled Flight can auto-ID.
     if (wearing_amulet(AMU_CONTROLLED_FLIGHT)
@@ -5166,6 +5169,10 @@ void float_player(bool fly)
     }
 
     burden_change();
+
+    // The player hasn't actuclly taken a step, but in this case, we want
+    // neither the message, nor the location effect.
+    you.check_clinging(true);
 }
 
 void levitate_player(int pow)
