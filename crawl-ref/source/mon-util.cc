@@ -1826,7 +1826,7 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
 
 void _mons_load_spells(monster* mon, mon_spellbook_type book)
 {
-    if (book = MST_GHOST)
+    if (book == MST_GHOST)
         return mon->load_ghost_spells();
 
     mon->spells.init(SPELL_NO_SPELL);
