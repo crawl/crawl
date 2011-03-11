@@ -438,7 +438,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     bool was_in_water = you.in_water();
     const flight_type was_flying = you.flight_mode();
 
-
     if (!force && crawl_state.is_god_acting())
         force = true;
 
@@ -478,7 +477,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
             if (just_check)
                 return (true);
 
-            if (which_trans==TRAN_PIG)
+            if (which_trans == TRAN_PIG)
                 mpr("You feel you'll be a pig longer.");
             else
                 mpr("You extend your transformation's duration.");
