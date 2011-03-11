@@ -5416,17 +5416,20 @@ bool melee_attack::do_trample()
         if (actor_at(new_pos))
             break;
 
-        defender->move_to_pos(new_pos);
-
-        if (attacker->is_habitable(old_pos))
-            attacker->move_to_pos(old_pos);
-
         if (needs_message)
         {
             mprf("%s %s backwards!",
                  def_name(DESC_CAP_THE).c_str(),
                  defender->conj_verb("stumble").c_str());
         }
+
+        if (defender->as_player())
+            move_player_to_grid(new_pos, false, true);
+        else
+            defender->move_to_pos(new_pos);
+
+        if (attacker->is_habitable(old_pos))
+            attacker->move_to_pos(old_pos);
 
         // Interrupt stair travel and passwall.
         if (defender == &you)
