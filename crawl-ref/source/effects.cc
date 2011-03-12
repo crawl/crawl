@@ -3274,15 +3274,11 @@ void recharge_rods(int aut, bool level_only)
     if (!level_only)
     {
         for (int item = 0; item < ENDOFPACK; ++item)
-        {
             _recharge_rod(you.inv[item], aut, true);
-        }
     }
 
     for (int item = 0; item < MAX_ITEMS; ++item)
-    {
         _recharge_rod(mitm[item], aut, false);
-    }
 }
 
 void slime_wall_damage(actor* act, int delay)
