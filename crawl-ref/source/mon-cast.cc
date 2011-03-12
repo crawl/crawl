@@ -1245,7 +1245,6 @@ static bool _is_physiological_spell(spell_type spell)
 {
     return spell == SPELL_QUICKSILVER_BOLT
         || spell == SPELL_METAL_SPLINTERS
-        || spell == SPELL_STEAM_BALL
         || spell == SPELL_STICKY_FLAME_SPLASH
         || spell == SPELL_POISON_SPLASH
         || spell == SPELL_HOLY_BREATH
@@ -1666,7 +1665,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             && !x_chance_in_y(mons->hit_dice * BASELINE_DELAY,
                               mons->hit_dice * BASELINE_DELAY
                               + mons->get_ench(ENCH_ANTIMAGIC).duration)
-            && !_is_physiological_spell(spell_cast))
+            && !_is_physiological_spell(spell_cast)
+            && spell_cast != draco_breath)
         {
             // This may be a bad idea -- if we decide monsters shouldn't
             // lose a turn like players do not, please make this just return.
