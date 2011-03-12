@@ -1238,7 +1238,7 @@ This staff increases the power of earth spells cast by its wielder. If the wield
 %%%%
 staff of enchantment
 
-This staff increases the power of charm and hex spells cast by its wielder. In hands of a skilled person, it also increase the resistance to hostile enchantments.
+This staff increases the power of charm and hex spells cast by its wielder. In the hands of a skilled person, it also increases resistance to hostile enchantments.
 %%%%
 staff of energy
 
