@@ -355,7 +355,7 @@ NAME:  evilmike_abyss_rune_tso_outpost
 TAGS:  abyss_rune allow_dup no_monster_gen
 KITEM: O = abyssal rune of Zot
 KFEAT: _ = altar_shining_one
-MONS:  cherub, daeva, ophan
+MONS:  angel, daeva, ophan
 MAP
 .......................
 ........ccc...cccccc...
