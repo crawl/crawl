@@ -3403,7 +3403,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_PORKALATOR:
-        if (transform(ench_power, TRAN_PIG, true))
+        if (!transform(ench_power, TRAN_PIG, true))
         {
             mpr("You feel like a pig.");
             break;
