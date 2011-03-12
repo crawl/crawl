@@ -1301,6 +1301,37 @@ x1.1x
 xx+xx
 ENDMAP
 
+# This vault is here to find bugs with new holy monsters.  It is guaranteed
+# so we can get some (belated) testing before the release.  Please axe it
+# (or reduce to normal weight) during the freeze.
+NAME:    hallowed_hall
+TAGS:    no_monster_gen no_trap_gen extra
+PLACE:   D:26
+MONS:    pearl dragon, shedu band, ophan, plant
+COLOUR:  c = white
+TILE:    c = wall_church
+FTILE:   .+23GtABC = floor_limestone
+COLOUR:  .23 = white
+SHUFFLE: ABC
+KFEAT:   A = altar_shining_one
+KFEAT:   B = altar_elyvilon
+KFEAT:   C = altar_zin
+MAP
+xxxxxxxxx
+xcccccccx
+xcG.B.Gcx
+xc..3..cx
+xcA...Ccx
+xc.....cx4''
+xcG...Gcx'''''
+xccc+cccx4''''''
+xct...tcx''''''''
+xc..2..cx'''''''''xx
+xc.....+''''1'''''cx
+xct....c'''''''''4cx
+xccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ################################################################################
 #
