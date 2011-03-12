@@ -387,7 +387,7 @@ int zin_check_recite_to_single_monster(const coord_def& where,
     monster* mon = monster_at(where);
 
     //Can't recite at nothing!
-    if (mon == NULL)
+    if (mon == NULL || !you.can_see(mon))
         return 0;
 
     // Can't recite if they were recently recited to.
