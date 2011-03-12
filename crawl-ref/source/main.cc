@@ -2788,7 +2788,6 @@ static void _player_reacts()
 
     _regenerate_hp_and_mp(capped_time);
 
-    // If you're wielding a rod, it'll gradually recharge.
     recharge_rods(you.time_taken, false);
 
     // Player stealth check.

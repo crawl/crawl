@@ -1394,9 +1394,7 @@ int staff_spell(int staff)
         return (0);
     }
     else if (num_spells == 1)
-    {
         keyin = 'a';  // automatically selected if it's the only option
-    }
     else
     {
         mprf(MSGCH_PROMPT,
