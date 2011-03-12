@@ -343,6 +343,8 @@
     // turn in which "bad" items appear.
     #define DEBUG_ITEM_SCAN
     #define DEBUG_MONS_SCAN
+
+    #define DEBUG_BONES
 #endif
 
 #ifdef _DEBUG       // this is how MSVC signals a debug build
