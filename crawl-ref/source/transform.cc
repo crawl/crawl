@@ -487,7 +487,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         }
         else
         {
-            if (!force && which_trans!=TRAN_PIG)
+            if (!force && which_trans != TRAN_PIG)
                 mpr("You cannot extend your transformation any further!");
             return (false);
         }
