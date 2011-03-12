@@ -3,7 +3,9 @@
 #include "target.h"
 
 #include "beam.h"
+#include "env.h"
 #include "player.h"
+#include "terrain.h"
 
 bool targetter::set_aim(coord_def a)
 {
@@ -35,8 +37,8 @@ aff_type targetter_view::is_affected(coord_def loc)
 
 
 targetter_smite::targetter_smite(const actor* act, int ran,
-                                 int exp_min, int exp_max):
-    exp_range_min(exp_min), exp_range_max(exp_max)
+                                 int exp_min, int exp_max, bool wall_ok):
+    exp_range_min(exp_min), exp_range_max(exp_max), affects_walls(wall_ok)
 {
     ASSERT(act);
     ASSERT(exp_min >= 0);
@@ -49,6 +51,8 @@ targetter_smite::targetter_smite(const actor* act, int ran,
 
 bool targetter_smite::valid_aim(coord_def a)
 {
+    if (!affects_walls && feat_is_solid(grd(a)))
+        return false;
     if (a == origin)
         return true;
     if ((origin - a).abs() > range2)

@@ -50,7 +50,7 @@ class targetter_smite : public targetter
 {
 public:
     targetter_smite(const actor *act, int range = LOS_RADIUS,
-                    int exp_min = 0, int exp_max = 0);
+                    int exp_min = 0, int exp_max = 0, bool wall_ok = false);
     bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
     aff_type is_affected(coord_def loc);
@@ -59,6 +59,7 @@ private:
     // assumes exp_map is valid only if >0, so let's keep it private
     int exp_range_min, exp_range_max;
     explosion_map exp_map_min, exp_map_max;
+    bool affects_walls;
 };
 
 class targetter_reach : public targetter
