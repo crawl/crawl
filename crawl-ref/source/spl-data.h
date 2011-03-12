@@ -1402,7 +1402,7 @@ struct spell_desc
 {
     SPELL_SPIDER_FORM, "Spider Form",
      SPTYP_TRANSMUTATION | SPTYP_POISON,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      3,
      200,
      -1, -1,
@@ -1428,7 +1428,7 @@ struct spell_desc
 {
     SPELL_BLADE_HANDS, "Blade Hands",
      SPTYP_TRANSMUTATION,
-     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
      5,  // only removes weapon, so I raised this from 4 -- bwr
      200,
      -1, -1,
@@ -1441,7 +1441,7 @@ struct spell_desc
 {
     SPELL_STATUE_FORM, "Statue Form",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      6,
      200,
      -1, -1,
@@ -1454,7 +1454,7 @@ struct spell_desc
 {
     SPELL_ICE_FORM, "Ice Form",
      SPTYP_ICE | SPTYP_TRANSMUTATION,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      4, // doesn't allow for equipment, so I lowered this from 5 -- bwr
      200,
      -1, -1,
@@ -1467,7 +1467,7 @@ struct spell_desc
 {
     SPELL_DRAGON_FORM, "Dragon Form",
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      8,
      200,
      -1, -1,
@@ -1480,7 +1480,7 @@ struct spell_desc
 {
     SPELL_NECROMUTATION, "Necromutation",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
-     SPFLAG_HELPFUL | SPFLAG_CORPSE_VIOLATING,
+     SPFLAG_HELPFUL | SPFLAG_CORPSE_VIOLATING | SPFLAG_CHAOTIC,
      8,
      200,
      -1, -1,
@@ -2408,7 +2408,7 @@ struct spell_desc
 {
     SPELL_PORKALATOR, "Porkalator",
      SPTYP_HEXES | SPTYP_TRANSMUTATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,

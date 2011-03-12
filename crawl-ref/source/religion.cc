@@ -3284,6 +3284,9 @@ bool transformed_player_can_join_god(god_type which_god)
         return (false);
     }
 
+    if (which_god == GOD_ZIN && you.form != TRAN_NONE)
+        return (false);
+
     return (true);
 }
 

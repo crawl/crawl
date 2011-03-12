@@ -25,6 +25,7 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "random.h"
+#include "religion.h"
 #include "skills2.h"
 #include "state.h"
 #include "stuff.h"
@@ -437,6 +438,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
     transformation_type previous_trans = you.form;
     bool was_in_water = you.in_water();
     const flight_type was_flying = you.flight_mode();
+
+    // Zin's protection.
+    if (!just_check && you.religion == GOD_ZIN
+        && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
+    {
+        simple_god_message(" protects your body from unnatural transformation!");
+        return (false);
+    }
 
     if (!force && crawl_state.is_god_acting())
         force = true;
