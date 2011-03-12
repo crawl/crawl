@@ -273,6 +273,7 @@ harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 kenku CORPSE_KENKU
+holy/shedu CORPSE_SHEDU
 
 ## Jellies ('J')
 %sdir dc-mon
