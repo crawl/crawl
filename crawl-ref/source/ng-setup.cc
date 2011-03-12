@@ -1271,14 +1271,8 @@ static void _racialise_starting_equipment()
                 && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE)
             {
                 // Now add appropriate species type mod.
-                // Fighters don't get elven body armour.
-                if (player_genus(GENPC_ELVEN)
-                    && (you.char_class != JOB_FIGHTER
-                        || you.inv[i].base_type != OBJ_ARMOUR
-                        || get_armour_slot(you.inv[i]) != EQ_BODY_ARMOUR))
-                {
+                if (player_genus(GENPC_ELVEN))
                     set_equip_race(you.inv[i], ISFLAG_ELVEN);
-                }
                 else if (player_genus(GENPC_DWARVEN))
                     set_equip_race(you.inv[i], ISFLAG_DWARVEN);
                 else if (you.species == SP_HILL_ORC)
