@@ -72,7 +72,7 @@ SHUFFLE: 11%
 MONS:    killer bee / nothing w:5
 SUBST:   % = %*
 : else
-MONS:    vampire mosquito / nothing
+MONS:    killer bee larva
 : end
 MAP
 xxxxxx
@@ -468,7 +468,7 @@ MAP
 ENDMAP
 
 NAME:  pond
-DEPTH: D:8-27, Lair
+DEPTH: D:10-27, Lair
 MONS:  plant w:30 / fungus
 MONS:  giant frog w:30 / giant toad / snake / rat / green rat / swamp drake w:2
 MONS:  vampire mosquito
@@ -1111,7 +1111,7 @@ ENDMAP
 
 NAME:   minmay_beelzebubs_servants
 DEPTH:  D:6-12
-MONS:   hairy devil / nothing, vampire mosquito / nothing
+MONS:   hairy devil / nothing, rotting devil / nothing
 MAP
 ........................
 ..xxxx....xxxx....xxxx..

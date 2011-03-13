@@ -733,7 +733,7 @@ DEPTH:  D:5-12, Elf, Vault
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30
-MONS:   vampire mosquito / scorpion / redback w:5
+MONS:   killer bee / scorpion / redback w:5
 MAP
 cccccccc+cccccccc
 c...............c
