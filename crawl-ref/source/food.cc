@@ -1983,9 +1983,6 @@ static void _eating(object_class_type item_class, int item_type)
                 if (create_monster(mg) != -1)
                     mprf("A jelly spawns from your body.");
             }
-
-            if (you.hunger_level() >= HS_FULL)
-                did_god_conduct(DID_GLUTTONY, food_value, true);
         }
         break;
 

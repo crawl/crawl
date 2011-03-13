@@ -5073,7 +5073,6 @@ bool haste_player(int turns, bool rageext)
     }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
-    did_god_conduct(DID_STIMULANTS, 4 + random2(4));
 
     return (true);
 }

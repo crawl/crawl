@@ -1724,8 +1724,6 @@ int melee_attack::player_stab(int damage)
         stab_message(defender, stab_bonus);
 
         practise(EX_WILL_STAB);
-
-        did_god_conduct(DID_STABBING, 4);
     }
     else
     {
