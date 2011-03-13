@@ -25,9 +25,14 @@ static inline std::string mb_to_utf8(const std::string &s)
     return mb_to_utf8(s.c_str());
 }
 
+int wclen(ucs_t c);
+
 #ifndef UNIX
 int wcwidth(ucs_t c);
 #endif
+
+char *prev_glyph(char *s, char *start);
+char *next_glyph(char *s);
 
 #define OUTS(x) utf8_to_mb(x).c_str()
 

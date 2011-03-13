@@ -241,8 +241,9 @@ protected:
     void backspace();
     void killword();
     void kill_to_begin();
+    void calc_pos();
 
-    bool is_wordchar(int c);
+    bool is_wordchar(ucs_t c);
 
 protected:
     char            *buffer;

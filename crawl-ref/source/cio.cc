@@ -13,6 +13,7 @@
 #include "macro.h"
 #include "message.h"
 #include "state.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 #include <queue>
@@ -373,17 +374,26 @@ int line_reader::read_line(bool clear_previous)
     start = cgetpos(region);
 
     length = strlen(buffer);
+    int width = strwidth(buffer);
 
     // Remember the previous cursor position, if valid.
-    if (pos < 0 || pos > length)
-        pos = length;
+    if (pos < 0 || pos > width)
+        pos = width;
 
-    cur = buffer + pos;
+    cur = buffer;
+    int cpos = 0;
+    while (*cur && cpos < pos)
+    {
+        ucs_t c;
+        int s = utf8towc(&c, cur);
+        cur += s;
+        cpos += wcwidth(c);
+    }
 
     if (length)
         wrapcprintf(wrapcol, "%s", buffer);
 
-    if (pos != length)
+    if (pos != width)
         cursorto(pos);
 
     if (history)
@@ -391,6 +401,24 @@ int line_reader::read_line(bool clear_previous)
 
     while (true)
     {
+        ////////////// DEBUG START
+        std::string comm;
+        int oldpos = pos;
+        calc_pos();
+        if (oldpos != pos)
+        {
+            comm += make_stringf(" invalid pos (cur at %d)!", pos);
+            pos = oldpos;
+        }
+        if ((signed int)strlen(buffer) != length)
+        {
+            comm += " invalid length!";
+            pos = oldpos;
+        }
+        debuglog("\"%.*s\e[33m¤\e[0m%s\" pos=%d%s\n", cur-buffer, buffer,
+                 cur, pos, comm.c_str());
+        //////////// DEBUG END
+
         int ch = getchm(getch_ck);
 
 #if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
@@ -427,29 +455,30 @@ int line_reader::read_line(bool clear_previous)
 
 void line_reader::backspace()
 {
-    if (pos)
-    {
-        buffer[length] = 0;
-        --cur;
-        char *c = cur;
-        while (*c)
-        {
-            *c = *(c+1);
-            c++;
-        }
-        --pos;
-        --length;
+    if (!pos)
+        return;
 
-        cursorto(pos);
-        buffer[length] = 0;
-        wrapcprintf(wrapcol, "%s ", cur);
-        cursorto(pos);
-    }
+    char *np = prev_glyph(cur, buffer);
+    ASSERT(np);
+    ucs_t ch;
+    utf8towc(&ch, np);
+    buffer[length] = 0;
+    length -= cur - np;
+    char *c = cur;
+    cur = np;
+    while (*c)
+        *np++ = *c++;
+    calc_pos();
+
+    cursorto(pos);
+    buffer[length] = 0;
+    wrapcprintf(wrapcol, "%s ", cur);
+    cursorto(pos);
 }
 
-bool line_reader::is_wordchar(int c)
+bool line_reader::is_wordchar(ucs_t c)
 {
-    return isalnum(c) || c == '_' || c == '-';
+    return iswalnum(c) || c == '_' || c == '-';
 }
 
 void line_reader::kill_to_begin()
@@ -457,11 +486,12 @@ void line_reader::kill_to_begin()
     if (!pos || cur == buffer)
         return;
 
+    int rest = length - (cur - buffer);
     buffer[length] = 0;
     cursorto(0);
-    wrapcprintf(wrapcol, "%s%*s", cur, cur - buffer, "");
-    memmove(buffer, cur, length - pos);
-    length -= pos;
+    wrapcprintf(wrapcol, "%s%*s", cur, pos, "");
+    memmove(buffer, cur, rest);
+    buffer[length = rest] = 0;;
     pos = 0;
     cur = buffer;
     cursorto(pos);
@@ -469,23 +499,57 @@ void line_reader::kill_to_begin()
 
 void line_reader::killword()
 {
-    if (!pos || cur == buffer)
+    if (cur == buffer)
         return;
 
     bool foundwc = false;
-    while (pos)
+    char *word = cur;
+    int ew = 0;
+    while (1)
     {
-        if (is_wordchar(cur[-1]))
+        char *np = prev_glyph(word, buffer);
+        if (!np)
+            break;
+
+        ucs_t c;
+        utf8towc(&c, np);
+        if (is_wordchar(c))
             foundwc = true;
         else if (foundwc)
             break;
 
-        backspace();
+        word = np;
+        ew += wcwidth(c);
     }
+    memmove(word, cur, strlen(cur) + 1);
+    length -= cur - word;
+    cur = word;
+    calc_pos();
+
+    cursorto(0);
+    wrapcprintf(wrapcol, "%s%*s", buffer, ew);
+    cursorto(pos);
+}
+
+void line_reader::calc_pos()
+{
+    int p = 0;
+    const char *cp = buffer;
+    ucs_t c;
+    int s;
+    while (cp < cur && (s = utf8towc(&c, cp)))
+    {
+        // FIXME: this won't handle a CJK character wrapping prematurely
+        // (if there's only one space left)
+        cp += s;
+        p += wcwidth(c);
+    }
+    pos = p;
 }
 
 int line_reader::process_key(int ch)
 {
+    debuglog("line_reader: key %d(%x)\n", ch, ch);
     switch (ch)
     {
     CASE_ESCAPE
@@ -501,19 +565,19 @@ int line_reader::process_key(int ch)
 
         if (text)
         {
-            int olen = length;
+            int olen = strwidth(buffer);
             length = text->length();
             if (length >= static_cast<int>(bufsz))
                 length = bufsz - 1;
             memcpy(buffer, text->c_str(), length);
             buffer[length] = 0;
+            cur = buffer + length;
+            calc_pos();
             cursorto(0);
 
-            int clear = length < olen ? olen - length : 0;
+            int clear = pos < olen ? olen - pos : 0;
             wrapcprintf(wrapcol, "%s%*s", buffer, clear, "");
 
-            pos = length;
-            cur = buffer + pos;
             cursorto(pos);
         }
         break;
@@ -527,26 +591,25 @@ int line_reader::process_key(int ch)
     case CONTROL('K'):
     {
         // Kill to end of line.
-        int erase = length - pos;
-        if (erase)
+        if (*cur)
         {
-            length = pos;
-            buffer[length] = 0;
+            int erase = strwidth(cur);
+            length = cur - buffer;
+            *cur = 0;
             wrapcprintf(wrapcol, "%*s", erase, "");
             cursorto(pos);
         }
         break;
     }
     case CK_DELETE:
-        if (pos < length)
+        if (*cur)
         {
+            char *np = next_glyph(cur);
+            ASSERT(np);
             char *c = cur;
-            while (c - buffer < length)
-            {
-                *c = c[1];
-                c++;
-            }
-            --length;
+            while (*np)
+                *c++ = *np++;
+            length = np - buffer;
 
             cursorto(pos);
             buffer[length] = 0;
@@ -568,54 +631,65 @@ int line_reader::process_key(int ch)
         break;
 
     case CK_LEFT:
-        if (pos)
+        if (char *np = prev_glyph(cur, buffer))
         {
-            --pos;
-            cur = buffer + pos;
+            cur = np;
+            calc_pos();
             cursorto(pos);
         }
         break;
     case CK_RIGHT:
-        if (pos < length)
+        if (char *np = next_glyph(cur))
         {
-            ++pos;
-            cur = buffer + pos;
+            cur = np;
+            calc_pos();
             cursorto(pos);
         }
         break;
     case CK_HOME:
     case CONTROL('A'):
         pos = 0;
-        cur = buffer + pos;
+        cur = buffer;
         cursorto(pos);
         break;
     case CK_END:
     case CONTROL('E'):
-        pos = length;
-        cur = buffer + pos;
+        cur = buffer + length;
+        calc_pos();
         cursorto(pos);
         break;
     case CK_MOUSE_CLICK:
         return (-1);
     default:
-        if (isprint(ch) && length < static_cast<int>(bufsz) - 1)
+        if (wcwidth(ch) >= 0 && length + wclen(ch) < static_cast<int>(bufsz))
         {
-            if (pos < length)
+            int w = wcwidth(ch);
+            int len = wclen(ch);
+            if (*cur)
             {
                 char *c = buffer + length - 1;
                 while (c >= cur)
                 {
-                    c[1] = *c;
+                    c[len] = *c;
                     c--;
                 }
             }
-            *cur++ = static_cast<char>(ch);
-            ++length;
+            wctoutf8(cur, ch);
+            cur += len;
+            length += len;
             buffer[length] = 0;
-            ++pos;
-            putch(ch);
-            if (pos < length)
-                wrapcprintf(wrapcol, "%s", cur);
+            pos += w;
+            if (!w)
+            {
+                cursorto(0);
+                wrapcprintf(wrapcol, "%s", buffer);
+            }
+            else
+            {
+                putwch(ch);
+                if (*cur)
+                    wrapcprintf(wrapcol, "%s", cur);
+            }
             cursorto(pos);
         }
         break;
