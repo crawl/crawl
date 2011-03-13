@@ -2384,9 +2384,6 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_BERSERK, delay,
                               "You are no longer berserk."))
     {
-        //jmf: Guilty for berserking /after/ berserk.
-        did_god_conduct(DID_STIMULANTS, 6 + random2(6));
-
         // Sometimes berserk leaves us physically drained.
         //
         // Chance of passing out:

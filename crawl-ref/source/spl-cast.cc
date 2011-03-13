@@ -774,21 +774,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
     return (true);
 }                               // end cast_a_spell()
 
-// "Utility" spells for the sake of simplicity are currently ones with
-// charms or translocations.
-static bool _spell_is_utility_spell(spell_type spell_id)
-{
-    return (spell_typematch(spell_id,
-                SPTYP_CHARMS | SPTYP_TRANSLOCATION));
-}
-
 static void _spellcasting_side_effects(spell_type spell)
 {
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
-    if (!_spell_is_utility_spell(spell) && !crawl_state.is_god_acting())
-        did_god_conduct(DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell));
-
     if (is_holy_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_HOLY, 10 + spell_difficulty(spell));
 

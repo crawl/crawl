@@ -967,13 +967,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_NOTHING:
-        case DID_GLUTTONY:                          // previously used for Chei
-        case DID_STABBING:                          // unused
-        case DID_STIMULANTS:                        // unused
-        case DID_EAT_MEAT:                          // unused
-        case DID_CREATE_LIFE:                       // unused
-        case DID_SPELL_NONUTILITY:                  // unused
-        case DID_DEDICATED_BUTCHERY:                // unused
         case NUM_CONDUCTS:
             break;
         }
@@ -995,8 +988,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 "",
                 "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
-                "Attack Friend", "Friend Died", "Stab", "Unchivalric Attack",
-                "Poison", "Field Sacrifice", "Kill Living", "Kill Undead",
+                "Attack Friend", "Friend Died", "Unchivalric Attack",
+                "Poison", "Kill Living", "Kill Undead",
                 "Kill Demon", "Kill Natural Unholy", "Kill Natural Evil",
                 "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
                 "Kill Holy", "Kill Fast", "Undead Slave Kill Living",
@@ -1005,12 +998,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Demon", "Servant Kill Natural Unholy",
                 "Servant Kill Natural Evil", "Undead Slave Kill Holy",
                 "Servant Kill Holy", "Spell Memorise", "Spell Cast",
-                "Spell Practise", "Spell Nonutility", "Cards", "Stimulants",
-                "Drink Blood", "Cannibalism", "Eat Meat", "Eat Souled Being",
+                "Spell Practise", "Cards",
+                "Drink Blood", "Cannibalism","Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
-                "Create Life", "Kill Slime", "Kill Plant", "Servant Kill Plant",
-                "Was Hasty", "Gluttony", "Corpse Violation",
+                "Kill Slime", "Kill Plant", "Servant Kill Plant",
+                "Was Hasty", "Corpse Violation",
                 "Souled Friend Died", "Servant Kill Unclean",
                 "Servant Kill Chaotic", "Attack In Sanctuary",
                 "Kill Artificial", "Undead Slave Kill Artificial",

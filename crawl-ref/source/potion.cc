@@ -176,8 +176,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_STR, 5, true, "");
-
-        did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
     }
 
@@ -195,8 +193,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_INT, 5, true, "");
-
-        did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
     }
 
@@ -213,8 +209,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             contaminate_player(1, was_known);
         else
             notify_stat_change(STAT_DEX, 5, true, "");
-
-        did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
     }
 
@@ -430,7 +424,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
         learned_something_new(HINT_YOU_MUTATED);
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
-        did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
 
     case POT_RESISTANCE:
