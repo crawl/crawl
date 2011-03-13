@@ -5914,7 +5914,11 @@ void monster::check_redraw(const coord_def &old) const
         if (see_new)
             view_update_at(pos());
         // Don't leave a trail if we can see the monster move in.
+#ifndef USE_TILES
         if (see_old || (pos() - old).rdist() <= 1)
+#else
+        if (see_old) // FIXME: it currently crashes trying to update out-of-LOS tile
+#endif
             view_update_at(old);
         update_screen();
     }
