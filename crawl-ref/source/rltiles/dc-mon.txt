@@ -22,6 +22,7 @@ butterfly3
 butterfly4
 butterfly5
 butterfly6
+fire_bat MONS_FIRE_BAT
 raven MONS_RAVEN
 %sdir dc-mon/vault
 %rim 0
