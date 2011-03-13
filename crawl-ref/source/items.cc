@@ -34,9 +34,9 @@
 #include "food.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -49,12 +49,15 @@
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "place.h"
 #include "player.h"
+#include "player-equip.h"
 #include "quiver.h"
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
+#include "shout.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
@@ -66,6 +69,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "xom.h"
@@ -627,64 +631,67 @@ void request_autopickup(bool do_pickup)
     will_autopickup = do_pickup;
 }
 
+bool item_is_branded(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        return (get_weapon_brand(item) != SPWPN_NORMAL);
+    case OBJ_ARMOUR:
+        return (get_armour_ego_type(item) != SPARM_NORMAL);
+    case OBJ_MISSILES:
+        return (get_ammo_brand(item) != SPMSL_NORMAL);
+    default:
+        return (false);
+    }
+}
+
 // 2 - artefact, 1 - glowing/runed, 0 - mundane
 int item_name_specialness(const item_def& item)
 {
-    // All jewellery is worth looking at.
-    // And we can always tell from the name if it's an artefact.
-    if (item.base_type == OBJ_JEWELLERY)
-        return (is_artefact(item) ? 2 : 1);
-
     if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_MISSILES)
+        && item.base_type != OBJ_MISSILES && item.base_type != OBJ_JEWELLERY)
     {
         return 0;
-    }
-    if (item_type_known(item))
-    {
-        if (is_artefact(item))
-            return 2;
-
-        // XXX Unite with l_item_branded() in clua.cc
-        bool branded = false;
-        switch (item.base_type)
-        {
-        case OBJ_WEAPONS:
-            branded = get_weapon_brand(item) != SPWPN_NORMAL;
-            break;
-        case OBJ_ARMOUR:
-            branded = get_armour_ego_type(item) != SPARM_NORMAL;
-            break;
-        case OBJ_MISSILES:
-            branded = get_ammo_brand(item) != SPMSL_NORMAL;
-            break;
-        default:
-            break;
-        }
-        return (branded ? 1 : 0);
-    }
-
-    std::string itname = item.name(DESC_PLAIN, false, false, false);
-    lowercase(itname);
-
-    // FIXME Maybe we should replace this with a test of ISFLAG_COSMETIC_MASK?
-    const bool item_runed = itname.find("runed ") != std::string::npos;
-    const bool heav_runed = itname.find("heavily ") != std::string::npos;
-    const bool item_glows = itname.find("glowing") != std::string::npos;
-
-    if (item_glows || item_runed && !heav_runed
-        || get_equip_desc(item) == ISFLAG_EMBROIDERED_SHINY)
-    {
-        return 1;
     }
 
     // You can tell something is an artefact, because it'll have a
     // description which rules out anything else.
-    // XXX: Fixedarts and unrandarts might upset the apple-cart, though.
     if (is_artefact(item))
         return 2;
 
+    // All unknown jewellery is worth looking at.
+    if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (is_useless_item(item))
+            return 0;
+
+        return 1;
+    }
+
+    if (item_type_known(item))
+    {
+        if (item_is_branded(item))
+            return 1;
+        return 0;
+    }
+
+    if (item.flags & ISFLAG_COSMETIC_MASK)
+        return 1;
+
     return 0;
+}
+
+static void _maybe_give_corpse_hint(const item_def item)
+{
+    if (!crawl_state.game_is_hints_tutorial())
+        return;
+
+    if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY
+        && you.has_spell(SPELL_ANIMATE_SKELETON))
+    {
+        learned_something_new(HINT_ANIMATE_CORPSE_SKELETON);
+    }
 }
 
 void item_check(bool verbose)
@@ -710,6 +717,7 @@ void item_check(bool verbose)
         item_def it(*items[0]);
         std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
         strm << "You see here " << name << '.' << std::endl;
+        _maybe_give_corpse_hint(it);
         return;
     }
 
@@ -763,16 +771,33 @@ void item_check(bool verbose)
             item_def it(*items[i]);
             std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
             strm << name << std::endl;
+            _maybe_give_corpse_hint(it);
         }
     }
     else if (!done_init_line)
         strm << "There are many items here." << std::endl;
 
-    if (items.size() > 5)
-        learned_something_new(HINT_MULTI_PICKUP);
+    if (items.size() > 2 && crawl_state.game_is_hints_tutorial())
+    {
+        // If there are 2 or more non-corpse items here, we might need
+        // a hint.
+        int count = 0;
+        for (unsigned int i = 0; i < items.size(); ++i)
+        {
+            item_def it(*items[i]);
+            if (it.base_type == OBJ_CORPSES)
+                continue;
+
+            if (++count > 1)
+            {
+                learned_something_new(HINT_MULTI_PICKUP);
+                break;
+            }
+        }
+    }
 }
 
-static void _pickup_menu(int item_link)
+void pickup_menu(int item_link)
 {
     int n_did_pickup   = 0;
     int n_tried_pickup = 0;
@@ -780,8 +805,11 @@ static void _pickup_menu(int item_link)
     std::vector<const item_def*> items;
     item_list_on_square(items, item_link, false);
 
+    std::string prompt = "Select items to pick up or press _ for help";
+    if (items.size() == 1 && items[0]->quantity > 1)
+        prompt = "Select pick up quantity by entering a number, then select the item";
     std::vector<SelItem> selected =
-        select_items(items, "Select items to pick up or press _ for help");
+        select_items(items, prompt.c_str());
     redraw_screen();
 
     std::string pickup_warning;
@@ -1130,18 +1158,21 @@ bool pickup_single_item(int link, int qty)
     if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
+        learned_something_new(HINT_LEVITATING);
         return (false);
     }
 
     if (qty == 0 && mitm[link].quantity > 1 && mitm[link].base_type != OBJ_GOLD)
     {
         const std::string prompt
-                = make_stringf("Pick up how many of %s? ",
+                = make_stringf("Pick up how many of %s (; or enter for all)? ",
                                mitm[link].name(DESC_NOCAP_THE,
                                     false, false, false).c_str());
 
-        qty = prompt_for_int(prompt.c_str(), true);
-        if (qty < 1)
+        qty = prompt_for_quantity(prompt.c_str());
+        if (qty == -1)
+            qty = mitm[link].quantity;
+        else if (qty == 0)
         {
             canned_msg(MSG_OK);
             return (false);
@@ -1179,6 +1210,15 @@ bool pickup_single_item(int link, int qty)
     return (true);
 }
 
+bool player_on_single_stack()
+{
+    int o = you.visible_igrd(you.pos());
+    if (o == NON_ITEM)
+        return false;
+    else
+        return (mitm[o].link == NON_ITEM && mitm[o].quantity > 1);
+}
+
 void pickup(bool partial_quantity)
 {
     int keyin = 'x';
@@ -1186,6 +1226,7 @@ void pickup(bool partial_quantity)
     if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
+        learned_something_new(HINT_LEVITATING);
         return;
     }
 
@@ -1205,7 +1246,7 @@ void pickup(bool partial_quantity)
     else if (Options.pickup_mode != -1
              && num_nonsquelched >= Options.pickup_mode)
     {
-        _pickup_menu(o);
+        pickup_menu(o);
     }
     else
     {
@@ -1226,10 +1267,7 @@ void pickup(bool partial_quantity)
             if (keyin != 'a')
             {
                 std::string prompt = "Pick up %s? ("
-#ifdef USE_TILE
-                                     "Left-click to enter menu, or press "
-#endif
-                                     "y/n/a/*?g,/q/o)";
+                                     "(y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
                      get_menu_colour_prefix_tags(mitm[o],
@@ -1240,14 +1278,17 @@ void pickup(bool partial_quantity)
             }
 
             if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g'
-                || keyin == CK_MOUSE_CLICK)
+                || keyin == 'm' || keyin == CK_MOUSE_CLICK)
             {
-                _pickup_menu(o);
+                pickup_menu(o);
                 break;
             }
 
-            if (keyin == 'q' || key_is_escape(keyin) || keyin == 'o')
+            if (keyin == 'q' || key_is_escape(keyin))
+            {
+                canned_msg(MSG_OK);
                 break;
+            }
 
             if (keyin == 'y' || keyin == 'a')
             {
@@ -1272,9 +1313,6 @@ void pickup(bool partial_quantity)
 
         if (!pickup_warning.empty())
             mpr(pickup_warning.c_str());
-
-        if (keyin == 'o')
-            start_explore(Options.explore_greedy);
     }
 }
 
@@ -1287,7 +1325,6 @@ bool is_stackable_item(const item_def &item)
         || item.base_type == OBJ_FOOD
         || item.base_type == OBJ_SCROLLS
         || item.base_type == OBJ_POTIONS
-        || item.base_type == OBJ_UNKNOWN_II
         || item.base_type == OBJ_GOLD
         || (item.base_type == OBJ_MISCELLANY
             && item.sub_type == MISC_RUNE_OF_ZOT))
@@ -1356,18 +1393,6 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
 
     if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
         return (false);
-
-    if (item1.base_type == OBJ_POTIONS)
-    {
-        // Thanks to mummy cursing, we can have potions of decay
-        // that don't look alike... so we don't stack potions
-        // if either isn't identified and they look different.  -- bwr
-        if (item1.plus != item2.plus
-            && (!item_type_known(item1) || !item_type_known(item2)))
-        {
-            return (false);
-        }
-    }
 
     // The inscriptions can differ if one of them is blank, but if they
     // are differing non-blank inscriptions then don't stack.
@@ -1510,7 +1535,7 @@ static void _got_item(item_def& item, int quant)
 
         if (you.religion == GOD_ASHENZARI)
         {
-            mprf(MSGCH_GOD, "You learn the power of this rune.");
+            simple_god_message(" appreciates your discovery of this rune.");
             // Important!  This should _not_ be scaled by bondage level, as
             // otherwise people would curse just before picking up.
             for (int i = 0; i < 10; i++)
@@ -1728,7 +1753,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         mpr(get_menu_colour_prefix_tags(you.inv[freeslot],
                                         DESC_INVENTORY).c_str());
     }
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
     {
         taken_new_item(item.base_type);
         if (is_artefact(item) || get_equip_desc(item) != ISFLAG_NO_DESC)
@@ -1741,8 +1766,10 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         // Take a note!
         _check_note_item(item);
 
-        if (!quiet)
-            mpr("Now all you have to do is get back out of the dungeon!");
+        orb_pickup_noise(you.pos(), 30);
+
+        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
+
         you.char_direction = GDT_ASCENDING;
         xom_is_stimulated(255, XM_INTRIGUED);
     }
@@ -1886,11 +1913,8 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
 
     if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
     {
-        if (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL
-            && item.sub_type != BOOK_DESTRUCTION)
-        {
+        if (item_is_spellbook(item))
             destroy_spellbook(item);
-        }
 
         item_was_destroyed(item, NON_MONSTER);
 
@@ -1912,10 +1936,16 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
                 item_def copy = item;
                 merge_item_stacks(copy, *si, quant_drop);
 
-                // If the items on the floor already have a nonzero slot,
-                // leave it as such, otherwise set the slot.
-                if (mark_dropped && !si->slot)
-                    si->slot = index_to_letter(item.link);
+                if (mark_dropped)
+                {
+                    // If the items on the floor already have a nonzero slot,
+                    // leave it as such, otherwise set the slot.
+                    if (!si->slot)
+                        si->slot = index_to_letter(item.link);
+
+                    si->flags |= ISFLAG_DROPPED;
+                    si->flags &= ~ISFLAG_THROWN;
+                }
                 return (true);
             }
         }
@@ -2092,7 +2122,7 @@ bool drop_item(int item_dropped, int quant_drop)
     if (item_dropped == you.equip[EQ_WEAPON]
         && quant_drop >= you.inv[item_dropped].quantity)
     {
-        if (!wield_weapon(true, PROMPT_GOT_SPECIAL))
+        if (!wield_weapon(true, SLOT_BARE_HANDS))
             return (false);
     }
 
@@ -2734,6 +2764,9 @@ static void _do_autopickup()
                 = _interesting_explore_pickup(mitm[o]);
 
             const iflags_t iflags(mitm[o].flags);
+            if ((iflags & ISFLAG_THROWN))
+                learned_something_new(HINT_AUTOPICKUP_THROWN);
+
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
             const int result = move_item_to_player(o, num_to_take);
@@ -2871,18 +2904,24 @@ int get_max_subtype(object_class_type base_type)
         NUM_ARMOURS,
         NUM_WANDS,
         NUM_FOODS,
+#if TAG_MAJOR_VERSION == 32
         0,              // unknown I
+#endif
         NUM_SCROLLS,
         NUM_JEWELLERY,
         NUM_POTIONS,
+#if TAG_MAJOR_VERSION == 32
         0,              // unknown II
+#endif
         NUM_BOOKS,
         NUM_STAVES,
         1,              // Orbs         -- only one
         NUM_MISCELLANY,
         -1,              // corpses     -- handled specially
         1,              // gold         -- handled specially
+#if TAG_MAJOR_VERSION == 32
         0,              // "gemstones"  -- no items of type
+#endif
     };
     COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES, c1);
 
@@ -2958,9 +2997,7 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return ((base_type == OBJ_BOOKS && item_type_known(*this)
-               && sub_type != BOOK_DESTRUCTION
-               && sub_type != BOOK_MANUAL)
+    return (item_is_spellbook(*this) && item_type_known(*this)
             || count_staff_spells(*this, true) > 1);
 }
 
@@ -3777,7 +3814,7 @@ item_info get_item_info(const item_def& item)
         ii.special = item.special; // appearance
         break;
     case OBJ_BOOKS:
-        if (item_type_known(item) || item.sub_type == BOOK_MANUAL || item.sub_type == BOOK_DESTRUCTION)
+        if (item_type_known(item) || !item_is_spellbook(item))
             ii.sub_type = item.sub_type;
         ii.special = item.special; // appearance
         break;
@@ -3805,7 +3842,7 @@ item_info get_item_info(const item_def& item)
             if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
                 ii.sub_type = MISC_DECK_OF_ESCAPE;
             else if (item.sub_type >= MISC_CRYSTAL_BALL_OF_ENERGY && item.sub_type <= MISC_CRYSTAL_BALL_OF_SEEING)
-                ii.sub_type = MISC_CRYSTAL_BALL_OF_FIXATION;
+                ii.sub_type = MISC_CRYSTAL_BALL_OF_ENERGY;
             else if (item.sub_type >= MISC_BOX_OF_BEASTS && item.sub_type <= MISC_EMPTY_EBONY_CASKET)
                 ii.sub_type = MISC_BOX_OF_BEASTS;
             else

@@ -1,0 +1,161 @@
+
+Note: If you are experiencing significant slowdown and lags with the Tiles
+version of Dungeon Crawl Stonesoup, scroll down to the end of this file.
+
+
+Tiles specific commands
+-----------------------
+
+There are several different ways to interact with your environment, both
+by typing the command keys, and by using the mouse.
+
+Of notable interest is the clickable tab area to the right of the screen
+that allows easy access to e.g. inventory, spells, or common commands.
+
+Depending on your screen resolution, one of more of these panels may be
+open at any time, though you can temporarily exchange the inventory view
+with another type of tiled panel by clicking on the tab icons.
+
+You can customize the priority of the control panels by modifying the
+tile_layout_priority option in tiles_options.txt in the settings directory.
+
+
+Movement
+--------
+
+You can move by using the arrow keys, the vi-keys, or the number pad.
+(For the latter try both Numlock on and off.)
+
+Numpad:   7 8 9     vi-keys:   y k u
+           \|/                  \|/
+          4-.-6                h-.-l
+           /|\                  /|\
+          1 2 3                b j n
+
+
+To run several steps into the same direction, press Shift along with these
+keys.
+
+You can also move by clicking somewhere on the map or minimap with your
+mouse. If the square is reachable from your current position and there are
+no hostile monsters in sight, you will automatically travel there. If there
+are hostile monsters in sight, you will only take a single step at a time.
+
+For automatic exploration, you can either type the 'o' command or you can
+click on the corresponding tile in the command panel to the right of your
+screen. Like mouseclick travel, these will refuse to work if there are
+hostile monsters in sight.
+
+
+Getting information
+-------------------
+
+Doing a rightclick with your mouse on any feature, monster or item on the
+main map or in the tiled control panels will display the description of
+said feature, monster or item on a separate screen.
+
+A simple mouseover will usually display the same description, or as much of
+it as can fit, in the message area.
+
+Similarly, letting your mouse rest for a while on a feature, monster or
+item will usually display a "tool tip" of applicable commands.
+
+
+Attacking monsters
+------------------
+
+You can attack a monster in melee by moving into it with the movement keys
+or by clicking on it with your mouse.
+
+For ranged attacks (including spells and wands), mouse over the monsters
+and wait for the tool tip to appear. Alternatively, you can cast spells by
+clicking on the spell tiles in the spell panel, or fire ammunition or
+evoke wands by clicking on them in the inventory panel.
+
+In the command panel, you'll also find a tile described as "Autofight",
+which, if clicked, will attack an adjacent monster in melee, or if there is
+no adjacent monster, take one step in the direction of the closest monster.
+
+
+Item usage
+----------
+
+The easiest way to use items is by clicking on them in the inventory panel.
+The mouseover tool tip will tell you what a mouseclick will do, and also
+the corresponding command key to execute the same action.
+As an alternative, you can also use an item by selecting it in the inventory
+('i' command) and then pressing the appropriate key in the action prompt.
+
+To pick up items on the ground, you can either click on them one by one in
+the floor section of the inventory panel, or you can click on the player
+tile and pull up a menu of selectable items instead. In the latter case,
+'Enter' will confirm your selection and start pick up.
+
+Dropping items works similarly, either by clicking on single items in the
+inventory panel, or by typing the 'd' command and then selecting items
+from a menu.
+
+
+Interacting with the dungeon
+----------------------------
+
+Again, doing a mouseover on features (such as staircases or doors) in the
+main map will tell you how to interact with them.
+
+
+Character status
+----------------
+
+Doing a rightclick on the player tile will display a character overview
+screen listing equipment, resistances and stats.
+
+More detailed screens on specific aspects of your characters can be
+accessed by clicking on the corresponding tiles in the command panel.
+
+
+
+If you are experiencing significant slowdown and lags...
+--------------------------------------------------------
+
+Crawl renders its graphics using OpenGL and SDL. However, it needs hardware
+acceleration to not run slowly. If you are on Windows, make sure to update
+your graphics card driver. If you are on Linux, be sure that you are using
+DRI.
+
+It has been tested successfully with cards as old as the i865. Unfortunately,
+it has been known to be slow on the i810 and there is little to be done in
+that case but to run the console version instead or switch to a different
+machine.
+
+You can try tweaking a number of options in tiles_options.txt in the settings
+directory to see whether performance improves:
+
+tile_title_screen = false
+    For weak drivers, the title screen can take a long time to load. If this
+    bothers you, you can easily deactivate it.
+
+travel_delay = -1
+    This setting suppresses redrawing until travelling is finished or
+    interrupted.
+
+tile_update_rate = 1000
+    By default, the screen gets redrawn at least every 1000 milliseconds,
+    more often if you take actions that change the display. You could try
+    cranking up this value, though this may lead to updating taking too long.
+
+tile_runrest_rate = 100
+    While running and resting the screen is redraw every 100 milliseconds.
+    If Crawl is slow while running or resting, increase this number.
+
+tile_tooltip_ms = 0
+    Deactivating the tooltips means there's less stuff to draw every time.
+
+clear_map = false
+    Not having to redraw remembered monsters outside your line of sight
+    takes some load off the redrawing routines.
+
+tile_window_width   = 1024
+tile_window_height  = 768
+    The larger the map area the more cells there are to redraw each turn.
+    If you've got a large display showing way more than the necessary 17x17
+    grids of the map, you could try specifying a lower resolution.

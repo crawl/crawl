@@ -121,6 +121,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         clone->del_ench(ENCH_CHARM);
         clone->del_ench(ENCH_STICKY_FLAME);
         clone->del_ench(ENCH_CORONA);
+        clone->del_ench(ENCH_SILVER_CORONA);
 
         behaviour_event(clone, ME_ALERT, MHITNOT, caster->pos());
 
@@ -186,7 +187,7 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
                 continue;
             target->add_ench(mon_enchant(ench,
                                          0,
-                                         creator->kill_alignment(),
+                                         creator,
                                          you.duration[i]));
         }
     }

@@ -31,7 +31,7 @@
 struct item_wrapper
 {
     item_def *item;
-    long turn;
+    int turn;
 
     bool valid() const { return turn == you.num_turns; }
 };
@@ -172,7 +172,7 @@ static int l_item_do_remove(lua_State *ls)
 
     bool result = false;
     if (eq == EQ_WEAPON)
-        result = wield_weapon(true, -1);
+        result = wield_weapon(true, SLOT_BARE_HANDS);
     else if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
         result = remove_ring(item->link);
     else
@@ -512,22 +512,7 @@ IDEF(branded)
     if (!item || !item->defined() || !item_type_known(*item))
         return (0);
 
-    bool branded = false;
-    switch (item->base_type)
-    {
-    case OBJ_WEAPONS:
-        branded = get_weapon_brand(*item) != SPWPN_NORMAL;
-        break;
-    case OBJ_ARMOUR:
-        branded = get_armour_ego_type(*item) != SPARM_NORMAL;
-        break;
-    case OBJ_MISSILES:
-        branded = get_ammo_brand(*item) != SPMSL_NORMAL;
-        break;
-    default:
-        break;
-    }
-    lua_pushboolean(ls, branded);
+    lua_pushboolean(ls, item_is_branded(*item));
     return (1);
 }
 
@@ -637,9 +622,9 @@ static int l_item_do_inc_quantity (lua_State *ls)
 
 IDEFN(inc_quantity, do_inc_quantity)
 
-unsigned long str_to_item_status_flags (std::string flag)
+iflags_t str_to_item_status_flags (std::string flag)
 {
-    unsigned long flags = 0;
+    iflags_t flags = 0;
     if (flag.find("curse") != std::string::npos)
         flags &= ISFLAG_KNOW_CURSE;
     // type is dealt with using item_type_known.
@@ -676,7 +661,7 @@ static int l_item_do_identified (lua_State *ls)
         else
         {
             const bool check_type = strip_tag(flags, "type");
-            const unsigned long item_flags = str_to_item_status_flags(flags);
+            iflags_t item_flags = str_to_item_status_flags(flags);
             known_status = ((item_flags || check_type)
                             && (!item_flags || item_ident(*item, item_flags))
                             && (!check_type || item_type_known(*item)));

@@ -25,7 +25,6 @@
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
-#include "map_knowledge.h"
 #include "exclude.h"
 #include "fight.h"
 #include "godabil.h"
@@ -34,6 +33,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -126,8 +126,7 @@ const int8_t IMPASSABLE  = 0;
 const int8_t FORBIDDEN   = -1;
 
 // Map of terrain types that are traversable.
-// Should be [NUM_FEATURES], but we're paranoid here.
-static int8_t traversable_terrain[256];
+static FixedVector<int8_t,NUM_FEATURES> traversable_terrain;
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -249,6 +248,15 @@ inline bool is_player_altar(const coord_def &c)
 bool is_unknown_stair(const coord_def &p)
 {
     dungeon_feature_type feat = env.map_knowledge(p).feat();
+
+    // While the stairs out of the dungeon are not precisely known
+    // to the travel cache, the player does know where they lead.
+    if (player_branch_depth() == 1
+        && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
+    {
+        return (false);
+    }
+
     return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
 }
 
@@ -284,16 +292,14 @@ inline bool is_stash(const LevelStashes *ls, const coord_def& p)
     return s && s->enabled;
 }
 
-static bool _is_monster_blocked(const coord_def& c)
+static bool _monster_blocks_travel(const monster_info *mons)
 {
-    const monster* mons = monster_at(c);
+    // [ds] No need to check if the monster is a known mimic, since it
+    // won't even be a monster_info if it's an unknown mimic.
     return (mons
-            && mons->visible_to(&you)
-            && mons_is_stationary(mons)
+            && mons_class_is_stationary(mons->type)
             && !fedhas_passthrough(mons)
-            && mons_was_seen(mons)
-            && !mons_is_unknown_mimic(mons)
-            && !travel_kill_monster(mons));
+            && !travel_kill_monster(mons->type));
 }
 
 /*
@@ -307,17 +313,18 @@ static bool _is_monster_blocked(const coord_def& c)
  *       colour the level map. It does not affect pathing of actual
  *       travel/explore.
  */
-static bool _is_reseedable(const coord_def& c)
+static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 {
-    if (is_excluded(c))
+    if (!ignore_danger && is_excluded(c))
         return (true);
 
-    const dungeon_feature_type grid = env.map_knowledge(c).feat();
+    map_cell &cell(env.map_knowledge(c));
+    const dungeon_feature_type grid = cell.feat();
     return (feat_is_water(grid)
             || grid == DNGN_LAVA
             || is_trap(c)
-            || _is_monster_blocked(c)
-            || (g_Slime_Wall_Check && slime_wall_neighbour(c)));
+            || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
+            || g_Slime_Wall_Check && slime_wall_neighbour(c));
 }
 
 struct cell_travel_safety
@@ -365,10 +372,19 @@ public:
     }
 };
 
+static bool _is_stair_exclusion(const coord_def &p)
+{
+    if (feat_stair_direction(env.map_knowledge(p).feat()) == CMD_NO_CMD)
+        return (false);
+
+    return (get_exclusion_radius(p) == 1);
+}
+
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
-bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
+                          bool ignore_danger)
 {
     if (!in_bounds(c))
         return (false);
@@ -394,24 +410,22 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     // plant/fungus checks.
     const map_cell& levelmap_cell = env.map_knowledge(c);
 
-    // Travel will not voluntarily cross squares blocked by immobile monsters.
-    // TODO: do this properly based only on map_knowledge instead of this bizarre manner
-    if (!ignore_hostile
-        && levelmap_cell.monster() != MONS_NO_MONSTER
-        && _is_monster_blocked(c)
-        // _is_monster_blocked can only return true if monster_at(c) != NULL
-        && monster_at(c)->type == levelmap_cell.monster())
+    // Travel will not voluntarily cross squares blocked by immobile
+    // monsters.
+    if (!ignore_danger && !ignore_hostile)
     {
-        return (false);
+        const monster_info *minfo = levelmap_cell.monsterinfo();
+        if (minfo && _monster_blocks_travel(minfo))
+            return (false);
     }
 
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
     // navigated over if the player is willing to take damage, or levitate.
-    if (ignore_hostile && _is_reseedable(c))
+    if (ignore_hostile && _is_reseedable(c, true))
         return (true);
 
-    // Excluded squares are never safe.
-    if (is_excluded(c))
+    // Excluded squares are only safe if marking stairs, i.e. another level.
+    if (!ignore_danger && is_excluded(c) && !_is_stair_exclusion(c))
         return (false);
 
     if (is_trap(c) && _is_safe_trap(c))
@@ -423,9 +437,9 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     return (feat_is_traversable(grid));
 }
 
-// Returns true if the location at (x,y) is monster-free and contains no clouds.
-// Travel uses this to check if the square the player is about to move to is
-// safe.
+// Returns true if the location at (x,y) is monster-free and contains
+// no clouds. Travel uses this to check if the square the player is
+// about to move to is safe.
 static bool _is_safe_move(const coord_def& c)
 {
     if (const monster* mon = monster_at(c))
@@ -436,7 +450,7 @@ static bool _is_safe_move(const coord_def& c)
             && mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && mons_is_stationary(mon)
             && !fedhas_passthrough(mon)
-            && !travel_kill_monster(mon))
+            && !travel_kill_monster(mon->type))
         {
             return (false);
         }
@@ -919,7 +933,8 @@ command_type travel()
         return CMD_NO_CMD;
     }
 
-    if (is_excluded(you.pos()))
+    // Excluded squares are only safe if marking stairs, i.e. another level.
+    if (is_excluded(you.pos()) && !_is_stair_exclusion(you.pos()))
     {
         mprf("You're in a travel-excluded area, stopping %s.",
              you.running.runmode_name().c_str());
@@ -1153,9 +1168,9 @@ FixedVector<coord_def, GXM * GYM> travel_pathfind::circumference[2];
 travel_pathfind::travel_pathfind()
     : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
       floodout(false), double_flood(false), ignore_hostile(false),
-      annotate_map(false), ls(NULL), need_for_greed(false),
-      unexplored_place(), greedy_place(), unexplored_dist(0),
-      greedy_dist(0), refdist(NULL), reseed_points(),
+      ignore_danger(false), annotate_map(false), ls(NULL),
+      need_for_greed(false), unexplored_place(), greedy_place(),
+      unexplored_dist(0), greedy_dist(0), refdist(NULL), reseed_points(),
       features(NULL), point_distance(travel_point_distance),
       points(0), next_iter_points(0), traveled_distance(0),
       circ_index(0)
@@ -1313,7 +1328,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
-        && !is_travelsafe_square(start, false)
+        && !is_travelsafe_square(start, false, ignore_danger)
         && !is_trap(start))          // player likes pain
     {
         return coord_def();
@@ -1397,8 +1412,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
                 for (unsigned i = 0, size = reseed_points.size(); i < size; ++i)
                     circumference[!circ_index][i] = reseed_points[i];
 
-                next_iter_points = reseed_points.size();
-                ignore_hostile = true;
+                next_iter_points  = reseed_points.size();
+                ignore_hostile    = true;
             }
         }
     } // for (; points > 0 ...
@@ -1494,7 +1509,7 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
         && is_greed_inducing_square(c)
-        && is_travelsafe_square(c, ignore_hostile))
+        && is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {
         greedy_place = c;
         greedy_dist  = traveled_distance;
@@ -1564,11 +1579,11 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
         return (true);
     }
-    else if (!is_travelsafe_square(dc, ignore_hostile))
+    else if (!is_travelsafe_square(dc, ignore_hostile, ignore_danger))
     {
         // This point is not okay to travel on, but if this is a
         // trap, we'll want to put it on the feature vector anyway.
-        if (_is_reseedable(dc)
+        if (_is_reseedable(dc, ignore_danger)
             && !point_distance[dc.x][dc.y]
             && dc != start)
         {
@@ -2115,13 +2130,13 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                             || i == BRANCH_SHOALS
                             || i == BRANCH_SNAKE_PIT))
                     {
-                        msg += "Branch not generated this game.  ";
+                        msg += "Branch not generated this game. ";
                     }
 
                     if (target.entry_stairs == NUM_FEATURES
                         && br[i] != BRANCH_MAIN_DUNGEON)
                     {
-                        msg += "Branch has no entry stairs.  ";
+                        msg += "Branch has no entry stairs. ";
                     }
 
                     if (!msg.empty())
@@ -2323,9 +2338,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
     }
 }
 
-bool travel_kill_monster(const monster* mons)
+bool travel_kill_monster(monster_type mons)
 {
-    if (mons->type != MONS_TOADSTOOL)
+    if (mons != MONS_TOADSTOOL)
         return (false);
 
     if (!wielded_weapon_check(you.weapon(), true))
@@ -4130,7 +4145,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
             altars.push_back(altar);
         es_flags |= ES_ALTAR;
     }
-    // Would checking for a makrer for all discovered cells slow things
+    // Would checking for a marker for all discovered cells slow things
     // down too much?
     else if (feat_is_statue_or_idol(feat))
     {
@@ -4281,7 +4296,8 @@ std::vector<std::string> explore_discoveries::apply_quantities(
 {
     static const char *feature_plural_qualifiers[] =
     {
-        " leading ", " back to ", " to ", " of ", " in ", NULL
+        " leading ", " back to ", " to ", " of ", " in ", " out of",
+        " from ", " back into ", NULL
     };
 
     std::vector<std::string> things;
@@ -4390,15 +4406,24 @@ int click_travel(const coord_def &gc, bool force)
     if (cmd)
         return cmd;
 
-    if (i_feel_safe())
+    if ((!is_excluded(gc) || _is_stair_exclusion(gc))
+        && (!is_excluded(you.pos()) || _is_stair_exclusion(you.pos()))
+        && i_feel_safe(false, false, false, false))
     {
-        start_travel(gc);
-        return CK_MOUSE_CMD;
+        map_cell &cell(env.map_knowledge(gc));
+        // If there's a monster that would block travel,
+        // don't start traveling.
+        if (!_monster_blocks_travel(cell.monsterinfo()))
+        {
+            start_travel(gc);
+            return CK_MOUSE_CMD;
+        }
     }
 
     // If not safe, then take one step towards the click.
     travel_pathfind tp;
     tp.set_src_dst(you.pos(), gc);
+    tp.set_ignore_danger();
     const coord_def dest = tp.pathfind(RMODE_TRAVEL);
 
     if (!dest.x && !dest.y)

@@ -164,6 +164,9 @@ void TextDB::init()
     if (_needs_update())
         _regenerate_db();
 
+    if (_db)
+        return;
+
     const std::string full_db_path = _db_cache_path(_db_name);
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
 
@@ -194,6 +197,8 @@ bool TextDB::_needs_update() const
 
 void TextDB::_regenerate_db()
 {
+    shutdown();
+
     std::string db_path = _db_cache_path(_db_name);
     std::string full_db_path = db_path + ".db";
 

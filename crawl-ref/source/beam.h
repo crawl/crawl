@@ -307,13 +307,13 @@ bool enchant_monster_with_flavour(monster* mon, actor *atk,
 
 bool enchant_monster_invisible(monster* mon, const std::string how);
 
-void mass_enchantment(enchant_type wh_enchant, int pow, int who,
+void mass_enchantment(enchant_type wh_enchant, int pow,
                        int *m_succumbed = NULL, int *m_attempted = NULL);
 
-bool poison_monster(monster* mons, kill_category who, int levels = 1,
+bool poison_monster(monster* mons, const actor* who, int levels = 1,
                     bool force = false, bool verbose = true);
-bool miasma_monster(monster* mons, kill_category who);
-bool napalm_monster(monster* mons, kill_category who, int levels = 1,
+bool miasma_monster(monster* mons, const actor* who);
+bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
 void fire_tracer(const monster* mons, struct bolt &pbolt,
                   bool explode_only = false);

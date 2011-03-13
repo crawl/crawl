@@ -69,6 +69,7 @@ static spell_type search_order_conj[] = {
     SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
     SPELL_HIBERNATION,
+    SPELL_FLAME_TONGUE,
     SPELL_CORONA,
     SPELL_NO_SPELL,                        // end search
 };
@@ -79,7 +80,10 @@ static spell_type search_order_third[] = {
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_SUMMON_DRAGON,
+    SPELL_TUKIMAS_BALL,
     SPELL_HAUNT,
+    SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,
     SPELL_DEMONIC_HORDE,
     SPELL_HASTE,
@@ -292,6 +296,10 @@ void ghost_demon::init_random_demon()
             spells[2] = SPELL_SMITING;
         if (one_chance_in(25))
             spells[2] = SPELL_HELLFIRE_BURST;
+        if (one_chance_in(22))
+            spells[2] = SPELL_SUMMON_HYDRA;
+        if (one_chance_in(20))
+            spells[2] = SPELL_SUMMON_DRAGON;
         if (one_chance_in(12))
             spells[2] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(12))
@@ -792,6 +800,16 @@ void ghost_demon::add_spells()
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         spells[i] = translate_spell(spells[i]);
+
+    spellcaster = has_spells();
+}
+
+bool ghost_demon::has_spells() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (spells[i] != SPELL_NO_SPELL)
+            return true;
+    return false;
 }
 
 // When passed the number for a player spell, returns the equivalent
@@ -804,10 +822,6 @@ spell_type ghost_demon::translate_spell(spell_type spel) const
         return (SPELL_BLINK);        // approximate
     case SPELL_DEMONIC_HORDE:
         return (SPELL_CALL_IMP);
-    case SPELL_AGONY:
-    case SPELL_SYMBOL_OF_TORMENT:
-        // Too powerful to give ghosts Torment for Agony?  Nah.
-        return (SPELL_SYMBOL_OF_TORMENT);
     case SPELL_DELAYED_FIREBALL:
         return (SPELL_FIREBALL);
     case SPELL_PETRIFY:

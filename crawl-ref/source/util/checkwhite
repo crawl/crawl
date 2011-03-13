@@ -9,7 +9,6 @@ while(<FLIST>)
     next unless -f $_;
     next if /\.(png|ttf|ico|icns|fig|tex|eps|pdf)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist)$/i;
-    next if /\.(rb|pl)$/i;
     next if /vcproj/;
     next if /^\.gitmodules$/;
     next if /\.(lex|tab)\./;

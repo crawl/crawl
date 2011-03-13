@@ -89,7 +89,7 @@ bool conjure_flame(int pow, const coord_def& where)
     monster* mons = monster_at(where);
     if (mons)
     {
-        if (you.can_see(mons))
+        if (you.can_see(mons) && !mons_is_unknown_mimic(mons))
         {
             mpr("You can't place the cloud on a creature.");
             return (false);
@@ -161,11 +161,24 @@ bool stinking_cloud(int pow, bolt &beem)
     return (true);
 }
 
-int cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam)
+bool cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam)
 {
+    if (distance(beam.target, you.pos()) > dist_range(beam.range)
+        || !in_bounds(beam.target))
+    {
+        mpr("That is beyond the maximum range.");
+        return false;
+    }
+
+    if (cell_is_solid(beam.target))
+    {
+        mpr("You can't place clouds on a wall.");
+        return false;
+    }
+
     big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
     noisy(2, beam.target);
-    return (1);
+    return true;
 }
 
 void big_cloud(cloud_type cl_type, const actor *agent,
@@ -199,6 +212,11 @@ void manage_fire_shield(int delay)
     you.duration[DUR_FIRE_SHIELD]-= delay;
     if (you.duration[DUR_FIRE_SHIELD] < 0)
         you.duration[DUR_FIRE_SHIELD] = 0;
+
+    // Remove fire clouds on top of you
+    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
+        if (env.cloud[env.cgrid(you.pos())].type == CLOUD_FIRE)
+            delete_cloud_at(you.pos());
 
     if (!you.duration[DUR_FIRE_SHIELD])
     {
@@ -388,7 +406,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     beem.is_beam     = false;
     beem.aux_source.clear();
 
-    beem.hit        = you.dex() / 2 + roll_dice(2, you.skills[SK_THROWING] / 2 + 1);
+    beem.auto_hit   = true;
     beem.damage     = dice_def(1, 0);  // no damage, just producing clouds
     beem.ench_power = pow;               // used for duration only?
     beem.is_explosion = true;
@@ -509,8 +527,6 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
         canned_msg(MSG_OK);
         return (false);
     }
-
-    practise(EX_WILL_THROW_POTION);
 
     // Really fire.
     beem.flavour = real_flavour;

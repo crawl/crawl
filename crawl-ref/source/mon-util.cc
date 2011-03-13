@@ -11,6 +11,7 @@
 
 #include "mon-util.h"
 
+#include "act-iter.h"
 #include "artefact.h"
 #include "beam.h"
 #include "colour.h"
@@ -55,6 +56,19 @@ mon_display monster_symbols[NUM_MONSTERS];
 
 static bool initialised_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
+
+#include "mon-mst.h"
+
+struct mon_spellbook
+{
+    mon_spellbook_type type;
+    spell_type spells[NUM_MONSTER_SPELL_SLOTS];
+};
+
+static mon_spellbook mspell_list[] =
+{
+#include "mon-spll.h"
+};
 
 #include "mon-data.h"
 
@@ -169,7 +183,6 @@ void init_mon_name_cache()
                 || mon == MONS_PORTAL_MIMIC
                 || mon == MONS_SHOP_MIMIC
                 || mon == MONS_STAIR_MIMIC
-                || mon == MONS_TRAP_MIMIC
                 || mon == MONS_FOUNTAIN_MIMIC
                 || mon == MONS_MARA_FAKE)
             {
@@ -598,6 +611,23 @@ bool mons_has_body(const monster* mon)
     return (true);
 }
 
+bool mons_has_flesh(const monster* mon)
+{
+    if (mon->is_skeletal() || mon->is_insubstantial())
+        return false;
+
+    // Dictionary says:
+    // 1. (12) flesh -- (the soft tissue of the body of a vertebrate:
+    //    mainly muscle tissue and fat)
+    // 3. pulp, flesh -- (a soft moist part of a fruit)
+    // yet I exclude sense 3 anyway but include arthropods and molluscs.
+    return (mon->holiness() != MH_PLANT
+            && mon->holiness() != MH_NONLIVING
+            && mons_base_char(mon->type) != 'G'  // eyes
+            && mons_base_char(mon->type) != 'J'  // jellies
+            && mons_base_char(mon->type) != '%');// cobs (plant!)
+}
+
 // Difference in speed between monster and the player for Cheibriados'
 // purposes. This is the speed difference disregarding the player's
 // slow status.
@@ -623,6 +653,20 @@ bool mons_is_projectile(int mc)
     return (mc == MONS_ORB_OF_DESTRUCTION);
 }
 
+// Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
+// at least in some degree, golems have a chem granting them that.
+bool mons_is_object(int mc)
+{
+    return mons_is_projectile(mc)
+           || mc == MONS_BALL_LIGHTNING
+           || mc == MONS_FIRE_VORTEX
+           || mc == MONS_SPATIAL_VORTEX
+           || mc == MONS_TWISTER
+           // unloading seeds helps the species
+           || mc == MONS_GIANT_SPORE
+           || mc == MONS_DANCING_WEAPON;
+}
+
 bool mons_has_blood(int mc)
 {
     // XXX: Jory is hacked in here so that he can
@@ -631,6 +675,15 @@ bool mons_has_blood(int mc)
     return (mons_class_flag(mc, M_COLD_BLOOD)
             || mons_class_flag(mc, M_WARM_BLOOD)
             || mc == MONS_JORY);
+}
+
+bool mons_is_sensed(int mc)
+{
+    return mc == MONS_SENSED
+           || mc == MONS_SENSED_TRIVIAL
+           || mc == MONS_SENSED_EASY
+           || mc == MONS_SENSED_TOUGH
+           || mc == MONS_SENSED_NASTY;
 }
 
 bool mons_behaviour_perceptible(const monster* mon)
@@ -730,6 +783,16 @@ bool mons_class_is_slime(int mc)
 bool mons_is_slime(const monster* mon)
 {
     return (mons_class_is_slime(mon->type));
+}
+
+bool herd_monster_class(int mc)
+{
+    return (mons_class_flag(mc, M_HERD));
+}
+
+bool herd_monster(const monster * mon)
+{
+    return (herd_monster_class(mon->type));
 }
 
 // Plant or fungus really
@@ -1168,7 +1231,8 @@ bool mons_class_can_use_stairs(int mc)
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && !mons_is_tentacle(mc)
             && mc != MONS_SILENT_SPECTRE
-            && mc != MONS_PLAYER_GHOST);
+            && mc != MONS_PLAYER_GHOST
+            && mc != MONS_GERYON);
 }
 
 bool mons_can_use_stairs(const monster* mon)
@@ -1404,16 +1468,6 @@ flight_type mons_flies(const monster* mon, bool temp)
         ret = FL_LEVITATE;
 
     return (ret);
-}
-
-bool mons_class_amphibious(int mc)
-{
-    return (mons_class_habitat(mc) == HT_AMPHIBIOUS);
-}
-
-bool mons_amphibious(const monster* mon)
-{
-    return (mons_class_amphibious(mons_base_type(mon)));
 }
 
 bool mons_class_flattens_trees(int mc)
@@ -1770,7 +1824,30 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     return (retval);
 }
 
-static void _get_spells(mon_spellbook_type& book, monster* mon)
+void _mons_load_spells(monster* mon, mon_spellbook_type book)
+{
+    if (book == MST_GHOST)
+        return mon->load_ghost_spells();
+
+    mon->spells.init(SPELL_NO_SPELL);
+    if (book == MST_NO_SPELLS)
+        return;
+
+    dprf("%s: loading spellbook #%d", mon->name(DESC_PLAIN, true).c_str(),
+         static_cast<int>(book));
+
+    for (unsigned int i = 0; i < ARRAYSZ(mspell_list); ++i)
+    {
+        if (mspell_list[i].type == book)
+        {
+            for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+                mon->spells[j] = mspell_list[i].spells[j];
+            break;
+        }
+    }
+}
+
+static void _get_spells(mon_spellbook_type book, monster* mon)
 {
     if (book == MST_NO_SPELLS && mons_class_flag(mon->type, M_SPELLCASTER))
     {
@@ -1783,7 +1860,7 @@ static void _get_spells(mon_spellbook_type& book, monster* mon)
         }
     }
 
-    mon->load_spells(book);
+    _mons_load_spells(mon, book);
 
     // (Dumb) special casing to give ogre mages Haste Other. -cao
     if (mon->type == MONS_OGRE_MAGE)
@@ -1835,19 +1912,19 @@ static int _serpent_of_hell_color(const monster* mon)
     switch (mon->props["serpent_of_hell_flavour"].get_int())
     {
     case BRANCH_GEHENNA:
-        return RED;
+        return ETC_FIRE;
         break;
     case BRANCH_COCYTUS:
-        return WHITE;
+        return ETC_ICE;
         break;
     case BRANCH_DIS:
-        return CYAN;
+        return ETC_IRON;
         break;
     case BRANCH_TARTARUS:
-        return MAGENTA;
+        return ETC_NECRO;
         break;
     default:
-        return RED;
+        return ETC_FIRE;
     }
 }
 
@@ -1861,7 +1938,6 @@ void define_monster(monster* mons)
     int col                   = mons_class_colour(mcls);
     int hd                    = mons_class_hit_dice(mcls);
     int speed                 = mons_real_base_speed(mcls);
-    mon_spellbook_type spells = MST_NO_SPELLS;
     int hp, hp_max, ac, ev;
 
     mons->mname.clear();
@@ -2013,8 +2089,7 @@ void define_monster(monster* mons)
 
     mons->bind_melee_flags();
 
-    spells = m->sec;
-    _get_spells(spells, mons);
+    _get_spells((mon_spellbook_type)m->sec, mons);
     mons->bind_spell_flags();
 
     // Reset monster enchantments.
@@ -2332,15 +2407,25 @@ mon_intel_type mons_intel(const monster* mon)
     return (mons_class_intel(newmon.type));
 }
 
-habitat_type mons_class_habitat(int mc)
+habitat_type mons_class_habitat(int mc, bool real_amphibious)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me ? me->habitat : HT_LAND);
+    habitat_type ht = (me ? me->habitat
+                          : get_monster_data(MONS_PROGRAM_BUG)->habitat);
+    if (!real_amphibious)
+    {
+        // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
+        size_type st = (me ? me->size
+                           : get_monster_data(MONS_PROGRAM_BUG)->size);
+        if (ht == HT_LAND && st >= SIZE_GIANT)
+            ht = HT_AMPHIBIOUS;
+    }
+    return (ht);
 }
 
-habitat_type mons_habitat(const monster* mon)
+habitat_type mons_habitat(const monster* mon, bool real_amphibious)
 {
-    return (mons_class_habitat(mons_base_type(mon)));
+    return (mons_class_habitat(mons_base_type(mon), real_amphibious));
 }
 
 habitat_type mons_class_primary_habitat(int mc)
@@ -2472,7 +2557,7 @@ mon_attitude_type mons_attitude(const monster* m)
 
 bool mons_is_confused(const monster* m, bool class_too)
 {
-    return (m->has_ench(ENCH_CONFUSION)
+    return ((m->has_ench(ENCH_CONFUSION) || m->has_ench(ENCH_MAD))
             && (class_too || !mons_class_flag(m->type, M_CONFUSED)));
 }
 
@@ -3154,10 +3239,6 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
 // affect the target.
 bool mons_has_los_ability(monster_type mon_type)
 {
-    // These two have Torment, but are handled specially.
-    if (mon_type == MONS_FIEND || mon_type == MONS_PIT_FIEND)
-        return (true);
-
     // These eyes only need LOS, as well.  (The other eyes use spells.)
     if (mon_type == MONS_GIANT_EYEBALL
         || mon_type == MONS_EYE_OF_DRAINING
@@ -3270,6 +3351,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     {
         switch (mon_type)
         {
+        case MONS_TERPSICHORE:
         case MONS_JESSICA:
         case MONS_PSYCHE:
         case MONS_JOSEPHINE:
@@ -3341,9 +3423,6 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 // unimpeded LOS to the player.
 static bool _mons_has_smite_attack(const monster* mons)
 {
-    if (mons->type == MONS_FIEND)
-        return (true);
-
     const monster_spells &hspell_pass = mons->spells;
     for (unsigned i = 0; i < hspell_pass.size(); ++i)
         if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
@@ -3411,6 +3490,15 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
 
     if (!me1 || !me2)
         return (false);
+
+    // Band leaders can displace followers regardless of type considerations.
+    // -cao
+    if (m2->props.exists("band_leader"))
+    {
+        unsigned leader_mid = m2->props["band_leader"].get_int();
+        if (leader_mid == m1->mid)
+            return (true);
+    }
 
     char mchar1 = me1->showchar;
     char mchar2 = me2->showchar;
@@ -3527,7 +3615,7 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
     if (_mons_can_pass_door(mon, p))
         return (true);
 
-    if (!mon->is_habitable_feat(env.grid(p)))
+    if (!mon->is_habitable(p))
         return (false);
 
     // Your friends only know about doors you know about, unless they feel
@@ -4077,6 +4165,8 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID);
     case 'h': // hounds
         return (MON_SHAPE_QUADRUPED);
+    case 'i': // spriggans
+        return (MON_SHAPE_HUMANOID);
     case 'j': // snails
         return (MON_SHAPE_SNAIL);
     case 'k': // killer bees
@@ -4109,7 +4199,12 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_ARACHNID);
     case 'u': // mutated type, not enough info to determine shape
         return (MON_SHAPE_MISC);
-    case 't': // turtles
+    case 't': // crocodiles/turtles
+        if (type == MONS_SNAPPING_TURTLE
+            || type == MONS_ALLIGATOR_SNAPPING_TURTLE)
+        {
+            return (MON_SHAPE_QUADRUPED_TAILLESS);
+        }
         return (MON_SHAPE_QUADRUPED);
     case 'v': // vortices
         return (MON_SHAPE_MISC);
@@ -4353,6 +4448,12 @@ bool mons_is_tentacle(int mc)
             || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
 }
 
+bool mons_is_tentacle_segment(int mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
+            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+}
+
 void init_anon()
 {
     monster &mon = menv[ANON_FRIENDLY_MONSTER];
@@ -4392,4 +4493,17 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
+}
+
+/*
+ * Update the clinging status of all actors.
+ *
+ * Called at game load (because clinging status isn't saved) and whenever
+ * terrain is change. If actor has fallen from the wall (because it has been
+ * dug for example), apply location effects.
+ */
+void check_clinging()
+{
+    for (actor_iterator ai; ai; ++ai)
+        ai->check_clinging(false);
 }

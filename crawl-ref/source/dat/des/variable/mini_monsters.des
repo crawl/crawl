@@ -72,7 +72,7 @@ SHUFFLE: 11%
 MONS:    killer bee / nothing w:5
 SUBST:   % = %*
 : else
-MONS:    giant mosquito / nothing
+MONS:    vampire mosquito / nothing
 : end
 MAP
 xxxxxx
@@ -152,7 +152,7 @@ ENDMAP
 NAME: minivault_29
 TAGS: allow_dup
 MONS: patrolling queen ant, patrolling soldier ant
-MONS: patrolling giant ant, ant larva
+MONS: patrolling worker ant, ant larva
 MAP
 .3......3...
 ...x.xx.x.2.
@@ -171,7 +171,7 @@ ENDMAP
 NAME:   zaba_anthell
 DEPTH:  D:12-19, Lair:2-, Hive
 TAGS:   no_rotate
-MONS:   queen ant, soldier ant, giant ant, soldier ant / w:20 giant ant
+MONS:   queen ant, soldier ant, worker ant, soldier ant / w:20 worker ant
 SUBST:  ? = . x
 MAP
      ?  ? ? ?  ?
@@ -194,7 +194,7 @@ ENDMAP
 NAME:  zaba_antful_of_joy
 DEPTH: D:10-17, Lair, Hive
 TAGS:  no_rotate
-MONS:  queen ant, giant ant w:5 / soldier ant, giant ant / nothing w:5
+MONS:  queen ant, worker ant w:5 / soldier ant, worker ant / nothing w:5
 KFEAT: ^ = alarm trap / .
 MAP
     xxxxxxxxxxx
@@ -239,7 +239,7 @@ ENDMAP
 
 NAME:   minmay_another_anthill
 DEPTH:  D:10-21, Lair:3-, Hive, Snake:1-3
-MONS:   patrolling ant larva, giant ant, soldier ant, patrolling queen ant
+MONS:   patrolling ant larva, worker ant, soldier ant, patrolling queen ant
 SUBST:  a = 1223........x
 MAP
   .. .... .. .
@@ -388,6 +388,51 @@ xxxx+xxxxx...xxxxx+xxxx
    xxxxxxx.@.xxxxxxx
 ENDMAP
 
+NAME:  goddamned_bats
+DEPTH: D:3-12, Lair:1-3, Orc:1-2
+# Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
+# and tera is understandable, but come on, even mili is lacking.
+KMONS:  1 = megabat
+KMONS:  2 = bat name:microbat n_rpl n_spe col:magenta tile:mons_microbat
+# Can we spell them this way?  Please?
+KMONS:  3 = bat name:fruity n_adj n_spe col:lightmagenta tile:mons_fruity_bat
+KMONS:  4 = bat name:giga n_adj n_spe hd:4 col:brown tile:mons_gigabat
+# Way harder than the rest here.
+KMONS:  5 = vampire bat
+# In RL, they sit put, not moving a finger.  Lazy bastards.
+KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_spe n_zom
+# The only here without a basis in reality.
+KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_spe n_zom
+# There are actual "ghost bats" too, but near-extinct, while ghost-faceds
+# have a number of species and are widespread.
+KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_spe n_zom
+# Just an US WW2 military project, but that's good enough.
+KMONS:  9 = fire bat hd:1
+KMONS:  0 = bat zombie name:rotten_bat n_rpl n_spe n_zom
+KMONS:  A = bat name:phase n_adj n_spe col:lightgreen spells:blink tile:mons_phase_bat
+MAP
+       xxxxx
+      xxxxxxx
+     xxxx7xxx
+    xxxxx.xxx
+   xxx9..xxx
+  xxx9..0xxx
+  xx.9..xxxxx
+  xxx....xxxx
+  xx88.xx.xxxx
+  xxxxxxxx.xxxx
+ xxxxxxxxx.AAxx
+xxx.4xxxx..x..xx
+xxx12.xxx.xx...xx
+xxxx.xxx.xxxx6..x
+xxxxx.xx.xxxx66.x
+xx33.x...xxxxx.xxx
+xxxxxxx...xxxxx.xx
+ xxxx21xx.xxxxx5xx
+  xxxxxxx.xxxxxxx
+    xxxx@xx
+ENDMAP
+
 # This vault can be highly OOD, which is why lindwurms are used in the
 # first place; unlike most dragon-types, lindwurms are flightless.
 NAME:   minmay_lindwurm_lava
@@ -426,7 +471,7 @@ NAME:  pond
 DEPTH: D:8-27, Lair
 MONS:  plant w:30 / fungus
 MONS:  giant frog w:30 / giant toad / snake / rat / green rat / swamp drake w:2
-MONS:  giant mosquito
+MONS:  vampire mosquito
 SUBST: ! : w.
 SUBST: 2 : 23
 SUBST: 2 = 2.
@@ -766,7 +811,7 @@ NAME:  eino_house_with_fridge
 DEPTH: D:8-20, Lair:2-, Vault:1-4
 TAGS:  no_monster_gen no_item_gen mini_float
 MONS:  necromancer / patrolling necromancer, plant
-MONS:  rat simulacrum / hound simulacrum / sheep simulacrum / bear simulacrum
+MONS:  rat simulacrum / hound simulacrum / sheep simulacrum / grizzly bear simulacrum
 MAP
 ............
 .xxxxxxxxxx.
@@ -876,8 +921,8 @@ ENDMAP
 NAME:   kilobyte_rumbling_trees
 DEPTH:  D:14-20, Elf, Lair:4-8
 MONS:   patrolling spriggan druid
-MONS:   black bear / bear / grizzly bear / giant bat w:20
-FTILE:  .t1@ = floor_lair
+MONS:   black bear / grizzly bear w:20 / megabat w:20
+FTILE:  .t1@ = floor_moss
 MAP
 ttttt       tttt@t
 tttttt tt ttttt2tt
@@ -895,7 +940,7 @@ ENDMAP
 # And for now, something woody (1KB)
 NAME:   forest_paths
 DEPTH:  D, Lair
-FTILE:  .t0@*123 = floor_lair
+FTILE:  .t0@*123 = floor_moss
 : if you.absdepth()>15 then
 MONS:   spriggan, spriggan druid, spriggan rider
 SUBST:  0=1
@@ -1066,7 +1111,7 @@ ENDMAP
 
 NAME:   minmay_beelzebubs_servants
 DEPTH:  D:6-12
-MONS:   hairy devil / nothing, giant blowfly / nothing
+MONS:   hairy devil / nothing, vampire mosquito / nothing
 MAP
 ........................
 ..xxxx....xxxx....xxxx..
@@ -1117,7 +1162,7 @@ MONS:  necrophage
 MARKER:  + = lua:props_marker { \
             door_open_prompt="This door is covered in warnings. Open " .. \
                              "it anyway?", \
-            door_description_prefix="warning scrawled " \
+            door_description_prefix="warning-scrawled " \
          }
 MAP
 ...........
@@ -1133,7 +1178,7 @@ ENDMAP
 NAME:  einodemon_crawler_minivault
 TAGS:  patrolling mini_float
 MONS:  demonic crawler
-MONS:  giant beetle / boulder beetle w:8 / demonic crawler w:2 / \
+MONS:  goliath beetle / boulder beetle w:8 / demonic crawler w:2 / \
        nothing
 MAP
 ..........
@@ -1256,6 +1301,37 @@ x1.1x
 xx+xx
 ENDMAP
 
+# This vault is here to find bugs with new holy monsters.  It is guaranteed
+# so we can get some (belated) testing before the release.  Please axe it
+# (or reduce to normal weight) during the freeze.
+NAME:    hallowed_hall
+TAGS:    no_monster_gen no_trap_gen extra
+PLACE:   D:26
+MONS:    pearl dragon, shedu band, ophan, plant
+COLOUR:  c = white
+TILE:    c = wall_church
+FTILE:   .+23GtABC = floor_limestone
+COLOUR:  .23 = white
+SHUFFLE: ABC
+KFEAT:   A = altar_shining_one
+KFEAT:   B = altar_elyvilon
+KFEAT:   C = altar_zin
+MAP
+xxxxxxxxx
+xcccccccx
+xcG.B.Gcx
+xc..3..cx
+xcA...Ccx
+xc.....cx4''
+xcG...Gcx'''''
+xccc+cccx4''''''
+xct...tcx''''''''
+xc..2..cx'''''''''xx
+xc.....+''''1'''''cx
+xct....c'''''''''4cx
+xccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ################################################################################
 #
@@ -1805,8 +1881,8 @@ MAP
 .x0x.xx.+.xx==xx..
 .x0xx9xxxxxG..Gxx.
 .xx*x.|xxxG....Gx.
-..xxxxxx.x*.8..|x.
-..xxxxxx.x|..8.*x.
+..xxxxxx.x*.9..|x.
+..xxxxxx.x|..9.*x.
 .xx0.9|xxxG....Gx.
 .x..xxxxxxxG..Gxx.
 .x0xx0x.+.xx==xx..
@@ -1828,7 +1904,7 @@ MAP
 ..x..x..0..x..x..
 ..xx..xx.xx..xx..
  ..x..xx.xx..x..
- ..x00..8xx00x..
+ ..x00..9xx00x..
  ..x..xxxxx..x..
 ..xx..xxxxx..xx..
 ..x..x..0..x.0x..
@@ -2002,7 +2078,7 @@ MARKER:  a = lua:fog_machine { \
                  size = 1, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "black smoke" \
              }
-KMONS:   a = giant mosquito
+KMONS:   a = vampire mosquito
 KMONS:   b = green death
 KMONS:   c = reaper
 KMONS:   d = soul eater
@@ -2114,7 +2190,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_librarian
-TAGS:   mini_float no_monster_gen no_item_gen no_trap_gen
+TAGS:   no_monster_gen no_item_gen no_trap_gen
 DEPTH:  D:9-27
 : if you.absdepth() > 24 then
 MONS:   ancient lich w:50 / greater mummy
@@ -2171,7 +2247,6 @@ MONS:   statue name:archer tile:mons_statue_archer name_adjective; \
         good_item longbow . good_item arrow q:20
 MONS:   statue name:archer tile:mons_statue_archer name_adjective; \
         longbow unrand:piercer . good_item arrow q:20
-NSUBST: 1 = 1:2 / *:1
 MAP
        ...
     .........
@@ -2182,7 +2257,7 @@ MAP
  ...............
 .......1.1.......
 .................
-.......1.1.......
+.......1.2.......
  ...............
  ...............
  ...............
@@ -2332,7 +2407,7 @@ KMONS:  l = fire elemental / nothing w:40
 KFEAT:  l = l
 KMONS:  1 = patrolling Azrael; scimitar unrand:scimitar_of_flaming_death, \
             patrolling efreet; scimitar unrand:scimitar_of_flaming_death
-KPROP:  1' = no_rtele_into
+KPROP:  1' = no_tele_into
 SUBST:  v : vc
 SUBST:  ' = .
 MAP
@@ -2360,7 +2435,7 @@ WEIGHT: 3
 MONS:   wizard, orange crystal statue / silver statue
 KMONS:  3 = lich / ancient lich
 KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage
-KPROP:  32' = no_rtele_into
+KPROP:  32' = no_tele_into
 SUBST:  ' = .
 MAP
 .......             .......

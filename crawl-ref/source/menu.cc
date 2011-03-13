@@ -409,8 +409,6 @@ bool Menu::process_key(int keyin)
     {
     case 0:
         return (true);
-    case CK_ENTER:
-        return (false);
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
     CASE_ESCAPE
@@ -565,7 +563,13 @@ bool Menu::process_key(int keyin)
         repaint = true;
         break;
 
+    case CK_ENTER:
+        if (!(flags & MF_PRESELECTED) || !sel.empty())
+            return (false);
+        // else fall through
     default:
+        // Even if we do return early, lastch needs to be set first,
+        // as it's sometimes checked when leaving a menu.
         keyin  = post_process(keyin);
         lastch = keyin;
 
@@ -775,9 +779,16 @@ void Menu::select_items(int key, int qty)
         // by its primary hotkey (which is assumed to always be
         // hotkeys[0]), in which case, we stop selecting further
         // items.
+        const bool check_preselected = (key == CK_ENTER);
         for (int i = first_entry; i < final; ++i)
         {
-            if (is_hotkey(i, key))
+            if (check_preselected && items[i]->preselected)
+            {
+                select_index(i, qty);
+                selected = true;
+                break;
+            }
+            else if (is_hotkey(i, key))
             {
                 select_index(i, qty);
                 if (items[i]->hotkeys[0] == key)
@@ -792,7 +803,13 @@ void Menu::select_items(int key, int qty)
         {
             for (int i = 0; i < first_entry; ++i)
             {
-                if (is_hotkey(i, key))
+                if (check_preselected && items[i]->preselected)
+                {
+                    select_index(i, qty);
+                    selected = true;
+                    break;
+                }
+                else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
                     if (items[i]->hotkeys[0] == key)
@@ -2622,9 +2639,8 @@ void TextItem::_wrap_text()
         size_t pos = 0;
         // find the max_line'th occurence of '\n'
         for (int i = 0; i < max_lines; ++i)
-        {
             pos = m_render_text.find('\n', pos);
-        }
+
         // Chop of all the nonfitting text
         m_render_text = m_render_text.substr(pos);
     }
@@ -3204,7 +3220,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         }
         return INPUT_NO_ACTION;
     }
-    if (me.event == MouseEvent::RELEASE && me.button == MouseEvent::LEFT)
+    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
         find_item = _find_item_by_mouse_coords(coord_def(me.px,
                                                         me.py));
@@ -3708,7 +3724,7 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
         return INPUT_NO_ACTION;
     }
 
-    if (me.event == MouseEvent::RELEASE && me.button == MouseEvent::LEFT)
+    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
         find_item = _find_item_by_mouse_coords(coord_def(me.px,
                                                         me.py));

@@ -263,9 +263,7 @@ void fill_doll_equipment(dolls_data &result)
 {
     // Base tile.
     if (result.parts[TILEP_PART_BASE] == TILEP_SHOW_EQUIP)
-    {
         tilep_race_default(you.species, you.experience_level, &result);
-    }
 
     // Main hand.
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
@@ -331,15 +329,12 @@ void fill_doll_equipment(dolls_data &result)
             }
         }
         else
-        {
             result.parts[TILEP_PART_HELM] = 0;
-        }
     }
     // Leg.
     if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP)
-    {
         result.parts[TILEP_PART_LEG] = _random_trousers();
-    }
+
     // Boots.
     if (result.parts[TILEP_PART_BOOTS] == TILEP_SHOW_EQUIP)
     {

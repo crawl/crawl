@@ -162,7 +162,7 @@ function ziggurat_build_level(e)
   -- Deeper levels can have all monsters awake.
   -- Does never happen at depths 1-4; does always happen at depths 25-27.
   local generate_awake = depth > 4 + crawl.random2(21)
-  zig().monster_hook = generate_awake and ziggurat_awaken_all
+  zig().monster_hook = generate_awake and global_function("ziggurat_awaken_all")
 
   -- Deeper levels may block controlled teleports.
   -- Does never happen at depths 1-6; does always happen at depths 25-27.

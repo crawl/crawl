@@ -1,0 +1,74 @@
+/**
+ * @file
+ * @section DESCRIPTION
+ *
+ * File:      orb.cc
+ * Summary:   Orb-related functionality.
+**/
+
+#include "AppHdr.h"
+
+#include "areas.h"
+#include "message.h"
+#include "orb.h"
+#include "shout.h"
+#include "view.h"
+
+/**
+ * Make a "noise" caused by the orb.
+ *
+ * Alerts monsters via fake_noisy. If the area is silenced, perform a "flashing
+ * lights" visual effect.
+ *
+ * @param where      The location the "noise" comes from.
+ * @param loudness   The loudness of the noise, determining distance travelled.
+ * @returns          True if the area was unsilenced and thus an actual noise
+ *                   occurred, otherwise false, denoting that flashing lights
+ *                   occurred.
+**/
+bool orb_noise (const coord_def& where, int loudness)
+{
+    // XXX: Fake noisy doesn't work. Oops.
+    fake_noisy(loudness, where);
+
+    if (silenced(where))
+    {
+        flash_view_delay(MAGENTA, 100);
+        flash_view_delay(LIGHTMAGENTA, 100);
+        flash_view_delay(MAGENTA, 100);
+        flash_view_delay(LIGHTMAGENTA, 100);
+
+        return (false);
+    }
+
+    return (true);
+}
+
+/**
+ * Make a "noise" upon picking up the orb.
+ *
+ * Calls orb_noise(where, loudness), and, depending on the result of that
+ * function, prints one of two messages.
+ *
+ * @param where       Passed to orb_noise.
+ * @param loudness    Passed to orb_noise.
+ * @param msg         The message to be printed if orb_noise returned true.
+ * @param msg2        The message to be printed if orb_noise returned false.
+**/
+void orb_pickup_noise (const coord_def& where, int loudness, const char* msg, const char* msg2)
+{
+    if (orb_noise(where, loudness))
+    {
+        if (msg)
+            mpr(msg, MSGCH_ORB);
+        else
+            mpr("The orb lets out a hideous shriek!", MSGCH_ORB);
+    }
+    else
+    {
+        if (msg2)
+            mpr(msg2, MSGCH_ORB);
+        else
+            mpr("The orb lets out a furious burst of light!", MSGCH_ORB);
+    }
+}

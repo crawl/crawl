@@ -299,7 +299,6 @@ function wizlab_zonguldrok_awaken_wizard(data, triggerable,
         local lich = spawn_zombie(pos.x, pos.y, "generate_awake ancient lich "
                  .."col:brown name:antique_lich name_replace name_descriptor"
                  .." tile:mons_zonguldrok_lich")
-        lich.set_prop("description", "A lich who has grown expensive over countless years.\n")
     end
 
     data.awoke = true
@@ -369,8 +368,6 @@ function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
       if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
       else
        local mon = dgn.create_monster(point.x, point.y, msp)
-       mon.set_prop("description", "It seems a flimsy representation of a monk;"
-                                .. " nothing more than a half-formed memory.\n")
        count = count + 1
       end
     end
@@ -669,14 +666,6 @@ KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other
                     name_replace name_descriptor hd:13 hp:120 \
                     tile:mons_statue_guardian
 KITEM:      9 = scroll of acquirement
-:           local mquote = '"The machine had stood there a long time. It was several '
-:                  .. "hundred feet long and could run on a thimbleful of earth or"
-:                  .. " water. It had been working seven and a half million years."
-:                  .. '"\n  -Sweet Their Blood and Sticky, Albert Teichner'
-MARKER:     8 = lua:MonPropsMarker:new {description="A glistening silver machine.\n",\
-                   quote=mquote}
-MARKER:     9 = lua:MonPropsMarker:new {description="A glistening silver machine.\n",\
-                   quote=mquote}
 :           dgn.set_feature_desc_short("translucent rock wall",
 :                                      "crystal clear mirror")
 :           dgn.set_feature_desc_long("translucent rock wall",
@@ -693,7 +682,6 @@ MARKER:     9 = lua:MonPropsMarker:new {description="A glistening silver machine
 :           dgn.set_feature_desc_short("Floor", "marble floor")
 :           dgn.set_feature_desc_long("Floor", "Where the walls are black marble, the floor is " ..
 :                                     "a white and silver, with shades of pink here and there.\n")
-:           dgn.set_feature_quote("A granite statue", mquote)
 :           set_random_mon_list("dancing weapon")
 :           wizlab_setup(_G, "Tukima's Studio")
 epilogue{{
@@ -1109,14 +1097,6 @@ KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
             tile:mons_flesh_golem name_descriptor
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:250 tile:mons_cigotuvis_monster
-MARKER:     M = lua:MonPropsMarker:new {description="This terrifying creation " \
-            .. "looks to have been constructed from the body parts of every monstrous " \
-            .. "creature imaginable.\n", quote="\"I beheld the wretch - the "     \
-            .. "miserable monster whom I had created. He held up the curtain "    \
-            .. "of the bed; and his eyes, if eyes they may be called, were "      \
-            .. "fixed on me. His jaws opened, and he muttered some inarticulate " \
-            .. "sounds, while a grin wrinkled his cheeks.\"\n    -Mary Shelley, \"Frankenstein\""}
-MARKER:     8 = lua:MonPropsMarker:new {description="An animated mound of misshapen flesh.\n"}
 :           local sickdesc = "This poor creature looks hideously deformed.\n"
 MARKER:     a = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
 MARKER:     b = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
@@ -1239,7 +1219,7 @@ MONS:       purple draconian / deep elf mage spells:iskenderun's_mystic_blast \
 MONS:       statue tile:mons_statue_mage spells:iskenderun's_mystic_blast;orb_of\
             _destruction col:lightmagenta
 KITEM:      D = star_item, star_item / superb_item, star_item
-KITEM:      E = randbook disc:conjuration owner:Iskenderun spell:iskenderun's_mystic\
+KITEM:      E = randbook disc:conjuration owner:Iskenderun spells:iskenderun's_mystic\
                 _blast, randbook disc:conjuration owner:Iskenderun, any book
 KITEM:      F = any book good_item, any book good_item, any book
 KMONS:      DEF = purple draconian
@@ -1304,6 +1284,8 @@ SUBST:      ? = txxx
 SUBST:      ! = t..
 SUBST:      G = G...
 MONS:       patrolling skeletal warrior
+MONS:       generate_awake ancient lich  col:brown name:antique_lich name_replace \
+            name_descriptor tile:mons_zonguldrok_lich
 COLOUR:     t = darkgrey / lightgrey
 TILE:       t = dngn_tree_dead
 LFLOORCOL:  darkgrey
@@ -1436,6 +1418,12 @@ ITEM:       potion of experience, manual of fighting / manual of armour / manual
             potion of gain dexterity / potion of gain strength / potion of gain \
             intelligence
 LFLOORCOL:  white
+KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures \
+            nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf \
+            dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk \
+            / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures \
+            nas:old_memories seen tile:mons_iron_troll_monk w:5
+
 {{
 dgn.persist.wucad_mu_died = false
 
@@ -1568,6 +1556,9 @@ kmons ("    1 = col:silver patrolling wizard name:" .. string.gsub(wizname, " ",
          .. " quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution"
          .. " | dagger ego:freezing")
 }}
+MARKER:     1 = lua:MonPropsMarker:new {description="This strange wizard has " \
+            .. "attained mastery over clouds, and his mystic gestures are as " \
+            .. "deft as they are foreboding.\n"}
 KMONS:      * = w:5 vapour / w:20 air elemental
 SUBST:      . = .:120 *
 MARKER:     ! = lua:fog_machine { \
@@ -1739,6 +1730,9 @@ kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "
               .." spells:call_imp;summon_demon;haste;hellfire;blink_away;throw_flame"
               .." hd:20 hp:150 ; demon blade . robe")
 }}
+MARKER:     1 = lua:MonPropsMarker:new {description="A mighty spellcaster, " \
+            .. "wreathed in arcane energies, and muttering the most profane incantations " \
+            .. "you might ever have heard.\n"}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      i = rod of demonology / ring of fire / ring of protection from fire /\
             amulet of conservation / scroll of torment / scroll of summoning /\

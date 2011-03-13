@@ -16,13 +16,7 @@
 
 static const std::string _get_title_image()
 {
-    std::vector<std::string> files;
-    for (int i = 0; i < 100; ++i)
-    {
-        std::string f = make_stringf("title%02d.png", i);
-        if (datafile_path(f, false) != "")
-            files.push_back(f);
-    }
+    std::vector<std::string> files = get_title_files();
     return files[random2(files.size())];
 }
 

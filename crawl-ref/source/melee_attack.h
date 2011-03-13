@@ -39,7 +39,8 @@ public:
 
     item_def  *weapon;
     int       damage_brand;  // Can be special even if unarmed (transforms)
-    int       wpn_skill, hands;
+    skill_type wpn_skill;
+    int       hands;
     bool      hand_half_bonus;
 
     bool      skip_chaos_message;
@@ -114,8 +115,8 @@ private:
     std::string atk_name(description_level_type desc) const;
     std::string def_name(description_level_type desc) const;
     std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
-                         unsigned long ignore_flags = ISFLAG_KNOW_CURSE
-                                                    | ISFLAG_KNOW_PLUSES) const;
+                         iflags_t ignore_flags = ISFLAG_KNOW_CURSE
+                                               | ISFLAG_KNOW_PLUSES) const;
 
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();
@@ -205,7 +206,7 @@ private:
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects(bool mondied);
     void player_sustain_passive_damage();
-    int  player_staff_damage(int skill);
+    int  player_staff_damage(skill_type skill);
     void player_apply_staff_damage();
     bool player_check_monster_died();
     void player_calc_hit_damage();

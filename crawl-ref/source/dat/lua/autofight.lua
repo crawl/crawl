@@ -34,7 +34,7 @@ end
 local function reaching(dx, dy)
   local wp = items.equipped_at("weapon")
   if wp and wp.ego_type == "reaching" then
-    return dx*dx + dy*dy <= 5
+    return dx*dx + dy*dy <= 8
   else
     return nil
   end
@@ -98,6 +98,17 @@ function hit_closest()
   local x, y = find_next_monster()
   if x == 0 and y == 0 then
     crawl.mpr("No unsafe monster in view!")
+  else
+    move_towards(x, y)
+  end
+end
+
+function hit_adjacent()
+  local x, y = find_next_monster()
+  if x == 0 and y == 0 then
+    crawl.mpr("No unsafe monster in view!")
+  elseif x*x + y*y > 2 and not reaching(x, y) then
+    crawl.mpr("That monster is too far!")
   else
     move_towards(x, y)
   end

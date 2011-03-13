@@ -72,9 +72,7 @@
 #include <SDL/SDL_syswm.h>
 #endif
 
-#ifdef ASSERTS
 static std::string _assert_msg;
-#endif
 
 static void _dump_compilation_info(FILE* file)
 {
@@ -586,10 +584,8 @@ void do_crash_dump()
 
     set_msg_dump_file(file);
 
-#ifdef ASSERTS
     if (!_assert_msg.empty())
         fprintf(file, "%s\n\n", _assert_msg.c_str());
-#endif
 
     _dump_ver_stuff(file);
 
@@ -669,9 +665,7 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
-#ifdef ASSERTS
     mark_milestone("crash", _assert_msg, false, t);
-#endif
 
     if (file != stderr)
         fclose(file);
@@ -695,8 +689,10 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
         MessageBox(SysInfo.window, mesg, assert ? "Assertion failed!" : "Error",
                    MB_OK|MB_ICONERROR);
     }
-    else
-        fprintf(stderr, "%s", mesg);
+    // Print the message to STDERR in addition to the above message box,
+    // so it's in the message history if we call Crawl from a shell.
+    fprintf(stderr, "%s", mesg);
+
     int* p = NULL;
     *p = 0;
     abort();

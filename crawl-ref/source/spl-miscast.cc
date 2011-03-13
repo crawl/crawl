@@ -17,7 +17,6 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
-#include "it_use2.h"
 #include "kills.h"
 #include "libutil.h"
 #include "misc.h"
@@ -28,6 +27,7 @@
 #include "mutation.h"
 #include "player.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "state.h"
@@ -958,7 +958,8 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
-            if (target->atype() == ACT_PLAYER && !liquefied(you.pos()) && !you.airborne() && !you.clinging)
+            if (target->atype() == ACT_PLAYER && !liquefied(you.pos())
+                && you.ground_level())
             {
                 you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
                 levitate_player(20);
@@ -974,7 +975,8 @@ void MiscastEffect::_enchantment(int severity)
                 // There's no levitation enchantment for monsters, and,
                 // anyway, it's not nearly as inconvenient for monsters as
                 // for the player, so backlight them instead.
-                target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20, kc));
+                target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20,
+                                                          guilty));
             }
             break;
         case 1:
@@ -1433,8 +1435,7 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(2))
         {
         case 0:
-            mpr("You feel slightly disoriented.");
-            forget_map(10 + random2(10));
+            mpr("You feel a little dazed.");
             break;
         case 1:
             potion_effect(POT_CONFUSION, 10);
@@ -1456,8 +1457,12 @@ void MiscastEffect::_divination_you(int severity)
                 mpr("You have a terrible headache.");
             break;
         case 1:
-            mpr("You feel lost.");
-            forget_map(40 + random2(40));
+            mpr("You lose your focus.");
+            if (you.magic_points > 0)
+            {
+                dec_mp(3 + random2(10));
+                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+            }
             break;
         }
 
@@ -1465,17 +1470,17 @@ void MiscastEffect::_divination_you(int severity)
         break;
 
     case 3:         // nasty
-        switch (random2(3))
+        switch (random2(2))
         {
         case 0:
-            if (!forget_spell())
-                mpr("You get a splitting headache.");
+            mpr("You lose concentration completely!");
+            if (you.magic_points > 0)
+            {
+                dec_mp(5 + random2(20));
+                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+            }
             break;
         case 1:
-            mpr("You feel completely lost.");
-            forget_map(100);
-            break;
-        case 2:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life.");
             else if (_lose_stat(STAT_INT, 3 + random2(3)))
@@ -1666,7 +1671,7 @@ void MiscastEffect::_necromancy(int severity)
                     you.rotting++;
                 else
                     target_as_monster()->add_ench(mon_enchant(ENCH_ROT, 1,
-                                                              kc));
+                                                              guilty));
             }
             else if (you.species == SP_MUMMY)
             {
@@ -2119,7 +2124,8 @@ void MiscastEffect::_fire(int severity)
             {
                 monster* mon_target = target_as_monster();
                 mon_target->add_ench(mon_enchant(ENCH_STICKY_FLAME,
-                    std::min(4, 1 + random2(mon_target->hit_dice) / 2), kc));
+                    std::min(4, 1 + random2(mon_target->hit_dice) / 2),
+                    guilty));
             }
             break;
         }
@@ -2277,8 +2283,7 @@ void MiscastEffect::_ice(int severity)
 
 static bool _on_floor(actor* target)
 {
-    return (!(target->airborne() || target->is_wall_clinging())
-            && grd(target->pos()) == DNGN_FLOOR);
+    return (target->ground_level() && grd(target->pos()) == DNGN_FLOOR);
 }
 
 void MiscastEffect::_earth(int severity)

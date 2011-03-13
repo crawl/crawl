@@ -34,6 +34,8 @@ default-depth: D, Vault, Elf, Crypt
 #       In general, we don't want more than one serial vault on a level. Use
 #       the luniq_serial in the serial vault's header map for this.
 #
+#       Elaborate serial vaults should go into their. des files.
+#
 ############################################################################
 
 # Glass vaults
@@ -44,7 +46,7 @@ default-depth: D, Vault, Elf, Crypt
 NAME:   serial_glass
 TAGS:   allow_dup extra luniq_serial
 DEPTH:  D, Elf, Vault, Crypt
-CHANCE: 3%
+CHANCE: 1%
 {{
   local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
   local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
@@ -986,7 +988,7 @@ ENDMAP
 
 NAME:   minmay_holes
 TAGS:   extra luniq_mini
-DEPTH:  D, Lair
+DEPTH:  D:5-26, Lair:1-7
 KFEAT:  ^ = known shaft trap
 SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
 WEIGHT: 15
@@ -1367,8 +1369,7 @@ DEPTH: D:2-12
 ITEM:  scroll of immolation / potion of degeneration / potion of decay / \
        potion of strong poison / potion of poison
 : else
-ITEM:  scroll of paper / scroll of random uselessness / \
-       potion of degeneration / potion of poison
+ITEM:  scroll of random uselessness / potion of degeneration / potion of poison
 : end
 MAP
 xxxx
@@ -1879,8 +1880,9 @@ ENDMAP
 #
 #######################################################################
 
-NAME: minivault_1
-TAGS: allow_dup extra luniq_mini abyss ruin_abyss
+NAME:  minivault_1
+TAGS:  allow_dup extra luniq_mini abyss ruin_abyss
+DEPTH: D:4-
 MAP
 ............
 ..xxxx=xxx..
@@ -1930,8 +1932,11 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_10
-TAGS: mini_float extra luniq_mini
+# Modified for DCSS 0.8, as 16 good items on D:1 is too good. -dpeg
+NAME:  minivault_10
+DEPTH: D:6-26
+SUBST: * = %:30 * |:1
+TAGS:  mini_float extra luniq_mini
 MAP
 xxxx  xxxx
 x**x  x**x
@@ -2018,8 +2023,9 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_22
-TAGS: allow_dup extra luniq_mini abyss ruin_abyss
+NAME:  minivault_22
+TAGS:  allow_dup extra luniq_mini abyss ruin_abyss
+DEPTH: D:6-26
 SUBST: $ : $ *:5
 MAP
 ............

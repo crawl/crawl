@@ -31,7 +31,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "macro.h"
 #include "mgen_data.h"
 #include "message.h"
@@ -43,6 +42,7 @@
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
@@ -259,7 +259,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
         if (!gloved_butcher)
         {
             mpr("You don't carry any weapon you could use for butchering.");
-            if (Hints.hints_left)
+            if (crawl_state.game_is_hints())
             {
                 mpr("You should pick up the first knife, dagger, sword or axe "
                     "you find so you can use it to butcher corpses.",
@@ -284,7 +284,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
     {
         if (you.has_claws() || form_can_butcher_barehanded())
         {
-            butcher_tool = -1;
+            butcher_tool = SLOT_BARE_HANDS;
             return (true);
         }
         else
@@ -346,7 +346,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     if (wpn_switch)
     {
         std::string tool;
-        if (butchering_tool == -1)
+        if (butchering_tool == SLOT_BARE_HANDS)
         {
             tool = "unarmed";
         }
@@ -372,6 +372,13 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
     ASSERT(corpse_id != -1);
 
     const bool rotten = food_is_rotten(mitm[corpse_id]);
+
+    if (is_forbidden_food(mitm[corpse_id])
+        && !yesno("Desecrating this corpse would be a sin. Continue anyway?",
+                  false, 'n'))
+    {
+        return false;
+    }
 
     // Start work on the first corpse we butcher.
     if (first_corpse)
@@ -483,6 +490,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
+        learned_something_new(HINT_LEVITATING);
         return (false);
     }
 
@@ -555,7 +563,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     bool wpn_switch     = false;
     bool removed_gloves = false;
-    int butcher_tool    = -1;
+    int butcher_tool    = SLOT_BARE_HANDS;
 
     if (!can_butcher)
     {
@@ -564,7 +572,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             !gloved_butcher)
             return (false);
 
-        if (butcher_tool == -1 && gloved_butcher)
+        if (butcher_tool == SLOT_BARE_HANDS && gloved_butcher)
             removed_gloves = true;
         else if (you.equip[EQ_WEAPON] != butcher_tool)
             wpn_switch = true;
@@ -625,7 +633,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             // Shall we butcher this corpse?
             do
             {
-                mprf(MSGCH_PROMPT, "%s %s? (yc/n/a/q/?)",
+                mprf(MSGCH_PROMPT, "%s %s? [(y)es/(c)hop/(n)o/(a)ll/(q)uit/?]",
                      bottle_blood ? "Bottle" : "Butcher",
                      corpse_name.c_str());
                 repeat_prompt = false;
@@ -709,29 +717,22 @@ bool prompt_eat_inventory_item(int slot)
         return (false);
     }
 
-    int which_inventory_slot;
+    int which_inventory_slot = slot;
 
-    if (you.species != SP_VAMPIRE)
+    if (slot == -1)
     {
-        which_inventory_slot = (slot != -1) ? slot :
-                prompt_invent_item("Eat which item?",
+        which_inventory_slot =
+                prompt_invent_item(you.species == SP_VAMPIRE ? "Drain what?"
+                                                             : "Eat which item?",
                                    MT_INVLIST,
-                                   OBJ_FOOD,
+                                   you.species == SP_VAMPIRE ? (int)OSEL_VAMP_EAT
+                                                             : OBJ_FOOD,
                                    true, true, true, 0, -1, NULL,
                                    OPER_EAT);
-    }
-    else
-    {
-        which_inventory_slot = (slot != -1) ? slot :
-                prompt_invent_item("Drain what?",
-                                   MT_INVLIST,
-                                   OSEL_VAMP_EAT,
-                                   true, true, true, 0, -1, NULL,
-                                   OPER_EAT);
-    }
 
-    if (prompt_failed(which_inventory_slot))
-        return (false);
+        if (prompt_failed(which_inventory_slot))
+            return (false);
+    }
 
     // This conditional can later be merged into food::can_ingest() when
     // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
@@ -753,11 +754,8 @@ bool prompt_eat_inventory_item(int slot)
         }
     }
 
-    if (!can_ingest(you.inv[which_inventory_slot].base_type,
-                     you.inv[which_inventory_slot].sub_type, false))
-    {
+    if (!can_ingest(you.inv[which_inventory_slot], false))
         return (false);
-    }
 
     eat_inventory_item(which_inventory_slot);
 
@@ -767,23 +765,36 @@ bool prompt_eat_inventory_item(int slot)
     return (true);
 }
 
-// [ds] Returns true if something was eaten.
-bool eat_food(int slot)
+static bool _eat_check(bool check_hunger = true, bool silent = false)
 {
     if (you.is_undead == US_UNDEAD)
     {
-        mpr("You can't eat.");
-        crawl_state.zero_turns_taken();
+        if (!silent)
+        {
+            mpr("You can't eat.");
+            crawl_state.zero_turns_taken();
+        }
         return (false);
     }
 
-    if (you.hunger >= 11000)
+    if (check_hunger && you.hunger >= 11000)
     {
-        mprf("You're too full to %s anything.",
-             you.species == SP_VAMPIRE ? "drain" : "eat");
-        crawl_state.zero_turns_taken();
+        if (!silent)
+        {
+            mprf("You're too full to %s anything.",
+                 you.species == SP_VAMPIRE ? "drain" : "eat");
+            crawl_state.zero_turns_taken();
+        }
         return (false);
     }
+    return (true);
+}
+
+// [ds] Returns true if something was eaten.
+bool eat_food(int slot)
+{
+    if (!_eat_check())
+        return (false);
 
     int result;
     // Skip the prompts if we already know what we're eating.
@@ -821,7 +832,7 @@ static bool _player_has_enough_food()
         if (!item.defined())
             continue;
 
-        if (!can_ingest(item.base_type, item.sub_type, true, true, false))
+        if (!can_ingest(item, true, true, false))
             continue;
 
         if (food_is_rotten(item) && !player_mutation_level(MUT_SAPROVOROUS))
@@ -1165,6 +1176,9 @@ public:
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten.
 int eat_from_floor(bool skip_chunks)
 {
+    if (!_eat_check())
+        return (false);
+
     if (you.flight_mode() == FL_LEVITATE)
         return (0);
 
@@ -1211,7 +1225,7 @@ int eat_from_floor(bool skip_chunks)
             unusable_corpse++;
             continue;
         }
-        else if (!can_ingest(si->base_type, si->sub_type, true))
+        else if (!can_ingest(*si, true))
         {
             if (!inedible_food)
             {
@@ -1261,7 +1275,7 @@ int eat_from_floor(bool skip_chunks)
                 if (!check_warning_inscriptions(*item, OPER_EAT))
                     break;
 
-                if (can_ingest(item->base_type, item->sub_type, false))
+                if (can_ingest(*item, false))
                 {
                     int ilink = item_on_floor(*item, you.pos());
 
@@ -1305,7 +1319,7 @@ int eat_from_floor(bool skip_chunks)
             {
                 ASSERT(wonteat.defined());
                 // Use the normal cannot ingest message.
-                if (can_ingest(wonteat.base_type, wonteat.sub_type, false))
+                if (can_ingest(wonteat, false))
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
                          wonteat.name(DESC_PLAIN).c_str());
@@ -1325,6 +1339,9 @@ int eat_from_floor(bool skip_chunks)
 
 bool eat_from_inventory()
 {
+    if (!_eat_check())
+        return (false);
+
     // Corpses should have been handled before.
     if (you.species == SP_VAMPIRE)
         return 0;
@@ -1367,7 +1384,7 @@ bool eat_from_inventory()
             unusable_corpse++;
             continue;
         }
-        else if (!can_ingest(item->base_type, item->sub_type, true))
+        else if (!can_ingest(*item, true))
         {
             if (!inedible_food)
             {
@@ -1413,7 +1430,7 @@ bool eat_from_inventory()
                 return (false);
             case 'e':
             case 'y':
-                if (can_ingest(item->base_type, item->sub_type, false))
+                if (can_ingest(*item, false))
                 {
                     eat_inventory_item(item->link);
                     return (true);
@@ -1445,7 +1462,7 @@ bool eat_from_inventory()
             {
                 ASSERT(wonteat->defined());
                 // Use the normal cannot ingest message.
-                if (can_ingest(wonteat->base_type, wonteat->sub_type, false))
+                if (can_ingest(*wonteat, false))
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
                          wonteat->name(DESC_PLAIN).c_str());
@@ -1587,7 +1604,7 @@ int prompt_eat_chunks()
                 return (-2);
             case 'e':
             case 'y':
-                if (can_ingest(item->base_type, item->sub_type, false))
+                if (can_ingest(*item, false))
                 {
                     if (autoeat)
                     {
@@ -1784,8 +1801,11 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         else
         {
             mpr("There is something wrong with this meat.");
-            if (you.sicken(50 + random2(100)))
+            if (you.sicken(50 + random2(100), false))
+            {
+                learned_something_new(HINT_CONTAMINATED_CHUNK);
                 xom_is_stimulated(random2(100));
+            }
         }
         break;
 
@@ -2428,7 +2448,7 @@ bool is_inedible(const item_def &item)
     }
 
     if (item.base_type == OBJ_FOOD
-        && !can_ingest(item.base_type, item.sub_type, true, true, false))
+        && !can_ingest(item, true, true, false))
     {
         return (true);
     }
@@ -2534,25 +2554,21 @@ bool check_amu_the_gourmand(bool reqid)
     return (false);
 }
 
+bool can_ingest(const item_def &food, bool suppress_msg, bool reqid,
+                bool check_hunger)
+{
+    return can_ingest(food.base_type, food.sub_type, suppress_msg, reqid,
+                      check_hunger, food_is_rotten(food));
+}
+
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
-                bool reqid, bool check_hunger)
+                bool reqid, bool check_hunger, bool rotten)
 {
     bool survey_says = false;
 
     // [ds] These redundant checks are now necessary - Lua might be calling us.
-    if (you.is_undead == US_UNDEAD)
-    {
-        if (!suppress_msg)
-            mpr("You can't eat.");
+    if (!_eat_check(check_hunger, suppress_msg))
         return (false);
-    }
-
-    if (check_hunger && you.hunger >= 11000)
-    {
-        if (!suppress_msg)
-            mpr("You're too full to eat anything.");
-        return (false);
-    }
 
     if (you.species == SP_VAMPIRE)
     {
@@ -2614,6 +2630,9 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             }
             else if (kindof_thing == FOOD_CHUNK)
             {
+                if (rotten && !_player_can_eat_rotten_meat(true))
+                    return (false);
+
                 if (ur_chunkslover)
                     return (true);
 
@@ -2622,6 +2641,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 
                 if (!suppress_msg)
                     mpr("You aren't quite hungry enough to eat that!");
+
                 return (false);
             }
         }

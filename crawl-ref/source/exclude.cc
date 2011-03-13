@@ -8,6 +8,7 @@
 #include "exclude.h"
 
 #include <algorithm>
+#include <sstream>
 
 #include "cloud.h"
 #include "coord.h"
@@ -61,13 +62,24 @@ bool need_auto_exclude(const monster* mon, bool sleepy)
     return (false);
 }
 
+// Nightstalker reduces LOS, so reducing the maximum exclusion radius
+// only makes sense. This is only possible because it's a permanent
+// mutation; the lantern of Shadows should not have this effect.
+int _get_full_exclusion_radius()
+{
+    return (LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER));
+}
+
 // If the monster is in the auto_exclude list, automatically set an
 // exclusion.
 void set_auto_exclude(const monster* mon)
 {
+    if (!player_in_mappable_area())
+        return;
+
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
-        int rad = LOS_RADIUS;
+        int rad = _get_full_exclusion_radius();
         if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
             rad = 2;
         set_exclude(mon->pos(), rad, true);
@@ -357,6 +369,25 @@ bool is_exclude_root(const coord_def &p)
     return (curr_excludes.get_exclude_root(p));
 }
 
+int get_exclusion_radius(const coord_def &p)
+{
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
+    {
+        if (!exc->radius)
+            return 1;
+        else
+            return exc->radius;
+    }
+    return 0;
+}
+
+std::string get_exclusion_desc(const coord_def &p)
+{
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
+        return exc->desc;
+    return "";
+}
+
 #ifdef USE_TILE
 // update Gmap for squares surrounding exclude centre
 static void _tile_exclude_gmap_update(const coord_def &p)
@@ -430,13 +461,13 @@ void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (exc->radius == LOS_RADIUS)
+        if (exc->radius > 0)
             set_exclude(p, 0);
         else
             del_exclude(p);
     }
     else
-        set_exclude(p, LOS_RADIUS);
+        set_exclude(p, _get_full_exclusion_radius());
 }
 
 // Remove a possible exclude.
@@ -545,6 +576,11 @@ std::string exclude_set::get_exclusion_desc()
          it != exclude_roots.end(); ++it)
     {
         travel_exclude &ex = it->second;
+
+        // Don't count cloud exclusions.
+        if (strstr(ex.desc.c_str(), "cloud"))
+            continue;
+
         if (ex.desc != "")
             desc.push_back(ex.desc);
         else

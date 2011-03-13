@@ -47,8 +47,7 @@ function sewer_portal(e)
         dstorigin = "in the sewers",
         overview = "glowing drain",
         turns = timeout_turns,
-        floor = "stone_arch",
-        feat_tile = "dngn_portal_sewer_rusted",
+        floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightgreen")
@@ -68,8 +67,8 @@ function sewer_setup(e)
   e.lrocktile("wall_slime")
   e.lfloortile("floor_slime")
 -- Random monster list and milestone.
-  e.set_random_mon_list("giant bat w:20 / giant newt w:20 / small snake / \
-                         ooze / worm / snake / giant mosquito")
+  e.set_random_mon_list("megabat w:20 / giant newt w:20 / small snake / \
+                         ooze / worm / snake")
 end
 
 function sewer_milestone(e)
@@ -517,7 +516,7 @@ SUBST:    2 = 23
 KMONS:    2 = crocodile
 KMONS:    3 = Purgy, crocodile
 ITEM:     potion of berserk rage / potion of speed w:5
-MONS:     giant bat / giant mosquito w:2
+MONS:     megabat
 epilogue{{
 sewer_milestone(_G)
 }}
@@ -564,8 +563,8 @@ KMONS:  4 = Purgy, giant slug
 ITEM:   potion of levitation / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration /\
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of paper / scroll of random uselessness / meat ration / \
-        royal jelly / potion of blood / nothing w:140
+        scroll of random uselessness / meat ration / royal jelly / \
+        potion of blood / nothing w:140
 : sewer_setup(_G)
 epilogue{{
 sewer_milestone(_G)
@@ -707,21 +706,21 @@ NSUBST:   h = 3:h / *:'
 #       some random monsters I: flying or big fish
 NSUBST:   w = 4:" / *:w
 KFEAT:    " = w
-KMONS:    " = big fish w:2 / giant bat / giant mosquito w:2 / nothing
+KMONS:    " = big fish w:2 / megabat / nothing
 COLOUR:   " = green
 #       some random monsters II: standard Sewers set
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
-KMONS:    ? = giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
-          snake w:1 / giant mosquito w:2
+KMONS:    ? = megabat / giant newt / small snake / ooze w:2 / worm w:2 / \
+          snake w:1
 COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
-MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
-          snake w:1 / giant mosquito w:2
+MONS:     megabat / giant newt / small snake / ooze w:2 / worm w:2 / \
+          snake w:1
 SHUFFLE:  23
-MONS:     giant bat / giant mosquito w:2 / nothing w:2
+MONS:     megabat / nothing w:2
 MONS:     patrolling jackal
 MONS:     worm / nothing w:3
 MONS:     ooze / nothing w:2
@@ -740,7 +739,7 @@ ITEM:     scroll of identify / scroll of recharging / potion of invisibility / \
 ITEM:     scroll of identify / scroll of recharging / \
           potion of resistance / potion of might / potion of berserk rage / \
           buckler / nothing
-KITEM:    ' = scroll of paper w:50 / scroll of random uselessness w:30 / \
+KITEM:    ' = scroll of random uselessness w:30 / \
               scroll of identify / scroll of teleportation / \
               potion of confusion w:50 / potion of paralysis w:50 / \
               potion of mutation / potion of levitation / \
@@ -795,12 +794,6 @@ COLOUR: G = green
 COLOUR: s = cyan
 KITEM:  M = potion of levitation q:4
 KITEM:  N = scroll of teleportation q:2
-MARKER: H = lua:MonPropsMarker:new { description="A young woman with a fish tail " .. \
-                       "in place of legs. She looks quite sick, but still capable" .. \
-                       " of bespelling her audience.\n"}
-MARKER: G = lua:MonPropsMarker:new { description="A young woman with a fish tail " .. \
-                       "in place of legs. She looks quite sick, but still capable" .. \
-                       " of bespelling her audience.\n"}
 : sewer_setup(_G)
 epilogue{{
 sewer_milestone(_G)
@@ -1006,11 +999,11 @@ ENDMAP
 
 ############################################################################
 # Cracked pipes. by co
-# Most of the time the player will move between the pipes through cracks
+# Most of the time the player will move between the pipes through cracks,
 # these will be filled with rats. Only two of the paths will be generated
 # each map, but all three pipes will be accessable on all instances.
-# One map in three, will end in harder rat nest containing a dangerous
-# orange rat. The rat nest also contains cheese and more loot.
+# One map in three, will end in a harder rat nest containing a dangerous
+# orange rat. The harder rat nest also contains cheese and more loot.
 #
 NAME:    sewer_co_cracked_pipes
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
@@ -1021,14 +1014,7 @@ MONS:    giant newt / small snake w:5 / \
          snake w:2 / nothing w:4
 KMONS:   2 = snake / big fish
 KFEAT:   2 = W
-COLOUR:  2 = green
-#      loot
-SUBST:   e = !!!!!?????%
-KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
-         potion of magic / potion of speed w:5 / potion of brilliance w:5
-KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
-         scroll of blinking w:3 / scroll of magic mapping w:3 /\
-         scroll of recharging w:2 / scroll of fog w:3
+COLOUR:  2 = lightgreen
 #      generate first path.
 SHUFFLE: BC/DE/FG
 NSUBST:  B = 1:. / *:c
@@ -1043,15 +1029,17 @@ SUBST:   LMKJ = c
 SUBST:   . = .W
 SUBST:   V = .WWWW
 SUBST:   X = xx"
-#      Sometimes there's a ratnest in the end.
+#      Sometimes there's a rat nest in the end.
 : if crawl.one_chance_in(3) then
 NSUBST:  Y = 2:. /*:c
+SUBST:   d = e
 KMONS:   Z = nothing w:60 / rat w:2 / grey rat / green rat w:7
 KITEM:   Z = cheese w:2 / nothing
 KMONS:   R = orange rat
 KFEAT:   ' = .
 : else
 SUBST:   Y = c
+SUBST:   d = x
 KFEAT:   Z = x
 KFEAT:   R = x
 KFEAT:   ' = x
@@ -1060,6 +1048,13 @@ KFEAT:   ' = x
 KPROP:   " = no_tele_into
 KMONS:   " = nothing w:50 / rat / grey rat / green rat w:5
 KPROP:   w = no_tele_into
+#      loot
+SUBST:   e = !!!!!?????%
+KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
+         potion of magic / potion of speed w:5 / potion of brilliance w:5
+KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
+         scroll of blinking w:3 / scroll of magic mapping w:3 /\
+         scroll of recharging w:2 / scroll of fog w:3
 : sewer_setup(_G)
 epilogue{{
 sewer_milestone(_G)
@@ -1067,7 +1062,7 @@ sewer_milestone(_G)
 MAP
                         xxxxxxxxxxxxx
                         xxxxx''xxxxxx
-                        xxx'eeeee'xxx
+                        xxx'ddddd'xxx
                         xxxZZZZZZZ'xx
                         xx'ZZZRZZZZ'x
                         x'ZZZZZZZZ'xx
@@ -1110,18 +1105,16 @@ MAP
 ENDMAP
 
 ############################################################################
-# Scannered pipes. by co
+# Scattered pipes. by co
 # The loot is often at the end of the pipes, with guarding monsters.
 #
 NAME:    sewer_co_scattered_pipes
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 KMONS:   P = plant / nothing
-KFEAT:   P = W / .
-COLOUR:  P = green
 #      pipe monsters.
 KFEAT:   1 = W
-COLOUR:  1 = green
+COLOUR:  1 = lightgreen
 KMONS:   1 = giant newt / small snake w:5 /  generate_awake small snake w:5 / \
          snake w:7 / big fish w:5
 SUBST:   1 = 1111W
@@ -1131,7 +1124,7 @@ SUBST:   2 = 222222W.
 #      loot
 SUBST:   e = !!!?????%WWW
 KFEAT:   !?% = W
-COLOUR:  !?% = green
+COLOUR:  !?% = lightgreen
 KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
          potion of magic / potion of speed w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
@@ -1190,6 +1183,4 @@ xxxxxwwwwwwwwwwwwwwwwwwwwwwxxxxxX..PB.2.Xxxx
 xxxxxYwwwwwwwwwwwwwwwwwwwwYxxxxxX.2..e..Xxxx
 xxxxxxYwwwwwwYYYYwwwYYYwwYxxxxxxxX.....Xxxxx
 xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

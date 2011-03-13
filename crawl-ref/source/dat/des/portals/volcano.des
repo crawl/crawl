@@ -139,10 +139,10 @@ function volcano_setup (e, metal, subvault)
     end
     if subvault == nil then
         e.set_random_mon_list([[hog / fire elemental / fire vortex /
-                                giant ant / bumblebee / fire drake / lindwurm /
+                                worker ant / bumblebee / fire drake / lindwurm /
                                 imp / redback / manticore / hell hound /
-                                hell hog / ghoul / flayed ghost /
-                                pulsating lump / toenail golem / efreet /
+                                hell hog / flayed ghost / pulsating lump /
+                                toenail golem / efreet /
                                 vampire]])
     end
 end
@@ -153,8 +153,7 @@ end
 
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
 -- weighted and balanced and have been tested extensively.
-
-local function in_radius_12 (x, y)
+function callback.volcano_in_radius_12(x, y)
   return dgn.point_in_radius(dgn.point(x, y), dgn.point(you.pos()), 12)
 end
 
@@ -164,7 +163,8 @@ local large_warning = tw_machine(3, "The air gets thick with the scent of sulphu
 
 local small_warning = tw_machine(3, nil, nil, nil, "The volcano roars to life, " ..
                                  "belching forth lava!", "The air gets thick with " ..
-                                 "the scent of sulphur.", in_radius_12)
+                                 "the scent of sulphur.",
+                                 "callback.volcano_in_radius_12")
 
 function place_large_volcano(e)
     e.kfeat("V = l")
@@ -252,8 +252,7 @@ function setup_loot (e)
     e.item("any")
     e.item([[potion of decay / potion of degeneration / potion of mutation /
              scroll of immolation / scroll of curse weapon / scroll of curse armour /
-             potion of confusion / potion of paralysis / scroll of paper /
-             scroll of random uselessness]])
+             potion of confusion / potion of paralysis / scroll of random uselessness]])
 end
 
 -- #
@@ -287,7 +286,7 @@ end
 -- surrounding either a lindwurm, fire drake, or manticore.
 --
 -- Demonic "packs" usually consist high chance of imps, toenail golems
--- and pulsating lumps, lower chance of red devils, hell hounds and ghouls
+-- and pulsating lumps, lower chance of red devils and hell hounds
 -- which are then surrounding either a hell hog, a hell knight (with
 -- watered-down equipment), flayed ghost or flaming corpse.
 --
@@ -379,7 +378,7 @@ function fiery_guardians (e)
     -- We are now going to use a mixed pack.
     if crawl.one_chance_in(3) then
         -- "Lair"-esque fire-themed monster pack.
-        e.mons("hog / giant ant / redback w:1 / bumblebee w:1 / manticore")
+        e.mons("hog / worker ant / redback w:1 / bumblebee w:1 / manticore")
         e.mons("fire drake / lindwurm w:1")
         return
     end
@@ -387,7 +386,7 @@ function fiery_guardians (e)
     if crawl.one_chance_in(3) then
         -- "Demonic" fire-themed monster pack.
         e.mons("imp w:20 / pulsating lump / toenail golem / hell hound w:9 / \
-                ghoul w:9 / red devil ; trident ego:flaming")
+                / red devil ; trident ego:flaming")
         e.mons("efreet / flaming corpse / flayed ghost / hell hog / vampire / " .. hellknight)
         return
     end

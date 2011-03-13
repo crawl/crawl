@@ -947,7 +947,7 @@
 { MUT_ICEMAIL,                    0,  1, false, false,
   NULL,
 
-  {"A meltable icy envelope protects you from harm (AC +", "", ""},
+  {"A meltable icy envelope protects you from harm and freezing vapours (AC +", "", ""},
   {"An icy envelope takes form around you.", "", ""},
   {"", "", ""},
 
@@ -1022,9 +1022,9 @@
 { MUT_POWERED_BY_DEATH,           0,  3, false, false,
   "powered by death",
 
-  {"You slowly steal the life force of defeated enemies.",
-   "You steal the life force of defeated enemies.",
-   "You quickly steal the life force of defeated enemies."},
+  {"You can steal the life force of nearby defeated enemies.",
+   "You can steal the life force of defeated enemies.",
+   "You can steal the life force of all defeated enemies in sight."},
 
   {"A wave of death washes over you.",
    "The wave of death grows in power.",
@@ -1034,7 +1034,23 @@
    "Your control of surrounding life forces weakens.",
    "Your control of surrounding life forces weakens."},
 
-  "pbd"
+  "powered by death"
+},
+
+{ MUT_POWERED_BY_PAIN,            0,  3, false, false,
+  "powered by pain",
+
+  {"You sometimes regain a little magical energy from taking damage.",
+   "You sometimes regain magical energy from taking damage.",
+   "You sometimes regain a lot of magical energy from taking damage."},
+
+  {"You feel energised by your suffering.",
+   "You feel even more energised by your suffering.",
+   "You feel completely energised by your suffering."},
+
+  {"", "", ""},
+
+  "powered by pain"
 },
 
 // Jiyva only mutations
@@ -1300,9 +1316,9 @@
 { MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true,
   NULL,
 
-  {"You have a somewhat thin skeletal structure (Dex +1, Str -1, Stlth).",
-   "You have a moderately thin skeletal structure (Dex +2, Str -2, Stlth).",
-   "You have an unnaturally thin skeletal structure (Dex +3, Str -3, Stlth)."},
+  {"You have a somewhat thin skeletal structure (Dex +2, Str -1, Stlth).",
+   "You have a moderately thin skeletal structure (Dex +4, Str -2, Stlth).",
+   "You have an unnaturally thin skeletal structure (Dex +6, Str -3, Stlth)."},
 
   {"Your bones become slightly less dense.",
    "Your bones become somewhat less dense.",

@@ -6,6 +6,7 @@
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
+#include "player-stats.h"
 #include "skills2.h"
 #include "transform.h"
 
@@ -29,7 +30,7 @@ static duration_def duration_data[] =
     { DUR_BERSERK, true,
       BLUE, "Berserk", "berserking", "You are possessed by a berserker rage." },
     { DUR_BREATH_WEAPON, false,
-      YELLOW, "BWpn", "short of breath", "You are short of breath." },
+      YELLOW, "Breath", "short of breath", "You are short of breath." },
     { DUR_BRILLIANCE, false,
       0, "", "brilliant", "You are brilliant." },
     { DUR_CONF, false,
@@ -47,7 +48,7 @@ static duration_def duration_data[] =
     { DUR_DIVINE_VIGOUR, false,
       0, "", "divinely vigorous", "You are divinely vigorous." },
     { DUR_EXHAUSTED, false,
-      YELLOW, "Fatig", "exhausted", "You are exhausted." },
+      YELLOW, "Exh", "exhausted", "You are exhausted." },
     { DUR_FIRE_SHIELD, true,
       BLUE, "RoF", "immune to fire clouds", "" },
     { DUR_ICY_ARMOUR, true,
@@ -66,7 +67,7 @@ static duration_def duration_data[] =
       0, "", "paralysed", "You are paralysed." },
     { DUR_PETRIFIED, false,
       0, "", "petrified", "You are petrified." },
-    { DUR_PRAYER, false,
+    { DUR_JELLY_PRAYER, false,
       WHITE, "Pray", "praying", "You are praying." },
     { DUR_REPEL_MISSILES, true,
       BLUE, "RMsl", "repel missiles", "You are protected from missiles." },
@@ -121,6 +122,14 @@ static duration_def duration_data[] =
     { DUR_LIQUEFYING, false,
       YELLOW, "Liquid", "liquefying",
       "The ground has become liquefied beneath your feet." },
+    { DUR_HEROISM, false,
+      LIGHTBLUE, "Hero", "heroism", "You posess the skills of a mighty hero." },
+    { DUR_FINESSE, false,
+      LIGHTBLUE, "Finesse", "finesse", "Your blows are lightning fast." },
+    { DUR_LIFESAVING, true,
+      LIGHTGREY, "Prot", "protection", "You ask for being saved." },
+    { DUR_DARKNESS, true,
+      BLUE, "Dark", "darkness", "You emit darkness." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -211,6 +220,7 @@ static void _describe_sickness(status_info* inf);
 static void _describe_speed(status_info* inf);
 static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
+static void _describe_stat_zero(status_info* inf, stat_type st);
 
 void fill_status_info(int status, status_info* inf)
 {
@@ -357,7 +367,7 @@ void fill_status_info(int status, status_info* inf)
         if (handle_pbd_corpses(false) > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = "PbD";
+            inf->light_text   = "Regen+";
         }
         break;
 
@@ -401,7 +411,7 @@ void fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_CLINGING:
-        if (you.clinging)
+        if (you.is_wall_clinging())
         {
             inf->light_text   = "Cling";
             inf->short_text   = "clinging";
@@ -410,6 +420,16 @@ void fill_status_info(int status, status_info* inf)
                                            dur_expiring(DUR_TRANSFORMATION));
             _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
         }
+        break;
+
+    case STATUS_STR_ZERO:
+        _describe_stat_zero(inf, STAT_STR);
+        break;
+    case STATUS_INT_ZERO:
+        _describe_stat_zero(inf, STAT_INT);
+        break;
+    case STATUS_DEX_ZERO:
+        _describe_stat_zero(inf, STAT_DEX);
         break;
 
     default:
@@ -583,7 +603,7 @@ static void _describe_speed(status_info* inf)
         inf->long_text = "Your actions are hasted.";
         _mark_expiring(inf, dur_expiring(DUR_HASTE));
     }
-    if (liquefied(you.pos(), true) && !you.airborne() && !you.clinging)
+    if (liquefied(you.pos(), true) && you.ground_level())
     {
         inf->light_colour = BROWN;
         inf->light_text   = "SlowM";
@@ -746,4 +766,19 @@ static void _describe_transform(status_info* inf)
 
     inf->light_colour = dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
+}
+
+static const char* s0_names[NUM_STATS] = { "Collapse", "Brainless", "Clumsy", };
+
+static void _describe_stat_zero(status_info* inf, stat_type st)
+{
+    if (you.stat_zero[st])
+    {
+        inf->light_colour = you.stat(st) ? LIGHTRED : RED;
+        inf->light_text   = s0_names[st];
+        inf->short_text   = make_stringf("lost %s", stat_desc(st, SD_NAME));
+        inf->long_text    = make_stringf(you.stat(st) ?
+                "You are recovering from loss of %s." : "You have no %s!",
+                stat_desc(st, SD_NAME));
+    }
 }

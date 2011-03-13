@@ -38,6 +38,32 @@ function callback.ancient_champions_mu_skele_death(data, triggerable,
     crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
   end
 end
+
+function callback.cathedral_bats (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if data.bat_count > 10 then
+    return
+  end
+
+  local x, y = marker:pos()
+  local you_x, you_y = you.pos()
+
+  if (you_x == x and you_y == y) then return end
+  if dgn.mons_at(x, y) then return end
+
+  if (not dgn.create_monster(x, y, "generate_awake megabat / generate_awake w:2 fire bat")) then
+    return
+  end
+
+  data.bat_count = data.bat_count + 1
+
+  if you.see_cell(x, y) then
+    crawl.mpr("A bat flies out of a crevice!")
+  end
+end
 }}
 
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
@@ -528,7 +554,7 @@ KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
 MONS:    giant mite, scorpion
 MONS:    rat / porcupine, green rat / orange rat
-MONS:    giant bat
+MONS:    megabat
 SHUFFLE: ?!+
 SUBST:   c:cccvvb , b=cc.
 SUBST:   1 : 1112
@@ -685,7 +711,7 @@ NAME:   zaba_anthole
 ORIENT: float
 TAGS:   allow_dup
 DEPTH:  D:3-9, Lair
-MONS:   giant ant / nothing w:5
+MONS:   worker ant / nothing w:5
 MAP
    @
  xx+xx
@@ -705,9 +731,9 @@ TAGS:   no_rotate
 ORIENT: float
 DEPTH:  D:5-12, Elf, Vault
 SUBST:  1 = 1:70 2:60 3:25
-MONS:   giant beetle w:20 / giant cockroach w:30 / butterfly w:20
-MONS:   bumblebee / giant centipede / giant mite w:30 / giant mosquito
-MONS:   giant blowfly / scorpion / redback w:5
+MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
+MONS:   bumblebee / giant centipede / giant mite w:30
+MONS:   vampire mosquito / scorpion / redback w:5
 MAP
 cccccccc+cccccccc
 c...............c
@@ -788,7 +814,7 @@ ENDMAP
 #
 NAME:   lemuel_bear_cage
 DEPTH:  D:7-21
-MONS:   bear / black bear / grizzly bear / polar bear
+MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
 MONS:   hound / wolf / hog
@@ -813,7 +839,7 @@ ENDMAP
 NAME:    vampire
 ORIENT:  float
 DEPTH:   D:12-26, Vault, Crypt
-MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 giant bat
+MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 megabat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item
@@ -939,10 +965,10 @@ KFEAT: F = w:150 w / w:70 W / ~ / . / x
 KFEAT: G = x / . / w / W
 KFEAT: H = . / W
 KMONS: D = Plant / w:200 nothing
-KMONS: E = w:2 slime creature / swamp worm / giant blowfly /\
-           w:2 giant mosquito / w:1 electric eel / w:1000 nothing
-KMONS: F = w:2 slime creature / swamp worm / giant blowfly /\
-           w:2 giant mosquito / w:2 electric eel / w:1000 nothing
+KMONS: E = w:2 slime creature / swamp worm /\
+           w:2 vampire mosquito / w:1 electric eel / w:1000 nothing
+KMONS: F = w:2 slime creature / swamp worm /\
+           w:2 vampire mosquito / w:2 electric eel / w:1000 nothing
 KMONS: H = swamp drake / swamp dragon / hydra / w:20 nothing
 KITEM: H = any good_item / any potion / w:20 nothing / gold
 MAP
@@ -1452,10 +1478,16 @@ ENDMAP
 # Ancient Champions (by Mu., lua by due)
 #
 NAME:   ancient_champions_mu
-DEPTH:  D:15-26, Vault, Crypt
+DEPTH:  D:15-26, Vault:1-7, Crypt:1-4
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen
 KFEAT:  ABCDEFG = metal_wall
+ ## This is for Gretell's benefit, not actually used.
+ KMONS: Z = col:gold skeletal warrior name:ancient_champion name_replace \
+ name_descriptor spells:iron_shot;.;haste;pain;.;. \
+ spells:bolt_of_draining;.;haste;throw_frost;.;. \
+ spells:venom_bolt;.;haste;haunt;.;. \
+ spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells
 KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \
         name_descriptor spells:iron_shot;.;haste;pain;.;. actual_spells \
         ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
@@ -1476,20 +1508,13 @@ KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
         ego:cold_resistance . great sword ego:pain | great sword ego:draining \
         | great sword ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain \
         | triple sword ego:vorpal | executioner's axe ego:vorpal
-: local ac_desc = "The unfathomably ancient " ..
-:    "skeleton of a humanoid creature. It has hundreds of golden sigils " ..
-:    "etched onto its bones, and pulses with terrible, unholy power.\n"
 SHUFFLE: 123
-KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_rtele_into
+KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_tele_into
 KITEM:  w = acquire weapon
 KITEM:  r = acquire armour
 NSUBST: $ = 1:w / 1:r / 4:| / *:$
 COLOUR: " = yellow
 KFEAT:  " = .
-MARKER: 1 = lua:MonPropsMarker:new { description=ac_desc }
-MARKER: 2 = lua:MonPropsMarker:new { description=ac_desc }
-MARKER: 3 = lua:MonPropsMarker:new { description=ac_desc }
-MARKER: 4 = lua:MonPropsMarker:new { description=ac_desc }
 {{
 
 -- First off, slave marker magic.
@@ -1808,4 +1833,54 @@ MAP
 ............1..1............
 ............................
 .............@@.............
+ENDMAP
+
+NAME: megacathedral
+ORIENT: float
+DEPTH: D:8-14
+MONS: wraith / freezing wraith w:2
+MONS: eidolon
+TAGS: no_rotate no_vmirror no_hmirror
+NSUBST: C = 5:C / *:.
+SUBST: X = C
+SUBST: D = V..
+MARKER: = = lua:restrict_door()
+{{
+local cathedral_bats = TriggerableFunction:new {
+    func = "callback.cathedral_bats",
+    repeated = true,
+    data = {bat_count=0},
+}
+
+cathedral_bats:add_triggerer(DgnTriggerer:new {
+    type="turn",
+    delay_min=500,
+    delay_max=800
+})
+
+lua_marker('C', cathedral_bats)
+lua_marker('V', cathedral_bats)
+}}
+MAP
+             cccc.cccc
+          ccccccG.Gcccccc
+         ccc...cc+cc1..ccc
+      ccccc..C..c.c..D..ccccc
+     ccc.ccc...cc.cc...ccc.ccc
+     cc1..ccc+cc...cc=ccc...cc
+  ccccc.D.ccc.........ccc.C.ccccc
+ cccccc...=c..ccc+ccc..c+...cccccc
+ cc...cc.cc..ccc...ccc..cc.cc..1cc
+cc.....ccc..cc.......cc..ccc.....cc
+cc..C...+....+...X...+....=...D..cc
+cc.....ccc..cc.......cc..ccc.....cc
+ cc...cc.cc..ccc...ccc..cc.cc...cc
+ cccccc...=c..ccc+ccc..c+...cccccc
+  ccccc.D.ccc.........ccc.C.ccccc
+     cc1..ccc=ccG.Gcc+ccc...cc
+     ccc.ccc...cc=cc...ccc.ccc
+      ccccc..D..c.c..C..ccccc
+         ccc..1cc2cc...ccc
+          cccccc|||cccccc
+             ccccccccc
 ENDMAP

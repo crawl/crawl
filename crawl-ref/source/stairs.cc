@@ -2,6 +2,8 @@
 
 #include "stairs.h"
 
+#include <sstream>
+
 #include "abyss.h"
 #include "areas.h"
 #include "branch.h"
@@ -75,8 +77,9 @@ bool check_annotation_exclusion_warning()
         might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
     }
-    else if (is_exclude_root(you.pos()) &&
-             feat_is_travelable_stair(grd(you.pos())))
+    else if (is_exclude_root(you.pos())
+             && feat_is_travelable_stair(grd(you.pos()))
+             && !strstr(get_exclusion_desc(you.pos()).c_str(), "cloud"))
     {
         mpr("This staircase is marked as excluded!", MSGCH_WARN);
         might_be_dangerous = true;
@@ -641,9 +644,9 @@ void up_stairs(dungeon_feature_type force_stair,
         bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
                             false, 'n') || !_check_carrying_orb());
 
-        if (!stay && Hints.hints_left)
+        if (!stay && crawl_state.game_is_hints())
         {
-            if (!yesno("Are you *sure*?  Doing so will end the game!", false,
+            if (!yesno("Are you *sure*? Doing so will end the game!", false,
                        'n'))
             {
                 stay = true;
@@ -870,6 +873,13 @@ int runes_in_pack(std::vector<int> &runes)
     return num_runes;
 }
 
+static bool _is_portal_exit(dungeon_feature_type stair)
+{
+    return stair == DNGN_EXIT_HELL
+        || stair == DNGN_EXIT_ABYSS
+        || stair == DNGN_EXIT_PORTAL_VAULT;
+}
+
 void down_stairs(dungeon_feature_type force_stair,
                  entry_cause_type entry_cause, const level_id* force_dest)
 {
@@ -939,6 +949,7 @@ void down_stairs(dungeon_feature_type force_stair,
         && !feat_is_gate(stair_find))
     {
         mpr("You're floating high up above the floor!");
+        learned_something_new(HINT_LEVITATING);
         return;
     }
 
@@ -1106,12 +1117,10 @@ void down_stairs(dungeon_feature_type force_stair,
 
     // When going downstairs into a special level, delete any previous
     // instances of it.
-    if (you.level_type != LEVEL_DUNGEON)
+    if (you.level_type != LEVEL_DUNGEON && !_is_portal_exit(stair_find))
     {
         std::string lname = level_id::current().describe();
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str());
-#endif
+        dprf("Deleting: %s", lname.c_str());
         you.save->delete_chunk(lname);
     }
 

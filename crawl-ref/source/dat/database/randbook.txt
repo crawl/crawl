@@ -423,19 +423,30 @@ Blows and Bruises
 w:1
 Damage Dealing
 %%%%
-Enchantment
+Charms
 
-Enchantment
+Enhancements
 
-Bewitchment
+Talismans
 
-Infatuation
+Good Luck
+
+Protection
+
+w:3
+Self-Knowledge
+
+w:3
+Improving Self
+
+Aid
+
+Buffs
 
 w:1
-Glamour
+Benedictions
 
-w:1
-Fascination
+Boosts
 %%%%
 Fire
 
@@ -452,6 +463,30 @@ the Blaze
 Ignition
 
 the Arsonist
+%%%%
+Hexes
+
+Hexes
+
+Curses
+
+Malediction
+
+the Oath
+
+Execration
+
+Enchantment
+
+Bewitchment
+
+w:1
+Glamour
+
+w:1
+Fascination
+
+Beguiling
 %%%%
 Ice
 
@@ -614,7 +649,17 @@ Excruciating
 w:5
 Lethal
 %%%%
-Enchantment adj
+Charms adj
+
+Helpful
+
+Lucky
+
+Assistive
+
+Boosting
+%%%%
+Hexes adj
 
 Enchanting
 

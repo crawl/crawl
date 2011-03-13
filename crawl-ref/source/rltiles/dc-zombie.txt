@@ -8,14 +8,17 @@ zombie_toad MONS_ZOMBIE_TOAD
 zombie_bat MONS_ZOMBIE_BAT
 zombie_bee MONS_ZOMBIE_BEE
 zombie_bug MONS_ZOMBIE_BEETLE
+zombie_rat MONS_ZOMBIE_RAT
 zombie_hound MONS_ZOMBIE_HOUND
 zombie_fish MONS_ZOMBIE_FISH
 zombie_centaur MONS_ZOMBIE_CENTAUR
 zombie_naga MONS_ZOMBIE_NAGA
 zombie_snake MONS_ZOMBIE_SNAKE
+zombie_worm MONS_ZOMBIE_WORM
+zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_spider MONS_ZOMBIE_SPIDER
 zombie_dragon MONS_ZOMBIE_DRAGON
-dc-mon/kraken/kraken_zombie_head MONS_ZOMBIE_KRAKEN
+zombie_kraken_head MONS_ZOMBIE_KRAKEN
 zombie_hydra1 MONS_ZOMBIE_HYDRA
 zombie_hydra2
 zombie_hydra3
@@ -58,6 +61,7 @@ spectral_fish MONS_SPECTRAL_FISH
 spectral_centaur MONS_SPECTRAL_CENTAUR
 spectral_naga MONS_SPECTRAL_NAGA
 spectral_snake MONS_SPECTRAL_SNAKE
+spectral_worm MONS_SPECTRAL_WORM
 spectral_spider MONS_SPECTRAL_SPIDER
 spectral_dragon MONS_SPECTRAL_DRAGON
 spectral_hydra1 MONS_SPECTRAL_HYDRA

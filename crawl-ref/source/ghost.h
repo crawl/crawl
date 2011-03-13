@@ -50,6 +50,7 @@ public:
 
 public:
     ghost_demon();
+    bool has_spells() const;
     void reset();
     void init_random_demon();
     void init_player_ghost();

@@ -458,7 +458,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             || trig_knows && !mons_is_fleeing(m) && !m->pacified())
         {
             // No message for flying monsters to avoid message spam.
-            if (you_know && !(triggerer.airborne() || triggerer.is_wall_clinging()))
+            if (you_know && triggerer.ground_level())
                 simple_monster_message(m, " carefully avoids the shaft.");
             return;
         }
@@ -471,8 +471,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         return;
     }
     // Only magical traps affect flying critters.
-    if ((triggerer.airborne() || triggerer.is_wall_clinging())
-        && this->category() != DNGN_TRAP_MAGICAL)
+    if (!triggerer.ground_level() && this->category() != DNGN_TRAP_MAGICAL)
     {
         if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");
@@ -1017,7 +1016,7 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skills[SK_TRAPS_DOORS] + 2) <= random2(you.absdepth0 + 5))
+    if (random2(you.skill(SK_TRAPS_DOORS) + 2) <= random2(you.absdepth0 + 5))
     {
         mpr("You failed to disarm the trap.");
         if (random2(you.dex()) > 5 + random2(5 + you.absdepth0))
@@ -1072,10 +1071,10 @@ void remove_net_from(monster* mon)
         invis = 3 + random2(5);
 
     bool net_destroyed = false;
-    if (random2(you.skills[SK_TRAPS_DOORS] + 2) + paralys
+    if (random2(you.skill(SK_TRAPS_DOORS) + 2) + paralys
            <= random2(2*mon->body_size(PSIZE_BODY) + 3) + invis)
     {
-        if (one_chance_in(you.skills[SK_TRAPS_DOORS] + you.dex()/2))
+        if (one_chance_in(you.skill(SK_TRAPS_DOORS) + you.dex()/2))
         {
             mitm[net].plus--;
             mpr("You tear at the net.");
@@ -1397,7 +1396,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
         if (act.atype() == ACT_PLAYER)
         {
-            if (one_chance_in(5) || (was_known && !one_chance_in(4)) && !force_hit)
+            if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
             {
                 mprf("You avoid triggering %s trap.",
                       this->name(DESC_NOCAP_A).c_str());
@@ -1544,12 +1543,12 @@ trap_type random_trap(dungeon_feature_type feat)
 
 bool is_valid_shaft_level(const level_id &place)
 {
-    if (crawl_state.game_is_sprint())
+    if (crawl_state.test
+        || crawl_state.game_is_sprint()
+        || crawl_state.game_is_zotdef())
+    {
         return (false);
-
-    // Zot def - no shafts
-    if (crawl_state.game_is_zotdef())
-        return (false);
+    }
 
     if (place.level_type != LEVEL_DUNGEON)
         return (false);

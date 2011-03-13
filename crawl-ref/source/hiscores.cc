@@ -43,6 +43,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "jobs.h"
 #include "options.h"
@@ -352,7 +353,7 @@ std::string hiscores_format_single_long(const scorefile_entry &se,
                                          bool verbose)
 {
     return se.hiscore_line(verbose ? scorefile_entry::DDV_VERBOSE
-                                    : scorefile_entry::DDV_NORMAL);
+                                   : scorefile_entry::DDV_NORMAL);
 }
 
 // --------------------------------------------------------------------------
@@ -912,6 +913,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_BEAM
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_SPORE
+            || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_REFLECTION)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
@@ -985,9 +987,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             killerpath = "";
         }
     }
-    else if (death_type == KILLED_BY_DISINT)
+    else if (death_type == KILLED_BY_DISINT
+             || death_type == KILLED_BY_CLOUD)
     {
-        death_source_name = dsrc_name ? dsrc_name : "you";
+        death_source_name = dsrc_name ? dsrc_name :
+                            dsrc == MHITYOU ? "you" :
+                            "";
         indirectkiller = killerpath = "";
     }
     else
@@ -1227,7 +1232,7 @@ void scorefile_entry::init(time_t dt)
     const int statuses[] = {
         DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
         STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR, STATUS_BURDEN,
-        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
+        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_JELLY_PRAYER,
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
         DUR_INVIS, DUR_CONF, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
@@ -1284,10 +1289,8 @@ void scorefile_entry::init(time_t dt)
     birth_time = you.birth_time;     // start time of game
     death_time = (dt != 0 ? dt : time(NULL)); // end time of game
 
-    if (you.real_time != -1)
-        real_time = you.real_time + long(death_time - you.start_time);
-    else
-        real_time = -1;
+    handle_real_time(death_time);
+    real_time = you.real_time;
 
     num_turns = you.num_turns;
 
@@ -1316,16 +1319,13 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
 
     if (verbosity == DDV_VERBOSE)
     {
-        if (real_time > 0)
-        {
-            char scratch[INFO_SIZE];
+        char scratch[INFO_SIZE];
 
-            snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
-                     make_time_string(real_time).c_str(), num_turns);
+        snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
+                 make_time_string(real_time).c_str(), num_turns);
 
-            line += scratch;
-            line += _hiscore_newline_string();
-        }
+        line += scratch;
+        line += _hiscore_newline_string();
     }
 
     return (line);
@@ -1681,13 +1681,22 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_CLOUD:
-        if (auxkilldata.empty())
-            desc += terse? "cloud" : "Engulfed by a cloud";
+        ASSERT(!auxkilldata.empty()); // there are no nameless clouds
+        if (terse)
+            if (death_source_name.empty())
+                desc += "cloud of " + auxkilldata;
+            else
+                desc += "cloud of " +auxkilldata + " [" +
+                        death_source_name == "you" ? "self" : death_source_name
+                        + "]";
         else
         {
-            snprintf(scratch, sizeof(scratch), "%scloud of %s",
-                      terse? "" : "Engulfed by a ",
-                      auxkilldata.c_str());
+            snprintf(scratch, sizeof(scratch), "Engulfed by %s%s %s",
+                death_source_name.empty() ? "a" :
+                  death_source_name == "you" ? "own" :
+                  apostrophise(death_source_name).c_str(),
+                death_source_name.empty() ? " cloud of" : "",
+                auxkilldata.c_str());
             desc += scratch;
         }
         needs_damage = true;
@@ -1945,12 +1954,12 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_TSO_SMITING:
-        desc += terse? "smote by Shining One" : "Smote by the Shining One";
+        desc += terse? "smitten by Shining One" : "Smitten by the Shining One";
         needs_damage = true;
         break;
 
     case KILLED_BY_BEOGH_SMITING:
-        desc += terse? "smote by Beogh" : "Smote by Beogh";
+        desc += terse? "smitten by Beogh" : "Smitten by Beogh";
         needs_damage = true;
         break;
 
@@ -2176,6 +2185,10 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
                 if (needs_damage)
                     desc += _hiscore_newline_string();
+
+                if (you.duration[DUR_PARALYSIS])
+                    desc += "... while paralysed" + _hiscore_newline_string();
+
             }
         }
     }
@@ -2366,7 +2379,12 @@ void mark_milestone(const std::string &type,
         // Suppress duplicate milestones on the same turn.
         || (lastturn == you.num_turns
             && lasttype == type
-            && lastmilestone == milestone))
+            && lastmilestone == milestone)
+#ifndef SCORE_WIZARD_CHARACTERS
+        // Don't mark milestones in wizmode
+        || you.wizard
+#endif
+        )
     {
         return;
     }

@@ -307,9 +307,14 @@ Terence
 
 A mean-looking human fighter who likes to kill, and not much else.
 %%%%
+Terpsichore
+
+A spectre of unearthly beauty, dancing through the air without stopping to rest or take a bow.
+%%%%
 Tiamat
 
 A powerful dragon with mighty wings. Her scales seem to shimmer and change colour as you watch.
+
 %%%%
 Urug
 
@@ -352,7 +357,7 @@ A spirit drawn from the elemental plane of air. It exists in this world as a swi
 %%%%
 alligator
 
-A reptile that's quite happy to ignore you. If you don't, or you get too close, it'll put on a great burst of speed and crush you in its massive jaws!
+A huge reptile. It hides in water and waits patiently for its prey to get too close, at which point it puts on a great burst of speed and crushes its victim with massive jaws.
 %%%%
 alligator snapping turtle
 
@@ -380,7 +385,7 @@ A placid, sacred bull of Elyvilon. Beware, evildoers, as surely it will turn on 
 %%%%
 azure jelly
 
-A frosty blob of bright blue cytoplasm.
+An extremely cold blob of bright blue cytoplasm, forming bits of frost in the air around it.
 %%%%
 baby alligator
 
@@ -397,10 +402,6 @@ A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the d
 Balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
-%%%%
-bear
-
-A common cave bear. If provoked, it may become angry!
 %%%%
 beast
 
@@ -549,7 +550,7 @@ A small dragon, radiating pestilence.
 %%%%
 death ooze
 
-A putrid mass of decaying flesh.
+A putrid undead mass of decaying flesh, rife with pestilence.
 %%%%
 death yak
 
@@ -605,7 +606,7 @@ While not a natural habitat for most elven-kind, the deep elves managed to settl
 %%%%
 deep elf sorcerer
 
-Most of these mighty spellcasters draw power from the very Hells, but even those who don't possess lethal arcane abilities.
+Most of these mighty spellcasters draw power from the very Hells, but even those who don't possess lethal arcane abilities of destruction and summoning.
 %%%%
 deep elf summoner
 
@@ -637,7 +638,7 @@ An armoured deep dwarf, formidable in melee combat.
 %%%%
 deep troll
 
-A stooped troll.
+A stooped troll with dark skin.
 %%%%
 demigod
 
@@ -669,7 +670,7 @@ While formidable in combat, this draconian specializes in summoning hordes of dr
 %%%%
 draconian knight
 
-Protected by both its thick scales and its skill in use of weapons and armour, this draconian is a dangerous opponent.
+Protected by both its thick scales and its skill in use of weapons and armour, this draconian is a dangerous opponent. It complements its abilities in combat with powerful magic.
 %%%%
 draconian monk
 
@@ -743,7 +744,7 @@ A two-headed giant, able to land devastating blows left and right.
 %%%%
 Executioner
 
-A horribly powerful demon.
+A horribly powerful and swift demon, its shape obscured by a cloud of swirling scythe-like blades.
 %%%%
 eye of devastation
 
@@ -760,6 +761,10 @@ This feline has been given sentience with magic. It uses the gift of speech to d
 fiend
 
 One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
+%%%%
+fire bat
+
+A bat whose leathery body burns with a hot flame.
 %%%%
 fire crab
 
@@ -801,6 +806,10 @@ frost giant
 
 A huge blue humanoid with hoarfrost hair.
 %%%%
+fruity bat
+
+An ugly, silly bat. It sparkles.
+%%%%
 fungus
 
 A lumpy grey fungus, growing well in the dank underground dungeon.
@@ -813,29 +822,29 @@ ghost moth
 
 A vile interdimensional predator that feeds on the life force of living beings. The few who have seen one and lived say it resembles an enormous spiny moth. Its bizarre lifecycle involves the production of ambrosia, much valued by gods and wizards.
 %%%%
+ghost-faced bat
+
+Does this bat merely possess the visage of a ghost, or is it a ghost itself?
+%%%%
 ghoul
 
-An undead humanoid creature, created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
+An undead humanoid creature with vicious claws, created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
 %%%%
 giant amoeba
 
 A pulsating lump of protoplasm.
 %%%%
-giant ant
+worker ant
 
 A black ant with poisonous pincers, about the size of a large dog.
 %%%%
-giant bat
+megabat
 
 A huge black bat.
 %%%%
-giant beetle
+goliath beetle
 
 A huge black beetle with great crunching mandibles and very hard chitinous armour.
-%%%%
-giant blowfly
-
-A huge and irritating fly.
 %%%%
 giant toad
 
@@ -851,7 +860,7 @@ A large brown cockroach. I call him 'Gregor'.
 %%%%
 giant eyeball
 
-A giant eyeball, with a captivating stare.
+A giant floating eyeball, with a captivating gaze.
 %%%%
 giant firefly
 
@@ -877,9 +886,9 @@ giant mite
 
 A large arachnid with vicious poisoned mouth-parts.
 %%%%
-giant mosquito
+vampire mosquito
 
-A huge, bloated mosquito. It looks diseased.
+This unfortunate and now massive creature once fed upon the blood of a vampire. Now it wants to feed upon yours.
 %%%%
 giant newt
 
@@ -887,7 +896,7 @@ Several times the size of a normal newt, but still not really impressive.
 %%%%
 giant orange brain
 
-A huge wrinkled brain, floating just off the floor. Every now and then it seems to pulsate.
+A huge wrinkled brain, floating just off the floor and glowing with mutagenic energies. Every now and then it seems to pulsate.
 %%%%
 emperor scorpion
 
@@ -900,6 +909,10 @@ A huge and disgusting gastropod.
 giant spore
 
 A volatile floating ball of spores, covered in knobbly rhizome growths.
+%%%%
+giga bat
+
+A huge, bloated bat.
 %%%%
 gila monster
 
@@ -923,7 +936,7 @@ A short, ugly and unfriendly humanoid:  squat, broad, flat-nosed, sallow-skinned
 %%%%
 golden dragon
 
-A great dragon covered in shining golden scales.
+A great dragon covered in shining golden scales. Legends say that their blood runs both hot and cold.
 %%%%
 golden eye
 
@@ -1053,6 +1066,10 @@ hydra
 
 A great reptilian beast, distantly related to the dragon. It has many heads, and the potential to grow many more!
 %%%%
+ice bat
+
+An undead creature in the shape of a bat, made of ice.
+%%%%
 ice beast
 
 A terrible creature, formed of snow and crystalline ice. Its feet leave puddles of icy water on the floor.
@@ -1091,7 +1108,7 @@ A hideous humanoid figure with metal skin. While it lacks magical attacks and is
 %%%%
 iron dragon
 
-A very heavy and apparently flightless dragon.
+A very heavy and apparently flightless dragon. It is named for its scales, which are so tough they might be iron.
 %%%%
 iron elemental
 
@@ -1233,6 +1250,10 @@ metal gargoyle
 
 A hideous metal statue come to life.
 %%%%
+microbat
+
+A bat that, unlike its name, is not any smaller than megabats.
+%%%%
 midge
 
 A small flying demon.
@@ -1259,7 +1280,7 @@ Before you stands a scale-covered humanoid with a reptilian tail and small wings
 %%%%
 mottled dragon
 
-A small dragon with strangely mottled scales.
+A small dragon with strangely mottled scales, its mouth dripping with a strange liquid flame.
 %%%%
 mummy
 
@@ -1395,6 +1416,10 @@ phantom
 
 A transparent man-like undead spirit.
 %%%%
+phase bat
+
+This bat travels through more dimensions than the average bat.
+%%%%
 phoenix
 
 A bird of myth and legend, said to die in flames and be reborn from the ashes.
@@ -1402,6 +1427,10 @@ A bird of myth and legend, said to die in flames and be reborn from the ashes.
 pile of gold coins
 
 An apparently harmless pile of gold coins hides a nasty venomous shapechanging predator.
+%%%%
+pillar of salt
+
+A large pillar of salt that is quickly crumbling away.
 %%%%
 Pit Fiend
 
@@ -1429,7 +1458,7 @@ A ravenous and incredibly buggy monster. Please report its existence to the DevT
 %%%%
 pulsating lump
 
-A revolting glob of writhing flesh.
+A revolting mutagenic glob of writhing flesh.
 %%%%
 purple draconian
 
@@ -1496,6 +1525,10 @@ An enormous and very nasty-looking humanoid creature. Its rocky hide seems to he
 rock worm
 
 A large worm which moves through rock as if it were air.
+%%%%
+rotten bat
+
+I guess this bat is well past its sell-by date.
 %%%%
 rotting devil
 
@@ -1594,6 +1627,10 @@ sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with lightning speed. It seems to throw sparks all around.
 %%%%
+skeletal bat
+
+A bat skeleton without the decency to lie unmoving like dead bats are supposed to.
+%%%%
 skeletal warrior
 
 The vicious and heavily armed skeleton of a humanoid creature, animated by unholy power.
@@ -1644,7 +1681,7 @@ A large belligerent reptile, armoured in a carapace. Its neck is surprisingly ex
 %%%%
 soldier ant
 
-A giant ant with large mandibles and a vicious sting.
+A worker ant with large mandibles and a vicious sting.
 %%%%
 soul eater
 
@@ -1660,7 +1697,7 @@ A hideous glowing apparition.
 %%%%
 sphinx
 
-A large creature with a human head, the body of a lion, and the wings of a huge bird.
+A large creature with a human head, the body of a lion, and the wings of a huge bird, wielding dangerous hexes.
 %%%%
 spider
 
@@ -1681,6 +1718,10 @@ The soul of a holy creature, reft from its body. It is a timid creature, but as 
 spriggan
 
 A small humanoid, resembling a human or elf except for the size. They move at a great speed, and love playing dirty tricks on people.
+%%%%
+spriggan air mage
+
+Ever noticed the wind always blows in your eyes and in the backs of some? These guys have something to do with that.
 %%%%
 spriggan assassin
 
@@ -1797,17 +1838,21 @@ ugly thing
 
 An ugly thing. According to legend, this mutated creature is the otherworldly spawn of a wizard's breeding experiment. Yuck.
 %%%%
+unborn deep dwarf
+
+This deep dwarf has honed its empathy with the powers of earth and death at the cost of its natural life force, transcending mortality in the peculiar dwarven fashion.
+%%%%
 unseen horror
 
 These creatures are usually unseen by the eyes of most, and those few who have seen them would rather not have.
 %%%%
 vampire
 
-A powerful undead.
+A powerful blood-drinking undead.
 %%%%
 vampire knight
 
-A powerful warrior, with skills undiminished by undeath.
+A powerful warrior, with skills undiminished by undeath. It complements its combat prowess with powerful enchantments.
 %%%%
 vampire mage
 
@@ -1907,9 +1952,90 @@ Before you stands a scale-covered humanoid with a reptilian tail and small wings
 %%%%
 yellow wasp
 
-A giant wasp covered with thick plates of yellow chitinous armour.
+A giant wasp covered with thick plates of yellow chitinous armour. Its deadly venom can render a grown man unable to move.
 %%%%
 ynoxinul
 
 A demon with shiny metallic scales.
+%%%%
+# Vault-defined monsters
+air elemental statue
+
+A delicate statue of a kenku gliding through the air. It looks quite insubstantial.
+%%%%
+ancient champion
+
+The unfathomably ancient skeleton of a humanoid creature. It has hundreds of golden sigils etched onto its bones, and pulses with terrible, unholy power.
+%%%%
+antique lich
+
+A lich who has grown expensive over countless years.
+%%%%
+Cigotuvi's Monster
+
+This terrifying creation looks to have been constructed from the body parts of every monstrous creature imaginable.
+%%%%
+earth elemental statue
+
+A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
+%%%%
+fire elemental statue
+
+An ornate statue of an orc holding a torch aloft. The air around it shimmers.
+%%%%
+firespitter statue
+
+Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes.
+%%%%
+flesh golem
+
+An animated mound of misshapen flesh.
+%%%%
+glowing angel
+
+A divine agent of Zin, it is a towering winged figure with an aura of brilliant white light. This angel's face, though, is marked by a scowl, as if its zeal against any real or perceived vice overshadows its goodness.
+%%%%
+grey elf
+
+Once considered a unique species of its own, grey elves are now more properly classified as a sub-species of high elf. Little exists to distinguish them from their high elf cousins, aside from their supposed glamour (which is probably more myth than fact).
+%%%%
+hill dwarf
+
+Hill dwarves are basically just mountain dwarves who live on hills. They are otherwise indistinguishable from their mountain brethren. Once able adventurers, the hill dwarves no longer have any interest in dungeon delving. This one was captured specially for this exhibit.
+%%%%
+human monk
+
+It seems a flimsy representation of a monk; nothing more than a half-formed memory.
+%%%%
+iron troll monk
+
+It seems a flimsy representation of a monk; nothing more than a half-formed memory.
+%%%%
+malarious mermaid
+
+A young woman with a fish tail in place of legs. She looks quite sick, but still capable of bespelling her audience.
+%%%%
+pristine statue
+
+An immaculately sculpted statue of an archer.
+%%%%
+rock troll monk
+
+It seems a flimsy representation of a monk; nothing more than a half-formed memory.
+%%%%
+sickly siren
+
+A young woman with a fish tail in place of legs. She looks quite sick, but still capable of bespelling her audience.
+%%%%
+strange machine
+
+A glistening silver machine.
+%%%%
+water elemental statue
+
+A smooth statue of a mermaid bathing in a fountain. It glistens softly.
+%%%%
+zot statue
+
+This statue is profoundly disturbing.
 %%%%

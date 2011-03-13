@@ -9,7 +9,7 @@
 NAME:   serial_co_window_serial
 TAGS:   allow_dup extra luniq
 DEPTH:  D, Elf, Crypt
-CHANCE: 2%
+CHANCE: 1%
 {{
   local s = 5 + crawl.random2(3)*crawl.random2(3)
   local c = 3 + crawl.random2(5)
@@ -27,7 +27,7 @@ CHANCE: 2%
 
 NAME:   co_window_of_opportunity_a
 WEIGHT: 3
-TAGS:   allow_dup extra mini_float serial_co_window_small
+TAGS:   allow_dup extra serial_co_window_small
 NSUBST: A = 1:@ / *:x
 NSUBST: B = 1:@ / *:x
 SUBST:  X:xm
@@ -44,7 +44,7 @@ ENDMAP
 
 NAME:   co_window_paths_a
 WEIGHT: 5
-TAGS:   allow_dup extra mini_float serial_co_window_small
+TAGS:   allow_dup extra serial_co_window_small
 SUBST:  X:Xxm, X=xm
 MAP
   x
@@ -60,7 +60,7 @@ ENDMAP
 
 NAME:   co_window_paths_b
 WEIGHT: 3
-TAGS:   allow_dup extra mini_float serial_co_window_small
+TAGS:   allow_dup extra serial_co_window_small
 SUBST:  X=xm
 MAP
   x
@@ -78,7 +78,7 @@ ENDMAP
 
 NAME:   co_window_corner_a
 WEIGHT: 5
-TAGS:   allow_dup extra mini_float serial_co_window_small
+TAGS:   allow_dup extra serial_co_window_small
 SUBST:  X:Xxm, X=xm
 MAP
     x
@@ -97,7 +97,7 @@ ENDMAP
 
 NAME:   co_window_cross_1
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float serial_co_window_small
+TAGS:   allow_dup extra serial_co_window_small
 MAP
 xxxxx@xxxxx
 xxxxx.xxxxx
@@ -115,7 +115,7 @@ ENDMAP
 
 NAME:   co_window_of_opportunity_b
 WEIGHT: 3
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 SUBST:  X:Xxm, X=xm
 MAP
 @....@
@@ -130,7 +130,7 @@ ENDMAP
 
 NAME:   co_window_of_opportunity_c
 WEIGHT: 2
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 SUBST:  X:Xxm, X=xm
 MAP
 @.....@
@@ -146,7 +146,7 @@ ENDMAP
 
 
 NAME:   co_window_corner_b
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 WEIGHT: 5
 SUBST:  X:Xxm, X=xm
 MAP
@@ -166,7 +166,7 @@ x@x
 ENDMAP
 
 NAME:   co_window_corner_ca
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 WEIGHT: 2
 SUBST:  X:mx
 MAP
@@ -188,7 +188,7 @@ ENDMAP
 
 NAME:   co_window_corner_cb
 WEIGHT: 2
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 SUBST:  X:mx
 MAP
          x
@@ -207,7 +207,7 @@ ENDMAP
 
 NAME:   co_window_paths_c
 WEIGHT: 3
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 SUBST:  X:xm
 MAP
   x x
@@ -228,7 +228,7 @@ ENDMAP
 
 NAME:   co_window_2corner
 WEIGHT: 5
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 SUBST:  A : .x
 SUBST:  B : .xxxx
 MAP
@@ -249,7 +249,7 @@ ENDMAP
 
 NAME:   co_window_broadway_a
 WEIGHT: 3
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 MAP
 xxxxxxxx@@@xxxxxxxx
 xxxxxxxx...xxxxxxxx
@@ -268,7 +268,7 @@ ENDMAP
 
 NAME:   co_window_broadway_b
 WEIGHT: 3
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 MAP
 xxxxxxxx@@@xxxxxxxx
 xxxxxxxx...xxxxxxxx
@@ -287,7 +287,7 @@ ENDMAP
 
 NAME:   co_window_broadway_c
 WEIGHT: 3
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 MAP
 xxxxxxxx@@@xxxxxxxx
 xxxxxxxx...xxxxxxxx
@@ -308,7 +308,7 @@ ENDMAP
 
 NAME:   co_window_unsneaky_path_a
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 MAP
 xxxxxxx@xxxxxxx
 xxxxxxx.xxxxxxx
@@ -322,7 +322,7 @@ ENDMAP
 
 NAME:   co_window_unsneaky_path_b
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 MAP
 xxxxxxx@xxxxxxx
 xxxxxxx.xxxxxxx
@@ -339,7 +339,7 @@ ENDMAP
 
 NAME:   co_window_unsneaky_path_c
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 SUBST:  X:xm
 MAP
 xxxxxxx@xxxxxxx
@@ -358,7 +358,7 @@ ENDMAP
 
 NAME:   co_window_unsneaky_path_d
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 SUBST:  X:xm
 MAP
 xxxxxxx@@xxxxxxx
@@ -377,7 +377,7 @@ ENDMAP
 
 NAME:   co_window_unsneaky_path_e
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 SUBST:  X:xm
 MAP
 xxxxxxx@@@xxxxxxx
@@ -396,7 +396,7 @@ ENDMAP
 
 NAME:   co_window_cross_4
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 MAP
 xxxxxxx@@@@xxxxxxx
 xxxxxxx....xxxxxxx
@@ -418,7 +418,7 @@ ENDMAP
 
 NAME:   co_window_cross_3
 WEIGHT: 1
-TAGS:   allow_dup extra mini_float serial_co_window_common
+TAGS:   allow_dup extra serial_co_window_common
 MAP
 xxxxxxx@@@xxxxxxx
 xxxxxxx...xxxxxxx
@@ -439,7 +439,7 @@ ENDMAP
 
 NAME: co_window_cross_2
 WEIGHT: 1
-TAGS: allow_dup extra mini_float serial_co_window_common
+TAGS: allow_dup extra serial_co_window_common
 MAP
 xxxxxx@@xxxxxx
 xxxxxx..xxxxxx
@@ -459,7 +459,7 @@ ENDMAP
 
 NAME:   co_window_paths_d
 WEIGHT: 2
-TAGS:   luni qallow_dup extra mini_float serial_co_window_rare
+TAGS:   luniq allow_dup extra serial_co_window_rare
 SUBST:  c : mmccb
 MAP
    xxx
@@ -485,7 +485,7 @@ ENDMAP
 
 NAME:   co_window_paths_e
 WEIGHT: 2
-TAGS:   luniq allow_dup extra mini_float serial_co_window_rare
+TAGS:   luniq allow_dup extra serial_co_window_rare
 SUBST:  c : mmccb
 MAP
     x
@@ -511,7 +511,7 @@ ENDMAP
 
 NAME:   co_window_4corner_a
 WEIGHT: 3
-TAGS:   luniq allow_dup extra mini_float serial_co_window_rare
+TAGS:   luniq allow_dup extra serial_co_window_rare
 SUBST:  c : cm
 MAP
 xxxxxx@xxxxx@xxxxxx
@@ -531,7 +531,7 @@ ENDMAP
 
 NAME:   co_window_4corner_b
 WEIGHT: 3
-TAGS:   allow_dup luniq  extra mini_float serial_co_window_rare
+TAGS:   allow_dup luniq extra serial_co_window_rare
 MAP
 xxxxx@xxxx@xxxxxxxx
 xxxxx.xxxx.xxxxxxxx
@@ -550,7 +550,7 @@ ENDMAP
 
 NAME:   co_window_sun
 WEIGHT: 3
-TAGS:   allow_dup luniq extra mini_float serial_co_window_rare
+TAGS:   allow_dup luniq extra serial_co_window_rare
 SUBST:  c : ccccm
 MAP
 xxxx@xxxxxxx@xxxx

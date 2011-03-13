@@ -13,6 +13,7 @@
 #include "enum.h"
 #include "ray.h"
 #include "state.h"
+#include "target.h"
 
 class range_view_annotator
 {
@@ -69,6 +70,7 @@ public:
 
 struct direction_chooser_args
 {
+    targetter *hitfunc;
     targeting_type restricts;
     targ_mode_type mode;
     int range;
@@ -83,6 +85,7 @@ struct direction_chooser_args
     bool show_floor_desc;
 
     direction_chooser_args() :
+        hitfunc(NULL),
         restricts(DIR_NONE),
         mode(TARG_ANY),
         range(-1),
@@ -159,7 +162,7 @@ private:
     // Can be modified by the targeting_behaviour.
     void print_top_prompt() const;
 
-    // Press: ? - help, Shift-Dir - straight line, t - giant bat
+    // Press: ? - help, Shift-Dir - straight line, t - megabat
     void print_key_hints() const;
 
     // Here: An orc wizard, wielding a glowing orcish dagger, and wearing
@@ -232,6 +235,7 @@ private:
     targeting_behaviour *behaviour; // Can be NULL for default
     bool cancel_at_self;        // Disallow self-targeting?
     bool show_floor_desc;       // Describe the floor of the current target
+    targetter *hitfunc;         // Determine what would be hit.
 
     // Internal data.
     ray_def beam;               // The (possibly invalid) beam.

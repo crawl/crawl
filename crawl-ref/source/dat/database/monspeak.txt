@@ -2659,8 +2659,6 @@ w:50
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "A hungry ghost just ate my lunch. I hate that."
-
 @The_monster@ says, "A freezing wraith just broke my potions. I hate that."
 
 @The_monster@ says, "A flaming corpse just burned my scrolls. I hate that."
@@ -2802,7 +2800,7 @@ w:50
 
 @The_monster@ says, "I'm sure I saw a card fall out of that deck."
 
-@The_monster@ syas, "I've seen this trick before. You've got the ace up your sleeve, right?"
+@The_monster@ says, "I've seen this trick before. You've got the ace up your sleeve, right?"
 
 @The_monster@ says, "You need to come to terms with your gambling problem, mate."
 %%%%
@@ -4378,7 +4376,7 @@ __NONE
 w:5
 @The_monster@ sings off-key, "You got some money for me?"
 %%%%
-############ MENNAS ### A silenct Angel.
+############ MENNAS ### A silent Angel.
 Mennas
 
 VISUAL:@The_monster@ gestures at you. @player_only@
@@ -5207,6 +5205,85 @@ _Terence_rare_
 @The_monster@ says @to_foe@, "Time to say good-bye..."
 
 ## END Terence ###
+%%%%
+############ TUKIMA ### A spectral dancer
+# Cantrip messages
+Terpsichore_self_buff
+
+@_Terpsichore_self_buff_@
+%%%%
+Terpsichore_other_buff
+
+@_Terpsichore_other_buff@
+%%%%
+Terpsichore_debuff
+
+@_Terpsichore_debuff_@
+%%%%
+_Terpsichore_self_buff_
+
+@The_monster@ performs a graceful pirouette.
+
+@The_monster@ cartwheels!
+
+@The_monster@ extends her arms.
+
+%%%%
+_Terpsichore_other_buff_
+
+@The_monster@ beats her extended leg.
+
+A look of regret passes over @the_monster@'s face.
+
+@The_monster@ twirls.
+
+%%%%
+_Terpsichore_debuff_
+
+You feel light on your feet.
+
+You feel strangely compelled to dance the "Siva Afi."
+
+You feel compelled to twirl your non-existent dancing partner!
+
+Some annoying song lyrics get stuck in your head!
+
+%%%%
+Terpsichore
+
+@_terpsichore_common_@
+
+w:4
+@_terpsichore_rare_@
+
+%%%%
+_terpsichore_common_
+
+@The_monster@ exclaims, "I never get tired of watching this."
+
+@The_monster@ asks, "Have you ever felt haunted by the need to dance?"
+
+@The_monster@ explains, "If I could tell you what I felt, there would be no point in dancing it..."
+
+@The_monster@ chuckles, "Your body is so clumsy! Shall I rid you of it?"
+
+@The_monster@ calls, "Will you, won't you, will you join the dance?"
+
+@The_monster@ asks, "Would you care for a dance?"
+
+%%%%
+_terpsichore_rare_
+
+@The_monster@ wistfully exclaims, "I've searched so long for a dance partner..."
+
+@The_monster@ pleads, "Your soul could dance with me forever!"
+
+%%%%
+Terpsichore killed
+
+@The_monster@ whispers, "I'll be waiting for you..."
+
+## END Terpsichore ##
 %%%%
 ############ URUG ### An orc hired to kill you
 Urug
@@ -6125,28 +6202,6 @@ beogh_converted_orc_reaction_battle_follower
 beogh_converted_orc_reaction_speech_follower
 
 @beogh_converted_orc_reaction_speech@
-%%%%
-##################################
-# ring of charms conversion speech
-##################################
-# on sight
-charm_converted_reaction_sight
-
-@The_monster@ stares at you in amazement and grins.
-
-@The_monster@ relaxes @possessive@ fighting stance and waves to you.
-
-@The_monster@ holds @possessive@ arms out to greet you.
-%%%%
-charm_converted_speech_sight
-
-@Pronoun@ shouts, "I'll follow you gladly!"
-
-@Pronoun@ shouts, "Hello, friend!"
-
-@Pronoun@ asks, "Tell me more about your plans... let's go there together!"
-
-@Pronoun@ says, "I'm so glad you are here now!"
 %%%%
 #################################
 # Monsters who worship Zin

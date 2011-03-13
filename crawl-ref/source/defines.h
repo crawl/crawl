@@ -79,7 +79,7 @@ enum extra_monster_index_type
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
-#define MAX_ITEMS 2000   // //
+#define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
 

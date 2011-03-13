@@ -1,8 +1,10 @@
-/*
+/**
+ * @file
+ * @section DESCRIPTION
+ *
  *  File:       mapdef.cc
  *  Summary:    Support code for Crawl des files.
- *  Created by: dshaligram on Wed Nov 22 08:41:20 2006 UTC
- */
+**/
 
 #include "AppHdr.h"
 
@@ -43,6 +45,7 @@
 #include "mon-util.h"
 #include "place.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-book.h"
@@ -790,7 +793,7 @@ std::string map_lines::add_colour(const std::string &sub)
 
 bool map_fprop_list::parse(const std::string &fp, int weight)
 {
-    unsigned long fprop;
+    feature_property_type fprop;
 
     if (fp == "nothing")
         fprop = FPROP_NONE;
@@ -3421,44 +3424,52 @@ bool mons_list::check_mimic(const std::string &s, int *mid, bool *fix) const
     return (true);
 }
 
-void mons_list::parse_mons_spells(mons_spec &spec, const std::string &spells)
+void mons_list::parse_mons_spells(mons_spec &spec, std::vector<std::string> &spells)
 {
     spec.explicit_spells = true;
     spec.extra_monster_flags |= MF_SPELLCASTER;
-    const std::vector<std::string> spell_names(split_string(";", spells));
-    if (spell_names.size() > NUM_MONSTER_SPELL_SLOTS)
+    std::vector<std::string>::iterator spell_it;
+    for (spell_it = spells.begin(); spell_it != spells.end(); ++spell_it)
     {
-        error = make_stringf("Too many monster spells (max %d) in %s",
-                             NUM_MONSTER_SPELL_SLOTS,
-                             spells.c_str());
-        return;
-    }
-    for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
-    {
-        const std::string spname(
-            lowercase_string(replace_all_of(spell_names[i], "_", " ")));
-        if (spname.empty() || spname == "." || spname == "none"
-            || spname == "no spell")
+        monster_spells cur_spells;
+
+        const std::vector<std::string> spell_names(split_string(";", (*spell_it)));
+        if (spell_names.size() > NUM_MONSTER_SPELL_SLOTS)
         {
-            spec.spells[i] = SPELL_NO_SPELL;
+            error = make_stringf("Too many monster spells (max %d) in %s",
+                                 NUM_MONSTER_SPELL_SLOTS,
+                                 spell_it->c_str());
+            return;
         }
-        else
+        for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
         {
-            const spell_type sp(spell_by_name(spname));
-            if (sp == SPELL_NO_SPELL)
+            const std::string spname(
+                lowercase_string(replace_all_of(spell_names[i], "_", " ")));
+            if (spname.empty() || spname == "." || spname == "none"
+                || spname == "no spell")
             {
-                error = make_stringf("Unknown spell name: '%s' in '%s'",
-                                     spname.c_str(), spells.c_str());
-                return;
+                cur_spells[i] = SPELL_NO_SPELL;
             }
-            if (!is_valid_mon_spell(sp))
+            else
             {
-                error = make_stringf("Not a monster spell: '%s'",
-                                     spname.c_str());
-                return;
+                const spell_type sp(spell_by_name(spname));
+                if (sp == SPELL_NO_SPELL)
+                {
+                    error = make_stringf("Unknown spell name: '%s' in '%s'",
+                                         spname.c_str(), spell_it->c_str());
+                    return;
+                }
+                if (!is_valid_mon_spell(sp))
+                {
+                    error = make_stringf("Not a monster spell: '%s'",
+                                         spname.c_str());
+                    return;
+                }
+                cur_spells[i] = sp;
             }
-            spec.spells[i] = sp;
         }
+
+        spec.spells.push_back(cur_spells);
     }
 }
 
@@ -3475,7 +3486,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mons_spec mspec;
         std::string s = specs[i];
 
-        std::string spells(strip_tag_prefix(s, "spells:"));
+        std::vector<std::string> spells(strip_multiple_tag_prefix(s, "spells:"));
         if (!spells.empty())
         {
             parse_mons_spells(mspec, spells);
@@ -3593,7 +3604,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (mspec.mlevel == TAG_UNFOUND)
             mspec.mlevel = 0;
 
-        mspec.hd = strip_number_tag(mon_str, "hd:");
+        mspec.hd = std::min(100, strip_number_tag(mon_str, "hd:"));
         if (mspec.hd == TAG_UNFOUND)
             mspec.hd = 0;
 
@@ -3748,6 +3759,12 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 || strip_tag(mon_str, "n_spe"))
             {
                 mspec.extra_monster_flags |= MF_NAME_SPECIES;
+            }
+
+            if (strip_tag(mon_str, "name_zombie")
+                || strip_tag(mon_str, "n_zom"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_ZOMBIE;
             }
         }
 
@@ -4231,6 +4248,37 @@ void item_spec::set_corpse_monster_spec(const mons_spec &spec)
 void item_list::clear()
 {
     items.clear();
+}
+
+item_spec item_list::random_item ()
+{
+    if (items.size() <= 0)
+    {
+        const item_spec none;
+        return (none);
+    }
+
+    return (get_item(random2(size())));
+}
+
+typedef std::pair<item_spec, int> item_pair;
+
+item_spec item_list::random_item_weighted ()
+{
+    const item_spec none;
+
+    std::vector<item_pair> pairs;
+    for (int i = 0, sz = size(); i < sz; ++i)
+    {
+        item_spec item = get_item(i);
+        pairs.push_back(item_pair(item, item.genweight));
+    }
+
+    item_spec* rn_item = random_choose_weighted(pairs);
+    if (rn_item)
+        return (*rn_item);
+
+    return (none);
 }
 
 item_spec item_list::pick_item(item_spec_slot &slot)
@@ -4751,6 +4799,13 @@ item_spec item_list::parse_single_spec(std::string s)
         }
     }
 
+    if (strip_tag(s, "mundane"))
+    {
+        result.level = ISPEC_MUNDANE;
+        result.ego   = -1;
+        if (strip_tag(s, "cursed"))
+            result.props["cursed"] = bool(true);
+    }
     if (strip_tag(s, "damaged"))
         result.level = ISPEC_DAMAGED;
     if (strip_tag(s, "cursed"))
@@ -4761,6 +4816,10 @@ item_spec item_list::parse_single_spec(std::string s)
         result.props["uncursed"] = bool(true);
     if (strip_tag(s, "useful"))
         result.props["useful"] = bool(true);
+
+    const short charges = strip_number_tag(s, "charges:");
+    if (charges >= 0)
+        result.props["charges"].get_int() = charges;
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
@@ -4851,12 +4910,25 @@ item_spec item_list::parse_single_spec(std::string s)
             return (result);
         }
 
-        const std::string spell = replace_all_of(strip_tag_prefix(s, "spell:"),
+        const std::string title = replace_all_of(strip_tag_prefix(s, "title:"),
                                                 "_", " ");
-        if (!spell.empty() && spell_by_name(spell) == SPELL_NO_SPELL)
+
+        const std::string spells = strip_tag_prefix(s, "spells:");
+
+        std::vector<std::string> spell_list = split_string("|", spells);
+        CrawlVector &incl_spells
+            = result.props["randbook_spells"].new_vector(SV_INT);
+
+        for (unsigned int i = 0; i < spell_list.size(); ++i)
         {
-            error = make_stringf("Bad spell: %s", spell.c_str());
-            return (result);
+            std::string spell_name = replace_all_of(spell_list[i], "_", " ");
+            spell_type spell = spell_by_name(spell_name);
+            if (spell == SPELL_NO_SPELL)
+            {
+                error = make_stringf("Bad spell: %s", spell_list[i].c_str());
+                return (result);
+            }
+            incl_spells.push_back(spell);
         }
 
         const std::string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
@@ -4865,12 +4937,12 @@ item_spec item_list::parse_single_spec(std::string s)
         result.props["randbook_disc2"] = disc2;
         result.props["randbook_num_spells"] = num_spells;
         result.props["randbook_slevels"] = slevels;
-        result.props["randbook_spell"] = spell;
+        result.props["randbook_title"] = title;
         result.props["randbook_owner"] = owner;
 
         result.base_type = OBJ_BOOKS;
         // This is changed in make_book_theme_randart.
-        result.sub_type = BOOK_MINOR_MAGIC_I;
+        result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
         return (result);
@@ -5143,12 +5215,12 @@ int colour_spec::get_colour()
 //////////////////////////////////////////////////////////////////////////
 // fprop_spec
 
-unsigned long fprop_spec::get_property()
+feature_property_type fprop_spec::get_property()
 {
     if (fixed_prop != FPROP_NONE)
         return (fixed_prop);
 
-    unsigned long chosen = FPROP_NONE;
+    feature_property_type chosen = FPROP_NONE;
     int cweight = 0;
     for (int i = 0, size = fprops.size(); i < size; ++i)
         if (x_chance_in_y(fprops[i].second, cweight += fprops[i].second))
@@ -5323,6 +5395,17 @@ void keyed_mapspec::parse_features(const std::string &s)
     }
 }
 
+/**
+ * Convert a trap string into a trap_spec.
+ *
+ * This function converts an incoming trap specification string from a vault
+ * into a trap_spec.
+ *
+ * @param s       The string to be parsed.
+ * @param weight  The weight of this string.
+ * @returns       A feature_spec with the contained, parsed trap_spec stored via
+ *                std::auto_ptr as feature_spec->trap.
+**/
 feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
 {
     strip_tag(s, "trap");
@@ -5336,22 +5419,70 @@ feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
         err = make_stringf("bad trap name: '%s'", s.c_str());
 
     feature_spec fspec(known ? 1 : -1, weight);
-    fspec.trap = trap;
+    fspec.trap.reset(new trap_spec(static_cast<trap_type>(trap)));
     return (fspec);
 }
 
+/**
+ * Convert a shop string into a shop_spec.
+ *
+ * This function converts an incoming shop specification string from a vault
+ * into a shop_spec.
+ *
+ * @param s      The string to be parsed.
+ * @param weight The weight of this string.
+ * @returns      A feature_spec with the contained, parsed shop_spec stored via
+ *               std::auto_ptr as feature_spec->shop.
+**/
 feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
 {
+    std::string orig(s);
+
     strip_tag(s, "shop");
     trim_string(s);
-    lowercase(s);
 
-    const int shop = str_to_shoptype(s);
+    bool use_all = strip_tag(s, "use_all");
+
+    std::string shop_name = replace_all_of(strip_tag_prefix(s, "name:"), "_", " ");
+    std::string shop_type_name = replace_all_of(strip_tag_prefix(s, "type:"), "_", " ");
+    std::string shop_suffix_name = replace_all_of(strip_tag_prefix(s, "suffix:"), "_", " ");
+
+    int num_items = std::min(20, strip_number_tag(s, "count:"));
+    if (num_items == TAG_UNFOUND)
+        num_items = -1;
+
+    int greed = strip_number_tag(s, "greed:");
+    if (greed == TAG_UNFOUND)
+        greed = -1;
+
+    std::vector<std::string> parts = split_string(";", s);
+    std::string main_part = parts[0];
+
+    const int shop = str_to_shoptype(main_part);
     if (shop == -1)
         err = make_stringf("bad shop type: '%s'", s.c_str());
 
+    if (parts.size() > 2)
+    {
+        err = make_stringf("too many semi-colons for '%s' spec", orig.c_str());
+    }
+
+    item_list items;
+    if (parts.size() == 2)
+    {
+        std::string item_list = parts[1];
+        std::vector<std::string> str_items = split_string("|", item_list);
+        for (int i = 0, sz = str_items.size(); i < sz; ++i)
+        {
+            err = items.add_item(str_items[i]);
+            if (!err.empty())
+                break;
+        }
+    }
+
     feature_spec fspec(-1, weight);
-    fspec.shop = shop;
+    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name, shop_type_name, shop_suffix_name, greed, num_items, use_all));
+    fspec.shop->items = items;
     return (fspec);
 }
 
@@ -5495,7 +5626,54 @@ map_flags &keyed_mapspec::get_mask()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// feature_slot
+// feature_spec and feature_slot
+
+feature_spec::feature_spec ()
+{
+    genweight = 0;
+    feat = 0;
+    glyph = -1;
+    shop.reset(NULL);
+    trap.reset(NULL);
+}
+
+feature_spec::feature_spec (int f, int wt)
+{
+    genweight = wt;
+    feat = f;
+    glyph = -1;
+    shop.reset(NULL);
+    trap.reset(NULL);
+}
+
+feature_spec::feature_spec(const feature_spec &other)
+{
+    init_with(other);
+}
+
+feature_spec& feature_spec::operator = (const feature_spec& other)
+{
+    if (this != &other)
+        init_with(other);
+    return (*this);
+}
+
+void feature_spec::init_with (const feature_spec& other)
+{
+    genweight = other.genweight;
+    feat = other.feat;
+    glyph = other.glyph;
+
+    if (other.trap.get())
+        trap.reset(new trap_spec(*other.trap));
+    else
+        trap.reset(NULL);
+
+    if (other.shop.get())
+        shop.reset(new shop_spec(*other.shop));
+    else
+        shop.reset(NULL);
+}
 
 feature_slot::feature_slot() : feats(), fix_slot(false)
 {

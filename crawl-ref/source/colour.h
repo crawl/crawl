@@ -95,6 +95,7 @@ uint8_t make_high_colour(uint8_t colour);
 bool is_element_colour(int col);
 int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
+bool get_tornado_phase(const coord_def& loc);
 
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 unsigned short dos_brand(unsigned short colour,

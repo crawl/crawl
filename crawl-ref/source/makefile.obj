@@ -66,7 +66,6 @@ hints.o \
 hiscores.o \
 initfile.o \
 invent.o \
-it_use2.o \
 it_use3.o \
 item_use.o \
 itemname.o \
@@ -137,6 +136,7 @@ mon-pick.o \
 mon-place.o \
 mon-project.o \
 mon-speak.o \
+mon-stealth.o \
 mon-stuff.o \
 mon-transit.o \
 mon-util.o \
@@ -151,6 +151,7 @@ ng-restr.o \
 ng-setup.o \
 ng-wanderer.o \
 notes.o \
+orb.o \
 ouch.o \
 output.o \
 package.o \
@@ -161,6 +162,7 @@ player-act.o \
 player-equip.o \
 player-stats.o \
 player.o \
+potion.o \
 quiver.o \
 random.o \
 random-var.o \
@@ -202,6 +204,7 @@ stuff.o \
 syscalls.o \
 tags.o \
 tagstring.o \
+target.o \
 teleport.o \
 terrain.o \
 transform.o \

@@ -108,6 +108,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld);
 static void _equip_jewellery_effect(item_def &item);
 static void _unequip_jewellery_effect(item_def &item, bool mesg);
+static void _equip_use_warning(const item_def& item);
 
 static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
                           bool msg)
@@ -121,6 +122,9 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
     ASSERT(slot == eq
            || eq == EQ_RINGS
               && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING));
+
+    if (msg)
+        _equip_use_warning(item);
 
     if (slot == EQ_WEAPON)
         _equip_weapon_effect(item, msg);
@@ -375,7 +379,7 @@ static void _unequip_artefact_effect(const item_def &item,
     }
 }
 
-static void _equip_weapon_use_warning(const item_def& item)
+static void _equip_use_warning(const item_def& item)
 {
     if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
         mpr("You really shouldn't be using a holy item like this.");
@@ -446,10 +450,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_STAVES:
     {
-        if (showMsgs)
-            _equip_weapon_use_warning(item);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
 
-        set_ident_flags(item, ISFLAG_KNOW_CURSE);
         if (item.sub_type == STAFF_POWER)
         {
             int mp = item.special - you.elapsed_time / POWER_DECAY;
@@ -465,21 +468,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
             calc_mp();
         }
-        maybe_identify_staff(item);
-
-        // Automatically identify rods; you can do this by wielding and then
-        // evoking them, so do it automatically instead. We don't need to give
-        // a message either, as the game will do that automatically. {due}
-        if (item_is_rod(item))
-        {
-            if (!item_type_known(item))
-            {
-                set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
-                set_ident_flags(item, ISFLAG_KNOW_TYPE);
-            }
-            if (!item_ident(item, ISFLAG_KNOW_PLUSES))
-                set_ident_flags(item, ISFLAG_KNOW_PLUSES);
-        }
 
         _wield_cursed(item, known_cursed);
         break;
@@ -487,9 +475,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
 
     case OBJ_WEAPONS:
     {
-        if (showMsgs)
-            _equip_weapon_use_warning(item);
-
         // Call unrandart equip func before item is identified.
         if (artefact)
             _equip_artefact_effect(item, &showMsgs);
@@ -1284,6 +1269,13 @@ static void _equip_jewellery_effect(item_def &item)
     case AMU_THE_GOURMAND:
         // What's this supposed to achieve? (jpeg)
         you.duration[DUR_GOURMAND] = 0;
+
+        if (you.species != SP_MUMMY
+            && player_mutation_level(MUT_HERBIVOROUS) < 3)
+        {
+            mpr("You feel a craving for the dungeon's cuisine.");
+            ident = ID_KNOWN_TYPE;
+        }
         break;
 
     case AMU_CONTROLLED_FLIGHT:
@@ -1316,7 +1308,7 @@ static void _equip_jewellery_effect(item_def &item)
         // Berserk is possible with a Battlelust card or with a moth of wrath
         // that affects you while donning the amulet.
         int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW]
-                     + you.duration[DUR_BERSERK];
+                     + you.duration[DUR_BERSERK] + you.duration[DUR_FINESSE];
         if (you.duration[DUR_TELEPORT])
             amount += 30 + random2(150);
         if (amount)
@@ -1342,10 +1334,14 @@ static void _equip_jewellery_effect(item_def &item)
                 mpr("You feel strangely stable.", MSGCH_DURATION);
             if (you.duration[DUR_BERSERK])
                 mpr("You violently calm down.", MSGCH_DURATION);
+            // my thesaurus says this usage is correct
+            if (you.duration[DUR_FINESSE])
+                mpr("Your hands get arrested.", MSGCH_DURATION);
             you.duration[DUR_HASTE] = 0;
             you.duration[DUR_SLOW] = 0;
             you.duration[DUR_TELEPORT] = 0;
             you.duration[DUR_BERSERK] = 0;
+            you.duration[DUR_FINESSE] = 0;
         }
         break;
 
@@ -1497,4 +1493,31 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
 
     // Must occur after ring is removed. -- bwr
     calc_mp();
+}
+
+bool unwield_item(bool showMsgs)
+{
+    if (!you.weapon())
+        return (false);
+
+    if (you.berserk())
+    {
+        if (showMsgs)
+            canned_msg(MSG_TOO_BERSERK);
+        return (false);
+    }
+
+    item_def& item = *you.weapon();
+
+    const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
+
+    if (is_weapon && !safe_to_remove(item))
+        return (false);
+
+    unequip_item(EQ_WEAPON, showMsgs);
+
+    you.wield_change     = true;
+    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+
+    return (true);
 }

@@ -1381,7 +1381,7 @@ static std::string _special_keys_to_string(int key)
     return (cmd);
 }
 
-std::string command_to_string(command_type cmd)
+std::string command_to_string(command_type cmd, bool tutorial)
 {
     const int key = command_to_key(cmd);
 
@@ -1390,7 +1390,12 @@ std::string command_to_string(command_type cmd)
         return (desc);
 
     if (key >= 32 && key < 256)
-        snprintf(info, INFO_SIZE, "%c", (char) key);
+    {
+        if (tutorial && key >= 'A' && key <= 'Z')
+            snprintf(info, INFO_SIZE, "uppercase %c", (char) key);
+        else
+            snprintf(info, INFO_SIZE, "%c", (char) key);
+    }
     else if (key > 1000 && key <= 1009)
     {
         const int numpad = (key - 1000);

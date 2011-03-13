@@ -17,14 +17,12 @@ NAME:    RatsNest_Dungeon
 ORIENT:  northeast
 TAGS:    uniq_rats_nest
 WEIGHT:  5
-DEPTH:   D:5-9
+DEPTH:   D:5-8
 SHUFFLE: 23, 34
 MONS:    rat / nothing, grey rat / nothing
 MONS:    green rat / nothing, orange rat / w:40 rat
 ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
-ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
-SUBST:   d = d....
-SUBST:   e = e.
+SUBST:   d = d...., e = e., e=d
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx.eexxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -48,6 +46,47 @@ xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Castle of kobolds and goblins
+NAME:    minmay_goblin_kobold_castle
+TAGS:    no_rotate
+ORIENT:  north
+DEPTH:   D:3-6
+MONS:    goblin; sling . stone / hobgoblin w:2; sling . sling bullet / nothing
+MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
+MONS:    kobold; dart / nothing
+MONS:    kobold; club / big kobold w:1; club | short sword w:2 / nothing
+SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW.
+SUBST:   5 = 2 1:2 .:24
+SHUFFLE: ABCD
+KITEM:   D = gold
+KMONS:   D = hobgoblin / kobold / gnoll / big kobold
+SUBST:   ABC = 2
+SHUFFLE: 12 / 34
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxx
+xxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxwwwwcccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccwwwwxxxxxx
+xxxwwwwwcAAAccccccccccccccccccccccccccccccccccccccccccccccccccccccDDDcwwwwwxxxxx
+xxxwwwwwcAAAc1.....ccccc.....c5555555c1..1c5555555c.............1cDDDcwwwwwwxxxx
+xxxwwwwwcAAAc.......ccc.2....+5555555c....c5555555+...........2..cDDDcwwwwwwxxxx
+xxwwwwwwcc+cc........c1...2..ccccccccc....ccccccccc..............cc+ccwwwwwwwxxx
+xxwwwwwwwc1..........c..2...........c.2..2.c..........cccccccc.....1cwwwwwwwwxxx
+xxwwwwwwwc...........+..............+......+..........cccccccc.2....cwwwwwwwwwxx
+xxwwwwwwwc1..........c..2...........c.2..2.c..........cccccccc.....1cwwwwwwwwwxx
+xwwwwwwwcc+cc........c1...2..ccccccccc....ccccccccc..............cc+ccwwwwwwwwxx
+xwwwwwwwcBBBc.......ccc.2....+5555555c....c5555555+...........2..cCCCcwwwwwwwwwx
+xwwwwwwwcBBBc1.....ccccc.....c5555555c....c5555555c.............1cCCCcwwwwwwwwwx
+xwwwwwwwcBBBccccccccccccccccccccccccccc++cccccccccccccccccccccccccCCCcwwwwwwwwwx
+xwwwwwwwcccccwwwwwwwwwwwwwwwwwwwwwwwyY1..1Yywwwwwwwwwwwwwwwwwwwwwcccccwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwyY....Yywwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyY.11.Yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyx
+xYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY1..1YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYx
+x..............................................................................x
+x..............................................................................x
 ENDMAP
 
 ###############################################################################
@@ -399,6 +438,375 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# Sea of Fire
+#
+# By minmay.
+#
+# All arrivals from above (and one from below) bubbles just lead to
+# downward escape hatches. The other two staircases from below lead
+# to bubbles with some loot. For the main fight, you have to levitate
+# or teleport.
+# The opposition is nasty, but this map is deep enough.
+NAME:    minmay_sea_of_fire
+TAGS:    no_rotate
+ORIENT:  encompass
+DEPTH:   D:16-24
+MONS:    hell hound / nothing
+MONS:    lindwurm
+MONS:    fire drake / steam dragon w:1
+MONS:    fire giant / dragon / mottled dragon w:5 / efreet w:2
+MONS:    smoke demon
+MONS:    hell knight / nothing w:5
+KMONS:   7 = molten gargoyle
+KFEAT:   7 = l
+KMONS:   8 = iron golem
+KMONS:   9 = Xtahua, hellephant
+KMONS:   $ = 0 / nothing w:90
+KITEM:   $ = $
+NSUBST:  = = 1:= / *:v
+SUBST:   = = =v
+SUBST:   ' : l.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxllllxxxxxxxxxlllllxxxll.3..v$$$$$$$$v......0..vxxxxxx.....xxxxxxx
+xxxxxxxxxxxxxllllllllllxxxxllllllllllll...=$$$$$$$$+....0....vxxxx....0....xxxxx
+xxxxxxxxxxxlllllxxllllllllllllllllllllllllvv=$$$$$$v..vvvvv.0vxll0..>.......xxxx
+xxxxxxxxxlllllllllllllllllllllllllllllllllllv$$$$$$v4.v...v..vllll.....x..0..xxx
+xxxxxxxllxxxxxllllllllllllllllllllllllllllllvvv$$$$v..v.].v..vllllll.0.......xxx
+xxxxxxlxxx..1xxx..lllxx.0..llxxlllllllllllllllv$$$$v......v..vlllllllll.......xx
+xxxxxlxx..1.....x...........xx..llllllllllllllvvvvvvvvvvvvv++vllllllllxx.0.x..xx
+xxxxlxx..xxxx1..1.x........0......lllllllllllllxxxxxllxxxll.3llllllllllxxxxx..xx
+xxxxlx.1xx{.x.........x............llllllllllllllxxllllllll..llllllllllllxxxx.xx
+xxxxlx..xxx.xl1..1..............2>.lllllllllllllllllllll.......lllllllllllxxx..x
+xxxllxx..1.xxl.........0.....0.....lllllxllllllllllll...x..........lllllllxx...x
+xxxlllxx..xxlll1...x.............xlllllxxllllllllllx........x...xll.llllllx[...x
+xxlllllxxxxlllllll........0....llxxllxxxllllllllll.....x...xx6.6xlll.lllllxxx..x
+xllllllllllllllllllll....x.llll.llxxxxxxllllllllllx...xx6.6xxx..xxll.llllllxxxxx
+xllllllllllllllllllllllllllllll.llllxxlllllllllllxx6.6xx..xxxxxxxxlll.lllllllxxx
+xlllllllllllllllllllllllllllllll.llllllllllllllllxxxx.xxxxxxxxxxxxllll.lllllllxx
+xxllllllllllllllllllllllllllllll.lllllllllllllllxxxxxxxxxxxxxxxxxllllll..lllllxx
+xxxllllllllllxxllllllllllllllllxx.llllllllllllllxxxxxxxxxxxxxxxxllllllx..ll...xx
+xxxlllllllllxxxxllllllllllllllxxxx...llllllllllllxxxxxxxxxxxxxllllllll..3..lll<x
+xxlllllllll..>xxlllllllvvvvvvvvvvxxx3.xxxllllllllllxxxxxxlllllllllllllll..lllllx
+xlllllllll....xxllllllxv..0....*vxxxxxxvvvvvvvvlllllllllllllllllllllllllllllllxx
+xlllllllll..3..xllllllxv..0...4*vxxxxxxv.4v...vlllllllvvv7vvv7vvv7vvv7vvv7vvvlxx
+xxlllllllll....llllllxxv..vvvvvvvvvvvvvv..v.}.vxllllllvvvvvvvvvvvvvvvvvvvvvvvllx
+xxllllllllll..lllllllxxv...........0......v...vxllllllvv.4***||v...v9.**|||vvllx
+xxllllllllllllllllllllxv....0.0.....0.....v...vxxlllll7v4.***||v.>.v...***|v7llx
+xxxllllllllllllllllllllv.vv.....vvvvvvvv......vxxlllllvv..vvvvvv...vv....*vvvllx
+xxxllllllllllllllllllllv..v.0.0.vlxxxxxv......vxllllllvv4......vv+vv.......vvlxx
+xxxllllllllxxllllllllllv4<v.....vllllxxvvvvvvvvlllllllvv...4...v...v.......vvlxx
+xxxlllllllxxxxxllllllllvvvv..vvvvlllllxxxlllllllllllll7vvvvv..vv...vvvv++vvv7lxx
+xxllllllllxxxxllllllllllll..3.llllllllllllllllllllllllvv4.....v6...6v8....8vvlxx
+xllllllllllxxllllllllllllll..llllllllllllllllllllxxlllvv......v.....v......vvllx
+xllllllllllllllllllllllllllll.llllllllllllllllllxxxxllvv......v6...6v......vvllx
+xxlllllllllllllllllllllllllll.lllllllllllllllllxxxxxll7v......v.....v8....8v7llx
+xxllllllllllllllllllllllllllx.xllllll...lllllllxxxxlllvv.....4v6...6vvv++vvvvllx
+xlllllllllllllllxxlllllllll...xxllll..0....xlllllxxlllvv..vvvvvv...vv......vvlxx
+xllllllllllllllxxxxlllllll.xxx.xll......xx....llllllllvv.......v...v.......vvlxx
+xllllllxxllllllxxvvvvllll.lxxxl...lll..xx...0..lllllll7v..............v..v.v7lxx
+xxlllllxxxlllllllv00v.l..llllllllllll...0......lllllllvv.......v...v.......vvlxx
+xxlllllllllllllllv00v..lllllllllllllll.........lllllllvv......vv...vv......vvlxx
+xxxllllllllllllllvvv.vvvlllllllllllllll..x....llllllllvv1vvvv1v3...3v.v..v.vvlxx
+xxx...lllllllllllv**v00vlllllllllllllll..0..xlllllllll7v1v**v1v.....v......v7lxx
+xxx1....lllllllllv**v00vllllllllllllllll.....lllllllllvv1....1v.....v4....4vvlxx
+xxxx.x.1.llllllllvvvvvvvllllllllllllllxx...0..lllllllxvvvvvvvvv.....vvvvvvvvvllx
+xxxx1..xxxxxlllllllxxxxxllllllllllllllxxxx....llllllxxvvv7vvv7v+++++v7vvv7vvvllx
+xxxx..xxxxxxxxllllllxxllllllllxxxllllllxxxx..llllllxxxxxlllllll8...8lllllllllllx
+xxxx.3xxxxxxxxxxlllllllllllllxxxxxllllllxx.llllllllxxxxlllllllll8.8llllllllllllx
+xxx...xxxxxxxxxxxllllllllllllxxxxxlllllll.lllllllllllxxlllllllllllllllllllllllxx
+xxx..xxxxxxxxxxxxxlllllllllllllxxxlllllll.llllllllllllllllllllllllllllllllllllxx
+xx...xxx>%%xxxxxxxllllllllllllllllllllll.lllllllllllllllllllllllllllllllllllllxx
+xx...xxxx%%.xxxxxxlllllllllllllllllllllll.lllllllllllllllllxxlllllllxxxxxllllllx
+x.1..xxxxxx.xxxxxllllllllxxllllllllllllll.lllllllllllllllllxxxxllllxxxxxxxxllllx
+x.....xx...xxxxxlllllllllxxxlllllllllllll.llllll....lllllllxxxlllllxxx$$$xxxlllx
+x.x.1...xxxxxxxxlllllllll..xllllllllllll.lllllll.0....lllllllllllllxx$$$$$xxllxx
+x......xxxxxxxxlllllll...x......llllllll.llllll.x...0.llllllllllllxxx$>$$xxxllxx
+x.1..x..xxxxxxlllllll.ll.....lll.lllll...xlllll...>...llllllllllllxx$$$$xxxlllxx
+xx........llll''''ll'lll.v++vllll..l...3...ll...0...x.llllllllllllxxx$$xxxxlllxx
+xx.1..........llll''lllvvv..vvvllll....x.....xx....0..xxlllllllllllxxxxxxxlllxxx
+xxx........xllllllllllvv......vvllllxx...xxxxxxx..x..xxxxxllllllllllxxxllllllxxx
+xxxx..x.1..xxlllllllllv.0......vlllllxxxxxxxxxxxx....xxxxlllllllllllllllllllxxxx
+xxx.......1.xxlllllllvv...vv0..vvlllllxxxxllxxxxxx.xxxxllllllllllllllllllllxxxxx
+xxx.x..3....xxlllllllv...v%%v..0vllllllllllllllxxxxxxxlllllllllllllllllllxxxxxxx
+xx..x.......xlllllllxv0..v%%v...vllllllllllllllllxxxxlll..1.llll..1.llllxxx...xx
+xx.xx...x..llllllllxxvv...vv...vvllllllllllllllllllllll1llll.1...x....lxxx).x..x
+x.xxxx1...lllllllllxxxv..0.....vllllllllllll.xlllllll..llllllll.1....xxxxxxxxx1x
+x.xxxxxx..lllllllllllxvv.....0vvlllllllllll....lll..1lllllllllll..xx1....xxx1..x
+x.xxxxxxxllllllllllllllvvv..vvvllllllllllll..5....llllllllllllxxxxxxxx...1....xx
+xx(xxxxxxxxllllllllllllllv++v...lllllllllxxxx<..llllllllllllxxxxxxxxxxxxx..1.xxx
+xxxxxxxxxxxxxxxllllxxxlll........llllxxxxxxxxx...llllllllxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_octagon_city
+TAGS:   no_rotate
+ORIENT: north
+DEPTH:  D:16-
+NSUBST: A = 1:+ / *:xxxx+, B = 1:+ / *:xxxx+, C = 1:+ / *:xxxx+
+NSUBST: D = 1:+ / *:xxxx+, E = 1:+ / *:xxxx+, F = 1:+ / *:xxxx+
+NSUBST: H = 1:+ / *:xxxx+, I = 1:+ / *:xxxx+, J = 1:+ / *:xxxx+
+SUBST:  1 : *., 2 : *., 3 : *., 4 : *., 5 : *., 6 : *.
+MAP
+                               xxxxxxx
+                              xx22222xx
+                             xx9.....9xx
+                            xx.........xx
+           xxxxxxx         xx.0.......0.xx  xxxxxx
+          xx.....xx       xx.............xxxx||||xx                    xxxxxx
+         xx.......xx xxxxxx0.............0xx.8..9.xx        xxxxxxx   xx3333xx
+  xxxxx xx.........xxx|||xx......0.0......x........x       xx66666xx xx......xx
+ xx111xxx...........x.....x.......G.......H...8....xxxxxx xx.......xxx..0..0..x
+xx.....xx....0.0....J..8..J......0.0......x....9...xx...xxx.........xx....9...x
+x..0.0..x.....9.....x.....x0.............0x........H.0.0.x...9...9...I...9....x
+x...9...F....0.0....xx9.9xxx.............xxx.9..8.xx..9..+...........x..0..0..xx
+x..0.0..x...........xxxxxx.xx.0.......0.xx.xx****xxx.0.0.x.....8.....xx......xxx
+xx.....xxx.........xx.......xx.........xx...xxxxxx.xx...xx...........xxx....xx.x
+xxx...xx.xx.......xx.........xx.......xx............xxxxxx...9...9...x.xx++xx..x
+x.xx+xx...xx.....xx...xxExx...xx.....xx...xxxCxxx........xx.........xx.........x
+x..........xxxFxxx...xx...xx...xxx+xxx...xx.....xx........xx.......xx..........x
+x....................x.9.9.x............xx.......xx........xx.....xx..xxxxxx...x
+x.............xxxxxx.E..8..E..xxBxx....xx.........xx........xxxIxxx..xx9..9xx..x
+x....xxAxx...xx$$$$xxx.9.9.x.xx...xx...x...0...0...x..xxDxx.........xx......xx.x
+x...xx...xx.xx$$$$$$x.x...xx.x.0.0.x...x....959....x.xx...xx........x9......9x.x
+x...x.0.0.x.x$$$$$$$$xxxExx..B..9..B...C....555....C.x.0.0.x........x...44...x.x
+x...A..9..A.x$$$$$$$$x.......x.0.0.x...x....959....x.D..9..D........x...44...x.x
+x...x.0.0.x.x$$$$$$$$x.......xx...xx...x...0...0...x.x.0.0.x........x........x.x
+x...xx...xx.x$$$$$$$$x........xxBxx....xx.........xx.xx...xx........xx......xx.x
+x....xxAxx..xx$$$$$$xx..................xx.......xx...xxDxx..........xx....xx..x
+x............xx$$$$xx....................xx.....xx....................xx++xx...x
+x.............xxxxxx......      ..........xxxCxxx............    ..............x
+        .................         ..................                   ........x
+ENDMAP
+
+NAME:   minmay_thick_lines
+ORIENT: north
+DEPTH:  D:4-
+WEIGHT: 1
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx................................9.........................xxxx
+xxxxxxxx.......................0..........xxx........0................xxx
+xxxxxx..............0.........xxx.......xxxxx.......xxx.......0........xx
+xxxxx......0.......xxx......xxxxx.....xxxxxxx.....xxxxx......xxx.....0..x
+xxxx......xxx.....xxxx.....xxxxxx....xxxxxxx.....xxxxxx.....xxxx....xxx.x
+xxx......xxxx...xxxxxx...xxxxxxx....xxxxxxxx...xxxxxxx....xxxxxx...xxxx.x
+xxx.....xxxxx..xxxxxx...xxxxxxxx...xxxxxxxx...xxxxxxxx...xxxxxx...xxxxx.x
+xx.....xxxxx..xxxxxx...xxxxxxxx...xxxxxxxxx..xxxxxxxx...xxxxxx...xxxxx..x
+xx....xxxxx..xxxxxxx..xxxxxxxx...xxxxxxxxx..xxxxxxxx...xxxxxxx..xxxxx...x
+xx...xxxxx..xxxxxxx..xxxxxxxxx..xxxxxxxxx..xxxxxxxxx..xxxxxxx..xxxxx....x
+x...xxxxx..xxxxxxx...xxxxxxxx..xxxxxxxxx...xxxxxxxx..xxxxxxx..xxxxx.....x
+x..xxxxx...xxxxxx...xxxxxxxx..xxxxxxxxx...xxxxxxxx...xxxxxx..xxxxx......x
+x.xxxxx...xxxxxx...xxxxxxxx...xxxxxxxx...xxxxxxxx...xxxxxx..xxxxx.......x
+x.xxxx...xxxxxx....xxxxxxx...xxxxxxxx....xxxxxxx...xxxxxx...xxxx........x
+x.xxx....xxxx.....xxxxxx.....xxxxxxx....xxxxxx.....xxxx.....xxx.........x
+x........xxx......xxxxx.....xxxxxxx.....xxxxx......xxx..........
+        ..........xxx.......xxxxx.......xxx............
+                 ...........xxx.............
+                           .....
+ENDMAP
+
+NAME:   minmay_smoke_and_mirrors
+ORIENT: northwest
+DEPTH:  D:12-
+MONS:   wizard / rakshasa / vapour / nothing
+MARKER: F = lua:fog_machine { cloud_type="purple smoke", \
+            pow_min = 5, pow_max = 15, delay_min = 10,   \
+            delay_max = 50, size_min = 1, size_max = 5,  \
+            walk_dist = 0, spread_rate= 100 }
+SUBST:  F = ., * = *****d, | = |||d
+ITEM:   bottled efreet
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbb
+b....................Fbb.
+b...bbbbb..1......1..bb..
+b..bb***bb..........bb...
+b.bb.....bb..1..1..bb....
+b......1..bb......bb..1..
+b..........bb||||bb......
+b.1...bb...FbbbbbbF.....
+b....bb....bb....bb.....
+b...bb.1..bb......bb....
+b..bb....bb........bb...
+bbbb....bb....bb.1.Fbb..
+b|.bb........bb....bb..
+b...bb...1..bb....bb...
+b....bb....bb....bb....
+b1....bbbbbb....bb.....
+bbb........bb.........
+b|bb........bb.....1..
+b.1bb........bb.......
+b...bb........bb.....
+b...Fbb.............
+b...bb.............
+b..bb....1......
+b.bb........
+b......
+ENDMAP
+
+NAME:   minmay_elf_outpost
+TAGS:   no_rotate
+ORIENT: northwest
+DEPTH:  D:12-20
+MONS:   deep elf soldier / deep elf fighter w:2 / nothing w:5, deep elf knight
+MONS:   deep elf conjurer / deep elf mage / deep elf summoner / nothing
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+x..3..............|x1...
+x.b..b..b..b3.b...|x....
+x.....3.........3.|x..x.
+x+xxxxxxx+xxxxxxxxxx....
+x..................x....
+x......1...........x..x.
+x..xxxx....xxxxxx1.x1...
+x.1x*.....1..2.*x..x....
+x..x*.2.1......*x..x..x.
+x..xxxxxx...1xxxx..x....
+x..................x....
+x1................1x..x.
+xxxxxxx..xxxxxx..xxx....
+x1................1x1...
+x.......1....11....x..x.
+x..xxxxxx....xxxx..x....
+x..1.2.*x....x*....x....
+x.1....*x....x*.2..x..x.
+xxxxxxxxxx++xxxxxxxx....
+x1......11..11.....1....
+x.......................
+x..x..x..x..x..x..x.....
+x.......................
+ENDMAP
+
+NAME:   minmay_ice_pillars
+TAGS:   no_rotate no_pool_fixup no_monster_gen
+ORIENT: north
+DEPTH:  D:16-24
+MONS:   ice beast / nothing w:3, ice statue, ice dragon / nothing
+SUBST:  y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wwW, Y = WW.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxx
+xxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwWWWWWWWWWWWWWWwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
+xxwwWWWWWWWwwwwwwwwwwwwwwwwwWWWWWW............WWWWWWwwwwwwwwwwwwwwwwwWWWWWWWwwxx
+xxwWW.....WWwwwwWWWWWwwwwwWWW.....1ccc++++ccc1.....WWWwwwwwWWWWWwwwwWW.....WWwxx
+xwwW.1c.c1.WwwwWW...WWwwwWW..1cccccc........cccccc1..WWwwwWW...WWwwwW.1c.c1.Wwwx
+xwwW.cc.cc.WwwwW.ccc.WwwwW..ccc..................ccc..WwwwW.ccc.WwwwW.cc.cc.Wwwx
+xwwW.c*2*c.WWWWW.ccc.WWWWW..c>3.2..............2.3<c..WWWWW.ccc.WWWWW.c*2*c.Wwwx
+xwwW.cc*cc.WwwwW.ccc.WwwwW..ccc..................ccc..WwwwW.ccc.WwwwW.cc*cc.Wwwx
+xwwW.1ccc1.WwwwWW...WWwwwWW..1cccccc********cccccc1..WWwwwWW...WWwwwW.1ccc1.Wwwx
+xwwWW.....WWwwwwWWWWWwwwwwWWW.....1cccccccccc1.....WWWwwwwwWWWWWwwwwWW.....WWwwx
+xwwwWWWWWWWwwwwwwwwwwwwwwwwwWWWWWW............WWWWWWwwwwwwwwwwwwwwwwwWWWWWWWwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwWWWWWWWWWWWWWWwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyx
+xYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYx
+ENDMAP
+
+NAME:   minmay_skeleton_keep
+TAGS:   no_monster_gen
+ORIENT: northwest
+DEPTH:  D:18-, Crypt
+MONS:   flying skull / nothing w:30, small skeleton / large skeleton / nothing
+MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
+SUBST:  G : GGccV.
+MAP
+cccccccccccccccccccccccccccccccc
+c....2.....||c...+....111c|....c
+c+c.2.3...cccc...c.....11cc..3.c
+c.cc...2.2.ccc...c......1ccc...c
+c..cc...2...cc...c...G...+2cc..c
+c...cc.2...2.c...c......cc2ccc.c
+c....cc...2..c...c1....cc2...+.c
+c1.3..cc.2...+...c11..cc2.2.2c.c
+c11....cc....c...c111cc2.2.22c|c
+c111....cccccc.3.ccccccccccc+ccc
+c1111....c...........c22.+11111c
+cc+cc1.3.c.G2G2G2G2G.c2..cc1111c
+c***c11..+...........+.2.2cc111c
+c***c111.c.G2G2G2G2G.c2...2cc11c
+c***c1111c...........c..22.2cc+c
+cccccccccccccccccccccccccccccc@
+ENDMAP
+
+NAME:   minmay_spriggan_fort
+TAGS:   no_rotate
+ORIENT: northwest
+DEPTH:  D:18-
+MONS:   plant, bush
+MONS:   spriggan w:70 / spriggan druid / spriggan berserker / spriggan rider
+MONS:   spriggan defender
+SUBST:  1 : 12t p:1, p = 12t, c : xc, 3 = 3, 4 = 444.
+MAP
+ccccccccccccccccccccccccccccxx
+c11111111111111111111111111c1.
+c1.........3.............31c13
+c1........................1c1.
+c1..111........3.....111..1c1.
+c13.1c1..3...........1c1..1c1.
+c1..111..........3...111..1c1.
+c1...........3............1c1.
+c1.........3...3..........1c1.
+c1.......111....111.......1c1.
+c1.......1ccc++ccc1.......1c1.
+c1.......1c1....1c1..3....1c1.
+c1.......1c1....1c1.......1c1.
+c1....3..1c14..41c1.......1c13
+c1.......1c1****1c1.......1c1.
+c1.......1c1****1c1.......1c1.
+c1.......1c111111c1....3..1c1.
+c1..3....1cccccccc1.......1c1.
+c1.......1111111111.......1c1.
+c1........................1c1.
+c1........................1c1.
+c1..111........3.....111..1c1.
+c1..1c1..3...........1c1..1c1.
+c1..111..............111..1c1.
+c1........................1c1.
+c13......................31c1.
+c11111111111....11111111111c1.
+ccccccccccccc++ccccccccccccc1.
+x11111111111....11111111111113
+x.3........3.3..3.............
+ENDMAP
+
+NAME:   minmay_haunted_quarter
+ORIENT: northwest
+DEPTH:  D:14-22
+KMONS:  w = wraith / freezing wraith / shadow wraith / phantasmal warrior / \
+            flayed ghost / nothing w:950
+KFEAT:  w = w
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccxxxxxxxxxx
+xc|||...wcxw..>..wxw..>..wx.
+xc|>|c.wwcxww.x.wwxww.x.wwx.
+xc|||cwwwcwwwxxwwwxwwwxwwwx.
+xcccccwwwcwwwxwwwxxwwwxwwwx.
+xccwwwwwwcwwwxwwwxwwwxxwwwx.
+xcwwwwwwwcwwwxwwwxwwwxwwwxx.
+xc.wwwwwccwwwxwwwxwwwxwwwx.
+xc.ccccccwwwxxwwwxwwwxwwwx.
+xc>cwwwwwwwwxwwwxxwwwxwwwx.
+xc..wwwwwwwwxwwwxwwwxxwwwx.
+xc.wwwwwwxxxxwwwxwwwxwwwxx.
+xcwwxxxxxxwwwwwwxwwwxwwwx.
+xxxxxwwwwwwwwwwxxwwwxwwwx.
+xxwwwwwwwwwwwwxxwwwxxwwwx.
+xx.wwwwwwwxxxxxwwwwxwwwxx.
+xx..wxxxxxxwwwwwwwwxwwwx.
+xx>xxxwwwwwwwwwwwwxxwwwx.
+xx..wwwwwwwwwwwxxxxwwwxx.
+xx.wwwwwwwwxxxxxwwwwwwx.
+xxwwwwxxxxxxwwwwwwwwwxx.
+xxxxxxxwwwwwwwwwwwwxxx.
+xxwwwwwwwwwwwwwwxxxx..
+xx.wwwwwwwwwxxxxx...
+xx..wwwxxxxxx....
+xx.xxxxx.....
+x.......
 ENDMAP
 
 #############################################################################
@@ -968,8 +1376,8 @@ SUBST:   V = *
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.......xccccccxxxxxxx.........................................w"..xxx
-x.{...{.xc....cbbbbbxx................xxx...................."w......x
-x.......++.U..++.].++.....'''....'l'....xxx................."ww".....x
+x.(...{.xc....cbbbbbxx................xxx...................."w......x
+x.......++.U..++.].++.....'''....'l'....xxx................."ww"..)..x
 x...[...xc....cbbbbbxx...'''..''lllll'....xx...bbEbbEb......"ww"....xx
 x.......xcccccccxxxxxx.......'llllllll.....x...bd...9b...."www".....xx
 xxxxxxxxxxxxxxxxxxxxxx.......'lllllll'.....x...E.....E.."ww.w".....xxx

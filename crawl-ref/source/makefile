@@ -120,6 +120,10 @@ CHOWN = chown 2>/dev/null
 PNGCRUSH = $(COPY)
 PNGCRUSH_LABEL = COPY
 ADVPNG = advpng -z -4
+DOXYGEN = doxygen
+DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
+DOXYGEN_ALL_CONF = crawl_all.doxy
+DOXYGEN_HTML_GEN = html/
 
 export AR
 export RANLIB
@@ -860,7 +864,8 @@ LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html
-GENERATED_FILES := art-data.h $(RLTILES)/dc-unrand.txt
+GENERATED_HEADERS := art-enum.h #the rest are private
+GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h $(RLTILES)/dc-unrand.txt build.h compflag.h
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
@@ -883,7 +888,7 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
         profile wizard package-source source build-windows package-windows
 
-all: $(GENERATED_FILES) $(GAME) $(GENERATED_DOCS)
+all: $(GAME) $(GENERATED_DOCS)
 
 test:
 	./$(GAME) -test > /dev/null
@@ -1064,7 +1069,7 @@ clean: clean-rltiles
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
-	    build.h compflag.h .contrib-libs .cflags
+	    .contrib-libs .cflags
 	$(RM) -r build-win
 	$(RM) -r build
 
@@ -1075,13 +1080,22 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
 	$(RM) scores $(GAME) core $(DEPENDENCY_MKF)
 	$(RM) -r mac-app-zips
+	$(RM) -r $(DOXYGEN_HTML_GEN)
 
 $(GAME): $(GAME_DEPENDS)
-	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
 profile: all
 wizard: all
+
+doxy-simple: doxygen-simple
+doxygen-simple:
+	$(DOXYGEN) $(DOXYGEN_SIMPLE_CONF)
+
+doxy-all: doxygen-all
+doxygen-all:
+	$(DOXYGEN) $(DOXYGEN_ALL_CONF)
 
 $(UTIL)%.o: $(UTIL)%.cc .cflags
 ifdef NO_INLINE_DEPGEN
@@ -1103,17 +1117,17 @@ ifdef NO_INLINE_DEPGEN
 $(OBJECTS): $(OBJECTS:%.o=%.d) $(YACC_OBJECTS:%.o=%.d)
 endif
 
-%.d: %.cc .cflags $(GENERATED_FILES)
+%.d: %.cc .cflags $(GENERATED_HEADERS)
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 
-%.o: %.m .cflags $(GENERATED_FILES)
+%.o: %.m .cflags $(GENERATED_HEADERS)
 ifdef NO_INLINE_DEPGEN
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -c $< -o $@
 else
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
 endif
 
-%.o: %.cc .cflags $(GENERATED_FILES)
+%.o: %.cc .cflags $(GENERATED_HEADERS)
 ifdef NO_INLINE_DEPGEN
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -c $< -o $@
 else
@@ -1141,16 +1155,23 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 #############################################################################
 # Build unrandart data
 art-data.h: art-data.txt util/art-data.pl art-func.h
-	@util/art-data.pl
+	$(QUIET_GEN)util/art-data.pl
+art-enum.h: art-data.h
+
+mon-mst.h: mon-spll.h util/gen-mst.pl
+	$(QUIET_GEN)util/gen-mst.pl
 
 $(RLTILES)/dc-unrand.txt: art-data.h
+
+artefact.o: art-data.h art-enum.h
+mon-util.o: mon-mst.h
 
 #############################################################################
 # RLTiles
 #
 
 .PHONY: rltile-build
-rltile-build: .contrib-libs $(GENERATED_FILES)
+rltile-build: .contrib-libs $(RLTILES)/dc-unrand.txt
 	+$(MAKE) -C $(RLTILES) all
 
 $(TILEDEFSRCS): rltile-build

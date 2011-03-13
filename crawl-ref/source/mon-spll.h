@@ -90,8 +90,8 @@
       {
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
+       SPELL_MIRROR_DAMAGE,
        SPELL_SUMMON_UNDEAD, // cheaper to fake recall and gift with summon spell
-       SPELL_NO_SPELL,
        SPELL_DRAIN_LIFE,
        SPELL_MIRROR_DAMAGE
       }
@@ -221,7 +221,7 @@
     {  MST_GIANT_ORANGE_BRAIN,
       {
        SPELL_BRAIN_FEED,
-       SPELL_POLYMORPH_OTHER,
+       SPELL_CAUSE_FEAR,
        SPELL_SHADOW_CREATURES,
        SPELL_CONFUSE,
        SPELL_BLINK,
@@ -416,6 +416,28 @@
       }
     },
 
+    {  MST_FIEND,
+      {
+       SPELL_HELLFIRE,
+       SPELL_HELLFIRE,
+       SPELL_NO_SPELL,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_PIT_FIEND,
+      {
+       SPELL_HELLFIRE,
+       SPELL_HELLFIRE,
+       SPELL_MELEE,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_ICE_FIEND,
       {
        SPELL_BOLT_OF_COLD,
@@ -517,11 +539,11 @@
 
     {  MST_CACODEMON,
       {
-       SPELL_CALL_IMP,
-       SPELL_CALL_IMP,
+       SPELL_ENERGY_BOLT,
+       SPELL_SLOW,
        SPELL_CALL_IMP,
        SPELL_POLYMORPH_OTHER,
-       SPELL_DIG,
+       SPELL_NO_SPELL,
        SPELL_SUMMON_DEMON
       }
     },
@@ -1186,6 +1208,17 @@
       }
     },
 
+    {  MST_TERPSICHORE,
+      {
+       SPELL_TUKIMAS_BALL,
+       SPELL_SWIFTNESS,
+       SPELL_CORONA,
+       SPELL_BLINK,
+       SPELL_CANTRIP,
+       SPELL_CANTRIP
+      }
+    },
+
     {  MST_KIRKE,
       {
        SPELL_PORKALATOR,
@@ -1463,6 +1496,17 @@
       }
     },
 
+    {  MST_SPRIGGAN_AIR_MAGE,
+      {
+       SPELL_AIRSTRIKE,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_SWIFTNESS,
+       SPELL_SHOCK,
+       SPELL_NO_SPELL,
+       SPELL_HASTE
+      }
+    },
+
     { MST_THE_ENCHANTRESS,
       {
        SPELL_PARALYSE,
@@ -1491,7 +1535,7 @@
        SPELL_PARALYSE,
        SPELL_BLINK,
        SPELL_PAIN,
-       SPELL_BRAIN_FEED,
+       SPELL_PARALYSE,
        SPELL_BLINK
       }
     },
@@ -1609,7 +1653,7 @@
     {  MST_JORY,
       {
        SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-       SPELL_CAUSE_FEAR,
+       SPELL_MESMERISE,
        SPELL_BLINK,
        SPELL_BRAIN_FEED,
        SPELL_PAIN,
@@ -1619,10 +1663,21 @@
 
     {  MST_SHEDU,
       {
-       SPELL_RESURRECT,
+       SPELL_HEAL_OTHER,
        SPELL_NO_SPELL,
        SPELL_HEAL_OTHER,
        SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+      }
+    },
+
+    {  MST_EIDOLON,
+      {
+       SPELL_PAIN,
+       SPELL_CAUSE_FEAR,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
       }

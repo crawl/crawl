@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -36,7 +37,7 @@
 #include "traps.h"
 #include "view.h"
 
-void identify(int power, int item_slot)
+int identify(int power, int item_slot, std::string *pre_msg)
 {
     int id_used = 1;
 
@@ -52,7 +53,7 @@ void identify(int power, int item_slot)
                                            OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return;
+            return(-1);
 
         item_def& item(you.inv[item_slot]);
 
@@ -64,6 +65,9 @@ void identify(int power, int item_slot)
             item_slot = -1;
             continue;
         }
+
+        if (pre_msg)
+            mpr(pre_msg->c_str());
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -92,6 +96,14 @@ void identify(int power, int item_slot)
 
         id_used--;
 
+        if (item.base_type == OBJ_JEWELLERY
+            && item.sub_type == AMU_INACCURACY
+            && item_slot == you.equip[EQ_AMULET]
+            && !item_known_cursed(item))
+        {
+            learned_something_new(HINT_INACCURACY);
+        }
+
         if (Options.auto_list && id_used > 0)
             more();
 
@@ -99,6 +111,7 @@ void identify(int power, int item_slot)
         item_slot = -1;
     }
     while (id_used > 0);
+    return(1);
 }
 
 static bool _mons_hostile(const monster* mon)
@@ -214,7 +227,7 @@ static int _healing_spell(int healed, bool divine_ability,
     monster* mons = monster_at(spd.target);
     if (!mons)
     {
-        mpr("There isn't anything there!");
+        canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
         return (0);
@@ -468,7 +481,7 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool _mark_detected_creature(coord_def where, const monster* mon,
+static bool _mark_detected_creature(coord_def where, monster* mon,
                                     int fuzz_chance, int fuzz_radius)
 {
     bool found_good = false;
@@ -507,6 +520,10 @@ static bool _mark_detected_creature(coord_def where, const monster* mon,
         if (found_good)
             where = place;
     }
+
+    // Mimics are too obvious by now, even out of LOS.
+    if (mons_is_unknown_mimic(mon))
+        discover_mimic(mon);
 
     env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
@@ -612,7 +629,10 @@ bool remove_curse()
     }
 
     if (success)
+    {
         mpr("You feel as if something is helping you.");
+        learned_something_new(HINT_REMOVED_CURSE);
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -677,7 +697,7 @@ bool detect_curse(int scroll, bool suppress_msg)
     return (true);
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool force_full)
+static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -690,44 +710,57 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
     };
 
     bool proceed;
+    monster *mon;
+    std::string targname;
 
-    if (force_full)
+    if (zin)
     {
+        // We need to get this now because we won't be able to see
+        // the monster once the walls go up!
+        mon = monster_at(where);
+        targname = mon->name(DESC_NOCAP_THE);
         bool success = true;
+        bool none_vis = true;
 
         for (adjacent_iterator ai(where); ai; ++ai)
         {
             // The tile is occupied.
-            if (actor_at(*ai))
+            if (actor *fatass = actor_at(*ai))
             {
                 success = false;
+                if (you.can_see(fatass))
+                    none_vis = false;
                 break;
             }
 
             // Make sure we have a legitimate tile.
             proceed = false;
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
 
             if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
             {
                 success = false;
+                none_vis = false;
                 break;
             }
         }
 
         if (!success)
         {
-            mpr("Half-formed walls emerge from the floor, then retract.");
+            mprf(none_vis ? "You briefly glimpse something next to %s."
+                          : "You need more space to imprison %s.",
+                 targname.c_str());
             return (false);
         }
+
     }
 
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!force_full && one_chance_in(pow / 5))
+        if (!zin && one_chance_in(pow / 5))
             continue;
 
         // The tile is occupied.
@@ -737,7 +770,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
         // Make sure we have a legitimate tile.
         proceed = false;
         for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                 proceed = true;
 
         if (proceed)
@@ -755,7 +788,21 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
                 ptrap->destroy();
 
             // Actually place the wall.
-            grd(*ai) = DNGN_ROCK_WALL;
+
+            if (zin)
+            {
+                // Make the walls silver.
+                grd(*ai) = DNGN_METAL_WALL;
+                env.grid_colours(*ai) = LIGHTGREY;
+
+                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
+                marker->set_property("feature_description", "A gleaming silver wall");
+                marker->set_property("prison", "Zin");
+                env.markers.add(marker);
+            }
+            else
+                grd(*ai) = DNGN_ROCK_WALL;
+
             set_terrain_changed(*ai);
             number_built++;
         }
@@ -763,9 +810,17 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
     if (number_built > 0)
     {
-        mpr("Walls emerge from the floor!");
+        if (zin)
+        {
+            mprf("Zin imprisons %s with walls of pure silver!",
+                 targname.c_str());
+        }
+        else
+            mpr("Walls emerge from the floor!");
+
         you.update_beholders();
         you.update_fearmongers();
+        env.markers.clear_need_activate();
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -779,7 +834,7 @@ bool entomb(int pow)
     if (crawl_state.game_is_zotdef())
     {
         mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
-        return false;
+        return (false);
     }
 
     return (_do_imprison(pow, you.pos(), false));
@@ -789,8 +844,7 @@ bool cast_imprison(int pow, monster* mons, int source)
 {
     if (_do_imprison(pow, mons->pos(), true))
     {
-        const int tomb_duration = BASELINE_DELAY
-            * pow;
+        const int tomb_duration = BASELINE_DELAY * pow;
         env.markers.add(new map_tomb_marker(mons->pos(),
                                             tomb_duration,
                                             source,
@@ -802,13 +856,11 @@ bool cast_imprison(int pow, monster* mons, int source)
     return (false);
 }
 
-bool cast_smiting(int pow, const coord_def& where)
+bool cast_smiting(int pow, monster* mons)
 {
-    monster* m = monster_at(where);
-
-    if (m == NULL)
+    if (mons == NULL || mons->submerged())
     {
-        mpr("There's nothing there!");
+        canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to victory-dancing and
         // invisible/submerged monsters.
         return (true);
@@ -817,17 +869,17 @@ bool cast_smiting(int pow, const coord_def& where)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(m, false, you.pos());
+    const bool success = !stop_attack_prompt(mons, false, you.pos());
 
     if (success)
     {
-        set_attack_conducts(conducts, m);
+        set_attack_conducts(conducts, mons);
 
-        mprf("You smite %s!", m->name(DESC_NOCAP_THE).c_str());
+        mprf("You smite %s!", mons->name(DESC_NOCAP_THE).c_str());
 
-        behaviour_event(m, ME_ANNOY, MHITYOU);
-        if (mons_is_mimic(m->type))
-            mimic_alert(m);
+        behaviour_event(mons, ME_ANNOY, MHITYOU);
+        if (mons_is_mimic(mons->type))
+            mimic_alert(mons);
     }
 
     enable_attack_conducts(conducts);
@@ -835,11 +887,11 @@ bool cast_smiting(int pow, const coord_def& where)
     if (success)
     {
         // Maxes out at around 40 damage at 27 Invocations, which is
-        // plenty in my book (the old max damage was around 70,
-        // which seems excessive).
-        m->hurt(&you, 7 + (random2(pow) * 33 / 191));
-        if (m->alive())
-            print_wounds(m);
+        // plenty in my book (the old max damage was around 70, which
+        // seems excessive).
+        mons->hurt(&you, 7 + (random2(pow) * 33 / 191));
+        if (mons->alive())
+            print_wounds(mons);
     }
 
     return (success);

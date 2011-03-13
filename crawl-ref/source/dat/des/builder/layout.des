@@ -695,7 +695,7 @@ TAGS: layout allow_dup
         if room.fill == '.'
            and (room.x2 - room.x1 > 5)
            and (room.y2 - room.y1 > 5)
-           and crawl.x_chance_in_y(3, 100 - you.absdepth())
+           and crawl.x_chance_in_y(you.absdepth() - 9, 220)
         then
             local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
             make_inner_room(room, feat, crawl.coinflip())

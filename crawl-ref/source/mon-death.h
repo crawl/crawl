@@ -25,7 +25,6 @@ monster* get_shedu_pair (const monster* mons);
 bool shedu_pair_alive (const monster* mons);
 bool mons_is_shedu(const monster* mons);
 void shedu_do_resurrection(const monster *mons);
-// Can't constify mons, need to change numbers.
 void shedu_do_actual_resurrection (monster* mons);
 
 #endif

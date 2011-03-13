@@ -719,7 +719,6 @@ void item_colour(item_def &item)
 
         case MISC_AIR_ELEMENTAL_FAN:
         case MISC_CRYSTAL_BALL_OF_ENERGY:
-        case MISC_CRYSTAL_BALL_OF_FIXATION:
         case MISC_CRYSTAL_BALL_OF_SEEING:
         case MISC_DISC_OF_STORMS:
         case MISC_HORN_OF_GERYON:
@@ -940,20 +939,24 @@ static bool _try_make_item_unrand(item_def& item, int force_type)
 static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart = false)
 {
-    if (item.sub_type != WPN_CLUB && item_level > 2
-          && x_chance_in_y(101 + item_level * 3, 4000)
+    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
         // Make a randart or unrandart.
 
-        // 1 in 50 randarts are unrandarts.
-        if (one_chance_in(50) && !force_randart)
+        // 1 in 12 randarts are unrandarts.
+        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 12)
+            && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type))
                 return (true);
         }
 
-        // The other 98% are normal randarts.
+        // Small clubs are never randarts.
+        if (item.sub_type == WPN_CLUB)
+            return false;
+
+        // The rest are normal randarts.
         make_item_randart(item);
         item.plus  = random2(7);
         item.plus2 = random2(7);
@@ -1517,11 +1520,16 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VAMPIRICISM;
             else if (one_chance_in(6))
                 rc = SPWPN_VENOM;
+            else if (one_chance_in(8))
+                rc = SPWPN_ANTIMAGIC;
             break;
 
         case WPN_DEMON_WHIP:
         case WPN_DEMON_BLADE:
         case WPN_DEMON_TRIDENT:
+            if (one_chance_in(25))
+                rc = SPWPN_ANTIMAGIC;
+
             if (one_chance_in(5))       // 4.9%, 7.3% blades
                 rc = SPWPN_VAMPIRICISM;
 
@@ -2063,14 +2071,15 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     {
         // Make a randart or unrandart.
 
-        // 1 in 50 randarts are unrandarts.
-        if (one_chance_in(50) && !force_randart)
+        // 1 in 12 randarts are unrandarts.
+        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 12)
+            && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type))
                 return (true);
         }
 
-        // The other 98% are normal randarts.
+        // The rest are normal randarts.
 
         // 10% of boots become barding.
         if (item.sub_type == ARM_BOOTS && one_chance_in(10))
@@ -2770,8 +2779,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
         {
             // total weight: 10000
             item.sub_type = random_choose_weighted(
-                1799, SCR_IDENTIFY,
-                1105, SCR_REMOVE_CURSE,
+                1800, SCR_IDENTIFY,
+                1115, SCR_REMOVE_CURSE,
                  511, SCR_DETECT_CURSE,
                  331, SCR_FEAR,
                  331, SCR_MAGIC_MAPPING,
@@ -2787,17 +2796,14 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  // Don't create ?oImmolation at low levels (encourage read-ID).
                  331, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
 
-                 220, SCR_CURSE_WEAPON,
-                 220, SCR_CURSE_ARMOUR,
-                 220, SCR_CURSE_JEWELLERY,
-
-                 161, SCR_PAPER,
+                 270, SCR_CURSE_WEAPON,
+                 270, SCR_CURSE_ARMOUR,
+                 270, SCR_CURSE_JEWELLERY,
 
                  // Medium-level scrolls.
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
                  140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
-                 140, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
 
                  // High-level scrolls.
                  140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
@@ -2810,6 +2816,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 // [ds] Zero-weights should always be at the end,
                 // since random_choose_weighted stops at the first
                 // zero weight.
+
+                (depth_mod < 4 ? 0 : 140), SCR_VULNERABILITY,
 
                 // [Cha] don't generate teleportation scrolls if in sprint
                 (crawl_state.game_is_sprint() ? 0 : 802), SCR_TELEPORTATION,
@@ -2951,6 +2959,9 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
 
     if (item_is_rod(item))
         init_rod_mp(item, -1, item_level);
+
+    if (one_chance_in(16))
+        do_curse_item(item);
 }
 
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
@@ -3077,6 +3088,9 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
              || item.sub_type == MISC_HORN_OF_GERYON
              || item.sub_type == MISC_DECK_OF_PUNISHMENT
              || item.sub_type == MISC_QUAD_DAMAGE
+#if TAG_MAJOR_VERSION == 32
+             || item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION
+#endif
              // Pure decks are rare in the dungeon.
              || (item.sub_type == MISC_DECK_OF_ESCAPE
                     || item.sub_type == MISC_DECK_OF_DESTRUCTION
@@ -3118,7 +3132,8 @@ int items(int allow_uniques,       // not just true-false,
                                    // item_race also gives type of rune!
           uint32_t mapmask,
           int force_ego,           // desired ego/brand
-          int agent)               // acquirement agent, if not -1
+          int agent,               // acquirement agent, if not -1
+          bool mundane)            // no plusses
 {
     ASSERT(force_ego <= 0
            || force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
@@ -3265,6 +3280,13 @@ int items(int allow_uniques,       // not just true-false,
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
         break;
+    }
+
+    if (mundane)
+    {
+        item.plus    = 0;
+        item.plus2   = 0;
+        item.special = 0;
     }
 
     if (item.base_type == OBJ_WEAPONS
@@ -3577,6 +3599,10 @@ armour_type get_random_armour_type(int item_level)
 // Sets item appearance to match brands, if any.
 void item_set_appearance(item_def &item)
 {
+    // Artefact appearance overrides cosmetic flags anyway.
+    if (is_artefact(item))
+        return;
+
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return;
 

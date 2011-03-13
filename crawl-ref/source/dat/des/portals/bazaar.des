@@ -785,7 +785,7 @@ xxxxxxxxxxxxxwwwwwxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# 2 wand shops, 2 jewellery shops
+# 2 wand shops, 2 potion shops
 NAME:    dpeg_bazaar_wands
 TAGS:    bazaar no_rotate
 WEIGHT:  5
@@ -1603,7 +1603,7 @@ NAME:    bazaar_jpeg_triangle_bulge
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  1
-SHUFFLE: ABC
+SHUFFLE: AB
 SUBST:   A = <, B = >
 KFEAT:   C = any shop
 : bazaar_epilogue(_G)

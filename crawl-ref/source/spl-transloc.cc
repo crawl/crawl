@@ -27,8 +27,10 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-util.h"
+#include "orb.h"
 #include "player.h"
 #include "random.h"
+#include "shout.h"
 #include "spl-other.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -56,7 +58,8 @@ static bool _abyss_blocks_teleport(bool cblink)
 // If wizard_blink is set, all restriction are ignored (except for
 // a monster being at the target spot), and the player gains no
 // contamination.
-int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
+int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
+          std::string *pre_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -72,17 +75,29 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
     // yes, there is a logic to this ordering {dlb}:
     if (item_blocks_teleport(true, true) && !wizard_blink)
+    {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         canned_msg(MSG_STRANGE_STASIS);
+    }
     else if (you.level_type == LEVEL_ABYSS
              && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
     {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         mpr("The power of the Abyss keeps you in your place!");
     }
     else if (you.confused() && !wizard_blink)
+    {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         random_blink(false);
+    }
     else if (!allow_control_teleport(true) && !wizard_blink)
     {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
         mpr("A powerful magic interferes with your control of the blink.");
         if (high_level_controlled_blink)
             return (cast_semi_controlled_blink(pow));
@@ -159,6 +174,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             }
         }
 
+        if (pre_msg)
+            mpr(pre_msg->c_str());
+
         // Allow wizard blink to send player into walls, in case the
         // user wants to alter that grid to something else.
         if (wizard_blink && feat_is_solid(grd(beam.target)))
@@ -184,10 +202,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
                 contaminate_player(1, true);
-
-
-            if (!wizard_blink && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-                remove_condensation_shield();
         }
     }
 
@@ -201,7 +215,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    bool success = false;
     coord_def target;
 
     if (item_blocks_teleport(true, true))
@@ -226,14 +239,12 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         mpr("You may select the general direction of your translocation.");
         cast_semi_controlled_blink(100);
         maybe_id_ring_TC();
-        success = true;
     }
     else
     {
         canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
         move_player_to_grid(target, false, true);
-        success = true;
 
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
@@ -245,9 +256,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
                 you.pet_target = MHITNOT;
         }
     }
-
-    if (success && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
 }
 
 // This function returns true if the player can use controlled teleport
@@ -377,9 +385,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     // (like picking up/dropping an item).
     viewwindow();
     StashTrack.update_stash(you.pos());
-
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
 
     if (you.level_type == LEVEL_ABYSS)
     {
@@ -694,8 +699,10 @@ bool cast_portal_projectile(int pow)
     return (true);
 }
 
-bool cast_apportation(int pow, const coord_def& where)
+bool cast_apportation(int pow, bolt& beam)
 {
+    const coord_def where = beam.target;
+
     if (you.trans_wall_blocking(where))
     {
         mpr("Something is in the way.");
@@ -758,15 +765,41 @@ bool cast_apportation(int pow, const coord_def& where)
 
     if (max_units <= 0)
     {
-        mpr("The mass is resisting your pull.");
-        return (true);
+        if (item_is_orb(item))
+        {
+            orb_pickup_noise(where, 30);
+            return (true);
+        }
+        else
+        {
+            mpr("The mass is resisting your pull.");
+            return (true);
+        }
     }
 
     // We need to modify the item *before* we move it, because
     // move_top_item() might change the location, or merge
     // with something at our position.
-    mprf("Yoink! You pull the item%s to yourself.",
+    mprf("Yoink! You pull the item%s towards yourself.",
          (item.quantity > 1) ? "s" : "");
+
+    if (item_is_orb(item))
+    {
+        fake_noisy(30, where);
+
+        // There's also a 1-in-6 flat chance of apport failing.
+        if (one_chance_in(6))
+        {
+            orb_pickup_noise(where, 30, "The orb shrieks and becomes a dead weight against your magic!",
+                             "The orb lets out a furious burst of light and becomes a dead weight against your magic!");
+            return (true);
+        }
+        else // Otherwise it's just a noisy little shiny thing
+        {
+            orb_pickup_noise(where, 30, "The orb shrieks as your magic touches it!",
+                             "The orb lets out a furious burst of light as your magic touches it!");
+        }
+    }
 
     if (max_units < item.quantity)
     {
@@ -782,6 +815,44 @@ bool cast_apportation(int pow, const coord_def& where)
         remove_item_stationary(item);
         if (monster* mons = monster_at(where))
             mons->del_ench(ENCH_HELD, true);
+    }
+
+    if (item_is_orb(item))
+    {
+        // The orb drags its heels.
+        beam.is_tracer = true;
+        beam.aimed_at_spot = true;
+        beam.fire();
+
+        // Pop the orb's location off the end
+        beam.path_taken.pop_back();
+
+        // The actual number of squares it needs to traverse to get to you.
+        unsigned int dist = beam.path_taken.size();
+
+        // The maximum number of squares the orb will actually move, always
+        // at least one square.
+        unsigned int max_dist = std::max((pow / 10) - 1, 1);
+
+        dprf("Orb apport dist=%d, max_dist=%d", dist, max_dist);
+
+        if (max_dist <= dist)
+        {
+            coord_def new_spot = beam.path_taken[beam.path_taken.size()-max_dist];
+
+            dprf("Orb apport: new spot is %d/%d", new_spot.x, new_spot.y);
+
+            if (feat_virtually_destroys_item(grd(new_spot), item))
+                return (true);
+
+            else
+            {
+                move_top_item(where, new_spot);
+                origin_set(new_spot);
+                return (true);
+            }
+        }
+        // if power is high enough it'll just come straight to you
     }
 
     // Actually move the item.
@@ -840,7 +911,10 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     }
 
     if (!found)
-        return 0;
+    {
+        random_blink(false);
+        return (1);
+    }
 
     coord_def origin = you.pos();
     move_player_to_grid(target, false, true);

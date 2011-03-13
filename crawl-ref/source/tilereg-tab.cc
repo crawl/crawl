@@ -106,7 +106,7 @@ GridRegion *TabbedRegion::get_tab_region(int idx)
 tileidx_t TabbedRegion::get_tab_tile(int idx)
 {
     if (invalid_index(idx))
-        return (NULL);
+        return (0);
 
     return (m_tabs[idx].tile_tab);
 }

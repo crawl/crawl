@@ -210,6 +210,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     args.mode = TARG_HOSTILE;
     args.range = 2;
     args.top_prompt = "Attack whom?";
+    targetter_reach hitfunc(&you, REACH_TWO);
+    args.hitfunc = &hitfunc;
 
     direction(beam, args);
 
@@ -308,13 +310,20 @@ static bool _evoke_horn_of_geryon(item_def &item)
     // Note: This assumes that the Vestibule has not been changed.
     bool rc = false;
 
-    if (silenced(you.pos())) {
+    if (silenced(you.pos()))
+    {
         mpr("You can't produce a sound!");
         return false;
     }
     else if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         mpr("You produce a weird and mournful sound.");
+
+        if (you.char_direction == GDT_ASCENDING)
+        {
+            mpr("But nothing happens...");
+            return false;
+        }
 
         for (int count_x = 0; count_x < GXM; count_x++)
             for (int count_y = 0; count_y < GYM; count_y++)
@@ -407,8 +416,7 @@ static bool _efreet_flask(int slot)
 static bool _is_crystal_ball(const item_def &item)
 {
     return (item.base_type == OBJ_MISCELLANY
-            && (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
+            && (item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
                 || item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING));
 }
 
@@ -669,36 +677,29 @@ static bool _box_of_beasts(item_def &box)
 
     if (x_chance_in_y(60 + you.skills[SK_EVOCATIONS], 100))
     {
-        monster_type beasty = MONS_NO_MONSTER;
+        const monster_type beasts[] = {
+            MONS_MEGABAT,   MONS_HOUND,     MONS_JACKAL,
+            MONS_RAT,       MONS_ICE_BEAST, MONS_SNAKE,
+            MONS_YAK,       MONS_BUTTERFLY, MONS_WATER_MOCCASIN,
+            MONS_CROCODILE, MONS_HELL_HOUND
+        };
 
-        // If you worship a good god, don't summon an evil beast (in
+        monster_type mon = MONS_NO_MONSTER;
+
+        // If you worship a good god, don't summon an unholy beast (in
         // this case, the hell hound).
         do
-        {
-            int temp_rand = random2(11);
+            mon = RANDOM_ELEMENT(beasts);
+        while (player_will_anger_monster(mon));
 
-            beasty = ((temp_rand == 0) ? MONS_GIANT_BAT :
-                      (temp_rand == 1) ? MONS_HOUND :
-                      (temp_rand == 2) ? MONS_JACKAL :
-                      (temp_rand == 3) ? MONS_RAT :
-                      (temp_rand == 4) ? MONS_ICE_BEAST :
-                      (temp_rand == 5) ? MONS_SNAKE :
-                      (temp_rand == 6) ? MONS_YAK :
-                      (temp_rand == 7) ? MONS_BUTTERFLY :
-                      (temp_rand == 8) ? MONS_WATER_MOCCASIN :
-                      (temp_rand == 9) ? MONS_CROCODILE
-                                       : MONS_HELL_HOUND);
-        }
-        while (player_will_anger_monster(beasty));
-
-        beh_type beha = BEH_FRIENDLY;
-
-        if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
-            beha = BEH_HOSTILE;
+        const bool friendly = (!one_chance_in(you.skills[SK_EVOCATIONS] + 5));
 
         if (create_monster(
-                mgen_data(beasty, beha, &you, 2 + random2(4), 0,
-                          you.pos(), MHITYOU)) != -1)
+                mgen_data(mon,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                          2 + random2(4), 0,
+                          you.pos(),
+                          MHITYOU)) != -1)
         {
             success = true;
 
@@ -766,18 +767,6 @@ static bool _ball_of_energy(void)
     }
 
     return (ret);
-}
-
-static bool _ball_of_fixation(void)
-{
-    mpr("You gaze into the crystal ball.");
-    mpr("You are mesmerised by a rainbow of scintillating colours!");
-
-    const int duration = random_range(15, 40);
-    you.set_duration(DUR_PARALYSIS, duration);
-    you.set_duration(DUR_SLOW,      duration);
-
-    return (true);
 }
 
 bool evoke_item(int slot)
@@ -970,10 +959,12 @@ bool evoke_item(int slot)
                 pract = 1, ident = true;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case MISC_CRYSTAL_BALL_OF_FIXATION:
-            if (_ball_of_fixation())
-                pract = 1, ident = true;
+            mpr("Nothing happens.");
+            pract = 0, ident = true;
             break;
+#endif
 
         case MISC_DISC_OF_STORMS:
             if (disc_of_storms())

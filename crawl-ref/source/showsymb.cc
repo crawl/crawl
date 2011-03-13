@@ -90,8 +90,11 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
     if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
         colour = ETC_WAVES;
 
-    if (feat_has_solid_floor(feat) && cell.flags & MAP_LIQUEFIED)
+    if (feat_has_solid_floor(feat) && !feat_is_water(feat)
+        && cell.flags & MAP_LIQUEFIED)
+    {
         colour = ETC_LIQUEFIED;
+    }
 
     if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
     {
@@ -117,6 +120,9 @@ static int _get_mons_colour(const monster_info& mi)
 
     if (mi.is(MB_BERSERK))
         col = RED;
+
+    if (mi.is(MB_MIRROR_DAMAGE))
+        col = ETC_NECRO;
 
     if (mi.attitude == ATT_FRIENDLY)
     {
@@ -260,14 +266,23 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
 
         show = cell.monster();
         if (cell.detected_monster())
-            g.col = Options.detected_monster_colour;
+        {
+            const monster_info* mi = cell.monsterinfo();
+            ASSERT(mi);
+            ASSERT(mi->type == MONS_SENSED);
+            if (mons_is_sensed(mi->base_type))
+                g.col = mons_class_colour(mi->base_type);
+            else
+                g.col = Options.detected_monster_colour;
+        }
         else if (!coloured)
             g.col = DARKGRAY;
-        else if (const monster_info* mi = cell.monsterinfo())
-            g.col = _get_mons_colour(*mi);
         else
-            g.col = mons_class_colour(show.mons);
-
+        {
+            const monster_info* mi = cell.monsterinfo();
+            ASSERT(mi);
+            g.col = _get_mons_colour(*mi);
+        }
         break;
 
     case SH_CLOUD:
@@ -279,7 +294,6 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
             g.col = cell.cloud_colour();
         else
             g.col = DARKGRAY;
-
         break;
 
     case SH_FEATURE:
@@ -337,6 +351,8 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
                 get_feature_def(cell.monsterinfo()->mimic_feature);
             g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
         }
+        else if (show.mons == MONS_SENSED)
+            g.ch = mons_char(cell.monsterinfo()->base_type);
         else
             g.ch = mons_char(show.mons);
     }
@@ -379,6 +395,8 @@ glyph get_mons_glyph(const monster_info& mi, bool realcol)
     }
     else if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
+    else if (mi.type == MONS_SENSED)
+        g.ch = mons_char(mi.base_type);
     else
         g.ch = mons_char(mi.type);
     g.col = _get_mons_colour(mi);

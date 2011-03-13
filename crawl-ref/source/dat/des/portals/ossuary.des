@@ -397,7 +397,7 @@ ITEM:    scroll of curse armour / scroll of enchant armour w:5 / \
          scroll of immolation   / scroll of identify
 # and sometimes strictly useless ones
 ITEM:    scroll of curse armour / scroll of curse weapon / \
-         scroll of paper        / scroll of random uselessness / \
+         scroll of random uselessness / \
          potion of mutation w:5 / potion of confusion    / \
          potion of degeneration / scroll of immolation   / \
          potion of confusion    / potion of paralysis
@@ -814,11 +814,11 @@ MONS:   mummy
 KFEAT:  F = floor
 COLOUR: F = cyan
 KMONS:  F = rat simulacrum / goblin simulacrum / kobold simulacrum /\
-            giant bat simulacrum / nothing w:80
+            megabat simulacrum / nothing w:80
 KFEAT:  S = floor
 COLOUR: S = green
 KMONS:  S = spectral rat / spectral goblin / spectral kobold /\
-            spectral giant bat / nothing w:80
+            spectral megabat / nothing w:80
 # Loot.
 ITEM:   any potion / any scroll / nothing w:1
 #

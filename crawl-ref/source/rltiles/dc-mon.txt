@@ -8,12 +8,13 @@ dc-misc/error MONS_PROGRAM_BUG
 
 ## Insects ('a')
 giant_cockroach MONS_GIANT_COCKROACH
-giant_ant MONS_GIANT_ANT
+worker_ant MONS_WORKER_ANT
 soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
-giant_bat MONS_GIANT_BAT
+megabat MONS_MEGABAT
+../../player/transform/bat_form MONS_VAMPIRE_BAT
 butterfly MONS_BUTTERFLY
 butterfly1
 butterfly2
@@ -22,6 +23,15 @@ butterfly4
 butterfly5
 butterfly6
 raven MONS_RAVEN
+%sdir dc-mon/vault
+%rim 0
+microbat MONS_MICROBAT
+%rim 1
+gigabat MONS_GIGABAT
+fruity_bat MONS_FRUITY_BAT
+ice_bat MONS_ICE_BAT
+phase_bat MONS_PHASE_BAT
+%sdir dc-mon/animals
 
 ## Hounds and hogs ('h')
 jackal MONS_JACKAL
@@ -105,7 +115,7 @@ snapping_turtle_shell MONS_SNAPPING_TURTLE_SHELL
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
 %rim 0
-firecrab MONS_FIRECRAB
+fire_crab MONS_FIRE_CRAB
 %rim 1
 
 ## Worms and larvae ('w')
@@ -120,8 +130,7 @@ rock_worm MONS_ROCK_WORM
 giant_leech MONS_GIANT_LEECH
 
 ## Flying insects ('y')
-giant_blowfly MONS_GIANT_BLOWFLY
-giant_mosquito MONS_GIANT_MOSQUITO
+vampire_mosquito MONS_VAMPIRE_MOSQUITO
 yellow_wasp MONS_YELLOW_WASP
 red_wasp MONS_RED_WASP
 ghost_moth MONS_GHOST_MOTH
@@ -137,11 +146,11 @@ shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
 %rim 1
 
-%include dc-kraken.txt
+%include dc-tentacles.txt
 
 ## Beetles ('B')
 %sdir dc-mon/animals
-giant_beetle MONS_GIANT_BEETLE
+goliath_beetle MONS_GOLIATH_BEETLE
 boring_beetle MONS_BORING_BEETLE
 boulder_beetle MONS_BOULDER_BEETLE
 
@@ -170,7 +179,6 @@ sea_snake MONS_SEA_SNAKE
 salamander MONS_SALAMANDER
 
 ## Bears ('U')
-bear MONS_BEAR
 black_bear MONS_BLACK_BEAR
 grizzly_bear MONS_GRIZZLY_BEAR
 polar_bear MONS_POLAR_BEAR
@@ -193,7 +201,7 @@ apis MONS_APIS
 earth_elemental MONS_EARTH_ELEMENTAL /*'#'*/
 fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
 water_elemental MONS_WATER_ELEMENTAL /*'#'*/
-#air_elemental MONS_AIR_ELEMENTAL /*'#'*/
+air_elemental MONS_AIR_ELEMENTAL /*'#'*/
 iron_elemental MONS_IRON_ELEMENTAL
 fire_vortex MONS_FIRE_VORTEX /*'v'*/
 spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
@@ -210,6 +218,11 @@ ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 death_cob MONS_DEATH_COB /*'%'*/
 %sdir dc-mon/holy
 silver_star MONS_SILVER_STAR /*'*'*/
+
+### Abyssal horrors ('*')
+%sdir dc-mon/abyss
+ancient_zyme MONS_ANCIENT_ZYME
+lurking_horror MONS_LURKING_HORROR
 
 ### Demonic monsters
 ## Arch demons ('&')
@@ -435,7 +448,11 @@ wizard MONS_WIZARD
 vault_guard MONS_VAULT_GUARD
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
-killer_klown MONS_KILLER_KLOWN
+killer_klown_blue MONS_KILLER_KLOWN
+killer_klown_green
+killer_klown_purple
+killer_klown_red
+killer_klown_yellow
 slave MONS_SLAVE
 human_slave
 ## From the Wucad Mu wizlab
@@ -453,9 +470,10 @@ paladin MONS_PALADIN
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
+%sdir dc-mon/unique
+mennas MONS_MENNAS
 
 ## Giants ('C')
-%sdir dc-mon/unique
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
 iron_giant MONS_IRON_GIANT
@@ -538,8 +556,8 @@ kenku MONS_KENKU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
 
-## Beasts ('I')
-%sdir dc-mon
+## Various beasts ('I')
+%sdir dc-mon/animals
 ice_beast MONS_ICE_BEAST
 sky_beast MONS_SKY_BEAST
 
@@ -710,6 +728,8 @@ grum MONS_GRUM
 goblin MONS_GOBLIN
 hobgoblin MONS_HOBGOBLIN
 gnoll MONS_GNOLL
+gnoll_sergeant MONS_GNOLL_SERGEANT
+gnoll_shaman MONS_GNOLL_SHAMAN
 boggart MONS_BOGGART
 
 ## Spriggans ('i')
@@ -720,6 +740,9 @@ spriggan_druid MONS_SPRIGGAN_DRUID
 spriggan_berserker MONS_SPRIGGAN_BERSERKER
 spriggan_defender MONS_SPRIGGAN_DEFENDER
 spriggan_assassin MONS_SPRIGGAN_ASSASSIN
+%rim 0
+spriggan_air_mage MONS_SPRIGGAN_AIR_MAGE
+%rim 1
 dc-mon/unique/enchantress MONS_THE_ENCHANTRESS
 dc-mon/unique/agnes MONS_AGNES
 
@@ -774,6 +797,8 @@ silent_spectre MONS_SILENT_SPECTRE
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
+%sdir dc-mon/unique
+terpsichore MONS_TERPSICHORE
 %sdir dc-mon/nonliving
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir dc-mon/holy
@@ -850,7 +875,12 @@ bat_form TRAN_BAT
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
 ice_form TRAN_ICE_BEAST
-statue_form TRAN_STATUE
+statue_form_humanoid TRAN_STATUE_HUMANOID
+%syn TRAN_STATUE_EQUIP_FIRST
+statue_form_centaur TRAN_STATUE_CENTAUR
+statue_form_naga TRAN_STATUE_NAGA
+%syn TRAN_STATUE_EQUIP_LAST
+statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST

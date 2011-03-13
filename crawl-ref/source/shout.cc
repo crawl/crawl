@@ -7,6 +7,7 @@
 
 #include "shout.h"
 
+#include "artefact.h"
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
@@ -50,7 +51,7 @@ static void _actor_apply_noise(actor *act,
 
 void handle_monster_shouts(monster* mons, bool force)
 {
-    if (!force && x_chance_in_y(you.skills[SK_STEALTH], 30))
+    if (!force && x_chance_in_y(you.skill(SK_STEALTH), 30))
         return;
 
     // Friendly or neutral monsters don't shout.
@@ -309,7 +310,7 @@ void handle_monster_shouts(monster* mons, bool force)
     const int  noise_level = get_shout_noise_level(s_type);
     const bool heard       = noisy(noise_level, mons->pos(), mons->mindex());
 
-    if (Hints.hints_left && (heard || you.can_see(mons)))
+    if (crawl_state.game_is_hints() && (heard || you.can_see(mons)))
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 
@@ -372,8 +373,9 @@ bool check_awaken(monster* mons)
 
     // If you've been tagged with Corona or are Glowing, the glow
     // makes you extremely unstealthy.
+    // The darker it is, the bigger the penalty.
     if (you.backlit() && you.visible_to(mons))
-        mons_perc += 50;
+        mons_perc += 50 * LOS_RADIUS / you.current_vision;
 
     if (mons_perc < 0)
         mons_perc = 0;
@@ -412,7 +414,7 @@ void apply_noises()
 // as appropriate.
 bool noisy(int original_loudness, const coord_def& where,
            const char *msg, int who,
-           bool mermaid, bool message_if_unseen)
+           bool mermaid, bool message_if_unseen, bool fake_noise)
 {
     // high ambient noise makes sounds harder to hear
     const int ambient = current_level_ambient_noise();
@@ -426,8 +428,9 @@ bool noisy(int original_loudness, const coord_def& where,
     if (loudness <= 0)
         return (false);
 
-    // If the origin is silenced there is no noise.
-    if (silenced(where))
+    // If the origin is silenced there is no noise, unless we're
+    // faking it.
+    if (silenced(where) && !fake_noise)
         return (false);
 
     // [ds] Reduce noise propagation for Sprint.
@@ -457,7 +460,7 @@ bool noisy(int original_loudness, const coord_def& where,
     // Message the player.
     if (player_distance <= dist && player_can_hear(where))
     {
-        if (msg)
+        if (msg && !fake_noise)
             mpr(msg, MSGCH_SOUND);
         return (true);
     }
@@ -468,6 +471,12 @@ bool noisy(int loudness, const coord_def& where, int who,
            bool mermaid, bool message_if_unseen)
 {
     return noisy(loudness, where, NULL, who, mermaid, message_if_unseen);
+}
+
+// This fakes noise even through silence.
+bool fake_noisy(int loudness, const coord_def& where)
+{
+    return noisy(loudness, where, NULL, -1, false, false, true);
 }
 
 static const char* _player_vampire_smells_blood(int dist)
@@ -571,7 +580,7 @@ void blood_smell(int strength, const coord_def& where)
                 else
                 {
                     mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1,
-                                             KC_OTHER, dur));
+                                             0, dur));
                     simple_monster_message(*mi, " is consumed with "
                                                 "blood-lust!");
                 }
@@ -1037,8 +1046,8 @@ static void _actor_apply_noise(actor *act,
         act->check_awaken(loudness);
         if (!(noise.noise_flags & NF_MERMAID))
         {
-            you.beholders_check_noise(loudness);
-            you.fearmongers_check_noise(loudness);
+            you.beholders_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
+            you.fearmongers_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
         }
     }
     else

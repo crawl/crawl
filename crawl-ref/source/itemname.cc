@@ -120,12 +120,14 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    // note: only the 32 lower bits of monster flags are passed,
-    // as we don't have support for 64 bit props
-    iflags_t corpse_flags;
+    monster_flag_type corpse_flags;
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
-        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
+#if TAG_MAJOR_VERSION == 32
+        && !(((corpse_flags = (int64_t)props[CORPSE_NAME_TYPE_KEY])
+#else
+        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
+#endif
                & MF_NAME_SPECIES)
              && !(corpse_flags & MF_NAME_DEFINITE))
              && !(corpse_flags & MF_NAME_SUFFIX)
@@ -639,6 +641,9 @@ static const char* scroll_type_name(int scrolltype)
 {
     switch (static_cast<scroll_type>(scrolltype))
     {
+#if TAG_MAJOR_VERSION == 32
+    case SCR_PAPER:              return "old paper";
+#endif
     case SCR_IDENTIFY:           return "identify";
     case SCR_TELEPORTATION:      return "teleportation";
     case SCR_FEAR:               return "fear";
@@ -655,7 +660,6 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_CURSE_JEWELLERY:    return "curse jewellery";
     case SCR_IMMOLATION:         return "immolation";
     case SCR_BLINKING:           return "blinking";
-    case SCR_PAPER:              return "paper";
     case SCR_MAGIC_MAPPING:      return "magic mapping";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
@@ -861,7 +865,9 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DECK_OF_DEFENCE:     return "deck of defence";
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:   return "crystal ball of energy";
-        case MISC_CRYSTAL_BALL_OF_FIXATION: return "crystal ball of fixation";
+#if TAG_MAJOR_VERSION == 32
+        case MISC_CRYSTAL_BALL_OF_FIXATION: return "old crystal ball";
+#endif
         case MISC_CRYSTAL_BALL_OF_SEEING:   return "crystal ball of seeing";
         case MISC_BOX_OF_BEASTS:            return "box of beasts";
         case MISC_EMPTY_EBONY_CASKET:       return "empty ebony casket";
@@ -895,7 +901,9 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DECK_OF_DEFENCE:
             return "deck of cards";
         case MISC_CRYSTAL_BALL_OF_ENERGY:
+#if TAG_MAJOR_VERSION == 32
         case MISC_CRYSTAL_BALL_OF_FIXATION:
+#endif
         case MISC_CRYSTAL_BALL_OF_SEEING:
             return "crystal ball";
         case MISC_BOX_OF_BEASTS:
@@ -957,9 +965,11 @@ static const char* book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
     {
-    case BOOK_MINOR_MAGIC_I:
+    case BOOK_MINOR_MAGIC:
+#if TAG_MAJOR_VERSION == 32
     case BOOK_MINOR_MAGIC_II:
     case BOOK_MINOR_MAGIC_III:
+#endif
         return "Minor Magic";
     case BOOK_CONJURATIONS_I:
     case BOOK_CONJURATIONS_II:
@@ -1847,10 +1857,6 @@ std::string item_def::name_aux(description_level_type desc,
         buff << "gold piece";
         break;
 
-    // not implemented
-    case OBJ_GEMSTONES:
-        break;
-
     case OBJ_CORPSES:
     {
         if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
@@ -1925,20 +1931,19 @@ std::string item_def::name_aux(description_level_type desc,
         case OBJ_BOOKS:
             switch (item_typ)
             {
-            case BOOK_MINOR_MAGIC_I:
-                buff << " [flame]";
-                break;
+#if TAG_MAJOR_VERSION == 32
             case BOOK_MINOR_MAGIC_II:
                 buff << " [frost]";
                 break;
             case BOOK_MINOR_MAGIC_III:
                 buff << " [summ]";
                 break;
+#endif
             case BOOK_CONJURATIONS_I:
-                buff << " [fire]";
+                buff << " [fire+earth]";
                 break;
             case BOOK_CONJURATIONS_II:
-                buff << " [ice]";
+                buff << " [ice+air]";
                 break;
             }
             break;
@@ -2069,7 +2074,7 @@ CrawlHashTable& get_type_id_props()
 }
 
 void set_ident_type(item_def &item, item_type_id_state_type setting,
-                     bool force)
+                    bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
         return;
@@ -2167,7 +2172,7 @@ bool identified_item_names(const item_def *it1,
          < it2->name(DESC_PLAIN, false, true, false, false, flags);
 }
 
-bool check_item_knowledge(bool quiet, bool inverted)
+void check_item_knowledge(bool unknown_items)
 {
     std::vector<const item_def*> items;
 
@@ -2177,15 +2182,21 @@ bool check_item_knowledge(bool quiet, bool inverted)
     const int idx_to_maxtype[5] = { NUM_WANDS, NUM_SCROLLS,
                                     NUM_JEWELLERY, NUM_POTIONS, NUM_STAVES };
 
-    bool has_unknown_items = false;
+    bool needs_inversion = false;
     for (int i = 0; i < 5; i++)
         for (int j = 0; j < idx_to_maxtype[i]; j++)
         {
             if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (inverted ? type_ids[i][j] != ID_KNOWN_TYPE
-                         : type_ids[i][j] == ID_KNOWN_TYPE)
+            // Potions of fizzing liquid are not something that
+            // need to be identified, because they never randomly
+            // generate! [due]
+            if (i == 3 && j == POT_FIZZING)
+                continue;
+
+            if (unknown_items ? type_ids[i][j] != ID_KNOWN_TYPE
+                              : type_ids[i][j] == ID_KNOWN_TYPE)
             {
                 item_def* ptmp = new item_def;
                 if (ptmp != 0)
@@ -2199,23 +2210,27 @@ bool check_item_knowledge(bool quiet, bool inverted)
                     items.push_back(ptmp);
                 }
             }
-            else if (!inverted)
-                has_unknown_items = true;
+            else
+                needs_inversion = true;
         }
 
-    if (items.empty())
+    if (!unknown_items && items.empty())
     {
-        if (!quiet)
-            mpr("You don't recognise anything yet!");
-        return (false);
+        // Directly skip ahead to unknown items.
+        check_item_knowledge(true);
+        return;
     }
 
     std::sort(items.begin(), items.end(), identified_item_names);
     InvMenu menu;
 
-    if (inverted)
-        menu.set_title("Items not yet recognised: (toggle with -)");
-    else if (has_unknown_items)
+    if (unknown_items)
+    {
+        menu.set_title(make_stringf("Items not yet recognised: %s",
+                                    needs_inversion ? "(toggle with -)"
+                                                    : ""));
+    }
+    else if (needs_inversion)
         menu.set_title("You recognise: (toggle with -)");
     else
         menu.set_title("You recognise all items:");
@@ -2232,10 +2247,8 @@ bool check_item_knowledge(bool quiet, bool inverted)
     {
          delete *iter;
     }
-    if (last_char == '-' && (inverted || has_unknown_items))
-        check_item_knowledge(quiet, !inverted);
-
-    return (true);
+    if (last_char == '-' && needs_inversion)
+        check_item_knowledge(!unknown_items);
 }
 
 
@@ -2741,8 +2754,6 @@ bool is_bad_item(const item_def &item, bool temp)
         default:
             return (false);
         }
-    case OBJ_MISCELLANY:
-        return (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION);
 
     default:
         return (false);
@@ -2758,8 +2769,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         // Use-IDing these is extremely dangerous!
         if (item.base_type == OBJ_MISCELLANY
             && (item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION))
+                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY))
         {
             return (true);
         }
@@ -2779,6 +2789,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_TORMENT:
             return (!player_mutation_level(MUT_TORMENT_RESISTANCE)
                     || !temp && you.species == SP_VAMPIRE);
+        case SCR_HOLY_WORD:
+            return (you.undead_or_demonic());
         default:
             return (false);
         }
@@ -2882,7 +2894,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
-        case SCR_PAPER:
         case SCR_RANDOM_USELESSNESS:
         case SCR_NOISE:
             return (true);
@@ -2950,8 +2961,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_WATER:
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return (!can_ingest(item.base_type, item.sub_type, true, true,
-                                                               false));
+            return (!can_ingest(item, true, true, false));
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
@@ -3180,12 +3190,11 @@ static const std::string _item_prefix(const item_def &item, bool temp,
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
-        if (item_is_equipped(item, true))
-            prefixes.push_back("equipped");
         if (is_artefact(item))
             prefixes.push_back("artefact");
-        break;
+        // fall through
 
+    case OBJ_STAVES:
     case OBJ_MISSILES:
         if (item_is_equipped(item, true))
             prefixes.push_back("equipped");
@@ -3377,7 +3386,11 @@ std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
         return ("");
 
     if (name_type != NULL)
-        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int();
+#if TAG_MAJOR_VERSION == 32
+        *name_type = (int64_t)corpse.props[CORPSE_NAME_TYPE_KEY];
+#else
+        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
+#endif
 
     return (corpse.props[CORPSE_NAME_KEY].get_string());
 }

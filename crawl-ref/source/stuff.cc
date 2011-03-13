@@ -616,10 +616,10 @@ int stepdown_value(int base_value, int stepping, int first_step,
 
 }
 
-int skill_bump(int skill)
+int skill_bump(skill_type skill)
 {
-    return ((you.skills[skill] < 3) ? you.skills[skill] * 2
-                                    : you.skills[skill] + 3);
+    int sk = you.skill(skill);
+    return sk < 3 ? sk * 2 : sk + 3;
 }
 
 // This gives (default div = 20, shift = 3):
@@ -680,6 +680,14 @@ void canned_msg(canned_message_type which_message)
         break;
     case MSG_UNTHINKING_ACT:
         mpr("Why would you want to do that?");
+        crawl_state.cancel_cmd_repeat();
+        break;
+    case MSG_NOTHING_THERE:
+        mpr("There's nothing there!");
+        crawl_state.cancel_cmd_repeat();
+        break;
+    case MSG_NOTHING_CLOSE_ENOUGH:
+        mpr("There's nothing close enough!");
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_SPELL_FIZZLES:
@@ -798,7 +806,10 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             return (true);
         else if (!noprompt)
         {
-            const std::string pr = "[Y]es or [N]o only, please.";
+            bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+            const std::string pr
+                = make_stringf("%s[Y]es or [N]o only, please.",
+                               upper ? "Uppercase " : "");
             if (message)
                 mpr(pr);
             else
@@ -850,11 +861,11 @@ static std::string _list_allowed_keys(char yes1, char yes2,
                                       bool allow_all = false)
 {
     std::string result = " [";
-                result += (lowered ? "y" : "Y");
+                result += (lowered ? "(y)es" : "(Y)es");
                 result += _list_alternative_yes(yes1, yes2, lowered);
                 if (allow_all)
-                    result += (lowered? "/a" : "/A");
-                result += (lowered ? "/n/q" : "/N/Q");
+                    result += (lowered? "/(a)ll" : "/(A)ll");
+                result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
                 result += "]";
 
     return (result);
@@ -909,12 +920,18 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
             if (tmp == 'A')
                 return 2;
             else
-                mprf("Choose [Y]es%s, [N]o, [Q]uit, or [A]ll!",
+            {
+                bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+                mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
+                     upper ? "uppercase " : "",
                      _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
+            }
         }
         else
         {
-            mprf("[Y]es%s, [N]o or [Q]uit only, please.",
+            bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+            mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
+                 upper ? "Uppercase " : "",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
         }
     }
@@ -1062,6 +1079,26 @@ coord_def get_random_stair()
     if (!st.size())
         return coord_def();        // sanity check: shouldn't happen
     return st[random2(st.size())];
+}
+
+
+//---------------------------------------------------------------
+//
+// prompt_for_quantity
+//
+// Returns -1 if ; or enter is pressed (pickup all).
+// Else, returns quantity.
+//---------------------------------------------------------------
+int prompt_for_quantity(const char *prompt)
+{
+    msgwin_prompt(prompt);
+
+    int ch = getch_ck();
+    if (ch == CK_ENTER || ch == ';')
+        return -1;
+
+    macro_buf_add(ch);
+    return prompt_for_int("", false);
 }
 
 //---------------------------------------------------------------

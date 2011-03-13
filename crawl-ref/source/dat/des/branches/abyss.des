@@ -19,10 +19,10 @@ ENDMAP
 
 ###############################################################################
 # abyss random vaults
+###############################################################################
 
 ###############################################################################
 # Dummy vaults
-#
 NAME: abyss_furniture_dummy
 TAGS: abyss dummy
 CHANCE: 0 : 90%
@@ -86,8 +86,10 @@ ENDMAP
 
 ###############################################################################
 # abyss rune vaults
-NAME: abyss_rune_001
-TAGS: abyss_rune allow_dup
+###############################################################################
+
+NAME:  abyss_rune_water_cross
+TAGS:  abyss_rune
 KITEM: O = abyssal rune of Zot
 MAP
 ww.ww
@@ -97,11 +99,11 @@ ww.ww
 ww.ww
 ENDMAP
 
-NAME: abyss_rune_due
-TAGS: abyss_rune allow_dup
-KITEM: O = abyssal rune of Zot
-KMONS: OL = lich / w:1 ancient lich
-SUBST: C = c+
+NAME:   due_abyss_rune
+TAGS:   abyss_rune
+KITEM:  O = abyssal rune of Zot
+KMONS:  OL = lich / w:1 ancient lich
+SUBST:  C = c+
 NSUBST: L = 1:O / *:L
 : colour("c = " .. dgn.random_colour() )
 : colour(". = " .. dgn.random_colour() )
@@ -117,14 +119,704 @@ ccLcLcLcc
   ccccc
 ENDMAP
 
+NAME:  evilmike_abyss_rune_tentacle_tunnel
+TAGS:  abyss_rune
+KITEM: O = abyssal rune of Zot
+KMONS: K = kraken
+KMONS: T = tentacled monstrosity
+SUBST: T = Tw
+KFEAT: KT = w
+KFEAT: O = W
+SUBST: . = w., w = WWWw, C = c., c = ccv
+MAP
+      CCcccCC
+   CCCCccOccCCCC
+ CCCCcccWcWcccCCCC
+ccccccwwwwwwwcccccc
+cTwwwwwwwwwwwwwwwTc
+cTwwwwwwwwwwwwwwwTc
+ccccccccwwwcccccccc
+ CCCCCccwwwccCCCCC
+   CCCcwwwwwcCCCC
+    ..wwwwwww..
+     .wwwKwww.
+     ..wwwww..
+      .wwwww.
+      .......
+       ..@..
+ENDMAP
+
+# This rune is supposed to be hard to reach, and killing the siren isn't usually
+# an option. Some versions let you use dig to get to her. You can always break LOS
+# with her (you will never be trapped inside the vault).
+NAME:  evilmike_abyss_rune_siren
+TAGS:  abyss_rune
+KITEM: O = abyssal rune of Zot
+: if crawl.one_chance_in(3) then
+SUBST: N : m, C : x
+: else
+SUBST: N : n, C : c
+: end
+SUBST: X = c., c = ccv
+MONS:  generate_awake siren
+MAP
+XXXXcccXXXX
+XXXccOccXXX
+XXcc0N0ccXX
+Xcc0NNN0ccX
+Xc.......cX
+Xc.N...N.cX
+Xcc.....ccX
+Xcc.NNN.ccX
+X c.N1N.cXX
+Xcc.CNC.ccX
+Xc.......cX
+Xc..ccc..cX
+@+cccXccc+@
+ENDMAP
+
+# Two versions here - one narrow, one wide (wide one is a bit easier).
+NAME:   evilmike_abyss_rune_acolytes_1
+TAGS:   abyss_rune no_monster_gen
+WEIGHT: 6
+KITEM:  O = abyssal rune of Zot
+KFEAT:  _ = altar_lugonu
+FTILE:  ._+OAL = floor_crystal_squares
+NSUBST: A = 2:L / *:.
+SUBST:  ' = .
+KMONS:  O = tentacled monstrosity / large abomination / chaos spawn
+KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
+            spells:smiting;blink_other;invisibility;malign_gateway;blink priest_spells ; \
+            robe . quarterstaff ego:distortion | dagger ego:distortion
+MARKER: L = lua:MonPropsMarker:new { description= \
+               "An insane follower of Lugonu. Years of living in the abyss have clearly " ..\
+               "taken their toll on this one's feeble mind.", \
+               quote='"And when you look long into an abyss, the abyss also looks into you."\n \
+               \ \ \ -Friedrich Nietzche, "Beyond Good and Evil", 1886' }
+MAP
+''''' ''''' '''''
+'bbb'''bbb'''bbb'
+'bAbbbbbAbbbbbAb'
+'bblblblblblblbb''
+'Gb...........bbb'
+@'+.....L._b..+Ob'
+'Gb...........bbb'
+'bblblblblblblbb''
+'bAbbbbbAbbbbbAb'
+'bbb'''bbb'''bbb'
+''''' ''''' '''''
+ENDMAP
+
+NAME:   evilmike_abyss_rune_acolytes_2
+TAGS:   abyss_rune no_monster_gen
+WEIGHT: 4
+KITEM:  O = abyssal rune of Zot
+KFEAT:  _ = altar_lugonu
+FTILE:  ._+OL = floor_crystal_squares
+SUBST:  ' = .
+KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
+            spells:smiting;blink_other;invisibility;malign_gateway;blink priest_spells ; \
+            robe . quarterstaff ego:distortion | dagger ego:distortion
+MARKER: L = lua:MonPropsMarker:new { description= \
+               "An insane follower of Lugonu. Years of living in the abyss have clearly " ..\
+               "taken their toll on this one's feeble mind.", \
+               quote='"And when you look long into an abyss, the abyss also looks into you."\n \
+               \ \ \ -Friedrich Nietzche, "Beyond Good and Evil", 1886' }
+MAP
+  '''''''''''
+  'b'b'b'b'b'
+'''bbbbbbbbb''
+'bbblblblblbb'''
+'bLl.......bbbb'
+'bbb......b.bb''
+@''+....._LbObb'
+'bbb......b.bb''
+'bLl.......bbbb'
+'bbblblblblbb'''
+'''bbbbbbbbb''
+  'b'b'b'b'b'
+  '''''''''''
+ENDMAP
+
+NAME:   evilmike_abyss_rune_seething_chaos
+TAGS:   abyss_rune allow_dup
+KITEM:  O = abyssal rune of Zot
+MARKER: ! = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 5, \
+                size_buildup_time = 25, cloud_type = "seething chaos" \
+            }
+SUBST:  ! = ., X = x., x = xc
+MONS:   megabat, chaos spawn, dragon / ice dragon
+MONS:   ogre mage, hill giant
+MAP
+ cccX X X
+cc.ccX X X
+c.O2cxx X X
+cc2+c3xx X X
+Xccc..1xx X X
+ Xx3.!.4xx X X
+X xx1...5xx X
+ X xx4...1xx X
+X X xx5.!..xX ..@
+ X X xx1...xxx++x
+  X X xx........x
+   X X xxx....XXx
+    X X  xxxxxxxx
+ENDMAP
+
+# Contains 1 to 3 hellephants. 3 is rare.
+NAME:   evilmike_abyss_rune_elephants
+TAGS:   abyss_rune allow_dup
+KITEM:  O = abyssal rune of Zot
+SUBST:  l = .....llllx, L: llllx
+KPROP:  ' = no_tele_into
+NSUBST: ' = 2:H / 9:E / *:.
+SUBST:  H = 322, E = 221.
+SUBST:  x : cccvvx, x = cccvvx
+KMONS:  O = hellephant
+MONS:   elephant, dire elephant, hellephant
+MAP
+  l..lllll..l
+ l.lllllllll.l
+l.llLLLLLLLll.l
+.llLLlllllLLll.
+.lLLll'''llLLl.
+llLll'''''llLll
+llLl''xxx''lLll
+llLl''xO+''lLll
+llLl''xxx''lLll
+llLll'''''llLll
+.lLLll'''llLLl.
+.llLLlllllLLll.
+l.llLLLLLLLll.l
+ l.lllllllll.l
+  l..lllll..l
+ENDMAP
+
+NAME:  evilmike_abyss_rune_shrine
+TAGS:  abyss_rune
+KITEM: _ = abyssal rune of Zot
+KFEAT: _ = altar_lugonu
+SUBST: c: cbvx
+MONS:  generate_awake spatial vortex
+MAP
+...........
+..ccccccc..
+.ccG..1.cc.
+..+..._1cc.
+.ccG..1.cc.
+..ccccccc..
+...........
+ENDMAP
+
+NAME:   evilmike_abyss_rune_ettins
+TAGS:   abyss_rune
+KITEM:  O = abyssal rune of Zot
+MONS:   ettin ; giant spiked club ego:distortion | giant club ego:distortion . \
+                giant spiked club ego:chaos | giant club ego:chaos
+SUBST:  x = xxxcccn, . = ...W
+NSUBST: 1 = 4:1 / *:0
+MAP
+    xxx.xx
+ xxxx.xx.xx
+ x1x.x1xx.xx
+ xx.xxx.xx.x
+xx.xx1x.x1xx
+x.xx1O.xx.xx
+xx.xx.xx.xxx
+ xx.xxxxx1xx
+ x1x.x1x.xx
+ xxxx.x.xx
+    xxxxx
+ENDMAP
+
+NAME:  evilmike_abyss_rune_curve
+TAGS:  abyss_rune allow_dup
+KITEM: O = abyssal rune of Zot
+SUBST: X = x.., Y: b., x = xc
+MONS:  tormentor / hellion / bone dragon / neqoxec / iron dragon zombie
+MAP
+xxxxxXXXX
+....xxxxXXX
+.......xxxXX
+..Y......xxXX
+.......1..xxx
+....Y...x.1Ox
+.......1..xxx
+..Y......xxXX
+.......xxxXX
+....xxxxXXX
+xxxxxXXXX
+ENDMAP
+
+# The altar may be inappropriate here. I'm not sure.
+NAME:  evilmike_abyss_rune_tso_outpost
+TAGS:  abyss_rune allow_dup no_monster_gen
+KITEM: O = abyssal rune of Zot
+KFEAT: _ = altar_shining_one
+MONS:  angel, daeva, ophan
+MAP
+.......................
+........ccc...cccccc...
+.cccccGcc3ccGcc....cc..
+.+...ccc...ccc.mmmm+cc.
+.+.T1.+.._..+..m2...Oc.
+.+...ccc...ccc.mmmm+cc.
+.cccccGcc3ccGcc....cc..
+........ccc...cccccc...
+.......................
+ENDMAP
+
+
 ###############################################################################
 # abyss exit vaults
-NAME: abyss_exit_001
+###############################################################################
+
+NAME: abyss_exit_lava
 TAGS: abyss_exit allow_dup
 MAP
 l.l
 .O.
 l.l
+ENDMAP
+
+NAME:  evilmike_abyss_exit_glass
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MAP
+ mmm@
+mm.mm
+m.O.m
+mm.mm
+ mmm
+ENDMAP
+
+NAME:  evilmike_abyss_exit_plants
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: 1 = 112.
+SUBST: . = .:100 1
+MONS:  plant col:any, bush col:any
+# TODO: Tiles!
+MAP
+ .......
+.........
+..11111..
+..12221..
+..12O21..
+..12221..
+..11111..
+.........
+ .......
+ENDMAP
+
+NAME:  evilmike_abyss_exit_teleports
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KFEAT: ^ = teleport trap
+SUBST: ^ = ^:40 . x:5,  . = .:80 ^ x
+SUBST: x:xcv
+MAP
+.....
+.^^^.
+.^O^.
+.^^^.
+.....
+ENDMAP
+
+NAME:  evilmike_abyss_exit_1
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MAP
+x+x
++O+
+x+x
+ENDMAP
+
+NAME:  evilmike_abyss_exit_2
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: x = x:30 c:20 v:20 m:3 b:3
+MAP
+  @ xxxx
+ x.xxxxxxx
+xx.x.....xx
+xx.x.xxx.xx
+xx.x.xOx.xx
+xx.x.x.x.xx
+xx.x...x.xx
+xx.xxxxx.xx
+xx.......xx
+ xxxxxxxxx
+  xxxxxxx
+ENDMAP
+
+NAME:  evilmike_abyss_exit_3
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: . = ..Wwl
+MAP
+     .
+    ...
+   .....
+  .......
+ .........@
+.....O.....
+ .........
+  .......
+   .....
+    ...
+     .
+ENDMAP
+
+NAME:  evilmike_abyss_exit_4
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KFEAT: n = stone_arch
+MAP
+    x
+    x
+  ..x..
+  .nxn.
+xxxxxxxxx
+  .Oxn.
+  ..x..
+ .  x
+@   x
+ENDMAP
+
+NAME:   evilmike_abyss_exit_5
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+KFEAT:  n = stone_arch
+NSUBST: n = 1:O / *:n, = = 1:+ / *:=
+MAP
+    x   x
+  x x x x x
+ xxxxxxxxxxx
+  xnxnxnxnx
+xxx=x=x=x=xxx
+  x.........@
+xxx=x=x=x=xxx
+  xnxnxnxnx
+ xxxxxxxxxxx
+  x x x x x
+    x   x
+ENDMAP
+
+NAME:  evilmike_abyss_exit_6
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: X: .x, x: xxxccvlw, .: ...W
+MAP
+  x x x
+ x x x x x
+xxxxxxxxx x
+xX.XxX.Xxx x
+x.x.x.x.x x
+@XxX.XxOxx x
+xxxxxxxxx x
+ x x x x x
+  x x x
+ENDMAP
+
+NAME:  evilmike_abyss_exit_7
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: x:xxcv
+MAP
+xx.xx
+x.x.x
+.xOx.
+x.x.x
+xx.xx
+ENDMAP
+
+NAME:  evilmike_abyss_exit_8
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: G : GGT, T : TV
+MAP
+...G...
+.G...G.
+.......
+G..O..G
+.......
+.G...G.
+...G...
+ENDMAP
+
+NAME:  evilmike_abyss_exit_9
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KMONS: O = tentacled monstrosity / large abomination / nothing w:5
+SUBST: x = xxc
+MAP
+.xxx.
+x...x
+x.O.x
+x...x
+.xxx.
+ENDMAP
+
+NAME:  evilmike_abyss_exit_10
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: X = x.., x = xxxcv
+MONS:  brain worm / w:5 neqoxec
+MAP
+XXXXXXXXXXX
+XXXXXXXXXXX
+XXxxxxxxxXX
+XXx..1..xXX
+XXx.xxx.xXX
+XXx1.Ox....
+XXx.xxx.xXX
+XXx..1..xXX
+XXxxxxxxxXX
+XXXXXXXXXXX
+XXXXXXXXXXX
+ENDMAP
+
+NAME:  evilmike_abyss_exit_11
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: b = bbx
+MAP
+   b.b
+  bb.bb
+ bb...bb
+bb.....bb
+b.......b
+....O....
+b.......b
+bb.....bb
+ bb...bb
+  bb.bb
+   b.b
+ENDMAP
+
+# Technically possible for this one to require dig, but pretty unlikely.
+NAME:  evilmike_abyss_exit_12
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: X = x., x = xxx++=1
+MONS:  w:2 trapdoor spider / nothing
+MAP
+XXXxxxXXX
+XxxxxxxxX
+XxxxxxxxX
+xxxxxxxxx
+xxxxOxxx+
+xxxxxxxxx
+XxxxxxxxX
+XxxxxxxxX
+XXXxxxXXX
+ENDMAP
+
+# Orange crystal and silver statue are very rare here...
+# I want most characters to be able to actually use this exit
+NAME:  evilmike_abyss_exit_13
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KMONS: O = w:1 orange crystal statue / w:2 silver statue / w: 20 ice statue / w: 15 oklob plant
+MAP
+O
+ENDMAP
+
+NAME:  evilmike_abyss_exit_14
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: x = xcv, 0 = 0.
+MAP
+x..x..x
+.0.x.0.
+...x...
+xxxOxxx
+...x...
+.0.x.0.
+x..x..x
+ENDMAP
+
+NAME:  evilmike_abyss_exit_15
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KMONS: O = unseen horror / lorocyproca / nothing
+MONS:  small abomination / nothing
+SUBST: X = x., x=xxc
+MAP
+ X X X
+X XXX X
+ XXXXX X
+XXXXXXX X
+xxxxxxxX X
++1+1+OxXX X
+xxxxxxxX X
+XXXXXXX X
+ XXXXX X
+X XXX X
+ X X X
+ENDMAP
+
+NAME:   evilmike_abyss_exit_16
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+NSUBST: . = 1:O / *:.
+SUBST:  c = cbx, + = +=, . = .....12
+MONS:   slime creature, pulsating lump / giant amoeba
+MAP
+c+c+c+c+c+c
++.+.+.+.+.+
+c+c+c+c+c+c
++.+.+.+.+.+
+c+c+c+c+c+c
++.+.+.+.+.+
+c+c+c+c+c+c
++.+.+.+.+.+
+c+c+c+c+c+c
++.+.+.+.+.+
+c+c+c+c+c+c
+ENDMAP
+
+NAME:  evilmike_abyss_exit_17
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: x = xxc, . = ...W, 0 = 0.
+MAP
+..xx0xx..
+...xxx...
+x...x...x
+xx.V.V.xx
+0xx.O.xx0
+xx.V.V.xx
+x...x...x
+...xxx...
+..xx0xx..
+ENDMAP
+
+NAME:   evilmike_abyss_exit_kraken
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+NSUBST: w = 1:m / *:w
+KFEAT:  m = w
+KMONS:  m = kraken
+SUBST:  Z = wY, Y = wW, W = w., w=WWw
+MAP
+..WWWWWWW..
+.WYYYYYYYW.
+WYZZZZZZZYW
+WYZwwwwwZYW
+WYZwwwwwZYW
+WYZwwOwwZYW
+WYZwwwwwZYW
+WYZwwwwwZYW
+WYZZZZZZZYW
+.WYYYYYYYW.
+..WWWWWWW..
+ENDMAP
+
+# Fog machine parameters are the same as that swamp entry vault; you pretty
+# much can't avoid the fog here, so I hope you have rMut.
+NAME:   evilmike_abyss_exit_mutagenic
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+MARKER: O = lua:fog_machine {                               \
+                pow_min = 8, pow_max = 12, delay = 25,      \
+                size = 1, walk_dist = 1, spread_rate = 33,  \
+                cloud_type = "mutagenic fog"                \
+            }
+MAP
+...
+.O.
+...
+ENDMAP
+
+# Make sure to close the doors if you don't like what you see behind them...
+NAME:   evilmike_abyss_exit_vortex
+TAGS:   abyss_exit allow_dup
+KFEAT:  O = exit_abyss
+KFEAT:  n = stone_arch
+SUBST:  x:xxxcv, 1=1., g:G.
+SUBST:  G:Gb.
+MONS:   spatial vortex
+NSUBST: n = 1:O / *:n
+MAP
+     xxxxx
+     x111x
+     x1n1x
+     x111x
+    @x+++x@
+xxxxx.....xxxxx
+x111+..g..+111x
+x1n1+.gGg.+1n1x
+x111+..g..+111x
+xxxxx.....xxxxx
+    @x+++x@
+     x111x
+     x1n1x
+     x111x
+     xxxxx
+ENDMAP
+
+NAME:  evilmike_abyss_exit_chaos
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MONS:  chaos spawn
+SUBST: 1 = 11., n : nc, c = cvb
+MAP
+ ccncc
+cc.1.cccccc
+c.1.1.c.1.cccc
+n1.O..+......+@
+c.1.1.c.1.cccc
+cc.1.cccccc
+ ccncc
+ENDMAP
+
+# This one is really, really weird...
+NAME:  evilmike_abyss_exit_smiterflies
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+KMONS: O = generate_awake statue spells:summon_butterflies;summon_butterflies;\
+           summon_butterflies;summon_butterflies;summon_butterflies; \
+           tile:mons_statue_mage col:lightblue
+MONS:  smoke demon, deep elf priest
+MAP
+       ccc
+     ccc1ccc
+   ccc.....ccc
+  cc.........cc
+  c....2......c
+ cc...........cc
+ c.............c
+cc..2..........cc
+c1......O.......+@
+cc..2..........cc
+ c.............c
+ cc...........cc
+  c....2......c
+  cc.........cc
+   ccc.....ccc
+     ccc1ccc
+       ccc
+ENDMAP
+
+NAME:  evilmike_abyss_exit_disperse
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+SUBST: . = .:100 2
+MONS:  centaur; bow . arrow ego:dispersal, plant
+MAP
+     xxx xxx xxx
+   xxx1xxx1xxx1x
+ xxx....x...x..xxx
+xx...............x
+x1.Ox............+@
+xx...............x
+ xxx....x...x..xxx
+   xxx1xxx1xxx1x
+     xxx xxx xxx
 ENDMAP
 
 ###################################################################

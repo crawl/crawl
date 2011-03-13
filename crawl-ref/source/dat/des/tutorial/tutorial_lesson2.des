@@ -1,0 +1,430 @@
+#########################################
+# Tutorial map 2: Monsters and combat   #
+#########################################
+
+{{
+require("clua/tutorial.lua")
+
+tutorial_msg2 = {}
+
+function tutorial_msg2.start ()
+    -- Make him hungry for the butchering tutorial.
+    crawl.tutorial_hunger(2700)
+    crawl.tutorial_hint("HINT_NEW_LEVEL")
+    -- TODO: Replace this with a hint on trying to _eat_ rotten food.
+    crawl.tutorial_hint("HINT_ROTTEN_FOOD")
+
+    tutorial_intro("This lesson will teach you about monsters and how to kill them in melee and ranged combat.")
+    crawl.mpr("First, you need a weapon! Go and grab the one lying in front of the door!", "tutorial")
+end
+
+function tutorial_msg2.pickup_weapon ()
+    local text = "Pick up this weapon with " .. tutorial_get_cmd("CMD_PICKUP")
+                 .. " and then wield it with " .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "."
+
+    if crawl.is_tiles() then
+        text = text .. " Alternatively, you can perform either action by "
+                    .. "<white>clicking</white> on it in the inventory panel."
+    end
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.melee ()
+    return tutorial_message("To attack a monster with your bare hands or wielded "
+                            .. "weapon, simply walk into it.")
+end
+
+function tutorial_msg2.examine ()
+    local text = "A monster wielding a weapon is more dangerous than the same "
+                 .. "monster when unarmed. "
+
+    if crawl.is_tiles() then
+        text = text .. "Most monsters will be displayed with their wielded weapon, "
+                    .. "but you can also check this by examining a monster via "
+                    .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<white>+</white>, "
+                    .. "or by <white>mouseover</white>. "
+                    .. "To return from the e<w>x</w>amination mode to the game "
+                    .. "mode, press <white>Escape</white>."
+    else
+        text = text .. "You can check whether this is the case by examining the "
+                    .. "monster with "
+                    .. tutorial_get_cmd("CMD_LOOK_AROUND")
+                    .. ", and then selecting the monster with the movement keys "
+                    .. "or via the "
+                    .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<white>+</white> "
+                    .. "shortcut directly looping through all monsters in sight."
+                    .. " When you're finished, press <white>Escape</white> to "
+                    .. "return to the main mode."
+    end
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.resting ()
+    return tutorial_message("Very good! You can regain any lost hit points by "
+                            .. "resting with "
+                            .. tutorial_get_cmd("CMD_REST") .. ". "
+                            .. "This will make you rest and search for up to 100 "
+                            .. "turns, but will get interrupted by a number of "
+                            .. "important events.")
+end
+
+function tutorial_msg2.chop_corpses ()
+    return tutorial_message("You can chop up corpses into edible meat chunks. "
+                            .. "For that you'll need a sharp-edged weapon, such "
+                            .. "as that short sword.")
+end
+
+function tutorial_msg2.butchery_weapon ()
+    local text = "Now that you have a sharp-edged weapon, you can chop a corpse "
+                 .. "with " .. tutorial_get_cmd("CMD_BUTCHER")
+
+    if crawl.is_tiles() then
+        text = text .. " or <white>Shift + mouseclick</white>,"
+    end
+
+    text = text .. " and then eat the resulting chunks with "
+                .. tutorial_get_cmd("CMD_EAT")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.wait ()
+    return tutorial_message("Rather than storm the room and get swarmed by "
+                            .. "monsters, you can also step back and wait (with "
+                            .. tutorial_get_cmd("CMD_MOVE_NOWHERE") .. ") for "
+                            .. "them to come to you.")
+end
+
+function tutorial_msg2.resting_reminder ()
+    return tutorial_message("If necessary, rest up with "
+                            .. tutorial_get_cmd("CMD_REST") .. ". ")
+end
+
+function tutorial_msg2.compare_monster_desc ()
+    local text = "Examine these monsters ("
+
+    if crawl.is_tiles() then
+        text = text .. "via <white>mouseover</white>"
+    else
+        text = text .. "with " .. tutorial_get_cmd("CMD_LOOK_AROUND")
+                    .. "<w>+</w>"
+    end
+
+    text = text .. ") and compare their descriptions ("
+
+    if crawl.is_tiles() then
+        text = text .. "<white>right mouseclick</white>"
+    else
+        text = text .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w>"
+    end
+
+    text = text .. ") to find out which of these cages is the safest to walk through."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.downstairs ()
+    return tutorial_message("Well done! After resting to full health continue "
+                            .. "into the next level with "
+                            .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS") .. ".")
+end
+
+-----------------------------------------------------------
+-- Lua code for level 2.
+-----------------------------------------------------------
+function tutorial_msg2.newlevel ()
+    local text = "Remember: You can reread old messages with "
+                 .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. "."
+
+    crawl.mesclr(true)
+    crawl.mpr(text, "tutorial")
+end
+
+function tutorial_msg2.darts ()
+    local text = "Now, for ranged combat! Pick up these darts with "
+                 .. tutorial_get_cmd("CMD_PICKUP")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>,"
+    end
+    text = text .. " and continue."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.throwing ()
+    local text = "You can fire your darts at a monster with "
+                 .. tutorial_get_cmd("CMD_FIRE")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</white> on them in the inventory panel"
+    end
+    text = text .. ". To confirm the auto-targeted monster, press <white>f</white> "
+                .. "a second time or <white>Enter</white>."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.wield_bow ()
+    local text = "Pick up this bow and wield it with "
+                 .. tutorial_get_cmd("CMD_WIELD_WEAPON")
+
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white>"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.firing ()
+    local text = "Firing some arrows from your wielded bow works exactly the "
+                 .. "same as throwing darts: via "
+                 .. tutorial_get_cmd("CMD_FIRE")
+    if crawl.is_tiles() then
+        text = text .. " or <white>mouseclick</white>"
+    end
+    text = text .. ". You can change the targeted monster by pressing <white>+</white> "
+                .. "while in target mode. "
+                .. "Again, confirm your choice with <white>f</white> or <white>Enter</white>."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.quiver ()
+    local text = "To conserve ammunition, you might sometimes want to switch "
+                 .. "ammunition, which you can do by pressing <white>(</white>"
+    if crawl.is_tiles() then
+        text = text .. " or simply <white>clicking</white> on another ammunition "
+                    .. "tile"
+    end
+    text = text .. "."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg2.explore ()
+    return tutorial_message("This cave is large. Use autoexplore ("
+                            .. tutorial_get_cmd("CMD_EXPLORE")
+                            .. ") to find the exit. Shoot any bats you come across!")
+end
+
+function tutorial_msg2.tutorial_end ()
+    return tutorial_message("Congratulations! You've survived your first batch "
+                            .. "of monsters!\n"
+                            .. "To exit the tutorial, simply go down these stairs.")
+end
+
+function tutorial_msg2.exit ()
+    -- A single screen recapping all commands.
+
+    local text = "<yellow>Weapons"
+    if not crawl.is_tiles() then
+        text = text .. " <cyan>)</cyan>"
+    end
+
+    text = text .. "</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_PICKUP") .. "  pick up an item\n"
+                .. "  " .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "  wield a weapon\n"
+
+    if crawl.is_tiles() then
+        text = text .. "\nYou also can do this by <white>clicking</white> on the weapon in your inventory.\n"
+    end
+
+    text = text .. "\n<yellow>Monsters</yellow>\n"
+                .. "  attack by moving into a monster\n"
+    if crawl.is_tiles() then
+        text = text .. "  <white>mouseover</white>  examine a monster\n"
+                    .. "  <white>rightclick</white>  read a more detailed description\n"
+    else
+        text = text .. "  " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "  examine a monster\n"
+                    .. "  " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>+</w>  loop to another monster\n"
+                    .. "  " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w>  read a more detailed description\n"
+    end
+    text = text .. "  " .. tutorial_get_cmd("CMD_FIRE") .. "<w>f</w>  fire ammunition at pre-targeted monster\n"
+                .. "  " .. tutorial_get_cmd("CMD_FIRE") .. "<w>(</w>  fire another item\n"
+                .. "  " .. tutorial_get_cmd("CMD_FIRE") .. "<w>+</w>  target another monster\n"
+
+    if crawl.is_tiles() then
+        text = text .. "\nYou can also fire an item by <white>clicking</white> on it and then confirming the target with <w>Enter</w>.\n"
+    end
+
+    text = text .. "\n<yellow>Resting</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_MOVE_NOWHERE") .. "  wait, rest and search a single turn\n"
+                .. "  " .. tutorial_get_cmd("CMD_REST") .. "  wait, rest and search up to 100 turns\n"
+
+    text = text .. "\n<yellow>Corpses"
+    if not crawl.is_tiles() then
+        text = text .. " <brown>%</brown>"
+    end
+
+    text = text .. "</yellow>\n"
+                .. "  " .. tutorial_get_cmd("CMD_BUTCHER") .. "  chop a corpse into meat chunks\n"
+                .. "  " .. tutorial_get_cmd("CMD_EAT") .. "  eat a chunk of meat\n\n"
+                .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
+
+    return crawl.endgame(text)
+end
+
+function tutorial_msg2.win ()
+    dgn.mark_game_won()
+    return tutorial_msg2.exit()
+end
+}}
+
+NAME:    tutorial_lesson2
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_start
+DESC:    "Lesson 2: Monsters and Combat"
+BFLAGS:  islanded
+ORIENT:  encompass
+KFEAT:   ABCFG = .
+KFEAT:   n = iron_grate
+COLOUR:  deABCDEFG = blue
+FTILE:   deABCDEFG = tutorial_pad
+ITEM:    quarterstaff mundane not_cursed
+ITEM:    short sword mundane not_cursed
+SHUFFLE: 456
+MONS:    training dummy hp:15
+MONS:    training dummy hp:30 ; whip mundane not_cursed
+MONS:    rat always_corpse
+MONS:    hound, porcupine, ooze
+MARKER:  d = lua:tutorial_msg2.pickup_weapon()
+MARKER:  A = lua:tutorial_msg2.melee()
+MARKER:  B = lua:tutorial_msg2.examine()
+MARKER:  C = lua:tutorial_msg2.resting()
+MARKER:  D = lua:tutorial_msg2.chop_corpses()
+MARKER:  e = lua:tutorial_msg2.butchery_weapon()
+MARKER:  E = lua:tutorial_msg2.wait()
+MARKER:  F = lua:tutorial_msg2.resting_reminder()
+MARKER:  G = lua:tutorial_msg2.compare_monster_desc()
+MARKER:  } = lua:tutorial_msg2.downstairs()
+MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson2", \
+                                 onclimb = "tutorial_msg2.exit" }
+MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson2", \
+                                 onclimb = "tutorial_msg2.exit" }
+MARKER:  [ = lua:one_way_stair { dst  = "tutorial_lesson2", \
+                                 onclimb = "tutorial_msg2.exit" }
+epilogue{{
+  tutorial_msg2.start()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx...}...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx.xx...xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.xxxx.xxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.xxxx.xxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxxxx.xxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxxxn+nxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxx.....xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxn+nn5......nn+nxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...nnnn+nnnn...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx4..+.......+...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...n...T...n.6.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...n.......n...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxxx..+....C.2..B..xxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxxx3.xxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxxxDxxxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxxx...3..xxxxxexxxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxx........xxxx.xxxxxxxxxxxxx.xxx
+xxxxxxxxx.....F+..3....E+....xxxxxxxxxxxxx1xxx
+xxxxxxxxxxxxxxxx....3...xxxxxxxxxxxxxxxxxx.xxx
+xxxxxxxxxxxxxxxxx3.....xxxxxxxxxxxxxxxxxxx.xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxAxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccc+ccc
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc..d..c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.....c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.....c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc(.{.[c
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc
+ENDMAP
+
+
+##########################################################
+# Level 2: Ranged combat
+##########################################################
+NAME:    tutorial_lesson2_level2
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson2
+PLACE:   D:2
+BFLAGS:  islanded
+ORIENT:  encompass
+TILE:    G = dngn_statue_centaur
+RTILE:   x = wall_lair, c = wall_vines
+KFEAT:   ABCDEFH = .
+COLOUR:  deABCDEH = blue
+FTILE:   deABCDEH = tutorial_pad
+MONS:    training dummy hp:10 ; stone q:15
+MONS:    megabat
+MONS:    rat always_corpse
+ITEM:    dart mundane q:30
+ITEM:    bow mundane not_cursed
+ITEM:    arrow mundane q:30
+MARKER:  d = lua:tutorial_msg2.darts()
+MARKER:  A = lua:tutorial_msg2.throwing()
+MARKER:  B = lua:tutorial_msg2.resting_reminder()
+MARKER:  e = lua:tutorial_msg2.wield_bow()
+MARKER:  C = lua:tutorial_msg2.firing()
+MARKER:  D = lua:tutorial_msg2.quiver()
+MARKER:  E = lua:tutorial_msg2.explore()
+# This is just for atmosphere.
+MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 10, \
+             pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
+             size_max = 3, spread_rate = -1 }
+MARKER:  } = lua:tutorial_msg2.tutorial_end()
+MARKER:  ) = lua:tutorial_msg2.tutorial_end()
+MARKER:  ] = lua:tutorial_msg2.tutorial_end()
+MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson2", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg2.win" }
+MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson2", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg2.win" }
+MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson2", \
+                                 desc = "exit from the tutorial", \
+                                 onclimb = "tutorial_msg2.win" }
+epilogue{{
+  tutorial_msg2.newlevel()
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxccccccccxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxc.....Gcccccxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxc..{..d..A.cxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxc.....Gccc.cxxxxxxxxxxx
+xxxxxxxxxxx..xxxxxxxxxxccccccccxc.cxxxxxxxxxxx
+xxxxxxxxxx.xxBxxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxx
+xxxxxxxxx.xx....xxxxxxxxxxxxxxx.....xxxxxxxxxx
+xxxx....DxxwWW..lllxxxxxxxxxxx..WWW..xxxxxxxxx
+xxll...xxxxwww.ll1llxxxxxxxxxx.WwwwW.xxxxxxxxx
+x1lll.xxxxxw1wW.lllxxxxxxxxxxx.Ww1wW.xxxxxxxxx
+xxll.xxxxxxxww.llxxxxxxxxxxxxx.WwwwW.xxxxxxxxx
+xxxxxBxxxxxxxx.xxxxxxxxxxxxxxx..WWW..xxxxxxxxx
+xxxxxx.xxxxxxxCxxxxxxxxxxxxxxxx.....xxxxxxxxxx
+xxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxxxBxxxxxxxxxxxx
+xxxxx.xxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxx.xxxxxxxxx.xxxxxxxxxx.xxxxxx.xxxxxxxxxxxx
+xxxxx.xxxxxxxxxx.xxxxxxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxExxxxxxxxxxx..xxxxxxxxxxxxxxx..xx.3xxxxxx
+xxx.....xxxxxxxxxxx..f.e..xxxxxxxxxx......xxxx
+x............xxxxxxxxxxxxx...xxxxxxxxx..3.xxx
+xx...x..........xxxxxxxxxxxxx...xxx...xxxxxxxx
+x............F......xxxxxxxxxxxx...xxxxxxxxxxx
+xxx...tt.........xx.2.xxxxxxxxxxxxxxxxxxxxxxxx
+xx....ttt..........x....xxxxxxxxxxxxxxxxxxxxxx
+x.......tt........xxx....xxxxxxxxxxxxxxxxxxxxx
+xxx.F.......x...2.xxxx...xxxxxxxxxxxxxxxxxxxxx
+xx.........xx.......xxx.xxxxxxxxxxxxxxxxxxxxxx
+xxx.2..x......x....xxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxx.....2..x.x..xxxxxxx]xxxxxxxxxxxxxxxxxxxxx
+xxxxxx.......x.xx.xxx.).xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx..xxxxx.xx..}xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

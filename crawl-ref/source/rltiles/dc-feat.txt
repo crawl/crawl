@@ -2,31 +2,36 @@
 %prefix TILE
 %startvalue TILE_WALL_MAX tiledef-wall.h
 
-%sdir dc-dngn
-
-wall/tree1 DNGN_TREE
-wall/tree2
+%sdir dc-dngn/trees
+tree1 DNGN_TREE
+tree2
 
 %variation DNGN_TREE yellow
-wall/tree1_yellow DNGN_TREE_YELLOW
-wall/tree2_yellow
+tree1_yellow DNGN_TREE_YELLOW
+tree2_yellow
 
 %variation DNGN_TREE lightred
-wall/tree1_lightred DNGN_TREE_LIGHTRED
-wall/tree2_lightred
+tree1_lightred DNGN_TREE_LIGHTRED
+tree2_lightred
 
 %variation DNGN_TREE red
-wall/tree1_red DNGN_TREE_RED
-wall/tree2_red
+tree1_red DNGN_TREE_RED
+tree2_red
 
 # this may need to change, but it should make things a bit simpler
 %variation DNGN_TREE darkgray
-wall/tree1_dead DNGN_TREE_DEAD
-wall/tree2_dead
+tree1_dead DNGN_TREE_DEAD
+tree2_dead
 
-wall/mangrove1 DNGN_SWAMP_TREE
+%weight 10
+mangrove1 DNGN_SWAMP_TREE
+%weight 8
+mangrove2
+%weight 5
+mangrove3
 
 ## doors
+%sdir dc-dngn
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
@@ -49,24 +54,33 @@ dngn_stone_arch DNGN_STONE_ARCH
 
 %sdir dc-dngn/statues
 dngn_orcish_idol DNGN_ORCISH_IDOL
-%weight 20
-dngn_granite_statue DNGN_GRANITE_STATUE
+# dungeon statues
 %weight 5
-dngn_statue_dwarf_axe
+dngn_statue_dwarf_axe DNGN_GRANITE_STATUE
 %weight 3
 dngn_statue_dwarf_mace
 %weight 2
 dngn_statue_dwarf_sword
-%weight 8
+%weight 5
 dngn_statue_centaur
 %syn DNGN_STATUE_CENTAUR
+%weight 3
+dngn_statue_centaur2
+%weight 8
+dngn_statue_mermaid
+%syn DNGN_STATUE_MERMAID
+dngn_statue_naga
+%syn DNGN_STATUE_NAGA
 dngn_statue_dragon
 %syn DNGN_STATUE_DRAGON
+dngn_statue_head
 dngn_statue_eye
 %weight 5
 dngn_statue_snail
 dngn_statue_troll
 %syn DNGN_STATUE_TROLL
+dngn_statue_cat
+%syn DNGN_STATUE_CAT
 %weight 3
 dngn_statue_skull
 %syn DNGN_STATUE_SKULL
@@ -75,9 +89,9 @@ dngn_statue_elephant
 %weight 1
 dngn_statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
+# damaged statues
 dngn_crumbled_column DNGN_CRUMBLED_COLUMN
 dngn_granite_stump DNGN_GRANITE_STUMP
-dngn_zot_pillar DNGN_ZOT_PILLAR
 
 ## Features only used in certain minivaults
 %sdir dc-dngn/vaults
@@ -124,6 +138,7 @@ dngn_trap_zot DNGN_TRAP_ZOT
 
 ## stairs
 %sdir dc-dngn/gateways
+dngn_exit_dungeon DNGN_EXIT_DUNGEON
 stone_stairs_down DNGN_STONE_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
@@ -272,6 +287,8 @@ ink_wave_W WAVE_INK_W
 #full
 ink_full WAVE_INK_FULL
 %shrink 1
+liquefaction1 LIQUEFACTION
+liquefaction2
 
 %sdir dc-dngn/gateways
 dngn_entrance DNGN_UNSEEN_ENTRANCE
@@ -418,7 +435,13 @@ dc-misc/mold_small3
 dc-misc/mold_small4
 effect/silenced SILENCED
 %shrink 0
-dc-mon/kraken/corner_piece_NW KRAKEN_OVERLAY_NW
-dc-mon/kraken/corner_piece_NE KRAKEN_OVERLAY_NE
-dc-mon/kraken/corner_piece_SE KRAKEN_OVERLAY_SE
-dc-mon/kraken/corner_piece_SW KRAKEN_OVERLAY_SW
+%sdir dc-mon/tentacles/kraken_corners
+kraken_corner_NW KRAKEN_OVERLAY_NW
+kraken_corner_NE KRAKEN_OVERLAY_NE
+kraken_corner_SE KRAKEN_OVERLAY_SE
+kraken_corner_SW KRAKEN_OVERLAY_SW
+%sdir dc-mon/tentacles/eldritch_corners
+eldritch_corner_NW ELDRITCH_OVERLAY_NW
+eldritch_corner_NE ELDRITCH_OVERLAY_NE
+eldritch_corner_SE ELDRITCH_OVERLAY_SE
+eldritch_corner_SW ELDRITCH_OVERLAY_SW

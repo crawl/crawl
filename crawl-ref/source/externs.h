@@ -261,6 +261,7 @@ struct coord_def
         return (xi == x && yi == y);
     }
 };
+
 const coord_def INVALID_COORD(-1, -1);
 
 typedef bool (*coord_predicate)(const coord_def &c);
@@ -316,8 +317,14 @@ struct shop_struct
     uint8_t             greed;
     shop_type           type;
     uint8_t             level;
+    std::string         shop_name;
+    std::string         shop_type_name;
+    std::string         shop_suffix_name;
 
     FixedVector<uint8_t, 3> keeper_name;
+
+    shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
+                     shop_name(""), shop_type_name(""), shop_suffix_name("") { }
 
     bool defined() const { return type != SHOP_UNASSIGNED; }
 };
@@ -330,6 +337,8 @@ struct delay_queue_item
     int         parm1;
     int         parm2;
     bool        started;
+    int         trits[6];
+    size_t      len;
 };
 
 

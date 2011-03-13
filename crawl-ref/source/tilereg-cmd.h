@@ -16,7 +16,7 @@ static const command_type _common_commands[] =
 #ifdef CLUA_BINDINGS
     CMD_AUTOFIGHT,
 #endif
-    CMD_USE_ABILITY, CMD_PRAY, CMD_SEARCH_STASHES,
+    CMD_SEARCH, CMD_USE_ABILITY, CMD_PRAY, CMD_SEARCH_STASHES,
 
     // informational commands
     CMD_REPLAY_MESSAGES, CMD_RESISTS_SCREEN, CMD_DISPLAY_OVERMAP,

@@ -187,7 +187,7 @@ public:
                           bool abyss_shift = false,
                           bool wizard_tele = false) = 0;
     virtual void poison(actor *attacker, int amount = 1, bool force = false) = 0;
-    virtual bool sicken(int amount) = 0;
+    virtual bool sicken(int amount, bool allow_hint = true) = 0;
     virtual void paralyse(actor *attacker, int strength) = 0;
     virtual void petrify(actor *attacker, int strength) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
@@ -202,13 +202,15 @@ public:
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              std::string source = "") = 0;
 
-    virtual int  skill(skill_type sk, bool skill_bump = false) const
+    virtual int  skill(skill_type sk) const
     {
         return (0);
     }
 
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
+
+    virtual int stealth () const = 0;
 
     virtual bool can_throw_large_rocks() const = 0;
 
@@ -238,8 +240,8 @@ public:
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
-    virtual int res_poison() const = 0;
-    virtual int res_rotting() const = 0;
+    virtual int res_poison(bool temp = true) const = 0;
+    virtual int res_rotting(bool temp = true) const = 0;
     virtual int res_asphyx() const = 0;
     virtual int res_water_drowning() const = 0;
     virtual int res_sticky_flame() const = 0;
@@ -252,9 +254,14 @@ public:
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
-    virtual bool is_wall_clinging() const = 0;
-    virtual bool can_cling_to(const coord_def& p) const = 0;
+    virtual bool is_wall_clinging() const;
+    virtual bool can_cling_to_walls() const = 0;
+    virtual bool can_cling_to(const coord_def& p) const;
+    virtual void check_clinging(bool stepped);
+    virtual void clear_clinging();
     virtual bool airborne() const;
+    virtual bool ground_level() const;
+    virtual bool stand_on_solid_ground() const;
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;
@@ -303,6 +310,8 @@ public:
     virtual bool     do_shaft() = 0;
 
     coord_def position;
+
+    CrawlHashTable props;
 
 protected:
     // These are here for memory management reasons...

@@ -124,7 +124,8 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_MOLLIFY_GOD
         || note.type == NOTE_DEATH
         || note.type == NOTE_XOM_REVIVAL
-        || note.type == NOTE_SEEN_FEAT)
+        || note.type == NOTE_SEEN_FEAT
+        || note.type == NOTE_PARALYSIS)
     {
         return (true);
     }
@@ -392,6 +393,9 @@ std::string Note::describe(bool when, bool where, bool what) const
                 result << ", tension: " << second;
             result << ")";
 #endif
+            break;
+        case NOTE_PARALYSIS:
+            result << "Paralysed by " << name << " for " << first << " turns";
             break;
         default:
             result << "Buggy note description: unknown note type";

@@ -349,11 +349,13 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
-    if (crawl_state.game_is_arena() ||
-        (crawl_state.game_is_sprint() &&
-         you.level_type == LEVEL_DUNGEON &&
-         you.char_direction == GDT_DESCENDING))
+    if (crawl_state.game_is_arena()
+        || (crawl_state.game_is_sprint()
+            && you.level_type == LEVEL_DUNGEON
+            && you.char_direction == GDT_DESCENDING))
+    {
         return;
+    }
 
 #ifdef DEBUG_MON_CREATION
     mpr("in spawn_random_monsters()", MSGCH_DIAGNOSTICS);
@@ -385,7 +387,7 @@ void spawn_random_monsters()
         return;
     }
 
-    // Place normal dungeon monsters,  but not in player LOS.
+    // Place normal dungeon monsters, but not in player LOS.
     if (you.level_type == LEVEL_DUNGEON && x_chance_in_y(5, rate))
     {
         dprf("Placing monster, rate: %d, turns here: %d",
@@ -559,18 +561,16 @@ monster_type pick_random_monster(const level_id &place, int power,
                 count = 0;
                 do
                 {
-                    // was: random2(400) {dlb}
                     mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
                     count++;
                 }
                 while (mons_abyss(mon_type) == 0 && count < 2000);
-            } while ((crawl_state.game_is_arena() &&
-                      arena_veto_random_monster(mon_type)) ||
-                     (crawl_state.game_is_sprint() &&
-                      sprint_veto_random_abyss_monster(mon_type)) ||
-                     (force_mobile && (mons_class_is_stationary(mon_type)
-                       || mons_is_mimic(mon_type))
-                     ));
+            } while ((crawl_state.game_is_arena()
+                          && arena_veto_random_monster(mon_type))
+                      || (crawl_state.game_is_sprint()
+                          && sprint_veto_random_abyss_monster(mon_type))
+                      || (force_mobile && (mons_class_is_stationary(mon_type)
+                                           || mons_is_mimic(mon_type))));
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
@@ -684,7 +684,7 @@ bool find_mon_place_near_stairs(coord_def& pos,
             break;
         }
     }
-    const monster_type habitat_target = MONS_GIANT_BAT;
+    const monster_type habitat_target = MONS_MEGABAT;
     pos = find_newmons_square_contiguous(habitat_target, pos);
     return (in_bounds(pos));
 }
@@ -1051,9 +1051,7 @@ int place_monster(mgen_data mg, bool force_pos)
     {
         branch_type b;
         if (!find_mon_place_near_stairs(mg.pos, &stair_type, b))
-        {
             mg.proximity = PROX_AWAY_FROM_PLAYER;
-        }
     } // end proximity check
 
     if (mg.cls == MONS_PROGRAM_BUG)
@@ -1281,11 +1279,8 @@ int place_monster(mgen_data mg, bool force_pos)
     // Zotdef change - banding allowed on stairs for extra challenge!
     // Frequency reduced, though, and only after 2K turns.
     if (id >= MAX_MONSTERS - 30
-        || (mg.proximity == PROX_NEAR_STAIRS
-            && !crawl_state.game_is_zotdef()
-            && coinflip())
-        || (crawl_state.game_is_zotdef() && you.num_turns<2000)
-        )
+        || (mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef())
+        || (crawl_state.game_is_zotdef() && you.num_turns<2000))
         return (id);
 
     // Not PROX_NEAR_STAIRS, so it will be part of a band, if there is any.
@@ -1323,6 +1318,8 @@ int place_monster(mgen_data mg, bool force_pos)
         if (band_id != -1 && band_id != NON_MONSTER)
         {
             menv[band_id].flags |= MF_BAND_MEMBER;
+            menv[band_id].props["band_leader"].get_int() = menv[id].mid;
+
             // Priestly band leaders should have an entourage of the
             // same religion, unless members of that entourage already
             // have a different one.
@@ -1392,10 +1389,10 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mons_is_unique(mg.cls) && you.unique_creatures[mg.cls]
             && !crawl_state.game_is_arena()
         || mg.cls == MONS_MERGED_SLIME_CREATURE
-        || mg.cls == MONS_SENSED
+        || mons_is_sensed(mg.cls)
         || mg.cls == MONS_PLAYER)
     {
-        die("unknown monster to place: %d", mons_class_name(mg.cls));
+        die("invalid monster to place: %s (%d)", mons_class_name(mg.cls), mg.cls);
     }
 
     const monsterentry *m_ent = get_monster_data(mg.cls);
@@ -1613,7 +1610,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_SPIRIT)
         mon->add_ench(ENCH_FADING_AWAY);
 
-    if (mg.cls == MONS_TOADSTOOL)
+    if (mg.cls == MONS_TOADSTOOL || mg.cls == MONS_SALT_PILLAR)
     {
         // This enchantment is a timer that counts down until death.
         // It should last longer than the lifespan of a corpse, to avoid
@@ -1665,10 +1662,6 @@ static int _place_monster_aux(const mgen_data &mg,
             }
             break;
         }
-
-        case MONS_TRAP_MIMIC:
-            mon->props["trap_type"] = static_cast<short>(random_trap(DNGN_TRAP_MECHANICAL));
-            break;
 
         // Needs a more complicated block.
         case MONS_SHOP_MIMIC:
@@ -1915,6 +1908,10 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         blame_prefix = "animated by ";
     }
+    else if (mg.summon_type == SPELL_STICKS_TO_SNAKES)
+    {
+        blame_prefix = "transmuted by ";
+    }
     else
     {
         blame_prefix = "created by ";
@@ -1984,7 +1981,8 @@ static int _place_monster_aux(const mgen_data &mg,
         // Dancing weapons are placed at pretty high power.  Remember, the
         // player is fighting them one-on-one, while he will often summon
         // several.
-        ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)), 180);
+        ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+                                  mg.summoner ? mg.power : 180);
         mon->set_ghost(ghost);
         mon->dancing_weapon_init();
     }
@@ -2523,8 +2521,13 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size += 1 + random2(3);
         break;
 
-    case MONS_GIANT_MOSQUITO:
-        band = BAND_GIANT_MOSQUITOES;
+    case MONS_VAMPIRE_MOSQUITO:
+        band = BAND_VAMPIRE_MOSQUITOES;
+        band_size = 1 + random2(3);
+        break;
+
+    case MONS_FIRE_BAT:
+        band = BAND_FIRE_BATS;
         band_size = 1 + random2(3);
         break;
 
@@ -2647,6 +2650,12 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         natural_leader = true;
         band = BAND_KHUFU;
         band_size = 3;
+        break;
+
+    case MONS_TERPSICHORE:
+        natural_leader = true;
+        band = BAND_TERPSICHORE;
+        band_size = 1 + random_range(1, 3);
         break;
 
     case MONS_GOLDEN_EYE:
@@ -2901,7 +2910,11 @@ static monster_type _band_member(band_type band, int power)
                  (temp_rand == 1) ? MONS_DEEP_ELF_SORCERER      // 1 in 16
                                   : MONS_DEEP_ELF_DEATH_MAGE);  // 1 in 16
         break;
-
+    case BAND_TERPSICHORE:
+        mon_type = MONS_DANCING_WEAPON;
+        if (one_chance_in(4))
+            mon_type = MONS_PHANTOM;
+        break;
     case BAND_HELL_KNIGHTS:
         mon_type = MONS_HELL_KNIGHT;
         if (one_chance_in(4))
@@ -2948,8 +2961,11 @@ static monster_type _band_member(band_type band, int power)
     case BAND_HELL_HOGS:
         mon_type = MONS_HELL_HOG;
         break;
-    case BAND_GIANT_MOSQUITOES:
-        mon_type = MONS_GIANT_MOSQUITO;
+    case BAND_VAMPIRE_MOSQUITOES:
+        mon_type = MONS_VAMPIRE_MOSQUITO;
+        break;
+    case BAND_FIRE_BATS:
+        mon_type = MONS_FIRE_BAT;
         break;
     case BAND_BOGGARTS:
         mon_type = MONS_BOGGART;
@@ -3176,9 +3192,12 @@ int mons_place(mgen_data mg)
         break;
     case LEVEL_DUNGEON:
     default:
-        mg.power = you.absdepth0;
-        if (crawl_state.game_is_zotdef())
+        if (mg.cls == MONS_DANCING_WEAPON && mg.summoner)
+            ; // It's an animated weapon, don't touch the power
+        else if (crawl_state.game_is_zotdef())
             mg.power =  you.num_turns / (CYCLE_LENGTH * 3);
+        else
+            mg.power = you.absdepth0;
         break;
     }
 

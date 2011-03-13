@@ -493,9 +493,9 @@ bool wizard_add_mutation()
         const char* msg;
 
         if (you.mutation[MUT_MUTATION_RESISTANCE] == 3)
-            msg = "You are immune to mutations, remove immunity?";
+            msg = "You are immune to mutations; remove immunity?";
         else
-            msg = "You are resistant to mutations, remove resistance?";
+            msg = "You are resistant to mutations; remove resistance?";
 
         if (yesno(msg, true, 'n'))
         {
@@ -776,6 +776,11 @@ static const char* dur_names[] =
     "scrying",
     "tornado",
     "liquefying",
+    "heroism",
+    "finesse",
+    "lifesaving",
+    "paralysis immunity",
+    "darkness",
 };
 
 void wizard_edit_durations(void)
@@ -893,11 +898,8 @@ void wizard_edit_durations(void)
 
 static void debug_uptick_xl(int newxl)
 {
-    while (newxl > you.experience_level)
-    {
-        you.experience = 1 + exp_needed(2 + you.experience_level);
-        level_change(true);
-    }
+    you.experience = exp_needed(newxl);
+    level_change(true);
 }
 
 static void debug_downtick_xl(int newxl)
@@ -910,7 +912,8 @@ static void debug_downtick_xl(int newxl)
         you.hp     = std::max(5, you.hp);
         you.hp_max = std::max(5, you.hp_max);
 
-        lose_level();
+        you.experience = exp_needed(you.experience_level) - 1;
+        level_change();
     }
 
     you.hp       = std::max(1, you.hp);
@@ -952,7 +955,7 @@ void wizard_get_god_gift (void)
         return;
     }
 
-    if (!do_god_gift(false, true))
+    if (!do_god_gift(true))
         mpr("Nothing happens.");
 }
 

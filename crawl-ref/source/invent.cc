@@ -976,11 +976,9 @@ std::string item_class_name(int type, bool terse)
         case OBJ_ARMOUR:     return ("armour");
         case OBJ_WANDS:      return ("wand");
         case OBJ_FOOD:       return ("food");
-        case OBJ_UNKNOWN_I:  return ("?");
         case OBJ_SCROLLS:    return ("scroll");
         case OBJ_JEWELLERY:  return ("jewellery");
         case OBJ_POTIONS:    return ("potion");
-        case OBJ_UNKNOWN_II: return ("?");
         case OBJ_BOOKS:      return ("book");
         case OBJ_STAVES:     return ("staff");
         case OBJ_ORBS:       return ("orb");
@@ -998,11 +996,9 @@ std::string item_class_name(int type, bool terse)
         case OBJ_ARMOUR:     return ("Armour");
         case OBJ_WANDS:      return ("Magical Devices");
         case OBJ_FOOD:       return ("Comestibles");
-        case OBJ_UNKNOWN_I:  return ("Books");
         case OBJ_SCROLLS:    return ("Scrolls");
         case OBJ_JEWELLERY:  return ("Jewellery");
         case OBJ_POTIONS:    return ("Potions");
-        case OBJ_UNKNOWN_II: return ("Gems");
         case OBJ_BOOKS:      return ("Books");
         case OBJ_STAVES:     return ("Magical Staves and Rods");
         case OBJ_ORBS:       return ("Orbs of Power");
@@ -1076,9 +1072,7 @@ static bool _item_class_selected(const item_def &i, int selector)
     }
     case OBJ_WEAPONS:
     case OSEL_WIELD:
-        return (itype == OBJ_WEAPONS || itype == OBJ_STAVES || is_deck(i)
-                || itype == OBJ_MISCELLANY
-                   && i.sub_type == MISC_LANTERN_OF_SHADOWS);
+        return (item_is_wieldable(i));
 
     case OSEL_BUTCHERY:
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
@@ -1509,7 +1503,7 @@ bool check_old_item_warning(const item_def& item,
 
     // now ask
     prompt += old_item.name(DESC_INVENTORY);
-    prompt += '?';
+    prompt += "?";
     return yesno(prompt.c_str(), false, 'n');
 }
 
@@ -1547,7 +1541,7 @@ static bool _nasty_stasis(const item_def &item, operation_types oper)
             && item.base_type == OBJ_JEWELLERY
             && item.sub_type == AMU_STASIS
             && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-                || you.duration[DUR_TELEPORT]));
+                || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE]));
 }
 
 bool needs_handle_warning(const item_def &item, operation_types oper)
@@ -1633,6 +1627,12 @@ bool check_warning_inscriptions(const item_def& item,
             if (equip != -1 && item.link == equip)
                 return (check_old_item_warning(item, oper));
         }
+        else if (oper == OPER_REMOVE || oper == OPER_TAKEOFF)
+        {
+            // Don't ask if it will fail anyway.
+            if (item.cursed())
+                return (true);
+        }
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
@@ -1640,7 +1640,7 @@ bool check_warning_inscriptions(const item_def& item,
         if (_nasty_stasis(item, oper))
             prompt += std::string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
-                         you.duration[DUR_HASTE] ? "hasted" : "slowed");
+                         you.duration[DUR_SLOW] ? "slowed" : "hasted");
         prompt += "?";
         return (yesno(prompt.c_str(), false, 'n')
                 && check_old_item_warning(item, oper));
@@ -1747,10 +1747,8 @@ int prompt_invent_item(const char *prompt,
 
             if (allow_list_known && keyin == '\\')
             {
-                if (check_item_knowledge(true))
-                    keyin = '?';
-                else
-                    mpr("You don't recognise anything yet!");
+                check_item_knowledge();
+                keyin = '?';
             }
 
             need_getch  = false;
@@ -1804,13 +1802,9 @@ int prompt_invent_item(const char *prompt,
         }
         else if (allow_list_known && keyin == '\\')
         {
-                if (check_item_knowledge(true))
-                {
-                    keyin = '?';
-                    need_getch = false;
-                }
-                else
-                    mpr("You don't recognise anything yet!");
+            check_item_knowledge();
+            keyin = '?';
+            need_getch = false;
         }
         else if (isaalpha(keyin))
         {
@@ -1852,6 +1846,16 @@ bool prompt_failed(int retval, std::string msg)
     crawl_state.cancel_cmd_repeat();
 
     return (true);
+}
+
+// Most items are wieldable, but this function check for items that needs to be
+// wielded to be used normally.
+bool item_is_wieldable(const item_def &item)
+{
+    const int type = item.base_type;
+    return (type == OBJ_WEAPONS || type == OBJ_STAVES || is_deck(item)
+            || type == OBJ_MISCELLANY
+               && item.sub_type == MISC_LANTERN_OF_SHADOWS);
 }
 
 bool item_is_evokable(const item_def &item, bool known, bool all_wands,

@@ -17,7 +17,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-place.h"
@@ -27,6 +26,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
+#include "player-equip.h"
 #include "skills2.h"
 #include "species.h"
 

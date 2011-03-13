@@ -38,37 +38,36 @@ struct map_cell
     uint32_t flags;   // Flags describing the mappedness of this square.
 
     map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
-                 _item(0), _cloud(CLOUD_NONE), _cloud_colour(0)
+                 _item(0), _mons(0), _cloud(CLOUD_NONE), _cloud_colour(0)
     {
-        memset(&_mons, 0, sizeof(_mons));
     }
 
     map_cell(const map_cell& c)
     {
         memcpy(this, &c, sizeof(map_cell));
-        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
-            _mons.info = new monster_info(*_mons.info);
+        if (_mons)
+            _mons = new monster_info(*_mons);
         if (_item)
             _item = new item_info(*_item);
     }
 
     ~map_cell()
     {
-        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
-            delete _mons.info;
+        if (!(flags & MAP_DETECTED_MONSTER) && _mons)
+            delete _mons;
         if (_item)
             delete _item;
     }
 
     map_cell& operator=(const map_cell& c)
     {
-        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
-            delete _mons.info;
+        if (_mons)
+            delete _mons;
         if (_item)
             delete _item;
         memcpy(this, &c, sizeof(map_cell));
-        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
-            _mons.info = new monster_info(*_mons.info);
+        if (_mons)
+            _mons = new monster_info(*_mons);
         if (_item)
             _item = new item_info(*_item);
          return (*this);
@@ -135,26 +134,21 @@ struct map_cell
 
     monster_type monster() const
     {
-        if (flags & MAP_DETECTED_MONSTER)
-            return _mons.detected;
-        else if (_mons.info)
-            return _mons.info->type;
+        if (_mons)
+            return _mons->type;
         else
             return MONS_NO_MONSTER;
     }
 
     monster_info* monsterinfo() const
     {
-        if (flags & MAP_DETECTED_MONSTER)
-            return 0;
-        else
-            return _mons.info;
+        return _mons;
     }
 
     void set_monster(const monster_info& mi)
     {
         clear_monster();
-        _mons.info = new monster_info(mi);
+        _mons = new monster_info(mi);
     }
 
     bool detected_monster() const
@@ -170,7 +164,8 @@ struct map_cell
     void set_detected_monster(monster_type mons)
     {
         clear_monster();
-        _mons.detected = mons;
+        _mons = new monster_info(MONS_SENSED);
+        _mons->base_type = mons;
         flags |= MAP_DETECTED_MONSTER;
     }
 
@@ -182,10 +177,10 @@ struct map_cell
 
     void clear_monster()
     {
-        if (!(flags & MAP_DETECTED_MONSTER) && _mons.info)
-            delete _mons.info;
+        if (_mons)
+            delete _mons;
         flags &= ~(MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER);
-        memset(&_mons, 0, sizeof(_mons));
+        _mons = 0;
     }
 
     cloud_type cloud() const
@@ -233,11 +228,7 @@ private:
     dungeon_feature_type _feat;
     uint8_t _feat_colour;
     item_info* _item;
-    union
-    {
-        monster_info* info;
-        monster_type detected;
-    } _mons;
+    monster_info* _mons;
     cloud_type _cloud;
     uint8_t _cloud_colour;
 };
