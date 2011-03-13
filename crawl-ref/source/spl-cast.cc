@@ -541,7 +541,6 @@ int spell_enhancement(unsigned int typeflags)
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
 
-    // Mostly preserving the old behaviour.
     if (player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI))
         enhanced++;
 
