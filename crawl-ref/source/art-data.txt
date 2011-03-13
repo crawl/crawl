@@ -255,7 +255,8 @@ TILE_EQ: wucad_mu
 VALUE:   1000
 BOOL:    special
 DESC_ID: Its power varies in proportion to its wielder's intelligence.
-         Using it can be a bit risky.
+         It can be evoked to restore large amounts of magical energy, but
+         at the risk of damaging the user's mind.
 
 NAME:    Vampire's Tooth
 APPEAR:  ivory dagger
