@@ -3195,7 +3195,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // batty monsters ('b')
     case MONS_BAT:
     case MONS_MEGABAT:
-    case MONS_VAMPIRE_BAT:
         return TILE_CORPSE_MEGABAT;
     case MONS_BUTTERFLY:
         return TILE_CORPSE_BUTTERFLY;
