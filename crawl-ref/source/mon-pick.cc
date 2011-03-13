@@ -245,9 +245,9 @@ int mons_rare_abyss(int mcls)
         return 15;
 
     case MONS_EYE_OF_DRAINING:
+    case MONS_FIRE_BAT:
     case MONS_FLAMING_CORPSE:
     case MONS_LICH:
-    case MONS_FIRE_BAT:
         return 14;
 
     case MONS_INSUBSTANTIAL_WISP:
