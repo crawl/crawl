@@ -71,13 +71,14 @@
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
+#include "tutorial.h"
 #include "view.h"
 #include "shout.h"
 #include "syscalls.h"
 #include "xom.h"
 
 
-static void end_game(scorefile_entry &se);
+static void _end_game(scorefile_entry &se);
 static void _item_corrode(int slot);
 
 static void _maybe_melt_player_enchantments(beam_type flavour)
@@ -409,7 +410,6 @@ static void _item_corrode(int slot)
         break;
 
     case OBJ_WEAPONS:
-    case OBJ_MISSILES:
         if (get_equip_race(item) == ISFLAG_DWARVEN && !one_chance_in(5))
         {
             it_resists = true;
@@ -497,17 +497,6 @@ static int _get_target_class(beam_type flavour)
     }
 
     return (target_class);
-}
-
-static const char* _part_stack_string(const int num, const int total)
-{
-    if (num == total)
-        return "Your";
-
-    std::string ret  = uppercase_first(number_in_words(num));
-                ret += " of your";
-
-    return ret.c_str();
 }
 
 // XXX: These expose functions could use being reworked into a real system...
@@ -605,14 +594,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 {
                 case OBJ_SCROLLS:
                     mprf("%s %s catch%s fire!",
-                         _part_stack_string(num_dest, quantity),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "es" : "");
                     break;
 
                 case OBJ_POTIONS:
                     mprf("%s %s freeze%s and shatter%s!",
-                         _part_stack_string(num_dest, quantity),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "s" : "",
                          (num_dest == 1) ? "s" : "");
@@ -623,14 +612,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                     if (flavour == BEAM_DEVOUR_FOOD)
                         break;
                     mprf("%s %s %s covered with spores!",
-                         _part_stack_string(num_dest, quantity),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
                      break;
 
                 default:
                     mprf("%s %s %s destroyed!",
-                         _part_stack_string(num_dest, quantity),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
                      break;
@@ -762,7 +751,6 @@ void lose_level()
         return;
     }
 
-    you.experience = exp_needed(you.experience_level + 1) - 1;
     you.experience_level--;
 
     mprf(MSGCH_WARN,
@@ -821,9 +809,9 @@ bool drain_exp(bool announce_full)
         return (true);
     }
 
-    unsigned int total_exp = exp_needed(you.experience_level + 2)
-                                  - exp_needed(you.experience_level + 1);
-    unsigned int exp_drained = (total_exp * (10 + random2(11))) / 100;
+    unsigned int total_exp = exp_needed(you.experience_level + 1)
+                                  - exp_needed(you.experience_level);
+    unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
     unsigned int pool_drained = std::min(exp_drained,
                                      (unsigned int)you.exp_available);
 
@@ -863,10 +851,7 @@ bool drain_exp(bool announce_full)
         dprf("You lose %d experience points, %d from pool.",
              exp_drained, pool_drained);
 
-        you.redraw_experience = true;
-
-        if (you.experience < exp_needed(you.experience_level + 1))
-            lose_level();
+        level_change();
 
         return (true);
     }
@@ -943,11 +928,11 @@ static void _xom_checks_damage(kill_method_type death_type,
             amusementvalue += 8;
 
         if (death_type != KILLED_BY_BEAM
-            && you.skills[SK_THROWING] <= (you.experience_level / 4))
+            && you.skill(SK_THROWING) <= (you.experience_level / 4))
         {
             amusementvalue += 2;
         }
-        else if (you.skills[SK_FIGHTING] <= (you.experience_level / 4))
+        else if (you.skill(SK_FIGHTING) <= (you.experience_level / 4))
             amusementvalue += 2;
 
         if (player_in_a_dangerous_place())
@@ -1026,6 +1011,22 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     }
 }
 
+static void _pain_recover_mp(int dam)
+{
+    if (you.mutation[MUT_POWERED_BY_PAIN]
+        && (you.magic_points < you.max_magic_points))
+    {
+        if (random2(dam) > 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN)
+            || dam >= you.hp_max / 2)
+        {
+            int gain_mp = roll_dice(3, 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN));
+
+            mpr("You focus.");
+            inc_mp(gain_mp, false);
+        }
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1047,7 +1048,7 @@ static void _place_player_corpse(bool explode)
 
     corpse.props[MONSTER_HIT_DICE].get_short() = you.experience_level;
     corpse.props[CORPSE_NAME_KEY] = you.your_name;
-    corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = 0;
+    corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
     corpse.props["ev"].get_int() = player_evasion(static_cast<ev_ignore_type>(
                                    EV_IGNORE_HELPLESS | EV_IGNORE_PHASESHIFT));
     // mostly mutations here.  At least there's no need to handle armour.
@@ -1136,19 +1137,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             dec_mp(you.magic_points);
         }
 
-        if (dam >= you.hp)
+        if (dam >= you.hp && god_protects_from_harm())
         {
-            if (harm_protection_type hpt = god_protects_from_harm(you.religion))
-            {
-                simple_god_message(" protects you from harm!");
-
-                if (you.duration[DUR_PRAYER]
-                    && hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
-                {
-                    lose_piety(21 + random2(20));
-                }
-                return;
-            }
+            simple_god_message(" protects you from harm!");
+            return;
         }
 
         you.turn_damage += dam;
@@ -1175,6 +1167,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 dungeon_events.fire_event(DET_HP_WARNING);
             }
 
+            hints_healing_check();
+
             _xom_checks_damage(death_type, dam, death_source);
 
             // for note taking
@@ -1195,6 +1189,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
+            _pain_recover_mp(dam);
 
             return;
         } // else hp <= 0
@@ -1278,6 +1273,14 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 #endif  // WIZARD
 
+    if (crawl_state.game_is_tutorial())
+    {
+        if (!non_death)
+            tutorial_death_message();
+
+        screen_end_game("");
+    }
+
     // Okay, so you're dead.
     take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                     se.death_description(scorefile_entry::DDV_NORMAL).c_str()),
@@ -1305,6 +1308,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     crawl_state.need_save       = false;
     crawl_state.updating_scores = true;
 
+#if TAG_MAJOR_VERSION == 32
+    note_montiers();
+#endif
+
     // Prevent bogus notes.
     activate_notes(false);
 
@@ -1326,10 +1333,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 #endif
 
-    end_game(se);
+    _end_game(se);
 }
 
-static std::string morgue_name(time_t when_crawl_got_even)
+static std::string _morgue_name(time_t when_crawl_got_even)
 {
 #ifdef SHORT_FILE_NAMES
     return "morgue";
@@ -1345,14 +1352,32 @@ static std::string morgue_name(time_t when_crawl_got_even)
 }
 
 // Delete save files on game end.
-static void delete_files()
+static void _delete_files()
 {
     you.save->unlink();
     delete you.save;
     you.save = 0;
 }
 
-void end_game(scorefile_entry &se)
+void screen_end_game(std::string text)
+{
+    crawl_state.cancel_cmd_all();
+    _delete_files();
+
+    if (!text.empty())
+    {
+        clrscr();
+        linebreak_string2(text, get_number_of_cols());
+        display_tagged_block(text);
+
+        if (!crawl_state.seen_hups)
+            get_ch();
+    }
+
+    game_ended();
+}
+
+void _end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
         if (item_type_unknown(you.inv[i]))
@@ -1372,7 +1397,7 @@ void end_game(scorefile_entry &se)
         }
     }
 
-    delete_files();
+    _delete_files();
 
     // death message
     if (se.get_death_type() != KILLED_BY_LEAVING
@@ -1426,11 +1451,11 @@ void end_game(scorefile_entry &se)
         flush_prev_message();
         viewwindow(); // don't do for leaving/winning characters
 
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_death_screen();
     }
 
-    if (!dump_char(morgue_name(se.get_death_time()), false, true, &se))
+    if (!dump_char(_morgue_name(se.get_death_time()), false, true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
@@ -1471,9 +1496,17 @@ void end_game(scorefile_entry &se)
     // "- 5" gives us an extra line in case the description wraps on a line.
     hiscores_print_list(get_number_of_lines() - lines - 5);
 
+#ifndef DGAMELAUNCH
+    cprintf("\nYou can find your morgue file in the '%s' directory.",
+            morgue_directory().c_str());
+#endif
+
     // just to pause, actual value returned does not matter {dlb}
     if (!crawl_state.seen_hups)
         get_ch();
+
+    if (se.get_death_type() == KILLED_BY_WINNING)
+        crawl_state.last_game_won = true;
 
     game_ended();
 }

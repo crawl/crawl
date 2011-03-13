@@ -553,7 +553,7 @@ public:
         {
             cgotoxy(use_first_col() ? 2 : 1, last_row, GOTO_MSG);
             textcolor(channel_to_colour(MSGCH_PROMPT));
-            if (Hints.hints_left)
+            if (crawl_state.game_is_hints())
             {
                 std::string more_str = "--more-- Press Space ";
 #ifdef USE_TILE
@@ -785,10 +785,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTRED;
             break;
 
-        case MSGCH_TUTORIAL:
-            ret = MSGCOL_MAGENTA;
-            break;
-
         case MSGCH_MONSTER_SPELL:
         case MSGCH_MONSTER_ENCHANT:
         case MSGCH_FRIEND_SPELL:
@@ -796,6 +792,8 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTMAGENTA;
             break;
 
+        case MSGCH_TUTORIAL:
+        case MSGCH_ORB:
         case MSGCH_BANISHMENT:
             ret = MSGCOL_MAGENTA;
             break;
@@ -956,6 +954,7 @@ static void debug_channel_arena(msg_channel_type channel)
     case MSGCH_MULTITURN_ACTION:
     case MSGCH_EXAMINE:
     case MSGCH_EXAMINE_FILTER:
+    case MSGCH_ORB:
     case MSGCH_TUTORIAL:
         die("Invalid channel '%s' in arena mode",
                  channel_to_str(channel).c_str());
@@ -1079,7 +1078,9 @@ void msgwin_got_input()
 int msgwin_get_line(std::string prompt, char *buf, int len,
                     input_history *mh, int (*keyproc)(int& c))
 {
-    msgwin_prompt(prompt);
+    if (prompt != "")
+        msgwin_prompt(prompt);
+
     int ret = cancelable_get_line(buf, len, mh, keyproc);
     msgwin_reply(buf);
     return ret;
@@ -1397,7 +1398,11 @@ void load_messages(reader& inf)
 
 void replay_messages(void)
 {
-    formatted_scroller hist(MF_START_AT_END, "");
+    formatted_scroller hist(MF_START_AT_END | MF_ALWAYS_SHOW_MORE, "");
+    hist.set_more(formatted_string::parse_string(
+                        "<cyan>[up/<< : Page up.    down/Space/> : Page down."
+                        "                           Esc exits.]</cyan>"));
+
     const store_t msgs = messages.get_store();
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
@@ -1420,6 +1425,7 @@ void replay_messages(void)
                 hist.add_item_formatted_string(line);
             }
         }
+
     hist.show();
 }
 

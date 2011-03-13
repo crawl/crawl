@@ -13,8 +13,8 @@
 #include "externs.h"
 #include "files.h"
 #include "ghost.h"
-#include "items.h" // // for find_floor_item
-#include "itemname.h" // // for make_name
+#include "items.h" // for find_floor_item
+#include "itemname.h" // for make_name
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -387,7 +387,7 @@ static void _frog_wave(int power)
 static void _bear_wave(int power)
 {
     wave_name("BEAR WAVE");
-    monster_type bears[] = {MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
+    monster_type bears[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
                  MONS_BLACK_BEAR, END};
     monster_type boss[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, END};
     _zotdef_fill_from_list(bears, 0, power); // full
@@ -438,13 +438,13 @@ static void _yak_wave(int power)
 static void _insect_wave(int power)
 {
     wave_name("INSECT WAVE");
-    monster_type insects[] = {MONS_GIANT_ANT, MONS_KILLER_BEE, MONS_YELLOW_WASP,
-                MONS_GIANT_BEETLE, MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
+    monster_type insects[] = {MONS_WORKER_ANT, MONS_KILLER_BEE, MONS_YELLOW_WASP,
+                MONS_GOLIATH_BEETLE, MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
                 MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_BUMBLEBEE, MONS_REDBACK,
-                MONS_GIANT_BLOWFLY, MONS_RED_WASP, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
+                MONS_VAMPIRE_MOSQUITO, MONS_RED_WASP, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
                 MONS_GIANT_COCKROACH, MONS_BORING_BEETLE, MONS_TRAPDOOR_SPIDER,
-                MONS_SCORPION, MONS_GIANT_MOSQUITO, MONS_GIANT_CENTIPEDE, END};
-    monster_type boss[] = {MONS_GIANT_BEETLE, MONS_BOULDER_BEETLE,
+                MONS_SCORPION, MONS_GIANT_CENTIPEDE, END};
+    monster_type boss[] = {MONS_GOLIATH_BEETLE, MONS_BOULDER_BEETLE,
                 MONS_QUEEN_ANT, MONS_BORING_BEETLE, MONS_QUEEN_BEE, END};
     _zotdef_fill_from_list(insects, 0, power); // full
     _zotdef_choose_boss(boss, power);

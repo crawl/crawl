@@ -455,7 +455,7 @@ void debug_stethoscope(int mon)
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d SP=%d "
-         "energy=%d%s%s mid=%u num=%d flags=%04"PRIx64,
+         "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04"PRIx64,
          mons.hit_dice,
          mons.experience,
          mons.hit_points, mons.max_hit_points,
@@ -466,13 +466,14 @@ void debug_stethoscope(int mon)
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
          get_monster_data(mons.base_monster)->name : "",
-         mons.mid, mons.number, mons.flags);
+         mons.mid, mons.number, mons.stealth(), mons.flags);
 
     // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat(&mons);
 
     mprf(MSGCH_DIAGNOSTICS,
-         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) god=%s",
+         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
+         "firing_pos=(%d,%d) god=%s",
          ((hab == HT_LAND)                       ? "land" :
           (hab == HT_AMPHIBIOUS)                 ? "amphibious" :
           (hab == HT_WATER)                      ? "water" :
@@ -495,6 +496,7 @@ void debug_stethoscope(int mon)
          mons.foe,
          mons.foe_memory,
          mons.target.x, mons.target.y,
+         mons.firing_pos.x, mons.firing_pos.y,
          god_name(mons.god).c_str());
 
     // Print resistances.
@@ -1322,6 +1324,7 @@ void debug_miscast(int target_index)
     delete miscast;
 }
 
+#ifdef DEBUG_BONES
 void debug_ghosts()
 {
     mpr("(C)reate or (L)oad bones file?", MSGCH_PROMPT);
@@ -1334,5 +1337,6 @@ void debug_ghosts()
     else
         canned_msg(MSG_OK);
 }
+#endif
 
 #endif

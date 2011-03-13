@@ -131,7 +131,7 @@ A crossbow bolt.
 %%%%
 book of air
 
-A book of magic spells.
+A book of magic spells. You feel a faint breeze as you open the pages.
 %%%%
 book of annihilations
 
@@ -171,11 +171,11 @@ A book of magic spells.
 %%%%
 book of death
 
-A book of magic spells.
+A black book containing spells written in a hasty scrawl.
 %%%%
 book of demonology
 
-When touching this book, you hear faint screams of tortured souls. Each and every page is about demons, demons of all kinds and sizes, and how to unleash them unto this unsuspecting world. Many wizards have proven too weak to stand the power of this tome. You are not sure whether you hear the screams of the countless victims, which have been eaten, maimed and raped by the demons. Or do you scream yet?
+When touching this book, you hear faint screams of tortured souls. Each and every page is about demons, demons of all kinds and sizes, and how to unleash them unto this unsuspecting world. Many wizards have proven too weak to stand the power of this tome. You are not sure whether you hear the screams of the countless victims, who have been eaten and maimed by the demons. Or do you scream yet?
 %%%%
 book of divinations
 
@@ -199,15 +199,15 @@ A book of magic spells.
 %%%%
 book of fire
 
-A book of magic spells.
+A completely scorched book of magic spells.
 %%%%
 book of flames
 
-A book of magic spells.
+A slightly seared book of magic spells.
 %%%%
 book of frost
 
-A book of magic spells.
+A book of magic spells, cold to the touch.
 %%%%
 book of geomancy
 
@@ -223,6 +223,10 @@ A book of magic spells.
 %%%%
 book of ice
 
+A book of magic spells. An icy wind chills you for a second as you open it.
+%%%%
+book of maledictions
+
 A book of magic spells.
 %%%%
 book of minor magic
@@ -235,7 +239,7 @@ A book of magic spells.
 %%%%
 book of necromancy
 
-A book of magic spells.
+A dusty tome of forbidden magic.
 %%%%
 book of party tricks
 
@@ -271,7 +275,7 @@ A book of magic spells.
 %%%%
 book of the sky
 
-A book of magic spells.
+A book of magic spells. Sparks fly from the pages.
 %%%%
 book of the tempests
 
@@ -291,7 +295,7 @@ A book of magic spells.
 %%%%
 book of unlife
 
-A book of magic spells.
+A book of magic spells, filled with sigils for binding the dead.
 %%%%
 book of war chants
 
@@ -379,7 +383,7 @@ A heavy piece of wood, to be held or thrown. Coshing someone on the head while t
 %%%%
 corpse
 
-A corpse.
+A corpse. You can butcher it to produce edible meat chunks.
 %%%%
 crossbow
 
@@ -388,10 +392,6 @@ A piece of machinery used for firing bolts, which takes some time to load and fi
 crystal ball of energy
 
 A magical device which can be used to restore one's reserves of magical energy, but the use of which carries the risk of draining all of those energies completely. This risk varies inversely with the proportion of their maximum energy which the user possesses; a user near his or her full potential will find this item most beneficial.
-%%%%
-crystal ball of fixation
-
-A dangerous item which hypnotises anyone so unwise as to gaze into it, leaving them helpless for a significant length of time.
 %%%%
 crystal ball of seeing
 
@@ -459,9 +459,9 @@ It may contain the following cards: the Portal, the Warp, Swap, Velocity, the To
 %%%%
 deck of wonders
 
-A deck of highly mysterious and magical cards, which can permanently alter the drawer's physical and mental condition, for better or worse.
+A deck of highly mysterious and magical cards, which can alter the drawer's physical and mental condition, for better or worse.
 
-It may contain the following cards: the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage.
+It may contain the following cards: the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
 
@@ -1230,7 +1230,7 @@ This staff increases the power of conjurations cast by its wielder.
 %%%%
 staff of death
 
-This staff increases the power of necromantic spells cast by its wielder. If the wielder is skilled in both evocations and necromancy, they can inflict great pain on those living souls they strike.
+This staff increases the power of necromantic spells cast by its wielder, and protects him or her from negative energy. If the wielder is skilled in both evocations and necromancy, they can inflict great pain on those living souls they strike.
 %%%%
 staff of earth
 
@@ -1238,7 +1238,7 @@ This staff increases the power of earth spells cast by its wielder. If the wield
 %%%%
 staff of enchantment
 
-This staff increases the power of enchantments cast by its wielder, and harnesses their innate skill to increase their resistance to hostile enchantments.
+This staff increases the power of charm and hex spells cast by its wielder. In the hands of a skilled person, it also increases resistance to hostile enchantments.
 %%%%
 staff of energy
 
@@ -1258,7 +1258,7 @@ This staff provides a reservoir of magical power to its wielder.
 %%%%
 staff of summoning
 
-This staff increases the power of summonings cast by its wielder.
+This staff increases the power of summonings cast by its wielder, and wards him or her from the attacks of summoned creatures. If the wielder is skilled in evocations, they can attempt to dismiss summoned creatures that they strike.
 %%%%
 staff of wizardry
 

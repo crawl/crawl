@@ -400,15 +400,15 @@ end
 
 function tw_machine (warn_turns, warn_cantsee_message,
                      trig_cantsee_message, trig_channel,
-                     trig_see_message, warn_see_message, see_func)
+                     trig_see_message, warn_see_message,
+                     see_func)
   if (not warn_turns or (not warn_see_message and not warn_cantsee_message)
       or (not trig_see_message and not trig_cantsee_message)) then
     error("TWMachine needs warning turns, warning message and "
           .. "triggering message.")
   end
-  if not see_func then
-    see_func = global_function("you.see_cell")
-  end
+
+  see_func = global_function(see_func or "you.see_cell")
 
   pars = {
     warning_see_message = warn_see_message,

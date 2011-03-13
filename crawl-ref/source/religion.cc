@@ -174,7 +174,7 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " glow% slightly [brighter ]and disappear%.",
         " glow% with a rainbow of weird colours and disappear%.",
     },
-    // Elyvilon (no sacrifices, but used for weapon destruction)
+    // Elyvilon
     {
         " barely shimmer% and break% into pieces.",
         " shimmer% and break% into pieces.",
@@ -239,7 +239,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Kikubaaqudgha is protecting you from some side-effects of death magic.",
       "",
       "Kikubaaqudgha is protecting you from unholy torment.",
-      "invoke torment by praying over a corpse" },
+      "invoke torment by sacrificing a corpse" },
     // Yredelemnul
     { "animate {yred_dead}",
       "recall your undead slaves and mirror injuries on your foes",
@@ -251,15 +251,15 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Vehumet
     { "gain magical power from killing",
       "Vehumet is aiding your destructive magics.",
-      "Vehumet is extending the range of your conjurations.",
+      "Vehumet is extending the range of your destructive magics.",
       "Vehumet is reducing the cost of your expensive destructive magics.",
       "" },
     // Okawaru
-    { "give your body great, but temporary strength",
+    { "gain great but temporary skills",
       "",
       "",
       "",
-      "haste yourself" },
+      "speed up your combat" },
     // Makhleb
     { "gain power from killing",
       "harness Makhleb's destructive might",
@@ -354,7 +354,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Kikubaaqudgha is no longer shielding you from miscast death magic.",
       "",
       "Kikubaaqudgha will no longer protect you from unholy torment.",
-      "invoke torment by praying over a corpse" },
+      "invoke torment by sacrificing a corpse" },
     // Yredelemnul
     { "animate {yred_dead}",
       "recall your undead slaves and mirror injuries on your foes",
@@ -366,15 +366,15 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Vehumet
     { "gain magical power from killing",
       "Vehumet will no longer aid your destructive magics.",
-      "Vehumet will no longer extend the range of your conjurations.",
+      "Vehumet will no longer extend the range of your destructive magics.",
       "Vehumet will no longer reduce the cost of your destructive magics.",
       "" },
     // Okawaru
-    { "give your body great, but temporary strength",
+    { "gain great but temporary skills",
       "",
       "",
       "",
-      "haste yourself" },
+      "speed up your combat" },
     // Makhleb
     { "gain power from killing",
       "harness Makhleb's destructive might",
@@ -514,7 +514,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_FEDHAS:
         snprintf(info, INFO_SIZE, "you promote the decay of nearby "
                                   "corpses%s",
-                 verbose ? " via the decomposition <w>a</w>bility" : "");
+                 verbose ? " by <w>p</w>raying" : "");
         likes.push_back(info);
         break;
 
@@ -537,8 +537,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_ELYVILON:
         snprintf(info, INFO_SIZE, "you destroy weapons (especially unholy and "
                                   "evil ones)%s",
-                 verbose ? " via the <w>a</w> command (inscribe items with "
-                           "<w>!D</w> to prevent their accidental destruction)"
+                 verbose ? " via the <w>p</w> command (inscribe items with "
+                           "<w>!p</w> to prevent their accidental destruction)"
                          : "");
 
         likes.push_back(info);
@@ -571,7 +571,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     {
     case GOD_ZIN:
         snprintf(info, INFO_SIZE, "you donate money%s",
-                 verbose ? " (by praying at an altar)" : "");
+                 verbose ? " (by <w>p</w>raying at an altar)" : "");
 
         likes.push_back(info);
         break;
@@ -589,11 +589,16 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back(info);
         break;
 
+    case GOD_ASHENZARI:
+        snprintf(info, INFO_SIZE, "you obtain runes of Zot");
+        likes.push_back(info);
+        break;
+
     default:
         break;
     }
 
-    if (god_likes_fresh_corpses(which_god) && which_god != GOD_KIKUBAAQUDGHA)
+    if (god_likes_fresh_corpses(which_god))
     {
         snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
@@ -843,7 +848,8 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_ELYVILON:
-        dislikes.push_back("you kill living things while praying");
+        dislikes.push_back("you kill living things while asking for sparing "
+                           "your life yourself");
         break;
 
     case GOD_YREDELEMNUL:
@@ -964,7 +970,7 @@ void dec_penance(int val)
 
 static bool _need_water_walking()
 {
-    return (!you.airborne() && you.species != SP_MERFOLK
+    return (you.ground_level() && you.species != SP_MERFOLK
             && grd(you.pos()) == DNGN_DEEP_WATER);
 }
 
@@ -1064,10 +1070,10 @@ static void _inc_gift_timeout(int val)
 // These are sorted in order of power.
 static monster_type _yred_servants[] =
 {
-    MONS_MUMMY, MONS_WIGHT, MONS_GHOUL, MONS_FLYING_SKULL, MONS_HUNGRY_GHOST,
-    MONS_WRAITH, MONS_ROTTING_HULK, MONS_FREEZING_WRAITH,
-    MONS_PHANTASMAL_WARRIOR, MONS_FLAMING_CORPSE, MONS_FLAYED_GHOST,
-    MONS_SKELETAL_WARRIOR, MONS_DEATH_COB, MONS_BONE_DRAGON
+    MONS_MUMMY, MONS_WIGHT, MONS_FLYING_SKULL, MONS_WRAITH,
+    MONS_ROTTING_HULK, MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR,
+    MONS_FLAMING_CORPSE, MONS_FLAYED_GHOST, MONS_SKELETAL_WARRIOR,
+    MONS_EIDOLON, MONS_GHOUL, MONS_DEATH_COB, MONS_BONE_DRAGON
 };
 
 #define MIN_YRED_SERVANT_THRESHOLD 3
@@ -1597,12 +1603,14 @@ static int _tso_blessing_extend_stay(monster* mon)
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
-    // [ds] Disabling permanence for balance reasons, but extending
-    // duration increase.  These numbers are tenths of a player turn.
-    // Holy monsters get a much bigger boost than random beasties.
-    const int base_increase = mon->is_holy() ? 1100 : 500;
-    const int increase = base_increase + random2(base_increase);
-    return _increase_ench_duration(mon, abj, increase);
+    // These numbers are tenths of a player turn. Holy monsters get a
+    // much bigger boost than random beasties, which get at most double
+    // their current summon duration.
+    if (mon->is_holy())
+        return _increase_ench_duration(mon, abj, 1100 + random2(1100));
+    else
+        return _increase_ench_duration(mon, abj, std::min(abj.duration,
+                                                          500 + random2(500)));
 }
 
 static bool _tso_blessing_friendliness(monster* mon)
@@ -1999,17 +2007,9 @@ static int _give_first_conjuration_book()
     return (book);
 }
 
-bool do_god_gift(bool prayed_for, bool forced)
+bool do_god_gift(bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
-
-    // Zin and Jiyva worshippers are the only ones who can pray to ask their
-    // god for stuff.  Jiyva also gives regular gifts.
-    if (prayed_for && you.religion != GOD_ZIN && you.religion != GOD_JIYVA
-        || !prayed_for && you.religion == GOD_ZIN)
-    {
-        return (false);
-    }
 
     god_acting gdact;
 
@@ -2022,26 +2022,12 @@ bool do_god_gift(bool prayed_for, bool forced)
 
     // Consider a gift if we don't have a timeout and weren't already
     // praying when we prayed.
-    if (forced
-        || !player_under_penance() && !you.gift_timeout
-        || prayed_for && (you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
+    if (forced || !player_under_penance() && !you.gift_timeout)
     {
         // Remember to check for water/lava.
         switch (you.religion)
         {
         default:
-            break;
-
-        case GOD_ZIN:
-            //jmf: this "good" god will feed you (a la Nethack)
-            if (forced || prayed_for && zin_sustenance())
-            {
-                god_speaks(you.religion, "Your stomach feels content.");
-                set_hunger(6000, true);
-                lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
-                _inc_gift_timeout(30 + random2avg(10, 2));
-                success = true;
-            }
             break;
 
         case GOD_NEMELEX_XOBEH:
@@ -2129,10 +2115,7 @@ bool do_god_gift(bool prayed_for, bool forced)
             break;
 
         case GOD_JIYVA:
-            if (prayed_for && jiyva_can_paralyse_jellies())
-                jiyva_paralyse_jellies();
-            else if (forced
-                     || you.piety > 80 && random2(you.piety) > 50
+            if (forced || you.piety > 80 && random2(you.piety) > 50
                          && one_chance_in(4) && you.gift_timeout == 0
                          && you.can_safely_mutate())
             {
@@ -2271,6 +2254,17 @@ bool do_god_gift(bool prayed_for, bool forced)
     }
 #endif
     return (success);
+}
+
+bool do_zin_sustenance()
+{
+    if (!zin_sustenance())
+        return false;
+    god_speaks(you.religion, "Your stomach feels content.");
+    set_hunger(6000, true);
+    lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+    _inc_gift_timeout(30 + random2avg(10, 2));
+    return true;
 }
 
 std::string god_name(god_type which_god, bool long_name)
@@ -2799,9 +2793,6 @@ void lose_piety(int pgn)
         }
     }
 
-    if (!god_accepts_prayer(you.religion) && you.duration[DUR_PRAYER])
-        end_prayer();
-
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(HINT_GOD_DISPLEASED);
 
@@ -2860,7 +2851,6 @@ void excommunication(god_type new_god)
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
-    you.duration[DUR_PRAYER] = 0;
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.piety = 0;
     you.piety_hysteresis = 0;
@@ -3024,6 +3014,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ELYVILON:
+        you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
 
@@ -3038,6 +3029,9 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_JIYVA:
+        // Actually, doesn't unparalyze jellies.
+        you.duration[DUR_JELLY_PRAYER] = 0;
+
         if (query_da_counter(DACT_ALLY_SLIME))
         {
             mpr("All of your fellow slimes turn on you.", MSGCH_MONSTER_ENCHANT);
@@ -3133,6 +3127,17 @@ static std::string _sacrifice_message(std::string msg,
 void print_sacrifice_message(god_type god, const item_def &item,
                              piety_gain_t piety_gain, bool your)
 {
+    if (god == GOD_ELYVILON && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+    {
+        // Weapons blessed by TSO don't get destroyed but are instead
+        // returned whence they came. (jpeg)
+        simple_god_message(
+            make_stringf(" %sreclaims %s.",
+                         piety_gain ? "gladly " : "",
+                         item.name(DESC_NOCAP_THE).c_str()).c_str(),
+            GOD_SHINING_ONE);
+        return;
+    }
     const std::string itname = item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE);
     mpr(_sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
                            itname.find("glowing") != std::string::npos,
@@ -3159,7 +3164,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 
 bool god_hates_attacking_friend(god_type god, int species)
 {
-    if (mons_is_projectile(species))
+    if (mons_is_object(species))
         return (false);
     switch (god)
     {
@@ -3186,7 +3191,11 @@ bool god_likes_items(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN: case GOD_BEOGH: case GOD_NEMELEX_XOBEH: case GOD_ASHENZARI:
+    case GOD_ZIN:
+    case GOD_BEOGH:
+    case GOD_NEMELEX_XOBEH:
+    case GOD_ASHENZARI:
+    case GOD_ELYVILON:
         return (true);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
@@ -3213,6 +3222,13 @@ bool god_likes_item(god_type god, const item_def& item)
     {
     case GOD_ZIN:
         return (item.base_type == OBJ_GOLD);
+
+    case GOD_ELYVILON:
+        if (item_is_stationary(item)) // Held in a net?
+            return false;
+        return (item.base_type == OBJ_WEAPONS
+             || item.base_type == OBJ_STAVES
+             || item.base_type == OBJ_MISSILES);
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
@@ -3267,6 +3283,9 @@ bool transformed_player_can_join_god(god_type which_god)
     {
         return (false);
     }
+
+    if (which_god == GOD_ZIN && you.form != TRAN_NONE)
+        return (false);
 
     return (true);
 }
@@ -3545,6 +3564,14 @@ bool god_hates_cannibalism(god_type god)
 
 bool god_hates_killing(god_type god, const monster* mon)
 {
+    // Must be at least a creature of sorts.  Smacking down an enchanted
+    // weapon or disrupting a lightning doesn't count.  Technically, this
+    // might raise a concern about necromancy but zombies traditionally
+    // count as creatures and that's the average person's (even if not ours)
+    // intuition.
+    if (mons_is_object(mon->type))
+        return false;
+
     bool retval = false;
     const mon_holy_type holiness = mon->holiness();
 
@@ -3571,8 +3598,7 @@ bool god_likes_fresh_corpses(god_type god)
     return (god == GOD_OKAWARU
             || god == GOD_MAKHLEB
             || god == GOD_TROG
-            || god == GOD_LUGONU
-            || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
+            || god == GOD_LUGONU);
 }
 
 bool god_likes_spell(spell_type spell, god_type god)
@@ -3628,47 +3654,53 @@ bool god_hates_spell(spell_type spell, god_type god)
     return (false);
 }
 
-harm_protection_type god_protects_from_harm(god_type god, bool actual)
+bool god_can_protect_from_harm(god_type god)
 {
-    const int min_piety = piety_breakpoint(0);
-    bool praying = (you.duration[DUR_PRAYER]
-                    && random2(piety_scale(you.piety)) >= min_piety);
-    bool reliable = (!actual || you.duration[DUR_PRAYER])
-                    && you.piety > 130;
-    bool anytime = (one_chance_in(10) ||
-                    x_chance_in_y(piety_scale(you.piety), 1000));
-    bool penance = (you.penance[god] > 0);
-
-    // If actual is true, return HPT_NONE if the given god can protect
-    // the player from harm, but doesn't actually do so.
     switch (god)
     {
     case GOD_BEOGH:
-        if (!penance && (!actual || anytime))
-            return (HPT_ANYTIME);
-        break;
+        return !you.penance[god];
     case GOD_ZIN:
     case GOD_SHINING_ONE:
-        if (!actual || anytime)
-            return (HPT_ANYTIME);
-        break;
     case GOD_ELYVILON:
-        if (!actual || praying || reliable || anytime)
-        {
-            if (you.piety >= min_piety)
-            {
-                return (reliable) ? HPT_RELIABLE_PRAYING_PLUS_ANYTIME
-                                  : HPT_PRAYING_PLUS_ANYTIME;
-            }
-            else
-                return (HPT_ANYTIME);
-        }
-        break;
+        return true;
     default:
-        break;
+        return false;
     }
+}
 
-    return (HPT_NONE);
+int elyvilon_lifesaving()
+{
+    if (you.religion != GOD_ELYVILON)
+        return 0;
+
+    if (you.piety < piety_breakpoint(0))
+        return 0;
+
+    return you.piety > 130 ? 2 : 1;
+}
+
+
+bool god_protects_from_harm()
+{
+    if (you.duration[DUR_LIFESAVING])
+        switch (elyvilon_lifesaving())
+        {
+        case 1:
+            if (random2(piety_scale(you.piety)) >= piety_breakpoint(0))
+                return true;
+            break;
+        case 2:
+            // Reliable lifesaving is costly.
+            lose_piety(21 + random2(20));
+            return true;
+        }
+
+    if (god_can_protect_from_harm(you.religion))
+        if (one_chance_in(10) || x_chance_in_y(piety_scale(you.piety), 1000))
+            return true;
+
+    return false;
 }
 
 // Returns true if the player can use the good gods' passive piety gain.
@@ -4078,7 +4110,7 @@ int get_tension(god_type god)
 
     // Divides by 1 at level 1, 200 at level 27.
     const int exp_lev  = you.get_experience_level();
-    const int exp_need = exp_needed(exp_lev + 1);
+    const int exp_need = exp_needed(exp_lev);
     const int factor   = (int)ceil(sqrt(exp_need / 30.0));
     const int div      = 1 + factor;
 

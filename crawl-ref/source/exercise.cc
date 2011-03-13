@@ -44,11 +44,10 @@ static skill_type _abil_skill(ability_type abil)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_ZIN_RECITE:
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-    case ABIL_OKAWARU_MIGHT:
+    case ABIL_OKAWARU_HEROISM:
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
-    case ABIL_KIKU_RECEIVE_CORPSES:
     case ABIL_BEOGH_SMITING:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_ELYVILON_PURIFICATION:
@@ -69,7 +68,7 @@ static skill_type _abil_skill(ability_type abil)
     case ABIL_LUGONU_BANISH:
     case ABIL_JIYVA_SLIMIFY:
     case ABIL_TSO_CLEANSING_FLAME:
-    case ABIL_OKAWARU_HASTE:
+    case ABIL_OKAWARU_FINESSE:
     case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_ELYVILON_RESTORATION:
     case ABIL_LUGONU_CORRUPT:
@@ -82,6 +81,10 @@ static skill_type _abil_skill(ability_type abil)
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_LUGONU_ABYSS_EXIT:
         return (SK_INVOCATIONS);
+
+    case ABIL_KIKU_RECEIVE_CORPSES:
+    case ABIL_KIKU_TORMENT:
+        return (SK_NECROMANCY);
 
     default:
         return (SK_NONE);
@@ -117,7 +120,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         return (1);
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-    case ABIL_OKAWARU_MIGHT:
+    case ABIL_OKAWARU_HEROISM:
     case ABIL_JIYVA_CALL_JELLY:
         return (1 + random2(3));
 
@@ -152,7 +155,7 @@ static int _abil_degree(ability_type abil)
         return (3 + random2(5));
     case ABIL_TSO_CLEANSING_FLAME:
         return (3 + random2(6));
-    case ABIL_OKAWARU_HASTE:
+    case ABIL_OKAWARU_FINESSE:
         return (3 + random2(7));
 
     case ABIL_CHEIBRIADOS_SLOUCH:
@@ -163,6 +166,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_LUGONU_CORRUPT:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_CHEIBRIADOS_TIME_STEP:
+    case ABIL_KIKU_TORMENT:
         return (5 + random2(5));
     case ABIL_ZIN_SANCTUARY:
         return (5 + random2(8));

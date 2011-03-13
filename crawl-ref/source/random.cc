@@ -250,8 +250,8 @@ int random2limit(int max, int limit)
 }
 
 // Generate samples from a binomial distribution with n_trials and trial_prob
-// probability of success per trial. trial_prob is a integer less than 100
-// representing the % chancee of success.
+// probability of success per trial. trial_prob is an integer less than 100
+// representing the % chance of success.
 // This just evaluates all n trials, there is probably an efficient way of
 // doing this but I'm not much of a statistician. -CAO
 int binomial_generator(unsigned n_trials, unsigned trial_prob)

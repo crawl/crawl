@@ -509,13 +509,6 @@ KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
-TILE:   m = dngn_zot_pillar
-COLOUR: m = magenta
-:           dgn.set_feature_desc_short("translucent rock wall",
-:                                      "crystal pillar")
-:           dgn.set_feature_desc_long("translucent rock wall",
-:                  "This is a pillar of crystal, apparently of a similar " ..
-:                  "material to the rock around.\n")
 KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
@@ -528,7 +521,7 @@ ccccccccccccccc
  XXX...1...XXX
  XX..1...1..XX
  X1...!!!...1X
- ...1.mZm.1...
+ ...1.!Z!.1...
  X1...!!!...1X
  XX..1...1..XX
  XXX...1...XXX

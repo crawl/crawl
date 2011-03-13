@@ -2,6 +2,7 @@
 
 #include "spl-damage.h"
 
+#include "areas.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -13,6 +14,7 @@
 #include "mon-behv.h"
 #include "ouch.h"
 #include "player.h"
+#include "shout.h"
 #include "spl-cast.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -134,8 +136,8 @@ bool cast_tornado(int powc)
     }
 
     mprf("A great vortex of raging winds %s.",
-         you.is_levitating() ? "appears around you"
-                             : "appears and lifts you up");
+         you.airborne() ? "appears around you"
+                        : "appears and lifts you up");
 
     if (you.fishtail)
         merfolk_stop_swimming();
@@ -161,16 +163,17 @@ void tornado_damage(actor *caster, int dur)
         pow = div_rand_round(pow * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
+    noisy(25, org, caster->mindex());
     WindSystem winds(org);
 
     std::stack<actor*>    move_act;
+    int cnt_open = 0;
+    int cnt_all  = 0;
 
     distance_iterator count_i(org, false);
     distance_iterator dam_i(org, true);
     for (int r = 1; r <= TORNADO_RADIUS; r++)
     {
-        int cnt_open = 0;
-        int cnt_all  = 0;
         while (count_i && count_i.radius() == r)
         {
             if (winds.has_wind(*count_i))
@@ -178,9 +181,9 @@ void tornado_damage(actor *caster, int dur)
             cnt_all++;
             count_i++;
         }
-        pow = pow * cnt_open / cnt_all;
-        dprf("at dist %d pow is %d", r, pow);
-        if (!pow)
+        int rpow = pow * cnt_open / cnt_all;
+        dprf("at dist %d pow is %d", r, rpow);
+        if (!rpow)
             break;
 
         std::vector<coord_def> clouds;
@@ -203,24 +206,28 @@ void tornado_damage(actor *caster, int dur)
                 if (victim->submerged())
                     continue;
 
+                bool leda = liquefied(victim->pos()) && victim->ground_level();
                 if (!victim->res_wind())
                 {
                     if (victim->atype() == ACT_MONSTER)
                     {
-                        // levitate the monster so you get only one attempt at
-                        // tossing them into water/lava
                         monster *mon = victim->as_monster();
-                        mon_enchant ench(ENCH_LEVITATION, 0,
-                                         caster->kill_alignment(), 20);
-                        if (mon->has_ench(ENCH_LEVITATION))
-                            mon->update_ench(ench);
-                        else
-                            mon->add_ench(ench);
+                        if (!leda)
+                        {
+                            // levitate the monster so you get only one attempt
+                            // at tossing them into water/lava
+                            mon_enchant ench(ENCH_LEVITATION, 0,
+                                             caster, 20);
+                            if (mon->has_ench(ENCH_LEVITATION))
+                                mon->update_ench(ench);
+                            else
+                                mon->add_ench(ench);
+                        }
                         behaviour_event(mon, ME_ANNOY, caster->mindex());
                         if (mons_is_mimic(mon->type))
                             mimic_alert(mon);
                     }
-                    else
+                    else if (!leda)
                     {
                         bool standing = !you.airborne();
                         if (standing)
@@ -231,7 +238,7 @@ void tornado_damage(actor *caster, int dur)
                         if (standing)
                             float_player(false);
                     }
-                    int dmg = roll_dice(6, pow) / 8;
+                    int dmg = roll_dice(6, rpow) / 8;
                     if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
@@ -242,12 +249,12 @@ void tornado_damage(actor *caster, int dur)
                         victim->hurt(caster, dmg);
                 }
 
-                if (victim->alive())
+                if (victim->alive() && !leda)
                     move_act.push(victim);
             }
             if ((env.cgrid(*dam_i) == EMPTY_CLOUD
                 || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
-                && x_chance_in_y(pow, 20))
+                && x_chance_in_y(rpow, 20))
             {
                 place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), caster);
             }

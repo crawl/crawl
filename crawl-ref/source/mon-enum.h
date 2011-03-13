@@ -10,6 +10,8 @@
 
 #include "tag-version.h"
 
+#define HERD_COMFORT_RANGE 6
+
 enum corpse_effect_type
 {
     CE_NOCORPSE,        //    0
@@ -116,7 +118,7 @@ enum mon_summon_type
     MON_SUMM_AID,     // Divine aid
 };
 
-#include "mon-class-flags.h"
+#include "mon-flags.h"
 
 enum mon_intel_type             // Must be in increasing intelligence order
 {

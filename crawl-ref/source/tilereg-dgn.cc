@@ -16,9 +16,11 @@
 #include "env.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "items.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "options.h"
@@ -383,7 +385,7 @@ static void _add_targeting_commands(const coord_def& pos)
     for (int i = 0; i < std::abs(delta.y); i++)
         macro_buf_add_cmd(cmd);
 
-    macro_buf_add_cmd(CMD_TARGET_MOUSE_MOVE);
+    macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
 }
 
 static const bool _is_appropriate_spell(spell_type spell,
@@ -468,6 +470,10 @@ static const bool _is_appropriate_evokable(const item_def& item,
 
 static const bool _have_appropriate_evokable(const actor* target)
 {
+    // Felids cannot use wands.
+    if (you.species == SP_CAT)
+        return (false);
+
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def &item(you.inv[i]);
@@ -579,23 +585,32 @@ static bool _spell_selector(spell_type spell)
 // TODO: Cast spells which target a particular cell.
 static bool _cast_spell_on_target(actor* target)
 {
-    ASSERT(_spell_target == NULL);
     _spell_target = target;
-
+    spell_type spell;
     int letter;
+
+    if (is_valid_spell(you.last_cast_spell)
+        && _is_appropriate_spell(you.last_cast_spell, target))
     {
-        // Prevent the spell letter from being recorded twice.
-        pause_all_key_recorders pause;
-
-        letter = list_spells(true, false, -1, _spell_selector);
+        spell = you.last_cast_spell;
+        letter = get_spell_letter(spell);
     }
+    else
+    {
+        {
+            // Prevent the spell letter from being recorded twice.
+            pause_all_key_recorders pause;
 
-    _spell_target = NULL;
+            letter = list_spells(true, false, true, -1, _spell_selector);
+        }
 
-    if (letter == 0)
-        return (false);
+        _spell_target = NULL;
 
-    const spell_type spell = get_spell_by_letter(letter);
+        if (letter == 0)
+            return (false);
+
+        spell = get_spell_by_letter(letter);
+    }
 
     ASSERT(is_valid_spell(spell));
     ASSERT(_is_appropriate_spell(spell, target));
@@ -655,18 +670,26 @@ static const bool _have_appropriate_spell(const actor* target)
     return (false);
 }
 
+static bool _can_fire_item()
+{
+    return (you.species != SP_CAT
+            && you.m_quiver->get_fire_item() != -1);
+}
+
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
     const bool shift = (mod & MOD_SHIFT);
     const bool ctrl  = (mod & MOD_CTRL);
     const bool alt   = (shift && ctrl || (mod & MOD_ALT));
+    const item_def* weapon = you.weapon();
 
     // Handle evoking items at monster.
     if (alt && _have_appropriate_evokable(mon))
         return _evoke_item_on_target(mon);
 
     // Handle firing quivered items.
-    if (shift && !ctrl && you.m_quiver->get_fire_item() != -1)
+    if (_can_fire_item() && !ctrl
+        && (shift || weapon && is_range_weapon(*weapon)))
     {
         macro_buf_add_cmd(CMD_FIRE);
         _add_targeting_commands(mon->pos());
@@ -680,7 +703,6 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
-        const item_def* weapon = you.weapon();
         const coord_def delta  = you.pos() - mon->pos();
         const int       x_dist = std::abs(delta.x);
         const int       y_dist = std::abs(delta.y);
@@ -805,7 +827,18 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             }
 
             if (!(event.mod & MOD_SHIFT))
+            {
+                const int o = you.visible_igrd(you.pos());
+                // More than a single item -> open menu right away.
+                if (o != NON_ITEM && mitm[o].link != NON_ITEM)
+                {
+                    pickup_menu(o);
+                    flush_prev_message();
+                    redraw_screen();
+                    return 0;
+                }
                 return command_to_key(CMD_PICKUP);
+            }
 
             const dungeon_feature_type feat = grd(gc);
             switch (feat_stair_direction(feat))
@@ -974,6 +1007,40 @@ bool DungeonRegion::update_tip_text(std::string &tip)
     return (ret);
 }
 
+static std::string _check_spell_evokable(const actor* target,
+                                         std::vector<command_type> &cmd)
+{
+    std::string str = "";
+    if (_have_appropriate_spell(target))
+    {
+        str += "\n[Ctrl + L-Click] Cast spell (%)";
+        cmd.push_back(CMD_CAST_SPELL);
+    }
+
+    if (_have_appropriate_evokable(target))
+    {
+        std::string key = "Alt";
+#ifdef UNIX
+        // On Unix systems the Alt key is already hogged by
+        // the application window, at least when we're not
+        // in fullscreen mode, so we use Ctrl-Shift instead.
+        if (!tiles.is_fullscreen())
+            key = "Ctrl-Shift";
+#endif
+        str += "\n[" + key + " + L-Click] Zap wand (%)";
+        cmd.push_back(CMD_EVOKE);
+    }
+
+    return str;
+}
+
+static void _add_tip(std::string &tip, std::string text)
+{
+    if (!tip.empty())
+        tip += "\n";
+    tip += text;
+}
+
 bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 {
     const bool have_reach = you.weapon()
@@ -981,6 +1048,10 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
     const int  attack_dist = have_reach ? 2 : 1;
 
     std::vector<command_type> cmd;
+    tip = "";
+    bool has_monster = false;
+
+    // Left-click first.
     if (gc == you.pos())
     {
         tip = you.your_name;
@@ -989,17 +1060,74 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
         tip += get_job_abbrev(you.char_class);
         tip += ")";
 
-        if (you.visible_igrd(gc) != NON_ITEM)
+        tip += _check_spell_evokable(&you, cmd);
+    }
+    else // non-player squares
+    {
+        const actor* target = actor_at(gc);
+        if (target && you.can_see(target))
         {
-            tip += "\n[L-Click] Pick up items (%)";
+            has_monster = true;
+            if (abs(gc.x - you.pos().x) <= attack_dist
+                && abs(gc.y - you.pos().y) <= attack_dist)
+            {
+                if (!cell_is_solid(gc))
+                {
+                    const monster* mon = monster_at(gc);
+                    if (!mon || mon->friendly() || !mon->visible_to(&you))
+                        _add_tip(tip, "[L-Click] Move");
+                    else if (mon)
+                    {
+                        tip = mon->name(DESC_CAP_A);
+                        _add_tip(tip, "[L-Click] Attack");
+                    }
+                }
+            }
+
+            if (you.species != SP_CAT
+                && you.see_cell_no_trans(target->pos())
+                && you.m_quiver->get_fire_item() != -1)
+            {
+                _add_tip(tip, "[Shift + L-Click] Fire (%)");
+                cmd.push_back(CMD_FIRE);
+            }
+
+            tip += _check_spell_evokable(target, cmd);
+        }
+        else if (!cell_is_solid(gc)) // no monster or player
+        {
+            if (adjacent(gc, you.pos()))
+                _add_tip(tip, "[L-Click] Move");
+            else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN
+                     && i_feel_safe())
+            {
+                _add_tip(tip, "[L-Click] Travel");
+            }
+        }
+        else if (feat_is_closed_door(grd(gc)))
+        {
+            if (!adjacent(gc, you.pos()) && i_feel_safe())
+                _add_tip(tip, "[L-Click] Travel");
+
+            _add_tip(tip, "[L-Click] Open door (%)");
+            cmd.push_back(CMD_OPEN_DOOR);
+        }
+    }
+
+    // These apply both on the same square as the player's and elsewhere.
+    if (!has_monster)
+    {
+        if (you.see_cell(gc) && env.map_knowledge(gc).item())
+        {
+            _add_tip(tip, "[L-Click] Pick up items (%)");
             cmd.push_back(CMD_PICKUP);
         }
 
-        const dungeon_feature_type feat = grd(gc);
+        const dungeon_feature_type feat = env.map_knowledge(gc).feat();
         const command_type dir = feat_stair_direction(feat);
         if (dir != CMD_NO_CMD)
         {
-            tip += "\n[Shift-L-Click] ";
+            _add_tip(tip, "[Shift + L-Click] ");
             if (feat == DNGN_ENTER_SHOP)
                 tip += "enter shop";
             else if (feat_is_gate(feat))
@@ -1010,112 +1138,36 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
             tip += " (%)";
             cmd.push_back(dir);
         }
-        else if (feat_is_altar(feat) && player_can_join_god(feat_altar_god(feat)))
+        else if (feat_is_altar(feat)
+                 && player_can_join_god(feat_altar_god(feat)))
         {
-            tip += "\n[Shift-L-Click] pray on altar (%)";
+            _add_tip(tip, "[Shift + L-Click] pray on altar (%)");
             cmd.push_back(CMD_PRAY);
         }
+    }
 
+    // Right-click.
+    if (gc == you.pos())
+    {
         // Character overview.
-        tip += "\n[R-Click] Overview (%)";
+        _add_tip(tip, "[R-Click] Overview (%)");
         cmd.push_back(CMD_RESISTS_SCREEN);
 
         // Religion.
         if (you.religion != GOD_NO_GOD)
         {
-            tip += "\n[Shift-R-Click] Religion (%)";
+            _add_tip(tip, "[Shift + R-Click] Religion (%)");
             cmd.push_back(CMD_DISPLAY_RELIGION);
         }
     }
-    else if (abs(gc.x - you.pos().x) <= attack_dist
-             && abs(gc.y - you.pos().y) <= attack_dist)
+    else if (you.see_cell(gc)
+             && env.map_knowledge(gc).feat() != DNGN_UNSEEN)
     {
-        tip = "";
-
-        if (!cell_is_solid(gc))
-        {
-            const monster* mon = monster_at(gc);
-            if (!mon || mon->friendly() || !mon->visible_to(&you))
-                tip = "[L-Click] Move\n";
-            else if (mon)
-            {
-                tip = mon->name(DESC_CAP_A);
-                tip += "\n[L-Click] Attack\n";
-            }
-        }
-    }
-    else
-    {
-        if (i_feel_safe() && !cell_is_solid(gc))
-            tip = "[L-Click] Travel\n";
+        _add_tip(tip, "[R-Click] Describe");
     }
 
-    if (gc != you.pos())
-    {
-        const monster* mon = monster_at(gc);
-        if (mon && you.can_see(mon))
-        {
-            if (you.see_cell_no_trans(mon->pos())
-                && you.m_quiver->get_fire_item() != -1)
-            {
-                tip += "[Shift-L-Click] Fire (%)\n";
-                cmd.push_back(CMD_FIRE);
-            }
-        }
-    }
-
-    const actor* target = actor_at(gc);
-    if (target && you.can_see(target))
-    {
-        std::string str = "";
-
-        if (_have_appropriate_spell(target))
-        {
-            str += "[Ctrl-L-Click] Cast spell (%)\n";
-            cmd.push_back(CMD_CAST_SPELL);
-        }
-
-        if (_have_appropriate_evokable(target))
-        {
-            std::string key = "Alt";
-#ifdef UNIX
-            // On Unix systems the Alt key is already hogged by
-            // the application window, at least when we're not
-            // in fullscreen mode, so we use Ctrl-Shift instead.
-            if (!tiles.is_fullscreen())
-                key = "Ctrl-Shift";
-#endif
-            str += "[" + key + "-L-Click] Zap wand (%)\n";
-            cmd.push_back(CMD_EVOKE);
-        }
-
-        if (!str.empty())
-        {
-            if (gc == you.pos())
-                tip += "\n";
-
-            tip += str;
-        }
-    }
-
-    if (gc != you.pos())
-        tip += "[R-Click] Describe";
-
-    if (!target && adjacent(gc, you.pos()))
-    {
-        trap_def *trap = find_trap(gc);
-        if (trap && trap->is_known()
-            && trap->category() == DNGN_TRAP_MECHANICAL)
-        {
-            tip += "\n[Ctrl-L-Click] Disarm";
-        }
-        else if (grd(gc) == DNGN_OPEN_DOOR)
-            tip += "\n[Ctrl-L-Click] Close door (C)";
-        else if (feat_is_closed_door(grd(gc)))
-            tip += "\n[Ctrl-L-Click] Open door (O)";
-    }
-
-    insert_commands(tip, cmd, false);
+    if (!tip.empty())
+        insert_commands(tip, cmd, false);
 
     return (true);
 }
@@ -1142,7 +1194,8 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         get_square_desc(gc, inf, true, false);
     }
     else if (grid_appearance(gc) != DNGN_FLOOR
-             && !feat_is_wall(grid_appearance(gc)))
+             && !feat_is_wall(grid_appearance(gc))
+             && !feat_is_tree(grid_appearance(gc)))
     {
         get_feature_desc(gc, inf);
     }

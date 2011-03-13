@@ -123,6 +123,13 @@ void print_description(const std::string &body)
     print_description(inf);
 }
 
+void print_quote (const std::string &body)
+{
+    describe_info inf;
+    inf.quote = body;
+    print_quote(inf);
+}
+
 class default_desc_proc
 {
 public:
@@ -148,6 +155,15 @@ void print_description(const describe_info &inf)
 
     default_desc_proc proc;
     process_description<default_desc_proc>(proc, inf);
+}
+
+void print_quote (const describe_info &inf)
+{
+    clrscr();
+    textcolor(LIGHTGREY);
+
+    default_desc_proc proc;
+    process_quote<default_desc_proc>(proc, inf);
 }
 
 const char* jewellery_base_ability_string(int subtype)
@@ -1253,8 +1269,6 @@ static std::string _describe_ammo(const item_def &item)
         description += ".";
     }
 
-    description += _corrosion_resistance_string(item);
-
     return (description);
 }
 
@@ -1358,9 +1372,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
             break;
         case SPARM_ARCHMAGI:
             description += "It increases the power of its wearer's "
-                "magical spells in most disciplines save for Transmutations "
-                "and pure Translocations. It also makes the spells affected "
-                "less likely to suffer a miscast.";
+                "magical spells.";
             break;
 
         case SPARM_PRESERVATION:
@@ -1559,6 +1571,27 @@ static bool _compare_card_names(card_type a, card_type b)
 // describe_misc_item
 //
 //---------------------------------------------------------------
+static bool _check_buggy_deck(const item_def &deck, std::string &desc)
+{
+    if (!is_deck(deck))
+    {
+        desc += "This isn't a deck at all!\n";
+        return (true);
+    }
+
+    const CrawlHashTable &props = deck.props;
+
+    if (!props.exists("cards")
+        || props["cards"].get_type() != SV_VEC
+        || props["cards"].get_vector().get_type() != SV_BYTE
+        || cards_in_deck(deck) == 0)
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
 static std::string _describe_deck(const item_def &item)
 {
     std::string description;
@@ -1566,6 +1599,9 @@ static std::string _describe_deck(const item_def &item)
     description.reserve(100);
 
     description += "\n";
+
+    if (_check_buggy_deck(item, description))
+        return "";
 
     const std::vector<card_type> drawn_cards = get_drawn_cards(item);
     if (!drawn_cards.empty())
@@ -1730,7 +1766,7 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
 //
 //---------------------------------------------------------------
 std::string get_item_description(const item_def &item, bool verbose,
-                                  bool dump, bool noquote)
+                                 bool dump, bool noquote)
 {
     if (dump)
         noquote = true;
@@ -2185,13 +2221,12 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
-    inf.body << desc;
+    inf.title = desc;
     if (!ends_with(desc, ".") && !ends_with(desc, "!")
         && !ends_with(desc, "?"))
     {
-        inf.body << ".";
+        inf.title += ".";
     }
-    inf.body << "\n\n";
 
     // If we couldn't find a description in the database then see if
     // the feature's base name is different.
@@ -2257,18 +2292,51 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     }
 }
 
-void describe_feature_wide(const coord_def& pos)
+static bool _print_toggle_message(const describe_info &inf)
+{
+    if (inf.quote.empty())
+    {
+        mouse_control mc(MOUSE_MODE_MORE);
+        getchm();
+        return (false);
+    }
+    else
+    {
+        const int bottom_line = std::min(30, get_number_of_lines());
+        cgotoxy(1, bottom_line);
+        formatted_string::parse_string(
+#ifndef USE_TILE
+            "Press '<w>!</w>'"
+#else
+            "<w>Right-click</w>"
+#endif
+            " to toggle between the overview and the extended description.").display();
+
+        mouse_control mc(MOUSE_MODE_MORE);
+        const int keyin = getchm();
+
+        if (keyin == '!' || keyin == CK_MOUSE_CMD)
+            return (true);
+
+        return (false);
+    }
+}
+
+void describe_feature_wide(const coord_def& pos, bool show_quote)
 {
     describe_info inf;
     get_feature_desc(pos, inf);
-    print_description(inf);
 
-    mouse_control mc(MOUSE_MODE_MORE);
+    if (show_quote)
+        print_quote(inf);
+    else
+        print_description(inf);
 
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
-    wait_for_keypress();
+    if (_print_toggle_message(inf))
+        describe_feature_wide(pos, not show_quote);
 }
 
 void set_feature_desc_long(const std::string &raw_name,
@@ -2307,14 +2375,13 @@ void set_feature_quote(const std::string &raw_name,
         quote_table[raw_name] = quote;
 }
 
-
 void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 {
     // Don't use verbose descriptions if terse and the item contains spells,
     // so we can actually output these spells if space is scarce.
     const bool verbose = !terse || !item.has_spells();
     inf.body << get_item_description(item, verbose, false,
-                                     Hints.hints_left);
+                                     crawl_state.game_is_hints_tutorial());
 }
 
 // Returns true if spells can be shown to player.
@@ -2341,7 +2408,8 @@ static void _show_item_description(const item_def &item)
     const          int height    = get_number_of_lines();
 
     std::string desc =
-        get_item_description(item, true, false, Hints.hints_left);
+        get_item_description(item, true, false,
+                             crawl_state.game_is_hints_tutorial());
 
     int num_lines = count_desc_lines(desc, lineWidth) + 1;
 
@@ -2353,7 +2421,7 @@ static void _show_item_description(const item_def &item)
         desc = get_item_description(item, true, false, true);
 
     print_description(desc);
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_describe_item(item);
 
     if (_can_show_spells(item))
@@ -2513,7 +2581,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
     case OBJ_FOOD:
-        if (can_ingest(item.base_type, item.sub_type, true, true, false))
+        if (can_ingest(item, true, true, false))
             actions.push_back(CMD_EAT);
         break;
     case OBJ_SCROLLS:
@@ -2595,7 +2663,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         return false;
     case CMD_WEAPON_SWAP:
         redraw_screen();
-        wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+        wield_weapon(true, SLOT_BARE_HANDS);
         return false;
     case CMD_QUIVER_ITEM:
         redraw_screen();
@@ -2673,6 +2741,9 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     _show_item_description(item);
     _update_inscription(item);
 
+    if (allow_inscribe && crawl_state.game_is_tutorial())
+        allow_inscribe = false;
+
     // Don't ask if there aren't enough rows left
     if (wherey() <= get_number_of_lines() - 2 && in_inventory(item))
     {
@@ -2734,8 +2805,11 @@ void inscribe_item(item_def &item, bool msgwin)
             prompt = "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
 
-            if (Hints.hints_left && wherey() <= get_number_of_lines() - 5)
+            if (crawl_state.game_is_hints()
+                && wherey() <= get_number_of_lines() - 5)
+            {
                 hints_inscription_info(need_autoinscribe, prompt);
+            }
         }
 
     keyin = (prompt != "" ? getch_ck() : 'i');
@@ -2890,7 +2964,7 @@ static int _get_spell_description(const spell_type spell,
     else if (god_likes_spell(spell, you.religion))
     {
         description += god_name(you.religion)
-                       + " appreciates the use of this spell.\n";
+                       + " supports the use of this spell.\n";
     }
     if (item && !player_can_memorise_from_spellbook(*item))
     {
@@ -3287,7 +3361,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (inf.title.empty())
         inf.title = mi.full_name(DESC_CAP_A, true);
 
-    std::string db_name = mi.db_name();
+    std::string db_name;
+
+    if (mi.mname.empty())
+        db_name = mi.db_name();
+    else
+        db_name = mi.full_name(DESC_PLAIN, true);
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
@@ -3538,7 +3617,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
 void describe_monsters(const monster_info &mi, bool force_seen,
                        const std::string &footer,
-                       bool wait_until_key_pressed)
+                       bool wait_until_key_pressed,
+                       bool show_quote)
 {
     describe_info inf;
     bool has_stat_desc = false;
@@ -3552,17 +3632,25 @@ void describe_monsters(const monster_info &mi, bool force_seen,
             inf.footer += "\n" + footer;
     }
 
-    print_description(inf);
+    if (show_quote)
+    {
+        print_quote(inf);
+    }
+    else
+    {
+        print_description(inf);
+
+        // TODO enne - this should really move into get_monster_db_desc
+        // and an additional tutorial string added to describe_info.
+        if (crawl_state.game_is_hints())
+            hints_describe_monster(mi, has_stat_desc);
+    }
+
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    // TODO enne - this should really move into get_monster_db_desc
-    // and an additional tutorial string added to describe_info.
-    if (Hints.hints_left)
-        hints_describe_monster(mi, has_stat_desc);
-
-    if (wait_until_key_pressed)
-        wait_for_keypress();
+    if (wait_until_key_pressed && _print_toggle_message(inf))
+        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, !show_quote);
 }
 
 static const char* xl_rank_names[] = {
@@ -3819,6 +3907,12 @@ static std::string _religion_help(god_type god)
         }
         break;
     }
+
+    case GOD_ELYVILON:
+        result += "You can pray to destroy weapons on the ground in "
+                + apostrophise(god_name(god)) + " name. Inscribe them "
+                + "with !p, !* or =p to avoid sacrificing them accidentally.";
+        break;
 
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
@@ -4280,31 +4374,28 @@ void describe_god(god_type which_god, bool give_title)
         // his life.
         bool have_any = false;
 
-        if (harm_protection_type hpt =
-                god_protects_from_harm(which_god, false))
+        if (god_can_protect_from_harm(which_god))
         {
             have_any = true;
 
-            int prayer_prot = 0;
+            int prot_chance = 10 + you.piety/10; // chance * 100
+            const char *when = "";
 
-            if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME
-                || hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
+            switch (elyvilon_lifesaving())
             {
-                prayer_prot = 100 - 3000/you.piety;
+            case 1:
+                when = ", especially when called upon";
+                prot_chance += 100 - 3000/you.piety;
+                break;
+            case 2:
+                when = ", and always does so when called upon";
+                prot_chance = 100;
             }
-
-            int prot_chance = 10 + you.piety/10 + prayer_prot; // chance * 100
 
             const char *how = (prot_chance >= 85) ? "carefully" :
                               (prot_chance >= 55) ? "often" :
                               (prot_chance >= 25) ? "sometimes"
                                                   : "occasionally";
-            const char *when =
-                (hpt == HPT_PRAYING)              ? " during prayer" :
-                (hpt == HPT_PRAYING_PLUS_ANYTIME) ? ", especially during prayer" :
-                (hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
-                                                  ? ", and always does so during prayer"
-                                                  : "";
 
             std::string buf = god_name(which_god);
             buf += " ";
@@ -4313,9 +4404,7 @@ void describe_god(god_type which_god, bool give_title)
             buf += when;
             buf += ".";
 
-            _print_final_god_abil_desc(which_god, buf,
-                (hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME) ?
-                    ABIL_HARM_PROTECTION_II : ABIL_HARM_PROTECTION);
+            _print_final_god_abil_desc(which_god, buf, ABIL_NON_ABILITY);
         }
 
         if (which_god == GOD_ZIN)
@@ -4357,15 +4446,6 @@ void describe_god(god_type which_god, bool give_title)
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_TROG_BURN_SPELLBOOKS);
         }
-        else if (which_god == GOD_ELYVILON)
-        {
-            have_any = true;
-            std::string buf = "You can destroy weapons on the ground in "
-                              + apostrophise(god_name(which_god))
-                              + " name.";
-            _print_final_god_abil_desc(which_god, buf,
-                                       ABIL_ELYVILON_DESTROY_WEAPONS);
-        }
         else if (which_god == GOD_JIYVA)
         {
             if (jiyva_can_paralyse_jellies())
@@ -4399,8 +4479,8 @@ void describe_god(god_type which_god, bool give_title)
         {
             have_any = true;
             _print_final_god_abil_desc(which_god,
-                                       "You can speed up decomposition.",
-                                       ABIL_FEDHAS_FUNGAL_BLOOM);
+                                       "You can pray to speed up decomposition.",
+                                       ABIL_NON_ABILITY);
             _print_final_god_abil_desc(which_god,
                                        "You can walk through plants and "
                                        "fire through allied plants.",

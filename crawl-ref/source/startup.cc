@@ -198,6 +198,8 @@ static void _post_init(bool newc)
     macro_init();
 
     crawl_state.need_save = true;
+    crawl_state.last_type = crawl_state.type;
+    crawl_state.last_game_won = false;
 
     calc_hp();
     calc_mp();
@@ -243,7 +245,7 @@ static void _post_init(bool newc)
     you.wield_change        = true;
 
     // Start timer on session.
-    you.start_time = time(NULL);
+    you.last_keypress_time = time(NULL);
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
@@ -276,7 +278,6 @@ static void _post_init(bool newc)
     you.xray_vision = !!you.duration[DUR_SCRYING];
     init_exclusion_los();
     you.bondage_level = ash_bondage_level();
-    you.check_clinging();
 
     trackers_init_new_level(false);
 
@@ -292,7 +293,7 @@ static void _post_init(bool newc)
         zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
 
         // For a newly started hints mode, turn secret doors into normal ones.
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_zap_secret_doors();
 
         if (crawl_state.game_is_zotdef())
@@ -541,6 +542,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
 {
     std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
+    static int type = GAME_TYPE_UNSPECIFIED;
 
 #ifdef USE_TILE
     const int max_col    = tiles.get_crt()->mx;
@@ -656,7 +658,12 @@ static void _show_startup_menu(newgame_def* ng_choice,
     bool full_name = !input_string.empty();
 
     int save = _find_save(chars, input_string);
-    if (save != -1)
+    if (type != GAME_TYPE_UNSPECIFIED)
+    {
+        menu.set_active_object(game_modes);
+        game_modes->set_active_item(type);
+    }
+    else if (save != -1)
     {
         menu.set_active_object(save_games);
         // save game id is offset by NUM_GAME_TYPE
@@ -757,8 +764,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
             else
             {
                 // Menu might have changed selection -- sync name.
-                int id = menu.get_active_item()->get_id();
-                switch (id)
+                type = menu.get_active_item()->get_id();
+                switch (type)
                 {
                 case GAME_TYPE_ARENA:
                     input_string = "";
@@ -779,7 +786,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                     break;
 
                 default:
-                    int save_number = id - NUM_GAME_TYPE;
+                    int save_number = type - NUM_GAME_TYPE;
                     input_string = chars.at(save_number).name;
                     full_name = true;
                     break;
@@ -863,7 +870,7 @@ static void _choose_arena_teams(newgame_def* choice,
 
     char buf[80];
     if (cancelable_get_line(buf, sizeof(buf)))
-        end(0);
+        game_ended();
     choice->arena_teams = buf;
     if (choice->arena_teams.empty())
         choice->arena_teams = defaults.arena_teams;
@@ -897,10 +904,20 @@ bool startup_step()
 
 
 #ifndef DGAMELAUNCH
+    if (crawl_state.last_type == GAME_TYPE_TUTORIAL
+        || crawl_state.last_type == GAME_TYPE_SPRINT)
+    {
+        choice.type = crawl_state.last_type;
+        crawl_state.type = crawl_state.last_type;
+        crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
+        choice.name = defaults.name;
+        if (choice.type == GAME_TYPE_TUTORIAL)
+            choose_tutorial_character(&choice);
+    }
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
-    if (!is_good_name(choice.name, false, false)
+    else if (!is_good_name(choice.name, false, false)
         && choice.type != GAME_TYPE_ARENA)
     {
         _show_startup_menu(&choice, defaults);

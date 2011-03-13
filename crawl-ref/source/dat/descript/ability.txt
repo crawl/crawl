@@ -125,7 +125,19 @@ Revert to your normal form, with a short delay.
 # Zin
 Recite
 
-Preach to monsters about Zin's laws which can lead to various results. It works best on humanoids, worse on undead and demons, and not at all on beasts.
+Preach to monsters about Zin's laws which can lead to various results. It works best on those especially repugnant to Zin - undead, demons, the insane, unclean creatures of all sorts and those who worship other gods. It has no effect on ordinary beasts.
+
+There are five books you can preach from:
+
+* Book of Abominations: This book deals with the very thing most abhorrent to Zin - chaos in all its forms. The recitations will invoke Zin's most powerful smiting.
+
+* Book of Ablutions: The impure are nearly as loathed by the Law-Giver. Recitations from this book will deal damage to such creatures.
+
+* Book of Apostates: Those who do not worship Zin but do no other evil will be dealt with least harshly. The recitations from this book merely sow confusion. Yet those who dare to believe in a god alien to Zin may be permanently deprived of means to spread their foul faith.
+
+* Book of Anathema: Demons and the undead are hated by Zin. This book gives you means to rebuke them.
+
+* Book of Alliances: This book contains recitations meant for your fellows. Yet the time has not come yet - Zin bids you to not love your friends while there are enemies to hate.
 %%%%
 Vitalisation
 
@@ -141,7 +153,7 @@ For a short duration gain safety in a divine refuge. While you are inside the sa
 %%%%
 Cure All Mutations
 
-Cure all your mutations.
+Cure all your mutations - but only once.
 %%%%
 # The Shining One
 Divine Shield
@@ -159,7 +171,13 @@ Summon an Angel or Daeva, powerful warriors against evil. They may be blessed by
 # Kikubaaqudgha
 Receive Corpses
 
-Create one or more reanimatable monster corpses near yourself. The number and freshness of these are dependent on Invocations skill.
+Create one or more reanimatable monster corpses near yourself. The number and freshness of these are dependent on Necromancy skill.
+%%%%
+Torment
+
+Sacrifice a cadaver to make everyone in sight, including you, experience all the pain that being suffered in its life. This will decimate the resilience of all those who can feel it.
+
+Kikubaaqudgha may choose to protect you from it... or may not.
 %%%%
 # Yredelemnul
 Animate Remains
@@ -195,13 +213,13 @@ Animate Remains or Dead
 If you get this description, it is a bug.
 %%%%
 # Okawaru
-Might
+Heroism
 
-Temporarily increase your Strength and damage output.
+Temporarily increase all of your combat skills, including the ability to sneak around or avoid traps.
 %%%%
-Haste
+Finesse
 
-Greatly increase your movement speed. Hasting yourself will increase your magical contamination, and may eventually cause glowing.
+Greatly increase your combat speed, with no loss of accuracy. This unnatural effect causes small amounts of magic contamination, prolonged exposure to which may be bad for your health.
 %%%%
 # Makhleb
 Minor Destruction
@@ -247,9 +265,11 @@ Brothers in Arms
 Summon huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
-Destroy Weapons
+Divine Protection
 
-Destroy all weapons on the ground. In order to prevent a weapon from being accidentally destroyed, use the !D inscription.
+Beseech Elyvilon to save your life. If you would have died, The Healer may undo the killing blow. Especially pious individuals may be certain of this help, although in that case it costs piety -- if you would actually have died, as merely asking is free.
+
+Beware, killing others while asking for being spared yourself is a major sin!
 %%%%
 Lesser Healing
 
@@ -269,7 +289,7 @@ Purge your body of bad effects such as sickness, poisoning, slowness, confusion 
 %%%%
 Greater Healing
 
-Depending on your Invocations skill, heal a creature other than you by a moderate amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. Mindless creatures cannot be pacified, and no monster can be pacified while it is asleep.   The chance for successful pacification depends on the healing power, so it is significantly better than using Lesser Healing.
+Depending on your Invocations skill, heal a creature other than you by a moderate amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. Mindless creatures cannot be pacified, and no monster can be pacified while it is asleep. The chance for successful pacification depends on the healing power, so it is significantly better than using Lesser Healing.
 
 Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain half the monster's experience value and possibly some piety. Otherwise, the monster is unaffected and you gain nothing.
 
@@ -339,10 +359,6 @@ Recall Orcish Followers
 Recall your orcish followers from anywhere on the level to your immediate surroundings.
 %%%%
 # Fedhas
-Decomposition
-
-Cause corpses in your field of vision to rapidly decay. Corpses with a monster on top of them will not be affected.
-%%%%
 Sunlight
 
 Call sunlight down over a small area of the dungeon. Monsters illuminated by the light will be easier to hit. Water affected by the sunlight will evaporate. In particular, deep water will become shallow water, and shallow water will dry up completely, revealing the dungeon floor.
@@ -388,7 +404,6 @@ Renounce your faith. This will make your character leave your god (and usually a
 Request Jelly
 
 Create a neutral jelly that will wander the floor and digest items.
-#
 %%%%
 Slimify
 
@@ -397,3 +412,16 @@ Coat a wielded weapon or your fists with slime, turning the next living or undea
 Cure Bad Mutation
 
 Remove a randomly selected bad mutation.
+%%%%
+# Ashenzari
+Scrying
+
+Gain astral sight to see through walls. This is not enough to let you target spells and abilities, even those that work through glass.
+%%%%
+Transfer Knowledge
+
+Sacrifice part of one of your skills to improve another.
+%%%%
+End Transfer Knowledge
+
+Abort an ongoing skill transfer.

@@ -19,6 +19,9 @@ enum status_type
     STATUS_SICK,
     STATUS_SPEED,
     STATUS_CLINGING,
+    STATUS_STR_ZERO,
+    STATUS_INT_ZERO,
+    STATUS_DEX_ZERO,
 };
 
 struct status_info

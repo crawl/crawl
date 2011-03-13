@@ -63,6 +63,13 @@ enum monster_info_flags
     MB_WITHDRAWN,
     MB_ATTACHED,
     MB_HELPLESS,
+    MB_DAZED,
+    MB_MUTE,
+    MB_BLIND,
+    MB_DUMB,
+    MB_MAD,
+    MB_CLINGING,
+    MB_NAME_ZOMBIE,
 };
 
 struct monster_info_base
@@ -135,7 +142,7 @@ struct monster_info : public monster_info_base
     monster* mon() const;
 
     /* only real equipment is visible, miscellany is for mimic items */
-    std::auto_ptr<item_def> inv[6];
+    std::auto_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
     union
     {

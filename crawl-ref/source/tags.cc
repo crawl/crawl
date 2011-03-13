@@ -42,6 +42,7 @@
 #include "itemname.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "misc.h"
 #include "mon-info.h"
 #include "mon-util.h"
 #include "mon-transit.h"
@@ -53,6 +54,7 @@
 #include "env.h"
 #include "syscalls.h"
 #include "tags.h"
+#include "tutorial.h"
 #ifdef USE_TILE
  #include "options.h"
  #include "tiledef-dngn.h"
@@ -669,7 +671,7 @@ void marshallString(writer &th, const std::string &data, int maxSize)
     th.write(data.c_str(), len);
 }
 
-// To pass to marsahllMap
+// To pass to marshallMap
 static void marshallStringNoMax(writer &th, const std::string &data)
 {
     marshallString(th, data);
@@ -1120,17 +1122,7 @@ static void tag_construct_you(writer &th)
     // time of game start
     marshallInt(th, you.birth_time);
 
-    // real_time == -1 means game was started before this feature.
-    if (you.real_time != -1)
-    {
-        const time_t now = time(NULL);
-        you.real_time += std::min<time_t>(now - you.start_time,
-                                          IDLE_TIME_CLAMP);
-
-        // Reset start_time now that real_time is being saved out...
-        // this may just be a level save.
-        you.start_time = now;
-    }
+    handle_real_time();
 
     marshallInt(th, you.real_time);
     marshallInt(th, you.num_turns);
@@ -1164,6 +1156,11 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.friendly_pickup);
 
     marshallString(th, you.zotdef_wave_name);
+
+#if TAG_MAJOR_VERSION == 32
+    for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
+        marshallInt(th, you.montiers[k]);
+#endif
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
@@ -1314,6 +1311,7 @@ static void tag_construct_you_dungeon(writer &th)
 
 static void marshall_follower(writer &th, const follower &f)
 {
+    ASSERT(!invalid_monster_type(f.mons.type));
     marshallMonster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         marshallItem(th, f.items[i]);
@@ -1359,6 +1357,9 @@ static m_transit_list unmarshall_follower_list(reader &th)
     {
         follower f;
         unmarshall_follower(th, f);
+#if TAG_MAJOR_VERSION == 32
+        if (f.mons.type != MONS_NO_MONSTER)
+#endif
         mlist.push_back(f);
     }
 
@@ -1508,6 +1509,8 @@ static void tag_construct_lost_items(writer &th)
 static void tag_construct_game_state(writer &th)
 {
     marshallByte(th, crawl_state.type);
+    if (crawl_state.game_is_tutorial())
+        marshallString(th, get_tutorial_map());
 }
 
 static void tag_read_char(reader &th)
@@ -1724,6 +1727,7 @@ static void tag_read_you(reader &th)
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
+    you.elapsed_time_at_last_input = you.elapsed_time;
 
     // time of character creation
     you.birth_time = unmarshallInt(th);
@@ -1763,6 +1767,12 @@ static void tag_read_you(reader &th)
     you.friendly_pickup = unmarshallByte(th);
 
     you.zotdef_wave_name = unmarshallString(th);
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_MON_TIER_STATS)
+        for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
+            you.montiers[k] = unmarshallInt(th);
+#endif
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
@@ -2009,6 +2019,8 @@ static void tag_read_lost_items(reader &th)
 static void tag_read_game_state(reader &th)
 {
     crawl_state.type = (game_type) unmarshallByte(th);
+    if (crawl_state.game_is_tutorial())
+        set_tutorial_map(unmarshallString(th));
 }
 
 template <typename Z>
@@ -2085,6 +2097,9 @@ static void tag_construct_level(writer &th)
         marshallByte(th, env.shop[i].pos.y);
         marshallByte(th, env.shop[i].greed);
         marshallByte(th, env.shop[i].level);
+        marshallString(th, env.shop[i].shop_name);
+        marshallString(th, env.shop[i].shop_type_name);
+        marshallString(th, env.shop[i].shop_suffix_name);
     }
 
     marshallCoord(th, env.sanctuary_pos);
@@ -2217,7 +2232,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
     if (cell.item())
         flags |= MAP_SERIALIZE_ITEM;
 
-    if (cell.monster() != MONS_NO_MONSTER && !cell.detected_monster())
+    if (cell.monster() != MONS_NO_MONSTER)
         flags |= MAP_SERIALIZE_MONSTER;
 
     marshallUnsigned(th, flags);
@@ -2252,8 +2267,6 @@ void marshallMapCell(writer &th, const map_cell &cell)
 
     if (flags & MAP_SERIALIZE_MONSTER)
         marshallMonsterInfo(th, *cell.monsterinfo());
-    else if (cell.detected_monster())
-        marshallUnsigned(th, cell.monster());
 }
 
 void unmarshallMapCell(reader &th, map_cell& cell)
@@ -2310,8 +2323,10 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         unmarshallMonsterInfo(th, mi);
         cell.set_monster(mi);
     }
+#if TAG_MAJOR_VERSION == 32
     else if (cell_flags & MAP_DETECTED_MONSTER)
         cell.set_detected_monster((monster_type)unmarshallUnsigned(th));
+#endif
 
     // set this last so the other sets don't override this
     cell.flags = cell_flags;
@@ -2343,6 +2358,7 @@ static void marshall_mon_enchant(writer &th, const mon_enchant &me)
     marshallShort(th, me.ench);
     marshallShort(th, me.degree);
     marshallShort(th, me.who);
+    marshallInt(th, me.source);
     marshallShort(th, me.duration);
     marshallShort(th, me.maxduration);
 }
@@ -2353,6 +2369,10 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     me.ench        = static_cast<enchant_type>(unmarshallShort(th));
     me.degree      = unmarshallShort(th);
     me.who         = static_cast<kill_category>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_ENCH_MID)
+#endif
+    me.source      = unmarshallInt(th);
     me.duration    = unmarshallShort(th);
     me.maxduration = unmarshallShort(th);
     return (me);
@@ -2380,6 +2400,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallByte(th, m.pos().y);
     marshallByte(th, m.target.x);
     marshallByte(th, m.target.y);
+    marshallCoord(th, m.firing_pos);
     marshallCoord(th, m.patrol_point);
     int help = m.travel_target;
     marshallByte(th, help);
@@ -2388,7 +2409,7 @@ void marshallMonster(writer &th, const monster& m)
     for (unsigned int i = 0; i < m.travel_path.size(); i++)
         marshallCoord(th, m.travel_path[i]);
 
-    marshallInt(th, m.flags);
+    marshallUnsigned(th, m.flags);
     marshallInt(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
@@ -2412,6 +2433,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallByte(th, m.god);
     marshallByte(th, m.attitude);
     marshallShort(th, m.foe);
+    marshallInt(th, m.foe_memory);
     marshallShort(th, m.damage_friendly);
     marshallShort(th, m.damage_total);
 
@@ -2673,6 +2695,14 @@ static void tag_read_level(reader &th)
         env.cloud[i].colour = unmarshallShort(th);
         env.cloud[i].name   = unmarshallString(th);
         env.cloud[i].tile   = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_CLOUD_BUG
+            && !in_bounds(env.cloud[i].pos))
+        {
+            env.cloud[i].type = CLOUD_NONE;
+            continue;
+        }
+#endif
         ASSERT(in_bounds(env.cloud[i].pos));
         env.cgrid(env.cloud[i].pos) = i;
         env.cloud_no++;
@@ -2695,6 +2725,16 @@ static void tag_read_level(reader &th)
         env.shop[i].pos.y = unmarshallByte(th);
         env.shop[i].greed = unmarshallByte(th);
         env.shop[i].level = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() >= TAG_MINOR_SHOPS)
+        {
+#endif
+        env.shop[i].shop_name = unmarshallString(th);
+        env.shop[i].shop_type_name = unmarshallString(th);
+        env.shop[i].shop_suffix_name = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 32
+        }
+#endif
         env.tgrid(env.shop[i].pos) = i;
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)
@@ -2775,6 +2815,11 @@ void unmarshallMonster(reader &th, monster& m)
     if (m.type == MONS_NO_MONSTER)
         return;
 
+#if TAG_MAJOR_VERSION == 32
+    if (m.type == MONS_GIANT_BLOWFLY)
+        m.type = MONS_VAMPIRE_MOSQUITO;
+#endif
+
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th, 100);
@@ -2791,6 +2836,10 @@ void unmarshallMonster(reader &th, monster& m)
     m.target.x        = unmarshallByte(th);
     m.target.y        = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_FIRING_POS)
+#endif
+    m.firing_pos      = unmarshallCoord(th);
     m.patrol_point    = unmarshallCoord(th);
 
     int help = unmarshallByte(th);
@@ -2800,7 +2849,12 @@ void unmarshallMonster(reader &th, monster& m)
     for (int i = 0; i < len; ++i)
         m.travel_path.push_back(unmarshallCoord(th));
 
-    m.flags      = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_MFLAGS64)
+        m.flags      = unmarshallInt(th);
+    else
+#endif
+    m.flags      = unmarshallUnsigned(th);
     m.experience = unmarshallInt(th);
 
     m.enchantments.clear();
@@ -2826,6 +2880,11 @@ void unmarshallMonster(reader &th, monster& m)
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
     m.foe      = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_FOE_MEMORY)
+#endif
+    m.foe_memory = unmarshallInt(th);
+
     unmarshallShort(th);
     unmarshallShort(th);
 

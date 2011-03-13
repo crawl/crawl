@@ -422,6 +422,7 @@
     0
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     ZAP_BONE_SHARDS,
     "spray of bone shards",
@@ -441,6 +442,7 @@
     false,
     3
 },
+#endif
 
 {
     ZAP_BANISHMENT,
@@ -700,6 +702,7 @@
     6
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     ZAP_ENSLAVE_UNDEAD,
     "",
@@ -715,6 +718,7 @@
     false,
     0
 },
+#endif
 
 {
     ZAP_ENSLAVE_SOUL,
@@ -780,6 +784,7 @@
     0 // Explosion does the noise.
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     ZAP_CONTROL_DEMON,
     "",
@@ -795,6 +800,7 @@
     false,
     0
 },
+#endif
 
 {
     ZAP_ORB_OF_FRAGMENTATION,

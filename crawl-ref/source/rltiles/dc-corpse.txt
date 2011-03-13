@@ -14,14 +14,14 @@
 ## Insects ('a')
 %back dc-misc/blood_green
 giant_cockroach CORPSE_GIANT_COCKROACH
-giant_ant CORPSE_GIANT_ANT
+worker_ant CORPSE_WORKER_ANT
 soldier_ant CORPSE_SOLDIER_ANT
 queen_ant CORPSE_QUEEN_ANT
 
 ## Batty monsters ('b')
 butterfly CORPSE_BUTTERFLY
 %back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
-giant_bat CORPSE_GIANT_BAT
+megabat CORPSE_MEGABAT
 raven CORPSE_RAVEN
 
 ## Hounds and hogs ('h')
@@ -79,7 +79,6 @@ labrat_shifting
 labrat_venomous
 %sdir dc-mon/animals
 
-
 ## Spiders and insects ('s')
 %back dc-misc/blood_green
 giant_centipede CORPSE_GIANT_CENTIPEDE
@@ -103,7 +102,7 @@ alligator_baby CORPSE_BABY_ALLIGATOR
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
-firecrab CORPSE_FIRECRAB
+fire_crab CORPSE_FIRE_CRAB
 
 ## Worms ('w')
 %back dc-misc/blood_green
@@ -117,8 +116,7 @@ rock_worm CORPSE_ROCK_WORM
 giant_leech CORPSE_GIANT_LEECH
 
 ## Wasps ('y')
-giant_blowfly CORPSE_GIANT_BLOWFLY
-giant_mosquito CORPSE_GIANT_MOSQUITO
+vampire_mosquito CORPSE_VAMPIRE_MOSQUITO
 yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
 ghost_moth CORPSE_GHOST_MOTH
@@ -131,12 +129,12 @@ giant_goldfish CORPSE_GIANT_GOLDFISH
 electric_eel CORPSE_ELECTRIC_EEL
 #lava_fish CORPSE_LAVA_FISH
 shark CORPSE_SHARK
-dc-mon/kraken/kraken_head CORPSE_KRAKEN /*'x'*/
+kraken_head CORPSE_KRAKEN /*'x'*/
 %back dc-misc/blood_green
 jellyfish CORPSE_JELLYFISH /*'J'*/
 
 ## Beetles ('B')
-giant_beetle CORPSE_GIANT_BEETLE
+goliath_beetle CORPSE_GOLIATH_BEETLE
 boring_beetle CORPSE_BORING_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 
@@ -147,8 +145,10 @@ giant_toad CORPSE_GIANT_TOAD
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 
+## Various beasts ('I')
+sky_beast CORPSE_SKY_BEAST
+
 ## Snakes ('S')
-%back dc-misc/blood_puddle_red dc-misc/blood_puddle_red1 dc-misc/blood_puddle_red2 dc-misc/blood_puddle_red3 dc-misc/blood_puddle_red4
 small_snake CORPSE_SMALL_SNAKE
 snake CORPSE_SNAKE
 black_mamba CORPSE_BLACK_MAMBA
@@ -158,7 +158,6 @@ viper CORPSE_VIPER
 sea_snake CORPSE_SEA_SNAKE
 
 ## Bears ('U')
-bear CORPSE_BEAR
 black_bear CORPSE_BLACK_BEAR
 grizzly_bear CORPSE_GRIZZLY_BEAR
 polar_bear CORPSE_POLAR_BEAR
@@ -274,11 +273,10 @@ harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 kenku CORPSE_KENKU
-
-## Sky beast ('I')
-sky_beast CORPSE_SKY_BEAST
+holy/shedu CORPSE_SHEDU
 
 ## Jellies ('J')
+%sdir dc-mon
 %back dc-misc/blood_green
 giant_amoeba CORPSE_GIANT_AMOEBA
 

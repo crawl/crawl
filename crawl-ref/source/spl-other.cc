@@ -14,7 +14,6 @@
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
-#include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -26,6 +25,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -51,6 +51,8 @@ bool cast_sublimation_of_blood(int pow)
         if (you.inv[wielded].base_type == OBJ_FOOD
             && you.inv[wielded].sub_type == FOOD_CHUNK)
         {
+            success = true;
+
             mpr("The chunk of flesh you are holding crumbles to dust.");
 
             mpr("A flood of magical energy pours into your mind!");
@@ -64,6 +66,8 @@ bool cast_sublimation_of_blood(int pow)
         }
         else if (is_blood_potion(you.inv[wielded]))
         {
+            success = true;
+
             mprf("The blood within %s froths and boils.",
                  you.inv[wielded].quantity > 1 ? "one of your flasks"
                                                : "the flask you are holding");
@@ -72,7 +76,8 @@ bool cast_sublimation_of_blood(int pow)
 
             inc_mp(7 + random2(7), false);
 
-            split_potions_into_decay(wielded, 1, false);
+            remove_oldest_blood_potion(you.inv[wielded]);
+            dec_inv_item_quantity(wielded, 1);
         }
         else
             wielded = -1;
@@ -85,7 +90,8 @@ bool cast_sublimation_of_blood(int pow)
             mpr("A conflicting enchantment prevents the spell from "
                 "coming into effect.");
         }
-        else if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
+        else if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED
+                 || you.is_undead == US_UNDEAD)
         {
             mpr("You don't have enough blood to draw power from your "
                 "own body.");
@@ -306,7 +312,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
         return 0;
     }
 
-    mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
+    mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
     return 1;
 }
 
@@ -321,7 +327,7 @@ void cast_intoxicate(int pow)
         mpr("Your head spins!");
     }
 
-    apply_area_visible(_intoxicate_monsters, pow);
+    apply_area_visible(_intoxicate_monsters, pow, true);
 }
 
 // The intent of this spell isn't to produce helpful potions
@@ -543,4 +549,22 @@ void cast_stoneskin(int pow)
     }
 
     you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
+}
+
+bool cast_darkness(int pow)
+{
+    if (you.haloed())
+    {
+        mpr("It would have no effect in that bright light!");
+        return false;
+    }
+
+    if (you.duration[DUR_DARKNESS])
+        mprf(MSGCH_DURATION, "It gets a bit darker.");
+    else
+        mprf(MSGCH_DURATION, "It gets dark.");
+    you.increase_duration(DUR_DARKNESS, 15 + random2(1 + pow/3), 100);
+    update_vision_range();
+
+    return true;
 }

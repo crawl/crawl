@@ -409,11 +409,12 @@ WEIGHT: 2
 ORIENT: float
 MONS:   kobold; dart ego:dispersal q:3
 MAP
-xxxxxxxxxx..
-=.llllll{l@.
-x.xxxxxx=x..
-x1xxxxxx....
-xxx
+xxxxxxxxx=x..
+x.llllll{.l@.
+x.llllll>.l..
+x1xxxxxxx=x..
+x=xxxxxx.....
+.............
 ENDMAP
 
 ##############################################################
@@ -811,7 +812,7 @@ ENDMAP
 ##############################################################################
 NAME:   dpeg_entry_chase
 TAGS:   entry no_monster_gen no_pool_fixup no_rotate
-MONS:   kobold, hobgoblin / goblin / giant bat
+MONS:   kobold, hobgoblin / goblin / megabat
 ITEM:   stone, dart
 ORIENT: float
 SUBST:  w : w l:1
@@ -1354,7 +1355,7 @@ ENDMAP
 ##############################################################################
 NAME:    dpeg_entry_ratfight
 TAGS:    entry
-MONS:    rat, goblin, giant bat
+MONS:    rat, goblin, megabat
 ORIENT:  float
 SHUFFLE: [{(
 SUBST:   X = x=
@@ -1856,7 +1857,7 @@ ENDMAP
 NAME:    dpeg_entry_subterranean_lakeside_camping
 TAGS:    entry no_monster_gen
 ORIENT:  float
-MONS:    goblin, rat, giant bat
+MONS:    goblin, rat, megabat
 SHUFFLE: {[(
 SUBST:   ? : . w ?:40, ' : . x ':40
 SUBST:   ? = .w, ' = .x
@@ -2371,7 +2372,7 @@ NAME:    onia_entry_handbag
 TAGS:    entry
 ORIENT:  float
 MONS:    w:30 rat / ooze / small snake
-MONS:    giant bat / w:6 small snake / w:2 snake / w:2 jackal / w:4 giant cockroach
+MONS:    megabat / w:6 small snake / w:2 snake / w:2 jackal / w:4 giant cockroach
 SUBST:   ! = $%%% , ? = ..~
 SHUFFLE: {[, [<(
 MAP
@@ -2629,18 +2630,18 @@ SHUFFLE: 12
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 MONS:    rat / green rat / orange rat / quokka
-MONS:    giant ant / soldier ant
+MONS:    worker ant / soldier ant
 MONS:    spiny worm / ant larva / worm
 MONS:    lindwurm / gila monster / komodo dragon
 : else
 SHUFFLE: 1234567
 MONS:    giant gecko / iguana / giant newt / gila monster / komodo dragon
 MONS:    hog / jackal / wolf / hound / war dog
-MONS:    giant cockroach / giant ant / butterfly / killer bee / bumblebee /\
+MONS:    giant cockroach / worker ant / butterfly / killer bee / bumblebee /\
          redback / giant mite
 MONS:    swamp worm / lindwurm / worm / spiny worm
 MONS:    swamp drake / hydra / wyvern / fire drake
-MONS:    bear / polar bear / grizzly bear / black bear
+MONS:    polar bear / grizzly bear / black bear
 MONS:    black mamba / water moccasin / anaconda / salamander / viper
 : end
 MAP
@@ -2668,7 +2669,7 @@ MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
 KPROP:  ' = no_rtele_into
 SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
-FTILE:  .1234567t = floor_lair
+FTILE:  .1234567t = floor_moss
 COLOUR: . = green
 SUBST:  " = .
 MAP

@@ -94,6 +94,7 @@ bool find_secret_door_info(const coord_def &where,
 dungeon_feature_type grid_secret_door_appearance(const coord_def &where);
 dungeon_feature_type grid_appearance(const coord_def &gc);
 bool feat_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
+bool feat_virtually_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
 
 // Terrain changed under 'pos', perform necessary effects.
 void dungeon_terrain_changed(const coord_def &pos,
@@ -125,5 +126,7 @@ dungeon_feature_type dungeon_feature_by_name(const std::string &name);
 std::vector<std::string> dungeon_feature_matches(const std::string &name);
 const char *dungeon_feature_name(dungeon_feature_type rfeat);
 void nuke_wall(const coord_def& p);
+bool cell_is_clingable(const coord_def pos);
+bool cell_can_cling_to(const coord_def& from, const coord_def to);
 
 #endif

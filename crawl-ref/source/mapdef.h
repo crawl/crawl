@@ -1,7 +1,10 @@
-/*
+/**
+ * @defgroup mapdef Map Parsing
+ * @brief Parse .des files into map objects.
+ * @section DESCRIPTION
+ *
  * mapdef.h:
  * Header for map structures used by the level compiler.
- * Created by: dshaligram on Wed Nov 22 08:41:20 2006 UTC
  *
  * NOTE: When we refer to map, this could be a full map, filling an entire
  * level or a minivault that occupies just a portion of the level.
@@ -173,7 +176,7 @@ public:
     map_colour_list colours;
 };
 
-typedef std::pair<unsigned long, int> map_weighted_fprop;
+typedef std::pair<feature_property_type, int> map_weighted_fprop;
 class map_fprop_list : public std::vector<map_weighted_fprop>
 {
 public:
@@ -195,12 +198,12 @@ public:
     {
     }
 
-    unsigned long get_property();
+    feature_property_type get_property();
 
 public:
     std::string key;
     bool fix;
-    unsigned long fixed_prop;
+    feature_property_type fixed_prop;
     map_fprop_list fprops;
 };
 
@@ -533,6 +536,7 @@ enum item_spec_type
     ISPEC_DAMAGED = -4,
     ISPEC_BAD     = -5,
     ISPEC_RANDART = -6,
+    ISPEC_MUNDANE = -7,
     ISPEC_ACQUIREMENT = -9,
 };
 
@@ -589,6 +593,8 @@ public:
     void clear();
 
     item_spec get_item(int index);
+    item_spec random_item ();
+    item_spec random_item_weighted ();
     size_t size() const { return items.size(); }
     bool empty() const { return items.empty(); }
 
@@ -656,8 +662,8 @@ class mons_spec
     std::string non_actor_summoner;
 
     bool explicit_spells;
-    monster_spells spells;
-    unsigned long extra_monster_flags;
+    std::vector<monster_spells> spells;
+    uint64_t extra_monster_flags;
 
     CrawlHashTable props;
 
@@ -672,7 +678,7 @@ class mons_spec
           colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
           abjuration_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
-          extra_monster_flags(0L), props()
+          extra_monster_flags(0), props()
     {
     }
 };
@@ -725,7 +731,7 @@ private:
     mons_spec get_zombified_monster(const std::string &name,
                                     monster_type zomb) const;
     mons_spec_slot parse_mons_spec(std::string spec);
-    void parse_mons_spells(mons_spec &slot, const std::string &spells);
+    void parse_mons_spells(mons_spec &slot, std::vector<std::string> &spells);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
     bool check_mimic(const std::string &s, int *mid, bool *fix) const;
@@ -735,19 +741,90 @@ private:
     std::string error;
 };
 
+/**
+ * @class shop_spec
+ * @ingroup mapdef
+ * @brief Specify how to create a shop.
+ *
+ * This specification struct is used when converting a vault-specified shop from
+ * a string into something the builder can use to actually create and place a
+ * shop.
+**/
+struct shop_spec
+{
+    shop_type sh_type;  /**< One of the shop_type enum values. */
+
+    std::string name;   /**< If provided, this is apostrophised and used as the
+                          *  shop keeper's name, ie, Plog as a name becomes
+                          *  Plog's. */
+
+    std::string type;   /**< If provided, this is used as the shop type name,
+                          *  ie, Hide, Antique, Wand, etc. */
+
+    std::string suffix; /**< If provided, this is used as the shop suffix,
+                          *  ie, Shop, Boutique, Parlour, etc. */
+
+    int greed;          /**< If provided, this value is used for price
+                          *  calculation. The higher the greed, the more
+                          *  inflation applied to prices. */
+
+    int num_items;      /**< Cap the number of items in a shop at this. */
+
+    item_list items;    /**< If provided, and `use_all` is false, items will be
+                          *  selected at random from the list and used to
+                          *  populate the shop. If `use_all` is true, the items
+                          *  contained will be placed precisely and in order. If
+                          *  the number of items contained is less than
+                          *  specified, random items according to the shop's
+                          *  type will be used to fill in the rest of the stock.
+                          *  */
+
+    bool use_all;       /**< True if all items in `items` should be used. */
+
+    shop_spec (shop_type sh, std::string n="", std::string t="",
+               std::string s="", int g=-1, int ni=-1, bool u=false)
+        : sh_type(sh), name(n), type(t), suffix(s),
+          greed(g), num_items(ni), items(), use_all(u) { }
+};
+
+/**
+ * @class trap_spec
+ * @ingroup mapdef
+ * @brief Specify how to create a trap.
+ *
+ * This specification struct is used when converting a vault-specified trap
+ * string into something that the builder can use to place a trap.
+**/
+struct trap_spec
+{
+    trap_type tr_type; /*> One of the trap_type enum values. */
+    trap_spec (trap_type tr)
+        : tr_type(static_cast<trap_type>(tr)) { }
+};
+
+
+/**
+ * @class feature_spec
+ * @ingroup mapdef
+ * @brief Specify how to create a feature.
+ *
+ * This specification struct is used firstly when a feature is specified in
+ * vault code (any feature), and secondly, if that feature is either a trap or a
+ * shop, as a container for a std::auto_ptr to that shop_spec or trap_spec.
+**/
 struct feature_spec
 {
-    int genweight;
-    int feat;
-    int shop;
-    int trap;
-    int glyph;
+    int genweight;                 /**> The weight of this specific feature. */
+    int feat;                      /**> The specific feature being placed. */
+    std::auto_ptr<shop_spec> shop; /**> A pointer to a shop_spec. */
+    std::auto_ptr<trap_spec> trap; /**> A pointer to a trap_spec. */
+    int glyph;                     /**> What glyph to use instead. */
 
-    feature_spec(int f, int wt = 10)
-        : genweight(wt), feat(f), shop(-1),
-          trap(-1), glyph(-1)
-    { }
-    feature_spec() : genweight(0), feat(0), shop(-1), trap(-1), glyph(-1) { }
+    feature_spec();
+    feature_spec(int f, int wt = 10);
+    feature_spec(const feature_spec& other);
+    feature_spec& operator = (const feature_spec& other);
+    void init_with (const feature_spec& other);
 };
 
 typedef std::vector<feature_spec> feature_spec_list;

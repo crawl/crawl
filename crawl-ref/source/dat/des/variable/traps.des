@@ -64,6 +64,8 @@ default-depth: D:9-27, Vault, Elf
 #
 NAME:   spider_trap
 DEPTH:  D:9-27, Vault, Elf, Spider, Snake
+TAGS:   allow_dup extra luniq_spider_trap
+WEIGHT: 100
 KFEAT:  ^ = pressure plate trap
 {{
  local tm = TriggerableFunction:new{func="callback.spider_trap_stepped",
@@ -83,7 +85,7 @@ ENDMAP
 #
 NAME:   grate_trap
 ORIENT: float
-TAGS:   allow_dup extra luniq_mini layout_rooms layout_cave
+TAGS:   allow_dup extra luniq_grate_trap layout_rooms layout_caves
 KFEAT:  ^ = pressure plate trap
 {{
 local tm = TriggerableFunction:new{func="callback.grate_trap_stepped",

@@ -100,7 +100,7 @@ static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
     "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
     "friend_spell", "friend_enchant", "monster_damage", "monster_target",
     "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
-    "examine_filter", "diagnostic", "error", "tutorial"
+    "examine_filter", "diagnostic", "error", "tutorial", "orb"
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -131,8 +131,6 @@ static startup_book_type _str_to_book(const std::string& str)
         return (SBT_FIRE);
     if (str == "frost" || str == "cold" || str == "ice")
         return (SBT_COLD);
-    if (str == "summ" || str == "summoning")
-        return (SBT_SUMM);
     if (str == "random")
         return (SBT_RANDOM);
     if (str == "viable")
@@ -145,6 +143,8 @@ static weapon_type _str_to_weapon(const std::string &str)
 {
     if (str == "shortsword" || str == "short sword")
         return (WPN_SHORT_SWORD);
+    else if (str == "falchion")
+        return (WPN_FALCHION);
     else if (str == "mace")
         return (WPN_MACE);
     else if (str == "ankus")
@@ -169,6 +169,8 @@ static std::string _weapon_to_str(int weapon)
     {
     case WPN_SHORT_SWORD:
         return "short sword";
+    case WPN_FALCHION:
+        return "falchion";
     case WPN_MACE:
         return "mace";
     case WPN_ANKUS:
@@ -209,7 +211,7 @@ static startup_wand_type _str_to_wand(const std::string& str)
 
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
-int str_to_summon_type (const std::string &str)
+int str_to_summon_type(const std::string &str)
 {
     if (str == "clone")
         return (MON_SUMM_CLONE);
@@ -369,6 +371,11 @@ static job_type _str_to_job(const std::string &str)
     // if we don't have a match, scan the full names
     if (job == JOB_UNKNOWN)
         job = get_job_by_name(str.c_str());
+
+#if TAG_MAJOR_VERSION == 32
+    if (job == JOB_PALADIN || job == JOB_REAVER)
+        job = JOB_UNKNOWN;
+#endif
 
     if (job == JOB_UNKNOWN)
         fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
@@ -603,7 +610,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
-static std::string _user_home_dir()
+std::string user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
     wchar_t home[MAX_PATH];
@@ -620,9 +627,9 @@ static std::string _user_home_dir()
 #endif
 }
 
-static std::string _user_home_subpath(const std::string subpath)
+std::string user_home_subpath(const std::string subpath)
 {
-    return catpath(_user_home_dir(), subpath);
+    return catpath(user_home_dir(), subpath);
 }
 
 #if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
@@ -634,7 +641,7 @@ static std::string _resolve_dir(const char* path, const char* suffix)
     if (path[0] != '~')
         return std::string(path) + suffix;
     else
-        return _user_home_subpath(std::string(path + 1) + suffix);
+        return user_home_subpath(std::string(path + 1) + suffix);
 #endif
 }
 #endif
@@ -659,7 +666,7 @@ void game_options::reset_options()
     if (macro_dir.empty())
     {
 #ifdef UNIX
-        macro_dir = _user_home_subpath(".crawl");
+        macro_dir = user_home_subpath(".crawl");
 #else
         macro_dir = "settings/";
 #endif
@@ -671,7 +678,7 @@ void game_options::reset_options()
     morgue_dir = _resolve_dir(SAVE_DIR_PATH, "/morgue/");
 #elif defined(TARGET_OS_MACOSX)
     const std::string tmp_path_base =
-        _user_home_subpath("Library/Application Support/" CRAWL);
+        user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
     if (SysEnv.macro_dir.empty())
@@ -818,6 +825,7 @@ void game_options::reset_options()
     show_waypoints         = true;
     item_colour            = true;
 
+    background_colour      = BLACK;
     // [ds] Default to jazzy colours.
     detected_item_colour   = GREEN;
     detected_monster_colour= LIGHTRED;
@@ -917,7 +925,12 @@ void game_options::reset_options()
     no_dark_brand      = true;
 
 #ifdef WIZARD
+#ifdef DGAMELAUNCH
+    if (wiz_mode != WIZ_NO)
+        wiz_mode         = WIZ_NEVER;
+#else
     wiz_mode         = WIZ_NO;
+#endif
     terp_files.clear();
 #endif
 
@@ -967,6 +980,8 @@ void game_options::reset_options()
     tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_force_overlay    = false;
+    tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
+                                             "command, spell, monster");
 
     // delays
     tile_update_rate      = 1000;
@@ -981,8 +996,6 @@ void game_options::reset_options()
     tile_show_minimagicbar   = true;
     tile_show_demon_tier     = true;
     tile_force_regenerate_levels = false;
-    tile_layout_priority = split_string(",", "minimap, inventory, "
-                                             "spell, gold_turn, monster");
 #endif
 
     // map each colour to itself as default
@@ -1261,6 +1274,7 @@ static std::string _find_crawlrc()
     const char* locations_data[][2] = {
         { SysEnv.crawl_dir.c_str(), "init.txt" },
 #ifdef UNIX
+        { SysEnv.home.c_str(), ".crawl/init.txt" },
         { SysEnv.home.c_str(), ".crawlrc" },
         { SysEnv.home.c_str(), "init.txt" },
 #endif
@@ -1404,7 +1418,6 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "book = %s\n",
                 prefs.book == SBT_FIRE ? "fire" :
                 prefs.book == SBT_COLD ? "cold" :
-                prefs.book == SBT_SUMM ? "summ" :
                 prefs.book == SBT_RANDOM ? "random" :
                 "viable");
     }
@@ -2369,7 +2382,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "religion")
     {
-        // Choose god for Chaos Knights or Priests.
+        // Choose god for Priests.
         game.religion = (field == "random") ? GOD_RANDOM : str_to_god(field);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
@@ -2562,6 +2575,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // wiz_mode is recognised as a legal key in all compiles -- bwr
 #ifdef WIZARD
+    #ifndef DGAMELAUNCH
         if (field == "never")
             wiz_mode = WIZ_NEVER;
         else if (field == "no")
@@ -2573,6 +2587,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             report_error (
                 make_stringf("Unknown wiz_mode option: %s\n", field.c_str()));
         }
+    #endif
 #endif
     }
     else if (key == "ban_pickup")
@@ -3409,6 +3424,8 @@ enum commandline_option_type
     CLO_EDIT_SAVE,
     CLO_PRINT_CHARSET,
     CLO_ZOTDEF,
+    CLO_TUTORIAL,
+    CLO_WIZARD,
 
     CLO_NOPS
 };
@@ -3419,7 +3436,7 @@ static const char *cmd_ops[] = {
     "mapstat", "arena", "dump-maps", "test", "script", "builddb",
     "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef",
+    "print-charset", "zotdef", "tutorial", "wizard"
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4013,6 +4030,18 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_ZOTDEF:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_ZOTDEF;
+            break;
+
+        case CLO_TUTORIAL:
+            if (!rc_only)
+                Options.game.type = GAME_TYPE_TUTORIAL;
+            break;
+
+        case CLO_WIZARD:
+#ifdef WIZARD
+            if (!rc_only)
+                Options.wiz_mode = WIZ_NO;
+#endif
             break;
 
         case CLO_PRINT_CHARSET:

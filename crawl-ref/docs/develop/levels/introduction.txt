@@ -114,12 +114,12 @@ and is always tagged "entry". A player starting a new game will usually land
 in an entry vault.
 
 Branch entry vault, or branch portal vault:
-     A map containing the entry to a branch - either a branch stair (such as
+    A map containing the entry to a branch - either a branch stair (such as
 the stair to the Orcish Mines), or a branch portal (a portal to Hell, say).
 Always tagged "<branchname>_entry".
 
 Special level:
-     A map for a location of significance in the game, such as the Ecumenical
+    A map for a location of significance in the game, such as the Ecumenical
 Temple, or the end of branches such as level 5 of the Snake Pit (Snake:5).
 Special level maps usually have a PLACE: attribute.
 
@@ -140,7 +140,7 @@ vaults) in most respects. The differences are:
 
 1. Floating vaults may be placed before the rest of the level layout
    is generated, and the rest of the level may be built around the floating
-  vault. This is never the case for minivaults.
+   vault. This is never the case for minivaults.
 
 2. Floating vaults may be placed anywhere in the map, including places
    completely separated from the rest of the level by rock. The
@@ -150,12 +150,7 @@ vaults) in most respects. The differences are:
 
    In contrast, minivaults are placed such that at least one square of
    the minivault overlaps with an existing part of the level, and are
-   thus more likely to look like part of the level. Unlike floating
-   vaults, the dungeon builder assumes that any one square of overlap
-   is enough to connect the minivault to the rest of the level and
-   makes no effort to connect exits from the minivault to the level.
-   You can ask the dungeon builder to connect exits from your
-   minivault with the "mini_float" tag.
+   thus more likely to look like part of the level.
 
 
 E.   Hints for level makers

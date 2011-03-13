@@ -26,6 +26,7 @@
 #include "format.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -240,9 +241,7 @@ int book_rarity(uint8_t which_book)
 {
     switch (which_book)
     {
-    case BOOK_MINOR_MAGIC_I:
-    case BOOK_MINOR_MAGIC_II:
-    case BOOK_MINOR_MAGIC_III:
+    case BOOK_MINOR_MAGIC:
     case BOOK_HINDERANCE:
     case BOOK_CANTRIPS: //jmf: added 04jan2000
         return 1;
@@ -316,6 +315,12 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_DESTRUCTION:
         return 30;
+
+#if TAG_MAJOR_VERSION == 32
+    case BOOK_MINOR_MAGIC_II:
+    case BOOK_MINOR_MAGIC_III:
+        return 100;
+#endif
 
     default:
         return 1;
@@ -417,11 +422,8 @@ void mark_had_book(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
-    if (book.book_number() == BOOK_MANUAL
-        || book.book_number() == BOOK_DESTRUCTION)
-    {
+    if (!item_is_spellbook(book))
         return;
-    }
 
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
@@ -455,16 +457,8 @@ void mark_had_book(int booktype)
 
     you.had_book[booktype] = true;
 
-    if (booktype == BOOK_MINOR_MAGIC_I
-        || booktype == BOOK_MINOR_MAGIC_II
-        || booktype == BOOK_MINOR_MAGIC_III)
-    {
-        you.had_book[BOOK_MINOR_MAGIC_I]   = true;
-        you.had_book[BOOK_MINOR_MAGIC_II]  = true;
-        you.had_book[BOOK_MINOR_MAGIC_III] = true;
-    }
-    else if (booktype == BOOK_CONJURATIONS_I
-             || booktype == BOOK_CONJURATIONS_II)
+    if (booktype == BOOK_CONJURATIONS_I
+        || booktype == BOOK_CONJURATIONS_II)
     {
         you.had_book[BOOK_CONJURATIONS_I]  = true;
         you.had_book[BOOK_CONJURATIONS_II] = true;
@@ -526,7 +520,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
         {
-        case SPELL_ALTER_SELF:
         case SPELL_BERSERKER_RAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
@@ -539,7 +532,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
-        case SPELL_SYMBOL_OF_TORMENT:
             rc = true;
             break;
         default:
@@ -565,7 +557,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     case US_UNDEAD: // Mummies
         switch (spell)
         {
-        case SPELL_ALTER_SELF:
         case SPELL_BERSERKER_RAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
@@ -575,13 +566,11 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_ICE_FORM:
         case SPELL_INTOXICATE:
         case SPELL_NECROMUTATION:
-        case SPELL_PASSWALL:
         case SPELL_REGENERATION:
         case SPELL_RESIST_POISON:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
-        case SPELL_SYMBOL_OF_TORMENT:
             rc = true;
             break;
         default:
@@ -609,13 +598,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
 
 bool player_can_memorise(const item_def &book)
 {
-    if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL
-        || book.sub_type == BOOK_DESTRUCTION)
-    {
-        return (false);
-    }
-
-    if (!player_spell_levels())
+    if (!item_is_spellbook(book) || !player_spell_levels())
         return (false);
 
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
@@ -646,6 +629,45 @@ bool player_can_memorise(const item_def &book)
 typedef std::vector<spell_type>   spell_list;
 typedef std::map<spell_type, int> spells_to_books;
 
+static void _index_book(item_def& book, spells_to_books &book_hash,
+                        unsigned int &num_unreadable, bool &book_errors)
+{
+    if (!player_can_memorise_from_spellbook(book))
+    {
+        inscribe_book_highlevel(book);
+        num_unreadable++;
+        return;
+    }
+
+    mark_had_book(book);
+    set_ident_flags(book, ISFLAG_KNOW_TYPE);
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+
+    int spells_in_book = 0;
+    for (int j = 0; j < SPELLBOOK_SIZE; j++)
+    {
+        if (!is_valid_spell_in_book(book, j))
+            continue;
+
+        const spell_type spell = which_spell_in_book(book, j);
+
+        spells_in_book++;
+
+        // XXX: If same spell is in two different dangerous spellbooks,
+        // how to decide which one to use?
+        spells_to_books::iterator it = book_hash.find(spell);
+        if (it == book_hash.end() || is_dangerous_spellbook(it->second))
+            book_hash[spell] = book.sub_type;
+    }
+
+    if (spells_in_book == 0)
+    {
+        mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
+             "file a bug report.", book.name(DESC_PLAIN).c_str());
+        book_errors = true;
+    }
+}
+
 static bool _get_mem_list(spell_list &mem_spells,
                           spells_to_books &book_hash,
                           unsigned int &num_unreadable,
@@ -654,6 +676,7 @@ static bool _get_mem_list(spell_list &mem_spells,
                           spell_type current_spell = SPELL_NO_SPELL)
 {
     bool          book_errors    = false;
+    unsigned int  num_on_ground  = 0;
     unsigned int  num_books      = 0;
                   num_unreadable = 0;
 
@@ -662,48 +685,26 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         item_def& book(you.inv[i]);
 
-        if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_DESTRUCTION
-            || book.sub_type == BOOK_MANUAL)
-        {
+        if (!item_is_spellbook(book))
             continue;
-        }
 
         num_books++;
+        _index_book(book, book_hash, num_unreadable, book_errors);
+    }
 
-        if (!player_can_memorise_from_spellbook(book))
-        {
-            inscribe_book_highlevel(book);
-            num_unreadable++;
+    // We also check the ground
+    std::vector<const item_def*> items;
+    item_list_on_square(items, you.visible_igrd(you.pos()));
+
+    for (unsigned int i = 0; i < items.size(); ++i)
+    {
+        item_def book(*items[i]);
+        if (!item_is_spellbook(book) || !item_type_known(book))
             continue;
-        }
 
-        mark_had_book(book);
-        set_ident_flags(book, ISFLAG_KNOW_TYPE);
-        set_ident_flags(book, ISFLAG_IDENT_MASK);
-
-        int spells_in_book = 0;
-        for (int j = 0; j < SPELLBOOK_SIZE; j++)
-        {
-            if (!is_valid_spell_in_book(book, j))
-                continue;
-
-            const spell_type spell = which_spell_in_book(book, j);
-
-            spells_in_book++;
-
-            // XXX: If same spell is in two different dangerous spellbooks,
-            // how to decide which one to use?
-            spells_to_books::iterator it = book_hash.find(spell);
-            if (it == book_hash.end() || is_dangerous_spellbook(it->second))
-                book_hash[spell] = book.sub_type;
-        }
-
-        if (spells_in_book == 0)
-        {
-            mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
-                 "file a bug report.", book.name(DESC_PLAIN).c_str());
-            book_errors = true;
-        }
+        num_books++;
+        num_on_ground++;
+        _index_book(book, book_hash, num_unreadable, book_errors);
     }
 
     if (book_errors)
@@ -719,8 +720,9 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         if (!just_check)
         {
-            mpr("All of the spellbooks you're carrying are beyond your "
-                "current level of comprehension.", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "All of the spellbooks%s are beyond your "
+                 "current level of comprehension.",
+                 num_on_ground == 0 ? " you're carrying" : "");
         }
         return (false);
     }
@@ -1271,6 +1273,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     if (random2(40) + random2(40) + random2(40) < chance)
     {
         mpr("You fail to memorise the spell.");
+        learned_something_new(HINT_MEMORISE_FAILURE);
         you.turn_is_over = true;
 
         if (book == BOOK_NECRONOMICON)
@@ -1391,9 +1394,7 @@ int staff_spell(int staff)
         return (0);
     }
     else if (num_spells == 1)
-    {
         keyin = 'a';  // automatically selected if it's the only option
-    }
     else
     {
         mprf(MSGCH_PROMPT,
@@ -1642,6 +1643,20 @@ static void _get_spell_list(std::vector<spell_type> &spells, int level,
                     avoid_known);
 }
 
+static void _make_book_randart(item_def &book)
+{
+    if (!is_artefact(book))
+    {
+        // This may need to get re-initialized at some point.
+        book.special = (random_int() & RANDART_SEED_MASK);
+        book.flags |= ISFLAG_RANDART;
+        if (!book.props.exists(ARTEFACT_APPEAR_KEY))
+        {
+            book.props[ARTEFACT_APPEAR_KEY].get_string() =
+                artefact_name(book, true);
+        }
+    }
+}
 
 bool make_book_level_randart(item_def &book, int level, int num_spells,
                              std::string owner)
@@ -1654,44 +1669,25 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     const bool completely_random =
         god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
 
-    if (!is_random_artefact(book))
+    if (level == -1)
     {
-        if (!owner.empty())
-            book.props["owner"].get_string() = owner;
+        int max_level =
+            (completely_random ? 9
+                                 : std::min(9, you.get_experience_level()));
 
-        // Stuff parameters into book.plus and book.plus2, then call
-        // make_item_randart(), which will call us back.
-        if (level == -1)
-        {
-            int max_level =
-                (completely_random ? 9
-                                   : std::min(9, you.get_experience_level()));
-
-            level = random_range(1, max_level);
-        }
-        ASSERT(level > 0 && level <= 9);
-
-        if (num_spells == -1)
-            num_spells = SPELLBOOK_SIZE;
-        ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
-
-        book.plus  = level;
-        book.plus2 = num_spells;
-
-        book.sub_type = BOOK_RANDART_LEVEL;
-        return (make_item_randart(book));
+        level = random_range(1, max_level);
     }
-
-    // Being called from make_item_randart().
-    ASSERT(book.sub_type == BOOK_RANDART_LEVEL);
-
-    // Re-read owner, if applicable.
-    if (owner.empty() && book.props.exists("owner"))
-        owner = book.props["owner"].get_string();
-
     ASSERT(level > 0 && level <= 9);
 
+    if (num_spells == -1)
+        num_spells = SPELLBOOK_SIZE;
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
+
+    book.plus  = level;
+    book.plus2 = num_spells;
+
+    book.sub_type = BOOK_RANDART_LEVEL;
+    _make_book_randart(book);
 
     int god_discard        = 0;
     int uncastable_discard = 0;
@@ -2047,6 +2043,16 @@ static void _get_weighted_spells(bool completely_random, god_type god,
     int spells_left = spells.size();
     while (book_pos < num_spells && max_levels > 0 && spells_left > 0)
     {
+        if (chosen_spells[book_pos] != SPELL_NO_SPELL)
+        {
+            spell_type spell = chosen_spells[book_pos];
+            spell_weights[spell]  = 0;
+            max_levels           -= spell_difficulty(spell);
+            spells_left--;
+            book_pos++;
+            continue;
+        }
+
         spell_type spell =
             (spell_type) choose_random_weighted(spell_weights,
                                                 spell_weights + NUM_SPELLS);
@@ -2100,18 +2106,54 @@ static void _remove_nondiscipline_spells(spell_type chosen_spells[],
     }
 }
 
+static void _add_included_spells(spell_type chosen_spells[SPELLBOOK_SIZE],
+                                 std::vector<spell_type> incl_spells)
+{
+    for (unsigned int i = 0; i < incl_spells.size(); ++i)
+    {
+        spell_type incl_spell = incl_spells[i];
+
+        if (incl_spell == SPELL_NO_SPELL)
+            continue;
+
+        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+        {
+            // Already included.
+            if (chosen_spells[j] == incl_spell)
+                break;
+
+            if (chosen_spells[j] == SPELL_NO_SPELL)
+            {
+                // Add to spells.
+                chosen_spells[j] = incl_spell;
+                break;
+            }
+        }
+    }
+}
+
 // Takes a book of any type, a spell discipline or two, the number of spells
 // (up to 8), the total spell levels of all spells, a spell that absolutely
 // has to be included, and the name of whomever the book should be named after.
 // With all that information the book is turned into a random artefact
 // containing random spells of the given disciplines (random if none set).
-// NOTE: This function calls make_item_randart() which recursively calls
-//       make_book_theme_randart() again but without all those parameters,
-//       so they have to be stored in the book attributes so as to not
-//       forget them.
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels,
-                             spell_type incl_spell, std::string owner)
+                             spell_type incl_spell, std::string owner,
+                             std::string title)
+{
+    std::vector<spell_type> spells;
+    if (incl_spell != SPELL_NO_SPELL)
+        spells.push_back(incl_spell);
+    return make_book_theme_randart(book, spells, disc1, disc2,
+                                   num_spells, max_levels, owner, title);
+}
+
+bool make_book_theme_randart(item_def &book,
+                             std::vector<spell_type> incl_spells,
+                             int disc1, int disc2,
+                             int num_spells, int max_levels,
+                             std::string owner, std::string title)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -2121,85 +2163,48 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     const bool completely_random =
         god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
 
-    if (!is_random_artefact(book))
-    {
-        // Store spell and owner for later use.
-        if (incl_spell != SPELL_NO_SPELL)
-            book.props["spell"].get_int() = incl_spell;
-        if (!owner.empty())
-            book.props["owner"].get_string() = owner;
-
-        // Stuff parameters into book.plus and book.plus2, then call
-        // make_item_randart(), which will then call us back.
-        if (num_spells == -1)
-            num_spells = SPELLBOOK_SIZE;
-        ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
-
-        if (max_levels == -1)
-            max_levels = 255;
-
-        if (disc1 == 0 && disc2 == 0)
-        {
-            if (!_get_weighted_discs(completely_random, god, disc1, disc2))
-            {
-                if (completely_random)
-                    return (false);
-
-                // Rather than give up at this point, choose schools randomly.
-                // This way, an acquirement won't fail once the player has
-                // seen all spells.
-                if (!_get_weighted_discs(true, god, disc1, disc2))
-                    return (false);
-            }
-        }
-        else if (disc2 == 0)
-            disc2 = disc1;
-
-        ASSERT(disc1 < (1 << (SPTYP_LAST_EXPONENT + 1)));
-        ASSERT(disc2 < (1 << (SPTYP_LAST_EXPONENT + 1)));
-        ASSERT(count_bits(disc1) == 1 && count_bits(disc2) == 1);
-
-        int disc1_pos = 0, disc2_pos = 0;
-        for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-        {
-            if (disc1 & (1 << i))
-                disc1_pos = i;
-            if (disc2 & (1 << i))
-                disc2_pos = i;
-        }
-
-        book.plus  = num_spells | (max_levels << 8);
-        book.plus2 = disc1_pos  | (disc2_pos  << 8);
-
-        book.sub_type = BOOK_RANDART_THEME;
-        return (make_item_randart(book));
-    }
-
-    // Re-read spell and owner, if applicable.
-    if (incl_spell == SPELL_NO_SPELL && book.props.exists("spell"))
-        incl_spell = (spell_type) book.props["spell"].get_int();
-
-    if (owner.empty() && book.props.exists("owner"))
-        owner = book.props["owner"].get_string();
-
-    // We're being called from make_item_randart()
-    ASSERT(book.sub_type == BOOK_RANDART_THEME);
-    ASSERT(disc1 == 0 && disc2 == 0);
-    ASSERT(num_spells == -1 && max_levels == -1);
-
-    num_spells = book.plus & 0xFF;
+    if (num_spells == -1)
+        num_spells = SPELLBOOK_SIZE;
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
-    max_levels = (book.plus >> 8) & 0xFF;
-    ASSERT(max_levels > 0);
+    if (max_levels == -1)
+        max_levels = 255;
 
-    int disc1_pos = book.plus2 & 0xFF;
-    ASSERT(disc1_pos <= SPTYP_LAST_EXPONENT);
-    disc1 = 1 << disc1_pos;
+    if (disc1 == 0 && disc2 == 0)
+    {
+        if (!_get_weighted_discs(completely_random, god, disc1, disc2))
+        {
+            if (completely_random)
+                return (false);
 
-    int disc2_pos = (book.plus2 >> 8) & 0xFF;
-    ASSERT(disc2_pos <= SPTYP_LAST_EXPONENT);
-    disc2 = 1 << disc2_pos;
+            // Rather than give up at this point, choose schools randomly.
+            // This way, an acquirement won't fail once the player has
+            // seen all spells.
+            if (!_get_weighted_discs(true, god, disc1, disc2))
+                return (false);
+        }
+    }
+    else if (disc2 == 0)
+        disc2 = disc1;
+
+    ASSERT(disc1 < (1 << (SPTYP_LAST_EXPONENT + 1)));
+    ASSERT(disc2 < (1 << (SPTYP_LAST_EXPONENT + 1)));
+    ASSERT(count_bits(disc1) == 1 && count_bits(disc2) == 1);
+
+    int disc1_pos = 0, disc2_pos = 0;
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    {
+        if (disc1 & (1 << i))
+            disc1_pos = i;
+        if (disc2 & (1 << i))
+            disc2_pos = i;
+    }
+
+    book.plus  = num_spells | (max_levels << 8);
+    book.plus2 = disc1_pos  | (disc2_pos  << 8);
+
+    book.sub_type = BOOK_RANDART_THEME;
+    _make_book_randart(book);
 
     int god_discard        = 0;
     int uncastable_discard = 0;
@@ -2215,25 +2220,10 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
         chosen_spells[i] = SPELL_NO_SPELL;
 
+    _add_included_spells(chosen_spells, incl_spells);
+
     _get_weighted_spells(completely_random, god, disc1, disc2,
                          num_spells, max_levels, spells, chosen_spells);
-
-    if (!is_valid_spell(incl_spell))
-        incl_spell = SPELL_NO_SPELL;
-    else
-    {
-        bool is_included = false;
-        for (int i = 0; i < SPELLBOOK_SIZE; i++)
-        {
-            if (chosen_spells[i] == incl_spell)
-            {
-                is_included = true;
-                break;
-            };
-        }
-        if (!is_included)
-            chosen_spells[0] = incl_spell;
-    }
 
     std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
@@ -2298,8 +2288,13 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         max2 = max1;
 
     // Remove spells that don't fit either discipline.
-    _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2,
-                                 incl_spell);
+    _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2);
+    _add_included_spells(chosen_spells, incl_spells);
+
+    // Resort spells.
+    if (!incl_spells.empty())
+        std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
+    ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     // ... and change disc1 and disc2 accordingly.
     disc1 = 1 << max1;
@@ -2420,12 +2415,17 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     else
         book.props["is_named"].get_bool() = false;
 
-    // Sometimes use a completely random title.
     std::string bookname = "";
-    if (owner == "Xom" && !one_chance_in(20))
-        bookname = getRandNameString("Xom_book_title");
-    else if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
-        bookname = getRandNameString("random_book_title");
+    if (!title.empty())
+        bookname = title;
+    else
+    {
+        // Sometimes use a completely random title.
+        if (owner == "Xom" && !one_chance_in(20))
+            bookname = getRandNameString("Xom_book_title");
+        else if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
+            bookname = getRandNameString("random_book_title");
+    }
 
     if (!bookname.empty())
         name += getRandNameString("book_noun") + " of " + bookname;

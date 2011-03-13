@@ -174,7 +174,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
             "/<w>R-Click</w>"
 #endif
             "] exit            [<w>!</w>] %s   %s",
-            (viewing ? "to select items " : "to examine items"),
+            (viewing ? "to buy items    " : "to examine items"),
             pkeys.c_str()));
 
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
@@ -481,13 +481,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         int key = getchm();
 
         if (key == '\\')
-        {
-            if (!check_item_knowledge(true))
-            {
-                _shop_print("You don't recognise anything yet!", 1);
-                _shop_more();
-            }
-        }
+            check_item_knowledge();
         else if (key == 'x' || key_is_escape(key) || key == CK_MOUSE_CMD)
             break;
         else if (key == '\r' || key == CK_MOUSE_CLICK)
@@ -530,7 +524,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                 continue;
             else
             {
-                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n) ",
+                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n)",
                          total_purchase);
 
                 if (_shop_yesno(info, 'n'))
@@ -1751,7 +1745,6 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_CURSE_ARMOUR:
             case SCR_CURSE_WEAPON:
             case SCR_CURSE_JEWELLERY:
-            case SCR_PAPER:
             case SCR_IMMOLATION:
                 valued++;
                 break;
@@ -1918,7 +1911,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 400;
                 break;
 
-            case MISC_CRYSTAL_BALL_OF_FIXATION:
             case MISC_EMPTY_EBONY_CASKET:
                 valued += 20;
                 break;
@@ -2193,17 +2185,36 @@ std::string shop_name(const coord_def& where)
 
     const shop_type type = cshop->type;
 
-    uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
-        | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
-        | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
+    std::string sh_name = "";
 
-    std::string sh_name = apostrophise(make_name(seed, false)) + " ";
+    if (!cshop->shop_name.empty())
+    {
+        sh_name += apostrophise(cshop->shop_name) + " ";
+    }
+    else
+    {
+        uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
+            | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
+            | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
 
-    sh_name += shop_type_name(type);
+        sh_name += apostrophise(make_name(seed, false)) + " ";
+    }
 
-    std::string sh_suffix = shop_type_suffix(type, where);
-    if (!sh_suffix.empty())
-        sh_name += " " + sh_suffix;
+    if (!cshop->shop_type_name.empty())
+        sh_name += cshop->shop_type_name;
+    else
+        sh_name += shop_type_name(type);
+
+    if (!cshop->shop_suffix_name.empty())
+    {
+        sh_name += " " + cshop->shop_suffix_name;
+    }
+    else
+    {
+        std::string sh_suffix = shop_type_suffix(type, where);
+        if (!sh_suffix.empty())
+            sh_name += " " + sh_suffix;
+    }
 
     return (sh_name);
 }

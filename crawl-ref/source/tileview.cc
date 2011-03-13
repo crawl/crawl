@@ -648,7 +648,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
 
     if (mons_is_item_mimic(mon->type))
     {
-        if (!mons_is_known_mimic(mon))
+        if (mons_is_unknown_mimic(mon))
         {
             // If necessary add item brand.
             if (you.visible_igrd(gc) != NON_ITEM)
@@ -658,7 +658,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
                 env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
         }
     }
-    else if (mons_is_stationary(mon))
+    else if (mons_is_stationary(mon) && mon->type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
         if (you.visible_igrd(gc) != NON_ITEM)
@@ -733,11 +733,11 @@ unsigned int num_tile_rays = 0;
 struct tile_ray
 {
     coord_def ep;
-    bool in_range;
+    aff_type in_range;
 };
 FixedVector<tile_ray, 30> tile_ray_vec;
 
-void tile_place_ray(const coord_def &gc, bool in_range)
+void tile_place_ray(const coord_def &gc, aff_type in_range)
 {
     // Record rays for later.  The curses version just applies
     // rays directly to the screen.  The tiles version doesn't have
@@ -754,8 +754,8 @@ void tile_draw_rays(bool reset_count)
 {
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
-        tileidx_t flag = tile_ray_vec[i].in_range ? TILE_FLAG_RAY
-                                                  : TILE_FLAG_RAY_OOR;
+        tileidx_t flag = tile_ray_vec[i].in_range > 0 ? TILE_FLAG_RAY
+                                                      : TILE_FLAG_RAY_OOR;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 
@@ -991,18 +991,20 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     else
         cell.is_haloed = false;
 
-    if (print_blood && (_suppress_blood(gc)
-                        || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
+    if (liquefied(gc, true))
+        cell.is_liquefied = true;
+    else if (print_blood && (_suppress_blood(gc)
+                             || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
     {
         print_blood = false;
     }
 
-    // Mold has the same restrictions as blood
-    // but mold takes precendence over blood.
+    // Mold has the same restrictions as blood but takes precedence.
     if (print_blood)
     {
         if (is_moldy(gc))
             cell.is_moldy = true;
+        // Corpses have a blood puddle of their own.
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
             cell.is_bloody = true;
     }

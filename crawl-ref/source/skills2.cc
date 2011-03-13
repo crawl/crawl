@@ -22,7 +22,9 @@
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
+#include "fontwrapper-ft.h"
 #include "godabil.h"
+#include "hints.h"
 #include "itemprop.h"
 #include "options.h"
 #include "player.h"
@@ -359,14 +361,16 @@ COLORS SkillMenuEntry::_get_colour() const
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
                                         || m_sk == you.transfer_to_skill))
     {
-        return GREEN;
+        return LIGHTBLUE;
     }
+    else if (you.skill(m_sk) > you.skills[m_sk])
+        return LIGHTBLUE;
     else if (you.skills[m_sk] == 27)
         return YELLOW;
     else if (you.skills[m_sk] == 0)
         return DARKGREY;
     else if (ct_bonus > 1 && is_set(SKMF_DISP_APTITUDE))
-        return LIGHTBLUE;
+        return GREEN;
     else if (is_antitrained(m_sk) && is_set(SKMF_DISP_APTITUDE))
         return MAGENTA;
     else
@@ -394,7 +398,7 @@ std::string SkillMenuEntry::_get_prefix()
 
 void SkillMenuEntry::_set_level()
 {
-    m_level->set_text(make_stringf("%2d", you.skills[m_sk]));
+    m_level->set_text(make_stringf("%2d", you.skill(m_sk)));
     m_level->set_fg_colour(_get_colour());
 }
 
@@ -428,13 +432,13 @@ void SkillMenuEntry::_set_aptitude()
     if (crosstrain_other(m_sk, show_all) || ct_bonus > 1)
     {
         m_skm->set_crosstrain();
-        text += "<lightblue>";
+        text += "<green>";
         text += crosstrain_other(m_sk, show_all) ? "*" : " ";
 
         if ( ct_bonus > 1)
             text += make_stringf("+%d", ct_bonus * 2);
 
-        text += "</lightblue>";
+        text += "</green>";
     }
     else if (antitrain_other(m_sk, show_all) || is_antitrained(m_sk))
     {
@@ -466,7 +470,7 @@ void SkillMenuEntry::_set_reskill_progress()
         text = "";
 
     m_progress->set_text(text);
-    m_progress->set_fg_colour(GREEN);
+    m_progress->set_fg_colour(LIGHTBLUE);
 }
 
 void SkillMenuEntry::_set_new_level()
@@ -483,7 +487,7 @@ void SkillMenuEntry::_set_new_level()
     {
         new_level = transfer_skill_points(you.transfer_from_skill, m_sk,
                                           you.transfer_skill_points, true);
-        m_progress->set_fg_colour(GREEN);
+        m_progress->set_fg_colour(LIGHTBLUE);
     }
 
     if (is_selectable() || m_sk == you.transfer_from_skill)
@@ -511,7 +515,8 @@ void SkillMenuEntry::_set_title()
     m_level->set_fg_colour(BLUE);
     m_progress->set_fg_colour(BLUE);
 
-    m_aptitude->set_text("<blue>Apt </blue>");
+    if (is_set(SKMF_DISP_APTITUDE))
+        m_aptitude->set_text("<blue>Apt </blue>");
 }
 
 void SkillMenuEntry::_clear()
@@ -540,28 +545,30 @@ void SkillMenuEntry::_set_points()
 }
 #endif
 
-#define MIN_COLS            78
+#define MIN_COLS            80
 #define MIN_LINES           24
 #define TILES_COL            6
-#define CURRENT_ACTION_SIZE 24
-#define NEXT_ACTION_SIZE    15
-#define NEXT_DISPLAY_SIZE   18
-#define SHOW_ALL_SIZE       16
+#define CURRENT_ACTION_SIZE 25
+#define NEXT_ACTION_SIZE    16
+#define NEXT_DISPLAY_SIZE   19
+#define SHOW_ALL_SIZE       17
 SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     m_min_coord(), m_max_coord(), m_disp_queue()
 {
     SkillMenuEntry::m_skm = this;
 
 #ifdef USE_TILE
-    if (Options.tile_menu_icons && tiles.get_crt()->wy >= 702)
+    const int limit = tiles.get_crt_font()->char_height() * 5
+                      + SK_ARR_LN * TILE_Y;
+    if (Options.tile_menu_icons && tiles.get_crt()->wy >= limit)
         set_flag(SKMF_SKILL_ICONS);
 #endif
 
-    m_min_coord.x = 2;
+    m_min_coord.x = 1;
     m_min_coord.y = 1;
 
     m_max_coord.x = MIN_COLS + 1;
-    m_max_coord.y = MIN_LINES + 1;
+    m_max_coord.y = get_number_of_lines() + 1;
 
     m_ff = new MenuFreeform();
     m_help = new FormattedTextItem();
@@ -582,13 +589,13 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
         {
-            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x
+            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x + 1
                                                          + col_split * col,
                                                          m_min_coord.y + 1 + ln),
                                                m_ff);
         }
 
-    coord_def help_min_coord(m_min_coord.x, 0);
+    coord_def help_min_coord(m_min_coord.x + 1, 0);
     help_min_coord.y = (m_min_coord.y + SK_ARR_LN + 2);
 #ifdef USE_TILE
     if (is_set(SKMF_SKILL_ICONS))
@@ -596,13 +603,28 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
         --help_min_coord.y;
         help_min_coord.y = tiles.to_lines(help_min_coord.y);
     }
+#else
+    help_min_coord.y = std::min(help_min_coord.y, m_max_coord.y - 3);
 #endif
+
+    int help_height;
+    if (is_set(SKMF_SIMPLE))
+    {
+        // We just assume that the player won't learn too many skill while
+        // in tutorial/hint mode.
+        help_min_coord.y -= 4;
+        help_height = 6;
+    }
+    else
+        help_height = 2;
+
     m_help->set_bounds(help_min_coord,
-                       coord_def(m_max_coord.x, help_min_coord.y + 2));
+                       coord_def(m_max_coord.x,
+                                 help_min_coord.y + help_height));
     m_ff->attach_item(m_help);
 
     _init_disp_queue();
-    _init_footer(coord_def(help_min_coord.x, help_min_coord.y + 2));
+    _init_footer(coord_def(m_min_coord.x, help_min_coord.y + help_height));
 
     _set_title();
     _set_skills();
@@ -782,12 +804,14 @@ void SkillMenu::_init_footer(coord_def coord)
         m_next_display->set_id(-3);
     }
 
-    _add_item(m_show_all, m_ff, SHOW_ALL_SIZE, coord);
-    m_show_all->set_highlight_colour(RED);
-    m_show_all->set_fg_colour(WHITE);
-    m_show_all->add_hotkey('*');
-    m_show_all->set_id(-4);
-
+    if (!is_set(SKMF_SIMPLE))
+    {
+        _add_item(m_show_all, m_ff, SHOW_ALL_SIZE, coord);
+        m_show_all->set_highlight_colour(RED);
+        m_show_all->set_fg_colour(WHITE);
+        m_show_all->add_hotkey('*');
+        m_show_all->set_id(-4);
+    }
 }
 
 void SkillMenu::_refresh_names()
@@ -914,11 +938,20 @@ void SkillMenu::_set_help(int flag)
     switch (flag)
     {
     case SKMF_DO_PRACTISE:
-        help = "Press the letter of a skill to choose whether you want to "
-               "practise it. Skills marked with '-' will train very slowly.";
+        if (is_set(SKMF_SIMPLE))
+            help = hints_skills_info();
+        else
+        {
+            help = "Press the letter of a skill to choose whether you want to "
+                   "practise it. Skills marked with '-' will train very "
+                   "slowly.";
+        }
         break;
     case SKMF_DO_SHOW_DESC:
-        help = "Press the letter of a skill to read its description.";
+        if (is_set(SKMF_SIMPLE))
+            help = hints_skills_description_info();
+        else
+            help = "Press the letter of a skill to read its description.";
         break;
     case SKMF_DO_RESKILL_FROM:
         help = "Select a skill as the source of the knowledge transfer. The "
@@ -928,26 +961,34 @@ void SkillMenu::_set_help(int flag)
     case SKMF_DO_RESKILL_TO:
         help = "Select a skill as the destination of the knowledge transfer. "
                "The chosen skill will be raised to the level showned in "
-               "<green>green</green>.";
+               "<lightblue>blue</lightblue>.";
         break;
     case SKMF_DISP_PROGRESS:
     case SKMF_DISP_APTITUDE:
+        if (is_set(SKMF_SIMPLE))
+        {
+            help = hints_skills_info();
+            break;
+        }
+
         if (flag == SKMF_DISP_PROGRESS || !m_crosstrain && !m_antitrain)
         {
             help = "The percentage of the progress done before reaching next "
                    "level is in <cyan>cyan</cyan>.\n";
         }
+
         help += "The species aptitude is in <red>red</red>. ";
+
         if (flag == SKMF_DISP_APTITUDE)
         {
             if (m_crosstrain)
-                help += "Crosstraining is in <blue>blue</blue>. ";
+                help += "Crosstraining is in <green>green</green>. ";
             if (m_antitrain)
                 help += "Antitraining is in <magenta>magenta</magenta>. ";
             if (m_crosstrain && !m_antitrain)
             {
                 help += "The skill responsible for the bonus is marked with "
-                        "'<blue>*</blue>'.";
+                        "'<green>*</green>'.";
             }
             else if (!m_crosstrain && m_antitrain)
             {
@@ -963,7 +1004,7 @@ void SkillMenu::_set_help(int flag)
         break;
     case SKMF_DISP_RESKILL:
         help = "The progress of the knowledge transfer is displayed in "
-               "<green>green</green> in front of the skill receiving the "
+               "<lightblue>blue</lightblue> in front of the skill receiving the "
                "knowledge. The donating skill is marked with '*'.";
         break;
     default:
@@ -985,7 +1026,7 @@ void SkillMenu::_set_footer()
     else if (is_set(SKMF_DO_RESKILL_TO))
         text = "select destination";
 
-    m_current_action->set_text(make_stringf("[a-%c:%-18s]",
+    m_current_action->set_text(make_stringf("[a-%c: %s]",
                                             SkillMenuEntry::m_letter.letter,
                                             text.c_str()));
 
@@ -1002,7 +1043,7 @@ void SkillMenu::_set_footer()
         text = "transfer";
     }
 
-    m_next_action->set_text(make_stringf("[?:%-11s]", text.c_str()));
+    m_next_action->set_text(make_stringf("[?: %s]", text.c_str()));
 
     if (m_disp_queue.size() > 1)
     {
@@ -1022,11 +1063,11 @@ void SkillMenu::_set_footer()
             text = "";
         }
 
-        m_next_display->set_text(make_stringf("[!:show %-9s]", text.c_str()));
+        m_next_display->set_text(make_stringf("[!: show %s]", text.c_str()));
     }
 
     text = is_set(SKMF_DISP_ALL) ? "hide unknown" : "show all";
-    m_show_all->set_text(make_stringf("[*:%-12s]", text.c_str()));
+    m_show_all->set_text(make_stringf("[*: %s]", text.c_str()));
 }
 
 TextItem* SkillMenu::_find_closest_selectable(int start_ln, int col)
@@ -1140,11 +1181,14 @@ void skill_menu(bool reskilling)
             flags |= SKMF_DISP_RESKILL;
     }
 
-    // For now, aptitudes are always showned.
-    flags |= SKMF_DISP_APTITUDE;
+    if (crawl_state.game_is_hints_tutorial())
+        flags |= SKMF_SIMPLE;
+    else
+        flags |= SKMF_DISP_APTITUDE;
 
 #ifdef DEBUG_DIAGNOSTICS
-    flags |= SKMF_DISP_ALL;
+    if (!crawl_state.game_is_hints_tutorial())
+        flags |= SKMF_DISP_ALL;
 #endif
 
     clrscr();
@@ -1911,7 +1955,10 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         // Perform the real level up
         check_skill_level_change(fsk);
         check_skill_level_change(tsk);
-        you.transfer_skill_points -= total_skp_lost;
+        if (you.transfer_skill_points - total_skp_lost < 0)
+            you.transfer_skill_points = 0;
+        else
+            you.transfer_skill_points -= total_skp_lost;
 
         dprf("skill %s lost %d points", skill_name(fsk), total_skp_lost);
         dprf("skill %s gained %d points", skill_name(tsk), total_skp_gained);
@@ -1920,9 +1967,9 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
             dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
 #endif
 
-        if (you.transfer_skill_points <= 0 || you.skills[tsk] == 27)
+        if (you.transfer_skill_points == 0 || you.skills[tsk] == 27)
             ashenzari_end_transfer(true);
-        else if (you.transfer_skill_points > 0)
+        else
             dprf("%d skill points left to transfer", you.transfer_skill_points);
     }
     return new_level;

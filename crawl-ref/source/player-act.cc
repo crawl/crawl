@@ -13,6 +13,7 @@
 #include "env.h"
 #include "food.h"
 #include "goditem.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
@@ -114,7 +115,11 @@ bool player::floundering() const
 
 bool player::extra_balanced() const
 {
-    return (species == SP_NAGA && !form_changed_physiology());
+    const dungeon_feature_type grid = grd(pos());
+    return (grid == DNGN_SHALLOW_WATER
+             && (species == SP_NAGA                      // tails, not feet
+                 || body_size(PSIZE_BODY) > SIZE_MEDIUM)
+                    && !form_changed_physiology());
 }
 
 int player::get_experience_level() const
@@ -436,17 +441,21 @@ std::string player::arm_name(bool plural, bool *can_plural) const
 
 bool player::fumbles_attack(bool verbose)
 {
+    bool did_fumble = false;
+
     // Fumbling in shallow water.
-    if (floundering() || (liquefied(pos()) && !airborne() && !clinging))
+    if (floundering() || liquefied(pos()) && ground_level())
     {
         if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
             if (verbose)
                 mpr("Your unstable footing causes you to fumble your attack.");
-            return (true);
+            did_fumble = true;
         }
+        if (floundering())
+            learned_something_new(HINT_FUMBLING_SHALLOW_WATER);
     }
-    return (false);
+    return (did_fumble);
 }
 
 bool player::cannot_fight() const
@@ -599,4 +608,9 @@ bool player::can_go_berserk(bool intentional, bool potion) const
 bool player::berserk() const
 {
     return (duration[DUR_BERSERK]);
+}
+
+bool player::can_cling_to_walls() const
+{
+    return you.form == TRAN_SPIDER;
 }

@@ -326,6 +326,22 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
     return (false);
 }
 
+std::vector<std::string> strip_multiple_tag_prefix (std::string &s, const std::string &tagprefix)
+{
+    std::vector<std::string> results;
+
+    while (true)
+    {
+        std::string this_result = strip_tag_prefix(s, tagprefix);
+        if (this_result.empty())
+            break;
+
+        results.push_back(this_result);
+    }
+
+    return results;
+}
+
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
 {
     std::string::size_type pos = s.find(tagprefix);
@@ -435,6 +451,10 @@ std::string pluralise(const std::string &name,
         // Vortex; vortexes is legal, but the classic plural is cooler.
         return name.substr(0, name.length() - 2) + "ices";
     }
+    else if (ends_with(name, "mosquito"))
+    {
+        return name + "es";
+    }
     else if (ends_with(name, "cyclops"))
     {
         return name.substr(0, name.length() - 1) + "es";
@@ -478,7 +498,8 @@ std::string pluralise(const std::string &name,
         return name.substr(0, name.length() - 1) + "i";
     }
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
-             || ends_with(name, "folk") || ends_with(name, "shedu")
+             || ends_with(name, "folk") || ends_with(name, "spawn")
+             || ends_with(name, "kenku") || ends_with(name, "shedu")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
     {
@@ -491,9 +512,10 @@ std::string pluralise(const std::string &name,
         // ending with sh (except fish, which are caught in the previous check).
         return name + "es";
     }
-    else if (ends_with(name, "simulacrum"))
+    else if (ends_with(name, "simulacrum") || ends_with(name, "eidolon"))
     {
-        // simulacrum -> simulacra
+        // simulacrum -> simulacra (correct Latin pluralisation)
+        // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
     }
     else if (ends_with(name, "efreet"))
@@ -503,7 +525,7 @@ std::string pluralise(const std::string &name,
     }
     else if (name == "foot")
         return "feet";
-    else if (name == "ophan" || name == "cherub")
+    else if (name == "ophan" || name == "cherub" || name == "seraph")
     {
         // unlike "angel" which is fully assimilated and "cherub" which may be
         // pluralized both ways, "ophan" always uses hebrew pluralization
@@ -517,6 +539,9 @@ std::string apostrophise(const std::string &name)
 {
     if (name.empty())
         return (name);
+
+    if (name == "you" || name == "You")
+        return (name + "r");
 
     if (name == "it" || name == "It")
         return (name + "s");

@@ -13,11 +13,11 @@
 #include "env.h"
 #include "godconduct.h"
 #include "hints.h"
-#include "it_use2.h"
 #include "itemprop.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "potion.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-other.h"
@@ -40,6 +40,8 @@ bool cast_deaths_door(int pow)
 {
     if (you.is_undead)
         mpr("You're already dead!");
+    else if (you.duration[DUR_EXHAUSTED])
+        mpr("You are too exhausted to enter Death's door!");
     else if (you.duration[DUR_DEATHS_DOOR])
         mpr("Your appeal for an extension has been denied.");
     else
@@ -60,207 +62,6 @@ bool cast_deaths_door(int pow)
     }
 
     return false;
-}
-
-static bool _know_spell(spell_type spell)
-{
-    if (spell == NUM_SPELLS)
-        return (false);
-
-    if (!you.has_spell(spell))
-    {
-        mprf("You don't know how to extend %s.", spell_title(spell));
-        return (false);
-    }
-
-    int fail = spell_fail(spell);
-    dprf("fail = %d", fail);
-
-    if (fail > random2(50) + 50)
-    {
-        mprf("Your knowledge of %s fails you.", spell_title(spell));
-        return (false);
-    }
-
-    return (true);
-}
-
-static spell_type _brand_spell()
-{
-    const item_def *wpn = you.weapon();
-
-    if (!wpn)
-        return NUM_SPELLS;
-
-    const int wpn_type = get_vorpal_type(*wpn);
-    switch(get_weapon_brand(*wpn))
-    {
-        case SPWPN_FLAMING:
-        case SPWPN_FLAME:
-            return SPELL_FIRE_BRAND;
-        case SPWPN_FREEZING:
-        case SPWPN_FROST:
-            return SPELL_FREEZING_AURA;
-        case SPWPN_VORPAL:
-            if (wpn_type == DVORP_CRUSHING)
-                return SPELL_MAXWELLS_SILVER_HAMMER;
-            return NUM_SPELLS;
-        case SPWPN_VENOM:
-            if (wpn_type == DVORP_CRUSHING)
-                return NUM_SPELLS;
-            return SPELL_POISON_WEAPON;
-        case SPWPN_PAIN:
-            return SPELL_EXCRUCIATING_WOUNDS;
-        case SPWPN_DRAINING:
-            return SPELL_LETHAL_INFUSION;
-        case SPWPN_DISTORTION:
-            return SPELL_WARP_BRAND;
-        default:
-            return NUM_SPELLS;
-    }
-}
-
-static spell_type _transform_spell()
-{
-    switch(you.form)
-    {
-    case TRAN_BLADE_HANDS:
-        return SPELL_BLADE_HANDS;
-    case TRAN_SPIDER:
-        return SPELL_SPIDER_FORM;
-    case TRAN_STATUE:
-        return SPELL_STATUE_FORM;
-    case TRAN_ICE_BEAST:
-        return SPELL_ICE_FORM;
-    case TRAN_DRAGON:
-        return SPELL_DRAGON_FORM;
-    case TRAN_LICH:
-        return SPELL_NECROMUTATION;
-    case TRAN_BAT:
-        return NUM_SPELLS; // no spell
-    case TRAN_PIG:
-        return SPELL_PORKALATOR; // Kirke/Nemelex only
-    default:
-        return NUM_SPELLS;
-    }
-}
-
-void extension(int pow)
-{
-    int contamination = random2(2);
-
-    if (you.duration[DUR_HASTE] && _know_spell(SPELL_HASTE))
-    {
-        potion_effect(POT_SPEED, pow);
-        contamination++;
-    }
-
-    if (you.duration[DUR_SLOW] && _know_spell(SPELL_SLOW)) // heh heh
-        potion_effect(POT_SLOWING, pow);
-
-    if (you.duration[DUR_LEVITATION] && !you.duration[DUR_CONTROLLED_FLIGHT]
-        && _know_spell(SPELL_LEVITATION))
-    {
-        levitate_player(pow);
-    }
-
-    if (you.duration[DUR_INVIS] && _know_spell(SPELL_INVISIBILITY))
-    {
-        potion_effect(POT_INVISIBILITY, pow);
-        contamination++;
-    }
-
-    if (you.duration[DUR_ICY_ARMOUR] && _know_spell(SPELL_OZOCUBUS_ARMOUR))
-        ice_armour(pow, true);
-
-    if (you.duration[DUR_REPEL_MISSILES] && _know_spell(SPELL_REPEL_MISSILES))
-        missile_prot(pow);
-
-    if (you.duration[DUR_REGENERATION] && _know_spell(SPELL_REGENERATION)
-        && you.form != TRAN_LICH)
-    {
-        cast_regen(pow);
-    }
-
-    if (you.duration[DUR_DEFLECT_MISSILES]
-        && _know_spell(SPELL_DEFLECT_MISSILES))
-    {
-        deflection(pow);
-    }
-
-    if (you.duration[DUR_FIRE_SHIELD] && _know_spell(SPELL_RING_OF_FLAMES))
-    {
-        you.increase_duration(DUR_FIRE_SHIELD, random2(pow / 20), 50);
-        mpr("Your ring of flames roars with new vigour!");
-    }
-
-    if (!you.duration[DUR_WEAPON_BRAND] < 1 && _know_spell(_brand_spell()))
-    {
-        you.increase_duration(DUR_WEAPON_BRAND, 5 + random2(8), 80);
-    }
-
-    if (you.duration[DUR_SWIFTNESS] && _know_spell(SPELL_SWIFTNESS))
-        cast_swiftness(pow);
-
-    if (you.duration[DUR_INSULATION] && _know_spell(SPELL_INSULATION))
-        cast_insulation(pow);
-
-    if (you.duration[DUR_CONTROLLED_FLIGHT] && _know_spell(SPELL_FLY))
-        cast_fly(pow);
-
-    if (you.duration[DUR_CONTROL_TELEPORT]
-        && _know_spell(SPELL_CONTROL_TELEPORT))
-    {
-        cast_teleport_control(pow);
-    }
-
-    if (you.duration[DUR_RESIST_POISON] && _know_spell(SPELL_RESIST_POISON))
-        cast_resist_poison(pow);
-
-    if (you.duration[DUR_TRANSFORMATION] && _know_spell(_transform_spell()))
-    {
-        mpr("Your transformation has been extended.");
-        you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100,
-                              "Your transformation has been extended.");
-
-        if (you.form == TRAN_LICH
-            && is_good_god(you.religion))
-        {
-            // possible with Xom or a card
-            excommunication();
-        }
-
-        // Give a warning if it won't last long enough for the
-        // timeout messages.
-        transformation_expiration_warning();
-    }
-
-    if (you.duration[DUR_STONESKIN] && _know_spell(SPELL_STONESKIN))
-        cast_stoneskin(pow);
-
-    if (you.duration[DUR_PHASE_SHIFT] && _know_spell(SPELL_PHASE_SHIFT))
-        cast_phase_shift(pow);
-
-    if (you.duration[DUR_SEE_INVISIBLE] && _know_spell(SPELL_SEE_INVISIBLE))
-        cast_see_invisible(pow);
-
-    if (you.duration[DUR_SILENCE] && _know_spell(SPELL_SILENCE))
-        cast_silence(pow);    //how precisely did you cast extension?
-
-    if (you.duration[DUR_CONDENSATION_SHIELD]
-        && _know_spell(SPELL_CONDENSATION_SHIELD))
-    {
-        cast_condensation_shield(pow);
-    }
-
-    if (you.duration[DUR_DEATH_CHANNEL] && _know_spell(SPELL_DEATH_CHANNEL))
-        cast_death_channel(pow);
-
-    if (you.duration[DUR_DEATHS_DOOR] && _know_spell(SPELL_DEATHS_DOOR))
-        cast_deaths_door(pow);   // just for the fail message
-
-    if (contamination)
-        contaminate_player(contamination, true);
 }
 
 void remove_ice_armour()
@@ -399,12 +200,12 @@ void cast_teleport_control(int power)
                           "You feel in control.");
 }
 
-bool cast_selective_amnesia()
+int cast_selective_amnesia(std::string *pre_msg)
 {
     if (you.spell_no == 0)
     {
         canned_msg(MSG_NO_SPELLS);
-        return (false);
+        return (0);
     }
 
     int keyin = 0;
@@ -420,12 +221,12 @@ bool cast_selective_amnesia()
         if (key_is_escape(keyin))
         {
             canned_msg(MSG_OK);
-            return (false);
+            return (-1);
         }
 
         if (keyin == '?' || keyin == '*')
         {
-            keyin = list_spells(false);
+            keyin = list_spells(false, false, false);
             redraw_screen();
         }
 
@@ -444,6 +245,9 @@ bool cast_selective_amnesia()
             break;
     }
 
+    if (pre_msg)
+        mpr(pre_msg->c_str());
+
     const int ep_gain = spell_mana(spell);
     del_spell_from_memory_by_slot(slot);
 
@@ -454,7 +258,7 @@ bool cast_selective_amnesia()
             "it unravels.");
     }
 
-    return (true);
+    return (1);
 }
 
 void cast_see_invisible(int pow)

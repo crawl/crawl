@@ -139,7 +139,6 @@ void seen_monsters_react()
         good_god_follower_attitude_change(*mi);
         beogh_follower_convert(*mi);
         slime_convert(*mi);
-        passive_enslavement_convert(*mi);
 
         // XXX: Hack for triggering Duvessa's going berserk.
         if (mi->props.exists("duvessa_berserk"))
@@ -704,9 +703,9 @@ static int player_view_update_at(const coord_def &gc)
         cloud_type   ctype = cl.type;
 
         bool did_exclude = false;
-        if (!is_harmless_cloud(ctype)
-            && cl.whose  == KC_OTHER
-            && cl.killer == KILL_MISC)
+        if (cl.whose  == KC_OTHER
+            && cl.killer == KILL_MISC
+            && is_damaging_cloud(cl.type, false))
         {
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.
@@ -719,7 +718,7 @@ static int player_view_update_at(const coord_def &gc)
     }
 
     // Print hints mode messages for features in LOS.
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())

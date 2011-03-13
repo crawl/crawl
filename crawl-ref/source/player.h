@@ -24,6 +24,8 @@
 #include "tiledoll.h"
 #endif
 
+int check_stealth(void);
+
 typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
@@ -42,6 +44,7 @@ public:
 
   // Long-term state:
   int elapsed_time;        // total amount of elapsed time in the game
+  int elapsed_time_at_last_input; // used for elapsed_time delta display
 
   int hp;
   int hp_max;
@@ -231,18 +234,20 @@ public:
   PlaceInfo global_info;
   player_quiver* m_quiver;
 
-  CrawlHashTable props;
-
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
   std::vector<int> beholders;
 
-  // monsterss causing fear to the player; see above
+  // monsters causing fear to the player; see above
   std::vector<int> fearmongers;
 
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
+
+#if TAG_MAJOR_VERSION == 32
+  int montiers[5]; // four monster tiers, plus corpse count
+#endif
 
 
   // Non-saved UI state:
@@ -260,7 +265,7 @@ public:
 
   delay_queue_type delay_queue;       // pending actions
 
-  time_t        start_time;           // start time of session
+  time_t last_keypress_time;
 #if defined(WIZARD) || defined(DEBUG)
   // If set to true, then any call to ouch() which would cuase the player
   // to die automatically returns without ending the game.
@@ -328,14 +333,14 @@ public:
   // The save file itself.
   package *save;
 
-  // Is player clinging to the wall?
-  bool clinging;
-  // Array of walls which player is currently clinging to.
-  std::vector<coord_def>    cling_to;
   // The type of a zotdef wave, if any.
   std::string zotdef_wave_name;
   // The biggest assigned monster id so far.
   mid_t last_mid;
+
+  // The last spell cast by the player.
+  spell_type last_cast_spell;
+
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
@@ -373,15 +378,12 @@ public:
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
-    bool is_wall_clinging() const;
-    bool can_cling_to(const coord_def& p) const;
-    void check_clinging();
+    bool can_cling_to_walls() const;
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool transient = true) const;
-    bool are_charming() const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
 
@@ -399,16 +401,17 @@ public:
     bool travelling_light() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monster* mon);
+    void add_beholder(const monster* mon, bool axe = false);
     bool beheld() const;
     bool beheld_by(const monster* mon) const;
     monster* get_beholder(const coord_def &pos) const;
     monster* get_any_beholder() const;
     void remove_beholder(const monster* mon);
     void clear_beholders();
-    void beholders_check_noise(int loudness);
+    void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();
     void update_beholder(const monster* mon);
+    bool possible_beholder(const monster* mon) const;
 
     // Dealing with fearmongers. Implemented in fearmonger.cc.
     bool add_fearmonger(const monster* mon);
@@ -418,7 +421,7 @@ public:
     monster* get_any_fearmonger() const;
     void remove_fearmonger(const monster* mon);
     void clear_fearmongers();
-    void fearmongers_check_noise(int loudness);
+    void fearmongers_check_noise(int loudness, bool axe = false);
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
@@ -518,7 +521,7 @@ public:
     int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
     void poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int amount);
+    bool sicken(int amount, bool allow_hint = true);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
@@ -549,8 +552,8 @@ public:
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
-    int res_poison() const;
-    int res_rotting() const;
+    int res_poison(bool temp = true) const;
+    int res_rotting(bool temp = true) const;
     int res_asphyx() const;
     int res_water_drowning() const;
     int res_sticky_flame() const;
@@ -600,6 +603,7 @@ public:
 
     int stat_hp() const     { return hp; }
     int stat_maxhp() const  { return hp_max; }
+    int stealth() const     { return check_stealth(); }
 
     int shield_bonus() const;
     int shield_block_penalty() const;
@@ -608,7 +612,7 @@ public:
     void shield_block_succeeded(actor *foe);
 
     bool wearing_light_armour(bool with_skill = false) const;
-    int  skill(skill_type skill, bool skill_bump = false) const;
+    int  skill(skill_type skill) const;
     int  traps_skill() const;
 
     bool do_shaft();
@@ -720,8 +724,6 @@ int burden_change(void);
 
 int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
-int check_stealth(void);
-
 int player_energy(void);
 
 int player_adjusted_shield_evasion_penalty(int scale);
@@ -758,7 +760,6 @@ int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
 
 bool player_likes_chunks(bool permanently = false);
-bool species_likes_water();
 bool player_likes_water(bool permanently = false);
 
 int player_mutation_level(mutation_type mut);
@@ -802,6 +803,7 @@ int player_evokable_invis();
 int player_spell_levels(void);
 
 int player_sust_abil(bool calc_unid = true);
+int player_warding(bool calc_unid = true);
 
 int player_teleport(bool calc_unid = true);
 
@@ -830,6 +832,7 @@ inline bool player_can_handle_equipment()
 }
 
 void level_change(bool skip_attribute_increase = false);
+void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,
                    species_type species = SP_UNKNOWN);

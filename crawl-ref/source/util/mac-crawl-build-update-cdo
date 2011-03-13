@@ -10,6 +10,7 @@ use strict;
 use warnings;
 
 use Cwd;
+use Getopt::Long;
 
 my $CRAWLDIR;
 
@@ -26,6 +27,12 @@ my $REMOTE_HOST = 'crawl@crawl.develz.org';
 my $SCP_PATH = "$REMOTE_HOST:/var/www/crawl.develz.org/htdocs/trunk";
 my $CURRENTVERSION;
 
+my $SKIP_BUILD;
+my $SCP;
+GetOptions("skip-build" => \$SKIP_BUILD,
+           "scp" => \$SCP)
+  or die "Bad command line\n";
+
 sub main() {
   $CRAWLDIR = discover_crawl_dir();
   goto_dir($CRAWLDIR);
@@ -33,22 +40,39 @@ sub main() {
   my $last_build_version = last_build_version();
   update_git();
   $CURRENTVERSION = current_version();
-  if (!$last_build_version || $last_build_version ne $CURRENTVERSION) {
-    if ($last_build_version) {
-      say("[INFO] Last build: $last_build_version; current: $CURRENTVERSION");
+
+  my $need_build =
+    !$last_build_version || $last_build_version ne $CURRENTVERSION;
+
+  my $did_build;
+  my $did_scp;
+  if ($need_build) {
+    if (!$SKIP_BUILD) {
+      if ($last_build_version) {
+        say("[INFO] Last build: $last_build_version; current: $CURRENTVERSION");
+      } else {
+        say("[INFO] Current version: $CURRENTVERSION");
+      }
+      build_crawl();
+      $did_build = 1;
+      package_build();
+      save_build_version($CURRENTVERSION);
     }
-    else {
-      say("[INFO] Current version: $CURRENTVERSION");
-    }
-    build_crawl();
-    my @binaries = package_build();
+  }
+
+  if ($need_build || $SCP) {
+    my @binaries = find_uploadable_binaries();
     print("Zips: @binaries\n");
     upload_binaries(@binaries);
-
-    save_build_version($CURRENTVERSION);
+    $did_scp = 1;
   }
-  else {
-    say("[INFO] $CURRENTVERSION already built, nothing to do");
+
+  if (!$did_build && !$did_scp) {
+    if (!$need_build) {
+      say("[INFO] $CURRENTVERSION already built, nothing to do");
+    } else {
+      say("[INFO] Nothing to do");
+    }
   }
 }
 
@@ -156,6 +180,13 @@ sub create_app_zips() {
 sub package_build() {
   assert_app_zips_exist();
   return create_app_zips();
+}
+
+sub find_uploadable_binaries() {
+  my $zipglob = sprintf("$ZIPDIR/$ZIPNAMEFMT", "*", "*");
+  my @zips = glob($zipglob);
+  @zips == 2 or die "[ERR] Can't find zips to upload: $zipglob\n";
+  @zips
 }
 
 sub scp($$) {

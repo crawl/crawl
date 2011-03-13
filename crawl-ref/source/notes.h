@@ -48,6 +48,7 @@ enum NOTE_TYPES
     NOTE_SEEN_FEAT,             /* needs: feature seen (string) */
     NOTE_XOM_EFFECT,            /* needs: description (name string) */
     NOTE_XOM_REVIVAL,           /* needs: death cause (string) */
+    NOTE_PARALYSIS,             /* needs: paralysis source (string) */
     NOTE_NUM_TYPES
 };
 

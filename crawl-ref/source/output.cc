@@ -29,6 +29,7 @@
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
@@ -51,6 +52,8 @@
 #ifndef USE_TILE
 #include "directn.h"
 #endif
+
+static std::string _god_powers(bool simple = false);
 
 // Color for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOUR Options.status_caption_colour
@@ -197,12 +200,17 @@ void update_turn_count()
         return;
     }
 
-    cgotoxy(19+6, 8, GOTO_STAT);
+    cgotoxy(19+6, 9, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
     if (Options.show_real_turns)
-       cprintf("%.1f", you.elapsed_time / 10.0);
+    {
+       cprintf("%.1f (%.1f)%s", you.elapsed_time / 10.0,
+               (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
+               // extra spaces to erase excess if previous output was longer
+               "    ");
+    }
     else
         cprintf("%d", you.num_turns);
     textcolor(LIGHTGREY);
@@ -390,24 +398,58 @@ static void _print_stats_wp(int y)
     if (you.weapon())
     {
         const item_def& wpn = *you.weapon();
-        col = wpn.colour;
 
         const std::string prefix = menu_colour_item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
+        else
+            col = LIGHTGREY;
 
         text = wpn.name(DESC_INVENTORY, true, false, true);
-    }
-    else if (you.form == TRAN_BLADE_HANDS)
-    {
-        col = RED;
-        text = "Blade Hands";
     }
     else
     {
         col = LIGHTGREY;
-        text = "Nothing wielded";
+        text = you.has_usable_claws(true) ? "Claws" : "Nothing wielded";
+        if (you.species == SP_CAT)
+            text = "Teeth and claws";
+
+        switch (you.form)
+        {
+            case TRAN_SPIDER:
+                col = LIGHTGREEN;
+                text = "Fangs (venom)";
+                break;
+            case TRAN_BLADE_HANDS:
+                col = RED;
+                text = "Blade " + blade_parts(true);
+                break;
+            case TRAN_STATUE:
+                col = LIGHTGREY;
+                text = you.has_usable_claws(true) ? "Stone claws" : "Stone fists";
+                break;
+            case TRAN_ICE_BEAST:
+                col = WHITE;
+                text = "Ice fists (freeze)";
+                break;
+            case TRAN_DRAGON:
+                col = GREEN;
+                text = "Teeth and claws";
+                break;
+            case TRAN_LICH:
+                col = MAGENTA;
+                text += " (drain)";
+                break;
+            case TRAN_BAT:
+            case TRAN_PIG:
+                col = LIGHTGREY;
+                text = "Teeth";
+                break;
+            case TRAN_NONE:
+            default:
+                break;
+        }
     }
     cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
@@ -428,12 +470,13 @@ static void _print_stats_qv(int y)
     if (q != -1)
     {
         const item_def& quiver = you.inv[q];
-        col = quiver.colour;
         const std::string prefix = menu_colour_item_prefix(quiver);
         const int prefcol =
             menu_colour(quiver.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
+        else
+            col = LIGHTGREY;
         text = quiver.name(DESC_INVENTORY, true);
     }
     else
@@ -493,7 +536,8 @@ static void _get_status_lights(std::vector<status_light>& out)
 #endif
 
     const int statuses[] = {
-        STATUS_BURDEN, STATUS_HUNGER, DUR_PRAYER, DUR_TELEPORT,
+        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+        STATUS_BURDEN, STATUS_HUNGER, DUR_JELLY_PRAYER, DUR_TELEPORT,
         DUR_DEATHS_DOOR, DUR_QUAD_DAMAGE, DUR_DEFLECT_MISSILES,
         DUR_REPEL_MISSILES, STATUS_REGENERATION, DUR_BERSERK,
         DUR_RESIST_POISON, DUR_RESIST_COLD, DUR_RESIST_FIRE,
@@ -506,7 +550,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_STEALTH,
         DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
         DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
-        STATUS_CLINGING, DUR_TORNADO, DUR_LIQUEFYING,
+        STATUS_CLINGING, DUR_TORNADO, DUR_LIQUEFYING, DUR_HEROISM,
+        DUR_FINESSE, DUR_LIFESAVING, DUR_DARKNESS,
     };
 
     status_info inf;
@@ -617,21 +662,9 @@ void print_stats(void)
             _print_stat(static_cast<stat_type>(i), 19, 5 + i);
     you.redraw_stats.init(false);
 
-    int yhack = 0;
-
-    // If Options.show_gold_turns, line 8 is Gold and Turns
-    if (Options.show_gold_turns)
-    {
-        // Increase y-value for all following lines.
-        yhack = 1;
-        cgotoxy(1+6, 8, GOTO_STAT);
-        textcolor(HUD_VALUE_COLOUR);
-        cprintf("%-6d", you.gold);
-    }
-
     if (you.redraw_experience)
     {
-        cgotoxy(1,8 + yhack, GOTO_STAT);
+        cgotoxy(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
 #ifdef DEBUG_DIAGNOSTICS
         cprintf("XP: ");
@@ -639,11 +672,27 @@ void print_stats(void)
         cprintf("%d/%d (%d) ",
                 you.skill_cost_level, you.exp_available, you.experience);
 #else
-        cprintf("Exp Pool: ");
+        cprintf("XL: ");
+        textcolor(HUD_VALUE_COLOUR);
+        cprintf("%2d ", you.experience_level);
+        textcolor(Options.status_caption_colour);
+        cprintf("Exp: ");
         textcolor(_get_exp_pool_colour(you.exp_available));
-        cprintf("%-6d", you.exp_available);
+        cprintf("%-5d", you.exp_available);
 #endif
         you.redraw_experience = false;
+    }
+
+    int yhack = 0;
+
+    // If Options.show_gold_turns, line 9 is Gold and Turns
+    if (Options.show_gold_turns)
+    {
+        // Increase y-value for all following lines.
+        yhack = 1;
+        cgotoxy(1+6, 9, GOTO_STAT);
+        textcolor(HUD_VALUE_COLOUR);
+        cprintf("%-6d", you.gold);
     }
 
     if (you.wield_change)
@@ -718,10 +767,7 @@ static std::string _level_description_string_hud()
 
 void print_stats_level()
 {
-    int ypos = 8;
-    if (Options.show_gold_turns)
-        ypos++;
-    cgotoxy(19, ypos, GOTO_STAT);
+    cgotoxy(19, 8, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOUR);
     cprintf("Place: ");
 
@@ -773,16 +819,29 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
 #endif
 
     // Line 2:
-    // Level N Minotaur [of God]
+    // Minotaur [of God] [Piety]
     textcolor(YELLOW);
     cgotoxy(1, 2, GOTO_STAT);
-    nowrap_eol_cprintf("Level %d %s", you.experience_level,
-                       species_name(you.species).c_str());
+    std::string species = species_name(you.species);
+    nowrap_eol_cprintf("%s", species.c_str());
     if (you.religion != GOD_NO_GOD)
     {
-        nowrap_eol_cprintf(" of %s",
-                           you.religion == GOD_JIYVA ? god_name_jiyva(true).c_str()
-                                                     : god_name(you.religion).c_str());
+        std::string god = " of ";
+        god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
+                                         : god_name(you.religion);
+        nowrap_eol_cprintf("%s", god.c_str());
+
+        std::string piety = _god_powers(true);
+        if (player_under_penance())
+            textcolor(RED);
+        if ((species.length() + god.length() + piety.length() + 1) <= WIDTH)
+            nowrap_eol_cprintf(" %s", piety.c_str());
+        else if ((species.length() + god.length() + piety.length() + 1) == (WIDTH + 1))
+        {
+            //mottled draconian of TSO doesn't fit by one symbol,
+            //so we remove leading space.
+            nowrap_eol_cprintf("%s", piety.c_str());
+        }
     }
 
     clear_to_end_of_line();
@@ -810,10 +869,10 @@ void draw_border(void)
 
     if (Options.show_gold_turns)
     {
-        cgotoxy(1, 8, GOTO_STAT); cprintf("Gold:");
-        cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
+        cgotoxy(1, 9, GOTO_STAT); cprintf("Gold:");
+        cgotoxy(19, 9, GOTO_STAT); cprintf("Turn:");
     }
-    // Line 9 (or 8) is exp pool, Level
+    // Line 8 is exp pool, Level
 }
 
 // ----------------------------------------------------------------------
@@ -1232,10 +1291,13 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int item_idx   = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
             const bool melded    = !player_wearing_slot(e_order[i]);
+            const std::string prefix = menu_colour_item_prefix(item);
+            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
+            const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
             const char* colname  = melded ? "darkgrey"
-                                          : colour_to_str(item.colour).c_str();
+                                          : colour_to_str(col).c_str();
 
             const char equip_char = index_to_letter(item_idx);
 
@@ -1303,13 +1365,10 @@ static std::string _overview_screen_title()
 
     char time_turns[50] = "";
 
-    if (you.real_time != -1)
-    {
-        const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        snprintf(time_turns, sizeof time_turns,
-                 " Turns: %d, Time: %s",
-                 you.num_turns, make_time_string(curr, true).c_str());
-    }
+    handle_real_time();
+    snprintf(time_turns, sizeof time_turns,
+             " Turns: %d, Time: %s",
+             you.num_turns, make_time_string(you.real_time, true).c_str());
 
     int linelength = you.your_name.length() + strlen(title)
                      + strlen(species_job) + strlen(time_turns);
@@ -1360,21 +1419,23 @@ static std::string _wiz_god_powers()
 }
 #endif
 
-static std::string _god_powers()
+static std::string _god_powers(bool simple)
 {
-    std::string godpowers = god_name(you.religion);
+    std::string godpowers = simple ? "" : god_name(you.religion) ;
     if (you.religion == GOD_XOM)
     {
         if (you.gift_timeout == 0)
-            godpowers += " - BORED";
+            godpowers += simple ? "- BORED" : " - BORED";
         else if (you.gift_timeout == 1)
-            godpowers += " - getting BORED";
-        return (colour_string(godpowers, god_colour(you.religion)));
+            godpowers += simple ? "- getting BORED" : " - getting BORED";
+        return (simple ? godpowers
+                       : colour_string(godpowers, god_colour(you.religion)));
     }
     else if (you.religion != GOD_NO_GOD)
     {
         if (player_under_penance())
-            return (colour_string("*" + godpowers, RED));
+            return (simple ? "*"
+                           : colour_string("*" + godpowers, RED));
         else
         {
             // piety rankings
@@ -1384,8 +1445,11 @@ static std::string _god_powers()
 
             // Careful about overflow. We erase some of the god's name
             // if necessary.
-            godpowers = godpowers.substr(0, 20)
-                         + " [" + std::string(prank, '*') + std::string(6 - prank, '.') + "]";
+            std::string asterisks = std::string(prank, '*')
+                                    + std::string(6 - prank, '.');
+            if (simple)
+                return(asterisks);
+            godpowers = godpowers.substr(0, 20) + " [" + asterisks + "]";
             return (colour_string(godpowers, god_colour(you.religion)));
         }
     }
@@ -1534,7 +1598,7 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     cols1.add_formatted(2, buf, false);
 
-    std::string godpowers = _god_powers();
+    std::string godpowers = _god_powers(false);
 #ifdef WIZARD
     if (you.wizard)
         godpowers = _wiz_god_powers();
@@ -1549,7 +1613,7 @@ static std::vector<formatted_string> _get_overview_stats()
     else
         lives[0] = 0;
 
-    int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
+    int xp_needed = (exp_needed(you.experience_level + 1) - you.experience) + 1;
     snprintf(buf, sizeof buf,
              "Exp: %d/%u (%d)%s\n"
              "God: %s\n"
@@ -1573,8 +1637,8 @@ static std::vector<formatted_string> _get_overview_resistances(
 {
     char buf[1000];
 
-    // 3 columns, splits at columns 21, 38
-    column_composer cols(3, 21, 38);
+    // 3 columns, splits at columns 21, 39
+    column_composer cols(3, 21, 39);
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
@@ -1631,7 +1695,7 @@ static std::vector<formatted_string> _get_overview_resistances(
 
 
     const int rinvi = you.can_see_invisible(calc_unid);
-    const int rward = wearing_amulet(AMU_WARDING, calc_unid);
+    const int rward = player_warding(calc_unid);
     const int rcons = player_item_conserve(calc_unid);
     const int rcorr = player_res_corr(calc_unid);
     const int rclar = player_mental_clarity(calc_unid);
@@ -1645,7 +1709,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSpirit.Shd : %s\n"
              ,
              _determine_colour_string(rinvi, 1), _itosym1(rinvi),
-             _determine_colour_string(rward, 1), _itosym1(rward),
+             _determine_colour_string(rward, 2), _itosym2(rward),
              _determine_colour_string(rcons, 1), _itosym1(rcons),
              _determine_colour_string(rcorr, 1), _itosym1(rcorr),
              _determine_colour_string(rclar, 1), _itosym1(rclar),
@@ -1825,9 +1889,9 @@ std::string _status_mut_abilities()
 
     const int statuses[] = {
         DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
-        STATUS_BURDEN,
+        STATUS_BURDEN, STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         DUR_BREATH_WEAPON, STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR,
-        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
+        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_JELLY_PRAYER,
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
         DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
         DUR_INVIS, DUR_CONF, DUR_EXHAUSTED, DUR_MIGHT, DUR_BRILLIANCE,
@@ -1836,7 +1900,8 @@ std::string _status_mut_abilities()
         DUR_MAGIC_SHIELD, DUR_FIRE_SHIELD, DUR_POISONING, STATUS_SICK,
         STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,
         DUR_SURE_BLADE, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
-        DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_TORNADO,
+        DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_TORNADO, DUR_HEROISM, DUR_FINESSE,
+        DUR_LIFESAVING, DUR_DARKNESS,
     };
 
     status_info inf;
@@ -2075,7 +2140,7 @@ std::string _status_mut_abilities()
                 EV_change -= level > 1 ? 1 : 0;
                 break;
             case MUT_IRIDESCENT_SCALES:
-                AC_change += 3*level;
+                AC_change += 2*level+2;
                 break;
             case MUT_LARGE_BONE_PLATES:
                 AC_change += level + 1;
@@ -2100,7 +2165,7 @@ std::string _status_mut_abilities()
                 AC_change += level;
                 break;
             case MUT_THIN_SKELETAL_STRUCTURE:
-                Dex_change += level;
+                Dex_change += 2 * level;
                 Str_change -= level;
                 break;
             case MUT_YELLOW_SCALES:

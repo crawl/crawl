@@ -18,7 +18,7 @@ trove = {}
 function trove.get_trove_item(e, value, base_item)
   -- This function should return a table with the following values:
   --  quantity=0 (number of items, 1 unless consumables)
-  --  base_type="armour" (armour, weapon, potion, scroll, jewellery or book)
+  --  base_type="armour" (armour, weapon, potion, scroll, jewellery, book, or miscellaneous)
   --  sub_type="robe" (short sword, etc)
   --  ego_type="resistance" (or false)
   --  plus1=4 (or false)
@@ -49,28 +49,8 @@ function trove.get_trove_item(e, value, base_item)
     return item
   end
 
-  if you.skill("armour") > 10 and crawl.one_chance_in(4) then
-    return {
-      quantity=1,
-      base_type="armour",
-      sub_type="gold dragon armour",
-      ego_type=false,
-      plus1=3+crawl.random2(3),
-      plus2=false,
-      artefact_name=false
-    }
-  elseif you.skill("dodging") > 10 and crawl.one_chance_in(4) then
-    return {
-      quantity=1,
-      base_type="armour",
-      sub_type="robe",
-      ego_type="resistance",
-      plus1=2,
-      plus2=false,
-      artefact_name=false
-    }
-  end
-
+  -- 1/3 chance of trying to get a shop item
+  if crawl.one_chance_in(3) then
   local floorlist, shoplist
   floorlist, shoplist = dgn.stash_items(value, true)
   if #shoplist ~= 0 then
@@ -106,6 +86,9 @@ function trove.get_trove_item(e, value, base_item)
             item.plus1 = shop_plus1
             item.plus2 = false
           end
+        elseif item.base_type == "book" and string.find(item.sub_type, "manual") then
+            item.plus1 = shop_plus1
+            item.plus2 = false
         else
           item.plus1 = false
           item.plus2 = false
@@ -114,80 +97,53 @@ function trove.get_trove_item(e, value, base_item)
       end
     end
   end
-
-  -- Default to consumables.
-  local d = crawl.roll_dice
-
-  -- Generation chances from makeitem.cc listed as comments; we don't
-  -- have to follow too closely, as we randomise quantities anyway.
-  -- Note that scrolls and potions can come in stacks of 2 or 3.
-
-  local wands = {
-       {wand="healing",          charges=5+d(3)},               -- max 8
-       {wand="hasting",          charges=5+d(3)} }              -- max 8
-
-  local potions = {
-       {potion="healing",        quantity=12+d(4)+d(4)},        -- 23%
-       {potion="heal wounds",    quantity=8+d(3)+d(3)},         -- 11%
-       {potion="might",          quantity=6+d(3)+d(3)},         --  5%
-       {potion="agility",        quantity=6+d(3)+d(3)},         --  5%
-       {potion="brilliance",     quantity=6+d(3)+d(3)},         --  5%
-       {potion="speed",          quantity=3+d(3)+d(2)},         --  5%
-       {potion="resistance",     quantity=3+d(3)+d(2)},         --  2%
-       {potion="levitation",     quantity=3+d(3)+d(2)},         --  2%
-       {potion="magic",          quantity=3+d(3)+d(2)},         --  2%
-       {potion="cure mutation",  quantity=d(2)},                --  1%
-       {potion="gain strength",  quantity=1, weight=1},         -- <1%, single
-       {potion="gain dexterity", quantity=1, weight=1},         -- <1%, single
-       {potion="gain strength",  quantity=1, weight=1},         -- <1%, single
-       {potion="experience",     quantity=1, weight=1} }        -- <1%, single
-
-  local scrolls = {
-       {scroll="identify",           quantity=12+d(4)+d(4)},    -- 18%
-       {scroll="remove curse",       quantity=12+d(3)+d(3)},    -- 13%
-       {scroll="fear",               quantity=6+d(3)},          --  3%
-       {scroll="fog",                quantity=6+d(3)},          --  3%
-       {scroll="magic mapping",      quantity=6+d(3)},          --  3%
-       {scroll="blinking",           quantity=3+d(3)},          --  3%
-       {scroll="recharging",         quantity=3+d(3)},          --  3%
-       {scroll="enchant weapon I",   quantity=3+d(3)+d(2)},     --  3%
-       {scroll="enchant weapon II",  quantity=3+d(3)+d(2)},     --  3%
-       {scroll="enchant armour",     quantity=3+d(3)+d(2)},     --  3%
-       {scroll="enchant weapon III", quantity=d(2), weight=1},  --  1%, single
-       {scroll="vorpalise weapon",   quantity=d(2), weight=1},  --  1%, single
-       {scroll="acquirement",        quantity=d(2), weight=1} } --  1%, single
-
-  if not crawl.one_chance_in(3) then
-    local chosen = util.random_weighted_from('weight', potions)
-    item.base_type = "potion"
-    item.sub_type = chosen.potion
-    if chosen.quantity == nil then
-      item.quantity = 8 + crawl.random2(6)
-    else
-      item.quantity = chosen.quantity
-    end
-  else
-    if crawl.one_chance_in(5) then
-      local chosen = util.random_weighted_from('weight', wands)
-      item.base_type = "wand"
-      item.sub_type = chosen.wand
-      if chosen.charges == nil then
-        item.plus1 = d(5)
-      else
-        item.plus1 = chosen.charges
-      end
-    else
-      local chosen = util.random_weighted_from('weight', scrolls)
-      item.base_type = "scroll"
-      item.sub_type = chosen.scroll
-      if chosen.quantity == nil then
-        item.quantity = 4 + crawl.random2(4)
-      else
-        item.quantity = chosen.quantity
-      end
-    end
   end
 
+  local d = crawl.roll_dice
+
+  -- base is item.base_type, type is item.sub_type, quant is an additional parameter (quantity, charges, etc)
+  -- currently 22% armour, 22% weapon, 44% consumable, 11% miscellaneous (which are not actually taken from the player)
+  local prices = {
+       {base="armour", type="gold dragon armour", quant=1+d(3), weight=1},
+       {base="armour", type="storm dragon armour", quant=1+d(3), weight=1},
+       {base="armour", type="ice dragon armour", quant=2+d(3), weight=2},
+       {base="armour", type="dragon armour", quant=2+d(3), weight=2},
+
+       {base="weapon", type="demon whip", quant=3+d(3), weight=2},
+       {base="weapon", type="demon trident", quant=3+d(3), weight=2},
+       {base="weapon", type="demon blade", quant=3+d(3), weight=2},
+
+       {base="wand", type="healing", quant=7+d(2), weight=1},
+       {base="potion", type="healing", quant=12+d(4)+d(4), weight=1},
+       {base="potion", type="heal wounds", quant=8+d(3)+d(3), weight=2},
+
+       {base="wand", type="hasting", quant=7+d(2), weight=1},
+       {base="potion", type="speed", quant=3+d(3)+d(2), weight=2},
+       {base="scroll", type="blinking", quant=3+d(3), weight=2},
+
+       {base="potion", type="cure mutation", quant=2, weight=1},
+       {base="scroll", type="acquirement", quant=2, weight=1},
+       {base="scroll", type="identify", quant=12+d(4)+d(4), weight=1},
+
+       {base="miscellaneous", type="rune of Zot", quant=3, name="slimy", weight=1},
+       {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal", weight=1},
+       {base="miscellaneous", type="silver horn", weight=1} }
+
+  local chosen = util.random_weighted_from('weight', prices)
+  item.base_type = chosen.base
+  item.sub_type = chosen.type
+  if chosen.base == "armour" or chosen.base == "wand" then
+    item.plus1 = chosen.quant
+  elseif chosen.base == "weapon" then
+    item.plus1 = chosen.quant
+    item.plus2 = chosen.quant
+  elseif chosen.base == "scroll" or chosen.base == "potion" then
+    item.quantity = chosen.quant
+  end
+  if chosen.type == "rune of Zot" then
+    item.plus1 = chosen.quant
+    item.ego_type = chosen.name -- not an actual ego, just the name of the rune
+  end
   return item
 end
 
@@ -196,7 +152,7 @@ function trove.portal(e)
 
 The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered. With his death, the now-uncontrolled portals began moving rapidly from one dimension to the next, stopping only long enough to absorb magical energy.]]
 
-    local item = trove.get_trove_item(e, 800)
+    local item = trove.get_trove_item(e, 1000)
 
     local function stair ()
         return trove_marker  {

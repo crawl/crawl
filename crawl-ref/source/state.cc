@@ -26,9 +26,11 @@
 game_state::game_state()
     : game_crashed(false), game_wants_emergency_save(false),
       mouse_enabled(false), waiting_for_command(false),
-      terminal_resized(false), io_inited(false), need_save(false),
+      terminal_resized(false), last_winch(0), io_inited(false),
+      need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
-      map_stat_gen(false), type(GAME_TYPE_NORMAL), arena_suspended(false),
+      map_stat_gen(false), type(GAME_TYPE_NORMAL),
+      last_type(GAME_TYPE_UNSPECIFIED), arena_suspended(false),
       dump_maps(false), test(false), script(false), build_db(false),
       tests_selected(), show_more_prompt(true),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
@@ -219,7 +221,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             mpr(text, MSGCH_WARN);
         }
 
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_monster_seen(*mon);
 #else
         formatted_string fs(channel_to_colour(MSGCH_WARN));
@@ -461,6 +463,9 @@ void game_state::dump()
     fprintf(stderr, "seen_hups: %d, map_stat_gen: %d, type: %d, "
                   "arena_suspended: %d\n",
             seen_hups, map_stat_gen, type, arena_suspended);
+    if (last_winch)
+        fprintf(stderr, "Last resize was %ld seconds ago.\n",
+                (long int)(time(0) - last_winch));
 
     fprintf(stderr, "\n");
 
@@ -570,6 +575,11 @@ bool game_state::game_is_hints() const
 {
     ASSERT(type < NUM_GAME_TYPE);
     return type == GAME_TYPE_HINTS;
+}
+
+bool game_state::game_is_hints_tutorial() const
+{
+    return (game_is_hints() || game_is_tutorial());
 }
 
 std::string game_state::game_type_name() const

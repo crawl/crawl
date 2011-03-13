@@ -108,6 +108,7 @@ LUARET1(you_taking_stairs, boolean,
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
+LUARET1(you_level_type_tag, string, you.level_type_tag.c_str())
 
 void lua_push_floor_items(lua_State *ls, int link);
 static int you_floor_items(lua_State *ls)
@@ -203,6 +204,8 @@ static const struct luaL_reg you_clib[] =
 
     { "can_smell",         you_can_smell },
     { "has_claws",         you_has_claws },
+
+    { "level_type_tag",    you_level_type_tag },
 
     { NULL, NULL },
 };

@@ -146,6 +146,30 @@ public:
     int power;
 };
 
+// A marker powered by phoenixes!
+class map_phoenix_marker : public map_marker
+{
+public:
+    map_phoenix_marker (const coord_def& pos = coord_def(0, 0),
+                    int tst = 0, int tso = 0, beh_type bh = BEH_HOSTILE,
+                    god_type gd = GOD_NO_GOD, coord_def cp = coord_def(-1, -1)
+                    );
+
+    void write (writer &) const;
+    void read (reader &);
+    map_marker *clone() const;
+    std::string debug_describe() const;
+
+    static map_marker *read(reader &, map_marker_type);
+
+public:
+    int turn_start;
+    int turn_stop;
+    beh_type behaviour;
+    god_type god;
+    coord_def& corpse_pos;
+};
+
 // A marker powered by Lua.
 class map_lua_marker : public map_marker, public dgn_event_listener
 {

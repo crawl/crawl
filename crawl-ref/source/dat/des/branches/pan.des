@@ -450,44 +450,43 @@ epilogue{{
   crawl.mark_milestone("br.enter", "entered the realm of Cerebov.")
 }}
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx....................................................................xx
-xx...............................6.....6..............................xx
-xx..................................6.................................xx
-xx.............................vvv.....vvv............................xx
-xx...vvvvv.....................vvv.v.v.vvv.....................vvvvv..xx
-xx...v|$|v..vv..vv..vv..vv..vv.vvv.....vvv.vv..vv..vv..vv..vv..v|||v..xx
-xx...v$|$vvvvvvvvvvvvvvvvvvvvvvvvvvv.vvvvvvvvvvvvvvvvvvvvvvvvvvv|$|v..xx
-xx...v|$|v.......................vvv.vvv.......................v|||v..xx
-xx...vvvv+.vvvvvvvvvvvvvvvvvvvvv.v.....v.vvvvvvvvvvvvvvvvvvvvv.+vvvv..xx
-xx....vv...vvvvvvvvvvvvvvvvvvvvv+vvv.vvv+vvvvvvvvvvvvvvvvvvvvv...vv...xx
-xx.....v.vvvvvvv........+$$v.......v.v.......v.v.......5..+.$vvv.v....xx
-xx....vv.vvvvvv.....vvvvv$$v.v.v.v.....v.v.v.v.v..v..v..v.v.$||v.vv...xx
-xx....vv.vv||v..vvv..v$$vv+v.................v.+........3.v.$||v.vv...xx
-xx.....v.vv||v.vv1vv.v$$v..v.v.............v.v.v..v..v..v.v.$$|v.v....xx
-xx....vv.vv||v.v...v.v$$vO3v......2...2......v.v.......5..+.$$|v.vv...xx
-xx....vv.vv+vv.......vv+vvvv.v.............v.v.vvvvvvvvvvvvvvvvv.vv...xx
-xx.....v.vv..2.......2..v..+.................+.................v.v....xx
-xx....vv.vv..2.......2..v..v.v.............v.vvvvvvvvvvvvvvvvv.v.vv...xx
-xx....vv.vv.............v..v......2...2......v...v..4..v$|$vvv.v.vv...xx
-xx.....v.vv....v...v....v..v.v.............v.v...+..2..+|$|vvv.v.v....xx
-xx....vv.vv...vv+++vv...v..v.................v.4.v..4..v$|$vvv.v.vv...xx
-xx....vv.vvvvvv.....vvvvv..v.v.v.v.....v.v.v.v.4.vvvvvvvvvvv...v.vv...xx
-xx.....v.vvv...............v.......v.v.......v...vvvvvvvvvvv.vvv.v....xx
-xx....vv...vvvvvvvvvvvvvvvvvvvvv+vvv.vvv+vvvvv...+...........v...vv...xx
-xx...vvvv+.vvvvvvvvvvvvvvvvvvvvv.v.....v.vvvvvvvvvvvvvvvvvvvvv.+vvvv..xx
-xx...v$$$v.......................vvv.vvv.......................v$$$v..xx
-xx...v|||vvvvvvvvvvvvvvvvvvvvvvvvvvv.vvvvvvvvvvvvvvvvvvvvvvvvvvv$|$v..xx
-xx...v$$$v..vv..vv..vv..vv..vv.vvv.....vvv.vv..vv..vv..vv..vv..v$$$v..xx
-xx...vvvvv.....................vvv.v.v.vvv.....................vvvvv..xx
-xx.............................vvv.....vvv............................xx
-xx..................................6.................................xx
-xx...............................6.....6..............................xx
-xx....................................................................xx
-xx.................................@@@................................xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx.....................................................................xx
+xx...............................6.....6...............................xx
+xx..................................6..................................xx
+xx.............................vvv.....vvv.............................xx
+xx...vvvvv.....................vvv.v.v.vvv.....................vvvvv...xx
+xx...v|$|v..vv..vv..vv..vv..vv.vvv.....vvv.vv..vv..vv..vv..vv..v|||v...xx
+xx...v$|$vvvvvvvvvvvvvvvvvvvvvvvvvvv.vvvvvvvvvvvvvvvvvvvvvvvvvvv|$|v...xx
+xx...v|$|v.......................vvv.vvv.......................v|||v...xx
+xx...vvvv+.vvvvvvvvvvvvvvvvvvvvv.v.....v.vvvvvvvvvvvvvvvvvvvvv.+vvvv...xx
+xx....vv...vvvvvvvvvvvvvvvvvvvvv+vvv.vvv+vvvvvvvvvvvvvvvvvvvvv...vv....xx
+xx.....v.vvvvvvv...........v.......v.v.......v.v.....5..5.+..vvv.v.....xx
+xx....vv.vvvvvvv+v+vvvvvvv+v.v.v.v.....v.v.v.v.v..v..v..v.v.$||v.vv....xx
+xx....vv.vv||v.......v$$vv+v.................v.+.........3v.$||v.vv....xx
+xx.....v.vv||v.v.1.v.v$$v6.v.v.............v.v.v..v..v..v.v.$$$v.v.....xx
+xx....vv.vv||v.v...v.v$$vO3v......2...2......v.v.....5..5.+.$$$v.vv....xx
+xx....vv.vv+vv.......vv+vvvv.v.............v.v.vvvvvvvvvvvvvvvvv.vv....xx
+xx.....v.vv..2.......2..v..+.................+.............+...v.v.....xx
+xx....vv.vv..2.......2..v..v.v.............v.vvvvvvvvvvvvvvv...v.vv....xx
+xx....vv.vv.............v..v......2...2......v...v..4..v$|$v.6.v.vv....xx
+xx.....v.vv....v...v....v..v.v.............v.v...+..2..+|$|v.2.v.v.....xx
+xx....vv.vv...vv+++vv...v..v.................v.4.v..4..v$|$v...v.vv....xx
+xx....vv.vvvvvv.....vvvvv..v.v.v.v.....v.v.v.v.4.vvvvvvvvvvv...v.vv....xx
+xx.....v.vvv...............v.......v.v.......v...vvvvvvvvvvv+vvv.v.....xx
+xx....vv...vvvvvvvvvvvvvvvvvvvvv+vvv.vvv+vvvvv...+...........v...vv....xx
+xx...vvvv+.vvvvvvvvvvvvvvvvvvvvv.v.....v.vvvvvvvvvvvvvvvvvvvvv.+vvvv...xx
+xx...v$$$v.......................vvv.vvv.......................v$$$v...xx
+xx...v|||vvvvvvvvvvvvvvvvvvvvvvvvvvv.vvvvvvvvvvvvvvvvvvvvvvvvvvv$|$v...xx
+xx...v$$$v..vv..vv..vv..vv..vv.vvv.....vvv.vv..vv..vv..vv..vv..v$$$v...xx
+xx...vvvvv.....................vvv.v.v.vvv.....................vvvvv...xx
+xx.............................vvv.....vvv.............................xx
+xx..................................6..................................xx
+xx...............................6.....6...............................xx
+xx.....................................................................xx
+xx.................................@@@.................................xx
 ENDMAP
-
 
 ##############################################################################
 # Gloorx Vloq
@@ -965,7 +964,7 @@ MONS:   red devil ; katana good_item ego:distortion
 RTILE:  x = wall_zot_blue / wall_zot_green / wall_zot_cyan / wall_zot_red /\
             wall_zot_magenta / wall_zot_yellow
 # alas, floor tiles are not distinguished from walls enough, commenting out:
-# FTILE: . = floor_lair / floor_dirt / floor_hive / floor_rough_red /\
+# FTILE: . = floor_moss / floor_dirt / floor_hive / floor_rough_red /\
 #            floor_snake / floor_swamp
 KFEAT:  _ = floor
 FTILE:  _ = floor_hall

@@ -9,6 +9,7 @@
 
 #include "tilereg-cmd.h"
 
+#include "abl-show.h"
 #include "cio.h"
 #include "command.h"
 #include "enum.h"
@@ -132,15 +133,15 @@ bool CommandRegion::update_alt_text(std::string &alt)
 
 void CommandRegion::pack_buffers()
 {
-    int i = 0;
+    unsigned int i = 0;
     for (int y = 0; y < my; y++)
     {
-        if (i >= (int)m_items.size())
+        if (i >= m_items.size())
             break;
 
         for (int x = 0; x < mx; x++)
         {
-            if (i >= (int)m_items.size())
+            if (i >= m_items.size())
                 break;
 
             m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
@@ -158,15 +159,21 @@ void CommandRegion::pack_buffers()
     }
 }
 
-static bool _command_not_applicable(const command_type cmd)
+static bool _command_not_applicable(const command_type cmd, bool safe)
 {
     switch (cmd)
     {
+    case CMD_REST:
+    case CMD_EXPLORE:
+    case CMD_INTERLEVEL_TRAVEL:
+        return (!safe);
     case CMD_DISPLAY_RELIGION:
         return (you.religion == GOD_NO_GOD);
     case CMD_PRAY:
         return (you.religion == GOD_NO_GOD
                 && !feat_is_altar(grd(you.pos())));
+    case CMD_USE_ABILITY:
+        return (your_talents(false).empty());
     default:
         return (false);
     }
@@ -180,6 +187,8 @@ void CommandRegion::update()
     if (mx * my == 0)
         return;
 
+    const bool safe = i_feel_safe(false);
+
     for (int idx = 0; idx < n_common_commands; ++idx)
     {
         const command_type cmd = _common_commands[idx];
@@ -189,7 +198,7 @@ void CommandRegion::update()
         desc.idx  = cmd;
 
         // Auto-explore while monsters around etc.
-        if (_command_not_applicable(cmd))
+        if (_command_not_applicable(cmd, safe))
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);

@@ -19,7 +19,6 @@
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
-#include "it_use2.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -33,6 +32,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
@@ -819,6 +819,10 @@ static bool _sif_muna_retribution()
         break;
 
     case 7:
+        if (!forget_spell())
+            mpr("You get a splitting headache.");
+                break;
+
     case 8:
         if (you.magic_points > 0)
         {
@@ -1402,7 +1406,7 @@ static void _god_smites_you(god_type god, const char *message,
         if (death_type != KILLED_BY_BEOGH_SMITING
             && death_type != KILLED_BY_TSO_SMITING)
         {
-            aux = "smote by " + god_name(god);
+            aux = "smitten by " + god_name(god);
         }
 
         // If there's a message, display it before smiting.

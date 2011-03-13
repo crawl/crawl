@@ -354,10 +354,6 @@ SUBST:   v : xvb
 SUBST:   | = | *:2
 SUBST:   $ = $:20 *:4 |:1
 SUBST:   * = * |:3
-MARKER:  U = lua:feat_change_change_flags { \
-            level_flags="!no_tele_control", final_feat="dry_fountain", \
-            group="fountain" \
-         }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -419,10 +415,6 @@ KMONS:   A = deep elf master archer
 KFEAT:   A = |
 KMONS:   B = deep elf blademaster
 KFEAT:   B = |
-MARKER:  U = lua:feat_change_change_flags { \
-            level_flags="!no_tele_control", final_feat="dry_fountain", \
-            group="fountain" \
-         }
 MAP
 cccccccccccccccccccccccccc
 c2ccccccc........ccccccccc
@@ -479,10 +471,6 @@ KITEM:   7 = |
 KFEAT:   6 = 6
 KFEAT:   7 = 7
 LFLAGS:  no_tele_control
-MARKER:  U = lua:feat_change_change_flags { \
-            level_flags="!no_tele_control", final_feat="dry_fountain", \
-            group="fountain" \
-         }
 MAP
 ccccccccccccccccccccccccc
 c2ccccccc.......ccccccccc
@@ -532,10 +520,6 @@ KFEAT:   | = |
 SUBST:   | = | *:2
 SUBST:   $ = $:20 *:4 |:1
 SUBST:   * = * |:3
-MARKER:  U = lua:feat_change_change_flags { \
-            level_flags="!no_tele_control", final_feat="dry_fountain", \
-            group="fountain" \
-         }
 MAP
 xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
@@ -560,7 +544,7 @@ c1.........ccc.........ccc.........2c
 cc.......cccxccc.....cccxccc.......cc
 xccc...cccxxxxxccc.cccxxxxxccc...cccx
 xxxcc+ccxxxxxxxxxc.cxxxxxxxxxcc+ccxxx
-xxxc$*|xxxxxxxxxxc.cxxxxxxxxxc|*$cxxx
+xxxc$*|cxxxxxxxxxc.cxxxxxxxxxc|*$cxxx
 xxxc|*$cxxxxxxxxxc.cxxxxxxxxxc$*|cxxx
 xxxcccccxxxxxxxxxc.cxxxxxxxxxcccccxxx
 xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
@@ -598,10 +582,6 @@ SUBST:   v : xvb
 SUBST:   | = | *:2
 SUBST:   $ = $:20 *:4 |:1
 SUBST:   * = * |:3
-MARKER:  U = lua:feat_change_change_flags { \
-            level_flags="!no_tele_control", final_feat="dry_fountain", \
-            group="fountain" \
-         }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxcccccccccccxxxxxxxxxxx

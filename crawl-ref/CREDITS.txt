@@ -1,9 +1,9 @@
-﻿
-The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Jude Brown,
-Robert Burnham, Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov,
-Janne Lahdenperä, Nat Lanza, Jesse Luehrs, Neil Middleton, Steven Noonan,
-Haran Pilpel, David Ploog, Johanna Ploog, Stefan O'Rear, Charles Otto, David
-Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
+﻿The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski,
+Jude Brown, Robert Burnham, Chris Campbell, Matthew Cline, Paul Du Bois,
+Eino Keskitalo, Vsevolod Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza,
+Jesse Luehrs, Neil Middleton, Steven Noonan, Haran Pilpel, David Ploog,
+Johanna Ploog, Stefan O'Rear, Charles Otto, David Lawrence Ramsey,
+Robert Vollmert, Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -28,37 +28,37 @@ Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Mike Adams                   Shayne Halvorson          Dylan O'Donnell
-Warwick Allison              Sophie Hamilton           Yuuma Oohara
-Juha Arpiainen               Chris Hamons              Malwyn P
-Arxale                       R. Dan Henry              Pedro
-John 'Poor Yurik' Attea      Brendan Hickey            Arlen Phillips
-Roy Axenov                   Benoit Hudson             Lemuel Pitkin
-Max Bane                     Sylvia 'Onia' Hörnke      Derek Ray
-Bill Beher                   Iainuki                   Terence Reeves
-Alexander Beisig             Ilyak                     Remsleep
-Stu Black                    Matthew Ince              Will Rogers
-Erik Inge Bolsø              Mitsuhiro Itakura         David Rose
-Peter Borgmann               Mikko Juola               Risto Saarelma
-Daniel Mark Brownrigg        Jarmo Kielosto            Sebastian Salman
-Trent W. Buck                Kornel Kisielewicz        Brett Scarborough
-Joe Buzzelli                 Daniel Klein              Robert Shimmin
-Terje Bø                     Ilkka Koskela             Sigurd
-Chris Campbell               Vambola Kotkas            Edgar Simo
-Henry Cipolla                Ryan Kusnery              Alex Smith
-Aaron Curtis                 Jukka Kuusisto            Solf
-Denzi                        Raphaël Langella          Michael Spang
-Mike Drinen                  Maciej Lapinski           Johan Strandell
-Kieron Dunbar                Jordan Lewis              Pavel Svinarhuk
-Micha Elsner                 Icy Lich                  Roman Sêk
-Carl-Oscar Erneholm          Markus Maier              Matthew Tadd
-Christopher Evenstar         Arien Malec               William Tanksley, Jr.
-Brett Foster                 Paul Maloney              Jared 'Twinge' Tinney
-Chris Galardi                Andrew Minton             Matt Titus
-Ben Goetter                  Shawn M Moore             Steven Wheeler
-Rob Grant                    Eva Myers                 Thomas Willem
-John Greenberg               Wille Mäntylä             Evan Williams
-GreyKnight                   Erkki Nurmi               Jeremey Wilson
-Joshua Gross                 Mattias Nyberg            Yelve Yakut
-Brian Haase                  nyra                      Zooko
-
+Mike Adams                   Sophie Hamilton           William Parker
+Warwick Allison              Chris Hamons              Pedro
+Juha Arpiainen               R. Dan Henry              Arlen Phillips
+Arxale                       Brendan Hickey            Lemuel Pitkin
+John 'Poor Yurik' Attea      Sylvia 'Onia' Hörnke      Derek Ray
+Roy Axenov                   Benoit Hudson             Terence Reeves
+Max Bane                     Iainuki                   Remsleep
+Bill Beher                   Ilyak                     RjY
+Alexander Beisig             Matthew Ince              Will Rogers
+Stu Black                    Mitsuhiro Itakura         David Rose
+Terje Bø                     Mikko Juola               Risto Saarelma
+Erik Inge Bolsø              Jarmo Kielosto            Sebastian Salman
+Peter Borgmann               Kornel Kisielewicz        Brett Scarborough
+Daniel Mark Brownrigg        Daniel Klein              Roman Sêk
+Trent W. Buck                Ilkka Koskela             Robert Shimmin
+Joe Buzzelli                 Vambola Kotkas            Sigurd
+Henry Cipolla                Ryan Kusnery              Edgar Simo
+Aaron Curtis                 Jukka Kuusisto            Alex Smith
+Denzi                        Maciej Lapinski           Solf
+Mike Drinen                  Jordan Lewis              Michael Spang
+Kieron Dunbar                Icy Lich                  Johan Strandell
+elliptic                     Markus Maier              Pavel Svinarhuk
+Micha Elsner                 Arien Malec               Matthew Tadd
+Carl-Oscar Erneholm          Paul Maloney              William Tanksley, Jr.
+Christopher Evenstar         Wille Mäntylä             Jared 'Twinge' Tinney
+Brett Foster                 Andrew Minton             Matt Titus
+Chris Galardi                Shawn M Moore             Steven Wheeler
+Ben Goetter                  Eva Myers                 Thomas Willem
+Rob Grant                    Erkki Nurmi               Evan Williams
+John Greenberg               Mattias Nyberg            Jeremey Wilson
+GreyKnight                   nyra                      Yelve Yakut
+Joshua Gross                 Dylan O'Donnell           Zooko
+Brian Haase                  Yuuma Oohara
+Shayne Halvorson             Malwyn P

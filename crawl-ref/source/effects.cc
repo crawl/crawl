@@ -40,7 +40,6 @@
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -62,6 +61,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "place.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "player.h"
 #include "religion.h"
@@ -155,8 +155,10 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
 
-    if (hploss)
+    if (hploss && caster != HOLY_WORD_ZIN)
         simple_monster_message(mons, " convulses!");
+    if (hploss && caster == HOLY_WORD_ZIN)
+        simple_monster_message(mons, " is blasted by Zin's holy word!");
 
     mons->hurt(attacker, hploss, BEAM_MISSILE, false);
 
@@ -429,7 +431,7 @@ static bool _conduct_electricity_affects_actor(const bolt& beam,
                                                const actor* victim)
 {
     return (victim->alive() && victim->res_elec() <= 0
-            && !(victim->airborne() || victim->is_wall_clinging()));
+            && victim->ground_level());
 }
 
 static bool _conduct_electricity_damage(bolt &beam, actor* victim,
@@ -889,7 +891,7 @@ void random_uselessness(int scroll_slot)
     }
 }
 
-bool recharge_wand(int item_slot, bool known)
+int recharge_wand(int item_slot, bool known, std::string *pre_msg)
 {
     do
     {
@@ -899,7 +901,7 @@ bool recharge_wand(int item_slot, bool known)
                                             OSEL_RECHARGE, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return (false);
+            return (-1);
 
         item_def &wand = you.inv[ item_slot ];
 
@@ -915,7 +917,7 @@ bool recharge_wand(int item_slot, bool known)
         }
 
         if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
-            return (false);
+            return (0);
 
         int charge_gain = 0;
         if (wand.base_type == OBJ_WANDS)
@@ -939,6 +941,9 @@ bool recharge_wand(int item_slot, bool known)
                          new_charges, new_charges == 1 ? "" : "s");
                 desc = info;
             }
+
+            if (pre_msg)
+                mpr(pre_msg->c_str());
 
             mprf("%s %s for a moment%s.",
                  wand.name(DESC_CAP_YOUR).c_str(),
@@ -981,17 +986,20 @@ bool recharge_wand(int item_slot, bool known)
             }
 
             if (!work)
-                return (false);
+                return (0);
+
+            if (pre_msg)
+                mpr(pre_msg->c_str());
 
             mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
         }
 
         you.wield_change = true;
-        return (true);
+        return (1);
     }
     while (true);
 
-    return (false);
+    return (0);
 }
 
 // Berserking monsters cannot be ordered around.
@@ -1650,8 +1658,9 @@ void change_labyrinth(bool msg)
 
 #ifdef WIZARD
     // Remove old highlighted areas to make place for the new ones.
-    for (rectangle_iterator ri(1); ri; ++ri)
-        env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
+    if (you.wizard)
+        for (rectangle_iterator ri(1); ri; ++ri)
+            env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
 #endif
 
     // How many switches we'll be doing.
@@ -1753,9 +1762,12 @@ void change_labyrinth(bool msg)
                  (int) old_grid, c.x, c.y, (int) grd(p), p.x, p.y);
         }
 #ifdef WIZARD
-        // Highlight the switched grids.
-        env.pgrid(c) |= FPROP_HIGHLIGHT;
-        env.pgrid(p) |= FPROP_HIGHLIGHT;
+        if (you.wizard)
+        {
+            // Highlight the switched grids.
+            env.pgrid(c) |= FPROP_HIGHLIGHT;
+            env.pgrid(p) |= FPROP_HIGHLIGHT;
+        }
 #endif
 
         // Shift blood some of the time.
@@ -2228,6 +2240,9 @@ void handle_time()
         added_contamination++;
 
     if (you.duration[DUR_HASTE] && x_chance_in_y(6, 10))
+        added_contamination++;
+
+    if (you.duration[DUR_FINESSE] && x_chance_in_y(4, 10))
         added_contamination++;
 
     bool mutagenic_randart = false;
@@ -3031,9 +3046,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
                     time_left *= 10;
 
-                    mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, KC_OTHER,
-                                        time_left);
-
+                    mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
                     env.mons[mushroom].update_ench(temp_en);
                 }
 
@@ -3261,15 +3274,11 @@ void recharge_rods(int aut, bool level_only)
     if (!level_only)
     {
         for (int item = 0; item < ENDOFPACK; ++item)
-        {
             _recharge_rod(you.inv[item], aut, true);
-        }
     }
 
     for (int item = 0; item < MAX_ITEMS; ++item)
-    {
         _recharge_rod(mitm[item], aut, false);
-    }
 }
 
 void slime_wall_damage(actor* act, int delay)

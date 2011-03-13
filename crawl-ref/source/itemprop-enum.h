@@ -188,8 +188,7 @@ enum jewellery_type
                                        //   safely with first amulet.
     // RINGS after num_rings are for unique types for artefacts
     //   (no non-artefact version).
-    RING_CHARM,                        //   25
-
+    // Currently none.
     AMU_FIRST_AMULET = 35,
     AMU_RAGE = AMU_FIRST_AMULET,       //   35
     AMU_CLARITY,
@@ -226,7 +225,9 @@ enum misc_item_type
     MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY,
     MISC_EMPTY_EBONY_CASKET,
+#if TAG_MAJOR_VERSION == 32
     MISC_CRYSTAL_BALL_OF_FIXATION,
+#endif
     MISC_DISC_OF_STORMS,
 
     // pure decks
@@ -297,32 +298,34 @@ enum rune_type
 
 enum scroll_type
 {
-    SCR_IDENTIFY,                      //    0
+    SCR_IDENTIFY,
     SCR_TELEPORTATION,
     SCR_FEAR,
     SCR_NOISE,
     SCR_REMOVE_CURSE,
-    SCR_DETECT_CURSE,                  //   5
+    SCR_DETECT_CURSE,
     SCR_SUMMONING,
     SCR_ENCHANT_WEAPON_I,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
-    SCR_RANDOM_USELESSNESS,            //   10
+    SCR_RANDOM_USELESSNESS,
     SCR_CURSE_WEAPON,
     SCR_CURSE_ARMOUR,
     SCR_IMMOLATION,
     SCR_BLINKING,
-    SCR_PAPER,                         //   15
+#if TAG_MAJOR_VERSION == 32
+    SCR_PAPER,
+#endif
     SCR_MAGIC_MAPPING,
     SCR_FOG,
     SCR_ACQUIREMENT,
     SCR_ENCHANT_WEAPON_II,
-    SCR_VORPALISE_WEAPON,              //   20
+    SCR_VORPALISE_WEAPON,
     SCR_RECHARGING,
     SCR_ENCHANT_WEAPON_III,
     SCR_HOLY_WORD,
     SCR_VULNERABILITY,
-    SCR_SILENCE,                       //   25
+    SCR_SILENCE,
     SCR_AMNESIA,
     SCR_CURSE_JEWELLERY,
     NUM_SCROLLS

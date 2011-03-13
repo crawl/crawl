@@ -30,6 +30,7 @@
 #include "env.h"
 #include "format.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "itemprop.h"
 #include "macro.h"
 #include "menu.h"
@@ -275,7 +276,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_PURPLE_DRACONIAN:
-        result += "You can breathe bolts of incandescent energy.\n";
+        result += "You can breathe bolts of energy.\n";
         result += "You can dispel enchantments when you breathe energy.\n";
         scale_type = "rich purple";
         have_any = true;
@@ -360,13 +361,12 @@ formatted_string describe_mutations()
     {
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
-        int ac = 3 + (you.experience_level / 3);
         std::ostringstream num;
-        num << ac;
+        num << 3 + you.experience_level / 3;
         result += "Your " + scale_type + " scales are hard (AC +" + num.str() + ").\n";
-        have_any = true;
 
         result += "Your body does not fit into most forms of armour.\n";
+        have_any = true;
     }
 
     result += "</lightblue>";
@@ -1027,7 +1027,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             || which_mutation == MUT_AGILE || which_mutation == MUT_WEAK
             || which_mutation == MUT_DOPEY || which_mutation == MUT_CLUMSY)
         {
-            if (you.hunger_state > HS_SATIATED)
+            if (you.hunger_state >= HS_SATIATED)
                 rotting = false;
         }
         else
@@ -1211,8 +1211,13 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_HORNS:
-    case MUT_BEAK:
     case MUT_ANTENNAE:
+        // Horns & Antennae 3 removes all headgear.  Same algorithm as with
+        // glove removal.
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
+            remove_one_equip(EQ_HELMET, false, true);
+        // Intentional fall-through
+    case MUT_BEAK:
         // Horns, beaks, and antennae force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
@@ -1240,9 +1245,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
 
-    if (Hints.hints_left && your_talents(false).size() > old_talents)
+    if (crawl_state.game_is_hints()
+        && your_talents(false).size() > old_talents)
+    {
         learned_something_new(HINT_NEW_ABILITY_MUT);
-
+    }
     return (true);
 }
 
@@ -1512,12 +1519,12 @@ static const facet_def _demon_facets[] =
       { 2, 2, 2 } },
     // Regular facets
     { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
-      { 1, 2, 3 } },
+      { 2, 2, 3 } },
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
           MUT_NEGATIVE_ENERGY_RESISTANCE },
-      { 3, 3, 3 } },
+      { 2, 2, 3 } },
     { 3, { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 3, 3, 3 } },
@@ -1526,7 +1533,7 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
       { 1, 2, 2 } },
     { 2, { MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING },
-      { 2, 2, 2 } },
+      { 1, 2, 2 } },
     { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
       { 2, 2, 2 } },
     { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
@@ -1537,10 +1544,8 @@ static const facet_def _demon_facets[] =
       { 2, 2, 2 } },
     { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
       { 2, 2, 2 } },
-    { 1, { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
-      { 1, 1, 1 } },
-    { 1, { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
-      { 1, 1, 1 } },
+    { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
+      { 2, 2, 2 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { 1, 1, 1 } },
@@ -1624,12 +1629,12 @@ static bool _slot_is_unique(const mutation_type mut[],
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
     int NUM_BODY_SLOTS = 1;
-    int ct_of_tier[] = { 0, 2, 3, 1 };
+    int ct_of_tier[] = { 0, 1, 3, 1 };
     // 1 in 10 chance to create a monstrous set
     if (one_chance_in(10))
     {
         NUM_BODY_SLOTS = 3;
-        ct_of_tier[1] = 1;
+        ct_of_tier[1] = 0;
         ct_of_tier[2] = 5;
     }
 
@@ -1640,8 +1645,6 @@ try_again:
     int absfacet = 0;
     int scales = 0;
     int slots_lost = 0;
-    int fire_breath = 0;
-    int poison_breath = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
 
@@ -1673,12 +1676,6 @@ try_again:
                 if (_is_covering(m))
                     ++scales;
 
-                if (i == 0 && m == MUT_SPIT_POISON)
-                    poison_breath++;
-
-                if (i == 0 && m == MUT_BREATHE_FLAMES)
-                    fire_breath++;
-
                 if (m == MUT_COLD_RESISTANCE)
                     ice_elemental++;
 
@@ -1706,13 +1703,7 @@ try_again:
     if (slots_lost != NUM_BODY_SLOTS)
         goto try_again;
 
-    if (fire_breath + poison_breath > 1)
-        goto try_again;
-
     if (ice_elemental + fire_elemental > 1)
-        goto try_again;
-
-    if (fire_breath + ice_elemental > 1)
         goto try_again;
 
     return ret;
@@ -1895,6 +1886,8 @@ bool balance_demonic_guardian()
     return (true);
 }
 
+#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
+
 // Primary function to handle and balance demonic guardians, if the tension
 // is unfavorably high and a guardian was not recently spawned, a new guardian
 // will be made, if tension is below a threshold (determined by the mutations
@@ -1907,20 +1900,25 @@ void check_demonic_guardian()
     if (!balance_demonic_guardian() &&
         you.duration[DUR_DEMONIC_GUARDIAN] == 0)
     {
-        const monster_type disallowed[] = {
-            MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
-            MONS_BLUE_DEATH, MONS_GREEN_DEATH,
-                                            MONS_CACODEMON };
-
         monster_type mt;
 
-        do
+        switch(mutlevel)
         {
-            mt = static_cast<monster_type>(MONS_WHITE_IMP +
-                                            (mutlevel-1)*5 + random2(5));
+        case 1:
+            mt = random_mons(MONS_WHITE_IMP, MONS_LEMURE, MONS_UFETUBUS,
+                             MONS_IRON_IMP, MONS_MIDGE, -1);
+            break;
+        case 2:
+            mt = random_mons(MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_IRON_DEVIL,
+                             MONS_BLUE_DEVIL, MONS_HAIRY_DEVIL, -1);
+            break;
+        case 3:
+            mt = random_mons(MONS_EXECUTIONER, MONS_BALRUG, MONS_ICE_DEVIL,
+                             MONS_SOUL_EATER, MONS_SUN_DEMON, -1);
+            break;
+        default:
+            die("Invalid demonic guardian level: %d", mutlevel);
         }
-        while (std::find(disallowed, disallowed + ARRAYSZ(disallowed), mt)
-                != disallowed + ARRAYSZ(disallowed));
 
         const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
                                                       2, 0, you.pos(),
@@ -1950,15 +1948,34 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
-        const monster* mon = monster_at(*ri);
+        monster* mon = monster_at(*ri);
+        map_cell& cell = env.map_knowledge(*ri);
         if (!mon)
         {
-            map_cell& cell = env.map_knowledge(*ri);
             if (cell.detected_monster())
                 cell.clear_monster();
         }
         else if (!mons_is_firewood(mon))
-            env.map_knowledge(*ri).set_detected_monster(MONS_SENSED);
+        {
+            // [ds] If the PC remembers the correct monster at this
+            // square, don't trample it with MONS_SENSED. Forgetting
+            // legitimate monster memory affects travel, which can
+            // path around mimics correctly only if it can actually
+            // *see* them in monster memory -- overwriting the mimic
+            // with MONS_SENSED causes travel to bounce back and
+            // forth, since every time it leaves LOS of the mimic, the
+            // mimic is forgotten (replaced by MONS_SENSED).
+            const monster_type remembered_monster = cell.monster();
+            if (remembered_monster != mon->type)
+            {
+                if (mons_is_unknown_mimic(mon))
+                    discover_mimic(mon);
+                monster_type mc = MONS_SENSED;
+                if (you.religion == GOD_ASHENZARI && !player_under_penance())
+                    mc = ash_monster_tier(mon);
+                env.map_knowledge(*ri).set_detected_monster(mc);
+            }
+        }
     }
 }
 

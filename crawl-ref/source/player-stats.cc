@@ -352,7 +352,7 @@ static int _dex_modifier()
     result += player_mutation_level(MUT_FLEXIBLE_WEAK)
               - player_mutation_level(MUT_STRONG_STIFF);
 
-    result += player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    result += 2 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     result -= player_mutation_level(MUT_ROUGH_BLACK_SCALES);
 
     // transformations
@@ -611,12 +611,14 @@ void update_stat_zero()
                 you.redraw_stats[s] = true;
             }
         }
+        else // no stat penalty at all
+            continue;
 
         if (you.stat_zero[i] > STAT_DEATH_TURNS)
         {
             ouch(INSTANT_DEATH, NON_MONSTER,
                  _statloss_killtype(s), you.stat_zero_cause[i].c_str());
-         }
+        }
 
         int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
         int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);

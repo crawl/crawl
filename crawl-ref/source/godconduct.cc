@@ -321,10 +321,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
             case GOD_ELYVILON:
                 // Killing is only disapproved of during prayer.
-                if (you.duration[DUR_PRAYER])
+                if (you.duration[DUR_LIFESAVING])
                 {
                     simple_god_message(" does not appreciate your shedding "
-                                       "blood during prayer!");
+                                       "blood when asking for salvation!");
                     retval = true;
                     piety_change = -level;
                     penance = level * 2;
@@ -944,19 +944,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_GLUTTONY:
-            if (you.religion == GOD_CHEIBRIADOS)
-            {
-                if (x_chance_in_y(level, 2000))
-                {
-                    // Honeycomb or greater guarantees piety gain.
-                    // Message in here to avoid grape message spam.
-                    simple_god_message(" encourages your appreciation of food.");
-                    piety_change = 1;
-                }
-                retval = true;
-            }
-            break;
         case DID_DESTROY_SPELLBOOK:
             if (you.religion == GOD_SIF_MUNA)
             {
@@ -980,6 +967,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_NOTHING:
+        case DID_GLUTTONY:                          // previously used for Chei
         case DID_STABBING:                          // unused
         case DID_STIMULANTS:                        // unused
         case DID_EAT_MEAT:                          // unused

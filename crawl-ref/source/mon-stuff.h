@@ -97,7 +97,7 @@ void slimify_monster(monster* mons, bool hostile = false);
 
 bool mon_can_be_slimified(monster* mons);
 
-void corrode_monster(monster* mons);
+void corrode_monster(monster* mons, const actor* evildoer);
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
@@ -106,7 +106,7 @@ void monster_cleanup(monster* mons);
 
 int dismiss_monsters(std::string pattern);
 
-bool curse_an_item(bool decay_potions, bool quiet = false);
+bool curse_an_item(bool destroy_potions, bool quiet = false);
 
 bool is_any_item(const item_def& item);
 void monster_drop_things(
@@ -172,8 +172,8 @@ int mons_natural_regen_rate(monster* mons);
 void mons_relocated(monster* mons);
 void mons_att_changed(monster* mons);
 
-bool can_go_straight(const coord_def& p1, const coord_def& p2,
-                     dungeon_feature_type allowed);
+bool can_go_straight(const monster* mon, const coord_def& p1,
+                     const coord_def& p2, dungeon_feature_type allowed);
 
 bool is_item_jelly_edible(const item_def &item);
 
@@ -212,5 +212,8 @@ void debuff_monster(monster* mons);
 int exp_rate(int killer);
 int count_monsters(monster_type mtyp, bool friendlyOnly);
 int count_allies();
+#if TAG_MAJOR_VERSION == 32
+void note_montiers();
+#endif
 
 #endif

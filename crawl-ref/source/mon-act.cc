@@ -65,9 +65,6 @@
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
-static bool _mon_can_move_to_pos(const monster* mons,
-                                 const coord_def& delta,
-                                 bool just_check = false);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
@@ -225,8 +222,7 @@ static void _swim_or_move_energy(monster* mon)
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-                      && !(mon->airborne() || mon->is_wall_clinging())) ? EUT_SWIM
-                                                                        : EUT_MOVE);
+                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE);
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -380,14 +376,16 @@ static void _set_mons_move_dir(const monster* mons,
         *delta = you.pos() - mons->pos();
     }
     else
-        *delta = mons->target - mons->pos();
+    {
+        *delta = (mons->firing_pos.zero() ? mons->target : mons->firing_pos)
+                 - mons->pos();
+    }
 
     // Move the monster.
     *dir = delta->sgn();
 
     if (mons_is_fleeing(mons) && mons->travel_target != MTRAV_WALL
-        && (!mons->friendly()
-            || mons->target != you.pos()))
+        && (!mons->friendly() || mons->target != you.pos()))
     {
         *dir *= -1;
     }
@@ -437,7 +435,7 @@ static void _fill_good_move(const monster* mons, move_array* good_move)
             }
 
             (*good_move)[count_x][count_y] =
-                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
+                mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
         }
 }
 
@@ -1091,7 +1089,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_DEMON:
-    case SPELL_SUMMON_ELEMENTAL:
     case SPELL_SUMMON_SWARM:
         _rod_fired_pre(mons, nice_spell);
         mons_cast(mons, beem, mzap, false);
@@ -1884,9 +1881,9 @@ void handle_monster_move(monster* mons)
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
-    if (liquefied(mons->pos()) && !mons->airborne() && !mons->is_insubstantial())
+    if (liquefied(mons->pos()) && mons->ground_level() && !mons->is_insubstantial())
     {
-        mon_enchant me = mon_enchant(ENCH_SLOW, 0, KC_OTHER, 20);
+        mon_enchant me = mon_enchant(ENCH_SLOW, 0, 0, 20);
         if (mons->has_ench(ENCH_SLOW))
             mons->update_ench(me);
         else
@@ -2062,6 +2059,13 @@ void handle_monster_move(monster* mons)
             || mons->type == MONS_SIXFIRHY // these move only 4 of 12 turns
                && ++mons->number / 4 % 3 != 2)  // but are not helpless
         {
+            mons->speed_increment -= non_move_energy;
+            continue;
+        }
+
+        if (mons->has_ench(ENCH_DAZED) && one_chance_in(5))
+        {
+            simple_monster_message(mons, " is lost in a daze.");
             mons->speed_increment -= non_move_energy;
             continue;
         }
@@ -2355,6 +2359,7 @@ void handle_monster_move(monster* mons)
         }
         you.update_beholder(mons);
         you.update_fearmonger(mons);
+        mons->check_clinging(true);
 
         // Reevaluate behaviour, since the monster's surroundings have
         // changed (it may have moved, or died for that matter).  Don't
@@ -2386,7 +2391,7 @@ void handle_monster_move(monster* mons)
 // This is the routine that controls monster AI.
 //
 //---------------------------------------------------------------
-void handle_monsters()
+void handle_monsters(bool with_noise)
 {
     // Keep track of monsters that have already moved and don't allow
     // them to move again.
@@ -2414,6 +2419,10 @@ void handle_monsters()
             break;
         }
     }
+
+    // Process noises now (before clearing the sleep flag).
+    if (with_noise)
+        apply_noises();
 
     // Clear one-turn deep sleep flag.
     // XXX: With the current handling, it would be cleaner to
@@ -2875,10 +2884,10 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
             // If a monster still gets stuck in a corridor it will usually be
             // because it has less than half its maximum hp.
 
-            if ((_mon_can_move_to_pos(mons, coord_def(x-1, y), true)
-                 || _mon_can_move_to_pos(mons, coord_def(x+1,y), true))
-                && (_mon_can_move_to_pos(mons, coord_def(x,y-1), true)
-                    || _mon_can_move_to_pos(mons, coord_def(x,y+1), true)))
+            if ((mon_can_move_to_pos(mons, coord_def(x-1, y), true)
+                 || mon_can_move_to_pos(mons, coord_def(x+1,y), true))
+                && (mon_can_move_to_pos(mons, coord_def(x,y-1), true)
+                    || mon_can_move_to_pos(mons, coord_def(x,y+1), true)))
             {
                 return (false);
             }
@@ -2979,15 +2988,10 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
     dungeon_events.fire_position_event(DET_DOOR_OPENED, pos);
 }
 
-static bool _habitat_okay(const monster* mons, dungeon_feature_type targ)
-{
-    return (monster_habitable_grid(mons, targ));
-}
-
 static bool _no_habitable_adjacent_grids(const monster* mon)
 {
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-        if (_habitat_okay(mon, grd(*ai)))
+        if (monster_habitable_grid(mon, grd(*ai)))
             return (false);
 
     return (true);
@@ -3100,8 +3104,8 @@ static bool _check_slime_walls(const monster *mon,
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
-static bool _mon_can_move_to_pos(const monster* mons,
-                                 const coord_def& delta, bool just_check)
+bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
+                         bool just_check)
 {
     const coord_def targ = mons->pos() + delta;
 
@@ -3137,11 +3141,7 @@ static bool _mon_can_move_to_pos(const monster* mons,
         return (false);
     }
 
-    // Effectively slows down monster movement across water.
-    // Fire elementals can't cross at all.
     bool no_water = false;
-    if (mons->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
-        no_water = true;
 
     const int targ_cloud_num = env.cgrid(targ);
     if (mons_avoids_cloud(mons, targ_cloud_num))
@@ -3159,15 +3159,11 @@ static bool _mon_can_move_to_pos(const monster* mons,
         // Don't burrow out of bounds.
         if (!in_bounds(targ))
             return (false);
-
-        // Don't burrow at an angle (legacy behaviour).
-        if (delta.x != 0 && delta.y != 0)
-            return (false);
     }
     else if (no_water && feat_is_water(target_grid))
         return (false);
     else if (!mons_can_traverse(mons, targ, false)
-             && !_habitat_okay(mons, target_grid))
+             && !monster_habitable_grid(mons, target_grid))
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.
@@ -3196,10 +3192,6 @@ static bool _mon_can_move_to_pos(const monster* mons,
             return (false);
         }
     }
-
-    // Water elementals avoid fire and heat.
-    if (mons->type == MONS_WATER_ELEMENTAL && target_grid == DNGN_LAVA)
-        return (false);
 
     // Fire elementals avoid water and cold.
     if (mons->type == MONS_FIRE_ELEMENTAL && feat_is_watery(target_grid))
@@ -3282,7 +3274,9 @@ static bool _mon_can_move_to_pos(const monster* mons,
 static void _find_good_alternate_move(monster* mons,
                                       const move_array& good_move)
 {
-    const int current_distance = distance(mons->pos(), mons->target);
+    const coord_def target = mons->firing_pos.zero() ? mons->target
+                                                     : mons->firing_pos;
+    const int current_distance = distance(mons->pos(), target);
 
     int dir = _compass_idx(mmov);
 
@@ -3305,14 +3299,9 @@ static void _find_good_alternate_move(monster* mons,
         {
             const int newdir = (dir + 8 + mod) % 8;
             if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
-            {
-                dist[i] = distance(mons->pos()+mon_compass[newdir],
-                                   mons->target);
-            }
+                dist[i] = distance(mons->pos()+mon_compass[newdir], target);
             else
-            {
                 dist[i] = (mons_is_fleeing(mons)) ? (-FAR_AWAY) : FAR_AWAY;
-            }
         }
 
         const int dir0 = ((dir + 8 + sdir) % 8);
@@ -3400,8 +3389,11 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     const coord_def c = mon->pos();
     const coord_def n = mon->pos() + delta;
 
-    if (!_habitat_okay(mon, grd(n)) || !_habitat_okay(m2, grd(c)))
+    if (!monster_habitable_grid(mon, grd(n))
+        || !monster_habitable_grid(m2, grd(c)))
+    {
         return (false);
+    }
 
     // Okay, do the swap!
     _swim_or_move_energy(mon);
@@ -3477,7 +3469,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     // this message to avoid confusion.
     if (mons->seen_context == _just_seen && !you.see_cell(f))
         simple_monster_message(mons, " moves out of view.");
-    else if (Hints.hints_left && (mons->flags & MF_WAS_IN_VIEW)
+    else if (crawl_state.game_is_hints() && (mons->flags & MF_WAS_IN_VIEW)
              && !you.see_cell(f))
     {
         learned_something_new(HINT_MONSTER_LEFT_LOS, mons->pos());
@@ -3673,7 +3665,7 @@ static bool _monster_move(monster* mons)
                 deep_water_available = true;
 
             good_move[count_x][count_y] =
-                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
+                mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
         }
 
     // Now we know where we _can_ move.
@@ -3872,6 +3864,12 @@ static bool _monster_move(monster* mons)
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();
+        if (!mons->is_patrolling() )
+        {
+            mons->travel_target = MTRAV_NONE;
+            mons->travel_path.clear();
+        }
+        mons->firing_pos.reset();
     }
 
     return (ret);

@@ -296,7 +296,7 @@ ENDMAP
 NAME:  tombwall_bobbens
 TAGS:  allow_dup
 DEPTH: Crypt
-MONS:  w:50 small zombie / w:100 large zombie / skeletal warrior /  ghoul / \
+MONS:  w:50 small zombie / w:100 large zombie / skeletal warrior / ghoul / \
        large abomination / small abomination / necrophage / rotting hulk / \
        w:50 small skeleton / w:100 large skeleton / w:30 nothing
 MAP
@@ -625,9 +625,9 @@ KFEAT:  H = .
 KMONS:  H = hell knight
 KFEAT:  M = .
 KMONS:  M = large zombie / small zombie / large skeleton / small skeleton / \
-            ghoul / necrophage
+            necrophage
 KFEAT:  h = .
-KMONS:  h = titan zombie/dragon zombie/golden dragon zombie
+KMONS:  h = titan zombie/dragon zombie/golden dragon zombie/ghoul
 # red metal walls
 COLOUR: = = red
 COLOUR: r = red
@@ -714,7 +714,7 @@ TAGS:   no_item_gen no_rotate
 PLACE:  Crypt:5
 MARKER: m = lua:portal_desc {wall_phase = 1}
 SUBST:  m : mnn
-MONS:   lich / ancient lich
+MONS:   patrolling lich / patrolling ancient lich
 MONS:   bone dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
 WEIGHT: 10

@@ -184,10 +184,33 @@ ice1
 ice2
 ice3
 
+%weight 16
 lair0 FLOOR_LAIR
 lair1
 lair2
 lair3
+lair4
+%weight 8
+lair0b
+lair1b
+lair2b
+lair3b
+lair4b
+%weight 6
+lair5
+lair6
+%weight 3
+lair5b
+lair6b
+%weight 2
+lair7
+%weight 1
+lair7b
+
+moss0 FLOOR_MOSS
+moss1
+moss2
+moss3
 
 bog_green0 FLOOR_SLIME
 bog_green1

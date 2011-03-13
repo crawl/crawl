@@ -17,7 +17,6 @@
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
-#include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -29,6 +28,7 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "player-equip.h"
 #include "shout.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -377,13 +377,10 @@ void cast_toxic_radiance(bool non_player)
             // this check should not be !mons->invisible().
             if (!mi->has_ench(ENCH_INVIS))
             {
-                kill_category kc = KC_YOU;
-                if (non_player)
-                    kc = KC_OTHER;
-                bool affected =
-                    poison_monster(*mi, kc, 1, false, false);
+                const actor* agent = non_player ? 0 : &you;
+                bool affected = poison_monster(*mi, agent, 1, false, false);
 
-                if (coinflip() && poison_monster(*mi, kc, false, false))
+                if (coinflip() && poison_monster(*mi, agent, false, false))
                     affected = true;
 
                 if (affected)
@@ -508,8 +505,9 @@ bool vampiric_drain(int pow, monster* mons)
 {
     if (mons == NULL || mons->submerged())
     {
-        mpr("There isn't anything there!");
-        // Cost to disallow freely locating invisible monsters.
+        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
+        // Cost to disallow freely locating invisible/submerged
+        // monsters.
         return (true);
     }
 
@@ -587,15 +585,15 @@ bool vampiric_drain(int pow, monster* mons)
     return (true);
 }
 
-bool burn_freeze(int pow, beam_type flavour, monster* mons)
+bool cast_freeze(int pow, monster* mons)
 {
     pow = std::min(25, pow);
 
     if (mons == NULL || mons->submerged())
     {
-        mpr("There isn't anything close enough!");
+        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // If there's no monster there, you still pay the costs in
-        // order to prevent locating invisible monsters.
+        // order to prevent locating invisible/submerged monsters.
         return (true);
     }
 
@@ -608,13 +606,7 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("You %s %s.",
-             (flavour == BEAM_FIRE)        ? "burn" :
-             (flavour == BEAM_COLD)        ? "freeze" :
-             (flavour == BEAM_MISSILE)     ? "crush" :
-             (flavour == BEAM_ELECTRICITY) ? "zap"
-                                           : "______",
-             mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You freeze %s.", mons->name(DESC_NOCAP_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
     }
@@ -625,7 +617,7 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
         return (false);
 
     bolt beam;
-    beam.flavour = flavour;
+    beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
     const int orig_hurted = roll_dice(1, 3 + pow / 3);
@@ -634,17 +626,14 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
 
     if (mons->alive())
     {
-        mons->expose_to_element(flavour, orig_hurted);
+        mons->expose_to_element(BEAM_COLD, orig_hurted);
         print_wounds(mons);
 
-        if (flavour == BEAM_COLD)
+        const int cold_res = mons->res_cold();
+        if (cold_res <= 0)
         {
-            const int cold_res = mons->res_cold();
-            if (cold_res <= 0)
-            {
-                const int stun = (1 - cold_res) * random2(2 + pow/5);
-                mons->speed_increment -= stun;
-            }
+            const int stun = (1 - cold_res) * random2(2 + pow/5);
+            mons->speed_increment -= stun;
         }
     }
 
@@ -714,16 +703,6 @@ int airstrike(int pow, const dist &beam)
 
     return (success);
 }
-
-enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
-{
-    DEBRIS_METAL,           //    0
-    DEBRIS_ROCK,
-    DEBRIS_STONE,
-    DEBRIS_WOOD,
-    DEBRIS_CRYSTAL,
-    NUM_DEBRIS
-};          // jmf: ...and I'll actually implement the items Real Soon Now...
 
 // Just to avoid typing this over and over.
 // Returns true if monster died. -- bwr
@@ -1058,7 +1037,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
     return strength;
 }
 
-static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
+static int _ignite_poison_objects(coord_def where, int pow, int, actor *actor)
 {
     UNUSED(pow);
 
@@ -1072,13 +1051,13 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
     if (strength > 0)
     {
         place_cloud(CLOUD_FIRE, where,
-                    strength + roll_dice(3, strength / 4), &you);
+                    strength + roll_dice(3, strength / 4), actor);
     }
 
     return (strength);
 }
 
-static int _ignite_poison_clouds(coord_def where, int pow, int, actor *)
+static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
 {
     UNUSED(pow);
 
@@ -1097,24 +1076,28 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *)
             return false;
 
         cloud.type = CLOUD_FIRE;
-        cloud.whose = KC_YOU;
-        cloud.killer = KILL_YOU_MISSILE;
-        cloud.source = MID_PLAYER;
+        cloud.whose = actor->kill_alignment();
+        cloud.killer = actor->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+        cloud.source = actor->mid;
         return true;
     }
 
     return false;
 }
 
-static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
+static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 {
     bolt beam;
     beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
 
     dice_def dam_dice(0, 5 + pow/7);  // Dice added below if applicable.
 
+    // If a monster casts Ignite Poison, it can't hit itself.
+    // This doesn't apply to the other functions: it can ignite
+    // clouds or items where it's standing!
+
     monster* mon = monster_at(where);
-    if (mon == NULL)
+    if (mon == NULL || mon == actor)
         return (0);
 
     // Monsters which have poison corpses or poisonous attacks.
@@ -1141,11 +1124,21 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
 
         dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
 
-        if (!_player_hurt_monster(*mon, damage))
+        mon->hurt(actor, damage);
+
+        if (mon->alive())
         {
+            behaviour_event(mon, ME_WHACK, actor->mindex());
+
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);
-            behaviour_event(mon, ME_ALERT);
+            print_wounds(mon);
+        }
+        else
+        {
+            monster_die(mon,
+                        actor->is_player() ? KILL_YOU : KILL_MON,
+                        actor->mindex());
         }
 
         return (1);
@@ -1154,9 +1147,15 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
     return (0);
 }
 
-void cast_ignite_poison(int pow)
+// The self effects of Ignite Poison are beautiful and
+// shouldn't be thrown out. Let's save them for a monster
+// version of the spell!
+
+static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
 {
-    flash_view(RED);
+
+    if (actor->is_player() || where != you.pos())
+        return (0);
 
     int totalstrength = 0;
 
@@ -1175,7 +1174,7 @@ void cast_ignite_poison(int pow)
             CLOUD_FIRE, you.pos(),
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) +
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) + 1,
-            &you);
+            actor);
     }
 
     int damage = 0;
@@ -1210,7 +1209,8 @@ void cast_ignite_poison(int pow)
         else
             mpr("The poison in your system burns!");
 
-        ouch(damage, NON_MONSTER, KILLED_BY_TARGETING);
+        ouch(damage, actor->as_monster()->mindex(), KILLED_BY_MONSTER,
+             actor->as_monster()->name(DESC_NOCAP_A).c_str());
 
         if (you.duration[DUR_POISONING] > 0)
         {
@@ -1219,9 +1219,22 @@ void cast_ignite_poison(int pow)
         }
     }
 
-    apply_area_visible(_ignite_poison_clouds, pow);
-    apply_area_visible(_ignite_poison_objects, pow);
-    apply_area_visible(_ignite_poison_monsters, pow);
+    if (damage || totalstrength)
+        return (1);
+    else
+        return (0);
+}
+
+void cast_ignite_poison(int pow)
+{
+    flash_view(RED);
+
+    apply_area_visible(_ignite_poison_clouds, pow, true, &you);
+    apply_area_visible(_ignite_poison_objects, pow, true, &you);
+    apply_area_visible(_ignite_poison_monsters, pow, true, &you);
+// Not currently relevant - nothing will ever happen as long as
+// the actor is &you.
+    apply_area_visible(_ignite_poison_player, pow, false, &you);
 
 #ifndef USE_TILE
     delay(100); // show a brief flash
@@ -1319,6 +1332,8 @@ static int _disperse_monster(monster* mon, int pow)
 {
     if (!mon)
         return (0);
+    if (mons_is_projectile(mon->type))
+        return (0);
 
     if (mons_genus(mon->type) == MONS_BLINK_FROG)
     {
@@ -1384,7 +1399,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     beam.aux_source.clear();
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
-    beam.damage = dice_def(0, 5 + pow / 10);
+    beam.damage = dice_def(0, 5 + pow / 5);
 
     const dungeon_feature_type grid = grd(spd.target);
 

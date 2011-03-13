@@ -25,11 +25,12 @@ struct packed_cell
     bool is_haloed;
     bool is_moldy;
     bool is_sanctuary;
+    bool is_liquefied;
     bool swamp_tree_water;
 
     packed_cell() : num_dngn_overlay(0), is_bloody(false), is_silenced(false),
                     is_haloed(false), is_moldy(false), is_sanctuary(false),
-                    swamp_tree_water (false) {}
+                    is_liquefied(false), swamp_tree_water (false) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
@@ -38,6 +39,7 @@ struct packed_cell
                                         is_haloed(c->is_haloed),
                                         is_moldy(c->is_moldy),
                                         is_sanctuary(c->is_sanctuary),
+                                        is_liquefied(c->is_liquefied),
                                         swamp_tree_water(c->swamp_tree_water) {}
 
     void clear();

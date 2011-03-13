@@ -441,8 +441,8 @@ This example is from sewer.des:
 
 {{
 function sewer_random_monster_list(e)
-  e.set_random_mon_list("giant bat w:20 / giant newt w:20 / small snake / \
-                         ooze / worm / snake / giant mosquito w:15")
+  e.set_random_mon_list("megabat w:20 / giant newt w:20 / small snake / \
+                         ooze / worm / snake / vampire mosquito w:15")
 end
 }}
 
@@ -509,11 +509,11 @@ anonymous functions (an anonymous function that takes no parameters is
 called a Lua chunk):
 
 function mapchunk()
-  map(".....")
+  map("1...1")
   map(".www.")
   map(".wGw.")
   map(".www.")
-  map(".....")
+  map("1...1")
 end
 
 function main()
