@@ -954,6 +954,7 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
     TextItem* tmp = new NoSelectTextItem();
     std::string text;
     tmp->set_text(name);
+    tmp->set_fg_colour(WHITE);
     coord_def min_coord(2 + position.x, 3 + position.y);
     coord_def max_coord(min_coord.x + width, min_coord.y + 1);
     tmp->set_bounds(min_coord, max_coord);
@@ -1024,33 +1025,33 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     job_group jobs_order[] =
     {
         {
-            "WARRIOR:",
+            "Warriors",
             coord_def(0, 0), 15,
             {JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN,
              JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
-            "ADVENTURER:",
+            "Adventurers",
             coord_def(0, 7), 15,
             {JOB_ARTIFICER, JOB_WANDERER, JOB_UNKNOWN, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
-            "ZEALOT:",
+            "Zealots",
             coord_def(15, 0), 20,
             {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
              JOB_DEATH_KNIGHT, JOB_PRIEST, JOB_HEALER, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
-            "BATTLEMAGE:",
+            "Battlemages",
             coord_def(35, 0), 21,
             {JOB_CRUSADER, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_STALKER,
              JOB_ARCANE_MARKSMAN, JOB_WARPER, JOB_UNKNOWN, JOB_UNKNOWN,
              JOB_UNKNOWN}
         },
         {
-            "MAGE:",
+            "Mages",
             coord_def(56, 0), 23,
             {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
              JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
