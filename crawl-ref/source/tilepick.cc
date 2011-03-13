@@ -817,6 +817,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_VAMPIRE_BAT;
     case MONS_BUTTERFLY:
         return _mon_mod(TILEP_MONS_BUTTERFLY, colour);
+    case MONS_FIRE_BAT:
+        return TILEP_MONS_FIRE_BAT;
     case MONS_RAVEN:
         return TILEP_MONS_RAVEN;
 
