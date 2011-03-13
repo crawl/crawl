@@ -1025,33 +1025,33 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     job_group jobs_order[] =
     {
         {
-            "Warriors",
+            "Warrior",
             coord_def(0, 0), 15,
             {JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN,
              JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
-            "Adventurers",
+            "Adventurer",
             coord_def(0, 7), 15,
             {JOB_ARTIFICER, JOB_WANDERER, JOB_UNKNOWN, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
-            "Zealots",
+            "Zealot",
             coord_def(15, 0), 20,
             {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
              JOB_DEATH_KNIGHT, JOB_PRIEST, JOB_HEALER, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
-            "Battlemages",
+            "Battlemage",
             coord_def(35, 0), 21,
             {JOB_CRUSADER, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_STALKER,
              JOB_ARCANE_MARKSMAN, JOB_WARPER, JOB_UNKNOWN, JOB_UNKNOWN,
              JOB_UNKNOWN}
         },
         {
-            "Mages",
+            "Mage",
             coord_def(56, 0), 23,
             {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
              JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
