@@ -475,3 +475,40 @@ int strwidth(const std::string &s)
 {
     return strwidth(s.c_str());
 }
+
+int wclen(ucs_t c)
+{
+    char dummy[4];
+    return wctoutf8(dummy, c);
+}
+
+char *prev_glyph(char *s, char *start)
+{
+    ucs_t c;
+    do
+    {
+        // Find the start of the previous code point.
+        do
+            if (--s < start)
+                return 0;
+        while ((*s & 0xc0) == 0x80);
+        // If a combining one, continue.
+        utf8towc(&c, s);
+    } while (!wcwidth(c));
+    return s;
+}
+
+char *next_glyph(char *s)
+{
+    char *s_cur;
+    ucs_t c;
+    // Skip at least one character.
+    s += utf8towc(&c, s);
+    if (!c)
+        return 0;
+    do
+        s += utf8towc(&c, s_cur = s);
+        // And any combining ones after it.
+    while (c && !wcwidth(c));
+    return s_cur;
+}
