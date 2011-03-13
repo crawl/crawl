@@ -3578,15 +3578,6 @@ int check_stealth(void)
     if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
         stealth += 20;
 
-    if (boots)
-    {
-        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
-            stealth += 50;
-
-        if (get_equip_race(*boots) == ISFLAG_ELVEN)
-            stealth += 20;
-    }
-
     if (you.duration[DUR_STEALTH])
         stealth += 80;
 
@@ -3597,6 +3588,7 @@ int check_stealth(void)
 
     if (you.airborne())
         stealth += 10;
+
     else if (you.in_water())
     {
         // Merfolk can sneak up on monsters underwater -- bwr
@@ -3605,6 +3597,17 @@ int check_stealth(void)
         else if (!you.can_swim() && !you.extra_balanced())
             stealth /= 2;       // splashy-splashy
     }
+
+    // No stealth bonus from boots if you're airborne or in water
+    else if (boots)
+    {
+        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
+            stealth += 50;
+
+        if (get_equip_race(*boots) == ISFLAG_ELVEN)
+            stealth += 20;
+    }
+
     else if (you.species == SP_CAT && !you.form)
         stealth += 20;  // paws
 
