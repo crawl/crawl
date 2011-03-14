@@ -555,6 +555,7 @@ i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 i-immolation SCR_IMMOLATION
 i-blinking SCR_BLINKING
+item/scroll/blank_paper SCR_PAPER
 i-magic_mapping SCR_MAGIC_MAPPING
 i-fog SCR_FOG
 i-acquirement SCR_ACQUIREMENT
@@ -843,6 +844,7 @@ misc_orb2
 #OBJ_MISCELLANY
 misc_bottle MISC_BOTTLED_EFREET
 misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY
+misc_crystal MISC_CRYSTAL_BALL_OF_FIXATION
 misc_crystal MISC_CRYSTAL_BALL_OF_SEEING UNSEEN_MISC
 misc_fan MISC_AIR_ELEMENTAL_FAN
 misc_lamp MISC_LAMP_OF_FIRE
