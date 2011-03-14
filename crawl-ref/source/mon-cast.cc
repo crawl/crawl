@@ -1084,6 +1084,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_LEDAS_LIQUEFACTION:
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
+    case SPELL_FIRE_SUMMON:
         return (true);
     default:
         if (check_validity)
@@ -3499,6 +3500,30 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
     case SPELL_SUMMON_HYDRA:
         cast_summon_hydra(mons, mons->hit_dice * 5, god);
+        return;
+    case SPELL_FIRE_SUMMON:
+        if (_mons_abjured(mons, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2) + random2(mons->hit_dice / 7 + 1);
+
+        duration = std::min(2 + mons->hit_dice / 10, 6);
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            const monster_type mon = static_cast<monster_type>(
+                random_choose_weighted(100, MONS_EFREET,
+                                        80, MONS_SUN_DEMON,
+                                        60, MONS_BALRUG,
+                                        40, MONS_HELLION,
+                                        20, MONS_PIT_FIEND,
+                                        10, MONS_FIEND,
+                                        0));
+
+            create_monster(
+                mgen_data(mon, SAME_ATTITUDE(mons), mons, duration,
+                          spell_cast, mons->pos(), mons->foe, 0, god));
+        }
         return;
     }
 

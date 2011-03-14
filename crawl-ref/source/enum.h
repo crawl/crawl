@@ -3074,6 +3074,7 @@ enum spell_type
     SPELL_DARKNESS,
     SPELL_MESMERISE,
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
+    SPELL_FIRE_SUMMON,
 
     NUM_SPELLS
 };
