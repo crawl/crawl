@@ -294,9 +294,6 @@ void handle_monster_shouts(monster* mons, bool force)
 
         if (channel != MSGCH_TALK_VISUAL || you.can_see(mons))
         {
-            msg = do_mon_str_replacements(msg, mons, s_type);
-            msg::streams(channel) << msg << std::endl;
-
             // Otherwise it can move away with no feedback.
             if (you.can_see(mons))
             {
@@ -304,6 +301,9 @@ void handle_monster_shouts(monster* mons, bool force)
                     handle_seen_interrupt(mons);
                 seen_monster(mons);
             }
+
+            msg = do_mon_str_replacements(msg, mons, s_type);
+            msg::streams(channel) << msg << std::endl;
         }
     }
 

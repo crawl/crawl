@@ -1673,8 +1673,7 @@ bool interrupt_activity(activity_interrupt_type ai,
         // auto-exploring/travelling.
         if (ai == AI_SEE_MONSTER)
         {
-            if (!you.turn_is_over)
-                _monster_warning(ai, at, DELAY_NOT_DELAYED, msgs_buf);
+            _monster_warning(ai, at, DELAY_NOT_DELAYED, msgs_buf);
             return true;
         }
         return (false);
