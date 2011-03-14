@@ -1818,9 +1818,11 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_stoneskin(powc);
         break;
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_STONEMAIL:
-        stonemail(powc);
-        break;
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_CONDENSATION_SHIELD:
         cast_condensation_shield(powc);

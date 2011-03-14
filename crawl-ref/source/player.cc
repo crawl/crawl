@@ -2253,9 +2253,6 @@ int player_evasion_bonuses(ev_ignore_type evit)
     if (you.duration[DUR_AGILITY])
         evbonus += 5;
 
-    if (you.duration[DUR_STONEMAIL])
-        evbonus -= 2;
-
     evbonus += player_equip(EQ_RINGS_PLUS, RING_EVASION);
 
     if (player_equip_ego_type(EQ_WEAPON, SPWPN_EVASION))
@@ -2559,9 +2556,6 @@ int burden_change(void)
     const bool was_flying_light = you.light_flight();
 
     you.burden = 0;
-
-    if (you.duration[DUR_STONEMAIL])
-        you.burden += 800;
 
     for (int bu = 0; bu < ENDOFPACK; bu++)
     {
@@ -3659,7 +3653,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_RESIST_POISON:
     case DUR_RESIST_FIRE:
     case DUR_RESIST_COLD:
-    case DUR_STONEMAIL:
     case DUR_SWIFTNESS:
     case DUR_INVIS:
     case DUR_HASTE:
@@ -3904,10 +3897,9 @@ void display_char_status()
         DUR_BREATH_WEAPON, DUR_LIQUID_FLAMES, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
         DUR_REPEL_MISSILES, DUR_DEFLECT_MISSILES, DUR_JELLY_PRAYER,
         STATUS_REGENERATION, DUR_SWIFTNESS, DUR_RESIST_POISON,
-        DUR_RESIST_COLD, DUR_RESIST_FIRE, DUR_INSULATION, DUR_STONEMAIL,
-        DUR_TELEPORT, DUR_CONTROL_TELEPORT,
-        DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE, DUR_STONESKIN,
-        DUR_SEE_INVISIBLE, DUR_INVIS, DUR_CONF, STATUS_BEHELD,
+        DUR_RESIST_COLD, DUR_RESIST_FIRE, DUR_INSULATION, DUR_TELEPORT,
+        DUR_CONTROL_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
+        DUR_STONESKIN, DUR_SEE_INVISIBLE, DUR_INVIS, DUR_CONF, STATUS_BEHELD,
         DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP, DUR_EXHAUSTED,
         STATUS_SPEED, DUR_MIGHT, DUR_BRILLIANCE, DUR_AGILITY,
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
@@ -5823,9 +5815,6 @@ int player::armour_class() const
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + 100 * skills[SK_ICE_MAGIC] / 3;         // max 13
 
-    if (duration[DUR_STONEMAIL])
-        AC += 500 + 100 * skills[SK_EARTH_MAGIC] / 2;       // max 18
-
     if (duration[DUR_STONESKIN])
         AC += 200 + 100 * skills[SK_EARTH_MAGIC] / 5;       // max 7
 
@@ -5894,7 +5883,7 @@ int player::armour_class() const
         case TRAN_STATUE: // main ability is armour (high bonus)
             AC += (1700 + 100 * skills[SK_EARTH_MAGIC] / 2);    // max 30
 
-            if (duration[DUR_STONESKIN] || duration[DUR_STONEMAIL])
+            if (duration[DUR_STONESKIN])
                 AC += (100 + 100 * skills[SK_EARTH_MAGIC] / 4); // max +7
             break;
 

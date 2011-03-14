@@ -87,8 +87,10 @@ static duration_def duration_data[] =
       GREEN, "Slime", "slimy", "" },
     { DUR_SLEEP, false,
       0, "", "sleeping", "You are sleeping." },
+#if TAG_MAJOR_VERSION == 32
     { DUR_STONEMAIL, true,
       0, "", "stone mail", "You are covered in scales of stone."},
+#endif
     { DUR_STONESKIN, false,
       0, "", "stone skin", "Your skin is tough as stone." },
     { DUR_SWIFTNESS, true,

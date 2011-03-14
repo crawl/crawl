@@ -1287,7 +1287,9 @@ enum duration_type
     DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
     DUR_REGENERATION,
     DUR_SWIFTNESS,
+#if TAG_MAJOR_VERSION == 32
     DUR_STONEMAIL,
+#endif
     DUR_CONTROLLED_FLIGHT,
     DUR_TELEPORT,
     DUR_CONTROL_TELEPORT,
@@ -2924,7 +2926,9 @@ enum spell_type
     SPELL_LETHAL_INFUSION,
     SPELL_IRON_SHOT,
     SPELL_STONE_ARROW,
+#if TAG_MAJOR_VERSION == 32
     SPELL_STONEMAIL,
+#endif
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
     SPELL_FLY,

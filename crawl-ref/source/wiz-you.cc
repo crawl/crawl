@@ -733,7 +733,9 @@ static const char* dur_names[] =
     "divine shield",
     "regeneration",
     "swiftness",
+#if TAG_MAJOR_VERSION == 32
     "stonemail",
+#endif
     "controlled flight",
     "teleport",
     "control teleport",

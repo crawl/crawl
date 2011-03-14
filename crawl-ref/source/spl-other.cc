@@ -530,7 +530,7 @@ void cast_stoneskin(int pow)
         return;
     }
 
-    if (you.duration[DUR_STONEMAIL] || you.duration[DUR_ICY_ARMOUR])
+    if (you.duration[DUR_ICY_ARMOUR])
     {
         mpr("This spell conflicts with another spell still in effect.");
         return;

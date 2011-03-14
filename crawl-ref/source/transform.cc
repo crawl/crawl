@@ -692,7 +692,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_STATUE:
-        if (you.duration[DUR_STONEMAIL] || you.duration[DUR_STONESKIN])
+        if (you.duration[DUR_STONESKIN])
             mpr("Your new body merges with your stone armour.");
         break;
 
@@ -806,9 +806,6 @@ void untransform(bool skip_wielding, bool skip_move)
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
-        if (you.duration[DUR_STONEMAIL])
-            you.duration[DUR_STONEMAIL] = 1;
-
         if (you.duration[DUR_STONESKIN])
             you.duration[DUR_STONESKIN] = 1;
 

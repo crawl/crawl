@@ -505,10 +505,6 @@ Stone Arrow
 
 This spell hurls a sharp spine of rock outward from the caster.
 %%%%
-Stonemail
-
-This spell covers the caster with chunky scales of stone, the durability of which depends on his or her skill with Earth magic. These scales can coexist with other forms of armour, but are in and of themselves extremely heavy and cumbersome. The effects of this spell are increased if the caster is in Statue Form.
-%%%%
 Stoneskin
 
 This spell hardens one's skin to a degree determined by one's skill in Earth Magic. It only works on relatively normal flesh, and will aid neither the undead nor the bodily transformed. However, there is one exception: the effects of this spell will be boosted for casters in Statue Form.
