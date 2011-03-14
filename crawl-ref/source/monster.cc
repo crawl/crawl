@@ -3487,7 +3487,7 @@ int monster::skill(skill_type sk) const
         return (type == MONS_DEEP_DWARF_ARTIFICER ? hit_dice * 2 : hit_dice);
 
     case SK_NECROMANCY:
-        return (holiness() == MH_UNDEAD ? hit_dice / 2 : hit_dice / 3);
+        return ((holiness() == MH_UNDEAD || holiness() == MH_DEMONIC) ? hit_dice : hit_dice / 2);
 
     default:
         return (0);
