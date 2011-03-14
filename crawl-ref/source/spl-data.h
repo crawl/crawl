@@ -2941,6 +2941,19 @@ struct spell_desc
 },
 
 {
+    SPELL_FIRE_SUMMON, "Fire Summon",
+     SPTYP_SUMMONING | SPTYP_FIRE,
+     SPFLAG_MONSTER,
+     8,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
