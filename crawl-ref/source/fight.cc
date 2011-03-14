@@ -5137,14 +5137,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_BLINK:
         if (one_chance_in(3))
-        {
-            if (attacker_visible)
-            {
-                mprf("%s %s!", attacker->name(DESC_CAP_THE).c_str(),
-                     attacker->conj_verb("blink").c_str());
-            }
             attacker->blink();
-        }
         break;
 
     case AF_CONFUSE:
