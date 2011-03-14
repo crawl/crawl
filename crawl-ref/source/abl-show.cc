@@ -348,7 +348,7 @@ static const ability_def Ability_List[] =
     { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
       4, 0, 100, 1, ABFLAG_NONE },
     { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
-      6, 0, 100, 4, ABFLAG_NONE },
+      6, 0, 100, 5, ABFLAG_NONE },
 
     // Sif Muna
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy",
