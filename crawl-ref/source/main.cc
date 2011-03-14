@@ -2826,6 +2826,8 @@ void world_reacts()
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
 
+    update_monsters_in_view();
+
     reset_show_terrain();
 
     crawl_state.clear_mon_acting();
