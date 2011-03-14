@@ -762,8 +762,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 
         } // end proximity check
 
-        if (you.level_type == LEVEL_PORTAL_VAULT
-            && vault_mon_types.size() > 0)
+        if (vault_mon_types.size() > 0)
         {
             // XXX: not respecting RANDOM_MOBILE_MONSTER currently.
             int i = choose_random_weighted(vault_mon_weights.begin(),

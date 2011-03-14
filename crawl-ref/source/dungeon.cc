@@ -4395,7 +4395,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     // be accessed with the '9' and '8' glyphs. (due)
     if (place.map.random_mons.size() > 0)
     {
-        ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
+        dprf("Setting the custom random mons list.");
         set_vault_mon_list(place.map.random_mons);
     }
 
