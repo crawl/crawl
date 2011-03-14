@@ -3028,7 +3028,8 @@ bool is_useless_item(const item_def &item, bool temp)
                     && (temp || you.species != SP_VAMPIRE));
 
         case AMU_CONTROLLED_FLIGHT:
-            return (player_genus(GENPC_DRACONIAN) || you.permanent_flight());
+            return (player_genus(GENPC_DRACONIAN)
+                    || (you.species == SP_KENKU && you.experience_level >= 5));
 
         case RING_WIZARDRY:
             return (you.religion == GOD_TROG);
