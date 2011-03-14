@@ -1874,6 +1874,8 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         return (true);
     }
 
+    // If monster was affected, then there was a message.
+    *did_msg = true;
     return (false);
 }
 
