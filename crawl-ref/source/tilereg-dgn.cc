@@ -12,6 +12,7 @@
 
 #include "cio.h"
 #include "cloud.h"
+#include "command.h"
 #include "coord.h"
 #include "env.h"
 #include "invent.h"
@@ -890,14 +891,18 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
     }
 
     if ((mod & MOD_CTRL) && adjacent(you.pos(), gc))
-        return (click_travel(gc, mod & MOD_CTRL));
+    {
+        process_command((command_type) click_travel(gc, mod & MOD_CTRL));
+        return (CK_MOUSE_CMD);
+    }
 
     // Don't move if we've tried to fire/cast/evoke when there's nothing
     // available.
     if (mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
         return (CK_MOUSE_CMD);
 
-    return (click_travel(gc, mod & MOD_CTRL));
+    process_command((command_type) click_travel(gc, mod & MOD_CTRL));
+    return (CK_MOUSE_CMD);
 }
 
 void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def *pc) const
