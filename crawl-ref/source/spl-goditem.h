@@ -21,6 +21,4 @@ bool cast_imprison(int pow, monster* mons, int source);
 
 bool cast_smiting(int pow, monster* mons);
 
-void stonemail(int pow);
-
 #endif

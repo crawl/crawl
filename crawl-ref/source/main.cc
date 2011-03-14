@@ -2239,16 +2239,6 @@ static void _decrement_durations()
                           "Your poison resistance expires.", coinflip(),
                           "You start to feel less resistant to poison.");
 
-    if (_decrement_a_duration(DUR_STONEMAIL, delay,
-                              "Your scaly stone armour disappears.",
-                              coinflip(),
-                              "Your scaly stone armour is starting "
-                              "to flake away."))
-    {
-        you.redraw_armour_class = true;
-        burden_change();
-    }
-
     if (_decrement_a_duration(DUR_PHASE_SHIFT, delay,
                     "You are firmly grounded in the material plane once more.",
                     coinflip(),

@@ -81,7 +81,7 @@ void ice_armour(int pow, bool extending)
         return;
     }
 
-    if (you.duration[DUR_STONEMAIL] || you.duration[DUR_STONESKIN])
+    if (you.duration[DUR_STONESKIN])
     {
         if (!extending)
             mpr("The spell conflicts with another spell still in effect.");

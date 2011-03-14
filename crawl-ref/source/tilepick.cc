@@ -4420,7 +4420,6 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // --------------------------------------------
     // Spells that don't need icons:
-    case SPELL_STONEMAIL:     // Xom only?
     case SPELL_DISINTEGRATE:  // wand and card
 
     // Monster spells (mostly?)

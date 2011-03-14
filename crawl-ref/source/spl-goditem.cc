@@ -368,9 +368,9 @@ bool cast_revivification(int pow)
 void antimagic()
 {
     duration_type dur_list[] = {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE,
-        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_STONEMAIL, DUR_CONTROL_TELEPORT,
+        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
+        DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
+        DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_BARGAIN,
@@ -895,30 +895,4 @@ bool cast_smiting(int pow, monster* mons)
     }
 
     return (success);
-}
-
-void stonemail(int pow)
-{
-    if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
-    {
-        mpr("The spell conflicts with another spell still in effect.");
-        return;
-    }
-
-    if (you.duration[DUR_STONEMAIL])
-        mpr("Your scaly armour looks firmer.");
-    else
-    {
-        if (you.form == TRAN_STATUE)
-            mpr("Your stone body feels more resilient.");
-        else
-            mpr("A set of stone scales covers your body!");
-
-        you.redraw_evasion = true;
-        you.redraw_armour_class = true;
-    }
-
-    you.increase_duration(DUR_STONEMAIL, 20 + random2(pow) + random2(pow), 100,
-                          NULL);
-    burden_change();
 }
