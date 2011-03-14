@@ -1519,22 +1519,22 @@ static bool _should_stop_activity(const delay_queue_item &item,
             || Options.activity_interrupts[item.type][ai]);
 }
 
-inline static void _monster_warning(activity_interrupt_type ai,
+inline static bool _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
                                     delay_type atype,
                                     std::vector<std::string>* msgs_buf = NULL)
 {
     if (ai != AI_SEE_MONSTER)
-        return;
+        return false;
     if (!delay_is_run(atype) && !_is_butcher_delay(atype)
         && !(atype == DELAY_NOT_DELAYED))
-        return;
+        return false;
     if (at.context != "newly seen" && atype == DELAY_NOT_DELAYED)
-        return;
+        return false;
 
     const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
-        return;
+        return false;
     if (at.context == "already seen" || at.context == "uncharm")
     {
         // Only say "comes into view" if the monster wasn't in view
@@ -1616,6 +1616,8 @@ inline static void _monster_warning(activity_interrupt_type ai,
 
     if (crawl_state.game_is_hints())
         hints_monster_seen(*mon);
+
+    return true;
 }
 
 // Turns autopickup off if we ran into an invisible monster or saw a monster
@@ -1648,7 +1650,7 @@ void autotoggle_autopickup(bool off)
 
 // Returns true if any activity was stopped. Not reentrant.
 bool interrupt_activity(activity_interrupt_type ai,
-                         const activity_interrupt_data &at,
+                        const activity_interrupt_data &at,
                         std::vector<std::string>* msgs_buf)
 {
     if (interrupt_block::blocked())
@@ -1672,11 +1674,9 @@ bool interrupt_activity(activity_interrupt_type ai,
         // Printing "[foo] comes into view." messages even when not
         // auto-exploring/travelling.
         if (ai == AI_SEE_MONSTER)
-        {
-            _monster_warning(ai, at, DELAY_NOT_DELAYED, msgs_buf);
-            return true;
-        }
-        return (false);
+            return _monster_warning(ai, at, DELAY_NOT_DELAYED, msgs_buf);
+        else
+            return false;
     }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
