@@ -762,90 +762,85 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 
         } // end proximity check
 
-        if (place == BRANCH_HALL_OF_BLADES)
-            mon_type = MONS_DANCING_WEAPON;
-        else
+        if (you.level_type == LEVEL_PORTAL_VAULT
+            && vault_mon_types.size() > 0)
         {
-            if (you.level_type == LEVEL_PORTAL_VAULT
-                && vault_mon_types.size() > 0)
-            {
-                // XXX: not respecting RANDOM_MOBILE_MONSTER currently.
-                int i = choose_random_weighted(vault_mon_weights.begin(),
-                                               vault_mon_weights.end());
-                int type = vault_mon_types[i];
-                int base = vault_mon_bases[i];
+            // XXX: not respecting RANDOM_MOBILE_MONSTER currently.
+            int i = choose_random_weighted(vault_mon_weights.begin(),
+                                           vault_mon_weights.end());
+            int type = vault_mon_types[i];
+            int base = vault_mon_bases[i];
 
-                if (type == -1)
+            if (type == -1)
+            {
+                place = level_id::from_packed_place(base);
+                // If lev_mons is set to you.absdepth0, it was probably
+                // set as a default meaning "the current dungeon depth",
+                // which for a portal vault using its own definition
+                // of random monsters means "the depth of whatever place
+                // we're using for picking the random monster".
+                if (*lev_mons == you.absdepth0)
+                    *lev_mons = place.absdepth();
+                // pick_random_monster() is called below
+            }
+            else
+            {
+                base_type = (monster_type) base;
+                mon_type  = (monster_type) type;
+                if (mon_type == RANDOM_DRACONIAN
+                    || mon_type == RANDOM_BASE_DRACONIAN
+                    || mon_type == RANDOM_NONBASE_DRACONIAN)
                 {
-                    place = level_id::from_packed_place(base);
-                    // If lev_mons is set to you.absdepth0, it was probably
-                    // set as a default meaning "the current dungeon depth",
-                    // which for a portal vault using its own definition
-                    // of random monsters means "the depth of whatever place
-                    // we're using for picking the random monster".
-                    if (*lev_mons == you.absdepth0)
-                        *lev_mons = place.absdepth();
-                    // pick_random_monster() is called below
+                    mon_type =
+                        _resolve_monster_type(mon_type, proximity,
+                                              base_type, pos, mmask,
+                                              stair_type, lev_mons,
+                                              chose_ood_monster);
                 }
-                else
-                {
-                    base_type = (monster_type) base;
-                    mon_type  = (monster_type) type;
-                    if (mon_type == RANDOM_DRACONIAN
-                        || mon_type == RANDOM_BASE_DRACONIAN
-                        || mon_type == RANDOM_NONBASE_DRACONIAN)
-                    {
-                        mon_type =
-                            _resolve_monster_type(mon_type, proximity,
-                                                  base_type, pos, mmask,
-                                                  stair_type, lev_mons,
-                                                  chose_ood_monster);
-                    }
-                    return (mon_type);
-                }
+                return (mon_type);
             }
-            else if (you.level_type == LEVEL_PORTAL_VAULT)
+        }
+        else if (you.level_type == LEVEL_PORTAL_VAULT)
+        {
+            // XXX: We don't have a random monster list here, so pick one
+            // from where we were.
+            place.level_type = LEVEL_DUNGEON;
+            *lev_mons = place.absdepth();
+        }
+
+        int tries = 0;
+        while (tries++ < 300)
+        {
+            const int original_level = *lev_mons;
+            // Now pick a monster of the given branch and level.
+            mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
+                                       chose_ood_monster,
+                                       mon_type == RANDOM_MOBILE_MONSTER);
+
+            // Don't allow monsters too stupid to use stairs (e.g.
+            // non-spectral zombified undead) to be placed near
+            // stairs.
+            if (proximity != PROX_NEAR_STAIRS
+                || mons_class_can_use_stairs(mon_type))
             {
-                // XXX: We don't have a random monster list here, so pick one
-                // from where we were.
-                place.level_type = LEVEL_DUNGEON;
-                *lev_mons = place.absdepth();
+                break;
             }
+            *lev_mons = original_level;
+        }
 
-            int tries = 0;
-            while (tries++ < 300)
-            {
-                const int original_level = *lev_mons;
-                // Now pick a monster of the given branch and level.
-                mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
-                                           chose_ood_monster,
-                                           mon_type == RANDOM_MOBILE_MONSTER);
+        if (proximity == PROX_NEAR_STAIRS && tries >= 300)
+        {
+            proximity = PROX_AWAY_FROM_PLAYER;
 
-                // Don't allow monsters too stupid to use stairs (e.g.
-                // non-spectral zombified undead) to be placed near
-                // stairs.
-                if (proximity != PROX_NEAR_STAIRS
-                    || mons_class_can_use_stairs(mon_type))
-                {
-                    break;
-                }
-                *lev_mons = original_level;
-            }
+            // Reset target level.
+            if (*stair_type == DCHAR_STAIRS_DOWN)
+                --*lev_mons;
+            else if (*stair_type == DCHAR_STAIRS_UP)
+                ++*lev_mons;
 
-            if (proximity == PROX_NEAR_STAIRS && tries >= 300)
-            {
-                proximity = PROX_AWAY_FROM_PLAYER;
-
-                // Reset target level.
-                if (*stair_type == DCHAR_STAIRS_DOWN)
-                    --*lev_mons;
-                else if (*stair_type == DCHAR_STAIRS_UP)
-                    ++*lev_mons;
-
-                mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
-                                           chose_ood_monster,
-                                           mon_type == RANDOM_MOBILE_MONSTER);
-            }
+            mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
+                                       chose_ood_monster,
+                                       mon_type == RANDOM_MOBILE_MONSTER);
         }
     }
     return (mon_type);
