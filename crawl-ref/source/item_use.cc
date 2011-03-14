@@ -4198,7 +4198,7 @@ static bool _drink_fountain()
 
 // Returns true if a message has already been printed (which will identify
 // the scroll.)
-static bool _vorpalise_weapon()
+static bool _vorpalise_weapon(bool already_known)
 {
     if (!you.weapon())
         return (false);
@@ -4244,7 +4244,7 @@ static bool _vorpalise_weapon()
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
-        immolation(10, IMMOLATION_SPELL, you.pos(), true, &you);
+        immolation(10, IMMOLATION_SCROLL, you.pos(), already_known, &you);
         break;
 
     case SPWPN_FROST:
@@ -4253,7 +4253,7 @@ static bool _vorpalise_weapon()
             mprf("%s is covered with a thick layer of frost!", itname.c_str());
         else
             mprf("%s glows brilliantly blue for a moment.", itname.c_str());
-        cast_refrigeration(60);
+        cast_refrigeration(60, false, false);
         break;
 
     case SPWPN_DRAINING:
@@ -5075,7 +5075,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_VORPALISE_WEAPON:
-        id_the_scroll = _vorpalise_weapon();
+        id_the_scroll = _vorpalise_weapon(alreadyknown);
         if (!id_the_scroll)
             canned_msg(MSG_NOTHING_HAPPENS);
         break;

@@ -13,7 +13,8 @@ bool cast_hellfire_burst(int pow, bolt &beam);
 void cast_chain_lightning(int pow, const actor *caster);
 
 void cast_toxic_radiance(bool non_player = false);
-void cast_refrigeration(int pow, bool non_player = false);
+void cast_refrigeration(int pow, bool non_player = false,
+                        bool freeze_potions = true);
 bool vampiric_drain(int pow, monster* mons);
 bool cast_freeze(int pow, monster* mons);
 

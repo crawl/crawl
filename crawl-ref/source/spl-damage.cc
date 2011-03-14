@@ -415,7 +415,7 @@ void cast_toxic_radiance(bool non_player)
     }
 }
 
-void cast_refrigeration(int pow, bool non_player)
+void cast_refrigeration(int pow, bool non_player, bool freeze_potions)
 {
     if (non_player)
         mpr("Something drains the heat from around you.");
@@ -439,7 +439,8 @@ void cast_refrigeration(int pow, bool non_player)
         // Note: this used to be 12!... and it was also applied even if
         // the player didn't take damage from the cold, so we're being
         // a lot nicer now.  -- bwr
-        expose_player_to_element(BEAM_COLD, 5);
+        if (freeze_potions)
+            expose_player_to_element(BEAM_COLD, 5);
     }
 
     // Now do the monsters.
