@@ -2417,6 +2417,51 @@ bool melee_attack::distortion_affects_defender()
     return (false);
 }
 
+void melee_attack::antimagic_affects_defender()
+{
+    if (defender->atype() == ACT_PLAYER)
+    {
+        int mp_loss = std::min(you.magic_points, random2(damage_done * 2));
+        if (!mp_loss)
+            return;
+        mpr("You feel your power leaking away.", MSGCH_WARN);
+        dec_mp(mp_loss);
+        obvious_effect = true;
+    }
+    else if (defender->as_monster()->can_use_spells()
+             && !defender->as_monster()->is_priest()
+             && !mons_class_flag(defender->type, M_FAKE_SPELLS))
+    {
+        defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
+                                attacker, // doesn't matter
+                                random2(damage_done * 2) * BASELINE_DELAY));
+        special_damage_message =
+                    apostrophise(defender->name(DESC_CAP_THE))
+                    + " magic leaks into the air.";
+        obvious_effect = true;
+    }
+}
+
+void melee_attack::pain_affects_defender()
+{
+    if (defender->res_negative_energy())
+        return;
+
+    if (x_chance_in_y(attacker->skill(SK_NECROMANCY) + 1, 8))
+    {
+        if (defender_visible)
+        {
+            special_damage_message =
+                make_stringf("%s %s in agony.",
+                             defender->name(DESC_CAP_THE).c_str(),
+                             defender->conj_verb("writhe").c_str());
+        }
+        special_damage += random2(1 + attacker->skill(SK_NECROMANCY));
+    }
+
+    attacker->god_conduct(DID_NECROMANCY, 4);
+}
+
 enum chaos_type
 {
     CHAOS_CLONE,
@@ -3383,22 +3428,7 @@ bool melee_attack::apply_damage_brand()
         break;
     }
     case SPWPN_PAIN:
-        if (defender->res_negative_energy())
-            break;
-
-        if (x_chance_in_y(attacker->skill(SK_NECROMANCY) + 1, 8))
-        {
-            if (defender_visible)
-            {
-                special_damage_message =
-                    make_stringf("%s %s in agony.",
-                                 defender->name(DESC_CAP_THE).c_str(),
-                                 defender->conj_verb("writhe").c_str());
-            }
-            special_damage += random2(1 + attacker->skill(SK_NECROMANCY));
-        }
-
-        attacker->god_conduct(DID_NECROMANCY, 4);
+        pain_affects_defender();
         break;
 
     case SPWPN_DISTORTION:
@@ -3449,27 +3479,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ANTIMAGIC:
-        if (defender->atype() == ACT_PLAYER)
-        {
-            int mp_loss = std::min(you.magic_points, random2(damage_done * 2));
-            if (!mp_loss)
-                break;
-            mpr("You feel your power leaking away.", MSGCH_WARN);
-            dec_mp(mp_loss);
-            obvious_effect = true;
-        }
-        else if (defender->as_monster()->can_use_spells()
-                 && !defender->as_monster()->is_priest()
-                 && !mons_class_flag(defender->type, M_FAKE_SPELLS))
-        {
-            defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                        attacker, // doesn't matter
-                        random2(damage_done * 2) * BASELINE_DELAY));
-            special_damage_message =
-                    apostrophise(defender->name(DESC_CAP_THE))
-                    + " magic leaks into the air.";
-            obvious_effect = true;
-        }
+        antimagic_affects_defender();
         break;
     }
 
@@ -5271,7 +5281,13 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
         break;
 
+    case AF_ANTIMAGIC:
+        antimagic_affects_defender();
+        break;
 
+    case AF_PAIN:
+        pain_affects_defender();
+        break;
     }
 }
 
