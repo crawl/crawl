@@ -3805,4 +3805,6 @@ void setup_vault_mon_list()
         }
         vault_mon_weights[i] = list[i].genweight;
     }
+    if (size)
+        dprf("Level has a custom monster set.");
 }
