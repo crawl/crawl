@@ -2570,14 +2570,13 @@ static int _min_transitive_label(map_component & component)
 {
     map_component * current = &component;
 
-
     int label;
-    while (current)
+    do
     {
         label = current->label;
 
         current = current->min_equivalent;
-    }
+    } while(current);
 
     return label;
 }
