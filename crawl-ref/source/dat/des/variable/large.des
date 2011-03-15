@@ -2175,3 +2175,107 @@ xxvvvvvvvvvvvvvv..V..vvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+
+##############################################################################
+# A mockup of the Forest branch for 0.8 (1KB)
+#
+NAME:    forest_0.8
+DEPTH:   D:19-26
+ORIENT:  encompass
+WEIGHT:  999999
+TAGS:    no_pool_fixup
+MONS:    spriggan, spriggan rider, spriggan druid, spriggan berserker
+MONS:    spriggan air mage, spriggan defender, the Enchantress
+SUBST:   . = .:300 / 1:2 / 2:1 / 3:1 / 4:1 / 5:1
+SUBST:   T = t / t / P / .
+KMONS:   P = plant / plant / bush / nothing
+KMONS:   R = plant
+KMONS:   Q = bush
+KMONS:   d = spriggan spells:pain;bolt_of_draining;animate_dead name:necromancer n_suf col:magenta
+KMONS:   e = bat skeleton name:skeletal_bat n_rpl n_spe n_zom
+KMONS:   K = giant firefly
+KITEM:   f = dagger / short sword / sabre / flail / whip / blowgun / bow
+KITEM:   g = robe / cloak / cap / buckler / steam dragon armour w:1
+KMONS:   L = spriggan col:white name:baker n_suf ; robe . knife
+KITEM:   h = bread ration q:2
+KMONS:   M = yak
+KMONS:   N = spriggan name:shepherd n_suf ; robe . quarterstaff
+KITEM:   i = cheese q:3
+COLOUR:  "MN = green
+COLOUR:  C = white
+KFEAT:   C = stone_wall
+TILE:    C = wall_marble
+KFEAT:   _ = altar_trog
+: _G.set_random_mon_list("place:Forest:3")
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ttttPP.Tttt...tttttttttttttttttttttttttttttttttttttttttttttttttTTTTTttTTTTtttttt
+tccccT.....ttt..ttttttttttttttttttttttttttttttTtTTtttttttQTtttTT.T.Ttt.T.TTTtttt
+tc%4c...Tttttttt.ttttttttttttttttttttttttttttT*....QQPtt..ccccc....cccc.TT.Ttttt
+tc..+..Ttttttttt..ttttttttttttttttttttttCCCCCCCCCCCCCC....c..1c....c.1c.t.TTtttt
+tc.4c...Ttttttt.t..tttttttttttttttttttttC.6.C6..6C$*|CtT..c.1.+....+..cT.TT.tttt
+tcccct.Tttttt..tttt........tttttttttttttC7..+....+$*|Ctt..ccccc....cccc.TT.Ttttt
+tttT..tttttt.tttttttttttttt.ttttttttttttC.6.C6..6C$*|CttQ..................ttttt
+ttTPTTtttt...ttttttttttttttt..ttttttttttCCCCCC++CCCCCCttttccccc....cccc......ttt
+ttTTtttttt..ttttttttttttttttt.ttttttttttCgggC....CfffCttttchxLc....c1.c.....tttt
+tttttttt...ttttttttttttttttttt.tttttttttCggg+..1.+fffCttttch..+....+.5c..1...ttt
+tttttt.tttt..ttttttttttttttttt.tttttttttCgggC1...CfffCttttccccc....cccc...1.tttt
+tttttt.ttttt.tttttttttttttt.....ttttttttCCCCCC++CCCCCCttttt...................tt
+ttttt.ttttt..ttttttttttt...tttT..tttttttCR.....1....RCccccccccc....Y.........ttt
+ttt..tttttt..ttttttttt..tttttttt.tttttttC..1........1CcKxKxKxKc......2......tttt
+tt.ttttttt.tttttttt...ttttttttttt.ttttttCR1..5..5..1RCc.22.1..c.....22......tttt
+tt.tttttt.ttttttt...1.tttttttttttt.tttttCCCCCC++CCCCCCc+ccccccc....2.2.....ttttt
+ttt.tttt..tttttt...22..tttttttttttt.tttt..................................tttttt
+tttt..[t.ttttttt..1..2.)tttttttttttt.....................................ttttttt
+ttttt....ttttttt.t.1...tttttttttttt.tt..TTttttt............Y..........ttt.tttttt
+ttttttt..tttttt.tttttttttttttttttt.tttttttttttttttttt...............tttttt...ttt
+ttttttttt..ttt.tttttttttttttttt....ttttttttttttttttttttt.........tttttttttttt(tt
+ttttttttttt...tttttttttttttttt.tt..ttttttttttttttttttttttttt....tttttttttttttttt
+tttttttttttttt.tttttttttttttt.tttt.tttttttttttttttttttttttt.tt...ttttttttttttttt
+tttttttttttttt.ttttttttttttt.WWWWt.ttttttttttttttttttttttt.ttttt...ttttttttttttt
+ttttttttttttt.tttttttttttttt.Wwwwt.ttttttttttttttttttttt..ttttttt..ttttttttttttt
+tttttttttttttt.ttttttttttttt.tWWWWt..tttttttttttttttt.t.ttttttttt..ttttttttttttt
+tttttttttttttT.ttttttttttttt.ttWwwwwt.tttttttttttttttt.ttttttttttt..tttttttttttt
+ttttttttttttt..ttttttttttttt.tttwwwwww.ttttttttttttttt.ttttttttttt..tttttttttttt
+tttttttttttt...tttttttttttt.tttwwwwwwww.....tttttttttt.ttttttttttt.ttttttttttttt
+ttttttttt.....ttttttttttttt.ttttwwwwwwwwwwwt.tttttttt.ttttttttttt.t.tttttttttttt
+ttttttt..tt..tttttttttttttt.ttwwwwwwwwwwwwwwt.tttttt.ttttttttttt..tt....tttttttt
+ttttT..tttttttttttttttttttt.ttwwwwwwwwwwwwwwt.......tttttttttttt.ttttttt...ttttt
+tttt....tttttttttttttttttttt.wwwwwwwwwwwwwwww..tttttttttttttttt.ttttttttt.33tttt
+ttt....T..3...tttttttttttttt.wwwwwwwwwwwwwwwt.ttttttttttttttttt.ttttttttt3..tttt
+tttT...ttttttt....tttttttttt.wwwwwwwwwwwwwwt.ttttttttttttttttt.ttttttttttt..tttt
+ttt..]..ttttttttt......ttttt.Wwwwwwwwwwwwtt.tttttttttttttttttt.ttttttttttt.ttttt
+ttt........tttttttttttt.......WWwwwwwwwttt.tttttttttttttttt...tttttttttttttttttt
+tttt..111.tttttttttttttttttttt...........ttttttttttttt.....ttttttttttttttt..tttt
+ttttT.1...tttttttttttttttttttttttt.tttttttttttttttttt.ttt.ttttttttttttttttt.tttt
+ttttTT.1....ttttttttttttttttttttt.tttttttttttttttttt.ttttt.ttttttttttttttt..tttt
+ttttttt.tttt...ttttttttttttttttt..tttttttttttttttt..ttttttt..ttttttttttttt.ttttt
+tttttt.tttttttt...ttttttttttttt.tttttttttttttttt..ttttttttttt....tttttttt.tttttt
+ttttt..tttttttttt.ttttttttttttt.tttttttttttttttt.ttttttttttttttt.........ttttttt
+ttttt.ttttttttttt.tttttttttttt.3.tttttttttttttt.ttttttttttttttt.ttt..t..tttttttt
+tttt..tttttttttt..tttttttttttt3G3ttttttttttttt.tttttt.tttttttt.ttttttt....tttttt
+ttttt.ttttttttt..ttttttttttttt.3.tttttttttttt.t.tttttt.....tt.tttttttttt...ttttt
+tttt.tttttttttt.t..tttttttttttttttttttttttt..ttt.tttttttttt...ttttttttttt..ttttt
+tttt.ttttttttt..ttt...ttttttttttttttttttttt.ttttt.ttttttttwwwtttttttttttt...tttt
+ttttt.tttttttt.tttttt...tttttttttttttttt...tttttt.tttttttttwwttttttttttttt..tttt
+ttttt.tttttttt{tttttttt......ttttttttt.....ttttt.ttttttttttttttttttttttttt.ttttt
+tttt.tttttttttttttttttttTT..t...tttt..tttttttttt.tttttttttttttttttttttttt.tttttt
+tttt.ttttttttttttttttttttt.ttttt....ttttttttttttt.ttttttttttttttttttttttt.cccctt
+ttttt.ttttttttttttttttttt.tttttttttt.tttttttttttt..tttttttt..tt...ttttttt.+.1ctt
+tttttt.ttttttttttttttttt.tttttttttt..tttttttttttttt.tttttt.t...ttt..tttttTc1%ctt
+ttttttt.ttttttttttttttt.ttttttttttt....xxxxxtttttttt..tttt...tttttt.ttttttcccctt
+ttttttt.tttttttttttttt.ttttttttttttT...x.44xtttttttttt....ttttttttt.tttttttxxxxx
+ttttttt.tttttttttttttt.ttttttttttttT...+...xtttttttttttttttttttttttt.tttxxxxxxxx
+txxxtt.ttttttttttt....ttttttttttttttt.tx.44xttttttttttttttttttttttttt..xxxxxxxxx
+txi+"""""""tt......t.....ttttttttttttt.x.4_xttttttttttttttttttttttttt....xxxxxxx
+txxx""""""""".tttttttt..TTtttttttttttttxxxxxttttttttttttttttttttttt......}xxxxxx
+ttt""N"""""""TTtttttttt....ttttttttttttttttttttttttttttttttttttt.....xxxxxxxxxxx
+ttT""MM"MM"TTTttttttttttttt..tttttttttttttttttttttt...ttttttttt....xxxxxxxxxxxxx
+tt""""M""""Tttttttttttttttttt..ttt.......ttttttttt.......tttt...xxxxxxxxexxxexxx
+tt".MM""NTTtttttttttttttttttttt....tttt.......ttt...ttttt.......xxxxx..exxxxeexx
+tt""M""""Ttttttttttttttttttttttttttttttt...ttt..t..ttttttttxxxxx......xx.exx..xx
+ttt""""TTTtttttttttttttttttttttttttttttttttttttt.tttttttxxxxxxxxxx....xxx.d.xxxx
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
