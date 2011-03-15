@@ -746,8 +746,9 @@ void tile_clear_monster(const coord_def &gc)
 
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
-    const coord_def ep = grid2show(gc);
-    if (env.tile_fg(ep) != 0)
+    // In the Shoals, ink is handled differently. (jpeg)
+    // I'm not sure it is even possible anywhere else, but just to be safe...
+    if (cl.type == CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         return;
 
     const monster* mon = monster_at(gc);
@@ -760,10 +761,16 @@ void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
         disturbance = true;
     }
 
-    // In the Shoals, ink is handled differently. (jpeg)
-    // I'm not sure it is even possible anywhere else, but just to be safe...
-    if (cl.type != CLOUD_INK || !player_in_branch(BRANCH_SHOALS))
+    if (you.see_cell(gc))
+    {
+        const coord_def ep = grid2show(gc);
+        if (env.tile_fg(ep) != 0)
+            return;
+
         env.tile_fg(ep) = tileidx_cloud(cl, disturbance);
+    }
+    else
+        env.tile_bk_fg(gc) = tileidx_cloud(cl, disturbance);
 }
 
 unsigned int num_tile_rays = 0;
