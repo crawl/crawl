@@ -3496,10 +3496,10 @@ static void _print_save_version(char *name)
         if (!file_exists(filename))
             filename = get_savedir_filename(filename, "", "") + SAVE_SUFFIX;
         package save(filename.c_str(), false);
-        reader charf(&save, "chr");
+        reader chrf(&save, "chr");
 
         int major, minor;
-        if (!get_save_version(charf, major, minor))
+        if (!get_save_version(chrf, major, minor))
             fail("Save file is invalid.");
         else
             printf("Save file version for %s is %d.%d\n", name, major, minor);
