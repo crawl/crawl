@@ -151,7 +151,13 @@ bool cast_summon_small_mammals(int pow, god_type god)
 
 static bool _snakable_missile(const item_def& item)
 {
-    return (item.base_type == OBJ_MISSILES && item.sub_type == MI_ARROW);
+    if (item.base_type != OBJ_MISSILES
+        || item.sub_type != MI_ARROW && item.sub_type != MI_JAVELIN)
+    {
+        return false;
+    }
+
+    return item.special != SPMSL_SILVER && item.special != SPMSL_STEEL;
 }
 
 static bool _snakable_weapon(const item_def& item)
