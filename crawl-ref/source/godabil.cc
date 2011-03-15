@@ -1772,11 +1772,11 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
 bool kiku_receive_corpses(int pow, coord_def where)
 {
-    // pow = invocations * 4, ranges from 0 to 108
+    // pow = necromancy * 4, ranges from 0 to 108
     dprf("kiku_receive_corpses() power: %d", pow);
 
     // Kiku gives branch-appropriate corpses (like shadow creatures).
-    int expected_extra_corpses = 3 + pow / 18; // 3 at 0 Inv, 9 at 27 Inv.
+    int expected_extra_corpses = 1 + random2(pow / 36); // 1 at 0 Nec, up to 4 at 27 Nec.
     int corpse_delivery_radius = 1;
 
     // We should get the same number of corpses
