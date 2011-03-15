@@ -32,7 +32,8 @@ tile_list_processor::~tile_list_processor()
     m_back.resize(0);
 }
 
-bool tile_list_processor::load_image(tile &img, const char *filename)
+bool tile_list_processor::load_image(tile &img, const char *filename,
+                                     bool background)
 {
     assert(filename);
 
@@ -46,15 +47,23 @@ bool tile_list_processor::load_image(tile &img, const char *filename)
         ""
     };
 
-    if (m_sdir != "")
+    if (m_sdir != "" || background && m_back_sdir != "")
     {
+        std::vector<const char *> dirs;
+        if (m_sdir != "")
+            dirs.push_back(m_sdir.c_str());
+        if (background && m_back_sdir != "")
+            dirs.push_back(m_back_sdir.c_str());
         for (unsigned int e = 0; e < num_ext; e++)
         {
-            sprintf(temp, "%s/%s%s", m_sdir.c_str(), filename, ext[e]);
-            if (img.load(temp))
+            for (unsigned int d = 0; d < dirs.size(); d++)
             {
-                m_depends.push_back(temp);
-                return (true);
+                sprintf(temp, "%s/%s%s", dirs[d], filename, ext[e]);
+                if (img.load(temp))
+                {
+                    m_depends.push_back(temp);
+                    return (true);
+                }
             }
         }
     }
@@ -300,7 +309,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             for (unsigned int i = 1; i < m_args.size(); i++)
             {
                 tile *img = new tile();
-                if (!load_image(*img, m_args[i]))
+                if (!load_image(*img, m_args[i], true))
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
                                     "'%s'.\n", list_file, line, m_args[i]);
@@ -473,6 +482,11 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         {
             CHECK_ARG(1);
             m_sdir = m_args[1];
+        }
+        else if (strcmp(arg, "back_sdir") == 0)
+        {
+            CHECK_ARG(1);
+            m_back_sdir = m_args[1];
         }
         else if (strcmp(arg, "weight") == 0)
         {
@@ -674,7 +688,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         if (m_back.size() > 0)
         {
             // compose
-            if (!load_image(m_compose, arg))
+            if (!load_image(m_compose, arg, true))
             {
                 fprintf(stderr, "Error (%s:%d): couldn't load image "
                                 "'%s'.\n", list_file, line, arg);
