@@ -624,7 +624,6 @@ void shedu_do_actual_resurrection (monster* mons)
     // shedu.
     bool found_body = false;
     coord_def place_at;
-    bool success = false;
     bool from_inventory = false;
 
     // Our pair might already be irretrievably dead.
@@ -667,14 +666,7 @@ void shedu_do_actual_resurrection (monster* mons)
         }
 
         if (found_body)
-        {
-            for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-                if ((place_at.origin() || one_chance_in(3))
-                    && monster_habitable_grid(mons, grd(*ai)))
-                {
-                    place_at = *ai;
-                }
-        }
+            place_at = you.pos();
     }
 
     if (!found_body)
@@ -686,21 +678,16 @@ void shedu_do_actual_resurrection (monster* mons)
     mgen_data new_shedu;
     new_shedu.cls = MONS_SHEDU;
     new_shedu.behaviour = mons->behaviour;
-    if (!place_at.origin())
-        new_shedu.pos = place_at;
+    ASSERT(!place_at.origin());
     new_shedu.foe = mons->foe;
     new_shedu.god = mons->god;
 
-    // try placing at exact location
-    bool at_right_place = (!new_shedu.pos.origin());
-    int id = place_monster(new_shedu, true);
-
-    // try elsewhere
-    if (id == -1)
+    int id = -1;
+    for (distance_iterator di(place_at, true, false); di; ++di)
     {
-        at_right_place = false;
-        new_shedu.pos.reset();
-        id = place_monster(new_shedu, false);
+        new_shedu.pos = *di;
+        if ((id = place_monster(new_shedu, true)) != -1)
+            break;
     }
 
     // give up
@@ -710,18 +697,15 @@ void shedu_do_actual_resurrection (monster* mons)
         return;
     }
 
-    success = true;
-
     monster* my_pair = &menv[id];
     my_pair->number = mons->mid;
     mons->number = my_pair->mid;
     my_pair->flags |= MF_BAND_MEMBER;
 
-    if (!at_right_place)
-        my_pair->teleport(true);
-
-    if (success && from_inventory)
+    if (from_inventory)
         simple_monster_message(mons, " resurrects its mate from your pack!");
-    else if (success && you.can_see(mons))
+    else if (you.can_see(mons))
         simple_monster_message(mons, " resurrects its mate from the grave!");
+    else if (you.can_see(my_pair))
+        simple_monster_message(mons, " rises from the grave!");
 }
