@@ -417,22 +417,33 @@ dngn_dry_fountain DNGN_DRY_FOUNTAIN
 
 ## Miscellaneous entries that get drawn on the background.
 ## Flavour is fixed again.
-dc-misc/blood_red BLOOD
-dc-misc/blood_red1
-dc-misc/blood_red2
-dc-misc/blood_red3
-dc-misc/blood_red4
-dc-misc/halo HALO
-dc-misc/ray RAY
-dc-misc/ray_out_of_range RAY_OUT_OF_RANGE
-dc-misc/travel_exclusion TRAVEL_EXCLUSION_BG
-dc-misc/travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
-dc-misc/slot ITEM_SLOT
+%sdir dc-misc
+blood_red BLOOD
+blood_red1
+blood_red2
+blood_red3
+blood_red4
+%sdir dc-misc/blood
+wall_blood1 WALL_BLOOD
+wall_blood2
+wall_blood3
+wall_blood4
+wall_blood5
+wall_blood6
+wall_blood7
+wall_blood8
+%sdir dc-misc
+halo HALO
+ray RAY
+ray_out_of_range RAY_OUT_OF_RANGE
+travel_exclusion TRAVEL_EXCLUSION_BG
+travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
+slot ITEM_SLOT
 effect/sanctuary SANCTUARY
-dc-misc/mold_small1 MOLD
-dc-misc/mold_small2
-dc-misc/mold_small3
-dc-misc/mold_small4
+mold_small1 MOLD
+mold_small2
+mold_small3
+mold_small4
 effect/silenced SILENCED
 %shrink 0
 %sdir dc-mon/tentacles/kraken_corners

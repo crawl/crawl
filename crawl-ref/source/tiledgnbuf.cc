@@ -506,7 +506,8 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     }
 }
 
-void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell)
+void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
+                                          bool is_wall)
 {
     if (cell.is_liquefied)
     {
@@ -515,8 +516,9 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell)
     }
     else if (cell.is_bloody)
     {
-        int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
-        m_buf_feat.add(TILE_BLOOD + offset, x, y);
+        const tileidx_t basetile = (is_wall ? TILE_WALL_BLOOD : TILE_BLOOD);
+        const int offset = cell.flv.special % tile_dngn_count(basetile);
+        m_buf_feat.add(basetile + offset, x, y);
     }
     else if (cell.is_moldy)
     {
@@ -549,7 +551,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
         // Draw blood on top of wall tiles.
         if (bg_idx <= TILE_WALL_MAX)
-            add_blood_overlay(x, y, cell);
+            add_blood_overlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);
 
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
             add_dngn_tile(cell.dngn_overlay[i], x, y);
