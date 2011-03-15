@@ -2760,7 +2760,7 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_PALE_DRACONIAN:
-        mpr("Your scales start fading to a pale grey colour.",
+        mpr("Your scales start fading to a pale cyan-grey colour.",
             MSGCH_INTRINSIC_GAIN);
         break;
 

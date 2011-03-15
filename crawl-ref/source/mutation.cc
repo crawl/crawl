@@ -291,7 +291,7 @@ formatted_string describe_mutations()
 
     case SP_PALE_DRACONIAN:
         result += "You can breathe blasts of scalding steam.\n";
-        scale_type = "pale grey";
+        scale_type = "pale cyan-grey";
         have_any = true;
         break;
 
