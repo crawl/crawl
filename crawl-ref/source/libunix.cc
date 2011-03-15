@@ -1031,19 +1031,13 @@ void fakecursorxy(int x, int y)
 
 int wherex()
 {
-    int x, y;
-
-    getyx(stdscr, y, x);
-    return (x + 1);
+    return getcurx(stdscr);
 }
 
 
 int wherey()
 {
-    int x, y;
-
-    getyx(stdscr, y, x);
-    return (y + 1);
+    return getcury(stdscr);
 }
 
 void delay(unsigned long time)
