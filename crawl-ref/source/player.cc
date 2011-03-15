@@ -1794,9 +1794,6 @@ int player_spec_cold()
     // rings of ice:
     sc += player_equip(EQ_RINGS, RING_ICE);
 
-    if (you.duration[DUR_FIRE_SHIELD])
-        sc--;
-
     return sc;
 }
 
