@@ -87,11 +87,11 @@ static int _compass_idx(const coord_def& mov)
     return (-1);
 }
 
-static bool immobile_monster[MAX_MONSTERS];
-
 // A probably needless optimization: convert the C string "just seen" to
 // a C++ string just once, instead of twice every time a monster moves.
 static const std::string _just_seen("just seen");
+
+static bool immobile_monster[MAX_MONSTERS];
 
 static inline bool _mons_natural_regen_roll(monster* mons)
 {
@@ -656,8 +656,6 @@ static void _handle_movement(monster* mons)
     if (mons->seen_context != _just_seen)
         return;
 
-    mons->seen_context.clear();
-
     // If the player can't see us, it doesn't matter.
     if (!(mons->flags & MF_WAS_IN_VIEW))
         return;
@@ -665,17 +663,18 @@ static void _handle_movement(monster* mons)
     const coord_def old_pos  = mons->pos();
     const int       old_dist = grid_distance(you.pos(), old_pos);
 
-    // We're not moving towards the player.
-    if (grid_distance(you.pos(), old_pos + mmov) >= old_dist)
-    {
-        // Give a message if we move back out of view.
-        mons->seen_context = _just_seen;
-        return;
-    }
-
     // We're already staying in the player's LOS.
     if (you.see_cell(old_pos + mmov))
         return;
+
+    // We're not moving towards the player.
+    if (grid_distance(you.pos(), old_pos + mmov) >= old_dist)
+    {
+        // Instead of moving out of view, we stay put.
+        if (you.see_cell(old_pos))
+            mmov.reset();
+        return;
+    }
 
     // Try to find a move that brings us closer to the player while
     // keeping us in view.
@@ -700,10 +699,10 @@ static void _handle_movement(monster* mons)
             }
         }
 
-    // The only way to get closer to the player is to step out of view;
-    // give a message so they player isn't confused about its being
-    // announced as coming into view but not being seen.
-    mons->seen_context = _just_seen;
+    // We haven't been able to find a visible cell to move to. If previous
+    // position was visible, we stay put.
+    if (you.see_cell(old_pos) && !you.see_cell(old_pos + mmov))
+        mmov.reset();
 }
 
 //---------------------------------------------------------------
