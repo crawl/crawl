@@ -282,7 +282,10 @@ int MapRegion::handle_mouse(MouseEvent &event)
             }
             else
             {
-                process_command((command_type) click_travel(gc, event.mod & MOD_CTRL));
+                const int cmd = click_travel(gc, event.mod & MOD_CTRL);
+                if (cmd != CK_MOUSE_CMD)
+                    process_command((command_type) cmd);
+
                 return (CK_MOUSE_CMD);
             }
         }

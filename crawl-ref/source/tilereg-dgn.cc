@@ -892,7 +892,10 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
 
     if ((mod & MOD_CTRL) && adjacent(you.pos(), gc))
     {
-        process_command((command_type) click_travel(gc, mod & MOD_CTRL));
+        const int cmd = click_travel(gc, mod & MOD_CTRL);
+        if (cmd != CK_MOUSE_CMD)
+            process_command((command_type) cmd);
+
         return (CK_MOUSE_CMD);
     }
 
@@ -901,7 +904,10 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
     if (mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
         return (CK_MOUSE_CMD);
 
-    process_command((command_type) click_travel(gc, mod & MOD_CTRL));
+    const int cmd = click_travel(gc, mod & MOD_CTRL);
+    if (cmd != CK_MOUSE_CMD)
+        process_command((command_type) cmd);
+
     return (CK_MOUSE_CMD);
 }
 
