@@ -1231,7 +1231,9 @@ void dgn_reset_level(bool enable_random_maps)
         menv[i].reset();
     init_anon();
 
+    // ... and Pan/regular spawn lists.
     env.mons_alloc.init(MONS_NO_MONSTER);
+    setup_vault_mon_list();
 
     // Zap clouds
     env.cgrid.init(EMPTY_CLOUD);
