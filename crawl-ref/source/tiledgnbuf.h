@@ -79,7 +79,8 @@ public:
     void draw();
 
 protected:
-    void add_blood_overlay(int x, int y, const packed_cell &cell);
+    void add_blood_overlay(int x, int y, const packed_cell &cell,
+                           bool is_wall = false);
     void pack_background(int x, int y, const packed_cell &cell);
     void pack_foreground(int x, int y, const packed_cell &cell);
 
