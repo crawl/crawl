@@ -1531,7 +1531,7 @@ static void _make_spectral_thing(monster* mons, bool quiet)
         const int spectre =
             create_monster(
                 mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
-                    6, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
+                    0, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
                     0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
                     mons->type, mons->number));
 
@@ -1550,6 +1550,9 @@ static void _make_spectral_thing(monster* mons, bool quiet)
             }
 
             name_zombie(&menv[spectre], mons);
+
+            monster* mon = &menv[spectre];
+            mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
         }
     }
 }
@@ -2276,6 +2279,11 @@ int monster_die(monster* mons, killer_type killer,
                         // Sticks to Snake
                         simple_monster_message(mons, " withers and dies!",
                             MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                    }
+                    else if (mons->type == MONS_SPECTRAL_THING)
+                    {
+                        // Death Channel
+                        simple_monster_message(mons, " fades into mist!");
                     }
                 }
                 else
