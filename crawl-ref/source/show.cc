@@ -159,9 +159,11 @@ static void _update_feat_at(const coord_def &gp)
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
     if (feat >= DNGN_STONE_STAIRS_DOWN_I
-                            && feat <= DNGN_ESCAPE_HATCH_UP
-                            && is_exclude_root(gp))
+        && feat <= DNGN_ESCAPE_HATCH_UP
+        && is_exclude_root(gp))
+    {
         env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;
+    }
 
     if (is_bloodcovered(gp))
         env.map_knowledge(gp).flags |= MAP_BLOODY;
@@ -214,8 +216,12 @@ static show_item_type _item_to_show_code(const item_def &item)
 
 static void _update_item_at(const coord_def &gp)
 {
+    if (!in_bounds(gp))
+        return;
+
     const item_def *eitem;
     bool more_items = false;
+
     // Check for mimics.
     const monster* m = monster_at(gp);
     if (m && mons_is_unknown_mimic(m) && mons_is_item_mimic(m->type))
@@ -235,9 +241,9 @@ static void _update_item_at(const coord_def &gp)
 
 #ifdef USE_TILE
     if (feat_is_stair(env.grid(gp)))
-        tile_place_item_marker(grid2show(gp), *eitem);
+        tile_place_item_marker(gp, *eitem);
     else
-        tile_place_item(grid2show(gp), *eitem);
+        tile_place_item(gp, *eitem);
 #endif
 }
 

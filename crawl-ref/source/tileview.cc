@@ -612,26 +612,48 @@ void tile_draw_floor()
 // Called from item() in view.cc
 void tile_place_item(const coord_def &gc, const item_def &item)
 {
-    if (env.tile_fg(gc))
-        return;
-
     tileidx_t t = tileidx_item(item);
     if (item.link != NON_ITEM)
         t |= TILE_FLAG_S_UNDER;
 
-    env.tile_fg(gc) = t;
+    if (you.see_cell(gc))
+    {
+        const coord_def ep = crawl_view.grid2show(gc);
+        if (env.tile_fg(ep))
+            return;
 
-    if (item_needs_autopickup(item))
-        env.tile_bg(gc) |= TILE_FLAG_CURSOR3;
+        env.tile_fg(ep) = t;
+
+        if (item_needs_autopickup(item))
+            env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+    }
+    else
+    {
+        env.tile_bk_fg(gc) = t;
+
+        if (item_needs_autopickup(item))
+            env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+    }
 }
 
 // Called from item() in view.cc
 void tile_place_item_marker(const coord_def &gc, const item_def &item)
 {
-    env.tile_fg(gc) |= TILE_FLAG_S_UNDER;
+    if (you.see_cell(gc))
+    {
+        const coord_def ep = crawl_view.grid2show(gc);
+        env.tile_fg(ep) |= TILE_FLAG_S_UNDER;
 
-    if (item_needs_autopickup(item))
-        env.tile_bg(gc) |= TILE_FLAG_CURSOR3;
+        if (item_needs_autopickup(item))
+            env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+    }
+    else
+    {
+        // env.tile_bk_fg(gc) |= TILE_FLAG_S_UNDER;
+
+        if (item_needs_autopickup(item))
+            env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+    }
 }
 
 // Called from show_def::_update_monster() in show.cc
@@ -655,7 +677,12 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
                 t |= TILE_FLAG_S_UNDER;
 
             if (item_needs_autopickup(get_mimic_item(mon)))
-                env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+            {
+                if (you.see_cell(gc))
+                    env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+                else
+                    env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+            }
         }
     }
     else if (mons_is_stationary(mon) && mon->type != MONS_TRAINING_DUMMY)
@@ -670,9 +697,14 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
         t = flag | (mcache_idx ? mcache_idx : t0);
     }
 
-    // Add name tags.
+    if (!you.see_cell(gc))
+    {
+        env.tile_bk_fg(gc) = t;
+        return;
+    }
     env.tile_fg(ep) = t;
 
+    // Add name tags.
     if (!mon->visible_to(&you)
         || mons_is_lurking(mon)
         || mons_is_unknown_mimic(mon)
@@ -705,6 +737,11 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
         return;
     }
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
+}
+
+void tile_clear_monster(const coord_def &gc)
+{
+    env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_bk_fg(gc), true);
 }
 
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
