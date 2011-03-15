@@ -852,7 +852,7 @@ ENDMAP
 
 # Alchemist's storehouse, has 14-26 desirable potions
 NAME:    trove_alchemists_storehouse
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_mu
 WEIGHT:  5
 ORIENT:  encompass
 ITEM:    potion of healing / potion of heal wounds / \
@@ -1034,7 +1034,7 @@ ENDMAP
 
 # 8 scrolls and wands
 NAME:   trove_wands_scrolls
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire wand
 SUBST:  e = eeed
