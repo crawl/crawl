@@ -1691,7 +1691,7 @@ bool interrupt_activity(activity_interrupt_type ai,
 
     if (_should_stop_activity(item, ai, at))
     {
-        _monster_warning(ai, at, item.type);
+        _monster_warning(ai, at, item.type, msgs_buf);
         // Teleport stops stair delays.
         stop_delay(ai == AI_TELEPORT);
 
@@ -1713,7 +1713,7 @@ bool interrupt_activity(activity_interrupt_type ai,
             {
                 if (delay_is_run(you.delay_queue[j].type))
                 {
-                    _monster_warning(ai, at, you.delay_queue[j].type);
+                    _monster_warning(ai, at, you.delay_queue[j].type, msgs_buf);
                     stop_delay(ai == AI_TELEPORT);
                     return (true);
                 }

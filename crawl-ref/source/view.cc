@@ -230,7 +230,8 @@ void update_monsters_in_view()
 
         // If the monster hasn't been seen by the time that the player
         // gets control back then seen_context is out of date.
-        mi->seen_context.clear();
+        if (!you.turn_is_over)
+            mi->seen_context.clear();
     }
 
     if (!msgs.empty())
