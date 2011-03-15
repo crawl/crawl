@@ -396,12 +396,16 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
             error += "\n";
     }
 
+#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
+     || defined(TARGET_OS_DOS) \
+     || defined(DGL_PAUSE_AFTER_ERROR)
     bool need_pause = true;
     if (exit_code && !error.empty())
     {
         if (print_error_screen("%s", error.c_str()))
             need_pause = false;
     }
+#endif
 
     cio_cleanup();
     msg::deinitialise_mpr_streams();
