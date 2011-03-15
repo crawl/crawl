@@ -45,6 +45,9 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "tileview.h"
+#endif
 #include "traps.h"
 #include "hints.h"
 #include "view.h"
@@ -5907,26 +5910,30 @@ void monster::check_redraw(const coord_def &old) const
 {
     if (!crawl_state.io_inited)
         return;
+
     const bool see_new = you.see_cell(pos());
     const bool see_old = you.see_cell(old);
     if ((see_new || see_old) && !view_update())
     {
         if (see_new)
             view_update_at(pos());
+
         // Don't leave a trail if we can see the monster move in.
-#ifndef USE_TILES
         if (see_old || (pos() - old).rdist() <= 1)
-#else
-        if (see_old) // FIXME: it currently crashes trying to update out-of-LOS tile
-#endif
+        {
             view_update_at(old);
+#ifdef USE_TILE
+            if (!see_old)
+                tile_clear_monster(old);
+#endif
+        }
         update_screen();
     }
 }
 
 void monster::apply_location_effects(const coord_def &oldpos,
-                                      killer_type killer,
-                                      int killernum)
+                                     killer_type killer,
+                                     int killernum)
 {
     if (oldpos != pos())
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
