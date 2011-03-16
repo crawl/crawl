@@ -1383,7 +1383,8 @@ int menu_colour(const std::string &text, const std::string &prefix,
 
 int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 {
-    return entry->highlight_colour();
+    return (entry->colour != MENU_ITEM_STOCK_COLOUR ? entry->colour
+            : entry->highlight_colour());
 }
 
 ///////////////////////////////////////////////////////////////////////
