@@ -63,12 +63,16 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
+DEPTH:  4-22, Pan, !Vault
+WEIGHT: 1 (Pan), 10
 ORIENT: encompass
-TAGS:   layout allow_dup
+TAGS:   layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
     fill_area{fill='x'}
+
+    layout_type "open"
 
     local width = (10 - crawl.random2(7))
 
@@ -130,12 +134,16 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
+DEPTH:   Pan, 4-22, !Vault
+WEIGHT:  1 (Pan), 10
 ORIENT:  encompass
-TAGS:    layout allow_dup
+TAGS:    layout allow_dup unrand
 
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
+
+    layout_type "cross"
 
     local floor = '.'
     local wall = 'x'
@@ -187,8 +195,10 @@ ENDMAP
 #
 
 NAME: layout_big_octagon
+DEPTH:   4-22, !Vault
+WEIGHT:  1 (Pan), 10
 ORIENT:  encompass
-TAGS:    layout allow_dup
+TAGS:    layout allow_dup unrand
 
 {{
     -- Step 1: Big octagon.
@@ -196,6 +206,8 @@ TAGS:    layout allow_dup
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
     fill_area{fill = 'x'}
+
+    layout_type "open"
 
     local oblique = 10 + crawl.random2(20)
     octa_room{
@@ -346,8 +358,10 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
+DEPTH: Pan, 4-22, !Vault
+WEIGHT: 6 (Pan), 20
 ORIENT: encompass
-TAGS: layout allow_dup
+TAGS: layout allow_dup unrand
 {{
     function random_room_point(room)
         return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
@@ -365,6 +379,8 @@ TAGS: layout allow_dup
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
     fill_area{fill = 'x'}
+
+    layout_type "rooms"
 
     local num_rooms = 30 + crawl.random2(90)
     local exclusive = not crawl.one_chance_in(10)
@@ -424,8 +440,11 @@ ENDMAP
 # This replaces dungeon.cc:_city_level().
 #
 NAME: layout_city
+DEPTH: Dis, Vault, 15-
+WEIGHT: 1 (Vault), 10
+CHANCE: 100% (Dis)
 ORIENT: encompass
-TAGS: layout allow_dup
+TAGS: layout allow_dup unrand
 {{
     function treasure_area (x1, y1, x2, y2)
         x2 = x2 + 1
@@ -457,6 +476,8 @@ TAGS: layout allow_dup
 
     extend_map{width = gxm, height = gym, fill = 'x'}
     fill_area{fill = 'x'}
+
+    layout_type "city"
 
     local wall_type_room
     local wall_type
@@ -535,8 +556,10 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
+DEPTH: Pan, 4-22, !Vault
+WEIGHT: 1 (Pan), 10
 ORIENT: encompass
-TAGS: layout allow_dup
+TAGS: layout allow_dup unrand
 {{
     function random_coord(max_x, max_y)
         return crawl.random2(max_x - 20) + 10,
@@ -547,6 +570,8 @@ TAGS: layout allow_dup
     local corridors = crawl.random_range(15, 25)
 
     extend_map { width = gxm, height = gym, fill = 'x' }
+
+    layout_type "misc"
 
     local x, y = random_coord(gxm, gym)
     local new_x, new_y
@@ -568,12 +593,16 @@ MAP
 ENDMAP
 
 NAME: layout_caves
+DEPTH: Hive, Orc, Slime, !Vault
+CHANCE: 100%
 ORIENT: encompass
-TAGS: layout allow_dup
+TAGS: layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
 
     extend_map { width = gxm, height = gym, fill = 'x' }
+
+    layout_type "caves"
 
     spotty_stairs(mapgrd)
 
@@ -591,12 +620,16 @@ MAP
 ENDMAP
 
 NAME: layout_spotty
+DEPTH: 9-22, !Vault
+WEIGHT: 10
 ORIENT: encompass
-TAGS: layout allow_dup
+TAGS: layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
 
     extend_map { width = gxm, height = gym, fill = 'x' }
+
+    layout_type "caves"
 
     spotty_stairs(mapgrd)
 
@@ -610,8 +643,10 @@ ENDMAP
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
+DEPTH: 1-, !Vault
+WEIGHT: 40
 ORIENT: encompass
-TAGS: layout allow_dup
+TAGS: layout allow_dup unrand
 {{
     function make_inner_room(room, feat, treasure)
         local inner_room = {
@@ -658,6 +693,8 @@ TAGS: layout allow_dup
     local gxm, gym = dgn.max_bounds()
 
     extend_map { width = gxm, height = gym, fill = 'x' }
+
+    layout_type "rooms"
 
     local rows = 5
     local cols = 5
@@ -717,6 +754,62 @@ TAGS: layout allow_dup
     if special ~= -1 then
         _G.subvault('O : special_room')
     end
+}}
+MAP
+ENDMAP
+
+# Dummy layouts that just call C++ functions that do all the work.
+NAME: layout_basic
+DEPTH: 1-, !Vault
+WEIGHT: 90
+ORIENT: encompass
+TAGS: layout allow_dup unrand
+{{
+    if crawl.game_started() then layout_basic() end
+}}
+MAP
+ENDMAP
+
+NAME: layout_bigger_room
+DEPTH: 9-22, !Vault
+WEIGHT: 10
+ORIENT: encompass
+TAGS: layout allow_dup unrand
+{{
+    if crawl.game_started() then layout_bigger_room() end
+}}
+MAP
+ENDMAP
+
+NAME: layout_plan_4
+DEPTH: Vault, Pan, 4-
+WEIGHT: 1 (Pan), 2 (Vault), 10
+ORIENT: encompass
+TAGS: layout allow_dup unrand
+{{
+    if crawl.game_started() then layout_plan_4() end
+}}
+MAP
+ENDMAP
+
+NAME: layout_shoals
+DEPTH: Shoals
+CHANCE: 100%
+ORIENT: encompass
+TAGS: layout allow_dup unrand
+{{
+    if crawl.game_started() then layout_shoals() end
+}}
+MAP
+ENDMAP
+
+NAME: layout_swamp
+DEPTH: Swamp
+CHANCE: 100%
+ORIENT: encompass
+TAGS: layout allow_dup unrand
+{{
+    if crawl.game_started() then dgn.layout_swamp() end
 }}
 MAP
 ENDMAP
