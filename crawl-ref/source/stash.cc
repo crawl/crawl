@@ -661,19 +661,21 @@ bool Stash::matches_search(const std::string &prefix,
         if (Stash::is_filtered(item))
             continue;
 
-        std::string s   = stash_item_name(item);
-        std::string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+        const std::string s   = stash_item_name(item);
+        const std::string ann =
+            stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
         if (search.matches(prefix + " " + ann + s))
         {
             if (!res.count++)
                 res.match = s;
             res.matches += item.quantity;
+            res.set_matching_item(item);
             continue;
         }
 
         if (is_dumpable_artefact(item, false))
         {
-            std::string desc =
+            const std::string desc =
                 munge_description(get_item_description(item, false, true));
 
             if (search.matches(desc))
@@ -681,6 +683,7 @@ bool Stash::matches_search(const std::string &prefix,
                 if (!res.count++)
                     res.match = s;
                 res.matches += item.quantity;
+                res.set_matching_item(item);
             }
         }
     }
@@ -898,15 +901,8 @@ void ShopInfo::add_item(const item_def &sitem, unsigned price)
 
 std::string ShopInfo::shop_item_name(const shop_item &si) const
 {
-    const iflags_t oldflags = si.item.flags;
-
-    if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
-        const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
-
-    if (oldflags != si.item.flags)
-        const_cast<shop_item&>(si).item.flags = oldflags;
-
-    return make_stringf("%s (%u gold)", Stash::stash_item_name(si.item).c_str(), si.price);
+    return make_stringf("%s (%u gold)",
+                        Stash::stash_item_name(si.item).c_str(), si.price);
 }
 
 std::string ShopInfo::shop_item_desc(const shop_item &si) const
@@ -1068,9 +1064,9 @@ bool ShopInfo::matches_search(const std::string &prefix,
         if (Stash::is_filtered(items[i].item))
             continue;
 
-        std::string sname = shop_item_name(items[i]);
-        std::string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
-                                                  &items[i].item, true);
+        const std::string sname = shop_item_name(items[i]);
+        const std::string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
+                                                      &items[i].item, true);
 
         bool thismatch = false;
         if (search.matches(prefix + " " + ann + sname))
@@ -1087,6 +1083,7 @@ bool ShopInfo::matches_search(const std::string &prefix,
             if (!res.count++)
                 res.match = sname;
             res.matches++;
+            res.set_matching_item(items[i].item);
         }
     }
 
@@ -1951,11 +1948,9 @@ bool StashTracker::display_search_results(
     if (results.empty())
         return (false);
 
-    bool travelable = can_travel_interlevel();
-
     StashSearchMenu stashmenu(sort_style);
     stashmenu.set_tag("stash");
-    stashmenu.can_travel   = travelable;
+    stashmenu.can_travel   = can_travel_interlevel();
     stashmenu.action_cycle = Menu::CYCLE_TOGGLE;
     stashmenu.menu_action  = Menu::ACT_EXECUTE;
     std::string title = "match";
@@ -1989,12 +1984,12 @@ bool StashTracker::display_search_results(
         if (res.shop && !res.shop->is_visited())
             me->colour = CYAN;
 
-        if (res.stash && res.stash->get_items().size() > 0)
+        if (res.matching_item.get())
         {
-            item_def first = res.stash->get_items()[0];
-            int itemcol = menu_colour(first.name(DESC_PLAIN).c_str(),
-                                      menu_colour_item_prefix(first),
-                                      "pickup");
+            const item_def &first(*res.matching_item);
+            const int itemcol = menu_colour(first.name(DESC_PLAIN).c_str(),
+                                            menu_colour_item_prefix(first),
+                                            "pickup");
             if (itemcol != -1)
                 me->colour = itemcol;
         }
