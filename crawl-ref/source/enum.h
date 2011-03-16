@@ -1250,6 +1250,9 @@ enum dungeon_feature_type
     DNGN_PERMADRY_FOUNTAIN,
     DNGN_ABANDONED_SHOP,
 
+    // Values below should never be saved.
+    DNGN_EXPLORE_HORIZON = 210, // dummy for redefinition
+
     NUM_FEATURES                       //  208
 };
 

@@ -3134,6 +3134,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_DRY_FOUNTAIN_BLOOD:
     case DNGN_PERMADRY_FOUNTAIN:
         return ("dry fountain");
+    case DNGN_EXPLORE_HORIZON:
+        return ("explore horizon");
     default:
         return ("");
     }
