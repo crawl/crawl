@@ -995,11 +995,6 @@ static void _give_items_skills(const newgame_def& ng)
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
                                30, 1);
 
-            // Give them a buckler, as well; sling users + bucklers is an ideal
-            // combination.
-            newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER);
-            you.skills[SK_SHIELDS] = 2;
-
             // Wield the sling instead.
             you.equip[EQ_WEAPON] = 1;
             break;
