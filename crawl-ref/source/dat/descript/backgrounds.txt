@@ -73,7 +73,7 @@ Ice Elementalists start with the book of Frost and the Freeze spell. The book's 
 %%%%
 Monk
 
-Monks are ready to take on everything in the dungeon wearing just a robe and using their body.
+Monks are ready to take on everything in the dungeon wearing just a robe and using their body, optionally wielding a staff.
 %%%%
 Necromancer
 
