@@ -690,7 +690,8 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
 
     // Handle firing quivered items.
     if (_can_fire_item() && !ctrl
-        && (shift || weapon && is_range_weapon(*weapon)))
+        && (shift || weapon && is_range_weapon(*weapon)
+                     && !mon->wont_attack()))
     {
         macro_buf_add_cmd(CMD_FIRE);
         _add_targeting_commands(mon->pos());
