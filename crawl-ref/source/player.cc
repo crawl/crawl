@@ -2532,10 +2532,10 @@ int carrying_capacity(burden_state_type bs)
 {
     // Yuck.  We need this for gameplay - it nerfs small forms too much
     // otherwise - but there's no good way to rationalize here...  --sorear
-    int used_weight = std::max(you.body_weight(), you.body_weight(true));
+    const int used_weight = std::max(you.body_weight(), you.body_weight(true));
 
-    int cap = (2 * used_weight) + (you.strength() * 300)
-              + (you.airborne() ? 1000 : 0);
+    int cap = ((2 * used_weight) + (you.strength() * 300)
+               + (you.airborne() ? 1000 : 0));
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
 
@@ -2570,7 +2570,7 @@ int burden_change(void)
     you.redraw_evasion = true;
 
     // changed the burdened levels to match the change to max_carried
-    if (you.burden < carrying_capacity(BS_UNENCUMBERED))
+    if (you.burden <= carrying_capacity(BS_UNENCUMBERED))
     {
         you.burden_state = BS_UNENCUMBERED;
 
@@ -2578,7 +2578,7 @@ int burden_change(void)
         if (old_burdenstate != you.burden_state)
             mpr("Your possessions no longer seem quite so burdensome.");
     }
-    else if (you.burden < carrying_capacity(BS_ENCUMBERED))
+    else if (you.burden <= carrying_capacity(BS_ENCUMBERED))
     {
         you.burden_state = BS_ENCUMBERED;
 
