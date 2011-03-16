@@ -49,16 +49,17 @@ Aaron Curtis                 Jukka Kuusisto            Alex Smith
 Denzi                        Maciej Lapinski           Solf
 Mike Drinen                  Jordan Lewis              Michael Spang
 Kieron Dunbar                Icy Lich                  Johan Strandell
-elliptic                     Markus Maier              Pavel Svinarhuk
-Micha Elsner                 Arien Malec               Matthew Tadd
-Carl-Oscar Erneholm          Paul Maloney              William Tanksley, Jr.
-Christopher Evenstar         Wille Mäntylä             Jared 'Twinge' Tinney
-Brett Foster                 Andrew Minton             Matt Titus
-Chris Galardi                Shawn M Moore             Steven Wheeler
-Ben Goetter                  Eva Myers                 Thomas Willem
-Rob Grant                    Erkki Nurmi               Evan Williams
-John Greenberg               Mattias Nyberg            Jeremey Wilson
-GreyKnight                   nyra                      Yelve Yakut
-Joshua Gross                 Dylan O'Donnell           Zooko
-Brian Haase                  Yuuma Oohara
+elliptic                     Markus Maier              Paul 'Curio' Svinarchuk
+Micha Elsner                 Arien Malec               Pavel Svinarhuk
+Carl-Oscar Erneholm          Paul Maloney              Matthew Tadd
+Christopher Evenstar         Wille Mäntylä             William Tanksley, Jr.
+Brett Foster                 Andrew Minton             Jared 'Twinge' Tinney
+Chris Galardi                Shawn M Moore             Matt Titus
+Ben Goetter                  Eva Myers                 Steven Wheeler
+Rob Grant                    Erkki Nurmi               Thomas Willem
+John Greenberg               Mattias Nyberg            Evan Williams
+GreyKnight                   nyra                      Jeremey Wilson
+Joshua Gross                 Dylan O'Donnell           Yelve Yakut
+Brian Haase                  Yuuma Oohara              Zooko
 Shayne Halvorson             Malwyn P
+
