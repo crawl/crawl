@@ -1614,7 +1614,8 @@ const char *dngn_feature_names[] =
 "altar_ashenzari", "", "",
 "fountain_blue", "fountain_sparkling", "fountain_blood",
 "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
-"permadry_fountain", "abandoned_shop"
+"permadry_fountain", "abandoned_shop", "", "",
+"explore_horizon",
 };
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)
