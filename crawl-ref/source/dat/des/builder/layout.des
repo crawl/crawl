@@ -70,7 +70,6 @@ TAGS:   layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
-    fill_area{fill='x'}
 
     layout_type "open"
 
@@ -205,7 +204,6 @@ TAGS:    layout allow_dup unrand
 
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-    fill_area{fill = 'x'}
 
     layout_type "open"
 
@@ -378,7 +376,6 @@ TAGS: layout allow_dup unrand
 
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-    fill_area{fill = 'x'}
 
     layout_type "rooms"
 
@@ -475,7 +472,6 @@ TAGS: layout allow_dup unrand
     local gxm, gym = dgn.max_bounds()
 
     extend_map{width = gxm, height = gym, fill = 'x'}
-    fill_area{fill = 'x'}
 
     layout_type "city"
 
