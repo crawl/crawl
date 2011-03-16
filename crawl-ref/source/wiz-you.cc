@@ -179,6 +179,7 @@ void wizard_change_species(void)
         break;
     }
 
+    burden_change();
     update_player_symbol();
 #ifdef USE_TILE
     init_player_doll();
