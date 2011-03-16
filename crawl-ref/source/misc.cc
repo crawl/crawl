@@ -1288,13 +1288,9 @@ bool scramble(void)
     if (you.form == TRAN_STATUE)
         return (false);
 
-    int max_carry = carrying_capacity();
-
+    const int max_carry = carrying_capacity();
     // When highly encumbered, scrambling out is hard to do.
-    if ((max_carry / 2) + random2(max_carry / 2) <= you.burden)
-        return (false);
-    else
-        return (true);
+    return (you.burden < (max_carry / 2) + random2(max_carry / 2));
 }
 
 bool go_berserk(bool intentional, bool potion)
