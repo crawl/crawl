@@ -2474,16 +2474,24 @@ ENDMAP
 # you could become the monarch! Or not..... (by Shiori)
 #
 # This is not about guarding an unrandart, but very close in spirit. (dpeg)
+# If the vault comes up in Orc or Elf, there will be uniques or natives
+# around.
 #
 NAME:   sword_in_stone
 TAGS:   mini_float patrolling
-DEPTH:  5-26, !Lair, !Orc, !Tomb, !Shoals, !Slime, !Swamp, !Snake
+DEPTH:  D:5-26, Vault, Orc, Elf
 NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item katana /\
             good_item triple sword / good_item double sword
 KFEAT:  S = known teleport trap
 NSUBST: n = n/cbn
-: if you.absdepth() < 10 then
+: if you.branch() == "Orc" then
+NSUBST: k = 1:o / *:k
+KMONS:  k = orc warrior / orc knight w:5 / orc w:1
+: elseif you.branch() == "Elf" then
+NSUBST: k = 2=CDKL / *:k
+KMONS:  k = deep elf knight
+: elseif you.absdepth() < 10 then
 SUBST: k = AWXYZ
 : elseif you.absdepth() < 13 then
 SUBST: k = ABCDE
@@ -2515,6 +2523,7 @@ KMONS: W = human; short sword . banded mail | chain mail . large shield
 KMONS: X = human; scimitar . scale mail|chain mail . shield
 KMONS: Y = human; sabre | long sword . robe | leather armour . buckler | nothing
 KMONS: Z = orc; falchion | long sword . ring mail | scale mail . shield | nothing
+KMONS: o = Blork the orc / orc warrior; great sword | long sword . chain mail . shield
 MAP
 kkkkkkk
 kkkkkkk
