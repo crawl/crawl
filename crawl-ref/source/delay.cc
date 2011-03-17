@@ -1143,6 +1143,8 @@ static void _finish_delay(const delay_queue_item &delay)
             {
                 mprf("You finish %s the %s into pieces.",
                      (you.has_usable_claws()
+                      || player_mutation_level(MUT_BEAK)
+                         && player_mutation_level(MUT_TALONS)
                       || you.has_usable_fangs() == 3
                          && you.species != SP_VAMPIRE) ? "ripping"
                                                        : "chopping",
