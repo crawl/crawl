@@ -208,7 +208,7 @@ public:
     bool find_home_anywhere();
 
     void set_ghost(const ghost_demon &ghost, bool has_name = true);
-    void ghost_init();
+    void ghost_init(bool need_pos = true);
     void pandemon_init();
     void dancing_weapon_init();
     void labrat_init();
