@@ -4326,7 +4326,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
         mapgen_report_map_use(place.map);
 #endif
 
-    const bool is_layout = place.map.has_tag("layout");
+    const bool is_layout = place.map.is_overwritable_layout();
     // If the map takes the whole screen or we were only requested to
     // build the vault, our work is done.
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout))

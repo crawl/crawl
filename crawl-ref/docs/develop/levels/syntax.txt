@@ -401,9 +401,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              vault!"
           * "no_hmirror": Like no_rotate, but for horizontal mirroring.
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
-          * "layout": Lua code that dungeon.cc uses for generating level
-             layouts.  Do *NOT* use or mess with unless you know what
-             you're doing.
+          * "overwritable": Lets the dungeon builder overwrite this vault with
+             other ones.  Don't use this casually.
+          * "layout": Makes the vault eligible for use as a level layout.  Do
+             not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
              compatible with, for vaults that don't fit in with all layouts;
              the absence of this type of tags means it can go with any layout.
