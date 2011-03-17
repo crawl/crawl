@@ -1028,13 +1028,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         {
             // Smaller chance of spattering surrounding squares.
             for (adjacent_iterator ai(where); ai; ++ai)
-            {
-                // Spattering onto walls etc. less likely.
-                if (grd(*ai) < DNGN_MINMOVE && !one_chance_in(3))
-                    continue;
-
                 _maybe_bloodify_square(*ai, amount/15);
-            }
         }
     }
 }
@@ -1084,9 +1078,6 @@ void blood_spray(const coord_def& origin, monster_type montype, int level)
 
             if (in_bounds(bloody) && ld.see_cell(bloody))
             {
-                if (feat_is_solid(grd(bloody)) && coinflip())
-                    continue;
-
                 bleed_onto_floor(bloody, montype, 99);
                 break;
             }
