@@ -5707,7 +5707,7 @@ static monsterentry mondata[] = {
     MONS_NERGALLE, 'o', WHITE, "Nergalle",
     M_UNIQUE | M_SPELLCASTER | M_SEE_INVIS | M_ACTUAL_SPELLS | M_WARM_BLOOD
         | M_SPEAKS,
-    MR_RES_FIRE | MR_RES_COLD,
+    MR_NO_FLAGS,
     600, 12, MONS_ORC, MONS_ORC, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 0, 0, 60 },
