@@ -2125,7 +2125,7 @@ void define_monster(monster* mons)
         ghost_demon ghost;
         ghost.init_player_ghost();
         mons->set_ghost(ghost);
-        mons->ghost_init();
+        mons->ghost_init(!mons->props.exists("fake"));
         mons->bind_melee_flags();
         mons->bind_spell_flags();
         if (mons->ghost->species == SP_DEEP_DWARF)

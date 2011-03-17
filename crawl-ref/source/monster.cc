@@ -3712,7 +3712,7 @@ void monster::set_new_monster_id()
     mid = ++you.last_mid;
 }
 
-void monster::ghost_init()
+void monster::ghost_init(bool need_pos)
 {
     set_new_monster_id();
     type            = MONS_PLAYER_GHOST;
@@ -3740,7 +3740,7 @@ void monster::ghost_init()
     // Summoned player ghosts are already given a position; calling this
     // in those instances will cause a segfault. Instead, check to see
     // if we have a home first. {due}
-    if (!in_bounds(pos()))
+    if (need_pos && !in_bounds(pos()))
         find_place_to_live();
 }
 
