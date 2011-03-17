@@ -523,7 +523,7 @@ struct spell_desc
 
 {
     SPELL_TORNADO, "Tornado",
-     SPTYP_CONJURATION | SPTYP_AIR,
+     SPTYP_AIR,
      SPFLAG_AREA,
      9,
      200,
