@@ -679,7 +679,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_CHARMS]       = 2;
-        you.skills[SK_HEXES]        = 2;
         weap_skill = 2;
         break;
 
