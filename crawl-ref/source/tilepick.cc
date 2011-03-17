@@ -1117,12 +1117,22 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // small abominations ('x')
     case MONS_UNSEEN_HORROR:
         return TILEP_MONS_UNSEEN_HORROR;
+    case MONS_ABOMINATION_SMALL:
+        return TILEP_MONS_ABOMINATION_SMALL;
+
+    // abyssal monsters (not assigned/implemented yet)
     case MONS_LURKING_HORROR:
         return TILEP_MONS_LURKING_HORROR;
     case MONS_ANCIENT_ZYME:
         return TILEP_MONS_ANCIENT_ZYME;
-    case MONS_ABOMINATION_SMALL:
-        return TILEP_MONS_ABOMINATION_SMALL;
+    case MONS_STARCURSED_MASS:
+        return TILEP_MONS_STARCURSED_MASS;
+    case MONS_TENTACLED_STARSPAWN:
+        return TILEP_MONS_TENTACLED_STARSPAWN;
+    case MONS_THRASHING_HORROR:
+        return MONS_THRASHING_HORROR;
+    case MONS_WRETCHED_STAR:
+        return MONS_WRETCHED_STAR;
 
     // flying insects ('y')
     case MONS_YELLOW_WASP:

@@ -224,6 +224,10 @@ silver_star MONS_SILVER_STAR /*'*'*/
 %sdir dc-mon/abyss
 ancient_zyme MONS_ANCIENT_ZYME
 lurking_horror MONS_LURKING_HORROR
+starcursed_mass MONS_STARCURSED_MASS
+tentacled_starspawn MONS_TENTACLED_STARSPAWN
+thrashing_horror MONS_THRASHING_HORROR
+wretched_star MONS_WRETCHED_STAR
 
 ### Demonic monsters
 ## Arch demons ('&')
