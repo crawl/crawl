@@ -15,7 +15,7 @@ The contents of this text are:
 0-d     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, book, wand,
-                chaos_knight, priest,
+                religion,
                 species, background, random_pick, good_random,
                 restart_after_game
 2-  File System and Sound.
@@ -272,11 +272,14 @@ remember_name = true
         initial name prompt - hitting Enter at the name prompt will
         simply reuse your old name if remember_name is set.
 
-weapon = (random | short sword | hand axe | spear | mace | trident | falchion)
+weapon = (short sword | falchion | hand axe | spear | mace | trident
+          | quarterstaff | unarmed | random)
         Specifying the weapon option allows you to bypass the weapon
-        selection screen.  Note that tridents and falchions are restricted to
-        only fighters and gladiators, but you'll get the standard query in
-        illegal cases.
+        selection screen. Tridents and falchions are restricted to only
+        fighters and gladiators, quarterstaves are restricted to monks,
+        and unarmed is restricted to monks and races with claws. The
+        standard weapon prompt will be shown if an illegal choice for the
+        selected background is specified.
 
 book = (flame | fire | ice | cold | random)
         Conjurers can choose their starting spellbook. Note flame=fire and

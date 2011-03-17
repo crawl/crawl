@@ -155,6 +155,8 @@ static weapon_type _str_to_weapon(const std::string &str)
         return (WPN_TRIDENT);
     else if (str == "hand axe" || str == "handaxe")
         return (WPN_HAND_AXE);
+    else if (str == "quarterstaff")
+        return (WPN_QUARTERSTAFF);
     else if (str == "unarmed" || str == "claws")
         return (WPN_UNARMED);
     else if (str == "random")
@@ -181,8 +183,10 @@ static std::string _weapon_to_str(int weapon)
         return "trident";
     case WPN_HAND_AXE:
         return "hand axe";
+    case WPN_QUARTERSTAFF:
+        return "quarterstaff";
     case WPN_UNARMED:
-        return "claws";
+        return "unarmed";
     case WPN_RANDOM:
     default:
         return "random";

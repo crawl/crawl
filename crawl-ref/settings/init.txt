@@ -59,7 +59,8 @@
 #
 # name = Delilah
 # remember_name = false
-# weapon = (short sword | falchion | hand axe | spear | mace | trident | random)
+# weapon = (short sword | falchion | hand axe | spear | mace | trident
+#           | quarterstaff | unarmed | random)
 # book = (fire | ice | random)
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
 # species = (Human |...| Vampire | random)
