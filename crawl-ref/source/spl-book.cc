@@ -266,7 +266,6 @@ int book_rarity(uint8_t which_book)
     case BOOK_YOUNG_POISONERS:
     case BOOK_STALKING:    //jmf: added 24jun2000
     case BOOK_WAR_CHANTS:
-    case BOOK_BRANDS:
         return 5;
 
     case BOOK_CLOUDS:
@@ -316,11 +315,12 @@ int book_rarity(uint8_t which_book)
     case BOOK_DESTRUCTION:
         return 30;
 
+    case BOOK_BRANDS:        // XXX: Temporarily disabled along with AM
 #if TAG_MAJOR_VERSION == 32
     case BOOK_MINOR_MAGIC_II:
     case BOOK_MINOR_MAGIC_III:
-        return 100;
 #endif
+       return 100;
 
     default:
         return 1;
