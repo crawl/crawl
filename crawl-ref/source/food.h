@@ -36,6 +36,9 @@ enum food_type
     NUM_FOODS                          //   23
 };
 
+#define BERSERK_NUTRITION    700
+#define HUNGER_STARVING     1000
+
 int count_corpses_in_pack(bool blood_only = false);
 bool butchery(int which_corpse = -1, bool bottle_blood = false);
 
