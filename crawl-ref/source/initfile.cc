@@ -377,6 +377,10 @@ static job_type _str_to_job(const std::string &str)
         job = JOB_UNKNOWN;
 #endif
 
+// XXX: Arcane Marksmen are temporarily disabled
+    if (job == JOB_ARCANE_MARKSMAN)
+        job = JOB_UNKNOWN;
+
     if (job == JOB_UNKNOWN)
         fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
 

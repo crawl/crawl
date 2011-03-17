@@ -405,6 +405,8 @@
     SPELL_PETRIFY,
     SPELL_DIG,
     SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
 },
 
 {   // Book of Brands
