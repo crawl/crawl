@@ -2371,9 +2371,13 @@ static void _decrement_durations()
         notify_stat_change(STAT_INT, -5, true, "brilliance running out");
     }
 
-    if (_decrement_a_duration(DUR_BERSERK, delay,
-                              "You are no longer berserk."))
+    if (you.duration[DUR_BERSERK]
+        && (_decrement_a_duration(DUR_BERSERK, delay)
+            || you.hunger <= HUNGER_STARVING + BERSERK_NUTRITION))
     {
+        mpr("You are no longer berserk.");
+        you.duration[DUR_BERSERK] = 0;
+
         // Sometimes berserk leaves us physically drained.
         //
         // Chance of passing out:
@@ -2427,8 +2431,8 @@ static void _decrement_durations()
 
         slow_player(dur);
 
-        make_hungry(700, true);
-        you.hunger = std::max(50, you.hunger);
+        make_hungry(BERSERK_NUTRITION, true);
+        you.hunger = std::max(HUNGER_STARVING, you.hunger);
 
         // 1KB: No berserk healing.
         you.hp = (you.hp + 1) * 2 / 3;

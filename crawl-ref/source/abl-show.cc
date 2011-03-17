@@ -1560,11 +1560,6 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-        if (you.hunger_state < HS_SATIATED && !you.is_undead)
-        {
-            mpr("You're too hungry to go berserk.");
-            return (false);
-        }
         return (you.can_go_berserk(true) && berserk_check_wielded_weapon());
 
     case ABIL_FLY_II:
