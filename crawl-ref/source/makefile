@@ -354,6 +354,11 @@ DATADIR       := share/crawl
 SAVEDIR       := ~/.crawl
 endif
 
+ifneq ($(patsubst /opt%,%,$(prefix)),$(prefix))
+DATADIR := data
+SAVEDIR := ~/.crawl
+endif
+
 
 INCLUDES_L += -Icontrib/install/include
 LIBS += -Lcontrib/install/lib
