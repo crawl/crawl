@@ -133,9 +133,10 @@ static void _give_wand(monster* mon, int level)
 
         item_def& wand = mitm[idx];
 
-        // Don't give top-tier wands before 5 HD.
-        if (mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND)
-            || mon->type == MONS_IJYB && crawl_state.game_is_sprint())
+        // Don't give top-tier wands before 5 HD, except to Ijyb and not in
+        // sprint.
+        if ((mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND))
+            && (mon->type != MONS_IJYB || crawl_state.game_is_sprint()))
         {
             // Technically these wands will be undercharged, but it
             // doesn't really matter.
