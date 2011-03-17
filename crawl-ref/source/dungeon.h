@@ -318,6 +318,6 @@ bool dgn_square_travel_ok(const coord_def &c);
 
 void builder_basic(int level_number);
 void bigger_room();
-bool plan_4(dungeon_feature_type force_wall);
+void plan_4(dungeon_feature_type force_wall);
 
 #endif
