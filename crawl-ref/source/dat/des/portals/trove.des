@@ -349,8 +349,8 @@ ENDMAP
 #
 # The portal vaults:
 #
-# Most of the vaults have 12 items of loot. Usually weighted 'd', 'e', 'f', from
-# good to "worse". Some vaults have more than 12 items for specific reasons.
+# Most of the vaults have 16 items of loot. Usually weighted 'd', 'e', 'f', from
+# good to "worse". Some vaults have more than 16 items for specific reasons.
 #
 ##############################################################################
 
@@ -361,7 +361,7 @@ NAME:    trove_simple
 WEIGHT:  60
 ORIENT:  encompass
 TAGS:    trove no_item_gen no_monster_gen allow_dup
-# Loot: 12 items.
+# Loot: 16 items.
 ITEM:   any useful good_item
 ITEM:   acquire jewellery / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
@@ -371,7 +371,8 @@ trove.milestone(_G)
 }}
 MAP
 xxxxxx
-xddfdx
+xddddx
+xfeedx
 xefedx
 xdefdx
 xx++xx
@@ -388,7 +389,7 @@ NAME:    trove_garden
 WEIGHT:  40
 ORIENT:  encompass
 TAGS:    trove no_item_gen no_monster_gen allow_dup
-# Loot: 12 items, spread out a bit.
+# Loot: 16 items, spread out a bit.
 KFEAT:   x = X
 COLOUR:  o = blue
 #
@@ -442,15 +443,15 @@ MAP
 1.1'"'wwW'".1ooooooooooooooo1.1.1.1.1.1.1.
 .1."'"wwW''1.o_____________o.1.1.1.1.1.1.1
 1.1'"'Www'm'1o_____________o1.1.1.1.1.1.1.
-.1.1'"'wwW'''o___xxx+xxx___o.1.m.1.1.1.1.1
-1.1."'"Www'''o__xxdx_xdxx__o1.1.1.1.1.1.1.
+.1.1'"'wwW'''o__xxxx+xxxx__o.1.m.1.1.1.1.1
+1.1."'"Www'''o__xddx_xedx__o1.1.1.1.1.1.1.
 .1.1."'"Www''o__xefx_xdex__o.1.1.1.1.1.1.1
 1.1.1."'"Ww''o__xxx=_=xxx__o1.1.1.1.1.1.1.
 .1.1.1."'"ww'o__+___1___+__o.1.m.1.1.1.1.1
 1.1.1.1'"'mwWo__xxx=_=xxx__o1.1.1.1.1.1.1.
 .1.1.1.1'"'wwo__xdfx_xdex__o.1.1.1.1.1.1.1
-1.1.1.1."'"WwoV_xxex_xdxx__o1.1.1.1.1.1.1.
-.1.1.1.1.1'"'ovvVxxx+xx_x__o.1.1.1.1.1.1.1
+1.1.1.1."'"WwoV_xdex_xdfx__o1.1.1.1.1.1.1.
+.1.1.1.1.1'"'ovvxxxx+xxxx__o.1.1.1.1.1.1.1
 1.1.1.1.1.1'"oVvV__________o1.1.1.1.1.1.1.
 .1.1.1.1.m.1'o_vvvV________o.1.m.1.1.1.1.1
 1.1.1.1.1.1.1o_vvvvvv______o1.1.1.1.1.1.1.
@@ -491,9 +492,9 @@ xd.........dx
 xx.xxx.xxx.xx
 xf.dxe.dxe.dx
 xx.xxx.xxx.xx
-xT.fxd.fxd.Tx
+xe.fxd.fxd.ex
 xx.xxx.xxx.xx
-x...........x
+xe.........dx
 xxxxx+++xxxxx
     x...x
     x...x
@@ -509,7 +510,7 @@ NAME:   trove_jewel_1
 WEIGHT: 20
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
-# Loot: once again, 12 items.
+# Loot: once again, 16 items.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery
 COLOUR: o = blue
 : trove.setup_features(_G)
@@ -526,6 +527,8 @@ x......x
 x+o..o+x
 xdo..odx
 xdo..odx
+xdo..odx
+xdo..odx
 xdoooodx
 xddddddx
 xxxxxxxx
@@ -536,7 +539,7 @@ NAME:   trove_jewel_2
 WEIGHT: 20
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
-# Loot: once again, 12 items.
+# Loot: 15 items this time.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 COLOUR: x = blue
 : trove.setup_features(_G)
@@ -547,6 +550,7 @@ MAP
 xxxxxxxx
 xddd+<Ax
 xdddxxxx
+xdddx
 xdddx
 xdddx
 xxxxx
@@ -561,7 +565,7 @@ WEIGHT: 5
 : end
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
-# Loot: once again, 12 items.
+# Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 : trove.setup_features(_G)
@@ -573,6 +577,8 @@ x......x
 xxx++xxx
 x......x
 x+o..o+x
+xdo..odx
+xdo..odx
 xdo..odx
 xdo..odx
 xdoooodx
@@ -589,7 +595,7 @@ WEIGHT: 5
 : end
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
-# Loot: once again, 12 items.
+# Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 : trove.setup_features(_G)
@@ -602,6 +608,7 @@ xddd+<Ax
 xdddxxxx
 xdddx
 xdddx
+xdddx
 xxxxx
 ENDMAP
 
@@ -610,7 +617,7 @@ NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
-# Loot: once again, 12 items.
+# Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
@@ -627,6 +634,8 @@ x......x
 x+o..o+x
 xdo..odx
 xdo..odx
+xdo..odx
+xdo..odx
 xdoooodx
 xddddddx
 xxxxxxxx
@@ -637,7 +646,7 @@ NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
-# Loot: once again, 12 items.
+# Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
@@ -648,6 +657,7 @@ MAP
 xxxxxxxx
 xddd+<Ax
 xdddxxxx
+xdddx
 xdddx
 xdddx
 xxxxx
@@ -696,9 +706,11 @@ WEIGHT: 2
 COLOUR: x = blue
 COLOUR: m = blue
 COLOUR: = = blue
+NSUBST: " = 1:= / *:x
+NSUBST: ' = 1:= / *:x
 # Rock is actually diggable for those people driven made by hatred.
 MONS:   vampire
-# 18 items, just because we're feeling generous.
+# 24 items, just because we're feeling generous.
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
@@ -709,15 +721,15 @@ trove.milestone(_G)
 MAP
         mmmmmmmmmm
         mmm1..1mmm
-xxxxxxxxmmmmmmmmmmxxxxxx
-x......................x
-x.xxxxxxxxxxxxxxxxxxxx.x
-x.xedd+.............<=.x
-x.xdedx.mmmmmmmmmm.xxxxx
-x.xddex.mmm1..1mmm.=dedx
-x=xxxxx.mmmmmmmmmm.xedex
-xA.................xfffx
-xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxmmmmmmmmmmxxxxxxxx
+x........................x
+x.x'x'xxxxxxxxxxxxxxxxxx.x
+x.'edd+...............<x.x
+x.xdedx.mmmmmmmmmm.xx"xx"x
+x.'ddex.mmm1..1mmm."dedddx
+x'xxxxx.mmmmmmmmmm.xededfx
+xA................."fffedx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Another nasty vault, because dpeg asked.
@@ -730,7 +742,7 @@ COLOUR: o = blue
 COLOUR: = = blue
 KFEAT:  1 = deep_water
 KMONS:  1 = shining eye
-# 18 items, 'cos this one is *nasty*. There are 4 extra potions of cure mutation.
+# 21 items, 'cos this one is *nasty*. There are 4 extra potions of cure mutation.
 ITEM:   any useful good_item / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
@@ -755,11 +767,11 @@ wwwwwwwwwwww..g.wwwwwwwwwwwww
 wwwwwwwwww...ge...wwwwwwwwwww
 wwwwwwwwww..<dded.wwwwwwwwwww
 wwwwwwwww...d...d..wwwwwwwwww
-wwwwwwww...fd.A.d...wwwwwwwww
+wwwwwwww.e.fd.A.d..dwwwwwwwww
 wwwwwwwww...d...df..wwwwwwwww
 wwwwwwwwww..gddd<d.wwwwwwwwww
 wwwwwwwwwww..g.dd..wwwwwwwwww
-wwwwwwwwwwwww....wwwwwwwwwwww
+wwwwwwwwwwwww.f..wwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwww1ww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -882,7 +894,7 @@ xxxxx xdx xfx xfx
       xxx xxx xxx
 ENDMAP
 
-# 12 items, but you have to dig for them.  Wand is included.
+# 20 items, but you have to dig for them.  Wand is included.
 NAME:    trove_dig
 TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  5
@@ -905,7 +917,15 @@ vvv...vvv
 vem...mfv
 vvv...vvv
 vem...mfv
+vvv...vvv
+vem...mfv
+vvv...vvv
+vem...mfv
 vvv.h.vvv
+vdm...mgv
+vvv...vvv
+vdm...mgv
+vvv...vvv
 vdm...mgv
 vvv...vvv
 vdm...mgv
@@ -915,13 +935,11 @@ vvv...vvv
   vvvvv
 ENDMAP
 
-# 12 pieces of armour (plus 4 ordinary ones)
+# 16 pieces of armour
 NAME:   trove_armour_six_rooms
 TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
-ITEM:   any armour
-NSUBST: d = 4:e / *:d
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
@@ -964,7 +982,7 @@ x............<x
 xxxxxxxxxxxxxxx
 ENDMAP
 
-# 12 pieces of jewellery
+# 16 pieces of jewellery
 NAME:   trove_jewellery_lava
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
@@ -985,11 +1003,11 @@ xlllllllllllllllllllllllllx
 xlllllllllllllllllllllllllx
 xllllllllxxxmmmxxxllllllllx
 xllllllllxA.ddd.Axllllllllx
-xllllllllx.......xllllllllx
+xllllllllx...d...xllllllllx
 xllllllllmd.....dmllllllllx
-xllllllllmd..<..dmllllllllx
+xllllllllmdd.<.ddmllllllllx
 xllllllllmd.....dmllllllllx
-xllllllllx.......xllllllllx
+xllllllllx...d...xllllllllx
 xllllllllxA.ddd.Axllllllllx
 xllllllllxxxmmmxxxllllllllx
 xlllllllllllllllllllllllllx
@@ -1003,7 +1021,7 @@ xlllllllllllllllllllllllllx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# 12 scrolls and books
+# 16 scrolls and books
 NAME:   trove_books_scrolls
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
@@ -1016,13 +1034,13 @@ trove.milestone(_G)
 }}
 MAP
      xxxxx
-     x<.<x
-     x...x
-     x...x
+     xd.dx
+     xx.xx
+     xd.dx
     xxx+xxx
 xxxxx.....xxxxx
 xdxdx.....xdxdx
-x...+..A..+...x
+x...+.<.A.+...x
 xdxdx.....xdxdx
 xxxxx.....xxxxx
     xxx+xxx
@@ -1032,7 +1050,7 @@ xxxxx.....xxxxx
      xxxxx
 ENDMAP
 
-# 8 scrolls and wands
+# 16 scrolls and wands
 NAME:   trove_wands_scrolls
 TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
@@ -1046,11 +1064,11 @@ trove.milestone(_G)
 MAP
 xxxxx
 x...xxxx
-x.A....xxxx
-x....x.eeexxxx
-xxxx...exe...xxxx
-   xxxxeee.x....x
-      xxxx....<.x
+x.A.eeexxxx
+x...exe...xxxx
+xxxxeee.x.eeexxxx
+   xxxx...exe...x
+      xxxxeee.<.x
          xxxx...x
             xxxxx
 ENDMAP
