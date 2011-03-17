@@ -54,6 +54,12 @@
             end
         end
     end
+
+    function random_wall_material(e)
+        if not you.in_branch("Lair") and crawl.one_chance_in(20) then
+            e.subst('x : ccv')
+        end
+    end
 }}
 
 ##############################################################
@@ -122,6 +128,8 @@ TAGS:   overwritable layout allow_dup unrand
     if not spotty and crawl.one_chance_in(4) or spotty then
         smear_map{iterations=smears, smear='x', onto='.', boxy=smear_boxy}
     end
+
+    random_wall_material(_G)
 }}
 MAP
 ENDMAP
@@ -181,6 +189,8 @@ TAGS:    overwritable layout allow_dup unrand
     if not crawl.one_chance_in(4) then
         spotty_map{boxy = crawl.coinflip()}
     end
+
+    random_wall_material(_G)
 }}
 MAP
 ENDMAP
@@ -346,6 +356,8 @@ TAGS:    overwritable layout allow_dup unrand
             end
         end
     end
+
+    random_wall_material(_G)
 }}
 MAP
 ENDMAP
@@ -427,6 +439,8 @@ TAGS: overwritable layout allow_dup unrand
                           random_room_point(rooms[i - 1]))
         end
     end
+
+    random_wall_material(_G)
 }}
 MAP
 ENDMAP
@@ -584,6 +598,8 @@ TAGS: overwritable layout allow_dup unrand
     if not crawl.one_chance_in(4) then
         spotty_map { boxy = true, iterations = 100 }
     end
+
+    random_wall_material(_G)
 }}
 MAP
 ENDMAP
