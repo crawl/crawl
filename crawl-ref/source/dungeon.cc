@@ -5862,7 +5862,7 @@ void bigger_room()
 
 
 // A more chaotic version of city level.
-bool plan_4(dungeon_feature_type force_wall)
+void plan_4(dungeon_feature_type force_wall)
 {
     env.level_build_method += make_stringf(" plan_4 [%d]", (int) force_wall);
     env.level_layout_types.insert("city");
@@ -5936,8 +5936,6 @@ bool plan_4(dungeon_feature_type force_wall)
 
         _octa_room(room, oblique_max, feature);
     }
-
-    return true;
 }
 
 static bool _octa_room(dgn_region& region, int oblique_max,
