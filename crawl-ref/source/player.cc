@@ -2665,14 +2665,24 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     if (you.transfer_skill_points > 0)
     {
-        int amount = exp_gained * 10
+        // Can happen if the game got interrupted during target skill choice.
+        if (is_invalid_skill(you.transfer_to_skill))
+        {
+            you.transfer_from_skill = SK_NONE;
+            you.transfer_skill_points = 0;
+            you.transfer_total_skill_points = 0;
+        }
+        else
+        {
+            int amount = exp_gained * 10
                                 / calc_skill_cost(you.skill_cost_level,
                                             you.skills[you.transfer_to_skill]);
-        if (amount >= 20 || one_chance_in(20 - amount))
-        {
-            amount = std::max(20, amount);
-            transfer_skill_points(you.transfer_from_skill,
-                                  you.transfer_to_skill, amount, false);
+            if (amount >= 20 || one_chance_in(20 - amount))
+            {
+                amount = std::max(20, amount);
+                transfer_skill_points(you.transfer_from_skill,
+                                      you.transfer_to_skill, amount, false);
+            }
         }
     }
 
