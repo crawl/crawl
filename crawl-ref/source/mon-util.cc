@@ -390,7 +390,11 @@ monster* monster_at(const coord_def &pos)
         return NULL;
 
     const int mindex = mgrd(pos);
-    return (mindex != NON_MONSTER ? &menv[mindex] : NULL);
+    if (mindex == NON_MONSTER)
+        return NULL;
+
+    ASSERT(mindex <= MAX_MONSTERS);
+    return (&menv[mindex]);
 }
 
 int mons_piety(const monster* mon)
