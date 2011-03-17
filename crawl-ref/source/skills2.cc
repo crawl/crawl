@@ -359,7 +359,7 @@ COLORS SkillMenuEntry::_get_colour() const
     else if (you.practise_skill[m_sk] == 0 && you.skills[m_sk] < 27)
         return DARKGREY;
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
-                                        || m_sk == you.transfer_to_skill))
+                                           || m_sk == you.transfer_to_skill))
     {
         return LIGHTBLUE;
     }
