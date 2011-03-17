@@ -64,13 +64,23 @@ function TroveMarker:activate(marker, verbose)
 end
 
 function TroveMarker:fdesc_long (marker)
-  local state = "This portal requires " ..
+  local state
+  if self.props.toll_item.base_type == "miscellaneous" then
+    state = "This portal requires the presence of " ..
             self:item_name() .. " to function.\n"
+  else
+    state = "This portal needs " ..
+            self:item_name() .. " to function.\n"
+  end
   return state .. "\n" .. self.props.desc_long
 end
 
 function TroveMarker:overview_note (marker)
-  return self:item_name(false)
+  if self.props.toll_item.base_type == "miscellaneous" then
+    return "show " .. self:item_name(false)
+  else
+    return "give " .. self:item_name(false)
+  end
 end
 
 function TroveMarker:debug_portal (marker)
