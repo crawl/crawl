@@ -500,6 +500,9 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool teeth_butcher    = (you.has_usable_fangs() == 3
                              && you.species != SP_VAMPIRE);
 
+    bool birdie_butcher   = (player_mutation_level(MUT_BEAK)
+                             && player_mutation_level(MUT_TALONS));
+
     bool barehand_butcher = (form_can_butcher_barehanded(you.form)
                                  || you.has_claws())
                              && !player_wearing_slot(EQ_GLOVES);
@@ -507,7 +510,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
                              && !you.inv[you.equip[EQ_GLOVES]].cursed());
 
-    bool can_butcher      = (teeth_butcher || barehand_butcher
+    bool can_butcher      = (teeth_butcher || barehand_butcher || birdie_butcher
                              || you.weapon() && can_cut_meat(*you.weapon()));
 
     if (!Options.easy_butcher && !can_butcher)
