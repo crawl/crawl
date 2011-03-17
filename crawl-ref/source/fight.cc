@@ -5378,7 +5378,7 @@ void melee_attack::mons_do_spines()
         }
 
         int dmg = roll_dice(mut, 6);
-        int ac = random2(1+attacker->as_monster()->armour_class());
+        int ac = random2(1 + attacker->armour_class());
 
         int hurt = dmg - ac - evp;
 
@@ -5393,7 +5393,7 @@ void melee_attack::mons_do_spines()
                                    " is struck by your spines.");
         }
 
-        attacker->as_monster()->hurt(&you, hurt);
+        attacker->hurt(&you, hurt);
     }
 }
 
