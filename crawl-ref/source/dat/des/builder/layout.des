@@ -66,7 +66,7 @@ NAME:   layout_forbidden_donut
 DEPTH:  4-22, Pan, !Vault
 WEIGHT: 1 (Pan), 10
 ORIENT: encompass
-TAGS:   layout allow_dup unrand
+TAGS:   overwritable layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
@@ -136,7 +136,7 @@ NAME:    layout_cross
 DEPTH:   Pan, 4-22, !Vault
 WEIGHT:  1 (Pan), 10
 ORIENT:  encompass
-TAGS:    layout allow_dup unrand
+TAGS:    overwritable layout allow_dup unrand
 
 {{
     local gxm, gym = dgn.max_bounds()
@@ -197,7 +197,7 @@ NAME: layout_big_octagon
 DEPTH:   4-22, !Vault
 WEIGHT:  1 (Pan), 10
 ORIENT:  encompass
-TAGS:    layout allow_dup unrand
+TAGS:    overwritable layout allow_dup unrand
 
 {{
     -- Step 1: Big octagon.
@@ -359,7 +359,7 @@ NAME: layout_rooms
 DEPTH: Pan, 4-22, !Vault
 WEIGHT: 6 (Pan), 20
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     function random_room_point(room)
         return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
@@ -441,7 +441,7 @@ DEPTH: Dis, Vault, 15-
 WEIGHT: 1 (Vault), 10
 CHANCE: 100% (Dis)
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     function treasure_area (x1, y1, x2, y2)
         x2 = x2 + 1
@@ -555,7 +555,7 @@ NAME: layout_misc
 DEPTH: Pan, 4-22, !Vault
 WEIGHT: 1 (Pan), 10
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     function random_coord(max_x, max_y)
         return crawl.random2(max_x - 20) + 10,
@@ -592,7 +592,7 @@ NAME: layout_caves
 DEPTH: Hive, Orc, Slime, !Vault
 CHANCE: 100%
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
 
@@ -619,7 +619,7 @@ NAME: layout_spotty
 DEPTH: 9-22, !Vault
 WEIGHT: 10
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
 
@@ -642,7 +642,7 @@ NAME: layout_roguey
 DEPTH: 1-, !Vault
 WEIGHT: 40
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     function make_inner_room(room, feat, treasure)
         local inner_room = {
@@ -759,7 +759,7 @@ NAME: layout_basic
 DEPTH: 1-, !Vault
 WEIGHT: 90
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     if crawl.game_started() then layout_basic() end
 }}
@@ -770,7 +770,7 @@ NAME: layout_bigger_room
 DEPTH: 9-22, !Vault
 WEIGHT: 10
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     if crawl.game_started() then layout_bigger_room() end
 }}
@@ -781,7 +781,7 @@ NAME: layout_plan_4
 DEPTH: Vault, Pan, 4-
 WEIGHT: 1 (Pan), 2 (Vault), 10
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     if crawl.game_started() then layout_plan_4() end
 }}
@@ -792,7 +792,7 @@ NAME: layout_shoals
 DEPTH: Shoals
 CHANCE: 100%
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     if crawl.game_started() then layout_shoals() end
 }}
@@ -803,7 +803,7 @@ NAME: layout_swamp
 DEPTH: Swamp
 CHANCE: 100%
 ORIENT: encompass
-TAGS: layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand
 {{
     if crawl.game_started() then dgn.layout_swamp() end
 }}

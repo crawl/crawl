@@ -2830,7 +2830,7 @@ bool map_def::is_minivault() const
 // built on it.
 bool map_def::is_overwritable_layout() const
 {
-    return (has_tag("layout") && !has_tag("sealed_layout"));
+    return has_tag("overwritable");
 }
 
 // Tries to dock a floating vault - push it to one edge of the level.
