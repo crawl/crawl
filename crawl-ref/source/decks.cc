@@ -2048,10 +2048,8 @@ static void _experience_card(int power, deck_rarity_type rarity)
     else
         mpr("You feel knowledgeable.");
 
-    // Put some free XP into pool; power_level 2 means fill pool
-    you.exp_available += power * 50;
-    if (power_level >= 2 || you.exp_available > FULL_EXP_POOL)
-        you.exp_available = FULL_EXP_POOL;
+    // Put some free XP into pool; power_level 2 means +20k
+    you.exp_available += (power_level <= 1 ? power * 50 : HIGH_EXP_POOL);
 
     // After level 27, boosts you get don't get increased (matters for
     // charging V:8 with no rN+++ and for felids).

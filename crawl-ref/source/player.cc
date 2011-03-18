@@ -2706,10 +2706,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
         exp_gained = sprint_modify_exp(exp_gained);
     }
 
-    if (you.exp_available + exp_gained > (unsigned int)MAX_EXP_POOL)
-        you.exp_available = MAX_EXP_POOL;
-    else
-        you.exp_available += exp_gained;
+    you.exp_available += exp_gained;
 
     level_change();
 

@@ -164,8 +164,7 @@ const int DEBUG_COOKIE = 32767;
 
 const int MAX_SKILL_LEVEL = 27;
 const int MAX_EXP_TOTAL = 8999999;
-const int MAX_EXP_POOL = 20000;
-const int FULL_EXP_POOL = MAX_EXP_POOL;
+const int HIGH_EXP_POOL = 20000;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 

@@ -367,8 +367,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
         else
             mpr("A flood of memories washes over you.");
-        you.exp_available = std::min(you.exp_available +
-                                     750 * you.experience_level, MAX_EXP_POOL);
+        you.exp_available += 750 * you.experience_level;
         break;
 
     case POT_MAGIC:
