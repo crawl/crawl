@@ -622,16 +622,6 @@ static bool _need_stats_printed()
 }
 #endif
 
-static short _get_exp_pool_colour(int pool)
-{
-    if (pool < HIGH_EXP_POOL/2)
-        return (HUD_VALUE_COLOUR);
-    else if (pool < HIGH_EXP_POOL*3/4)
-        return (YELLOW);
-    else
-        return (RED);
-}
-
 void print_stats(void)
 {
     cursor_control coff(false);
@@ -666,7 +656,7 @@ void print_stats(void)
         textcolor(Options.status_caption_colour);
 #ifdef DEBUG_DIAGNOSTICS
         cprintf("XP: ");
-        textcolor(_get_exp_pool_colour(you.exp_available));
+        textcolor(HUD_VALUE_COLOUR);
         cprintf("%d/%d (%d) ",
                 you.skill_cost_level, you.exp_available, you.experience);
 #else
@@ -675,7 +665,7 @@ void print_stats(void)
         cprintf("%2d ", you.experience_level);
         textcolor(Options.status_caption_colour);
         cprintf("Exp: ");
-        textcolor(_get_exp_pool_colour(you.exp_available));
+        textcolor(HUD_VALUE_COLOUR);
         cprintf("%-5d", you.exp_available);
 #endif
         you.redraw_experience = false;
