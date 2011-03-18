@@ -506,7 +506,7 @@ int zin_check_recite_to_single_monster(const coord_def& where,
         // (The above mean that worshipers will be treated as
         // priests for reciting, even if they aren't actually.)
 
-        // Sanity check: monsters that you can't convert anyways, don't get
+        // Sanity check: monsters that you can't convert anyway don't get
         // recited against.
         if ((mon->is_unclean()
              || mon->is_chaotic()
