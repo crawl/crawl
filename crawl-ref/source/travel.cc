@@ -4369,7 +4369,7 @@ void do_interlevel_travel()
         mesclr();
 }
 
-
+#ifdef USE_TILE
 // (0,0) = same position is handled elsewhere.
 const int dir_dx[8] = {-1, 0, 1, -1, 1, -1,  0,  1};
 const int dir_dy[8] = { 1, 1, 1,  0, 0, -1, -1, -1};
@@ -4431,6 +4431,7 @@ int click_travel(const coord_def &gc, bool force)
 
     return _adjacent_cmd(dest, force);
 }
+#endif
 
 bool check_for_interesting_features()
 {
