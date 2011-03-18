@@ -146,6 +146,8 @@ private:
 
     void handle_noise(const coord_def & pos);
 
+    // Handle specific attack phases (mons and player)
+    void respond_to_attack_phase(phase);
 private:
     // Monster-attack specific stuff
     bool mons_attack_you();
