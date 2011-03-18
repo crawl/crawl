@@ -39,6 +39,16 @@ enum unchivalric_attack_type
     UCAT_ALLY,
 };
 
+enum phase
+{
+    ATK_ATTEMPTED,                      //  0
+    ATK_DODGED,
+    ATK_BLOCKED,
+    ATK_HIT,
+    ATK_DAMAGED,
+    ATK_KILLED
+};
+
 struct mon_attack_def;
 
 int effective_stat_bonus(int wepType = -1);
