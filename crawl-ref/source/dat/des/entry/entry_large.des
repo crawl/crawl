@@ -435,33 +435,33 @@ NAME:    dpeg_entry_circle_labyrinth_c
 TAGS:    entry no_monster_gen no_rotate
 WEIGHT:  6
 ORIENT:  float
+NSUBST:  X = 1:adgj / *:x
 SHUFFLE: ab, cd, ef, gh, ij, kl, mn
 SUBST:   a=., c=., e=., g=., i=., k=., m=.
 SUBST:   b=x, d=x, f=x, h=x, j=x, l=x, n=x
 NSUBST:  . = 1:d / *:.
-NSUBST:  = = 1:= / *:x
 ITEM:    stone / dart
 MAP
           xxxxxxxxxxxxx
        xxxx.....h.....xxxx
     xxxx........h........xxxx
-   xx.......xx=xxxxxx.......xx
-  xx.....xx=x.......xxxx.....xx
- xx....x=x.............xxx....xx
+   xx.......xxXxxxxxx.......xx
+  xx.....xXxx.......xxxx.....xx
+ xx....xXx.............xxx....xx
  x....xx.....xxxBxxx.....gg....x
 xx....i....xxx.....xxx....xx...xx
 x....xxxxjjx.........xx....x....x
 x...xx........xxxxx...xx...xx...x
 x...x....xlllxx...xx...x....x...x
-x...=....x...k.[{(.m...xffffx...x
+x...X....x...k.[{(.m...xffffx...x
 x...x....x...xx...xx...x....e...x
 x...xx...xx...xxnxx...xx...xxxxxx
 x....c....xx...x.....xx....x.....
 xx...xx....xxx.x...xxx....xx....@
  x....xx.....xxxxxxx.....xx......
- xx....x=x.....d.......xxx....xxx
-  xx.....xx=x..d....xxxx.....xx
-   xx.......x=xxxaxxx.......xx
+ xx....xXx.....d.......xxx....xxx
+  xx.....xxXx..d....xxxx.....xx
+   xx.......xxxxxaxxx.......xx
     xxxx.......b.........xxxx
        xxxx....b......xxxx
           xxxxxxxxxxxxx
