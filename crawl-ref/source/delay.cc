@@ -1533,6 +1533,11 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         return false;
     if (at.context != "newly seen" && atype == DELAY_NOT_DELAYED)
         return false;
+    if (you.turn_is_over
+        && (at.context == "already seen" || at.context == "uncharm"))
+    {
+        return false;
+    }
 
     const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
