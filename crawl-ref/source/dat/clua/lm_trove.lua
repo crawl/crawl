@@ -216,7 +216,7 @@ function TroveMarker:item_name(do_grammar)
     end
   end
 
-  if item.sub_type == "silver horn" then
+  if item.sub_type == "horn of Geryon" then
     if do_grammar == false then
       return "horn of Geryon"
     else
@@ -328,7 +328,6 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
     if it.base_type == "miscellaneous" then
       if iplus1 ~= false and item.plus1 ~= false and iplus1 ~= item.plus1 then
         this_item = false
-        crawl.mpr("abc")
       end
     else
     if dry_run ~= nil then crawl.mpr("Checking item: " .. it.name()) end

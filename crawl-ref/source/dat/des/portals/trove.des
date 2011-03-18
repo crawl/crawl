@@ -127,7 +127,7 @@ function trove.get_trove_item(e, value, base_item)
 
        {base="miscellaneous", type="rune of Zot", quant=3, name="slimy", weight=1},
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal", weight=1},
-       {base="miscellaneous", type="silver horn", weight=1} }
+       {base="miscellaneous", type="horn of Geryon", weight=1} }
 
   local chosen = util.random_weighted_from('weight', prices)
   item.base_type = chosen.base
