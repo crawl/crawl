@@ -545,8 +545,6 @@ void SkillMenuEntry::_set_points()
 }
 #endif
 
-#define MIN_COLS            80
-#define MIN_LINES           24
 #define TILES_COL            6
 #define CURRENT_ACTION_SIZE 25
 #define NEXT_ACTION_SIZE    16
@@ -1150,16 +1148,6 @@ int SkillMenu::_get_next_display() const
 
 void skill_menu(bool reskilling)
 {
-#ifndef USE_TILE
-    if (get_number_of_lines() < MIN_LINES || get_number_of_cols() < MIN_COLS)
-    {
-        mprf(MSGCH_ERROR, "Terminal too small (%d, %d) to display the skill "
-             "menu; need at least (%d, %d).", get_number_of_cols(),
-             get_number_of_lines(), MIN_COLS, MIN_LINES);
-        return;
-    }
-#endif
-
     int flags = SKMF_NONE;
 
     if (reskilling)
