@@ -5308,6 +5308,25 @@ bool stasis_blocks_effect(bool calc_unid,
     return (false);
 }
 
+item_def* only_unided_ring()
+{
+    item_def* found = 0;
+
+    for (int i = EQ_LEFT_RING; i < EQ_RIGHT_RING; i++)
+        if (you.equip[i])
+        {
+            item_def& item = you.inv[you.equip[i]];
+            if (!item_type_known(item))
+            {
+                if (found)
+                    return 0;
+                found = &item;
+            }
+        }
+
+    return found;
+}
+
 #ifdef USE_TILE
 // Interactive menu for item drop/use.
 
