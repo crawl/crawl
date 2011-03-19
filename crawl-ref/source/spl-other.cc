@@ -63,6 +63,8 @@ bool cast_sublimation_of_blood(int pow)
 
             if (mons_genus(you.inv[wielded].plus) == MONS_ORC)
                 did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+            if (mons_class_holiness(you.inv[wielded].plus) == MH_HOLY)
+                did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
         }
         else if (is_blood_potion(you.inv[wielded]))
         {
@@ -457,6 +459,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
     }
 
     const bool was_orc = (mons_genus(corpse->plus) == MONS_ORC);
+    const bool was_holy = (mons_class_holiness(corpse->plus) == MH_HOLY);
 
     // We borrow the corpse's object to make our potion.
     corpse->base_type = OBJ_POTIONS;
@@ -480,6 +483,8 @@ bool cast_fulsome_distillation(int pow, bool check_range)
 
     if (was_orc)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+    if (was_holy)
+        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
 
     return (true);
 }

@@ -124,12 +124,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
+        case DID_VIOLATE_HOLY_CORPSE:
             switch (you.religion)
             {
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (!known && thing_done != DID_ATTACK_HOLY)
+                if (!known && thing_done != DID_ATTACK_HOLY && thing_done != DID_VIOLATE_HOLY_CORPSE)
                 {
                     simple_god_message(" forgives your inadvertent unholy act, "
                                        "just this once.");
@@ -1008,7 +1009,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Chaotic", "Attack In Sanctuary",
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
-                "Exploration",
+                "Exploration", "Desecrated Holy Remains",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
