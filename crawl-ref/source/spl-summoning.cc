@@ -2036,6 +2036,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
 {
     int how_many_corpses = 0;
     int how_many_orcs = 0;
+    int how_many_holy = 0;
     int total_mass = 0;
     int unrotted = 0;
 
@@ -2047,6 +2048,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
             how_many_corpses++;
             if (mons_genus(si->plus) == MONS_ORC)
                 how_many_orcs++;
+            if (mons_class_holiness(si->plus) == MH_HOLY)
+                how_many_holy++;
             if (!food_is_rotten(*si))
                 unrotted++;
             destroy_item(si->index());
@@ -2077,6 +2080,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
 
     if (how_many_orcs > 0)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
+    if (how_many_holy > 0)
+        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2 * how_many_holy);
 
     return (success);
 }

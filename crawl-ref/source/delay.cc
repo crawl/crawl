@@ -304,6 +304,7 @@ void stop_delay(bool stop_stair_travel)
                                       : mitm[delay.parm2]);
 
         const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
+        const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
         // Don't skeletonize a corpse if it's no longer there!
         if (delay.parm1
@@ -329,6 +330,8 @@ void stop_delay(bool stop_stair_travel)
 
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+        if (was_holy)
+            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
 
         delay.duration = 0;
         _pop_delay();
@@ -1012,6 +1015,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                       : mitm[delay.parm2]);
 
         const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
+        const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
         vampire_nutrition_per_turn(item, 1);
 
@@ -1032,6 +1036,8 @@ static void _finish_delay(const delay_queue_item &delay)
 
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+        if (was_holy)
+            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
         break;
     }
 
@@ -1130,6 +1136,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 mpr("You finish bottling this corpse's blood.");
 
                 const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
+                const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_blood_potions(item);
@@ -1138,6 +1145,8 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+                if (was_holy)
+                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
             }
             else
             {
@@ -1156,6 +1165,12 @@ static void _finish_delay(const delay_queue_item &delay)
                     simple_god_message(" expects more respect for your"
                                        " departed relatives.");
                 }
+                else if (is_good_god(you.religion)
+                    && mons_class_holiness(item.plus) == MH_HOLY)
+                {
+                    simple_god_message(" expects more respect for holy"
+                                       " creatures!");
+                }
                 else if (you.religion == GOD_ZIN
                          && mons_class_intel(item.plus) >= I_NORMAL)
                 {
@@ -1164,6 +1179,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 }
 
                 const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
+                const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_chunks(item);
@@ -1179,6 +1195,8 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+                if (was_holy)
+                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
             }
 
             // Don't autopickup chunks/potions if there's still another

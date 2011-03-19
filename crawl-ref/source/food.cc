@@ -56,7 +56,7 @@
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
                                                   bool rotten_chunk);
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
-                       int mon_intel = 0);
+                       int mon_intel = 0, bool holy = false);
 static void _eating(object_class_type item_class, int item_type);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(int slot, bool invent);
@@ -1076,6 +1076,7 @@ void eat_inventory_item(int which_inventory_slot)
     {
         const int mons_type  = food.plus;
         const bool cannibal  = is_player_same_species(mons_type);
+        const bool holy      = (mons_class_holiness(mons_type) == MH_HOLY);
         const int intel      = mons_class_intel(mons_type) - I_ANIMAL;
         const bool rotten    = food_is_rotten(food);
         const corpse_effect_type chunk_type = mons_corpse_effect(mons_type);
@@ -1084,7 +1085,7 @@ void eat_inventory_item(int which_inventory_slot)
             return;
 
         _eat_chunk(_determine_chunk_effect(chunk_type, rotten), cannibal,
-                   intel);
+                   intel, holy);
     }
     else
         _eating(food.base_type, food.sub_type);
@@ -1111,13 +1112,14 @@ void eat_floor_item(int item_link)
         const int intel      = mons_class_intel(food.plus) - I_ANIMAL;
         const bool cannibal  = is_player_same_species(food.plus);
         const bool rotten    = food_is_rotten(food);
+        const bool holy      = (mons_class_holiness(food.plus) == MH_HOLY);
         const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
 
         if (rotten && !_player_can_eat_rotten_meat(true))
             return;
 
         _eat_chunk(_determine_chunk_effect(chunk_type, rotten), cannibal,
-                   intel);
+                   intel, holy);
     }
     else
         _eating(food.base_type, food.sub_type);
@@ -1746,7 +1748,7 @@ static void _say_chunk_flavour(bool likes_chunks)
 // Never called directly - chunk_effect values must pass
 // through food::_determine_chunk_effect() first. {dlb}:
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
-                       int mon_intel)
+                       int mon_intel, bool holy)
 {
     bool likes_chunks = player_likes_chunks(true);
     int nutrition     = _chunk_nutrition(likes_chunks);
@@ -1841,6 +1843,9 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         did_god_conduct(DID_CANNIBALISM, 10);
     else if (mon_intel > 0)
         did_god_conduct(DID_EAT_SOULED_BEING, mon_intel);
+
+    if (holy)
+        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
 
     if (do_eat)
     {
@@ -2519,6 +2524,13 @@ bool is_forbidden_food(const item_def &food)
     // Some gods frown upon cannibalistic behaviour.
     if (god_hates_cannibalism(you.religion)
         && is_player_same_species(food.plus))
+    {
+        return (true);
+    }
+
+    // Holy gods do not like it if you are eating holy creatures
+    if (is_good_god(you.religion)
+        && mons_class_holiness(food.plus) == MH_HOLY)
     {
         return (true);
     }
