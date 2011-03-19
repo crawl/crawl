@@ -4223,7 +4223,20 @@ tileidx_t tileidx_bolt(const bolt &bolt)
 
 tileidx_t tileidx_zap(int colour)
 {
-    int col = (colour == ETC_MAGIC ? element_colour(ETC_MAGIC) : colour);
+    int col;
+
+    switch (colour)
+    {
+    case ETC_MAGIC:
+        col = element_colour(ETC_MAGIC);
+        break;
+    case ETC_HOLY:
+        col = YELLOW;
+        break;
+    default:
+        col = colour;
+        break;
+    }
 
     if (col > 8)
         col -= 8;
