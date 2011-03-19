@@ -5312,7 +5312,7 @@ item_def* only_unided_ring()
 {
     item_def* found = 0;
 
-    for (int i = EQ_LEFT_RING; i < EQ_RIGHT_RING; i++)
+    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; i++)
         if (you.equip[i])
         {
             item_def& item = you.inv[you.equip[i]];
