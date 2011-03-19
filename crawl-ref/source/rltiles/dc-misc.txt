@@ -36,6 +36,8 @@ cloud_blue_smoke CLOUD_BLUE_SMOKE
 cloud_blue_smoke_disturbance CLOUD_BLUE_SMOKE_DISTURBANCE
 cloud_grey_smoke CLOUD_GREY_SMOKE
 cloud_grey_smoke_disturbance CLOUD_GREY_SMOKE_DISTURBANCE
+cloud_yellow_smoke CLOUD_YELLOW_SMOKE
+cloud_yellow_smoke_disturbance CLOUD_YELLOW_SMOKE_DISTURBANCE
 
 %variation CLOUD_GREY_SMOKE white
 %lum 0 30

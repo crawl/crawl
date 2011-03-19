@@ -4192,6 +4192,10 @@ tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance)
                                                : TILE_CLOUD_GREY_SMOKE;
                 break;
 
+            case CLOUD_HOLY_FLAMES:
+                ch = TILE_CLOUD_YELLOW_SMOKE;
+                break;
+
             default:
                 ch = TILE_CLOUD_GREY_SMOKE;
                 break;
