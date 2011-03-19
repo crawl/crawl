@@ -2979,6 +2979,7 @@ bool monster::heal(int amount, bool max_too)
 
 void monster::blame_damage(const actor* attacker, int amount)
 {
+    ASSERT(amount >= 0);
     damage_total = std::min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
     if (attacker)
         damage_friendly = std::min<int>(MAX_DAMAGE_COUNTER * 2,
