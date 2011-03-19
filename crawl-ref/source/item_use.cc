@@ -5482,8 +5482,8 @@ item_def* only_unided_ring()
 {
     item_def* found = 0;
 
-    for (int i = EQ_LEFT_RING; i < EQ_RIGHT_RING; i++)
-        if (you.equip[i])
+    for (int i = EQ_LEFT_RING; i <= EQ_RING_EIGHT; i++)
+        if (i != EQ_AMULET && you.equip[i])
         {
             item_def& item = you.inv[you.equip[i]];
             if (!item_type_known(item))
