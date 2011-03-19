@@ -622,6 +622,18 @@ bool mons_speaks(monster* mons)
                                      mons->props["speech_key"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
+
+            if (msg.empty())
+            {
+                // Try again without the prefixes if the key is empty. Vaults
+                // *really* want monsters to use the key specified, rather than
+                // the key with prefixes.
+                std::vector<std::string> faux_prefixes;
+                msg = _get_speak_string(faux_prefixes,
+                                     mons->props["speech_key"].get_string(),
+                                     mons, no_player, no_foe, no_foe_name,
+                                     no_god, unseen);
+            }
         }
 
         // If the monster was originally a unique which has been polymorphed
