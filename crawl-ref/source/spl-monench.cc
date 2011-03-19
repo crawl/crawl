@@ -74,7 +74,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
         if (!mons->has_ench(ENCH_CORONA) && !mons->has_ench(ENCH_SILVER_CORONA))
         {
             mons->add_ench(
-                mon_enchant(ENCH_CORONA, 1, KC_OTHER, random_range(30, 50)));
+                mon_enchant(ENCH_CORONA, 1, 0, random_range(30, 50)));
             simple_monster_message(mons, " is lined in light.");
         }
         return (true);
@@ -92,7 +92,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     return (true);
 }
 
-bool do_slow_monster(monster* mon, kill_category whose_kill)
+bool do_slow_monster(monster* mon, const actor* agent)
 {
     // Try to remove haste, if monster is hasted.
     if (mon->del_ench(ENCH_HASTE, true))
@@ -104,7 +104,7 @@ bool do_slow_monster(monster* mon, kill_category whose_kill)
     // Not hasted, slow it.
     if (!mon->has_ench(ENCH_SLOW)
         && !mons_is_stationary(mon)
-        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, whose_kill)))
+        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent)))
     {
         if (!mon->paralysed() && !mon->petrified()
             && simple_monster_message(mon, " seems to slow down."))

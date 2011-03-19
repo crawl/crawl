@@ -37,7 +37,6 @@
 #include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -56,6 +55,7 @@
 #include "output.h"
 #include "place.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
@@ -138,6 +138,7 @@ static bool _check_moveto_cloud(const coord_def& p,
                                     "Really %s into that cloud of %s?",
                                     move_verb.c_str(),
                                     cloud_name_at_index(cloud).c_str());
+            learned_something_new(HINT_CLOUD_WARNING);
 
             if (!yesno(prompt.c_str(), false, 'n'))
             {
@@ -277,6 +278,14 @@ bool check_moveto(const coord_def& p, const std::string &move_verb)
             && _check_moveto_trap(p, move_verb));
 }
 
+static void _splash()
+{
+    if (you.can_swim())
+        noisy(4, you.pos(), "Floosh!");
+    else if (!beogh_water_walk())
+        noisy(8, you.pos(), "Splash!");
+}
+
 void moveto_location_effects(dungeon_feature_type old_feat,
                              bool stepped, bool allow_shift,
                              const coord_def& old_pos)
@@ -284,7 +293,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
     // Terrain effects.
-    if (is_feat_dangerous(new_grid) && !you.can_cling_to(you.pos()))
+    if (is_feat_dangerous(new_grid) && !you.is_wall_clinging())
     {
         // Lava and dangerous deep water (ie not merfolk).
         const coord_def& entry = (stepped) ? old_pos : you.pos();
@@ -310,29 +319,34 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
 
         if (feat_is_water(new_grid) && !stepped)
-        {
-            if (you.can_swim())
-                noisy(4, you.pos(), "Floosh!");
-            else if (!beogh_water_walk())
-                noisy(8, you.pos(), "Splash!");
-        }
+            _splash();
 
         if (feat_is_water(new_grid) && !you.can_swim() && !beogh_water_walk())
         {
             you.time_taken *= 13 + random2(8);
             you.time_taken /= 10;
+            const bool will_cling = you.can_cling_to_walls()
+                                    && cell_is_clingable(you.pos());
 
             if (!feat_is_water(old_feat))
             {
-                mprf("You %s the %s water.",
-                     stepped ? "enter" : "fall into",
-                     new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                if (stepped && will_cling)
+                {
+                    mpr("You slowly cross the shallow water and cling to the "
+                        "wall.");
+                }
+                else
+                {
+                    mprf("You %s the %s water.",
+                         stepped ? "enter" : "fall into",
+                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                }
             }
 
             if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
                 mpr("You sink to the bottom.");
 
-            if (!feat_is_water(old_feat))
+            if (!feat_is_water(old_feat) && !will_cling)
             {
                 mpr("Moving in this stuff is going to be slow.");
                 if (you.invisible())
@@ -340,6 +354,12 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
         }
     }
+    else if (feat_is_water(new_grid) && you.is_wall_clinging()
+             && !cell_is_clingable(you.pos()))
+    {
+        _splash();
+    }
+
 
     // Icy shield goes down over lava.
     if (new_grid == DNGN_LAVA)
@@ -363,6 +383,9 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(in_bounds(p));
 
+    if (!stepped)
+        you.clear_clinging();
+
     // assuming that entering the same square means coming from above (levitate)
     const coord_def old_pos = you.pos();
     const bool from_above = (old_pos == p);
@@ -384,7 +407,6 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     if (!you.running)
         check_for_interesting_features();
 
-    you.check_clinging();
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
 
@@ -647,7 +669,11 @@ bool you_can_wear(int eq, bool special_armour)
         return (true);
 
     case EQ_HELMET:
-        // Anyone can wear caps.
+        // No caps or hats with Horns 3 or Antennae 3.
+        if (player_mutation_level(MUT_HORNS) == 3
+            || player_mutation_level(MUT_ANTENNAE) == 3)
+            return(false);
+        // Anyone else can wear caps.
         if (special_armour)
             return (true);
         if (player_mutation_level(MUT_HORNS)
@@ -746,6 +772,12 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     if (check_mutation)
     {
         if (eq == EQ_GLOVES && you.has_claws(false) >= 3)
+            return (false);
+
+        if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) >= 3)
+            return (false);
+
+        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) >= 3)
             return (false);
 
         if (eq == EQ_BOOTS
@@ -1915,6 +1947,8 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         // Che bonus
         pl += che_boost(CB_RNEG);
+
+        pl += player_equip(EQ_STAFF, STAFF_DEATH, calc_unid);
     }
 
     // undead/demonic power
@@ -2227,9 +2261,6 @@ int player_evasion_bonuses(ev_ignore_type evit)
     if (you.duration[DUR_AGILITY])
         evbonus += 5;
 
-    if (you.duration[DUR_STONEMAIL])
-        evbonus -= 2;
-
     evbonus += player_equip(EQ_RINGS_PLUS, RING_EVASION);
 
     if (player_equip_ego_type(EQ_WEAPON, SPWPN_EVASION))
@@ -2416,13 +2447,11 @@ int player_mag_abil(bool is_weighted)
     // Brilliance Potion
     ma += 6 * (you.duration[DUR_BRILLIANCE] ? 1 : 0);
 
+    // Rings
     ma += 3 * player_equip(EQ_RINGS, RING_WIZARDRY);
 
     // Staves
     ma += 4 * player_equip(EQ_STAFF, STAFF_WIZARDRY);
-
-    // armour of the Archmagi (checks body armour only)
-    ma += 2 * player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI);
 
     return ((is_weighted) ? ((ma * you.intel()) / 10) : ma);
 }
@@ -2496,14 +2525,25 @@ int player_sust_abil(bool calc_unid)
     return (sa);
 }
 
+int player_warding(bool calc_unid)
+{
+    int ward = 0;
+
+    ward += player_equip(EQ_AMULET, AMU_WARDING, calc_unid);
+
+    ward += player_equip(EQ_STAFF, STAFF_SUMMONING, calc_unid);
+
+    return (ward);
+}
+
 int carrying_capacity(burden_state_type bs)
 {
     // Yuck.  We need this for gameplay - it nerfs small forms too much
     // otherwise - but there's no good way to rationalize here...  --sorear
-    int used_weight = std::max(you.body_weight(), you.body_weight(true));
+    const int used_weight = std::max(you.body_weight(), you.body_weight(true));
 
-    int cap = (2 * used_weight) + (you.strength() * 300)
-              + (you.airborne() ? 1000 : 0);
+    int cap = ((2 * used_weight) + (you.strength() * 300)
+               + (you.airborne() ? 1000 : 0));
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
 
@@ -2525,9 +2565,6 @@ int burden_change(void)
 
     you.burden = 0;
 
-    if (you.duration[DUR_STONEMAIL])
-        you.burden += 800;
-
     for (int bu = 0; bu < ENDOFPACK; bu++)
     {
         if (you.inv[bu].quantity < 1)
@@ -2541,7 +2578,7 @@ int burden_change(void)
     you.redraw_evasion = true;
 
     // changed the burdened levels to match the change to max_carried
-    if (you.burden < carrying_capacity(BS_UNENCUMBERED))
+    if (you.burden <= carrying_capacity(BS_UNENCUMBERED))
     {
         you.burden_state = BS_UNENCUMBERED;
 
@@ -2549,7 +2586,7 @@ int burden_change(void)
         if (old_burdenstate != you.burden_state)
             mpr("Your possessions no longer seem quite so burdensome.");
     }
-    else if (you.burden < carrying_capacity(BS_ENCUMBERED))
+    else if (you.burden <= carrying_capacity(BS_ENCUMBERED))
     {
         you.burden_state = BS_ENCUMBERED;
 
@@ -2636,14 +2673,24 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     if (you.transfer_skill_points > 0)
     {
-        int amount = exp_gained * 10
+        // Can happen if the game got interrupted during target skill choice.
+        if (is_invalid_skill(you.transfer_to_skill))
+        {
+            you.transfer_from_skill = SK_NONE;
+            you.transfer_skill_points = 0;
+            you.transfer_total_skill_points = 0;
+        }
+        else
+        {
+            int amount = exp_gained * 10
                                 / calc_skill_cost(you.skill_cost_level,
                                             you.skills[you.transfer_to_skill]);
-        if (amount >= 20 || one_chance_in(20 - amount))
-        {
-            amount = std::max(20, amount);
-            transfer_skill_points(you.transfer_from_skill,
-                                  you.transfer_to_skill, amount, false);
+            if (amount >= 20 || one_chance_in(20 - amount))
+            {
+                amount = std::max(20, amount);
+                transfer_skill_points(you.transfer_from_skill,
+                                      you.transfer_to_skill, amount, false);
+            }
         }
     }
 
@@ -2667,10 +2714,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
         exp_gained = sprint_modify_exp(exp_gained);
     }
 
-    if (you.exp_available + exp_gained > (unsigned int)MAX_EXP_POOL)
-        you.exp_available = MAX_EXP_POOL;
-    else
-        you.exp_available += exp_gained;
+    you.exp_available += exp_gained;
 
     level_change();
 
@@ -2731,7 +2775,7 @@ static void _draconian_scale_colour_message()
         break;
 
     case SP_PALE_DRACONIAN:
-        mpr("Your scales start fading to a pale grey colour.",
+        mpr("Your scales start fading to a pale cyan-grey colour.",
             MSGCH_INTRINSIC_GAIN);
         break;
 
@@ -2763,8 +2807,11 @@ void level_change(bool skip_attribute_increase)
     // directly sometimes {dlb}
     you.redraw_experience = true;
 
+    while (you.experience < exp_needed(you.experience_level))
+        lose_level();
+
     while (you.experience_level < 27
-           && you.experience > exp_needed(you.experience_level + 2))
+           && you.experience >= exp_needed(you.experience_level + 1))
     {
         if (!skip_attribute_increase && !wiz_cmd)
         {
@@ -3280,7 +3327,7 @@ void level_change(bool skip_attribute_increase)
             }
         }
 
-        // // zot defence abilities; must also be updated in abil-show.cc when these levels are changed
+        // zot defence abilities; must also be updated in abl-show.cc when these levels are changed
         if (crawl_state.game_is_zotdef())
         {
             if (you.experience_level == 1)
@@ -3379,7 +3426,7 @@ void level_change(bool skip_attribute_increase)
         learned_something_new(HINT_NEW_LEVEL);
     }
 
-    while (you.experience > exp_needed(you.max_level + 2))
+    while (you.experience >= exp_needed(you.max_level + 1))
     {
         ASSERT(you.experience_level == 27);
         ASSERT(you.max_level < 127);
@@ -3393,6 +3440,42 @@ void level_change(bool skip_attribute_increase)
     // Hints mode arbitrarily ends at xp 7.
     if (crawl_state.game_is_hints() && you.experience_level >= 7)
         hints_finished();
+}
+
+void adjust_level(int diff, bool just_xp)
+{
+    if (you.experience_level + diff < 1)
+        you.experience = 0;
+    else if (you.experience_level + diff >= 27)
+        you.experience = std::max(you.experience, exp_needed(27));
+    else
+    {
+        while (diff < 0 && you.experience >= exp_needed(27))
+        {
+            // Having XP for level 53 and going back to 26 due to a single
+            // card would mean your felid is not going to get any extra lives
+            // in foreseable future.
+            you.experience -= exp_needed(27) - exp_needed(26);
+            diff++;
+        }
+        int old_min = exp_needed(you.experience_level);
+        int old_max = exp_needed(you.experience_level + 1);
+        int new_min = exp_needed(you.experience_level + diff);
+        int new_max = exp_needed(you.experience_level + 1 + diff);
+        dprf("XP before: %d\n", you.experience);
+        dprf("%4.2f of %d..%d to %d..%d",
+             (you.experience - old_min) * 1.0 / (old_max - old_min),
+             old_min, old_max, new_min, new_max);
+
+        you.experience = ((uint64_t)(new_max - new_min))
+                       * (you.experience - old_min)
+                       / (old_max - old_min)
+                       + new_min;
+        dprf("XP after: %d\n", you.experience);
+    }
+
+    if (!just_xp)
+        level_change();
 }
 
 // Here's a question for you: does the ordering of mods make a difference?
@@ -3514,15 +3597,6 @@ int check_stealth(void)
     if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
         stealth += 20;
 
-    if (boots)
-    {
-        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
-            stealth += 50;
-
-        if (get_equip_race(*boots) == ISFLAG_ELVEN)
-            stealth += 20;
-    }
-
     if (you.duration[DUR_STEALTH])
         stealth += 80;
 
@@ -3533,6 +3607,7 @@ int check_stealth(void)
 
     if (you.airborne())
         stealth += 10;
+
     else if (you.in_water())
     {
         // Merfolk can sneak up on monsters underwater -- bwr
@@ -3541,6 +3616,17 @@ int check_stealth(void)
         else if (!you.can_swim() && !you.extra_balanced())
             stealth /= 2;       // splashy-splashy
     }
+
+    // No stealth bonus from boots if you're airborne or in water
+    else if (boots)
+    {
+        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
+            stealth += 50;
+
+        if (get_equip_race(*boots) == ISFLAG_ELVEN)
+            stealth += 20;
+    }
+
     else if (you.species == SP_CAT && !you.form)
         stealth += 20;  // paws
 
@@ -3592,7 +3678,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_RESIST_POISON:
     case DUR_RESIST_FIRE:
     case DUR_RESIST_COLD:
-    case DUR_STONEMAIL:
     case DUR_SWIFTNESS:
     case DUR_INVIS:
     case DUR_HASTE:
@@ -3837,10 +3922,9 @@ void display_char_status()
         DUR_BREATH_WEAPON, DUR_LIQUID_FLAMES, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
         DUR_REPEL_MISSILES, DUR_DEFLECT_MISSILES, DUR_JELLY_PRAYER,
         STATUS_REGENERATION, DUR_SWIFTNESS, DUR_RESIST_POISON,
-        DUR_RESIST_COLD, DUR_RESIST_FIRE, DUR_INSULATION, DUR_STONEMAIL,
-        DUR_TELEPORT, DUR_CONTROL_TELEPORT,
-        DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE, DUR_STONESKIN,
-        DUR_SEE_INVISIBLE, DUR_INVIS, DUR_CONF, STATUS_BEHELD,
+        DUR_RESIST_COLD, DUR_RESIST_FIRE, DUR_INSULATION, DUR_TELEPORT,
+        DUR_CONTROL_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
+        DUR_STONESKIN, DUR_SEE_INVISIBLE, DUR_INVIS, DUR_CONF, STATUS_BEHELD,
         DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP, DUR_EXHAUSTED,
         STATUS_SPEED, DUR_MIGHT, DUR_BRILLIANCE, DUR_AGILITY,
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
@@ -3979,8 +4063,6 @@ static int _species_exp_mod(species_type species)
 
 unsigned int exp_needed(int lev)
 {
-    lev--;
-
     unsigned int level = 0;
 
     // Basic plan:
@@ -5010,7 +5092,6 @@ bool haste_player(int turns, bool rageext)
     }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
-    did_god_conduct(DID_STIMULANTS, 4 + random2(4));
 
     return (true);
 }
@@ -5087,7 +5168,10 @@ void float_player(bool fly)
     else if (fly)
         mpr("You fly up into the air.");
     else
-        mpr("You gently float upwards from the floor.");
+    {
+        mprf("You gently float upwards from the %s.",
+             you.is_wall_clinging() ? "wall" : "floor");
+    }
 
     // Amulet of Controlled Flight can auto-ID.
     if (wearing_amulet(AMU_CONTROLLED_FLIGHT)
@@ -5106,6 +5190,10 @@ void float_player(bool fly)
     }
 
     burden_change();
+
+    // The player hasn't actuclly taken a step, but in this case, we want
+    // neither the message, nor the location effect.
+    you.check_clinging(true);
 }
 
 void levitate_player(int pow)
@@ -5211,6 +5299,7 @@ void player::init()
 
     // Long-term state:
     elapsed_time     = 0;
+    elapsed_time_at_last_input = 0;
 
     hp               = 0;
     hp_max           = 0;
@@ -5373,7 +5462,6 @@ void player::init()
     fearmongers.clear();
     dactions.clear();
 
-    clinging = 0;
     zotdef_wave_name.clear();
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
@@ -5523,12 +5611,6 @@ bool player::is_levitating() const
     return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
 }
 
-void player::clear_clinging()
-{
-    you.clinging = false;
-    you.cling_to.clear();
-}
-
 bool player::in_water() const
 {
     return (ground_level() && !beogh_water_walk()
@@ -5635,10 +5717,7 @@ int calc_hunger(int food_cost)
 
 int player::warding() const
 {
-    if (wearing_amulet(AMU_WARDING))
-        return (30);
-
-    return (0);
+    return (30 * player_warding());
 }
 
 bool player::paralysed() const
@@ -5763,9 +5842,6 @@ int player::armour_class() const
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + 100 * skills[SK_ICE_MAGIC] / 3;         // max 13
 
-    if (duration[DUR_STONEMAIL])
-        AC += 500 + 100 * skills[SK_EARTH_MAGIC] / 2;       // max 18
-
     if (duration[DUR_STONESKIN])
         AC += 200 + 100 * skills[SK_EARTH_MAGIC] / 5;       // max 7
 
@@ -5834,7 +5910,7 @@ int player::armour_class() const
         case TRAN_STATUE: // main ability is armour (high bonus)
             AC += (1700 + 100 * skills[SK_EARTH_MAGIC] / 2);    // max 30
 
-            if (duration[DUR_STONESKIN] || duration[DUR_STONEMAIL])
+            if (duration[DUR_STONESKIN])
                 AC += (100 + 100 * skills[SK_EARTH_MAGIC] / 4); // max +7
             break;
 
@@ -6124,6 +6200,7 @@ int player_res_magic(bool calc_unid, bool temp)
         rm = you.experience_level * 4;
         break;
     case SP_NAGA:
+    case SP_MUMMY:
         rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
@@ -6346,6 +6423,14 @@ void player::confuse(actor *who, int str)
     confuse_player(str);
 }
 
+/*
+ * Paralyse the player for str turns.
+ *
+ *  Duration is capped at 13.
+ *
+ * @param who Pointer to the actor who paralysed the player.
+ * @param str The number of turns the paralysis will last.
+ */
 void player::paralyse(actor *who, int str)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -6355,13 +6440,20 @@ void player::paralyse(actor *who, int str)
         return;
 
     if (!(who && who->as_monster() && who->as_monster()->type == MONS_RED_WASP)
-        && (duration[DUR_PARALYSIS] || duration[DUR_PARALYSIS_IMMUNITY]))
+        && who && (duration[DUR_PARALYSIS] || duration[DUR_PARALYSIS_IMMUNITY]))
     {
         canned_msg(MSG_YOU_RESIST);
         return;
     }
 
     int &paralysis(duration[DUR_PARALYSIS]);
+
+    if (!paralysis && who)
+    {
+        take_note(Note(NOTE_PARALYSIS, str, 0,
+                       who->name(DESC_NOCAP_A).c_str()));
+    }
+
 
     mprf("You %s the ability to move!",
          paralysis ? "still haven't" : "suddenly lose");
@@ -6579,7 +6671,7 @@ int player::has_usable_tentacles(bool allow_tran) const
 }
 
 
-bool player::sicken(int amount)
+bool player::sicken(int amount, bool allow_hint)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6599,7 +6691,8 @@ bool player::sicken(int amount)
     if (disease > 210 * BASELINE_DELAY)
         disease = 210 * BASELINE_DELAY;
 
-    learned_something_new(HINT_YOU_SICK);
+    if (allow_hint)
+        learned_something_new(HINT_YOU_SICK);
     return (true);
 }
 

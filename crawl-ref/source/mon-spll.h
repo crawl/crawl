@@ -90,8 +90,8 @@
       {
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
+       SPELL_MIRROR_DAMAGE,
        SPELL_SUMMON_UNDEAD, // cheaper to fake recall and gift with summon spell
-       SPELL_NO_SPELL,
        SPELL_DRAIN_LIFE,
        SPELL_MIRROR_DAMAGE
       }
@@ -221,7 +221,7 @@
     {  MST_GIANT_ORANGE_BRAIN,
       {
        SPELL_BRAIN_FEED,
-       SPELL_POLYMORPH_OTHER,
+       SPELL_CAUSE_FEAR,
        SPELL_SHADOW_CREATURES,
        SPELL_CONFUSE,
        SPELL_BLINK,
@@ -416,6 +416,28 @@
       }
     },
 
+    {  MST_FIEND,
+      {
+       SPELL_HELLFIRE,
+       SPELL_HELLFIRE,
+       SPELL_NO_SPELL,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_PIT_FIEND,
+      {
+       SPELL_HELLFIRE,
+       SPELL_HELLFIRE,
+       SPELL_MELEE,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_ICE_FIEND,
       {
        SPELL_BOLT_OF_COLD,
@@ -517,11 +539,11 @@
 
     {  MST_CACODEMON,
       {
-       SPELL_CALL_IMP,
-       SPELL_CALL_IMP,
-       SPELL_CALL_IMP,
+       SPELL_ENERGY_BOLT,
+       SPELL_SLOW,
+       SPELL_NO_SPELL,
        SPELL_POLYMORPH_OTHER,
-       SPELL_DIG,
+       SPELL_CONFUSE,
        SPELL_SUMMON_DEMON
       }
     },
@@ -532,7 +554,7 @@
        SPELL_POISONOUS_CLOUD,
        SPELL_NO_SPELL,
        SPELL_VENOM_BOLT,
-       SPELL_CALL_IMP,
+       SPELL_NO_SPELL,
        SPELL_BLINK
       }
     },
@@ -553,7 +575,7 @@
        SPELL_LIGHTNING_BOLT,
        SPELL_BOLT_OF_COLD,
        SPELL_NO_SPELL,
-       SPELL_CALL_IMP,
+       SPELL_NO_SPELL,
        SPELL_SHADOW_CREATURES,
        SPELL_TELEPORT_OTHER
       }
@@ -1188,7 +1210,7 @@
 
     {  MST_TERPSICHORE,
       {
-       SPELL_TUKIMAS_DANCE_PARTY,
+       SPELL_TUKIMAS_BALL,
        SPELL_SWIFTNESS,
        SPELL_CORONA,
        SPELL_BLINK,
@@ -1257,9 +1279,9 @@
     {  MST_DISPATER,
       {
        SPELL_SUMMON_GREATER_DEMON,
+       SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+       SPELL_NO_SPELL,
        SPELL_IRON_SHOT,
-       SPELL_SUMMON_DEMON,
-       SPELL_LIGHTNING_BOLT,
        SPELL_HELLFIRE,
        SPELL_SUMMON_GREATER_DEMON
       }
@@ -1269,9 +1291,9 @@
       {
        SPELL_BOLT_OF_FIRE,
        SPELL_HELLFIRE,
-       SPELL_SUMMON_DEMON,
-       SPELL_SUMMON_GREATER_DEMON,
-       SPELL_BOLT_OF_DRAINING,
+       SPELL_NO_SPELL,
+       SPELL_FIRE_SUMMON,
+       SPELL_NO_SPELL,
        SPELL_TELEPORT_SELF
       }
     },
@@ -1300,9 +1322,9 @@
 
     {  MST_MNOLEG,
       {
-       SPELL_SUMMON_GREATER_DEMON,
+       SPELL_SUMMON_EYEBALLS,
        SPELL_SMITING,
-       SPELL_INVISIBILITY,
+       SPELL_BLINK_RANGE,
        SPELL_SUMMON_HORRIBLE_THINGS,
        SPELL_SUMMON_HORRIBLE_THINGS,
        SPELL_TELEPORT_SELF
@@ -1474,6 +1496,17 @@
       }
     },
 
+    {  MST_SPRIGGAN_AIR_MAGE,
+      {
+       SPELL_AIRSTRIKE,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_SWIFTNESS,
+       SPELL_SHOCK,
+       SPELL_NO_SPELL,
+       SPELL_HASTE
+      }
+    },
+
     { MST_THE_ENCHANTRESS,
       {
        SPELL_PARALYSE,
@@ -1620,7 +1653,7 @@
     {  MST_JORY,
       {
        SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-       SPELL_CAUSE_FEAR,
+       SPELL_MESMERISE,
        SPELL_BLINK,
        SPELL_BRAIN_FEED,
        SPELL_PAIN,
@@ -1634,6 +1667,17 @@
        SPELL_NO_SPELL,
        SPELL_HEAL_OTHER,
        SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+      }
+    },
+
+    {  MST_EIDOLON,
+      {
+       SPELL_PAIN,
+       SPELL_CAUSE_FEAR,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
       }

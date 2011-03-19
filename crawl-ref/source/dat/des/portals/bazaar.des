@@ -443,8 +443,8 @@ TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  20
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh
-SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk, Gg/Mm
-# one guaranteed shop, expected 4.5 shops
+SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk
+# two guaranteed shops, expected five shops
 SUBST:   B=A, C=A, D=A, E=A, F=A, G=A, H=A
 SUBST:   b=a, c=a, d=a, e=a, f=a, g=a, h=a
 SUBST:   Y=Z, R=Z, S=Z, J=Z, K=Z, M=Z
@@ -785,7 +785,7 @@ xxxxxxxxxxxxxwwwwwxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# 2 wand shops, 2 jewellery shops
+# 2 wand shops, 2 potion shops
 NAME:    dpeg_bazaar_wands
 TAGS:    bazaar no_rotate
 WEIGHT:  5
@@ -1603,7 +1603,7 @@ NAME:    bazaar_jpeg_triangle_bulge
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  1
-SHUFFLE: ABC
+SHUFFLE: AB
 SUBST:   A = <, B = >
 KFEAT:   C = any shop
 : bazaar_epilogue(_G)

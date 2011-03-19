@@ -294,9 +294,6 @@ void handle_monster_shouts(monster* mons, bool force)
 
         if (channel != MSGCH_TALK_VISUAL || you.can_see(mons))
         {
-            msg = do_mon_str_replacements(msg, mons, s_type);
-            msg::streams(channel) << msg << std::endl;
-
             // Otherwise it can move away with no feedback.
             if (you.can_see(mons))
             {
@@ -304,6 +301,9 @@ void handle_monster_shouts(monster* mons, bool force)
                     handle_seen_interrupt(mons);
                 seen_monster(mons);
             }
+
+            msg = do_mon_str_replacements(msg, mons, s_type);
+            msg::streams(channel) << msg << std::endl;
         }
     }
 
@@ -580,7 +580,7 @@ void blood_smell(int strength, const coord_def& where)
                 else
                 {
                     mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1,
-                                             KC_OTHER, dur));
+                                             0, dur));
                     simple_monster_message(*mi, " is consumed with "
                                                 "blood-lust!");
                 }

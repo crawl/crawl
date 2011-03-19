@@ -290,40 +290,26 @@ static skill_type _weighted_skill_roll()
 
 static void _give_wanderer_book(skill_type skill, int & slot)
 {
-    int book_type = BOOK_MINOR_MAGIC_I;
+    int book_type = BOOK_MINOR_MAGIC;
     switch((int)skill)
     {
     case SK_SPELLCASTING:
-        switch (random2(3))
-        {
-        case 0:
-            book_type = BOOK_MINOR_MAGIC_I;
-            break;
-        case 1:
-            book_type = BOOK_MINOR_MAGIC_II;
-            break;
-        case 2:
-            book_type = BOOK_MINOR_MAGIC_III;
-            break;
-        }
+        book_type = BOOK_MINOR_MAGIC;
         break;
 
     case SK_CONJURATIONS:
-        switch (random2(5))
+        switch (random2(4))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_I;
+            book_type = BOOK_MINOR_MAGIC;
             break;
         case 1:
-            book_type = BOOK_MINOR_MAGIC_II;
-            break;
-        case 2:
             book_type = BOOK_CONJURATIONS_I;
             break;
-        case 3:
+        case 2:
             book_type = BOOK_CONJURATIONS_II;
             break;
-        case 4:
+        case 3:
             book_type = BOOK_YOUNG_POISONERS;
             break;
         }
@@ -333,7 +319,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         switch (random2(2))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_III;
+            book_type = BOOK_MINOR_MAGIC;
             break;
         case 1:
             book_type = BOOK_CALLINGS;
@@ -365,30 +351,24 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_FIRE_MAGIC:
-        switch (random2(3))
+        switch (random2(2))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_I;
-            break;
-        case 1:
             book_type = BOOK_FLAMES;
             break;
-        case 2:
+        case 1:
             book_type = BOOK_CONJURATIONS_I;
             break;
         }
         break;
 
     case SK_ICE_MAGIC:
-        switch (random2(3))
+        switch (random2(2))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_II;
-            break;
-        case 1:
             book_type = BOOK_FROST;
             break;
-        case 2:
+        case 1:
             book_type = BOOK_CONJURATIONS_II;
             break;
         }

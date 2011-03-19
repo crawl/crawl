@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <sstream>
 
+#include "areas.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "dgn-overview.h"
@@ -387,7 +388,7 @@ bool feat_is_secret_door(dungeon_feature_type feat)
 
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
 {
-    return (feat >= DNGN_ORCISH_IDOL && feat <= DNGN_STATUE_RESERVED);
+    return (feat >= DNGN_ORCISH_IDOL && feat <= DNGN_GRANITE_STATUE);
 }
 
 bool feat_is_rock(dungeon_feature_type feat)
@@ -1575,8 +1576,7 @@ const char *dngn_feature_names[] =
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
 "open_sea", "tree", "orcish_idol", "swamp_tree", "", "",
-"granite_statue", "statue_reserved_1", "statue_reserved_2",
-"", "", "", "", "", "", "", "",
+"granite_statue", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
 "deep_water", "", "", "shallow_water", "water_stuck", "floor",
@@ -1614,7 +1614,8 @@ const char *dngn_feature_names[] =
 "altar_ashenzari", "", "",
 "fountain_blue", "fountain_sparkling", "fountain_blood",
 "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
-"permadry_fountain", "abandoned_shop"
+"permadry_fountain", "abandoned_shop", "", "",
+"explore_horizon",
 };
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)
@@ -1675,4 +1676,62 @@ void nuke_wall(const coord_def& p)
 
     grd(p) = (grd(p) == DNGN_SWAMP_TREE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
     set_terrain_changed(p);
+}
+
+/*
+ * Check if an actor can cling to a cell.
+ *
+ * Wall clinging is done only on orthogonal walls.
+ *
+ * @param pos The coordinates of the cell.
+ *
+ * @return Whether the cell is clingable.
+ */
+bool cell_is_clingable(const coord_def pos)
+{
+    for (orth_adjacent_iterator ai(pos); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            return true;
+
+    return false;
+}
+
+/*
+ * Check if an actor can cling from a cell to another.
+ *
+ * "clinging" to a wall means being orthogonally (left, right, up, down) next
+ * to it. A spider can cling to several squares. A move is allowed if the
+ * spider clings to an adjacent wall square or the same wall square before and
+ * after moving. Being over floor or shallow water and next to a wall counts as
+ * clinging to that wall (no further action needed).
+ *
+ * Example:
+ * ~ = deep water
+ * * = deep water the spider can reach
+ *
+ *  #####
+ *  ~~#~~
+ *  ~~~*~
+ *  **s#*
+ *  #####
+ *
+ * Look at Mantis #2704 for more examples.
+ *
+ * @param from The coordinates of the starting position.
+ * @param to The coordinates of the destination.
+ *
+ * @return Whether it is possible to cling from one cell to another.
+ */
+bool cell_can_cling_to(const coord_def& from, const coord_def to)
+{
+    if (!in_bounds(to))
+        return false;
+
+    for (orth_adjacent_iterator ai(from); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)))
+            for (orth_adjacent_iterator ai2(to, false); ai2; ++ai2)
+                if (feat_is_wall(env.grid(*ai2)) && distance(*ai, *ai2) <= 1)
+                    return true;
+
+        return false;
 }

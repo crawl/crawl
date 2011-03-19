@@ -40,7 +40,6 @@
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -62,6 +61,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "place.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "player.h"
 #include "religion.h"
@@ -3046,9 +3046,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
                     time_left *= 10;
 
-                    mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, KC_OTHER,
-                                        time_left);
-
+                    mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
                     env.mons[mushroom].update_ench(temp_en);
                 }
 
@@ -3276,15 +3274,11 @@ void recharge_rods(int aut, bool level_only)
     if (!level_only)
     {
         for (int item = 0; item < ENDOFPACK; ++item)
-        {
             _recharge_rod(you.inv[item], aut, true);
-        }
     }
 
     for (int item = 0; item < MAX_ITEMS; ++item)
-    {
         _recharge_rod(mitm[item], aut, false);
-    }
 }
 
 void slime_wall_damage(actor* act, int delay)

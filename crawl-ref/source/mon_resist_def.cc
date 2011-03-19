@@ -23,8 +23,6 @@ short mon_resist_def::get_default_res_level(int resist, short level) const
     case MR_RES_STEAM:
     case MR_RES_ACID:
         return 3;
-    case MR_RES_ELEC:
-        return 2;
     default:
         return 1;
     }

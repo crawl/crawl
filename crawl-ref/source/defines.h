@@ -11,6 +11,10 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+// Minimum terminal size allowed.
+#define MIN_COLS  80
+#define MIN_LINES 24
+
 #define NUM_MONSTER_SPELL_SLOTS  6
 
 #define ESCAPE '\x1b'           // most ansi-friendly way I can think of defining this.
@@ -77,7 +81,7 @@ enum extra_monster_index_type
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
-#define MAX_ITEMS 2000   // //
+#define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
 
@@ -160,8 +164,7 @@ const int DEBUG_COOKIE = 32767;
 
 const int MAX_SKILL_LEVEL = 27;
 const int MAX_EXP_TOTAL = 8999999;
-const int MAX_EXP_POOL = 20000;
-const int FULL_EXP_POOL = MAX_EXP_POOL;
+const int HIGH_EXP_POOL = 20000;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 

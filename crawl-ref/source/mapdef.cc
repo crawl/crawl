@@ -2830,7 +2830,7 @@ bool map_def::is_minivault() const
 // built on it.
 bool map_def::is_overwritable_layout() const
 {
-    return (has_tag("layout") && !has_tag("sealed_layout"));
+    return has_tag("overwritable");
 }
 
 // Tries to dock a floating vault - push it to one edge of the level.
@@ -3759,6 +3759,12 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 || strip_tag(mon_str, "n_spe"))
             {
                 mspec.extra_monster_flags |= MF_NAME_SPECIES;
+            }
+
+            if (strip_tag(mon_str, "name_zombie")
+                || strip_tag(mon_str, "n_zom"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_ZOMBIE;
             }
         }
 
@@ -4936,7 +4942,7 @@ item_spec item_list::parse_single_spec(std::string s)
 
         result.base_type = OBJ_BOOKS;
         // This is changed in make_book_theme_randart.
-        result.sub_type = BOOK_MINOR_MAGIC_I;
+        result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
         return (result);

@@ -1726,6 +1726,7 @@ static void tag_read_you(reader &th)
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
+    you.elapsed_time_at_last_input = you.elapsed_time;
 
     // time of character creation
     you.birth_time = unmarshallInt(th);
@@ -2356,6 +2357,7 @@ static void marshall_mon_enchant(writer &th, const mon_enchant &me)
     marshallShort(th, me.ench);
     marshallShort(th, me.degree);
     marshallShort(th, me.who);
+    marshallInt(th, me.source);
     marshallShort(th, me.duration);
     marshallShort(th, me.maxduration);
 }
@@ -2366,6 +2368,10 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     me.ench        = static_cast<enchant_type>(unmarshallShort(th));
     me.degree      = unmarshallShort(th);
     me.who         = static_cast<kill_category>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_ENCH_MID)
+#endif
+    me.source      = unmarshallInt(th);
     me.duration    = unmarshallShort(th);
     me.maxduration = unmarshallShort(th);
     return (me);
@@ -2688,6 +2694,14 @@ static void tag_read_level(reader &th)
         env.cloud[i].colour = unmarshallShort(th);
         env.cloud[i].name   = unmarshallString(th);
         env.cloud[i].tile   = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_CLOUD_BUG
+            && !in_bounds(env.cloud[i].pos))
+        {
+            env.cloud[i].type = CLOUD_NONE;
+            continue;
+        }
+#endif
         ASSERT(in_bounds(env.cloud[i].pos));
         env.cgrid(env.cloud[i].pos) = i;
         env.cloud_no++;

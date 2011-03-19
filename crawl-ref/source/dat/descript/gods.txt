@@ -110,7 +110,7 @@ To worship Xom is to live riskily. In a good mood Xom may shower you with gifts,
 %%%%
 Okawaru powers
 
-Followers will soon gain the ability to temporarily increase their strength, and, much later, to haste themselves. Okawaru will eventually gift followers with weapons and armour.
+Followers will soon gain the ability to temporarily increase their skills in combat, and, much later, to deal much faster blows. Okawaru will eventually gift followers with weapons and armour.
 %%%%
 Makhleb powers
 
@@ -130,7 +130,7 @@ The Trickster's followers gain various ways to influence fate when playing cards
 %%%%
 Elyvilon powers
 
-The healer god offers followers means to heal themselves from damage and other ill effects. Elyvilon also allows healing of hostile monsters, trying to turn them neutral. The healer god may directly intervene to save a follower's life, especially when callen upon; highly pious followers can be sure of such aid.
+The healer god offers followers means to heal themselves from damage and other ill effects. Elyvilon also allows healing of hostile monsters, trying to turn them neutral. The healer god may directly intervene to save a follower's life, especially when called upon; highly pious followers can be sure of such aid.
 %%%%
 Lugonu powers
 

@@ -51,10 +51,10 @@ Getting information
 -------------------
 
 Doing a rightclick with your mouse on any feature, monster or item on the
-main map or in the tiled control panels will display the description of 
+main map or in the tiled control panels will display the description of
 said feature, monster or item on a separate screen.
 
-A simple mouseover will usually display the same description, or as much of 
+A simple mouseover will usually display the same description, or as much of
 it as can fit, in the message area.
 
 Similarly, letting your mouse rest for a while on a feature, monster or
@@ -159,4 +159,3 @@ tile_window_height  = 768
     The larger the map area the more cells there are to redraw each turn.
     If you've got a large display showing way more than the necessary 17x17
     grids of the map, you could try specifying a lower resolution.
-

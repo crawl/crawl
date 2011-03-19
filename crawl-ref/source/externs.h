@@ -261,6 +261,7 @@ struct coord_def
         return (xi == x && yi == y);
     }
 };
+
 const coord_def INVALID_COORD(-1, -1);
 
 typedef bool (*coord_predicate)(const coord_def &c);

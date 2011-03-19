@@ -131,8 +131,6 @@ static startup_book_type _str_to_book(const std::string& str)
         return (SBT_FIRE);
     if (str == "frost" || str == "cold" || str == "ice")
         return (SBT_COLD);
-    if (str == "summ" || str == "summoning")
-        return (SBT_SUMM);
     if (str == "random")
         return (SBT_RANDOM);
     if (str == "viable")
@@ -157,6 +155,8 @@ static weapon_type _str_to_weapon(const std::string &str)
         return (WPN_TRIDENT);
     else if (str == "hand axe" || str == "handaxe")
         return (WPN_HAND_AXE);
+    else if (str == "quarterstaff")
+        return (WPN_QUARTERSTAFF);
     else if (str == "unarmed" || str == "claws")
         return (WPN_UNARMED);
     else if (str == "random")
@@ -183,8 +183,10 @@ static std::string _weapon_to_str(int weapon)
         return "trident";
     case WPN_HAND_AXE:
         return "hand axe";
+    case WPN_QUARTERSTAFF:
+        return "quarterstaff";
     case WPN_UNARMED:
-        return "claws";
+        return "unarmed";
     case WPN_RANDOM:
     default:
         return "random";
@@ -374,6 +376,15 @@ static job_type _str_to_job(const std::string &str)
     if (job == JOB_UNKNOWN)
         job = get_job_by_name(str.c_str());
 
+#if TAG_MAJOR_VERSION == 32
+    if (job == JOB_PALADIN || job == JOB_REAVER)
+        job = JOB_UNKNOWN;
+#endif
+
+// XXX: Arcane Marksmen are temporarily disabled
+    if (job == JOB_ARCANE_MARKSMAN)
+        job = JOB_UNKNOWN;
+
     if (job == JOB_UNKNOWN)
         fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
 
@@ -498,13 +509,13 @@ void game_options::set_default_activity_interrupts()
         "interrupt_drop_item = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
         "interrupt_memorise = interrupt_armour_on, stat",
-        "interrupt_butcher = interrupt_armour_on, teleport, stat",
+        "interrupt_butcher = interrupt_armour_on, teleport, stat, monster",
         "interrupt_bottle_blood = interrupt_butcher",
         "interrupt_vampire_feed = interrupt_butcher",
-        "interrupt_multidrop = interrupt_butcher",
+        "interrupt_multidrop = interrupt_armour_on, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
         "interrupt_travel = interrupt_butcher, statue, hungry, "
-                            "burden, monster, hit_monster",
+                            "burden, hit_monster",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp",
 
@@ -819,6 +830,7 @@ void game_options::reset_options()
     show_waypoints         = true;
     item_colour            = true;
 
+    background_colour      = BLACK;
     // [ds] Default to jazzy colours.
     detected_item_colour   = GREEN;
     detected_monster_colour= LIGHTRED;
@@ -1267,6 +1279,7 @@ static std::string _find_crawlrc()
     const char* locations_data[][2] = {
         { SysEnv.crawl_dir.c_str(), "init.txt" },
 #ifdef UNIX
+        { SysEnv.home.c_str(), ".crawl/init.txt" },
         { SysEnv.home.c_str(), ".crawlrc" },
         { SysEnv.home.c_str(), "init.txt" },
 #endif
@@ -1414,7 +1427,6 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "book = %s\n",
                 prefs.book == SBT_FIRE ? "fire" :
                 prefs.book == SBT_COLD ? "cold" :
-                prefs.book == SBT_SUMM ? "summ" :
                 prefs.book == SBT_RANDOM ? "random" :
                 "viable");
     }
@@ -2385,7 +2397,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "religion")
     {
-        // Choose god for Chaos Knights or Priests.
+        // Choose god for Priests.
         game.religion = (field == "random") ? GOD_RANDOM : str_to_god(field);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
@@ -3492,10 +3504,10 @@ static void _print_save_version(char *name)
         if (!file_exists(filename))
             filename = get_savedir_filename(filename, "", "") + SAVE_SUFFIX;
         package save(filename.c_str(), false);
-        reader charf(&save, "chr");
+        reader chrf(&save, "chr");
 
         int major, minor;
-        if (!get_save_version(charf, major, minor))
+        if (!get_save_version(chrf, major, minor))
             fail("Save file is invalid.");
         else
             printf("Save file version for %s is %d.%d\n", name, major, minor);

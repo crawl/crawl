@@ -14,6 +14,7 @@ queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
 megabat MONS_MEGABAT
+../../player/transform/bat_form MONS_VAMPIRE_BAT
 butterfly MONS_BUTTERFLY
 butterfly1
 butterfly2
@@ -21,7 +22,17 @@ butterfly3
 butterfly4
 butterfly5
 butterfly6
+fire_bat MONS_FIRE_BAT
 raven MONS_RAVEN
+%sdir dc-mon/vault
+%rim 0
+microbat MONS_MICROBAT
+%rim 1
+gigabat MONS_GIGABAT
+fruity_bat MONS_FRUITY_BAT
+ice_bat MONS_ICE_BAT
+phase_bat MONS_PHASE_BAT
+%sdir dc-mon/animals
 
 ## Hounds and hogs ('h')
 jackal MONS_JACKAL
@@ -136,7 +147,7 @@ shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
 %rim 1
 
-%include dc-kraken.txt
+%include dc-tentacles.txt
 
 ## Beetles ('B')
 %sdir dc-mon/animals
@@ -169,7 +180,6 @@ sea_snake MONS_SEA_SNAKE
 salamander MONS_SALAMANDER
 
 ## Bears ('U')
-bear MONS_BEAR
 black_bear MONS_BLACK_BEAR
 grizzly_bear MONS_GRIZZLY_BEAR
 polar_bear MONS_POLAR_BEAR
@@ -192,7 +202,7 @@ apis MONS_APIS
 earth_elemental MONS_EARTH_ELEMENTAL /*'#'*/
 fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
 water_elemental MONS_WATER_ELEMENTAL /*'#'*/
-#air_elemental MONS_AIR_ELEMENTAL /*'#'*/
+air_elemental MONS_AIR_ELEMENTAL /*'#'*/
 iron_elemental MONS_IRON_ELEMENTAL
 fire_vortex MONS_FIRE_VORTEX /*'v'*/
 spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
@@ -214,6 +224,10 @@ silver_star MONS_SILVER_STAR /*'*'*/
 %sdir dc-mon/abyss
 ancient_zyme MONS_ANCIENT_ZYME
 lurking_horror MONS_LURKING_HORROR
+starcursed_mass MONS_STARCURSED_MASS
+tentacled_starspawn MONS_TENTACLED_STARSPAWN
+thrashing_horror MONS_THRASHING_HORROR
+wretched_star MONS_WRETCHED_STAR
 
 ### Demonic monsters
 ## Arch demons ('&')
@@ -731,6 +745,9 @@ spriggan_druid MONS_SPRIGGAN_DRUID
 spriggan_berserker MONS_SPRIGGAN_BERSERKER
 spriggan_defender MONS_SPRIGGAN_DEFENDER
 spriggan_assassin MONS_SPRIGGAN_ASSASSIN
+%rim 0
+spriggan_air_mage MONS_SPRIGGAN_AIR_MAGE
+%rim 1
 dc-mon/unique/enchantress MONS_THE_ENCHANTRESS
 dc-mon/unique/agnes MONS_AGNES
 
@@ -785,6 +802,8 @@ silent_spectre MONS_SILENT_SPECTRE
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
+%sdir dc-mon/unique
+terpsichore MONS_TERPSICHORE
 %sdir dc-mon/nonliving
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir dc-mon/holy
@@ -861,7 +880,12 @@ bat_form TRAN_BAT
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
 ice_form TRAN_ICE_BEAST
-statue_form TRAN_STATUE
+statue_form_humanoid TRAN_STATUE_HUMANOID
+%syn TRAN_STATUE_EQUIP_FIRST
+statue_form_centaur TRAN_STATUE_CENTAUR
+statue_form_naga TRAN_STATUE_NAGA
+%syn TRAN_STATUE_EQUIP_LAST
+statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST

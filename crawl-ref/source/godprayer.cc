@@ -7,6 +7,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "coordit.h"
+#include "database.h"
 #include "effects.h"
 #include "env.h"
 #include "food.h"
@@ -90,9 +91,6 @@ bool god_accepts_prayer(god_type god)
     {
     case GOD_ZIN:
         return (zin_sustenance(false));
-
-    case GOD_KIKUBAAQUDGHA:
-        return (you.piety >= piety_breakpoint(4));
 
     case GOD_JIYVA:
         return (jiyva_can_paralyse_jellies());
@@ -383,22 +381,12 @@ void pray()
          you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
-    if (player_under_penance())
-        simple_god_message(" demands penance!");
-    else
-        mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
-
     switch(you.religion)
     {
     case GOD_ZIN:
         //jmf: this "good" god will feed you (a la Nethack)
-        if (zin_sustenance())
-        {
-            god_speaks(you.religion, "Your stomach feels content.");
-            set_hunger(6000, true);
-            lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+        if (do_zin_sustenance())
             something_happened = true;
-        }
         break;
 
     case GOD_JIYVA:
@@ -409,12 +397,24 @@ void pray()
         something_happened = true;
         break;
 
+    case GOD_FEDHAS:
+        if (fedhas_fungal_bloom())
+            something_happened = true;
+        break;
+
     default:
         ;
     }
 
     // All sacrifices affect items you're standing on.
     something_happened |= _offer_items();
+
+    if (you.religion == GOD_XOM)
+        mpr(getSpeakString("Xom prayer"), MSGCH_GOD);
+    else if (player_under_penance())
+        simple_god_message(" demands penance!");
+    else
+        mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
 
     if (something_happened)
         you.turn_is_over = true;
@@ -586,27 +586,32 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         case GOD_ELYVILON:
         {
             const int value = item_value(item) / item.quantity;
+            const bool valuable_weapon =
+                _destroyed_valuable_weapon(value, item.base_type);
             const bool unholy_weapon = is_unholy_item(item);
             const bool evil_weapon = is_evil_item(item);
 
-            if (unholy_weapon || evil_weapon)
+            if (valuable_weapon || unholy_weapon || evil_weapon)
             {
-                relative_piety_gain = PIETY_SOME;
-                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
-
-                // Print this in addition to the above!
-                if (first)
+                if (unholy_weapon || evil_weapon)
                 {
-                    simple_god_message(make_stringf(
+                    const char *desc_weapon = evil_weapon ? "evil" : "unholy";
+
+                    // Print this in addition to the above!
+                    if (first)
+                    {
+                        simple_god_message(make_stringf(
                                  " welcomes the destruction of %s %s weapon%s.",
                                  item.quantity == 1 ? "this" : "these",
                                  desc_weapon,
                                  item.quantity == 1 ? ""     : "s").c_str(),
                                  GOD_ELYVILON);
+                    }
                 }
-            }
-            else if (_destroyed_valuable_weapon(value, item.base_type))
+
+                gain_piety(1);
                 relative_piety_gain = PIETY_SOME;
+            }
             break;
         }
 
@@ -860,13 +865,6 @@ static bool _offer_items()
 #if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
         _show_pure_deck_chances();
 #endif
-    }
-
-    if (num_sacced > 0 && you.religion == GOD_KIKUBAAQUDGHA)
-    {
-        simple_god_message(" torments the living!");
-        torment(TORMENT_KIKUBAAQUDGHA, you.pos());
-        lose_piety(random_range(8, 12));
     }
 
     // Explanatory messages if nothing the god likes is sacrificed.

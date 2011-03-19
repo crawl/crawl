@@ -17,7 +17,6 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
-#include "it_use2.h"
 #include "kills.h"
 #include "libutil.h"
 #include "misc.h"
@@ -28,6 +27,7 @@
 #include "mutation.h"
 #include "player.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "state.h"
@@ -975,7 +975,8 @@ void MiscastEffect::_enchantment(int severity)
                 // There's no levitation enchantment for monsters, and,
                 // anyway, it's not nearly as inconvenient for monsters as
                 // for the player, so backlight them instead.
-                target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20, kc));
+                target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20,
+                                                          guilty));
             }
             break;
         case 1:
@@ -1670,7 +1671,7 @@ void MiscastEffect::_necromancy(int severity)
                     you.rotting++;
                 else
                     target_as_monster()->add_ench(mon_enchant(ENCH_ROT, 1,
-                                                              kc));
+                                                              guilty));
             }
             else if (you.species == SP_MUMMY)
             {
@@ -2123,7 +2124,8 @@ void MiscastEffect::_fire(int severity)
             {
                 monster* mon_target = target_as_monster();
                 mon_target->add_ench(mon_enchant(ENCH_STICKY_FLAME,
-                    std::min(4, 1 + random2(mon_target->hit_dice) / 2), kc));
+                    std::min(4, 1 + random2(mon_target->hit_dice) / 2),
+                    guilty));
             }
             break;
         }

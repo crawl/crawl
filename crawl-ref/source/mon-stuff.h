@@ -97,7 +97,7 @@ void slimify_monster(monster* mons, bool hostile = false);
 
 bool mon_can_be_slimified(monster* mons);
 
-void corrode_monster(monster* mons);
+void corrode_monster(monster* mons, const actor* evildoer);
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
@@ -172,8 +172,8 @@ int mons_natural_regen_rate(monster* mons);
 void mons_relocated(monster* mons);
 void mons_att_changed(monster* mons);
 
-bool can_go_straight(const coord_def& p1, const coord_def& p2,
-                     dungeon_feature_type allowed);
+bool can_go_straight(const monster* mon, const coord_def& p1,
+                     const coord_def& p2, dungeon_feature_type allowed);
 
 bool is_item_jelly_edible(const item_def &item);
 

@@ -170,6 +170,9 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_KP3:
     case SDLK_PAGEDOWN:
         return (CK_PGDN + numpad_offset);
+    case SDLK_TAB:
+        if (numpad_offset) // keep tab a tab
+            return (CK_TAB_TILE + numpad_offset);
     default:
         break;
     }

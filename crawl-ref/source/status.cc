@@ -48,7 +48,7 @@ static duration_def duration_data[] =
     { DUR_DIVINE_VIGOUR, false,
       0, "", "divinely vigorous", "You are divinely vigorous." },
     { DUR_EXHAUSTED, false,
-      YELLOW, "Fatig", "exhausted", "You are exhausted." },
+      YELLOW, "Exh", "exhausted", "You are exhausted." },
     { DUR_FIRE_SHIELD, true,
       BLUE, "RoF", "immune to fire clouds", "" },
     { DUR_ICY_ARMOUR, true,
@@ -87,8 +87,10 @@ static duration_def duration_data[] =
       GREEN, "Slime", "slimy", "" },
     { DUR_SLEEP, false,
       0, "", "sleeping", "You are sleeping." },
+#if TAG_MAJOR_VERSION == 32
     { DUR_STONEMAIL, true,
       0, "", "stone mail", "You are covered in scales of stone."},
+#endif
     { DUR_STONESKIN, false,
       0, "", "stone skin", "Your skin is tough as stone." },
     { DUR_SWIFTNESS, true,
@@ -367,7 +369,7 @@ void fill_status_info(int status, status_info* inf)
         if (handle_pbd_corpses(false) > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = "PbD";
+            inf->light_text   = "Regen+";
         }
         break;
 

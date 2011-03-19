@@ -3,9 +3,13 @@
 use strict;
 use warnings;
 
+use Unicode::Collate;
+
 my $CREDITS = 'CREDITS.txt';
 
 my $NAMEHEAD = qr/contributed to .*Stone Soup:\s*$/;
+
+my $COLLATOR = Unicode::Collate->new();
 
 binmode STDOUT, ':utf8';
 open my $inf, '<:utf8', $CREDITS
@@ -49,7 +53,9 @@ sub recolumnise {
   # Discard header lines:
   splice @columns, 0, 2;
 
-  my @names = sort { last_word($a) cmp last_word($b) } extract_names(@columns);
+  my @names =
+    sort { $COLLATOR->cmp(last_word($a), last_word($b)) }
+      extract_names(@columns);
 
   my @recol = resplit(3, @names);
   @recol

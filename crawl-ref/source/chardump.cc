@@ -1356,7 +1356,7 @@ static bool _write_dump(const std::string &fname, dump_params &par,
         fclose(handle);
         succeeded = true;
         if (print_dump_path)
-#ifdef USE_DGAMELAUNCH
+#ifdef DGAMELAUNCH
             mprf("Char dumped successfully.");
 #else
             mprf("Char dumped to '%s'.", file_name.c_str());

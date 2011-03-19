@@ -523,6 +523,14 @@ void wizard_tweak_object(void)
         const bool hex = (keyin == 'e');
         int64_t new_val = strtoll(specs, &end, hex ? 16 : 0);
 
+        if (keyin == 'e' && new_val & ISFLAG_ARTEFACT_MASK
+            && (!you.inv[item].props.exists(KNOWN_PROPS_KEY)
+             || !you.inv[item].props.exists(ARTEFACT_PROPS_KEY)))
+        {
+            mpr("You can't set this flag on a non-artefact.");
+            continue;
+        }
+
         if (end == specs)
             return;
 

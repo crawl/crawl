@@ -223,7 +223,7 @@ static void _spread_fire(const cloud_struct &cloud)
                               cloud.colour, cloud.name, cloud.tile);
             if (cloud.whose == KC_YOU)
                 did_god_conduct(DID_KILL_PLANT, 1);
-            else if (cloud.whose == KC_FRIENDLY)
+            else if (cloud.whose == KC_FRIENDLY && !crawl_state.game_is_arena())
                 did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1);
         }
 
@@ -235,7 +235,8 @@ static void _cloud_fire_interacts_with_terrain(const cloud_struct &cloud)
     for (adjacent_iterator ai(cloud.pos); ai; ++ai)
     {
         const coord_def p(*ai);
-        if (feat_is_watery(grd(p))
+        if (in_bounds(p)
+            && feat_is_watery(grd(p))
             && env.cgrid(p) == EMPTY_CLOUD
             && one_chance_in(5))
         {
@@ -909,13 +910,13 @@ bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_POISON:
         if (player)
         {
-            // We don't track the source of the cloud so we can't
-            // assign blame.
-            poison_player(1, "", cloud.cloud_name());
+            const actor* agent = find_agent(cloud.source, cloud.whose);
+            poison_player(1, agent ? agent->name(DESC_NOCAP_A) : "",
+                          cloud.cloud_name());
         }
         else
         {
-            poison_monster(mons, cloud.whose);
+            poison_monster(mons, find_agent(cloud.source, cloud.whose));
         }
         return true;
 
@@ -923,12 +924,15 @@ bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_MIASMA:
         if (player)
         {
-            // We'd want to blame it to a specific monster...
-            miasma_player(cloud.cloud_name());
+            const actor* agent = find_agent(cloud.source, cloud.whose);
+            if (agent)
+                miasma_player(agent->name(DESC_NOCAP_A), cloud.cloud_name());
+            else
+                miasma_player(cloud.cloud_name());
         }
         else
         {
-            miasma_monster(mons, cloud.whose);
+            miasma_monster(mons, find_agent(cloud.source, cloud.whose));
         }
         break;
 
@@ -1214,9 +1218,9 @@ static const char *_verbose_cloud_names[] =
     "roaring flames", "noxious fumes", "freezing vapours", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
-    "a cloud of scalding steam", "a thick gloom", "ink", "blessed fire",
-    "a dark miasma", "thin mist", "seething chaos", "the rain",
-    "a mutagenic fog", "magical condensation", "raging winds",
+    "a cloud of scalding steam", "thick gloom", "ink", "blessed fire",
+    "dark miasma", "thin mist", "seething chaos", "the rain",
+    "mutagenic fog", "magical condensation", "raging winds",
 };
 
 std::string cloud_type_name(cloud_type type, bool terse)
@@ -1279,17 +1283,17 @@ void cloud_struct::set_killer(killer_type _killer)
 
     switch (killer)
     {
-        case KILL_YOU:
-            killer = KILL_YOU_MISSILE;
-            break;
+    case KILL_YOU:
+        killer = KILL_YOU_MISSILE;
+        break;
 
-        case KILL_MON:
-            killer = KILL_MON_MISSILE;
-            break;
+    case KILL_MON:
+        killer = KILL_MON_MISSILE;
+        break;
 
-        default:
-            break;
-     }
+    default:
+        break;
+    }
 }
 
 std::string cloud_struct::cloud_name(const std::string &defname,

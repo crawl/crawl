@@ -34,7 +34,7 @@ Once a mighty and renowned Titan, his arrogance was his undoing. Now he is corru
 %%%%
 Asmodeus
 
-One of the arch-demons who dwell in the depths of Hell.
+One of the arch-demons who dwell in the depths of Hell, wreathed in fire.
 %%%%
 Azrael
 
@@ -403,10 +403,6 @@ Balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
-bear
-
-A common cave bear. If provoked, it may become angry!
-%%%%
 beast
 
 A weird and hideous cross between beast and human.
@@ -766,6 +762,10 @@ fiend
 
 One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
 %%%%
+fire bat
+
+A bat whose leathery body burns with a hot flame.
+%%%%
 fire crab
 
 These crabs are prized for their brilliantly jewelled shells. The rarity of these shells is only enhanced by the vicious, fiery nature of the animal, and their almost supernatural ability to expel massive quantities of flames.
@@ -806,6 +806,10 @@ frost giant
 
 A huge blue humanoid with hoarfrost hair.
 %%%%
+fruity bat
+
+An ugly, silly bat. It sparkles.
+%%%%
 fungus
 
 A lumpy grey fungus, growing well in the dank underground dungeon.
@@ -818,9 +822,13 @@ ghost moth
 
 A vile interdimensional predator that feeds on the life force of living beings. The few who have seen one and lived say it resembles an enormous spiny moth. Its bizarre lifecycle involves the production of ambrosia, much valued by gods and wizards.
 %%%%
+ghost-faced bat
+
+Does this bat merely possess the visage of a ghost, or is it a ghost itself?
+%%%%
 ghoul
 
-An undead humanoid creature, created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
+An undead humanoid creature with vicious claws, created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
 %%%%
 giant amoeba
 
@@ -901,6 +909,10 @@ A huge and disgusting gastropod.
 giant spore
 
 A volatile floating ball of spores, covered in knobbly rhizome growths.
+%%%%
+giga bat
+
+A huge, bloated bat.
 %%%%
 gila monster
 
@@ -1053,6 +1065,10 @@ The undead form of someone who died of starvation, this creature wants the same 
 hydra
 
 A great reptilian beast, distantly related to the dragon. It has many heads, and the potential to grow many more!
+%%%%
+ice bat
+
+An undead creature in the shape of a bat, made of ice.
 %%%%
 ice beast
 
@@ -1234,6 +1250,10 @@ metal gargoyle
 
 A hideous metal statue come to life.
 %%%%
+microbat
+
+A bat that, unlike its name, is not any smaller than megabats.
+%%%%
 midge
 
 A small flying demon.
@@ -1396,6 +1416,10 @@ phantom
 
 A transparent man-like undead spirit.
 %%%%
+phase bat
+
+This bat travels through more dimensions than the average bat.
+%%%%
 phoenix
 
 A bird of myth and legend, said to die in flames and be reborn from the ashes.
@@ -1502,6 +1526,10 @@ rock worm
 
 A large worm which moves through rock as if it were air.
 %%%%
+rotten bat
+
+I guess this bat is well past its sell-by date.
+%%%%
 rotting devil
 
 A hideous decaying form.
@@ -1599,6 +1627,10 @@ sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with lightning speed. It seems to throw sparks all around.
 %%%%
+skeletal bat
+
+A bat skeleton without the decency to lie unmoving like dead bats are supposed to.
+%%%%
 skeletal warrior
 
 The vicious and heavily armed skeleton of a humanoid creature, animated by unholy power.
@@ -1686,6 +1718,10 @@ The soul of a holy creature, reft from its body. It is a timid creature, but as 
 spriggan
 
 A small humanoid, resembling a human or elf except for the size. They move at a great speed, and love playing dirty tricks on people.
+%%%%
+spriggan air mage
+
+Ever noticed the wind always blows in your eyes and in the backs of some? These guys have something to do with that.
 %%%%
 spriggan assassin
 

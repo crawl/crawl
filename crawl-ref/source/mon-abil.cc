@@ -51,219 +51,6 @@
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
 static bool _slime_split_merge(monster* thing);
-
-struct position_node
-{
-    position_node(const position_node & existing)
-    {
-        pos = existing.pos;
-        last = existing.last;
-        estimate = existing.estimate;
-        path_distance = existing.path_distance;
-        connect_level = existing.connect_level;
-        string_distance = existing.string_distance;
-        departure = existing.departure;
-    }
-
-    position_node()
-    {
-        pos.x=0;
-        pos.y=0;
-        last = NULL;
-        estimate = 0;
-        path_distance = 0;
-        connect_level = 0;
-        string_distance = 0;
-        departure = false;
-    }
-
-    coord_def pos;
-    const position_node * last;
-
-    int estimate;
-    int path_distance;
-    int connect_level;
-    int string_distance;
-    bool departure;
-
-    bool operator < (const position_node & right) const
-    {
-        if (pos == right.pos)
-            return string_distance < right.string_distance;
-
-        return pos < right.pos;
-
-  //      if (pos.x == right.pos.x)
-//            return pos.y < right.pos.y;
-
-//        return pos.x < right.pos.x;
-    }
-
-    int total_dist() const
-    {
-        return (estimate + path_distance);
-    }
-};
-
-struct path_less
-{
-    bool operator()(const std::set<position_node>::iterator & left,
-                    const std::set<position_node>::iterator & right)
-    {
-        return (left->total_dist() > right->total_dist());
-    }
-
-};
-
-#define DISCONNECT_DIST (INT_MAX - 1000)
-
-template<typename cost_T, typename est_T>
-struct simple_connect
-{
-    cost_T cost_function;
-    est_T estimate_function;
-
-    int connect;
-    int compass_idx[8];
-
-    simple_connect()
-    {
-        for (unsigned i=0; i<8; i++)
-        {
-            compass_idx[i] = i;
-        }
-    }
-
-    void operator()(const position_node & node,
-                    std::vector<position_node> & expansion)
-    {
-        std::random_shuffle(compass_idx, compass_idx + connect);
-
-        for (int i=0; i < connect; i++)
-        {
-            position_node temp;
-            temp.pos = node.pos + Compass[compass_idx[i]];
-            if (!in_bounds(temp.pos))
-                continue;
-
-            int cost = cost_function(temp.pos);
-//            if (cost == DISCONNECT_DIST)
-  //              continue;
-            temp.path_distance = node.path_distance + cost;
-
-            temp.estimate = estimate_function(temp.pos);
-            expansion.push_back(temp);
-            // leaving last undone for now, don't want to screw the pointer up.
-        }
-    }
-};
-
-struct coord_wrapper
-{
-    coord_wrapper(int (*input) (const coord_def & pos))
-    {
-        test = input;
-    }
-    int (*test) (const coord_def & pos);
-    int  operator()(const coord_def & pos)
-    {
-        return (test(pos));
-    }
-
-    coord_wrapper()
-    {
-
-    }
-};
-
-template<typename valid_T, typename expand_T>
-void search_astar(position_node & start,
-                  valid_T & valid_target,
-                  expand_T & expand_node,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates)
-{
-    std::priority_queue<std::set<position_node>::iterator,
-                        std::vector<std::set<position_node>::iterator>,
-                        path_less  > fringe;
-
-    std::set<position_node>::iterator current = visited.insert(start).first;
-    fringe.push(current);
-
-
-    bool done = false;
-    while (!fringe.empty())
-    {
-        current = fringe.top();
-        fringe.pop();
-
-        std::vector<position_node> expansion;
-        expand_node(*current, expansion);
-
-        for (unsigned i=0;i < expansion.size(); ++i)
-        {
-            expansion[i].last = &(*current);
-
-            std::pair<std::set<position_node>::iterator, bool > res;
-            res = visited.insert(expansion[i]);
-
-            if (!res.second)
-            {
-                continue;
-            }
-
-            if (valid_target(res.first->pos))
-            {
-                candidates.push_back(res.first);
-                done = true;
-                break;
-            }
-
-            if (res.first->path_distance < DISCONNECT_DIST)
-            {
-                fringe.push(res.first);
-            }
-        }
-        if (done)
-            break;
-    }
-}
-
-template<typename valid_T, typename expand_T>
-void search_astar(const coord_def & start,
-                  valid_T & valid_target,
-                  expand_T & expand_node,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates)
-{
-    position_node temp_node;
-    temp_node.pos = start;
-    temp_node.last = NULL;
-    temp_node.path_distance = 0;
-
-    search_astar(temp_node, valid_target, expand_node, visited, candidates);
-}
-
-template<typename valid_T, typename cost_T, typename est_T>
-void search_astar(const coord_def & start,
-                  valid_T & valid_target,
-                  cost_T & connection_cost,
-                  est_T & cost_estimate,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates,
-                  int connect_mode = 8)
-{
-    if (connect_mode < 1 || connect_mode > 8)
-        connect_mode = 8;
-
-    simple_connect<cost_T, est_T> connect;
-    connect.connect = connect_mode;
-    connect.cost_function = connection_cost;
-    connect.estimate_function = cost_estimate;
-
-    search_astar(start, valid_target, connect, visited, candidates);
-}
-
 template<typename valid_T, typename connect_T>
 void search_dungeon(const coord_def & start,
                     valid_T & valid_target,
@@ -1071,7 +858,7 @@ static bool _orc_battle_cry(monster* chief)
                     else
                     {
                         mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, level,
-                                                  KC_OTHER, dur));
+                                                 chief, dur));
                     }
 
                     affected++;
@@ -2277,7 +2064,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->attitude == ATT_HOSTILE
             && distance(you.pos(), mons->pos()) <= 5)
         {
-            mons->hit_points = -1;
+            mons->suicide();
             used = true;
             break;
         }
@@ -2290,7 +2077,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
             if (mons->can_see(*targ) && !feat_is_solid(grd(targ->pos())))
             {
-                mons->hit_points = -1;
+                mons->suicide();
                 used = true;
                 break;
             }
@@ -2347,7 +2134,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         beem.aux_source  = "bolt of electricity";
         beem.range       = 8;
         beem.damage      = dice_def(3, 6);
-        beem.hit         = 50;
+        beem.hit         = 35;
         beem.colour      = LIGHTCYAN;
         beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_ELECTRICITY;
@@ -2457,64 +2244,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             mons->go_berserk(true);
         break;
 
-    case MONS_PIT_FIEND:
-        if (one_chance_in(3))
-            break;
-        // deliberate fall through
-    case MONS_FIEND:
-        if (mons->has_ench(ENCH_CONFUSION))
-            break;
-
-        if (player_or_mon_in_sanct(mons))
-            break;
-
-        // Friendly fiends won't use torment, preferring hellfire
-        // (right now there is no way a monster can predict how
-        // badly they'll damage the player with torment) -- GDL
-
-        // Well, I guess you could allow it if the player is torment
-        // resistant, but there's a very good reason torment resistant
-        // players can't cast Torment themselves, and allowing your
-        // allies to cast it would just introduce harmless Torment
-        // through the backdoor. Thus, shouldn't happen. (jpeg)
-        if (one_chance_in(4))
-        {
-            spell_type spell_cast = SPELL_NO_SPELL;
-
-            switch (random2(4))
-            {
-            case 0:
-                if (!mons->friendly())
-                {
-                    make_mons_stop_fleeing(mons);
-                    spell_cast = SPELL_SYMBOL_OF_TORMENT;
-                    _mons_cast_abil(mons, beem, spell_cast);
-                    used = true;
-                    break;
-                }
-                // deliberate fallthrough -- see above
-            case 1:
-            case 2:
-            case 3:
-                spell_cast = SPELL_HELLFIRE;
-                setup_mons_cast(mons, beem, spell_cast);
-
-                // Fire tracer.
-                fire_tracer(mons, beem);
-
-                // Good idea?
-                if (mons_should_fire(beem))
-                {
-                    make_mons_stop_fleeing(mons);
-
-                    _mons_cast_abil(mons, beem, spell_cast);
-                    used = true;
-                }
-                break;
-            }
-        }
-        break;
-
     case MONS_IMP:
     case MONS_PHANTOM:
     case MONS_INSUBSTANTIAL_WISP:
@@ -2550,7 +2279,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (mons->has_ench(ENCH_ROT))
                 break;
 
-            mon_enchant rot = mon_enchant(ENCH_ROT, 0, KC_OTHER, 10);
+            mon_enchant rot = mon_enchant(ENCH_ROT, 0, 0, 10);
             mons->add_ench(rot);
 
             if (mons->visible_to(&you))

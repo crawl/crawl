@@ -75,10 +75,10 @@
 
 crawl_view_geometry crawl_view;
 
-void handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
+bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
 {
     if (mons_is_unknown_mimic(mons))
-        return;
+        return false;
 
     activity_interrupt_data aid(mons);
     if (!mons->seen_context.empty())
@@ -92,13 +92,16 @@ void handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
     else
         aid.context = "newly seen";
 
+    seen_monster(mons);
+
     if (!mons_is_safe(mons)
         && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
             || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
     {
-        interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
+        return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
     }
-    seen_monster(mons);
+
+    return false;
 }
 
 void flush_comes_into_view()
@@ -158,10 +161,46 @@ void seen_monsters_react()
     }
 }
 
+static std::string _desc_mons_type_map(std::map<monster_type, int> types)
+{
+    std::string message;
+    unsigned int count = 1;
+    for (std::map<monster_type, int>::iterator it = types.begin();
+         it != types.end(); it++)
+    {
+        std::string name;
+        description_level_type desc;
+        if (it->second == 1)
+        {
+            desc = (it == types.begin() ? DESC_CAP_A
+                                                : DESC_NOCAP_A);
+        }
+        else
+            desc = DESC_PLAIN;
+
+        name = mons_type_name(it->first, desc);
+        if (it->second > 1)
+        {
+            name = make_stringf("%d %s", it->second,
+                                pluralise(name).c_str());
+        }
+
+        message += name;
+        if (count == types.size() - 1)
+            message += " and ";
+        else if (count < types.size())
+            message += ", ";
+        ++count;
+    }
+    return make_stringf("%s come into view.", message.c_str());
+}
+
 void update_monsters_in_view()
 {
+    const unsigned int max_msgs = 4;
     int num_hostile = 0;
     std::vector<std::string> msgs;
+    std::vector<monster*> monsters;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -179,7 +218,8 @@ void update_monsters_in_view()
             }
             else if (mi->visible_to(&you))
             {
-                handle_seen_interrupt(*mi, &msgs);
+                if (handle_seen_interrupt(*mi, &msgs))
+                    monsters.push_back(*mi);
                 seen_monster(*mi);
             }
             else
@@ -190,17 +230,27 @@ void update_monsters_in_view()
 
         // If the monster hasn't been seen by the time that the player
         // gets control back then seen_context is out of date.
-        mi->seen_context.clear();
+        if (!you.turn_is_over)
+            mi->seen_context.clear();
     }
 
     if (!msgs.empty())
     {
-        int size = msgs.size();
-        if (size <= 6)
+        unsigned int size = monsters.size();
+        std::map<monster_type, int> types;
+        std::map<monster_type, int> genera; // This is the plural for genus!
+        for (unsigned int i = 0; i < size; ++i)
         {
-            for (int i = 0; i < size; i++)
-                mpr(msgs[i], MSGCH_WARN);
+            types[monsters[i]->type]++;
+            genera[mons_genus(monsters[i]->type)]++;
         }
+
+        if (size == 1)
+            mpr(msgs[0], MSGCH_WARN);
+        else if (types.size() <= max_msgs)
+            mpr(_desc_mons_type_map(types), MSGCH_WARN);
+        else if (genera.size() <= max_msgs)
+            mpr(_desc_mons_type_map(genera), MSGCH_WARN);
         else
             mprf(MSGCH_WARN, "%d monsters come into view.", size);
     }

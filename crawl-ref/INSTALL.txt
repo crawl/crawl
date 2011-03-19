@@ -73,7 +73,7 @@ This is not what you want.
 
 Once you have Git installed, you just need to do:
 
-    git clone git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+    git clone git@gitorious.org:crawl/crawl.git
 
 And then to get the contributing libraries, enter the newly cloned
 repository via 'cd crawl-ref' and type:

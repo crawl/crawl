@@ -34,6 +34,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
@@ -1206,7 +1207,7 @@ static void _append_non_item(std::string &desc, std::string key)
     }
     else
     {
-        desc += "\nOdd, this spell can't be found anywhere.  Please "
+        desc += "\nOdd, this spell can't be found anywhere. Please "
                 "file a bug report.";
     }
 
@@ -1219,7 +1220,7 @@ static void _append_non_item(std::string &desc, std::string key)
         if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER))
         {
             desc += "\n\nYou aren't in wizard mode, so you shouldn't be "
-                    "seeing this entry.  Please file a bug report.";
+                    "seeing this entry. Please file a bug report.";
         }
     }
 }
@@ -1317,7 +1318,8 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
 }
 
 // Does not wait for keypress; the caller must do that if necessary.
-static void _do_description(std::string key, std::string type,
+// Returns true if we need to wait for keypress.
+static bool _do_description(std::string key, std::string type,
                             std::string footer = "")
 {
     describe_info inf;
@@ -1362,8 +1364,8 @@ static void _do_description(std::string key, std::string type,
             && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
         {
             monster_info mi(mon_num);
-            describe_monsters(mi, true);
-            return;
+            describe_monsters(mi, true, footer);
+            return (false);
         }
         else
         {
@@ -1435,6 +1437,7 @@ static void _do_description(std::string key, std::string type,
     inf.title  = key;
 
     print_description(inf);
+    return (true);
 }
 
 // Reads all questions from database/FAQ.txt, outputs them in the form of
@@ -1704,8 +1707,8 @@ static void _find_description(bool *again, std::string *error_inout)
     }
     else if (key_list.size() == 1)
     {
-        _do_description(key_list[0], type);
-        wait_for_keypress();
+        if (_do_description(key_list[0], type))
+            wait_for_keypress();
         return;
     }
 
@@ -1713,9 +1716,12 @@ static void _find_description(bool *again, std::string *error_inout)
     {
         std::string footer = "This entry is an exact match for '";
         footer += regex;
-        footer += "'.  To see non-exact matches, press space.";
+        footer += "'. To see non-exact matches, press space.";
 
         _do_description(regex, type, footer);
+        // FIXME: This results in an *additional* getchm(). We might have
+        // to check for this eventuality way over in describe.cc and
+        // _print_toggle_message. (jpeg)
         if (getchm() != ' ')
             return;
     }
@@ -1756,11 +1762,24 @@ static void _find_description(bool *again, std::string *error_inout)
             if (mons_is_mimic(m_type))
                 continue;
 
+            // No proper monster, and causes crashes in Tiles.
+            if (mons_is_tentacle_segment(m_type))
+                continue;
+
             // NOTE: Initializing the demon_ghost part of (very) ugly
             // things and player ghosts is taken care of in define_monster().
             fake_mon.type = m_type;
             fake_mon.props["fake"] = true;
-            define_monster(&fake_mon);
+            // HACK: Set an arbitrary humanoid monster as base type.
+            if (mons_class_is_zombified(m_type))
+            {
+                monster_type base_type = MONS_GOBLIN;
+                if (zombie_class_size(m_type) == Z_BIG)
+                    base_type = MONS_HILL_GIANT;
+                define_zombie(&fake_mon, base_type, m_type);
+            }
+            else
+                define_monster(&fake_mon);
 
             // FIXME: This doesn't generate proper draconian monsters.
             monster_list.push_back(fake_mon);
@@ -1841,8 +1860,8 @@ static void _find_description(bool *again, std::string *error_inout)
             else
                 key = *((std::string*) sel[0]->data);
 
-            _do_description(key, type);
-            wait_for_keypress();
+            if (_do_description(key, type))
+                wait_for_keypress();
         }
     }
 }
@@ -1862,6 +1881,8 @@ static void _keyhelp_query_descriptions()
     while (again);
 
     viewwindow();
+    if (!error.empty())
+        mpr(error);
 }
 
 static int _keyhelp_keyfilter(int ch)
@@ -2750,7 +2771,9 @@ int list_wizard_commands(bool do_redraw_screen)
     cols.add_formatted(1,
                        "<yellow>Other player related effects</yellow>\n"
                        "<w>c</w>      : card effect\n"
+#ifdef DEBUG_BONES
                        "<w>Ctrl-G</w> : save/load ghost (bones file)\n"
+#endif
                        "<w>h</w>/<w>H</w>    : heal yourself (super-Heal)\n"
                        "<w>Ctrl-H</w> : set hunger state\n"
                        "<w>X</w>      : make Xom do something now\n"

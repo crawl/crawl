@@ -4369,7 +4369,7 @@ void do_interlevel_travel()
         mesclr();
 }
 
-
+#ifdef USE_TILE
 // (0,0) = same position is handled elsewhere.
 const int dir_dx[8] = {-1, 0, 1, -1, 1, -1,  0,  1};
 const int dir_dy[8] = { 1, 1, 1,  0, 0, -1, -1, -1};
@@ -4391,19 +4391,19 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
         if (force)
             cmd += CMD_OPEN_DOOR_LEFT - CMD_MOVE_LEFT;
 
-        return command_to_key((command_type) cmd);
+        return cmd;
     }
 
-    return 0;
+    return CK_MOUSE_CMD;
 }
 
 int click_travel(const coord_def &gc, bool force)
 {
     if (!in_bounds(gc))
-        return 0;
+        return CK_MOUSE_CMD;
 
-    int cmd = _adjacent_cmd(gc, force);
-    if (cmd)
+    const int cmd = _adjacent_cmd(gc, force);
+    if (cmd != CK_MOUSE_CMD)
         return cmd;
 
     if ((!is_excluded(gc) || _is_stair_exclusion(gc))
@@ -4427,10 +4427,11 @@ int click_travel(const coord_def &gc, bool force)
     const coord_def dest = tp.pathfind(RMODE_TRAVEL);
 
     if (!dest.x && !dest.y)
-        return 0;
+        return CK_MOUSE_CMD;
 
     return _adjacent_cmd(dest, force);
 }
+#endif
 
 bool check_for_interesting_features()
 {

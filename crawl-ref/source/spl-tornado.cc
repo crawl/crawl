@@ -2,6 +2,7 @@
 
 #include "spl-damage.h"
 
+#include "areas.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -13,6 +14,7 @@
 #include "mon-behv.h"
 #include "ouch.h"
 #include "player.h"
+#include "shout.h"
 #include "spl-cast.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -134,8 +136,8 @@ bool cast_tornado(int powc)
     }
 
     mprf("A great vortex of raging winds %s.",
-         you.is_levitating() ? "appears around you"
-                             : "appears and lifts you up");
+         you.airborne() ? "appears around you"
+                        : "appears and lifts you up");
 
     if (you.fishtail)
         merfolk_stop_swimming();
@@ -154,13 +156,20 @@ void tornado_damage(actor *caster, int dur)
     int pow;
     // Not stored so unwielding that staff will reduce damage.
     if (caster->atype() == ACT_PLAYER)
+    {
+        // don't dis-enhance our own power
+        int dur_left = you.duration[DUR_TORNADO];
+        you.duration[DUR_TORNADO] = 0;
         pow = calc_spell_power(SPELL_TORNADO, true);
+        you.duration[DUR_TORNADO] = dur_left;
+    }
     else
         pow = caster->as_monster()->hit_dice * 4;
     if (dur > 0)
         pow = div_rand_round(pow * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
+    noisy(25, org, caster->mindex());
     WindSystem winds(org);
 
     std::stack<actor*>    move_act;
@@ -203,24 +212,28 @@ void tornado_damage(actor *caster, int dur)
                 if (victim->submerged())
                     continue;
 
+                bool leda = liquefied(victim->pos()) && victim->ground_level();
                 if (!victim->res_wind())
                 {
                     if (victim->atype() == ACT_MONSTER)
                     {
-                        // levitate the monster so you get only one attempt at
-                        // tossing them into water/lava
                         monster *mon = victim->as_monster();
-                        mon_enchant ench(ENCH_LEVITATION, 0,
-                                         caster->kill_alignment(), 20);
-                        if (mon->has_ench(ENCH_LEVITATION))
-                            mon->update_ench(ench);
-                        else
-                            mon->add_ench(ench);
+                        if (!leda)
+                        {
+                            // levitate the monster so you get only one attempt
+                            // at tossing them into water/lava
+                            mon_enchant ench(ENCH_LEVITATION, 0,
+                                             caster, 20);
+                            if (mon->has_ench(ENCH_LEVITATION))
+                                mon->update_ench(ench);
+                            else
+                                mon->add_ench(ench);
+                        }
                         behaviour_event(mon, ME_ANNOY, caster->mindex());
                         if (mons_is_mimic(mon->type))
                             mimic_alert(mon);
                     }
-                    else
+                    else if (!leda)
                     {
                         bool standing = !you.airborne();
                         if (standing)
@@ -231,7 +244,7 @@ void tornado_damage(actor *caster, int dur)
                         if (standing)
                             float_player(false);
                     }
-                    int dmg = roll_dice(6, rpow) / 8;
+                    int dmg = roll_dice(6, rpow) / 10;
                     if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
@@ -242,7 +255,7 @@ void tornado_damage(actor *caster, int dur)
                         victim->hurt(caster, dmg);
                 }
 
-                if (victim->alive())
+                if (victim->alive() && !leda)
                     move_act.push(victim);
             }
             if ((env.cgrid(*dam_i) == EMPTY_CLOUD

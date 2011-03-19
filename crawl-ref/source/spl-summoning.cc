@@ -24,7 +24,6 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
-#include "it_use2.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -34,6 +33,7 @@
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
@@ -53,7 +53,8 @@ bool summon_animals(int pow)
         MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
         MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR,
         MONS_AGATE_SNAIL, MONS_BORING_BEETLE, MONS_GILA_MONSTER,
-        MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND
+        MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND,
+        MONS_ELEPHANT, MONS_HIPPOGRIFF, MONS_GRIFFON
     };
 
     int count = 0;
@@ -150,7 +151,13 @@ bool cast_summon_small_mammals(int pow, god_type god)
 
 static bool _snakable_missile(const item_def& item)
 {
-    return (item.base_type == OBJ_MISSILES && item.sub_type == MI_ARROW);
+    if (item.base_type != OBJ_MISSILES
+        || item.sub_type != MI_ARROW && item.sub_type != MI_JAVELIN)
+    {
+        return false;
+    }
+
+    return item.special != SPMSL_SILVER && item.special != SPMSL_STEEL;
 }
 
 static bool _snakable_weapon(const item_def& item)
@@ -315,7 +322,7 @@ bool cast_summon_scorpions(int pow, god_type god)
 }
 
 // Creates a mixed swarm of typical swarming animals.
-// Number, duration and friendlinesss depend on spell power.
+// Number and duration depend on spell power.
 bool cast_summon_swarm(int pow, god_type god)
 {
     bool success = false;
@@ -341,11 +348,8 @@ bool cast_summon_swarm(int pow, god_type god)
             mon = RANDOM_ELEMENT(swarmers);
         while (player_will_anger_monster(mon));
 
-        const bool friendly = (random2(pow) > 7);
-
         if (create_monster(
-                mgen_data(mon,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                mgen_data(mon, BEH_FRIENDLY, &you,
                           dur, SPELL_SUMMON_SWARM,
                           you.pos(),
                           MHITYOU,
@@ -530,7 +534,7 @@ bool cast_summon_elemental(int pow, god_type god,
 
     while (true)
     {
-        mpr("Summon from material in which direction? ", MSGCH_PROMPT);
+        mpr("Summon from material in which direction?", MSGCH_PROMPT);
 
         direction_chooser_args args;
         args.restricts = DIR_DIR;
@@ -929,7 +933,7 @@ static bool _can_weapon_dance(item_def* wpn)
 }
 
 // Mass Tukima's dance
-bool cast_tukimas_dance_party(actor *caster, int pow, god_type god, bool force_hostile)
+bool cast_tukimas_ball(actor *caster, int pow, god_type god, bool force_hostile)
 {
     bool some_weapon_was_animated = false;
     const int dur = std::min(2 + (random2(pow) / 5), 6);
@@ -959,7 +963,7 @@ bool cast_tukimas_dance_party(actor *caster, int pow, god_type god, bool force_h
                              dur,
                              SPELL_TUKIMAS_DANCE,
                              *ri,
-                             MHITYOU,
+                             (caster == &you) ? MHITYOU : caster->as_monster()->foe,
                              // mgen_flag_type - might be MG_PLAYER_MADE or MG_FORCE_PLACE
                              0,
                              // if you animate the weapon, your god gets mad
@@ -1018,7 +1022,9 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
                      dur, SPELL_TUKIMAS_DANCE,
                      you.pos(),
                      MHITYOU,
-                     0, god);
+                     0, god,
+                     MONS_NO_MONSTER, 0, BLACK,
+                     pow);
         mg.props[TUKIMA_WEAPON] = cp;
 
         if (force_hostile)
@@ -2030,6 +2036,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
 {
     int how_many_corpses = 0;
     int how_many_orcs = 0;
+    int how_many_holy = 0;
     int total_mass = 0;
     int unrotted = 0;
 
@@ -2041,6 +2048,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
             how_many_corpses++;
             if (mons_genus(si->plus) == MONS_ORC)
                 how_many_orcs++;
+            if (mons_class_holiness(si->plus) == MH_HOLY)
+                how_many_holy++;
             if (!food_is_rotten(*si))
                 unrotted++;
             destroy_item(si->index());
@@ -2071,6 +2080,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
 
     if (how_many_orcs > 0)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
+    if (how_many_holy > 0)
+        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2 * how_many_holy);
 
     return (success);
 }

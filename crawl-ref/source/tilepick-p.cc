@@ -45,8 +45,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;
 
         case MISC_CRYSTAL_BALL_OF_SEEING:
-        case MISC_CRYSTAL_BALL_OF_ENERGY:
-        case MISC_CRYSTAL_BALL_OF_FIXATION:   return TILEP_HAND1_CRYSTAL;
+        case MISC_CRYSTAL_BALL_OF_ENERGY:     return TILEP_HAND1_CRYSTAL;
 
         case MISC_LAMP_OF_FIRE:               return TILEP_HAND1_LANTERN;
         case MISC_LANTERN_OF_SHADOWS:         return TILEP_HAND1_BONE_LANTERN;
@@ -382,7 +381,17 @@ tileidx_t tileidx_player()
         case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
         // non-animals
         case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
-        case TRAN_STATUE:    ch = TILEP_TRAN_STATUE;    break;
+        case TRAN_STATUE:
+        {
+            switch (you.species)
+            {
+            case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
+            case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
+            case SP_CAT:     ch = TILEP_TRAN_STATUE_FELID;    break;
+            default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
+            }
+            break;
+        }
         case TRAN_DRAGON:    ch = TILEP_TRAN_DRAGON;    break;
         case TRAN_LICH:
         {
@@ -400,7 +409,10 @@ tileidx_t tileidx_player()
         case TRAN_NONE: break;
     }
 
-    if (!you.ground_level())
+    // Currently, the flying flag is only used for not drawing the tile in the
+    // water. in_water() checks Beogh's water walking. If the flying flag is
+    // used for something else, we would need to add an in_water flag.
+    if (!you.in_water())
         ch |= TILE_FLAG_FLYING;
 
     if (you.attribute[ATTR_HELD])
@@ -663,6 +675,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case JOB_PALADIN:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BROWN;
@@ -671,12 +684,26 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
             break;
+#endif
 
         case JOB_CHAOS_KNIGHT:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
+            parts[TILEP_PART_BODY]  = TILEP_BODY_MESH_BLACK;
+            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_SHORT_DARKBROWN;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_CLOWN; // Xom
+            break;
+
+        case JOB_DEATH_KNIGHT:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_BLACK3;
+            parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_OFS;
+            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_BLACK;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
+            break;
+
+        case JOB_ABYSSAL_KNIGHT:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_SHOULDER_PAD;
             parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
             parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_PLUME;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
         case JOB_BERSERKER:
@@ -684,12 +711,14 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_REDBROWN;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case JOB_REAVER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BLACK_GOLD;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BROWN;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_RED_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
+#endif
 
         case JOB_STALKER:
             parts[TILEP_PART_HELM]  = TILEP_HELM_HOOD_GREEN;
@@ -828,11 +857,10 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_HUNTER:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_ARMOUR2;
-            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BROWN;
-            parts[TILEP_PART_HAND1] = TILEP_HAND1_BOW;
-            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_BROWN;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN;
+            parts[TILEP_PART_BODY]  = TILEP_BODY_LEGOLAS;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_FEATHER_GREEN;
+            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_DARKGREEN;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN3;
             break;
 
         case JOB_GLADIATOR:

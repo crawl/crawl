@@ -59,13 +59,13 @@
 #
 # name = Delilah
 # remember_name = false
-# weapon = (short sword | falchion | hand axe | spear | mace | trident | random)
-# book = (fire | ice | summ | random)
+# weapon = (short sword | falchion | hand axe | spear | mace | trident
+#           | quarterstaff | unarmed | random)
+# book = (fire | ice | random)
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
-# chaos_knight = (Xom | Makhleb | Lugonu | random)
-# priest       = (Zin | Yredelemnul | Beogh | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
+# religion = (Beogh | Zin | random)
 # random_pick = true
 # good_random = false
 # restart_after_game = true

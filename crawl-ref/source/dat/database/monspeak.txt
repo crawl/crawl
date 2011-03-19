@@ -2659,8 +2659,6 @@ w:50
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "A hungry ghost just ate my lunch. I hate that."
-
 @The_monster@ says, "A freezing wraith just broke my potions. I hate that."
 
 @The_monster@ says, "A flaming corpse just burned my scrolls. I hate that."
@@ -2802,7 +2800,7 @@ w:50
 
 @The_monster@ says, "I'm sure I saw a card fall out of that deck."
 
-@The_monster@ syas, "I've seen this trick before. You've got the ace up your sleeve, right?"
+@The_monster@ says, "I've seen this trick before. You've got the ace up your sleeve, right?"
 
 @The_monster@ says, "You need to come to terms with your gambling problem, mate."
 %%%%
@@ -4378,7 +4376,7 @@ __NONE
 w:5
 @The_monster@ sings off-key, "You got some money for me?"
 %%%%
-############ MENNAS ### A silenct Angel.
+############ MENNAS ### A silent Angel.
 Mennas
 
 VISUAL:@The_monster@ gestures at you. @player_only@

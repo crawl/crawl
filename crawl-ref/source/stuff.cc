@@ -396,12 +396,16 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
             error += "\n";
     }
 
+#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
+     || defined(TARGET_OS_DOS) \
+     || defined(DGL_PAUSE_AFTER_ERROR)
     bool need_pause = true;
     if (exit_code && !error.empty())
     {
         if (print_error_screen("%s", error.c_str()))
             need_pause = false;
     }
+#endif
 
     cio_cleanup();
     msg::deinitialise_mpr_streams();
@@ -683,6 +687,14 @@ void canned_msg(canned_message_type which_message)
         break;
     case MSG_UNTHINKING_ACT:
         mpr("Why would you want to do that?");
+        crawl_state.cancel_cmd_repeat();
+        break;
+    case MSG_NOTHING_THERE:
+        mpr("There's nothing there!");
+        crawl_state.cancel_cmd_repeat();
+        break;
+    case MSG_NOTHING_CLOSE_ENOUGH:
+        mpr("There's nothing close enough!");
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_SPELL_FIZZLES:

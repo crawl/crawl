@@ -2,8 +2,11 @@
 
 #include "player-stats.h"
 
+#include "artefact.h"
 #include "delay.h"
 #include "godpassive.h"
+#include "itemname.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mon-util.h"
@@ -392,7 +395,22 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
     // scale modifier by player_sust_abil() - right-shift
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
-        stat_loss >>= player_sust_abil();
+    {
+        int sust = player_sust_abil();
+        stat_loss >>= sust;
+
+        if (sust && !stat_loss && !player_sust_abil(false))
+        {
+            item_def *ring = only_unided_ring();
+            if (ring && !is_artefact(*ring)
+                && ring->sub_type == RING_SUSTAIN_ABILITIES)
+            {
+                set_ident_type(*ring, ID_KNOWN_TYPE);
+                mprf("You are wearing: %s",
+                     ring->name(DESC_INVENTORY_EQUIP).c_str());
+            }
+        }
+    }
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
          "You feel %s%s.",
@@ -611,12 +629,14 @@ void update_stat_zero()
                 you.redraw_stats[s] = true;
             }
         }
+        else // no stat penalty at all
+            continue;
 
         if (you.stat_zero[i] > STAT_DEATH_TURNS)
         {
             ouch(INSTANT_DEATH, NON_MONSTER,
                  _statloss_killtype(s), you.stat_zero_cause[i].c_str());
-         }
+        }
 
         int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
         int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);

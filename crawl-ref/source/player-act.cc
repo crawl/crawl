@@ -551,7 +551,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (beheld())
+    if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
     {
         if (verbose)
             mpr("You are too mesmerised to rage.");
@@ -608,6 +608,14 @@ bool player::can_go_berserk(bool intentional, bool potion) const
             }
         }
 
+        return (false);
+    }
+
+    ASSERT(HUNGER_STARVING + BERSERK_NUTRITION < 2066);
+    if (you.hunger <= 2066)
+    {
+        if (verbose)
+            mpr("You're too hungry to go berserk.");
         return (false);
     }
 

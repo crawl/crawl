@@ -136,7 +136,7 @@ static void _update_agrid()
 
                 _set_agrid_flag(*ri, APROP_LIQUID);
 
-                if (feat_has_solid_floor(f))
+                if (feat_has_solid_floor(f) && !feat_is_water(f))
                     _set_agrid_flag(*ri, APROP_ACTUAL_LIQUID);
             }
             no_areas = false;
@@ -584,6 +584,9 @@ bool liquefied(const coord_def& p, bool check_actual)
 
     if (!_agrid_valid)
         _update_agrid();
+
+    if (feat_is_water(grd(p)))
+        return false;
 
     // "actually" liquified (ie, check for movement)
     if (check_actual)

@@ -14,7 +14,6 @@
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
-#include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -26,6 +25,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -51,6 +51,8 @@ bool cast_sublimation_of_blood(int pow)
         if (you.inv[wielded].base_type == OBJ_FOOD
             && you.inv[wielded].sub_type == FOOD_CHUNK)
         {
+            success = true;
+
             mpr("The chunk of flesh you are holding crumbles to dust.");
 
             mpr("A flood of magical energy pours into your mind!");
@@ -61,9 +63,13 @@ bool cast_sublimation_of_blood(int pow)
 
             if (mons_genus(you.inv[wielded].plus) == MONS_ORC)
                 did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+            if (mons_class_holiness(you.inv[wielded].plus) == MH_HOLY)
+                did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
         }
         else if (is_blood_potion(you.inv[wielded]))
         {
+            success = true;
+
             mprf("The blood within %s froths and boils.",
                  you.inv[wielded].quantity > 1 ? "one of your flasks"
                                                : "the flask you are holding");
@@ -86,7 +92,8 @@ bool cast_sublimation_of_blood(int pow)
             mpr("A conflicting enchantment prevents the spell from "
                 "coming into effect.");
         }
-        else if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
+        else if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED
+                 || you.is_undead == US_UNDEAD)
         {
             mpr("You don't have enough blood to draw power from your "
                 "own body.");
@@ -307,7 +314,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
         return 0;
     }
 
-    mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
+    mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
     return 1;
 }
 
@@ -452,6 +459,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
     }
 
     const bool was_orc = (mons_genus(corpse->plus) == MONS_ORC);
+    const bool was_holy = (mons_class_holiness(corpse->plus) == MH_HOLY);
 
     // We borrow the corpse's object to make our potion.
     corpse->base_type = OBJ_POTIONS;
@@ -475,6 +483,8 @@ bool cast_fulsome_distillation(int pow, bool check_range)
 
     if (was_orc)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+    if (was_holy)
+        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
 
     return (true);
 }
@@ -525,7 +535,7 @@ void cast_stoneskin(int pow)
         return;
     }
 
-    if (you.duration[DUR_STONEMAIL] || you.duration[DUR_ICY_ARMOUR])
+    if (you.duration[DUR_ICY_ARMOUR])
     {
         mpr("This spell conflicts with another spell still in effect.");
         return;

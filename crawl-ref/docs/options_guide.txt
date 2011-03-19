@@ -15,7 +15,7 @@ The contents of this text are:
 0-d     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, book, wand,
-                chaos_knight, priest,
+                religion,
                 species, background, random_pick, good_random,
                 restart_after_game
 2-  File System and Sound.
@@ -104,7 +104,7 @@ The contents of this text are:
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
                 tile_show_minihealthbar, tile_show_minimagicbar,
                 tile_show_demon_tier, tile_layout_priority,
-		tile_force_regenerate_levels
+                tile_force_regenerate_levels
 5-  Character Dump.
 5-a     Items and Kills.
                 kill_map, dump_kill_places, dump_item_origins,
@@ -245,7 +245,7 @@ could be used in conjunction with
 To prevent a variable from being changed you can make it a constant:
     constant = useless
 
-This is usefull if you wish to prevent an included file from altering
+This is useful if you wish to prevent an included file from altering
 a variable.
 
 See settings/standard_colours.txt and settings/food_colouring.txt
@@ -272,26 +272,27 @@ remember_name = true
         initial name prompt - hitting Enter at the name prompt will
         simply reuse your old name if remember_name is set.
 
-weapon = (random | short sword | hand axe | spear | mace | trident)
+weapon = (short sword | falchion | hand axe | spear | mace | trident
+          | quarterstaff | unarmed | random)
         Specifying the weapon option allows you to bypass the weapon
-        selection screen.  Note that tridents are restricted to only
-        merfolk and gladiators, but you'll get the standard query in
-        illegal cases.
+        selection screen. Tridents and falchions are restricted to only
+        fighters and gladiators, quarterstaves are restricted to monks,
+        and unarmed is restricted to monks and races with claws. The
+        standard weapon prompt will be shown if an illegal choice for the
+        selected background is specified.
 
-book = (flame | fire | ice | cold | summ | summoning | random)
-        Several characters of spellcasting background can choose their
-        starting spellbook. Note flame=fire and ice=cold and summ=summoning.
+book = (flame | fire | ice | cold | random)
+        Conjurers can choose their starting spellbook. Note flame=fire and
+        ice=cold.
 
 wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
         Artificers can start with either a wand of random effects and another
         wand out of enslavement, confusion, magic darts, frost, or flame, or
         with a rod of striking.
 
-chaos_knight = (Xom | Makhleb | random)
-
-priest = (Zin | Yredelemnul | Beogh | random)
-        The above three make in advance the additional choices for
-        Chaos Knights and Priests (Beogh for HO only).
+religion = (Zin | Beogh | random)
+        Hill Orc priests may choose between worshipping Zin and Beogh, specifying
+        the religion option allows them to bypass this prompt.
 
 species = (Human |...| Vampire | random)
         The usual abbreviations (Hu, HE, etc.) work.
@@ -1318,8 +1319,9 @@ show_gold_turns = false
         ignored. Use the tile_layout_priority option instead.
 
 show_real_turns = false
-        If set to true, the turn counter in the stat area will display absolute
-        turns instead of player turns.
+        If set to true, the turn counter in the stat area will display game
+        turns instead of player turns. A second number is displayed in
+        parenthesis, showing the duration of the last action.
 
 show_beam = true
         When performing actions such as throwing or zapping, you can
@@ -1562,7 +1564,7 @@ CHANNEL_NAME can currently be one of these:
    god             = messages from the gods
    pray            = standard praying messages (start/end of prayer)
    duration        = messages about character spells/effects wearing off
-   danger          = serious threats to the characters existence
+   danger          = serious threats to the character's existence
    food            = warnings about food
    warning         = various other warnings
    recovery        = recovery from disease/stat loss/poison conditions
@@ -1589,8 +1591,8 @@ CHANNEL_NAME can currently be one of these:
 
 The channel options are
    mute      = show no messages from channel (dangerous, be careful!)
-   default   = turn channel on to it's default scheme
-   alternate = turn channel on to it's alternate "colourful" scheme
+   default   = turn channel on to its default scheme
+   alternate = turn channel on to its alternate "colourful" scheme
    on        = same as default
    plain     = make channel the same colour as the "plain" channel
                (won't do anything silly like "mute" if plain == mute,
@@ -1838,7 +1840,7 @@ tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
 
 tile_force_regenerate_levels = false
 
-	If set to true, this will cause the tiles information of existing
+        If set to true, this will cause the tiles information of existing
         levels to be regenerated when loading the level, thus repairing
         save files where this information has become corrupted.
 

@@ -880,7 +880,9 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DECK_OF_DEFENCE:     return "deck of defence";
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:   return "crystal ball of energy";
-        case MISC_CRYSTAL_BALL_OF_FIXATION: return "crystal ball of fixation";
+#if TAG_MAJOR_VERSION == 32
+        case MISC_CRYSTAL_BALL_OF_FIXATION: return "old crystal ball";
+#endif
         case MISC_CRYSTAL_BALL_OF_SEEING:   return "crystal ball of seeing";
         case MISC_BOX_OF_BEASTS:            return "box of beasts";
         case MISC_EMPTY_EBONY_CASKET:       return "empty ebony casket";
@@ -914,7 +916,9 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DECK_OF_DEFENCE:
             return "deck of cards";
         case MISC_CRYSTAL_BALL_OF_ENERGY:
+#if TAG_MAJOR_VERSION == 32
         case MISC_CRYSTAL_BALL_OF_FIXATION:
+#endif
         case MISC_CRYSTAL_BALL_OF_SEEING:
             return "crystal ball";
         case MISC_BOX_OF_BEASTS:
@@ -976,9 +980,11 @@ static const char* book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
     {
-    case BOOK_MINOR_MAGIC_I:
+    case BOOK_MINOR_MAGIC:
+#if TAG_MAJOR_VERSION == 32
     case BOOK_MINOR_MAGIC_II:
     case BOOK_MINOR_MAGIC_III:
+#endif
         return "Minor Magic";
     case BOOK_CONJURATIONS_I:
     case BOOK_CONJURATIONS_II:
@@ -1138,10 +1144,11 @@ std::string base_type_string (object_class_type type, bool known)
 
 std::string sub_type_string (const item_def &item, bool known)
 {
-    return sub_type_string(item.base_type, item.sub_type, item.plus);
+    return sub_type_string(item.base_type, item.sub_type, known, item.plus);
 }
 
-std::string sub_type_string (object_class_type type, int sub_type, bool known, int plus)
+std::string sub_type_string(object_class_type type, int sub_type,
+                            bool known, int plus)
 {
     switch (type)
     {
@@ -1940,20 +1947,19 @@ std::string item_def::name_aux(description_level_type desc,
         case OBJ_BOOKS:
             switch (item_typ)
             {
-            case BOOK_MINOR_MAGIC_I:
-                buff << " [flame]";
-                break;
+#if TAG_MAJOR_VERSION == 32
             case BOOK_MINOR_MAGIC_II:
                 buff << " [frost]";
                 break;
             case BOOK_MINOR_MAGIC_III:
                 buff << " [summ]";
                 break;
+#endif
             case BOOK_CONJURATIONS_I:
-                buff << " [fire]";
+                buff << " [fire+earth]";
                 break;
             case BOOK_CONJURATIONS_II:
-                buff << " [ice]";
+                buff << " [ice+air]";
                 break;
             }
             break;
@@ -2084,7 +2090,7 @@ CrawlHashTable& get_type_id_props()
 }
 
 void set_ident_type(item_def &item, item_type_id_state_type setting,
-                     bool force)
+                    bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
         return;
@@ -2764,8 +2770,6 @@ bool is_bad_item(const item_def &item, bool temp)
         default:
             return (false);
         }
-    case OBJ_MISCELLANY:
-        return (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION);
 
     default:
         return (false);
@@ -2781,8 +2785,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         // Use-IDing these is extremely dangerous!
         if (item.base_type == OBJ_MISCELLANY
             && (item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION))
+                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY))
         {
             return (true);
         }
@@ -2802,6 +2805,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_TORMENT:
             return (!player_mutation_level(MUT_TORMENT_RESISTANCE)
                     || !temp && you.species == SP_VAMPIRE);
+        case SCR_HOLY_WORD:
+            return (you.undead_or_demonic());
         default:
             return (false);
         }
@@ -2972,8 +2977,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_WATER:
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return (!can_ingest(item.base_type, item.sub_type, true, true,
-                                                               false));
+            return (!can_ingest(item, true, true, false));
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
@@ -3040,7 +3044,8 @@ bool is_useless_item(const item_def &item, bool temp)
                     && (temp || you.species != SP_VAMPIRE));
 
         case AMU_CONTROLLED_FLIGHT:
-            return (player_genus(GENPC_DRACONIAN) || you.permanent_flight());
+            return (player_genus(GENPC_DRACONIAN)
+                    || (you.species == SP_KENKU && you.experience_level >= 5));
 
         case RING_WIZARDRY:
             return (you.religion == GOD_TROG);
