@@ -1911,7 +1911,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 400;
                 break;
 
-            case MISC_CRYSTAL_BALL_OF_FIXATION:
             case MISC_EMPTY_EBONY_CASKET:
                 valued += 20;
                 break;

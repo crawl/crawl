@@ -409,7 +409,6 @@ static void _item_corrode(int slot)
         break;
 
     case OBJ_WEAPONS:
-    case OBJ_MISSILES:
         if (get_equip_race(item) == ISFLAG_DWARVEN && !one_chance_in(5))
         {
             it_resists = true;
@@ -751,7 +750,6 @@ void lose_level()
         return;
     }
 
-    you.experience = exp_needed(you.experience_level + 1) - 1;
     you.experience_level--;
 
     mprf(MSGCH_WARN,
@@ -810,9 +808,9 @@ bool drain_exp(bool announce_full)
         return (true);
     }
 
-    unsigned int total_exp = exp_needed(you.experience_level + 2)
-                                  - exp_needed(you.experience_level + 1);
-    unsigned int exp_drained = (total_exp * (10 + random2(11))) / 100;
+    unsigned int total_exp = exp_needed(you.experience_level + 1)
+                                  - exp_needed(you.experience_level);
+    unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
     unsigned int pool_drained = std::min(exp_drained,
                                      (unsigned int)you.exp_available);
 
@@ -852,10 +850,7 @@ bool drain_exp(bool announce_full)
         dprf("You lose %d experience points, %d from pool.",
              exp_drained, pool_drained);
 
-        you.redraw_experience = true;
-
-        if (you.experience < exp_needed(you.experience_level + 1))
-            lose_level();
+        level_change();
 
         return (true);
     }
@@ -1020,10 +1015,10 @@ static void _pain_recover_mp(int dam)
     if (you.mutation[MUT_POWERED_BY_PAIN]
         && (you.magic_points < you.max_magic_points))
     {
-        if (random2(dam) > 5 * player_mutation_level(MUT_POWERED_BY_PAIN)
+        if (random2(dam) > 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN)
             || dam >= you.hp_max / 2)
         {
-            int gain_mp = roll_dice(3, 5 * player_mutation_level(MUT_POWERED_BY_PAIN));
+            int gain_mp = roll_dice(3, 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN));
 
             mpr("You focus.");
             inc_mp(gain_mp, false);
@@ -1500,7 +1495,7 @@ void _end_game(scorefile_entry &se)
     // "- 5" gives us an extra line in case the description wraps on a line.
     hiscores_print_list(get_number_of_lines() - lines - 5);
 
-#ifndef USE_DGAMELAUNCH
+#ifndef DGAMELAUNCH
     cprintf("\nYou can find your morgue file in the '%s' directory.",
             morgue_directory().c_str());
 #endif

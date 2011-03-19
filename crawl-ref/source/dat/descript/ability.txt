@@ -153,7 +153,7 @@ For a short duration gain safety in a divine refuge. While you are inside the sa
 %%%%
 Cure All Mutations
 
-Cure all your mutations.
+Cure all your mutations - but only once.
 %%%%
 # The Shining One
 Divine Shield
@@ -171,7 +171,13 @@ Summon an Angel or Daeva, powerful warriors against evil. They may be blessed by
 # Kikubaaqudgha
 Receive Corpses
 
-Create one or more reanimatable monster corpses near yourself. The number and freshness of these are dependent on Invocations skill.
+Create one or more reanimatable monster corpses near yourself. The number and freshness of these are dependent on Necromancy skill.
+%%%%
+Torment
+
+Sacrifice a cadaver to make everyone in sight, including you, experience all the pain that being suffered in its life. This will decimate the resilience of all those who can feel it.
+
+Kikubaaqudgha may choose to protect you from it... or may not.
 %%%%
 # Yredelemnul
 Animate Remains
@@ -353,10 +359,6 @@ Recall Orcish Followers
 Recall your orcish followers from anywhere on the level to your immediate surroundings.
 %%%%
 # Fedhas
-Decomposition
-
-Cause corpses in your field of vision to rapidly decay. Corpses with a monster on top of them will not be affected.
-%%%%
 Sunlight
 
 Call sunlight down over a small area of the dungeon. Monsters illuminated by the light will be easier to hit. Water affected by the sunlight will evaporate. In particular, deep water will become shallow water, and shallow water will dry up completely, revealing the dungeon floor.

@@ -36,6 +36,8 @@ cloud_blue_smoke CLOUD_BLUE_SMOKE
 cloud_blue_smoke_disturbance CLOUD_BLUE_SMOKE_DISTURBANCE
 cloud_grey_smoke CLOUD_GREY_SMOKE
 cloud_grey_smoke_disturbance CLOUD_GREY_SMOKE_DISTURBANCE
+cloud_yellow_smoke CLOUD_YELLOW_SMOKE
+cloud_yellow_smoke_disturbance CLOUD_YELLOW_SMOKE_DISTURBANCE
 
 %variation CLOUD_GREY_SMOKE white
 %lum 0 30
@@ -87,7 +89,8 @@ sensed_monster_easy MONS_SENSED_EASY
 sensed_monster_tough MONS_SENSED_TOUGH
 sensed_monster_nasty MONS_SENSED_NASTY
 %corpse 1
-%back dc-misc/blood_red
+%back_sdir dc-misc/blood
+%back blood_puddle_red
 unseen_monster UNSEEN_CORPSE
 %corpse 0
 %back none

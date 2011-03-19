@@ -50,15 +50,6 @@ void register_monslist(lua_State *ls)
 
 static int dgn_set_random_mon_list(lua_State *ls)
 {
-    // Don't complain if we're being called when the map is being loaded
-    // and validated.
-    if (you.level_type != LEVEL_PORTAL_VAULT
-        && (you.entering_level || Generating_Level))
-    {
-        luaL_error(ls, "Can only be used in portal vaults.");
-        return (0);
-    }
-
     const int nargs = lua_gettop(ls);
 
     map_def *map = NULL;
@@ -77,16 +68,6 @@ static int dgn_set_random_mon_list(lua_State *ls)
         map_def **_map =
         clua_get_userdata<map_def*>(ls, MAP_METATABLE, 1);
         map = *_map;
-    }
-
-    if (map)
-    {
-        if (map->orient != MAP_ENCOMPASS || map->place.is_valid()
-            || !map->depths.empty())
-        {
-            luaL_error(ls, "Can only be used in portal vaults.");
-            return (0);
-        }
     }
 
     int       list_pos = (map != NULL) ? 2 : 1;

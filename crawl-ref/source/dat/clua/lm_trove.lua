@@ -10,6 +10,7 @@
 --  any scroll
 --  any potion
 --  any wand
+--  runes and the horn of Geryon
 ------------------------------------------------------------------------------
 
 require('clua/lm_1way.lua')
@@ -63,13 +64,23 @@ function TroveMarker:activate(marker, verbose)
 end
 
 function TroveMarker:fdesc_long (marker)
-  local state = "This portal requires " ..
+  local state
+  if self.props.toll_item.base_type == "miscellaneous" then
+    state = "This portal requires the presence of " ..
             self:item_name() .. " to function.\n"
+  else
+    state = "This portal needs " ..
+            self:item_name() .. " to function.\n"
+  end
   return state .. "\n" .. self.props.desc_long
 end
 
 function TroveMarker:overview_note (marker)
-  return self:item_name(false)
+  if self.props.toll_item.base_type == "miscellaneous" then
+    return "show " .. self:item_name(false)
+  else
+    return "give " .. self:item_name(false)
+  end
 end
 
 function TroveMarker:debug_portal (marker)
@@ -197,6 +208,22 @@ function TroveMarker:item_name(do_grammar)
     s = s .. item.quantity
   end
 
+  if item.sub_type == "rune of Zot" then
+    if do_grammar == false then
+      return item.ego_type .. " rune of Zot"
+    else
+      return crawl.grammar(item.ego_type .. " rune of Zot", "a")
+    end
+  end
+
+  if item.sub_type == "horn of Geryon" then
+    if do_grammar == false then
+      return "horn of Geryon"
+    else
+      return "the horn of Geryon"
+    end
+  end
+
   if item.artefact_name ~= false then
     if string.find(item.artefact_name, "'s") or do_grammar == false then
       return item.artefact_name
@@ -297,6 +324,12 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
   for it in iter.invent_iterator:new(iter_table) do
     local iplus1, iplus2 = it.pluses()
     local this_item = true
+    -- For misc items we check plus1 and nothing else.
+    if it.base_type == "miscellaneous" then
+      if iplus1 ~= false and item.plus1 ~= false and iplus1 ~= item.plus1 then
+        this_item = false
+      end
+    else
     if dry_run ~= nil then crawl.mpr("Checking item: " .. it.name()) end
 
     if not it.identified("type properties pluses") then
@@ -367,7 +400,7 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
         this_item = false
       end
     end
-
+    end
     -- Now all we need to do is to make sure that the item
     -- is the one we're looking for
     if this_item and item.sub_type == it.sub_type
@@ -432,9 +465,13 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
 end
 
 function TroveMarker:accept_item (it)
-  crawl.mpr("The portal accepts the item" .. self:plural() ..
-            " and buzzes to life!")
-  it.dec_quantity(self.props.toll_item.quantity)
+  -- We don't take misc items away from people.
+  if it.base_type == "miscellaneous" then
+    crawl.mpr("The portal draws power from the presence of the item" .. self:plural() .. " and buzzes to life!")
+  else
+    crawl.mpr("The portal accepts the item" .. self:plural() .. " and buzzes to life!")
+    it.dec_quantity(self.props.toll_item.quantity)
+  end
   return true
 end
 
@@ -452,7 +489,20 @@ function TroveMarker:check_veto(marker, pname)
 
   local _x, _y = marker:pos()
 
-  -- Let's check to see if there's an item at our current position
+  -- The message is slightly different for items that aren't actually taken by the trove (currently misc items).
+  if self.props.toll_item.base_type == "miscellaneous" then
+    if crawl.yesno("This trove requires the presence of " .. self:item_name() ..
+                 " to function. Show it the item" ..
+                 self:plural() .. "?", true, "n") then
+    if self:check_item(marker, pname, "inventory") == true then
+      return
+    else
+      crawl.mpr("You don't have " .. self:item_name() ..
+                " with you.")
+      return "veto"
+    end
+  end
+  else
   if crawl.yesno("This trove needs " .. self:item_name() ..
                  " to function. Give it the item" ..
                  self:plural() .. "?", true, "n") then
@@ -463,6 +513,7 @@ function TroveMarker:check_veto(marker, pname)
                 " to give! Perhaps you haven't completely identified the item yet?")
       return "veto"
     end
+  end
   end
   return "veto"
 end

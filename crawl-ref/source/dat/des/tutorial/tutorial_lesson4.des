@@ -23,7 +23,7 @@ function tutorial_msg4.train_spellcasting ()
     if crawl.is_tiles() then
         text = text .. " or by <white>mouseclick</white>"
     end
-    text = text .. ") to train it to level 1."
+    text = text .. ") to train it to level 1, then continue to the left."
 
     return tutorial_message(text)
 end
@@ -35,7 +35,8 @@ function tutorial_msg4.spellbook ()
         text = text .. " or by <white>clicking</white> on the memorisation tab "
                     .. "and selecting the spell tile"
     end
-    text = text .. "."
+    text = text .. ". At experience level 1, only level 1 spells are available "
+                .. "to you. This will change as you gain experience."
 
     return tutorial_message(text)
 end
@@ -47,7 +48,10 @@ function tutorial_msg4.spellcasting ()
     if crawl.is_tiles() then
         text = text .. " or by <white>clicking</white> on the spell tile"
     end
-    text = text .. ". Once you are out of magic points, retreat and rest with "
+    text = text .. ". Press "
+                .. tutorial_get_cmd("CMD_CAST_SPELL")
+                .. "<w>?</w> to get a list of your spells.\n"
+                .. "Once you are out of magic points, retreat and rest with "
                 .. tutorial_get_cmd("CMD_REST")
     if crawl.is_tiles() then
         text = text .. " or by <white>mouseclick</white> in the command panel"
@@ -122,30 +126,27 @@ function tutorial_msg4.aiming_clouds ()
 end
 
 function tutorial_msg4.spell_hunger ()
-    return tutorial_message("Spellcasting can make really hungry. Spell hunger "
+    return tutorial_message("Spellcasting can make you really hungry. Spell hunger "
                             .. "is higher for more difficult spells and can be "
                             .. "reduced by high Intelligence and by training the "
                             .. "Spellcasting skill.")
 end
 
 function tutorial_msg4.forget_spell ()
-        local text = "You can't memorise any new spells yet. You can gain new spell "
-                 .. "slots by gaining an experience level or by raising your "
-                 .. "Spellcasting skill. If you don't want to wait, you can also "
-                 .. "<w>forget a spell</w> to make place for a new one. "
-                 .. "To do this, read a spellbook with "
+    local text = "Gaining an experience level and raising your Spellcasting "
+                 .. "skill gives you spell slots to spend on spells. You can "
+                 .. "also <w>forget a memorised spell</w> to make space for "
+                 .. "a new one. For example, to forget \"Magic Dart\", you "
+                 .. "need to read a spellbook containing the spell (with "
                  .. tutorial_get_cmd("CMD_READ")
-
     if crawl.is_tiles() then
-        text = text .. " or by <white>rightclicking</click> on it"
+        text = text .. " or by <white>rightclicking</click> on it)"
     end
+    text = text .. ", select \"Magic Dart\", type <w>f</w> and confirm. This "
+                .. "will destroy the book, so you'll need other spellbooks "
+                .. "to learn new spells, such as the one lying over there."
 
-    text = text .. ", and select the spell you want to forget. In the process, "
-                .. "the book will be destroyed, so you'll need other spellbooks "
-                .. "to learn new spells."
-
-    crawl.mesclr(true)
-    crawl.mpr(text, "tutorial")
+    return tutorial_message(text)
 end
 
 function tutorial_msg4.memorise2 ()
@@ -155,15 +156,26 @@ function tutorial_msg4.memorise2 ()
         text = text .. " or by <white>clicking</white> on the memorisation tab "
                     .. "and selecting the spell tile"
     end
-    text = text .. "."
+    text = text .. ". And then raise yourself an undead army!"
 
     return tutorial_message(text)
 end
 
+function tutorial_msg4.displace_allies ()
+    return tutorial_message("Did you notice you can swap positions with your "
+                            .. "allies by moving into them? Among other things, "
+                            .. "displacing a friendly creature can be a good "
+                            .. "way to escape a fight.")
+end
+
 function tutorial_msg4.order_allies ()
-    return tutorial_message("Try to let your allies kill that hobgoblin! If "
+    return tutorial_message("Try to let your allies do the killing! If "
                             .. "necessary, you can order them about with "
-                            .. tutorial_get_cmd("CMD_SHOUT") .. ".")
+                            .. tutorial_get_cmd("CMD_SHOUT") .. "."
+                            .. " Before opening this gate, you may want to "
+                            .. "wait with "
+                            .. tutorial_get_cmd("CMD_MOVE_NOWHERE")
+                            .. " until your allies have caught up with you.")
 end
 
 function tutorial_msg4.heavy_armour ()
@@ -193,8 +205,23 @@ function tutorial_msg4.heavy_armour ()
     return tutorial_message(text)
 end
 
+function tutorial_msg4.resting_reminder ()
+    text = "Make sure you are at full health and magic points before "
+           .. "entering a new area. If necessary, rest up with "
+           .. tutorial_get_cmd("CMD_REST")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>mouseclick</white> in the command panel"
+    end
+    text = text .. ".\n"
+                .. "Also, undead don't breathe, so you can cast Evaporate "
+                .. "without harming your allies."
+
+    return tutorial_message(text)
+end
+
 function tutorial_msg4.tutorial_end ()
-    return tutorial_message("Well done! To exit the tutorial, simply go down "
+    return tutorial_message("Congratulations, you're a real wizard now! "
+                            .. "To exit the tutorial, simply go down "
                             .. "these stairs.")
 end
 
@@ -303,18 +330,24 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
-KFEAT:   T = fountain_blood
-KFEAT:   A = +
-KFEAT:   B = .
-COLOUR:  dB = blue
-FTILE:   dB = tutorial_pad
-ITEM:    randbook numspells:1 spells:summon_small_mammals title:Simple_Steps_to_Summoning owner:player
-MONS:    hobgoblin ; shield not_cursed . ring mail race:none not_cursed
+KFEAT:   ABCDE = .
+COLOUR:  dABCDE = blue
+FTILE:   dABCDE = tutorial_pad
+ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
+ITEM:    never_decay megabat skeleton
+ITEM:    never_decay goblin; nothing skeleton
+ITEM:    never_decay small snake skeleton
+ITEM:    never_decay jackal skeleton
+MONS:    hobgoblin always_corpse; shield not_cursed . ring mail race:none not_cursed
 MONS:    rat
 MONS:    goblin
+MONS:    gnoll; nothing
+MARKER:  A = lua:tutorial_msg4.forget_spell()
 MARKER:  d = lua:tutorial_msg4.memorise2()
-MARKER:  A = lua:tutorial_msg4.order_allies()
-MARKER:  B = lua:tutorial_msg4.heavy_armour()
+MARKER:  B = lua:tutorial_msg4.displace_allies()
+MARKER:  C = lua:tutorial_msg4.order_allies()
+MARKER:  D = lua:tutorial_msg4.heavy_armour()
+MARKER:  E = lua:tutorial_msg4.resting_reminder()
 MARKER:  } = lua:tutorial_msg4.tutorial_end()
 MARKER:  ) = lua:tutorial_msg4.tutorial_end()
 MARKER:  ] = lua:tutorial_msg4.tutorial_end()
@@ -327,9 +360,6 @@ MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson4", \
 MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial_msg4.win" }
-epilogue{{
-  tutorial_msg4.forget_spell()
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -338,23 +368,23 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.....xxxx.T..xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.xxxxx.xx.....[xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxxxxxx.+..d..{xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxAxxxxxxxxx.....(xxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxx.T..xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx......B.xxxx.T..xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx......B...x.egf.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxCCCxxxx...+.gde.....xxxxxxxxxxxxxxx
+xxxxxxxxxxx+++xxxxx..x.fhh.xxxx.Axxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxx.T..xxxxxx.xxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxx..xxxxxxxx.xxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx...xxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx{([xxxxxxxxxx
 xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxBxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxxxxxx....3.]xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxxxxx..2.....3xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx......+......2.)xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx..2....xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx...}xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxDxxxxxxx.2..xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxGx.....4]xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxGf+...2....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx...Eeg+......3.)xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxGh+...3....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxGx.....2}xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx2...xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

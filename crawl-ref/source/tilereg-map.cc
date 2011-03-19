@@ -11,6 +11,7 @@
 #include "tilereg-map.h"
 
 #include "cio.h"
+#include "command.h"
 #include "food.h"
 #include "libutil.h"
 #include "misc.h"
@@ -280,7 +281,13 @@ int MapRegion::handle_mouse(MouseEvent &event)
                 return (CK_MOUSE_CMD);
             }
             else
-                return (click_travel(gc, event.mod & MOD_CTRL));
+            {
+                const int cmd = click_travel(gc, event.mod & MOD_CTRL);
+                if (cmd != CK_MOUSE_CMD)
+                    process_command((command_type) cmd);
+
+                return (CK_MOUSE_CMD);
+            }
         }
         else if (event.button == MouseEvent::RIGHT)
         {

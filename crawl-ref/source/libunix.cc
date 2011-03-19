@@ -323,6 +323,7 @@ int getch_ck()
 
 static void handle_sigwinch(int)
 {
+    crawl_state.last_winch = time(0);
     if (crawl_state.waiting_for_command)
         handle_terminal_resize();
     else
@@ -465,6 +466,7 @@ int unixcurses_get_vi_key(int keyin)
     case KEY_SEND:   return 'B';
     case KEY_SLEFT:  return 'H';
     case KEY_SRIGHT: return 'L';
+    case KEY_BTAB:   return CK_SHIFT_TAB;
     }
     return keyin;
 }
@@ -1029,19 +1031,13 @@ void fakecursorxy(int x, int y)
 
 int wherex()
 {
-    int x, y;
-
-    getyx(stdscr, y, x);
-    return (x + 1);
+    return getcurx(stdscr) + 1;
 }
 
 
 int wherey()
 {
-    int x, y;
-
-    getyx(stdscr, y, x);
-    return (y + 1);
+    return getcury(stdscr) + 1;
 }
 
 void delay(unsigned long time)

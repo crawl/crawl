@@ -291,7 +291,7 @@ formatted_string describe_mutations()
 
     case SP_PALE_DRACONIAN:
         result += "You can breathe blasts of scalding steam.\n";
-        scale_type = "pale grey";
+        scale_type = "pale cyan-grey";
         have_any = true;
         break;
 
@@ -367,13 +367,12 @@ formatted_string describe_mutations()
     {
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
-        int ac = 3 + (you.experience_level / 3);
         std::ostringstream num;
-        num << ac;
+        num << 3 + you.experience_level / 3;
         result += "Your " + scale_type + " scales are hard (AC +" + num.str() + ").\n";
-        have_any = true;
 
         result += "Your body does not fit into most forms of armour.\n";
+        have_any = true;
     }
 
     result += "</lightblue>";
@@ -1218,8 +1217,13 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_HORNS:
-    case MUT_BEAK:
     case MUT_ANTENNAE:
+        // Horns & Antennae 3 removes all headgear.  Same algorithm as with
+        // glove removal.
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
+            remove_one_equip(EQ_HELMET, false, true);
+        // Intentional fall-through
+    case MUT_BEAK:
         // Horns, beaks, and antennae force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])

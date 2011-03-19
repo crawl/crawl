@@ -1028,13 +1028,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         {
             // Smaller chance of spattering surrounding squares.
             for (adjacent_iterator ai(where); ai; ++ai)
-            {
-                // Spattering onto walls etc. less likely.
-                if (grd(*ai) < DNGN_MINMOVE && !one_chance_in(3))
-                    continue;
-
                 _maybe_bloodify_square(*ai, amount/15);
-            }
         }
     }
 }
@@ -1084,9 +1078,6 @@ void blood_spray(const coord_def& origin, monster_type montype, int level)
 
             if (in_bounds(bloody) && ld.see_cell(bloody))
             {
-                if (feat_is_solid(grd(bloody)) && coinflip())
-                    continue;
-
                 bleed_onto_floor(bloody, montype, 99);
                 break;
             }
@@ -1288,13 +1279,9 @@ bool scramble(void)
     if (you.form == TRAN_STATUE)
         return (false);
 
-    int max_carry = carrying_capacity();
-
+    const int max_carry = carrying_capacity();
     // When highly encumbered, scrambling out is hard to do.
-    if ((max_carry / 2) + random2(max_carry / 2) <= you.burden)
-        return (false);
-    else
-        return (true);
+    return (you.burden < (max_carry / 2) + random2(max_carry / 2));
 }
 
 bool go_berserk(bool intentional, bool potion)
@@ -1829,7 +1816,7 @@ void timeout_malign_gateways (int duration)
                     menv[tentacle_idx].flags |= MF_NO_REWARD;
                     menv[tentacle_idx].add_ench(ENCH_PORTAL_TIMER);
                     mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
-                                        KC_YOU, (random2avg(mmark->power, 6)-random2(4))*10);
+                        caster, (random2avg(mmark->power, 6)-random2(4))*10);
                     menv[tentacle_idx].props["base_position"].get_coord()
                                         = menv[tentacle_idx].pos();
                     menv[tentacle_idx].add_ench(kduration);

@@ -69,6 +69,7 @@ enum monster_info_flags
     MB_DUMB,
     MB_MAD,
     MB_CLINGING,
+    MB_NAME_ZOMBIE,
 };
 
 struct monster_info_base

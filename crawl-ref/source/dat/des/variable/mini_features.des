@@ -1726,49 +1726,6 @@ MAP
 .............
 ENDMAP
 
-NAME:    lemuel_firewalk_3
-DEPTH:   D:16-27
-TAGS:    uniq_firewalk abyss ruin_abyss
-WEIGHT:  2
-ORIENT:  float
-ITEM:    nothing, nothing, nothing
-SHUFFLE: def
-MARKER:  d = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 2, pow_max = 4, delay = 39, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
-MARKER:  e = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 2, pow_max = 6, delay = 59, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
-MARKER:  f = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 2, pow_max = 8, delay = 79, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
-MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "scorch-marked granite statue" }
-MAP
-xxxxxxxG@Gxxxxxxx
-x...............x
-x...............x
-x.d..e.....f..d.x
-x...............x
-x...............x
-x...............x
-x.e..f.....d..e.x
-x...............x
-x...............x
-x...............x
-x.f..d.....e..f.x
-x...............x
-x...............x
-x...............x
-x.d..e.....f..d.x
-x...............x
-x...............x
-x......$$$......x
-x.e.f..$$$..d.e.x
-x......$$$......x
-xxxxxxxxxxxxxxxxx
-ENDMAP
-
 #################################################################
 # Flame stairs (Lemuel)
 #

@@ -49,6 +49,7 @@ void drink(int slot = -1);
 
 bool elemental_missile_beam(int launcher_brand, int ammo_brand);
 
+bool safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet = false);
 bool safe_to_remove(const item_def &item, bool quiet = false);
 
 void examine_object(void);
@@ -112,6 +113,7 @@ bool item_blocks_teleport(bool calc_unid, bool permit_id);
 bool stasis_blocks_effect(bool calc_unid, bool identify,
                           const char *msg, int noise = 0,
                           const char *silencedmsg = NULL);
+item_def* only_unided_ring();
 
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);

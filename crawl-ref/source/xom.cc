@@ -27,7 +27,6 @@
 #include "env.h"
 #include "feature.h"
 #include "goditem.h"
-#include "it_use2.h"
 #include "item_use.h" // for safe_to_remove_or_wear()
 #include "itemprop.h"
 #include "items.h"
@@ -51,8 +50,10 @@
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "religion.h"
 #include "shout.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-miscast.h"
@@ -102,15 +103,15 @@ static const spell_type _xom_tension_spells[] =
 {
     SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_CAUSE_FEAR, SPELL_ENGLACIATION,
     SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES,
-    SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_MAXWELLS_SILVER_HAMMER, SPELL_FIRE_BRAND, SPELL_FREEZING_AURA,
-    SPELL_POISON_WEAPON, SPELL_STONEMAIL, SPELL_LETHAL_INFUSION,
-    SPELL_EXCRUCIATING_WOUNDS, SPELL_WARP_BRAND, SPELL_TUKIMAS_DANCE,
-    SPELL_RECALL, SPELL_SUMMON_BUTTERFLIES, SPELL_SUMMON_SMALL_MAMMALS,
-    SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM, SPELL_FLY, SPELL_SPIDER_FORM,
-    SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_ANIMATE_DEAD,
-    SPELL_SHADOW_CREATURES, SPELL_SUMMON_HORRIBLE_THINGS,
-    SPELL_CALL_CANINE_FAMILIAR, SPELL_SUMMON_ICE_BEAST, SPELL_SUMMON_UGLY_THING,
+    SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_MAXWELLS_SILVER_HAMMER,
+    SPELL_FIRE_BRAND, SPELL_FREEZING_AURA, SPELL_POISON_WEAPON,
+    SPELL_LETHAL_INFUSION, SPELL_EXCRUCIATING_WOUNDS, SPELL_WARP_BRAND,
+    SPELL_TUKIMAS_DANCE, SPELL_RECALL, SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SUMMON_SMALL_MAMMALS, SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM,
+    SPELL_FLY, SPELL_SPIDER_FORM, SPELL_STATUE_FORM, SPELL_ICE_FORM,
+    SPELL_DRAGON_FORM, SPELL_ANIMATE_DEAD, SPELL_SHADOW_CREATURES,
+    SPELL_SUMMON_HORRIBLE_THINGS, SPELL_CALL_CANINE_FAMILIAR,
+    SPELL_SUMMON_ICE_BEAST, SPELL_SUMMON_UGLY_THING,
     SPELL_CONJURE_BALL_LIGHTNING, SPELL_SUMMON_HYDRA, SPELL_SUMMON_DRAGON,
     SPELL_DEATH_CHANNEL, SPELL_NECROMUTATION
 };
@@ -263,6 +264,8 @@ static void _xom_is_stimulated(int maxinterestingness,
                     (interestingness >  50) ? message_array[2] :
                     (interestingness >  25) ? message_array[1]
                                             : message_array[0]));
+        //updating piety status line
+        redraw_skill(you.your_name, player_title());
     }
 }
 
@@ -332,10 +335,16 @@ void xom_tick()
     {
         const std::string msg = "You are now " + new_xom_favour;
         god_speaks(you.religion, msg.c_str());
+        //updating piety status line
+        redraw_skill(you.your_name, player_title());
     }
 
     if (you.gift_timeout == 1)
+    {
         simple_god_message(" is getting BORED.");
+        //updating piety status line
+        redraw_skill(you.your_name, player_title());
+    }
 
     if (wearing_amulet(AMU_FAITH)? coinflip() : one_chance_in(3))
     {
@@ -365,6 +374,8 @@ void xom_tick()
                     simple_god_message(" is intrigued.");
 
                 you.gift_timeout += interest;
+                //updating piety status line
+                redraw_skill(you.your_name, player_title());
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
                 mprf(MSGCH_DIAGNOSTICS,
                      "tension %d (chance: %d) -> increase interest to %d",
@@ -1173,10 +1184,6 @@ static int _xom_do_potion(bool debug = false)
             if (!you.can_go_berserk(false))
                 has_effect = false;
             break;
-        case POT_EXPERIENCE:
-            if (you.experience_level == 27)
-                has_effect = false;
-            break;
         default:
             break;
         }
@@ -1208,6 +1215,7 @@ static int _xom_do_potion(bool debug = false)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg.c_str()), true);
 
     potion_effect(pot, 150);
+    level_change(); // potion_effect() doesn't do this anymore
 
     return (XOM_GOOD_POTION);
 }
@@ -1228,7 +1236,7 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
             return (XOM_GOOD_CONFUSION);
 
         if (mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                                          KC_FRIENDLY, random2(sever))))
+              &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
         {
             // Only give this message once.
             if (!rc)
@@ -1491,8 +1499,8 @@ static void _confuse_monster(monster* mons, int sever)
         return;
 
     const bool was_confused = mons->confused();
-    if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY,
-                                  random2(sever))))
+    if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+          &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
     {
         if (was_confused)
             simple_monster_message(mons, " looks rather more confused.");
@@ -2649,10 +2657,17 @@ static void _xom_zero_miscast()
             messages.push_back("You trip over your bandages.");
     }
 
-    if (you.form != TRAN_SPIDER)
     {
         std::string str = "A monocle briefly appears over your ";
         str += coinflip() ? "right" : "left";
+        if (you.form == TRAN_SPIDER)
+            if (coinflip())
+                str += " primary";
+            else
+            {
+                str += random_choose_string(" front", " middle", " rear");
+                str += " secondary";
+            }
         str += " eye.";
         messages.push_back(str);
     }
@@ -3036,7 +3051,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
                 }
 
                 if (mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                                                  KC_FRIENDLY, random2(sever))))
+                      &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
                 {
                     simple_monster_message(*mi,
                                            " looks rather confused.");
@@ -3671,6 +3686,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
     {
         const int interest = random2avg(badness*60, 2);
         you.gift_timeout   = std::min(interest, 255);
+        //updating piety status line
+        redraw_skill(you.your_name, player_title());
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
         mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
              badness, you.gift_timeout);

@@ -1324,6 +1324,7 @@ void debug_miscast(int target_index)
     delete miscast;
 }
 
+#ifdef DEBUG_BONES
 void debug_ghosts()
 {
     mpr("(C)reate or (L)oad bones file?", MSGCH_PROMPT);
@@ -1336,5 +1337,6 @@ void debug_ghosts()
     else
         canned_msg(MSG_OK);
 }
+#endif
 
 #endif

@@ -225,7 +225,9 @@ enum misc_item_type
     MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY,
     MISC_EMPTY_EBONY_CASKET,
+#if TAG_MAJOR_VERSION == 32
     MISC_CRYSTAL_BALL_OF_FIXATION,
+#endif
     MISC_DISC_OF_STORMS,
 
     // pure decks

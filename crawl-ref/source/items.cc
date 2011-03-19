@@ -34,9 +34,9 @@
 #include "food.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -52,6 +52,7 @@
 #include "orb.h"
 #include "place.h"
 #include "player.h"
+#include "player-equip.h"
 #include "quiver.h"
 #include "religion.h"
 #include "shopping.h"
@@ -681,6 +682,18 @@ int item_name_specialness(const item_def& item)
     return 0;
 }
 
+static void _maybe_give_corpse_hint(const item_def item)
+{
+    if (!crawl_state.game_is_hints_tutorial())
+        return;
+
+    if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY
+        && you.has_spell(SPELL_ANIMATE_SKELETON))
+    {
+        learned_something_new(HINT_ANIMATE_CORPSE_SKELETON);
+    }
+}
+
 void item_check(bool verbose)
 {
     describe_floor();
@@ -704,6 +717,7 @@ void item_check(bool verbose)
         item_def it(*items[0]);
         std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
         strm << "You see here " << name << '.' << std::endl;
+        _maybe_give_corpse_hint(it);
         return;
     }
 
@@ -757,6 +771,7 @@ void item_check(bool verbose)
             item_def it(*items[i]);
             std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
             strm << name << std::endl;
+            _maybe_give_corpse_hint(it);
         }
     }
     else if (!done_init_line)
@@ -1378,18 +1393,6 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
 
     if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
         return (false);
-
-    if (item1.base_type == OBJ_POTIONS)
-    {
-        // Thanks to mummy cursing, we can have potions of decay
-        // that don't look alike... so we don't stack potions
-        // if either isn't identified and they look different.  -- bwr
-        if (item1.plus != item2.plus
-            && (!item_type_known(item1) || !item_type_known(item2)))
-        {
-            return (false);
-        }
-    }
 
     // The inscriptions can differ if one of them is blank, but if they
     // are differing non-blank inscriptions then don't stack.
@@ -3840,7 +3843,7 @@ item_info get_item_info(const item_def& item)
             if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
                 ii.sub_type = MISC_DECK_OF_ESCAPE;
             else if (item.sub_type >= MISC_CRYSTAL_BALL_OF_ENERGY && item.sub_type <= MISC_CRYSTAL_BALL_OF_SEEING)
-                ii.sub_type = MISC_CRYSTAL_BALL_OF_FIXATION;
+                ii.sub_type = MISC_CRYSTAL_BALL_OF_ENERGY;
             else if (item.sub_type >= MISC_BOX_OF_BEASTS && item.sub_type <= MISC_EMPTY_EBONY_CASKET)
                 ii.sub_type = MISC_BOX_OF_BEASTS;
             else

@@ -1855,7 +1855,8 @@ bool item_is_wieldable(const item_def &item)
 {
     const int type = item.base_type;
     return (type == OBJ_WEAPONS || type == OBJ_STAVES || is_deck(item)
-            || type == OBJ_MISCELLANY && type == MISC_LANTERN_OF_SHADOWS);
+            || type == OBJ_MISCELLANY
+               && item.sub_type == MISC_LANTERN_OF_SHADOWS);
 }
 
 bool item_is_evokable(const item_def &item, bool known, bool all_wands,

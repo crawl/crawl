@@ -239,7 +239,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Kikubaaqudgha is protecting you from some side-effects of death magic.",
       "",
       "Kikubaaqudgha is protecting you from unholy torment.",
-      "invoke torment by praying over a corpse" },
+      "invoke torment by sacrificing a corpse" },
     // Yredelemnul
     { "animate {yred_dead}",
       "recall your undead slaves and mirror injuries on your foes",
@@ -326,7 +326,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Ashenzari
     { "",
-      "Ashenzari helps you learn.",
+      "The more cursed you are, the more Ashenzari helps you learn.",
       "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
       "Ashenzari helps you to reconsider your skills."
@@ -354,7 +354,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Kikubaaqudgha is no longer shielding you from miscast death magic.",
       "",
       "Kikubaaqudgha will no longer protect you from unholy torment.",
-      "invoke torment by praying over a corpse" },
+      "invoke torment by sacrificing a corpse" },
     // Yredelemnul
     { "animate {yred_dead}",
       "recall your undead slaves and mirror injuries on your foes",
@@ -514,7 +514,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_FEDHAS:
         snprintf(info, INFO_SIZE, "you promote the decay of nearby "
                                   "corpses%s",
-                 verbose ? " via the decomposition <w>a</w>bility" : "");
+                 verbose ? " by <w>p</w>raying" : "");
         likes.push_back(info);
         break;
 
@@ -598,7 +598,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (god_likes_fresh_corpses(which_god) && which_god != GOD_KIKUBAAQUDGHA)
+    if (god_likes_fresh_corpses(which_god))
     {
         snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
@@ -1070,10 +1070,10 @@ static void _inc_gift_timeout(int val)
 // These are sorted in order of power.
 static monster_type _yred_servants[] =
 {
-    MONS_MUMMY, MONS_WIGHT, MONS_GHOUL, MONS_FLYING_SKULL, MONS_HUNGRY_GHOST,
-    MONS_WRAITH, MONS_ROTTING_HULK, MONS_FREEZING_WRAITH,
-    MONS_PHANTASMAL_WARRIOR, MONS_FLAMING_CORPSE, MONS_FLAYED_GHOST,
-    MONS_SKELETAL_WARRIOR, MONS_DEATH_COB, MONS_BONE_DRAGON
+    MONS_MUMMY, MONS_WIGHT, MONS_FLYING_SKULL, MONS_WRAITH,
+    MONS_ROTTING_HULK, MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR,
+    MONS_FLAMING_CORPSE, MONS_FLAYED_GHOST, MONS_SKELETAL_WARRIOR,
+    MONS_EIDOLON, MONS_GHOUL, MONS_DEATH_COB, MONS_BONE_DRAGON
 };
 
 #define MIN_YRED_SERVANT_THRESHOLD 3
@@ -1603,12 +1603,14 @@ static int _tso_blessing_extend_stay(monster* mon)
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
-    // [ds] Disabling permanence for balance reasons, but extending
-    // duration increase.  These numbers are tenths of a player turn.
-    // Holy monsters get a much bigger boost than random beasties.
-    const int base_increase = mon->is_holy() ? 1100 : 500;
-    const int increase = base_increase + random2(base_increase);
-    return _increase_ench_duration(mon, abj, increase);
+    // These numbers are tenths of a player turn. Holy monsters get a
+    // much bigger boost than random beasties, which get at most double
+    // their current summon duration.
+    if (mon->is_holy())
+        return _increase_ench_duration(mon, abj, 1100 + random2(1100));
+    else
+        return _increase_ench_duration(mon, abj, std::min(abj.duration,
+                                                          500 + random2(500)));
 }
 
 static bool _tso_blessing_friendliness(monster* mon)
@@ -2252,6 +2254,17 @@ bool do_god_gift(bool forced)
     }
 #endif
     return (success);
+}
+
+bool do_zin_sustenance()
+{
+    if (!zin_sustenance())
+        return false;
+    god_speaks(you.religion, "Your stomach feels content.");
+    set_hunger(6000, true);
+    lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+    _inc_gift_timeout(30 + random2avg(10, 2));
+    return true;
 }
 
 std::string god_name(god_type which_god, bool long_name)
@@ -3271,6 +3284,9 @@ bool transformed_player_can_join_god(god_type which_god)
         return (false);
     }
 
+    if (which_god == GOD_ZIN && you.form != TRAN_NONE)
+        return (false);
+
     return (true);
 }
 
@@ -3582,8 +3598,7 @@ bool god_likes_fresh_corpses(god_type god)
     return (god == GOD_OKAWARU
             || god == GOD_MAKHLEB
             || god == GOD_TROG
-            || god == GOD_LUGONU
-            || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
+            || god == GOD_LUGONU);
 }
 
 bool god_likes_spell(spell_type spell, god_type god)
@@ -4095,7 +4110,7 @@ int get_tension(god_type god)
 
     // Divides by 1 at level 1, 200 at level 27.
     const int exp_lev  = you.get_experience_level();
-    const int exp_need = exp_needed(exp_lev + 1);
+    const int exp_need = exp_needed(exp_lev);
     const int factor   = (int)ceil(sqrt(exp_need / 30.0));
     const int div      = 1 + factor;
 

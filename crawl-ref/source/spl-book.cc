@@ -26,6 +26,7 @@
 #include "format.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -240,9 +241,7 @@ int book_rarity(uint8_t which_book)
 {
     switch (which_book)
     {
-    case BOOK_MINOR_MAGIC_I:
-    case BOOK_MINOR_MAGIC_II:
-    case BOOK_MINOR_MAGIC_III:
+    case BOOK_MINOR_MAGIC:
     case BOOK_HINDERANCE:
     case BOOK_CANTRIPS: //jmf: added 04jan2000
         return 1;
@@ -267,7 +266,6 @@ int book_rarity(uint8_t which_book)
     case BOOK_YOUNG_POISONERS:
     case BOOK_STALKING:    //jmf: added 24jun2000
     case BOOK_WAR_CHANTS:
-    case BOOK_BRANDS:
         return 5;
 
     case BOOK_CLOUDS:
@@ -316,6 +314,13 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_DESTRUCTION:
         return 30;
+
+    case BOOK_BRANDS:        // XXX: Temporarily disabled along with AM
+#if TAG_MAJOR_VERSION == 32
+    case BOOK_MINOR_MAGIC_II:
+    case BOOK_MINOR_MAGIC_III:
+#endif
+       return 100;
 
     default:
         return 1;
@@ -452,16 +457,8 @@ void mark_had_book(int booktype)
 
     you.had_book[booktype] = true;
 
-    if (booktype == BOOK_MINOR_MAGIC_I
-        || booktype == BOOK_MINOR_MAGIC_II
-        || booktype == BOOK_MINOR_MAGIC_III)
-    {
-        you.had_book[BOOK_MINOR_MAGIC_I]   = true;
-        you.had_book[BOOK_MINOR_MAGIC_II]  = true;
-        you.had_book[BOOK_MINOR_MAGIC_III] = true;
-    }
-    else if (booktype == BOOK_CONJURATIONS_I
-             || booktype == BOOK_CONJURATIONS_II)
+    if (booktype == BOOK_CONJURATIONS_I
+        || booktype == BOOK_CONJURATIONS_II)
     {
         you.had_book[BOOK_CONJURATIONS_I]  = true;
         you.had_book[BOOK_CONJURATIONS_II] = true;
@@ -523,7 +520,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
         {
-        case SPELL_ALTER_SELF:
         case SPELL_BERSERKER_RAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
@@ -536,7 +532,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
-        case SPELL_SYMBOL_OF_TORMENT:
             rc = true;
             break;
         default:
@@ -562,7 +557,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     case US_UNDEAD: // Mummies
         switch (spell)
         {
-        case SPELL_ALTER_SELF:
         case SPELL_BERSERKER_RAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
@@ -572,13 +566,11 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_ICE_FORM:
         case SPELL_INTOXICATE:
         case SPELL_NECROMUTATION:
-        case SPELL_PASSWALL:
         case SPELL_REGENERATION:
         case SPELL_RESIST_POISON:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
-        case SPELL_SYMBOL_OF_TORMENT:
             rc = true;
             break;
         default:
@@ -1281,6 +1273,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     if (random2(40) + random2(40) + random2(40) < chance)
     {
         mpr("You fail to memorise the spell.");
+        learned_something_new(HINT_MEMORISE_FAILURE);
         you.turn_is_over = true;
 
         if (book == BOOK_NECRONOMICON)
@@ -1401,9 +1394,7 @@ int staff_spell(int staff)
         return (0);
     }
     else if (num_spells == 1)
-    {
         keyin = 'a';  // automatically selected if it's the only option
-    }
     else
     {
         mprf(MSGCH_PROMPT,

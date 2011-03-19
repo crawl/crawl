@@ -401,9 +401,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              vault!"
           * "no_hmirror": Like no_rotate, but for horizontal mirroring.
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
-          * "layout": Lua code that dungeon.cc uses for generating level
-             layouts.  Do *NOT* use or mess with unless you know what
-             you're doing.
+          * "overwritable": Lets the dungeon builder overwrite this vault with
+             other ones.  Don't use this casually.
+          * "layout": Makes the vault eligible for use as a level layout.  Do
+             not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
              compatible with, for vaults that don't fit in with all layouts;
              the absence of this type of tags means it can go with any layout.
@@ -441,7 +442,7 @@ LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
           for vaults with ORIENT encompass or with PLACE. Causes a level's
           flags to be set when the level is first created. These flags can
           later be altered using Lua markers; for examples, look at the slime
-          pit vault in lair.des, and the vaults in hell.des and elf.des.
+          pit vault in slime.des, and the vaults in hell.des.
 
           Valid flags are:
           * no_tele_control - prevents the player from using teleport control
@@ -620,8 +621,8 @@ ITEM:     (list of items, separated by comma)
           * "numspells:number" maximum number of spells to include in the book.
             A book may contain at most 8 spells.
           * "owner:name" will be used to make the title include the apostrophised
-            owner (or author) of the book if provided. For example, "owner:Roxanne" 
-            may create "Roxanne's Treatise on Mountains". You can use the keyword 
+            owner (or author) of the book if provided. For example, "owner:Roxanne"
+            may create "Roxanne's Treatise on Mountains". You can use the keyword
             "player" (i.e. "owner:player") to use the player's name instead.
 
           In addition, themed books allow the use of the following tags:
@@ -841,6 +842,9 @@ MONS:     (list of monsters)
           also prevent turning articles into definite unless where forced by
           name_definite or grammar.
 
+          name_zombie can be used to redefine already zombified monsters
+          (including skeletons, simulacra and spectrals).
+
           For instances where space in definitions is limited, you can use
           abbreviated forms of these tags:
 
@@ -850,6 +854,7 @@ MONS:     (list of monsters)
               name_species    -> n_spe
               name_descriptor -> n_des
               name_definite   -> n_the
+              name_zombie     -> n_zom
 
           Monster names should be used very sparingly.
 
@@ -1254,12 +1259,17 @@ KPROP:    x = bloody
              feature (usually lava).  Does not stop fog generators or clouds
              entering from nearby squares.
           * "no_rtele_into": Prevents random teleport from chosing to use this
-             square. Should be used sparingly.
+             square. Use this to prevent nasty situations like the player
+             ending up in a closet (for example, because your map randomises
+             wall/floor so much that closets may occur) or an extremely dense
+             monster array (like a hellion island).
           * "no_ctele_into": Prevents controlled teleportation into this square.
              Will instead generate the message "A strong magical force throws
-             you back!". Should be used sparingly.
+             you back!".
           * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
              in one flag, and disallows both random and controlled teleports.
+             Use this for vaults with loot where the player is not supposed to
+             get it by teleporting alone.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
 

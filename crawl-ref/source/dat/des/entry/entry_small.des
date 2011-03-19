@@ -409,11 +409,12 @@ WEIGHT: 2
 ORIENT: float
 MONS:   kobold; dart ego:dispersal q:3
 MAP
-xxxxxxxxxx..
-=.llllll{l@.
-x.xxxxxx=x..
-x1xxxxxx....
-xxx
+xxxxxxxxx=x..
+x.llllll{.l@.
+x.llllll>.l..
+x1xxxxxxx=x..
+x=xxxxxx.....
+.............
 ENDMAP
 
 ##############################################################
@@ -2640,7 +2641,7 @@ MONS:    giant cockroach / worker ant / butterfly / killer bee / bumblebee /\
          redback / giant mite
 MONS:    swamp worm / lindwurm / worm / spiny worm
 MONS:    swamp drake / hydra / wyvern / fire drake
-MONS:    bear / polar bear / grizzly bear / black bear
+MONS:    polar bear / grizzly bear / black bear
 MONS:    black mamba / water moccasin / anaconda / salamander / viper
 : end
 MAP

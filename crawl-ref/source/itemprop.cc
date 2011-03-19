@@ -248,25 +248,25 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
     { WPN_BLESSED_FALCHION,      "blessed falchion",      10,  2, 11, 170,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL, MI_NONE, false,
-        DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
+        DAMV_SLICING, 0 },       // or perhaps DAMV_CHOPPING is more apt?
     { WPN_LONG_SWORD,            "long sword",            10,  1, 14, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    12,  0, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 10 },
+        DAMV_SLICING, 0 },
     { WPN_SCIMITAR,              "scimitar",              11, -1, 14, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -1, 13, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 10 },
+        DAMV_SLICING, 0 },
     { WPN_KATANA,                "katana",                14,  3, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
     { WPN_BLESSED_KATANA,        "blessed katana",        15,  2, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 2 },
+        DAMV_SLICING, 0 },
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 15, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
@@ -278,19 +278,19 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLICING, 2 },
     { WPN_BLESSED_DOUBLE_SWORD,  "blessed double sword",  16, -1, 14, 220,  5,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 2 },
+        DAMV_SLICING, 0 },
     { WPN_GREAT_SWORD,           "great sword",           16, -3, 17, 250,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -3, 17, 250,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
-        DAMV_SLICING, 10 },
+        DAMV_SLICING, 0 },
     { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 19, 260,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
     { WPN_BLESSED_TRIPLE_SWORD,  "blessed triple sword",  19, -4, 18, 260,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
-        DAMV_SLICING, 2 },
+        DAMV_SLICING, 0 },
 
     // Axes
     { WPN_HAND_AXE,          "hand axe",            7,  3, 13,  80,  6,
@@ -1105,13 +1105,10 @@ int armour_max_enchant(const item_def &item)
     const int eq_slot = get_armour_slot(item);
 
     int max_plus = MAX_SEC_ENCHANT;
-    if (eq_slot == EQ_BODY_ARMOUR)
-        max_plus = property(item, PARM_AC);
-    else if (item.sub_type == ARM_CENTAUR_BARDING
+    if (eq_slot == EQ_BODY_ARMOUR
+        || item.sub_type == ARM_CENTAUR_BARDING
         || item.sub_type == ARM_NAGA_BARDING)
-    {
-        max_plus = MAX_ARM_ENCHANT;
-    }
+        max_plus = property(item, PARM_AC);
     else if (eq_slot == EQ_SHIELD)
         max_plus = 3;
 
@@ -2690,7 +2687,6 @@ int item_mass(const item_def &item)
         case MISC_BOTTLED_EFREET:
         case MISC_CRYSTAL_BALL_OF_SEEING:
         case MISC_CRYSTAL_BALL_OF_ENERGY:
-        case MISC_CRYSTAL_BALL_OF_FIXATION:
             unit_mass = 150;
             break;
 

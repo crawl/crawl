@@ -1269,8 +1269,6 @@ static std::string _describe_ammo(const item_def &item)
         description += ".";
     }
 
-    description += _corrosion_resistance_string(item);
-
     return (description);
 }
 
@@ -1374,9 +1372,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
             break;
         case SPARM_ARCHMAGI:
             description += "It increases the power of its wearer's "
-                "magical spells in most disciplines save for Transmutations "
-                "and pure Translocations. It also makes the spells affected "
-                "less likely to suffer a miscast.";
+                "magical spells.";
             break;
 
         case SPARM_PRESERVATION:
@@ -1575,6 +1571,27 @@ static bool _compare_card_names(card_type a, card_type b)
 // describe_misc_item
 //
 //---------------------------------------------------------------
+static bool _check_buggy_deck(const item_def &deck, std::string &desc)
+{
+    if (!is_deck(deck))
+    {
+        desc += "This isn't a deck at all!\n";
+        return (true);
+    }
+
+    const CrawlHashTable &props = deck.props;
+
+    if (!props.exists("cards")
+        || props["cards"].get_type() != SV_VEC
+        || props["cards"].get_vector().get_type() != SV_BYTE
+        || cards_in_deck(deck) == 0)
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
 static std::string _describe_deck(const item_def &item)
 {
     std::string description;
@@ -1582,6 +1599,9 @@ static std::string _describe_deck(const item_def &item)
     description.reserve(100);
 
     description += "\n";
+
+    if (_check_buggy_deck(item, description))
+        return "";
 
     const std::vector<card_type> drawn_cards = get_drawn_cards(item);
     if (!drawn_cards.empty())
@@ -2272,7 +2292,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     }
 }
 
-static bool _print_toggle_message (const describe_info &inf)
+static bool _print_toggle_message(const describe_info &inf)
 {
     if (inf.quote.empty())
     {
@@ -2296,9 +2316,7 @@ static bool _print_toggle_message (const describe_info &inf)
         const int keyin = getchm();
 
         if (keyin == '!' || keyin == CK_MOUSE_CMD)
-        {
             return (true);
-        }
 
         return (false);
     }
@@ -2563,7 +2581,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
     case OBJ_FOOD:
-        if (can_ingest(item.base_type, item.sub_type, true, true, false))
+        if (can_ingest(item, true, true, false))
             actions.push_back(CMD_EAT);
         break;
     case OBJ_SCROLLS:
@@ -3632,7 +3650,7 @@ void describe_monsters(const monster_info &mi, bool force_seen,
     mouse_control mc(MOUSE_MODE_MORE);
 
     if (wait_until_key_pressed && _print_toggle_message(inf))
-        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, not show_quote);
+        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, !show_quote);
 }
 
 static const char* xl_rank_names[] = {
@@ -4461,8 +4479,8 @@ void describe_god(god_type which_god, bool give_title)
         {
             have_any = true;
             _print_final_god_abil_desc(which_god,
-                                       "You can speed up decomposition.",
-                                       ABIL_FEDHAS_FUNGAL_BLOOM);
+                                       "You can pray to speed up decomposition.",
+                                       ABIL_NON_ABILITY);
             _print_final_god_abil_desc(which_god,
                                        "You can walk through plants and "
                                        "fire through allied plants.",

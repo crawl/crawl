@@ -612,26 +612,48 @@ void tile_draw_floor()
 // Called from item() in view.cc
 void tile_place_item(const coord_def &gc, const item_def &item)
 {
-    if (env.tile_fg(gc))
-        return;
-
     tileidx_t t = tileidx_item(item);
     if (item.link != NON_ITEM)
         t |= TILE_FLAG_S_UNDER;
 
-    env.tile_fg(gc) = t;
+    if (you.see_cell(gc))
+    {
+        const coord_def ep = crawl_view.grid2show(gc);
+        if (env.tile_fg(ep))
+            return;
 
-    if (item_needs_autopickup(item))
-        env.tile_bg(gc) |= TILE_FLAG_CURSOR3;
+        env.tile_fg(ep) = t;
+
+        if (item_needs_autopickup(item))
+            env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+    }
+    else
+    {
+        env.tile_bk_fg(gc) = t;
+
+        if (item_needs_autopickup(item))
+            env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+    }
 }
 
 // Called from item() in view.cc
 void tile_place_item_marker(const coord_def &gc, const item_def &item)
 {
-    env.tile_fg(gc) |= TILE_FLAG_S_UNDER;
+    if (you.see_cell(gc))
+    {
+        const coord_def ep = crawl_view.grid2show(gc);
+        env.tile_fg(ep) |= TILE_FLAG_S_UNDER;
 
-    if (item_needs_autopickup(item))
-        env.tile_bg(gc) |= TILE_FLAG_CURSOR3;
+        if (item_needs_autopickup(item))
+            env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+    }
+    else
+    {
+        // env.tile_bk_fg(gc) |= TILE_FLAG_S_UNDER;
+
+        if (item_needs_autopickup(item))
+            env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+    }
 }
 
 // Called from show_def::_update_monster() in show.cc
@@ -655,7 +677,12 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
                 t |= TILE_FLAG_S_UNDER;
 
             if (item_needs_autopickup(get_mimic_item(mon)))
-                env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+            {
+                if (you.see_cell(gc))
+                    env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+                else
+                    env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+            }
         }
     }
     else if (mons_is_stationary(mon) && mon->type != MONS_TRAINING_DUMMY)
@@ -670,9 +697,14 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
         t = flag | (mcache_idx ? mcache_idx : t0);
     }
 
-    // Add name tags.
+    if (!you.see_cell(gc))
+    {
+        env.tile_bk_fg(gc) = t;
+        return;
+    }
     env.tile_fg(ep) = t;
 
+    // Add name tags.
     if (!mon->visible_to(&you)
         || mons_is_lurking(mon)
         || mons_is_unknown_mimic(mon)
@@ -707,10 +739,16 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
+void tile_clear_monster(const coord_def &gc)
+{
+    env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_bk_fg(gc), true);
+}
+
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
-    const coord_def ep = grid2show(gc);
-    if (env.tile_fg(ep) != 0)
+    // In the Shoals, ink is handled differently. (jpeg)
+    // I'm not sure it is even possible anywhere else, but just to be safe...
+    if (cl.type == CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         return;
 
     const monster* mon = monster_at(gc);
@@ -723,21 +761,27 @@ void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
         disturbance = true;
     }
 
-    // In the Shoals, ink is handled differently. (jpeg)
-    // I'm not sure it is even possible anywhere else, but just to be safe...
-    if (cl.type != CLOUD_INK || !player_in_branch(BRANCH_SHOALS))
+    if (you.see_cell(gc))
+    {
+        const coord_def ep = grid2show(gc);
+        if (env.tile_fg(ep) != 0)
+            return;
+
         env.tile_fg(ep) = tileidx_cloud(cl, disturbance);
+    }
+    else
+        env.tile_bk_fg(gc) = tileidx_cloud(cl, disturbance);
 }
 
 unsigned int num_tile_rays = 0;
 struct tile_ray
 {
     coord_def ep;
-    bool in_range;
+    aff_type in_range;
 };
 FixedVector<tile_ray, 30> tile_ray_vec;
 
-void tile_place_ray(const coord_def &gc, bool in_range)
+void tile_place_ray(const coord_def &gc, aff_type in_range)
 {
     // Record rays for later.  The curses version just applies
     // rays directly to the screen.  The tiles version doesn't have
@@ -754,8 +798,8 @@ void tile_draw_rays(bool reset_count)
 {
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
-        tileidx_t flag = tile_ray_vec[i].in_range ? TILE_FLAG_RAY
-                                                  : TILE_FLAG_RAY_OOR;
+        tileidx_t flag = tile_ray_vec[i].in_range > 0 ? TILE_FLAG_RAY
+                                                      : TILE_FLAG_RAY_OOR;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 
@@ -991,18 +1035,20 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     else
         cell.is_haloed = false;
 
-    if (print_blood && (_suppress_blood(gc)
-                        || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
+    if (liquefied(gc, true))
+        cell.is_liquefied = true;
+    else if (print_blood && (_suppress_blood(gc)
+                             || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
     {
         print_blood = false;
     }
 
-    // Mold has the same restrictions as blood
-    // but mold takes precendence over blood.
+    // Mold has the same restrictions as blood but takes precedence.
     if (print_blood)
     {
         if (is_moldy(gc))
             cell.is_moldy = true;
+        // Corpses have a blood puddle of their own.
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
             cell.is_bloody = true;
     }

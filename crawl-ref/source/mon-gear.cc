@@ -23,6 +23,7 @@
 #include "mon-util.h"
 #include "random.h"
 #include "spl-book.h"
+#include "state.h"
 
 
 static void _give_monster_item(monster* mon, int thing,
@@ -132,8 +133,10 @@ static void _give_wand(monster* mon, int level)
 
         item_def& wand = mitm[idx];
 
-        // Don't give top-tier wands before 5 HD.
-        if (mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND))
+        // Don't give top-tier wands before 5 HD, except to Ijyb and not in
+        // sprint.
+        if ((mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND))
+            && (mon->type != MONS_IJYB || crawl_state.game_is_sprint()))
         {
             // Technically these wands will be undercharged, but it
             // doesn't really matter.
@@ -145,6 +148,12 @@ static void _give_wand(monster* mon, int level)
 
             if (wand.sub_type == WAND_LIGHTNING)
                 wand.sub_type = (coinflip() ? WAND_FLAME : WAND_FROST);
+
+            if (wand.sub_type == WAND_PARALYSIS)
+                wand.sub_type = WAND_SLOWING;
+
+            if (wand.sub_type == WAND_DRAINING)
+                wand.sub_type = WAND_POLYMORPH_OTHER;
         }
 
         wand.flags = 0;
@@ -385,10 +394,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_PIKEL:
-        force_item = true; // guaranteed flaming or pain
+        force_item = true; // guaranteed flaming or elec
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_WHIP;
-        set_item_ego_type(item, OBJ_WEAPONS, coinflip() ? SPWPN_PAIN : SPWPN_FLAMING);
+        set_item_ego_type(item, OBJ_WEAPONS, coinflip() ? SPWPN_ELECTROCUTION : SPWPN_FLAMING);
         item.plus  += random2(3);
         item.plus2 += random2(3);
         break;
@@ -425,18 +434,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type      = OBJ_WEAPONS;
         item.sub_type       = WPN_QUARTERSTAFF;
         break;
-
-    case MONS_GRINDER:
-        force_item = true; // guaranteed pain
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(
-                30, WPN_DAGGER,     20, WPN_HAMMER,
-                5, WPN_WHIP,
-                0);
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PAIN);
-
-        break;
-
 
     case MONS_ORC:
     case MONS_ORC_PRIEST:
@@ -1900,6 +1897,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_MARA:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
+    case MONS_SPRIGGAN_AIR_MAGE:
     case MONS_SPRIGGAN_DEFENDER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;

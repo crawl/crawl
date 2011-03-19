@@ -255,7 +255,8 @@ TILE_EQ: wucad_mu
 VALUE:   1000
 BOOL:    special
 DESC_ID: Its power varies in proportion to its wielder's intelligence.
-         Using it can be a bit risky.
+         It can be evoked to restore large amounts of magical energy, but
+         at the risk of damaging the user's mind.
 
 NAME:    Vampire's Tooth
 APPEAR:  ivory dagger
@@ -1174,7 +1175,7 @@ TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:    1
 STR:      +3
-BOOL:     evil, seeinv, special
+BOOL:     evil, seeinv, lev, special
 DESC_END: This axe has had a curse placed on it by one of the lords of
           Pandemonium so that unsuspecting adventurers like you would
           unleash demons into this world. Beware, for this axe has

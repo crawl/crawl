@@ -53,7 +53,11 @@ I can't find my save files, morgue and character dumps. Where are they?
 %%%%
 A:userdir
 
-On Macs, they are now stored in ~/Library/Application Support/Dungeon Crawl Stone Soup (or similar).
+If you're playing locally (i.e. not on one of the servers), the chardump command will tell you where the morgue file is written, and this information is also displayed below the highscore at the end of a game.
+
+The saves/ directory can be found in the same directory as the morgue/ one.
+
+If you'd like to change either location, modify the morgue_dir and/or save_dir options in the init file.
 %%%%
 Q:drop
 
@@ -63,7 +67,7 @@ A:drop
 
 A: When choosing items to drop or pick up from a menu, you can select part of a stack by first entering a number (the desired amount), followed by the item slot. Stacks that are selected only in part are marked with '#' rather than '+'.
 
-If you want to pick up part of a single-item stack, you can use the 'g' command, which will prompt you for the quantity, but otherwise behaves the same as ','.
+If you want to pick up part of a single-item stack, you can use the ';' command, which will prompt you for the quantity, but otherwise behaves the same as ','.
 %%%%
 Q:roguelike difference
 
@@ -98,7 +102,7 @@ A: If you've got trouble even reaching the Temple, you might want to try a game 
 
 Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
 
-For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stonesoup forum (https://crawl.develz.org/tavern/) or on the rec.games.roguelike.misc group, so other players can comment on your equipment, skills or spell selection.
+For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/) or on the rec.games.roguelike.misc group, so other players can comment on your equipment, skills or spell selection.
 
 Please try to trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list). If you're playing online on one of the public servers, you can join the ##crawl channel of the freenode IRC, where you will find helpful souls who will even watch you and give hints.
 %%%%
@@ -118,7 +122,7 @@ I teleported and ended up in a closed room without any exits. Am I stuck?
 %%%%
 A:stuck
 
-A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis tracker: http://crawl.develz.org/mantis/
+A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis bug tracker: http://crawl.develz.org/mantis/
 
 If you're playing locally, be sure to upload your save file!
 
@@ -181,7 +185,7 @@ A:religion
 
 A: The easiest gods to play are probably Trog (for pure fighters), Vehumet or Sif Muna (for spellcasters), Yredelemnul (for ally-based play), and Okawaru (for pretty much everyone). Also, while unreliable, Xom can be a lot of fun.
 
-Whenever you encounter an altar, be sure to read the corresponding god's description and take your time in deciding whether to pick this deity or not. As a follower, you can reread your god's description, now more detailed via the '!' toggle, on the '^' screen.
+Whenever you encounter an altar, be sure to read the corresponding god's description (by 'p'raying on the altar) and take your time in deciding whether to pick this deity or not. As a follower, you can reread your god's description, now more detailed via the '!' toggle, on the '^' screen.
 
 You're guaranteed to find altars to almost every god on the first nine levels of the main dungeon.
 %%%%
@@ -195,7 +199,7 @@ A: There isn't any such option, and we're not planning to add one, either.
 
 For a more constructive answer, once a ghost has been loaded onto a level, it won't be loaded again - unless you happen to die on that level, thus creating a bones file featuring more than one ghost. Keep in mind that you don't absolutely have to fight every monster you meet, and with ghosts it's even easier: they cannot leave the level they were created on.
 
-Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers, Paladins, or spellcasters who've learned Dispel Undead.
+Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers, spellcasters who've learned Dispel Undead, or followers of The Shining One.
 %%%%
 Q:instadeath
 
@@ -256,7 +260,7 @@ A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org, y
 
 Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an explanation about how to play online.
 
-You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Stonesoup forum (https://crawl.develz.org/tavern/), or in one of the other forums linked on the website.
+You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Stone Soup forum (https://crawl.develz.org/tavern/), or in one of the other forums linked on the website.
 %%%%
 ##############################################
 # Questions about the development process.
@@ -267,7 +271,7 @@ When will development reach the "stable" version 1.0?
 %%%%
 A:version
 
-A: Actually, by now we consider Stonesoup to be reasonably stable for a game of such active development, so please don't get hung up about the 0.X versioning and give it a try.
+A: Actually, by now we consider Stone Soup to be reasonably stable for a game of such active development, so please don't get hung up about the 0.X versioning and give it a try.
 
 We've mostly kept the versioning for historic reasons and because it might cause undue confusion. We might decide to change that at some point, but maybe we won't.
 %%%%
@@ -289,8 +293,7 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-A: Please submit a bug report on Mantis (http://crawl.develz.org/mantis/),
-and give as much information as you can:
+A: Please submit a bug report on Mantis (http://crawl.develz.org/mantis/), and give as much information as you can:
 * What were you doing at the time?
 * What did you expect to happen, what happened instead, etc.
 * Most importantly, what version are you playing?
@@ -403,11 +406,21 @@ For more recent versions, no, that's not possible at the moment. We are working 
 
 If you can, do give the console version a try: playing online is certainly worth it.
 %%%%
+Q:tiles commands
+
+Is there a list of mouse commands anywhere?
+%%%%
+A:tiles commands
+
+Yes, check tiles_help.txt. You can also browse it in-game via the '?t' command.
+%%%%
 Q:tiles options
 
 Is there a way to modify the size of the tiles screen, the font, etc.?
 %%%%
 A:tiles options
 
-A: Yes: Play around with the options in settings/tiles_options.txt until you are satisfied. See docs/options_guide.txt for some explanations.
+A: Yes. Play around with the options in settings/tiles_options.txt until you are satisfied. See docs/options_guide.txt for some explanations.
+
+It is currently not possible to modify any options from within the game itself.
 %%%%

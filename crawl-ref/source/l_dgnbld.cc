@@ -7,6 +7,9 @@
 
 #include <cmath>
 
+#include "dungeon.h"
+#include "dgn-shoals.h"
+#include "dgn-swamp.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "coordit.h"
@@ -889,6 +892,45 @@ static int dgn_width(lua_State *ls)
     PLUARET(number, lines.width());
 }
 
+LUAFN(dgn_layout_type)
+{
+    env.level_layout_types.insert(luaL_checkstring(ls, 2));
+    return 0;
+}
+
+/* Wrappers for C++ layouts, to facilitate choosing of layouts by weight and
+ * depth */
+
+LUAFN(dgn_layout_basic)
+{
+    builder_basic(you.absdepth0);
+    return 0;
+}
+
+LUAFN(dgn_layout_bigger_room)
+{
+    bigger_room();
+    return 0;
+}
+
+LUAFN(dgn_layout_plan_4)
+{
+    plan_4(NUM_FEATURES);
+    return 0;
+}
+
+LUAFN(dgn_layout_shoals)
+{
+    dgn_build_shoals_level(you.absdepth0);
+    return 0;
+}
+
+LUAFN(dgn_layout_swamp)
+{
+    dgn_build_swamp_level(you.absdepth0);
+    return 0;
+}
+
 const struct luaL_reg dgn_build_dlib[] =
 {
     { "count_feature_in_box", &dgn_count_feature_in_box },
@@ -917,6 +959,13 @@ const struct luaL_reg dgn_build_dlib[] =
     { "smear_map", &dgn_smear_map },
     { "spotty_map", &dgn_spotty_map },
     { "width", dgn_width },
+    { "layout_type", &dgn_layout_type },
+
+    { "layout_basic", &dgn_layout_basic },
+    { "layout_bigger_room", &dgn_layout_bigger_room },
+    { "layout_plan_4", &dgn_layout_plan_4 },
+    { "layout_shoals", &dgn_layout_shoals },
+    { "layout_swamp", &dgn_layout_swamp },
 
     { NULL, NULL }
 };

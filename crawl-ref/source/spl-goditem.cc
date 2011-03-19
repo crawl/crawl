@@ -227,7 +227,7 @@ static int _healing_spell(int healed, bool divine_ability,
     monster* mons = monster_at(spd.target);
     if (!mons)
     {
-        mpr("There isn't anything there!");
+        canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
         return (0);
@@ -368,9 +368,9 @@ bool cast_revivification(int pow)
 void antimagic()
 {
     duration_type dur_list[] = {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE,
-        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_STONEMAIL, DUR_CONTROL_TELEPORT,
+        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
+        DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
+        DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_BARGAIN,
@@ -856,13 +856,11 @@ bool cast_imprison(int pow, monster* mons, int source)
     return (false);
 }
 
-bool cast_smiting(int pow, const coord_def& where)
+bool cast_smiting(int pow, monster* mons)
 {
-    monster* m = monster_at(where);
-
-    if (m == NULL)
+    if (mons == NULL || mons->submerged())
     {
-        mpr("There's nothing there!");
+        canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to victory-dancing and
         // invisible/submerged monsters.
         return (true);
@@ -871,17 +869,17 @@ bool cast_smiting(int pow, const coord_def& where)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(m, false, you.pos());
+    const bool success = !stop_attack_prompt(mons, false, you.pos());
 
     if (success)
     {
-        set_attack_conducts(conducts, m);
+        set_attack_conducts(conducts, mons);
 
-        mprf("You smite %s!", m->name(DESC_NOCAP_THE).c_str());
+        mprf("You smite %s!", mons->name(DESC_NOCAP_THE).c_str());
 
-        behaviour_event(m, ME_ANNOY, MHITYOU);
-        if (mons_is_mimic(m->type))
-            mimic_alert(m);
+        behaviour_event(mons, ME_ANNOY, MHITYOU);
+        if (mons_is_mimic(mons->type))
+            mimic_alert(mons);
     }
 
     enable_attack_conducts(conducts);
@@ -889,38 +887,12 @@ bool cast_smiting(int pow, const coord_def& where)
     if (success)
     {
         // Maxes out at around 40 damage at 27 Invocations, which is
-        // plenty in my book (the old max damage was around 70,
-        // which seems excessive).
-        m->hurt(&you, 7 + (random2(pow) * 33 / 191));
-        if (m->alive())
-            print_wounds(m);
+        // plenty in my book (the old max damage was around 70, which
+        // seems excessive).
+        mons->hurt(&you, 7 + (random2(pow) * 33 / 191));
+        if (mons->alive())
+            print_wounds(mons);
     }
 
     return (success);
-}
-
-void stonemail(int pow)
-{
-    if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
-    {
-        mpr("The spell conflicts with another spell still in effect.");
-        return;
-    }
-
-    if (you.duration[DUR_STONEMAIL])
-        mpr("Your scaly armour looks firmer.");
-    else
-    {
-        if (you.form == TRAN_STATUE)
-            mpr("Your stone body feels more resilient.");
-        else
-            mpr("A set of stone scales covers your body!");
-
-        you.redraw_evasion = true;
-        you.redraw_armour_class = true;
-    }
-
-    you.increase_duration(DUR_STONEMAIL, 20 + random2(pow) + random2(pow), 100,
-                          NULL);
-    burden_change();
 }

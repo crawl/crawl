@@ -136,6 +136,8 @@ private:
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
 
+    void antimagic_affects_defender();
+    void pain_affects_defender();
     void chaos_affects_defender();
     void chaos_affects_attacker();
     void chaos_killed_defender(monster* def_copy);

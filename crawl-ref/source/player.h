@@ -45,6 +45,7 @@ public:
 
   // Long-term state:
   int elapsed_time;        // total amount of elapsed time in the game
+  int elapsed_time_at_last_input; // used for elapsed_time delta display
 
   int hp;
   int hp_max;
@@ -234,8 +235,6 @@ public:
   PlaceInfo global_info;
   player_quiver* m_quiver;
 
-  CrawlHashTable props;
-
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
   std::vector<int> beholders;
@@ -381,7 +380,6 @@ public:
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool can_cling_to_walls() const;
-    void clear_clinging();
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;
@@ -526,7 +524,7 @@ public:
     int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
     void poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int amount);
+    bool sicken(int amount, bool allow_hint = true);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
@@ -808,6 +806,7 @@ int player_evokable_invis();
 int player_spell_levels(void);
 
 int player_sust_abil(bool calc_unid = true);
+int player_warding(bool calc_unid = true);
 
 int player_teleport(bool calc_unid = true);
 
@@ -836,6 +835,7 @@ inline bool player_can_handle_equipment()
 }
 
 void level_change(bool skip_attribute_increase = false);
+void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,
                    species_type species = SP_UNKNOWN);

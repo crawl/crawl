@@ -11,6 +11,8 @@ function tutorial_msg2.start ()
     -- Make him hungry for the butchering tutorial.
     crawl.tutorial_hunger(2700)
     crawl.tutorial_hint("HINT_NEW_LEVEL")
+    -- TODO: Replace this with a hint on trying to _eat_ rotten food.
+    crawl.tutorial_hint("HINT_ROTTEN_FOOD")
 
     tutorial_intro("This lesson will teach you about monsters and how to kill them in melee and ranged combat.")
     crawl.mpr("First, you need a weapon! Go and grab the one lying in front of the door!", "tutorial")

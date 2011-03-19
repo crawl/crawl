@@ -17,7 +17,6 @@
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
-#include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -29,6 +28,7 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "player-equip.h"
 #include "shout.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -377,13 +377,10 @@ void cast_toxic_radiance(bool non_player)
             // this check should not be !mons->invisible().
             if (!mi->has_ench(ENCH_INVIS))
             {
-                kill_category kc = KC_YOU;
-                if (non_player)
-                    kc = KC_OTHER;
-                bool affected =
-                    poison_monster(*mi, kc, 1, false, false);
+                const actor* agent = non_player ? 0 : &you;
+                bool affected = poison_monster(*mi, agent, 1, false, false);
 
-                if (coinflip() && poison_monster(*mi, kc, false, false))
+                if (coinflip() && poison_monster(*mi, agent, false, false))
                     affected = true;
 
                 if (affected)
@@ -418,7 +415,7 @@ void cast_toxic_radiance(bool non_player)
     }
 }
 
-void cast_refrigeration(int pow, bool non_player)
+void cast_refrigeration(int pow, bool non_player, bool freeze_potions)
 {
     if (non_player)
         mpr("Something drains the heat from around you.");
@@ -442,7 +439,8 @@ void cast_refrigeration(int pow, bool non_player)
         // Note: this used to be 12!... and it was also applied even if
         // the player didn't take damage from the cold, so we're being
         // a lot nicer now.  -- bwr
-        expose_player_to_element(BEAM_COLD, 5);
+        if (freeze_potions)
+            expose_player_to_element(BEAM_COLD, 5);
     }
 
     // Now do the monsters.
@@ -508,8 +506,9 @@ bool vampiric_drain(int pow, monster* mons)
 {
     if (mons == NULL || mons->submerged())
     {
-        mpr("There isn't anything there!");
-        // Cost to disallow freely locating invisible monsters.
+        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
+        // Cost to disallow freely locating invisible/submerged
+        // monsters.
         return (true);
     }
 
@@ -587,15 +586,15 @@ bool vampiric_drain(int pow, monster* mons)
     return (true);
 }
 
-bool burn_freeze(int pow, beam_type flavour, monster* mons)
+bool cast_freeze(int pow, monster* mons)
 {
     pow = std::min(25, pow);
 
     if (mons == NULL || mons->submerged())
     {
-        mpr("There isn't anything close enough!");
+        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // If there's no monster there, you still pay the costs in
-        // order to prevent locating invisible monsters.
+        // order to prevent locating invisible/submerged monsters.
         return (true);
     }
 
@@ -608,13 +607,7 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("You %s %s.",
-             (flavour == BEAM_FIRE)        ? "burn" :
-             (flavour == BEAM_COLD)        ? "freeze" :
-             (flavour == BEAM_MISSILE)     ? "crush" :
-             (flavour == BEAM_ELECTRICITY) ? "zap"
-                                           : "______",
-             mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You freeze %s.", mons->name(DESC_NOCAP_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
     }
@@ -625,7 +618,7 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
         return (false);
 
     bolt beam;
-    beam.flavour = flavour;
+    beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
     const int orig_hurted = roll_dice(1, 3 + pow / 3);
@@ -634,17 +627,14 @@ bool burn_freeze(int pow, beam_type flavour, monster* mons)
 
     if (mons->alive())
     {
-        mons->expose_to_element(flavour, orig_hurted);
+        mons->expose_to_element(BEAM_COLD, orig_hurted);
         print_wounds(mons);
 
-        if (flavour == BEAM_COLD)
+        const int cold_res = mons->res_cold();
+        if (cold_res <= 0)
         {
-            const int cold_res = mons->res_cold();
-            if (cold_res <= 0)
-            {
-                const int stun = (1 - cold_res) * random2(2 + pow/5);
-                mons->speed_increment -= stun;
-            }
+            const int stun = (1 - cold_res) * random2(2 + pow/5);
+            mons->speed_increment -= stun;
         }
     }
 
@@ -714,16 +704,6 @@ int airstrike(int pow, const dist &beam)
 
     return (success);
 }
-
-enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
-{
-    DEBRIS_METAL,           //    0
-    DEBRIS_ROCK,
-    DEBRIS_STONE,
-    DEBRIS_WOOD,
-    DEBRIS_CRYSTAL,
-    NUM_DEBRIS
-};          // jmf: ...and I'll actually implement the items Real Soon Now...
 
 // Just to avoid typing this over and over.
 // Returns true if monster died. -- bwr
@@ -1353,6 +1333,8 @@ static int _disperse_monster(monster* mon, int pow)
 {
     if (!mon)
         return (0);
+    if (mons_is_projectile(mon->type))
+        return (0);
 
     if (mons_genus(mon->type) == MONS_BLINK_FROG)
     {
@@ -1418,7 +1400,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     beam.aux_source.clear();
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
-    beam.damage = dice_def(0, 5 + pow / 10);
+    beam.damage = dice_def(0, 5 + pow / 5);
 
     const dungeon_feature_type grid = grd(spd.target);
 

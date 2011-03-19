@@ -889,7 +889,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     MenuEntry::get_tiles(tileset);
 
-    const bool      fake = m->props.exists("fake");
+    const bool    fake = m->props.exists("fake");
     const coord_def c  = m->pos();
           tileidx_t ch = TILE_FLOOR_NORMAL;
 
@@ -1383,7 +1383,8 @@ int menu_colour(const std::string &text, const std::string &prefix,
 
 int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 {
-    return entry->highlight_colour();
+    return (entry->colour != MENU_ITEM_STOCK_COLOUR ? entry->colour
+            : entry->highlight_colour());
 }
 
 ///////////////////////////////////////////////////////////////////////

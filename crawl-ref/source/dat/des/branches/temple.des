@@ -566,11 +566,10 @@ c...c...c...c
 ccBcccBcccBcc
 ENDMAP
 
-NAME:   minmay_temple_entry_steam
+NAME:   minmay_temple_entry_mist
 TAGS:   temple_entry
 ORIENT: float
-# This steam is essentially harmless; hopefully players will figure that out.
-MARKER: l = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
+MARKER: l = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
         pow_max = 3, delay = 10, start_clouds = 1, size_min = 1, \
         size_max = 3, spread_rate = -1 }
 KMASK:  W = no_monster_gen
@@ -578,11 +577,11 @@ KMASK:  l = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 ..WWW..
-.WWlWW.
+.WWWWW.
 WWWWWWW
-WlWOWlW
+WWWOWWW
 WWWWWWW
-.WWlWW.
+.WWWWW.
 ..WWW..
 ENDMAP
 
@@ -738,7 +737,7 @@ TAGS:   temple_entry
 DEPTH:  D:7
 WEIGHT: 1
 ORIENT: float
-MONS:   plant, oklob plant
+MONS:   plant, oklob sapling
 KFEAT:  O = enter_temple
 MAP
 ....1..
@@ -1224,7 +1223,7 @@ tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 # 8 gods
-NAME:    minmay_temple_alley_garden
+NAME:    jpeg_temple_alley_garden
 PLACE:   Temple
 TAGS:    no_rotate
 WEIGHT:  5
@@ -1266,7 +1265,7 @@ tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 # 12 gods
-NAME:    minmay_temple_clearing_a
+NAME:    jpeg_temple_clearing_a
 WEIGHT:  2
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1307,7 +1306,7 @@ ttttttt'tt.....tt""ttt""tt.....tt'ttttttt
 ENDMAP
 
 # 9 gods
-NAME:    minmay_temple_clearing_b
+NAME:    jpeg_temple_clearing_b
 WEIGHT:  2
 PLACE:   Temple
 TAGS:    no_rotate

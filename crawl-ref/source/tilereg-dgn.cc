@@ -12,6 +12,7 @@
 
 #include "cio.h"
 #include "cloud.h"
+#include "command.h"
 #include "coord.h"
 #include "env.h"
 #include "invent.h"
@@ -385,7 +386,7 @@ static void _add_targeting_commands(const coord_def& pos)
     for (int i = 0; i < std::abs(delta.y); i++)
         macro_buf_add_cmd(cmd);
 
-    macro_buf_add_cmd(CMD_TARGET_MOUSE_MOVE);
+    macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
 }
 
 static const bool _is_appropriate_spell(spell_type spell,
@@ -585,23 +586,32 @@ static bool _spell_selector(spell_type spell)
 // TODO: Cast spells which target a particular cell.
 static bool _cast_spell_on_target(actor* target)
 {
-    ASSERT(_spell_target == NULL);
     _spell_target = target;
-
+    spell_type spell;
     int letter;
+
+    if (is_valid_spell(you.last_cast_spell)
+        && _is_appropriate_spell(you.last_cast_spell, target))
     {
-        // Prevent the spell letter from being recorded twice.
-        pause_all_key_recorders pause;
-
-        letter = list_spells(true, false, true, -1, _spell_selector);
+        spell = you.last_cast_spell;
+        letter = get_spell_letter(spell);
     }
+    else
+    {
+        {
+            // Prevent the spell letter from being recorded twice.
+            pause_all_key_recorders pause;
 
-    _spell_target = NULL;
+            letter = list_spells(true, false, true, -1, _spell_selector);
+        }
 
-    if (letter == 0)
-        return (false);
+        _spell_target = NULL;
 
-    const spell_type spell = get_spell_by_letter(letter);
+        if (letter == 0)
+            return (false);
+
+        spell = get_spell_by_letter(letter);
+    }
 
     ASSERT(is_valid_spell(spell));
     ASSERT(_is_appropriate_spell(spell, target));
@@ -672,13 +682,16 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     const bool shift = (mod & MOD_SHIFT);
     const bool ctrl  = (mod & MOD_CTRL);
     const bool alt   = (shift && ctrl || (mod & MOD_ALT));
+    const item_def* weapon = you.weapon();
 
     // Handle evoking items at monster.
     if (alt && _have_appropriate_evokable(mon))
         return _evoke_item_on_target(mon);
 
     // Handle firing quivered items.
-    if (shift && !ctrl && _can_fire_item())
+    if (_can_fire_item() && !ctrl
+        && (shift || weapon && is_range_weapon(*weapon)
+                     && !mon->wont_attack()))
     {
         macro_buf_add_cmd(CMD_FIRE);
         _add_targeting_commands(mon->pos());
@@ -692,7 +705,6 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
-        const item_def* weapon = you.weapon();
         const coord_def delta  = you.pos() - mon->pos();
         const int       x_dist = std::abs(delta.x);
         const int       y_dist = std::abs(delta.y);
@@ -880,14 +892,24 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
     }
 
     if ((mod & MOD_CTRL) && adjacent(you.pos(), gc))
-        return (click_travel(gc, mod & MOD_CTRL));
+    {
+        const int cmd = click_travel(gc, mod & MOD_CTRL);
+        if (cmd != CK_MOUSE_CMD)
+            process_command((command_type) cmd);
+
+        return (CK_MOUSE_CMD);
+    }
 
     // Don't move if we've tried to fire/cast/evoke when there's nothing
     // available.
     if (mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
         return (CK_MOUSE_CMD);
 
-    return (click_travel(gc, mod & MOD_CTRL));
+    const int cmd = click_travel(gc, mod & MOD_CTRL);
+    if (cmd != CK_MOUSE_CMD)
+        process_command((command_type) cmd);
+
+    return (CK_MOUSE_CMD);
 }
 
 void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def *pc) const

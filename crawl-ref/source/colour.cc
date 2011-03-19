@@ -216,22 +216,25 @@ static int _etc_swamp_tree(int, const coord_def& loc)
     return (h>>30) ? GREEN : BROWN;
 }
 
-static int _etc_tornado(int, const coord_def& loc)
+bool get_tornado_phase(const coord_def& loc)
 {
-    bool phase;
     coord_def center = get_cloud_originator(loc);
     if (center.origin())
-        phase = coinflip(); // source died/went away
+        return coinflip(); // source died/went away
     else
     {
         int x = loc.x - center.x;
         int y = loc.y - center.y;
         double dir = atan2(x, y)/PI;
         double dist = sqrt(x*x + y*y);
-        phase = ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+        return ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
     }
+}
 
-    switch(grd(loc))
+static int _etc_tornado(int, const coord_def& loc)
+{
+    const bool phase = get_tornado_phase(loc);
+    switch (grd(loc))
     {
     case DNGN_LAVA:
         return phase ? LIGHTRED : RED;

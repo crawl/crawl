@@ -28,11 +28,12 @@ void packed_cell::clear()
     fg = 0;
     bg = 0;
 
-    is_bloody = false;
-    is_silenced = false;
-    is_haloed = false;
-    is_moldy = false;
-    is_sanctuary = false;
+    is_bloody        = false;
+    is_silenced      = false;
+    is_haloed        = false;
+    is_moldy         = false;
+    is_sanctuary     = false;
+    is_liquefied     = false;
     swamp_tree_water = false;
 }
 
@@ -56,8 +57,8 @@ static bool _in_water(const packed_cell &cell)
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
-static void _lichform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
-                                 bool in_water)
+static void _transform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
+                                  bool in_water)
 {
     const int item = you.equip[EQ_WEAPON];
     if (item == -1)
@@ -93,9 +94,11 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
         if (fg_idx >= TILEP_TRAN_LICH_EQUIP_FIRST
-            && fg_idx <= TILEP_TRAN_LICH_EQUIP_LAST)
+                && fg_idx <= TILEP_TRAN_LICH_EQUIP_LAST
+            || fg_idx >= TILEP_TRAN_STATUE_EQUIP_FIRST
+                && fg_idx <= TILEP_TRAN_STATUE_EQUIP_LAST)
         {
-            _lichform_add_weapon(m_buf_doll, x, y, in_water);
+            _transform_add_weapon(m_buf_doll, x, y, in_water);
         }
     }
 
@@ -503,15 +506,19 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     }
 }
 
-void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell)
+void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
+                                          bool is_wall)
 {
-    if (!cell.is_bloody && !cell.is_moldy)
-        return;
-
-    if (cell.is_bloody)
+    if (cell.is_liquefied)
     {
-        int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
-        m_buf_feat.add(TILE_BLOOD + offset, x, y);
+        int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
+        m_buf_feat.add(TILE_LIQUEFACTION + offset, x, y);
+    }
+    else if (cell.is_bloody)
+    {
+        const tileidx_t basetile = (is_wall ? TILE_WALL_BLOOD : TILE_BLOOD);
+        const int offset = cell.flv.special % tile_dngn_count(basetile);
+        m_buf_feat.add(basetile + offset, x, y);
     }
     else if (cell.is_moldy)
     {
@@ -544,7 +551,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
         // Draw blood on top of wall tiles.
         if (bg_idx <= TILE_WALL_MAX)
-            add_blood_overlay(x, y, cell);
+            add_blood_overlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);
 
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
             add_dngn_tile(cell.dngn_overlay[i], x, y);
@@ -553,12 +560,20 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (bg & TILE_FLAG_KRAKEN_NW)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_NW, x, y);
+            else if (bg & TILE_FLAG_ELDRITCH_NW)
+                m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NW, x, y);
             if (bg & TILE_FLAG_KRAKEN_NE)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_NE, x, y);
+            else if (bg & TILE_FLAG_ELDRITCH_NE)
+                m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NE, x, y);
             if (bg & TILE_FLAG_KRAKEN_SE)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_SE, x, y);
+            else if (bg & TILE_FLAG_ELDRITCH_SE)
+                m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SE, x, y);
             if (bg & TILE_FLAG_KRAKEN_SW)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_SW, x, y);
+            else if (bg & TILE_FLAG_ELDRITCH_SW)
+                m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SW, x, y);
         }
 
         if (cell.is_haloed)

@@ -197,9 +197,43 @@ struct stash_search_result
     const Stash    *stash;
     const ShopInfo *shop;
 
+    // The item that matched the search, if any.
+    std::auto_ptr<item_def> matching_item;
+
     stash_search_result() : pos(), player_distance(0), matches(0),
-                            count(0), match(), stash(NULL), shop(NULL)
+                            count(0), match(), stash(NULL), shop(NULL),
+                            matching_item()
     {
+    }
+
+    stash_search_result(const stash_search_result &o)
+        : pos(o.pos), player_distance(o.player_distance), matches(o.matches),
+          count(o.count), match(o.match), stash(o.stash), shop(o.shop),
+          matching_item()
+    {
+        if (o.matching_item.get())
+            matching_item.reset(new item_def(*o.matching_item));
+    }
+
+    stash_search_result &operator = (const stash_search_result &o)
+    {
+        pos = o.pos;
+        player_distance = o.player_distance;
+        matches = o.matches;
+        count = o.count;
+        match = o.match;
+        stash = o.stash;
+        shop = o.shop;
+        matching_item.reset(NULL);
+        if (o.matching_item.get())
+            matching_item.reset(new item_def(*o.matching_item));
+        return (*this);
+    }
+
+    void set_matching_item(const item_def &item)
+    {
+        if (!matching_item.get())
+            matching_item.reset(new item_def(item));
     }
 
     bool operator < (const stash_search_result &ssr) const

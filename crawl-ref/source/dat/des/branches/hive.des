@@ -101,7 +101,7 @@ ENDMAP
 NAME:    erik_hive_1
 TAGS:    hive_entry
 ORIENT:  float
-MONS:    w:200 bear / polar bear / w:100 grizzly bear / w:100 black bear
+MONS:    polar bear / grizzly bear w:200 / black bear w:100
 MONS:    killer bee, queen bee, killer bee larva
 ITEM:    honeycomb, royal jelly
 SUBST:   ? = a.

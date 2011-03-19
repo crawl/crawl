@@ -15,19 +15,21 @@ public:
     enchant_type  ench;
     int           degree;
     int           duration, maxduration;
-    kill_category who;      // Who set this enchantment?
+    kill_category who;      // Source's alignment.
+    mid_t         source;   // Who set this enchantment?
 
 public:
     mon_enchant(enchant_type e = ENCH_NONE, int deg = 0,
-                kill_category whose = KC_OTHER,
+                const actor *whose = 0,
                 int dur = 0);
 
     killer_type killer() const;
     int kill_agent() const;
+    actor* agent() const;
 
     operator std::string () const;
     const char *kill_category_desc(kill_category) const;
-    void merge_killer(kill_category who);
+    void merge_killer(kill_category who, mid_t whos);
     void cap_degree();
 
     void set_duration(const monster* mons, const mon_enchant *exist);
@@ -113,8 +115,6 @@ public:
 
     int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
     int damage_total;
-
-    CrawlHashTable props;
 
 public:
     void set_new_monster_id();
@@ -208,7 +208,7 @@ public:
     bool find_home_anywhere();
 
     void set_ghost(const ghost_demon &ghost, bool has_name = true);
-    void ghost_init();
+    void ghost_init(bool need_pos = true);
     void pandemon_init();
     void dancing_weapon_init();
     void labrat_init();
@@ -216,7 +216,7 @@ public:
     void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();
     void destroy_inventory();
-    void load_spells(mon_spellbook_type spellbook);
+    void load_ghost_spells();
 
     actor *get_foe() const;
 
@@ -231,7 +231,9 @@ public:
 
     bool      submerged() const;
     bool      can_drown() const;
+    bool      floundering_at(const coord_def p) const;
     bool      floundering() const;
+    bool      extra_balanced_at(const coord_def p) const;
     bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
@@ -401,8 +403,8 @@ public:
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
 
     void poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int strength);
-    bool bleed(int amount, int degree);
+    bool sicken(int strength, bool unused = true);
+    bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
@@ -413,10 +415,12 @@ public:
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
     bool heal(int amount, bool max_too = false);
+    void blame_damage(const actor *attacker, int amount);
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool abyss_shift = false,
                   bool wizard_tele = false);
+    void suicide(int hp = -1);
 
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);

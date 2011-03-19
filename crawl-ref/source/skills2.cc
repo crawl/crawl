@@ -359,7 +359,7 @@ COLORS SkillMenuEntry::_get_colour() const
     else if (you.practise_skill[m_sk] == 0 && you.skills[m_sk] < 27)
         return DARKGREY;
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
-                                        || m_sk == you.transfer_to_skill))
+                                           || m_sk == you.transfer_to_skill))
     {
         return LIGHTBLUE;
     }
@@ -545,8 +545,6 @@ void SkillMenuEntry::_set_points()
 }
 #endif
 
-#define MIN_COLS            80
-#define MIN_LINES           24
 #define TILES_COL            6
 #define CURRENT_ACTION_SIZE 25
 #define NEXT_ACTION_SIZE    16
@@ -1150,16 +1148,6 @@ int SkillMenu::_get_next_display() const
 
 void skill_menu(bool reskilling)
 {
-#ifndef USE_TILE
-    if (get_number_of_lines() < MIN_LINES || get_number_of_cols() < MIN_COLS)
-    {
-        mprf(MSGCH_ERROR, "Terminal too small (%d, %d) to display the skill "
-             "menu; need at least (%d, %d).", get_number_of_cols(),
-             get_number_of_lines(), MIN_COLS, MIN_LINES);
-        return;
-    }
-#endif
-
     int flags = SKMF_NONE;
 
     if (reskilling)
@@ -1187,7 +1175,8 @@ void skill_menu(bool reskilling)
         flags |= SKMF_DISP_APTITUDE;
 
 #ifdef DEBUG_DIAGNOSTICS
-    flags |= SKMF_DISP_ALL;
+    if (!crawl_state.game_is_hints_tutorial())
+        flags |= SKMF_DISP_ALL;
 #endif
 
     clrscr();

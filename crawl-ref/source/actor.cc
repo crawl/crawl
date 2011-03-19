@@ -52,6 +52,12 @@ bool actor::ground_level() const
     return (!airborne() && !is_wall_clinging());
 }
 
+bool actor::stand_on_solid_ground() const
+{
+    return ground_level() && feat_has_solid_floor(grd(pos()))
+           && !feat_is_water(grd(pos()));
+}
+
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const
@@ -241,7 +247,7 @@ bool actor_slime_wall_immune(const actor *act)
  */
 bool actor::is_wall_clinging() const
 {
-    return (clinging);
+    return props.exists("clinging") && props["clinging"].get_bool();
 }
 
 /*
@@ -252,45 +258,45 @@ bool actor::is_wall_clinging() const
  */
 bool actor::can_cling_to(const coord_def& p) const
 {
-    if (!in_bounds(p))
-        return (false);
+    if (!is_wall_clinging() || !can_pass_through_feat(grd(p)))
+        return false;
 
-    if (!is_wall_clinging())
-        return (false);
-
-    if (!can_pass_through_feat(grd(p)))
-        return (false);
-
-    for (orth_adjacent_iterator ai(p); ai; ++ai)
-        if (feat_is_wall(env.grid(*ai)))
-            for (orth_adjacent_iterator ai2(*ai, false); ai2; ++ai2)
-                for (int i = 0, size = cling_to.size(); i < size; ++i)
-                    if (cling_to[i] == *ai2)
-                        return (true);
-
-        return (false);
+    return cell_can_cling_to(pos(), p);
 }
 
 /*
  * Update the clinging status of an actor.
  *
  * It checks adjacent orthogonal walls to see if the actor can cling to them.
+ * If actor has fallen from the wall (wall dug or actor changed form), print a
+ * message and apply location effects.
  *
- * @returns True if actor has fallen from the wall.
+ * @param stepped Whether the actor has taken a step.
  */
-bool actor::check_clinging()
+void actor::check_clinging(bool stepped)
 {
-    if (!can_cling_to_walls())
-        return false;
+    bool was_clinging = is_wall_clinging();
+    bool clinging = can_cling_to_walls() && cell_is_clingable(pos())
+                    && !airborne();
 
-    bool was_clinging = clinging;
+    if (can_cling_to_walls())
+        props["clinging"] = clinging;
+    else if (props.exists("clinging"))
+        props.erase("clinging");
 
-    cling_to.clear();
-    for (orth_adjacent_iterator ai(pos()); ai; ++ai)
-        if (feat_is_wall(env.grid(*ai)))
-            cling_to.push_back(*ai);
+    if (!stepped && was_clinging && !clinging)
+    {
+        if (you.can_see(this))
+        {
+            mprf("%s fall%s off the wall.", name(DESC_CAP_THE).c_str(),
+                 is_player() ? "" : "s");
+        }
+        apply_location_effects(pos());
+    }
+}
 
-    clinging = (cling_to.size() > 0) ? true : false;
-
-    return was_clinging && !clinging;
+void actor::clear_clinging()
+{
+    if (props.exists("clinging"))
+        props["clinging"] = false;
 }

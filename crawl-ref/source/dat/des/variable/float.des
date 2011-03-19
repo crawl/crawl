@@ -38,6 +38,32 @@ function callback.ancient_champions_mu_skele_death(data, triggerable,
     crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
   end
 end
+
+function callback.cathedral_bats (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if data.bat_count > 10 then
+    return
+  end
+
+  local x, y = marker:pos()
+  local you_x, you_y = you.pos()
+
+  if (you_x == x and you_y == y) then return end
+  if dgn.mons_at(x, y) then return end
+
+  if (not dgn.create_monster(x, y, "generate_awake megabat / generate_awake w:2 fire bat")) then
+    return
+  end
+
+  data.bat_count = data.bat_count + 1
+
+  if you.see_cell(x, y) then
+    crawl.mpr("A bat flies out of a crevice!")
+  end
+end
 }}
 
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
@@ -707,7 +733,7 @@ DEPTH:  D:5-12, Elf, Vault
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30
-MONS:   vampire mosquito / scorpion / redback w:5
+MONS:   killer bee / scorpion / redback w:5
 MAP
 cccccccc+cccccccc
 c...............c
@@ -788,7 +814,7 @@ ENDMAP
 #
 NAME:   lemuel_bear_cage
 DEPTH:  D:7-21
-MONS:   bear / black bear / grizzly bear / polar bear
+MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
 MONS:   hound / wolf / hog
@@ -1112,49 +1138,6 @@ MAP
 ENDMAP
 
 ##############################################################################
-# A variety of statues, with loot. (1KB)
-#
-NAME:    statue_cache
-ORIENT:  north
-TAGS:    no_monster_gen
-DEPTH:   D:12-20, Elf, Vault
-MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:flame . bolt q:30
-MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:frost . bolt q:30
-MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
-      ego:flaming good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
-      ego:freezing good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
-      ego:flaming good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
-      ego:freezing good_item
-MONS: silver statue
-KMONS: 8 = statue name:wizard name_adjective tile:mons_statue_mage \
-           spells:lehudib's_crystal_spear;iskenderun's_mystic_blast;slow;stone_arrow
-KMONS: 9 = statue name:wizard name_adjective tile:mons_statue_mage \
-           spells:freezing_cloud;mephitic_cloud;throw_icicle;confuse
-MAP
-  cccccccccccccc
-  cccccccc7ccccc
-  cccccc.....ccc
-  cccc..ccccc.cc
-  ccc.ccccc5c.cc
-  ccc.cccccc.ccc
-  cc8.9cc3c.c6cc
-  c$$$$$cc.ccccc
-  c|*|*|c.c4cccc
-ccccccccc.ccccccccc
-........1.2........
-...................
-...................
- .................
-   .............
-      ...@...
-ENDMAP
-
-##############################################################################
 # The Shining One Protects a Powerful Item 1 (by abrahamwl)
 #
 # The basic theme of this vault is that the the Shining one has placed a
@@ -1452,7 +1435,7 @@ ENDMAP
 # Ancient Champions (by Mu., lua by due)
 #
 NAME:   ancient_champions_mu
-DEPTH:  D:15-26, Vault, Crypt
+DEPTH:  D:15-26, Vault:1-7, Crypt:1-4
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen
 KFEAT:  ABCDEFG = metal_wall
@@ -1483,7 +1466,7 @@ KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
         | great sword ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain \
         | triple sword ego:vorpal | executioner's axe ego:vorpal
 SHUFFLE: 123
-KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_rtele_into
+KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_tele_into
 KITEM:  w = acquire weapon
 KITEM:  r = acquire armour
 NSUBST: $ = 1:w / 1:r / 4:| / *:$
@@ -1748,6 +1731,49 @@ c..LLlllLL..c
 ccccccccccccc
 ENDMAP
 
+NAME:    lemuel_firewalk_3
+DEPTH:   D:16-27
+TAGS:    uniq_firewalk abyss ruin_abyss
+WEIGHT:  2
+ORIENT:  float
+ITEM:    nothing, nothing, nothing
+SHUFFLE: def
+MARKER:  d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 4, delay = 39, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 6, delay = 59, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER:  f = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 8, delay = 79, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
+        , feature_description = "scorch-marked granite statue" }
+MAP
+xxxxxxxG@Gxxxxxxx
+x...............x
+x...............x
+x.d..e.....f..d.x
+x...............x
+x...............x
+x...............x
+x.e..f.....d..e.x
+x...............x
+x...............x
+x...............x
+x.f..d.....e..f.x
+x...............x
+x...............x
+x...............x
+x.d..e.....f..d.x
+x...............x
+x...............x
+x......$$$......x
+x.e.f..$$$..d.e.x
+x......$$$......x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
 #############################################################################
 # The Elephants' Graveyard (by Mu.)
 #
@@ -1807,4 +1833,54 @@ MAP
 ............1..1............
 ............................
 .............@@.............
+ENDMAP
+
+NAME: megacathedral
+ORIENT: float
+DEPTH: D:8-14
+MONS: wraith / freezing wraith w:2
+MONS: eidolon
+TAGS: no_rotate no_vmirror no_hmirror
+NSUBST: C = 5:C / *:.
+SUBST: X = C
+SUBST: D = V..
+MARKER: = = lua:restrict_door()
+{{
+local cathedral_bats = TriggerableFunction:new {
+    func = "callback.cathedral_bats",
+    repeated = true,
+    data = {bat_count=0},
+}
+
+cathedral_bats:add_triggerer(DgnTriggerer:new {
+    type="turn",
+    delay_min=500,
+    delay_max=800
+})
+
+lua_marker('C', cathedral_bats)
+lua_marker('V', cathedral_bats)
+}}
+MAP
+             cccc.cccc
+          ccccccG.Gcccccc
+         ccc...cc+cc1..ccc
+      ccccc..C..c.c..D..ccccc
+     ccc.ccc...cc.cc...ccc.ccc
+     cc1..ccc+cc...cc=ccc...cc
+  ccccc.D.ccc.........ccc.C.ccccc
+ cccccc...=c..ccc+ccc..c+...cccccc
+ cc...cc.cc..ccc...ccc..cc.cc..1cc
+cc.....ccc..cc.......cc..ccc.....cc
+cc..C...+....+...X...+....=...D..cc
+cc.....ccc..cc.......cc..ccc.....cc
+ cc...cc.cc..ccc...ccc..cc.cc...cc
+ cccccc...=c..ccc+ccc..c+...cccccc
+  ccccc.D.ccc.........ccc.C.ccccc
+     cc1..ccc=ccG.Gcc+ccc...cc
+     ccc.ccc...cc=cc...ccc.ccc
+      ccccc..D..c.c..C..ccccc
+         ccc..1cc2cc...ccc
+          cccccc|||cccccc
+             ccccccccc
 ENDMAP

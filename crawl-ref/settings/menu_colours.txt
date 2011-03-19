@@ -42,6 +42,8 @@ menu = white:.*artefact.*
 menu = lightblue:(^identified armour .* pair of .* of )
 menu = lightgrey:(^identified armour .* pair of )
 menu = lightblue:(^identified (weapon|armour) .* of )
+menu = lightblue:(^identified weapon .* vampiric .*)
+menu = lightblue:(^identified weapon .* anti-magic .*)
 
 # Possible egos
 menu = lightblue:^unidentified .*weapon.*(runed|glowing)

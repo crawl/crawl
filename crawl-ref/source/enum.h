@@ -71,6 +71,7 @@ enum ability_type
     ABIL_TSO_SUMMON_DIVINE_WARRIOR,
     // Kiku
     ABIL_KIKU_RECEIVE_CORPSES = 70,
+    ABIL_KIKU_TORMENT,
     // Yredelemnul
     ABIL_YRED_INJURY_MIRROR = 80,
     ABIL_YRED_ANIMATE_REMAINS,
@@ -126,8 +127,7 @@ enum ability_type
     ABIL_JIYVA_SLIMIFY,
     ABIL_JIYVA_CURE_BAD_MUTATION,
     // Fedhas
-    ABIL_FEDHAS_FUNGAL_BLOOM = 190,
-    ABIL_FEDHAS_SUNLIGHT,
+    ABIL_FEDHAS_SUNLIGHT = 190,
     ABIL_FEDHAS_RAIN,
     ABIL_FEDHAS_PLANT_RING,
     ABIL_FEDHAS_SPAWN_SPORES,
@@ -356,9 +356,11 @@ enum beam_type                  // beam[].flavour
 
 enum book_type
 {
-    BOOK_MINOR_MAGIC_I,
+    BOOK_MINOR_MAGIC,
+#if TAG_MAJOR_VERSION == 32
     BOOK_MINOR_MAGIC_II,
     BOOK_MINOR_MAGIC_III,
+#endif
     BOOK_CONJURATIONS_I,
     BOOK_CONJURATIONS_II,
     BOOK_FLAMES,
@@ -470,6 +472,8 @@ enum canned_message_type
     MSG_CANNOT_DO_YET,
     MSG_OK,
     MSG_UNTHINKING_ACT,
+    MSG_NOTHING_THERE,
+    MSG_NOTHING_CLOSE_ENOUGH,
     MSG_SPELL_FIZZLES,
     MSG_HUH,
     MSG_EMPTY_HANDED,
@@ -649,6 +653,7 @@ enum command_type
 
 #ifdef CLUA_BINDINGS
     CMD_AUTOFIGHT,
+    CMD_AUTOFIGHT_NOMOVE,
 #endif
 
 #ifdef USE_TILE
@@ -835,11 +840,8 @@ enum conduct_type
     DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,
     DID_FRIEND_DIED,
-    DID_STABBING,                         // unused
     DID_UNCHIVALRIC_ATTACK,
     DID_POISON,
-    DID_DEDICATED_BUTCHERY,               // unused
-    // killings need no longer be dedicated (JPEG)
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
     DID_KILL_DEMON,
@@ -864,12 +866,9 @@ enum conduct_type
     DID_SPELL_MEMORISE,
     DID_SPELL_CASTING,
     DID_SPELL_PRACTISE,
-    DID_SPELL_NONUTILITY,                 // unused
     DID_CARDS,
-    DID_STIMULANTS,                       // unused
     DID_DRINK_BLOOD,
     DID_CANNIBALISM,
-    DID_EAT_MEAT,                         // unused
     DID_EAT_SOULED_BEING,                 // Zin
     DID_DELIBERATE_MUTATING,              // Zin
     DID_CAUSE_GLOWING,                    // Zin
@@ -877,12 +876,10 @@ enum conduct_type
     DID_CHAOS,                            // Zin (used chaotic weapon/magic)
     DID_DESECRATE_ORCISH_REMAINS,         // Beogh
     DID_DESTROY_ORCISH_IDOL,              // Beogh
-    DID_CREATE_LIFE,                      // unused
     DID_KILL_SLIME,                       // Jiyva
     DID_KILL_PLANT,                       // Fedhas
     DID_PLANT_KILLED_BY_SERVANT,          // Fedhas
     DID_HASTY,                            // Cheibriados
-    DID_GLUTTONY,                         // unused, previously Cheibriados
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
     DID_SOULED_FRIEND_DIED,               // Zin
@@ -894,6 +891,7 @@ enum conduct_type
     DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
     DID_DESTROY_SPELLBOOK,                // Sif Muna
     DID_EXPLORATION,                      // Ashenzari, wrath timers
+    DID_VIOLATE_HOLY_CORPSE,              // Zin/Ely/TSO butchering holy
 
     NUM_CONDUCTS
 };
@@ -1118,11 +1116,8 @@ enum dungeon_feature_type
     DNGN_ORCISH_IDOL,
     DNGN_SWAMP_TREE,
     DNGN_GRANITE_STATUE = 21,
-    DNGN_STATUE_RESERVED,
-
     // Highest solid grid value.
-    DNGN_MAXSOLID = DNGN_STATUE_RESERVED,
-
+    DNGN_MAXSOLID = DNGN_GRANITE_STATUE,
     // Lowest grid value which can be passed by walking etc.
     DNGN_MINMOVE = 31,
 
@@ -1256,6 +1251,9 @@ enum dungeon_feature_type
     DNGN_PERMADRY_FOUNTAIN,
     DNGN_ABANDONED_SHOP,
 
+    // Values below should never be saved.
+    DNGN_EXPLORE_HORIZON = 210, // dummy for redefinition
+
     NUM_FEATURES                       //  208
 };
 
@@ -1293,7 +1291,9 @@ enum duration_type
     DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
     DUR_REGENERATION,
     DUR_SWIFTNESS,
+#if TAG_MAJOR_VERSION == 32
     DUR_STONEMAIL,
+#endif
     DUR_CONTROLLED_FLIGHT,
     DUR_TELEPORT,
     DUR_CONTROL_TELEPORT,
@@ -1627,7 +1627,9 @@ enum job_type
     JOB_PRIEST,
     JOB_GLADIATOR,
     JOB_NECROMANCER,
+#if TAG_MAJOR_VERSION == 32
     JOB_PALADIN,
+#endif
     JOB_ASSASSIN,
     JOB_BERSERKER,
     JOB_HUNTER,
@@ -1643,13 +1645,17 @@ enum job_type
     JOB_CHAOS_KNIGHT,
     JOB_TRANSMUTER,
     JOB_HEALER,
+#if TAG_MAJOR_VERSION == 32
     JOB_REAVER,
+#endif
     JOB_STALKER,
     JOB_MONK,
     JOB_WARPER,
     JOB_WANDERER,
     JOB_ARTIFICER,                     //   Greenberg/Bane
     JOB_ARCANE_MARKSMAN,
+    JOB_DEATH_KNIGHT,
+    JOB_ABYSSAL_KNIGHT,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,
@@ -1742,6 +1748,7 @@ enum map_marker_type
     MAT_WIZ_PROPS,
     MAT_TOMB,
     MAT_MALIGN,
+    MAT_PHOENIX,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };
@@ -1860,7 +1867,9 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_TOAD,
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
+#if TAG_MAJOR_VERSION == 32
     MONS_BEAR,
+#endif
     MONS_GRIZZLY_BEAR,
     MONS_POLAR_BEAR,
     MONS_BLACK_BEAR,
@@ -1985,7 +1994,9 @@ enum monster_type                      // (int) menv[].type
     MONS_POTION_MIMIC,
     MONS_DOOR_MIMIC,
     MONS_PORTAL_MIMIC,
+#if TAG_MAJOR_VERSION == 32
     MONS_TRAP_MIMIC,
+#endif
     MONS_STAIR_MIMIC,
     MONS_SHOP_MIMIC,
     MONS_FOUNTAIN_MIMIC,
@@ -2346,6 +2357,9 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED_NASTY,
     MONS_SALT_PILLAR,
     MONS_TERPSICHORE,
+    MONS_BAT,
+    MONS_SPRIGGAN_AIR_MAGE,
+    MONS_FIRE_BAT,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2419,173 +2433,6 @@ enum mon_inv_type           // (int) menv[].inv[]
     MSLOT_SCROLL,
     MSLOT_GOLD,
     NUM_MONSTER_SLOTS
-};
-
-// XXX: These still need to be applied in mon-data.h
-// The order doesn't matter, these don't get saved.
-enum mon_spellbook_type
-{
-    MST_ORC_WIZARD_I,
-    MST_ORC_WIZARD_II,
-    MST_ORC_WIZARD_III,
-    MST_DEEP_DWARF_NECROMANCER,
-    MST_UNBORN_DEEP_DWARF,
-    MST_BK_TROG,
-    MST_BK_YREDELEMNUL,
-    MST_BK_OKAWARU,
-    MST_GUARDIAN_SERPENT,
-    MST_LICH_I,
-    MST_LICH_II,
-    MST_LICH_III,
-    MST_LICH_IV,
-    MST_HELLION,
-    MST_VAMPIRE,
-    MST_VAMPIRE_KNIGHT,
-    MST_VAMPIRE_MAGE,
-    MST_EFREET,
-    MST_KILLER_KLOWN,
-    MST_BRAIN_WORM,
-    MST_GIANT_ORANGE_BRAIN,
-    MST_RAKSHASA,
-    MST_GREAT_ORB_OF_EYES,
-    MST_KRAKEN,
-    MST_ORC_SORCERER,
-    MST_STEAM_DRAGON,
-    MST_HELL_KNIGHT_I,
-    MST_HELL_KNIGHT_II,
-    MST_NECROMANCER_I,
-    MST_NECROMANCER_II,
-    MST_WIZARD_I,
-    MST_WIZARD_II,
-    MST_WIZARD_III,
-    MST_WIZARD_IV,
-    MST_WIZARD_V,
-    MST_ORC_PRIEST,
-    MST_ORC_HIGH_PRIEST,
-    MST_MOTTLED_DRAGON,
-    MST_ICE_FIEND,
-    MST_SHADOW_FIEND,
-    MST_TORMENTOR,
-    MST_STORM_DRAGON,
-    MST_WHITE_IMP,
-    MST_YNOXINUL,
-    MST_NEQOXEC,
-    MST_HELLWING,
-    MST_SMOKE_DEMON,
-    MST_CACODEMON,
-    MST_GREEN_DEATH,
-    MST_BALRUG,
-    MST_BLUE_DEATH,
-    MST_TITAN,
-    MST_GOLDEN_DRAGON,
-    MST_DEEP_ELF_SUMMONER,
-    MST_DEEP_ELF_CONJURER_I,
-    MST_DEEP_ELF_CONJURER_II,
-    MST_DEEP_ELF_PRIEST,
-    MST_DEEP_ELF_HIGH_PRIEST,
-    MST_DEEP_ELF_DEMONOLOGIST,
-    MST_DEEP_ELF_ANNIHILATOR,
-    MST_DEEP_ELF_SORCERER,
-    MST_DEEP_ELF_DEATH_MAGE,
-    MST_KOBOLD_DEMONOLOGIST,
-    MST_NAGA,
-    MST_NAGA_MAGE,
-    MST_CURSE_SKULL,
-    MST_SHINING_EYE,
-    MST_FROST_GIANT,
-    MST_ANGEL,
-    MST_DAEVA,
-    MST_SHADOW_DRAGON,
-    MST_SPHINX,
-    MST_MUMMY,
-    MST_ELECTRIC_GOLEM,
-    MST_ORB_OF_FIRE,
-    MST_SHADOW_IMP,
-    MST_HELL_HOG,
-    MST_SWAMP_DRAGON,
-    MST_SWAMP_DRAKE,
-    MST_BOGGART,
-    MST_EYE_OF_DEVASTATION,
-    MST_QUICKSILVER_DRAGON,
-    MST_IRON_DRAGON,
-    MST_SKELETAL_WARRIOR,
-    MST_NORRIS,
-    MST_DEATH_DRAKE,
-    MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
-    MST_DRAC_CALLER,
-    MST_DRAC_SHIFTER,
-    MST_CURSE_TOE,
-    MST_ICE_STATUE,
-    MST_MERFOLK_AQUAMANCER,
-    MST_ALLIGATOR,
-    MST_JUMPING_SPIDER,
-    MST_CHERUB,
-    MST_PHOENIX,
-    MST_SILVER_STAR,
-    MST_BLESSED_TOE,
-    MST_SHEDU,
-    MST_OPHAN,
-    MST_SPIRIT,
-    MST_PALADIN,
-    MST_PEARL_DRAGON,
-    MST_BOG_MUMMY,
-    MST_SPRIGGAN_DRUID,
-    MST_TENTACLED_STARSPAWN,
-    MST_LURKING_HORROR,
-    MST_STARCURSED_MASS,
-    MST_ANCIENT_ZYME,
-    // unique monsters' "spellbooks"
-    MST_RUPERT,
-    MST_ROXANNE,
-    MST_SONJA,
-    MST_EUSTACHIO,
-    MST_ILSUIW,
-    MST_PRINCE_RIBBIT,
-    MST_NESSOS,
-    MST_KIRKE,
-    MST_MENKAURE,
-    MST_DOWAN,
-    MST_GERYON,
-    MST_DISPATER,
-    MST_ASMODEUS,
-    MST_ERESHKIGAL,
-    MST_ANTAEUS,
-    MST_MNOLEG,
-    MST_LOM_LOBON,
-    MST_CEREBOV,
-    MST_GLOORX_VLOQ,
-    MST_JESSICA,
-    MST_BERSERK_ESCAPE,
-    MST_GASTRONOK,
-    MST_MAURICE,
-    MST_KHUFU,
-    MST_NIKOLA,
-    MST_DISSOLUTION,
-    MST_AIZUL,
-    MST_EXECUTIONER,
-    MST_HAROLD,
-    MST_MARA,
-    MST_MARA_FAKE,
-    MST_BORIS,
-    MST_FREDERICK,
-    MST_THE_ENCHANTRESS,
-    MST_HELLEPHANT,
-    MST_GRINDER,
-    MST_IRON_GIANT,
-    MST_IRON_ELEMENTAL,
-    MST_MENNAS,
-    MST_SERPENT_OF_HELL_GEHENNA,
-    MST_SERPENT_OF_HELL_COCYTUS,
-    MST_SERPENT_OF_HELL_TARTARUS,
-    MST_SERPENT_OF_HELL_DIS,
-    MST_NERGALLE,
-    MST_JORY,
-    MST_TERPSICHORE,
-
-    MST_GHOST, // special
-    MST_TEST_SPAWNER,
-    NUM_MSTYPES,
-    MST_NO_SPELLS
 };
 
 enum mutation_type
@@ -3056,7 +2903,9 @@ enum spell_type
     SPELL_ENSLAVEMENT,
     SPELL_ANIMATE_DEAD,
     SPELL_PAIN,
+#if TAG_MAJOR_VERSION == 32
     SPELL_EXTENSION,
+#endif
     SPELL_CONTROL_UNDEAD,
     SPELL_ANIMATE_SKELETON,
     SPELL_VAMPIRIC_DRAINING,
@@ -3092,7 +2941,9 @@ enum spell_type
     SPELL_LETHAL_INFUSION,
     SPELL_IRON_SHOT,
     SPELL_STONE_ARROW,
+#if TAG_MAJOR_VERSION == 32
     SPELL_STONEMAIL,
+#endif
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
     SPELL_FLY,
@@ -3103,7 +2954,9 @@ enum spell_type
     SPELL_POISON_WEAPON,
     SPELL_RESIST_POISON,
     SPELL_PROJECTED_NOISE,
+#if TAG_MAJOR_VERSION == 32
     SPELL_ALTER_SELF,
+#endif
     SPELL_DEBUGGING_RAY,
     SPELL_RECALL,
     SPELL_AGONY,
@@ -3232,8 +3085,11 @@ enum spell_type
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_HOMUNCULUS,
     SPELL_SUMMON_HYDRA,
-    SPELL_TUKIMAS_DANCE_PARTY,
+    SPELL_TUKIMAS_BALL,
     SPELL_DARKNESS,
+    SPELL_MESMERISE,
+    SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
+    SPELL_FIRE_SUMMON,
 
     NUM_SPELLS
 };
@@ -3348,7 +3204,9 @@ enum zap_type
     ZAP_PAIN,
     ZAP_STICKY_FLAME,
     ZAP_DISPEL_UNDEAD,
+#if TAG_MAJOR_VERSION == 32
     ZAP_BONE_SHARDS,
+#endif
     ZAP_BANISHMENT,
     ZAP_DEGENERATION,
     ZAP_STING,

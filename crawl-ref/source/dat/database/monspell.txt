@@ -4,7 +4,7 @@
 #
 # 1) If the monster is a wizard or priest which has been polymorphed into
 #    a wizard without hands which is trying to cast a spell it kept across
-#    the polymporh, then the first key will be "polymorphed wizard" or
+#    the polymorph, then the first key will be "polymorphed wizard" or
 #    "polymorphed priest".
 # 2) The name of the spell being cast:
 #   a) If being cast by a wizard or priest monster with arms, first try
@@ -177,14 +177,14 @@ unseen Holy Flames cast
 
 Blessed flames are called forth!
 %%%%
-Tukima's Dance Party cast
+Tukima's Ball
 
 @The_monster@ hums a lilting melody.
 
 @The_monster@ sings a lively tune!
 
 %%%%
-unseen Tukima's Dance Party cast
+unseen Tukima's Ball
 
 You hear someone hum a lilting melody!
 
@@ -385,6 +385,8 @@ You hear a roar.
 curse skull cast
 
 @The_monster@ rattles @possessive@ jaw.
+%%%%
+silent curse skull cast
 
 @The_monster@ casts a spell.
 %%%%

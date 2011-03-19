@@ -213,6 +213,11 @@ void manage_fire_shield(int delay)
     if (you.duration[DUR_FIRE_SHIELD] < 0)
         you.duration[DUR_FIRE_SHIELD] = 0;
 
+    // Remove fire clouds on top of you
+    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
+        if (env.cloud[env.cgrid(you.pos())].type == CLOUD_FIRE)
+            delete_cloud_at(you.pos());
+
     if (!you.duration[DUR_FIRE_SHIELD])
     {
         mpr("Your ring of flames gutters out.", MSGCH_DURATION);

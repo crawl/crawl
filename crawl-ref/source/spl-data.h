@@ -77,7 +77,7 @@ struct spell_desc
 },
 
 {
-     SPELL_APPORTATION, "Apportation",
+    SPELL_APPORTATION, "Apportation",
      SPTYP_TRANSLOCATION,
      SPFLAG_TARG_OBJ | SPFLAG_NOT_SELF,
      1,
@@ -210,7 +210,7 @@ struct spell_desc
     SPELL_SLOW, "Slow",
      SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET,
-     3,
+     2,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
@@ -235,7 +235,7 @@ struct spell_desc
 },
 
 {
-     SPELL_PETRIFY, "Petrify",
+    SPELL_PETRIFY, "Petrify",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      4,
@@ -262,7 +262,7 @@ struct spell_desc
 
 {
     SPELL_INVISIBILITY, "Invisibility",
-     SPTYP_CHARMS | SPTYP_HEXES,
+     SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      6,
      200,
@@ -327,7 +327,7 @@ struct spell_desc
 },
 
 {
-     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
+    SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      3,
@@ -523,7 +523,7 @@ struct spell_desc
 
 {
     SPELL_TORNADO, "Tornado",
-     SPTYP_CONJURATION | SPTYP_AIR,
+     SPTYP_AIR,
      SPFLAG_AREA,
      9,
      200,
@@ -587,7 +587,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK, "Blink",
+    SPELL_BLINK, "Blink",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE,
      2,
@@ -600,7 +600,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK_RANGE, "Blink Range", // XXX needs better name
+    SPELL_BLINK_RANGE, "Blink Range", // XXX needs better name
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE | SPFLAG_MONSTER,
      2,
@@ -613,7 +613,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK_AWAY, "Blink Away",
+    SPELL_BLINK_AWAY, "Blink Away",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE | SPFLAG_MONSTER,
      2,
@@ -626,7 +626,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK_CLOSE, "Blink Close",
+    SPELL_BLINK_CLOSE, "Blink Close",
      SPTYP_TRANSLOCATION,
      SPFLAG_MONSTER,
      2,
@@ -657,7 +657,7 @@ struct spell_desc
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
      SPFLAG_BATTLE,
-     6,
+     5,
      200,
      -1, -1,
      0,
@@ -706,7 +706,7 @@ struct spell_desc
 },
 
 {
-   SPELL_ANIMATE_DEAD, "Animate Dead",
+    SPELL_ANIMATE_DEAD, "Animate Dead",
      SPTYP_NECROMANCY,
      SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_CORPSE_VIOLATING,
      4,
@@ -731,6 +731,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_EXTENSION, "Extension",
      SPTYP_CHARMS,
@@ -743,6 +744,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
@@ -1003,10 +1005,11 @@ struct spell_desc
      true
 },
 
+// Monster-only, players can use Lugonu's ability
 {
     SPELL_BANISHMENT, "Banishment",
      SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_CHAOTIC,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -1020,7 +1023,7 @@ struct spell_desc
     SPELL_CIGOTUVIS_DEGENERATION, "Cigotuvi's Degeneration",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC
-     | SPFLAG_CORPSE_VIOLATING,
+         | SPFLAG_CORPSE_VIOLATING,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -1069,7 +1072,8 @@ struct spell_desc
      false
 },
 
-{   SPELL_TUKIMAS_DANCE_PARTY, "Tukima's Dance Party",
+{
+    SPELL_TUKIMAS_BALL, "Tukima's Ball",
      SPTYP_HEXES,
      SPFLAG_NONE,
      9,
@@ -1135,7 +1139,7 @@ struct spell_desc
 
 {
     SPELL_FIRE_BRAND, "Fire Brand",
-     SPTYP_HEXES | SPTYP_FIRE,
+     SPTYP_CHARMS | SPTYP_FIRE,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1148,7 +1152,7 @@ struct spell_desc
 
 {
     SPELL_FREEZING_AURA, "Freezing Aura",
-     SPTYP_HEXES | SPTYP_ICE,
+     SPTYP_CHARMS | SPTYP_ICE,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1161,7 +1165,7 @@ struct spell_desc
 
 {
     SPELL_LETHAL_INFUSION, "Lethal Infusion",
-     SPTYP_HEXES | SPTYP_NECROMANCY,
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1198,6 +1202,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_STONEMAIL, "Stonemail",
      SPTYP_CHARMS | SPTYP_EARTH,
@@ -1210,6 +1215,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_SHOCK, "Shock",
@@ -1304,7 +1310,7 @@ struct spell_desc
 
 {
     SPELL_POISON_WEAPON, "Poison Weapon",
-     SPTYP_HEXES | SPTYP_POISON,
+     SPTYP_CHARMS | SPTYP_POISON,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      3,
      0,
@@ -1341,6 +1347,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_ALTER_SELF, "Alter Self",
      SPTYP_TRANSMUTATION,
@@ -1353,6 +1360,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_DEBUGGING_RAY, "Debugging Ray",
@@ -1396,7 +1404,7 @@ struct spell_desc
 {
     SPELL_SPIDER_FORM, "Spider Form",
      SPTYP_TRANSMUTATION | SPTYP_POISON,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      3,
      200,
      -1, -1,
@@ -1422,7 +1430,7 @@ struct spell_desc
 {
     SPELL_BLADE_HANDS, "Blade Hands",
      SPTYP_TRANSMUTATION,
-     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
      5,  // only removes weapon, so I raised this from 4 -- bwr
      200,
      -1, -1,
@@ -1435,7 +1443,7 @@ struct spell_desc
 {
     SPELL_STATUE_FORM, "Statue Form",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      6,
      200,
      -1, -1,
@@ -1448,7 +1456,7 @@ struct spell_desc
 {
     SPELL_ICE_FORM, "Ice Form",
      SPTYP_ICE | SPTYP_TRANSMUTATION,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      4, // doesn't allow for equipment, so I lowered this from 5 -- bwr
      200,
      -1, -1,
@@ -1461,7 +1469,7 @@ struct spell_desc
 {
     SPELL_DRAGON_FORM, "Dragon Form",
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      8,
      200,
      -1, -1,
@@ -1474,7 +1482,7 @@ struct spell_desc
 {
     SPELL_NECROMUTATION, "Necromutation",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
-     SPFLAG_HELPFUL | SPFLAG_CORPSE_VIOLATING,
+     SPFLAG_HELPFUL | SPFLAG_CORPSE_VIOLATING | SPFLAG_CHAOTIC,
      8,
      200,
      -1, -1,
@@ -1488,7 +1496,7 @@ struct spell_desc
     SPELL_DEATH_CHANNEL, "Death Channel",
      SPTYP_NECROMANCY,
      SPFLAG_HELPFUL,
-     8,
+     7,
      200,
      -1, -1,
      0,
@@ -1497,10 +1505,11 @@ struct spell_desc
      true
 },
 
+// Monster-only, players can use Kiku's ability
 {
     SPELL_SYMBOL_OF_TORMENT, "Symbol of Torment",
      SPTYP_NECROMANCY,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_MONSTER,
      6,
      0,
      -1, -1,
@@ -1615,7 +1624,7 @@ struct spell_desc
 },
 
 {
-     SPELL_PASSWALL, "Passwall",
+    SPELL_PASSWALL, "Passwall",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR | SPFLAG_ESCAPE | SPFLAG_NOT_SELF,
      3,
@@ -1759,7 +1768,7 @@ struct spell_desc
 
 {
     SPELL_WARP_BRAND, "Warp Weapon",
-     SPTYP_HEXES | SPTYP_TRANSLOCATION,
+     SPTYP_CHARMS | SPTYP_TRANSLOCATION,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      5,     // this is high for a reason - Warp brands are very powerful.
      0,
@@ -1772,7 +1781,7 @@ struct spell_desc
 
 {
     SPELL_SILENCE, "Silence",
-     SPTYP_HEXES | SPTYP_AIR,
+     SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_AREA,
      5,
      200,
@@ -1889,7 +1898,7 @@ struct spell_desc
 
 {
     SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
-     SPTYP_HEXES | SPTYP_EARTH,
+     SPTYP_CHARMS | SPTYP_EARTH,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -1967,7 +1976,7 @@ struct spell_desc
 
 {
     SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
-     SPTYP_HEXES | SPTYP_NECROMANCY,
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      5,     // fairly high level - potentially one of the best brands
      200,
@@ -2008,7 +2017,7 @@ struct spell_desc
     SPELL_GOLUBRIAS_PASSAGE, "Passage of Golubria",
      SPTYP_TRANSLOCATION,
      SPFLAG_GRID | SPFLAG_NEUTRAL | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
-     5,
+     4,
      0,
      LOS_RADIUS, LOS_RADIUS,
      0,
@@ -2281,7 +2290,7 @@ struct spell_desc
 },
 
 {
-     SPELL_BLINK_OTHER_CLOSE, "Blink Other Close",
+    SPELL_BLINK_OTHER_CLOSE, "Blink Other Close",
      SPTYP_TRANSLOCATION,
      SPFLAG_TARGET | SPFLAG_MONSTER,
      2,
@@ -2401,7 +2410,7 @@ struct spell_desc
 {
     SPELL_PORKALATOR, "Porkalator",
      SPTYP_HEXES | SPTYP_TRANSMUTATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -2699,15 +2708,15 @@ struct spell_desc
 
 {
     SPELL_TROGS_HAND, "Trog's Hand",
-    SPTYP_NONE,
-    SPFLAG_MONSTER,
-    3,
-    0,
-    -1, -1,
-    0,
-    NULL,
-    false,
-    false
+     SPTYP_NONE,
+     SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
 },
 
 {
@@ -2830,7 +2839,7 @@ struct spell_desc
 {
     SPELL_HOLY_BREATH, "Holy Breath",
      SPTYP_CONJURATION | SPTYP_HOLY,
-     SPFLAG_GRID | SPFLAG_AREA,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      5,
      200,
      6, 6,
@@ -2898,6 +2907,45 @@ struct spell_desc
      SPFLAG_NONE,
      7,
      200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MESMERISE, "Mesmerise",
+     SPTYP_HEXES,
+     SPFLAG_AREA,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MELEE, "melee",
+     0,
+     SPFLAG_TESTING,
+     1,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_FIRE_SUMMON, "Fire Summon",
+     SPTYP_SUMMONING | SPTYP_FIRE,
+     SPFLAG_MONSTER,
+     8,
+     0,
      -1, -1,
      0,
      NULL,

@@ -160,7 +160,7 @@ close DIFF;
 # HACK to convert CIA's idea of committeers names to match the IRC handles
 # Developers:
 $user =~ s/stefanor/sorear/;
-$user =~ s/evktalo/Keskitalo/;
+$user =~ s/eino.keskitalo/Keskitalo/;
 $user =~ s/dploog/dpeg/;
 $user =~ s/bookofjude/due/;
 $user =~ s/zelgadis/Matthew_Cline/;

@@ -145,7 +145,7 @@ impression about the weaknesses and strengths of the different species.
 
 For some combinations of species and background, you must make further
 choices before starting the game: For example, you must pick a starting
-god for Chaos Knights, and a starting weapon for Gladiators.
+book for Conjurers, and a starting weapon for Gladiators.
 
 You can choose a tutorial from the species and background selection
 screens by pressing 'Ctrl-T'. Three different tutorial combinations are
@@ -777,8 +777,8 @@ You can wear armour with the 'W' command, and take it off with the 'T'
 command. With '[' you can have a quick look at your current gear.
 
 Most armours can be improved by reading the appropriate scroll. Body
-armour can be enchanted up to the base value of AC it provides, bardings
-can go to +8, and shields can go to +3. Other gear is limited to +2.
+armour and bardings can be enchanted up to the base value of AC they
+provide. Shields can be enchanted up to +3. Other gear is limited to +2.
 
 % Food and Carrion
 ------------------
@@ -1135,7 +1135,8 @@ You will be asked afterwards if you really want to attend this circle.
 Note that the good gods will not accept demonic or undead devotees.
 
 If you like to start the game with a religion, choose your background
-from Healer, Priest, Paladin, Berserker or Chaos Knight.
+from Healer, Priest, Berserker, Chaos Knight, Abyssal Knight or Death
+Knight.
 
 
 ------------------------------------------------------------------------
@@ -1764,7 +1765,7 @@ on the part of the player.
       good at stabbing.
 
   Black Draconians can unleash huge electrical discharges, and are naturally
-      insulated. They are good at air magic but feel cumbersome with earth 
+      insulated. They are good at air magic but feel cumbersome with earth
       magic.
 
   Mottled Draconians are somewhat in touch with fire, yet are not weak
@@ -1915,7 +1916,7 @@ The Gladiator has been trained to fight in the ring, and so is versed
 in the art of fighting, but is not so good at anything else. In fact,
 Gladiators have never learned anything except bashing monsters with
 heavy things. They start with a nasty weapon, a small shield, light
-armour, a helmet (if they can wear one) and some nets or stones.
+armour, a helmet (if they can wear one) and some nets or darts.
 
 Monks:
 ------
@@ -1932,19 +1933,11 @@ should they prove worthy), but who forbids the use of spell magic. They
 usually enter the dungeon with a mace or axe, and dressed in animal
 skins.
 
-Paladins:
----------
-The Paladin is a servant of the Shining One, and has many of the
-abilities of the Fighter and the Priest. He or she enters the dungeon
-with a long sword, a shield, a ring mail or robe, and a healing potion.
-
 Priests:
 --------
-Priests serve either Zin, the ancient and revered God of Law, or
-Yredelemnul, the rather less pleasant God of Death. In addition, Hill
-Orcs may choose to follow the Orc god Beogh instead. Priests enter the
-dungeon with a traditional weapon and a priestly robe. Those who serve
-Zin also get a few healing potions.
+Priests serve Zin, the ancient and revered God of Law. Hill Orcs may
+choose to follow the Orc god Beogh instead. Priests enter the dungeon
+with a traditional weapon and a priestly robe.
 
 Healers:
 --------
@@ -1955,25 +1948,26 @@ and experience that way.
 
 Chaos Knights:
 --------------
-The Chaos Knight is a fighter who chooses to serve one of the Gods of
-Chaos. There are three choices: Xom, Makhleb or Lugonu. Xom is a very
-unpredictable (and possibly psychotic) entity who rewards or punishes
-according to whim. Makhleb the Destroyer is a more purposeful God, who
-appreciates destruction and offers a variety of very violent powers to
-the faithful. Lugonu the Unformed rules over the Abyss, and grants
-followers some control over that unpleasant place in return for
-spreading death and disorder.
+The Chaos Knight is a plaything of Xom. Xom is a very unpredictable
+(and possibly psychotic) entity who rewards or punishes according to whim.
+
+Death Knights:
+-------------
+The Death Knight is a fighter who aligns him or herself with the powers
+of death and worships Yredelemnul the Dark, who will soon grant the
+ability to re-animate the dead.
+
+Abyssal Knights:
+---------------
+The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of
+the Abyss. They are granted some power over the Abyss, and must spread
+death and disorder in return.
 
 Crusaders:
 ----------
 The Crusader is a decent fighter who can use the magical arts of
 enchantment to become more dangerous in battle. Crusaders start out
 lightly armed and armoured, but equipped with a book of martial spells.
-
-Reavers:
---------
-Reavers are warriors who learn the magics of destruction in order to
-complement their deadliness in hand combat.
 
 Warpers:
 --------
@@ -1999,9 +1993,8 @@ first several levels.
 Wizards:
 --------
 A Wizard is a magician who does not specialise in any area of magic.
-Wizards start with a variety of magical skills and with either Magic
-Dart or Summon Small Mammals in memory, depending on their starting
-book.
+Wizards start with a variety of magical skills and with Magic Dart
+memorised.
 
 Conjurers:
 ----------

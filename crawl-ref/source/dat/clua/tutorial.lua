@@ -17,8 +17,6 @@ function tutorial_message (text, onetime)
   -- defaults to true
   if onetime == nil then
     onetime = true
-  else
-    onetime = false
   end
 
   local data = {text=text, channel="tutorial", onetime=onetime}
