@@ -595,9 +595,7 @@ TAGS: overwritable layout allow_dup unrand
         corridors = corridors - 1
     end
 
-    if not crawl.one_chance_in(4) then
-        spotty_map { boxy = true, iterations = 100 }
-    end
+    spotty_map { boxy = true, iterations = 100 }
 
     random_wall_material(_G)
 }}
