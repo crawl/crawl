@@ -120,8 +120,6 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
         return ULL1 << MB_WITHDRAWN;
     case ENCH_ATTACHED:
         return ULL1 << MB_ATTACHED;
-    case ENCH_HELPLESS:
-        return ULL1 << MB_HELPLESS;
     case ENCH_BLEED:
         return ULL1 << MB_BLEEDING;
     case ENCH_DAZED:
@@ -152,7 +150,10 @@ static bool _blocked_ray(const coord_def &where,
 
 static bool _is_public_key(std::string key)
 {
-    return false;
+    if (key == "helpless")
+        return true;
+    else
+        return false;
 }
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
@@ -333,9 +334,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb |= ULL1 << MB_NAME_THE;
     if (m->flags & MF_NAME_ZOMBIE)
         mb |= ULL1 << MB_NAME_ZOMBIE;
-
-    if (m->has_ench(ENCH_HELPLESS))
-        mb |= ench_to_mb(*m, ENCH_HELPLESS);
 
     if (milev <= MILEV_NAME)
     {
@@ -682,7 +680,7 @@ std::string monster_info::common_name(description_level_type desc) const
 {
     std::ostringstream ss;
 
-    if (is(MB_HELPLESS))
+    if (props.exists("helpless"))
         ss << "helpless ";
 
     if (is(MB_SUBMERGED))

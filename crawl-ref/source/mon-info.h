@@ -62,7 +62,9 @@ enum monster_info_flags
     MB_FEAR_INSPIRING,
     MB_WITHDRAWN,
     MB_ATTACHED,
+#if TAG_MAJOR_VERSION == 32
     MB_HELPLESS,
+#endif
     MB_DAZED,
     MB_MUTE,
     MB_BLIND,

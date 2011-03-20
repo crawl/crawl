@@ -867,7 +867,8 @@ bool melee_attack::player_attack()
                 make_stringf("You %s %s.", attack_verb.c_str(),
                              defender->name(DESC_NOCAP_THE).c_str());
         }
-        defender->as_monster()->del_ench(ENCH_HELPLESS);
+        if (defender->props.exists("helpless"))
+            defender->props.erase("helpless");
 
         damage_done = defender->hurt(&you, damage_done,
                                      special_damage_flavour, false);
@@ -1199,7 +1200,7 @@ bool melee_attack::player_aux_test_hit()
     if (!auto_hit && to_hit >= evasion && helpful_evasion > evasion
         && defender_visible)
     {
-        defender->as_monster()->add_ench(ENCH_HELPLESS);
+        defender->props["helpless"] = true;
     }
 
     if (to_hit >= evasion || auto_hit)
@@ -1383,7 +1384,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
              defender->name(DESC_NOCAP_THE).c_str(),
              you.can_see(defender) ? ", but do no damage" : "");
     }
-    defender->as_monster()->del_ench(ENCH_HELPLESS);
+    if (defender->props.exists("helpless"))
+        defender->props.erase("helpless");
 
     if (defender->as_monster()->hit_points < 1)
     {
@@ -1525,7 +1527,7 @@ int melee_attack::player_hits_monster()
         || defender->as_monster()->petrifying()
             && !one_chance_in(2 + you.skill(SK_STABBING)))
     {
-        defender->as_monster()->add_ench(ENCH_HELPLESS);
+        defender->props["helpless"] = true;
         return (1);
     }
 

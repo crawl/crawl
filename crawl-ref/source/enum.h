@@ -1410,7 +1410,9 @@ enum enchant_type
     ENCH_ATTACHED,
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
     ENCH_LEVITATION,
+#if TAG_MAJOR_VERSION == 32
     ENCH_HELPLESS,
+#endif
     ENCH_LIQUEFYING,
     ENCH_PERM_TORNADO,
     ENCH_FAKE_ABJURATION,
