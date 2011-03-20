@@ -522,8 +522,8 @@ church0 WALL_CHURCH
 church1
 church2
 church3
-%weight 1
-church4
+#%weight 1
+#church4
 
 stone2_gray0 DNGN_STONE_WALL DNGN_STONE_WALL_LIGHTGRAY
 stone2_gray1
