@@ -2490,7 +2490,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 #if TAG_MAJOR_VERSION == 32
     else
         mi.props.clear();
-#endif;
+#endif
 }
 
 static void tag_construct_level_monsters(writer &th)
