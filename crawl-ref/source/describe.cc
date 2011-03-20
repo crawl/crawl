@@ -867,7 +867,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             break;
         case SPWPN_SPEED:
             description += "Attacks with this weapon take half as long "
-                "as usual.";
+                "as usual, albeit are slightly weaker.";
             break;
         case SPWPN_VORPAL:
             if (is_range_weapon(item))

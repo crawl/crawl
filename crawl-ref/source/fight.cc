@@ -1656,6 +1656,9 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         // Demonspawn get a damage bonus for demonic weapons.
         if (you.species == SP_DEMONSPAWN && is_demonic(*weapon))
             damage += random2(3);
+
+        if (get_weapon_brand(*weapon) == SPWPN_SPEED)
+            damage = div_rand_round(damage * 4, 5);
     }
 
     return (damage);
@@ -4506,6 +4509,9 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
              attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
 #endif
     }
+
+    if (weapon && get_weapon_brand(*weapon) == SPWPN_SPEED)
+        damage = div_rand_round(damage * 4, 5);
 
     // If the defender is asleep, the attacker gets a stab.
     if (defender && defender->asleep())

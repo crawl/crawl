@@ -1341,6 +1341,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     std::string ammo_name;
 
     bool returning = false;
+    bool speed_brand = false;
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
@@ -1552,6 +1553,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
             // Speed bows take 50% less time to use than
             // ordinary bows.
             speed_delta = div_rand_round(throw_energy, 2);
+            speed_brand = true;
         }
 
         mons->speed_increment += speed_delta;
@@ -1663,6 +1665,9 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         pbolt.hit         = pbolt.hit * 120 / 100;
         pbolt.damage.size = pbolt.damage.size * 120 / 100;
     }
+
+    if (speed_brand)
+        pbolt.damage.size = div_rand_round(pbolt.damage.size * 4, 5);
 
     scale_dice(pbolt.damage);
 
