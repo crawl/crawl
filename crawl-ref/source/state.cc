@@ -217,8 +217,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         {
             set_auto_exclude(mon);
 
-            std::string text = get_monster_equipment_desc(mon, DESC_FULL,
-                                                          DESC_CAP_A, false);
+            std::string text = get_monster_equipment_desc(mon, DESC_WEAPON);
             text += " comes into view.";
             mpr(text, MSGCH_WARN);
         }
