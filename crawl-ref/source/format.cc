@@ -51,7 +51,9 @@ void display_tagged_block(const std::string &s)
 
     int x = wherex();
     int y = wherey();
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    const unsigned int max_y = cgetsize(GOTO_CRT).y;
+    const int size = std::min(lines.size(), max_y - y + 1);
+    for (int i = 0; i < size; ++i)
     {
         cgotoxy(x, y);
         lines[i].display();
