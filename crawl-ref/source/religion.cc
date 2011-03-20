@@ -2885,14 +2885,10 @@ void excommunication(god_type new_god)
     switch (old_god)
     {
     case GOD_XOM:
-        xom_acts(false, abs(you.piety - 100) * 2);
         _inc_penance(old_god, 50);
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
-                      5 + you.experience_level, random2avg(88, 3),
-                      "the malice of Kikubaaqudgha");
         _inc_penance(old_god, 30);
         break;
 
@@ -2904,26 +2900,14 @@ void excommunication(god_type new_god)
                                GOD_YREDELEMNUL);
             add_daction(DACT_ALLY_YRED_SLAVE);
         }
-
-        MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
-                      5 + you.experience_level, random2avg(88, 3),
-                      "the anger of Yredelemnul");
         _inc_penance(old_god, 30);
         break;
 
     case GOD_VEHUMET:
-        MiscastEffect(&you, -old_god,
-                      (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
-                      8 + you.experience_level, random2avg(98, 3),
-                      "the wrath of Vehumet");
         _inc_penance(old_god, 25);
         break;
 
     case GOD_MAKHLEB:
-        MiscastEffect(&you, -old_god,
-                      (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
-                      8 + you.experience_level, random2avg(98, 3),
-                      "the fury of Makhleb");
         _inc_penance(old_god, 25);
         break;
 
@@ -2933,9 +2917,7 @@ void excommunication(god_type new_god)
 
         add_daction(DACT_ALLY_TROG);
 
-        // Penance has to come before retribution to prevent "mollify"
         _inc_penance(old_god, 50);
-        divine_retribution(old_god);
         break;
 
     case GOD_BEOGH:
@@ -2953,7 +2935,6 @@ void excommunication(god_type new_god)
             fall_into_a_pool(you.pos(), true, grd(you.pos()));
 
         _inc_penance(old_god, 50);
-        // No instant retribution, the orcs could be farmed.
         break;
 
     case GOD_SIF_MUNA:
@@ -2966,11 +2947,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_LUGONU:
-        if (you.level_type == LEVEL_DUNGEON)
-        {
-            simple_god_message(" casts you into the Abyss!", old_god);
-            banished(DNGN_ENTER_ABYSS, "Lugonu's wrath");
-        }
         _inc_penance(old_god, 50);
         break;
 
@@ -3041,14 +3017,6 @@ void excommunication(god_type new_god)
         if (you.duration[DUR_SLIMIFY])
             you.duration[DUR_SLIMIFY] = 0;
 
-        if (you.can_safely_mutate())
-        {
-            god_speaks(old_god, "You feel Jiyva alter your body.");
-
-            for (int i = 0; i < 2; ++i)
-                mutate(RANDOM_BAD_MUTATION, true, false, true);
-        }
-
         _inc_penance(old_god, 30);
         break;
     case GOD_FEDHAS:
@@ -3058,7 +3026,6 @@ void excommunication(god_type new_god)
             add_daction(DACT_ALLY_PLANT);
         }
         _inc_penance(old_god, 30);
-        divine_retribution(old_god);
         break;
 
     case GOD_ASHENZARI:
