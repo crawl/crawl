@@ -253,6 +253,36 @@ void update_monsters_in_view()
             mpr(_desc_mons_type_map(genera), MSGCH_WARN);
         else
             mprf(MSGCH_WARN, "%d monsters come into view.", size);
+
+        bool warning = false;
+        std::string warning_msg = "Ashenzari warns you: ";
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            const monster* mon = monsters[i];
+            if (!mon->props.exists("ash_id"))
+                continue;
+
+            if (warning)
+                warning_msg += " ";
+            else
+                warning = true;
+
+            if (size == 1)
+                warning_msg += mon->pronoun(PRONOUN_CAP);
+            else if (mon->type == MONS_DANCING_WEAPON)
+                warning_msg += "There";
+            else if (types[mon->type] == 1)
+                warning_msg += mon->full_name(DESC_CAP_THE);
+            else
+                warning_msg += mon->full_name(DESC_CAP_A);
+
+            warning_msg += " is";
+            warning_msg += get_monster_equipment_desc(mon, DESC_IDENTIFIED,
+                                                      DESC_NONE);
+            warning_msg += ".";
+        }
+        if (warning)
+            mpr(warning_msg, MSGCH_GOD);
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever

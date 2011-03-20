@@ -257,6 +257,14 @@ private:
 
 };
 
+// Monster equipment description level.
+enum mons_equip_desc_level_type
+{
+    DESC_WEAPON,
+    DESC_FULL,
+    DESC_IDENTIFIED,
+};
+
 #ifndef USE_TILE
 char mlist_index_to_letter(int index);
 #endif
@@ -276,7 +284,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
 void describe_floor();
 std::string get_monster_equipment_desc(const monster_info& mi,
-                                bool full_desc = true,
+                                mons_equip_desc_level_type level = DESC_FULL,
                                 description_level_type mondtype = DESC_CAP_A,
                                 bool print_attitude = false);
 

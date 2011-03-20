@@ -27,6 +27,7 @@
 #include "exclude.h"
 #include "food.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -1623,19 +1624,32 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         else
             text += " comes into view.";
 
+        ash_id_monster_equipment(const_cast<monster* >(mon));
+        bool ash_id = mon->props.exists("ash_id") && mon->props["ash_id"];
+        std::string ash_warning;
+
         const std::string mweap =
-            get_monster_equipment_desc(mon, false, DESC_NONE);
+            get_monster_equipment_desc(mon, ash_id ? DESC_IDENTIFIED
+                                                   : DESC_WEAPON,
+                                       DESC_NONE);
 
         if (!mweap.empty())
         {
-            text += " " + mon->pronoun(PRONOUN_CAP)
-                    + " is" + mweap + ".";
+            if (ash_id)
+                ash_warning = "Ashenzari warns you:";
+
+            (ash_id ? ash_warning : text) += " " + mon->pronoun(PRONOUN_CAP)
+                                             + " is" + mweap + ".";
         }
 
         if (msgs_buf)
             msgs_buf->push_back(text);
         else
+        {
             mpr(text, MSGCH_WARN);
+            if (ash_id)
+                mpr(ash_warning, MSGCH_GOD);
+        }
         const_cast<monster* >(mon)->seen_context = "just seen";
     }
 

@@ -6,6 +6,7 @@
 #ifndef GODPASSIVE_H
 #define GODPASSIVE_H
 
+#include "mon-info.h"
 #include "religion-enum.h"
 
 enum che_boost_type
@@ -41,6 +42,7 @@ int ash_bondage_level(int type_only = 0);
 void ash_check_bondage();
 bool ash_id_item(item_def& item, bool silent = true);
 void ash_id_inventory();
+void ash_id_monster_equipment(monster* mon);
 int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 
