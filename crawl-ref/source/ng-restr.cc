@@ -619,6 +619,7 @@ char_choice_restriction book_restriction(startup_book_type booktype,
             case SP_MERFOLK:
             case SP_HALFLING:
             case SP_VAMPIRE:
+            case SP_KENKU:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
