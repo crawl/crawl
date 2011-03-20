@@ -430,6 +430,33 @@ void ash_id_inventory()
     }
 }
 
+void ash_id_monster_equipment(monster* mon)
+{
+    if (you.religion != GOD_ASHENZARI)
+        return;
+
+    bool id = false;
+
+    for (unsigned int i = 0; i < MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        if (mon->inv[i] == NON_ITEM)
+            continue;
+
+        item_def &item = mitm[mon->inv[i]];
+        if (!item_is_branded(item))
+            continue;
+
+        else if (x_chance_in_y(you.bondage_level, 3))
+        {
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+            id = true;
+        }
+    }
+
+    if (id)
+        mon->props["ash_id"] = true;
+}
+
 static bool is_ash_portal(dungeon_feature_type feat)
 {
     switch (feat)

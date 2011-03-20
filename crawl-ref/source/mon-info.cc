@@ -15,6 +15,7 @@
 #include "env.h"
 #include "fight.h"
 #include "ghost.h"
+#include "itemname.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -482,6 +483,11 @@ monster_info::monster_info(const monster* m, int milev)
                 ok = mons_is_mimic(type);
             else if (attitude == ATT_FRIENDLY)
                 ok = true;
+            else if (m->props.exists("ash_id")
+                     && item_type_known(mitm[m->inv[i]]))
+            {
+                ok = true;
+            }
             else if (i == MSLOT_ALT_WEAPON)
                 ok = two_weapons;
             else if (i == MSLOT_MISSILE)
