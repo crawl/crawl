@@ -97,6 +97,7 @@ struct monster_info_base
     flight_type fly;
     bool two_weapons;
     bool no_regen;
+    CrawlHashTable props;
 };
 
 // Monster info used by the pane; precomputes some data
@@ -127,6 +128,7 @@ struct monster_info : public monster_info_base
             if (mi.inv[i].get())
                 inv[i].reset(new item_def(*mi.inv[i]));
         }
+        props = mi.props;
     }
 
     monster_info& operator=(const monster_info& p)
