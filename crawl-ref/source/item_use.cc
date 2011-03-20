@@ -2291,6 +2291,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
     int slayDam      = 0;
+    bool speed_brand = false;
 
     if (you.confused())
         thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
@@ -2713,6 +2714,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             more();
             you.wield_change = true;
         }
+
+        if (get_weapon_brand(launcher) == SPWPN_SPEED)
+            speed_brand = true;
     }
 
     // check for returning ammo from launchers
@@ -2949,6 +2953,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.hit += ammoHitBonus + lnchHitBonus;
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
     }
+
+    if (speed_brand)
+        pbolt.damage.size = div_rand_round(pbolt.damage.size * 4, 5);
 
     // Add in bonus (only from Portal Projectile for now).
     if (acc_bonus != DEBUG_COOKIE)
