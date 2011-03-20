@@ -2462,6 +2462,8 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallString(th, mi.quote);
     marshallUnsigned(th, mi.fly);
     marshallUnsigned(th, mi.mimic_feature);
+
+    mi.props.write(th);
 }
 
 void unmarshallMonsterInfo(reader &th, monster_info& mi)
@@ -2480,6 +2482,15 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.quote = unmarshallString(th);
     unmarshallUnsigned(th, mi.fly);
     unmarshallUnsigned(th, mi.mimic_feature);
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_MINFO_PROP)
+#endif
+        mi.props.read(th);
+#if TAG_MAJOR_VERSION == 32
+    else
+        mi.props.clear();
+#endif;
 }
 
 static void tag_construct_level_monsters(writer &th)

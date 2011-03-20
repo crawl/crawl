@@ -150,6 +150,11 @@ static bool _blocked_ray(const coord_def &where,
     return (true);
 }
 
+static bool _is_public_key(std::string key)
+{
+    return false;
+}
+
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 {
     mb = 0;
@@ -204,6 +209,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
+
+    props.clear();
 }
 
 monster_info::monster_info(const monster* m, int milev)
@@ -240,8 +247,18 @@ monster_info::monster_info(const monster* m, int milev)
         type = m->type;
     }
 
+    props.clear();
+
     if (type_known)
     {
+        if (!m->props.empty())
+        {
+            CrawlHashTable::hash_map_type::const_iterator i = m->props.begin();
+            for (; i != m->props.end(); i++)
+                if (_is_public_key(i->first))
+                    props[i->first] = i->second;
+        }
+
         draco_type =
             mons_genus(type) == MONS_DRACONIAN ? ::draco_subspecies(m) : type;
 
