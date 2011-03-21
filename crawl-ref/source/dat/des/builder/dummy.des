@@ -5,9 +5,28 @@
 # This represents the old 8/9 chance of *not* placing a regular vault.
 NAME: primary_dummy
 TAGS: dummy
-DEPTH: 1-100, Pan, Abyss, !Swamp
+DEPTH: 1-100, !D:20-27, Pan, Abyss, !Swamp
 ORIENT: float
 CHANCE: 0 : 8888
+MAP
+x
+ENDMAP
+
+# Levels deep in the dungeon receive progressively more regular vaults.
+NAME: primary_dummy_4
+TAGS: dummy
+DEPTH: D:20-23
+ORIENT: float
+CHANCE: 0 : 7500
+MAP
+x
+ENDMAP
+
+NAME: primary_dummy_2
+TAGS: dummy
+DEPTH: D:24-25
+ORIENT: float
+CHANCE: 0 : 5000
 MAP
 x
 ENDMAP
