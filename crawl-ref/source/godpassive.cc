@@ -314,6 +314,26 @@ static bool _is_slot_cursed(equipment_type eq)
     return true;
 }
 
+bool ash_not_wearing_uncursed()
+{
+    if (you.religion != GOD_ASHENZARI)
+        return false;
+
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
+        if (you_can_wear(i, true) && you.equip[i] != -1)
+        {
+            const item_def& item = you.inv[you.equip[i]];
+            if (!item.cursed()
+                && (i != EQ_WEAPON
+                    || item.base_type == OBJ_WEAPONS
+                    || item.base_type == OBJ_STAVES))
+            {
+                return false;
+            }
+        }
+    return true;
+}
+
 static bool _jewel_auto_id(const item_def& item)
 {
     if (item.base_type != OBJ_JEWELLERY)
