@@ -1305,9 +1305,15 @@ static bool _handle_wand(monster* mons, bolt &beem)
         if (was_visible)
         {
             if (niceWand || !beem.is_enchantment() || beem.obvious_effect)
+            {
                 set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+                mons->props["wand_known"] = true;
+            }
             else
+            {
                 set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
+                mons->props["wand_known"] = false;
+            }
 
             // Increment zap count.
             if (wand.plus2 >= 0)
