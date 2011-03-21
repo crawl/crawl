@@ -470,6 +470,19 @@ void warn_shield_penalties()
     }
 }
 
+void warn_armour_penalties()
+{
+    const int penalty = 3 * player_raw_body_armour_evasion_penalty() - you.strength();
+
+    if (penalty > 0)
+    {
+        mprf(MSGCH_WARN, "Your low strength makes using this armour %smore difficult.",
+             (penalty < 3) ? "a little " :
+             (penalty < 5) ? "" :
+                             "a lot ");
+    }
+}
+
 //---------------------------------------------------------------
 //
 // armour_prompt

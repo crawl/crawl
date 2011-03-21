@@ -727,6 +727,7 @@ int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
 int player_energy(void);
 
+int player_raw_body_armour_evasion_penalty();
 int player_adjusted_shield_evasion_penalty(int scale);
 int player_adjusted_body_armour_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
