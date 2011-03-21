@@ -804,4 +804,42 @@ void wizard_list_levels()
     }
     mprf("%-10s : %s", "`- total", cnts.c_str());
 }
+
+void wizard_recreate_level()
+{
+    // Need to allow reuse of vaults, otherwise we'd run out of them fast.
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+        env.level_map_ids(*ri) = INVALID_MAP_INDEX;
+    for (vault_placement_refv::const_iterator vp = env.level_vaults.begin();
+         vp != env.level_vaults.end(); ++vp)
+    {
+        (*vp)->seen = false;
+    }
+    dgn_erase_unused_vault_placements();
+
+    level_id lev = level_id::current();
+    dungeon_feature_type stair_taken = DNGN_STONE_STAIRS_DOWN_I;
+
+    if (lev.depth == 1 && lev != BRANCH_MAIN_DUNGEON)
+        stair_taken = branches[lev.branch].entry_stairs;
+
+    if (lev.level_type == LEVEL_DUNGEON)
+        you.get_place_info().levels_seen--;
+    Generated_Levels.erase(lev);
+    const bool newlevel = load(stair_taken, LOAD_START_GAME, lev);
+#ifdef USE_TILE
+    tile_new_level(newlevel);
+#else
+    UNUSED(newlevel);
+#endif
+    if (!crawl_state.test)
+        save_game_state();
+    new_level();
+    seen_monsters_react();
+    viewwindow();
+
+    travel_cache.erase_level_info(lev);
+    trackers_init_new_level(true);
+}
+
 #endif
