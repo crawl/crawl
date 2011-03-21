@@ -19,6 +19,7 @@ public:
 
     int     to_hit;
     int     damage_done;
+    int     special_damage; // We'll see if we can remove this
     int     aux_damage;
     
     bool    stab_attempt;
@@ -69,12 +70,12 @@ public:
     virtual int adjust_to_hit(bool random = true);
 
     // Exact copies of their melee_attack predecessors
+    std::string actor_name(const actor *a, description_level_type desc,
+                           bool actor_visible, bool actor_invisible);
+    std::string actor_pronoun(const actor *a, pronoun_type ptyp,
+                              bool actor_visible);
     std::string anon_name(description_level_type desc,
                           bool actor_invisible);
-    std::string attacker_name(const actor *a, description_level_type desc,
-                              bool actor_visible, bool actor_invisible);
-    std::string attacker_pronoun(const actor *a, pronoun_type ptyp,
-                                 bool actor_visible);
     std::string anon_pronoun(pronoun_type ptyp);
     
 // Private Methods
@@ -91,9 +92,6 @@ private:
     // Determine if we're blocking (partially or entirely)
     virtual bool attack_shield_blocked(bool verbose);
     virtual bool apply_damage_brand();
-    void calc_elemental_brand_damage(beam_type flavour,
-                                     int res,
-                                     const char *verb);
 
     // Ouput methods
     std::string atk_name(description_level_type desc) const;
@@ -101,7 +99,9 @@ private:
     std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
                          iflags_t ignore_flags = ISFLAG_KNOW_CURSE
                                                | ISFLAG_KNOW_PLUSES) const;
-    
+    void calc_elemental_brand_damage(beam_type flavour,
+                                     int res,
+                                     const char *verb);    
 }
 
 #endif
