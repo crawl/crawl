@@ -92,7 +92,7 @@ ENDMAP
 # Dummy probability balancer vault for non-dungeon branches.
 #
 NAME: dummy_balancer_other
-DEPTH: 1-, !D
+DEPTH: 1-, !D, !Zot:1-4
 # Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
 # by depth.
 TAGS: dummy
