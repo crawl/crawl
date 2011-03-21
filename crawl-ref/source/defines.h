@@ -67,6 +67,7 @@ enum extra_monster_index_type
     MHITYOU,
 
     ZOT_TRAP_MISCAST,
+    HELL_EFFECT_MISCAST,
     WIELD_MISCAST,
     MELEE_MISCAST,
     MISC_MISCAST,
