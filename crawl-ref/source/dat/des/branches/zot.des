@@ -613,7 +613,7 @@ PLACE:      Zot:1
 TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  lightgrey
-LROCKCOL:   lightgrey
+LROCKCOL:   white
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_zot_white
 MAP
@@ -624,7 +624,7 @@ NAME:       hall_of_Zot_2
 PLACE:      Zot:2
 TAGS:       transparent no_dump
 ORIENT:     float
-LFLOORCOL:  lightgrey
+LFLOORCOL:  white
 LROCKCOL:   blue
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_zot_blue
