@@ -1748,63 +1748,6 @@ bool antitrain_other(skill_type sk, bool show_zero)
                    && you.skill_order[sk] < you.skill_order[opposite]));
 }
 
-void wield_warning(bool newWeapon)
-{
-    // Early out - no weapon.
-    if (!you.weapon())
-         return;
-
-    const item_def& wep = *you.weapon();
-
-    // Early out - don't warn for non-weapons or launchers.
-    if (wep.base_type != OBJ_WEAPONS || is_range_weapon(wep))
-        return;
-
-    // Don't warn if the weapon is OK, of course.
-    if (effective_stat_bonus() > -4)
-        return;
-
-    std::string msg;
-
-    // We know if it's an artefact because we just wielded
-    // it, so no information leak.
-    if (is_artefact(wep))
-        msg = "the";
-    else if (newWeapon)
-        msg = "this";
-    else
-        msg = "your";
-    msg += " " + wep.name(DESC_BASENAME);
-    const char* mstr = msg.c_str();
-
-    if (you.strength() < you.dex())
-    {
-        if (you.strength() < 11)
-        {
-            mprf(MSGCH_WARN, "You have %strouble swinging %s.",
-                 (you.strength() < 7) ? "" : "a little ", mstr);
-        }
-        else
-        {
-            mprf(MSGCH_WARN, "You'd be more effective with "
-                 "%s if you were stronger.", mstr);
-        }
-    }
-    else
-    {
-        if (you.dex() < 11)
-        {
-            mprf(MSGCH_WARN, "Wielding %s is %s awkward.",
-                 mstr, (you.dex() < 7) ? "fairly" : "a little");
-        }
-        else
-        {
-            mprf(MSGCH_WARN, "You'd be more effective with "
-                 "%s if you were nimbler.", mstr);
-        }
-    }
-}
-
 bool is_invalid_skill(skill_type skill)
 {
     if (skill < 0 || skill >= NUM_SKILLS)

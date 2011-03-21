@@ -379,9 +379,6 @@ static void _launch_game()
 
     _god_greeting_message(game_start);
 
-    // Warn player about their weapon, if unsuitable.
-    wield_warning(false);
-
     if (!crawl_state.game_is_tutorial())
         mpr("Press <w>?</w> for a list of commands and other information.");
 
