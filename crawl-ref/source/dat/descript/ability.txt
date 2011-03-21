@@ -267,9 +267,9 @@ Summon huge angry allies to wreak havoc.
 # Elyvilon
 Divine Protection
 
-Beseech Elyvilon to save your life. If you would have died, The Healer may undo the killing blow. Especially pious individuals may be certain of this help, although in that case it costs piety -- if you would actually have died, as merely asking is free.
+Beseech Elyvilon to save your life. If you are mortally wounded, the Healer may undo the killing blow. Especially pious individuals may be certain of this help, but in that case, any actual intervention costs piety (as opposed to merely asking for intervention, which is always free).
 
-Beware, killing others while asking for being spared yourself is a major sin!
+Beware: killing others while asking to be spared yourself is a major sin!
 %%%%
 Lesser Healing
 
