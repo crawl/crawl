@@ -106,7 +106,7 @@ ENDMAP
 # Elevator
 #
 NAME:    lemuel_elevator
-DEPTH:   D, Vault, Elf, Crypt, Zot, Tar, Dis, Geh, Coc
+DEPTH:   D:2-26, Vault:2-7, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
 ORIENT:  float
 TAGS:    allow_dup
 SUBST:   m:mn
