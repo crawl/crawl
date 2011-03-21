@@ -937,6 +937,9 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
     if (get_item_slot(arm) == EQ_SHIELD)
         warn_shield_penalties();
 
+    if (get_item_slot(arm) == EQ_BODY_ARMOUR)
+        warn_armour_penalties();
+
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 }

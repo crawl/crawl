@@ -106,6 +106,7 @@ int launcher_final_speed(const item_def &launcher,
                          const item_def *shield);
 
 void warn_shield_penalties();
+void warn_armour_penalties();
 
 bool wearing_slot(int inv_slot);
 
