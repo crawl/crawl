@@ -430,6 +430,40 @@ void ash_id_inventory()
     }
 }
 
+static bool _is_offensive_wand(const item_def& item)
+{
+    switch (item.sub_type)
+    {
+    // Monsters don't use those, so no need to warn the player about them.
+    case WAND_ENSLAVEMENT:
+    case WAND_RANDOM_EFFECTS:
+    case WAND_DIGGING:
+
+    // Monsters will use them on themselves.
+    case WAND_HASTING:
+    case WAND_HEALING:
+    case WAND_INVISIBILITY:
+        return false;
+
+    case WAND_FLAME:
+    case WAND_FROST:
+    case WAND_SLOWING:
+    case WAND_MAGIC_DARTS:
+    case WAND_PARALYSIS:
+    case WAND_FIRE:
+    case WAND_COLD:
+    case WAND_CONFUSION:
+    case WAND_FIREBALL:
+    case WAND_TELEPORTATION:
+    case WAND_LIGHTNING:
+    case WAND_POLYMORPH_OTHER:
+    case WAND_DRAINING:
+    case WAND_DISINTEGRATION:
+        return true;
+    }
+    return false;
+}
+
 void ash_id_monster_equipment(monster* mon)
 {
     if (you.religion != GOD_ASHENZARI)
@@ -437,18 +471,28 @@ void ash_id_monster_equipment(monster* mon)
 
     bool id = false;
 
-    for (unsigned int i = 0; i < MSLOT_LAST_VISIBLE_SLOT; ++i)
+    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (mon->inv[i] == NON_ITEM)
             continue;
 
         item_def &item = mitm[mon->inv[i]];
-        if (!item_is_branded(item))
-            continue;
-
-        else if (x_chance_in_y(you.bondage_level, 3))
+        if ((i != MSLOT_WAND || !_is_offensive_wand(item))
+            && !item_is_branded(item))
         {
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+            continue;
+        }
+
+        if (x_chance_in_y(you.bondage_level, 3))
+        {
+            if (i == MSLOT_WAND)
+            {
+                set_ident_type(OBJ_WANDS, item.sub_type, ID_KNOWN_TYPE);
+                mon->props["wand_known"] = true;
+            }
+            else
+                set_ident_flags(item, ISFLAG_KNOW_TYPE);
+
             id = true;
         }
     }

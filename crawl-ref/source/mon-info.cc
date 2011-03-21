@@ -150,7 +150,7 @@ static bool _blocked_ray(const coord_def &where,
 
 static bool _is_public_key(std::string key)
 {
-    if (key == "helpless")
+    if (key == "helpless" || key == "wand_known")
         return true;
     else
         return false;
@@ -498,6 +498,8 @@ monster_info::monster_info(const monster* m, int milev)
                 ok = mons_is_mimic(type);
             else if (attitude == ATT_FRIENDLY)
                 ok = true;
+            else if (i == MSLOT_WAND)
+                ok = props.exists("wand_known") && props["wand_known"];
             else if (m->props.exists("ash_id")
                      && item_type_known(mitm[m->inv[i]]))
             {

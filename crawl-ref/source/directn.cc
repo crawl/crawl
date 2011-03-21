@@ -3666,6 +3666,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
         item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
         item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
+        item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
 
         if (level == DESC_IDENTIFIED)
         {
@@ -3679,6 +3680,9 @@ std::string get_monster_equipment_desc(const monster_info& mi,
                 mon_alt = 0;
         }
 
+        const bool mon_has_wand = mi.props.exists("wand_known");
+        const bool mon_carry = mon_alt || mon_has_wand;
+
         // _describe_monster_weapon already took care of this
         if (mi.two_weapons)
             mon_alt = 0;
@@ -3688,7 +3692,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mon_arm)
         {
             if (found_sth)
-                desc += (!mon_shd && !mon_qvr && !mon_alt) ? " and" : ",";
+                desc += (!mon_shd && !mon_qvr && !mon_carry) ? " and" : ",";
             else
                 found_sth = true;
 
@@ -3699,7 +3703,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mon_shd)
         {
             if (found_sth)
-                desc += (!mon_qvr && !mon_alt) ? " and" : ",";
+                desc += (!mon_qvr && !mon_carry) ? " and" : ",";
             else
                 found_sth = true;
 
@@ -3710,7 +3714,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mon_qvr)
         {
             if (found_sth)
-                desc += !mon_alt ? " and" : ",";
+                desc += !mon_carry ? " and" : ",";
             else
                 found_sth = true;
 
@@ -3718,13 +3722,27 @@ std::string get_monster_equipment_desc(const monster_info& mi,
             desc += mon_qvr->name(DESC_NOCAP_A);
         }
 
-        if (mon_alt)
+        if (mon_carry)
         {
             if (found_sth)
                 desc += " and";
 
             desc += " carrying ";
-            desc += mon_alt->name(DESC_NOCAP_A);
+
+            if (mon_alt)
+            {
+                desc += mon_alt->name(DESC_NOCAP_A);
+                if (mon_has_wand)
+                    desc += " and ";
+            }
+
+            if (mon_has_wand)
+            {
+                if (mi.props["wand_known"])
+                    desc += mon_wnd->name(DESC_NOCAP_A);
+                else
+                    desc += "a wand";
+            }
         }
     }
 

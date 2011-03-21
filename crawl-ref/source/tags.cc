@@ -2883,6 +2883,18 @@ void unmarshallMonster(reader &th, monster& m)
     m.colour         = unmarshallShort(th);
 
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_MON_INV_ORDER)
+        {
+            if (j == MSLOT_WAND || j == MSLOT_MISCELLANY)
+                m.inv[j + 1] = unmarshallShort(th);
+            else if (j == MSLOT_POTION)
+                m.inv[MSLOT_WAND] = unmarshallShort(th);
+            else
+                m.inv[j] = unmarshallShort(th);
+        }
+        else
+#endif
         m.inv[j] = unmarshallShort(th);
 
     unmarshallSpells(th, m.spells);

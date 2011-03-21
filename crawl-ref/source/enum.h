@@ -2414,14 +2414,14 @@ enum mon_inv_type           // (int) menv[].inv[]
     MSLOT_ALT_MISSILE,
     MSLOT_ARMOUR,
     MSLOT_SHIELD,
+    MSLOT_WAND,
 
     // [ds] Last monster gear slot that the player can observe by examining
     // the monster; i.e. the last slot that goes into monster_info.
-    MSLOT_LAST_VISIBLE_SLOT = MSLOT_SHIELD,
+    MSLOT_LAST_VISIBLE_SLOT = MSLOT_WAND,
 
     MSLOT_MISCELLANY,
     MSLOT_POTION,
-    MSLOT_WAND,
     MSLOT_SCROLL,
     MSLOT_GOLD,
     NUM_MONSTER_SLOTS

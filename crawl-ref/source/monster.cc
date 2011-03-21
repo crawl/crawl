@@ -1225,6 +1225,9 @@ bool monster::drop_item(int eslot, int near)
         }
     }
 
+    if (props.exists("wand_known") && near && pitem->base_type == OBJ_WANDS)
+        props.erase("wand_known");
+
     inv[eslot] = NON_ITEM;
     return (true);
 }
@@ -1890,7 +1893,14 @@ bool monster::pickup_wand(item_def &item, int near)
             return (false);
     }
 
-    return (pickup(item, MSLOT_WAND, near));
+    if (pickup(item, MSLOT_WAND, near))
+    {
+        if (near)
+            props["wand_known"] = item_type_known(item);
+        return true;
+    }
+    else
+        return false;
 }
 
 bool monster::pickup_scroll(item_def &item, int near)
