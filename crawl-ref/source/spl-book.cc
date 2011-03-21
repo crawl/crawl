@@ -1820,6 +1820,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     {
         bookname = getRandNameString("book_noun") + " of "
                    + getRandNameString("Xom_book_title");
+        bookname = replace_name_parts(bookname, book);
     }
     else
     {
@@ -2425,6 +2426,7 @@ bool make_book_theme_randart(item_def &book,
             bookname = getRandNameString("Xom_book_title");
         else if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
             bookname = getRandNameString("random_book_title");
+        bookname = replace_name_parts(bookname, book);
     }
 
     if (!bookname.empty())
