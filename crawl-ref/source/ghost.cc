@@ -167,13 +167,17 @@ void ghost_demon::init_random_demon()
     ev = 5 + random2(20);
     ac = 5 + random2(20);
 
+    // Is demon a spellcaster?
+    // Non-spellcasters get some boosts to their melee and speed instead.
+    spellcaster = !one_chance_in(10);
+
     see_invis = !one_chance_in(10);
 
     if (!one_chance_in(3))
         resists.fire = random_range(1, 2);
     else
     {
-        resists.fire = 0; // res_fire
+        resists.fire = 0;
 
         if (one_chance_in(10))
             resists.fire = -1;
@@ -184,6 +188,7 @@ void ghost_demon::init_random_demon()
     else
     {
         resists.cold = 0;
+
         if (one_chance_in(10))
             resists.cold = -1;
     }
@@ -199,7 +204,7 @@ void ghost_demon::init_random_demon()
     // special attack type (uses weapon brand code):
     brand = SPWPN_NORMAL;
 
-    if (!one_chance_in(3))
+    if (!one_chance_in(3) || !spellcaster)
     {
         do
         {
@@ -207,19 +212,15 @@ void ghost_demon::init_random_demon()
             // some brands inappropriate (e.g. holy wrath)
         }
         while (brand == SPWPN_HOLY_WRATH
-               || (brand == SPWPN_ORC_SLAYING
-                   && mons_genus(you.mons_species()) != MONS_ORC)
-               || (brand == SPWPN_DRAGON_SLAYING
-                   && mons_genus(you.mons_species()) != MONS_DRACONIAN)
+               || brand == SPWPN_ORC_SLAYING
+               || brand == SPWPN_DRAGON_SLAYING
                || brand == SPWPN_PROTECTION
+               || brand == SPWPN_EVASION
                || brand == SPWPN_FLAME
-               || brand == SPWPN_FROST);
+               || brand == SPWPN_FROST
+               || brand == SPWPN_RETURNING
+               || brand == SPWPN_REACHING);
     }
-
-    // Is demon a spellcaster?
-    // Upped from one_chance_in(3)... spellcasters are more interesting
-    // and I expect named demons to typically have a trick or two. - bwr
-    spellcaster = !one_chance_in(10);
 
     // Does demon fly?
     fly = (one_chance_in(3) ? FL_NONE :
@@ -249,7 +250,11 @@ void ghost_demon::init_random_demon()
             spells[1] = RANDOM_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
+        {
             spells[2] = RANDOM_ELEMENT(search_order_third);
+            if (spells[2] == SPELL_TUKIMAS_BALL)
+                spells[2] = SPELL_NO_SPELL;
+        }
 
         if (coinflip())
         {
