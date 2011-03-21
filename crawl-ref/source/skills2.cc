@@ -1797,7 +1797,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 {
     ASSERT(!is_invalid_skill(fsk) && !is_invalid_skill(tsk));
 
-    const int penalty = 90; // 10% XP penalty
+    const int penalty = 80; // 20% XP penalty
     int total_skp_lost   = 0; // skill points lost in fsk.
     int total_skp_gained = 0; // skill points gained in tsk.
     int fsk_level = you.skills[fsk];
