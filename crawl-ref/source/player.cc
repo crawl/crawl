@@ -5756,6 +5756,8 @@ int player::skill(skill_type sk) const
 {
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         return std::min(skills[sk] + 5, 27);
+    else if (ash_not_wearing_uncursed())
+        return std::max<int>(skills[sk], piety_rank() - 1);
 
     return skills[sk];
 }
