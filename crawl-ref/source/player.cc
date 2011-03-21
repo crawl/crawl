@@ -2655,9 +2655,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
     if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS)
         return;
 
-    if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
-        exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
-
     const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
