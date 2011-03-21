@@ -50,7 +50,6 @@ bool is_antitrained(skill_type sk);
 bool antitrain_other(skill_type sk, bool show_zero);
 
 void skill_menu(bool reskilling = false);
-void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(skill_type skill);
 void dump_skills(std::string &text);
 int skill_transfer_amount(skill_type sk);

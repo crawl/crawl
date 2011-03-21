@@ -400,10 +400,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (show_wield_msg)
         mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
 
-    // Warn player about low str/dex or throwing skill.
-    if (show_weff_messages)
-        wield_warning();
-
     check_item_hint(new_wpn, old_talents);
 
     // Time calculations.
