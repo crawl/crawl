@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "fight.h"
+#include "attack.h"
 #include "melee_attack.h"
 
 #include <string.h>
@@ -835,8 +836,6 @@ bool melee_attack::player_attack()
 {
     if (cancel_attack)
         return (false);
-    
-    respond_to_attack_phase(ATK_ATTEMPTED);
 
     noise_factor = 100;
 
