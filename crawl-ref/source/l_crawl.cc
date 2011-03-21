@@ -235,9 +235,17 @@ static int crawl_process_command(lua_State *ls)
 
 static int crawl_process_keys(lua_State *ls)
 {
-    if (you_are_delayed() || you.turn_is_over)
+    const delay_type current_delay = current_delay_action();
+    if (current_delay && current_delay != DELAY_MACRO)
     {
-        luaL_error(ls, "Cannot currently process new keys");
+        luaL_error(ls, "Cannot currently process new keys (%s delay active)",
+                   delay_name(current_delay));
+        return (0);
+    }
+
+    if (you.turn_is_over)
+    {
+        luaL_error(ls, "Cannot currently process new keys (turn is over)");
         return (0);
     }
 
