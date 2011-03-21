@@ -43,16 +43,16 @@ function ice_cave_portal(e)
   local difficulty = "ice_cave_easy"
 
   -- Handle overlapping depths for easy and hard maps with a coinflip.
-  if you.branch == "Dungeon" and you.subdepth == 14 or
-     you.branch == "Elf" and you.subdepth < 3 then
+  if you.branch() == "D" and you.subdepth() == 14 or
+     you.branch() == "Elf" and you.subdepth() < 3 then
       if crawl.coinflip() then
           difficulty = "ice_cave_hard"
       end
   end
 
-  if you.branch == "Dungeon" and you.subdepth >= 15 or
-     you.branch == "Elf" and you.subdepth >= 3 or
-     you.branch == "Vault" then
+  if you.branch() == "D" and you.subdepth() >= 15 or
+     you.branch() == "Elf" and you.subdepth() >= 3 or
+     you.branch() == "Vault" then
       difficulty = "ice_cave_hard"
   end
 
