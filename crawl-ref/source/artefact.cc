@@ -224,8 +224,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     return (true);
 }
 
-static std::string _replace_name_parts(const std::string name_in,
-                                       const item_def& item)
+std::string replace_name_parts(const std::string name_in, const item_def& item)
 {
     std::string name = name_in;
 
@@ -1401,7 +1400,7 @@ static std::string _artefact_name_lookup(const item_def &item,
                                  const std::string &lookup)
 {
     const std::string name = getRandNameString(lookup);
-    return (!name.empty()? _replace_name_parts(name, item) : name);
+    return (!name.empty()? replace_name_parts(name, item) : name);
 }
 
 static bool _artefact_name_lookup(std::string &result,

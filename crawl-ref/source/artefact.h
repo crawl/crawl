@@ -105,6 +105,7 @@ std::string get_artefact_name(const item_def &item, bool force_known = false);
 void set_artefact_name(item_def &item, const std::string &name);
 
 std::string artefact_name(const item_def &item, bool appearance = false);
+std::string replace_name_parts(const std::string name_in, const item_def& item);
 
 const char *unrandart_descrip(int which_descrip, const item_def &item);
 
