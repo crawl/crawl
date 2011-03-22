@@ -235,18 +235,7 @@ SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
 void SkillMenuEntry::set_skill(skill_type sk)
 {
     m_sk = sk;
-
-    if (sk == SK_TITLE)
-        _set_title();
-    else if (is_invalid_skill(sk))
-        _clear();
-    else
-    {
-        set_name(false);
-        set_display();
-        if (is_set(SKMF_DISP_APTITUDE))
-            _set_aptitude();
-    }
+    refresh(false);
 }
 
 skill_type SkillMenuEntry::get_skill() const
@@ -298,16 +287,31 @@ void SkillMenuEntry::set_display()
     if (is_invalid_skill(m_sk))
         return;
 
-    if (is_set(SKMF_DISP_PROGRESS))
+    if (is_set(SKMF_DISP_NORMAL) || is_set(SKMF_DISP_ENHANCED))
         _set_progress();
     else if (is_set(SKMF_DISP_RESKILL))
         _set_reskill_progress();
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef WIZARD
     else if (is_set(SKMF_DISP_POINTS))
         _set_points();
 #endif
     else if (is_set(SKMF_RESKILLING))
         _set_new_level();
+}
+
+void SkillMenuEntry::refresh(bool keep_hotkey)
+{
+    if (m_sk == SK_TITLE)
+        _set_title();
+    else if (is_invalid_skill(m_sk))
+        _clear();
+    else
+    {
+        set_name(keep_hotkey);
+        set_display();
+        if (is_set(SKMF_DISP_APTITUDE))
+            _set_aptitude();
+    }
 }
 
 int SkillMenuEntry::get_id()
@@ -363,7 +367,7 @@ COLORS SkillMenuEntry::_get_colour() const
     {
         return LIGHTBLUE;
     }
-    else if (you.skill(m_sk) > you.skills[m_sk])
+    else if (is_set(SKMF_DISP_ENHANCED) && you.skill(m_sk) > you.skills[m_sk])
         return LIGHTBLUE;
     else if (you.skills[m_sk] == 27)
         return YELLOW;
@@ -398,7 +402,9 @@ std::string SkillMenuEntry::_get_prefix()
 
 void SkillMenuEntry::_set_level()
 {
-    m_level->set_text(make_stringf("%2d", you.skill(m_sk)));
+    m_level->set_text(make_stringf("%2d",
+                      is_set(SKMF_DISP_ENHANCED) ? you.skill(m_sk)
+                                                 : you.skills[m_sk]));
     m_level->set_fg_colour(_get_colour());
 }
 
@@ -502,7 +508,7 @@ void SkillMenuEntry::_set_title()
     m_name->set_text("    Skill");
     m_level->set_text("Lvl");
 
-    if (is_set(SKMF_DISP_PROGRESS))
+    if (is_set(SKMF_DISP_NORMAL))
         m_progress->set_text("Progr");
     else if (is_set(SKMF_DISP_RESKILL))
         m_progress->set_text("Trnsf");
@@ -537,7 +543,7 @@ void SkillMenuEntry::_clear()
 #endif
 }
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef WIZARD
 void SkillMenuEntry::_set_points()
 {
     m_progress->set_text(make_stringf("%5d", you.skill_points[m_sk]));
@@ -677,13 +683,17 @@ void SkillMenu::change_action()
     }
 }
 
-void SkillMenu::change_display()
+void SkillMenu::change_display(bool init)
 {
     const int new_disp = _get_next_display();
     clear_flag(SKMF_DISP_MASK);
     set_flag(new_disp);
     m_disp_queue.pop();
     m_disp_queue.push(new_disp);
+
+    if (init)
+        return;
+
     _set_help(new_disp);
     _refresh_display();
     _set_footer();
@@ -755,16 +765,21 @@ SkillMenuEntry* SkillMenu::_find_entry(skill_type sk)
 
 void SkillMenu::_init_disp_queue()
 {
-#ifdef DEBUG_DIAGNOSTICS
-    m_disp_queue.push(SKMF_DISP_POINTS);
-#endif
-
-    m_disp_queue.push(SKMF_DISP_PROGRESS);
-
     if (is_set(SKMF_RESKILLING))
         m_disp_queue.push(SKMF_DISP_NEW_LEVEL);
     else if (!is_invalid_skill(you.transfer_to_skill))
         m_disp_queue.push(SKMF_DISP_RESKILL);
+
+    if (_skill_enhanced())
+        m_disp_queue.push(SKMF_DISP_ENHANCED);
+
+    m_disp_queue.push(SKMF_DISP_NORMAL);
+
+#ifdef WIZARD
+    //m_disp_queue.push(SKMF_DISP_POINTS);
+#endif
+
+    change_display(true);
 }
 
 void SkillMenu::_init_title()
@@ -834,7 +849,7 @@ void SkillMenu::_refresh_display()
 {
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
-                m_skills[ln][col].set_display();
+                m_skills[ln][col].refresh(true);
 }
 
 void SkillMenu::_set_title()
@@ -847,7 +862,7 @@ void SkillMenu::_set_title()
         t = make_stringf(format, "destination");
     else
     {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef WIZARD
         t = make_stringf("You have %d points of unallocated experience "
                          " (cost lvl %d; total %d).\n\n",
                          you.exp_available, you.skill_cost_level,
@@ -961,7 +976,7 @@ void SkillMenu::_set_help(int flag)
                "The chosen skill will be raised to the level showned in "
                "<lightblue>blue</lightblue>.";
         break;
-    case SKMF_DISP_PROGRESS:
+    case SKMF_DISP_NORMAL:
     case SKMF_DISP_APTITUDE:
         if (is_set(SKMF_SIMPLE))
         {
@@ -969,7 +984,7 @@ void SkillMenu::_set_help(int flag)
             break;
         }
 
-        if (flag == SKMF_DISP_PROGRESS || !m_crosstrain && !m_antitrain)
+        if (flag == SKMF_DISP_NORMAL || !m_crosstrain && !m_antitrain)
         {
             help = "The percentage of the progress done before reaching next "
                    "level is in <cyan>cyan</cyan>.\n";
@@ -1047,8 +1062,11 @@ void SkillMenu::_set_footer()
     {
         switch (_get_next_display())
         {
-        case SKMF_DISP_PROGRESS:
-            text = "progress";
+        case SKMF_DISP_NORMAL:
+            text = "normal";
+            break;
+        case SKMF_DISP_ENHANCED:
+            text = "enhanced";
             break;
         case SKMF_DISP_POINTS:
             text = "points";
@@ -1146,6 +1164,18 @@ int SkillMenu::_get_next_display() const
     return m_disp_queue.front();
 }
 
+bool SkillMenu::_skill_enhanced() const
+{
+    if (you.religion != GOD_OKAWARU && you.religion != GOD_ASHENZARI)
+        return false;
+
+    for (unsigned int i = 0; i < NUM_SKILLS; ++i)
+        if (you.skill(skill_type(i)) > you.skills[i])
+            return true;
+
+    return false;
+}
+
 void skill_menu(bool reskilling)
 {
     int flags = SKMF_NONE;
@@ -1157,27 +1187,15 @@ void skill_menu(bool reskilling)
         else
             flags |= SKMF_DO_RESKILL_TO;
 
-        flags |= SKMF_RESKILLING | SKMF_DISP_NEW_LEVEL;
+        flags |= SKMF_RESKILLING;
     }
     else
-    {
         flags |= SKMF_DO_PRACTISE;
-
-        if (is_invalid_skill(you.transfer_from_skill))
-            flags |= SKMF_DISP_PROGRESS;
-        else
-            flags |= SKMF_DISP_RESKILL;
-    }
 
     if (crawl_state.game_is_hints_tutorial())
         flags |= SKMF_SIMPLE;
     else
         flags |= SKMF_DISP_APTITUDE;
-
-#ifdef DEBUG_DIAGNOSTICS
-    if (!crawl_state.game_is_hints_tutorial())
-        flags |= SKMF_DISP_ALL;
-#endif
 
     clrscr();
     SkillMenu skm(flags);

@@ -1516,6 +1516,13 @@ static bool _should_stop_activity(const delay_queue_item &item,
         break;
     }
 
+    // Don't interrupt player on monster's turn, they might wander off.
+    if (you.turn_is_over
+        && (at.context == "already seen" || at.context == "uncharm"))
+    {
+        return false;
+    }
+
     // No monster will attack you inside a sanctuary,
     // so presence of monsters won't matter.
     if (ai == AI_SEE_MONSTER && is_sanctuary(you.pos()))
@@ -1552,11 +1559,6 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         return false;
     if (at.context != "newly seen" && atype == DELAY_NOT_DELAYED)
         return false;
-    if (you.turn_is_over
-        && (at.context == "already seen" || at.context == "uncharm"))
-    {
-        return false;
-    }
 
     const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
