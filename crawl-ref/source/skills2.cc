@@ -787,7 +787,7 @@ void SkillMenu::_init_disp_queue()
     m_disp_queue.push(SKMF_DISP_NORMAL);
 
 #ifdef WIZARD
-    //m_disp_queue.push(SKMF_DISP_POINTS);
+    m_disp_queue.push(SKMF_DISP_POINTS);
 #endif
 
     change_display(true);
