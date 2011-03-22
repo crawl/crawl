@@ -118,6 +118,7 @@ private:
     void _potion_effect(potion_type pot_eff, int pot_pow);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     bool _send_abyss();
+    bool _malign_gateway();
     void _do_poison(int amount);
 
     bool avoid_lethal(int dam);
