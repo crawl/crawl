@@ -48,6 +48,7 @@
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -2757,8 +2758,14 @@ static int _scale_piety_cost(ability_type abil, int original_cost)
 // of the ability (if the cost is scaled, for example)
 static void _pay_ability_costs(const ability_def& abil, int xpcost)
 {
-    // currently only delayed fireball is instantaneous -- bwr
-    you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
+    if (abil.flags & ABFLAG_INSTANT)
+    {
+        you.turn_is_over = false;
+        you.elapsed_time_at_last_input = you.elapsed_time;
+        update_turn_count();
+    }
+    else
+        you.turn_is_over = true;
 
     const int food_cost  = abil.food_cost + random2avg(abil.food_cost, 2);
     const int piety_cost =
