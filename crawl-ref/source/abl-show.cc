@@ -3134,7 +3134,13 @@ std::vector<talent> your_talents(bool check_confused)
         {
             if (you.piety >= piety_breakpoint(i))
             {
-                const ability_type abil = god_abilities[you.religion][i];
+                ability_type abil = god_abilities[you.religion][i];
+                if (crawl_state.game_is_zotdef()
+                    && (abil == ABIL_LUGONU_ABYSS_EXIT
+                     || abil == ABIL_LUGONU_ABYSS_ENTER))
+                {
+                    abil = ABIL_NON_ABILITY;
+                }
                 if (abil != ABIL_NON_ABILITY)
                 {
                     _add_talent(talents, abil, check_confused);

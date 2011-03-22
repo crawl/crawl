@@ -629,7 +629,8 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
-        you.char_direction = GDT_GAME_START;
+        if (!crawl_state.game_is_zotdef())
+            you.char_direction = GDT_GAME_START;
         you.piety = 38;
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,

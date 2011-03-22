@@ -2423,6 +2423,9 @@ static void _erase_between(std::string& s,
 
 std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
+    if (crawl_state.game_is_zotdef() && strstr(pmsg, "Abyss"))
+        return "";
+
     std::string pm = pmsg;
 
     // Message portions in [] sections are ability upgrades.
@@ -2462,6 +2465,8 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
     you.piety = piety_breakpoint(breakpoint);
 
     std::string pm = adjust_abil_message(pmsg);
+    if (pm.empty())
+        return false;
 
     you.piety = old_piety;
 
