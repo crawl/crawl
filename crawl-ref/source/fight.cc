@@ -7,8 +7,6 @@
 #include "AppHdr.h"
 
 #include "fight.h"
-#include "attack.h"
-#include "melee_attack.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -19,6 +17,7 @@
 
 #include "areas.h"
 #include "artefact.h"
+#include "attack.h"
 #include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
@@ -51,6 +50,7 @@
 #include "mon-clone.h"
 #include "mon-place.h"
 #include "terrain.h"
+#include "melee_attack.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-stuff.h"
@@ -281,7 +281,10 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
 
 melee_attack::melee_attack(actor *attk, actor *defn,
                            bool allow_unarmed, int which_attack)
-    : attacker(attk), defender(defn), cancel_attack(false), did_hit(false),
+    :  // Call attack's constructor
+    attack::attack(attk, defn, allow_unarmed),
+
+    attacker(attk), defender(defn), cancel_attack(false), did_hit(false),
     perceived_attack(false), obvious_effect(false), needs_message(false),
     attacker_visible(false), defender_visible(false),
     attacker_invisible(false), defender_invisible(false),
@@ -372,96 +375,6 @@ void melee_attack::init_attack()
     miscast_level  = -1;
     miscast_type   = SPTYP_NONE;
     miscast_target = NULL;
-}
-
-std::string melee_attack::actor_name(const actor *a,
-                                     description_level_type desc,
-                                     bool actor_visible,
-                                     bool actor_invisible)
-{
-    return (actor_visible ? a->name(desc) : anon_name(desc, actor_invisible));
-}
-
-std::string melee_attack::pronoun(const actor *a,
-                                  pronoun_type pron,
-                                  bool actor_visible)
-{
-    return (actor_visible ? a->pronoun(pron) : anon_pronoun(pron));
-}
-
-std::string melee_attack::anon_pronoun(pronoun_type pron)
-{
-    switch (pron)
-    {
-    default:
-    case PRONOUN_CAP:              return "It";
-    case PRONOUN_NOCAP:            return "it";
-    case PRONOUN_CAP_POSSESSIVE:   return "Its";
-    case PRONOUN_NOCAP_POSSESSIVE: return "its";
-    case PRONOUN_REFLEXIVE:        return "itself";
-    }
-}
-
-std::string melee_attack::anon_name(description_level_type desc,
-                                    bool actor_invisible)
-{
-    switch (desc)
-    {
-    case DESC_CAP_THE:
-    case DESC_CAP_A:
-        return (actor_invisible ? "It" : "Something");
-    case DESC_CAP_YOUR:
-        return ("Its");
-    case DESC_NOCAP_YOUR:
-    case DESC_NOCAP_ITS:
-        return ("its");
-    case DESC_NONE:
-        return ("");
-    case DESC_NOCAP_THE:
-    case DESC_NOCAP_A:
-    case DESC_PLAIN:
-    default:
-        return (actor_invisible? "it" : "something");
-    }
-}
-
-std::string melee_attack::atk_name(description_level_type desc) const
-{
-    return actor_name(attacker, desc, attacker_visible, attacker_invisible);
-}
-
-std::string melee_attack::def_name(description_level_type desc) const
-{
-    return actor_name(defender, desc, defender_visible, defender_invisible);
-}
-
-std::string melee_attack::wep_name(description_level_type desc,
-                                   iflags_t ignore_flags) const
-{
-    ASSERT(weapon != NULL);
-
-    if (attacker->atype() == ACT_PLAYER)
-        return weapon->name(desc, false, false, false, false, ignore_flags);
-
-    std::string name;
-    bool possessive = false;
-    if (desc == DESC_CAP_YOUR)
-    {
-        desc       = DESC_CAP_THE;
-        possessive = true;
-    }
-    else if (desc == DESC_NOCAP_YOUR)
-    {
-        desc       = DESC_NOCAP_THE;
-        possessive = true;
-    }
-
-    if (possessive)
-        name = apostrophise(atk_name(desc)) + " ";
-
-    name += weapon->name(DESC_PLAIN, false, false, false, false, ignore_flags);
-
-    return (name);
 }
 
 bool melee_attack::is_banished(const actor *a) const
@@ -804,7 +717,7 @@ static bool _player_vampire_draws_blood(const monster* mon, const int damage,
  *  or messages.
  *
  *  @param <phase> sequence         // ENUM phase defined in fight.h
- */
+ *
 void melee_attack::respond_to_attack_phase(phase sequence)
 {
     switch (sequence)
@@ -830,7 +743,7 @@ void melee_attack::respond_to_attack_phase(phase sequence)
     default:
         break;
     }
-}
+}*/
 
 bool melee_attack::player_attack()
 {
@@ -1433,48 +1346,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     }
 
     return (false);
-}
-
-std::string melee_attack::debug_damage_number()
-{
-#ifdef DEBUG_DIAGNOSTICS
-    return make_stringf(" for %d", damage_done);
-#else
-    return ("");
-#endif
-}
-
-std::string melee_attack::special_attack_punctuation()
-{
-    if (special_damage < 6)
-        return ".";
-    else
-        return "!";
-}
-
-std::string melee_attack::attack_strength_punctuation()
-{
-    if (attacker->atype() == ACT_PLAYER)
-    {
-        if (damage_done < HIT_WEAK)
-            return ".";
-        else if (damage_done < HIT_MED)
-            return "!";
-        else if (damage_done < HIT_STRONG)
-            return "!!";
-        else
-            return "!!!";
-    }
-    else
-        return (damage_done < HIT_WEAK ? "." : "!");
-}
-
-std::string melee_attack::evasion_margin_adverb()
-{
-    return (ev_margin <= -20) ? " completely" :
-           (ev_margin <= -12) ? "" :
-           (ev_margin <= -6)  ? " closely"
-                              : " barely";
 }
 
 void melee_attack::player_announce_aux_hit()
@@ -2289,24 +2160,6 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
         resistible = resistible * (ranged? 15 : 20) / 10;
 
     return std::max(resistible + irresistible, 0);
-}
-
-void melee_attack::calc_elemental_brand_damage(beam_type flavour,
-                                                int res,
-                                                const char *verb)
-{
-    special_damage = resist_adjust_damage(defender, flavour, res,
-                                          random2(damage_done) / 2 + 1);
-
-    if (needs_message && special_damage > 0 && verb)
-    {
-        special_damage_message = make_stringf(
-            "%s %s %s%s",
-            atk_name(DESC_CAP_THE).c_str(),
-            attacker->conj_verb(verb).c_str(),
-            mons_defender_name().c_str(),
-            special_attack_punctuation().c_str());
-    }
 }
 
 int melee_attack::fire_res_apply_cerebov_downgrade(int res)

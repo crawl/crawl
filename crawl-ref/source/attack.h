@@ -1,7 +1,7 @@
 #ifndef ATTACK_H
 #define ATTACK_H
 
-#include "itemprop.h"
+#include "itemprop-enum.h"
 
 class attack
 {
@@ -19,7 +19,7 @@ public:
 
     int     to_hit;
     int     damage_done;
-    int     special_damage; // We'll see if we can remove this
+    int     special_damage; // TODO: We'll see if we can remove this
     int     aux_damage;
     
     bool    stab_attempt;
@@ -60,7 +60,7 @@ public:
 
 // Public Methods
 public:
-    attack(actor *attacker, actor *defender, bool allow_unarmed = true);
+    attack(actor *attk, actor *defn, bool allow_unarmed);
 
     // Applies damage and effect(s)
     virtual bool do_attack();
@@ -99,9 +99,13 @@ private:
     std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
                          iflags_t ignore_flags = ISFLAG_KNOW_CURSE
                                                | ISFLAG_KNOW_PLUSES) const;
+
+    // TODO: Used in elemental brand dmg, definitely want to get rid of this
+    std::string defender_name();
+    
     void calc_elemental_brand_damage(beam_type flavour,
                                      int res,
                                      const char *verb);    
-}
+};
 
 #endif

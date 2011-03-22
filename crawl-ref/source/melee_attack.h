@@ -2,9 +2,10 @@
 #define MELEE_ATTACK_H
 
 #include "artefact.h"
+#include "attack.h"
 #include "random-var.h"
 
-class melee_attack
+class melee_attack : public attack
 {
 public:
     actor     *attacker, *defender;
