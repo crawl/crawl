@@ -49,6 +49,7 @@
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
@@ -5390,6 +5391,9 @@ void player::init()
     dead = false;
     lives = 0;
     deaths = 0;
+
+    temperature = 0;
+
     xray_vision = false;
 
     init_skills();

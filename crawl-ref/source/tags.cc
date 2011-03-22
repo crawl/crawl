@@ -1187,6 +1187,8 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.deaths);
     marshallByte(th, you.lives);
 
+    marshallByte(th, you.temperature);
+
     marshallInt(th, you.dactions.size());
     for (unsigned int k = 0; k < you.dactions.size(); k++)
         marshallByte(th, you.dactions[k]);
@@ -1979,6 +1981,9 @@ static void tag_read_you(reader &th)
 
     you.deaths = unmarshallByte(th);
     you.lives = unmarshallByte(th);
+
+    you.temperature = unmarshallByte(th);
+
     you.dead = !you.hp;
 
     int n_dact = unmarshallInt(th);

@@ -68,6 +68,7 @@ static void _species_stat_init(species_type which_species)
 
     case SP_MINOTAUR:           sb = 10; ib =  3; db =  3;      break;  // 16
     case SP_HILL_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
+    case SP_LAVA_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
     case SP_CENTAUR:            sb =  8; ib =  5; db =  2;      break;  // 15
     case SP_NAGA:               sb =  8; ib =  6; db =  4;      break;  // 18
 
@@ -242,6 +243,10 @@ void give_basic_mutations(species_type speci)
     // for the fast/slow metabolism when we get around to it.
     switch (speci)
     {
+    case SP_LAVA_ORC:
+        you.mutation[MUT_HEAT_RESISTANCE] = 3;
+        you.mutation[MUT_CONSERVE_SCROLLS] = 1;
+    // Intentional fallthrough.
     case SP_HILL_ORC:
         you.mutation[MUT_SAPROVOROUS] = 1;
         break;
@@ -580,7 +585,7 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_PRIEST:
-        if (you.species == SP_HILL_ORC)
+        if (player_genus(GENPC_ORCISH))
             you.religion = GOD_BEOGH;
         else
             you.religion = GOD_ZIN;
@@ -1028,7 +1033,7 @@ static void _give_starting_food()
     else
     {
         item.base_type = OBJ_FOOD;
-        if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
+        if (player_genus(GENPC_ORCISH) || you.species == SP_KOBOLD
             || you.species == SP_OGRE || you.species == SP_TROLL
             || you.species == SP_FELID)
         {
@@ -1100,7 +1105,7 @@ static void _racialise_starting_equipment()
                     set_equip_race(you.inv[i], ISFLAG_ELVEN);
                 else if (you.species == SP_DEEP_DWARF)
                     set_equip_race(you.inv[i], ISFLAG_DWARVEN);
-                else if (you.species == SP_HILL_ORC)
+                else if (player_genus(GENPC_ORCISH))
                     set_equip_race(you.inv[i], ISFLAG_ORCISH);
             }
         }

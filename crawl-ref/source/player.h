@@ -206,6 +206,7 @@ public:
 
   vector<demon_trait> demonic_traits;
 
+  int temperature; // For lava orcs.
   int earth_attunement; // nomes only
   int magic_contamination;
 
@@ -332,6 +333,7 @@ public:
   bool redraw_title;
   bool redraw_hit_points;
   bool redraw_magic_points;
+  bool redraw_temperature;
   FixedVector<bool, NUM_STATS> redraw_stats;
   bool redraw_experience;
   bool redraw_armour_class;
