@@ -427,7 +427,7 @@ static const ability_def Ability_List[] =
 
     // Ashenzari
     { ABIL_ASHENZARI_SCRYING, "Scrying",
-      4, 0, 50, generic_cost::range(5, 6), ABFLAG_NONE },
+      4, 0, 50, generic_cost::range(5, 6), ABFLAG_INSTANT },
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
       0, 0, 0, 30, ABFLAG_NONE },
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
@@ -2830,10 +2830,10 @@ int choose_ability_menu(const std::vector<talent>& talents)
     abil_menu.set_highlighter(NULL);
     abil_menu.set_title(
         new MenuEntry("  Ability - do what?                 "
-                      "Cost                    Success"));
+                      "Cost                       Success"));
     abil_menu.set_title(
         new MenuEntry("  Ability - describe what?           "
-                      "Cost                    Success"), false);
+                      "Cost                       Success"), false);
 
     abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE
                             | MF_ALWAYS_SHOW_MORE);
@@ -2915,7 +2915,7 @@ static std::string _describe_talent(const talent& tal)
     std::ostringstream desc;
     desc << std::left
          << std::setw(32) << ability_name(tal.which)
-         << std::setw(24) << make_cost_description(tal.which)
+         << std::setw(27) << make_cost_description(tal.which)
          << std::setw(10) << failure_rate_to_string(tal.fail);
     return desc.str();
 }
