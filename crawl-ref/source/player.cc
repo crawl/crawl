@@ -5819,10 +5819,10 @@ int player::armour_class() const
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
-        AC += 400 + 100 * skills[SK_ICE_MAGIC] / 3;         // max 13
+        AC += 400 + 100 * skill(SK_ICE_MAGIC) / 3;         // max 13
 
     if (duration[DUR_STONESKIN])
-        AC += 200 + 100 * skills[SK_EARTH_MAGIC] / 5;       // max 7
+        AC += 200 + 100 * skill(SK_EARTH_MAGIC) / 5;       // max 7
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
@@ -5838,7 +5838,7 @@ int player::armour_class() const
         // Note: Even though necromutation is a high level spell, it does
         // allow the character full armour (so the bonus is low). -- bwr
         if (form == TRAN_LICH)
-            AC += (300 + 100 * skills[SK_NECROMANCY] / 6);   // max 7
+            AC += (300 + 100 * skill(SK_NECROMANCY) / 6);   // max 7
 
         //jmf: only give:
         if (player_genus(GENPC_DRACONIAN))
@@ -5872,25 +5872,25 @@ int player::armour_class() const
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
-            AC += (200 + 100 * skills[SK_POISON_MAGIC] / 6); // max 6
+            AC += (200 + 100 * skill(SK_POISON_MAGIC) / 6); // max 6
             break;
 
         case TRAN_ICE_BEAST:
-            AC += (500 + 100 * (skills[SK_ICE_MAGIC] + 1) / 4); // max 12
+            AC += (500 + 100 * (skill(SK_ICE_MAGIC) + 1) / 4); // max 12
 
             if (duration[DUR_ICY_ARMOUR])
-                AC += (100 + 100 * skills[SK_ICE_MAGIC] / 4);   // max +7
+                AC += (100 + 100 * skill(SK_ICE_MAGIC) / 4);   // max +7
             break;
 
         case TRAN_DRAGON: // Draconians handled above
-            AC += (700 + 100 * skills[SK_FIRE_MAGIC] / 3); // max 16
+            AC += (700 + 100 * skill(SK_FIRE_MAGIC) / 3); // max 16
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += (1700 + 100 * skills[SK_EARTH_MAGIC] / 2);    // max 30
+            AC += (1700 + 100 * skill(SK_EARTH_MAGIC) / 2);    // max 30
 
             if (duration[DUR_STONESKIN])
-                AC += (100 + 100 * skills[SK_EARTH_MAGIC] / 4); // max +7
+                AC += (100 + 100 * skill(SK_EARTH_MAGIC) / 4); // max +7
             break;
 
         default:

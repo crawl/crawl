@@ -191,7 +191,7 @@ bool yred_slaves_abandon_you()
 
             // During penance, followers get a saving throw.
             if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
-                + random2(you.skills[SK_INVOCATIONS] - 6)
+                + random2(you.skill(SK_INVOCATIONS) - 6)
                 > random2(hd) + hd + random2(5))
             {
                 continue;
@@ -249,7 +249,7 @@ bool beogh_followers_abandon_you()
 
                 // During penance, followers get a saving throw.
                 if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
-                    + random2(you.skills[SK_INVOCATIONS] - 6)
+                    + random2(you.skill(SK_INVOCATIONS) - 6)
                     > random2(hd) + hd + random2(5))
                 {
                     continue;

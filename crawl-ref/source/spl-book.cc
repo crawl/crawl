@@ -401,16 +401,16 @@ bool player_can_memorise_from_spellbook(const item_def &book)
 
     if ((book.sub_type == BOOK_ANNIHILATIONS
             && you.religion != GOD_VEHUMET
-            && (you.skills[SK_CONJURATIONS] < 10
-                || you.skills[SK_SPELLCASTING] < 6))
+            && (you.skill(SK_CONJURATIONS) < 10
+                || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_DEMONOLOGY
             && you.religion != GOD_VEHUMET
-            && (you.skills[SK_SUMMONINGS] < 10
-                || you.skills[SK_SPELLCASTING] < 6))
+            && (you.skill(SK_SUMMONINGS) < 10
+                || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_NECRONOMICON
             && you.religion != GOD_KIKUBAAQUDGHA
-            && (you.skills[SK_NECROMANCY] < 10
-                || you.skills[SK_SPELLCASTING] < 6)))
+            && (you.skill(SK_NECROMANCY) < 10
+                || you.skill(SK_SPELLCASTING) < 6)))
     {
         return (false);
     }

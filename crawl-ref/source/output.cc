@@ -1300,7 +1300,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             equip_chars.push_back(equip_char);
         }
         else if (e_order[i] == EQ_WEAPON
-                 && you.skills[SK_UNARMED_COMBAT])
+                 && you.skill(SK_UNARMED_COMBAT))
         {
             snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
         }
