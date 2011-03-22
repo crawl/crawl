@@ -66,7 +66,7 @@ The contents of this text are:
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, clear_messages, show_more, small_more,
-                show_inventory_weights, show_gold_turns, show_real_turns,
+                show_inventory_weights, show_gold_turns, show_game_turns,
                 show_beam, item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top,
@@ -1318,7 +1318,7 @@ show_gold_turns = false
         to display the current gold and turn counters. In Tiles, this option is
         ignored. Use the tile_layout_priority option instead.
 
-show_real_turns = false
+show_game_turns = false
         If set to true, the turn counter in the stat area will display game
         turns instead of player turns. A second number is displayed in
         parenthesis, showing the duration of the last action.
