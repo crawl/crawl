@@ -616,12 +616,41 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 
 bool MiscastEffect::_send_abyss()
 {
-    if (you.level_type == LEVEL_ABYSS
-        || source == HELL_EFFECT_MISCAST)
+    if ((you.level_type == LEVEL_ABYSS
+         || source == HELL_EFFECT_MISCAST)
+        && !_malign_gateway()) // attempt to degrade to malign gateway
         return (false);
 
     target->banish(cause);
     return (true);
+}
+
+// XXX: Mostly duplicated from cast_malign_gateway.
+bool MiscastEffect::_malign_gateway()
+{
+    coord_def point = find_gateway_location(&you);
+    bool success = (point != coord_def(0, 0));
+
+    if (success)
+    {
+        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+        env.markers.add(new map_malign_gateway_marker(point,
+                                malign_gateway_duration,
+                                false,
+                                cause,
+                                BEH_HOSTILE,
+                                GOD_NO_GOD,
+                                200));
+        env.markers.clear_need_activate();
+        env.grid(point) = DNGN_TEMP_PORTAL;
+
+        noisy(10, point);
+        all_msg = "The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!";
+        msg_ch = MSGCH_WARN;
+        do_msg();
+    }
+
+    return (success);
 }
 
 bool MiscastEffect::avoid_lethal(int dam)
@@ -1177,7 +1206,7 @@ void MiscastEffect::_translocation(int severity)
         do
         {
             // Don't use the last case for monsters.
-            switch (random2(target->atype() == ACT_PLAYER ? 4 : 3))
+            switch (random2(target->atype() == ACT_PLAYER ? 5 : 4))
             {
             case 0:
                 you_msg        = "You are caught in an extremely strong localised "
@@ -1201,6 +1230,9 @@ void MiscastEffect::_translocation(int severity)
                 success = _send_abyss();
                 break;
             case 3:
+                success = _malign_gateway();
+                break;
+            case 4:
                 contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
                 break;
             }
@@ -1363,7 +1395,7 @@ void MiscastEffect::_summoning(int severity)
 
         do
         {
-            switch (random2(4))
+            switch (random2(5))
             {
             case 0:
                 if (_create_monster(MONS_ABOMINATION_SMALL, 0, true))
@@ -1399,6 +1431,10 @@ void MiscastEffect::_summoning(int severity)
 
             case 3:
                 success = _send_abyss();
+                break;
+
+            case 4:
+                success = _malign_gateway();
                 break;
             }
         }
