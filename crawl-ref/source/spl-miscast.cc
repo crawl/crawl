@@ -1146,9 +1146,9 @@ void MiscastEffect::_translocation(int severity)
 
     case 2:         // less harmless
     {
-        bool reroll = false;
+        bool reroll = true;
 
-        do
+        while (reroll)
         {
             switch (random2(7))
             {
@@ -1161,6 +1161,7 @@ void MiscastEffect::_translocation(int severity)
                                  "spatial distortion.";
                 mon_msg_unseen = "A piece of empty space twists and writhes.";
                 _ouch(9 + random2avg(23, 2));
+                reroll = false;
                 break;
             case 3:
             case 4:
@@ -1174,6 +1175,7 @@ void MiscastEffect::_translocation(int severity)
                     else
                         target->blink(false);
                     _potion_effect(POT_CONFUSION, 40);
+                    reroll = false;
                 }
                 break;
             case 5:
@@ -1188,6 +1190,7 @@ void MiscastEffect::_translocation(int severity)
 
                 if (success)
                     all_msg = "Space twists in upon itself!";
+                reroll = false;
                 break;
             }
             case 6:
@@ -1195,16 +1198,15 @@ void MiscastEffect::_translocation(int severity)
                 break;
             }
         }
-        while (reroll);
 
         break;
     }
 
     case 3:         // much less harmless
     {
-        bool reroll = false;
+        bool reroll = true;
 
-        do
+        while (reroll)
         {
             // Don't use the last case for monsters.
             switch (random2(target->atype() == ACT_PLAYER ? 5 : 4))
@@ -1216,6 +1218,7 @@ void MiscastEffect::_translocation(int severity)
                                  "localised spatial distortion!";
                 mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
                 _ouch(15 + random2avg(29, 2));
+                reroll = false;
                 break;
             case 1:
                 you_msg        = "Space warps crazily around you!";
@@ -1226,6 +1229,7 @@ void MiscastEffect::_translocation(int severity)
                     target->teleport(true);
                     _potion_effect(POT_CONFUSION, 60);
                 }
+                reroll = false;
                 break;
             case 2:
                 reroll = !_send_abyss();
@@ -1235,10 +1239,10 @@ void MiscastEffect::_translocation(int severity)
                 break;
             case 4:
                 contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
+                reroll = false;
                 break;
             }
         }
-        while (reroll);
 
         break;
     }
@@ -1392,9 +1396,9 @@ void MiscastEffect::_summoning(int severity)
         break;
 
     case 3:         // more bad
-        bool reroll = false;
+        bool reroll = true;
 
-        do
+        while (reroll)
         {
             switch (random2(5))
             {
@@ -1402,12 +1406,14 @@ void MiscastEffect::_summoning(int severity)
                 if (_create_monster(MONS_ABOMINATION_SMALL, 0, true))
                     all_msg = "Something forms from out of thin air.";
                 do_msg();
+                reroll = false;
                 break;
 
             case 1:
                 if (_create_monster(summon_any_demon(DEMON_GREATER), 0, true))
                     all_msg = "You sense a hostile presence.";
                 do_msg();
+                reroll = false;
                 break;
 
             case 2:
@@ -1427,6 +1433,7 @@ void MiscastEffect::_summoning(int severity)
                     mon_msg = "You sense a malign presence.";
                 }
                 do_msg();
+                reroll = false;
                 break;
             }
 
@@ -1439,7 +1446,6 @@ void MiscastEffect::_summoning(int severity)
                 break;
             }
         }
-        while (reroll);
 
         break;
     }
