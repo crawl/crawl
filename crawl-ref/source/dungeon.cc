@@ -343,9 +343,17 @@ bool builder(int level_number, level_area_type level_type, bool enable_random_ma
     if (!crawl_state.map_stat_gen)
     {
         // Failed to build level, bail out.
-        save_game(true,
+        if (crawl_state.need_save)
+        {
+            save_game(true,
                   make_stringf("Unable to generate level for '%s'!",
                                level_id::current().describe().c_str()).c_str());
+        }
+        else
+        {
+            die("Unable to generate level for '%s'!",
+                level_id::current().describe().c_str());
+        }
     }
 
     env.level_layout_types.clear();
