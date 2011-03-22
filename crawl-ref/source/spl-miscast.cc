@@ -615,7 +615,7 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
     }
 }
 
-bool MiscastEffect::_send_abyss()
+bool MiscastEffect::_send_to_abyss()
 {
     if ((you.level_type == LEVEL_ABYSS
          || source == HELL_EFFECT_MISCAST)
@@ -1194,7 +1194,7 @@ void MiscastEffect::_translocation(int severity)
                 break;
             }
             case 6:
-                reroll = !_send_abyss();
+                reroll = !_send_to_abyss();
                 break;
             }
         }
@@ -1232,7 +1232,7 @@ void MiscastEffect::_translocation(int severity)
                 reroll = false;
                 break;
             case 2:
-                reroll = !_send_abyss();
+                reroll = !_send_to_abyss();
                 break;
             case 3:
                 reroll = !_malign_gateway();
@@ -1438,7 +1438,7 @@ void MiscastEffect::_summoning(int severity)
             }
 
             case 3:
-                reroll = !_send_abyss();
+                reroll = !_send_to_abyss();
                 break;
 
             case 4:
