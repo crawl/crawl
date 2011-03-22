@@ -224,16 +224,16 @@ ENDMAP
 # Two corridors leading into a scorpion pit.  Deep water pools showcase spider
 # clinging. Secret door at end of pool.
 #
-NAME:   spiders_nest_scorpion_pit
-TAGS:	spiders_nest no_item_gen no_monster_gen no_pool_fixup
-ORIENT:	encompass
+NAME:    spiders_nest_scorpion_pit
+TAGS:    spiders_nest no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
 : spiders_nest_colours(_G)
 : spiders_nest_random_monster_set(_G)
 epilogue{{
 spiders_nest_milestone(_G)
 }}
 KMONS:  1 = spider
-KMONS:  2 = scorpion / wolf spider w:3 
+KMONS:  2 = scorpion / wolf spider w:3
 KMONS:  3 = trapdoor spider generate_awake / nothing
 KMONS: 74 = redback / wolf spider / nothing w:15
 KMONS:  5 = jumping spider / tarantella w:20
@@ -246,11 +246,11 @@ SUBST:  _ : __x     , - : --x     , ' : ''x     , " : ""x
 NSUBST: _ = 2:x/*:. , - = 1:x/*:. , ' = 1:x/*:. , " = 2:x/*:.
 MAP
                               xxxx
-          xxxxxxxxxxxxxxxxxxxxx''x  
+          xxxxxxxxxxxxxxxxxxxxx''x
           xxxxXXX...WWWWWWxwww4x'x
           xXWWWW...2WW....wwwww''x
          xxW...WWXXXxxxxWW.wxxxxxx
-   xxxxxxxX.WW2XXxxxx**xxWWxx   
+   xxxxxxxX.WW2XXxxxx**xxWWxx
    x1wxxxXWWXXxxxxxx7**xx++xx    xxxx
    xwwwxxWWxxxxwwxxx+xxxx..Wxxxxxx""x
 xxxxxwwxx++xwwwwww4x6xxx5..*Wwwww4""x
@@ -300,8 +300,8 @@ end
 
 ##############################################################
 # Spider Trap Map by 7hm
-# Small winding map leading to a treasure room.  In the room is a 
-# basket of spiders trap.  
+# Small winding map leading to a treasure room.  In the room is a
+# basket of spiders trap.
 #
 NAME:   spiders_nest_spider_trap
 TAGS:   spiders_nest no_item_gen no_monster_gen no_pool_fixup
@@ -311,8 +311,8 @@ ORIENT: encompass
 epilogue{{
 spiders_nest_milestone(_G)
 }}
-NSUBST:	* = 1:z / *:*
-KITEM:	t = piece of ambrosia
+NSUBST: * = 1:z / *:*
+KITEM:  t = piece of ambrosia
 KMONS:  M = fungus
 {{
  local tm = TriggerableFunction:new{func="callback.spider_nest_trap"}
@@ -322,7 +322,7 @@ KMONS:  M = fungus
  lua_marker('z', tm)
  lua_marker('Z', wm)
 }}
-SUBST:  W = Ww , z : * , * = ||**..M , . = WW.  
+SUBST:  W = Ww , z : * , * = ||**..M , . = WW.
 MONS:   spider w:20 / wolf spider / trapdoor spider generate_awake / \
         redback / tarantella w:2
 MAP
