@@ -1335,6 +1335,13 @@ static void _go_upstairs()
     if (_marker_vetoes_stair())
         return;
 
+    if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(ygrd)
+        && !feat_is_gate(ygrd))
+    {
+        mpr("You are carrying too much to climb upwards.");
+        return;
+    }
+
     if (you.duration[DUR_MISLED])
     {
         mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);

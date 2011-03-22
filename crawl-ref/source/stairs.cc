@@ -626,14 +626,6 @@ void up_stairs(dungeon_feature_type force_stair,
         return;
     }
 
-    if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(stair_find)
-        && !feat_is_gate(stair_find))
-    {
-        mpr("You are carrying too much to climb upwards.");
-        you.turn_is_over = true;
-        return;
-    }
-
     const level_id destination_override(_stair_destination_override());
     const bool leaving_dungeon =
         level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1)
