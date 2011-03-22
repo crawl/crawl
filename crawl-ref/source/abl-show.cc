@@ -1142,6 +1142,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_CHEIBRIADOS_PONDEROUSIFY:
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
     case ABIL_ASHENZARI_END_TRANSFER:
+    case ABIL_ASHENZARI_SCRYING:
         invoc = true;
         perfect = true;
         failure = 0;
@@ -1159,7 +1160,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
-    case ABIL_ASHENZARI_SCRYING:
         invoc = true;
         failure = 160 - you.piety;      // starts at 60%
         break;
