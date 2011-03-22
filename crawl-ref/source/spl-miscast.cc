@@ -30,6 +30,7 @@
 #include "potion.h"
 #include "religion.h"
 #include "spl-clouds.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -1145,7 +1146,7 @@ void MiscastEffect::_translocation(int severity)
 
     case 2:         // less harmless
     {
-        bool success = true;
+        bool reroll = false;
 
         do
         {
@@ -1190,18 +1191,18 @@ void MiscastEffect::_translocation(int severity)
                 break;
             }
             case 6:
-                success = _send_abyss();
+                reroll = !_send_abyss();
                 break;
             }
         }
-        while (!success)
+        while (reroll);
 
         break;
     }
 
     case 3:         // much less harmless
     {
-        bool success = true;
+        bool reroll = false;
 
         do
         {
@@ -1227,17 +1228,17 @@ void MiscastEffect::_translocation(int severity)
                 }
                 break;
             case 2:
-                success = _send_abyss();
+                reroll = !_send_abyss();
                 break;
             case 3:
-                success = _malign_gateway();
+                reroll = !_malign_gateway();
                 break;
             case 4:
                 contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
                 break;
             }
         }
-        while (!success)
+        while (reroll);
 
         break;
     }
@@ -1391,7 +1392,7 @@ void MiscastEffect::_summoning(int severity)
         break;
 
     case 3:         // more bad
-        bool success = true;
+        bool reroll = false;
 
         do
         {
@@ -1430,15 +1431,15 @@ void MiscastEffect::_summoning(int severity)
             }
 
             case 3:
-                success = _send_abyss();
+                reroll = !_send_abyss();
                 break;
 
             case 4:
-                success = _malign_gateway();
+                reroll = !_malign_gateway();
                 break;
             }
         }
-        while (!success)
+        while (reroll);
 
         break;
     }
