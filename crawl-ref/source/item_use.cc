@@ -2964,7 +2964,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
 
     if (speed_brand)
-        pbolt.damage.size = div_rand_round(pbolt.damage.size * 4, 5);
+        pbolt.damage.size = div_rand_round(pbolt.damage.size * 9, 10);
 
     // Add in bonus (only from Portal Projectile for now).
     if (acc_bonus != DEBUG_COOKIE)
