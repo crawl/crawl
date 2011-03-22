@@ -1660,7 +1660,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
             damage += random2(3);
 
         if (get_weapon_brand(*weapon) == SPWPN_SPEED)
-            damage = div_rand_round(damage * 4, 5);
+            damage = div_rand_round(damage * 9, 10);
     }
 
     return (damage);
@@ -4513,7 +4513,7 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     }
 
     if (weapon && get_weapon_brand(*weapon) == SPWPN_SPEED)
-        damage = div_rand_round(damage * 4, 5);
+        damage = div_rand_round(damage * 9, 10);
 
     // If the defender is asleep, the attacker gets a stab.
     if (defender && defender->asleep())

@@ -1673,7 +1673,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     }
 
     if (speed_brand)
-        pbolt.damage.size = div_rand_round(pbolt.damage.size * 4, 5);
+        pbolt.damage.size = div_rand_round(pbolt.damage.size * 9, 10);
 
     scale_dice(pbolt.damage);
 
