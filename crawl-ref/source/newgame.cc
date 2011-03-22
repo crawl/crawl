@@ -1349,6 +1349,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 }
                 else
                 {
+                    selection.at(0)->select(false);
                     continue;
                 }
             }
