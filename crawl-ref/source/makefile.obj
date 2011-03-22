@@ -8,6 +8,7 @@ actor.o \
 areas.o \
 arena.o \
 artefact.o \
+attack.o \
 attitude-change.o \
 beam.o \
 behold.o \

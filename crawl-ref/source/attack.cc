@@ -16,7 +16,9 @@
 
 #include "externs.h"
 #include "enum.h"
-#include "itemprop.h"
+#include "fight.h"
+#include "libutil.h"
+#include "player.h"
 
 const int HIT_WEAK   = 7;
 const int HIT_MED    = 18;
@@ -30,9 +32,9 @@ const int HIT_STRONG = 36;
 attack::attack(actor *attk, actor *defn, bool allow_unarmed)
     : attacker(attk), defender(defn), cancel_attack(false), did_hit(false),
     needs_message(false), attacker_visible(false), defender_visible(false),
-    attacker_invisible(false), defender_invisible(false),
-    unarmed_ok(allow_unarmed), to_hit(0), damage_done(0), aux_damage(0), 
-    stab_attempt(false), stab_bonus(0), min_delay(0), final_attack_delay(0), 
+    attacker_invisible(false), defender_invisible(false), to_hit(0), 
+    damage_done(0), aux_damage(0), stab_attempt(false), stab_bonus(0), 
+    min_delay(0), final_attack_delay(0), unarmed_ok(allow_unarmed), 
     noise_factor(0), unarmed_capable(false), ev_margin(0), weapon(NULL),
     damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
     hand_half_bonus(false), attacker_to_hit_penalty(0), attack_verb("bug"), 
@@ -60,8 +62,8 @@ std::string attack::actor_name(const actor *a, description_level_type desc,
  *
  * Takes into account actor visibility
  */
-std::string attack::pronoun(const actor *a, pronoun_type pron, 
-                            bool actor_visible)
+std::string attack::actor_pronoun(const actor *a, pronoun_type pron, 
+                                  bool actor_visible)
 {
     return (actor_visible ? a->pronoun(pron) : anon_pronoun(pron));
 }
@@ -238,6 +240,17 @@ std::string attack::wep_name(description_level_type desc,
     return (name);
 }
 
+/* TODO: Remove this!
+ *
+ */
+std::string attack::defender_name()
+{
+    if (attacker == defender)
+        return actor_pronoun(attacker, PRONOUN_REFLEXIVE, attacker_visible);
+    else
+        return def_name(DESC_NOCAP_THE);
+}
+
 /* Calculates special damage, prints appropriate combat text
  *
  * Applies a particular damage brand to the current attack, the setup and
@@ -257,7 +270,7 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
             "%s %s %s%s",
             atk_name(DESC_CAP_THE).c_str(),
             attacker->conj_verb(verb).c_str(),
-            mons_defender_name().c_str(),
+            defender_name().c_str(),
             special_attack_punctuation().c_str());
     }
 }
