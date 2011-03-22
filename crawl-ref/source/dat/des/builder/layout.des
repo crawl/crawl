@@ -357,6 +357,15 @@ TAGS:    overwritable layout allow_dup unrand
         end
     end
 
+    if (you.in_branch("D") and you.subdepth() > 21 or you.where() == "Pan")
+      and crawl.coinflip()
+    then
+        mapgrd[40][36] = 'O'
+        mapgrd[41][36] = 'O'
+        nsubst('O = 1:O / *:.')
+        kfeat('O = enter_abyss')
+    end
+
     random_wall_material(_G)
 }}
 MAP
