@@ -1088,7 +1088,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         // begin item abilities - some possibly mutagenic {dlb}
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_TELEPORTATION:
-        failure = 60 - 2 * you.skills[SK_EVOCATIONS];
+        failure = 60 - 2 * you.skill(SK_EVOCATIONS);
         break;
 
     case ABIL_EVOKE_TURN_VISIBLE:
@@ -1100,11 +1100,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_EVOKE_LEVITATE:
     case ABIL_EVOKE_BLINK:
-        failure = 40 - 2 * you.skills[SK_EVOCATIONS];
+        failure = 40 - 2 * you.skill(SK_EVOCATIONS);
         break;
 
     case ABIL_EVOKE_BERSERK:
-        failure = 50 - 2 * you.skills[SK_EVOCATIONS];
+        failure = 50 - 2 * you.skill(SK_EVOCATIONS);
 
         if (you.species == SP_TROLL)
             failure -= 30;
@@ -1119,7 +1119,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         // begin invocations {dlb}
     case ABIL_ELYVILON_PURIFICATION:
         invoc = true;
-        failure = 20 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        failure = 20 - (you.piety / 20) - (5 * you.skill(SK_INVOCATIONS));
         break;
 
     case ABIL_ZIN_RECITE:
@@ -1132,7 +1132,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_FEDHAS_SUNLIGHT:
     case ABIL_FEDHAS_EVOLUTION:
         invoc = true;
-        failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
+        failure = 30 - (you.piety / 20) - (6 * you.skill(SK_INVOCATIONS));
         break;
 
     // These don't train anything.
@@ -1168,7 +1168,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
         invoc = true;
-        failure = 40 - (you.piety / 20) - (4 * you.skills[SK_INVOCATIONS]);
+        failure = 40 - (you.piety / 20) - (4 * you.skill(SK_INVOCATIONS));
         break;
 
     // Placeholder for Animate Remains or Animate Dead.
@@ -1188,34 +1188,34 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_JIYVA_SLIMIFY:
     case ABIL_FEDHAS_PLANT_RING:
         invoc = true;
-        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        failure = 40 - (you.piety / 20) - (5 * you.skill(SK_INVOCATIONS));
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
         invoc = true;
-        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_NECROMANCY]);
+        failure = 40 - (you.piety / 20) - (5 * you.skill(SK_NECROMANCY));
         break;
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         invoc = true;
-        failure = 40 - you.intel() - you.skills[SK_INVOCATIONS];
+        failure = 40 - you.intel() - you.skill(SK_INVOCATIONS);
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_CHEIBRIADOS_TIME_BEND:
         invoc = true;
-        failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
+        failure = 50 - (you.piety / 20) - (you.skill(SK_INVOCATIONS) * 4);
         break;
 
     case ABIL_ZIN_IMPRISON:
     case ABIL_LUGONU_BANISH:
         invoc = true;
-        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        failure = 60 - (you.piety / 20) - (5 * you.skill(SK_INVOCATIONS));
         break;
 
     case ABIL_KIKU_TORMENT:
         invoc = true;
-        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_NECROMANCY]);
+        failure = 60 - (you.piety / 20) - (5 * you.skill(SK_NECROMANCY));
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -1224,7 +1224,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_OKAWARU_FINESSE:
         invoc = true;
-        failure = 60 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
+        failure = 60 - (you.piety / 25) - (you.skill(SK_INVOCATIONS) * 4);
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
@@ -1233,7 +1233,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_CORRUPT:
     case ABIL_FEDHAS_RAIN:
         invoc = true;
-        failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
+        failure = 70 - (you.piety / 25) - (you.skill(SK_INVOCATIONS) * 4);
         break;
 
     case ABIL_ZIN_SANCTUARY:
@@ -1244,34 +1244,34 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_CHEIBRIADOS_TIME_STEP:
         invoc = true;
-        failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
+        failure = 80 - (you.piety / 25) - (you.skill(SK_INVOCATIONS) * 4);
         break;
 
     case ABIL_NEMELEX_STACK_FIVE:
         invoc = true;
-        failure = 80 - (you.piety / 25) - (4 * you.skills[SK_EVOCATIONS]);
+        failure = 80 - (you.piety / 25) - (4 * you.skill(SK_EVOCATIONS));
         break;
 
     case ABIL_NEMELEX_MARK_FOUR:
         invoc = true;
         failure = 70 - (you.piety * 2 / 45)
-            - (9 * you.skills[SK_EVOCATIONS] / 2);
+            - (9 * you.skill(SK_EVOCATIONS) / 2);
         break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
         invoc = true;
-        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
+        failure = 60 - (you.piety / 20) - (5 * you.skill(SK_EVOCATIONS));
         break;
 
     case ABIL_NEMELEX_PEEK_TWO:
         invoc = true;
-        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
+        failure = 40 - (you.piety / 20) - (5 * you.skill(SK_EVOCATIONS));
         break;
 
     case ABIL_NEMELEX_DRAW_ONE:
         invoc = true;
         perfect = true;         // Tactically important to allow perfection
-        failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
+        failure = 50 - (you.piety / 20) - (5 * you.skill(SK_EVOCATIONS));
         break;
 
     case ABIL_RENOUNCE_RELIGION:
@@ -2137,7 +2137,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
-        potion_effect(POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5);
+        potion_effect(POT_INVISIBILITY, 2 * you.skill(SK_EVOCATIONS) + 5);
         contaminate_player(1 + random2(3), true);
         break;
 
@@ -2158,7 +2158,7 @@ static bool _do_ability(const ability_def& abil)
                 mpr("You feel more buoyant.");
         }
         else
-            levitate_player(2 * you.skills[SK_EVOCATIONS] + 30);
+            levitate_player(2 * you.skill(SK_EVOCATIONS) + 30);
         break;
 
     case ABIL_EVOKE_STOP_LEVITATING:
@@ -2222,7 +2222,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        power = 3 + roll_dice(3, 10 * (3 + you.skills[SK_INVOCATIONS])
+        power = 3 + roll_dice(3, 10 * (3 + you.skill(SK_INVOCATIONS))
                                     / (3 + mons->hit_dice)) / 3;
 
         if (!cast_imprison(power, mons, -GOD_ZIN))
@@ -2244,16 +2244,16 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
-        cleansing_flame(10 + (you.skills[SK_INVOCATIONS] * 7) / 6,
+        cleansing_flame(10 + (you.skill(SK_INVOCATIONS) * 7) / 6,
                         CLEANSING_FLAME_INVOCATION, you.pos(), &you);
         break;
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-        summon_holy_warrior(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
+        summon_holy_warrior(you.skill(SK_INVOCATIONS) * 4, GOD_SHINING_ONE);
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
-        kiku_receive_corpses(you.skills[SK_NECROMANCY] * 4, you.pos());
+        kiku_receive_corpses(you.skill(SK_NECROMANCY) * 4, you.pos());
         break;
 
     case ABIL_KIKU_TORMENT:
@@ -2301,7 +2301,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_ENSLAVE_SOUL:
     {
         god_acting gdact;
-        power = you.skills[SK_INVOCATIONS] * 4;
+        power = you.skill(SK_INVOCATIONS) * 4;
         beam.range = LOS_RADIUS;
 
         if (!spell_direction(spd, beam))
@@ -2315,7 +2315,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         mpr("You channel some magical energy.");
 
-        inc_mp(1 + random2(you.skills[SK_INVOCATIONS] / 4 + 2), false);
+        inc_mp(1 + random2(you.skill(SK_INVOCATIONS) / 4 + 2), false);
         break;
 
     case ABIL_OKAWARU_HEROISM:
@@ -2324,7 +2324,7 @@ static bool _do_ability(const ability_def& abil)
              : "You gain the combat prowess of a mighty hero.");
 
         you.increase_duration(DUR_HEROISM,
-            35 + random2(you.skills[SK_INVOCATIONS] * 8), 80);
+            35 + random2(you.skill(SK_INVOCATIONS) * 8), 80);
         you.redraw_evasion      = true;
         you.redraw_armour_class = true;
         break;
@@ -2341,7 +2341,7 @@ static bool _do_ability(const ability_def& abil)
              : "You can now deal lightning-fast blows.");
 
         you.increase_duration(DUR_FINESSE,
-            40 + random2(you.skills[SK_INVOCATIONS] * 8), 80);
+            40 + random2(you.skill(SK_INVOCATIONS) * 8), 80);
 
         did_god_conduct(DID_HASTY, 8); // Currently irrelevant.
         break;
@@ -2350,9 +2350,9 @@ static bool _do_ability(const ability_def& abil)
         if (!spell_direction(spd, beam))
             return (false);
 
-        power = you.skills[SK_INVOCATIONS]
-                + random2(1 + you.skills[SK_INVOCATIONS])
-                + random2(1 + you.skills[SK_INVOCATIONS]);
+        power = you.skill(SK_INVOCATIONS)
+                + random2(1 + you.skill(SK_INVOCATIONS))
+                + random2(1 + you.skill(SK_INVOCATIONS));
 
         // Since the actual beam is random, check with BEAM_MMISSILE and the
         // highest range possible (electricity).
@@ -2372,16 +2372,16 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
         summon_demon_type(random_mons(MONS_HELLWING, MONS_NEQOXEC,
                           MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL, -1),
-                          20 + you.skills[SK_INVOCATIONS] * 3, GOD_MAKHLEB);
+                          20 + you.skill(SK_INVOCATIONS) * 3, GOD_MAKHLEB);
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
         if (!spell_direction(spd, beam))
             return (false);
 
-        power = you.skills[SK_INVOCATIONS] * 3
-                + random2(1 + you.skills[SK_INVOCATIONS])
-                + random2(1 + you.skills[SK_INVOCATIONS]);
+        power = you.skill(SK_INVOCATIONS) * 3
+                + random2(1 + you.skill(SK_INVOCATIONS))
+                + random2(1 + you.skill(SK_INVOCATIONS));
 
         // Since the actual beam is random, check with BEAM_MMISSILE and the
         // highest range possible (orb of electricity).
@@ -2407,7 +2407,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         summon_demon_type(random_mons(MONS_EXECUTIONER, MONS_GREEN_DEATH,
                           MONS_BLUE_DEATH, MONS_BALRUG, MONS_CACODEMON, -1),
-                          20 + you.skills[SK_INVOCATIONS] * 3, GOD_MAKHLEB);
+                          20 + you.skill(SK_INVOCATIONS) * 3, GOD_MAKHLEB);
         break;
 
     case ABIL_TROG_BURN_SPELLBOOKS:
@@ -2455,7 +2455,7 @@ static bool _do_ability(const ability_def& abil)
     {
         const bool self = (abil.ability == ABIL_ELYVILON_LESSER_HEALING_SELF);
 
-        if (cast_healing(3 + (you.skills[SK_INVOCATIONS] / 6), true,
+        if (cast_healing(3 + (you.skill(SK_INVOCATIONS) / 6), true,
                          self ? you.pos() : coord_def(0, 0), !self,
                          self ? TARG_NUM_MODES : TARG_HOSTILE) < 0)
         {
@@ -2474,7 +2474,7 @@ static bool _do_ability(const ability_def& abil)
     {
         const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING_SELF);
 
-        if (cast_healing(10 + (you.skills[SK_INVOCATIONS] / 3), true,
+        if (cast_healing(10 + (you.skill(SK_INVOCATIONS) / 3), true,
                          self ? you.pos() : coord_def(0, 0), !self,
                          self ? TARG_NUM_MODES : TARG_HOSTILE) < 0)
         {
@@ -2513,7 +2513,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        if (!zapping(ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam,
+        if (!zapping(ZAP_BANISHMENT, 16 + you.skill(SK_INVOCATIONS) * 8, beam,
                      true))
         {
             return (false);
@@ -2521,7 +2521,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_CORRUPT:
-        if (!lugonu_corrupt_level(300 + you.skills[SK_INVOCATIONS] * 15))
+        if (!lugonu_corrupt_level(300 + you.skill(SK_INVOCATIONS) * 15))
             return (false);
         break;
 
@@ -2665,7 +2665,7 @@ static bool _do_ability(const ability_def& abil)
                                          : ("your " + you.hand_name(true));
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
-                              you.skills[SK_INVOCATIONS] * 3 / 2 + 3,
+                              you.skill(SK_INVOCATIONS) * 3 / 2 + 3,
                               100);
         break;
     }
@@ -2680,11 +2680,11 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CHEIBRIADOS_TIME_STEP:
-        cheibriados_time_step(you.skills[SK_INVOCATIONS]*you.piety/10);
+        cheibriados_time_step(you.skill(SK_INVOCATIONS)*you.piety/10);
         break;
 
     case ABIL_CHEIBRIADOS_TIME_BEND:
-        cheibriados_time_bend(16 + you.skills[SK_INVOCATIONS] * 8);
+        cheibriados_time_bend(16 + you.skill(SK_INVOCATIONS) * 8);
         break;
 
     case ABIL_CHEIBRIADOS_SLOUCH:

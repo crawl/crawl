@@ -448,13 +448,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     if (rod) {
         // This is only the average of the power. It's used for display and
         // calculating range. The real power is randomized in staff_spell()
-        power = (5 + you.skills[SK_EVOCATIONS] * 2);
+        power = (5 + you.skill(SK_EVOCATIONS) * 2);
     }
     else
     {
         // When checking failure rates, wizardry is handled after the various
         // stepping calulations.
-        power = (you.skills[SK_SPELLCASTING] / 2)
+        power = (you.skill(SK_SPELLCASTING) / 2)
                      + (fail_rate_check? 0 : player_mag_abil(false));
         int enhanced = 0;
 
@@ -470,7 +470,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             {
                 unsigned int bit = (1 << ndx);
                 if (disciplines & bit)
-                    power += (you.skills[spell_type2skill(bit)] * 2) / skillcount;
+                    power += (you.skill(spell_type2skill(bit)) * 2) / skillcount;
             }
         }
 

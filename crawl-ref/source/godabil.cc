@@ -1284,7 +1284,7 @@ bool zin_vitalisation()
             const int stamina_amt = 3;
             you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
             you.set_duration(DUR_DIVINE_STAMINA,
-                             40 + (you.skills[SK_INVOCATIONS]*5)/2);
+                             40 + (you.skill(SK_INVOCATIONS)*5)/2);
 
             notify_stat_change(STAT_STR, stamina_amt, true, "");
             notify_stat_change(STAT_INT, stamina_amt, true, "");
@@ -1361,7 +1361,7 @@ bool zin_sanctuary()
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
 
-    create_sanctuary(you.pos(), 7 + you.skills[SK_INVOCATIONS] / 2);
+    create_sanctuary(you.pos(), 7 + you.skill(SK_INVOCATIONS) / 2);
 
     return (true);
 }
@@ -1390,7 +1390,7 @@ void tso_divine_shield()
 
     // duration of complete shield bonus from 35 to 80 turns
     you.set_duration(DUR_DIVINE_SHIELD,
-                     35 + (you.skills[SK_INVOCATIONS] * 4) / 3);
+                     35 + (you.skill(SK_INVOCATIONS) * 4) / 3);
 
     // shield bonus up to 8
     you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skill(SK_SHIELDS) / 5;
@@ -1428,12 +1428,12 @@ bool elyvilon_divine_vigour()
         mprf("%s grants you divine vigour.",
              god_name(GOD_ELYVILON).c_str());
 
-        const int vigour_amt = 1 + (you.skills[SK_INVOCATIONS]/3);
+        const int vigour_amt = 1 + (you.skill(SK_INVOCATIONS)/3);
         const int old_hp_max = you.hp_max;
         const int old_mp_max = you.max_magic_points;
         you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
         you.set_duration(DUR_DIVINE_VIGOUR,
-                         40 + (you.skills[SK_INVOCATIONS]*5)/2);
+                         40 + (you.skill(SK_INVOCATIONS)*5)/2);
 
         calc_hp();
         inc_hp(you.hp_max - old_hp_max, false);
@@ -1659,7 +1659,7 @@ void yred_animate_remains_or_dead()
     {
         mpr("You call on the dead to rise...");
 
-        animate_dead(&you, you.skills[SK_INVOCATIONS] + 1, BEH_FRIENDLY,
+        animate_dead(&you, you.skill(SK_INVOCATIONS) + 1, BEH_FRIENDLY,
                      MHITYOU, &you, "", GOD_YREDELEMNUL);
     }
     else
@@ -1682,7 +1682,7 @@ void yred_drain_life()
     more();
     mesclr();
 
-    const int pow = you.skills[SK_INVOCATIONS];
+    const int pow = you.skill(SK_INVOCATIONS);
     const int hurted = 3 + random2(7) + random2(pow);
     int hp_gain = 0;
 
@@ -2590,7 +2590,7 @@ bool fedhas_plant_ring_from_fruit()
         return (false);
     }
 
-    const int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
+    const int hp_adjust = you.skill(SK_INVOCATIONS) * 10;
 
     // The user entered a number, remove all number overlays which
     // are higher than that number.
@@ -2720,7 +2720,7 @@ int fedhas_rain(const coord_def &target)
             // of 27 gives expected 5 clouds.
             int max_expected = 5;
             int expected = div_rand_round(max_expected
-                                          * you.skills[SK_INVOCATIONS], 27);
+                                          * you.skill(SK_INVOCATIONS), 27);
 
             if (x_chance_in_y(expected, 20))
             {
@@ -3018,13 +3018,13 @@ bool fedhas_evolve_flora()
     case MONS_BUSH:
     {
         std::string evolve_desc = " can now spit acid";
-        if (you.skills[SK_INVOCATIONS] >= 20)
+        if (you.skill(SK_INVOCATIONS) >= 20)
             evolve_desc += " continuously";
-        else if (you.skills[SK_INVOCATIONS] >= 15)
+        else if (you.skill(SK_INVOCATIONS) >= 15)
             evolve_desc += " quickly";
-        else if (you.skills[SK_INVOCATIONS] >= 10)
+        else if (you.skill(SK_INVOCATIONS) >= 10)
             evolve_desc += " rather quickly";
-        else if (you.skills[SK_INVOCATIONS] >= 5)
+        else if (you.skill(SK_INVOCATIONS) >= 5)
             evolve_desc += " somewhat quickly";
         evolve_desc += ".";
 
@@ -3063,7 +3063,7 @@ bool fedhas_evolve_flora()
     if (target->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
         target->add_ench(ENCH_EXPLODING);
 
-    target->hit_dice += you.skills[SK_INVOCATIONS];
+    target->hit_dice += you.skill(SK_INVOCATIONS);
 
     if (upgrade.fruit_cost)
         _decrease_amount(collected_fruit, upgrade.fruit_cost);

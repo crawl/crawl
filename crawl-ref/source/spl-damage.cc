@@ -920,7 +920,7 @@ void cast_shatter(int pow)
         mpr("The dungeon rumbles!", MSGCH_SOUND);
     }
 
-    int rad = 3 + (you.skills[SK_EARTH_MAGIC] / 5);
+    int rad = 3 + (you.skill(SK_EARTH_MAGIC) / 5);
 
     apply_area_within_radius(_shatter_items, you.pos(), pow, rad, 0);
     apply_area_within_radius(_shatter_monsters, you.pos(), pow, rad, 0);
