@@ -28,6 +28,7 @@
 #include "itemprop.h"
 #include "options.h"
 #include "player.h"
+#include "religion.h"
 #include "species.h"
 #include "skills.h"
 #include "stuff.h"
@@ -632,7 +633,6 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 
     _set_title();
     _set_skills();
-    _set_help();
     _set_footer();
 
 
@@ -692,7 +692,15 @@ void SkillMenu::change_display(bool init)
     m_disp_queue.push(new_disp);
 
     if (init)
+    {
+        if (is_set(SKMF_DO_RESKILL_FROM))
+            _set_help(SKMF_DO_RESKILL_FROM);
+        else if (is_set(SKMF_DO_RESKILL_TO))
+            _set_help(SKMF_DO_RESKILL_TO);
+        else
+            _set_help(new_disp);
         return;
+    }
 
     _set_help(new_disp);
     _refresh_display();
@@ -934,17 +942,6 @@ void SkillMenu::_set_skills()
 
 void SkillMenu::_set_help(int flag)
 {
-    if (flag == SKMF_NONE)
-    {
-        if (is_set(SKMF_DO_RESKILL_FROM))
-            flag = SKMF_DO_RESKILL_FROM;
-        else if (is_set(SKMF_DO_RESKILL_TO))
-            flag = SKMF_DO_RESKILL_TO;
-        else if (is_set(SKMF_DISP_RESKILL))
-            flag = SKMF_DISP_RESKILL;
-        else
-            flag = SKMF_DISP_APTITUDE;
-    }
     m_current_help = flag;
 
     std::string help;
@@ -1015,6 +1012,13 @@ void SkillMenu::_set_help(int flag)
             }
         }
         break;
+    case SKMF_DISP_ENHANCED:
+    {
+        help = make_stringf("Skills enhanced by the power of %s are marked in "
+                            "<blue>blue</blue>.",
+                            god_name(you.religion).c_str());
+        break;
+    }
     case SKMF_DISP_RESKILL:
         help = "The progress of the knowledge transfer is displayed in "
                "<lightblue>blue</lightblue> in front of the skill receiving the "
