@@ -168,7 +168,7 @@ drop_filter = useless_item
 # travel_avoid_terrain = shallow water
 #
 # explore_greedy   = false
-# explore_stop     = items,greedy_pickup,stairs,shops,altars,gates
+# explore_stop     = items,greedy_pickup_smart,stairs,shops,altars,gates
 # explore_stop    += greedy_visited_item_stack
 # explore_improved = true
 #
