@@ -1374,7 +1374,7 @@ int get_cloud_colour(int cloudno)
         break;
 
     case CLOUD_POISON:
-        which_colour = (one_chance_in(3) ? LIGHTGREEN : GREEN);
+        which_colour = LIGHTGREEN;
         break;
 
     case CLOUD_BLUE_SMOKE:
