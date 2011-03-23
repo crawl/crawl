@@ -6494,19 +6494,12 @@ static void _labyrinth_level(int level_number)
         const vault_placement &rplace = **(env.level_vaults.end() - 1);
         if (rplace.map.has_tag("generate_loot"))
         {
-            for (int y = rplace.pos.y;
-                 y <= rplace.pos.y + rplace.size.y - 1; ++y)
-            {
-                for (int x = rplace.pos.x;
-                     x <= rplace.pos.x + rplace.size.x - 1; ++x)
+            for (vault_place_iterator vi(rplace); vi; ++vi)
+                if (grd(*vi) == DNGN_ESCAPE_HATCH_UP)
                 {
-                    if (grd[x][y] == DNGN_ESCAPE_HATCH_UP)
-                    {
-                        _labyrinth_place_items(coord_def(x, y));
-                        break;
-                    }
+                    _labyrinth_place_items(*vi);
+                    break;
                 }
-            }
         }
         place.pos  = rplace.pos;
         place.size = rplace.size;
