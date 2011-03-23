@@ -159,7 +159,7 @@ private:
     void _set_new_level();
     void _set_title();
     void _clear();
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef WIZARD
     void _set_points();
 #endif
 };
