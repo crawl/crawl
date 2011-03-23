@@ -5,8 +5,18 @@
 # The generic pan lord warning message.
 
 {{
-function pan_lord_warning(e)
-  crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
+function pan_lord_epilogue(name)
+    local msgs = {
+        Mnoleg = "The air here is shimmering with an eerie glow.",
+        ['Lom Lobon'] = "You sense a powerful magical presence. It is not pleased.",
+        Cerebov = "Searing heat pours from the floors and walls of this place.",
+        ['Gloorx Vloq'] = "Shadowy figures dance across your vision."
+    }
+
+    crawl.mpr(msgs[name])
+    crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
+    crawl.take_note('Entered the realm of ' .. name .. '.')
+    crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.')
 end
 
 colours = {
@@ -101,10 +111,7 @@ LROCKCOL:  red
 MONS:      patrolling Mnoleg, neqoxec
 KITEM:     O = glowing rune of Zot
 epilogue{{
-  crawl.mpr("The air here is shimmering with an eerie glow.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Mnoleg")
-  crawl.mark_milestone("br.enter", "entered the realm of Mnoleg.")
+  pan_lord_epilogue('Mnoleg')
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -156,10 +163,7 @@ NSUBST:    q = 2:u / *:.
 NSUBST:    e = 2:u / *:.
 NSUBST:    p = 3:u / *:.
 epilogue{{
-  crawl.mpr("The air here is shimmering with an eerie glow.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Mnoleg")
-  crawl.mark_milestone("br.enter", "entered the realm of Mnoleg.")
+  pan_lord_epilogue('Mnoleg')
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxx@xxxxxxxx
@@ -210,10 +214,7 @@ LROCKCOL:  white
 MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
 KITEM:     O = magical rune of Zot
 epilogue{{
-  crawl.mpr("You sense a powerful magical presence. It is not pleased.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Lom Lobon")
-  crawl.mark_milestone("br.enter", "entered the realm of Lom Lobon.")
+  pan_lord_epilogue('Lom Lobon')
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -262,10 +263,7 @@ SUBST:     0 = 23444445566
 NSUBST:    Q = 1:O / *:4
 NSUBST:    B = 1:. / *:b
 epilogue{{
-  crawl.mpr("You sense a powerful magical presence. It is not pleased.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Lom Lobon")
-  crawl.mark_milestone("br.enter", "entered the realm of Lom Lobon.")
+  pan_lord_epilogue('Lom Lobon')
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -328,10 +326,7 @@ COLOUR:    c = white
 KFEAT:     S = deep_water
 NSUBST:    D = 1:S / *:w
 epilogue{{
-  crawl.mpr("You sense a powerful magical presence. It is not pleased.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Lom Lobon")
-  crawl.mark_milestone("br.enter", "entered the realm of Lom Lobon.")
+  pan_lord_epilogue('Lom Lobon')
 }}
 MAP
 cccccccccccccccccccccccccccccccccccccccc
@@ -395,10 +390,7 @@ LROCKCOL:  red
 MONS:      patrolling Cerebov, Balrug, Pit Fiend
 KITEM:     O = fiery rune of Zot
 epilogue{{
-  crawl.mpr("Searing heat pours from the floors and walls of this place.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Cerebov")
-  crawl.mark_milestone("br.enter", "entered the realm of Cerebov.")
+  pan_lord_epilogue('Cerebov')
 }}
 COLOUR:     n = blue
 TILE:       n = dngn_metal_wall_cracked
@@ -451,10 +443,7 @@ KITEM:     O = fiery rune of zot
 MONS:      patrolling Cerebov, balrug, pit fiend
 MONS:      red devil, sun demon, imp
 epilogue{{
-  crawl.mpr("Searing heat pours from the floors and walls of this place.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Cerebov")
-  crawl.mark_milestone("br.enter", "entered the realm of Cerebov.")
+  pan_lord_epilogue('Cerebov')
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -506,10 +495,7 @@ LROCKCOL:  darkgrey
 MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
 KITEM:     O = dark rune of Zot
 epilogue{{
-  crawl.mpr("Shadowy figures dance across your vision.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Gloorx Vloq")
-  crawl.mark_milestone("br.enter", "entered the realm of Gloorx Vloq.")
+  pan_lord_epilogue('Gloorx Vloq')
 }}
 MAP
 xxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
@@ -552,10 +538,7 @@ MONS:      patrolling Gloorx Vloq, Executioner, shadow wraith
 MONS:      shadow demon, unseen horror
 KITEM:     O = dark rune of Zot
 epilogue{{
-  crawl.mpr("Shadowy figures dance across your vision.")
-  pan_lord_warning(_G)
-  crawl.take_note("Entered the realm of Gloorx Vloq")
-  crawl.mark_milestone("br.enter", "entered the realm of Gloorx Vloq.")
+  pan_lord_epilogue('Gloorx Vloq')
 }}
 MAP
 xxxxxxxxxxxxxxxxxx.@.xxxxxxxxxxxxxxxxxx
