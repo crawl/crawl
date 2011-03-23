@@ -2060,9 +2060,6 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
                  damage_done, heal);
             inc_hp(heal, false);
 
-            if (you.hunger_state != HS_ENGORGED)
-                lessen_hunger(30 + random2avg(59, 2), false);
-
             did_god_conduct(DID_NECROMANCY, 2);
         }
     }
@@ -3427,6 +3424,8 @@ bool melee_attack::apply_damage_brand()
         else
             hp_boost = 1 + random2(damage_done);
 
+        dprf("Vampiric healing: damage %d, healed %d",
+             damage_done, hp_boost);
         attacker->heal(hp_boost);
 
         attacker->god_conduct(DID_NECROMANCY, 2);
