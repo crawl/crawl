@@ -3044,6 +3044,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_INVISIBILITY:
             return (temp && you.backlit(true));
 
+        case RING_LEVITATION:
+            return (you.permanent_levitation() || you.permanent_flight());
+
         default:
             return (false);
         }
