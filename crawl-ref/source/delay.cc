@@ -1552,6 +1552,11 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                                     delay_type atype,
                                     std::vector<std::string>* msgs_buf = NULL)
 {
+    if (ai == AI_SENSE_MONSTER)
+    {
+        mpr("You sense a monster nearby.", MSGCH_WARN);
+        return true;
+    }
     if (ai != AI_SEE_MONSTER)
         return false;
     if (!delay_is_run(atype) && !_is_butcher_delay(atype)
@@ -1774,7 +1779,7 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "statue",
     "hungry", "message", "hp_loss", "burden", "stat",
-    "monster", "monster_attack", "teleport", "hit_monster"
+    "monster", "monster_attack", "teleport", "hit_monster", "sense_monster"
 };
 
 static const char *_activity_interrupt_name(activity_interrupt_type ai)
