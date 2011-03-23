@@ -196,6 +196,7 @@ enum activity_interrupt_type
     AI_TELEPORT,
     AI_HIT_MONSTER,                 // Player hit monster (invis or
                                     // mimic) during travel/explore.
+    AI_SENSE_MONSTER,
 
     // Always the last.
     NUM_AINTERRUPTS
