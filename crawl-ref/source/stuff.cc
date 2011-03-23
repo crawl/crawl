@@ -238,6 +238,8 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     fmenv->travel_path.clear();
     fmenv->travel_target = MTRAV_NONE;
 
+    fmenv->clear_clinging();
+
     dprf("%s is marked for following.",
          fmenv->name(DESC_CAP_THE, true).c_str());
 

@@ -1348,6 +1348,8 @@ static void _go_upstairs()
         you.duration[DUR_MISLED] = 0;
     }
 
+    you.clear_clinging();
+
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
                 1 + (you.burden_state > BS_UNENCUMBERED));
@@ -1422,6 +1424,8 @@ static void _go_downstairs()
         mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
         you.duration[DUR_MISLED] = 0;
     }
+
+    you.clear_clinging();
 
     if (shaft)
     {
