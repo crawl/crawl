@@ -813,6 +813,7 @@ ENDMAP
 # Lions and Tigers and Bears, oh my! (or at least bears)
 #
 NAME:   lemuel_bear_cage
+ORIENT: float
 DEPTH:  D:7-21
 MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
