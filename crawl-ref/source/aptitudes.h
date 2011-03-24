@@ -1133,7 +1133,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_DWARF,      SK_EVOCATIONS,      3),
 
     // SP_CAT
-    APT(SP_CAT,             SK_FIGHTING,       -1),
+    APT(SP_CAT,             SK_FIGHTING,       -2),
     APT(SP_CAT,             SK_SHORT_BLADES,    0),
     APT(SP_CAT,             SK_LONG_BLADES,     0),
     APT(SP_CAT,             SK_AXES,            0),
@@ -1150,7 +1150,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_CAT,             SK_STABBING,        3),
     APT(SP_CAT,             SK_SHIELDS,         0),
     APT(SP_CAT,             SK_TRAPS_DOORS,     2),
-    APT(SP_CAT,             SK_UNARMED_COMBAT, -1),
+    APT(SP_CAT,             SK_UNARMED_COMBAT, -2),
     APT(SP_CAT,             SK_SPELLCASTING,    0),
     APT(SP_CAT,             SK_CONJURATIONS,   -1),
     APT(SP_CAT,             SK_HEXES,           3),
