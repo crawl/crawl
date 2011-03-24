@@ -5346,6 +5346,7 @@ void player::init()
     lives = 0;
     deaths = 0;
     xray_vision = false;
+    you.wear_uncursed = false;
 
     skills.init(0);
     // In Zot def we turn off all skills with non-zero skill level later
@@ -5753,7 +5754,7 @@ int player::skill(skill_type sk) const
 {
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         return std::min(skills[sk] + 5, 27);
-    else if (ash_not_wearing_uncursed() && skills[sk])
+    else if (!you.wear_uncursed && skills[sk])
         return std::max<int>(skills[sk], piety_rank() - 1);
 
     return skills[sk];
