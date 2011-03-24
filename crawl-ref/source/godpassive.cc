@@ -22,6 +22,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "state.h"
 #include "stuff.h"
@@ -597,4 +598,71 @@ monster_type ash_monster_tier(const monster *mon)
     else
         // Check all wands/jewels several times, wear brown pants...
         return MONS_SENSED_NASTY;
+}
+
+int ash_skill_boost(skill_type sk)
+{
+    int level = you.skills[sk];
+    std::set<skill_type> boosted_skills;
+
+    bool bondage_types[NUM_ET];
+    for (int i = 0; i < NUM_ET; i++)
+        bondage_types[i] = ash_bondage_level(i+1);
+
+    if (bondage_types[ET_WEAPON])
+    {
+        const item_def* wpn = you.weapon();
+
+        // Boost your weapon skill.
+        if(wpn->base_type == OBJ_WEAPONS)
+        {
+            boosted_skills.insert(is_range_weapon(*wpn) ? range_skill(*wpn)
+                                                        : weapon_skill(*wpn));
+        }
+        // Those staves don't benefit from evocation.
+        //Boost spellcasting instead.
+        else if (item_is_staff(*wpn)
+                 && (wpn->sub_type == STAFF_POWER
+                     || wpn->sub_type == STAFF_CONJURATION
+                     || wpn->sub_type == STAFF_ENCHANTMENT
+                     || wpn->sub_type == STAFF_ENERGY
+                     || wpn->sub_type == STAFF_WIZARDRY))
+        {
+            boosted_skills.insert(SK_SPELLCASTING);
+        }
+        // Those staves and rods use evocation. Boost it.
+        else if (item_is_staff(*wpn) || item_is_rod(*wpn))
+        {
+            boosted_skills.insert(SK_EVOCATIONS);
+        }
+    }
+
+    if (bondage_types[ET_ARMOUR])
+    {
+        // Boost armour or dodging, whichever is higher.
+        boosted_skills.insert(compare_skills(SK_ARMOUR, SK_DODGING)
+                              ? SK_ARMOUR
+                              : SK_DODGING);
+    }
+
+    if (bondage_types[ET_JEWELS])
+    {
+        // Boost your highest magical skill.
+        skill_type highest = SK_NONE;
+        for (int i = SK_CONJURATIONS; i <= SK_POISON_MAGIC; ++i)
+            if (compare_skills(skill_type(i), highest))
+                highest = skill_type(i);
+
+        boosted_skills.insert(highest);
+    }
+
+    // Apply the skill boost.
+    if (boosted_skills.find(sk) != boosted_skills.end())
+        level += std::max(0, piety_rank() - 3);
+
+    // If not wearing uncursed items, boost low skills.
+    if (!you.wear_uncursed && you.skills[sk])
+        level = std::max(level, piety_rank() - 1);
+
+    return std::min(level, 27);
 }
