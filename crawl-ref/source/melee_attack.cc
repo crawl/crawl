@@ -97,7 +97,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     perceived_attack(false), obvious_effect(false),
     attack_number(which_attack), extra_noise(0), skip_chaos_message(false),
-    art_props(0), unrand_entry(NULL), special_damage_flavour(BEAM_NONE),
+    special_damage_flavour(BEAM_NONE),
     shield(NULL), player_body_armour_penalty(0), player_shield_penalty(0),
     player_armour_tohit_penalty(0), player_shield_tohit_penalty(0),
     can_do_unarmed(false), miscast_level(-1), miscast_type(SPTYP_NONE),

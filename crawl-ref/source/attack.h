@@ -1,6 +1,7 @@
 #ifndef ATTACK_H
 #define ATTACK_H
 
+#include "artefact.h"
 #include "itemprop-enum.h"
 
 // Used throughout inheriting classes, define them here for universal access
@@ -61,6 +62,13 @@ public:
     skill_type      wpn_skill;
     hands_reqd_type hands;
     bool            hand_half_bonus;
+
+    // If weapon is an artefact, its properties.
+    artefact_properties_t art_props;
+
+    // If a weapon is an unrandart, its unrandart entry.
+    // TODO: replace with *weapon references in attack
+    unrandart_entry *unrand_entry;
 
     int     attacker_to_hit_penalty;
 
