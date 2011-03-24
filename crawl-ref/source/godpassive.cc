@@ -296,9 +296,9 @@ void ash_check_bondage()
 
     if (you.wear_uncursed != wear_uncursed)
     {
-        mprf(MSGCH_GOD, "%s on bland gear, you are %san avatar of Ashenzari.",
-             wear_uncursed ? "Relying" : "Shunning",
-             wear_uncursed ? "no longer " : "");
+        mprf(MSGCH_GOD, "%s uncursed gear, you %s an avatar of Ashenzari.",
+             wear_uncursed ? "Relying on" : "Shunning",
+             wear_uncursed ? "are no longer" : "become");
         you.wear_uncursed = wear_uncursed;
     }
 
