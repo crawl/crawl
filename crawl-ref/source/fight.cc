@@ -352,15 +352,6 @@ bool monsters_fight(monster* attacker, monster* defender,
     return (attk.attack());
 }
 
-
-/*
- **************************************************
- *                                                *
- *              END PUBLIC FUNCTIONS              *
- *                                                *
- **************************************************
-*/
-
 // Returns a value between 0 and 10 representing the weight given to str
 int weapon_str_weight(object_class_type wpn_class, int wpn_type)
 {
@@ -453,9 +444,4 @@ int player_weapon_str_weight()
 int player_weapon_dex_weight(void)
 {
     return (10 - player_weapon_str_weight());
-}
-
-void chaos_affect_actor(actor *victim)
-{
-    melee_attack::chaos_affect_actor(victim);
 }
