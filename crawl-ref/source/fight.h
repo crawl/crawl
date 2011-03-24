@@ -4,25 +4,12 @@
  *  Written by: Linley Henzell
  */
 
-
 #ifndef FIGHT_H
 #define FIGHT_H
 
+#include "melee_attack.h"
 #include "mon-enum.h"
 #include "random-var.h"
-
-enum unarmed_attack_type
-{
-    UNAT_NO_ATTACK,                    //    0
-    UNAT_KICK,
-    UNAT_HEADBUTT,
-    UNAT_TAILSLAP,
-    UNAT_PUNCH,
-    UNAT_BITE,
-    UNAT_PSEUDOPODS,
-    UNAT_FIRST_ATTACK = UNAT_KICK,
-    UNAT_LAST_ATTACK = UNAT_PSEUDOPODS,
-};
 
 enum unchivalric_attack_type
 {
@@ -38,18 +25,6 @@ enum unchivalric_attack_type
     UCAT_SLEEPING,
     UCAT_ALLY,
 };
-
-enum phase
-{
-    ATK_ATTEMPTED,                      //  0
-    ATK_DODGED,
-    ATK_BLOCKED,
-    ATK_HIT,
-    ATK_DAMAGED,
-    ATK_KILLED
-};
-
-struct mon_attack_def;
 
 int effective_stat_bonus(int wepType = -1);
 
@@ -73,5 +48,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
                                               const actor *defender);
 
 void chaos_affect_actor(actor *victim);
+int player_weapon_str_weight();
+int player_weapon_dex_weight();
 
 #endif

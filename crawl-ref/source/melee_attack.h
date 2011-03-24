@@ -3,67 +3,51 @@
 
 #include "artefact.h"
 #include "attack.h"
+#include "fight.h"
+#include "mon-enum.h"
 #include "random-var.h"
+#include "random.h"
+
+enum unarmed_attack_type
+{
+    UNAT_NO_ATTACK,                    //    0
+    UNAT_KICK,
+    UNAT_HEADBUTT,
+    UNAT_TAILSLAP,
+    UNAT_PUNCH,
+    UNAT_BITE,
+    UNAT_PSEUDOPODS,
+    UNAT_FIRST_ATTACK = UNAT_KICK,
+    UNAT_LAST_ATTACK = UNAT_PSEUDOPODS,
+};
 
 class melee_attack : public attack
 {
 public:
-    actor     *attacker, *defender;
+    bool      perceived_attack, obvious_effect;
 
-    bool      cancel_attack;
-    bool      did_hit, perceived_attack, obvious_effect;
-
-    // If all or part of the action is visible to the player, we need a message.
-    bool      needs_message;
-    bool      attacker_visible, defender_visible;
-    bool      attacker_invisible, defender_invisible;
-
-    bool      unarmed_ok;
     int       attack_number;
 
-    int       to_hit;
-    int       ev_margin;
-    int       damage_done;
-    int       special_damage;
-    int       aux_damage;
-
-    bool      stab_attempt;
-    int       stab_bonus;
-
-    int       min_delay;
-    int       final_attack_delay;
-
-    int       noise_factor;
     int       extra_noise;
-
-    // Attacker's damage output potential:
-
-    item_def  *weapon;
-    int       damage_brand;  // Can be special even if unarmed (transforms)
-    skill_type wpn_skill;
-    int       hands;
-    bool      hand_half_bonus;
 
     bool      skip_chaos_message;
 
     // If weapon is an artefact, its properties.
+    // TODO: replace with *weapon references in attack
     artefact_properties_t art_props;
 
     // If a weapon is an unrandart, its unrandart entry.
+    // TODO: replace with *weapon references in attack
     unrandart_entry *unrand_entry;
 
-    // Attack messages
-    std::string attack_verb, verb_degree;
-    std::string no_damage_message;
-    std::string special_damage_message;
-    std::string aux_attack, aux_verb;
     beam_type special_damage_flavour;
 
+    // TODO: Remove entirely OR move it into attack
     item_def  *shield;
-    item_def  *defender_shield;
 
     // Armour penalties?
     // Adjusted EV penalty for body armour and shields.
+    // TODO: Replaced with attack methods
     int       player_body_armour_penalty;
     int       player_shield_penalty;
 
@@ -71,8 +55,8 @@ public:
     int       player_armour_tohit_penalty;
     int       player_shield_tohit_penalty;
 
+    // TODO: Replaced with attack::unarmed_capable
     bool      can_do_unarmed;
-    bool      apply_bleeding; // whether the attack should cause bleeding
 
     // Miscast to cause after special damage is done.  If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
@@ -87,43 +71,22 @@ public:
     // Applies attack damage and other effects.
     bool attack();
 
+    // TODO: move base calc to actor/player/monster, use attack::adjust_to_hit
     int  calc_to_hit(bool random = true);
     random_var player_calc_attack_delay();
 
     static void chaos_affect_actor(actor *victim);
 
-    static std::string anon_name(description_level_type desc,
-                                 bool actor_invisible);
-    static std::string actor_name(const actor *a, description_level_type desc,
-                                  bool actor_visible, bool actor_invisible);
-    static std::string pronoun(const actor *a, pronoun_type ptyp,
-                               bool actor_visible);
-    static std::string anon_pronoun(pronoun_type ptyp);
-
 private:
     void init_attack();
     bool is_banished(const actor *) const;
     void check_autoberserk();
-    bool check_unrand_effects(bool mondied = false);
+    bool check_unrand_effects();
     void emit_nodmg_hit_message();
     void identify_mimic(actor *mon);
 
-    std::string debug_damage_number();
-    std::string special_attack_punctuation();
-    std::string attack_strength_punctuation();
-    std::string evasion_margin_adverb();
-
-    std::string atk_name(description_level_type desc) const;
-    std::string def_name(description_level_type desc) const;
-    std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
-                         iflags_t ignore_flags = ISFLAG_KNOW_CURSE
-                                               | ISFLAG_KNOW_PLUSES) const;
-
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();
-    void calc_elemental_brand_damage(beam_type flavour,
-                                     int res,
-                                     const char *verb);
     int fire_res_apply_cerebov_downgrade(int res);
     void drain_defender();
     void rot_defender(int amount, int immediate = 0);
@@ -149,6 +112,10 @@ private:
 
     // Handle specific attack phases (mons and player)
     void respond_to_attack_phase(phase);
+
+    // Added from fight.cc, were static, should be removed
+    int _modify_blood_amount(const int damage, const int dam_type);
+    bool _move_stairs();
 private:
     // Monster-attack specific stuff
     bool mons_attack_you();
@@ -179,6 +146,16 @@ private:
 
     mon_attack_flavour random_chaos_attack_flavour();
 
+    // Added in, were previously static functions in fight.cc, most should
+    // be removed and placed in other classes (monster of player, mostly)
+    void _find_remains(monster* mon, int &corpse_class, int &corpse_index,
+                       item_def &fake_corpse, int &last_item,
+                       std::vector<int> items);
+    bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
+                      item_def &fake_corpse, int last_item);
+    int test_melee_hit(int to_hit, int ev, defer_rand& r);
+    void mons_lose_attack_energy(monster* attacker, int wpn_speed,
+                                 int which_attack, int effective_attack);
 private:
     // Player-attack specific stuff
     bool player_attack();
@@ -209,7 +186,7 @@ private:
     int  player_calc_base_weapon_damage();
     int  player_calc_base_unarmed_damage();
     void player_exercise_combat_skills();
-    bool player_monattk_hit_effects(bool mondied);
+    bool player_monattk_hit_effects();
     void player_sustain_passive_damage();
     int  player_staff_damage(skill_type skill);
     void player_apply_staff_damage();
@@ -224,6 +201,23 @@ private:
     void player_warn_miss();
     void player_check_weapon_effects();
     void _monster_die(monster* mons, killer_type killer, int killer_index);
+
+    // Output methods
+    void stab_message();
+
+    // Added in, were previously static methods of fight.cc
+    bool _tran_forbid_aux_attack(unarmed_attack_type atk);
+    bool _extra_aux_attack(unarmed_attack_type atk);
+    bool player_fights_well_unarmed(int heavy_armour_penalty);
+    int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
+                                 bool vampiric = false);
+    int calc_stat_to_hit_base();
+    void _steal_item_from_player(monster* mon);
+    bool _player_vampire_draws_blood(const monster* mon, const int damage,
+                                     bool needs_bite_msg = false,
+                                     int reduction = 1);
+    int calc_stat_to_dam_base();
+    bool _vamp_wants_blood_from_monster(const monster* mon);
 };
 
 #endif
