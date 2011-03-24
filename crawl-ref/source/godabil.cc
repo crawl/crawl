@@ -21,6 +21,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "food.h"
 #include "files.h"
 #include "fprop.h"
 #include "godabil.h"
@@ -3322,5 +3323,57 @@ bool ashenzari_end_transfer(bool finished, bool force)
     you.transfer_to_skill = SK_NONE;
     you.transfer_skill_points = 0;
     you.transfer_total_skill_points = 0;
+    return true;
+}
+
+bool ashenzari_butcher()
+{
+    // Some shameless copy/paste from fulsome.
+    int num_corpses = 0;
+    item_def *corpse = corpse_at(you.pos(), &num_corpses);
+    if (num_corpses && you.flight_mode() == FL_LEVITATE)
+        num_corpses = -1;
+
+    // If there is only one corpse, butcher it; otherwise, ask the player
+    // which corpse to butcher.
+    switch (num_corpses)
+    {
+        case 0: case -1:
+            if (num_corpses == -1)
+                mpr("You can't reach the corpse!");
+            else
+                mpr("There aren't any corpses here.");
+            return (false);
+        case 1:
+            // Use the only corpse available without prompting.
+            break;
+        default:
+            // Search items at the player's location for corpses.
+            // The last corpse detected earlier is irrelevant.
+            corpse = NULL;
+            for (stack_iterator si(you.pos(), true); si; ++si)
+            {
+                if (item_is_corpse(*si))
+                {
+                    const std::string corpsedesc =
+                        get_menu_colour_prefix_tags(*si, DESC_NOCAP_THE);
+                    const std::string prompt =
+                        make_stringf("Butcher %s?", corpsedesc.c_str());
+
+                    if (yesno(prompt.c_str(), true, 0, false))
+                    {
+                        corpse = &*si;
+                        break;
+                    }
+                }
+            }
+    }
+
+    if (!corpse || !butcher_corpse(corpse->index()))
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+
     return true;
 }
