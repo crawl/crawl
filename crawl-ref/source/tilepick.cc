@@ -2179,6 +2179,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
             no_head_connect = (head->type == MONS_KRAKEN
                                || head->type == MONS_ZOMBIE_LARGE
                                || head->type == MONS_SPECTRAL_THING
+                               || head->type == MONS_SIMULACRUM_LARGE
                                || _tentacle_pos_unknown(head, mon->pos()));
         }
 
