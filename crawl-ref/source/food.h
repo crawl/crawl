@@ -41,6 +41,8 @@ enum food_type
 
 int count_corpses_in_pack(bool blood_only = false);
 bool butchery(int which_corpse = -1, bool bottle_blood = false);
+bool butcher_corpse(int corpse_id, bool first_corpse = true,
+                    bool bottle_blood = false);
 
 bool eat_food(int slot = -1);
 
