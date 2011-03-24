@@ -1011,6 +1011,12 @@ static bool _spellcasting_aborted(spell_type spell,
         mpr("The dungeon can only cope with one malign gateway at a time!");
         return (true);
     }
+    if (spell == SPELL_BERSERKER_RAGE && (!you.can_go_berserk(true)
+                                          || !berserk_check_wielded_weapon()))
+    {
+        return (true);
+    }
+
 
     return (false);
 }
@@ -1773,9 +1779,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // General enhancement.
     case SPELL_BERSERKER_RAGE:
-        if (!berserk_check_wielded_weapon())
-           return (SPRET_ABORT);
-
         cast_berserk();
         break;
 
