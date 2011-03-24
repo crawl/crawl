@@ -294,7 +294,7 @@ void ash_check_bondage()
     bool wear_uncursed = false;
     int new_level = ash_bondage_level(0, &wear_uncursed);
 
-    if (you.wear_uncursed != wear_uncursed)
+    if (you.wear_uncursed != wear_uncursed && piety_rank() > 1)
     {
         mprf(MSGCH_GOD, "%s uncursed gear, you %s an avatar of Ashenzari.",
              wear_uncursed ? "Relying on" : "Shunning",
