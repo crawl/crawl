@@ -15,68 +15,17 @@
 
 #include "externs.h"
 
-#include "areas.h"
-#include "artefact.h"
-#include "attack.h"
-#include "attitude-change.h"
-#include "beam.h"
 #include "cloud.h"
-#include "coordit.h"
-#include "database.h"
 #include "debug.h"
 #include "delay.h"
-#include "directn.h"
-#include "effects.h"
 #include "env.h"
-#include "exercise.h"
-#include "map_knowledge.h"
-#include "feature.h"
-#include "fineff.h"
-#include "fprop.h"
-#include "food.h"
-#include "goditem.h"
 #include "invent.h"
-#include "items.h"
-#include "itemname.h"
 #include "itemprop.h"
-#include "item_use.h"
-#include "libutil.h"
-#include "macro.h"
-#include "makeitem.h"
-#include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
-#include "mon-cast.h"
-#include "mon-clone.h"
-#include "mon-place.h"
-#include "terrain.h"
-#include "melee_attack.h"
-#include "mgen_data.h"
-#include "coord.h"
-#include "mon-stuff.h"
-#include "mon-util.h"
-#include "mutation.h"
-#include "ouch.h"
-#include "player.h"
-#include "random-var.h"
-#include "religion.h"
-#include "godconduct.h"
-#include "shopping.h"
-#include "skills.h"
-#include "species.h"
-#include "spl-clouds.h"
-#include "spl-miscast.h"
-#include "spl-summoning.h"
-#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "transform.h"
-#include "traps.h"
 #include "travel.h"
 #include "hints.h"
-#include "view.h"
-#include "shout.h"
-#include "xom.h"
 
 #ifdef NOTE_DEBUG_CHAOS_BRAND
     #define NOTE_DEBUG_CHAOS_EFFECTS
@@ -85,14 +34,6 @@
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
 #include "notes.h"
 #endif
-
-/*
- **************************************************
- *                                                *
- *             BEGIN PUBLIC FUNCTIONS             *
- *                                                *
- **************************************************
-*/
 
 // This function returns the "extra" stats the player gets because of
 // choice of weapon... it's used only for giving warnings when a player
