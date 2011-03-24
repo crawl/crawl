@@ -609,10 +609,9 @@ int ash_skill_boost(skill_type sk)
     for (int i = 0; i < NUM_ET; i++)
         bondage_types[i] = ash_bondage_level(i+1);
 
-    if (bondage_types[ET_WEAPON])
+    const item_def* wpn = you.weapon();
+    if (wpn && bondage_types[ET_WEAPON])
     {
-        const item_def* wpn = you.weapon();
-
         // Boost your weapon skill.
         if(wpn->base_type == OBJ_WEAPONS)
         {
