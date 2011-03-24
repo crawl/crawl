@@ -28,6 +28,7 @@
 #include "exclude.h"
 #include "fight.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -4219,6 +4220,9 @@ void explore_discoveries::add_item(const item_def &i)
 
 void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
 {
+    if (you.religion == GOD_ASHENZARI)
+        ash_id_item(const_cast<item_def&>(i), false);
+
     if (you.running == RMODE_EXPLORE_GREEDY)
     {
         // The things we need to do...
