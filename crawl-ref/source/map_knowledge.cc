@@ -95,7 +95,7 @@ static void _automap_from(int x, int y, int mutated)
     if (mutated)
     {
         magic_mapping(8 * mutated,
-                      you.religion == GOD_ASHENZARI ? you.piety / 4 : 25,
+                      you.religion == GOD_ASHENZARI ? 25 + you.piety / 8 : 25,
                       true, you.religion == GOD_ASHENZARI,
                       true, true, coord_def(x,y));
     }
