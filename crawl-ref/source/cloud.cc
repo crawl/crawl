@@ -957,7 +957,8 @@ bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_CHAOS:
         if (coinflip())
         {
-            chaos_affect_actor(act);
+            // TODO: Not have this in melee_attack
+            melee_attack::chaos_affect_actor(act);
             return true;
         }
         break;
