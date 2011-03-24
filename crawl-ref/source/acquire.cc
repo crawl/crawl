@@ -894,6 +894,10 @@ static bool _skill_useless_with_god(int skill)
         return (skill == SK_NECROMANCY);
     case GOD_XOM:
     case GOD_NEMELEX_XOBEH:
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_VEHUMET:
+    case GOD_ASHENZARI:
+    case GOD_NO_GOD:
         return (skill == SK_INVOCATIONS);
     default:
         return (false);
