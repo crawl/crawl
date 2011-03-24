@@ -1976,12 +1976,18 @@ void check_antennae_detect()
                     mc = ash_monster_tier(mon);
                 env.map_knowledge(*ri).set_detected_monster(mc);
 
-                if (mc == MONS_SENSED_TRIVIAL || mc == MONS_SENSED_EASY)
+                if (mc == MONS_SENSED_TRIVIAL || mc == MONS_SENSED_EASY
+                    || testbits(mon->flags, MF_SENSED))
+                {
                     continue;
+                }
 
                 for (radius_iterator ri2(mon->pos(), 2, C_SQUARE); ri2; ++ri2)
                     if (you.see_cell(*ri2))
+                    {
+                        mon->flags |= MF_SENSED;
                         interrupt_activity(AI_SENSE_MONSTER);
+                    }
             }
         }
     }

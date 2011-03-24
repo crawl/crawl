@@ -204,5 +204,7 @@ const uint64_t MF_DEMONIC_GUARDIAN    = BIT(30); // is a demonic_guardian
 const uint64_t MF_NAME_SPECIES        = BIT(31); // mname should be used for corpses as well,
 const uint64_t MF_NAME_ZOMBIE         = BIT(32); // mname replaces zombies/skeletons, use
                                       // only for already zombified monsters
+const uint64_t MF_SENSED              = BIT(33); // Player has been warned
+                                      // about this monster being nearby.
 
 #endif
