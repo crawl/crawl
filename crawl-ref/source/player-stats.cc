@@ -383,9 +383,6 @@ static int _stat_modifier(stat_type stat)
     }
 }
 
-// use player::decrease_stats() instead iff:
-// (a) player_sust_abil() should not factor in; and
-// (b) there is no floor to the final stat values {dlb}
 bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
                const char *cause, bool see_source)
 {
@@ -419,7 +416,8 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
 
     if (stat_loss > 0)
     {
-        you.stat_loss[which_stat] += stat_loss;
+        you.stat_loss[which_stat] = std::min<int>(100,
+                                        you.stat_loss[which_stat] + stat_loss);
         _handle_stat_change(which_stat, cause, see_source);
         return (true);
     }
