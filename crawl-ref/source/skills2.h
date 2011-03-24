@@ -44,6 +44,7 @@ unsigned int skill_exp_needed(int lev);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
 
+bool compare_skills(skill_type sk1, skill_type sk2);
 float crosstrain_bonus(skill_type sk);
 bool crosstrain_other(skill_type sk, bool show_zero);
 bool is_antitrained(skill_type sk);
