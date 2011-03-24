@@ -292,7 +292,7 @@ void SkillMenuEntry::set_display()
         _set_progress();
     else if (is_set(SKMF_DISP_RESKILL))
         _set_reskill_progress();
-#ifdef WIZARD
+#ifdef DEBUG
     else if (is_set(SKMF_DISP_POINTS))
         _set_points();
 #endif
@@ -547,7 +547,7 @@ void SkillMenuEntry::_clear()
 #endif
 }
 
-#ifdef WIZARD
+#ifdef DEBUG
 void SkillMenuEntry::_set_points()
 {
     m_progress->set_text(make_stringf("%5d", you.skill_points[m_sk]));
@@ -786,7 +786,7 @@ void SkillMenu::_init_disp_queue()
 
     m_disp_queue.push(SKMF_DISP_NORMAL);
 
-#ifdef WIZARD
+#ifdef DEBUG
     m_disp_queue.push(SKMF_DISP_POINTS);
 #endif
 
@@ -873,7 +873,7 @@ void SkillMenu::_set_title()
         t = make_stringf(format, "destination");
     else
     {
-#ifdef WIZARD
+#ifdef DEBUG
         t = make_stringf("You have %d points of unallocated experience "
                          " (cost lvl %d; total %d).\n\n",
                          you.exp_available, you.skill_cost_level,
