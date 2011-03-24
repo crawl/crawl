@@ -231,7 +231,7 @@ enum eq_type
     NUM_ET
 };
 
-int ash_bondage_level(int type_only)
+int ash_bondage_level(int type_only, bool* wear_uncursed)
 {
     if (you.religion != GOD_ASHENZARI)
         return (0);
@@ -271,6 +271,8 @@ int ash_bondage_level(int type_only)
                 {
                     cursed[s]++;
                 }
+                else if (wear_uncursed)
+                    *wear_uncursed = true;
             }
         }
     }
@@ -288,7 +290,18 @@ int ash_bondage_level(int type_only)
 
 void ash_check_bondage()
 {
-    int new_level = ash_bondage_level();
+    bool wear_uncursed = false;
+    int new_level = ash_bondage_level(0, &wear_uncursed);
+
+    if (you.wear_uncursed != wear_uncursed)
+    {
+        mprf(MSGCH_GOD, "%s on bland gear, you are %san avatar of Ashenzari.",
+             wear_uncursed ? "Relying" : "Shunning",
+             wear_uncursed ? "no longer " : "");
+        you.wear_uncursed = wear_uncursed;
+    }
+
+
     if (new_level == you.bondage_level)
         return;
 
@@ -311,26 +324,6 @@ static bool _is_slot_cursed(equipment_type eq)
 
     if (eq == EQ_WEAPON)
         return worn->base_type == OBJ_WEAPONS || worn->base_type == OBJ_STAVES;
-    return true;
-}
-
-bool ash_not_wearing_uncursed()
-{
-    if (you.religion != GOD_ASHENZARI)
-        return false;
-
-    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
-        if (you_can_wear(i, true) && you.equip[i] != -1)
-        {
-            const item_def& item = you.inv[you.equip[i]];
-            if (!item.cursed()
-                && (i != EQ_WEAPON
-                    || item.base_type == OBJ_WEAPONS
-                    || item.base_type == OBJ_STAVES))
-            {
-                return false;
-            }
-        }
     return true;
 }
 
