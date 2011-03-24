@@ -115,6 +115,7 @@ map_knowledge.o \
 mapdef.o \
 mapmark.o \
 maps.o \
+melee_attack.o \
 menu.o \
 message-stream.o \
 message.o \

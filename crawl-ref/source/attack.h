@@ -3,11 +3,29 @@
 
 #include "itemprop-enum.h"
 
+// Used throughout inheriting classes, define them here for universal access
+const int HIT_WEAK   = 7;
+const int HIT_MED    = 18;
+const int HIT_STRONG = 36;
+
+enum phase
+{
+    ATK_ATTEMPTED,                      //  0
+    ATK_DODGED,
+    ATK_BLOCKED,
+    ATK_HIT,
+    ATK_DAMAGED,
+    ATK_KILLED
+};
+
+// TODO: Potentially remove
+struct mon_attack_def;
+
 class attack
 {
 // Public Properties
 public:
-    // General attack properties, set on instantiation or through a normal 
+    // General attack properties, set on instantiation or through a normal
     // thread of execution
     actor   *attacker, *defender;
 
@@ -21,7 +39,7 @@ public:
     int     damage_done;
     int     special_damage; // TODO: We'll see if we can remove this
     int     aux_damage;
-    
+
     bool    stab_attempt;
     int     stab_bonus;
 
@@ -30,7 +48,7 @@ public:
 
     bool    apply_bleeding;
     bool    unarmed_ok;
-    
+
     int     noise_factor;
     // int     extra_noise; May not be needed??
 
@@ -39,23 +57,23 @@ public:
     bool            ev_margin;
 
     item_def        *weapon;
-    brand_type      damage_brand;
+    int             damage_brand;   // TODO: int => brand_type
     skill_type      wpn_skill;
     hands_reqd_type hands;
     bool            hand_half_bonus;
-    
+
     int     attacker_to_hit_penalty;
-    
+
     // Attack messages
     std::string     attack_verb, verb_degree;
     std::string     no_damage_message;
     std::string     special_damage_message;
     std::string     aux_attack, aux_verb;
-    
+
     // Fetched/Calculated from the defender, stored to save execution time
     int     defender_body_armour_penalty;
     int     defender_shield_penalty;
-    
+
     item_def        *defender_shield;
 
 // Public Methods
@@ -63,11 +81,15 @@ public:
     attack(actor *attk, actor *defn, bool allow_unarmed);
 
     // Applies damage and effect(s)
-    virtual bool do_attack();
+    // TODO: Maybe this should actually occur in fight (eg damage is calculated
+    // within a particular attack, but fight is responsible for performing the
+    // damage.
+    /* virtual bool do_attack(); */
 
     // To-hit is a function of attacker/defender, but we may adjust it
     // for a particular attack, especially if there are temporary effects
-    virtual int adjust_to_hit(bool random = true);
+    /* TODO: Implement */
+    //virtual int adjust_to_hit(bool random = true);
 
     // Exact copies of their melee_attack predecessors
     std::string actor_name(const actor *a, description_level_type desc,
@@ -77,11 +99,11 @@ public:
     std::string anon_name(description_level_type desc,
                           bool actor_invisible);
     std::string anon_pronoun(pronoun_type ptyp);
-    
+
 // Private Methods
-private:
+protected:
     virtual void init_attack();
-    virtual void check_unrand_effects();
+    virtual bool check_unrand_effects() = 0;
 
     // Methods which produce output
     std::string debug_damage_number();
@@ -90,22 +112,22 @@ private:
     std::string evasion_margin_adverb();
 
     // Determine if we're blocking (partially or entirely)
-    virtual bool attack_shield_blocked(bool verbose);
-    virtual bool apply_damage_brand();
+    virtual bool attack_shield_blocked(bool verbose) = 0;
+    virtual bool apply_damage_brand() = 0;
 
     // Ouput methods
-    std::string atk_name(description_level_type desc) const;
-    std::string def_name(description_level_type desc) const;
+    std::string atk_name(description_level_type desc);
+    std::string def_name(description_level_type desc);
     std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
                          iflags_t ignore_flags = ISFLAG_KNOW_CURSE
-                                               | ISFLAG_KNOW_PLUSES) const;
+                                               | ISFLAG_KNOW_PLUSES);
 
     // TODO: Used in elemental brand dmg, definitely want to get rid of this
     std::string defender_name();
-    
+
     void calc_elemental_brand_damage(beam_type flavour,
                                      int res,
-                                     const char *verb);    
+                                     const char *verb);
 };
 
 #endif

@@ -4,7 +4,7 @@
  *              be overloaded by inheriting classes.
  *  Written by: Robert Burnham
  */
- 
+
 #include "AppHdr.h"
 
 #include "attack.h"
@@ -20,10 +20,6 @@
 #include "libutil.h"
 #include "player.h"
 
-const int HIT_WEAK   = 7;
-const int HIT_MED    = 18;
-const int HIT_STRONG = 36;
-
 /*
  **************************************************
  *             BEGIN PUBLIC FUNCTIONS             *
@@ -32,17 +28,17 @@ const int HIT_STRONG = 36;
 attack::attack(actor *attk, actor *defn, bool allow_unarmed)
     : attacker(attk), defender(defn), cancel_attack(false), did_hit(false),
     needs_message(false), attacker_visible(false), defender_visible(false),
-    attacker_invisible(false), defender_invisible(false), to_hit(0), 
-    damage_done(0), aux_damage(0), stab_attempt(false), stab_bonus(0), 
-    min_delay(0), final_attack_delay(0), unarmed_ok(allow_unarmed), 
+    attacker_invisible(false), defender_invisible(false), to_hit(0),
+    damage_done(0), aux_damage(0), stab_attempt(false), stab_bonus(0),
+    min_delay(0), final_attack_delay(0), unarmed_ok(allow_unarmed),
     noise_factor(0), unarmed_capable(false), ev_margin(0), weapon(NULL),
     damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
-    hand_half_bonus(false), attacker_to_hit_penalty(0), attack_verb("bug"), 
-    verb_degree(), no_damage_message(), special_damage_message(), aux_attack(), 
+    hand_half_bonus(false), attacker_to_hit_penalty(0), attack_verb("bug"),
+    verb_degree(), no_damage_message(), special_damage_message(), aux_attack(),
     aux_verb(), defender_body_armour_penalty(0), defender_shield_penalty(0),
     defender_shield(NULL)
 {
-    // No effective code should execute, we'll call init_attack from within 
+    // No effective code should execute, we'll call init_attack from within
     // the child class, since initializing an attack will vary based the type
     // of attack actually being made (melee, ranged, etc.)
 }
@@ -62,7 +58,7 @@ std::string attack::actor_name(const actor *a, description_level_type desc,
  *
  * Takes into account actor visibility
  */
-std::string attack::actor_pronoun(const actor *a, pronoun_type pron, 
+std::string attack::actor_pronoun(const actor *a, pronoun_type pron,
                                   bool actor_visible)
 {
     return (actor_visible ? a->pronoun(pron) : anon_pronoun(pron));
@@ -191,7 +187,7 @@ std::string attack::evasion_margin_adverb()
  *
  * Helper method to easily access the attacker's name
  */
-std::string attack::atk_name(description_level_type desc) const
+std::string attack::atk_name(description_level_type desc)
 {
     return actor_name(attacker, desc, attacker_visible, attacker_invisible);
 }
@@ -200,7 +196,7 @@ std::string attack::atk_name(description_level_type desc) const
  *
  * Helper method to easily access the defender's name
  */
-std::string attack::def_name(description_level_type desc) const
+std::string attack::def_name(description_level_type desc)
 {
     return actor_name(defender, desc, defender_visible, defender_invisible);
 }
@@ -208,16 +204,15 @@ std::string attack::def_name(description_level_type desc) const
 /* Returns the attacking weapon's name
  *
  * Sets upthe appropriate descriptive level and obtains the name of a weapon
- * based on if the attacker is a player or non-player (non-players use a 
+ * based on if the attacker is a player or non-player (non-players use a
  * plain name and a manually entered pronoun)
  */
-std::string attack::wep_name(description_level_type desc,
-                             iflags_t ignore_flags) const
+std::string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
 {
     ASSERT(weapon != NULL);
 
     if (attacker->atype() == ACT_PLAYER)
-        return weapon->name(desc, false, false, false, false, ignore_flags);
+        return weapon->name(desc, false, false, false, false, ignre_flags);
 
     std::string name;
     bool possessive = false;
@@ -235,7 +230,7 @@ std::string attack::wep_name(description_level_type desc,
     if (possessive)
         name = apostrophise(atk_name(desc)) + " ";
 
-    name += weapon->name(DESC_PLAIN, false, false, false, false, ignore_flags);
+    name += weapon->name(DESC_PLAIN, false, false, false, false, ignre_flags);
 
     return (name);
 }
