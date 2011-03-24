@@ -4029,10 +4029,10 @@ static int _species_exp_mod(species_type species)
         case SP_HIGH_ELF:
         case SP_VAMPIRE:
         case SP_TROLL:
-        case SP_CAT:
         case SP_DEMONSPAWN:
             return 15;
         case SP_DEMIGOD:
+        case SP_CAT:
             return 16;
         default:
             return 0;
