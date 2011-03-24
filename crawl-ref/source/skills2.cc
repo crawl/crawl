@@ -1749,16 +1749,29 @@ static skill_type _get_opposite(skill_type sk)
     }
 }
 
+/*
+ * Compare skill levels
+ *
+ * It compares the level of 2 skills, and breaks ties by using skill order.
+ *
+ * @param sk1 First skill.
+ * @param sk2 Second skill.
+ * @return Whether first skill is higher than second skill.
+ */
+bool compare_skills(skill_type sk1, skill_type sk2)
+{
+    return you.skills[sk1] > you.skills[sk2]
+           || you.skills[sk1] == you.skills[sk2]
+              && you.skill_order[sk1] < you.skill_order[sk2];
+}
+
 bool is_antitrained(skill_type sk)
 {
     skill_type opposite = _get_opposite(sk);
     if (opposite == SK_NONE)
         return false;
 
-    return (you.skills[sk] < you.skills[opposite]
-            || you.skills[sk] == you.skills[opposite]
-               && you.skill_order[sk] > you.skill_order[opposite]
-               && you.skills[sk] > 0);
+    return compare_skills(opposite, sk);
 }
 
 bool antitrain_other(skill_type sk, bool show_zero)
@@ -1768,9 +1781,7 @@ bool antitrain_other(skill_type sk, bool show_zero)
         return false;
 
     return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
-            && (you.skills[sk] > you.skills[opposite]
-                || you.skills[sk] == you.skills[opposite]
-                   && you.skill_order[sk] < you.skill_order[opposite]));
+            && compare_skills(sk, opposite));
 }
 
 bool is_invalid_skill(skill_type skill)
