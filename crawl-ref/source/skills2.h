@@ -37,6 +37,7 @@ void init_skill_order();
 
 void calc_mp();
 void calc_hp();
+bool is_useless_skill(int skill);
 
 int species_apt(skill_type skill, species_type species = you.species);
 float species_apt_factor(skill_type sk, species_type sp = you.species);

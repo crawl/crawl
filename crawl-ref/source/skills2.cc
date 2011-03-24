@@ -1591,6 +1591,30 @@ void calc_mp()
     you.redraw_magic_points = true;
 }
 
+bool is_useless_skill(int skill)
+{
+    if (you.species == SP_DEMIGOD && skill == SK_INVOCATIONS)
+        return true;
+    if (you.species == SP_CAT)
+        switch(skill)
+        {
+        case SK_SHORT_BLADES:
+        case SK_LONG_BLADES:
+        case SK_AXES:
+        case SK_MACES_FLAILS:
+        case SK_POLEARMS:
+        case SK_STAVES:
+        case SK_SLINGS:
+        case SK_BOWS:
+        case SK_CROSSBOWS:
+        case SK_THROWING:
+        case SK_ARMOUR:
+        case SK_SHIELDS:
+            return true;
+        }
+    return false;
+}
+
 // What aptitude value corresponds to doubled skill learning
 // (i.e., old-style aptitude 50).
 #define APT_DOUBLE 4

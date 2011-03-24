@@ -1056,7 +1056,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
             int skl = you.skills[sk];
 
-            if (skl == 27 || you.species == SP_DEMIGOD && sk == SK_INVOCATIONS)
+            if (skl == 27 || is_useless_skill(sk))
             {
                 weights[sk] = 0;
                 continue;

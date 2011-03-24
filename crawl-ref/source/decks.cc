@@ -2179,7 +2179,7 @@ void sage_card(int power, deck_rarity_type rarity)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type s = static_cast<skill_type>(i);
-        if (skill_name(s) == NULL)
+        if (skill_name(s) == NULL || is_useless_skill(s))
             continue;
 
         if (you.skills[s] < MAX_SKILL_LEVEL)
