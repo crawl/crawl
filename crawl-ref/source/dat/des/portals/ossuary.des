@@ -536,6 +536,96 @@ c**E~..........<..........~Deec
 ccccccccccccccccccccccccccccccc
 ENDMAP
 
+# Bog mummies might be a bit too hard, but with HD of 3 they seem to be fine.
+# Loot might need tweaking.
+NAME:    ossuary_zaba_flooded
+WEIGHT:  20
+ORIENT:  encompass
+TAGS:    ossuary no_item_gen no_monster_gen
+{{
+local flood_x, flood_y, n = -1, -1, 0
+
+-- Find where to start the flood.
+for x = 0, width() - 1 do
+    for y = 0, height() - 1 do
+        if mapgrd[x][y] == '.' then
+            n = n + 1
+            if crawl.one_chance_in(n) then
+                flood_x, flood_y = x, y
+            end
+        end
+    end
+end
+
+-- Flood it!
+flood(flood_x, flood_y, crawl.random_range(6, 16), function(x, y, distance)
+    local c = mapgrd[x][y]
+
+    local replacements = {
+        ['.'] = { ['.'] = 1, W = 2 },
+        x = { x = 5, w = 5 },
+        c = { c = 5, w = 3, W = 2, x = 1 },
+        ['+'] = { ['+'] = 10, W = 5 },
+        ['1'] = { ['2'] = 1 }
+    }
+
+    if replacements[c] then
+        mapgrd[x][y] = crawl.random_element(replacements[c])
+    end
+
+    if c == '+' or c == 'v' then
+        return 0
+    end
+
+    return distance - 1
+end)
+
+}}
+SHUFFLE: AB/CD/EF/GH
+SUBST:   AC : ., B : A, D : <
+SUBST:   EFGH : d
+MONS:    generate_awake zombie place:D:6 /\
+         w:5 generate_awake mummy
+MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
+         bog mummy hd:3 /\
+         w:5 plant col:lightgrey name:withered n_adj tile:mons_withered_plant /\
+         w:5 nothing
+ITEM:    any potion / any scroll / any jewellery w:1
+: ossuary_setup_features(_G)
+: lrockcol('brown')
+epilogue {{
+ossuary_milestone(_G)
+}}
+MAP
+      xxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxx
+  xxxxxxxxxxxxxxxxxxxxxxx
+ xxxxxxxxxxxxxxxxxxxxxxxxx
+ xxxxxcccccccccccccccxxxxx
+ xxxxxc1c1c1c1c1c1c1cxxxxx
+xxxxccc+c+c+c+c+c+c+cccxxxx
+xxxxc1+.............+1cxxxx
+xxxxccc.vv+vv+vv+vv.cccxxxx
+xxxxc1+.vAAAv1vCCCv.+1cxxxx
+xxxxccc.vABAvvvCDCv.cccxxxx
+xxxxc1+.vAAAv1vCCCv.+1cxxxx
+xxxxccc.vvvvv+vvvvv.cccxxxx
+xxxxc1+.............+1cxxxx
+xxxxccc.vvvvv+vvvvv.cccxxxx
+xxxxc1+.vEEEv1vGGGv.+1cxxxx
+xxxxccc.vEFEvvvGHGv.cccxxxx
+xxxxc1+.vEEEv1vGGGv.+1cxxxx
+xxxxccc.vv+vv+vv+vv.cccxxxx
+xxxxc1+.............+1cxxxx
+xxxxccc+c+c+c+c+c+c+cccxxxx
+ xxxxxc1c1c1c1c1c1c1cxxxxx
+ xxxxxcccccccccccccccxxxxx
+ xxxxxxxxxxxxxxxxxxxxxxxxx
+  xxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxx
+ENDMAP
+
 ###########################################################
 # Very rare: WEIGHT 10
 ###########################################################
