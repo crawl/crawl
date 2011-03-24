@@ -921,7 +921,7 @@ void SkillMenu::_set_skills()
             ln = 0;
             continue;
         }
-        else if (!is_invalid_skill(sk) && you.skills[sk] == 0
+        else if (!is_invalid_skill(sk) && you.skill(sk) == 0
                  && ! is_set(SKMF_DISP_ALL))
         {
             continue;
@@ -1760,9 +1760,14 @@ static skill_type _get_opposite(skill_type sk)
  */
 bool compare_skills(skill_type sk1, skill_type sk2)
 {
-    return you.skills[sk1] > you.skills[sk2]
-           || you.skills[sk1] == you.skills[sk2]
-              && you.skill_order[sk1] < you.skill_order[sk2];
+    if (is_invalid_skill(sk1))
+        return false;
+    else if (is_invalid_skill(sk2))
+        return true;
+    else
+        return you.skills[sk1] > you.skills[sk2]
+               || you.skills[sk1] == you.skills[sk2]
+                   && you.skill_order[sk1] < you.skill_order[sk2];
 }
 
 bool is_antitrained(skill_type sk)
