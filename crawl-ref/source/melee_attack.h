@@ -32,14 +32,6 @@ public:
 
     bool      skip_chaos_message;
 
-    // If weapon is an artefact, its properties.
-    // TODO: replace with *weapon references in attack
-    artefact_properties_t art_props;
-
-    // If a weapon is an unrandart, its unrandart entry.
-    // TODO: replace with *weapon references in attack
-    unrandart_entry *unrand_entry;
-
     beam_type special_damage_flavour;
 
     // TODO: Remove entirely OR move it into attack
