@@ -815,8 +815,10 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "injury to most foes and up to double damage against "
                 "particularly susceptible opponents.";
             if (get_vorpal_type(item) & (DVORP_SLICING | DVORP_CHOPPING))
+            {
                 description += " Big, fiery blades are also staple armaments "
                     "of hydra-hunters.";
+            }
             break;
         case SPWPN_FREEZING:
             description += "It has been specially enchanted to freeze "
@@ -831,13 +833,17 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             break;
         case SPWPN_ELECTROCUTION:
             if (is_range_weapon(item))
+            {
                 description += "It charges the ammunition it shoots with "
                     "electricity; occasionally upon a hit, such missiles "
                     "may discharge and cause terrible harm.";
+            }
             else
+            {
                 description += "Occasionally, upon striking a foe, it will "
                     "discharge some electrical energy and cause terrible "
                     "harm.";
+            }
             break;
         case SPWPN_ORC_SLAYING:
             description += "It is especially effective against all of "
@@ -866,8 +872,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "life of those it strikes.";
             break;
         case SPWPN_SPEED:
-            description += "Attacks with this weapon take half as long "
-                "as usual, albeit are slightly weaker.";
+            description += "Attacks with this weapon take half as long, "
+                "but cause less damage.";
             break;
         case SPWPN_VORPAL:
             if (is_range_weapon(item))
