@@ -966,7 +966,7 @@ static bool _jiyva_retribution()
         if (found_one)
         {
             mprf(MSGCH_GOD, "Jiyva's putrescence saturates the %s!",
-                 mon->name(DESC_NOCAP_THE).c_str());
+                 mon->name(DESC_THE).c_str());
 
             slimify_monster(mon, true);
         }
