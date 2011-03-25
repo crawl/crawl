@@ -30,7 +30,7 @@ function sewer_portal(e)
       visible = true,
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns,
+      messages = time_messages(timeout_turns/10,
                                "$F{The} is slowly rusting away.",
                                "$F{The} is rusting away.",
                                "$F{The} is quickly rusting away.",

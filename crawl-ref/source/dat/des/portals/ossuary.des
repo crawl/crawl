@@ -19,14 +19,15 @@ function ossuary_portal(e)
 "staircase will be gone. They say that some distant relatives of the pharaohs "..
 "were entombed here."
 
-  local timeout_turns = crawl.random_range(2700, 3300)
+  local timeout_turns_long = crawl.random_range(2700, 3300)
+  local timeout_turns_short = timeout_turns_long/10
 
   local messager =
     timed_msg {
       visible = true,
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns,
+      messages = time_messages(timeout_turns_short,
           "Nearby sand pours into $F{the}.",
           "Nearby sand pours into $F{the}, lightly covering it.",
           "Nearby sand pours into $F{the}, greatly covering it.",
@@ -42,7 +43,8 @@ function ossuary_portal(e)
         dst = "ossuary",
         dstorigin = "in a tomb",
         overview = "sand-covered staircase",
-        turns = timeout_turns,
+        turns = timeout_turns_long,
+        turns2 = timeout_turns_short,
         floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")

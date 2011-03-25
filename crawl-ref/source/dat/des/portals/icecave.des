@@ -19,14 +19,15 @@ function ice_cave_portal(e)
     "portal. Whatever lives on the other side, they will be full of " ..
     "grim and arctic fury. You note that the archway is melting away."
 
-  local timeout_turns = crawl.random_range(2700, 3300)
+  local timeout_turns_long = crawl.random_range(2700, 3300)
+  local timeout_turns_short = timeout_turns_long/10
 
   local messager =
     timed_msg {
       visible = true,
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns,
+      messages = time_messages(timeout_turns_short,
                                "$F{The} is slowly melting away.",
                                "$F{The} is melting away.",
                                "$F{The} is quickly melting away.",
@@ -67,7 +68,8 @@ function ice_cave_portal(e)
         dstname_abbrev = "IceCv",
         dstorigin = "in an ice cave",
         overview = "frozen archway",
-        turns = timeout_turns,
+        turns = timeout_turns_long,
+        turns2 = timeout_turns_short,
         floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")

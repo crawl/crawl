@@ -71,13 +71,15 @@ function volcano_portal (e)
                       "though triggered by the air, rocks fall from the roof " ..
                       "and sides of the tunnel, slowly filling the entry."
 
-    local timeout_turns = crawl.random_range(2700, 3300)
+    local timeout_turns_long = crawl.random_range(2700, 3300)
+    local timeout_turns_short = timeout_turns_long/10
+
     local messager =
         timed_msg {
             visible = true,
             -- $F{xxx} will be substituted with the 'entity' property of the timed
             -- marker, or with the desc property (if entity is not set).
-            messages = time_messages(timeout_turns,
+            messages = time_messages(timeout_turns_short,
                             "Rocks fall inside $F{the}.",
                             "Debris falls inside $F{the}, filling the entry.",
                             "More rocks fall inside $F{the}, blocking the entry.",
@@ -95,7 +97,8 @@ function volcano_portal (e)
         dstname_abbrev = "Volcano",
         dstorigin = "in a volcano",
         overview = "dark tunnel",
-        turns = timeout_turns,
+        turns = timeout_turns_long,
+        turns2 = timeout_turns_short,
         msg = messager })
     e.kfeat("O = enter_portal_vault")
     e.tile("O = dngn_portal_volcano")
