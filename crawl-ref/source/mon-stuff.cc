@@ -2307,7 +2307,7 @@ int monster_die(monster* mons, killer_type killer,
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
-            if (mons->pacified() || !mons->needs_transit())
+            if (mons->pacified() || !mons->needs_abyss_transit())
             {
                 // A banished monster that doesn't go on the transit list
                 // loses all items.

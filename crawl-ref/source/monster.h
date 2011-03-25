@@ -200,7 +200,7 @@ public:
 
     bool is_travelling() const;
     bool is_patrolling() const;
-    bool needs_transit() const;
+    bool needs_abyss_transit() const;
     void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);
     bool find_home_near_place(const coord_def &c);

@@ -654,7 +654,7 @@ public:
 
 static void _abyss_lose_monster(monster& mons)
 {
-    if (mons.needs_transit())
+    if (mons.needs_abyss_transit())
         mons.set_transit(level_id(LEVEL_ABYSS));
 
     mons.destroy_inventory();
@@ -974,7 +974,7 @@ void abyss_area_shift(void)
 void save_abyss_uniques()
 {
     for (monster_iterator mi; mi; ++mi)
-        if (mi->needs_transit())
+        if (mi->needs_abyss_transit())
             mi->set_transit(level_id(LEVEL_ABYSS));
 }
 

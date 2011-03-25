@@ -3918,7 +3918,7 @@ bool monster::is_patrolling() const
     return (!patrol_point.origin());
 }
 
-bool monster::needs_transit() const
+bool monster::needs_abyss_transit() const
 {
     return ((mons_is_unique(type)
                 || (flags & MF_BANISHED)
