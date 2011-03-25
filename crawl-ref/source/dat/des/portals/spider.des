@@ -5,7 +5,9 @@
 # This is a portal vault adaptation of an upcoming branch for Lair rotation.
 # Original branch concept by Lemuel Pitkin.
 #
-# Spiders, bugs, webs.
+# Spiders, bugs, webs. There should be no bottlenecks for the player to camp
+# at. The monsters should always be able to swarm the player. Water (or even
+# lava) is good, so that the spiders can use their clinging ability.
 #
 ###############################################################################
 
