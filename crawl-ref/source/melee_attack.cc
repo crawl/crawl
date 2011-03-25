@@ -3700,7 +3700,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
             mprf("%s %s %s attack.",
                  def_name(DESC_THE).c_str(),
                  defender->conj_verb("block").c_str(),
-                 atk_name(DESC_NOCAP_ITS).c_str());
+                 atk_name(DESC_ITS).c_str());
         }
 
         defender->shield_block_succeeded(attacker);
@@ -4195,7 +4195,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                 mprf("%s %s strength from %s injuries!",
                      atk_name(DESC_THE).c_str(),
                      attacker->conj_verb("draw").c_str(),
-                     def_name(DESC_NOCAP_ITS).c_str());
+                     def_name(DESC_ITS).c_str());
             }
 
             // 4.1.2 actually drains max hp; we're being nicer and just doing
@@ -4776,7 +4776,7 @@ void melee_attack::mons_perform_attack_rounds()
                     mprf("Helpless, %s %s to dodge %s attack.",
                          mons_defender_name().c_str(),
                          defender->conj_verb("fail").c_str(),
-                         atk_name(DESC_NOCAP_ITS).c_str());
+                         atk_name(DESC_ITS).c_str());
                 }
                 this_round_hit = true;
             }
@@ -4788,7 +4788,7 @@ void melee_attack::mons_perform_attack_rounds()
                          "attack passes through %s%s",
                          defender->name(DESC_THE).c_str(),
                          defender->conj_verb("phase").c_str(),
-                         atk_name(DESC_NOCAP_ITS).c_str(),
+                         atk_name(DESC_ITS).c_str(),
                          defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
                          attack_strength_punctuation().c_str());
                 }

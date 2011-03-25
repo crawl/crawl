@@ -133,7 +133,7 @@ std::string item_def::name(description_level_type descrip,
              && !(corpse_flags & MF_NAME_SUFFIX)
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
-        descript = DESC_THE;
+        descrip = DESC_THE;
     }
 
     if (item_is_orb(*this)
