@@ -328,9 +328,9 @@ void player::make_hungry(int hunger_increase, bool silent)
         ::lessen_hunger(-hunger_increase, silent);
 }
 
-static std::string _pronoun_you(description_level_type desc)
+std::string player::name(description_level_type dt, bool) const
 {
-    switch (desc)
+    switch (dt)
     {
     case DESC_NONE:
         return "";
@@ -345,11 +345,6 @@ static std::string _pronoun_you(description_level_type desc)
     case DESC_NOCAP_ITS:
         return "your";
     }
-}
-
-std::string player::name(description_level_type dt, bool) const
-{
-    return (_pronoun_you(dt));
 }
 
 std::string player::pronoun(pronoun_type pro, bool) const
