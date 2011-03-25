@@ -641,7 +641,9 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
         z_tile = TILEP_MONS_ZOMBIE_NAGA;
         break;
     case MON_SHAPE_QUADRUPED_WINGED:
-        if (mons_genus(subtype) == MONS_DRAGON)
+    case MON_SHAPE_QUADRUPED:
+        if (mons_genus(subtype) == MONS_DRAGON
+            || mons_genus(subtype) == MONS_WYVERN)
         {
             if (_is_skeleton(z_type))
                 return TILEP_MONS_SKELETON_DRAGON;
@@ -649,9 +651,7 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
             z_tile = TILEP_MONS_ZOMBIE_DRAGON;
             break;
         }
-        // else fall-through
-    case MON_SHAPE_QUADRUPED:
-        if (mons_genus(subtype) == MONS_HYDRA)
+        else if (mons_genus(subtype) == MONS_HYDRA)
         {
             if (_is_skeleton(z_type))
             {
