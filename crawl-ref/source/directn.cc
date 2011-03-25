@@ -680,7 +680,7 @@ void full_describe_view()
                      + "</" + col_string + ">) ";
 #endif
             std::string str = get_monster_equipment_desc(mi->mon(), true,
-                                                         DESC_CAP_A, true);
+                                                         DESC_A, true);
 
             if (mi->is(MB_MESMERIZING))
                 str += ", keeping you mesmerised";
@@ -1496,7 +1496,7 @@ void direction_chooser::print_target_object_description() const
     // FIXME: remove the duplication with print_items_description().
     mprf(MSGCH_PROMPT, "%s: %s",
          target_prefix ? target_prefix : "Aim",
-         get_menu_colour_prefix_tags(*item, DESC_CAP_A).c_str());
+         get_menu_colour_prefix_tags(*item, DESC_A).c_str());
 }
 
 void direction_chooser::print_items_description() const
@@ -1510,7 +1510,7 @@ void direction_chooser::print_items_description() const
 
     // Print the first item.
     mprf(MSGCH_FLOOR_ITEMS, "%s.",
-         get_menu_colour_prefix_tags(*item, DESC_CAP_A).c_str());
+         get_menu_colour_prefix_tags(*item, DESC_A).c_str());
 
     if (multiple_items_at(target(), true))
         mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
@@ -2811,7 +2811,7 @@ void describe_floor()
     }
 
     feat = feature_description(you.pos(), true,
-                               DESC_NOCAP_A, false);
+                               DESC_A, false);
     if (feat.empty())
         return;
 
@@ -3357,12 +3357,12 @@ static std::string _describe_monster_weapon(const monster_info& mi)
 
     if (weap)
     {
-        name1 = weap->name(DESC_NOCAP_A, false, false, true,
+        name1 = weap->name(DESC_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
     if (alt && mi.two_weapons)
     {
-        name2 = alt->name(DESC_NOCAP_A, false, false, true,
+        name2 = alt->name(DESC_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
     }
 
@@ -3373,7 +3373,7 @@ static std::string _describe_monster_weapon(const monster_info& mi)
     {
         item_def dup = *weap;
         ++dup.quantity;
-        name1 = dup.name(DESC_NOCAP_A, false, false, true, true,
+        name1 = dup.name(DESC_A, false, false, true, true,
                          ISFLAG_KNOW_CURSE);
         name2.clear();
     }
@@ -3483,7 +3483,7 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     {
         descs.push_back("fire blocked by "
                         + feature_description(mi.fire_blocker, NUM_TRAPS, "",
-                                              DESC_NOCAP_A, false));
+                                              DESC_A, false));
     }
 
     return descs;
@@ -3551,7 +3551,7 @@ static std::string _get_monster_desc(const monster_info& mi)
         text += std::string("Your line of fire to ") + mi.pronoun(PRONOUN_OBJECTIVE)
               + " is blocked by "
               + feature_description(mi.fire_blocker, NUM_TRAPS, "",
-                                    DESC_NOCAP_A)
+                                    DESC_A)
               + "\n";
     }
 
@@ -3675,7 +3675,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
                 desc += "and ";
             }
             desc += "wearing ";
-            desc += mon_arm->name(DESC_NOCAP_A);
+            desc += mon_arm->name(DESC_A);
             if (!found_sth)
                 found_sth = true;
         }
@@ -3686,7 +3686,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
             if (found_sth && !mon_qvr && !mon_alt)
                 desc += "and ";
             desc += "wearing ";
-            desc += mon_shd->name(DESC_NOCAP_A);
+            desc += mon_shd->name(DESC_A);
             if (!found_sth)
                 found_sth = true;
         }
@@ -3697,7 +3697,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
             if (found_sth && !mon_alt)
                 desc += "and ";
             desc += "quivering ";
-            desc += mon_qvr->name(DESC_NOCAP_A);
+            desc += mon_qvr->name(DESC_A);
             if (!found_sth)
                 found_sth = true;
         }
@@ -3708,7 +3708,7 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
             if (found_sth)
                 desc += "and ";
             desc += "carrying ";
-            desc += mon_alt->name(DESC_NOCAP_A);
+            desc += mon_alt->name(DESC_A);
         }
     }
 
@@ -3820,7 +3820,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
             {
                 const std::string name =
                         get_menu_colour_prefix_tags(get_mimic_item(mon),
-                                                    DESC_NOCAP_A);
+                                                    DESC_A);
                 mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
                 mimic_item = true;
                 item_described = true;
@@ -3875,7 +3875,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         else
         {
             std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
-                                                           DESC_NOCAP_A);
+                                                           DESC_A);
             mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
             if (mitm[ targ_item ].link != NON_ITEM)

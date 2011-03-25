@@ -271,7 +271,7 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         {
             // Colour stock according to menu colours.
             const std::string colprf = menu_colour_item_prefix(item);
-            const int col = menu_colour(item.name(DESC_NOCAP_A),
+            const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
             textcolor(col != -1 ? col : LIGHTGREY);
         }
@@ -279,7 +279,7 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
         cprintf("%-56s%5d gold",
-                item.name(DESC_NOCAP_A, false, id).substr(0, 56).c_str(),
+                item.name(DESC_A, false, id).substr(0, 56).c_str(),
                 gp_value);
 
         si.add_item(item, gp_value);
@@ -552,7 +552,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
                             // Take a note of the purchase.
                             take_note(Note(NOTE_BUY_ITEM, gp_value, 0,
-                                           item.name(DESC_NOCAP_A).c_str()));
+                                           item.name(DESC_A).c_str()));
 
                             // But take no further similar notes.
                             item.flags |= ISFLAG_NOTED_GET;
@@ -2509,7 +2509,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
             std::string prompt =
                 make_stringf("Shopping-list: remove %s? (Y/n)",
-                             describe_thing(thing, DESC_NOCAP_A).c_str());
+                             describe_thing(thing, DESC_A).c_str());
 
             if (_shop_yesno(prompt.c_str(), 'y'))
                 to_del.push_back(list_pos);
@@ -2518,7 +2518,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         {
             std::string str =
                 make_stringf("Shopping-list: removing %s",
-                             describe_thing(thing, DESC_NOCAP_A).c_str());
+                             describe_thing(thing, DESC_A).c_str());
 
             _shop_mpr(str.c_str());
             to_del.push_back(list_pos);
@@ -2620,7 +2620,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
                 desc = "buy";
             desc += " ";
 
-            desc += describe_thing(thing, DESC_NOCAP_A);
+            desc += describe_thing(thing, DESC_A);
 
             descs.push_back(desc);
         }
@@ -2684,7 +2684,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
         std::string etitle =
             make_stringf("[%s] %s (%d gp)", short_place_name(pos.id).c_str(),
-                         name_thing(thing, DESC_NOCAP_A).c_str(),
+                         name_thing(thing, DESC_A).c_str(),
                          cost);
 
         MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
@@ -2698,7 +2698,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             const item_def &item = get_thing_item(thing);
 
             const std::string colprf = menu_colour_item_prefix(item);
-            const int col = menu_colour(item.name(DESC_NOCAP_A),
+            const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 
             if (col != -1)
@@ -2766,7 +2766,7 @@ void ShoppingList::display()
                 std::string prompt =
                    make_stringf("You cannot afford %s; travel there "
                                 "anyway? (y/N)",
-                                describe_thing(*thing, DESC_NOCAP_A).c_str());
+                                describe_thing(*thing, DESC_A).c_str());
                 clrscr();
                 if (!yesno(prompt.c_str(), true, 'n'))
                     continue;
@@ -2789,7 +2789,7 @@ void ShoppingList::display()
                 // HACK: Assume it's some kind of portal vault.
                 snprintf(info, INFO_SIZE,
                          "%s with an entry fee of %d gold pieces.",
-                         describe_thing(*thing, DESC_CAP_A).c_str(),
+                         describe_thing(*thing, DESC_A).c_str(),
                          (int) thing_cost(*thing));
 
                 print_description(info);
@@ -2800,7 +2800,7 @@ void ShoppingList::display()
         {
             std::string prompt =
                 make_stringf("Delete %s from shopping list? (y/N)",
-                             describe_thing(*thing, DESC_NOCAP_A).c_str());
+                             describe_thing(*thing, DESC_A).c_str());
             clrscr();
             if (!yesno(prompt.c_str(), true, 'n'))
                 continue;

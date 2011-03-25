@@ -1198,7 +1198,7 @@ void melee_attack::player_weapon_auto_id()
         && x_chance_in_y(you.skill(wpn_skill), 100))
     {
         set_ident_flags(*weapon, ISFLAG_KNOW_PLUSES);
-        mprf("You are wielding %s.", weapon->name(DESC_NOCAP_A).c_str());
+        mprf("You are wielding %s.", weapon->name(DESC_A).c_str());
         more();
         you.wield_change = true;
     }
@@ -3077,7 +3077,7 @@ void melee_attack::player_apply_staff_damage()
             set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
             set_ident_type(*weapon, ID_KNOWN_TYPE);
 
-            mprf("You are wielding %s.", weapon->name(DESC_NOCAP_A).c_str());
+            mprf("You are wielding %s.", weapon->name(DESC_A).c_str());
             more();
             you.wield_change = true;
         }
@@ -3894,7 +3894,7 @@ std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
         if (attacker->type != MONS_DANCING_WEAPON)
         {
             result += " with ";
-            result += weapon->name(DESC_NOCAP_A);
+            result += weapon->name(DESC_A);
         }
 
         return (result);

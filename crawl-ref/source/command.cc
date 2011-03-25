@@ -712,7 +712,7 @@ void list_weapons(void)
         else
         {
             wstring += "  - ";
-            wstring += item->name(DESC_NOCAP_A);
+            wstring += item->name(DESC_A);
             wstring += " (empty)";
         }
     }
@@ -1166,7 +1166,7 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
             keys[i] = "A shop";
         else
         {
-            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_CAP_A,
+            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A,
                                           false);
         }
     }

@@ -154,7 +154,7 @@ void debug_item_scan(void)
                     if (menv[j].inv[k] == i)
                     {
                         mprf("Held by monster #%d: %s at (%d,%d)",
-                             j, menv[j].name(DESC_CAP_A, true).c_str(),
+                             j, menv[j].name(DESC_A, true).c_str(),
                              menv[j].pos().x, menv[j].pos().y);
                     }
                 }

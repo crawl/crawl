@@ -484,7 +484,7 @@ static short _min_rot(const item_def &item)
 // stash-tracking pre/suffixes.
 std::string Stash::stash_item_name(const item_def &item)
 {
-    std::string name = item.name(DESC_NOCAP_A);
+    std::string name = item.name(DESC_A);
 
     if (!_is_rottable(item))
         return name;

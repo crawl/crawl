@@ -1211,7 +1211,7 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
             mpr("The poison in your system burns!");
 
         ouch(damage, actor->as_monster()->mindex(), KILLED_BY_MONSTER,
-             actor->as_monster()->name(DESC_NOCAP_A).c_str());
+             actor->as_monster()->name(DESC_A).c_str());
 
         if (you.duration[DUR_POISONING] > 0)
         {

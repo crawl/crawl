@@ -1852,7 +1852,7 @@ std::string get_item_description(const item_def &item, bool verbose,
                 }
                 else
                 {
-                    description << article_a(item.name(DESC_CAP_A, true,
+                    description << article_a(item.name(DESC_A, true,
                                                        false, false), false);
                     description << ".\n";
                 }
@@ -2217,7 +2217,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
             feat = get_mimic_feat(mimic_mons);
         }
     }
-    std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
+    std::string desc      = feature_description(pos, false, DESC_A, false);
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
@@ -2232,7 +2232,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     // the feature's base name is different.
     if (long_desc.empty())
     {
-        db_name   = feature_description(pos, false, DESC_CAP_A, false, true);
+        db_name   = feature_description(pos, false, DESC_A, false, true);
         long_desc = getLongDescription(db_name);
     }
 
@@ -3359,7 +3359,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen)
 {
     if (inf.title.empty())
-        inf.title = mi.full_name(DESC_CAP_A, true);
+        inf.title = mi.full_name(DESC_A, true);
 
     std::string db_name;
 
@@ -3596,7 +3596,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                 has_item = true;
             }
             inf.body << "    " << i << ") "
-                     << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
+                     << mitm[mons.inv[i]].name(DESC_A, false, true);
         }
     }
 

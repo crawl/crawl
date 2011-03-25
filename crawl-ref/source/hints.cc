@@ -1133,7 +1133,7 @@ void hints_first_item(const item_def &item)
 #else
     const coord_def gc = item.pos;
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
-    tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_CAP_A), gc);
+    tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_A), gc);
 #endif
 
     text += "is an item. If you move there and press <w>g</w> or "
@@ -1671,7 +1671,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 text << " ";
 #else
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
-                tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_CAP_A), gc);
+                tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_A), gc);
 #endif
 
                 text << "is a corpse.";
@@ -2987,7 +2987,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         if (const monster* m = monster_at(gc))
-            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
+            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_A), gc);
 #endif
         text << "That monster looks a bit unusual. You might wish to examine "
                 "it a bit more closely by "
@@ -3008,7 +3008,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
+        tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_A), gc);
 #endif
         text << "That monster is friendly to you and will attack your "
                 "enemies, though you'll get only half the experience for "
@@ -3047,7 +3047,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (vis)
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
-            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
+            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_A), gc);
         }
 #endif
         if (!vis)

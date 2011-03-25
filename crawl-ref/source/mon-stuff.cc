@@ -626,7 +626,7 @@ int place_monster_corpse(const monster* mons, bool silent,
             else
             {
                 mprf("%s appears out of nowhere!",
-                     mitm[o].name(DESC_CAP_A).c_str());
+                     mitm[o].name(DESC_A).c_str());
             }
         }
         if (o != NON_ITEM && !silent)
@@ -1679,7 +1679,7 @@ int monster_die(monster* mons, killer_type killer,
     {
         take_note(Note(NOTE_KILL_MONSTER,
                        mons->type, mons->friendly(),
-                       mons->full_name(DESC_NOCAP_A).c_str()));
+                       mons->full_name(DESC_A).c_str()));
     }
 
     // From time to time Trog gives you a little bonus.
@@ -2759,7 +2759,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     bool can_see_new = !mons_class_flag(targetc, M_INVIS) || you.can_see_invisible();
 
     bool need_note = false;
-    std::string old_name = mons->full_name(DESC_CAP_A);
+    std::string old_name = mons->full_name(DESC_A);
 
     // If old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.
@@ -2808,7 +2808,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         }
         else
         {
-            str_polymon += mons_type_name(targetc, DESC_NOCAP_A);
+            str_polymon += mons_type_name(targetc, DESC_A);
 
             if (targetc == MONS_PULSATING_LUMP)
                 str_polymon += " of flesh";
@@ -2969,7 +2969,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     if (!player_messaged && you.can_see(mons))
     {
-        mprf("%s appears out of thin air!", mons->name(DESC_CAP_A).c_str());
+        mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
         autotoggle_autopickup(false);
         player_messaged = true;
     }
@@ -2991,7 +2991,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // New monster type might be interesting.
     mark_interesting_monst(mons);
     if (new_name.empty())
-        new_name = mons->full_name(DESC_NOCAP_A);
+        new_name = mons->full_name(DESC_A);
 
     if (need_note
         || can_see && you.can_see(mons) && MONST_INTERESTING(mons))
@@ -4073,7 +4073,7 @@ void seen_monster(monster* mons)
 
         if (MONST_INTERESTING(mons))
         {
-            std::string name = mons->name(DESC_NOCAP_A, true);
+            std::string name = mons->name(DESC_A, true);
             if (mons->type == MONS_PLAYER_GHOST)
             {
                 name += make_stringf(" (%s)",

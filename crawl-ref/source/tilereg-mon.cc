@@ -215,7 +215,7 @@ void MonsterRegion::draw_tag()
     if (!mon)
         return;
 
-    std::string desc = mon->name(DESC_CAP_A);
+    std::string desc = mon->name(DESC_A);
     draw_desc(desc.c_str());
 }
 

@@ -78,7 +78,7 @@ InvEntry::InvEntry(const item_def &i) : MenuEntry("", MEL_ITEM), item(&i)
         text = i.name(DESC_INVENTORY_EQUIP, false).substr(4);
     }
     else
-        text = i.name(DESC_NOCAP_A, false);
+        text = i.name(DESC_A, false);
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
         add_hotkey(index_to_letter(i.link));
@@ -1636,7 +1636,7 @@ bool check_warning_inscriptions(const item_def& item,
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
-                                      : item.name(DESC_NOCAP_A));
+                                      : item.name(DESC_A));
         if (_nasty_stasis(item, oper))
             prompt += std::string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :

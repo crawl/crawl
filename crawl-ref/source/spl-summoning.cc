@@ -1349,7 +1349,7 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
                                 is_player,
-                                is_player ? "" : caster->as_monster()->full_name(DESC_NOCAP_A, true),
+                                is_player ? "" : caster->as_monster()->full_name(DESC_A, true),
                                 is_player ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
                                 god,
                                 pow));

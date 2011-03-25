@@ -472,7 +472,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
     set_ident_type(*corpse, ID_KNOWN_TYPE);
 
     mprf("You extract %s from the corpse.",
-         corpse->name(DESC_NOCAP_A).c_str());
+         corpse->name(DESC_A).c_str());
 
     // Try to move the potion to the player (for convenience).
     if (move_item_to_player(corpse->index(), 1) != 1)

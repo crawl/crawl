@@ -612,7 +612,7 @@ void wizard_create_all_artefacts()
         item.quantity = 1;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
-        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_NOCAP_A)
+        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
                                         << " (" << debug_art_val_str(item)
                                         << ")" << std::endl;
         move_item_to_grid(&islot, you.pos());
@@ -632,7 +632,7 @@ void wizard_create_all_artefacts()
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         move_item_to_grid(&islot, you.pos());
 
-        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_NOCAP_A)
+        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
                                         << std::endl;
     }
 }

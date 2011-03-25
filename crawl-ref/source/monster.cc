@@ -807,7 +807,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
     if (msg)
     {
         snprintf(info, INFO_SIZE, " wields %s.",
-                 item.name(DESC_NOCAP_A, false, false, true, false,
+                 item.name(DESC_A, false, false, true, false,
                            ISFLAG_CURSED).c_str());
         msg = simple_monster_message(this, info);
     }
@@ -889,7 +889,7 @@ void monster::equip_armour(item_def &item, int near)
     if (need_message(near))
     {
         snprintf(info, INFO_SIZE, " wears %s.",
-                 item.name(DESC_NOCAP_A).c_str());
+                 item.name(DESC_A).c_str());
         simple_monster_message(this, info);
     }
 
@@ -937,7 +937,7 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
     if (msg)
     {
         snprintf(info, INFO_SIZE, " unwields %s.",
-                             item.name(DESC_NOCAP_A, false, false, true, false,
+                             item.name(DESC_A, false, false, true, false,
                              ISFLAG_CURSED).c_str());
         msg = simple_monster_message(this, info);
     }
@@ -991,7 +991,7 @@ void monster::unequip_armour(item_def &item, int near)
     if (need_message(near))
     {
         snprintf(info, INFO_SIZE, " takes off %s.",
-                 item.name(DESC_NOCAP_A).c_str());
+                 item.name(DESC_A).c_str());
         simple_monster_message(this, info);
     }
 
@@ -1055,7 +1055,7 @@ void monster::pickup_message(const item_def &item, int near)
         mprf("%s picks up %s.",
              name(DESC_THE).c_str(),
              item.base_type == OBJ_GOLD ? "some gold"
-                                        : item.name(DESC_NOCAP_A).c_str());
+                                        : item.name(DESC_A).c_str());
     }
 }
 
@@ -1204,7 +1204,7 @@ bool monster::drop_item(int eslot, int near)
         if (need_message(near))
         {
             mprf("%s drops %s.", name(DESC_THE).c_str(),
-                 pitem->name(DESC_NOCAP_A).c_str());
+                 pitem->name(DESC_A).c_str());
         }
 
         if (!move_item_to_grid(&item_index, pos(), swimming()))
@@ -4122,12 +4122,12 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             if (type == MONS_AIR_ELEMENTAL)
             {
                 mprf("%s merges itself into the air.",
-                     name(DESC_CAP_A, true).c_str());
+                     name(DESC_A, true).c_str());
             }
             else if (type == MONS_TRAPDOOR_SPIDER)
             {
                 mprf("%s hides itself under the floor.",
-                     name(DESC_CAP_A, true).c_str());
+                     name(DESC_A, true).c_str());
             }
             else if (seen_context == "surfaces"
                      || seen_context == "bursts forth"
@@ -4140,7 +4140,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                                                            "surfaced"));
             }
             else if (crawl_state.game_is_arena())
-                mprf("%s submerges.", name(DESC_CAP_A, true).c_str());
+                mprf("%s submerges.", name(DESC_A, true).c_str());
         }
 
         // Pacified monsters leave the level when they submerge.
@@ -4233,7 +4233,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         else
             mprf(MSGCH_ERROR, "%s tried to unsubmerge while on same square as "
                  "%s (see bug 2293518)", mon->name(DESC_THE, true).c_str(),
-                 mon->name(DESC_NOCAP_A, true).c_str());
+                 mon->name(DESC_A, true).c_str());
     }
 
     // Monster un-submerging while under player or another monster.  Try to
@@ -4423,7 +4423,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!quiet)
             {
                 mprf("%s appears from thin air!",
-                     name(DESC_CAP_A, true).c_str());
+                     name(DESC_A, true).c_str());
                 autotoggle_autopickup(false);
             }
 
@@ -4525,7 +4525,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (you.pos() == pos())
         {
             mprf(MSGCH_ERROR, "%s is on the same square as you!",
-                 name(DESC_CAP_A).c_str());
+                 name(DESC_A).c_str());
         }
 
         if (you.can_see(this))
@@ -4550,15 +4550,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 if (type == MONS_AIR_ELEMENTAL)
                 {
                     mprf("%s forms itself from the air!",
-                         name(DESC_CAP_A, true).c_str());
+                         name(DESC_A, true).c_str());
                 }
                 else if (type == MONS_TRAPDOOR_SPIDER)
                 {
                     mprf("%s leaps out from its hiding place under the floor!",
-                         name(DESC_CAP_A, true).c_str());
+                         name(DESC_A, true).c_str());
                 }
                 else if (crawl_state.game_is_arena())
-                    mprf("%s surfaces.", name(DESC_CAP_A, true).c_str());
+                    mprf("%s surfaces.", name(DESC_A, true).c_str());
             }
         }
         else if (mons_near(this)
@@ -5198,7 +5198,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         && !mon->has_ench(ENCH_STICKY_FLAME)
                         && coinflip())
                     {
-                        mprf("%s catches fire!", mon->name(DESC_CAP_A).c_str());
+                        mprf("%s catches fire!", mon->name(DESC_A).c_str());
                         const int dur = me.degree/2 + 1 + random2(me.degree);
                         mon->add_ench(mon_enchant(ENCH_STICKY_FLAME, dur,
                                                   me.agent()));

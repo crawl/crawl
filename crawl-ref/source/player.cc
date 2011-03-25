@@ -6288,7 +6288,7 @@ int player::mons_species() const
 
 void player::poison(actor *agent, int amount, bool force)
 {
-    ::poison_player(amount, agent? agent->name(DESC_NOCAP_A, true) : "");
+    ::poison_player(amount, agent? agent->name(DESC_A, true) : "");
 }
 
 void player::expose_to_element(beam_type element, int st)
@@ -6424,7 +6424,7 @@ void player::paralyse(actor *who, int str)
     if (!paralysis && who)
     {
         take_note(Note(NOTE_PARALYSIS, str, 0,
-                       who->name(DESC_NOCAP_A).c_str()));
+                       who->name(DESC_A).c_str()));
     }
 
 

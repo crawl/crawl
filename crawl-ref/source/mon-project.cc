@@ -300,7 +300,7 @@ move_again:
         {
             if (you.see_cell(pos))
                 mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
-                     feature_description(pos, false, DESC_NOCAP_A).c_str());
+                     feature_description(pos, false, DESC_A).c_str());
         }
 
         monster* mons = (victim && victim->atype() == ACT_MONSTER) ?

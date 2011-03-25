@@ -1131,7 +1131,7 @@ bool bolt::hit_wall()
         }
 
         prompt += " is blocked by "
-                + feature_description(pos(), false, DESC_NOCAP_A, false);
+                + feature_description(pos(), false, DESC_A, false);
 
         prompt += ". Continue anyway?";
 
@@ -4481,7 +4481,7 @@ void bolt::affect_monster(monster* mon)
         // Preserve name of the source monster if it winds up killing
         // itself.
         if (mon->mindex() == beam_source && source_name.empty())
-            source_name = orig.name(DESC_NOCAP_A, true);
+            source_name = orig.name(DESC_A, true);
 
         // Prevent spore explosions killing plants from being registered
         // as a Fedhas misconduct.  Deaths can trigger the ally dying or
@@ -5672,7 +5672,7 @@ std::string bolt::get_short_name() const
         return (short_name);
 
     if (item != NULL && item->defined())
-        return item->name(DESC_NOCAP_A, false, false, false, false,
+        return item->name(DESC_A, false, false, false, false,
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                           | ISFLAG_RACIAL_MASK);
 
@@ -5796,7 +5796,7 @@ std::string bolt::get_source_name() const
         return source_name;
     const actor *a = agent();
     if (a)
-        return a->name(DESC_NOCAP_A, true);
+        return a->name(DESC_A, true);
     return "";
 }
 
