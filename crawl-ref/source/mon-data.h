@@ -5492,7 +5492,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
-// "G"oblins and gnolls.
+// "g"oblins and gnolls.
 {
     MONS_IJYB, 'g', BLUE, "Ijyb",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS,
@@ -5651,7 +5651,7 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-// "M"erfolk.
+// "m"erfolk.
 {
     MONS_ILSUIW, 'm', LIGHTGREEN, "Ilsuiw",
     M_UNIQUE | M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS,
