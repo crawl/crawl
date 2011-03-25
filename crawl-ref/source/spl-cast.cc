@@ -941,7 +941,7 @@ static int _setup_evaporate_cast()
     else
     {
         mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
-             you.inv[rc].name(DESC_NOCAP_YOUR).c_str());
+             you.inv[rc].name(DESC_YOUR).c_str());
     }
     return rc;
 }

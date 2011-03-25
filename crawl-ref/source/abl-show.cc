@@ -2673,7 +2673,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_JIYVA_SLIMIFY:
     {
         const item_def* const weapon = you.weapon();
-        const std::string msg = (weapon) ? weapon->name(DESC_NOCAP_YOUR)
+        const std::string msg = (weapon) ? weapon->name(DESC_YOUR)
                                          : ("your " + you.hand_name(true));
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,

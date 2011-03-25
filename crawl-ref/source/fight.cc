@@ -254,7 +254,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         if (unarmed_warning)
             prompt += "being unarmed?";
         else
-            prompt += "wielding " + weapon->name(DESC_NOCAP_YOUR) + "? ";
+            prompt += "wielding " + weapon->name(DESC_YOUR) + "? ";
 
         const bool result = yesno(prompt.c_str(), true, 'n');
 

@@ -3712,7 +3712,7 @@ void hints_describe_item(const item_def &item)
        case OBJ_MISSILES:
             if (is_throwable(&you, item))
             {
-                ostr << item.name(DESC_CAP_YOUR)
+                ostr << item.name(DESC_YOUR)
                      << " can be <w>%</w>ired without the use of a launcher. ";
                 ostr << _hints_throw_stuff(item);
                 cmd.push_back(CMD_FIRE);

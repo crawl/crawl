@@ -855,12 +855,12 @@ void handle_delay()
         {
         case DELAY_ARMOUR_ON:
             mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
-                 you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+                 you.inv[delay.parm1].name(DESC_YOUR).c_str());
             break;
 
         case DELAY_ARMOUR_OFF:
             mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
-                 you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+                 you.inv[delay.parm1].name(DESC_YOUR).c_str());
             break;
 
         case DELAY_BUTCHER:
@@ -986,7 +986,7 @@ static void _finish_delay(const delay_queue_item &delay)
         ASSERT(you.equip[slot] == delay.parm1);
 
         mprf("You finish taking off %s.",
-             you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+             you.inv[delay.parm1].name(DESC_YOUR).c_str());
         unequip_item(slot);
 
         break;
@@ -1288,7 +1288,7 @@ static void _armour_wear_effects(const int item_slot)
         if (Options.autoinscribe_artefacts && is_artefact(arm))
             add_autoinscription(arm, artefact_auto_inscription(arm));
     }
-    mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
+    mprf("You finish putting on %s.", arm.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {

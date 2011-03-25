@@ -131,7 +131,7 @@ bool brand_weapon(brand_type which_brand, int power)
         temp_brand = false;
     }
 
-    std::string msg = weapon.name(DESC_CAP_YOUR);
+    std::string msg = weapon.name(DESC_YOUR);
 
     bool emit_special_message = !temp_brand;
     int duration_affected = 0;
@@ -219,7 +219,7 @@ bool brand_weapon(brand_type which_brand, int power)
     if (emit_special_message)
         mpr(msg.c_str());
     else
-        mprf("%s flashes.", weapon.name(DESC_CAP_YOUR).c_str());
+        mprf("%s flashes.", weapon.name(DESC_YOUR).c_str());
 
     you.increase_duration(DUR_WEAPON_BRAND,
                           duration_affected + roll_dice(2, power), 50);
