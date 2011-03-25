@@ -615,9 +615,11 @@ ENDMAP
 NAME:    sewer_co_purgy_island
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-#      Placing Purgy, he appear in one of three places.
+WEIGHT:  10
+#      Placing Purgy, he appears in one of three places. The crocodile serves
+#      as the back-up, in case Purgy was already placed in the Dungeon.
 SHUFFLE: PQR
-KMONS:   P = Purgy
+KMONS:   P = Purgy, crocodile
 SUBST:   Q = .
 SUBST:   R = .
 #      lesser monsters.
