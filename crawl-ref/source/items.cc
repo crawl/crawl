@@ -1728,7 +1728,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (!item.slot)
         item.slot = index_to_letter(item.link);
 
-    ash_id_item(item);
+    if (item.props.exists("needs_autopickup"))
+        item.props.erase("needs_autopickup");
+    else
+        ash_id_item(item);
+
     note_inscribe_item(item);
 
     item.quantity = quant_got;
@@ -2467,6 +2471,9 @@ bool item_needs_autopickup(const item_def &item)
 {
     if (item_is_stationary(item))
         return (false);
+
+    if (item.props.exists("needs_autopickup"))
+        return (true);
 
     if (item.inscription.find("=g") != std::string::npos)
         return (true);
