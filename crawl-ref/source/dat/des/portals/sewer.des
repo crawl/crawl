@@ -183,6 +183,22 @@ xwww.....
 x........
 ENDMAP
 
+NAME:   portal_sewer_entry_f
+TAGS:   uniq_sewer no_monster_gen chance_sewer
+CHANCE: 8%
+: sewer_portal(_G)
+NSUBST: W = 6:1 / *:W
+KMONS:  1 = nothing w:5 / giant gecko / giant mite / giant cockroach
+KFEAT:  1 = W
+COLOUR: W = green / cyan w:5
+MAP
+xxxxxxxxxxx
+.WWWWWWWWW.
+@WWWWOWWWW@
+.WWWWWWWWW.
+xxxxxxxxxxx
+ENDMAP
+
 # The actual portal vaults #####################################
 default-depth:
 
