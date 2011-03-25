@@ -320,7 +320,7 @@ static std::string _describe_monsters(const counted_monster_list &list)
 {
     std::ostringstream out;
 
-    description_level_type desc = DESC_CAP_THE;
+    description_level_type desc = DESC_THE;
     for (counted_monster_list::const_iterator i = list.begin();
          i != list.end(); desc = DESC_NOCAP_THE)
     {
@@ -1277,7 +1277,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         if (damage)
         {
             mprf("%s is struck by lightning.",
-                 mons->name(DESC_CAP_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             _player_hurt_monster(*mons, damage);
         }
     }
@@ -1407,7 +1407,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     if (monster* mon = monster_at(spd.target))
     {
         // Save the monster's name in case it isn't available later.
-        const std::string name_cap_the = mon->name(DESC_CAP_THE);
+        const std::string name_cap_the = mon->name(DESC_THE);
 
         switch (mon->type)
         {
@@ -1562,7 +1562,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     {
         if (si->base_type == OBJ_CORPSES)
         {
-            std::string nm = si->name(DESC_CAP_THE);
+            std::string nm = si->name(DESC_THE);
             if (si->sub_type == CORPSE_BODY)
             {
                 if (!explode_corpse(*si, spd.target))
@@ -1585,7 +1585,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                                 "veto_fragmentation") == "veto")
     {
         mprf("%s seems to be unnaturally hard.",
-             feature_description(spd.target, false, DESC_CAP_THE, false).c_str());
+             feature_description(spd.target, false, DESC_THE, false).c_str());
         canned_msg(MSG_SPELL_FIZZLES);
         return (true);
     }

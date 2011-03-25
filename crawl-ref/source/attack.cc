@@ -75,18 +75,13 @@ std::string attack::anon_name(description_level_type desc,
 {
     switch (desc)
     {
-    case DESC_CAP_THE:
-    case DESC_CAP_A:
-        return (actor_invisible ? "It" : "Something");
-    case DESC_CAP_YOUR:
-        return ("Its");
+    case DESC_NONE:
+        return ("");
     case DESC_NOCAP_YOUR:
     case DESC_NOCAP_ITS:
         return ("its");
-    case DESC_NONE:
-        return ("");
-    case DESC_NOCAP_THE:
-    case DESC_NOCAP_A:
+    case DESC_THE:
+    case DESC_A:
     case DESC_PLAIN:
     default:
         return (actor_invisible? "it" : "something");
@@ -219,7 +214,7 @@ std::string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
     bool possessive = false;
     if (desc == DESC_CAP_YOUR)
     {
-        desc       = DESC_CAP_THE;
+        desc       = DESC_THE;
         possessive = true;
     }
     else if (desc == DESC_NOCAP_YOUR)
@@ -264,7 +259,7 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
     {
         special_damage_message = make_stringf(
             "%s %s %s%s",
-            atk_name(DESC_CAP_THE).c_str(),
+            atk_name(DESC_THE).c_str(),
             attacker->conj_verb(verb).c_str(),
             defender_name().c_str(),
             special_attack_punctuation().c_str());

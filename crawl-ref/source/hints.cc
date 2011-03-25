@@ -3083,7 +3083,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (!m || !you.can_see(m))
             DELAY_EVENT;
 
-        text << m->name(DESC_CAP_THE, true) << " didn't vanish, but merely "
+        text << m->name(DESC_THE, true) << " didn't vanish, but merely "
                 "moved onto a square which you can't currently see. It's still "
                 "nearby, unless something happens to it in the short amount of "
                 "time it's out of sight.";

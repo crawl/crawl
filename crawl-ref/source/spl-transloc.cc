@@ -728,7 +728,7 @@ bool cast_apportation(int pow, bolt& beam)
         {
             if (mons_is_item_mimic(m->type) && you.can_see(m))
             {
-                mprf("%s twitches.", m->name(DESC_CAP_THE).c_str());
+                mprf("%s twitches.", m->name(DESC_THE).c_str());
                 // Nothing else gives this message, so identify the mimic.
                 discover_mimic(m);
                 return (true);  // otherwise you get free mimic ID

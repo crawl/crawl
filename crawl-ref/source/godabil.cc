@@ -1006,7 +1006,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 else
                 {
                     mprf("%s bleeds profusely from %s eyes and ears.",
-                         mon->name(DESC_CAP_THE).c_str(),
+                         mon->name(DESC_THE).c_str(),
                          mons_pronoun(mon->type, PRONOUN_NOCAP_POSSESSIVE));
                 }
                 break;
@@ -1724,7 +1724,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
     const std::string whose =
-        you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
+        you.can_see(mon) ? apostrophise(mon->name(DESC_THE))
                          : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
 
     // If the monster's held in a net, get it out.
@@ -3089,7 +3089,7 @@ static int _lugonu_warp_monster(monster* mon, int pow)
     if (res_margin > 0)
     {
         mprf("%s%s",
-             mon->name(DESC_CAP_THE).c_str(),
+             mon->name(DESC_THE).c_str(),
              mons_resist_string(mon, res_margin).c_str());
         return (1);
     }
@@ -3188,7 +3188,7 @@ void cheibriados_time_bend(int pow)
             if (res_margin > 0)
             {
                 mprf("%s%s",
-                     mon->name(DESC_CAP_THE).c_str(),
+                     mon->name(DESC_THE).c_str(),
                      mons_resist_string(mon, res_margin).c_str());
                 continue;
             }

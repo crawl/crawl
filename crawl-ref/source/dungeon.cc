@@ -5111,7 +5111,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
             {
                 mprf(MSGCH_ERROR, "ERROR: %s already generated somewhere "
                      "else; please file a bug report.",
-                     mons_type_name(mt, DESC_CAP_THE).c_str());
+                     mons_type_name(mt, DESC_THE).c_str());
                 // Force it to be generated anyway.
                 you.unique_creatures[mt] = false;
             }

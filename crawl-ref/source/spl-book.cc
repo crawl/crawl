@@ -112,7 +112,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     formatted_string out;
     out.textcolor(LIGHTGREY);
 
-    out.cprintf("%s", book.name(DESC_CAP_THE).c_str());
+    out.cprintf("%s", book.name(DESC_THE).c_str());
 
     out.cprintf("\n\n Spells                             Type                      Level\n");
 

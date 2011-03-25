@@ -1157,7 +1157,7 @@ static bool _grab_follower_at(const coord_def &pos)
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "%s is following to %s.",
-         fmenv->name(DESC_CAP_THE, true).c_str(),
+         fmenv->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
 #endif
     bool could_see = you.can_see(fmenv);
@@ -1612,7 +1612,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
             {
                 std::string stair_str =
                     feature_description(feat, NUM_TRAPS, "",
-                                        DESC_CAP_THE, false);
+                                        DESC_THE, false);
                 std::string verb = stair_climb_verb(feat);
 
                 if (coinflip()

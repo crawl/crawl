@@ -299,7 +299,7 @@ move_again:
         if (cell_is_solid(pos))
         {
             if (you.see_cell(pos))
-                mprf("%s hits %s", mon.name(DESC_CAP_THE, true).c_str(),
+                mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
                      feature_description(pos, false, DESC_NOCAP_A).c_str());
         }
 
@@ -369,7 +369,7 @@ move_again:
                 if (victim->observable())
                 {
                     mprf("%s reflects %s with %s %s!",
-                        victim->name(DESC_CAP_THE, true).c_str(),
+                        victim->name(DESC_THE, true).c_str(),
                         mon.name(DESC_NOCAP_THE, true).c_str(),
                         mon.pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
                         shield->name(DESC_PLAIN).c_str());
@@ -378,7 +378,7 @@ move_again:
                 else
                 {
                     mprf("%s bounces off thin air!",
-                        mon.name(DESC_CAP_THE, true).c_str());
+                        mon.name(DESC_THE, true).c_str());
                 }
             }
             victim->shield_block_succeeded(&mon);
@@ -397,7 +397,7 @@ move_again:
 
         // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
         if (victim == &you)
-            mprf("%s hits you!", mon.name(DESC_CAP_THE, true).c_str());
+            mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
         if (_iood_hit(mon, pos))
             return (true);

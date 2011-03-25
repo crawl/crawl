@@ -1056,8 +1056,8 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     {
         seen = true;
 
-        description_level_type desc = mon->friendly() ? DESC_CAP_YOUR :
-                                                        DESC_CAP_THE;
+        description_level_type desc = mon->friendly() ? DESC_YOUR :
+                                                        DESC_THE;
         std::string msg = apostrophise(mon->name(desc));
 
         msg += " ";
@@ -1648,7 +1648,7 @@ static int _xom_swap_weapons(bool debug = false)
     mitm[index].flags |= ISFLAG_THROWN;
 
     mprf("%s wields %s!",
-         mon->name(DESC_CAP_THE).c_str(),
+         mon->name(DESC_THE).c_str(),
          myweapon.name(DESC_NOCAP_YOUR).c_str());
     mon->equip(myweapon, MSLOT_WEAPON, 0);
 
@@ -1821,7 +1821,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
             doodad.quantity = 1;
 
             // Output some text since otherwise snakes will disappear silently.
-            mprf("%s reforms as %s", mi->name(DESC_CAP_THE).c_str(),
+            mprf("%s reforms as %s", mi->name(DESC_THE).c_str(),
                  doodad.name(DESC_NOCAP_A).c_str());
 
             // Dismiss monster silently.
@@ -1920,7 +1920,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
     mon->inv[MSLOT_WEAPON] = NON_ITEM;
 
     mprf("%s %s dances into the air!",
-         apostrophise(mon->name(DESC_CAP_THE)).c_str(),
+         apostrophise(mon->name(DESC_THE)).c_str(),
          mitm[wpn].name(DESC_PLAIN).c_str());
 
     destroy_item(menv[mons].inv[MSLOT_WEAPON]);
@@ -2597,7 +2597,7 @@ static void _xom_zero_miscast()
         && feat != DNGN_OPEN_DOOR && feat != DNGN_ABANDONED_SHOP)
     {
         const std::string feat_name =
-            feature_description(you.pos(), false, DESC_CAP_THE, false);
+            feature_description(you.pos(), false, DESC_THE, false);
 
         if (you.airborne())
         {
@@ -3202,7 +3202,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     ASSERT(stair_pos != ray.pos());
 
     std::string stair_str =
-        feature_description(stair_pos, false, DESC_CAP_THE, false);
+        feature_description(stair_pos, false, DESC_THE, false);
 
     mprf("%s slides %s you!", stair_str.c_str(),
          away ? "away from" : "towards");

@@ -443,7 +443,7 @@ void debug_stethoscope(int mon)
 
     // Print type of monster.
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
-         mons.name(DESC_CAP_THE, true).c_str(),
+         mons.name(DESC_THE, true).c_str(),
          i, mons.type, mons.pos().x, mons.pos().y,
          ((mons.attitude == ATT_HOSTILE)        ? "hostile" :
           (mons.attitude == ATT_FRIENDLY)       ? "friendly" :

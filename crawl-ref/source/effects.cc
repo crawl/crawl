@@ -196,7 +196,7 @@ int holy_word(int pow, int caster, const coord_def& where, bool silent,
     if (!silent && attacker)
     {
         mprf("%s %s a Word of immense power!",
-             attacker->name(DESC_CAP_THE).c_str(),
+             attacker->name(DESC_THE).c_str(),
              attacker->conj_verb("speak").c_str());
     }
 

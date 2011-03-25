@@ -1058,7 +1058,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
     const std::string orig_name =
         feature_description(dest_pos, false,
-                            you.see_cell(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
+                            you.see_cell(orig_pos) ? DESC_THE : DESC_A,
                             false);
 
     std::string prep = feat_preposition(orig_feat, false);

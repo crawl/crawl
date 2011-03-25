@@ -3431,7 +3431,7 @@ bool player_angers_monster(monster* mon)
                 aura = "anti-magical";
 
             mprf("%s is enraged by your %s aura!",
-                 mon->name(DESC_CAP_THE).c_str(), aura.c_str());
+                 mon->name(DESC_THE).c_str(), aura.c_str());
         }
 
         return (true);

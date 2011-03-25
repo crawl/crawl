@@ -1543,7 +1543,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             && !(atype == DELAY_NOT_DELAYED))
         {
             mprf(MSGCH_WARN, "%s is too close now for your liking.",
-                 mon->name(DESC_CAP_THE).c_str());
+                 mon->name(DESC_THE).c_str());
         }
     }
     else

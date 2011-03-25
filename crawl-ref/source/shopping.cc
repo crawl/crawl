@@ -2286,7 +2286,7 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
     if (find_thing(item, pos) != -1)
     {
         mprf(MSGCH_ERROR, "%s is already on the shopping list.",
-             item.name(DESC_CAP_THE).c_str());
+             item.name(DESC_THE).c_str());
         return (false);
     }
 
@@ -2365,7 +2365,7 @@ bool ShoppingList::del_thing(const item_def &item,
     if (idx == -1)
     {
         mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
-             item.name(DESC_CAP_THE).c_str());
+             item.name(DESC_THE).c_str());
         return (false);
     }
 

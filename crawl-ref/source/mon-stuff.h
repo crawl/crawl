@@ -120,7 +120,7 @@ bool monster_blink(monster* mons, bool quiet = false);
 bool simple_monster_message(const monster* mons, const char *event,
                             msg_channel_type channel = MSGCH_PLAIN,
                             int param = 0,
-                            description_level_type descrip = DESC_CAP_THE);
+                            description_level_type descrip = DESC_THE);
 
 bool choose_any_monster(const monster* mon);
 monster *choose_random_nearby_monster(

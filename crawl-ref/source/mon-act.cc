@@ -194,7 +194,7 @@ static bool _swap_monsters(monster* mover, monster* moved)
 
     if (you.can_see(mover) && you.can_see(moved))
     {
-        mprf("%s and %s swap places.", mover->name(DESC_CAP_THE).c_str(),
+        mprf("%s and %s swap places.", mover->name(DESC_THE).c_str(),
              moved->name(DESC_NOCAP_THE).c_str());
     }
 
@@ -1584,7 +1584,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 
     // Now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
-    std::string msg = mons->name(DESC_CAP_THE);
+    std::string msg = mons->name(DESC_THE);
     msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
 
     if (!pbolt.name.empty() && projected == LRET_LAUNCHED)
@@ -2651,7 +2651,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
 
     if (nearby)
     {
-        mprf("%s eats %s.", mons->name(DESC_CAP_THE).c_str(),
+        mprf("%s eats %s.", mons->name(DESC_THE).c_str(),
              item.name(DESC_NOCAP_THE).c_str());
     }
 
@@ -2719,7 +2719,7 @@ static bool _monster_eat_food(monster* mons, bool nearby)
             {
                 if (nearby)
                 {
-                    mprf("%s eats %s.", mons->name(DESC_CAP_THE).c_str(),
+                    mprf("%s eats %s.", mons->name(DESC_THE).c_str(),
                          quant_name(*si, 1, DESC_NOCAP_THE).c_str());
                 }
 
@@ -2966,7 +2966,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
         {
             mprf("%s was actually a secret door!",
                  feature_description(grid, NUM_TRAPS, "",
-                                     DESC_CAP_THE, false).c_str());
+                                     DESC_THE, false).c_str());
             learned_something_new(HINT_FOUND_SECRET_DOOR, pos);
         }
 
@@ -3576,7 +3576,7 @@ static bool _monster_move(monster* mons)
                 if (one_chance_in(10))
                 {
                     mprf(MSGCH_TALK_VISUAL, "%s rages.",
-                         mons->name(DESC_CAP_THE).c_str());
+                         mons->name(DESC_THE).c_str());
                 }
                 noisy(noise_level, mons->pos(), mons->mindex());
             }
@@ -3743,7 +3743,7 @@ static bool _monster_move(monster* mons)
                     const bool actor_visible = you.can_see(mons);
                     mprf("%s knocks down a tree!",
                          actor_visible?
-                         mons->name(DESC_CAP_THE).c_str() : "Something");
+                         mons->name(DESC_THE).c_str() : "Something");
                     noisy(25, target);
                 }
                 else
@@ -3796,7 +3796,7 @@ static bool _monster_move(monster* mons)
 #ifdef DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
                      "%s is skipping movement in order to follow.",
-                     mons->name(DESC_CAP_THE).c_str(), true);
+                     mons->name(DESC_THE).c_str(), true);
 #endif
             }
         }

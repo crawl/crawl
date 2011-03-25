@@ -2390,7 +2390,7 @@ void bolt::drop_object()
         if (you.see_cell(pos()))
         {
             mprf("%s %s!",
-                 item->name(DESC_CAP_THE).c_str(),
+                 item->name(DESC_THE).c_str(),
                  summoned_poof_msg(beam_source, *item).c_str());
         }
         item_was_destroyed(*item, beam_source);
@@ -2419,7 +2419,7 @@ void bolt::drop_object()
         // Large rocks mulch to stone.
         bool in_view = you.see_cell(pos());
         if (in_view)
-            mprf("%s shatters into pieces!", item->name(DESC_CAP_THE).c_str());
+            mprf("%s shatters into pieces!", item->name(DESC_THE).c_str());
         noisy(12, pos(), in_view ? NULL : "You hear a cracking sound!");
 
         item->sub_type = MI_STONE;
@@ -4099,14 +4099,14 @@ void bolt::beam_hits_actor(actor *act)
             if (drac_breath)
             {
                 mprf("%s %s blown backwards by the freezing wind.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
                 knockback_actor(act);
             }
             else
             {
                 mprf("%s %s knocked back by the %s.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str(),
                      this->name.c_str());
             }
@@ -4132,7 +4132,7 @@ bool bolt::attempt_block(monster* mon)
                 if (mon->observable())
                 {
                     mprf("%s reflects the %s off %s %s!",
-                         mon->name(DESC_CAP_THE).c_str(),
+                         mon->name(DESC_THE).c_str(),
                          name.c_str(),
                          mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
                          shield->name(DESC_PLAIN).c_str());
@@ -4146,7 +4146,7 @@ bool bolt::attempt_block(monster* mon)
             else if (you.see_cell(pos()))
             {
                 mprf("%s blocks the %s.",
-                     mon->name(DESC_CAP_THE).c_str(), name.c_str());
+                     mon->name(DESC_THE).c_str(), name.c_str());
                 finish_beam();
             }
 
@@ -4361,14 +4361,14 @@ void bolt::affect_monster(monster* mon)
             // if it would have hit otherwise...
             if (_test_beam_hit(beam_hit, rand_ev, is_beam, false, false, r))
             {
-                msg::stream << mon->name(DESC_CAP_THE) << " deflects the "
+                msg::stream << mon->name(DESC_THE) << " deflects the "
                             << name << '!' << std::endl;
             }
             else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
                      && _test_beam_hit(beam_hit, rand_ev - random2(8),
                                        is_beam, false, false, r))
             {
-                msg::stream << mon->name(DESC_CAP_THE) << " momentarily phases "
+                msg::stream << mon->name(DESC_THE) << " momentarily phases "
                             << "out as the " << name << " passes through "
                             << mon->pronoun(PRONOUN_OBJECTIVE) << ".\n";
             }
@@ -4598,7 +4598,7 @@ bool enchant_monster_with_flavour(monster* mon, actor *foe,
 bool enchant_monster_invisible(monster* mon, const std::string how)
 {
     // Store the monster name before it becomes an "it". - bwr
-    const std::string monster_name = mon->name(DESC_CAP_THE);
+    const std::string monster_name = mon->name(DESC_THE);
 
     if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
     {

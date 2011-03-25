@@ -1053,7 +1053,7 @@ void monster::pickup_message(const item_def &item, int near)
     if (need_message(near))
     {
         mprf("%s picks up %s.",
-             name(DESC_CAP_THE).c_str(),
+             name(DESC_THE).c_str(),
              item.base_type == OBJ_GOLD ? "some gold"
                                         : item.name(DESC_NOCAP_A).c_str());
     }
@@ -1190,7 +1190,7 @@ bool monster::drop_item(int eslot, int near)
         if (need_message(near))
         {
             mprf("%s %s as %s drops %s!",
-                 pitem->name(DESC_CAP_THE).c_str(),
+                 pitem->name(DESC_THE).c_str(),
                  summoned_poof_msg(this, *pitem).c_str(),
                  name(DESC_NOCAP_THE).c_str(),
                  pitem->quantity > 1 ? "them" : "it");
@@ -1203,7 +1203,7 @@ bool monster::drop_item(int eslot, int near)
     {
         if (need_message(near))
         {
-            mprf("%s drops %s.", name(DESC_CAP_THE).c_str(),
+            mprf("%s drops %s.", name(DESC_THE).c_str(),
                  pitem->name(DESC_NOCAP_A).c_str());
         }
 
@@ -2198,9 +2198,7 @@ static std::string _mon_special_name(const monster& mon, description_level_type 
     {
         switch (desc)
         {
-        case DESC_CAP_THE: case DESC_CAP_A:
-            return ("It");
-        case DESC_NOCAP_THE: case DESC_NOCAP_A: case DESC_PLAIN:
+        case DESC_THE: case DESC_A: case DESC_PLAIN:
             return ("it");
         default:
             return ("it (buggy)");
@@ -2572,7 +2570,7 @@ bool monster::fumbles_attack(bool verbose)
         {
             if (you.can_see(this))
             {
-                mpr(name(DESC_CAP_THE)
+                mpr(name(DESC_THE)
                     + (liquefied(pos())
                        ? " becomes momentarily stuck in the liquid earth."
                        : " splashes around in the water."));
@@ -3524,7 +3522,7 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
         return (false);
 
     if (!quiet && you.can_see(this))
-        mprf("%s is drained!", name(DESC_CAP_THE).c_str());
+        mprf("%s is drained!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.
     hurt(agent, 2 + random2(pow), BEAM_NEG, !quiet);
@@ -3551,7 +3549,7 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
 
     if (!quiet && you.can_see(this))
     {
-        mprf("%s %s!", name(DESC_CAP_THE).c_str(),
+        mprf("%s %s!", name(DESC_THE).c_str(),
              amount > 0 ? "rots" : "looks less resilient");
     }
 
@@ -4234,7 +4232,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         }
         else
             mprf(MSGCH_ERROR, "%s tried to unsubmerge while on same square as "
-                 "%s (see bug 2293518)", mon->name(DESC_CAP_THE, true).c_str(),
+                 "%s (see bug 2293518)", mon->name(DESC_THE, true).c_str(),
                  mon->name(DESC_NOCAP_A, true).c_str());
     }
 
@@ -4465,7 +4463,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             else if (has_ench(ENCH_INVIS) && mons_near(this))
             {
                 mprf("%s stops glowing and disappears.",
-                     name(DESC_CAP_THE, true).c_str());
+                     name(DESC_THE, true).c_str());
             }
         }
         break;
@@ -5619,7 +5617,7 @@ bool monster::sicken(int amount, bool unused)
     if (!has_ench(ENCH_SICK) && you.can_see(this))
     {
         // Yes, could be confused with poisoning.
-        mprf("%s looks sick.", name(DESC_CAP_THE).c_str());
+        mprf("%s looks sick.", name(DESC_THE).c_str());
     }
 
     add_ench(mon_enchant(ENCH_SICK, 0, 0, amount * 10));
@@ -5631,7 +5629,7 @@ bool monster::bleed(const actor* agent, int amount, int degree)
 {
     if (!has_ench(ENCH_BLEED) && you.can_see(this))
     {
-        mprf("%s begins to bleed from %s wounds!", name(DESC_CAP_THE).c_str(),
+        mprf("%s begins to bleed from %s wounds!", name(DESC_THE).c_str(),
              pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
     }
 
@@ -6382,7 +6380,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
         if (needs_message)
         {
-            const std::string monnam = name(DESC_CAP_THE);
+            const std::string monnam = name(DESC_THE);
             mprf("%s shudders%s.", monnam.c_str(),
                  spawned >= 5 ? " alarmingly" :
                  spawned >= 3 ? " violently" :
@@ -6507,7 +6505,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             else if (fly_died && observable())
             {
                 mprf("%s jumps down from %s now dead mount.",
-                     name(DESC_CAP_THE).c_str(),
+                     name(DESC_THE).c_str(),
                      pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
             }
         }

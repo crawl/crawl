@@ -2849,13 +2849,9 @@ std::string thing_do_grammar(description_level_type dtype,
 
     switch (dtype)
     {
-    case DESC_CAP_THE:
-        return "The " + desc;
-    case DESC_NOCAP_THE:
+    case DESC_THE:
         return "the " + desc;
-    case DESC_CAP_A:
-        return article_a(desc, false);
-    case DESC_NOCAP_A:
+    case DESC_A:
         return article_a(desc, true);
     case DESC_NONE:
         return ("");
@@ -3320,8 +3316,7 @@ std::string feature_description(const coord_def& where, bool covering,
     {
         switch (dtype)
         {
-        case DESC_CAP_A:   dtype = DESC_CAP_THE;   break;
-        case DESC_NOCAP_A: dtype = DESC_NOCAP_THE; break;
+        case DESC_A:   dtype = DESC_THE;   break;
         default: break;
         }
     }
