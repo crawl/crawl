@@ -3140,6 +3140,7 @@ void melee_attack::player_calc_hit_damage()
     damage_done = std::max(0, player_weapon_type_modify(damage_done));
 }
 
+// TODO: unify player_to_hit and mons_to_hit
 int melee_attack::calc_to_hit(bool random)
 {
     return (attacker->atype() == ACT_PLAYER ? player_to_hit(random)

@@ -60,7 +60,7 @@ public:
     // Applies attack damage and other effects.
     bool attack();
 
-    // TODO: move base calc to actor/player/monster, use attack::adjust_to_hit
+    // To-hit is a function of attacker/defender, inherited from attack
     int  calc_to_hit(bool random = true);
     random_var player_calc_attack_delay();
 
