@@ -58,16 +58,18 @@ public:
     bool            ev_margin;
 
     item_def        *weapon;
-    int             damage_brand;   // TODO: int => brand_type
+    brand_type      damage_brand;
     skill_type      wpn_skill;
     hands_reqd_type hands;
     bool            hand_half_bonus;
+    // Attacker's shield, stored so we can reference it and determine
+    // the attacker's combat effectiveness (staff + shield == bad)
+    item_def  *shield;
 
     // If weapon is an artefact, its properties.
     artefact_properties_t art_props;
 
     // If a weapon is an unrandart, its unrandart entry.
-    // TODO: replace with *weapon references in attack
     unrandart_entry *unrand_entry;
 
     int     attacker_to_hit_penalty;

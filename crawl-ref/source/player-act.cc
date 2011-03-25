@@ -200,7 +200,7 @@ int player::damage_type(int)
     return (DVORP_CRUSHING);
 }
 
-int player::damage_brand(int)
+brand_type player::damage_brand(int)
 {
     int ret = SPWPN_NORMAL;
     const int wpn = equip[EQ_WEAPON];
@@ -238,7 +238,7 @@ int player::damage_brand(int)
         }
     }
 
-    return (ret);
+    return (static_cast<brand_type>(ret));
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.

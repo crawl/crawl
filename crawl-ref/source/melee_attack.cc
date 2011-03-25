@@ -97,11 +97,10 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     perceived_attack(false), obvious_effect(false),
     attack_number(which_attack), extra_noise(0), skip_chaos_message(false),
-    special_damage_flavour(BEAM_NONE),
-    shield(NULL), player_body_armour_penalty(0), player_shield_penalty(0),
-    player_armour_tohit_penalty(0), player_shield_tohit_penalty(0),
-    can_do_unarmed(false), miscast_level(-1), miscast_type(SPTYP_NONE),
-    miscast_target(NULL)
+    special_damage_flavour(BEAM_NONE), player_body_armour_penalty(0),
+    player_shield_penalty(0), player_armour_tohit_penalty(0),
+    player_shield_tohit_penalty(0), can_do_unarmed(false), miscast_level(-1),
+    miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
     init_attack();
 }
@@ -798,7 +797,7 @@ bool melee_attack::player_aux_test_hit()
 // Returns true to end the attack round.
 bool melee_attack::player_aux_unarmed()
 {
-    unwind_var<int> save_brand(damage_brand);
+    unwind_var<brand_type> save_brand(damage_brand);
 
     /*
      * baseattack is the auxiliary unarmed attack the player gets

@@ -406,7 +406,7 @@ int monster::total_weight() const
     return (body_weight() + burden);
 }
 
-int monster::damage_brand(int which_attack)
+brand_type monster::damage_brand(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
 
@@ -418,7 +418,8 @@ int monster::damage_brand(int which_attack)
         return (SPWPN_NORMAL);
     }
 
-    return (!is_range_weapon(*mweap) ? get_weapon_brand(*mweap) : SPWPN_NORMAL);
+    return (!is_range_weapon(*mweap) ?
+            static_cast<brand_type>(get_weapon_brand(*mweap)) : SPWPN_NORMAL);
 }
 
 int monster::damage_type(int which_attack)

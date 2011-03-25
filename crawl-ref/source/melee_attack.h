@@ -34,9 +34,6 @@ public:
 
     beam_type special_damage_flavour;
 
-    // TODO: Remove entirely OR move it into attack
-    item_def  *shield;
-
     // Armour penalties?
     // Adjusted EV penalty for body armour and shields.
     // TODO: Replaced with attack methods

@@ -33,7 +33,7 @@ attack::attack(actor *attk, actor *defn, bool allow_unarmed)
     min_delay(0), final_attack_delay(0), unarmed_ok(allow_unarmed),
     noise_factor(0), unarmed_capable(false), ev_margin(0), weapon(NULL),
     damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
-    hand_half_bonus(false), art_props(0), unrand_entry(NULL),
+    hand_half_bonus(false), shield(NULL), art_props(0), unrand_entry(NULL),
     attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
     no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
     defender_body_armour_penalty(0), defender_shield_penalty(0),
