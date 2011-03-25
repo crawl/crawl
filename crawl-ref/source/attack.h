@@ -96,10 +96,8 @@ public:
     // damage.
     /* virtual bool do_attack(); */
 
-    // To-hit is a function of attacker/defender, but we may adjust it
-    // for a particular attack, especially if there are temporary effects
-    /* TODO: Implement */
-    //virtual int adjust_to_hit(bool random = true);
+    // To-hit is a function of attacker/defender, defined in sub-classes
+    virtual int calc_to_hit(bool) = 0;
 
     // Exact copies of their melee_attack predecessors
     std::string actor_name(const actor *a, description_level_type desc,
