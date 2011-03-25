@@ -1788,7 +1788,7 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
 
-        if (was_banished && !summoned_it && !hard_reset)
+        if (was_banished && !summoned_it && !hard_reset && mons->has_ench(ENCH_ABJ))
         {
             if (is_unrandom_artefact(mitm[w_idx]))
                 set_unique_item_status(mitm[w_idx], UNIQ_LOST_IN_ABYSS);
