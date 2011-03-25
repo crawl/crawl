@@ -586,7 +586,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("A huge blade swings out and slices into you!");
                 const int damage = (you.absdepth0 * 2) + random2avg(29, 2)
                     - random2(1 + you.armour_class());
-                std::string n = name(DESC_NOCAP_A) + " trap";
+                std::string n = name(DESC_A) + " trap";
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
             }
@@ -1397,13 +1397,13 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
             {
                 mprf("You avoid triggering %s trap.",
-                      this->name(DESC_NOCAP_A).c_str());
+                      this->name(DESC_A).c_str());
 
                 return;         // no ammo generated either
             }
 
             // Start constructing the message.
-            std::string msg = shot.name(DESC_CAP_A) + " shoots out and ";
+            std::string msg = shot.name(DESC_A) + " shoots out and ";
 
             // Check for shield blocking.
             // Exercise only if the trap was unknown (to prevent scumming.)
@@ -1440,7 +1440,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                     msg += "hits you!";
                     mpr(msg.c_str());
 
-                    std::string n = name(DESC_NOCAP_A) + " trap";
+                    std::string n = name(DESC_A) + " trap";
 
                     // Needle traps can poison.
                     if (poison)
@@ -1467,7 +1467,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             if (you.see_cell(act.pos()))
             {
                 mprf("%s %s %s%s!",
-                     shot.name(DESC_CAP_A).c_str(),
+                     shot.name(DESC_A).c_str(),
                      hit ? "hits" : "misses",
                      act.name(DESC_THE).c_str(),
                      (hit && damage_taken == 0

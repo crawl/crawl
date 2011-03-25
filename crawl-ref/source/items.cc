@@ -715,7 +715,7 @@ void item_check(bool verbose)
     if (items.size() == 1)
     {
         item_def it(*items[0]);
-        std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
+        std::string name = get_menu_colour_prefix_tags(it, DESC_A);
         strm << "You see here " << name << '.' << std::endl;
         _maybe_give_corpse_hint(it);
         return;
@@ -769,7 +769,7 @@ void item_check(bool verbose)
         for (unsigned int i = 0; i < items.size(); ++i)
         {
             item_def it(*items[i]);
-            std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
+            std::string name = get_menu_colour_prefix_tags(it, DESC_A);
             strm << name << std::endl;
             _maybe_give_corpse_hint(it);
         }
@@ -951,7 +951,7 @@ static int _first_corpse_monnum(const coord_def& where)
 
 static std::string _milestone_rune(const item_def &item)
 {
-    return std::string("found ") + item.name(DESC_NOCAP_A) + ".";
+    return std::string("found ") + item.name(DESC_A) + ".";
 }
 
 static void _milestone_check(const item_def &item)
@@ -969,7 +969,7 @@ static void _check_note_item(item_def &item)
 
     if (item_is_rune(item) || item_is_orb(item) || is_artefact(item))
     {
-        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
+        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A).c_str(),
                        origin_desc(item).c_str()));
         item.flags |= ISFLAG_NOTED_GET;
 
@@ -1023,7 +1023,7 @@ std::string origin_monster_name(const item_def &item)
         return ("a player ghost");
     else if (monnum == MONS_PANDEMONIUM_DEMON)
         return ("a demon");
-    return mons_type_name(monnum, DESC_NOCAP_A);
+    return mons_type_name(monnum, DESC_A);
 }
 
 static std::string _origin_place_desc(const item_def &item)
@@ -1271,7 +1271,7 @@ void pickup(bool partial_quantity)
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
                      get_menu_colour_prefix_tags(mitm[o],
-                                                 DESC_NOCAP_A).c_str());
+                                                 DESC_A).c_str());
 
                 mouse_control mc(MOUSE_MODE_MORE);
                 keyin = getch();
@@ -2136,7 +2136,7 @@ bool drop_item(int item_dropped, int quant_drop)
     }
 
     mprf("You drop %s.",
-         quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
+         quant_name(you.inv[item_dropped], quant_drop, DESC_A).c_str());
 
     bool quiet = silenced(you.pos());
 

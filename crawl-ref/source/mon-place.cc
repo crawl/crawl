@@ -1235,7 +1235,7 @@ int place_monster(mgen_data mg, bool force_pos)
         std::string msg;
 
         if (menv[id].visible_to(&you))
-            msg = menv[id].name(DESC_CAP_A);
+            msg = menv[id].name(DESC_A);
         else if (shoved)
             msg = "Something";
 
@@ -1935,7 +1935,7 @@ static int _place_monster_aux(const mgen_data &mg,
         {
             monster* sum = mg.summoner->as_monster();
             mons_add_blame(mon, (blame_prefix
-                                 + sum->full_name(DESC_NOCAP_A, true)));
+                                 + sum->full_name(DESC_A, true)));
             if (sum->props.exists("blame"))
             {
                 CrawlVector& oldblame = sum->props["blame"].get_vector();
@@ -3098,7 +3098,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     // Don't waste time on moname() if user isn't using this option
     else if (Options.note_monsters.size() > 0)
     {
-        const std::string iname = mons_type_name(mons->type, DESC_NOCAP_A);
+        const std::string iname = mons_type_name(mons->type, DESC_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
         {
             if (Options.note_monsters[i].matches(iname))

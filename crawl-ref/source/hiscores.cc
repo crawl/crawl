@@ -939,13 +939,13 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             // Setting this is redundant for dancing weapons, however
             // we do care about the above indentification. -- bwr
             if (mons->type != MONS_DANCING_WEAPON)
-                auxkilldata = mitm[mons->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
+                auxkilldata = mitm[mons->inv[MSLOT_WEAPON]].name(DESC_A);
         }
 
         const bool death = you.hp <= 0;
 
         const description_level_type desc =
-            death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_NOCAP_A;
+            death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_A;
 
         death_source_name = mons->name(desc, death);
 

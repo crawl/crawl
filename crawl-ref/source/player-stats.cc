@@ -422,7 +422,7 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss,
         return lose_stat(which_stat, stat_loss, force, NULL, true);
 
     bool        vis  = you.can_see(cause);
-    std::string name = cause->name(DESC_NOCAP_A, true);
+    std::string name = cause->name(DESC_A, true);
 
     if (cause->has_ench(ENCH_SHAPESHIFTER))
         name += " (shapeshifter)";

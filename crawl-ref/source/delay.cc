@@ -1231,7 +1231,7 @@ static void _finish_delay(const delay_queue_item &delay)
         else
         {
             mprf("You drop %s.", quant_name(you.inv[delay.parm1], delay.parm2,
-                                            DESC_NOCAP_A).c_str());
+                                            DESC_A).c_str());
             dec_inv_item_quantity(delay.parm1, delay.parm2);
         }
         break;
@@ -1549,7 +1549,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     else
     {
         ASSERT(mon->seen_context != "just seen");
-        std::string text = mon->full_name(DESC_CAP_A);
+        std::string text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
             text += make_stringf(" (%s)",

@@ -268,7 +268,7 @@ std::string MiscastEffect::get_default_cause(bool attribute_to_user) const
     if (attribute_to_user)
     {
         return (std::string(you.can_see(act_source)?
-                            act_source->name(DESC_NOCAP_A)
+                            act_source->name(DESC_A)
                             : "something")
                 + " miscasting " + spell_title(spell));
     }

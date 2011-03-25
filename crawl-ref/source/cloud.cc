@@ -911,7 +911,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         if (player)
         {
             const actor* agent = find_agent(cloud.source, cloud.whose);
-            poison_player(1, agent ? agent->name(DESC_NOCAP_A) : "",
+            poison_player(1, agent ? agent->name(DESC_A) : "",
                           cloud.cloud_name());
         }
         else
@@ -926,7 +926,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         {
             const actor* agent = find_agent(cloud.source, cloud.whose);
             if (agent)
-                miasma_player(agent->name(DESC_NOCAP_A), cloud.cloud_name());
+                miasma_player(agent->name(DESC_A), cloud.cloud_name());
             else
                 miasma_player(cloud.cloud_name());
         }

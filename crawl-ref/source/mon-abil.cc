@@ -378,7 +378,7 @@ static int _do_split(monster* thing, coord_def & target)
     // XXX copy summoner info
 
     if (you.can_see(thing))
-        mprf("%s splits.", thing->name(DESC_CAP_A).c_str());
+        mprf("%s splits.", thing->name(DESC_A).c_str());
 
     int split_off = thing->number / 2;
     float max_per_blob = thing->max_hit_points / float(thing->number);
@@ -456,12 +456,12 @@ static bool _do_merge(monster* initial_slime, monster* merge_to)
         if (you.can_see(initial_slime))
         {
             mprf("Two slime creatures merge to form %s.",
-                 merge_to->name(DESC_NOCAP_A).c_str());
+                 merge_to->name(DESC_A).c_str());
         }
         else
         {
             mprf("A slime creature suddenly becomes %s.",
-                 merge_to->name(DESC_NOCAP_A).c_str());
+                 merge_to->name(DESC_A).c_str());
         }
 
         flash_view_delay(LIGHTGREEN, 150);

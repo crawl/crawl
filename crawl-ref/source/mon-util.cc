@@ -3908,12 +3908,12 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     {
         std::string something = mons->name(DESC_PLAIN);
         msg = replace_all(msg, "@something@",   something);
-        msg = replace_all(msg, "@a_something@", mons->name(DESC_NOCAP_A));
+        msg = replace_all(msg, "@a_something@", mons->name(DESC_A));
         msg = replace_all(msg, "@the_something@", mons->name(nocap));
 
         something[0] = toupper(something[0]);
         msg = replace_all(msg, "@Something@",   something);
-        msg = replace_all(msg, "@A_something@", mons->name(DESC_CAP_A));
+        msg = replace_all(msg, "@A_something@", mons->name(DESC_A));
         msg = replace_all(msg, "@The_something@", mons->name(cap));
     }
     else
@@ -3932,12 +3932,12 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     std::string plain = mons->name(DESC_PLAIN);
     msg = replace_all(msg, "@monster@",     plain);
-    msg = replace_all(msg, "@a_monster@",   mons->name(DESC_NOCAP_A));
+    msg = replace_all(msg, "@a_monster@",   mons->name(DESC_A));
     msg = replace_all(msg, "@the_monster@", mons->name(nocap));
 
     plain[0] = toupper(plain[0]);
     msg = replace_all(msg, "@Monster@",     plain);
-    msg = replace_all(msg, "@A_monster@",   mons->name(DESC_CAP_A));
+    msg = replace_all(msg, "@A_monster@",   mons->name(DESC_A));
     msg = replace_all(msg, "@The_monster@", mons->name(cap));
 
     msg = replace_all(msg, "@Pronoun@",

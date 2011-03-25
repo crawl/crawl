@@ -277,13 +277,13 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 void describe_floor();
 std::string get_monster_equipment_desc(const monster_info& mi,
                                 bool full_desc = true,
-                                description_level_type mondtype = DESC_CAP_A,
+                                description_level_type mondtype = DESC_A,
                                 bool print_attitude = false);
 
 int dos_direction_unmunge(int doskey);
 
 std::string feature_description(const coord_def& where, bool covering = false,
-                                description_level_type dtype = DESC_CAP_A,
+                                description_level_type dtype = DESC_A,
                                 bool add_stop = true, bool base_desc = false);
 std::string raw_feature_description(dungeon_feature_type grid,
                                     trap_type tr = NUM_TRAPS,
@@ -291,7 +291,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap = NUM_TRAPS,
                                 const std::string & cover_desc = "",
-                                description_level_type dtype = DESC_CAP_A,
+                                description_level_type dtype = DESC_A,
                                 bool add_stop = true, bool base_desc = false);
 
 void set_feature_desc_short(dungeon_feature_type grid,

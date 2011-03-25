@@ -288,7 +288,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             tip += " - ";
         }
 
-        tip += item.name(DESC_NOCAP_A);
+        tip += item.name(DESC_A);
 
         if (!display_actions)
             return (true);

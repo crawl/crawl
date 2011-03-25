@@ -107,7 +107,7 @@ std::string item_def::name(description_level_type descrip,
                 buff << " - ";
         }
         else
-            descrip = DESC_CAP_A;
+            descrip = DESC_A;
     }
 
     if (base_type == OBJ_BOOKS && (ident || item_type_known(*this))
@@ -156,11 +156,9 @@ std::string item_def::name(description_level_type descrip,
         switch (descrip)
         {
         case DESC_THE:        buff << "the "; break;
-        case DESC_CAP_YOUR:   buff << "Your "; break;
-        case DESC_NOCAP_YOUR: buff << "your "; break;
-        case DESC_NOCAP_ITS:  buff << "its "; break;
-        case DESC_CAP_A:
-        case DESC_NOCAP_A:
+        case DESC_YOUR:       buff << "your "; break;
+        case DESC_ITS:        buff << "its "; break;
+        case DESC_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
         case DESC_PLAIN:
@@ -182,13 +180,11 @@ std::string item_def::name(description_level_type descrip,
         switch (descrip)
         {
         case DESC_THE:        buff << "the "; break;
-        case DESC_CAP_A:      buff << (startvowel ? "An " : "A "); break;
 
-        case DESC_CAP_YOUR:   buff << "Your "; break;
-        case DESC_NOCAP_YOUR: buff << "your "; break;
-        case DESC_NOCAP_ITS:  buff << "its "; break;
+        case DESC_YOUR:       buff << "your "; break;
+        case DESC_ITS:        buff << "its "; break;
 
-        case DESC_NOCAP_A:
+        case DESC_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
                               buff << (startvowel ? "an " : "a "); break;
@@ -2059,7 +2055,7 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
         && !(item.flags & (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET)))
     {
         // Make a note of it.
-        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
+        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
                        origin_desc(item).c_str()));
 
         // Sometimes (e.g. shops) you can ID an item before you get it;

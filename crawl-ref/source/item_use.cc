@@ -2700,7 +2700,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 ammo_ided = true;
                 identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
                 mprf("You are firing %s.",
-                     you.inv[throw_2].name(DESC_NOCAP_A).c_str());
+                     you.inv[throw_2].name(DESC_A).c_str());
             }
         }
         else if (!teleport && x_chance_in_y(shoot_skill, 100))
@@ -2708,7 +2708,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             item_def& weapon = *you.weapon();
             set_ident_flags(weapon, ISFLAG_KNOW_PLUSES);
 
-            mprf("You are wielding %s.", weapon.name(DESC_NOCAP_A).c_str());
+            mprf("You are wielding %s.", weapon.name(DESC_A).c_str());
 
             more();
             you.wield_change = true;
@@ -2900,7 +2900,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
             ammo_ided = true;
             mprf("You are throwing %s.",
-                 you.inv[throw_2].name(DESC_NOCAP_A).c_str());
+                 you.inv[throw_2].name(DESC_A).c_str());
         }
     }
 
@@ -3147,7 +3147,7 @@ static int _prompt_ring_to_remove(int new_ring)
     const item_def *right = you.slot_item(EQ_RIGHT_RING, true);
 
     mesclr();
-    mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
+    mprf("Wearing %s.", you.inv[new_ring].name(DESC_A).c_str());
 
     const char lslot = index_to_letter(left->link);
     const char rslot = index_to_letter(right->link);
@@ -5363,7 +5363,7 @@ static bool _prompt_eat_bad_food(const item_def food)
     std::string colour            = "";
     std::string colour_off        = "";
 
-    const int col = menu_colour(food.name(DESC_NOCAP_A), food_colour, "pickup");
+    const int col = menu_colour(food.name(DESC_A), food_colour, "pickup");
     if (col != -1)
         colour = colour_to_str(col);
 

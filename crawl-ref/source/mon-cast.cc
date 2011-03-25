@@ -2094,7 +2094,7 @@ static bool _mons_vampiric_drain(monster *mons)
 
     if (target->atype() == ACT_PLAYER)
     {
-        ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+        ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
         simple_monster_message(mons,
                                " draws life force from you and is healed!");
     }
@@ -2325,7 +2325,7 @@ static bool _mons_drain_life(monster* mons, bool actual)
                 continue;
 
             if (actual)
-                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
 
             success = true;
 

@@ -4196,14 +4196,14 @@ void explore_discoveries::add_item(const item_def &i)
         {
             items[j].thing.quantity = orig_quantity + i.quantity;
             items[j].name =
-                items[j].thing.name(DESC_NOCAP_A, false, false, true,
+                items[j].thing.name(DESC_A, false, false, true,
                                     !is_stackable_item(i));
             return;
         }
         items[j].thing.quantity = orig_quantity;
     }
 
-    std::string itemname = get_menu_colour_prefix_tags(i, DESC_NOCAP_A);
+    std::string itemname = get_menu_colour_prefix_tags(i, DESC_A);
     monster* mon = monster_at(i.pos);
     if (mon && mon->type == MONS_BUSH)
         itemname += " (under bush)";

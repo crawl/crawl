@@ -196,7 +196,7 @@ void hogs_to_humans()
             mpr("The hog vanishes!");
         else if (!could_see && can_see)
             mprf("%s appears from out of thin air!",
-                 mi->name(DESC_CAP_A).c_str());
+                 mi->name(DESC_A).c_str());
     }
 
     if (any == 1)

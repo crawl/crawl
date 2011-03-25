@@ -884,7 +884,7 @@ static bool _handle_scroll(monster* mons)
             {
                 if (you.can_see(&menv[mon]))
                 {
-                    mprf("%s appears!", menv[mon].name(DESC_CAP_A).c_str());
+                    mprf("%s appears!", menv[mon].name(DESC_A).c_str());
                     ident = ID_KNOWN_TYPE;
                 }
                 player_angers_monster(&menv[mon]);
@@ -1592,7 +1592,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     else
     {
         // build shoot message
-        msg += item.name(DESC_NOCAP_A, false, false, false);
+        msg += item.name(DESC_A, false, false, false);
 
         // build beam name
         pbolt.name = item.name(DESC_PLAIN, false, false, false);
@@ -1615,13 +1615,13 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     {
         pbolt.aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
-                 mons->name(DESC_NOCAP_A).c_str());
+                 mons->name(DESC_A).c_str());
     }
     else
     {
         pbolt.aux_source = make_stringf("Hit by a%s %s thrown by %s",
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
-                 mons->name(DESC_NOCAP_A).c_str());
+                 mons->name(DESC_A).c_str());
     }
 
     // And restore it here.
@@ -2984,7 +2984,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
         }
         else if (!you_are_delayed())
         {
-            mprf("%s %s", mons->name(DESC_CAP_A).c_str(),
+            mprf("%s %s", mons->name(DESC_A).c_str(),
                  open_str.c_str());
         }
     }
