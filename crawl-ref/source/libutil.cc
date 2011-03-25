@@ -42,7 +42,7 @@ description_level_type description_type_by_name(const char *desc)
     else if (!strcmp("Your", desc) || !strcmp("your", desc))
         return DESC_YOUR;
     else if (!strcmp("its", desc))
-        return DESC_NOCAP_ITS;
+        return DESC_ITS;
     else if (!strcmp("worn", desc))
         return DESC_INVENTORY_EQUIP;
     else if (!strcmp("inv", desc))
