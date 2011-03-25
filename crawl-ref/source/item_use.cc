@@ -1587,7 +1587,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         mon->check_redraw(oldpos);
 
         const bool        seen = you.can_see(mon);
-        const std::string name = mon->name(DESC_CAP_THE);
+        const std::string name = mon->name(DESC_THE);
         if (was_seen && seen)
             mprf("%s blinks!", name.c_str());
         else if (was_seen && !seen)
@@ -1622,7 +1622,7 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
         if (victim->atype() == ACT_PLAYER)
             dmg_msg = "You are electrocuted!";
         else if (victim->type == MONS_SIXFIRHY)
-            dmg_msg = victim->name(DESC_CAP_THE) + " is charged up!";
+            dmg_msg = victim->name(DESC_THE) + " is charged up!";
         else
             dmg_msg = "There is a sudden explosion of sparks!";
     }
@@ -1647,7 +1647,7 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
         dmg += 1 + (random2(dmg * 15) / 10);
 
         if (!beam.is_tracer && you.can_see(victim))
-           dmg_msg = victim->name(DESC_CAP_THE) + " "
+           dmg_msg = victim->name(DESC_THE) + " "
                    + victim->conj_verb("convulse") + "!";
     }
 
@@ -3027,7 +3027,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         viewwindow();
         pbolt.fire();
 
-        msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
+        msg::stream << item.name(DESC_THE) << " returns to your pack!"
                     << std::endl;
 
         // Player saw the item return.
@@ -3044,7 +3044,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // Should have returned but didn't.
         if (returning && item_type_known(you.inv[throw_2]))
         {
-            msg::stream << item.name(DESC_CAP_THE)
+            msg::stream << item.name(DESC_THE)
                         << " fails to return to your pack!" << std::endl;
         }
         dec_inv_item_quantity(throw_2, 1);

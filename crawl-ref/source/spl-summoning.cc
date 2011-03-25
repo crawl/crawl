@@ -948,7 +948,7 @@ bool cast_tukimas_ball(actor *caster, int pow, god_type god, bool force_hostile)
                 if (!_can_weapon_dance(&*si))
                 {
                     mprf("%s flop%s limply for a second.",
-                    si->name(DESC_CAP_THE).c_str(),
+                    si->name(DESC_THE).c_str(),
                     si->quantity > 1 ? "" : "s");
                     continue;
                 }

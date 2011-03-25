@@ -129,11 +129,11 @@ static void _mons_summon_monster_illusion(monster* caster,
         {
             if (!you.can_see(caster))
                 mprf("%s seems to step out of %s!",
-                     foe->name(DESC_CAP_THE).c_str(),
+                     foe->name(DESC_THE).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
             else
                 mprf("%s seems to draw %s out of %s!",
-                     caster->name(DESC_CAP_THE).c_str(),
+                     caster->name(DESC_THE).c_str(),
                      foe->name(DESC_NOCAP_THE).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
         }

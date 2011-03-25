@@ -1875,7 +1875,7 @@ bool balance_demonic_guardian()
             && !one_chance_in(3)
             && !mons->has_ench(ENCH_LIFE_TIMER))
         {
-            mpr(mons->name(DESC_CAP_THE) + " "
+            mpr(mons->name(DESC_THE) + " "
                 + summoned_poof_msg(*mons) + "!", MSGCH_PLAIN);
             monster_die(*mons, KILL_NONE, NON_MONSTER);
         }

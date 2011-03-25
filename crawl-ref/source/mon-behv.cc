@@ -294,7 +294,7 @@ void handle_behaviour(monster* mon)
         {
             mon->foe = MHITYOU;
             //mprf("%s resetting target (cantSee)",
-            //     mon->name(DESC_CAP_THE,true).c_str());
+            //     mon->name(DESC_THE,true).c_str());
         }
     }
 
@@ -316,7 +316,7 @@ void handle_behaviour(monster* mon)
             if (you.pet_target != MHITNOT && proxPlayer)
             {
                 //mprf("%s setting target (player target)",
-                //     mon->name(DESC_CAP_THE,true).c_str());
+                //     mon->name(DESC_THE,true).c_str());
                 mon->foe = you.pet_target;
             }
             else

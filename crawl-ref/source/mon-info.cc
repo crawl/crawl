@@ -640,17 +640,11 @@ std::string monster_info::_apply_adjusted_description(description_level_type des
         desc = DESC_NOCAP_THE;
     if (is(MB_NAME_THE))
     {
-        if (desc == DESC_CAP_A)
-            desc = DESC_CAP_THE;
-        if (desc == DESC_NOCAP_A)
-            desc = DESC_NOCAP_THE;
+        desc = DESC_THE;
     }
     if (attitude == ATT_FRIENDLY)
     {
-        if (desc == DESC_CAP_THE)
-            desc = DESC_CAP_YOUR;
-        if (desc == DESC_NOCAP_THE)
-            desc = DESC_NOCAP_YOUR;
+        desc = DESC_YOUR;
     }
     return apply_description(desc, s);
 }

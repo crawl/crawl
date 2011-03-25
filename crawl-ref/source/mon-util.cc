@@ -2244,10 +2244,8 @@ std::string mons_type_name(int type, description_level_type desc)
     {
         switch (desc)
         {
-        case DESC_CAP_THE:   result = "The "; break;
-        case DESC_NOCAP_THE: result = "the "; break;
-        case DESC_CAP_A:     result = "A ";   break;
-        case DESC_NOCAP_A:   result = "a ";   break;
+        case DESC_THE:       result = "the "; break;
+        case DESC_A:         result = "a ";   break;
         case DESC_PLAIN: default:             break;
         }
     }
@@ -3859,11 +3857,11 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         foe_species = genus;
     }
 
-    description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
+    description_level_type nocap = DESC_NOCAP_THE, cap = DESC_THE;
 
     if (mons->is_named() && you.can_see(mons))
     {
-        const std::string name = mons->name(DESC_CAP_THE);
+        const std::string name = mons->name(DESC_THE);
 
         msg = replace_all(msg, "@the_something@", name);
         msg = replace_all(msg, "@The_something@", name);

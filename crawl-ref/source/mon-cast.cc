@@ -2985,7 +2985,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MALIGN_GATEWAY:
         if (!can_cast_malign_gateway())
-            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! Counted %d gateways.", mons->name(DESC_CAP_THE).c_str(), count_malign_gateways());
+            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! Counted %d gateways.", mons->name(DESC_THE).c_str(), count_malign_gateways());
         cast_malign_gateway(mons, 200);
         return;
 
@@ -3055,7 +3055,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_LEDAS_LIQUEFACTION:
         if (!mons->has_ench(ENCH_LIQUEFYING))
         {
-            mprf("%s liquefies the ground around %s!", mons->name(DESC_CAP_THE).c_str(),
+            mprf("%s liquefies the ground around %s!", mons->name(DESC_THE).c_str(),
                 mons->pronoun(PRONOUN_REFLEXIVE).c_str());
             flash_view_delay(BROWN, 80);
         }
@@ -3217,7 +3217,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (!dance_compulsion.empty())
                 {
                     dance_compulsion = replace_all(dance_compulsion, "@The_monster@",
-                                           mons->name(DESC_CAP_THE));
+                                           mons->name(DESC_THE));
                     mpr(dance_compulsion.c_str(), channel);
                 }
             }
@@ -3236,7 +3236,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (!dance_compulsion.empty())
                 {
                     dance_compulsion = replace_all(dance_compulsion,
-                        "@The_monster@", foe->name(DESC_CAP_THE));
+                        "@The_monster@", foe->name(DESC_THE));
                     mpr(dance_compulsion.c_str(), MSGCH_MONSTER_ENCHANT);
                 }
             }
@@ -3252,7 +3252,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (!slugform.empty())
                 {
                     slugform = replace_all(slugform, "@The_monster@",
-                                           mons->name(DESC_CAP_THE));
+                                           mons->name(DESC_THE));
                     mpr(slugform.c_str(), channel);
                 }
             }
@@ -3277,7 +3277,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (!slugform.empty())
                 {
                     slugform = replace_all(slugform, "@The_monster@",
-                                           foe->name(DESC_CAP_THE));
+                                           foe->name(DESC_THE));
                     mpr(slugform.c_str(), MSGCH_MONSTER_ENCHANT);
                 }
             }

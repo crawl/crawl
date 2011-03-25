@@ -299,7 +299,7 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
     if (!item_type_known(*item))
     {
         mprf(MSGCH_TALK, "%s says, \"Hi!  I'm the Singing Sword!\"",
-             item->name(DESC_CAP_THE).c_str());
+             item->name(DESC_THE).c_str());
     }
     else
         mpr("The Singing Sword hums in delight!", MSGCH_TALK);

@@ -852,7 +852,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         {
             if (you.can_see(act))
                 mprf("%s %s in the rain.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb(silenced(act->pos())?
                                     "steam" : "sizzle").c_str());
         }
@@ -1085,7 +1085,7 @@ int actor_apply_cloud(actor *act)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from cloud: %s.",
-             act->name(DESC_CAP_THE).c_str(),
+             act->name(DESC_THE).c_str(),
              act->conj_verb("take").c_str(),
              final_damage,
              cloud.cloud_name().c_str());
@@ -1321,13 +1321,13 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
             // of spam reduction.
             if (act->is_player())
                 mprf("%s %s standing in the rain.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
         }
         else
         {
             mprf("%s %s in %s.",
-                 act->name(DESC_CAP_THE).c_str(),
+                 act->name(DESC_THE).c_str(),
                  beneficial ? act->conj_verb("bask").c_str()
                  : (act->conj_verb("are") + " engulfed").c_str(),
                  cloud_name().c_str());

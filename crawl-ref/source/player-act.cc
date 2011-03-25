@@ -334,14 +334,10 @@ std::string player::name(description_level_type dt, bool) const
     {
     case DESC_NONE:
         return "";
-    case DESC_CAP_A: case DESC_CAP_THE:
-        return "You";
-    case DESC_NOCAP_A: case DESC_NOCAP_THE:
+    case DESC_A: case DESC_THE:
     default:
         return "you";
-    case DESC_CAP_YOUR:
-        return "Your";
-    case DESC_NOCAP_YOUR:
+    case DESC_YOUR:
     case DESC_NOCAP_ITS:
         return "your";
     }

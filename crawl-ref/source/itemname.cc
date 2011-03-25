@@ -137,7 +137,7 @@ std::string item_def::name(description_level_type descrip,
         {
         case DESC_CAP_A:
         case DESC_CAP_YOUR:
-            descrip = DESC_CAP_THE;
+            descrip = DESC_THE;
             break;
 
         case DESC_NOCAP_A:
@@ -164,7 +164,7 @@ std::string item_def::name(description_level_type descrip,
         {
         case DESC_CAP_A:
         case DESC_CAP_YOUR:
-        case DESC_CAP_THE:
+        case DESC_THE:
             buff << "The ";
             break;
         case DESC_NOCAP_A:
@@ -184,8 +184,7 @@ std::string item_def::name(description_level_type descrip,
     {
         switch (descrip)
         {
-        case DESC_CAP_THE:    buff << "The "; break;
-        case DESC_NOCAP_THE:  buff << "the "; break;
+        case DESC_THE:        buff << "the "; break;
         case DESC_CAP_YOUR:   buff << "Your "; break;
         case DESC_NOCAP_YOUR: buff << "your "; break;
         case DESC_NOCAP_ITS:  buff << "its "; break;
@@ -211,8 +210,7 @@ std::string item_def::name(description_level_type descrip,
     {
         switch (descrip)
         {
-        case DESC_CAP_THE:    buff << "The "; break;
-        case DESC_NOCAP_THE:  buff << "the "; break;
+        case DESC_THE:        buff << "the "; break;
         case DESC_CAP_A:      buff << (startvowel ? "An " : "A "); break;
 
         case DESC_CAP_YOUR:   buff << "Your "; break;

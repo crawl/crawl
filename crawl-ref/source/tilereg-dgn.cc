@@ -619,7 +619,7 @@ static bool _cast_spell_on_target(actor* target)
     if (!_spell_in_range(spell, target))
     {
         mprf("%s is out of range for that spell.",
-             target->name(DESC_CAP_THE).c_str());
+             target->name(DESC_THE).c_str());
         return (true);
     }
 

@@ -1843,7 +1843,7 @@ int monster_die(monster* mons, killer_type killer,
                     && (anon || !invalid_monster_index(killer_index)))
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
-                         mons->name(DESC_CAP_THE).c_str(),
+                         mons->name(DESC_THE).c_str(),
                          exploded                        ? "blown up" :
                          _wounded_damaged(targ_holy)     ? "destroyed"
                                                          : "killed");
@@ -3213,7 +3213,7 @@ void corrode_monster(monster* mons, const actor* evildoer)
         if (you.can_see(mons))
         {
             mprf("%s writhes in agony as %s flesh is eaten away!",
-                 mons->name(DESC_CAP_THE).c_str(),
+                 mons->name(DESC_THE).c_str(),
                  mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
         }
     }
@@ -3922,7 +3922,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
         if (message && (oldpos == mons->pos() || grd(oldpos) != grid))
         {
             mprf("%s falls into the %s!",
-                 mons->name(DESC_CAP_THE).c_str(),
+                 mons->name(DESC_THE).c_str(),
                  grid == DNGN_LAVA ? "lava" : "water");
         }
 
@@ -4494,9 +4494,9 @@ bool mons_reaped(actor *killer, monster* victim)
     monster* zombie = &menv[midx];
 
     if (you.can_see(victim))
-        mprf("%s turns into a zombie!", victim->name(DESC_CAP_THE).c_str());
+        mprf("%s turns into a zombie!", victim->name(DESC_THE).c_str());
     else if (you.can_see(zombie))
-        mprf("%s appears out of thin air!", zombie->name(DESC_CAP_THE).c_str());
+        mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());
 
     player_angers_monster(zombie);
 
@@ -4648,8 +4648,7 @@ void forest_damage(const actor *mon)
                         const bool up = *msg == '%';
                         // "it" looks butt-ugly here...
                         mprf(msg, foe->visible_to(&you) ?
-                                      foe->name(up ? DESC_CAP_THE
-                                                   : DESC_NOCAP_THE).c_str()
+                                      foe->name(DESC_THE).c_str()
                                     : up ? "Something" : "something");
                     }
                     foe->hurt(mon, damage);

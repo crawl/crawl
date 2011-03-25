@@ -110,7 +110,7 @@ static void _moveto_maybe_repel_stairs()
         {
             std::string stair_str =
                 feature_description(new_grid, NUM_TRAPS, "",
-                                    DESC_CAP_THE, false);
+                                    DESC_THE, false);
             std::string prep = feat_preposition(new_grid, true, &you);
 
             mprf("%s slides away as you move %s it!", stair_str.c_str(),

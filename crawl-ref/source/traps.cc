@@ -145,17 +145,15 @@ std::string trap_def::name(description_level_type desc) const
         return ("buggy");
 
     const char* basename = trap_name(this->type);
-    if (desc == DESC_CAP_A || desc == DESC_NOCAP_A)
+    if (desc == DESC_A)
     {
-        std::string prefix = (desc == DESC_CAP_A ? "A" : "a");
+        std::string prefix = "a";
         if (is_vowel(basename[0]))
             prefix += 'n';
         prefix += ' ';
         return (prefix + basename);
     }
-    else if (desc == DESC_CAP_THE)
-        return (std::string("The ") + basename);
-    else if (desc == DESC_NOCAP_THE)
+    else if (desc == DESC_THE)
         return (std::string("the ") + basename);
     else                        // everything else
         return (basename);

@@ -227,7 +227,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
 
     // Get feature name before sliding stair over.
     std::string stair_str =
-        feature_description(you.pos(), false, DESC_CAP_THE, false);
+        feature_description(you.pos(), false, DESC_THE, false);
 
     if (!slide_feature_over(you.pos(), coord_def(-1, -1), false))
         return (false);
