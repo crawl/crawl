@@ -87,13 +87,14 @@ function wizlab_portal (e)
                       "It might lead to their secret laboratory, but beware!" ..
                       " Surely it will be guarded by magical traps and "      ..
                       "terrible monsters."
-    local timeout_turns = crawl.random_range(2700, 3300)
+    local timeout_turns_long = crawl.random_range(2700, 3300)
+    local timeout_turns_short = timeout_turns_long/10
     local messager =
         timed_msg {
             visible = true,
             -- $F{xxx} will be substituted with the 'entity' property of the timed
             -- marker, or with the desc property (if entity is not set).
-            messages = time_messages(timeout_turns,
+            messages = time_messages(timeout_turns_short,
                             "$F{The} shimmers.",
                             "$F{The} vibrates and hums gently.",
                             "$F{The} is slightly opaque.",
@@ -110,7 +111,8 @@ function wizlab_portal (e)
         dstname_abbrev = "WizLab",
         dstorigin = "in a Wizard's Laboratory",
         overview = "magical portal",
-        turns = timeout_turns,
+        turns = timeout_turns_long,
+        turns2 = timeout_turns_short,
         floor = "stone_arch",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
