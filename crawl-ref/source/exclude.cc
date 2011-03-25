@@ -88,7 +88,7 @@ void set_auto_exclude(const monster* mon)
         //        annoying. (jpeg)
         mprf(MSGCH_WARN,
              "Marking area around %s as unsafe for travelling.",
-             mon->name(DESC_NOCAP_THE).c_str());
+             mon->name(DESC_THE).c_str());
 
 #ifdef USE_TILE
         viewwindow();

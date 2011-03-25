@@ -1695,7 +1695,7 @@ void yred_drain_life()
             continue;
 
         mprf("You draw life from %s.",
-             mi->name(DESC_NOCAP_THE).c_str());
+             mi->name(DESC_THE).c_str());
 
         behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
 
@@ -3195,7 +3195,7 @@ void cheibriados_time_bend(int pow)
 
             simple_god_message(
                 make_stringf(" rebukes %s.",
-                             mon->name(DESC_NOCAP_THE).c_str()).c_str(),
+                             mon->name(DESC_THE).c_str()).c_str(),
                              GOD_CHEIBRIADOS);
             do_slow_monster(mon, &you);
         }

@@ -951,7 +951,6 @@ enum delay_type
 enum description_level_type
 {
     DESC_THE,
-    DESC_NOCAP_THE,
     DESC_CAP_A,
     DESC_NOCAP_A,
     DESC_CAP_YOUR,

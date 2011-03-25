@@ -1192,7 +1192,7 @@ bool monster::drop_item(int eslot, int near)
             mprf("%s %s as %s drops %s!",
                  pitem->name(DESC_THE).c_str(),
                  summoned_poof_msg(this, *pitem).c_str(),
-                 name(DESC_NOCAP_THE).c_str(),
+                 name(DESC_THE).c_str(),
                  pitem->quantity > 1 ? "them" : "it");
         }
 
@@ -4333,7 +4333,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (alive())
                 simple_monster_message(this, " becomes audible again.");
             else
-                mprf("As %s dies, the sound returns.", name(DESC_NOCAP_THE).c_str());
+                mprf("As %s dies, the sound returns.", name(DESC_THE).c_str());
         break;
 
     case ENCH_MIGHT:
@@ -5078,7 +5078,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                     if (visible_to(&you))
                     {
                         mprf("The net rips apart, and %s comes free!",
-                             name(DESC_NOCAP_THE).c_str());
+                             name(DESC_THE).c_str());
                     }
                     else
                     {
@@ -5176,7 +5176,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (mons_near(this) && visible_to(&you))
             {
                 mprf("The flames covering %s go out.",
-                     name(DESC_NOCAP_THE, false).c_str());
+                     name(DESC_THE, false).c_str());
             }
             del_ench(ENCH_STICKY_FLAME);
             break;
@@ -5348,7 +5348,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             // Do a thing.
             if (you.see_cell(base_position))
             {
-                mprf("The portal closes; %s is severed.", name(DESC_NOCAP_THE).c_str());
+                mprf("The portal closes; %s is severed.", name(DESC_THE).c_str());
             }
 
             if (env.grid(base_position) == DNGN_TEMP_PORTAL)
@@ -5989,7 +5989,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
             if (you.see_cell(pos()) && !visible_to(&you))
             {
                std::string desc =
-                   feature_description(pos(), false, DESC_NOCAP_THE, false);
+                   feature_description(pos(), false, DESC_THE, false);
                mprf("The bloodstain on %s disappears!", desc.c_str());
             }
         }
@@ -6049,7 +6049,7 @@ bool monster::do_shaft()
                 if (visible_to(&you))
                 {
                     mprf("A shaft briefly opens up underneath %s!",
-                         name(DESC_NOCAP_THE).c_str());
+                         name(DESC_THE).c_str());
                 }
                 else
                     mpr("A shaft briefly opens up in the floor!");
@@ -6497,7 +6497,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 if (observable())
                     mprf("As %s mount dies, %s plunges down into %s!",
                          pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
-                         name(DESC_NOCAP_THE).c_str(),
+                         name(DESC_THE).c_str(),
                          grd(pos()) == DNGN_LAVA ?
                              "lava and is incinerated" :
                              "deep water and drowns");

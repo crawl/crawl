@@ -2838,12 +2838,14 @@ std::string thing_do_grammar(description_level_type dtype,
     }
     if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
     {
+        /* Since we're removing caps, this shouldn't be needed,
+           but we'll keep it in case, for now.
         if (dtype == DESC_PLAIN
             || dtype == DESC_NOCAP_THE
             || dtype == DESC_NOCAP_A)
         {
             desc[0] = tolower(desc[0]);
-        }
+        }*/
         return (desc);
     }
 

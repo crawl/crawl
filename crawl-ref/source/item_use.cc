@@ -1489,7 +1489,7 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
         return (false);
 
     if (!beam.is_tracer && you.can_see(victim))
-       dmg_msg = "The silver sears " + victim->name(DESC_NOCAP_THE) + "!";
+       dmg_msg = "The silver sears " + victim->name(DESC_THE) + "!";
 
     return (false);
 }

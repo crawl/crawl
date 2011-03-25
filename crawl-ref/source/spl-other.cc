@@ -372,7 +372,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
                 if (item_is_corpse(*si))
                 {
                     const std::string corpsedesc =
-                        get_menu_colour_prefix_tags(*si, DESC_NOCAP_THE);
+                        get_menu_colour_prefix_tags(*si, DESC_THE);
                     const std::string prompt =
                         make_stringf("Distill a potion from %s?",
                                      corpsedesc.c_str());

@@ -63,7 +63,7 @@ void player::add_beholder(const monster* mon, bool axe)
         if (!axe)
         {
             mprf(MSGCH_WARN, "You are mesmerised by %s!",
-                             mon->name(DESC_NOCAP_THE).c_str());
+                             mon->name(DESC_THE).c_str());
         }
     }
     else
@@ -189,7 +189,7 @@ static void _removed_beholder_msg(const monster* mon)
             if (_mermaid_beholder(mon))
             {
                 mprf("You can no longer hear %s's singing!",
-                     mon->name(DESC_NOCAP_THE).c_str());
+                     mon->name(DESC_THE).c_str());
             }
             else
             {
