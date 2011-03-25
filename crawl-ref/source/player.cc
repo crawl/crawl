@@ -686,9 +686,7 @@ bool you_can_wear(int eq, bool special_armour)
 bool player_has_feet()
 {
     if (you.species == SP_NAGA || you.species == SP_CAT || you.fishtail)
-    {
         return (false);
-    }
 
     if (player_mutation_level(MUT_HOOVES) >= 3
         || player_mutation_level(MUT_TALONS) >= 3)
@@ -816,6 +814,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
 bool player_weapon_wielded()
 {
+    if (you.melded[EQ_WEAPON])
+        return (false);
+
     const int wpn = you.equip[EQ_WEAPON];
 
     if (wpn == -1)
