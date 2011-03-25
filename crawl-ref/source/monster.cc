@@ -3925,7 +3925,7 @@ bool monster::needs_transit() const
                 || you.level_type == LEVEL_DUNGEON
                    && hit_dice > 8 + random2(25)
                    && mons_can_use_stairs(this))
-            && !is_summoned());
+            && !has_ench(ENCH_ABJ));
 }
 
 void monster::set_transit(const level_id &dest)
