@@ -954,7 +954,7 @@ enum description_level_type
     DESC_A,
     DESC_YOUR,
     DESC_PLAIN,
-    DESC_NOCAP_ITS,
+    DESC_ITS,
     DESC_INVENTORY_EQUIP,
     DESC_INVENTORY,
 

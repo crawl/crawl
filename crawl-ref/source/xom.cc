@@ -1684,7 +1684,7 @@ static int _xom_swap_weapons(bool debug = false)
     burden_change();
 
     mprf("You wield %s %s!",
-         mon->name(DESC_NOCAP_ITS).c_str(),
+         mon->name(DESC_ITS).c_str(),
          you.inv[freeslot].name(DESC_PLAIN).c_str());
 
     equip_item(EQ_WEAPON, freeslot);
