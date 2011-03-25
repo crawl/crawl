@@ -722,7 +722,7 @@ static bool _siren_movement_effect(const monster* mons)
                     {
                         mprf("Something prevents you from swapping places "
                              "with %s.",
-                             mon->name(DESC_NOCAP_THE).c_str());
+                             mon->name(DESC_THE).c_str());
                         return (do_resist);
                     }
 
@@ -735,7 +735,7 @@ static bool _siren_movement_effect(const monster* mons)
                     mgrd(mon->pos()) = swap_mon;
 
                     mprf("You swap places with %s.",
-                         mon->name(DESC_NOCAP_THE).c_str());
+                         mon->name(DESC_THE).c_str());
                 }
                 move_player_to_grid(newpos, true, true);
 
@@ -807,7 +807,7 @@ static bool _orange_statue_effects(monster* mons)
                 mprf(MSGCH_WARN, "%s fixes %s piercing gaze on %s.",
                      mons->name(DESC_THE).c_str(),
                      mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str());
+                     foe->name(DESC_THE).c_str());
         }
 
         MiscastEffect(foe, mons->mindex(), SPTYP_DIVINATION,
@@ -952,7 +952,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     if (you.can_see(mon))
     {
         mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
-             targ->name(DESC_NOCAP_THE).c_str());
+             targ->name(DESC_THE).c_str());
     }
 
     targ->go_berserk(false);
@@ -2591,7 +2591,7 @@ void mon_nearby_ability(monster* mons)
             if (can_see && you.can_see(foe))
                 mprf("%s blinks at %s.",
                      mons->name(DESC_THE).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str());
+                     foe->name(DESC_THE).c_str());
 
             int confuse_power = 2 + random2(3);
 
@@ -2624,7 +2624,7 @@ void mon_nearby_ability(monster* mons)
             if (can_see && you.can_see(foe))
                 mprf("%s stares at %s.",
                      mons->name(DESC_THE).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str());
+                     foe->name(DESC_THE).c_str());
 
             if (foe->atype() == ACT_PLAYER && !can_see)
                 mpr("You feel you are being watched by something.");

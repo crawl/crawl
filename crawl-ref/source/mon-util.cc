@@ -3823,7 +3823,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                     foe_name = foe_name.substr(0, pos);
             }
             else
-                foe_name = foe->name(DESC_NOCAP_THE);
+                foe_name = foe->name(DESC_THE);
         }
         else
             foe_name = "something";
@@ -3857,7 +3857,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         foe_species = genus;
     }
 
-    description_level_type nocap = DESC_NOCAP_THE, cap = DESC_THE;
+    description_level_type nocap = DESC_THE, cap = DESC_THE;
 
     if (mons->is_named() && you.can_see(mons))
     {

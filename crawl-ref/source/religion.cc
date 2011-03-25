@@ -1928,7 +1928,7 @@ blessing_done:
     else
     {
         if (you.can_see(follower))
-            whom = follower->name(DESC_NOCAP_THE);
+            whom = follower->name(DESC_THE);
         else
             whom = "a follower";
     }
@@ -3134,7 +3134,7 @@ void print_sacrifice_message(god_type god, const item_def &item,
         simple_god_message(
             make_stringf(" %sreclaims %s.",
                          piety_gain ? "gladly " : "",
-                         item.name(DESC_NOCAP_THE).c_str()).c_str(),
+                         item.name(DESC_THE).c_str()).c_str(),
             GOD_SHINING_ONE);
         return;
     }

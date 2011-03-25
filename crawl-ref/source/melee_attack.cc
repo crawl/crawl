@@ -299,7 +299,7 @@ bool melee_attack::attack()
             {
                 mprf("The %s protects %s from harm.",
                      feat_name.c_str(),
-                     defender->name(DESC_NOCAP_THE).c_str());
+                     defender->name(DESC_THE).c_str());
             }
             else
             {
@@ -322,7 +322,7 @@ bool melee_attack::attack()
             {
                 mprf("%s tries to hit %s, but is blocked by the %s.",
                      attacker->name(DESC_THE).c_str(),
-                     defender->name(DESC_NOCAP_THE).c_str(),
+                     defender->name(DESC_THE).c_str(),
                      feat_name.c_str());
             }
         }
@@ -489,7 +489,7 @@ bool melee_attack::player_attack()
         {
             no_damage_message =
                 make_stringf("You %s %s.", attack_verb.c_str(),
-                             defender->name(DESC_NOCAP_THE).c_str());
+                             defender->name(DESC_THE).c_str());
         }
         defender->as_monster()->del_ench(ENCH_HELPLESS);
 
@@ -782,13 +782,13 @@ bool melee_attack::player_aux_test_hit()
     {
         mprf("Your %s passes through %s as %s momentarily phases out.",
             aux_attack.c_str(),
-            defender->name(DESC_NOCAP_THE).c_str(),
+            defender->name(DESC_THE).c_str(),
             defender->pronoun(PRONOUN_NOCAP).c_str());
     }
     else
     {
         mprf("Your %s misses %s.", aux_attack.c_str(),
-             defender->name(DESC_NOCAP_THE).c_str());
+             defender->name(DESC_THE).c_str());
     }
 
     return (false);
@@ -950,7 +950,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     {
         mprf("You %s %s%s.",
              aux_verb.c_str(),
-             defender->name(DESC_NOCAP_THE).c_str(),
+             defender->name(DESC_THE).c_str(),
              you.can_see(defender) ? ", but do no damage" : "");
     }
     defender->as_monster()->del_ench(ENCH_HELPLESS);
@@ -969,7 +969,7 @@ void melee_attack::player_announce_aux_hit()
 {
     mprf("You %s %s%s%s",
          aux_verb.c_str(),
-         defender->name(DESC_NOCAP_THE).c_str(),
+         defender->name(DESC_THE).c_str(),
          debug_damage_number().c_str(),
          attack_strength_punctuation().c_str());
 }
@@ -980,7 +980,7 @@ void melee_attack::player_announce_hit()
         verb_degree = " " + verb_degree;
 
     msg::stream << "You " << attack_verb << ' '
-                << defender->name(DESC_NOCAP_THE)
+                << defender->name(DESC_THE)
                 << verb_degree << debug_damage_number()
                 << attack_strength_punctuation()
                 << std::endl;
@@ -1024,7 +1024,7 @@ void melee_attack::player_warn_miss()
         behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
 
     msg::stream << player_why_missed()
-                << defender->name(DESC_NOCAP_THE)
+                << defender->name(DESC_THE)
                 << "."
                 << std::endl;
 }
@@ -1065,7 +1065,7 @@ int melee_attack::player_hits_monster()
 
     if (to_hit >= phaseless_evasion && defender_visible)
         msg::stream << "Your attack passes through "
-                    << defender->name(DESC_NOCAP_THE) << " as "
+                    << defender->name(DESC_THE) << " as "
                     << defender->pronoun(PRONOUN_NOCAP)
                     << " momentarily phases out." << std::endl;
 
@@ -1620,7 +1620,7 @@ bool melee_attack::player_monattk_hit_effects()
         {
             mprf("You %s %s, but do no damage.",
                  attack_verb.c_str(),
-                 defender->name(DESC_NOCAP_THE).c_str());
+                 defender->name(DESC_THE).c_str());
         }
     }
 
@@ -1634,7 +1634,7 @@ bool melee_attack::player_monattk_hit_effects()
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Special damage to %s: %d, flavour: %d",
-         defender->name(DESC_NOCAP_THE).c_str(),
+         defender->name(DESC_THE).c_str(),
          special_damage, special_damage_flavour);
 #endif
 
@@ -1772,7 +1772,7 @@ bool melee_attack::distortion_affects_defender()
             special_damage_message =
                 make_stringf(
                     "Space bends around %s.",
-                def_name(DESC_NOCAP_THE).c_str());
+                def_name(DESC_THE).c_str());
         }
         special_damage += 1 + random2avg(7, 2);
         return (false);
@@ -1785,7 +1785,7 @@ bool melee_attack::distortion_affects_defender()
             special_damage_message =
                 make_stringf(
                     "Space warps horribly around %s!",
-                    def_name(DESC_NOCAP_THE).c_str());
+                    def_name(DESC_THE).c_str());
         }
         special_damage += 3 + random2avg(24, 2);
         return (false);
@@ -2017,7 +2017,7 @@ void melee_attack::chaos_affects_defender()
             {
                 special_damage_message =
                     make_stringf("%s is duplicated!",
-                                 def_name(DESC_NOCAP_THE).c_str());
+                                 def_name(DESC_THE).c_str());
             }
 
             monster& clone(menv[clone_idx]);
@@ -2134,7 +2134,7 @@ void melee_attack::chaos_affects_defender()
             beam.item = weapon;
         }
         else
-            beam.name = atk_name(DESC_NOCAP_THE);
+            beam.name = atk_name(DESC_THE);
 
         beam.thrower =
             (attacker->atype() == ACT_PLAYER)          ? KILL_YOU
@@ -2300,7 +2300,7 @@ void melee_attack::do_miscast()
     // instead of the attacker's hands.
     std::string hand_str;
 
-    std::string cause = atk_name(DESC_NOCAP_THE);
+    std::string cause = atk_name(DESC_THE);
     int         source;
 
     const int ignore_mask = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
@@ -2850,7 +2850,7 @@ bool melee_attack::chop_hydra_head(int dam,
                 mprf("%s %s %s's last head off!",
                      atk_name(DESC_THE).c_str(),
                      attacker->conj_verb(verb).c_str(),
-                     def_name(DESC_NOCAP_THE).c_str());
+                     def_name(DESC_THE).c_str());
             }
             defender->as_monster()->number--;
 
@@ -2869,7 +2869,7 @@ bool melee_attack::chop_hydra_head(int dam,
                 mprf("%s %s one of %s's heads off!",
                      atk_name(DESC_THE).c_str(),
                      attacker->conj_verb(verb).c_str(),
-                     def_name(DESC_NOCAP_THE).c_str());
+                     def_name(DESC_THE).c_str());
             }
             defender->as_monster()->number--;
 
@@ -2979,7 +2979,7 @@ void melee_attack::player_apply_staff_damage()
             special_damage_message =
                 make_stringf(
                     "You freeze %s!",
-                    defender->name(DESC_NOCAP_THE).c_str());
+                    defender->name(DESC_THE).c_str());
         }
         break;
 
@@ -2992,7 +2992,7 @@ void melee_attack::player_apply_staff_damage()
             special_damage_message =
                 make_stringf(
                     "You crush %s!",
-                    defender->name(DESC_NOCAP_THE).c_str());
+                    defender->name(DESC_THE).c_str());
         }
         break;
 
@@ -3008,7 +3008,7 @@ void melee_attack::player_apply_staff_damage()
             special_damage_message =
                 make_stringf(
                     "You burn %s!",
-                    defender->name(DESC_NOCAP_THE).c_str());
+                    defender->name(DESC_THE).c_str());
         }
         break;
 
@@ -3913,7 +3913,7 @@ std::string melee_attack::mons_defender_name()
     if (attacker == defender)
         return actor_pronoun(attacker, PRONOUN_REFLEXIVE, attacker_visible);
     else
-        return def_name(DESC_NOCAP_THE);
+        return def_name(DESC_THE);
 }
 
 void melee_attack::mons_announce_hit(const mon_attack_def &attk)
@@ -4432,7 +4432,7 @@ void melee_attack::mons_do_eyeball_confusion()
             && mons_class_is_confusable(mon->type))
         {
             mprf("The eyeballs on your body gaze at %s.",
-                 mon->name(DESC_NOCAP_THE).c_str());
+                 mon->name(DESC_THE).c_str());
 
             mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you,
                                       30 + random2(100)));
@@ -5649,13 +5649,13 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     if (needs_bite_msg && !player_in_bat_form())
     {
         mprf("You bite %s, and draw %s blood!",
-             mon->name(DESC_NOCAP_THE, true).c_str(),
+             mon->name(DESC_THE, true).c_str(),
              mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
     }
     else
     {
         mprf("You draw %s blood!",
-             apostrophise(mon->name(DESC_NOCAP_THE, true)).c_str());
+             apostrophise(mon->name(DESC_THE, true)).c_str());
     }
 
     // Regain hp.
@@ -5720,25 +5720,25 @@ void melee_attack::stab_message()
         {
             mprf("You %s %s from a blind spot!",
                   (you.species == SP_CAT) ? "pounce on" : "strike",
-                  defender->name(DESC_NOCAP_THE).c_str());
+                  defender->name(DESC_THE).c_str());
         }
         else
         {
             mprf("You catch %s momentarily off-guard.",
-                  defender->name(DESC_NOCAP_THE).c_str());
+                  defender->name(DESC_THE).c_str());
         }
         break;
     case 4:     // confused/fleeing
         if (!one_chance_in(3))
         {
             mprf("You catch %s completely off-guard!",
-                  defender->name(DESC_NOCAP_THE).c_str());
+                  defender->name(DESC_THE).c_str());
         }
         else
         {
             mprf("You %s %s from behind!",
                   (you.species == SP_CAT) ? "pounce on" : "strike",
-                  defender->name(DESC_NOCAP_THE).c_str());
+                  defender->name(DESC_THE).c_str());
         }
         break;
     case 2:

@@ -345,12 +345,12 @@ move_again:
             {
                 if (victim->atype() == ACT_PLAYER)
                 {
-                    mprf("You block %s.", mon.name(DESC_NOCAP_THE, true).c_str());
+                    mprf("You block %s.", mon.name(DESC_THE, true).c_str());
                 }
                 else
                 {
                     simple_monster_message(mons, (" blocks "
-                        + mon.name(DESC_NOCAP_THE, true) + ".").c_str());
+                        + mon.name(DESC_THE, true) + ".").c_str());
                 }
                 victim->shield_block_succeeded(&mon);
                 _iood_dissipate(mon);
@@ -361,7 +361,7 @@ move_again:
             {
                 mprf("Your %s reflects %s!",
                     shield->name(DESC_PLAIN).c_str(),
-                    mon.name(DESC_NOCAP_THE, true).c_str());
+                    mon.name(DESC_THE, true).c_str());
                 ident_reflector(shield);
             }
             else if (you.see_cell(pos))
@@ -370,7 +370,7 @@ move_again:
                 {
                     mprf("%s reflects %s with %s %s!",
                         victim->name(DESC_THE, true).c_str(),
-                        mon.name(DESC_NOCAP_THE, true).c_str(),
+                        mon.name(DESC_THE, true).c_str(),
                         mon.pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
                         shield->name(DESC_PLAIN).c_str());
                     ident_reflector(shield);

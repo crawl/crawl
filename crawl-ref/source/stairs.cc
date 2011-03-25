@@ -1027,7 +1027,7 @@ void down_stairs(dungeon_feature_type force_stair,
         ASSERT(runes.size() >= 3);
 
         mprf("You insert %s into the lock.",
-             you.inv[runes[0]].name(DESC_NOCAP_THE).c_str());
+             you.inv[runes[0]].name(DESC_THE).c_str());
 #ifdef USE_TILE
         tiles.add_overlay(you.pos(), tileidx_zap(GREEN));
         update_screen();
@@ -1038,14 +1038,14 @@ void down_stairs(dungeon_feature_type force_stair,
         more();
 
         mprf("You insert %s into the lock.",
-             you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
+             you.inv[runes[1]].name(DESC_THE).c_str());
         big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
         viewwindow();
         mpr("Heavy smoke blows from the lock!");
         more();
 
         mprf("You insert %s into the lock.",
-             you.inv[runes[2]].name(DESC_NOCAP_THE).c_str());
+             you.inv[runes[2]].name(DESC_THE).c_str());
 
         if (silenced(you.pos()))
             mpr("The gate opens wide!");

@@ -133,24 +133,7 @@ std::string item_def::name(description_level_type descrip,
              && !(corpse_flags & MF_NAME_SUFFIX)
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
-        switch (descrip)
-        {
-        case DESC_CAP_A:
-        case DESC_CAP_YOUR:
-            descrip = DESC_THE;
-            break;
-
-        case DESC_NOCAP_A:
-        case DESC_NOCAP_YOUR:
-        case DESC_NOCAP_ITS:
-        case DESC_INVENTORY_EQUIP:
-        case DESC_INVENTORY:
-            descrip = DESC_NOCAP_THE;
-            break;
-
-        default:
-            break;
-        }
+        descript = DESC_THE;
     }
 
     if (item_is_orb(*this)
@@ -162,20 +145,8 @@ std::string item_def::name(description_level_type descrip,
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
         {
-        case DESC_CAP_A:
-        case DESC_CAP_YOUR:
-        case DESC_THE:
-            buff << "The ";
-            break;
-        case DESC_NOCAP_A:
-        case DESC_NOCAP_YOUR:
-        case DESC_NOCAP_THE:
-        case DESC_NOCAP_ITS:
-        case DESC_INVENTORY_EQUIP:
-        case DESC_INVENTORY:
-            buff << "the ";
-            break;
         default:
+            buff << "the ";
         case DESC_PLAIN:
             break;
         }

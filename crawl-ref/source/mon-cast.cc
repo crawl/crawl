@@ -2101,7 +2101,7 @@ static bool _mons_vampiric_drain(monster *mons)
     else
     {
         monster* mtarget = target->as_monster();
-        const std::string targname = mtarget->name(DESC_NOCAP_THE);
+        const std::string targname = mtarget->name(DESC_THE);
         mtarget->hurt(mons, hp_cost);
         simple_monster_message(mons,
                                make_stringf(" draws life force from %s and is healed!", targname.c_str()).c_str());
@@ -3748,7 +3748,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
         if (const monster* mtarg = monster_at(pbolt.target))
         {
             if (you.can_see(mtarg))
-                target = mtarg->name(DESC_NOCAP_THE);
+                target = mtarg->name(DESC_THE);
         }
     }
 
@@ -3769,7 +3769,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
                     targ_prep = "next to";
 
                     if (act->atype() == ACT_PLAYER || one_chance_in(++count))
-                        target = act->name(DESC_NOCAP_THE);
+                        target = act->name(DESC_THE);
 
                     if (act->atype() == ACT_PLAYER)
                         break;
@@ -3813,7 +3813,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
             else if (visible_path && m && you.can_see(m))
             {
                 bool is_aligned  = mons_aligned(m, mons);
-                std::string name = m->name(DESC_NOCAP_THE);
+                std::string name = m->name(DESC_THE);
 
                 if (target == "nothing")
                 {
@@ -3842,7 +3842,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
                         if (act->atype() == ACT_PLAYER
                             || one_chance_in(++count))
                         {
-                            target = act->name(DESC_NOCAP_THE);
+                            target = act->name(DESC_THE);
                         }
 
                         if (act->atype() == ACT_PLAYER)
@@ -3869,7 +3869,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
         && !mons->confused()
         && visible_path)
     {
-        target = foe->name(DESC_NOCAP_THE);
+        target = foe->name(DESC_THE);
         targ_prep = (pbolt.aimed_at_spot ? "next to" : "past");
     }
 

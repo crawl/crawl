@@ -1728,7 +1728,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
         else if (seen_change && zin)
             mprf("Zin %s %s %s.",
             (mon) ? "releases" : "dismisses",
-            (mon) ? mon->name(DESC_NOCAP_THE).c_str() : "the silver walls,",
+            (mon) ? mon->name(DESC_THE).c_str() : "the silver walls,",
             (mon) ? "from its prison" : "but there is nothing inside them");
         else {
             if (!silenced(you.pos()))
@@ -2320,7 +2320,7 @@ void swap_with_monster(monster* mon_to_swap)
     // If it was submerged, it surfaces first.
     mon.del_ench(ENCH_SUBMERGED);
 
-    mprf("You swap places with %s.", mon.name(DESC_NOCAP_THE).c_str());
+    mprf("You swap places with %s.", mon.name(DESC_THE).c_str());
 
     // Pick the monster up.
     mgrd(newpos) = NON_MONSTER;
@@ -2407,7 +2407,7 @@ void maybe_id_ring_TC()
 void entered_malign_portal(actor* act)
 {
     if (you.can_see(act))
-        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_NOCAP_THE).c_str());
+        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_THE).c_str());
 
     act->blink(false);
     if (act->atype() == ACT_PLAYER)

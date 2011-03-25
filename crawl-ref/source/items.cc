@@ -1166,7 +1166,7 @@ bool pickup_single_item(int link, int qty)
     {
         const std::string prompt
                 = make_stringf("Pick up how many of %s (; or enter for all)? ",
-                               mitm[link].name(DESC_NOCAP_THE,
+                               mitm[link].name(DESC_THE,
                                     false, false, false).c_str());
 
         qty = prompt_for_quantity(prompt.c_str());

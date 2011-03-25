@@ -1069,7 +1069,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     else if (const monster* m = monster_at(orig_pos))
     {
         if (you.can_see(m))
-            orig_actor = m->name(DESC_NOCAP_THE);
+            orig_actor = m->name(DESC_THE);
     }
 
     if (dest_pos == you.pos())
@@ -1077,7 +1077,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     else if (const monster* m = monster_at(dest_pos))
     {
         if (you.can_see(m))
-            dest_actor = m->name(DESC_NOCAP_THE);
+            dest_actor = m->name(DESC_THE);
     }
 
     std::ostringstream str;

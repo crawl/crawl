@@ -322,7 +322,7 @@ static std::string _describe_monsters(const counted_monster_list &list)
 
     description_level_type desc = DESC_THE;
     for (counted_monster_list::const_iterator i = list.begin();
-         i != list.end(); desc = DESC_NOCAP_THE)
+         i != list.end(); desc = DESC_THE)
     {
         const counted_monster &cm(*i);
         if (i != list.begin())
@@ -390,7 +390,7 @@ void cast_toxic_radiance(bool non_player)
             {
                 // message player re:"miss" where appropriate {dlb}
                 mprf("The light passes through %s.",
-                     mi->name(DESC_NOCAP_THE).c_str());
+                     mi->name(DESC_THE).c_str());
             }
         }
     }
@@ -607,7 +607,7 @@ bool cast_freeze(int pow, monster* mons)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("You freeze %s.", mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You freeze %s.", mons->name(DESC_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
     }
@@ -657,7 +657,7 @@ int airstrike(int pow, const dist &beam)
         if (mons->res_wind() > 0)
         {
             mprf("The air twists arounds and harmlessly tosses %s around.",
-                 mons->name(DESC_NOCAP_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             // Bailing out early, no need to upset the gods or the target.
             return (false);
         }
@@ -672,7 +672,7 @@ int airstrike(int pow, const dist &beam)
             set_attack_conducts(conducts, mons);
 
             mprf("The air twists around and strikes %s!",
-                 mons->name(DESC_NOCAP_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             noisy(4, beam.target);
 
             behaviour_event(mons, ME_ANNOY, MHITYOU);

@@ -113,7 +113,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         clone->props[clone_slave_key] = clone_id;
         foe->props[clone_master_key] = clone_id;
         mons_add_blame(clone,
-                       "woven by " + caster->name(DESC_NOCAP_THE));
+                       "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_ABJ))
             clone->mark_summoned(6, true, MON_SUMM_CLONE);
 
@@ -134,7 +134,7 @@ static void _mons_summon_monster_illusion(monster* caster,
             else
                 mprf("%s seems to draw %s out of %s!",
                      caster->name(DESC_THE).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str(),
+                     foe->name(DESC_THE).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
         }
     }

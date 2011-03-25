@@ -265,7 +265,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
         if (you.can_see(mon))
         {
             mprf("The net passes right through %s!",
-                 mon->name(DESC_NOCAP_THE).c_str());
+                 mon->name(DESC_THE).c_str());
         }
         return;
     }
@@ -342,7 +342,7 @@ void check_net_will_hold_monster(monster* mons)
             if (mons->visible_to(&you))
             {
                 mprf("The net rips apart, and %s comes free!",
-                     mons->name(DESC_NOCAP_THE).c_str());
+                     mons->name(DESC_THE).c_str());
             }
             else
                 mpr("All of a sudden the net rips apart!");
@@ -621,7 +621,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     if (m->visible_to(&you))
                     {
                         msg += " and slices into ";
-                        msg += m->name(DESC_NOCAP_THE);
+                        msg += m->name(DESC_THE);
                     }
                     msg += "!";
                     mpr(msg.c_str());
@@ -714,7 +714,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 {
                     msg::stream << "A large net falls down";
                     if (m->visible_to(&you))
-                        msg::stream << " onto " << m->name(DESC_NOCAP_THE);
+                        msg::stream << " onto " << m->name(DESC_THE);
                     msg::stream << "!" << std::endl;
                 }
                 // FIXME: Fake a beam for monster_caught_in_net().
@@ -777,7 +777,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (in_sight)
                 {
                     mprf("The power of Zot is invoked against %s!",
-                         targ->name(DESC_NOCAP_THE).c_str());
+                         targ->name(DESC_THE).c_str());
                 }
                 MiscastEffect(targ, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                               3, "the power of Zot");
@@ -1091,7 +1091,7 @@ void remove_net_from(monster* mon)
             if (mon->visible_to(&you))
             {
                 mprf("You fail to remove the net from %s.",
-                     mon->name(DESC_NOCAP_THE).c_str());
+                     mon->name(DESC_THE).c_str());
             }
             else
                 mpr("You fail to remove the net.");
@@ -1105,7 +1105,7 @@ void remove_net_from(monster* mon)
     remove_item_stationary(mitm[net]);
 
     if (mon->visible_to(&you))
-        mprf("You free %s.", mon->name(DESC_NOCAP_THE).c_str());
+        mprf("You free %s.", mon->name(DESC_THE).c_str());
     else
         mpr("You loosen the net.");
 
@@ -1469,7 +1469,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 mprf("%s %s %s%s!",
                      shot.name(DESC_CAP_A).c_str(),
                      hit ? "hits" : "misses",
-                     act.name(DESC_NOCAP_THE).c_str(),
+                     act.name(DESC_THE).c_str(),
                      (hit && damage_taken == 0
                          && !poison) ? ", but does no damage" : "");
             }

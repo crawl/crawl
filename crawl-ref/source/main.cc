@@ -1248,7 +1248,7 @@ static bool _stairs_check_mesmerised()
     {
         const monster* beholder = you.get_any_beholder();
         mprf("You cannot move away from %s!",
-             beholder->name(DESC_NOCAP_THE, true).c_str());
+             beholder->name(DESC_THE, true).c_str());
         return (true);
     }
 
@@ -3079,7 +3079,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         {
             const std::string prompt =
                 make_stringf("Do you want to try to take the net off %s?",
-                             mon->name(DESC_NOCAP_THE).c_str());
+                             mon->name(DESC_THE).c_str());
 
             if (yesno(prompt.c_str(), true, 'n'))
             {
@@ -3978,13 +3978,13 @@ static void _move_player(coord_def move)
     else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
-            beholder->name(DESC_NOCAP_THE, true).c_str());
+            beholder->name(DESC_THE, true).c_str());
         return;
     }
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
-            fmonger->name(DESC_NOCAP_THE, true).c_str());
+            fmonger->name(DESC_THE, true).c_str());
         return;
     }
 

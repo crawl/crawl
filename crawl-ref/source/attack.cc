@@ -212,14 +212,9 @@ std::string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
 
     std::string name;
     bool possessive = false;
-    if (desc == DESC_CAP_YOUR)
+    if (desc == DESC_YOUR)
     {
         desc       = DESC_THE;
-        possessive = true;
-    }
-    else if (desc == DESC_NOCAP_YOUR)
-    {
-        desc       = DESC_NOCAP_THE;
         possessive = true;
     }
 
@@ -239,7 +234,7 @@ std::string attack::defender_name()
     if (attacker == defender)
         return actor_pronoun(attacker, PRONOUN_REFLEXIVE, attacker_visible);
     else
-        return def_name(DESC_NOCAP_THE);
+        return def_name(DESC_THE);
 }
 
 /* Calculates special damage, prints appropriate combat text

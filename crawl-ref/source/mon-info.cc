@@ -637,7 +637,7 @@ std::string monster_info::_core_name() const
 std::string monster_info::_apply_adjusted_description(description_level_type desc, const std::string& s) const
 {
     if (desc == DESC_NOCAP_ITS)
-        desc = DESC_NOCAP_THE;
+        desc = DESC_THE;
     if (is(MB_NAME_THE))
     {
         desc = DESC_THE;

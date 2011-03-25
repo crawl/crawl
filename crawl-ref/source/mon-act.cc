@@ -195,7 +195,7 @@ static bool _swap_monsters(monster* mover, monster* moved)
     if (you.can_see(mover) && you.can_see(moved))
     {
         mprf("%s and %s swap places.", mover->name(DESC_THE).c_str(),
-             moved->name(DESC_NOCAP_THE).c_str());
+             moved->name(DESC_THE).c_str());
     }
 
     return (true);
@@ -1699,7 +1699,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         {
             msg::stream << "The weapon returns "
                         << (you.can_see(mons)?
-                              ("to " + mons->name(DESC_NOCAP_THE))
+                              ("to " + mons->name(DESC_THE))
                             : "from whence it came")
                         << "!" << std::endl;
         }
@@ -2652,7 +2652,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (nearby)
     {
         mprf("%s eats %s.", mons->name(DESC_THE).c_str(),
-             item.name(DESC_NOCAP_THE).c_str());
+             item.name(DESC_THE).c_str());
     }
 
     // Assume that eating a corpse requires butchering it.  Use logic
@@ -2720,7 +2720,7 @@ static bool _monster_eat_food(monster* mons, bool nearby)
                 if (nearby)
                 {
                     mprf("%s eats %s.", mons->name(DESC_THE).c_str(),
-                         quant_name(*si, 1, DESC_NOCAP_THE).c_str());
+                         quant_name(*si, 1, DESC_THE).c_str());
                 }
 
                 dec_mitm_item_quantity(si.link(), 1);

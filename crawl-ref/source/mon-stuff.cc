@@ -673,7 +673,7 @@ static void _check_kill_milestone(const monster* mons,
     {
         mark_milestone("uniq",
                        _milestone_kill_verb(killer)
-                       + mons->name(DESC_NOCAP_THE, true)
+                       + mons->name(DESC_THE, true)
                        + ".");
     }
 }
@@ -891,7 +891,7 @@ static bool _ely_protect_ally(monster* mons)
     mons->hit_points = 1;
 
     snprintf(info, INFO_SIZE, " protects %s from harm!%s",
-             mons->name(DESC_NOCAP_THE).c_str(),
+             mons->name(DESC_THE).c_str(),
              coinflip() ? "" : " You feel responsible.");
 
     simple_god_message(info);
@@ -938,7 +938,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     snprintf(info, INFO_SIZE, "%s heals %s%s",
              god_name(god, false).c_str(),
-             mons->name(DESC_NOCAP_THE).c_str(),
+             mons->name(DESC_THE).c_str(),
              mons->hit_points * 2 <= mons->max_hit_points ? "." : "!");
 
     god_speaks(god, info);
@@ -1173,7 +1173,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         else if (you.can_see(target))
         {
             mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
-                 target->name(DESC_NOCAP_THE).c_str());
+                 target->name(DESC_THE).c_str());
         }
         MiscastEffect(target, mons->mindex(), SPTYP_NECROMANCY,
                       pow, random2avg(88, 3), "a mummy death curse");
@@ -1854,7 +1854,7 @@ int monster_die(monster* mons, killer_type killer,
                          exploded                        ? "blow up" :
                          _wounded_damaged(targ_holy)     ? "destroy"
                                                          : "kill",
-                         mons->name(DESC_NOCAP_THE).c_str());
+                         mons->name(DESC_THE).c_str());
                 }
 
                 if ((created_friendly || was_neutral) && gives_xp)
@@ -3199,7 +3199,7 @@ void corrode_monster(monster* mons, const actor* evildoer)
                 if (you.can_see(mons))
                 {
                     mprf("The acid corrodes %s %s!",
-                         apostrophise(mons->name(DESC_NOCAP_THE)).c_str(),
+                         apostrophise(mons->name(DESC_THE)).c_str(),
                          thing_chosen.name(DESC_PLAIN).c_str());
                 }
             }

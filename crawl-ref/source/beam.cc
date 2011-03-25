@@ -1123,7 +1123,7 @@ bool bolt::hit_wall()
         const monster* mon = monster_at(target);
 
         if (mon && mon->observable())
-            prompt += mon->name(DESC_NOCAP_THE);
+            prompt += mon->name(DESC_THE);
         else
         {
             prompt += "the targeted "
@@ -1204,7 +1204,7 @@ void bolt::affect_cell()
             {
                 mprf("The %s protects %s from harm.",
                      raw_feature_description(grd(act->pos())).c_str(),
-                     act->name(DESC_NOCAP_THE).c_str());
+                     act->name(DESC_THE).c_str());
             }
         }
 
@@ -1777,7 +1777,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                     simple_monster_message(mons, " appears unharmed.");
                 else if (mons->observable())
                     mprf("The beam of light passes harmlessly through %s.",
-                         mons->name(DESC_NOCAP_THE, true).c_str());
+                         mons->name(DESC_THE, true).c_str());
             }
         }
         else if (original < hurted)
@@ -4047,7 +4047,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
                     grid_distance(mon->pos(), mi->pos()) == 1)
                 {
                     mprf("The sticky flame splashes onto %s!",
-                         mi->name(DESC_NOCAP_THE).c_str());
+                         mi->name(DESC_THE).c_str());
                     napalm_monster(*mi, agent(), levels);
                 }
             }
@@ -4375,7 +4375,7 @@ void bolt::affect_monster(monster* mon)
             else
             {
                 msg::stream << "The " << name << " misses "
-                            << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
+                            << mon->name(DESC_THE) << '.' << std::endl;
             }
         }
         return;
@@ -4423,7 +4423,7 @@ void bolt::affect_monster(monster* mon)
              name.c_str(),
              hit_verb.c_str(),
              mon->observable() ?
-                 mon->name(DESC_NOCAP_THE).c_str() : "something");
+                 mon->name(DESC_THE).c_str() : "something");
 
     }
     else if (heard && !noise_msg.empty())
