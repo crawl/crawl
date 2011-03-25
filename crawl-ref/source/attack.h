@@ -19,9 +19,6 @@ enum phase
     ATK_KILLED
 };
 
-// TODO: Potentially remove
-struct mon_attack_def;
-
 class attack
 {
 // Public Properties

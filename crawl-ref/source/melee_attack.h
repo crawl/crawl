@@ -8,6 +8,9 @@
 #include "random-var.h"
 #include "random.h"
 
+// Forward declaration of the struct
+struct mon_attack_def;
+
 enum unarmed_attack_type
 {
     UNAT_NO_ATTACK,                    //    0
