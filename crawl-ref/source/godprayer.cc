@@ -119,7 +119,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         return (false);
     }
 
-    std::string prompt = "Do you wish to have " + wpn.name(DESC_NOCAP_YOUR)
+    std::string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
                        + " ";
     if (brand == SPWPN_PAIN)
         prompt += "bloodied with pain";

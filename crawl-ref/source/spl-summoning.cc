@@ -199,7 +199,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
     if (!check_warning_inscriptions(wpn, OPER_DESTROY))
     {
         mprf("%s feel%s slithery for a moment!",
-             wpn.name(DESC_CAP_YOUR).c_str(),
+             wpn.name(DESC_YOUR).c_str(),
              wpn.quantity > 1 ? "" : "s");
         return (false);
     }
@@ -1039,7 +1039,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
         if (wpn)
         {
             mprf("%s vibrate%s crazily for a second.",
-                 wpn->name(DESC_CAP_YOUR).c_str(),
+                 wpn->name(DESC_YOUR).c_str(),
                  wpn->quantity > 1 ? "" : "s");
         }
         else
@@ -1052,7 +1052,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     // effects.
     unwield_item();
 
-    mprf("%s dances into the air!", wpn->name(DESC_CAP_YOUR).c_str());
+    mprf("%s dances into the air!", wpn->name(DESC_YOUR).c_str());
 
     // Find out what our god thinks before killing the item.
     conduct_type why = good_god_hates_item_handling(*wpn);

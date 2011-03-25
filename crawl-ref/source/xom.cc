@@ -1649,7 +1649,7 @@ static int _xom_swap_weapons(bool debug = false)
 
     mprf("%s wields %s!",
          mon->name(DESC_THE).c_str(),
-         myweapon.name(DESC_NOCAP_YOUR).c_str());
+         myweapon.name(DESC_YOUR).c_str());
     mon->equip(myweapon, MSLOT_WEAPON, 0);
 
     // Item is gone from player's inventory.
@@ -2637,11 +2637,11 @@ static void _xom_zero_miscast()
 
         std::string name;
         if (item.quantity == 1)
-            name = item.name(DESC_CAP_YOUR, false, false, false);
+            name = item.name(DESC_YOUR, false, false, false);
         else
         {
             name  = "One of ";
-            name += item.name(DESC_NOCAP_YOUR, false, false, false);
+            name += item.name(DESC_YOUR, false, false, false);
         }
         messages.push_back(name + " falls out of your pack, then "
                            "immediately jumps back in!");
@@ -2783,7 +2783,7 @@ static void _xom_zero_miscast()
 
         item = &you.inv[idx];
 
-        std::string name = item->name(DESC_CAP_YOUR, false, false, false);
+        std::string name = item->name(DESC_YOUR, false, false, false);
         std::string verb = coinflip() ? "glow" : "vibrate";
 
         if (item->quantity == 1)

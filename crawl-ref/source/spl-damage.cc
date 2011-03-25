@@ -955,7 +955,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
         if (set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING))
         {
             mprf("%s bursts into flame!",
-                 item.name(DESC_CAP_YOUR).c_str());
+                 item.name(DESC_YOUR).c_str());
 
             you.wield_change = true;
 

@@ -698,7 +698,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
 
         if (brand != SPWPN_NORMAL)
         {
-            const std::string msg = item.name(DESC_CAP_YOUR);
+            const std::string msg = item.name(DESC_YOUR);
 
             switch (brand)
             {
@@ -1075,7 +1075,7 @@ static void _remove_amulet_of_faith(item_def &item)
         {
             mprf(MSGCH_GOD,
                  "%s leaches power out of you as you remove it.",
-                 item.name(DESC_CAP_YOUR).c_str());
+                 item.name(DESC_YOUR).c_str());
             dprf("%s: piety leach: %d",
                  item.name(DESC_PLAIN).c_str(), piety_loss);
             lose_piety(piety_loss);

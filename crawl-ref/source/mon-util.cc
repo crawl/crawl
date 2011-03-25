@@ -3817,7 +3817,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                 && !mons_is_unique(m_foe->type)
                 && !crawl_state.game_is_arena())
             {
-                foe_name = foe->name(DESC_NOCAP_YOUR);
+                foe_name = foe->name(DESC_YOUR);
                 const std::string::size_type pos = foe_name.find("'");
                 if (pos != std::string::npos)
                     foe_name = foe_name.substr(0, pos);

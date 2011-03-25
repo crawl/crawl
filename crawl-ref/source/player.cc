@@ -842,7 +842,7 @@ bool berserk_check_wielded_weapon()
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
         std::string prompt = "Do you really want to go berserk while "
-                             "wielding " + weapon.name(DESC_NOCAP_YOUR)
+                             "wielding " + weapon.name(DESC_YOUR)
                              + "?";
 
         if (!yesno(prompt.c_str(), true, 'n'))

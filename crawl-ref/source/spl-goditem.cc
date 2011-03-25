@@ -688,7 +688,7 @@ bool detect_curse(int scroll, bool suppress_msg)
                 item.quantity--;
 
             mprf("%s softly glows as it is inspected for curses.",
-                 item.name(DESC_CAP_YOUR).c_str());
+                 item.name(DESC_YOUR).c_str());
         }
         else
             mpr("Your items softly glow as they are inspected for curses.");

@@ -771,7 +771,7 @@ bool do_wear_armour(int item, bool quiet)
             if (!quiet)
             {
                 mprf("%s is stuck to your body!",
-                     you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_CAP_YOUR)
+                     you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_YOUR)
                                                        .c_str());
             }
             return (false);
@@ -840,7 +840,7 @@ bool takeoff_armour(int item)
     if (item == you.equip[slot] && you.melded[slot])
     {
         mprf("%s is melded into your body!",
-             invitem.name(DESC_CAP_YOUR).c_str());
+             invitem.name(DESC_YOUR).c_str());
         return (false);
     }
 
@@ -858,7 +858,7 @@ bool takeoff_armour(int item)
     // If we get here, we're wearing the item.
     if (invitem.cursed())
     {
-        mprf("%s is stuck to your body!", invitem.name(DESC_CAP_YOUR).c_str());
+        mprf("%s is stuck to your body!", invitem.name(DESC_YOUR).c_str());
         return (false);
     }
 
@@ -3610,7 +3610,7 @@ bool remove_ring(int slot, bool announce)
         if (announce)
         {
             mprf("%s is stuck to you!",
-                 you.inv[you.equip[hand_used]].name(DESC_CAP_YOUR).c_str());
+                 you.inv[you.equip[hand_used]].name(DESC_YOUR).c_str());
         }
         else
             mpr("It's stuck to you!");
@@ -3625,7 +3625,7 @@ bool remove_ring(int slot, bool announce)
     if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
         return (false);
 
-    mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_NOCAP_YOUR).c_str());
+    mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_YOUR).c_str());
     unequip_item(hand_used);
 
     you.time_taken /= 2;
@@ -4218,7 +4218,7 @@ static bool _vorpalise_weapon(bool already_known)
     {
         alert_nearby_monsters();
         mprf("%s emits a brilliant flash of light!",
-             wpn.name(DESC_CAP_YOUR).c_str());
+             wpn.name(DESC_YOUR).c_str());
         set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_VORPAL);
         return (true);
     }
@@ -4228,7 +4228,7 @@ static bool _vorpalise_weapon(bool already_known)
         return (false);
 
     // There's a temporary brand, attempt to make it permanent.
-    const std::string itname = wpn.name(DESC_CAP_YOUR);
+    const std::string itname = wpn.name(DESC_YOUR);
     bool success = true;
     bool msg = true;
 
@@ -4351,7 +4351,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
     }
 
     // Get item name now before changing enchantment.
-    std::string iname = wpn.name(DESC_CAP_YOUR);
+    std::string iname = wpn.name(DESC_YOUR);
 
     if (!uncurse_only)
     {
@@ -4393,7 +4393,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
             if (!quiet)
             {
                 mprf("%s glows silver for a moment.",
-                     wpn.name(DESC_CAP_YOUR).c_str());
+                     wpn.name(DESC_YOUR).c_str());
             }
         }
 
@@ -4453,7 +4453,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         if (!quiet)
         {
             mprf("%s glows purple and changes!",
-                 arm.name(DESC_CAP_YOUR).c_str());
+                 arm.name(DESC_YOUR).c_str());
         }
 
         ac_change = property(arm, PARM_AC);
@@ -4474,7 +4474,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
             if (!quiet)
             {
                 mprf("%s glows silver for a moment.",
-                     arm.name(DESC_CAP_YOUR).c_str());
+                     arm.name(DESC_YOUR).c_str());
             }
 
             do_uncurse_item(arm, true, true);
@@ -4493,7 +4493,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     if (!quiet)
     {
         mprf("%s glows green for a moment.",
-             arm.name(DESC_CAP_YOUR).c_str());
+             arm.name(DESC_YOUR).c_str());
     }
 
     arm.plus++;
@@ -5027,7 +5027,7 @@ void read_scroll(int slot)
             // and not fully enchanted, or at least needs to be uncursed.
 
             // Get item name now before changing enchantment.
-            std::string iname = wpn.name(DESC_CAP_YOUR);
+            std::string iname = wpn.name(DESC_YOUR);
 
             // Uncursing is always possible.
             bool success = is_cursed;
@@ -5277,7 +5277,7 @@ bool stasis_blocks_effect(bool calc_unid,
 
         if (msg)
         {
-            const std::string name(amulet? amulet->name(DESC_CAP_YOUR) :
+            const std::string name(amulet? amulet->name(DESC_YOUR) :
                                    "Something");
             const std::string message =
                 make_stringf(msg, name.c_str());

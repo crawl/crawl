@@ -2130,7 +2130,7 @@ void melee_attack::chaos_affects_defender()
 
         if (weapon && you.can_see(attacker))
         {
-            beam.name = wep_name(DESC_NOCAP_YOUR);
+            beam.name = wep_name(DESC_YOUR);
             beam.item = weapon;
         }
         else
@@ -2195,7 +2195,7 @@ void melee_attack::chaos_affects_attacker()
     // Create a colourful cloud.
     if (weapon && one_chance_in(1000))
     {
-        mprf("Smoke pours forth from %s!", wep_name(DESC_NOCAP_YOUR).c_str());
+        mprf("Smoke pours forth from %s!", wep_name(DESC_YOUR).c_str());
         big_cloud(random_smoke_type(), &you, attacker->pos(), 20,
                   4 + random2(8));
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
@@ -2219,7 +2219,7 @@ void melee_attack::chaos_affects_attacker()
         else
         {
             msg = getSpeakString("weapon_noises");
-            std::string wepname = wep_name(DESC_CAP_YOUR);
+            std::string wepname = wep_name(DESC_YOUR);
             if (!msg.empty())
             {
                 msg = replace_all(msg, "@Your_weapon@", wepname);
@@ -2314,7 +2314,7 @@ void melee_attack::do_miscast()
             // Ignore a lot of item flags to make cause as short as possible,
             // so it will (hopefully) fit onto a single line in the death
             // cause screen.
-            cause += wep_name(DESC_NOCAP_YOUR,
+            cause += wep_name(DESC_YOUR,
                               ignore_mask
                               | ISFLAG_COSMETIC_MASK | ISFLAG_RACIAL_MASK);
 
@@ -5510,7 +5510,7 @@ void melee_attack::_steal_item_from_player(monster* mon)
 
     mprf("%s steals %s!",
          mon->name(DESC_THE).c_str(),
-         new_item.name(DESC_NOCAP_YOUR).c_str());
+         new_item.name(DESC_YOUR).c_str());
 
     unlink_item(index);
     mon->inv[mslot] = index;

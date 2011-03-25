@@ -443,9 +443,9 @@ static void _item_corrode(int slot)
     if (!suppress_msg)
     {
         if (it_resists)
-            mprf("%s resists.", item.name(DESC_CAP_YOUR).c_str());
+            mprf("%s resists.", item.name(DESC_YOUR).c_str());
         else
-            mprf("The acid corrodes %s!", item.name(DESC_NOCAP_YOUR).c_str());
+            mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
     }
 
     if (!it_resists)

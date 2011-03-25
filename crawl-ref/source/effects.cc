@@ -847,7 +847,7 @@ void random_uselessness(int scroll_slot)
         if (you.weapon())
         {
             mprf("%s glows %s for a moment.",
-                 you.weapon()->name(DESC_CAP_YOUR).c_str(),
+                 you.weapon()->name(DESC_YOUR).c_str(),
                  weird_glowing_colour().c_str());
         }
         else
@@ -946,7 +946,7 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
                 mpr(pre_msg->c_str());
 
             mprf("%s %s for a moment%s.",
-                 wand.name(DESC_CAP_YOUR).c_str(),
+                 wand.name(DESC_YOUR).c_str(),
                  charged ? "glows" : "flickers",
                  desc.c_str());
 
@@ -991,7 +991,7 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
             if (pre_msg)
                 mpr(pre_msg->c_str());
 
-            mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
+            mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());
         }
 
         you.wield_change = true;

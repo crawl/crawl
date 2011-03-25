@@ -569,7 +569,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         {
             const item_def *amulet = you.slot_item(EQ_AMULET, false);
             mprf("You cannot go berserk with %s on.",
-                 amulet? amulet->name(DESC_NOCAP_YOUR).c_str() : "your amulet");
+                 amulet? amulet->name(DESC_YOUR).c_str() : "your amulet");
         }
         return (false);
     }

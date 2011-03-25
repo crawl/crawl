@@ -123,7 +123,7 @@ protected:
     // Ouput methods
     std::string atk_name(description_level_type desc);
     std::string def_name(description_level_type desc);
-    std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
+    std::string wep_name(description_level_type desc = DESC_YOUR,
                          iflags_t ignore_flags = ISFLAG_KNOW_CURSE
                                                | ISFLAG_KNOW_PLUSES);
 
