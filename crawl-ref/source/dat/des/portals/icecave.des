@@ -36,8 +36,8 @@ function ice_cave_portal(e)
 
   -- There are actually two kinds of ice caves: easy and hard ones. Players
   -- that enter the portal deeper in the dungeon end up in the hard ones.
-  -- Possible depths for easy ice caves are D:11-14, Lair:1-7, Orc:1-4 and
-  -- Elf:1-2. Hard ice caves are in D:14-19, Elf:3-4 and Vault:1-7. Those
+  -- Possible depths for easy ice caves are D:11-14, Lair:1-8, Orc:1-4 and
+  -- Elf:1-2. Hard ice caves are in D:14-19, Elf:3-5 and Vault:1-7. Those
   -- depths are set in the entry vault default-depth.
   --
   -- Now, first default to easy destinatinos.
@@ -220,7 +220,7 @@ end
 
 # Entries ##########################################
 
-default-depth: D:11-20, Lair:1-7, Orc:1-4, Elf:1-5, Vault:1-7
+default-depth: D:11-19, Lair:1-8, Orc:1-4, Elf:1-5, Vault:1-7
 
 NAME:   portal_ice_cave_entry_pillars_01
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
