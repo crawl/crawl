@@ -68,7 +68,8 @@ function sewer_setup(e)
   e.lfloortile("floor_slime")
 -- Random monster list and milestone.
   e.set_random_mon_list("megabat w:20 / giant newt w:20 / small snake / \
-                         ooze / worm / snake")
+                         ooze / worm / snake / giant cockroach / giant mite / \
+                         giant gecko")
 end
 
 function sewer_milestone(e)
