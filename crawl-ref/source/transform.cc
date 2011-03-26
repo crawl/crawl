@@ -314,34 +314,6 @@ void remove_one_equip(equipment_type eq, bool meld, bool mutation)
     _remove_equipment(r, meld, mutation);
 }
 
-// Returns true if the player got prompted by an inscription warning and
-// chose to opt out.
-static bool _check_transformation_inscription_warning(
-            const std::set<equipment_type> &remove)
-{
-    // Check over all items to be removed or melded.
-    std::set<equipment_type>::const_iterator iter;
-    for (iter = remove.begin(); iter != remove.end(); ++iter)
-    {
-        equipment_type e = *iter;
-        if (you.equip[e] == -1)
-            continue;
-
-        const item_def& item = you.inv[you.equip[e]];
-
-        operation_types op = OPER_WEAR;
-        if (e == EQ_WEAPON)
-            op = OPER_WIELD;
-        else if (item.base_type == OBJ_JEWELLERY)
-            op = OPER_PUTON;
-
-        if (!check_old_item_warning(item, op))
-            return (true);
-    }
-
-    return (false);
-}
-
 // FIXME: Switch to 4.1 transforms handling.
 size_type transform_size(int psize)
 {
@@ -654,9 +626,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // If we're just pretending return now.
     if (just_check)
         return (true);
-
-    if (!force && _check_transformation_inscription_warning(rem_stuff))
-        return (_abort_or_fizzle(just_check));
 
     // All checks done, transformation will take place now.
     you.redraw_evasion      = true;
