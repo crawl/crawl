@@ -1530,6 +1530,9 @@ static int _place_monster_aux(const mgen_data &mg,
     // Mennas belongs to Zin.
     else if (mg.cls == MONS_MENNAS)
         mon->god = GOD_ZIN;
+    // Ignacio belongs to Makhleb.
+    else if (mg.cls == MONS_IGNACIO)
+        mon->god = GOD_MAKHLEB;
     // 1 out of 7 non-priestly orcs are unbelievers.
     else if (mons_genus(mg.cls) == MONS_ORC)
     {
