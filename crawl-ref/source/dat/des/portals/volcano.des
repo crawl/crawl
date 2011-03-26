@@ -98,7 +98,7 @@ function volcano_portal (e)
         dstorigin = "in a volcano",
         overview = "dark tunnel",
         turns = timeout_turns_long,
-        turns2 = timeout_turns_short,
+        turns_short = timeout_turns_short,
         msg = messager })
     e.kfeat("O = enter_portal_vault")
     e.tile("O = dngn_portal_volcano")

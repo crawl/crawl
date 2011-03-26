@@ -21,23 +21,24 @@ function TimedMarker:new(props)
 
   props.high = props.high or props.low or props.turns or 1
   props.low  = props.low or props.high or props.turns or 1
-  props.high2 = props.high2 or props.low2 or props.turns2 or
-                props.high/10 or 1
-  props.low2 = props.low2 or props.high2 or props.turns2 or
-               props.low/10 or 1
+  props.high_short = props.high_short or props.low_short or props.turns_short or
+                     props.high/10 or 1
+  props.low_short = props.low_short or props.high_short or props.turns_short or
+                    props.low/10 or 1
 
   local dur = crawl.random_range(props.low, props.high, props.navg or 1)
-  local dur2 = crawl.random_range(props.low2, props.high2, props.navg or 1)
+  local dur_short = crawl.random_range(props.low_short, props.high_short,
+                                       props.navg or 1)
   if fnum == dgn.feature_number('unseen') then
     error("Bad feature name: " .. feat)
   end
 
   tmarker.started = false
   tmarker.dur = dur * 10
-  tmarker.dur2 = dur2 * 10
+  tmarker.dur_short = dur_short * 10
   if props.single_timed then
     -- Disable LOS timer by setting it as long as the primary timer.
-    tmarker.dur2 = tmarker.dur
+    tmarker.dur_short = tmarker.dur
   end
   tmarker.msg = props.msg
 
@@ -72,10 +73,10 @@ function TimedMarker:start()
   end
 end
 
-function TimedMarker:start2(marker)
+function TimedMarker:start_short(marker)
   self:start()
-  if self.dur2 < self.dur then
-     self.dur = self.dur2
+  if self.dur_short < self.dur then
+     self.dur = self.dur_short
   end
 end
 
@@ -117,7 +118,7 @@ function TimedMarker:event(marker, ev)
   if ev:type() == dgn.dgn_event_type('entered_level') then
     self:start()
   elseif ev:type() == dgn.dgn_event_type('player_los') then
-    self:start2(marker)
+    self:start_short(marker)
   elseif ev:type() == self.ticktype then
     self.dur = self.dur - ev:ticks()
     self.msg:event(self, marker, ev)
@@ -137,7 +138,7 @@ function TimedMarker:read(marker, th)
   TimedMarker.super.read(self, marker, th)
   self.started = file.unmarshall_boolean(th)
   self.dur = file.unmarshall_number(th)
-  self.dur2 = file.unmarshall_number(th)
+  self.dur_short = file.unmarshall_number(th)
   self.msg  = lmark.unmarshall_marker(th)
 
   if self.props.amount then
@@ -152,7 +153,7 @@ function TimedMarker:write(marker, th)
   TimedMarker.super.write(self, marker, th)
   file.marshall(th, self.started)
   file.marshall(th, self.dur)
-  file.marshall(th, self.dur2)
+  file.marshall(th, self.dur_short)
   lmark.marshall_marker(th, self.msg)
 end
 
