@@ -584,6 +584,9 @@ enum command_type
     CMD_EVOKE,
     CMD_EVOKE_WIELDED,
     CMD_WIELD_WEAPON,
+#if TAG_MAJOR_VERSION > 32
+    CMD_UNWIELD_WEAPON,
+#endif
     CMD_WEAPON_SWAP,
     CMD_FIRE,
     CMD_QUIVER_ITEM,
@@ -827,6 +830,10 @@ enum command_type
 
     // [ds] Silently ignored, requests another round of input.
     CMD_NEXT_CMD,
+
+#if TAG_MAJOR_VERSION == 32
+    CMD_UNWIELD_WEAPON,
+#endif
 
     // Must always be last
     CMD_MAX_CMD

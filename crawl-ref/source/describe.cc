@@ -2508,7 +2508,7 @@ static command_type _get_action(int key, std::vector<command_type> actions)
     if (act_key_init)
     {
         act_key[CMD_WIELD_WEAPON]       = 'w';
-        act_key[CMD_WEAPON_SWAP]        = 'u'; //unwield
+        act_key[CMD_UNWIELD_WEAPON]     = 'u';
         act_key[CMD_QUIVER_ITEM]        = 'q';
         act_key[CMD_WEAR_ARMOUR]        = 'w';
         act_key[CMD_REMOVE_ARMOUR]      = 't';
@@ -2569,7 +2569,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
                 break;
 
         if (item_is_equipped(item))
-            actions.push_back(CMD_WEAPON_SWAP); // no unwield command
+            actions.push_back(CMD_UNWIELD_WEAPON);
         else
         {
             actions.push_back(CMD_WIELD_WEAPON);
@@ -2628,7 +2628,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     if (act_str_init)
     {
         act_str[CMD_WIELD_WEAPON]       = "(w)ield";
-        act_str[CMD_WEAPON_SWAP]        = "(u)nwield";
+        act_str[CMD_UNWIELD_WEAPON]     = "(u)nwield";
         act_str[CMD_QUIVER_ITEM]        = "(q)uiver";
         act_str[CMD_WEAR_ARMOUR]        = "(w)ear";
         act_str[CMD_REMOVE_ARMOUR]      = "(t)ake off";
@@ -2667,7 +2667,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         redraw_screen();
         wield_weapon(true, slot);
         return false;
-    case CMD_WEAPON_SWAP:
+    case CMD_UNWIELD_WEAPON:
         redraw_screen();
         wield_weapon(true, SLOT_BARE_HANDS);
         return false;
