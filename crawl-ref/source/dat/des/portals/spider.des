@@ -41,7 +41,7 @@ function spiders_nest_portal(e)
         dstorigin = "in a spider's nest",
         overview = "crumbling entrance",
         turns = timeout_turns_long,
-        turns2 = timeout_turns_short,
+        turns_short = timeout_turns_short,
         floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")

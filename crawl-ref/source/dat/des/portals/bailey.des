@@ -47,7 +47,7 @@ function bailey_portal(e, ptype)
         dstorigin = "in the bailey",
         overview = "flagged portal",
         turns = timeout_turns_long,
-        turns2 = timeout_turns_short,
+        turns_short = timeout_turns_short,
         floor = "stone_arch",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
