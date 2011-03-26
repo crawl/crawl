@@ -1209,7 +1209,7 @@ void MiscastEffect::_translocation(int severity)
         while (reroll)
         {
             // Don't use the last case for monsters.
-            switch (random2(target->atype() == ACT_PLAYER ? 5 : 4))
+            switch (random2(target->atype() == ACT_PLAYER ? 4 : 3))
             {
             case 0:
                 you_msg        = "You are caught in an extremely strong localised "
@@ -1235,9 +1235,6 @@ void MiscastEffect::_translocation(int severity)
                 reroll = !_send_to_abyss();
                 break;
             case 3:
-                reroll = !_malign_gateway();
-                break;
-            case 4:
                 contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
                 reroll = false;
                 break;
