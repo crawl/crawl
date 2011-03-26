@@ -76,7 +76,6 @@ function TimedMarker:start2(marker)
   self:start()
   if self.dur2 < self.dur then
      self.dur = self.dur2
-     self.msg:say_message(marker, self.dur)
   end
 end
 
