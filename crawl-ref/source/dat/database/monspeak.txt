@@ -3802,7 +3802,7 @@ VISUAL:@The_monster@ grins in joy.
 
 @The_monster@ exclaims, "Oh yes!! We are going to have fun!"
 
-@The_monster@ says @to_foe@, "Pain is my business you will see!"
+@The_monster@ says @to_foe@, "Pain is my business; you will see!"
 
 @The_monster@ shouts @to_foe@, "Off with your head!"
 %%%%
@@ -3816,7 +3816,7 @@ _Ignacio_rare_
 
 @The_monster@ says, "The death blow is fun, but the real pleasure is in torturing beforehand."
 
-@The_monster@ says @to_foe@, "No gallows around, so decapitation is it."
+@The_monster@ says @to_foe@, "No gallows around, so decapitation it is."
 ## END Ignacio ##
 %%%%
 ############ IJYB ### A twisted goblin
