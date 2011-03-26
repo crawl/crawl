@@ -102,7 +102,7 @@ static bool _is_cancellable_scroll(scroll_type scroll);
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability)
+               bool ignore_temporary_disability, bool unwield)
 {
 #define SAY(x) if (say_reason) { x; } else
 
@@ -130,7 +130,8 @@ bool can_wield(item_def *weapon, bool say_reason,
            || you.weapon()->base_type == OBJ_STAVES)
         && you.weapon()->cursed())
     {
-        SAY(mpr("You can't unwield your weapon to draw a new one!"));
+        SAY(mprf("You can't unwield your weapon%s!",
+                 !unwield ? " to draw a new one" : ""));
         return (false);
     }
 
@@ -289,7 +290,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Look for conditions like berserking that could prevent wielding
     // weapons.
-    if (!can_wield(NULL, true))
+    if (!can_wield(NULL, true, false, slot == SLOT_BARE_HANDS))
         return (false);
 
     int item_slot = 0;          // default is 'a'
