@@ -3406,7 +3406,7 @@ static void _rune_or_deck_from_specs(const char* specs, item_def &item)
 {
     if (strstr(specs, "rune"))
         _rune_from_specs(specs, item);
-    else if (strstr(specs, "deck"))
+    else if (strstr(specs, "deck") || strstr(specs, "card"))
         _deck_from_specs(specs, item);
 }
 
