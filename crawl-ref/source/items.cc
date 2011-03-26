@@ -2087,7 +2087,7 @@ bool drop_item(int item_dropped, int quant_drop)
 
     if (item_dropped == you.equip[EQ_WEAPON]
         && you.inv[item_dropped].base_type == OBJ_WEAPONS
-        && you.inv[item_dropped] .cursed())
+        && you.inv[item_dropped].cursed())
     {
         mpr("That object is stuck to you!");
         return (false);

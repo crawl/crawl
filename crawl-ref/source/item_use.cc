@@ -112,6 +112,12 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
+    if (you.melded[EQ_WEAPON])
+    {
+        SAY(mpr("Your weapon is melded into your body!"));
+        return (false);
+    }
+
     if (!can_equip(EQ_WEAPON, ignore_temporary_disability))
     {
         SAY(mpr("You can't wield anything in your present form."));
