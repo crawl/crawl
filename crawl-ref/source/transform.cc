@@ -175,7 +175,9 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
         if (equip == NULL)
             continue;
 
-        bool unequip = (e == EQ_WEAPON && !equip->cursed() || !meld);
+        bool unequip = !meld
+                     || e == EQ_WEAPON && (you.form == TRAN_NONE
+                                        || form_can_wield(you.form));
 
         mprf("%s %s%s %s", equip->name(DESC_CAP_YOUR).c_str(),
              unequip ? "fall" : "meld",
@@ -669,13 +671,12 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // Give the transformation message.
     mpr(msg);
 
-    _remove_equipment(rem_stuff);
-
     // Update your status.
     you.form = which_trans;
     you.set_duration(DUR_TRANSFORMATION, dur);
     update_player_symbol();
 
+    _remove_equipment(rem_stuff);
     burden_change();
 
     if (str)
