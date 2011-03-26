@@ -103,7 +103,7 @@ bool unmeld_slot(equipment_type slot, bool msg)
 }
 
 static void _equip_weapon_effect(item_def& item, bool showMsgs);
-static void _unequip_weapon_effect(item_def& item, bool showMsgs);
+static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
 static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld);
 static void _equip_jewellery_effect(item_def &item);
@@ -148,7 +148,7 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
               && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING));
 
     if (slot == EQ_WEAPON)
-        _unequip_weapon_effect(item, msg);
+        _unequip_weapon_effect(item, msg, meld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _unequip_armour_effect(item, meld);
     else if (slot >= EQ_LEFT_RING && slot <= EQ_AMULET)
@@ -677,7 +677,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
-static void _unequip_weapon_effect(item_def& item, bool showMsgs)
+static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 {
     you.wield_change = true;
     you.m_quiver->on_weapon_changed();
@@ -759,7 +759,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
                 // int effect = 9 -
                 //        random2avg(you.skills[SK_TRANSLOCATIONS] * 2, 2);
 
-                if (you.duration[DUR_WEAPON_BRAND] == 0)
+                if (you.duration[DUR_WEAPON_BRAND] == 0 && !meld)
                 {
                     // Makes no sense to discourage unwielding a temporarily
                     // branded weapon since you can wait it out. This also
