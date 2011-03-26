@@ -22,6 +22,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
+#include "itemname.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -314,8 +315,24 @@ static void _dump_player(FILE *file)
             fprintf(file, " <invalid>\n");
             continue;
         }
-        fprintf(file, ": %s\n",
-                you.inv[eq].name(DESC_PLAIN, false, true).c_str());
+        const bool unknown = !item_type_known(you.inv[eq]);
+        const bool melded  = you.melded[i];
+        std::string suffix = "";
+        if (unknown || melded)
+        {
+            suffix = " (";
+            if (unknown)
+            {
+                suffix += "unknown";
+                if (melded)
+                    suffix += ", ";
+            }
+            if (melded)
+                suffix += "melded";
+            suffix += ")";
+        }
+        fprintf(file, ": %s%s\n",
+                you.inv[eq].name(DESC_PLAIN, false, true).c_str(), suffix.c_str());
     }
     fprintf(file, "\n");
 
