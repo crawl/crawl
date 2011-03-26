@@ -2649,7 +2649,7 @@ void forget_map(int chance_forgotten, bool force)
 }
 
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
-               unsigned int* actual_avail_gain)
+              unsigned int* actual_avail_gain)
 {
     if (crawl_state.game_is_arena())
         return;

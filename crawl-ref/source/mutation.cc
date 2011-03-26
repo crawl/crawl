@@ -1800,8 +1800,6 @@ bool perma_mutate(mutation_type which_mut, int how_much)
 {
     ASSERT(is_valid_mutation(which_mut));
 
-    int levels = 0;
-
     how_much = std::min(static_cast<short>(how_much),
                         get_mutation_def(which_mut).levels);
 
@@ -1812,9 +1810,13 @@ bool perma_mutate(mutation_type which_mut, int how_much)
         rc = _handle_conflicting_mutations(which_mut, true);
     ASSERT(rc == 0);
 
+    int levels = 0;
     while (how_much-- > 0)
-        if (mutate(which_mut, false, true, false, false, true))
+        if (you.mutation[which_mut] > you.innate_mutations[which_mut]
+            || mutate(which_mut, false, true, false, false, true))
+        {
             levels++;
+        }
 
     you.innate_mutations[which_mut] += levels;
 
