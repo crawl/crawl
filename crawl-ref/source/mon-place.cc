@@ -94,7 +94,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
 //                               bool first_band_member, int dur = 0);
 
 static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
-                              bool force_pos = false);
+                              bool force_pos = false, bool dont_place = false);
 
 // Returns whether actual_feat is compatible with feat_wanted for monster
 // movement and generation.
@@ -1002,7 +1002,7 @@ static bool _in_ood_pack_protected_place()
     return (env.turns_on_level < 1400 - you.absdepth0 * 117);
 }
 
-int place_monster(mgen_data mg, bool force_pos)
+int place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
 #ifdef DEBUG_MON_CREATION
     mpr("in place_monster()", MSGCH_DIAGNOSTICS);
@@ -1109,7 +1109,7 @@ int place_monster(mgen_data mg, bool force_pos)
     // Player shoved out of the way?
     bool shoved = false;
 
-    if (!mg.use_position())
+    if (!mg.use_position() && !force_pos)
     {
         tries = 0;
 
@@ -1201,13 +1201,13 @@ int place_monster(mgen_data mg, bool force_pos)
             break;
         } // end while... place first monster
     }
-    else if (!_valid_monster_generation_location(mg))
+    else if (!_valid_monster_generation_location(mg) && !dont_place)
     {
         // Sanity check that the specified position is valid.
         return (-1);
     }
 
-    id = _place_monster_aux(mg, true, force_pos);
+    id = _place_monster_aux(mg, true, force_pos, dont_place);
 
     // Reset the (very) ugly thing band colour.
     if (ugly_colour != BLACK)
@@ -1375,7 +1375,8 @@ static void _place_twister_clouds(monster *mon)
 }
 
 static int _place_monster_aux(const mgen_data &mg,
-                              bool first_band_member, bool force_pos)
+                              bool first_band_member, bool force_pos,
+                              bool dont_place)
 {
     coord_def fpos;
 
@@ -1400,7 +1401,11 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
-    if (first_band_member && in_bounds(mg.pos)
+    if (dont_place)
+    {
+        fpos.reset();
+    }
+    else if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
@@ -1441,7 +1446,7 @@ static int _place_monster_aux(const mgen_data &mg,
     mon->number       = mg.number;
 
     // Set pos and link monster into monster grid.
-    if (!mon->move_to_pos(fpos))
+    if (!dont_place && !mon->move_to_pos(fpos))
     {
         mon->reset();
         return (-1);

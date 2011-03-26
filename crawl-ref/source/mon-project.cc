@@ -37,20 +37,16 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     if (beam->target == you.pos())
         mtarg = MHITYOU;
 
-    int mind = -1;
-    for (int i=0; i < 10 && mind == -1; i++)
-    {
-        mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
+    int mind = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
                     ((monster*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
                 0,
                 SPELL_IOOD,
-                coord_def(-1, -1),
+                coord_def(),
                 mtarg,
                 0,
-                GOD_NO_GOD));
-    }
+                GOD_NO_GOD), true, true);
     if (mind == -1)
     {
         mpr("Failed to spawn projectile.", MSGCH_WARN);
