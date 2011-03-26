@@ -1520,6 +1520,9 @@ static void _got_item(item_def& item, int quant)
     seen_item(item);
     shopping_list.cull_identical_items(item);
 
+    if (item.props.exists("needs_autopickup"))
+        item.props.erase("needs_autopickup");
+
     if (!item_is_rune(item))
         return;
 
@@ -1728,10 +1731,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (!item.slot)
         item.slot = index_to_letter(item.link);
 
-    if (item.props.exists("needs_autopickup"))
-        item.props.erase("needs_autopickup");
-    else
-        ash_id_item(item);
+    ash_id_item(item);
 
     note_inscribe_item(item);
 
