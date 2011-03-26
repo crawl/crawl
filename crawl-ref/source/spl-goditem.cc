@@ -251,7 +251,7 @@ static int _healing_spell(int healed, bool divine_ability,
             }
             else
                 mpr("You cannot pacify this monster!");
-        return (0);
+        return (-1);
     }
 
     bool did_something = false;
