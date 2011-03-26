@@ -254,6 +254,9 @@ green_death MONS_GREEN_DEATH
 ice_fiend MONS_ICE_FIEND
 pit_fiend MONS_PIT_FIEND
 shadow_fiend MONS_SHADOW_FIEND
+%sdir dc-mon/unique
+ignacio MONS_IGNACIO
+%sdir dc-mon/demons
 
 # type '2' demons
 beast MONS_BEAST

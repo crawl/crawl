@@ -3786,6 +3786,39 @@ _Harold_rare_
 @The_monster@ says @to_foe@, "Mine is not to reason why. Mine's to do, yours to die."
 ## END Harold ##
 %%%%
+############ IGNACIO ### A human executioner turned into a demon
+Ignacio
+
+@_Ignacio_common_@
+
+w:3
+@_Ignacio_rare_@
+%%%%
+_Ignacio_common_
+
+VISUAL:@The_monster@ looks at his axe, then at @foe@, then at his axe, then at @foe@...
+
+VISUAL:@The_monster@ grins in joy.
+
+@The_monster@ exclaims, "Oh yes!! We are going to have fun!"
+
+@The_monster@ says @to_foe@, "Pain is my business you will see!"
+
+@The_monster@ shouts @to_foe@, "Off with your head!"
+%%%%
+_Ignacio_rare_
+
+@The_monster@ says, "I enjoy death. I like the smell. I like the greasy feel of cooling blood."
+
+@The_monster@ says, "I have to say that I admire beauty and perfection. I like to watch it die. The contrast as it decays is exquisite."
+
+@The_monster@ says in a calm gravelly voice, "173 down. One million more to go."
+
+@The_monster@ says, "The death blow is fun, but the real pleasure is in torturing beforehand."
+
+@The_monster@ says @to_foe@, "No gallows around, so decapitation is it."
+## END Ignacio ##
+%%%%
 ############ IJYB ### A twisted goblin
 Ijyb
 

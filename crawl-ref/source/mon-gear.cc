@@ -1189,6 +1189,16 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         break;
 
+    case MONS_IGNACIO:
+        force_item = true;
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_EXECUTIONERS_AXE;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PAIN);
+        item.plus      = 2 + random2(7);
+        item.plus2     = 2 + random2(7);
+        break;
+
     default:
         break;
     }
