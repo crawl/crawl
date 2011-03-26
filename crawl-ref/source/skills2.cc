@@ -339,7 +339,7 @@ bool SkillMenuEntry::is_selectable() const
     if (is_set(SKMF_DO_RESKILL_TO) && you.transfer_from_skill == m_sk)
         return false;
 
-    if (is_set(SKMF_DO_RESKILL_TO) && m_sk == SK_FIGHTING)
+    if (is_set(SKMF_RESKILLING) && m_sk == SK_FIGHTING)
         return false;
 
     if (you.skills[m_sk] == 0 && !is_set(SKMF_DO_RESKILL_TO))
