@@ -252,7 +252,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     if (!keep_hotkey)
         m_name->clear_hotkeys();
 
-    if (is_selectable())
+    if (is_selectable(keep_hotkey))
     {
         if (!keep_hotkey)
             m_name->add_hotkey(++m_letter);
@@ -325,7 +325,7 @@ bool SkillMenuEntry::is_set(int flag) const
     return m_skm->is_set(flag);
 }
 
-bool SkillMenuEntry::is_selectable() const
+bool SkillMenuEntry::is_selectable(bool keep_hotkey)
 {
     if (is_invalid_skill(m_sk))
         return false;
@@ -337,7 +337,11 @@ bool SkillMenuEntry::is_selectable() const
         return true;
 
     if (is_set(SKMF_DO_RESKILL_TO) && you.transfer_from_skill == m_sk)
+    {
+        if (!keep_hotkey)
+            ++m_letter;
         return false;
+    }
 
     if (is_set(SKMF_RESKILLING) && m_sk == SK_FIGHTING)
         return false;
@@ -345,8 +349,13 @@ bool SkillMenuEntry::is_selectable() const
     if (you.skills[m_sk] == 0 && !is_set(SKMF_DO_RESKILL_TO))
         return false;
 
-    if (you.skills[m_sk] == 27 && !is_set(SKMF_DO_RESKILL_FROM))
-        return false;
+    if (you.skills[m_sk] == 27)
+    {
+        if (is_set(SKMF_DO_RESKILL_TO) && !keep_hotkey)
+            ++m_letter;
+        if (!is_set(SKMF_DO_RESKILL_FROM))
+            return false;
+    }
 
     return true;
 }

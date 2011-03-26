@@ -138,7 +138,7 @@ public:
     void refresh(bool keep_hotkey);
     int get_id();
     bool is_set(int flag) const;
-    bool is_selectable() const;
+    bool is_selectable(bool keep_hotkey = true);
     TextItem* get_name_item() const;
 
 private:
