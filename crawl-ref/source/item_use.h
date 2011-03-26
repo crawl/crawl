@@ -114,7 +114,7 @@ bool item_blocks_teleport(bool calc_unid, bool permit_id);
 bool stasis_blocks_effect(bool calc_unid, bool identify,
                           const char *msg, int noise = 0,
                           const char *silencedmsg = NULL);
-item_def* only_unided_ring();
+item_def* get_only_unided_ring();
 
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);

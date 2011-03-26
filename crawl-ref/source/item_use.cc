@@ -5324,22 +5324,26 @@ bool stasis_blocks_effect(bool calc_unid,
     return (false);
 }
 
-item_def* only_unided_ring()
+item_def* get_only_unided_ring()
 {
-    item_def* found = 0;
+    item_def* found = NULL;
 
     for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; i++)
-        if (you.equip[i])
-        {
-            item_def& item = you.inv[you.equip[i]];
-            if (!item_type_known(item))
-            {
-                if (found)
-                    return 0;
-                found = &item;
-            }
-        }
+    {
+        if (!player_wearing_slot(i))
+            continue;
 
+        item_def& item = you.inv[you.equip[i]];
+        if (!item_type_known(item))
+        {
+            if (found)
+            {
+                // Both rings are unid'd, so return NULL.
+                return NULL;
+            }
+            found = &item;
+        }
+    }
     return found;
 }
 
