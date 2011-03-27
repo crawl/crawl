@@ -3911,7 +3911,7 @@ tileidx_t tileidx_item(const item_def &item)
         if (item_is_rod(item))
         {
             if (id[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
-                ||  (item.flags & ISFLAG_KNOW_TYPE))
+                || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_ROD_ID_FIRST + type - STAFF_SMITING;
             }
@@ -3922,13 +3922,12 @@ tileidx_t tileidx_item(const item_def &item)
         else
         {
             if (id[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
-                ||  (item.flags & ISFLAG_KNOW_TYPE))
+                || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_STAFF_ID_FIRST + type;
             }
 
-            int orig_spec = you.item_description[IDESC_STAVES][item.sub_type];
-            int desc = (orig_spec/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+            int desc = (special/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
             return TILE_STAFF_OFFSET + desc;
         }
 
