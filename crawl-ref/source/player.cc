@@ -3052,7 +3052,7 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_OGRE:
-                hp_adjust++;
+                hp_adjust += 2;
 
                 if (!(you.experience_level % 3))
                     modify_stat(STAT_STR, 1, false, "level gain");
