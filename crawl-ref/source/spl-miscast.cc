@@ -617,10 +617,9 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 
 bool MiscastEffect::_send_to_abyss()
 {
-    if ((you.level_type == LEVEL_ABYSS
-         || source == HELL_EFFECT_MISCAST)
-        && !_malign_gateway()) // attempt to degrade to malign gateway
-        return (false);
+    if (you.level_type == LEVEL_ABYSS
+        || source == HELL_EFFECT_MISCAST)
+        return (_malign_gateway()); // attempt to degrade to malign gateway
 
     target->banish(cause);
     return (true);
