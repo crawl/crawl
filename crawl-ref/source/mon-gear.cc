@@ -59,6 +59,22 @@ static void _give_monster_item(monster* mon, int thing,
             set_item_ego_type(mthing, OBJ_WEAPONS, SPWPN_NORMAL);
     }
 
+    if (!is_artefact(mthing)
+        && (mthing.base_type == OBJ_WEAPONS
+         || mthing.base_type == OBJ_ARMOUR
+         || mthing.base_type == OBJ_MISSILES))
+    {
+        bool enchanted = mthing.plus
+                      || mthing.base_type == OBJ_WEAPONS && !mthing.plus2;
+
+        // The item could either lose or gain brand after being generated,
+        // adjust the glowing flag.
+        if (!mthing.special && !enchanted)
+            set_equip_desc(mthing, 0);
+        else if (mthing.special && !get_equip_desc(mthing))
+            set_equip_desc(mthing, ISFLAG_GLOWING);
+    }
+
     unwind_var<int> save_speedinc(mon->speed_increment);
     if (!(pickupfn ? (mon->*pickupfn)(mthing, false)
                    : mon->pickup_item(mthing, false, true)))
@@ -1571,7 +1587,10 @@ void give_shield(monster* mon, int level)
         {
             item_def *shield = mon->shield();
             if (shield)
+            {
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_REFLECTION);
+                set_equip_desc(*shield, ISFLAG_GLOWING);
+            }
         }
 
         break;
