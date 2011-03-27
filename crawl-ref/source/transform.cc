@@ -175,9 +175,14 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
         if (equip == NULL)
             continue;
 
-        bool unequip = !meld
-                     || e == EQ_WEAPON && (you.form == TRAN_NONE
-                                        || form_can_wield(you.form));
+        bool unequip = !meld;
+        if (!unequip && e == EQ_WEAPON)
+        {
+            if (you.form == TRAN_NONE || form_can_wield(you.form))
+                unequip = true;
+            if (equip->base_type != OBJ_WEAPONS && equip->base_type != OBJ_STAVES)
+                unequip = true;
+        }
 
         mprf("%s %s%s %s", equip->name(DESC_CAP_YOUR).c_str(),
              unequip ? "fall" : "meld",
@@ -245,7 +250,7 @@ static void _unmeld_equipment_slot(equipment_type e)
 
     if (item.base_type == OBJ_JEWELLERY)
         unmeld_slot(e);
-    else if (item.base_type == OBJ_WEAPONS)
+    else if (e == EQ_WEAPON)
     {
         if (you.slot_item(EQ_SHIELD)
             && is_shield_incompatible(item, you.slot_item(EQ_SHIELD)))
