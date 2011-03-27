@@ -136,11 +136,14 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 // to a weapon is done using the wield_weapon code.
 // special cases like staves of power or other special weps are taken
 // care of by calling wield_effects().    {gdl}
-void weapon_switch(int targ)
+void weapon_switch(int targ, bool force)
 {
     // Give the player an option to abort.
-    if (you.weapon() && !check_old_item_warning(*you.weapon(), OPER_WIELD))
+    if (!force && you.weapon() && !you.inv[targ].cursed()
+        && !check_old_item_warning(*you.weapon(), OPER_WIELD))
+    {
         return;
+    }
 
     if (targ == -1) // Unarmed Combat.
     {

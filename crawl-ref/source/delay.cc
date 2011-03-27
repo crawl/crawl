@@ -444,8 +444,11 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
             || safe && swap_if_safe
             || force)
         {
-            if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
+            if (weap == -1 || force
+                || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
+            {
                 start_delay(DELAY_WEAPON_SWAP, 1, weap);
+            }
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
         }
         return;
@@ -457,8 +460,11 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         if (_is_butcher_delay(delay)
             && (safe || prompt && yesno(prompt_str, true, 'n', true, false)))
         {
-            if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
+            if (weap == -1 || force
+                || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
+            {
                 start_delay(DELAY_WEAPON_SWAP, 1, weap);
+            }
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
         }
         return;
@@ -474,9 +480,10 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         return;
     }
 
-    if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
+    if (weap == -1 || force
+        || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
     {
-        weapon_switch(weap);
+        weapon_switch(weap, force);
         print_stats();
     }
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
