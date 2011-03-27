@@ -579,9 +579,11 @@ bool butchery(int which_corpse, bool bottle_blood)
     if (!can_butcher)
     {
         // Try to find a butchering implement.
-        if (!_find_butchering_implement(butcher_tool, gloved_butcher) &&
-            !gloved_butcher)
+        if (!_find_butchering_implement(butcher_tool, gloved_butcher)
+            && !gloved_butcher)
+        {
             return (false);
+        }
 
         if (butcher_tool == SLOT_BARE_HANDS && gloved_butcher)
             removed_gloves = true;
