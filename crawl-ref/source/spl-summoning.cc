@@ -881,7 +881,10 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
                  MG_FORCE_BEH, god);
 
     if (!friendly)
+    {
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
         mg.non_actor_summoner = god_name(god, false);
+    }
 
     const int mons = create_monster(mg);
 
