@@ -288,6 +288,9 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->is_summoned())
             mb |= ULL1 << MB_SUMMONED;
 
+        if (testbits(m->flags, MF_HARD_RESET) && testbits(m->flags, MF_NO_REWARD))
+            mb |= ULL1 << MB_PERM_SUMMON;
+
         if (mons_is_known_mimic(m) && mons_genus(type) == MONS_DOOR_MIMIC)
             mimic_feature = get_mimic_feat(m);
     }

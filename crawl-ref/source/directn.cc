@@ -3467,6 +3467,9 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_SUMMONED))
         descs.push_back("summoned");
 
+    if (mi.is(MB_PERM_SUMMON))
+        descs.push_back("durably summoned");
+
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
 
@@ -3531,6 +3534,9 @@ static std::string _get_monster_desc(const monster_info& mi)
 
     if (mi.is(MB_SUMMONED))
         text += pronoun + " has been summoned.\n";
+
+    if (mi.is(MB_PERM_SUMMON))
+        text += pronoun + " has been summoned but will not time out.\n";
 
     if (mi.is(MB_HALOED))
         text += pronoun + " is illuminated by a divine halo.\n";
@@ -3616,6 +3622,13 @@ std::string get_monster_equipment_desc(const monster_info& mi,
                 if (!str.empty())
                     str += ", ";
                 str += "summoned";
+            }
+
+            if (mi.is(MB_PERM_SUMMON))
+            {
+                if (!str.empty())
+                    str += ", ";
+                str += "durably summoned";
             }
 
             if (mi.type == MONS_DANCING_WEAPON

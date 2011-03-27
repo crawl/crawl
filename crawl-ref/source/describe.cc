@@ -3533,6 +3533,14 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                        "or items.\n";
     }
 
+    if (mi.is(MB_PERM_SUMMON))
+    {
+        inf.body << "\n" << "This monster has been summoned in a durable "
+                       "way, and only partially exists. Killing it yields no "
+                       "experience, nutrition or items. You cannot easily "
+                       "abjure it, though.\n";
+    }
+
     if (!inf.quote.empty())
         inf.quote += "\n";
 

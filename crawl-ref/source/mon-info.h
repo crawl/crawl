@@ -72,6 +72,7 @@ enum monster_info_flags
     MB_MAD,
     MB_CLINGING,
     MB_NAME_ZOMBIE,
+    MB_PERM_SUMMON,
 };
 
 struct monster_info_base
