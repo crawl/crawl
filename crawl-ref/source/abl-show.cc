@@ -232,7 +232,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
     // Ashenzari
-    { ABIL_ASHENZARI_BUTCHER, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
 };
 
@@ -427,7 +427,6 @@ static const ability_def Ability_List[] =
       10, 0, 200, 10, ABFLAG_NONE },
 
     // Ashenzari
-    { ABIL_ASHENZARI_BUTCHER, "Butcher", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_ASHENZARI_SCRYING, "Scrying",
       4, 0, 50, generic_cost::range(5, 6), ABFLAG_INSTANT },
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
@@ -1136,7 +1135,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
     case ABIL_ASHENZARI_END_TRANSFER:
     case ABIL_ASHENZARI_SCRYING:
-    case ABIL_ASHENZARI_BUTCHER:
         invoc = true;
         perfect = true;
         failure = 0;
@@ -2687,10 +2685,6 @@ static bool _do_ability(const ability_def& abil)
         cheibriados_slouch(0);
         break;
 
-    case ABIL_ASHENZARI_BUTCHER:
-        if (!ashenzari_butcher())
-            return false;
-        break;
     case ABIL_ASHENZARI_SCRYING:
         if (you.duration[DUR_SCRYING])
             mpr("You extend your astral sight.");
