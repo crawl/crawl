@@ -75,12 +75,14 @@ bool do_wear_armour(int item, bool quiet);
 struct item_def;
 
 bool can_wield(item_def *weapon, bool say_why = false,
-               bool ignore_temporary_disability = false, bool unwield = false);
+               bool ignore_temporary_disability = false, bool unwield = false,
+               bool butcher = false);
 
 bool wield_weapon(bool auto_wield, int slot = -1,
                   bool show_weff_messages = true, bool force = false,
                   bool show_unwield_msg = true,
-                  bool show_wield_msg = true);
+                  bool show_wield_msg = true,
+                  bool butcher = false);
 
 void zap_wand(int slot = -1);
 

@@ -102,7 +102,8 @@ static bool _is_cancellable_scroll(scroll_type scroll);
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability, bool unwield)
+               bool ignore_temporary_disability, bool unwield,
+               bool butcher)
 {
 #define SAY(x) if (say_reason) { x; } else
 
@@ -128,7 +129,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         && you.weapon()
         && (you.weapon()->base_type == OBJ_WEAPONS
            || you.weapon()->base_type == OBJ_STAVES)
-        && you.weapon()->cursed())
+        && you.weapon()->cursed()
+        && !(butcher && you.religion == GOD_ASHENZARI && i_feel_safe()))
     {
         SAY(mprf("You can't unwield your weapon%s!",
                  !unwield ? " to draw a new one" : ""));
@@ -280,7 +282,8 @@ static bool _valid_weapon_swap(const item_def &item)
 // If force is true, don't check weapon inscriptions.
 // (Assuming the player was already prompted for that.)
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force, bool show_unwield_msg, bool show_wield_msg)
+                  bool force, bool show_unwield_msg, bool show_wield_msg,
+                  bool butcher)
 {
     if (inv_count() < 1)
     {
@@ -290,15 +293,18 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Look for conditions like berserking that could prevent wielding
     // weapons.
-    if (!can_wield(NULL, true, false, slot == SLOT_BARE_HANDS))
+    if (!can_wield(NULL, true, false, slot == SLOT_BARE_HANDS, butcher))
         return (false);
 
     int item_slot = 0;          // default is 'a'
 
     if (auto_wield)
     {
-        if (slot >= 0 && !can_wield(&you.inv[slot], true))
+        if (slot >= 0
+            && !can_wield(&you.inv[slot], true, false, false, butcher))
+        {
             return (false);
+        }
 
         if (item_slot == you.equip[EQ_WEAPON]
             || you.equip[EQ_WEAPON] == -1
@@ -381,7 +387,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     item_def& new_wpn(you.inv[item_slot]);
 
-    if (!can_wield(&new_wpn, true))
+    if (!can_wield(&new_wpn, true, false, false, true))
         return (false);
 
     // For non-auto_wield cases checked above.
