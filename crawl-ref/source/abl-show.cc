@@ -1106,14 +1106,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_EVOKE_BERSERK:
         failure = 50 - 2 * you.skill(SK_EVOCATIONS);
-
-        if (you.species == SP_TROLL)
-            failure -= 30;
-        else if (player_genus(GENPC_DWARVEN) || you.species == SP_HILL_ORC
-                || player_genus(GENPC_OGREISH))
-        {
-            failure -= 10;
-        }
         break;
         // end item abilities - some possibly mutagenic {dlb}
 
