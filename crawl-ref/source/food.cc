@@ -181,7 +181,7 @@ void weapon_switch(int targ)
         unwield_item(false);
 
     if (targ != -1)
-        equip_item(EQ_WEAPON, targ);
+        equip_item(EQ_WEAPON, targ, false);
 
     if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
