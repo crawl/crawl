@@ -2018,15 +2018,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     // mv: All items with force_colour = 0 are colored via items().
     if (force_colour)
         mitm[thing_created].colour = force_colour;
-
-    switch (mon->type)
-    {
-    case MONS_NIKOLA:
-        mitm[thing_created].plus2 = TGLOV_DESC_GAUNTLETS;
-        break;
-    default:
-        break;
-    }
 }
 
 static void _give_gold(monster* mon, int level)
