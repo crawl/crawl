@@ -154,7 +154,7 @@ Followers can request a jelly from Jiyva, turn monsters to slime, and eventually
 %%%%
 Ashenzari powers
 
-Ashenzari exhorts his followers to garb themselves with curses, rewarding followers for time spent using cursed armour, jewelry, or weapons. Ashenzari especially favours those who completely eschew the use of uncursed gear, and will grant them improved knowledge of their skills. Ashenzari's ultimate desire, however, is not for the devotion of his followers but for knowledge of all things. Pious followers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
+Ashenzari exhorts his followers to garb themselves with curses, rewarding followers for time spent using cursed armour, jewelry, or weapons. Ashenzari especially favours those who completely eschew the use of uncursed gear, and will grant them improved knowledge of their skills. Having been shackled for centuries, Ashenzari has learned a few tricks to deal with curses and will help you in that regard. Ashenzari's ultimate desire, however, is not for the devotion of his followers but for knowledge of all things. Pious followers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
 
 %%%%
 Zin lastname
