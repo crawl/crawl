@@ -698,7 +698,8 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     mgen_data data = mgen_data::hostile_at(what, cause, alert,
                                            abj_deg, 0, target->pos(), 0, god);
 
-    data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    if (source != HELL_EFFECT_MISCAST)
+        data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     // hostile_at() assumes the monster is hostile to the player,
     // but should be hostile to the target monster unless the miscast
