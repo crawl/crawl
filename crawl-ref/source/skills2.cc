@@ -1809,7 +1809,7 @@ bool is_antitrained(skill_type sk)
     if (opposite == SK_NONE)
         return false;
 
-    return compare_skills(opposite, sk);
+    return compare_skills(opposite, sk) && you.skills[opposite];
 }
 
 bool antitrain_other(skill_type sk, bool show_zero)
