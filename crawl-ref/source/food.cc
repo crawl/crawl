@@ -371,7 +371,8 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     return (true);
 }
 
-bool butcher_corpse(int corpse_id, bool first_corpse, bool bottle_blood)
+static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
+                            bool bottle_blood = false)
 {
     ASSERT(corpse_id != -1);
 
@@ -595,7 +596,7 @@ bool butchery(int which_corpse, bool bottle_blood)
         {
             return (false);
         }
-        success = butcher_corpse(corpse_id, true, bottle_blood);
+        success = _butcher_corpse(corpse_id, true, bottle_blood);
         _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
 
         // Remind player of corpses in pack that could be butchered or
@@ -691,7 +692,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
         if (corpse_id != -1)
         {
-            if (butcher_corpse(corpse_id, first_corpse, bottle_blood))
+            if (_butcher_corpse(corpse_id, first_corpse, bottle_blood))
             {
                 success = true;
                 first_corpse = false;
