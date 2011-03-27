@@ -3444,7 +3444,7 @@ bool puton_item(int item_slot)
     {
         const item_def* gloves = you.slot_item(EQ_GLOVES, false);
         // Cursed gloves cannot be removed.
-        if (gloves && gloves->cursed())
+        if (gloves && gloves->cursed() && you.religion != GOD_ASHENZARI)
         {
             mpr("You can't take your gloves off to put on a ring!");
             return (false);
@@ -3572,7 +3572,7 @@ bool remove_ring(int slot, bool announce)
 
     const item_def* gloves = you.slot_item(EQ_GLOVES);
     const bool gloves_cursed = gloves && gloves->cursed();
-    if (gloves_cursed && !amu)
+    if (gloves_cursed && !amu && you.religion != GOD_ASHENZARI)
     {
         mpr("You can't take your gloves off to remove any rings!");
         return (false);
@@ -3620,7 +3620,7 @@ bool remove_ring(int slot, bool announce)
         mpr("You can't take that off while it's melded.");
         return (false);
     }
-    else if (gloves_cursed
+    else if (gloves_cursed && you.religion != GOD_ASHENZARI
              && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
     {
         mpr("You can't take your gloves off to remove any rings!");
