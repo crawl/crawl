@@ -477,6 +477,16 @@ IDEF(weap_skill)
     return (2);
 }
 
+IDEF(is_ranged)
+{
+    if (!item || !item->defined())
+        return (0);
+
+    lua_pushboolean(ls, is_range_weapon(*item));
+
+    return (1);
+}
+
 IDEF(dropped)
 {
     if (!item || !item->defined())
@@ -922,6 +932,7 @@ static ItemAccessor item_attrs[] =
     { "equipped",          l_item_equipped },
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
+    { "is_ranged",         l_item_is_ranged },
     { "dropped",           l_item_dropped },
     { "can_cut_meat",      l_item_can_cut_meat },
     { "pluses",            l_item_pluses },
