@@ -546,7 +546,7 @@ int zin_check_recite_to_single_monster(const coord_def& where,
 #ifdef DEBUG_DIAGNOSTICS
     std::string elig;
     for (int i = 0; i < NUM_RECITE_TYPES; i++)
-        elig[i] += '0' + eligibility[i];
+        elig += '0' + eligibility[i];
     dprf("Eligibility: %s", elig.c_str());
 #endif
 
