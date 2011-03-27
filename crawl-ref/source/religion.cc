@@ -1105,6 +1105,8 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     int created = 0;
     if (force_hostile)
     {
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
         for (; how_many > 0; --how_many)
         {
             if (create_monster(mg) != -1)
