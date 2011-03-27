@@ -403,7 +403,7 @@ void maybe_clear_weapon_swap()
 }
 
 void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
-                             bool transform)
+                             bool transform, bool force)
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
         || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act() || you.berserk())
@@ -417,7 +417,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         weap = -1;
 
     const bool       safe   = i_feel_safe() && !force_unsafe;
-    const bool       prompt = Options.prompt_for_swap && !safe;
+    const bool       prompt = Options.prompt_for_swap && !safe && !force;
     const delay_type delay  = current_delay_action();
 
     const char* prompt_str  = transform ? "Switch back to main weapon?"
@@ -441,7 +441,8 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
     {
         // Turn is over, set up a delay to do swapping next turn.
         if (prompt && yesno(prompt_str, true, 'n', true, false)
-            || safe && swap_if_safe)
+            || safe && swap_if_safe
+            || force)
         {
             if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
                 start_delay(DELAY_WEAPON_SWAP, 1, weap);
@@ -468,7 +469,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         if (!swap_if_safe)
             return;
     }
-    else if (!prompt || !yesno(prompt_str, true, 'n', true, false))
+    else if (!force && (!prompt || !yesno(prompt_str, true, 'n', true, false)))
     {
         return;
     }
@@ -512,7 +513,8 @@ static void _maybe_interrupt_swap(bool force_unsafe)
         // Possibly prompt if user wants to switch back from
         // butchering tool in order to use their normal weapon to
         // fight the interrupting monster.
-        handle_interrupted_swap(true, force_unsafe);
+        handle_interrupted_swap(true, force_unsafe, false,
+                                you.inv[butcher_swap_weapon].cursed());
     }
 }
 

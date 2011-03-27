@@ -206,7 +206,7 @@ void weapon_switch(int targ)
 static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
 {
     // When berserk, you can't change weapons.  Sanity check!
-    if (!can_wield(NULL, true))
+    if (!can_wield(NULL, true, false, false, true))
         return (false);
 
     // If wielding a distortion weapon, never attempt to switch away
@@ -241,7 +241,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
         if (tool.defined()
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat(tool)
-            && can_wield(&tool)
+            && can_wield(&tool, false, false, false, true)
             // Don't even suggest autocursing items.
             // Note that unknown autocursing is OK.
             && (!is_artefact(tool)
@@ -354,9 +354,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     {
         std::string tool;
         if (butchering_tool == SLOT_BARE_HANDS)
-        {
             tool = "unarmed";
-        }
         else
         {
             item_def& new_wpn(you.inv[butchering_tool]);
@@ -365,7 +363,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 
         mprf("Switching to %s for butchering.", tool.c_str());
 
-        if (!wield_weapon(true, butchering_tool, false, true, false, false))
+        if (!wield_weapon(true, butchering_tool, false, true, false, false, true))
             return (false);
     }
 
