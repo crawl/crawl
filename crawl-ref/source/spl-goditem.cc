@@ -242,8 +242,12 @@ static int _healing_spell(int healed, bool divine_ability,
         && can_pacify <= 0)
     {
         if (can_pacify == 0)
+        {
             canned_msg(MSG_NOTHING_HAPPENS);
+            return (0);
+        }
         else
+        {
             if (can_pacify == -2)
             {
                 mprf("You cannot pacify this monster while %s is sleeping!",
@@ -251,7 +255,8 @@ static int _healing_spell(int healed, bool divine_ability,
             }
             else
                 mpr("You cannot pacify this monster!");
-        return (-1);
+            return (-1);
+        }
     }
 
     bool did_something = false;
