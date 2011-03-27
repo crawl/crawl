@@ -85,6 +85,35 @@ function spiders_nest_milestone(e)
 end
 }}
 
+####################################################################
+# Functions for the spider trap
+{{
+function callback.spider_nest_trap(data, triggerable, triggerer, marker, ev)
+  local x, y = marker:pos()
+  if not you.pos(x, y) then
+    -- pretend the monster avoided it
+    return
+  end
+  local spiders = 0
+  for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
+    if (dgn.mons_at(p.x, p.y) == nil and p ~= you.pos() and dgn.is_passable(p.x, p.y)) then
+      if (dgn.create_monster(p.x, p.y, "generate_awake spider")) then
+        spiders = spiders + 1
+      end
+    end
+  end
+ if (spiders > 0) then
+   crawl.mpr("A basket of spiders falls from above!")
+ end
+end
+
+function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
+    crawl.mpr("You notice webbing strewn about the room and hear a chittering noise in the background." , 1)
+    crawl.more()
+end
+}}
+
+
 # Entries ##########################################
 
 NAME:   portal_spiders_nest_entry_a
@@ -273,34 +302,6 @@ xxxxxxxxx++xwwww1xx**xxxx++xx    xxxx
   xxxxxxxxxxxxxxxxxxxxxxxxxxxxx--x
                               xxxx
 ENDMAP
-
-####################################################################
-# Functions for the spider trap
-{{
-function callback.spider_nest_trap(data, triggerable, triggerer, marker, ev)
-  local x, y = marker:pos()
-  if not you.pos(x, y) then
-    -- pretend the monster avoided it
-    return
-  end
-  local spiders = 0
-  for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
-    if (dgn.mons_at(p.x, p.y) == nil and p ~= you.pos() and dgn.is_passable(p.x, p.y)) then
-      if (dgn.create_monster(p.x, p.y, "generate_awake spider")) then
-        spiders = spiders + 1
-      end
-    end
-  end
- if (spiders > 0) then
-   crawl.mpr("A basket of spiders falls from above!")
- end
-end
-
-function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
-    crawl.mpr("You notice webbing strewn about the room and hear a chittering noise in the background." , 1)
-    crawl.more()
-end
-}}
 
 ##############################################################
 # Spider Trap Map by 7hm
