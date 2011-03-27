@@ -1109,6 +1109,8 @@ static bool _fedhas_retribution()
                                   MG_FORCE_PLACE,
                                   GOD_FEDHAS);
 
+       temp.extra_flags |= MF_NO_REWARD;
+
         // If we have a lot of space to work with we can do something
         // flashy.
         if (radius_points[max_idx].size() > free_thresh)
