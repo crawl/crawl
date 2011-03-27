@@ -172,7 +172,7 @@ void pick_hints(newgame_def* choice)
 
     while (true)
     {
-        char keyn = getch_ck();
+        int keyn = getch_ck();
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
