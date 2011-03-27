@@ -164,7 +164,7 @@ void shadow_lantern_effect()
         // This should only get called when we are wielding a lantern of
         // shadows.
         ASSERT(lantern && lantern->base_type == OBJ_MISCELLANY
-                && lantern->sub_type == MISC_LANTERN_OF_SHADOWS);
+               && lantern->sub_type == MISC_LANTERN_OF_SHADOWS);
 
         bool known = fully_identified(*lantern);
         did_god_conduct(DID_NECROMANCY, 1, known);
@@ -434,11 +434,12 @@ static bool _check_crystal_ball(int subtype, bool known)
         return (false);
     }
 
-    if (subtype == MISC_CRYSTAL_BALL_OF_ENERGY && known
-        && (you.magic_points == you.max_magic_points))
+    if (subtype == MISC_CRYSTAL_BALL_OF_ENERGY
+        && known
+        && you.magic_points == you.max_magic_points)
     {
         mpr("With no energy to recover, the crystal ball of energy is "
-             "presently useless to you.");
+            "presently useless to you.");
         return (false);
     }
 
@@ -454,9 +455,7 @@ static bool _ball_of_seeing(void)
     int use = random2(you.skill(SK_EVOCATIONS) * 6);
 
     if (use < 2)
-    {
         lose_stat(STAT_INT, 1, false, "using a ball of seeing");
-    }
     else if (use < 5 && enough_mp(1, true))
     {
         mpr("You feel your power drain away!");
@@ -470,9 +469,7 @@ static bool _ball_of_seeing(void)
         confuse_player(10 + random2(10));
     }
     else if (use < 15 || coinflip())
-    {
         mpr("You see nothing.");
-    }
     else if (magic_mapping(6 + you.skill(SK_EVOCATIONS),
                            50 + random2(you.skill(SK_EVOCATIONS)), true))
     {
@@ -480,9 +477,7 @@ static bool _ball_of_seeing(void)
         ret = true;
     }
     else
-    {
         mpr("You see nothing.");
-    }
 
     return (ret);
 }
@@ -495,7 +490,9 @@ bool disc_of_storms(bool drac_breath)
 
     if ((player_res_electricity() || x_chance_in_y(fail_rate, 100))
          && !drac_breath)
+    {
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
     else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
         mpr("The disc glows for a moment, then fades.");
     else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
@@ -503,7 +500,7 @@ bool disc_of_storms(bool drac_breath)
     else
     {
         if (!drac_breath)
-         mpr("The disc erupts in an explosion of electricity!");
+            mpr("The disc erupts in an explosion of electricity!");
         rc = true;
 
         const int disc_count = (drac_breath) ? roll_dice(2, 1 + you.experience_level / 7) :
@@ -529,17 +526,17 @@ bool disc_of_storms(bool drac_breath)
 
         if (!drac_breath)
         {
-        for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
-        {
-            if (grd(*ri) < DNGN_MAXWALL)
-                continue;
+            for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
+            {
+                if (grd(*ri) < DNGN_MAXWALL)
+                    continue;
 
-            if (one_chance_in(60 - you.skill(SK_EVOCATIONS)))
-                place_cloud(CLOUD_RAIN, *ri,
-                            random2(you.skill(SK_EVOCATIONS)), &you);
+                if (one_chance_in(60 - you.skill(SK_EVOCATIONS)))
+                    place_cloud(CLOUD_RAIN, *ri,
+                                random2(you.skill(SK_EVOCATIONS)), &you);
+            }
         }
     }
-}
     return (rc);
 }
 
