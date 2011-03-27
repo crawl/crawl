@@ -76,7 +76,7 @@ static bool _yred_random_zombified_hostile()
                                            true, 0, 0, you.pos(), 0,
                                            GOD_YREDELEMNUL, z_base);
 
-    temp.extra_flags |= MF_NO_REWARD;
+    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     return (create_monster(temp, false) != -1);
 }
@@ -448,7 +448,7 @@ static bool _makhleb_retribution()
                                       "the fury of Makhleb",
                                       true, 0, 0, you.pos(), 0, god);
 
-            temp.extra_flags |= MF_NO_REWARD;
+            temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
             if (create_monster(temp, false) != -1)
             {
@@ -914,7 +914,7 @@ static bool _lugonu_retribution()
                                       "the touch of Lugonu",
                                       true, 0, 0, you.pos(), 0, god);
 
-            temp.extra_flags |= MF_NO_REWARD;
+            temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
             if (create_monster(temp, false) != -1)
             {
@@ -1044,7 +1044,7 @@ static bool _jiyva_retribution()
                                       "the vengeance of Jiyva",
                                       true, 0, 0, you.pos(), 0, god);
 
-            temp.extra_flags |= MF_NO_REWARD;
+            temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
             if (create_monster(temp, false) != -1)
             {
@@ -1138,7 +1138,7 @@ static bool _fedhas_retribution()
                                   MG_FORCE_PLACE,
                                   GOD_FEDHAS);
 
-       temp.extra_flags |= MF_NO_REWARD;
+       temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         // If we have a lot of space to work with we can do something
         // flashy.
