@@ -192,9 +192,9 @@ void start_delay(delay_type type, int turns, int parm1, int parm2)
     _push_delay(delay);
 }
 
-static void _maybe_interrupt_swap();
+static void _maybe_interrupt_swap(bool force_unsafe = false);
 
-void stop_delay(bool stop_stair_travel)
+void stop_delay(bool stop_stair_travel, bool force_unsafe)
 {
     if (you.delay_queue.empty())
         return;
@@ -239,7 +239,7 @@ void stop_delay(bool stop_stair_travel)
 
         _pop_delay();
 
-        _maybe_interrupt_swap();
+        _maybe_interrupt_swap(force_unsafe);
         break;
     }
     case DELAY_MEMORISE:
@@ -481,7 +481,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
-static void _maybe_interrupt_swap()
+static void _maybe_interrupt_swap(bool force_unsafe)
 {
     bool butcher_swap_setup  = false;
     int  butcher_swap_weapon = 0;
@@ -512,7 +512,7 @@ static void _maybe_interrupt_swap()
         // Possibly prompt if user wants to switch back from
         // butchering tool in order to use their normal weapon to
         // fight the interrupting monster.
-        handle_interrupted_swap(true);
+        handle_interrupted_swap(true, force_unsafe);
     }
 }
 
@@ -1742,7 +1742,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     {
         _monster_warning(ai, at, item.type, msgs_buf);
         // Teleport stops stair delays.
-        stop_delay(ai == AI_TELEPORT);
+        stop_delay(ai == AI_TELEPORT, ai == AI_MONSTER_ATTACKS);
 
         return (true);
     }
