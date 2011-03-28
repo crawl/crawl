@@ -2180,8 +2180,8 @@ bool do_god_gift(bool forced)
                             gift = BOOK_CALLINGS;
                         else if (!you.had_book[BOOK_SUMMONINGS])
                             gift = BOOK_SUMMONINGS;
-                        else if (!you.had_book[BOOK_DEMONOLOGY])
-                            gift = BOOK_DEMONOLOGY; // Summoning books.
+                        else if (!you.had_book[BOOK_GRAND_GRIMOIRE])
+                            gift = BOOK_GRAND_GRIMOIRE; // Summoning books.
                     }
                 }
             }

@@ -475,7 +475,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Book of Demonology - Vehumet special
+{   // Grand Grimoire - Vehumet special
     SPELL_DEMONIC_HORDE,
     SPELL_HAUNT,
     SPELL_SUMMON_GREATER_DEMON,

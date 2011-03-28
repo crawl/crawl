@@ -173,10 +173,6 @@ book of death
 
 A black book containing spells written in a hasty scrawl.
 %%%%
-book of demonology
-
-When touching this book, you hear faint screams of tortured souls. Each and every page is about demons, demons of all kinds and sizes, and how to unleash them unto this unsuspecting world. Many wizards have proven too weak to stand the power of this tome. You are not sure whether you hear the screams of the countless victims, who have been eaten and maimed by the demons. Or do you scream yet?
-%%%%
 book of divinations
 
 A book of magic spells.
@@ -546,6 +542,10 @@ The extremely tough and heavy skin of a golden dragon, covered in shimmering gol
 gold piece
 
 A pile of glittering gold coins.
+%%%%
+grand grimoire
+
+A deathly silence seems to surround you as you open this book; even the very air appears to recoil from the monstrosities pictured here. The pages, covered in abominable runes, describe how the mighty among summoners can bend to their will the terrible things from betwixt the planes. Many have been the unwary souls, however, who have toyed with this tome and been driven mad by eldritch horrors from beyond imagining.
 %%%%
 grape
 

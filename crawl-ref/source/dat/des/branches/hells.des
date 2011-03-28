@@ -116,7 +116,7 @@ MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
         hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
-ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology /\
+ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
         scroll of torment
 KFEAT:  A = enter_hell
 ORIENT: float
@@ -153,7 +153,7 @@ MONS:   imp / quasit / shadow imp / iron imp / lemure
 MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
-ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology /\
+ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
         scroll of torment
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
