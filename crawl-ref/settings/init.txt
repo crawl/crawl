@@ -201,9 +201,6 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 ##### 4-h       Stashes ###############################
 #
 
-# 14 filters out corpses
-# stash_filter = 14
-
 # annotate_item_class = true
 # annotate_item_dropped = true
 
