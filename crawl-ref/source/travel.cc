@@ -4222,9 +4222,6 @@ void explore_discoveries::add_item(const item_def &i)
 
 void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
 {
-    if (you.religion == GOD_ASHENZARI)
-        ash_id_item(const_cast<item_def&>(i));
-
     if (you.running == RMODE_EXPLORE_GREEDY)
     {
         // The things we need to do...
@@ -4449,6 +4446,10 @@ bool check_for_interesting_features()
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         const coord_def p(*ri);
+
+        if (you.visible_igrd(*ri) != NON_ITEM)
+            ash_id_item(mitm[ you.visible_igrd(*ri) ]);
+
         if (!env.map_shadow(p).seen() && env.map_knowledge(p).seen())
             _check_interesting_square(p, discoveries);
     }
