@@ -2012,7 +2012,12 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     if (you.duration[dur] <= midpoint && old_dur > midpoint)
     {
         if (midmsg)
-            mpr(midmsg, chan);
+        {
+            if (need_expiration_warning(dur))
+                mprf(MSGCH_DANGER, "Careful! %s", midmsg);
+            else
+                mpr(midmsg, chan);
+        }
         you.duration[dur] -= midloss * BASELINE_DELAY;
     }
 
@@ -2488,7 +2493,7 @@ static void _decrement_durations()
             if (_decrement_a_duration(DUR_LEVITATION, delay,
                                       0,
                                       random2(6),
-                                      "You are starting to lose your buoyancy!"))
+                                      "You are starting to lose your buoyancy."))
             {
                 land_player();
             }

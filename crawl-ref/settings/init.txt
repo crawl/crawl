@@ -309,8 +309,6 @@ menu_colour = notes:white:Reached XP level
 
 # You can also enforce a --more-- prompt for messages
 
-## Reduce chance of drowning because levitation runs out:
-# force_more_message = You are starting to lose your buoyancy
 ## Avoid wasting turns with aborted actions:
 # force_more_message = There are no visible monsters within range
 # force_more_message = This wand has no charges
@@ -318,7 +316,9 @@ menu_colour = notes:white:Reached XP level
 force_more_message = You have reached level
 force_more_message = Your scales start
 force_more_message = You fall through a shaft
-force_more_message = You are starting to lose your buoyancy
+
+## Reduce chance of drowning because levitation or form runs out:
+force_more_message = Careful!
 
 # Announcements of timed portal vaults (bazaar, labyrinths):
 force_more_message = interdimensional caravan
