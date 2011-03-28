@@ -171,6 +171,7 @@ drop_filter = useless_item
 # explore_stop     = items,greedy_pickup_smart,stairs,shops,altars,gates
 # explore_stop    += greedy_visited_item_stack
 # explore_improved = true
+# travel_key_stop = false
 #
 # explore_stop_pickup_ignore = curare
 auto_exclude = oklob plant,statue,curse skull,roxanne, hyperactive

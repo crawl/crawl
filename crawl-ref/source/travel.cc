@@ -919,7 +919,7 @@ command_type travel()
 
     command_type result = CMD_NO_CMD;
 
-    if (kbhit())
+    if (Options.travel_key_stop && kbhit())
     {
         mprf("Key pressed, stopping %s.", you.running.runmode_name().c_str());
         stop_running();
