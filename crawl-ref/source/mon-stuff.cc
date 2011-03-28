@@ -173,7 +173,7 @@ const item_def *give_mimic_item(monster* mimic)
     return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
 }
 
-const item_def &get_mimic_item(const monster* mimic)
+item_def &get_mimic_item(const monster* mimic)
 {
     ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 

@@ -4446,9 +4446,7 @@ bool check_for_interesting_features()
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         const coord_def p(*ri);
-
-        if (you.visible_igrd(*ri) != NON_ITEM)
-            ash_id_item(mitm[ you.visible_igrd(*ri) ]);
+        ash_id_item(p);
 
         if (!env.map_shadow(p).seen() && env.map_knowledge(p).seen())
             _check_interesting_square(p, discoveries);
