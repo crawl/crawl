@@ -352,6 +352,18 @@ static bool _jewel_auto_id(const item_def& item)
     }
 }
 
+bool ash_id_item(const coord_def p)
+{
+    if (const monster* mons = monster_at(p))
+        if (mons_is_unknown_mimic(mons) && mons_is_item_mimic(mons->type))
+            return ash_id_item(get_mimic_item(mons));
+
+    if (you.visible_igrd(p) != NON_ITEM)
+        return ash_id_item(mitm[you.visible_igrd(p)]);
+
+    return false;
+}
+
 bool ash_id_item(item_def& item, bool silent)
 {
     if (you.religion != GOD_ASHENZARI)
