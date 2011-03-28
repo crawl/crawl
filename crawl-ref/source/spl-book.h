@@ -1,8 +1,7 @@
-/*
- *  File:       spl-book.h
- *  Summary:    Some spellbook related functions.
- *  Written by: Josh Fishman
- */
+/**
+ * @file
+ * @brief Some spellbook related functions.
+**/
 
 
 #ifndef SPL_BOOK_H

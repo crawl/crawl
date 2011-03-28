@@ -1,8 +1,7 @@
-/*
- *  File:       chardump.h
- *  Summary:    Dumps character info out to the morgue file.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Dumps character info out to the morgue file.
+**/
 
 
 #ifndef CHARDUMP_H

@@ -1,7 +1,7 @@
-/*
- * File:     los_def.cc
- * Summary:  LOS wrapper class.
- */
+/**
+ * @file
+ * @brief LOS wrapper class.
+**/
 
 #include "AppHdr.h"
 

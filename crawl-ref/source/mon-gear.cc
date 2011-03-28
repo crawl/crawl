@@ -1,7 +1,7 @@
-/*
- * File:       mon-gear.cc
- * Summary:    Monsters' starting equipment.
- */
+/**
+ * @file
+ * @brief Monsters' starting equipment.
+**/
 
 #include "AppHdr.h"
 

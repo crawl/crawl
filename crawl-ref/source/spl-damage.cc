@@ -1,8 +1,8 @@
-/*
- *  File:     spl-damage.cc
- *  Summary:  Damage-dealing spells not already handled elsewhere.
- *            Other targeted spells are covered in spl-zap.cc.
- */
+/**
+ * @file
+ * @brief Damage-dealing spells not already handled elsewhere.
+ *           Other targeted spells are covered in spl-zap.cc.
+**/
 
 #include "AppHdr.h"
 

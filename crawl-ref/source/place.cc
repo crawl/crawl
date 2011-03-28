@@ -1,8 +1,7 @@
-/*
- *  File:       place.cc
- *  Summary:    Place related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Place related functions.
+**/
 
 #include "AppHdr.h"
 

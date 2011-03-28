@@ -1,8 +1,7 @@
-/*
- *  File:       view.h
- *  Summary:    Misc function used to render the dungeon.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc function used to render the dungeon.
+**/
 
 
 #ifndef VIEW_H

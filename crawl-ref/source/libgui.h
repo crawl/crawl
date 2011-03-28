@@ -1,8 +1,7 @@
-/*
- *  File:       libgui.cc
- *  Summary:    Functions for x11
- *  Written by: M.Itakura (?)
- */
+/**
+ * @file
+ * @brief Functions for x11
+**/
 
 // TODO enne - slowly morph this into tilesdl.h
 

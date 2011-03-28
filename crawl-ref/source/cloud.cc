@@ -1,10 +1,9 @@
-/*
- *  File:       cloud.cc
- *  Summary:    Functions related to clouds.
- *  Written by: Brent Ross
+/**
+ * @file
+ * @brief Functions related to clouds.
  *
- *  Creating a cloud module so all the cloud stuff can be isolated.
- */
+ * Creating a cloud module so all the cloud stuff can be isolated.
+**/
 
 #include "AppHdr.h"
 

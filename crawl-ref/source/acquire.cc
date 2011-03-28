@@ -1,7 +1,7 @@
-/*
- *  File:       acquire.cc
- *  Summary:    Acquirement and Trog/Oka/Sif gifts.
- */
+/**
+ * @file
+ * @brief Acquirement and Trog/Oka/Sif gifts.
+**/
 
 #include "AppHdr.h"
 

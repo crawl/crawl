@@ -1,7 +1,7 @@
-/*
- *  File:       decks.cc
- *  Summary:    Functions with decks of cards.
- */
+/**
+ * @file
+ * @brief Functions with decks of cards.
+**/
 
 #include "AppHdr.h"
 

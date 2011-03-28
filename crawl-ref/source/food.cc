@@ -1,8 +1,7 @@
-/*
- *  File:       food.cc
- *  Summary:    Functions for eating and butchering.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for eating and butchering.
+**/
 
 #include "AppHdr.h"
 

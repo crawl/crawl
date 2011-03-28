@@ -1,8 +1,7 @@
-/*
- *  File:       state.h
- *  Summary:    Game state.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Game state.
+**/
 
 #ifndef STATE_H
 #define STATE_H

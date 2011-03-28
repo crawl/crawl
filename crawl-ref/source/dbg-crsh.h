@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-crsh.h
- *  Summary:    Crash handler.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Crash handler.
+**/
 
 #ifndef DBGCRSH_H
 #define DBGCRSH_H

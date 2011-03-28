@@ -1,8 +1,7 @@
-/*
- *  File:       stash.cc
- *  Summary:    Classes tracking player stashes
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Classes tracking player stashes
+**/
 
 #include "AppHdr.h"
 

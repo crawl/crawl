@@ -1,10 +1,9 @@
-/*
- *  File:       hints.cc
- *  Summary:    A hints mode as an introduction on how to play Dungeon Crawl.
- *  Written by: j-p-e-g
+/**
+ * @file
+ * @brief A hints mode as an introduction on how to play Dungeon Crawl.
  *
- *  Created on 2007-01-11.
- */
+ * Created on 2007-01-11.
+**/
 
 #include "AppHdr.h"
 

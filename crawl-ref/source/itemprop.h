@@ -1,8 +1,7 @@
-/*
- *  File:       itemprop.h
- *  Summary:    Misc functions.
- *  Written by: Brent Ross
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 
 #ifndef ITEMPROP_H

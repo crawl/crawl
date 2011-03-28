@@ -1,8 +1,7 @@
-/*
- *  File:       skills.cc
- *  Summary:    Skill exercising functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Skill exercising functions.
+**/
 
 #include "AppHdr.h"
 

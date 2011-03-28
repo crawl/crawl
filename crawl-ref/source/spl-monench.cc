@@ -1,8 +1,8 @@
-/*
- *  File:     spl-monench.cc
- *  Summary:  Monster-affecting enchantment spells.
- *            Other targeted enchantments are handled in spl-zap.cc.
- */
+/**
+ * @file
+ * @brief Monster-affecting enchantment spells.
+ *           Other targeted enchantments are handled in spl-zap.cc.
+**/
 
 #include "AppHdr.h"
 

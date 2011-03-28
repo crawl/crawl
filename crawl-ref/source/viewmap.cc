@@ -1,7 +1,7 @@
-/*
- * File:     viewmap.cc
- * Summary:  Showing the level map (X and background).
- */
+/**
+ * @file
+ * @brief Showing the level map (X and background).
+**/
 
 #include "AppHdr.h"
 

@@ -1,7 +1,7 @@
-/*
- *  File:       godwrath.h
- *  Summary:    Divine retribution.
- */
+/**
+ * @file
+ * @brief Divine retribution.
+**/
 
 
 #ifndef GODWRATH_H

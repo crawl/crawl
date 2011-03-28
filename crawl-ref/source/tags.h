@@ -1,8 +1,7 @@
-/*
- *  File:       tags.h
- *  Summary:    Auxilary functions to make savefile versioning simpler.
- *  Written by: Gordon Lipford
- */
+/**
+ * @file
+ * @brief Auxilary functions to make savefile versioning simpler.
+**/
 
 #ifndef TAGS_H
 #define TAGS_H

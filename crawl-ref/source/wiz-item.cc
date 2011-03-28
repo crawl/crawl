@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-item.cc
- *  Summary:    Item related wizard functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Item related wizard functions.
+**/
 
 #include "AppHdr.h"
 

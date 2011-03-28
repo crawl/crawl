@@ -1,6 +1,7 @@
-/*
- * Summary:   Monster attitude changing due to religion.
- */
+/**
+ * @file
+ * @brief Monster attitude changing due to religion.
+**/
 
 #include "AppHdr.h"
 

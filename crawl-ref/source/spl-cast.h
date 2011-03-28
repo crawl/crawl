@@ -1,8 +1,7 @@
-/*
- *  File:       spl-cast.h
- *  Summary:    Spell casting functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Spell casting functions.
+**/
 
 
 #ifndef SPL_CAST_H

@@ -1,7 +1,7 @@
-/*
- * File:     l_view.cc
- * Summary:  User interaction with env.show.
- */
+/**
+ * @file
+ * @brief User interaction with env.show.
+**/
 
 #include "AppHdr.h"
 

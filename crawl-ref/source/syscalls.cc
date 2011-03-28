@@ -1,8 +1,7 @@
-/*
- *  File:       syscalls.cc
- *  Summary:    Wrappers for sys/libc calls, mostly for charset purposes.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Wrappers for sys/libc calls, mostly for charset purposes.
+**/
 
 #include "AppHdr.h"
 #include "syscalls.h"

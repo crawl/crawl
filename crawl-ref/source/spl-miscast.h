@@ -1,8 +1,7 @@
-/*
- *  File:       spl-miscast.h
- *  Summary:    Spell miscast class.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Spell miscast class.
+**/
 
 #ifndef SPL_MISCAST_H
 #define SPL_MISCAST_H

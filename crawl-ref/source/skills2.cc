@@ -1,8 +1,7 @@
-/*
- *  File:       skills2.cc
- *  Summary:    More skill related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief More skill related functions.
+**/
 
 #include "AppHdr.h"
 

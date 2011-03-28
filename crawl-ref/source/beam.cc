@@ -1,8 +1,7 @@
-/*
- *  File:       beam.cc
- *  Summary:    Functions related to ranged attacks.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions related to ranged attacks.
+**/
 
 #include "AppHdr.h"
 

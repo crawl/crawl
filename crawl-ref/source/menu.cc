@@ -1,8 +1,7 @@
-/*
- *  File:       menu.cc
- *  Summary:    Menus and associated malarkey.
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Menus and associated malarkey.
+**/
 
 #include "AppHdr.h"
 

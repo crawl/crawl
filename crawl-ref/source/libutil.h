@@ -1,7 +1,7 @@
-/*
- *  File:       libutil.h
- *  Summary:    System independent functions
- */
+/**
+ * @file
+ * @brief System independent functions
+**/
 
 #ifndef LIBUTIL_H
 #define LIBUTIL_H

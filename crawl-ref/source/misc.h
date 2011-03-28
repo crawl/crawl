@@ -1,8 +1,7 @@
-/*
- *  File:       misc.h
- *  Summary:    Misc functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 #ifndef MISC_H
 #define MISC_H

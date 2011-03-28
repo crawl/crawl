@@ -1,8 +1,7 @@
-/*
- *  File:       initfile.cc
- *  Summary:    Simple reading of an init file and system variables
- *  Written by: David Loewenstern
- */
+/**
+ * @file
+ * @brief Simple reading of an init file and system variables
+**/
 
 #include "AppHdr.h"
 

@@ -1,8 +1,7 @@
-/*
- *  File:       mutation.cc
- *  Summary:    Functions for handling player mutations.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for handling player mutations.
+**/
 
 #include "AppHdr.h"
 #include "mutation.h"

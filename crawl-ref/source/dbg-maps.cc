@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-maps.cc
- *  Summary:    Map generation statistics/testing.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Map generation statistics/testing.
+**/
 
 #include "AppHdr.h"
 

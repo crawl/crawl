@@ -1,7 +1,7 @@
-/*
- * File:     player-act.cc
- * Summary:  Implementing the actor interface for player.
- */
+/**
+ * @file
+ * @brief Implementing the actor interface for player.
+**/
 
 #include "AppHdr.h"
 

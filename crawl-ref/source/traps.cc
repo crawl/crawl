@@ -1,8 +1,7 @@
-/*
- *  File:       traps.cc
- *  Summary:    Traps related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Traps related functions.
+**/
 
 #include "AppHdr.h"
 

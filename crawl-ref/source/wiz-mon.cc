@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-mon.cc
- *  Summary:    Monster related debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Monster related debugging functions.
+**/
 
 #include "AppHdr.h"
 

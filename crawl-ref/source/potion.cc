@@ -1,8 +1,7 @@
-/*
- *  File:       potion.cc
- *  Summary:    Potion and potion-like effects.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Potion and potion-like effects.
+**/
 
 #include "AppHdr.h"
 

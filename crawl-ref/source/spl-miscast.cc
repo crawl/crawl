@@ -1,8 +1,7 @@
-/*
- *  File:       spl-miscast.cc
- *  Summary:    Spell miscast class.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Spell miscast class.
+**/
 
 #include "AppHdr.h"
 

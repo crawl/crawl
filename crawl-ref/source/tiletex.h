@@ -1,8 +1,7 @@
-/*
- *  File:       tiletex.h
- *  Summary:    PNG and texture loading functionality
- *  Written by: Enne Walker
- */
+/**
+ * @file
+ * @brief PNG and texture loading functionality
+**/
 
 #ifndef TILETEX_H
 #define TILETEX_H

@@ -1,7 +1,7 @@
-/*
- *  File:     spl-transloc.cc
- *  Summary:  Translocation spells.
- */
+/**
+ * @file
+ * @brief Translocation spells.
+**/
 
 #include "AppHdr.h"
 

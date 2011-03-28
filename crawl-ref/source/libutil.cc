@@ -1,7 +1,7 @@
-/*
- *  File:       libutil.cc
- *  Summary:    Functions that may be missing from some systems
- */
+/**
+ * @file
+ * @brief Functions that may be missing from some systems
+**/
 
 #include "AppHdr.h"
 

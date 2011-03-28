@@ -1,8 +1,7 @@
-/*
- *  File:       dgnevent.h
- *  Summary:    General dungeon events.
- *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
- */
+/**
+ * @file
+ * @brief General dungeon events.
+**/
 
 #ifndef __DGNEVENT_H__
 #define __DGNEVENT_H__

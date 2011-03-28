@@ -1,8 +1,7 @@
-/*
- *  File:       monster.cc
- *  Summary:    Monsters class methods
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monsters class methods
+**/
 
 #include "AppHdr.h"
 

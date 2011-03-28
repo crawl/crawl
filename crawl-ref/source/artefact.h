@@ -1,8 +1,7 @@
-/*
- *  File:       artefact.h
- *  Summary:    Random and unrandom artefact functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Random and unrandom artefact functions.
+**/
 
 
 #ifndef RANDART_H

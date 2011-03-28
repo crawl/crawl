@@ -1,8 +1,8 @@
-/*
- * File:       exercise.cc
- * Summary:    Collects all calls to skills.cc:exercise for
- *             easier changes to the training modell.
- */
+/**
+ * @file
+ * @brief Collects all calls to skills.cc:exercise for
+ *            easier changes to the training modell.
+**/
 
 #include "AppHdr.h"
 

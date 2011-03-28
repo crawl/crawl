@@ -1,8 +1,7 @@
-/*
- *  File:       crash-u.cc
- *  Summary:    UNIX specific crash handling functions.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief UNIX specific crash handling functions.
+**/
 
 #include "AppHdr.h"
 

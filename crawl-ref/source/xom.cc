@@ -1,8 +1,7 @@
-/*
- *  File:       xom.cc
- *  Summary:    All things Xomly
- *  Written by: Zooko
- */
+/**
+ * @file
+ * @brief All things Xomly
+**/
 
 #include "AppHdr.h"
 

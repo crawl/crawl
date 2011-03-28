@@ -1,8 +1,7 @@
-/*
- *  File:       travel.h
- *  Summary:    Travel stuff
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Travel stuff
+**/
 #ifndef TRAVEL_H
 #define TRAVEL_H
 

@@ -1,7 +1,7 @@
-/*
- *  File:       mon-stealth.cc
- *  Summary:    Monsters stealth methods.
- */
+/**
+ * @file
+ * @brief Monsters stealth methods.
+**/
 
 #include "AppHdr.h"
 

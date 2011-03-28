@@ -1,8 +1,7 @@
-/*
- *  File:       sqldbm.cc
- *  Summary:    dbm wrapper for SQLite
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief dbm wrapper for SQLite
+**/
 
 #include "AppHdr.h"
 

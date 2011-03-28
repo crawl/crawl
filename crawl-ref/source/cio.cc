@@ -1,8 +1,7 @@
-/*
- *  File:       cio.cc
- *  Summary:    Platform-independent console IO functions.
- *  Created by: dshaligram on Wed Jun 20 19:00:52 2007 UTC
- */
+/**
+ * @file
+ * @brief Platform-independent console IO functions.
+**/
 
 #include "AppHdr.h"
 

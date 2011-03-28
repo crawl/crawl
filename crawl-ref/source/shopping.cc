@@ -1,8 +1,7 @@
-/*
- *  File:       shopping.cc
- *  Summary:    Shop keeper functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Shop keeper functions.
+**/
 
 #include "AppHdr.h"
 

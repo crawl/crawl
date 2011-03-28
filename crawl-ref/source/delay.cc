@@ -1,7 +1,7 @@
-/*
- *  File:     delay.cc
- *  Summary:  Functions for handling multi-turn actions.
- */
+/**
+ * @file
+ * @brief Functions for handling multi-turn actions.
+**/
 
 #include "AppHdr.h"
 

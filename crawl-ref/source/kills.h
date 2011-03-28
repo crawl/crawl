@@ -1,8 +1,7 @@
-/*
- *  File:       kills.h
- *  Summary:    Tracks monsters the player has killed.
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Tracks monsters the player has killed.
+**/
 
 #ifndef KILLS_H
 #define KILLS_H

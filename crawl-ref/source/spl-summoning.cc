@@ -1,7 +1,7 @@
-/*
- *  File:     spl-summoning.cc
- *  Summary:  Summoning spells and other effects creating monsters.
- */
+/**
+ * @file
+ * @brief Summoning spells and other effects creating monsters.
+**/
 
 #include "AppHdr.h"
 

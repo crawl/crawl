@@ -1,8 +1,7 @@
-/*
- *  File:       menu.h
- *  Summary:    Menus and associated malarkey.
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Menus and associated malarkey.
+**/
 
 #ifndef __MENU_H__
 #define __MENU_H__

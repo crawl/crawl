@@ -1,8 +1,7 @@
-/*
- *  File:       main.cc
- *  Summary:    Main entry point, event loop, and some initialization functions
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Main entry point, event loop, and some initialization functions
+**/
 
 #include "AppHdr.h"
 

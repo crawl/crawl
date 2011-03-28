@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-you.cc
- *  Summary:    Player related debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Player related debugging functions.
+**/
 
 #include "AppHdr.h"
 

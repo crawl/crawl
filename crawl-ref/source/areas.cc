@@ -1,8 +1,8 @@
-/*
- * File:      areas.cc
- * Summary:   Tracking effects that affect areas for durations.
- *            Silence, sanctuary, halos, ...
- */
+/**
+ * @file
+ * @brief Tracking effects that affect areas for durations.
+ *           Silence, sanctuary, halos, ...
+**/
 
 #include "AppHdr.h"
 

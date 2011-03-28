@@ -1,7 +1,7 @@
-/*
- *  File:       godabil.cc
- *  Summary:    God-granted abilities.
- */
+/**
+ * @file
+ * @brief God-granted abilities.
+**/
 
 #include "AppHdr.h"
 

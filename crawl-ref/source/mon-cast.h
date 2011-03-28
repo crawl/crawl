@@ -1,8 +1,7 @@
-/*
- *  File:       mon-cast.h
- *  Summary:    Monster spell casting.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monster spell casting.
+**/
 
 #ifndef MONCAST_H
 #define MONCAST_H

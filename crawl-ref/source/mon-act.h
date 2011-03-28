@@ -1,8 +1,7 @@
-/*
- *  File:       mon-act.h
- *  Summary:    Monsters doing stuff (monsters acting).
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monsters doing stuff (monsters acting).
+**/
 
 #ifndef MONACT_H
 #define MONACT_H

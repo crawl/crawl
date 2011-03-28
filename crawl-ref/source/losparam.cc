@@ -1,7 +1,7 @@
-/*
- *  File:       losparam.h
- *  Summary:    Parameters for the LOS algorithm
- */
+/**
+ * @file
+ * @brief Parameters for the LOS algorithm
+**/
 
 #include "AppHdr.h"
 

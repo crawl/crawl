@@ -1,8 +1,7 @@
-/*
- *  File:       describe.cc
- *  Summary:    Functions used to print information about various game objects.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print information about various game objects.
+**/
 
 #include "AppHdr.h"
 

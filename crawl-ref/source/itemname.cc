@@ -1,8 +1,7 @@
-/*
- *  File:       itemname.cc
- *  Summary:    Misc functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 #include "AppHdr.h"
 

@@ -1,7 +1,7 @@
-/*
- *  File:       message.cc
- *  Summary:    Functions used to print messages.
- */
+/**
+ * @file
+ * @brief Functions used to print messages.
+**/
 
 #include "AppHdr.h"
 

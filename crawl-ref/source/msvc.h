@@ -1,8 +1,7 @@
-/*
- *  File:       msvc.h
- *  Summary:    Header file for MSVC compiles
- *  Written by: Paul Du Bois
- */
+/**
+ * @file
+ * @brief Header file for MSVC compiles
+**/
 
 #ifndef __msvc_h
 #define __msvc_h

@@ -1,7 +1,7 @@
-/*
- * File:     teleport.cc
- * Summary:  Functions related to teleportation and blinking.
- */
+/**
+ * @file
+ * @brief Functions related to teleportation and blinking.
+**/
 
 #include "AppHdr.h"
 

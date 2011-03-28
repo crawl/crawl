@@ -1,7 +1,7 @@
-/*
- * File:      l_dgngrd.cc
- * Summary:   Grid and dungeon_feature_type-related bindings.
- */
+/**
+ * @file
+ * @brief Grid and dungeon_feature_type-related bindings.
+**/
 
 #include "AppHdr.h"
 

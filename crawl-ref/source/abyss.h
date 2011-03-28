@@ -1,8 +1,7 @@
-/*
- *  File:       abyss.h
- *  Summary:    Misc abyss specific functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc abyss specific functions.
+**/
 
 
 #ifndef ABYSS_H

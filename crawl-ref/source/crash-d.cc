@@ -1,7 +1,7 @@
-/*
- *  File:       crash-d.cc
- *  Summary:    Dos specific crash handling functions.
- */
+/**
+ * @file
+ * @brief Dos specific crash handling functions.
+**/
 
 #include "AppHdr.h"
 

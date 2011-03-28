@@ -1,8 +1,7 @@
-/*
- *  File:       directn.h
- *  Summary:    Functions used when picking squares.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when picking squares.
+**/
 
 
 #ifndef DIRECT_H

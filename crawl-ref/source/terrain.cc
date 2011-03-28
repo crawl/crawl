@@ -1,8 +1,7 @@
-/*
- *  File:       terrain.cc
- *  Summary:    Terrain related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Terrain related functions.
+**/
 
 #include "AppHdr.h"
 

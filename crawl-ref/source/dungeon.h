@@ -1,8 +1,7 @@
-/*
- *  File:       dungeon.h
- *  Summary:    Functions used when building new levels.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when building new levels.
+**/
 
 
 #ifndef DUNGEON_H

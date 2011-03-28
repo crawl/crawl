@@ -1,8 +1,7 @@
-/*
- *  File:       startup.cc
- *  Summary:    Collection of startup related functions and objects
- *  Written by:
- */
+/**
+ * @file
+ * @brief Collection of startup related functions and objects
+**/
 
 #include "AppHdr.h"
 

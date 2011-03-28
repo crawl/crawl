@@ -1,8 +1,7 @@
-/*
- *  File:       cloud.h
- *  Summary:    Functions related to clouds.
- *  Written by: Brent Ross
- */
+/**
+ * @file
+ * @brief Functions related to clouds.
+**/
 
 
 #ifndef CLOUD_H

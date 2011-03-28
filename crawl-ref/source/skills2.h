@@ -1,8 +1,7 @@
-/*
- *  File:       skills2.h
- *  Summary:    More skill related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief More skill related functions.
+**/
 
 
 #ifndef SKILLS2_H

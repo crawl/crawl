@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-fsim.cc
- *  Summary:    Fight simualtion wizard functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Fight simualtion wizard functions.
+**/
 
 #include "AppHdr.h"
 

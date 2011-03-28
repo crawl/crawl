@@ -569,10 +569,7 @@ sub write_data
 
     (my $guard = $ART_DATA) =~ tr/a-zA-Z/_/c;
     print HEADER <<"ENDofTEXT";
-/*
- * File:       $ART_DATA
- * Summary:    Definitions for unrandom artefacts.
- */
+/* Definitions for unrandom artefacts. */
 
 /**********************************************************************
  * WARNING!

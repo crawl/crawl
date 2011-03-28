@@ -1,7 +1,7 @@
-/*
- * File:      exclude.cc
- * Summary:   Code related to travel exclusions.
- */
+/**
+ * @file
+ * @brief Code related to travel exclusions.
+**/
 
 #include "AppHdr.h"
 

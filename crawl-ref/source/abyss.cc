@@ -1,8 +1,7 @@
-/*
- *  File:       abyss.cc
- *  Summary:    Misc abyss specific functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc abyss specific functions.
+**/
 
 #include "AppHdr.h"
 

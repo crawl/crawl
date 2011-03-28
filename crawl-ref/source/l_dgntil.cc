@@ -1,7 +1,7 @@
-/*
- * File:        l_dgntile.cc
- * Summary:     Tiles-specific dungeon builder functions.
- */
+/**
+ * @file
+ * @brief Tiles-specific dungeon builder functions.
+**/
 
 #include "AppHdr.h"
 

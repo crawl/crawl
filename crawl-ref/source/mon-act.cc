@@ -1,8 +1,7 @@
-/*
- *  File:       mon-act.cc
- *  Summary:    Monsters doing stuff (monsters acting).
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monsters doing stuff (monsters acting).
+**/
 
 #include "AppHdr.h"
 #include "mon-act.h"

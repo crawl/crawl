@@ -1,7 +1,7 @@
-/*
- * File:     l_dgnmon.cc
- * Summary:  Monster-related functions in lua library "dgn".
- */
+/**
+ * @file
+ * @brief Monster-related functions in lua library "dgn".
+**/
 
 #include "AppHdr.h"
 

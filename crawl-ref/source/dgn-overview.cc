@@ -1,8 +1,7 @@
-/*
- *  File:       dgn-overview.cc
- *  Summary:    Records location of stairs etc
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Records location of stairs etc
+**/
 
 #include "AppHdr.h"
 
