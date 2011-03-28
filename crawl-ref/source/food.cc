@@ -139,7 +139,8 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 void weapon_switch(int targ, bool force)
 {
     // Give the player an option to abort.
-    if (!force && you.weapon() && !you.inv[targ].cursed()
+    if (!force && you.weapon()
+        && (targ == -1 || !you.inv[targ].cursed())
         && !check_old_item_warning(*you.weapon(), OPER_WIELD))
     {
         return;

@@ -517,11 +517,13 @@ static void _maybe_interrupt_swap(bool force_unsafe)
             = (butcher_swap_weapon == -1 ? ENDOFPACK
                                          : butcher_swap_weapon) + 1;
 
+        const item_def *butcher_weapon =
+            (butcher_swap_weapon == -1 ? NULL : &you.inv[butcher_swap_weapon]);
         // Possibly prompt if user wants to switch back from
         // butchering tool in order to use their normal weapon to
         // fight the interrupting monster.
         handle_interrupted_swap(true, force_unsafe, false,
-                                you.inv[butcher_swap_weapon].cursed());
+                                butcher_weapon && butcher_weapon->cursed());
     }
 }
 
