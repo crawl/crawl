@@ -232,7 +232,7 @@ enum eq_type
     NUM_ET
 };
 
-int ash_bondage_level(int type_only, bool* wear_uncursed)
+int ash_bondage_level(int type_only)
 {
     if (you.religion != GOD_ASHENZARI)
         return (0);
@@ -272,8 +272,6 @@ int ash_bondage_level(int type_only, bool* wear_uncursed)
                 {
                     cursed[s]++;
                 }
-                else if (wear_uncursed)
-                    *wear_uncursed = true;
             }
         }
     }
@@ -291,17 +289,7 @@ int ash_bondage_level(int type_only, bool* wear_uncursed)
 
 void ash_check_bondage()
 {
-    bool wear_uncursed = false;
-    int new_level = ash_bondage_level(0, &wear_uncursed);
-
-    if (you.wear_uncursed != wear_uncursed && piety_rank() > 1)
-    {
-        mprf(MSGCH_GOD, "%s uncursed gear, you %s an avatar of Ashenzari.",
-             wear_uncursed ? "Relying on" : "Shunning",
-             wear_uncursed ? "are no longer" : "become");
-        you.wear_uncursed = wear_uncursed;
-    }
-
+    int new_level = ash_bondage_level();
 
     if (new_level == you.bondage_level)
         return;
@@ -603,6 +591,7 @@ monster_type ash_monster_tier(const monster *mon)
         return MONS_SENSED_NASTY;
 }
 
+#if 0
 int ash_skill_boost(skill_type sk)
 {
     int level = you.skills[sk];
@@ -668,3 +657,4 @@ int ash_skill_boost(skill_type sk)
 
     return std::min(level, 27);
 }
+#endif
