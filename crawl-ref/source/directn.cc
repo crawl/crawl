@@ -1929,10 +1929,21 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_MOUSE_MOVE: tiles_update_target(); break;
 #endif
 
+    case CMD_TARGET_CYCLE_BACK:
+        if (restricts != DIR_TARGET_OBJECT)
+        {
+            monster_cycle(-1);
+            break;
+        } // else fall-through
     case CMD_TARGET_OBJ_CYCLE_BACK:    object_cycle(-1);  break;
+
+    case CMD_TARGET_CYCLE_FORWARD:
+        if (restricts != DIR_TARGET_OBJECT)
+        {
+            monster_cycle(1);
+            break;
+        } // else fall-through
     case CMD_TARGET_OBJ_CYCLE_FORWARD: object_cycle(1);  break;
-    case CMD_TARGET_CYCLE_BACK:        monster_cycle(-1); break;
-    case CMD_TARGET_CYCLE_FORWARD:     monster_cycle(1); break;
 
     case CMD_TARGET_CANCEL:
         loop_done = true;
