@@ -312,7 +312,9 @@ enum beam_type                  // beam[].flavour
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
     BEAM_DISINTEGRATION,
+#if TAG_MAJOR_VERSION == 32
     BEAM_ENSLAVE_DEMON,
+#endif
     BEAM_BLINK,
     BEAM_BLINK_CLOSE,
     BEAM_PETRIFY,
