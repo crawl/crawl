@@ -960,7 +960,7 @@ static const char* book_primary_string(int p)
     }
 }
 
-static const char* book_type_name(int booktype)
+static const char* _book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
     {
@@ -1161,7 +1161,7 @@ std::string sub_type_string(object_class_type type, int sub_type,
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
 
-        return book_type_name(sub_type);
+        return _book_type_name(sub_type);
     }
     case OBJ_STAVES: return staff_type_name(sub_type);
     case OBJ_MISCELLANY:
@@ -1804,7 +1804,7 @@ std::string item_def::name_aux(description_level_type desc,
         else if (item_typ == BOOK_YOUNG_POISONERS)
             buff << "Young Poisoner's Handbook";
         else
-            buff << "book of " << book_type_name(item_typ);
+            buff << "book of " << _book_type_name(item_typ);
         break;
 
     case OBJ_STAVES:
