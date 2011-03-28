@@ -357,7 +357,7 @@ bool ash_id_item(item_def& item, bool silent)
     if (you.religion != GOD_ASHENZARI)
         return false;
 
-    if (item_needs_autopickup(item))
+    if (item.base_type == OBJ_JEWELLERY && item_needs_autopickup(item))
         item.props["needs_autopickup"] = true;
 
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
