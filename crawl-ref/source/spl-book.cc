@@ -306,7 +306,7 @@ int book_rarity(uint8_t which_book)
         return 18;
 
     case BOOK_ANNIHILATIONS: // Vehumet special
-    case BOOK_DEMONOLOGY:    // Vehumet special
+    case BOOK_GRAND_GRIMOIRE:    // Vehumet special
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
     case BOOK_MANUAL:
         return 20;
@@ -402,7 +402,7 @@ bool player_can_memorise_from_spellbook(const item_def &book)
             && you.religion != GOD_VEHUMET
             && (you.skill(SK_CONJURATIONS) < 10
                 || you.skill(SK_SPELLCASTING) < 6))
-        || (book.sub_type == BOOK_DEMONOLOGY
+        || (book.sub_type == BOOK_GRAND_GRIMOIRE
             && you.religion != GOD_VEHUMET
             && (you.skill(SK_SUMMONINGS) < 10
                 || you.skill(SK_SPELLCASTING) < 6))
@@ -1282,12 +1282,12 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
                            8, random2avg(88, 3),
                            "reading the Necronomicon");
         }
-        else if (book == BOOK_DEMONOLOGY)
+        else if (book == BOOK_GRAND_GRIMOIRE)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
             MiscastEffect(&you, MISC_MISCAST, SPTYP_SUMMONING,
                            7, random2avg(88, 3),
-                           "reading the book of Demonology");
+                           "reading the Grand Grimoire");
         }
         else if (book == BOOK_ANNIHILATIONS)
         {
@@ -2521,7 +2521,7 @@ bool is_dangerous_spellbook(const int book_type)
     switch(book_type)
     {
     case BOOK_NECRONOMICON:
-    case BOOK_DEMONOLOGY:
+    case BOOK_GRAND_GRIMOIRE:
     case BOOK_ANNIHILATIONS:
         return (true);
     default:

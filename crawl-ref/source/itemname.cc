@@ -990,7 +990,6 @@ static const char* book_type_name(int booktype)
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
     case BOOK_MALEDICT:               return "Maledictions";
-    case BOOK_DEMONOLOGY:             return "Demonology";
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
     case BOOK_WARP:                   return "the Warp";
@@ -1155,6 +1154,8 @@ std::string sub_type_string(object_class_type type, int sub_type,
         }
         else if (sub_type == BOOK_NECRONOMICON)
             return "Necronomicon";
+        else if (sub_type == BOOK_GRAND_GRIMOIRE)
+            return "Grand Grimoire";
         else if (sub_type == BOOK_DESTRUCTION)
             return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
@@ -1796,6 +1797,8 @@ std::string item_def::name_aux(description_level_type desc,
         }
         else if (item_typ == BOOK_NECRONOMICON)
             buff << "Necronomicon";
+        else if (item_typ == BOOK_GRAND_GRIMOIRE)
+            buff << "Grand Grimoire";
         else if (item_typ == BOOK_DESTRUCTION)
             buff << "tome of Destruction";
         else if (item_typ == BOOK_YOUNG_POISONERS)

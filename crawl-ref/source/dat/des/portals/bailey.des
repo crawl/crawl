@@ -874,7 +874,7 @@ ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
          scroll of fog q:3 / scroll of vulnerability q:3 /\
          scroll of recharging q:3 / scroll of immolation q:3 /\
          any good_item book w:30 /\
-         book of annihilations w:1 / book of demonology w:1 / necronomicon w:1
+         book of annihilations w:1 / grand grimoire w:1 / necronomicon w:1
 MONS:    deep elf soldier / deep elf fighter
 MONS:    deep elf summoner / deep elf priest / nothing
 MONS:    deep elf knight
