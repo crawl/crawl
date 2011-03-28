@@ -4531,7 +4531,6 @@ bool bolt::has_saving_throw() const
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
     case BEAM_ENSLAVE_SOUL:     // has a different saving throw
-    case BEAM_ENSLAVE_DEMON:    // ditto
         return (false);
     default:
         return (true);
@@ -4558,10 +4557,6 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
 
     case BEAM_DISPEL_UNDEAD:
         rc = (mon->holiness() == MH_UNDEAD);
-        break;
-
-    case BEAM_ENSLAVE_DEMON:
-        rc = (mon->holiness() == MH_DEMONIC && !mon->friendly());
         break;
 
     case BEAM_PAIN:
@@ -4736,33 +4731,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
         return (MON_AFFECTED);
     }
-
-    case BEAM_ENSLAVE_DEMON:
-        dprf("HD: %d; pow: %d", mon->hit_dice, ench_power);
-
-        if (mon->hit_dice * 11 / 2 >= random2(ench_power)
-            || mons_is_unique(mon->type))
-        {
-            return (MON_RESIST);
-        }
-
-        obvious_effect = true;
-        if (player_will_anger_monster(mon))
-        {
-            simple_monster_message(mon, " is repulsed!");
-            return (MON_OTHER);
-        }
-
-        simple_monster_message(mon, " is enslaved.");
-
-        // Wow, permanent enslaving! (sometimes)
-        if (one_chance_in(2 + mon->hit_dice / 4))
-            mon->attitude = ATT_FRIENDLY;
-        else
-            mon->add_ench(ENCH_CHARM);
-        behaviour_event(mon, ME_ALERT, MHITNOT);
-        mons_att_changed(mon);
-        return (MON_AFFECTED);
 
     case BEAM_PAIN:             // pain/agony
         if (simple_monster_message(mon, " convulses in agony!"))
@@ -5509,10 +5477,6 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_PAIN)
         return (!mon->res_negative_energy());
 
-    // control demon
-    if (flavour == BEAM_ENSLAVE_DEMON)
-        return (mon->holiness() == MH_DEMONIC);
-
     // everything else is considered nasty by everyone
     return (true);
 }
@@ -5760,7 +5724,9 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_PAIN:                  return ("pain");
     case BEAM_DISPEL_UNDEAD:         return ("dispel undead");
     case BEAM_DISINTEGRATION:        return ("disintegration");
+#if TAG_MAJOR_VERSION == 32
     case BEAM_ENSLAVE_DEMON:         return ("enslave demon");
+#endif
     case BEAM_BLINK:                 return ("blink");
     case BEAM_BLINK_CLOSE:           return ("blink close");
     case BEAM_PETRIFY:               return ("petrify");
