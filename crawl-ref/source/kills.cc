@@ -1,8 +1,7 @@
-/*
- *  File:       kills.cc
- *  Summary:    Player kill tracking
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Player kill tracking
+**/
 
 #include "AppHdr.h"
 

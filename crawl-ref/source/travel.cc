@@ -1,9 +1,8 @@
-/*
- *  File:       travel.cc
- *  Summary:    Travel stuff
- *  Written by: Darshan Shaligram
- *
- *  Known issues:
+/**
+ * @file
+ * @brief Travel stuff
+**/
+/* Known issues:
  *   Hardcoded dungeon features all over the place - this thing is a devil to
  *   refactor.
  */

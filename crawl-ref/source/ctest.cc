@@ -1,16 +1,15 @@
-/*
- *  File:       ctest.cc
- *  Summary:    Crawl Lua test cases
- *  Written by: Darshan Shaligram
+/**
+ * @file
+ * @brief Crawl Lua test cases
  *
- *  ctest runs Lua tests found in the test directory. The intent here
- *  is to test parts of Crawl that can be easily tested from within Crawl
- *  itself (such as LOS). As a side-effect, writing Lua bindings to support
- *  tests will expand the available Lua bindings. :-)
+ * ctest runs Lua tests found in the test directory. The intent here
+ * is to test parts of Crawl that can be easily tested from within Crawl
+ * itself (such as LOS). As a side-effect, writing Lua bindings to support
+ * tests will expand the available Lua bindings. :-)
  *
- *  Tests will run only with Crawl built in its source tree without
- *  DATA_DIR_PATH set.
- */
+ * Tests will run only with Crawl built in its source tree without
+ * DATA_DIR_PATH set.
+**/
 
 #include "AppHdr.h"
 

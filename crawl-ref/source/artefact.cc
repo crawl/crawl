@@ -1,8 +1,7 @@
-/*
- *  File:       artefact.cc
- *  Summary:    Random and unrandom artefact functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Random and unrandom artefact functions.
+**/
 
 #include "AppHdr.h"
 

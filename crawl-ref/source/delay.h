@@ -1,7 +1,7 @@
-/*
- *  File:       delay.h
- *  Summary:    Functions for handling multi-turn actions.
- */
+/**
+ * @file
+ * @brief Functions for handling multi-turn actions.
+**/
 
 #ifndef DELAY_H
 #define DELAY_H

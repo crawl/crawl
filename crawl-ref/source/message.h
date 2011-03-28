@@ -1,8 +1,7 @@
-/*
- *  File:       message.cc
- *  Summary:    Functions used to print messages.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print messages.
+**/
 
 #ifndef MESSAGE_H
 #define MESSAGE_H

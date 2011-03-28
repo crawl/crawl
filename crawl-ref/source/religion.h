@@ -1,8 +1,7 @@
-/*
- *  File:       religion.h
- *  Summary:    Misc religion related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc religion related functions.
+**/
 
 
 #ifndef RELIGION_H

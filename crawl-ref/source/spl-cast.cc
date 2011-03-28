@@ -1,8 +1,7 @@
-/*
- *  File:       spl-cast.cc
- *  Summary:    Spell casting and miscast functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Spell casting and miscast functions.
+**/
 
 #include "AppHdr.h"
 

@@ -1,8 +1,7 @@
-/*
- *  File:       macro.cc
- *  Summary:    Crude macro-capability
- *  Written by: Juho Snellman <jsnell@lyseo.edu.ouka.fi>
- */
+/**
+ * @file
+ * @brief Crude macro-capability
+**/
 
 #ifndef MACRO_H
 #define MACRO_H

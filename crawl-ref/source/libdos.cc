@@ -1,11 +1,7 @@
-/*
- *  File:       libdos.cc
- *  Summary:    Functions for DOS support.
- *              Needed by makefile.dos.
- *  Written by: Darshan Shaligram
- *
- *  Added for Crawl Reference by dshaligram on Wed Nov 22 08:41:20 2006 UTC
- */
+/**
+ * @file
+ * @brief Functions for DOS support.  Needed by makefile.dos.
+**/
 
 // Every .cc must include AppHdr or bad things happen.
 #include "AppHdr.h"

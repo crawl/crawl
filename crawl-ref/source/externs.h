@@ -1,8 +1,7 @@
-/*
- *  File:       externs.h
- *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Fixed size 2D vector class that asserts if you do something bad.
+**/
 
 #ifndef EXTERNS_H
 #define EXTERNS_H

@@ -1,8 +1,7 @@
-/*
- * File:       art-func.h
- * Summary:    Functions non-standard unrandarts uses.
- * Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Functions non-standard unrandarts uses.
+**/
 
 /*
  * util/art-data.pl scans through this file to grab the functions

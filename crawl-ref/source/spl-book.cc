@@ -1,8 +1,7 @@
-/*
- *  File:       spl-book.cc
- *  Summary:    Spellbook/Staff contents array and management functions
- *  Written by: Josh Fishman
- */
+/**
+ * @file
+ * @brief Spellbook/Staff contents array and management functions
+**/
 
 #include "AppHdr.h"
 

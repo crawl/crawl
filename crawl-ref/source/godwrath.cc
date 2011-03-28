@@ -1,7 +1,7 @@
-/*
- *  File:       godwrath.cc
- *  Summary:    Divine retribution.
- */
+/**
+ * @file
+ * @brief Divine retribution.
+**/
 
 #include "AppHdr.h"
 

@@ -1,8 +1,7 @@
-/*
- *  File:       newgame.h
- *  Summary:    Functions used when starting a new game.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when starting a new game.
+**/
 
 
 #ifndef NEWGAME_H

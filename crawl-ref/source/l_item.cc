@@ -1,7 +1,7 @@
-/*
- * File:     l_items.cc
- * Summary:  functions for managed Lua item manipulation
- */
+/**
+ * @file
+ * @brief functions for managed Lua item manipulation
+**/
 
 #include "AppHdr.h"
 

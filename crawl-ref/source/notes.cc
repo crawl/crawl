@@ -1,8 +1,7 @@
-/*
- *  File:       notes.cc
- *  Summary:    Notetaking stuff
- *  Written by: Haran Pilpel
- */
+/**
+ * @file
+ * @brief Notetaking stuff
+**/
 
 #include "AppHdr.h"
 

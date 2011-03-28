@@ -1,8 +1,7 @@
-/*
- *  File:       spl-util.h
- *  Summary:    data handlers for player spell list
- *  Written by: don brodale <dbrodale@bigfootinteractive.com>
- */
+/**
+ * @file
+ * @brief data handlers for player spell list
+**/
 
 
 #ifndef SPL_UTIL_H

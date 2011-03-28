@@ -1,8 +1,8 @@
-/*
- *  File:       libunix.cc
- *  Summary:    Functions for unix and curses support
- *              Needed by makefile.unix.
- */
+/**
+ * @file
+ * @brief Functions for unix and curses support
+ *             Needed by makefile.unix.
+**/
 
 /* Some replacement routines missing in gcc
    Some of these are inspired by/stolen from the Linux-conio package

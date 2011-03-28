@@ -1,8 +1,7 @@
-/*
- *  File:       skills.h
- *  Summary:    Skill exercising functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Skill exercising functions.
+**/
 
 
 #ifndef SKILLS_H

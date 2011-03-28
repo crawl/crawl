@@ -1,8 +1,7 @@
-/*
- *  File:       religion.cc
- *  Summary:    Misc religion related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc religion related functions.
+**/
 
 #include "AppHdr.h"
 

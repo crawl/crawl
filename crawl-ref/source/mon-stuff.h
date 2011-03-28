@@ -1,8 +1,7 @@
-/*
- *  File:       mon-stuff.h
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 
 #ifndef MONSTUFF_H

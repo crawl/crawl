@@ -1,9 +1,8 @@
-/*
- *  File:       fineff.cc
- *  Summary:    Brand/ench/etc effects that might alter something in an
- *              unexpected way.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Brand/ench/etc effects that might alter something in an
+ *             unexpected way.
+**/
 
 #include "AppHdr.h"
 #include <math.h>

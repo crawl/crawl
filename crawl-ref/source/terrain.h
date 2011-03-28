@@ -1,8 +1,7 @@
-/*
- *  File:       terrain.h
- *  Summary:    Terrain related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Terrain related functions.
+**/
 
 #ifndef TERRAIN_H
 #define TERRAIN_H

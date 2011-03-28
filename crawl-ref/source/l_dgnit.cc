@@ -1,7 +1,7 @@
-/*
- * File:     l_dgnit.cc
- * Summary:  Item-related functions in lua library "dgn".
- */
+/**
+ * @file
+ * @brief Item-related functions in lua library "dgn".
+**/
 
 #include "AppHdr.h"
 

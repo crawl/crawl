@@ -1,8 +1,7 @@
-/*
- *  File:       debug.h
- *  Summary:    Assertions and such.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Assertions and such.
+**/
 
 #ifndef DEBUG_H
 #define DEBUG_H

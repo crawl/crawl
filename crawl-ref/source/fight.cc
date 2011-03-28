@@ -1,8 +1,7 @@
-/*
- *  File:       fight.cc
- *  Summary:    Functions used during combat.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used during combat.
+**/
 
 #include "AppHdr.h"
 

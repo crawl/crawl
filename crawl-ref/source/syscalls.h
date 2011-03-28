@@ -1,8 +1,7 @@
-/*
- *  File:       syscalls.h
- *  Summary:    Wrappers for sys/libc calls, mostly for charset purposes.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Wrappers for sys/libc calls, mostly for charset purposes.
+**/
 
 #ifndef SYSCALLS_H
 #define SYSCALLS_H

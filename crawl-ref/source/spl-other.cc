@@ -1,8 +1,8 @@
-/*
- *  File:     spl-other.cc
- *  Summary:  Non-enchantment spells that didn't fit anywhere else.
- *            Mostly Transmutations.
- */
+/**
+ * @file
+ * @brief Non-enchantment spells that didn't fit anywhere else.
+ *           Mostly Transmutations.
+**/
 
 #include "AppHdr.h"
 

@@ -1,8 +1,7 @@
-/*
- *  File:       item_use.cc
- *  Summary:    Functions for making use of inventory items.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for making use of inventory items.
+**/
 
 #include "AppHdr.h"
 

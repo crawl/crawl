@@ -1,7 +1,7 @@
-/*
- * File:     zap-data.h
- * Summary:  Zap definitions. See zap_info struct in beam.cc.
- */
+/**
+ * @file
+ * @brief Zap definitions. See zap_info struct in beam.cc.
+**/
 
 #ifndef ZAP_DATA_H
 #define ZAP_DATA_H

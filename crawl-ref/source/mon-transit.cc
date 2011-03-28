@@ -1,8 +1,7 @@
-/*
- * File:       mon-transit.cc
- * Summary:    Tracks monsters that are in suspended animation between levels.
- * Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Tracks monsters that are in suspended animation between levels.
+**/
 
 #include "AppHdr.h"
 

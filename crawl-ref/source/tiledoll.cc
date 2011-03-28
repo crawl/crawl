@@ -1,9 +1,7 @@
-/*
- *  File:       tiledoll.cc
- *  Summary:    Region system implementations
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
+/**
+ * @file
+ * @brief Region system implementations
+**/
 
 #include "AppHdr.h"
 

@@ -1,7 +1,7 @@
-/*
- * File:       mon-gear.h
- * Summary:    Monsters' initial equipment.
- */
+/**
+ * @file
+ * @brief Monsters' initial equipment.
+**/
 
 #ifndef MON_GEAR_H
 #define MON_GEAR_H

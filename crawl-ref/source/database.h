@@ -1,8 +1,7 @@
-/*
- *  database.h
- *
- *  Created by Peter Berger on 4/15/07.
- */
+/**
+ * @file
+ * database.h
+**/
 
 
 #ifndef DATABASE_H

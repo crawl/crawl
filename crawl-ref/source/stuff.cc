@@ -1,8 +1,7 @@
-/*
- *  File:       stuff.cc
- *  Summary:    Misc stuff.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc stuff.
+**/
 
 #include "AppHdr.h"
 

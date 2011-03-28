@@ -1,8 +1,7 @@
-/*
- *  File:       invent.cc
- *  Summary:    Functions for inventory related commands.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for inventory related commands.
+**/
 
 #include "AppHdr.h"
 

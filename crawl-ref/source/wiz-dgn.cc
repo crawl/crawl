@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-dgn.h
- *  Summary:    Dungeon related wizard functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Dungeon related wizard functions.
+**/
 
 #include "AppHdr.h"
 

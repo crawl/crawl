@@ -1,8 +1,7 @@
-/*
- *  File:       enum.h
- *  Summary:    Global (ick) enums.
- *  Written by: Daniel Ligon
- */
+/**
+ * @file
+ * @brief Global (ick) enums.
+**/
 
 
 #ifndef ENUM_H

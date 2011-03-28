@@ -1,8 +1,7 @@
-/*
- *  File:       mon-behv.h
- *  Summary:    Monster behaviour functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monster behaviour functions.
+**/
 
 #ifndef MONBEHV_H
 #define MONBEHV_H

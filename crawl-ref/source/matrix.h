@@ -1,7 +1,7 @@
-/*
- * File:     matrix.h
- * Summary:  Two-dimensional array class.
- */
+/**
+ * @file
+ * @brief Two-dimensional array class.
+**/
 
 #ifndef MATRIX_H
 #define MATRIX_H

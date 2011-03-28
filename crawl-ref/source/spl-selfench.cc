@@ -1,7 +1,7 @@
-/*
- *  File:     spl-selfench.cc
- *  Summary:  Self-enchantment spells.
- */
+/**
+ * @file
+ * @brief Self-enchantment spells.
+**/
 
 #include "AppHdr.h"
 

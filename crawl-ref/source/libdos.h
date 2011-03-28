@@ -1,10 +1,7 @@
-/*
- *  File:       libdos.h
- *  Summary:    Functions for DOS support.
- *  Written by: Darshan Shaligram
- *
- *  Added for Crawl Reference by dshaligram on Wed Nov 22 08:41:20 2006 UTC
- */
+/**
+ * @file
+ * @brief Functions for DOS support.
+**/
 
 #ifndef __LIBDOS_H__
 #define __LIBDOS_H__

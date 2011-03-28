@@ -1,8 +1,7 @@
-/*
- *  File:       cio.h
- *  Summary:    System independent console IO functions
- *  Created by: dshaligram on Wed Jun 20 19:00:52 2007 UTC
- */
+/**
+ * @file
+ * @brief System independent console IO functions
+**/
 
 #ifndef CIO_H
 #define CIO_H

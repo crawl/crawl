@@ -1,8 +1,7 @@
-/*
- *  File:       abl-show.h
- *  Summary:    Functions related to special abilities.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions related to special abilities.
+**/
 
 
 #ifndef ABLSHOW_H

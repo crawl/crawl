@@ -1,8 +1,7 @@
-/*
- *  File:       maps.cc
- *  Summary:    Functions used to create vaults.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to create vaults.
+**/
 
 #include "AppHdr.h"
 

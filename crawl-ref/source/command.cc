@@ -1,8 +1,7 @@
-/*
- *  File:       command.cc
- *  Summary:    Misc commands.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc commands.
+**/
 
 #include "AppHdr.h"
 

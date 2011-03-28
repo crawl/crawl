@@ -1,7 +1,7 @@
-/*
- *  File:       goditem.cc
- *  Summary:    Gods' attitude towards items.
- */
+/**
+ * @file
+ * @brief Gods' attitude towards items.
+**/
 
 #include "AppHdr.h"
 

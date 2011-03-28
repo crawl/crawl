@@ -1,8 +1,7 @@
-/*
- *  File:       direct.cc
- *  Summary:    Functions used when picking squares.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when picking squares.
+**/
 
 #include "AppHdr.h"
 

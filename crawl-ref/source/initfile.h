@@ -1,8 +1,7 @@
-/*
- *  File:       initfile.h
- *  Summary:    Simple reading of init file.
- *  Written by: David Loewenstern
- */
+/**
+ * @file
+ * @brief Simple reading of init file.
+**/
 
 
 #ifndef INITFILE_H

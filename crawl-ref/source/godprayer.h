@@ -1,7 +1,7 @@
-/*
- * File:     godprayer.h
- * Summary:  Prayer and sacrifice.
- */
+/**
+ * @file
+ * @brief Prayer and sacrifice.
+**/
 
 #ifndef GODPRAYER_H
 #define GODPRAYER_H

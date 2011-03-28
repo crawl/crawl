@@ -1,8 +1,7 @@
-/*
- *  File:       branch.h
- *  Summary:    Dungeon branch classes
- *  Written by: Haran Pilpel
- */
+/**
+ * @file
+ * @brief Dungeon branch classes
+**/
 
 #ifndef BRANCH_H
 #define BRANCH_H

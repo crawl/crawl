@@ -1,8 +1,7 @@
-/*
- *  File:       ouch.h
- *  Summary:    Functions used when Bad Things happen to the player.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when Bad Things happen to the player.
+**/
 
 
 #ifndef OUCH_H

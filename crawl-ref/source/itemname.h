@@ -1,8 +1,7 @@
-/*
- *  File:       itemname.h
- *  Summary:    Misc functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 
 #ifndef ITEMNAME_H

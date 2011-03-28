@@ -1,8 +1,7 @@
-/*
- *  File:       tags.cc
- *  Summary:    Auxilary functions to make savefile versioning simpler.
- *  Written by: Gordon Lipford
- */
+/**
+ * @file
+ * @brief Auxilary functions to make savefile versioning simpler.
+**/
 
 /*
    The marshalling and unmarshalling of data is done in big endian and

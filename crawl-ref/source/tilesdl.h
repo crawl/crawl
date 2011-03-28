@@ -1,8 +1,7 @@
-/*
- *  File:       tilesdl.h
- *  Summary:    SDL-related functionality for the tiles port
- *  Written by: Enne Walker
- */
+/**
+ * @file
+ * @brief SDL-related functionality for the tiles port
+**/
 
 #ifdef USE_TILE
 #ifndef TILESDL_H

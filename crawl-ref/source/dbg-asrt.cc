@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-asrt.cc
- *  Summary:    Assertions and crashing.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Assertions and crashing.
+**/
 
 #include "AppHdr.h"
 

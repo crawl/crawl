@@ -1,8 +1,7 @@
-/*
- *  File:       items.cc
- *  Summary:    Misc (mostly) inventory related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc (mostly) inventory related functions.
+**/
 
 #include "AppHdr.h"
 

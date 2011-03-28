@@ -1,8 +1,7 @@
-/*
- *  File:       package.cc
- *  Summary:    A container for chunks that make up the save file.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief A container for chunks that make up the save file.
+**/
 
 /*
 Guarantees:

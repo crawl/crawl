@@ -1,8 +1,7 @@
-/*
- *  File:       mon-pick.h
- *  Summary:    Functions used to help determine which monsters should appear.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to help determine which monsters should appear.
+**/
 
 
 #ifndef MONPICK_H

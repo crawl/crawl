@@ -1,10 +1,10 @@
-/*
- * File:     ng-restr.cc
- * Summary:  Character choice restrictions.
+/**
+ * @file
+ * @brief Character choice restrictions.
  *
  * The functions in this file are "pure": They don't
  * access any global data.
- */
+**/
 
 #include "AppHdr.h"
 

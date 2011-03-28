@@ -1,10 +1,7 @@
-/*
- *  File:       hints.h
- *  Summary:    Stuff needed for hints mode
- *  Written by: j-p-e-g
- *
- *  Created on 2007-01-11.
- */
+/**
+ * @file
+ * @brief Stuff needed for hints mode
+**/
 
 #ifndef HINTS_H
 #define HINTS_H

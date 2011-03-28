@@ -1,7 +1,7 @@
-/*
- * File:     godpassive.h
- * Summary:  Passive god effects.
- */
+/**
+ * @file
+ * @brief Passive god effects.
+**/
 
 #ifndef GODPASSIVE_H
 #define GODPASSIVE_H

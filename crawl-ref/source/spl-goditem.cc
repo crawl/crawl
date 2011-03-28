@@ -1,7 +1,7 @@
-/*
- *  File:     spl-goditem.cc
- *  Summary:  Pseudo spells triggered by gods and various items.
- */
+/**
+ * @file
+ * @brief Pseudo spells triggered by gods and various items.
+**/
 
 #include "AppHdr.h"
 

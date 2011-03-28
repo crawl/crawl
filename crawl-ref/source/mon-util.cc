@@ -1,8 +1,7 @@
-/*
- *  File:       mon-util.cc
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 // $pellbinder: (c) D.G.S.E 1998
 // some routines snatched from former monsstat.cc

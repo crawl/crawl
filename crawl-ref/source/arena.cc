@@ -1,7 +1,7 @@
-/*
- *  File:       arena.cc
- *  Summary:    Functions related to the monster arena (stage and watch fights).
- */
+/**
+ * @file
+ * @brief Functions related to the monster arena (stage and watch fights).
+**/
 
 #include "AppHdr.h"
 

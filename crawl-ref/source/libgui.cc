@@ -1,8 +1,7 @@
-/*
- *  File:       libgui.cc
- *  Summary:    Functions that any display port needs to implement.
- *  Written by: M.Itakura
- */
+/**
+ * @file
+ * @brief Functions that any display port needs to implement.
+**/
 
 #include "AppHdr.h"
 

@@ -1,7 +1,7 @@
-/*
- *  File:       los.h
- *  Summary:    Line-of-sight algorithm.
- */
+/**
+ * @file
+ * @brief Line-of-sight algorithm.
+**/
 
 #ifndef LOS_H
 #define LOS_H

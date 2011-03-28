@@ -1,8 +1,7 @@
-/*
- *  File:       mon-stuff.cc
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 #include "AppHdr.h"
 #include "mon-stuff.h"

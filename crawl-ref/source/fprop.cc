@@ -1,7 +1,7 @@
-/*
- * File:      envmap.cc
- * Summary:   Functions dealing with env.map_knowledge.
- */
+/**
+ * @file
+ * @brief Functions dealing with env.map_knowledge.
+**/
 
 #include "AppHdr.h"
 

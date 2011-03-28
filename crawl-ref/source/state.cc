@@ -1,8 +1,7 @@
-/*
- *  File:       state.cc
- *  Summary:    Game state functions.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Game state functions.
+**/
 
 #include "AppHdr.h"
 

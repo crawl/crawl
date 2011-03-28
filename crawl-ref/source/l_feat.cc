@@ -1,7 +1,7 @@
-/*
- * File:     l_feat.cc
- * Summary:  Boolean feat-related functions lua library "feat".
- */
+/**
+ * @file
+ * @brief Boolean feat-related functions lua library "feat".
+**/
 
 #include "AppHdr.h"
 

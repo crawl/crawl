@@ -1,8 +1,7 @@
-/*
- *  File: highscore.cc
- *  Summary: deal with reading and writing of highscore file
- *  Written by: Gordon Lipford
- */
+/**
+ * @file
+ * @brief deal with reading and writing of highscore file
+**/
 
 /*
  * ----------- MODIFYING THE PRINTED SCORE FORMAT ---------------------

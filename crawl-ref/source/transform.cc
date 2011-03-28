@@ -1,8 +1,7 @@
-/*
- *  File:       transform.cc
- *  Summary:    Misc function related to player transformations.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc function related to player transformations.
+**/
 
 #include "AppHdr.h"
 

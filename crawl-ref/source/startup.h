@@ -1,8 +1,7 @@
-/*
- *  File:       startup.h
- *  Summary:    Collection of startup related functions and objects
- *  Written by:
- */
+/**
+ * @file
+ * @brief Collection of startup related functions and objects
+**/
 
 #ifndef STARTUP_H
 #define STARTUP_H

@@ -1,8 +1,7 @@
-/*
- *  File:         bitary.cc
- *  Summary:      Bit array data type.
- *  Created by:   Robert Vollmert
- */
+/**
+ * @file
+ * @brief Bit array data type.
+**/
 
 #include "AppHdr.h"
 

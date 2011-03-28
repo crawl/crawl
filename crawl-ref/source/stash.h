@@ -1,8 +1,7 @@
-/*
- *  File:       stash.h
- *  Summary:    Classes tracking player stashes
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Classes tracking player stashes
+**/
 
 #ifndef STASH_H
 #define STASH_H

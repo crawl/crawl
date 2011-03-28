@@ -1,8 +1,7 @@
-/*
- *  File:       fixedvector.h
- *  Summary:    Fixed size vector class that asserts if you do something bad.
- *  Written by: Jesse Jones
- */
+/**
+ * @file
+ * @brief Fixed size vector class that asserts if you do something bad.
+**/
 
 #ifndef FIXVEC_H
 #define FIXVEC_H

@@ -1,7 +1,7 @@
-/*
- * File:     l_crawl.cc
- * Summary:  General game bindings.
- */
+/**
+ * @file
+ * @brief General game bindings.
+**/
 
 #include "AppHdr.h"
 

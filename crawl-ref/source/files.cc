@@ -1,8 +1,7 @@
-/*
- *  File:       files.cc
- *  Summary:    Functions used to save and load levels/games.
- *  Written by: Linley Henzell and Alexey Guzeev
- */
+/**
+ * @file
+ * @brief Functions used to save and load levels/games.
+**/
 
 #include "AppHdr.h"
 

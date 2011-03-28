@@ -1,8 +1,7 @@
-/*
- *  File:       notes.h
- *  Summary:    Notetaking stuff
- *  Written by: Haran Pilpel
- */
+/**
+ * @file
+ * @brief Notetaking stuff
+**/
 
 #ifndef NOTES_H
 #define NOTES_H

@@ -1,9 +1,9 @@
-/*
- * File:     mon-info.cc
- * Summary:  Monster information that may be passed to the user.
+/**
+ * @file
+ * @brief Monster information that may be passed to the user.
  *
  * Used to fill the monster pane and to pass monster info to Lua.
- */
+**/
 
 #include "AppHdr.h"
 

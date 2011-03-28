@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-util.cc
- *  Summary:    Miscellaneous debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Miscellaneous debugging functions.
+**/
 
 #include "AppHdr.h"
 

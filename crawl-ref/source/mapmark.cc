@@ -1,8 +1,7 @@
-/*
- *  File:       mapmark.cc
- *  Summary:    Level markers (annotations).
- *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
- */
+/**
+ * @file
+ * @brief Level markers (annotations).
+**/
 
 #include "AppHdr.h"
 

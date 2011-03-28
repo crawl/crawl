@@ -1,19 +1,16 @@
-/*
- *  File:       AppHdr.h
- *  Summary:    Precompiled header used by Crawl.
- *  Written by: Jesse Jones
+/**
+ * @file
+ * @brief Precompiled header used by Crawl.
  *
- * Abstract: CodeWarrior and MSVC both support precompiled headers which can
- *      significantly speed up compiles. Unlike CodeWarrior MSVC imposes
- *      some annoying restrictions on precompiled headers: the precompiled
- *      header *must* be the first include in all cc files. Any includes or
- *      other statements that occur before the pch include are ignored. This
- *      is really stupid and can lead to bizarre errors, but it does mean
- *      that we shouldn't run into any problems on systems without precompiled
- *      headers.
- *
- *  Copyright © 1999 Jesse Jones.
- */
+ * CodeWarrior and MSVC both support precompiled headers which can
+ * significantly speed up compiles. Unlike CodeWarrior MSVC imposes
+ * some annoying restrictions on precompiled headers: the precompiled
+ * header *must* be the first include in all cc files. Any includes or
+ * other statements that occur before the pch include are ignored. This
+ * is really stupid and can lead to bizarre errors, but it does mean
+ * that we shouldn't run into any problems on systems without precompiled
+ * headers.
+**/
 
 
 #ifndef APPHDR_H

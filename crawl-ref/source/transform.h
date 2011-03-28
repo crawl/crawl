@@ -1,8 +1,7 @@
-/*
- *  File:       transform.h
- *  Summary:    Misc function related to player transformations.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc function related to player transformations.
+**/
 
 
 #ifndef TRANSFOR_H

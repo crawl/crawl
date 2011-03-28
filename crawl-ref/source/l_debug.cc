@@ -1,7 +1,7 @@
-/*
- * File:       l_debug.cc
- * Summary:    Various debugging bindings.
- */
+/**
+ * @file
+ * @brief Various debugging bindings.
+**/
 
 #include "AppHdr.h"
 
