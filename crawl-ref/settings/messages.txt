@@ -10,7 +10,6 @@ msc = $danger:strangely unstable
 msc = $danger:curare-tipped.*hits you
 msc = $danger:Space warps.* around you
 msc = $danger:Space bends around you
-msc = $danger:lose your buoyancy
 msc = $danger:sense of stasis
 msc = $danger:clumsily bash
 msc = $danger:goes berserk!
