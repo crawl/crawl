@@ -875,6 +875,7 @@ void game_options::reset_options()
     explore_greedy         = true;
 
     explore_improved       = false;
+    travel_key_stop        = true;
     trap_prompt            = true;
 
     target_unshifted_dirs  = false;
@@ -2937,6 +2938,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_greedy);
     else BOOL_OPTION(explore_improved);
+    else BOOL_OPTION(travel_key_stop);
     else BOOL_OPTION(trap_prompt);
     else if (key == "stash_filter")
     {

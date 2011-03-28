@@ -252,6 +252,8 @@ public:
     // Some experimental improvements to explore
     bool        explore_improved;
 
+    bool        travel_key_stop;   // Travel stops on keypress.
+
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
     std::vector<message_colour_mapping> message_colour_mappings;
