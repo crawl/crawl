@@ -173,10 +173,6 @@ book of death
 
 A black book containing spells written in a hasty scrawl.
 %%%%
-book of divinations
-
-A book of magic spells.
-%%%%
 book of enchantments
 
 A book of magic spells.
