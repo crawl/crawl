@@ -325,7 +325,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Ashenzari
     { "Ashenzari supports your low skills.",
-      "Ashenzari enhances your skills corresponding to bounded parts.",
+      "The more cursed you are, the more Ashenzari helps you learn.",
       "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
       "Ashenzari helps you to reconsider your skills."
@@ -439,9 +439,8 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step out of the time flow"
     },
     // Ashenzari
-    { "Ashenzari no longer supports your low skills.",
-      "Ashenzari no longer enhances your skills corresponding "
-      "to bounded parts.",
+    { "",
+      "Ashenzari no longer helps you learn.",
       "Ashenzari no longer keeps your vision and mind clear.",
       "scry through walls",
       "Ashenzari no longer helps you to reconsider your skills."

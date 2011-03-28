@@ -2655,6 +2655,9 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
     if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS)
         return;
 
+    if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
+        exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
+
     const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
@@ -5346,7 +5349,6 @@ void player::init()
     lives = 0;
     deaths = 0;
     xray_vision = false;
-    you.wear_uncursed = false;
 
     skills.init(0);
     // In Zot def we turn off all skills with non-zero skill level later
@@ -5754,8 +5756,8 @@ int player::skill(skill_type sk) const
 {
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         return std::min(skills[sk] + 5, 27);
-    else if (you.religion == GOD_ASHENZARI)
-        return ash_skill_boost(sk);
+//    else if (you.religion == GOD_ASHENZARI)
+//        return ash_skill_boost(sk);
 
     return skills[sk];
 }
