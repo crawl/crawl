@@ -114,7 +114,8 @@ static void _crash_signal_handler(int sig_num)
     // In case the crash dumper is unable to open a file and has to dump
     // to stderr.
 #ifndef USE_TILE
-    unixcurses_shutdown();
+    if (crawl_state.io_inited)
+        unixcurses_shutdown();
 #endif
 
     do_crash_dump();
