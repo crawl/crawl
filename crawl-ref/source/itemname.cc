@@ -31,6 +31,7 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "mon-util.h"
+#include "mon-stuff.h"
 #include "notes.h"
 #include "player.h"
 #include "religion.h"
@@ -3075,6 +3076,10 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_ARMOUR:
         return !can_wear_armour(item, false, true);
 
+    case OBJ_BOOKS:
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+            return (true);
+
     case OBJ_SCROLLS:
         if (!item_type_known(item))
             return false;
@@ -3082,6 +3087,9 @@ bool is_useless_item(const item_def &item, bool temp)
         // A bad item is always useless.
         if (is_bad_item(item, temp))
             return true;
+
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+            return (true);
 
         switch (item.sub_type)
         {
