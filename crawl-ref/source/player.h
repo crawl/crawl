@@ -130,6 +130,8 @@ public:
   int  total_skill_points;
   int  exp_available;
 
+  int exp_docked, exp_docked_total; // Ashenzari's wrath
+
   FixedArray<uint8_t, 6, 50> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
   FixedVector<bool, NUM_MONSTERS> unique_creatures;

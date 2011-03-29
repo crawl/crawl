@@ -1114,6 +1114,9 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.hell_exit);
     marshallByte(th, you.hell_branch);
 
+    marshallInt(th, you.exp_docked);
+    marshallInt(th, you.exp_docked_total);
+
     // elapsed time
     marshallInt(th, you.elapsed_time);
 
@@ -1722,6 +1725,16 @@ static void tag_read_you(reader &th)
 
     you.hell_exit      = unmarshallByte(th);
     you.hell_branch = static_cast<branch_type>(unmarshallByte(th));
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_ASH_PENANCE)
+    {
+#endif
+    you.exp_docked       = unmarshallInt(th);
+    you.exp_docked_total = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
