@@ -58,14 +58,23 @@ local function try_move(dx, dy)
   end
 end
 
-local function move_towards(dx, dy)
+local function move_towards(dx, dy, attack_only)
   local move = nil
-  if reaching(dx, dy) then
+  local msg = nil
+  if dx == 0 and dy == 0 then
+    msg = "No unsafe monster in view!"
+  elseif reaching(dx, dy) then
     move = 'vf'
   elseif ranged() then
-    move = 'ff'
+    if you.see_cell_no_trans(dx, dy) then
+      move = 'ff'
+    else
+      msg = "There's something in the way."
+    end
   elseif adjacent(dx, dy) then
     move = delta_to_vi(dx, dy)
+  elseif attack_only then
+    msg = "That monster is too far!"
   elseif abs(dx) > abs(dy) then
     move = try_move(sign(dx), 0)
     if move == nil then move = try_move(sign(dx), sign(dy)) end
@@ -79,7 +88,9 @@ local function move_towards(dx, dy)
     if move == nil then move = try_move(sign(dx), sign(dy)) end
     if move == nil then move = try_move(sign(dx), 0) end
   end
-  if move == nil then
+  if msg then
+    crawl.mpr(msg)
+  elseif move == nil then
     crawl.mpr("Failed to move towards target.")
   else
     crawl.process_keys(move)
@@ -103,20 +114,10 @@ end
 
 function hit_closest()
   local x, y = find_next_monster()
-  if x == 0 and y == 0 then
-    crawl.mpr("No unsafe monster in view!")
-  else
-    move_towards(x, y)
-  end
+  move_towards(x, y, false)
 end
 
 function hit_adjacent()
   local x, y = find_next_monster()
-  if x == 0 and y == 0 then
-    crawl.mpr("No unsafe monster in view!")
-  elseif x*x + y*y > 2 and not reaching(x, y) then
-    crawl.mpr("That monster is too far!")
-  else
-    move_towards(x, y)
-  end
+  move_towards(x, y, true)
 end
