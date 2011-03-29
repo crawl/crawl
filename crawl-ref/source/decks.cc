@@ -2052,6 +2052,7 @@ static void _experience_card(int power, deck_rarity_type rarity)
     int exp_gain = HIGH_EXP_POOL;
     if (power_level <= 1)
         exp_gain = std::min(exp_gain, power * 50);
+    exp_gain -= ash_reduce_xp(exp_gain);
     you.exp_available += exp_gain;
 
     // After level 27, boosts you get don't get increased (matters for
