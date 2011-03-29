@@ -852,8 +852,14 @@ bool cast_apportation(int pow, bolt& beam)
     // Actually move the item.
     if (max_units < item.quantity)
     {
+        if (!copy_item_to_grid(item, you.pos(), max_units))
+        {
+            // always >1 item
+            mpr("They abruptly stop in place!");
+            // Too late to abort.
+            return (true);
+        }
         item.quantity -= max_units;
-        copy_item_to_grid(item, you.pos(), max_units);
     }
     else
         move_top_item(where, you.pos());
