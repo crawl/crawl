@@ -40,6 +40,11 @@ local function reaching(dx, dy)
   end
 end
 
+local function ranged()
+  local wp = items.equipped_at("weapon")
+  return wp and wp.is_ranged
+end
+
 local function can_move(feat)
   return travel.feature_traversable(feat)
 end
@@ -57,6 +62,8 @@ local function move_towards(dx, dy)
   local move = nil
   if reaching(dx, dy) then
     move = 'vf'
+  elseif ranged() then
+    move = 'ff'
   elseif adjacent(dx, dy) then
     move = delta_to_vi(dx, dy)
   elseif abs(dx) > abs(dy) then
