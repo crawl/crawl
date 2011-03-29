@@ -527,6 +527,48 @@ string describe_mutations(bool center_title)
         have_any = true;
         break;
 
+    case SP_LAVA_ORC:
+    {
+        have_any = true;
+        std::string col = "darkgrey";
+
+        col = (temperature_effect(LORC_STONESKIN)) ? "brown" : "darkgrey";
+        result += "<" + col + ">You have stony skin.</" + col + ">\n";
+
+        if (temperature_effect(LORC_LAVA_BOOST))
+        {
+            col = "white";
+            result += "<" + col + ">Your lava-based spells are more powerful.<" + col + ">\n";
+        }
+        else if (temperature_effect(LORC_EARTH_BOOST))
+        {
+            col = "brown";
+            result += "<" + col + ">Your earth spells are more powerful.<" + col + ">\n";
+        }
+        else if (temperature_effect(LORC_FIRE_BOOST))
+        {
+            col = "lightred";
+            result += "<" + col + ">Your fire spells are more powerful.<" + col + ">\n";
+        }
+
+        col = (temperature_effect(LORC_LAVA_BLOOD)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">You bleed molten lava.</" + col + ">\n";
+
+        col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
+
+        col = (temperature_effect(LORC_HEAT_AURA)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">You bathe your surroundings in blazing heat.</" + col + ">\n";
+
+        col = (temperature_effect(LORC_COLD_VULN)) ? "red" : "darkgrey";
+        result += "<" + col + ">You are vulnerable to cold.</" + col + ">\n";
+
+        col = (temperature_effect(LORC_NO_SCROLLS)) ? "red" : "darkgrey";
+        result += "<" + col + ">You are too hot to use scrolls.</" + col + ">\n";
+
+        break;
+    }
+
     default:
         break;
     }

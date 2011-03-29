@@ -4664,3 +4664,114 @@ int count_allies()
 
     return count;
 }
+
+// Lava orcs!
+void temperature_check()
+{
+    int tension = get_tension(GOD_NO_GOD);
+
+    // Temperature is somewhat 'sticky' - 20% chance not to change.
+    if (one_chance_in(5))
+        return;
+
+    // 4 seems to be a reasonable baseline. The variation from it is
+    // because if it's strictly >/< 4 it will seesaw rapidly.
+    if (tension*3/4 > you.temperature * 4.8)
+        temperature_increment();
+    else if (tension*3/4 < you.temperature * 3.2)
+        temperature_decrement();
+
+    if (temperature_effect(LORC_STONESKIN) && !you.duration[DUR_STONESKIN])
+    {
+        you.set_duration(DUR_STONESKIN, 500);
+        mpr("Your skin hardens.", MSGCH_DURATION);
+        you.redraw_armour_class = true;
+    }
+
+    if (!temperature_effect(LORC_STONESKIN) && you.duration[DUR_STONESKIN] > 0)
+    {
+        you.set_duration(DUR_STONESKIN, 0);
+        mpr("Your skin softens.", MSGCH_DURATION);
+        you.redraw_armour_class = true;
+    }
+
+    you.redraw_temperature = true;
+}
+
+void temperature_increment()
+{
+    if (you.temperature < TEMP_MAX)
+        you.temperature++;
+}
+
+void temperature_decrement()
+{
+    if (you.temperature > TEMP_MIN)
+    you.temperature--;
+}
+
+bool temperature_effect(int which) {
+
+    switch (which)
+    {
+        case LORC_STONESKIN:
+            return (you.temperature < TEMP_WARM); // 1-8
+        case LORC_EARTH_BOOST:
+            return (you.temperature < TEMP_COOL); // 1-4
+        case LORC_LAVA_BOOST:
+            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
+        case LORC_FIRE_BOOST:
+        case LORC_LAVA_BLOOD:
+            return (you.temperature >= TEMP_WARM); // 9-15
+        case LORC_COLD_VULN:
+        case LORC_PASSIVE_HEAT:
+            return (you.temperature >= TEMP_HOT); // 11-15
+        case LORC_NO_SCROLLS:
+        case LORC_HEAT_AURA:
+            return (you.temperature >= TEMP_FIRE); // 13-15
+
+        default:
+            return false;
+    }
+}
+
+void lava_blood(monster* mon, int amount)
+{
+    if (mon->type == MONS_LAVA_ORC ||
+        (mon->type == MONS_PLAYER && you.species == SP_LAVA_ORC))
+        return;
+
+    mpr("I am a player still");
+
+    if (!(you.temperature > TEMP_WARM))
+        return;
+
+    bolt beam;
+    beam.flavour = BEAM_LAVA; // Should maybe be just fire...
+    beam.thrower = KILL_YOU;
+
+    const int orig_hurted = random2(amount) + 10;
+    int hurted = mons_adjust_flavoured(mon, beam, orig_hurted);
+
+mpr("We got this far");
+    if (!hurted)
+        return;
+
+    if (mon->observable())
+        mprf("%s is sprayed with searing blood.", mon->name(DESC_CAP_THE).c_str());
+
+    mon->hurt(&you, hurted);
+
+    if (mon->alive())
+        print_wounds(mon);
+}
+
+int temperature_colour() {
+
+return (you.temperature > TEMP_FIRE) ? LIGHTRED  :
+       (you.temperature > TEMP_HOT)  ? RED       :
+       (you.temperature > TEMP_WARM) ? YELLOW    :
+       (you.temperature > TEMP_ROOM) ? WHITE     :
+       (you.temperature > TEMP_COOL) ? LIGHTCYAN :
+       (you.temperature > TEMP_COLD) ? LIGHTBLUE : BLUE;
+}

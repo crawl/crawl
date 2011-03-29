@@ -2993,6 +2993,9 @@ static void _player_reacts()
     if (you.attribute[ATTR_SHADOWS])
         shadow_lantern_effect();
 
+    if (you.species == SP_LAVA_ORC)
+        temperature_check();
+
     if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
 
