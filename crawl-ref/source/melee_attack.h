@@ -109,6 +109,7 @@ private:
     /* Mutation Effects */
     void do_spines();
     void do_passive_freeze();
+    void do_passive_heat();
     void emit_foul_stench();
     /* Race Effects */
     void do_minotaur_retaliation();
