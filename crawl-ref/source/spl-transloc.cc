@@ -801,12 +801,6 @@ bool cast_apportation(int pow, bolt& beam)
         }
     }
 
-    if (max_units < item.quantity)
-    {
-        item.quantity = max_units;
-        mpr("You feel that some mass got lost in the cosmic void.");
-    }
-
     // If we apport a net, free the monster under it.
     if (item.base_type == OBJ_MISSILES
         && item.sub_type == MI_THROWING_NET
@@ -856,7 +850,14 @@ bool cast_apportation(int pow, bolt& beam)
     }
 
     // Actually move the item.
-    move_top_item(where, you.pos());
+    if (max_units < item.quantity)
+    {
+        item.quantity -= max_units;
+        copy_item_to_grid(item, you.pos(), max_units);
+    }
+    else
+        move_top_item(where, you.pos());
+
     // Mark the item as found now.
     origin_set(you.pos());
 
