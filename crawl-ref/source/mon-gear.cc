@@ -905,11 +905,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (x_chance_in_y(5, 9))
         {
             set_item_ego_type(item, OBJ_WEAPONS,
-                              random_choose_weighted(15, SPWPN_FLAMING,
-                                                     2, SPWPN_DRAINING,
-                                                     2, SPWPN_VORPAL,
+                              random_choose_weighted(13, SPWPN_FLAMING,
+                                                     4, SPWPN_DRAINING,
+                                                     4, SPWPN_VORPAL,
                                                      2, SPWPN_DISTORTION,
-                                                     2, SPWPN_SPEED,
                                                      2, SPWPN_PAIN,
                                                      0));
         }
@@ -947,11 +946,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (x_chance_in_y(5, 9))
         {
             set_item_ego_type(item, OBJ_WEAPONS,
-                              random_choose_weighted(15, SPWPN_FLAMING,
-                                                     2, SPWPN_DRAINING,
-                                                     2, SPWPN_VORPAL,
+                              random_choose_weighted(13, SPWPN_FLAMING,
+                                                     4, SPWPN_DRAINING,
+                                                     4, SPWPN_VORPAL,
                                                      2, SPWPN_DISTORTION,
-                                                     2, SPWPN_SPEED,
                                                      2, SPWPN_PAIN,
                                                      0));
         }
