@@ -852,7 +852,7 @@ struct spell_desc
     SPELL_OZOCUBUS_REFRIGERATION, "Ozocubu's Refrigeration",
      SPTYP_ICE,
      SPFLAG_AREA,
-     5,
+     6,
      200,
      -1, -1,
      0,
