@@ -15,6 +15,10 @@ Blink ability
 
 Randomly translocate a short distance.
 %%%%
+Breathe Energy
+
+Breathe a blast of power at a targeted monster, possibly removing some of its enchantments.
+%%%%
 Breathe Fire
 
 Breathe a blast of fire at a targeted monster, possibly leaving fire clouds in its wake.
@@ -30,10 +34,6 @@ Breathe a blast of poison gas at a targeted monster.
 Breathe Lightning
 
 Release a great discharge of electricity causing an uncontrollable lightning storm.
-%%%%
-Breathe Power
-
-Breathe a blast of power at a targeted monster, possibly removing some of its enchantments.
 %%%%
 Breathe Sticky Flame
 
