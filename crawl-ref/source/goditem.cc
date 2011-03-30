@@ -292,8 +292,11 @@ bool is_chaotic_item(const item_def& item)
         break;
     }
 
-    if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
+    if (is_artefact(item) && item.base_type != OBJ_BOOKS
+        && artefact_wpn_property(item, ARTP_MUTAGENIC))
+    {
         retval = true;
+    }
 
     return (retval);
 }
