@@ -490,33 +490,27 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
     }
 
-    if (type_known)
+    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
-        for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
-        {
-            bool ok;
-            if (m->inv[i] == NON_ITEM)
-                ok = false;
-            else if (i == MSLOT_MISCELLANY)
-                ok = mons_is_mimic(type);
-            else if (attitude == ATT_FRIENDLY)
-                ok = true;
-            else if (i == MSLOT_WAND)
-                ok = props.exists("wand_known") && props["wand_known"];
-            else if (m->props.exists("ash_id")
-                     && item_type_known(mitm[m->inv[i]]))
-            {
-                ok = true;
-            }
-            else if (i == MSLOT_ALT_WEAPON)
-                ok = two_weapons;
-            else if (i == MSLOT_MISSILE)
-                ok = false;
-            else
-                ok = true;
-            if (ok)
-                inv[i].reset(new item_def(get_item_info(mitm[m->inv[i]])));
-        }
+        bool ok;
+        if (m->inv[i] == NON_ITEM)
+            ok = false;
+        else if (i == MSLOT_MISCELLANY)
+            ok = mons_is_mimic(type);
+        else if (attitude == ATT_FRIENDLY)
+            ok = true;
+        else if (i == MSLOT_WAND)
+            ok = props.exists("wand_known") && props["wand_known"];
+        else if (m->props.exists("ash_id") && item_type_known(mitm[m->inv[i]]))
+            ok = true;
+        else if (i == MSLOT_ALT_WEAPON)
+            ok = two_weapons;
+        else if (i == MSLOT_MISSILE)
+            ok = false;
+        else
+            ok = true;
+        if (ok)
+            inv[i].reset(new item_def(get_item_info(mitm[m->inv[i]])));
     }
 
     fire_blocker = DNGN_UNSEEN;
