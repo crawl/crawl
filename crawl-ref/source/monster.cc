@@ -3020,22 +3020,22 @@ bool monster::undead_or_demonic() const
     return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
-bool monster::is_holy(bool spells) const
+bool monster::is_holy(bool check_spells) const
 {
     if (holiness() == MH_HOLY)
         return (true);
 
     // Assume that all unknown gods (GOD_NAMELESS) are not holy.
-    if (is_priest() && is_good_god(god) && spells)
+    if (is_priest() && is_good_god(god) && check_spells)
         return (true);
 
-    if (has_holy_spell() && (spells || !is_actual_spellcaster()))
+    if (has_holy_spell() && (check_spells || !is_actual_spellcaster()))
         return (true);
 
     return (false);
 }
 
-bool monster::is_unholy(bool spells) const
+bool monster::is_unholy(bool check_spells) const
 {
     if (type == MONS_SILVER_STATUE)
         return (true);
@@ -3043,22 +3043,25 @@ bool monster::is_unholy(bool spells) const
     if (holiness() == MH_DEMONIC)
         return (true);
 
-    if (has_unholy_spell() && spells)
+    if (has_unholy_spell() && check_spells)
         return (true);
 
     return (false);
 }
 
-bool monster::is_evil(bool spells) const
+bool monster::is_evil(bool check_spells) const
 {
     if (holiness() == MH_UNDEAD)
         return (true);
 
     // Assume that all unknown gods (GOD_NAMELESS) are evil.
-    if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS) && spells)
+    if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS)
+        && check_spells)
+    {
         return (true);
+    }
 
-    if (has_evil_spell() && spells)
+    if (has_evil_spell() && check_spells)
         return (true);
 
     if (has_attack_flavour(AF_DRAIN_XP)
@@ -3070,9 +3073,9 @@ bool monster::is_evil(bool spells) const
     return (false);
 }
 
-bool monster::is_unclean(bool spells) const
+bool monster::is_unclean(bool check_spells) const
 {
-    if (has_unclean_spell() && spells)
+    if (has_unclean_spell() && check_spells)
         return (true);
 
     if (has_attack_flavour(AF_DISEASE)
@@ -3096,17 +3099,17 @@ bool monster::is_unclean(bool spells) const
     // Being a worshipper of a chaotic god doesn't yet make you
     // physically/essentially chaotic (so you don't get hurt by silver),
     // but Zin does mind.
-    if (is_priest() && is_chaotic_god(god) && spells)
+    if (is_priest() && is_chaotic_god(god) && check_spells)
         return (true);
 
-    if (has_chaotic_spell() && is_actual_spellcaster() && spells)
+    if (has_chaotic_spell() && is_actual_spellcaster() && check_spells)
         return (true);
 
     corpse_effect_type ce = mons_corpse_effect(type);
     if ((ce == CE_HCL || ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_GOOD
          || ce == CE_MUTAGEN_BAD || ce == CE_RANDOM) && !is_chaotic())
     {
-        return true;
+        return (true);
     }
 
     return (false);
