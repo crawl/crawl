@@ -887,7 +887,7 @@
     "flame",
     25,
     new dicedef_calculator<1, 8, 1, 4>,
-    new tohit_calculator<7, 1, 6>,
+    new tohit_calculator<11, 1, 6>,
     RED,
     false,
     BEAM_FIRE,
