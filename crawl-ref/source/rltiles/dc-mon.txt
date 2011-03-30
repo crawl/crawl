@@ -24,6 +24,7 @@ butterfly5
 butterfly6
 fire_bat MONS_FIRE_BAT
 raven MONS_RAVEN
+dc-mon/holy/phoenix MONS_PHOENIX
 %sdir dc-mon/vault
 %rim 0
 microbat MONS_MICROBAT
