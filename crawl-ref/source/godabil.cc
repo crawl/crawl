@@ -507,11 +507,11 @@ int zin_check_recite_to_single_monster(const coord_def& where,
         // priests for reciting, even if they aren't actually.)
 
         // Sanity check: monsters that you can't convert anyway don't get
-        // recited against.
-        if ((mon->is_unclean()
+        // recited against.  Merely behaving evil doesn't get you off.
+        if ((mon->is_unclean(false)
              || mon->is_chaotic()
-             || mon->is_evil()
-             || mon->is_unholy())
+             || mon->is_evil(false)
+             || mon->is_unholy(false))
             && eligibility[RECITE_HERETIC] <= 1)
         {
             eligibility[RECITE_HERETIC] = 0;

@@ -324,10 +324,10 @@ public:
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
-    bool is_holy() const;
-    bool is_unholy() const;
-    bool is_evil() const;
-    bool is_unclean() const;
+    bool is_holy(bool spells = true) const;
+    bool is_unholy(bool spells = true) const;
+    bool is_evil(bool spells = true) const;
+    bool is_unclean(bool spells = true) const;
     bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_artificial() const;

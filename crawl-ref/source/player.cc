@@ -5985,25 +5985,25 @@ bool player::undead_or_demonic() const
     return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
-bool player::is_holy() const
+bool player::is_holy(bool spells) const
 {
-    if (is_good_god(religion))
+    if (is_good_god(religion) && spells)
         return (true);
 
     return (false);
 }
 
-bool player::is_unholy() const
+bool player::is_unholy(bool spells) const
 {
     return (holiness() == MH_DEMONIC);
 }
 
-bool player::is_evil() const
+bool player::is_evil(bool spells) const
 {
     if (holiness() == MH_UNDEAD)
         return (true);
 
-    if (is_evil_god(religion))
+    if (is_evil_god(religion) && spells)
         return (true);
 
     return (false);
