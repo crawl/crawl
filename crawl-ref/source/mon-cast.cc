@@ -2458,6 +2458,8 @@ static void _clone_monster(monster* mons, monster_type clone_type,
         // weapons or such out of him.
         mitm[new_index].flags |= ISFLAG_SUMMONED;
     }
+
+    new_fake->props = mons->props;
 }
 
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
