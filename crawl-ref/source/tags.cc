@@ -2431,8 +2431,8 @@ void marshallMonster(writer &th, const monster& m)
     }
     marshallByte(th, m.ench_countdown);
 
-    marshallShort(th, m.hit_points);
-    marshallShort(th, m.max_hit_points);
+    marshallShort(th, std::min(m.hit_points, MAX_MONSTER_HP));
+    marshallShort(th, std::min(m.max_hit_points, MAX_MONSTER_HP));
     marshallInt(th, m.number);
     marshallShort(th, m.base_monster);
     marshallShort(th, m.colour);

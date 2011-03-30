@@ -42,6 +42,7 @@ static int _create_fsim_monster(int mtype, int hp)
         return (mi);
 
     monster* mon = &menv[mi];
+    // the monster is never saved, and thus we might allow any 31 bit value
     mon->hit_points = mon->max_hit_points = hp;
     return (mi);
 }

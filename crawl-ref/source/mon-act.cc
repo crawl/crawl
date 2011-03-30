@@ -2625,6 +2625,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             // This is done manually instead of using heal_monster(),
             // because that function doesn't work quite this way. - bwr
             mons->hit_points += hps_changed;
+            mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
             mons->max_hit_points = std::max(mons->hit_points,
                                                mons->max_hit_points);
         }
@@ -2653,6 +2654,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (do_heal)
     {
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
+        mons->hit_points = std::min(MAX_MONSTER_HP, mons->hit_points);
         mons->max_hit_points = std::max(mons->hit_points,
                                            mons->max_hit_points);
     }
@@ -3364,6 +3366,8 @@ static void _jelly_grows(monster* mons)
     }
 
     mons->hit_points += 5;
+    // possible with ridiculous farming on a full level
+    mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
 
     // note here, that this makes jellies "grow" {dlb}:
     if (mons->hit_points > mons->max_hit_points)
