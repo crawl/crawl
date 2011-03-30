@@ -1,9 +1,8 @@
-/*
- *  File:       unicode.h
- *  Summary:    Conversions between Unicode and local charsets, string
- *              manipulation functions that act on character types.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Conversions between Unicode and local charsets, string
+ *        manipulation functions that act on character types.
+**/
 #ifndef UNICODE_H
 #define UNICODE_H
 
