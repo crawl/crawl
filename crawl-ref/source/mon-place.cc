@@ -1587,8 +1587,11 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->hit_points = mg.hp;
     }
 
-    mon->max_hit_points = std::min(mon->max_hit_points, MAX_MONSTER_HP);
-    mon->hit_points = std::min(mon->hit_points, MAX_MONSTER_HP);
+    if (!crawl_state.game_is_arena())
+    {
+        mon->max_hit_points = std::min(mon->max_hit_points, MAX_MONSTER_HP);
+        mon->hit_points = std::min(mon->hit_points, MAX_MONSTER_HP);
+    }
 
     // Store the extra flags here.
     mon->flags       |= mg.extra_flags;
