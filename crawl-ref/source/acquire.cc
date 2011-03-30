@@ -1354,8 +1354,10 @@ int acquirement_create_item(object_class_type class_wanted,
     if (is_blood_potion(thing))
         init_stack_blood_potions(thing);
 
-    // Remove curse flag from item.
-    if (you.religion != GOD_ASHENZARI)
+    // Remove curse flag from item, unless worshipping Ashenzari.
+    if (you.religion == GOD_ASHENZARI)
+        do_curse_item(thing, true);
+    else
         do_uncurse_item(thing, false);
 
     if (thing.base_type == OBJ_BOOKS)
