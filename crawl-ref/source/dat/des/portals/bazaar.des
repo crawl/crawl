@@ -15,12 +15,16 @@
 
 lua {{
 
-function place_bazaar_portal(e)
+function place_bazaar_portal(e, perm)
   e.kfeat("O = enter_portal_vault")
-  e.lua_marker('O', bazaar_portal())
+  if perm then
+     e.lua_marker('O', bazaar_portal(false))
+  else
+     e.lua_marker('O', bazaar_portal(not crawl.one_chance_in(6)))
+  end
 end
 
-function bazaar_portal()
+function bazaar_portal(timed)
   local desc_long =
 "Aside from the vendors who've set up their stores at various places in the " ..
 "dungeon, there are others trying to make a living by traveling from place " ..
@@ -45,7 +49,7 @@ function bazaar_portal()
     }
   local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
   local bhigh = blow + crawl.random2(blow) + 100
-  if not crawl.one_chance_in(6) then
+  if timed then
     local pdesc = 'flickering gateway to a bazaar'
     return timed_marker {
                   low=blow, high=bhigh, msg=messager, single_timed=true,
@@ -240,7 +244,7 @@ NAME:   statue_bzr
 TAGS:   bzr_entry
 SUBST:  G = G111
 MONS:   orange crystal statue / silver statue / ice statue
-: place_bazaar_portal(_G)
+: place_bazaar_portal(_G, true)
 MAP
  @
 cGc
