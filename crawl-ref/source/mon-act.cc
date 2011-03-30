@@ -2653,9 +2653,6 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (do_heal)
     {
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
-
-        // Limited growth factor here - should 77 really be the cap? {dlb}:
-        mons->hit_points = std::min(100, mons->hit_points);
         mons->max_hit_points = std::max(mons->hit_points,
                                            mons->max_hit_points);
     }
