@@ -91,7 +91,6 @@ static bool _travel_colour_override(const coord_def& p)
     else
         return false;
 }
-#endif
 
 static bool _is_explore_horizon(const coord_def& c)
 {
@@ -110,8 +109,10 @@ static bool _is_explore_horizon(const coord_def& c)
                 return true;
             }
         }
+
     return false;
 }
+#endif
 
 wchar_t get_sightmap_char(dungeon_feature_type feat)
 {
