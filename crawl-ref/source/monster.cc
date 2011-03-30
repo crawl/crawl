@@ -2971,7 +2971,7 @@ bool monster::heal(int amount, bool max_too)
 
             // Limit HP growth.
             if (random2(3 * maxhp) > 2 * max_hit_points)
-                max_hit_points++;
+                max_hit_points = std::min(max_hit_points + 1, MAX_MONSTER_HP);
             else
                 success = false;
         }
@@ -3697,7 +3697,7 @@ void monster::set_ghost(const ghost_demon &g, bool has_name)
 void monster::pandemon_init()
 {
     hit_dice        = ghost->xl;
-    max_hit_points  = ghost->max_hp;
+    max_hit_points  = std::min<int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
@@ -3732,7 +3732,7 @@ void monster::ghost_init(bool need_pos)
     type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
     hit_dice        = ghost->xl;
-    max_hit_points  = ghost->max_hp;
+    max_hit_points  = std::min<int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
