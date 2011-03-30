@@ -249,17 +249,16 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     props.clear();
+    if (!m->props.empty())
+    {
+        CrawlHashTable::hash_map_type::const_iterator i = m->props.begin();
+        for (; i != m->props.end(); i++)
+            if (_is_public_key(i->first))
+                props[i->first] = i->second;
+    }
 
     if (type_known)
     {
-        if (!m->props.empty())
-        {
-            CrawlHashTable::hash_map_type::const_iterator i = m->props.begin();
-            for (; i != m->props.end(); i++)
-                if (_is_public_key(i->first))
-                    props[i->first] = i->second;
-        }
-
         draco_type =
             mons_genus(type) == MONS_DRACONIAN ? ::draco_subspecies(m) : type;
 
