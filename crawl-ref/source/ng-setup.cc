@@ -776,7 +776,7 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ENCHANTER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1,
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 1,
                            1);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
@@ -787,18 +787,17 @@ static void _give_items_skills(const newgame_def& ng)
         // Spriggans used to get a rod of striking, but now that anyone
         // can get one when playing an Artificer, this is no longer
         // necessary. (jpeg)
-        if (you.species == SP_SPRIGGAN)
-            you.inv[0].sub_type = WPN_DAGGER;
 
         if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
         you.skills[SK_THROWING]     = 1;
-        you.skills[SK_HEXES]        = 4;
+        you.skills[SK_HEXES]        = 3;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
+        you.skills[SK_STABBING]     = 1;
         break;
 
     case JOB_SUMMONER:
