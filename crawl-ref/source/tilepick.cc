@@ -804,7 +804,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_QUEEN_ANT:
         return TILEP_MONS_QUEEN_ANT;
 
-    // batty monsters ('b')
+    // bats and birds ('b')
     case MONS_BAT:
     case MONS_MEGABAT:
         return TILEP_MONS_MEGABAT;
@@ -816,6 +816,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_FIRE_BAT;
     case MONS_RAVEN:
         return TILEP_MONS_RAVEN;
+    case MONS_PHOENIX:
+        return TILEP_MONS_PHOENIX;
 
     // centaurs ('c')
     case MONS_CENTAUR:
@@ -3202,7 +3204,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_QUEEN_ANT:
         return TILE_CORPSE_QUEEN_ANT;
 
-    // batty monsters ('b')
+    // bats and birds ('b')
     case MONS_BAT:
     case MONS_MEGABAT:
         return TILE_CORPSE_MEGABAT;
@@ -3210,6 +3212,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BUTTERFLY;
     case MONS_RAVEN:
         return TILE_CORPSE_RAVEN;
+    case MONS_PHOENIX:
+        return TILE_CORPSE_PHOENIX;
 
     // centaurs ('c')
     case MONS_CENTAUR:
