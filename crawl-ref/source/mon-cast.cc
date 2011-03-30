@@ -2400,6 +2400,66 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     return (false);
 }
 
+static void _clone_monster(monster* mons, monster_type clone_type,
+                           int summon_type, bool clone_hp = false,
+                           std::string name = "")
+{
+    mgen_data summ_mon =
+        mgen_data(clone_type, SAME_ATTITUDE(mons),
+                  mons, 3, summon_type, mons->pos(),
+                  mons->foe, 0, mons->god);
+    // This is somewhat hacky, to prevent "A Mara", and such,
+    // as MONS_FAKE_MARA is not M_UNIQUE.
+    if (name != "")
+    {
+        summ_mon.mname = name;
+        summ_mon.extra_flags |= MF_NAME_REPLACE;
+    }
+
+    int created = create_monster(summ_mon);
+    if (created == -1)
+        return;
+
+    // Mara's clones are special; they have the same stats as him, and
+    // are exact clones, so they are created damaged if necessary.
+    monster* new_fake = &menv[created];
+    if (clone_hp)
+    {
+        new_fake->hit_points = mons->hit_points;
+        new_fake->max_hit_points = mons->max_hit_points;
+    }
+    mon_enchant_list::iterator ei;
+    for (ei = mons->enchantments.begin();
+         ei != mons->enchantments.end(); ++ei)
+    {
+        new_fake->enchantments.insert(*ei);
+    }
+
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        const int old_index = mons->inv[i];
+
+        if (old_index == NON_ITEM)
+            continue;
+
+        const int new_index = get_item_slot(0);
+        if (new_index == NON_ITEM)
+        {
+            new_fake->unequip(mitm[old_index], i, 0, true);
+            new_fake->inv[i] = NON_ITEM;
+            continue;
+        }
+
+        new_fake->inv[i] = new_index;
+        mitm[new_index]  = mitm[old_index];
+        mitm[new_index].set_holding_monster(new_fake->mindex());
+
+        // Mark items as summoned, so there's no way to get three nice
+        // weapons or such out of him.
+        mitm[new_index].flags |= ISFLAG_SUMMONED;
+    }
+}
+
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
 {
@@ -2781,71 +2841,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         sumcount2 = 2 - count_mara_fakes();
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-            mgen_data summ_mon =
-                mgen_data(MONS_MARA_FAKE, SAME_ATTITUDE(mons),
-                          mons, 3, spell_cast, mons->pos(),
-                          mons->foe, 0, god);
-            // This is somewhat hacky, to prevent "A Mara", and such,
-            // as MONS_FAKE_MARA is not M_UNIQUE.
-            summ_mon.mname = "Mara";
-            summ_mon.extra_flags |= MF_NAME_REPLACE;
-
-            int created = create_monster(summ_mon);
-            if (created == -1)
-                continue;
-
-            // Mara's clones are special; they have the same stats as him, and
-            // are exact clones, so they are created damaged if necessary, with
-            // identical enchants and with the same items.
-            monster* new_fake = &menv[created];
-            new_fake->hit_points = mons->hit_points;
-            new_fake->max_hit_points = mons->max_hit_points;
-            mon_enchant_list::iterator ei;
-            for (ei = mons->enchantments.begin();
-                 ei != mons->enchantments.end(); ++ei)
-            {
-                new_fake->enchantments.insert(*ei);
-            }
-
-            // Code basically lifted from clone_monster. In theory, it
-            // only needs to copy weapon and armour slots; instead,
-            // copy the whole inventory.
-            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-            {
-                const int old_index = mons->inv[i];
-
-                if (old_index == NON_ITEM)
-                    continue;
-
-                const int new_index = get_item_slot(0);
-                if (new_index == NON_ITEM)
-                {
-                    new_fake->unequip(mitm[old_index], i, 0, true);
-                    new_fake->inv[i] = NON_ITEM;
-                    continue;
-                }
-
-                new_fake->inv[i] = new_index;
-                mitm[new_index]  = mitm[old_index];
-                mitm[new_index].set_holding_monster(new_fake->mindex());
-
-                // Mark items as summoned, so there's no way to get three nice
-                // weapons or such out of him.
-                mitm[new_index].flags |= ISFLAG_SUMMONED;
-            }
-        }
+            _clone_monster(mons, MONS_MARA_FAKE, spell_cast, true, "Mara");
         return;
 
     case SPELL_FAKE_RAKSHASA_SUMMON:
         sumcount2 = (coinflip() ? 2 : 3);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-            create_monster(
-                mgen_data(MONS_RAKSHASA_FAKE, SAME_ATTITUDE(mons), mons,
-                          3, spell_cast, mons->pos(), mons->foe, 0, god));
-        }
+            _clone_monster(mons, MONS_RAKSHASA_FAKE, spell_cast);
         return;
 
     case SPELL_SUMMON_DEMON: // class 2-4 demons
