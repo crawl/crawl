@@ -442,6 +442,8 @@ private:
     static const std::string interrupt_prefix;
 };
 
+ucs_t get_glyph_override(int c);
+
 #ifdef DEBUG_GLOBALS
 #define Options (*real_Options)
 #endif

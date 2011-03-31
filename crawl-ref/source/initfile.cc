@@ -1090,6 +1090,18 @@ void game_options::clear_feature_overrides()
     feature_overrides.clear();
 }
 
+ucs_t get_glyph_override(int c)
+{
+    if (c >= 0)
+        return c;
+    c = -c;
+    if (Options.char_set == CSET_IBM)
+        return (c & ~0xff) ? 0 : charset_cp437[c & 0xff];
+    if (Options.char_set == CSET_DEC)
+        return (c & 0x80) ? charset_vt100[c & 0x7f] : c;
+    return c;
+}
+
 static int read_symbol(std::string s)
 {
     if (s.empty())
@@ -1109,7 +1121,7 @@ static int read_symbol(std::string s)
     }
 
     char *tail;
-    return (strtoul(s.c_str(), &tail, base));
+    return -strtoul(s.c_str(), &tail, base);
 }
 
 void game_options::set_fire_order(const std::string &s, bool add)
@@ -1259,6 +1271,13 @@ void game_options::add_cset_override(
 void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
                                      unsigned symbol)
 {
+    if (symbol >= 0)
+    {
+        cset_override[dc] = symbol;
+        return;
+    }
+
+    symbol = -symbol;
     if (set == CSET_IBM)
         symbol = (symbol &~ 0xff) ? 0 : charset_cp437[symbol & 0xff];
     else if (set == CSET_DEC && symbol & 0xff)
