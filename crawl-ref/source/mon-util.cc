@@ -275,7 +275,7 @@ void init_monster_symbols()
             continue;
 
         if (md.glyph)
-            monster_symbols[md.type].glyph = md.glyph;
+            monster_symbols[md.type].glyph = get_glyph_override(md.glyph);
         if (md.colour)
             monster_symbols[md.type].colour = md.colour;
     }

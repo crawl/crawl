@@ -37,9 +37,9 @@ void apply_feature_overrides()
         feature_def                 &feat   = Features[fov.object];
 
         if (ofeat.symbol)
-            feat.symbol = ofeat.symbol;
+            feat.symbol = get_glyph_override(ofeat.symbol);
         if (ofeat.magic_symbol)
-            feat.magic_symbol = ofeat.magic_symbol;
+            feat.magic_symbol = get_glyph_override(ofeat.magic_symbol);
         if (ofeat.colour)
             feat.colour = ofeat.colour;
         if (ofeat.map_colour)
