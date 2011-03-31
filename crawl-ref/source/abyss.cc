@@ -51,6 +51,9 @@
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#ifdef WIZARD
+ #include "wiz-dgn.h"
+#endif
 
 const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
@@ -1012,6 +1015,12 @@ void abyss_area_shift(void)
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
     place_transiting_items();
+
+#ifdef WIZARD
+    // Update map, if already mapped.
+    if (!testbits(env.level_flags, LFLAG_NOT_MAPPABLE))
+        wizard_map_level();
+#endif
 }
 
 void save_abyss_uniques()
