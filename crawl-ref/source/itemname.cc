@@ -56,9 +56,9 @@ static bool _is_random_name_vowel(char let);
 static char _random_vowel(int seed);
 static char _random_cons(int seed);
 
-bool is_vowel(const char chr)
+bool is_vowel(const ucs_t chr)
 {
-    const char low = tolower(chr);
+    const char low = towlower(chr);
     return (low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u');
 }
 
