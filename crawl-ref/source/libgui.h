@@ -37,7 +37,6 @@ int get_number_of_cols(void);
 void _setcursortype(int curstype);
 void textbackground(int bg);
 void textcolor(int col);
-int putch(unsigned char chr);
 int putwch(ucs_t chr);
 void put_colour_ch(int colour, ucs_t ch);
 

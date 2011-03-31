@@ -114,27 +114,27 @@ class colour_bar
                 textcolor(BLACK + m_default * 16);
             else if (old_disp > disp && cx < old_disp)
                 textcolor(BLACK + m_change_neg * 16);
-            putch(' ');
+            putwch(' ');
 #else
             if (cx < disp && cx < old_disp)
             {
                 textcolor(m_default);
-                putch('=');
+                putwch('=');
             }
             else if (cx < disp)
             {
                 textcolor(m_change_pos);
-                putch('=');
+                putwch('=');
             }
             else if (cx < old_disp)
             {
                 textcolor(m_change_neg);
-                putch('-');
+                putwch('-');
             }
             else
             {
                 textcolor(m_empty);
-                putch('-');
+                putwch('-');
             }
 #endif
 

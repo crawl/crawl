@@ -605,14 +605,6 @@ void cprintf(const char *format, ...)
     }
 }
 
-int putch(unsigned char chr)
-{
-    if (chr == 0)
-        chr = ' ';
-
-    return (addch(chr));
-}
-
 int putwch(ucs_t chr)
 {
     wchar_t c = chr;
