@@ -176,6 +176,42 @@ void melee_attack::init_attack()
     miscast_target = NULL;
 }
 
+bool melee_attack::handle_phase_attempted()
+{
+    return true;
+}
+
+bool melee_attack::handle_phase_dodged()
+{
+    return true;
+}
+
+bool melee_attack::handle_phase_blocked()
+{
+    return true;
+}
+
+bool melee_attack::handle_phase_hit()
+{
+    return true;
+}
+
+bool melee_attack::handle_phase_damaged()
+{
+    return true;
+}
+
+bool melee_attack::handle_phase_killed()
+{
+    return true;
+}
+
+bool melee_attack::handle_phase_end()
+{
+    return true;
+}
+
+
 bool melee_attack::is_banished(const actor *a) const
 {
     if (!a || a->alive())

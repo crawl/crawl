@@ -71,6 +71,15 @@ public:
 
 private:
     void init_attack();
+
+    bool handle_phase_attempted();
+    bool handle_phase_dodged();
+    bool handle_phase_blocked();
+    bool handle_phase_hit();
+    bool handle_phase_damaged();
+    bool handle_phase_killed();
+    bool handle_phase_end();
+
     bool is_banished(const actor *) const;
     void check_autoberserk();
     bool check_unrand_effects();
@@ -103,7 +112,7 @@ private:
     void handle_noise(const coord_def & pos);
 
     // Handle specific attack phases (mons and player)
-    void respond_to_attack_phase(phase);
+
 
     // Added from fight.cc, were static, should be removed
     int _modify_blood_amount(const int damage, const int dam_type);
