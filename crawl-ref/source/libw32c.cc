@@ -641,7 +641,7 @@ static int key_to_command(int keyin)
     return keyin;
 }
 
-int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
+static int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
 {
     bool shftDown = false;
     bool ctrlDown = false;
@@ -786,9 +786,9 @@ int getch_ck(void)
                 if (kr->bKeyDown)
                 {
                     key = vk_translate(kr->wVirtualKeyCode,
-                                        kr->uChar.UnicodeChar,
-                                        kr->dwControlKeyState);
-                    if (key > 0)
+                                       kr->uChar.UnicodeChar,
+                                       kr->dwControlKeyState);
+                    if (key != 0)
                     {
                         repeat_count = kr->wRepeatCount - 1;
                         repeat_key = key;
