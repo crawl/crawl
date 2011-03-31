@@ -1091,9 +1091,6 @@ static void _spatter_neighbours(const coord_def& where, int chance)
         if (!allow_bleeding_on_square(*ai))
             continue;
 
-        if (grd(*ai) < DNGN_MINMOVE && !one_chance_in(3))
-            continue;
-
         if (one_chance_in(chance))
         {
             env.pgrid(*ai) |= FPROP_BLOODY;
