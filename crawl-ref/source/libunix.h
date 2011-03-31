@@ -13,12 +13,6 @@
 
 // Emulate Borland C functions not present elsewhere
 
-#ifdef UNICODE_GLYPHS
-typedef unsigned int screen_buffer_t;
-#else
-typedef unsigned short screen_buffer_t;
-#endif
-
 #include <stdio.h>
 
 class crawl_view_buffer;
@@ -26,20 +20,18 @@ class crawl_view_buffer;
 int get_number_of_lines();
 int get_number_of_cols();
 
+int getchk();
 int getch_ck(void);
 int clrscr(void);
-int cprintf(const char *format,...);
+void cprintf(const char *format,...);
 int gotoxy_sys(int x, int y);
 void fakecursorxy(int x, int y);
 extern "C" char *itoa(int value, char *strptr, int radix);
 int kbhit(void);
-int putch(unsigned char chr);
 int putwch(unsigned chr);
 void put_colour_ch(int colour, unsigned ch);
-int translate_keypad(int keyin);
 int wherex(void);
 int wherey(void);
-int window(int x1, int y1, int x2, int y2);
 void puttext(int x, int y, const crawl_view_buffer &vbuf);
 void update_screen(void);
 void clear_to_end_of_line(void);
@@ -67,7 +59,6 @@ void sighup_save_and_exit();
 /* Some stuff from curses, to remove compiling warnings.. */
 extern "C"
 {
-    int getstr(char *);
     int getch(void);
     int noecho(void);
     int echo(void);

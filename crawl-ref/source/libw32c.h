@@ -7,8 +7,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-typedef unsigned short screen_buffer_t;
-
 class crawl_view_buffer;
 
 void init_libw32c(void);
@@ -32,12 +30,10 @@ bool set_buffering(bool value);
 int get_console_string(char *buf, int maxlen);
 void print_timings(void);
 
-void window(int x, int y, int lx, int ly);
 int wherex(void);
 int wherey(void);
-void putch(char c);
-void putwch(unsigned c);
-int getch(void);
+void putwch(wchar_t c);
+int getchk(void);
 int getch_ck(void);
 int kbhit(void);
 void delay(int ms);

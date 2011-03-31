@@ -8,7 +8,6 @@
 #include "view.h"
 #include "shout.h"
 
-#include <stdint.h>
 #include <string.h>
 #include <cmath>
 #include <sstream>
@@ -582,90 +581,53 @@ bool mon_enemies_around(const monster* mons)
     }
 }
 
-// Returns a string containing an ASCII representation of the map. If fullscreen
-// is set to false, only the viewable area is returned. Leading and trailing
-// spaces are trimmed from each line. Leading and trailing empty lines are also
-// snipped.
-std::string screenshot(bool fullscreen)
+// Returns a string containing a representation of the map.  Leading and
+// trailing spaces are trimmed from each line.  Leading and trailing empty
+// lines are also snipped.
+std::string screenshot()
 {
-    UNUSED(fullscreen);
-
-    // [ds] Screenshots need to be straight ASCII. We will now proceed to force
-    // the char and feature tables back to ASCII.
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
-    char_table_bk = Options.char_table;
-
-    init_char_table(CSET_ASCII);
-    init_show_table();
-
-    int firstnonspace = -1;
-    int firstpopline  = -1;
-    int lastpopline   = -1;
-
     std::vector<std::string> lines(crawl_view.viewsz.y);
-    for (int count_y = 1; count_y <= crawl_view.viewsz.y; count_y++)
+    unsigned int lsp = GXM;
+    for (int y = 0; y < crawl_view.viewsz.y; y++)
     {
-        int lastnonspace = -1;
-
-        for (int count_x = 1; count_x <= crawl_view.viewsz.x; count_x++)
+        std::string line;
+        for (int x = 0; x < crawl_view.viewsz.x; x++)
         {
             // in grid coords
             const coord_def gc = view2grid(crawl_view.viewp +
-                                     coord_def(count_x - 1, count_y - 1));
-
-            int ch =
-                  (!map_bounds(gc))             ? 0 :
+                                     coord_def(x, y));
+            ucs_t ch =
+                  (!map_bounds(gc))             ? ' ' :
                   (gc == you.pos())             ? mons_char(you.symbol)
                                                 : get_cell_glyph(gc).ch;
-
-            if (ch && !isprint(ch))
-            {
-                // [ds] Evil hack time again. Peek at grid, use that character.
-                ch = get_feat_symbol(grid_appearance(gc));
-            }
-
-            // More mangling to accommodate C strings.
-            if (!ch)
-                ch = ' ';
-
-            if (ch != ' ')
-            {
-                lastnonspace = count_x;
-                lastpopline = count_y;
-
-                if (firstnonspace == -1 || firstnonspace > count_x)
-                    firstnonspace = count_x;
-
-                if (firstpopline == -1)
-                    firstpopline = count_y;
-            }
-
-            lines[count_y - 1] += ch;
+            line += stringize_glyph(ch);
         }
-
-        if (lastnonspace < (int) lines[count_y - 1].length())
-            lines[count_y - 1].erase(lastnonspace + 1);
+        // right-trim the line
+        for (int x = line.length() - 1; x >= 0; x--)
+            if (line[x] == ' ')
+                line.erase(x);
+        // see how much it can be left-trimmed
+        for (unsigned int x = 0; x < line.length(); x++)
+            if (line[x] != ' ')
+            {
+                if (lsp > x)
+                    lsp = x;
+                break;
+            }
+        lines[y] = line;
     }
 
-    // Restore char and feature tables.
-    Options.char_table = char_table_bk;
-    init_show_table();
+    for (unsigned int y = 0; y < lines.size(); y++)
+        lines[y].erase(0, lsp); // actually trim from the left
+    while (!lines.empty() && lines.back().empty())
+        lines.pop_back();       // then from the bottom
 
     std::ostringstream ss;
-    if (firstpopline != -1 && lastpopline != -1)
-    {
-        if (firstnonspace == -1)
-            firstnonspace = 0;
-
-        for (int i = firstpopline; i <= lastpopline; ++i)
-        {
-            const std::string &ref = lines[i - 1];
-            if (firstnonspace < (int) ref.length())
-                ss << ref.substr(firstnonspace);
-            ss << "\n";
-        }
-    }
-
+    unsigned int y = 0;
+    for (y = 0; y < lines.size() && lines[y].empty(); y++)
+        ;                       // ... and from the top
+    for (; y < lines.size(); y++)
+        ss << lines[y] << "\n";
     return (ss.str());
 }
 

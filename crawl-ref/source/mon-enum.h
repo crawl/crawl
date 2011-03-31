@@ -10,7 +10,6 @@
 #define MON_ENUM_H
 
 #include "tag-version.h"
-#include <stdint.h>
 
 #define HERD_COMFORT_RANGE 6
 

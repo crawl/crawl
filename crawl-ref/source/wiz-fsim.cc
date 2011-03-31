@@ -380,7 +380,7 @@ static bool _fsim_mon_hit_you(FILE *ostat, int mindex, int)
         fflush(ostat);
         // Not checking in the combat loop itself; that would be more responsive
         // for the user, but slow down the sim with all the calls to kbhit().
-        if (kbhit() && getch() == 27)
+        if (kbhit() && getchk() == 27)
         {
             mprf("Canceling simulation\n");
             return (false);
@@ -400,7 +400,7 @@ static bool _fsim_mon_hit_you(FILE *ostat, int mindex, int)
         fflush(ostat);
         // Not checking in the combat loop itself; that would be more responsive
         // for the user, but slow down the sim with all the calls to kbhit().
-        if (kbhit() && getch() == 27)
+        if (kbhit() && getchk() == 27)
         {
             mprf("Canceling simulation\n");
             return (false);
@@ -428,7 +428,7 @@ static bool _fsim_you_hit_mon(FILE *ostat, int mindex, int missile_slot)
         fflush(ostat);
         // Not checking in the combat loop itself; that would be more responsive
         // for the user, but slow down the sim with all the calls to kbhit().
-        if (kbhit() && getch() == 27)
+        if (kbhit() && getchk() == 27)
         {
             mprf("Canceling simulation\n");
             return (false);

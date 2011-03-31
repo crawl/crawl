@@ -228,6 +228,7 @@ static void _handle_wizard_command(void);
 
 int main(int argc, char *argv[])
 {
+    setlocale(LC_ALL, "");
 #ifdef DEBUG_GLOBALS
     real_Options = new game_options();
     real_you = new player();

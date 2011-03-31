@@ -36,18 +36,19 @@
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
+#include "syscalls.h"
 #include "env.h"
 #include "tags.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
 #include "hints.h"
+#include "unicode.h"
 #include "viewgeom.h"
 #include "viewmap.h"
 
 #include <cctype>
 #include <cstdio>
-#include <fstream>
 #include <sstream>
 #include <algorithm>
 
@@ -764,7 +765,7 @@ void Stash::add_item(const item_def &item, bool add_to_front)
     }
 }
 
-void Stash::write(std::ostream &os, int refx, int refy,
+void Stash::write(FILE *f, int refx, int refy,
                   std::string place, bool identify)
     const
 {
@@ -774,10 +775,8 @@ void Stash::write(std::ostream &os, int refx, int refy,
     bool note_status = notes_are_active();
     activate_notes(false);
 
-    os << "(" << ((int) x - refx) << ", " << ((int) y - refy)
-       << (place.length()? ", " + place : "")
-       << ")"
-       << std::endl;
+    fprintf(f, "(%d, %d%s%s)\n", x - refx, y - refy,
+            place.empty() ? "" : ", ", OUTS(place));
 
     char buf[ITEMNAME_SIZE];
     for (int i = 0; i < (int) items.size(); ++i)
@@ -798,10 +797,8 @@ void Stash::write(std::ostream &os, int refx, int refy,
             ann = " " + ann;
         }
 
-        os << "  " << buf
-           << (!ann.empty()? ann : std::string())
-           << (!verified && (items.size() > 1 || i) ? " (still there?)" : "")
-           << std::endl;
+        fprintf(f, "  %s%s%s\n", OUTS(buf), OUTS(ann),
+            (!verified && (items.size() > 1 || i) ? " (still there?)" : ""));
 
         if (is_dumpable_artefact(item, false))
         {
@@ -819,13 +816,13 @@ void Stash::write(std::ostream &os, int refx, int refy,
                     if (desc[j] == '\n')
                         desc.insert(j + 1, " ");
 
-                os << "    " << desc << std::endl;
+                fprintf(f, "    %s\n", OUTS(desc));
             }
         }
     }
 
     if (items.size() <= 1 && !verified)
-        os << "  (unseen)" << std::endl;
+        fprintf(f, "  (unseen)\n");
 
     activate_notes(note_status);
 }
@@ -879,12 +876,6 @@ void Stash::load(reader& inf)
 
         items.push_back(item);
     }
-}
-
-std::ostream &operator << (std::ostream &os, const Stash &s)
-{
-    s.write(os);
-    return os;
 }
 
 ShopInfo::ShopInfo(int xp, int yp) : x(xp), y(yp), name(), shoptype(-1),
@@ -1116,11 +1107,11 @@ bool ShopInfo::matches_search(const std::string &prefix,
     return (match || res.matches);
 }
 
-void ShopInfo::write(std::ostream &os, bool identify) const
+void ShopInfo::write(FILE *f, bool identify) const
 {
     bool note_status = notes_are_active();
     activate_notes(false);
-    os << "[Shop] " << name << std::endl;
+    fprintf(f, "[Shop] %s\n", OUTS(name));
     if (items.size() > 0)
     {
         for (unsigned i = 0; i < items.size(); ++i)
@@ -1130,16 +1121,16 @@ void ShopInfo::write(std::ostream &os, bool identify) const
             if (identify)
                 _fully_identify_item(&item.item);
 
-            os << "  " << shop_item_name(item) << std::endl;
+            fprintf(f, "  %s\n", OUTS(shop_item_name(item)));
             std::string desc = shop_item_desc(item);
-            if (desc.length() > 0)
-                os << "    " << desc << std::endl;
+            if (!desc.empty())
+                fprintf(f, "    %s\n", OUTS(desc));
         }
     }
     else if (visited)
-        os << "  (Shop is empty)" << std::endl;
+        fprintf(f, "  (Shop is empty)\n");
     else
-        os << "  (Shop contents are unknown)" << std::endl;
+        fprintf(f, "  (Shop contents are unknown)\n");
 
     activate_notes(note_status);
 }
@@ -1185,12 +1176,6 @@ void ShopInfo::load(reader& inf)
         item.price = (unsigned) unmarshallShort(inf);
         items.push_back(item);
     }
-}
-
-std::ostream &operator << (std::ostream &os, const ShopInfo &s)
-{
-    s.write(os);
-    return os;
 }
 
 LevelStashes::LevelStashes()
@@ -1411,15 +1396,16 @@ void LevelStashes::_update_identification()
     }
 }
 
-void LevelStashes::write(std::ostream &os, bool identify) const
+void LevelStashes::write(FILE *f, bool identify) const
 {
     if (visible_stash_count() == 0)
         return;
 
-    os << level_name() << std::endl;
+    // very unlikely level names will be localized, but hey
+    fprintf(f, "%s\n", OUTS(level_name()));
 
     for (unsigned i = 0; i < m_shops.size(); ++i)
-        m_shops[i].write(os, identify);
+        m_shops[i].write(f, identify);
 
     if (m_stashes.size())
     {
@@ -1429,10 +1415,10 @@ void LevelStashes::write(std::ostream &os, bool identify) const
         for (stashes_t::const_iterator iter = m_stashes.begin();
              iter != m_stashes.end(); iter++)
         {
-            iter->second.write(os, refx, refy, levname, identify);
+            iter->second.write(f, refx, refy, levname, identify);
         }
     }
-    os << std::endl;
+    fprintf(f, "\n");
 }
 
 void LevelStashes::save(writer& outf) const
@@ -1503,12 +1489,6 @@ void LevelStashes::remove_shop(const coord_def& c)
         }
 }
 
-std::ostream &operator << (std::ostream &os, const LevelStashes &ls)
-{
-    ls.write(os);
-    return os;
-}
-
 LevelStashes &StashTracker::get_current_level()
 {
     return (levels[level_id::current()]);
@@ -1577,25 +1557,25 @@ void StashTracker::add_stash(int x, int y, bool verbose)
 
 void StashTracker::dump(const char *filename, bool identify) const
 {
-    std::ofstream outf(filename);
+    FILE *outf = fopen_u(filename, "w");
     if (outf)
     {
         write(outf, identify);
-        outf.close();
+        fclose(outf);
     }
 }
 
-void StashTracker::write(std::ostream &os, bool identify) const
+void StashTracker::write(FILE *f, bool identify) const
 {
-    os << you.your_name << std::endl << std::endl;
+    fprintf(f, "%s\n\n", OUTS(you.your_name));
     if (!levels.size())
-        os << "  You have no stashes." << std::endl;
+        fprintf(f, "  You have no stashes.\n");
     else
     {
         for (stash_levels_t::const_iterator iter = levels.begin();
              iter != levels.end(); iter++)
         {
-            iter->second.write(os, identify);
+            iter->second.write(f, identify);
         }
     }
 }

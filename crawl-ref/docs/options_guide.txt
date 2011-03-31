@@ -119,8 +119,7 @@ The contents of this text are:
 6-  Miscellaneous.
 6-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
-                colour, char_set, cset_ascii, cset_ibm, cset_dec,
-                cset_unicode, feature, mon_glyph, pizza,
+                colour, cset, feature, mon_glyph, pizza,
                 use_fake_player_cursor, show_player_species
 
 6-b     DOS and Windows.
@@ -2051,16 +2050,16 @@ wiz_mode = (no | never | yes)
                    of game
           never -- never allow a wizard command to be used
 
-char_set = (ascii | ibm | dec | unicode)
-        Chooses different character sets for the game play screen. DOS
-        and Windows users will want to use the IBM character set, Unix
-        users will prefer DEC or plain ASCII.
+char_set = (default | ascii | ibm | dec | unicode)
+        Chooses different pre-set character sets for the game play screen.
+        Unlike previous versions of Crawl, this does not select the I/O
+        encoding anymore.
 
-        On Unix, Crawl may be built with Unicode support, in which case
-        you can use char_set = unicode to use unicode characters in the
-        map display.
+        Setting char_set = ibm or dec has a side effect of making numeric
+        codes inside cset, feature and mon_glyph lines interpreted as,
+        respectively, CP437 codes or VT100 line-drawing characters + 128.
 
-        Has no effect in the Tiles build.
+        Has negligible effect in the Tiles build.
 
 classic_item_colours = false
         Crawl uses 4.0 b26/0.1.x-like item colours if
@@ -2086,20 +2085,7 @@ colour.OLDCOLOUR = NEWCOLOUR
           colour.lightcyan = cyan
           colour.yellow    = brown
 
-cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any
-        Can be used to change individual characters in a specific
-        character set (the character set used for display is determined
-        by the char_set option). The syntax is the same for all of
-        these; cset_any changes characters in all character sets.
-
-        * cset_ascii is limited to 7-bit characters only; these always work.
-        * cset_ibm stands for legacy CP437.  Unlikely to work unless you
-          manually select this encoding.
-        * cset_dec uses VT100 line-drawing characters.
-        * cset_unicode means UTF-8.  Ubiquitous on modern systems save for
-          Windows.
-
-cset_XXX = <dungeon_character_name : symbol>
+cset = <dungeon_character_name : symbol>
         a list of these is allowed, as well.
 
         The possible entries for dungeon_character_name are:
@@ -2116,8 +2102,10 @@ cset_XXX = <dungeon_character_name : symbol>
         character for water creatures submerged in shallow water, or
         invisible creatures wading in shallow water.
 
-        Symbols can be specified using a letter, or by a number (decimal
-        code), or a hexadecimal number (prefixed with x):
+        Symbols can be specified using a letter, or by its ASCII/Unicode
+        code: a decimal number or a hexadecimal one (prefixed with x).
+        For compatibility with old config files, you can use cset_ibm or
+        cset_dec to use IBM code page 437 or vt100 graphic characters.
 
         For an example on IBM displays,
              cset_ibm = wall:219, arch:0, wavy:x7E
