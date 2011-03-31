@@ -423,14 +423,38 @@ blood_red1
 blood_red2
 blood_red3
 blood_red4
-wall_blood1 WALL_BLOOD
-wall_blood2
-wall_blood3
-wall_blood4
-wall_blood5
-wall_blood6
-wall_blood7
-wall_blood8
+wall_blood1_s WALL_BLOOD_S
+wall_blood2_s
+wall_blood3_s
+wall_blood4_s
+wall_blood5_s
+wall_blood6_s
+wall_blood7_s
+wall_blood8_s
+wall_blood1_w WALL_BLOOD_W
+wall_blood2_w
+wall_blood3_w
+wall_blood4_w
+wall_blood5_w
+wall_blood6_w
+wall_blood7_w
+wall_blood8_w
+wall_blood1_n WALL_BLOOD_N
+wall_blood2_n
+wall_blood3_n
+wall_blood4_n
+wall_blood5_n
+wall_blood6_n
+wall_blood7_n
+wall_blood8_n
+wall_blood1_e WALL_BLOOD_E
+wall_blood2_e
+wall_blood3_e
+wall_blood4_e
+wall_blood5_e
+wall_blood6_e
+wall_blood7_e
+wall_blood8_e
 %sdir dc-misc
 halo HALO
 ray RAY

@@ -1053,7 +1053,10 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             cell.is_moldy = true;
         // Corpses have a blood puddle of their own.
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
+        {
             cell.is_bloody = true;
+            cell.blood_rotation = blood_rotation(gc);
+        }
     }
 
     const dungeon_feature_type feat = grd(gc);
