@@ -118,7 +118,7 @@ The contents of this text are:
 6-  Miscellaneous.
 6-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
-                colour, char_set, cset, feature, mon_glyph, pizza,
+                colour, cset, feature, mon_glyph, pizza,
                 use_fake_player_cursor, show_player_species
 
 6-b     DOS and Windows.
@@ -2043,16 +2043,16 @@ wiz_mode = (no | never | yes)
                    of game
           never -- never allow a wizard command to be used
 
-char_set = (ascii | ibm | dec | unicode)
-        Chooses different character sets for the game play screen. DOS
-        and Windows users will want to use the IBM character set, Unix
-        users will prefer DEC or plain ASCII.
+char_set = (default | ascii | ibm | dec | unicode)
+        Chooses different pre-set character sets for the game play screen.
+        Unlike previous versions of Crawl, this does not select the I/O
+        encoding anymore.
 
-        On Unix, Crawl may be built with Unicode support, in which case
-        you can use char_set = unicode to use unicode characters in the
-        map display.
+        Setting char_set = ibm or dec has a side effect of making numeric
+        codes inside cset, feature and mon_glyph lines interpreted as,
+        respectively, CP437 codes or VT100 line-drawing characters + 128.
 
-        Has no effect in the Tiles build.
+        Has negligible effect in the Tiles build.
 
 classic_item_colours = false
         Crawl uses 4.0 b26/0.1.x-like item colours if
