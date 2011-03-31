@@ -4233,26 +4233,22 @@ tileidx_t tileidx_bolt(const bolt &bolt)
 
 tileidx_t tileidx_zap(int colour)
 {
-    int col;
-
     switch (colour)
     {
-    case ETC_MAGIC:
-        col = element_colour(ETC_MAGIC);
-        break;
     case ETC_HOLY:
-        col = YELLOW;
+        colour = YELLOW;
         break;
     default:
-        col = colour;
+        colour = element_colour(colour);
         break;
     }
 
-    if (col > 8)
-        col -= 8;
-    if (col < 1)
-        col = 7;
-    return (TILE_SYM_BOLT_OFS - 1 + col);
+    if (colour < 1)
+        colour = 7;
+    else if (colour > 8)
+        colour -= 8;
+
+    return (TILE_SYM_BOLT_OFS - 1 + colour);
 }
 
 tileidx_t tileidx_spell(spell_type spell)
