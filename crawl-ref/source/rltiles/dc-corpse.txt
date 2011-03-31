@@ -238,6 +238,7 @@ stone_giant CORPSE_STONE_GIANT
 titan CORPSE_TITAN
 
 ## Drakes ('l')
+%sdir dc-mon/dragons
 swamp_drake CORPSE_SWAMP_DRAKE
 fire_drake CORPSE_FIRE_DRAKE
 lindwurm CORPSE_LINDWURM
@@ -256,15 +257,17 @@ iron_dragon CORPSE_IRON_DRAGON
 storm_dragon CORPSE_STORM_DRAGON
 golden_dragon CORPSE_GOLDEN_DRAGON
 shadow_dragon CORPSE_SHADOW_DRAGON
-holy/pearl_dragon CORPSE_PEARL_DRAGON
+dc-mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 
 ## Eyes ('G')
+%sdir dc-mon/eyes
 %back blood_green
 giant_eyeball CORPSE_GIANT_EYEBALL
 eye_of_devastation CORPSE_EYE_OF_DEVASTATION
 eye_of_draining CORPSE_EYE_OF_DRAINING
 great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
 shining_eye CORPSE_SHINING_EYE
+%sdir dc-mon
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
 
@@ -279,11 +282,12 @@ kenku CORPSE_KENKU
 holy/shedu CORPSE_SHEDU
 
 ## Jellies ('J')
-%sdir dc-mon
+%sdir dc-mon/amorphous
 %back blood_green
 giant_amoeba CORPSE_GIANT_AMOEBA
 
 ## Kobolds ('K')
+%sdir dc-mon/
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 kobold CORPSE_KOBOLD
 big_kobold CORPSE_BIG_KOBOLD
