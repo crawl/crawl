@@ -73,6 +73,7 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
+#include "syscalls.h"
 #include "xom.h"
 
 

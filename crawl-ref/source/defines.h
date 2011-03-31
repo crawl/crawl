@@ -28,6 +28,8 @@
     #endif
 #endif
 
+typedef uint32_t ucs_t;
+
 // length of a single zot defence cycle
 #define CYCLE_LENGTH 200
 

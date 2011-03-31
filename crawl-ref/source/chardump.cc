@@ -54,6 +54,7 @@
 #include "env.h"
 #include "transform.h"
 #include "travel.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -1253,13 +1254,6 @@ std::string morgue_directory()
 
 void dump_map(FILE *fp, bool debug, bool dist)
 {
-    // Duplicate the screenshot() trick.
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
-    char_table_bk = Options.char_table;
-
-    init_char_table(CSET_ASCII);
-    init_show_table();
-
     if (debug)
     {
         // Write the whole map out without checking for mappedness. Handy
@@ -1279,7 +1273,10 @@ void dump_map(FILE *fp, bool debug, bool dist)
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
                 else
-                    fputc(get_feature_def(grd[x][y]).symbol, fp);
+                {
+                    fputs(OUTS(stringize_glyph(
+                               get_feature_def(grd[x][y]).symbol)), fp);
+                }
             }
             fputc('\n', fp);
         }
@@ -1301,15 +1298,14 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc(get_cell_glyph(coord_def(x, y)).ch, fp);
+            {
+                fputs(OUTS(stringize_glyph(
+                           get_cell_glyph(coord_def(x, y)).ch)), fp);
+            }
 
             fputc('\n', fp);
         }
     }
-
-    // Restore char and feature tables
-    Options.char_table = char_table_bk;
-    init_show_table();
 }
 
 void dump_map(const char* fname, bool debug, bool dist)
@@ -1351,7 +1347,7 @@ static bool _write_dump(const std::string &fname, dump_params &par,
 
     if (handle != NULL)
     {
-        fputs(par.text.c_str(), handle);
+        fputs(OUTS(par.text), handle);
         fclose(handle);
         succeeded = true;
         if (print_dump_path)
@@ -1415,6 +1411,7 @@ void whereis_record(const char *status)
 
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
+        // no need to bother with supporting ancient charsets for DGL
         fprintf(handle, "%s:status=%s\n",
                 xlog_status_line().c_str(),
                 status? status : "");
@@ -1470,7 +1467,7 @@ std::string dgl_timestamp_filename()
 // of a known version.
 bool dgl_unknown_timestamp_file(const std::string &filename)
 {
-    if (FILE *inh = fopen(filename.c_str(), "rb"))
+    if (FILE *inh = fopen_u(filename.c_str(), "rb"))
     {
         reader r(inh);
         const uint32_t file_version = unmarshallInt(r);
@@ -1494,7 +1491,7 @@ FILE *dgl_timestamp_filehandle()
         // First check if there's already a timestamp file. If it exists
         // but has a different version, we cannot safely modify it, so bail.
         if (!dgl_unknown_timestamp_file(filename))
-            timestamp_file = fopen(filename.c_str(), "ab");
+            timestamp_file = fopen_u(filename.c_str(), "ab");
     }
     return timestamp_file;
 }

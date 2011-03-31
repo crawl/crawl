@@ -11,6 +11,7 @@
 #include <cstdio>
 
 #include "enum.h"
+#include "unicode.h"
 
 enum drop_mode_type
 {
@@ -26,7 +27,6 @@ std::string read_init_file(bool runscript = false);
 struct newgame_def;
 newgame_def read_startup_prefs();
 
-void read_options(FILE *f, bool runscript = false);
 void read_options(const std::string &s, bool runscript = false,
                   bool clear_aliases = false);
 
@@ -83,36 +83,7 @@ std::string channel_to_str(int ch);
 
 int str_to_channel(const std::string &);
 
-class InitLineInput
-{
-public:
-    virtual ~InitLineInput() { }
-    virtual bool eof() = 0;
-    virtual std::string getline() = 0;
-};
-
-class FileLineInput : public InitLineInput
-{
-public:
-    FileLineInput(FILE *f) : file(f) { }
-
-    bool eof()
-    {
-        return !file || feof(file);
-    }
-
-    std::string getline()
-    {
-        char s[256] = "";
-        if (!eof())
-            fgets(s, sizeof s, file);
-        return (s);
-    }
-private:
-    FILE *file;
-};
-
-class StringLineInput : public InitLineInput
+class StringLineInput : public LineInput
 {
 public:
     StringLineInput(const std::string &s) : str(s), pos(0) { }
@@ -122,7 +93,7 @@ public:
         return pos >= str.length();
     }
 
-    std::string getline()
+    std::string get_line()
     {
         if (eof())
             return "";

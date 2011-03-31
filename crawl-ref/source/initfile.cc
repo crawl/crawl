@@ -620,15 +620,18 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
 std::string user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
-    char home[MAX_PATH];
-    if (SHGetFolderPath(0, CSIDL_APPDATA, 0, 0, home))
-        strcpy(home, "./");
+    wchar_t home[MAX_PATH];
+    if (SHGetFolderPathW(0, CSIDL_APPDATA, 0, 0, home))
+        return "./";
+    else
+        return utf16_to_8(home);
 #else
     const char *home = getenv("HOME");
     if (!home || !*home)
-        home = "./";
+        return "./";
+    else
+        return mb_to_utf8(home);
 #endif
-    return (home);
 }
 
 std::string user_home_subpath(const std::string subpath)
@@ -745,12 +748,12 @@ void game_options::reset_options()
 
     remember_name = true;
 
-#ifdef USE_ASCII_CHARACTERS
-    char_set      = CSET_ASCII;
-#else
+#ifdef USE_TILE
     // NOTE: Tiles relies on the IBM character set for evaluating glyphs
     //       of magic mapped dungeon cells.
     char_set      = CSET_IBM;
+#else
+    char_set      = CSET_DEFAULT;
 #endif
 
     // set it to the .crawlrc default
@@ -1095,7 +1098,22 @@ void game_options::clear_feature_overrides()
     feature_overrides.clear();
 }
 
-static unsigned read_symbol(std::string s)
+ucs_t get_glyph_override(int c)
+{
+    if (c < 0)
+    {
+        c = -c;
+        if (Options.char_set == CSET_IBM)
+            c = (c & ~0xff) ? 0 : charset_cp437[c & 0xff];
+        else if (Options.char_set == CSET_DEC)
+            c = (c & 0x80) ? charset_vt100[c & 0x7f] : c;
+    }
+    if (wcwidth(c) != 1)
+        c = 0;
+    return c;
+}
+
+static int read_symbol(std::string s)
 {
     if (s.empty())
         return (0);
@@ -1103,8 +1121,14 @@ static unsigned read_symbol(std::string s)
     if (s.length() > 1 && s[0] == '\\')
         s = s.substr(1);
 
-    if (s.length() == 1)
-        return s[0];
+    {
+        ucs_t c;
+        const char *nc = s.c_str();
+        nc += utf8towc(&c, nc);
+        // no control, combining or CJK characters, please
+        if (!*nc && wcwidth(c) == 1)
+            return c;
+    }
 
     int base = 10;
     if (s.length() > 1 && s[0] == 'x')
@@ -1114,7 +1138,7 @@ static unsigned read_symbol(std::string s)
     }
 
     char *tail;
-    return (strtoul(s.c_str(), &tail, base));
+    return -strtoul(s.c_str(), &tail, base);
 }
 
 void game_options::set_fire_order(const std::string &s, bool add)
@@ -1257,21 +1281,25 @@ void game_options::add_cset_override(
         if (dc == NUM_DCHAR_TYPES)
             continue;
 
-        unsigned symbol =
-            static_cast<unsigned>(read_symbol(mapping[1]));
-
-        if (set == NUM_CSET)
-            for (int c = 0; c < NUM_CSET; ++c)
-                add_cset_override(char_set_type(c), dc, symbol);
-        else
-            add_cset_override(set, dc, symbol);
+        add_cset_override(set, dc, read_symbol(mapping[1]));
     }
 }
 
 void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
                                      unsigned symbol)
 {
-    cset_override[set][dc] = symbol;
+    if (symbol >= 0)
+    {
+        cset_override[dc] = symbol;
+        return;
+    }
+
+    symbol = -symbol;
+    if (set == CSET_IBM)
+        symbol = (symbol &~ 0xff) ? 0 : charset_cp437[symbol & 0xff];
+    else if (set == CSET_DEC && symbol & 0xff)
+        symbol = charset_vt100[symbol & 0x7f];
+    cset_override[dc] = symbol;
 }
 
 static std::string _find_crawlrc()
@@ -1347,8 +1375,8 @@ std::string read_init_file(bool runscript)
 
     const std::string init_file_name(_find_crawlrc());
 
-    FILE* f = fopen(init_file_name.c_str(), "r");
-    if (f == NULL)
+    FileLineInput f(init_file_name.c_str());
+    if (f.error())
     {
         if (!init_file_name.empty())
             return make_stringf("(\"%s\" is not readable)",
@@ -1368,8 +1396,7 @@ std::string read_init_file(bool runscript)
 #else
     Options.basefilename = "init.txt";
 #endif
-    read_options(f, runscript);
-    fclose(f);
+    Options.read_options(f, runscript);
 
     Options.filename     = "extra opts last";
     Options.basefilename = "extra opts last";
@@ -1390,15 +1417,12 @@ std::string read_init_file(bool runscript)
 newgame_def read_startup_prefs()
 {
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
-    std::string fn = get_prefs_filename();
-    FILE *f = fopen(fn.c_str(), "r");
-    if (!f)
+    FileLineInput fl(get_prefs_filename().c_str());
+    if (fl.error())
         return newgame_def();
 
     game_options temp;
-    FileLineInput fl(f);
     temp.read_options(fl, false);
-    fclose(f);
 
     return (temp.game);
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
@@ -1462,7 +1486,7 @@ void write_newgame_options_file(const newgame_def& prefs)
     unwind_var<game_type> gt(crawl_state.type, Options.game.type);
 
     std::string fn = get_prefs_filename();
-    FILE *f = fopen(fn.c_str(), "w");
+    FILE *f = fopen_u(fn.c_str(), "w");
     if (!f)
         return;
     write_newgame_options(prefs, f);
@@ -1485,12 +1509,6 @@ void save_player_name()
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
-void read_options(FILE *f, bool runscript)
-{
-    FileLineInput fl(f);
-    Options.read_options(fl, runscript);
-}
-
 void read_options(const std::string &s, bool runscript, bool clear_aliases)
 {
     StringLineInput st(s);
@@ -1502,7 +1520,7 @@ game_options::game_options()
     reset_options();
 }
 
-void game_options::read_options(InitLineInput &il, bool runscript,
+void game_options::read_options(LineInput &il, bool runscript,
                                 bool clear_aliases)
 {
     unsigned int line = 0;
@@ -1522,7 +1540,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
     while (!il.eof())
     {
         line_num++;
-        std::string s   = il.getline();
+        std::string s   = il.get_line();
         std::string str = s;
         line++;
 
@@ -2192,28 +2210,20 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 #endif
 #ifndef USE_TILE
-    else if (key == "char_set" || key == "ascii_display")
+    else if (key == "char_set")
     {
-        if (key == "ascii_display")
-        {
-            char_set =
-                _read_bool(field, char_set == CSET_ASCII)?
-                    CSET_ASCII
-                  : CSET_IBM;
-        }
+        if (field == "ascii")
+            char_set = CSET_ASCII;
+        else if (field == "ibm")
+            char_set = CSET_IBM;
+        else if (field == "dec")
+            char_set = CSET_DEC;
+        else if (field == "utf" || field == "unicode")
+            char_set = CSET_OLD_UNICODE;
+        else if (field == "default")
+            char_set = CSET_DEFAULT;
         else
-        {
-            if (field == "ascii")
-                char_set = CSET_ASCII;
-            else if (field == "ibm")
-                char_set = CSET_IBM;
-            else if (field == "dec")
-                char_set = CSET_DEC;
-            else if (field == "utf" || field == "unicode")
-                char_set = CSET_UNICODE;
-            else
-                fprintf(stderr, "Bad character set: %s\n", field.c_str());
-        }
+            fprintf(stderr, "Bad character set: %s\n", field.c_str());
     }
 #endif
     else if (key == "default_autopickup")
@@ -2331,14 +2341,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             cset = cset.substr(1);
 
         char_set_type cs = NUM_CSET;
-        if (cset == "ascii")
-            cs = CSET_ASCII;
-        else if (cset == "ibm")
+        if (cset == "ibm")
             cs = CSET_IBM;
         else if (cset == "dec")
             cs = CSET_DEC;
-        else if (cset == "utf" || cset == "unicode")
-            cs = CSET_UNICODE;
 
         add_cset_override(cs, field);
     }
@@ -3340,13 +3346,9 @@ void game_options::include(const std::string &rawfilename,
     // Also unwind any aliases defined in included files.
     unwind_var<string_map> unwalias(aliases);
 
-    FILE* f = fopen(include_file.c_str(), "r");
-    if (f)
-    {
-        FileLineInput fl(f);
-        this->read_options(fl, runscript, false);
-        fclose(f);
-    }
+    FileLineInput fl(include_file.c_str());
+    if (!fl.error())
+        read_options(fl, runscript, false);
 }
 
 void game_options::report_error(const std::string &error)
@@ -3464,29 +3466,32 @@ static bool arg_seen[num_cmd_ops];
 
 std::string find_executable_path()
 {
-    char tempPath[2048];
-
     // A lot of OSes give ways to find the location of the running app's
     // binary executable. This is useful, because argv[0] can be relative
     // when we really need an absolute path in order to locate the game's
     // resources.
-
-    // Faster than a memset, and counts as a null-terminated string!
-    tempPath[0] = 0;
-
-#if defined (TARGET_OS_WINDOWS)
-    GetModuleFileName (NULL, tempPath, sizeof(tempPath));
-#elif defined (TARGET_OS_LINUX)
+#if defined ( TARGET_OS_WINDOWS )
+    wchar_t tempPath[MAX_PATH];
+    if (GetModuleFileNameW(NULL, tempPath, MAX_PATH))
+        return utf16_to_8(tempPath);
+    else
+        return "";
+#elif defined ( TARGET_OS_LINUX )
+    char tempPath[2048];
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
     if (rsize > 0)
+    {
         tempPath[rsize] = 0;
-#elif defined (TARGET_OS_MACOSX)
-    strncpy (tempPath, NXArgv[0], sizeof(tempPath));
+        return mb_to_utf8(tempPath);
+    }
+    return "";
+#elif defined ( TARGET_OS_MACOSX )
+    return mb_to_utf8(NXArgv[0]);
 #else
     // We don't know how to find the executable's path on this OS.
+    return "";
 #endif
-    return std::string(tempPath);
 }
 
 static void _print_version()
@@ -3604,7 +3609,7 @@ static void _edit_save(int argc, char **argv)
             const char *file = (argc == 4) ? argv[3] : "chunk";
             FILE *f;
             if (strcmp(file, "-"))
-                f = fopen(file, "wb");
+                f = fopen_u(file, "wb");
             else
                 f = stdout;
             if (!f)
@@ -3628,7 +3633,7 @@ static void _edit_save(int argc, char **argv)
             const char *file = (argc == 4) ? argv[3] : "chunk";
             FILE *f;
             if (strcmp(file, "-"))
-                f = fopen(file, "rb");
+                f = fopen_u(file, "rb");
             else
                 f = stdin;
             if (!f)
@@ -3670,7 +3675,7 @@ static void _edit_save(int argc, char **argv)
             }
             save2.commit();
             save.unlink();
-            rename((filename + ".tmp").c_str(), filename.c_str());
+            rename_u((filename + ".tmp").c_str(), filename.c_str());
         }
     }
     catch (ext_fail_exception &fe)
@@ -4064,23 +4069,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_PRINT_CHARSET:
             if (rc_only)
                 break;
-            switch(Options.char_set)
-            {
-            case CSET_ASCII:
-                printf("ASCII\n");
-                end(0);
-            case CSET_IBM:
-                printf("IBM\n");
-                end(0);
-            case CSET_DEC:
-                printf("DEC\n");
-                end(0);
-            case CSET_UNICODE:
-                printf("UNICODE\n");
-                end(0);
-            case NUM_CSET:
-                die("unset charset");
-            }
+#ifdef DGAMELAUNCH
+            // Tell DGL we don't use ancient charsets anymore.  The glyph set
+            // doesn't matter here, just the encoding.
+            printf("UNICODE\n");
+#else
+            printf("This option is for DGL use only.\n");
+#endif
+            end(0);
             break;
 
         case CLO_EXTRA_OPT_FIRST:

@@ -18,7 +18,6 @@
 #include <sys/times.h>
 #endif
 
-#undef rename
 // for getpid()
 #include <sys/types.h>
 #include <unistd.h>

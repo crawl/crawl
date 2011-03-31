@@ -12,6 +12,7 @@
 #include "macro.h"
 #include "message.h"
 #include "stuff.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 #include <sstream>
@@ -107,7 +108,7 @@ void play_sound(const char *file)
 #if defined(WINMM_PLAY_SOUNDS)
     // Check whether file exists, is readable, etc.?
     if (file && *file)
-        sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
+        sndPlaySoundW(utf8_to_16(file).c_str(), SND_ASYNC | SND_NODEFAULT);
 
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
@@ -116,7 +117,7 @@ void play_sound(const char *file)
         && shell_safe(file))
     {
         snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-        system(command);
+        system(utf8_to_mb(command));
     }
 #endif
 }
@@ -856,19 +857,6 @@ size_t strlcpy(char *dst, const char *src, size_t n)
     }
 
     return s - src - 1;
-}
-
-// Stubs for now.  With Unicode, the width may be different from length in
-// bytes due to UTF (any of these) -- and counting characters is not enough,
-// too, because of combining characters and CJK double-widths.
-int strwidth(const char *s)
-{
-    return strlen(s);
-}
-
-int strwidth(const std::string &s)
-{
-    return s.length();
 }
 
 #ifdef TARGET_OS_WINDOWS

@@ -44,17 +44,16 @@ public:
 
     // Object's method
     void clear_to_end_of_line(void);
-    void putch(unsigned char chr);
-    void writeWChar(unsigned char *ch);
+    void putwch(ucs_t chr);
 
-    unsigned char *cbuf; //text backup
-    unsigned char *abuf; //textcolor backup
+    ucs_t   *cbuf; //text backup
+    uint8_t *abuf; //textcolor backup
 
     int cx_ofs; //cursor x offset
     int cy_ofs; //cursor y offset
 
-    void addstr(char *buffer);
-    void addstr_aux(char *buffer, int len);
+    void addstr(const char *buffer);
+    void addstr_aux(const ucs_t *buffer, int len);
     void adjust_region(int *x1, int *x2, int y);
     void scroll();
 

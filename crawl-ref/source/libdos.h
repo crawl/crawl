@@ -9,8 +9,6 @@
 #include <conio.h>
 #include <stdio.h>
 
-typedef unsigned char screen_buffer_t;
-
 void init_libdos();
 
 int get_number_of_lines();

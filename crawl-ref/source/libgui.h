@@ -13,8 +13,6 @@
 
 #include "defines.h"
 
-typedef unsigned int screen_buffer_t;
-
 void set_mouse_enabled(bool enabled);
 
 struct coord_def;
@@ -38,10 +36,8 @@ int get_number_of_cols(void);
 void _setcursortype(int curstype);
 void textbackground(int bg);
 void textcolor(int col);
-int putch(unsigned char chr);
-int putwch(unsigned chr);
-void put_colour_ch(int colour, unsigned ch);
-void writeWChar(unsigned char *ch);
+int putwch(ucs_t chr);
+void put_colour_ch(int colour, ucs_t ch);
 
 #define textattr(x) textcolor(x)
 void set_cursor_enabled(bool enabled);
@@ -50,9 +46,7 @@ inline void enable_smart_cursor(bool) { }
 inline bool is_smart_cursor_enabled() { return false; }
 
 
-int window(int x1, int y1, int x2, int y2);
-
-extern "C" int getch();
+extern "C" int getchk();
 int getch_ck();
 int clrscr();
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);

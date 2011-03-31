@@ -13,6 +13,7 @@
 #include "glwrapper.h"
 #include "libutil.h"
 #include "options.h"
+#include "syscalls.h"
 #include "windowmanager.h"
 
 WindowManager *wm = NULL;
@@ -135,7 +136,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_EURO:
     case SDLK_UNDO:
         ASSERT(keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_UNDO);
-        return (keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
+        return -(keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
 
         // Hack.  libw32c overloads clear with '5' too.
     case SDLK_KP5:
@@ -178,10 +179,10 @@ static int _translate_keysym(SDL_keysym &keysym)
     }
 
     // Alt does not get baked into keycodes like shift and ctrl, so handle it.
-    const int key_offset = (mod & MOD_ALT) ? 3000 : 0;
+    const int key_offset = (mod & MOD_ALT) ? -3000 : 0;
 
     const bool is_ascii = ((keysym.unicode & 0xFF80) == 0);
-    return (is_ascii ? (keysym.unicode & 0x7F) + key_offset : 0);
+    return (is_ascii ? (keysym.unicode & 0x7F) + key_offset : keysym.unicode);
 }
 
 static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
@@ -483,6 +484,11 @@ int SDLWrapper::wait_event(wm_event *event)
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
         event->key.keysym.unicode = sdlevent.key.keysym.unicode;
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
+
+        // Everything that's not an actual character (ie, all special keys)
+        // must be < 0.  Dead/shift keys are 0.
+        ASSERT(event->key.keysym.unicode && event->key.keysym.sym > 0
+           || !event->key.keysym.unicode && event->key.keysym.sym <= 0);
         break;
     case SDL_KEYUP:
         event->type = WM_KEYUP;
@@ -799,7 +805,7 @@ int SDLWrapper::byte_order()
 SDL_Surface *SDLWrapper::load_image(const char *file) const
 {
     SDL_Surface *surf = NULL;
-    FILE *imgfile = fopen(file, "rb");
+    FILE *imgfile = fopen_u(file, "rb");
     if (imgfile)
     {
         SDL_RWops *rw = SDL_RWFromFP(imgfile, 0);

@@ -1273,7 +1273,7 @@ void pickup(bool partial_quantity)
                                                  DESC_NOCAP_A).c_str());
 
                 mouse_control mc(MOUSE_MODE_MORE);
-                keyin = getch();
+                keyin = getchk();
             }
 
             if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g'

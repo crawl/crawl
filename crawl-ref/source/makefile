@@ -205,7 +205,6 @@ ifeq ($(uname_S),DOS)
 	GAME = crawl.exe
 	bin_prefix = .
 	NO_NCURSES = yes
-	NO_UNICODE = yes
 	NEED_LIBDOS = yes
 	BUILD_PCRE = yes
 	NO_RDYNAMIC = yes
@@ -719,28 +718,21 @@ NC_PREFIX = /usr
 NC_INCLUDE = $(NC_PREFIX)/include/ncurses
 
 # Usually, it can be autodetected for you:
-ifndef NO_UNICODE
 ifneq ($(shell ls $(NC_PREFIX)/include/ncursesw 2> /dev/null),)
 NC_INCLUDE = $(NC_PREFIX)/include/ncursesw
-USE_UNICODE = YesPlease
-endif
 endif
 
 INCLUDES_L += -I$(NC_INCLUDE)
 
-ifdef USE_UNICODE
 # Include path for (n)curses with Unicode support.
 
 # Your ncurses library may include Unicode support, and you may not have a
 # separate libncursesw; in that case, change this line accordingly.
 NC_LIB  = ncursesw
-CFOTHERS_L += -DUNICODE_GLYPHS
 
 # The standard ncurses library also supports Unicode on Mac OS/Darwin.
 ifdef LIBNCURSES_IS_UNICODE
 NC_LIB = ncurses
-endif
-
 endif
 
 ifndef TILES

@@ -17,6 +17,7 @@
 #define APPHDR_H
 
 #include "platform.h"
+#include <stdint.h>
 
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:
@@ -34,14 +35,6 @@
 // memory.
 //
 #define CLUA_MAX_MEMORY_USE (2 * 1024)
-
-// Enable support for Unicode character glyphs. Note that this needs
-// to be accompanied by changes to linker and compiler options and may
-// not be available on all platforms. In most cases you want to set
-// this option from your makefile, not directly in AppHdr.h (See
-// INSTALL for more details.)
-//
-// #define UNICODE_GLYPHS
 
 // Uncomment to prevent Crawl from looking for a list of saves when
 // asking the player to enter a name. This can speed up startup
@@ -116,9 +109,6 @@
 
     #define CHARACTER_SET           0
 #ifndef USE_TILE
-    // NOTE: Tiles relies on the IBM character set for evaluating glyphs
-    //       of magic mapped dungeon cells.
-    #define USE_ASCII_CHARACTERS
     #define USE_CURSES
 #endif
 
@@ -188,7 +178,6 @@
         #include "libw32c.h"
     #endif
     #define CHARACTER_SET           A_ALTCHARSET
-    #define getstr(X,Y)         get_console_string(X,Y)
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'
