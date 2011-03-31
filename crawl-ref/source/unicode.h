@@ -80,4 +80,6 @@ public:
     std::string get_line();
 };
 
+extern unsigned short charset_vt100[128];
+extern unsigned short charset_cp437[256];
 #endif

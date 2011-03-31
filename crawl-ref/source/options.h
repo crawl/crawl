@@ -38,7 +38,7 @@ public:
     // View options
     std::vector<feature_override> feature_overrides;
     std::vector<mon_display>      mon_glyph_overrides;
-    ucs_t cset_override[NUM_CSET][NUM_DCHAR_TYPES];
+    ucs_t cset_override[NUM_DCHAR_TYPES];
 
     std::string save_dir;       // Directory where saves and bones go.
     std::string macro_dir;      // Directory containing macro.txt

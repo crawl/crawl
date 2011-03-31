@@ -741,12 +741,12 @@ void game_options::reset_options()
 
     remember_name = true;
 
-#ifdef USE_ASCII_CHARACTERS
-    char_set      = CSET_ASCII;
-#else
+#ifdef USE_TILE
     // NOTE: Tiles relies on the IBM character set for evaluating glyphs
     //       of magic mapped dungeon cells.
     char_set      = CSET_IBM;
+#else
+    char_set      = CSET_DEFAULT;
 #endif
 
     // set it to the .crawlrc default
@@ -1090,7 +1090,7 @@ void game_options::clear_feature_overrides()
     feature_overrides.clear();
 }
 
-static unsigned read_symbol(std::string s)
+static int read_symbol(std::string s)
 {
     if (s.empty())
         return (0);
@@ -1252,21 +1252,18 @@ void game_options::add_cset_override(
         if (dc == NUM_DCHAR_TYPES)
             continue;
 
-        unsigned symbol =
-            static_cast<unsigned>(read_symbol(mapping[1]));
-
-        if (set == NUM_CSET)
-            for (int c = 0; c < NUM_CSET; ++c)
-                add_cset_override(char_set_type(c), dc, symbol);
-        else
-            add_cset_override(set, dc, symbol);
+        add_cset_override(set, dc, read_symbol(mapping[1]));
     }
 }
 
 void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
                                      unsigned symbol)
 {
-    cset_override[set][dc] = symbol;
+    if (set == CSET_IBM)
+        symbol = (symbol &~ 0xff) ? 0 : charset_cp437[symbol & 0xff];
+    else if (set == CSET_DEC && symbol & 0xff)
+        symbol = charset_vt100[symbol & 0x7f];
+    cset_override[dc] = symbol;
 }
 
 static std::string _find_crawlrc()
@@ -2177,28 +2174,20 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 #endif
 #ifndef USE_TILE
-    else if (key == "char_set" || key == "ascii_display")
+    else if (key == "char_set")
     {
-        if (key == "ascii_display")
-        {
-            char_set =
-                _read_bool(field, char_set == CSET_ASCII)?
-                    CSET_ASCII
-                  : CSET_IBM;
-        }
+        if (field == "ascii")
+            char_set = CSET_ASCII;
+        else if (field == "ibm")
+            char_set = CSET_IBM;
+        else if (field == "dec")
+            char_set = CSET_DEC;
+        else if (field == "utf" || field == "unicode")
+            char_set = CSET_OLD_UNICODE;
+        else if (field == "default")
+            char_set = CSET_DEFAULT;
         else
-        {
-            if (field == "ascii")
-                char_set = CSET_ASCII;
-            else if (field == "ibm")
-                char_set = CSET_IBM;
-            else if (field == "dec")
-                char_set = CSET_DEC;
-            else if (field == "utf" || field == "unicode")
-                char_set = CSET_UNICODE;
-            else
-                fprintf(stderr, "Bad character set: %s\n", field.c_str());
-        }
+            fprintf(stderr, "Bad character set: %s\n", field.c_str());
     }
 #endif
     else if (key == "default_autopickup")
@@ -2316,14 +2305,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             cset = cset.substr(1);
 
         char_set_type cs = NUM_CSET;
-        if (cset == "ascii")
-            cs = CSET_ASCII;
-        else if (cset == "ibm")
+        if (cset == "ibm")
             cs = CSET_IBM;
         else if (cset == "dec")
             cs = CSET_DEC;
-        else if (cset == "utf" || cset == "unicode")
-            cs = CSET_UNICODE;
 
         add_cset_override(cs, field);
     }

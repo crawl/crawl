@@ -112,9 +112,6 @@
 
     #define CHARACTER_SET           0
 #ifndef USE_TILE
-    // NOTE: Tiles relies on the IBM character set for evaluating glyphs
-    //       of magic mapped dungeon cells.
-    #define USE_ASCII_CHARACTERS
     #define USE_CURSES
 #endif
 
