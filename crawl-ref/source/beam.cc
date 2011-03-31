@@ -2559,7 +2559,9 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_CLOSED_DOOR
             || wall == DNGN_DETECTED_SECRET_DOOR
             || wall == DNGN_SECRET_DOOR)
-        return (B_TRUE);
+        {
+            return (B_TRUE);
+        }
     }
 
     // Lee's Rapid Deconstruction
