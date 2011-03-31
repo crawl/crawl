@@ -847,8 +847,8 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_ELYVILON:
-        dislikes.push_back("you kill living things while asking for sparing "
-                           "your life yourself");
+        dislikes.push_back("you kill living things while asking for "
+                           "your life to be spared");
         break;
 
     case GOD_YREDELEMNUL:
