@@ -45,7 +45,8 @@ void turn_corpse_into_blood_potions (item_def &item);
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
 
 void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
-                      bool spatter = false, bool smell_alert = true);
+                      bool spatter = false, bool smell_alert = true,
+                      const coord_def& from = INVALID_COORD);
 void blood_spray(const coord_def& where, monster_type mon, int level);
 void generate_random_blood_spatter_on_level(
     const map_mask *susceptible_area = NULL);
