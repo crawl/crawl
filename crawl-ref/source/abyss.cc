@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include "abyss.h"
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -857,7 +858,9 @@ static void _abyss_identify_area_to_shift(coord_def source, int radius,
 
     for (std::set<int>::const_iterator i = affected_vault_indexes.begin();
          i != affected_vault_indexes.end(); ++i)
+    {
         _abyss_expand_mask_to_cover_vault(mask, *i);
+    }
 }
 
 static void _abyss_invert_mask(map_mask *mask)
@@ -898,8 +901,16 @@ static void _abyss_shift_level_contents_around_player(
     const coord_def source_centre = you.pos();
 
     ASSERT(radius >= LOS_RADIUS);
+#ifdef WIZARD
+    // This should only really happen due to wizmode blink/movement.
+    if (!map_bounds_with_margin(source_centre, radius))
+        mprf("source_centre(%d, %d) outside map radius %d", source_centre.x, source_centre.y, radius);
+    if (!map_bounds_with_margin(target_centre, radius))
+        mprf("target_centre(%d, %d) outside map radius %d", target_centre.x, target_centre.y, radius);
+#else
     ASSERT(map_bounds_with_margin(source_centre, radius));
     ASSERT(map_bounds_with_margin(target_centre, radius));
+#endif
 
     _abyss_identify_area_to_shift(source_centre, radius,
                                   &abyss_destruction_mask);
@@ -939,6 +950,38 @@ static void _abyss_generate_monsters(int nmonsters)
 
     for (int mcount = 0; mcount < nmonsters; mcount++)
         mons_place(mons);
+}
+
+void maybe_shift_abyss_around_player()
+{
+    ASSERT(you.level_type == LEVEL_ABYSS);
+    if (map_bounds_with_margin(you.pos(),
+                               MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
+    {
+        return;
+    }
+
+    dprf("Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
+
+    abyss_area_shift();
+    if (you.pet_target != MHITYOU)
+        you.pet_target = MHITNOT;
+
+#ifdef DEBUG_DIAGNOSTICS
+    int j = 0;
+    for (int i = 0; i < MAX_ITEMS; ++i)
+         if (mitm[i].defined())
+             ++j;
+
+    mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
+
+    j = 0;
+    for (monster_iterator mi; mi; ++mi)
+        ++j;
+
+    mprf(MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
+    mprf(MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
+#endif
 }
 
 void abyss_area_shift(void)
