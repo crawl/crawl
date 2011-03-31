@@ -2170,7 +2170,7 @@ int player_adjusted_shield_evasion_penalty(int scale)
     return std::max(0,
                     (base_shield_penalty * scale
                      - you.skill(SK_SHIELDS) * scale
-                     / (5 + player_evasion_size_factor())));
+                     / std::max(1, 5 + player_evasion_size_factor())));
 }
 
 int player_raw_body_armour_evasion_penalty()
