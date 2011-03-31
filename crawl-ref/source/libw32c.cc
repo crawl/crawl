@@ -602,15 +602,6 @@ int wherey(void)
     return cy+1;
 }
 
-void putch(char c)
-{
-    // special case: check for '0' char: map to space
-    if (c == 0)
-        c = ' ';
-
-    writeChar(c);
-}
-
 void putwch(wchar_t c)
 {
     if (c == 0)

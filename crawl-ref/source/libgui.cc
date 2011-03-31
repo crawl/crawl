@@ -66,13 +66,6 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.viewsz.y = 17;
 }
 
-int putch(unsigned char chr)
-{
-    // object's method
-    TextRegion::text_mode->putwch(chr);
-    return 0;
-}
-
 int putwch(ucs_t chr)
 {
     TextRegion::text_mode->putwch(chr);

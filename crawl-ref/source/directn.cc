@@ -442,7 +442,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
     const coord_def vp = grid2view(pos);
     cgotoxy(vp.x, vp.y, GOTO_DNGN);
     textcolor(real_colour(colour));
-    putch(glych);
+    putwch(glych);
 }
 #endif
 
