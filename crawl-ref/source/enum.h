@@ -537,7 +537,7 @@ enum cloud_type
 
 enum command_type
 {
-    CMD_NO_CMD = 1000,
+    CMD_NO_CMD = 2000,
     CMD_NO_CMD_DEFAULT, // hack to allow assignment of keys to CMD_NO_CMD
     CMD_MOVE_NOWHERE,
     CMD_MOVE_LEFT,
@@ -759,8 +759,8 @@ enum command_type
     CMD_TARGET_CYCLE_FORWARD,
     CMD_TARGET_CYCLE_BACK,
     CMD_TARGET_CYCLE_BEAM,
-    CMD_TARGET_CYCLE_MLIST = 2000, // for indices a-z in the monster list
-    CMD_TARGET_CYCLE_MLIST_END = 2025,
+    CMD_TARGET_CYCLE_MLIST = CMD_NO_CMD + 1000, // for indices a-z in the monster list
+    CMD_TARGET_CYCLE_MLIST_END = CMD_NO_CMD + 1025,
     CMD_TARGET_TOGGLE_MLIST,
     CMD_TARGET_TOGGLE_BEAM,
     CMD_TARGET_CANCEL,
