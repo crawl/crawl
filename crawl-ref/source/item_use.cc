@@ -45,6 +45,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "map_knowledge.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -4326,8 +4327,10 @@ static bool _vorpalise_weapon(bool already_known)
     }
 
     if (success)
+    {
         you.duration[DUR_WEAPON_BRAND] = 0;
-
+        item_set_appearance(wpn);
+    }
     return (msg);
 }
 
