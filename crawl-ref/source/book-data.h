@@ -464,6 +464,17 @@
     SPELL_NO_SPELL,
 },
 
+{   // Book of Zoology
+    SPELL_SUMMON_BUTTERFLIES,
+    SPELL_STICKS_TO_SNAKES,
+    SPELL_CALL_CANINE_FAMILIAR,
+    SPELL_ICE_FORM,
+    SPELL_SUMMON_ICE_BEAST,
+    SPELL_SUMMON_HYDRA,
+    SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
+},
+
 {   // Book of Annihilations - Vehumet special
     SPELL_POISON_ARROW,
     SPELL_IOOD,

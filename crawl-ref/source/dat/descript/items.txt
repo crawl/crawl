@@ -313,6 +313,10 @@ book of wizardry
 
 A book of magic spells.
 %%%%
+book of zoology
+
+A book of magic spells.
+%%%%
 bottled efreet
 
 A mighty efreet, captured by some wizard and bound into a bronze flask. Breaking the flask's seal will release it to wreak havoc - possibly on you.
