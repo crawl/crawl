@@ -4008,32 +4008,8 @@ static void _move_player(coord_def move)
     if (you.running == RMODE_START)
         you.running = RMODE_CONTINUE;
 
-    if (you.level_type == LEVEL_ABYSS
-        && !map_bounds_with_margin(you.pos(),
-                                   MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
-    {
-        dprf("Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
-
-        abyss_area_shift();
-        if (you.pet_target != MHITYOU)
-            you.pet_target = MHITNOT;
-
-#ifdef DEBUG_DIAGNOSTICS
-        int j = 0;
-        for (int i = 0; i < MAX_ITEMS; ++i)
-            if (mitm[i].defined())
-                ++j;
-
-        mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
-
-        j = 0;
-        for (monster_iterator mi; mi; ++mi)
-            ++j;
-
-        mprf(MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
-        mprf(MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
-#endif
-    }
+    if (you.level_type == LEVEL_ABYSS)
+        maybe_shift_abyss_around_player();
 
     apply_berserk_penalty = !attacking;
 
