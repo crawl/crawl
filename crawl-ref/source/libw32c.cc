@@ -641,7 +641,7 @@ static int key_to_command(int keyin)
     return keyin;
 }
 
-int vk_translate(WORD VirtCode, CHAR c, DWORD cKeys)
+int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
 {
     bool shftDown = false;
     bool ctrlDown = false;
@@ -773,8 +773,8 @@ int getch_ck(void)
     bool waiting_for_event = true;
     while (waiting_for_event)
     {
-        if (ReadConsoleInput(inbuf, &ir, 1, &nread) == 0)
-            fputs("Error in ReadConsoleInput()!", stderr);
+        if (ReadConsoleInputW(inbuf, &ir, 1, &nread) == 0)
+            fputs("Error in ReadConsoleInputW()!", stderr);
         if (nread > 0)
         {
             // ignore if it isn't a keyboard event.
@@ -786,7 +786,7 @@ int getch_ck(void)
                 if (kr->bKeyDown)
                 {
                     key = vk_translate(kr->wVirtualKeyCode,
-                                        kr->uChar.AsciiChar,
+                                        kr->uChar.UnicodeChar,
                                         kr->dwControlKeyState);
                     if (key > 0)
                     {
@@ -826,7 +826,7 @@ int kbhit()
 {
     INPUT_RECORD ir[10];
     DWORD read_count = 0;
-    PeekConsoleInput(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
+    PeekConsoleInputW(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
     if (read_count > 0)
     {
         for (unsigned i = 0; i < read_count; ++i)
