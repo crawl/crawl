@@ -250,7 +250,10 @@ bool curse_an_item(bool destroy_potions, bool quiet)
     if (you.religion == GOD_ASHENZARI)
     {
         if (!quiet)
-            simple_god_message(" absorbs the curse.");
+        {
+            mprf(MSGCH_GOD, "The curse is absorbed by %s.",
+                 god_name(GOD_ASHENZARI).c_str());
+        }
         return (false);
     }
 
