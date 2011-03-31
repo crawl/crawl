@@ -235,17 +235,14 @@ int getchk()
     switch (get_wch(&c))
     {
     case ERR:
-        debuglog("get_wch: ERR\n");
         // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
         // but the alternative is to explicitly check for -1 everywhere where
         // we might otherwise spin in a tight keyboard input loop.
         return ESCAPE;
     case OK:
-        debuglog("get_wch: OK %d[%04X]\n", c, c);
         // a normal (printable) key
         return c;
     }
-    debuglog("get_wch: FUNC - %d[%04X]\n", c, c);
 
     return -c;
 }
@@ -382,34 +379,34 @@ static void unixcurses_defkeys(void)
 {
 #ifdef NCURSES_VERSION
     // keypad 0-9 (only if the "application mode" was successfully initialised)
-    define_key("\033Op", -1000);
-    define_key("\033Oq", -1001);
-    define_key("\033Or", -1002);
-    define_key("\033Os", -1003);
-    define_key("\033Ot", -1004);
-    define_key("\033Ou", -1005);
-    define_key("\033Ov", -1006);
-    define_key("\033Ow", -1007);
-    define_key("\033Ox", -1008);
-    define_key("\033Oy", -1009);
+    define_key("\033Op", 1000);
+    define_key("\033Oq", 1001);
+    define_key("\033Or", 1002);
+    define_key("\033Os", 1003);
+    define_key("\033Ot", 1004);
+    define_key("\033Ou", 1005);
+    define_key("\033Ov", 1006);
+    define_key("\033Ow", 1007);
+    define_key("\033Ox", 1008);
+    define_key("\033Oy", 1009);
 
     // non-arrow keypad keys (for macros)
-    define_key("\033OM", -1010); // Enter
-    define_key("\033OP", -1011); // NumLock
-    define_key("\033OQ", -1012); // /
-    define_key("\033OR", -1013); // *
-    define_key("\033OS", -1014); // -
-    define_key("\033Oj", -1015); // *
-    define_key("\033Ok", -1016); // +
-    define_key("\033Ol", -1017); // +
-    define_key("\033Om", -1018); // .
-    define_key("\033On", -1019); // .
-    define_key("\033Oo", -1020); // -
+    define_key("\033OM", 1010); // Enter
+    define_key("\033OP", 1011); // NumLock
+    define_key("\033OQ", 1012); // /
+    define_key("\033OR", 1013); // *
+    define_key("\033OS", 1014); // -
+    define_key("\033Oj", 1015); // *
+    define_key("\033Ok", 1016); // +
+    define_key("\033Ol", 1017); // +
+    define_key("\033Om", 1018); // .
+    define_key("\033On", 1019); // .
+    define_key("\033Oo", 1020); // -
 
     // variants.  Ugly curses won't allow us to return the same code...
-    define_key("\033[1~", -1031); // Home
-    define_key("\033[4~", -1034); // End
-    define_key("\033[E",  -1040); // center arrow
+    define_key("\033[1~", 1031); // Home
+    define_key("\033[4~", 1034); // End
+    define_key("\033[E",  1040); // center arrow
 #endif
 }
 
