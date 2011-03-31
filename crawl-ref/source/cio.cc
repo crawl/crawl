@@ -401,24 +401,6 @@ int line_reader::read_line(bool clear_previous)
 
     while (true)
     {
-        ////////////// DEBUG START
-        std::string comm;
-        int oldpos = pos;
-        calc_pos();
-        if (oldpos != pos)
-        {
-            comm += make_stringf(" invalid pos (cur at %d)!", pos);
-            pos = oldpos;
-        }
-        if ((signed int)strlen(buffer) != length)
-        {
-            comm += " invalid length!";
-            pos = oldpos;
-        }
-        debuglog("\"%.*s\e[33m¤\e[0m%s\" pos=%d%s\n", cur-buffer, buffer,
-                 cur, pos, comm.c_str());
-        //////////// DEBUG END
-
         int ch = getchm(getch_ck);
 
 #if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
@@ -549,7 +531,6 @@ void line_reader::calc_pos()
 
 int line_reader::process_key(int ch)
 {
-    debuglog("line_reader: key %d(%x)\n", ch, ch);
     switch (ch)
     {
     CASE_ESCAPE
