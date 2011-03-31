@@ -273,10 +273,6 @@ book of summonings
 
 A book of magic spells.
 %%%%
-book of surveyances
-
-A book of magic spells.
-%%%%
 book of the dragon
 
 A book of magic spells; it is warm to the touch.
