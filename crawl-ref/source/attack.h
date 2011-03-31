@@ -9,14 +9,15 @@ const int HIT_WEAK   = 7;
 const int HIT_MED    = 18;
 const int HIT_STRONG = 36;
 
-enum phase
+enum atk_phase
 {
     ATK_ATTEMPTED,                      //  0
     ATK_DODGED,
     ATK_BLOCKED,
     ATK_HIT,
     ATK_DAMAGED,
-    ATK_KILLED
+    ATK_KILLED,
+    ATK_END
 };
 
 class attack
@@ -25,7 +26,8 @@ class attack
 public:
     // General attack properties, set on instantiation or through a normal
     // thread of execution
-    actor   *attacker, *defender;
+    actor        *attacker, *defender;
+    atk_phase    attack_phase;
 
     bool    cancel_attack;
     bool    did_hit;
@@ -108,6 +110,15 @@ public:
 // Private Methods
 protected:
     virtual void init_attack();
+
+    virtual bool handle_phase_attempted();
+    virtual bool handle_phase_dodged() = 0;
+    virtual bool handle_phase_blocked() = 0;
+    virtual bool handle_phase_hit() = 0;
+    virtual bool handle_phase_damaged() = 0;
+    virtual bool handle_phase_killed() = 0;
+    virtual bool handle_phase_end() = 0;
+
     virtual bool check_unrand_effects() = 0;
 
     // Methods which produce output
