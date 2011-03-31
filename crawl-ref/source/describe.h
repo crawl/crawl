@@ -246,7 +246,7 @@ inline void process_description(T &proc, const describe_info &inf)
         // Ok, try to truncate at space.
         nextLine = desc.rfind(' ', currentPos + line_width);
 
-        if (nextLine > 0)
+        if (nextLine > currentPos)
         {
             proc.print(desc.substr(currentPos, nextLine - currentPos));
             currentPos = nextLine + 1;
