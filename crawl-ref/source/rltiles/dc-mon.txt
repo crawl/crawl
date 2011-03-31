@@ -497,6 +497,7 @@ stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
 
 ## Drakes (also 'l')
+%sdir dc-mon/dragons
 swamp_drake MONS_SWAMP_DRAKE
 fire_drake MONS_FIRE_DRAKE
 lindwurm MONS_LINDWURM
@@ -516,7 +517,7 @@ lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
 serpent_of_hell MONS_SERPENT_OF_HELL
-%sdir dc-mon
+%sdir dc-mon/dragons
 wyvern MONS_WYVERN
 dragon MONS_DRAGON
 hydra1 MONS_HYDRA
@@ -535,17 +536,16 @@ iron_dragon MONS_IRON_DRAGON
 storm_dragon MONS_STORM_DRAGON
 golden_dragon MONS_GOLDEN_DRAGON
 shadow_dragon MONS_SHADOW_DRAGON
-undead/bone_dragon MONS_BONE_DRAGON
-%sdir dc-mon/holy
-pearl_dragon MONS_PEARL_DRAGON
+dc-mon/undead/bone_dragon MONS_BONE_DRAGON
+dc-mon/holy/pearl_dragon MONS_PEARL_DRAGON
 
 ## Eyes ('G')
 %sdir dc-mon/fungi_plants
 giant_spore MONS_GIANT_SPORE
-%sdir dc-mon
+%sdir dc-mon/eyes
 giant_eyeball MONS_GIANT_EYEBALL
 eye_of_draining MONS_EYE_OF_DRAINING
-giant_orange_brain MONS_GIANT_ORANGE_BRAIN
+dc-mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN
 great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 shining_eye MONS_SHINING_EYE
 eye_of_devastation MONS_EYE_OF_DEVASTATION
@@ -574,7 +574,7 @@ sky_beast MONS_SKY_BEAST
 %sdir dc-mon/unique
 royal_jelly MONS_ROYAL_JELLY
 dissolution MONS_DISSOLUTION
-%sdir dc-mon
+%sdir dc-mon/amorphous
 ooze MONS_OOZE
 jelly MONS_JELLY
 slime_creature MONS_SLIME_CREATURE
@@ -587,7 +587,6 @@ giant_amoeba MONS_GIANT_AMOEBA
 brown_ooze MONS_BROWN_OOZE
 azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB
-%sdir dc-mon/undead
 death_ooze MONS_DEATH_OOZE
 
 ## Kobolds ('K')
