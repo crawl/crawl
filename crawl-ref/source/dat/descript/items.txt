@@ -137,6 +137,14 @@ book of annihilations
 
 While browsing, you note blood leaking from the pages. Even an illiterate will feel the sheer impact of arcane fury contained in this book. It is sought after by sorcerers, for it allows the gifted and resourceful to command destruction with the ease of a twinkle. Feeble wizards, however, may well meet their doom when trying to read this opus.
 %%%%
+book of brands
+
+This book contains magical spells related to the branding of weapons and launchers, as well as spells that are helpful in all forms of ranged combat.
+%%%%
+book of burglary
+
+A worn-looking book, with a small key pressed between two pages.
+%%%%
 book of callings
 
 A book of magic spells.
@@ -157,6 +165,10 @@ book of charms
 
 A book of magic spells.
 %%%%
+book of chemistry
+
+A slightly seared book, with a hole burnt through the cover.
+%%%%
 book of clouds
 
 A book of magic spells.
@@ -172,6 +184,10 @@ A book of magic spells.
 book of death
 
 A black book containing spells written in a hasty scrawl.
+%%%%
+book of dreams
+
+A translucent book; light plays strangely on its surface.
 %%%%
 book of enchantments
 
@@ -261,6 +277,10 @@ book of surveyances
 
 A book of magic spells.
 %%%%
+book of the dragon
+
+A book of magic spells; it is warm to the touch.
+%%%%
 book of the earth
 
 A book of magic spells.
@@ -296,26 +316,6 @@ A book of magic spells.
 book of wizardry
 
 A book of magic spells.
-%%%%
-book of brands
-
-This book contains magical spells related to the branding of weapons and launchers, as well as spells that are helpful in all forms of ranged combat.
-%%%%
-book of the dragon
-
-A book of magic spells; it is warm to the touch.
-%%%%
-book of burglary
-
-A worn-looking book, with a small key pressed between two pages.
-%%%%
-book of dreams
-
-A translucent book; light plays strangely on its surface.
-%%%%
-book of chemistry
-
-A slightly seared book, with a hole burnt through the cover.
 %%%%
 bottled efreet
 
