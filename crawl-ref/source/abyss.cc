@@ -711,12 +711,13 @@ static void _abyss_wipe_square_at(coord_def p)
     // Delete cloud.
     delete_cloud_at(p);
 
-    env.pgrid(p)          = 0;
-    env.grid_colours(p)   = 0;
+    env.pgrid(p)        = 0;
+    env.grid_colours(p) = 0;
 #ifdef USE_TILE
-    env.tile_bk_fg(p) = 0;
-    env.tile_bk_bg(p) = 0;
-    // FIXME: need to clear tile_flavour as well
+    env.tile_bk_fg(p)   = 0;
+    env.tile_bk_bg(p)   = 0;
+    tile_clear_flavour(p);
+    tile_init_flavour(p);
 #endif
 
     env.level_map_mask(p) = 0;
