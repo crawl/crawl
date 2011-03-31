@@ -35,6 +35,7 @@ void tile_init_default_flavour();
 // Get the default types of walls and floors
 void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv);
 // Clear the per-cell wall and floor flavours.
+void tile_clear_flavour(const coord_def &p);
 void tile_clear_flavour();
 // Initialise types of walls and floors of the entire level using defaults.
 void tile_init_flavour();
