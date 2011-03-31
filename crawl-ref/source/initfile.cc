@@ -1110,8 +1110,14 @@ static int read_symbol(std::string s)
     if (s.length() > 1 && s[0] == '\\')
         s = s.substr(1);
 
-    if (s.length() == 1)
-        return s[0];
+    {
+        ucs_t c;
+        const char *nc = s.c_str();
+        nc += utf8towc(&c, nc);
+        // no control, combining or CJK characters, please
+        if (!*nc && wcwidth(c) == 1)
+            return c;
+    }
 
     int base = 10;
     if (s.length() > 1 && s[0] == 'x')
