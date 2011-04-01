@@ -106,8 +106,6 @@
     #define SIGHUP_SAVE
 
     #define FILE_SEPARATOR '/'
-
-    #define CHARACTER_SET           0
 #ifndef USE_TILE
     #define USE_CURSES
 #endif
@@ -155,7 +153,6 @@
 
 #elif defined(TARGET_OS_DOS)
     #define SHORT_FILE_NAMES
-    #define CHARACTER_SET           A_ALTCHARSET
 
     #define FILE_SEPARATOR '\\'
 
@@ -177,7 +174,6 @@
     #if !defined(USE_TILE)
         #include "libw32c.h"
     #endif
-    #define CHARACTER_SET           A_ALTCHARSET
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'
