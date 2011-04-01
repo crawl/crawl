@@ -2177,6 +2177,13 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_UNASSIGNED)
         return;
     item.sub_type    = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_BOOK_ZOOLOGY
+        && item.base_type == OBJ_BOOKS && item.sub_type >= BOOK_ZOOLOGY)
+    {
+        ++item.sub_type;
+    }
+#endif
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
