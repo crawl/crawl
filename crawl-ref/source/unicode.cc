@@ -512,6 +512,33 @@ char *next_glyph(char *s)
     return s_cur;
 }
 
+std::string chop_string(const char *s, int width, bool spaces = true)
+{
+    const char *s0 = s;
+    ucs_t c;
+
+    while (int clen = utf8towc(&c, s))
+    {
+        int cw = wcwidth(c);
+        // Due to combining chars, we can't stop at merely reaching the
+        // target width, the next character needs to exceed it.
+        if (cw > width) // note: a CJK character might leave one space left
+            break;
+        if (cw >= 0) // should we assert on control chars instead?
+            width -= cw;
+        s += clen;
+    }
+
+   if (spaces && width)
+       return std::string(s0, s - s0) + std::string(width, 0);
+   return std::string(s0, s - s0);;
+}
+
+std::string chop_string(const std::string &s, int width, bool spaces = true)
+{
+    return chop_string(s.c_str(), width, spaces);
+}
+
 unsigned short charset_vt100[128] =
 {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,

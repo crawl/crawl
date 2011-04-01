@@ -453,7 +453,7 @@ static void _print_stats_wp(int y)
     cprintf("Wp: ");
     textcolor(col);
     int w = crawl_view.hudsz.x - 4;
-    cprintf("%-*s", w, text.substr(0, w).c_str());
+    cprintf("%s", chop_string(text, w).c_str());
     textcolor(LIGHTGREY);
 }
 
@@ -486,7 +486,7 @@ static void _print_stats_qv(int y)
     cprintf("Qv: ");
     textcolor(col);
     int w = crawl_view.hudsz.x - 4;
-    cprintf("%-*s", w, text.substr(0, w).c_str());
+    cprintf("%s", chop_string(text, w).c_str());
     textcolor(LIGHTGREY);
 }
 
@@ -776,14 +776,14 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
     {
         in_len -= 3;  // What we're getting back from removing "the".
 
-        const unsigned int name_len = your_name.length();
+        const unsigned int name_len = strwidth(your_name);
         std::string trimmed_name = your_name;
 
         // Squeeze name if required, the "- 8" is to not squeeze too much.
         if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
         {
-            trimmed_name =
-                trimmed_name.substr(0, name_len - (in_len - WIDTH) - 1);
+            trimmed_name = chop_string(trimmed_name,
+                                       name_len - (in_len - WIDTH) - 1);
         }
 
         title = trimmed_name + ", " + job_name;
@@ -1294,7 +1294,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      equip_char,
                      colname,
                      melded ? "melded " : "",
-                     item.name(DESC_PLAIN, true).substr(0,42).c_str(),
+                     chop_string(item.name(DESC_PLAIN, true), 42, false).c_str(),
                      colname);
             equip_chars.push_back(equip_char);
         }
@@ -1436,7 +1436,8 @@ static std::string _god_powers(bool simple)
                                     + std::string(6 - prank, '.');
             if (simple)
                 return(asterisks);
-            godpowers = godpowers.substr(0, 20) + " [" + asterisks + "]";
+            godpowers = chop_string(godpowers, 20, false)
+                      + " [" + asterisks + "]";
             return (colour_string(godpowers, god_colour(you.religion)));
         }
     }
