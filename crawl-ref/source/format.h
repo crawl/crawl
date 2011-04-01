@@ -103,7 +103,6 @@ public:
 int count_linebreaks(const formatted_string& fs);
 
 int tagged_string_tag_length(const std::string& s);
-int tagged_string_printable_length(const std::string& s);
 std::string tagged_string_substr(const std::string& s, int start, int end);
 void display_tagged_block(const std::string& s);
 

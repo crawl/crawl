@@ -581,7 +581,7 @@ std::string tagged_string_substr(const std::string& s, int start, int end)
                      _find_string_location(s, end)));
 }
 
-int tagged_string_printable_length(const std::string& s)
+static int _tagged_string_printable_length(const std::string& s)
 {
     int len = 0;
     bool in_tag = false;
@@ -621,5 +621,5 @@ int tagged_string_printable_length(const std::string& s)
 // Count the length of the tags in the string.
 int tagged_string_tag_length(const std::string& s)
 {
-    return s.size() - tagged_string_printable_length(s);
+    return s.size() - _tagged_string_printable_length(s);
 }
