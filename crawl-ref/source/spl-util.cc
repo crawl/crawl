@@ -102,7 +102,7 @@ void init_spell_descs(void)
         if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
             end(1, false, "spell #%d has invalid id %d", i, data.id);
 
-        if (data.title == NULL || strlen(data.title) == 0)
+        if (data.title == NULL || !*data.title)
             end(1, false, "spell #%d, id %d has no name", i, data.id);
 
         if (data.level < 1 || data.level > 9)
