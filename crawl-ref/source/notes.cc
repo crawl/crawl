@@ -254,11 +254,11 @@ std::string Note::describe(bool when, bool where, bool what) const
     if (where)
     {
         if (!place_abbrev.empty())
-            result << "| " << std::setw(MAX_NOTE_PLACE_LEN) << std::left
-                   << place_abbrev << " | ";
+            result << "| " << chop_string(place_abbrev, MAX_NOTE_PLACE_LEN)
+                   << " | ";
         else
-            result << "| " << std::setw(MAX_NOTE_PLACE_LEN) << std::left
-                   << short_place_name(packed_place) << " | ";
+            result << "| " << chop_string(short_place_name(packed_place),
+                                          MAX_NOTE_PLACE_LEN) << " | ";
     }
 
     if (what)

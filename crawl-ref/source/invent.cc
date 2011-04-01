@@ -231,7 +231,7 @@ std::string InvEntry::get_text(bool need_cursor) const
             std::string colour_tag = colour_to_str(item->colour);
             colour_tag_adjustment = colour_tag.size() * 2 + 5;
         }
-        tstr << std::setw(get_number_of_cols() - tstr.str().length() - 2
+        tstr << std::setw(get_number_of_cols() - strwidth(tstr.str()) - 2
                           + colour_tag_adjustment)
              << std::right
              << make_stringf("(%.1f aum)", BURDEN_TO_AUM * mass);
