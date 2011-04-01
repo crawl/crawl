@@ -816,7 +816,7 @@ void wizard_edit_durations(void)
 
     char buf[80];
 
-    if (cancelable_get_line_autohist(buf, sizeof buf) || strlen(buf) == 0)
+    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;

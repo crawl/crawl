@@ -174,7 +174,7 @@ colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 void update_message_status()
 {
     static const char *msg = "(Hit _)";
-    static const int len = strlen(msg);
+    static const int len = strwidth(msg);
     static const std::string spc(len, ' ');
 
     textcolor(LIGHTBLUE);

@@ -173,7 +173,7 @@ formatted_string describe_mutations()
     std::string scale_type = "plain brown";
 
     // center title
-    int offset = 39 - strlen(mut_title) / 2;
+    int offset = 39 - strwidth(mut_title) / 2;
     if (offset < 0) offset = 0;
 
     result += std::string(offset, ' ');
