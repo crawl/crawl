@@ -736,6 +736,52 @@ std::vector<std::string> split_string(const std::string &sep,
     return segments;
 }
 
+// The provided string is consumed!
+std::string wordwrap_line(std::string &s, int width)
+{
+    const char *cp0 = s.c_str();
+    const char *cp = cp0, *space = 0;
+    ucs_t c;
+
+    while (int clen = utf8towc(&c, cp))
+    {
+        int cw = wcwidth(c);
+        if (c == ' ')
+            space = cp;
+        else if (c == '\n')
+        {
+            space = cp;
+            break;
+        }
+        if (cw > width)
+            break;
+        if (cw >= 0)
+            width -= cw;
+        cp += clen;
+    }
+
+    if (!c)
+    {
+        // everything fits
+        std::string ret = s;
+        s.clear();
+        return ret;
+    }
+
+    if (space)
+        cp = space;
+    const std::string ret = s.substr(0, cp - cp0);
+
+    // eat all trailing spaces and up to one newline
+    while (*cp == ' ')
+        cp++;
+    if (*cp == '\n')
+        cp++;
+    s.erase(0, cp - cp0);
+
+    return ret;
+}
+
 // The old school way of doing short delays via low level I/O sync.
 // Good for systems like old versions of Solaris that don't have usleep.
 #ifdef NEED_USLEEP

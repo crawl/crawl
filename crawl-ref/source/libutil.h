@@ -81,6 +81,7 @@ int strwidth(const char *s);
 int strwidth(const std::string &s);
 std::string chop_string(const char *s, int width, bool spaces = true);
 std::string chop_string(const std::string &s, int width, bool spaces = true);
+std::string wordwrap_line(std::string &s, int cols);
 
 // String "tags"
 #define TAG_UNFOUND -20404
