@@ -487,8 +487,21 @@ int SDLWrapper::wait_event(wm_event *event)
 
         // Everything that's not an actual character (ie, all special keys)
         // must be < 0.  Dead/shift keys are 0.
-        ASSERT(event->key.keysym.unicode && event->key.keysym.sym > 0
-           || !event->key.keysym.unicode && event->key.keysym.sym <= 0);
+#ifdef ASSERTS
+        if (event->key.keysym.unicode)
+        {
+            if (event->key.keysym.sym <= 0)
+            {
+                die("Valid character '%lc' %d[%x] yet keysym %d <= 0",
+                    event->key.keysym.unicode,
+                    event->key.keysym.unicode,
+                    event->key.keysym.unicode,
+                    event->key.keysym.sym);
+            }
+        }
+        else if (event->key.keysym.sym > 0)
+            die("Keysym %d > 0 yet no valid character", event->key.keysym.sym);
+#endif
         break;
     case SDL_KEYUP:
         event->type = WM_KEYUP;
