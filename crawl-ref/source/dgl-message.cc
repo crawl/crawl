@@ -12,6 +12,7 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
+#include "syscalls.h"
 
 #include <errno.h>
 #include <sys/stat.h>
