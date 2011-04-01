@@ -437,14 +437,19 @@ void mark_had_book(const item_def &book)
     if (book.sub_type == BOOK_RANDART_LEVEL)
     {
         god_type god;
-        int      level = book.plus;
-        ASSERT(level > 0 && level <= 9);
-
-        if (origin_is_acquirement(book)
-            || origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA)
+        const int level = book.plus;
+#if TAG_MAJOR_VERSION == 32
+        if (level > 0 && level <= 9)
         {
-            you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
+            if (origin_is_acquirement(book)
+                || origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA)
+            {
+                you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
+            }
         }
+#else
+        ASSERT(level > 0 && level <= 9);
+#endif
     }
 
     if (!book.props.exists(SPELL_LIST_KEY))
