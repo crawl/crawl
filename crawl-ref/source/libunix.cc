@@ -605,6 +605,8 @@ void cprintf(const char *format, ...)
 int putwch(ucs_t chr)
 {
     wchar_t c = chr;
+    if (!c)
+        c = ' ';
     // TODO: recognize unsupported characters and try to transliterate
     return (addnwstr(&c, 1));
 }
