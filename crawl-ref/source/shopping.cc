@@ -277,8 +277,8 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
-        cprintf("%-56s%5d gold",
-                item.name(DESC_NOCAP_A, false, id).substr(0, 56).c_str(),
+        cprintf("%s%5d gold",
+                chop_string(item.name(DESC_NOCAP_A, false, id), 56).c_str(),
                 gp_value);
 
         si.add_item(item, gp_value);

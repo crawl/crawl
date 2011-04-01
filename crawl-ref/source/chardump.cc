@@ -1024,11 +1024,8 @@ static void _sdump_spells(dump_params &par)
                 spell_line += " - ";
                 spell_line += spell_title(spell);
 
-                if (spell_line.length() > 24)
-                    spell_line = spell_line.substr(0, 24);
-
-                for (int i = spell_line.length(); i < 26; i++)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 24);
+                spell_line += "  ";
 
                 bool already = false;
 
@@ -1042,24 +1039,20 @@ static void _sdump_spells(dump_params &par)
                     }
                 }
 
-                for (int i = spell_line.length(); i < 41; ++i)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 41);
 
                 spell_line += spell_power_string(spell);
 
-                for (int i = spell_line.length(); i < 54; ++i)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 54);
 
                 spell_line += failure_rate_to_string(spell_fail(spell));
 
-                for (int i = spell_line.length(); i < 66; i++)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 66);
 
                 itoa(spell_difficulty(spell), tmp_quant, 10);
                 spell_line += tmp_quant;
 
-                for (int i = spell_line.length(); i < 71; i++)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 71);
 
                 spell_line += spell_hunger_string(spell);
                 spell_line += "\n";

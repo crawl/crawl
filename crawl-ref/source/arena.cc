@@ -220,11 +220,11 @@ namespace arena
         if (number >= 0)
             text = make_stringf("(%d) %s", number, text.c_str());
 
-        if (text.length() > sz)
-            text = text.substr(0, sz);
+        unsigned len = strwidth(text);
+        if (len > sz)
+            text = chop_string(text, len = sz);
 
-        int padding = (sz - text.length()) / 2 + text.length();
-        cprintf("%*s", padding, text.c_str());
+        cprintf("%s%s", std::string((sz - len) / 2, ' ').c_str(), text.c_str());
     }
 
     void setup_level()
