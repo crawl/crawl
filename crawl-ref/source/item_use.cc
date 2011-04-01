@@ -5154,38 +5154,16 @@ void read_scroll(int slot)
 
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
-    {
-        // make sure there's something to curse first
-        int count = 0;
-        int affected = EQ_WEAPON;
-        int min_type, max_type;
-        if (which_scroll == SCR_CURSE_ARMOUR)
-            min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
-        else
-            min_type = EQ_LEFT_RING, max_type = EQ_AMULET;
-        for (int i = min_type; i <= max_type; i++)
+        if (!curse_item(which_scroll == SCR_CURSE_ARMOUR, alreadyknown))
         {
-            if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
-            {
-                count++;
-                if (one_chance_in(count))
-                    affected = i;
-            }
+            if (alreadyknown)
+                cancel_scroll = you.religion == GOD_ASHENZARI;
+            else
+                id_the_scroll = false;
         }
-
-        if (affected == EQ_WEAPON)
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
-            break;
-        }
-
-        // Make the name before we curse it.
-        do_curse_item(you.inv[you.equip[affected]], false);
-        learned_something_new(HINT_YOU_CURSED);
-        bad_effect = true;
+         else
+             bad_effect = true;
         break;
-    }
 
     case SCR_HOLY_WORD:
     {

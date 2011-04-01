@@ -646,6 +646,78 @@ bool remove_curse(bool alreadyknown)
     return (success);
 }
 
+static bool _selectively_curse_item(bool armour)
+{
+    while(1)
+    {
+        int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
+                                           armour ? OSEL_UNCURSED_WORN_ARMOUR
+                                                  : OSEL_UNCURSED_WORN_JEWELLERY,
+                                           true, true, false);
+        if (prompt_failed(item_slot))
+            return false;
+
+        item_def& item(you.inv[item_slot]);
+
+        if (item.cursed()
+            || !item_is_equipped(item)
+            || armour && item.base_type != OBJ_ARMOUR
+            || !armour && item.base_type != OBJ_JEWELLERY)
+        {
+            mprf("Choose an uncursed equipped piece of %s, or Esc to abort.",
+                 armour ? "armour" : "jewellery");
+            if (Options.auto_list)
+                more();
+            continue;
+        }
+
+        do_curse_item(item, false);
+        return true;
+    }
+}
+
+bool curse_item(bool armour, bool alreadyknown)
+{
+    // make sure there's something to curse first
+    int count = 0;
+    int affected = EQ_WEAPON;
+    int min_type, max_type;
+    if (armour)
+        min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
+    else
+        min_type = EQ_LEFT_RING, max_type = EQ_AMULET;
+    for (int i = min_type; i <= max_type; i++)
+    {
+        if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
+        {
+            count++;
+            if (one_chance_in(count))
+                affected = i;
+        }
+    }
+
+    if (affected == EQ_WEAPON)
+    {
+        if (you.religion == GOD_ASHENZARI && alreadyknown)
+        {
+            mprf(MSGCH_PROMPT, "You aren't wearing any piece of uncursed %s.",
+                 armour ? "armour" : "jewellery");
+        }
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
+
+        return false;
+    }
+
+    if (you.religion == GOD_ASHENZARI && alreadyknown)
+        return _selectively_curse_item(armour);
+
+    // Make the name before we curse it.
+    do_curse_item(you.inv[you.equip[affected]], false);
+    learned_something_new(HINT_YOU_CURSED);
+    return true;
+}
+
 bool detect_curse(int scroll, bool suppress_msg)
 {
     int item_count = 0;
