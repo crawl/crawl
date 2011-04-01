@@ -2969,8 +2969,8 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     //tmp->set_visible(true);
 
     // Only add tab entry if we have a previous map choice
-    if (crawl_state.game_is_sprint()
-        && !defaults.map.empty() && _char_defined(defaults))
+    if (crawl_state.game_is_sprint() && !defaults.map.empty()
+        && defaults.type == GAME_TYPE_SPRINT && _char_defined(defaults))
     {
         tmp = new TextItem();
         text.clear();
