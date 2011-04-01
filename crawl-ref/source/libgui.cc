@@ -67,6 +67,8 @@ void gui_init_view_params(crawl_view_geometry &geom)
 
 int putwch(ucs_t chr)
 {
+    if (!chr)
+        chr = ' ';
     TextRegion::text_mode->putwch(chr);
     return 0;
 }
