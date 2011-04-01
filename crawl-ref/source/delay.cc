@@ -1036,7 +1036,10 @@ static void _finish_delay(const delay_queue_item &delay)
         if (is_vampire_feeding())
         {
             if (mons_skeleton(item.plus) && one_chance_in(3))
+            {
                 turn_corpse_into_skeleton(item);
+                item_check(false);
+            }
             else
             {
                 if (delay.parm1)
@@ -1233,7 +1236,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                              : "bottling this corpse's blood");
             _pop_delay();
         }
-        StashTrack.update_stash(you.pos()); // Stash-track the generbated items.
+        StashTrack.update_stash(you.pos()); // Stash-track the generated items.
         break;
     }
 
