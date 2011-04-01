@@ -30,6 +30,8 @@ enum object_selector
     OSEL_FRUIT       = -13,
     OSEL_PONDER_ARM  = -14,
     OSEL_CURSED_WORN = -15,
+    OSEL_UNCURSED_WORN_ARMOUR    = -16,
+    OSEL_UNCURSED_WORN_JEWELLERY = -17
 };
 
 #define SLOT_BARE_HANDS      -2
