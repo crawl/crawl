@@ -561,76 +561,26 @@ static void _sdump_lua(dump_params &par)
  // XXX: should be replaced by some other linewrapping function
  //      now EOL munging is gone
  //---------------------------------------------------------------
-std::string munge_description(const std::string & inStr)
+std::string munge_description(std::string inStr)
 {
     std::string outStr;
 
     outStr.reserve(inStr.length() + 32);
 
     const int kIndent = 3;
-    int lineLen = kIndent;
 
-    unsigned int i = 0;
+    if (inStr.empty()) // always at least an empty line
+        return "\n";
 
-    outStr += std::string(kIndent, ' ');
-
-    while (i < inStr.length())
+    while (!inStr.empty())
     {
-        const char ch = inStr[i];
-
-        if (ch == '\n')
-        {
-            outStr += "\n";
-
-            outStr += std::string(kIndent, ' ');
-            lineLen = kIndent;
-
-            while (inStr[++i] == '\n')
-                ;
-        }
-        else if (isspace(ch))
-        {
-            if (lineLen >= 79)
-            {
-                outStr += "\n";
-                outStr += std::string(kIndent, ' ');
-                lineLen = kIndent;
-
-            }
-            else if (lineLen > 0)
-            {
-                outStr += ch;
-                ++lineLen;
-            }
-            ++i;
-        }
-        else
-        {
-            std::string word;
-
-            while (i < inStr.length()
-                   && lineLen + word.length() < 79
-                   && !isspace(inStr[i]) && inStr[i] != '\n')
-            {
-                word += inStr[i++];
-            }
-
-            if (lineLen + word.length() >= 79)
-            {
-                outStr += "\n";
-                outStr += std::string(kIndent, ' ');
-                lineLen = kIndent;
-            }
-
-            outStr += word;
-            lineLen += word.length();
-        }
+        outStr += std::string(kIndent, ' ')
+                + wordwrap_line(inStr, 79 - kIndent)
+                + "\n";
     }
 
-    outStr += "\n";
-
     return (outStr);
-}                               // end munge_description()
+}
 
 static void _sdump_messages(dump_params &par)
 {

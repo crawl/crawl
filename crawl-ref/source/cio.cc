@@ -197,42 +197,23 @@ int nowrap_eol_cprintf(const char *s, ...)
 }
 
 // cprintf that knows how to wrap down lines (primitive, but what the heck)
-int wrapcprintf(int wrapcol, const char *s, ...)
+void wrapcprintf(int wrapcol, const char *s, ...)
 {
-    char buf[1000]; // Hard max
     va_list args;
     va_start(args, s);
-
-    // XXX: If snprintf isn't available, vsnprintf probably isn't, either.
-    int len = std::min<int>(vsnprintf(buf, sizeof buf, s, args), sizeof buf);
-    int olen = len;
+    std::string buf = vmake_stringf(s, args);
     va_end(args);
 
-    char *run = buf;
-    while (len > 0)
+    while (!buf.empty())
     {
         int x = wherex(), y = wherey();
 
-        if (x > wrapcol) // Somebody messed up!
-            return 0;
-
         int avail = wrapcol - x + 1;
-        int c = 0;
-        if (len > avail)
-        {
-            c = run[avail];
-            run[avail] = 0;
-        }
-        cprintf("%s", run);
-
-        if (len > avail)
-            run[avail] = c;
-
-        if ((len -= avail) > 0)
+        if (avail > 0)
+            cprintf("%s", wordwrap_line(buf, avail).c_str());
+        if (!buf.empty())
             cgotoxy(1, y + 1);
-        run += avail;
     }
-    return (olen);
 }
 
 int cancelable_get_line(char *buf, int len, input_history *mh,
