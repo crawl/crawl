@@ -77,7 +77,7 @@ struct message_item
           turn(you.num_turns)
     {
          // Don't join long messages.
-         join = jn && pure_text().length() < 40;
+         join = jn && strwidth(pure_text()) < 40;
     }
 
     // Constructor for restored messages.
@@ -144,8 +144,8 @@ struct message_item
                     seplen++;
                 }
                 sep += " </lightgrey>";
-                if (pure_text().length() + seplen + other.pure_text().length()
-                    > msgwin_line_length())
+                if (strwidth(pure_text()) + seplen + strwidth(other.pure_text())
+                    > (int)msgwin_line_length())
                 {
                     return false;
                 }

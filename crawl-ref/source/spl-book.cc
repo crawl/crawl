@@ -1017,7 +1017,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
         desc << chop_string(spell_title(spell), 30);
         desc << spell_schools_string(spell);
 
-        int so_far = desc.str().length() - (colour_to_str(colour).length()+2);
+        int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
 

@@ -391,7 +391,7 @@ void cast_toxic_radiance(bool non_player)
             make_stringf("%s %s poisoned.",
                          _describe_monsters(affected_monsters).c_str(),
                          _monster_count(affected_monsters) == 1? "is" : "are");
-        if (static_cast<int>(message.length()) < get_number_of_cols() - 2)
+        if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
         {
@@ -448,7 +448,7 @@ void cast_refrigeration(int pow, bool non_player, bool freeze_potions)
             make_stringf("%s %s frozen.",
                          _describe_monsters(affected_monsters).c_str(),
                          _monster_count(affected_monsters) == 1? "is" : "are");
-        if (static_cast<int>(message.length()) < get_number_of_cols() - 2)
+        if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
         {

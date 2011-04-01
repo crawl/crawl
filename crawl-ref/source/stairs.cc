@@ -413,9 +413,9 @@ static void _leaving_level_now()
 
     if (!you.level_type_name.empty() && you.level_type_name_abbrev.empty())
     {
-        if (you.level_type_name.length() <= MAX_NOTE_PLACE_LEN)
+        if (strwidth(you.level_type_name) <= MAX_NOTE_PLACE_LEN)
             you.level_type_name_abbrev = you.level_type_name;
-        else if (you.level_type_tag.length() <= MAX_NOTE_PLACE_LEN)
+        else if (strwidth(you.level_type_tag) <= MAX_NOTE_PLACE_LEN)
             you.level_type_name_abbrev = spaced_tag;
         else
         {

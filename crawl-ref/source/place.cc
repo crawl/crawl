@@ -146,7 +146,7 @@ std::string short_place_name(unsigned short place)
 std::string prep_branch_level_name(unsigned short packed_place)
 {
     std::string place = place_name(packed_place, true, true);
-    if (place.length() && place != "Pandemonium")
+    if (!place.empty() && place != "Pandemonium")
         place[0] = tolower(place[0]);
     return (place.find("level") == 0 ? "on " + place
                                      : "in " + place);

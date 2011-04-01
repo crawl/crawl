@@ -155,7 +155,7 @@ static std::string _spell_base_description(spell_type spell)
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = strwidth(desc.str()) - (colour_to_str(highlight).length()+2);
+    const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 

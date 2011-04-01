@@ -1268,7 +1268,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         item.sub_type = i;
         std::string name = item.name(desc, terse, true);
 
-        max_width = std::max(max_width, (int) name.length());
+        max_width = std::max(max_width, strwidth(name));
     }
 
     // Now output the sub types.

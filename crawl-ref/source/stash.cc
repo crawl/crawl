@@ -809,7 +809,7 @@ void Stash::write(FILE *f, int refx, int refy,
             desc.erase(desc.find_last_not_of(" \n\t") + 1);
             desc.erase(0, desc.find_first_not_of(" \n\t"));
             // If string is not-empty, pad out to a neat indent
-            if (desc.length())
+            if (!desc.empty())
             {
                 // Walk backwards and prepend indenting spaces to \n characters.
                 for (int j = desc.length() - 1; j >= 0; --j)
@@ -1784,7 +1784,7 @@ void StashTracker::search_stashes()
     msgwin_reply(validline ? buf : "");
 
     mesclr();
-    if (!validline || (!*buf && !lastsearch.length()))
+    if (!validline || (!*buf && lastsearch.empty()))
         return;
 
     std::string csearch = *buf? buf : lastsearch;

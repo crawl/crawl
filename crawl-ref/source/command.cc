@@ -2159,7 +2159,7 @@ static void _add_command(column_composer &cols, const int column,
     if (strcmp(command_name.c_str(), "<") == 0)
         command_name += "<";
 
-    const int cmd_len = command_name.length();
+    const int cmd_len = strwidth(command_name);
     std::string line = "<w>" + command_name + "</w>";
     for (unsigned int i = cmd_len; i < space_to_colon; ++i)
         line += " ";

@@ -1158,7 +1158,7 @@ static void _sdump_kills_by_place(dump_params &par)
         result += _sdump_kills_place_info(pi);
     }
 
-    if (result.length() > 0)
+    if (!result.empty())
         text += header + result + footer + "\n";
 }
 
