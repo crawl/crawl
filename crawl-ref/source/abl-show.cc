@@ -2912,9 +2912,9 @@ static std::string _describe_talent(const talent& tal)
 
     std::ostringstream desc;
     desc << std::left
-         << std::setw(32) << ability_name(tal.which)
-         << std::setw(27) << make_cost_description(tal.which)
-         << std::setw(10) << failure_rate_to_string(tal.fail);
+         << chop_string(ability_name(tal.which), 32)
+         << chop_string(make_cost_description(tal.which), 27)
+         << chop_string(failure_rate_to_string(tal.fail), 10);
     return desc.str();
 }
 

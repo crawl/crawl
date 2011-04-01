@@ -150,17 +150,17 @@ static std::string _spell_base_description(spell_type spell)
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
-    desc << std::setw(30) << spell_title(spell);
+    desc << chop_string(spell_title(spell), 30);
 
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = desc.str().length() - (colour_to_str(highlight).length()+2);
+    const int so_far = strwidth(desc.str()) - (colour_to_str(highlight).length()+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 
     // spell fail rate, level
-    desc << std::setw(12) << failure_rate_to_string(spell_fail(spell))
+    desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
          << spell_difficulty(spell);
     desc << "</" << colour_to_str(highlight) <<">";
 
@@ -176,14 +176,14 @@ static std::string _spell_extra_description(spell_type spell)
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
-    desc << std::setw(30) << spell_title(spell);
+    desc << chop_string(spell_title(spell), 30);
 
     // spell power, spell range, hunger level, level
     const std::string rangestring = spell_range_string(spell);
 
-    desc << std::setw(14) << spell_power_string(spell)
-         << std::setw(16 + tagged_string_tag_length(rangestring)) << rangestring
-         << std::setw(12) << spell_hunger_string(spell)
+    desc << chop_string(spell_power_string(spell), 14)
+         << chop_string(rangestring, 16 + tagged_string_tag_length(rangestring))
+         << chop_string(spell_hunger_string(spell), 12)
          << spell_difficulty(spell);
 
     desc << "</" << colour_to_str(highlight) <<">";

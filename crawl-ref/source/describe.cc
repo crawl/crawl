@@ -3803,8 +3803,8 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 
     if (cost != "(None)")
     {
-        const int spacesleft = 79 - buf.str().length();
-        buf << std::setw(spacesleft) << cost;
+        const int spacesleft = 79 - strwidth(buf.str());
+        buf << chop_string(cost, spacesleft);
     }
 
     cprintf("%s\n", buf.str().c_str());

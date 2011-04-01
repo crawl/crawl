@@ -129,21 +129,13 @@ std::string make_time_string(time_t abs_time, bool terse)
     const int mins  = (abs_time % 3600) / 60;
     const int secs  = abs_time % 60;
 
-    std::ostringstream buff;
-    buff << std::setfill('0');
-
+    std::string buff;
     if (days > 0)
     {
-        if (terse)
-            buff << days << ", ";
-        else
-            buff << days << (days > 1 ? " days" : "day");
+        buff += make_stringf("%d%s ", days, terse ? ","
+                             : days > 1 ? "days" : "day");
     }
-
-    buff << std::setw(2) << hours << ':'
-         << std::setw(2) << mins << ':'
-         << std::setw(2) << secs;
-    return buff.str();
+    return buff + make_stringf("%02:%02:%02", hours, mins, secs);
 }
 
 std::string make_file_time(time_t when)
