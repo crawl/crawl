@@ -1286,7 +1286,7 @@ void game_options::add_cset_override(
 }
 
 void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
-                                     unsigned symbol)
+                                     int symbol)
 {
     if (symbol >= 0)
     {
