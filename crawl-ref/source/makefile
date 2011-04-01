@@ -713,27 +713,21 @@ datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
 
 ifndef NO_NCURSES
 
-NC_LIB = ncurses
 NC_PREFIX = /usr
-NC_INCLUDE = $(NC_PREFIX)/include/ncurses
-
-# Usually, it can be autodetected for you:
-ifneq ($(shell ls $(NC_PREFIX)/include/ncursesw 2> /dev/null),)
-NC_INCLUDE = $(NC_PREFIX)/include/ncursesw
-endif
-
-INCLUDES_L += -I$(NC_INCLUDE)
 
 # Include path for (n)curses with Unicode support.
 
 # Your ncurses library may include Unicode support, and you may not have a
-# separate libncursesw; in that case, change this line accordingly.
-NC_LIB  = ncursesw
-
-# The standard ncurses library also supports Unicode on Mac OS/Darwin.
+# separate libncursesw; this is the case on Mac OS/Darwin.
 ifdef LIBNCURSES_IS_UNICODE
 NC_LIB = ncurses
+NC_INCLUDE = $(NC_PREFIX)/include/ncurses
+else
+NC_LIB = ncursesw
+NC_INCLUDE = $(NC_PREFIX)/include/ncursesw
 endif
+
+INCLUDES_L += -I$(NC_INCLUDE)
 
 ifndef TILES
 LIBS += -L$(NC_PREFIX)/lib -l$(NC_LIB)
