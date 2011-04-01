@@ -63,8 +63,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
     else
     {
         std::string text = me->get_text(needs_cursor);
-        if ((int) text.length() > get_number_of_cols())
-            text = text.substr(0, get_number_of_cols());
+        text = chop_string(text, get_number_of_cols());
         cprintf("%s", text.c_str());
     }
 }
@@ -639,10 +638,7 @@ bool Menu::draw_title_suffix(const std::string &s, bool titlefirst)
 
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
     unsigned avail_width = get_number_of_cols() - x + 1;
-    std::string towrite = s.length() > avail_width? s.substr(0, avail_width) :
-                          s.length() == avail_width? s :
-                                s + std::string(avail_width - s.length(), ' ');
-
+    std::string towrite = chop_string(s, avail_width);
     cprintf("%s", towrite.c_str());
 
     cgotoxy(oldx, oldy);
@@ -2582,13 +2578,9 @@ void TextItem::render()
         textbackground(m_bg_colour);
         cprintf("%s", m_render_text.substr(newline_pos, endline_pos).c_str());
         if (endline_pos != std::string::npos)
-        {
             newline_pos = endline_pos + 1;
-        }
         else
-        {
             break;
-        }
     }
     // clear text background
     textbackground(BLACK);

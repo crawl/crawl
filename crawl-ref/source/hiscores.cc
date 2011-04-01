@@ -1439,11 +1439,10 @@ void scorefile_entry::fixup_char_name()
 
 std::string scorefile_entry::single_cdesc() const
 {
-    std::string scname = name;
-    if (scname.length() > 10)
-        scname = scname.substr(0, 10);
+    std::string scname;
+    scname = chop_string(name, 10);
 
-    return make_stringf("%8d %-10s %s-%02d%s", points, scname.c_str(),
+    return make_stringf("%8d %s %s-%02d%s", points, scname.c_str(),
                          race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "");
 }
 

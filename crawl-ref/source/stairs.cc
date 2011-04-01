@@ -374,11 +374,11 @@ static void _leaving_level_now()
     if (you.level_type_name_abbrev != oldname_abbrev)
         newname_abbrev = you.level_type_name_abbrev;
 
-    if (newname_abbrev.length() > MAX_NOTE_PLACE_LEN)
+    if (strwidth(newname_abbrev) > MAX_NOTE_PLACE_LEN)
     {
         mprf(MSGCH_ERROR, "'%s' is too long for a portal vault name "
                           "abbreviation, truncating");
-        newname_abbrev = newname_abbrev.substr(0, MAX_NOTE_PLACE_LEN);
+        newname_abbrev = chop_string(newname_abbrev, MAX_NOTE_PLACE_LEN, false);
     }
 
     you.level_type_origin = "";
@@ -420,10 +420,11 @@ static void _leaving_level_now()
         else
         {
             const std::string shorter =
-                you.level_type_name.length() < you.level_type_tag.length() ?
+                strwidth(you.level_type_name) < strwidth(you.level_type_tag) ?
                     you.level_type_name : spaced_tag;
 
-            you.level_type_name_abbrev = shorter.substr(0, MAX_NOTE_PLACE_LEN);
+            you.level_type_name_abbrev = chop_string(shorter,
+                                         MAX_NOTE_PLACE_LEN, false);
         }
     }
 

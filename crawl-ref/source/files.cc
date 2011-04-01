@@ -774,7 +774,7 @@ std::string get_save_filename(const std::string &prefix,
     std::string result = "";
 
     // Shorten string as appropriate
-    result += strip_filename_unsafe_chars(prefix).substr(0, kFileNameLen);
+    result += chop_string(strip_filename_unsafe_chars(prefix), kFileNameLen, false);
 
     result += suffix;
 
