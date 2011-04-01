@@ -79,6 +79,8 @@ size_t strlcpy(char *dst, const char *src, size_t n);
 
 int strwidth(const char *s);
 int strwidth(const std::string &s);
+std::string chop_string(const char *s, int width, bool spaces = true);
+std::string chop_string(const std::string &s, int width, bool spaces = true);
 
 // String "tags"
 #define TAG_UNFOUND -20404
