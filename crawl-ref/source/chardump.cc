@@ -1439,6 +1439,7 @@ void whereis_record(const char *status)
 
 #ifdef DGL_TURN_TIMESTAMPS
 
+#include "syscalls.h"
 #include <sys/stat.h>
 
 // File-format version for timestamp files. Crawl will never append to a
