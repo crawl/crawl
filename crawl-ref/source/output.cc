@@ -582,7 +582,7 @@ static void _print_status_lights(int y)
     while (true)
     {
         const int end_x = (wherex() - crawl_view.hudp.x)
-                + (i_light < lights.size() ? lights[i_light].text.length()
+                + (i_light < lights.size() ? strwidth(lights[i_light].text)
                                            : 10000);
 
         if (end_x <= crawl_view.hudsz.x)
@@ -770,7 +770,7 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
 {
     std::string title = your_name + " the " + job_name;
 
-    unsigned int in_len = title.length();
+    unsigned int in_len = strwidth(title);
     const unsigned int WIDTH = crawl_view.hudsz.x;
     if (in_len > WIDTH)
     {
@@ -821,9 +821,10 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
         std::string piety = _god_powers(true);
         if (player_under_penance())
             textcolor(RED);
-        if ((species.length() + god.length() + piety.length() + 1) <= WIDTH)
+        if ((strwidth(species) + strwidth(god) + strwidth(piety) + 1) <= WIDTH)
             nowrap_eol_cprintf(" %s", piety.c_str());
-        else if ((species.length() + god.length() + piety.length() + 1) == (WIDTH + 1))
+        else if ((strwidth(species) + strwidth(god) + strwidth(piety) + 1)
+                  == (WIDTH + 1))
         {
             //mottled draconian of TSO doesn't fit by one symbol,
             //so we remove leading space.
@@ -1357,8 +1358,8 @@ static std::string _overview_screen_title()
              " Turns: %d, Time: %s",
              you.num_turns, make_time_string(you.real_time, true).c_str());
 
-    int linelength = you.your_name.length() + strlen(title)
-                     + strlen(species_job) + strlen(time_turns);
+    int linelength = strwidth(you.your_name) + strwidth(title)
+                     + strwidth(species_job) + strwidth(time_turns);
     for (int count = 0; linelength >= get_number_of_cols() && count < 2;
          count++)
     {
@@ -1376,8 +1377,8 @@ static std::string _overview_screen_title()
           default:
               break;
         }
-        linelength = you.your_name.length() + strlen(title)
-                     + strlen(species_job) + strlen(time_turns);
+        linelength = strwidth(you.your_name) + strwidth(title)
+                     + strwidth(species_job) + strwidth(time_turns);
     }
 
     std::string text;

@@ -211,7 +211,7 @@ void KillMaster::add_kill_info(std::string &killtext,
 #endif
     {
 #ifdef CLUA_BINDINGS
-        if (clua.error.length())
+        if (!clua.error.empty())
         {
             killtext += "Lua error:\n";
             killtext += clua.error + "\n\n";

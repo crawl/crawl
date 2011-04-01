@@ -1407,7 +1407,7 @@ std::string scorefile_entry::terse_missile_cause() const
 
     std::string missile = terse_missile_name();
 
-    if (missile.length())
+    if (!missile.empty())
         mcause += "/" + missile;
 
     return (mcause);

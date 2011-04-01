@@ -1492,7 +1492,7 @@ std::string artefact_name(const item_def &item, bool appearance)
              // If still nothing found, try base type alone.
              || _artefact_name_lookup(name, item, _get_artefact_type(item)));
         }
-        while (--tries > 0 && name.length() > 25);
+        while (--tries > 0 && strwidth(name) > 25);
 
         if (name.empty()) // still nothing found?
             result += "of Bugginess";

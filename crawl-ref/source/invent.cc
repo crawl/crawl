@@ -391,21 +391,18 @@ void InvMenu::set_title(const std::string &s)
     std::string stitle = s;
     if (stitle.empty())
     {
-        std::ostringstream default_title;
         const int cap = carrying_capacity(BS_UNENCUMBERED);
 
-        default_title << make_stringf(
+        stitle = make_stringf(
             "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots)",
             BURDEN_TO_AUM * you.burden,
             BURDEN_TO_AUM * cap,
             (you.burden * 100) / cap,
             inv_count());
 
-        default_title << std::setw(get_number_of_cols() - default_title.str().length() - 1)
-                      << std::right
-                      << "Press item letter to examine.";
-
-        stitle = default_title.str();
+        std::string prompt = "Press item letter to examine.";
+        stitle = stitle + std::string(get_number_of_cols() - strwidth(stitle)
+                                      - strwidth(prompt), ' ') + prompt;
     }
 
     set_title(new InvTitle(this, stitle, title_annotate));
@@ -821,8 +818,7 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             if (!glyphs.empty())
             {
                 const std::string str = "Magical Staves and Rods"; // longest string
-                subtitle += std::string(str.length()
-                                        - subtitle.length() + 1, ' ');
+                subtitle += std::string(strwidth(str) - strwidth(subtitle) + 1, ' ');
                 subtitle += "(select all with ";
 #ifdef USE_TILE
                 // For some reason, this is only formatted correctly in the

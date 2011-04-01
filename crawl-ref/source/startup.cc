@@ -719,9 +719,9 @@ static void _show_startup_menu(newgame_def* ng_choice,
                     full_name = false;
                     input_string = "";
                 }
-                if ((int) input_string.length() < kNameLen)
+                if (strwidth(input_string) < kNameLen)
                 {
-                    input_string += static_cast<char> (keyn);
+                    input_string += stringize_glyph(keyn);
                     changed_name = true;
                 }
             }

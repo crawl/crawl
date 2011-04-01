@@ -1713,9 +1713,7 @@ void append_spells(std::string &desc, const item_def &item)
 
         std::string name = (is_memorised(stype) ? "*" : "");
                     name += spell_title(stype);
-        desc += name;
-        for (unsigned int i = 0; i < 35 - name.length(); ++i)
-             desc += " ";
+        desc += chop_string(name, 35);
 
         std::string schools;
         if (item.base_type == OBJ_STAVES)
@@ -1723,9 +1721,7 @@ void append_spells(std::string &desc, const item_def &item)
         else
             schools = spell_schools_string(stype);
 
-        desc += schools;
-        for (unsigned int i = 36; i < 65 - schools.length(); ++i)
-             desc += " ";
+        desc += chop_string(schools, 65 - 36);
 
         char sval[3];
         itoa(spell_difficulty(stype), sval, 10);
@@ -3699,7 +3695,7 @@ std::string short_ghost_description(const monster *mon, bool abbrev)
                         species_name(ghost.species).c_str(),
                         get_job_name(ghost.job));
 
-    if (abbrev || desc.length() > 40)
+    if (abbrev || strwidth(desc) > 40)
     {
         desc = make_stringf("%s %s%s",
                             rank,
@@ -3788,8 +3784,7 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
     if (final_msg.empty())
         return (false);
 
-    std::ostringstream buf;
-    buf << final_msg;
+    std::string buf = final_msg;
 
     // For ability slots that give more than one ability, display
     // "Various" instead of the cost of the first ability.
@@ -3803,11 +3798,13 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 
     if (cost != "(None)")
     {
-        const int spacesleft = 79 - strwidth(buf.str());
-        buf << chop_string(cost, spacesleft);
+        int spacesleft = 79 - strwidth(buf) - strwidth(cost);
+        while (spacesleft--)
+            buf += ' ';
+        buf += cost;
     }
 
-    cprintf("%s\n", buf.str().c_str());
+    cprintf("%s\n", buf.c_str());
 
     return (true);
 }
@@ -4104,7 +4101,7 @@ static void _detailed_god_description(god_type which_god)
     const int width = std::min(80, get_number_of_cols());
 
     std::string godname = god_name(which_god, true);
-    int len = get_number_of_cols() - godname.length();
+    int len = get_number_of_cols() - strwidth(godname);
     textcolor(god_colour(which_god));
     cprintf("%s%s\n", std::string(len / 2, ' ').c_str(), godname.c_str());
     textcolor(LIGHTGREY);

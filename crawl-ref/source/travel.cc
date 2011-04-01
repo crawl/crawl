@@ -2053,7 +2053,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                                      branches[br[i]].travel_shortcut,
                                      branches[br[i]].shortname);
             }
-            if (line.length())
+            if (!line.empty())
                 mpr(line.c_str());
         }
 
@@ -3591,7 +3591,7 @@ void TravelCache::list_waypoints() const
             line = "";
         }
     }
-    if (line.length())
+    if (!line.empty())
         mpr(line.c_str());
 }
 
@@ -4288,7 +4288,7 @@ template <class C> void explore_discoveries::say_any(
     const std::string message = "Found " +
         comma_separated_line(coll.begin(), coll.end()) + ".";
 
-    if ((int) message.length() >= get_number_of_cols())
+    if (strwidth(message) >= get_number_of_cols())
         mprf(stub, number_in_words(coll.size()).c_str());
     else
         mprf("%s", message.c_str());
