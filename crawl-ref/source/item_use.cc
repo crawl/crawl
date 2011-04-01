@@ -4938,8 +4938,13 @@ void read_scroll(int slot)
         break;
 
     case SCR_REMOVE_CURSE:
-        if (!remove_curse())
-            id_the_scroll = false;
+        if (!remove_curse(alreadyknown))
+        {
+            if (alreadyknown)
+                cancel_scroll = true;
+            else
+                id_the_scroll = false;
+        }
         break;
 
     case SCR_DETECT_CURSE:

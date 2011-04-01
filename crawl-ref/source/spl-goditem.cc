@@ -603,9 +603,9 @@ static bool _selectively_remove_curse()
     }
 }
 
-bool remove_curse()
+bool remove_curse(bool alreadyknown)
 {
-    if (you.religion == GOD_ASHENZARI)
+    if (you.religion == GOD_ASHENZARI && alreadyknown)
         return _selectively_remove_curse();
 
     bool success = false;
@@ -638,6 +638,8 @@ bool remove_curse()
         mpr("You feel as if something is helping you.");
         learned_something_new(HINT_REMOVED_CURSE);
     }
+    else if (alreadyknown)
+        mpr("None of your equipped items are cursed.", MSGCH_PROMPT);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
