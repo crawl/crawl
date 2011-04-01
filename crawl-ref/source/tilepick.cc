@@ -1657,6 +1657,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ELECTRIC_GOLEM;
 
     // statues (also '8')
+    case MONS_SALT_PILLAR:
+        return TILEP_MONS_PILLAR_OF_SALT;
     case MONS_TRAINING_DUMMY:
         return TILEP_MONS_TRAINING_DUMMY;
     case MONS_ICE_STATUE:
@@ -4352,6 +4354,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_HASTE:                    return TILEG_HASTE;
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
     case SPELL_MASS_CONFUSION:           return TILEG_MASS_CONFUSION;
+    case SPELL_DARKNESS:                 return TILEG_DARKNESS;
 
     // Translocation
     case SPELL_APPORTATION:              return TILEG_APPORTATION;

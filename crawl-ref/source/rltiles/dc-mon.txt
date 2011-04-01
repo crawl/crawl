@@ -365,6 +365,8 @@ vine-covered_golem MONS_VINE_GOLEM
 %sdir dc-mon/unique
 roxanne MONS_ROXANNE
 %sdir dc-mon/statues
+pillar_of_salt MONS_PILLAR_OF_SALT
+training_dummy MONS_TRAINING_DUMMY
 ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
@@ -873,7 +875,6 @@ draco-job-shifter DRACO_SHIFTER
 draco-job-zealot DRACO_ZEALOT
 
 dc-mon/nonliving/test_spawner MONS_TEST_SPAWNER
-dc-mon/statues/training_dummy MONS_TRAINING_DUMMY
 
 dc-misc/unseen PLAYER
 
