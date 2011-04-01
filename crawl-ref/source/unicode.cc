@@ -530,7 +530,7 @@ std::string chop_string(const char *s, int width, bool spaces = true)
     }
 
    if (spaces && width)
-       return std::string(s0, s - s0) + std::string(width, 0);
+       return std::string(s0, s - s0) + std::string(width, ' ');
    return std::string(s0, s - s0);;
 }
 
