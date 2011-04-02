@@ -23,6 +23,7 @@ $(SUBDIRS):
 	    echo; \
 	    echo "The '$@' directory is missing. Have you run"; \
 	    echo "   'git submodule update --init'?"; \
+	    echo "(It's probably better to install all native dependencies instead.)"; \
 	    echo; \
 	    echo "**********************************************************"; \
 	    exit 1; \
@@ -32,6 +33,7 @@ $(SUBDIRS):
 	    echo; \
 	    echo "The '$@' directory exists, but the Makefile is missing!"; \
 	    echo "Did 'git submodule update' work properly?"; \
+	    echo "(It's probably better to install all native dependencies instead.)"; \
 	    echo; \
 	    echo "**********************************************************"; \
 	    exit 1; \
