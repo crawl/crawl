@@ -821,9 +821,12 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
         std::string piety = _god_powers(true);
         if (player_under_penance())
             textcolor(RED);
-        if ((strwidth(species) + strwidth(god) + strwidth(piety) + 1) <= WIDTH)
+        if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
+            <= WIDTH)
+        {
             nowrap_eol_cprintf(" %s", piety.c_str());
-        else if ((strwidth(species) + strwidth(god) + strwidth(piety) + 1)
+        }
+        else if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
                   == (WIDTH + 1))
         {
             //mottled draconian of TSO doesn't fit by one symbol,
