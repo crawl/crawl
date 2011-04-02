@@ -1599,6 +1599,10 @@ shapeshifter
 
 A disturbing creature with the power to change its form. It is very rarely observed alive in its natural state.
 %%%%
+shark
+
+A sharp-toothed predatory fish.
+%%%%
 shedu
 
 These dangerous divine guardians always travel in pairs. Each has the ability to heal the other and, if the worst is to occur, can even resurrect it.
