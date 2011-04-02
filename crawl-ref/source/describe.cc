@@ -2654,7 +2654,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
 
     keyin = tolower(getch_ck());
     command_type action = _get_action(keyin, actions);
-    int slot = letter_to_index(item.slot);
+    int slot = letter_to_index(item.link);
 
     switch (action)
     {
