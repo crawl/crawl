@@ -14,9 +14,14 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     // It must be limited to stuff present both in CP437 and WGL4.
     {
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',
-        '#', '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2302,
+        '#', '_', 0x2229, 0x2320, 0x2248, '8', '{',
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
+        0x2302, // CP437 but "optional" in WGL4
+#else
+        0x2206, // WGL4 and DEC
+#endif
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
-        0x221E, '|', '}', '%', '$', '"', 0xA7, 0x2663,
+        ':', '|', '}', '%', '$', '"', 0xA7, 0x2663,
         ' ', '!', '#', '%', '+', ')', '*', '+',     // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', 0x0398           // fi_stick .. explosion
     },
