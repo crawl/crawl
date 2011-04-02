@@ -4234,6 +4234,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
         while (you.max_stat(s) < 1)
             you.base_stats[s]++;
         you.stat_loss[s] = std::min<int8_t>(you.stat_loss[s], you.max_stat(s) - 1);
+        you.stat_zero[s] = 0;
     }
 
     god_speaks(GOD_XOM, "Xom revives you!");
