@@ -86,6 +86,10 @@ dungeon_char_type dchar_by_name(const std::string &name)
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
         "item_stave", "item_miscellany", "item_corpse", "item_gold",
         "item_amulet", "cloud", "tree",
+        "space", "fired_flask", "fired_bolt", "fired_chunk", "fired_book",
+        "fired_weapon", "fired_zap", "fired_burst", "fired_stick",
+        "fired_trinket", "fired_scroll", "fired_debug", "fired_armour",
+        "fired_missile", "explosion",
     };
 
     for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
