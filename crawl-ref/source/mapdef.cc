@@ -1,9 +1,6 @@
 /**
  * @file
- * @section DESCRIPTION
- *
- *  File:       mapdef.cc
- *  Summary:    Support code for Crawl des files.
+ * @brief Support code for Crawl des files.
 **/
 
 #include "AppHdr.h"

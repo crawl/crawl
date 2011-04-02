@@ -1,8 +1,3 @@
-/*
- *  File:       format.cc
- *  Created by: haranp on Sat Feb 17 13:35:54 2007 UTC
- */
-
 #include <limits.h>
 
 #include "AppHdr.h"

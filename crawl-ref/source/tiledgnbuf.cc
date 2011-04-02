@@ -1,7 +1,3 @@
-/*
- *  File:       tiledgnbuf.cc
- */
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE

@@ -1,8 +1,3 @@
-/*
- *  File:       tilereg_text.h
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #ifdef USE_TILE
 #ifndef TILEREG_TEXT_H
 #define TILEREG_TEXT_H

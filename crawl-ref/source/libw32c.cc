@@ -1,17 +1,15 @@
+/**
+ * @file
+ * @brief Functions for windows32 console mode support.
+**/
+
 #include "AppHdr.h"
 
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
 
-/*
- *  File:       libw32c.cc
- *  Summary:    Functions for windows32 console mode support.
- *              Needed by makefile.mgw.
- *  Written by: Gordon Lipford
- */
-
 // WINDOWS INCLUDES GO HERE
 /*
- * Exclude parts of WINDOWS.H that are not needed
+ * Exclude parts of windows.h that are not needed
  */
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
@@ -38,7 +36,7 @@
 #define NOCTLMGR          /* Control management and controls */
 #define NOHELP            /* Help support */
 /*
- * Exclude parts of WINDOWS.H that are not needed (Win32)
+ * Exclude parts of windows.h that are not needed (Win32)
  */
 #define WIN32_LEAN_AND_MEAN
 #define NONLS             /* All NLS defines and routines */

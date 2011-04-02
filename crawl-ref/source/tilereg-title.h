@@ -1,8 +1,3 @@
-/*
- *  File:       tilereg_title.h
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #ifdef USE_TILE
 #ifndef TILEREG_TITLE_H
 #define TILEREG_TITLE_H

@@ -1,8 +1,8 @@
-/*
- *  File:       tileview.h
- *  Summary:    Tile functions that modify the tiles or flavours in
-                the crawl_environment that are shown to the player.
- */
+/**
+ * @file
+ * @brief Tile functions that modify the tiles or flavours in
+ *        the crawl_environment that are shown to the player.
+**/
 
 #ifndef TILEDRAW_H
 #define TILEDRAW_H
