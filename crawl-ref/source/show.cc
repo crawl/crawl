@@ -117,6 +117,9 @@ bool show_type::is_cleanable_monster() const
 
 static void _update_feat_at(const coord_def &gp)
 {
+    if (!you.see_cell(gp))
+        return;
+
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
 
@@ -217,31 +220,43 @@ static void _update_item_at(const coord_def &gp)
     if (!in_bounds(gp))
         return;
 
-    const item_def *eitem;
+    item_def eitem;
     bool more_items = false;
 
-    // Check for mimics.
-    const monster* m = monster_at(gp);
-    if (m && mons_is_unknown_mimic(m) && mons_is_item_mimic(m->type))
-        eitem = &get_mimic_item(m);
-    else if (you.visible_igrd(gp) != NON_ITEM)
-        eitem = &mitm[you.visible_igrd(gp)];
+    if (you.see_cell(gp))
+    {
+        // Check for mimics.
+        const monster* m = monster_at(gp);
+        if (m && mons_is_unknown_mimic(m) && mons_is_item_mimic(m->type))
+            eitem = get_mimic_item(m);
+        else if (you.visible_igrd(gp) != NON_ITEM)
+            eitem = mitm[you.visible_igrd(gp)];
+        else
+            return;
+
+        // monster(mimic)-owned items have link = NON_ITEM+1+midx
+        if (eitem.link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
+            more_items = true;
+        else if (eitem.link < NON_ITEM && !crawl_state.game_is_arena())
+            more_items = true;
+    }
     else
-        return;
+    {
+        const std::vector<item_def> stash = item_list_in_stash(gp);
+        if (stash.empty())
+            return;
 
-    // monster(mimic)-owned items have link = NON_ITEM+1+midx
-    if (eitem->link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
-        more_items = true;
-    else if (eitem->link < NON_ITEM && !crawl_state.game_is_arena())
-        more_items = true;
-
-    env.map_knowledge(gp).set_item(get_item_info(*eitem), more_items);
+        eitem = stash[0];
+        if (stash.size() > 1)
+            more_items = true;
+    }
+    env.map_knowledge(gp).set_item(get_item_info(eitem), more_items);
 
 #ifdef USE_TILE
     if (feat_is_stair(env.grid(gp)))
-        tile_place_item_marker(gp, *eitem);
+        tile_place_item_marker(gp, eitem);
     else
-        tile_place_item(gp, *eitem);
+        tile_place_item(gp, eitem);
 #endif
 }
 
@@ -408,7 +423,10 @@ static void _update_monster(const monster* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    env.map_knowledge(gp).clear_data();
+    if (you.see_cell(gp))
+        env.map_knowledge(gp).clear_data();
+    else
+        env.map_knowledge(gp).clear_monster();
 
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp);
