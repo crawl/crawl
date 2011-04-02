@@ -1,16 +1,9 @@
-/*
- *  File:       mon-data.h
- */
-
 #ifndef MONDATA_H
 #define MONDATA_H
 
 #define AT_NO_ATK       {AT_NONE, AF_PLAIN, 0}
 
 #include "enum.h"
-
-// This whole file was very generously condensed from its initial ugly form
-// by Wladimir van der Laan ($pellbinder).
 
 /* ******************************************************************
 

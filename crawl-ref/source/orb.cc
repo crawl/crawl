@@ -1,9 +1,6 @@
 /**
  * @file
- * @section DESCRIPTION
- *
- * File:      orb.cc
- * Summary:   Orb-related functionality.
+ * @brief Orb-related functionality.
 **/
 
 #include "AppHdr.h"

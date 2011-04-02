@@ -1,8 +1,3 @@
-/*
- *  File:       format.h
- *  Created by: haranp on Sat Feb 17 13:35:54 2007 UTC
- */
-
 #ifndef __FORMAT_H__
 #define __FORMAT_H__
 

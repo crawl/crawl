@@ -1,8 +1,3 @@
-/*
- *  File:       tilereg-cmd.cc
- *  Created by: jpeg on Sat, Dec 27 2010
- */
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE

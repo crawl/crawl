@@ -1,9 +1,6 @@
 /**
  * @file
- * @section DESCRIPTION
- *
- * Filename: show.cc
- * Summary: updates the screen via map_knowledge.
+ * @brief Updates the screen via map_knowledge.
 **/
 
 #include "AppHdr.h"

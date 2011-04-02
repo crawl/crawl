@@ -1,7 +1,3 @@
-/*
- *  File:       libunix.h
- */
-
 #ifndef LIBUNIX_H
 #define LIBUNIX_H
 

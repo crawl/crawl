@@ -1,7 +1,3 @@
-/*
- *  File:       branch-data.h
- */
-
 #ifndef BRANCHDATA_H
 #define BRANCHDATA_H
 

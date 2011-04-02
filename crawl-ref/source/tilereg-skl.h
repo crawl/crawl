@@ -1,8 +1,3 @@
-/*
- *  File:       tilereg_skl.h
- *  Created by: jpeg on Sat, Nov 27 2010
- */
-
 #ifdef USE_TILE
 #ifndef TILEREG_SKL_H
 #define TILEREG_SKL_H

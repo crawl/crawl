@@ -1,7 +1,7 @@
-/*  File:       mon-cast.cc
- *  Summary:    Monster spell casting.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monster spell casting.
+**/
 
 #include "AppHdr.h"
 #include "mon-cast.h"

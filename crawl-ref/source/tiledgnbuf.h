@@ -1,7 +1,3 @@
-/*
- *  File:       tiledgnbuf.h
- */
-
 #ifdef USE_TILE
 #ifndef TILEDGNBUF_H
 #define TILEDGNBUF_H

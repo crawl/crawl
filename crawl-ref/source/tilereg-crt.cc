@@ -1,9 +1,3 @@
-/*
- *  File:       tilereg-crt.cc
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE
