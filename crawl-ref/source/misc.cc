@@ -1932,7 +1932,8 @@ void bring_to_safety()
     {
         // In ZotDef, it's not the safety of your sorry butt that matters.
         for (distance_iterator di(orb_position(), true, false); di; ++di)
-            if (!monster_at(*di))
+            if (!monster_at(*di)
+                && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
             {
                 you.moveto(*di);
                 return;
@@ -1953,6 +1954,7 @@ void bring_to_safety()
             || grd(pos) != DNGN_FLOOR
             || env.cgrid(pos) != EMPTY_CLOUD
             || monster_at(pos)
+            || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || crawl_state.game_is_sprint()
                && distance(pos, you.pos()) > dist_range(10))
         {
