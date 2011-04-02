@@ -25,7 +25,7 @@
 # Crawl Init file
 #
 # On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy
-# init.txt to ~/.crawlrc as:
+# init.txt to ~/.crawlrc or ~/.crawl/init.txt as:
 #   cp init.txt ~/.crawlrc
 #
 # Lines beginning with '#' are comments.  The basic syntax is:
