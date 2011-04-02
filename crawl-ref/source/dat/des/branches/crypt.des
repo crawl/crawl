@@ -905,3 +905,139 @@ vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwvv!s....;..R..'........$ov
 vvvvvvvvvvvvvvvvvvvvvvwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
+
+### Haunted Forest #############################################################
+#
+# Q: How is there a dead forest in the Crypt?
+# A: ~use your Imagination~
+#
+NAME: evilmike_haunted_forest
+ORIENT: encompass
+PLACE: Crypt:5
+TAGS: no_monster_gen no_item_gen no_pool_fixup no_rotate
+SUBST: T = t., w = Wwww
+SUBST: v = cccc.-
+COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+COLOUR: x'GD = white
+COLOUR: "2 = brown
+NSUBST: . = 68:f / *:.
+KMONS:  f = col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
+FTILE: .tT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
+FTILE: '_D = FLOOR_VAULT
+TILE: x = WALL_STONE_GRAY, t = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE
+SUBST: x: c, -'": ., ?: |
+SUBST: D = +, d = cc=
+NSUBST: * = 12:* / 12:% / *:$
+KFEAT: m = iron_grate
+MONS: w:3 patrolling lich / w:1 patrolling ancient lich
+MONS: patrolling large zombie / w:5 patrolling small zombie / w:15 nothing
+MONS: spider / jumping spider / wolf spider / redback / w:25 nothing
+MONS: w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
+MONS: raven skeleton / w:30 nothing
+MONS: w:3 guardian mummy / w:1 mummy
+MONS: w:20 patrolling mummy priest / w:1 patrolling greater mummy
+# This statue doesn't have a tile of its own
+KMONS: 8 = statue name:spooky n_adj spells:haunt tile:MONS_STATUE_MAGE col:necro
+: if crawl.coinflip() then
+# Temple of yred - enemies are priest types + general undead. The dwarves might
+# be too hard, I'm not sure.
+KFEAT: _ = altar_yredelemnul
+KMONS: 9 = patrolling unborn deep dwarf
+KMONS: 0 = patrolling ghoul
+KMONS: A = patrolling deep dwarf death knight
+KMONS: B = skeletal warrior
+KMONS: C = necrophage / rotting hulk
+KMONS: E = flayed ghost / w:2 hungry ghost / w:1 phantom / w:1 shadow
+KMONS: F = patrolling bone dragon
+: else
+# Temple of kiku - more necromancers, more demonic (kiku's description refers to
+# him/her/it being demonic). Not as much undead in this set.
+KFEAT: _ = altar_kikubaaqudgha
+KMONS: 9 = patrolling ancient lich
+NSUBST: 9 = 1:9 / *:.
+KMONS: 0 = patrolling reaper / patrolling soul eater
+KMONS: A = patrolling deep elf death mage
+KMONS: B = w:4 necromancer / w:1 deep dwarf necromancer
+KMONS: C = rotting devil
+KMONS: E = large skeleton / w:3 small skeleton
+KMONS: F = patrolling deep elf death mage
+: end
+KFEAT: ABCEF = .
+: dgn.set_feature_desc_short("granite statue", "gravestone")
+: dgn.set_feature_desc_long("granite statue", "A nameless gravestone.\n")
+: dgn.set_feature_desc_short("tree", "dead tree")
+: dgn.set_feature_desc_long("tree", "This tree is as dead as everything else here.\n")
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ttt"""ttttttttvvvvvvvvTttTtttttttttttttttttttttttTTTT...Tttttw8wtttttwttt8t??ttt
+tt""("ttttttttv%--v-4v.....TtttttttttTTTTtttttttT....TTT..ttwwwwwttwwwttttT?Tttt
+ttT""ttttTTTttv4-4v4-v..T.t..TTTtttTT...TTTT.ttTT.TTttttT..WWWwwwwwwwwwtwwwW.Ttt
+ttT"TttTT..t..v---vvv.T....T..t..TTt.TTT.t....T..TtttttttTTTWWWwwwwwwwwwwwwwWttt
+tt""ttT..t...Tv--...."..ccccc...T...ccccc.T..t..TTTTtttttttTTWWWWWWwwtwwwwwWTttt
+tt""ttTt...T..vv."""....c*0-+.......+CC*c...T.T..t..TttttttttTTWWWTtttttWWW.Tttt
+tt""TtT..T..""".""".....c*-cccccccccccC*c.......t..t..ttttttttTTT.ttttttTW.Ttttt
+ttT""T.t.."""""""".....cccccc---9---cccccc......T....t.TTTTTtttttT.TtttT..Tttttt
+tttT"""""""".......T...c------*|||*------c..555....t.....t.tTtttttT.TtT.TTtttttt
+ttttt"""""".vvvvv.....ccc--xx**|V|**xx--ccc..555...t..tt..t...TTtttT....Tttttttt
+ttttttTtT"".v--4vvv...ccc--xx-*|||*-xx--ccc.......T.....t....t..TttttTTTTttttttt
+ttttttT..."...-%v--v...c--------9--------c...........t...t..t.t..Ttttttttttttttt
+ttttttT.t.".v-4-v4-v...c------ccccc------c....T.vvvT...t..t......Ttttttttcnnnctt
+ttttT.t.....vvvvvvvv..cccc+cccc$$$cccc+cccc.....v4--.T..t....t..tTttttt..c***ctt
+tttT.t........v-%-4v..ccc--Bcc0---0ccB--ccc.T...v4%4-v.T...t.....Ttttt...c%%%ctt
+ttT....T...T..v4--.....n--cccccc+cccccc--n......vvvvvv...T..T..t..Tttcc+cc---ctt
+tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc3333333ctt
+ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3333333ctt
+tttttT.....cccccccccccccc-cVcC-'''-CcVc-cccccccccccccc.........T...tTcccnnnccctt
+ttttT..t..cc----+---------c-+-''x''-+-c---------+--E-cc....vvvv.T.t.Tttttttttttt
+ttttTt.....n-B--cccmmcccccc-c--'''--c-ccccccmmcccEEE-n..T..v44vT....Tttttttttttt
+ttttT..T..ccEEE-ccc00cc-----cc--'--cc-----cc00ccc-EEEcc....v--v....t.Ttttttttttt
+tttTt.T....n----cc--cc--ccccccc---ccccccc--cc--cc-E--n.....-vvv...t...Tttttttttt
+ttT.......ccc+ccc--cc--ccccccccc+ccccccccc--cc--ccc+ccc.........T....tTttttttttt
+ttT..t555..cc-cc**cc--ccccccc-------ccccccc--cc**cc-cc....T.......T....Ttttttttt
+tttT.55T..ccc-c**ccc+cc--------VAV--------cc+ccc**c-ccc.............t...Tttttttt
+ttttT5t....cc-cccc-EE-c-B-xxxx'''''xxxx-B-c----cccc-cc...vvvvvvv..T...t.Tttttttt
+tttttT....ccc+ccccEEEEc---xxxx'''''xxxx---c0--0cccc+ccc..v---4--v....t.Ttttttttt
+ttttT..t...n--'F-c-EE-c---xxxx''_''xxxx---c----c--'B-n...v-xxxx-v..T..tTtttttttt
+ttttT.t...cc-'x'-ccc+cc-V----B'''''B---V--cc+ccc-'x'-cc..v-xxxx4v......Ttttttttt
+tttttT..T..n--'--+----d--------'''--------d----+--'B-n...v4xxxx-v..T..t.Tttttttt
+ttttttTt...cccdcccccccccc-xxx--'''--xxx-ccccccccccdccc...v%---4-v........Ttttttt
+tttttttT..............ccc-xxx--'''--xxx-ccc..............vvvvvvvv....T.t.tTttttt
+ttttttttTt....xxxxx....n-------'''-------n...555....T..............--v....Tttttt
+tttttttT......x*1*x....n---B---'''---B---n..555......ccccccccc....--Tv..t.Tttttt
+ttttttT.t..T..x*|*x...ccc-xxx--'''--xxx-ccc...T......c$$$$$$$c...--44vT...tTtttt
+ttttttT.......x***x...ccc-xxx--'''--xxx-ccc.T........c$$$$$$$c..vvvvvvvvvv.Ttttt
+tttttttT.t.T..xx=xx....n-------'''-------n.......T...c$$$7$$$c..--4--vT..t.Ttttt
+ttttttttT......x-x.....n-------'''-------n.....t..t..c**666**c....---v..t...Tttt
+tttttttttTt..T.x=x....ccc-xxx--'''--xxx-ccc..T...t..tc-------c....T..t....t..Ttt
+tttttttttT......".....ccc-xxx--'''--xxx-ccc...t....ttcccc=cccct.t.t........tTttt
+ttttttttTt..T..."".....n--C----'''----C--n..t..tt.ttttccc-ccctt.....t...t..Ttttt
+tttttttT.........".....nCC-----'''-----CCn....ttttt"""c-----ctttttt...t..Ttttttt
+tttttTT.t..T....."....cccccxxxcDDDcxxxccccc.tttt"""2""cc+++cc""""2tt.t..Tttttttt
+ttttT.t5........""....ccc--xxxV'''Vxxx--ccc<tt""""""G"""""""""2"G""tt..tTttttttt
+tttT.t5....T...."......d-------'''-------cttt""2""""""2"""G"""""""""tt...Ttttttt
+ttT.55.t........"".....ccnnccc-'''-cccnncctt""""""G"""""2"""2"G""2"2"t..t.Tttttt
+tttTt.....T......""..........ccDDDcc....t.tt"G""""""2""""2"""""2""G""tt..t.Ttttt
+ttttT.t..........""....T..T....""".........t"""""2"""""G"""""""G"""""t..t.t..Ttt
+tttttT.t...T......"".....T....""""....."""""""2G"""""2"""2""""2"""2"ttt.....Tttt
+ttttT.....T..vvv...""".......""""..."""""""""""""""G"""""2"G""""G"""""...t.Ttttt
+tttTt.t.....v--v....."""..T..""""""""""""..t""G""""""""G""""""2""""""tt.t..Ttttt
+tttT......T.v44v....T..""...""""""""""....tt"""""2"""""2"""2""""2""G"tt..t..Tttt
+ttttTTt.....vvvv........""."""...vvvvvv...ttt""""G"""2"""G""""G""""""tt....t.Ttt
+ttttttT..t..T.....T......""""....v%-44v..t.ttttt"""""""""""2""""""G"ttt..t...Ttt
+tttttTT.t.....T........."""".....v4---v.......ttt""2""G"2"""G"""2"""tt.t...Ttttt
+tttttttTTT.t.t.....""""""".......v---......t.t.ttttt"""""2"""2""""ttt...t.Tttttt
+ttttttttttT....."""""""""".......vvvv....T........tttttttt"""ttttttt..t..Ttttttt
+tttttttttttT""""""""..............T...T.......t..t.tt..ttttttttt..t......Ttttttt
+ttttttttttt"""""...t.......T..............t...5555.......tt....t....t..tTTtttttt
+tttttttttt"""tttTt...t........t....T..t....t.t.55t..t..t....t.....t..TTTtttttttt
+tttttt""""""tttttT.t.....t.......t.......t......55...t...t.....t...TTttttttttttt
+ttt"""""""tttttttTT..TTTTTT..t......TTttT.TTtT..t...t.......t.TTTTTttttttttttttt
+tttt""[""""tttttttTTTtttttTT.....TTTtttttTttttTTT..t...TTTTttttttttttttttttttttt
+ttt""{""tttttttttttttttttttTTTTTTttttttttttttttttTT.TTTttttttttttttttttttttttttt
+tttt"""ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
