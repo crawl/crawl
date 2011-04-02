@@ -918,7 +918,8 @@ TAGS: no_monster_gen no_item_gen no_pool_fixup no_rotate
 SUBST: T = t., w = Wwww
 SUBST: v = cccc.-
 COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
-COLOUR: x'GD = white
+COLOUR: x'D = white
+COLOUR: G = lightgrey
 COLOUR: "2 = brown
 NSUBST: . = 68:f / *:.
 KMONS:  f = col:darkgrey plant name:withered name_adjective               \
