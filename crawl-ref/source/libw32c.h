@@ -35,7 +35,7 @@ int wherey(void);
 void putwch(wchar_t c);
 int getchk(void);
 int getch_ck(void);
-int kbhit(void);
+bool kbhit(void);
 void delay(int ms);
 void textbackground(int c);
 void puttext(int x, int y, const crawl_view_buffer &vbuf);

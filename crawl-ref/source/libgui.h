@@ -54,7 +54,7 @@ coord_def cgetpos(GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
 void delay(int ms);
 void update_screen();
-int kbhit();
+bool kbhit();
 
 #ifdef UNIX
 extern "C" char *strlwr(char *str);

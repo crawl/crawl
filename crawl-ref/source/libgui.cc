@@ -186,7 +186,7 @@ void update_screen()
     tiles.set_need_redraw();
 }
 
-int kbhit()
+bool kbhit()
 {
     // Look for the presence of any keyboard events in the queue.
     int count = wm->get_event_count(WM_KEYDOWN);

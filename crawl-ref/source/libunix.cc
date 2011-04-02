@@ -229,8 +229,17 @@ static int proc_mouse_event(int c, const MEVENT *me)
 }
 #endif
 
+static int pending = 0;
+
 int getchk()
 {
+    if (pending)
+    {
+        int c = pending;
+        pending = 0;
+        return c;
+    }
+
     wint_t c;
     switch (get_wch(&c))
     {
@@ -915,27 +924,31 @@ void delay(unsigned long time)
         usleep(time * 1000);
 }
 
-
-/*
-   Note: kbhit now in macro.cc
- */
-
 /* This is Juho Snellman's modified kbhit, to work with macros */
-int kbhit()
+bool kbhit()
 {
+    if (pending)
+        return true;
+
+    wint_t c;
     int i;
 
     nodelay(stdscr, TRUE);
     timeout(0);  // apparently some need this to guarantee non-blocking -- bwr
-    i = wgetch(stdscr);
+    i = get_wch(&c);
     nodelay(stdscr, FALSE);
 
-    if (i == -1)
-        i = 0;
-    else
-        ungetch(i);
-
-    return (i);
+    switch(i)
+    {
+    case OK:
+        pending = c;
+        return true;
+    case KEY_CODE_YES:
+        pending = -c;
+        return true;
+    default:
+        return false;
+    }
 }
 
 extern "C" {
