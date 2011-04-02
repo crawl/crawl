@@ -27,7 +27,7 @@ void cprintf(const char *format,...);
 int gotoxy_sys(int x, int y);
 void fakecursorxy(int x, int y);
 extern "C" char *itoa(int value, char *strptr, int radix);
-int kbhit(void);
+bool kbhit(void);
 int putwch(unsigned chr);
 void put_colour_ch(int colour, unsigned ch);
 int wherex(void);

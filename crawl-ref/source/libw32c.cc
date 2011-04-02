@@ -822,7 +822,7 @@ int getchk(void)
     return key_to_command(c);
 }
 
-int kbhit()
+bool kbhit()
 {
     INPUT_RECORD ir[10];
     DWORD read_count = 0;
