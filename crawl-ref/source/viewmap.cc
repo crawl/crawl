@@ -632,10 +632,9 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     cgotoxy(1, 1);
     textcolor(WHITE);
 
-    cprintf("%-*s",
-            columns - helplen,
-            (upcase_first(place_name(
-                    get_packed_place(), true, true)) + pstr).c_str());
+    cprintf("%s", chop_string(upcase_first(place_name(
+                          get_packed_place(), true, true)) + pstr,
+                      columns - helplen).c_str());
 
     cgotoxy(std::max(1, (columns - titlelen) / 2), 1);
     title.display();
