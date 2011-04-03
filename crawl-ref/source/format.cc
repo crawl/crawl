@@ -517,56 +517,6 @@ int count_linebreaks(const formatted_string& fs)
     return count;
 }
 
-// Return the actual (string) offset of character #loc to be printed,
-// i.e. ignoring tags. So for instance, if s == "<tag>ab</tag>", then
-// _find_string_location(s, 2) == 6.
-static int _find_string_location(const std::string& s, int loc)
-{
-    int real_offset = 0;
-    bool in_tag = false;
-    int last_taglen = 0;
-    int offset = 0;
-    for (std::string::const_iterator ci = s.begin();
-         ci != s.end() && real_offset < loc;
-         ++ci, ++offset)
-    {
-        if (in_tag)
-        {
-            if (*ci == '<' && last_taglen == 1)
-            {
-                ++real_offset;
-                in_tag = false;
-            }
-            else if (*ci == '>')
-            {
-                in_tag = false;
-            }
-            else
-            {
-                ++last_taglen;
-            }
-        }
-        else if (*ci == '<')
-        {
-            in_tag = true;
-            last_taglen = 1;
-        }
-        else
-        {
-            ++real_offset;
-        }
-    }
-    return (offset);
-}
-
-// Return the substring of s from character start to character end,
-// where tags count as length 0.
-std::string tagged_string_substr(const std::string& s, int start, int end)
-{
-    return (s.substr(_find_string_location(s, start),
-                     _find_string_location(s, end)));
-}
-
 static int _tagged_string_printable_length(const std::string& s)
 {
     int len = 0;
