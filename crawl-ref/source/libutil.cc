@@ -737,7 +737,7 @@ std::vector<std::string> split_string(const std::string &sep,
 }
 
 // The provided string is consumed!
-std::string wordwrap_line(std::string &s, int width)
+std::string wordwrap_line(std::string &s, int width, bool tags)
 {
     const char *cp0 = s.c_str();
     const char *cp = cp0, *space = 0;
@@ -755,6 +755,19 @@ std::string wordwrap_line(std::string &s, int width)
         }
         if (cw > width)
             break;
+        if (c == '<' && tags)
+            if (cp[1] == '<') // "<<" escape
+            {
+                // Note: this must be after a possible wrap, otherwise we could
+                // split the escape between lines.
+                cp++;
+            }
+            else
+            {
+                // Skip the whole tag.
+                while (*cp && *cp != '>')
+                    cp++;
+            }
         if (cw >= 0)
             width -= cw;
         cp += clen;

@@ -1555,123 +1555,26 @@ formatted_scroller::~formatted_scroller()
             delete static_cast<formatted_string*>(items[i]->data);
 }
 
-int linebreak_string(std::string& s, int wrapcol, int maxcol)
-{
-    size_t loc = 0;
-    int xpos = 0;
-    int breakcount = 0;
-    while (loc < s.size())
-    {
-        if (s[loc] == '<')    // tag
-        {
-            // << escape
-            if (loc + 1 < s.size() && s[loc+1] == '<')
-            {
-                ++xpos;
-                loc += 2;
-                // Um, we never break on <<. That's a feature. Right.
-                continue;
-            }
-            // skip tag
-            while (loc < s.size() && s[loc] != '>')
-                ++loc;
-            ++loc;
-        }
-        else
-        {
-            // user-forced newline
-            if (s[loc] == '\n')
-                xpos = 0;
-            // soft linebreak
-            else if (s[loc] == ' ' && xpos > wrapcol)
-            {
-                s.replace(loc, 1, "\n");
-                xpos = 0;
-                ++breakcount;
-            }
-            // hard linebreak
-            else if (xpos > maxcol)
-            {
-                s.insert(loc, "\n");
-                xpos = 0;
-                ++breakcount;
-            }
-            // bog-standard
-            else
-                ++xpos;
-
-            ++loc;
-        }
-    }
-    return breakcount;
-}
-
 int linebreak_string2(std::string& s, int maxcol)
 {
-    size_t loc = 0;
-    int xpos = 0, spaceloc = 0;
-    int breakcount = 0;
-
     // [ds] Don't loop forever if the user is playing silly games with
     // their term size.
     if (maxcol < 1)
         return 0;
 
-    while (loc < s.size())
+    int breakcount = 0;
+    std::string res;
+
+    while (!s.empty())
     {
-        if (s[loc] == '<')    // tag
+        res += wordwrap_line(s, maxcol, true);
+        if (!s.empty())
         {
-            // << escape
-            if (loc + 1 < s.size() && s[loc+1] == '<')
-            {
-                ++xpos;
-                loc += 2;
-                // Um, we never break on <<. That's a feature. Right.
-                continue;
-            }
-            // skip tag
-            while (loc < s.size() && s[loc] != '>')
-                ++loc;
-            ++loc;
-        }
-        else
-        {
-            // user-forced newline, or one we just stuffed in
-            if (s[loc] == '\n')
-            {
-                xpos = 0;
-                spaceloc = 0;
-                ++loc;
-                continue;
-            }
-
-            // force a wrap?
-            if (xpos >= maxcol)
-            {
-                if (spaceloc)
-                {
-                    loc = spaceloc;
-                    s.replace(loc, 1, "\n");
-                }
-                else
-                {
-                    s.insert(loc, "\n");
-                }
-                ++breakcount;
-                // reset pointers when we come around and see the \n
-                continue;
-            }
-
-            // save possible linebreak location
-            if (s[loc] == ' ' && xpos > 0)
-            {
-                spaceloc = loc;
-            }
-
-            ++xpos;
-            ++loc;
+            res += "\n";
+            breakcount++;
         }
     }
+    s = res;
     return breakcount;
 }
 
