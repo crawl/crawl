@@ -163,7 +163,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         out.cprintf(strng);
         out.cprintf(" - ");
 
-        out.cprintf("%-29s", spell_title(stype));
+        out.cprintf("%s", chop_string(spell_title(stype), 29).c_str());
 
         std::string schools;
         if (action == RBOOK_USE_STAFF)
@@ -182,7 +182,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
                 }
             }
         }
-        out.cprintf("%-30s", schools.c_str());
+        out.cprintf("%s", chop_string(schools, 30).c_str());
 
         char sval[3];
         itoa(level_diff, sval, 10);

@@ -792,9 +792,7 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
     // Line 1: Foo the Bar    *WIZARD*
     cgotoxy(1, 1, GOTO_STAT);
     textcolor(YELLOW);
-    if (title.size() > WIDTH)
-        title.resize(WIDTH, ' ');
-    cprintf("%-*s", WIDTH, title.c_str());
+    cprintf("%s", chop_string(title, WIDTH).c_str());
     if (you.wizard)
     {
         textcolor(LIGHTBLUE);
