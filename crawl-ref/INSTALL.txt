@@ -1,6 +1,6 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20091025 for Dungeon Crawl Stone Soup 0.6.0.)
+(Last updated on 20110403 for Dungeon Crawl Stone Soup 0.8.0.)
 
 Getting DCSS to run
 -------------------
@@ -29,7 +29,8 @@ If, however, you're having trouble getting a precompiled binary to run:
    recognized anymore.
 
 
-If you still can't get Crawl to run, you can ask for further help on
+If you still can't get Crawl to run, you can ask for further help on IRC:
+##crawl-dev on freenode, forums: https://crawl.develz.org/tavern/ or usenet:
 rec.games.roguelike.misc.  Please try to be as detailed as possible about
 any error messages you're getting.
 
@@ -42,7 +43,7 @@ Building Dungeon Crawl Stone Soup
 Crawl Stone Soup is known to compile successfully on the following platforms
 as of version 0.8:
 
-- Any Unix with a recent gcc (and g++), GNU make and libncurses, including
+- Any Unix with a recent gcc (and g++), GNU make and libncursesw, including
   Linux and Mac OS X.  "Recent" is defined as gcc 4.1 or newer.
 - Microsoft Windows NT/2000/XP.
 
@@ -89,9 +90,7 @@ Optional libraries
 Crawl can be built with some optional features:
 
 * Sounds
-* Regular expressions
 * User Lua scripts
-* Unicode characters for the map (Unix only).
 
 Crawl Stone Soup also uses a level compiler to compile special level
 definitions; to make changes to the level compiler, you'll need the flex and
@@ -101,21 +100,11 @@ available below.
 Sounds must be enabled by editing AppHdr.h (uncomment SOUND_PLAY_COMMAND on
 Unixes or WINMM_PLAY_SOUNDS on Windows).
 
-Regular expressions require libpcre on non-Unix operating systems. On
-Unixes, the standard POSIX regular expression support is adequate for
-Crawl's needs.
-
 Stone Soup 0.6 includes Lua 5.1.4 in its source tree. Crawl uses Lua for
 dungeon generation.  In addition, Crawl has a (rudimentary) Lua interface
 for users to run scripts which can do things such as conditionalise parts of
 the .crawlrc/init.txt.  Such user Lua scripts are enabled by default, but
 can be turned off by appending NO_LUA_BINDINGS=y to the make invocation.
-
-Unicode support needs libncursesw and its header files; these are usually
-available in your operating system's package-management system.  Unicode is
-not supported on Windows or DOS.  Some systems, such as Mac OS X, may have
-Unicode support available in libncurses itself (i.e., without a separate
-libncursesw).
 
 
 Building on Unix (Linux, *BSD, Solaris, etc.)
@@ -141,7 +130,7 @@ with it you don't have a need for the bundled "contribs".
 
 Prerequisites (other systems):
 
-GNU gcc and g++, GNU make, libncurses or libcurses. You need the development
+GNU gcc and g++, GNU make, libncursesw or libcursesw. You need the development
 headers for ncurses - they may not be installed by default on some Unixes.
 
 For tile builds, you need FreeDesktop's pkg-config and X11 headers.
@@ -149,11 +138,9 @@ For tile builds, you need FreeDesktop's pkg-config and X11 headers.
 flex and bison are optional but highly recommended. Recent versions of byacc
 are also fine (edit your makefile appropriately).
 
-If you want to use Unicode, you need to link with a curses library that
-understands Unicode characters, usually named libncursesw (the development
-headers for libncursesw are usually in /usr/include/ncursesw.) You also need
-to have a UTF-8 locale installed.  You can then build Crawl with support for
-Unicode by setting USE_UNICODE on the 'make' command line.
+You need to link with a curses library that understands Unicode characters,
+usually named libncursesw (the development headers for libncursesw are
+usually in /usr/include/ncursesw.)
 
 
 Building:
@@ -427,39 +414,21 @@ best bet.  Remember to install development headers, not just the plain
 library.
 
 
-Unicode (Unix only)
--------------------
+Unicode
+-------
+As of 0.8, Unicode support is included in all ports.  Still, you might need
+to ensure your terminal can display non-basic glyphs.
 
-Modern Unixes may support Unicode terminals (particularly xterms).  If you
-have a terminal that can display Unicode characters, and an ncurses library
-that can handle Unicode (libncursesw, and its devel headers), you can build
-Crawl to display Unicode in the map: set 'USE_UNICODE=y' when running
-'make'.
+On Unix, you want an UTF-8 locale.  All modern distributions install one by
+default, but you might have somehow dropped required settings.  To check
+this, run "locale charmap", which should say "UTF-8".  If it's not, please
+ensure either LANG, LC_ALL or LC_CTYPE is set.  A typical line would be
+"export LC_ALL=en_US.UTF-8".
 
-NOTE: You may have libncursesw, but not have the header files; check that
-you have the header files installed as well, or you'll get a lot of errors.
-Crawl expects the ncursesw headers to be in /usr/include/ncursesw.
-
-After compiling Crawl with Unicode support, you still need to add the line
-"char_set = unicode" in your .crawlrc to tell Crawl to use Unicode.  You may
-also need to set the locale in your terminal if the encoding does not
-default to UTF-8.  To check this, run "locale charmap", which should say
-"UTF-8".  If your encoding is not UTF-8, you can force it to UTF-8 on most
-systems by doing "export LC_ALL=en_US.UTF-8" or the equivalent, depending on
-your language locale and what shell you're using.
-
-Crawl tries to use en_US.UTF-8 as its default Unicode locale. If you do not
-have this locale installed, but do have some other UTF-8 locale, you can
-tell Crawl to use your preferred UTF-8 locale by setting
-UNICODE_LOCALE=${foo}.UTF-8 on the 'make' command line, where ${foo} is your
-locale name.
-
-You may not want to embed the locale in Crawl itself, but have Crawl use the
-locale as set in the environment LC_* variables.  In such cases, you can
-omit the UNICODE_LOCALE option from the 'make' command line.  Crawl will
-then use the locale as set in your environment.
-
-If you're playing Crawl on a remote machine, the remote Crawl should be
-built with Unicode support, it needs to have a UTF-8 locale installed, *and*
-your local terminal (where you're running telnet/ssh) needs to be able to
-decode UTF-8.
+On Windows, the console behaves differently for TrueType and legacy (bitmap)
+fonts.  The latter (mostly) work only on certain language editions of
+Windows, such as English, and even there, they work adequately only for
+Crawl's default settings.  For anything more, please select one of TrueType
+fonts.  If, like one of our players, you are deeply attached to the looks of
+bitmap fonts, you can download a corrected version of the Terminal font from
+http://www.yohng.com/software/terminalvector.html
