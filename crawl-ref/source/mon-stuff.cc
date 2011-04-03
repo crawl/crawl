@@ -3659,7 +3659,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_fire() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_fire() < 0)
             return (true);
 
         if (mons->hit_points >= 15 + random2avg(46, 5))
@@ -3673,7 +3673,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
             return (true);
 
         if (x_chance_in_y(mons->hit_dice - 1, 5))
@@ -3690,7 +3690,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_cold() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_cold() < 0)
             return (true);
 
         if (mons->hit_points >= 15 + random2avg(46, 5))
@@ -3704,7 +3704,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
             return (true);
 
         if (mons->hit_points >= random2avg(37, 4))
