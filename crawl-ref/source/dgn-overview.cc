@@ -781,7 +781,7 @@ bool unnotice_feature(const level_pos &pos)
 void display_overview()
 {
     std::string disp = overview_description_string(true);
-    linebreak_string(disp, get_number_of_cols() - 5, get_number_of_cols() - 1);
+    linebreak_string2(disp, get_number_of_cols() - 5);
     formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
                        disp).show();
     redraw_screen();
