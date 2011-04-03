@@ -664,10 +664,10 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
 
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
     const unsigned int avail_width = get_number_of_cols() - x + 1;
-    const unsigned int fs_length = fs.length();
+    const unsigned int fs_length = fs.width();
     if (fs_length > avail_width)
     {
-        formatted_string fs_trunc = fs.substr(0, avail_width);
+        formatted_string fs_trunc = fs.chop(avail_width);
         fs_trunc.display();
     }
     else
@@ -1466,7 +1466,7 @@ void column_composer::strip_blank_lines(std::vector<formatted_string> &fs) const
 {
     for (int i = fs.size() - 1; i >= 0; --i)
     {
-        if (fs[i].length() == 0)
+        if (fs[i].width() == 0)
             fs.erase(fs.begin() + i);
         else
             break;
@@ -1486,7 +1486,7 @@ void column_composer::compose_formatted_column(
         int f = i + startline;
         if (margin > 1)
         {
-            int xdelta = margin - flines[f].length() - 1;
+            int xdelta = margin - flines[f].width() - 1;
             if (xdelta > 0)
                 flines[f].cprintf("%-*s", xdelta, "");
         }

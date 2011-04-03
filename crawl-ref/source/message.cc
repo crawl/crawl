@@ -309,7 +309,7 @@ class message_window
     {
         cgotoxy(1, n + 1, GOTO_MSG);
         line.display();
-        cprintf("%*s", width() - line.length(), "");
+        cprintf("%*s", width() - line.width(), "");
     }
 
     // Place cursor at end of last non-empty line to handle prompts.
@@ -318,9 +318,9 @@ class message_window
     void place_cursor() const
     {
         int i;
-        for (i = lines.size() - 1; i >= 0 && lines[i].length() == 0; --i);
-        if (i >= 0 && (int) lines[i].length() < crawl_view.msgsz.x)
-            cgotoxy(lines[i].length() + 1, i + 1, GOTO_MSG);
+        for (i = lines.size() - 1; i >= 0 && lines[i].width() == 0; --i);
+        if (i >= 0 && (int) lines[i].width() < crawl_view.msgsz.x)
+            cgotoxy(lines[i].width() + 1, i + 1, GOTO_MSG);
     }
 
     // Whether to show msgwin-full more prompts.
@@ -384,7 +384,8 @@ class message_window
         {
             formatted_string line;
             line.add_glyph(prefix_glyph(prompt));
-            line += lines[next_line-1].substr(1);
+            lines[next_line-1].del_char();
+            line += lines[next_line-1];
             lines[next_line-1] = line;
         }
         show();

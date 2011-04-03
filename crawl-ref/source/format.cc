@@ -6,6 +6,7 @@
 #include "format.h"
 #include "libutil.h"
 #include "showsymb.h"
+#include "unicode.h"
 #include "viewchar.h"
 
 formatted_string::formatted_string(int init_colour)
@@ -278,13 +279,13 @@ formatted_string::operator += (const formatted_string &other)
     return (*this);
 }
 
-std::string::size_type formatted_string::length() const
+int formatted_string::width() const
 {
     // Just add up the individual string lengths.
-    std::string::size_type len = 0;
+    int len = 0;
     for (unsigned i = 0, size = ops.size(); i < size; ++i)
         if (ops[i] == FSOP_TEXT)
-            len += ops[i].text.length();
+            len += strwidth(ops[i].text);
     return (len);
 }
 
@@ -390,57 +391,47 @@ int formatted_string::find_last_colour() const
     return (LIGHTGREY);
 }
 
-formatted_string formatted_string::substr(size_t start, size_t substr_length) const
+formatted_string formatted_string::chop(int length) const
 {
-    const unsigned int NONE = UINT_MAX; // from limits.h
-    unsigned int last_FSOP_COLOUR = NONE;
-
-    // Find the first string to copy
-    unsigned int i;
-    for (i = 0; i < ops.size(); ++i)
-    {
-        const fs_op& op = ops[i];
-        if (op.type == FSOP_COLOUR)
-            last_FSOP_COLOUR = i;
-        else if (op.type == FSOP_TEXT)
-        {
-            if (op.text.length() > start)
-                break;
-            else
-                start -= op.text.length();
-        }
-    }
-
-    if (i == ops.size())
-        return formatted_string();
-
     formatted_string result;
-    // set up the state
-    if (last_FSOP_COLOUR != NONE)
-        result.ops.push_back(ops[last_FSOP_COLOUR]);
-
-    // Copy the text
-    for (; i<ops.size(); i++)
+    for (unsigned int i = 0; i<ops.size(); i++)
     {
         const fs_op& op = ops[i];
         if (op.type == FSOP_TEXT)
         {
             result.ops.push_back(op);
             std::string& new_string = result.ops[result.ops.size()-1].text;
-            if (start > 0 || op.text.length() > substr_length)
-                new_string = new_string.substr(start, substr_length);
-
-            substr_length -= new_string.length();
-            if (substr_length == 0)
+            int w = strwidth(new_string);
+            if (w > length)
+                new_string = chop_string(new_string, length, false);
+            length -= w;
+            if (length <= 0)
                 break;
         }
         else
-        {
             result.ops.push_back(op);
-        }
     }
 
     return result;
+}
+
+void formatted_string::del_char()
+{
+    for (oplist::iterator i = ops.begin(); i != ops.end(); ++i)
+    {
+        if (i->type != FSOP_TEXT)
+            continue;
+        switch(strwidth(i->text))
+        {
+        case 0: // shouldn't happen
+            continue;
+        case 1:
+            ops.erase(i);
+            return;
+        }
+        i->text = next_glyph((char*)i->text.c_str());
+        return;
+    }
 }
 
 void formatted_string::add_glyph(glyph g)
