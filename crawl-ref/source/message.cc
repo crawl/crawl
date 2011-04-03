@@ -480,7 +480,7 @@ public:
         prompt = P_NONE; // reset prompt
 
         std::vector<formatted_string> newlines;
-        linebreak_string2(text, out_width());
+        linebreak_string(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
 
         for (size_t i = 0; i < newlines.size(); ++i)
@@ -1409,7 +1409,7 @@ void replay_messages(void)
         if (channel_message_history(msgs[i].channel))
         {
             std::string text = msgs[i].with_repeats();
-            linebreak_string2(text, cgetsize(GOTO_CRT).x - 1);
+            linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
             std::vector<formatted_string> parts;
             formatted_string::parse_string_to_multiple(text, parts);
             for (unsigned int j = 0; j < parts.size(); ++j)

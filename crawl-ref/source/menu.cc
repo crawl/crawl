@@ -1555,7 +1555,7 @@ formatted_scroller::~formatted_scroller()
             delete static_cast<formatted_string*>(items[i]->data);
 }
 
-int linebreak_string2(std::string& s, int maxcol)
+int linebreak_string(std::string& s, int maxcol)
 {
     // [ds] Don't loop forever if the user is playing silly games with
     // their term size.
@@ -1581,7 +1581,7 @@ int linebreak_string2(std::string& s, int maxcol)
 std::string get_linebreak_string(const std::string& s, int maxcol)
 {
     std::string r = s;
-    linebreak_string2(r, maxcol);
+    linebreak_string(r, maxcol);
     return r;
 }
 
@@ -2528,7 +2528,7 @@ void TextItem::_wrap_text()
         return;
     }
 
-    int num_linebreaks = linebreak_string2(m_render_text, max_cols);
+    int num_linebreaks = linebreak_string(m_render_text, max_cols);
     if (num_linebreaks > max_lines)
     {
         size_t pos = 0;
