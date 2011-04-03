@@ -766,7 +766,8 @@ void untransform(bool skip_wielding, bool skip_move)
         mpr("Your transformation has ended.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, -5, true,
                      "losing the spider transformation");
-        you.check_clinging(false);
+        if (!skip_move)
+            you.check_clinging(false);
         break;
 
     case TRAN_BAT:
