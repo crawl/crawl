@@ -23,7 +23,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
         ':', '|', '}', '%', '$', '"', 0xA7, 0x2663,
         ' ', '!', '#', '%', '+', ')', '*', '+',     // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', 0x0398           // fi_stick .. explosion
+        '/', '=', '?', 'X', '[', '`', '#'           // fi_stick .. explosion
     },
     // CSET_ASCII
     {
