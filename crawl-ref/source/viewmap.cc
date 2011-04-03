@@ -609,13 +609,13 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     const int columns = get_number_of_cols();
     const formatted_string help =
         formatted_string::parse_string("(Press <w>?</w> for help)");
-    const int helplen = std::string(help).length();
+    const int helplen = help.width();
 
     if (columns < helplen)
         return;
 
     const formatted_string title = feats.format();
-    const int titlelen = title.length();
+    const int titlelen = title.width();
     if (columns < titlelen)
         return;
 

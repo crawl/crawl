@@ -29,7 +29,8 @@ public:
     void cprintf(const std::string &s);
     void add_glyph(glyph g);
     void textcolor(int color);
-    formatted_string substr(size_t index, size_t length=std::string::npos) const;
+    formatted_string chop(int length) const;
+    void del_char();
     void all_caps();
 
     void clear();
@@ -37,7 +38,7 @@ public:
 
     void swap(formatted_string& other);
 
-    std::string::size_type length() const;
+    int width() const;
     std::string html_dump() const;
 
     bool operator < (const formatted_string &other) const;

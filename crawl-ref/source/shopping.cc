@@ -142,7 +142,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     {
         cgotoxy(1, numlines - 2, GOTO_CRT);
         fs = formatted_string::parse_string(shop_list);
-        fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
+        fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
         fs.display();
     }
 
@@ -176,7 +176,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
             (viewing ? "to buy items    " : "to examine items"),
             pkeys.c_str()));
 
-    fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
+    fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
     fs.display();
     cgotoxy(1, numlines, GOTO_CRT);
 
@@ -188,7 +188,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
             "] make purchase   [<w>\\</w>] list known items   "
             "[<w>?</w>/<w>*</w>] inventory");
 
-    fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
+    fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
     fs.display();
 }
 
