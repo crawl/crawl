@@ -1419,7 +1419,7 @@ static bool _do_description(std::string key, std::string type,
     inf.body << desc;
 
     key = uppercase_first(key);
-    linebreak_string2(footer, width - 1);
+    linebreak_string(footer, width - 1);
 
     inf.footer = footer;
     inf.title  = key;
@@ -1453,7 +1453,7 @@ static bool _handle_FAQ()
 
         std::string question = getFAQ_Question(question_keys[i]);
         // Wraparound if the question is longer than fits into a line.
-        linebreak_string2(question, width - 4);
+        linebreak_string(question, width - 4);
         std::vector<formatted_string> fss;
         formatted_string::parse_string_to_multiple(question, fss);
 
@@ -1493,7 +1493,7 @@ static bool _handle_FAQ()
                          "bug report!";
             }
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
-            linebreak_string2(answer, width - 1);
+            linebreak_string(answer, width - 1);
             print_description(answer);
             wait_for_keypress();
         }
@@ -2494,7 +2494,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                     CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
                     CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
                     0);
-    linebreak_string2(text, 40);
+    linebreak_string(text, 40);
 
     cols.add_formatted(
             1, text,

@@ -503,7 +503,7 @@ bool print_error_screen(const char *message, ...)
 #else
     width = std::min(80, get_number_of_cols());
 #endif
-    linebreak_string2(error_msg, width);
+    linebreak_string(error_msg, width);
 
     // And finally output the message.
     clrscr();

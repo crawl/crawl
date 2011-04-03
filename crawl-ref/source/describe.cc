@@ -4113,7 +4113,7 @@ static void _detailed_god_description(god_type which_god)
         broken = get_god_powers(which_god);
         if (!broken.empty())
         {
-            linebreak_string2(broken, width);
+            linebreak_string(broken, width);
             display_tagged_block(broken);
             cprintf("\n");
             cprintf("\n");
@@ -4123,7 +4123,7 @@ static void _detailed_god_description(god_type which_god)
     if (which_god != GOD_XOM)
     {
         broken = get_god_likes(which_god, true);
-        linebreak_string2(broken, width);
+        linebreak_string(broken, width);
         display_tagged_block(broken);
 
         broken = get_god_dislikes(which_god, true);
@@ -4131,7 +4131,7 @@ static void _detailed_god_description(god_type which_god)
         {
             cprintf("\n");
             cprintf("\n");
-            linebreak_string2(broken, width);
+            linebreak_string(broken, width);
             display_tagged_block(broken);
         }
         // Some special handling.
@@ -4219,7 +4219,7 @@ static void _detailed_god_description(god_type which_god)
         {
             cprintf("\n");
             cprintf("\n");
-            linebreak_string2(broken, width);
+            linebreak_string(broken, width);
             display_tagged_block(broken);
         }
     }
@@ -4614,7 +4614,7 @@ std::string get_skill_description(skill_type skill, bool need_title)
                                                        unarmed_attacks.end(),
                                                        " or ", ", ");
                         broken += ".";
-            linebreak_string2(broken, 72);
+            linebreak_string(broken, 72);
 
             result += "\n";
             result += broken;

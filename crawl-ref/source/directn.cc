@@ -689,7 +689,7 @@ void full_describe_view()
 
 #ifndef USE_TILE
             // Wraparound if the description is longer than allowed.
-            linebreak_string2(str, get_number_of_cols() - 9);
+            linebreak_string(str, get_number_of_cols() - 9);
 #endif
             std::vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);

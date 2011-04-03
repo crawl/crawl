@@ -2221,7 +2221,7 @@ std::string _status_mut_abilities()
     //----------------------------
 
     text += print_abilities();
-    linebreak_string2(text, get_number_of_cols());
+    linebreak_string(text, get_number_of_cols());
 
     return text;
 }

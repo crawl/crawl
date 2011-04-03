@@ -1324,7 +1324,7 @@ void display_notes()
         if (spaceleft <= 0)
             return;
 
-        linebreak_string2(suffix, spaceleft);
+        linebreak_string(suffix, spaceleft);
         std::vector<std::string> parts = split_string("\n", suffix);
         if (parts.empty()) // Disregard pure-whitespace notes.
             continue;

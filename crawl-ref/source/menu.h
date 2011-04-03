@@ -1075,7 +1075,7 @@ protected:
     SelectType m_select_type;
 };
 
-int linebreak_string2(std::string& s, int maxcol);
+int linebreak_string(std::string& s, int maxcol);
 std::string get_linebreak_string(const std::string& s, int maxcol);
 
 #endif
