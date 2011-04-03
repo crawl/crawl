@@ -364,7 +364,7 @@ enum beam_type                  // beam[].flavour
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
     BEAM_DEVOUR_FOOD,             // Pseudo-beam for harpies' devouring food.
-
+    BEAM_OVERRUN,                 // Pseudo-beam for overrun.
     NUM_BEAMS
 };
 
@@ -2420,7 +2420,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT,
     MONS_BASILISK,
     MONS_OCTOPODE,
-
+    MONS_FOREST_WYRM,
     NUM_MONSTERS,                      // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3162,6 +3162,7 @@ enum spell_type
     SPELL_FIRE_SUMMON,
     SPELL_SHROUD_OF_GOLUBRIA,
     SPELL_INNER_FLAME,
+    SPELL_PLANT_BREATH,
 
     NUM_SPELLS
 };

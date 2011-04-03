@@ -1553,6 +1553,7 @@ static int _place_monster_aux(const mgen_data &mg,
             }
         }
     }
+
     // The royal jelly belongs to Jiyva.
     else if (mg.cls == MONS_ROYAL_JELLY)
         mon->god = GOD_JIYVA;

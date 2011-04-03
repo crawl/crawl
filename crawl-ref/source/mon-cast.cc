@@ -902,6 +902,12 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_LIGHT;
         break;
 
+    case SPELL_PLANT_BREATH:
+        beam.short_name = "plant life";
+        beam.flavour  = BEAM_MISSILE;
+        beam.is_beam  = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1564,6 +1570,37 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     && !mons->props.exists("went_berserk"))
                 {
                     spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
+
+                // Forest wyrms shouldn't breathe if:
+                if (spell_cast == SPELL_PLANT_BREATH
+                    && mons->type == MONS_FOREST_WYRM)
+                {
+                    // they're adjacent:
+                    if (adjacent(foe->pos(), mons->pos()))
+                    {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
+                    }
+
+                    // or if there's no room for plants:
+
+                    // The radius on this is 1, even though the
+                    // ability is radius 2. This gives more natural
+                    // behavior: it stops breathing if you're trapped.
+                    int spots = 0;
+                    for (radius_iterator ri(foe->pos(), 1); ri; ++ri)
+                    {
+                        // Wyrms will only breathe if they can see an empty
+                        // cell next to you that a toadstool can live in.
+                        if (cell_see_cell(*ri, mons->pos())
+                            && !actor_at(*ri)
+                            && monster_habitable_grid(MONS_TOADSTOOL, grd(*ri)))
+                            spots++;
+                    }
+                    if (spots == 0)
+                        spell_cast = SPELL_NO_SPELL;
                     continue;
                 }
 
@@ -3514,6 +3551,25 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HYDRA:
         cast_summon_hydra(mons, mons->hit_dice * 5, god);
         return;
+    case SPELL_PLANT_BREATH:
+        for (radius_iterator ri(pbolt.target, 2); ri; ++ri)
+        {
+            if (cell_see_cell(pbolt.target, *ri) && monster_at(*ri) == NULL && coinflip())
+            {
+                const monster_type mon = static_cast<monster_type>(
+                    random_choose_weighted(16, MONS_TOADSTOOL,
+                                           4, MONS_FUNGUS,
+                                           2, MONS_PLANT,
+                                           1, MONS_BUSH,
+                                           0));
+                place_monster(
+                    mgen_data(mon, SAME_ATTITUDE(mons),
+                              mons, 0, 0, *ri,
+                              MHITNOT, 0, god), 1);
+            }
+        }
+            return;
+
     case SPELL_FIRE_SUMMON:
         if (_mons_abjured(mons, monsterNearby))
             return;

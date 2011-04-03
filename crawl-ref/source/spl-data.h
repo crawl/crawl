@@ -2903,6 +2903,19 @@ struct spell_desc
 },
 
 {
+    SPELL_PLANT_BREATH, "Breathe Plants",
+     SPTYP_SUMMONING,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_DARKNESS, "Darkness",
      SPTYP_HEXES,
      SPFLAG_NONE,

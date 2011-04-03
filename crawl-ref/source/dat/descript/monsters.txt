@@ -816,6 +816,10 @@ frost giant
 
 A huge blue humanoid with hoarfrost hair.
 %%%%
+forest wyrm
+
+This enormous serpent wends its way through the wood without regard for collateral damage. Its scaly coils seem to go on forever.
+%%%%
 fruity bat
 
 An ugly, silly bat. It sparkles.

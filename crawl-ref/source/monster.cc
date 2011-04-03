@@ -3621,6 +3621,8 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
+    bool silent = false;
+
     if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER)
         return (0);
 
@@ -3672,6 +3674,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 flags |= MF_EXPLODE_KILL;
         }
 
+        // We'll print our own death message if this attack kills them.
+        if (flavour == BEAM_OVERRUN)
+            silent = true;
+
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the royal jelly).
         react_to_damage(agent, amount, flavour);
@@ -3686,11 +3692,11 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
     {
         if (agent == NULL)
-            monster_die(this, KILL_MISC, NON_MONSTER);
+            monster_die(this, KILL_MISC, NON_MONSTER, silent);
         else if (agent->atype() == ACT_PLAYER)
-            monster_die(this, KILL_YOU, NON_MONSTER);
+            monster_die(this, KILL_YOU, NON_MONSTER, silent);
         else
-            monster_die(this, KILL_MON, agent->mindex());
+            monster_die(this, KILL_MON, agent->mindex(), silent);
     }
 
     return (amount);

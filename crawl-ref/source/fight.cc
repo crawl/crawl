@@ -858,6 +858,14 @@ bool melee_attack::player_attack()
             bleed_onto_floor(where, defender->type, blood, true);
         }
 
+        // Need to define these in the right scope for trampling.
+        // ugh, inspecting attack_verb here is pretty ugly
+        bool will_trample = (attack_verb == "trample");
+        coord_def old_pos = defender->pos();
+        coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
+        std::string name =  def_name(DESC_CAP_THE);
+        std::string name_nocap = def_name(DESC_NOCAP_THE);
+
         if (damage_done > 0 || !defender_visible && !shield_blocked)
             player_announce_hit();
         else if (!shield_blocked && damage_done <= 0)
@@ -871,6 +879,9 @@ bool melee_attack::player_attack()
 
         damage_done = defender->hurt(&you, damage_done,
                                      special_damage_flavour, false);
+
+        if (will_trample)
+            do_trample(old_pos, new_pos);
 
         if (damage_done)
             player_exercise_combat_skills();
@@ -886,10 +897,6 @@ bool melee_attack::player_attack()
         // [ds] Monster may disappear after behaviour event.
         if (!defender->alive())
             return (true);
-
-        // ugh, inspecting attack_verb here is pretty ugly
-        if (damage_done && attack_verb == "trample")
-            do_trample();
 
         player_sustain_passive_damage();
 
@@ -1404,7 +1411,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             && grd(you.pos()) == DNGN_DEEP_WATER
             && feat_is_water(grd(defender->as_monster()->pos())))
         {
-            do_trample();
+            coord_def old_pos = defender->pos();
+            coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
+            do_trample(old_pos, new_pos);
         }
     }
     else // no damage was done
@@ -5467,63 +5476,97 @@ void melee_attack::mons_do_spines()
     }
 }
 
-bool melee_attack::do_trample()
+void melee_attack::announce_trample(mon_attack_def attk, bool trampled, std::string name, std::string name_nocap)
 {
-    do
-    {
-        monster* def_monster = defender->as_monster();
-        if (def_monster && mons_is_stationary(def_monster))
-            // don't even print a message
-            return false;
-
-        int size_diff =
-            attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
-        if (!x_chance_in_y(size_diff + 3, 6))
-            break;
-
-        coord_def old_pos = defender->pos();
-        coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
-
-        // need a valid tile
-        if (grd(new_pos) < DNGN_SHALLOW_WATER && !defender->is_habitable(new_pos))
-            break;
-
-        // don't trample into a monster - or do we want to cause a chain
-        // reaction here?
-        if (actor_at(new_pos))
-            break;
-
-        if (needs_message)
-        {
-            mprf("%s %s backwards!",
-                 def_name(DESC_CAP_THE).c_str(),
-                 defender->conj_verb("stumble").c_str());
-        }
-
-        if (defender->as_player())
-            move_player_to_grid(new_pos, false, true);
-        else
-            defender->move_to_pos(new_pos);
-
-        if (attacker->is_habitable(old_pos))
-            attacker->move_to_pos(old_pos);
-
-        // Interrupt stair travel and passwall.
-        if (defender == &you)
-            stop_delay(true);
-
-        return true;
-    } while (0);
+    monster* def_monster = defender->as_monster();
+    bool stationary = (def_monster) ? mons_is_stationary(def_monster) : false;
 
     if (needs_message)
     {
-        mprf("%s %s %s ground!",
-             def_name(DESC_CAP_THE).c_str(),
-             defender->conj_verb("hold").c_str(),
-             defender->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
-    }
+        mprf("%s %s %s%s%s%s",
+             atk_name(DESC_CAP_THE).c_str(),
+             attacker->conj_verb(((trampled || !defender->alive() && stationary) && attk.flavour == AF_OVERRUN) ? "overrun" : mons_attack_verb(attk)).c_str(),
+             name_nocap.c_str(),
+             debug_damage_number().c_str(),
+             mons_attack_desc(attk).c_str(),
+             attack_strength_punctuation().c_str());
 
-    return false;
+        if (trampled && defender->alive() && stationary)
+        {
+            mprf("%s %s backwards!",
+                 name.c_str(),
+                 defender->conj_verb("stumble").c_str());
+        }
+        else if (!trampled && defender->alive() && stationary)
+        {
+            mprf("%s %s %s ground!",
+                 name.c_str(),
+                 defender->conj_verb("hold").c_str(),
+                 defender->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+        }
+        else if (!defender->alive())
+        {
+            if (attacker->atype() == ACT_PLAYER)
+                mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You flatten %s!",
+                     name_nocap.c_str());
+            else
+                mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s flattens %s!",
+                     attacker->name(DESC_CAP_THE).c_str(),
+                     name_nocap.c_str());
+        }
+    }
+}
+
+bool melee_attack::do_trample(coord_def old_pos, coord_def new_pos)
+{
+    monster* def_monster = defender->as_monster();
+    bool firewood = (def_monster) ? mons_is_firewood(def_monster) : false;
+    bool stationary = (def_monster) ? mons_is_stationary(def_monster) : false;
+
+        // Firewood monsters are always trampled regardless of size.
+        if (def_monster && !firewood)
+        {
+            int size_diff = attacker->body_size() - defender->body_size();
+            if ((defender->alive() && !x_chance_in_y(size_diff + 3, 6)) || stationary)
+                return false;
+        }
+
+        // Instakills for trampled firewood monsters.
+        if (firewood)
+        {
+            if (attacker->atype() == ACT_PLAYER)
+                monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER, false);
+            else
+                monster_die(defender->as_monster(), KILL_MON, attacker->mindex(), true);
+        }
+
+        // need a valid tile to move the defender to
+        if (defender->alive() && grd(new_pos) < DNGN_SHALLOW_WATER && !defender->is_habitable(new_pos))
+            return false;
+
+        // don't trample into a monster - or do we want to cause a chain
+        // reaction here?
+        if (!actor_at(new_pos) && defender->alive())
+        {
+            if (defender->as_player())
+                move_player_to_grid(new_pos, false, true);
+            else
+                defender->move_to_pos(new_pos);
+
+            // Interrupt stair travel and passwall.
+            if (defender == &you)
+                stop_delay(true);
+        }
+        else if (defender->alive())
+            return false;
+
+        // The attacker moves if a trample did happen,
+        // even if the target's dead by now.
+
+        if (attacker->is_habitable(old_pos) && !actor_at(old_pos))
+            attacker->move_to_pos(old_pos);
+
+    return true;
 }
 
 void melee_attack::mons_perform_attack_rounds()
@@ -5692,6 +5735,9 @@ void melee_attack::mons_perform_attack_rounds()
         mons_set_weapon(attk);
         to_hit = mons_to_hit();
 
+        const bool will_trample = (attacker != defender
+                                   && (attk.type == AT_TRAMPLE || attk.flavour == AF_OVERRUN));
+
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
                                   || (attk.flavour == AF_CHAOS
                                       && attacker != defender);
@@ -5859,9 +5905,11 @@ void melee_attack::mons_perform_attack_rounds()
         {
             if (shield_blocked)
                 dprf("ERROR: Non-zero damage after shield block!");
-            mons_announce_hit(attk);
+            if (!will_trample)
+                mons_announce_hit(attk);
             if (shroud_broken)
                 mpr("Your shroud falls apart!", MSGCH_WARN);
+
             if (defender == &you)
                 practise(EX_MONSTER_WILL_HIT);
 
@@ -5888,8 +5936,15 @@ void melee_attack::mons_perform_attack_rounds()
             special_damage_message.clear();
             special_damage_flavour = BEAM_NONE;
 
-            if (attacker != defender && attk.type == AT_TRAMPLE)
-                do_trample();
+            // Need to define these in the right scope for trampling.
+            coord_def old_pos = defender->pos();
+            coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
+            std::string name =  def_name(DESC_CAP_THE);
+            std::string name_nocap = def_name(DESC_NOCAP_THE);
+
+            // BEAM_OVERRUN is so we can pass information into hurt::().
+            if (will_trample)
+                special_damage_flavour = BEAM_OVERRUN;
 
             // Monsters attacking themselves don't get attack flavour.
             // The message sequences look too weird.  Also, stealing
@@ -5914,6 +5969,15 @@ void melee_attack::mons_perform_attack_rounds()
 
             defender->hurt(attacker, damage_done + special_damage,
                            special_damage_flavour);
+
+            // At this point the monster is done being hurt by
+            // the primary attack. We can print messages now.
+
+            if (will_trample)
+            {
+                bool trampled = do_trample(old_pos, new_pos);
+                announce_trample(attk, trampled, name, name_nocap);
+            }
 
             if (!defender->alive())
             {

@@ -434,5 +434,5 @@ actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
 void check_clinging();
 bool mons_is_tentacle_end(const int mtype);
-
+bool mons_is_trampler(const monster* mons);
 #endif

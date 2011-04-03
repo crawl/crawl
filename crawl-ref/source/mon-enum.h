@@ -103,7 +103,8 @@ enum mon_attack_flavour
     AF_REACH,
     AF_HOLY,
     AF_ANTIMAGIC,
-    AF_PAIN
+    AF_PAIN,
+    AF_OVERRUN, // Identical to trample but can be put on attacks of any type.
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

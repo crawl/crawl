@@ -1506,7 +1506,7 @@ flight_type mons_flies(const monster* mon, bool temp)
 
 bool mons_class_flattens_trees(int mc)
 {
-    return (mc == MONS_LERNAEAN_HYDRA);
+    return (mc == MONS_LERNAEAN_HYDRA || mc == MONS_FOREST_WYRM);
 }
 
 bool mons_flattens_trees(const monster* mon)
@@ -4144,4 +4144,32 @@ bool mons_is_tentacle_end(const int mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
             || mtype == MONS_ELDRITCH_TENTACLE);
+}
+
+bool mons_is_trampler(const monster* mons)
+{
+    int attack_number = 0;
+    const int nrounds = mons->has_hydra_multi_attack() ? mons->number : 4;
+    for (attack_number = 0; attack_number < nrounds; ++attack_number)
+    {
+        mon_attack_def attk = mons_attack_spec(mons, attack_number);
+
+        if (attk.type == AT_TRAMPLE || attk.flavour == AF_OVERRUN)
+            return(true);
+    }
+
+    return (false);
+}
+
+/*
+ * Update the clinging status of all actors.
+ *
+ * Called at game load (because clinging status isn't saved) and whenever
+ * terrain is change. If actor has fallen from the wall (because it has been
+ * dug for example), apply location effects.
+ */
+void check_clinging()
+{
+    for (actor_iterator ai; ai; ++ai)
+        ai->check_clinging(false);
 }

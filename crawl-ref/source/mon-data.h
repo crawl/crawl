@@ -6408,6 +6408,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+{
+    MONS_FOREST_WYRM, 'D', BROWN, "forest wyrm",
+    M_SPELLCASTER | M_WARM_BLOOD | M_FAKE_SPELLS,
+    MR_RES_POISON,
+    1800, 11, MONS_DRAGON, MONS_FOREST_WYRM, MH_NATURAL, -3,
+    { {AT_BITE, AF_OVERRUN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 13, 3, 5, 0 },
+    10, 5, MST_FOREST_WYRM, CE_CONTAMINATED, Z_BIG, S_ROAR,
+    I_ANIMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
+},
+
 /*
   For simplicity, here again the explanation:
     - row 1: monster id, display character, display colour, name

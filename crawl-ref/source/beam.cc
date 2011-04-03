@@ -5781,7 +5781,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_HOLY_LIGHT:            return ("holy light");
     case BEAM_AIR:                   return ("air");
     case BEAM_INNER_FLAME:           return ("inner flame");
-
+    case BEAM_OVERRUN:               return ("overrun");
     case NUM_BEAMS:                  die("invalid beam type");
     }
     die("unknown beam type");

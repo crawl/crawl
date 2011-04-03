@@ -443,6 +443,14 @@ flying skull
 "Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most excellent fancy. He hath bore me on his back a thousand times, and now how abhorr'd in my imagination it is! My gorge rises at it."
     -William Shakespeare, _Hamlet_, V, 1. 1600.
 %%%%
+forest wyrm
+
+"I wouldn't stand in front of that wurm, son. 'Course, I wouldn't stand behind it neither. In fact, standing anywhere near that wurm's not much of a plan. Running, now _that's_ a plan!"
+    -Spined Wurm, Magic: The Gathering
+
+"The most terrifying thing about the Craw Wurm is probably the horrible crashing sound it makes as it speeds through the forest. This noise is so loud it echoes through the trees and seems to come from all directions at once."
+    -Craw Wurm, Magic: The Gathering
+%%%%
 ghoul
 
 "In the desert
