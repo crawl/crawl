@@ -23,13 +23,16 @@ bool form_can_wear_item(const item_def& item,
 
 bool can_equip(equipment_type use_which, bool ignore_temporary);
 
+bool feat_dangerous_for_form(transformation_type which_trans,
+                             dungeon_feature_type feat);
 bool transform(int pow, transformation_type which_trans, bool force = false,
                bool just_check = false);
 
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_wielding = false, bool skip_move = false);
 
-size_type transform_size(int psize = PSIZE_BODY);
+size_type transform_size(int psize = PSIZE_BODY,
+                         transformation_type form = you.form);
 
 void remove_one_equip(equipment_type eq, bool meld = true,
                       bool mutation = false);
