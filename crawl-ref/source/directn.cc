@@ -3710,7 +3710,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mi.two_weapons)
             mon_alt = 0;
 
-        const bool mon_has_wand = mi.props.exists("wand_known");
+        const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;
         const bool mon_carry = mon_alt || mon_has_wand;
 
         bool found_sth    = !weap.empty();
