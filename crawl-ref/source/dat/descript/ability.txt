@@ -50,8 +50,6 @@ Breathe a blast of noxious fumes at a targeted monster.
 Bat Form
 
 Turn into a speedy vampire bat. In bat form, you can neither interact with items in any form (except picking them up or dropping them), nor cast spells. Note that Bat Form will decrease your current Strength while increasing your Dexterity. Thus, you won't be able to change form if your Strength is too low.
-
-Vampires below experience level 10 will be unable to transform if wearing cursed equipment.
 %%%%
 Bottle Blood
 
