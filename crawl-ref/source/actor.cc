@@ -272,8 +272,9 @@ bool actor::can_cling_to(const coord_def& p) const
  * message and apply location effects.
  *
  * @param stepped Whether the actor has taken a step.
+ * @return the new clinging status.
  */
-void actor::check_clinging(bool stepped)
+bool actor::check_clinging(bool stepped)
 {
     bool was_clinging = is_wall_clinging();
     bool clinging = can_cling_to_walls() && cell_is_clingable(pos())
@@ -293,6 +294,7 @@ void actor::check_clinging(bool stepped)
         }
         apply_location_effects(pos());
     }
+    return clinging;
 }
 
 void actor::clear_clinging()
