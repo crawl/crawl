@@ -262,7 +262,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLICING, 0 },
     { WPN_KATANA,                "katana",                14,  3, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 2 },
+        DAMV_SLICING, 0 },
     { WPN_BLESSED_KATANA,        "blessed katana",        15,  2, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },

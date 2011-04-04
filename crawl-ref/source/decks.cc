@@ -2695,7 +2695,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
             // Rare and powerful.
             wpn.plus  = random2(4) + 2;
             wpn.plus2 = random2(4) + 2;
-            wpn.sub_type = (coinflip() ? WPN_KATANA : WPN_EXECUTIONERS_AXE);
+            wpn.sub_type = (coinflip() ? WPN_DIRE_FLAIL : WPN_EXECUTIONERS_AXE);
 
             set_item_ego_type(wpn, OBJ_WEAPONS,
                               coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
