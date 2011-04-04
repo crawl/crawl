@@ -219,6 +219,9 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
         che_handle_change(CB_PONDEROUS, 1);
     }
 
+    if (proprt[ARTP_EYESIGHT])
+        autotoggle_autopickup(false);
+
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
         canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
