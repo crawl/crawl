@@ -1580,6 +1580,7 @@ int melee_attack::player_aux_stat_modify_damage(int damage)
 int melee_attack::player_apply_weapon_skill(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   && !is_range_weapon(*weapon)
                    || weapon->base_type == OBJ_STAVES))
     {
         damage *= 25 + (random2(you.skill(wpn_skill) + 1));
@@ -1613,6 +1614,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   && !is_range_weapon(*weapon)
                    || item_is_rod(*weapon)))
     {
         int wpn_damage_plus = weapon->plus2;
@@ -3963,7 +3965,7 @@ int melee_attack::player_to_hit(bool random_factor)
     // weapon bonus contribution
     if (weapon)
     {
-        if (weapon->base_type == OBJ_WEAPONS)
+        if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon))
         {
             your_to_hit += weapon->plus;
             your_to_hit += property(*weapon, PWPN_HIT);
@@ -4176,6 +4178,7 @@ random_var melee_attack::player_weapon_speed()
     random_var attack_delay = constant(15);
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   && !is_range_weapon(*weapon)
                    || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = constant(property(*weapon, PWPN_SPEED));
@@ -4292,8 +4295,11 @@ int melee_attack::player_calc_base_weapon_damage()
 {
     int damage = 0;
 
-    if (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
+    if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon)
+        || weapon->base_type == OBJ_STAVES)
+    {
         damage = property(*weapon, PWPN_DAMAGE);
+    }
 
     // Staves can be wielded with a worn shield, but are much less
     // effective.
@@ -4462,8 +4468,9 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     int damage = 0;
     int damage_max = 0;
     if (weapon
-        && weapon->base_type == OBJ_WEAPONS
-        && !is_range_weapon(*weapon))
+        && (weapon->base_type == OBJ_WEAPONS
+            && !is_range_weapon(*weapon)
+            || item_is_rod(*weapon)))
     {
         damage_max = property(*weapon, PWPN_DAMAGE);
         damage += random2(damage_max);
@@ -4475,10 +4482,15 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
             damage++;
         }
 
-        if (weapon->plus2 >= 0)
-            damage += random2(weapon->plus2);
+        int wpn_damage_plus = weapon->plus2;
+        if (item_is_rod(*weapon))
+            wpn_damage_plus = (short)weapon->props["rod_enchantment"];
+
+        if (wpn_damage_plus >= 0)
+            damage += random2(wpn_damage_plus);
         else
-            damage -= random2(1 - weapon->plus2);
+            damage -= random2(1 - wpn_damage_plus);
+
 
         damage -= 1 + random2(3);
     }
@@ -5973,8 +5985,13 @@ int melee_attack::mons_to_hit()
     const int base_hit = mhit;
 #endif
 
-    if (weapon && weapon->base_type == OBJ_WEAPONS)
+    if (weapon && (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon)
+                || weapon->base_type == OBJ_STAVES))
+    {
         mhit += weapon->plus + property(*weapon, PWPN_HIT);
+    }
+    if (weapon && item_is_rod(*weapon))
+        mhit += (short)weapon->props["rod_enchantment"];
 
     if (attacker->confused())
         mhit -= 5;
