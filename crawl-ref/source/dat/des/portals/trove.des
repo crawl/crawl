@@ -844,7 +844,7 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          mace unrand:sceptre_of_torment / mace unrand:mace_of_variability    /\
          sling unrand:punk / bow unrand:bow_of_krishna_"sharnga"             /\
          crossbow unrand:hellfire / longbow unrand:piercer                   /\
-         randart demon blade  /\ blowgun unrand:blowgun_of_the_assassin
+         randart demon blade  / blowgun unrand:blowgun_of_the_assassin
 SHUFFLE: def
 : trove.setup_features(_G)
 epilogue{{
