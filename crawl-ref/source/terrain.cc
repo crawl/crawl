@@ -1361,6 +1361,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                        dungeon_feature_type terrain)
 {
     bool escape = false;
+    bool clinging = false;
     coord_def empty;
 
     if (species_likes_water(you.species) && terrain == DNGN_DEEP_WATER
@@ -1408,7 +1409,9 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     {
         if (allow_shift)
         {
-            escape = empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty);
+            escape = empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty)
+                     || you.check_clinging(false);
+            clinging = you.is_wall_clinging();
         }
         else
         {
@@ -1435,11 +1438,11 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     if (escape)
     {
-        if (in_bounds(empty)
-            && (!is_feat_dangerous(grd(empty)) || you.can_cling_to(empty)))
+        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)) || clinging)
         {
             mpr("You manage to scramble free!");
-            move_player_to_grid(empty, false, false);
+            if (!clinging)
+                move_player_to_grid(empty, false, false);
 
             if (terrain == DNGN_LAVA)
                 expose_player_to_element(BEAM_LAVA, 14);
