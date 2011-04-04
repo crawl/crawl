@@ -1229,12 +1229,18 @@ void pickup(bool partial_quantity)
         return;
     }
 
+
     int o = you.visible_igrd(you.pos());
     const int num_nonsquelched = _count_nonsquelched_items(o);
 
     if (o == NON_ITEM)
     {
         mpr("There are no items here.");
+    }
+    else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
+    {
+        mpr("You can't reach the bottom while floating on water.");
+        return;
     }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
