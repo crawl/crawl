@@ -220,10 +220,13 @@ void MenuRegion::place_entries()
                 if (let && plus && unfm[0] == ' ' && unfm[2] == ' '
                     && unfm[4] == ' ')
                 {
-                    formatted_string header = m_entries[i].text.substr(0, 5);
+                    formatted_string header = m_entries[i].text.chop(5);
                     m_font_buf.add(header, text_sx, text_sy);
                     text_sx += m_font_entry->string_width(header);
-                    text = m_entries[i].text.substr(5);
+                    text = m_entries[i].text;
+                    // remove hotkeys.  As Enne said above, this is a monstrosity.
+                    for (int k = 0; k < 5; k++)
+                        text.del_char();
                 }
                 else
                 {
