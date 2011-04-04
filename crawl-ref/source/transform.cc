@@ -15,6 +15,7 @@
 #include "artefact.h"
 #include "delay.h"
 #include "env.h"
+#include "godabil.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -45,16 +46,25 @@ bool form_can_fly(transformation_type form)
         && you.species == SP_KENKU
         && (you.experience_level >= 15 || you.airborne()))
     {
-        return 1;
+        return (true);
     }
     return (form == TRAN_DRAGON || form == TRAN_BAT);
 }
 
 bool form_can_swim(transformation_type form)
 {
-    return ((you.species == SP_MERFOLK && !form_changed_physiology(form))
-             || form == TRAN_ICE_BEAST                    // made of ice
-             || you.body_size(PSIZE_BODY) >= SIZE_GIANT);
+    // Ice floats.
+    if (form == TRAN_ICE_BEAST)
+        return (true);
+
+    if (you.species == SP_MERFOLK && !form_changed_physiology(form))
+        return (true);
+
+    size_type size = you.transform_size(form, PSIZE_BODY);
+    if (size == SIZE_CHARACTER)
+        size = you.body_size(PSIZE_BODY, true);
+
+    return (size >= SIZE_GIANT);
 }
 
 bool form_likes_water(transformation_type form)
@@ -317,12 +327,12 @@ void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 // FIXME: Switch to 4.1 transforms handling.
 size_type transform_size(int psize)
 {
-    return you.transform_size(psize);
+    return you.transform_size(you.form, psize);
 }
 
-size_type player::transform_size(int psize) const
+size_type player::transform_size(transformation_type tform, int psize) const
 {
-    switch (you.form)
+    switch (tform)
     {
     case TRAN_SPIDER:
     case TRAN_BAT:
@@ -417,6 +427,36 @@ monster_type dragon_form_dragon_type()
     }
 }
 
+bool feat_dangerous_for_form(transformation_type which_trans,
+                             dungeon_feature_type feat)
+{
+    // Everything is okay if we can fly.
+    if (form_can_fly(which_trans) || you.is_levitating())
+        return (false);
+
+    if (feat == DNGN_LAVA)
+        return (true);
+
+    if (feat == DNGN_DEEP_WATER)
+        return (!form_likes_water(which_trans) && !beogh_water_walk());
+
+    return (false);
+}
+
+static bool _transformation_is_safe(transformation_type which_trans,
+                                    dungeon_feature_type feat, bool quiet)
+{
+    if (!feat_dangerous_for_form(which_trans, feat))
+        return (true);
+
+    if (!quiet)
+    {
+        mprf("You would %s in your new form.",
+             feat == DNGN_DEEP_WATER ? "drown" : "burn");
+    }
+    return (false);
+}
+
 // Transforms you into the specified form. If force is true, checks for
 // inscription warnings are skipped, and the transformation fails silently
 // (if it fails). If just_check is true the transformation doesn't actually
@@ -447,25 +487,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (false);
     }
 
-    dungeon_feature_type feat = env.grid(you.pos());
-
-    if (feat == DNGN_DEEP_WATER && you.in_water()
-        && !form_can_fly(which_trans) && !form_likes_water(which_trans))
-    {
-        if (!force)
-            mpr("You would drown in your new form.");
+    if (!_transformation_is_safe(which_trans, env.grid(you.pos()), force))
         return (false);
-    }
-
-    if ((feat == DNGN_DEEP_WATER && !form_likes_water(which_trans)
-         || feat == DNGN_LAVA)
-         && form_can_fly() && !form_can_fly(which_trans))
-    {
-        if (!force)
-            mprf("You would %s in your new form.",
-                 feat == DNGN_DEEP_WATER ? "drown" : "burn");
-        return (false);
-    }
 
     // This must occur before the untransform() and the is_undead check.
     if (previous_trans == which_trans)

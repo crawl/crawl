@@ -1574,24 +1574,42 @@ static bool _check_ability_possible(const ability_def& abil,
 
 static bool _activate_talent(const talent& tal)
 {
-    // Doing these would outright kill the player due to stat drain.
-    if (tal.which == ABIL_TRAN_BAT)
+    // Doing these would outright kill the player.
+    if (tal.which == ABIL_EVOKE_STOP_LEVITATING)
     {
-        if (you.strength() <= 5)
+        if (is_feat_dangerous(env.grid(you.pos()), true)
+            && (!you.can_swim() || !feat_is_water(env.grid(you.pos()))))
         {
-            mpr("You lack the strength for this transformation.", MSGCH_WARN);
+            mpr("Stopping levitation right now would be fatal!");
             crawl_state.zero_turns_taken();
             return (false);
         }
     }
-    else if (tal.which == ABIL_END_TRANSFORMATION
-             && player_in_bat_form()
-             && you.dex() <= 5)
+    else if (tal.which == ABIL_TRAN_BAT)
     {
-        mpr("Turning back with such low dexterity would be fatal!", MSGCH_WARN);
-        more();
-        crawl_state.zero_turns_taken();
-        return (false);
+        if (you.strength() <= 5
+            && !yesno("Turning into a bat will reduce your strength to zero. Continue?", false, 'n'))
+        {
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
+    }
+    else if (tal.which == ABIL_END_TRANSFORMATION)
+    {
+        if (feat_dangerous_for_form(TRAN_NONE, env.grid(you.pos())))
+        {
+            mprf("Turning back right now would cause you to %s!",
+                 env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
+        if (player_in_bat_form() && you.dex() <= 5
+            && !yesno("Turning back will reduce your dexterity to zero. Continue?", false, 'n'))
+        {
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
     }
 
     if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
