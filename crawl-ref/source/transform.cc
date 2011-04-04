@@ -696,10 +696,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // Extra effects
     switch (which_trans)
     {
-    case TRAN_SPIDER:
-        you.check_clinging(false);
-        break;
-
     case TRAN_STATUE:
         if (you.duration[DUR_STONESKIN])
             mpr("Your new body merges with your stone armour.");
@@ -740,6 +736,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     default:
         break;
     }
+
+    you.check_clinging(false);
 
     // This only has an effect if the transformation happens passively,
     // for example if Xom decides to transform you while you're busy
