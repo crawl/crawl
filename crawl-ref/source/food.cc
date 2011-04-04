@@ -221,12 +221,15 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
 
         if (wpn->base_type == OBJ_WEAPONS
             && item_type_known(*wpn)
-            && get_weapon_brand(*wpn) == SPWPN_DISTORTION)
+            && get_weapon_brand(*wpn) == SPWPN_DISTORTION
+            && !you.duration[DUR_WEAPON_BRAND])
         {
             if (!gloved_butcher)
+            {
                 mprf(MSGCH_WARN,
                     "You're wielding a weapon of distortion, will not "
                     "autoswap for butchering.");
+            }
 
             return (false);
         }

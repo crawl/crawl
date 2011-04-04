@@ -1569,19 +1569,19 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         return (true);
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
-        && item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_DISTORTION
-        && you.duration[DUR_WEAPON_BRAND] == 0)
+        && item.base_type == OBJ_WEAPONS)
     {
-        return (true);
-    }
+        if (get_weapon_brand(item) == SPWPN_DISTORTION
+            && !you.duration[DUR_WEAPON_BRAND])
+        {
+            return (true);
+        }
 
-    if (oper == OPER_WIELD
-        && item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_VAMPIRICISM
-        && !you.is_undead)
-    {
-        return (true);
+        if (get_weapon_brand(item) == SPWPN_VAMPIRICISM
+            && !you.is_undead)
+        {
+            return (true);
+        }
     }
 
     return (false);
