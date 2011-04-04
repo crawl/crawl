@@ -952,7 +952,7 @@ MARKER: D = lua:props_marker { veto_fragmentation="veto", \
 MONS:   col:random name:demonic name_adjective plant
 MONS:   red devil ; demon trident good_item ego:distortion
 MONS:   red devil ; lajatang good_item ego:distortion
-MONS:   red devil ; katana good_item ego:distortion
+MONS:   red devil ; demon blade good_item ego:distortion
 RTILE:  x = wall_zot_blue / wall_zot_green / wall_zot_cyan / wall_zot_red /\
             wall_zot_magenta / wall_zot_yellow
 # alas, floor tiles are not distinguished from walls enough, commenting out:
