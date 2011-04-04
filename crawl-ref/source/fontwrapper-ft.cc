@@ -484,7 +484,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
             ret[idx] = '.';
             ret[idx+1] = '.';
 
-            return ret.substr(0, idx + 2);
+            return ret.chop(idx + 2);
         }
         else
         {
