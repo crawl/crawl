@@ -433,7 +433,8 @@ public:
 
     bool has_spell(spell_type spell) const;
 
-    size_type transform_size(int psize = PSIZE_TORSO) const;
+    size_type transform_size(transformation_type tform,
+                             int psize = PSIZE_TORSO) const;
     std::string shout_verb() const;
 
     item_def *slot_item(equipment_type eq,
