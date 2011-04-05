@@ -985,9 +985,9 @@ static bool _spellcasting_aborted(spell_type spell,
         return (true);
     }
 
-    if (is_prevented_teleport(spell)
-        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
+    if (is_prevented_teleport(spell))
     {
+        mpr("You cannot teleport right now.");
         return (true);
     }
 
