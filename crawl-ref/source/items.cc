@@ -2480,9 +2480,6 @@ bool item_needs_autopickup(const item_def &item)
     if (item_is_stationary(item))
         return (false);
 
-    if (item.props.exists("needs_autopickup"))
-        return (true);
-
     if (item.inscription.find("=g") != std::string::npos)
         return (true);
 
@@ -2491,6 +2488,9 @@ bool item_needs_autopickup(const item_def &item)
 
     if ((item.flags & ISFLAG_DROPPED) && !Options.pickup_dropped)
         return (false);
+
+    if (item.props.exists("needs_autopickup"))
+        return (true);
 
     std::string itemname;
     return _is_option_autopickup(item, itemname);
