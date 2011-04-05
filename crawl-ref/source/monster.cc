@@ -2908,6 +2908,11 @@ int monster::shield_bypass_ability(int) const
     return (15 + hit_dice * 2 / 3);
 }
 
+int monster::adjusted_body_armour_penalty(int) const
+{
+    return 0;
+}
+
 int monster::armour_class() const
 {
     // Extra AC for snails/turtles drawn into their shells.

@@ -224,6 +224,9 @@ public:
 
     virtual void shield_block_succeeded(actor *foe);
 
+    // Combat-related virtual class methods
+    virtual int adjusted_body_armour_penalty(int scale = 1) const = 0;
+
     virtual int mons_species() const = 0;
 
     virtual mon_holy_type holiness() const = 0;
