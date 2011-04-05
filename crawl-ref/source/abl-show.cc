@@ -1542,11 +1542,12 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return (true);
 
+    case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
         if (item_blocks_teleport(false, false))
         {
-            return (yesno("You cannot teleport right now. Try anyway?",
-                          true, 'n'));
+            mpr("You cannot teleport right now.");
+            return(false);
         }
         return (true);
 
