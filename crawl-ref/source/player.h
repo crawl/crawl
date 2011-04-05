@@ -612,6 +612,10 @@ public:
 
     void shield_block_succeeded(actor *foe);
 
+
+    // Combat-related adjusted penalty calculation methods
+    int adjusted_body_armour_penalty(int scale) const;
+
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill) const;
     int  traps_skill() const;
@@ -728,7 +732,6 @@ int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 int player_energy(void);
 
 int player_adjusted_shield_evasion_penalty(int scale);
-int player_adjusted_body_armour_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 

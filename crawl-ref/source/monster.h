@@ -431,10 +431,13 @@ public:
     int stat_maxhp() const { return max_hit_points; }
     int stealth () const;
 
-    int shield_bonus() const;
-    int shield_block_penalty() const;
-    void shield_block_succeeded(actor *foe);
-    int shield_bypass_ability(int tohit) const;
+    int     shield_bonus() const;
+    int     shield_block_penalty() const;
+    void    shield_block_succeeded(actor *foe);
+    int     shield_bypass_ability(int tohit) const;
+
+    // Combat-related class methods
+    int     adjusted_body_armour_penalty(int) const;
 
     actor_type atype() const { return ACT_MONSTER; }
     monster* as_monster() { return this; }

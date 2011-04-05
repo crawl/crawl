@@ -156,8 +156,7 @@ void melee_attack::init_attack()
 
     if (attacker && attacker->atype() == ACT_PLAYER)
     {
-        player_body_armour_penalty =
-            player_adjusted_body_armour_evasion_penalty(1);
+        player_body_armour_penalty = you.adjusted_body_armour_penalty(1);
         player_shield_penalty =
             player_adjusted_shield_evasion_penalty(1);
         dprf("Player body armour penalty: %d, shield penalty: %d",
@@ -170,14 +169,13 @@ void melee_attack::init_attack()
         // reach submerged monsters.
         unarmed_ok = (attacker->damage_type() == DVORP_TENTACLE);
     }
-
-    miscast_level  = -1;
-    miscast_type   = SPTYP_NONE;
-    miscast_target = NULL;
 }
 
 bool melee_attack::handle_phase_attempted()
 {
+    // If a mimic is attacking or defending, it is thereafter known.
+    identify_mimic(attacker);
+
     return true;
 }
 
@@ -413,44 +411,6 @@ bool melee_attack::attack()
 
     return (retval);
 }
-/*  Calls effects based on the current phase of attacks
- *
- *  Hooks into the three attack methods (player_attack, mons_attack_you, and
- *  mons_attack_mons) by being called during a particular phase of combat.
- *  While some phases of combat seem like exit points - such as Dying and
- *  Missed - the code here and the code of the effects that are called should
- *  never make the presumption that we're exiting, since there could be (and
- *  likely, are) sections of code which apply post-death, or post-miss effects
- *  or messages.
- *
- *  @param <phase> sequence         // ENUM phase defined in fight.h
- *
-void melee_attack::respond_to_attack_phase(phase sequence)
-{
-    switch (sequence)
-    {
-    // Beginning phase, will we hit, miss, be dodged, be blocked... Who knows?
-    ATK_ATTEMPTED:
-        break;
-    // Attack has hit, but may not necessarily do damage
-    ATK_LANDED:
-        break;
-    // Attack was dodged
-    ATK_DODGED:
-        break;
-    // Attack was blocked (partially, or entirely)
-    ATK_BLOCKED:
-        break;
-    // Attack did some damage (either all, or partial)
-    ATK_DAMAGED:
-        break;
-    // Attack killed the defender, maybe we'll revive it (Xom!)
-    ATK_KILLED:
-        break;
-    default:
-        break;
-    }
-}*/
 
 bool melee_attack::player_attack()
 {

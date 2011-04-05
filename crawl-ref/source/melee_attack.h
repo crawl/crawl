@@ -39,7 +39,7 @@ public:
 
     // Armour penalties?
     // Adjusted EV penalty for body armour and shields.
-    // TODO: Replaced with attack methods
+    // TODO: Remove and replace with attacker_*_penalty
     int       player_body_armour_penalty;
     int       player_shield_penalty;
 
@@ -47,10 +47,10 @@ public:
     int       player_armour_tohit_penalty;
     int       player_shield_tohit_penalty;
 
-    // TODO: Replaced with attack::unarmed_capable
+    // TODO: Replace with attack::unarmed_capable
     bool      can_do_unarmed;
 
-    // Miscast to cause after special damage is done.  If miscast_level == 0
+    // Miscast to cause after special damage is done. If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
     int    miscast_level;
     int    miscast_type;

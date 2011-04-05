@@ -2192,20 +2192,6 @@ int player_size_adjusted_body_armour_evasion_penalty(int scale)
     return (size_adjusted_penalty);
 }
 
-// The EV penalty to the player for their worn body armour.
-int player_adjusted_body_armour_evasion_penalty(int scale)
-{
-    const int base_ev_penalty = player_raw_body_armour_evasion_penalty();
-    if (!base_ev_penalty)
-        return (0);
-
-    return ((base_ev_penalty
-             + std::max(0, 3 * base_ev_penalty - you.strength()))
-            * (45 - you.skill(SK_ARMOUR))
-            * scale
-            / 45);
-}
-
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
@@ -2227,7 +2213,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
     }
 
     return (piece_armour_evasion_penalty * scale +
-            player_adjusted_body_armour_evasion_penalty(scale));
+            you.adjusted_body_armour_penalty(scale));
 }
 
 // EV bonuses that work even when helpless.
@@ -2410,7 +2396,7 @@ int player_armour_shield_spell_penalty()
     const int scale = 100;
 
     const int body_armour_penalty =
-        std::max(25 * player_adjusted_body_armour_evasion_penalty(scale)
+        std::max(25 * you.adjusted_body_armour_penalty(scale)
                     - player_body_armour_racial_spellcasting_bonus(scale),
                  0);
 
@@ -5743,6 +5729,20 @@ void player::shield_block_succeeded(actor *foe)
 
     shield_blocks++;
     practise(EX_SHIELD_BLOCK);
+}
+
+// The EV penalty to the player for their worn body armour.
+int player::adjusted_body_armour_penalty(int scale) const
+{
+    const int base_ev_penalty = player_raw_body_armour_evasion_penalty();
+    if (!base_ev_penalty)
+        return (0);
+
+    return ((base_ev_penalty
+             + std::max(0, 3 * base_ev_penalty - you.strength()))
+            * (45 - you.skill(SK_ARMOUR))
+            * scale
+            / 45);
 }
 
 int player::skill(skill_type sk) const
