@@ -455,12 +455,31 @@ void clear_excludes()
     _exclude_update();
 }
 
+static void _exclude_gate(const coord_def &p, bool del = false)
+{
+    std::set<coord_def> all_doors;
+    find_connected_identical(p, grd(p), all_doors);
+    for (std::set<coord_def>::const_iterator dc = all_doors.begin();
+         dc != all_doors.end(); ++dc)
+    {
+        if (del)
+            del_exclude(*dc);
+        else
+            set_exclude(*dc, 0);
+    }
+}
+
 // Cycles the radius of an exclusion, including "off" state;
 // may start at 0 < radius < LOS_RADIUS, but won't cycle there.
 void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
+        if (feat_is_door(grd(p)))
+        {
+            _exclude_gate(p, exc->radius == 0);
+            return;
+        }
         if (exc->radius > 0)
             set_exclude(p, 0);
         else
