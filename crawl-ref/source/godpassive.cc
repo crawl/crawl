@@ -420,6 +420,9 @@ bool ash_id_item(item_def& item, bool silent)
         if (Options.autoinscribe_artefacts && is_artefact(item))
             add_autoinscription(item, artefact_auto_inscription(item));
 
+        if (item.props.exists("needs_autopickup") && is_useless_item(item))
+            item.props.erase("needs_autopickup");
+
         if (&item == you.weapon())
             you.wield_change = true;
 
