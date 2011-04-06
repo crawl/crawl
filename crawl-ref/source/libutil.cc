@@ -766,8 +766,17 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
             else
             {
                 // Skip the whole tag.
-                while (*cp && *cp != '>')
+                while (*cp != '>')
+                {
+                    if (!*cp)
+                    {
+                        // Everything so far fitted, report error.
+                        std::string ret = s + ">";
+                        s = "<lightred>ERROR: string above had unterminated tag</lightred>";
+                        return ret;
+                    }
                     cp++;
+                }
             }
         if (cw >= 0)
             width -= cw;
