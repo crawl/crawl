@@ -273,7 +273,8 @@ int species_has_claws(species_type species, bool mut_level)
 
 bool species_likes_water(species_type species)
 {
-    return (species == SP_MERFOLK || species == SP_GREY_DRACONIAN);
+    return (species == SP_MERFOLK || species == SP_GREY_DRACONIAN
+            || species == SP_OCTOPUS);
 }
 
 genus_type species_genus(species_type species)

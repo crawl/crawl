@@ -3545,7 +3545,7 @@ int check_stealth(void)
         case SP_GREY_DRACONIAN:
         case SP_NAGA:       // not small but very good at stealth
         case SP_CAT:
-            case SP_OCTOPUS:
+        case SP_OCTOPUS:
             race_mod = 18;
             break;
         default:
@@ -5638,7 +5638,7 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return (species == SP_MERFOLK
+    return (species == SP_MERFOLK || species == SP_OCTOPUS
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || !permanently)
                 && form_can_swim();
@@ -5648,7 +5648,8 @@ int player::visible_igrd(const coord_def &where) const
 {
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
-            && species != SP_MERFOLK && species != SP_GREY_DRACONIAN))
+            && species != SP_MERFOLK && species != SP_GREY_DRACONIAN
+            && species != SP_OCTOPUS))
     {
         return (NON_ITEM);
     }
