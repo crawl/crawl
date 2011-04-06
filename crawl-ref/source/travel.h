@@ -141,6 +141,9 @@ const int PD_EXCLUDED = -20099;
 // This square is within LOS radius of an excluded square
 const int PD_EXCLUDED_RADIUS = -20100;
 
+// This square has a damaging cloud
+const int PD_CLOUD = -20101;
+
 /* ***********************************************************************
  * Array of points on the map, each value being the distance the character
  * would have to travel to get there. Negative distances imply that the point
