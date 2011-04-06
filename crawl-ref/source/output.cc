@@ -102,7 +102,7 @@ class colour_bar
         }
 
         int temp_colour;
-        temp_colour = temperature_colour();
+        temp_colour = temperature_colour(temperature());
 
         const int width = crawl_view.hudsz.x - (ox-1);
         const int disp  = width * val / max_val;
@@ -244,7 +244,7 @@ static void _print_stats_temperature(int x, int y)
     textcolor(HUD_CAPTION_COLOUR);
     cprintf("Temperature: ");
 
-    Temp_Bar.draw(19, y, you.temperature, TEMP_MAX, true);
+    Temp_Bar.draw(19, y, temperature(), TEMP_MAX, true);
 }
 
 static void _print_stats_mp(int x, int y)
