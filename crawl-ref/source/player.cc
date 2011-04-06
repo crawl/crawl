@@ -2164,34 +2164,6 @@ int player_adjusted_shield_evasion_penalty(int scale)
                      / (5 + player_evasion_size_factor())));
 }
 
-int player_raw_body_armour_evasion_penalty()
-{
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    if (!body_armour)
-        return (0);
-
-    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
-    return base_ev_penalty;
-}
-
-int player_size_adjusted_body_armour_evasion_penalty(int scale)
-{
-    const int base_ev_penalty = player_raw_body_armour_evasion_penalty();
-    if (!base_ev_penalty)
-        return (0);
-
-    const int size = you.body_size(PSIZE_BODY);
-
-    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
-
-    const int size_adjusted_penalty =
-        std::max(0,
-                 scale * base_ev_penalty
-                 - size_bonus_factor * base_ev_penalty);
-
-    return (size_adjusted_penalty);
-}
-
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
@@ -2330,7 +2302,7 @@ int player_evasion(ev_ignore_type evit)
     // adjusted_evasion_penalty, however.
     const int armour_dodge_penalty =
         std::max(0,
-                 (30 * player_size_adjusted_body_armour_evasion_penalty(scale)
+                 (30 * you.adjusted_body_armour_penalty(scale, true)
                   - 30 * scale)
                  / std::max(1, (int) you.strength()));
 
@@ -5731,16 +5703,36 @@ void player::shield_block_succeeded(actor *foe)
     practise(EX_SHIELD_BLOCK);
 }
 
-// The EV penalty to the player for their worn body armour.
-int player::adjusted_body_armour_penalty(int scale) const
+int player::unadjusted_body_armour_penalty() const
 {
-    const int base_ev_penalty = player_raw_body_armour_evasion_penalty();
+    const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
+    if (!body_armour)
+        return (0);
+
+    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
+    return base_ev_penalty;
+}
+
+// The EV penalty to the player for their worn body armour.
+int player::adjusted_body_armour_penalty(int scale, bool use_size) const
+{
+    const int base_ev_penalty = unadjusted_body_armour_penalty();
     if (!base_ev_penalty)
         return (0);
 
+    if(use_size)
+    {
+        const int size = you.body_size(PSIZE_BODY);
+
+        const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
+
+        return std::max(0, scale * base_ev_penalty
+                           - size_bonus_factor * base_ev_penalty);
+    }
+
     return ((base_ev_penalty
-             + std::max(0, 3 * base_ev_penalty - you.strength()))
-            * (45 - you.skill(SK_ARMOUR))
+             + std::max(0, 3 * base_ev_penalty - strength()))
+            * (45 - skill(SK_ARMOUR))
             * scale
             / 45);
 }
