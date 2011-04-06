@@ -4666,47 +4666,49 @@ int count_allies()
 }
 
 // Lava orcs!
+int temperature()
+{
+    return (int) you.temperature;
+}
+
 void temperature_check()
 {
+    double factor = sqrt(exp_needed(you.experience_level) / 30.0);
     int tension = get_tension(GOD_NO_GOD);
+    double tension_b = tension / (1 + factor);
+    double tension_c = sqrt(tension_b);
+    float tempchange = .5 + tension_c / (1 + you.temperature);
 
-    // Temperature is somewhat 'sticky' - 20% chance not to change.
-    if (one_chance_in(5))
-        return;
+    mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f, Tempchange: %f", factor, tension, tension_b, tension_c, tempchange);
 
-    // 4 seems to be a reasonable baseline. The variation from it is
-    // because if it's strictly >/< 4 it will seesaw rapidly.
-    if (tension*3/4 > you.temperature * 4.8)
-        temperature_increment();
-    else if (tension*3/4 < you.temperature * 3.2)
-        temperature_decrement();
+    if ((tempchange - 1) > 0)
+        temperature_increment(tempchange);
+    else if ((tempchange - 1) < 0)
+        temperature_decrement(tempchange);
 }
 
-void temperature_increment()
+void temperature_increment(float degree)
 {
-    if (you.temperature < TEMP_MAX)
-    {
-        you.temperature++;
-        temperature_changed(true);
-    }
+    you.temperature += sqrt(degree);
+    if (temperature() >= TEMP_MAX)
+        you.temperature = TEMP_MAX;
+    temperature_changed(true);
 }
 
-void temperature_decrement()
+void temperature_decrement(float degree)
 {
-    if (you.temperature > TEMP_MIN)
-    {
-        you.temperature--;
-        temperature_changed(false);
-    }
-
+    you.temperature -= sqrt(degree);
+    if (temperature() <= TEMP_MIN)
+        you.temperature = TEMP_MIN;
+    temperature_changed(false);
 }
 
 void temperature_changed(bool inc_temp) {
 
     // Okay, so here's how it works - it gets your current temperature, and it knows
     // whether that temperature has just risen by one or not.
-    int new_temp = you.temperature;
-    int old_temp = you.temperature + 1;
+    int new_temp = temperature();
+    int old_temp = temperature() + 1;
 
     if (inc_temp)
         old_temp -= 2;
@@ -4750,20 +4752,24 @@ bool temperature_effect(int which) {
     switch (which)
     {
         case LORC_STONESKIN:
-            return (you.temperature < TEMP_WARM); // 1-8
-        case LORC_EARTH_BOOST:
-            return (you.temperature < TEMP_COOL); // 1-4
+            return (temperature() < TEMP_WARM); // 1-8
+//      case nothing, right now:
+//            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
+        case LORC_FIRE_RES_II:
+        case LORC_LAVA_BLOOD:
+            return (temperature() >= TEMP_WARM); // 9-15
         case LORC_LAVA_BOOST:
-            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
+            return (temperature() >= TEMP_WARM && temperature() < TEMP_HOT); // 9 - 10
+        case LORC_FIRE_RES_III:
         case LORC_FIRE_BOOST:
         case LORC_LAVA_BLOOD:
-            return (you.temperature >= TEMP_WARM); // 9-15
+            return (temperature() >= TEMP_WARM); // 9-15
         case LORC_COLD_VULN:
         case LORC_PASSIVE_HEAT:
-            return (you.temperature >= TEMP_HOT); // 11-15
+            return (temperature() >= TEMP_HOT); // 11-15
         case LORC_NO_SCROLLS:
         case LORC_HEAT_AURA:
-            return (you.temperature >= TEMP_FIRE); // 13-15
+            return (temperature() >= TEMP_FIRE); // 13-15
 
         default:
             return false;
@@ -4772,10 +4778,28 @@ bool temperature_effect(int which) {
 
 int temperature_colour() {
 
-return (you.temperature > TEMP_FIRE) ? LIGHTRED  :
-       (you.temperature > TEMP_HOT)  ? RED       :
-       (you.temperature > TEMP_WARM) ? YELLOW    :
-       (you.temperature > TEMP_ROOM) ? WHITE     :
-       (you.temperature > TEMP_COOL) ? LIGHTCYAN :
-       (you.temperature > TEMP_COLD) ? LIGHTBLUE : BLUE;
+return (temperature() > TEMP_FIRE) ? LIGHTRED  :
+       (temperature() > TEMP_HOT)  ? RED       :
+       (temperature() > TEMP_WARM) ? YELLOW    :
+       (temperature() > TEMP_ROOM) ? WHITE     :
+       (temperature() > TEMP_COOL) ? LIGHTCYAN :
+       (temperature() > TEMP_COLD) ? LIGHTBLUE : BLUE;
+
+std::string temperature_text(int which) {
+
+    switch (which)
+    {
+        case TEMP_MIN:
+            return "Minimum temperature; always rF+.";
+        case TEMP_WARM:
+            return "rF++; lava magic boost; lava bleeding; lose stoneskin.";
+        case TEMP_HOT:
+            return "rF+++; fire magic boost; burn attackers; cold vulnerability.";
+        case TEMP_FIRE:
+            return "Burn surroundings; cannot read books or scrolls.";
+        case TEMP_MAX:
+            return "Maximum temperature!";
+        default:
+            return "";
+    }
 }
