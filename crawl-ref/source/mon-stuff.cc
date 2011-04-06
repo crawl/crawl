@@ -4735,9 +4735,12 @@ void temperature_changed(bool inc_temp) {
     // Cooled down enough for stoneskin to kick in again.
     if (!inc_temp && old_temp == TEMP_WARM)
     {
-        you.set_duration(DUR_STONESKIN, 500);
-        mpr("Your skin cools and hardens.", MSGCH_DURATION);
-        you.redraw_armour_class = true;
+        if (duration[DUR_STONESKIN] < 500)
+        {
+            you.set_duration(DUR_STONESKIN, 500);
+            mpr("Your skin cools and hardens.", MSGCH_DURATION);
+            you.redraw_armour_class = true;
+        }
     }
 
     // Passive heat stuff.
