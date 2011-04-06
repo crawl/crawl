@@ -4681,7 +4681,7 @@ void temperature_check()
     double tension_c = sqrt(tension_b);
     float tempchange = .5 + tension_c / (1 + you.temperature);
 
-    mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f, Tempchange: %f", factor, tension, tension_b, tension_c, tempchange);
+//    mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f, Tempchange: %f", factor, tension, tension_b, tension_c, tempchange);
 
     // Off from 1 so that there's less seesawing.
     if ((tempchange - .9) > 0)
