@@ -61,7 +61,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
-      "Fe", "Oc",
+      "Fe", "OP",
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
