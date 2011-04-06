@@ -6677,8 +6677,13 @@ int player::has_tentacles(bool allow_tran) const
 {
     if (allow_tran)
     {
-        if (you.form != TRAN_NONE)
+        if (form != TRAN_NONE
+            && form != TRAN_BLADE_HANDS
+            && form != TRAN_STATUE
+            && form != TRAN_LICH)
+        {
             return (0);
+        }
     }
 
     return (player_mutation_level(MUT_TENTACLES));
