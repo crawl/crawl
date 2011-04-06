@@ -226,8 +226,9 @@ public:
 
     // Combat-related virtual class methods
     virtual int unadjusted_body_armour_penalty() const = 0;
-    virtual int adjusted_body_armour_penalty(int scale,
-                                             bool use_size) const = 0;
+    virtual int adjusted_body_armour_penalty(int scale = 1,
+                                             bool use_size = false) const = 0;
+    virtual int adjusted_shield_penalty(int scale) const = 0;
 
     virtual int mons_species() const = 0;
 

@@ -39,11 +39,11 @@ public:
 
     // Armour penalties?
     // Adjusted EV penalty for body armour and shields.
-    // TODO: Remove and replace with attacker_*_penalty
-    int       player_body_armour_penalty;
-    int       player_shield_penalty;
+    int       attacker_body_armour_penalty;
+    int       attacker_shield_penalty;
 
     // Combined to-hit penalty from armour and shield.
+    // TODO: Remove and replace with attacker_*_tohit_penalty
     int       player_armour_tohit_penalty;
     int       player_shield_tohit_penalty;
 
