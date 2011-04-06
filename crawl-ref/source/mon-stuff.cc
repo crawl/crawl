@@ -4713,14 +4713,24 @@ void temperature_changed(bool inc_temp) {
     if (inc_temp)
         old_temp -= 2;
 
-    // Stoneskin stuff.
+    // Reached the temp that kills off stoneskin.
     if (inc_temp && !temperature_effect(LORC_STONESKIN) && you.duration[DUR_STONESKIN] > 0)
     {
+        // Stoneskin melts.
         you.set_duration(DUR_STONESKIN, 0);
         mpr("Your stony skin melts.", MSGCH_DURATION);
+
+        // Handles condensation shield, ozo's armour, icemail.
+        _maybe_melt_player_enchantments(BEAM_FIRE);
+
+        // Handled separately because normally heat doesn't affect this.
+        if (you.form == TRAN_ICE_BEAST || you.form == TRAN_STATUE)
+            untransform(true, false);
+
         you.redraw_armour_class = true;
     }
 
+    // Cooled down enough for stoneskin to kick in again.
     if (!inc_temp && temperature_effect(LORC_STONESKIN) && !you.duration[DUR_STONESKIN])
     {
         you.set_duration(DUR_STONESKIN, 500);
