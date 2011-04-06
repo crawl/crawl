@@ -97,8 +97,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     perceived_attack(false), obvious_effect(false),
     attack_number(which_attack), extra_noise(0), skip_chaos_message(false),
-    special_damage_flavour(BEAM_NONE), player_body_armour_penalty(0),
-    player_shield_penalty(0), player_armour_tohit_penalty(0),
+    special_damage_flavour(BEAM_NONE), attacker_body_armour_penalty(0),
+    attacker_shield_penalty(0), player_armour_tohit_penalty(0),
     player_shield_tohit_penalty(0), can_do_unarmed(false), miscast_level(-1),
     miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
@@ -154,14 +154,10 @@ void melee_attack::init_attack()
                           && you.see_cell(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);
 
-    if (attacker && attacker->atype() == ACT_PLAYER)
-    {
-        player_body_armour_penalty = you.adjusted_body_armour_penalty(1);
-        player_shield_penalty =
-            player_adjusted_shield_evasion_penalty(1);
-        dprf("Player body armour penalty: %d, shield penalty: %d",
-             player_body_armour_penalty, player_shield_penalty);
-    }
+    attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(1);
+    attacker_shield_penalty = attacker->adjusted_shield_penalty(1);
+    //dprf("Player body armour penalty: %d, shield penalty: %d",
+    //     player_body_armour_penalty, player_shield_penalty);
 
     if (defender && defender->submerged())
     {
@@ -3110,7 +3106,7 @@ void melee_attack::player_calc_hit_damage()
     {
         potential_damage =
             std::max(1,
-                     potential_damage - roll_dice(1, player_shield_penalty));
+                     potential_damage - roll_dice(1, attacker_shield_penalty));
     }
 
     potential_damage = player_stat_modify_damage(potential_damage);
@@ -3150,16 +3146,16 @@ void melee_attack::calc_player_armour_shield_tohit_penalty(bool random_factor)
     if (weapon && hands == HANDS_HALF)
     {
         player_armour_tohit_penalty =
-            maybe_roll_dice(1, player_body_armour_penalty, random_factor);
+            maybe_roll_dice(1, attacker_body_armour_penalty, random_factor);
         player_shield_tohit_penalty =
-            maybe_roll_dice(2, player_shield_penalty, random_factor);
+            maybe_roll_dice(2, attacker_shield_penalty, random_factor);
     }
     else
     {
         player_armour_tohit_penalty =
-            maybe_roll_dice(1, player_body_armour_penalty, random_factor);
+            maybe_roll_dice(1, attacker_body_armour_penalty, random_factor);
         player_shield_tohit_penalty =
-            maybe_roll_dice(1, player_shield_penalty, random_factor);
+            maybe_roll_dice(1, attacker_shield_penalty, random_factor);
     }
 }
 
@@ -3383,16 +3379,16 @@ random_var melee_attack::player_calc_attack_delay()
     random_var attack_delay = weapon ? player_weapon_speed()
                                      : player_unarmed_speed();
 
-    if (player_shield_penalty)
+    if (attacker_shield_penalty)
     {
         if (weapon && hands == HANDS_HALF)
         {
-            attack_delay += rv::roll_dice(1, player_shield_penalty);
+            attack_delay += rv::roll_dice(1, attacker_shield_penalty);
         }
         else
         {
-            attack_delay += rv::min(rv::random2(1 + player_shield_penalty),
-                                    rv::random2(1 + player_shield_penalty));
+            attack_delay += rv::min(rv::random2(1 + attacker_shield_penalty),
+                                    rv::random2(1 + attacker_shield_penalty));
         }
     }
 
@@ -3463,7 +3459,7 @@ random_var melee_attack::player_unarmed_speed()
     random_var unarmed_delay =
         rv::max(constant(10),
                  (rv::roll_dice(1, 10) +
-                  rv::roll_dice(2, player_body_armour_penalty)));
+                  rv::roll_dice(2, attacker_body_armour_penalty)));
 
     // Not even bats can attack faster than this.
     min_delay = 5;

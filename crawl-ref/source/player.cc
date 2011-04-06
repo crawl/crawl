@@ -2150,20 +2150,6 @@ int player_evasion_size_factor()
     return 2 * (SIZE_MEDIUM - size);
 }
 
-// The EV penalty to the player for wearing their current shield.
-int player_adjusted_shield_evasion_penalty(int scale)
-{
-    const item_def *shield = you.slot_item(EQ_SHIELD, false);
-    if (!shield)
-        return (0);
-
-    const int base_shield_penalty = -property(*shield, PARM_EVASION);
-    return std::max(0,
-                    (base_shield_penalty * scale
-                     - you.skill(SK_SHIELDS) * scale
-                     / (5 + player_evasion_size_factor())));
-}
-
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
@@ -2310,8 +2296,7 @@ int player_evasion(ev_ignore_type evit)
     const int armour_adjusted_dodge_bonus =
         std::max(0, dodge_bonus - armour_dodge_penalty);
 
-    const int adjusted_shield_penalty =
-        player_adjusted_shield_evasion_penalty(scale);
+    const int adjusted_shield_penalty = you.adjusted_shield_penalty(scale);
 
     const int prestepdown_evasion =
         size_base_ev
@@ -2373,7 +2358,7 @@ int player_armour_shield_spell_penalty()
                  0);
 
     const int total_penalty = body_armour_penalty
-                 + 25 * player_adjusted_shield_evasion_penalty(scale)
+                 + 25 * you.adjusted_shield_penalty(scale)
                  - 20 * scale;
 
     return (std::max(total_penalty, 0) / scale);
@@ -5735,6 +5720,20 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
             * (45 - skill(SK_ARMOUR))
             * scale
             / 45);
+}
+
+// The EV penalty to the player for wearing their current shield.
+int player::adjusted_shield_penalty(int scale) const
+{
+    const item_def *_shield = slot_item(EQ_SHIELD, false);
+    if (!_shield)
+        return (0);
+
+    const int base_shield_penalty = -property(*_shield, PARM_EVASION);
+    return std::max(0,
+                    (base_shield_penalty * scale
+                     - skill(SK_SHIELDS) * scale
+                     / (5 + player_evasion_size_factor())));
 }
 
 int player::skill(skill_type sk) const
