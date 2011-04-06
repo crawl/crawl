@@ -1037,6 +1037,13 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
             aux_verb = "claw";
             aux_damage += roll_dice(you.has_claws(), 3);
         }
+        else if (you.has_usable_tentacles())
+        {
+            // Provisional - same damage boost as claws.
+            aux_verb = "tentacle-slap";
+            aux_damage += roll_dice(you.has_usable_tentacles(), 3);
+            noise_factor = 125;
+        }
 
         break;
 
@@ -1995,6 +2002,19 @@ int melee_attack::player_weapon_type_modify(int damage)
             else
                 attack_verb = "eviscerate";
         }
+
+        if (you.damage_type() == DVORP_TENTACLE)
+        {
+            if (damage < HIT_WEAK)
+                attack_verb = "tentacle-slap";
+            else if (damage < HIT_MED)
+                attack_verb = "bludgeon";
+            else if (damage < HIT_STRONG)
+                attack_verb = "batter";
+            else
+                attack_verb = "thrash";
+        }
+
         else
         {
             if (damage < HIT_MED)
