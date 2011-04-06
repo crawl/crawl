@@ -756,6 +756,7 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
         if (cw > width)
             break;
         if (c == '<' && tags)
+        {
             ASSERT(cw == 1);
             if (cp[1] == '<') // "<<" escape
             {
@@ -778,6 +779,7 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
                     cp++;
                 }
             }
+        }
         if (cw >= 0)
             width -= cw;
         cp += clen;
