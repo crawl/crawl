@@ -85,8 +85,13 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             cell.clear_item();
 
         if ((!clear_detected_monsters || !cell.detected_monster())
-                && !mons_class_is_stationary(cell.monster()))
+            && !mons_class_is_stationary(cell.monster()))
+        {
             cell.clear_monster();
+#ifdef USE_TILE
+            tile_clear_monster(p);
+#endif
+        }
     }
 }
 
