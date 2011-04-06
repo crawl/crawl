@@ -715,6 +715,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return _abort_or_fizzle(just_check);
     }
 
+    if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
+        && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
+    {
+        if (!force)
+            mpr("Your temperature is too high to benefit from that spell.");
+        return _abort_or_fizzle(just_check);
+    }
+
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     int str = 0, dex = 0;
