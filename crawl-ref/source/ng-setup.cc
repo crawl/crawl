@@ -318,8 +318,8 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SLOW_METABOLISM] = 2;
         break;
     case SP_OCTOPUS:
-        you.mutation[MUT_REGENERATION]    = 1;
         you.mutation[MUT_TENTACLES]       = 3;
+        you.mutation[MUT_BEAK]            = 1;
         break;
     default:
         break;
