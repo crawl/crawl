@@ -324,7 +324,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step out of the time flow"
     },
     // Ashenzari
-    { "Ashenzari supports your low skills.",
+    { "",
       "The more cursed you are, the more Ashenzari helps you learn.",
       "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
