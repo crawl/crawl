@@ -1076,7 +1076,10 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_ICE_BEAST:
-        mpr("You warm up again.", MSGCH_DURATION);
+        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+            mpr("Your icy form melts away into molten rock.", MSGCH_DURATION);
+        else
+            mpr("You warm up again.", MSGCH_DURATION);
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
