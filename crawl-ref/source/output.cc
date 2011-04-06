@@ -408,7 +408,13 @@ static void _print_stats_wp(int y)
     else
     {
         col = LIGHTGREY;
-        text = you.has_usable_claws(true) ? "Claws" : "Nothing wielded";
+        text = "Nothing wielded"; // Default
+
+        if (you.has_usable_claws(true))
+            text = "Claws";
+        if (you.has_usable_tentacles(true))
+            text = "Tentacles";
+
         if (you.species == SP_CAT)
             text = "Teeth and claws";
 
@@ -424,7 +430,12 @@ static void _print_stats_wp(int y)
                 break;
             case TRAN_STATUE:
                 col = LIGHTGREY;
-                text = you.has_usable_claws(true) ? "Stone claws" : "Stone fists";
+                if (you.has_usable_claws(true))
+                    text = "Stone claws";
+                else if (you.has_usable_tentacles(true))
+                    text = "Stone tentacles";
+                else
+                    text = "Stone fists";
                 break;
             case TRAN_ICE_BEAST:
                 col = WHITE;
