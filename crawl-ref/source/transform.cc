@@ -1168,7 +1168,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
     // Lava orcs become stony again if at the right temperature.
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
-        && duration[DUR_STONESKIN] < 500)
+        && you.duration[DUR_STONESKIN] < 500)
         you.duration[DUR_STONESKIN] = 500;
 
     if (hp_downscale != 10 && you.hp != you.hp_max)
