@@ -1090,13 +1090,11 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
     case UNAT_KICK:
     case UNAT_HEADBUTT:
     case UNAT_PUNCH:
+    case UNAT_TENTACLES:
         return (you.form == TRAN_ICE_BEAST
                 || you.form == TRAN_DRAGON
                 || you.form == TRAN_SPIDER
                 || you.form == TRAN_BAT);
-
-    case UNAT_TENTACLES:
-        return (you.form != TRAN_NONE);
 
     default:
         return (false);
