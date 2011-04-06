@@ -683,6 +683,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     bool          book_errors    = false;
     unsigned int  num_on_ground  = 0;
     unsigned int  num_books      = 0;
+    unsigned int  num_unknown    = 0;
                   num_unreadable = 0;
 
     // Collect the list of all spells in all available spellbooks.
@@ -704,8 +705,14 @@ static bool _get_mem_list(spell_list &mem_spells,
     for (unsigned int i = 0; i < items.size(); ++i)
     {
         item_def book(*items[i]);
-        if (!item_is_spellbook(book) || !item_type_known(book))
+        if (!item_is_spellbook(book))
             continue;
+
+        if (!item_type_known(book))
+        {
+            num_unknown++;
+            continue;
+        }
 
         num_books++;
         num_on_ground++;
@@ -718,7 +725,23 @@ static bool _get_mem_list(spell_list &mem_spells,
     if (num_books == 0)
     {
         if (!just_check)
-            mpr("You aren't carrying any spellbooks.", MSGCH_PROMPT);
+        {
+            if (num_unknown > 1)
+            {
+                mpr("You must pick those books before reading them.",
+                    MSGCH_PROMPT);
+            }
+            else if (num_unknown == 1)
+            {
+                mpr("You must pick this book before reading it.",
+                    MSGCH_PROMPT);
+            }
+            else
+            {
+                mpr("You aren't carrying or standing over any spellbooks.",
+                    MSGCH_PROMPT);
+            }
+        }
         return (false);
     }
     else if (num_unreadable == num_books)
