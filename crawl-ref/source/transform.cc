@@ -1059,7 +1059,11 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_STATUE:
-        mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
+        // This only handles lava orcs going statue -> stoneskin.
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN))
+            mpr("You revert to a slightly less stony form.", MSGCH_DURATION);
+        else if (you.species != SP_LAVA_ORC)
+            mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, 2, true,
                      "losing the statue transformation");
         notify_stat_change(STAT_STR, -2, true,
@@ -1158,6 +1162,11 @@ void untransform(bool skip_wielding, bool skip_move)
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
              armour->name(DESC_YOUR).c_str());
     }
+
+    // Lava orcs become stony again if at the right temperature.
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
+        && duration[DUR_STONESKIN] < 500)
+        you.duration[DUR_STONESKIN] = 500;
 
     if (hp_downscale != 10 && you.hp != you.hp_max)
     {
