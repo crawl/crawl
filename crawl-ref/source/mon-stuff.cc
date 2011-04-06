@@ -4756,11 +4756,16 @@ void temperature_changed(bool inc_temp) {
 
     // Heat aura stuff.
     if (inc_temp && new_temp == TEMP_FIRE)
+    {
         mpr("You blaze with the fury of an erupting volcano!", MSGCH_DURATION);
+        invalidate_agrid(true);
+    }
 
     if (!inc_temp && old_temp == TEMP_FIRE)
+    {
         mpr("The intensity of your heat diminishes.", MSGCH_DURATION);
-
+        invalidate_agrid(true);
+    }
     // If we're in this function, temperature changed, anyways.
     you.redraw_temperature = true;
 
