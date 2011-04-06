@@ -4683,10 +4683,14 @@ void temperature_check()
 
     mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f, Tempchange: %f", factor, tension, tension_b, tension_c, tempchange);
 
-    if ((tempchange - 1) > 0)
+    // Off from 1 so that there's less seesawing.
+    if ((tempchange - .9) > 0)
         temperature_increment(tempchange);
-    else if ((tempchange - 1) < 0)
+    else if ((tempchange - 1.1) < 0)
         temperature_decrement(tempchange);
+
+    if (temperature_effect(LORC_HEAT_AURA))
+        invalidate_agrid(true);
 }
 
 void temperature_increment(float degree)
