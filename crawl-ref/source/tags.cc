@@ -2893,6 +2893,7 @@ void unmarshallMonster(reader &th, monster& m)
     {
         mon_enchant me = unmarshall_mon_enchant(th);
         m.enchantments[me.ench] = me;
+        m.ench_cache.set(me.ench, true);
     }
     m.ench_countdown = unmarshallByte(th);
 

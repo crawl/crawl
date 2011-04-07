@@ -97,6 +97,7 @@ void monster::reset()
 {
     mname.clear();
     enchantments.clear();
+    ench_cache.reset();
     ench_countdown = 0;
     inv.init(NON_ITEM);
 
@@ -155,6 +156,7 @@ void monster::init_with(const monster& mon)
     behaviour         = mon.behaviour;
     foe               = mon.foe;
     enchantments      = mon.enchantments;
+    ench_cache        = mon.ench_cache;
     flags             = mon.flags;
     experience        = mon.experience;
     number            = mon.number;
@@ -3752,6 +3754,7 @@ void monster::ghost_init(bool need_pos)
 
     inv.init(NON_ITEM);
     enchantments.clear();
+    ench_cache.reset();
     ench_countdown = 0;
 
     // Summoned player ghosts are already given a position; calling this
@@ -3991,11 +3994,6 @@ bool monster::is_shapeshifter() const
     return (has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
 }
 
-bool monster::has_ench(enchant_type ench) const
-{
-    return (enchantments.find(ench) != enchantments.end());
-}
-
 bool monster::has_ench(enchant_type ench, enchant_type ench2) const
 {
     if (ench2 == ENCH_NONE)
@@ -4061,6 +4059,7 @@ bool monster::add_ench(const mon_enchant &ench)
     {
         new_enchantment = true;
         added = &(enchantments[ench.ench] = ench);
+        ench_cache.set(ench.ench, true);
     }
     else
     {
@@ -4308,6 +4307,7 @@ bool monster::del_ench(enchant_type ench, bool quiet, bool effect)
         return (false);
 
     enchantments.erase(et);
+    ench_cache.set(et, false);
     if (effect)
         remove_enchantment_effect(me, quiet);
     return (true);
@@ -6490,6 +6490,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             int old_hp                = hit_points;
             uint64_t old_flags        = flags;
             mon_enchant_list old_ench = enchantments;
+            FixedBitArray<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
             int8_t old_ench_countdown = ench_countdown;
 
             if (!fly_died)
@@ -6500,6 +6501,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             hit_points = std::min(old_hp, hit_points);
             flags          = old_flags;
             enchantments   = old_ench;
+            ench_cache     = old_ench_cache;
             ench_countdown = old_ench_countdown;
 
             mounted_kill(this, fly_died ? MONS_FIREFLY : MONS_SPRIGGAN,
