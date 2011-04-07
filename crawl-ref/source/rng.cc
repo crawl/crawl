@@ -8,7 +8,7 @@
 #include "rng.h"
 
 #include "endianness.h"
-#include "mt19937ar.h"
+#include "asg.h"
 #include "syscalls.h"
 
 #ifdef UNIX
@@ -20,35 +20,15 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#ifdef MORE_HARDENED_PRNG
-#include "sha256.h"
-#endif
-
 void seed_rng(uint32_t* seed_key, size_t num_keys)
 {
-    // MT19937 -- see mt19937ar.cc for details/licence
-    init_by_array(seed_key, num_keys);
-
-    // Reset the sha256 generator to get predictable random numbers in case
-    // of a saved rng state.
-#ifdef MORE_HARDENED_PRNG
-    reset_sha256_state();
-#endif
-
-    // for std::random_shuffle()
-    srand(seed_key[0]);
+    seed_asg(seed_key, num_keys);
 }
 
 void seed_rng(uint32_t seed)
 {
-    // MT19937 -- see mt19937ar.cc for details/licence
-    init_genrand(seed);
-
-    // Reset the sha256 generator to get predictable random numbers in case
-    // of a saved rng state.
-#ifdef MORE_HARDENED_PRNG
-    reset_sha256_state();
-#endif
+    uint32_t sarg[1] = { seed };
+    seed_rng(sarg, 1);
 
     // for std::random_shuffle()
     srand(seed);
@@ -58,11 +38,11 @@ void seed_rng()
 {
     uint32_t seed = time(NULL);
 
-    /* (at least) 256-bit wide seed */
-    uint32_t seed_key[8];
+    /* Use a 160-bit wide seed */
+    uint32_t seed_key[5];
 
 #ifdef UNIX
-    struct tms  buf;
+    struct tms buf;
     seed += times(&buf);
 #endif
 
@@ -70,35 +50,22 @@ void seed_rng()
     seed_key[0] = seed;
 
     read_urandom((char*)(&seed_key[1]), sizeof(seed_key[0]) * 7);
-    seed_rng(seed_key, 8);
+    seed_rng(seed_key, 5);
 }
 
-// MT19937 -- see mt19937ar.cc for details
 uint32_t random_int(void)
 {
-#ifndef MORE_HARDENED_PRNG
-    return (genrand_int32());
-#else
-    return (sha256_genrand());
-#endif
+    return (get_uint32());
 }
 
 void push_rng_state()
 {
-#ifndef MORE_HARDENED_PRNG
-    push_mt_state();
-#else
-    push_sha256_state();
-#endif
+    push_asg_state();
 }
 
 void pop_rng_state()
 {
-#ifndef MORE_HARDENED_PRNG
-    pop_mt_state();
-#else
-    pop_sha256_state();
-#endif
+    pop_asg_state();
 }
 
 //-----------------------------------------------------------------------------
