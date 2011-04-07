@@ -142,7 +142,7 @@ mon-transit.o \
 mon-util.o \
 mon_resist_def.o \
 monster.o \
-mt19937ar.o \
+asg.o \
 mutation.o \
 newgame.o \
 ng-init.o \
@@ -169,7 +169,6 @@ random-var.o \
 ray.o \
 religion.o \
 rng.o \
-sha256.o \
 shopping.o \
 shout.o \
 show.o \
