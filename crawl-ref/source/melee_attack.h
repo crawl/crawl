@@ -118,6 +118,9 @@ private:
     bool mons_attack_you();
     bool mons_attack_mons();
     int  mons_to_hit();
+    // TODO: add actor class method can_self_destruct and move the
+    // self-destruct logic in mons_self_destructs to a special case
+    // inside one of the handle_phase
     bool mons_self_destructs();
     bool mons_attack_warded_off();
     int mons_attk_delay();
