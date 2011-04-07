@@ -78,7 +78,6 @@ private:
     bool handle_phase_killed();
     bool handle_phase_end();
 
-    bool is_banished(const actor *) const;
     void check_autoberserk();
     bool check_unrand_effects();
     void emit_nodmg_hit_message();
