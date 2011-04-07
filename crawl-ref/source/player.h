@@ -834,6 +834,7 @@ int player_res_torment(bool calc_unid = true, bool temp = true);
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
+bool player_likes_lava(bool permanently = false);
 
 int player_mutation_level(mutation_type mut, bool temp = true);
 

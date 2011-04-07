@@ -236,6 +236,11 @@ bool species_likes_water(species_type species)
             || species == SP_OCTOPODE);
 }
 
+bool species_likes_lava(species_type species)
+{
+    return (species == SP_LAVA_ORC);
+}
+
 genus_type species_genus(species_type species)
 {
     switch (species)

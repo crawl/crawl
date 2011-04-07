@@ -100,6 +100,13 @@ bool form_likes_water(transformation_type form)
             || you.species == SP_OCTOPODE && !form_changed_physiology(form));
 }
 
+bool form_likes_lava(transformation_type form)
+{
+    // Lava orcs can only swim in non-phys-change forms.
+    return (you.species == SP_LAVA_ORC
+            && !form_changed_physiology(form));
+}
+
 bool form_can_butcher_barehanded(transformation_type form)
 {
     return (form == TRAN_BLADE_HANDS || form == TRAN_DRAGON

@@ -4690,7 +4690,7 @@ void temperature_check()
         temperature_decrement(tempchange);
 
     if (feat_is_water(env.grid(you.pos())) && you.ground_level()
-        && !beogh_water_walk() && temperature_effect(LORC_PASSIVE_HEAT))
+        && temperature_effect(LORC_PASSIVE_HEAT))
     {
         // Cools you off by 1 each turn until you're
         // not hot enough to boil water.
