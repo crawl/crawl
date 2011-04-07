@@ -80,11 +80,6 @@
     #endif
 #endif
 
-// Use this to seed the PRNG with a bit more than just time()... which
-// leads to problems if for any reason we get started twice in the same
-// second.
-#define USE_MORE_SECURE_SEED
-
 // =========================================================================
 //  System Defines
 // =========================================================================
@@ -230,12 +225,7 @@
     // it in-place, instead of torching the old file.
     #define DGL_REWRITE_PROTECT_DB_FILES
 
-    #ifndef USE_MORE_SECURE_SEED
-    #error DGAMELAUNCH builds should define USE_MORE_SECURE_SEED
-    #endif
-
     // This secures the PRNG itself by hashing the values with SHA256.
-    // It doesn't have much point if USE_MORE_SECURE_SEED is not used.
     // PRNG will be about 15 times slower when this is turned on, but
     // even with that the cpu time used by the PRNG is relatively small.
     #define MORE_HARDENED_PRNG
