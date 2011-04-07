@@ -180,6 +180,14 @@ void init_crash_handler()
         if (i == SIGTTIN)
             continue;
 #endif
+#ifdef SIGKILL
+        if (i == SIGKILL)
+            continue;
+#endif
+#ifdef SIGSTOP
+        if (i == SIGSTOP)
+            continue;
+#endif
         if (i == SIGWINCH)
             continue;
 
