@@ -239,8 +239,14 @@ void update_monsters_in_view()
         std::map<monster_type, int> genera; // This is the plural for genus!
         for (unsigned int i = 0; i < size; ++i)
         {
-            types[monsters[i]->type]++;
-            genera[mons_genus(monsters[i]->type)]++;
+            monster_type type;
+            if (monsters[i]->props.exists("mislead_as") && you.misled())
+                type = monsters[i]->get_mislead_type();
+            else
+                type = monsters[i]->type;
+
+            types[type]++;
+            genera[mons_genus(type)]++;
         }
 
         if (size == 1)
