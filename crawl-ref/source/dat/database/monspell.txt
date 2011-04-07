@@ -329,6 +329,11 @@ unseen Terpsichore cast
 You hear spectral shoes clatter against the floor.
 
 %%%%
+Mennas cast
+
+@The_monster@ casts a spell.
+
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
