@@ -14,12 +14,11 @@
 #ifdef UNIX
 // for times()
 #include <sys/times.h>
+#endif
 
 // for getpid()
 #include <sys/types.h>
 #include <unistd.h>
-
-#endif
 
 #ifdef MORE_HARDENED_PRNG
 #include "sha256.h"
