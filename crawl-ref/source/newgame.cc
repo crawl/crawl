@@ -350,7 +350,8 @@ static std::string _highlight_pattern(const newgame_def* ng)
             ret += species_name(species) + "  |";
     }
 
-    ret.resize(ret.size() - 1);
+    if (ret != "")
+        ret.resize(ret.size() - 1);
     return ret;
 }
 
