@@ -4012,14 +4012,6 @@ void melee_attack::wasp_paralyse_defender()
     }
 }
 
-void melee_attack::splash_monster_with_acid(int strength)
-{
-    special_damage += roll_dice(2, 4);
-    if (defender_visible)
-        mprf("%s is splashed with acid.", defender->name(DESC_THE).c_str());
-    corrode_monster(defender->as_monster(), attacker);
-}
-
 void melee_attack::splash_defender_with_acid(int strength)
 {
     if (defender->atype() == ACT_PLAYER)
@@ -4028,7 +4020,12 @@ void melee_attack::splash_defender_with_acid(int strength)
         splash_with_acid(strength);
     }
     else
-        splash_monster_with_acid(strength);
+    {
+        special_damage += roll_dice(2, 4);
+        if (defender_visible)
+            mprf("%s is splashed with acid.", defender->name(DESC_THE).c_str());
+        corrode_monster(defender->as_monster(), attacker);
+    }
 }
 
 void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
