@@ -5409,6 +5409,8 @@ void player::init()
     worshipped.init(0);
     num_current_gifts.init(0);
     num_total_gifts.init(0);
+    exp_docked       = 0;
+    exp_docked_total = 0;
 
     mutation.init(0);
     innate_mutations.init(0);
