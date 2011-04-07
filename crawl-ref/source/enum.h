@@ -1,8 +1,7 @@
-/*
- *  File:       enum.h
- *  Summary:    Global (ick) enums.
- *  Written by: Daniel Ligon
- */
+/**
+ * @file
+ * @brief Global (ick) enums.
+**/
 
 
 #ifndef ENUM_H
@@ -196,6 +195,7 @@ enum activity_interrupt_type
     AI_TELEPORT,
     AI_HIT_MONSTER,                 // Player hit monster (invis or
                                     // mimic) during travel/explore.
+    AI_SENSE_MONSTER,
 
     // Always the last.
     NUM_AINTERRUPTS
@@ -311,7 +311,9 @@ enum beam_type                  // beam[].flavour
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
     BEAM_DISINTEGRATION,
+#if TAG_MAJOR_VERSION == 32
     BEAM_ENSLAVE_DEMON,
+#endif
     BEAM_BLINK,
     BEAM_BLINK_CLOSE,
     BEAM_PETRIFY,
@@ -400,11 +402,12 @@ enum book_type
     BOOK_BURGLARY,
     BOOK_DREAMS,
     BOOK_CHEMISTRY,
-    MAX_NORMAL_BOOK = BOOK_CHEMISTRY,
+    BOOK_ZOOLOGY,
+    MAX_NORMAL_BOOK = BOOK_ZOOLOGY,
 
     MIN_GOD_ONLY_BOOK,
     BOOK_ANNIHILATIONS = MIN_GOD_ONLY_BOOK,
-    BOOK_DEMONOLOGY,
+    BOOK_GRAND_GRIMOIRE,
     BOOK_NECRONOMICON,
     MAX_GOD_ONLY_BOOK = BOOK_NECRONOMICON,
 
@@ -487,10 +490,11 @@ enum canned_message_type
 
 enum char_set_type
 {
+    CSET_DEFAULT,
     CSET_ASCII,         // flat 7-bit ASCII
     CSET_IBM,           // 8-bit ANSI/Code Page 437
     CSET_DEC,           // 8-bit DEC, 0xE0-0xFF shifted for line drawing chars
-    CSET_UNICODE,       // Unicode
+    CSET_OLD_UNICODE,
     NUM_CSET
 };
 
@@ -537,7 +541,7 @@ enum cloud_type
 
 enum command_type
 {
-    CMD_NO_CMD = 1000,
+    CMD_NO_CMD = 2000,
     CMD_NO_CMD_DEFAULT, // hack to allow assignment of keys to CMD_NO_CMD
     CMD_MOVE_NOWHERE,
     CMD_MOVE_LEFT,
@@ -582,6 +586,9 @@ enum command_type
     CMD_EVOKE,
     CMD_EVOKE_WIELDED,
     CMD_WIELD_WEAPON,
+#if TAG_MAJOR_VERSION > 32
+    CMD_UNWIELD_WEAPON,
+#endif
     CMD_WEAPON_SWAP,
     CMD_FIRE,
     CMD_QUIVER_ITEM,
@@ -759,8 +766,8 @@ enum command_type
     CMD_TARGET_CYCLE_FORWARD,
     CMD_TARGET_CYCLE_BACK,
     CMD_TARGET_CYCLE_BEAM,
-    CMD_TARGET_CYCLE_MLIST = 2000, // for indices a-z in the monster list
-    CMD_TARGET_CYCLE_MLIST_END = 2025,
+    CMD_TARGET_CYCLE_MLIST = CMD_NO_CMD + 1000, // for indices a-z in the monster list
+    CMD_TARGET_CYCLE_MLIST_END = CMD_NO_CMD + 1025,
     CMD_TARGET_TOGGLE_MLIST,
     CMD_TARGET_TOGGLE_BEAM,
     CMD_TARGET_CANCEL,
@@ -825,6 +832,10 @@ enum command_type
 
     // [ds] Silently ignored, requests another round of input.
     CMD_NEXT_CMD,
+
+#if TAG_MAJOR_VERSION == 32
+    CMD_UNWIELD_WEAPON,
+#endif
 
     // Must always be last
     CMD_MAX_CMD
@@ -1410,7 +1421,9 @@ enum enchant_type
     ENCH_ATTACHED,
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
     ENCH_LEVITATION,
+#if TAG_MAJOR_VERSION == 32
     ENCH_HELPLESS,
+#endif
     ENCH_LIQUEFYING,
     ENCH_PERM_TORNADO,
     ENCH_FAKE_ABJURATION,
@@ -2360,6 +2373,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BAT,
     MONS_SPRIGGAN_AIR_MAGE,
     MONS_FIRE_BAT,
+    MONS_IGNACIO,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2422,14 +2436,14 @@ enum mon_inv_type           // (int) menv[].inv[]
     MSLOT_ALT_MISSILE,
     MSLOT_ARMOUR,
     MSLOT_SHIELD,
+    MSLOT_WAND,
 
     // [ds] Last monster gear slot that the player can observe by examining
     // the monster; i.e. the last slot that goes into monster_info.
-    MSLOT_LAST_VISIBLE_SLOT = MSLOT_SHIELD,
+    MSLOT_LAST_VISIBLE_SLOT = MSLOT_WAND,
 
     MSLOT_MISCELLANY,
     MSLOT_POTION,
-    MSLOT_WAND,
     MSLOT_SCROLL,
     MSLOT_GOLD,
     NUM_MONSTER_SLOTS

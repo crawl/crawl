@@ -1,8 +1,7 @@
-/*
- *  File:       libgui.cc
- *  Summary:    Functions for x11
- *  Written by: M.Itakura (?)
- */
+/**
+ * @file
+ * @brief Functions for x11
+**/
 
 // TODO enne - slowly morph this into tilesdl.h
 
@@ -13,8 +12,6 @@
 #include <stdio.h>
 
 #include "defines.h"
-
-typedef unsigned int screen_buffer_t;
 
 void set_mouse_enabled(bool enabled);
 
@@ -39,10 +36,8 @@ int get_number_of_cols(void);
 void _setcursortype(int curstype);
 void textbackground(int bg);
 void textcolor(int col);
-int putch(unsigned char chr);
-int putwch(unsigned chr);
-void put_colour_ch(int colour, unsigned ch);
-void writeWChar(unsigned char *ch);
+int putwch(ucs_t chr);
+void put_colour_ch(int colour, ucs_t ch);
 
 #define textattr(x) textcolor(x)
 void set_cursor_enabled(bool enabled);
@@ -51,9 +46,7 @@ inline void enable_smart_cursor(bool) { }
 inline bool is_smart_cursor_enabled() { return false; }
 
 
-int window(int x1, int y1, int x2, int y2);
-
-extern "C" int getch();
+extern "C" int getchk();
 int getch_ck();
 int clrscr();
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
@@ -61,7 +54,7 @@ coord_def cgetpos(GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
 void delay(int ms);
 void update_screen();
-int kbhit();
+bool kbhit();
 
 #ifdef UNIX
 extern "C" char *strlwr(char *str);

@@ -1,12 +1,9 @@
-/*
- *  File:       defines.h
- *  Summary:    Various definess used by Crawl.
- *  Written by: Linley Henzel
+/**
+ * @file
+ * @brief Various definess used by Crawl.
  *
- *      Abstract:       A variety of miscellaneous constant values are found here.
- *
- *  Copyright © 1999 Brian Robinson.  // Me?  How come?
- */
+ * A variety of miscellaneous constant values are found here.
+**/
 
 #ifndef DEFINES_H
 #define DEFINES_H
@@ -30,6 +27,8 @@
      #define FALSE 0
     #endif
 #endif
+
+typedef uint32_t ucs_t;
 
 // length of a single zot defence cycle
 #define CYCLE_LENGTH 200
@@ -67,6 +66,7 @@ enum extra_monster_index_type
     MHITYOU,
 
     ZOT_TRAP_MISCAST,
+    HELL_EFFECT_MISCAST,
     WIELD_MISCAST,
     MELEE_MISCAST,
     MISC_MISCAST,
@@ -225,6 +225,8 @@ const int ANTITRAIN_PENALTY = 2;
 // Haste/slow boost.
 #define haste_mul(x) div_rand_round((x) * 3, 2)
 #define haste_div(x) div_rand_round((x) * 2, 3)
+
+#define MAX_MONSTER_HP 10000
 
 // some shortcuts:
 #define menv   env.mons

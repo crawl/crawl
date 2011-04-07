@@ -1,8 +1,7 @@
-/*
- *  File:       mon-util.h
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 
 #ifndef MONUTIL_H

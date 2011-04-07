@@ -1,8 +1,7 @@
-/*
- *  File:       spl-miscast.cc
- *  Summary:    Spell miscast class.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Spell miscast class.
+**/
 
 #include "AppHdr.h"
 
@@ -30,6 +29,7 @@
 #include "potion.h"
 #include "religion.h"
 #include "spl-clouds.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -189,6 +189,7 @@ void MiscastEffect::init()
     else
     {
         ASSERT(source == ZOT_TRAP_MISCAST
+               || source == HELL_EFFECT_MISCAST
                || source == MISC_MISCAST
                || (source < 0 && -source < NUM_GODS));
 
@@ -207,7 +208,8 @@ void MiscastEffect::init()
                 kt = KILL_YOU_CONF;
             }
         }
-        else if (source == MISC_MISCAST)
+        else if (source == HELL_EFFECT_MISCAST
+                 || source == MISC_MISCAST)
             source_known = true, guilty = &you;
         else
             source_known = true;
@@ -612,18 +614,42 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
     }
 }
 
-void MiscastEffect::send_abyss()
+bool MiscastEffect::_send_to_abyss()
 {
-    if (you.level_type == LEVEL_ABYSS)
-    {
-        you_msg        = "The world appears momentarily distorted.";
-        mon_msg_seen   = "@The_monster@ wobbles for a moment.";
-        mon_msg_unseen = "An empty piece of space momentarily distorts.";
-        do_msg();
-        return;
-    }
+    if (you.level_type == LEVEL_ABYSS
+        || source == HELL_EFFECT_MISCAST)
+        return (_malign_gateway()); // attempt to degrade to malign gateway
 
     target->banish(cause);
+    return (true);
+}
+
+// XXX: Mostly duplicated from cast_malign_gateway.
+bool MiscastEffect::_malign_gateway()
+{
+    coord_def point = find_gateway_location(&you);
+    bool success = (point != coord_def(0, 0));
+
+    if (success)
+    {
+        const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
+        env.markers.add(new map_malign_gateway_marker(point,
+                                malign_gateway_duration,
+                                false,
+                                cause,
+                                BEH_HOSTILE,
+                                GOD_NO_GOD,
+                                200));
+        env.markers.clear_need_activate();
+        env.grid(point) = DNGN_TEMP_PORTAL;
+
+        noisy(10, point);
+        all_msg = "The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!";
+        msg_ch = MSGCH_WARN;
+        do_msg();
+    }
+
+    return (success);
 }
 
 bool MiscastEffect::avoid_lethal(int dam)
@@ -669,6 +695,9 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
         cause = get_default_cause(true);
     mgen_data data = mgen_data::hostile_at(what, cause, alert,
                                            abj_deg, 0, target->pos(), 0, god);
+
+    if (source != HELL_EFFECT_MISCAST)
+        data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     // hostile_at() assumes the monster is hostile to the player,
     // but should be hostile to the target monster unless the miscast
@@ -1117,82 +1146,104 @@ void MiscastEffect::_translocation(int severity)
         break;
 
     case 2:         // less harmless
-        switch (random2(7))
-        {
-        case 0:
-        case 1:
-        case 2:
-            you_msg        = "You are caught in a strong localised spatial "
-                             "distortion.";
-            mon_msg_seen   = "@The_monster@ is caught in a strong localised "
-                             "spatial distortion.";
-            mon_msg_unseen = "A piece of empty space twists and writhes.";
-            _ouch(9 + random2avg(23, 2));
-            break;
-        case 3:
-        case 4:
-            you_msg        = "Space warps around you!";
-            mon_msg_seen   = "Space warps around @the_monster@!";
-            mon_msg_unseen = "A piece of empty space twists and writhes.";
-            if (_ouch(5 + random2avg(9, 2)) && target->alive())
-            {
-                if (one_chance_in(3))
-                    target->teleport(true);
-                else
-                    target->blink(false);
-                _potion_effect(POT_CONFUSION, 40);
-            }
-            break;
-        case 5:
-        {
-            bool success = false;
+    {
+        bool reroll = true;
 
-            for (int i = 1 + random2(3); i >= 0; --i)
+        while (reroll)
+        {
+            switch (random2(7))
             {
-                if (_create_monster(MONS_SPATIAL_VORTEX, 3))
-                    success = true;
-            }
+            case 0:
+            case 1:
+            case 2:
+                you_msg        = "You are caught in a strong localised spatial "
+                                 "distortion.";
+                mon_msg_seen   = "@The_monster@ is caught in a strong localised "
+                                 "spatial distortion.";
+                mon_msg_unseen = "A piece of empty space twists and writhes.";
+                _ouch(9 + random2avg(23, 2));
+                reroll = false;
+                break;
+            case 3:
+            case 4:
+                you_msg        = "Space warps around you!";
+                mon_msg_seen   = "Space warps around @the_monster@!";
+                mon_msg_unseen = "A piece of empty space twists and writhes.";
+                if (_ouch(5 + random2avg(9, 2)) && target->alive())
+                {
+                    if (one_chance_in(3))
+                        target->teleport(true);
+                    else
+                        target->blink(false);
+                    _potion_effect(POT_CONFUSION, 40);
+                    reroll = false;
+                }
+                break;
+            case 5:
+            {
+                bool success = false;
 
-            if (success)
-                all_msg = "Space twists in upon itself!";
-            break;
+                for (int i = 1 + random2(3); i >= 0; --i)
+                {
+                    if (_create_monster(MONS_SPATIAL_VORTEX, 3))
+                        success = true;
+                }
+
+                if (success)
+                    all_msg = "Space twists in upon itself!";
+                reroll = false;
+                break;
+            }
+            case 6:
+                reroll = !_send_to_abyss();
+                break;
+            }
         }
-        case 6:
-            send_abyss();
-            break;
-        }
+
         break;
+    }
 
     case 3:         // much less harmless
-        // Don't use the last case for monsters.
-        switch (random2(target->atype() == ACT_PLAYER ? 4 : 3))
+    {
+        bool reroll = true;
+
+        while (reroll)
         {
-        case 0:
-            you_msg        = "You are caught in an extremely strong localised "
-                             "spatial distortion!";
-            mon_msg_seen   = "@The_monster@ is caught in an extremely strong "
-                             "localised spatial distortion!";
-            mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
-            _ouch(15 + random2avg(29, 2));
-            break;
-        case 1:
-            you_msg        = "Space warps crazily around you!";
-            mon_msg_seen   = "Space warps crazily around @the_monster@!";
-            mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
-            if (_ouch(9 + random2avg(17, 2)) && target->alive())
+            // Don't use the last case for monsters.
+            switch (random2(target->atype() == ACT_PLAYER ? 4 : 3))
             {
-                target->teleport(true);
-                _potion_effect(POT_CONFUSION, 60);
+            case 0:
+                you_msg        = "You are caught in an extremely strong localised "
+                                 "spatial distortion!";
+                mon_msg_seen   = "@The_monster@ is caught in an extremely strong "
+                                 "localised spatial distortion!";
+                mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
+                _ouch(15 + random2avg(29, 2));
+                reroll = false;
+                break;
+            case 1:
+                you_msg        = "Space warps crazily around you!";
+                mon_msg_seen   = "Space warps crazily around @the_monster@!";
+                mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
+                if (_ouch(9 + random2avg(17, 2)) && target->alive())
+                {
+                    target->teleport(true);
+                    _potion_effect(POT_CONFUSION, 60);
+                }
+                reroll = false;
+                break;
+            case 2:
+                reroll = !_send_to_abyss();
+                break;
+            case 3:
+                contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
+                reroll = false;
+                break;
             }
-            break;
-        case 2:
-            send_abyss();
-            break;
-        case 3:
-            contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
-            break;
         }
+
         break;
+    }
     }
 }
 
@@ -1343,44 +1394,57 @@ void MiscastEffect::_summoning(int severity)
         break;
 
     case 3:         // more bad
-        switch (random2(4))
+        bool reroll = true;
+
+        while (reroll)
         {
-        case 0:
-            if (_create_monster(MONS_ABOMINATION_SMALL, 0, true))
-                all_msg = "Something forms from out of thin air.";
-            do_msg();
-            break;
-
-        case 1:
-            if (_create_monster(summon_any_demon(DEMON_GREATER), 0, true))
-                all_msg = "You sense a hostile presence.";
-            do_msg();
-            break;
-
-        case 2:
-        {
-            bool success = false;
-
-            for (int i = 1 + random2(2); i >= 0; --i)
+            switch (random2(5))
             {
-                if (_create_monster(summon_any_demon(DEMON_COMMON), 3, true))
-                    success = true;
+            case 0:
+                if (_create_monster(MONS_ABOMINATION_SMALL, 0, true))
+                    all_msg = "Something forms from out of thin air.";
+                do_msg();
+                reroll = false;
+                break;
+
+            case 1:
+                if (_create_monster(summon_any_demon(DEMON_GREATER), 0, true))
+                    all_msg = "You sense a hostile presence.";
+                do_msg();
+                reroll = false;
+                break;
+
+            case 2:
+            {
+                bool success = false;
+
+                for (int i = 1 + random2(2); i >= 0; --i)
+                {
+                    if (_create_monster(summon_any_demon(DEMON_COMMON), 3, true))
+                        success = true;
+                }
+
+                if (success)
+                {
+                    you_msg = "Something turns its malign attention towards "
+                              "you...";
+                    mon_msg = "You sense a malign presence.";
+                }
+                do_msg();
+                reroll = false;
+                break;
             }
 
-            if (success)
-            {
-                you_msg = "Something turns its malign attention towards "
-                          "you...";
-                mon_msg = "You sense a malign presence.";
+            case 3:
+                reroll = !_send_to_abyss();
+                break;
+
+            case 4:
+                reroll = !_malign_gateway();
+                break;
             }
-            do_msg();
-            break;
         }
 
-        case 3:
-            send_abyss();
-            break;
-        }
         break;
     }
 }

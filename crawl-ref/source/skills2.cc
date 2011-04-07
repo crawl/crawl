@@ -1,8 +1,7 @@
-/*
- *  File:       skills2.cc
- *  Summary:    More skill related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief More skill related functions.
+**/
 
 #include "AppHdr.h"
 
@@ -28,6 +27,7 @@
 #include "itemprop.h"
 #include "options.h"
 #include "player.h"
+#include "religion.h"
 #include "species.h"
 #include "skills.h"
 #include "stuff.h"
@@ -235,18 +235,7 @@ SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
 void SkillMenuEntry::set_skill(skill_type sk)
 {
     m_sk = sk;
-
-    if (sk == SK_TITLE)
-        _set_title();
-    else if (is_invalid_skill(sk))
-        _clear();
-    else
-    {
-        set_name(false);
-        set_display();
-        if (is_set(SKMF_DISP_APTITUDE))
-            _set_aptitude();
-    }
+    refresh(false);
 }
 
 skill_type SkillMenuEntry::get_skill() const
@@ -262,7 +251,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     if (!keep_hotkey)
         m_name->clear_hotkeys();
 
-    if (is_selectable())
+    if (is_selectable(keep_hotkey))
     {
         if (!keep_hotkey)
             m_name->add_hotkey(++m_letter);
@@ -298,16 +287,31 @@ void SkillMenuEntry::set_display()
     if (is_invalid_skill(m_sk))
         return;
 
-    if (is_set(SKMF_DISP_PROGRESS))
+    if (is_set(SKMF_DISP_NORMAL) || is_set(SKMF_DISP_ENHANCED))
         _set_progress();
     else if (is_set(SKMF_DISP_RESKILL))
         _set_reskill_progress();
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG
     else if (is_set(SKMF_DISP_POINTS))
         _set_points();
 #endif
     else if (is_set(SKMF_RESKILLING))
         _set_new_level();
+}
+
+void SkillMenuEntry::refresh(bool keep_hotkey)
+{
+    if (m_sk == SK_TITLE)
+        _set_title();
+    else if (is_invalid_skill(m_sk))
+        _clear();
+    else
+    {
+        set_name(keep_hotkey);
+        set_display();
+        if (is_set(SKMF_DISP_APTITUDE))
+            _set_aptitude();
+    }
 }
 
 int SkillMenuEntry::get_id()
@@ -320,7 +324,7 @@ bool SkillMenuEntry::is_set(int flag) const
     return m_skm->is_set(flag);
 }
 
-bool SkillMenuEntry::is_selectable() const
+bool SkillMenuEntry::is_selectable(bool keep_hotkey)
 {
     if (is_invalid_skill(m_sk))
         return false;
@@ -332,13 +336,25 @@ bool SkillMenuEntry::is_selectable() const
         return true;
 
     if (is_set(SKMF_DO_RESKILL_TO) && you.transfer_from_skill == m_sk)
+    {
+        if (!keep_hotkey)
+            ++m_letter;
+        return false;
+    }
+
+    if (is_set(SKMF_RESKILLING) && m_sk == SK_FIGHTING)
         return false;
 
     if (you.skills[m_sk] == 0 && !is_set(SKMF_DO_RESKILL_TO))
         return false;
 
-    if (you.skills[m_sk] == 27 && !is_set(SKMF_DO_RESKILL_FROM))
-        return false;
+    if (you.skills[m_sk] == 27)
+    {
+        if (is_set(SKMF_DO_RESKILL_TO) && !keep_hotkey)
+            ++m_letter;
+        if (!is_set(SKMF_DO_RESKILL_FROM))
+            return false;
+    }
 
     return true;
 }
@@ -363,7 +379,7 @@ COLORS SkillMenuEntry::_get_colour() const
     {
         return LIGHTBLUE;
     }
-    else if (you.skill(m_sk) > you.skills[m_sk])
+    else if (is_set(SKMF_DISP_ENHANCED) && you.skill(m_sk) > you.skills[m_sk])
         return LIGHTBLUE;
     else if (you.skills[m_sk] == 27)
         return YELLOW;
@@ -398,7 +414,9 @@ std::string SkillMenuEntry::_get_prefix()
 
 void SkillMenuEntry::_set_level()
 {
-    m_level->set_text(make_stringf("%2d", you.skill(m_sk)));
+    m_level->set_text(make_stringf("%2d",
+                      is_set(SKMF_DISP_ENHANCED) ? you.skill(m_sk)
+                                                 : you.skills[m_sk]));
     m_level->set_fg_colour(_get_colour());
 }
 
@@ -502,7 +520,7 @@ void SkillMenuEntry::_set_title()
     m_name->set_text("    Skill");
     m_level->set_text("Lvl");
 
-    if (is_set(SKMF_DISP_PROGRESS))
+    if (is_set(SKMF_DISP_NORMAL))
         m_progress->set_text("Progr");
     else if (is_set(SKMF_DISP_RESKILL))
         m_progress->set_text("Trnsf");
@@ -537,7 +555,7 @@ void SkillMenuEntry::_clear()
 #endif
 }
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG
 void SkillMenuEntry::_set_points()
 {
     m_progress->set_text(make_stringf("%5d", you.skill_points[m_sk]));
@@ -626,7 +644,6 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 
     _set_title();
     _set_skills();
-    _set_help();
     _set_footer();
 
 
@@ -677,13 +694,25 @@ void SkillMenu::change_action()
     }
 }
 
-void SkillMenu::change_display()
+void SkillMenu::change_display(bool init)
 {
     const int new_disp = _get_next_display();
     clear_flag(SKMF_DISP_MASK);
     set_flag(new_disp);
     m_disp_queue.pop();
     m_disp_queue.push(new_disp);
+
+    if (init)
+    {
+        if (is_set(SKMF_DO_RESKILL_FROM))
+            _set_help(SKMF_DO_RESKILL_FROM);
+        else if (is_set(SKMF_DO_RESKILL_TO))
+            _set_help(SKMF_DO_RESKILL_TO);
+        else
+            _set_help(new_disp);
+        return;
+    }
+
     _set_help(new_disp);
     _refresh_display();
     _set_footer();
@@ -755,16 +784,21 @@ SkillMenuEntry* SkillMenu::_find_entry(skill_type sk)
 
 void SkillMenu::_init_disp_queue()
 {
-#ifdef DEBUG_DIAGNOSTICS
-    m_disp_queue.push(SKMF_DISP_POINTS);
-#endif
-
-    m_disp_queue.push(SKMF_DISP_PROGRESS);
-
     if (is_set(SKMF_RESKILLING))
         m_disp_queue.push(SKMF_DISP_NEW_LEVEL);
     else if (!is_invalid_skill(you.transfer_to_skill))
         m_disp_queue.push(SKMF_DISP_RESKILL);
+
+    if (_skill_enhanced())
+        m_disp_queue.push(SKMF_DISP_ENHANCED);
+
+    m_disp_queue.push(SKMF_DISP_NORMAL);
+
+#ifdef DEBUG
+    m_disp_queue.push(SKMF_DISP_POINTS);
+#endif
+
+    change_display(true);
 }
 
 void SkillMenu::_init_title()
@@ -834,7 +868,7 @@ void SkillMenu::_refresh_display()
 {
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
-                m_skills[ln][col].set_display();
+                m_skills[ln][col].refresh(true);
 }
 
 void SkillMenu::_set_title()
@@ -847,7 +881,7 @@ void SkillMenu::_set_title()
         t = make_stringf(format, "destination");
     else
     {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG
         t = make_stringf("You have %d points of unallocated experience "
                          " (cost lvl %d; total %d).\n\n",
                          you.exp_available, you.skill_cost_level,
@@ -895,7 +929,7 @@ void SkillMenu::_set_skills()
             ln = 0;
             continue;
         }
-        else if (!is_invalid_skill(sk) && you.skills[sk] == 0
+        else if (!is_invalid_skill(sk) && you.skill(sk) == 0
                  && ! is_set(SKMF_DISP_ALL))
         {
             continue;
@@ -919,17 +953,6 @@ void SkillMenu::_set_skills()
 
 void SkillMenu::_set_help(int flag)
 {
-    if (flag == SKMF_NONE)
-    {
-        if (is_set(SKMF_DO_RESKILL_FROM))
-            flag = SKMF_DO_RESKILL_FROM;
-        else if (is_set(SKMF_DO_RESKILL_TO))
-            flag = SKMF_DO_RESKILL_TO;
-        else if (is_set(SKMF_DISP_RESKILL))
-            flag = SKMF_DISP_RESKILL;
-        else
-            flag = SKMF_DISP_APTITUDE;
-    }
     m_current_help = flag;
 
     std::string help;
@@ -961,7 +984,7 @@ void SkillMenu::_set_help(int flag)
                "The chosen skill will be raised to the level showned in "
                "<lightblue>blue</lightblue>.";
         break;
-    case SKMF_DISP_PROGRESS:
+    case SKMF_DISP_NORMAL:
     case SKMF_DISP_APTITUDE:
         if (is_set(SKMF_SIMPLE))
         {
@@ -969,7 +992,7 @@ void SkillMenu::_set_help(int flag)
             break;
         }
 
-        if (flag == SKMF_DISP_PROGRESS || !m_crosstrain && !m_antitrain)
+        if (flag == SKMF_DISP_NORMAL || !m_crosstrain && !m_antitrain)
         {
             help = "The percentage of the progress done before reaching next "
                    "level is in <cyan>cyan</cyan>.\n";
@@ -1000,6 +1023,13 @@ void SkillMenu::_set_help(int flag)
             }
         }
         break;
+    case SKMF_DISP_ENHANCED:
+    {
+        help = make_stringf("Skills enhanced by the power of %s are marked in "
+                            "<blue>blue</blue>.",
+                            god_name(you.religion).c_str());
+        break;
+    }
     case SKMF_DISP_RESKILL:
         help = "The progress of the knowledge transfer is displayed in "
                "<lightblue>blue</lightblue> in front of the skill receiving the "
@@ -1047,8 +1077,11 @@ void SkillMenu::_set_footer()
     {
         switch (_get_next_display())
         {
-        case SKMF_DISP_PROGRESS:
-            text = "progress";
+        case SKMF_DISP_NORMAL:
+            text = "normal";
+            break;
+        case SKMF_DISP_ENHANCED:
+            text = "enhanced";
             break;
         case SKMF_DISP_POINTS:
             text = "points";
@@ -1146,6 +1179,18 @@ int SkillMenu::_get_next_display() const
     return m_disp_queue.front();
 }
 
+bool SkillMenu::_skill_enhanced() const
+{
+    if (you.religion != GOD_OKAWARU && you.religion != GOD_ASHENZARI)
+        return false;
+
+    for (unsigned int i = 0; i < NUM_SKILLS; ++i)
+        if (you.skill(skill_type(i)) > you.skills[i])
+            return true;
+
+    return false;
+}
+
 void skill_menu(bool reskilling)
 {
     int flags = SKMF_NONE;
@@ -1157,27 +1202,15 @@ void skill_menu(bool reskilling)
         else
             flags |= SKMF_DO_RESKILL_TO;
 
-        flags |= SKMF_RESKILLING | SKMF_DISP_NEW_LEVEL;
+        flags |= SKMF_RESKILLING;
     }
     else
-    {
         flags |= SKMF_DO_PRACTISE;
-
-        if (is_invalid_skill(you.transfer_from_skill))
-            flags |= SKMF_DISP_PROGRESS;
-        else
-            flags |= SKMF_DISP_RESKILL;
-    }
 
     if (crawl_state.game_is_hints_tutorial())
         flags |= SKMF_SIMPLE;
     else
         flags |= SKMF_DISP_APTITUDE;
-
-#ifdef DEBUG_DIAGNOSTICS
-    if (!crawl_state.game_is_hints_tutorial())
-        flags |= SKMF_DISP_ALL;
-#endif
 
     clrscr();
     SkillMenu skm(flags);
@@ -1568,6 +1601,30 @@ void calc_mp()
     you.redraw_magic_points = true;
 }
 
+bool is_useless_skill(int skill)
+{
+    if (you.species == SP_DEMIGOD && skill == SK_INVOCATIONS)
+        return true;
+    if (you.species == SP_CAT)
+        switch(skill)
+        {
+        case SK_SHORT_BLADES:
+        case SK_LONG_BLADES:
+        case SK_AXES:
+        case SK_MACES_FLAILS:
+        case SK_POLEARMS:
+        case SK_STAVES:
+        case SK_SLINGS:
+        case SK_BOWS:
+        case SK_CROSSBOWS:
+        case SK_THROWING:
+        case SK_ARMOUR:
+        case SK_SHIELDS:
+            return true;
+        }
+    return false;
+}
+
 // What aptitude value corresponds to doubled skill learning
 // (i.e., old-style aptitude 50).
 #define APT_DOUBLE 4
@@ -1726,16 +1783,34 @@ static skill_type _get_opposite(skill_type sk)
     }
 }
 
+/*
+ * Compare skill levels
+ *
+ * It compares the level of 2 skills, and breaks ties by using skill order.
+ *
+ * @param sk1 First skill.
+ * @param sk2 Second skill.
+ * @return Whether first skill is higher than second skill.
+ */
+bool compare_skills(skill_type sk1, skill_type sk2)
+{
+    if (is_invalid_skill(sk1))
+        return false;
+    else if (is_invalid_skill(sk2))
+        return true;
+    else
+        return you.skills[sk1] > you.skills[sk2]
+               || you.skills[sk1] == you.skills[sk2]
+                   && you.skill_order[sk1] < you.skill_order[sk2];
+}
+
 bool is_antitrained(skill_type sk)
 {
     skill_type opposite = _get_opposite(sk);
     if (opposite == SK_NONE)
         return false;
 
-    return (you.skills[sk] < you.skills[opposite]
-            || you.skills[sk] == you.skills[opposite]
-               && you.skill_order[sk] > you.skill_order[opposite]
-               && you.skills[sk] > 0);
+    return compare_skills(opposite, sk) && you.skills[opposite];
 }
 
 bool antitrain_other(skill_type sk, bool show_zero)
@@ -1745,66 +1820,7 @@ bool antitrain_other(skill_type sk, bool show_zero)
         return false;
 
     return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
-            && (you.skills[sk] > you.skills[opposite]
-                || you.skills[sk] == you.skills[opposite]
-                   && you.skill_order[sk] < you.skill_order[opposite]));
-}
-
-void wield_warning(bool newWeapon)
-{
-    // Early out - no weapon.
-    if (!you.weapon())
-         return;
-
-    const item_def& wep = *you.weapon();
-
-    // Early out - don't warn for non-weapons or launchers.
-    if (wep.base_type != OBJ_WEAPONS || is_range_weapon(wep))
-        return;
-
-    // Don't warn if the weapon is OK, of course.
-    if (effective_stat_bonus() > -4)
-        return;
-
-    std::string msg;
-
-    // We know if it's an artefact because we just wielded
-    // it, so no information leak.
-    if (is_artefact(wep))
-        msg = "the";
-    else if (newWeapon)
-        msg = "this";
-    else
-        msg = "your";
-    msg += " " + wep.name(DESC_BASENAME);
-    const char* mstr = msg.c_str();
-
-    if (you.strength() < you.dex())
-    {
-        if (you.strength() < 11)
-        {
-            mprf(MSGCH_WARN, "You have %strouble swinging %s.",
-                 (you.strength() < 7) ? "" : "a little ", mstr);
-        }
-        else
-        {
-            mprf(MSGCH_WARN, "You'd be more effective with "
-                 "%s if you were stronger.", mstr);
-        }
-    }
-    else
-    {
-        if (you.dex() < 11)
-        {
-            mprf(MSGCH_WARN, "Wielding %s is %s awkward.",
-                 mstr, (you.dex() < 7) ? "fairly" : "a little");
-        }
-        else
-        {
-            mprf(MSGCH_WARN, "You'd be more effective with "
-                 "%s if you were nimbler.", mstr);
-        }
-    }
+            && compare_skills(sk, opposite));
 }
 
 bool is_invalid_skill(skill_type skill)
@@ -1856,7 +1872,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 {
     ASSERT(!is_invalid_skill(fsk) && !is_invalid_skill(tsk));
 
-    const int penalty = 90; // 10% XP penalty
+    const int penalty = 80; // 20% XP penalty
     int total_skp_lost   = 0; // skill points lost in fsk.
     int total_skp_gained = 0; // skill points gained in tsk.
     int fsk_level = you.skills[fsk];

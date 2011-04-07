@@ -1,7 +1,7 @@
-/*
- * File:      rng.cc
- * Summary:   Random number generator wrapping.
- */
+/**
+ * @file
+ * @brief Random number generator wrapping.
+**/
 
 #include "AppHdr.h"
 
@@ -18,7 +18,6 @@
 #include <sys/times.h>
 #endif
 
-#undef rename
 // for getpid()
 #include <sys/types.h>
 #include <unistd.h>

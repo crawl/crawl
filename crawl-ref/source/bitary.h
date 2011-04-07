@@ -1,11 +1,10 @@
-/*
- *  File:         bitary.h
- *  Summary:      Bit array data type.
- *  Created by:   Robert Vollmert
+/**
+ * @file
+ * @brief Bit array data type.
  *
  * Just contains the operations required by los.cc
  * for the moment.
- */
+**/
 
 #ifndef BITARY_H
 #define BITARY_H

@@ -1,16 +1,9 @@
-/*
- *  File:       mon-data.h
- */
-
 #ifndef MONDATA_H
 #define MONDATA_H
 
 #define AT_NO_ATK       {AT_NONE, AF_PLAIN, 0}
 
 #include "enum.h"
-
-// This whole file was very generously condensed from its initial ugly form
-// by Wladimir van der Laan ($pellbinder).
 
 /* ******************************************************************
 
@@ -1977,9 +1970,7 @@ static monsterentry mondata[] = {
     240, 10, MONS_SPIDER, MONS_TRAPDOOR_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
-    // XXX: Will be Z_SMALL, but is Z_NOZOMBIE until code for zombie
-    // spawns is no longer based on zombie size.
-    3, 10, MST_NO_SPELLS, CE_POISON_CONTAM, Z_NOZOMBIE, S_HISS,
+    3, 10, MST_NO_SPELLS, CE_POISON_CONTAM, Z_SMALL, S_HISS,
     I_INSECT, HT_LAND, FL_NONE, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
@@ -3556,7 +3547,7 @@ static monsterentry mondata[] = {
     { 1, 0, 0, 1 },
     0, 30, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR,
     I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 // snakes ('S')
@@ -5492,7 +5483,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
-// "G"oblins and gnolls.
+// "g"oblins and gnolls.
 {
     MONS_IJYB, 'g', BLUE, "Ijyb",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS,
@@ -5651,7 +5642,7 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-// "M"erfolk.
+// "m"erfolk.
 {
     MONS_ILSUIW, 'm', LIGHTGREEN, "Ilsuiw",
     M_UNIQUE | M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS,
@@ -5879,6 +5870,19 @@ static monsterentry mondata[] = {
 },
 
 // numbers!
+{
+    MONS_IGNACIO, '1', LIGHTMAGENTA, "Ignacio",
+    M_UNIQUE | M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS,
+    MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD | MR_RES_POISON,
+    0, 14, MONS_EXECUTIONER, MONS_EXECUTIONER, MH_DEMONIC, -9,
+    { {AT_HIT, AF_PLAIN, 30}, {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 15},
+       AT_NO_ATK },
+    { 18, 0, 0, 250 },
+    10, 15, MST_IGNACIO, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
+    I_HIGH, HT_LAND, FL_NONE, 20, DEFAULT_ENERGY,
+    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_LARGE
+},
+
 {
     MONS_GRINDER, '5', BLUE, "Grinder",
     M_UNIQUE | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS | M_NO_HT_WAND,

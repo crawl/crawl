@@ -1,10 +1,9 @@
-/*
- *  File:       hints.cc
- *  Summary:    A hints mode as an introduction on how to play Dungeon Crawl.
- *  Written by: j-p-e-g
+/**
+ * @file
+ * @brief A hints mode as an introduction on how to play Dungeon Crawl.
  *
- *  Created on 2007-01-11.
- */
+ * Created on 2007-01-11.
+**/
 
 #include "AppHdr.h"
 
@@ -172,7 +171,7 @@ void pick_hints(newgame_def* choice)
 
     while (true)
     {
-        char keyn = getch_ck();
+        int keyn = getch_ck();
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
@@ -335,7 +334,7 @@ void hints_starting_screen()
         "Happy Crawling!";
 
     insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_SAVE_GAME, CMD_LOOK_AROUND, 0);
-    linebreak_string2(text, width);
+    linebreak_string(text, width);
     display_tagged_block(text);
 
 #ifndef USE_TILE
@@ -900,8 +899,7 @@ void hints_gained_new_skill(skill_type skill)
 
 #ifndef USE_TILE
 // As safely as possible, colourize the passed glyph.
-// Handles quoting "<", MBCS-ing unicode, and
-// making DEC characters safe if not properly printable.
+// Stringizes it and handles quoting "<".
 static std::string _colourize_glyph(int col, unsigned ch)
 {
     glyph g;
@@ -3407,7 +3405,7 @@ formatted_string hints_abilities_info()
         "way of mutations. Activation of an ability usually comes at a cost, "
         "e.g. nutrition or Magic power. Press '<w>!</w>' or '<w>?</w>' to "
         "toggle between ability selection and description.";
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     text << broken;
 
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
@@ -3429,7 +3427,7 @@ std::string hints_skills_info()
         "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
         "will increase at a decidedly slower rate and ease training of others. "
         "Press <w>?</w> to read your skills' descriptions.";
-    linebreak_string2(broken, std::min(80, _get_hints_cols()));
+    linebreak_string(broken, std::min(80, _get_hints_cols()));
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -3446,7 +3444,7 @@ std::string hints_skills_description_info()
                          "or press <w>?</w> again to return to the skill "
                          "selection.";
 
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -4269,7 +4267,7 @@ void hints_describe_item(const item_def &item)
     std::string broken = ostr.str();
     if (!cmd.empty())
         insert_commands(broken, cmd);
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     cgotoxy(1, wherey() + 2);
     display_tagged_block(broken);
 }
@@ -4607,7 +4605,7 @@ static void _hints_describe_feature(int x, int y)
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
 
@@ -4669,7 +4667,7 @@ static void _hints_describe_cloud(int x, int y)
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
 
@@ -4691,7 +4689,7 @@ static void _hints_describe_disturbance(int x, int y)
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
 
@@ -4855,7 +4853,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
 

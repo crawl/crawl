@@ -211,10 +211,12 @@ transform.o \
 traps.o \
 travel.o \
 tutorial.o \
+unicode.o \
 view.o \
 viewchar.o \
 viewgeom.o \
 viewmap.o \
+wcwidth.o \
 wiz-dgn.o \
 wiz-fsim.o \
 wiz-item.o \

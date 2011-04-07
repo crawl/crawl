@@ -1,8 +1,7 @@
-/*
- *  File:       food.cc
- *  Summary:    Functions for eating and butchering.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for eating and butchering.
+**/
 
 #include "AppHdr.h"
 
@@ -70,6 +69,13 @@ static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
 void make_hungry(int hunger_amount, bool suppress_msg,
                  bool allow_reducing)
 {
+    if (crawl_state.game_is_zotdef() && you.species == SP_SPRIGGAN)
+    {
+        you.hunger = 6000;
+        you.hunger_state = HS_SATIATED;
+        return;
+    }
+
     if (you.is_undead == US_UNDEAD)
         return;
 
@@ -129,11 +135,15 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 // to a weapon is done using the wield_weapon code.
 // special cases like staves of power or other special weps are taken
 // care of by calling wield_effects().    {gdl}
-void weapon_switch(int targ)
+void weapon_switch(int targ, bool force)
 {
     // Give the player an option to abort.
-    if (you.weapon() && !check_old_item_warning(*you.weapon(), OPER_WIELD))
+    if (!force && you.weapon()
+        && (targ == -1 || !you.inv[targ].cursed())
+        && !check_old_item_warning(*you.weapon(), OPER_WIELD))
+    {
         return;
+    }
 
     if (targ == -1) // Unarmed Combat.
     {
@@ -174,7 +184,7 @@ void weapon_switch(int targ)
         unwield_item(false);
 
     if (targ != -1)
-        equip_item(EQ_WEAPON, targ);
+        equip_item(EQ_WEAPON, targ, false);
 
     if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
@@ -199,7 +209,7 @@ void weapon_switch(int targ)
 static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
 {
     // When berserk, you can't change weapons.  Sanity check!
-    if (!can_wield(NULL, true))
+    if (!can_wield(NULL, true, false, false, true))
         return (false);
 
     // If wielding a distortion weapon, never attempt to switch away
@@ -211,12 +221,15 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
 
         if (wpn->base_type == OBJ_WEAPONS
             && item_type_known(*wpn)
-            && get_weapon_brand(*wpn) == SPWPN_DISTORTION)
+            && get_weapon_brand(*wpn) == SPWPN_DISTORTION
+            && !you.duration[DUR_WEAPON_BRAND])
         {
             if (!gloved_butcher)
+            {
                 mprf(MSGCH_WARN,
                     "You're wielding a weapon of distortion, will not "
                     "autoswap for butchering.");
+            }
 
             return (false);
         }
@@ -234,7 +247,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
         if (tool.defined()
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat(tool)
-            && can_wield(&tool)
+            && can_wield(&tool, false, false, false, true)
             // Don't even suggest autocursing items.
             // Note that unknown autocursing is OK.
             && (!is_artefact(tool)
@@ -347,9 +360,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     {
         std::string tool;
         if (butchering_tool == SLOT_BARE_HANDS)
-        {
             tool = "unarmed";
-        }
         else
         {
             item_def& new_wpn(you.inv[butchering_tool]);
@@ -358,7 +369,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 
         mprf("Switching to %s for butchering.", tool.c_str());
 
-        if (!wield_weapon(true, butchering_tool, false, true, false, false))
+        if (!wield_weapon(true, butchering_tool, false, true, false, false, true))
             return (false);
     }
 
@@ -571,9 +582,11 @@ bool butchery(int which_corpse, bool bottle_blood)
     if (!can_butcher)
     {
         // Try to find a butchering implement.
-        if (!_find_butchering_implement(butcher_tool, gloved_butcher) &&
-            !gloved_butcher)
+        if (!_find_butchering_implement(butcher_tool, gloved_butcher)
+            && !gloved_butcher)
+        {
             return (false);
+        }
 
         if (butcher_tool == SLOT_BARE_HANDS && gloved_butcher)
             removed_gloves = true;

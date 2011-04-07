@@ -374,11 +374,11 @@ static void _leaving_level_now()
     if (you.level_type_name_abbrev != oldname_abbrev)
         newname_abbrev = you.level_type_name_abbrev;
 
-    if (newname_abbrev.length() > MAX_NOTE_PLACE_LEN)
+    if (strwidth(newname_abbrev) > MAX_NOTE_PLACE_LEN)
     {
         mprf(MSGCH_ERROR, "'%s' is too long for a portal vault name "
                           "abbreviation, truncating");
-        newname_abbrev = newname_abbrev.substr(0, MAX_NOTE_PLACE_LEN);
+        newname_abbrev = chop_string(newname_abbrev, MAX_NOTE_PLACE_LEN, false);
     }
 
     you.level_type_origin = "";
@@ -413,17 +413,18 @@ static void _leaving_level_now()
 
     if (!you.level_type_name.empty() && you.level_type_name_abbrev.empty())
     {
-        if (you.level_type_name.length() <= MAX_NOTE_PLACE_LEN)
+        if (strwidth(you.level_type_name) <= MAX_NOTE_PLACE_LEN)
             you.level_type_name_abbrev = you.level_type_name;
-        else if (you.level_type_tag.length() <= MAX_NOTE_PLACE_LEN)
+        else if (strwidth(you.level_type_tag) <= MAX_NOTE_PLACE_LEN)
             you.level_type_name_abbrev = spaced_tag;
         else
         {
             const std::string shorter =
-                you.level_type_name.length() < you.level_type_tag.length() ?
+                strwidth(you.level_type_name) < strwidth(you.level_type_tag) ?
                     you.level_type_name : spaced_tag;
 
-            you.level_type_name_abbrev = shorter.substr(0, MAX_NOTE_PLACE_LEN);
+            you.level_type_name_abbrev = chop_string(shorter,
+                                         MAX_NOTE_PLACE_LEN, false);
         }
     }
 
@@ -622,14 +623,6 @@ void up_stairs(dungeon_feature_type force_stair,
             ouch(1, NON_MONSTER, KILLED_BY_FALLING_THROUGH_GATE);
         else
             ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
-        you.turn_is_over = true;
-        return;
-    }
-
-    if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(stair_find)
-        && !feat_is_gate(stair_find))
-    {
-        mpr("You are carrying too much to climb upwards.");
         you.turn_is_over = true;
         return;
     }

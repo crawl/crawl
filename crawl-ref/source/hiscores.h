@@ -1,8 +1,7 @@
-/*
- *  File:       hiscores.h
- *  Summary:    Scorefile manipulation functions
- *  Written by: Gordon Lipford
- */
+/**
+ * @file
+ * @brief Scorefile manipulation functions
+**/
 
 
 #ifndef HISCORES_H

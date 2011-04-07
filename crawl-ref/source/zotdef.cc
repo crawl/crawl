@@ -1,8 +1,7 @@
-/*
- *  File:       zotdef.cc
- *  Summary:    Zot Def specific functions
- *  Written by: Mark Mackey
- */
+/**
+ * @file
+ * @brief Zot Def specific functions
+**/
 
 #include "AppHdr.h"
 

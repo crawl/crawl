@@ -1,8 +1,7 @@
-/*
- *  File:       item_use.cc
- *  Summary:    Functions for making use of inventory items.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for making use of inventory items.
+**/
 
 #include "AppHdr.h"
 
@@ -46,6 +45,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "map_knowledge.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -102,13 +102,20 @@ static bool _is_cancellable_scroll(scroll_type scroll);
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability)
+               bool ignore_temporary_disability, bool unwield,
+               bool butcher)
 {
 #define SAY(x) if (say_reason) { x; } else
 
     if (!ignore_temporary_disability && you.berserk())
     {
         SAY(canned_msg(MSG_TOO_BERSERK));
+        return (false);
+    }
+
+    if (you.melded[EQ_WEAPON])
+    {
+        SAY(mpr("Your weapon is melded into your body!"));
         return (false);
     }
 
@@ -122,9 +129,11 @@ bool can_wield(item_def *weapon, bool say_reason,
         && you.weapon()
         && (you.weapon()->base_type == OBJ_WEAPONS
            || you.weapon()->base_type == OBJ_STAVES)
-        && you.weapon()->cursed())
+        && you.weapon()->cursed()
+        && !(butcher && you.religion == GOD_ASHENZARI && i_feel_safe()))
     {
-        SAY(mpr("You can't unwield your weapon to draw a new one!"));
+        SAY(mprf("You can't unwield your weapon%s!",
+                 !unwield ? " to draw a new one" : ""));
         return (false);
     }
 
@@ -273,7 +282,8 @@ static bool _valid_weapon_swap(const item_def &item)
 // If force is true, don't check weapon inscriptions.
 // (Assuming the player was already prompted for that.)
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force, bool show_unwield_msg, bool show_wield_msg)
+                  bool force, bool show_unwield_msg, bool show_wield_msg,
+                  bool butcher)
 {
     if (inv_count() < 1)
     {
@@ -283,15 +293,18 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Look for conditions like berserking that could prevent wielding
     // weapons.
-    if (!can_wield(NULL, true))
+    if (!can_wield(NULL, true, false, slot == SLOT_BARE_HANDS, butcher))
         return (false);
 
     int item_slot = 0;          // default is 'a'
 
     if (auto_wield)
     {
-        if (slot >= 0 && !can_wield(&you.inv[slot], true))
+        if (slot >= 0
+            && !can_wield(&you.inv[slot], true, false, false, butcher))
+        {
             return (false);
+        }
 
         if (item_slot == you.equip[EQ_WEAPON]
             || you.equip[EQ_WEAPON] == -1
@@ -374,7 +387,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     item_def& new_wpn(you.inv[item_slot]);
 
-    if (!can_wield(&new_wpn, true))
+    if (!can_wield(&new_wpn, true, false, false, true))
         return (false);
 
     // For non-auto_wield cases checked above.
@@ -399,10 +412,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (show_wield_msg)
         mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
-
-    // Warn player about low str/dex or throwing skill.
-    if (show_weff_messages)
-        wield_warning();
 
     check_item_hint(new_wpn, old_talents);
 
@@ -471,6 +480,19 @@ void warn_shield_penalties()
     {
         mprf(MSGCH_WARN, "Your %s severely limits your weapon's effectiveness.",
              shield_base_name(you.shield()));
+    }
+}
+
+void warn_armour_penalties()
+{
+    const int penalty = 3 * player_raw_body_armour_evasion_penalty() - you.strength();
+
+    if (penalty > 0)
+    {
+        mprf(MSGCH_WARN, "Your low strength makes using this armour %smore difficult.",
+             (penalty < 3) ? "a little " :
+             (penalty < 5) ? "" :
+                             "a lot ");
     }
 }
 
@@ -799,7 +821,7 @@ bool do_wear_armour(int item, bool quiet)
 
             removed_cloak = true;
         }
-        else
+        else if (you.religion != GOD_ASHENZARI)
         {
             if (!quiet)
                mpr("Your cloak prevents you from wearing the armour.");
@@ -895,7 +917,7 @@ bool takeoff_armour(int item)
 
                 removed_cloak = true;
             }
-            else
+            else if (you.religion != GOD_ASHENZARI)
             {
                 mpr("Your cloak prevents you from removing the armour.");
                 return (false);
@@ -1057,8 +1079,9 @@ void fire_target_behaviour::set_prompt()
             << "</" << colour << ">";
     }
 
+    formatted_string cut(msg.str());
     // Write it out.
-    internal_prompt += tagged_string_substr(msg.str(), 0, crawl_view.msgsz.x);
+    internal_prompt += cut.chop(crawl_view.msgsz.x);
 
     // Never unset need_redraw here, because we might have cleared the
     // screen or something else which demands a redraw.
@@ -2306,6 +2329,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
     int slayDam      = 0;
+    bool speed_brand = false;
 
     if (you.confused())
         thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
@@ -2728,6 +2752,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             more();
             you.wield_change = true;
         }
+
+        if (get_weapon_brand(launcher) == SPWPN_SPEED)
+            speed_brand = true;
     }
 
     // check for returning ammo from launchers
@@ -2964,6 +2991,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.hit += ammoHitBonus + lnchHitBonus;
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
     }
+
+    if (speed_brand)
+        pbolt.damage.size = div_rand_round(pbolt.damage.size * 9, 10);
 
     // Add in bonus (only from Portal Projectile for now).
     if (acc_bonus != DEBUG_COOKIE)
@@ -3563,7 +3593,7 @@ bool puton_item(int item_slot)
     {
         const item_def* gloves = you.slot_item(EQ_GLOVES, false);
         // Cursed gloves cannot be removed.
-        if (gloves && gloves->cursed())
+        if (gloves && gloves->cursed() && you.religion != GOD_ASHENZARI)
         {
             mpr("You can't take your gloves off to put on a ring!");
             return (false);
@@ -3713,7 +3743,7 @@ bool remove_ring(int slot, bool announce)
 
     const item_def* gloves = you.slot_item(EQ_GLOVES);
     const bool gloves_cursed = gloves && gloves->cursed();
-    if (gloves_cursed && !amu)
+    if (gloves_cursed && !amu && you.religion != GOD_ASHENZARI)
     {
         mpr("You can't take your gloves off to remove any rings!");
         return (false);
@@ -3761,7 +3791,7 @@ bool remove_ring(int slot, bool announce)
         mpr("You can't take that off while it's melded.");
         return (false);
     }
-    else if (gloves_cursed
+    else if (gloves_cursed && you.religion != GOD_ASHENZARI
              && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
     {
         mpr("You can't take your gloves off to remove any rings!");
@@ -4468,8 +4498,10 @@ static bool _vorpalise_weapon(bool already_known)
     }
 
     if (success)
+    {
         you.duration[DUR_WEAPON_BRAND] = 0;
-
+        item_set_appearance(wpn);
+    }
     return (msg);
 }
 
@@ -5077,8 +5109,13 @@ void read_scroll(int slot)
         break;
 
     case SCR_REMOVE_CURSE:
-        if (!remove_curse())
-            id_the_scroll = false;
+        if (!remove_curse(alreadyknown))
+        {
+            if (alreadyknown)
+                cancel_scroll = true;
+            else
+                id_the_scroll = false;
+        }
         break;
 
     case SCR_DETECT_CURSE:
@@ -5289,35 +5326,15 @@ void read_scroll(int slot)
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
     {
-        // make sure there's something to curse first
-        int count = 0;
-        int affected = EQ_WEAPON;
-        int min_type, max_type;
-        if (which_scroll == SCR_CURSE_ARMOUR)
-            min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
-        else
-            min_type = EQ_LEFT_RING, max_type = EQ_RING_EIGHT;
-        for (int i = min_type; i <= max_type; i++)
+        if (!curse_item(which_scroll == SCR_CURSE_ARMOUR, alreadyknown))
         {
-            if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
-            {
-                count++;
-                if (one_chance_in(count))
-                    affected = i;
-            }
+            if (alreadyknown)
+                cancel_scroll = you.religion == GOD_ASHENZARI;
+            else
+                id_the_scroll = false;
         }
-
-        if (affected == EQ_WEAPON)
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
-            break;
-        }
-
-        // Make the name before we curse it.
-        do_curse_item(you.inv[you.equip[affected]], false);
-        learned_something_new(HINT_YOU_CURSED);
-        bad_effect = true;
+         else
+             bad_effect = true;
         break;
     }
 
@@ -5478,22 +5495,29 @@ bool stasis_blocks_effect(bool calc_unid,
     return (false);
 }
 
-item_def* only_unided_ring()
+item_def* get_only_unided_ring()
 {
-    item_def* found = 0;
+    item_def* found = NULL;
 
     for (int i = EQ_LEFT_RING; i <= EQ_RING_EIGHT; i++)
-        if (i != EQ_AMULET && you.equip[i])
-        {
-            item_def& item = you.inv[you.equip[i]];
-            if (!item_type_known(item))
-            {
-                if (found)
-                    return 0;
-                found = &item;
-            }
-        }
+    {
+        if (i == EQ_AMULET)
+            continue;
 
+        if (!player_wearing_slot(i))
+            continue;
+
+        item_def& item = you.inv[you.equip[i]];
+        if (!item_type_known(item))
+        {
+            if (found)
+            {
+                // Both rings are unid'd, so return NULL.
+                return NULL;
+            }
+            found = &item;
+        }
+    }
     return found;
 }
 

@@ -1,8 +1,7 @@
-/*
- *  File:       effects.h
- *  Summary:    Misc stuff.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc stuff.
+**/
 
 
 #ifndef EFFECTS_H

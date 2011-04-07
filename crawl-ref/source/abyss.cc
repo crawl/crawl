@@ -1,8 +1,7 @@
-/*
- *  File:       abyss.cc
- *  Summary:    Misc abyss specific functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc abyss specific functions.
+**/
 
 #include "AppHdr.h"
 
@@ -11,6 +10,7 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include "abyss.h"
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -51,6 +51,9 @@
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#ifdef WIZARD
+ #include "wiz-dgn.h"
+#endif
 
 const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
@@ -654,7 +657,7 @@ public:
 
 static void _abyss_lose_monster(monster& mons)
 {
-    if (mons.needs_transit())
+    if (mons.needs_abyss_transit())
         mons.set_transit(level_id(LEVEL_ABYSS));
 
     mons.destroy_inventory();
@@ -711,12 +714,13 @@ static void _abyss_wipe_square_at(coord_def p)
     // Delete cloud.
     delete_cloud_at(p);
 
-    env.pgrid(p)          = 0;
-    env.grid_colours(p)   = 0;
+    env.pgrid(p)        = 0;
+    env.grid_colours(p) = 0;
 #ifdef USE_TILE
-    env.tile_bk_fg(p) = 0;
-    env.tile_bk_bg(p) = 0;
-    // FIXME: need to clear tile_flavour as well
+    env.tile_bk_fg(p)   = 0;
+    env.tile_bk_bg(p)   = 0;
+    tile_clear_flavour(p);
+    tile_init_flavour(p);
 #endif
 
     env.level_map_mask(p) = 0;
@@ -858,7 +862,9 @@ static void _abyss_identify_area_to_shift(coord_def source, int radius,
 
     for (std::set<int>::const_iterator i = affected_vault_indexes.begin();
          i != affected_vault_indexes.end(); ++i)
+    {
         _abyss_expand_mask_to_cover_vault(mask, *i);
+    }
 }
 
 static void _abyss_invert_mask(map_mask *mask)
@@ -899,8 +905,16 @@ static void _abyss_shift_level_contents_around_player(
     const coord_def source_centre = you.pos();
 
     ASSERT(radius >= LOS_RADIUS);
+#ifdef WIZARD
+    // This should only really happen due to wizmode blink/movement.
+    if (!map_bounds_with_margin(source_centre, radius))
+        mprf("source_centre(%d, %d) outside map radius %d", source_centre.x, source_centre.y, radius);
+    if (!map_bounds_with_margin(target_centre, radius))
+        mprf("target_centre(%d, %d) outside map radius %d", target_centre.x, target_centre.y, radius);
+#else
     ASSERT(map_bounds_with_margin(source_centre, radius));
     ASSERT(map_bounds_with_margin(target_centre, radius));
+#endif
 
     _abyss_identify_area_to_shift(source_centre, radius,
                                   &abyss_destruction_mask);
@@ -942,6 +956,38 @@ static void _abyss_generate_monsters(int nmonsters)
         mons_place(mons);
 }
 
+void maybe_shift_abyss_around_player()
+{
+    ASSERT(you.level_type == LEVEL_ABYSS);
+    if (map_bounds_with_margin(you.pos(),
+                               MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
+    {
+        return;
+    }
+
+    dprf("Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
+
+    abyss_area_shift();
+    if (you.pet_target != MHITYOU)
+        you.pet_target = MHITNOT;
+
+#ifdef DEBUG_DIAGNOSTICS
+    int j = 0;
+    for (int i = 0; i < MAX_ITEMS; ++i)
+         if (mitm[i].defined())
+             ++j;
+
+    mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
+
+    j = 0;
+    for (monster_iterator mi; mi; ++mi)
+        ++j;
+
+    mprf(MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
+    mprf(MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
+#endif
+}
+
 void abyss_area_shift(void)
 {
 #ifdef DEBUG_ABYSS
@@ -969,12 +1015,18 @@ void abyss_area_shift(void)
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
     place_transiting_items();
+
+#ifdef WIZARD
+    // Update map, if already mapped.
+    if (!testbits(env.level_flags, LFLAG_NOT_MAPPABLE))
+        wizard_map_level();
+#endif
 }
 
 void save_abyss_uniques()
 {
     for (monster_iterator mi; mi; ++mi)
-        if (mi->needs_transit())
+        if (mi->needs_abyss_transit())
             mi->set_transit(level_id(LEVEL_ABYSS));
 }
 
@@ -1105,7 +1157,7 @@ static void _initialise_level_corrupt_seeds(int power)
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
     const beh_type beh =
-        one_chance_in(2 + you.skills[SK_INVOCATIONS] / 4) ? BEH_HOSTILE
+        one_chance_in(2 + you.skill(SK_INVOCATIONS) / 4) ? BEH_HOSTILE
         : BEH_NEUTRAL;
 
     // [ds] No longer summon hostiles -- don't create the monster if

@@ -1,8 +1,7 @@
-/*
- *  File:       dgn-actions.cc
- *  Summary:    Delayed level actions.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Delayed level actions.
+**/
 
 #include "AppHdr.h"
 

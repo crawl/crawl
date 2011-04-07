@@ -1,8 +1,7 @@
-/*
- *  File:       spl-util.cc                                          *
- *  Summary:    data handlers for player-available spell list        *
- *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
- */
+/**
+ * @file
+ * @brief data handlers for player-available spell list
+**/
 
 #include "AppHdr.h"
 
@@ -103,7 +102,7 @@ void init_spell_descs(void)
         if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
             end(1, false, "spell #%d has invalid id %d", i, data.id);
 
-        if (data.title == NULL || strlen(data.title) == 0)
+        if (data.title == NULL || !*data.title)
             end(1, false, "spell #%d, id %d has no name", i, data.id);
 
         if (data.level < 1 || data.level > 9)
@@ -365,11 +364,11 @@ int spell_hunger(spell_type which_spell, bool rod)
 
     if (rod)
     {
-        hunger -= 10 * you.skills[SK_EVOCATIONS];
+        hunger -= 10 * you.skill(SK_EVOCATIONS);
         hunger = std::max(hunger, level * 5);
     }
     else
-        hunger -= you.intel() * you.skills[SK_SPELLCASTING];
+        hunger -= you.intel() * you.skill(SK_SPELLCASTING);
 
     if (hunger < 0)
         hunger = 0;

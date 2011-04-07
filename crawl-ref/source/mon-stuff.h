@@ -1,8 +1,7 @@
-/*
- *  File:       mon-stuff.h
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 
 #ifndef MONSTUFF_H
@@ -56,7 +55,7 @@ struct level_exit
 
 
 const item_def *give_mimic_item(monster* mimic);
-const item_def &get_mimic_item(const monster* mimic);
+item_def &get_mimic_item(const monster* mimic);
 int  get_mimic_colour(const monster* mimic);
 dungeon_feature_type get_mimic_feat (const monster* mimic);
 bool feature_mimic_at (const coord_def &c);

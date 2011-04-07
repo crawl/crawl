@@ -1,8 +1,7 @@
-/*
- *  File:       lev-pand.cc
- *  Summary:    Functions used in Pandemonium.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used in Pandemonium.
+**/
 
 #include "AppHdr.h"
 

@@ -1,8 +1,7 @@
-/*
- *  File:       output.h
- *  Summary:    Functions used to print player related info.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print player related info.
+**/
 
 
 #ifndef OUTPUT_H

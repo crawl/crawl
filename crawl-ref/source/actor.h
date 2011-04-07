@@ -227,9 +227,9 @@ public:
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool undead_or_demonic() const = 0;
-    virtual bool is_holy() const = 0;
-    virtual bool is_unholy() const = 0;
-    virtual bool is_evil() const = 0;
+    virtual bool is_holy(bool spells = true) const = 0;
+    virtual bool is_unholy(bool spells = true) const = 0;
+    virtual bool is_evil(bool spells = true) const = 0;
     virtual bool is_chaotic() const = 0;
     virtual bool is_artificial() const = 0;
     virtual bool is_unbreathing() const = 0;
@@ -257,7 +257,7 @@ public:
     virtual bool is_wall_clinging() const;
     virtual bool can_cling_to_walls() const = 0;
     virtual bool can_cling_to(const coord_def& p) const;
-    virtual void check_clinging(bool stepped);
+    virtual bool check_clinging(bool stepped);
     virtual void clear_clinging();
     virtual bool airborne() const;
     virtual bool ground_level() const;

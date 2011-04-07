@@ -1,8 +1,7 @@
-/*
- *  File:       dlua.cc
- *  Summary:    Dungeon-builder Lua interface.
- *  Created by: dshaligram on Sat Jun 23 20:02:09 2007 UTC
- */
+/**
+ * @file
+ * @brief Dungeon-builder Lua interface.
+**/
 
 #include "AppHdr.h"
 

@@ -1,9 +1,8 @@
-/*
- *  File:       store.cc
- *  Summary:    Saveable hash-table and vector capable of storing
- *              multiple types of data.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Saveable hash-table and vector capable of storing
+ *             multiple types of data.
+**/
 
 #include "AppHdr.h"
 

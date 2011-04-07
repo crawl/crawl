@@ -1,7 +1,7 @@
-/*
- *  File:       decks.cc
- *  Summary:    Functions with decks of cards.
- */
+/**
+ * @file
+ * @brief Functions with decks of cards.
+**/
 
 #include "AppHdr.h"
 
@@ -1074,13 +1074,13 @@ bool deck_stack()
             }
 
             // Hand-hacked implementation, instead of using Menu. Oh well.
-            const int c = getch();
+            const int c = getchk();
             if (c == CK_ENTER)
             {
                 cgotoxy(1,11);
                 textcolor(LIGHTGREY);
                 cprintf("Are you sure? (press y or Y to confirm)");
-                if (toupper(getch()) == 'Y')
+                if (toupper(getchk()) == 'Y')
                     break;
 
                 cgotoxy(1,11);
@@ -1383,7 +1383,7 @@ void evoke_deck(item_def& deck)
     }
 
     if (!deck_gone && allow_id
-        && you.skills[SK_EVOCATIONS] > 5 + random2(35))
+        && you.skill(SK_EVOCATIONS) > 5 + random2(35))
     {
         mpr("Your skill with magical items lets you identify the deck.");
         set_ident_flags(deck, ISFLAG_KNOW_TYPE);
@@ -1508,7 +1508,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     if (you.religion == GOD_NEMELEX_XOBEH && !player_under_penance())
         nemelex_bonus = you.piety / 20;
 
-    int extra_targets = power_level + random2(you.skills[SK_EVOCATIONS]
+    int extra_targets = power_level + random2(you.skill(SK_EVOCATIONS)
                                               + nemelex_bonus) / 12;
 
     for (int i = 0; i < 1 + extra_targets; ++i)
@@ -2049,7 +2049,11 @@ static void _experience_card(int power, deck_rarity_type rarity)
         mpr("You feel knowledgeable.");
 
     // Put some free XP into pool; power_level 2 means +20k
-    you.exp_available += (power_level <= 1 ? power * 50 : HIGH_EXP_POOL);
+    int exp_gain = HIGH_EXP_POOL;
+    if (power_level <= 1)
+        exp_gain = std::min(exp_gain, power * 50);
+    exp_gain -= ash_reduce_xp(exp_gain);
+    you.exp_available += exp_gain;
 
     // After level 27, boosts you get don't get increased (matters for
     // charging V:8 with no rN+++ and for felids).
@@ -2179,7 +2183,7 @@ void sage_card(int power, deck_rarity_type rarity)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type s = static_cast<skill_type>(i);
-        if (skill_name(s) == NULL)
+        if (skill_name(s) == NULL || is_useless_skill(s))
             continue;
 
         if (you.skills[s] < MAX_SKILL_LEVEL)
@@ -2691,7 +2695,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
             // Rare and powerful.
             wpn.plus  = random2(4) + 2;
             wpn.plus2 = random2(4) + 2;
-            wpn.sub_type = (coinflip() ? WPN_KATANA : WPN_EXECUTIONERS_AXE);
+            wpn.sub_type = (coinflip() ? WPN_DIRE_FLAIL : WPN_EXECUTIONERS_AXE);
 
             set_item_ego_type(wpn, OBJ_WEAPONS,
                               coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
@@ -2837,11 +2841,11 @@ static int _card_power(deck_rarity_type rarity)
     else if (you.religion == GOD_NEMELEX_XOBEH)
     {
         result = you.piety;
-        result *= (you.skills[SK_EVOCATIONS] + 25);
+        result *= (you.skill(SK_EVOCATIONS) + 25);
         result /= 27;
     }
 
-    result += you.skills[SK_EVOCATIONS] * 9;
+    result += you.skill(SK_EVOCATIONS) * 9;
     if (rarity == DECK_RARITY_RARE)
         result += 150;
     else if (rarity == DECK_RARITY_LEGENDARY)

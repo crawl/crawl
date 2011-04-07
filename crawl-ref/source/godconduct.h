@@ -1,7 +1,7 @@
-/*
- * File:     godconduct.h
- * Summary:  Stuff related to conducts.
- */
+/**
+ * @file
+ * @brief Stuff related to conducts.
+**/
 
 #ifndef GODCONDUCT_H
 #define GODCONDUCT_H

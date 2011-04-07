@@ -7,6 +7,7 @@
 #include "menu.h"
 #include "options.h"
 #include "stuff.h"
+#include "unicode.h"
 
 extern std::string init_file_error; // defined in main.cc
 
@@ -80,7 +81,7 @@ bool is_good_name(const std::string& name, bool blankOK, bool verbose)
 static bool _read_player_name(std::string &name)
 {
     const int name_x = wherex(), name_y = wherey();
-    char buf[kNameLen + 1];
+    char buf[kNameLen + 1]; // FIXME: make line_reader handle widths
     // XXX: Prompt displays garbage otherwise, but don't really know why.
     //      Other places don't do this. --rob
     buf[0] = '\0';
@@ -147,16 +148,15 @@ bool validate_player_name(const std::string &name, bool verbose)
         return (false);
     }
 
-    for (unsigned int i = 0; i < name.length(); i++)
+    ucs_t c;
+    for (const char *str = name.c_str(); int l = utf8towc(&c, str); str += l)
     {
-        char c = name[i];
         // Note that this includes systems which may be using the
         // packaging system.  The packaging system is very simple
         // and doesn't take the time to escape every character that
         // might be a problem for some random shell or OS... so we
         // play it very conservative here.  -- bwr
-        // Accented 8-bit letters are probably harmless here.  -- 1KB
-        if (!isalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
+        if (!iswalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
         {
             if (verbose)
             {

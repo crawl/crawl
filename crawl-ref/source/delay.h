@@ -1,7 +1,7 @@
-/*
- *  File:       delay.h
- *  Summary:    Functions for handling multi-turn actions.
- */
+/**
+ * @file
+ * @brief Functions for handling multi-turn actions.
+**/
 
 #ifndef DELAY_H
 #define DELAY_H
@@ -65,7 +65,7 @@ struct ait_hp_loss
 };
 
 void start_delay(delay_type type, int turns, int parm1 = 0, int parm2 = 0);
-void stop_delay(bool stop_stair_travel = false);
+void stop_delay(bool stop_stair_travel = false, bool force_unsafe = false);
 bool you_are_delayed();
 delay_type current_delay_action();
 void handle_delay();
@@ -82,7 +82,8 @@ void stop_butcher_delay();
 void maybe_clear_weapon_swap();
 void handle_interrupted_swap(bool swap_if_safe = false,
                              bool force_unsafe = false,
-                             bool transform = false);
+                             bool transform = false,
+                             bool force = false);
 
 void clear_macro_process_key_delay();
 

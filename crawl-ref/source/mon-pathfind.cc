@@ -414,9 +414,6 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    if (mons_avoids_cloud(mons, env.cgrid(p)))
-        return false;
-
     return mons_can_traverse(mons, p) || mons->can_cling_to_walls()
                                          && cell_is_clingable(pos)
                                          && cell_can_cling_to(pos, p);

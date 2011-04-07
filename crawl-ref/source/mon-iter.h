@@ -1,10 +1,9 @@
-/*
+/**
+ * @file
  * Provide a way to iterator over all monsters,
  * subject to a few common restrictions.
- *
- * TODO:
- *  - Iterate over actors?
- */
+**/
+// TODO: Iterate over actors?
 
 #ifndef MON_ITER_H
 #define MON_ITER_H

@@ -1,8 +1,7 @@
-/*
- *  File:       mon-project.cc
- *  Summary:    Slow projectiles, done as monsters.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Slow projectiles, done as monsters.
+**/
 
 #ifndef MON_PROJECT_H
 #define MON_PROJECT_H

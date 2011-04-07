@@ -1,6 +1,6 @@
-/*
- *  File:        los.cc
- *  Summary:     Line-of-sight algorithm.
+/**
+ * @file
+ * @brief Line-of-sight algorithm.
  *
  *
  *
@@ -38,7 +38,7 @@
  * The code provides functions for filling LOS information
  * around a given center efficiently, and for querying rays
  * between two given cells.
- */
+**/
 
 #include "AppHdr.h"
 

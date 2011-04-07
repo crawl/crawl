@@ -19,14 +19,15 @@ function ice_cave_portal(e)
     "portal. Whatever lives on the other side, they will be full of " ..
     "grim and arctic fury. You note that the archway is melting away."
 
-  local timeout_turns = crawl.random_range(2700, 3300)
+  local timeout_turns_long = crawl.random_range(2700, 3300)
+  local timeout_turns_short = timeout_turns_long/10
 
   local messager =
     timed_msg {
       visible = true,
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns,
+      messages = time_messages(timeout_turns_short,
                                "$F{The} is slowly melting away.",
                                "$F{The} is melting away.",
                                "$F{The} is quickly melting away.",
@@ -35,24 +36,24 @@ function ice_cave_portal(e)
 
   -- There are actually two kinds of ice caves: easy and hard ones. Players
   -- that enter the portal deeper in the dungeon end up in the hard ones.
-  -- Possible depths for easy ice caves are D:11-14, Lair:1-7, Orc:1-4 and
-  -- Elf:1-2. Hard ice caves are in D:14-19, Elf:3-4 and Vault:1-7. Those
+  -- Possible depths for easy ice caves are D:11-14, Lair:1-8, Orc:1-4 and
+  -- Elf:1-2. Hard ice caves are in D:14-19, Elf:3-5 and Vault:1-7. Those
   -- depths are set in the entry vault default-depth.
   --
   -- Now, first default to easy destinatinos.
   local difficulty = "ice_cave_easy"
 
   -- Handle overlapping depths for easy and hard maps with a coinflip.
-  if you.branch == "Dungeon" and you.subdepth == 14 or
-     you.branch == "Elf" and you.subdepth < 3 then
+  if you.branch() == "D" and you.subdepth() == 14 or
+     you.branch() == "Elf" and you.subdepth() < 3 then
       if crawl.coinflip() then
           difficulty = "ice_cave_hard"
       end
   end
 
-  if you.branch == "Dungeon" and you.subdepth >= 15 or
-     you.branch == "Elf" and you.subdepth >= 3 or
-     you.branch == "Vault" then
+  if you.branch() == "D" and you.subdepth() >= 15 or
+     you.branch() == "Elf" and you.subdepth() >= 3 or
+     you.branch() == "Vault" then
       difficulty = "ice_cave_hard"
   end
 
@@ -67,7 +68,8 @@ function ice_cave_portal(e)
         dstname_abbrev = "IceCv",
         dstorigin = "in an ice cave",
         overview = "frozen archway",
-        turns = timeout_turns,
+        turns = timeout_turns_long,
+        turns_short = timeout_turns_short,
         floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
@@ -218,7 +220,7 @@ end
 
 # Entries ##########################################
 
-default-depth: D:11-20, Lair:1-7, Orc:1-4, Elf:1-5, Vault:1-7
+default-depth: D:11-19, Lair:1-8, Orc:1-4, Elf:1-5, Vault:1-7
 
 NAME:   portal_ice_cave_entry_pillars_01
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave

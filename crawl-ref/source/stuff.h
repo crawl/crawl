@@ -1,8 +1,7 @@
-/*
- *  File:       stuff.h
- *  Summary:    Misc stuff.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc stuff.
+**/
 
 
 #ifndef STUFF_H

@@ -76,7 +76,7 @@ static void _species_stat_init(species_type which_species)
     case SP_SPRIGGAN:           sb =  2; ib =  7; db =  9;      break;  // 18
 
     case SP_MUMMY:              sb =  9; ib =  5; db =  5;      break;  // 19
-    case SP_GHOUL:              sb =  9; ib =  1; db =  2;      break;  // 13
+    case SP_GHOUL:              sb =  9; ib =  1; db =  2;      break;  // 12
     case SP_VAMPIRE:            sb =  5; ib =  8; db =  7;      break;  // 20
 
     case SP_RED_DRACONIAN:
@@ -634,7 +634,8 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
-        you.char_direction = GDT_GAME_START;
+        if (!crawl_state.game_is_zotdef())
+            you.char_direction = GDT_GAME_START;
         you.piety = 38;
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,

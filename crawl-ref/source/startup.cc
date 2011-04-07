@@ -1,8 +1,7 @@
-/*
- *  File:       startup.cc
- *  Summary:    Collection of startup related functions and objects
- *  Written by:
- */
+/**
+ * @file
+ * @brief Collection of startup related functions and objects
+**/
 
 #include "AppHdr.h"
 
@@ -711,10 +710,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
         {
             // handle the non-action keys by hand to poll input
             // Only consider alphanumeric keys and -_ .
-            // Note: this currently allows letters between 128 and 255 in
-            // 8-bit ancient charsets.
             bool changed_name = false;
-            if (std::isalnum(keyn) || keyn == '-' || keyn == '.'
+            if (std::iswalnum(keyn) || keyn == '-' || keyn == '.'
                 || keyn == '_' || keyn == ' ')
             {
                 if (full_name)
@@ -722,9 +719,9 @@ static void _show_startup_menu(newgame_def* ng_choice,
                     full_name = false;
                     input_string = "";
                 }
-                if ((int) input_string.length() < kNameLen)
+                if (strwidth(input_string) < kNameLen)
                 {
-                    input_string += static_cast<char> (keyn);
+                    input_string += stringize_glyph(keyn);
                     changed_name = true;
                 }
             }

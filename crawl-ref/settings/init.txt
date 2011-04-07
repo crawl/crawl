@@ -25,7 +25,7 @@
 # Crawl Init file
 #
 # On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy
-# init.txt to ~/.crawlrc as:
+# init.txt to ~/.crawlrc or ~/.crawl/init.txt as:
 #   cp init.txt ~/.crawlrc
 #
 # Lines beginning with '#' are comments.  The basic syntax is:
@@ -168,9 +168,10 @@ drop_filter = useless_item
 # travel_avoid_terrain = shallow water
 #
 # explore_greedy   = false
-# explore_stop     = items,greedy_pickup,stairs,shops,altars,gates
+# explore_stop     = items,greedy_pickup_smart,stairs,shops,altars,gates
 # explore_stop    += greedy_visited_item_stack
 # explore_improved = true
+# travel_key_stop = false
 #
 # explore_stop_pickup_ignore = curare
 auto_exclude = oklob plant,statue,curse skull,roxanne, hyperactive
@@ -200,9 +201,6 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
 ##### 4-h       Stashes ###############################
 #
-
-# 14 filters out corpses
-# stash_filter = 14
 
 # annotate_item_class = true
 # annotate_item_dropped = true
@@ -244,7 +242,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # messages_at_top              = true
 # mlist_targetting             = true
 # show_gold_turns              = true
-# show_real_turns              = true
+# show_game_turns              = true
 
 # clear_messages             = true
 # small_more                 = true
@@ -311,8 +309,6 @@ menu_colour = notes:white:Reached XP level
 
 # You can also enforce a --more-- prompt for messages
 
-## Reduce chance of drowning because levitation runs out:
-# force_more_message = You are starting to lose your buoyancy
 ## Avoid wasting turns with aborted actions:
 # force_more_message = There are no visible monsters within range
 # force_more_message = This wand has no charges
@@ -320,7 +316,9 @@ menu_colour = notes:white:Reached XP level
 force_more_message = You have reached level
 force_more_message = Your scales start
 force_more_message = You fall through a shaft
-force_more_message = You are starting to lose your buoyancy
+
+## Reduce chance of drowning because levitation or form runs out:
+force_more_message = Careful!
 
 # Announcements of timed portal vaults (bazaar, labyrinths):
 force_more_message = interdimensional caravan
@@ -408,8 +406,7 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # show_player_species = true
 
 # See options_guide.txt for the options
-# cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any,
-# feature, mon_glyph
+# cset, feature, mon_glyph
 
 ##### 6-b       DOS and Windows #######################
 #

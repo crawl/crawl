@@ -1,8 +1,7 @@
-/*
- *  File:       mon-behv.h
- *  Summary:    Monster behaviour functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monster behaviour functions.
+**/
 
 #include "AppHdr.h"
 #include "mon-behv.h"
@@ -476,17 +475,6 @@ void handle_behaviour(monster* mon)
 
                 if (mon->travel_target == MTRAV_SIREN)
                     mon->travel_target = MTRAV_NONE;
-
-                if (mon->foe == MHITYOU && mon->is_travelling()
-                    && mon->travel_target == MTRAV_PLAYER)
-                {
-                    // We've got a target, so we'll continue on our way.
-#ifdef DEBUG_PATHFIND
-                    mpr("Player out of LoS... start wandering.");
-#endif
-                    new_beh = BEH_WANDER;
-                    break;
-                }
 
                 if (isFriendly && mon->foe != MHITYOU)
                 {

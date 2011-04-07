@@ -1,7 +1,7 @@
-/*
- *  File:       acquire.cc
- *  Summary:    Acquirement and Trog/Oka/Sif gifts.
- */
+/**
+ * @file
+ * @brief Acquirement and Trog/Oka/Sif gifts.
+**/
 
 #include "AppHdr.h"
 
@@ -894,6 +894,10 @@ static bool _skill_useless_with_god(int skill)
         return (skill == SK_NECROMANCY);
     case GOD_XOM:
     case GOD_NEMELEX_XOBEH:
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_VEHUMET:
+    case GOD_ASHENZARI:
+    case GOD_NO_GOD:
         return (skill == SK_INVOCATIONS);
     default:
         return (false);
@@ -1052,7 +1056,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
             int skl = you.skills[sk];
 
-            if (skl == 27 || you.species == SP_DEMIGOD && sk == SK_INVOCATIONS)
+            if (skl == 27 || is_useless_skill(sk))
             {
                 weights[sk] = 0;
                 continue;
@@ -1156,6 +1160,7 @@ int acquirement_create_item(object_class_type class_wanted,
                          || agent == GOD_TROG);
     int thing_created = NON_ITEM;
     int quant = 1;
+#define ITEM_LEVEL (divine ? MAKE_GIFT_ITEM : MAKE_GOOD_ITEM)
 #define MAX_ACQ_TRIES 40
     for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
     {
@@ -1171,7 +1176,7 @@ int acquirement_create_item(object_class_type class_wanted,
         int want_arts = (class_wanted == OBJ_BOOKS ? 0 : 1);
 
         thing_created = items(want_arts, class_wanted, type_wanted, true,
-                               MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE,
+                               ITEM_LEVEL, MAKE_ITEM_RANDOM_RACE,
                                0, 0, agent);
 
         if (thing_created == NON_ITEM)
@@ -1185,7 +1190,7 @@ int acquirement_create_item(object_class_type class_wanted,
             while (_weapon_brand_quality(get_weapon_brand(doodad),
                                         is_range_weapon(doodad)) < random2(6))
             {
-                reroll_brand(doodad, MAKE_GOOD_ITEM);
+                reroll_brand(doodad, ITEM_LEVEL);
             }
         }
 
@@ -1200,7 +1205,7 @@ int acquirement_create_item(object_class_type class_wanted,
                         & (1<<get_armour_ego_type(doodad)))
                && !one_chance_in(5))
         {
-            reroll_brand(doodad, MAKE_GOOD_ITEM);
+            reroll_brand(doodad, ITEM_LEVEL);
         }
 
         // For plain armour, try to change the subtype to something

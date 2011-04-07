@@ -1,11 +1,11 @@
-/*
- *  File:       quiver.cc
- *  Summary:    Player quiver functionality
+/**
+ * @file
+ * @brief Player quiver functionality
  *
- *  - Only change last_used when actually using
- *  - Not changing Qv; nobody knows about internals
- *  - Track last_used of each type so each weapon can do the right thing
- */
+ * - Only change last_used when actually using
+ * - Not changing Qv; nobody knows about internals
+ * - Track last_used of each type so each weapon can do the right thing
+**/
 
 #include "AppHdr.h"
 

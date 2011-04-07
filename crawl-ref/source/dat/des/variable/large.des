@@ -2225,7 +2225,6 @@ ENDMAP
 NAME:    forest_0.8
 DEPTH:   D:19-26
 ORIENT:  encompass
-WEIGHT:  999999
 TAGS:    no_pool_fixup
 MONS:    spriggan, spriggan rider, spriggan druid, spriggan berserker
 MONS:    spriggan air mage, spriggan defender, the Enchantress
@@ -2308,9 +2307,9 @@ tttt.ttttttttttttttttttttt.ttttt....ttttttttttttt.ttttttttttttttttttttttt.cccctt
 ttttt.ttttttttttttttttttt.tttttttttt.tttttttttttt..tttttttt..tt...ttttttt.+.1ctt
 tttttt.ttttttttttttttttt.tttttttttt..tttttttttttttt.tttttt.t...ttt..tttttTc1%ctt
 ttttttt.ttttttttttttttt.ttttttttttt....xxxxxtttttttt..tttt...tttttt.ttttttcccctt
-ttttttt.tttttttttttttt.ttttttttttttT...x.44xtttttttttt....ttttttttt.tttttttxxxxx
+ttttttt.tttttttttttttt.ttttttttttttT...x..4xtttttttttt....ttttttttt.tttttttxxxxx
 ttttttt.tttttttttttttt.ttttttttttttT...+...xtttttttttttttttttttttttt.tttxxxxxxxx
-txxxtt.ttttttttttt....ttttttttttttttt.tx.44xttttttttttttttttttttttttt..xxxxxxxxx
+txxxtt.ttttttttttt....ttttttttttttttt.tx..4xttttttttttttttttttttttttt..xxxxxxxxx
 txi+"""""""tt......t.....ttttttttttttt.x.4_xttttttttttttttttttttttttt....xxxxxxx
 txxx""""""""".tttttttt..TTtttttttttttttxxxxxttttttttttttttttttttttt......}xxxxxx
 ttt""N"""""""TTtttttttt....ttttttttttttttttttttttttttttttttttttt.....xxxxxxxxxxx

@@ -712,7 +712,6 @@ ENDMAP
 
 NAME:   minmay_temple_entry_levitate
 TAGS:   temple_entry
-DEPTH:  D:6-7
 WEIGHT: 1
 ORIENT: float
 SUBST:  < : <>
@@ -734,7 +733,6 @@ ENDMAP
 
 NAME:   minmay_temple_entry_oklob
 TAGS:   temple_entry
-DEPTH:  D:7
 WEIGHT: 1
 ORIENT: float
 MONS:   plant, oklob sapling

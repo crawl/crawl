@@ -1,8 +1,7 @@
-/*
- *  File:       mon-act.cc
- *  Summary:    Monsters doing stuff (monsters acting).
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monsters doing stuff (monsters acting).
+**/
 
 #include "AppHdr.h"
 #include "mon-act.h"
@@ -1087,6 +1086,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         break;
 
     case SPELL_CALL_IMP:
+    case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_SWARM:
         _rod_fired_pre(mons, nice_spell);
@@ -1305,9 +1305,15 @@ static bool _handle_wand(monster* mons, bolt &beem)
         if (was_visible)
         {
             if (niceWand || !beem.is_enchantment() || beem.obvious_effect)
+            {
                 set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+                mons->props["wand_known"] = true;
+            }
             else
+            {
                 set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
+                mons->props["wand_known"] = false;
+            }
 
             // Increment zap count.
             if (wand.plus2 >= 0)
@@ -1341,6 +1347,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     std::string ammo_name;
 
     bool returning = false;
+    bool speed_brand = false;
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
@@ -1552,6 +1559,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
             // Speed bows take 50% less time to use than
             // ordinary bows.
             speed_delta = div_rand_round(throw_energy, 2);
+            speed_brand = true;
         }
 
         mons->speed_increment += speed_delta;
@@ -1663,6 +1671,9 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         pbolt.hit         = pbolt.hit * 120 / 100;
         pbolt.damage.size = pbolt.damage.size * 120 / 100;
     }
+
+    if (speed_brand)
+        pbolt.damage.size = div_rand_round(pbolt.damage.size * 9, 10);
 
     scale_dice(pbolt.damage);
 
@@ -2614,6 +2625,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             // This is done manually instead of using heal_monster(),
             // because that function doesn't work quite this way. - bwr
             mons->hit_points += hps_changed;
+            mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
             mons->max_hit_points = std::max(mons->hit_points,
                                                mons->max_hit_points);
         }
@@ -2642,9 +2654,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (do_heal)
     {
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
-
-        // Limited growth factor here - should 77 really be the cap? {dlb}:
-        mons->hit_points = std::min(100, mons->hit_points);
+        mons->hit_points = std::min(MAX_MONSTER_HP, mons->hit_points);
         mons->max_hit_points = std::max(mons->hit_points,
                                            mons->max_hit_points);
     }
@@ -3356,6 +3366,8 @@ static void _jelly_grows(monster* mons)
     }
 
     mons->hit_points += 5;
+    // possible with ridiculous farming on a full level
+    mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
 
     // note here, that this makes jellies "grow" {dlb}:
     if (mons->hit_points > mons->max_hit_points)

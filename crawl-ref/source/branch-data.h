@@ -1,7 +1,3 @@
-/*
- *  File:       branch-data.h
- */
-
 #ifndef BRANCHDATA_H
 #define BRANCHDATA_H
 
@@ -34,7 +30,7 @@ Branch branches[] = {
       DNGN_ENTER_TEMPLE, DNGN_RETURN_FROM_TEMPLE,
       "Temple", "the Ecumenical Temple", "Temple",
       NULL,
-      false, LIGHTGREY, LIGHTGREY,
+      false, LIGHTGREY, BROWN,
       mons_standard_rare, mons_standard_level,
       traps_zero_number, NULL, NULL, NULL, // No traps in temple
       'T', false, false, 0 },
@@ -88,7 +84,7 @@ Branch branches[] = {
       DNGN_ENTER_SLIME_PITS, DNGN_RETURN_FROM_SLIME_PITS,
       "Slime Pits", "the Pits of Slime", "Slime",
       NULL,
-      true, GREEN, LIGHTGREEN,
+      true, GREEN, BROWN,
       mons_pitslime_rare, mons_pitslime_level,
       NULL, random_trap_slime, NULL, NULL,
       'M', false, true, -5 },
@@ -124,7 +120,7 @@ Branch branches[] = {
       DNGN_ENTER_HALL_OF_BLADES, DNGN_RETURN_FROM_HALL_OF_BLADES,
       "Hall of Blades", "the Hall of Blades", "Blade",
       NULL,
-      true, LIGHTGREY, LIGHTGREY,
+      true, LIGHTGREY, BROWN,
       mons_hallblade_rare, mons_hallblade_level,
       NULL, NULL, NULL, NULL,
       'B', false, false, -7 },
@@ -133,7 +129,7 @@ Branch branches[] = {
       DNGN_ENTER_CRYPT, DNGN_RETURN_FROM_CRYPT,
       "Crypt", "the Crypt", "Crypt",
       NULL,
-      true, LIGHTGREY, LIGHTGREY,
+      true, LIGHTGREY, BROWN,
       mons_crypt_rare, mons_crypt_level,
       NULL, NULL, NULL, NULL,
       'C', false, false, -20 },
@@ -143,7 +139,7 @@ Branch branches[] = {
       DNGN_ENTER_TOMB, DNGN_RETURN_FROM_TOMB,
       "Tomb", "the Tomb of the Ancients", "Tomb",
       NULL,
-      true, YELLOW, LIGHTGREY,
+      true, YELLOW, BROWN,
       mons_tomb_rare, mons_tomb_level,
       NULL, NULL, NULL, NULL,
       'W', false, true, -10 },
@@ -152,7 +148,7 @@ Branch branches[] = {
       DNGN_ENTER_HELL, DNGN_EXIT_HELL, // sentinel
       "Hell", "the Vestibule of Hell", "Hell",
       NULL,
-      true, LIGHTGREY, LIGHTGREY,
+      true, LIGHTGREY, LIGHTRED,
       mons_standard_rare, mons_standard_level,
       NULL, NULL, NULL, NULL,
       'U', false, false, 0 },
@@ -161,7 +157,7 @@ Branch branches[] = {
       DNGN_ENTER_DIS, NUM_FEATURES, // sentinel
       "Dis", "the Iron City of Dis", "Dis",
       NULL,
-      false, CYAN, CYAN,
+      false, CYAN, BROWN,
       mons_dis_rare, mons_dis_level,
       NULL, NULL, NULL, NULL,
       'I', true, true, 0 },
@@ -224,7 +220,7 @@ Branch branches[] = {
       DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
       NULL,
-      true, YELLOW, LIGHTGREY,
+      true, YELLOW, BROWN,
       mons_dwarf_rare, mons_dwarf_level,
       NULL, NULL, NULL, NULL,
       'K', false, false, 0 },

@@ -1,8 +1,7 @@
-/*
- *  File:       player.cc
- *  Summary:    Player related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Player related functions.
+**/
 
 
 #ifndef PLAYER_H
@@ -19,7 +18,6 @@
 #include "species.h"
 
 #include <vector>
-#include <stdint.h>
 
 #ifdef USE_TILE
 #include "tiledoll.h"
@@ -130,6 +128,8 @@ public:
   int  skill_cost_level;
   int  total_skill_points;
   int  exp_available;
+
+  int exp_docked, exp_docked_total; // Ashenzari's wrath
 
   FixedArray<uint8_t, 6, 50> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
@@ -275,7 +275,6 @@ public:
   bool xray_vision;
   int bondage_level;  // how much an Ash worshipper is into bondage
 
-
   // Volatile (same-turn) state:
   bool turn_is_over; // flag signaling that player has performed a timed action
 
@@ -341,6 +340,10 @@ public:
 
   // The last spell cast by the player.
   spell_type last_cast_spell;
+
+  // Has the player already been warned about an expiring effect?
+  bool lev_expire_warning;
+  bool form_expire_warning;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
@@ -430,7 +433,8 @@ public:
 
     bool has_spell(spell_type spell) const;
 
-    size_type transform_size(int psize = PSIZE_TORSO) const;
+    size_type transform_size(transformation_type tform,
+                             int psize = PSIZE_TORSO) const;
     std::string shout_verb() const;
 
     item_def *slot_item(equipment_type eq,
@@ -542,9 +546,9 @@ public:
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
-    bool is_holy() const;
-    bool is_unholy() const;
-    bool is_evil() const;
+    bool is_holy(bool spells = true) const;
+    bool is_unholy(bool spells = true) const;
+    bool is_evil(bool spells = true) const;
     bool is_chaotic() const;
     bool is_artificial() const;
     bool is_unbreathing() const;
@@ -729,6 +733,7 @@ int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
 int player_energy(void);
 
+int player_raw_body_armour_evasion_penalty();
 int player_adjusted_shield_evasion_penalty(int scale);
 int player_adjusted_body_armour_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
@@ -919,4 +924,5 @@ bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false);
 void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
+bool need_expiration_warning(duration_type dur);
 #endif

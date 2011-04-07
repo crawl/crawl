@@ -1,7 +1,7 @@
-/*
- * File:     coordit.h
- * Summary:  Coordinate iterators.
- */
+/**
+ * @file
+ * @brief Coordinate iterators.
+**/
 
 #include "AppHdr.h"
 

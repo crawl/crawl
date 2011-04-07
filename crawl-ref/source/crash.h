@@ -1,8 +1,7 @@
-/*
- *  File:       crash.h
- *  Summary:    Platform specific crash handling functions.
- *  Written by: Matthew cline
- */
+/**
+ * @file
+ * @brief Platform specific crash handling functions.
+**/
 
 #ifndef CRASH_H
 #define CRASH_H

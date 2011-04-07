@@ -21,14 +21,15 @@ function bailey_portal(e, ptype)
   end
   desc_long = string.gsub(desc_long, "\n%s+", "\n")
 
-  local timeout_turns = crawl.random_range(2700, 3300)
+  local timeout_turns_long = crawl.random_range(2700, 3300)
+  local timeout_turns_short = timeout_turns_long/10;
 
   local messager =
     timed_msg {
       visible = true,
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns,
+      messages = time_messages(timeout_turns_short,
                                "$F{The} is being lowered.",
                                "$F{The} is being lowered.",
                                "$F{The} is being lowered.",
@@ -45,7 +46,8 @@ function bailey_portal(e, ptype)
         dstname = "bailey",
         dstorigin = "in the bailey",
         overview = "flagged portal",
-        turns = timeout_turns,
+        turns = timeout_turns_long,
+        turns_short = timeout_turns_short,
         floor = "stone_arch",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
@@ -872,7 +874,7 @@ ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
          scroll of fog q:3 / scroll of vulnerability q:3 /\
          scroll of recharging q:3 / scroll of immolation q:3 /\
          any good_item book w:30 /\
-         book of annihilations w:1 / book of demonology w:1 / necronomicon w:1
+         book of annihilations w:1 / grand grimoire w:1 / necronomicon w:1
 MONS:    deep elf soldier / deep elf fighter
 MONS:    deep elf summoner / deep elf priest / nothing
 MONS:    deep elf knight

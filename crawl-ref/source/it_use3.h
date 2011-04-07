@@ -1,8 +1,7 @@
-/*
- *  File:       it_use3.h
- *  Summary:    Functions for using some of the wackier inventory items.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for using some of the wackier inventory items.
+**/
 
 
 #ifndef IT_USE3_H

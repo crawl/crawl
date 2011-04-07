@@ -1,8 +1,7 @@
-/*
- *  File:       version.cc
- *  Summary:    Version (and revision) functionality.
- *  Written by: Steven Noonan
- */
+/**
+ * @file
+ * @brief Version (and revision) functionality.
+**/
 
 #include "AppHdr.h"
 

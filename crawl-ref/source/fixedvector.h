@@ -1,8 +1,7 @@
-/*
- *  File:       fixedvector.h
- *  Summary:    Fixed size vector class that asserts if you do something bad.
- *  Written by: Jesse Jones
- */
+/**
+ * @file
+ * @brief Fixed size vector class that asserts if you do something bad.
+**/
 
 #ifndef FIXVEC_H
 #define FIXVEC_H
@@ -68,7 +67,7 @@ public:
         {
             // Intentionally printed as signed, it's very, very unlikely we'd
             // have a genuine big number here, but underflows are common.
-            die("range check error (%ld / %ld)", (signed long)index,
+            die_noline("range check error (%ld / %ld)", (signed long)index,
                 SIZE);
         }
 #endif
@@ -80,7 +79,7 @@ public:
 #ifdef ASSERTS
         if (index >= SIZE)
         {
-            die("range check error (%ld / %ld)", (signed long)index,
+            die_noline("range check error (%ld / %ld)", (signed long)index,
                 SIZE);
         }
 #endif

@@ -1,6 +1,7 @@
-/*  File:       mon-clone.cc
- *  Summary:    Code to clone existing monsters and to create player illusions.
- */
+/**
+ * @file
+ * @brief Code to clone existing monsters and to create player illusions.
+**/
 
 #include "AppHdr.h"
 

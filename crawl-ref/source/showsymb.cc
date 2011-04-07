@@ -1,9 +1,9 @@
-/*
- * File:     showsymb.cc
- * Summary:  Rendering of map_cell to glyph and colour.
+/**
+ * @file
+ * @brief Rendering of map_cell to glyph and colour.
  *
  * This only needs the information within one object of type map_cell.
- */
+**/
 
 #include "AppHdr.h"
 
