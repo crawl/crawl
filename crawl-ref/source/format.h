@@ -36,6 +36,7 @@ public:
     void textcolor(int color);
     formatted_string substr(size_t index, size_t length=std::string::npos) const;
     void all_caps();
+    void capitalize();
 
     void clear();
     bool empty();

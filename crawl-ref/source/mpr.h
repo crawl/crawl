@@ -76,7 +76,7 @@ enum msg_colour_type
 msg_colour_type msg_colour(int colour);
 
 void mpr(std::string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
-         bool nojoin=false);
+         bool nojoin=false, bool cap=true);
 
 inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
                       int param=0)
@@ -88,6 +88,10 @@ inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
 void mprf(msg_channel_type channel, int param, const char *format, ...);
 void mprf(msg_channel_type channel, const char *format, ...);
 void mprf(const char *format, ...);
+
+void Mprf(msg_channel_type channel, int param, const char *format, ...);
+void Mprf(msg_channel_type channel, const char *format, ...);
+void Mprf(const char *format, ...);
 
 // Yay for C89 and lack of variadic #defines...
 #ifdef DEBUG_DIAGNOSTICS
