@@ -9,8 +9,6 @@
 
 #include "debug.h"
 
-#define LONGSIZE (sizeof(unsigned long)*8)
-
 bit_array::bit_array(unsigned long s)
     : size(s)
 {
