@@ -4689,6 +4689,26 @@ void temperature_check()
     else if ((tempchange - 1.1) < 0)
         temperature_decrement(tempchange);
 
+    if (feat_is_water(env.grid(you.pos())) && you.ground_level()
+        && !beogh_water_walk() && temperature_effect(LORC_PASSIVE_HEAT))
+    {
+        // Cools you off by 1 each turn until you're
+        // not hot enough to boil water.
+        temperature_decrement(1);
+
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            const coord_def p(*ai);
+            if (in_bounds(p)
+                && env.cgrid(p) == EMPTY_CLOUD
+                && one_chance_in(5))
+            {
+                place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
+            }
+        }
+    }
+
+    // Occurs *after* water cool-down:
     if (temperature_effect(LORC_HEAT_AURA))
         invalidate_agrid(true);
 }
@@ -4703,6 +4723,10 @@ void temperature_increment(float degree)
 
 void temperature_decrement(float degree)
 {
+    // No cooling off while you're angry!
+    if (you.duration[DUR_BERSERK])
+        return;
+
     you.temperature -= sqrt(degree);
     if (temperature() <= TEMP_MIN)
         you.temperature = TEMP_MIN;
