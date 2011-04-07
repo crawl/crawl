@@ -510,6 +510,16 @@ void formatted_string::all_caps()
             uppercase(ops[i].text);
 }
 
+void formatted_string::capitalize()
+{
+    for (unsigned int i = 0; i < ops.size(); i++)
+        if (ops[i].type == FSOP_TEXT && !ops[i].text.empty())
+        {
+            ops[i].text = uppercase_first(ops[i].text);
+            break;
+        }
+}
+
 int count_linebreaks(const formatted_string& fs)
 {
     std::string::size_type where = 0;
