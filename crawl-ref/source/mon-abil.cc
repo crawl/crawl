@@ -2801,20 +2801,20 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
 
     if (candidates.empty())
     {
-        if (player_kill
-            && !fedhas_mode
+        if (!fedhas_mode
             && non_activable_count == 0
             && ballisto_count == 0
             && mons->attitude == ATT_HOSTILE)
         {
-            mpr("Having destroyed the fungal colony, you feel a bit more "
-                "experienced.");
-            gain_exp(500);
+            if (player_kill)
+            {
+                mpr("Having destroyed the fungal colony, you feel a bit more "
+                    "experienced.");
+                gain_exp(500);
+            }
 
             // Get rid of the mold, so it'll be more useful when new fungi
             // spawn.
-            // NOTE: Not triggered if eradication happens by hostile monster,
-            //       so we don't give anything away. (jpeg)
             for (rectangle_iterator ri(1); ri; ++ri)
                 remove_mold(*ri);
         }
