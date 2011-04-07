@@ -737,11 +737,16 @@ void direct_effect(monster* source, spell_type spell,
         break;
 
     case SPELL_AIRSTRIKE:
-        // Damage averages 14 for 5HD, 18 for 10HD, 28 for 20HD.
+        // Damage averages 14 for 5HD, 18 for 10HD, 28 for 20HD, +50% if flying.
         if (def)
             simple_monster_message(def, " is struck by the twisting air!");
         else
-            mpr("The air twists around and strikes you!");
+        {
+            if (you.flight_mode())
+                mpr("The air twists around and violently strikes you in flight!");
+            else
+                mpr("The air twists around and strikes you!");
+        }
 
         pbolt.name       = "airstrike";
         pbolt.flavour    = BEAM_AIR;
