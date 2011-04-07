@@ -84,7 +84,7 @@ static bool _surge_identify_boosters(spell_type spell)
             || item_ident(*wpn, ISFLAG_KNOW_PROPERTIES))
         {
             int num_unknown = 0;
-            for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; ++i)
+            for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
             {
                 if (i == EQ_AMULET)
                     continue;
@@ -101,7 +101,7 @@ static bool _surge_identify_boosters(spell_type spell)
             // of fire (or both of ice)...let's skip it.
             if (num_unknown == 1)
             {
-                for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; ++i)
+                for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
                 {
                     if (i == EQ_AMULET)
                         continue;
