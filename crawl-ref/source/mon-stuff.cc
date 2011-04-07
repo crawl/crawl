@@ -4746,6 +4746,10 @@ void temperature_increment(float degree)
 
 void temperature_decrement(float degree)
 {
+    // No cooling off while you're angry!
+    if (you.duration[DUR_BERSERK])
+        return;
+
     you.temperature -= degree;
     if (temperature() <= TEMP_MIN)
         you.temperature = TEMP_MIN;

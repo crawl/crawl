@@ -2627,6 +2627,12 @@ static void _decrement_durations()
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
             mpr("You are exhausted.", MSGCH_WARN);
 
+        if (you.species == SP_LAVA_ORC)
+        {
+            mpr("You feel less hot-headed.");
+            temperature_decrement(16);
+        }
+
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
 
