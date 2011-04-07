@@ -11,12 +11,9 @@
 #include "mt19937ar.h"
 #include "syscalls.h"
 
-#ifdef USE_MORE_SECURE_SEED
-
 #ifdef UNIX
 // for times()
 #include <sys/times.h>
-#endif
 
 // for getpid()
 #include <sys/types.h>
@@ -61,7 +58,6 @@ void seed_rng(uint32_t seed)
 void seed_rng()
 {
     uint32_t seed = time(NULL);
-#ifdef USE_MORE_SECURE_SEED
 
     /* (at least) 256-bit wide seed */
     uint32_t seed_key[8];
@@ -76,10 +72,6 @@ void seed_rng()
 
     read_urandom((char*)(&seed_key[1]), sizeof(seed_key[0]) * 7);
     seed_rng(seed_key, 8);
-
-#else
-    seed_rng(seed);
-#endif
 }
 
 // MT19937 -- see mt19937ar.cc for details
