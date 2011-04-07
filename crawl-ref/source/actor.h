@@ -229,6 +229,8 @@ public:
     virtual int adjusted_body_armour_penalty(int scale = 1,
                                              bool use_size = false) const = 0;
     virtual int adjusted_shield_penalty(int scale) const = 0;
+    virtual int armour_tohit_penalty(bool random_factor) const = 0;
+    virtual int shield_tohit_penalty(bool random_factor) const = 0;
 
     virtual int mons_species() const = 0;
 
@@ -262,6 +264,7 @@ public:
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
     virtual bool is_wall_clinging() const;
+    virtual bool is_banished() const = 0;
     virtual bool can_cling_to_walls() const = 0;
     virtual bool can_cling_to(const coord_def& p) const;
     virtual void check_clinging(bool stepped);

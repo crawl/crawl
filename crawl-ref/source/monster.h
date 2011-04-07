@@ -353,6 +353,7 @@ public:
     flight_type flight_mode() const;
     bool is_levitating() const;
     bool can_cling_to_walls() const;
+    bool is_banished() const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;
@@ -437,9 +438,11 @@ public:
     int     shield_bypass_ability(int tohit) const;
 
     // Combat-related class methods
-    int     unadjusted_body_armour_penalty() const { return 0; };
-    int     adjusted_body_armour_penalty(int, bool) const { return 0; };
-    int     adjusted_shield_penalty(int) const { return 0; };
+    int     unadjusted_body_armour_penalty() const { return 0; }
+    int     adjusted_body_armour_penalty(int, bool) const { return 0; }
+    int     adjusted_shield_penalty(int) const { return 0; }
+    int     armour_tohit_penalty(bool) const { return 0; }
+    int     shield_tohit_penalty(bool) const { return 0; }
 
     actor_type atype() const { return ACT_MONSTER; }
     monster* as_monster() { return this; }

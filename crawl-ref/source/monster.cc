@@ -3464,6 +3464,11 @@ bool monster::is_levitating() const
     return (flight_mode() == FL_LEVITATE);
 }
 
+bool monster::is_banished() const
+{
+    return (!alive() && flags & MF_BANISHED);
+}
+
 int monster::mons_species() const
 {
     return ::mons_species(type);

@@ -43,11 +43,9 @@ public:
     int       attacker_shield_penalty;
 
     // Combined to-hit penalty from armour and shield.
-    // TODO: Remove and replace with attacker_*_tohit_penalty
-    int       player_armour_tohit_penalty;
-    int       player_shield_tohit_penalty;
+    int       attacker_armour_tohit_penalty;
+    int       attacker_shield_tohit_penalty;
 
-    // TODO: Replace with attack::unarmed_capable
     bool      can_do_unarmed;
 
     // Miscast to cause after special damage is done. If miscast_level == 0

@@ -380,6 +380,7 @@ public:
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool can_cling_to_walls() const;
+    bool is_banished() const;
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;
@@ -618,6 +619,8 @@ public:
     int adjusted_body_armour_penalty(int scale = 1,
                                      bool use_size = false) const;
     int adjusted_shield_penalty(int scale = 1) const;
+    int armour_tohit_penalty(bool random_factor) const;
+    int shield_tohit_penalty(bool random_factor) const;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill) const;
