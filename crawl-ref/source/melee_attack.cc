@@ -206,18 +206,6 @@ bool melee_attack::handle_phase_end()
     return true;
 }
 
-
-bool melee_attack::is_banished(const actor *a) const
-{
-    if (!a || a->alive())
-        return (false);
-
-    if (a->atype() == ACT_PLAYER)
-        return (you.banished);
-    else
-        return (a->as_monster()->flags & MF_BANISHED);
-}
-
 void melee_attack::check_autoberserk()
 {
     if (weapon
@@ -4858,7 +4846,7 @@ void melee_attack::mons_perform_attack_rounds()
             // Defender banished.  Bail before chaos_killed_defender()
             // is called, since the defender is still alive in the
             // Abyss.
-            if (is_banished(defender))
+            if (defender->is_banished())
             {
                 if (chaos_attack && attacker->alive())
                     chaos_affects_attacker();
