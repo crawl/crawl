@@ -1,8 +1,3 @@
-/*
- *  File:       tiledoll.h
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #ifdef USE_TILE
 #ifndef TILEDOLL_H
 #define TILEDOLL_H

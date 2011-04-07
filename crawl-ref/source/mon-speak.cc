@@ -1,7 +1,7 @@
-/*
- *  File:       mon-speak.cc
- *  Summary:    Functions to handle speaking monsters
- */
+/**
+ * @file
+ * @brief Functions to handle speaking monsters
+**/
 
 #include "AppHdr.h"
 

@@ -5,7 +5,7 @@
 #include "pattern.h"
 #include "newgame_def.h"
 
-class InitLineInput;
+class LineInput;
 struct game_options
 {
 public:
@@ -13,7 +13,7 @@ public:
     void reset_options();
 
     void read_option_line(const std::string &s, bool runscripts = false);
-    void read_options(InitLineInput &, bool runscripts,
+    void read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
 
     void include(const std::string &file, bool resolve, bool runscript);
@@ -38,7 +38,7 @@ public:
     // View options
     std::vector<feature_override> feature_overrides;
     std::vector<mon_display>      mon_glyph_overrides;
-    unsigned cset_override[NUM_CSET][NUM_DCHAR_TYPES];
+    ucs_t cset_override[NUM_DCHAR_TYPES];
 
     std::string save_dir;       // Directory where saves and bones go.
     std::string macro_dir;      // Directory containing macro.txt
@@ -94,7 +94,7 @@ public:
     int         default_friendly_pickup;
 
     bool        show_gold_turns; // Show gold and turns in HUD.
-    bool        show_real_turns; // Show real turns instead of actions.
+    bool        show_game_turns; // Show game turns instead of player turns.
     bool        show_beam;       // Show targeting beam by default.
 
     uint32_t    autopickups;     // items to autopickup
@@ -157,7 +157,7 @@ public:
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
     char_set_type  char_set;
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table;
+    FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table;
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
@@ -251,6 +251,8 @@ public:
 
     // Some experimental improvements to explore
     bool        explore_improved;
+
+    bool        travel_key_stop;   // Travel stops on keypress.
 
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
@@ -407,8 +409,7 @@ private:
     void clear_feature_overrides();
     void clear_cset_overrides();
     void add_cset_override(char_set_type set, const std::string &overrides);
-    void add_cset_override(char_set_type set, dungeon_char_type dc,
-                           unsigned symbol);
+    void add_cset_override(char_set_type set, dungeon_char_type dc, int symbol);
     void add_feature_override(const std::string &);
 
     void add_message_colour_mappings(const std::string &);
@@ -441,6 +442,8 @@ private:
 
     static const std::string interrupt_prefix;
 };
+
+ucs_t get_glyph_override(int c);
 
 #ifdef DEBUG_GLOBALS
 #define Options (*real_Options)

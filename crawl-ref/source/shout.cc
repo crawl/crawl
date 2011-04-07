@@ -1,7 +1,7 @@
-/*
- * File:      shout.cc
- * Summary:   Stealth, noise, shouting.
- */
+/**
+ * @file
+ * @brief Stealth, noise, shouting.
+**/
 
 #include "AppHdr.h"
 

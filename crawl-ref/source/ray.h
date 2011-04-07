@@ -1,7 +1,7 @@
-/*
- *  File:       ray.h
- *  Summary:    Ray definition
- */
+/**
+ * @file
+ * @brief Ray definition
+**/
 
 #ifndef RAY_H
 #define RAY_H

@@ -1,7 +1,7 @@
-/*
- * File:     viewmap.cc
- * Summary:  Showing the level map (X and background).
- */
+/**
+ * @file
+ * @brief Showing the level map (X and background).
+**/
 
 #include "AppHdr.h"
 
@@ -91,7 +91,6 @@ static bool _travel_colour_override(const coord_def& p)
     else
         return false;
 }
-#endif
 
 static bool _is_explore_horizon(const coord_def& c)
 {
@@ -110,8 +109,10 @@ static bool _is_explore_horizon(const coord_def& c)
                 return true;
             }
         }
+
     return false;
 }
+#endif
 
 wchar_t get_sightmap_char(dungeon_feature_type feat)
 {
@@ -608,13 +609,13 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     const int columns = get_number_of_cols();
     const formatted_string help =
         formatted_string::parse_string("(Press <w>?</w> for help)");
-    const int helplen = std::string(help).length();
+    const int helplen = help.width();
 
     if (columns < helplen)
         return;
 
     const formatted_string title = feats.format();
-    const int titlelen = title.length();
+    const int titlelen = title.width();
     if (columns < titlelen)
         return;
 
@@ -631,10 +632,9 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     cgotoxy(1, 1);
     textcolor(WHITE);
 
-    cprintf("%-*s",
-            columns - helplen,
-            (upcase_first(place_name(
-                    get_packed_place(), true, true)) + pstr).c_str());
+    cprintf("%s", chop_string(upcase_first(place_name(
+                          get_packed_place(), true, true)) + pstr,
+                      columns - helplen).c_str());
 
     cgotoxy(std::max(1, (columns - titlelen) / 2), 1);
     title.display();

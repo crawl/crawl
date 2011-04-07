@@ -1,10 +1,7 @@
 /**
  * @file
- * @section DESCRIPTION
- *
- * File: mon-death.cc.
- * Summary: Contains monster death functionality, including Dowan and Duvessa,
- *          Kirke, Pikel, shedu and spirits.
+ * @brief Contains monster death functionality, including Dowan and Duvessa,
+ *        Kirke, Pikel, shedu and spirits.
 **/
 
 #include "AppHdr.h"

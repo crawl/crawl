@@ -1,9 +1,8 @@
-/*
- *  File:       spl-data.h
- *  Summary:    Spell definitions and descriptions. See spell_desc struct in
- *              spl-util.cc.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Spell definitions and descriptions. See spell_desc struct in
+ *             spl-util.cc.
+**/
 
 #ifndef SPLDATA_H
 #define SPLDATA_H

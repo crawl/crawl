@@ -1,7 +1,7 @@
-/*
- *  File:     spl-clouds.cc
- *  Summary:  Cloud creating spells.
- */
+/**
+ * @file
+ * @brief Cloud creating spells.
+**/
 
 #include "AppHdr.h"
 

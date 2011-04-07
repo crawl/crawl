@@ -1,8 +1,7 @@
-/*
- *  File:       spl-miscast.h
- *  Summary:    Spell miscast class.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Spell miscast class.
+**/
 
 #ifndef SPL_MISCAST_H
 #define SPL_MISCAST_H
@@ -117,7 +116,8 @@ private:
     bool _lose_stat(stat_type which_stat, int8_t stat_loss);
     void _potion_effect(potion_type pot_eff, int pot_pow);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
-    void send_abyss();
+    bool _send_to_abyss();
+    bool _malign_gateway();
     void _do_poison(int amount);
 
     bool avoid_lethal(int dam);

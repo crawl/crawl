@@ -5,10 +5,26 @@
 #include "feature.h"
 #include "options.h"
 #include "state.h"
+#include "unicode.h"
 
 // For order and meaning of symbols, see dungeon_char_type in enum.h.
 static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
 {
+    // CSET_DEFAULT
+    // It must be limited to stuff present both in CP437 and WGL4.
+    {
+        '#', '*', '.', ',', '\'', '+', '^', '>', '<',
+        '#', '_', 0x2229, 0x2320, 0x2248, '8', '{',
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
+        0x2302, // CP437 but "optional" in WGL4
+#else
+        0x2206, // WGL4 and DEC
+#endif
+        '0', ')', '[', '/', '%', '?', '=', '!', '(',
+        ':', '|', '}', '%', '$', '"', 0xA7, 0x2663,
+        ' ', '!', '#', '%', '+', ')', '*', '+',     // space .. fired_burst
+        '/', '=', '?', 'X', '[', '`', '#'           // fi_stick .. explosion
+    },
     // CSET_ASCII
     {
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
@@ -21,26 +37,26 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
 
     // CSET_IBM - this is ANSI 437
     {
-        177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall .. stairs up
-        '#', 220, 239, 244, 247, '8', '{', '{',        // grate .. item detect
+        0x2592, 0x2591, 0x2219, 0xb7, '\'', 0x25a0, '^', '>', '<', // wall .. stairs up
+        '#', 0x2584, 0x2229, 0x2320, 0x2248, '8', '{', '{',        // grate .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        236, '\\', '}', '%', '$', '"', '#', 234,       // book .. tree
+        0x221e, '\\', '}', '%', '$', '"', '#', 0x3a9,  // book .. tree
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 
-    // CSET_DEC - remember: 224-255 are mapped to shifted 96-127
+    // CSET_DEC
     // It's better known as "vt100 line drawing characters".
     {
-        225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall .. stairs up
-        '#', 251, 182, 167, 187, '8', 171, 168,        // grate .. item detect
+        0x2592, 0x2666, 0xb7, ':', '\'', 0x253c, '^', '>', '<', // wall .. stairs up
+        '#', 0x3c0, 0xb6, 0xa7, 0xbb, '8', 0x2192, 0xa8,        // grate .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '\\', '}', '%', '$', '"', '#', '7',       // book .. tree
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 
-    // CSET_UNICODE
+    // CSET_OLD_UNICODE
     /* Beware, some popular terminals (PuTTY, xterm) are incapable of coping with
        the lack of a character in the chosen font, and most popular fonts have a
        quite limited repertoire.  A subset that is reasonably likely to be present
@@ -52,7 +68,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         0x2592, 0x2591, 0xB7, 0x25E6, '\'', 0x25FC, '^', '>', '<',
         '#', '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2206,
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
-        0x221E, '|', '}', '%', '$', '"', '#', 0x2663,
+        0x221E, '|', '}', '%', '$', '"', 0xA7, 0x2663,
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -70,6 +86,10 @@ dungeon_char_type dchar_by_name(const std::string &name)
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
         "item_stave", "item_miscellany", "item_corpse", "item_gold",
         "item_amulet", "cloud", "tree",
+        "space", "fired_flask", "fired_bolt", "fired_chunk", "fired_book",
+        "fired_weapon", "fired_zap", "fired_burst", "fired_stick",
+        "fired_trinket", "fired_scroll", "fired_debug", "fired_armour",
+        "fired_missile", "explosion",
     };
 
     for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
@@ -83,10 +103,12 @@ void init_char_table(char_set_type set)
 {
     for (int i = 0; i < NUM_DCHAR_TYPES; i++)
     {
-        if (Options.cset_override[set][i])
-            Options.char_table[i] = Options.cset_override[set][i];
+        ucs_t c;
+        if (Options.cset_override[i])
+            c = Options.cset_override[i];
         else
-            Options.char_table[i] = dchar_table[set][i];
+            c = dchar_table[set][i];
+        Options.char_table[i] = c;
     }
 }
 
@@ -98,20 +120,12 @@ unsigned dchar_glyph(dungeon_char_type dchar)
         return (0);
 }
 
-std::string stringize_glyph(unsigned glyph)
+std::string stringize_glyph(ucs_t glyph)
 {
-    if (crawl_state.glyph2strfn && Options.char_set == CSET_UNICODE)
-        return (*crawl_state.glyph2strfn)(glyph);
+    char buf[5];
+    buf[wctoutf8(buf, glyph)] = 0;
 
-    return (std::string(1, glyph));
-}
-
-int multibyte_strlen(const std::string &s)
-{
-    if (crawl_state.multibyte_strlen)
-        return (*crawl_state.multibyte_strlen)(s);
-
-    return (s.length());
+    return buf;
 }
 
 dungeon_char_type get_feature_dchar(dungeon_feature_type feat)

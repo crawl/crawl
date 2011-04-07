@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-item.h
- *  Summary:    Item related wizard functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Item related wizard functions.
+**/
 
 #ifndef WIZITEM_H
 #define WIZITEM_H

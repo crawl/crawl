@@ -1,7 +1,7 @@
-/*
- * File:     zap-data.h
- * Summary:  Zap definitions. See zap_info struct in beam.cc.
- */
+/**
+ * @file
+ * @brief Zap definitions. See zap_info struct in beam.cc.
+**/
 
 #ifndef ZAP_DATA_H
 #define ZAP_DATA_H
@@ -528,7 +528,7 @@
     ZAP_STRIKING,
     "force bolt",
     25,
-    new dicedef_calculator<1, 5, 0, 1>,
+    new dicedef_calculator<1, 8, 0, 1>,
     new tohit_calculator<8, 1, 10>,
     BLACK,
     false,

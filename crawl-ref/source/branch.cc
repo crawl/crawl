@@ -1,8 +1,3 @@
-/*
- *  File:       branch.cc
- *  Created by: haranp on Wed Dec 20 20:08:15 2006 UTC
- */
-
 #include "AppHdr.h"
 
 #include "branch.h"

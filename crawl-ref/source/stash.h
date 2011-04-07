@@ -1,8 +1,7 @@
-/*
- *  File:       stash.h
- *  Summary:    Classes tracking player stashes
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Classes tracking player stashes
+**/
 
 #ifndef STASH_H
 #define STASH_H
@@ -10,7 +9,6 @@
 #include "shopping.h"
 #include <string>
 
-#include <iostream>
 #include <map>
 #include <vector>
 
@@ -68,7 +66,7 @@ public:
                         stash_search_result &res)
             const;
 
-    void write(std::ostream &os, int refx = 0, int refy = 0,
+    void write(FILE *f, int refx = 0, int refy = 0,
                  std::string place = "",
                  bool identify = false) const;
 
@@ -94,6 +92,7 @@ public:
 
 private:
     void _update_corpses(int rot_time);
+    void _update_identification();
     void add_item(const item_def &item, bool add_to_front = false);
 
 private:
@@ -138,7 +137,7 @@ public:
     bool show_menu(const level_pos &place, bool can_travel) const;
     bool is_visited() const { return items.size() || visited; }
 
-    void write(std::ostream &os, bool identify = false) const;
+    void write(FILE *f, bool identify = false) const;
 
     void reset() { items.clear(); visited = true; }
     void set_name(const std::string& s) { name = s; }
@@ -244,8 +243,6 @@ struct stash_search_result
     }
 };
 
-extern std::ostream &operator << (std::ostream &, const Stash &);
-
 class LevelStashes
 {
 public:
@@ -287,7 +284,7 @@ public:
     void  save(writer&) const;
     void  load(reader&);
 
-    void  write(std::ostream &os, bool identify = false) const;
+    void  write(FILE *f, bool identify = false) const;
     std::string level_name() const;
     std::string short_level_name() const;
 
@@ -300,6 +297,7 @@ public:
  private:
     int _num_enabled_stashes() const;
     void _update_corpses(int rot_time);
+    void _update_identification();
 
  private:
     typedef std::map<int, Stash>  stashes_t;
@@ -313,8 +311,6 @@ public:
     friend class StashTracker;
     friend class ST_ItemIterator;
 };
-
-extern std::ostream &operator << (std::ostream &, const LevelStashes &);
 
 class StashTracker
 {
@@ -351,6 +347,7 @@ public:
     };
 
     void update_corpses();
+    void update_identification();
 
     void update_visible_stashes(StashTracker::stash_update_mode = ST_PASSIVE);
 
@@ -370,7 +367,7 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    void write(std::ostream &os, bool identify = false) const;
+    void write(FILE *f, bool identify = false) const;
 
     void dump(const char *filename, bool identify = false) const;
 

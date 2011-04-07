@@ -220,15 +220,18 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     }
 }
 
+void tile_clear_flavour(const coord_def &p)
+{
+    env.tile_flv(p).floor   = 0;
+    env.tile_flv(p).wall    = 0;
+    env.tile_flv(p).feat    = 0;
+    env.tile_flv(p).special = 0;
+}
+
 void tile_clear_flavour()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        env.tile_flv(*ri).floor   = 0;
-        env.tile_flv(*ri).wall    = 0;
-        env.tile_flv(*ri).feat    = 0;
-        env.tile_flv(*ri).special = 0;
-    }
+        tile_clear_flavour(*ri);
 }
 
 // For floors and walls that have not already been set to a particular tile,
@@ -1050,7 +1053,10 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             cell.is_moldy = true;
         // Corpses have a blood puddle of their own.
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
+        {
             cell.is_bloody = true;
+            cell.blood_rotation = blood_rotation(gc);
+        }
     }
 
     const dungeon_feature_type feat = grd(gc);

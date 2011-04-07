@@ -1,8 +1,7 @@
-/*
- *  File:       religion.cc
- *  Summary:    Misc religion related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc religion related functions.
+**/
 
 #include "AppHdr.h"
 
@@ -325,7 +324,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step out of the time flow"
     },
     // Ashenzari
-    { "",
+    { "Ashenzari supports your low skills.",
       "The more cursed you are, the more Ashenzari helps you learn.",
       "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
@@ -848,8 +847,8 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_ELYVILON:
-        dislikes.push_back("you kill living things while asking for sparing "
-                           "your life yourself");
+        dislikes.push_back("you kill living things while asking for "
+                           "your life to be spared");
         break;
 
     case GOD_YREDELEMNUL:
@@ -1073,7 +1072,7 @@ static monster_type _yred_servants[] =
     MONS_MUMMY, MONS_WIGHT, MONS_FLYING_SKULL, MONS_WRAITH,
     MONS_ROTTING_HULK, MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR,
     MONS_FLAMING_CORPSE, MONS_FLAYED_GHOST, MONS_SKELETAL_WARRIOR,
-    MONS_EIDOLON, MONS_GHOUL, MONS_DEATH_COB, MONS_BONE_DRAGON
+    MONS_GHOUL, MONS_DEATH_COB, MONS_BONE_DRAGON
 };
 
 #define MIN_YRED_SERVANT_THRESHOLD 3
@@ -1104,6 +1103,8 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     int created = 0;
     if (force_hostile)
     {
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
         for (; how_many > 0; --how_many)
         {
             if (create_monster(mg) != -1)
@@ -2179,8 +2180,8 @@ bool do_god_gift(bool forced)
                             gift = BOOK_CALLINGS;
                         else if (!you.had_book[BOOK_SUMMONINGS])
                             gift = BOOK_SUMMONINGS;
-                        else if (!you.had_book[BOOK_DEMONOLOGY])
-                            gift = BOOK_DEMONOLOGY; // Summoning books.
+                        else if (!you.had_book[BOOK_GRAND_GRIMOIRE])
+                            gift = BOOK_GRAND_GRIMOIRE; // Summoning books.
                     }
                 }
             }
@@ -2423,6 +2424,9 @@ static void _erase_between(std::string& s,
 
 std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
+    if (crawl_state.game_is_zotdef() && strstr(pmsg, "Abyss"))
+        return "";
+
     std::string pm = pmsg;
 
     // Message portions in [] sections are ability upgrades.
@@ -2462,6 +2466,8 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
     you.piety = piety_breakpoint(breakpoint);
 
     std::string pm = adjust_abil_message(pmsg);
+    if (pm.empty())
+        return false;
 
     you.piety = old_piety;
 
@@ -2885,14 +2891,10 @@ void excommunication(god_type new_god)
     switch (old_god)
     {
     case GOD_XOM:
-        xom_acts(false, abs(you.piety - 100) * 2);
         _inc_penance(old_god, 50);
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
-                      5 + you.experience_level, random2avg(88, 3),
-                      "the malice of Kikubaaqudgha");
         _inc_penance(old_god, 30);
         break;
 
@@ -2904,26 +2906,14 @@ void excommunication(god_type new_god)
                                GOD_YREDELEMNUL);
             add_daction(DACT_ALLY_YRED_SLAVE);
         }
-
-        MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
-                      5 + you.experience_level, random2avg(88, 3),
-                      "the anger of Yredelemnul");
         _inc_penance(old_god, 30);
         break;
 
     case GOD_VEHUMET:
-        MiscastEffect(&you, -old_god,
-                      (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
-                      8 + you.experience_level, random2avg(98, 3),
-                      "the wrath of Vehumet");
         _inc_penance(old_god, 25);
         break;
 
     case GOD_MAKHLEB:
-        MiscastEffect(&you, -old_god,
-                      (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
-                      8 + you.experience_level, random2avg(98, 3),
-                      "the fury of Makhleb");
         _inc_penance(old_god, 25);
         break;
 
@@ -2933,9 +2923,7 @@ void excommunication(god_type new_god)
 
         add_daction(DACT_ALLY_TROG);
 
-        // Penance has to come before retribution to prevent "mollify"
         _inc_penance(old_god, 50);
-        divine_retribution(old_god);
         break;
 
     case GOD_BEOGH:
@@ -2953,7 +2941,6 @@ void excommunication(god_type new_god)
             fall_into_a_pool(you.pos(), true, grd(you.pos()));
 
         _inc_penance(old_god, 50);
-        // No instant retribution, the orcs could be farmed.
         break;
 
     case GOD_SIF_MUNA:
@@ -2966,11 +2953,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_LUGONU:
-        if (you.level_type == LEVEL_DUNGEON)
-        {
-            simple_god_message(" casts you into the Abyss!", old_god);
-            banished(DNGN_ENTER_ABYSS, "Lugonu's wrath");
-        }
         _inc_penance(old_god, 50);
         break;
 
@@ -3041,14 +3023,6 @@ void excommunication(god_type new_god)
         if (you.duration[DUR_SLIMIFY])
             you.duration[DUR_SLIMIFY] = 0;
 
-        if (you.can_safely_mutate())
-        {
-            god_speaks(old_god, "You feel Jiyva alter your body.");
-
-            for (int i = 0; i < 2; ++i)
-                mutate(RANDOM_BAD_MUTATION, true, false, true);
-        }
-
         _inc_penance(old_god, 30);
         break;
     case GOD_FEDHAS:
@@ -3058,13 +3032,16 @@ void excommunication(god_type new_god)
             add_daction(DACT_ALLY_PLANT);
         }
         _inc_penance(old_god, 30);
-        divine_retribution(old_god);
         break;
 
     case GOD_ASHENZARI:
         if (you.transfer_skill_points > 0)
             ashenzari_end_transfer(false, true);
-        _inc_penance(old_god, 25);
+        // max_level can be much higher, multi-Zig felids may lose millions
+        you.exp_docked = exp_needed(you.max_level + 1)
+                       - exp_needed(you.max_level);
+        you.exp_docked_total = you.exp_docked;
+        _inc_penance(old_god, 50);
         break;
 
     case GOD_CHEIBRIADOS:

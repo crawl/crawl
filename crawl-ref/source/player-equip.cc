@@ -103,7 +103,7 @@ bool unmeld_slot(equipment_type slot, bool msg)
 }
 
 static void _equip_weapon_effect(item_def& item, bool showMsgs);
-static void _unequip_weapon_effect(item_def& item, bool showMsgs);
+static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
 static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld);
 static void _equip_jewellery_effect(item_def &item);
@@ -148,7 +148,7 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
            || eq == EQ_RINGS && you.species == SP_OCTOPUS);
 
     if (slot == EQ_WEAPON)
-        _unequip_weapon_effect(item, msg);
+        _unequip_weapon_effect(item, msg, meld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _unequip_armour_effect(item, meld);
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
@@ -218,6 +218,9 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
         mpr("You feel rather ponderous.");
         che_handle_change(CB_PONDEROUS, 1);
     }
+
+    if (proprt[ARTP_EYESIGHT])
+        autotoggle_autopickup(false);
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
@@ -599,9 +602,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                     break;
 
                 case SPWPN_PAIN:
-                    if (you.skills[SK_NECROMANCY] == 0)
+                    if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
-                    else if (you.skills[SK_NECROMANCY] <= 4)
+                    else if (you.skill(SK_NECROMANCY) <= 4)
                         mpr("Pain shudders through your arm!");
                     else
                         mpr("A searing pain shoots up your arm!");
@@ -677,8 +680,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
-static void _unequip_weapon_effect(item_def& item, bool showMsgs)
+static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 {
+    you.wield_change = true;
     you.m_quiver->on_weapon_changed();
 
     // Call this first, so that the unrandart func can set showMsgs to
@@ -758,7 +762,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs)
                 // int effect = 9 -
                 //        random2avg(you.skills[SK_TRANSLOCATIONS] * 2, 2);
 
-                if (you.duration[DUR_WEAPON_BRAND] == 0)
+                if (you.duration[DUR_WEAPON_BRAND] == 0 && !meld)
                 {
                     // Makes no sense to discourage unwielding a temporarily
                     // branded weapon since you can wait it out. This also
@@ -881,7 +885,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_ARCHMAGI:
-            if (!you.skills[SK_SPELLCASTING])
+            if (!you.skill(SK_SPELLCASTING))
                 mpr("You feel strangely lacking in power.");
             else
                 mpr("You feel powerful.");
@@ -936,6 +940,9 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
 
     if (get_item_slot(arm) == EQ_SHIELD)
         warn_shield_penalties();
+
+    if (get_item_slot(arm) == EQ_BODY_ARMOUR)
+        warn_armour_penalties();
 
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
@@ -1001,7 +1008,9 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_LEVITATION:
-        if (you.species != SP_KENKU || you.experience_level < 15)
+        if (you.attribute[ATTR_PERM_LEVITATION] == 0)
+            break;
+        else if (you.species != SP_KENKU || you.experience_level < 15)
             you.attribute[ATTR_PERM_LEVITATION] = 0;
         land_player();
         break;

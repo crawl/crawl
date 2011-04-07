@@ -1,8 +1,7 @@
-/*
- *  File:       newgame.cc
- *  Summary:    Functions used when starting a new game.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when starting a new game.
+**/
 
 #include "AppHdr.h"
 
@@ -394,9 +393,7 @@ static bool _reroll_random(newgame_def* ng)
 {
     clrscr();
 
-    std::string specs = species_name(ng->species);
-    if (specs.length() > 79)
-        specs = specs.substr(0, 79);
+    std::string specs = chop_string(species_name(ng->species), 79, false);
 
     cprintf("You are a%s %s %s.\n",
             (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
@@ -482,9 +479,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     {
         clrscr();
 
-        std::string specs = species_name(ng->species);
-        if (specs.length() > 79)
-            specs = specs.substr(0, 79);
+        std::string specs = chop_string(species_name(ng->species), 79, false);
 
         cprintf("You are a%s %s %s.\n",
                 (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
@@ -1349,6 +1344,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 }
                 else
                 {
+                    selection.at(0)->select(false);
                     continue;
                 }
             }
@@ -2857,10 +2853,11 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     unsigned int padding_width = 0;
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
     {
-        if (padding_width < maps.at(i)->desc_or_name().length())
-            padding_width = maps.at(i)->desc_or_name().length();
+        padding_width = std::max<int>(padding_width,
+                                      strwidth(maps.at(i)->desc_or_name()));
     }
     padding_width += 4; // Count the letter and " - "
+    padding_width = std::min<int>(padding_width, MENU_COLUMN_WIDTH - 1);
 
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
     {
@@ -2875,12 +2872,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         text += " - ";
 
         text += maps[i]->desc_or_name();
-        if (static_cast<int>(text.length()) > MENU_COLUMN_WIDTH - 1)
-            text = text.substr(0, MENU_COLUMN_WIDTH - 1);
-
-        // Add padding
-        if (padding_width > text.size())
-            text.append(padding_width - text.size(), ' ');
+        text = chop_string(text, padding_width);
 
         tmp->set_text(text);
         tmp->add_hotkey(letter);
@@ -2977,8 +2969,8 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     //tmp->set_visible(true);
 
     // Only add tab entry if we have a previous map choice
-    if (crawl_state.game_is_sprint()
-        && !defaults.map.empty() && _char_defined(defaults))
+    if (crawl_state.game_is_sprint() && !defaults.map.empty()
+        && defaults.type == GAME_TYPE_SPRINT && _char_defined(defaults))
     {
         tmp = new TextItem();
         text.clear();

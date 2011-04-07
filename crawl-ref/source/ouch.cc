@@ -1,8 +1,7 @@
-/*
- *  File:       ouch.cc
- *  Summary:    Functions used when Bad Things happen to the player.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when Bad Things happen to the player.
+**/
 
 #include "AppHdr.h"
 
@@ -74,6 +73,7 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
+#include "syscalls.h"
 #include "xom.h"
 
 
@@ -1222,7 +1222,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         you.reset_escaped_death();
 
         // Ensure some minimal information about Xom's involvement.
-        if (aux == NULL || strlen(aux) == 0)
+        if (aux == NULL || !*aux)
         {
             if (death_type != KILLED_BY_XOM)
                 aux = "Xom";
@@ -1366,7 +1366,7 @@ void screen_end_game(std::string text)
     if (!text.empty())
     {
         clrscr();
-        linebreak_string2(text, get_number_of_cols());
+        linebreak_string(text, get_number_of_cols());
         display_tagged_block(text);
 
         if (!crawl_state.seen_hups)

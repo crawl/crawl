@@ -92,7 +92,7 @@ ENDMAP
 # Dummy probability balancer vault for non-dungeon branches.
 #
 NAME: dummy_balancer_other
-DEPTH: 1-, !D
+DEPTH: 1-, !D, !Zot:1-4
 # Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
 # by depth.
 TAGS: dummy
@@ -106,7 +106,7 @@ ENDMAP
 # Elevator
 #
 NAME:    lemuel_elevator
-DEPTH:   D, Vault, Elf, Crypt, Zot, Tar, Dis, Geh, Coc
+DEPTH:   D:2-26, Vault:2-7, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
 ORIENT:  float
 TAGS:    allow_dup
 SUBST:   m:mn
@@ -813,6 +813,7 @@ ENDMAP
 # Lions and Tigers and Bears, oh my! (or at least bears)
 #
 NAME:   lemuel_bear_cage
+ORIENT: float
 DEPTH:  D:7-21
 MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon

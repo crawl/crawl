@@ -1,7 +1,7 @@
-/*
- * File:     behold.cc
- * Summary:  player methods dealing with mesmerisation.
- */
+/**
+ * @file
+ * @brief player methods dealing with mesmerisation.
+**/
 
 #include "AppHdr.h"
 

@@ -1,10 +1,9 @@
-/*
- *  File:       cloud.cc
- *  Summary:    Functions related to clouds.
- *  Written by: Brent Ross
+/**
+ * @file
+ * @brief Functions related to clouds.
  *
- *  Creating a cloud module so all the cloud stuff can be isolated.
- */
+ * Creating a cloud module so all the cloud stuff can be isolated.
+**/
 
 #include "AppHdr.h"
 
@@ -1374,7 +1373,7 @@ int get_cloud_colour(int cloudno)
         break;
 
     case CLOUD_POISON:
-        which_colour = (one_chance_in(3) ? LIGHTGREEN : GREEN);
+        which_colour = LIGHTGREEN;
         break;
 
     case CLOUD_BLUE_SMOKE:

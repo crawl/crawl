@@ -1,7 +1,7 @@
-/*
- * File:     player-act.cc
- * Summary:  Implementing the actor interface for player.
- */
+/**
+ * @file
+ * @brief Implementing the actor interface for player.
+**/
 
 #include "AppHdr.h"
 
@@ -155,7 +155,7 @@ size_type player::body_size(size_part_type psize, bool base) const
         return species_size(species, psize);
     else
     {
-        size_type tf_size = transform_size(psize);
+        size_type tf_size = transform_size(form, psize);
         return (tf_size == SIZE_CHARACTER ? species_size(species, psize)
                                           : tf_size);
     }
@@ -269,6 +269,9 @@ const item_def *player::slot_item(equipment_type eq, bool include_melded) const
 // Returns the item in the player's weapon slot.
 item_def *player::weapon(int /* which_attack */)
 {
+    if (you.melded[EQ_WEAPON])
+        return (NULL);
+
     return (slot_item(EQ_WEAPON, false));
 }
 

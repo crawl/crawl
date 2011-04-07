@@ -1,8 +1,7 @@
-/*
- *  File:       package.cc
- *  Summary:    A container for chunks that make up the save file.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief A container for chunks that make up the save file.
+**/
 
 /*
 Guarantees:
@@ -95,7 +94,7 @@ package::package(const char* file, bool writeable, bool empty)
 
     if (empty)
     {
-        fd = open(file, O_RDWR | O_CREAT | O_TRUNC | O_BINARY, 0666);
+        fd = open_u(file, O_RDWR | O_CREAT | O_TRUNC | O_BINARY, 0666);
         if (fd == -1)
             sysfail("can't create save file (%s)", file);
 
@@ -110,7 +109,7 @@ package::package(const char* file, bool writeable, bool empty)
     }
     else
     {
-        fd = open(file, (writeable? O_RDWR : O_RDONLY) | O_BINARY, 0666);
+        fd = open_u(file, (writeable? O_RDWR : O_RDONLY) | O_BINARY, 0666);
         if (fd == -1)
             sysfail("can't open save file (%s)", file);
 
@@ -564,7 +563,7 @@ void package::unlink()
     abort();
     close(fd);
     fd = -1;
-    ::unlink(filename.c_str());
+    ::unlink_u(filename.c_str());
 }
 
 

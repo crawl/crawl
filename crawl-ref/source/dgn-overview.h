@@ -1,8 +1,7 @@
-/*
- *  File:       dgn-overview.h
- *  Summary:    "Overview" functionality
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief "Overview" functionality
+**/
 
 
 #ifndef OVERMAP_H

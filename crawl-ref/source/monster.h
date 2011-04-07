@@ -2,7 +2,6 @@
 #define MONSTER_H
 
 #include "actor.h"
-#include <stdint.h>
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
@@ -200,7 +199,7 @@ public:
 
     bool is_travelling() const;
     bool is_patrolling() const;
-    bool needs_transit() const;
+    bool needs_abyss_transit() const;
     void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);
     bool find_home_near_place(const coord_def &c);
@@ -324,10 +323,10 @@ public:
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
-    bool is_holy() const;
-    bool is_unholy() const;
-    bool is_evil() const;
-    bool is_unclean() const;
+    bool is_holy(bool check_spells = true) const;
+    bool is_unholy(bool check_spells = true) const;
+    bool is_evil(bool check_spells = true) const;
+    bool is_unclean(bool check_spells = true) const;
     bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_artificial() const;

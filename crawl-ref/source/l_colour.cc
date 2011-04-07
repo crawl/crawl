@@ -1,7 +1,7 @@
-/*
- * File:     l_colour.cc
- * Summary:  Colour related functions
- */
+/**
+ * @file
+ * @brief Colour related functions
+**/
 
 #include "AppHdr.h"
 

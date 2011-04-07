@@ -1,8 +1,7 @@
-/*
- *  File:       dgn-overview.cc
- *  Summary:    Records location of stairs etc
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Records location of stairs etc
+**/
 
 #include "AppHdr.h"
 
@@ -568,13 +567,13 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
             // manually aligning the god columns: five whitespaces between columns
             switch (num_printed % 5)
             {
-            case 1: disp += std::string(14 - god_name(god, false).length(), ' ');
+            case 1: disp += std::string(14 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 2: disp += std::string(18 - god_name(god, false).length(), ' ');
+            case 2: disp += std::string(18 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 3: disp += std::string(13 - god_name(god, false).length(), ' ');
+            case 3: disp += std::string(13 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 4: disp += std::string(16 - god_name(god, false).length(), ' ');
+            case 4: disp += std::string(16 - strwidth(god_name(god, false)), ' ');
             }
     }
 
@@ -624,7 +623,7 @@ static std::string _get_shops(bool display)
 
             const std::string loc = ci_shops->first.id.describe(false, true);
             disp += loc;
-            column_count += loc.length();
+            column_count += strwidth(loc);
 
             disp += ": ";
             disp += "</brown>";
@@ -673,7 +672,7 @@ static std::string _get_notes()
         {
             const level_id li(branch.id, depth);
 
-            if (get_level_annotation(li).length() > 0)
+            if (!get_level_annotation(li).empty())
             {
                 notes_exist  = true;
                 has_notes[i] = true;
@@ -697,7 +696,7 @@ static std::string _get_notes()
             {
                 const level_id li(branch.id, depth);
 
-                if (get_level_annotation(li).length() > 0)
+                if (!get_level_annotation(li).empty())
                 {
                     sprintf(depth_str, "%d", depth);
 
@@ -782,7 +781,7 @@ bool unnotice_feature(const level_pos &pos)
 void display_overview()
 {
     std::string disp = overview_description_string(true);
-    linebreak_string(disp, get_number_of_cols() - 5, get_number_of_cols() - 1);
+    linebreak_string(disp, get_number_of_cols());
     formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
                        disp).show();
     redraw_screen();
@@ -1045,7 +1044,7 @@ void annotate_level()
 
     if (buf[0] == 0)
     {
-        if (get_level_annotation(li, true).length() > 0)
+        if (!get_level_annotation(li, true).empty())
         {
             if (!yesno("Really clear the annotation?", false, 'n'))
                 return;

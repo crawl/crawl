@@ -1419,6 +1419,17 @@
       }
     },
 
+    {  MST_IGNACIO,
+      {
+       SPELL_AGONY,
+       SPELL_PAIN,
+       SPELL_HASTE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_HASTE
+      }
+    },
+
     {  MST_HAROLD,
       {
        SPELL_NO_SPELL,

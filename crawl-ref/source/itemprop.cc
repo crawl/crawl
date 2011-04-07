@@ -1,8 +1,7 @@
-/*
- *  File:       itemprop.h
- *  Summary:    Misc functions.
- *  Written by: Brent Ross
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 #include "AppHdr.h"
 
@@ -263,7 +262,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLICING, 0 },
     { WPN_KATANA,                "katana",                14,  3, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 2 },
+        DAMV_SLICING, 0 },
     { WPN_BLESSED_KATANA,        "blessed katana",        15,  2, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
@@ -2786,7 +2785,7 @@ equipment_type get_item_slot(const item_def& item)
 
 equipment_type get_item_slot(object_class_type type, int sub_type)
 {
-    switch(type)
+    switch (type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:

@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-you.cc
- *  Summary:    Player related debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Player related debugging functions.
+**/
 
 #include "AppHdr.h"
 
@@ -259,7 +258,7 @@ void wizard_set_hunger_state()
 
     mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
 
-    const int c = tolower(getch());
+    const int c = tolower(getchk());
 
     // Values taken from food.cc.
     switch (c)
@@ -817,7 +816,7 @@ void wizard_edit_durations(void)
 
     char buf[80];
 
-    if (cancelable_get_line_autohist(buf, sizeof buf) || strlen(buf) == 0)
+    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;

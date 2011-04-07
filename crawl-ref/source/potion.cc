@@ -1,8 +1,7 @@
-/*
- *  File:       potion.cc
- *  Summary:    Potion and potion-like effects.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Potion and potion-like effects.
+**/
 
 #include "AppHdr.h"
 
@@ -20,6 +19,7 @@
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
+#include "godwrath.h"
 #include "hints.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -367,7 +367,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
         else
             mpr("A flood of memories washes over you.");
-        you.exp_available += 750 * you.experience_level;
+        you.exp_available += 750 * you.experience_level
+                           - ash_reduce_xp(750 * you.experience_level);
         break;
 
     case POT_MAGIC:

@@ -1,8 +1,7 @@
-/*
- *  File:       mon-abil.cc
- *  Summary:    Monster abilities.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monster abilities.
+**/
 
 #include "AppHdr.h"
 #include "mon-abil.h"

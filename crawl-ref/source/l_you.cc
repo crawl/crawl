@@ -94,6 +94,23 @@ LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
 LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
 LUARET1(you_flying, boolean, you.flight_mode() == FL_FLY)
 LUARET1(you_transform, string, transform_name())
+LUARET1(you_berserk, boolean, you.berserk())
+LUARET1(you_confused, boolean, you.confused())
+LUARET1(you_paralysed, boolean, you.paralysed())
+LUARET1(you_asleep, boolean, you.asleep())
+LUARET1(you_hasted, boolean, you.duration[DUR_HASTE])
+LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
+LUARET1(you_exhausted, boolean, you.duration[DUR_EXHAUSTED])
+LUARET1(you_teleporting, boolean, you.duration[DUR_TELEPORT])
+LUARET1(you_poisoned, boolean, you.duration[DUR_POISONING])
+LUARET1(you_invisible, boolean, you.duration[DUR_INVIS])
+LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
+LUARET1(you_rotting, boolean, you.rotting)
+LUARET1(you_silenced, boolean, silenced(you.pos()))
+LUARET1(you_sick, boolean, you.disease)
+LUARET1(you_deaths, number, you.deaths)
+LUARET1(you_lives, number, you.lives)
+
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
 LUARET1(you_subdepth, number, level_id::current().depth)
@@ -109,6 +126,12 @@ LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 LUARET1(you_level_type_tag, string, you.level_type_tag.c_str())
+
+LUARET1(you_see_cell_rel, boolean,
+        you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
+LUARET1(you_see_cell_no_trans_rel, boolean,
+        you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
+LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
 
 void lua_push_floor_items(lua_State *ls, int link);
 static int you_floor_items(lua_State *ls)
@@ -188,6 +211,23 @@ static const struct luaL_reg you_clib[] =
     { "levitating",   you_levitating },
     { "flying",       you_flying },
     { "transform",    you_transform },
+    { "berserk",      you_berserk },
+    { "confused",     you_confused },
+    { "paralysed",    you_paralysed },
+    { "asleep",       you_asleep },
+    { "hasted",       you_hasted },
+    { "slowed",       you_slowed },
+    { "exhausted",    you_exhausted },
+    { "teleporting",  you_teleporting },
+    { "poisoned",     you_poisoned },
+    { "invisible",    you_invisible },
+    { "mesmerised",   you_mesmerised },
+    { "rotting",      you_rotting },
+    { "silenced",     you_silenced },
+    { "sick",         you_sick },
+    { "deaths",       you_deaths },
+    { "lives",        you_lives },
+    { "piety_rank",   you_piety_rank },
 
     { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },
@@ -207,6 +247,9 @@ static const struct luaL_reg you_clib[] =
 
     { "level_type_tag",    you_level_type_tag },
 
+    { "see_cell",          you_see_cell_rel },
+    { "see_cell_no_trans", you_see_cell_no_trans_rel },
+
     { NULL, NULL },
 };
 
@@ -221,7 +264,6 @@ void cluaopen_you(lua_State *ls)
 
 LUARET1(you_can_hear_pos, boolean,
         player_can_hear(coord_def(luaL_checkint(ls,1), luaL_checkint(ls, 2))))
-LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_x_pos, number, you.pos().x)
 LUARET1(you_y_pos, number, you.pos().y)
 LUARET2(you_pos, number, you.pos().x, you.pos().y)

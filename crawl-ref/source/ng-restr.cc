@@ -1,10 +1,10 @@
-/*
- * File:     ng-restr.cc
- * Summary:  Character choice restrictions.
+/**
+ * @file
+ * @brief Character choice restrictions.
  *
  * The functions in this file are "pure": They don't
  * access any global data.
- */
+**/
 
 #include "AppHdr.h"
 
@@ -619,6 +619,7 @@ char_choice_restriction book_restriction(startup_book_type booktype,
             case SP_MERFOLK:
             case SP_HALFLING:
             case SP_VAMPIRE:
+            case SP_KENKU:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);

@@ -1,8 +1,7 @@
-/*
- *  File:       main.cc
- *  Summary:    Main entry point, event loop, and some initialization functions
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Main entry point, event loop, and some initialization functions
+**/
 
 #include "AppHdr.h"
 
@@ -229,6 +228,7 @@ static void _handle_wizard_command(void);
 
 int main(int argc, char *argv[])
 {
+    setlocale(LC_ALL, "");
 #ifdef DEBUG_GLOBALS
     real_Options = new game_options();
     real_you = new player();
@@ -378,9 +378,6 @@ static void _launch_game()
        _announce_goal_message();
 
     _god_greeting_message(game_start);
-
-    // Warn player about their weapon, if unsuitable.
-    wield_warning(false);
 
     if (!crawl_state.game_is_tutorial())
         mpr("Press <w>?</w> for a list of commands and other information.");
@@ -593,6 +590,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('H'): wizard_set_hunger_state(); break;
     case CONTROL('I'): debug_item_statistics(); break;
     case CONTROL('L'): wizard_set_xl(); break;
+    case CONTROL('R'): wizard_recreate_level(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
     case CONTROL('V'): wizard_toggle_xray_vision(); break;
     case CONTROL('X'): debug_xom_effects(); break;
@@ -1337,11 +1335,20 @@ static void _go_upstairs()
     if (_marker_vetoes_stair())
         return;
 
+    if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(ygrd)
+        && !feat_is_gate(ygrd))
+    {
+        mpr("You are carrying too much to climb upwards.");
+        return;
+    }
+
     if (you.duration[DUR_MISLED])
     {
         mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
         you.duration[DUR_MISLED] = 0;
     }
+
+    you.clear_clinging();
 
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
@@ -1417,6 +1424,8 @@ static void _go_downstairs()
         mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
         you.duration[DUR_MISLED] = 0;
     }
+
+    you.clear_clinging();
 
     if (shaft)
     {
@@ -2004,7 +2013,12 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     if (you.duration[dur] <= midpoint && old_dur > midpoint)
     {
         if (midmsg)
-            mpr(midmsg, chan);
+        {
+            if (need_expiration_warning(dur))
+                mprf(MSGCH_DANGER, "Careful! %s", midmsg);
+            else
+                mpr(midmsg, chan);
+        }
         you.duration[dur] -= midloss * BASELINE_DELAY;
     }
 
@@ -2480,7 +2494,7 @@ static void _decrement_durations()
             if (_decrement_a_duration(DUR_LEVITATION, delay,
                                       0,
                                       random2(6),
-                                      "You are starting to lose your buoyancy!"))
+                                      "You are starting to lose your buoyancy."))
             {
                 land_player();
             }
@@ -3995,32 +4009,8 @@ static void _move_player(coord_def move)
     if (you.running == RMODE_START)
         you.running = RMODE_CONTINUE;
 
-    if (you.level_type == LEVEL_ABYSS
-        && !map_bounds_with_margin(you.pos(),
-                                   MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
-    {
-        dprf("Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
-
-        abyss_area_shift();
-        if (you.pet_target != MHITYOU)
-            you.pet_target = MHITNOT;
-
-#ifdef DEBUG_DIAGNOSTICS
-        int j = 0;
-        for (int i = 0; i < MAX_ITEMS; ++i)
-            if (mitm[i].defined())
-                ++j;
-
-        mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
-
-        j = 0;
-        for (monster_iterator mi; mi; ++mi)
-            ++j;
-
-        mprf(MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
-        mprf(MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
-#endif
-    }
+    if (you.level_type == LEVEL_ABYSS)
+        maybe_shift_abyss_around_player();
 
     apply_berserk_penalty = !attacking;
 

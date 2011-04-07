@@ -1,7 +1,7 @@
-/*
- *  File:     spl-wpnench.cc
- *  Summary:  Weapon enchantment spells.
- */
+/**
+ * @file
+ * @brief Weapon enchantment spells.
+**/
 
 #include "AppHdr.h"
 

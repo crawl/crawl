@@ -1,7 +1,7 @@
-/*
- * File:     l_libs.h
- * Summary:  Library definitions for dlua.
- */
+/**
+ * @file
+ * @brief Library definitions for dlua.
+**/
 
 #ifndef L_LIBS_H
 #define L_LIBS_H

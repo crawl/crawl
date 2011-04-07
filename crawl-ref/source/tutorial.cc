@@ -1,7 +1,7 @@
-/*
- *  File:       tutorial.cc
- *  Summary:    Collection of tutorial related functions.
- */
+/**
+ * @file
+ * @brief Collection of tutorial related functions.
+**/
 
 #include "AppHdr.h"
 #include "tutorial.h"

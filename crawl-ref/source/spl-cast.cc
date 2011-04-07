@@ -1,8 +1,7 @@
-/*
- *  File:       spl-cast.cc
- *  Summary:    Spell casting and miscast functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Spell casting and miscast functions.
+**/
 
 #include "AppHdr.h"
 
@@ -158,17 +157,17 @@ static std::string _spell_base_description(spell_type spell)
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
-    desc << std::setw(30) << spell_title(spell);
+    desc << chop_string(spell_title(spell), 30);
 
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = desc.str().length() - (colour_to_str(highlight).length()+2);
+    const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 
     // spell fail rate, level
-    desc << std::setw(12) << failure_rate_to_string(spell_fail(spell))
+    desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
          << spell_difficulty(spell);
     desc << "</" << colour_to_str(highlight) <<">";
 
@@ -184,14 +183,14 @@ static std::string _spell_extra_description(spell_type spell)
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
-    desc << std::setw(30) << spell_title(spell);
+    desc << chop_string(spell_title(spell), 30);
 
     // spell power, spell range, hunger level, level
     const std::string rangestring = spell_range_string(spell);
 
-    desc << std::setw(14) << spell_power_string(spell)
-         << std::setw(16 + tagged_string_tag_length(rangestring)) << rangestring
-         << std::setw(12) << spell_hunger_string(spell)
+    desc << chop_string(spell_power_string(spell), 14)
+         << chop_string(rangestring, 16 + tagged_string_tag_length(rangestring))
+         << chop_string(spell_hunger_string(spell), 12)
          << spell_difficulty(spell);
 
     desc << "</" << colour_to_str(highlight) <<">";
@@ -455,13 +454,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     if (rod) {
         // This is only the average of the power. It's used for display and
         // calculating range. The real power is randomized in staff_spell()
-        power = (5 + you.skills[SK_EVOCATIONS] * 2);
+        power = (5 + you.skill(SK_EVOCATIONS) * 2);
     }
     else
     {
         // When checking failure rates, wizardry is handled after the various
         // stepping calulations.
-        power = (you.skills[SK_SPELLCASTING] / 2)
+        power = (you.skill(SK_SPELLCASTING) / 2)
                      + (fail_rate_check? 0 : player_mag_abil(false));
         int enhanced = 0;
 
@@ -477,7 +476,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             {
                 unsigned int bit = (1 << ndx);
                 if (disciplines & bit)
-                    power += (you.skills[spell_type2skill(bit)] * 2) / skillcount;
+                    power += (you.skill(spell_type2skill(bit)) * 2) / skillcount;
             }
         }
 
@@ -993,9 +992,9 @@ static bool _spellcasting_aborted(spell_type spell,
         return (true);
     }
 
-    if (is_prevented_teleport(spell)
-        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
+    if (is_prevented_teleport(spell))
     {
+        mpr("You cannot teleport right now.");
         return (true);
     }
 
@@ -1018,6 +1017,12 @@ static bool _spellcasting_aborted(spell_type spell,
         mpr("The dungeon can only cope with one malign gateway at a time!");
         return (true);
     }
+    if (spell == SPELL_BERSERKER_RAGE && (!you.can_go_berserk(true)
+                                          || !berserk_check_wielded_weapon()))
+    {
+        return (true);
+    }
+
 
     return (false);
 }
@@ -1780,9 +1785,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // General enhancement.
     case SPELL_BERSERKER_RAGE:
-        if (!berserk_check_wielded_weapon())
-           return (SPRET_ABORT);
-
         cast_berserk();
         break;
 
@@ -1983,9 +1985,7 @@ const char* failure_rate_to_string(int fail)
 {
     return (fail == 100) ? "Useless"   : // 0% success chance
            (fail > 77)   ? "Terrible"  : // 0-5%
-           (fail > 71)   ? "Cruddy"    : // 5-10%
-           (fail > 64)   ? "Bad"       : // 10-20%
-           (fail > 59)   ? "Very Poor" : // 20-30%
+           (fail > 59)   ? "Bad" :       // 5-30%
            (fail > 50)   ? "Poor"      : // 30-50%
            (fail > 40)   ? "Fair"      : // 50-70%
            (fail > 35)   ? "Good"      : // 70-80%

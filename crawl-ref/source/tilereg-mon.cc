@@ -1,7 +1,3 @@
-/*
- *  File:       tilereg-mon.cc
- */
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE

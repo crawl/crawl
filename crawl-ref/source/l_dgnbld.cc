@@ -1,7 +1,7 @@
-/*
- * File:       l_dgnbld.cc
- * Summary:    Building routines (library "dgn").
- */
+/**
+ * @file
+ * @brief Building routines (library "dgn").
+**/
 
 #include "AppHdr.h"
 

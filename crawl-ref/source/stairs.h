@@ -1,7 +1,7 @@
-/*
- * File:     stairs.h
- * Summary:  Moving between levels.
- */
+/**
+ * @file
+ * @brief Moving between levels.
+**/
 
 #ifndef STAIRS_H
 #define STAIRS_H

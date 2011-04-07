@@ -1,25 +1,23 @@
-/*
- *  File:       AppHdr.h
- *  Summary:    Precompiled header used by Crawl.
- *  Written by: Jesse Jones
+/**
+ * @file
+ * @brief Precompiled header used by Crawl.
  *
- * Abstract: CodeWarrior and MSVC both support precompiled headers which can
- *      significantly speed up compiles. Unlike CodeWarrior MSVC imposes
- *      some annoying restrictions on precompiled headers: the precompiled
- *      header *must* be the first include in all cc files. Any includes or
- *      other statements that occur before the pch include are ignored. This
- *      is really stupid and can lead to bizarre errors, but it does mean
- *      that we shouldn't run into any problems on systems without precompiled
- *      headers.
- *
- *  Copyright © 1999 Jesse Jones.
- */
+ * CodeWarrior and MSVC both support precompiled headers which can
+ * significantly speed up compiles. Unlike CodeWarrior MSVC imposes
+ * some annoying restrictions on precompiled headers: the precompiled
+ * header *must* be the first include in all cc files. Any includes or
+ * other statements that occur before the pch include are ignored. This
+ * is really stupid and can lead to bizarre errors, but it does mean
+ * that we shouldn't run into any problems on systems without precompiled
+ * headers.
+**/
 
 
 #ifndef APPHDR_H
 #define APPHDR_H
 
 #include "platform.h"
+#include <stdint.h>
 
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:
@@ -37,14 +35,6 @@
 // memory.
 //
 #define CLUA_MAX_MEMORY_USE (2 * 1024)
-
-// Enable support for Unicode character glyphs. Note that this needs
-// to be accompanied by changes to linker and compiler options and may
-// not be available on all platforms. In most cases you want to set
-// this option from your makefile, not directly in AppHdr.h (See
-// INSTALL for more details.)
-//
-// #define UNICODE_GLYPHS
 
 // Uncomment to prevent Crawl from looking for a list of saves when
 // asking the player to enter a name. This can speed up startup
@@ -116,12 +106,7 @@
     #define SIGHUP_SAVE
 
     #define FILE_SEPARATOR '/'
-
-    #define CHARACTER_SET           0
 #ifndef USE_TILE
-    // NOTE: Tiles relies on the IBM character set for evaluating glyphs
-    //       of magic mapped dungeon cells.
-    #define USE_ASCII_CHARACTERS
     #define USE_CURSES
 #endif
 
@@ -168,7 +153,6 @@
 
 #elif defined(TARGET_OS_DOS)
     #define SHORT_FILE_NAMES
-    #define CHARACTER_SET           A_ALTCHARSET
 
     #define FILE_SEPARATOR '\\'
 
@@ -190,8 +174,6 @@
     #if !defined(USE_TILE)
         #include "libw32c.h"
     #endif
-    #define CHARACTER_SET           A_ALTCHARSET
-    #define getstr(X,Y)         get_console_string(X,Y)
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'

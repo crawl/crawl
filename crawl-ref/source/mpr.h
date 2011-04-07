@@ -1,8 +1,7 @@
-/*
- *  File:       mpr.h
- *  Summary:    Functions used to print simple messages.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print simple messages.
+**/
 
 #ifndef MPR_H
 #define MPR_H

@@ -1,8 +1,8 @@
-/*
- *  File:     spl-other.cc
- *  Summary:  Non-enchantment spells that didn't fit anywhere else.
- *            Mostly Transmutations.
- */
+/**
+ * @file
+ * @brief Non-enchantment spells that didn't fit anywhere else.
+ *           Mostly Transmutations.
+**/
 
 #include "AppHdr.h"
 
@@ -105,8 +105,6 @@ bool cast_sublimation_of_blood(int pow)
             // For vampires.
             int food = 0;
 
-            mpr("You draw magical energy from your own body!");
-
             while (you.magic_points < you.max_magic_points && you.hp > 1
                    && (you.species != SP_VAMPIRE || you.hunger - food >= 7000))
             {
@@ -125,6 +123,10 @@ bool cast_sublimation_of_blood(int pow)
                 if (x_chance_in_y(6, pow))
                     break;
             }
+            if (success)
+                mpr("You draw magical energy from your own body!");
+            else
+                mpr("Your attempt to draw power from your own body fails.");
 
             make_hungry(food, false);
         }
@@ -257,7 +259,7 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 
 bool cast_passwall(const coord_def& delta, int pow)
 {
-    int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
+    int shallow = 1 + (you.skill(SK_EARTH_MAGIC) / 8);
     int range = shallow + random2(pow) / 25;
     int maxrange = shallow + pow / 25;
 

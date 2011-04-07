@@ -1,8 +1,7 @@
-/*
- *  File:       command.h
- *  Summary:    Misc commands.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc commands.
+**/
 
 
 #ifndef COMMAND_H

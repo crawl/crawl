@@ -1,8 +1,7 @@
-/*
- *  File:       fight.h
- *  Summary:    Functions used during combat.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used during combat.
+**/
 
 
 #ifndef FIGHT_H

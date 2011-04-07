@@ -1,8 +1,7 @@
-/*
- *  File:       misc.cc
- *  Summary:    Misc functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 #include "AppHdr.h"
 
@@ -1001,9 +1000,63 @@ bool maybe_bloodify_square(const coord_def& where)
     return true;
 }
 
+#ifdef USE_TILE
+/*
+ * Rotate the wall blood splat tile, so that it is facing the source.
+ *
+ * Wall blood splat tiles are drawned with the blood dripping down. We need
+ * the tile to be facing an orthogonal empty space for the effect to look
+ * good. We choose the empty space closest to the source of the blood.
+ *
+ * @param where Coordinates of the wall where there is a blood splat.
+ * @param from Coordinates of the source of the blood.
+ */
+static void _orient_wall_blood(const coord_def& where, coord_def from)
+{
+    if (!feat_is_wall(env.grid(where)))
+        return;
+
+    if (from == INVALID_COORD)
+        from = where;
+
+    coord_def closer = INVALID_COORD;
+    int dist = INT_MAX;
+    los_def ld(from, opc_solid);
+    ld.update();
+
+    for (orth_adjacent_iterator ai(where); ai; ++ai)
+    {
+        if (in_bounds(*ai) && !cell_is_solid(*ai) && ld.see_cell(*ai)
+            && (distance(*ai, from) < dist
+                || distance(*ai, from) == dist && coinflip()))
+        {
+            closer = *ai;
+            dist = distance(*ai, from);
+        }
+    }
+
+    // If we didn't find anything, the wall is in a corner.
+    // We don't want blood tile there.
+    if (closer == INVALID_COORD)
+    {
+        env.pgrid(where) &= ~FPROP_BLOODY;
+        return;
+    }
+
+    const coord_def diff = where - closer;
+    if (diff == coord_def(1, 0))
+        env.pgrid(where) |= FPROP_BLOOD_WEST;
+    else if (diff == coord_def(0, 1))
+        env.pgrid(where) |= FPROP_BLOOD_NORTH;
+    else if (diff == coord_def(-1, 0))
+        env.pgrid(where) |= FPROP_BLOOD_EAST;
+}
+#endif
+
 static void _maybe_bloodify_square(const coord_def& where, int amount,
                                    bool spatter = false,
-                                   bool smell_alert = true)
+                                   bool smell_alert = true,
+                                   const coord_def& from = INVALID_COORD)
 {
     if (amount < 1)
         return;
@@ -1019,6 +1072,9 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         if (may_bleed)
         {
             env.pgrid(where) |= FPROP_BLOODY;
+#ifdef USE_TILE
+            _orient_wall_blood(where, from);
+#endif
 
             if (smell_alert && in_bounds(where))
                 blood_smell(12, where);
@@ -1028,7 +1084,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         {
             // Smaller chance of spattering surrounding squares.
             for (adjacent_iterator ai(where); ai; ++ai)
-                _maybe_bloodify_square(*ai, amount/15);
+                _maybe_bloodify_square(*ai, amount/15, false, true, from);
         }
     }
 }
@@ -1037,7 +1093,8 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 // "damage" depends on damage taken (or hitpoints, if damage higher),
 // or, for sacrifices, on the number of chunks possible to get out of a corpse.
 void bleed_onto_floor(const coord_def& where, monster_type montype,
-                      int damage, bool spatter, bool smell_alert)
+                      int damage, bool spatter, bool smell_alert,
+                      const coord_def& from)
 {
     ASSERT(in_bounds(where));
 
@@ -1052,7 +1109,7 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
             return;
     }
 
-    _maybe_bloodify_square(where, damage, spatter, smell_alert);
+    _maybe_bloodify_square(where, damage, spatter, smell_alert, from);
 }
 
 void blood_spray(const coord_def& origin, monster_type montype, int level)
@@ -1078,27 +1135,28 @@ void blood_spray(const coord_def& origin, monster_type montype, int level)
 
             if (in_bounds(bloody) && ld.see_cell(bloody))
             {
-                bleed_onto_floor(bloody, montype, 99);
+                bleed_onto_floor(bloody, montype, 99, false, true, origin);
                 break;
             }
         }
     }
 }
 
-static void _spatter_neighbours(const coord_def& where, int chance)
+static void _spatter_neighbours(const coord_def& where, int chance,
+                                const coord_def& from = INVALID_COORD)
 {
     for (adjacent_iterator ai(where, false); ai; ++ai)
     {
         if (!allow_bleeding_on_square(*ai))
             continue;
 
-        if (grd(*ai) < DNGN_MINMOVE && !one_chance_in(3))
-            continue;
-
         if (one_chance_in(chance))
         {
             env.pgrid(*ai) |= FPROP_BLOODY;
-            _spatter_neighbours(*ai, chance+1);
+#ifdef USE_TILE
+            _orient_wall_blood(where, from);
+#endif
+            _spatter_neighbours(*ai, chance+1, from);
         }
     }
 }
@@ -1874,7 +1932,8 @@ void bring_to_safety()
     {
         // In ZotDef, it's not the safety of your sorry butt that matters.
         for (distance_iterator di(orb_position(), true, false); di; ++di)
-            if (!monster_at(*di))
+            if (!monster_at(*di)
+                && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
             {
                 you.moveto(*di);
                 return;
@@ -1895,6 +1954,7 @@ void bring_to_safety()
             || grd(pos) != DNGN_FLOOR
             || env.cgrid(pos) != EMPTY_CLOUD
             || monster_at(pos)
+            || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || crawl_state.game_is_sprint()
                && distance(pos, you.pos()) > dist_range(10))
         {

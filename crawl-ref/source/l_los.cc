@@ -1,8 +1,7 @@
-/*
- * File:        l_los.cc
- * Summary:     Lua bindings for LOS.
- * Created by:  Robert Vollmert
- */
+/**
+ * @file
+ * @brief Lua bindings for LOS.
+**/
 
 #include "AppHdr.h"
 

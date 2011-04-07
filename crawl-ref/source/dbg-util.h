@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-util.h
- *  Summary:    Miscellaneous debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Miscellaneous debugging functions.
+**/
 
 #ifndef DBGUTIL_H
 #define DBGUTIL_H

@@ -1,8 +1,7 @@
-/*
- *  File:       effects.cc
- *  Summary:    Misc stuff.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc stuff.
+**/
 
 #include "AppHdr.h"
 
@@ -1325,7 +1324,7 @@ static void _hell_effects()
         else                // 1 in 8 odds {dlb}
             which_miscast = coinflip() ? SPTYP_HEXES : SPTYP_CHARMS;
 
-        MiscastEffect(&you, MISC_MISCAST, which_miscast,
+        MiscastEffect(&you, HELL_EFFECT_MISCAST, which_miscast,
                       4 + random2(6), random2avg(97, 3),
                       "the effects of Hell");
     }
@@ -1381,7 +1380,7 @@ static void _hell_effects()
         }
         else
         {
-            MiscastEffect(&you, MISC_MISCAST, which_miscast,
+            MiscastEffect(&you, HELL_EFFECT_MISCAST, which_miscast,
                           4 + random2(6), random2avg(97, 3),
                           "the effects of Hell");
         }

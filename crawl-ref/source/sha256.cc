@@ -8,8 +8,6 @@
 
 #include "AppHdr.h"
 
-#include <stdint.h>
-
 typedef uint32_t u32;
 
 #include "mt19937ar.h"

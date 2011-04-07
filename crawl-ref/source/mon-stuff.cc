@@ -1,8 +1,7 @@
-/*
- *  File:       mon-stuff.cc
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 #include "AppHdr.h"
 #include "mon-stuff.h"
@@ -174,7 +173,7 @@ const item_def *give_mimic_item(monster* mimic)
     return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
 }
 
-const item_def &get_mimic_item(const monster* mimic)
+item_def &get_mimic_item(const monster* mimic)
 {
     ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
@@ -255,7 +254,7 @@ bool curse_an_item(bool destroy_potions, bool quiet)
             mprf(MSGCH_GOD, "The curse is absorbed by %s.",
                  god_name(GOD_ASHENZARI).c_str());
         }
-        return false;
+        return (false);
     }
 
     int count = 0;
@@ -1788,7 +1787,7 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
 
-        if (was_banished && !summoned_it && !hard_reset)
+        if (was_banished && !summoned_it && !hard_reset && mons->has_ench(ENCH_ABJ))
         {
             if (is_unrandom_artefact(mitm[w_idx]))
                 set_unique_item_status(mitm[w_idx], UNIQ_LOST_IN_ABYSS);
@@ -2307,7 +2306,7 @@ int monster_die(monster* mons, killer_type killer,
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
-            if (mons->pacified() || !mons->needs_transit())
+            if (mons->pacified() || !mons->needs_abyss_transit())
             {
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
@@ -3526,8 +3525,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
         dungeon_feature_type feat = env.grid(ray.pos());
         if (feat >= DNGN_UNSEEN && feat <= max_disallowed
             || (mons_intel(mon) >= I_NORMAL || mon->can_cling_to_walls())
-                && mon->floundering_at(ray.pos())
-            || mons_avoids_cloud(mon, env.cgrid(ray.pos())))
+                && mon->floundering_at(ray.pos()))
         {
             return (false);
         }
@@ -3661,7 +3659,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_fire() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_fire() < 0)
             return (true);
 
         if (mons->hit_points >= 15 + random2avg(46, 5))
@@ -3675,7 +3673,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
             return (true);
 
         if (x_chance_in_y(mons->hit_dice - 1, 5))
@@ -3692,7 +3690,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_cold() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_cold() < 0)
             return (true);
 
         if (mons->hit_points >= 15 + random2avg(46, 5))
@@ -3706,7 +3704,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
             return (true);
 
         if (mons->hit_points >= random2avg(37, 4))

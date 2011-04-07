@@ -1642,6 +1642,8 @@ KFEAT:  _ = altar_zin
 KPROP:  1 = no_rtele_into
 COLOUR: G = lightgray
 COLOUR: c = white
+TILE:   c = wall_church
+FTILE: _.G1m+ = floor_limestone
 MONS:   angel god:zin name:glowing name_adjective
 : local za_desc = "A divine agent of Zin, it is a towering winged figure " ..
 :   "with an aura of brilliant white light. This angel's face, though, " ..
@@ -1668,8 +1670,10 @@ NAME:     tso_altar
 TAGS:     no_item_gen no_rotate
 TAGS:     temple_overflow_the_shining_one uniq_altar_the_shining_one
 COLOUR:   _ = yellow
+FTILE:    _A = floor_limestone
 SUBST:    _ = .
 COLOUR:   c = white
+TILE:     c = wall_church
 KFEAT:    A = altar_shining_one
 MAP
   xxxxx

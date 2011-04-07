@@ -1,8 +1,3 @@
-/*
- *  File:       tilereg_cmd.h
- *  Created by: jpeg on Sat, Dec 27 2010
- */
-
 #ifdef USE_TILE
 #ifndef TILEREG_CMD_H
 #define TILEREG_CMD_H

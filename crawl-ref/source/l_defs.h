@@ -1,9 +1,8 @@
-/*
- * File:      l_defs.h
- * Summary:   Functions defined in the Lua bindings but used elsewhere.
- *
- * TODO: Move these where they belong.
- */
+/**
+ * @file
+ * @brief Functions defined in the Lua bindings but used elsewhere.
+**/
+// TODO: Move these where they belong.
 
 #ifndef L_DEFS_H
 #define L_DEFS_H

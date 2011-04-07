@@ -1,8 +1,7 @@
-/*
- *  File:       cio.h
- *  Summary:    System independent console IO functions
- *  Created by: dshaligram on Wed Jun 20 19:00:52 2007 UTC
- */
+/**
+ * @file
+ * @brief System independent console IO functions
+**/
 
 #ifndef CIO_H
 #define CIO_H
@@ -49,8 +48,7 @@ int m_getch();
 int unmangle_direction_keys(int keyin, KeymapContext keymap = KMC_DEFAULT,
                             bool fake_ctrl = true, bool fake_shift = true);
 
-int nowrapcprintf(int wrapcol, const char *s, ...);
-int nowrap_eol_cprintf(const char *s, ...);
+void nowrap_eol_cprintf(const char *s, ...);
 
 // Returns zero if user entered text and pressed Enter, otherwise returns the
 // key pressed that caused the exit, usually Escape.
@@ -141,8 +139,7 @@ enum KEYS
     CK_BKSP   = 8,
     CK_ESCAPE = ESCAPE,
 
-    // 128 is off-limits because it's the code that's used when running
-    CK_DELETE = 129,
+    CK_DELETE = -255,
 
     // This sequence of enums should not be rearranged.
     CK_UP,
@@ -191,7 +188,7 @@ enum KEYS
     CK_CTRL_TAB,
 
     // Mouse codes.
-    CK_MOUSE_MOVE  = 10001,
+    CK_MOUSE_MOVE  = -10009,
     CK_MOUSE_CMD,
     CK_MOUSE_B1,
     CK_MOUSE_B2,
@@ -242,8 +239,9 @@ protected:
     void backspace();
     void killword();
     void kill_to_begin();
+    void calc_pos();
 
-    bool is_wordchar(int c);
+    bool is_wordchar(ucs_t c);
 
 protected:
     char            *buffer;

@@ -1,8 +1,7 @@
-/*
- *  File:       command.cc
- *  Summary:    Misc commands.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc commands.
+**/
 
 #include "AppHdr.h"
 
@@ -50,6 +49,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
+#include "syscalls.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tilepick.h"
@@ -95,10 +95,6 @@ static const char *features[] = {
 #ifdef DGL_MILESTONES
     "Milestones",
 #endif
-
-#ifdef UNICODE_GLYPHS
-    "Unicode glyphs",
-#endif
 };
 
 static std::string _get_version_information(void)
@@ -132,7 +128,7 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
 static std::string _get_version_changes(void)
 {
     // Attempts to print "Highlights" of the latest version.
-    FILE* fp = fopen(datafile_path("changelog.txt", false).c_str(), "r");
+    FILE* fp = fopen_u(datafile_path("changelog.txt", false).c_str(), "r");
     if (!fp)
         return "";
 
@@ -228,7 +224,7 @@ static void _print_version(void)
 
     std::string fname = "key_changes.txt";
     // Read in information about changes in comparison to the latest version.
-    FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
+    FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
 
 #if defined(TARGET_OS_DOS)
     if (!fp)
@@ -243,7 +239,7 @@ static void _print_version(void)
             mprf(MSGCH_DIAGNOSTICS,
                  "Attempting to open file '%s'", fname.c_str());
  #endif
-            fp = fopen(datafile_path(fname, false).c_str(), "r");
+            fp = fopen_u(datafile_path(fname, false).c_str(), "r");
         }
     }
 #endif
@@ -1431,7 +1427,7 @@ static bool _do_description(std::string key, std::string type,
     inf.body << desc;
 
     key = uppercase_first(key);
-    linebreak_string2(footer, width - 1);
+    linebreak_string(footer, width - 1);
 
     inf.footer = footer;
     inf.title  = key;
@@ -1465,7 +1461,7 @@ static bool _handle_FAQ()
 
         std::string question = getFAQ_Question(question_keys[i]);
         // Wraparound if the question is longer than fits into a line.
-        linebreak_string2(question, width - 4);
+        linebreak_string(question, width - 4);
         std::vector<formatted_string> fss;
         formatted_string::parse_string_to_multiple(question, fss);
 
@@ -1505,7 +1501,7 @@ static bool _handle_FAQ()
                          "bug report!";
             }
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
-            linebreak_string2(answer, width - 1);
+            linebreak_string(answer, width - 1);
             print_description(answer);
             wait_for_keypress();
         }
@@ -2064,7 +2060,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
         {
             // Attempt to open this file, skip it if unsuccessful.
             std::string fname = canonicalise_file_separator(help_files[i].name);
-            FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
+            FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
 
 #if defined(TARGET_OS_DOS)
             if (!fp)
@@ -2079,7 +2075,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
                     mprf(MSGCH_DIAGNOSTICS,
                          "Attempting to open file '%s'", fname.c_str());
  #endif
-                    fp = fopen(datafile_path(fname, false).c_str(), "r");
+                    fp = fopen_u(datafile_path(fname, false).c_str(), "r");
                 }
             }
 #endif
@@ -2171,7 +2167,7 @@ static void _add_command(column_composer &cols, const int column,
     if (strcmp(command_name.c_str(), "<") == 0)
         command_name += "<";
 
-    const int cmd_len = command_name.length();
+    const int cmd_len = strwidth(command_name);
     std::string line = "<w>" + command_name + "</w>";
     for (unsigned int i = cmd_len; i < space_to_colon; ++i)
         line += " ";
@@ -2506,7 +2502,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                     CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
                     CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
                     0);
-    linebreak_string2(text, 40);
+    linebreak_string(text, 40);
 
     cols.add_formatted(
             1, text,
@@ -2765,7 +2761,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>{</w>      : magic mapping\n"
                        "<w>}</w>      : detect all traps on level\n"
                        "<w>)</w>      : change Shoals' tide speed\n"
-                       "<w>Ctrl-E</w> : dump level builder information\n",
+                       "<w>Ctrl-E</w> : dump level builder information\n"
+                       "<w>Ctrl-R</w> : regenerate current level\n",
                        true, true);
 
     cols.add_formatted(1,

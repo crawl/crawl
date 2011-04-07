@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-scan.cc
- *  Summary:    Debugging code to scan the list of items and monsters.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Debugging code to scan the list of items and monsters.
+**/
 
 #include "AppHdr.h"
 

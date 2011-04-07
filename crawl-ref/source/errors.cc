@@ -1,8 +1,7 @@
-/*
- *  File:       errors.cc
- *  Summary:    Handling of error conditions that are not program bugs.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Handling of error conditions that are not program bugs.
+**/
 
 #include <stdarg.h>
 #include <errno.h>

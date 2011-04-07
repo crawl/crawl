@@ -1,6 +1,7 @@
-/*  File:       mislead.h
- *  Summary:    Handling of Mara's Mislead spell and stats, plus fakes.
- */
+/**
+ * @file
+ * @brief Handling of Mara's Mislead spell and stats, plus fakes.
+**/
 
 bool unsuitable_misled_monster(monster_type mons);
 monster_type get_misled_monster (monster* mons);

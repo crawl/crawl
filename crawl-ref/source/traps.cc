@@ -1,8 +1,7 @@
-/*
- *  File:       traps.cc
- *  Summary:    Traps related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Traps related functions.
+**/
 
 #include "AppHdr.h"
 
@@ -558,7 +557,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 msg = std::string("You hear a ") +
                     ((in_sight) ? "" : "distant ")
                     + "blaring wail "
-                    + ((dir.length())? ("to the " + dir + ".") : "behind you!");
+                    + (!dir.empty()? ("to the " + dir + ".") : "behind you!");
             }
             // Monsters of normal or greater intelligence will realize that
             // they were the one to set off the trap.

@@ -1,7 +1,7 @@
-/*
- *  File:       message.cc
- *  Summary:    Functions used to print messages.
- */
+/**
+ * @file
+ * @brief Functions used to print messages.
+**/
 
 #include "AppHdr.h"
 
@@ -77,7 +77,7 @@ struct message_item
           turn(you.num_turns)
     {
          // Don't join long messages.
-         join = jn && pure_text().length() < 40;
+         join = jn && strwidth(pure_text()) < 40;
     }
 
     // Constructor for restored messages.
@@ -144,8 +144,8 @@ struct message_item
                     seplen++;
                 }
                 sep += " </lightgrey>";
-                if (pure_text().length() + seplen + other.pure_text().length()
-                    > msgwin_line_length())
+                if (strwidth(pure_text()) + seplen + strwidth(other.pure_text())
+                    > (int)msgwin_line_length())
                 {
                     return false;
                 }
@@ -309,7 +309,7 @@ class message_window
     {
         cgotoxy(1, n + 1, GOTO_MSG);
         line.display();
-        cprintf("%*s", width() - line.length(), "");
+        cprintf("%*s", width() - line.width(), "");
     }
 
     // Place cursor at end of last non-empty line to handle prompts.
@@ -318,9 +318,9 @@ class message_window
     void place_cursor() const
     {
         int i;
-        for (i = lines.size() - 1; i >= 0 && lines[i].length() == 0; --i);
-        if (i >= 0 && (int) lines[i].length() < crawl_view.msgsz.x)
-            cgotoxy(lines[i].length() + 1, i + 1, GOTO_MSG);
+        for (i = lines.size() - 1; i >= 0 && lines[i].width() == 0; --i);
+        if (i >= 0 && (int) lines[i].width() < crawl_view.msgsz.x)
+            cgotoxy(lines[i].width() + 1, i + 1, GOTO_MSG);
     }
 
     // Whether to show msgwin-full more prompts.
@@ -384,7 +384,8 @@ class message_window
         {
             formatted_string line;
             line.add_glyph(prefix_glyph(prompt));
-            line += lines[next_line-1].substr(1);
+            lines[next_line-1].del_char();
+            line += lines[next_line-1];
             lines[next_line-1] = line;
         }
         show();
@@ -479,7 +480,7 @@ public:
         prompt = P_NONE; // reset prompt
 
         std::vector<formatted_string> newlines;
-        linebreak_string2(text, out_width());
+        linebreak_string(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
 
         for (size_t i = 0; i < newlines.size(); ++i)
@@ -1408,7 +1409,7 @@ void replay_messages(void)
         if (channel_message_history(msgs[i].channel))
         {
             std::string text = msgs[i].with_repeats();
-            linebreak_string2(text, cgetsize(GOTO_CRT).x - 1);
+            linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
             std::vector<formatted_string> parts;
             formatted_string::parse_string_to_multiple(text, parts);
             for (unsigned int j = 0; j < parts.size(); ++j)

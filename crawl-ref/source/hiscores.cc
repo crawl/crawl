@@ -1,8 +1,7 @@
-/*
- *  File: highscore.cc
- *  Summary: deal with reading and writing of highscore file
- *  Written by: Gordon Lipford
- */
+/**
+ * @file
+ * @brief deal with reading and writing of highscore file
+**/
 
 /*
  * ----------- MODIFYING THE PRINTED SCORE FORMAT ---------------------
@@ -1408,7 +1407,7 @@ std::string scorefile_entry::terse_missile_cause() const
 
     std::string missile = terse_missile_name();
 
-    if (missile.length())
+    if (!missile.empty())
         mcause += "/" + missile;
 
     return (mcause);
@@ -1440,11 +1439,10 @@ void scorefile_entry::fixup_char_name()
 
 std::string scorefile_entry::single_cdesc() const
 {
-    std::string scname = name;
-    if (scname.length() > 10)
-        scname = scname.substr(0, 10);
+    std::string scname;
+    scname = chop_string(name, 10);
 
-    return make_stringf("%8d %-10s %s-%02d%s", points, scname.c_str(),
+    return make_stringf("%8d %s %s-%02d%s", points, scname.c_str(),
                          race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "");
 }
 

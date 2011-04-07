@@ -1,8 +1,7 @@
-/*
- *  File:       artefact.cc
- *  Summary:    Random and unrandom artefact functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Random and unrandom artefact functions.
+**/
 
 #include "AppHdr.h"
 
@@ -224,8 +223,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     return (true);
 }
 
-static std::string _replace_name_parts(const std::string name_in,
-                                       const item_def& item)
+std::string replace_name_parts(const std::string name_in, const item_def& item)
 {
     std::string name = name_in;
 
@@ -1401,7 +1399,7 @@ static std::string _artefact_name_lookup(const item_def &item,
                                  const std::string &lookup)
 {
     const std::string name = getRandNameString(lookup);
-    return (!name.empty()? _replace_name_parts(name, item) : name);
+    return (!name.empty()? replace_name_parts(name, item) : name);
 }
 
 static bool _artefact_name_lookup(std::string &result,
@@ -1494,7 +1492,7 @@ std::string artefact_name(const item_def &item, bool appearance)
              // If still nothing found, try base type alone.
              || _artefact_name_lookup(name, item, _get_artefact_type(item)));
         }
-        while (--tries > 0 && name.length() > 25);
+        while (--tries > 0 && strwidth(name) > 25);
 
         if (name.empty()) // still nothing found?
             result += "of Bugginess";

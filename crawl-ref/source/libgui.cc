@@ -1,8 +1,7 @@
-/*
- *  File:       libgui.cc
- *  Summary:    Functions that any display port needs to implement.
- *  Written by: M.Itakura
- */
+/**
+ * @file
+ * @brief Functions that any display port needs to implement.
+**/
 
 #include "AppHdr.h"
 
@@ -29,7 +28,7 @@
 
 int m_getch()
 {
-    return getch();
+    return getchk();
 }
 
 void set_mouse_enabled(bool enabled)
@@ -66,24 +65,12 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.viewsz.y = 17;
 }
 
-int putch(unsigned char chr)
+int putwch(ucs_t chr)
 {
-    // object's method
-    TextRegion::text_mode->putch(chr);
+    if (!chr)
+        chr = ' ';
+    TextRegion::text_mode->putwch(chr);
     return 0;
-}
-
-int putwch(unsigned chr)
-{
-    // No unicode support.
-    putch(static_cast<unsigned char>(chr));
-    return 0;
-}
-
-void writeWChar(unsigned char *ch)
-{
-    // object's method
-    TextRegion::text_mode->writeWChar(ch);
 }
 
 void clear_to_end_of_line()
@@ -150,15 +137,10 @@ int get_number_of_cols()
     return tiles.get_number_of_cols();
 }
 
-void put_colour_ch(int colour, unsigned ch)
+void put_colour_ch(int colour, ucs_t ch)
 {
     textcolor(colour);
     putwch(ch);
-}
-
-int window(int x1, int y1, int x2, int y2)
-{
-    return 0;
 }
 
 int getch_ck()
@@ -166,7 +148,7 @@ int getch_ck()
     return (tiles.getch_ck());
 }
 
-int getch()
+int getchk()
 {
     return getch_ck();
 }
@@ -204,7 +186,7 @@ void update_screen()
     tiles.set_need_redraw();
 }
 
-int kbhit()
+bool kbhit()
 {
     // Look for the presence of any keyboard events in the queue.
     int count = wm->get_event_count(WM_KEYDOWN);

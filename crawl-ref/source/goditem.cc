@@ -1,7 +1,7 @@
-/*
- *  File:       goditem.cc
- *  Summary:    Gods' attitude towards items.
- */
+/**
+ * @file
+ * @brief Gods' attitude towards items.
+**/
 
 #include "AppHdr.h"
 
@@ -292,8 +292,11 @@ bool is_chaotic_item(const item_def& item)
         break;
     }
 
-    if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
+    if (is_artefact(item) && item.base_type != OBJ_BOOKS
+        && artefact_wpn_property(item, ARTP_MUTAGENIC))
+    {
         retval = true;
+    }
 
     return (retval);
 }
@@ -366,7 +369,7 @@ bool is_hasty_item(const item_def& item)
         break;
     }
 
-    if (is_artefact(item)
+    if (is_artefact(item) && item.base_type != OBJ_BOOKS
         && (artefact_wpn_property(item, ARTP_ANGRY)
             || artefact_wpn_property(item, ARTP_BERSERK)))
     {

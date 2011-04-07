@@ -1,7 +1,7 @@
-/*
- *  File:       libutil.cc
- *  Summary:    Functions that may be missing from some systems
- */
+/**
+ * @file
+ * @brief Functions that may be missing from some systems
+**/
 
 #include "AppHdr.h"
 
@@ -12,6 +12,7 @@
 #include "macro.h"
 #include "message.h"
 #include "stuff.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 #include <sstream>
@@ -107,7 +108,7 @@ void play_sound(const char *file)
 #if defined(WINMM_PLAY_SOUNDS)
     // Check whether file exists, is readable, etc.?
     if (file && *file)
-        sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
+        sndPlaySoundW(utf8_to_16(file).c_str(), SND_ASYNC | SND_NODEFAULT);
 
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
@@ -116,7 +117,7 @@ void play_sound(const char *file)
         && shell_safe(file))
     {
         snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-        system(command);
+        system(utf8_to_mb(command));
     }
 #endif
 }
@@ -735,6 +736,66 @@ std::vector<std::string> split_string(const std::string &sep,
     return segments;
 }
 
+// The provided string is consumed!
+std::string wordwrap_line(std::string &s, int width, bool tags)
+{
+    const char *cp0 = s.c_str();
+    const char *cp = cp0, *space = 0;
+    ucs_t c;
+
+    while (int clen = utf8towc(&c, cp))
+    {
+        int cw = wcwidth(c);
+        if (c == ' ')
+            space = cp;
+        else if (c == '\n')
+        {
+            space = cp;
+            break;
+        }
+        if (cw > width)
+            break;
+        if (c == '<' && tags)
+            ASSERT(cw == 1);
+            if (cp[1] == '<') // "<<" escape
+            {
+                // Note: this must be after a possible wrap, otherwise we could
+                // split the escape between lines.
+                cp++;
+            }
+            else
+            {
+                // Skip the whole tag.
+                while (*cp && *cp != '>')
+                    cp++;
+            }
+        if (cw >= 0)
+            width -= cw;
+        cp += clen;
+    }
+
+    if (!c)
+    {
+        // everything fits
+        std::string ret = s;
+        s.clear();
+        return ret;
+    }
+
+    if (space)
+        cp = space;
+    const std::string ret = s.substr(0, cp - cp0);
+
+    // eat all trailing spaces and up to one newline
+    while (*cp == ' ')
+        cp++;
+    if (*cp == '\n')
+        cp++;
+    s.erase(0, cp - cp0);
+
+    return ret;
+}
+
 // The old school way of doing short delays via low level I/O sync.
 // Good for systems like old versions of Solaris that don't have usleep.
 #ifdef NEED_USLEEP
@@ -856,19 +917,6 @@ size_t strlcpy(char *dst, const char *src, size_t n)
     }
 
     return s - src - 1;
-}
-
-// Stubs for now.  With Unicode, the width may be different from length in
-// bytes due to UTF (any of these) -- and counting characters is not enough,
-// too, because of combining characters and CJK double-widths.
-int strwidth(const char *s)
-{
-    return strlen(s);
-}
-
-int strwidth(const std::string &s)
-{
-    return s.length();
 }
 
 #ifdef TARGET_OS_WINDOWS
