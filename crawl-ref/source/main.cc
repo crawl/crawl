@@ -2398,19 +2398,11 @@ static void _decrement_durations()
         //     - mutation gives a large plus in order to try and
         //       avoid the mutation being a "death sentence" to
         //       certain characters.
-        //     - knowing the spell gives an advantage just
-        //       so that people who have invested 3 spell levels
-        //       are better off than the casual potion drinker...
-        //       this should make it a bit more interesting for
-        //       Crusaders again.
-        //     - similarly for the amulet
 
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
         {
             const int chance =
-                10 + player_mutation_level(MUT_BERSERK) * 25
-                + (wearing_amulet(AMU_RAGE) ? 10 : 0)
-                + (you.has_spell(SPELL_BERSERKER_RAGE) ? 5 : 0);
+                10 + player_mutation_level(MUT_BERSERK) * 25;
 
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
