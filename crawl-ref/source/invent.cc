@@ -401,8 +401,10 @@ void InvMenu::set_title(const std::string &s)
             inv_count());
 
         std::string prompt = "Press item letter to examine.";
-        stitle = stitle + std::string(get_number_of_cols() - strwidth(stitle)
-                                      - strwidth(prompt), ' ') + prompt;
+        stitle = stitle + std::string(std::max(0, get_number_of_cols()
+                                                  - strwidth(stitle)
+                                                  - strwidth(prompt)),
+                                      ' ') + prompt;
     }
 
     set_title(new InvTitle(this, stitle, title_annotate));
