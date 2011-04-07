@@ -123,6 +123,10 @@ private:
     // inside one of the handle_phase
     bool mons_self_destructs();
     bool mons_attack_warded_off();
+    // TODO: merge mons_attk_delay with player_apply_attcK_delay
+    // this is harder than it sounds, though, since monster one returns an
+    // int and players returns a random_var. player one also automatically
+    // applies the delay.
     int mons_attk_delay();
     int mons_calc_damage(const mon_attack_def &attk);
     bool do_trample();
