@@ -4683,32 +4683,46 @@ void temperature_check()
 
 //    mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f, Tempchange: %f", factor, tension, tension_b, tension_c, tempchange);
 
-    // Off from 1 so that there's less seesawing.
-    if ((tempchange - .9) > 0)
-        temperature_increment(tempchange);
-    else if ((tempchange - 1.1) < 0)
-        temperature_decrement(tempchange);
-
-    if (feat_is_water(env.grid(you.pos())) && you.ground_level()
-        && temperature_effect(LORC_PASSIVE_HEAT))
+    // Increment temp to full if you're in lava,
+    // and don't muck with it otherwise.
+    if (feat_is_lava(env.grid(you.pos())) && you.ground_level())
     {
-        // Cools you off by 1 each turn until you're
-        // not hot enough to boil water.
-        temperature_decrement(1);
+        // If you're already very hot, no message,
+        // but otherwise it lets you know you're being
+        // brought up to max temp.
+        if (temperature() < TEMP_FIRE)
+            mpr("The lava instantly superheats you.");
+        temperature_increment(TEMP_MAX*TEMP_MAX);
+    }
+    else
+    {
+        // Off from 1 so that there's less seesawing.
+        if ((tempchange - .9) > 0)
+            temperature_increment(tempchange);
+        else if ((tempchange - 1.1) < 0)
+            temperature_decrement(tempchange);
 
-        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (feat_is_water(env.grid(you.pos())) && you.ground_level()
+            && temperature_effect(LORC_PASSIVE_HEAT))
         {
-            const coord_def p(*ai);
-            if (in_bounds(p)
-                && env.cgrid(p) == EMPTY_CLOUD
-                && one_chance_in(5))
+            // Cools you off by 1 each turn until you're
+            // not hot enough to boil water.
+            temperature_decrement(1);
+
+            for (adjacent_iterator ai(you.pos()); ai; ++ai)
             {
-                place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
+                const coord_def p(*ai);
+                if (in_bounds(p)
+                    && env.cgrid(p) == EMPTY_CLOUD
+                    && one_chance_in(5))
+                {
+                    place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
+                }
             }
         }
     }
 
-    // Occurs *after* water cool-down:
+    // Occurs *after* lava heat-up or water cool-down:
     if (temperature_effect(LORC_HEAT_AURA))
         invalidate_agrid(true);
 }
