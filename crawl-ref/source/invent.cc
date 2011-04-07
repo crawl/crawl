@@ -391,6 +391,10 @@ void InvMenu::set_title(const std::string &s)
     std::string stitle = s;
     if (stitle.empty())
     {
+        // We're not printing anything yet, but this select the crt layer
+        // so that get_number_of_cols returns the appropriate value.
+        cgotoxy(1, 1);
+
         const int cap = carrying_capacity(BS_UNENCUMBERED);
 
         stitle = make_stringf(
