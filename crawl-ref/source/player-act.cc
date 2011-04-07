@@ -205,7 +205,7 @@ int player::damage_brand(int)
     int ret = SPWPN_NORMAL;
     const int wpn = equip[EQ_WEAPON];
 
-    if (wpn != -1)
+    if (wpn != -1 && !you.melded[EQ_WEAPON])
     {
         if (!is_range_weapon(inv[wpn]))
             ret = get_weapon_brand(inv[wpn]);
