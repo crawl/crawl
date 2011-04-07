@@ -5527,6 +5527,11 @@ bool player::is_levitating() const
     return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
 }
 
+bool player::is_banished() const
+{
+    return (!alive() && banished);
+}
+
 bool player::in_water() const
 {
     return (ground_level() && !beogh_water_walk()
@@ -5734,6 +5739,20 @@ int player::adjusted_shield_penalty(int scale) const
                     (base_shield_penalty * scale
                      - skill(SK_SHIELDS) * scale
                      / (5 + player_evasion_size_factor())));
+}
+
+int player::armour_tohit_penalty(bool random_factor) const
+{
+    return maybe_roll_dice(1, adjusted_body_armour_penalty(), random_factor);
+}
+
+int player::shield_tohit_penalty(bool random_factor) const
+{
+    const item_def* wp = slot_item(EQ_WEAPON);
+    hands_reqd_type hands = hands_reqd(*wp, body_size());
+    int factor = wp && hands == HANDS_HALF ? 2 : 1;
+
+    return maybe_roll_dice(factor, adjusted_shield_penalty(), random_factor);
 }
 
 int player::skill(skill_type sk) const

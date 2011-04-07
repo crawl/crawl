@@ -2,7 +2,8 @@
  *  File:       melee_attack.cc
  *  Summary:    Methods of the melee_attack class, generalized functions which
  *              may be overloaded from inheriting classes.
- *  Written by: Robert Burnham
+ *  Written by: Linley Henzell
+ *  Revisioned by: Robert Burnham
  */
 
 #include "AppHdr.h"
@@ -98,8 +99,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     perceived_attack(false), obvious_effect(false),
     attack_number(which_attack), extra_noise(0), skip_chaos_message(false),
     special_damage_flavour(BEAM_NONE), attacker_body_armour_penalty(0),
-    attacker_shield_penalty(0), player_armour_tohit_penalty(0),
-    player_shield_tohit_penalty(0), can_do_unarmed(false), miscast_level(-1),
+    attacker_shield_penalty(0), attacker_armour_tohit_penalty(0),
+    attacker_shield_tohit_penalty(0), can_do_unarmed(false), miscast_level(-1),
     miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
     init_attack();
@@ -982,15 +983,15 @@ std::string melee_attack::player_why_missed()
 {
     const int ev = defender->melee_evasion(attacker);
     const int combined_penalty =
-        player_armour_tohit_penalty + player_shield_tohit_penalty;
+        attacker_armour_tohit_penalty + attacker_shield_tohit_penalty;
     if (to_hit < ev && to_hit + combined_penalty >= ev)
     {
         const bool armour_miss =
-            (player_armour_tohit_penalty
-             && to_hit + player_armour_tohit_penalty >= ev);
+            (attacker_armour_tohit_penalty
+             && to_hit + attacker_armour_tohit_penalty >= ev);
         const bool shield_miss =
-            (player_shield_tohit_penalty
-             && to_hit + player_shield_tohit_penalty >= ev);
+            (attacker_shield_tohit_penalty
+             && to_hit + attacker_shield_tohit_penalty >= ev);
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
         const std::string armour_name =
@@ -3139,36 +3140,19 @@ int melee_attack::calc_to_hit(bool random)
                                             : mons_to_hit());
 }
 
-// Calculates your armour+shield penalty. If random_factor is true,
-// be stochastic; if false, deterministic (e.g. for chardumps.)
-void melee_attack::calc_player_armour_shield_tohit_penalty(bool random_factor)
-{
-    if (weapon && hands == HANDS_HALF)
-    {
-        player_armour_tohit_penalty =
-            maybe_roll_dice(1, attacker_body_armour_penalty, random_factor);
-        player_shield_tohit_penalty =
-            maybe_roll_dice(2, attacker_shield_penalty, random_factor);
-    }
-    else
-    {
-        player_armour_tohit_penalty =
-            maybe_roll_dice(1, attacker_body_armour_penalty, random_factor);
-        player_shield_tohit_penalty =
-            maybe_roll_dice(1, attacker_shield_penalty, random_factor);
-    }
-}
-
 int melee_attack::player_to_hit(bool random_factor)
 {
-    calc_player_armour_shield_tohit_penalty(random_factor);
+    attacker_armour_tohit_penalty =
+        attacker->armour_tohit_penalty(random_factor);
+    attacker_shield_tohit_penalty =
+        attacker->shield_tohit_penalty(random_factor);
 
     dprf("Armour/shield to-hit penalty: %d/%d",
-         player_armour_tohit_penalty, player_shield_tohit_penalty);
+         attacker_armour_tohit_penalty, attacker_shield_tohit_penalty);
 
     can_do_unarmed =
-        player_fights_well_unarmed(player_armour_tohit_penalty
-                                   + player_shield_tohit_penalty);
+        player_fights_well_unarmed(attacker_armour_tohit_penalty
+                                   + attacker_shield_tohit_penalty);
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
 
@@ -3244,7 +3228,7 @@ int melee_attack::player_to_hit(bool random_factor)
         your_to_hit -= 3;
 
     // armour penalty
-    your_to_hit -= (player_armour_tohit_penalty + player_shield_tohit_penalty);
+    your_to_hit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
     //mutation
     if (player_mutation_level(MUT_EYEBALLS))
