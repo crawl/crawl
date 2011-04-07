@@ -2835,7 +2835,10 @@ static void _update_golubria_traps()
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
             if (--trap->ammo_qty <= 0)
+            {
+                mpr("Your passage of Golubria closes.");
                 trap->destroy();
+            }
         }
     }
 }
