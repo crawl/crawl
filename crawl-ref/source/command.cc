@@ -591,7 +591,7 @@ void list_jewellery(void)
 {
     std::ostringstream jstr;
 
-    for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; i++)
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
     {
         const int jewellery_id = you.equip[i];
         int       colour       = MSGCOL_BLACK;

@@ -2441,7 +2441,7 @@ void maybe_id_ring_TC()
     }
 
     int num_unknown = 0;
-    for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; ++i)
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
         if (i == EQ_AMULET)
             continue;
@@ -2456,7 +2456,7 @@ void maybe_id_ring_TC()
     if (num_unknown == 0)
         return;
 
-    for (int i = EQ_LEFT_RING; i <= NUM_EQUIP; ++i)
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
         if (i == EQ_AMULET)
             continue;
