@@ -2,6 +2,7 @@
 #define MONSTER_H
 
 #include "actor.h"
+#include "bitary.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
@@ -92,6 +93,7 @@ public:
     unsigned short foe;
     int8_t ench_countdown;
     mon_enchant_list enchantments;
+    FixedBitArray<NUM_ENCHANTMENTS> ench_cache;
     uint64_t flags;                    // bitfield of boolean flags
 
     unsigned int experience;
@@ -168,7 +170,7 @@ public:
     // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
     bool is_shapeshifter() const;
 
-    bool has_ench(enchant_type ench) const;
+    bool has_ench(enchant_type ench) const { return ench_cache[ench]; }
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
                          enchant_type ench2 = ENCH_NONE) const;
