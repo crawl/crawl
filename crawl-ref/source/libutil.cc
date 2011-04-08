@@ -759,6 +759,7 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
             }
             else
             {
+                cw = 0;
                 // Skip the whole tag.
                 while (*cp != '>')
                 {
