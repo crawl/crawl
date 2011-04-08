@@ -1214,18 +1214,20 @@ static bool _fire_validate_item(int slot, std::string &err)
 }
 
 // Returns true if warning is given.
-static bool _fire_warn_if_impossible()
+bool fire_warn_if_impossible(bool silent)
 {
     if (you.species == SP_CAT)
     {
-        mpr("You can't grasp things well enough to throw them.");
+        if (!silent)
+            mpr("You can't grasp things well enough to throw them.");
         return (true);
     }
 
     // If you can't wield it, you can't throw it.
     if (!form_can_wield())
     {
-        canned_msg(MSG_PRESENT_FORM);
+        if (!silent)
+            canned_msg(MSG_PRESENT_FORM);
         return (true);
     }
 
@@ -1234,20 +1236,23 @@ static bool _fire_warn_if_impossible()
         const item_def *weapon = you.weapon();
         if (!weapon || !is_range_weapon(*weapon))
         {
-            mpr("You cannot throw anything while held in a net!");
+            if (!silent)
+                mpr("You cannot throw anything while held in a net!");
             return (true);
         }
         else if (weapon->sub_type != WPN_BLOWGUN)
         {
-            mprf("You cannot shoot with your %s while held in a net!",
-                 weapon->name(DESC_BASENAME).c_str());
+            if (!silent)
+                mprf("You cannot shoot with your %s while held in a net!",
+                     weapon->name(DESC_BASENAME).c_str());
             return (true);
         }
         // Else shooting is possible.
     }
     if (you.berserk())
     {
-        canned_msg(MSG_TOO_BERSERK);
+        if (!silent)
+            canned_msg(MSG_TOO_BERSERK);
         return (true);
     }
     return (false);
@@ -1255,7 +1260,7 @@ static bool _fire_warn_if_impossible()
 
 int get_ammo_to_shoot(int item, dist &target, bool teleport)
 {
-    if (_fire_warn_if_impossible())
+    if (fire_warn_if_impossible())
     {
         flush_input_buffer(FLUSH_ON_FAILURE);
         return (-1);
@@ -1293,7 +1298,7 @@ void fire_thing(int item)
 // the quiver.
 void throw_item_no_quiver()
 {
-    if (_fire_warn_if_impossible())
+    if (fire_warn_if_impossible())
     {
         flush_input_buffer(FLUSH_ON_FAILURE);
         return;

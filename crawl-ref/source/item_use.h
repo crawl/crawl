@@ -60,6 +60,7 @@ void read_scroll(int slot = -1);
 bool remove_ring(int slot = -1, bool announce = false);
 
 bool item_is_quivered(const item_def &item);
+bool fire_warn_if_impossible(bool silent = false);
 int get_next_fire_item(int current, int offset);
 int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 void fire_thing(int item = -1);
