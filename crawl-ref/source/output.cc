@@ -407,6 +407,7 @@ static void _print_stats_wp(int y)
     }
     else
     {
+        const std::string prefix = "-) ";
         col = LIGHTGREY;
         text = you.has_usable_claws(true) ? "Claws" : "Nothing wielded";
         if (you.species == SP_CAT)
@@ -447,7 +448,11 @@ static void _print_stats_wp(int y)
             default:
                 break;
         }
+
+    text = prefix + text;
+
     }
+
     cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
     cprintf("Wp: ");
@@ -464,7 +469,7 @@ static void _print_stats_qv(int y)
 
     int q = you.m_quiver->get_fire_item();
     ASSERT(q >= -1 && q < ENDOFPACK);
-    if (q != -1)
+    if (q != -1 && !fire_warn_if_impossible(true))
     {
         const item_def& quiver = you.inv[q];
         const std::string prefix = menu_colour_item_prefix(quiver);
@@ -478,8 +483,20 @@ static void _print_stats_qv(int y)
     }
     else
     {
-        col = LIGHTGREY;
-        text = "Nothing quivered";
+        const std::string prefix = "-) ";
+
+        if (fire_warn_if_impossible(true))
+        {
+            col = RED;
+            text = "Unavailable";
+        }
+        else
+        {
+            col = LIGHTGREY;
+            text = "Nothing quivered";
+        }
+
+        text = prefix + text;
     }
     cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
