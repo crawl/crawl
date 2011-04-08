@@ -21,7 +21,6 @@ If, however, you're having trouble getting a precompiled binary to run:
                                     or stone_soup-VERSION-tiles-osx-app.dmg
     Mac OS X        no              stone_soup-VERSION-osx.zip
                                     or stone_soup-VERSION-osx-app.dmg
-    DOS             no              stone_soup-VERSION-dos.zip
     Source code     yes             stone_soup-VERSION-src.zip
                                     or stone_soup-VERSION-src.tar.bz2
 
@@ -48,7 +47,7 @@ as of version 0.8:
 - Microsoft Windows NT/2000/XP.
 
 The only officially supported compiler is gcc (available on almost all
-Unixes, and as djgpp for DOS, and MinGW for Windows).
+Unixes, and as MinGW for Windows).
 
 On other platforms, your mileage may wary, but you should be able to build
 Crawl on pretty much any operating system with a modern C++ compiler (full
@@ -56,9 +55,7 @@ support for the standard C++ library, in particular <string>, the collection
 classes and <algorithm> is necessary) and the curses library.
 
 Windows 9X and ME are no longer supported but you may probably build for
-them with relatively minor changes.  We also used to support DOS in the past
-and the remnants of DOS code are still present, but getting them to work may
-require a substantial effort.  If you have any success, please let us know!
+them with relatively minor changes.
 
 
 Source Code Checkout
@@ -223,7 +220,8 @@ Building on Windows (MinGW)
 
 NOTE: You cannot build Windows binaries on Windows 9x/ME using MinGW. On
 9x/ME, you can use the Cygwin build instructions, or build a binary on a
-Windows NT/2k/XP system (the binary will run on 9x), or build a DOS binary.
+Windows NT/2k/XP system (although it would require a good bit of porting to
+run on 9x).
 
 * To install MinGW, you have two options. You can install via the installer
   provided by the MinGW project (http://www.mingw.org), but this is not
@@ -271,28 +269,6 @@ Building on Windows (cygwin)
   sources in c:\crawl\source, you would type 'cd /cygdrive/c/crawl/source'.
 
 * Follow the Linux build instructions to build Crawl.
-
-
-Building for DOS (djgpp) -- unsupported!
-----------------------------------------
-
-* Install djgpp from http://www.delorie.com/djgpp/. Don't forget to include
-  C++ support when the Zip picker asks for what you want.  You may also have
-  to download GNU make as a separate package.  It's important to follow the
-  install instructions carefully, because bad installs can produce rather
-  confusing error messages.
-
-* Make sure gxx and make are in your PATH.
-
-* If you want to modify the level compiler, install the djgpp flex, bison
-  and m4 packages and set DOYACC := y in makefile.dos.
-
-* cd to the Crawl source directory.
-
-* Build Crawl by running
-        make -f makefile.dos
-
-* When the build is done, crawl.exe should be in the source directory.
 
 
 Building Tiles versions
