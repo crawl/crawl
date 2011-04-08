@@ -184,6 +184,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 
     const bool alreadyknown = item_type_known(item);
     const bool dangerous    = player_in_a_dangerous_place();
+    const bool msg          = !show_msgs || *show_msgs;
 
     artefact_properties_t  proprt;
     artefact_known_props_t known;
@@ -195,8 +196,11 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         you.redraw_armour_class = true;
         if (!known[ARTP_AC])
         {
-            mprf("You feel %s.", proprt[ARTP_AC] > 0?
-                 "well-protected" : "more vulnerable");
+            if (msg)
+            {
+                mprf("You feel %s.", proprt[ARTP_AC] > 0?
+                     "well-protected" : "more vulnerable");
+            }
             artefact_wpn_learn_prop(item, ARTP_AC);
         }
     }
@@ -206,15 +210,19 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         you.redraw_evasion = true;
         if (!known[ARTP_EVASION])
         {
-            mprf("You feel somewhat %s.", proprt[ARTP_EVASION] > 0?
-                 "nimbler" : "more awkward");
+            if (msg)
+            {
+                mprf("You feel somewhat %s.", proprt[ARTP_EVASION] > 0?
+                     "nimbler" : "more awkward");
+            }
             artefact_wpn_learn_prop(item, ARTP_EVASION);
         }
     }
 
     if (proprt[ARTP_PONDEROUS] && !unmeld)
     {
-        mpr("You feel rather ponderous.");
+        if (msg)
+            mpr("You feel rather ponderous.");
         che_handle_change(CB_PONDEROUS, 1);
     }
 
@@ -223,16 +231,19 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
-        canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
-                                                  : MSG_MANA_DECREASE);
+        if (msg)
+        {
+            canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
+                                                      : MSG_MANA_DECREASE);
+        }
         artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
     }
 
     // Modify ability scores.
     // Output result even when identified (because of potential fatality).
-    notify_stat_change(STAT_STR,     proprt[ARTP_STRENGTH],     false, item);
-    notify_stat_change(STAT_INT, proprt[ARTP_INTELLIGENCE], false, item);
-    notify_stat_change(STAT_DEX,    proprt[ARTP_DEXTERITY],    false, item);
+    notify_stat_change(STAT_STR,     proprt[ARTP_STRENGTH], !msg, item);
+    notify_stat_change(STAT_INT, proprt[ARTP_INTELLIGENCE], !msg, item);
+    notify_stat_change(STAT_DEX,    proprt[ARTP_DEXTERITY], !msg, item);
 
     const artefact_prop_type stat_props[3] =
         {ARTP_STRENGTH, ARTP_INTELLIGENCE, ARTP_DEXTERITY};
@@ -247,30 +258,35 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     if (unknown_proprt(ARTP_LEVITATE)
         && !items_give_ability(item.link, ARTP_LEVITATE))
     {
-        if (you.airborne())
-            mpr("You feel vaguely more buoyant than before.");
-        else
-            mpr("You feel buoyant.");
+        if (msg)
+        {
+            if (you.airborne())
+                mpr("You feel vaguely more buoyant than before.");
+            else
+                mpr("You feel buoyant.");
+        }
         artefact_wpn_learn_prop(item, ARTP_LEVITATE);
     }
 
     if (unknown_proprt(ARTP_INVISIBLE) && !you.duration[DUR_INVIS])
     {
-        mpr("You become transparent for a moment.");
+        if (msg)
+            mpr("You become transparent for a moment.");
         artefact_wpn_learn_prop(item, ARTP_INVISIBLE);
     }
 
     if (unknown_proprt(ARTP_BERSERK)
         && !items_give_ability(item.link, ARTP_BERSERK))
     {
-        mpr("You feel a brief urge to hack something to bits.");
+        if (msg)
+            mpr("You feel a brief urge to hack something to bits.");
         artefact_wpn_learn_prop(item, ARTP_BERSERK);
     }
 
     if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
          && one_chance_in(proprt[ARTP_CURSED]))
     {
-        do_curse_item(item, false);
+        do_curse_item(item, !msg);
         artefact_wpn_learn_prop(item, ARTP_CURSED);
     }
 
@@ -301,11 +317,12 @@ static void _unequip_artefact_effect(const item_def &item,
     artefact_properties_t proprt;
     artefact_known_props_t known;
     artefact_wpn_properties(item, proprt, known);
+    const bool msg = !show_msgs || *show_msgs;
 
     if (proprt[ARTP_AC])
     {
         you.redraw_armour_class = true;
-        if (!known[ARTP_AC])
+        if (!known[ARTP_AC] && msg)
         {
             mprf("You feel less %s.",
                  proprt[ARTP_AC] > 0? "well-protected" : "vulnerable");
@@ -315,7 +332,7 @@ static void _unequip_artefact_effect(const item_def &item,
     if (proprt[ARTP_EVASION])
     {
         you.redraw_evasion = true;
-        if (!known[ARTP_EVASION])
+        if (!known[ARTP_EVASION] && msg)
         {
             mprf("You feel less %s.",
                  proprt[ARTP_EVASION] > 0? "nimble" : "awkward");
@@ -324,22 +341,23 @@ static void _unequip_artefact_effect(const item_def &item,
 
     if (proprt[ARTP_PONDEROUS] && !meld)
     {
-        mpr("That put a bit of spring back into your step.");
+        if (msg)
+            mpr("That put a bit of spring back into your step.");
         che_handle_change(CB_PONDEROUS, -1);
     }
 
-    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
+    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
     {
         canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_DECREASE
                                                   : MSG_MANA_INCREASE);
     }
 
     // Modify ability scores; always output messages.
-    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     false, item,
+    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     !msg, item,
                        true);
-    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], false, item,
+    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], !msg, item,
                        true);
-    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    false, item,
+    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    !msg, item,
                        true);
 
     if (proprt[ARTP_NOISES] != 0)
