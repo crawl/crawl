@@ -1406,6 +1406,8 @@ bool go_berserk(bool intentional, bool potion)
     if (you.berserk_penalty != NO_BERSERK_PENALTY)
         you.berserk_penalty = 0;
 
+    you.redraw_quiver = true; // Account for no firing.
+
     return (true);
 }
 
@@ -2416,7 +2418,7 @@ void swap_with_monster(monster* mon_to_swap)
         {
             you.attribute[ATTR_HELD] = 10;
             mpr("You become entangled in the net!");
-
+            you.redraw_quiver = true; // Account for being in a net.
             // Xom thinks this is hilarious if you trap yourself this way.
             if (you_caught)
                 xom_is_stimulated(16);

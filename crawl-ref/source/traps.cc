@@ -325,6 +325,7 @@ bool player_caught_in_net()
         }
 
         stop_delay(true); // even stair delays
+        redraw_screen(); // Account for changes in display.
         return (true);
     }
     return (false);
