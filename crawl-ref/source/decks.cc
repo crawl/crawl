@@ -29,6 +29,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "maps.h"
 #include "message.h"
@@ -978,7 +979,7 @@ static void _describe_cards(std::vector<card_type> cards)
     formatted_string fs = formatted_string::parse_string(data.str());
     clrscr();
     fs.display();
-    wait_for_keypress();
+    getchm();
     redraw_screen();
 }
 

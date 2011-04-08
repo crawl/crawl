@@ -690,13 +690,11 @@ void game_options::reset_options()
     morgue_dir = tmp_path_base + "/morgue/";
     if (SysEnv.macro_dir.empty())
         macro_dir  = tmp_path_base;
-#elif !defined(TARGET_OS_DOS)
-    save_dir   = "saves/";
 #else
-    save_dir.clear();
+    save_dir   = "saves/";
 #endif
 
-#if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
+#if !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
     morgue_dir = "morgue/";
 #endif
 
@@ -841,11 +839,7 @@ void game_options::reset_options()
     classic_item_colours   = false;
 
     easy_exit_menu         = true;
-#ifdef TARGET_OS_DOS
-    dos_use_background_intensity = false;
-#else
     dos_use_background_intensity = true;
-#endif
 
     level_map_title        = true;
 
@@ -3252,9 +3246,6 @@ std::string game_options::resolve_include(
     // favoured file separator.
     parent_file   = canonicalise_file_separator(parent_file);
     included_file = canonicalise_file_separator(included_file);
-#if defined(TARGET_OS_DOS)
-    get_dos_compatible_file_name(&included_file);
-#endif
 
     // How we resolve include paths:
     // 1. If it's an absolute path, use it directly.

@@ -807,7 +807,7 @@ void full_describe_view()
             else // ACT_EXECUTE, here used to display monster status.
             {
                 _describe_monster(mi);
-                wait_for_keypress();
+                getchm();
             }
         }
         else if (quant == 2)

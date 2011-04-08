@@ -2752,7 +2752,7 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
         return _actions_prompt(item, allow_inscribe);
     }
     else
-        wait_for_keypress();
+        getchm();
 
     return (true);
 }
@@ -4673,7 +4673,7 @@ void describe_skill(skill_type skill)
     data << get_skill_description(skill, true);
 
     print_description(data.str());
-    wait_for_keypress();
+    getchm();
 }
 
 #ifdef USE_TILE

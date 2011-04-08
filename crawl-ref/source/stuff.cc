@@ -319,10 +319,6 @@ void cio_init()
     init_libw32c();
 #endif
 
-#ifdef TARGET_OS_DOS
-    init_libdos();
-#endif
-
     set_cursor_enabled(false);
 
     crawl_view.init_geometry();
@@ -387,7 +383,6 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
     }
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
-     || defined(TARGET_OS_DOS) \
      || defined(DGL_PAUSE_AFTER_ERROR)
     bool need_pause = true;
     if (exit_code && !error.empty())
@@ -409,7 +404,6 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
     }
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
-     || defined(TARGET_OS_DOS) \
      || defined(DGL_PAUSE_AFTER_ERROR)
     if (need_pause && exit_code && !crawl_state.game_is_arena()
         && !crawl_state.seen_hups && !crawl_state.test)

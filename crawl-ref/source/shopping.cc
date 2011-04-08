@@ -2792,7 +2792,7 @@ void ShoppingList::display()
                          (int) thing_cost(*thing));
 
                 print_description(info);
-                wait_for_keypress();
+                getchm();
             }
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)

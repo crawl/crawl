@@ -13,10 +13,6 @@
 #include <cctype>
 #include <cmath>
 
-#ifdef TARGET_OS_DOS
-#include <file.h>
-#endif
-
 #ifdef UNIX
 #include <sys/types.h>
 #include <fcntl.h>
@@ -1337,9 +1333,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
 static std::string _morgue_name(time_t when_crawl_got_even)
 {
-#ifdef SHORT_FILE_NAMES
-    return "morgue";
-#else  // !SHORT_FILE_NAMES
     std::string name = "morgue-" + you.your_name;
 
     std::string time = make_file_time(when_crawl_got_even);
@@ -1347,7 +1340,6 @@ static std::string _morgue_name(time_t when_crawl_got_even)
         name += "-" + time;
 
     return (name);
-#endif // SHORT_FILE_NAMES
 }
 
 // Delete save files on game end.
