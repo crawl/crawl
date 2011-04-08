@@ -1821,7 +1821,7 @@ struct spell_desc
     SPELL_DISCHARGE, "Static Discharge",
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_AREA,
-     4,
+     3,
      200,
      -1, -1,
      0,
