@@ -1133,7 +1133,7 @@ else
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
 endif
 
-icon.o: util/crawl.rc util/crawl.ico
+icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
 #

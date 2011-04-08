@@ -52,6 +52,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shlwapi.h>
+#include <shlobj.h>
 #elif defined (__APPLE__)
 extern char **NXArgv;
 #elif defined (__linux__)
