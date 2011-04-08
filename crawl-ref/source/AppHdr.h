@@ -83,7 +83,6 @@
 // =========================================================================
 //  System Defines
 // =========================================================================
-// Define plain_term for Unix and dos_term for DOS.
 
 #ifdef UNIX
     // Uncomment if you're running Crawl with dgamelaunch and have
@@ -145,25 +144,6 @@
     // #define COL_TO_REPLACE_DARKGREY     MAGENTA
 
     #include "libunix.h"
-
-#elif defined(TARGET_OS_DOS)
-    #define SHORT_FILE_NAMES
-
-    #define FILE_SEPARATOR '\\'
-
-    #include <string>
-    #include "libdos.h"
-
-    #include <dos.h>
-    #include <file.h>
-
-    #define round(x) floor((x)+0.5)
-
-    // Use Perl-compatible regular expressions. libpcre must be available and
-    // linked in.  This is optional.
-    #ifndef REGEX_PCRE
-    #define REGEX_PCRE
-    #endif
 
 #elif defined(TARGET_OS_WINDOWS)
     #if !defined(USE_TILE)

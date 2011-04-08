@@ -14,10 +14,6 @@
 #include <stdio.h>
 #include <cmath>
 
-#ifdef TARGET_OS_DOS
-#include <dos.h>
-#endif
-
 #include "externs.h"
 
 #include "abl-show.h"

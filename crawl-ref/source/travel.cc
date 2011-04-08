@@ -59,10 +59,6 @@
 #include <memory>
 #include <sstream>
 
-#ifdef TARGET_OS_DOS
-#include <dos.h>
-#endif
-
 enum IntertravelDestination
 {
     // Go down a level

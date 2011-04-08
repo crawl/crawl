@@ -1329,7 +1329,7 @@ static void _print_talent_description(const talent& tal)
         data << make_detailed_cost_description(tal.which);
         print_description(data.str());
     }
-    wait_for_keypress();
+    getchm();
     clrscr();
 }
 

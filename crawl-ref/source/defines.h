@@ -236,7 +236,6 @@ const int ANTITRAIN_PENALTY = 2;
 #define igrd   env.igrid
 
 // colors, such pretty colors ...
-#ifndef TARGET_OS_DOS
 // The order is important (IRGB bit patterns).
 enum COLORS
 {
@@ -260,12 +259,6 @@ enum COLORS
     WHITE,
     MAX_TERM_COLOUR
 };
-#else
-# include <conio.h>
-# define LIGHTGREY LIGHTGRAY
-# define DARKGREY DARKGRAY
-# define MAX_TERM_COLOUR 16
-#endif
 
 // Colour options... these are used as bit flags along with the colour
 // value in the low byte.

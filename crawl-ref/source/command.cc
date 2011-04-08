@@ -226,24 +226,6 @@ static void _print_version(void)
     // Read in information about changes in comparison to the latest version.
     FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
 
-#if defined(TARGET_OS_DOS)
-    if (!fp)
-    {
- #ifdef DEBUG_FILES
-        mprf(MSGCH_DIAGNOSTICS, "File '%s' could not be opened.",
-             fname.c_str());
- #endif
-        if (get_dos_compatible_file_name(&fname))
-        {
- #ifdef DEBUG_FILES
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Attempting to open file '%s'", fname.c_str());
- #endif
-            fp = fopen_u(datafile_path(fname, false).c_str(), "r");
-        }
-    }
-#endif
-
     if (fp)
     {
         char buf[200];
@@ -1495,7 +1477,7 @@ static bool _handle_FAQ()
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
             linebreak_string(answer, width - 1);
             print_description(answer);
-            wait_for_keypress();
+            getchm();
         }
     }
 
@@ -1696,7 +1678,7 @@ static void _find_description(bool *again, std::string *error_inout)
     else if (key_list.size() == 1)
     {
         if (_do_description(key_list[0], type))
-            wait_for_keypress();
+            getchm();
         return;
     }
 
@@ -1849,7 +1831,7 @@ static void _find_description(bool *again, std::string *error_inout)
                 key = *((std::string*) sel[0]->data);
 
             if (_do_description(key, type))
-                wait_for_keypress();
+                getchm();
         }
     }
 }
@@ -2053,24 +2035,6 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             // Attempt to open this file, skip it if unsuccessful.
             std::string fname = canonicalise_file_separator(help_files[i].name);
             FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
-
-#if defined(TARGET_OS_DOS)
-            if (!fp)
-            {
- #ifdef DEBUG_FILES
-                mprf(MSGCH_DIAGNOSTICS, "File '%s' could not be opened.",
-                     help_files[i].name);
- #endif
-                if (get_dos_compatible_file_name(&fname))
-                {
- #ifdef DEBUG_FILES
-                    mprf(MSGCH_DIAGNOSTICS,
-                         "Attempting to open file '%s'", fname.c_str());
- #endif
-                    fp = fopen_u(datafile_path(fname, false).c_str(), "r");
-                }
-            }
-#endif
 
             if (!fp)
                 continue;

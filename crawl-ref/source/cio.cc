@@ -17,12 +17,11 @@
 
 #include <queue>
 
-#ifdef UNIX
 extern int unixcurses_get_vi_key(int keyin);
 
 static keycode_type _numpad2vi(keycode_type key)
 {
-#ifndef USE_TILE
+#if defined(UNIX) && !defined(USE_TILE)
     key = unixcurses_get_vi_key(key);
 #endif
     switch (key)
@@ -31,6 +30,7 @@ static keycode_type _numpad2vi(keycode_type key)
     case CK_DOWN:  key = 'j'; break;
     case CK_LEFT:  key = 'h'; break;
     case CK_RIGHT: key = 'l'; break;
+#if defined(UNIX) && !defined(USE_TILE)
     case -1001:    key = 'b'; break;
     case -1002:    key = 'j'; break;
     case -1003:    key = 'n'; break;
@@ -40,6 +40,7 @@ static keycode_type _numpad2vi(keycode_type key)
     case -1007:    key = 'y'; break;
     case -1008:    key = 'k'; break;
     case -1009:    key = 'u'; break;
+#endif
     }
     if (key >= '1' && key <= '9')
     {
@@ -48,17 +49,13 @@ static keycode_type _numpad2vi(keycode_type key)
     }
     return (key);
 }
-#endif
 
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
                             bool fake_ctrl, bool fake_shift)
 {
-#ifdef UNIX
-    // Kludging running and opening as two character sequences
-    // for Unix systems.  This is an easy way out... all the
-    // player has to do is find a termcap and numlock setting
-    // that will get curses the numbers from the keypad.  This
-    // will hopefully be easy.
+    // Kludging running and opening as two character sequences.
+    // This is useful when you can't use control keys (macros, lua) or have
+    // them bound to something on your system.
 
     /* can we say yuck? -- haranp */
     if (fake_ctrl && keyin == '*')
@@ -73,33 +70,6 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
         // return shift-key
         keyin = toupper(_numpad2vi(keyin));
     }
-#else
-    // Old DOS keypad support
-    if (keyin == 0)
-    {
-        /* FIXME haranp - hackiness */
-        const char DOSidiocy[10]     = { "OPQKSMGHI" };
-        const char DOSunidiocy[10]   = { "bjnh.lyku" };
-        const int DOScontrolidiocy[9] =
-        {
-            117, 145, 118, 115, 76, 116, 119, 141, 132
-        };
-        keyin = getchm(keymap);
-        for (int j = 0; j < 9; ++j)
-        {
-            if (keyin == DOSidiocy[j])
-            {
-                keyin = DOSunidiocy[j];
-                break;
-            }
-            if (keyin == DOScontrolidiocy[j])
-            {
-                keyin = CONTROL(toupper(DOSunidiocy[j]));
-                break;
-            }
-        }
-    }
-#endif
 
     // [dshaligram] More lovely keypad mangling.
     switch (keyin)

@@ -32,7 +32,6 @@ std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
 std::string upcase_first(std::string);
 
-void wait_for_keypress();
 bool key_is_escape(int key);
 
 #define CASE_ESCAPE case ESCAPE: case CONTROL('G'): case -1:

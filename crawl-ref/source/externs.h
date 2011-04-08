@@ -72,11 +72,7 @@ protected:
 extern char info[INFO_SIZE];         // defined in main.cc {dlb}
 
 #define kNameLen        30
-#ifdef SHORT_FILE_NAMES
-    const int kFileNameLen = 6;
-#else
-    const int kFileNameLen = 250;
-#endif
+const int kFileNameLen = 250;
 
 // Used only to bound the init file name length
 const int kPathLen = 256;

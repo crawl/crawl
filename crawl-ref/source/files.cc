@@ -125,10 +125,6 @@ static bool _is_uid_file(const std::string &name, const std::string &ext)
 {
     std::string save_suffix = get_savedir_filename("", "", "");
     save_suffix += ext;
-#ifdef TARGET_OS_DOS
-    // Grumble grumble. Hang all retarded operating systems.
-    uppercase(save_suffix);
-#endif
 
     save_suffix = save_suffix.substr(get_savefile_directory().length());
 
@@ -168,29 +164,6 @@ player_save_info read_character_info(package *save)
 
     return fromfile;
 }
-
-#if defined(TARGET_OS_DOS)
-// Abbreviates a given file name to DOS style "xxxxxx~1.txt".
-// Does not take into account files with differing suffixes or files
-// with a prepended path with more than one separator.
-// (It does handle all files included with the distribution except
-//  changes.stone_soup.)
-bool get_dos_compatible_file_name(std::string *fname)
-{
-    std::string::size_type pos1 = fname->find("\\");
-    if (pos1 == std::string::npos)
-        pos1 = 0;
-
-    const std::string::size_type pos2 = fname->find(".txt");
-    // Name already fits DOS requirements, nothing to be done.
-    if (fname->substr(pos1, pos2).length() <= 8)
-        return (false);
-
-    *fname = fname->substr(0,pos1) + fname->substr(pos1, pos1 + 6) + "~1.txt";
-
-    return (true);
-}
-#endif
 
 // Returns a vector of files (including directories if requested) in
 // the given directory, recursively. All filenames returned are
@@ -759,10 +732,6 @@ std::string get_savedir_filename(const std::string &prefix,
     std::string result = get_savefile_directory();
     result += get_save_filename(prefix, suffix, extension, suppress_uid);
 
-#ifdef TARGET_OS_DOS
-    uppercase(result);
-#endif
-
     return result;
 }
 
@@ -784,9 +753,6 @@ std::string get_save_filename(const std::string &prefix,
         result += extension;
     }
 
-#ifdef TARGET_OS_DOS
-    uppercase(result);
-#endif
     return result;
 }
 
@@ -831,9 +797,7 @@ public:
         : target_filename(filename), tmp_filename(target_filename),
           filemode(mode), lock(_lock), filep(NULL)
     {
-#ifndef SHORT_FILE_NAMES
         tmp_filename = target_filename + ".tmp";
-#endif
     }
 
     ~safe_file_writer()

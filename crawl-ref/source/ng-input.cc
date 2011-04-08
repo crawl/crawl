@@ -128,7 +128,7 @@ void enter_player_name(newgame_def *ng)
 
 bool validate_player_name(const std::string &name, bool verbose)
 {
-#if defined(TARGET_OS_DOS) || defined(TARGET_OS_WINDOWS)
+#if defined(TARGET_OS_WINDOWS)
     // Quick check for CON -- blows up real good under DOS/Windows.
     if (stricmp(name.c_str(), "con") == 0
         || stricmp(name.c_str(), "nul") == 0

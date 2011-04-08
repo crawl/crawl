@@ -177,9 +177,6 @@ ifdef CROSSHOST
 	ifneq (,$(findstring mingw,$(CROSSHOST)))
 		uname_S=MINGW32
 	endif
-	ifneq (,$(findstring djgpp,$(CROSSHOST)))
-		uname_S=DOS
-	endif
 
 endif
 ifneq (,$(findstring MINGW,$(uname_S)))
@@ -200,14 +197,6 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 	endif
-endif
-ifeq ($(uname_S),DOS)
-	GAME = crawl.exe
-	bin_prefix = .
-	NO_NCURSES = yes
-	NEED_LIBDOS = yes
-	BUILD_PCRE = yes
-	NO_RDYNAMIC = yes
 endif
 ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
@@ -293,11 +282,7 @@ ifndef TILES
 ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
 else
-ifdef NEED_LIBDOS
-OBJECTS += libdos.o
-else
 OBJECTS += libunix.o
-endif
 endif
 endif
 
