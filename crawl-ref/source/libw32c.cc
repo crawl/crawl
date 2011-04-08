@@ -43,15 +43,14 @@
 #define NOSERVICE         /* All Service Controller routines, SERVICE_ equates, etc. */
 #define NOKANJI           /* Kanji support stuff. */
 #define NOMCX             /* Modem Configuration Extensions */
-#ifndef _X86_
-#define _X86_                     /* target architecture */
-#endif
 
 #include <excpt.h>
 #include <stdarg.h>
 #undef ARRAYSZ
 #include <windows.h>
 #undef max
+#undef AF_CHAOS
+#undef S_NORMAL
 
 // END -- WINDOWS INCLUDES
 
