@@ -2454,6 +2454,7 @@ static void _decrement_durations()
 
         learned_something_new(HINT_POSTBERSERK);
         Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
+        you.redraw_quiver = true; // Can throw again.
     }
 
     if (_decrement_a_duration(DUR_CORONA, delay))
