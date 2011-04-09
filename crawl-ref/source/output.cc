@@ -719,7 +719,13 @@ void print_stats(void)
         _print_stats_wp(9 + yhack);
     }
 
-    if (you.redraw_quiver || you.wield_change)
+    if (you.species == SP_CAT)
+    {
+        // There are no circumstances under which Felids could quiver something.
+        // Reduce line counter for status display.y
+        yhack -= 1;
+    }
+    else if (you.redraw_quiver || you.wield_change)
     {
         _print_stats_qv(10 + yhack);
         you.redraw_quiver = false;
