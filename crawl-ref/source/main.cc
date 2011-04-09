@@ -3820,6 +3820,30 @@ static void _move_player(coord_def move)
         return;
 
     const dungeon_feature_type targ_grid = grd(targ);
+
+    if (!need_expiration_warning() && need_expiration_warning(targ))
+    {
+        std::string prompt = "Are you sure you want to ";
+        const bool lev = need_expiration_warning(DUR_LEVITATION, targ);
+        if (lev)
+        {
+            prompt += you.flight_mode() == FL_FLY ? "fly" : "levitate";
+            prompt += " over ";
+        }
+        else
+            prompt += "go into ";
+
+        prompt += targ_grid == DNGN_DEEP_WATER ? "deep water" : "lava";
+        prompt += lev ? " while you are losing your buoyancy?"
+                      : " while your transformation is expiring?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
     {

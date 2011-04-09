@@ -341,10 +341,6 @@ public:
   // The last spell cast by the player.
   spell_type last_cast_spell;
 
-  // Has the player already been warned about an expiring effect?
-  bool lev_expire_warning;
-  bool form_expire_warning;
-
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
@@ -922,5 +918,6 @@ bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false);
 void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
-bool need_expiration_warning(duration_type dur);
+bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
+bool need_expiration_warning(coord_def p = you.pos());
 #endif
