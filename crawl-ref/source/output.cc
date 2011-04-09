@@ -487,12 +487,12 @@ static void _print_stats_qv(int y)
 
         if (fire_warn_if_impossible(true))
         {
-            col = RED;
+            col  = DARKGREY;
             text = "Unavailable";
         }
         else
         {
-            col = LIGHTGREY;
+            col  = LIGHTGREY;
             text = "Nothing quivered";
         }
 
