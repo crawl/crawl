@@ -2175,7 +2175,10 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
             ASSERT(!invalid_monster_index(h_idx));
             head = &menv[h_idx];
             h_pos = head->pos();  // head position
-            ASSERT(adjacent(t_pos, h_pos));
+            // If the tentacle and its "head" segment are no longer adjacent
+            // (distortion etc.), just treat them as not connected.
+            if (!adjacent(t_pos, h_pos))
+                no_head_connect = true;
         }
         if (!no_head_connect)
         {
