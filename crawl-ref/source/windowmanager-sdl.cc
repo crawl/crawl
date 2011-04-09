@@ -181,7 +181,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     // Alt does not get baked into keycodes like shift and ctrl, so handle it.
     const int key_offset = (mod & MOD_ALT) ? -3000 : 0;
 
-    const bool is_ascii = ((keysym.unicode & 0xFF80) == 0);
+    const bool is_ascii = keysym.unicode < 127;
     return (is_ascii ? (keysym.unicode & 0x7F) + key_offset : keysym.unicode);
 }
 
