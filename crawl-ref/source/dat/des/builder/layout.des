@@ -790,7 +790,7 @@ MAP
 ENDMAP
 
 NAME: layout_bigger_room
-DEPTH: 9-22, !Vault
+DEPTH: 9-22, !Vault, !Crypt
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
