@@ -1650,7 +1650,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "}\n\n");
 
         fprintf(fp, "function get%sImg(idx) {\n", lcname.c_str());
-        add_abstracts(fp, "return \"/static/%s.png\";", lc_enum, uc_max_enum);
+        add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum);
         fprintf(fp, "}\n\n");
 
         fflush(fp);

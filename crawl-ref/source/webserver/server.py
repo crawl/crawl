@@ -5,31 +5,12 @@ import tornado.websocket
 import tornado.ioloop
 import tornado.web
 
-os.chdir("/home/florian/Projekte/crawl/crawl-ref/source/")
+os.chdir("../")
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("""
-        <html><head>
-        <title>Web Crawl</title>
-        <script type=\"text/javascript\" src=\"/static/jquery.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/enums.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/client.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/tileinfo-floor.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/tileinfo-wall.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/tileinfo-feat.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/tileinfo-dngn.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/tileinfo-main.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/tileinfo-player.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/tileinfo-icons.js\"></script>
-        <script type=\"text/javascript\" src=\"/static/tileinfo-gui.js\"></script>
-        <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/style.css\" />
-        </head>
-        <body>
-        <canvas id=\"crt\" width=\"50\" height=\"50\"></canvas>
-        <canvas id=\"dungeon\" width=\"50\" height=\"50\"></canvas>
-        </body>
-        </html>""")
+        """)
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
@@ -75,7 +56,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close_pipes()
 
 settings = {
-    "static_path": "/home/florian/Projekte/web-crawl-server/static/"
+    "static_path": "./webserver/static/"
 }
 
 application = tornado.web.Application([
