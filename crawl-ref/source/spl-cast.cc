@@ -1978,7 +1978,7 @@ const char* failure_rate_to_string(int fail)
 {
     return (fail == 100) ? "Useless"   : // 0% success chance
            (fail > 77)   ? "Terrible"  : // 0-5%
-           (fail > 59)   ? "Bad" :       // 5-30%
+           (fail > 59)   ? "Very Poor" : // 5-30%
            (fail > 50)   ? "Poor"      : // 30-50%
            (fail > 40)   ? "Fair"      : // 50-70%
            (fail > 35)   ? "Good"      : // 70-80%
