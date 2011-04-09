@@ -36,20 +36,17 @@ void seed_rng(uint32_t seed)
 
 void seed_rng()
 {
-    uint32_t seed = time(NULL);
-
     /* Use a 160-bit wide seed */
     uint32_t seed_key[5];
+    read_urandom((char*)(&seed_key), sizeof(seed_key));
 
 #ifdef UNIX
     struct tms buf;
-    seed += times(&buf);
+    seed_key[0] += times(&buf);
 #endif
+    seed_key[1] += getpid();
+    seed_key[2] += time(NULL);
 
-    seed += getpid();
-    seed_key[0] = seed;
-
-    read_urandom((char*)(&seed_key[1]), sizeof(seed_key[0]) * 4);
     seed_rng(seed_key, 5);
 }
 
