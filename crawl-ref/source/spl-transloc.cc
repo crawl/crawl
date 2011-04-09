@@ -873,7 +873,7 @@ bool cast_apportation(int pow, bolt& beam)
 static int _quadrant_blink(coord_def where, int pow, int, actor *)
 {
     if (where == you.pos())
-        return (0);
+        return (1);
 
     if (you.level_type == LEVEL_ABYSS)
     {
