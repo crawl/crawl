@@ -128,12 +128,14 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
         fprintf(stdout, "setLayer(\"normal\");\n");
     }
 
-    if ((vbuf.size() != m_current_view.size()) || true)
+    if ((vbuf.size() != m_current_view.size()))
     {
         // The view buffer size changed, we need to do a full redraw
         m_current_view = vbuf;
+
         fprintf(stdout, "viewSize(%d,%d);\n", m_current_view.size().x,
                                               m_current_view.size().y);
+
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
@@ -142,12 +144,36 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                         cell->tile.fg, cell->tile.bg);
                 cell++;
             }
+
+        fprintf(stdout, "\n");
         fflush(stdout);
     }
     else
     {
+        int counter = 0;
         // Find differences
-        // OTTODO
+        // OTTODO: This will have to account for scrolling to be really effective
+        const screen_cell_t *cell = (const screen_cell_t *) vbuf;
+        screen_cell_t *old_cell = (screen_cell_t *) m_current_view;
+        for (int y = 0; y < m_current_view.size().y; y++)
+            for (int x = 0; x < m_current_view.size().x; x++)
+            {
+                if ((cell->tile.fg != old_cell->tile.fg)
+                    || (cell->tile.bg != old_cell->tile.bg))
+                {
+                    fprintf(stdout, "c(%d,%d,%d,%d);", x, y,
+                            cell->tile.fg, cell->tile.bg);
+                    *old_cell = *cell;
+                    counter++;
+                }
+                cell++;
+                old_cell++;
+            }
+
+        fprintf(stderr, "Sent: %d/%d\n", counter, vbuf.size().y * vbuf.size().x);
+
+        fprintf(stdout, "\n");
+        fflush(stdout);
     }
 }
 
