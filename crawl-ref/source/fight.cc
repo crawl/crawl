@@ -1801,7 +1801,7 @@ int melee_attack::player_weapon_type_modify(int damage)
         weap_type = WPN_QUARTERSTAFF;
     else if (item_is_rod(*weapon))
         weap_type = WPN_CLUB;
-    else if (weapon->base_type == OBJ_WEAPONS)
+    else if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon))
         weap_type = weapon->sub_type;
 
     // All weak hits look the same, except for when the player
