@@ -5358,6 +5358,8 @@ static void _many_pools(dungeon_feature_type pool_type)
         pool_type = DNGN_DEEP_WATER;
     else if (player_in_branch(BRANCH_GEHENNA))
         pool_type = DNGN_LAVA;
+    else if (player_in_branch(BRANCH_CRYPT))
+        return;
 
     const int num_pools = 20 + random2avg(9, 2);
     int pools = 0;
