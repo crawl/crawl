@@ -20,6 +20,9 @@
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
+#include "tiledef-player.h"
+#include "tilemcache.h"
+#include "tilepick-p.h"
 #include "tilesdl.h"
 #include "tileview.h"
 #include "travel.h"
@@ -117,6 +120,129 @@ bool TilesFramework::initialise()
     return (true);
 }
 
+void _send_doll(int x, int y, const dolls_data &doll)
+{
+    // OTTODO: This is largely copied from tiledoll.cc; unify.
+    // Ordered from back to front.
+    int p_order[TILEP_PART_MAX] =
+    {
+        // background
+        TILEP_PART_SHADOW,
+        TILEP_PART_HALO,
+        TILEP_PART_ENCH,
+        TILEP_PART_DRCWING,
+        TILEP_PART_CLOAK,
+        // player
+        TILEP_PART_BASE,
+        TILEP_PART_BOOTS,
+        TILEP_PART_LEG,
+        TILEP_PART_BODY,
+        TILEP_PART_ARM,
+        TILEP_PART_HAIR,
+        TILEP_PART_BEARD,
+        TILEP_PART_HELM,
+        TILEP_PART_HAND1,
+        TILEP_PART_HAND2,
+        TILEP_PART_DRCHEAD
+    };
+
+    int flags[TILEP_PART_MAX];
+    tilep_calc_flags(doll, flags);
+
+    // For skirts, boots go under the leg armour.  For pants, they go over.
+    if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
+    {
+        p_order[7] = TILEP_PART_BOOTS;
+        p_order[6] = TILEP_PART_LEG;
+    }
+
+    // Special case bardings from being cut off.
+    const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_NAGA);
+
+    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
+    {
+        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
+    const bool is_cent = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_CENTAUR);
+
+    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+    {
+        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
+    for (int i = 0; i < TILEP_PART_MAX; i++)
+    {
+        int p = p_order[i];
+
+        if (!doll.parts[p] || flags[p] == TILEP_FLAG_HIDE)
+            continue;
+
+        //        if (p == TILEP_PART_SHADOW && (submerged || ghost))
+        //            continue;
+
+        int ymax = TILE_Y;
+
+        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
+            || flags[p] == TILEP_FLAG_CUT_NAGA)
+        {
+            ymax = 18;
+        }
+
+        // TODO: Use ymax
+        fprintf(stdout, "p(%d,%d,%d);", x, y, doll.parts[p]);
+    }
+
+}
+
+void _send_cell(int x, int y, const screen_cell_t *cell)
+{
+    const tileidx_t fg_idx = cell->tile.fg & TILE_FLAG_MASK;
+
+    // send bg
+    fprintf(stdout, "bg(%d,%d,%d);", x, y, cell->tile.bg & TILE_FLAG_MASK);
+
+    if (fg_idx >= TILEP_MCACHE_START)
+    {
+        mcache_entry *entry = mcache.get(fg_idx);
+        if (!entry)
+        {
+            // TODO
+            return;
+        }
+        // TODO: This is mainly copied from pack_mcache; unify
+        const dolls_data *doll = entry->doll();
+        if (doll)
+            _send_doll(x, y, *doll);
+
+        tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
+        int draw_info_count = entry->info(&dinfo[0]);
+        for (int i = 0; i < draw_info_count; i++)
+        {
+            fprintf(stdout, "p(%d,%d,%d,%d,%d);",
+                    x, y, dinfo[i].idx, dinfo[i].ofs_x, dinfo[i].ofs_y);
+        }
+    }
+    else if (fg_idx == TILEP_PLAYER)
+    {
+        dolls_data result = player_doll;
+        fill_doll_equipment(result);
+        _send_doll(x, y, result);
+    }
+    else if (fg_idx >= TILE_MAIN_MAX)
+    {
+        fprintf(stdout, "p(%d,%d,%d);", x, y, fg_idx);
+    }
+    else if (fg_idx > 0)
+    {
+        fprintf(stdout, "fg(%d,%d,%d);", x, y, fg_idx);
+    }
+}
+
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)
 {
@@ -140,8 +266,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
-                fprintf(stdout, "c(%d,%d,%d,%d);", x, y,
-                        cell->tile.fg, cell->tile.bg);
+                _send_cell(x, y, cell);
                 cell++;
             }
 
@@ -158,11 +283,11 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
+                // TODO: Implement != for screen_cell_t
                 if ((cell->tile.fg != old_cell->tile.fg)
                     || (cell->tile.bg != old_cell->tile.bg))
                 {
-                    fprintf(stdout, "c(%d,%d,%d,%d);", x, y,
-                            cell->tile.fg, cell->tile.bg);
+                    _send_cell(x, y, cell);
                     *old_cell = *cell;
                     counter++;
                 }

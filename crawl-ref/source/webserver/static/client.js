@@ -57,26 +57,8 @@ function setLayer(layer) {
     }
 }
 
-var images = {};
-
-function withImg(src, func) {
-    if (src in images)
-        img = images[src];
-    else {
-        img = new Image();
-        img.src = src;
-        images[src] = img;
-    }
-
-    if (img.complete)
-        func(img);
-    else {
-        console.log("Deferring...");
-        $(img).load(function () {
-            console.log("Deferred func call...");
-            func(img);
-        });
-    }
+function getImg(id) {
+    return $("#" + id)[0];
 }
 
 function viewSize(cols, rows) {
@@ -91,27 +73,37 @@ function viewSize(cols, rows) {
     dungeonContext = canvas.getContext("2d");
 }
 
-function c(cx, cy, fg, bg) {
-    console.log("bg: " + bg + " fg: " + fg);
-    fg = fg & TILE_FLAG_MASK;
-    bg = bg & TILE_FLAG_MASK;
+function bg(cx, cy, bg) {
+    console.log("bg("+bg+")");
+    bg_idx = bg & TILE_FLAG_MASK;
     x = dungeonCellWidth * cx;
     y = dungeonCellHeight * cy;
-    withImg(getdngnImg(bg), function(img) {
-        info = getdngnTileInfo(bg);
-        w = info.ex - info.sx;
-        h = info.ey - info.sy;
-        dungeonContext.drawImage(img, info.sx, info.sy, w, h, x + info.ox, y + info.oy, w, h);
-        if ((fg > 0) && (fg < TILE_MAIN_MAX)) {
-            withImg("/static/main.png", function(img) {
-                info = getmainTileInfo(fg);
-                w = info.ex - info.sx;
-                h = info.ey - info.sy;
-                dungeonContext.drawImage(img, info.sx, info.sy, w, h,
-                                         x + info.ox, y + info.oy, w, h);
-            });
-        }
-    });
+    img = getImg(getdngnImg(bg_idx));
+    info = getdngnTileInfo(bg_idx);
+    w = info.ex - info.sx;
+    h = info.ey - info.sy;
+    dungeonContext.drawImage(img, info.sx, info.sy, w, h, x + info.ox, y + info.oy, w, h);
+}
+
+function fg(cx, cy, fg) {
+    console.log("fg("+fg+")");
+    fg_idx = fg & TILE_FLAG_MASK;
+    info = getmainTileInfo(fg_idx);
+    img = getImg("main");
+    w = info.ex - info.sx;
+    h = info.ey - info.sy;
+    dungeonContext.drawImage(img, info.sx, info.sy, w, h,
+                             x + info.ox, y + info.oy, w, h);
+}
+
+function p(cx, cy, part, ofsx, ofsy) {
+    console.log("p("+part+")");
+    info = getplayerTileInfo(part);
+    img = getImg("player");
+    w = info.ex - info.sx;
+    h = info.ey - info.sy;
+    dungeonContext.drawImage(img, info.sx, info.sy, w, h,
+                             x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
 }
 
 function handleKeypress(e) {
