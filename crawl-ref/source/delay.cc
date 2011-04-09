@@ -912,6 +912,11 @@ void handle_delay()
             if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
                 viewwindow();
 
+            // Recite trains more than once per use, because it has a
+            // long timer in between uses and actually takes up multiple
+            // turns.
+            practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
+
             const std::string shout_verb = you.shout_verb();
 
             int noise_level = 12; // "shout"
