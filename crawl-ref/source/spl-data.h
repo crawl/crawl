@@ -1320,6 +1320,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_RESIST_POISON, "Resist Poison",
      SPTYP_CHARMS | SPTYP_POISON,
@@ -1332,6 +1333,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_PROJECTED_NOISE, "Projected Noise",

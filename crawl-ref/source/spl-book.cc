@@ -533,7 +533,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_DRAGON_FORM:
         case SPELL_ICE_FORM:
         case SPELL_NECROMUTATION:
-        case SPELL_RESIST_POISON:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:
@@ -572,7 +571,6 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         case SPELL_INTOXICATE:
         case SPELL_NECROMUTATION:
         case SPELL_REGENERATION:
-        case SPELL_RESIST_POISON:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
         case SPELL_STONESKIN:

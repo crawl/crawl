@@ -827,7 +827,6 @@ static bool _vampire_cannot_cast(spell_type spell)
     case SPELL_CURE_POISON:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
-    case SPELL_RESIST_POISON:
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
     case SPELL_STONESKIN:
@@ -1683,9 +1682,11 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_insulation(powc);
         break;
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_RESIST_POISON:
-        cast_resist_poison(powc);
-        break;
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_SEE_INVISIBLE:
         cast_see_invisible(powc);
