@@ -303,14 +303,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             return;
     }
 
-    if (is_feat_dangerous(new_grid, true))
-    {
-        if (need_expiration_warning(DUR_LEVITATION))
-            mpr("Careful! You are losing your buoyancy.", MSGCH_DANGER);
-        if (need_expiration_warning(DUR_TRANSFORMATION))
-            mpr("Careful! Your transformation is almost over.", MSGCH_DANGER);
-    }
-
     if (you.ground_level())
     {
         if (you.species == SP_MERFOLK)
@@ -5193,7 +5185,6 @@ void levitate_player(int pow)
          "You feel %s buoyant.", standing ? "very" : "more");
 
     you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
-    you.lev_expire_warning = false;
 
     if (standing)
         float_player(false);
@@ -5348,8 +5339,6 @@ void player::init()
     attribute.init(0);
     quiver.init(ENDOFPACK);
     sacrifice_value.init(0);
-    lev_expire_warning = false;
-    form_expire_warning = false;
 
     is_undead       = US_ALIVE;
 
@@ -7101,23 +7090,26 @@ void player::goto_place(const level_id &lid)
  * by the caller.
  *
  * @param dur the duration to check for dangerous expiration.
+ * @param p the coordinates of the cell to check. Defaults to player position.
  * @return whether the player is in immediate danger.
  */
-bool need_expiration_warning(duration_type dur)
+bool need_expiration_warning(duration_type dur, coord_def p)
 {
-    if (!is_feat_dangerous(env.grid(you.pos()), true) || !dur_expiring(dur))
+    if (!is_feat_dangerous(env.grid(p), true) || !dur_expiring(dur))
         return false;
 
-    if (dur == DUR_LEVITATION && !you.lev_expire_warning)
-    {
-        you.lev_expire_warning = true;
+    if (dur == DUR_LEVITATION)
         return true;
-    }
-    else if (dur == DUR_TRANSFORMATION && !you.form_expire_warning
+    else if (dur == DUR_TRANSFORMATION
              && (!you.airborne() || form_can_fly()))
     {
-        you.form_expire_warning = true;
         return true;
     }
     return false;
+}
+
+bool need_expiration_warning(coord_def p)
+{
+    return need_expiration_warning(DUR_LEVITATION, p)
+           || need_expiration_warning(DUR_TRANSFORMATION, p);
 }
