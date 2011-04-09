@@ -188,12 +188,6 @@ void cast_insulation(int power)
                           "You feel insulated.");
 }
 
-void cast_resist_poison(int power)
-{
-    you.increase_duration(DUR_RESIST_POISON, 10 + random2(power), 100,
-                          "You feel resistant to poison.");
-}
-
 void cast_teleport_control(int power)
 {
     you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50,

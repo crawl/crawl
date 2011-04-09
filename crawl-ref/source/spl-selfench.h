@@ -16,7 +16,6 @@ void cast_swiftness(int power);
 void cast_fly(int power);
 void cast_insulation(int power);
 
-void cast_resist_poison(int power);
 void cast_teleport_control(int power);
 int cast_selective_amnesia(std::string *pre_msg = NULL);
 void cast_see_invisible(int pow);
