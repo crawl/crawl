@@ -92,6 +92,37 @@ function viewSize(cols, rows) {
     dungeonContext = canvas.getContext("2d");
 }
 
+function shift(x, y) {
+    x *= dungeonCellWidth;
+    y *= dungeonCellHeight;
+    if (x > 0) {
+        sx = x;
+        dx = 0;
+    }
+    else {
+        sx = 0;
+        dx = -x;
+    }
+    if (y > 0) {
+        sy = y;
+        dy = 0;
+    }
+    else {
+        sy = 0;
+        dy = -y;
+    }
+    w = (dungeonCols * dungeonCellWidth - abs(x));
+    h = (dungeonRows * dungeonCellHeight - abs(y));
+
+    dungeonContext.drawImage($("#dungeon")[0], sx, sy, w, h, dx, dy, w, h);
+
+    dungeonContext.fillStyle = "black";
+    dungeonContext.fillRect(0, 0, dungeonCols * dungeonCellWidth, dy);
+    dungeonContext.fillRect(0, dy, dx, h);
+    dungeonContext.fillRect(w, 0, sx, dungeonRows * dungeonCellHeight);
+    dungeonContext.fillRect(0, h, w, sy);
+}
+
 function handleKeypress(e) {
     s = String.fromCharCode(e.which);
     if (s == "\\") {
@@ -141,3 +172,5 @@ $(document).ready(function() {
     socket.onclose = function() {
     }
 });
+
+function abs(x) { return x > 0 ? x : -x; }

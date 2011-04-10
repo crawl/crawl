@@ -299,6 +299,36 @@ void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &g
     fprintf(stdout, "});");
 }
 
+static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
+{
+    if ((abs(shift.x) >= vbuf.size().x)
+        || (abs(shift.y) >= vbuf.size().y))
+        return; // The whole buffer needs to be redrawn anyway
+
+    screen_cell_t *cells = (screen_cell_t *) vbuf;
+
+    int w = vbuf.size().x, h = vbuf.size().y;
+
+    // shift specifies the shift in the view location; i.e.
+    // if shift.x is > 0, we need to move all cells to the left
+    // Also, if shift.x is < 0, we need to iterate through the cells from right to left,
+    // because we would overwrite the cells we haven't shifted yet otherwise.
+    // All this is of course analogous for y.
+    int start_x = shift.x > 0 ? 0 : w;
+    int start_y = shift.y > 0 ? 0 : h;
+    int end_x = shift.x > 0 ? w - shift.x : -1 - shift.x;
+    int end_y = shift.y > 0 ? h - shift.y : -1 - shift.y;
+
+    for (int y = start_y; y != end_y; shift.y > 0 ? y++ : y--)
+        for (int x = start_x; x != end_x; shift.x > 0 ? x++ : x--)
+        {
+            cells[y * w + x] = cells[(y + shift.y) * w + x + shift.x];
+            // A kind of hacky way to ensure the cells in the new areas are always sent
+            // (even if they by chance are the same as the old cell)
+            cells[(y + shift.y) * w + x + shift.x].tile.bg = 0;
+        }
+}
+
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)
 {
@@ -336,13 +366,21 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     {
         int counter = 0;
         // Find differences
-        // OTTODO: This will have to account for scrolling to be really effective
+
+        // Shift the view, so we need to send less cells
+        coord_def shift = gc - m_current_gc;
+        m_current_gc = gc;
+        if ((shift.x != 0) || (shift.y != 0))
+        {
+            _shift_view_buffer(m_current_view, shift);
+            fprintf(stdout, "shift(%d,%d);", shift.x, shift.y);
+        }
+
         const screen_cell_t *cell = (const screen_cell_t *) vbuf;
         screen_cell_t *old_cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
-                // TODO: Implement != for screen_cell_t
                 if ((cell->tile.fg != old_cell->tile.fg)
                     || (cell->tile.bg != old_cell->tile.bg))
                 {
@@ -358,7 +396,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
         fprintf(stderr, "Sent: %d/%d\n", counter, vbuf.size().y * vbuf.size().x);
 
-        fprintf(stdout, "\n");
+        fprintf(stdout, "\n"); // This sends the message to the client
         fflush(stdout);
     }
 }
