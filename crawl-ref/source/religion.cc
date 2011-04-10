@@ -3348,10 +3348,8 @@ void god_pitch(god_type which_god)
     // OK, so join the new religion.
     redraw_screen();
 
+    const god_type old_god = you.religion;
     const int old_piety = you.piety;
-    // Are you switching between good gods?
-    const bool good_god_switch = is_good_god(you.religion)
-                                 && is_good_god(which_god);
 
     // Leave your prior religion first.
     if (you.religion != GOD_NO_GOD)
@@ -3450,10 +3448,32 @@ void god_pitch(god_type which_god)
     // interesting.
     you.penance[you.religion] = 0;
 
-    if (is_good_god(you.religion))
+    if (is_good_god(you.religion) && is_good_god(old_god))
     {
+        // Some feedback that piety moved over.
+        switch(you.religion)
+        {
+        case GOD_ELYVILON:
+            simple_god_message((" says: Farewell. Go and aid the meek with "
+                               + god_name(you.religion) + ".").c_str(), old_god);
+            break;
+        case GOD_SHINING_ONE:
+            simple_god_message((" says: Farewell. Go and vanquish evil with "
+                               + god_name(you.religion) + ".").c_str(), old_god);
+            break;
+        case GOD_ZIN:
+            simple_god_message((" says: Farewell. Go and enforce order with "
+                               + god_name(you.religion) + ".").c_str(), old_god);
+            break;
+        case GOD_XOM:
+            simple_god_message((" says: Farewell. Go and pirate ninja with "
+                               + god_name(you.religion) + ".").c_str(), old_god);
+            break;
+        default:
+            mpr("Unknown good god.", MSGCH_ERROR);
+        }
         // Give a piety bonus when switching between good gods.
-        if (good_god_switch && old_piety > 15)
+        if (old_piety > 15)
             gain_piety(std::min(30, old_piety - 15), 1, true, false);
     }
     else if (is_evil_god(you.religion))
