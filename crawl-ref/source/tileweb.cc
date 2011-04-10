@@ -199,12 +199,30 @@ void _send_doll(int x, int y, const dolls_data &doll)
 
 }
 
-void _send_cell(int x, int y, const screen_cell_t *cell)
+void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &gc)
 {
-    const tileidx_t fg_idx = cell->tile.fg & TILE_FLAG_MASK;
+    // TODO: Refactor, unify with tiledgnbuf.cc stuff
+    packed_cell cell = packed_cell(vbuf_cell->tile);
+    if (map_bounds(gc))
+    {
+        cell.flv = env.tile_flv(gc);
+        //pack_cell_overlays(gc, &cell);
+    }
+    else
+    {
+        cell.flv.floor   = 0;
+        cell.flv.wall    = 0;
+        cell.flv.special = 0;
+        cell.flv.feat    = 0;
+    }
+
+    const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
+    const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
 
     // send bg
-    fprintf(stdout, "bg(%d,%d,%d);", x, y, cell->tile.bg & TILE_FLAG_MASK);
+    if (bg_idx >= TILE_DNGN_WAX_WALL)
+        fprintf(stdout, "bg(%d,%d,%d);", x, y, cell.flv.floor);
+    fprintf(stdout, "bg(%d,%d,%d);", x, y, bg_idx);
 
     if (fg_idx >= TILEP_MCACHE_START)
     {
@@ -246,13 +264,14 @@ void _send_cell(int x, int y, const screen_cell_t *cell)
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)
 {
-    fprintf(stderr, "load_dungeon(vbuf, gc)\n");
-
     if (m_active_layer != LAYER_NORMAL)
     {
         m_active_layer = LAYER_NORMAL;
         fprintf(stdout, "setLayer(\"normal\");\n");
     }
+
+    int cx_to_gx = gc.x - vbuf.size().x / 2;
+    int cy_to_gy = gc.y - vbuf.size().y / 2;
 
     if ((vbuf.size() != m_current_view.size()))
     {
@@ -266,7 +285,9 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
-                _send_cell(x, y, cell);
+                coord_def cgc(x + cx_to_gx, y + cy_to_gy);
+
+                _send_cell(x, y, cell, cgc);
                 cell++;
             }
 
@@ -287,7 +308,9 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                 if ((cell->tile.fg != old_cell->tile.fg)
                     || (cell->tile.bg != old_cell->tile.bg))
                 {
-                    _send_cell(x, y, cell);
+                    coord_def cgc(x + cx_to_gx, y + cy_to_gy);
+
+                    _send_cell(x, y, cell, cgc);
                     *old_cell = *cell;
                     counter++;
                 }
@@ -344,17 +367,17 @@ int TilesFramework::get_number_of_cols()
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
-    fprintf(stdout, "cgotoxy(%d,%d);\n", x, y);
+    m_cursor_region = region;
+    fprintf(stdout, "cgotoxy(%d,%d,%d);\n", x, y, region);
 }
 
 GotoRegion TilesFramework::get_cursor_region() const
 {
-    return GOTO_CRT;
+    return m_cursor_region;
 }
 
 void TilesFramework::redraw()
 {
-    fprintf(stderr, "redraw()\n");
 }
 
 void TilesFramework::update_minimap(const coord_def& gc)
@@ -413,7 +436,6 @@ void TilesFramework::clear_overlays()
 
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
-    fprintf(stderr, "set_need_redraw(min_tick_delay)\n");
 }
 
 bool TilesFramework::need_redraw() const

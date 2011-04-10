@@ -1,3 +1,10 @@
 body {
     background: black;
+    color: white;
+    font: 16px monospace;
+}
+
+#stats {
+    display: inline-block;
+    vertical-align: top;
 }

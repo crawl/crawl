@@ -9,8 +9,7 @@ os.chdir("../")
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("""
-        """)
+        self.redirect("/static/client.html")
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
@@ -65,6 +64,6 @@ application = tornado.web.Application([
 ], **settings)
 
 application.listen(8080)
-ioloop = tornado.ioloop.IOLoop.instance()
 
+ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.start()

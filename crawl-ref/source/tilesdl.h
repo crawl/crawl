@@ -283,6 +283,7 @@ protected:
     cursor_loc m_cur_loc;
 #elif defined(USE_TILE_WEB)
     crawl_view_buffer m_current_view;
+    GotoRegion m_cursor_region;
 #endif
 };
 

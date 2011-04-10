@@ -7,6 +7,7 @@
 
 #ifdef USE_TILE_WEB
 
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,14 +68,13 @@ int putwch(ucs_t chr)
 {
     if (!chr)
         chr = ' ';
-    //    TextRegion::text_mode->putwch(chr);
+    fprintf(stderr, "putwch(chr)\n");
     return 0;
 }
 
 void clear_to_end_of_line()
 {
-    // object's method
-    //    TextRegion::text_mode->clear_to_end_of_line();
+    fprintf(stderr, "clear_to_end_of_line()\n");
 }
 
 int cprintf(const char *format,...)
@@ -84,24 +84,34 @@ int cprintf(const char *format,...)
     va_start(argp, format);
     vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
-    fprintf(stdout, "puts(\"%s\");\n", buffer);
-    // object's method
-    //    TextRegion::text_mode->addstr(buffer);
+    // We need to replace newlines by \\n
+    fputs("puts(\"", stdout);
+    char *current = buffer;
+    while (*current)
+    {
+        if (*current == '\n')
+            fputs("\\n", stdout);
+        else
+            fputc(*current, stdout);
+        ++current;
+    }
+    fputs("\");\n", stdout);
     return 0;
 }
 
 void textcolor(int color)
 {
-    //    TextRegion::textcolor(color);
+    fprintf(stdout, "textfg(%d);\n", color);
 }
 
 void textbackground(int bg)
 {
-    //    TextRegion::textbackground(bg);
+    fprintf(stdout, "textbg(%d);\n", bg);
 }
 
 void set_cursor_enabled(bool enabled)
 {
+    fprintf(stderr, "set_cursor_enabled(%d);\n", enabled);
     //    if (enabled)
     //        TextRegion::_setcursortype(1);
     //    else
@@ -185,13 +195,20 @@ void delay(int ms)
 
 void update_screen()
 {
+    // TODO: Do we need set_need_redraw and redraw?
     tiles.set_need_redraw();
 }
 
 bool kbhit()
 {
-    fprintf(stderr, "kbhit()\n");
-    return false;
+    struct timeval tv;
+    fd_set fds;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    FD_ZERO(&fds);
+    FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0
+    select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
+    return FD_ISSET(STDIN_FILENO, &fds) != 0;
 }
 
 #ifdef UNIX

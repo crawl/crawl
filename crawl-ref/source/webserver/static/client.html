@@ -3,6 +3,7 @@
   <head>
     <title>Web Crawl</title>
     <script type="text/javascript" src="/static/jquery.js"></script>
+    <script type="text/javascript" src="/static/textarea.js"></script>
     <script type="text/javascript" src="/static/enums.js"></script>
     <script type="text/javascript" src="/static/client.js"></script>
     <script type="text/javascript" src="/static/tileinfo-floor.js"></script>
@@ -16,8 +17,11 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
   </head>
   <body>
-    <canvas id="crt" width="50" height="50"></canvas>
+    <!--    <canvas id="crt" width="50" height="50"></canvas>-->
+    <div id="crt"></div>
     <canvas id="dungeon" width="50" height="50"></canvas>
+    <div id="stats"></div>
+    <div id="messages"></div>
     <div style="display: none;">
       <img id="floor" src="/static/floor.png">
       <img id="wall" src="/static/wall.png">
