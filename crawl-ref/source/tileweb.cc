@@ -354,6 +354,17 @@ int TilesFramework::getch_ck()
 {
     fflush(stdout);
     int key = getchar();
+    if (key == '\\')
+    {
+        // Char encoded as a number
+        char data[10];
+        fgets(data, 10, stdin);
+        return atoi(data);
+    }
+    else if (key == '^')
+    {
+        // Control messages. Currently nothing.
+    }
     return key;
 }
 

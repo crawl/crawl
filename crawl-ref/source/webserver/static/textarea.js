@@ -2,6 +2,7 @@ var textAreaFont = "16px monospace";
 var textAreaCellWidth, textAreaCellHeight = 17;
 
 function putChar(element, cx, cy, content, fg, bg) {
+    cx--; cy--; // Text area coordinates are 1-based
     x = cx * textAreaCellWidth;
     y = cy * textAreaCellHeight;
     ctx = element.getContext("2d");

@@ -68,7 +68,8 @@ int putwch(ucs_t chr)
 {
     if (!chr)
         chr = ' ';
-    fprintf(stderr, "putwch(chr)\n");
+    // TODO: Not sure if this works...
+    fputwc(chr, stdout);
     return 0;
 }
 

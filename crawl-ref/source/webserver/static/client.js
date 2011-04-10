@@ -123,11 +123,22 @@ function p(cx, cy, part, ofsx, ofsy) {
 }
 
 function handleKeypress(e) {
-    socket.send(String.fromCharCode(e.which));
+    s = String.fromCharCode(e.which);
+    if (s == "\\") {
+        socket.send("\\92\n");
+    } else if (s == "^") {
+        socket.send("\\94\n");
+    }
+    else
+        socket.send(s);
 }
 
 function handleKeydown(e) {
-    console.log("Key: " + e.which);
+    if (e.which in keyConversion) {
+        socket.send("\\" + keyConversion[e.which] + "\n");
+    }
+    else
+        console.log("Key: " + e.which);
 }
 
 $(document).ready(function() {
