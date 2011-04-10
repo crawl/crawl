@@ -106,7 +106,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
 static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld);
-static void _equip_jewellery_effect(item_def &item);
+static void _equip_jewellery_effect(item_def &item, bool unmeld);
 static void _unequip_jewellery_effect(item_def &item, bool mesg);
 static void _equip_use_warning(const item_def& item);
 
@@ -131,7 +131,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _equip_armour_effect(item, unmeld);
     else if (slot >= EQ_LEFT_RING && slot <= EQ_AMULET)
-        _equip_jewellery_effect(item);
+        _equip_jewellery_effect(item, unmeld);
 }
 
 static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
@@ -160,8 +160,7 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
 // Actual equip and unequip effect implementation below
 //
 
-static void _equip_artefact_effect(item_def &item, bool *show_msgs=NULL,
-                                   bool unmeld=false)
+static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 {
 #define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
 
@@ -498,7 +497,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     {
         // Call unrandart equip func before item is identified.
         if (artefact)
-            _equip_artefact_effect(item, &showMsgs);
+            _equip_artefact_effect(item, &showMsgs, unmeld);
 
         const bool was_known      = item_type_known(item);
               bool known_recurser = false;
@@ -1111,7 +1110,7 @@ static void _remove_amulet_of_faith(item_def &item)
     }
 }
 
-static void _equip_jewellery_effect(item_def &item)
+static void _equip_jewellery_effect(item_def &item, bool unmeld)
 {
     item_type_id_state_type ident        = ID_TRIED_TYPE;
     artefact_prop_type      fake_rap     = ARTP_NUM_PROPERTIES;
@@ -1382,7 +1381,7 @@ static void _equip_jewellery_effect(item_def &item)
     if (artefact)
     {
         bool show_msgs = true;
-        _equip_artefact_effect(item, &show_msgs);
+        _equip_artefact_effect(item, &show_msgs, unmeld);
 
         if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
