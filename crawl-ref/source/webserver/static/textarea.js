@@ -1,45 +1,34 @@
+var textAreaFont = "16px monospace";
+var textAreaCellWidth, textAreaCellHeight = 17;
 
-function prepareCell(element, x, y) {
-    $element = $(element);
-    lineLengths = $element.data("lineLengths");
-    if (lineLengths == undefined) {
-        lineLengths = [];
-        $element.data("lineLengths", lineLengths);
-    }
-    id = element.id;
-    html = "";
-    while (lineLengths.length <= y) {
-        html += "<br id=\"" + id + "-end-" + lineLengths.length + "\">";
-        lineLengths.push(0);
-    }
-    if (html != "")
-        $element.append(html);
-    lineAdd = "";
-    while (lineLengths[y] <= x) {
-        lineAdd += "<span id=\"" + id + "-" + lineLengths[y] + "-" + y + "\">&nbsp;</span>";
-        lineLengths[y]++;
-    }
-    if (lineAdd != "")
-        $("#" + id + "-end-" + y).before(lineAdd);
-}
-
-function setCellStyle(element, x, y, attr, value) {
-    prepareCell(element, x, y);
-     $("#" + id + "-" + x + "-" + y).css(attr, value);
-}
-
-function putChar(element, x, y, content) {
-    prepareCell(element, x, y);
-    if (content == " ") content = "&nbsp;";
-    $("#" + id + "-" + x + "-" + y).html(content);
-}
-
-function putString(element, x, y, string) {
-
+function putChar(element, cx, cy, content, fg, bg) {
+    x = cx * textAreaCellWidth;
+    y = cy * textAreaCellHeight;
+    ctx = element.getContext("2d");
+    ctx.fillStyle = termColours[bg];
+    ctx.fillRect(x, y, textAreaCellWidth, textAreaCellHeight);
+    ctx.fillStyle = termColours[fg];
+    ctx.font = textAreaFont;
+    ctx.textAlign = "start";
+    ctx.textBaseline = "top";
+    ctx.fillText(content, x, y);
 }
 
 function clearTextArea(element) {
-    $element = $(element);
-    $element.data("lineLengths", []);
-    $element.html("");
+    ctx = element.getContext("2d");
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, element.width, element.height);
+}
+
+function textAreaSize(element, cols, rows) {
+    console.log("Resizing " + element.id + " to " + cols + "x" + rows);
+    if (textAreaCellWidth == undefined) {
+        ctx = element.getContext("2d");
+        ctx.font = textAreaFont;
+        metrics = ctx.measureText("@");
+        textAreaCellWidth = metrics.width;
+    }
+    element.width = cols * textAreaCellWidth;
+    element.height = rows * textAreaCellHeight;
+    clearTextArea(element);
 }

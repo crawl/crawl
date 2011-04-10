@@ -44,9 +44,7 @@ function putch(ch) {
         cursorX = 1;
         cursorY++;
     } else {
-        putChar(region, cursorX, cursorY, ch);
-        setCellStyle(region, cursorX, cursorY, "color", termColours[fgCol]);
-        setCellStyle(region, cursorX, cursorY, "background", termColours[bgCol]);
+        putChar(region, cursorX, cursorY, ch, fgCol, bgCol);
         cursorX++;
     }
 }
