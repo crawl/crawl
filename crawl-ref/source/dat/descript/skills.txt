@@ -47,6 +47,8 @@ Being skilled in Staves makes becoming skilled in Maces & Flails or Polearms eas
 Slings
 
 Being skilled in a particular type of ranged attack will let you deal more damage when using the appropriate launcher and ammunition.
+
+If you're already skilled in Slings, it is easier to become (more) skilled in Throwing.
 %%%%
 Bows
 
@@ -63,6 +65,8 @@ Being skilled in a particular type of ranged attack will let you deal more damag
 Throwing
 
 Training Throwing will make thrown weapons (as opposed to ones fired from a launcher) more effective. In particular, it makes weapons of returning more likely to actually return to their thrower.
+
+If you're already skilled in Throwing, it is easier to become (more) skilled in Slings.
 %%%%
 Armour
 
