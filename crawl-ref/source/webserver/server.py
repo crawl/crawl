@@ -41,6 +41,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def on_stderr(self, fd, events):
         print "ERR: ", self.p.stderr.readline(),
         if self.p.poll():
+            self.close()
             self.close_pipes()
 
     def on_stdout(self, fd, events):
@@ -52,6 +53,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.message_buffer += char
 
         if self.p.poll():
+            self.close()
             self.close_pipes()
 
 settings = {

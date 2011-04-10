@@ -340,7 +340,14 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 void TilesFramework::resize()
 {
-    fprintf(stderr, "resize()\n");
+    fprintf(stdout, "textAreaSize(stats,%d,%d);\n",
+            crawl_view.hudsz.x, crawl_view.hudsz.y);
+
+    fprintf(stdout, "textAreaSize(crt,%d,%d);\n",
+            crawl_view.termsz.x, crawl_view.termsz.y);
+
+    fprintf(stdout, "textAreaSize(messages,%d,%d);\n",
+            crawl_view.msgsz.x, crawl_view.msgsz.y);
 }
 
 int TilesFramework::getch_ck()
