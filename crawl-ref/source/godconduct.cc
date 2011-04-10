@@ -520,6 +520,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
+            case GOD_OKAWARU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
