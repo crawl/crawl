@@ -23,7 +23,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.add_handler(self.p.stdout.fileno(), self.on_stdout, self.ioloop.READ)
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr, self.ioloop.READ)
 
-        self.message_buffer = "";
+        self.message_buffer = ""
 
     def close_pipes(self):
         self.ioloop.remove_handler(self.p.stdout.fileno())
