@@ -5159,7 +5159,7 @@ void float_player(bool fly)
         mpr("You fly up into the air.");
     else
     {
-        mprf("You gently float upwards from the %s.",
+        mprf("You gently float away from the %s.",
              you.is_wall_clinging() ? "wall" : "floor");
     }
 
