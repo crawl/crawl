@@ -1634,7 +1634,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
              << "</w>')"
 #endif
-                ". You can eat it by typing <w>%</w>"
+                ". You can eat it by typing <w>e</w>"
 #ifdef USE_TILE
                 " or by clicking on it with your <w>left mouse button</w>"
 #endif
