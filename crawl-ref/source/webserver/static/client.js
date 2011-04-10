@@ -1,12 +1,13 @@
-var crtContext, dungeonContext;
-var rows = 24, cols = 80;
-var crtCellWidth, crtCellHeight = 17;
-var font = "16px monospace";
-
-var dungeonCellWidth = 32, dungeonCellHeight = 32;
-var dungeonCols = 0, dungeonRows = 0;
+var crt, stats, messages;
+var region;
+var currentLayer = "crt";
 
 var cursorX = 0, cursorY = 0;
+var fgCol = 16, bgCol = 0;
+
+var dungeonContext;
+var dungeonCellWidth = 32, dungeonCellHeight = 32;
+var dungeonCols = 0, dungeonRows = 0;
 
 var socket;
 
@@ -15,24 +16,39 @@ function assert(cond) {
         console.log("Assertion failed!");
 }
 
-function drawTextCell(cx, cy, content) {
-    x = cx * crtCellWidth;
-    y = cy * crtCellHeight;
-    crtContext.fillStyle = "black";
-    crtContext.fillRect(x, y, crtCellWidth, crtCellHeight);
-    crtContext.fillStyle = "white";
-    crtContext.font = font;
-    crtContext.fillText(content, x + crtCellWidth / 2, y + crtCellHeight / 2);
-}
+function textfg(col) { fgCol = col; }
+function textbg(col) { bgCol = col; }
 
-function cgotoxy(cx, cy) {
+function cgotoxy(cx, cy, reg) {
+    reg = reg || GOTO_CRT;
+    switch (reg) {
+    case GOTO_CRT:
+        setLayer("crt");
+        region = crt;
+        break;
+    case GOTO_MSG:
+        setLayer("normal");
+        region = messages;
+        break;
+    case GOTO_STAT:
+        setLayer("normal");
+        region = stats;
+        break;
+    }
     cursorX = cx;
     cursorY = cy;
 }
 
 function putch(ch) {
-    drawTextCell(cursorX, cursorY, ch);
-    cursorX++;
+    if (ch == '\n') {
+        cursorX = 1;
+        cursorY++;
+    } else {
+        putChar(region, cursorX, cursorY, ch);
+        setCellStyle(region, cursorX, cursorY, "color", termColours[fgCol]);
+        setCellStyle(region, cursorX, cursorY, "background", termColours[bgCol]);
+        cursorX++;
+    }
 }
 
 function puts(str) {
@@ -42,19 +58,25 @@ function puts(str) {
 }
 
 function clrscr() {
-    crtContext.fillStyle = "black";
-    crtContext.fillRect(0, 0, crtCellWidth * cols, crtCellHeight * rows);
+    clearTextArea(region);
 }
 
 function setLayer(layer) {
     if (layer == "crt") {
-        $("#crt").show();
+        if (currentLayer != "crt") clearTextArea(crt);
+        $(crt).show();
         $("#dungeon").hide();
+        $(stats).hide();
+        $(messages).hide();
     }
     else if (layer == "normal") {
         $("#crt").hide();
         $("#dungeon").show();
+        // jQuery should restore display correctly -- but doesn't
+        $(stats).css("display", "inline-block");
+        $(messages).show();
     }
+    currentLayer = layer;
 }
 
 function getImg(id) {
@@ -64,7 +86,6 @@ function getImg(id) {
 function viewSize(cols, rows) {
     if ((cols == dungeonCols) && (rows == dungeonRows))
         return;
-    console.log("New viewsize: " + cols + "/" + rows);
     dungeonCols = cols;
     dungeonRows = rows;
     canvas = $("#dungeon")[0];
@@ -74,7 +95,6 @@ function viewSize(cols, rows) {
 }
 
 function bg(cx, cy, bg) {
-    console.log("bg("+bg+")");
     bg_idx = bg & TILE_FLAG_MASK;
     x = dungeonCellWidth * cx;
     y = dungeonCellHeight * cy;
@@ -86,7 +106,6 @@ function bg(cx, cy, bg) {
 }
 
 function fg(cx, cy, fg) {
-    console.log("fg("+fg+")");
     fg_idx = fg & TILE_FLAG_MASK;
     info = getmainTileInfo(fg_idx);
     img = getImg("main");
@@ -97,7 +116,6 @@ function fg(cx, cy, fg) {
 }
 
 function p(cx, cy, part, ofsx, ofsy) {
-    console.log("p("+part+")");
     info = getplayerTileInfo(part);
     img = getImg("player");
     w = info.ex - info.sx;
@@ -111,29 +129,18 @@ function handleKeypress(e) {
 }
 
 function handleKeydown(e) {
-    cgotoxy(0, 0);
-    puts(e.which + "");
+    console.log("Key: " + e.which);
 }
 
 $(document).ready(function() {
-    crtCanvas = $("#crt")[0];
+    crt = $("#crt")[0];
+    stats = $("#stats")[0];
+    messages = $("#messages")[0];
 
-    crtContext = crtCanvas.getContext("2d");
-
-    // Measure font
-    crtContext.font = font;
-    metrics = crtContext.measureText("@");
-    crtCellWidth = metrics.width;
-
-    crtCanvas.width = cols * crtCellWidth;
-    crtCanvas.height = rows * crtCellHeight;
-
-    crtContext = crtCanvas.getContext("2d");
-    crtContext.font = font;
-    crtContext.textAlign = "center";
-    crtContext.textBaseline = "middle";
-
+    region = crt;
     setLayer("crt");
+
+    puts("Hallo Welt!");
 
     // Key handler
     $(document).bind('keypress.client', handleKeypress);
@@ -145,7 +152,11 @@ $(document).ready(function() {
     }
 
     socket.onmessage = function(msg) {
-        eval(msg.data);
+        try {
+            eval(msg.data);
+        } catch (err) {
+            console.error("Error in message: " + msg.data + " - " + err);
+        }
     }
 
     socket.onclose = function() {
