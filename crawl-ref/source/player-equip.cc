@@ -402,9 +402,9 @@ static void _equip_use_warning(const item_def& item)
 }
 
 
-static void _wield_cursed(item_def& item, bool known_cursed)
+static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
 {
-    if (!item.cursed())
+    if (!item.cursed() || unmeld)
         return;
     mpr("It sticks to your hand!");
     int amusement = 16;
@@ -471,7 +471,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             calc_mp();
         }
 
-        _wield_cursed(item, known_cursed);
+        _wield_cursed(item, known_cursed, unmeld);
         break;
     }
 
@@ -667,7 +667,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             }
         }
 
-        _wield_cursed(item, known_cursed || known_recurser);
+        _wield_cursed(item, known_cursed || known_recurser, unmeld);
         break;
     }
     default:
