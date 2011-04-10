@@ -791,7 +791,7 @@ struct mon_display
 struct final_effect
 {
     final_effect_flavour flavour;
-    short att, def;
+    mid_t att, def;
     coord_def pos;
     int x;
 };
