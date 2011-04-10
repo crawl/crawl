@@ -7,6 +7,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "fineff.h"
 #include "godconduct.h"
 #include "los.h"
 #include "message.h"
@@ -269,6 +270,8 @@ void tornado_damage(actor *caster, int dur)
             swap_clouds(clouds[random2(clouds.size())], *dam_i);
         }
     }
+    if (caster == &you)
+        fire_final_effects();
 }
 
 void cancel_tornado()
