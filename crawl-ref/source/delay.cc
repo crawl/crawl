@@ -1448,11 +1448,36 @@ static void _handle_macro_delay()
         you.time_taken = 0;
 }
 
+static void _decrement_delay(delay_type delay)
+{
+    for (delay_queue_type::iterator i = you.delay_queue.begin();
+         i != you.delay_queue.end(); ++i)
+    {
+        if (i->type == delay)
+        {
+            if (i->duration > 0)
+                --i->duration;
+            break;
+        }
+    }
+}
+
 void run_macro(const char *macroname)
 {
     const int currdelay = current_delay_action();
     if (currdelay != DELAY_NOT_DELAYED && currdelay != DELAY_MACRO)
         return;
+
+    if (currdelay == DELAY_MACRO)
+    {
+        const delay_queue_item &delay = you.delay_queue.front();
+        if (!delay.duration)
+        {
+            dprf("Expiring macro delay on turn: %d", you.num_turns);
+            stop_delay();
+            return;
+        }
+    }
 
 #ifdef CLUA_BINDINGS
     if (!clua)
@@ -1462,17 +1487,24 @@ void run_macro(const char *macroname)
         return;
     }
 
+    if (!currdelay)
+        start_delay(DELAY_MACRO, 1);
+
+    // If callbooleanfn returns false, that means the macro either exited
+    // normally by returning or by calling coroutine.yield(false). Either way,
+    // decrement the macro duration.
     if (!clua.callbooleanfn(false, "c_macro", "s", macroname))
     {
         if (!clua.error.empty())
+        {
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-
-        stop_delay();
-    }
-    else
-    {
-        if (!you_are_delayed())
-            start_delay(DELAY_MACRO, 1);
+            stop_delay();
+        }
+        else
+        {
+            // Decay the macro delay's duration.
+            _decrement_delay(DELAY_MACRO);
+        }
     }
 #else
     stop_delay();
