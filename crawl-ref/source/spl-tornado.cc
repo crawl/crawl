@@ -201,7 +201,8 @@ void tornado_damage(actor *caster, int dur)
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the hurricane!");
-                did_god_conduct(DID_KILL_PLANT, 1);
+                if (caster == &you)
+                    did_god_conduct(DID_KILL_PLANT, 1);
             }
 
             if (!winds.has_wind(*dam_i))
