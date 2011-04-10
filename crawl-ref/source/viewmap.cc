@@ -1250,8 +1250,10 @@ bool show_map(level_pos &lpos,
                 curs_y += lpos.pos.y - oldp.y;
             }
 #else
-            if (curs_x + move_x < 1 || curs_x + move_x > crawl_view.termsz.x)
-                move_x = 0;
+            if (curs_x + move_x < 1)
+                move_x = 1 - curs_x;
+            else if (curs_x + move_x > crawl_view.termsz.x)
+                move_x = crawl_view.termsz.x - curs_x;
 
             curs_x += move_x;
 
@@ -1299,8 +1301,10 @@ bool show_map(level_pos &lpos,
             }
             start_y = screen_y - half_screen;
 
-            if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
-                move_y = 0;
+            if (curs_y + move_y < 1)
+                move_y = 1 - curs_y;
+            else if (curs_y + move_y > num_lines)
+                move_y = num_lines - curs_y;
 
             curs_y += move_y;
 
