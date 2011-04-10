@@ -2539,7 +2539,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     }
 
     if (is_fiery() && (wall == DNGN_WAX_WALL || feat_is_tree(wall)))
-        return (is_superhot() ? B_TRUE : B_MAYBE);
+        return (is_superhot() ? B_TRUE : is_beam ? B_MAYBE : B_FALSE);
 
     if (flavour == BEAM_ELECTRICITY && feat_is_tree(wall))
         return (is_superhot() ? B_TRUE : B_MAYBE);
