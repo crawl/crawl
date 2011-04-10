@@ -102,7 +102,7 @@ bool unmeld_slot(equipment_type slot, bool msg)
     return (false);
 }
 
-static void _equip_weapon_effect(item_def& item, bool showMsgs);
+static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
 static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld);
@@ -127,7 +127,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
         _equip_use_warning(item);
 
     if (slot == EQ_WEAPON)
-        _equip_weapon_effect(item, msg);
+        _equip_weapon_effect(item, msg, unmeld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _equip_armour_effect(item, unmeld);
     else if (slot >= EQ_LEFT_RING && slot <= EQ_AMULET)
@@ -444,7 +444,7 @@ static void _wield_cursed(item_def& item, bool known_cursed)
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
-static void _equip_weapon_effect(item_def& item, bool showMsgs)
+static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 {
     int special = 0;
 
@@ -609,7 +609,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs)
                     {
                         mpr("You feel a dreadful hunger.");
                         // takes player from Full to Hungry
-                        make_hungry(4500, false, false);
+                        if (!unmeld)
+                            make_hungry(4500, false, false);
                     }
                     else
                         mpr("You feel an empty sense of dread.");
