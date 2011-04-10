@@ -8,6 +8,7 @@
  */
 #include "AppHdr.h"
 
+#include "artefact.h"
 #include "coord.h"
 #include "coordit.h"
 #include "files.h"
@@ -2349,7 +2350,8 @@ bool travel_kill_monster(monster_type mons)
         return (false);
 
     // Don't auto-kill things with berserkitis or *rage.
-    if ((player_mutation_level(MUT_BERSERK) || scan_artefacts(ARTP_ANGRY))
+    if ((player_mutation_level(MUT_BERSERK) || scan_artefacts(ARTP_ANGRY)
+         || player_equip_unrand(UNRAND_TROG))
         && !wearing_amulet(AMU_STASIS, false) && !player_mental_clarity(false))
     {
         return (false);
