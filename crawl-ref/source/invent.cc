@@ -1551,6 +1551,12 @@ static bool _nasty_stasis(const item_def &item, operation_types oper)
                 || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE]));
 }
 
+static bool _is_wielded(const item_def &item)
+{
+    int equip = you.equip[EQ_WEAPON];
+    return equip != -1 && item.link == equip;
+}
+
 bool needs_handle_warning(const item_def &item, operation_types oper)
 {
     if (_has_warning_inscription(item, oper))
@@ -1571,7 +1577,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         return (true);
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
-        && item.base_type == OBJ_WEAPONS)
+        && (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES))
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
             && !you.duration[DUR_WEAPON_BRAND])
@@ -1584,6 +1590,14 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         {
             return (true);
         }
+
+        if (item_known_cursed(item) && !_is_wielded(item))
+            return (true);
+    }
+    else if (oper == OPER_PUTON || oper == OPER_WEAR)
+    {
+        if (item_known_cursed(item))
+            return (true);
     }
 
     return (false);
