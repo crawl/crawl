@@ -612,6 +612,8 @@ std::string screenshot()
         for (int x = line.length() - 1; x >= 0; x--)
             if (line[x] == ' ')
                 line.erase(x);
+            else
+                break;
         // see how much it can be left-trimmed
         for (unsigned int x = 0; x < line.length(); x++)
             if (line[x] != ' ')
