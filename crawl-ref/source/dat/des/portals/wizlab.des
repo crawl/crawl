@@ -86,7 +86,7 @@ function wizlab_portal (e)
     local desc_long = "This portal has been left open by a careless wizard. " ..
                       "It might lead to their secret laboratory, but beware!" ..
                       " Surely it will be guarded by magical traps and "      ..
-                      "terrible monsters."
+                      "terrible monsters. It seems to be slowly fading away."
     local timeout_turns_long = crawl.random_range(2700, 3300)
     local timeout_turns_short = timeout_turns_long/10
     local messager =
