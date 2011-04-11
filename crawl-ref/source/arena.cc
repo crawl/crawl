@@ -41,7 +41,7 @@
 #include "view.h"
 #include "viewgeom.h"
 
-#define DEBUG_DIAGNOSTICS
+#define ARENA_VERBOSE
 
 extern void world_reacts();
 
@@ -786,7 +786,7 @@ namespace arena
                     // The other monster isn't a respawner itself, so
                     // just get rid of it.
                     mprf(MSGCH_DIAGNOSTICS,
-                         "Dismissing non-repsawner %s to make room "
+                         "Dismissing non-respawner %s to make room for "
                          "respawner whose side has 0 active members.",
                          other->name(DESC_PLAIN, true).c_str());
                     monster_die(other, KILL_DISMISSED, NON_MONSTER);
@@ -795,7 +795,7 @@ namespace arena
                 {
                     // Other monster is a respawner, try to move it.
                     mprf(MSGCH_DIAGNOSTICS,
-                         "Teleporting respawner %s to make room "
+                         "Teleporting respawner %s to make room for "
                          "other respawner whose side has 0 active members.",
                          other->name(DESC_PLAIN, true).c_str());
                     monster_teleport(other, true);
@@ -842,7 +842,7 @@ namespace arena
                         return;
                 }
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef ARENA_VERBOSE
                 mprf("---- Turn #%d ----", turns);
 #endif
 
@@ -1171,7 +1171,7 @@ void arena_placed_monster(monster* mons)
 
     const bool summoned = mons->is_summoned();
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef ARENA_VERBOSE
     mprf("%s %s!",
          mons->full_name(DESC_CAP_A, true).c_str(),
          arena::is_respawning                ? "respawns" :
@@ -1409,19 +1409,13 @@ int arena_cull_items()
 
     if (cull_count >= cull_target)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "On turn #%d culled %d items dropped by "
-                                "monsters, done.",
+        dprf("On turn #%d culled %d items dropped by monsters, done.",
              arena::turns, cull_count);
-#endif
         return (first_avail);
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "On turn #%d culled %d items dropped by "
-                            "monsters, culling some more.",
+    dprf("On turn #%d culled %d items dropped by monsters, culling some more.",
          arena::turns, cull_count);
-#endif
 
     const int count1 = cull_count;
     for (unsigned int i = 0; i < ammo.size(); i++)
@@ -1433,17 +1427,13 @@ int arena_cull_items()
 
     if (cull_count >= cull_target)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Culled %d (probably) ammo items, done.",
+        dprf("Culled %d (probably) ammo items, done.",
              cull_count - count1);
-#endif
         return (first_avail);
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Culled %d items total, short of target %d.",
+    dprf("Culled %d items total, short of target %d.",
          cull_count, cull_target);
-#endif
     return (first_avail);
 } // arena_cull_items
 
