@@ -90,14 +90,14 @@ bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
     else
         aid.context = "newly seen";
 
-    seen_monster(mons);
-
     if (!mons_is_safe(mons)
         && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
             || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
     {
         return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
     }
+
+    seen_monster(mons);
 
     return false;
 }
@@ -223,13 +223,14 @@ void update_monsters_in_view()
             else
                 mi->flags &= ~MF_WAS_IN_VIEW;
         }
-        else
+        else if (!you.turn_is_over)
+        {
             mi->flags &= ~MF_WAS_IN_VIEW;
 
-        // If the monster hasn't been seen by the time that the player
-        // gets control back then seen_context is out of date.
-        if (!you.turn_is_over)
+            // If the monster hasn't been seen by the time that the player
+            // gets control back then seen_context is out of date.
             mi->seen_context.clear();
+        }
     }
 
     if (!msgs.empty())
