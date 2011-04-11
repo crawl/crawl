@@ -103,7 +103,6 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     {
         // It's not jewellery, and it's worn, so it must be armour.
         const equipment_type eqslot = get_armour_slot(item);
-        const bool is_soft_helmet   = is_helmet(item) && !is_hard_helmet(item);
 
         switch (form)
         {
@@ -117,24 +116,22 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
         case TRAN_DRAGON:
         case TRAN_BAT:
         case TRAN_PIG:
+        case TRAN_SPIDER:
             rc = false;
             break;
 
         // And some need more complicated logic.
-        case TRAN_SPIDER:
-            rc = is_soft_helmet;
-            break;
-
         case TRAN_BLADE_HANDS:
             rc = (eqslot != EQ_SHIELD && eqslot != EQ_GLOVES);
             break;
 
         case TRAN_STATUE:
-            rc = (eqslot == EQ_CLOAK || eqslot == EQ_HELMET);
+            rc = (eqslot == EQ_CLOAK || eqslot == EQ_HELMET
+                  || eqslot == EQ_SHIELD);
             break;
 
         case TRAN_ICE_BEAST:
-            rc = (eqslot == EQ_CLOAK || is_soft_helmet);
+            rc = (eqslot == EQ_CLOAK);
             break;
 
         default:                // Bug-catcher.
@@ -946,6 +943,7 @@ bool can_equip(equipment_type use_which, bool ignore_temporary)
 
         case TRAN_STATUE:
             return (use_which == EQ_WEAPON
+                    || use_which == EQ_SHIELD
                     || use_which == EQ_CLOAK
                     || use_which == EQ_HELMET);
 
