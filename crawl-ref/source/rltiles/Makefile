@@ -61,6 +61,7 @@ HEADERS := $(INPUTS:%=tiledef-%.h)
 HTML := $(INPUTS:%=tile-%.html)
 SOURCE := $(INPUTS:%=tiledef-%.cc)
 IMAGES := $(INPUTS:%=%.png)
+JAVASCRIPT := $(INPUTS:%=tileinfo-%.js)
 
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
@@ -74,9 +75,9 @@ endif
 BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
 OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
-all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
+all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES) $(JAVASCRIPT)
 
-%.png tiledef-%.h tiledef-%.cc: dc-%.txt | $(TILEGEN)
+%.png tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt | $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
 
 DEPS := $(shell ls $(OBJECTS:%.o=%.d) $(INPUTS:%=%.d) 2> /dev/null)
@@ -86,7 +87,7 @@ ifneq ($(DEPS),)
 endif
 
 clean:
-	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) $(DEPS)
+	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) $(DEPS) $(JAVASCRIPT)
 
 distclean: clean
 
