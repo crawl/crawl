@@ -362,12 +362,12 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
         }
     }
-    else if (feat_is_water(new_grid) && you.is_wall_clinging()
-             && !cell_is_clingable(you.pos()))
-    {
-        _splash();
-    }
 
+    const bool was_clinging = you.is_wall_clinging();
+    const bool is_clinging = you.check_clinging(stepped);
+
+    if (feat_is_water(new_grid) && was_clinging && !is_clinging)
+        _splash();
 
     // Icy shield goes down over lava.
     if (new_grid == DNGN_LAVA)
