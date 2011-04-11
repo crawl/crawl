@@ -804,7 +804,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (you.form == TRAN_STATUE)
     {
-        if (eq == EQ_WEAPON || eq == EQ_CLOAK || eq == EQ_HELMET)
+        if (eq == EQ_WEAPON || eq == EQ_SHIELD
+            || eq == EQ_CLOAK || eq == EQ_HELMET)
             return (true);
         return (false);
     }
