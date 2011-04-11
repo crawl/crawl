@@ -4897,7 +4897,7 @@ bool miasma_player(std::string source, std::string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.res_rotting())
+    if (you.res_rotting() || you.duration[DUR_DEATHS_DOOR])
         return (false);
 
     // Zin's protection.
@@ -6376,7 +6376,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     if (amount <= 0 && immediate <= 0)
         return (false);
 
-    if (res_rotting())
+    if (res_rotting() || you.duration[DUR_DEATHS_DOOR])
     {
         mpr("You feel terrible.");
         return (false);
