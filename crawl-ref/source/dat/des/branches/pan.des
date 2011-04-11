@@ -490,8 +490,8 @@ ENDMAP
 NAME:      gloorx_vloq
 TAGS:      gloorx_vloq
 ORIENT:    southwest
-LFLOORCOL: darkgrey
-LROCKCOL:  darkgrey
+LFLOORCOL: lightgrey
+LROCKCOL:  lightgrey
 MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
 KITEM:     O = dark rune of Zot
 epilogue{{
@@ -532,8 +532,8 @@ ENDMAP
 NAME:      gloorx_vloq_st
 TAGS:      gloorx_vloq
 ORIENT:    southeast
-LFLOORCOL: darkgrey
-LROCKCOL:  darkgrey
+LFLOORCOL: lightgrey
+LROCKCOL:  lightgrey
 MONS:      patrolling Gloorx Vloq, Executioner, shadow wraith
 MONS:      shadow demon, unseen horror
 KITEM:     O = dark rune of Zot
