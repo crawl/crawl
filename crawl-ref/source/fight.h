@@ -42,10 +42,6 @@ bool monsters_fight(monster* attacker, monster* attacked,
                     bool allow_unarmed = true);
 
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
-// TODO: Fix this; its used in player.cc but no where in melee_attack, which
-// means that we have another to-hit function declared that's actually being
-// used for combat to-hit (this is only used deterministically)
-int calc_your_to_hit(bool random_factor);
 int calc_heavy_armour_penalty(bool random_factor);
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,

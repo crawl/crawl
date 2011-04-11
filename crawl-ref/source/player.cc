@@ -3736,7 +3736,9 @@ static void _display_movement_speed()
 
 static void _display_tohit()
 {
-    const int to_hit = calc_your_to_hit(false) * 2;
+    melee_attack attk(&you, NULL);
+
+    const int to_hit = attk.calc_to_hit(false) * 2;
     dprf("To-hit: %d", to_hit);
 /*
     // Messages based largely on percentage chance of missing the

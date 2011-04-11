@@ -61,14 +61,6 @@ int effective_stat_bonus(int wepType)
     return ((you.strength() - you.dex()) * (str_weight - 5) / 10);
 }
 
-// Calculates your to-hit roll. If random_factor is true, be stochastic;
-// if false, determinstic (e.g. for chardumps).
-int calc_your_to_hit(bool random_factor)
-{
-    melee_attack attk(&you, NULL);
-    return attk.calc_to_hit(random_factor);
-}
-
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
                                               const actor *defender)
 {
