@@ -3451,7 +3451,7 @@ void god_pitch(god_type which_god)
     if (is_good_god(you.religion) && is_good_god(old_god))
     {
         // Some feedback that piety moved over.
-        switch(you.religion)
+        switch (you.religion)
         {
         case GOD_ELYVILON:
             simple_god_message((" says: Farewell. Go and aid the meek with "
@@ -3463,10 +3463,6 @@ void god_pitch(god_type which_god)
             break;
         case GOD_ZIN:
             simple_god_message((" says: Farewell. Go and enforce order with "
-                               + god_name(you.religion) + ".").c_str(), old_god);
-            break;
-        case GOD_XOM:
-            simple_god_message((" says: Farewell. Go and pirate ninja with "
                                + god_name(you.religion) + ".").c_str(), old_god);
             break;
         default:
