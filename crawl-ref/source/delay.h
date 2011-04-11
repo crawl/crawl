@@ -82,8 +82,7 @@ void stop_butcher_delay();
 void maybe_clear_weapon_swap();
 void handle_interrupted_swap(bool swap_if_safe = false,
                              bool force_unsafe = false,
-                             bool transform = false,
-                             bool force = false);
+                             bool transform = false);
 
 void clear_macro_process_key_delay();
 
