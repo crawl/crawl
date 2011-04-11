@@ -102,8 +102,7 @@ static bool _is_cancellable_scroll(scroll_type scroll);
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability, bool unwield,
-               bool butcher)
+               bool ignore_temporary_disability, bool unwield)
 {
 #define SAY(x) if (say_reason) { x; } else
 
@@ -129,8 +128,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         && you.weapon()
         && (you.weapon()->base_type == OBJ_WEAPONS
            || you.weapon()->base_type == OBJ_STAVES)
-        && you.weapon()->cursed()
-        && !(butcher && you.religion == GOD_ASHENZARI && i_feel_safe()))
+        && you.weapon()->cursed())
     {
         SAY(mprf("You can't unwield your weapon%s!",
                  !unwield ? " to draw a new one" : ""));
@@ -282,8 +280,7 @@ static bool _valid_weapon_swap(const item_def &item)
 // If force is true, don't check weapon inscriptions.
 // (Assuming the player was already prompted for that.)
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force, bool show_unwield_msg, bool show_wield_msg,
-                  bool butcher)
+                  bool force, bool show_unwield_msg, bool show_wield_msg)
 {
     if (inv_count() < 1)
     {
@@ -293,18 +290,15 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Look for conditions like berserking that could prevent wielding
     // weapons.
-    if (!can_wield(NULL, true, false, slot == SLOT_BARE_HANDS, butcher))
+    if (!can_wield(NULL, true, false, slot == SLOT_BARE_HANDS))
         return (false);
 
     int item_slot = 0;          // default is 'a'
 
     if (auto_wield)
     {
-        if (slot >= 0
-            && !can_wield(&you.inv[slot], true, false, false, butcher))
-        {
+        if (slot >= 0 && !can_wield(&you.inv[slot], true))
             return (false);
-        }
 
         if (item_slot == you.equip[EQ_WEAPON]
             || you.equip[EQ_WEAPON] == -1
@@ -387,7 +381,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     item_def& new_wpn(you.inv[item_slot]);
 
-    if (!can_wield(&new_wpn, true, false, false, true))
+    if (!can_wield(&new_wpn, true))
         return (false);
 
     // For non-auto_wield cases checked above.
@@ -3449,7 +3443,7 @@ bool puton_item(int item_slot)
     {
         const item_def* gloves = you.slot_item(EQ_GLOVES, false);
         // Cursed gloves cannot be removed.
-        if (gloves && gloves->cursed() && you.religion != GOD_ASHENZARI)
+        if (gloves && gloves->cursed())
         {
             mpr("You can't take your gloves off to put on a ring!");
             return (false);
@@ -3577,7 +3571,7 @@ bool remove_ring(int slot, bool announce)
 
     const item_def* gloves = you.slot_item(EQ_GLOVES);
     const bool gloves_cursed = gloves && gloves->cursed();
-    if (gloves_cursed && !amu && you.religion != GOD_ASHENZARI)
+    if (gloves_cursed && !amu)
     {
         mpr("You can't take your gloves off to remove any rings!");
         return (false);
@@ -3625,7 +3619,7 @@ bool remove_ring(int slot, bool announce)
         mpr("You can't take that off while it's melded.");
         return (false);
     }
-    else if (gloves_cursed && you.religion != GOD_ASHENZARI
+    else if (gloves_cursed
              && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
     {
         mpr("You can't take your gloves off to remove any rings!");
