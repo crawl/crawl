@@ -8,3 +8,37 @@ body {
     display: inline-block;
     vertical-align: top;
 }
+
+.fg0 { color: rgb(  0,   0,   0); }
+.fg1 { color: rgb(  0,  82, 255); }
+.fg2 { color: rgb(100, 185,  70); }
+.fg3 { color: rgb(  0, 180, 180); }
+.fg4 { color: rgb(255,  48,   0); }
+.fg5 { color: rgb(238,  92, 238); }
+.fg6 { color: rgb(165,  91,   0); }
+.fg7 { color: rgb(162, 162, 162); }
+.fg8 { color: rgb( 82,  82,  82); }
+.fg9 { color: rgb( 82, 102, 255); }
+.fg10 { color: rgb( 82, 255,  82); }
+.fg11 { color: rgb( 82, 255, 255); }
+.fg12 { color: rgb(255,  82,  82); }
+.fg13 { color: rgb(255,  82, 255); }
+.fg14 { color: rgb(255, 255,  82); }
+.fg15 { color: rgb(255, 255, 255); }
+
+.bg0 { background-color: rgb(  0,   0,   0); }
+.bg1 { background-color: rgb(  0,  82, 255); }
+.bg2 { background-color: rgb(100, 185,  70); }
+.bg3 { background-color: rgb(  0, 180, 180); }
+.bg4 { background-color: rgb(255,  48,   0); }
+.bg5 { background-color: rgb(238,  92, 238); }
+.bg6 { background-color: rgb(165,  91,   0); }
+.bg7 { background-color: rgb(162, 162, 162); }
+.bg8 { background-color: rgb( 82,  82,  82); }
+.bg9 { background-color: rgb( 82, 102, 255); }
+.bg10 { background-color: rgb( 82, 255,  82); }
+.bg11 { background-color: rgb( 82, 255, 255); }
+.bg12 { background-color: rgb(255,  82,  82); }
+.bg13 { background-color: rgb(255,  82, 255); }
+.bg14 { background-color: rgb(255, 255,  82); }
+.bg15 { background-color: rgb(255, 255, 255); }

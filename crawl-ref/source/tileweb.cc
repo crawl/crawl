@@ -28,6 +28,7 @@
 #include "tilesdl.h"
 #include "tileview.h"
 #include "travel.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"
 
@@ -416,18 +417,15 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 void TilesFramework::resize()
 {
-    fprintf(stdout, "textAreaSize(stats,%d,%d);\n",
-            crawl_view.hudsz.x, crawl_view.hudsz.y);
-
-    fprintf(stdout, "textAreaSize(crt,%d,%d);\n",
-            crawl_view.termsz.x, crawl_view.termsz.y);
-
-    fprintf(stdout, "textAreaSize(messages,%d,%d);\n",
-            crawl_view.msgsz.x, crawl_view.msgsz.y);
+    fprintf(stderr, "resize()\n");
+    m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
+    m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
+    m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
 
 int TilesFramework::getch_ck()
 {
+    redraw();
     fflush(stdout);
     int key = getchar();
     if (key == '\\')
@@ -446,7 +444,7 @@ int TilesFramework::getch_ck()
 
 void TilesFramework::clrscr()
 {
-    fprintf(stdout, "clrscr();\n");
+    m_print_area->clear();
 }
 
 int TilesFramework::get_number_of_lines()
@@ -461,8 +459,33 @@ int TilesFramework::get_number_of_cols()
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
+    m_print_x = x - 1;
+    m_print_y = y - 1;
+    switch (region)
+    {
+    case GOTO_CRT:
+        if (m_active_layer != LAYER_CRT)
+            fprintf(stdout, "setLayer(\"crt\");\n");
+        m_active_layer = LAYER_CRT;
+        m_print_area = &m_text_crt;
+        break;
+    case GOTO_MSG:
+        if (m_active_layer != LAYER_NORMAL)
+            fprintf(stdout, "setLayer(\"normal\");\n");
+        m_active_layer = LAYER_NORMAL;
+        m_print_area = &m_text_message;
+        break;
+    case GOTO_STAT:
+        if (m_active_layer != LAYER_NORMAL)
+            fprintf(stdout, "setLayer(\"normal\");\n");
+        m_active_layer = LAYER_NORMAL;
+        m_print_area = &m_text_stat;
+        break;
+    default:
+        die("invalid cgotoxy region in webtiles: %d", region);
+        break;
+    }
     m_cursor_region = region;
-    fprintf(stdout, "cgotoxy(%d,%d,%d);\n", x, y, region);
 }
 
 GotoRegion TilesFramework::get_cursor_region() const
@@ -472,6 +495,10 @@ GotoRegion TilesFramework::get_cursor_region() const
 
 void TilesFramework::redraw()
 {
+    fprintf(stderr, "redraw()\n");
+    m_text_crt.send();
+    m_text_stat.send();
+    m_text_message.send();
 }
 
 void TilesFramework::update_minimap(const coord_def& gc)
@@ -545,5 +572,81 @@ int TilesFramework::to_lines(int num_tiles)
 void TilesFramework::layout_statcol()
 {
     fprintf(stderr, "layout_statcol()\n");
+}
+
+void TilesFramework::textcolor(int col)
+{
+    m_print_fg = col;
+}
+
+void TilesFramework::textbackground(int col)
+{
+    m_print_bg = col;
+}
+
+void TilesFramework::put_string(char *buffer)
+{
+    // This basically just converts buffer to ucs_t and then uses put_ucs_string
+    ucs_t buf2[1024], c;
+
+    int j = 0;
+
+    int clen;
+    do
+    {
+        buffer += clen = utf8towc(&c, buffer);
+
+        // TODO: use wcwidth() to handle widths!=1:
+        // *  2 for CJK chars -- add a zero-width blank?
+        // *  0 for combining characters -- would need extra support
+        // * -1 for non-printable stuff -- assert or ignore
+        buf2[j] = c;
+        j++;
+
+        if (c == 0 || j == (ARRAYSZ(buf2) - 1))
+        {
+            if (c != 0)
+                buf2[j + 1] = 0;
+
+            if (j - 1 != 0)
+            {
+                put_ucs_string(buf2);
+            }
+        }
+    } while (clen);
+}
+
+void TilesFramework::put_ucs_string(ucs_t *str)
+{
+    while (*str)
+    {
+        if (*str == '\r')
+            continue;
+
+        if (*str == '\n')
+        {
+            m_print_x = 0;
+            m_print_y++;
+            // TODO: Clear end of line?
+        }
+        else
+        {
+            m_print_area->put_character(*str, m_print_fg, m_print_bg, m_print_x, m_print_y);
+            m_print_x++;
+            if (m_print_x >= m_print_area->mx)
+            {
+                m_print_x = 0;
+                m_print_y++;
+            }
+        }
+
+        if (m_print_y >= m_print_area->my)
+        {
+            // TODO Scroll?
+            m_print_y = 0;
+        }
+
+        str++;
+    }
 }
 #endif

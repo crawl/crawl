@@ -1,7 +1,9 @@
 
 var keyConversion = {
     // Escape
-    27: 0x1b,
+    27: 27,
+    // Backspace
+    8: 8,
 
     // Numpad / Arrow keys
     35: -1001,

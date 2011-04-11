@@ -1,11 +1,11 @@
-import os
+import os, os.path
 import subprocess
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
 
-os.chdir("../")
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -35,7 +35,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         self.close_pipes()
-        self.p.terminate()
+        if not self.p.poll():
+            self.p.terminate()
         print "SOCKET CLOSED"
 
     def on_stderr(self, fd, events):

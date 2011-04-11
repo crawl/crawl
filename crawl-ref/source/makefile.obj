@@ -270,7 +270,8 @@ tilepick.o \
 tilepick-p.o \
 tileweb.o \
 tileview.o \
-tilecell.o
+tilecell.o \
+tileweb-text.o
 endif
 
 ifdef SDL

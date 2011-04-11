@@ -111,6 +111,7 @@ void TextRegion::addstr_aux(const ucs_t *buffer, int len)
     int head = x;
     int tail = x + len - 1;
 
+    // XXX: What does this even do?
     adjust_region(&head, &tail, y);
 
     for (int i = 0; i < len && x + i < mx; i++)

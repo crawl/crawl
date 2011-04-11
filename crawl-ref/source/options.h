@@ -323,6 +323,8 @@ public:
     char        tile_show_items[20]; // show which item types in tile inventory
     bool        tile_skip_title;     // wait for a key at title screen?
     bool        tile_menu_icons;     // display icons in menus?
+#endif
+#ifdef USE_TILE_LOCAL
     // minimap colours
     char        tile_player_col;
     char        tile_monster_col;
@@ -365,6 +367,9 @@ public:
     int         tile_window_height;
     int         tile_map_pixels;
     bool        tile_force_overlay;
+#endif
+
+#ifdef USE_TILE
     // display settings
     int         tile_update_rate;
     int         tile_runrest_rate;

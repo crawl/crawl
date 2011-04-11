@@ -8,9 +8,11 @@
 #define TILESDL_H
 
 #include "externs.h"
+
 #ifdef USE_TILE_LOCAL
- #include "tilereg.h"
- #include "tiletex.h"
+
+#include "tilereg.h"
+#include "tiletex.h"
 
 class Region;
 class CRTRegion;
@@ -36,6 +38,11 @@ class StatRegion;
 class MessageRegion;
 
 typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
+
+#elif defined(USE_TILE_WEB)
+
+#include "tileweb-text.h"
+
 #endif
 
 struct map_cell;
@@ -154,6 +161,15 @@ public:
 #endif
 
     int to_lines(int num_tiles);
+
+#ifdef USE_TILE_WEB
+    void textcolor(int col);
+    void textbackground(int col);
+    void put_string(char *str);
+    void put_ucs_string(ucs_t *str);
+    int wherex() { return m_print_x + 1; }
+    int wherey() { return m_print_y + 1; }
+#endif
 protected:
     enum TabID
     {
@@ -285,6 +301,14 @@ protected:
     crawl_view_buffer m_current_view;
     coord_def m_current_gc;
     GotoRegion m_cursor_region;
+
+    CRTTextArea m_text_crt;
+    StatTextArea m_text_stat;
+    MessageTextArea m_text_message;
+
+    WebTextArea *m_print_area;
+    int m_print_x, m_print_y;
+    int m_print_fg, m_print_bg;
 #endif
 };
 

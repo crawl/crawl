@@ -925,6 +925,7 @@ void game_options::reset_options()
     strcpy(tile_show_items, "!?/%=([)x}+\\_.");
     tile_skip_title      = false;
     tile_menu_icons      = true;
+#endif
 
 #ifdef USE_TILE_LOCAL
     // minimap colours
@@ -975,7 +976,9 @@ void game_options::reset_options()
     tile_force_overlay    = false;
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
                                              "command, spell, monster");
+#endif
 
+#ifdef USE_TILE
     // delays
     tile_update_rate      = 1000;
     tile_runrest_rate     = 100;
@@ -3085,6 +3088,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         strncpy(tile_show_items, field.c_str(), 18);
     else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
+#endif
+#ifdef USE_TILE_LOCAL
     else if (key == "tile_player_col")
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
@@ -3150,6 +3155,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else BOOL_OPTION(tile_force_overlay);
+#endif // USE_TILE_LOCAL
+#ifdef USE_TILE
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else INT_OPTION(tile_runrest_rate, 0, INT_MAX);
@@ -3161,7 +3168,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         tile_layout_priority = split_string(",", field.c_str());
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
-#endif // USE_TILE
+#endif
 
     else if (key == "bindkey")
         _bindkey(field);
