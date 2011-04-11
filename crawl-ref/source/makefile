@@ -1053,7 +1053,7 @@ endif
 ifeq ($(GAME),crawl.exe)
 	sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
 endif
-ifdef TILES_ANY
+ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
 	$(COPY) dat/tiles/*.png $(datadir_fp)/dat/tiles/
 ifndef PROPORTIONAL_FONT

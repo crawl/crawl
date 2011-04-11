@@ -92,36 +92,6 @@ function viewSize(cols, rows) {
     dungeonContext = canvas.getContext("2d");
 }
 
-function bg(cx, cy, bg) {
-    bg_idx = bg & TILE_FLAG_MASK;
-    x = dungeonCellWidth * cx;
-    y = dungeonCellHeight * cy;
-    img = getImg(getdngnImg(bg_idx));
-    info = getdngnTileInfo(bg_idx);
-    w = info.ex - info.sx;
-    h = info.ey - info.sy;
-    dungeonContext.drawImage(img, info.sx, info.sy, w, h, x + info.ox, y + info.oy, w, h);
-}
-
-function fg(cx, cy, fg) {
-    fg_idx = fg & TILE_FLAG_MASK;
-    info = getmainTileInfo(fg_idx);
-    img = getImg("main");
-    w = info.ex - info.sx;
-    h = info.ey - info.sy;
-    dungeonContext.drawImage(img, info.sx, info.sy, w, h,
-                             x + info.ox, y + info.oy, w, h);
-}
-
-function p(cx, cy, part, ofsx, ofsy) {
-    info = getplayerTileInfo(part);
-    img = getImg("player");
-    w = info.ex - info.sx;
-    h = info.ey - info.sy;
-    dungeonContext.drawImage(img, info.sx, info.sy, w, h,
-                             x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
-}
-
 function handleKeypress(e) {
     s = String.fromCharCode(e.which);
     if (s == "\\") {
