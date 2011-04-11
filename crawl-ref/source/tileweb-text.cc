@@ -8,7 +8,8 @@ WebTextArea::WebTextArea(std::string name) :
     my(0),
     m_cbuf(NULL),
     m_abuf(NULL),
-    m_client_side_name(name)
+    m_client_side_name(name),
+    m_dirty(true)
 {
 }
 
@@ -48,6 +49,8 @@ void WebTextArea::clear()
         m_cbuf[i] = ' ';
         m_abuf[i] = 0;
     }
+
+    m_dirty = true;
 }
 
 void WebTextArea::put_character(ucs_t chr, int fg, int bg, int x, int y)
@@ -55,12 +58,18 @@ void WebTextArea::put_character(ucs_t chr, int fg, int bg, int x, int y)
     ASSERT((x < mx) && (y < my) && (x >= 0) && (y >= 0));
     uint8_t col = (fg & 0xf) + (bg << 4);
 
+    if ((m_cbuf[x + y * mx] != chr) || (m_abuf[x + y * mx] != col))
+        m_dirty = true;
+
     m_cbuf[x + y * mx] = chr;
     m_abuf[x + y * mx] = col;
 }
 
 void WebTextArea::send()
 {
+    if (!m_dirty) return;
+    m_dirty = false;
+
     fprintf(stdout, "$(\"#%s\").html(\"", m_client_side_name.c_str());
 
     uint8_t last_col = 0;

@@ -110,8 +110,8 @@ void TilesFramework::calculate_default_options()
 
 bool TilesFramework::initialise()
 {
-    fprintf(stderr, "initialize()\n");
     std::string title = CRAWL " " + Version::Long();
+    // TODO Send title
 
     // Do our initialization here.
     m_active_layer = LAYER_CRT;
@@ -306,6 +306,8 @@ static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
         || (abs(shift.y) >= vbuf.size().y))
         return; // The whole buffer needs to be redrawn anyway
 
+    fprintf(stdout, "shift(%d,%d);", shift.x, shift.y);
+
     screen_cell_t *cells = (screen_cell_t *) vbuf;
 
     int w = vbuf.size().x, h = vbuf.size().y;
@@ -374,10 +376,10 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
         // Shift the view, so we need to send less cells
         coord_def shift = gc - m_current_gc;
         m_current_gc = gc;
+        fprintf(stderr, "Shift: %d/%d\n", shift.x, shift.y);
         if ((shift.x != 0) || (shift.y != 0))
         {
             _shift_view_buffer(m_current_view, shift);
-            fprintf(stdout, "shift(%d,%d);", shift.x, shift.y);
         }
 
         const screen_cell_t *cell = (const screen_cell_t *) vbuf;
@@ -420,7 +422,6 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 void TilesFramework::resize()
 {
-    fprintf(stderr, "resize()\n");
     m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
     m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
     m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
@@ -452,12 +453,20 @@ void TilesFramework::clrscr()
 
 int TilesFramework::get_number_of_lines()
 {
-    return 24;
+    return m_text_crt.my;
 }
 
 int TilesFramework::get_number_of_cols()
 {
-    return 80;
+    switch (m_active_layer)
+    {
+    default:
+        return 0;
+    case LAYER_NORMAL:
+        return m_text_message.mx;
+    case LAYER_CRT:
+        return m_text_crt.mx;
+    }
 }
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
@@ -551,10 +560,26 @@ const coord_def &TilesFramework::get_cursor() const
 
 void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 {
+    // overlays must be from the main image and must be in LOS.
+    if (!crawl_view.in_los_bounds_g(gc))
+    {
+        fprintf(stderr, "out of los\n");
+        return;
+    }
+
+    if (idx >= TILE_MAIN_MAX)
+        return;
+
+    int cx_to_gx = m_current_gc.x - m_current_view.size().x / 2;
+    int cy_to_gy = m_current_gc.y - m_current_view.size().y / 2;
+
+    fprintf(stdout, "drawMain(%d,%d,%d);\n",
+            idx, gc.x - cx_to_gx, gc.y - cy_to_gy);
 }
 
 void TilesFramework::clear_overlays()
 {
+    fprintf(stderr, "clear_overlays\n");
 }
 
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
