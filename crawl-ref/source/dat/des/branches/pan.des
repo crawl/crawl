@@ -82,7 +82,7 @@ end)
 
 # 25% chance to appear on D:21-27, and guaranteed on D:24.
 NAME: pan_entry
-TAGS: extra allow_dup
+TAGS: extra allow_dup can_overwrite
 DEPTH: D:21-27
 CHANCE: 100% (D:24), 25%
 KFEAT: O = enter_pandemonium
