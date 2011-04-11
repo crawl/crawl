@@ -3826,33 +3826,32 @@ int melee_attack::mons_apply_defender_ac(int damage, int damage_max)
     return std::max(0, damage);
 }
 
-// TODO: Move this somewhere sane too
-static const char *klown_attack[] =
-{
-    "hit",
-    "poke",
-    "prod",
-    "flog",
-    "pound",
-    "slap",
-    "tickle",
-    "defenestrate",
-    "sucker-punch",
-    "elbow",
-    "pinch",
-    "strangle-hug",
-    "squeeze",
-    "tease",
-    "eye-gouge",
-    "karate-kick",
-    "headlock",
-    "wrestle",
-    "trip-wire",
-    "kneecap"
-};
-
 std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 {
+    static const char *klown_attack[] =
+    {
+        "hit",
+        "poke",
+        "prod",
+        "flog",
+        "pound",
+        "slap",
+        "tickle",
+        "defenestrate",
+        "sucker-punch",
+        "elbow",
+        "pinch",
+        "strangle-hug",
+        "squeeze",
+        "tease",
+        "eye-gouge",
+        "karate-kick",
+        "headlock",
+        "wrestle",
+        "trip-wire",
+        "kneecap"
+    };
+
     if (attacker->type == MONS_KILLER_KLOWN && attk.type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
