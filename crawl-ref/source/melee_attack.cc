@@ -3143,9 +3143,9 @@ int melee_attack::calc_to_hit(bool random)
     if(attacker->atype() == ACT_PLAYER)
     {
         attacker_armour_tohit_penalty =
-            attacker->armour_tohit_penalty(random_factor);
+            attacker->armour_tohit_penalty(random);
         attacker_shield_tohit_penalty =
-            attacker->shield_tohit_penalty(random_factor);
+            attacker->shield_tohit_penalty(random);
 
         dprf("Armour/shield to-hit penalty: %d/%d",
              attacker_armour_tohit_penalty, attacker_shield_tohit_penalty);
@@ -3168,7 +3168,7 @@ int melee_attack::calc_to_hit(bool random)
             your_to_hit -= 5;
 
         // fighting contribution
-        your_to_hit += maybe_random2(1 + you.skill(SK_FIGHTING), random_factor);
+        your_to_hit += maybe_random2(1 + you.skill(SK_FIGHTING), random);
 
         // weapon skill contribution
         if (weapon)
@@ -3179,7 +3179,7 @@ int melee_attack::calc_to_hit(bool random)
                     xom_is_stimulated(14); // Xom thinks that is mildly amusing.
 
                 your_to_hit += maybe_random2(you.skill(wpn_skill) + 1,
-                                             random_factor);
+                                             random);
             }
         }
         else
@@ -3187,7 +3187,7 @@ int melee_attack::calc_to_hit(bool random)
             your_to_hit += species_has_claws(you.species) ? 4 : 2;
 
             your_to_hit += maybe_random2(1 + you.skill(SK_UNARMED_COMBAT),
-                                         random_factor);
+                                         random);
         }
 
         // weapon bonus contribution
@@ -3201,7 +3201,7 @@ int melee_attack::calc_to_hit(bool random)
                 if (get_equip_race(*weapon) == ISFLAG_ELVEN
                     && player_genus(GENPC_ELVEN))
                 {
-                    your_to_hit += (random_factor && coinflip() ? 2 : 1);
+                    your_to_hit += (random && coinflip() ? 2 : 1);
                 }
                 else if (get_equip_race(*weapon) == ISFLAG_ORCISH
                          && you.religion == GOD_BEOGH && !player_under_penance())
@@ -3239,7 +3239,7 @@ int melee_attack::calc_to_hit(bool random)
     #endif
 
         // hit roll
-        your_to_hit = maybe_random2(your_to_hit, random_factor);
+        your_to_hit = maybe_random2(your_to_hit, random);
 
     #ifdef DEBUG_DIAGNOSTICS
         dprf("to hit die: %d; rolled value: %d; base: %d",
@@ -3250,7 +3250,7 @@ int melee_attack::calc_to_hit(bool random)
         {
             int turn_duration = you.duration[DUR_SURE_BLADE] / BASELINE_DELAY;
             your_to_hit += 5 +
-                (random_factor ? random2limit(turn_duration, 10) :
+                (random ? random2limit(turn_duration, 10) :
                  turn_duration / 2);
         }
 
@@ -3260,31 +3260,31 @@ int melee_attack::calc_to_hit(bool random)
             if (you.duration[DUR_CONFUSING_TOUCH])
             {
                 // Just trying to touch is easier that trying to damage.
-                your_to_hit += maybe_random2(you.dex(), random_factor);
+                your_to_hit += maybe_random2(you.dex(), random);
             }
 
             switch (you.form)
             {
             case TRAN_SPIDER:
-                your_to_hit += maybe_random2(10, random_factor);
+                your_to_hit += maybe_random2(10, random);
                 break;
             case TRAN_BAT:
-                your_to_hit += maybe_random2(12, random_factor);
+                your_to_hit += maybe_random2(12, random);
                 break;
             case TRAN_ICE_BEAST:
-                your_to_hit += maybe_random2(10, random_factor);
+                your_to_hit += maybe_random2(10, random);
                 break;
             case TRAN_BLADE_HANDS:
-                your_to_hit += maybe_random2(12, random_factor);
+                your_to_hit += maybe_random2(12, random);
                 break;
             case TRAN_STATUE:
-                your_to_hit += maybe_random2(9, random_factor);
+                your_to_hit += maybe_random2(9, random);
                 break;
             case TRAN_DRAGON:
-                your_to_hit += maybe_random2(10, random_factor);
+                your_to_hit += maybe_random2(10, random);
                 break;
             case TRAN_LICH:
-                your_to_hit += maybe_random2(10, random_factor);
+                your_to_hit += maybe_random2(10, random);
                 break;
             case TRAN_PIG:
             case TRAN_NONE:
@@ -3343,7 +3343,37 @@ int melee_attack::calc_to_hit(bool random)
     }
 
     // Uh-oh?
-    return 0;
+    return (0);
+}
+
+int melee_attack::calc_attack_delay(bool random)
+{
+    if(attacker->atype() == ACT_PLAYER)
+    {
+        random_var attack_delay = weapon ? player_weapon_speed()
+                                         : player_unarmed_speed();
+
+        if (attacker_shield_penalty)
+        {
+            if (weapon && hands == HANDS_HALF)
+                attack_delay += rv::roll_dice(1, attacker_shield_penalty);
+            else
+            {
+                attack_delay += rv::min(rv::random2(1 + attacker_shield_penalty),
+                                        rv::random2(1 + attacker_shield_penalty));
+            }
+        }
+
+        attack_delay = rv::max(attack_delay, constant(3));
+
+        return (random ? attack_delay.roll() : attack_delay.expected());
+    }
+    else
+    {
+        return (weapon ? property(*weapon, PWPN_SPEED) : 0);
+    }
+
+    return (0);
 }
 
 void melee_attack::player_stab_check()
@@ -3399,32 +3429,9 @@ void melee_attack::player_stab_check()
     }
 }
 
-random_var melee_attack::player_calc_attack_delay()
-{
-    random_var attack_delay = weapon ? player_weapon_speed()
-                                     : player_unarmed_speed();
-
-    if (attacker_shield_penalty)
-    {
-        if (weapon && hands == HANDS_HALF)
-        {
-            attack_delay += rv::roll_dice(1, attacker_shield_penalty);
-        }
-        else
-        {
-            attack_delay += rv::min(rv::random2(1 + attacker_shield_penalty),
-                                    rv::random2(1 + attacker_shield_penalty));
-        }
-    }
-
-    attack_delay = rv::max(attack_delay, constant(3));
-
-    return (attack_delay);
-}
-
 void melee_attack::player_apply_attack_delay()
 {
-    final_attack_delay = player_calc_attack_delay().roll();
+    final_attack_delay = calc_attack_delay();
 
     if (you.duration[DUR_FINESSE])
     {
@@ -3681,11 +3688,6 @@ bool melee_attack::mons_attack_warded_off()
     }
 
     return (false);
-}
-
-int melee_attack::mons_attk_delay()
-{
-    return (weapon ? property(*weapon, PWPN_SPEED) : 0);
 }
 
 bool melee_attack::attack_shield_blocked(bool verbose)
@@ -4729,7 +4731,7 @@ void melee_attack::mons_perform_attack_rounds()
         if (chaos_attack && defender->atype() == ACT_MONSTER && !def_copy)
             def_copy = new monster(*defender->as_monster());
 
-        final_attack_delay = mons_attk_delay();
+        final_attack_delay = calc_attack_delay();
         if (damage_brand == SPWPN_SPEED)
             final_attack_delay = final_attack_delay / 2 + 1;
 
