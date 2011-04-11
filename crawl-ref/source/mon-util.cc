@@ -37,6 +37,7 @@
 #include "mon-place.h"
 #include "coord.h"
 #include "mon-stuff.h"
+#include "notes.h"
 #include "options.h"
 #include "random.h"
 #include "religion.h"
@@ -2333,6 +2334,12 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     }
 
     mon->mname = _get_proper_monster_name(mon);
+
+    if (mon->friendly())
+    {
+        take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname.c_str()));
+    }
+
     return (mon->is_named());
 }
 
