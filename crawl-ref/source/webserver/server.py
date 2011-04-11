@@ -40,7 +40,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         print "SOCKET CLOSED"
 
     def on_stderr(self, fd, events):
-        print "ERR: ", self.p.stderr.readline(),
+        s = self.p.stderr.readline()
+        if s.isspace() or s == "": return
+        print "ERR: ", s,
         if self.p.poll():
             self.close()
             self.close_pipes()

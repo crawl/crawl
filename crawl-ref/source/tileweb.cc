@@ -315,14 +315,17 @@ static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
     // Also, if shift.x is < 0, we need to iterate through the cells from right to left,
     // because we would overwrite the cells we haven't shifted yet otherwise.
     // All this is of course analogous for y.
-    int start_x = shift.x > 0 ? 0 : w;
-    int start_y = shift.y > 0 ? 0 : h;
-    int end_x = shift.x > 0 ? w - shift.x : -1 - shift.x;
-    int end_y = shift.y > 0 ? h - shift.y : -1 - shift.y;
+    int start_x = shift.x >= 0 ? 0 : w - 1;
+    int start_y = shift.y >= 0 ? 0 : h - 1;
+    int end_x = shift.x >= 0 ? w - shift.x : -1 - shift.x;
+    int end_y = shift.y >= 0 ? h - shift.y : -1 - shift.y;
 
-    for (int y = start_y; y != end_y; shift.y > 0 ? y++ : y--)
-        for (int x = start_x; x != end_x; shift.x > 0 ? x++ : x--)
+    for (int y = start_y; y != end_y; shift.y >= 0 ? y++ : y--)
+        for (int x = start_x; x != end_x; shift.x >= 0 ? x++ : x--)
         {
+            ASSERT((y * w + x) < (w*h));
+            ASSERT(((y + shift.y) * w + x + shift.x) < (w*h));
+
             cells[y * w + x] = cells[(y + shift.y) * w + x + shift.x];
             // A kind of hacky way to ensure the cells in the new areas are always sent
             // (even if they by chance are the same as the old cell)
@@ -543,8 +546,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
 
 const coord_def &TilesFramework::get_cursor() const
 {
-    fprintf(stderr, "get_cursor()\n");
-    return coord_def(0,0);
+    die("get_cursor() not implemented!");
 }
 
 void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
