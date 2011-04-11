@@ -3976,7 +3976,6 @@ static void _move_player(coord_def move)
 
         move_player_to_grid(targ, true, false);
 
-        you.check_clinging(true);
         you.walking = move.abs();
         you.prev_move = move;
         move.reset();
