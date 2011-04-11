@@ -77,11 +77,9 @@ static bool _place_feature_near(const coord_def &centre,
 
         if (grd(cp) == candidate)
         {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Placing %s at (%d,%d)",
+            dprf("Placing %s at (%d,%d)",
                  dungeon_feature_name(replacement),
                  cp.x, cp.y);
-#endif
             grd(cp) = replacement;
             return (true);
         }
@@ -111,10 +109,7 @@ void generate_abyss()
     env.level_build_method += " abyss";
     env.level_layout_types.insert("abyss");
 
-#ifdef DEBUG_ABYSS
-    mprf(MSGCH_DIAGNOSTICS,
-         "generate_abyss(); turn_on_level: %d", env.turns_on_level);
-#endif
+    dprf("generate_abyss(); turn_on_level: %d", env.turns_on_level);
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         grd(*ri) = _abyss_proto_feature();
@@ -179,7 +174,7 @@ static int _abyssal_rune_roll()
     const int odds =
         std::min(1 + std::max((env.turns_on_level - cutoff) / scale, 0), 34);
 #ifdef DEBUG_ABYSS
-    mprf(MSGCH_DIAGNOSTICS, "Abyssal rune odds: %d in %d (%.2f%%)",
+    dprf("Abyssal rune odds: %d in %d (%.2f%%)",
          odds, ABYSSAL_RUNE_MAX_ROLL, odds * 100.0 / ABYSSAL_RUNE_MAX_ROLL);
 #endif
     return (odds);
@@ -566,8 +561,7 @@ static void _generate_area(const map_mask &abyss_genlevel_mask,
         find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
 
 #ifdef DEBUG_ABYSS
-    mprf(MSGCH_DIAGNOSTICS,
-         "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
+    dprf("_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
 #endif
 
@@ -700,7 +694,7 @@ static void _abyss_wipe_square_at(coord_def p)
     // Nuke items.
 #ifdef DEBUG_ABYSS
     if (igrd(p) != NON_ITEM)
-        mprf(MSGCH_DIAGNOSTICS, "Nuke item stack at (%d, %d)", p.x, p.y);
+        dprf("Nuke item stack at (%d, %d)", p.x, p.y);
 #endif
     lose_item_stack(p);
 
@@ -945,7 +939,7 @@ static void _abyss_generate_monsters(int nmonsters)
 void abyss_area_shift(void)
 {
 #ifdef DEBUG_ABYSS
-    mprf(MSGCH_DIAGNOSTICS, "area_shift() - player at pos (%d, %d)",
+    dprf("area_shift() - player at pos (%d, %d)",
          you.pos().x, you.pos().y);
 #endif
 
@@ -1024,8 +1018,7 @@ static bool _abyss_teleport_within_level()
             && env.cgrid(newspot) == EMPTY_CLOUD)
         {
 #ifdef DEBUG_ABYSS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Abyss same-area teleport to (%d,%d).",
+            dprf("Abyss same-area teleport to (%d,%d).",
                  newspot.x, newspot.y);
 #endif
             you.moveto(newspot);
@@ -1043,7 +1036,7 @@ void abyss_teleport(bool new_area)
         return;
 
 #ifdef DEBUG_ABYSS
-    mpr("New area Abyss teleport.", MSGCH_DIAGNOSTICS);
+    dprf("New area Abyss teleport.");
 #endif
 
     // Teleport to a new area of the abyss.
