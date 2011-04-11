@@ -317,6 +317,8 @@ function drawDngn(idx, cx, cy, submerged) {
 }
 
 function drawMain(idx, cx, cy) {
+    x = dungeonCellWidth * cx;
+    y = dungeonCellHeight * cy;
     info = getmainTileInfo(idx);
     img = getImg("main");
     if (!info) {
@@ -329,6 +331,8 @@ function drawMain(idx, cx, cy) {
 }
 
 function drawPlayer(idx, cx, cy, ofsx, ofsy) {
+    x = dungeonCellWidth * cx;
+    y = dungeonCellHeight * cy;
     info = getplayerTileInfo(idx);
     img = getImg("player");
     if (!info) {
@@ -341,6 +345,8 @@ function drawPlayer(idx, cx, cy, ofsx, ofsy) {
 }
 
 function drawIcon(idx, cx, cy, ofsx, ofsy) {
+    x = dungeonCellWidth * cx;
+    y = dungeonCellHeight * cy;
     info = geticonsTileInfo(idx);
     img = getImg("icons");
     if (!info) {
