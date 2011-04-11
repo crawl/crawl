@@ -373,12 +373,15 @@ bool map_safe_vault_place(const map_def &map,
         if (lines[dp.y][dp.x] == ' ')
             continue;
 
-        // Also check adjacent squares for collisions, because being next
-        // to another vault may block off one of this vault's exits.
-        for (adjacent_iterator ai(cp); ai; ++ai)
+        if (!map.has_tag("can_overwrite"))
         {
-            if (map_bounds(*ai) && (env.level_map_mask(*ai) & MMT_VAULT))
-                return (false);
+            // Also check adjacent squares for collisions, because being next
+            // to another vault may block off one of this vault's exits.
+            for (adjacent_iterator ai(cp); ai; ++ai)
+            {
+                if (map_bounds(*ai) && (env.level_map_mask(*ai) & MMT_VAULT))
+                    return (false);
+            }
         }
 
         // Don't overwrite features other than floor, rock wall, doors,
