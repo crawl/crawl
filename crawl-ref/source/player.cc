@@ -356,7 +356,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     }
 
     const bool was_clinging = you.is_wall_clinging();
-    const bool is_clinging = you.check_clinging(stepped);
+    const bool is_clinging = stepped && you.check_clinging(stepped);
 
     if (feat_is_water(new_grid) && was_clinging && !is_clinging)
         _splash();
