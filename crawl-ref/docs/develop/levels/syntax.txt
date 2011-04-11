@@ -403,6 +403,9 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
           * "overwritable": Lets the dungeon builder overwrite this vault with
              other ones.  Don't use this casually.
+          * "can_overwrite": Tells the dungeon builder that this vault can be
+             placed on top of other vaults, even those without the "overwritable"
+             tag.  Don't use this casually.
           * "layout": Makes the vault eligible for use as a level layout.  Do
              not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
