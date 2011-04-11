@@ -21,7 +21,9 @@
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
+#include "tiledef-icons.h"
 #include "tilemcache.h"
+#include "tilepick.h"
 #include "tilepick-p.h"
 #include "tilesdl.h"
 #include "tileview.h"
@@ -120,9 +122,8 @@ bool TilesFramework::initialise()
     return (true);
 }
 
-void _send_doll(int x, int y, const dolls_data &doll)
+static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
-    // OTTODO: This is largely copied from tiledoll.cc; unify.
     // Ordered from back to front.
     int p_order[TILEP_PART_MAX] =
     {
@@ -175,15 +176,17 @@ void _send_doll(int x, int y, const dolls_data &doll)
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    for (int i = 0; i < TILEP_PART_MAX; i++)
+    fprintf(stdout, "doll:[");
+
+    for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
         int p = p_order[i];
 
         if (!doll.parts[p] || flags[p] == TILEP_FLAG_HIDE)
             continue;
 
-        //        if (p == TILEP_PART_SHADOW && (submerged || ghost))
-        //            continue;
+        if (p == TILEP_PART_SHADOW && (submerged || ghost))
+            continue;
 
         int ymax = TILE_Y;
 
@@ -193,20 +196,46 @@ void _send_doll(int x, int y, const dolls_data &doll)
             ymax = 18;
         }
 
-        // TODO: Use ymax
-        fprintf(stdout, "p(%d,%d,%d);", x, y, doll.parts[p]);
+        fprintf(stdout, "[%d,%d],", doll.parts[p], ymax);
     }
 
+    fprintf(stdout, "],");
+}
+
+static void _send_mcache(mcache_entry *entry, bool submerged)
+{
+    bool trans = entry->transparent();
+    if (trans)
+        fprintf(stdout, "trans:true,");
+
+    const dolls_data *doll = entry->doll();
+    if (doll)
+        _send_doll(*doll, submerged, trans);
+
+    fprintf(stdout, "mcache:[");
+
+    tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
+    int draw_info_count = entry->info(&dinfo[0]);
+    for (int i = 0; i < draw_info_count; i++)
+    {
+        fprintf(stdout, "[%d,%d,%d],", dinfo[i].idx, dinfo[i].ofs_x, dinfo[i].ofs_y);
+    }
+
+    fprintf(stdout, "],");
+}
+
+static bool _in_water(const packed_cell &cell)
+{
+    return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
 void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &gc)
 {
-    // TODO: Refactor, unify with tiledgnbuf.cc stuff
     packed_cell cell = packed_cell(vbuf_cell->tile);
     if (map_bounds(gc))
     {
         cell.flv = env.tile_flv(gc);
-        //pack_cell_overlays(gc, &cell);
+        pack_cell_overlays(gc, &cell);
     }
     else
     {
@@ -216,49 +245,58 @@ void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &g
         cell.flv.feat    = 0;
     }
 
-    const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
-    const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
+    fprintf(stdout, "c(%d,%d,{fg:%d,bg:%d,%s%s%s%s%s%s%s",
+            x, y, cell.fg, cell.bg,
+            // These could obviously be shorter, but I don't think they need to be
+            cell.is_bloody ? "bloody:true," : "",
+            cell.is_silenced ? "silenced:true," : "",
+            cell.is_haloed ? "haloed:true," : "",
+            cell.is_moldy ? "moldy:true," : "",
+            cell.is_sanctuary ? "sanctuary:true," : "",
+            cell.is_liquefied ? "liquefied:true," : "",
+            cell.swamp_tree_water ? "swtree:true," : "");
 
-    // send bg
-    if (bg_idx >= TILE_DNGN_WAX_WALL)
-        fprintf(stdout, "bg(%d,%d,%d);", x, y, cell.flv.floor);
-    fprintf(stdout, "bg(%d,%d,%d);", x, y, bg_idx);
+    if (cell.is_bloody)
+    {
+        fprintf(stdout, "bloodrot:%d,", cell.blood_rotation);
+    }
+
+    tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
+    const bool in_water = _in_water(cell);
 
     if (fg_idx >= TILEP_MCACHE_START)
     {
         mcache_entry *entry = mcache.get(fg_idx);
-        if (!entry)
+        if (entry)
         {
-            // TODO
-            return;
+            _send_mcache(entry, in_water);
         }
-        // TODO: This is mainly copied from pack_mcache; unify
-        const dolls_data *doll = entry->doll();
-        if (doll)
-            _send_doll(x, y, *doll);
-
-        tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
-        int draw_info_count = entry->info(&dinfo[0]);
-        for (int i = 0; i < draw_info_count; i++)
-        {
-            fprintf(stdout, "p(%d,%d,%d,%d,%d);",
-                    x, y, dinfo[i].idx, dinfo[i].ofs_x, dinfo[i].ofs_y);
-        }
+        else
+            fprintf(stdout, "doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
     }
     else if (fg_idx == TILEP_PLAYER)
     {
         dolls_data result = player_doll;
         fill_doll_equipment(result);
-        _send_doll(x, y, result);
+        _send_doll(result, in_water, false);
     }
     else if (fg_idx >= TILE_MAIN_MAX)
     {
-        fprintf(stdout, "p(%d,%d,%d);", x, y, fg_idx);
+        fprintf(stdout, "doll:[[%d,%d]],", fg_idx, TILE_Y);
+        // TODO: _transform_add_weapon
     }
-    else if (fg_idx > 0)
+
+    if (cell.num_dngn_overlay > 0)
     {
-        fprintf(stdout, "fg(%d,%d,%d);", x, y, fg_idx);
+        fprintf(stdout, "ov:[");
+        for (int i = 0; i < cell.num_dngn_overlay; ++i)
+            fprintf(stdout, "%d,", cell.dngn_overlay[i]);
+        fprintf(stdout, "],");
     }
+
+    // TODO: send flavour?
+
+    fprintf(stdout, "});");
 }
 
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
