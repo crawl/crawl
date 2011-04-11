@@ -113,7 +113,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if (you.melded[EQ_WEAPON])
+    if (you.melded[EQ_WEAPON] && unwield)
     {
         SAY(mpr("Your weapon is melded into your body!"));
         return (false);
