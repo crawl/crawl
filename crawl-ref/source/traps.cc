@@ -1205,6 +1205,7 @@ void free_self_from_net()
     if (net == NON_ITEM) // really shouldn't happen!
     {
         you.attribute[ATTR_HELD] = 0;
+        you.redraw_quiver = true;
         return;
     }
 
@@ -1249,6 +1250,7 @@ void free_self_from_net()
             destroy_item(net);
 
             you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
             return;
         }
 
@@ -1294,6 +1296,7 @@ void free_self_from_net()
                 mpr("You break free from the net!");
 
             you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
             remove_item_stationary(mitm[net]);
             return;
         }
@@ -1320,6 +1323,7 @@ void clear_trapping_net()
         remove_item_stationary(mitm[net]);
 
     you.attribute[ATTR_HELD] = 0;
+    you.redraw_quiver = true;
 }
 
 item_def trap_def::generate_trap_item()
