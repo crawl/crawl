@@ -173,6 +173,21 @@ bool melee_attack::handle_phase_attempted()
     // If a mimic is attacking or defending, it is thereafter known.
     identify_mimic(attacker);
 
+    if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER
+        && stop_attack_prompt(defender->as_monster(), false, attacker->pos()))
+    {
+        cancel_attack = true;
+        return (false);
+    }
+
+    if (attacker != defender)
+    {
+        // Allow setting of your allies' target, etc.
+        attacker->attacking(defender);
+
+        check_autoberserk();
+    }
+
     return true;
 }
 
@@ -248,8 +263,6 @@ bool melee_attack::attack()
 {
     // If a mimic is attacking or defending, it is thereafter known.
     identify_mimic(attacker);
-
-    coord_def defender_pos = defender->pos();
 
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
@@ -381,7 +394,7 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER)
     {
-        handle_noise(defender_pos);
+        handle_noise(defender->pos());
 
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
@@ -3121,176 +3134,216 @@ void melee_attack::player_calc_hit_damage()
     damage_done = std::max(0, player_weapon_type_modify(damage_done));
 }
 
-// TODO: unify player_to_hit and mons_to_hit
 int melee_attack::calc_to_hit(bool random)
 {
-    return (attacker->atype() == ACT_PLAYER ? player_to_hit(random)
-                                            : mons_to_hit());
-}
-
-int melee_attack::player_to_hit(bool random_factor)
-{
-    attacker_armour_tohit_penalty =
-        attacker->armour_tohit_penalty(random_factor);
-    attacker_shield_tohit_penalty =
-        attacker->shield_tohit_penalty(random_factor);
-
-    dprf("Armour/shield to-hit penalty: %d/%d",
-         attacker_armour_tohit_penalty, attacker_shield_tohit_penalty);
-
-    can_do_unarmed =
-        player_fights_well_unarmed(attacker_armour_tohit_penalty
-                                   + attacker_shield_tohit_penalty);
-
-    int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
-
-#ifdef DEBUG_DIAGNOSTICS
-    const int base_to_hit = your_to_hit;
-#endif
-
-    if (wearing_amulet(AMU_INACCURACY))
-        your_to_hit -= 5;
-
-    // If you can't see yourself, you're a little less accurate.
-    if (!you.visible_to(&you))
-        your_to_hit -= 5;
-
-    // fighting contribution
-    your_to_hit += maybe_random2(1 + you.skill(SK_FIGHTING), random_factor);
-
-    // weapon skill contribution
-    if (weapon)
+    // This if statement is temporary, it should be removed when the
+    // implementation of a more universal (and elegant) to-hit calculation
+    // is designed. The actual code is copied from the old mons_to_hit and
+    // player_to_hit methods.
+    if(attacker->atype() == ACT_PLAYER)
     {
-        if (wpn_skill != SK_FIGHTING)
-        {
-            if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place())
-                xom_is_stimulated(14); // Xom thinks that is mildly amusing.
+        attacker_armour_tohit_penalty =
+            attacker->armour_tohit_penalty(random_factor);
+        attacker_shield_tohit_penalty =
+            attacker->shield_tohit_penalty(random_factor);
 
-            your_to_hit += maybe_random2(you.skill(wpn_skill) + 1,
+        dprf("Armour/shield to-hit penalty: %d/%d",
+             attacker_armour_tohit_penalty, attacker_shield_tohit_penalty);
+
+        can_do_unarmed =
+            player_fights_well_unarmed(attacker_armour_tohit_penalty
+                                       + attacker_shield_tohit_penalty);
+
+        int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
+
+    #ifdef DEBUG_DIAGNOSTICS
+        const int base_to_hit = your_to_hit;
+    #endif
+
+        if (wearing_amulet(AMU_INACCURACY))
+            your_to_hit -= 5;
+
+        // If you can't see yourself, you're a little less accurate.
+        if (!you.visible_to(&you))
+            your_to_hit -= 5;
+
+        // fighting contribution
+        your_to_hit += maybe_random2(1 + you.skill(SK_FIGHTING), random_factor);
+
+        // weapon skill contribution
+        if (weapon)
+        {
+            if (wpn_skill != SK_FIGHTING)
+            {
+                if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place())
+                    xom_is_stimulated(14); // Xom thinks that is mildly amusing.
+
+                your_to_hit += maybe_random2(you.skill(wpn_skill) + 1,
+                                             random_factor);
+            }
+        }
+        else
+        {                       // ...you must be unarmed
+            your_to_hit += species_has_claws(you.species) ? 4 : 2;
+
+            your_to_hit += maybe_random2(1 + you.skill(SK_UNARMED_COMBAT),
                                          random_factor);
         }
+
+        // weapon bonus contribution
+        if (weapon)
+        {
+            if (weapon->base_type == OBJ_WEAPONS)
+            {
+                your_to_hit += weapon->plus;
+                your_to_hit += property(*weapon, PWPN_HIT);
+
+                if (get_equip_race(*weapon) == ISFLAG_ELVEN
+                    && player_genus(GENPC_ELVEN))
+                {
+                    your_to_hit += (random_factor && coinflip() ? 2 : 1);
+                }
+                else if (get_equip_race(*weapon) == ISFLAG_ORCISH
+                         && you.religion == GOD_BEOGH && !player_under_penance())
+                {
+                    your_to_hit++;
+                }
+
+            }
+            else if (weapon->base_type == OBJ_STAVES)
+            {
+                // magical staff
+                your_to_hit += property(*weapon, PWPN_HIT);
+
+                if (item_is_rod(*weapon))
+                    your_to_hit += (short)weapon->props["rod_enchantment"];
+            }
+        }
+
+        // slaying bonus
+        your_to_hit += slaying_bonus(PWPN_HIT);
+
+        // hunger penalty
+        if (you.hunger_state == HS_STARVING)
+            your_to_hit -= 3;
+
+        // armour penalty
+        your_to_hit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
+
+        //mutation
+        if (player_mutation_level(MUT_EYEBALLS))
+            your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
+
+    #ifdef DEBUG_DIAGNOSTICS
+        int roll_hit = your_to_hit;
+    #endif
+
+        // hit roll
+        your_to_hit = maybe_random2(your_to_hit, random_factor);
+
+    #ifdef DEBUG_DIAGNOSTICS
+        dprf("to hit die: %d; rolled value: %d; base: %d",
+              roll_hit, your_to_hit, base_to_hit);
+    #endif
+
+        if (weapon && wpn_skill == SK_SHORT_BLADES && you.duration[DUR_SURE_BLADE])
+        {
+            int turn_duration = you.duration[DUR_SURE_BLADE] / BASELINE_DELAY;
+            your_to_hit += 5 +
+                (random_factor ? random2limit(turn_duration, 10) :
+                 turn_duration / 2);
+        }
+
+        // other stuff
+        if (!weapon)
+        {
+            if (you.duration[DUR_CONFUSING_TOUCH])
+            {
+                // Just trying to touch is easier that trying to damage.
+                your_to_hit += maybe_random2(you.dex(), random_factor);
+            }
+
+            switch (you.form)
+            {
+            case TRAN_SPIDER:
+                your_to_hit += maybe_random2(10, random_factor);
+                break;
+            case TRAN_BAT:
+                your_to_hit += maybe_random2(12, random_factor);
+                break;
+            case TRAN_ICE_BEAST:
+                your_to_hit += maybe_random2(10, random_factor);
+                break;
+            case TRAN_BLADE_HANDS:
+                your_to_hit += maybe_random2(12, random_factor);
+                break;
+            case TRAN_STATUE:
+                your_to_hit += maybe_random2(9, random_factor);
+                break;
+            case TRAN_DRAGON:
+                your_to_hit += maybe_random2(10, random_factor);
+                break;
+            case TRAN_LICH:
+                your_to_hit += maybe_random2(10, random_factor);
+                break;
+            case TRAN_PIG:
+            case TRAN_NONE:
+                break;
+            }
+        }
+
+        // Check for backlight (Corona).
+        if (defender && defender->atype() == ACT_MONSTER)
+        {
+            if (defender->backlit(true, false))
+                your_to_hit += 2 + random2(8);
+            // Invisible monsters are hard to hit.
+            else if (!defender->visible_to(&you))
+                your_to_hit -= 6;
+        }
+
+        return (your_to_hit);
     }
     else
-    {                       // ...you must be unarmed
-        your_to_hit += species_has_claws(you.species) ? 4 : 2;
-
-        your_to_hit += maybe_random2(1 + you.skill(SK_UNARMED_COMBAT),
-                                     random_factor);
-    }
-
-    // weapon bonus contribution
-    if (weapon)
     {
-        if (weapon->base_type == OBJ_WEAPONS)
-        {
-            your_to_hit += weapon->plus;
-            your_to_hit += property(*weapon, PWPN_HIT);
+        const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER)? 25 : 15;
+        int mhit = 18 + attacker->get_experience_level() * hd_mult / 10;
 
-            if (get_equip_race(*weapon) == ISFLAG_ELVEN
-                && player_genus(GENPC_ELVEN))
-            {
-                your_to_hit += (random_factor && coinflip() ? 2 : 1);
-            }
-            else if (get_equip_race(*weapon) == ISFLAG_ORCISH
-                     && you.religion == GOD_BEOGH && !player_under_penance())
-            {
-                your_to_hit++;
-            }
+    #ifdef DEBUG_DIAGNOSTICS
+        const int base_hit = mhit;
+    #endif
 
-        }
-        else if (weapon->base_type == OBJ_STAVES)
-        {
-            // magical staff
-            your_to_hit += property(*weapon, PWPN_HIT);
+        if (weapon && weapon->base_type == OBJ_WEAPONS)
+            mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
-            if (item_is_rod(*weapon))
-                your_to_hit += (short)weapon->props["rod_enchantment"];
-        }
-    }
+        if (attacker->confused())
+            mhit -= 5;
 
-    // slaying bonus
-    your_to_hit += slaying_bonus(PWPN_HIT);
-
-    // hunger penalty
-    if (you.hunger_state == HS_STARVING)
-        your_to_hit -= 3;
-
-    // armour penalty
-    your_to_hit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
-
-    //mutation
-    if (player_mutation_level(MUT_EYEBALLS))
-        your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
-
-#ifdef DEBUG_DIAGNOSTICS
-    int roll_hit = your_to_hit;
-#endif
-
-    // hit roll
-    your_to_hit = maybe_random2(your_to_hit, random_factor);
-
-#ifdef DEBUG_DIAGNOSTICS
-    dprf("to hit die: %d; rolled value: %d; base: %d",
-          roll_hit, your_to_hit, base_to_hit);
-#endif
-
-    if (weapon && wpn_skill == SK_SHORT_BLADES && you.duration[DUR_SURE_BLADE])
-    {
-        int turn_duration = you.duration[DUR_SURE_BLADE] / BASELINE_DELAY;
-        your_to_hit += 5 +
-            (random_factor ? random2limit(turn_duration, 10) :
-             turn_duration / 2);
-    }
-
-    // other stuff
-    if (!weapon)
-    {
-        if (you.duration[DUR_CONFUSING_TOUCH])
-        {
-            // Just trying to touch is easier that trying to damage.
-            your_to_hit += maybe_random2(you.dex(), random_factor);
-        }
-
-        switch (you.form)
-        {
-        case TRAN_SPIDER:
-            your_to_hit += maybe_random2(10, random_factor);
-            break;
-        case TRAN_BAT:
-            your_to_hit += maybe_random2(12, random_factor);
-            break;
-        case TRAN_ICE_BEAST:
-            your_to_hit += maybe_random2(10, random_factor);
-            break;
-        case TRAN_BLADE_HANDS:
-            your_to_hit += maybe_random2(12, random_factor);
-            break;
-        case TRAN_STATUE:
-            your_to_hit += maybe_random2(9, random_factor);
-            break;
-        case TRAN_DRAGON:
-            your_to_hit += maybe_random2(10, random_factor);
-            break;
-        case TRAN_LICH:
-            your_to_hit += maybe_random2(10, random_factor);
-            break;
-        case TRAN_PIG:
-        case TRAN_NONE:
-            break;
-        }
-    }
-
-    // Check for backlight (Corona).
-    if (defender && defender->atype() == ACT_MONSTER)
-    {
         if (defender->backlit(true, false))
-            your_to_hit += 2 + random2(8);
-        // Invisible monsters are hard to hit.
-        else if (!defender->visible_to(&you))
-            your_to_hit -= 6;
+            mhit += 2 + random2(8);
+
+         if (defender->atype() == ACT_PLAYER
+             && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
+             mhit -= 5;
+
+        // Invisible defender is hard to hit if you can't see invis. Note
+        // that this applies only to monsters vs monster and monster vs
+        // player. Does not apply to a player fighting an invisible
+        // monster.
+        if (!defender->visible_to(attacker))
+            mhit = mhit * 65 / 100;
+
+    #ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s: Base to-hit: %d, Final to-hit: %d",
+             attacker->name(DESC_PLAIN).c_str(),
+             base_hit, mhit);
+    #endif
+
+        return (mhit);
     }
 
-    return (your_to_hit);
+    // Uh-oh?
+    return 0;
 }
 
 void melee_attack::player_stab_check()
@@ -4666,7 +4719,7 @@ void melee_attack::mons_perform_attack_rounds()
 
         damage_done = 0;
         mons_set_weapon(attk);
-        to_hit = mons_to_hit();
+        to_hit = calc_to_hit();
 
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
                                   || (attk.flavour == AF_CHAOS
@@ -5002,44 +5055,6 @@ bool melee_attack::mons_attack_you()
     mons_perform_attack();
     mons_check_attack_perceived();
     return (did_hit);
-}
-
-int melee_attack::mons_to_hit()
-{
-    const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER)? 25 : 15;
-    int mhit = 18 + attacker->get_experience_level() * hd_mult / 10;
-
-#ifdef DEBUG_DIAGNOSTICS
-    const int base_hit = mhit;
-#endif
-
-    if (weapon && weapon->base_type == OBJ_WEAPONS)
-        mhit += weapon->plus + property(*weapon, PWPN_HIT);
-
-    if (attacker->confused())
-        mhit -= 5;
-
-    if (defender->backlit(true, false))
-        mhit += 2 + random2(8);
-
-     if (defender->atype() == ACT_PLAYER
-         && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
-         mhit -= 5;
-
-    // Invisible defender is hard to hit if you can't see invis. Note
-    // that this applies only to monsters vs monster and monster vs
-    // player. Does not apply to a player fighting an invisible
-    // monster.
-    if (!defender->visible_to(attacker))
-        mhit = mhit * 65 / 100;
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s: Base to-hit: %d, Final to-hit: %d",
-         attacker->name(DESC_PLAIN).c_str(),
-         base_hit, mhit);
-#endif
-
-    return (mhit);
 }
 
 void melee_attack::chaos_affect_actor(actor *victim)

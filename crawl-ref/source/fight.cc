@@ -35,6 +35,18 @@
 #include "notes.h"
 #endif
 
+/* Handles melee combat between attacker and defender
+ *
+ * Works using the new fight rewrite. For monsters attacking, this method
+ * loops through all their available attacks, instantiating a new melee_attack
+ * for each attack. Combat effects should not go here, if at all possible. This
+ * is merely a wrapper function which is used to start combat.
+ */
+void fight_melee(actor *defender, actor *atacker)
+{
+
+}
+
 // This function returns the "extra" stats the player gets because of
 // choice of weapon... it's used only for giving warnings when a player
 // wields a less than ideal weapon.
@@ -55,12 +67,6 @@ int calc_your_to_hit(bool random_factor)
 {
     melee_attack attk(&you, NULL);
     return attk.calc_to_hit(random_factor);
-}
-
-random_var calc_your_attack_delay()
-{
-    melee_attack attk(&you, NULL);
-    return attk.player_calc_attack_delay();
 }
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,

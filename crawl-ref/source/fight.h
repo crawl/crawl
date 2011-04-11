@@ -26,6 +26,8 @@ enum unchivalric_attack_type
     UCAT_ALLY,
 };
 
+void fight_melee(actor *defender, actor *attacker);
+
 int effective_stat_bonus(int wepType = -1);
 
 int resist_adjust_damage(actor *defender, beam_type flavour,
@@ -40,9 +42,11 @@ bool monsters_fight(monster* attacker, monster* attacked,
                     bool allow_unarmed = true);
 
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
+// TODO: Fix this; its used in player.cc but no where in melee_attack, which
+// means that we have another to-hit function declared that's actually being
+// used for combat to-hit (this is only used deterministically)
 int calc_your_to_hit(bool random_factor);
 int calc_heavy_armour_penalty(bool random_factor);
-random_var calc_your_attack_delay();
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
                                               const actor *defender);

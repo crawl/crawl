@@ -3776,7 +3776,8 @@ static std::string _attack_delay_desc(int attack_delay)
 
 static void _display_attack_delay()
 {
-    const random_var delay = calc_your_attack_delay();
+    melee_attack attk(&you, NULL);
+    const random_var delay = attk.player_calc_attack_delay()();
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
