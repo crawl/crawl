@@ -68,8 +68,10 @@ int putwch(ucs_t chr)
 {
     if (!chr)
         chr = ' ';
-    // TODO: Not sure if this works...
-    fputwc(chr, stdout);
+    ucs_t buf[2];
+    buf[0] = chr;
+    buf[1] = 0;
+    tiles.put_ucs_string(buf);
     return 0;
 }
 
@@ -85,29 +87,18 @@ int cprintf(const char *format,...)
     va_start(argp, format);
     vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
-    // We need to replace newlines by \\n
-    fputs("puts(\"", stdout);
-    char *current = buffer;
-    while (*current)
-    {
-        if (*current == '\n')
-            fputs("\\n", stdout);
-        else
-            fputc(*current, stdout);
-        ++current;
-    }
-    fputs("\");\n", stdout);
+    tiles.put_string(buffer);
     return 0;
 }
 
 void textcolor(int color)
 {
-    fprintf(stdout, "textfg(%d);\n", color);
+    tiles.textcolor(color);
 }
 
 void textbackground(int bg)
 {
-    fprintf(stdout, "textbg(%d);\n", bg);
+    tiles.textbackground(bg);
 }
 
 void set_cursor_enabled(bool enabled)
@@ -129,14 +120,12 @@ bool is_cursor_enabled()
 
 int wherex()
 {
-    //    return TextRegion::wherex();
-    return 1;
+    return tiles.wherex();
 }
 
 int wherey()
 {
-    //    return TextRegion::wherey();
-    return 1;
+    return tiles.wherey();
 }
 
 int get_number_of_lines()
@@ -190,18 +179,17 @@ GotoRegion get_cursor_region()
 void delay(int ms)
 {
     tiles.redraw();
-    //    wm->delay(ms);
     fprintf(stderr, "delay(ms)\n");
 }
 
 void update_screen()
 {
-    // TODO: Do we need set_need_redraw and redraw?
     tiles.set_need_redraw();
 }
 
 bool kbhit()
 {
+    // Check stdin in a non-blocking way
     struct timeval tv;
     fd_set fds;
     tv.tv_sec = 0;

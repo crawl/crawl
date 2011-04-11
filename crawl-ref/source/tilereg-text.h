@@ -15,7 +15,6 @@ public:
 
     // STATIC -
     // TODO enne - move these to TilesFramework?
-    // OTTODO
 
     // where now printing? what color?
     static int print_x;
