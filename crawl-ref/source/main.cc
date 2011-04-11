@@ -3464,6 +3464,8 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     update_exclusion_los(excludes);
+    viewwindow();
+    check_for_interesting_features();
 
     you.turn_is_over = true;
 }
