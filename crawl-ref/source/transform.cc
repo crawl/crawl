@@ -712,6 +712,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         {
             mpr("The net rips apart!");
             you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
                 destroy_item(net);
