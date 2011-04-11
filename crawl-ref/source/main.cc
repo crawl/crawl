@@ -2515,7 +2515,8 @@ static void _decrement_durations()
         // It's not normal biology, so Cheibriados won't help.
         if (you.species == SP_MUMMY)
             you.rotting = 0;
-        else if (x_chance_in_y(you.rotting, 20))
+        else if (x_chance_in_y(you.rotting, 20)
+                 && !you.duration[DUR_DEATHS_DOOR])
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
             ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
