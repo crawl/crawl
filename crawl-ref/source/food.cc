@@ -135,15 +135,11 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 // to a weapon is done using the wield_weapon code.
 // special cases like staves of power or other special weps are taken
 // care of by calling wield_effects().    {gdl}
-void weapon_switch(int targ, bool force)
+void weapon_switch(int targ)
 {
     // Give the player an option to abort.
-    if (!force && you.weapon()
-        && (targ == -1 || !you.inv[targ].cursed())
-        && !check_old_item_warning(*you.weapon(), OPER_WIELD))
-    {
+    if (you.weapon() && !check_old_item_warning(*you.weapon(), OPER_WIELD))
         return;
-    }
 
     if (targ == -1) // Unarmed Combat.
     {
@@ -209,7 +205,7 @@ void weapon_switch(int targ, bool force)
 static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
 {
     // When berserk, you can't change weapons.  Sanity check!
-    if (!can_wield(NULL, true, false, false, true))
+    if (!can_wield(NULL, true))
         return (false);
 
     // If wielding a distortion weapon, never attempt to switch away
@@ -247,7 +243,7 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
         if (tool.defined()
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat(tool)
-            && can_wield(&tool, false, false, false, true)
+            && can_wield(&tool)
             // Don't even suggest autocursing items.
             // Note that unknown autocursing is OK.
             && (!is_artefact(tool)
@@ -360,7 +356,9 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     {
         std::string tool;
         if (butchering_tool == SLOT_BARE_HANDS)
+        {
             tool = "unarmed";
+        }
         else
         {
             item_def& new_wpn(you.inv[butchering_tool]);
@@ -369,7 +367,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 
         mprf("Switching to %s for butchering.", tool.c_str());
 
-        if (!wield_weapon(true, butchering_tool, false, true, false, false, true))
+        if (!wield_weapon(true, butchering_tool, false, true, false, false))
             return (false);
     }
 
