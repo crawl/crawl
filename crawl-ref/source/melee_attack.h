@@ -70,6 +70,7 @@ public:
 private:
     void init_attack();
 
+    // Handle specific attack phases (mons and player)
     bool handle_phase_attempted();
     bool handle_phase_dodged();
     bool handle_phase_blocked();
@@ -96,7 +97,6 @@ private:
 
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
-
     void antimagic_affects_defender();
     void pain_affects_defender();
     void chaos_affects_defender();
@@ -107,9 +107,6 @@ private:
 
     void handle_noise(const coord_def & pos);
 
-    // Handle specific attack phases (mons and player)
-
-
     // Added from fight.cc, were static, should be removed
     int _modify_blood_amount(const int damage, const int dam_type);
     bool _move_stairs();
@@ -117,7 +114,6 @@ private:
     // Monster-attack specific stuff
     bool mons_attack_you();
     bool mons_attack_mons();
-    int  mons_to_hit();
     // TODO: add actor class method can_self_destruct and move the
     // self-destruct logic in mons_self_destructs to a special case
     // inside one of the handle_phase
@@ -173,7 +169,6 @@ private:
 
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
-    int  player_to_hit(bool random_factor);
     void calc_player_armour_shield_tohit_penalty(bool random_factor);
     void player_apply_attack_delay();
     int  player_apply_weapon_bonuses(int damage);
