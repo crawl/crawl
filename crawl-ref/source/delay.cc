@@ -1584,6 +1584,14 @@ static bool _should_stop_activity(const delay_queue_item &item,
         }
     }
 
+    // Don't interrupt butchering for monsters already in view.
+    const monster* mon = static_cast<const monster* >(at.data);
+    if (curr == DELAY_BUTCHER && ai == AI_SEE_MONSTER
+        && testbits(mon->flags, MF_WAS_IN_VIEW))
+    {
+        return false;
+    }
+
     return (ai == AI_FORCE_INTERRUPT
             || Options.activity_interrupts[item.type][ai]);
 }
