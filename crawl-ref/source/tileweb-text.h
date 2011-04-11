@@ -26,6 +26,8 @@ protected:
 
     std::string m_client_side_name;
 
+    bool m_dirty;
+
     virtual void on_resize();
 };
 
