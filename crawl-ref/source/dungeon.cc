@@ -3599,27 +3599,6 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     return (true);
 }
 
-static bool _place_unique_map(const map_def *uniq_map)
-{
-    // If the unique map is guaranteed to not affect connectivity,
-    // allow it to overwrite existing vaults by temporarily
-    // suppressing dgn_Map_Mask.
-    const bool transparent = uniq_map->has_tag("transparent");
-    std::auto_ptr<map_mask> backup_mask;
-    if (transparent)
-    {
-        backup_mask.reset(new map_mask(env.level_map_mask));
-        env.level_map_mask.init(0);
-    }
-
-    bool placed = dgn_place_map(uniq_map, false, false);
-
-    if (transparent)
-        env.level_map_mask = *backup_mask;
-
-    return (placed);
-}
-
 // Place uniques on the level.
 // There is a hidden dependency on the player's actual
 // location (through your_branch()).
@@ -3665,7 +3644,7 @@ static int _place_uniques(int level_number, level_area_type level_type)
             break;
         }
 
-        const bool map_placed = _place_unique_map(uniq_map);
+        const bool map_placed = dgn_place_map(uniq_map, false, false);
         if (map_placed)
         {
             num_placed++;
