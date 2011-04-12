@@ -40,9 +40,11 @@ attack::attack(actor *attk, actor *defn, bool allow_unarmed)
     defender_body_armour_penalty(0), defender_shield_penalty(0),
     defender_shield(NULL)
 {
-    // No effective code should execute, we'll call init_attack from within
-    // the child class, since initializing an attack will vary based the type
-    // of attack actually being made (melee, ranged, etc.)
+    // No effective code should execute, we'll call init_attack again from
+    // the child class, since initializing an attack will vary based the within
+    // type of attack actually being made (melee, ranged, etc.)
+
+    init_attack();
 }
 
 bool attack::handle_phase_attempted() {
@@ -125,7 +127,7 @@ std::string attack::anon_pronoun(pronoun_type pron)
  */
 void attack::init_attack()
 {
-    mprf("attack::init_attack()");
+    ;
 }
 
 /* If debug, return formatted damage done
@@ -233,7 +235,9 @@ std::string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
 }
 
 /* TODO: Remove this!
- *
+ * Removing it may not really be practical, in retrospect. Its only used
+ * below, in calc_elemental_brand_damage, which is called for both frost and
+ * flame brands for both players and monsters.
  */
 std::string attack::defender_name()
 {
