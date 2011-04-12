@@ -80,6 +80,7 @@ private:
     bool handle_phase_end();
 
     // Combat calculations
+    int test_melee_hit(int to_hit, int ev, defer_rand& r);
     int fire_res_apply_cerebov_downgrade(int res);
 
     /* Attack effects */
@@ -152,7 +153,6 @@ private:
                        std::vector<int> items);
     bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
                       item_def &fake_corpse, int last_item);
-    int test_melee_hit(int to_hit, int ev, defer_rand& r);
     void mons_lose_attack_energy(monster* attacker, int wpn_speed,
                                  int which_attack, int effective_attack);
 private:

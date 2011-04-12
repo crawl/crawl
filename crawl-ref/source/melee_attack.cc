@@ -5500,8 +5500,6 @@ void melee_attack::_steal_item_from_player(monster* mon)
     dec_inv_item_quantity(steal_what, new_item.quantity);
 }
 
-// TODO: Decide whether this should stay in melee class, it is melee
-// specific, potentially more so than other functions in melee_attack
 // This function is only used when monsters are attacking.
 int melee_attack::test_melee_hit(int to_land, int ev, defer_rand& r)
 {
