@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Functions that any display port needs to implement.
+ * @brief Functions that any display port needs to implement -- webtiles version.
 **/
 
 #include "AppHdr.h"
@@ -179,7 +179,7 @@ GotoRegion get_cursor_region()
 void delay(int ms)
 {
     tiles.redraw();
-    fprintf(stderr, "delay(ms)\n");
+    fprintf(stdout, "delay(%d);\n", ms);
 }
 
 void update_screen()

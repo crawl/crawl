@@ -1,8 +1,5 @@
 var currentLayer = "crt";
 
-var cursorX = 0, cursorY = 0;
-var fgCol = 16, bgCol = 0;
-
 var dungeonContext;
 var dungeonCellWidth = 32, dungeonCellHeight = 32;
 var dungeonCols = 0, dungeonRows = 0;
@@ -11,9 +8,24 @@ var socket;
 
 var log_messages = false;
 
-function assert(cond) {
-    if (!cond)
-        console.log("Assertion failed!");
+var delay_timeout = undefined;
+var message_queue = [];
+
+function delay(ms) {
+    clearTimeout(delay_timeout);
+    delay_timeout = setTimeout(delay_ended, ms);
+}
+
+function delay_ended() {
+    delay_timeout = undefined;
+    while (message_queue.length && !delay_timeout) {
+        msg = message_queue.shift();
+        try {
+            eval(msg);
+        } catch (err) {
+            console.error("Error in message: " + msg.data + " - " + err);
+        }
+    }
 }
 
 function setLayer(layer) {
@@ -106,6 +118,8 @@ function shift(cx, cy) {
 }
 
 function handleKeypress(e) {
+    if (delay_timeout) return; // TODO: Do we want to capture keys during delay?
+
     s = String.fromCharCode(e.which);
     if (s == "\\") {
         socket.send("\\92\n");
@@ -117,6 +131,8 @@ function handleKeypress(e) {
 }
 
 function handleKeydown(e) {
+    if (delay_timeout) return; // TODO: Do we want to capture keys during delay?
+
     if (e.which in keyConversion) {
         socket.send("\\" + keyConversion[e.which] + "\n");
     }
@@ -141,10 +157,14 @@ $(document).ready(function() {
         if (log_messages) {
             console.log("Message: " + msg.data);
         }
-        try {
-            eval(msg.data);
-        } catch (err) {
-            console.error("Error in message: " + msg.data + " - " + err);
+        if (delay_timeout) {
+            message_queue.push(msg.data);
+        } else {
+            try {
+                eval(msg.data);
+            } catch (err) {
+                console.error("Error in message: " + msg.data + " - " + err);
+            }
         }
     }
 
@@ -154,3 +174,7 @@ $(document).ready(function() {
 });
 
 function abs(x) { return x > 0 ? x : -x; }
+function assert(cond) {
+    if (!cond)
+        console.log("Assertion failed!");
+}
