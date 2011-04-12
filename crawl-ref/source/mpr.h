@@ -44,6 +44,7 @@ enum msg_channel_type
     MSGCH_ERROR,            // error messages
     MSGCH_TUTORIAL,         // messages for tutorial
     MSGCH_ORB,              // messages for the orb
+    MSGCH_WIZARD,           // wizard-mode and technical messages
 
     NUM_MESSAGE_CHANNELS    // always last
 };
@@ -89,9 +90,9 @@ void mprf(msg_channel_type channel, int param, const char *format, ...);
 void mprf(msg_channel_type channel, const char *format, ...);
 void mprf(const char *format, ...);
 
-void Mprf(msg_channel_type channel, int param, const char *format, ...);
-void Mprf(msg_channel_type channel, const char *format, ...);
-void Mprf(const char *format, ...);
+void mprf_nocap(msg_channel_type channel, int param, const char *format, ...);
+void mprf_nocap(msg_channel_type channel, const char *format, ...);
+void mprf_nocap(const char *format, ...);
 
 // Yay for C89 and lack of variadic #defines...
 #ifdef DEBUG_DIAGNOSTICS

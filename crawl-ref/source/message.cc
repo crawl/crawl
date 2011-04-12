@@ -877,7 +877,7 @@ static void do_message_print(msg_channel_type channel, int param, bool cap,
     va_end(ap);
 }
 
-void mprf(msg_channel_type channel, int param, const char *format, ...)
+void mprf_nocap(msg_channel_type channel, int param, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -885,7 +885,7 @@ void mprf(msg_channel_type channel, int param, const char *format, ...)
     va_end(argp);
 }
 
-void mprf(msg_channel_type channel, const char *format, ...)
+void mprf_nocap(msg_channel_type channel, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -894,7 +894,7 @@ void mprf(msg_channel_type channel, const char *format, ...)
     va_end(argp);
 }
 
-void mprf(const char *format, ...)
+void mprf_nocap(const char *format, ...)
 {
     va_list  argp;
     va_start(argp, format);
@@ -902,7 +902,7 @@ void mprf(const char *format, ...)
     va_end(argp);
 }
 
-void Mprf(msg_channel_type channel, int param, const char *format, ...)
+void mprf(msg_channel_type channel, int param, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -910,7 +910,7 @@ void Mprf(msg_channel_type channel, int param, const char *format, ...)
     va_end(argp);
 }
 
-void Mprf(msg_channel_type channel, const char *format, ...)
+void mprf(msg_channel_type channel, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -919,7 +919,7 @@ void Mprf(msg_channel_type channel, const char *format, ...)
     va_end(argp);
 }
 
-void Mprf(const char *format, ...)
+void mprf(const char *format, ...)
 {
     va_list  argp;
     va_start(argp, format);
@@ -1035,6 +1035,10 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
 
     if (channel == MSGCH_GOD && param == 0)
         param = you.religion;
+
+    // Ugly hack.
+    if (channel == MSGCH_DIAGNOSTICS || channel == MSGCH_ERROR || channel == MSGCH_WIZARD)
+        cap = false;
 
     msg_colour_type colour = prepare_message(text, channel, param);
 

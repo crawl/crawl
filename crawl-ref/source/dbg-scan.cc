@@ -26,15 +26,15 @@ static void _dump_item(const char *name, int num, const item_def &item)
 {
     mpr(name, MSGCH_ERROR);
 
-    mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
+    mprf(MSGCH_WIZARD, "    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
          num, item.base_type, item.sub_type,
          item.plus, item.plus2, item.special);
 
-    mprf("    quant: %d; colour: %d; ident: 0x%08"PRIx64"; ident_type: %d",
+    mprf(MSGCH_WIZARD, "    quant: %d; colour: %d; ident: 0x%08"PRIx64"; ident_type: %d",
          item.quantity, item.colour, item.flags,
          get_ident_type(item));
 
-    mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
+    mprf(MSGCH_WIZARD, "    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
 
     crawl_state.cancel_cmd_repeat();
 }
@@ -143,7 +143,7 @@ void debug_item_scan(void)
             }
             else
             {
-                mprf("igrd(%d,%d) = %d",
+                mprf(MSGCH_WIZARD, "igrd(%d,%d) = %d",
                      mitm[i].pos.x, mitm[i].pos.y, igrd(mitm[i].pos));
             }
 
@@ -310,7 +310,7 @@ void debug_mons_scan()
             else if (!m->alive())
             {
                 _announce_level_prob(warned);
-                mprf(MSGCH_WARN,
+                mprf_nocap(MSGCH_WARN,
                      "mgrd at (%d,%d) points at dead monster %s",
                      x, y, m->name(DESC_PLAIN, true).c_str());
                 warned = true;

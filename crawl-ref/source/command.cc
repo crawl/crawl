@@ -409,7 +409,7 @@ static void _adjust_spell(void)
     }
 
     // Print targeted spell.
-    mprf("%c - %s", keyin, spell_title(spell));
+    mprf_nocap("%c - %s", keyin, spell_title(spell));
 
     // Select target slot.
     keyin = 0;
@@ -435,13 +435,13 @@ static void _adjust_spell(void)
     you.spell_letter_table[index_1] = tmp;
 
     // print out spell in new slot
-    mprf("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
+    mprf_nocap("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
 
     // print out other spell if one was involved (now at input_1)
     spell = get_spell_by_letter(input_1);
 
     if (spell != SPELL_NO_SPELL)
-        mprf("%c - %s", input_1, spell_title(spell));
+        mprf_nocap("%c - %s", input_1, spell_title(spell));
 }
 
 static void _adjust_ability(void)
