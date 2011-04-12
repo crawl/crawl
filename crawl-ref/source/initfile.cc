@@ -840,7 +840,7 @@ void game_options::reset_options()
 
     classic_item_colours   = false;
 
-    easy_exit_menu         = true;
+    easy_exit_menu         = false;
 #ifdef TARGET_OS_DOS
     dos_use_background_intensity = false;
 #else
