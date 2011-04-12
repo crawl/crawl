@@ -70,7 +70,7 @@ public:
 private:
     void init_attack();
 
-    // Handle specific attack phases (mons and player)
+    /* Attack phases */
     bool handle_phase_attempted();
     bool handle_phase_dodged();
     bool handle_phase_blocked();
@@ -79,14 +79,13 @@ private:
     bool handle_phase_killed();
     bool handle_phase_end();
 
+    // Combat calculations
+    int fire_res_apply_cerebov_downgrade(int res);
+
+    /* Attack effects */
     void check_autoberserk();
     bool check_unrand_effects();
-    void emit_nodmg_hit_message();
     void identify_mimic(actor *mon);
-
-    bool attack_shield_blocked(bool verbose);
-    bool apply_damage_brand();
-    int fire_res_apply_cerebov_downgrade(int res);
     void drain_defender();
     void rot_defender(int amount, int immediate = 0);
     void splash_defender_with_acid(int strength);
@@ -94,7 +93,7 @@ private:
     bool chop_hydra_head(int damage_done,
                           int dam_type,
                           int wpn_brand);
-
+    bool apply_damage_brand();
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
     void antimagic_affects_defender();
@@ -105,6 +104,11 @@ private:
     int  random_chaos_brand();
     void do_miscast();
 
+    /* Output methods */
+    void emit_nodmg_hit_message();
+    bool attack_shield_blocked(bool verbose);
+
+    /* Misc methods */
     void handle_noise(const coord_def & pos);
 
     // Added from fight.cc, were static, should be removed
