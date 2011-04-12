@@ -794,12 +794,12 @@ static bool _handle_reaching(monster* mons)
     {
         ret = true;
 
-        ASSERT(defender == &you || defender->atype() == ACT_MONSTER);
+        ASSERT(foe == &you || foe->atype() == ACT_MONSTER);
 
-        if (defender->atype() == ACT_PLAYER)
-            monster_attack(attacker, allow_unarmed)
+        if (foe->atype() == ACT_PLAYER)
+            monster_attack(mons, false);
         else
-            monsters_fight(attacker, defender->as_monster(), allow_unarmed));
+            monsters_fight(mons, foe->as_monster(), false);
 
         if (mons->alive())
         {
