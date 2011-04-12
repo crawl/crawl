@@ -1750,7 +1750,7 @@ void find_travel_pos(const coord_def& youpos,
                 new_dest = dest;
             }
 #ifdef DEBUG_SAFE_EXPLORE
-            mprf("youpos: (%d, %d), dest: (%d, %d), unseen: (%d, %d), "
+            mprf(MSGCH_DIAGNOSTICS, "youpos: (%d, %d), dest: (%d, %d), unseen: (%d, %d), "
                  "new_dest: (%d, %d)",
                  youpos.x, youpos.y, dest.x, dest.y, unseen.x, unseen.y,
                  new_dest.x, new_dest.y);
