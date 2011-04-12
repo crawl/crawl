@@ -507,7 +507,7 @@ bool melee_attack::player_attack()
 
         // ugh, inspecting attack_verb here is pretty ugly
         if (damage_done && attack_verb == "trample")
-            do_trample();
+            do_knockback();
 
         player_sustain_passive_damage();
 
@@ -937,7 +937,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             && grd(you.pos()) == DNGN_DEEP_WATER
             && feat_is_water(grd(defender->as_monster()->pos())))
         {
-            do_trample();
+            do_knockback(true);
         }
     }
     else // no damage was done
@@ -4497,7 +4497,7 @@ void melee_attack::mons_do_spines()
     }
 }
 
-bool melee_attack::do_trample()
+bool melee_attack::do_knockback(bool trample)
 {
     do
     {
@@ -4535,7 +4535,7 @@ bool melee_attack::do_trample()
         else
             defender->move_to_pos(new_pos);
 
-        if (attacker->is_habitable(old_pos))
+        if (trample && attacker->is_habitable(old_pos))
             attacker->move_to_pos(old_pos);
 
         // Interrupt stair travel and passwall.
@@ -4886,7 +4886,7 @@ void melee_attack::mons_perform_attack_rounds()
             special_damage_flavour = BEAM_NONE;
 
             if (attacker != defender && attk.type == AT_TRAMPLE)
-                do_trample();
+                do_knockback();
 
             // Monsters attacking themselves don't get attack flavour.
             // The message sequences look too weird.  Also, stealing
