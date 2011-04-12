@@ -589,7 +589,7 @@ int TilesFramework::getch_ck()
             case WM_KEYDOWN:
                 m_key_mod |= event.key.keysym.key_mod;
                 key        = event.key.keysym.sym;
-                m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+                m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
 
                 // If you hit a key, disable tooltips until the mouse
                 // is moved again.

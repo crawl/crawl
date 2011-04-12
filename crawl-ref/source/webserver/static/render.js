@@ -1,12 +1,91 @@
+var overlaid_locs = [];
+// TODO: The overlay locations should be shifted by shift too, but practically,
+//       this may not be necessary (will the view ever be shifted between addOverlay
+//       and clearOverlays?)
+
+var cursor_locs = [];
 
 // This gets called by the messages sent by crawl
 function c(x, y, cell) {
+    set_tile_cache(x, y, cell);
+
+    renderCell(x, y);
+}
+
+function addOverlay(idx, x, y) {
+    drawMain(idx, x, y);
+    overlaid_locs.push({x: x, y: y});
+}
+
+function clearOverlays() {
+    $.each(overlaid_locs, function(i, loc) {
+        renderCell(loc.x, loc.y);
+    });
+    overlaid_locs = [];
+}
+
+function place_cursor(type, x, y) {
+    var old_loc = undefined;
+    if (cursor_locs[type]) {
+        old_loc = cursor_locs[type];
+    }
+
+    cursor_locs[type] = {x: x, y: y};
+
+    if (old_loc)
+        renderCell(old_loc.x, old_loc.y);
+
+    render_cursors(x, y);
+}
+
+function remove_cursor(type) {
+    var old_loc = undefined;
+    if (cursor_locs[type]) {
+        old_loc = cursor_locs[type];
+    }
+
+    cursor_locs[type] = undefined;
+
+    if (old_loc)
+        renderCell(old_loc.x, old_loc.y);
+}
+
+function render_cursors(x, y) {
+    $.each(cursor_locs, function (type, loc) {
+        if (loc && (loc.x == x) && (loc.y == y)) {
+            var idx;
+
+            switch (type) {
+            case CURSOR_TUTORIAL:
+                idx = TILEI_TUTORIAL_CURSOR;
+                break;
+            case CURSOR_MOUSE:
+                idx = TILEI_CURSOR;
+                // TODO: TILEI_CURSOR2 if not visible
+                // But do we even need a server-side mouse cursor?
+                break;
+            case CURSOR_MAP:
+                idx = TILEI_CURSOR;
+                break;
+            }
+
+            drawIcon(idx, x, y);
+        }
+    });
+}
+
+function renderCell(x, y) {
     try {
+        var cell = get_tile_cache(x, y);
+
+        if (!cell)
+            return;
+
         // cell is basically a packed_cell + doll + mcache entries
         drawBackground(x, y, cell);
 
-        fg_idx = cell.fg & TILE_FLAG_MASK;
-        in_water = inWater(cell);
+        var fg_idx = cell.fg & TILE_FLAG_MASK;
+        var in_water = inWater(cell);
 
         if (cell.doll) {
             $.each(cell.doll, function (i, dollPart) {
@@ -21,6 +100,8 @@ function c(x, y, cell) {
         }
 
         drawForeground(x, y, cell);
+
+        render_cursors(x, y);
     } catch (err) {
         console.error("Error while drawing cell " + objectToString(cell)
                       + " at " + x + "/" + y + ": " + err);
@@ -37,6 +118,7 @@ function drawBloodOverlay(x, y, cell, isWall)
 {
     if (cell.liquefied)
     {
+        // TODO: tile_dngn_count
 //        offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
         offset = 0;
         drawDngn(TILE_LIQUEFACTION + offset, x, y);
@@ -70,9 +152,8 @@ function drawBackground(x, y, cell)
     if (cell.swtree && bg_idx > TILE_DNGN_UNSEEN)
         drawDngn(TILE_DNGN_SHALLOW_WATER, x, y);
 
-    // TODO: flavour
-//    if (bg_idx >= TILE_DNGN_WAX_WALL)
-//        drawDngn(cell.flv.floor, x, y);
+    if (bg_idx >= TILE_DNGN_WAX_WALL)
+        drawDngn(cell.flv.f, x, y); // f = floor
 
     // Draw blood beneath feature tiles.
     if (bg_idx > TILE_WALL_MAX)

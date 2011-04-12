@@ -257,10 +257,16 @@ void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &g
             cell.is_liquefied ? "liquefied:true," : "",
             cell.swamp_tree_water ? "swtree:true," : "");
 
+
     if (cell.is_bloody)
     {
         fprintf(stdout, "bloodrot:%d,", cell.blood_rotation);
     }
+
+    fprintf(stdout, "flv:{f:%d,", cell.flv.floor);
+    if (cell.flv.special)
+        fprintf(stdout, "s:%d,", cell.flv.special);
+    fprintf(stdout, "},");
 
     tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
@@ -338,6 +344,7 @@ static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)
 {
+    // TODO: Most of this should be in redraw() instead
     if (m_active_layer != LAYER_NORMAL)
     {
         m_active_layer = LAYER_NORMAL;
@@ -349,6 +356,9 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
     if ((vbuf.size() != m_current_view.size()))
     {
+        if (vbuf.size().equals(0, 0))
+            return; // It seems the view buffer changes to size 0 while using stairs
+
         // The view buffer size changed, we need to do a full redraw
         m_current_view = vbuf;
 
@@ -417,7 +427,7 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
     crawl_view.calc_vlos();
     viewwindow(false);
-    tiles.place_cursor(CURSOR_MAP, cen);
+    place_cursor(CURSOR_MAP, cen);
 }
 
 void TilesFramework::resize()
@@ -538,6 +548,51 @@ void TilesFramework::toggle_inventory_display()
 
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 {
+    // This is mainly copied from DungeonRegion::place_cursor.
+    coord_def result = gc;
+
+    // If we're only looking for a direction, put the mouse
+    // cursor next to the player to let them know that their
+    // spell/wand will only go one square.
+    if (mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        && type == CURSOR_MOUSE && gc != INVALID_COORD)
+    {
+        coord_def delta = gc - you.pos();
+
+        int ax = abs(delta.x);
+        int ay = abs(delta.y);
+
+        result = you.pos();
+        if (1000 * ay < 414 * ax)
+            result += (delta.x > 0) ? coord_def(1, 0) : coord_def(-1, 0);
+        else if (1000 * ax < 414 * ay)
+            result += (delta.y > 0) ? coord_def(0, 1) : coord_def(0, -1);
+        else if (delta.x > 0)
+            result += (delta.y > 0) ? coord_def(1, 1) : coord_def(1, -1);
+        else if (delta.x < 0)
+            result += (delta.y > 0) ? coord_def(-1, 1) : coord_def(-1, -1);
+    }
+
+    if (m_cursor[type] != result)
+    {
+        m_cursor[type] = result;
+        if (type == CURSOR_MOUSE)
+            m_last_clicked_grid = coord_def();
+
+        if (result == NO_CURSOR)
+        {
+            fprintf(stdout, "remove_cursor(%d);\n", type);
+            return;
+        }
+        else
+        {
+            int cx_to_gx = m_current_gc.x - m_current_view.size().x / 2;
+            int cy_to_gy = m_current_gc.y - m_current_view.size().y / 2;
+
+            fprintf(stdout, "place_cursor(%d,%d,%d);\n",
+                    type, result.x - cx_to_gx, result.y - cy_to_gy);
+        }
+    }
 }
 
 void TilesFramework::clear_text_tags(text_tag_type type)
@@ -573,13 +628,13 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
     int cx_to_gx = m_current_gc.x - m_current_view.size().x / 2;
     int cy_to_gy = m_current_gc.y - m_current_view.size().y / 2;
 
-    fprintf(stdout, "drawMain(%d,%d,%d);\n",
+    fprintf(stdout, "addOverlay(%d,%d,%d);\n",
             idx, gc.x - cx_to_gx, gc.y - cy_to_gy);
 }
 
 void TilesFramework::clear_overlays()
 {
-    fprintf(stderr, "clear_overlays\n");
+    fprintf(stdout, "clearOverlays();\n");
 }
 
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)

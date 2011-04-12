@@ -61,8 +61,6 @@ public:
     int ex;
     int ey;
 
-    static coord_def NO_CURSOR;
-
 protected:
     void recalculate();
     virtual void on_resize() = 0;
