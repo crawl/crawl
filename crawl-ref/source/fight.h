@@ -35,8 +35,6 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
 int weapon_str_weight(object_class_type wpn_class, int wpn_type);
 bool you_attack(int monster_attacked, bool unarmed_attacks);
-bool monster_attack_actor(monster* attacker, actor *defender,
-                          bool allow_unarmed);
 bool monster_attack(monster* attacker, bool allow_unarmed = true);
 bool monsters_fight(monster* attacker, monster* attacked,
                     bool allow_unarmed = true);

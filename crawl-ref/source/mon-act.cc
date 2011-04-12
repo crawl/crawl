@@ -793,7 +793,13 @@ static bool _handle_reaching(monster* mons)
             || mons->see_cell_no_trans(foepos)))
     {
         ret = true;
-        monster_attack_actor(mons, foe, false);
+
+        ASSERT(defender == &you || defender->atype() == ACT_MONSTER);
+
+        if (defender->atype() == ACT_PLAYER)
+            monster_attack(attacker, allow_unarmed)
+        else
+            monsters_fight(attacker, defender->as_monster(), allow_unarmed));
 
         if (mons->alive())
         {
