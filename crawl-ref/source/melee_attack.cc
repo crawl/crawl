@@ -91,13 +91,12 @@
  *             BEGIN PUBLIC FUNCTIONS             *
  **************************************************
 */
-melee_attack::melee_attack(actor *attk, actor *defn,
-                           bool allow_unarmed, int which_attack)
+melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed)
     :  // Call attack's constructor
     attack::attack(attk, defn, allow_unarmed),
 
     perceived_attack(false), obvious_effect(false),
-    attack_number(which_attack), extra_noise(0), skip_chaos_message(false),
+    attack_number(-1), extra_noise(0), skip_chaos_message(false),
     special_damage_flavour(BEAM_NONE), attacker_body_armour_penalty(0),
     attacker_shield_penalty(0), attacker_armour_tohit_penalty(0),
     attacker_shield_tohit_penalty(0), can_do_unarmed(false), miscast_level(-1),

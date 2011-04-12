@@ -55,8 +55,7 @@ public:
     actor* miscast_target;
 
 public:
-    melee_attack(actor *attacker, actor *defender,
-                 bool allow_unarmed = true, int attack_num = -1);
+    melee_attack(actor *attacker, actor *defender, bool allow_unarmed = true);
 
     // Applies attack damage and other effects.
     bool attack();
