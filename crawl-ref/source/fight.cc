@@ -310,16 +310,6 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     return (true);
 }
 
-bool monster_attack_actor(monster* attacker, actor *defender,
-                          bool allow_unarmed)
-{
-    ASSERT(defender == &you || defender->atype() == ACT_MONSTER);
-    return (defender->atype() == ACT_PLAYER ?
-              monster_attack(attacker, allow_unarmed)
-            : monsters_fight(attacker, defender->as_monster(),
-                             allow_unarmed));
-}
-
 // A monster attacking the player.
 bool monster_attack(monster* attacker, bool allow_unarmed)
 {
