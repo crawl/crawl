@@ -3424,9 +3424,9 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mgrd(c) = m2i;
     immobile_monster[m2i] = true;
 
-    mon->check_redraw(c);
+    mon->check_redraw(c, false);
     mon->apply_location_effects(c);
-    m2->check_redraw(c);
+    m2->check_redraw(n, false);
     m2->apply_location_effects(n);
 
     // The seen context no longer applies if the monster is moving normally.

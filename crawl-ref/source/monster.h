@@ -139,7 +139,7 @@ public:
                        int summon_type = 0);
     bool is_summoned(int* duration = NULL, int* summon_type = NULL) const;
     bool has_action_energy() const;
-    void check_redraw(const coord_def &oldpos) const;
+    void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1);
