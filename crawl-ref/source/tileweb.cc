@@ -676,4 +676,10 @@ void TilesFramework::put_ucs_string(ucs_t *str)
         str++;
     }
 }
+
+void TilesFramework::clear_to_end_of_line()
+{
+    for (int x = m_print_x; x < m_print_area->mx; ++x)
+        m_print_area->put_character(' ', m_print_fg, m_print_bg, x, m_print_y);
+}
 #endif

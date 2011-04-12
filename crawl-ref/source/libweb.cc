@@ -77,7 +77,7 @@ int putwch(ucs_t chr)
 
 void clear_to_end_of_line()
 {
-    fprintf(stderr, "clear_to_end_of_line()\n");
+    tiles.clear_to_end_of_line();
 }
 
 int cprintf(const char *format,...)

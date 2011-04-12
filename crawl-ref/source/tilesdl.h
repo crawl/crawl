@@ -167,6 +167,7 @@ public:
     void textbackground(int col);
     void put_string(char *str);
     void put_ucs_string(ucs_t *str);
+    void clear_to_end_of_line();
     int wherex() { return m_print_x + 1; }
     int wherey() { return m_print_y + 1; }
 #endif
