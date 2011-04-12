@@ -3054,18 +3054,9 @@ std::vector<talent> your_talents(bool check_confused)
         }
 
         // Draconians don't maintain their original breath weapons
-        // if shapechanged into a non-dragon form, but green draconians
-        // do get spit poison in spider form.
-        if (form_changed_physiology())
-        {
-            if (you.species == SP_GREEN_DRACONIAN
-                && you.form == TRAN_SPIDER)
-            {
-                ability = ABIL_SPIT_POISON; // spit, not breath
-            }
-            else if (you.form != TRAN_DRAGON)
-                ability = ABIL_NON_ABILITY;
-        }
+        // if shapechanged into a non-dragon form.
+        if (form_changed_physiology() && you.form != TRAN_DRAGON)
+            ability = ABIL_NON_ABILITY;
 
         if (ability != ABIL_NON_ABILITY)
             _add_talent(talents, ability, check_confused);
