@@ -222,6 +222,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_MUMMY:
+        result += "You do not eat or drink.\n";
         result += "Your flesh is vulnerable to fire.\n";
         if (you.experience_level > 12)
         {
