@@ -89,12 +89,6 @@ public:
 public:
     attack(actor *attk, actor *defn, bool allow_unarmed);
 
-    // Applies damage and effect(s)
-    // TODO: Maybe this should actually occur in fight (eg damage is calculated
-    // within a particular attack, but fight is responsible for performing the
-    // damage.
-    /* virtual bool do_attack(); */
-
     // To-hit is a function of attacker/defender, defined in sub-classes
     virtual int calc_to_hit(bool) = 0;
 

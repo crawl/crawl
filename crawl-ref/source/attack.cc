@@ -73,7 +73,7 @@ std::string attack::actor_pronoun(const actor *a, pronoun_type pron,
 /* Returns an anonymous actor's name
  *
  * Given the actor visible or invisible, returns the
- * appropriate possessive, capitalized pronoun.
+ * appropriate possessive pronoun.
  */
 std::string attack::anon_name(description_level_type desc,
                                     bool actor_invisible)
@@ -98,6 +98,7 @@ std::string attack::anon_name(description_level_type desc,
  * Given invisibility (whether out of LOS or just invisible), returns the
  * appropriate possessive, inflexive, capitalized pronoun.
  */
+ // TODO: Remove PRONOUN_CAP/NOCAP and replace with just PRONOUN
 std::string attack::anon_pronoun(pronoun_type pron)
 {
     switch (pron)
