@@ -227,11 +227,8 @@ bool direction_chooser::choose_compass()
         else if (key_command == CMD_TARGET_MOUSE_SELECT)
         {
             const coord_def &gc = tiles.get_cursor();
-#ifdef USE_TILE_LOCAL
-            // OTTODO: What??
-            if (gc == Region::NO_CURSOR)
+            if (gc == NO_CURSOR)
                 continue;
-#endif
 
             if (!map_bounds(gc))
                 continue;
@@ -268,9 +265,8 @@ bool direction_chooser::choose_compass()
     }
     while (!moves.isCancel && moves.delta.origin());
 
-#ifdef USE_TILE_LOCAL
-    // OTTODO: What's NO_CURSOR?
-    tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+#ifdef USE_TILE
+    tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
 #endif
 
     return moves.isValid;
@@ -851,10 +847,7 @@ void full_describe_view()
     }
 #else
     // Clear cursor placement.
-#ifdef USE_TILE_LOCAL
-    // OTTODO
-    tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
-#endif
+    tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
 }
@@ -1786,10 +1779,9 @@ void direction_chooser::do_redraws()
 
 bool direction_chooser::tiles_update_target()
 {
-#ifdef USE_TILE_LOCAL
-    // OTTODO
+#ifdef USE_TILE
     const coord_def& gc = tiles.get_cursor();
-    if (gc != Region::NO_CURSOR && map_bounds(gc))
+    if (gc != NO_CURSOR && map_bounds(gc))
     {
         set_target(gc);
         return true;
@@ -2018,9 +2010,8 @@ void direction_chooser::finalize_moves()
     // square away from the player.
     _extend_move_to_edge(moves);
 
-#ifdef USE_TILE_LOCAL
-    // OTTODO
-    tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+#ifdef USE_TILE
+    tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
 #endif
 }
 

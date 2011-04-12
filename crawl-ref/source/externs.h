@@ -258,6 +258,7 @@ struct coord_def
 };
 
 const coord_def INVALID_COORD(-1, -1);
+const coord_def NO_CURSOR(-1, -1);
 
 typedef bool (*coord_predicate)(const coord_def &c);
 

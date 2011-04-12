@@ -11,8 +11,6 @@
 
 #include "glwrapper.h"
 
-coord_def Region::NO_CURSOR(-1, -1);
-
 Region::Region() :
     ox(0),
     oy(0),

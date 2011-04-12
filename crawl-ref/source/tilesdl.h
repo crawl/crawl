@@ -299,9 +299,15 @@ protected:
     };
     cursor_loc m_cur_loc;
 #elif defined(USE_TILE_WEB)
+    // TODO: Much of this and tileweb.cc is copied from DungeonRegion -- unify somehow?
+    // or at least pull this code into its own class similar to DungeonRegion?
+
     crawl_view_buffer m_current_view;
     coord_def m_current_gc;
     GotoRegion m_cursor_region;
+
+    coord_def m_cursor[CURSOR_MAX];
+    coord_def m_last_clicked_grid;
 
     CRTTextArea m_text_crt;
     StatTextArea m_text_stat;

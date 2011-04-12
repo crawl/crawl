@@ -30,6 +30,12 @@ var termColours =
     VColour(255, 255, 255)  // WHITE
 ];
 
+// Cursors
+CURSOR_MOUSE = 0;
+CURSOR_TUTORIAL = 1;
+CURSOR_MAP = 2;
+CURSOR_MAX = 3;
+
 // Foreground flags
 
 // 3 mutually exclusive flags for attitude.
