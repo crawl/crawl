@@ -5923,7 +5923,7 @@ bool monster::has_action_energy() const
     return (speed_increment >= 80);
 }
 
-void monster::check_redraw(const coord_def &old) const
+void monster::check_redraw(const coord_def &old, bool clear_tiles) const
 {
     if (!crawl_state.io_inited)
         return;
@@ -5940,7 +5940,7 @@ void monster::check_redraw(const coord_def &old) const
         {
             view_update_at(old);
 #ifdef USE_TILE
-            if (!see_old)
+            if (clear_tiles && !see_old)
                 tile_clear_monster(old);
 #endif
         }
