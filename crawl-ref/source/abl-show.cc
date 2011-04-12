@@ -150,7 +150,7 @@ struct ability_def
     unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
     generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
     unsigned int        flags;          // used for additonal cost notices
-    unsigned int        xp_cost;        // hit point cost of ability
+    unsigned int        xp_cost;        // experience point cost of ability
 };
 
 static int  _find_ability_slot(ability_type which_ability);
@@ -714,7 +714,7 @@ const std::string make_cost_description(ability_type ability)
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << "Food";   // randomised and amount hidden from player
+        ret << "Food";   // randomised and exact amount hidden from player
     }
 
     if (abil.piety_cost)
@@ -722,7 +722,7 @@ const std::string make_cost_description(ability_type ability)
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << "Piety";  // randomised and amount hidden from player
+        ret << "Piety";  // randomised and exact amount hidden from player
     }
 
     if (abil.flags & ABFLAG_BREATH)
@@ -3389,10 +3389,8 @@ static int _find_ability_slot(ability_type which_ability)
 
     // No requested slot, find new one and make it preferred.
 
-    // Skip over a-e (invocations), a-g for Elyvilon, or a-f for Yredelemnul.
-    const int first_slot = you.religion == GOD_ELYVILON    ? 7 :
-                           you.religion == GOD_YREDELEMNUL ? 6
-                                                           : 5;
+    // Skip over a-e (invocations), a-g for Elyvilon.
+    const int first_slot = you.religion == GOD_ELYVILON ? 7 : 5;
     for (int slot = first_slot; slot < 52; ++slot)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
