@@ -225,6 +225,11 @@ void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &g
     tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
 
+    if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+    {
+        fprintf(stdout, "base:%d,", tileidx_known_base_item(fg_idx));
+    }
+
     if (fg_idx >= TILEP_MCACHE_START)
     {
         mcache_entry *entry = mcache.get(fg_idx);
