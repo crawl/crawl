@@ -1822,7 +1822,7 @@ struct spell_desc
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_AREA,
      3,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
