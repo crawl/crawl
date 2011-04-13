@@ -9,10 +9,10 @@ Breaks save compatibility with the 0.7 release.
 * New game mode: Zot Defence, a tower defence mini-game.
 * New god: Ashenzari, god of divinations.
 * New species: Felids, sentient cats.
-* New spells: Malign Gateway, Tornado, Leda's Liquefaction, Summon Dragon, Summon Hydra, Tukima's Ball, Darkness
+* New spells: Malign Gateway, Tornado, Leda's Liquefaction, Summon Dragon, Summon Hydra, Darkness.
 * Removed spells: Bone Shards, Tame Beasts, Portal, Alter Self, Extension.
 * Split Enchantments into Hexes (harm foes) and Charms (self-buffs).
-* Replace Selective Amnesia spell with scroll, and book destruction.
+* Replace Selective Amnesia spell with scroll and book destruction.
 * Improved heavy armour.
 * Makhleb and the Shining One are no longer available as starting gods.
 * Shortened the Elven Halls.
