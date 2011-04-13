@@ -1411,6 +1411,13 @@ static void _go_downstairs()
         return;
     }
 
+    if (you.flight_mode() == FL_LEVITATE && !feat_is_gate(ygrd))
+    {
+        mpr("You're floating high up above the floor!");
+        learned_something_new(HINT_LEVITATING);
+        return;
+    }
+
     if (!_prompt_dangerous_portal(ygrd))
         return;
 
