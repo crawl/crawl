@@ -4570,7 +4570,8 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
 
     case BEAM_PORKALATOR:
         rc = (mon->holiness() == MH_DEMONIC && mon->type != MONS_HELL_HOG)
-              || (mon->holiness() == MH_NATURAL && mon->type != MONS_HOG);
+              || (mon->holiness() == MH_NATURAL && mon->type != MONS_HOG)
+              || (mon->holiness() == MH_HOLY && mon->type != MONS_HOLY_SWINE);
         break;
 
     default:
@@ -4908,8 +4909,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return (MON_UNAFFECTED);
 
         monster orig_mon(*mon);
-        if (monster_polymorph(mon, (mon->holiness() == MH_DEMONIC ?
-                                        MONS_HELL_HOG : MONS_HOG)))
+        if (monster_polymorph(mon, mon->holiness() == MH_DEMONIC ?
+                      MONS_HELL_HOG : mon->holiness() == MH_HOLY ?
+                      MONS_HOLY_SWINE : MONS_HOG))
         {
             obvious_effect = true;
 
