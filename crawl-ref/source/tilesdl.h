@@ -113,7 +113,6 @@ public:
     int getch_ck();
     void resize();
     void layout_statcol();
-    void calculate_default_options();
     void clrscr();
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
@@ -137,20 +136,22 @@ public:
                       const coord_def &gc);
     void add_text_tag(text_tag_type type, const monster* mon);
 
-    bool initialise_items();
+//    bool initialise_items(); // XXX: Where is this even implemented?
 
     const coord_def &get_cursor() const;
 
     void add_overlay(const coord_def &gc, tileidx_t idx);
     void clear_overlays();
 
+    void draw_doll_edit();
+
+#ifdef USE_TILE_LOCAL
+    void calculate_default_options(); // XXX: I don't know why this is public
+
     void draw_title();
     void update_title_msg(std::string load_msg);
     void hide_title();
 
-    void draw_doll_edit();
-
-#ifdef USE_TILE_LOCAL
     MenuRegion *get_menu() { return m_region_menu; }
 
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
@@ -301,17 +302,25 @@ protected:
 #elif defined(USE_TILE_WEB)
     // TODO: Much of this and tileweb.cc is copied from DungeonRegion -- unify somehow?
     // or at least pull this code into its own class similar to DungeonRegion?
+    unsigned int m_last_tick_redraw;
+    bool m_need_redraw;
 
     crawl_view_buffer m_current_view;
     coord_def m_current_gc;
-    GotoRegion m_cursor_region;
+
+    crawl_view_buffer m_next_view;
+    coord_def m_next_gc;
 
     coord_def m_cursor[CURSOR_MAX];
     coord_def m_last_clicked_grid;
 
+    bool m_has_overlays;
+
     CRTTextArea m_text_crt;
     StatTextArea m_text_stat;
     MessageTextArea m_text_message;
+
+    GotoRegion m_cursor_region;
 
     WebTextArea *m_print_area;
     int m_print_x, m_print_y;
