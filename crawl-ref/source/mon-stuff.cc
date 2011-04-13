@@ -2718,6 +2718,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     std::string str_polymon;
     int source_power, target_power, relax;
+    int source_tier, target_tier;
     int tries = 1000;
 
     // Used to be mons_power, but that just returns hit_dice
@@ -2725,6 +2726,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // the player gets the opportunity to use draining more
     // effectively against shapeshifters. - bwr
     source_power = mons->hit_dice;
+    source_tier = mons_demon_tier(mons->type);
     relax = 1;
 
     if (targetc == RANDOM_MONSTER)
@@ -2739,6 +2741,9 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             targetc = mons_species(targetc);
 
             target_power = mons_power(targetc);
+            // Can't compare tiers in valid_morph, since we want to affect only
+            // random polymorphs, and not absolutely, too.
+            target_tier = mons_demon_tier(targetc);
 
             if (one_chance_in(200))
                 relax++;
@@ -2747,6 +2752,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 return (simple_monster_message(mons, " shudders."));
         }
         while (tries-- && (!_valid_morph(mons, targetc)
+                           || source_tier != target_tier && !x_chance_in_y(relax, 200)
                            || _is_poly_power_unsuitable(power, source_power,
                                                         target_power, relax)));
     }

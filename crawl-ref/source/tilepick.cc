@@ -2629,21 +2629,22 @@ tileidx_t tileidx_monster(const monster* mons)
 
     if (Options.tile_show_demon_tier)
     {
-        switch (mons_base_char(mons->type))
+        // FIXME: non-linear bits suck, should be a simple addition
+        switch (mons_demon_tier(mons->type))
         {
-        case '1':
+        case 1:
             ch |= TILE_FLAG_DEMON_1;
             break;
-        case '2':
+        case 2:
             ch |= TILE_FLAG_DEMON_2;
             break;
-        case '3':
+        case 3:
             ch |= TILE_FLAG_DEMON_3;
             break;
-        case '4':
+        case 4:
             ch |= TILE_FLAG_DEMON_4;
             break;
-        case '5':
+        case 5:
             ch |= TILE_FLAG_DEMON_5;
             break;
         }
