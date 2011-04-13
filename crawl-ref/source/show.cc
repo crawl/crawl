@@ -420,11 +420,11 @@ static void _update_monster(const monster* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    if (!env.map_knowledge(gp).known())
-        return;
 
     if (you.see_cell(gp))
         env.map_knowledge(gp).clear_data();
+    else if (!env.map_knowledge(gp).known())
+        return;
     else
         env.map_knowledge(gp).clear_monster();
 
