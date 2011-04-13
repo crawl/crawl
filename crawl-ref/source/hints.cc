@@ -423,13 +423,13 @@ void hints_death_screen()
              && !you.berserk() && !you.duration[DUR_EXHAUSTED])
     {
         text = "Don't forget to go berserk when fighting particularly "
-               "difficult foes. It is risky, but makes you faster and beefier.";
+               "difficult foes. It's risky, but makes you faster and beefier.";
 
-        if (you.hunger_state <= HS_HUNGRY)
+        if (you.hunger_state < HS_HUNGRY)
         {
-            text += " Berserking is impossible while hungry or worse, so make "
-                    "sure to keep some food with you that you can eat when you "
-                    "need to go berserk.";
+            text += " Berserking is impossible while very hungry or worse, "
+                    "so make sure to stay fed at all times, just in case "
+                    "you need to berserk.";
         }
     }
     else if (Hints.hints_type == HINT_RANGER_CHAR
@@ -762,8 +762,7 @@ void hints_healing_reminder()
                     ".";
 
             if (you.hp < you.hp_max && you.religion == GOD_TROG
-                && !you.berserk() && !you.duration[DUR_EXHAUSTED]
-                && you.hunger_state >= HS_SATIATED)
+                && you.can_go_berserk())
             {
               text += "\nAlso, berserking might help you not to lose so many "
                       "hitpoints in the first place. To use your abilities type "
@@ -996,8 +995,7 @@ void hints_monster_seen(const monster& mon)
         if (mon.friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, mon.pos());
 
-        if (you.religion == GOD_TROG && !you.berserk()
-            && !you.duration[DUR_EXHAUSTED] && you.hunger_state >= HS_SATIATED
+        if (you.religion == GOD_TROG && you.can_go_berserk()
             && one_chance_in(4))
         {
             learned_something_new(HINT_CAN_BERSERK);
@@ -2354,7 +2352,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Try to dine on chunks in order to save permanent food.";
 
         if (Hints.hints_type == HINT_BERSERK_CHAR)
-            text << "\nNote that you cannot Berserk while hungry or worse.";
+            text << "\nNote that you cannot Berserk while very hungry or worse.";
         break;
 
     case HINT_YOU_STARVING:
@@ -2681,9 +2679,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "you come back, so you might want to use a different set of "
                 "stairs when you return.";
 
-        if (you.religion == GOD_TROG && !you.berserk()
-            && !you.duration[DUR_EXHAUSTED]
-            && you.hunger_state >= HS_SATIATED)
+        if (you.religion == GOD_TROG && you.can_go_berserk())
         {
             text << "\nAlso, with "
                  << apostrophise(god_name(you.religion))
@@ -4813,12 +4809,8 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
         {
             ostr << "This might be a good time to run away";
 
-            if (you.religion == GOD_TROG && !you.berserk()
-                && !you.duration[DUR_EXHAUSTED]
-                && you.hunger_state >= HS_SATIATED)
-            {
+            if (you.religion == GOD_TROG && you.can_go_berserk())
                 ostr << " or apply your Berserk <w>a</w>bility";
-            }
             ostr << ".";
         }
     }
