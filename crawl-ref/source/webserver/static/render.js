@@ -120,21 +120,57 @@ function render_cell(x, y)
         var fg_idx = cell.fg & TILE_FLAG_MASK;
         var is_in_water = in_water(cell);
 
-        if (cell.doll)
-        {
-            // TODO: Transparency (i.e. ghosts)
-            $.each(cell.doll, function (i, doll_part)
-                   {
-                       draw_player(doll_part[0], x, y); // TODO: doll_part[1] is Y_MAX, use that
-                   });
+        // Canvas doesn't support applying an alpha gradient to an image while drawing;
+        // so to achieve the same effect as in local tiles, it would probably be best
+        // to pregenerate water tiles with the (inverse) alpha gradient built in.
+        // This simply draws the lower half with increased transparency; for now,
+        // it looks good enough.
+
+        var draw_dolls = function () {
+            if (cell.doll)
+            {
+                $.each(cell.doll, function (i, doll_part)
+                       {
+                           draw_player(doll_part[0], x, y, 0, 0, doll_part[1]);
+                       });
+            }
+
+            if (cell.mcache)
+            {
+                $.each(cell.mcache, function (i, mcache_part)
+                       {
+                           draw_player(mcache_part[0], x, y, mcache_part[1], mcache_part[2]);
+                       });
+            }
         }
 
-        if (cell.mcache)
+        if (is_in_water)
         {
-            $.each(cell.mcache, function (i, mcache_part)
-                   {
-                       draw_player(mcache_part[0], x, y, mcache_part[1], mcache_part[2]);
-                   });
+            dungeon_ctx.save();
+            dungeon_ctx.globalAlpha = cell.trans ? 0.7 : 1.0;
+
+            set_nonsubmerged_clip(x, y, 20);
+
+            draw_dolls();
+
+            dungeon_ctx.restore();
+
+            dungeon_ctx.save();
+            dungeon_ctx.globalAlpha = cell.trans ? 0.1 : 0.3;
+            set_submerged_clip(x, y, 20);
+
+            draw_dolls();
+
+            dungeon_ctx.restore();
+        }
+        else
+        {
+            dungeon_ctx.save();
+            dungeon_ctx.globalAlpha = cell.trans ? 0.7 : 1.0;
+
+            draw_dolls();
+
+            dungeon_ctx.restore();
         }
 
         draw_foreground(x, y, cell);
@@ -151,11 +187,33 @@ function render_cell(x, y)
             dungeon_ctx.fillText(mark,
                                  (x + 0.5) * dungeon_cell_w, (y + 0.5) * dungeon_cell_h);
         }
-    } catch (err)
+    }
+    catch (err)
     {
         console.error("Error while drawing cell " + obj_to_str(cell)
                       + " at " + x + "/" + y + ": " + err);
     }
+}
+
+function set_submerged_clip(cx, cy, water_level)
+{
+    var x = dungeon_cell_w * cx;
+    var y = dungeon_cell_h * cy;
+
+    dungeon_ctx.beginPath();
+    dungeon_ctx.rect(0, y + water_level, dungeon_cell_w * dungeon_cols,
+                     dungeon_cell_h * dungeon_cols - y - water_level);
+    dungeon_ctx.clip();
+}
+
+function set_nonsubmerged_clip(cx, cy, water_level)
+{
+    var x = dungeon_cell_w * cx;
+    var y = dungeon_cell_h * cy;
+
+    dungeon_ctx.beginPath();
+    dungeon_ctx.rect(0, 0, dungeon_cell_w * dungeon_cols, y + water_level);
+    dungeon_ctx.clip();
 }
 
 // Much of the following is more or less directly copied from tiledgnbuf.cc
@@ -292,12 +350,28 @@ function draw_foreground(x, y, cell)
         base_idx = cell.base;
         if (is_in_water)
         {
-            /*
-              TODO: Submerged stuff
-              if (base_idx)
-              m_buf_main_trans.add(base_idx, x, y, 0, true, false);
-              m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
-            */
+            dungeon_ctx.save();
+            dungeon_ctx.globalAlpha = cell.trans ? 0.7 : 1.0;
+
+            set_nonsubmerged_clip(x, y, 20);
+
+            if (base_idx)
+                draw_main(base_idx, x, y);
+
+            draw_main(fg_idx, x, y);
+
+            dungeon_ctx.restore();
+
+            dungeon_ctx.save();
+            dungeon_ctx.globalAlpha = cell.trans ? 0.1 : 0.3;
+            set_submerged_clip(x, y, 20);
+
+            if (base_idx)
+                draw_main(base_idx, x, y);
+
+            draw_main(fg_idx, x, y);
+
+            dungeon_ctx.restore();
         }
         else
         {
@@ -470,7 +544,7 @@ function draw_main(idx, cx, cy)
                           x + info.ox, y + info.oy, w, h);
 }
 
-function draw_player(idx, cx, cy, ofsx, ofsy)
+function draw_player(idx, cx, cy, ofsx, ofsy, y_max)
 {
     x = dungeon_cell_w * cx;
     y = dungeon_cell_h * cy;
@@ -482,6 +556,8 @@ function draw_player(idx, cx, cy, ofsx, ofsy)
     }
     w = info.ex - info.sx;
     h = info.ey - info.sy;
+    if (y_max && (y_max < h))
+        h = y_max;
     dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
                           x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
 }
