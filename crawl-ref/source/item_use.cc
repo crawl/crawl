@@ -297,9 +297,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (auto_wield)
     {
-        if (slot >= 0 && !can_wield(&you.inv[slot], true))
-            return (false);
-
         if (item_slot == you.equip[EQ_WEAPON]
             || you.equip[EQ_WEAPON] == -1
                && !_valid_weapon_swap(you.inv[item_slot]))
@@ -381,22 +378,22 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     item_def& new_wpn(you.inv[item_slot]);
 
-    if (!can_wield(&new_wpn, true))
-        return (false);
-
-    // For non-auto_wield cases checked above.
+    // Non-auto_wield cases are checked below.
     if (auto_wield && !force
         && !check_warning_inscriptions(new_wpn, OPER_WIELD))
     {
         return (false);
     }
 
-    // Check for stat losses.
-    if (!safe_to_remove_or_wear(new_wpn, false))
-        return (false);
-
     // Unwield any old weapon.
     if (you.weapon() && !unwield_item(show_weff_messages))
+        return (false);
+
+    if (!can_wield(&new_wpn, true))
+        return (false);
+
+    // Check for stat losses.
+    if (!safe_to_remove_or_wear(new_wpn, false))
         return (false);
 
     const unsigned int old_talents = your_talents(false).size();
