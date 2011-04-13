@@ -3669,7 +3669,7 @@ bool melee_attack::mons_self_destructs()
     return (false);
 }
 
-bool melee_attack::mons_attack_warded_off()
+bool melee_attack::attack_warded_off()
 {
     // [dshaligram] Note: warding is no longer a simple 50% chance.
     const int warding = defender->warding();
@@ -5023,7 +5023,7 @@ bool melee_attack::mons_perform_attack()
     if (attacker != defender && mons_self_destructs())
         return (did_hit = perceived_attack = true);
 
-    if (attacker != defender && mons_attack_warded_off())
+    if (attacker != defender && attack_warded_off())
     {
         // A warded-off attack takes half the normal energy.
         attacker->lose_energy(EUT_ATTACK, 2);
