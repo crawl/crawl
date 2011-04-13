@@ -449,12 +449,8 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     // for non-amphibious monsters, so they'll avoid it where possible.
     // (The resulting path might not be optimal but it will lead to a path
     // a monster of such habits is likely to prefer.)
-    // Only tested for shallow water since they can't enter deep water anyway.
-    if (ground_level && !mons_class_habitat(mt) == HT_AMPHIBIOUS
-        && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
-    {
+    if (mons->floundering_at(npos))
         return (2);
-    }
 
     // Try to avoid (known) traps.
     const trap_def* ptrap = find_trap(npos);
