@@ -898,6 +898,25 @@ bool mons_is_demon(int mc)
     return (false);
 }
 
+int mons_demon_tier(int mc)
+{
+    switch(mons_base_char(mc))
+    {
+    case '1':
+        return 1;
+    case '2':
+        return 2;
+    case '3':
+        return 3;
+    case '4':
+        return 4;
+    case '5':
+        return 5;
+    default:
+        return 0;
+    }
+}
+
 bool mons_is_draconian(int mc)
 {
     return (mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN);
