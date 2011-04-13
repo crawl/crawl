@@ -56,6 +56,8 @@ public:
     virtual void set_position(const coord_def &c);
     virtual const coord_def& pos() const { return position; }
 
+    virtual bool self_destructs() { return false; }
+
     // Blink the actor to the destination. c should be a
     // valid target, though the method returns false
     // if the blink fails.

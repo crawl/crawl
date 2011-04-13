@@ -6001,6 +6001,20 @@ void monster::apply_location_effects(const coord_def &oldpos,
     }
 }
 
+bool monster::self_destructs()
+{
+    if (type == MONS_GIANT_SPORE
+        || type == MONS_BALL_LIGHTNING
+        || type == MONS_ORB_OF_DESTRUCTION)
+    {
+        suicide();
+        // Do the explosion right now.
+        monster_die(as_monster(), KILL_MON, mindex());
+        return (true);
+    }
+    return (false);
+}
+
 bool monster::move_to_pos(const coord_def &newpos)
 {
     const actor* a = actor_at(newpos);

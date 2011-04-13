@@ -3655,20 +3655,6 @@ bool melee_attack::mons_attack_mons()
     return (did_hit);
 }
 
-bool melee_attack::mons_self_destructs()
-{
-    if (attacker->type == MONS_GIANT_SPORE
-        || attacker->type == MONS_BALL_LIGHTNING
-        || attacker->type == MONS_ORB_OF_DESTRUCTION)
-    {
-        attacker->as_monster()->suicide();
-        // Do the explosion right now.
-        monster_die(attacker->as_monster(), KILL_MON, attacker->mindex());
-        return (true);
-    }
-    return (false);
-}
-
 bool melee_attack::attack_warded_off()
 {
     // [dshaligram] Note: warding is no longer a simple 50% chance.
@@ -5020,7 +5006,7 @@ void melee_attack::mons_perform_attack_rounds()
 
 bool melee_attack::mons_perform_attack()
 {
-    if (attacker != defender && mons_self_destructs())
+    if (attacker != defender && attacker->self_destructs())
         return (did_hit = perceived_attack = true);
 
     if (attacker != defender && attack_warded_off())
