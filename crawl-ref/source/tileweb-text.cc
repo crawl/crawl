@@ -102,8 +102,27 @@ void WebTextArea::send()
                     space_count--;
                 }
 
-//                fputwc(chr, stdout);
-                fputc(chr, stdout);
+                switch (chr)
+                {
+                case '<':
+                    fprintf(stdout, "&lt;");
+                    break;
+                case '>':
+                    fprintf(stdout, "&gt;");
+                    break;
+                case '&':
+                    fprintf(stdout, "&amp;");
+                    break;
+                case '\\':
+                    fprintf(stdout, "&92;");
+                    break;
+                case '"':
+                    fprintf(stdout, "&quot;");
+                    break;
+                default:
+                    fprintf(stdout, "%lc", chr);
+                    break;
+                }
             }
 
             if (x == mx - 1)
