@@ -792,6 +792,23 @@ static bool _is_perm_down_stair(const coord_def &c)
     }
 }
 
+static bool _is_perm_up_stair(const coord_def &c)
+{
+    switch (grd(c))
+    {
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_EXIT_HELL:
+    case DNGN_EXIT_PANDEMONIUM:
+    case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_EXIT_ABYSS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 static bool _is_bottom_exit_stair(const coord_def &c)
 {
     // Is this a valid exit stair from the bottom of a branch? In general,
@@ -1753,7 +1770,10 @@ static bool _add_connecting_escape_hatches()
     if (at_branch_bottom())
         return (dgn_count_disconnected_zones(true) == 0);
 
-    return (_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN));
+    if (!_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN))
+        return (false);
+    
+    return (_add_feat_if_missing(_is_perm_up_stair, DNGN_ESCAPE_HATCH_UP));
 }
 
 static bool _branch_entrances_are_connected()
