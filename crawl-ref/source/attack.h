@@ -105,6 +105,7 @@ public:
 protected:
     virtual void init_attack();
 
+    /* Attack Phases */
     virtual bool handle_phase_attempted();
     virtual bool handle_phase_dodged() = 0;
     virtual bool handle_phase_blocked() = 0;
@@ -113,19 +114,23 @@ protected:
     virtual bool handle_phase_killed() = 0;
     virtual bool handle_phase_end() = 0;
 
+    /* Combat Calculations */
+    // Determine if we're blocking (partially or entirely)
+    virtual bool attack_shield_blocked(bool verbose) = 0;
+    virtual bool apply_damage_brand() = 0;
+    void calc_elemental_brand_damage(beam_type flavour,
+                                     int res,
+                                     const char *verb);
+
+    /* Weapon Effects */
     virtual bool check_unrand_effects() = 0;
 
-    // Methods which produce output
+    /* Output */
     std::string debug_damage_number();
     std::string special_attack_punctuation();
     std::string attack_strength_punctuation();
     std::string evasion_margin_adverb();
 
-    // Determine if we're blocking (partially or entirely)
-    virtual bool attack_shield_blocked(bool verbose) = 0;
-    virtual bool apply_damage_brand() = 0;
-
-    // Ouput methods
     std::string atk_name(description_level_type desc);
     std::string def_name(description_level_type desc);
     std::string wep_name(description_level_type desc = DESC_YOUR,
@@ -137,10 +142,6 @@ protected:
     // usage from these lowly classes all the way up to monster/player (and
     // actor) classes.
     std::string defender_name();
-
-    void calc_elemental_brand_damage(beam_type flavour,
-                                     int res,
-                                     const char *verb);
 };
 
 #endif
