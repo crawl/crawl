@@ -3056,7 +3056,7 @@ static std::string _describe_draconian_role(monster_type type)
     case MONS_DRACONIAN_SHIFTER:
         return "It darts around disconcertingly without taking a step.";
     case MONS_DRACONIAN_SCORCHER:
-        return "Its scales are sooty black from years of magical pyrotechnics.";
+        return "Its scales are sooty from years of magical pyrotechnics.";
     case MONS_DRACONIAN_ZEALOT:
         return "In its gaze you see all the malefic power of its "
                "terrible god.";

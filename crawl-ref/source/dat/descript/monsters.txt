@@ -427,7 +427,7 @@ A small black bear. If provoked, it may become angry!
 %%%%
 black draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 black mamba
 
@@ -443,7 +443,7 @@ A weird-looking frog, constantly blinking in and out of reality.
 %%%%
 Blue Death
 
-A blue greater demon.
+A blue greater demon, capable of conjuring great hordes of creatures into existence.
 %%%%
 blue devil
 
@@ -495,7 +495,7 @@ A large multicoloured butterfly with beautifully patterned wings, fluttering inc
 %%%%
 Cacodemon
 
-A hideously ugly demon of rage and legendary power.
+A hideously ugly demon of rage and legendary power, it disables its foes before blasting them to pieces.
 %%%%
 centaur
 
@@ -648,7 +648,7 @@ A stooped troll with dark skin.
 %%%%
 demigod
 
-While this fellow looks like any of the human-like races, the aura of power betrays some divine ancestry. And with the good gods (at least officially) decrying fornication, betting on the good nature of this individual may be unwise...
+The aura of power around this human-like figure immediately betrays its divine ancestry. And with the good gods (at least officially) decrying fornication, betting on the good nature of this individual may be unwise...
 %%%%
 demonic crawler
 
@@ -656,7 +656,7 @@ A long and bloated body, supported by dozens of short legs and topped with an ev
 %%%%
 demonspawn
 
-This fellow looks mostly like a human, yet you sense something evil about him.
+This creature could almost pass for human... yet you sense something evil about it.
 %%%%
 dire elephant
 
@@ -664,7 +664,7 @@ With thick skin, even thicker legs and a memory to die for, this enraged pachyde
 %%%%
 draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 draconian annihilator
 
@@ -684,7 +684,7 @@ While lacking the claws possessed by dragons it was created from, this draconian
 %%%%
 draconian scorcher
 
-Capable of roasting you and any other interlopers to a crisp, these guys really enjoy making sure you are well done.
+Capable of roasting you and any other interlopers to a crisp, this draconian really enjoys making sure you are well done.
 %%%%
 draconian shifter
 
@@ -954,7 +954,7 @@ A levitating ball, covered in malignant eyes.
 %%%%
 greater mummy
 
-The embalmed and undead corpse of an ancient ruler.
+The embalmed and undead corpse of an ancient ruler, now capable of great and terrifying feats of magic.
 %%%%
 greater naga
 
@@ -968,7 +968,7 @@ A bloated form covered in oozing sores and exhaling clouds of lethal poison.
 %%%%
 green draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 green rat
 
@@ -976,7 +976,7 @@ A very large rat, with hair and skin of a most peculiar green colour.
 %%%%
 grey draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 grey rat
 
@@ -1010,7 +1010,7 @@ It definitely deserves an axe to the head.
 %%%%
 harpy
 
-Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to devour the food of the unwary, causing many a man to starve to death.
+Harpies have roamed the coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to devour the food of the unwary, causing many a man to starve to death.
 %%%%
 hell hound
 
@@ -1262,7 +1262,7 @@ A hideous metal statue come to life.
 %%%%
 microbat
 
-A bat that, unlike its name, is not any smaller than megabats.
+A bat that, despite its name, is not any smaller than a megabat.
 %%%%
 midge
 
@@ -1286,7 +1286,7 @@ A huge moth, as violent as it is hairy.
 %%%%
 mottled draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 mottled dragon
 
@@ -1298,7 +1298,7 @@ An undead figure covered in bandages and embalming fluids, compelled to walk by 
 %%%%
 mummy priest
 
-The embalmed and undead corpse of an ancient servant of darkness.
+The embalmed and undead corpse of an ancient servant of darkness, still drawing great power from its god.
 %%%%
 naga
 
@@ -1408,7 +1408,7 @@ While orcs are generally quite stupid, occasionally one develops an aptitude for
 %%%%
 pale draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 paladin
 
@@ -1436,7 +1436,7 @@ A bird of myth and legend, said to die in flames and be reborn from the ashes.
 %%%%
 pile of gold coins
 
-An apparently harmless pile of gold coins hides a nasty venomous shapechanging predator.
+This apparently harmless pile of gold coins hides a nasty venomous shapechanging predator.
 %%%%
 pillar of salt
 
@@ -1444,7 +1444,7 @@ A large pillar of salt that is quickly crumbling away.
 %%%%
 Pit Fiend
 
-A huge winged fiend with incredibly tough skin.
+A huge, slow-moving winged fiend with incredibly tough skin and devastating hellish powers.
 %%%%
 plant
 
@@ -1472,7 +1472,7 @@ A revolting mutagenic glob of writhing flesh.
 %%%%
 purple draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 quasit
 
@@ -1518,7 +1518,7 @@ A muscular demon covered in spikes and horns. Two short wings sprout from its sh
 %%%%
 red draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 red wasp
 
@@ -1573,7 +1573,7 @@ A giant black scorpion, its body covered in thick armour plating, and its tail t
 %%%%
 sea snake
 
-A brightly coloured snake with a highly potent venomous bite.
+A brightly coloured snake, very comfortable in the water. It has a highly potent venomous bite.
 %%%%
 shadow
 
@@ -1589,7 +1589,7 @@ A great shadowy shape, radiating evil and death.
 %%%%
 Shadow Fiend
 
-One of the most terrible denizens of the many Hells, this horrible being appears as a great mass of writhing shadows which occasionally reveal a huge, horned skeleton.
+One of the most terrible denizens of the many Hells, this horrible being appears as a great mass of writhing shadows which occasionally reveals a huge, horned skeleton.
 %%%%
 shadow imp
 
@@ -1659,7 +1659,7 @@ A once proud human that has been magically enslaved, and is now a timid, simperi
 %%%%
 slime creature
 
-An icky glob of slime, which slithers along the ground.
+An icky glob of slime, which slithers along the ground, occasionally merging with other nearby globs...
 %%%%
 small abomination
 
@@ -1719,7 +1719,7 @@ An ordinary orb-weaving spider with a white cross on its back. It's not as ridic
 %%%%
 spiny frog
 
-Although slightly smaller than the giant toad, the spiny frog makes up for lack of size by being covered in wickedly barbed spines and spurs.
+Although slightly smaller than the giant toad, the spiny frog makes up for lack of size by being covered in wickedly barbed spines and spurs, dripping with venom.
 %%%%
 spiny worm
 
@@ -1735,7 +1735,7 @@ A small humanoid, resembling a human or elf except for the size. They move at a 
 %%%%
 spriggan air mage
 
-Ever noticed the wind always blows in your eyes and in the backs of some? These guys have something to do with that.
+Ever noticed how the wind always blows in your eyes and in the backs of some? These lightning-fast spriggans have something to do with that.
 %%%%
 spriggan assassin
 
@@ -1755,7 +1755,7 @@ Revelling in nature, these protectors of forests are the doom of anyone who as m
 %%%%
 spriggan rider
 
-Mounted on giant fireflies, these guys make sure no one who dares to intrude on the spriggan forests and cairns will be able to just walk away.
+Mounted on giant fireflies, these riders make sure no one who dares to intrude on the spriggan forests and cairns will be able to just walk away.
 %%%%
 spriggan warper
 
@@ -1910,7 +1910,7 @@ A largish venomous brown snake. It usually lives near water, and is an able swim
 %%%%
 white draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 white imp
 
@@ -1934,7 +1934,7 @@ A huge hairy spider with vicious mandibles, roaming the dungeon in search of foo
 %%%%
 wood golem
 
-A huge animated wood statue.
+A huge animated wooden statue.
 %%%%
 worm
 
@@ -1962,7 +1962,7 @@ Like a centaur, but half yak. It looks very strong and aggressive.
 %%%%
 yellow draconian
 
-Before you stands a scale-covered humanoid with a reptilian tail and small wings.
+A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 yellow wasp
 
@@ -1999,7 +1999,7 @@ An ornate statue of an orc holding a torch aloft. The air around it shimmers.
 %%%%
 firespitter statue
 
-Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes.
+A statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes.
 %%%%
 flesh golem
 
