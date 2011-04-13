@@ -365,9 +365,15 @@ int TilesFramework::getch_ck()
 
 void TilesFramework::clrscr()
 {
-    m_print_area->clear();
-    m_print_x = 0;
-    m_print_y = 0;
+    // TODO: Clear cursor
+
+    m_text_crt.clear();
+    m_text_message.clear();
+    m_text_stat.clear();
+
+    cgotoxy(1, 1);
+
+    set_need_redraw();
 }
 
 int TilesFramework::get_number_of_lines()
@@ -701,19 +707,20 @@ void TilesFramework::put_ucs_string(ucs_t *str)
         }
         else
         {
-            m_print_area->put_character(*str, m_print_fg, m_print_bg, m_print_x, m_print_y);
-            m_print_x++;
             if (m_print_x >= m_print_area->mx)
             {
                 m_print_x = 0;
                 m_print_y++;
             }
-        }
 
-        if (m_print_y >= m_print_area->my)
-        {
-            // TODO Scroll?
-            m_print_y = 0;
+            if (m_print_y >= m_print_area->my)
+            {
+                // TODO Scroll?
+                m_print_y = 0;
+            }
+
+            m_print_area->put_character(*str, m_print_fg, m_print_bg, m_print_x, m_print_y);
+            m_print_x++;
         }
 
         str++;
