@@ -78,9 +78,10 @@ private:
     bool handle_phase_killed();
     bool handle_phase_end();
 
-    // Combat calculations
+    /* Combat Calculations */
     int test_melee_hit(int to_hit, int ev, defer_rand& r);
     int fire_res_apply_cerebov_downgrade(int res);
+    int apply_defender_ac(int damage, int damage_max = NULL);
 
     /* Attack effects */
     void check_autoberserk();
@@ -126,7 +127,6 @@ private:
     bool mons_self_destructs();
     int mons_calc_damage(const mon_attack_def &attk);
     void mons_apply_attack_flavour(const mon_attack_def &attk);
-    int mons_apply_defender_ac(int damage, int damage_max);
     bool mons_perform_attack();
     void mons_perform_attack_rounds();
     void mons_check_attack_perceived();
@@ -172,7 +172,6 @@ private:
     int  player_apply_weapon_skill(int damage);
     int  player_apply_fighting_skill(int damage, bool aux);
     int  player_apply_misc_modifiers(int damage);
-    int  player_apply_monster_ac(int damage);
     void player_weapon_auto_id();
     int  player_stab_weapon_bonus(int damage);
     int  player_stab(int damage);

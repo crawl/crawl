@@ -868,7 +868,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     stab_bonus  = 0;
 
     const int pre_ac_dmg = aux_damage;
-    const int post_ac_dmg = player_apply_monster_ac(aux_damage);
+    const int post_ac_dmg = apply_defender_ac(aux_damage);
 
     aux_damage = post_ac_dmg;
     aux_damage = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
@@ -1275,33 +1275,6 @@ int melee_attack::player_stab(int damage)
 
         damage = player_stab_weapon_bonus(damage);
     }
-
-    return (damage);
-}
-
-int melee_attack::player_apply_monster_ac(int damage)
-{
-    if (stab_bonus)
-    {
-        // When stabbing we can get by some of the armour.
-        if (defender->armour_class() > 0)
-        {
-            const int ac = defender->armour_class()
-                - random2(you.skill(SK_STABBING) / stab_bonus);
-
-            if (ac > 0)
-                damage -= random2(1 + ac);
-        }
-    }
-    else
-    {
-        // Apply AC normally.
-        if (defender->armour_class() > 0)
-            damage -= random2(1 + defender->armour_class());
-    }
-
-    if (defender->petrified())
-        damage /= 3;
 
     return (damage);
 }
@@ -3782,36 +3755,7 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
 #endif
     }
 
-    return (mons_apply_defender_ac(damage, damage_max));
-}
-
-int melee_attack::mons_apply_defender_ac(int damage, int damage_max)
-{
-    const int ac = defender->armour_class();
-    if (ac > 0)
-    {
-        int damage_reduction = random2(ac + 1);
-        int guaranteed_damage_reduction = 0;
-
-        if (defender->atype() == ACT_PLAYER)
-        {
-            const int gdr_perc = defender->as_player()->gdr_perc();
-            guaranteed_damage_reduction =
-                std::min(damage_max * gdr_perc / 100, ac / 2);
-            damage_reduction =
-                std::max(guaranteed_damage_reduction, damage_reduction);
-        }
-
-        dprf("AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "
-             "rdam: %d",
-             attacker->name(DESC_PLAIN, true).c_str(),
-             defender->name(DESC_PLAIN, true).c_str(),
-             damage, damage_max, damage_reduction, guaranteed_damage_reduction,
-             damage - damage_reduction);
-
-        damage -= damage_reduction;
-    }
-    return std::max(0, damage);
+    return (apply_defender_ac(damage, damage_max));
 }
 
 std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
@@ -5489,7 +5433,6 @@ void melee_attack::_steal_item_from_player(monster* mon)
     dec_inv_item_quantity(steal_what, new_item.quantity);
 }
 
-// This function is only used when monsters are attacking.
 int melee_attack::test_melee_hit(int to_land, int ev, defer_rand& r)
 {
     int   roll = -1;
@@ -5525,6 +5468,65 @@ int melee_attack::test_melee_hit(int to_land, int ev, defer_rand& r)
 #endif
 
     return (margin);
+}
+
+int apply_defender_ac(int damage, int damage_max)
+{
+    if(attacker->atype() == ACT_MONSTER)
+    {
+        const int ac = defender->armour_class();
+        if (ac > 0)
+        {
+            int damage_reduction = random2(ac + 1);
+            int guaranteed_damage_reduction = 0;
+
+            if (defender->atype() == ACT_PLAYER)
+            {
+                const int gdr_perc = defender->as_player()->gdr_perc();
+                guaranteed_damage_reduction =
+                    std::min(damage_max * gdr_perc / 100, ac / 2);
+                damage_reduction =
+                    std::max(guaranteed_damage_reduction, damage_reduction);
+            }
+
+            dprf("AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "
+                 "rdam: %d",
+                 attacker->name(DESC_PLAIN, true).c_str(),
+                 defender->name(DESC_PLAIN, true).c_str(),
+                 damage, damage_max, damage_reduction, guaranteed_damage_reduction,
+                 damage - damage_reduction);
+
+            damage -= damage_reduction;
+        }
+
+        return std::max(0, damage);
+    }
+    else if(attacker->atype() == ACT_PLAYER)
+    {
+        if (stab_bonus)
+        {
+            // When stabbing we can get by some of the armour.
+            if (defender->armour_class() > 0)
+            {
+                const int ac = defender->armour_class()
+                    - random2(you.skill(SK_STABBING) / stab_bonus);
+
+                if (ac > 0)
+                    damage -= random2(1 + ac);
+            }
+        }
+        else
+        {
+            // Apply AC normally.
+            if (defender->armour_class() > 0)
+                damage -= random2(1 + defender->armour_class());
+        }
+
+        if (defender->petrified())
+            damage /= 3;
+
+        return (damage);
+    }
 }
 
 // TODO: This should be in monster class, there's probably already a method
