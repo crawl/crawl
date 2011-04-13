@@ -3594,7 +3594,7 @@ void TravelCache::list_waypoints() const
 
         dest = get_trans_travel_dest(waypoints[i], false, true);
 
-        snprintf(choice, sizeof choice, "(%d) %-8s", i, dest.c_str());
+        snprintf(choice, sizeof choice, "(%d) %-9s", i, dest.c_str());
         line += choice;
         if (!(++count % 5))
         {
