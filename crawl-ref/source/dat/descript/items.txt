@@ -1190,7 +1190,7 @@ A piece of cloth and leather for launching stones, which do a small amount of da
 %%%%
 sling bullet
 
-A small heavy projectile usually made of lead. It can be fired from a sling. They are more effective as ammunition than simple stones, and can also come with various enchantments.
+A small, heavy projectile shaped specifically for use with slings, and more effective as ammunition than simple stones. It can also come with various enchantments.
 %%%%
 snozzcumber
 
