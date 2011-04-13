@@ -3958,6 +3958,7 @@ void melee_attack::mons_announce_dud_hit(const mon_attack_def &attk)
     }
 }
 
+// TODO: Remove after monster attack rounds is handled outside of melee_attack
 void melee_attack::mons_set_weapon(const mon_attack_def &attk)
 {
     weapon = (attk.type == AT_HIT) ? attacker->weapon(attack_number) : NULL;
