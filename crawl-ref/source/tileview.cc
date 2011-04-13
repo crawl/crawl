@@ -1049,7 +1049,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     // Mold has the same restrictions as blood but takes precedence.
     if (print_blood)
     {
-        if (is_moldy(gc))
+        if (glowing_mold(gc))
+            cell.glowing_mold = true;
+        else if (is_moldy(gc))
             cell.is_moldy = true;
         // Corpses have a blood puddle of their own.
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
