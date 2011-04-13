@@ -1693,7 +1693,7 @@ void nuke_wall(const coord_def& p)
 bool cell_is_clingable(const coord_def pos)
 {
     for (orth_adjacent_iterator ai(pos); ai; ++ai)
-        if (feat_is_wall(env.grid(*ai)))
+        if (feat_is_wall(env.grid(*ai)) || feat_is_closed_door(env.grid(*ai)))
             return true;
 
     return false;
