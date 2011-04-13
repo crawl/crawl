@@ -5827,7 +5827,9 @@ bool monster::has_lifeforce() const
 
 bool monster::can_mutate() const
 {
-    return (has_lifeforce());
+    const mon_holy_type holi = holiness();
+
+    return (holi != MH_UNDEAD && holi != MH_NONLIVING);
 }
 
 bool monster::can_safely_mutate() const
