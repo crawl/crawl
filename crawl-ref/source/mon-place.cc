@@ -1690,6 +1690,8 @@ static int _place_monster_aux(const mgen_data &mg,
         // Uses complicated logic!
         case MONS_STAIR_MIMIC:
         {
+// Disable branch stair mimic in 0.8.
+#if 0
             // So far, branch stairs.
             mon->colour = YELLOW;
 
@@ -1751,7 +1753,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
             if (got_stair)
                 break;
-
+#endif
             // If we get to here, we've not got a stair yet...
             // So either choose a stone stair, or an escape hatch.
             dungeon_feature_type stair = random_stair();
