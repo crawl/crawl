@@ -449,8 +449,7 @@ static void _print_stats_wp(int y)
                 break;
         }
 
-    text = prefix + text;
-
+        text = prefix + text;
     }
 
     cgotoxy(1, y, GOTO_STAT);
