@@ -289,10 +289,7 @@ function draw_foreground(x, y, cell)
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
-        // TODO: Send known base item
-        // base_idx = tileidx_known_base_item(fg_idx);
-        base_idx = fg_idx;
-
+        base_idx = cell.base;
         if (is_in_water)
         {
             /*
