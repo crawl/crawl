@@ -3537,9 +3537,12 @@ void bolt::affect_player()
         armour_damage_reduction = 0;
     hurted -= armour_damage_reduction;
 
-    // shrapnel has double AC reduction
+    // shrapnel has triple AC reduction
     if (flavour == BEAM_FRAG)
+    {
         hurted -= random2(1 + you.armour_class());
+        hurted -= random2(1 + you.armour_class());
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
@@ -3809,9 +3812,12 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
         {
             postac -= maybe_random2(1 + mon->ac, !is_tracer);
 
-            // Fragmentation has double AC reduction.
+            // Fragmentation has triple AC reduction.
             if (flavour == BEAM_FRAG)
+            {
                 postac -= maybe_random2(1 + mon->ac, !is_tracer);
+                postac -= maybe_random2(1 + mon->ac, !is_tracer);
+            }
         }
     }
 
