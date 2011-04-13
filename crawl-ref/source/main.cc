@@ -2691,7 +2691,7 @@ static void _regenerate_hp_and_mp(int delay)
 
 static void _update_mold_state(const coord_def & pos)
 {
-    if (glowing_mold(pos))
+    if (glowing_mold(pos) && coinflip())
     {
         // Doing a weird little state thing with the two mold
         // fprops. 'glowing' mold should turn back to normal after
