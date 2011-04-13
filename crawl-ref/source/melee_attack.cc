@@ -3729,6 +3729,9 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     return (false);
 }
 
+// TODO: Unify this and player_calc_base damage, requires the removal
+// or the generalization of the mon_attack_def struct (mon-util). Judging
+// fromthe struct def, removal seems preferable
 int melee_attack::mons_calc_damage(const mon_attack_def &attk)
 {
     int damage = 0;
