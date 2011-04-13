@@ -2071,7 +2071,7 @@ void show_specific_help(const std::string &help)
             formatted_string::parse_string(
                 lines[i], true, _cmdhelp_textfilter));
     }
-    _show_keyhelp_menu(formatted_lines, false, true);
+    _show_keyhelp_menu(formatted_lines, false, Options.easy_exit_menu);
 }
 
 void show_levelmap_help()
@@ -2092,7 +2092,7 @@ void show_targeting_help()
 
     cols.add_formatted(0, targeting_help_1, true, true);
     cols.add_formatted(1, targeting_help_2, true, true);
-    _show_keyhelp_menu(cols.formatted_lines(), false, true);
+    _show_keyhelp_menu(cols.formatted_lines(), false, Options.easy_exit_menu);
 }
 void show_interlevel_travel_branch_help()
 {
@@ -2658,8 +2658,8 @@ void list_commands(int hotkey, bool do_redraw_screen,
     else
         _add_formatted_keyhelp(cols);
 
-    _show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey,
-                       highlight_string);
+    _show_keyhelp_menu(cols.formatted_lines(), true, Options.easy_exit_menu,
+                       hotkey, highlight_string);
 
     if (do_redraw_screen)
     {
@@ -2768,7 +2768,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>?</w>      : list wizard commands\n",
                        true, true);
 
-    int key = _show_keyhelp_menu(cols.formatted_lines(), false, true);
+    int key = _show_keyhelp_menu(cols.formatted_lines(), false,
+                                 Options.easy_exit_menu);
     if (do_redraw_screen)
         redraw_screen();
     return key;
