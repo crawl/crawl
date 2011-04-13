@@ -1653,7 +1653,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 }
 
 static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
-    dungeon_feature_type feat)
+                                 dungeon_feature_type feat)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
@@ -1667,7 +1667,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
             // downstairs.
             const coord_def gc(x, y);
             if (!map_bounds(x, y)
-                || travel_point_distance[x][y]
+                || travel_point_distance[x][y] // already covered previously
                 || !_dgn_square_is_passable(gc))
             {
                 continue;
@@ -1686,6 +1686,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
                     && travel_point_distance[ri->x][ri->y] == nzones)
                 {
                     found_feature = true;
+                    break;
                 }
             }
 
@@ -1703,8 +1704,12 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
                     continue;
 
                 grd(rnd) = feat;
-                return (true);
+                found_feature = true;
+                break;
             }
+
+            if (found_feature)
+                continue;
 
             for (rectangle_iterator ri(0); ri; ++ri)
             {
@@ -1715,8 +1720,12 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
                     continue;
 
                 grd(*ri) = feat;
-                return (true);
+                found_feature = true;
+                break;
             }
+
+            if (found_feature)
+                continue;
 
 #ifdef DEBUG_DIAGNOSTICS
             dump_map("debug.map", true, true);
@@ -1737,6 +1746,7 @@ static bool _add_connecting_escape_hatches()
 
     if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         return (true);
+
     if (you.level_type != LEVEL_DUNGEON)
         return (true);
 
