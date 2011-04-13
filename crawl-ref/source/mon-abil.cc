@@ -2857,7 +2857,7 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
         const position_node * thread = &(*candidates[index]);
         while (thread)
         {
-            if (you.see_cell(thread->pos))
+            if (!one_chance_in(3))
                 env.pgrid(thread->pos) |= FPROP_GLOW_MOLD;
 
             thread = thread->last;
