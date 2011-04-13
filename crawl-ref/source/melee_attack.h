@@ -81,7 +81,7 @@ private:
     /* Combat Calculations */
     int test_melee_hit(int to_hit, int ev, defer_rand& r);
     int fire_res_apply_cerebov_downgrade(int res);
-    int apply_defender_ac(int damage, int damage_max = NULL);
+    int apply_defender_ac(int damage, int damage_max = 0);
 
     /* Attack effects */
     void check_autoberserk();
