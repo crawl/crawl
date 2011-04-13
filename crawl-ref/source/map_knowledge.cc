@@ -39,7 +39,9 @@ void set_terrain_changed(int x, int y)
 
     los_terrain_changed(coord_def(x,y));
 
-    check_clinging();
+    for (orth_adjacent_iterator ai(coord_def(x,y)); ai; ++ai)
+        if (actor *act = actor_at(*ai))
+            act->check_clinging(false);
 }
 
 void set_terrain_mapped(int x, int y)
