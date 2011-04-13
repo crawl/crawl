@@ -451,6 +451,31 @@ monster_type pick_random_monster(const level_id &place,
     return pick_random_monster(place, level, level, chose_ood_monster);
 }
 
+// HACK: The shop probabilities are defined in dat/des/builders/shops.des.
+// Once mimics replace actual features, this sort of hackery will become
+// unnecessary.
+static bool _is_valid_shop_level()
+{
+    if (you.absdepth0 < 5)
+        return (false);
+
+    switch (your_branch().id)
+    {
+    case BRANCH_MAIN_DUNGEON:
+    case BRANCH_ORCISH_MINES:
+    case BRANCH_ELVEN_HALLS:
+    case BRANCH_SHOALS:
+    case BRANCH_SNAKE_PIT:
+    case BRANCH_VAULTS:
+    case BRANCH_FOREST:
+    case BRANCH_SPIDER_NEST:
+    case BRANCH_DWARVEN_HALL:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 static std::vector<monster_type> _find_valid_monster_types(const level_id &place)
 {
     static std::vector<monster_type> valid_monster_types;
@@ -464,6 +489,8 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
         if (mons_rarity(static_cast<monster_type>(i), place) > 0)
         {
             if (i == MONS_STAIR_MIMIC && your_branch().depth == 1)
+                continue;
+            if (i == MONS_SHOP_MIMIC && !_is_valid_shop_level())
                 continue;
             valid_monster_types.push_back(static_cast<monster_type>(i));
         }
