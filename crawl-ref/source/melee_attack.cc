@@ -2951,7 +2951,7 @@ void melee_attack::player_apply_staff_damage()
 
     case STAFF_EARTH:
         special_damage = player_staff_damage(SK_EARTH_MAGIC);
-        special_damage = player_apply_monster_ac(special_damage);
+        special_damage = apply_defender_ac(special_damage);
 
         if (special_damage > 0)
         {
@@ -3099,7 +3099,7 @@ void melee_attack::player_calc_hit_damage()
     player_weapon_auto_id();
 
     damage_done = player_stab(damage_done);
-    damage_done = player_apply_monster_ac(damage_done);
+    damage_done = apply_defender_ac(damage_done);
 
     // This doesn't actually modify damage. -- bwr
     // It only chooses the appropriate verb.
@@ -5470,7 +5470,7 @@ int melee_attack::test_melee_hit(int to_land, int ev, defer_rand& r)
     return (margin);
 }
 
-int apply_defender_ac(int damage, int damage_max)
+int melee_attack::apply_defender_ac(int damage, int damage_max)
 {
     if(attacker->atype() == ACT_MONSTER)
     {
@@ -5527,6 +5527,8 @@ int apply_defender_ac(int damage, int damage_max)
 
         return (damage);
     }
+
+    return (0);
 }
 
 // TODO: This should be in monster class, there's probably already a method
