@@ -1643,7 +1643,7 @@ bool tile_list_processor::write_data()
         {
             fprintf(fp, "%s_%s_MAX = val++;\n\n", m_prefix.c_str(), ucname.c_str());
 
-            fprintf(fp, "var _%sTileInfo = [\n", lcname.c_str());
+            fprintf(fp, "var _%s_tile_info = [\n", lcname.c_str());
             for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
             {
                 fprintf(fp, "  {w: %d, h: %d, ox: %d, oy: %d, sx: %d, sy: %d, ex: %d, ey: %d},\n",
@@ -1654,8 +1654,18 @@ bool tile_list_processor::write_data()
             }
             fprintf(fp, "]\n\n");
 
-            fprintf(fp, "function get%sTileInfo(idx) {\n", lcname.c_str());
-            fprintf(fp, "    return _%sTileInfo[idx - %s];\n",
+            fprintf(fp, "function get_%s_tile_info(idx)\n{\n", lcname.c_str());
+            fprintf(fp, "    return _%s_tile_info[idx - %s];\n",
+                    lcname.c_str(), m_start_value.c_str());
+            fprintf(fp, "}\n\n");
+
+            fprintf(fp, "var _tile_%s_count =\n[\n", lcname.c_str());
+            for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
+                fprintf(fp, "    %u,\n", m_page.m_counts[i]);
+            fprintf(fp, "];\n\n");
+
+            fprintf(fp, "function tile_%s_count(idx)\n{\n", lcname.c_str());
+            fprintf(fp, "    return _tile_%s_count[idx - %s];\n",
                     lcname.c_str(), m_start_value.c_str());
             fprintf(fp, "}\n\n");
         }
@@ -1694,11 +1704,15 @@ bool tile_list_processor::write_data()
             for (size_t i = 0; i < m_abstract.size(); ++i)
                 lc_enum.push_back(m_abstract[i].first);
 
-            fprintf(fp, "function get%sTileInfo(idx) {\n", lcname.c_str());
-            add_abstracts(fp, "return (get%sTileInfo(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "function get_%s_tile_info(idx)\n{\n", lcname.c_str());
+            add_abstracts(fp, "return (get_%s_tile_info(idx));", lc_enum, uc_max_enum);
             fprintf(fp, "}\n\n");
 
-            fprintf(fp, "function get%sImg(idx) {\n", lcname.c_str());
+            fprintf(fp, "function tile_%s_count(idx)\n{\n", lcname.c_str());
+            add_abstracts(fp, "return (tile_%s_count(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "}\n\n");
+
+            fprintf(fp, "function get_%s_img(idx) {\n", lcname.c_str());
             add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum);
             fprintf(fp, "}\n\n");
         }

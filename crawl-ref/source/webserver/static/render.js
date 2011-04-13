@@ -1,263 +1,291 @@
 var overlaid_locs = [];
-// TODO: The overlay locations should be shifted by shift too, but practically,
-//       this may not be necessary (will the view ever be shifted between addOverlay
-//       and clearOverlays?)
-
 var cursor_locs = [];
 
 // Debug helper
-function mark_cell(x, y, mark) {
+function mark_cell(x, y, mark)
+{
     mark = mark || "m";
 
     if (get_tile_cache(x, y))
         get_tile_cache(x, y).mark = mark;
 
-    dungeonContext.fillStyle = "red";
-    dungeonContext.font = "12px monospace";
-    dungeonContext.textAlign = "center";
-    dungeonContext.textBaseline = "middle";
-    dungeonContext.fillText(mark,
-                            (x + 0.5) * dungeonCellWidth, (y + 0.5) * dungeonCellHeight);
+    dungeon_ctx.fillStyle = "red";
+    dungeon_ctx.font = "12px monospace";
+    dungeon_ctx.textAlign = "center";
+    dungeon_ctx.textBaseline = "middle";
+    dungeon_ctx.fillText(mark,
+                         (x + 0.5) * dungeon_cell_w, (y + 0.5) * dungeon_cell_h);
 }
-function mark_all() {
-    for (x = 0; x < dungeonCols; x++)
-        for (y = 0; y < dungeonRows; y++)
+function mark_all()
+{
+    for (x = 0; x < dungeon_cols; x++)
+        for (y = 0; y < dungeon_rows; y++)
             mark_cell(x, y, x + "/" + y);
 }
 
 // This gets called by the messages sent by crawl
-function c(x, y, cell) {
+function c(x, y, cell)
+{
     set_tile_cache(x, y, cell);
 
-    renderCell(x, y);
+    render_cell(x, y);
 }
 
-function addOverlay(idx, x, y) {
-    drawMain(idx, x, y);
+function add_overlay(idx, x, y)
+{
+    draw_main(idx, x, y);
     overlaid_locs.push({x: x, y: y});
 }
 
-function clearOverlays() {
-    $.each(overlaid_locs, function(i, loc) {
-        renderCell(loc.x, loc.y);
-    });
+function clear_overlays()
+{
+    $.each(overlaid_locs, function(i, loc)
+           {
+               render_cell(loc.x, loc.y);
+           });
     overlaid_locs = [];
 }
 
-function place_cursor(type, x, y) {
+function place_cursor(type, x, y)
+{
     var old_loc = undefined;
-    if (cursor_locs[type]) {
+    if (cursor_locs[type])
+    {
         old_loc = cursor_locs[type];
     }
 
-    cursor_locs[type] = {x: x, y: y};
+    cursor_locs[type] =
+        {x: x, y: y};
 
     if (old_loc)
-        renderCell(old_loc.x, old_loc.y);
+        render_cell(old_loc.x, old_loc.y);
 
     render_cursors(x, y);
 }
 
-function remove_cursor(type) {
+function remove_cursor(type)
+{
     var old_loc = undefined;
-    if (cursor_locs[type]) {
+    if (cursor_locs[type])
+    {
         old_loc = cursor_locs[type];
     }
 
     cursor_locs[type] = undefined;
 
     if (old_loc)
-        renderCell(old_loc.x, old_loc.y);
+        render_cell(old_loc.x, old_loc.y);
 }
 
-function render_cursors(x, y) {
-    $.each(cursor_locs, function (type, loc) {
-        if (loc && (loc.x == x) && (loc.y == y)) {
-            var idx;
+function render_cursors(x, y)
+{
+    $.each(cursor_locs, function (type, loc)
+           {
+               if (loc && (loc.x == x) && (loc.y == y))
+               {
+                   var idx;
 
-            switch (type) {
-            case CURSOR_TUTORIAL:
-                idx = TILEI_TUTORIAL_CURSOR;
-                break;
-            case CURSOR_MOUSE:
-                idx = TILEI_CURSOR;
-                // TODO: TILEI_CURSOR2 if not visible
-                // But do we even need a server-side mouse cursor?
-                break;
-            case CURSOR_MAP:
-                idx = TILEI_CURSOR;
-                break;
-            }
+                   switch (type)
+                   {
+                   case CURSOR_TUTORIAL:
+                       idx = TILEI_TUTORIAL_CURSOR;
+                       break;
+                   case CURSOR_MOUSE:
+                       idx = TILEI_CURSOR;
+                       // TODO: TILEI_CURSOR2 if not visible
+                       // But do we even need a server-side mouse cursor?
+                       break;
+                   case CURSOR_MAP:
+                       idx = TILEI_CURSOR;
+                       break;
+                   }
 
-            drawIcon(idx, x, y);
-        }
-    });
+                   draw_icon(idx, x, y);
+               }
+           });
 }
 
-function renderCell(x, y) {
-    try {
+function render_cell(x, y)
+{
+    try
+    {
         var cell = get_tile_cache(x, y);
 
         if (!cell)
             return;
 
         // cell is basically a packed_cell + doll + mcache entries
-        drawBackground(x, y, cell);
+        draw_background(x, y, cell);
 
         var fg_idx = cell.fg & TILE_FLAG_MASK;
-        var in_water = inWater(cell);
+        var is_in_water = in_water(cell);
 
-        if (cell.doll) {
-            $.each(cell.doll, function (i, dollPart) {
-                drawPlayer(dollPart[0], x, y); // TODO: dollPart[1] is Y_MAX, use that
-            });
+        if (cell.doll)
+        {
+            // TODO: Transparency (i.e. ghosts)
+            $.each(cell.doll, function (i, doll_part)
+                   {
+                       draw_player(doll_part[0], x, y); // TODO: doll_part[1] is Y_MAX, use that
+                   });
         }
 
-        if (cell.mcache) {
-            $.each(cell.mcache, function (i, mcachePart) {
-                drawPlayer(mcachePart[0], x, y, mcachePart[1], mcachePart[2]);
-            });
+        if (cell.mcache)
+        {
+            $.each(cell.mcache, function (i, mcache_part)
+                   {
+                       draw_player(mcache_part[0], x, y, mcache_part[1], mcache_part[2]);
+                   });
         }
 
-        drawForeground(x, y, cell);
+        draw_foreground(x, y, cell);
 
         render_cursors(x, y);
 
         // Debug helper
-        if (cell.mark) {
-            dungeonContext.fillStyle = "red";
-            dungeonContext.font = "12px monospace";
-            dungeonContext.textAlign = "center";
-            dungeonContext.textBaseline = "middle";
-            dungeonContext.fillText(mark,
-                                    (x + 0.5) * dungeonCellWidth, (y + 0.5) * dungeonCellHeight);
+        if (cell.mark)
+        {
+            dungeon_ctx.fillStyle = "red";
+            dungeon_ctx.font = "12px monospace";
+            dungeon_ctx.textAlign = "center";
+            dungeon_ctx.textBaseline = "middle";
+            dungeon_ctx.fillText(mark,
+                                 (x + 0.5) * dungeon_cell_w, (y + 0.5) * dungeon_cell_h);
         }
-    } catch (err) {
-        console.error("Error while drawing cell " + objectToString(cell)
+    } catch (err)
+    {
+        console.error("Error while drawing cell " + obj_to_str(cell)
                       + " at " + x + "/" + y + ": " + err);
     }
 }
 
 // Much of the following is more or less directly copied from tiledgnbuf.cc
-function inWater(cell)
+function in_water(cell)
 {
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
-function drawBloodOverlay(x, y, cell, isWall)
+function draw_blood_overlay(x, y, cell, is_wall)
 {
     if (cell.liquefied)
+
     {
-        // TODO: tile_dngn_count
-//        offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
+        offset = cell.flv.s % tile_dngn_count(TILE_LIQUEFACTION);
         offset = 0;
-        drawDngn(TILE_LIQUEFACTION + offset, x, y);
+        draw_dngn(TILE_LIQUEFACTION + offset, x, y);
     }
     else if (cell.bloody)
+
     {
-        if (isWall)
+        if (is_wall)
+
         {
             basetile = TILE_WALL_BLOOD_S + tile_dngn_count(TILE_WALL_BLOOD_S)
-                                           * cell.bloodrot;
+                * cell.bloodrot;
         }
         else
             basetile = TILE_BLOOD;
-//        offset = cell.flv.special % tile_dngn_count(basetile);
+        offset = cell.flv.s % tile_dngn_count(basetile);
         offset = 0;
-        drawDngn(basetile + offset, x, y);
+        draw_dngn(basetile + offset, x, y);
     }
     else if (cell.moldy)
+
     {
-//        offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
+        offset = cell.flv.s % tile_dngn_count(TILE_MOLD);
         offset = 0;
-        drawDngn(TILE_MOLD + offset, x, y);
+        draw_dngn(TILE_MOLD + offset, x, y);
     }
 }
 
-function drawBackground(x, y, cell)
+function draw_background(x, y, cell)
 {
     bg = cell.bg;
     bg_idx = cell.bg & TILE_FLAG_MASK;
 
     if (cell.swtree && bg_idx > TILE_DNGN_UNSEEN)
-        drawDngn(TILE_DNGN_SHALLOW_WATER, x, y);
+        draw_dngn(TILE_DNGN_SHALLOW_WATER, x, y);
 
     if (bg_idx >= TILE_DNGN_WAX_WALL)
-        drawDngn(cell.flv.f, x, y); // f = floor
+        draw_dngn(cell.flv.f, x, y); // f = floor
 
     // Draw blood beneath feature tiles.
     if (bg_idx > TILE_WALL_MAX)
-        drawBloodOverlay(x, y, cell);
+        draw_blood_overlay(x, y, cell);
 
-    drawDngn(bg_idx, x, y, cell.swtree);
+    draw_dngn(bg_idx, x, y, cell.swtree);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
+
     {
         if (bg & TILE_FLAG_WAS_SECRET)
-            drawDngn(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
+            draw_dngn(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
 
         // Draw blood on top of wall tiles.
         if (bg_idx <= TILE_WALL_MAX)
-            drawBloodOverlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);
+            draw_blood_overlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);
 
         // Draw overlays
-        if (cell.ov) {
-            $.each(cell.ov, function (i, overlay) {
-                drawDngn(overlay, x, y);
-            });
+        if (cell.ov)
+        {
+            $.each(cell.ov, function (i, overlay)
+                   {
+                       draw_dngn(overlay, x, y);
+                   });
         }
 
         if (!(bg & TILE_FLAG_UNSEEN))
+
         {
             if (bg & TILE_FLAG_KRAKEN_NW)
-                drawDngn(TILE_KRAKEN_OVERLAY_NW, x, y);
+                draw_dngn(TILE_KRAKEN_OVERLAY_NW, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_NW)
-                drawDngn(TILE_ELDRITCH_OVERLAY_NW, x, y);
+                draw_dngn(TILE_ELDRITCH_OVERLAY_NW, x, y);
             if (bg & TILE_FLAG_KRAKEN_NE)
-                drawDngn(TILE_KRAKEN_OVERLAY_NE, x, y);
+                draw_dngn(TILE_KRAKEN_OVERLAY_NE, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_NE)
-                drawDngn(TILE_ELDRITCH_OVERLAY_NE, x, y);
+                draw_dngn(TILE_ELDRITCH_OVERLAY_NE, x, y);
             if (bg & TILE_FLAG_KRAKEN_SE)
-                drawDngn(TILE_KRAKEN_OVERLAY_SE, x, y);
+                draw_dngn(TILE_KRAKEN_OVERLAY_SE, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_SE)
-                drawDngn(TILE_ELDRITCH_OVERLAY_SE, x, y);
+                draw_dngn(TILE_ELDRITCH_OVERLAY_SE, x, y);
             if (bg & TILE_FLAG_KRAKEN_SW)
-                drawDngn(TILE_KRAKEN_OVERLAY_SW, x, y);
+                draw_dngn(TILE_KRAKEN_OVERLAY_SW, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_SW)
-                drawDngn(TILE_ELDRITCH_OVERLAY_SW, x, y);
+                draw_dngn(TILE_ELDRITCH_OVERLAY_SW, x, y);
         }
 
         if (cell.haloed)
-            drawDngn(TILE_HALO, x, y);
+            draw_dngn(TILE_HALO, x, y);
 
         if (!(bg & TILE_FLAG_UNSEEN))
+
         {
             if (cell.sanctuary)
-                drawDngn(TILE_SANCTUARY, x, y);
+                draw_dngn(TILE_SANCTUARY, x, y);
             if (cell.silenced)
-                drawDngn(TILE_SILENCED, x, y);
+                draw_dngn(TILE_SILENCED, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible.  It will be applied later if the cell is unseen.
             if (bg & TILE_FLAG_EXCL_CTR)
-                drawDngn(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
+                draw_dngn(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
             else if (bg & TILE_FLAG_TRAV_EXCL)
-                drawDngn(TILE_TRAVEL_EXCLUSION_BG, x, y);
+                draw_dngn(TILE_TRAVEL_EXCLUSION_BG, x, y);
         }
 
         if (bg & TILE_FLAG_RAY)
-            drawDngn(TILE_RAY, x, y);
+            draw_dngn(TILE_RAY, x, y);
         else if (bg & TILE_FLAG_RAY_OOR)
-            drawDngn(TILE_RAY_OUT_OF_RANGE, x, y);
+            draw_dngn(TILE_RAY_OUT_OF_RANGE, x, y);
     }
 }
 
-function drawForeground(x, y, cell)
+function draw_foreground(x, y, cell)
 {
     fg = cell.fg;
     bg = cell.bg;
     fg_idx = cell.fg & TILE_FLAG_MASK;
-    in_water = inWater(cell);
+    is_in_water = in_water(cell);
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
@@ -265,37 +293,37 @@ function drawForeground(x, y, cell)
         // base_idx = tileidx_known_base_item(fg_idx);
         base_idx = fg_idx;
 
-        if (in_water)
+        if (is_in_water)
         {
             /*
-            TODO: Submerged stuff
-            if (base_idx)
-                m_buf_main_trans.add(base_idx, x, y, 0, true, false);
-            m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
+              TODO: Submerged stuff
+              if (base_idx)
+              m_buf_main_trans.add(base_idx, x, y, 0, true, false);
+              m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
             */
         }
         else
         {
             if (base_idx)
-                drawMain(base_idx, x, y);
+                draw_main(base_idx, x, y);
 
-            drawMain(fg_idx, x, y);
+            draw_main(fg_idx, x, y);
         }
     }
 
     if (fg & TILE_FLAG_NET)
-        drawIcon(TILEI_TRAP_NET, x, y);
+        draw_icon(TILEI_TRAP_NET, x, y);
 
     if (fg & TILE_FLAG_S_UNDER)
-        drawIcon(TILEI_SOMETHING_UNDER, x, y);
+        draw_icon(TILEI_SOMETHING_UNDER, x, y);
 
     status_shift = 0;
     if (fg & TILE_FLAG_MIMIC)
-        drawIcon(TILEI_MIMIC, x, y);
+        draw_icon(TILEI_MIMIC, x, y);
 
     if (fg & TILE_FLAG_BERSERK)
     {
-        drawIcon(TILEI_BERSERK, x, y);
+        draw_icon(TILEI_BERSERK, x, y);
         status_shift += 10;
     }
 
@@ -305,68 +333,68 @@ function drawForeground(x, y, cell)
         att_flag = fg & TILE_FLAG_ATT_MASK;
         if (att_flag == TILE_FLAG_PET)
         {
-            drawIcon(TILEI_HEART, x, y);
+            draw_icon(TILEI_HEART, x, y);
             status_shift += 10;
         }
         else if (att_flag == TILE_FLAG_GD_NEUTRAL)
         {
-            drawIcon(TILEI_GOOD_NEUTRAL, x, y);
+            draw_icon(TILEI_GOOD_NEUTRAL, x, y);
             status_shift += 8;
         }
         else if (att_flag == TILE_FLAG_NEUTRAL)
         {
-            drawIcon(TILEI_NEUTRAL, x, y);
+            draw_icon(TILEI_NEUTRAL, x, y);
             status_shift += 8;
         }
     }
     else if (fg & TILE_FLAG_STAB)
     {
-        drawIcon(TILEI_STAB_BRAND, x, y);
+        draw_icon(TILEI_STAB_BRAND, x, y);
         status_shift += 15;
     }
     else if (fg & TILE_FLAG_MAY_STAB)
     {
-        drawIcon(TILEI_MAY_STAB_BRAND, x, y);
+        draw_icon(TILEI_MAY_STAB_BRAND, x, y);
         status_shift += 8;
     }
 
     if (fg & TILE_FLAG_POISON)
     {
-        drawIcon(TILEI_POISON, x, y, -status_shift, 0);
+        draw_icon(TILEI_POISON, x, y, -status_shift, 0);
         status_shift += 5;
     }
     if (fg & TILE_FLAG_FLAME)
     {
-        drawIcon(TILEI_FLAME, x, y, -status_shift, 0);
+        draw_icon(TILEI_FLAME, x, y, -status_shift, 0);
         status_shift += 5;
     }
 
     if (fg & TILE_FLAG_ANIM_WEP)
-        drawIcon(TILEI_ANIMATED_WEAPON, x, y);
+        draw_icon(TILEI_ANIMATED_WEAPON, x, y);
 
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
-        drawIcon(TILEI_MESH, x, y);
+        draw_icon(TILEI_MESH, x, y);
 
     if (bg & TILE_FLAG_OOR && (bg != TILE_FLAG_OOR || fg))
-        drawIcon(TILEI_OOR_MESH, x, y);
+        draw_icon(TILEI_OOR_MESH, x, y);
 
     if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
-        drawIcon(TILEI_MAGIC_MAP_MESH, x, y);
+        draw_icon(TILEI_MAGIC_MAP_MESH, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.
     if (bg & TILE_FLAG_NEW_STAIR && status_shift == 0)
-        drawIcon(TILEI_NEW_STAIR, x, y);
+        draw_icon(TILEI_NEW_STAIR, x, y);
 
     if (bg & TILE_FLAG_EXCL_CTR && (bg & TILE_FLAG_UNSEEN))
-        drawIcon(TILEI_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
+        draw_icon(TILEI_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
     else if (bg & TILE_FLAG_TRAV_EXCL && (bg & TILE_FLAG_UNSEEN))
-        drawIcon(TILEI_TRAVEL_EXCLUSION_FG, x, y);
+        draw_icon(TILEI_TRAVEL_EXCLUSION_FG, x, y);
 
     // Tutorial cursor takes precedence over other cursors.
     if (bg & TILE_FLAG_TUT_CURSOR)
     {
-        drawIcon(TILEI_TUTORIAL_CURSOR, x, y);
+        draw_icon(TILEI_TUTORIAL_CURSOR, x, y);
     }
     else if (bg & TILE_FLAG_CURSOR)
     {
@@ -374,119 +402,133 @@ function drawForeground(x, y, cell)
             TILEI_CURSOR : TILEI_CURSOR2;
 
         if ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
-           type = TILEI_CURSOR3;
+            type = TILEI_CURSOR3;
 
-        drawIcon(type, x, y);
+        draw_icon(type, x, y);
     }
 
     if (fg & TILE_FLAG_MDAM_MASK)
     {
         mdam_flag = fg & TILE_FLAG_MDAM_MASK;
         if (mdam_flag == TILE_FLAG_MDAM_LIGHT)
-            drawIcon(TILEI_MDAM_LIGHTLY_DAMAGED, x, y);
+            draw_icon(TILEI_MDAM_LIGHTLY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_MOD)
-            drawIcon(TILEI_MDAM_MODERATELY_DAMAGED, x, y);
+            draw_icon(TILEI_MDAM_MODERATELY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_HEAVY)
-            drawIcon(TILEI_MDAM_HEAVILY_DAMAGED, x, y);
+            draw_icon(TILEI_MDAM_HEAVILY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_SEV)
-            drawIcon(TILEI_MDAM_SEVERELY_DAMAGED, x, y);
+            draw_icon(TILEI_MDAM_SEVERELY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_ADEAD)
-            drawIcon(TILEI_MDAM_ALMOST_DEAD, x, y);
+            draw_icon(TILEI_MDAM_ALMOST_DEAD, x, y);
     }
 
     if (fg & TILE_FLAG_DEMON)
     {
         demon_flag = fg & TILE_FLAG_DEMON;
         if (demon_flag == TILE_FLAG_DEMON_1)
-            drawIcon(TILEI_DEMON_NUM1, x, y);
+            draw_icon(TILEI_DEMON_NUM1, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_2)
-            drawIcon(TILEI_DEMON_NUM2, x, y);
+            draw_icon(TILEI_DEMON_NUM2, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_3)
-            drawIcon(TILEI_DEMON_NUM3, x, y);
+            draw_icon(TILEI_DEMON_NUM3, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_4)
-            drawIcon(TILEI_DEMON_NUM4, x, y);
+            draw_icon(TILEI_DEMON_NUM4, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_5)
-            drawIcon(TILEI_DEMON_NUM5, x, y);
+            draw_icon(TILEI_DEMON_NUM5, x, y);
     }
 }
 
 
 // Helper functions for drawing from specific textures
-function drawDngn(idx, cx, cy, submerged) {
+function draw_dngn(idx, cx, cy, submerged)
+{
     // TODO: submerged
-    x = dungeonCellWidth * cx;
-    y = dungeonCellHeight * cy;
-    img = getImg(getdngnImg(idx));
-    info = getdngnTileInfo(idx);
-    if (!info) {
+    x = dungeon_cell_w * cx;
+    y = dungeon_cell_h * cy;
+    img = get_img(get_dngn_img(idx));
+    info = get_dngn_tile_info(idx);
+    if (!info)
+    {
         console.error("Dngn tile not found: " + idx);
         return;
     }
     w = info.ex - info.sx;
     h = info.ey - info.sy;
-    dungeonContext.drawImage(img, info.sx, info.sy, w, h, x + info.ox, y + info.oy, w, h);
+    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h, x + info.ox, y + info.oy, w, h);
 }
 
-function drawMain(idx, cx, cy) {
-    x = dungeonCellWidth * cx;
-    y = dungeonCellHeight * cy;
-    info = getmainTileInfo(idx);
-    img = getImg("main");
-    if (!info) {
+function draw_main(idx, cx, cy)
+{
+    x = dungeon_cell_w * cx;
+    y = dungeon_cell_h * cy;
+    info = get_main_tile_info(idx);
+    img = get_img("main");
+    if (!info)
+    {
         throw ("Main tile not found: " + idx);
     }
     w = info.ex - info.sx;
     h = info.ey - info.sy;
-    dungeonContext.drawImage(img, info.sx, info.sy, w, h,
-                             x + info.ox, y + info.oy, w, h);
+    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
+                          x + info.ox, y + info.oy, w, h);
 }
 
-function drawPlayer(idx, cx, cy, ofsx, ofsy) {
-    x = dungeonCellWidth * cx;
-    y = dungeonCellHeight * cy;
-    info = getplayerTileInfo(idx);
-    img = getImg("player");
-    if (!info) {
+function draw_player(idx, cx, cy, ofsx, ofsy)
+{
+    x = dungeon_cell_w * cx;
+    y = dungeon_cell_h * cy;
+    info = get_player_tile_info(idx);
+    img = get_img("player");
+    if (!info)
+    {
         throw ("Player tile not found: " + idx);
     }
     w = info.ex - info.sx;
     h = info.ey - info.sy;
-    dungeonContext.drawImage(img, info.sx, info.sy, w, h,
-                             x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
+    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
+                          x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
 }
 
-function drawIcon(idx, cx, cy, ofsx, ofsy) {
-    x = dungeonCellWidth * cx;
-    y = dungeonCellHeight * cy;
-    info = geticonsTileInfo(idx);
-    img = getImg("icons");
-    if (!info) {
+function draw_icon(idx, cx, cy, ofsx, ofsy)
+{
+    x = dungeon_cell_w * cx;
+    y = dungeon_cell_h * cy;
+    info = get_icons_tile_info(idx);
+    img = get_img("icons");
+    if (!info)
+    {
         throw ("Icon tile not found: " + idx);
     }
     w = info.ex - info.sx;
     h = info.ey - info.sy;
-    dungeonContext.drawImage(img, info.sx, info.sy, w, h,
-                             x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
+    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
+                          x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
 }
 
-function objectToString (o) {
-    var parse = function (_o) {
-
+function obj_to_str (o)
+{
+    var parse = function (_o)
+    {
         var a = [], t;
 
-        for (var p in _o) {
-
-            if (_o.hasOwnProperty(p)) {
+        for (var p in _o)
+        {
+            if (_o.hasOwnProperty(p))
+            {
                 t = _o[p];
 
-                if (t && typeof t == "object") {
+                if (t && typeof t == "object")
+                {
                     a[a.length]= p + ":{ " + arguments.callee(t).join(", ") + "}";
                 }
-                else {
-                    if (typeof t == "string") {
+                else
+                {
+                    if (typeof t == "string")
+                    {
                         a[a.length] = [ p+ ": \"" + t.toString() + "\"" ];
                     }
-                    else {
+                    else
+                    {
                         a[a.length] = [ p+ ": " + t.toString()];
                     }
                 }
