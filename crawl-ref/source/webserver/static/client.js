@@ -157,12 +157,25 @@ function handle_keydown(e)
 {
     if (delay_timeout) return; // TODO: Do we want to capture keys during delay?
 
-    if (e.which in key_conversion)
+    if (e.ctrlKey)
     {
-        socket.send("\\" + key_conversion[e.which] + "\n");
+        if ($.inArray(String.fromCharCode(e.which), captured_control_keys) == -1)
+            return;
+
+        e.preventDefault();
+        e.which = e.which - "A".charCodeAt(0) + 1; // Compare the CONTROL macro in defines.h
+        handle_keypress(e);
     }
     else
-        console.log("Key: " + e.which);
+    {
+        // TODO: Shift and Ctrl?
+        if (e.which in key_conversion)
+        {
+            socket.send("\\" + key_conversion[e.which] + "\n");
+        }
+        else
+            console.log("Key: " + e.which);
+    }
 }
 
 $(document).ready(
