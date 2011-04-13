@@ -5,6 +5,26 @@ var overlaid_locs = [];
 
 var cursor_locs = [];
 
+// Debug helper
+function mark_cell(x, y, mark) {
+    mark = mark || "m";
+
+    if (get_tile_cache(x, y))
+        get_tile_cache(x, y).mark = mark;
+
+    dungeonContext.fillStyle = "red";
+    dungeonContext.font = "12px monospace";
+    dungeonContext.textAlign = "center";
+    dungeonContext.textBaseline = "middle";
+    dungeonContext.fillText(mark,
+                            (x + 0.5) * dungeonCellWidth, (y + 0.5) * dungeonCellHeight);
+}
+function mark_all() {
+    for (x = 0; x < dungeonCols; x++)
+        for (y = 0; y < dungeonRows; y++)
+            mark_cell(x, y, x + "/" + y);
+}
+
 // This gets called by the messages sent by crawl
 function c(x, y, cell) {
     set_tile_cache(x, y, cell);
@@ -102,6 +122,16 @@ function renderCell(x, y) {
         drawForeground(x, y, cell);
 
         render_cursors(x, y);
+
+        // Debug helper
+        if (cell.mark) {
+            dungeonContext.fillStyle = "red";
+            dungeonContext.font = "12px monospace";
+            dungeonContext.textAlign = "center";
+            dungeonContext.textBaseline = "middle";
+            dungeonContext.fillText(mark,
+                                    (x + 0.5) * dungeonCellWidth, (y + 0.5) * dungeonCellHeight);
+        }
     } catch (err) {
         console.error("Error while drawing cell " + objectToString(cell)
                       + " at " + x + "/" + y + ": " + err);

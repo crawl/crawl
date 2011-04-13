@@ -32,20 +32,18 @@
 #include "view.h"
 #include "viewgeom.h"
 
-#ifdef TARGET_OS_WINDOWS
+#include <sys/time.h>
 
-#include <windows.h>
-// WINAPI defines these, but we are already using them in
-// wm_event_type enum,
-// so we have to undef these to have working input when using
-// Windows and Tiles
-#undef WM_KEYDOWN
-#undef WM_KEYUP
-#undef WM_QUIT
-#endif
+static unsigned int get_milliseconds()
+{
+    // This is Unix-only, but so is Webtiles at the moment.
+    timeval tv;
+    gettimeofday(&tv, NULL);
+
+    return ((unsigned int) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
+}
 
 TilesFramework tiles;
-
 
 TilesFramework::TilesFramework()
 {
@@ -59,59 +57,15 @@ void TilesFramework::shutdown()
 {
 }
 
-/**
- * Creates a new title region and sets it active
- * Remember to call hide_title() when you're done
- * showing the title.
- */
-void TilesFramework::draw_title()
-{
-    fprintf(stderr, "draw_title()\n");
-}
-
-/**
- * Updates the loading message text on the title
- * screen
- * Assumes that we only have one region on the layer
- * If at some point it's possible to have multiple regions
- * open while the title screen shows, the .at(0) will need
- * to be changed and saved on a variable somewhere instead
- */
-void TilesFramework::update_title_msg(std::string message)
-{
-    fprintf(stderr, "update_title_msg(message)\n");
-    puts(message.c_str());
-    printf("\n");
-}
-
-/**
- * Deletes the dynamically reserved Titlescreen memory
- * at end. Runs reg->run to get one key input from the user
- * so that the title screen stays ope until any input is given.
- * Assumes that we only have one region on the layer
- * If at some point it's possible to have multiple regions
- * open while the title screen shows, the .at(0) will need
- * to be changed and saved on a variable somewhere instead
- */
-void TilesFramework::hide_title()
-{
-    fprintf(stderr, "hide_title()\n");
-}
-
 void TilesFramework::draw_doll_edit()
 {
     fprintf(stderr, "draw_doll_edit()\n");
 }
 
-void TilesFramework::calculate_default_options()
-{
-    fprintf(stderr, "calculate_default_options()\n");
-}
-
 bool TilesFramework::initialise()
 {
     std::string title = CRAWL " " + Version::Long();
-    // TODO Send title
+    fprintf(stdout, "document.title = \"%s\";", title.c_str());
 
     // Do our initialization here.
     m_active_layer = LAYER_CRT;
@@ -325,96 +279,42 @@ static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
     // All this is of course analogous for y.
     int start_x = shift.x >= 0 ? 0 : w - 1;
     int start_y = shift.y >= 0 ? 0 : h - 1;
-    int end_x = shift.x >= 0 ? w - shift.x : -1 - shift.x;
-    int end_y = shift.y >= 0 ? h - shift.y : -1 - shift.y;
+    int end_x = shift.x >= 0 ? w : -1;
+    int end_y = shift.y >= 0 ? h : -1;
 
+    // We now iterate over the locations _that are shifted to_, copying their data
+    // from the locations they come from.
     for (int y = start_y; y != end_y; shift.y >= 0 ? y++ : y--)
         for (int x = start_x; x != end_x; shift.x >= 0 ? x++ : x--)
         {
-            ASSERT((y * w + x) < (w*h));
-            ASSERT(((y + shift.y) * w + x + shift.x) < (w*h));
+            ASSERT((0 <= x) && (x < w) && (0 <= y) && (y < h));
 
-            cells[y * w + x] = cells[(y + shift.y) * w + x + shift.x];
-            // A kind of hacky way to ensure the cells in the new areas are always sent
-            // (even if they by chance are the same as the old cell)
-            cells[(y + shift.y) * w + x + shift.x].tile.bg = 0;
+            int sx = x + shift.x, sy = y + shift.y;
+            if ((0 > sx) || (sx >= w) || (0 > sy) || (sy >= h))
+            {
+                cells[y * w + x].tile.bg = 0 + TILE_FLAG_UNSEEN;
+            }
+            else
+            {
+                cells[y * w + x] = cells[sy * w + sx];
+            }
         }
 }
 
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)
 {
-    // TODO: Most of this should be in redraw() instead
+    if (vbuf.size().equals(0, 0))
+        return; // It seems the view buffer changes to size 0 while using stairs
+
     if (m_active_layer != LAYER_NORMAL)
     {
         m_active_layer = LAYER_NORMAL;
         fprintf(stdout, "setLayer(\"normal\");\n");
     }
 
-    int cx_to_gx = gc.x - vbuf.size().x / 2;
-    int cy_to_gy = gc.y - vbuf.size().y / 2;
-
-    if ((vbuf.size() != m_current_view.size()))
-    {
-        if (vbuf.size().equals(0, 0))
-            return; // It seems the view buffer changes to size 0 while using stairs
-
-        // The view buffer size changed, we need to do a full redraw
-        m_current_view = vbuf;
-
-        fprintf(stdout, "viewSize(%d,%d);\n", m_current_view.size().x,
-                                              m_current_view.size().y);
-
-        screen_cell_t *cell = (screen_cell_t *) m_current_view;
-        for (int y = 0; y < m_current_view.size().y; y++)
-            for (int x = 0; x < m_current_view.size().x; x++)
-            {
-                coord_def cgc(x + cx_to_gx, y + cy_to_gy);
-
-                _send_cell(x, y, cell, cgc);
-                cell++;
-            }
-
-        fprintf(stdout, "\n");
-        fflush(stdout);
-    }
-    else
-    {
-        int counter = 0;
-        // Find differences
-
-        // Shift the view, so we need to send less cells
-        coord_def shift = gc - m_current_gc;
-        m_current_gc = gc;
-        fprintf(stderr, "Shift: %d/%d\n", shift.x, shift.y);
-        if ((shift.x != 0) || (shift.y != 0))
-        {
-            _shift_view_buffer(m_current_view, shift);
-        }
-
-        const screen_cell_t *cell = (const screen_cell_t *) vbuf;
-        screen_cell_t *old_cell = (screen_cell_t *) m_current_view;
-        for (int y = 0; y < m_current_view.size().y; y++)
-            for (int x = 0; x < m_current_view.size().x; x++)
-            {
-                if ((cell->tile.fg != old_cell->tile.fg)
-                    || (cell->tile.bg != old_cell->tile.bg))
-                {
-                    coord_def cgc(x + cx_to_gx, y + cy_to_gy);
-
-                    _send_cell(x, y, cell, cgc);
-                    *old_cell = *cell;
-                    counter++;
-                }
-                cell++;
-                old_cell++;
-            }
-
-        fprintf(stderr, "Sent: %d/%d\n", counter, vbuf.size().y * vbuf.size().x);
-
-        fprintf(stdout, "\n"); // This sends the message to the client
-        fflush(stdout);
-    }
+    m_next_view = vbuf;
+    m_next_gc = gc;
 }
 
 void TilesFramework::load_dungeon(const coord_def &cen)
@@ -439,8 +339,15 @@ void TilesFramework::resize()
 
 int TilesFramework::getch_ck()
 {
-    redraw();
+    m_text_crt.send();
+    m_text_stat.send();
+    m_text_message.send();
+
+    if (need_redraw())
+        redraw();
+
     fflush(stdout);
+
     int key = getchar();
     if (key == '\\')
     {
@@ -459,6 +366,8 @@ int TilesFramework::getch_ck()
 void TilesFramework::clrscr()
 {
     m_print_area->clear();
+    m_print_x = 0;
+    m_print_y = 0;
 }
 
 int TilesFramework::get_number_of_lines()
@@ -518,9 +427,78 @@ GotoRegion TilesFramework::get_cursor_region() const
 void TilesFramework::redraw()
 {
     fprintf(stderr, "redraw()\n");
+
     m_text_crt.send();
     m_text_stat.send();
     m_text_message.send();
+
+    if (m_next_view.size().equals(0, 0))
+        return; // Nothing yet to draw
+
+    int cx_to_gx = m_next_gc.x - m_next_view.size().x / 2;
+    int cy_to_gy = m_next_gc.y - m_next_view.size().y / 2;
+
+    if ((m_next_view.size() != m_current_view.size()))
+    {
+        // The view buffer size changed, we need to do a full redraw
+        m_current_view = m_next_view;
+
+        fprintf(stdout, "viewSize(%d,%d);\n", m_current_view.size().x,
+                                              m_current_view.size().y);
+
+        screen_cell_t *cell = (screen_cell_t *) m_current_view;
+        for (int y = 0; y < m_current_view.size().y; y++)
+            for (int x = 0; x < m_current_view.size().x; x++)
+            {
+                coord_def cgc(x + cx_to_gx, y + cy_to_gy);
+
+                _send_cell(x, y, cell, cgc);
+                cell++;
+            }
+
+        fprintf(stdout, "\n");
+        fflush(stdout);
+    }
+    else
+    {
+        int counter = 0;
+        // Find differences
+
+        // Shift the view, so we need to send less cells
+        coord_def shift = m_next_gc - m_current_gc;
+        m_current_gc = m_next_gc;
+        fprintf(stderr, "Shift: %d/%d\n", shift.x, shift.y);
+        if ((shift.x != 0) || (shift.y != 0))
+        {
+            _shift_view_buffer(m_current_view, shift);
+        }
+
+        const screen_cell_t *cell = (const screen_cell_t *) m_next_view;
+        screen_cell_t *old_cell = (screen_cell_t *) m_current_view;
+        for (int y = 0; y < m_current_view.size().y; y++)
+            for (int x = 0; x < m_current_view.size().x; x++)
+            {
+                if (cell->tile != old_cell->tile)
+                {
+                    coord_def cgc(x + cx_to_gx, y + cy_to_gy);
+
+                    _send_cell(x, y, cell, cgc);
+                    *old_cell = *cell;
+                    counter++;
+                }
+                cell++;
+                old_cell++;
+            }
+
+        fprintf(stderr, "Sent: %d/%d\n", counter,
+                m_next_view.size().y * m_next_view.size().x);
+
+        fprintf(stdout, "\n"); // This sends the message to the client
+        fflush(stdout);
+    }
+
+    m_need_redraw = false;
+    m_last_tick_redraw = get_milliseconds();
 }
 
 void TilesFramework::update_minimap(const coord_def& gc)
@@ -610,7 +588,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
 
 const coord_def &TilesFramework::get_cursor() const
 {
-    die("get_cursor() not implemented!");
+    return m_cursor[CURSOR_MOUSE];
 }
 
 void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
@@ -625,6 +603,8 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
     if (idx >= TILE_MAIN_MAX)
         return;
 
+    m_has_overlays = true;
+
     int cx_to_gx = m_current_gc.x - m_current_view.size().x / 2;
     int cy_to_gy = m_current_gc.y - m_current_view.size().y / 2;
 
@@ -634,16 +614,24 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 
 void TilesFramework::clear_overlays()
 {
-    fprintf(stdout, "clearOverlays();\n");
+    if (m_has_overlays)
+        fprintf(stdout, "clearOverlays();\n");
+
+    m_has_overlays = false;
 }
 
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
+    unsigned int ticks = (get_milliseconds() - m_last_tick_redraw);
+    if (min_tick_delay && ticks <= min_tick_delay)
+        return;
+
+    m_need_redraw = true;
 }
 
 bool TilesFramework::need_redraw() const
 {
-    return false;
+    return m_need_redraw;
 }
 
 int TilesFramework::to_lines(int num_tiles)
