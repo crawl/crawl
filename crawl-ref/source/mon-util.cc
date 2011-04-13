@@ -4524,16 +4524,3 @@ const char* mons_class_name(monster_type mc)
 
     return get_monster_data(mc)->name;
 }
-
-/*
- * Update the clinging status of all actors.
- *
- * Called at game load (because clinging status isn't saved) and whenever
- * terrain is change. If actor has fallen from the wall (because it has been
- * dug for example), apply location effects.
- */
-void check_clinging()
-{
-    for (actor_iterator ai; ai; ++ai)
-        ai->check_clinging(false);
-}
