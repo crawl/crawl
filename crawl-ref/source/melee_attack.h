@@ -167,7 +167,6 @@ private:
 
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
-    void calc_player_armour_shield_tohit_penalty(bool random_factor);
     void player_apply_attack_delay();
     int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);
