@@ -130,7 +130,7 @@ function tutorial_msg5.exhaustion ()
 end
 
 function tutorial_msg5.hunger ()
-    return tutorial_message("You cannot berserk while hungry, so you should "
+    return tutorial_message("You cannot berserk while very hungry, so you should "
                             .. "always carry some food with you. This means that "
                             .. "sometimes you'll have to decide between butchering "
                             .. "a corpse or sacrificing it to Trog.")
