@@ -1385,8 +1385,25 @@ void new_level(bool restore)
 }
 
 // Returns a hatch or stair (up or down)
-dungeon_feature_type random_stair()
+dungeon_feature_type random_stair(bool do_place_check)
 {
+    if (do_place_check)
+    {
+        // Only place stairs in a direction that's actually applicable.
+        if (at_branch_bottom())
+        {
+            return (static_cast<dungeon_feature_type>(
+                DNGN_STONE_STAIRS_UP_I+random2(
+                    DNGN_ESCAPE_HATCH_UP-DNGN_STONE_STAIRS_UP_I+1)));
+        }
+        else if (player_branch_depth() == 1)
+        {
+            return (static_cast<dungeon_feature_type>(
+                DNGN_STONE_STAIRS_DOWN_I+random2(
+                    DNGN_ESCAPE_HATCH_DOWN-DNGN_STONE_STAIRS_DOWN_I+1)));
+        }
+    }
+    // else we can go either direction
     return (static_cast<dungeon_feature_type>(
         DNGN_STONE_STAIRS_DOWN_I+random2(
             DNGN_ESCAPE_HATCH_UP-DNGN_STONE_STAIRS_DOWN_I+1)));
