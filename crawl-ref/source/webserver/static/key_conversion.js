@@ -1,5 +1,5 @@
 
-var keyConversion = {
+var key_conversion = {
     // Escape
     27: 27,
     // Backspace
@@ -15,4 +15,4 @@ var keyConversion = {
     36: -1007,
     38: -254,//-1008,
     33: -1009,
-}
+};

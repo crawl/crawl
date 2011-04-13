@@ -310,7 +310,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     if (m_active_layer != LAYER_NORMAL)
     {
         m_active_layer = LAYER_NORMAL;
-        fprintf(stdout, "setLayer(\"normal\");\n");
+        fprintf(stdout, "set_layer(\"normal\");\n");
     }
 
     m_next_view = vbuf;
@@ -319,7 +319,6 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
 void TilesFramework::load_dungeon(const coord_def &cen)
 {
-    fprintf(stderr, "load_dungeon(cen)\n");
     unwind_var<coord_def> viewp(crawl_view.viewp, cen - crawl_view.viewhalfsz);
     unwind_var<coord_def> vgrdc(crawl_view.vgrdc, cen);
     unwind_var<coord_def> vlos1(crawl_view.vlos1);
@@ -402,19 +401,19 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     {
     case GOTO_CRT:
         if (m_active_layer != LAYER_CRT)
-            fprintf(stdout, "setLayer(\"crt\");\n");
+            fprintf(stdout, "set_layer(\"crt\");\n");
         m_active_layer = LAYER_CRT;
         m_print_area = &m_text_crt;
         break;
     case GOTO_MSG:
         if (m_active_layer != LAYER_NORMAL)
-            fprintf(stdout, "setLayer(\"normal\");\n");
+            fprintf(stdout, "set_layer(\"normal\");\n");
         m_active_layer = LAYER_NORMAL;
         m_print_area = &m_text_message;
         break;
     case GOTO_STAT:
         if (m_active_layer != LAYER_NORMAL)
-            fprintf(stdout, "setLayer(\"normal\");\n");
+            fprintf(stdout, "set_layer(\"normal\");\n");
         m_active_layer = LAYER_NORMAL;
         m_print_area = &m_text_stat;
         break;
@@ -449,7 +448,7 @@ void TilesFramework::redraw()
         // The view buffer size changed, we need to do a full redraw
         m_current_view = m_next_view;
 
-        fprintf(stdout, "viewSize(%d,%d);\n", m_current_view.size().x,
+        fprintf(stdout, "view_size(%d,%d);\n", m_current_view.size().x,
                                               m_current_view.size().y);
 
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
@@ -614,14 +613,14 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
     int cx_to_gx = m_current_gc.x - m_current_view.size().x / 2;
     int cy_to_gy = m_current_gc.y - m_current_view.size().y / 2;
 
-    fprintf(stdout, "addOverlay(%d,%d,%d);\n",
+    fprintf(stdout, "add_overlay(%d,%d,%d);\n",
             idx, gc.x - cx_to_gx, gc.y - cy_to_gy);
 }
 
 void TilesFramework::clear_overlays()
 {
     if (m_has_overlays)
-        fprintf(stdout, "clearOverlays();\n");
+        fprintf(stdout, "clear_overlays();\n");
 
     m_has_overlays = false;
 }
