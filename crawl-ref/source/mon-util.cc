@@ -2447,7 +2447,7 @@ habitat_type mons_class_habitat(int mc, bool real_amphibious)
         // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
         size_type st = (me ? me->size
                            : get_monster_data(MONS_PROGRAM_BUG)->size);
-        if (ht == HT_LAND && st >= SIZE_GIANT)
+        if (ht == HT_LAND && st >= SIZE_GIANT || mc == MONS_GREY_DRACONIAN)
             ht = HT_AMPHIBIOUS;
     }
     return (ht);
