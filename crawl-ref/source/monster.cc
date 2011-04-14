@@ -2562,9 +2562,9 @@ int monster::get_experience_level() const
     return (hit_dice);
 }
 
-void monster::moveto(const coord_def& c)
+void monster::moveto(const coord_def& c, bool clear_net)
 {
-    if (c != pos() && in_bounds(pos()))
+    if (clear_net && c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
 
     if (mons_is_projectile(type))
@@ -6016,7 +6016,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
     }
 }
 
-bool monster::move_to_pos(const coord_def &newpos)
+bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
 {
     const actor* a = actor_at(newpos);
     if (a && (a != &you || !fedhas_passthrough(this)))
@@ -6029,7 +6029,7 @@ bool monster::move_to_pos(const coord_def &newpos)
         mgrd(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
-    moveto(newpos);
+    moveto(newpos, clear_net);
 
     // Set new monster grid pointer to this monster.
     mgrd(newpos) = index;

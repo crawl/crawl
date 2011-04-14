@@ -41,12 +41,12 @@ public:
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as mgrd.
-    virtual void moveto(const coord_def &c) = 0;
+    virtual void moveto(const coord_def &c, bool clear_net = true) = 0;
 
     // High-level actor movement. If in doubt, use this. Returns false if the
     // actor cannot be moved to the target, possibly because it is already
     // occupied.
-    virtual bool move_to_pos(const coord_def &c) = 0;
+    virtual bool move_to_pos(const coord_def &c, bool clear_net = true) = 0;
 
     virtual void apply_location_effects(const coord_def &oldpos,
                                         killer_type killer = KILL_NONE,

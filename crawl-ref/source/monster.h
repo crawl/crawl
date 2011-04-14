@@ -144,8 +144,8 @@ public:
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1);
 
-    void moveto(const coord_def& c);
-    bool move_to_pos(const coord_def &newpos);
+    void moveto(const coord_def& c, bool clear_net = true);
+    bool move_to_pos(const coord_def &newpos, bool clear_net = true);
     bool blink_to(const coord_def& c, bool quiet = false);
 
     kill_category kill_alignment() const;
