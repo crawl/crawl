@@ -264,6 +264,28 @@ static bool _check_moveto_dangerous(const coord_def& p,
 static bool _check_moveto_terrain(const coord_def& p,
                                   const std::string &move_verb)
 {
+    if (!need_expiration_warning() && need_expiration_warning(p))
+    {
+        std::string prompt = "Are you sure you want to " + move_verb;
+
+        if (you.ground_level())
+            prompt += " into ";
+        else
+            prompt += " over ";
+
+        prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
+
+        prompt += need_expiration_warning(DUR_LEVITATION, p)
+                      ? " while you are losing your buoyancy?"
+                      : " while your transformation is expiring?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Only consider terrain if player is not levitating.
     if (you.airborne() || you.can_cling_to(p))
         return (true);
