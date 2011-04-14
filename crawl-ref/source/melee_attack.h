@@ -134,6 +134,8 @@ private:
     void mons_announce_hit(const mon_attack_def &attk);
     void mons_announce_dud_hit(const mon_attack_def &attk);
     void mons_set_weapon(const mon_attack_def &attk);
+    // TODO: Generalizing do_poison is trivial, but what purpose would it serve
+    // when all the player poisoning seems to be handled elsewhere...
     void mons_do_poison(const mon_attack_def &attk);
     void mons_do_napalm();
     std::string mons_defender_name();
