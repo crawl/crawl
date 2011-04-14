@@ -109,6 +109,10 @@ function render_cell(x, y)
 {
     try
     {
+        dungeon_ctx.fillStyle = "black";
+        dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
+                             dungeon_cell_w, dungeon_cell_h);
+
         var cell = get_tile_cache(x, y);
 
         if (!cell)
