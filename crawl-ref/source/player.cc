@@ -264,6 +264,9 @@ static bool _check_moveto_dangerous(const coord_def& p,
 static bool _check_moveto_terrain(const coord_def& p,
                                   const std::string &move_verb)
 {
+    if (you.is_wall_clinging() && move_verb == "blink")
+        return (_check_moveto_dangerous(p, move_verb));
+
     if (!need_expiration_warning() && need_expiration_warning(p))
     {
         std::string prompt = "Are you sure you want to " + move_verb;
