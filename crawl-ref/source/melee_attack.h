@@ -129,7 +129,6 @@ private:
     void mons_apply_attack_flavour(const mon_attack_def &attk);
     bool mons_perform_attack();
     void mons_perform_attack_rounds();
-    void mons_check_attack_perceived();
     std::string mons_attack_verb(const mon_attack_def &attk);
     std::string mons_attack_desc(const mon_attack_def &attk);
     void mons_announce_hit(const mon_attack_def &attk);

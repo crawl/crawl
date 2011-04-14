@@ -4967,12 +4967,14 @@ bool melee_attack::mons_perform_attack()
     return (did_hit);
 }
 
-void melee_attack::mons_check_attack_perceived()
+bool melee_attack::mons_attack_you()
 {
-    if (!perceived_attack)
-        return;
+    mons_perform_attack();
 
-    if (attacker->alive() && defender->atype() == ACT_PLAYER)
+    // Check attack perceived
+    if (perceived_attack
+        && attacker->alive()
+        && defender->atype() == ACT_PLAYER)
     {
         interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
 
@@ -4982,12 +4984,7 @@ void melee_attack::mons_check_attack_perceived()
         if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
             you.pet_target = attacker->mindex();
     }
-}
 
-bool melee_attack::mons_attack_you()
-{
-    mons_perform_attack();
-    mons_check_attack_perceived();
     return (did_hit);
 }
 
