@@ -77,6 +77,8 @@ function remove_cursor(type)
         render_cell(old_loc.x, old_loc.y);
 }
 
+// Render functions
+
 function render_cursors(x, y)
 {
     $.each(cursor_locs, function (type, loc)
@@ -515,71 +517,48 @@ function draw_foreground(x, y, cell)
 
 
 // Helper functions for drawing from specific textures
-function draw_dngn(idx, cx, cy, submerged)
+// TODO: Center tiles that are smaller than 32x32?
+// TODO: Handle redrawing of cells above higher-than-32 tiles
+// (e.g. the lernaean hydra leaves a trail of heads)
+
+function draw_tile(idx, cx, cy, img, info_func, ofsx, ofsy, y_max)
 {
-    // TODO: submerged
     x = dungeon_cell_w * cx;
     y = dungeon_cell_h * cy;
-    img = get_img(get_dngn_img(idx));
-    info = get_dngn_tile_info(idx);
+    info = info_func(idx);
+    img = get_img(img);
     if (!info)
     {
-        console.error("Dngn tile not found: " + idx);
-        return;
+        throw ("Tile not found: " + idx);
     }
     w = info.ex - info.sx;
     h = info.ey - info.sy;
-    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h, x + info.ox, y + info.oy, w, h);
+    if (h > dungeon_cell_h)
+        y -= (h - dungeon_cell_h);
+    if (y_max)
+        h -= (y_max - dungeon_cell_h);
+    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
+                          x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
+}
+
+function draw_dngn(idx, cx, cy)
+{
+    draw_tile(idx, cx, cy, get_dngn_img(idx), get_dngn_tile_info);
 }
 
 function draw_main(idx, cx, cy)
 {
-    x = dungeon_cell_w * cx;
-    y = dungeon_cell_h * cy;
-    info = get_main_tile_info(idx);
-    img = get_img("main");
-    if (!info)
-    {
-        throw ("Main tile not found: " + idx);
-    }
-    w = info.ex - info.sx;
-    h = info.ey - info.sy;
-    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
-                          x + info.ox, y + info.oy, w, h);
+    draw_tile(idx, cx, cy, "main", get_main_tile_info);
 }
 
 function draw_player(idx, cx, cy, ofsx, ofsy, y_max)
 {
-    x = dungeon_cell_w * cx;
-    y = dungeon_cell_h * cy;
-    info = get_player_tile_info(idx);
-    img = get_img("player");
-    if (!info)
-    {
-        throw ("Player tile not found: " + idx);
-    }
-    w = info.ex - info.sx;
-    h = info.ey - info.sy;
-    if (y_max && (y_max < h))
-        h = y_max;
-    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
-                          x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
+    draw_tile(idx, cx, cy, "player", get_player_tile_info, ofsx, ofsy, y_max);
 }
 
 function draw_icon(idx, cx, cy, ofsx, ofsy)
 {
-    x = dungeon_cell_w * cx;
-    y = dungeon_cell_h * cy;
-    info = get_icons_tile_info(idx);
-    img = get_img("icons");
-    if (!info)
-    {
-        throw ("Icon tile not found: " + idx);
-    }
-    w = info.ex - info.sx;
-    h = info.ey - info.sy;
-    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
-                          x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
+    draw_tile(idx, cx, cy, "icons", get_icons_tile_info, ofsx, ofsy);
 }
 
 function obj_to_str (o)
