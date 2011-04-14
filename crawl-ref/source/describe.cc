@@ -36,7 +36,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "it_use3.h"
+#include "evoke.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"

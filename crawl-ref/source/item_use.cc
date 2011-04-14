@@ -40,7 +40,7 @@
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
-#include "it_use3.h"
+#include "evoke.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
