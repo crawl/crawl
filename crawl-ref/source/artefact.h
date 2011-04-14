@@ -153,5 +153,6 @@ void artefact_set_property(item_def           &item,
 int get_unrandart_num(const char *name);
 
 void cheibriados_make_item_ponderous(item_def &item);
+void unrand_reacts();
 
 #endif
