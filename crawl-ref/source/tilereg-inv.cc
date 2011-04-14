@@ -428,17 +428,8 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                     tmp += "Fire (%)";
                     cmd.push_back(CMD_FIRE);
 
-                    if (wielded)
-                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                    else if (item.sub_type == MI_STONE
-                                && you.has_spell(SPELL_SANDBLAST)
-                            || item.sub_type == MI_ARROW
-                                && you.has_spell(SPELL_STICKS_TO_SNAKES))
-                    {
-                        // For Sandblast and Sticks to Snakes,
-                        // respectively.
-                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
-                    }
+                    if (wielded || you.can_wield(item))
+                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", wielded);
                 }
                 break;
             case OBJ_WANDS:
