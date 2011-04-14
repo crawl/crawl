@@ -2974,7 +2974,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_MAP:
-        if (!magic_mapping(random2(power/10) + 15, random2(power), true))
+        if (!magic_mapping(random2(power/8) + 18, random2(power), true))
             mpr("The map is blank.");
         break;
 

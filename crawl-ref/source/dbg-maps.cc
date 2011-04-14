@@ -104,7 +104,7 @@ static bool mg_do_build_level(int niters)
 
         {
             unwind_bool wiz(you.wizard, true);
-            magic_mapping(1000, 100, true, true, false, false,
+            magic_mapping(1000, 100, true, true, false,
                           coord_def(GXM/2, GYM/2));
         }
         if (_mg_is_disconnected_level())
