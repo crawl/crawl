@@ -1772,7 +1772,7 @@ static bool _add_connecting_escape_hatches()
 
     if (!_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN))
         return (false);
-    
+
     return (_add_feat_if_missing(_is_perm_up_stair, DNGN_ESCAPE_HATCH_UP));
 }
 

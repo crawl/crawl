@@ -2027,6 +2027,27 @@ const char *unrandart_descrip(int which_descrip, const item_def &item)
                                  : "Unknown.");
 }
 
+void unrand_reacts()
+{
+    item_def*  weapon     = you.weapon();
+    const int  old_plus   = weapon ? weapon->plus   : 0;
+    const int  old_plus2  = weapon ? weapon->plus2  : 0;
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        if (you.unrand_reacts & (1 << i))
+        {
+            item_def&        item  = you.inv[you.equip[i]];
+            unrandart_entry* entry = get_unrand_entry(item.special);
+
+            entry->world_reacts_func(&item);
+        }
+    }
+
+    if (weapon && (old_plus != weapon->plus || old_plus2 != weapon->plus2))
+        you.wield_change = true;
+}
+
 // Set all non-zero properties in proprt on the randart supplied.
 static void _artefact_merge_properties(item_def &item,
                                        const artefact_properties_t &proprt)
