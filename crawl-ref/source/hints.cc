@@ -1638,8 +1638,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
                 ". However, it is usually best to conserve rations and fruit "
                 "until you are hungry or even starving.";
-
-        cmd.push_back(CMD_EAT);
         break;
 
     case HINT_SEEN_CARRION:
