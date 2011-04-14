@@ -1082,10 +1082,11 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return maxrange;
+        return std::min(maxrange, LOS_RADIUS);
 
     // Round appropriately.
-    return ((pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
+    return std::min(LOS_RADIUS,
+           (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
 /**

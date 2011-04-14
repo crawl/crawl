@@ -172,7 +172,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      5,
      200,
-     5, 12,
+     5, 12, // capped at LOS, yet this 12 matters since range increases linearly
      0,
      NULL,
      true,
