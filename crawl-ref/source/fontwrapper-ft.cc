@@ -43,31 +43,19 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
 
     error = FT_Init_FreeType(&library);
     if (error)
-    {
-        fprintf(stderr, "Failed to initialise freetype library.\n");
-        return false;
-    }
+        die_noline("Failed to initialise freetype library.\n");
 
     // TODO enne - need to find a cross-platform way to also
     // attempt to locate system fonts by name...
     std::string font_path = datafile_path(font_name, false, true);
     if (font_path.c_str()[0] == 0)
-    {
-        fprintf(stderr, "Could not find font '%s'\n", font_name);
-        return false;
-    }
+        die_noline("Could not find font '%s'\n", font_name);
 
     error = FT_New_Face(library, font_path.c_str(), 0, &face);
     if (error == FT_Err_Unknown_File_Format)
-    {
-        fprintf(stderr, "Unknown font format for file '%s'\n",
-                         font_path.c_str());
-        return false;
-    }
+        die_noline("Unknown font format for file '%s'\n", font_path.c_str());
     else if (error)
-    {
-        fprintf(stderr, "Invalid font from file '%s'\n", font_path.c_str());
-    }
+        die_noline("Invalid font from file '%s'\n", font_path.c_str());
 
     error = FT_Set_Pixel_Sizes(face, font_size, font_size);
     ASSERT(!error);
