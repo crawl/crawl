@@ -5472,10 +5472,17 @@ int melee_attack::test_melee_hit(int to_land, int ev, defer_rand& r)
 
 int melee_attack::apply_defender_ac(int damage, int damage_max)
 {
-    if(attacker->atype() == ACT_MONSTER)
+    int ac = defender->armour_class();
+    int stab_bypass = stab_bonus
+                      ? random2(you.skill(SK_STABBING) / stab_bonus)
+                      : 0;
+    if (ac > 0)
     {
-        const int ac = defender->armour_class();
-        if (ac > 0)
+        if(attacker->atype() == ACT_PLAYER)
+        {
+            damage -= random2(1 + defender->armour_class() - stab_bypass);
+        }
+        else
         {
             int damage_reduction = random2(ac + 1);
             int guaranteed_damage_reduction = 0;
@@ -5489,46 +5496,21 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
                     std::max(guaranteed_damage_reduction, damage_reduction);
             }
 
+            damage -= damage_reduction;
+
             dprf("AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "
                  "rdam: %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
                  damage, damage_max, damage_reduction, guaranteed_damage_reduction,
                  damage - damage_reduction);
-
-            damage -= damage_reduction;
-        }
-
-        return std::max(0, damage);
-    }
-    else if(attacker->atype() == ACT_PLAYER)
-    {
-        if (stab_bonus)
-        {
-            // When stabbing we can get by some of the armour.
-            if (defender->armour_class() > 0)
-            {
-                const int ac = defender->armour_class()
-                    - random2(you.skill(SK_STABBING) / stab_bonus);
-
-                if (ac > 0)
-                    damage -= random2(1 + ac);
-            }
-        }
-        else
-        {
-            // Apply AC normally.
-            if (defender->armour_class() > 0)
-                damage -= random2(1 + defender->armour_class());
         }
 
         if (defender->petrified())
             damage /= 3;
-
-        return (damage);
     }
 
-    return (0);
+    return std::max(0, damage);
 }
 
 // TODO: This should be in monster class, there's probably already a method
