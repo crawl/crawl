@@ -239,26 +239,18 @@ bool can_wield(item_def *weapon, bool say_reason,
 static bool _valid_weapon_swap(const item_def &item)
 {
     // Weapons and staves are valid weapons.
-    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+    // Also allow missiles to enchant them.
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES
+        || item.base_type == OBJ_MISSILES)
+    {
         return (you.species != SP_CAT);
+    }
 
     // Some misc. items need to be wielded to be evoked.
     if (is_deck(item) || item.base_type == OBJ_MISCELLANY
                          && item.sub_type == MISC_LANTERN_OF_SHADOWS)
     {
         return (true);
-    }
-
-    // Some missiles need to be wielded for spells.
-    if (item.base_type == OBJ_MISSILES)
-    {
-        if (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK)
-            return (you.has_spell(SPELL_SANDBLAST));
-
-        if (item.sub_type == MI_ARROW)
-            return (you.has_spell(SPELL_STICKS_TO_SNAKES));
-
-        return (false);
     }
 
     // Sublimation of Blood.
