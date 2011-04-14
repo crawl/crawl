@@ -788,7 +788,7 @@ void game_options::reset_options()
     hp_warning             = 30;
     magic_point_warning    = 0;
     default_target         = true;
-    autopickup_no_burden   = false;
+    autopickup_no_burden   = true;
 
     user_note_prefix       = "";
     note_all_skill_levels  = false;

@@ -470,7 +470,7 @@ default_autopickup = true
         When set to false, the game starts with autopickup turned off.
         You can still toggle autopickup in-game with Ctrl-A.
 
-autopickup_no_burden = false
+autopickup_no_burden = true
         When set, autopickup will not pick up items which would increase
         your burden status (from unencumbered to burdened, or from
         encumbered to overloaded.)
