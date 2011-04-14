@@ -76,14 +76,20 @@
 static void _end_game(scorefile_entry &se);
 static void _item_corrode(int slot);
 
-static void _maybe_melt_player_enchantments(beam_type flavour)
+static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
         || flavour == BEAM_STEAM)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
+        {
+            you.duration[DUR_CONDENSATION_SHIELD] -= damage * BASELINE_DELAY;
+            if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
+                remove_condensation_shield();
+            else
+                you.props["melt_shield"] = true;
+        }
 
         if (you.mutation[MUT_ICEMAIL])
         {
@@ -93,7 +99,13 @@ static void _maybe_melt_player_enchantments(beam_type flavour)
         }
 
         if (you.duration[DUR_ICY_ARMOUR] > 0)
-            remove_ice_armour();
+        {
+            you.duration[DUR_ICY_ARMOUR] -= damage * BASELINE_DELAY;
+            if (you.duration[DUR_ICY_ARMOUR] <= 0)
+                remove_ice_armour();
+            else
+                you.props["melt_armour"] = true;
+        }
     }
 }
 
@@ -114,7 +126,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     }
 
     if (doEffects)
-        _maybe_melt_player_enchantments(flavour);
+        _maybe_melt_player_enchantments(flavour, hurted);
 
     switch (flavour)
     {
@@ -725,11 +737,12 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 // This function now calls _expose_invent_to_element() if strength > 0.
 //
 // XXX: This function is far from perfect and a work in progress.
-bool expose_player_to_element(beam_type flavour, int strength)
+bool expose_player_to_element(beam_type flavour, int strength,
+                              bool damage_inventory)
 {
-    _maybe_melt_player_enchantments(flavour);
+    _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
 
-    if (strength <= 0)
+    if (strength <= 0 || !damage_inventory)
         return (false);
 
     return (_expose_invent_to_element(flavour, strength));

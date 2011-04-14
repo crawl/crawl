@@ -386,10 +386,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (feat_is_water(new_grid) && was_clinging && !is_clinging)
         _splash();
 
-    // Icy shield goes down over lava.
-    if (new_grid == DNGN_LAVA)
-        expose_player_to_element(BEAM_LAVA);
-
     // Traps go off.
     if (trap_def* ptrap = find_trap(you.pos()))
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade

@@ -2107,7 +2107,8 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
                               "Your icy armour evaporates.", coinflip(),
-                              "Your icy armour starts to melt."))
+                              you.props.exists("melt_armour") ? NULL
+                                  : "Your icy armour starts to melt."))
     {
         you.redraw_armour_class = true;
     }
@@ -2783,6 +2784,10 @@ static void _player_reacts()
 
     slime_wall_damage(&you, you.time_taken);
 
+    // Icy shield and armour melt over lava.
+    if (grd(you.pos()) == DNGN_LAVA)
+        expose_player_to_element(BEAM_LAVA);
+
     _decrement_durations();
 
     int capped_time = you.time_taken;
@@ -2821,6 +2826,27 @@ static void _player_reacts_to_monsters()
     if (you.duration[DUR_TELEPATHY] && player_in_mappable_area())
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);
+
+    // We have to do the messaging here, because a simple wand of flame will
+    // call _maybe_melt_player_enchantments twice. It also avoid duplicate
+    // messages when melting because of several heating sources.
+    std::string what;
+    if (you.props.exists("melt_armour"))
+    {
+        what = "armour";
+        you.props.erase("melt_armour");
+    }
+
+    if (you.props.exists("melt_shield"))
+    {
+        if (what != "")
+            what += " and ";
+        what += "shield";
+        you.props.erase("melt_shield");
+    }
+
+    if (what != "")
+        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
 
     handle_starvation();
     _decrement_paralysis(you.time_taken);
