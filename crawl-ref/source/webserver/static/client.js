@@ -141,6 +141,15 @@ function handle_keypress(e)
 {
     if (delay_timeout) return; // TODO: Do we want to capture keys during delay?
 
+    if (e.ctrlKey || e.altKey)
+    {
+        console.log("CTRL key: " + e.ctrlKey + " " + e.which
+                    + " " + String.fromCharCode(e.which));
+        return;
+    }
+
+    e.preventDefault();
+
     s = String.fromCharCode(e.which);
     if (s == "\\")
     {
@@ -163,14 +172,15 @@ function handle_keydown(e)
             return;
 
         e.preventDefault();
-        e.which = e.which - "A".charCodeAt(0) + 1; // Compare the CONTROL macro in defines.h
-        handle_keypress(e);
+        var code = e.which - "A".charCodeAt(0) + 1; // Compare the CONTROL macro in defines.h
+        socket.send("\\" + code + "\n");
     }
     else
     {
         // TODO: Shift and Ctrl?
         if (e.which in key_conversion)
         {
+            e.preventDefault();
             socket.send("\\" + key_conversion[e.which] + "\n");
         }
         else
