@@ -775,7 +775,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     return (true);
 }                               // end cast_a_spell()
 
-static void _spellcasting_side_effects(spell_type spell)
+static void _spellcasting_side_effects(spell_type spell, int pow)
 {
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
@@ -797,7 +797,7 @@ static void _spellcasting_side_effects(spell_type spell)
     // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start. - bwr
     if (spell_typematch(spell, SPTYP_FIRE))
-        expose_player_to_element(BEAM_FIRE, 0);
+        expose_player_to_element(BEAM_FIRE, pow * 3, false);
 
     if (spell_typematch(spell, SPTYP_NECROMANCY)
         && !crawl_state.is_god_acting())
@@ -1239,7 +1239,7 @@ spret_type your_spells(spell_type spell, int powc,
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range))
     {
     case SPRET_SUCCESS:
-        _spellcasting_side_effects(spell);
+        _spellcasting_side_effects(spell, powc);
         return (SPRET_SUCCESS);
 
     case SPRET_FAIL:
