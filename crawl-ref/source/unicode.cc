@@ -178,7 +178,7 @@ std::string utf8_to_mb(const char *s)
         int r = wcrtomb(buf, c, &ps);
         if (r != -1)
         {
-            for (int i = 0; i < l; i++)
+            for (int i = 0; i < r; i++)
                 d.push_back(buf[i]);
         }
         else
