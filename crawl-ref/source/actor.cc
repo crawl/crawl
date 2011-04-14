@@ -274,7 +274,7 @@ bool actor::can_cling_to(const coord_def& p) const
  * @param stepped Whether the actor has taken a step.
  * @return the new clinging status.
  */
-bool actor::check_clinging(bool stepped)
+bool actor::check_clinging(bool stepped, bool door)
 {
     bool was_clinging = is_wall_clinging();
     bool clinging = can_cling_to_walls() && cell_is_clingable(pos())
@@ -289,8 +289,8 @@ bool actor::check_clinging(bool stepped)
     {
         if (you.can_see(this))
         {
-            mprf("%s fall%s off the wall.", name(DESC_CAP_THE).c_str(),
-                 is_player() ? "" : "s");
+            mprf("%s fall%s off the %s.", name(DESC_CAP_THE).c_str(),
+                 is_player() ? "" : "s", door ? "door" : "wall");
         }
         apply_location_effects(pos());
     }

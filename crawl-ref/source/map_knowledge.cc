@@ -33,15 +33,16 @@ void map_knowledge_forget_mons(const coord_def& c)
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed(int x, int y)
 {
+    const coord_def p = coord_def(x, y);
     env.map_knowledge[x][y].flags |= MAP_CHANGED_FLAG;
 
-    dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
+    dungeon_events.fire_position_event(DET_FEAT_CHANGE, p);
 
-    los_terrain_changed(coord_def(x,y));
+    los_terrain_changed(p);
 
-    for (orth_adjacent_iterator ai(coord_def(x,y)); ai; ++ai)
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
         if (actor *act = actor_at(*ai))
-            act->check_clinging(false);
+            act->check_clinging(false, feat_is_door(grd(p)));
 }
 
 void set_terrain_mapped(int x, int y)
