@@ -1047,14 +1047,13 @@ void annotate_level()
     {
         if (!get_level_annotation(li, true).empty())
         {
-            if (!yesno("Really clear the annotation?", false, 'n'))
+            if (!yesno("Really clear the annotation?", true, 'n'))
                 return;
-        }
-        else
-        {
-            canned_msg(MSG_OK);
+            mpr("Cleared.");
             return;
         }
+        canned_msg(MSG_OK);
+        return;
     }
 
     set_level_annotation(buf, li);
