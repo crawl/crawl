@@ -682,7 +682,12 @@ void print_stats(void)
         textcolor(Options.status_caption_colour);
         cprintf("Exp: ");
         textcolor(HUD_VALUE_COLOUR);
-        cprintf("%-5d", you.exp_available);
+        if (you.exp_available < 100000)
+            cprintf("%-5d", you.exp_available);
+        else if (you.exp_available < 10000000)
+            cprintf("%4dK", you.exp_available / 1000);
+        else
+            cprintf("%4dM", you.exp_available / 1000000);
 #endif
         you.redraw_experience = false;
     }
