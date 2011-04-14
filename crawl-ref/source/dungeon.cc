@@ -792,26 +792,9 @@ static bool _is_perm_down_stair(const coord_def &c)
     }
 }
 
-static bool _is_perm_up_stair(const coord_def &c)
+static bool _is_upwards_exit_stair(const coord_def &c)
 {
-    switch (grd(c))
-    {
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_EXIT_HELL:
-    case DNGN_EXIT_PANDEMONIUM:
-    case DNGN_TRANSIT_PANDEMONIUM:
-    case DNGN_EXIT_ABYSS:
-        return (true);
-    default:
-        return (false);
-    }
-}
-
-static bool _is_bottom_exit_stair(const coord_def &c)
-{
-    // Is this a valid exit stair from the bottom of a branch? In general,
+    // Is this a valid upwards or exit stair out of a branch? In general,
     // ensure that each region has a stone stair up.
     switch (grd(c))
     {
@@ -940,7 +923,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                                _dgn_point_record_stub,
                                dgn_square_travel_ok,
                                choose_stairless ? (at_branch_bottom() ?
-                                                   _is_bottom_exit_stair :
+                                                   _is_upwards_exit_stair :
                                                    _is_exit_stair) : NULL);
 
             // If we want only stairless zones, screen out zones that did
@@ -1772,8 +1755,8 @@ static bool _add_connecting_escape_hatches()
 
     if (!_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN))
         return (false);
-    
-    return (_add_feat_if_missing(_is_perm_up_stair, DNGN_ESCAPE_HATCH_UP));
+
+    return (_add_feat_if_missing(_is_upwards_exit_stair, DNGN_ESCAPE_HATCH_UP));
 }
 
 static bool _branch_entrances_are_connected()
