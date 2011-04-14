@@ -394,7 +394,7 @@ static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
 
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force, bool deterministic, bool circular,
+                   bool force, bool deterministic,
                    coord_def pos)
 {
     if (!in_bounds(pos))
@@ -436,7 +436,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!deterministic)
         detectable = _tile_detectability();
 
-    for (radius_iterator ri(pos, map_radius, circular ? C_ROUND : C_SQUARE);
+    for (radius_iterator ri(pos, map_radius, C_ROUND);
          ri; ++ri)
     {
         if (!wizard_map)

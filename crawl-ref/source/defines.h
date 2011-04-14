@@ -105,6 +105,8 @@ enum extra_monster_index_type
 #define GYM 70
 
 const int INFINITE_DISTANCE = 30000;
+// max distance on a map
+#define GDM 105
 
 // this is the size of the border around the playing area (see in_bounds())
 #define BOUNDARY_BORDER         1
