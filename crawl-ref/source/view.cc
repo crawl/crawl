@@ -83,7 +83,7 @@ bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
         aid.context = mons->seen_context;
     // XXX: Hack to make the 'seen' monster spec flag work.
     else if (testbits(mons->flags, MF_WAS_IN_VIEW)
-        || testbits(mons->flags, MF_SEEN))
+             || testbits(mons->flags, MF_SEEN))
     {
         aid.context = "already seen";
     }
@@ -92,7 +92,7 @@ bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
 
     if (!mons_is_safe(mons)
         && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-            || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
+           || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
     {
         return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
     }
