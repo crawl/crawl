@@ -57,21 +57,21 @@ bool player::is_summoned(int* _duration, int* summon_type) const
     return (false);
 }
 
-void player::moveto(const coord_def &c)
+void player::moveto(const coord_def &c, bool clear_net)
 {
-    if (c != pos())
+    if (clear_net && c != pos())
         clear_trapping_net();
 
     crawl_view.set_player_at(c);
     set_position(c);
 }
 
-bool player::move_to_pos(const coord_def &c)
+bool player::move_to_pos(const coord_def &c, bool clear_net)
 {
     actor *target = actor_at(c);
     if (!target || target->submerged())
     {
-        moveto(c);
+        moveto(c, clear_net);
         return true;
     }
     return false;
