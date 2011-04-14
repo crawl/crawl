@@ -1390,14 +1390,6 @@ const uint32_t DGL_TIMESTAMP_VERSION = 1;
 const int VERSION_SIZE = sizeof(DGL_TIMESTAMP_VERSION);
 const int TIMESTAMP_SIZE = sizeof(uint32_t);
 
-// Returns the size of the opened file with the give FILE* handle.
-unsigned long _file_size(FILE *handle)
-{
-    struct stat fs;
-    const int err = fstat(fileno(handle), &fs);
-    return err? 0 : fs.st_size;
-}
-
 // Returns the name of the timestamp file based on the morgue_dir,
 // character name and the game start time.
 std::string dgl_timestamp_filename()
@@ -1450,7 +1442,7 @@ void dgl_record_timestamp(unsigned long file_offset, time_t time)
         writer w(dgl_timestamp_filename(), ftimestamp, true);
         if (timestamp_first_write)
         {
-            unsigned long ts_size = _file_size(ftimestamp);
+            unsigned long ts_size = file_size(ftimestamp);
             if (!ts_size)
             {
                 marshallInt(w, DGL_TIMESTAMP_VERSION);

@@ -2292,6 +2292,14 @@ FILE *fopen_replace(const char *name)
     return fdopen(fd, "w");
 }
 
+// Returns the size of the opened file with the give FILE* handle.
+unsigned long file_size(FILE *handle)
+{
+    struct stat fs;
+    const int err = fstat(fileno(handle), &fs);
+    return err? 0 : fs.st_size;
+}
+
 std::vector<std::string> get_title_files()
 {
     std::vector<std::string> bases = _get_base_dirs();
