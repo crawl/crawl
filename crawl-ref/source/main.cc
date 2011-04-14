@@ -3839,32 +3839,6 @@ static void _move_player(coord_def move)
 
     const dungeon_feature_type targ_grid = grd(targ);
 
-    if (!need_expiration_warning() && need_expiration_warning(targ))
-    {
-        std::string prompt = "Are you sure you want to ";
-
-        if (you.flight_mode() == FL_FLY)
-            prompt += "fly over ";
-        else if (you.flight_mode() == FL_LEVITATE)
-            prompt += "levitate over ";
-        else if (you.is_wall_clinging())
-            prompt += "cling over ";
-        else
-            prompt += "go into ";
-
-        prompt += targ_grid == DNGN_DEEP_WATER ? "deep water" : "lava";
-
-        prompt += need_expiration_warning(DUR_LEVITATION, targ)
-                      ? " while you are losing your buoyancy?"
-                      : " while your transformation is expiring?";
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-    }
-
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
     {
@@ -3974,7 +3948,19 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (!you.confused() && !check_moveto(targ))
+        std::string verb;
+        if (you.flight_mode() == FL_FLY)
+            verb = "fly";
+        else if (you.flight_mode() == FL_LEVITATE)
+            verb = "levitate";
+        else if (you.is_wall_clinging())
+            verb = "cling";
+        else if (you.species == SP_NAGA && !form_changed_physiology())
+            verb = "crawl";
+        else
+            verb = "walk";
+
+        if (!you.confused() && !check_moveto(targ, verb))
         {
             stop_running();
             you.turn_is_over = false;
