@@ -34,7 +34,7 @@
 #include "godconduct.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use3.h"
+#include "evoke.h"
 #include "macro.h"
 #include "maps.h"
 #include "message.h"
