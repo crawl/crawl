@@ -161,7 +161,7 @@ TAGS:    overwritable layout allow_dup unrand
     -- Include a small possibility of adding windows around the cross.
     -- This layout can get used with spotty_level, so don't make this
     -- chance too large as lava/water prevents that from happening.
-    local window = crawl.one_chance_in(20)
+    local window = not you.in_branch("Lair") and crawl.one_chance_in(20)
 
     if window then
         if crawl.coinflip() then
