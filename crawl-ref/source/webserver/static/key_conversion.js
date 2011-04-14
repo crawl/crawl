@@ -17,5 +17,5 @@ var key_conversion = {
 };
 
 var captured_control_keys = [
-    "O", "Q", "F", "P", "W"
+    "O", "Q", "F", "P", "W", "A", "T", "X", "S"
 ];
