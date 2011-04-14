@@ -261,7 +261,7 @@ tileview.o \
 tilecell.o
 endif
 
-ifdef ONLINE_TILES
+ifdef WEBTILES
 OBJECTS += \
 libweb.o \
 tiledoll.o \

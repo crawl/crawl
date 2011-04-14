@@ -278,7 +278,7 @@ TILES_ANY = YesPlease
 
 endif
 
-ifdef ONLINE_TILES
+ifdef WEBTILES
 
 TILES_ANY = YesPlease
 
@@ -509,7 +509,7 @@ endif
 
 RLTILES = rltiles
 
-ifdef ONLINE_TILES
+ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_WEB
 INCLUDES_L += -I$(RLTILES)
@@ -925,6 +925,24 @@ test:
 ifeq (,$(findstring clean,$(MAKECMDGOALS)))
 ifeq (,$(findstring test,$(MAKECMDGOALS)))
 ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
+
+# Webtiles data
+ifdef WEBTILES
+webserver/static/%.png: dat/tiles/%.png
+	$(COPY) $< webserver/static/
+
+webserver/static/%.js: $(RLTILES)/%.js
+	$(COPY) $< webserver/static/
+
+TILEINFOJS = $(TILEIMAGEFILES) dngn
+
+STATICFILES = $(TILEIMAGEFILES:%=webserver/static/%.png) \
+              webserver/static/stone_soup_icon-32x32.png \
+              $(TILEINFOJS:%=webserver/static/tileinfo-%.js)
+
+.PHONY: webserver
+webserver: $(STATICFILES)
+endif
 
 #
 # CFLAGS difference check
