@@ -7,10 +7,12 @@
 #include FT_FREETYPE_H
 
 #include "defines.h"
+#include "errno.h"
 #include "files.h"
 #include "format.h"
 #include "fontwrapper-ft.h"
 #include "glwrapper.h"
+#include "syscalls.h"
 #include "tilebuf.h"
 #include "tilefont.h"
 #include "unicode.h"
@@ -47,11 +49,25 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
 
     // TODO enne - need to find a cross-platform way to also
     // attempt to locate system fonts by name...
+    // 1KB: fontconfig if we are not scared of hefty libraries
     std::string font_path = datafile_path(font_name, false, true);
     if (font_path.c_str()[0] == 0)
         die_noline("Could not find font '%s'\n", font_name);
 
-    error = FT_New_Face(library, font_path.c_str(), 0, &face);
+    // Certain versions of freetype have problems reading files on Windows,
+    // do that ourselves.
+    FILE *f = fopen_u(font_path.c_str(), "rb");
+    if (!f)
+        die_noline("Could not read font '%s'\n", font_name);
+    unsigned long size = file_size(f);
+    FT_Byte *ttf = (FT_Byte*)malloc(size);
+    ASSERT(ttf);
+    if (fread(ttf, 1, size, f) != size)
+        die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
+    fclose(f);
+    // FreeType needs the font until FT_Done_Face(), and we never call it.
+
+    error = FT_New_Memory_Face(library, ttf, size, 0, &face);
     if (error == FT_Err_Unknown_File_Format)
         die_noline("Unknown font format for file '%s'\n", font_path.c_str());
     else if (error)
