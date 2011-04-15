@@ -200,6 +200,8 @@ bool can_wield(item_def *weapon, bool say_reason,
                 if (in_inventory(*weapon))
                     mpr(weapon->name(DESC_INVENTORY_EQUIP).c_str());
             }
+            else if (is_artefact(*weapon) && !item_type_known(*weapon))
+                artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
         }
         return (false);
     }
@@ -220,6 +222,8 @@ bool can_wield(item_def *weapon, bool say_reason,
                 if (in_inventory(*weapon))
                     mpr(weapon->name(DESC_INVENTORY_EQUIP).c_str());
             }
+            else if (is_artefact(*weapon) && !item_type_known(*weapon))
+                artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
         }
         return (false);
     }
