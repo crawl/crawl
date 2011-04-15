@@ -1050,10 +1050,12 @@ void annotate_level()
             if (!yesno("Really clear the annotation?", true, 'n'))
                 return;
             mpr("Cleared.");
+        }
+        else
+        {
+            canned_msg(MSG_OK);
             return;
         }
-        canned_msg(MSG_OK);
-        return;
     }
 
     set_level_annotation(buf, li);
