@@ -234,7 +234,6 @@ function draw_blood_overlay(x, y, cell, is_wall)
 
     {
         offset = cell.flv.s % tile_dngn_count(TILE_LIQUEFACTION);
-        offset = 0;
         draw_dngn(TILE_LIQUEFACTION + offset, x, y);
     }
     else if (cell.bloody)
@@ -249,14 +248,12 @@ function draw_blood_overlay(x, y, cell, is_wall)
         else
             basetile = TILE_BLOOD;
         offset = cell.flv.s % tile_dngn_count(basetile);
-        offset = 0;
         draw_dngn(basetile + offset, x, y);
     }
     else if (cell.moldy)
 
     {
         offset = cell.flv.s % tile_dngn_count(TILE_MOLD);
-        offset = 0;
         draw_dngn(TILE_MOLD + offset, x, y);
     }
 }
