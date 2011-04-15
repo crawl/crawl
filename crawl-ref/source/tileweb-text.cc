@@ -83,27 +83,32 @@ void WebTextArea::send()
             ucs_t chr = m_cbuf[x + y * mx];
             uint8_t col = m_abuf[x + y * mx];
 
-            if (chr == ' ')
-                space_count++;
-            else
+            if (chr != ' ' || ((col >> 4) & 0xF) != 0)
             {
-                if ((col != last_col) && !start)
-                    fprintf(stdout, "</span>");
-                if ((col != last_col) || start)
-                    fprintf(stdout, "<span class=\\\"fg%d bg%d\\\">",
-                            col & 0xf, (col >> 4) & 0xf);
-
-                last_col = col;
-                start = false;
-
                 while (space_count)
                 {
                     fprintf(stdout, "&nbsp;");
                     space_count--;
                 }
+            }
 
+            if ((col != last_col) && !start)
+                fprintf(stdout, "</span>");
+            if ((col != last_col) || start)
+                fprintf(stdout, "<span class=\\\"fg%d bg%d\\\">",
+                        col & 0xf, (col >> 4) & 0xf);
+            last_col = col;
+            start = false;
+
+            if (chr == ' ' && ((col >> 4) & 0xF) == 0)
+                space_count++;
+            else
+            {
                 switch (chr)
                 {
+                case ' ':
+                    fprintf(stdout, "&nbsp;");
+                    break;
                 case '<':
                     fprintf(stdout, "&lt;");
                     break;
@@ -114,7 +119,7 @@ void WebTextArea::send()
                     fprintf(stdout, "&amp;");
                     break;
                 case '\\':
-                    fprintf(stdout, "&92;");
+                    fprintf(stdout, "\\\\");
                     break;
                 case '"':
                     fprintf(stdout, "&quot;");
