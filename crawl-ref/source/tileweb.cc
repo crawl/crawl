@@ -656,7 +656,8 @@ void TilesFramework::layout_statcol()
 
 void TilesFramework::textcolor(int col)
 {
-    m_print_fg = col;
+    m_print_fg = col & 0xF;
+    m_print_bg = (col >> 4) & 0xF;
 }
 
 void TilesFramework::textbackground(int col)
