@@ -2573,7 +2573,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         }
         break;
     case OBJ_MISSILES:
-        actions.push_back(CMD_QUIVER_ITEM);
+        if (you.species != SP_CAT)
+            actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:
         if (item_is_equipped(item))
