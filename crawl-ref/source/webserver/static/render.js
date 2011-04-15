@@ -536,7 +536,7 @@ function draw_tile(idx, cx, cy, img, info_func, ofsx, ofsy, y_max)
     if (h > dungeon_cell_h)
         y -= (h - dungeon_cell_h);
     if (y_max)
-        h -= (y_max - dungeon_cell_h);
+        h -= (dungeon_cell_h - y_max);
     dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
                           x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
 }
