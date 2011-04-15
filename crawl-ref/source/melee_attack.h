@@ -121,10 +121,6 @@ private:
     // Monster-attack specific stuff
     bool mons_attack_you();
     bool mons_attack_mons();
-    // TODO: add actor class method can_self_destruct and move the
-    // self-destruct logic in mons_self_destructs to a special case
-    // inside one of the handle_phase
-    bool mons_self_destructs();
     int mons_calc_damage(const mon_attack_def &attk);
     void mons_apply_attack_flavour(const mon_attack_def &attk);
     bool mons_perform_attack();
