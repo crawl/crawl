@@ -412,13 +412,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
     const bool wizard_map = (you.wizard && map_radius == 1000);
 
-    if (!wizard_map)
-    {
-        if (map_radius > 50)
-            map_radius = 50;
-        else if (map_radius < 5)
-            map_radius = 5;
-    }
+    if (map_radius < 5)
+        map_radius = 5;
 
     // now gradually weaker with distance:
     const int pfar     = dist_range((map_radius * 7) / 10);
