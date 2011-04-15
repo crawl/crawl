@@ -9,7 +9,9 @@ os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.redirect("/static/client.html")
+        host = self.request.host
+        print host
+        self.render("client.html", socket_server = "ws://" + host + "/socket")
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
@@ -29,23 +31,25 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.remove_handler(self.p.stdout.fileno())
         self.ioloop.remove_handler(self.p.stderr.fileno())
 
+    def poll_crawl(self):
+        if self.p.poll() is not None:
+            self.close()
+
     def on_message(self, message):
         print "MESSAGE:", message
         self.p.stdin.write(message)
 
     def on_close(self):
         self.close_pipes()
-        if not self.p.poll():
+        if self.p.poll() is None:
             self.p.terminate()
         print "SOCKET CLOSED"
 
     def on_stderr(self, fd, events):
         s = self.p.stderr.readline()
-        if s.isspace() or s == "": return
-        print "ERR: ", s,
-        if self.p.poll():
-            self.close()
-            self.close_pipes()
+        if not (s.isspace() or s == ""):
+            print "ERR: ", s,
+        self.poll_crawl()
 
     def on_stdout(self, fd, events):
         char = self.p.stdout.read(1)
@@ -55,9 +59,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             self.message_buffer += char
 
-        if self.p.poll():
-            self.close()
-            self.close_pipes()
+        self.poll_crawl()
 
 settings = {
     "static_path": "./webserver/static/"
