@@ -684,6 +684,7 @@ bool mons_has_blood(int mc)
 bool mons_is_sensed(int mc)
 {
     return mc == MONS_SENSED
+           || mc == MONS_SENSED_FRIENDLY
            || mc == MONS_SENSED_TRIVIAL
            || mc == MONS_SENSED_EASY
            || mc == MONS_SENSED_TOUGH
