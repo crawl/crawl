@@ -29,7 +29,7 @@
 
 int che_boost_level()
 {
-    if (you.religion != GOD_CHEIBRIADOS)
+    if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
         return (0);
 
     return (std::min(player_ponderousness(), piety_rank() - 1));
