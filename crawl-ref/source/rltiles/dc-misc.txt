@@ -87,6 +87,7 @@ unseen_weapon UNSEEN_WEAPON
 unseen_monster UNSEEN_MONSTER
 unseen_armour UNSEEN_ARMOUR
 unseen_item UNSEEN_ITEM
+sensed_monster_friendly MONS_SENSED_FRIENDLY
 sensed_monster_trivial MONS_SENSED_TRIVIAL
 sensed_monster_easy MONS_SENSED_EASY
 sensed_monster_tough MONS_SENSED_TOUGH
