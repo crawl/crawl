@@ -120,6 +120,8 @@ function render_cell(x, y)
         if (!cell)
             return;
 
+        cell.flv.s = cell.flv.s || 0;
+
         // cell is basically a packed_cell + doll + mcache entries
         draw_background(x, y, cell);
 
