@@ -451,7 +451,7 @@ void wizard_map_level()
         unset_branch_flags(BFLAG_NOT_MAPPABLE | BFLAG_NO_MAGIC_MAP);
     }
 
-    magic_mapping(GDM, 100, true, true);
+    magic_mapping(1000, 100, true, true);
 }
 
 static int find_trap_slot()
