@@ -200,13 +200,14 @@ void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &g
         cell.flv.feat    = 0;
     }
 
-    fprintf(stdout, "c(%d,%d,{fg:%d,bg:%d,%s%s%s%s%s%s%s",
+    fprintf(stdout, "c(%d,%d,{fg:%d,bg:%d,%s%s%s%s%s%s%s%s",
             x, y, cell.fg, cell.bg,
             // These could obviously be shorter, but I don't think they need to be
             cell.is_bloody ? "bloody:true," : "",
             cell.is_silenced ? "silenced:true," : "",
             cell.is_haloed ? "haloed:true," : "",
             cell.is_moldy ? "moldy:true," : "",
+            cell.glowing_mold ? "glowing_mold:true" : "",
             cell.is_sanctuary ? "sanctuary:true," : "",
             cell.is_liquefied ? "liquefied:true," : "",
             cell.swamp_tree_water ? "swtree:true," : "");
