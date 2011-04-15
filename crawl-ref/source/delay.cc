@@ -1631,9 +1631,10 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                  mon->name(DESC_CAP_THE).c_str());
         }
     }
+    else if (mon->seen_context == "just seen")
+        return false;
     else
     {
-        ASSERT(mon->seen_context != "just seen");
         std::string text = mon->full_name(DESC_CAP_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
