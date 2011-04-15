@@ -7,6 +7,7 @@ var dungeon_cols = 0, dungeon_rows = 0;
 var socket;
 
 var log_messages = false;
+var log_message_size = false;
 
 var delay_timeout = undefined;
 var message_queue = [];
@@ -197,7 +198,8 @@ $(document).ready(
         $(document).bind('keypress.client', handle_keypress);
         $(document).bind('keydown.client', handle_keydown);
 
-        socket = new WebSocket("ws://localhost:8080/socket");
+        // socket_server is set in the client.html template
+        socket = new WebSocket(socket_server);
 
         socket.onopen = function()
         {
@@ -209,6 +211,10 @@ $(document).ready(
             if (log_messages)
             {
                 console.log("Message: " + msg.data);
+            }
+            if (log_message_size)
+            {
+                console.log("Message size: " + msg.data.length);
             }
             if (delay_timeout)
             {
