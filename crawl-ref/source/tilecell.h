@@ -18,6 +18,7 @@ struct packed_cell
     bool is_silenced;
     bool is_haloed;
     bool is_moldy;
+    bool glowing_mold;
     bool is_sanctuary;
     bool is_liquefied;
     bool swamp_tree_water;
@@ -27,9 +28,9 @@ struct packed_cell
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
 
     packed_cell() : num_dngn_overlay(0), is_bloody(false), is_silenced(false),
-                    is_haloed(false), is_moldy(false), is_sanctuary(false),
-                    is_liquefied(false), swamp_tree_water (false),
-                    blood_rotation(0) {}
+                    is_haloed(false), is_moldy(false), glowing_mold(false),
+                    is_sanctuary(false), is_liquefied(false),
+                    swamp_tree_water (false), blood_rotation(0) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
@@ -37,6 +38,7 @@ struct packed_cell
                                         is_silenced(c->is_silenced),
                                         is_haloed(c->is_haloed),
                                         is_moldy(c->is_moldy),
+                                        glowing_mold(c->glowing_mold),
                                         is_sanctuary(c->is_sanctuary),
                                         is_liquefied(c->is_liquefied),
                                         swamp_tree_water(c->swamp_tree_water),

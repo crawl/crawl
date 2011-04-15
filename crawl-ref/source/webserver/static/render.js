@@ -253,10 +253,14 @@ function draw_blood_overlay(x, y, cell, is_wall)
         draw_dngn(basetile + offset, x, y);
     }
     else if (cell.moldy)
-
     {
         offset = cell.flv.s % tile_dngn_count(TILE_MOLD);
         draw_dngn(TILE_MOLD + offset, x, y);
+    }
+    else if (cell.glowing_mold)
+    {
+        offset = cell.flv.special % tile_dngn_count(TILE_GLOWING_MOLD);
+        draw_dngn(TILE_GLOWING_MOLD + offset, x, y);
     }
 }
 
