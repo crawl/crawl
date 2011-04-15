@@ -1979,6 +1979,7 @@ void check_antennae_detect()
                 env.map_knowledge(*ri).set_detected_monster(mc);
 
                 if (mc == MONS_SENSED_TRIVIAL || mc == MONS_SENSED_EASY
+                    || mc == MONS_SENSED_FRIENDLY
                     || testbits(mon->flags, MF_SENSED))
                 {
                     continue;

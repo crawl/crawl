@@ -592,7 +592,9 @@ monster_type ash_monster_tier(const monster *mon)
     double factor = sqrt(exp_needed(you.experience_level) / 30.0);
     int tension = exper_value(mon) / (1 + factor);
 
-    if (tension <= 0)
+    if (mon->friendly())
+        return MONS_SENSED_FRIENDLY;
+    else if (tension <= 0)
         // Conjurators use melee to conserve mana, MDFis switch plates...
         return MONS_SENSED_TRIVIAL;
     else if (tension <= 5)

@@ -782,6 +782,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_PROGRAM_BUG;
     case MONS_SENSED:
         return TILE_UNSEEN_MONSTER;
+    case MONS_SENSED_FRIENDLY:
+        return TILE_MONS_SENSED_FRIENDLY;
     case MONS_SENSED_TRIVIAL:
         return TILE_MONS_SENSED_TRIVIAL;
     case MONS_SENSED_EASY:

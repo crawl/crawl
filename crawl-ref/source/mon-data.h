@@ -6312,6 +6312,18 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_SENSED_FRIENDLY, '{', GREEN, "friendly sensed monster",
+    M_NO_POLY_TO,
+    MR_NO_FLAGS,
+    0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 1, 0, 0 },
+    0, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
+{
     MONS_SENSED_TRIVIAL, '{', LIGHTGRAY, "trivial sensed monster",
     M_NO_POLY_TO,
     MR_NO_FLAGS,
