@@ -78,6 +78,13 @@ void player_quiver::get_desired_item(const item_def** item_out, int* slot_out) c
 // If no item can be found, return the reason why.
 int player_quiver::get_fire_item(std::string* no_item_reason) const
 {
+    // Felids have no use for the quiver.
+    if (you.species == SP_CAT)
+    {
+        if (no_item_reason != NULL)
+            *no_item_reason = "You can't grasp things well enough to throw them.";
+        return -1;
+    }
     int slot;
     const item_def* desired_item;
 
@@ -315,6 +322,10 @@ void player_quiver::on_inv_quantity_changed(int slot, int amt)
 // If current quiver slot is empty, fill it with something useful.
 void player_quiver::_maybe_fill_empty_slot()
 {
+    // Felids have no use for the quiver.
+    if (you.species == SP_CAT)
+        return;
+
     const item_def* weapon = you.weapon();
     const ammo_t slot = _get_weapon_ammo_type(weapon);
 
