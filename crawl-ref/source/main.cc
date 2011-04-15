@@ -1644,6 +1644,12 @@ static void _do_display_map()
 
 static void _do_cycle_quiver(int dir)
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't grasp things well enough to throw them.");
+        return;
+    }
+
     const int cur = you.m_quiver->get_fire_item();
     const int next = get_next_fire_item(cur, dir);
 #ifdef DEBUG_QUIVER
