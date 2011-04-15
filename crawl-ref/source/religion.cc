@@ -64,6 +64,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-stats.h"
 #include "shopping.h"
 #include "skills2.h"
 #include "spl-book.h"
@@ -888,74 +889,79 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
 void dec_penance(god_type god, int val)
 {
-    if (val <= 0)
+    if (val <= 0 || you.penance[god] <= 0)
         return;
 
-    if (you.penance[god] > 0)
-    {
 #ifdef DEBUG_PIETY
-        mprf(MSGCH_DIAGNOSTICS, "Decreasing penance by %d", val);
+    mprf(MSGCH_DIAGNOSTICS, "Decreasing penance by %d", val);
 #endif
-        if (you.penance[god] <= val)
+    if (you.penance[god] <= val)
+    {
+        you.penance[god] = 0;
+
+        mark_milestone("god.mollify",
+                       "mollified " + god_name(god) + ".");
+
+        const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
+
+        simple_god_message(
+            make_stringf(" seems mollified%s.",
+                         dead_jiyva ? ", and vanishes" : "").c_str(),
+            god);
+
+        if (dead_jiyva)
+            add_daction(DACT_REMOVE_JIYVA_ALTARS);
+
+        take_note(Note(NOTE_MOLLIFY_GOD, god));
+
+        if (you.religion == god)
         {
-            you.penance[god] = 0;
+            // In case the best skill is Invocations, redraw the god
+            // title.
+            redraw_skill(you.your_name, player_title());
+        }
 
-            mark_milestone("god.mollify",
-                           "mollified " + god_name(god) + ".");
-
-            const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
-
-            simple_god_message(
-                make_stringf(" seems mollified%s.",
-                             dead_jiyva ? ", and vanishes" : "").c_str(),
-                god);
-
-            if (dead_jiyva)
-                add_daction(DACT_REMOVE_JIYVA_ALTARS);
-
-            take_note(Note(NOTE_MOLLIFY_GOD, god));
-
-            if (you.religion == god)
-            {
-                // In case the best skill is Invocations, redraw the god
-                // title.
-                redraw_skill(you.your_name, player_title());
-            }
-
+        if (you.religion == god)
+        {
             // Orcish bonuses are now once more effective.
-            if (god == GOD_BEOGH && you.religion == god)
+            if (god == GOD_BEOGH)
                  you.redraw_armour_class = true;
             // TSO's halo is once more available.
-            else if (god == GOD_SHINING_ONE && you.religion == god
+            else if (god == GOD_SHINING_ONE
                 && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_ASHENZARI && you.religion == god
+            else if (god == GOD_ASHENZARI
                 && you.piety >= piety_breakpoint(2))
             {
                 mpr("Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
             }
+            else if (god == GOD_CHEIBRIADOS && che_boost_level())
+            {
+                redraw_screen();
+                notify_stat_change("mollifying Cheibriados");
+            }
 
             // When you've worked through all your penance, you get
             // another chance to make hostile holy beings good neutral.
-            if (is_good_god(you.religion))
+            if (is_good_god(god))
                 add_daction(DACT_HOLY_NEW_ATTEMPT);
         }
-        else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
-        { // Nemelex's penance works actively only until 100
-            if ((you.penance[god] -= val) > 100)
-                return;
-            mark_milestone("god.mollify",
-                           "partially mollified " + god_name(god) + ".");
-            simple_god_message(" seems mollified... mostly.", god);
-            take_note(Note(NOTE_MOLLIFY_GOD, god));
-        }
-        else
-            you.penance[god] -= val;
     }
+    else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
+    { // Nemelex's penance works actively only until 100
+        if ((you.penance[god] -= val) > 100)
+            return;
+        mark_milestone("god.mollify",
+                       "partially mollified " + god_name(god) + ".");
+        simple_god_message(" seems mollified... mostly.", god);
+        take_note(Note(NOTE_MOLLIFY_GOD, god));
+    }
+    else
+        you.penance[god] -= val;
 }
 
 void dec_penance(int val)
@@ -1033,6 +1039,11 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_SLIMIFY])
                 you.duration[DUR_SLIMIFY] = 0;
+        }
+        else if (god == GOD_CHEIBRIADOS)
+        {
+            redraw_screen();
+            notify_stat_change("falling into Cheibriados' penance");
         }
 
         if (you.religion == god)
