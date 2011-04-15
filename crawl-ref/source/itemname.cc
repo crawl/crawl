@@ -2190,6 +2190,10 @@ void check_item_knowledge(bool unknown_items)
     for (int i = 0; i < 5; i++)
         for (int j = 0; j < idx_to_maxtype[i]; j++)
         {
+#if TAG_MAJOR_VERSION == 32
+            if (i == 1 && j == SCR_PAPER)
+                continue;
+#endif
             if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
