@@ -171,6 +171,11 @@ void quiver_item(int slot)
 
 void choose_item_for_quiver()
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't grasp things well enough to throw them.");
+        return;
+    }
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
                                   MT_INVLIST,
                                   OSEL_THROWABLE, true, true, true, '-',
