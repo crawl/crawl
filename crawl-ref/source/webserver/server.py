@@ -5,12 +5,14 @@ import tornado.websocket
 import tornado.ioloop
 import tornado.web
 
+bind_address = ""
+bind_port = 8080
+
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         host = self.request.host
-        print host
         self.render("client.html", socket_server = "ws://" + host + "/socket")
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
@@ -70,7 +72,7 @@ application = tornado.web.Application([
     (r"/socket", CrawlWebSocket),
 ], **settings)
 
-application.listen(8080)
+application.listen(bind_port, bind_address)
 
 ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.start()
