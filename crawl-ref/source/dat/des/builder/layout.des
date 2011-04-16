@@ -751,7 +751,8 @@ TAGS: overwritable layout allow_dup unrand
         if room.fill == '.'
            and (room.x2 - room.x1 > 5)
            and (room.y2 - room.y1 > 5)
-           and crawl.x_chance_in_y(you.absdepth() - 9, 220)
+           and (you.in_branch("D") or you.in_branch("Lair"))
+           and crawl.x_chance_in_y(you.absdepth() - 9, 450)
         then
             local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
             make_inner_room(room, feat, crawl.coinflip())
