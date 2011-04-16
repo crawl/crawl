@@ -677,6 +677,9 @@ bool monster::can_throw_large_rocks() const
 
 bool monster::can_speak()
 {
+    if (has_ench(ENCH_MUTE))
+        return (false);
+
     // Priest and wizard monsters can always speak.
     if (is_priest() || is_actual_spellcaster())
         return (true);
@@ -687,9 +690,6 @@ bool monster::can_speak()
     {
         return (false);
     }
-
-    if (has_ench(ENCH_MUTE))
-        return (false);
 
     // Does it have the proper vocal equipment?
     const mon_body_shape shape = get_mon_shape(this);
