@@ -406,7 +406,7 @@ monster_type player_species_to_mons_species(species_type species)
     case SP_CAT:
         return (MONS_FELID);
     case SP_OCTOPUS:
-        return (MONS_OCTOPUS);
+        return (MONS_OCTOPODE);
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
