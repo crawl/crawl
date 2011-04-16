@@ -829,6 +829,9 @@ static bool _handle_scroll(monster* mons)
     if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
         return (false);
 
+    if (silenced(mons->pos()))
+        return (false);
+
     // Make sure the item actually is a scroll.
     if (mitm[mons->inv[MSLOT_SCROLL]].base_type != OBJ_SCROLLS)
         return (false);
