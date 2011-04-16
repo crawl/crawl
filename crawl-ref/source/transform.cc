@@ -585,9 +585,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_BLADE_HANDS:
-        tran_name = "Blade Hands";
-        if (you.species == SP_CAT)
-            tran_name = "Blade Paws";
+        tran_name = ("Blade " + uppercase_first(blade_parts(true))).c_str();
         dur       = std::min(10 + random2(pow), 100);
         msg       = "Your " + blade_parts()
                     + " turn into razor-sharp scythe blades.";
