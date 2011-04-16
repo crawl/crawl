@@ -217,6 +217,7 @@ static monsterentry mondata[] = {
     AXED_MON(MONS_GIANT_BLOWFLY)
     AXED_MON(MONS_TRAP_MIMIC)
     AXED_MON(MONS_BEAR)
+    AXED_MON(MONS_HOLY_SWINE)
 #endif
 
 // Real monsters begin here {dlb}:
