@@ -1229,7 +1229,7 @@ KFEAT:  S = deep_water
 KMONS:  S = anaconda
 # The anaconda's name is Kaa.
 KITEM:  U = superb_item
-KITEM:  Q = acquire_any
+KITEM:  Q = acquire any
 MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 KFEAT:  o = granite_statue
 {{
