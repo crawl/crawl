@@ -1220,7 +1220,8 @@ ENDMAP
 # tiles!
 NAME:   jungle_book
 ORIENT: north
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen lair_end_large
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen
 MONS:   plant, elephant
 SUBST:  X = xxx..
 SUBST:  P = 1.........
@@ -1276,7 +1277,8 @@ ENDMAP
 
 #######################################################################
 NAME:   evil_forest
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen lair_end_large
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
 ORIENT: southeast
 SUBST:  T = ttt.
 COLOUR: _;/1234 = red
@@ -1325,7 +1327,8 @@ ENDMAP
 #######################################################################
 # Oh worms!
 NAME:   wormcave
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen lair_end_small
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
 ORIENT: southeast
 MONS:   plant
 MONS:   spiny worm, brain worm, worm, giant leech, lindwurm
@@ -1374,7 +1377,8 @@ ENDMAP
 #######################################################################
 # Bear with us...
 NAME:   bearwithus
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen lair_end_small
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
 ORIENT: southeast
 MONS:   plant
 MONS:   grizzly bear, polar bear, black bear
@@ -1406,7 +1410,8 @@ ENDMAP
 #######################################################################
 # Who let the dogs out?
 NAME:   kennels
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling lair_end_small
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling
 ORIENT: southeast
 MONS:   plant
 MONS:   jackal, hound, warg, wolf, war dog, hell hound
@@ -1437,8 +1442,8 @@ ENDMAP
 # Frog pond
 #
 NAME:   minmay_lair_end_frog_pond
+PLACE:  Lair:$
 ORIENT: float
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling lair_end_small
 MONS:   giant frog / giant toad / spiny frog
 MONS:   blink frog
 MONS:   vampire mosquito
@@ -1482,7 +1487,7 @@ ENDMAP
 # See https://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:branch:forest.
 #
 NAME:   minmay_lair_end_enchanted_forest
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling lair_end_large
+PLACE:  Lair:$
 ORIENT: northwest
 MONS:   black bear / grizzly bear, wolf, spriggan
 MONS:   spriggan rider / spriggan druid
