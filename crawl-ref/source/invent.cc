@@ -1888,7 +1888,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
 
         if (entry->evoke_func && item_type_known(item))
         {
-            if (item_is_equipped(item))
+            if (item_is_equipped(item) && !item_is_melded(item))
                 return (true);
 
             if (msg)
@@ -1899,7 +1899,8 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
         // Unrandart might still be evokable (e.g., reaching)
     }
 
-    const bool wielded = (you.equip[EQ_WEAPON] == item.link);
+    const bool wielded = you.equip[EQ_WEAPON] == item.link
+                         && !item_is_melded(item);
 
     switch (item.base_type)
     {
