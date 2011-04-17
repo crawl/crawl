@@ -344,6 +344,7 @@ orcish_platemail ARM_PLATE_MAIL_ORC
 orcish_platemail2
 
 crystal_plate_mail ARM_CRYSTAL_PLATE_MAIL
+crystal_plate_mail2
 
 animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
