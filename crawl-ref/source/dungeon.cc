@@ -2906,6 +2906,27 @@ static void _builder_normal(int level_number)
 {
     const map_def *vault = _dgn_random_map_for_place(false);
 
+    if (player_in_branch(BRANCH_LAIR))
+    {
+        // Instead of using PLACE: maps to place Lair ending vaults, we now use
+        // a tag instead.
+        if (one_chance_in(3))
+        {
+            // Place a single large Lair vault and pretend it was from PLACE!
+            vault = random_map_for_tag("lair_end_large", false);
+        }
+        else
+        {
+            // Try to place two small ending vaults instead!
+
+            const map_def *vault2 = random_map_for_tag("lair_end_small", false);
+            _ensure_vault_placed_ex(_build_primary_vault(level_number, vault2),
+                                 vault2);
+
+            vault = random_map_for_tag("lair_end_small", false);
+        }
+    }
+
     if (vault)
     {
         env.level_build_method += " random_map_for_place";
