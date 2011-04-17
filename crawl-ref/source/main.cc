@@ -1279,6 +1279,25 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
+static bool _check_carrying_orb()
+{
+    // We never picked up the Orb, no problem.
+    if (you.char_direction != GDT_ASCENDING)
+        return (true);
+
+    // So we did pick up the Orb. Now check whether we're carrying it.
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].defined()
+            && you.inv[i].base_type == OBJ_ORBS
+            && you.inv[i].sub_type == ORB_ZOT)
+        {
+            return (true);
+        }
+    }
+    return (yes_or_no("You're not carrying the Orb! Leave anyway"));
+}
+
 static void _go_downstairs();
 static void _go_upstairs()
 {
@@ -1340,6 +1359,30 @@ static void _go_upstairs()
     {
         mpr("You are carrying too much to climb upwards.");
         return;
+    }
+
+    const bool leaving_dungeon =
+        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1);
+
+    if (leaving_dungeon)
+    {
+        bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
+                            false, 'n') || !_check_carrying_orb());
+
+        if (!stay && crawl_state.game_is_hints())
+        {
+            if (!yesno("Are you *sure*? Doing so will end the game!", false,
+                       'n'))
+            {
+                stay = true;
+            }
+        }
+
+        if (stay)
+        {
+            mpr("Alright, then stay!");
+            return;
+        }
     }
 
     if (you.duration[DUR_MISLED])
