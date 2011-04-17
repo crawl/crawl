@@ -242,25 +242,6 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     return (true);
 }
 
-static bool _check_carrying_orb()
-{
-    // We never picked up the Orb, no problem.
-    if (you.char_direction != GDT_ASCENDING)
-        return (true);
-
-    // So we did pick up the Orb. Now check whether we're carrying it.
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].base_type == OBJ_ORBS
-            && you.inv[i].sub_type == ORB_ZOT)
-        {
-            return (true);
-        }
-    }
-    return (yes_or_no("You're not carrying the Orb! Leave anyway"));
-}
-
 // Adds a dungeon marker at the point of the level where returning from
 // a labyrinth or portal vault should drop the player.
 static void _mark_portal_return_point(const coord_def &pos)
@@ -629,30 +610,6 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     const level_id destination_override(_stair_destination_override());
-    const bool leaving_dungeon =
-        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1)
-        && !destination_override.is_valid();
-
-    if (leaving_dungeon)
-    {
-        bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
-                            false, 'n') || !_check_carrying_orb());
-
-        if (!stay && crawl_state.game_is_hints())
-        {
-            if (!yesno("Are you *sure*? Doing so will end the game!", false,
-                       'n'))
-            {
-                stay = true;
-            }
-        }
-
-        if (stay)
-        {
-            mpr("Alright, then stay!");
-            return;
-        }
-    }
 
     // Bail if any markers veto the move.
     if (_marker_vetoes_level_change())
