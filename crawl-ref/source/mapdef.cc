@@ -3617,6 +3617,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 
         mspec.abjuration_duration = dur;
 
+        std::string shifter_name = replace_all_of(strip_tag_prefix(mon_str, "shifter:"), "_", " ");
+
+        if (!shifter_name.empty())
+        {
+            mspec.initial_shifter = get_monster_by_name(shifter_name);
+            if (mspec.initial_shifter == MONS_PROGRAM_BUG)
+                mspec.initial_shifter = RANDOM_MONSTER;
+        }
+
         int summon_type = 0;
         std::string s_type = strip_tag_prefix(mon_str, "sum:");
         if (!s_type.empty())

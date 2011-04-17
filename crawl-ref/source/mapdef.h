@@ -665,6 +665,8 @@ class mons_spec
     std::vector<monster_spells> spells;
     uint64_t extra_monster_flags;
 
+    monster_type initial_shifter;
+
     CrawlHashTable props;
 
     mons_spec(int id = RANDOM_MONSTER,
@@ -678,7 +680,7 @@ class mons_spec
           colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
           abjuration_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
-          extra_monster_flags(0), props()
+          extra_monster_flags(0), initial_shifter(RANDOM_MONSTER), props()
     {
     }
 };
