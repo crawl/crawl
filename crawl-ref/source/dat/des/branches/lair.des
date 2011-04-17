@@ -8,8 +8,12 @@
 ################################################################################
 
 {{
-function place_second_ending(e)
+function lair_small_ending(e)
+    e.tags('lair_end_small')
+    e.weight(5)
+
     if not crawl.game_started() then return end
+
     e.hook("post_place", function ()
         if not dgn.persist.lair_second_ending_built then
             dgn.persist.lair_second_ending_built = true
@@ -1342,7 +1346,6 @@ ENDMAP
 NAME:   wormcave
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
-TAGS:   lair_end_small
 ORIENT: southeast
 MONS:   plant
 MONS:   spiny worm, brain worm, worm, giant leech, lindwurm
@@ -1364,7 +1367,7 @@ KPROP:  = = bloody
 : end
 SUBST:  C = x
 SUBST:  _ = .
-: place_second_ending(_G)
+: lair_small_ending(_G)
 MAP
             XXXXXxxXXxxXXxxxxXXxxxXXXxxx
  @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1394,14 +1397,13 @@ ENDMAP
 NAME:   bearwithus
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
-TAGS:   lair_end_small
 ORIENT: southeast
 MONS:   plant
 MONS:   grizzly bear, polar bear, black bear
 SUBST:  X = xx.
 SUBST:  P = 1111.
 KITEM:  % = honeycomb q:3
-: place_second_ending(_G)
+: lair_small_ending(_G)
 MAP
             xXXxxxXXXxxx
        @...xxxxxxxxxxxxx
@@ -1429,14 +1431,13 @@ ENDMAP
 NAME:   kennels
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling
-TAGS:   lair_end_small
 ORIENT: southeast
 MONS:   plant
 MONS:   jackal, hound, warg, wolf, war dog, hell hound
 SUBST:  X = xx.
 SUBST:  P = 1111.
 KITEM:  $ = gold, acquire any
-: place_second_ending(_G)
+: lair_small_ending(_G)
 MAP
 @   @  @  XXXXXxxxxXXxxxxxxxxxxxxxxx
  ...P..Pxxxxxxxx.3xxxxxxxxxxxxxxxxxx
@@ -1461,7 +1462,6 @@ ENDMAP
 # Frog pond
 #
 NAME:   minmay_lair_end_frog_pond
-TAGS:   lair_end_small
 PLACE:  Lair:$
 ORIENT: float
 MONS:   giant frog / giant toad / spiny frog
@@ -1474,7 +1474,7 @@ SUBST:  . = .:40 W:10 1:2 3:1 4:5
 KFEAT:  W = W
 KMONS:  W = giant leech / nothing w:1000
 SUBST:  % = %%*|
-: place_second_ending(_G)
+: lair_small_ending(_G)
 MAP
           ..............
        ....................
