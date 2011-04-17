@@ -199,134 +199,6 @@ void weapon_switch(int targ)
     you.turn_is_over = true;
 }
 
-// Look for a butchering implement. If fallback is true,
-// prompt the user if no obvious options exist.
-// Returns whether a weapon was switched.
-static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
-{
-    // When berserk, you can't change weapons.  Sanity check!
-    if (!can_wield(NULL, true))
-        return (false);
-
-    // If wielding a distortion weapon, never attempt to switch away
-    // automatically.
-    if (const item_def *wpn = you.weapon())
-    {
-        // Otherwise we wouldn't be here.
-        ASSERT(!can_cut_meat(*wpn));
-
-        if (wpn->base_type == OBJ_WEAPONS
-            && item_type_known(*wpn)
-            && get_weapon_brand(*wpn) == SPWPN_DISTORTION
-            && !you.duration[DUR_WEAPON_BRAND])
-        {
-            if (!gloved_butcher)
-            {
-                mprf(MSGCH_WARN,
-                    "You're wielding a weapon of distortion, will not "
-                    "autoswap for butchering.");
-            }
-
-            return (false);
-        }
-
-        if (!check_old_item_warning(*wpn, OPER_WIELD))
-            return (false);
-    }
-
-    bool potential_candidate = false;
-
-    // Look for a butchering implement in your pack.
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_info tool = get_item_info(you.inv[i]);
-        if (tool.defined()
-            && tool.base_type == OBJ_WEAPONS
-            && can_cut_meat(tool)
-            && can_wield(&tool)
-            // Don't even suggest autocursing items.
-            // Note that unknown autocursing is OK.
-            && (!is_artefact(tool)
-                || (artefact_known_wpn_property(tool, ARTP_CURSED) <= 0)))
-        {
-            if (Options.easy_butcher
-                && item_known_uncursed(tool)
-                && item_type_known(tool)
-                // Don't even ask!
-                && !needs_handle_warning(tool, OPER_WIELD))
-            {
-                butcher_tool = i;
-                return (true);
-            }
-            else
-                potential_candidate = true;
-        }
-    }
-
-    if (!potential_candidate)
-    {
-        if (!gloved_butcher)
-        {
-            mpr("You don't carry any weapon you could use for butchering.");
-            if (crawl_state.game_is_hints())
-            {
-                mpr("You should pick up the first knife, dagger, sword or axe "
-                    "you find so you can use it to butcher corpses.",
-                    MSGCH_TUTORIAL);
-            }
-        }
-
-        return (false);
-    }
-
-    const int item_slot = prompt_invent_item(
-                              "What would you like to use? (- for none)?",
-                              MT_INVLIST, OSEL_BUTCHERY,
-                              true, true, true, '-', -1, NULL, OPER_WIELD);
-
-    if (prompt_failed(item_slot))
-    {
-        canned_msg(MSG_OK);
-        return (false);
-    }
-    else if (item_slot == PROMPT_GOT_SPECIAL)
-    {
-        if (you.has_claws() || form_can_butcher_barehanded())
-        {
-            butcher_tool = SLOT_BARE_HANDS;
-            return (true);
-        }
-        else
-        {
-            mpr("You can't butcher without a weapon!");
-            return (false);
-        }
-    }
-    else if (item_slot == you.equip[EQ_WEAPON])
-    {
-        mpr("You are already wielding that!");
-        return (false);
-    }
-
-    item_info tool = get_item_info(you.inv[item_slot]);
-    if (tool.defined()
-        && tool.base_type == OBJ_WEAPONS
-        && can_cut_meat(tool))
-    {
-        if (can_wield(&tool))
-        {
-            butcher_tool = item_slot;
-            return (true);
-        }
-
-        mpr("You can't wield this item!");
-        return (false);
-    }
-
-    mpr("That item isn't sharp enough!");
-    return (false);
-}
-
 static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
                               bool wpn_switch, int butchering_tool)
 {
@@ -354,18 +226,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 
     if (wpn_switch)
     {
-        std::string tool;
-        if (butchering_tool == SLOT_BARE_HANDS)
-        {
-            tool = "unarmed";
-        }
-        else
-        {
-            item_def& new_wpn(you.inv[butchering_tool]);
-            tool = new_wpn.name(DESC_INVENTORY_EQUIP);
-        }
-
-        mprf("Switching to %s for butchering.", tool.c_str());
+        mprf("Switching to boot knife for butchering.");
 
         if (!wield_weapon(true, butchering_tool, false, true, false, false))
             return (false);
@@ -579,14 +440,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     if (!can_butcher)
     {
-        // Try to find a butchering implement.
-        if (!_find_butchering_implement(butcher_tool, gloved_butcher)
-            && !gloved_butcher)
-        {
-            return (false);
-        }
-
-        if (butcher_tool == SLOT_BARE_HANDS && gloved_butcher)
+        if (gloved_butcher)
             removed_gloves = true;
         else if (you.equip[EQ_WEAPON] != butcher_tool)
             wpn_switch = true;
