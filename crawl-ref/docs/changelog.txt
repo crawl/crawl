@@ -12,7 +12,7 @@ Breaks save compatibility with the 0.7 release.
 * New spells: Malign Gateway, Tornado, Leda's Liquefaction, Summon Dragon, Summon Hydra, Darkness.
 * Removed spells: Bone Shards, Tame Beasts, Portal, Alter Self, Extension.
 * Split Enchantments into Hexes (harm foes) and Charms (self-buffs).
-* Replace Selective Amnesia spell with scroll and book destruction.
+* Replaced Selective Amnesia spell with scroll and book destruction.
 * Improved heavy armour.
 * Makhleb and the Shining One are no longer available as starting gods.
 * Shortened the Elven Halls.
@@ -20,16 +20,15 @@ Breaks save compatibility with the 0.7 release.
 Gods
 ----
 * New god: Ashenzari, god of divinations.
-* Fix Jiyva off-level eating crash.
-* Fix gods sometimes missing from the game due to some temple vaults.
+* Fixed gods sometimes missing from the game due to some temple vaults.
 * Except for Jiyva, prayer is now only used for (piety-gaining) sacrifices. Other effects are abilities.
-* Don't give experience or items for killing monsters from god wrath
+* Killing monsters from god wrath doesn't give experience or items anymore.
 * Gods ignore kills of dancing weapons, ball lightning and vortices.
 * No instant divine retribution.
 * Beefed up Cheibriados' wrath; no stat boosts during Chei penance.
-* Don't give piety for eating with Chei.
-* Make Cheibriados warn you when putting on boots of running or "rage.
-* Make armour keep its ponderousness when melded.
+* Eating with Chei doesn't give piety.
+* Cheibriados warns you when putting on boots of running or amulet of rage.
+* Armour keeps its ponderousness when melded.
 * Invoking Elyvilon's protection is now an ability.
 * Destroying weapons in Elyvilon's name is now a prayer.
 * Elyvilon allows destruction of staves.
@@ -38,44 +37,43 @@ Gods
 * Fedhas's corpse decomposition is now activated by prayer.
 * Followers of Jiyva gain food, hp and mp on jellies slurping items.
 * Jiyva no longer provides duplicate conservation and resist corrosion effects.
-* Allow the player more control over what items to sacrifice to Nemelex (on the '^!' screen).
-* Use Necromancy skill for Kikubaaqudgha's invocations.
-* Tone down Kiku's mummy death curse protection.
-* Make corpses received from Kiku actually fit for reanimation; reduce number of corpses.
+* Allowed the player more control over what items to sacrifice to Nemelex (on the '^!' screen).
+* Kikubaaqudgha's invocations use Necromancy skill.
+* Toned down Kiku's mummy death curse protection.
+* Made corpses received from Kiku actually fit for reanimation; reduce number of corpses.
 * Kikubaaqudgha protects followers from ordinary mummy curses.
 * Okawaru: Might -> Heroism, increasing all weapon skills by 5, up to 27.
 * Okawaru: Haste -> Finesse, doubled combat speed (melee and ranged).
-* Fix Okawaru not accepting kills of holy beings.
+* Okawaru now accepts kills of holy beings.
 * Sif Muna punishes destruction of spellbooks.
-* Don't reduce Sif Muna's penance for miscasts.
+* Sif Muna's miscasts don't decrease penance.
 * Trog extending your rage doesn't cause glow.
 * The Shining One no longer accepts item sacrifices.
-* Make TSO non-holy summon extension at most double the current duration.
-* Prevent starvation by Xom swapping you to a vampiric weapon.
+* TSO non-holy summon extension at most doubles the current duration.
+* Prevented starvation by Xom swapping you to a vampiric weapon.
 * Yredelemnul's prayer (Injury Mirror) is now an ability.
-* Allow Injury Mirror to reflect torment damage.
+* Injury Mirror can now reflect torment damage.
 * Yredelemnul accepts kills of artificial beings (golems, gargoyles).
-* Overhaul Zin's Recite invocation: much more powerful and interesting.
+* Overhauled Zin's Recite invocation: much more powerful and interesting.
 * Zin protects from Hell effects, chance depending on piety.
 * Zin forbids shapeshifting spells and protects against Kirke’s pig spell.
-* Adjust Zin's ability piety costs.
-* Make Zin hate monsters with mutagenic/rot corpses.
+* Zin hates monsters with mutagenic/rot corpses.
 * Spell failure while already in yellow glow angers Zin.
-* Demand confirmation when butchering forbidden corpses.
-* Add penance welcome messages.
+* Butchering forbidden corpses asks for confirmation.
+* Some god welcome messages differ while under penance.
 
 Character
 ---------
 * New species: Felids, sentient cats.
-* Increase GDR from body armour. New GDR formula: 14 * (baseAC-2)^(1/2).
-* Assign xp from monster kills proportional to the damage dealt by player/allies out of total damage.
-* Prevent chain paralysis: When coming out of paralysis, you're immune for 1d3 turns.
-* Remove Paladins, Reavers and Arcane Marksmen.
-* Remove Chaos Knight of Makhleb.
+* Increased GDR from body armour. New GDR formula: 14 * (baseAC-2)^(1/2).
+* XP from monster kills is proportional to the damage dealt by player/allies out of total damage.
+* No chain paralysis: When coming out of paralysis, you're immune for 1d3 turns.
+* Removed Paladins, Reavers and Arcane Marksmen.
+* Removed Chaos Knight of Makhleb.
 * Split out CK/Lugonu -> Abyssal Knight, Pr/Yredelemnul -> Death Knight.
-* Overhaul Draconians, now more interesting.
-* Fix dangerous clouds sometimes being considered safe for travelling.
-* Fix normal mutations possibly preventing getting them as a perma-mutation.
+* Overhauled Draconians, now more interesting.
+* Fixed dangerous clouds sometimes being considered safe for travelling.
+* Fixed normal mutations possibly preventing getting them as a perma-mutation.
 * Stop quick actions from letting you search faster.
 * All sources of berserk are blocked at 'Very Hungry'. Berserk automatically stops when you hit 'Starving'.
 * Remove experience pool limit; abbreviate the XP pool above 100K.
@@ -100,11 +98,11 @@ Character
 * Remove map-forgetting and spell-forgetting Divination miscast effects.
 * Don't prevent blink from putting you in dangerous clouds.
 * Don't train Stealth for pacified monsters.
-* Allow Merfolk/Kenku to blink over deep water.
-* Allow Kenku to stop flying.
+* Allowed Merfolk/Kenku to blink over deep water.
+* Allowed Kenku to stop flying.
 * Apply terrain change to player when banished.
-* Bring Merfolk HP down to Human HP levels.
-* Boost Mummy base MR 3 -> 5.
+* Brought Merfolk HP down to Human HP levels.
+* Boosted Mummy base MR 3 -> 5.
 * Make LOS reducers multiplicative rather than additive.
 * Potions/cards of experience give you a full level; similarly drain costs a full level.
 * Make stat gain mutations work for satiated Vampires.
@@ -185,10 +183,10 @@ Spells
 ------
 * Split Enchantments skill and spell school into Charms and Hexes.
 * Removed Bone Shards, Tame Beasts, Portal, Alter Self, Extension.
-* New spell: Passage of Golubria (Trloc 5).
-* New spell: Malign Gateway (Summ/Trloc 7).
-* New spell: Tornado (Air/Conj 9).
-* New spell: Leda's Liquefaction (Trmut/Earth 4), area slowing effect.
+* New spell: Passage of Golubria (Tloc 5).
+* New spell: Malign Gateway (Summ/Tloc 7).
+* New spell: Tornado (Air 9).
+* New spell: Leda's Liquefaction (Tmut/Earth 4), area slowing effect.
 * New spell: Summon Dragon (Summ 9).
 * New spell: Summon Hydra (Summ 7), summons short-lived 4-12 headed hydra.
 * New spell: Darkness (Hex 7), decreases LOS radius by 2.
