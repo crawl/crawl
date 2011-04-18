@@ -193,6 +193,55 @@ static std::string _desc_mons_type_map(std::map<monster_type, int> types)
     return make_stringf("%s come into view.", message.c_str());
 }
 
+/*
+ * Monster list simplification
+ *
+ * When too many monsters come into view at once, we group the ones with the
+ * same genus, starting with the most represented genus.
+ *
+ * @param types monster types and the number of monster for each type.
+ * @param genera monster genera and the number of monster for each genus.
+ */
+static void _genus_factoring(std::map<monster_type, int> &types,
+                             std::map<monster_type, int> &genera)
+{
+    monster_type genus;
+    int num = 0;
+    std::map<monster_type, int>::iterator it;
+    // Find the most represented genus.
+    for (it = genera.begin(); it != genera.end(); it++)
+        if (it->second > num)
+        {
+            genus = it->first;
+            num = it->second;
+        }
+
+    // The most represented genus has a single member.
+    // No more factoring is possible, we're done.
+    if (num == 1)
+    {
+        genera.clear();
+        return;
+    }
+
+    genera.erase(genus);
+    it = types.begin();
+    do
+    {
+        if (mons_genus(it->first) != genus)
+            continue;
+
+        // This genus has a single monster type. Can't factor.
+        if (it->second == num)
+            return;
+
+        types.erase(it->first);
+
+    } while (++it != types.end());
+
+    types[genus] = num;
+}
+
 void update_monsters_in_view()
 {
     const unsigned int max_msgs = 4;
@@ -252,12 +301,12 @@ void update_monsters_in_view()
 
         if (size == 1)
             mpr(msgs[0], MSGCH_WARN);
-        else if (types.size() <= max_msgs)
-            mpr(_desc_mons_type_map(types), MSGCH_WARN);
-        else if (genera.size() <= max_msgs)
-            mpr(_desc_mons_type_map(genera), MSGCH_WARN);
         else
-            mprf(MSGCH_WARN, "%d monsters come into view.", size);
+        {
+            while (types.size() > max_msgs && !genera.empty())
+                _genus_factoring(types, genera);
+            mpr(_desc_mons_type_map(types), MSGCH_WARN);
+        }
 
         bool warning = false;
         std::string warning_msg = "Ashenzari warns you: ";
