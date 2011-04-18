@@ -117,7 +117,7 @@ void play_sound(const char *file)
         && shell_safe(file))
     {
         snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-        system(utf8_to_mb(command));
+        system(OUTS(command));
     }
 #endif
 }
