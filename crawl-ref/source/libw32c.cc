@@ -349,7 +349,7 @@ void init_libw32c(void)
 
     if (!GetConsoleTitleW(oldTitle, 78))
         *oldTitle = 0;
-    SetConsoleTitleW(utf8_to_16(title.c_str()).c_str());
+    SetConsoleTitleW(OUTW(title));
 
     // Use the initial Windows setting for cursor size if it exists.
     // TODO: Respect changing cursor size manually while Crawl is running.
@@ -553,7 +553,7 @@ static void cprintf_aux(const char *s)
     // early out -- not initted yet
     if (outbuf == NULL)
     {
-        printf("%S", utf8_to_16(s).c_str());
+        printf("%S", OUTW(s));
         return;
     }
 
