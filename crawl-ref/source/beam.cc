@@ -78,9 +78,6 @@
 #include "viewgeom.h"
 #include "xom.h"
 
-//#define DEBUG_BEAM
-//#define DEBUG_CHAOS_BOUNCE
-
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
 
@@ -581,12 +578,9 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     }
 
     new_ray = temp_ray;
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_BEAM) || defined(DEBUG_CHAOS_BOUNCE)
-    mprf(MSGCH_DIAGNOSTICS,
-         "chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
+    dprf("chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
          static_cast<float>(old_deg), static_cast<float>(new_deg),
          static_cast<float>(shift));
-#endif
 
     // Don't use up range in bouncing off walls, so that chaos beams have
     // as many chances as possible to bounce.  They're like demented
@@ -698,7 +692,7 @@ void bolt::initialise_fire()
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
+    dprf("%s%s%s [%s] (%d,%d) to (%d,%d): "
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (is_beam) ? "beam" : "missile",
           (is_explosion) ? "*" :
@@ -1315,7 +1309,7 @@ void bolt::do_fire()
     if (range < extra_range_used && range > 0)
     {
 #ifdef DEBUG
-        mprf(MSGCH_DIAGNOSTICS, "fire_beam() called on already done beam "
+        dprf("fire_beam() called on already done beam "
              "'%s' (item = '%s')", name.c_str(),
              item ? item->name(DESC_PLAIN).c_str() : "none");
 #endif
@@ -2998,7 +2992,7 @@ void bolt::reflect()
     {
         reflector = -1;
 #ifdef DEBUG
-        mprf(MSGCH_DIAGNOSTICS, "Bolt reflected by neither player nor "
+        dprf("Bolt reflected by neither player nor "
              "monster (bolt = %s, item = %s)", name.c_str(),
              item ? item->name(DESC_PLAIN).c_str() : "none");
 #endif
@@ -3545,8 +3539,7 @@ void bolt::affect_player()
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Player damage: rolled=%d; after AC=%d", roll, hurted);
+    dprf("Player damage: rolled=%d; after AC=%d", roll, hurted);
 #endif
 
     practise(EX_BEAM_WILL_HIT);
@@ -4300,8 +4293,7 @@ void bolt::affect_monster(monster* mon)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
+    dprf("Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
          mon->name(DESC_PLAIN).c_str(), preac, postac, final);
 #endif
 
@@ -5224,8 +5216,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
+    dprf("explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
          pos().x, pos().y, glyph, colour, flavour, hit, damage.num, damage.size, r);
 #endif
 

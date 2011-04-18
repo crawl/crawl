@@ -745,7 +745,7 @@ std::string getSpeakString(const std::string &key)
     int num_replacements = 0;
 
 #ifdef DEBUG_MONSPEAK
-    mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s", key.c_str());
+    dprf("monster speech lookup for %s", key.c_str());
 #endif
     return _getRandomisedStr(SpeakDB, key, "", num_replacements);
 }
