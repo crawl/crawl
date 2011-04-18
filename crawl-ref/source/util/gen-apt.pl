@@ -39,7 +39,7 @@ sub create_aptitude_file {
     print $outf $_;
     if (/^-{60,}/) {
       $foundmarkers = 1;
-      print $outf aptitude_table($lastline);
+      print $outf (aptitude_table($lastline));
 
       # Repeat separator and headerline under the table.
       print $outf $_;
