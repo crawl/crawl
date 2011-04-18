@@ -1593,8 +1593,8 @@ bool cast_fragmentation(int pow, const dist& spd)
         beam.colour = env.rock_colour;
         // fall-through
     case DNGN_STONE_WALL:
-        if (player_in_branch(BRANCH_HALL_OF_ZOT))
-            beam.colour = env.rock_colour;
+        if (beam.colour == 0)
+            beam.colour = LIGHTGRAY;
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
         if (beam.colour == 0)
