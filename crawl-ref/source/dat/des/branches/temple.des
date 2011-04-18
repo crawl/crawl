@@ -2840,6 +2840,57 @@ xx.O.xxx.'.xxx.O.xx
        xxxxx
 ENDMAP
 
+# 15 gods
+NAME:       temple_of_Zot
+PLACE:      Temple
+ORIENT:     encompass
+LFLOORCOL:  magenta
+LROCKCOL:   lightmagenta
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_magenta
+SUBST:      C = X:900 c:100
+COLOUR:     c = lightmagenta
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxcccccccccccccccccxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxx
+xxxxxxxxxxxXXXX.............XXXXcccccccccccccccccXXXX.............XXXXxxxxxxxxxx
+xxxxxxxxxxXX...................XXXcccccccccccccXXX...................XXxxxxxxxxx
+xxxxxxxxxXX......................XXcccccccccccXX......................XXxxxxxxxx
+xxxxxxxxxX........................XXXXXXXXXXXXX........................Xxxxxxxxx
+xxxxxxxxxX........................XXX.B...B.XXX........................Xxxxxxxxx
+xxxxxxxxxXX.......................XXB...B...BXX.......................XXxxxxxxxx
+xxxxxxxxxxXX......................X...B...B...X......................XXxxxxxxxxx
+xxxxxxxxxxxXX...........................B...........................XXxxxxxxxxxx
+xxxxxxxxxxXX......................X...B...B...X......................XXxxxxxxxxx
+xxxxxxxxxXX.......................XXB...B...BXX.......................XXxxxxxxxx
+xxxxxxxxxX........................XXX.B...B.XXX........................Xxxxxxxxx
+xxxxxxxxxX........................cXXXXXXXXXXXc........................Xxxxxxxxx
+xxxxxxxxxXX......................ccccccccccccccc......................XXxxxxxxxx
+xxxxxxxxxxXX...................XcccccccccccccccccX...................XXxxxxxxxxx
+xxxxxxxxxxxXX...............XXXXcccccccccccccccccXXXX...............XXxxxxxxxxxx
+xxxxxxxxxxxxXX.....ccCCCCCCXXXXXcccccccccccccccccXXXXXCCCCCCcc.....XXxxxxxxxxxxx
+xxxxxxxxxxxcc...................ccccccccccccccccc...................ccxxxxxxxxxx
+xxxxxxxxxxcc................cc....ccccccccccccc....cc................ccxxxxxxxxx
+xxxxxxxxxcc..................ccc...ccccccccccc...ccc..................ccxxxxxxxx
+xxxxxxxxxc....................ccc...............ccc....................cxxxxxxxx
+xxxxxxxxxc....................cxcc.............ccxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxc.............cxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxcc...........ccxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxxc...........cxxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxcc...........ccxxc....................cxxxxxxxx
+xxxxxxxxxcc..................ccxxc.............cxxcc..................ccxxxxxxxx
+xxxxxxxxxxcc................ccxxcc.............ccxxcc................ccxxxxxxxxx
+xxxxxxxxxxxcc..............ccxxxc......(.{......cxxxcc..............ccxxxxxxxxxx
+xxxxxxxxxxxxccccccccccccccccxxxxcccccccc[ccccccccxxxxccccccccccccccccxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 
 #############################################################################
 # Overflow temples
