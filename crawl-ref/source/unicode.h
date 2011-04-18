@@ -11,6 +11,15 @@ int utf8towc(ucs_t *d, const char *s);
 #ifdef TARGET_OS_WINDOWS
 std::wstring utf8_to_16(const char *s);
 std::string utf16_to_8(const wchar_t *s);
+
+static inline std::wstring utf8_to_16(const std::string &s)
+{
+    return utf8_to_16(s.c_str());
+}
+static inline std::string utf16_to_8(const std::wstring &s)
+{
+    return utf16_to_8(s.c_str());
+}
 #endif
 std::string utf8_to_mb(const char *s);
 std::string mb_to_utf8(const char *s);
@@ -34,6 +43,7 @@ char *prev_glyph(char *s, char *start);
 char *next_glyph(char *s);
 
 #define OUTS(x) utf8_to_mb(x).c_str()
+#define OUTW(x) utf8_to_16(x).c_str()
 
 class LineInput
 {

@@ -108,7 +108,7 @@ void play_sound(const char *file)
 #if defined(WINMM_PLAY_SOUNDS)
     // Check whether file exists, is readable, etc.?
     if (file && *file)
-        sndPlaySoundW(utf8_to_16(file).c_str(), SND_ASYNC | SND_NODEFAULT);
+        sndPlaySoundW(OUTW(file), SND_ASYNC | SND_NODEFAULT);
 
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];

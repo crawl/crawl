@@ -152,12 +152,12 @@ int fdatasync(int fd)
 bool file_exists(const std::string &name)
 {
 #ifdef TARGET_OS_WINDOWS
-    DWORD lAttr = GetFileAttributesW(utf8_to_16(name.c_str()).c_str());
+    DWORD lAttr = GetFileAttributesW(OUTW(name));
     return (lAttr != INVALID_FILE_ATTRIBUTES
             && !(lAttr & FILE_ATTRIBUTE_DIRECTORY));
 #else
     struct stat st;
-    const int err = ::stat(utf8_to_mb(name).c_str(), &st);
+    const int err = ::stat(OUTS(name), &st);
     return (!err && S_ISREG(st.st_mode));
 #endif
 }
@@ -166,15 +166,15 @@ bool file_exists(const std::string &name)
 bool dir_exists(const std::string &dir)
 {
 #ifdef TARGET_OS_WINDOWS
-    DWORD lAttr = GetFileAttributesW(utf8_to_16(dir.c_str()).c_str());
+    DWORD lAttr = GetFileAttributesW(OUTW(dir));
     return (lAttr != INVALID_FILE_ATTRIBUTES
             && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
 #elif defined(HAVE_STAT)
     struct stat st;
-    const int err = ::stat(utf8_to_mb(dir).c_str(), &st);
+    const int err = ::stat(OUTS(dir), &st);
     return (!err && S_ISDIR(st.st_mode));
 #else
-    DIR *d = opendir(utf8_to_mb(dir).c_str());
+    DIR *d = opendir(OUTS(dir));
     const bool exists = !!d;
     if (d)
         closedir(d);
@@ -200,7 +200,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
     dir += "*";
-    HANDLE hFind = FindFirstFileW(utf8_to_16(dir.c_str()).c_str(), &lData);
+    HANDLE hFind = FindFirstFileW(OUTW(dir), &lData);
     if (hFind != INVALID_HANDLE_VALUE)
     {
         do
@@ -212,7 +212,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     }
 #else
 
-    DIR *dir = opendir(utf8_to_mb(dirname).c_str());
+    DIR *dir = opendir(OUTS(dirname));
     if (!dir)
         return (files);
 
@@ -231,29 +231,28 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
 int rename_u(const char *oldpath, const char *newpath)
 {
 #ifdef TARGET_OS_WINDOWS
-    return !MoveFileExW(utf8_to_16(oldpath).c_str(),
-                        utf8_to_16(newpath).c_str(),
+    return !MoveFileExW(OUTW(oldpath), OUTW(newpath),
                         MOVEFILE_REPLACE_EXISTING);
 #else
-    return rename(utf8_to_mb(oldpath).c_str(), utf8_to_mb(newpath).c_str());
+    return rename(OUTS(oldpath), OUTS(newpath));
 #endif
 }
 
 int unlink_u(const char *pathname)
 {
 #ifdef TARGET_OS_WINDOWS
-    return _wunlink(utf8_to_16(pathname).c_str());
+    return _wunlink(OUTW(pathname));
 #else
-    return unlink(utf8_to_mb(pathname).c_str());
+    return unlink(OUTS(pathname));
 #endif
 }
 
 int chmod_u(const char *path, mode_t mode)
 {
 #ifdef TARGET_OS_WINDOWS
-    return _wchmod(utf8_to_16(path).c_str(), mode);
+    return _wchmod(OUTW(path), mode);
 #else
-    return chmod(utf8_to_mb(path).c_str(), mode);
+    return chmod(OUTS(path), mode);
 #endif
 }
 
@@ -261,26 +260,26 @@ FILE *fopen_u(const char *path, const char *mode)
 {
 #ifdef TARGET_OS_WINDOWS
     // Why it wants the mode string as double-byte is beyond me.
-    return _wfopen(utf8_to_16(path).c_str(), utf8_to_16(mode).c_str());
+    return _wfopen(OUTW(path), OUTW(mode));
 #else
-    return fopen(utf8_to_mb(path).c_str(), mode);
+    return fopen(OUTS(path), mode);
 #endif
 }
 
 int mkdir_u(const char *pathname, mode_t mode)
 {
 #ifdef TARGET_OS_WINDOWS
-    return _wmkdir(utf8_to_16(pathname).c_str());
+    return _wmkdir(OUTW(pathname));
 #else
-    return mkdir(utf8_to_mb(pathname).c_str(), mode);
+    return mkdir(OUTS(pathname), mode);
 #endif
 }
 
 int open_u(const char *pathname, int flags, mode_t mode)
 {
 #ifdef TARGET_OS_WINDOWS
-    return _wopen(utf8_to_16(pathname).c_str(), flags, mode);
+    return _wopen(OUTW(pathname), flags, mode);
 #else
-    return open(utf8_to_mb(pathname).c_str(), flags, mode);
+    return open(OUTS(pathname), flags, mode);
 #endif
 }
