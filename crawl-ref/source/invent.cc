@@ -1882,6 +1882,10 @@ bool item_is_wieldable(const item_def &item)
 bool item_is_evokable(const item_def &item, bool known, bool all_wands,
                       bool msg)
 {
+    const std::string error = item_is_melded(item)
+            ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
+            : "That item can only be evoked when wielded.";
+
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry* entry = get_unrand_entry(item.special);
@@ -1892,7 +1896,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
                 return (true);
 
             if (msg)
-                mpr("That item can only be evoked when wielded.");
+                mpr(error);
 
             return (false);
         }
@@ -1926,7 +1930,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             if (!wielded)
             {
                 if (msg)
-                    mpr("That item can only be evoked when wielded.");
+                    mpr(error);
                 return (false);
             }
             return (true);
@@ -1945,7 +1949,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             if (!wielded)
             {
                 if (msg)
-                    mpr("That item can only be evoked when wielded.");
+                    mpr(error);
                 return (false);
             }
             return (true);
@@ -1960,7 +1964,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             if (!wielded)
             {
                 if (msg)
-                    mpr("That item can only be evoked when wielded.");
+                    mpr(error);
                 return (false);
             }
             return (true);
