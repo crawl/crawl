@@ -352,14 +352,6 @@ bool is_newer(const std::string &a, const std::string &b)
     return (file_modtime(a) > file_modtime(b));
 }
 
-void check_newer(const std::string &target,
-                 const std::string &dependency,
-                 void (*action)())
-{
-    if (is_newer(dependency, target))
-        action();
-}
-
 static int _create_directory(const char *dir)
 {
     return mkdir_u(dir, 0755);
