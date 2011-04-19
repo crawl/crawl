@@ -221,7 +221,8 @@ bool monster::submerged() const
         return (true);
 
     if (grd(pos()) == DNGN_DEEP_WATER
-        && !monster_habitable_grid(this, DNGN_DEEP_WATER)
+        && (!monster_habitable_grid(this, DNGN_DEEP_WATER)
+            || type == MONS_GREY_DRACONIAN)
         && !can_drown())
     {
         return (true);
