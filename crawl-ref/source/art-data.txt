@@ -735,7 +735,7 @@ COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  cutlass
 BRAND:    SPWPN_SPEED
-DAM:      3
+DAM:      2
 DESC_END: This infamous weapon was used by a vile pirate captain to
           slaughter countless innocents.  Finally, he met his destiny
           when a kraken swallowed his ship with all the crew aboard.
