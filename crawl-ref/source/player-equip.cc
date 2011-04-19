@@ -644,7 +644,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_ANTIMAGIC:
-                    calc_mp();
                     // Even if your maxmp is 0.
                     mpr("You feel magic leave you.");
                     break;
@@ -678,6 +677,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     else
                         xom_is_stimulated(128);
                 }
+                break;
+
+            case SPWPN_ANTIMAGIC:
+                calc_mp();
                 break;
 
             default:
