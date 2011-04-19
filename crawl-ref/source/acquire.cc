@@ -1006,6 +1006,13 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 weights[bk] = 0;
                 continue;
             }
+#if TAG_MAJOR_VERSION == 32
+            if (bk == BOOK_MINOR_MAGIC_II || bk == BOOK_MINOR_MAGIC_III)
+            {
+                weights[bk] = 0;
+                continue;
+            }
+#endif
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
         }
