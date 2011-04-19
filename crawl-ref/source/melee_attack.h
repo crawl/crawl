@@ -204,7 +204,6 @@ private:
     int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
                                  bool vampiric = false);
     int calc_stat_to_hit_base();
-    void _steal_item_from_player(monster* mon);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
                                      bool needs_bite_msg = false,
                                      int reduction = 1);
