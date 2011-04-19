@@ -12,6 +12,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "dgn-shoals.h"
@@ -27,10 +28,12 @@
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
+#include "makeitem.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -6546,6 +6549,179 @@ reach_type monster::reach_range() const
 bool monster::can_cling_to_walls() const
 {
     return mons_genus(type) == MONS_SPIDER;
+}
+
+void monster::steal_item_from_player()
+{
+    if (confused())
+    {
+        std::string msg = getSpeakString("Maurice confused nonstealing");
+        if (!msg.empty() && msg != "__NONE")
+        {
+            msg = replace_all(msg, "@The_monster@", name(DESC_THE));
+            mpr(msg.c_str(), MSGCH_TALK);
+        }
+        return;
+    }
+
+    mon_inv_type mslot = NUM_MONSTER_SLOTS;
+    int steal_what  = -1;
+    int total_value = 0;
+    for (int m = 0; m < ENDOFPACK; ++m)
+    {
+        if (!you.inv[m].defined())
+            continue;
+
+        // Cannot unequip player.
+        // TODO: Allow stealing of the wielded weapon?
+        //       Needs to be unwielded properly and should never lead to
+        //       fatal stat loss.
+        // 1KB: I'd say no, weapon is being held, it's different from pulling
+        //      a wand from your pocket.
+        if (item_is_equipped(you.inv[m]))
+            continue;
+
+        mon_inv_type monslot = item_to_mslot(you.inv[m]);
+        if (monslot == NUM_MONSTER_SLOTS)
+        {
+            // Try a related slot instead to allow for stealing of other
+            // valuable items.
+            if (you.inv[m].base_type == OBJ_BOOKS)
+                monslot = MSLOT_SCROLL;
+            else if (you.inv[m].base_type == OBJ_JEWELLERY)
+                monslot = MSLOT_MISCELLANY;
+            else
+                continue;
+        }
+
+        // Only try to steal stuff we can still store somewhere.
+        if (inv[monslot] != NON_ITEM)
+        {
+            if (monslot == MSLOT_WEAPON
+                && inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+            {
+                monslot = MSLOT_ALT_WEAPON;
+            }
+            else
+                continue;
+        }
+
+        // Candidate for stealing.
+        const int value = item_value(you.inv[m], true);
+        total_value += value;
+
+        if (x_chance_in_y(value, total_value))
+        {
+            steal_what = m;
+            mslot      = monslot;
+        }
+    }
+
+    if (steal_what == -1 || you.gold > 0 && one_chance_in(10))
+    {
+        // Found no item worth stealing, try gold.
+        if (you.gold == 0)
+        {
+            if (silenced(pos()))
+                return;
+
+            std::string complaint = getSpeakString("Maurice nonstealing");
+            if (!complaint.empty())
+            {
+                complaint = replace_all(complaint, "@The_monster@",
+                                        name(DESC_THE));
+                mpr(complaint.c_str(), MSGCH_TALK);
+            }
+
+            bolt beem;
+            beem.source      = pos();
+            beem.target      = pos();
+            beem.beam_source = mindex();
+
+            // Try to teleport away.
+            if (has_ench(ENCH_TP))
+            {
+                mons_cast_noise(this, beem, SPELL_BLINK);
+                monster_blink(this);
+            }
+            else
+                mons_cast(this, beem, SPELL_TELEPORT_SELF);
+
+            return;
+        }
+
+        const int stolen_amount = std::min(20 + random2(800), you.gold);
+        if (inv[MSLOT_GOLD] != NON_ITEM)
+        {
+            // If Maurice already's got some gold, simply increase the amount.
+            mitm[inv[MSLOT_GOLD]].quantity += stolen_amount;
+        }
+        else
+        {
+            // Else create a new item for this pile of gold.
+            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0, 0);
+            if (idx == NON_ITEM)
+                return;
+
+            item_def &new_item = mitm[idx];
+            new_item.base_type = OBJ_GOLD;
+            new_item.sub_type  = 0;
+            new_item.plus      = 0;
+            new_item.plus2     = 0;
+            new_item.special   = 0;
+            new_item.flags     = 0;
+            new_item.link      = NON_ITEM;
+            new_item.quantity  = stolen_amount;
+            new_item.pos.reset();
+            item_colour(new_item);
+
+            unlink_item(idx);
+
+            inv[MSLOT_GOLD] = idx;
+            new_item.set_holding_monster(mindex());
+        }
+        mprf("%s steals %s your gold!",
+             name(DESC_THE).c_str(),
+             stolen_amount == you.gold ? "all" : "some of");
+
+        you.attribute[ATTR_GOLD_FOUND] -= stolen_amount;
+
+        you.del_gold(stolen_amount);
+        return;
+    }
+
+    ASSERT(steal_what != -1);
+    ASSERT(mslot != NUM_MONSTER_SLOTS);
+    ASSERT(inv[mslot] == NON_ITEM);
+
+    // Create new item.
+    int index = get_item_slot(10);
+    if (index == NON_ITEM)
+        return;
+
+    item_def &new_item = mitm[index];
+
+    // Copy item.
+    new_item = you.inv[steal_what];
+
+    // Set quantity, and set the item as unlinked.
+    new_item.quantity -= random2(new_item.quantity);
+    new_item.pos.reset();
+    new_item.link = NON_ITEM;
+
+    mprf("%s steals %s!",
+         name(DESC_THE).c_str(),
+         new_item.name(DESC_YOUR).c_str());
+
+    unlink_item(index);
+    inv[mslot] = index;
+    new_item.set_holding_monster(mindex());
+    // You'll want to autopickup it after killing Maurice.
+    new_item.flags |= ISFLAG_THROWN;
+    equip(new_item, mslot, true);
+
+    // Item is gone from player's inventory.
+    dec_inv_item_quantity(steal_what, new_item.quantity);
 }
 
 /////////////////////////////////////////////////////////////////////////
