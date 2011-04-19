@@ -2085,10 +2085,10 @@ void finished_eating_message(int food_type)
         case FOOD_APPLE:
         case FOOD_APRICOT:
             mprf("Mmmm... Yummy %s.",
-                (food_type == FOOD_APPLE)   ? "apple." :
-                (food_type == FOOD_PEAR)    ? "pear." :
-                (food_type == FOOD_APRICOT) ? "apricot."
-                                            : "fruit.");
+                (food_type == FOOD_APPLE)   ? "apple" :
+                (food_type == FOOD_PEAR)    ? "pear" :
+                (food_type == FOOD_APRICOT) ? "apricot"
+                                            : "fruit");
             return;
         case FOOD_CHOKO:
             mpr("That choko was very bland.");
@@ -2117,7 +2117,7 @@ void finished_eating_message(int food_type)
             mpr("That grape was delicious!");
             return;
         case FOOD_SULTANA:
-            mpr("That sultana was delicious! (but very small)");
+            mpr("That sultana was delicious... but very small.");
             return;
         case FOOD_LYCHEE:
             mpr("That lychee was delicious!");
@@ -2130,7 +2130,7 @@ void finished_eating_message(int food_type)
     switch (food_type)
     {
     case FOOD_HONEYCOMB:
-        mpr("That honeycomb was delicious.");
+        mpr("That honeycomb was delicious!");
         break;
     case FOOD_ROYAL_JELLY:
         mpr("That royal jelly was delicious!");
@@ -2146,24 +2146,20 @@ void finished_eating_message(int food_type)
             mprf("Mmm... %s.", Options.pizza.c_str());
         else
         {
-            int temp_rand;
-            if (carnivorous) // non-vegetable
-                temp_rand = random2(7);
-            else if (herbivorous) // non-meaty
-                temp_rand = 6 + random2(3);
-            else
-                temp_rand = random2(9);
-
-            mprf("Mmm... %s",
-                (temp_rand == 0) ? "Ham and pineapple." :
-                (temp_rand == 1) ? "Supreme." :
-                (temp_rand == 2) ? "Super Supreme!" :
-                (temp_rand == 3) ? "Pepperoni." :
-                (temp_rand == 4) ? "Yeuchh - Anchovies!" :
-                (temp_rand == 5) ? "Chicken." :
-                (temp_rand == 6) ? "Cheesy." :
-                (temp_rand == 7) ? "Vegetable."
-                                 : "Mushroom.");
+            int temp_rand = random2(9);
+            mprf("%s %s.",
+                (carnivorous && temp_rand >= 6
+                 || herbivorous && temp_rand <= 4
+                 || temp_rand == 3) ? "Yeuchh!" : "Mmm...",
+                (temp_rand == 0) ? "Ham and pineapple" :
+                (temp_rand == 1) ? "Super Supreme" :
+                (temp_rand == 2) ? "Pepperoni" :
+                (temp_rand == 3) ? "Anchovies" :
+                (temp_rand == 4) ? "Chicken" :
+                (temp_rand == 5) ? "Cheesy" :
+                (temp_rand == 6) ? "Vegetable" :
+                (temp_rand == 7) ? "Peppers"
+                                 : "Mushroom");
         }
         break;
     case FOOD_CHEESE:
