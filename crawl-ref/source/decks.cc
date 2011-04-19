@@ -2324,13 +2324,13 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 }
 
-static bool _trowel_card(int power, deck_rarity_type rarity)
+static void _trowel_card(int power, deck_rarity_type rarity)
 {
     // Early exit: don't clobber important features.
     if (is_critical_feature(grd(you.pos())))
     {
         mpr("The dungeon trembles momentarily.");
-        return (false);
+        return;
     }
 
     const int power_level = get_power_level(power, rarity);
@@ -2440,8 +2440,6 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
 
     if (!done_stuff)
         canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (done_stuff);
 }
 
 static void _genie_card(int power, deck_rarity_type rarity)
@@ -2786,7 +2784,7 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     }
 }
 
-static bool _alchemist_card(int power, deck_rarity_type rarity)
+static void _alchemist_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     int gold_used = std::min(you.gold, random2avg(100, 2) * (1 + power_level));
@@ -2827,8 +2825,6 @@ static bool _alchemist_card(int power, deck_rarity_type rarity)
 
     // Add back any remaining gold
     you.add_gold(gold_used);
-
-    return (done_stuff);
 }
 
 static int _card_power(deck_rarity_type rarity)
@@ -2943,11 +2939,11 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_SKELETON:  _summon_skeleton(power, rarity); break;
     case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
-    case CARD_TROWEL:      rc = _trowel_card(power, rarity); break;
-    case CARD_SPADE:   your_spells(SPELL_DIG, random2(power/4), false); break;
-    case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power); break;
-    case CARD_TORMENT: torment(TORMENT_CARDS, you.pos()); break;
-    case CARD_ALCHEMIST:   rc = _alchemist_card(power, rarity); break;
+    case CARD_TROWEL:           _trowel_card(power, rarity); break;
+    case CARD_SPADE:            your_spells(SPELL_DIG, random2(power/4), false); break;
+    case CARD_BANSHEE:          mass_enchantment(ENCH_FEAR, power); break;
+    case CARD_TORMENT:          torment(TORMENT_CARDS, you.pos()); break;
+    case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
 
     case CARD_VENOM:
         if (coinflip())
@@ -3013,14 +3009,8 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
     }
 
-    if (you.religion == GOD_XOM && !rc)
-    {
-        god_speaks(GOD_XOM, "\"How boring, let's spice things up a little.\"");
-        xom_acts(abs(you.piety - HALF_MAX_PIETY));
-    }
-
     if (you.religion == GOD_NEMELEX_XOBEH && !rc)
-        simple_god_message(" seems disappointed in you.");
+        simple_god_message(" does not approve of your wasteful card use.");
 
     return rc;
 }
