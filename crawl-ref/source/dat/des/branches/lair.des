@@ -12,7 +12,7 @@ function lair_small_ending(e)
     e.tags('lair_end_small')
     e.weight(5)
 
-    if not crawl.game_started() then return end
+    if e.is_validating() then return end
 
     e.hook("post_place", function ()
         if not dgn.persist.lair_second_ending_built then

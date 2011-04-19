@@ -34,7 +34,7 @@ function sroom_kobold_lair(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if not crawl.game_started() then
+    if e.is_validating() then
         return
     end
 
@@ -64,7 +64,7 @@ function sroom_orc_lair(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if not crawl.game_started() then
+    if e.is_validating() then
         return
     end
 
@@ -91,7 +91,7 @@ function sroom_beehive(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if not crawl.game_started() then
+    if e.is_validating() then
         return
     end
 
@@ -115,7 +115,7 @@ function sroom_jelly_pit(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if not crawl.game_started() then
+    if e.is_validating() then
         return
     end
 
