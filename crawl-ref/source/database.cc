@@ -23,6 +23,10 @@
 #include "syscalls.h"
 #include "unicode.h"
 
+static std::string _query_database(DBM *db, std::string key,
+                                   bool canonicalise_key, bool run_lua);
+static void _add_entry(DBM *db, const std::string &k, std::string &v);
+
 // TextDB handles dependency checking the db vs text files, creating the
 // db, loading, and destroying the DB.
 class TextDB
@@ -45,14 +49,16 @@ class TextDB
     void _regenerate_db();
 
  private:
+    bool open_db();
     const char* const _db_name;            // relative to savedir
     std::vector<std::string> _input_files; // relative to datafile dirs
     DBM* _db;
+    time_t timestamp;
 };
 
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
-static void _store_text_db(const std::string &in, const std::string &out);
+static void _store_text_db(const std::string &in, DBM *db);
 
 static TextDB AllDBs[] =
 {
@@ -139,7 +145,7 @@ static std::string _db_cache_path(const std::string &db)
 
 TextDB::TextDB(const char* db_name, ...)
     : _db_name(db_name),
-      _db(NULL)
+      _db(NULL), timestamp(-1)
 {
     va_list args;
     va_start(args, db_name);
@@ -157,19 +163,37 @@ TextDB::TextDB(const char* db_name, ...)
     va_end(args);
 }
 
-void TextDB::init()
+bool TextDB::open_db()
 {
-    if (_needs_update())
-        _regenerate_db();
-
     if (_db)
-        return;
+        return true;
 
     const std::string full_db_path = _db_cache_path(_db_name);
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
+    if (!_db)
+        return false;
 
-    if (_db == NULL)
-        end(1, true, "Failed to open DB: %s", full_db_path.c_str());
+    std::string ts = _query_database(_db, "TIMESTAMP", false, false);
+    if (ts.empty())
+        return false;
+    char *err;
+    timestamp = strtol(ts.c_str(), &err, 10);
+    if (*err)
+        return false;
+
+    return true;
+}
+
+void TextDB::init()
+{
+    open_db();
+
+    if (!_needs_update())
+        return;
+    _regenerate_db();
+
+    if (!open_db())
+        end(1, true, "Failed to open DB: %s", _db_cache_path(_db_name).c_str());
 }
 
 void TextDB::shutdown()
@@ -183,11 +207,10 @@ void TextDB::shutdown()
 
 bool TextDB::_needs_update() const
 {
-    std::string full_db_path = _db_cache_path(std::string(_db_name) + ".db");
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
-        if (is_newer(full_input_path, full_db_path))
+        if (file_modtime(full_input_path) > timestamp)
             return (true);
     }
     return (false);
@@ -196,6 +219,9 @@ bool TextDB::_needs_update() const
 void TextDB::_regenerate_db()
 {
     shutdown();
+#ifdef DEBUG_DIAGNOSTICS
+    printf("Regenerating db: %s\n", _db_name);
+#endif
 
     std::string db_path = _db_cache_path(_db_name);
     std::string full_db_path = db_path + ".db";
@@ -211,12 +237,18 @@ void TextDB::_regenerate_db()
     unlink_u(full_db_path.c_str());
 #endif
 
+    std::string now = make_stringf("%ld", time(0));
+    if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
+        end(1, true, "Unable to open DB: %s", db_path.c_str());
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
-        _store_text_db(full_input_path, db_path);
+        _store_text_db(full_input_path, _db);
     }
-    file_touch(full_db_path);
+    _add_entry(_db, "TIMESTAMP", now);
+
+    dbm_close(_db);
+    _db = 0;
 }
 
 // ----------------------------------------------------------------------
@@ -409,19 +441,13 @@ static void _parse_text_db(LineInput &inf, DBM *db)
         _add_entry(db, key, value);
 }
 
-static void _store_text_db(const std::string &in, const std::string &out)
+static void _store_text_db(const std::string &in, DBM *db)
 {
     UTF8FileLineInput inf(in.c_str());
     if (inf.error())
         end(1, true, "Unable to open input file: %s", in.c_str());
 
-    if (DBM *db = dbm_open(out.c_str(), O_RDWR | O_CREAT, 0660))
-    {
-        _parse_text_db(inf, db);
-        dbm_close(db);
-    }
-    else
-        end(1, true, "Unable to open DB: %s", out.c_str());
+    _parse_text_db(inf, db);
 }
 
 static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
