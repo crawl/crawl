@@ -785,7 +785,7 @@ WEIGHT: 90
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then layout_basic() end
+    if not is_validating() then layout_basic() end
 }}
 MAP
 ENDMAP
@@ -796,7 +796,7 @@ WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then layout_bigger_room() end
+    if not is_validating() then layout_bigger_room() end
 }}
 MAP
 ENDMAP
@@ -807,7 +807,7 @@ WEIGHT: 1 (Pan), 2 (Vault), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then layout_plan_4() end
+    if not is_validating() then layout_plan_4() end
 }}
 MAP
 ENDMAP
@@ -818,7 +818,7 @@ CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then layout_shoals() end
+    if not is_validating() then layout_shoals() end
 }}
 MAP
 ENDMAP
@@ -829,7 +829,7 @@ CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then dgn.layout_swamp() end
+    if not is_validating() then dgn.layout_swamp() end
 }}
 MAP
 ENDMAP
