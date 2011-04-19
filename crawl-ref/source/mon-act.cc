@@ -188,6 +188,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     mover->set_position(moved_pos);
     moved->set_position(mover_pos);
 
+    mover->check_clinging(true);
+    moved->check_clinging(false);
+
     mgrd(mover->pos()) = mover->mindex();
     mgrd(moved->pos()) = moved->mindex();
 
