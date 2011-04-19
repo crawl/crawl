@@ -13,7 +13,7 @@ Arcane Marksmen carry some missiles as well as a book from which they will learn
 %%%%
 Artificer
 
-Artificers start with two magical devices and are competent at using such tools.
+Artificers start with a choice of magical devices and are competent at using such tools.
 %%%%
 Assassin
 
