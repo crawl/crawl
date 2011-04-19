@@ -1366,8 +1366,7 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return (WPN_UNKNOWN);
 }
 
-static void _construct_weapon_menu(const newgame_def* ng,
-                                   const weapon_type& defweapon,
+static void _construct_weapon_menu(const weapon_type& defweapon,
                                    const std::vector<weapon_choice>& weapons,
                                    MenuFreeform* menu)
 {
@@ -1399,8 +1398,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
         text += letter;
         text += " - ";
         text += weapons[i].first == WPN_UNARMED
-                ? (species_has_claws(ng->species) ? "claws" : "unarmed")
-                : weapon_base_name(weapons[i].first);
+                ? "claws" : weapon_base_name(weapons[i].first);
         // Fill to column width to give extra padding for the highlight
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
         tmp->set_text(text);
@@ -1542,7 +1540,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 
     weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
-    _construct_weapon_menu(ng, defweapon, weapons, freeform);
+    _construct_weapon_menu(defweapon, weapons, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
@@ -1642,11 +1640,9 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
 {
     std::vector<weapon_choice> weapons;
 
-    weapon_type startwep[7] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
-                                WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION,
-                                WPN_QUARTERSTAFF};
-
-    for (unsigned int i = 0; i < ARRAYSZ(startwep); ++i)
+    weapon_type startwep[6] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
+                                WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION };
+    for (int i = 0; i < 6; ++i)
     {
         weapon_choice wp;
         wp.first = startwep[i];
@@ -1654,11 +1650,8 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
         switch (wp.first)
         {
         case WPN_UNARMED:
-            if (!species_has_claws(ng->species) && ng->job != JOB_MONK
-                || ng->job == JOB_GLADIATOR)
-            {
+            if (ng->job == JOB_GLADIATOR || !species_has_claws(ng->species))
                 continue;
-            }
             break;
         case WPN_SPEAR:
             // Non-small fighters and gladiators get tridents.
@@ -1739,7 +1732,6 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     {
     case JOB_FIGHTER:
     case JOB_GLADIATOR:
-    case JOB_MONK:
     case JOB_CHAOS_KNIGHT:
     case JOB_DEATH_KNIGHT:
     case JOB_ABYSSAL_KNIGHT:

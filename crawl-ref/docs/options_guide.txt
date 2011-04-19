@@ -273,13 +273,12 @@ remember_name = true
         simply reuse your old name if remember_name is set.
 
 weapon = (short sword | falchion | hand axe | spear | mace | trident
-          | quarterstaff | unarmed | random)
+          | unarmed | random)
         Specifying the weapon option allows you to bypass the weapon
         selection screen. Tridents and falchions are restricted to only
-        fighters and gladiators, quarterstaves are restricted to monks,
-        and unarmed is restricted to monks and races with claws. The
-        standard weapon prompt will be shown if an illegal choice for the
-        selected background is specified.
+        fighters and gladiators, and unarmed is restricted to races with
+        claws. The standard weapon prompt will be shown if an illegal choice
+        for the selected background is specified.
 
 book = (flame | fire | ice | cold | random)
         Conjurers can choose their starting spellbook. Note flame=fire and
