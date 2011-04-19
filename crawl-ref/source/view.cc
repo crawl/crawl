@@ -205,7 +205,7 @@ static std::string _desc_mons_type_map(std::map<monster_type, int> types)
 static void _genus_factoring(std::map<monster_type, int> &types,
                              std::map<monster_type, int> &genera)
 {
-    monster_type genus;
+    monster_type genus = MONS_NO_MONSTER;
     int num = 0;
     std::map<monster_type, int>::iterator it;
     // Find the most represented genus.
