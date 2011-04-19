@@ -3873,7 +3873,12 @@ static void _display_attack_delay()
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     // We could also compute the variance if desired.
-    int avg = static_cast<int>(round(10 * delay.expected()));
+    int avg;
+    const item_def* weapon = you.weapon();
+    if (weapon && is_range_weapon(*weapon))
+        avg = launcher_final_speed(*weapon, you.shield());
+    else
+        avg = static_cast<int>(round(10 * delay.expected()));
 
     // Haste wasn't counted here, but let's show finesse.
     // Can't be done in the above function because of interactions with
