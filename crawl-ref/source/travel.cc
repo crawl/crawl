@@ -944,12 +944,8 @@ command_type travel()
         return CMD_NO_CMD;
     }
 
-    if (you.running.is_explore())
-    {
-        if (check_for_interesting_features())
+    if (you.running.is_explore() && check_for_interesting_features())
             stop_running();
-        env.map_shadow = env.map_knowledge;
-    }
 
     if (you.running.is_explore())
     {
