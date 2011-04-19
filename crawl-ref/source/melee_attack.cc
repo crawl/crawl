@@ -3688,9 +3688,12 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     return (false);
 }
 
-// TODO: Unify this and player_calc_base damage, requires the removal
-// or the generalization of the mon_attack_def struct (mon-util). Judging
-// fromthe struct def, removal seems preferable
+// TODO: Unify this and player_calc_base damage, requires the restructuring
+// of how attacks get initiated and handled (these changes are congruent with
+// the original plans for changing combat) in that each instance of melee_attack
+// is strictly associated with one monster attack. Thus, once we're inside a
+// particular melee_attack instantiation, we can pretend as if mon_attack_def's
+// don't exist in the code
 int melee_attack::mons_calc_damage(const mon_attack_def &attk)
 {
     int damage = 0;
