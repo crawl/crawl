@@ -1151,7 +1151,11 @@ static void _input()
 
         // Some delays reset you.time_taken.
         if (you.time_taken || you.turn_is_over)
+        {
+            if (you.berserk())
+                _do_berserk_no_combat_penalty();
             world_reacts();
+        }
 
         return;
     }
