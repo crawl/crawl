@@ -2382,7 +2382,6 @@ void handle_monster_move(monster* mons)
         }
         you.update_beholder(mons);
         you.update_fearmonger(mons);
-        mons->check_clinging(true);
 
         // Reevaluate behaviour, since the monster's surroundings have
         // changed (it may have moved, or died for that matter).  Don't
@@ -3519,6 +3518,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     mgrd(mons->pos()) = mons->mindex();
 
+    mons->check_clinging(true);
     ballisto_on_move(mons, old_pos);
 
     mons->check_redraw(mons->pos() - delta);

@@ -3919,8 +3919,8 @@ int mons_natural_regen_rate(monster* mons)
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
-    // Levitating/flying monsters don't make contact with the terrain.
-    if (mons->airborne() || mons->can_cling_to(oldpos))
+    // Levitating/flying/clinging monsters don't make contact with the terrain.
+    if (!mons->ground_level())
         return;
 
     dungeon_feature_type grid = grd(mons->pos());
