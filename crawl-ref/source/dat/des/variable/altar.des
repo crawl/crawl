@@ -231,7 +231,7 @@ ENDMAP
 ######################################
 
 NAME: basic_altar
-TAGS: allow_dup extra no_monster_gen
+TAGS: allow_dup extra no_monster_gen transparent
 DEPTH: 5-
 CHANCE: 20% (Orc)
 CHANCE: 10% (Snake, Forest, Dwarf)
