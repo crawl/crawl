@@ -88,9 +88,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_BOOKS)
             type_bad = true;
 
-        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
-            || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
-            || item.sub_type == RING_MAGICAL_POWER))
+        if (item.base_type == OBJ_JEWELLERY
+            && (item.sub_type == RING_WIZARDRY
+             || item.sub_type == RING_FIRE
+             || item.sub_type == RING_ICE
+             || item.sub_type == RING_MAGICAL_POWER))
         {
             type_bad = true;
         }
@@ -124,8 +126,10 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
     else if (is_good_god(which_god)
-             && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING
+             && (brand == SPWPN_DRAINING
+                 || brand == SPWPN_PAIN
+                 || brand == SPWPN_VAMPIRICISM
+                 || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
                  || artefact_wpn_property(item, ARTP_CURSED) != 0))
