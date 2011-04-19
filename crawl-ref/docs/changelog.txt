@@ -56,7 +56,7 @@ Gods
 * Yredelemnul accepts kills of artificial beings (golems, gargoyles).
 * Overhauled Zin's Recite invocation: much more powerful and interesting.
 * Zin protects from Hell effects, chance depending on piety.
-* Zin forbids shapeshifting spells and protects against Kirke’s pig spell.
+* Zin forbids shapeshifting spells and protects against Kirke's pig spell.
 * Zin hates monsters with mutagenic/rot corpses.
 * Spell failure while already in yellow glow angers Zin.
 * Butchering forbidden corpses asks for confirmation.
@@ -231,7 +231,7 @@ Spells
 * Boost LRD damage.
 * Apportation targetting: allow cycling with +/-.
 * When apporting part of a stack, don't destroy the rest of it.
-* Don't rot while under Death’s Door.
+* Don't rot while under Death's Door.
 * Death channel spectral monsters are not abjurable.
 * Merge low spell success adjectives (Cruddy, Bad, Very Poor) into Very Poor (now 5-30%).
 * Move spells around among various spellbooks.
