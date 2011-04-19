@@ -761,7 +761,6 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         return;
 
     targetter_cloud place(0, 0, number, number);
-    debuglog("in apply_area_cloud(%d)\n", number);
     if (!place.set_aim(where))
         return;
     unsigned int dist = 0;

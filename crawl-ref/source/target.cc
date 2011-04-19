@@ -200,20 +200,17 @@ bool targetter_cloud::set_aim(coord_def a)
     for (unsigned int d1 = 0; d1 < queue.size() && placed < cnt_max; d1++)
     {
         unsigned int to_place = queue[d1].size();
-        debuglog("At dist %u placed %d + %u\n", d1, placed, to_place);
         placed += to_place;
 
         for (unsigned int i = 0; i < to_place; i++)
         {
             coord_def c = queue[d1][i];
-            debuglog("» (%d,%d)\n", c.x, c.y);
             for(adjacent_iterator ai(c); ai; ++ai)
                 if (_cloudable(*ai) && seen.find(*ai) == seen.end())
                 {
                     unsigned int d2 = d1 + ((*ai - c).abs() == 1 ? 5 : 7);
                     if (d2 >= queue.size())
                         queue.resize(d2 + 1);
-                    debuglog("  + (%d,%d) dist %u\n", ai->x, ai->y, d2);
                     queue[d2].push_back(*ai);
                     seen[*ai] = AFF_TRACER;
                 }
