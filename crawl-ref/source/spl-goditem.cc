@@ -574,12 +574,18 @@ int detect_creatures(int pow, bool telepathic)
     return (creatures_found);
 }
 
-static bool _selectively_remove_curse()
+static bool _selectively_remove_curse(std::string *pre_msg)
 {
     bool used = false;
 
     while(1)
     {
+        if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
+        {
+            mpr("You have uncursed all your worn items.");
+            return used;
+        }
+
         int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
                                            OSEL_CURSED_WORN, true, true, false);
         if (prompt_failed(item_slot))
@@ -599,15 +605,18 @@ static bool _selectively_remove_curse()
             continue;
         }
 
+        if (!used && pre_msg)
+            mpr(*pre_msg);
+
         do_uncurse_item(item);
         used = true;
     }
 }
 
-bool remove_curse(bool alreadyknown)
+bool remove_curse(bool alreadyknown, std::string *pre_msg)
 {
     if (you.religion == GOD_ASHENZARI && alreadyknown)
-        return _selectively_remove_curse();
+        return _selectively_remove_curse(pre_msg);
 
     bool success = false;
 
@@ -636,18 +645,24 @@ bool remove_curse(bool alreadyknown)
 
     if (success)
     {
+        if (pre_msg)
+            mpr(*pre_msg);
         mpr("You feel as if something is helping you.");
         learned_something_new(HINT_REMOVED_CURSE);
     }
     else if (alreadyknown)
         mpr("None of your equipped items are cursed.", MSGCH_PROMPT);
     else
+    {
+        if (pre_msg)
+            mpr(*pre_msg);
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     return (success);
 }
 
-static bool _selectively_curse_item(bool armour)
+static bool _selectively_curse_item(bool armour, std::string *pre_msg)
 {
     while(1)
     {
@@ -672,12 +687,14 @@ static bool _selectively_curse_item(bool armour)
             continue;
         }
 
+        if (pre_msg)
+            mpr(*pre_msg);
         do_curse_item(item, false);
         return true;
     }
 }
 
-bool curse_item(bool armour, bool alreadyknown)
+bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg)
 {
     // make sure there's something to curse first
     int count = 0;
@@ -705,14 +722,20 @@ bool curse_item(bool armour, bool alreadyknown)
                  armour ? "armour" : "jewellery");
         }
         else
+        {
+            if (pre_msg)
+                mpr(*pre_msg);
             canned_msg(MSG_NOTHING_HAPPENS);
+        }
 
         return false;
     }
 
     if (you.religion == GOD_ASHENZARI && alreadyknown)
-        return _selectively_curse_item(armour);
+        return _selectively_curse_item(armour, pre_msg);
 
+    if (pre_msg)
+        mpr(*pre_msg);
     // Make the name before we curse it.
     do_curse_item(you.inv[you.equip[affected]], false);
     learned_something_new(HINT_YOU_CURSED);
