@@ -4050,6 +4050,11 @@ static void _move_player(coord_def move)
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
 
+#ifdef EUCLIDEAN
+        if (move.abs() == 2)
+            you.time_taken *= 1.4;
+#endif
+
         move_player_to_grid(targ, true, false);
 
         you.walking = move.abs();

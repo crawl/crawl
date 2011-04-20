@@ -576,6 +576,10 @@ ifndef NO_LUA_BINDINGS
 CFOTHERS_L += -DCLUA_BINDINGS
 endif
 
+ifdef EUCLIDEAN
+DEFINES_L += -DEUCLIDEAN
+endif
+
 #
 # Figure out the build settings for this type of build
 #
