@@ -175,8 +175,6 @@ bool targetter_cloud::valid_aim(coord_def a)
     if (!agent)
         return _cloudable(a);
 
-    if (a == origin)
-        return true;
     if ((origin - a).abs() > range2)
         return false;
     if (!_cloudable(a))
