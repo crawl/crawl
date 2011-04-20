@@ -2378,7 +2378,10 @@ void handle_monster_move(monster* mons)
             }
 
             if (mons->cannot_move() || !_monster_move(mons))
+            {
                 mons->speed_increment -= non_move_energy;
+                mons->check_clinging(false);
+            }
         }
         you.update_beholder(mons);
         you.update_fearmonger(mons);
