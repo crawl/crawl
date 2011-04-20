@@ -4747,7 +4747,9 @@ bool _is_cancellable_scroll(scroll_type scroll)
 {
     return (scroll == SCR_IDENTIFY
             || scroll == SCR_BLINKING || scroll == SCR_RECHARGING
-            || scroll == SCR_ENCHANT_ARMOUR || scroll == SCR_AMNESIA);
+            || scroll == SCR_ENCHANT_ARMOUR || scroll == SCR_AMNESIA
+            || scroll == SCR_REMOVE_CURSE || scroll == SCR_CURSE_ARMOUR
+            || scroll == SCR_CURSE_JEWELLERY);
 }
 
 void read_scroll(int slot)
@@ -4853,6 +4855,27 @@ void read_scroll(int slot)
             }
             break;
 
+        case SCR_REMOVE_CURSE:
+            if (!any_items_to_select(OSEL_CURSED_WORN, true))
+                return;
+            break;
+
+        case SCR_CURSE_ARMOUR:
+            if (you.religion == GOD_ASHENZARI
+                && !any_items_to_select(OSEL_UNCURSED_WORN_ARMOUR, true))
+            {
+                return;
+            }
+            break;
+
+        case SCR_CURSE_JEWELLERY:
+            if (you.religion == GOD_ASHENZARI
+                && !any_items_to_select(OSEL_UNCURSED_WORN_JEWELLERY, true))
+            {
+                return;
+            }
+            break;
+
         default:
             break;
         }
@@ -4941,13 +4964,13 @@ void read_scroll(int slot)
         break;
 
     case SCR_REMOVE_CURSE:
-        if (!remove_curse(alreadyknown))
+        if (!alreadyknown)
         {
-            if (alreadyknown)
-                cancel_scroll = true;
-            else
-                id_the_scroll = false;
+            mpr(pre_succ_msg);
+            id_the_scroll = remove_curse(false);
         }
+        else
+            cancel_scroll = !remove_curse(true, &pre_succ_msg);
         break;
 
     case SCR_DETECT_CURSE:
@@ -5157,6 +5180,25 @@ void read_scroll(int slot)
 
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
+        if (!alreadyknown)
+        {
+            mpr(pre_succ_msg);
+            if (curse_item(which_scroll == SCR_CURSE_ARMOUR, false))
+            {
+                id_the_scroll = true;
+                bad_effect = true;
+            }
+        }
+        else if (curse_item(which_scroll == SCR_CURSE_ARMOUR, true,
+                            &pre_succ_msg))
+        {
+            bad_effect = true;
+        }
+        else
+            cancel_scroll = you.religion == GOD_ASHENZARI;
+
+        break;
+
         if (!curse_item(which_scroll == SCR_CURSE_ARMOUR, alreadyknown))
         {
             if (alreadyknown)
