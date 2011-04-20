@@ -421,10 +421,23 @@ bool monster_pathfind::mons_traversable(const coord_def& p)
 
 int monster_pathfind::travel_cost(coord_def npos)
 {
+#ifdef EUCLIDEAN
+    int cost = 1;
+    if (mons)
+        cost = mons_travel_cost(npos);
+
+    if ((pos - npos).abs() == 2)
+        cost *= 14;
+    else
+        cost *= 10;
+
+    return cost;
+#else
     if (mons)
         return mons_travel_cost(npos);
 
     return (1);
+#endif
 }
 
 // Assumes that grids that really cannot be entered don't even get here.

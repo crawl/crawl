@@ -218,13 +218,14 @@ static bool _do_mon_spell(monster* mons, bolt &beem)
     return (false);
 }
 
-static void _swim_or_move_energy(monster* mon)
+static void _swim_or_move_energy(monster* mon, bool diag = false)
 {
     const dungeon_feature_type feat = grd(mon->pos());
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE);
+                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE,
+                      diag ? 10 : 1, diag ? 14 : 1);
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -3423,7 +3424,11 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     }
 
     // Okay, do the swap!
+#ifdef EUCLIDEAN
+    _swim_or_move_energy(mon, delta.abs() == 2);
+#else
     _swim_or_move_energy(mon);
+#endif
 
     mon->set_position(n);
     mgrd(n) = mon->mindex();
@@ -3506,7 +3511,11 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     mons->seen_context.clear();
 
     // This appears to be the real one, ie where the movement occurs:
+#ifdef EUCLIDEAN
+    _swim_or_move_energy(mons, delta.abs() == 2);
+#else
     _swim_or_move_energy(mons);
+#endif
 
     if (grd(mons->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(mons, DNGN_DEEP_WATER))
