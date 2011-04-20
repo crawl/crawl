@@ -5118,7 +5118,7 @@ void read_scroll(int slot)
                 tried_on_item = true;
         }
         else
-            cancel_scroll = (identify(-1, -1, &pre_succ_msg) == -1);
+            cancel_scroll = (identify(-1, -1, &pre_succ_msg) == 0);
         break;
 
     case SCR_RECHARGING:
