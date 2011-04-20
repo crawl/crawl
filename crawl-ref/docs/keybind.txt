@@ -154,7 +154,7 @@ v              CMD_TARGET_DESCRIBE
 ^P             CMD_TARGET_SHOW_PROMPT
 ^C             CMD_TARGET_CYCLE_BEAM
 ^:             CMD_TARGET_HIDE_BEAM
-\t             CMD_TARGET_FIND_PORTAL
+^I             CMD_TARGET_FIND_PORTAL
 ^              CMD_TARGET_FIND_TRAP
 _              CMD_TARGET_FIND_ALTAR
 <              CMD_TARGET_FIND_UPSTAIR
