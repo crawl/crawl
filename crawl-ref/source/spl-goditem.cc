@@ -40,6 +40,7 @@
 int identify(int power, int item_slot, std::string *pre_msg)
 {
     int id_used = 1;
+    int identified = 0;
 
     // Scrolls of identify *may* produce "extra" identifications.
     if (power == -1 && one_chance_in(5))
@@ -53,7 +54,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
                                            OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return(-1);
+            return(identified);
 
         item_def& item(you.inv[item_slot]);
 
@@ -66,7 +67,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
             continue;
         }
 
-        if (pre_msg)
+        if (pre_msg && identified == 0)
             mpr(pre_msg->c_str());
 
         set_ident_type(item, ID_KNOWN_TYPE);
@@ -94,7 +95,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        id_used--;
+        identified++;
 
         if (item.base_type == OBJ_JEWELLERY
             && item.sub_type == AMU_INACCURACY
@@ -104,14 +105,14 @@ int identify(int power, int item_slot, std::string *pre_msg)
             learned_something_new(HINT_INACCURACY);
         }
 
-        if (Options.auto_list && id_used > 0)
+        if (Options.auto_list && id_used > identified)
             more();
 
         // In case we get to try again.
         item_slot = -1;
     }
-    while (id_used > 0);
-    return(1);
+    while (id_used > identified);
+    return(identified);
 }
 
 static bool _mons_hostile(const monster* mon)
