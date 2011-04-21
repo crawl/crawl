@@ -3824,8 +3824,10 @@ static void _display_movement_speed()
 
 static void _display_tohit()
 {
+#ifdef DEBUG_DIAGNOSTICS
     const int to_hit = calc_your_to_hit(false) * 2;
     dprf("To-hit: %d", to_hit);
+#endif
 /*
     // Messages based largely on percentage chance of missing the
     // average EV 10 humanoid, and very agile EV 30 (pretty much

@@ -760,7 +760,9 @@ static void _abyss_move_masked_vaults_by_delta(const map_mask &mask,
          i != vault_indexes.end(); ++i)
     {
         vault_placement &vp(*env.level_vaults[*i]);
+#ifdef DEBUG_DIAGNOSTICS
         const coord_def oldp = vp.pos;
+#endif
         vp.pos += delta;
         dprf("Moved vault (%s) from (%d,%d)-(%d,%d)",
              vp.map.name.c_str(), oldp.x, oldp.y, vp.pos.x, vp.pos.y);
