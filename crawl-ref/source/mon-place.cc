@@ -308,11 +308,10 @@ static int _fuzz_mons_level(int level)
         const int fuzzspan = 5;
         const int fuzz = std::max(0, random_range(-fuzzspan, fuzzspan, 2));
 
-#ifdef DEBUG_DIAGNOSTICS
         if (fuzz)
             dprf("Monster level fuzz: %d (old: %d, new: %d)",
                  fuzz, level, level + fuzz);
-#endif
+
         return level + fuzz;
     }
     return (level);
@@ -658,14 +657,12 @@ monster_type pick_random_monster(const level_id &place, int power,
             *isood = true;
     }
 
-#ifdef DEBUG_DIAGNOSTICS
     if (lev_mons > original_level)
         dprf("Orginal level: %d, Final level: %d, Monster: %s, OOD: %s",
              original_level, lev_mons,
              mon_type == MONS_NO_MONSTER || mon_type == MONS_PROGRAM_BUG ?
              "NONE" : get_monster_data(mon_type)->name,
              *isood? "YES" : "no");
-#endif
 
     return (mon_type);
 }

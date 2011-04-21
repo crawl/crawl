@@ -973,14 +973,14 @@ void maybe_shift_abyss_around_player()
          if (mitm[i].defined())
              ++j;
 
-    mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
+    dprf("Number of items present: %d", j);
 
     j = 0;
     for (monster_iterator mi; mi; ++mi)
         ++j;
 
-    mprf(MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
-    mprf(MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
+    dprf("Number of monsters present: %d", j);
+    dprf("Number of clouds present: %d", env.cloud_no);
 #endif
 }
 

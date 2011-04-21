@@ -37,11 +37,8 @@ static void _give_monster_item(monster* mon, int thing,
     item_def &mthing = mitm[thing];
     ASSERT(mthing.defined());
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
+    dprf("Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
          mon->name(DESC_PLAIN, true).c_str());
-#endif
 
     mthing.pos.reset();
     mthing.link = NON_ITEM;
@@ -79,11 +76,9 @@ static void _give_monster_item(monster* mon, int thing,
     if (!(pickupfn ? (mon->*pickupfn)(mthing, false)
                    : mon->pickup_item(mthing, false, true)))
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Destroying %s because %s doesn't want it!",
+        dprf("Destroying %s because %s doesn't want it!",
              mthing.name(DESC_PLAIN, false, true).c_str(),
              mon->name(DESC_PLAIN, true).c_str());
-#endif
         destroy_item(thing, true);
         return;
     }

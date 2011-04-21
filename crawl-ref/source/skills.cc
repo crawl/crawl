@@ -339,13 +339,11 @@ int exercise(skill_type exsk, int deg)
         deg--;
     }
 
-#ifdef DEBUG_DIAGNOSTICS
     if (ret)
     {
         dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
         dprf("Cost %d experience points", exp_pool - you.exp_available);
     }
-#endif
 
     check_skill_level_change(exsk);
 

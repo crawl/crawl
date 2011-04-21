@@ -640,10 +640,8 @@ int cheibriados_monster_player_speed_delta(const monster* mon)
     // Ignore the Slow effect.
     unwind_var<int> ignore_slow(you.duration[DUR_SLOW], 0);
     const int pspeed = 1000 / (player_movement_speed(true) * player_speed());
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Your delay: %d, your speed: %d, mon speed: %d",
+    dprf("Your delay: %d, your speed: %d, mon speed: %d",
         player_movement_speed(), pspeed, mon->speed);
-#endif
     return (mon->speed - pspeed);
 }
 
@@ -2769,14 +2767,11 @@ static bool _beneficial_beam_flavour(beam_type flavour)
 
 bool mons_should_fire(struct bolt &beam)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "tracer: foes %d (pow: %d), friends %d (pow: %d), "
+    dprf("tracer: foes %d (pow: %d), friends %d (pow: %d), "
          "foe_ratio: %d, smart: %s",
          beam.foe_info.count, beam.foe_info.power,
          beam.friend_info.count, beam.friend_info.power,
          beam.foe_ratio, beam.smart_monster ? "yes" : "no");
-#endif
 
     // Use different evaluation criteria if the beam is a beneficial
     // enchantment (haste other).

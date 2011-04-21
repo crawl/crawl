@@ -1417,7 +1417,9 @@ int arena_cull_items()
     dprf("On turn #%d culled %d items dropped by monsters, culling some more.",
          arena::turns, cull_count);
 
+#ifdef DEBUG_DIAGNOSTICS
     const int count1 = cull_count;
+#endif
     for (unsigned int i = 0; i < ammo.size(); i++)
     {
         DESTROY_ITEM(ammo[i]);

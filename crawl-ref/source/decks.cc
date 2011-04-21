@@ -2866,11 +2866,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
 
-#ifdef DEBUG_DIAGNOSTICS
-    msg::streams(MSGCH_DIAGNOSTICS) << "Card power: " << power
-                                    << ", rarity: " << static_cast<int>(rarity)
-                                    << std::endl;
-#endif
+    dprf("Card power: %d, rarity: %d", power, rarity);
 
     if (tell_card)
     {
