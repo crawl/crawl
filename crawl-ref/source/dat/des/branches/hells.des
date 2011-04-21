@@ -30,7 +30,6 @@ function geh_setup(e)
    e.lrockcol("brown")
    e.lfloorcol("lightgrey")
    e.colour("v = red")
-   e.colour("c = lightgrey")
    dgn.set_feature_desc_short("Floor", "Ashen ground")
    dgn.set_feature_desc_long("Floor", "With every step, you walk on ash. " ..
                              "It is warm and almost comfortable.\n")
