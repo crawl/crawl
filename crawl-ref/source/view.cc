@@ -129,7 +129,12 @@ void seen_monsters_react()
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
-            && check_awaken(*mi))
+            && check_awaken(*mi)
+#ifdef EUCLIDEAN
+               || you.prev_move.abs() == 2 && x_chance_in_y(2, 5)
+                  && check_awaken(*mi)
+#endif
+           )
         {
             behaviour_event(*mi, ME_ALERT, MHITYOU, you.pos(), false);
             handle_monster_shouts(*mi);
