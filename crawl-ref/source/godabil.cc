@@ -1167,7 +1167,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         && !mon->cannot_move()
         && mons_shouts(mon->type, false) != S_SILENT)
     {
-        force_monster_shout(mon);
+        handle_monster_shouts(mon, true);
     }
 
     return (true);

@@ -12,7 +12,6 @@ void noisy_equipment();
 
 void blood_smell(int strength, const coord_def& where);
 void handle_monster_shouts(monster* mons, bool force = false);
-void force_monster_shout(monster* mons);
 bool check_awaken(monster* mons);
 
 void apply_noises();
