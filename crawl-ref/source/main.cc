@@ -296,6 +296,7 @@ static void _reset_game()
 {
     clrscr();
     crawl_state.type = GAME_TYPE_UNSPECIFIED;
+    crawl_state.updating_scores = false;
     clear_message_store();
     macro_clear_buffers();
     transit_lists_clear();
