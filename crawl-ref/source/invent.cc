@@ -940,11 +940,13 @@ bool in_inventory(const item_def &i)
 unsigned char get_invent(int invent_type)
 {
     unsigned char select;
+    int flags = MF_SINGLESELECT;
+    if (you.dead || crawl_state.updating_scores)
+        flags |= MF_EASY_EXIT;
 
     while (true)
     {
-        select = invent_select(NULL, MT_INVLIST, invent_type, -1,
-                               MF_SINGLESELECT);
+        select = invent_select(NULL, MT_INVLIST, invent_type, -1, flags);
 
         if (isaalpha(select))
         {
