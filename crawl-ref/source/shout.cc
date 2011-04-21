@@ -315,11 +315,6 @@ void handle_monster_shouts(monster* mons, bool force)
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 
-void force_monster_shout(monster* mons)
-{
-    handle_monster_shouts(mons, true);
-}
-
 bool check_awaken(monster* mons)
 {
     // Usually redundant because we iterate over player LOS,

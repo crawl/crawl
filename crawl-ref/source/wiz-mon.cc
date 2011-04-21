@@ -611,7 +611,7 @@ void debug_make_monster_shout(monster* mon)
             mpr("The monster is silenced and likely won't give any shouts.");
 
         for (int i = 0; i < num_times; ++i)
-            force_monster_shout(mon);
+            handle_monster_shouts(mon, true);
     }
     else
     {
