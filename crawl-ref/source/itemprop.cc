@@ -636,8 +636,8 @@ bool _is_affordable(const item_def &item)
         for (adjacent_iterator ai(item.pos); ai; ++ai)
             if (you.can_pass_through(*ai))
                 return true;
-        dprf("Seen item %s seems to be un(easily)obtainable.",
-             item.name(DESC_PLAIN).c_str());
+        //dprf("Seen item %s seems to be un(easily)obtainable.",
+        //     item.name(DESC_PLAIN).c_str());
         return false;
     }
 
