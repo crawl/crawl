@@ -1082,7 +1082,8 @@ coord_def direction_chooser::find_default_target() const
     }
     else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
              || mode == TARG_HOSTILE_SUBMERGED
-             || mode == TARG_EVOLVABLE_PLANTS)
+             || mode == TARG_EVOLVABLE_PLANTS
+             || mode == TARG_HOSTILE_UNDEAD)
     {
         // Try to find an enemy monster.
 
@@ -1093,7 +1094,9 @@ coord_def direction_chooser::find_default_target() const
                     && mons_attitude(mon_target) == ATT_HOSTILE
                 || mode == TARG_ENEMY && !mon_target->friendly()
                 || mode == TARG_EVOLVABLE_PLANTS
-                    && mons_is_evolvable(mon_target))
+                    && mons_is_evolvable(mon_target)
+                || mode == TARG_HOSTILE_UNDEAD && !mon_target->friendly()
+                   && mon_target->holiness() == MH_UNDEAD)
             && in_range(mon_target->pos()))
         {
             result = mon_target->pos();
@@ -2432,6 +2435,9 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 
     if (mode == TARG_EVOLVABLE_PLANTS)
         return (mons_is_evolvable(mon));
+
+    if (mode == TARG_HOSTILE_UNDEAD)
+        return  !mon->friendly() && mon->holiness() == MH_UNDEAD;
 
     ASSERT(mode == TARG_ENEMY);
     if (mon->friendly())
