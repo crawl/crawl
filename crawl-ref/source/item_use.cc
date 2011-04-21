@@ -5189,17 +5189,6 @@ void read_scroll(int slot)
 
         break;
 
-        if (!curse_item(which_scroll == SCR_CURSE_ARMOUR, alreadyknown))
-        {
-            if (alreadyknown)
-                cancel_scroll = you.religion == GOD_ASHENZARI;
-            else
-                id_the_scroll = false;
-        }
-         else
-             bad_effect = true;
-        break;
-
     case SCR_HOLY_WORD:
     {
         int pow = 100;
