@@ -1045,7 +1045,7 @@ int map_count_for_tag(const std::string &tag,
 // Reading maps from .des files.
 
 // All global preludes.
-std::vector<dlua_chunk> global_preludes;
+static std::vector<dlua_chunk> global_preludes;
 
 // Map-specific prelude.
 dlua_chunk lc_global_prelude("global_prelude");
@@ -1056,7 +1056,7 @@ depth_ranges lc_default_depths;
 bool lc_run_global_prelude = true;
 map_load_info_t lc_loaded_maps;
 
-std::set<std::string> map_files_read;
+static std::set<std::string> map_files_read;
 
 extern int yylineno;
 
