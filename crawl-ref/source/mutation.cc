@@ -1774,10 +1774,8 @@ _schedule_ds_mutations(std::vector<mutation_type> muts)
             dt.level_gained = slots_left.front();
             dt.mutation     = muts_left.front();
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Demonspawn will gain %s at level %d",
+            dprf("Demonspawn will gain %s at level %d",
                     get_mutation_def(dt.mutation).wizname, dt.level_gained);
-#endif
 
             out.push_back(dt);
 

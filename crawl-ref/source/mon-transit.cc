@@ -112,10 +112,7 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(m);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Monster in transit: %s",
-         m.name(DESC_PLAIN).c_str());
-#endif
+    dprf("Monster in transit: %s", m.name(DESC_PLAIN).c_str());
 
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)
@@ -146,10 +143,7 @@ void place_followers()
 
 static bool place_lost_monster(follower &f)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Placing lost one: %s",
-         f.mons.name(DESC_PLAIN).c_str());
-#endif
+    dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN).c_str());
     return (f.place(false));
 }
 
@@ -185,10 +179,7 @@ void add_item_to_transit(const level_id &lid, const item_def &i)
     i_transit_list &ilist = transiting_items[lid];
     ilist.push_back(i);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Item in transit: %s",
-         i.name(DESC_PLAIN).c_str());
-#endif
+    dprf("Item in transit: %s", i.name(DESC_PLAIN).c_str());
 
     const int how_many = ilist.size();
     if (how_many > MAX_LOST)
@@ -277,10 +268,7 @@ bool follower::place(bool near_player)
 
         if (placed)
         {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Placed follower: %s",
-                 m.name(DESC_PLAIN).c_str());
-#endif
+            dprf("Placed follower: %s", m.name(DESC_PLAIN).c_str());
             m.target.reset();
 
             m.flags &= ~MF_TAKING_STAIRS;

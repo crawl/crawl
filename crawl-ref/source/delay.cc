@@ -844,10 +844,8 @@ void handle_delay()
     // Handle delay:
     if (delay.duration > 0)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Delay type: %d (%s), duration: %d",
+        dprf("Delay type: %d (%s), duration: %d",
              delay.type, delay_name(delay.type), delay.duration);
-#endif
         // delay.duration-- *must* be done before multidrop, because
         // multidrop is now a parent delay, which means other delays
         // can be pushed to the front of the queue, invalidating the

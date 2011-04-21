@@ -2063,9 +2063,7 @@ void setup_environment_effects()
             }
         }
     }
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%u environment effect seeds", sfx_seeds.size());
-#endif
+    dprf("%u environment effect seeds", sfx_seeds.size());
 }
 
 static void apply_environment_effect(const coord_def &c)

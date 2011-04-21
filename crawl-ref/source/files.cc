@@ -1015,11 +1015,8 @@ static bool _grab_follower_at(const coord_def &pos)
     if (you.char_direction == GDT_GAME_START)
         dest.depth = 1;
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s is following to %s.",
-         fmenv->name(DESC_CAP_THE, true).c_str(),
+    dprf("%s is following to %s.", fmenv->name(DESC_CAP_THE, true).c_str(),
          dest.describe().c_str());
-#endif
     bool could_see = you.can_see(fmenv);
     fmenv->set_transit(dest);
     fmenv->destroy_inventory();

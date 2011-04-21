@@ -925,10 +925,7 @@ skill_type spell_type2skill(unsigned int spelltype)
     default:
     case SPTYP_HOLY:
     case SPTYP_DIVINATION:
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "spell_type2skill: called with spelltype %u",
-             spelltype);
-#endif
+        dprf("spell_type2skill: called with spelltype %u", spelltype);
         return (SK_NONE);
     }
 }                               // end spell_type2skill()

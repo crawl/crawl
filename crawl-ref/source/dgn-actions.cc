@@ -123,10 +123,7 @@ static void _apply_daction(daction_type act)
         for (monster_iterator mi; mi; ++mi)
             if (_mons_matches_counter(*mi, act))
             {
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                     "going hostile: %s", mi->name(DESC_PLAIN, true).c_str());
-#endif
+                dprf("going hostile: %s", mi->name(DESC_PLAIN, true).c_str());
                 mi->attitude = ATT_HOSTILE;
                 mi->del_ench(ENCH_CHARM, true);
                 behaviour_event(*mi, ME_ALERT, MHITYOU);

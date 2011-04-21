@@ -1664,12 +1664,10 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 
         pbolt.damage.size = pbolt.damage.size * (115 + ench.degree * 15) / 100;
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s frenzy damage: %dd%d -> %dd%d",
+        dprf("%s frenzy damage: %dd%d -> %dd%d",
              mons->name(DESC_PLAIN).c_str(),
              orig_damage.num, orig_damage.size,
              pbolt.damage.num, pbolt.damage.size);
-#endif
     }
 
     // Skilled archers get better to-hit and damage.
@@ -3403,11 +3401,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     {
         if (coinflip())
         {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Alerting monster %s at (%d,%d)",
+            dprf("Alerting monster %s at (%d,%d)",
                  m2->name(DESC_PLAIN).c_str(), m2->pos().x, m2->pos().y);
-#endif
             behaviour_event(m2, ME_ALERT, MHITNOT);
         }
         return (false);
@@ -3813,22 +3808,16 @@ static bool _monster_move(monster* mons)
             {
                 mons->flags &= ~MF_TAKING_STAIRS;
 
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                     "BUG: %s was marked as follower when not following!",
+                dprf("BUG: %s was marked as follower when not following!",
                      mons->name(DESC_PLAIN).c_str(), true);
-#endif
             }
             else
             {
                 ret    = true;
                 mmov.reset();
 
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                     "%s is skipping movement in order to follow.",
+                dprf("%s is skipping movement in order to follow.",
                      mons->name(DESC_CAP_THE).c_str(), true);
-#endif
             }
         }
 

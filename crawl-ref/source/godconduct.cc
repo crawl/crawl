@@ -1012,8 +1012,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
-            mprf(MSGCH_DIAGNOSTICS,
-                 "conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
+            dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
                  conducts[thing_done],
                  you.piety, piety_change, piety_denom,
                  you.penance[you.religion], penance);
