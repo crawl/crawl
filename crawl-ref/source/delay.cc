@@ -111,7 +111,7 @@ static bool _is_parent_delay(delay_type delay)
     // Lua macros can in theory perform any of the other delays,
     // including travel; in practise travel still assumes there can be
     // no parent delay.
-    return (delay == DELAY_TRAVEL
+    return (delay_is_run(delay)
             || delay == DELAY_MACRO
             || delay == DELAY_MULTIDROP);
 }
@@ -1498,6 +1498,13 @@ void run_macro(const char *macroname)
 #endif
 }
 
+bool is_delay_interruptible(delay_type delay)
+{
+    return !(delay == DELAY_EAT || delay == DELAY_WEAPON_SWAP
+             || delay == DELAY_DROP_ITEM || delay == DELAY_JEWELLERY_ON
+             || delay == DELAY_UNINTERRUPTIBLE);
+}
+
 // Returns TRUE if the delay should be interrupted, MAYBE if the user function
 // had no opinion on the matter, FALSE if the delay should not be interrupted.
 static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
@@ -1764,7 +1771,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     if (crawl_state.is_repeating_cmd())
         return interrupt_cmd_repeat(ai, at);
 
-    const int delay = current_delay_action();
+    const delay_type delay = current_delay_action();
 
     if (delay == DELAY_NOT_DELAYED)
     {
@@ -1775,6 +1782,10 @@ bool interrupt_activity(activity_interrupt_type ai,
         else
             return false;
     }
+
+    // If we get hungry while traveling, let's try to auto-eat a chunk.
+    if (delay_is_run(delay) && ai == AI_HUNGRY && prompt_eat_chunks(true) == 1)
+        return false;
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 
