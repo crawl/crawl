@@ -3117,9 +3117,9 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_TELEPORTATION, check_confused);
 
     // Religious abilities.
-    if (you.religion == GOD_TROG)
+    if (you.religion == GOD_TROG && !silenced(you.pos()))
         _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
-    else if (you.religion == GOD_CHEIBRIADOS)
+    else if (you.religion == GOD_CHEIBRIADOS && !silenced(you.pos()))
         _add_talent(talents, ABIL_CHEIBRIADOS_PONDEROUSIFY, check_confused);
     else if (you.transfer_skill_points > 0)
         _add_talent(talents, ABIL_ASHENZARI_END_TRANSFER, check_confused);
