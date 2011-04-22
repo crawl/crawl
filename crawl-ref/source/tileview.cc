@@ -801,8 +801,8 @@ void tile_draw_rays(bool reset_count)
 {
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
-        tileidx_t flag = tile_ray_vec[i].in_range > 0 ? TILE_FLAG_RAY
-                                                      : TILE_FLAG_RAY_OOR;
+        tileidx_t flag = tile_ray_vec[i].in_range > AFF_MAYBE ? TILE_FLAG_RAY
+                                                           : TILE_FLAG_RAY_OOR;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 

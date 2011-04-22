@@ -1231,7 +1231,7 @@ void direction_chooser::draw_beam_if_needed()
 
         const bool inrange = in_range(p);
 #ifdef USE_TILE
-        tile_place_ray(p, inrange ? AFF_MAYBE : AFF_NO);
+        tile_place_ray(p, inrange ? AFF_YES : AFF_NO);
 #else
         const int bcol = inrange ? MAGENTA : DARKGREY;
         _draw_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE);
@@ -1239,7 +1239,7 @@ void direction_chooser::draw_beam_if_needed()
     }
     textcolor(LIGHTGREY);
 #ifdef USE_TILE
-    tile_place_ray(target(), in_range(ray.pos()) ? AFF_MAYBE : AFF_NO);
+    tile_place_ray(target(), in_range(ray.pos()) ? AFF_YES : AFF_NO);
 
     // In tiles, we need to refresh the window to get the beam drawn.
     viewwindow();
