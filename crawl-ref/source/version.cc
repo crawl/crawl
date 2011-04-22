@@ -13,7 +13,7 @@ namespace Version
 {
     std::string Short()
     {
-        return std::string(CRAWL_VERSION_TAG);
+        return std::string(CRAWL_VERSION_SHORT);
     }
 
     std::string Long()
@@ -21,34 +21,9 @@ namespace Version
         return std::string(CRAWL_VERSION_LONG);
     }
 
-    int Major()
+    bool ReleaseType()
     {
-        return CRAWL_VERSION_MAJOR;
-    }
-
-    int Minor()
-    {
-        return CRAWL_VERSION_MINOR;
-    }
-
-    int Revision()
-    {
-        return CRAWL_VERSION_REVISION;
-    }
-
-    int Build()
-    {
-        return CRAWL_VERSION_BUILD;
-    }
-
-    Class ReleaseType()
-    {
-        return CRAWL_VERSION_PREREL_TYPE;
-    }
-
-    int ReleaseID()
-    {
-        return CRAWL_VERSION_PREREL_NUM;
+        return CRAWL_VERSION_FINAL;
     }
 
     std::string Compiler()
@@ -70,26 +45,6 @@ namespace Version
 #endif
     }
 
-    std::string BuildOS()
-    {
-        return CRAWL_BUILD_OS;
-    }
-
-    std::string BuildOSVersion()
-    {
-        return CRAWL_BUILD_OS_VER;
-    }
-
-    std::string BuildMachine()
-    {
-        return CRAWL_BUILD_MACHINE;
-    }
-
-    std::string BuildProcessor()
-    {
-        return CRAWL_BUILD_PROCESSOR;
-    }
-
     std::string CFLAGS()
     {
         return CRAWL_CFLAGS;
@@ -107,13 +62,6 @@ std::string compilation_info()
 
     out += make_stringf("Compiled with %s on %s at %s\n",
                         Version::Compiler().c_str(), __DATE__, __TIME__);
-    out += make_stringf("Compiled on OS: %s %s\n",
-                        Version::BuildOS().c_str(),
-                        Version::BuildOSVersion().c_str());
-    out += make_stringf("Compiled on machine type: %s\n",
-                        Version::BuildMachine().c_str());
-    out += make_stringf("Compiled on processor type: %s\n",
-                        Version::BuildProcessor().c_str());
 
     out += make_stringf("CLFAGS: %s\n", Version::CFLAGS().c_str());
     out += make_stringf("LDFLAGS: %s\n", Version::LDFLAGS().c_str());
