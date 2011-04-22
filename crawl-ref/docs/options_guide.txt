@@ -1100,6 +1100,8 @@ easy_eat_chunks = false
         the oldest chunk happens to be contaminated, and you will always
         be prompted for harmful chunks.
         Note that this option is ignored for each of the undead species.
+        Setting this option will also allow you to automatically eat a chunk
+        if you get hungry while you are travelling, auto-exploring or resting.
 
 easy_eat_gourmand = false
         If both this and easy_eat_chunks are true, and you're wearing an
