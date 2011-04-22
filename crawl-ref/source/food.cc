@@ -1494,7 +1494,7 @@ bool eat_from_inventory()
 
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten,
 //         -2 for skip to inventory.
-int prompt_eat_chunks()
+int prompt_eat_chunks(bool only_auto)
 {
     // Full herbivores cannot eat chunks.
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
@@ -1599,6 +1599,8 @@ int prompt_eat_chunks()
             }
             else if (easy_contam && contam && !bad)
                 autoeat = true;
+            else if (only_auto)
+                return 0;
             else
             {
                 mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",

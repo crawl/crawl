@@ -14,6 +14,9 @@ ignore = safely over a trap
 ignore = A.*toadstool withers and dies
 ignore = toadstools? grows
 ignore = You walk carefully through the
+ignore = Eating a chunk
+ignore = This .*flesh tastes
+ignore = You .* eating
 
 # Expiring spells
 #

@@ -497,7 +497,10 @@ void game_options::set_default_activity_interrupts()
 {
     for (int adelay = 0; adelay < NUM_DELAYS; ++adelay)
         for (int aint = 0; aint < NUM_AINTERRUPTS; ++aint)
-            activity_interrupts[adelay][aint] = true;
+        {
+            activity_interrupts[adelay][aint]
+                = is_delay_interruptible(static_cast<delay_type>(adelay));
+        }
 
     const char *default_activity_interrupts[] = {
         "interrupt_armour_on = hp_loss, monster_attack",
