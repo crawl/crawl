@@ -926,7 +926,7 @@ depend: $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
 compflag.h: $(OBJECTS:.o=.cc)
 	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)"
 
-build.h: $(OBJECTS:.o=.cc)
+build.h: $(OBJECTS:.o=.cc) util/gen_ver.pl
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
 version.o: build.h compflag.h
