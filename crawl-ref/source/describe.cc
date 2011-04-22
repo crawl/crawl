@@ -201,7 +201,8 @@ struct property_annotators
     int spell_out;              // 0: "+3", 1: "+++", 2: value doesn't matter
 };
 
-static std::vector<std::string> _randart_propnames(const item_def& item)
+static std::vector<std::string> _randart_propnames(const item_def& item,
+                                                   bool no_comma = false)
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
@@ -279,7 +280,8 @@ static std::vector<std::string> _randart_propnames(const item_def& item)
             // ... and another one for adding a comma if needed.
             for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
                 if (known_proprt(propanns[i].prop)
-                    && propanns[i].prop != ARTP_BRAND)
+                    && propanns[i].prop != ARTP_BRAND
+                    && !no_comma)
                 {
                     ego += ",";
                     break;
@@ -363,7 +365,7 @@ static std::vector<std::string> _randart_propnames(const item_def& item)
 // the last auto-inscription.
 void trim_randart_inscrip(item_def& item)
 {
-    std::vector<std::string> propnames = _randart_propnames(item);
+    std::vector<std::string> propnames = _randart_propnames(item, true);
 
     for (unsigned int i = 0; i < propnames.size(); ++i)
     {
