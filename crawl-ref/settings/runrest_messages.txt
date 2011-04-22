@@ -11,7 +11,6 @@ ignore = engulfed in a cloud of smoke
 ignore = standing in the rain
 ignore = engulfed in white fluffiness
 ignore = safely over a trap
-ignore = You feel.*sick
 ignore = A.*toadstool withers and dies
 ignore = toadstools? grows
 ignore = You walk carefully through the
