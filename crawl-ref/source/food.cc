@@ -2390,7 +2390,9 @@ bool is_contaminated(const item_def &food)
 
     const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
     return (chunk_type == CE_CONTAMINATED
-            || (player_res_poison(false) && chunk_type == CE_POISON_CONTAM));
+            || (player_res_poison(false) && chunk_type == CE_POISON_CONTAM)
+            || food_is_rotten(food)
+               && player_mutation_level(MUT_SAPROVOROUS) < 3);
 }
 
 // Returns true if a food item (also corpses) will cause rotting.
