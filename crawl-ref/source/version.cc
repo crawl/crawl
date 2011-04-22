@@ -45,6 +45,15 @@ namespace Version
 #endif
     }
 
+    std::string BuildArch()
+    {
+        return CRAWL_HOST;
+    }
+    std::string Arch()
+    {
+        return CRAWL_ARCH;
+    }
+
     std::string CFLAGS()
     {
         return CRAWL_CFLAGS;
@@ -62,6 +71,8 @@ std::string compilation_info()
 
     out += make_stringf("Compiled with %s on %s at %s\n",
                         Version::Compiler().c_str(), __DATE__, __TIME__);
+    out += make_stringf("Build platform: %s\n", Version::BuildArch().c_str());
+    out += make_stringf("Platform: %s\n", Version::Arch().c_str());
 
     out += make_stringf("CLFAGS: %s\n", Version::CFLAGS().c_str());
     out += make_stringf("LDFLAGS: %s\n", Version::LDFLAGS().c_str());
