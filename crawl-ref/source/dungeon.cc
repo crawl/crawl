@@ -2141,39 +2141,23 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         _fixup_hell_stairs();
 }
 
-static uint8_t _fix_black_colour(uint8_t incol)
-{
-    if (incol == BLACK)
-        return LIGHTGREY;
-    else
-        return incol;
-}
-
 void dgn_set_colours_from_monsters()
 {
-    if (env.mons_alloc[9] < 0 || env.mons_alloc[9] == MONS_NO_MONSTER
-        || env.mons_alloc[9] >= NUM_MONSTERS)
+    if (env.mons_alloc[9] >= 0 && env.mons_alloc[9] != MONS_NO_MONSTER
+        && env.mons_alloc[9] < NUM_MONSTERS)
     {
-        if (env.floor_colour == BLACK)
-            env.floor_colour = LIGHTGREY;
+        env.floor_colour = mons_class_colour(env.mons_alloc[9]);
     }
-    else
-    {
-        env.floor_colour =
-            _fix_black_colour(mons_class_colour(env.mons_alloc[9]));
-    }
+    if (env.floor_colour == BLACK)
+        env.floor_colour = LIGHTGREY;
 
-    if (env.mons_alloc[8] < 0 || env.mons_alloc[8] == MONS_NO_MONSTER
-        || env.mons_alloc[8] >= NUM_MONSTERS)
+    if (env.mons_alloc[8] >= 0 && env.mons_alloc[8] != MONS_NO_MONSTER
+        && env.mons_alloc[8] < NUM_MONSTERS)
     {
-        if (env.rock_colour == BLACK)
-            env.rock_colour = BROWN;
+        env.rock_colour = mons_class_colour(env.mons_alloc[9]);
     }
-    else
-    {
-        env.rock_colour =
-            _fix_black_colour(mons_class_colour(env.mons_alloc[8]));
-    }
+    if (env.rock_colour == BLACK || env.rock_colour == LIGHTGREY)
+        env.rock_colour = coinflip() ? BROWN : LIGHTRED;
 }
 
 static void _dgn_set_floor_colours()
