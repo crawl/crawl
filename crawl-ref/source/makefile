@@ -162,7 +162,11 @@ uname_R := $(shell sh -c 'uname -r 2>/dev/null || echo not')
 uname_P := $(shell sh -c 'uname -p 2>/dev/null || echo not')
 uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 
+HOST = $(shell sh -c 'cc -dumpmachine || echo unknown')
+ARCH = $(HOST)
+
 ifdef CROSSHOST
+	ARCH = $(CROSSHOST)
 	NO_PKGCONFIG = YesPlease
 	NO_AUTO_OPT = YesPlease
 	NEED_STATIC = YesPlease
@@ -923,8 +927,8 @@ depend: $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
-compflag.h: $(OBJECTS:.o=.cc)
-	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)"
+compflag.h: $(OBJECTS:.o=.cc) util/gen-cflg.pl
+	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)" "$(HOST)" "$(ARCH)"
 
 build.h: $(OBJECTS:.o=.cc) util/gen_ver.pl
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)

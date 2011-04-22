@@ -43,6 +43,18 @@ namespace Version
      */
     std::string Compiler();
 
+    //! Build architecture.
+    /*!
+     * Host triplet of the architecture used for build.
+     */
+    std::string BuildArch();
+
+    //! Target architecture.
+    /*!
+     * Host triplet of the architecture Crawl was compiled for.
+     */
+    std::string Arch();
+
     //! The CFLAGS.
     /*!
      * Returns the CFLAGS the executable was compiled with.
