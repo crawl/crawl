@@ -1979,7 +1979,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
 
     if (major != TAG_MAJOR_VERSION)
     {
-        if (Version::ReleaseType() == Version::FINAL)
+        if (Version::ReleaseType())
         {
             *reason = (CRAWL " " + Version::Short() + " is not compatible with "
                        "save files from older versions. You can continue your "
