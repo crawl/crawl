@@ -942,8 +942,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
     {
         // Make a randart or unrandart.
 
-        // 1 in 12 randarts are unrandarts.
-        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 12)
+        // 1 in 20 randarts are unrandarts.
+        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type))
@@ -2069,8 +2069,8 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     {
         // Make a randart or unrandart.
 
-        // 1 in 12 randarts are unrandarts.
-        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 12)
+        // 1 in 20 randarts are unrandarts.
+        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type))
