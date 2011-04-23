@@ -1758,7 +1758,7 @@ static bool _add_connecting_escape_hatches()
 
     // FIXME: shouldn't depend on branch.
     if (you.where_are_you != BRANCH_ORCISH_MINES)
-        return (false);
+        return (true);
 
     return (_add_feat_if_missing(_is_upwards_exit_stair, DNGN_ESCAPE_HATCH_UP));
 }
