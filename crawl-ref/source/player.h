@@ -333,6 +333,9 @@ public:
   // The save file itself.
   package *save;
 
+  // The version the save was last played with.
+  std::string prev_save_version;
+
   // The type of a zotdef wave, if any.
   std::string zotdef_wave_name;
   // The biggest assigned monster id so far.

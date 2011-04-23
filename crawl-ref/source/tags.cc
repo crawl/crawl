@@ -1518,8 +1518,8 @@ static void tag_construct_game_state(writer &th)
 static void tag_read_char(reader &th)
 {
     you.your_name         = unmarshallString(th);
-    const std::string old_version = unmarshallString(th);
-    dprf("Last save Crawl version: %s", old_version.c_str());
+    you.prev_save_version = unmarshallString(th);
+    dprf("Last save Crawl version: %s", you.prev_save_version.c_str());
 
     you.species           = static_cast<species_type>(unmarshallByte(th));
     you.char_class        = static_cast<job_type>(unmarshallByte(th));

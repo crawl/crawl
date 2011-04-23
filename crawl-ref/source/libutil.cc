@@ -803,6 +803,53 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
     return ret;
 }
 
+/**
+ * Compare two strings, sorting integer numeric parts according to their value.
+ *
+ * "foo123bar" > "foo99bar"
+ * "0.10" > "0.9" (version sort)
+ *
+ * @param limit If passed, comparison ends after X numeric parts.
+ * @return As in strcmp().
+**/
+int numcmp(const char *a, const char *b, int limit)
+{
+    int res;
+
+not_numeric:
+    while (*a && *a == *b && !isadigit(*a))
+    {
+        a++;
+        b++;
+    }
+    if (!a && !b)
+        return 0;
+    if (!isadigit(*a) || !isadigit(*b))
+        return (*a < *b) ? -1 : (*a > *b) ? 1 : 0;
+    while (*a == '0')
+        a++;
+    while (*b == '0')
+        b++;
+    res = 0;
+    while (isadigit(*a))
+    {
+        if (!isadigit(*b))
+            return 1;
+        if (*a != *b && !res)
+            res = (*a < *b) ? -1 : 1;
+        a++;
+        b++;
+    }
+    if (isadigit(*b))
+        return -1;
+    if (res)
+        return res;
+
+    if (--limit)
+        goto not_numeric;
+    return 0;
+}
+
 // The old school way of doing short delays via low level I/O sync.
 // Good for systems like old versions of Solaris that don't have usleep.
 #ifdef NEED_USLEEP
