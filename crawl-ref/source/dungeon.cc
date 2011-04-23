@@ -5914,7 +5914,7 @@ void plan_4(dungeon_feature_type force_wall)
             drawing = static_cast<dungeon_feature_type>(
                       random_choose_weighted(261, DNGN_ROCK_WALL,
                                              116, DNGN_STONE_WALL,
-                                             40, DNGN_METAL_WALL));
+                                             40, DNGN_METAL_WALL, 0));
         }
 
         if (one_chance_in(3))
