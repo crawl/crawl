@@ -1485,18 +1485,18 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
     else
         mutated = how_mutated(false, true);
 
-    if ((victim->holiness() == MH_UNDEAD && !victim->is_insubstantial())
-        || victim->is_chaotic()
+    if (victim->is_chaotic()
         || (victim == &you && player_is_shapechanged()))
     {
-        dmg *= 2;
+        dmg *= 7;
+        dmg /= 4;
     }
     else if (victim == &you && mutated > 0)
     {
         int multiplier = 100 + (mutated * 5);
 
-        if (multiplier > 200)
-            multiplier = 200;
+        if (multiplier > 175)
+            multiplier = 175;
 
         dmg = (dmg * multiplier) / 100;
     }

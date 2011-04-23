@@ -1221,13 +1221,13 @@ static std::string _describe_ammo(const item_def &item)
                 "time, and weighs three times as much.";
             break;
         case SPMSL_SILVER:
-            description += "The touch of silver hurts beings which are out "
-                "of their natural form. Compared to normal ammo, it does twice "
-                "as much damage to the corporeal undead, shapechangers and "
-                "chaotic beings. It also does extra damage against mutated "
-                "beings according to how mutated they are. With due "
-                "care, silver ammo can still be handled by those folks. "
-                "Silver ammo weighs twice as much as normal ammo.";
+            description += "Silver sears all those touched by chaos. "
+                "Compared to normal ammo, it does 75% more damage to "
+                "chaotic and magically transformed beings. It also does "
+                "extra damage against mutated beings according to how "
+                "mutated they are. With due care, silver ammo can still "
+                "be handled by those it affects. It weighs twice as much "
+                "as normal ammo.";
             break;
         }
 
