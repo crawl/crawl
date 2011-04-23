@@ -5573,6 +5573,7 @@ void player::init()
     frame_no            = 0;
 
     save                = 0;
+    prev_save_version.clear();
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)

@@ -1789,6 +1789,20 @@ void restore_game(const std::string& name)
                            + SAVE_SUFFIX).c_str(), true);
 
     _restore_tagged_chunk(you.save, "chr", TAG_CHR, "Player data is invalid.");
+
+    if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1)
+    {
+        if (!yesno("This game comes from a previous release of Crawl.  If you "
+                   "load it now, you won't be able to go back.  Continue?",
+                   false, 'n'))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            end(0, false, "Please reinstall the stable version then.\n");
+        }
+    }
+
     _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
 
     const int minorVersion = crawl_state.minorVersion;
