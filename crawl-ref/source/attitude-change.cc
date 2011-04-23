@@ -325,7 +325,9 @@ void good_god_holy_attitude_change(monster* holy)
         _print_good_god_holy_being_speech(true, "reaction", holy,
                                           MSGCH_FRIEND_ENCHANT);
 
-        if (!one_chance_in(3) && holy->can_speak())
+        if (!one_chance_in(3)
+            && holy->can_speak()
+            && holy->type != MONS_MENNAS) // Mennas is mute and only has visual speech
             _print_good_god_holy_being_speech(true, "speech", holy,
                                               MSGCH_TALK);
     }
@@ -355,7 +357,9 @@ void good_god_holy_fail_attitude_change(monster* holy)
         _print_good_god_holy_being_speech(false, "reaction", holy,
                                           MSGCH_FRIEND_ENCHANT);
 
-        if (!one_chance_in(3) && holy->can_speak())
+        if (!one_chance_in(3)
+            && holy->can_speak()
+            && holy->type != MONS_MENNAS) // Mennas is mute and only has visual speech
             _print_good_god_holy_being_speech(false, "speech", holy,
                                               MSGCH_TALK);
     }
