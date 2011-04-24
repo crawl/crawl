@@ -71,6 +71,8 @@ bool is_unknown_stair(const coord_def &p);
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
                      std::vector<coord_def>* coords = NULL);
 
+bool is_stair_exclusion(const coord_def &p);
+
 bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false,
                           bool ignore_danger = false);
 
