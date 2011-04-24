@@ -149,6 +149,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
                 mesclr();
                 mpr("You can't blink into the sea!");
             }
+            else if (grd(beam.target) == DNGN_LAVA_SEA)
+            {
+                mesclr();
+                mpr("You can't blink into the sea of lava!");
+            }
             else if (!check_moveto(beam.target, "blink"))
             {
                 // try again (messages handled by check_moveto)

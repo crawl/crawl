@@ -3138,7 +3138,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return (false);
 
     // No monster may enter the open sea.
-    if (grd(targ) == DNGN_OPEN_SEA)
+    if (grd(targ) == DNGN_OPEN_SEA || grd(targ) == DNGN_LAVA_SEA)
         return (false);
 
     // Non-friendly and non-good neutral monsters won't enter

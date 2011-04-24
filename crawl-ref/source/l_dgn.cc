@@ -1059,10 +1059,7 @@ static bool _valid_border_feat (dungeon_feature_type feat)
             || (feat == DNGN_TREE
                || feat == DNGN_SWAMP_TREE
                || feat == DNGN_OPEN_SEA
-               || feat == DNGN_LAVA
-               || feat == DNGN_DEEP_WATER
-               || feat == DNGN_SHALLOW_WATER
-               || feat == DNGN_FLOOR));
+               || feat == DNGN_LAVA_SEA));
 }
 
 // XXX: Currently, this is hacked so that map_def->border_fill_type is marsalled

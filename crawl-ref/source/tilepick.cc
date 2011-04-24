@@ -198,6 +198,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_SWAMP_TREE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
+    case DNGN_LAVA_SEA: // FIXME
     case DNGN_LAVA:
         return TILE_DNGN_LAVA;
     case DNGN_DEEP_WATER:

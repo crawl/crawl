@@ -1126,6 +1126,7 @@ enum dungeon_feature_type
     DNGN_TREE,
     DNGN_ORCISH_IDOL,
     DNGN_SWAMP_TREE,
+    DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
     DNGN_GRANITE_STATUE = 21,
     // Highest solid grid value.
     DNGN_MAXSOLID = DNGN_GRANITE_STATUE,

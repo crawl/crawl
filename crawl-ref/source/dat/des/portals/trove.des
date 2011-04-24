@@ -748,7 +748,7 @@ ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
 ITEM:   potion of cure mutation
 : trove.setup_features(_G)
-: set_border_fill_type("deep_water")
+: set_border_fill_type("open_sea")
 epilogue{{
 trove.milestone(_G)
 }}

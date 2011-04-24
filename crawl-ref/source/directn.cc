@@ -2952,6 +2952,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("unnaturally hard rock wall");
     case DNGN_OPEN_SEA:
         return ("open sea");
+    case DNGN_LAVA_SEA:
+        return ("Endless lava");
     case DNGN_CLOSED_DOOR:
         return ("closed door");
     case DNGN_DETECTED_SECRET_DOOR:

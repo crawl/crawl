@@ -1318,7 +1318,7 @@ SUBST:     "=. , '=l , A=! , B=l
 : end
 KFEAT:     ! = jewellery shop / jewellery shop / wand shop / scroll shop / book shop
 : bazaar_epilogue(_G)
-: set_border_fill_type("lava")
+: set_border_fill_type("endless_lava")
 MAP
 lllllllllllllllllllllllllllllllllllll
 ll...lllllllllllllllll'''llllllllllll
