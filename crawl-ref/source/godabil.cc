@@ -1273,7 +1273,7 @@ bool zin_vitalisation()
     else
     {
         // Add divine stamina.
-        if (!you.duration[DUR_DIVINE_STAMINA])
+        if (you.attribute[ATTR_DIVINE_STAMINA] < 9)
         {
             success = true;
             type = 2;
@@ -1282,7 +1282,7 @@ bool zin_vitalisation()
                  god_name(GOD_ZIN).c_str());
 
             const int stamina_amt = 3;
-            you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
+            you.attribute[ATTR_DIVINE_STAMINA] += stamina_amt;
             you.set_duration(DUR_DIVINE_STAMINA,
                              40 + (you.skill(SK_INVOCATIONS)*5)/2);
 
