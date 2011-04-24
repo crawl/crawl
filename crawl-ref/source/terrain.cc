@@ -799,6 +799,15 @@ bool is_critical_feature(dungeon_feature_type feat)
             || feat == DNGN_TEMP_PORTAL);
 }
 
+bool is_valid_border_feat(dungeon_feature_type feat)
+{
+    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
+            || (feat == DNGN_TREE
+               || feat == DNGN_SWAMP_TREE
+               || feat == DNGN_OPEN_SEA
+               || feat == DNGN_LAVA_SEA));
+}
+
 static bool _is_feature_shift_target(const coord_def &pos, void*)
 {
     return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));

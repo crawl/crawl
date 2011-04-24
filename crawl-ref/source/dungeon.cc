@@ -453,11 +453,27 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
     return (false);
 }
 
+// Things that are bugs where we want to assert rather than to sweep it under
+// the rug with a veto.
+static void _builder_assertions()
+{
+#ifdef ASSERTS
+    for(rectangle_iterator ri(0); ri; ++ri)
+        if (!in_bounds(*ri))
+            if (!is_valid_border_feat(grd(*ri)))
+            {
+                die("invalid map border at (%d,%d): %s", ri->x, ri->y,
+                    dungeon_feature_name(grd(*ri)));
+            }
+#endif
+}
+
 // Should be called after a level is constructed to perform any final
 // fixups.
 static void _dgn_postprocess_level()
 {
     shoals_postprocess_level();
+    _builder_assertions();
     _calc_density();
 }
 

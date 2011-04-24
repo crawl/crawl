@@ -117,6 +117,7 @@ bool slide_feature_over(const coord_def &src,
                         bool announce = true);
 
 bool is_critical_feature(dungeon_feature_type feat);
+bool is_valid_border_feat(dungeon_feature_type feat);
 
 void                 init_feat_desc_cache();
 dungeon_feature_type feat_by_desc(std::string desc);
