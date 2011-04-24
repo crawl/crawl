@@ -10,7 +10,7 @@
 #include <vector>
 #include <stdio.h>
 
-#define MAX_NOTE_PLACE_LEN 7
+#define MAX_NOTE_PLACE_LEN 8
 
 class reader;
 class writer;
