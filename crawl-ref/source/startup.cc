@@ -402,6 +402,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef ENABLE_ZOTDEF
 #ifdef USE_TILE
     tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_ZOTDEF), TEX_GUI));
@@ -419,6 +420,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp->set_description_text("Defend the Orb of Zot against waves of critters.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
+#endif
 
 #ifdef USE_TILE
     tmp = new TextTileItem();

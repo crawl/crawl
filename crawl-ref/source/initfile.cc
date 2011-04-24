@@ -4053,6 +4053,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_ZOTDEF:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_ZOTDEF;
+#ifndef ENABLE_ZOTDEF
+            end(1, false, "Zot Defense is disabled in this version.");
+#endif
             break;
 
         case CLO_TUTORIAL:

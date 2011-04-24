@@ -386,6 +386,9 @@
 // in the score file.
 // #define SCORE_WIZARD_CHARACTERS
 
+// Zot Defense is too buggy for 0.8, temporarily disabled.
+// #define ENABLE_ZOTDEF
+
 #define SAVE_SUFFIX ".cs"
 
 // If you are installing Crawl for multiple users, define SAVE_DIR

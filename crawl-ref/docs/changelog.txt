@@ -6,7 +6,6 @@ Breaks save compatibility with the 0.7 release.
 
 0.8 Highlights
 --------------
-* New game mode: Zot Defence, a tower defence mini-game.
 * New god: Ashenzari, god of divinations.
 * New species: Felids, sentient cats.
 * New spells: Malign Gateway, Tornado, Leda's Liquefaction, Summon Dragon, Summon Hydra, Darkness.
