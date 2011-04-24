@@ -1309,17 +1309,17 @@ MAP
  .Tttttttttttttt..ttt...ttt....ttttttttttT.5Tttttttx
  ...Ttttttttttt..ttttt.......tttttttttttT....Ttttttx
  ...tttttttttt..ttttttt0tt.tttttttttcccccc++cccccccx
- ..Tttttttttt..tttttttttttt=ccccccccc:::::::::::::cl
- ..Ttttttttt.0t..ttttttttttc::::::::c:::Q;;;;Q::::cl
- .Tttttttttt..tt..tttttttttc::G:G:::c:::::::::::::cl
- ..Tttttttt..tttt.tttttttttc:::G:G::cccccccccccccccl
- .Tttttttt..ttttt..ttttttttc::G:G:::c;;;;;;;2lllllll
- ..Ttttt.0ttttttt...tttttttc:::G:G::c;;;;;;;222lllll
- ....T..tttttttt....tttttttc::G:G:::=;;;;_;3142/llll
- ...T0tttttttttt.Q5ttttttttc:::G:G::c;;;;;2222llllll
- ..Ttttttttttttttttttttttttc:::::::6c;;;;2llllllllll
- ttttttttttttttttttttttttttcccccccccccccllllllllllll
- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllllllllllllllllll
+ ..Tttttttttt..tttttttttttt=ccccccccc:::::::::::::cx
+ ..Ttttttttt.0t..ttttttttttc::::::::c:::Q;;;;Q::::cx
+ .Tttttttttt..tt..tttttttttc::G:G:::c:::::::::::::cx
+ ..Tttttttt..tttt.tttttttttc:::G:G::cccccccccccccccx
+ .Tttttttt..ttttt..ttttttttc::G:G:::c;;;;;;;2llllllx
+ ..Ttttt.0ttttttt...tttttttc:::G:G::c;;;;;;;222llllx
+ ....T..tttttttt....tttttttc::G:G:::=;;;;_;3142/lllx
+ ...T0tttttttttt.Q5ttttttttc:::G:G::c;;;;;2222lllllx
+ ..Ttttttttttttttttttttttttc:::::::6c;;;;2lllllllllx
+ ttttttttttttttttttttttttttccccccccccccclllllllllllx
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 #######################################################################
