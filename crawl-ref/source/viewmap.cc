@@ -51,7 +51,8 @@ static unsigned _get_travel_colour(const coord_def& p)
 
     if (is_waypoint(p))
         return LIGHTGREEN;
-
+    if (is_stair_exclusion(p))
+        return Options.tc_excluded;
     short dist = travel_point_distance[p.x][p.y];
     return dist > 0?                    Options.tc_reachable        :
            dist == PD_EXCLUDED?         Options.tc_excluded         :
@@ -64,7 +65,8 @@ static unsigned _get_travel_colour(const coord_def& p)
 #ifndef USE_TILE
 static bool _travel_colour_override(const coord_def& p)
 {
-    if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
+  if (is_waypoint(p) || is_stair_exclusion(p)
+     || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
         return (true);
 #ifdef WIZARD
     if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))

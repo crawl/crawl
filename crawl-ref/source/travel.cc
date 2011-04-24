@@ -380,7 +380,7 @@ public:
     }
 };
 
-static bool _is_stair_exclusion(const coord_def &p)
+bool is_stair_exclusion(const coord_def &p)
 {
     if (feat_stair_direction(env.map_knowledge(p).feat()) == CMD_NO_CMD)
         return (false);
@@ -433,7 +433,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
         return (true);
 
     // Excluded squares are only safe if marking stairs, i.e. another level.
-    if (!ignore_danger && is_excluded(c) && !_is_stair_exclusion(c))
+    if (!ignore_danger && is_excluded(c) && !is_stair_exclusion(c))
         return (false);
 
     if (is_trap(c) && _is_safe_trap(c))
@@ -936,7 +936,7 @@ command_type travel()
     }
 
     // Excluded squares are only safe if marking stairs, i.e. another level.
-    if (is_excluded(you.pos()) && !_is_stair_exclusion(you.pos()))
+    if (is_excluded(you.pos()) && !is_stair_exclusion(you.pos()))
     {
         mprf("You're in a travel-excluded area, stopping %s.",
              you.running.runmode_name().c_str());
@@ -4412,8 +4412,8 @@ int click_travel(const coord_def &gc, bool force)
     if (cmd != CK_MOUSE_CMD)
         return cmd;
 
-    if ((!is_excluded(gc) || _is_stair_exclusion(gc))
-        && (!is_excluded(you.pos()) || _is_stair_exclusion(you.pos()))
+    if ((!is_excluded(gc) || is_stair_exclusion(gc))
+        && (!is_excluded(you.pos()) || is_stair_exclusion(you.pos()))
         && i_feel_safe(false, false, false, false))
     {
         map_cell &cell(env.map_knowledge(gc));
