@@ -4088,6 +4088,9 @@ static void _move_player(coord_def move)
         if (grd(targ) == DNGN_OPEN_SEA)
             mpr("You can't go out to sea!");
 
+        if (grd(targ) == DNGN_LAVA_SEA)
+            mpr("The endless sea of lava is not a nice place.");
+
         if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
             mpr("You cannot walk through the dense trees.");
 

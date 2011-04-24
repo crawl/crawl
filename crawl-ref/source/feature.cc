@@ -120,6 +120,12 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_WATER;
             break;
 
+        case DNGN_LAVA_SEA:
+            f.dchar        = DCHAR_WAVY;
+            f.colour       = RED;
+            f.minimap      = MF_LAVA;
+            break;
+
         case DNGN_OPEN_DOOR:
             f.dchar   = DCHAR_DOOR_OPEN;
             f.colour  = LIGHTGREY;

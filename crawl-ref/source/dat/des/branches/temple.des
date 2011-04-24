@@ -1569,7 +1569,7 @@ ORIENT: encompass
 WEIGHT: 7
 : if crawl.one_chance_in(10) then
 SUBST:  w = l
-:   set_border_fill_type("lava")
+:   set_border_fill_type("endless_lava")
 : else
 :   set_border_fill_type("open_sea")
 : end
@@ -1616,7 +1616,7 @@ ORIENT: encompass
 WEIGHT: 1
 : if crawl.one_chance_in(10) then
 SUBST:  w = l
-:   set_border_fill_type("lava")
+:   set_border_fill_type("endless_lava")
 : else
 :   set_border_fill_type("open_sea")
 : end
@@ -1663,7 +1663,7 @@ ORIENT: encompass
 WEIGHT: 1
 : if crawl.one_chance_in(10) then
 SUBST:  w = l
-:   set_border_fill_type("lava")
+:   set_border_fill_type("endless_lava")
 : else
 :   set_border_fill_type("open_sea")
 : end
@@ -1710,7 +1710,7 @@ ORIENT: encompass
 WEIGHT: 1
 : if crawl.one_chance_in(10) then
 SUBST:  w = l
-:   set_border_fill_type("lava")
+:   set_border_fill_type("endless_lava")
 : else
 :   set_border_fill_type("open_sea")
 : end
