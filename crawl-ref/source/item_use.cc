@@ -5184,10 +5184,9 @@ void read_scroll(int slot)
         {
             mpr(pre_succ_msg);
             if (curse_item(which_scroll == SCR_CURSE_ARMOUR, false))
-            {
-                id_the_scroll = true;
                 bad_effect = true;
-            }
+            else
+                id_the_scroll = false;
         }
         else if (curse_item(which_scroll == SCR_CURSE_ARMOUR, true,
                             &pre_succ_msg))
