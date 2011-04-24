@@ -657,7 +657,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
         if (*ri == mon->pos())
             continue;
 
-        if (!mon->can_pass_through_feat(grd(*ri)))
+        if (!in_bounds(*ri) || !mon->can_pass_through_feat(grd(*ri)))
             continue;
 
         // Don't bother moving to squares (currently) occupied by a
