@@ -1053,16 +1053,7 @@ static int lua_dgn_set_lt_callback(lua_State *ls)
     return (0);
 }
 
-static bool _valid_border_feat (dungeon_feature_type feat)
-{
-    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
-            || (feat == DNGN_TREE
-               || feat == DNGN_SWAMP_TREE
-               || feat == DNGN_OPEN_SEA
-               || feat == DNGN_LAVA_SEA));
-}
-
-// XXX: Currently, this is hacked so that map_def->border_fill_type is marsalled
+// XXX: Currently, this is hacked so that map_def->border_fill_type is marshalled
 //      when the maps are stored. This relies on the individual map Lua prelude
 //      being executed whenever maps are loaded and verified, which means that
 //      the next time the map is loaded, border_fill_type is already stored.
@@ -1075,7 +1066,13 @@ static int lua_dgn_set_border_fill_type (lua_State *ls)
     std::string fill_string = luaL_checkstring(ls, 2);
     dungeon_feature_type fill_type = dungeon_feature_by_name(fill_string);
 
-    if (_valid_border_feat(fill_type))
+    if (fill_type == DNGN_UNSEEN)
+    {
+        luaL_error(ls, ("unknown feature '" + fill_string + "'.").c_str());
+        return 0;
+    }
+
+    if (is_valid_border_feat(fill_type))
         map->border_fill_type = fill_type;
     else
         luaL_error(ls, ("set_border_fill_type cannot be the feature '" +

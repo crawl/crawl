@@ -148,12 +148,13 @@ TAGS:    overwritable layout allow_dup unrand
 
 {{
     local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
+    extend_map{width = gxm, height = gym, fill = 'L'}
 
     layout_type "cross"
 
     local floor = '.'
     local wall = 'x'
+    local border = 'x'
 
     local width = 5 - crawl.random2(5)
     local height = 5 - crawl.random2(5)
@@ -166,12 +167,17 @@ TAGS:    overwritable layout allow_dup unrand
     if window then
         if crawl.coinflip() then
             wall = 'l'
+            border = 'L'
+            kfeat("L = endless_lava")
         else
             wall = 'w'
+            border = 'L'
+            kfeat("L = open_sea")
         end
     end
 
-    fill_area{fill=wall}
+    fill_area{fill = border}
+    fill_area{x1=1, y1=1, x2=gxm-2, y2=gym-2, fill = wall}
 
     -- create window
     if window then
