@@ -368,6 +368,7 @@ You cannot affect this wall by any means.
 An unnaturally hard stone wall
 
 This stone wall is harder than... stone. In fact, there's exactly nothing you can do about it.
+%%%%
 Floor
 
 Dungeon floor.
