@@ -3271,11 +3271,11 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet)
         prop_dex *= -1;
     }
     stat_type red_stat = NUM_STATS;
-    if (prop_str >= you.strength())
+    if (prop_str >= you.strength() && you.strength() > 0)
         red_stat = STAT_STR;
-    else if (prop_int >= you.intel())
+    else if (prop_int >= you.intel() && you.intel() > 0)
         red_stat = STAT_INT;
-    else if (prop_dex >= you.dex())
+    else if (prop_dex >= you.dex() && you.dex() > 0)
         red_stat = STAT_DEX;
 
     if (red_stat == NUM_STATS)
