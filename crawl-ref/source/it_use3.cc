@@ -277,7 +277,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             if (x_chance_in_y(5 + (3 * skill), 40))
             {
                 mpr("You reach to attack!");
-                success = you_attack(mons->mindex(), false);
+                success = fight_melee(&you, mons, false);
             }
             else
             {
@@ -288,7 +288,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         else
         {
             mpr("You reach to attack!");
-            success = you_attack(mons->mindex(), false);
+            success = fight_melee(&you, mons, false);
         }
 
         if (success)
@@ -300,7 +300,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         }
     }
     else
-        you_attack(mons->mindex(), false);
+        fight_melee(&you, mons, false);
 
     return (true);
 }

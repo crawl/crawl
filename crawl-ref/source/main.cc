@@ -3089,7 +3089,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         }
 
         you.turn_is_over = true;
-        you_attack(mon->mindex(), true);
+        fight_melee(&you, mon, true);
 
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
             you.berserk_penalty = 0;
@@ -3877,7 +3877,7 @@ static void _move_player(coord_def move)
             // the player to figure out which adjacent wall an invis
             // monster is in "for free".
             you.turn_is_over = true;
-            you_attack(targ_monst->mindex(), true);
+            fight_melee(&you, targ_monst, true);
 
             // We don't want to create a penalty if there isn't
             // supposed to be one.
