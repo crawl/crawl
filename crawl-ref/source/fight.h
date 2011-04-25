@@ -26,7 +26,7 @@ enum unchivalric_attack_type
     UCAT_ALLY,
 };
 
-void fight_melee(actor *defender, actor *attacker);
+bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed = true);
 
 int effective_stat_bonus(int wepType = -1);
 
@@ -34,10 +34,6 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
 int weapon_str_weight(object_class_type wpn_class, int wpn_type);
-bool you_attack(int monster_attacked, bool unarmed_attacks);
-bool monster_attack(monster* attacker, bool allow_unarmed = true);
-bool monsters_fight(monster* attacker, monster* attacked,
-                    bool allow_unarmed = true);
 
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
 int calc_heavy_armour_penalty(bool random_factor);

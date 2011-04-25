@@ -796,10 +796,7 @@ static bool _handle_reaching(monster* mons)
 
         ASSERT(foe == &you || foe->atype() == ACT_MONSTER);
 
-        if (foe->atype() == ACT_PLAYER)
-            monster_attack(mons, false);
-        else
-            monsters_fight(mons, foe->as_monster(), false);
+        fight_melee(mons, foe, false);
 
         if (mons->alive())
         {
@@ -2192,10 +2189,10 @@ void handle_monster_move(monster* mons)
                     && newcell != mons->pos()
                     && !is_sanctuary(mons->pos()))
                 {
-                    if (monsters_fight(mons, enemy))
+                    if (fight_melee(mons, enemy))
                     {
                         mmov.reset();
-                        DEBUG_ENERGY_USE("monsters_fight()");
+                        DEBUG_ENERGY_USE("fight_melee()");
                         continue;
                     }
                     else
@@ -2298,14 +2295,14 @@ void handle_monster_move(monster* mons)
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
 
-                    monster_attack(mons);
+                    fight_melee(mons, &you);
 
                     if (mons_is_batty(mons))
                     {
                         mons->behaviour = BEH_WANDER;
                         set_random_target(mons);
                     }
-                    DEBUG_ENERGY_USE("monster_attack()");
+                    DEBUG_ENERGY_USE("fight_melee()");
                     mmov.reset();
                     continue;
                 }
@@ -2344,7 +2341,7 @@ void handle_monster_move(monster* mons)
                 // Figure out if they fight.
                 else if ((!mons_is_firewood(targ)
                           || mons->type == MONS_KRAKEN_TENTACLE)
-                              && monsters_fight(mons, targ))
+                              && fight_melee(mons, targ))
                 {
                     if (mons_is_batty(mons))
                     {
@@ -2354,7 +2351,7 @@ void handle_monster_move(monster* mons)
                     }
 
                     mmov.reset();
-                    DEBUG_ENERGY_USE("monsters_fight()");
+                    DEBUG_ENERGY_USE("fight_melee()");
                     continue;
                 }
             }
@@ -3439,14 +3436,14 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     if (f == you.pos())
     {
-        monster_attack(mons);
+        fight_melee(mons, &you);
         return (true);
     }
 
     // This includes the case where the monster attacks itself.
     if (monster* def = monster_at(f))
     {
-        monsters_fight(mons, def);
+        fight_melee(mons, def);
         return (true);
     }
 
@@ -3774,7 +3771,7 @@ static bool _monster_move(monster* mons)
         // Check for attacking player.
         if (mons->pos() + mmov == you.pos())
         {
-            ret = monster_attack(mons);
+            ret = fight_melee(mons, &you);
             mmov.reset();
         }
 
@@ -3816,7 +3813,7 @@ static bool _monster_move(monster* mons)
                 ret = _monster_swaps_places(mons, mmov);
             else
             {
-                monsters_fight(mons, targ);
+                fight_melee(mons, targ);
                 ret = true;
             }
 
@@ -3850,7 +3847,7 @@ static bool _monster_move(monster* mons)
         monster* targ = monster_at(mons->pos() + mmov);
         if (!mmov.origin() && targ && _may_cutdown(mons, targ))
         {
-            monsters_fight(mons, targ);
+            fight_melee(mons, targ);
             ret = true;
         }
 

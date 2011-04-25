@@ -29,6 +29,7 @@ class melee_attack : public attack
 public:
     bool      perceived_attack, obvious_effect;
 
+    // mon_attack_def stuff
     int       attack_number;
 
     int       extra_noise;
@@ -80,8 +81,11 @@ private:
 
     /* Combat Calculations */
     int test_melee_hit(int to_hit, int ev, defer_rand& r);
-    int fire_res_apply_cerebov_downgrade(int res);
+    int calc_base_unarmed_damage();
+    int calc_base_weapon_damage();
+    int calc_damage();
     int apply_defender_ac(int damage, int damage_max = 0);
+    int fire_res_apply_cerebov_downgrade(int res);
 
     /* Attack effects */
     void check_autoberserk();
@@ -175,8 +179,6 @@ private:
     int  player_weapon_type_modify(int damage);
 
     int  player_hits_monster();
-    int  player_calc_base_weapon_damage();
-    int  player_calc_base_unarmed_damage();
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects();
     void player_sustain_passive_damage();

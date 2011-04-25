@@ -37,14 +37,68 @@
 
 /* Handles melee combat between attacker and defender
  *
- * Works using the new fight rewrite. For monsters attacking, this method
+ * Works using the new fight rewrite. For a monster attacking, this method
  * loops through all their available attacks, instantiating a new melee_attack
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
  */
-void fight_melee(actor *defender, actor *atacker)
+bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
 {
+    ASSERT(!crawl_state.game_is_arena());
 
+    if(defender->atype() == ACT_PLAYER)
+    {
+        // Friendly and good neutral monsters won't attack unless confused.
+        if (attacker->as_monster()->wont_attack() &&
+            !mons_is_confused(attacker->as_monster()))
+            return (false);
+
+        // It's hard to attack from within a shell.
+        if (attacker->as_monster()->withdrawn())
+            return (false);
+
+        // In case the monster hasn't noticed you, bumping into it will
+        // change that.
+        behaviour_event(attacker->as_monster(), ME_ALERT, MHITYOU);
+    }
+    else if(attacker->atype() == ACT_PLAYER)
+    {
+        // Can't damage orbs or boulders this way.
+        if (mons_is_projectile(defender->type) && !you.confused())
+        {
+            you.turn_is_over = false;
+            return (false);
+        }
+
+        melee_attack attk(&you, defender, allow_unarmed);
+
+        // We're trying to hit a monster, break out of travel/explore now.
+        if (!travel_kill_monster(defender->type))
+            interrupt_activity(AI_HIT_MONSTER, defender->as_monster());
+
+        // Check if the player is fighting with something unsuitable,
+        // or someone unsuitable.
+        if (you.can_see(defender)
+            && !mons_is_unknown_mimic(defender->as_monster())
+            && !wielded_weapon_check(attk.weapon))
+        {
+            you.turn_is_over = false;
+            return (false);
+        }
+
+        if (!attk.attack())
+        {
+            // Attack was cancelled or unsuccessful...
+            if (attk.cancel_attack)
+                you.turn_is_over = false;
+            return (false);
+        }
+
+        return (true);
+    }
+
+    melee_attack attk(attacker, defender, allow_unarmed);
+    return (attk.attack());
 }
 
 // This function returns the "extra" stats the player gets because of
@@ -266,78 +320,6 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     }
 
     return (true);
-}
-
-// Returns true if you hit the monster.
-bool you_attack(int monster_attacked, bool unarmed_attacks)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    monster* defender = &menv[monster_attacked];
-
-    // Can't damage orbs or boulders this way.
-    if (mons_is_projectile(defender->type) && !you.confused())
-    {
-        you.turn_is_over = false;
-        return (false);
-    }
-
-    melee_attack attk(&you, defender, unarmed_attacks);
-
-    // We're trying to hit a monster, break out of travel/explore now.
-    if (!travel_kill_monster(defender->type))
-        interrupt_activity(AI_HIT_MONSTER, defender);
-
-    // Check if the player is fighting with something unsuitable,
-    // or someone unsuitable.
-    if (you.can_see(defender)
-        && !mons_is_unknown_mimic(defender)
-        && !wielded_weapon_check(attk.weapon))
-    {
-        you.turn_is_over = false;
-        return (false);
-    }
-
-    bool attack = attk.attack();
-    if (!attack)
-    {
-        // Attack was cancelled or unsuccessful...
-        if (attk.cancel_attack)
-            you.turn_is_over = false;
-        return (false);
-    }
-
-    return (true);
-}
-
-// A monster attacking the player.
-bool monster_attack(monster* attacker, bool allow_unarmed)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    // Friendly and good neutral monsters won't attack unless confused.
-    if (attacker->wont_attack() && !mons_is_confused(attacker))
-        return (false);
-
-    // It's hard to attack from within a shell.
-    if (attacker->withdrawn())
-        return (false);
-
-    // In case the monster hasn't noticed you, bumping into it will
-    // change that.
-    behaviour_event(attacker, ME_ALERT, MHITYOU);
-    melee_attack attk(attacker, &you, allow_unarmed);
-    attk.attack();
-
-    return (true);
-}
-
-// Two monsters fighting each other.
-bool monsters_fight(monster* attacker, monster* defender,
-                    bool allow_unarmed)
-{
-    melee_attack attk(attacker, defender, allow_unarmed);
-    return (attk.attack());
 }
 
 // Returns a value between 0 and 10 representing the weight given to str

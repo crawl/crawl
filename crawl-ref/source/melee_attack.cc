@@ -3072,8 +3072,8 @@ void melee_attack::player_calc_hit_damage()
     int potential_damage;
 
     potential_damage =
-        !weapon ? player_calc_base_unarmed_damage()
-                : player_calc_base_weapon_damage();
+        !weapon ? calc_base_unarmed_damage()
+                : calc_base_weapon_damage();
 
     // [0.6 AC/EV overhaul] Shields don't go well with hand-and-half weapons.
     if (weapon && hands == HANDS_HALF)
@@ -3481,82 +3481,6 @@ random_var melee_attack::player_unarmed_speed()
     return (unarmed_delay);
 }
 
-int melee_attack::player_calc_base_unarmed_damage()
-{
-    int damage = 3;
-
-    if (you.duration[DUR_CONFUSING_TOUCH])
-    {
-        // No base hand damage while using this spell.
-        damage = 0;
-    }
-
-    switch (you.form)
-    {
-    case TRAN_SPIDER:
-        damage = 5;
-        break;
-    case TRAN_BAT:
-        damage = (you.species == SP_VAMPIRE ? 2 : 1);
-        break;
-    case TRAN_ICE_BEAST:
-        damage = 12;
-        break;
-    case TRAN_BLADE_HANDS:
-        damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
-        break;
-    case TRAN_STATUE:
-        damage = 12 + you.strength();
-        break;
-    case TRAN_DRAGON:
-        damage = 20 + you.strength();
-        break;
-    case TRAN_LICH:
-        damage = 5;
-        break;
-    case TRAN_PIG:
-        break;
-    case TRAN_NONE:
-        break;
-    }
-
-    if (you.has_usable_claws())
-    {
-        // Claw damage only applies for bare hands.
-        damage += you.has_claws(false) * 2;
-        apply_bleeding = true;
-    }
-
-    if (player_in_bat_form())
-    {
-        // Bats really don't do a lot of damage.
-        damage += you.skill(SK_UNARMED_COMBAT) / 5;
-    }
-    else
-        damage += you.skill(SK_UNARMED_COMBAT);
-
-    return (damage);
-}
-
-int melee_attack::player_calc_base_weapon_damage()
-{
-    int damage = 0;
-
-    if (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
-        damage = property(*weapon, PWPN_DAMAGE);
-
-    // Staves can be wielded with a worn shield, but are much less
-    // effective.
-    if (shield && weapon->base_type == OBJ_WEAPONS
-        && weapon_skill(*weapon) == SK_STAVES
-        && hands_reqd(*weapon, you.body_size()) == HANDS_HALF)
-    {
-        damage /= 2;
-    }
-
-    return (damage);
-}
-
 ///////////////////////////////////////////////////////////////////////////
 
 bool melee_attack::mons_attack_mons()
@@ -3688,7 +3612,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     return (false);
 }
 
-// TODO: Unify this and player_calc_base damage, requires the restructuring
+// TODO: Merge this and calc_base damage, requires the restructuring
 // of how attacks get initiated and handled (these changes are congruent with
 // the original plans for changing combat) in that each instance of melee_attack
 // is strictly associated with one monster attack. Thus, once we're inside a
@@ -5294,6 +5218,98 @@ int melee_attack::test_melee_hit(int to_land, int ev, defer_rand& r)
 #endif
 
     return (margin);
+}
+
+/* Returns base weapon damage for attacker
+ *
+ * TODO: Fill this in
+ */
+int melee_attack::calc_base_weapon_damage()
+{
+    int damage = 0;
+
+    if(attacker->atype() == ACT_PLAYER)
+    {
+        if (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
+            damage = property(*weapon, PWPN_DAMAGE);
+
+        // Staves can be wielded with a worn shield, but are much less
+        // effective.
+        if (shield && weapon->base_type == OBJ_WEAPONS
+            && weapon_skill(*weapon) == SK_STAVES
+            && hands_reqd(*weapon, you.body_size()) == HANDS_HALF)
+        {
+            damage /= 2;
+        }
+    }
+
+    return (damage);
+}
+
+/* Returns attacker base unarmed damage
+ *
+ * Scales for current mutations and unarmed effects
+ * TODO: More here?
+ */
+int melee_attack::calc_base_unarmed_damage()
+{
+    int damage = 0;
+
+    if(attacker->atype() == ACT_PLAYER)
+    {
+        damage = you.duration[DUR_CONFUSING_TOUCH] ? 0 : 3;
+
+        switch (you.form)
+        {
+        case TRAN_SPIDER:
+            damage = 5;
+            break;
+        case TRAN_BAT:
+            damage = (you.species == SP_VAMPIRE ? 2 : 1);
+            break;
+        case TRAN_ICE_BEAST:
+            damage = 12;
+            break;
+        case TRAN_BLADE_HANDS:
+            damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
+            break;
+        case TRAN_STATUE:
+            damage = 12 + you.strength();
+            break;
+        case TRAN_DRAGON:
+            damage = 20 + you.strength();
+            break;
+        case TRAN_LICH:
+            damage = 5;
+            break;
+        case TRAN_PIG:
+            break;
+        case TRAN_NONE:
+            break;
+        }
+
+        if (you.has_usable_claws())
+        {
+            // Claw damage only applies for bare hands.
+            damage += you.has_claws(false) * 2;
+            apply_bleeding = true;
+        }
+
+        if (player_in_bat_form())
+        {
+            // Bats really don't do a lot of damage.
+            damage += you.skill(SK_UNARMED_COMBAT) / 5;
+        }
+        else
+            damage += you.skill(SK_UNARMED_COMBAT);
+    }
+
+    return damage;
+}
+
+int melee_attack::calc_damage()
+{
+
 }
 
 int melee_attack::apply_defender_ac(int damage, int damage_max)

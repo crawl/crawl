@@ -176,7 +176,7 @@ static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
     for (int i = 0; i < Options.fsim_rounds; ++i)
     {
         you.hp = you.hp_max = 5000;
-        monster_attack(&menv[mi]);
+        fight_melee(&menv[mi], &you);
         const int damage = you.hp_max - you.hp;
         if (damage)
             hits++;
@@ -213,7 +213,7 @@ static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
         mon            = orig;
         mon.hit_points = mon.max_hit_points;
         you.time_taken = player_speed();
-        if (you_attack(mi, true))
+        if (fight_melee(&you, &mon, true))
             hits++;
 
         you.hunger = hunger;
