@@ -3308,7 +3308,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet)
 
     std::string prompt = make_stringf("%sing this item will reduce your %s to zero or below. Continue?",
                                       verb.c_str(), stat_desc(red_stat, SD_NAME));
-    if (!yesno(prompt.c_str(), true, 'n'))
+    if (!yesno(prompt.c_str(), true, 'n', true, false))
     {
         canned_msg(MSG_OK);
         return (false);
