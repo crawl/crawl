@@ -1043,8 +1043,11 @@ static std::vector<std::string> _get_branch_keys()
         Branch     &branch       = branches[which_branch];
 
         // Skip unimplemented branches
-        if (branch.depth < 1 || branch.shortname == NULL)
+        if (branch.depth < 1 || i == BRANCH_FOREST || i == BRANCH_SPIDER_NEST
+            || i == BRANCH_DWARVEN_HALL)
+        {
             continue;
+        }
 
         names.push_back(branch.shortname);
     }
