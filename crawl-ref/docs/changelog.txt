@@ -1,4 +1,4 @@
-Stone Soup 0.8 (20110424)
+Stone Soup 0.8 (20110426)
 -------------------------
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
