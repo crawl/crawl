@@ -6,11 +6,6 @@ involving characters of diverse skills, worshipping deities of great power and
 caprice. To win, you'll need to be a master of tactics and strategy, and
 prevail against overwhelming odds.
 
-Players of versions 0.3.4 and older beware: please read the file
-   034_changes.txt
-in the docs/ directory for a list of the interface changes, and how
-you could possibly retrieve the 0.3.4 standards.
-
 Contents:
 1. How to get started? (Information for new players)
 2. The file system of this version.
