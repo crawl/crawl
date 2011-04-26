@@ -839,11 +839,15 @@ Ashenzari says: Partake of my vision. Partake of my curse.
 %%%%
 Beogh penance
 
-@Beogh welcome@
+Beogh says: Show any more mercy to foul non-orcs and I'll have you killed.
 %%%%
 Beogh welcome
 
 Beogh says: Drown the unbelievers in a sea of blood!
+%%%%
+Beogh newgame
+
+@Beogh welcome@
 %%%%
 Cheibriados penance
 
@@ -860,6 +864,10 @@ Elyvilon says: I plead you, be more careful when helping others!
 Elyvilon welcome
 
 Elyvilon says: Go forth and aid the weak!
+%%%%
+Elyvilon newgame
+
+@Elyvilon welcome@
 %%%%
 Fedhas penance
 
@@ -892,6 +900,10 @@ Lugonu penance
 Lugonu welcome
 
 Lugonu says: Spread carnage and corruption!
+%%%%
+Lugonu newgame
+
+Lugonu says: Take this gate or call upon me to unleash you onto the world, my servant!
 %%%%
 Makhleb penance
 
@@ -941,6 +953,10 @@ Trog welcome
 
 Trog says: Kill them all!
 %%%%
+Trog newgame
+
+@Trog welcome@
+%%%%
 Vehumet penance
 
 @Vehumet welcome@
@@ -975,6 +991,10 @@ Yredelemnul welcome
 
 Yredelemnul says: Carry the black torch! Rouse the idle dead!
 %%%%
+Yredelemnul newgame
+
+@Yredelemnul welcome@
+%%%%
 Zin penance
 
 Zin castigates you for your disobedience of the Law.
@@ -984,4 +1004,8 @@ Zin sternly explains the importance of @important_subject@.
 Zin welcome
 
 Zin says: Spread the light, my child.
+%%%%
+Zin newgame
+
+@Zin welcome@
 %%%%

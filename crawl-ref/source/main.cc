@@ -499,11 +499,11 @@ static void _god_greeting_message(bool game_start)
 
     std::string msg = god_name(you.religion);
 
-    if (you.religion == GOD_XOM)
+    if (game_start)
+        msg += " newgame";
+    else if (you.religion == GOD_XOM)
     {
-        if (game_start)
-            msg += " newgame";
-        else if (you.gift_timeout <= 1)
+        if (you.gift_timeout <= 1)
             msg += " bored";
         else
             msg += " generic";
