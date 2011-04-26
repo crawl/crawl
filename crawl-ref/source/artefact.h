@@ -1,8 +1,7 @@
-/*
- *  File:       artefact.h
- *  Summary:    Random and unrandom artefact functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Random and unrandom artefact functions.
+**/
 
 
 #ifndef RANDART_H
@@ -105,6 +104,7 @@ std::string get_artefact_name(const item_def &item, bool force_known = false);
 void set_artefact_name(item_def &item, const std::string &name);
 
 std::string artefact_name(const item_def &item, bool appearance = false);
+std::string replace_name_parts(const std::string name_in, const item_def& item);
 
 const char *unrandart_descrip(int which_descrip, const item_def &item);
 
@@ -153,5 +153,6 @@ void artefact_set_property(item_def           &item,
 int get_unrandart_num(const char *name);
 
 void cheibriados_make_item_ponderous(item_def &item);
+void unrand_reacts();
 
 #endif

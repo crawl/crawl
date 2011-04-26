@@ -1,7 +1,7 @@
-/*
- *  File:       libutil.cc
- *  Summary:    Functions that may be missing from some systems
- */
+/**
+ * @file
+ * @brief Functions that may be missing from some systems
+**/
 
 #include "AppHdr.h"
 
@@ -12,6 +12,7 @@
 #include "macro.h"
 #include "message.h"
 #include "stuff.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 #include <sstream>
@@ -94,7 +95,7 @@ void play_sound(const char *file)
 #if defined(WINMM_PLAY_SOUNDS)
     // Check whether file exists, is readable, etc.?
     if (file && *file)
-        sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
+        sndPlaySoundW(OUTW(file), SND_ASYNC | SND_NODEFAULT);
 
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
@@ -103,7 +104,7 @@ void play_sound(const char *file)
         && shell_safe(file))
     {
         snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-        system(command);
+        system(OUTS(command));
     }
 #endif
 }
@@ -172,13 +173,6 @@ std::string &escape_path_spaces(std::string &s)
 #endif
     s = result;
     return s;
-}
-
-void wait_for_keypress()
-{
-    // Double getchm() was necessary if first call returned zero; this
-    // should theoretically be needed only for DOS.
-    getchm() || getchm();
 }
 
 bool key_is_escape(int key)
@@ -722,6 +716,127 @@ std::vector<std::string> split_string(const std::string &sep,
     return segments;
 }
 
+// The provided string is consumed!
+std::string wordwrap_line(std::string &s, int width, bool tags)
+{
+    const char *cp0 = s.c_str();
+    const char *cp = cp0, *space = 0;
+    ucs_t c;
+
+    while (int clen = utf8towc(&c, cp))
+    {
+        int cw = wcwidth(c);
+        if (c == ' ')
+            space = cp;
+        else if (c == '\n')
+        {
+            space = cp;
+            break;
+        }
+        if (c == '<' && tags)
+        {
+            ASSERT(cw == 1);
+            if (cp[1] == '<') // "<<" escape
+            {
+                // Note: this must be after a possible wrap, otherwise we could
+                // split the escape between lines.
+                cp++;
+            }
+            else
+            {
+                cw = 0;
+                // Skip the whole tag.
+                while (*cp != '>')
+                {
+                    if (!*cp)
+                    {
+                        // Everything so far fitted, report error.
+                        std::string ret = s + ">";
+                        s = "<lightred>ERROR: string above had unterminated tag</lightred>";
+                        return ret;
+                    }
+                    cp++;
+                }
+            }
+        }
+
+        if (cw > width)
+            break;
+
+        if (cw >= 0)
+            width -= cw;
+        cp += clen;
+    }
+
+    if (!c)
+    {
+        // everything fits
+        std::string ret = s;
+        s.clear();
+        return ret;
+    }
+
+    if (space)
+        cp = space;
+    const std::string ret = s.substr(0, cp - cp0);
+
+    // eat all trailing spaces and up to one newline
+    while (*cp == ' ')
+        cp++;
+    if (*cp == '\n')
+        cp++;
+    s.erase(0, cp - cp0);
+
+    return ret;
+}
+
+/**
+ * Compare two strings, sorting integer numeric parts according to their value.
+ *
+ * "foo123bar" > "foo99bar"
+ * "0.10" > "0.9" (version sort)
+ *
+ * @param limit If passed, comparison ends after X numeric parts.
+ * @return As in strcmp().
+**/
+int numcmp(const char *a, const char *b, int limit)
+{
+    int res;
+
+not_numeric:
+    while (*a && *a == *b && !isadigit(*a))
+    {
+        a++;
+        b++;
+    }
+    if (!a && !b)
+        return 0;
+    if (!isadigit(*a) || !isadigit(*b))
+        return (*a < *b) ? -1 : (*a > *b) ? 1 : 0;
+    while (*a == '0')
+        a++;
+    while (*b == '0')
+        b++;
+    res = 0;
+    while (isadigit(*a))
+    {
+        if (!isadigit(*b))
+            return 1;
+        if (*a != *b && !res)
+            res = (*a < *b) ? -1 : 1;
+        a++;
+        b++;
+    }
+    if (isadigit(*b))
+        return -1;
+    if (res)
+        return res;
+
+    if (--limit)
+        goto not_numeric;
+    return 0;
+}
+
 // The old school way of doing short delays via low level I/O sync.
 // Good for systems like old versions of Solaris that don't have usleep.
 #ifdef NEED_USLEEP
@@ -843,19 +958,6 @@ size_t strlcpy(char *dst, const char *src, size_t n)
     }
 
     return s - src - 1;
-}
-
-// Stubs for now.  With Unicode, the width may be different from length in
-// bytes due to UTF (any of these) -- and counting characters is not enough,
-// too, because of combining characters and CJK double-widths.
-int strwidth(const char *s)
-{
-    return strlen(s);
-}
-
-int strwidth(const std::string &s)
-{
-    return s.length();
 }
 
 #ifdef TARGET_OS_WINDOWS

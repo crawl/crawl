@@ -1,8 +1,7 @@
-/*
- *  File:       mon-grow.cc
- *  Summary:    Monster level-up code.
- *  Written by: dshaligram on Fri Oct 26 08:33:37 2007 UTC
- */
+/**
+ * @file
+ * @brief Monster level-up code.
+**/
 
 #include "AppHdr.h"
 
@@ -175,10 +174,8 @@ bool monster::level_up()
         // Not less than 3 hp, not more than 25.
         hpboost = std::min(std::max(hpboost, 3), 25);
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s: HD: %d, maxhp: %d, boost: %d",
+        dprf("%s: HD: %d, maxhp: %d, boost: %d",
              name(DESC_PLAIN).c_str(), hit_dice, max_hit_points, hpboost);
-#endif
 
         max_hit_points += hpboost;
         hit_points     += hpboost;

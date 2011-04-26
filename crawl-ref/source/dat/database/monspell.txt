@@ -329,6 +329,18 @@ unseen Terpsichore cast
 You hear spectral shoes clatter against the floor.
 
 %%%%
+Mennas cast
+
+@The_monster@ casts a spell.
+
+@The_monster@ gestures silently.
+
+%%%%
+# Roxanne can't gesture or point either.
+Roxanne cast
+
+@sphinx cast@
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

@@ -377,19 +377,15 @@ void crawl_view_geometry::init_geometry()
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);
 
-    if (! lay_inline.valid)
-    {
 #ifndef USE_TILE
+    if ((termsz.x < MIN_COLS || termsz.y < MIN_LINES || !lay_inline.valid)
+        && !crawl_state.need_save)
+    {
         // Terminal too small; exit with an error.
-        if (!crawl_state.need_save)
-        {
-            end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
-                termsz.x, termsz.y,
-                termsz.x + std::max(0, -lay_inline.leftover_x()),
-                termsz.y + std::max(0, -lay_inline.leftover_y()));
-        }
-#endif
+        end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
+            termsz.x, termsz.y, MIN_COLS, MIN_LINES);
     }
+#endif
 
     const _layout* winner = &lay_inline;
     if (Options.mlist_allow_alternate_layout

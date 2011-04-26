@@ -1,7 +1,7 @@
-/*
- *  File:     spl-goditem.cc
- *  Summary:  Pseudo spells triggered by gods and various items.
- */
+/**
+ * @file
+ * @brief Pseudo spells triggered by gods and various items.
+**/
 
 #include "AppHdr.h"
 
@@ -40,6 +40,7 @@
 int identify(int power, int item_slot, std::string *pre_msg)
 {
     int id_used = 1;
+    int identified = 0;
 
     // Scrolls of identify *may* produce "extra" identifications.
     if (power == -1 && one_chance_in(5))
@@ -53,7 +54,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
                                            OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return(-1);
+            return(identified);
 
         item_def& item(you.inv[item_slot]);
 
@@ -66,7 +67,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
             continue;
         }
 
-        if (pre_msg)
+        if (pre_msg && identified == 0)
             mpr(pre_msg->c_str());
 
         set_ident_type(item, ID_KNOWN_TYPE);
@@ -94,7 +95,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        id_used--;
+        identified++;
 
         if (item.base_type == OBJ_JEWELLERY
             && item.sub_type == AMU_INACCURACY
@@ -104,14 +105,14 @@ int identify(int power, int item_slot, std::string *pre_msg)
             learned_something_new(HINT_INACCURACY);
         }
 
-        if (Options.auto_list && id_used > 0)
+        if (Options.auto_list && id_used > identified)
             more();
 
         // In case we get to try again.
         item_slot = -1;
     }
-    while (id_used > 0);
-    return(1);
+    while (id_used > identified);
+    return(identified);
 }
 
 static bool _mons_hostile(const monster* mon)
@@ -170,12 +171,12 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
-    const int random_factor = random2((you.skills[SK_INVOCATIONS] + 1) *
+    const int random_factor = random2((you.skill(SK_INVOCATIONS) + 1) *
                                       healed / divisor);
 
     dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
          mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
-         you.skills[SK_INVOCATIONS], healed, random_factor);
+         you.skill(SK_INVOCATIONS), healed, random_factor);
 
     if (mon->max_hit_points < factor * random_factor)
         return (1);
@@ -242,8 +243,12 @@ static int _healing_spell(int healed, bool divine_ability,
         && can_pacify <= 0)
     {
         if (can_pacify == 0)
+        {
             canned_msg(MSG_NOTHING_HAPPENS);
+            return (0);
+        }
         else
+        {
             if (can_pacify == -2)
             {
                 mprf("You cannot pacify this monster while %s is sleeping!",
@@ -251,7 +256,8 @@ static int _healing_spell(int healed, bool divine_ability,
             }
             else
                 mpr("You cannot pacify this monster!");
-        return (0);
+            return (-1);
+        }
     }
 
     bool did_something = false;
@@ -568,12 +574,18 @@ int detect_creatures(int pow, bool telepathic)
     return (creatures_found);
 }
 
-static bool _selectively_remove_curse()
+static bool _selectively_remove_curse(std::string *pre_msg)
 {
     bool used = false;
 
     while(1)
     {
+        if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
+        {
+            mpr("You have uncursed all your worn items.");
+            return used;
+        }
+
         int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
                                            OSEL_CURSED_WORN, true, true, false);
         if (prompt_failed(item_slot))
@@ -593,15 +605,18 @@ static bool _selectively_remove_curse()
             continue;
         }
 
+        if (!used && pre_msg)
+            mpr(*pre_msg);
+
         do_uncurse_item(item);
         used = true;
     }
 }
 
-bool remove_curse()
+bool remove_curse(bool alreadyknown, std::string *pre_msg)
 {
-    if (you.religion == GOD_ASHENZARI)
-        return _selectively_remove_curse();
+    if (you.religion == GOD_ASHENZARI && alreadyknown)
+        return _selectively_remove_curse(pre_msg);
 
     bool success = false;
 
@@ -630,13 +645,101 @@ bool remove_curse()
 
     if (success)
     {
+        if (pre_msg)
+            mpr(*pre_msg);
         mpr("You feel as if something is helping you.");
         learned_something_new(HINT_REMOVED_CURSE);
     }
+    else if (alreadyknown)
+        mpr("None of your equipped items are cursed.", MSGCH_PROMPT);
     else
+    {
+        if (pre_msg)
+            mpr(*pre_msg);
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     return (success);
+}
+
+static bool _selectively_curse_item(bool armour, std::string *pre_msg)
+{
+    while(1)
+    {
+        int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
+                                           armour ? OSEL_UNCURSED_WORN_ARMOUR
+                                                  : OSEL_UNCURSED_WORN_JEWELLERY,
+                                           true, true, false);
+        if (prompt_failed(item_slot))
+            return false;
+
+        item_def& item(you.inv[item_slot]);
+
+        if (item.cursed()
+            || !item_is_equipped(item)
+            || armour && item.base_type != OBJ_ARMOUR
+            || !armour && item.base_type != OBJ_JEWELLERY)
+        {
+            mprf("Choose an uncursed equipped piece of %s, or Esc to abort.",
+                 armour ? "armour" : "jewellery");
+            if (Options.auto_list)
+                more();
+            continue;
+        }
+
+        if (pre_msg)
+            mpr(*pre_msg);
+        do_curse_item(item, false);
+        return true;
+    }
+}
+
+bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg)
+{
+    // make sure there's something to curse first
+    int count = 0;
+    int affected = EQ_WEAPON;
+    int min_type, max_type;
+    if (armour)
+        min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
+    else
+        min_type = EQ_LEFT_RING, max_type = EQ_AMULET;
+    for (int i = min_type; i <= max_type; i++)
+    {
+        if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
+        {
+            count++;
+            if (one_chance_in(count))
+                affected = i;
+        }
+    }
+
+    if (affected == EQ_WEAPON)
+    {
+        if (you.religion == GOD_ASHENZARI && alreadyknown)
+        {
+            mprf(MSGCH_PROMPT, "You aren't wearing any piece of uncursed %s.",
+                 armour ? "armour" : "jewellery");
+        }
+        else
+        {
+            if (pre_msg)
+                mpr(*pre_msg);
+            canned_msg(MSG_NOTHING_HAPPENS);
+        }
+
+        return false;
+    }
+
+    if (you.religion == GOD_ASHENZARI && alreadyknown)
+        return _selectively_curse_item(armour, pre_msg);
+
+    if (pre_msg)
+        mpr(*pre_msg);
+    // Make the name before we curse it.
+    do_curse_item(you.inv[you.equip[affected]], false);
+    learned_something_new(HINT_YOU_CURSED);
+    return true;
 }
 
 bool detect_curse(int scroll, bool suppress_msg)

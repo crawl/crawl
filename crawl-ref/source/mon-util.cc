@@ -1,8 +1,7 @@
-/*
- *  File:       mon-util.cc
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 // $pellbinder: (c) D.G.S.E 1998
 // some routines snatched from former monsstat.cc
@@ -38,6 +37,7 @@
 #include "mon-place.h"
 #include "coord.h"
 #include "mon-stuff.h"
+#include "notes.h"
 #include "options.h"
 #include "random.h"
 #include "religion.h"
@@ -275,7 +275,7 @@ void init_monster_symbols()
             continue;
 
         if (md.glyph)
-            monster_symbols[md.type].glyph = md.glyph;
+            monster_symbols[md.type].glyph = get_glyph_override(md.glyph);
         if (md.colour)
             monster_symbols[md.type].colour = md.colour;
     }
@@ -640,10 +640,8 @@ int cheibriados_monster_player_speed_delta(const monster* mon)
     // Ignore the Slow effect.
     unwind_var<int> ignore_slow(you.duration[DUR_SLOW], 0);
     const int pspeed = 1000 / (player_movement_speed(true) * player_speed());
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Your delay: %d, your speed: %d, mon speed: %d",
+    dprf("Your delay: %d, your speed: %d, mon speed: %d",
         player_movement_speed(), pspeed, mon->speed);
-#endif
     return (mon->speed - pspeed);
 }
 
@@ -684,6 +682,7 @@ bool mons_has_blood(int mc)
 bool mons_is_sensed(int mc)
 {
     return mc == MONS_SENSED
+           || mc == MONS_SENSED_FRIENDLY
            || mc == MONS_SENSED_TRIVIAL
            || mc == MONS_SENSED_EASY
            || mc == MONS_SENSED_TOUGH
@@ -896,6 +895,27 @@ bool mons_is_demon(int mc)
     }
 
     return (false);
+}
+
+int mons_demon_tier(int mc)
+{
+    switch(mons_base_char(mc))
+    {
+    case '&':
+        return -1;
+    case '1':
+        return 1;
+    case '2':
+        return 2;
+    case '3':
+        return 3;
+    case '4':
+        return 4;
+    case '5':
+        return 5;
+    default:
+        return 0;
+    }
 }
 
 bool mons_is_draconian(int mc)
@@ -1236,7 +1256,8 @@ bool mons_class_can_use_stairs(int mc)
             && !mons_is_tentacle(mc)
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST
-            && mc != MONS_GERYON);
+            && mc != MONS_GERYON
+            && mc != MONS_ROYAL_JELLY);
 }
 
 bool mons_can_use_stairs(const monster* mon)
@@ -2332,6 +2353,12 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     }
 
     mon->mname = _get_proper_monster_name(mon);
+
+    if (mon->friendly())
+    {
+        take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname.c_str()));
+    }
+
     return (mon->is_named());
 }
 
@@ -2419,7 +2446,7 @@ habitat_type mons_class_habitat(int mc, bool real_amphibious)
         // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
         size_type st = (me ? me->size
                            : get_monster_data(MONS_PROGRAM_BUG)->size);
-        if (ht == HT_LAND && st >= SIZE_GIANT)
+        if (ht == HT_LAND && st >= SIZE_GIANT || mc == MONS_GREY_DRACONIAN)
             ht = HT_AMPHIBIOUS;
     }
     return (ht);
@@ -2738,14 +2765,11 @@ static bool _beneficial_beam_flavour(beam_type flavour)
 
 bool mons_should_fire(struct bolt &beam)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "tracer: foes %d (pow: %d), friends %d (pow: %d), "
+    dprf("tracer: foes %d (pow: %d), friends %d (pow: %d), "
          "foe_ratio: %d, smart: %s",
          beam.foe_info.count, beam.foe_info.power,
          beam.friend_info.count, beam.friend_info.power,
          beam.foe_ratio, beam.smart_monster ? "yes" : "no");
-#endif
 
     // Use different evaluation criteria if the beam is a beneficial
     // enchantment (haste other).
@@ -4495,17 +4519,4 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
-}
-
-/*
- * Update the clinging status of all actors.
- *
- * Called at game load (because clinging status isn't saved) and whenever
- * terrain is change. If actor has fallen from the wall (because it has been
- * dug for example), apply location effects.
- */
-void check_clinging()
-{
-    for (actor_iterator ai; ai; ++ai)
-        ai->check_clinging(false);
 }

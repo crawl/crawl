@@ -664,3 +664,39 @@ function dgn.random_colour (colours)
 
   return util.random_from(colours)
 end
+
+function dgn.flood(map, x, y, distance, func)
+    local queue = {}
+    local queued = {}
+
+    table.insert(queue, { x = x, y = y, distance = distance })
+
+    while #queue > 0 do
+        local coord = table.remove(queue, 1)
+
+        local new_distance = func(coord.x, coord.y, coord.distance)
+
+        if new_distance > 0 then
+            for dx = -1, 1 do
+                for dy = -1, 1 do
+                    local new_x, new_y = coord.x + dx, coord.y + dy
+
+                    queued[new_x] = queued[new_x] or {}
+
+                    if (dx ~= 0 or dy ~= 0)
+                      and dgn.is_valid_coord(map, { x = new_x, y = new_y })
+                      and not queued[new_x][new_y]
+                    then
+                        table.insert(queue, {
+                            x = new_x,
+                            y = new_y,
+                            distance = new_distance
+                        })
+
+                        queued[new_x][new_y] = true
+                    end
+                end
+            end
+        end
+    end
+end

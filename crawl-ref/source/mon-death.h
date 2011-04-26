@@ -1,7 +1,7 @@
-/*
- *  File:       mon-death.h
- *  Summary:    Monster death functionality (kraken, uniques, and so-on).
- */
+/**
+ * @file
+ * @brief Monster death functionality (kraken, uniques, and so-on).
+**/
 
 #ifndef MONDEATH_H
 #define MONDEATH_H

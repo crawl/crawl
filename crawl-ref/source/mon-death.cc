@@ -1,10 +1,7 @@
 /**
  * @file
- * @section DESCRIPTION
- *
- * File: mon-death.cc.
- * Summary: Contains monster death functionality, including Dowan and Duvessa,
- *          Kirke, Pikel, shedu and spirits.
+ * @brief Contains monster death functionality, including Dowan and Duvessa,
+ *        Kirke, Pikel, shedu and spirits.
 **/
 
 #include "AppHdr.h"
@@ -685,6 +682,9 @@ void shedu_do_actual_resurrection (monster* mons)
     int id = -1;
     for (distance_iterator di(place_at, true, false); di; ++di)
     {
+        if (monster_at(*di) || !monster_habitable_grid(mons, grd(*di)))
+            continue;
+
         new_shedu.pos = *di;
         if ((id = place_monster(new_shedu, true)) != -1)
             break;

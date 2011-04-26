@@ -148,12 +148,13 @@ TAGS:    overwritable layout allow_dup unrand
 
 {{
     local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
+    extend_map{width = gxm, height = gym, fill = 'L'}
 
     layout_type "cross"
 
     local floor = '.'
     local wall = 'x'
+    local border = 'x'
 
     local width = 5 - crawl.random2(5)
     local height = 5 - crawl.random2(5)
@@ -161,17 +162,22 @@ TAGS:    overwritable layout allow_dup unrand
     -- Include a small possibility of adding windows around the cross.
     -- This layout can get used with spotty_level, so don't make this
     -- chance too large as lava/water prevents that from happening.
-    local window = crawl.one_chance_in(20)
+    local window = not you.in_branch("Lair") and crawl.one_chance_in(20)
 
     if window then
         if crawl.coinflip() then
             wall = 'l'
+            border = 'L'
+            kfeat("L = endless_lava")
         else
             wall = 'w'
+            border = 'L'
+            kfeat("L = open_sea")
         end
     end
 
-    fill_area{fill=wall}
+    fill_area{fill = border}
+    fill_area{x1=1, y1=1, x2=gxm-2, y2=gym-2, fill = wall}
 
     -- create window
     if window then
@@ -355,6 +361,15 @@ TAGS:    overwritable layout allow_dup unrand
                     replace = st})
             end
         end
+    end
+
+    if (you.in_branch("D") and you.subdepth() > 21 or you.where() == "Pan")
+      and crawl.coinflip()
+    then
+        mapgrd[40][36] = 'O'
+        mapgrd[41][36] = 'O'
+        nsubst('O = 1:O / *:.')
+        kfeat('O = enter_abyss')
     end
 
     random_wall_material(_G)
@@ -595,9 +610,7 @@ TAGS: overwritable layout allow_dup unrand
         corridors = corridors - 1
     end
 
-    if not crawl.one_chance_in(4) then
-        spotty_map { boxy = true, iterations = 100 }
-    end
+    spotty_map { boxy = true, iterations = 100 }
 
     random_wall_material(_G)
 }}
@@ -744,7 +757,8 @@ TAGS: overwritable layout allow_dup unrand
         if room.fill == '.'
            and (room.x2 - room.x1 > 5)
            and (room.y2 - room.y1 > 5)
-           and crawl.x_chance_in_y(you.absdepth() - 9, 220)
+           and (you.in_branch("D") or you.in_branch("Lair"))
+           and crawl.x_chance_in_y(you.absdepth() - 9, 450)
         then
             local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
             make_inner_room(room, feat, crawl.coinflip())
@@ -777,18 +791,18 @@ WEIGHT: 90
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then layout_basic() end
+    if not is_validating() then layout_basic() end
 }}
 MAP
 ENDMAP
 
 NAME: layout_bigger_room
-DEPTH: 9-22, !Vault
+DEPTH: 9-22, !Vault, !Crypt
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then layout_bigger_room() end
+    if not is_validating() then layout_bigger_room() end
 }}
 MAP
 ENDMAP
@@ -799,7 +813,7 @@ WEIGHT: 1 (Pan), 2 (Vault), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then layout_plan_4() end
+    if not is_validating() then layout_plan_4() end
 }}
 MAP
 ENDMAP
@@ -810,7 +824,7 @@ CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then layout_shoals() end
+    if not is_validating() then layout_shoals() end
 }}
 MAP
 ENDMAP
@@ -821,7 +835,7 @@ CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if crawl.game_started() then dgn.layout_swamp() end
+    if not is_validating() then dgn.layout_swamp() end
 }}
 MAP
 ENDMAP

@@ -1,7 +1,7 @@
-/*
- *  File:       arena.cc
- *  Summary:    Functions related to the monster arena (stage and watch fights).
- */
+/**
+ * @file
+ * @brief Functions related to the monster arena (stage and watch fights).
+**/
 
 #include "AppHdr.h"
 
@@ -220,11 +220,11 @@ namespace arena
         if (number >= 0)
             text = make_stringf("(%d) %s", number, text.c_str());
 
-        if (text.length() > sz)
-            text = text.substr(0, sz);
+        unsigned len = strwidth(text);
+        if (len > sz)
+            text = chop_string(text, len = sz);
 
-        int padding = (sz - text.length()) / 2 + text.length();
-        cprintf("%*s", padding, text.c_str());
+        cprintf("%s%s", std::string((sz - len) / 2, ' ').c_str(), text.c_str());
     }
 
     void setup_level()
@@ -1417,7 +1417,9 @@ int arena_cull_items()
     dprf("On turn #%d culled %d items dropped by monsters, culling some more.",
          arena::turns, cull_count);
 
+#ifdef DEBUG_DIAGNOSTICS
     const int count1 = cull_count;
+#endif
     for (unsigned int i = 0; i < ammo.size(); i++)
     {
         DESTROY_ITEM(ammo[i]);

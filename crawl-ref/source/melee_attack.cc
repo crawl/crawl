@@ -484,7 +484,8 @@ bool melee_attack::player_attack()
                 make_stringf("You %s %s.", attack_verb.c_str(),
                              defender->name(DESC_THE).c_str());
         }
-        defender->as_monster()->del_ench(ENCH_HELPLESS);
+        if(defender->props.exists("helpless"))
+            defender->props.erase("helpless");
 
         damage_done = defender->hurt(&you, damage_done,
                                      special_damage_flavour, false);
@@ -762,7 +763,7 @@ bool melee_attack::player_aux_test_hit()
     if (!auto_hit && to_hit >= evasion && helpful_evasion > evasion
         && defender_visible)
     {
-        defender->as_monster()->add_ench(ENCH_HELPLESS);
+        defender->props["helpless"] = true;
     }
 
     if (to_hit >= evasion || auto_hit)
@@ -946,7 +947,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
              defender->name(DESC_THE).c_str(),
              you.can_see(defender) ? ", but do no damage" : "");
     }
-    defender->as_monster()->del_ench(ENCH_HELPLESS);
+    if(defender->props.exists("helpless"))
+        defender->props.erase("helpless");
 
     if (defender->as_monster()->hit_points < 1)
     {
@@ -1046,7 +1048,7 @@ int melee_attack::player_hits_monster()
         || defender->as_monster()->petrifying()
             && !one_chance_in(2 + you.skill(SK_STABBING)))
     {
-        defender->as_monster()->add_ench(ENCH_HELPLESS);
+        defender->props["helpless"] = true;
         return (1);
     }
 
@@ -1100,6 +1102,7 @@ int melee_attack::player_aux_stat_modify_damage(int damage)
 int melee_attack::player_apply_weapon_skill(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   && !is_range_weapon(*weapon)
                    || weapon->base_type == OBJ_STAVES))
     {
         damage *= 25 + (random2(you.skill(wpn_skill) + 1));
@@ -1133,6 +1136,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   && !is_range_weapon(*weapon)
                    || item_is_rod(*weapon)))
     {
         int wpn_damage_plus = weapon->plus2;
@@ -1177,6 +1181,9 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         // Demonspawn get a damage bonus for demonic weapons.
         if (you.species == SP_DEMONSPAWN && is_demonic(*weapon))
             damage += random2(3);
+
+        if (get_weapon_brand(*weapon) == SPWPN_SPEED)
+            damage = div_rand_round(damage * 9, 10);
     }
 
     return (damage);
@@ -1549,9 +1556,6 @@ bool melee_attack::player_monattk_hit_effects()
             dprf("Vampiric healing: damage %d, healed %d",
                  damage_done, heal);
             inc_hp(heal, false);
-
-            if (you.hunger_state != HS_ENGORGED)
-                lessen_hunger(30 + random2avg(59, 2), false);
 
             did_god_conduct(DID_NECROMANCY, 2);
         }
@@ -2644,6 +2648,8 @@ bool melee_attack::apply_damage_brand()
         else
             hp_boost = 1 + random2(damage_done);
 
+        dprf("Vampiric Healing: damage %d, healed %d",
+             damage_done, hp_boost);
         attacker->heal(hp_boost);
 
         attacker->god_conduct(DID_NECROMANCY, 2);
@@ -3165,7 +3171,7 @@ int melee_attack::calc_to_hit(bool random)
         // weapon bonus contribution
         if (weapon)
         {
-            if (weapon->base_type == OBJ_WEAPONS)
+            if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon))
             {
                 your_to_hit += weapon->plus;
                 your_to_hit += property(*weapon, PWPN_HIT);
@@ -3285,8 +3291,15 @@ int melee_attack::calc_to_hit(bool random)
         const int base_hit = mhit;
     #endif
 
-        if (weapon && weapon->base_type == OBJ_WEAPONS)
+        if (weapon
+            && (weapon->base_type == OBJ_WEAPONS)
+                && !is_range_weapon(*weapon)
+                || weapon->base_type == OBJ_STAVES)
+        {
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
+        }
+        if(weapon && item_is_rod(*weapon))
+            mhit += (short)weapon->props["rod_enchantment"];
 
         if (attacker->confused())
             mhit -= 5;
@@ -3426,6 +3439,7 @@ random_var melee_attack::player_weapon_speed()
     random_var attack_delay = constant(15);
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   && !is_range_weapon(*weapon)
                    || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = constant(property(*weapon, PWPN_SPEED));
@@ -3623,8 +3637,9 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     int damage = 0;
     int damage_max = 0;
     if (weapon
-        && weapon->base_type == OBJ_WEAPONS
-        && !is_range_weapon(*weapon))
+        && (weapon->base_type == OBJ_WEAPONS
+            && !is_range_weapon(*weapon)
+            || item_is_rod(*weapon)))
     {
         damage_max = property(*weapon, PWPN_DAMAGE);
         damage += random2(damage_max);
@@ -3636,10 +3651,14 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
             damage++;
         }
 
-        if (weapon->plus2 >= 0)
-            damage += random2(weapon->plus2);
+        int wpn_damage_plus = weapon->plus2;
+        if(item_is_rod(*weapon))
+            wpn_damage_plus = (short)weapon->props["rod_enchantment"];
+
+        if (wpn_damage_plus >= 0)
+            damage += random2(wpn_damage_plus);
         else
-            damage -= random2(1 - weapon->plus2);
+            damage -= random2(1 - wpn_damage_plus);
 
         damage -= 1 + random2(3);
     }
@@ -3670,6 +3689,9 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
              attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
 #endif
     }
+
+    if (weapon && get_weapon_brand(*weapon) == SPWPN_SPEED)
+        damage = div_rand_round(damage * 9, 10);
 
     // If the defender is asleep, the attacker gets a stab.
     if (defender && defender->asleep())
@@ -5230,8 +5252,11 @@ int melee_attack::calc_base_weapon_damage()
 
     if(attacker->atype() == ACT_PLAYER)
     {
-        if (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
+        if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon)
+            || weapon->base_type == OBJ_STAVES)
+        {
             damage = property(*weapon, PWPN_DAMAGE);
+        }
 
         // Staves can be wielded with a worn shield, but are much less
         // effective.

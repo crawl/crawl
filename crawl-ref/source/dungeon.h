@@ -1,8 +1,7 @@
-/*
- *  File:       dungeon.h
- *  Summary:    Functions used when building new levels.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when building new levels.
+**/
 
 
 #ifndef DUNGEON_H
@@ -43,6 +42,7 @@ enum portal_type
     NUM_PORTALS
 };
 
+const int MAKE_GIFT_ITEM = 350; // worse than the next one
 const int MAKE_GOOD_ITEM = 351;
 const unsigned short INVALID_MAP_INDEX = 10000;
 
@@ -318,6 +318,6 @@ bool dgn_square_travel_ok(const coord_def &c);
 
 void builder_basic(int level_number);
 void bigger_room();
-bool plan_4(dungeon_feature_type force_wall);
+void plan_4(dungeon_feature_type force_wall);
 
 #endif

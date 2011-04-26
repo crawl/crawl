@@ -1,8 +1,7 @@
-/*
- *  File:       potion.h
- *  Summary:    Potion and potion-like effects.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Potion and potion-like effects.
+**/
 
 #ifndef IT_USE2_H
 #define IT_USE2_H

@@ -2176,6 +2176,48 @@ xxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+##############################################################################
+# A variety of statues, with loot. (1KB)
+#
+NAME:    statue_cache
+ORIENT:  north
+TAGS:    no_monster_gen
+DEPTH:   D:12-20, Elf, Vault
+MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
+      ego:flame . bolt q:30
+MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
+      ego:frost . bolt q:30
+MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
+      ego:flaming good_item
+MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
+      ego:freezing good_item
+MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
+      ego:flaming good_item
+MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
+      ego:freezing good_item
+MONS: silver statue
+KMONS: 8 = statue name:wizard name_adjective tile:mons_statue_mage \
+           spells:lehudib's_crystal_spear;iskenderun's_mystic_blast;slow;stone_arrow
+KMONS: 9 = statue name:wizard name_adjective tile:mons_statue_mage \
+           spells:freezing_cloud;mephitic_cloud;throw_icicle;confuse
+MAP
+  cccccccccccccc
+  cccccccc7ccccc
+  cccccc.....ccc
+  cccc..ccccc.cc
+  ccc.ccccc5c.cc
+  ccc.cccccc.ccc
+  cc8.9cc3c.c6cc
+  c$$$$$cc.ccccc
+  c|*|*|c.c4cccc
+ccccccccc.ccccccccc
+........1.2........
+...................
+...................
+ .................
+   .............
+      ...@...
+ENDMAP
 
 ##############################################################################
 # A mockup of the Forest branch for 0.8 (1KB)
@@ -2183,7 +2225,6 @@ ENDMAP
 NAME:    forest_0.8
 DEPTH:   D:19-26
 ORIENT:  encompass
-WEIGHT:  999999
 TAGS:    no_pool_fixup
 MONS:    spriggan, spriggan rider, spriggan druid, spriggan berserker
 MONS:    spriggan air mage, spriggan defender, the Enchantress
@@ -2266,9 +2307,9 @@ tttt.ttttttttttttttttttttt.ttttt....ttttttttttttt.ttttttttttttttttttttttt.cccctt
 ttttt.ttttttttttttttttttt.tttttttttt.tttttttttttt..tttttttt..tt...ttttttt.+.1ctt
 tttttt.ttttttttttttttttt.tttttttttt..tttttttttttttt.tttttt.t...ttt..tttttTc1%ctt
 ttttttt.ttttttttttttttt.ttttttttttt....xxxxxtttttttt..tttt...tttttt.ttttttcccctt
-ttttttt.tttttttttttttt.ttttttttttttT...x.44xtttttttttt....ttttttttt.tttttttxxxxx
+ttttttt.tttttttttttttt.ttttttttttttT...x..4xtttttttttt....ttttttttt.tttttttxxxxx
 ttttttt.tttttttttttttt.ttttttttttttT...+...xtttttttttttttttttttttttt.tttxxxxxxxx
-txxxtt.ttttttttttt....ttttttttttttttt.tx.44xttttttttttttttttttttttttt..xxxxxxxxx
+txxxtt.ttttttttttt....ttttttttttttttt.tx..4xttttttttttttttttttttttttt..xxxxxxxxx
 txi+"""""""tt......t.....ttttttttttttt.x.4_xttttttttttttttttttttttttt....xxxxxxx
 txxx""""""""".tttttttt..TTtttttttttttttxxxxxttttttttttttttttttttttt......}xxxxxx
 ttt""N"""""""TTtttttttt....ttttttttttttttttttttttttttttttttttttt.....xxxxxxxxxxx

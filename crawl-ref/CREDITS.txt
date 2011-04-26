@@ -28,38 +28,38 @@ Robert Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Mike Adams                   Sophie Hamilton           William Parker
-Warwick Allison              Chris Hamons              Pedro
-Juha Arpiainen               R. Dan Henry              Arlen Phillips
-Arxale                       Brendan Hickey            Lemuel Pitkin
-John 'Poor Yurik' Attea      Sylvia 'Onia' Hörnke      Derek Ray
-Roy Axenov                   Benoit Hudson             Terence Reeves
-Max Bane                     Iainuki                   Remsleep
-Bill Beher                   Ilyak                     RjY
-Alexander Beisig             Matthew Ince              Will Rogers
-Stu Black                    Mitsuhiro Itakura         David Rose
-Terje Bø                     Mikko Juola               Risto Saarelma
-Erik Inge Bolsø              Jarmo Kielosto            Sebastian Salman
-Peter Borgmann               Kornel Kisielewicz        Brett Scarborough
-Daniel Mark Brownrigg        Daniel Klein              Roman Sêk
-Trent W. Buck                Ilkka Koskela             Robert Shimmin
-Joe Buzzelli                 Vambola Kotkas            Sigurd
-Henry Cipolla                Ryan Kusnery              Edgar Simo
-Aaron Curtis                 Jukka Kuusisto            Alex Smith
-Denzi                        Maciej Lapinski           Solf
-Mike Drinen                  Jordan Lewis              Michael Spang
-Kieron Dunbar                Icy Lich                  Johan Strandell
-elliptic                     Markus Maier              Paul 'Curio' Svinarchuk
-Micha Elsner                 Arien Malec               Pavel Svinarhuk
-Carl-Oscar Erneholm          Paul Maloney              Matthew Tadd
-Christopher Evenstar         Wille Mäntylä             William Tanksley, Jr.
-Brett Foster                 Andrew Minton             Jared 'Twinge' Tinney
-Chris Galardi                Shawn M Moore             Matt Titus
-Ben Goetter                  Eva Myers                 Steven Wheeler
-Rob Grant                    Erkki Nurmi               Thomas Willem
-John Greenberg               Mattias Nyberg            Evan Williams
-GreyKnight                   nyra                      Jeremey Wilson
-Joshua Gross                 Dylan O'Donnell           Yelve Yakut
-Brian Haase                  Yuuma Oohara              Zooko
-Shayne Halvorson             Malwyn P
+Mike Adams                   Sophie Hamilton              Malwyn P
+Warwick Allison              Chris Hamons                 William Parker
+Juha Arpiainen               R. Dan Henry                 Pedro
+Arxale                       Brendan Hickey               Arlen Phillips
+John 'Poor Yurik' Attea      Sylvia 'Onia' Hörnke         Lemuel Pitkin
+Roy Axenov                   Benoit Hudson                Derek Ray
+Max Bane                     Iainuki                      Terence Reeves
+Bill Beher                   Ilyak                        Remsleep
+Alexander Beisig             Matthew Ince                 RjY
+Stu Black                    Mitsuhiro Itakura            Will Rogers
+Terje Bø                     Mikko Juola                  David Rose
+Erik Inge Bolsø              Jarmo Kielosto               Risto Saarelma
+Peter Borgmann               Kornel Kisielewicz           Sebastian Salman
+Daniel Mark Brownrigg        Daniel Klein                 Brett Scarborough
+Trent W. Buck                Ilkka Koskela                Roman Sêk
+Joe Buzzelli                 Vambola Kotkas               Robert Shimmin
+Henry Cipolla                Ryan Kusnery                 Sigurd
+Aaron Curtis                 Jukka Kuusisto               Edgar Simo
+Denzi                        Maciej Lapinski              Alex Smith
+Mike Drinen                  Jordan Lewis                 Solf
+Kieron Dunbar                Icy Lich                     Michael Spang
+elliptic                     Markus Maier                 Johan Strandell
+Micha Elsner                 Arien Malec                  Pavel 'Curio' Svinarchuk
+Carl-Oscar Erneholm          Paul Maloney                 Matthew Tadd
+Christopher Evenstar         Wille Mäntylä                William Tanksley, Jr.
+Brett Foster                 James 'Eronarn' Meickle      Jared 'Twinge' Tinney
+Chris Galardi                Andrew Minton                Matt Titus
+Ben Goetter                  Shawn M Moore                Steven Wheeler
+Rob Grant                    Eva Myers                    Thomas Willem
+John Greenberg               Erkki Nurmi                  Evan Williams
+GreyKnight                   Mattias Nyberg               Jeremey Wilson
+Joshua Gross                 nyra                         Yelve Yakut
+Brian Haase                  Dylan O'Donnell              Zooko
+Shayne Halvorson             Yuuma Oohara
 

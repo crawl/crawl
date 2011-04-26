@@ -1,8 +1,7 @@
-/*
- *  File:       traps.cc
- *  Summary:    Traps related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Traps related functions.
+**/
 
 #include "AppHdr.h"
 
@@ -324,6 +323,7 @@ bool player_caught_in_net()
         }
 
         stop_delay(true); // even stair delays
+        redraw_screen(); // Account for changes in display.
         return (true);
     }
     return (false);
@@ -556,7 +556,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 msg = std::string("You hear a ") +
                     ((in_sight) ? "" : "distant ")
                     + "blaring wail "
-                    + ((dir.length())? ("to the " + dir + ".") : "behind you!");
+                    + (!dir.empty()? ("to the " + dir + ".") : "behind you!");
             }
             // Monsters of normal or greater intelligence will realize that
             // they were the one to set off the trap.
@@ -1203,6 +1203,7 @@ void free_self_from_net()
     if (net == NON_ITEM) // really shouldn't happen!
     {
         you.attribute[ATTR_HELD] = 0;
+        you.redraw_quiver = true;
         return;
     }
 
@@ -1247,6 +1248,7 @@ void free_self_from_net()
             destroy_item(net);
 
             you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
             return;
         }
 
@@ -1292,6 +1294,7 @@ void free_self_from_net()
                 mpr("You break free from the net!");
 
             you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
             remove_item_stationary(mitm[net]);
             return;
         }
@@ -1318,6 +1321,7 @@ void clear_trapping_net()
         remove_item_stationary(mitm[net]);
 
     you.attribute[ATTR_HELD] = 0;
+    you.redraw_quiver = true;
 }
 
 item_def trap_def::generate_trap_item()

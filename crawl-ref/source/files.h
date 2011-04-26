@@ -1,8 +1,7 @@
-/*
- *  File:       files.h
- *  Summary:    Functions used to save and load levels/games.
- *  Written by: Linley Henzell and Alexey Guzeev
- */
+/**
+ * @file
+ * @brief Functions used to save and load levels/games.
+**/
 
 
 #ifndef FILES_H
@@ -35,6 +34,7 @@ bool dir_exists(const std::string &dir);
 bool is_absolute_path(const std::string &path);
 bool is_read_safe_path(const std::string &path);
 void assert_read_safe_path(const std::string &path) throw (std::string);
+unsigned long file_size(FILE *handle);
 
 std::vector<std::string> get_dir_files(const std::string &dir);
 std::vector<std::string> get_dir_files_ext(const std::string &dir,
@@ -89,9 +89,6 @@ std::string change_file_extension(const std::string &file,
 void file_touch(const std::string &file);
 time_t file_modtime(const std::string &file);
 bool is_newer(const std::string &a, const std::string &b);
-void check_newer(const std::string &target,
-                 const std::string &dependency,
-                 void (*action)());
 std::vector<std::string> get_title_files();
 
 

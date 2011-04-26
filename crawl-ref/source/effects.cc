@@ -1,8 +1,7 @@
-/*
- *  File:       effects.cc
- *  Summary:    Misc stuff.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc stuff.
+**/
 
 #include "AppHdr.h"
 
@@ -738,11 +737,16 @@ void direct_effect(monster* source, spell_type spell,
         break;
 
     case SPELL_AIRSTRIKE:
-        // Damage averages 14 for 5HD, 18 for 10HD, 28 for 20HD.
+        // Damage averages 14 for 5HD, 18 for 10HD, 28 for 20HD, +50% if flying.
         if (def)
             simple_monster_message(def, " is struck by the twisting air!");
         else
-            mpr("The air twists around and strikes you!");
+        {
+            if (you.flight_mode())
+                mpr("The air twists around and violently strikes you in flight!");
+            else
+                mpr("The air twists around and strikes you!");
+        }
 
         pbolt.name       = "airstrike";
         pbolt.flavour    = BEAM_AIR;
@@ -1325,7 +1329,7 @@ static void _hell_effects()
         else                // 1 in 8 odds {dlb}
             which_miscast = coinflip() ? SPTYP_HEXES : SPTYP_CHARMS;
 
-        MiscastEffect(&you, MISC_MISCAST, which_miscast,
+        MiscastEffect(&you, HELL_EFFECT_MISCAST, which_miscast,
                       4 + random2(6), random2avg(97, 3),
                       "the effects of Hell");
     }
@@ -1381,7 +1385,7 @@ static void _hell_effects()
         }
         else
         {
-            MiscastEffect(&you, MISC_MISCAST, which_miscast,
+            MiscastEffect(&you, HELL_EFFECT_MISCAST, which_miscast,
                           4 + random2(6), random2avg(97, 3),
                           "the effects of Hell");
         }
@@ -2438,14 +2442,11 @@ static void _catchup_monster_moves(monster* mon, int turns)
     const bool ranged_attack = (mons_has_ranged_spell(mon, true)
                                 || mons_has_ranged_attack(mon));
 
-#ifdef DEBUG_DIAGNOSTICS
     // probably too annoying even for DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "mon #%d: range %d; "
+    dprf("mon #%d: range %d; "
          "pos (%d,%d); targ %d(%d,%d); flags %"PRIx64,
          mon->mindex(), range, mon->pos().x, mon->pos().y,
          mon->foe, mon->target.x, mon->target.y, mon->flags);
-#endif
 
     if (range <= 0)
         return;
@@ -2536,11 +2537,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         else
         {
             shift_monster(mon, mon->pos());
-
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "shifted to (%d, %d)",
-                 mon->pos().x, mon->pos().y);
-#endif
+            dprf("shifted to (%d, %d)", mon->pos().x, mon->pos().y);
             return;
         }
     }
@@ -2590,9 +2587,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         mon->add_ench(ENCH_SUBMERGED);
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "moved to (%d, %d)", mon->pos().x, mon->pos().y);
-#endif
+    dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
 }
 
 //---------------------------------------------------------------
@@ -2611,7 +2606,7 @@ void update_level(int elapsedTime)
 #ifdef DEBUG_DIAGNOSTICS
     int mons_total = 0;
 
-    mprf(MSGCH_DIAGNOSTICS, "turns: %d", turns);
+    dprf("turns: %d", turns);
 #endif
 
     update_corpses(elapsedTime);
@@ -2681,7 +2676,7 @@ void update_level(int elapsedTime)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "total monsters on level = %d", mons_total);
+    dprf("total monsters on level = %d", mons_total);
 #endif
 
     for (int i = 0; i < MAX_CLOUDS; i++)

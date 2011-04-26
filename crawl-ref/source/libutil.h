@@ -1,7 +1,7 @@
-/*
- *  File:       libutil.h
- *  Summary:    System independent functions
- */
+/**
+ * @file
+ * @brief System independent functions
+**/
 
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
@@ -32,7 +32,6 @@ std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
 std::string upcase_first(std::string);
 
-void wait_for_keypress();
 bool key_is_escape(int key);
 
 #define CASE_ESCAPE case ESCAPE: case CONTROL('G'): case -1:
@@ -75,10 +74,14 @@ bool ends_with(const std::string &s, const std::string &suffix);
 #ifdef UNIX
 extern "C" int stricmp(const char *str1, const char *str2);
 #endif
+int numcmp(const char *a, const char *b, int limit);
 size_t strlcpy(char *dst, const char *src, size_t n);
 
 int strwidth(const char *s);
 int strwidth(const std::string &s);
+std::string chop_string(const char *s, int width, bool spaces = true);
+std::string chop_string(const std::string &s, int width, bool spaces = true);
+std::string wordwrap_line(std::string &s, int cols, bool tags = false);
 
 // String "tags"
 #define TAG_UNFOUND -20404

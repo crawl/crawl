@@ -102,9 +102,9 @@ A: If you've got trouble even reaching the Temple, you might want to try a game 
 
 Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
 
-For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/) or on the rec.games.roguelike.misc group, so other players can comment on your equipment, skills or spell selection.
+For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/) or on the rec.games.roguelike.misc group, so other players can comment on your equipment, skills or spell selection. Please trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list).
 
-Please try to trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list). If you're playing online on one of the public servers, you can join the ##crawl channel of the freenode IRC, where you will find helpful souls who will even watch you and give hints.
+If you're playing online on one of the public servers, you can join the ##crawl channel of the freenode IRC, where you will find helpful souls who will even watch you and give hints.
 %%%%
 Q:downstairs
 
@@ -114,7 +114,7 @@ A:downstairs
 
 A: While this might be a bug, chances are the downstairs are somewhere in a room closed off by a secret door. If you search (with '5') in suspicious-looking corridors and along walls near empty terrain, you will eventually find one. Note that most levels feature three downstairs as well as three upstairs, not counting any escape hatches. If you get stuck, you might try another set of stairs from the level above.
 
-Alternatively, if you are in one of the branches, you might also have reached its lowest level and have to turn around to explore another one. Check the overview ('Ctrl-O') to see how deep you've delved into a given branch, or the database ('?/b') for the number of levels for unseen branches.
+Alternatively, if you are in one of the branches, you might also have reached its lowest level and have to turn around to explore another one. Check the dungeon overview ('Ctrl-O') to see how deep you've delved into a given branch, or the database ('?/b') for the number of levels for unseen branches.
 %%%%
 Q:stuck
 
@@ -281,7 +281,7 @@ Is there a way for me to play the new version before it is released?
 %%%%
 A:beta
 
-A: There certainly is! You can play "trunk" (what will eventually become the next version) online on http://crawl.develz.org, or you can download Windows and Mac binaries from the same site. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
+A: There certainly is! You can play "trunk" (what will eventually become the next version) online on both http://crawl.akrasiac.org and http://crawl.develz.org; the latter site also hosts Windows and Mac binaries you can download. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
 
 Be sure to reports bugs on our bug tracker (http://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the development wiki (http://crawl.develz.org/wiki).
 

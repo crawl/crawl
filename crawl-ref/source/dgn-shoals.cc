@@ -22,6 +22,7 @@
 #include "mon-util.h"
 #include "random.h"
 #include "terrain.h"
+#include "traps.h"
 #include "view.h"
 
 #include <algorithm>
@@ -231,7 +232,9 @@ static std::vector<coord_def> _shoals_water_depth_change_points()
         coord_def c(*ri);
         if (grd(c) == DNGN_DEEP_WATER
             && dgn_has_adjacent_feat(c, DNGN_SHALLOW_WATER))
+        {
             points.push_back(c);
+        }
     }
     return points;
 }
@@ -628,7 +631,9 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
         if (!windy(p) && grd(p) == DNGN_FLOOR
             && (dgn_has_adjacent_feat(p, DNGN_STONE_WALL)
                 || dgn_has_adjacent_feat(p, DNGN_ROCK_WALL)))
+        {
             wind_shadows.push_back(p);
+        }
     }
     return wind_shadows;
 }
@@ -780,6 +785,26 @@ static coord_def _shoals_escape_place_from(coord_def bad_place,
     return chosen;
 }
 
+static void _clear_net_trapping_status(coord_def c)
+{
+    actor *victim = actor_at(c);
+    if (!victim)
+        return;
+
+    if (victim->atype() == ACT_MONSTER)
+    {
+        monster* mvictim = victim->as_monster();
+        if (you.can_see(mvictim))
+            mprf("The net is swept off %s.", mvictim->name(DESC_THE).c_str());
+        mons_clear_trapping_net(mvictim);
+    }
+    else
+    {
+        mpr("The tide washes the net away!");
+        clear_trapping_net();
+    }
+}
+
 static bool _shoals_tide_sweep_items_clear(coord_def c)
 {
     int link = igrd(c);
@@ -792,13 +817,20 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
         // item clear here, let dungeon_terrain_changed teleport the item
         // to the nearest safe square.
         item_def &item(*si);
+
         // Let the tide break up stacks
         if (!item_is_rune(item) && coinflip())
+            continue;
+
+        if (item_is_stationary(item) && !one_chance_in(5))
             continue;
 
         const coord_def target(_shoals_escape_place_from(c, NULL, &item));
         if (!target.origin())
         {
+            if (item_is_stationary(item))
+                _clear_net_trapping_status(c);
+
             int id = si.link();
             move_item_to_grid(&id, target);
         }
@@ -831,7 +863,14 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
     if (evacuation_point.origin())
         return false;
 
-    victim->move_to_pos(evacuation_point);
+    bool clear_net = false;
+    if (victim->caught())
+    {
+        int net = get_trapping_net(c);
+        if (net != NON_ITEM)
+            clear_net = !move_item_to_grid(&net, evacuation_point);
+    }
+    victim->move_to_pos(evacuation_point, clear_net);
     return true;
 }
 

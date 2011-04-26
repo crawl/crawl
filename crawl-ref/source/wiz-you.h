@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-you.h
- *  Summary:    Player related wizard functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Player related wizard functions.
+**/
 
 #ifndef WIZYOU_H
 #define WIZYOU_H

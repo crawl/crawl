@@ -1,8 +1,7 @@
-/*
- *  File:       itemprop.h
- *  Summary:    Misc functions.
- *  Written by: Brent Ross
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 #include "AppHdr.h"
 
@@ -200,10 +199,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON, 10 },
-    { WPN_DEMON_WHIP,        "demon whip",         12,  1, 11,  30,  2,
+    { WPN_DEMON_WHIP,        "demon whip",         11,  1, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 2 },
-    { WPN_SACRED_SCOURGE,    "sacred scourge",     13,  0, 11,  30,  2,
+    { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 0 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
@@ -263,7 +262,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLICING, 0 },
     { WPN_KATANA,                "katana",                14,  3, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLICING, 2 },
+        DAMV_SLICING, 0 },
     { WPN_BLESSED_KATANA,        "blessed katana",        15,  2, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
@@ -322,10 +321,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_DEMON_TRIDENT,     "demon trident",      14,  1, 13, 160,  4,
+    { WPN_DEMON_TRIDENT,     "demon trident",      13,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 2 },
-    { WPN_TRISHULA,          "trishula",           15,  0, 13, 160,  4,
+    { WPN_TRISHULA,          "trishula",           14,  0, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 0 },
     { WPN_GLAIVE,            "glaive",             15, -3, 18, 200,  6,
@@ -637,8 +636,8 @@ bool _is_affordable(const item_def &item)
         for (adjacent_iterator ai(item.pos); ai; ++ai)
             if (you.can_pass_through(*ai))
                 return true;
-        dprf("Seen item %s seems to be un(easily)obtainable.",
-             item.name(DESC_PLAIN).c_str());
+        //dprf("Seen item %s seems to be un(easily)obtainable.",
+        //     item.name(DESC_PLAIN).c_str());
         return false;
     }
 
@@ -2786,7 +2785,7 @@ equipment_type get_item_slot(const item_def& item)
 
 equipment_type get_item_slot(object_class_type type, int sub_type)
 {
-    switch(type)
+    switch (type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:

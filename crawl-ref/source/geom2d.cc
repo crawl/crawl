@@ -1,7 +1,7 @@
-/*
- * File:     geom2d.cc
- * Summary:  Plane geometry for shooting rays.
- */
+/**
+ * @file
+ * @brief Plane geometry for shooting rays.
+**/
 
 #include "AppHdr.h"
 #include "debug.h"

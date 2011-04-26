@@ -1,8 +1,7 @@
-/*
- *  File:       itemname.h
- *  Summary:    Misc functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 
 #ifndef ITEMNAME_H
@@ -88,7 +87,7 @@ enum
     NDSC_BOOK_SEC  = 8,
 };
 
-bool is_vowel(const char chr);
+bool is_vowel(const ucs_t chr);
 int property(const item_def &item, int prop_type);
 
 const char* racial_description_string(const item_def& item, bool terse = false);

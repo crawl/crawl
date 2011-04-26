@@ -1,25 +1,23 @@
-/*
- *  File:       AppHdr.h
- *  Summary:    Precompiled header used by Crawl.
- *  Written by: Jesse Jones
+/**
+ * @file
+ * @brief Precompiled header used by Crawl.
  *
- * Abstract: CodeWarrior and MSVC both support precompiled headers which can
- *      significantly speed up compiles. Unlike CodeWarrior MSVC imposes
- *      some annoying restrictions on precompiled headers: the precompiled
- *      header *must* be the first include in all cc files. Any includes or
- *      other statements that occur before the pch include are ignored. This
- *      is really stupid and can lead to bizarre errors, but it does mean
- *      that we shouldn't run into any problems on systems without precompiled
- *      headers.
- *
- *  Copyright © 1999 Jesse Jones.
- */
+ * CodeWarrior and MSVC both support precompiled headers which can
+ * significantly speed up compiles. Unlike CodeWarrior MSVC imposes
+ * some annoying restrictions on precompiled headers: the precompiled
+ * header *must* be the first include in all cc files. Any includes or
+ * other statements that occur before the pch include are ignored. This
+ * is really stupid and can lead to bizarre errors, but it does mean
+ * that we shouldn't run into any problems on systems without precompiled
+ * headers.
+**/
 
 
 #ifndef APPHDR_H
 #define APPHDR_H
 
 #include "platform.h"
+#include <stdint.h>
 
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:
@@ -37,14 +35,6 @@
 // memory.
 //
 #define CLUA_MAX_MEMORY_USE (2 * 1024)
-
-// Enable support for Unicode character glyphs. Note that this needs
-// to be accompanied by changes to linker and compiler options and may
-// not be available on all platforms. In most cases you want to set
-// this option from your makefile, not directly in AppHdr.h (See
-// INSTALL for more details.)
-//
-// #define UNICODE_GLYPHS
 
 // Uncomment to prevent Crawl from looking for a list of saves when
 // asking the player to enter a name. This can speed up startup
@@ -90,15 +80,9 @@
     #endif
 #endif
 
-// Use this to seed the PRNG with a bit more than just time()... which
-// leads to problems if for any reason we get started twice in the same
-// second.
-#define USE_MORE_SECURE_SEED
-
 // =========================================================================
 //  System Defines
 // =========================================================================
-// Define plain_term for Unix and dos_term for DOS.
 
 #ifdef UNIX
     // Uncomment if you're running Crawl with dgamelaunch and have
@@ -116,12 +100,7 @@
     #define SIGHUP_SAVE
 
     #define FILE_SEPARATOR '/'
-
-    #define CHARACTER_SET           0
 #ifndef USE_TILE
-    // NOTE: Tiles relies on the IBM character set for evaluating glyphs
-    //       of magic mapped dungeon cells.
-    #define USE_ASCII_CHARACTERS
     #define USE_CURSES
 #endif
 
@@ -148,11 +127,9 @@
 
     // Uncomment (and edit as appropriate) to play sounds.
     //
-    // WARNING: Enabling sounds may compromise security if Crawl is installed
-    //          setuid or setgid. Filenames passed to this command *are not
-    //          validated in any way*.
+    // WARNING: Filenames passed to this command *are not validated in any way*.
     //
-    // #define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 %s 2>/dev/null &"
+    // #define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
 
     // For cases when the game will be played on terms that don't support the
     // curses "bold == lighter" 16 colour mode. -- bwr
@@ -166,32 +143,10 @@
 
     #include "libunix.h"
 
-#elif defined(TARGET_OS_DOS)
-    #define SHORT_FILE_NAMES
-    #define CHARACTER_SET           A_ALTCHARSET
-
-    #define FILE_SEPARATOR '\\'
-
-    #include <string>
-    #include "libdos.h"
-
-    #include <dos.h>
-    #include <file.h>
-
-    #define round(x) floor((x)+0.5)
-
-    // Use Perl-compatible regular expressions. libpcre must be available and
-    // linked in.  This is optional.
-    #ifndef REGEX_PCRE
-    #define REGEX_PCRE
-    #endif
-
 #elif defined(TARGET_OS_WINDOWS)
     #if !defined(USE_TILE)
         #include "libw32c.h"
     #endif
-    #define CHARACTER_SET           A_ALTCHARSET
-    #define getstr(X,Y)         get_console_string(X,Y)
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'
@@ -248,12 +203,7 @@
     // it in-place, instead of torching the old file.
     #define DGL_REWRITE_PROTECT_DB_FILES
 
-    #ifndef USE_MORE_SECURE_SEED
-    #error DGAMELAUNCH builds should define USE_MORE_SECURE_SEED
-    #endif
-
     // This secures the PRNG itself by hashing the values with SHA256.
-    // It doesn't have much point if USE_MORE_SECURE_SEED is not used.
     // PRNG will be about 15 times slower when this is turned on, but
     // even with that the cpu time used by the PRNG is relatively small.
     #define MORE_HARDENED_PRNG

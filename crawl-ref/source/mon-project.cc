@@ -1,8 +1,7 @@
-/*
- *  File:       mon-project.cc
- *  Summary:    Slow projectiles, done as monsters.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Slow projectiles, done as monsters.
+**/
 
 #include "AppHdr.h"
 
@@ -37,20 +36,16 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     if (beam->target == you.pos())
         mtarg = MHITYOU;
 
-    int mind = -1;
-    for (int i=0; i < 10 && mind == -1; i++)
-    {
-        mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
+    int mind = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
                     ((monster*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
                 0,
                 SPELL_IOOD,
-                coord_def(-1, -1),
+                coord_def(),
                 mtarg,
                 0,
-                GOD_NO_GOD));
-    }
+                GOD_NO_GOD), true, true);
     if (mind == -1)
     {
         mpr("Failed to spawn projectile.", MSGCH_WARN);
@@ -59,12 +54,14 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     }
 
     monster& mon = menv[mind];
-    const coord_def pos = caster->pos();
     beam->choose_ray();
+#ifdef DEBUG_DIAGNOSTICS
+    const coord_def pos = caster->pos();
     dprf("beam (%d,%d)+t*(%d,%d)  ray (%f,%f)+t*(%f,%f)",
         pos.x, pos.y, beam->target.x - pos.x, beam->target.y - pos.y,
         beam->ray.r.start.x - 0.5, beam->ray.r.start.y - 0.5,
         beam->ray.r.dir.x, beam->ray.r.dir.y);
+#endif
     mon.props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
     mon.props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
     mon.props["iood_vx"].get_float() = beam->ray.r.dir.x;

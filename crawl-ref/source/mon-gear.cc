@@ -1,7 +1,7 @@
-/*
- * File:       mon-gear.cc
- * Summary:    Monsters' starting equipment.
- */
+/**
+ * @file
+ * @brief Monsters' starting equipment.
+**/
 
 #include "AppHdr.h"
 
@@ -37,11 +37,8 @@ static void _give_monster_item(monster* mon, int thing,
     item_def &mthing = mitm[thing];
     ASSERT(mthing.defined());
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
+    dprf("Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
          mon->name(DESC_PLAIN, true).c_str());
-#endif
 
     mthing.pos.reset();
     mthing.link = NON_ITEM;
@@ -59,15 +56,29 @@ static void _give_monster_item(monster* mon, int thing,
             set_item_ego_type(mthing, OBJ_WEAPONS, SPWPN_NORMAL);
     }
 
+    if (!is_artefact(mthing)
+        && (mthing.base_type == OBJ_WEAPONS
+         || mthing.base_type == OBJ_ARMOUR
+         || mthing.base_type == OBJ_MISSILES))
+    {
+        bool enchanted = mthing.plus
+                      || mthing.base_type == OBJ_WEAPONS && !mthing.plus2;
+
+        // The item could either lose or gain brand after being generated,
+        // adjust the glowing flag.
+        if (!mthing.special && !enchanted)
+            set_equip_desc(mthing, 0);
+        else if (mthing.special && !get_equip_desc(mthing))
+            set_equip_desc(mthing, ISFLAG_GLOWING);
+    }
+
     unwind_var<int> save_speedinc(mon->speed_increment);
     if (!(pickupfn ? (mon->*pickupfn)(mthing, false)
                    : mon->pickup_item(mthing, false, true)))
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Destroying %s because %s doesn't want it!",
+        dprf("Destroying %s because %s doesn't want it!",
              mthing.name(DESC_PLAIN, false, true).c_str(),
              mon->name(DESC_PLAIN, true).c_str());
-#endif
         destroy_item(thing, true);
         return;
     }
@@ -133,9 +144,10 @@ static void _give_wand(monster* mon, int level)
 
         item_def& wand = mitm[idx];
 
-        // Don't give top-tier wands before 5 HD.
-        if (mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND)
-            || mon->type == MONS_IJYB && crawl_state.game_is_sprint())
+        // Don't give top-tier wands before 5 HD, except to Ijyb and not in
+        // sprint.
+        if ((mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND))
+            && (mon->type != MONS_IJYB || crawl_state.game_is_sprint()))
         {
             // Technically these wands will be undercharged, but it
             // doesn't really matter.
@@ -888,11 +900,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (x_chance_in_y(5, 9))
         {
             set_item_ego_type(item, OBJ_WEAPONS,
-                              random_choose_weighted(15, SPWPN_FLAMING,
-                                                     2, SPWPN_DRAINING,
-                                                     2, SPWPN_VORPAL,
+                              random_choose_weighted(13, SPWPN_FLAMING,
+                                                     4, SPWPN_DRAINING,
+                                                     4, SPWPN_VORPAL,
                                                      2, SPWPN_DISTORTION,
-                                                     2, SPWPN_SPEED,
                                                      2, SPWPN_PAIN,
                                                      0));
         }
@@ -930,11 +941,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (x_chance_in_y(5, 9))
         {
             set_item_ego_type(item, OBJ_WEAPONS,
-                              random_choose_weighted(15, SPWPN_FLAMING,
-                                                     2, SPWPN_DRAINING,
-                                                     2, SPWPN_VORPAL,
+                              random_choose_weighted(13, SPWPN_FLAMING,
+                                                     4, SPWPN_DRAINING,
+                                                     4, SPWPN_VORPAL,
                                                      2, SPWPN_DISTORTION,
-                                                     2, SPWPN_SPEED,
                                                      2, SPWPN_PAIN,
                                                      0));
         }
@@ -1186,6 +1196,16 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.plus      = random2(5);
             item.plus2     = random2(5);
         }
+        break;
+
+    case MONS_IGNACIO:
+        force_item = true;
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_EXECUTIONERS_AXE;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PAIN);
+        item.plus      = 2 + random2(7);
+        item.plus2     = 2 + random2(7);
         break;
 
     default:
@@ -1560,7 +1580,10 @@ void give_shield(monster* mon, int level)
         {
             item_def *shield = mon->shield();
             if (shield)
+            {
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_REFLECTION);
+                set_equip_desc(*shield, ISFLAG_GLOWING);
+            }
         }
 
         break;
@@ -2007,15 +2030,6 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     // mv: All items with force_colour = 0 are colored via items().
     if (force_colour)
         mitm[thing_created].colour = force_colour;
-
-    switch (mon->type)
-    {
-    case MONS_NIKOLA:
-        mitm[thing_created].plus2 = TGLOV_DESC_GAUNTLETS;
-        break;
-    default:
-        break;
-    }
 }
 
 static void _give_gold(monster* mon, int level)

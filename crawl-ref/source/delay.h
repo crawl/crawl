@@ -1,7 +1,7 @@
-/*
- *  File:       delay.h
- *  Summary:    Functions for handling multi-turn actions.
- */
+/**
+ * @file
+ * @brief Functions for handling multi-turn actions.
+**/
 
 #ifndef DELAY_H
 #define DELAY_H
@@ -65,7 +65,7 @@ struct ait_hp_loss
 };
 
 void start_delay(delay_type type, int turns, int parm1 = 0, int parm2 = 0);
-void stop_delay(bool stop_stair_travel = false);
+void stop_delay(bool stop_stair_travel = false, bool force_unsafe = false);
 bool you_are_delayed();
 delay_type current_delay_action();
 void handle_delay();
@@ -87,6 +87,7 @@ void handle_interrupted_swap(bool swap_if_safe = false,
 void clear_macro_process_key_delay();
 
 activity_interrupt_type get_activity_interrupt(const std::string &);
+bool is_delay_interruptible(delay_type delay);
 
 const char *delay_name(int delay);
 delay_type get_delay(const std::string &);

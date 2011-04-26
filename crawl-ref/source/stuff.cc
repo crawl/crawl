@@ -1,8 +1,7 @@
-/*
- *  File:       stuff.cc
- *  Summary:    Misc stuff.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc stuff.
+**/
 
 #include "AppHdr.h"
 
@@ -130,21 +129,13 @@ std::string make_time_string(time_t abs_time, bool terse)
     const int mins  = (abs_time % 3600) / 60;
     const int secs  = abs_time % 60;
 
-    std::ostringstream buff;
-    buff << std::setfill('0');
-
+    std::string buff;
     if (days > 0)
     {
-        if (terse)
-            buff << days << ", ";
-        else
-            buff << days << (days > 1 ? " days" : "day");
+        buff += make_stringf("%d%s ", days, terse ? ","
+                             : days > 1 ? "days" : "day");
     }
-
-    buff << std::setw(2) << hours << ':'
-         << std::setw(2) << mins << ':'
-         << std::setw(2) << secs;
-    return buff.str();
+    return buff + make_stringf("%02d:%02d:%02d", hours, mins, secs);
 }
 
 std::string make_file_time(time_t when)
@@ -238,6 +229,8 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     fmenv->travel_path.clear();
     fmenv->travel_target = MTRAV_NONE;
 
+    fmenv->clear_clinging();
+
     dprf("%s is marked for following.",
          fmenv->name(DESC_THE, true).c_str());
 
@@ -326,10 +319,6 @@ void cio_init()
     init_libw32c();
 #endif
 
-#ifdef TARGET_OS_DOS
-    init_libdos();
-#endif
-
     set_cursor_enabled(false);
 
     crawl_view.init_geometry();
@@ -337,9 +326,6 @@ void cio_init()
 #ifdef USE_TILE
     tiles.resize();
 #endif
-
-    if (Options.char_set == CSET_UNICODE && !crawl_state.unicode_ok)
-        end(1, false, "Unicode glyphs are not available.");
 }
 
 void cio_cleanup()
@@ -397,7 +383,6 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
     }
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
-     || defined(TARGET_OS_DOS) \
      || defined(DGL_PAUSE_AFTER_ERROR)
     bool need_pause = true;
     if (exit_code && !error.empty())
@@ -419,7 +404,6 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
     }
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
-     || defined(TARGET_OS_DOS) \
      || defined(DGL_PAUSE_AFTER_ERROR)
     if (need_pause && exit_code && !crawl_state.game_is_arena()
         && !crawl_state.seen_hups && !crawl_state.test)
@@ -513,7 +497,7 @@ bool print_error_screen(const char *message, ...)
 #else
     width = std::min(80, get_number_of_cols());
 #endif
-    linebreak_string2(error_msg, width);
+    linebreak_string(error_msg, width);
 
     // And finally output the message.
     clrscr();

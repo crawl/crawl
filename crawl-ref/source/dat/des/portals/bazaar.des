@@ -15,12 +15,16 @@
 
 lua {{
 
-function place_bazaar_portal(e)
+function place_bazaar_portal(e, perm)
   e.kfeat("O = enter_portal_vault")
-  e.lua_marker('O', bazaar_portal())
+  if perm then
+     e.lua_marker('O', bazaar_portal(false))
+  else
+     e.lua_marker('O', bazaar_portal(not crawl.one_chance_in(6)))
+  end
 end
 
-function bazaar_portal()
+function bazaar_portal(timed)
   local desc_long =
 "Aside from the vendors who've set up their stores at various places in the " ..
 "dungeon, there are others trying to make a living by traveling from place " ..
@@ -45,7 +49,7 @@ function bazaar_portal()
     }
   local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
   local bhigh = blow + crawl.random2(blow) + 100
-  if not crawl.one_chance_in(6) then
+  if timed then
     local pdesc = 'flickering gateway to a bazaar'
     return timed_marker {
                   low=blow, high=bhigh, msg=messager, single_timed=true,
@@ -240,7 +244,7 @@ NAME:   statue_bzr
 TAGS:   bzr_entry
 SUBST:  G = G111
 MONS:   orange crystal statue / silver statue / ice statue
-: place_bazaar_portal(_G)
+: place_bazaar_portal(_G, true)
 MAP
  @
 cGc
@@ -443,8 +447,8 @@ TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  20
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh
-SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk, Gg/Mm
-# one guaranteed shop, expected 4.5 shops
+SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk
+# two guaranteed shops, expected five shops
 SUBST:   B=A, C=A, D=A, E=A, F=A, G=A, H=A
 SUBST:   b=a, c=a, d=a, e=a, f=a, g=a, h=a
 SUBST:   Y=Z, R=Z, S=Z, J=Z, K=Z, M=Z
@@ -1314,7 +1318,7 @@ SUBST:     "=. , '=l , A=! , B=l
 : end
 KFEAT:     ! = jewellery shop / jewellery shop / wand shop / scroll shop / book shop
 : bazaar_epilogue(_G)
-: set_border_fill_type("lava")
+: set_border_fill_type("endless_lava")
 MAP
 lllllllllllllllllllllllllllllllllllll
 ll...lllllllllllllllll'''llllllllllll

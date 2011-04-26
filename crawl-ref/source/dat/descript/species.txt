@@ -53,7 +53,7 @@ Bird-men who love to fight, both with weapons and spells. They are quite fragile
 %%%%
 Kobold
 
-Small, mischievous and a little fragile, but multi-talented. They can and will eat anything.
+Small, mischievous and a little fragile, but multi-talented. They can and will eat any meat.
 %%%%
 Merfolk
 

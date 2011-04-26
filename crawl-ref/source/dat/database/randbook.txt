@@ -54,8 +54,6 @@ book appearance
 %%%%
 book_noun
 
-Book
-
 Tome
 
 Grimoire

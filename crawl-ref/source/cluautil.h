@@ -1,7 +1,7 @@
-/*
- * File:      cluautil.h
- * Summary:   Utility functions and macros for Lua bindings.
- */
+/**
+ * @file
+ * @brief Utility functions and macros for Lua bindings.
+**/
 
 #ifndef CLUAUTIL_H
 #define CLUAUTIL_H

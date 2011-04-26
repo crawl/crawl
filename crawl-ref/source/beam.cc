@@ -1,8 +1,7 @@
-/*
- *  File:       beam.cc
- *  Summary:    Functions related to ranged attacks.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions related to ranged attacks.
+**/
 
 #include "AppHdr.h"
 
@@ -2534,7 +2533,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     }
 
     if (is_fiery() && (wall == DNGN_WAX_WALL || feat_is_tree(wall)))
-        return (is_superhot() ? B_TRUE : B_MAYBE);
+        return (is_superhot() ? B_TRUE : is_beam ? B_MAYBE : B_FALSE);
 
     if (flavour == BEAM_ELECTRICITY && feat_is_tree(wall))
         return (is_superhot() ? B_TRUE : B_MAYBE);
@@ -2554,7 +2553,9 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_CLOSED_DOOR
             || wall == DNGN_DETECTED_SECRET_DOOR
             || wall == DNGN_SECRET_DOOR)
-        return (B_TRUE);
+        {
+            return (B_TRUE);
+        }
     }
 
     // Lee's Rapid Deconstruction
@@ -3530,9 +3531,12 @@ void bolt::affect_player()
         armour_damage_reduction = 0;
     hurted -= armour_damage_reduction;
 
-    // shrapnel has double AC reduction
+    // shrapnel has triple AC reduction
     if (flavour == BEAM_FRAG)
+    {
         hurted -= random2(1 + you.armour_class());
+        hurted -= random2(1 + you.armour_class());
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf("Player damage: rolled=%d; after AC=%d", roll, hurted);
@@ -3801,9 +3805,12 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
         {
             postac -= maybe_random2(1 + mon->ac, !is_tracer);
 
-            // Fragmentation has double AC reduction.
+            // Fragmentation has triple AC reduction.
             if (flavour == BEAM_FRAG)
+            {
                 postac -= maybe_random2(1 + mon->ac, !is_tracer);
+                postac -= maybe_random2(1 + mon->ac, !is_tracer);
+            }
         }
     }
 
@@ -4523,7 +4530,6 @@ bool bolt::has_saving_throw() const
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
     case BEAM_ENSLAVE_SOUL:     // has a different saving throw
-    case BEAM_ENSLAVE_DEMON:    // ditto
         return (false);
     default:
         return (true);
@@ -4552,10 +4558,6 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
         rc = (mon->holiness() == MH_UNDEAD);
         break;
 
-    case BEAM_ENSLAVE_DEMON:
-        rc = (mon->holiness() == MH_DEMONIC && !mon->friendly());
-        break;
-
     case BEAM_PAIN:
         rc = !mon->res_negative_energy();
         break;
@@ -4566,7 +4568,8 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
 
     case BEAM_PORKALATOR:
         rc = (mon->holiness() == MH_DEMONIC && mon->type != MONS_HELL_HOG)
-              || (mon->holiness() == MH_NATURAL && mon->type != MONS_HOG);
+              || (mon->holiness() == MH_NATURAL && mon->type != MONS_HOG)
+              || (mon->holiness() == MH_HOLY && mon->type != MONS_HOLY_SWINE);
         break;
 
     default:
@@ -4723,38 +4726,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
 
         obvious_effect = true;
-        const int duration = you.skills[SK_INVOCATIONS] * 3 / 4 + 2;
+        const int duration = you.skill(SK_INVOCATIONS) * 3 / 4 + 2;
         mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, agent(), duration * 10));
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
         return (MON_AFFECTED);
     }
-
-    case BEAM_ENSLAVE_DEMON:
-        dprf("HD: %d; pow: %d", mon->hit_dice, ench_power);
-
-        if (mon->hit_dice * 11 / 2 >= random2(ench_power)
-            || mons_is_unique(mon->type))
-        {
-            return (MON_RESIST);
-        }
-
-        obvious_effect = true;
-        if (player_will_anger_monster(mon))
-        {
-            simple_monster_message(mon, " is repulsed!");
-            return (MON_OTHER);
-        }
-
-        simple_monster_message(mon, " is enslaved.");
-
-        // Wow, permanent enslaving! (sometimes)
-        if (one_chance_in(2 + mon->hit_dice / 4))
-            mon->attitude = ATT_FRIENDLY;
-        else
-            mon->add_ench(ENCH_CHARM);
-        behaviour_event(mon, ME_ALERT, MHITNOT);
-        mons_att_changed(mon);
-        return (MON_AFFECTED);
 
     case BEAM_PAIN:             // pain/agony
         if (simple_monster_message(mon, " convulses in agony!"))
@@ -4931,8 +4907,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return (MON_UNAFFECTED);
 
         monster orig_mon(*mon);
-        if (monster_polymorph(mon, (mon->holiness() == MH_DEMONIC ?
-                                        MONS_HELL_HOG : MONS_HOG)))
+        if (monster_polymorph(mon, mon->holiness() == MH_DEMONIC ?
+                      MONS_HELL_HOG : mon->holiness() == MH_HOLY ?
+                      MONS_HOLY_SWINE : MONS_HOG))
         {
             obvious_effect = true;
 
@@ -5500,10 +5477,6 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_PAIN)
         return (!mon->res_negative_energy());
 
-    // control demon
-    if (flavour == BEAM_ENSLAVE_DEMON)
-        return (mon->holiness() == MH_DEMONIC);
-
     // everything else is considered nasty by everyone
     return (true);
 }
@@ -5751,7 +5724,9 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_PAIN:                  return ("pain");
     case BEAM_DISPEL_UNDEAD:         return ("dispel undead");
     case BEAM_DISINTEGRATION:        return ("disintegration");
+#if TAG_MAJOR_VERSION == 32
     case BEAM_ENSLAVE_DEMON:         return ("enslave demon");
+#endif
     case BEAM_BLINK:                 return ("blink");
     case BEAM_BLINK_CLOSE:           return ("blink close");
     case BEAM_PETRIFY:               return ("petrify");

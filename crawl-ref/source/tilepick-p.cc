@@ -23,6 +23,9 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
+    if (you.melded[EQ_WEAPON])
+        return 0;
+
     if (item.base_type == OBJ_STAVES)
     {
         // Can't just use item.special here as STAFF_POWER abuses

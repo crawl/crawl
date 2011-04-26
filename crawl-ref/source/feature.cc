@@ -37,9 +37,9 @@ void apply_feature_overrides()
         feature_def                 &feat   = Features[fov.object];
 
         if (ofeat.symbol)
-            feat.symbol = ofeat.symbol;
+            feat.symbol = get_glyph_override(ofeat.symbol);
         if (ofeat.magic_symbol)
-            feat.magic_symbol = ofeat.magic_symbol;
+            feat.magic_symbol = get_glyph_override(ofeat.magic_symbol);
         if (ofeat.colour)
             feat.colour = ofeat.colour;
         if (ofeat.map_colour)
@@ -63,7 +63,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_ROCK_WALL:
-        case DNGN_SLIMY_WALL:
         case DNGN_PERMAROCK_WALL:
             f.dchar        = DCHAR_WALL;
             f.colour       = ETC_ROCK;
@@ -73,7 +72,14 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
 
         case DNGN_STONE_WALL:
             f.dchar        = DCHAR_WALL;
-            f.colour       = ETC_STONE;
+            f.colour       = LIGHTGRAY;
+            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            f.minimap      = MF_WALL;
+            break;
+
+        case DNGN_SLIMY_WALL:
+            f.dchar        = DCHAR_WALL;
+            f.colour       = LIGHTGREEN;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             f.minimap      = MF_WALL;
             break;
@@ -112,6 +118,12 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.dchar        = DCHAR_WALL;
             f.colour       = BLUE;
             f.minimap      = MF_WATER;
+            break;
+
+        case DNGN_LAVA_SEA:
+            f.dchar        = DCHAR_WAVY;
+            f.colour       = RED;
+            f.minimap      = MF_LAVA;
             break;
 
         case DNGN_OPEN_DOOR:

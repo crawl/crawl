@@ -1,6 +1,7 @@
-/*
- * Summary:   Monster attitude changing due to religion.
- */
+/**
+ * @file
+ * @brief Monster attitude changing due to religion.
+**/
 
 #include "AppHdr.h"
 
@@ -191,7 +192,7 @@ bool yred_slaves_abandon_you()
 
             // During penance, followers get a saving throw.
             if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
-                + random2(you.skills[SK_INVOCATIONS] - 6)
+                + random2(you.skill(SK_INVOCATIONS) - 6)
                 > random2(hd) + hd + random2(5))
             {
                 continue;
@@ -249,7 +250,7 @@ bool beogh_followers_abandon_you()
 
                 // During penance, followers get a saving throw.
                 if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
-                    + random2(you.skills[SK_INVOCATIONS] - 6)
+                    + random2(you.skill(SK_INVOCATIONS) - 6)
                     > random2(hd) + hd + random2(5))
                 {
                     continue;
@@ -324,7 +325,9 @@ void good_god_holy_attitude_change(monster* holy)
         _print_good_god_holy_being_speech(true, "reaction", holy,
                                           MSGCH_FRIEND_ENCHANT);
 
-        if (!one_chance_in(3))
+        if (!one_chance_in(3)
+            && holy->can_speak()
+            && holy->type != MONS_MENNAS) // Mennas is mute and only has visual speech
             _print_good_god_holy_being_speech(true, "speech", holy,
                                               MSGCH_TALK);
     }
@@ -354,7 +357,9 @@ void good_god_holy_fail_attitude_change(monster* holy)
         _print_good_god_holy_being_speech(false, "reaction", holy,
                                           MSGCH_FRIEND_ENCHANT);
 
-        if (!one_chance_in(3))
+        if (!one_chance_in(3)
+            && holy->can_speak()
+            && holy->type != MONS_MENNAS) // Mennas is mute and only has visual speech
             _print_good_god_holy_being_speech(false, "speech", holy,
                                               MSGCH_TALK);
     }

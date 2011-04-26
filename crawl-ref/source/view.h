@@ -1,8 +1,7 @@
-/*
- *  File:       view.h
- *  Summary:    Misc function used to render the dungeon.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc function used to render the dungeon.
+**/
 
 
 #ifndef VIEW_H
@@ -22,7 +21,6 @@ void find_features(const std::vector<coord_def>& features,
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
-                   bool circular = false,
                    coord_def origin = coord_def(-1, -1));
 void reautomap_level();
 void fully_map_level();
@@ -32,7 +30,7 @@ bool is_feature(wchar_t feature, const coord_def& where);
 void clear_feature_overrides();
 void add_feature_override(const std::string &text);
 
-std::string screenshot(bool fullscreen = false);
+std::string screenshot();
 
 bool view_update();
 void view_update_at(const coord_def &pos);

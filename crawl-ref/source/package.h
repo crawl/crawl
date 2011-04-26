@@ -3,7 +3,6 @@
 
 #define USE_ZLIB
 
-#include <stdint.h>
 #include <string>
 #include <map>
 #include <vector>

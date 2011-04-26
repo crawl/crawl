@@ -13,7 +13,7 @@ Arcane Marksmen carry some missiles as well as a book from which they will learn
 %%%%
 Artificer
 
-Artificers start with two magical devices and are competent at using such tools.
+Artificers start with a choice of magical devices and are competent at using such tools.
 %%%%
 Assassin
 
@@ -73,7 +73,7 @@ Ice Elementalists start with the book of Frost and the Freeze spell. The book's 
 %%%%
 Monk
 
-Monks are ready to take on everything in the dungeon wearing just a robe and using their body, optionally wielding a staff.
+Monks are ready to take on everything in the dungeon wearing just a robe and using their body.
 %%%%
 Necromancer
 

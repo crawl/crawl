@@ -1,8 +1,7 @@
-/*
- *  File:       player.cc
- *  Summary:    Player related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Player related functions.
+**/
 
 #include "AppHdr.h"
 
@@ -35,6 +34,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "godpassive.h"
+#include "godwrath.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "item_use.h"
@@ -264,6 +264,31 @@ static bool _check_moveto_dangerous(const coord_def& p,
 static bool _check_moveto_terrain(const coord_def& p,
                                   const std::string &move_verb)
 {
+    if (you.is_wall_clinging() && move_verb == "blink")
+        return (_check_moveto_dangerous(p, move_verb));
+
+    if (!need_expiration_warning() && need_expiration_warning(p))
+    {
+        std::string prompt = "Are you sure you want to " + move_verb;
+
+        if (you.ground_level())
+            prompt += " into ";
+        else
+            prompt += " over ";
+
+        prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
+
+        prompt += need_expiration_warning(DUR_LEVITATION, p)
+                      ? " while you are losing your buoyancy?"
+                      : " while your transformation is expiring?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Only consider terrain if player is not levitating.
     if (you.airborne() || you.can_cling_to(p))
         return (true);
@@ -354,16 +379,12 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
         }
     }
-    else if (feat_is_water(new_grid) && you.is_wall_clinging()
-             && !cell_is_clingable(you.pos()))
-    {
+
+    const bool was_clinging = you.is_wall_clinging();
+    const bool is_clinging = stepped && you.check_clinging(stepped);
+
+    if (feat_is_water(new_grid) && was_clinging && !is_clinging)
         _splash();
-    }
-
-
-    // Icy shield goes down over lava.
-    if (new_grid == DNGN_LAVA)
-        expose_player_to_element(BEAM_LAVA);
 
     // Traps go off.
     if (trap_def* ptrap = find_trap(you.pos()))
@@ -686,9 +707,7 @@ bool you_can_wear(int eq, bool special_armour)
 bool player_has_feet()
 {
     if (you.species == SP_NAGA || you.species == SP_CAT || you.fishtail)
-    {
         return (false);
-    }
 
     if (player_mutation_level(MUT_HOOVES) >= 3
         || player_mutation_level(MUT_TALONS) >= 3)
@@ -806,7 +825,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (you.form == TRAN_STATUE)
     {
-        if (eq == EQ_WEAPON || eq == EQ_CLOAK || eq == EQ_HELMET)
+        if (eq == EQ_WEAPON || eq == EQ_SHIELD
+            || eq == EQ_CLOAK || eq == EQ_HELMET)
             return (true);
         return (false);
     }
@@ -816,6 +836,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
 bool player_weapon_wielded()
 {
+    if (you.melded[EQ_WEAPON])
+        return (false);
+
     const int wpn = you.equip[EQ_WEAPON];
 
     if (wpn == -1)
@@ -2591,7 +2614,7 @@ void forget_map(int chance_forgotten, bool force)
 }
 
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
-               unsigned int* actual_avail_gain)
+              unsigned int* actual_avail_gain)
 {
     if (crawl_state.game_is_arena())
         return;
@@ -2600,6 +2623,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
         exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
+    exp_gained -= ash_reduce_xp(exp_gained);
 
     const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
@@ -2608,14 +2632,24 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     if (you.transfer_skill_points > 0)
     {
-        int amount = exp_gained * 10
+        // Can happen if the game got interrupted during target skill choice.
+        if (is_invalid_skill(you.transfer_to_skill))
+        {
+            you.transfer_from_skill = SK_NONE;
+            you.transfer_skill_points = 0;
+            you.transfer_total_skill_points = 0;
+        }
+        else
+        {
+            int amount = exp_gained * 10
                                 / calc_skill_cost(you.skill_cost_level,
                                             you.skills[you.transfer_to_skill]);
-        if (amount >= 20 || one_chance_in(20 - amount))
-        {
-            amount = std::max(20, amount);
-            transfer_skill_points(you.transfer_from_skill,
-                                  you.transfer_to_skill, amount, false);
+            if (amount >= 20 || one_chance_in(20 - amount))
+            {
+                amount = std::max(20, amount);
+                transfer_skill_points(you.transfer_from_skill,
+                                      you.transfer_to_skill, amount, false);
+            }
         }
     }
 
@@ -2639,10 +2673,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
         exp_gained = sprint_modify_exp(exp_gained);
     }
 
-    if (you.exp_available + exp_gained > (unsigned int)MAX_EXP_POOL)
-        you.exp_available = MAX_EXP_POOL;
-    else
-        you.exp_available += exp_gained;
+    you.exp_available += exp_gained;
 
     level_change();
 
@@ -2990,7 +3021,7 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_OGRE:
-                hp_adjust++;
+                hp_adjust += 2;
 
                 if (!(you.experience_level % 3))
                     modify_stat(STAT_STR, 1, false, "level gain");
@@ -3736,10 +3767,13 @@ static void _display_movement_speed()
 
 static void _display_tohit()
 {
+#ifdef DEBUG_DIAGNOSTICS
     melee_attack attk(&you, NULL);
 
     const int to_hit = attk.calc_to_hit(false) * 2;
+
     dprf("To-hit: %d", to_hit);
+#endif
 /*
     // Messages based largely on percentage chance of missing the
     // average EV 10 humanoid, and very agile EV 30 (pretty much
@@ -3784,7 +3818,12 @@ static void _display_attack_delay()
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     // We could also compute the variance if desired.
-    int avg = static_cast<int>(round(10 * delay));
+    int avg;
+    const item_def* weapon = you.weapon();
+    if (weapon && is_range_weapon(*weapon))
+        avg = launcher_final_speed(*weapon, you.shield());
+    else
+        avg = static_cast<int>(round(10 * delay));
 
     // Haste wasn't counted here, but let's show finesse.
     // Can't be done in the above function because of interactions with
@@ -3829,19 +3868,56 @@ void display_char_status()
 
     static int statuses[] = {
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
-        DUR_TRANSFORMATION, STATUS_BURDEN, DUR_SAGE, DUR_BARGAIN,
-        DUR_BREATH_WEAPON, DUR_LIQUID_FLAMES, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
-        DUR_REPEL_MISSILES, DUR_DEFLECT_MISSILES, DUR_JELLY_PRAYER,
-        STATUS_REGENERATION, DUR_SWIFTNESS, DUR_RESIST_POISON,
-        DUR_RESIST_COLD, DUR_RESIST_FIRE, DUR_INSULATION, DUR_TELEPORT,
-        DUR_CONTROL_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
-        DUR_STONESKIN, DUR_SEE_INVISIBLE, DUR_INVIS, DUR_CONF, STATUS_BEHELD,
-        DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP, DUR_EXHAUSTED,
-        STATUS_SPEED, DUR_MIGHT, DUR_BRILLIANCE, DUR_AGILITY,
-        DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
-        STATUS_AIRBORNE, STATUS_NET, DUR_POISONING, STATUS_SICK,
-        STATUS_ROT, STATUS_GLOW, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE,
-        DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING, STATUS_CLINGING,
+        DUR_TRANSFORMATION,
+        STATUS_BURDEN,
+        DUR_SAGE,
+        DUR_BARGAIN,
+        DUR_BREATH_WEAPON,
+        DUR_LIQUID_FLAMES,
+        DUR_FIRE_SHIELD,
+        DUR_ICY_ARMOUR,
+        DUR_REPEL_MISSILES,
+        DUR_DEFLECT_MISSILES,
+        DUR_JELLY_PRAYER,
+        STATUS_REGENERATION,
+        DUR_SWIFTNESS,
+        DUR_RESIST_POISON,
+        DUR_RESIST_COLD,
+        DUR_RESIST_FIRE,
+        DUR_INSULATION,
+        DUR_TELEPORT,
+        DUR_CONTROL_TELEPORT,
+        DUR_DEATH_CHANNEL,
+        DUR_PHASE_SHIFT,
+        DUR_SILENCE,
+        DUR_STONESKIN,
+        DUR_SEE_INVISIBLE,
+        DUR_INVIS,
+        DUR_CONF,
+        STATUS_BEHELD,
+        DUR_PARALYSIS,
+        DUR_PETRIFIED,
+        DUR_SLEEP,
+        DUR_EXHAUSTED,
+        STATUS_SPEED,
+        DUR_MIGHT,
+        DUR_BRILLIANCE,
+        DUR_AGILITY,
+        DUR_DIVINE_VIGOUR,
+        DUR_DIVINE_STAMINA,
+        DUR_BERSERK,
+        STATUS_AIRBORNE,
+        STATUS_NET,
+        DUR_POISONING,
+        STATUS_SICK,
+        STATUS_ROT,
+        STATUS_GLOW,
+        DUR_CONFUSING_TOUCH,
+        DUR_SURE_BLADE,
+        DUR_AFRAID,
+        DUR_MIRROR_DAMAGE,
+        DUR_SCRYING,
+        STATUS_CLINGING,
     };
 
     status_info inf;
@@ -3961,10 +4037,10 @@ static int _species_exp_mod(species_type species)
         case SP_HIGH_ELF:
         case SP_VAMPIRE:
         case SP_TROLL:
-        case SP_CAT:
         case SP_DEMONSPAWN:
             return 15;
         case SP_DEMIGOD:
+        case SP_CAT:
             return 16;
         default:
             return 0;
@@ -4465,7 +4541,7 @@ int get_real_hp(bool trans, bool rotted)
     hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
     // Important: we shouldn't add Heroism boosts here.
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) /
-            (you.species == SP_CAT ? 7 : 5);
+            (you.species == SP_CAT ? 8 : 5);
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
@@ -4815,7 +4891,7 @@ bool miasma_player(std::string source, std::string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.res_rotting())
+    if (you.res_rotting() || you.duration[DUR_DEATHS_DOOR])
         return (false);
 
     // Zin's protection.
@@ -5078,7 +5154,7 @@ void float_player(bool fly)
         mpr("You fly up into the air.");
     else
     {
-        mprf("You gently float upwards from the %s.",
+        mprf("You gently float away from the %s.",
              you.is_wall_clinging() ? "wall" : "floor");
     }
 
@@ -5263,7 +5339,6 @@ void player::init()
     duration.init(0);
     rotting         = 0;
     berserk_penalty = 0;
-
     attribute.init(0);
     quiver.init(ENDOFPACK);
     sacrifice_value.init(0);
@@ -5326,6 +5401,8 @@ void player::init()
     worshipped.init(0);
     num_current_gifts.init(0);
     num_total_gifts.init(0);
+    exp_docked       = 0;
+    exp_docked_total = 0;
 
     mutation.init(0);
     innate_mutations.init(0);
@@ -5433,6 +5510,7 @@ void player::init()
     frame_no            = 0;
 
     save                = 0;
+    prev_save_version.clear();
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
@@ -5752,6 +5830,8 @@ int player::skill(skill_type sk) const
 {
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         return std::min(skills[sk] + 5, 27);
+//    else if (you.religion == GOD_ASHENZARI)
+//        return ash_skill_boost(sk);
 
     return skills[sk];
 }
@@ -5816,10 +5896,10 @@ int player::armour_class() const
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
-        AC += 400 + 100 * skills[SK_ICE_MAGIC] / 3;         // max 13
+        AC += 400 + 100 * skill(SK_ICE_MAGIC) / 3;         // max 13
 
     if (duration[DUR_STONESKIN])
-        AC += 200 + 100 * skills[SK_EARTH_MAGIC] / 5;       // max 7
+        AC += 200 + 100 * skill(SK_EARTH_MAGIC) / 5;       // max 7
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
@@ -5835,7 +5915,7 @@ int player::armour_class() const
         // Note: Even though necromutation is a high level spell, it does
         // allow the character full armour (so the bonus is low). -- bwr
         if (form == TRAN_LICH)
-            AC += (300 + 100 * skills[SK_NECROMANCY] / 6);   // max 7
+            AC += (300 + 100 * skill(SK_NECROMANCY) / 6);   // max 7
 
         //jmf: only give:
         if (player_genus(GENPC_DRACONIAN))
@@ -5869,25 +5949,25 @@ int player::armour_class() const
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
-            AC += (200 + 100 * skills[SK_POISON_MAGIC] / 6); // max 6
+            AC += (200 + 100 * skill(SK_POISON_MAGIC) / 6); // max 6
             break;
 
         case TRAN_ICE_BEAST:
-            AC += (500 + 100 * (skills[SK_ICE_MAGIC] + 1) / 4); // max 12
+            AC += (500 + 100 * (skill(SK_ICE_MAGIC) + 1) / 4); // max 12
 
             if (duration[DUR_ICY_ARMOUR])
-                AC += (100 + 100 * skills[SK_ICE_MAGIC] / 4);   // max +7
+                AC += (100 + 100 * skill(SK_ICE_MAGIC) / 4);   // max +7
             break;
 
         case TRAN_DRAGON: // Draconians handled above
-            AC += (700 + 100 * skills[SK_FIRE_MAGIC] / 3); // max 16
+            AC += (700 + 100 * skill(SK_FIRE_MAGIC) / 3); // max 16
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += (1700 + 100 * skills[SK_EARTH_MAGIC] / 2);    // max 30
+            AC += (1700 + 100 * skill(SK_EARTH_MAGIC) / 2);    // max 30
 
             if (duration[DUR_STONESKIN])
-                AC += (100 + 100 * skills[SK_EARTH_MAGIC] / 4); // max +7
+                AC += (100 + 100 * skill(SK_EARTH_MAGIC) / 4); // max +7
             break;
 
         default:
@@ -5967,25 +6047,25 @@ bool player::undead_or_demonic() const
     return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
-bool player::is_holy() const
+bool player::is_holy(bool check_spells) const
 {
-    if (is_good_god(religion))
+    if (is_good_god(religion) && check_spells)
         return (true);
 
     return (false);
 }
 
-bool player::is_unholy() const
+bool player::is_unholy(bool check_spells) const
 {
     return (holiness() == MH_DEMONIC);
 }
 
-bool player::is_evil() const
+bool player::is_evil(bool check_spells) const
 {
     if (holiness() == MH_UNDEAD)
         return (true);
 
-    if (is_evil_god(religion))
+    if (is_evil_god(religion) && check_spells)
         return (true);
 
     return (false);
@@ -6355,7 +6435,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     if (amount <= 0 && immediate <= 0)
         return (false);
 
-    if (res_rotting())
+    if (res_rotting() || you.duration[DUR_DEATHS_DOOR])
     {
         mpr("You feel terrible.");
         return (false);
@@ -7070,4 +7150,37 @@ void player::goto_place(const level_id &lid)
         where_are_you = static_cast<branch_type>(lid.branch);
         absdepth0 = absdungeon_depth(lid.branch, lid.depth);
     }
+}
+
+/*
+ * Check if the player is about to die from levitation/form expiration.
+ *
+ * Check whether the player is on a cell which would be deadly if not for some
+ * temporary condition, and if such condition is expiring. In that case, we
+ * give a strong warning to the player. The actual message printing is done
+ * by the caller.
+ *
+ * @param dur the duration to check for dangerous expiration.
+ * @param p the coordinates of the cell to check. Defaults to player position.
+ * @return whether the player is in immediate danger.
+ */
+bool need_expiration_warning(duration_type dur, coord_def p)
+{
+    if (!is_feat_dangerous(env.grid(p), true) || !dur_expiring(dur))
+        return false;
+
+    if (dur == DUR_LEVITATION)
+        return true;
+    else if (dur == DUR_TRANSFORMATION
+             && (!you.airborne() || form_can_fly()))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool need_expiration_warning(coord_def p)
+{
+    return need_expiration_warning(DUR_LEVITATION, p)
+           || need_expiration_warning(DUR_TRANSFORMATION, p);
 }

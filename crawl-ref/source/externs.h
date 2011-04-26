@@ -1,8 +1,7 @@
-/*
- *  File:       externs.h
- *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Fixed size 2D vector class that asserts if you do something bad.
+**/
 
 #ifndef EXTERNS_H
 #define EXTERNS_H
@@ -73,11 +72,7 @@ protected:
 extern char info[INFO_SIZE];         // defined in main.cc {dlb}
 
 #define kNameLen        30
-#ifdef SHORT_FILE_NAMES
-    const int kFileNameLen = 6;
-#else
-    const int kFileNameLen = 250;
-#endif
+const int kFileNameLen = 250;
 
 // Used only to bound the init file name length
 const int kPathLen = 256;
@@ -796,7 +791,7 @@ struct mon_display
 struct final_effect
 {
     final_effect_flavour flavour;
-    short att, def;
+    mid_t att, def;
     coord_def pos;
     int x;
 };

@@ -1,8 +1,7 @@
-/*
- *  File:       mon-util.h
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 
 #ifndef MONUTIL_H
@@ -231,6 +230,7 @@ bool mons_is_statue(int mc, bool allow_disintegrate = false);
 bool mons_is_demon(int mc);
 bool mons_is_draconian(int mc);
 bool mons_is_conjured(int mc);
+int mons_demon_tier(int mc);
 
 bool mons_class_wields_two_weapons(int mc);
 bool mons_wields_two_weapons(const monster* m);

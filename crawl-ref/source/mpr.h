@@ -1,8 +1,7 @@
-/*
- *  File:       mpr.h
- *  Summary:    Functions used to print simple messages.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print simple messages.
+**/
 
 #ifndef MPR_H
 #define MPR_H
@@ -98,7 +97,7 @@ void mprf_nocap(const char *format, ...);
 #ifdef DEBUG_DIAGNOSTICS
 void dprf(const char *format, ...);
 #else
-static inline void dprf(const char *format, ...) {}
+# define dprf(...) ((void)0)
 #endif
 
 #endif

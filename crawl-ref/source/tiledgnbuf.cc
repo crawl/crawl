@@ -1,7 +1,3 @@
-/*
- *  File:       tiledgnbuf.cc
- */
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE
@@ -16,6 +12,7 @@
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
+#include "tiledef-main.h"
 #include "tiledef-player.h"
 #include "tiledoll.h"
 #include "tilemcache.h"
@@ -32,6 +29,7 @@ void packed_cell::clear()
     is_silenced      = false;
     is_haloed        = false;
     is_moldy         = false;
+    glowing_mold     = false;
     is_sanctuary     = false;
     is_liquefied     = false;
     swamp_tree_water = false;
@@ -516,7 +514,14 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
     }
     else if (cell.is_bloody)
     {
-        const tileidx_t basetile = (is_wall ? TILE_WALL_BLOOD : TILE_BLOOD);
+        tileidx_t basetile;
+        if (is_wall)
+        {
+            basetile = TILE_WALL_BLOOD_S + tile_dngn_count(TILE_WALL_BLOOD_S)
+                                           * cell.blood_rotation;
+        }
+        else
+            basetile = TILE_BLOOD;
         const int offset = cell.flv.special % tile_dngn_count(basetile);
         m_buf_feat.add(basetile + offset, x, y);
     }
@@ -524,6 +529,11 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
         m_buf_feat.add(TILE_MOLD + offset, x, y);
+    }
+    else if (cell.glowing_mold)
+    {
+        int offset = cell.flv.special % tile_dngn_count(TILE_GLOWING_MOLD);
+        m_buf_feat.add(TILE_GLOWING_MOLD + offset, x, y);
     }
 }
 

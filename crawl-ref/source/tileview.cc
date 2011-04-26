@@ -220,15 +220,18 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     }
 }
 
+void tile_clear_flavour(const coord_def &p)
+{
+    env.tile_flv(p).floor   = 0;
+    env.tile_flv(p).wall    = 0;
+    env.tile_flv(p).feat    = 0;
+    env.tile_flv(p).special = 0;
+}
+
 void tile_clear_flavour()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        env.tile_flv(*ri).floor   = 0;
-        env.tile_flv(*ri).wall    = 0;
-        env.tile_flv(*ri).feat    = 0;
-        env.tile_flv(*ri).special = 0;
-    }
+        tile_clear_flavour(*ri);
 }
 
 // For floors and walls that have not already been set to a particular tile,
@@ -798,8 +801,8 @@ void tile_draw_rays(bool reset_count)
 {
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
-        tileidx_t flag = tile_ray_vec[i].in_range > 0 ? TILE_FLAG_RAY
-                                                      : TILE_FLAG_RAY_OOR;
+        tileidx_t flag = tile_ray_vec[i].in_range > AFF_MAYBE ? TILE_FLAG_RAY
+                                                           : TILE_FLAG_RAY_OOR;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 
@@ -1046,11 +1049,16 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     // Mold has the same restrictions as blood but takes precedence.
     if (print_blood)
     {
-        if (is_moldy(gc))
+        if (glowing_mold(gc))
+            cell.glowing_mold = true;
+        else if (is_moldy(gc))
             cell.is_moldy = true;
         // Corpses have a blood puddle of their own.
         else if (is_bloodcovered(gc) && !_top_item_is_corpse(gc))
+        {
             cell.is_bloody = true;
+            cell.blood_rotation = blood_rotation(gc);
+        }
     }
 
     const dungeon_feature_type feat = grd(gc);

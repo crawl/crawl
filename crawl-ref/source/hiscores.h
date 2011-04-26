@@ -1,8 +1,7 @@
-/*
- *  File:       hiscores.h
- *  Summary:    Scorefile manipulation functions
- *  Written by: Gordon Lipford
- */
+/**
+ * @file
+ * @brief Scorefile manipulation functions
+**/
 
 
 #ifndef HISCORES_H
@@ -157,6 +156,8 @@ public:
     xlog_fields get_fields() const;
 
     void set_base_xlog_fields() const;
+    std::string short_kill_message() const;
+    std::string long_kill_message() const;
 
 private:
     std::string single_cdesc() const;
@@ -176,8 +177,6 @@ private:
     void set_score_fields() const;
     void fixup_char_name();
 
-    std::string short_kill_message() const;
-    std::string long_kill_message() const;
     std::string make_oneline(const std::string &s) const;
 
     void init_from(const scorefile_entry &other);

@@ -1,8 +1,7 @@
-/*
- *  File:       direct.cc
- *  Summary:    Functions used when picking squares.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when picking squares.
+**/
 
 #include "AppHdr.h"
 
@@ -442,7 +441,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
     const coord_def vp = grid2view(pos);
     cgotoxy(vp.x, vp.y, GOTO_DNGN);
     textcolor(real_colour(colour));
-    putch(glych);
+    putwch(glych);
 }
 #endif
 
@@ -679,7 +678,8 @@ void full_describe_view()
                      + stringize_glyph(g.ch)
                      + "</" + col_string + ">) ";
 #endif
-            std::string str = get_monster_equipment_desc(mi->mon(), true,
+
+            std::string str = get_monster_equipment_desc(mi->mon(), DESC_FULL,
                                                          DESC_A, true);
 
             if (mi->is(MB_MESMERIZING))
@@ -690,7 +690,7 @@ void full_describe_view()
 
 #ifndef USE_TILE
             // Wraparound if the description is longer than allowed.
-            linebreak_string2(str, get_number_of_cols() - 9);
+            linebreak_string(str, get_number_of_cols() - 9);
 #endif
             std::vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
@@ -808,7 +808,7 @@ void full_describe_view()
             else // ACT_EXECUTE, here used to display monster status.
             {
                 _describe_monster(mi);
-                wait_for_keypress();
+                getchm();
             }
         }
         else if (quant == 2)
@@ -1083,7 +1083,8 @@ coord_def direction_chooser::find_default_target() const
     }
     else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
              || mode == TARG_HOSTILE_SUBMERGED
-             || mode == TARG_EVOLVABLE_PLANTS)
+             || mode == TARG_EVOLVABLE_PLANTS
+             || mode == TARG_HOSTILE_UNDEAD)
     {
         // Try to find an enemy monster.
 
@@ -1094,7 +1095,9 @@ coord_def direction_chooser::find_default_target() const
                     && mons_attitude(mon_target) == ATT_HOSTILE
                 || mode == TARG_ENEMY && !mon_target->friendly()
                 || mode == TARG_EVOLVABLE_PLANTS
-                    && mons_is_evolvable(mon_target))
+                    && mons_is_evolvable(mon_target)
+                || mode == TARG_HOSTILE_UNDEAD && !mon_target->friendly()
+                   && mon_target->holiness() == MH_UNDEAD)
             && in_range(mon_target->pos()))
         {
             result = mon_target->pos();
@@ -1229,7 +1232,7 @@ void direction_chooser::draw_beam_if_needed()
 
         const bool inrange = in_range(p);
 #ifdef USE_TILE
-        tile_place_ray(p, inrange ? AFF_MAYBE : AFF_NO);
+        tile_place_ray(p, inrange ? AFF_YES : AFF_NO);
 #else
         const int bcol = inrange ? MAGENTA : DARKGREY;
         _draw_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE);
@@ -1237,7 +1240,7 @@ void direction_chooser::draw_beam_if_needed()
     }
     textcolor(LIGHTGREY);
 #ifdef USE_TILE
-    tile_place_ray(target(), in_range(ray.pos()) ? AFF_MAYBE : AFF_NO);
+    tile_place_ray(target(), in_range(ray.pos()) ? AFF_YES : AFF_NO);
 
     // In tiles, we need to refresh the window to get the beam drawn.
     viewwindow();
@@ -1930,10 +1933,21 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_MOUSE_MOVE: tiles_update_target(); break;
 #endif
 
+    case CMD_TARGET_CYCLE_BACK:
+        if (restricts != DIR_TARGET_OBJECT)
+        {
+            monster_cycle(-1);
+            break;
+        } // else fall-through
     case CMD_TARGET_OBJ_CYCLE_BACK:    object_cycle(-1);  break;
+
+    case CMD_TARGET_CYCLE_FORWARD:
+        if (restricts != DIR_TARGET_OBJECT)
+        {
+            monster_cycle(1);
+            break;
+        } // else fall-through
     case CMD_TARGET_OBJ_CYCLE_FORWARD: object_cycle(1);  break;
-    case CMD_TARGET_CYCLE_BACK:        monster_cycle(-1); break;
-    case CMD_TARGET_CYCLE_FORWARD:     monster_cycle(1); break;
 
     case CMD_TARGET_CANCEL:
         loop_done = true;
@@ -2397,6 +2411,9 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     if (mon == NULL || !cell_see_cell(you.pos(), where, LOS_DEFAULT))
         return (false);
 
+    if (mons_is_unknown_mimic(mon))
+        return (false);
+
     // Monster in LOS but only via glass walls, so no direct path.
     if (need_path && !you.see_cell_no_trans(where))
         return (false);
@@ -2419,6 +2436,9 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 
     if (mode == TARG_EVOLVABLE_PLANTS)
         return (mons_is_evolvable(mon));
+
+    if (mode == TARG_HOSTILE_UNDEAD)
+        return  !mon->friendly() && mon->holiness() == MH_UNDEAD;
 
     ASSERT(mode == TARG_ENEMY);
     if (mon->friendly())
@@ -2841,8 +2861,8 @@ std::string thing_do_grammar(description_level_type dtype,
         /* Since we're removing caps, this shouldn't be needed,
            but we'll keep it in case, for now.
         if (dtype == DESC_PLAIN
-            || dtype == DESC_NOCAP_THE
-            || dtype == DESC_NOCAP_A)
+            || dtype == DESC_THE
+            || dtype == DESC_A)
         {
             desc[0] = tolower(desc[0]);
         }*/
@@ -2931,6 +2951,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("unnaturally hard rock wall");
     case DNGN_OPEN_SEA:
         return ("open sea");
+    case DNGN_LAVA_SEA:
+        return ("Endless lava");
     case DNGN_CLOSED_DOOR:
         return ("closed door");
     case DNGN_DETECTED_SECRET_DOOR:
@@ -3348,19 +3370,19 @@ std::string feature_description(const coord_def& where, bool covering,
     }
 }
 
-static std::string _describe_monster_weapon(const monster_info& mi)
+static std::string _describe_monster_weapon(const monster_info& mi, bool ident)
 {
     std::string desc = "";
     std::string name1, name2;
     const item_def *weap = mi.inv[MSLOT_WEAPON].get();
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
 
-    if (weap)
+    if (weap && (!ident || item_type_known(*weap)))
     {
         name1 = weap->name(DESC_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && mi.two_weapons)
+    if (alt && (!ident || item_type_known(*alt)) && mi.two_weapons)
     {
         name2 = alt->name(DESC_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
@@ -3369,7 +3391,7 @@ static std::string _describe_monster_weapon(const monster_info& mi)
     if (name1.empty() && !name2.empty())
         name1.swap(name2);
 
-    if (name1 == name2 && weap)
+    if (name1 == name2 && weap && !name1.empty())
     {
         item_def dup = *weap;
         ++dup.quantity;
@@ -3461,6 +3483,9 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_SUMMONED))
         descs.push_back("summoned");
 
+    if (mi.is(MB_PERM_SUMMON))
+        descs.push_back("durably summoned");
+
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
 
@@ -3526,6 +3551,9 @@ static std::string _get_monster_desc(const monster_info& mi)
     if (mi.is(MB_SUMMONED))
         text += pronoun + " has been summoned.\n";
 
+    if (mi.is(MB_PERM_SUMMON))
+        text += pronoun + " has been summoned but will not time out.\n";
+
     if (mi.is(MB_HALOED))
         text += pronoun + " is illuminated by a divine halo.\n";
 
@@ -3580,7 +3608,8 @@ static void _describe_monster(const monster_info& mi)
 // This method is called in two cases:
 // a) Monsters coming into view: "An ogre comes into view. It is wielding ..."
 // b) Monster description via 'x': "An ogre, wielding a club, and wearing ..."
-std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
+std::string get_monster_equipment_desc(const monster_info& mi,
+                                       mons_equip_desc_level_type level,
                                        description_level_type mondtype,
                                        bool print_attitude)
 {
@@ -3609,6 +3638,13 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
                 if (!str.empty())
                     str += ", ";
                 str += "summoned";
+            }
+
+            if (mi.is(MB_PERM_SUMMON))
+            {
+                if (!str.empty())
+                    str += ", ";
+                str += "durably summoned";
             }
 
             if (mi.type == MONS_DANCING_WEAPON
@@ -3643,72 +3679,102 @@ std::string get_monster_equipment_desc(const monster_info& mi, bool full_desc,
 
     if (mi.type != MONS_DANCING_WEAPON)
     {
-        weap = _describe_monster_weapon(mi);
+        weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
     }
+    else if (level == DESC_IDENTIFIED)
+        return " " + mi.full_name(DESC_A);
 
     if (!weap.empty())
     {
-        if (full_desc)
+        if (level == DESC_FULL)
             desc += ",";
         desc += weap;
     }
 
     // Print the rest of the equipment only for full descriptions.
-    if (full_desc)
+    if (level != DESC_WEAPON)
     {
-        const item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
-        const item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
-        const item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
-        const item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
+        item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
+        item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
+        item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
+        item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
+        item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
+
+        if (level == DESC_IDENTIFIED)
+        {
+            if (mon_arm && !item_type_known(*mon_arm))
+                mon_arm = 0;
+            if (mon_shd && !item_type_known(*mon_shd))
+                mon_shd = 0;
+            if (mon_qvr && !item_type_known(*mon_qvr))
+                mon_qvr = 0;
+            if (mon_alt && !item_type_known(*mon_alt))
+                mon_alt = 0;
+        }
 
         // _describe_monster_weapon already took care of this
         if (mi.two_weapons)
             mon_alt = 0;
 
+        const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;
+        const bool mon_carry = mon_alt || mon_has_wand;
+
         bool found_sth    = !weap.empty();
 
         if (mon_arm)
         {
-            desc += ", ";
-            if (found_sth && !mon_shd && !mon_qvr && !mon_alt)
-            {
-                desc += "and ";
-            }
-            desc += "wearing ";
-            desc += mon_arm->name(DESC_A);
-            if (!found_sth)
+            if (found_sth)
+                desc += (!mon_shd && !mon_qvr && !mon_carry) ? " and" : ",";
+            else
                 found_sth = true;
+
+            desc += " wearing ";
+            desc += mon_arm->name(DESC_A);
         }
 
         if (mon_shd)
         {
-            desc += ", ";
-            if (found_sth && !mon_qvr && !mon_alt)
-                desc += "and ";
-            desc += "wearing ";
-            desc += mon_shd->name(DESC_A);
-            if (!found_sth)
+            if (found_sth)
+                desc += (!mon_qvr && !mon_carry) ? " and" : ",";
+            else
                 found_sth = true;
+
+            desc += " wearing ";
+            desc += mon_shd->name(DESC_A);
         }
 
         if (mon_qvr)
         {
-            desc += ", ";
-            if (found_sth && !mon_alt)
-                desc += "and ";
-            desc += "quivering ";
-            desc += mon_qvr->name(DESC_A);
-            if (!found_sth)
+            if (found_sth)
+                desc += !mon_carry ? " and" : ",";
+            else
                 found_sth = true;
+
+            desc += " quivering ";
+            desc += mon_qvr->name(DESC_A);
         }
 
-        if (mon_alt)
+        if (mon_carry)
         {
-            desc += ", ";
             if (found_sth)
-                desc += "and ";
-            desc += "carrying ";
-            desc += mon_alt->name(DESC_A);
+                desc += " and";
+
+            desc += " carrying ";
+
+            if (mon_alt)
+            {
+                desc += mon_alt->name(DESC_A);
+                if (mon_has_wand)
+                    desc += " and ";
+            }
+
+            if (mon_has_wand)
+            {
+                if (mi.props["wand_known"])
+                    desc += mon_wnd->name(DESC_A);
+                else
+                    desc += "a wand";
+            }
         }
     }
 

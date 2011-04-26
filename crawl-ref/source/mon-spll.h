@@ -1324,7 +1324,7 @@
       {
        SPELL_SUMMON_EYEBALLS,
        SPELL_SMITING,
-       SPELL_BLINK_RANGE,
+       SPELL_NO_SPELL,
        SPELL_SUMMON_HORRIBLE_THINGS,
        SPELL_SUMMON_HORRIBLE_THINGS,
        SPELL_TELEPORT_SELF
@@ -1411,6 +1411,17 @@
     {  MST_EXECUTIONER,
       {
        SPELL_NO_SPELL,
+       SPELL_PAIN,
+       SPELL_HASTE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_HASTE
+      }
+    },
+
+    {  MST_IGNACIO,
+      {
+       SPELL_AGONY,
        SPELL_PAIN,
        SPELL_HASTE,
        SPELL_NO_SPELL,

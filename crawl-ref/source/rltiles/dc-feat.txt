@@ -121,20 +121,21 @@ dc-misc/error PLACEHOLDER6
 dc-misc/error PLACEHOLDER7
 dc-misc/error PLACEHOLDER8
 
-%sdir dc-dngn
+%sdir dc-dngn/traps
 ## traps
-dngn_trap_dart DNGN_TRAP_DART
-dngn_trap_arrow DNGN_TRAP_ARROW
-dngn_trap_needle DNGN_TRAP_NEEDLE
-dngn_trap_bolt DNGN_TRAP_BOLT
-dngn_trap_spear DNGN_TRAP_SPEAR
-dngn_trap_axe DNGN_TRAP_AXE
-dngn_trap_blade DNGN_TRAP_BLADE
-dngn_trap_net DNGN_TRAP_NET
-dngn_trap_alarm DNGN_TRAP_ALARM
-dngn_trap_shaft DNGN_TRAP_SHAFT
-dngn_trap_teleport DNGN_TRAP_TELEPORT
-dngn_trap_zot DNGN_TRAP_ZOT
+dart DNGN_TRAP_DART
+arrow DNGN_TRAP_ARROW
+needle DNGN_TRAP_NEEDLE
+bolt DNGN_TRAP_BOLT
+spear DNGN_TRAP_SPEAR
+axe DNGN_TRAP_AXE
+blade DNGN_TRAP_BLADE
+net DNGN_TRAP_NET
+alarm DNGN_TRAP_ALARM
+shaft DNGN_TRAP_SHAFT
+teleport DNGN_TRAP_TELEPORT
+zot DNGN_TRAP_ZOT
+pressure_plate DNGN_TRAP_PLATE
 
 ## stairs
 %sdir dc-dngn/gateways
@@ -423,14 +424,38 @@ blood_red1
 blood_red2
 blood_red3
 blood_red4
-wall_blood1 WALL_BLOOD
-wall_blood2
-wall_blood3
-wall_blood4
-wall_blood5
-wall_blood6
-wall_blood7
-wall_blood8
+wall_blood1_s WALL_BLOOD_S
+wall_blood2_s
+wall_blood3_s
+wall_blood4_s
+wall_blood5_s
+wall_blood6_s
+wall_blood7_s
+wall_blood8_s
+wall_blood1_w WALL_BLOOD_W
+wall_blood2_w
+wall_blood3_w
+wall_blood4_w
+wall_blood5_w
+wall_blood6_w
+wall_blood7_w
+wall_blood8_w
+wall_blood1_n WALL_BLOOD_N
+wall_blood2_n
+wall_blood3_n
+wall_blood4_n
+wall_blood5_n
+wall_blood6_n
+wall_blood7_n
+wall_blood8_n
+wall_blood1_e WALL_BLOOD_E
+wall_blood2_e
+wall_blood3_e
+wall_blood4_e
+wall_blood5_e
+wall_blood6_e
+wall_blood7_e
+wall_blood8_e
 %sdir dc-misc
 halo HALO
 ray RAY
@@ -443,6 +468,10 @@ mold_small1 MOLD
 mold_small2
 mold_small3
 mold_small4
+mold_glowing1 GLOWING_MOLD
+mold_glowing2
+mold_glowing3
+mold_glowing4
 effect/silenced SILENCED
 %shrink 0
 %sdir dc-mon/tentacles/kraken_corners

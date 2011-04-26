@@ -2,7 +2,7 @@
 local niters = 150
 local output_file = "monster-report.out"
 
-local excluded_things = util.set({}) -- "plant", "fungus", "bush" })
+local excluded_things = util.set({ "plant", "fungus", "bush" })
 local use_random_maps = true
 local multiple_levels = false
 local start_level = nil
@@ -254,7 +254,9 @@ local function count_monsters_from(start_place, end_place)
 
     local iter_mpops = { }
     for i = 1, niters do
-      crawl.message("Counting monsters at " .. place .. " (" ..
+      crawl.message("Counting monsters at " .. place .. ", depth: " ..
+                    you.absdepth() ..
+                    " (" ..
                     i .. "/" .. niters .. ")")
       local res = count_monsters_at(place)
       table.insert(iter_mpops, res)

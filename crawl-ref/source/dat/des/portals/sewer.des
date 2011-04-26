@@ -30,7 +30,7 @@ function sewer_portal(e)
       visible = true,
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns,
+      messages = time_messages(timeout_turns/10,
                                "$F{The} is slowly rusting away.",
                                "$F{The} is rusting away.",
                                "$F{The} is quickly rusting away.",
@@ -68,7 +68,8 @@ function sewer_setup(e)
   e.lfloortile("floor_slime")
 -- Random monster list and milestone.
   e.set_random_mon_list("megabat w:20 / giant newt w:20 / small snake / \
-                         ooze / worm / snake")
+                         ooze / worm / snake / giant cockroach / giant mite / \
+                         giant gecko")
 end
 
 function sewer_milestone(e)
@@ -180,6 +181,22 @@ xWWWWWw..
 xwwwww...
 xwww.....
 x........
+ENDMAP
+
+NAME:   portal_sewer_entry_f
+TAGS:   uniq_sewer no_monster_gen chance_sewer
+CHANCE: 8%
+: sewer_portal(_G)
+NSUBST: W = 6:1 / *:W
+KMONS:  1 = nothing w:5 / giant gecko / giant mite / giant cockroach
+KFEAT:  1 = W
+COLOUR: W = green / cyan w:5
+MAP
+xxxxxxxxxxx
+.WWWWWWWWW.
+@WWWWOWWWW@
+.WWWWWWWWW.
+xxxxxxxxxxx
 ENDMAP
 
 # The actual portal vaults #####################################
@@ -344,9 +361,10 @@ SUBST:    - = WWW.
 SHUFFLE:  |d
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
-MONS:     giant newt / small snake w:5 / \
+MONS:     giant newt / small snake w:5 / giant cockroach / giant mite w:5 / \
           generate_awake giant newt / generate_awake small snake w:5 / \
-          snake w:4 / nothing w:4
+          generate_awake giant cockroach / generate_awake giant mite w:5 / \
+          giant gecko / snake w:8 / nothing w:8
 NSUBST:   ! = 2:! / *:w
 KFEAT:    ! = w
 COLOUR:   ! = green
@@ -395,8 +413,9 @@ ORIENT:   encompass
 WEIGHT:   10
 NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
-KMONS:    W = giant newt / small snake / snake w:2 / jelly w:1 / \
-              nothing w:250
+KMONS:    W = giant newt / small snake / giant cockroach / giant mite / \
+              giant gecko / snake w:4 / jelly w:2 / \
+              nothing w:270
 KFEAT:    W = W
 KFEAT:    ! = w
 COLOUR:   ! = green
@@ -615,9 +634,11 @@ ENDMAP
 NAME:    sewer_co_purgy_island
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-#      Placing Purgy, he appear in one of three places.
+WEIGHT:  10
+#      Placing Purgy, he appears in one of three places. The crocodile serves
+#      as the back-up, in case Purgy was already placed in the Dungeon.
 SHUFFLE: PQR
-KMONS:   P = Purgy
+KMONS:   P = Purgy, crocodile
 SUBST:   Q = .
 SUBST:   R = .
 #      lesser monsters.
@@ -711,14 +732,14 @@ COLOUR:   " = green
 #       some random monsters II: standard Sewers set
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
-KMONS:    ? = megabat / giant newt / small snake / ooze w:2 / worm w:2 / \
-          snake w:1
+KMONS:    ? = megabat / giant newt / small snake / giant cockroach / \
+              giant mite / giant gecko / ooze w:4 / worm w:4 / snake w:2
 COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
-MONS:     megabat / giant newt / small snake / ooze w:2 / worm w:2 / \
-          snake w:1
+MONS:     megabat / giant newt / small snake / giant cockroach / \
+          giant mite / giant gecko / ooze w:4 / worm w:4 / snake w:2
 SHUFFLE:  23
 MONS:     megabat / nothing w:2
 MONS:     patrolling jackal
@@ -784,7 +805,8 @@ MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
 KMONS:  G = mermaid hd:3 name:malarious name_adjective
 KMONS:  H = siren hd:3 name:sickly name_adjective
 KMONS:  hJ = giant newt / small snake / snake / nothing w:2
-KMONS:  g = giant newt / small snake / nothing w:3
+KMONS:  g = giant newt / small snake / giant mite / giant cockroach / \
+            giant gecko / nothing w:7
 KFEAT:  gsh = W
 KFEAT:  O = open_sea
 COLOUR: gh = lightgreen
@@ -839,7 +861,7 @@ ENDMAP
 
 ############################################################################
 # 15 rooms, by co
-# All rooms will always be accessable, except the room in the center, which
+# All rooms will always be accessible, except the room in the center, which
 # is surrounded by deep water.
 #
 NAME:    sewer_co_15_rooms

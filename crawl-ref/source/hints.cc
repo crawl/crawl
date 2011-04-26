@@ -1,10 +1,7 @@
-/*
- *  File:       hints.cc
- *  Summary:    A hints mode as an introduction on how to play Dungeon Crawl.
- *  Written by: j-p-e-g
- *
- *  Created on 2007-01-11.
- */
+/**
+ * @file
+ * @brief A hints mode as an introduction on how to play Dungeon Crawl.
+**/
 
 #include "AppHdr.h"
 
@@ -172,7 +169,7 @@ void pick_hints(newgame_def* choice)
 
     while (true)
     {
-        char keyn = getch_ck();
+        int keyn = getch_ck();
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
@@ -335,7 +332,7 @@ void hints_starting_screen()
         "Happy Crawling!";
 
     insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_SAVE_GAME, CMD_LOOK_AROUND, 0);
-    linebreak_string2(text, width);
+    linebreak_string(text, width);
     display_tagged_block(text);
 
 #ifndef USE_TILE
@@ -426,13 +423,13 @@ void hints_death_screen()
              && !you.berserk() && !you.duration[DUR_EXHAUSTED])
     {
         text = "Don't forget to go berserk when fighting particularly "
-               "difficult foes. It is risky, but makes you faster and beefier.";
+               "difficult foes. It's risky, but makes you faster and beefier.";
 
-        if (you.hunger_state <= HS_HUNGRY)
+        if (you.hunger_state < HS_HUNGRY)
         {
-            text += " Berserking is impossible while hungry or worse, so make "
-                    "sure to keep some food with you that you can eat when you "
-                    "need to go berserk.";
+            text += " Berserking is impossible while very hungry or worse, "
+                    "so make sure to stay fed at all times, just in case "
+                    "you need to berserk.";
         }
     }
     else if (Hints.hints_type == HINT_RANGER_CHAR
@@ -765,8 +762,7 @@ void hints_healing_reminder()
                     ".";
 
             if (you.hp < you.hp_max && you.religion == GOD_TROG
-                && !you.berserk() && !you.duration[DUR_EXHAUSTED]
-                && you.hunger_state >= HS_SATIATED)
+                && you.can_go_berserk())
             {
               text += "\nAlso, berserking might help you not to lose so many "
                       "hitpoints in the first place. To use your abilities type "
@@ -900,8 +896,7 @@ void hints_gained_new_skill(skill_type skill)
 
 #ifndef USE_TILE
 // As safely as possible, colourize the passed glyph.
-// Handles quoting "<", MBCS-ing unicode, and
-// making DEC characters safe if not properly printable.
+// Stringizes it and handles quoting "<".
 static std::string _colourize_glyph(int col, unsigned ch)
 {
     glyph g;
@@ -1000,8 +995,7 @@ void hints_monster_seen(const monster& mon)
         if (mon.friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, mon.pos());
 
-        if (you.religion == GOD_TROG && !you.berserk()
-            && !you.duration[DUR_EXHAUSTED] && you.hunger_state >= HS_SATIATED
+        if (you.religion == GOD_TROG && you.can_go_berserk()
             && one_chance_in(4))
         {
             learned_something_new(HINT_CAN_BERSERK);
@@ -1636,14 +1630,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
              << "</w>')"
 #endif
-                ". You can eat it by typing <w>%</w>"
+                ". You can eat it by typing <w>e</w>"
 #ifdef USE_TILE
                 " or by clicking on it with your <w>left mouse button</w>"
 #endif
                 ". However, it is usually best to conserve rations and fruit "
                 "until you are hungry or even starving.";
-
-        cmd.push_back(CMD_EAT);
         break;
 
     case HINT_SEEN_CARRION:
@@ -2001,6 +1993,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_ALTAR:
         text << "That ";
 #ifndef USE_TILE
+        // Is a monster blocking the view?
+        if (monster_at(gc))
+            DELAY_EVENT;
+
         text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
 #else
         {
@@ -2036,6 +2032,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, shop_name(gc), gc);
+#else
+        // Is a monster blocking the view?
+        if (monster_at(gc))
+            DELAY_EVENT;
 #endif
         text << "That "
 #ifndef USE_TILE
@@ -2358,7 +2358,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Try to dine on chunks in order to save permanent food.";
 
         if (Hints.hints_type == HINT_BERSERK_CHAR)
-            text << "\nNote that you cannot Berserk while hungry or worse.";
+            text << "\nNote that you cannot Berserk while very hungry or worse.";
         break;
 
     case HINT_YOU_STARVING:
@@ -2685,9 +2685,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "you come back, so you might want to use a different set of "
                 "stairs when you return.";
 
-        if (you.religion == GOD_TROG && !you.berserk()
-            && !you.duration[DUR_EXHAUSTED]
-            && you.hunger_state >= HS_SATIATED)
+        if (you.religion == GOD_TROG && you.can_go_berserk())
         {
             text << "\nAlso, with "
                  << apostrophise(god_name(you.religion))
@@ -3407,7 +3405,7 @@ formatted_string hints_abilities_info()
         "way of mutations. Activation of an ability usually comes at a cost, "
         "e.g. nutrition or Magic power. Press '<w>!</w>' or '<w>?</w>' to "
         "toggle between ability selection and description.";
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     text << broken;
 
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
@@ -3429,7 +3427,7 @@ std::string hints_skills_info()
         "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
         "will increase at a decidedly slower rate and ease training of others. "
         "Press <w>?</w> to read your skills' descriptions.";
-    linebreak_string2(broken, std::min(80, _get_hints_cols()));
+    linebreak_string(broken, std::min(80, _get_hints_cols()));
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -3446,7 +3444,7 @@ std::string hints_skills_description_info()
                          "or press <w>?</w> again to return to the skill "
                          "selection.";
 
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -4269,7 +4267,7 @@ void hints_describe_item(const item_def &item)
     std::string broken = ostr.str();
     if (!cmd.empty())
         insert_commands(broken, cmd);
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     cgotoxy(1, wherey() + 2);
     display_tagged_block(broken);
 }
@@ -4607,7 +4605,7 @@ static void _hints_describe_feature(int x, int y)
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
 
@@ -4669,7 +4667,7 @@ static void _hints_describe_cloud(int x, int y)
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
 
@@ -4691,7 +4689,7 @@ static void _hints_describe_disturbance(int x, int y)
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
 
@@ -4817,12 +4815,8 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
         {
             ostr << "This might be a good time to run away";
 
-            if (you.religion == GOD_TROG && !you.berserk()
-                && !you.duration[DUR_EXHAUSTED]
-                && you.hunger_state >= HS_SATIATED)
-            {
+            if (you.religion == GOD_TROG && you.can_go_berserk())
                 ostr << " or apply your Berserk <w>a</w>bility";
-            }
             ostr << ".";
         }
     }
@@ -4855,7 +4849,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
-    linebreak_string2(broken, _get_hints_cols());
+    linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
 

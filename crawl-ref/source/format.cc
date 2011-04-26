@@ -1,8 +1,3 @@
-/*
- *  File:       format.cc
- *  Created by: haranp on Sat Feb 17 13:35:54 2007 UTC
- */
-
 #include <limits.h>
 
 #include "AppHdr.h"
@@ -11,6 +6,7 @@
 #include "format.h"
 #include "libutil.h"
 #include "showsymb.h"
+#include "unicode.h"
 #include "viewchar.h"
 
 formatted_string::formatted_string(int init_colour)
@@ -51,7 +47,9 @@ void display_tagged_block(const std::string &s)
 
     int x = wherex();
     int y = wherey();
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    const unsigned int max_y = cgetsize(GOTO_CRT).y;
+    const int size = std::min<unsigned int>(lines.size(), max_y - y + 1);
+    for (int i = 0; i < size; ++i)
     {
         cgotoxy(x, y);
         lines[i].display();
@@ -281,13 +279,13 @@ formatted_string::operator += (const formatted_string &other)
     return (*this);
 }
 
-std::string::size_type formatted_string::length() const
+int formatted_string::width() const
 {
     // Just add up the individual string lengths.
-    std::string::size_type len = 0;
+    int len = 0;
     for (unsigned i = 0, size = ops.size(); i < size; ++i)
         if (ops[i] == FSOP_TEXT)
-            len += ops[i].text.length();
+            len += strwidth(ops[i].text);
     return (len);
 }
 
@@ -393,57 +391,47 @@ int formatted_string::find_last_colour() const
     return (LIGHTGREY);
 }
 
-formatted_string formatted_string::substr(size_t start, size_t substr_length) const
+formatted_string formatted_string::chop(int length) const
 {
-    const unsigned int NONE = UINT_MAX; // from limits.h
-    unsigned int last_FSOP_COLOUR = NONE;
-
-    // Find the first string to copy
-    unsigned int i;
-    for (i = 0; i < ops.size(); ++i)
-    {
-        const fs_op& op = ops[i];
-        if (op.type == FSOP_COLOUR)
-            last_FSOP_COLOUR = i;
-        else if (op.type == FSOP_TEXT)
-        {
-            if (op.text.length() > start)
-                break;
-            else
-                start -= op.text.length();
-        }
-    }
-
-    if (i == ops.size())
-        return formatted_string();
-
     formatted_string result;
-    // set up the state
-    if (last_FSOP_COLOUR != NONE)
-        result.ops.push_back(ops[last_FSOP_COLOUR]);
-
-    // Copy the text
-    for (; i<ops.size(); i++)
+    for (unsigned int i = 0; i<ops.size(); i++)
     {
         const fs_op& op = ops[i];
         if (op.type == FSOP_TEXT)
         {
             result.ops.push_back(op);
             std::string& new_string = result.ops[result.ops.size()-1].text;
-            if (start > 0 || op.text.length() > substr_length)
-                new_string = new_string.substr(start, substr_length);
-
-            substr_length -= new_string.length();
-            if (substr_length == 0)
+            int w = strwidth(new_string);
+            if (w > length)
+                new_string = chop_string(new_string, length, false);
+            length -= w;
+            if (length <= 0)
                 break;
         }
         else
-        {
             result.ops.push_back(op);
-        }
     }
 
     return result;
+}
+
+void formatted_string::del_char()
+{
+    for (oplist::iterator i = ops.begin(); i != ops.end(); ++i)
+    {
+        if (i->type != FSOP_TEXT)
+            continue;
+        switch(strwidth(i->text))
+        {
+        case 0: // shouldn't happen
+            continue;
+        case 1:
+            ops.erase(i);
+            return;
+        }
+        i->text = next_glyph((char*)i->text.c_str());
+        return;
+    }
 }
 
 void formatted_string::add_glyph(glyph g)
@@ -539,57 +527,7 @@ int count_linebreaks(const formatted_string& fs)
     return count;
 }
 
-// Return the actual (string) offset of character #loc to be printed,
-// i.e. ignoring tags. So for instance, if s == "<tag>ab</tag>", then
-// _find_string_location(s, 2) == 6.
-static int _find_string_location(const std::string& s, int loc)
-{
-    int real_offset = 0;
-    bool in_tag = false;
-    int last_taglen = 0;
-    int offset = 0;
-    for (std::string::const_iterator ci = s.begin();
-         ci != s.end() && real_offset < loc;
-         ++ci, ++offset)
-    {
-        if (in_tag)
-        {
-            if (*ci == '<' && last_taglen == 1)
-            {
-                ++real_offset;
-                in_tag = false;
-            }
-            else if (*ci == '>')
-            {
-                in_tag = false;
-            }
-            else
-            {
-                ++last_taglen;
-            }
-        }
-        else if (*ci == '<')
-        {
-            in_tag = true;
-            last_taglen = 1;
-        }
-        else
-        {
-            ++real_offset;
-        }
-    }
-    return (offset);
-}
-
-// Return the substring of s from character start to character end,
-// where tags count as length 0.
-std::string tagged_string_substr(const std::string& s, int start, int end)
-{
-    return (s.substr(_find_string_location(s, start),
-                     _find_string_location(s, end)));
-}
-
-int tagged_string_printable_length(const std::string& s)
+static int _tagged_string_printable_length(const std::string& s)
 {
     int len = 0;
     bool in_tag = false;
@@ -629,5 +567,5 @@ int tagged_string_printable_length(const std::string& s)
 // Count the length of the tags in the string.
 int tagged_string_tag_length(const std::string& s)
 {
-    return s.size() - tagged_string_printable_length(s);
+    return s.size() - _tagged_string_printable_length(s);
 }

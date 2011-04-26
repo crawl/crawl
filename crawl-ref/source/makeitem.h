@@ -1,8 +1,7 @@
-/*
- * File:       makeitem.h
- * Summary:    Item creation routines.
- * Created by: haranp on Sat Apr 21 11:31:42 2007 UTC
- */
+/**
+ * @file
+ * @brief Item creation routines.
+**/
 
 #ifndef MAKEITEM_H
 #define MAKEITEM_H

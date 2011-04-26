@@ -1,8 +1,7 @@
-/*
- *  File:       mon-act.cc
- *  Summary:    Monsters doing stuff (monsters acting).
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monsters doing stuff (monsters acting).
+**/
 
 #include "AppHdr.h"
 #include "mon-act.h"
@@ -189,6 +188,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     mover->set_position(moved_pos);
     moved->set_position(mover_pos);
 
+    mover->check_clinging(true);
+    moved->check_clinging(false);
+
     mgrd(mover->pos()) = mover->mindex();
     mgrd(moved->pos()) = moved->mindex();
 
@@ -216,13 +218,14 @@ static bool _do_mon_spell(monster* mons, bolt &beem)
     return (false);
 }
 
-static void _swim_or_move_energy(monster* mon)
+static void _swim_or_move_energy(monster* mon, bool diag = false)
 {
     const dungeon_feature_type feat = grd(mon->pos());
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy((feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE);
+                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE,
+                      diag ? 10 : 1, diag ? 14 : 1);
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -833,6 +836,9 @@ static bool _handle_scroll(monster* mons)
     if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
         return (false);
 
+    if (silenced(mons->pos()))
+        return (false);
+
     // Make sure the item actually is a scroll.
     if (mitm[mons->inv[MSLOT_SCROLL]].base_type != OBJ_SCROLLS)
         return (false);
@@ -1090,6 +1096,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         break;
 
     case SPELL_CALL_IMP:
+    case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_SWARM:
         _rod_fired_pre(mons, nice_spell);
@@ -1308,9 +1315,15 @@ static bool _handle_wand(monster* mons, bolt &beem)
         if (was_visible)
         {
             if (niceWand || !beem.is_enchantment() || beem.obvious_effect)
+            {
                 set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+                mons->props["wand_known"] = true;
+            }
             else
+            {
                 set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
+                mons->props["wand_known"] = false;
+            }
 
             // Increment zap count.
             if (wand.plus2 >= 0)
@@ -1344,6 +1357,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     std::string ammo_name;
 
     bool returning = false;
+    bool speed_brand = false;
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
@@ -1555,6 +1569,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
             // Speed bows take 50% less time to use than
             // ordinary bows.
             speed_delta = div_rand_round(throw_energy, 2);
+            speed_brand = true;
         }
 
         mons->speed_increment += speed_delta;
@@ -1652,12 +1667,10 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 
         pbolt.damage.size = pbolt.damage.size * (115 + ench.degree * 15) / 100;
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s frenzy damage: %dd%d -> %dd%d",
+        dprf("%s frenzy damage: %dd%d -> %dd%d",
              mons->name(DESC_PLAIN).c_str(),
              orig_damage.num, orig_damage.size,
              pbolt.damage.num, pbolt.damage.size);
-#endif
     }
 
     // Skilled archers get better to-hit and damage.
@@ -1666,6 +1679,9 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         pbolt.hit         = pbolt.hit * 120 / 100;
         pbolt.damage.size = pbolt.damage.size * 120 / 100;
     }
+
+    if (speed_brand)
+        pbolt.damage.size = div_rand_round(pbolt.damage.size * 9, 10);
 
     scale_dice(pbolt.damage);
 
@@ -2364,11 +2380,13 @@ void handle_monster_move(monster* mons)
             }
 
             if (mons->cannot_move() || !_monster_move(mons))
+            {
                 mons->speed_increment -= non_move_energy;
+                mons->check_clinging(false);
+            }
         }
         you.update_beholder(mons);
         you.update_fearmonger(mons);
-        mons->check_clinging(true);
 
         // Reevaluate behaviour, since the monster's surroundings have
         // changed (it may have moved, or died for that matter).  Don't
@@ -2617,6 +2635,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             // This is done manually instead of using heal_monster(),
             // because that function doesn't work quite this way. - bwr
             mons->hit_points += hps_changed;
+            mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
             mons->max_hit_points = std::max(mons->hit_points,
                                                mons->max_hit_points);
         }
@@ -2645,9 +2664,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     if (do_heal)
     {
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
-
-        // Limited growth factor here - should 77 really be the cap? {dlb}:
-        mons->hit_points = std::min(100, mons->hit_points);
+        mons->hit_points = std::min(MAX_MONSTER_HP, mons->hit_points);
         mons->max_hit_points = std::max(mons->hit_points,
                                            mons->max_hit_points);
     }
@@ -3049,12 +3066,13 @@ static bool _mons_can_displace(const monster* mpusher,
     // can't push. Note that sleeping monsters can't be pushed
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
-    if (mons_is_confused(mpusher)      || mons_is_confused(mpushee)
-        || mpusher->cannot_move()   || mons_is_stationary(mpusher)
+    // Monsters caught in a net also can't be pushed past.
+    if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
+        || mpusher->cannot_move() || mons_is_stationary(mpusher)
         || (!_same_kraken_parts(mpusher, mpushee)
            && (mpushee->cannot_move()
                || mons_is_stationary(mpushee)))
-        || mpusher->asleep())
+        || mpusher->asleep() || mpushee->caught())
     {
         return (false);
     }
@@ -3123,7 +3141,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return (false);
 
     // No monster may enter the open sea.
-    if (grd(targ) == DNGN_OPEN_SEA)
+    if (grd(targ) == DNGN_OPEN_SEA || grd(targ) == DNGN_LAVA_SEA)
         return (false);
 
     // Non-friendly and non-good neutral monsters won't enter
@@ -3359,6 +3377,8 @@ static void _jelly_grows(monster* mons)
     }
 
     mons->hit_points += 5;
+    // possible with ridiculous farming on a full level
+    mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
 
     // note here, that this makes jellies "grow" {dlb}:
     if (mons->hit_points > mons->max_hit_points)
@@ -3384,11 +3404,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     {
         if (coinflip())
         {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Alerting monster %s at (%d,%d)",
+            dprf("Alerting monster %s at (%d,%d)",
                  m2->name(DESC_PLAIN).c_str(), m2->pos().x, m2->pos().y);
-#endif
             behaviour_event(m2, ME_ALERT, MHITNOT);
         }
         return (false);
@@ -3405,7 +3422,11 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     }
 
     // Okay, do the swap!
+#ifdef EUCLIDEAN
+    _swim_or_move_energy(mon, delta.abs() == 2);
+#else
     _swim_or_move_energy(mon);
+#endif
 
     mon->set_position(n);
     mgrd(n) = mon->mindex();
@@ -3415,9 +3436,9 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mgrd(c) = m2i;
     immobile_monster[m2i] = true;
 
-    mon->check_redraw(c);
+    mon->check_redraw(c, false);
     mon->apply_location_effects(c);
-    m2->check_redraw(c);
+    m2->check_redraw(n, false);
     m2->apply_location_effects(n);
 
     // The seen context no longer applies if the monster is moving normally.
@@ -3488,7 +3509,11 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     mons->seen_context.clear();
 
     // This appears to be the real one, ie where the movement occurs:
+#ifdef EUCLIDEAN
+    _swim_or_move_energy(mons, delta.abs() == 2);
+#else
     _swim_or_move_energy(mons);
+#endif
 
     if (grd(mons->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(mons, DNGN_DEEP_WATER))
@@ -3503,6 +3528,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     mgrd(mons->pos()) = mons->mindex();
 
+    mons->check_clinging(true);
     ballisto_on_move(mons, old_pos);
 
     mons->check_redraw(mons->pos() - delta);
@@ -3785,22 +3811,16 @@ static bool _monster_move(monster* mons)
             {
                 mons->flags &= ~MF_TAKING_STAIRS;
 
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                     "BUG: %s was marked as follower when not following!",
+                dprf("BUG: %s was marked as follower when not following!",
                      mons->name(DESC_PLAIN).c_str(), true);
-#endif
             }
             else
             {
                 ret    = true;
                 mmov.reset();
 
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                     "%s is skipping movement in order to follow.",
+                dprf("%s is skipping movement in order to follow.",
                      mons->name(DESC_THE).c_str(), true);
-#endif
             }
         }
 

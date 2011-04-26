@@ -1,8 +1,7 @@
-/*
- *  File:       newgame.cc
- *  Summary:    Functions used when starting a new game.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when starting a new game.
+**/
 
 #include "AppHdr.h"
 
@@ -351,7 +350,8 @@ static std::string _highlight_pattern(const newgame_def* ng)
             ret += species_name(species) + "  |";
     }
 
-    ret.resize(ret.size() - 1);
+    if (ret != "")
+        ret.resize(ret.size() - 1);
     return ret;
 }
 
@@ -394,9 +394,7 @@ static bool _reroll_random(newgame_def* ng)
 {
     clrscr();
 
-    std::string specs = species_name(ng->species);
-    if (specs.length() > 79)
-        specs = specs.substr(0, 79);
+    std::string specs = chop_string(species_name(ng->species), 79, false);
 
     cprintf("You are a%s %s %s.\n",
             (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
@@ -482,9 +480,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     {
         clrscr();
 
-        std::string specs = species_name(ng->species);
-        if (specs.length() > 79)
-            specs = specs.substr(0, 79);
+        std::string specs = chop_string(species_name(ng->species), 79, false);
 
         cprintf("You are a%s %s %s.\n",
                 (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
@@ -1037,20 +1033,20 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         },
         {
             "Zealot",
-            coord_def(15, 0), 20,
+            coord_def(17, 0), 20,
             {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
              JOB_DEATH_KNIGHT, JOB_PRIEST, JOB_HEALER, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
-            "Battlemage",    // XXX: Arcane Marksmen are temporarily disabled
-            coord_def(35, 0), 21,
+            "Warrior-mage",    // XXX: Arcane Marksmen are temporarily disabled
+            coord_def(39, 0), 17,
             {JOB_CRUSADER, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_STALKER,
              JOB_WARPER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
             "Mage",
-            coord_def(56, 0), 23,
+            coord_def(57, 0), 22,
             {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
              JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
              JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE}
@@ -1349,6 +1345,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 }
                 else
                 {
+                    selection.at(0)->select(false);
                     continue;
                 }
             }
@@ -1369,8 +1366,7 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return (WPN_UNKNOWN);
 }
 
-static void _construct_weapon_menu(const newgame_def* ng,
-                                   const weapon_type& defweapon,
+static void _construct_weapon_menu(const weapon_type& defweapon,
                                    const std::vector<weapon_choice>& weapons,
                                    MenuFreeform* menu)
 {
@@ -1402,8 +1398,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
         text += letter;
         text += " - ";
         text += weapons[i].first == WPN_UNARMED
-                ? (species_has_claws(ng->species) ? "claws" : "unarmed")
-                : weapon_base_name(weapons[i].first);
+                ? "claws" : weapon_base_name(weapons[i].first);
         // Fill to column width to give extra padding for the highlight
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
         tmp->set_text(text);
@@ -1545,7 +1540,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 
     weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
-    _construct_weapon_menu(ng, defweapon, weapons, freeform);
+    _construct_weapon_menu(defweapon, weapons, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
@@ -1645,11 +1640,9 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
 {
     std::vector<weapon_choice> weapons;
 
-    weapon_type startwep[7] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
-                                WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION,
-                                WPN_QUARTERSTAFF};
-
-    for (unsigned int i = 0; i < ARRAYSZ(startwep); ++i)
+    weapon_type startwep[6] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
+                                WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION };
+    for (int i = 0; i < 6; ++i)
     {
         weapon_choice wp;
         wp.first = startwep[i];
@@ -1657,11 +1650,8 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
         switch (wp.first)
         {
         case WPN_UNARMED:
-            if (!species_has_claws(ng->species) && ng->job != JOB_MONK
-                || ng->job == JOB_GLADIATOR)
-            {
+            if (ng->job == JOB_GLADIATOR || !species_has_claws(ng->species))
                 continue;
-            }
             break;
         case WPN_SPEAR:
             // Non-small fighters and gladiators get tridents.
@@ -1742,7 +1732,6 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     {
     case JOB_FIGHTER:
     case JOB_GLADIATOR:
-    case JOB_MONK:
     case JOB_CHAOS_KNIGHT:
     case JOB_DEATH_KNIGHT:
     case JOB_ABYSSAL_KNIGHT:
@@ -2857,10 +2846,11 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     unsigned int padding_width = 0;
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
     {
-        if (padding_width < maps.at(i)->desc_or_name().length())
-            padding_width = maps.at(i)->desc_or_name().length();
+        padding_width = std::max<int>(padding_width,
+                                      strwidth(maps.at(i)->desc_or_name()));
     }
     padding_width += 4; // Count the letter and " - "
+    padding_width = std::min<int>(padding_width, MENU_COLUMN_WIDTH - 1);
 
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
     {
@@ -2875,12 +2865,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         text += " - ";
 
         text += maps[i]->desc_or_name();
-        if (static_cast<int>(text.length()) > MENU_COLUMN_WIDTH - 1)
-            text = text.substr(0, MENU_COLUMN_WIDTH - 1);
-
-        // Add padding
-        if (padding_width > text.size())
-            text.append(padding_width - text.size(), ' ');
+        text = chop_string(text, padding_width);
 
         tmp->set_text(text);
         tmp->add_hotkey(letter);
@@ -2977,8 +2962,8 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     //tmp->set_visible(true);
 
     // Only add tab entry if we have a previous map choice
-    if (crawl_state.game_is_sprint()
-        && !defaults.map.empty() && _char_defined(defaults))
+    if (crawl_state.game_is_sprint() && !defaults.map.empty()
+        && defaults.type == GAME_TYPE_SPRINT && _char_defined(defaults))
     {
         tmp = new TextItem();
         text.clear();

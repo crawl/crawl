@@ -3,11 +3,13 @@
 #include "status.h"
 
 #include "areas.h"
+#include "env.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
 #include "player-stats.h"
 #include "skills2.h"
+#include "terrain.h"
 #include "transform.h"
 
 // Status defaults for durations that are handled straight-forwardly.
@@ -417,9 +419,14 @@ void fill_status_info(int status, status_info* inf)
         {
             inf->light_text   = "Cling";
             inf->short_text   = "clinging";
-            inf->long_text = "You cling to the nearby walls.";
-            inf->light_colour = dur_colour(GREEN,
-                                           dur_expiring(DUR_TRANSFORMATION));
+            inf->long_text    = "You cling to the nearby walls.";
+            const dungeon_feature_type feat = grd(you.pos());
+            if (is_feat_dangerous(feat))
+                inf->light_colour = LIGHTGREEN;
+            else if (feat == DNGN_LAVA || feat_is_water(feat))
+                inf->light_colour = GREEN;
+            else
+                inf->light_colour = DARKGREY;
             _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
         }
         break;

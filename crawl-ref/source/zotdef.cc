@@ -1,8 +1,7 @@
-/*
- *  File:       zotdef.cc
- *  Summary:    Zot Def specific functions
- *  Written by: Mark Mackey
- */
+/**
+ * @file
+ * @brief Zot Def specific functions
+**/
 
 #include "AppHdr.h"
 
@@ -632,14 +631,13 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         if (diff < std::min(-3,-power))
             continue;
 
-        const char *bn = "RANDOM";
-        if (place.branch != NUM_BRANCHES)
-            bn = branches[place.branch].shortname;
-
         if (random2avg(100, 2) <= chance)
         {
             dprf("ZOTDEF %d %s chose monster %s rarity %d power %d strength %d "
-                 "level %d chance %d", i, bn,mentry->name, rarity, power,
+                 "level %d chance %d", i,
+                 (place.branch == NUM_BRANCHES) ? "RANDOM"
+                     : branches[place.branch].shortname,
+                 mentry->name, rarity, power,
                  strength, lev_mons, chance);
             mon_type_ret = mon_type;
             break;

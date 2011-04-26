@@ -45,6 +45,7 @@ dlua.o \
 dungeon.o \
 effects.o \
 errors.o \
+evoke.o \
 exclude.o \
 exercise.o \
 fearmonger.o \
@@ -67,7 +68,6 @@ hints.o \
 hiscores.o \
 initfile.o \
 invent.o \
-it_use3.o \
 item_use.o \
 itemname.o \
 itemprop.o \
@@ -144,7 +144,7 @@ mon-transit.o \
 mon-util.o \
 mon_resist_def.o \
 monster.o \
-mt19937ar.o \
+asg.o \
 mutation.o \
 newgame.o \
 ng-init.o \
@@ -171,7 +171,6 @@ random-var.o \
 ray.o \
 religion.o \
 rng.o \
-sha256.o \
 shopping.o \
 shout.o \
 show.o \
@@ -213,10 +212,12 @@ transform.o \
 traps.o \
 travel.o \
 tutorial.o \
+unicode.o \
 view.o \
 viewchar.o \
 viewgeom.o \
 viewmap.o \
+wcwidth.o \
 wiz-dgn.o \
 wiz-fsim.o \
 wiz-item.o \

@@ -7,6 +7,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "fineff.h"
 #include "godconduct.h"
 #include "los.h"
 #include "message.h"
@@ -201,7 +202,8 @@ void tornado_damage(actor *caster, int dur)
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the hurricane!");
-                did_god_conduct(DID_KILL_PLANT, 1);
+                if (caster == &you)
+                    did_god_conduct(DID_KILL_PLANT, 1);
             }
 
             if (!winds.has_wind(*dam_i))
@@ -268,6 +270,8 @@ void tornado_damage(actor *caster, int dur)
             swap_clouds(clouds[random2(clouds.size())], *dam_i);
         }
     }
+    if (caster == &you)
+        fire_final_effects();
 }
 
 void cancel_tornado()

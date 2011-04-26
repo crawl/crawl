@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-maps.cc
- *  Summary:    Map generation statistics/testing.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Map generation statistics/testing.
+**/
 
 #include "AppHdr.h"
 
@@ -76,7 +75,7 @@ static bool mg_do_build_level(int niters)
     no_messages mx;
     for (int i = 0; i < niters; ++i)
     {
-        if (kbhit() && key_is_escape(getch()))
+        if (kbhit() && key_is_escape(getchk()))
         {
             mprf(MSGCH_WARN, "User requested cancel");
             return (false);
@@ -105,7 +104,7 @@ static bool mg_do_build_level(int niters)
 
         {
             unwind_bool wiz(you.wizard, true);
-            magic_mapping(1000, 100, true, true, false, false,
+            magic_mapping(1000, 100, true, true, false,
                           coord_def(GXM/2, GYM/2));
         }
         if (_mg_is_disconnected_level())
@@ -238,7 +237,7 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
         mesclr();
         mprf("Examining random maps at %s", i->describe().c_str());
         mg_report_random_maps(outf, *i);
-        if (kbhit() && key_is_escape(getch()))
+        if (kbhit() && key_is_escape(getchk()))
             break;
         fprintf(outf, "---------------------------------\n");
     }

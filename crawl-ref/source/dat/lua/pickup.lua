@@ -31,8 +31,8 @@ local function can_butcher(it, name)
 end
 
 function pickup_butcher(it, name)
-    -- If you can butcher with your claws you don't need a butchering tool.
-    if you.has_claws() > 0 then
+    -- If you can butcher with your claws or talons you don't need a butchering tool.
+    if you.has_claws() > 0 or you.race() == "Kenku" then
         return false
     end
 

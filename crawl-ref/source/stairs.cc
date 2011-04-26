@@ -242,25 +242,6 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     return (true);
 }
 
-static bool _check_carrying_orb()
-{
-    // We never picked up the Orb, no problem.
-    if (you.char_direction != GDT_ASCENDING)
-        return (true);
-
-    // So we did pick up the Orb. Now check whether we're carrying it.
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].base_type == OBJ_ORBS
-            && you.inv[i].sub_type == ORB_ZOT)
-        {
-            return (true);
-        }
-    }
-    return (yes_or_no("You're not carrying the Orb! Leave anyway"));
-}
-
 // Adds a dungeon marker at the point of the level where returning from
 // a labyrinth or portal vault should drop the player.
 static void _mark_portal_return_point(const coord_def &pos)
@@ -374,11 +355,11 @@ static void _leaving_level_now()
     if (you.level_type_name_abbrev != oldname_abbrev)
         newname_abbrev = you.level_type_name_abbrev;
 
-    if (newname_abbrev.length() > MAX_NOTE_PLACE_LEN)
+    if (strwidth(newname_abbrev) > MAX_NOTE_PLACE_LEN)
     {
         mprf(MSGCH_ERROR, "'%s' is too long for a portal vault name "
                           "abbreviation, truncating");
-        newname_abbrev = newname_abbrev.substr(0, MAX_NOTE_PLACE_LEN);
+        newname_abbrev = chop_string(newname_abbrev, MAX_NOTE_PLACE_LEN, false);
     }
 
     you.level_type_origin = "";
@@ -413,17 +394,18 @@ static void _leaving_level_now()
 
     if (!you.level_type_name.empty() && you.level_type_name_abbrev.empty())
     {
-        if (you.level_type_name.length() <= MAX_NOTE_PLACE_LEN)
+        if (strwidth(you.level_type_name) <= MAX_NOTE_PLACE_LEN)
             you.level_type_name_abbrev = you.level_type_name;
-        else if (you.level_type_tag.length() <= MAX_NOTE_PLACE_LEN)
+        else if (strwidth(you.level_type_tag) <= MAX_NOTE_PLACE_LEN)
             you.level_type_name_abbrev = spaced_tag;
         else
         {
             const std::string shorter =
-                you.level_type_name.length() < you.level_type_tag.length() ?
+                strwidth(you.level_type_name) < strwidth(you.level_type_tag) ?
                     you.level_type_name : spaced_tag;
 
-            you.level_type_name_abbrev = shorter.substr(0, MAX_NOTE_PLACE_LEN);
+            you.level_type_name_abbrev = chop_string(shorter,
+                                         MAX_NOTE_PLACE_LEN, false);
         }
     }
 
@@ -584,7 +566,8 @@ void up_stairs(dungeon_feature_type force_stair,
     // Up and down both work for portals.
     if (feat_is_bidirectional_portal(stair_find))
     {
-        if (!(stair_find == DNGN_ENTER_HELL && player_in_hell())) {
+        if (!(stair_find == DNGN_ENTER_HELL && player_in_hell()))
+        {
             down_stairs(force_stair, entry_cause);
             return;
         }
@@ -626,39 +609,7 @@ void up_stairs(dungeon_feature_type force_stair,
         return;
     }
 
-    if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(stair_find)
-        && !feat_is_gate(stair_find))
-    {
-        mpr("You are carrying too much to climb upwards.");
-        you.turn_is_over = true;
-        return;
-    }
-
     const level_id destination_override(_stair_destination_override());
-    const bool leaving_dungeon =
-        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1)
-        && !destination_override.is_valid();
-
-    if (leaving_dungeon)
-    {
-        bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
-                            false, 'n') || !_check_carrying_orb());
-
-        if (!stay && crawl_state.game_is_hints())
-        {
-            if (!yesno("Are you *sure*? Doing so will end the game!", false,
-                       'n'))
-            {
-                stay = true;
-            }
-        }
-
-        if (stay)
-        {
-            mpr("Alright, then stay!");
-            return;
-        }
-    }
 
     // Bail if any markers veto the move.
     if (_marker_vetoes_level_change())
@@ -942,14 +893,6 @@ void down_stairs(dungeon_feature_type force_stair,
     if (stair_find == DNGN_STONE_ARCH)
     {
         mpr("There is nothing on the other side of the stone arch.");
-        return;
-    }
-
-    if (!force_stair && you.flight_mode() == FL_LEVITATE
-        && !feat_is_gate(stair_find))
-    {
-        mpr("You're floating high up above the floor!");
-        learned_something_new(HINT_LEVITATING);
         return;
     }
 
@@ -1392,8 +1335,25 @@ void new_level(bool restore)
 }
 
 // Returns a hatch or stair (up or down)
-dungeon_feature_type random_stair()
+dungeon_feature_type random_stair(bool do_place_check)
 {
+    if (do_place_check)
+    {
+        // Only place stairs in a direction that's actually applicable.
+        if (at_branch_bottom())
+        {
+            return (static_cast<dungeon_feature_type>(
+                DNGN_STONE_STAIRS_UP_I+random2(
+                    DNGN_ESCAPE_HATCH_UP-DNGN_STONE_STAIRS_UP_I+1)));
+        }
+        else if (player_branch_depth() == 1)
+        {
+            return (static_cast<dungeon_feature_type>(
+                DNGN_STONE_STAIRS_DOWN_I+random2(
+                    DNGN_ESCAPE_HATCH_DOWN-DNGN_STONE_STAIRS_DOWN_I+1)));
+        }
+    }
+    // else we can go either direction
     return (static_cast<dungeon_feature_type>(
         DNGN_STONE_STAIRS_DOWN_I+random2(
             DNGN_ESCAPE_HATCH_UP-DNGN_STONE_STAIRS_DOWN_I+1)));

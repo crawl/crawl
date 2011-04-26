@@ -92,7 +92,7 @@ ENDMAP
 # Dummy probability balancer vault for non-dungeon branches.
 #
 NAME: dummy_balancer_other
-DEPTH: 1-, !D
+DEPTH: 1-, !D, !Zot:1-4
 # Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
 # by depth.
 TAGS: dummy
@@ -106,7 +106,7 @@ ENDMAP
 # Elevator
 #
 NAME:    lemuel_elevator
-DEPTH:   D, Vault, Elf, Crypt, Zot, Tar, Dis, Geh, Coc
+DEPTH:   D:2-26, Vault:2-7, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
 ORIENT:  float
 TAGS:    allow_dup
 SUBST:   m:mn
@@ -813,12 +813,18 @@ ENDMAP
 # Lions and Tigers and Bears, oh my! (or at least bears)
 #
 NAME:   lemuel_bear_cage
+ORIENT: float
 DEPTH:  D:7-21
 MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
 MONS:   hound / wolf / hog
 SUBST:  1 = 1:30 2 3 4 .
+MARKER: + = lua:props_marker { \
+            door_open_prompt="This door is covered in warnings. Open " .. \
+                             "it anyway?", \
+            door_description_prefix="warning-scrawled " \
+        }
 MAP
 cccccccccc
 c.1.1.1.1c
@@ -1135,49 +1141,6 @@ MAP
  xxxxxx  x..x  xxxxxx
          x++x
           @.
-ENDMAP
-
-##############################################################################
-# A variety of statues, with loot. (1KB)
-#
-NAME:    statue_cache
-ORIENT:  north
-TAGS:    no_monster_gen
-DEPTH:   D:12-20, Elf, Vault
-MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:flame . bolt q:30
-MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:frost . bolt q:30
-MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
-      ego:flaming good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
-      ego:freezing good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
-      ego:flaming good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
-      ego:freezing good_item
-MONS: silver statue
-KMONS: 8 = statue name:wizard name_adjective tile:mons_statue_mage \
-           spells:lehudib's_crystal_spear;iskenderun's_mystic_blast;slow;stone_arrow
-KMONS: 9 = statue name:wizard name_adjective tile:mons_statue_mage \
-           spells:freezing_cloud;mephitic_cloud;throw_icicle;confuse
-MAP
-  cccccccccccccc
-  cccccccc7ccccc
-  cccccc.....ccc
-  cccc..ccccc.cc
-  ccc.ccccc5c.cc
-  ccc.cccccc.ccc
-  cc8.9cc3c.c6cc
-  c$$$$$cc.ccccc
-  c|*|*|c.c4cccc
-ccccccccc.ccccccccc
-........1.2........
-...................
-...................
- .................
-   .............
-      ...@...
 ENDMAP
 
 ##############################################################################
@@ -1772,6 +1735,49 @@ cLLlll*lllLLc
 c.LLlllllLL.c
 c..LLlllLL..c
 ccccccccccccc
+ENDMAP
+
+NAME:    lemuel_firewalk_3
+DEPTH:   D:16-27
+TAGS:    uniq_firewalk abyss ruin_abyss
+WEIGHT:  2
+ORIENT:  float
+ITEM:    nothing, nothing, nothing
+SHUFFLE: def
+MARKER:  d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 4, delay = 39, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 6, delay = 59, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER:  f = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 8, delay = 79, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
+        , feature_description = "scorch-marked granite statue" }
+MAP
+xxxxxxxG@Gxxxxxxx
+x...............x
+x...............x
+x.d..e.....f..d.x
+x...............x
+x...............x
+x...............x
+x.e..f.....d..e.x
+x...............x
+x...............x
+x...............x
+x.f..d.....e..f.x
+x...............x
+x...............x
+x...............x
+x.d..e.....f..d.x
+x...............x
+x...............x
+x......$$$......x
+x.e.f..$$$..d.e.x
+x......$$$......x
+xxxxxxxxxxxxxxxxx
 ENDMAP
 
 #############################################################################

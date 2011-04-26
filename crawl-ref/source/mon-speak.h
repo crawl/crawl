@@ -1,7 +1,7 @@
-/*
- *  File:       mon-speak.h
- *  Summary:    Functions to handle speaking monsters
- */
+/**
+ * @file
+ * @brief Functions to handle speaking monsters
+**/
 
 #ifndef MONSPEAK_H
 #define MONSPEAK_H
