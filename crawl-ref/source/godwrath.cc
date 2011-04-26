@@ -1027,7 +1027,7 @@ static bool _jiyva_retribution()
         const monster_type slimes[] = {
                 MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
                 MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES,
-                MONS_GIANT_SPORE, MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
+                MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
                 MONS_JELLY, MONS_BROWN_OOZE, MONS_ACID_BLOB, MONS_AZURE_JELLY,
                 MONS_DEATH_OOZE, MONS_SLIME_CREATURE
             };
