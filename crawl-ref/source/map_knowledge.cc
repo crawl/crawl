@@ -33,13 +33,16 @@ void map_knowledge_forget_mons(const coord_def& c)
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed(int x, int y)
 {
+    const coord_def p = coord_def(x, y);
     env.map_knowledge[x][y].flags |= MAP_CHANGED_FLAG;
 
-    dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
+    dungeon_events.fire_position_event(DET_FEAT_CHANGE, p);
 
-    los_terrain_changed(coord_def(x,y));
+    los_terrain_changed(p);
 
-    check_clinging();
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
+        if (actor *act = actor_at(*ai))
+            act->check_clinging(false, feat_is_door(grd(p)));
 }
 
 void set_terrain_mapped(int x, int y)
@@ -85,16 +88,25 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             cell.clear_item();
 
         if ((!clear_detected_monsters || !cell.detected_monster())
-                && !mons_class_is_stationary(cell.monster()))
+            && !mons_class_is_stationary(cell.monster()))
+        {
             cell.clear_monster();
+#ifdef USE_TILE
+            tile_clear_monster(p);
+#endif
+        }
     }
 }
 
 static void _automap_from(int x, int y, int mutated)
 {
     if (mutated)
-        magic_mapping(8 * mutated, 25, true, you.religion == GOD_ASHENZARI,
-                      true, true, coord_def(x,y));
+    {
+        magic_mapping(8 * mutated,
+                      you.religion == GOD_ASHENZARI ? 25 + you.piety / 8 : 25,
+                      true, you.religion == GOD_ASHENZARI,
+                      true, coord_def(x,y));
+    }
 }
 
 static int _map_quality()

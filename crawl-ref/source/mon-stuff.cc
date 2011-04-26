@@ -1,8 +1,7 @@
-/*
- *  File:       mon-stuff.cc
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 #include "AppHdr.h"
 #include "mon-stuff.h"
@@ -174,7 +173,7 @@ const item_def *give_mimic_item(monster* mimic)
     return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
 }
 
-const item_def &get_mimic_item(const monster* mimic)
+item_def &get_mimic_item(const monster* mimic)
 {
     ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
@@ -255,7 +254,7 @@ bool curse_an_item(bool destroy_potions, bool quiet)
             mprf(MSGCH_GOD, "The curse is absorbed by %s.",
                  god_name(GOD_ASHENZARI).c_str());
         }
-        return false;
+        return (false);
     }
 
     int count = 0;
@@ -1668,9 +1667,13 @@ int monster_die(monster* mons, killer_type killer,
 #if TAG_MAJOR_VERSION == 32
     if (gives_xp)
     {
-        int tier = ash_monster_tier(mons) - MONS_SENSED_TRIVIAL;
-        ASSERT(tier >= 0 && tier <= 3);
-        you.montiers[tier]++;
+        int tier = ash_monster_tier(mons);
+        if (tier != MONS_SENSED_FRIENDLY)
+        {
+            tier -= MONS_SENSED_TRIVIAL;
+            ASSERT(tier >= 0 && tier <= 3);
+            you.montiers[tier]++;
+        }
     }
 #endif
 
@@ -1788,7 +1791,7 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
 
-        if (was_banished && !summoned_it && !hard_reset)
+        if (was_banished && !summoned_it && !hard_reset && mons->has_ench(ENCH_ABJ))
         {
             if (is_unrandom_artefact(mitm[w_idx]))
                 set_unique_item_status(mitm[w_idx], UNIQ_LOST_IN_ABYSS);
@@ -2307,7 +2310,7 @@ int monster_die(monster* mons, killer_type killer,
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
-            if (mons->pacified() || !mons->needs_transit())
+            if (mons->pacified() || !mons->needs_abyss_transit())
             {
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
@@ -2396,6 +2399,10 @@ int monster_die(monster* mons, killer_type killer,
         // His slaves don't care if he's dead or not, just whether or not
         // he goes away.
         pikel_band_neutralise();
+    }
+    else if (mons->is_named() && created_friendly)
+    {
+        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
     }
     else if (mons_base_type(mons) == MONS_KRAKEN)
     {
@@ -2715,6 +2722,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     std::string str_polymon;
     int source_power, target_power, relax;
+    int source_tier, target_tier;
     int tries = 1000;
 
     // Used to be mons_power, but that just returns hit_dice
@@ -2722,6 +2730,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // the player gets the opportunity to use draining more
     // effectively against shapeshifters. - bwr
     source_power = mons->hit_dice;
+    source_tier = mons_demon_tier(mons->type);
     relax = 1;
 
     if (targetc == RANDOM_MONSTER)
@@ -2736,6 +2745,9 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             targetc = mons_species(targetc);
 
             target_power = mons_power(targetc);
+            // Can't compare tiers in valid_morph, since we want to affect only
+            // random polymorphs, and not absolutely, too.
+            target_tier = mons_demon_tier(targetc);
 
             if (one_chance_in(200))
                 relax++;
@@ -2744,6 +2756,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 return (simple_monster_message(mons, " shudders."));
         }
         while (tries-- && (!_valid_morph(mons, targetc)
+                           || source_tier != target_tier && !x_chance_in_y(relax, 200)
                            || _is_poly_power_unsuitable(power, source_power,
                                                         target_power, relax)));
     }
@@ -3526,8 +3539,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
         dungeon_feature_type feat = env.grid(ray.pos());
         if (feat >= DNGN_UNSEEN && feat <= max_disallowed
             || (mons_intel(mon) >= I_NORMAL || mon->can_cling_to_walls())
-                && mon->floundering_at(ray.pos())
-            || mons_avoids_cloud(mon, env.cgrid(ray.pos())))
+                && mon->floundering_at(ray.pos()))
         {
             return (false);
         }
@@ -3661,7 +3673,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_fire() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_fire() < 0)
             return (true);
 
         if (mons->hit_points >= 15 + random2avg(46, 5))
@@ -3675,7 +3687,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
             return (true);
 
         if (x_chance_in_y(mons->hit_dice - 1, 5))
@@ -3692,7 +3704,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_cold() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_cold() < 0)
             return (true);
 
         if (mons->hit_points >= 15 + random2avg(46, 5))
@@ -3706,7 +3718,7 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return (true);
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() <= 0)
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_poison() < 0)
             return (true);
 
         if (mons->hit_points >= random2avg(37, 4))
@@ -3907,8 +3919,8 @@ int mons_natural_regen_rate(monster* mons)
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
-    // Levitating/flying monsters don't make contact with the terrain.
-    if (mons->airborne() || mons->can_cling_to(oldpos))
+    // Levitating/flying/clinging monsters don't make contact with the terrain.
+    if (!mons->ground_level())
         return;
 
     dungeon_feature_type grid = grd(mons->pos());

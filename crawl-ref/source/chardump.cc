@@ -1,8 +1,7 @@
-/*
- *  File:       chardump.cc
- *  Summary:    Dumps character info out to the morgue file.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Dumps character info out to the morgue file.
+**/
 
 #include "AppHdr.h"
 
@@ -55,6 +54,7 @@
 #include "env.h"
 #include "transform.h"
 #include "travel.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -561,76 +561,26 @@ static void _sdump_lua(dump_params &par)
  // XXX: should be replaced by some other linewrapping function
  //      now EOL munging is gone
  //---------------------------------------------------------------
-std::string munge_description(const std::string & inStr)
+std::string munge_description(std::string inStr)
 {
     std::string outStr;
 
     outStr.reserve(inStr.length() + 32);
 
     const int kIndent = 3;
-    int lineLen = kIndent;
 
-    unsigned int i = 0;
+    if (inStr.empty()) // always at least an empty line
+        return "\n";
 
-    outStr += std::string(kIndent, ' ');
-
-    while (i < inStr.length())
+    while (!inStr.empty())
     {
-        const char ch = inStr[i];
-
-        if (ch == '\n')
-        {
-            outStr += "\n";
-
-            outStr += std::string(kIndent, ' ');
-            lineLen = kIndent;
-
-            while (inStr[++i] == '\n')
-                ;
-        }
-        else if (isspace(ch))
-        {
-            if (lineLen >= 79)
-            {
-                outStr += "\n";
-                outStr += std::string(kIndent, ' ');
-                lineLen = kIndent;
-
-            }
-            else if (lineLen > 0)
-            {
-                outStr += ch;
-                ++lineLen;
-            }
-            ++i;
-        }
-        else
-        {
-            std::string word;
-
-            while (i < inStr.length()
-                   && lineLen + word.length() < 79
-                   && !isspace(inStr[i]) && inStr[i] != '\n')
-            {
-                word += inStr[i++];
-            }
-
-            if (lineLen + word.length() >= 79)
-            {
-                outStr += "\n";
-                outStr += std::string(kIndent, ' ');
-                lineLen = kIndent;
-            }
-
-            outStr += word;
-            lineLen += word.length();
-        }
+        outStr += std::string(kIndent, ' ')
+                + wordwrap_line(inStr, 79 - kIndent)
+                + "\n";
     }
 
-    outStr += "\n";
-
     return (outStr);
-}                               // end munge_description()
+}
 
 static void _sdump_messages(dump_params &par)
 {
@@ -1024,11 +974,8 @@ static void _sdump_spells(dump_params &par)
                 spell_line += " - ";
                 spell_line += spell_title(spell);
 
-                if (spell_line.length() > 24)
-                    spell_line = spell_line.substr(0, 24);
-
-                for (int i = spell_line.length(); i < 26; i++)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 24);
+                spell_line += "  ";
 
                 bool already = false;
 
@@ -1042,24 +989,20 @@ static void _sdump_spells(dump_params &par)
                     }
                 }
 
-                for (int i = spell_line.length(); i < 41; ++i)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 41);
 
                 spell_line += spell_power_string(spell);
 
-                for (int i = spell_line.length(); i < 54; ++i)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 54);
 
                 spell_line += failure_rate_to_string(spell_fail(spell));
 
-                for (int i = spell_line.length(); i < 66; i++)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 66);
 
                 itoa(spell_difficulty(spell), tmp_quant, 10);
                 spell_line += tmp_quant;
 
-                for (int i = spell_line.length(); i < 71; i++)
-                    spell_line += ' ';
+                spell_line = chop_string(spell_line, 71);
 
                 spell_line += spell_hunger_string(spell);
                 spell_line += "\n";
@@ -1165,7 +1108,7 @@ static void _sdump_kills_by_place(dump_params &par)
         result += _sdump_kills_place_info(pi);
     }
 
-    if (result.length() > 0)
+    if (!result.empty())
         text += header + result + footer + "\n";
 }
 
@@ -1254,13 +1197,6 @@ std::string morgue_directory()
 
 void dump_map(FILE *fp, bool debug, bool dist)
 {
-    // Duplicate the screenshot() trick.
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
-    char_table_bk = Options.char_table;
-
-    init_char_table(CSET_ASCII);
-    init_show_table();
-
     if (debug)
     {
         // Write the whole map out without checking for mappedness. Handy
@@ -1280,7 +1216,10 @@ void dump_map(FILE *fp, bool debug, bool dist)
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
                 else
-                    fputc(get_feature_def(grd[x][y]).symbol, fp);
+                {
+                    fputs(OUTS(stringize_glyph(
+                               get_feature_def(grd[x][y]).symbol)), fp);
+                }
             }
             fputc('\n', fp);
         }
@@ -1302,15 +1241,14 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc(get_cell_glyph(coord_def(x, y)).ch, fp);
+            {
+                fputs(OUTS(stringize_glyph(
+                           get_cell_glyph(coord_def(x, y)).ch)), fp);
+            }
 
             fputc('\n', fp);
         }
     }
-
-    // Restore char and feature tables
-    Options.char_table = char_table_bk;
-    init_show_table();
 }
 
 void dump_map(const char* fname, bool debug, bool dist)
@@ -1346,13 +1284,11 @@ static bool _write_dump(const std::string &fname, dump_params &par,
     file_name += ".txt";
     FILE *handle = fopen_replace(file_name.c_str());
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "File name: %s", file_name.c_str());
-#endif
+    dprf("File name: %s", file_name.c_str());
 
     if (handle != NULL)
     {
-        fputs(par.text.c_str(), handle);
+        fputs(OUTS(par.text), handle);
         fclose(handle);
         succeeded = true;
         if (print_dump_path)
@@ -1386,9 +1322,7 @@ void display_notes()
         if (spaceleft <= 0)
             return;
 
-        // Use smarter linebreak function.
-        // was:  linebreak_string(suffix, spaceleft - 4, spaceleft);
-        linebreak_string2(suffix, spaceleft);
+        linebreak_string(suffix, spaceleft);
         std::vector<std::string> parts = split_string("\n", suffix);
         if (parts.empty()) // Disregard pure-whitespace notes.
             continue;
@@ -1416,6 +1350,7 @@ void whereis_record(const char *status)
 
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
+        // no need to bother with supporting ancient charsets for DGL
         fprintf(handle, "%s:status=%s\n",
                 xlog_status_line().c_str(),
                 status? status : "");
@@ -1443,20 +1378,13 @@ void whereis_record(const char *status)
 
 #ifdef DGL_TURN_TIMESTAMPS
 
+#include "syscalls.h"
 #include <sys/stat.h>
 
 // File-format version for timestamp files. Crawl will never append to a
 const uint32_t DGL_TIMESTAMP_VERSION = 1;
 const int VERSION_SIZE = sizeof(DGL_TIMESTAMP_VERSION);
 const int TIMESTAMP_SIZE = sizeof(uint32_t);
-
-// Returns the size of the opened file with the give FILE* handle.
-unsigned long _file_size(FILE *handle)
-{
-    struct stat fs;
-    const int err = fstat(fileno(handle), &fs);
-    return err? 0 : fs.st_size;
-}
 
 // Returns the name of the timestamp file based on the morgue_dir,
 // character name and the game start time.
@@ -1471,7 +1399,7 @@ std::string dgl_timestamp_filename()
 // of a known version.
 bool dgl_unknown_timestamp_file(const std::string &filename)
 {
-    if (FILE *inh = fopen(filename.c_str(), "rb"))
+    if (FILE *inh = fopen_u(filename.c_str(), "rb"))
     {
         reader r(inh);
         const uint32_t file_version = unmarshallInt(r);
@@ -1495,7 +1423,7 @@ FILE *dgl_timestamp_filehandle()
         // First check if there's already a timestamp file. If it exists
         // but has a different version, we cannot safely modify it, so bail.
         if (!dgl_unknown_timestamp_file(filename))
-            timestamp_file = fopen(filename.c_str(), "ab");
+            timestamp_file = fopen_u(filename.c_str(), "ab");
     }
     return timestamp_file;
 }
@@ -1510,7 +1438,7 @@ void dgl_record_timestamp(unsigned long file_offset, time_t time)
         writer w(dgl_timestamp_filename(), ftimestamp, true);
         if (timestamp_first_write)
         {
-            unsigned long ts_size = _file_size(ftimestamp);
+            unsigned long ts_size = file_size(ftimestamp);
             if (!ts_size)
             {
                 marshallInt(w, DGL_TIMESTAMP_VERSION);

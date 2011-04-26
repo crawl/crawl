@@ -1,7 +1,7 @@
-/*
- *  File:       tilepick.h
- *  Summary:    Look-up functions for dungeon and item tiles.
- */
+/**
+ * @file
+ * @brief Look-up functions for dungeon and item tiles.
+**/
 
 #ifndef TILEPICK_H
 #define TILEPICK_H

@@ -1,8 +1,8 @@
-/*
- * File:      areas.cc
- * Summary:   Tracking effects that affect areas for durations.
- *            Silence, sanctuary, halos, ...
- */
+/**
+ * @file
+ * @brief Tracking effects that affect areas for durations.
+ *           Silence, sanctuary, halos, ...
+**/
 
 #include "AppHdr.h"
 
@@ -552,6 +552,8 @@ int monster::halo_radius2() const
         return (17);
     case MONS_SILVER_STAR:
         return (40); // dumb but with an immense power
+    case MONS_HOLY_SWINE:
+        return (1);  // only notionally holy
     default:
         return (4);
     }

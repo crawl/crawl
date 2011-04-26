@@ -1,6 +1,9 @@
 #ifndef COLOUR_H
 #define COLOUR_H
 
+// Please remove after changing TAG_MAJOR_VERSION
+#include "tag-version.h"
+
 // various elemental colour schemes... used for abstracting random
 // short lists. When adding colours, please also add their names in
 // str_to_colour!
@@ -37,7 +40,9 @@ enum element_type
     ETC_KRAKEN,         // kraken colours
     ETC_FLOOR,          // colour of the area's floor
     ETC_ROCK,           // colour of the area's rock
+#if TAG_MAJOR_VERSION == 32
     ETC_STONE,          // colour of the area's stone
+#endif
     ETC_MIST,           // colour of mist
     ETC_SHIMMER_BLUE,   // shimmering colours of blue
     ETC_DECAY,          // colour of decay/swamp
@@ -97,7 +102,7 @@ int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
 bool get_tornado_phase(const coord_def& loc);
 
-#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
 unsigned short dos_brand(unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
 #endif

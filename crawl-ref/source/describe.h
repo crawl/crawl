@@ -1,9 +1,7 @@
-
-/*
- *  File:       describe.h
- *  Summary:    Functions used to print information about various game objects.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print information about various game objects.
+**/
 
 #ifndef DESCRIBE_H
 #define DESCRIBE_H
@@ -12,6 +10,7 @@
 #include <sstream>
 #include "externs.h"
 #include "enum.h"
+#include "libutil.h"
 #include "mon-info.h"
 
 // If you add any more description types, remember to also
@@ -207,59 +206,11 @@ inline void process_description(T &proc, const describe_info &inf)
         }
     }
 
-    std::string::size_type nextLine = std::string::npos;
-    unsigned int  currentPos = 0;
-
-    while (currentPos < desc.length())
+    while (!desc.empty())
     {
-        if (currentPos != 0)
+        proc.print(wordwrap_line(desc, line_width));
+        if (!desc.empty())
             proc.nextline();
-
-        // See if '\n' is within one line_width.
-        nextLine = desc.find('\n', currentPos);
-
-        if (nextLine >= currentPos && nextLine < currentPos + line_width)
-        {
-            proc.print(desc.substr(currentPos, nextLine-currentPos));
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // Handle real line breaks.  No substitutions necessary, just update
-        // the counts.
-        nextLine = desc.find('\n', currentPos);
-        if (nextLine >= currentPos && nextLine < currentPos + line_width)
-        {
-            proc.print(desc.substr(currentPos, nextLine-currentPos));
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // No newline -- see if rest of string will fit.
-        if (currentPos + line_width >= desc.length())
-        {
-            proc.print(desc.substr(currentPos));
-            return;
-        }
-
-
-        // Ok, try to truncate at space.
-        nextLine = desc.rfind(' ', currentPos + line_width);
-
-        if (nextLine > 0)
-        {
-            proc.print(desc.substr(currentPos, nextLine - currentPos));
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // Oops.  Just truncate.
-        nextLine = currentPos + line_width;
-
-        nextLine = std::min(inf.body.str().length(), nextLine);
-
-        proc.print(desc.substr(currentPos, nextLine - currentPos));
-        currentPos = nextLine;
     }
 }
 
@@ -306,59 +257,11 @@ inline void process_quote(T &proc, const describe_info &inf)
         }
     }
 
-    std::string::size_type nextLine = std::string::npos;
-    unsigned int  currentPos = 0;
-
-    while (currentPos < desc.length())
+    while (!desc.empty())
     {
-        if (currentPos != 0)
+        proc.print(wordwrap_line(desc, line_width));
+        if (!desc.empty())
             proc.nextline();
-
-        // See if '\n' is within one line_width.
-        nextLine = desc.find('\n', currentPos);
-
-        if (nextLine >= currentPos && nextLine < currentPos + line_width)
-        {
-            proc.print(desc.substr(currentPos, nextLine-currentPos));
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // Handle real line breaks.  No substitutions necessary, just update
-        // the counts.
-        nextLine = desc.find('\n', currentPos);
-        if (nextLine >= currentPos && nextLine < currentPos + line_width)
-        {
-            proc.print(desc.substr(currentPos, nextLine-currentPos));
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // No newline -- see if rest of string will fit.
-        if (currentPos + line_width >= desc.length())
-        {
-            proc.print(desc.substr(currentPos));
-            return;
-        }
-
-
-        // Ok, try to truncate at space.
-        nextLine = desc.rfind(' ', currentPos + line_width);
-
-        if (nextLine > 0)
-        {
-            proc.print(desc.substr(currentPos, nextLine - currentPos));
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // Oops.  Just truncate.
-        nextLine = currentPos + line_width;
-
-        nextLine = std::min(inf.body.str().length(), nextLine);
-
-        proc.print(desc.substr(currentPos, nextLine - currentPos));
-        currentPos = nextLine;
     }
 }
 

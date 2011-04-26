@@ -1,9 +1,9 @@
-/*
- * File:     showsymb.cc
- * Summary:  Rendering of map_cell to glyph and colour.
+/**
+ * @file
+ * @brief Rendering of map_cell to glyph and colour.
  *
  * This only needs the information within one object of type map_cell.
- */
+**/
 
 #include "AppHdr.h"
 
@@ -184,8 +184,12 @@ show_class get_cell_show_class(const map_cell& cell,
     if (cell.cloud() != CLOUD_NONE && cell.cloud() != CLOUD_GLOOM)
         return SH_CLOUD;
 
-    if (feat_is_trap(cell.feat()) || is_critical_feature(cell.feat()))
+    if (feat_is_trap(cell.feat())
+     || is_critical_feature(cell.feat())
+     || cell.feat() < DNGN_MINMOVE)
+    {
         return SH_FEATURE;
+    }
 
     if (cell.item())
         return SH_ITEM;
@@ -307,8 +311,12 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
 
         if (cell.item())
         {
-            if (Options.feature_item_brand && is_critical_feature(cell.feat()))
+            if (Options.feature_item_brand
+                && (is_critical_feature(cell.feat())
+                 || cell.feat() < DNGN_MINMOVE))
+            {
                 g.col |= COLFLAG_FEATURE_ITEM;
+            }
             else if (Options.trap_item_brand && feat_is_trap(cell.feat()))
                 g.col |= COLFLAG_TRAP_ITEM;
         }

@@ -414,9 +414,6 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    if (mons_avoids_cloud(mons, env.cgrid(p)))
-        return false;
-
     return mons_can_traverse(mons, p) || mons->can_cling_to_walls()
                                          && cell_is_clingable(pos)
                                          && cell_can_cling_to(pos, p);
@@ -424,10 +421,23 @@ bool monster_pathfind::mons_traversable(const coord_def& p)
 
 int monster_pathfind::travel_cost(coord_def npos)
 {
+#ifdef EUCLIDEAN
+    int cost = 1;
+    if (mons)
+        cost = mons_travel_cost(npos);
+
+    if ((pos - npos).abs() == 2)
+        cost *= 14;
+    else
+        cost *= 10;
+
+    return cost;
+#else
     if (mons)
         return mons_travel_cost(npos);
 
     return (1);
+#endif
 }
 
 // Assumes that grids that really cannot be entered don't even get here.
@@ -452,12 +462,8 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     // for non-amphibious monsters, so they'll avoid it where possible.
     // (The resulting path might not be optimal but it will lead to a path
     // a monster of such habits is likely to prefer.)
-    // Only tested for shallow water since they can't enter deep water anyway.
-    if (ground_level && !mons_class_habitat(mt) == HT_AMPHIBIOUS
-        && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
-    {
+    if (mons->floundering_at(npos))
         return (2);
-    }
 
     // Try to avoid (known) traps.
     const trap_def* ptrap = find_trap(npos);

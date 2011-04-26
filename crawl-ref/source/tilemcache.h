@@ -1,8 +1,7 @@
-/*
- *  File:       tilemcache.h
- *  Summary:    Monster cache support
- *  Written by: Enne Walker
- */
+/**
+ * @file
+ * @brief Monster cache support
+**/
 
 #ifdef USE_TILE
 #ifndef TILEMCACHE_H

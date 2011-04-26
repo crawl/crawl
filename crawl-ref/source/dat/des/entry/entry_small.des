@@ -2559,6 +2559,7 @@ ENDMAP
 ###########################################################
 # Eye to eye with the dorky.
 NAME:    lordsloth_entry_two_stooges
+ORIENT:  float
 TAGS:    entry no_rotate no_monster_gen no_item_gen
 : if crawl.one_chance_in(4) then
 SUBST:   [ = l, ( = l

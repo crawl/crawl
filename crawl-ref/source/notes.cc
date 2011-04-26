@@ -1,8 +1,7 @@
-/*
- *  File:       notes.cc
- *  Summary:    Notetaking stuff
- *  Written by: Haran Pilpel
- */
+/**
+ * @file
+ * @brief Notetaking stuff
+**/
 
 #include "AppHdr.h"
 
@@ -125,7 +124,9 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_DEATH
         || note.type == NOTE_XOM_REVIVAL
         || note.type == NOTE_SEEN_FEAT
-        || note.type == NOTE_PARALYSIS)
+        || note.type == NOTE_PARALYSIS
+        || note.type == NOTE_NAMED_ALLY
+        || note.type == NOTE_ALLY_DEATH)
     {
         return (true);
     }
@@ -255,11 +256,11 @@ std::string Note::describe(bool when, bool where, bool what) const
     if (where)
     {
         if (!place_abbrev.empty())
-            result << "| " << std::setw(MAX_NOTE_PLACE_LEN) << std::left
-                   << place_abbrev << " | ";
+            result << "| " << chop_string(place_abbrev, MAX_NOTE_PLACE_LEN)
+                   << " | ";
         else
-            result << "| " << std::setw(MAX_NOTE_PLACE_LEN) << std::left
-                   << short_place_name(packed_place) << " | ";
+            result << "| " << chop_string(short_place_name(packed_place),
+                                          MAX_NOTE_PLACE_LEN) << " | ";
     }
 
     if (what)
@@ -396,6 +397,12 @@ std::string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_PARALYSIS:
             result << "Paralysed by " << name << " for " << first << " turns";
+            break;
+        case NOTE_NAMED_ALLY:
+            result << "Gained " << name << " as an ally";
+            break;
+        case NOTE_ALLY_DEATH:
+            result << "Your ally " << name << " died";
             break;
         default:
             result << "Buggy note description: unknown note type";

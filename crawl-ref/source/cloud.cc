@@ -1,10 +1,9 @@
-/*
- *  File:       cloud.cc
- *  Summary:    Functions related to clouds.
- *  Written by: Brent Ross
+/**
+ * @file
+ * @brief Functions related to clouds.
  *
- *  Creating a cloud module so all the cloud stuff can be isolated.
- */
+ * Creating a cloud module so all the cloud stuff can be isolated.
+**/
 
 #include "AppHdr.h"
 
@@ -851,10 +850,12 @@ bool _actor_apply_cloud_side_effects(actor *act,
         if (final_damage > 0)
         {
             if (you.can_see(act))
+            {
                 mprf("%s %s in the rain.",
                      act->name(DESC_THE).c_str(),
                      act->conj_verb(silenced(act->pos())?
                                     "steam" : "sizzle").c_str());
+            }
         }
         if (player)
         {
@@ -1000,11 +1001,15 @@ static int _cloud_timescale_damage(const actor *act, int damage)
 static int _cloud_damage_output(actor *actor,
                                 beam_type flavour,
                                 int resist,
-                                int base_timescaled_damage)
+                                int base_timescaled_damage,
+                                bool maximum_damage = false)
 {
     const int resist_adjusted_damage =
         resist_adjust_damage(actor, flavour, resist,
                              base_timescaled_damage, true);
+    if (maximum_damage)
+        return resist_adjusted_damage;
+
     return std::max(0, resist_adjusted_damage - random2(actor->armour_class()));
 }
 
@@ -1029,7 +1034,8 @@ static int _actor_cloud_damage(actor *act,
     case CLOUD_STEAM:
         final_damage =
             _cloud_damage_output(act, cloud2beam(cloud.type), resist,
-                                 cloud_base_timescaled_damage);
+                                 cloud_base_timescaled_damage,
+                                 maximum_damage);
         break;
     default:
         break;
@@ -1102,8 +1108,8 @@ int actor_apply_cloud(actor *act)
     return final_damage;
 }
 
-bool cloud_is_harmful(actor *act, cloud_struct &cloud,
-                      int maximum_negligible_damage)
+static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
+                              int maximum_negligible_damage)
 {
     return (!_actor_cloud_immune(act, cloud)
             && (cloud_has_negative_side_effects(cloud.type)
@@ -1118,7 +1124,7 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
         cloud_struct cloud;
         cloud.type = type;
         cloud.decay = 100;
-        return (cloud_is_harmful(&you, cloud, 0));
+        return (_cloud_is_harmful(&you, cloud, 0));
     }
     else
     {
@@ -1320,9 +1326,11 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
             // Don't produce monster-in-rain messages in the interests
             // of spam reduction.
             if (act->is_player())
+            {
                 mprf("%s %s standing in the rain.",
                      act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
+            }
         }
         else
         {
@@ -1375,7 +1383,7 @@ int get_cloud_colour(int cloudno)
         break;
 
     case CLOUD_POISON:
-        which_colour = (one_chance_in(3) ? LIGHTGREEN : GREEN);
+        which_colour = LIGHTGREEN;
         break;
 
     case CLOUD_BLUE_SMOKE:

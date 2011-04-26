@@ -1,7 +1,7 @@
-/*
- *  File:       arena.h
- *  Summary:    Functions related to the monster arena (stage and watch fights).
- */
+/**
+ * @file
+ * @brief Functions related to the monster arena (stage and watch fights).
+**/
 
 #ifndef ARENA_H
 #define ARENA_H

@@ -1,7 +1,7 @@
-/*
- * File:      l_dgnlvl.cc
- * Summary:   Level and branch bindings (library "dgn").
- */
+/**
+ * @file
+ * @brief Level and branch bindings (library "dgn").
+**/
 
 #include "AppHdr.h"
 

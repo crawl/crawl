@@ -1,7 +1,7 @@
-/*
- *  File:       flood_find.h
- *  Summary:    flood_find template
- */
+/**
+ * @file
+ * @brief flood_find template
+**/
 
 #ifndef FLOOD_FIND_H
 #define FLOOD_FIND_H

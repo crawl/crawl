@@ -1,9 +1,3 @@
-/*
- *  File:       tilereg-skl.cc
- *
- *  Created by: jpeg on Sat, Nov 27 2010
- */
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE

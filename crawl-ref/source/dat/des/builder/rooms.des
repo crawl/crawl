@@ -34,7 +34,7 @@ function sroom_kobold_lair(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if not level then
+    if e.is_validating() then
         return
     end
 
@@ -64,7 +64,7 @@ function sroom_orc_lair(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if not level then
+    if e.is_validating() then
         return
     end
 
@@ -91,7 +91,7 @@ function sroom_beehive(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if not level then
+    if e.is_validating() then
         return
     end
 
@@ -115,7 +115,7 @@ function sroom_jelly_pit(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if not level then
+    if e.is_validating() then
         return
     end
 
@@ -154,138 +154,34 @@ WEIGHT: 11
 MAP
 ENDMAP
 
-NAME:   special_room_orc_a
-DEPTH:  8-14, !Lair, !Crypt
+NAME:   special_room_orc
+DEPTH:  8-, !Lair, !Crypt
 TAGS:   special_room allow_dup unrand
-WEIGHT: 59
+WEIGHT: 59 (8-14), 50 (15-16), 40 (17), 25 (18-20), 15 (21-)
 : sroom_orc_lair(_G)
 MAP
 ENDMAP
 
-NAME:   special_room_bee_a
-DEPTH:  8-14, !Crypt
+NAME:   special_room_bee
+DEPTH:  8-, !Crypt
 TAGS:   special_room allow_dup unrand
-WEIGHT: 30
-: sroom_beehive(_G)
-MAP
-ENDMAP
-################################
-NAME:   special_room_orc_b
-DEPTH:  15-16, !Lair, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 50
-: sroom_orc_lair(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_bee_b
-DEPTH:  15-16, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 25
+WEIGHT: 30 (8-14), 25 (15-17), 33 (18-20), 8 (21-)
 : sroom_beehive(_G)
 MAP
 ENDMAP
 
-NAME:   special_room_morgue_b
-DEPTH:  15-16, !Lair
+NAME:   special_room_morgue
+DEPTH:  15-, !Lair
 TAGS:   special_room allow_dup unrand
-WEIGHT: 25
-: sroom_morgue(_G)
-MAP
-ENDMAP
-#################################
-NAME:   special_room_orc_c
-DEPTH:  17, !Lair, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 40
-: sroom_orc_lair(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_bee_c
-DEPTH:  17, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 25
-: sroom_beehive(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_morgue_c
-DEPTH:  17, !Lair
-TAGS:   special_room allow_dup unrand
-WEIGHT: 27
+WEIGHT: 25 (15-16), 27 (17), 29 (18-20), 32 (21-)
 : sroom_morgue(_G)
 MAP
 ENDMAP
 
-NAME:   special_room_jelly_c
-DEPTH:  17, !Crypt
+NAME:   special_room_jelly
+DEPTH:  17-, !Crypt
 TAGS:   special_room allow_dup unrand
-WEIGHT: 9
-: sroom_jelly_pit(_G)
-MAP
-ENDMAP
-#################################
-NAME:   special_room_orc_d
-DEPTH:  18-20, !Lair, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 25
-: sroom_orc_lair(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_bee_d
-DEPTH:  18-20, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 33
-: sroom_beehive(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_morgue_d
-DEPTH:  18-20, !Lair
-TAGS:   special_room allow_dup unrand
-WEIGHT: 29
-: sroom_morgue(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_jelly_d
-DEPTH:  18-20, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 13
-: sroom_jelly_pit(_G)
-MAP
-ENDMAP
-#################################
-NAME:   special_room_orc_e
-DEPTH:  21-, !Lair, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 15
-: sroom_orc_lair(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_bee_e
-DEPTH:  21-, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 8
-: sroom_beehive(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_morgue_e
-DEPTH:  21-, !Lair
-TAGS:   special_room allow_dup unrand
-WEIGHT: 32
-: sroom_morgue(_G)
-MAP
-ENDMAP
-
-NAME:   special_room_jelly_e
-DEPTH:  21-, !Crypt
-TAGS:   special_room allow_dup unrand
-WEIGHT: 45
+WEIGHT: 9 (17), 13 (18-20), 45 (21-)
 : sroom_jelly_pit(_G)
 MAP
 ENDMAP

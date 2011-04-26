@@ -1,8 +1,7 @@
-/*
- *  File:       skills2.h
- *  Summary:    More skill related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief More skill related functions.
+**/
 
 
 #ifndef SKILLS2_H
@@ -37,6 +36,7 @@ void init_skill_order();
 
 void calc_mp();
 void calc_hp();
+bool is_useless_skill(int skill);
 
 int species_apt(skill_type skill, species_type species = you.species);
 float species_apt_factor(skill_type sk, species_type sp = you.species);
@@ -44,13 +44,13 @@ unsigned int skill_exp_needed(int lev);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
 
+bool compare_skills(skill_type sk1, skill_type sk2);
 float crosstrain_bonus(skill_type sk);
 bool crosstrain_other(skill_type sk, bool show_zero);
 bool is_antitrained(skill_type sk);
 bool antitrain_other(skill_type sk, bool show_zero);
 
 void skill_menu(bool reskilling = false);
-void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(skill_type skill);
 void dump_skills(std::string &text);
 int skill_transfer_amount(skill_type sk);
@@ -104,19 +104,20 @@ enum skill_menu_flags
     SKMF_ACTION_MASK     = 0x000F,
 
 //Display
-    SKMF_DISP_PROGRESS   = 0x0010,
-    SKMF_DISP_RESKILL    = 0x0020,
-    SKMF_DISP_NEW_LEVEL  = 0x0040,
-    SKMF_DISP_POINTS     = 0x0080,
-    SKMF_DISP_MASK       = 0x00F0,
-    SKMF_DISP_ALL        = 0x0100,
-    SKMF_DISP_APTITUDE   = 0x0200,
+    SKMF_DISP_NORMAL     = 0x0010,
+    SKMF_DISP_ENHANCED   = 0x0020,
+    SKMF_DISP_RESKILL    = 0x0040,
+    SKMF_DISP_NEW_LEVEL  = 0x0080,
+    SKMF_DISP_POINTS     = 0x0100,
+    SKMF_DISP_MASK       = 0x01F0,
+    SKMF_DISP_ALL        = 0x0200,
+    SKMF_DISP_APTITUDE   = 0x0400,
 
 //Ashenzari transfer knowledge ability set this flag.
-    SKMF_RESKILLING      = 0x0400,
+    SKMF_RESKILLING      = 0x0800,
 
-    SKMF_SKILL_ICONS     = 0x0800,
-    SKMF_SIMPLE          = 0x1000, // Simple mode for tutorial and hint mode.
+    SKMF_SKILL_ICONS     = 0x1000,
+    SKMF_SIMPLE          = 0x2000, // Simple mode for tutorial and hint mode.
 };
 
 class SkillMenu;
@@ -133,9 +134,10 @@ public:
     skill_type get_skill() const;
     void set_name(bool keep_hotkey);
     void set_display();
+    void refresh(bool keep_hotkey);
     int get_id();
     bool is_set(int flag) const;
-    bool is_selectable() const;
+    bool is_selectable(bool keep_hotkey = true);
     TextItem* get_name_item() const;
 
 private:
@@ -158,7 +160,7 @@ private:
     void _set_new_level();
     void _set_title();
     void _clear();
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG
     void _set_points();
 #endif
 };
@@ -175,7 +177,7 @@ public:
     void clear_flag(int flag);
     void toggle_flag(int flag);
     void change_action();
-    void change_display();
+    void change_display(bool init = false);
     void toggle_practise(skill_type sk, int keyn);
     void show_description(skill_type sk);
     void toggle_show_all();
@@ -220,6 +222,7 @@ private:
     void _set_links();
     int _get_next_action() const;
     int _get_next_display() const;
+    bool _skill_enhanced() const;
 };
 
 #endif

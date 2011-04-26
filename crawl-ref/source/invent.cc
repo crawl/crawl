@@ -1,8 +1,7 @@
-/*
- *  File:       invent.cc
- *  Summary:    Functions for inventory related commands.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for inventory related commands.
+**/
 
 #include "AppHdr.h"
 
@@ -232,7 +231,7 @@ std::string InvEntry::get_text(bool need_cursor) const
             std::string colour_tag = colour_to_str(item->colour);
             colour_tag_adjustment = colour_tag.size() * 2 + 5;
         }
-        tstr << std::setw(get_number_of_cols() - tstr.str().length() - 2
+        tstr << std::setw(get_number_of_cols() - strwidth(tstr.str()) - 2
                           + colour_tag_adjustment)
              << std::right
              << make_stringf("(%.1f aum)", BURDEN_TO_AUM * mass);
@@ -392,21 +391,24 @@ void InvMenu::set_title(const std::string &s)
     std::string stitle = s;
     if (stitle.empty())
     {
-        std::ostringstream default_title;
+        // We're not printing anything yet, but this select the crt layer
+        // so that get_number_of_cols returns the appropriate value.
+        cgotoxy(1, 1);
+
         const int cap = carrying_capacity(BS_UNENCUMBERED);
 
-        default_title << make_stringf(
+        stitle = make_stringf(
             "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots)",
             BURDEN_TO_AUM * you.burden,
             BURDEN_TO_AUM * cap,
             (you.burden * 100) / cap,
             inv_count());
 
-        default_title << std::setw(get_number_of_cols() - default_title.str().length() - 1)
-                      << std::right
-                      << "Press item letter to examine.";
-
-        stitle = default_title.str();
+        std::string prompt = "Press item letter to examine.";
+        stitle = stitle + std::string(std::max(0, get_number_of_cols()
+                                                  - strwidth(stitle)
+                                                  - strwidth(prompt)),
+                                      ' ') + prompt;
     }
 
     set_title(new InvTitle(this, stitle, title_annotate));
@@ -487,6 +489,10 @@ static std::string _no_selectables_message(int item_selector)
         return "You aren't carrying any armour which can be made ponderous.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
+    case OSEL_UNCURSED_WORN_ARMOUR:
+        return "You aren't wearing any piece of uncursed armour.";
+    case OSEL_UNCURSED_WORN_JEWELLERY:
+        return "You aren't wearing any piece of uncursed jewellery.";
     }
 
     return "You aren't carrying any such object.";
@@ -822,8 +828,7 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             if (!glyphs.empty())
             {
                 const std::string str = "Magical Staves and Rods"; // longest string
-                subtitle += std::string(str.length()
-                                        - subtitle.length() + 1, ' ');
+                subtitle += std::string(strwidth(str) - strwidth(subtitle) + 1, ' ');
                 subtitle += "(select all with ";
 #ifdef USE_TILE
                 // For some reason, this is only formatted correctly in the
@@ -939,11 +944,13 @@ bool in_inventory(const item_def &i)
 unsigned char get_invent(int invent_type)
 {
     unsigned char select;
+    int flags = MF_SINGLESELECT;
+    if (you.dead || crawl_state.updating_scores)
+        flags |= MF_EASY_EXIT;
 
     while (true)
     {
-        select = invent_select(NULL, MT_INVLIST, invent_type, -1,
-                               MF_SINGLESELECT);
+        select = invent_select(NULL, MT_INVLIST, invent_type, -1, flags);
 
         if (isaalpha(select))
         {
@@ -1119,6 +1126,12 @@ static bool _item_class_selected(const item_def &i, int selector)
                 && (&i != you.weapon()
                     || i.base_type == OBJ_WEAPONS
                     || i.base_type == OBJ_STAVES));
+
+    case OSEL_UNCURSED_WORN_ARMOUR:
+        return (!i.cursed() && item_is_equipped(i) && itype == OBJ_ARMOUR);
+
+    case OSEL_UNCURSED_WORN_JEWELLERY:
+        return (!i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY);
 
     default:
         return (false);
@@ -1544,6 +1557,12 @@ static bool _nasty_stasis(const item_def &item, operation_types oper)
                 || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE]));
 }
 
+static bool _is_wielded(const item_def &item)
+{
+    int equip = you.equip[EQ_WEAPON];
+    return equip != -1 && item.link == equip;
+}
+
 bool needs_handle_warning(const item_def &item, operation_types oper)
 {
     if (_has_warning_inscription(item, oper))
@@ -1564,19 +1583,27 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         return (true);
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
-        && item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_DISTORTION
-        && you.duration[DUR_WEAPON_BRAND] == 0)
+        && (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES))
     {
-        return (true);
-    }
+        if (get_weapon_brand(item) == SPWPN_DISTORTION
+            && !you.duration[DUR_WEAPON_BRAND])
+        {
+            return (true);
+        }
 
-    if (oper == OPER_WIELD
-        && item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_VAMPIRICISM
-        && !you.is_undead)
+        if (get_weapon_brand(item) == SPWPN_VAMPIRICISM
+            && !you.is_undead)
+        {
+            return (true);
+        }
+
+        if (item_known_cursed(item) && !_is_wielded(item))
+            return (true);
+    }
+    else if (oper == OPER_PUTON || oper == OPER_WEAR)
     {
-        return (true);
+        if (item_known_cursed(item))
+            return (true);
     }
 
     return (false);
@@ -1861,24 +1888,29 @@ bool item_is_wieldable(const item_def &item)
 bool item_is_evokable(const item_def &item, bool known, bool all_wands,
                       bool msg)
 {
+    const std::string error = item_is_melded(item)
+            ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
+            : "That item can only be evoked when wielded.";
+
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->evoke_func && item_type_known(item))
         {
-            if (item_is_equipped(item))
+            if (item_is_equipped(item) && !item_is_melded(item))
                 return (true);
 
             if (msg)
-                mpr("That item can only be evoked when wielded.");
+                mpr(error);
 
             return (false);
         }
         // Unrandart might still be evokable (e.g., reaching)
     }
 
-    const bool wielded = (you.equip[EQ_WEAPON] == item.link);
+    const bool wielded = you.equip[EQ_WEAPON] == item.link
+                         && !item_is_melded(item);
 
     switch (item.base_type)
     {
@@ -1904,7 +1936,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             if (!wielded)
             {
                 if (msg)
-                    mpr("That item can only be evoked when wielded.");
+                    mpr(error);
                 return (false);
             }
             return (true);
@@ -1923,7 +1955,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             if (!wielded)
             {
                 if (msg)
-                    mpr("That item can only be evoked when wielded.");
+                    mpr(error);
                 return (false);
             }
             return (true);
@@ -1938,7 +1970,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             if (!wielded)
             {
                 if (msg)
-                    mpr("That item can only be evoked when wielded.");
+                    mpr(error);
                 return (false);
             }
             return (true);

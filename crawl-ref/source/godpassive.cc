@@ -22,13 +22,14 @@
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "state.h"
 #include "stuff.h"
 
 int che_boost_level()
 {
-    if (you.religion != GOD_CHEIBRIADOS)
+    if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
         return (0);
 
     return (std::min(player_ponderousness(), piety_rank() - 1));
@@ -289,6 +290,7 @@ int ash_bondage_level(int type_only)
 void ash_check_bondage()
 {
     int new_level = ash_bondage_level();
+
     if (new_level == you.bondage_level)
         return;
 
@@ -350,10 +352,25 @@ static bool _jewel_auto_id(const item_def& item)
     }
 }
 
+bool ash_id_item(const coord_def p)
+{
+    if (const monster* mons = monster_at(p))
+        if (mons_is_unknown_mimic(mons) && mons_is_item_mimic(mons->type))
+            return ash_id_item(get_mimic_item(mons));
+
+    if (you.visible_igrd(p) != NON_ITEM)
+        return ash_id_item(mitm[you.visible_igrd(p)]);
+
+    return false;
+}
+
 bool ash_id_item(item_def& item, bool silent)
 {
     if (you.religion != GOD_ASHENZARI)
         return false;
+
+    if (item.base_type == OBJ_JEWELLERY && item_needs_autopickup(item))
+        item.props["needs_autopickup"] = true;
 
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
     iflags_t ided = ISFLAG_KNOW_CURSE;
@@ -403,6 +420,9 @@ bool ash_id_item(item_def& item, bool silent)
         if (Options.autoinscribe_artefacts && is_artefact(item))
             add_autoinscription(item, artefact_auto_inscription(item));
 
+        if (item.props.exists("needs_autopickup") && is_useless_item(item))
+            item.props.erase("needs_autopickup");
+
         if (&item == you.weapon())
             you.wield_change = true;
 
@@ -428,6 +448,77 @@ void ash_id_inventory()
         if (item.defined())
             ash_id_item(item, false);
     }
+}
+
+static bool _is_offensive_wand(const item_def& item)
+{
+    switch (item.sub_type)
+    {
+    // Monsters don't use those, so no need to warn the player about them.
+    case WAND_ENSLAVEMENT:
+    case WAND_RANDOM_EFFECTS:
+    case WAND_DIGGING:
+
+    // Monsters will use them on themselves.
+    case WAND_HASTING:
+    case WAND_HEALING:
+    case WAND_INVISIBILITY:
+        return false;
+
+    case WAND_FLAME:
+    case WAND_FROST:
+    case WAND_SLOWING:
+    case WAND_MAGIC_DARTS:
+    case WAND_PARALYSIS:
+    case WAND_FIRE:
+    case WAND_COLD:
+    case WAND_CONFUSION:
+    case WAND_FIREBALL:
+    case WAND_TELEPORTATION:
+    case WAND_LIGHTNING:
+    case WAND_POLYMORPH_OTHER:
+    case WAND_DRAINING:
+    case WAND_DISINTEGRATION:
+        return true;
+    }
+    return false;
+}
+
+void ash_id_monster_equipment(monster* mon)
+{
+    if (you.religion != GOD_ASHENZARI)
+        return;
+
+    bool id = false;
+
+    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        if (mon->inv[i] == NON_ITEM)
+            continue;
+
+        item_def &item = mitm[mon->inv[i]];
+        if ((i != MSLOT_WAND || !_is_offensive_wand(item))
+            && !item_is_branded(item))
+        {
+            continue;
+        }
+
+        if (x_chance_in_y(you.bondage_level, 3))
+        {
+            if (i == MSLOT_WAND)
+            {
+                set_ident_type(OBJ_WANDS, item.sub_type, ID_KNOWN_TYPE);
+                mon->props["wand_known"] = true;
+            }
+            else
+                set_ident_flags(item, ISFLAG_KNOW_TYPE);
+
+            id = true;
+        }
+    }
+
+    if (id)
+        mon->props["ash_id"] = true;
 }
 
 static bool is_ash_portal(dungeon_feature_type feat)
@@ -501,7 +592,9 @@ monster_type ash_monster_tier(const monster *mon)
     double factor = sqrt(exp_needed(you.experience_level) / 30.0);
     int tension = exper_value(mon) / (1 + factor);
 
-    if (tension <= 0)
+    if (mon->friendly())
+        return MONS_SENSED_FRIENDLY;
+    else if (tension <= 0)
         // Conjurators use melee to conserve mana, MDFis switch plates...
         return MONS_SENSED_TRIVIAL;
     else if (tension <= 5)
@@ -514,3 +607,71 @@ monster_type ash_monster_tier(const monster *mon)
         // Check all wands/jewels several times, wear brown pants...
         return MONS_SENSED_NASTY;
 }
+
+#if 0
+int ash_skill_boost(skill_type sk)
+{
+    int level = you.skills[sk];
+    std::set<skill_type> boosted_skills;
+
+    bool bondage_types[NUM_ET];
+    for (int i = 0; i < NUM_ET; i++)
+        bondage_types[i] = ash_bondage_level(i+1);
+
+    const item_def* wpn = you.weapon();
+    if (wpn && bondage_types[ET_WEAPON])
+    {
+        // Boost your weapon skill.
+        if(wpn->base_type == OBJ_WEAPONS)
+        {
+            boosted_skills.insert(is_range_weapon(*wpn) ? range_skill(*wpn)
+                                                        : weapon_skill(*wpn));
+        }
+        // Those staves don't benefit from evocation.
+        //Boost spellcasting instead.
+        else if (item_is_staff(*wpn)
+                 && (wpn->sub_type == STAFF_POWER
+                     || wpn->sub_type == STAFF_CONJURATION
+                     || wpn->sub_type == STAFF_ENCHANTMENT
+                     || wpn->sub_type == STAFF_ENERGY
+                     || wpn->sub_type == STAFF_WIZARDRY))
+        {
+            boosted_skills.insert(SK_SPELLCASTING);
+        }
+        // Those staves and rods use evocation. Boost it.
+        else if (item_is_staff(*wpn) || item_is_rod(*wpn))
+        {
+            boosted_skills.insert(SK_EVOCATIONS);
+        }
+    }
+
+    if (bondage_types[ET_ARMOUR])
+    {
+        // Boost armour or dodging, whichever is higher.
+        boosted_skills.insert(compare_skills(SK_ARMOUR, SK_DODGING)
+                              ? SK_ARMOUR
+                              : SK_DODGING);
+    }
+
+    if (bondage_types[ET_JEWELS])
+    {
+        // Boost your highest magical skill.
+        skill_type highest = SK_NONE;
+        for (int i = SK_CONJURATIONS; i <= SK_POISON_MAGIC; ++i)
+            if (compare_skills(skill_type(i), highest))
+                highest = skill_type(i);
+
+        boosted_skills.insert(highest);
+    }
+
+    // Apply the skill boost.
+    if (boosted_skills.find(sk) != boosted_skills.end())
+        level += std::max(0, piety_rank() - 3);
+
+    // If not wearing uncursed items, boost low skills.
+    if (!you.wear_uncursed && you.skills[sk])
+        level = std::max(level, piety_rank() - 1);
+
+    return std::min(level, 27);
+}
+#endif

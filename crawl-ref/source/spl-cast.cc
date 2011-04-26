@@ -1,8 +1,7 @@
-/*
- *  File:       spl-cast.cc
- *  Summary:    Spell casting and miscast functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Spell casting and miscast functions.
+**/
 
 #include "AppHdr.h"
 
@@ -151,17 +150,17 @@ static std::string _spell_base_description(spell_type spell)
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
-    desc << std::setw(30) << spell_title(spell);
+    desc << chop_string(spell_title(spell), 30);
 
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = desc.str().length() - (colour_to_str(highlight).length()+2);
+    const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 
     // spell fail rate, level
-    desc << std::setw(12) << failure_rate_to_string(spell_fail(spell))
+    desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12)
          << spell_difficulty(spell);
     desc << "</" << colour_to_str(highlight) <<">";
 
@@ -177,14 +176,14 @@ static std::string _spell_extra_description(spell_type spell)
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
-    desc << std::setw(30) << spell_title(spell);
+    desc << chop_string(spell_title(spell), 30);
 
     // spell power, spell range, hunger level, level
     const std::string rangestring = spell_range_string(spell);
 
-    desc << std::setw(14) << spell_power_string(spell)
-         << std::setw(16 + tagged_string_tag_length(rangestring)) << rangestring
-         << std::setw(12) << spell_hunger_string(spell)
+    desc << chop_string(spell_power_string(spell), 14)
+         << chop_string(rangestring, 16 + tagged_string_tag_length(rangestring))
+         << chop_string(spell_hunger_string(spell), 12)
          << spell_difficulty(spell);
 
     desc << "</" << colour_to_str(highlight) <<">";
@@ -448,13 +447,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     if (rod) {
         // This is only the average of the power. It's used for display and
         // calculating range. The real power is randomized in staff_spell()
-        power = (5 + you.skills[SK_EVOCATIONS] * 2);
+        power = (5 + you.skill(SK_EVOCATIONS) * 2);
     }
     else
     {
         // When checking failure rates, wizardry is handled after the various
         // stepping calulations.
-        power = (you.skills[SK_SPELLCASTING] / 2)
+        power = (you.skill(SK_SPELLCASTING) / 2)
                      + (fail_rate_check? 0 : player_mag_abil(false));
         int enhanced = 0;
 
@@ -470,7 +469,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             {
                 unsigned int bit = (1 << ndx);
                 if (disciplines & bit)
-                    power += (you.skills[spell_type2skill(bit)] * 2) / skillcount;
+                    power += (you.skill(spell_type2skill(bit)) * 2) / skillcount;
             }
         }
 
@@ -776,7 +775,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     return (true);
 }                               // end cast_a_spell()
 
-static void _spellcasting_side_effects(spell_type spell)
+static void _spellcasting_side_effects(spell_type spell, int pow)
 {
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
@@ -798,7 +797,7 @@ static void _spellcasting_side_effects(spell_type spell)
     // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start. - bwr
     if (spell_typematch(spell, SPTYP_FIRE))
-        expose_player_to_element(BEAM_FIRE, 0);
+        expose_player_to_element(BEAM_FIRE, pow * 3, false);
 
     if (spell_typematch(spell, SPTYP_NECROMANCY)
         && !crawl_state.is_god_acting())
@@ -828,7 +827,6 @@ static bool _vampire_cannot_cast(spell_type spell)
     case SPELL_CURE_POISON:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
-    case SPELL_RESIST_POISON:
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
     case SPELL_STONESKIN:
@@ -986,9 +984,9 @@ static bool _spellcasting_aborted(spell_type spell,
         return (true);
     }
 
-    if (is_prevented_teleport(spell)
-        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
+    if (is_prevented_teleport(spell))
     {
+        mpr("You cannot teleport right now.");
         return (true);
     }
 
@@ -1011,6 +1009,12 @@ static bool _spellcasting_aborted(spell_type spell,
         mpr("The dungeon can only cope with one malign gateway at a time!");
         return (true);
     }
+    if (spell == SPELL_BERSERKER_RAGE && (!you.can_go_berserk(true)
+                                          || !berserk_check_wielded_weapon()))
+    {
+        return (true);
+    }
+
 
     return (false);
 }
@@ -1021,7 +1025,10 @@ targetter* _spell_targetter(spell_type spell, int pow, int range)
     {
     case SPELL_FIRE_STORM:
         return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
-        break;
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_HOLY_BREATH:
+        return new targetter_cloud(&you, range);
     default:
         return 0;
     }
@@ -1080,6 +1087,9 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (testbits(flags, SPFLAG_NEUTRAL))
             targ = TARG_ANY;
+
+        if (spell == SPELL_DISPEL_UNDEAD)
+            targ = TARG_HOSTILE_UNDEAD;
 
         targeting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :
@@ -1235,7 +1245,7 @@ spret_type your_spells(spell_type spell, int powc,
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range))
     {
     case SPRET_SUCCESS:
-        _spellcasting_side_effects(spell);
+        _spellcasting_side_effects(spell, powc);
         return (SPRET_SUCCESS);
 
     case SPRET_FAIL:
@@ -1273,7 +1283,8 @@ static void _spell_zap_effect(spell_type spell)
 {
     // Casting pain costs 1 hp.
     // Deep Dwarves' damage reduction always blocks at least 1 hp.
-    if (spell == SPELL_PAIN && you.species != SP_DEEP_DWARF)
+    if (spell == SPELL_PAIN
+        && (you.species != SP_DEEP_DWARF && !player_res_torment()))
         dec_hp(1, false);
 }
 
@@ -1677,9 +1688,11 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_insulation(powc);
         break;
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_RESIST_POISON:
-        cast_resist_poison(powc);
-        break;
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_SEE_INVISIBLE:
         cast_see_invisible(powc);
@@ -1773,9 +1786,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // General enhancement.
     case SPELL_BERSERKER_RAGE:
-        if (!berserk_check_wielded_weapon())
-           return (SPRET_ABORT);
-
         cast_berserk();
         break;
 
@@ -1976,9 +1986,7 @@ const char* failure_rate_to_string(int fail)
 {
     return (fail == 100) ? "Useless"   : // 0% success chance
            (fail > 77)   ? "Terrible"  : // 0-5%
-           (fail > 71)   ? "Cruddy"    : // 5-10%
-           (fail > 64)   ? "Bad"       : // 10-20%
-           (fail > 59)   ? "Very Poor" : // 20-30%
+           (fail > 59)   ? "Very Poor" : // 5-30%
            (fail > 50)   ? "Poor"      : // 30-50%
            (fail > 40)   ? "Fair"      : // 50-70%
            (fail > 35)   ? "Good"      : // 70-80%

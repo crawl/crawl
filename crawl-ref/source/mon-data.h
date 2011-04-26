@@ -1,16 +1,9 @@
-/*
- *  File:       mon-data.h
- */
-
 #ifndef MONDATA_H
 #define MONDATA_H
 
 #define AT_NO_ATK       {AT_NONE, AF_PLAIN, 0}
 
 #include "enum.h"
-
-// This whole file was very generously condensed from its initial ugly form
-// by Wladimir van der Laan ($pellbinder).
 
 /* ******************************************************************
 
@@ -350,6 +343,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_CORPSES, SIZE_TINY
 },
 
+{
+    MONS_PHOENIX, 'b', ETC_FIRE, "phoenix",
+    M_WARM_BLOOD | M_ALWAYS_CORPSE | M_UNFINISHED,
+    MR_RES_POISON,
+    480, 12, MONS_PHOENIX, MONS_PHOENIX, MH_HOLY, -3,
+    { {AT_CLAW, AF_HOLY, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 13, 6, 5, 0 },
+    2, 10, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SCREECH,
+    I_NORMAL, HT_LAND, FL_FLY, 12, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // centaurs ('c')
 {
     MONS_CENTAUR, 'c', BROWN, "centaur",
@@ -510,7 +515,7 @@ static monsterentry mondata[] = {
        AT_NO_ATK },
     { 14, 5, 4, 0 },
     16, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR,
-    I_HIGH, HT_AMPHIBIOUS, FL_NONE, 10, SWIM_ENERGY(12),
+    I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
@@ -1002,6 +1007,18 @@ static monsterentry mondata[] = {
     2, 9, MST_HELL_HOG, CE_POISON_CONTAM, Z_NOZOMBIE, S_SILENT,
     I_ANIMAL, HT_LAND, FL_NONE, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
+{   // effect of porkalator cast on holies
+    MONS_HOLY_SWINE, 'h', YELLOW, "holy swine",
+    M_WARM_BLOOD,
+    MR_NO_FLAGS,
+    450, 10, MONS_HOG, MONS_HOLY_SWINE, MH_HOLY, -3,
+    { {AT_BITE, AF_HOLY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 11, 3, 5, 0 },
+    2, 9, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SILENT,
+    I_ANIMAL, HT_LAND, FL_NONE, 14, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
 {   // a dummy monster for recolouring
@@ -1965,9 +1982,7 @@ static monsterentry mondata[] = {
     240, 10, MONS_SPIDER, MONS_TRAPDOOR_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
-    // XXX: Will be Z_SMALL, but is Z_NOZOMBIE until code for zombie
-    // spawns is no longer based on zombie size.
-    3, 10, MST_NO_SPELLS, CE_POISON_CONTAM, Z_NOZOMBIE, S_HISS,
+    3, 10, MST_NO_SPELLS, CE_POISON_CONTAM, Z_SMALL, S_HISS,
     I_INSECT, HT_LAND, FL_NONE, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
@@ -2762,7 +2777,7 @@ static monsterentry mondata[] = {
     { {AT_BITE, AF_HOLY, 35}, {AT_CLAW, AF_HOLY, 20}, AT_NO_ATK, AT_NO_ATK },
     { 18, 4, 5, 0 },
     10, 15, MST_PEARL_DRAGON, CE_CLEAN, Z_NOZOMBIE, S_ROAR,
-    I_ANIMAL, HT_LAND, FL_FLY, 13, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, FL_FLY, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_GIANT
 },
 
@@ -2974,7 +2989,7 @@ static monsterentry mondata[] = {
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 15, 4, 5, 0 },
     10, 10, MST_OPHAN, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
+    I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
@@ -3074,26 +3089,14 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_PHOENIX, 'H', ETC_FIRE, "phoenix",
-    M_WARM_BLOOD | M_ALWAYS_CORPSE | M_UNFINISHED,
-    MR_RES_POISON,
-    480, 12, MONS_PHOENIX, MONS_PHOENIX, MH_HOLY, -3,
-    { {AT_CLAW, AF_HOLY, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 6, 5, 0 },
-    2, 10, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SCREECH,
-    I_NORMAL, HT_LAND, FL_FLY, 19, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
-},
-
-{
     MONS_SHEDU, 'H', WHITE, "shedu",
     M_WARM_BLOOD | M_ALWAYS_CORPSE | M_SPELLCASTER,
     MR_RES_POISON,
     480, 12, MONS_PHOENIX, MONS_SHEDU, MH_HOLY, -3,
-    { {AT_CLAW, AF_HOLY, 19}, {AT_CLAW, AF_HOLY, 23}, AT_NO_ATK, AT_NO_ATK },
+    { {AT_KICK, AF_HOLY, 19}, {AT_KICK, AF_HOLY, 23}, AT_NO_ATK, AT_NO_ATK },
     { 13, 6, 5, 0 },
     2, 10, MST_SHEDU, CE_CLEAN, Z_NOZOMBIE, S_SCREECH,
-    I_NORMAL, HT_LAND, FL_FLY, 19, DEFAULT_ENERGY,
+    I_NORMAL, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
@@ -3556,7 +3559,7 @@ static monsterentry mondata[] = {
     { 1, 0, 0, 1 },
     0, 30, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR,
     I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 // snakes ('S')
@@ -5291,7 +5294,7 @@ static monsterentry mondata[] = {
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 0, 0, 77 },
     50, 1, MST_BLESSED_TOE, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_HIGH, HT_LAND, FL_LEVITATE, 11, MOVE_ENERGY(20),
+    I_HIGH, HT_LAND, FL_LEVITATE, 10, MOVE_ENERGY(20),
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
@@ -5332,7 +5335,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 30}, {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK,
        AT_NO_ATK },
     { 19, 0, 0, 150 },
-    15, 28, MST_MENNAS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
+    15, 28, MST_MENNAS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_HIGH, HT_LAND, FL_FLY, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -5396,7 +5399,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_COLD, 75}, {AT_HIT, AF_COLD, 30}, AT_NO_ATK, AT_NO_ATK },
     { 22, 0, 0, 700 },
     28, 4, MST_ANTAEUS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
-    I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    I_HIGH, HT_AMPHIBIOUS, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_GIANT
 },
 
@@ -5492,7 +5495,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
-// "G"oblins and gnolls.
+// "g"oblins and gnolls.
 {
     MONS_IJYB, 'g', BLUE, "Ijyb",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS,
@@ -5651,7 +5654,7 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-// "M"erfolk.
+// "m"erfolk.
 {
     MONS_ILSUIW, 'm', LIGHTGREEN, "Ilsuiw",
     M_UNIQUE | M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS,
@@ -5879,6 +5882,19 @@ static monsterentry mondata[] = {
 },
 
 // numbers!
+{
+    MONS_IGNACIO, '1', LIGHTMAGENTA, "Ignacio",
+    M_UNIQUE | M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS,
+    MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD | MR_RES_POISON,
+    0, 14, MONS_EXECUTIONER, MONS_EXECUTIONER, MH_DEMONIC, -9,
+    { {AT_HIT, AF_PLAIN, 30}, {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 15},
+       AT_NO_ATK },
+    { 18, 0, 0, 250 },
+    10, 15, MST_IGNACIO, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
+    I_HIGH, HT_LAND, FL_NONE, 20, DEFAULT_ENERGY,
+    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_LARGE
+},
+
 {
     MONS_GRINDER, '5', BLUE, "Grinder",
     M_UNIQUE | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS | M_NO_HT_WAND,
@@ -6296,6 +6312,18 @@ static monsterentry mondata[] = {
 // an unspecified monster
 {
     MONS_SENSED, '{', LIGHTRED, "sensed monster",
+    M_NO_POLY_TO,
+    MR_NO_FLAGS,
+    0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 1, 0, 0 },
+    0, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
+{
+    MONS_SENSED_FRIENDLY, '{', GREEN, "friendly sensed monster",
     M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,

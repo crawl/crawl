@@ -1,15 +1,16 @@
-/*
- *  File:       defines.h
- *  Summary:    Various definess used by Crawl.
- *  Written by: Linley Henzel
+/**
+ * @file
+ * @brief Various definess used by Crawl.
  *
- *      Abstract:       A variety of miscellaneous constant values are found here.
- *
- *  Copyright © 1999 Brian Robinson.  // Me?  How come?
- */
+ * A variety of miscellaneous constant values are found here.
+**/
 
 #ifndef DEFINES_H
 #define DEFINES_H
+
+// Minimum terminal size allowed.
+#define MIN_COLS  80
+#define MIN_LINES 24
 
 #define NUM_MONSTER_SPELL_SLOTS  6
 
@@ -26,6 +27,8 @@
      #define FALSE 0
     #endif
 #endif
+
+typedef uint32_t ucs_t;
 
 // length of a single zot defence cycle
 #define CYCLE_LENGTH 200
@@ -63,6 +66,7 @@ enum extra_monster_index_type
     MHITYOU,
 
     ZOT_TRAP_MISCAST,
+    HELL_EFFECT_MISCAST,
     WIELD_MISCAST,
     MELEE_MISCAST,
     MISC_MISCAST,
@@ -101,6 +105,8 @@ enum extra_monster_index_type
 #define GYM 70
 
 const int INFINITE_DISTANCE = 30000;
+// max distance on a map
+#define GDM 105
 
 // this is the size of the border around the playing area (see in_bounds())
 #define BOUNDARY_BORDER         1
@@ -160,8 +166,7 @@ const int DEBUG_COOKIE = 32767;
 
 const int MAX_SKILL_LEVEL = 27;
 const int MAX_EXP_TOTAL = 8999999;
-const int MAX_EXP_POOL = 20000;
-const int FULL_EXP_POOL = MAX_EXP_POOL;
+const int HIGH_EXP_POOL = 20000;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 
@@ -223,6 +228,8 @@ const int ANTITRAIN_PENALTY = 2;
 #define haste_mul(x) div_rand_round((x) * 3, 2)
 #define haste_div(x) div_rand_round((x) * 2, 3)
 
+#define MAX_MONSTER_HP 10000
+
 // some shortcuts:
 #define menv   env.mons
 #define mitm   env.item
@@ -231,7 +238,6 @@ const int ANTITRAIN_PENALTY = 2;
 #define igrd   env.igrid
 
 // colors, such pretty colors ...
-#ifndef TARGET_OS_DOS
 // The order is important (IRGB bit patterns).
 enum COLORS
 {
@@ -255,12 +261,6 @@ enum COLORS
     WHITE,
     MAX_TERM_COLOUR
 };
-#else
-# include <conio.h>
-# define LIGHTGREY LIGHTGRAY
-# define DARKGREY DARKGRAY
-# define MAX_TERM_COLOUR 16
-#endif
 
 // Colour options... these are used as bit flags along with the colour
 // value in the low byte.

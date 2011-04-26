@@ -73,7 +73,6 @@ ENDMAP
 NAME:   minmay_snake_entry_six_corridors
 TAGS:   snake_entry ruin_lair
 ORIENT: float
-DEPTH:  Lair:5-
 MONS:   small snake, snake, water moccasin, viper, black mamba
 KMONS:  P = plant / fungus w:1 / nothing
 SUBST:  1 = 1., 2 = 2., 3 = 3.
@@ -105,7 +104,6 @@ ENDMAP
 NAME:   minmay_snake_entry_spellcaster
 TAGS:   snake_entry
 ORIENT: float
-DEPTH:  Lair:5-
 WEIGHT: 2
 MONS:   naga mage / guardian serpent
 KFEAT:  O = enter_snake_pit

@@ -1,16 +1,16 @@
-/*
- * File:     luaterp.cc
- * Summary:  An interactive lua interpreter.
+/**
+ * @file
+ * @brief An interactive lua interpreter.
  *
  * Based heavily on lua.c from the Lua distribution.
  *
  * Deficiencies:
  * - Currently requires defining a global function __echo
- *   to echo results.
+ *  to echo results.
  * - Currently requires prefixing with '=' if you want results echoed.
  * - Appears to require delay_message_clear = true.
  * - Old input lines are not visible.
- */
+**/
 
 #include "AppHdr.h"
 

@@ -1,8 +1,7 @@
-/*
- *  File:       monster.cc
- *  Summary:    Monsters class methods
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monsters class methods
+**/
 
 #include "AppHdr.h"
 
@@ -101,6 +100,7 @@ void monster::reset()
 {
     mname.clear();
     enchantments.clear();
+    ench_cache.reset();
     ench_countdown = 0;
     inv.init(NON_ITEM);
 
@@ -159,6 +159,7 @@ void monster::init_with(const monster& mon)
     behaviour         = mon.behaviour;
     foe               = mon.foe;
     enchantments      = mon.enchantments;
+    ench_cache        = mon.ench_cache;
     flags             = mon.flags;
     experience        = mon.experience;
     number            = mon.number;
@@ -223,7 +224,8 @@ bool monster::submerged() const
         return (true);
 
     if (grd(pos()) == DNGN_DEEP_WATER
-        && !monster_habitable_grid(this, DNGN_DEEP_WATER)
+        && (!monster_habitable_grid(this, DNGN_DEEP_WATER)
+            || type == MONS_GREY_DRACONIAN)
         && !can_drown())
     {
         return (true);
@@ -682,6 +684,9 @@ bool monster::can_throw_large_rocks() const
 
 bool monster::can_speak()
 {
+    if (has_ench(ENCH_MUTE))
+        return (false);
+
     // Priest and wizard monsters can always speak.
     if (is_priest() || is_actual_spellcaster())
         return (true);
@@ -692,9 +697,6 @@ bool monster::can_speak()
     {
         return (false);
     }
-
-    if (has_ench(ENCH_MUTE))
-        return (false);
 
     // Does it have the proper vocal equipment?
     const mon_body_shape shape = get_mon_shape(this);
@@ -1229,6 +1231,9 @@ bool monster::drop_item(int eslot, int near)
         }
     }
 
+    if (props.exists("wand_known") && near && pitem->base_type == OBJ_WANDS)
+        props.erase("wand_known");
+
     inv[eslot] = NON_ITEM;
     return (true);
 }
@@ -1384,6 +1389,9 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 
         case UNRAND_CEREBOV:
             return (mons->type == MONS_CEREBOV);
+
+        case UNRAND_MORG:
+            return (mons->type == MONS_BORIS);
         }
     }
 
@@ -1891,7 +1899,14 @@ bool monster::pickup_wand(item_def &item, int near)
             return (false);
     }
 
-    return (pickup(item, MSLOT_WAND, near));
+    if (pickup(item, MSLOT_WAND, near))
+    {
+        if (near)
+            props["wand_known"] = item_type_known(item);
+        return true;
+    }
+    else
+        return false;
 }
 
 bool monster::pickup_scroll(item_def &item, int near)
@@ -2550,9 +2565,9 @@ int monster::get_experience_level() const
     return (hit_dice);
 }
 
-void monster::moveto(const coord_def& c)
+void monster::moveto(const coord_def& c, bool clear_net)
 {
-    if (c != pos() && in_bounds(pos()))
+    if (clear_net && c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
 
     if (mons_is_projectile(type))
@@ -2961,7 +2976,7 @@ bool monster::heal(int amount, bool max_too)
 
             // Limit HP growth.
             if (random2(3 * maxhp) > 2 * max_hit_points)
-                max_hit_points++;
+                max_hit_points = std::min(max_hit_points + 1, MAX_MONSTER_HP);
             else
                 success = false;
         }
@@ -2981,6 +2996,7 @@ bool monster::heal(int amount, bool max_too)
 
 void monster::blame_damage(const actor* attacker, int amount)
 {
+    ASSERT(amount >= 0);
     damage_total = std::min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
     if (attacker)
         damage_friendly = std::min<int>(MAX_DAMAGE_COUNTER * 2,
@@ -3009,22 +3025,22 @@ bool monster::undead_or_demonic() const
     return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
-bool monster::is_holy() const
+bool monster::is_holy(bool check_spells) const
 {
     if (holiness() == MH_HOLY)
         return (true);
 
     // Assume that all unknown gods (GOD_NAMELESS) are not holy.
-    if (is_priest() && is_good_god(god))
+    if (is_priest() && is_good_god(god) && check_spells)
         return (true);
 
-    if (has_holy_spell())
+    if (has_holy_spell() && (check_spells || !is_actual_spellcaster()))
         return (true);
 
     return (false);
 }
 
-bool monster::is_unholy() const
+bool monster::is_unholy(bool check_spells) const
 {
     if (type == MONS_SILVER_STATUE)
         return (true);
@@ -3032,22 +3048,25 @@ bool monster::is_unholy() const
     if (holiness() == MH_DEMONIC)
         return (true);
 
-    if (has_unholy_spell())
+    if (has_unholy_spell() && check_spells)
         return (true);
 
     return (false);
 }
 
-bool monster::is_evil() const
+bool monster::is_evil(bool check_spells) const
 {
     if (holiness() == MH_UNDEAD)
         return (true);
 
     // Assume that all unknown gods (GOD_NAMELESS) are evil.
-    if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS))
+    if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS)
+        && check_spells)
+    {
         return (true);
+    }
 
-    if (has_evil_spell())
+    if (has_evil_spell() && check_spells)
         return (true);
 
     if (has_attack_flavour(AF_DRAIN_XP)
@@ -3059,9 +3078,9 @@ bool monster::is_evil() const
     return (false);
 }
 
-bool monster::is_unclean() const
+bool monster::is_unclean(bool check_spells) const
 {
-    if (has_unclean_spell())
+    if (has_unclean_spell() && check_spells)
         return (true);
 
     if (has_attack_flavour(AF_DISEASE)
@@ -3085,17 +3104,17 @@ bool monster::is_unclean() const
     // Being a worshipper of a chaotic god doesn't yet make you
     // physically/essentially chaotic (so you don't get hurt by silver),
     // but Zin does mind.
-    if (is_priest() && is_chaotic_god(god))
+    if (is_priest() && is_chaotic_god(god) && check_spells)
         return (true);
 
-    if (has_chaotic_spell() && is_actual_spellcaster())
+    if (has_chaotic_spell() && is_actual_spellcaster() && check_spells)
         return (true);
 
     corpse_effect_type ce = mons_corpse_effect(type);
     if ((ce == CE_HCL || ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_GOOD
          || ce == CE_MUTAGEN_BAD || ce == CE_RANDOM) && !is_chaotic())
     {
-        return true;
+        return (true);
     }
 
     return (false);
@@ -3691,25 +3710,26 @@ void monster::set_ghost(const ghost_demon &g, bool has_name)
 void monster::pandemon_init()
 {
     hit_dice        = ghost->xl;
-    max_hit_points  = ghost->max_hp;
+    max_hit_points  = std::min<int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
     flags           = MF_INTERESTING;
     // Don't make greased-lightning Pandemonium demons in the dungeon
-    // max speed = 17).  Demons in Pandemonium can be up to speed 20,
-    // possibly with haste.
+    // max speed = 17). Demons in Pandemonium can be up to speed 20,
+    // possibly with haste. Non-caster demons are likely to be fast.
     if (you.level_type == LEVEL_DUNGEON)
-        speed = (one_chance_in(3) ? 10 : 7 + roll_dice(2, 5));
+        speed = (!ghost->spellcaster ? 11 + roll_dice(2, 3) :
+                 one_chance_in(3) ? 10 :
+                 7 + roll_dice(2, 5));
     else
-        speed = (one_chance_in(3) ? 10 : 8 + roll_dice(2, 6));
+        speed = (!ghost->spellcaster ? 12 + roll_dice(2, 4) :
+                 one_chance_in(3) ? 10 :
+                 8 + roll_dice(2, 6));
 
     speed_increment = 70;
 
-    if (you.char_direction == GDT_ASCENDING && you.level_type == LEVEL_DUNGEON)
-        colour = LIGHTRED;
-    else
-        colour = ghost->colour;
+    colour = ghost->colour;
 
     load_ghost_spells();
 }
@@ -3725,7 +3745,7 @@ void monster::ghost_init(bool need_pos)
     type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
     hit_dice        = ghost->xl;
-    max_hit_points  = ghost->max_hp;
+    max_hit_points  = std::min<int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
@@ -3742,6 +3762,7 @@ void monster::ghost_init(bool need_pos)
 
     inv.init(NON_ITEM);
     enchantments.clear();
+    ench_cache.reset();
     ench_countdown = 0;
 
     // Summoned player ghosts are already given a position; calling this
@@ -3910,14 +3931,14 @@ bool monster::is_patrolling() const
     return (!patrol_point.origin());
 }
 
-bool monster::needs_transit() const
+bool monster::needs_abyss_transit() const
 {
     return ((mons_is_unique(type)
                 || (flags & MF_BANISHED)
                 || you.level_type == LEVEL_DUNGEON
                    && hit_dice > 8 + random2(25)
                    && mons_can_use_stairs(this))
-            && !is_summoned());
+            && !has_ench(ENCH_ABJ));
 }
 
 void monster::set_transit(const level_id &dest)
@@ -3979,11 +4000,6 @@ bool monster::is_actual_spellcaster() const
 bool monster::is_shapeshifter() const
 {
     return (has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
-}
-
-bool monster::has_ench(enchant_type ench) const
-{
-    return (enchantments.find(ench) != enchantments.end());
 }
 
 bool monster::has_ench(enchant_type ench, enchant_type ench2) const
@@ -4051,6 +4067,7 @@ bool monster::add_ench(const mon_enchant &ench)
     {
         new_enchantment = true;
         added = &(enchantments[ench.ench] = ench);
+        ench_cache.set(ench.ench, true);
     }
     else
     {
@@ -4298,6 +4315,7 @@ bool monster::del_ench(enchant_type ench, bool quiet, bool effect)
         return (false);
 
     enchantments.erase(et);
+    ench_cache.set(et, false);
     if (effect)
         remove_enchantment_effect(me, quiet);
     return (true);
@@ -5817,7 +5835,9 @@ bool monster::has_lifeforce() const
 
 bool monster::can_mutate() const
 {
-    return (has_lifeforce());
+    const mon_holy_type holi = holiness();
+
+    return (holi != MH_UNDEAD && holi != MH_NONLIVING);
 }
 
 bool monster::can_safely_mutate() const
@@ -5913,7 +5933,7 @@ bool monster::has_action_energy() const
     return (speed_increment >= 80);
 }
 
-void monster::check_redraw(const coord_def &old) const
+void monster::check_redraw(const coord_def &old, bool clear_tiles) const
 {
     if (!crawl_state.io_inited)
         return;
@@ -5930,7 +5950,7 @@ void monster::check_redraw(const coord_def &old) const
         {
             view_update_at(old);
 #ifdef USE_TILE
-            if (!see_old)
+            if (clear_tiles && !see_old)
                 tile_clear_monster(old);
 #endif
         }
@@ -6018,7 +6038,7 @@ bool monster::self_destructs()
     return (false);
 }
 
-bool monster::move_to_pos(const coord_def &newpos)
+bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
 {
     const actor* a = actor_at(newpos);
     if (a && (a != &you || !fedhas_passthrough(this)))
@@ -6031,7 +6051,7 @@ bool monster::move_to_pos(const coord_def &newpos)
         mgrd(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
-    moveto(newpos);
+    moveto(newpos, clear_net);
 
     // Set new monster grid pointer to this monster.
     mgrd(newpos) = index;
@@ -6494,6 +6514,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             int old_hp                = hit_points;
             uint64_t old_flags        = flags;
             mon_enchant_list old_ench = enchantments;
+            FixedBitArray<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
             int8_t old_ench_countdown = ench_countdown;
 
             if (!fly_died)
@@ -6504,6 +6525,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             hit_points = std::min(old_hp, hit_points);
             flags          = old_flags;
             enchantments   = old_ench;
+            ench_cache     = old_ench_cache;
             ench_countdown = old_ench_countdown;
 
             mounted_kill(this, fly_died ? MONS_FIREFLY : MONS_SPRIGGAN,
@@ -6548,7 +6570,9 @@ reach_type monster::reach_range() const
 
 bool monster::can_cling_to_walls() const
 {
-    return mons_genus(type) == MONS_SPIDER;
+    return (mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
+            || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
+            || type == MONS_DEMONIC_CRAWLER);
 }
 
 void monster::steal_item_from_player()

@@ -62,7 +62,9 @@ enum monster_info_flags
     MB_FEAR_INSPIRING,
     MB_WITHDRAWN,
     MB_ATTACHED,
+#if TAG_MAJOR_VERSION == 32
     MB_HELPLESS,
+#endif
     MB_DAZED,
     MB_MUTE,
     MB_BLIND,
@@ -70,6 +72,7 @@ enum monster_info_flags
     MB_MAD,
     MB_CLINGING,
     MB_NAME_ZOMBIE,
+    MB_PERM_SUMMON,
 };
 
 struct monster_info_base
@@ -97,6 +100,7 @@ struct monster_info_base
     flight_type fly;
     bool two_weapons;
     bool no_regen;
+    CrawlHashTable props;
 };
 
 // Monster info used by the pane; precomputes some data
@@ -127,6 +131,7 @@ struct monster_info : public monster_info_base
             if (mi.inv[i].get())
                 inv[i].reset(new item_def(*mi.inv[i]));
         }
+        props = mi.props;
     }
 
     monster_info& operator=(const monster_info& p)

@@ -1,7 +1,7 @@
-/*
- * File:     l_travel.cc
- * Summary:  Travel and exclusions.
- */
+/**
+ * @file
+ * @brief Travel and exclusions.
+**/
 
 #include "AppHdr.h"
 

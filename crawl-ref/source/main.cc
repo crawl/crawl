@@ -1,8 +1,7 @@
-/*
- *  File:       main.cc
- *  Summary:    Main entry point, event loop, and some initialization functions
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Main entry point, event loop, and some initialization functions
+**/
 
 #include "AppHdr.h"
 
@@ -71,7 +70,7 @@
 #include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
-#include "it_use3.h"
+#include "evoke.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -229,6 +228,7 @@ static void _handle_wizard_command(void);
 
 int main(int argc, char *argv[])
 {
+    setlocale(LC_ALL, "");
 #ifdef DEBUG_GLOBALS
     real_Options = new game_options();
     real_you = new player();
@@ -296,6 +296,7 @@ static void _reset_game()
 {
     clrscr();
     crawl_state.type = GAME_TYPE_UNSPECIFIED;
+    crawl_state.updating_scores = false;
     clear_message_store();
     macro_clear_buffers();
     transit_lists_clear();
@@ -378,9 +379,6 @@ static void _launch_game()
        _announce_goal_message();
 
     _god_greeting_message(game_start);
-
-    // Warn player about their weapon, if unsuitable.
-    wield_warning(false);
 
     if (!crawl_state.game_is_tutorial())
         mpr("Press <w>?</w> for a list of commands and other information.");
@@ -593,6 +591,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('H'): wizard_set_hunger_state(); break;
     case CONTROL('I'): debug_item_statistics(); break;
     case CONTROL('L'): wizard_set_xl(); break;
+    case CONTROL('R'): wizard_recreate_level(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
     case CONTROL('V'): wizard_toggle_xray_vision(); break;
     case CONTROL('X'): debug_xom_effects(); break;
@@ -655,7 +654,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 's':
-        you.exp_available = FULL_EXP_POOL;
+        you.exp_available += HIGH_EXP_POOL;
         level_change();
         you.redraw_experience = true;
         break;
@@ -1153,7 +1152,11 @@ static void _input()
 
         // Some delays reset you.time_taken.
         if (you.time_taken || you.turn_is_over)
+        {
+            if (you.berserk())
+                _do_berserk_no_combat_penalty();
             world_reacts();
+        }
 
         return;
     }
@@ -1281,6 +1284,25 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
+static bool _check_carrying_orb()
+{
+    // We never picked up the Orb, no problem.
+    if (you.char_direction != GDT_ASCENDING)
+        return (true);
+
+    // So we did pick up the Orb. Now check whether we're carrying it.
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].defined()
+            && you.inv[i].base_type == OBJ_ORBS
+            && you.inv[i].sub_type == ORB_ZOT)
+        {
+            return (true);
+        }
+    }
+    return (yes_or_no("You're not carrying the Orb! Leave anyway"));
+}
+
 static void _go_downstairs();
 static void _go_upstairs()
 {
@@ -1337,11 +1359,44 @@ static void _go_upstairs()
     if (_marker_vetoes_stair())
         return;
 
+    if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(ygrd)
+        && !feat_is_gate(ygrd))
+    {
+        mpr("You are carrying too much to climb upwards.");
+        return;
+    }
+
+    const bool leaving_dungeon =
+        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1);
+
+    if (leaving_dungeon)
+    {
+        bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
+                            false, 'n') || !_check_carrying_orb());
+
+        if (!stay && crawl_state.game_is_hints())
+        {
+            if (!yesno("Are you *sure*? Doing so will end the game!", false,
+                       'n'))
+            {
+                stay = true;
+            }
+        }
+
+        if (stay)
+        {
+            mpr("Alright, then stay!");
+            return;
+        }
+    }
+
     if (you.duration[DUR_MISLED])
     {
         mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
         you.duration[DUR_MISLED] = 0;
     }
+
+    you.clear_clinging();
 
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
@@ -1404,6 +1459,13 @@ static void _go_downstairs()
         return;
     }
 
+    if (you.flight_mode() == FL_LEVITATE && !feat_is_gate(ygrd))
+    {
+        mpr("You're floating high up above the floor!");
+        learned_something_new(HINT_LEVITATING);
+        return;
+    }
+
     if (!_prompt_dangerous_portal(ygrd))
         return;
 
@@ -1417,6 +1479,8 @@ static void _go_downstairs()
         mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
         you.duration[DUR_MISLED] = 0;
     }
+
+    you.clear_clinging();
 
     if (shaft)
     {
@@ -1628,6 +1692,12 @@ static void _do_display_map()
 
 static void _do_cycle_quiver(int dir)
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't grasp things well enough to throw them.");
+        return;
+    }
+
     const int cur = you.m_quiver->get_fire_item();
     const int next = get_next_fire_item(cur, dir);
 #ifdef DEBUG_QUIVER
@@ -2004,7 +2074,12 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     if (you.duration[dur] <= midpoint && old_dur > midpoint)
     {
         if (midmsg)
-            mpr(midmsg, chan);
+        {
+            if (need_expiration_warning(dur))
+                mprf(MSGCH_DANGER, "Careful! %s", midmsg);
+            else
+                mpr(midmsg, chan);
+        }
         you.duration[dur] -= midloss * BASELINE_DELAY;
     }
 
@@ -2086,7 +2161,8 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
                               "Your icy armour evaporates.", coinflip(),
-                              "Your icy armour starts to melt."))
+                              you.props.exists("melt_armour") ? NULL
+                                  : "Your icy armour starts to melt."))
     {
         you.redraw_armour_class = true;
     }
@@ -2371,28 +2447,24 @@ static void _decrement_durations()
         notify_stat_change(STAT_INT, -5, true, "brilliance running out");
     }
 
-    if (_decrement_a_duration(DUR_BERSERK, delay,
-                              "You are no longer berserk."))
+    if (you.duration[DUR_BERSERK]
+        && (_decrement_a_duration(DUR_BERSERK, delay)
+            || you.hunger <= HUNGER_STARVING + BERSERK_NUTRITION))
     {
+        mpr("You are no longer berserk.");
+        you.duration[DUR_BERSERK] = 0;
+
         // Sometimes berserk leaves us physically drained.
         //
         // Chance of passing out:
         //     - mutation gives a large plus in order to try and
         //       avoid the mutation being a "death sentence" to
         //       certain characters.
-        //     - knowing the spell gives an advantage just
-        //       so that people who have invested 3 spell levels
-        //       are better off than the casual potion drinker...
-        //       this should make it a bit more interesting for
-        //       Crusaders again.
-        //     - similarly for the amulet
 
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
         {
             const int chance =
-                10 + player_mutation_level(MUT_BERSERK) * 25
-                + (wearing_amulet(AMU_RAGE) ? 10 : 0)
-                + (you.has_spell(SPELL_BERSERKER_RAGE) ? 5 : 0);
+                10 + player_mutation_level(MUT_BERSERK) * 25;
 
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
@@ -2427,8 +2499,8 @@ static void _decrement_durations()
 
         slow_player(dur);
 
-        make_hungry(700, true);
-        you.hunger = std::max(50, you.hunger);
+        make_hungry(BERSERK_NUTRITION, true);
+        you.hunger = std::max(HUNGER_STARVING, you.hunger);
 
         // 1KB: No berserk healing.
         you.hp = (you.hp + 1) * 2 / 3;
@@ -2436,6 +2508,7 @@ static void _decrement_durations()
 
         learned_something_new(HINT_POSTBERSERK);
         Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
+        you.redraw_quiver = true; // Can throw again.
     }
 
     if (_decrement_a_duration(DUR_CORONA, delay))
@@ -2476,7 +2549,7 @@ static void _decrement_durations()
             if (_decrement_a_duration(DUR_LEVITATION, delay,
                                       0,
                                       random2(6),
-                                      "You are starting to lose your buoyancy!"))
+                                      "You are starting to lose your buoyancy."))
             {
                 land_player();
             }
@@ -2504,7 +2577,8 @@ static void _decrement_durations()
         // It's not normal biology, so Cheibriados won't help.
         if (you.species == SP_MUMMY)
             you.rotting = 0;
-        else if (x_chance_in_y(you.rotting, 20))
+        else if (x_chance_in_y(you.rotting, 20)
+                 && !you.duration[DUR_DEATHS_DOOR])
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
             ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
@@ -2679,7 +2753,7 @@ static void _regenerate_hp_and_mp(int delay)
 
 static void _update_mold_state(const coord_def & pos)
 {
-    if (glowing_mold(pos))
+    if (glowing_mold(pos) && coinflip())
     {
         // Doing a weird little state thing with the two mold
         // fprops. 'glowing' mold should turn back to normal after
@@ -2764,6 +2838,10 @@ static void _player_reacts()
 
     slime_wall_damage(&you, you.time_taken);
 
+    // Icy shield and armour melt over lava.
+    if (grd(you.pos()) == DNGN_LAVA)
+        expose_player_to_element(BEAM_LAVA);
+
     _decrement_durations();
 
     int capped_time = you.time_taken;
@@ -2803,6 +2881,27 @@ static void _player_reacts_to_monsters()
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);
 
+    // We have to do the messaging here, because a simple wand of flame will
+    // call _maybe_melt_player_enchantments twice. It also avoid duplicate
+    // messages when melting because of several heating sources.
+    std::string what;
+    if (you.props.exists("melt_armour"))
+    {
+        what = "armour";
+        you.props.erase("melt_armour");
+    }
+
+    if (you.props.exists("melt_shield"))
+    {
+        if (what != "")
+            what += " and ";
+        what += "shield";
+        you.props.erase("melt_shield");
+    }
+
+    if (what != "")
+        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
+
     handle_starvation();
     _decrement_paralysis(you.time_taken);
 
@@ -2817,7 +2916,10 @@ static void _update_golubria_traps()
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
             if (--trap->ammo_qty <= 0)
+            {
+                mpr("Your passage of Golubria closes.");
                 trap->destroy();
+            }
         }
     }
 }
@@ -3449,6 +3551,9 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     update_exclusion_los(excludes);
+    viewwindow();
+    if (check_for_interesting_features() && you.running.is_explore())
+            stop_running();
 
     you.turn_is_over = true;
 }
@@ -3806,6 +3911,7 @@ static void _move_player(coord_def move)
         return;
 
     const dungeon_feature_type targ_grid = grd(targ);
+
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
     {
@@ -3915,7 +4021,19 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (!you.confused() && !check_moveto(targ))
+        std::string verb;
+        if (you.flight_mode() == FL_FLY)
+            verb = "fly";
+        else if (you.flight_mode() == FL_LEVITATE)
+            verb = "levitate";
+        else if (you.is_wall_clinging())
+            verb = "cling";
+        else if (you.species == SP_NAGA && !form_changed_physiology())
+            verb = "crawl";
+        else
+            verb = "walk";
+
+        if (!you.confused() && !check_moveto(targ, verb))
         {
             stop_running();
             you.turn_is_over = false;
@@ -3933,9 +4051,13 @@ static void _move_player(coord_def move)
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
 
+#ifdef EUCLIDEAN
+        if (move.abs() == 2)
+            you.time_taken *= 1.4;
+#endif
+
         move_player_to_grid(targ, true, false);
 
-        you.check_clinging(true);
         you.walking = move.abs();
         you.prev_move = move;
         move.reset();
@@ -3966,6 +4088,9 @@ static void _move_player(coord_def move)
         if (grd(targ) == DNGN_OPEN_SEA)
             mpr("You can't go out to sea!");
 
+        if (grd(targ) == DNGN_LAVA_SEA)
+            mpr("The endless sea of lava is not a nice place.");
+
         if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
             mpr("You cannot walk through the dense trees.");
 
@@ -3991,32 +4116,8 @@ static void _move_player(coord_def move)
     if (you.running == RMODE_START)
         you.running = RMODE_CONTINUE;
 
-    if (you.level_type == LEVEL_ABYSS
-        && !map_bounds_with_margin(you.pos(),
-                                   MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
-    {
-        dprf("Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
-
-        abyss_area_shift();
-        if (you.pet_target != MHITYOU)
-            you.pet_target = MHITNOT;
-
-#ifdef DEBUG_DIAGNOSTICS
-        int j = 0;
-        for (int i = 0; i < MAX_ITEMS; ++i)
-            if (mitm[i].defined())
-                ++j;
-
-        mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
-
-        j = 0;
-        for (monster_iterator mi; mi; ++mi)
-            ++j;
-
-        mprf(MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
-        mprf(MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
-#endif
-    }
+    if (you.level_type == LEVEL_ABYSS)
+        maybe_shift_abyss_around_player();
 
     apply_berserk_penalty = !attacking;
 

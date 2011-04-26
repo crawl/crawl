@@ -28,11 +28,8 @@ function geh_setup(e)
    e.kmask('O = no_item_gen')
    e.kitem('O = obsidian rune of Zot')
    e.lrockcol("brown")
-   e.lfloorcol("darkgrey")
---   e.lrocktile("???")
---   e.lfloortile("???")
+   e.lfloorcol("lightgrey")
    e.colour("v = red")
-   e.colour("c = darkgrey")
    dgn.set_feature_desc_short("Floor", "Ashen ground")
    dgn.set_feature_desc_long("Floor", "With every step, you walk on ash. " ..
                              "It is warm and almost comfortable.\n")
@@ -48,11 +45,10 @@ function coc_setup(e)
                      level_flags="!no_tele_control", item="auto" } )
    e.kmask('O = no_item_gen')
    e.kitem('O = icy rune of Zot')
-   e.lrockcol("lightgrey")
+   e.lrockcol("lightcyan")
    e.lfloorcol("white")
---   e.lrocktile("???")
    e.lfloortile("floor_ice")
-   e.colour("c = lightcyan")
+   e.colour("c = lightblue")
    dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
    dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.\n")
    dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
@@ -119,7 +115,7 @@ MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
         hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
-ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology /\
+ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
         scroll of torment
 KFEAT:  A = enter_hell
 ORIENT: float
@@ -156,7 +152,7 @@ MONS:   imp / quasit / shadow imp / iron imp / lemure
 MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
-ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology /\
+ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
         scroll of torment
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing

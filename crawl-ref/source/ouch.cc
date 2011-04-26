@@ -1,8 +1,7 @@
-/*
- *  File:       ouch.cc
- *  Summary:    Functions used when Bad Things happen to the player.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when Bad Things happen to the player.
+**/
 
 #include "AppHdr.h"
 
@@ -13,10 +12,6 @@
 #include <cstdlib>
 #include <cctype>
 #include <cmath>
-
-#ifdef TARGET_OS_DOS
-#include <file.h>
-#endif
 
 #ifdef UNIX
 #include <sys/types.h>
@@ -74,20 +69,27 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
+#include "syscalls.h"
 #include "xom.h"
 
 
 static void _end_game(scorefile_entry &se);
 static void _item_corrode(int slot);
 
-static void _maybe_melt_player_enchantments(beam_type flavour)
+static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
         || flavour == BEAM_STEAM)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
+        {
+            you.duration[DUR_CONDENSATION_SHIELD] -= damage * BASELINE_DELAY;
+            if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
+                remove_condensation_shield();
+            else
+                you.props["melt_shield"] = true;
+        }
 
         if (you.mutation[MUT_ICEMAIL])
         {
@@ -97,7 +99,13 @@ static void _maybe_melt_player_enchantments(beam_type flavour)
         }
 
         if (you.duration[DUR_ICY_ARMOUR] > 0)
-            remove_ice_armour();
+        {
+            you.duration[DUR_ICY_ARMOUR] -= damage * BASELINE_DELAY;
+            if (you.duration[DUR_ICY_ARMOUR] <= 0)
+                remove_ice_armour();
+            else
+                you.props["melt_armour"] = true;
+        }
     }
 }
 
@@ -118,7 +126,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     }
 
     if (doEffects)
-        _maybe_melt_player_enchantments(flavour);
+        _maybe_melt_player_enchantments(flavour, hurted);
 
     switch (flavour)
     {
@@ -729,11 +737,12 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 // This function now calls _expose_invent_to_element() if strength > 0.
 //
 // XXX: This function is far from perfect and a work in progress.
-bool expose_player_to_element(beam_type flavour, int strength)
+bool expose_player_to_element(beam_type flavour, int strength,
+                              bool damage_inventory)
 {
-    _maybe_melt_player_enchantments(flavour);
+    _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
 
-    if (strength <= 0)
+    if (strength <= 0 || !damage_inventory)
         return (false);
 
     return (_expose_invent_to_element(flavour, strength));
@@ -1222,7 +1231,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         you.reset_escaped_death();
 
         // Ensure some minimal information about Xom's involvement.
-        if (aux == NULL || strlen(aux) == 0)
+        if (aux == NULL || !*aux)
         {
             if (death_type != KILLED_BY_XOM)
                 aux = "Xom";
@@ -1286,8 +1295,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
               true);
     if (you.lives && !non_death)
     {
-        mark_milestone("death", lowercase_first(
-            se.death_description(scorefile_entry::DDV_NORMAL)).c_str());
+        mark_milestone("death", lowercase_first(se.long_kill_message()).c_str());
 
         you.deaths++;
         you.lives--;
@@ -1337,9 +1345,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
 static std::string _morgue_name(time_t when_crawl_got_even)
 {
-#ifdef SHORT_FILE_NAMES
-    return "morgue";
-#else  // !SHORT_FILE_NAMES
     std::string name = "morgue-" + you.your_name;
 
     std::string time = make_file_time(when_crawl_got_even);
@@ -1347,7 +1352,6 @@ static std::string _morgue_name(time_t when_crawl_got_even)
         name += "-" + time;
 
     return (name);
-#endif // SHORT_FILE_NAMES
 }
 
 // Delete save files on game end.
@@ -1366,7 +1370,7 @@ void screen_end_game(std::string text)
     if (!text.empty())
     {
         clrscr();
-        linebreak_string2(text, get_number_of_cols());
+        linebreak_string(text, get_number_of_cols());
         display_tagged_block(text);
 
         if (!crawl_state.seen_hups)

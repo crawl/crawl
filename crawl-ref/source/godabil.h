@@ -1,7 +1,7 @@
-/*
- *  File:       godabil.h
- *  Summary:    God-granted abilities.
- */
+/**
+ * @file
+ * @brief God-granted abilities.
+**/
 
 #ifndef GODABIL_H
 #define GODABIL_H

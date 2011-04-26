@@ -9,7 +9,7 @@
 
 # 1/3 chance to appear on D:21-27, and guaranteed on D:25.
 NAME: abyss_entry
-TAGS: extra allow_dup
+TAGS: extra allow_dup can_overwrite
 DEPTH: D:21-27
 CHANCE: 100% (D:25), 3333
 KFEAT: O = enter_abyss

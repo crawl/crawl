@@ -42,12 +42,12 @@ public:
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as mgrd.
-    virtual void moveto(const coord_def &c) = 0;
+    virtual void moveto(const coord_def &c, bool clear_net = true) = 0;
 
     // High-level actor movement. If in doubt, use this. Returns false if the
     // actor cannot be moved to the target, possibly because it is already
     // occupied.
-    virtual bool move_to_pos(const coord_def &c) = 0;
+    virtual bool move_to_pos(const coord_def &c, bool clear_net = true) = 0;
 
     virtual void apply_location_effects(const coord_def &oldpos,
                                         killer_type killer = KILL_NONE,
@@ -237,9 +237,9 @@ public:
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool undead_or_demonic() const = 0;
-    virtual bool is_holy() const = 0;
-    virtual bool is_unholy() const = 0;
-    virtual bool is_evil() const = 0;
+    virtual bool is_holy(bool spells = true) const = 0;
+    virtual bool is_unholy(bool spells = true) const = 0;
+    virtual bool is_evil(bool spells = true) const = 0;
     virtual bool is_chaotic() const = 0;
     virtual bool is_artificial() const = 0;
     virtual bool is_unbreathing() const = 0;
@@ -268,7 +268,7 @@ public:
     virtual bool is_banished() const = 0;
     virtual bool can_cling_to_walls() const = 0;
     virtual bool can_cling_to(const coord_def& p) const;
-    virtual void check_clinging(bool stepped);
+    virtual bool check_clinging(bool stepped, bool door = false);
     virtual void clear_clinging();
     virtual bool airborne() const;
     virtual bool ground_level() const;

@@ -1,7 +1,7 @@
-/*
- * File:      l_moninf.cc
- * Summary:   User-accessible monster info.
- */
+/**
+ * @file
+ * @brief User-accessible monster info.
+**/
 
 #include "AppHdr.h"
 

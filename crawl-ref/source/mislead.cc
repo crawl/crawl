@@ -1,6 +1,7 @@
-/*  File:       mislead.cc
- *  Summary:    Handling of Mara's Mislead spell and stats, plus fakes.
- */
+/**
+ * @file
+ * @brief Handling of Mara's Mislead spell and stats, plus fakes.
+**/
 
 #include "AppHdr.h"
 #include "mislead.h"

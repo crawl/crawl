@@ -1,8 +1,7 @@
-/*
- *  File:       food.cc
- *  Summary:    Functions for eating and butchering.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for eating and butchering.
+**/
 
 #include "AppHdr.h"
 
@@ -56,7 +55,7 @@
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
                                                   bool rotten_chunk);
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
-                       int mon_intel = 0);
+                       int mon_intel = 0, bool holy = false);
 static void _eating(object_class_type item_class, int item_type);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(int slot, bool invent);
@@ -70,6 +69,13 @@ static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
 void make_hungry(int hunger_amount, bool suppress_msg,
                  bool allow_reducing)
 {
+    if (crawl_state.game_is_zotdef() && you.species == SP_SPRIGGAN)
+    {
+        you.hunger = 6000;
+        you.hunger_state = HS_SATIATED;
+        return;
+    }
+
     if (you.is_undead == US_UNDEAD)
         return;
 
@@ -174,7 +180,7 @@ void weapon_switch(int targ)
         unwield_item(false);
 
     if (targ != -1)
-        equip_item(EQ_WEAPON, targ);
+        equip_item(EQ_WEAPON, targ, false);
 
     if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
@@ -211,12 +217,15 @@ static bool _find_butchering_implement(int &butcher_tool, bool gloved_butcher)
 
         if (wpn->base_type == OBJ_WEAPONS
             && item_type_known(*wpn)
-            && get_weapon_brand(*wpn) == SPWPN_DISTORTION)
+            && get_weapon_brand(*wpn) == SPWPN_DISTORTION
+            && !you.duration[DUR_WEAPON_BRAND])
         {
             if (!gloved_butcher)
+            {
                 mprf(MSGCH_WARN,
                     "You're wielding a weapon of distortion, will not "
                     "autoswap for butchering.");
+            }
 
             return (false);
         }
@@ -500,6 +509,9 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool teeth_butcher    = (you.has_usable_fangs() == 3
                              && you.species != SP_VAMPIRE);
 
+    bool birdie_butcher   = (player_mutation_level(MUT_BEAK)
+                             && player_mutation_level(MUT_TALONS));
+
     bool barehand_butcher = (form_can_butcher_barehanded(you.form)
                                  || you.has_claws())
                              && !player_wearing_slot(EQ_GLOVES);
@@ -507,7 +519,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
                              && !you.inv[you.equip[EQ_GLOVES]].cursed());
 
-    bool can_butcher      = (teeth_butcher || barehand_butcher
+    bool can_butcher      = (teeth_butcher || barehand_butcher || birdie_butcher
                              || you.weapon() && can_cut_meat(*you.weapon()));
 
     if (!Options.easy_butcher && !can_butcher)
@@ -568,9 +580,11 @@ bool butchery(int which_corpse, bool bottle_blood)
     if (!can_butcher)
     {
         // Try to find a butchering implement.
-        if (!_find_butchering_implement(butcher_tool, gloved_butcher) &&
-            !gloved_butcher)
+        if (!_find_butchering_implement(butcher_tool, gloved_butcher)
+            && !gloved_butcher)
+        {
             return (false);
+        }
 
         if (butcher_tool == SLOT_BARE_HANDS && gloved_butcher)
             removed_gloves = true;
@@ -1073,6 +1087,7 @@ void eat_inventory_item(int which_inventory_slot)
     {
         const int mons_type  = food.plus;
         const bool cannibal  = is_player_same_species(mons_type);
+        const bool holy      = (mons_class_holiness(mons_type) == MH_HOLY);
         const int intel      = mons_class_intel(mons_type) - I_ANIMAL;
         const bool rotten    = food_is_rotten(food);
         const corpse_effect_type chunk_type = mons_corpse_effect(mons_type);
@@ -1081,7 +1096,7 @@ void eat_inventory_item(int which_inventory_slot)
             return;
 
         _eat_chunk(_determine_chunk_effect(chunk_type, rotten), cannibal,
-                   intel);
+                   intel, holy);
     }
     else
         _eating(food.base_type, food.sub_type);
@@ -1108,13 +1123,14 @@ void eat_floor_item(int item_link)
         const int intel      = mons_class_intel(food.plus) - I_ANIMAL;
         const bool cannibal  = is_player_same_species(food.plus);
         const bool rotten    = food_is_rotten(food);
+        const bool holy      = (mons_class_holiness(food.plus) == MH_HOLY);
         const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
 
         if (rotten && !_player_can_eat_rotten_meat(true))
             return;
 
         _eat_chunk(_determine_chunk_effect(chunk_type, rotten), cannibal,
-                   intel);
+                   intel, holy);
     }
     else
         _eating(food.base_type, food.sub_type);
@@ -1478,7 +1494,7 @@ bool eat_from_inventory()
 
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten,
 //         -2 for skip to inventory.
-int prompt_eat_chunks()
+int prompt_eat_chunks(bool only_auto)
 {
     // Full herbivores cannot eat chunks.
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
@@ -1583,6 +1599,8 @@ int prompt_eat_chunks()
             }
             else if (easy_contam && contam && !bad)
                 autoeat = true;
+            else if (only_auto)
+                return 0;
             else
             {
                 mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
@@ -1743,7 +1761,7 @@ static void _say_chunk_flavour(bool likes_chunks)
 // Never called directly - chunk_effect values must pass
 // through food::_determine_chunk_effect() first. {dlb}:
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
-                       int mon_intel)
+                       int mon_intel, bool holy)
 {
     bool likes_chunks = player_likes_chunks(true);
     int nutrition     = _chunk_nutrition(likes_chunks);
@@ -1838,6 +1856,9 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         did_god_conduct(DID_CANNIBALISM, 10);
     else if (mon_intel > 0)
         did_god_conduct(DID_EAT_SOULED_BEING, mon_intel);
+
+    if (holy)
+        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
 
     if (do_eat)
     {
@@ -2066,10 +2087,10 @@ void finished_eating_message(int food_type)
         case FOOD_APPLE:
         case FOOD_APRICOT:
             mprf("Mmmm... Yummy %s.",
-                (food_type == FOOD_APPLE)   ? "apple." :
-                (food_type == FOOD_PEAR)    ? "pear." :
-                (food_type == FOOD_APRICOT) ? "apricot."
-                                            : "fruit.");
+                (food_type == FOOD_APPLE)   ? "apple" :
+                (food_type == FOOD_PEAR)    ? "pear" :
+                (food_type == FOOD_APRICOT) ? "apricot"
+                                            : "fruit");
             return;
         case FOOD_CHOKO:
             mpr("That choko was very bland.");
@@ -2098,7 +2119,7 @@ void finished_eating_message(int food_type)
             mpr("That grape was delicious!");
             return;
         case FOOD_SULTANA:
-            mpr("That sultana was delicious! (but very small)");
+            mpr("That sultana was delicious... but very small.");
             return;
         case FOOD_LYCHEE:
             mpr("That lychee was delicious!");
@@ -2111,7 +2132,7 @@ void finished_eating_message(int food_type)
     switch (food_type)
     {
     case FOOD_HONEYCOMB:
-        mpr("That honeycomb was delicious.");
+        mpr("That honeycomb was delicious!");
         break;
     case FOOD_ROYAL_JELLY:
         mpr("That royal jelly was delicious!");
@@ -2127,24 +2148,20 @@ void finished_eating_message(int food_type)
             mprf("Mmm... %s.", Options.pizza.c_str());
         else
         {
-            int temp_rand;
-            if (carnivorous) // non-vegetable
-                temp_rand = random2(7);
-            else if (herbivorous) // non-meaty
-                temp_rand = 6 + random2(3);
-            else
-                temp_rand = random2(9);
-
-            mprf("Mmm... %s",
-                (temp_rand == 0) ? "Ham and pineapple." :
-                (temp_rand == 1) ? "Supreme." :
-                (temp_rand == 2) ? "Super Supreme!" :
-                (temp_rand == 3) ? "Pepperoni." :
-                (temp_rand == 4) ? "Yeuchh - Anchovies!" :
-                (temp_rand == 5) ? "Chicken." :
-                (temp_rand == 6) ? "Cheesy." :
-                (temp_rand == 7) ? "Vegetable."
-                                 : "Mushroom.");
+            int temp_rand = random2(9);
+            mprf("%s %s.",
+                (carnivorous && temp_rand >= 6
+                 || herbivorous && temp_rand <= 4
+                 || temp_rand == 3) ? "Yeuchh!" : "Mmm...",
+                (temp_rand == 0) ? "Ham and pineapple" :
+                (temp_rand == 1) ? "Super Supreme" :
+                (temp_rand == 2) ? "Pepperoni" :
+                (temp_rand == 3) ? "Anchovies" :
+                (temp_rand == 4) ? "Chicken" :
+                (temp_rand == 5) ? "Cheesy" :
+                (temp_rand == 6) ? "Vegetable" :
+                (temp_rand == 7) ? "Peppers"
+                                 : "Mushroom");
         }
         break;
     case FOOD_CHEESE:
@@ -2371,7 +2388,9 @@ bool is_contaminated(const item_def &food)
 
     const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
     return (chunk_type == CE_CONTAMINATED
-            || (player_res_poison(false) && chunk_type == CE_POISON_CONTAM));
+            || (player_res_poison(false) && chunk_type == CE_POISON_CONTAM)
+            || food_is_rotten(food)
+               && player_mutation_level(MUT_SAPROVOROUS) < 3);
 }
 
 // Returns true if a food item (also corpses) will cause rotting.
@@ -2516,6 +2535,13 @@ bool is_forbidden_food(const item_def &food)
     // Some gods frown upon cannibalistic behaviour.
     if (god_hates_cannibalism(you.religion)
         && is_player_same_species(food.plus))
+    {
+        return (true);
+    }
+
+    // Holy gods do not like it if you are eating holy creatures
+    if (is_good_god(you.religion)
+        && mons_class_holiness(food.plus) == MH_HOLY)
     {
         return (true);
     }

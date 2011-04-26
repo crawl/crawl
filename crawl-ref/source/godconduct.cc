@@ -124,12 +124,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
+        case DID_VIOLATE_HOLY_CORPSE:
             switch (you.religion)
             {
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (!known && thing_done != DID_ATTACK_HOLY)
+                if (!known && thing_done != DID_ATTACK_HOLY && thing_done != DID_VIOLATE_HOLY_CORPSE)
                 {
                     simple_god_message(" forgives your inadvertent unholy act, "
                                        "just this once.");
@@ -519,6 +520,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
+            case GOD_OKAWARU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -956,10 +958,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_EXPLORATION:
             if (you.religion == GOD_ASHENZARI)
             {
-                // levels: x1, x2, x4, x6
-                piety_change = ash_bondage_level() * 2;
-                if (!piety_change)
-                    piety_change = 1;
+                // levels: x1, x2, x3, x4
+                piety_change = 1 + ash_bondage_level();
                 piety_change *= 8; // base gain per dungeon level
                 piety_denom = level;
                 retval = true;
@@ -1008,12 +1008,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Chaotic", "Attack In Sanctuary",
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
-                "Exploration",
+                "Exploration", "Desecrated Holy Remains",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
-            mprf(MSGCH_DIAGNOSTICS,
-                 "conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
+            dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
                  conducts[thing_done],
                  you.piety, piety_change, piety_denom,
                  you.penance[you.religion], penance);

@@ -1,7 +1,7 @@
-/*
- *  File:       tutorial.h
- *  Summary:    Collection of tutorial related functions.
- */
+/**
+ * @file
+ * @brief Collection of tutorial related functions.
+**/
 
 #ifndef TUTORIAL_H
 #define TUTORIAL_H

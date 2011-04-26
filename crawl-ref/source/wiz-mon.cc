@@ -1,13 +1,13 @@
-/*
- *  File:       dbg-mon.cc
- *  Summary:    Monster related debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Monster related debugging functions.
+**/
 
 #include "AppHdr.h"
 
 #include "wiz-mon.h"
 
+#include "abyss.h"
 #include "areas.h"
 #include "cio.h"
 #include "colour.h"
@@ -611,7 +611,7 @@ void debug_make_monster_shout(monster* mon)
             mpr("The monster is silenced and likely won't give any shouts.");
 
         for (int i = 0; i < num_times; ++i)
-            force_monster_shout(mon);
+            handle_monster_shouts(mon, true);
     }
     else
     {
@@ -892,6 +892,9 @@ static void _move_player(const coord_def& where)
     if (!you.can_pass_through_feat(grd(where)))
         grd(where) = DNGN_FLOOR;
     move_player_to_grid(where, false, true);
+    // If necessary, update the Abyss.
+    if (you.level_type == LEVEL_ABYSS)
+        maybe_shift_abyss_around_player();
 }
 
 static void _move_monster(const coord_def& where, int mid1)

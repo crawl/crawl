@@ -1,8 +1,7 @@
-/*
- *  File:       mon-place.cc
- *  Summary:    Functions used when placing monsters in the dungeon.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when placing monsters in the dungeon.
+**/
 
 #include "AppHdr.h"
 
@@ -94,7 +93,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
 //                               bool first_band_member, int dur = 0);
 
 static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
-                              bool force_pos = false);
+                              bool force_pos = false, bool dont_place = false);
 
 // Returns whether actual_feat is compatible with feat_wanted for monster
 // movement and generation.
@@ -167,7 +166,7 @@ bool monster_habitable_grid(monster_type mt,
                             int flies, bool paralysed)
 {
     // No monster may be placed on open sea.
-    if (actual_grid == DNGN_OPEN_SEA)
+    if (actual_grid == DNGN_OPEN_SEA || actual_grid == DNGN_LAVA_SEA)
         return (false);
 
     const dungeon_feature_type feat_preferred =
@@ -309,11 +308,10 @@ static int _fuzz_mons_level(int level)
         const int fuzzspan = 5;
         const int fuzz = std::max(0, random_range(-fuzzspan, fuzzspan, 2));
 
-#ifdef DEBUG_DIAGNOSTICS
         if (fuzz)
             dprf("Monster level fuzz: %d (old: %d, new: %d)",
                  fuzz, level, level + fuzz);
-#endif
+
         return level + fuzz;
     }
     return (level);
@@ -452,6 +450,31 @@ monster_type pick_random_monster(const level_id &place,
     return pick_random_monster(place, level, level, chose_ood_monster);
 }
 
+// HACK: The shop probabilities are defined in dat/des/builders/shops.des.
+// Once mimics replace actual features, this sort of hackery will become
+// unnecessary.
+static bool _is_valid_shop_level()
+{
+    if (you.absdepth0 < 5)
+        return (false);
+
+    switch (your_branch().id)
+    {
+    case BRANCH_MAIN_DUNGEON:
+    case BRANCH_ORCISH_MINES:
+    case BRANCH_ELVEN_HALLS:
+    case BRANCH_SHOALS:
+    case BRANCH_SNAKE_PIT:
+    case BRANCH_VAULTS:
+    case BRANCH_FOREST:
+    case BRANCH_SPIDER_NEST:
+    case BRANCH_DWARVEN_HALL:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 static std::vector<monster_type> _find_valid_monster_types(const level_id &place)
 {
     static std::vector<monster_type> valid_monster_types;
@@ -463,7 +486,13 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
     valid_monster_types.clear();
     for (int i = 0; i < NUM_MONSTERS; ++i)
         if (mons_rarity(static_cast<monster_type>(i), place) > 0)
+        {
+            if (i == MONS_STAIR_MIMIC && your_branch().depth == 1)
+                continue;
+            if (i == MONS_SHOP_MIMIC && !_is_valid_shop_level())
+                continue;
             valid_monster_types.push_back(static_cast<monster_type>(i));
+        }
     last_monster_type_place = place;
     return (valid_monster_types);
 }
@@ -628,14 +657,12 @@ monster_type pick_random_monster(const level_id &place, int power,
             *isood = true;
     }
 
-#ifdef DEBUG_DIAGNOSTICS
     if (lev_mons > original_level)
         dprf("Orginal level: %d, Final level: %d, Monster: %s, OOD: %s",
              original_level, lev_mons,
              mon_type == MONS_NO_MONSTER || mon_type == MONS_PROGRAM_BUG ?
              "NONE" : get_monster_data(mon_type)->name,
              *isood? "YES" : "no");
-#endif
 
     return (mon_type);
 }
@@ -1002,7 +1029,7 @@ static bool _in_ood_pack_protected_place()
     return (env.turns_on_level < 1400 - you.absdepth0 * 117);
 }
 
-int place_monster(mgen_data mg, bool force_pos)
+int place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
 #ifdef DEBUG_MON_CREATION
     mpr("in place_monster()", MSGCH_DIAGNOSTICS);
@@ -1109,7 +1136,7 @@ int place_monster(mgen_data mg, bool force_pos)
     // Player shoved out of the way?
     bool shoved = false;
 
-    if (!mg.use_position())
+    if (!mg.use_position() && !force_pos)
     {
         tries = 0;
 
@@ -1201,13 +1228,13 @@ int place_monster(mgen_data mg, bool force_pos)
             break;
         } // end while... place first monster
     }
-    else if (!_valid_monster_generation_location(mg))
+    else if (!_valid_monster_generation_location(mg) && !dont_place)
     {
         // Sanity check that the specified position is valid.
         return (-1);
     }
 
-    id = _place_monster_aux(mg, true, force_pos);
+    id = _place_monster_aux(mg, true, force_pos, dont_place);
 
     // Reset the (very) ugly thing band colour.
     if (ugly_colour != BLACK)
@@ -1375,7 +1402,8 @@ static void _place_twister_clouds(monster *mon)
 }
 
 static int _place_monster_aux(const mgen_data &mg,
-                              bool first_band_member, bool force_pos)
+                              bool first_band_member, bool force_pos,
+                              bool dont_place)
 {
     coord_def fpos;
 
@@ -1400,7 +1428,11 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
-    if (first_band_member && in_bounds(mg.pos)
+    if (dont_place)
+    {
+        fpos.reset();
+    }
+    else if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
@@ -1441,7 +1473,7 @@ static int _place_monster_aux(const mgen_data &mg,
     mon->number       = mg.number;
 
     // Set pos and link monster into monster grid.
-    if (!mon->move_to_pos(fpos))
+    if (!dont_place && !mon->move_to_pos(fpos))
     {
         mon->reset();
         return (-1);
@@ -1525,6 +1557,9 @@ static int _place_monster_aux(const mgen_data &mg,
     // Mennas belongs to Zin.
     else if (mg.cls == MONS_MENNAS)
         mon->god = GOD_ZIN;
+    // Ignacio belongs to Makhleb.
+    else if (mg.cls == MONS_IGNACIO)
+        mon->god = GOD_MAKHLEB;
     // 1 out of 7 non-priestly orcs are unbelievers.
     else if (mons_genus(mg.cls) == MONS_ORC)
     {
@@ -1578,6 +1613,12 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         mon->max_hit_points = mg.hp;
         mon->hit_points = mg.hp;
+    }
+
+    if (!crawl_state.game_is_arena())
+    {
+        mon->max_hit_points = std::min(mon->max_hit_points, MAX_MONSTER_HP);
+        mon->hit_points = std::min(mon->hit_points, MAX_MONSTER_HP);
     }
 
     // Store the extra flags here.
@@ -1744,6 +1785,7 @@ static int _place_monster_aux(const mgen_data &mg,
             dungeon_feature_type stair = random_stair();
             mon->props["stair_type"] = static_cast<short>(stair);
             const feature_def stair_d = get_feature_def(stair);
+
             if (stair == DNGN_ESCAPE_HATCH_DOWN
                 || stair == DNGN_ESCAPE_HATCH_UP)
             {
@@ -1783,7 +1825,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)
     {
         no_messages nm;
-        monster_polymorph(mon, RANDOM_MONSTER);
+        monster_polymorph(mon, mg.initial_shifter);
 
         // It's not actually a known shapeshifter if it happened to be
         // placed in LOS of the player.

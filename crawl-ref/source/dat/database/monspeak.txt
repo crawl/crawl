@@ -251,7 +251,7 @@ w:20
 w:15
 __YOU_RESIST
 
-ENCHANT:@The_monster@ becomes transparent for a moment.
+ENCHANT:@The_monster@ shimmers violently.
 
 ENCHANT:@The_monster@ glows brightly for a moment.
 
@@ -264,7 +264,7 @@ ENCHANT:@The_monster@ becomes larger for a moment.
 
 VISUAL SPELL:@The_monster@'s eyes start to glow.
 
-VISUAL SPELL:@The_monster@ tries to paralyse @foe@ with @possessive@ gaze.
+VISUAL SPELL:@The_monster@ tries to enchant @foe@ with @possessive@ gaze.
 
 @The_monster@ shouts @at_foe@, "You can't withstand my power!"
 
@@ -940,7 +940,7 @@ silenced player ghost
 
 w:15
 VISUAL SPELL:@The_monster@ stares at you.
-VISUAL WARN:You feel cold.
+VISUAL WARN:You feel frightened.
 
 VISUAL:@The_monster@ points at @foe@ threateningly.
 
@@ -3785,6 +3785,39 @@ _Harold_rare_
 
 @The_monster@ says @to_foe@, "Mine is not to reason why. Mine's to do, yours to die."
 ## END Harold ##
+%%%%
+############ IGNACIO ### A human executioner turned into a demon
+Ignacio
+
+@_Ignacio_common_@
+
+w:3
+@_Ignacio_rare_@
+%%%%
+_Ignacio_common_
+
+VISUAL:@The_monster@ looks at his axe, then at @foe@, then at his axe, then at @foe@...
+
+VISUAL:@The_monster@ grins in joy.
+
+@The_monster@ exclaims, "Oh yes!! We are going to have fun!"
+
+@The_monster@ says @to_foe@, "Pain is my business; you will see!"
+
+@The_monster@ shouts @to_foe@, "Off with your head!"
+%%%%
+_Ignacio_rare_
+
+@The_monster@ says, "I enjoy death. I like the smell. I like the greasy feel of cooling blood."
+
+@The_monster@ says, "I have to say that I admire beauty and perfection. I like to watch it die. The contrast as it decays is exquisite."
+
+@The_monster@ says in a calm gravelly voice, "173 down. One million more to go."
+
+@The_monster@ says, "The death blow is fun, but the real pleasure is in torturing beforehand."
+
+@The_monster@ says @to_foe@, "No gallows around, so decapitation it is."
+## END Ignacio ##
 %%%%
 ############ IJYB ### A twisted goblin
 Ijyb

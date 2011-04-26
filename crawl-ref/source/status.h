@@ -1,7 +1,7 @@
-/*
- * File:      status.h
- * Summary:   Collects information for output of status effects.
- */
+/**
+ * @file
+ * @brief Collects information for output of status effects.
+**/
 
 #ifndef STATUS_H
 #define STATUS_H

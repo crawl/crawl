@@ -1,7 +1,7 @@
-/*
- * File:     viewmap.cc
- * Summary:  Showing the level map (X and background).
- */
+/**
+ * @file
+ * @brief Showing the level map (X and background).
+**/
 
 #include "AppHdr.h"
 
@@ -51,7 +51,8 @@ static unsigned _get_travel_colour(const coord_def& p)
 
     if (is_waypoint(p))
         return LIGHTGREEN;
-
+    if (is_stair_exclusion(p))
+        return Options.tc_excluded;
     short dist = travel_point_distance[p.x][p.y];
     return dist > 0?                    Options.tc_reachable        :
            dist == PD_EXCLUDED?         Options.tc_excluded         :
@@ -64,7 +65,8 @@ static unsigned _get_travel_colour(const coord_def& p)
 #ifndef USE_TILE
 static bool _travel_colour_override(const coord_def& p)
 {
-    if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
+  if (is_waypoint(p) || is_stair_exclusion(p)
+     || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
         return (true);
 #ifdef WIZARD
     if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
@@ -91,7 +93,6 @@ static bool _travel_colour_override(const coord_def& p)
     else
         return false;
 }
-#endif
 
 static bool _is_explore_horizon(const coord_def& c)
 {
@@ -110,8 +111,10 @@ static bool _is_explore_horizon(const coord_def& c)
                 return true;
             }
         }
+
     return false;
 }
+#endif
 
 wchar_t get_sightmap_char(dungeon_feature_type feat)
 {
@@ -608,13 +611,13 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     const int columns = get_number_of_cols();
     const formatted_string help =
         formatted_string::parse_string("(Press <w>?</w> for help)");
-    const int helplen = std::string(help).length();
+    const int helplen = help.width();
 
     if (columns < helplen)
         return;
 
     const formatted_string title = feats.format();
-    const int titlelen = title.length();
+    const int titlelen = title.width();
     if (columns < titlelen)
         return;
 
@@ -631,10 +634,9 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     cgotoxy(1, 1);
     textcolor(WHITE);
 
-    cprintf("%-*s",
-            columns - helplen,
-            (upcase_first(place_name(
-                    get_packed_place(), true, true)) + pstr).c_str());
+    cprintf("%s", chop_string(upcase_first(place_name(
+                          get_packed_place(), true, true)) + pstr,
+                      columns - helplen).c_str());
 
     cgotoxy(std::max(1, (columns - titlelen) / 2), 1);
     title.display();
@@ -1250,8 +1252,10 @@ bool show_map(level_pos &lpos,
                 curs_y += lpos.pos.y - oldp.y;
             }
 #else
-            if (curs_x + move_x < 1 || curs_x + move_x > crawl_view.termsz.x)
-                move_x = 0;
+            if (curs_x + move_x < 1)
+                move_x = 1 - curs_x;
+            else if (curs_x + move_x > crawl_view.termsz.x)
+                move_x = crawl_view.termsz.x - curs_x;
 
             curs_x += move_x;
 
@@ -1299,8 +1303,10 @@ bool show_map(level_pos &lpos,
             }
             start_y = screen_y - half_screen;
 
-            if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
-                move_y = 0;
+            if (curs_y + move_y < 1)
+                move_y = 1 - curs_y;
+            else if (curs_y + move_y > num_lines)
+                move_y = num_lines - curs_y;
 
             curs_y += move_y;
 

@@ -1,8 +1,7 @@
-/*
- *  File:       terrain.cc
- *  Summary:    Terrain related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Terrain related functions.
+**/
 
 #include "AppHdr.h"
 
@@ -153,7 +152,8 @@ bool feat_sealable_portal(dungeon_feature_type feat)
 
 bool feat_is_portal(dungeon_feature_type feat)
 {
-    return (feat == DNGN_ENTER_PORTAL_VAULT || feat == DNGN_EXIT_PORTAL_VAULT);
+    return (feat == DNGN_ENTER_PORTAL_VAULT || feat == DNGN_EXIT_PORTAL_VAULT
+            || feat == DNGN_TEMP_PORTAL);
 }
 
 // Returns true if the given dungeon feature is a stair, i.e., a level
@@ -799,6 +799,15 @@ bool is_critical_feature(dungeon_feature_type feat)
             || feat == DNGN_TEMP_PORTAL);
 }
 
+bool is_valid_border_feat(dungeon_feature_type feat)
+{
+    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
+            || (feat == DNGN_TREE
+               || feat == DNGN_SWAMP_TREE
+               || feat == DNGN_OPEN_SEA
+               || feat == DNGN_LAVA_SEA));
+}
+
 static bool _is_feature_shift_target(const coord_def &pos, void*)
 {
     return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));
@@ -1361,6 +1370,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                        dungeon_feature_type terrain)
 {
     bool escape = false;
+    bool clinging = false;
     coord_def empty;
 
     if (species_likes_water(you.species) && terrain == DNGN_DEEP_WATER
@@ -1408,7 +1418,9 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     {
         if (allow_shift)
         {
-            escape = empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty);
+            escape = empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty)
+                     || you.check_clinging(false);
+            clinging = you.is_wall_clinging();
         }
         else
         {
@@ -1435,11 +1447,11 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     if (escape)
     {
-        if (in_bounds(empty)
-            && (!is_feat_dangerous(grd(empty)) || you.can_cling_to(empty)))
+        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)) || clinging)
         {
             mpr("You manage to scramble free!");
-            move_player_to_grid(empty, false, false);
+            if (!clinging)
+                move_player_to_grid(empty, false, false);
 
             if (terrain == DNGN_LAVA)
                 expose_player_to_element(BEAM_LAVA, 14);
@@ -1575,7 +1587,7 @@ const char *dngn_feature_names[] =
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"open_sea", "tree", "orcish_idol", "swamp_tree", "", "",
+"open_sea", "tree", "orcish_idol", "swamp_tree", "endless_lava", "",
 "granite_statue", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
@@ -1690,7 +1702,7 @@ void nuke_wall(const coord_def& p)
 bool cell_is_clingable(const coord_def pos)
 {
     for (orth_adjacent_iterator ai(pos); ai; ++ai)
-        if (feat_is_wall(env.grid(*ai)))
+        if (feat_is_wall(env.grid(*ai)) || feat_is_closed_door(env.grid(*ai)))
             return true;
 
     return false;

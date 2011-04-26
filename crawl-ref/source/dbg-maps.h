@@ -1,8 +1,7 @@
-/*
- *  File:       dbd-maps.h
- *  Summary:    Map generation statistics/testing.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Map generation statistics/testing.
+**/
 
 #ifndef DBGDGN_H
 #define DBGDGN_H

@@ -134,14 +134,6 @@ static int _etc_rock(int, const coord_def& loc)
     return element_colour(env.rock_colour, false, loc);
 }
 
-static int _etc_stone(int, const coord_def& loc)
-{
-    if (player_in_branch(BRANCH_HALL_OF_ZOT))
-        return element_colour(env.rock_colour, false, loc);
-    else
-        return LIGHTGREY;
-}
-
 static int _etc_elven_brick(int, const coord_def& loc)
 {
     if ((loc.x + loc.y) % 2)
@@ -478,9 +470,12 @@ void init_element_colours()
     add_element_colour(new element_colour_calc(
                             ETC_ROCK, "rock", _etc_rock
                        ));
-    add_element_colour(new element_colour_calc(
-                            ETC_STONE, "stone", _etc_stone
-                       ));
+#if TAG_MAJOR_VERSION == 32
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_STONE, "stone",
+                            1,  LIGHTGREY,
+                        0));
+#endif
     add_element_colour(_create_random_element_colour_calc(
                             ETC_MIST, "mist",
                             100, CYAN,
@@ -667,7 +662,7 @@ int str_to_colour(const std::string &str, int default_colour,
     return ((ret == 16) ? default_colour : ret);
 }
 
-#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
 static unsigned short _dos_reverse_brand(unsigned short colour)
 {
     if (Options.dos_use_background_intensity)
@@ -743,7 +738,7 @@ unsigned short dos_brand(unsigned short colour,
 }
 #endif
 
-#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
 static unsigned _colflag2brand(int colflag)
 {
     switch (colflag)
@@ -779,7 +774,7 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     if (is_element_colour(raw_colour))
         raw_colour = colflags | element_colour(raw_colour, false, loc);
 
-#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
     if (colflags)
     {
         unsigned brand = _colflag2brand(colflags);

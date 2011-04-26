@@ -1,7 +1,7 @@
-/*
- *  File:       decks.h
- *  Summary:    Functions with decks of cards.
- */
+/**
+ * @file
+ * @brief Functions with decks of cards.
+**/
 
 
 #ifndef DECKS_H

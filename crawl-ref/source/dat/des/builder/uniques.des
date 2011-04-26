@@ -62,7 +62,7 @@
 function place_unique(e, monster)
    e.mons(monster)
    e.tags("place_unique")
-   e.tags("transparent")
+   e.tags("transparent can_overwrite")
    e.map("1")
 end
 }}
@@ -310,9 +310,9 @@ NAME:   uniq_urug
 DEPTH:  10-16, !Lair, !Slime
 : place_unique(_G, "Urug")
 
-NAME:   uniq_terpsichore
-DEPTH:  15-25, !Lair, !Slime, Blade
-: place_unique(_G, "Terpsichore band")
+#NAME:   uniq_terpsichore
+#DEPTH:  15-25, !Lair, !Slime, Blade
+#: place_unique(_G, "Terpsichore band")
 
 NAME:   uniq_wiglaf
 DEPTH:  17-27, !Lair, !Slime

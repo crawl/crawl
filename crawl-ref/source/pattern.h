@@ -3,7 +3,7 @@
 
 #ifdef REGEX_PCRE
     // Statically link pcre on Windows
-    #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS)
+    #if defined(TARGET_OS_WINDOWS)
         #define PCRE_STATIC
     #endif
 

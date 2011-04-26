@@ -1,8 +1,7 @@
-/*
- *  File:       player.cc
- *  Summary:    Player related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Player related functions.
+**/
 
 
 #ifndef PLAYER_H
@@ -19,7 +18,6 @@
 #include "species.h"
 
 #include <vector>
-#include <stdint.h>
 
 #ifdef USE_TILE
 #include "tiledoll.h"
@@ -130,6 +128,8 @@ public:
   int  skill_cost_level;
   int  total_skill_points;
   int  exp_available;
+
+  int exp_docked, exp_docked_total; // Ashenzari's wrath
 
   FixedArray<uint8_t, 6, 50> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
@@ -275,7 +275,6 @@ public:
   bool xray_vision;
   int bondage_level;  // how much an Ash worshipper is into bondage
 
-
   // Volatile (same-turn) state:
   bool turn_is_over; // flag signaling that player has performed a timed action
 
@@ -334,6 +333,9 @@ public:
   // The save file itself.
   package *save;
 
+  // The version the save was last played with.
+  std::string prev_save_version;
+
   // The type of a zotdef wave, if any.
   std::string zotdef_wave_name;
   // The biggest assigned monster id so far.
@@ -358,8 +360,8 @@ public:
     // Set player position without updating view geometry.
     void set_position(const coord_def &c);
     // Low-level move the player. Use this instead of changing pos directly.
-    void moveto(const coord_def &c);
-    bool move_to_pos(const coord_def &c);
+    void moveto(const coord_def &c, bool clear_net = true);
+    bool move_to_pos(const coord_def &c, bool clear_net = true);
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false);
@@ -431,7 +433,8 @@ public:
 
     bool has_spell(spell_type spell) const;
 
-    size_type transform_size(int psize = PSIZE_TORSO) const;
+    size_type transform_size(transformation_type tform,
+                             int psize = PSIZE_TORSO) const;
     std::string shout_verb() const;
 
     item_def *slot_item(equipment_type eq,
@@ -541,9 +544,9 @@ public:
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
-    bool is_holy() const;
-    bool is_unholy() const;
-    bool is_evil() const;
+    bool is_holy(bool spells = true) const;
+    bool is_unholy(bool spells = true) const;
+    bool is_evil(bool spells = true) const;
     bool is_chaotic() const;
     bool is_artificial() const;
     bool is_unbreathing() const;
@@ -738,6 +741,7 @@ int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
 int player_energy(void);
 
+int player_raw_body_armour_evasion_penalty();
 int player_adjusted_shield_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
@@ -927,4 +931,6 @@ bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false);
 void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
+bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
+bool need_expiration_warning(coord_def p = you.pos());
 #endif

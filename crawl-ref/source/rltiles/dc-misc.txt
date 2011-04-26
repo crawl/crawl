@@ -36,6 +36,8 @@ cloud_blue_smoke CLOUD_BLUE_SMOKE
 cloud_blue_smoke_disturbance CLOUD_BLUE_SMOKE_DISTURBANCE
 cloud_grey_smoke CLOUD_GREY_SMOKE
 cloud_grey_smoke_disturbance CLOUD_GREY_SMOKE_DISTURBANCE
+cloud_yellow_smoke CLOUD_YELLOW_SMOKE
+cloud_yellow_smoke_disturbance CLOUD_YELLOW_SMOKE_DISTURBANCE
 
 %variation CLOUD_GREY_SMOKE white
 %lum 0 30
@@ -71,6 +73,9 @@ dc-dngn/water/ink_full CLOUD_INK
 
 cloud_gloom CLOUD_GLOOM
 
+tornado1 CLOUD_RAGING_WINDS_0
+tornado2 CLOUD_RAGING_WINDS_1
+
 %sdir dc-mon
 fungi_plants/giant_spore SPORE_OVERLAY
 
@@ -82,6 +87,7 @@ unseen_weapon UNSEEN_WEAPON
 unseen_monster UNSEEN_MONSTER
 unseen_armour UNSEEN_ARMOUR
 unseen_item UNSEEN_ITEM
+sensed_monster_friendly MONS_SENSED_FRIENDLY
 sensed_monster_trivial MONS_SENSED_TRIVIAL
 sensed_monster_easy MONS_SENSED_EASY
 sensed_monster_tough MONS_SENSED_TOUGH

@@ -1301,12 +1301,10 @@ x1.1x
 xx+xx
 ENDMAP
 
-# This vault is here to find bugs with new holy monsters.  It is guaranteed
-# so we can get some (belated) testing before the release.  Please axe it
-# (or reduce to normal weight) during the freeze.
+# disabled for 0.8
 NAME:    hallowed_hall
 TAGS:    no_monster_gen no_trap_gen extra
-PLACE:   D:26
+WEIGHT:  0
 MONS:    pearl dragon, shedu band, ophan, plant
 COLOUR:  c = white
 TILE:    c = wall_church
@@ -2481,7 +2479,7 @@ NAME:   sword_in_stone
 TAGS:   mini_float patrolling
 DEPTH:  D:5-26, Vault, Orc, Elf
 NSUBST: k = 4=k / *= .:19 k:1
-KITEM:  S = good_item long sword / good_item great sword / good_item katana /\
+KITEM:  S = good_item long sword / good_item great sword / good_item demon blade /\
             good_item triple sword / good_item double sword
 KFEAT:  S = known teleport trap
 NSUBST: n = n/cbn

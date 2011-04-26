@@ -1,8 +1,7 @@
-/*
- *  File:       artefact.cc
- *  Summary:    Random and unrandom artefact functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Random and unrandom artefact functions.
+**/
 
 #include "AppHdr.h"
 
@@ -89,9 +88,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_BOOKS)
             type_bad = true;
 
-        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
-            || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
-            || item.sub_type == RING_MAGICAL_POWER))
+        if (item.base_type == OBJ_JEWELLERY
+            && (item.sub_type == RING_WIZARDRY
+             || item.sub_type == RING_FIRE
+             || item.sub_type == RING_ICE
+             || item.sub_type == RING_MAGICAL_POWER))
         {
             type_bad = true;
         }
@@ -125,8 +126,10 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
     else if (is_good_god(which_god)
-             && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING
+             && (brand == SPWPN_DRAINING
+                 || brand == SPWPN_PAIN
+                 || brand == SPWPN_VAMPIRICISM
+                 || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
                  || artefact_wpn_property(item, ARTP_CURSED) != 0))
@@ -224,8 +227,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     return (true);
 }
 
-static std::string _replace_name_parts(const std::string name_in,
-                                       const item_def& item)
+std::string replace_name_parts(const std::string name_in, const item_def& item)
 {
     std::string name = name_in;
 
@@ -1401,7 +1403,7 @@ static std::string _artefact_name_lookup(const item_def &item,
                                  const std::string &lookup)
 {
     const std::string name = getRandNameString(lookup);
-    return (!name.empty()? _replace_name_parts(name, item) : name);
+    return (!name.empty()? replace_name_parts(name, item) : name);
 }
 
 static bool _artefact_name_lookup(std::string &result,
@@ -1494,7 +1496,7 @@ std::string artefact_name(const item_def &item, bool appearance)
              // If still nothing found, try base type alone.
              || _artefact_name_lookup(name, item, _get_artefact_type(item)));
         }
-        while (--tries > 0 && name.length() > 25);
+        while (--tries > 0 && strwidth(name) > 25);
 
         if (name.empty()) // still nothing found?
             result += "of Bugginess";
@@ -2027,6 +2029,27 @@ const char *unrandart_descrip(int which_descrip, const item_def &item)
             (which_descrip == 1) ? unrand->desc_id :
             (which_descrip == 2) ? unrand->desc_end
                                  : "Unknown.");
+}
+
+void unrand_reacts()
+{
+    item_def*  weapon     = you.weapon();
+    const int  old_plus   = weapon ? weapon->plus   : 0;
+    const int  old_plus2  = weapon ? weapon->plus2  : 0;
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        if (you.unrand_reacts & (1 << i))
+        {
+            item_def&        item  = you.inv[you.equip[i]];
+            unrandart_entry* entry = get_unrand_entry(item.special);
+
+            entry->world_reacts_func(&item);
+        }
+    }
+
+    if (weapon && (old_plus != weapon->plus || old_plus2 != weapon->plus2))
+        you.wield_change = true;
 }
 
 // Set all non-zero properties in proprt on the randart supplied.

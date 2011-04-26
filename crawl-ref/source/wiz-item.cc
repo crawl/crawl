@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-item.cc
- *  Summary:    Item related wizard functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Item related wizard functions.
+**/
 
 #include "AppHdr.h"
 
@@ -567,7 +566,7 @@ static bool _make_book_randart(item_def &book)
     do
     {
         mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
-        type = tolower(getch());
+        type = tolower(getchk());
     }
     while (type != 't' && type != 'l');
 
@@ -919,7 +918,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     {
         if (kbhit())
         {
-            getch();
+            getchk();
             mpr("Stopping early due to keyboard input.");
             break;
         }
@@ -1269,7 +1268,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         item.sub_type = i;
         std::string name = item.name(desc, terse, true);
 
-        max_width = std::max(max_width, (int) name.length());
+        max_width = std::max(max_width, strwidth(name));
     }
 
     // Now output the sub types.
@@ -1381,7 +1380,7 @@ static void _debug_rap_stats(FILE *ostat)
     {
         if (kbhit())
         {
-            getch();
+            getchk();
             mpr("Stopping early due to keyboard input.");
             break;
         }

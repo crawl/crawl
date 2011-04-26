@@ -1,7 +1,7 @@
-/*
- *  File:     spl-summoning.cc
- *  Summary:  Summoning spells and other effects creating monsters.
- */
+/**
+ * @file
+ * @brief Summoning spells and other effects creating monsters.
+**/
 
 #include "AppHdr.h"
 
@@ -205,7 +205,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
     }
 
     const int dur = std::min(3 + random2(pow) / 20, 5);
-    int how_many_max = 1 + random2(1 + you.skills[SK_TRANSMUTATIONS]) / 4;
+    int how_many_max = 1 + random2(1 + you.skill(SK_TRANSMUTATIONS)) / 4;
     const bool friendly = (!wpn.cursed());
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
@@ -590,21 +590,21 @@ bool cast_summon_elemental(int pow, god_type god,
     // - Earth elementals are more static and easy to tame (as before).
     // - Fire elementals fall in between the two (10 is still fairly easy).
     const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
-                            || x_chance_in_y(you.skills[SK_FIRE_MAGIC]
+                            || x_chance_in_y(you.skill(SK_FIRE_MAGIC)
                                              - horde_penalty, 10))
 
                         && (mon != MONS_WATER_ELEMENTAL
-                            || x_chance_in_y(you.skills[SK_ICE_MAGIC]
+                            || x_chance_in_y(you.skill(SK_ICE_MAGIC)
                                              - horde_penalty,
                                              (you.species == SP_MERFOLK) ? 5
                                                                          : 15))
 
                         && (mon != MONS_AIR_ELEMENTAL
-                            || x_chance_in_y(you.skills[SK_AIR_MAGIC]
+                            || x_chance_in_y(you.skill(SK_AIR_MAGIC)
                                              - horde_penalty, 15))
 
                         && (mon != MONS_EARTH_ELEMENTAL
-                            || x_chance_in_y(you.skills[SK_EARTH_MAGIC]
+                            || x_chance_in_y(you.skill(SK_EARTH_MAGIC)
                                              - horde_penalty, 5))
 
                         && random2(100) >= unfriendly);
@@ -881,7 +881,10 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
                  MG_FORCE_BEH, god);
 
     if (!friendly)
+    {
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
         mg.non_actor_summoner = god_name(god, false);
+    }
 
     const int mons = create_monster(mg);
 
@@ -2036,6 +2039,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
 {
     int how_many_corpses = 0;
     int how_many_orcs = 0;
+    int how_many_holy = 0;
     int total_mass = 0;
     int unrotted = 0;
 
@@ -2047,6 +2051,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
             how_many_corpses++;
             if (mons_genus(si->plus) == MONS_ORC)
                 how_many_orcs++;
+            if (mons_class_holiness(si->plus) == MH_HOLY)
+                how_many_holy++;
             if (!food_is_rotten(*si))
                 unrotted++;
             destroy_item(si->index());
@@ -2077,6 +2083,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
 
     if (how_many_orcs > 0)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
+    if (how_many_holy > 0)
+        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2 * how_many_holy);
 
     return (success);
 }

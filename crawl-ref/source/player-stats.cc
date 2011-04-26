@@ -2,8 +2,11 @@
 
 #include "player-stats.h"
 
+#include "artefact.h"
 #include "delay.h"
 #include "godpassive.h"
+#include "itemname.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mon-util.h"
@@ -68,6 +71,7 @@ void attribute_increase()
         MSGCH_INTRINSIC_GAIN);
     learned_something_new(HINT_CHOOSE_STAT);
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
+    mouse_control mc(MOUSE_MODE_MORE);
 
     while (true)
     {
@@ -380,9 +384,6 @@ static int _stat_modifier(stat_type stat)
     }
 }
 
-// use player::decrease_stats() instead iff:
-// (a) player_sust_abil() should not factor in; and
-// (b) there is no floor to the final stat values {dlb}
 bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
                const char *cause, bool see_source)
 {
@@ -392,7 +393,22 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
     // scale modifier by player_sust_abil() - right-shift
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
-        stat_loss >>= player_sust_abil();
+    {
+        int sust = player_sust_abil();
+        stat_loss >>= sust;
+
+        if (sust && !stat_loss && !player_sust_abil(false))
+        {
+            item_def *ring = get_only_unided_ring();
+            if (ring && !is_artefact(*ring)
+                && ring->sub_type == RING_SUSTAIN_ABILITIES)
+            {
+                set_ident_type(*ring, ID_KNOWN_TYPE);
+                mprf("You are wearing: %s",
+                     ring->name(DESC_INVENTORY_EQUIP).c_str());
+            }
+        }
+    }
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
          "You feel %s%s.",
@@ -401,7 +417,8 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
 
     if (stat_loss > 0)
     {
-        you.stat_loss[which_stat] += stat_loss;
+        you.stat_loss[which_stat] = std::min<int>(100,
+                                        you.stat_loss[which_stat] + stat_loss);
         _handle_stat_change(which_stat, cause, see_source);
         return (true);
     }

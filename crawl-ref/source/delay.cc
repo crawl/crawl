@@ -1,7 +1,7 @@
-/*
- *  File:     delay.cc
- *  Summary:  Functions for handling multi-turn actions.
- */
+/**
+ * @file
+ * @brief Functions for handling multi-turn actions.
+**/
 
 #include "AppHdr.h"
 
@@ -27,6 +27,7 @@
 #include "exclude.h"
 #include "food.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -110,7 +111,7 @@ static bool _is_parent_delay(delay_type delay)
     // Lua macros can in theory perform any of the other delays,
     // including travel; in practise travel still assumes there can be
     // no parent delay.
-    return (delay == DELAY_TRAVEL
+    return (delay_is_run(delay)
             || delay == DELAY_MACRO
             || delay == DELAY_MULTIDROP);
 }
@@ -191,9 +192,9 @@ void start_delay(delay_type type, int turns, int parm1, int parm2)
     _push_delay(delay);
 }
 
-static void _maybe_interrupt_swap();
+static void _maybe_interrupt_swap(bool force_unsafe = false);
 
-void stop_delay(bool stop_stair_travel)
+void stop_delay(bool stop_stair_travel, bool force_unsafe)
 {
     if (you.delay_queue.empty())
         return;
@@ -238,7 +239,7 @@ void stop_delay(bool stop_stair_travel)
 
         _pop_delay();
 
-        _maybe_interrupt_swap();
+        _maybe_interrupt_swap(force_unsafe);
         break;
     }
     case DELAY_MEMORISE:
@@ -304,6 +305,7 @@ void stop_delay(bool stop_stair_travel)
                                       : mitm[delay.parm2]);
 
         const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
+        const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
         // Don't skeletonize a corpse if it's no longer there!
         if (delay.parm1
@@ -329,6 +331,8 @@ void stop_delay(bool stop_stair_travel)
 
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+        if (was_holy)
+            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
 
         delay.duration = 0;
         _pop_delay();
@@ -477,7 +481,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
-static void _maybe_interrupt_swap()
+static void _maybe_interrupt_swap(bool force_unsafe)
 {
     bool butcher_swap_setup  = false;
     int  butcher_swap_weapon = 0;
@@ -508,7 +512,7 @@ static void _maybe_interrupt_swap()
         // Possibly prompt if user wants to switch back from
         // butchering tool in order to use their normal weapon to
         // fight the interrupting monster.
-        handle_interrupted_swap(true);
+        handle_interrupted_swap(true, force_unsafe);
     }
 }
 
@@ -840,10 +844,8 @@ void handle_delay()
     // Handle delay:
     if (delay.duration > 0)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Delay type: %d (%s), duration: %d",
+        dprf("Delay type: %d (%s), duration: %d",
              delay.type, delay_name(delay.type), delay.duration);
-#endif
         // delay.duration-- *must* be done before multidrop, because
         // multidrop is now a parent delay, which means other delays
         // can be pushed to the front of the queue, invalidating the
@@ -896,6 +898,11 @@ void handle_delay()
                                         delay.parm1, delay.duration).c_str());
             if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
                 viewwindow();
+
+            // Recite trains more than once per use, because it has a
+            // long timer in between uses and actually takes up multiple
+            // turns.
+            practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
 
             const std::string shout_verb = you.shout_verb();
 
@@ -1012,6 +1019,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                       : mitm[delay.parm2]);
 
         const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
+        const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
         vampire_nutrition_per_turn(item, 1);
 
@@ -1020,7 +1028,10 @@ static void _finish_delay(const delay_queue_item &delay)
         if (is_vampire_feeding())
         {
             if (mons_skeleton(item.plus) && one_chance_in(3))
+            {
                 turn_corpse_into_skeleton(item);
+                item_check(false);
+            }
             else
             {
                 if (delay.parm1)
@@ -1032,6 +1043,8 @@ static void _finish_delay(const delay_queue_item &delay)
 
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+        if (was_holy)
+            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
         break;
     }
 
@@ -1130,6 +1143,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 mpr("You finish bottling this corpse's blood.");
 
                 const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
+                const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_blood_potions(item);
@@ -1138,11 +1152,15 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+                if (was_holy)
+                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
             }
             else
             {
                 mprf("You finish %s the %s into pieces.",
                      (you.has_usable_claws()
+                      || player_mutation_level(MUT_BEAK)
+                         && player_mutation_level(MUT_TALONS)
                       || you.has_usable_fangs() == 3
                          && you.species != SP_VAMPIRE) ? "ripping"
                                                        : "chopping",
@@ -1154,6 +1172,12 @@ static void _finish_delay(const delay_queue_item &delay)
                     simple_god_message(" expects more respect for your"
                                        " departed relatives.");
                 }
+                else if (is_good_god(you.religion)
+                    && mons_class_holiness(item.plus) == MH_HOLY)
+                {
+                    simple_god_message(" expects more respect for holy"
+                                       " creatures!");
+                }
                 else if (you.religion == GOD_ZIN
                          && mons_class_intel(item.plus) >= I_NORMAL)
                 {
@@ -1162,6 +1186,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 }
 
                 const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
+                const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_chunks(item);
@@ -1177,6 +1202,8 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+                if (was_holy)
+                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
             }
 
             // Don't autopickup chunks/potions if there's still another
@@ -1201,7 +1228,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                              : "bottling this corpse's blood");
             _pop_delay();
         }
-        StashTrack.update_stash(you.pos()); // Stash-track the generbated items.
+        StashTrack.update_stash(you.pos()); // Stash-track the generated items.
         break;
     }
 
@@ -1311,7 +1338,8 @@ static void _armour_wear_effects(const int item_slot)
 
 static command_type _get_running_command()
 {
-    if (kbhit() || !in_bounds(you.pos() + you.running.pos))
+    if (Options.travel_key_stop && kbhit()
+        || !in_bounds(you.pos() + you.running.pos))
     {
         stop_running();
         return CMD_NO_CMD;
@@ -1407,11 +1435,36 @@ static void _handle_macro_delay()
         you.time_taken = 0;
 }
 
+static void _decrement_delay(delay_type delay)
+{
+    for (delay_queue_type::iterator i = you.delay_queue.begin();
+         i != you.delay_queue.end(); ++i)
+    {
+        if (i->type == delay)
+        {
+            if (i->duration > 0)
+                --i->duration;
+            break;
+        }
+    }
+}
+
 void run_macro(const char *macroname)
 {
     const int currdelay = current_delay_action();
     if (currdelay != DELAY_NOT_DELAYED && currdelay != DELAY_MACRO)
         return;
+
+    if (currdelay == DELAY_MACRO)
+    {
+        const delay_queue_item &delay = you.delay_queue.front();
+        if (!delay.duration)
+        {
+            dprf("Expiring macro delay on turn: %d", you.num_turns);
+            stop_delay();
+            return;
+        }
+    }
 
 #ifdef CLUA_BINDINGS
     if (!clua)
@@ -1421,21 +1474,35 @@ void run_macro(const char *macroname)
         return;
     }
 
+    if (!currdelay)
+        start_delay(DELAY_MACRO, 1);
+
+    // If callbooleanfn returns false, that means the macro either exited
+    // normally by returning or by calling coroutine.yield(false). Either way,
+    // decrement the macro duration.
     if (!clua.callbooleanfn(false, "c_macro", "s", macroname))
     {
-        if (clua.error.length())
+        if (!clua.error.empty())
+        {
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-
-        stop_delay();
-    }
-    else
-    {
-        if (!you_are_delayed())
-            start_delay(DELAY_MACRO, 1);
+            stop_delay();
+        }
+        else
+        {
+            // Decay the macro delay's duration.
+            _decrement_delay(DELAY_MACRO);
+        }
     }
 #else
     stop_delay();
 #endif
+}
+
+bool is_delay_interruptible(delay_type delay)
+{
+    return !(delay == DELAY_EAT || delay == DELAY_WEAPON_SWAP
+             || delay == DELAY_DROP_ITEM || delay == DELAY_JEWELLERY_ON
+             || delay == DELAY_UNINTERRUPTIBLE);
 }
 
 // Returns TRUE if the delay should be interrupted, MAYBE if the user function
@@ -1495,6 +1562,13 @@ static bool _should_stop_activity(const delay_queue_item &item,
         break;
     }
 
+    // Don't interrupt player on monster's turn, they might wander off.
+    if (you.turn_is_over
+        && (at.context == "already seen" || at.context == "uncharm"))
+    {
+        return false;
+    }
+
     // No monster will attack you inside a sanctuary,
     // so presence of monsters won't matter.
     if (ai == AI_SEE_MONSTER && is_sanctuary(you.pos()))
@@ -1515,6 +1589,14 @@ static bool _should_stop_activity(const delay_queue_item &item,
         }
     }
 
+    // Don't interrupt butchering for monsters already in view.
+    const monster* mon = static_cast<const monster* >(at.data);
+    if (_is_butcher_delay(curr) && ai == AI_SEE_MONSTER
+        && testbits(mon->flags, MF_WAS_IN_VIEW))
+    {
+        return false;
+    }
+
     return (ai == AI_FORCE_INTERRUPT
             || Options.activity_interrupts[item.type][ai]);
 }
@@ -1524,6 +1606,11 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                                     delay_type atype,
                                     std::vector<std::string>* msgs_buf = NULL)
 {
+    if (ai == AI_SENSE_MONSTER)
+    {
+        mpr("You sense a monster nearby.", MSGCH_WARN);
+        return true;
+    }
     if (ai != AI_SEE_MONSTER)
         return false;
     if (!delay_is_run(atype) && !_is_butcher_delay(atype)
@@ -1535,6 +1622,9 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
         return false;
+    if (testbits(mon->flags, MF_JUST_SUMMONED) && atype == DELAY_NOT_DELAYED)
+        return false;
+
     if (at.context == "already seen" || at.context == "uncharm")
     {
         // Only say "comes into view" if the monster wasn't in view
@@ -1546,9 +1636,10 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                  mon->name(DESC_THE).c_str());
         }
     }
+    else if (mon->seen_context == "just seen")
+        return false;
     else
     {
-        ASSERT(mon->seen_context != "just seen");
         std::string text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
@@ -1598,19 +1689,32 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         else
             text += " comes into view.";
 
+        ash_id_monster_equipment(const_cast<monster* >(mon));
+        bool ash_id = mon->props.exists("ash_id") && mon->props["ash_id"];
+        std::string ash_warning;
+
         const std::string mweap =
-            get_monster_equipment_desc(mon, false, DESC_NONE);
+            get_monster_equipment_desc(mon, ash_id ? DESC_IDENTIFIED
+                                                   : DESC_WEAPON,
+                                       DESC_NONE);
 
         if (!mweap.empty())
         {
-            text += " " + mon->pronoun(PRONOUN_CAP)
-                    + " is" + mweap + ".";
+            if (ash_id)
+                ash_warning = "Ashenzari warns you:";
+
+            (ash_id ? ash_warning : text) += " " + mon->pronoun(PRONOUN_CAP)
+                                             + " is" + mweap + ".";
         }
 
         if (msgs_buf)
             msgs_buf->push_back(text);
         else
+        {
             mpr(text, MSGCH_WARN);
+            if (ash_id)
+                mpr(ash_warning, MSGCH_GOD);
+        }
         const_cast<monster* >(mon)->seen_context = "just seen";
     }
 
@@ -1667,7 +1771,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     if (crawl_state.is_repeating_cmd())
         return interrupt_cmd_repeat(ai, at);
 
-    const int delay = current_delay_action();
+    const delay_type delay = current_delay_action();
 
     if (delay == DELAY_NOT_DELAYED)
     {
@@ -1678,6 +1782,10 @@ bool interrupt_activity(activity_interrupt_type ai,
         else
             return false;
     }
+
+    // If we get hungry while traveling, let's try to auto-eat a chunk.
+    if (delay_is_run(delay) && ai == AI_HUNGRY && prompt_eat_chunks(true) == 1)
+        return false;
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 
@@ -1693,7 +1801,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     {
         _monster_warning(ai, at, item.type, msgs_buf);
         // Teleport stops stair delays.
-        stop_delay(ai == AI_TELEPORT);
+        stop_delay(ai == AI_TELEPORT, ai == AI_MONSTER_ATTACKS);
 
         return (true);
     }
@@ -1733,7 +1841,7 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "statue",
     "hungry", "message", "hp_loss", "burden", "stat",
-    "monster", "monster_attack", "teleport", "hit_monster"
+    "monster", "monster_attack", "teleport", "hit_monster", "sense_monster"
 };
 
 static const char *_activity_interrupt_name(activity_interrupt_type ai)

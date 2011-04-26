@@ -1,7 +1,7 @@
-/*
- *  File:     spl-selfench.cc
- *  Summary:  Self-enchantment spells.
- */
+/**
+ * @file
+ * @brief Self-enchantment spells.
+**/
 
 #include "AppHdr.h"
 
@@ -28,7 +28,7 @@
 
 int allowed_deaths_door_hp(void)
 {
-    int hp = you.skills[SK_NECROMANCY] / 2;
+    int hp = you.skill(SK_NECROMANCY) / 2;
 
     if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
         hp += you.piety / 15;
@@ -186,12 +186,6 @@ void cast_insulation(int power)
 {
     you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
                           "You feel insulated.");
-}
-
-void cast_resist_poison(int power)
-{
-    you.increase_duration(DUR_RESIST_POISON, 10 + random2(power), 100,
-                          "You feel resistant to poison.");
 }
 
 void cast_teleport_control(int power)

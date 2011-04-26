@@ -76,7 +76,7 @@ static void _species_stat_init(species_type which_species)
     case SP_SPRIGGAN:           sb =  2; ib =  7; db =  9;      break;  // 18
 
     case SP_MUMMY:              sb =  9; ib =  5; db =  5;      break;  // 19
-    case SP_GHOUL:              sb =  9; ib =  1; db =  2;      break;  // 13
+    case SP_GHOUL:              sb =  9; ib =  1; db =  2;      break;  // 12
     case SP_VAMPIRE:            sb =  5; ib =  8; db =  7;      break;  // 20
 
     case SP_RED_DRACONIAN:
@@ -422,16 +422,16 @@ static void _give_wand(const newgame_def& ng)
     ASSERT(wand != -1);
 
     if (is_rod)
-        make_rod(you.inv[2], STAFF_STRIKING, 8);
+        make_rod(you.inv[1], STAFF_STRIKING, 8);
     else
     {
         // 1 wand of random effects and one chosen lesser wand
         const wand_type choice = static_cast<wand_type>(wand);
         const int ncharges = 15;
+        newgame_make_item(1, EQ_NONE, OBJ_WANDS, choice,
+                          -1, 1, ncharges, 0);
         newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS,
-                           -1, 1, ncharges, 0);
-        newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice,
-                           -1, 1, ncharges, 0);
+                          -1, 1, ncharges, 0);
     }
 }
 
@@ -448,7 +448,7 @@ static void _update_weapon(const newgame_def& ng)
 static void _give_items_skills(const newgame_def& ng)
 {
     int weap_skill = 0;
-    int curr;
+    int curr = 0;
 
     switch (you.char_class)
     {
@@ -510,28 +510,12 @@ static void _give_items_skills(const newgame_def& ng)
     }
 
     case JOB_MONK:
-        // Equipment.
-        curr = 0;
-        if (ng.weapon == WPN_QUARTERSTAFF)
-        {
-            newgame_make_item(curr++, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-            _update_weapon(ng);
-        }
-        else
-            you.equip[EQ_WEAPON] = -1;
+        you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
 
-        newgame_make_item(curr, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
         you.skills[SK_FIGHTING]       = 3;
-
-        if (ng.weapon == WPN_QUARTERSTAFF)
-        {
-            you.skills[SK_STAVES] = 3;
-            you.skills[SK_UNARMED_COMBAT] = 1;
-        }
-        else
-            you.skills[SK_UNARMED_COMBAT] = 4;
-
+        you.skills[SK_UNARMED_COMBAT] = 4;
         you.skills[SK_DODGING]        = 3;
         you.skills[SK_STEALTH]        = 2;
         break;
@@ -629,7 +613,8 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
-        you.char_direction = GDT_GAME_START;
+        if (!crawl_state.game_is_zotdef())
+            you.char_direction = GDT_GAME_START;
         you.piety = 38;
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
@@ -775,7 +760,7 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ENCHANTER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1,
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 1,
                            1);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
@@ -786,18 +771,17 @@ static void _give_items_skills(const newgame_def& ng)
         // Spriggans used to get a rod of striking, but now that anyone
         // can get one when playing an Artificer, this is no longer
         // necessary. (jpeg)
-        if (you.species == SP_SPRIGGAN)
-            you.inv[0].sub_type = WPN_DAGGER;
 
         if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
         you.skills[SK_THROWING]     = 1;
-        you.skills[SK_HEXES]        = 4;
+        you.skills[SK_HEXES]        = 3;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
+        you.skills[SK_STABBING]     = 1;
         break;
 
     case JOB_SUMMONER:
@@ -1037,38 +1021,28 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ARTIFICER:
-        // Equipment. Dagger, and armour or robe.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                           ARM_LEATHER_ARMOUR, ARM_ROBE);
+        // Equipment. Quarterstaff, and armour or robe.
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
 
         // Choice of lesser wands, 15 charges plus wand of random
         // effects: confusion, enslavement, slowing, magic dart, frost,
         // flame; OR a rod of striking, 8 charges and no random effects.
         _give_wand(ng);
 
-        // If an offensive wand or the rod of striking was chosen,
-        // don't hand out a weapon.
-        if (item_is_rod(you.inv[2]))
-        {
-            // If the rod of striking was chosen, put it in the first
-            // slot and wield it.
-            you.inv[0] = you.inv[2];
-            you.equip[EQ_WEAPON] = 0;
-            _newgame_clear_item(2);
-        }
-        else if (you.inv[3].base_type != OBJ_WANDS
-                 || you.inv[3].sub_type != WAND_CONFUSION
-                    && you.inv[3].sub_type != WAND_ENSLAVEMENT)
-        {
-            _newgame_clear_item(0);
-        }
+        curr = 2;
+
+        if (!item_is_rod(you.inv[1]))
+            curr++;
+
+        newgame_make_item(curr, EQ_BODY_ARMOUR, OBJ_ARMOUR,
+                           ARM_LEATHER_ARMOUR, ARM_ROBE);
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 4;
         you.skills[SK_TRAPS_DOORS] = 3;
         you.skills[SK_DODGING]     = 2;
         you.skills[SK_FIGHTING]    = 1;
+        you.skills[SK_STAVES]      = 1;
         you.skills[SK_STEALTH]     = 1;
         break;
 

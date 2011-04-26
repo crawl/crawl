@@ -10,20 +10,19 @@ two other, less sophisticated ways:
   (lightgrey).
 
 If you consider figuring out such things yourself to be fun, stop
-reading now. Otherwise, just go ahead. (The numbers in brackets
-are the aptitude values shown in version 0.6 and older.)
+reading now. Otherwise, just go ahead.
 
- -5  (238)  abysmal aptitude
- -4  (200)  very poor aptitude (learning half as fast as Humans)
- -3  (168)  poor aptitude
- -2  (141)  bad aptitude
- -1  (119)  slightly disfavoured aptitude
-  0  (100)  standard aptitude (Humans)
- +1   (84)  slightly favoured aptitude
- +2   (71)  strong aptitude
- +3   (59)  very strong aptitude
- +4   (50)  outstanding aptitude (learning twice as fast as Humans)
- +5   (42)  exceptional aptitude
+ -5  abysmal aptitude
+ -4  terrible aptitude (learning half as fast as Humans)
+ -3  very poor aptitude
+ -2  poor aptitude
+ -1  slightly disfavoured aptitude
+  0  standard aptitude (Humans)
+ +1  slightly favoured aptitude
+ +2  strong aptitude
+ +3  very strong aptitude
+ +4  outstanding aptitude (learning twice as fast as Humans)
+ +5  exceptional aptitude
 
 Please note that many things affect how quickly a character will actually
 learn a skill. Thus, the numbers below are good enough for comparisons among

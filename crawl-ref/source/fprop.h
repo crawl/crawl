@@ -27,6 +27,11 @@ enum feature_property_type
     FPROP_NO_JIYVA      = (1 << 14),
     // Permanent, unlike map memory.
     FPROP_SEEN_OR_NOEXP = (1 << 15),
+#ifdef USE_TILE
+    FPROP_BLOOD_WEST    = (1 << 16),
+    FPROP_BLOOD_NORTH   = (1 << 17),
+    FPROP_BLOOD_EAST    = FPROP_BLOOD_WEST | FPROP_BLOOD_NORTH,
+#endif
 };
 
 
@@ -37,5 +42,9 @@ bool is_moldy(const coord_def & p);
 bool glowing_mold(const coord_def & p);
 void remove_mold(const coord_def & p);
 feature_property_type str_to_fprop(const std::string &str);
+
+#ifdef USE_TILE
+char blood_rotation(const coord_def & p);
+#endif
 
 #endif

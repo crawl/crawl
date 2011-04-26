@@ -1,8 +1,7 @@
-/*
- *  File:       potion.cc
- *  Summary:    Potion and potion-like effects.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Potion and potion-like effects.
+**/
 
 #include "AppHdr.h"
 
@@ -20,6 +19,7 @@
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
+#include "godwrath.h"
 #include "hints.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -367,9 +367,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
         else
             mpr("A flood of memories washes over you.");
-        you.exp_available = std::min(you.exp_available +
-                                     750 * you.experience_level, MAX_EXP_POOL);
-        break;                  // I'll let this slip past robe of archmagi
+        you.exp_available += 750 * you.experience_level
+                           - ash_reduce_xp(750 * you.experience_level);
+        break;
 
     case POT_MAGIC:
         inc_mp((10 + random2avg(28, 3)), false);
@@ -397,11 +397,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         {
             mpr("You feel slightly irritated.");
             make_hungry(100, false);
-        }
-        else if (you.duration[DUR_BUILDING_RAGE])
-        {
-            you.duration[DUR_BUILDING_RAGE] = 0;
-            mpr("Your blood cools.");
         }
         else
         {

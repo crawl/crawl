@@ -7,12 +7,15 @@
 #include FT_FREETYPE_H
 
 #include "defines.h"
+#include "errno.h"
 #include "files.h"
 #include "format.h"
 #include "fontwrapper-ft.h"
 #include "glwrapper.h"
+#include "syscalls.h"
 #include "tilebuf.h"
 #include "tilefont.h"
+#include "unicode.h"
 
 FontWrapper* FontWrapper::create()
 {
@@ -42,31 +45,33 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
 
     error = FT_Init_FreeType(&library);
     if (error)
-    {
-        fprintf(stderr, "Failed to initialise freetype library.\n");
-        return false;
-    }
+        die_noline("Failed to initialise freetype library.\n");
 
     // TODO enne - need to find a cross-platform way to also
     // attempt to locate system fonts by name...
+    // 1KB: fontconfig if we are not scared of hefty libraries
     std::string font_path = datafile_path(font_name, false, true);
     if (font_path.c_str()[0] == 0)
-    {
-        fprintf(stderr, "Could not find font '%s'\n", font_name);
-        return false;
-    }
+        die_noline("Could not find font '%s'\n", font_name);
 
-    error = FT_New_Face(library, font_path.c_str(), 0, &face);
+    // Certain versions of freetype have problems reading files on Windows,
+    // do that ourselves.
+    FILE *f = fopen_u(font_path.c_str(), "rb");
+    if (!f)
+        die_noline("Could not read font '%s'\n", font_name);
+    unsigned long size = file_size(f);
+    FT_Byte *ttf = (FT_Byte*)malloc(size);
+    ASSERT(ttf);
+    if (fread(ttf, 1, size, f) != size)
+        die_noline("Could not read font '%s': %s\n", font_name, strerror(errno));
+    fclose(f);
+    // FreeType needs the font until FT_Done_Face(), and we never call it.
+
+    error = FT_New_Memory_Face(library, ttf, size, 0, &face);
     if (error == FT_Err_Unknown_File_Format)
-    {
-        fprintf(stderr, "Unknown font format for file '%s'\n",
-                         font_path.c_str());
-        return false;
-    }
+        die_noline("Unknown font format for file '%s'\n", font_path.c_str());
     else if (error)
-    {
-        fprintf(stderr, "Invalid font from file '%s'\n", font_path.c_str());
-    }
+        die_noline("Invalid font from file '%s'\n", font_path.c_str());
 
     error = FT_Set_Pixel_Sizes(face, font_size, font_size);
     ASSERT(!error);
@@ -242,9 +247,18 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     return success;
 }
 
+// This function should be removed once we can support more than ISO-8859-1.
+ucs_t _fallback_char(ucs_t c)
+{
+    // Weed out characters we can't draw.
+    if (c > 0xFF) // TODO: try to transliterate
+        c = 0xBF; // reversed question mark
+    return c;
+}
+
 void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
-                                     unsigned char *chars,
-                                     unsigned char *colours,
+                                     ucs_t *chars,
+                                     uint8_t *colours,
                                      unsigned int width, unsigned int height,
                                      bool drop_shadow)
 {
@@ -263,9 +277,9 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     {
         for (unsigned int x = 0; x < width; x++)
         {
-            unsigned char c = chars[i];
-            unsigned char col_bg = colours[i] >> 4;
-            unsigned char col_fg = colours[i] & 0xF;
+            ucs_t c = _fallback_char(chars[i]);
+            uint8_t col_bg = colours[i] >> 4;
+            uint8_t col_fg = colours[i] & 0xF;
 
             if (col_bg != 0)
             {
@@ -474,7 +488,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
             ret[idx] = '.';
             ret[idx+1] = '.';
 
-            return ret.substr(0, idx + 2);
+            return ret.chop(idx + 2);
         }
         else
         {
@@ -504,15 +518,18 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     unsigned int max_rows = 1;
     unsigned int cols = 0;
     unsigned int max_cols = 0;
-    for (const char *itr = text; *itr; itr++)
+    ucs_t c;
+    for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
     {
-        cols++;
+        int w = wcwidth(c);
+        if (w != -1)
+            cols += w;
         max_cols = std::max(cols, max_cols);
 
         // NOTE: only newlines should be used for tool tips.  Don't use EOL.
-        ASSERT(*itr != '\r');
+        ASSERT(c != '\r');
 
-        if (*itr == '\n')
+        if (c == '\n')
         {
             cols = 0;
             max_rows++;
@@ -520,20 +537,27 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     }
 
     // Create the text block
-    unsigned char *chars = (unsigned char *)malloc(max_rows * max_cols);
-    unsigned char *colours = (unsigned char *)malloc(max_rows * max_cols);
-    memset(chars, ' ', max_rows * max_cols);
+    ucs_t *chars = (ucs_t*)malloc(max_rows * max_cols * sizeof(ucs_t));
+    uint8_t *colours = (uint8_t*)malloc(max_rows * max_cols);
+    for (unsigned int i = 0; i < max_rows * max_cols; i++)
+        chars[i] = ' ';
     memset(colours, font_colour, max_rows * max_cols);
 
     // Fill the text block
     cols = 0;
     unsigned int rows = 0;
-    for (const char *itr = text; *itr; itr++)
+    for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
     {
-        chars[cols + rows * max_cols] = *itr;
-        cols++;
+        int w = wcwidth(c);
+        if (w > 0) // FIXME: combining characters are silently ignored
+        {
+            chars[cols + rows * max_cols] = c;
+            cols++;
+            if (w == 2)
+                chars[cols + rows * max_cols] = ' ', cols++;
+        }
 
-        if (*itr == '\n')
+        if (c == '\n')
         {
             cols = 0;
             rows++;
@@ -596,9 +620,11 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const std::string &str, const VColour &col,
                           float orig_x)
 {
-    for (unsigned int i = 0; i < str.size(); i++)
+    const char *sp = str.c_str();
+    ucs_t c;
+    while(int s = utf8towc(&c, sp))
     {
-        char c = str[i];
+        sp += s;
         if (c == '\n')
         {
             x = orig_x;
@@ -639,8 +665,9 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          unsigned char c, const VColour &col)
+                          ucs_t c, const VColour &col)
 {
+    c = _fallback_char(c);
     if (!m_glyphs[c].renderable)
     {
         x += m_glyphs[c].advance;

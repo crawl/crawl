@@ -84,7 +84,7 @@ While it seems inconceivable that the divine could be shackled, Ashenzari is jus
 %%%%
 Jiyva
 
-Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items and are forbidden from harming any slimes. Especially favoured followers will become as shapeless as their god, as their attributes and mutations shift around under Jiyva's influence.
+Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items and are forbidden from harming any slimes. Jiyva will even occasionally consume items left elsewhere in the Dungeon by followers. Especially favoured followers will become as shapeless as their god, as their attributes and mutations shift around under Jiyva's influence.
 %%%%
 Zin powers
 
@@ -154,7 +154,8 @@ Followers can request a jelly from Jiyva, turn monsters to slime, and eventually
 %%%%
 Ashenzari powers
 
-Ashenzari exhorts his followers to garb themselves with curses, rewarding followers for time spent using cursed armour, jewelry, or weapons. Ashenzari's ultimate desire, however, is not for the devotion of his followers but for knowledge of all things. Pious followers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
+Ashenzari exhorts followers to garb themselves with curses, rewarding followers for time spent using cursed armour, jewelry, or weapons. Ashenzari's ultimate desire, however, is not for the devotion of followers but for knowledge of all things. Pious followers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
+
 %%%%
 Zin lastname
 

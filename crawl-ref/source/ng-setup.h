@@ -1,7 +1,7 @@
-/*
- *  File:       ng-setup.h
- *  Summary:    Setup "you" for a new game.
- */
+/**
+ * @file
+ * @brief Setup "you" for a new game.
+**/
 
 #ifndef NG_SETUP_H
 #define NG_SETUP_H

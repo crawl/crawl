@@ -1,15 +1,15 @@
-/*
- * Summary:   Monster-related enums.
+/**
+ * @file
+ * @brief Monster-related enums.
  *
  * Extracted from mon-util.h to cut down on mon-util.h
  * dependencies.
- */
+**/
 
 #ifndef MON_ENUM_H
 #define MON_ENUM_H
 
 #include "tag-version.h"
-#include <stdint.h>
 
 #define HERD_COMFORT_RANGE 6
 

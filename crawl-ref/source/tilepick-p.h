@@ -1,7 +1,7 @@
-/*
- *  File:       tilepick-p.h
- *  Summary:    Look-up functions for player tiles.
- */
+/**
+ * @file
+ * @brief Look-up functions for player tiles.
+**/
 
 #ifndef TILEPICK_P_H
 #define TILEPICK_P_H

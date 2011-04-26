@@ -1,8 +1,7 @@
-/*
- *  File:       debug.h
- *  Summary:    Assertions and such.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Assertions and such.
+**/
 
 #ifndef DEBUG_H
 #define DEBUG_H
@@ -67,6 +66,8 @@ inline void __DUMMY_TRACE__(...)
 
 NORETURN void die(const char *file, int line, const char *format, ...);
 #define die(...) die(__FILE__, __LINE__, __VA_ARGS__)
+
+NORETURN void die_noline(const char *format, ...);
 
 #ifdef DEBUG
 void debuglog(const char *format, ...);

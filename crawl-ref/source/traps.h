@@ -1,8 +1,7 @@
-/*
- *  File:       traps.h
- *  Summary:    Traps related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Traps related functions.
+**/
 
 #ifndef TRAPS_H
 #define TRAPS_H
