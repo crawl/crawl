@@ -1019,7 +1019,7 @@ static bool _jiyva_retribution()
                 }
 
                 if (transform(random2(you.penance[GOD_JIYVA]) * 2, form, true))
-                    you.transform_uncancellable = false;
+                    you.transform_uncancellable = true;
             }
     }
     else
