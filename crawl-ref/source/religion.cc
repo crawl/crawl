@@ -716,6 +716,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you or your allied orcs kill holy beings");
         break;
 
+    case GOD_OKAWARU:
+        likes.push_back("you kill holy beings");
+        break;
+
     default:
         break;
     }
