@@ -28,7 +28,7 @@ Appendices
 
 
 ------------------------------------------------------------------------
-A. Overview
+A.                                OVERVIEW
 ------------------------------------------------------------------------
 
 Crawl is a fun game in the grand tradition of games like Rogue, Hack and Moria.
@@ -82,7 +82,7 @@ You can ask for help and there will always be someone to supervise your game and
 give hints if you happen to play on a server.
 
 ------------------------------------------------------------------------
-B. Starting screen
+B.                             STARTING SCREEN
 ------------------------------------------------------------------------
 
 After starting Crawl, you'll be asked to type in a name. Press Enter if you wish
@@ -162,7 +162,7 @@ Ctrl-O
   an overview of the part of the dungeon you discovered so far
 
 ------------------------------------------------------------------------
-C. Attributes and stats
+C.                          ATTRIBUTES AND STATS
 ------------------------------------------------------------------------
 
 The stat area to the right of the playing map shows a lot of information.
@@ -290,7 +290,7 @@ ability to spit poison or the magical power to turn invisible granted by a
 ring. These are accessed through the 'a' command.
 
 ------------------------------------------------------------------------
-D. Exploring the dungeon
+D.                          EXPLORING THE DUNGEON
 ------------------------------------------------------------------------
 
 Movement
@@ -483,7 +483,7 @@ can use keymaps and macros. See macros_guide.txt in the docs/ directory, or read
 it from the in-game help menu.
 
 ------------------------------------------------------------------------
-E. Experience and skills
+E.                          EXPERIENCE AND SKILLS
 ------------------------------------------------------------------------
 
 When you kill monsters, you gain experience points (XP). You receive less XP
@@ -535,7 +535,7 @@ transferred into exercising this particular skill. This can be done till
 the manual crumbles, which will occur after a random number of uses.
 
 ------------------------------------------------------------------------
-F. Monsters
+F.                                MONSTERS
 ------------------------------------------------------------------------
 
 In the caverns of Crawl, you will find a great variety of creatures, most of
@@ -584,7 +584,7 @@ monsters are giving you trouble, try to alter your tactics for future
 encounters.
 
 ------------------------------------------------------------------------
-G. Items
+G.                                  ITEMS
 ------------------------------------------------------------------------
 
 In the dungeons of Crawl there are many different kinds of normal and magical
@@ -998,7 +998,7 @@ Normal and ego helmets can both have extra decorations ("winged",
 "plumed", etc.).
 
 ------------------------------------------------------------------------
-H. Spellcasting
+H.                              SPELLCASTING
 ------------------------------------------------------------------------
 
 Magical spells are a very important part of surviving in the dungeon. Every
@@ -1068,7 +1068,7 @@ Be careful of magic-using enemies! Some of them can use magic just as well as
 you, if not better, and often use it intelligently.
 
 ------------------------------------------------------------------------
-I. Targeting
+I.                                TARGETING
 ------------------------------------------------------------------------
 
 When throwing something, evoking certain wands, or casting spells, you
@@ -1119,7 +1119,7 @@ Finally, there are some more targeting related commands:
     hostiles, friends, plants or all monsters.
 
 ------------------------------------------------------------------------
-J. Religion
+J.                                RELIGION
 ------------------------------------------------------------------------
 
 There are a number of gods, demons and other assorted powers who will accept
@@ -1154,7 +1154,7 @@ If you like to start the game with a religion, choose your background from
 Healer, Priest, Berserker, Chaos Knight, Abyssal Knight or Death Knight.
 
 ------------------------------------------------------------------------
-K. Mutations
+K.                                MUTATIONS
 ------------------------------------------------------------------------
 
 Although it would doubtless be a nice thing if you could remain genetically
@@ -1195,7 +1195,7 @@ feature gets amplified by an ordinary mutation, it is displayed in a light blue
 colour.
 
 ------------------------------------------------------------------------
-L. Licence, contact, history
+L.                        LICENCE, CONTACT, HISTORY
 ------------------------------------------------------------------------
 
 Licence
@@ -1253,7 +1253,7 @@ The object of your quest in Crawl (the Orb of Zot) was taken from Wizard's
 Castle, a text adventure written in BASIC.
 
 ------------------------------------------------------------------------
-M. Macros, options, performance
+M.                      MACROS, OPTIONS, PERFORMANCE
 ------------------------------------------------------------------------
 
 Crawl supports redefining keys via key maps. This is useful when your keyboard
@@ -1287,7 +1287,7 @@ measures which may improve the situation:
     useful if playing on a remote server)
 
 ------------------------------------------------------------------------
-N. Philosophy (pas de faq)
+N.                         PHILOSOPHY (PAS DE FAQ)
 ------------------------------------------------------------------------
 
 In a nutshell: This game aims to be a tactical fantasy-themed dungeon crawl. We
@@ -1475,7 +1475,7 @@ Appendices
 ########################################
 
 ------------------------------------------------------------------------
-1. List of character species
+1.                        LIST OF CHARACTER SPECIES
 ------------------------------------------------------------------------
 
 .. note:: Use 'A' to check for which particular peculiarities a species might
@@ -1859,7 +1859,7 @@ Pale Draconians
   Evocations.
 
 ------------------------------------------------------------------------
-2. List of character backgrounds
+2.                      LIST OF CHARACTER BACKGROUNDS
 ------------------------------------------------------------------------
 
 In your quest, you play as one of a large number of different types of
@@ -2037,7 +2037,7 @@ Elementalists
     is a mixed bag, with destructive, defensive and utility spells available.
 
 ------------------------------------------------------------------------
-3. List of skills
+3.                             LIST OF SKILLS
 ------------------------------------------------------------------------
 
 Here is a description of the skills you may have. You can check your current
@@ -2213,7 +2213,7 @@ Evocations
   practising the activities mentioned above.
 
 ------------------------------------------------------------------------
-4. List of keys and commands
+4.                        LIST OF KEYS AND COMMANDS
 ------------------------------------------------------------------------
 
 Main screen
@@ -2806,7 +2806,7 @@ Shift-direction
   exclusive with default_target.
 
 ------------------------------------------------------------------------
-5. List of enchantments
+5.                          LIST OF ENCHANTMENTS
 ------------------------------------------------------------------------
 
 The stats area has room for showing the enchantments which you currently enjoy
@@ -2948,7 +2948,7 @@ There are several more enchantment messages for various spells. The description
 of the spell causing the enchantment will explain these.
 
 ------------------------------------------------------------------------
-6. Inscriptions
+6.                              INSCRIPTIONS
 ------------------------------------------------------------------------
 
 You can use the { command to manually inscribe items; alternatively, you can
