@@ -335,7 +335,6 @@ Monsters
 
 Levels
 ------
-* New game mode: 'Zot Defence'.
 * Shorten Elven Halls from 7 -> 5 floors.
 * Use a random Temple map if the original temple map is no longer available.
 * Fix portal vaults not being deleted after leaving.
