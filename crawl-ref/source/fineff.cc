@@ -80,12 +80,12 @@ void fire_final_effects()
             if (!attacker || attacker == defender || !attacker->alive())
                 continue;
             // defender being dead is ok, if we killed them we still suffer
-            if (attacker->atype() == ACT_PLAYER)
+            if (fe.att == MID_PLAYER)
             {
                 mpr("It reflects your damage back at you!");
                 ouch(fe.x, NON_MONSTER, KILLED_BY_REFLECTION);
             }
-            else if (defender->atype() == ACT_PLAYER)
+            else if (fe.def == MID_PLAYER)
             {
                 simple_god_message(" mirrors your injury!");
 #ifndef USE_TILE
