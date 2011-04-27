@@ -43,10 +43,9 @@
  */
 bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
 {
-    ASSERT(!crawl_state.game_is_arena());
-
-    if(defender->atype() == ACT_PLAYER)
+    if (defender->atype() == ACT_PLAYER)
     {
+        ASSERT(!crawl_state.game_is_arena());
         // Friendly and good neutral monsters won't attack unless confused.
         if (attacker->as_monster()->wont_attack() &&
             !mons_is_confused(attacker->as_monster()))
@@ -62,6 +61,7 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
     }
     else if(attacker->atype() == ACT_PLAYER)
     {
+        ASSERT(!crawl_state.game_is_arena());
         // Can't damage orbs or boulders this way.
         if (mons_is_projectile(defender->type) && !you.confused())
         {
