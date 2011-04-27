@@ -132,6 +132,8 @@ LUARET1(you_see_cell_rel, boolean,
 LUARET1(you_see_cell_no_trans_rel, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
 LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
+LUARET1(you_max_burden, number, carrying_capacity(BS_UNENCUMBERED))
+LUARET1(you_burden, number, you.burden)
 
 void lua_push_floor_items(lua_State *ls, int link);
 static int you_floor_items(lua_State *ls)
@@ -228,6 +230,8 @@ static const struct luaL_reg you_clib[] =
     { "deaths",       you_deaths },
     { "lives",        you_lives },
     { "piety_rank",   you_piety_rank },
+    { "max_burden",   you_max_burden },
+    { "burden",       you_burden },
 
     { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },
