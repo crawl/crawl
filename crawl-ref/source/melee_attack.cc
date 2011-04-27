@@ -3292,9 +3292,9 @@ int melee_attack::calc_to_hit(bool random)
     #endif
 
         if (weapon
-            && (weapon->base_type == OBJ_WEAPONS)
+            && (weapon->base_type == OBJ_WEAPONS
                 && !is_range_weapon(*weapon)
-                || weapon->base_type == OBJ_STAVES)
+                || weapon->base_type == OBJ_STAVES))
         {
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
         }
