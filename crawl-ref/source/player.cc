@@ -5820,7 +5820,11 @@ int player::armour_tohit_penalty(bool random_factor) const
 int player::shield_tohit_penalty(bool random_factor) const
 {
     const item_def* wp = slot_item(EQ_WEAPON);
-    hands_reqd_type hands = hands_reqd(*wp, body_size());
+    hands_reqd_type hands;
+
+    if(wp)
+        hands = hands_reqd(*wp, body_size());
+
     int factor = wp && hands == HANDS_HALF ? 2 : 1;
 
     return maybe_roll_dice(factor, adjusted_shield_penalty(), random_factor);
