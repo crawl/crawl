@@ -56,7 +56,8 @@ public:
     actor* miscast_target;
 
 public:
-    melee_attack(actor *attacker, actor *defender, bool allow_unarmed = true);
+    melee_attack(actor *attacker, actor *defender,
+                 bool allow_unarmed = true, int attack_num = -1);
 
     // Applies attack damage and other effects.
     bool attack();
@@ -128,7 +129,6 @@ private:
     int mons_calc_damage(const mon_attack_def &attk);
     void mons_apply_attack_flavour(const mon_attack_def &attk);
     bool mons_perform_attack();
-    void mons_perform_attack_rounds();
     std::string mons_attack_verb(const mon_attack_def &attk);
     std::string mons_attack_desc(const mon_attack_def &attk);
     void mons_announce_hit(const mon_attack_def &attk);
