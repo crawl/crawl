@@ -15,6 +15,7 @@
 #include "externs.h"
 
 #include "cloud.h"
+#include "coordit.h"
 #include "debug.h"
 #include "delay.h"
 #include "env.h"
@@ -96,8 +97,69 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
         return (true);
     }
 
-    melee_attack attk(attacker, defender, allow_unarmed);
-    return (attk.attack());
+    // If execution gets here, attacker != Player, so we can safely continue
+    // with processing the number of attacks a monster has without worrying
+    // about unpredictable or wierd results from players.
+
+    const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
+        attacker->as_monster()->number : 4;
+    coord_def pos    = defender->pos();
+
+    // Melee combat, tell attacker to wield its melee weapon.
+    attacker->as_monster()->wield_melee_weapon();
+
+    int effective_attack_number = 0;
+    int attack_number;
+    for (attack_number = 0; attack_number < nrounds && attacker->alive();
+         ++attack_number, ++effective_attack_number)
+    {
+        if (!attacker->alive())
+            return (false);
+
+        // Monster went away?
+        if (!defender->alive() || defender->pos() != pos)
+        {
+            if (attacker == defender
+               || !attacker->as_monster()->has_multitargeting())
+            {
+                break;
+            }
+
+            // Hydras can try and pick up a new monster to attack to
+            // finish out their round. -cao
+            bool end = true;
+            for (adjacent_iterator i(attacker->pos()); i; ++i)
+            {
+                if (*i == you.pos()
+                    && !mons_aligned(attacker, &you))
+                {
+                    attacker->as_monster()->foe = MHITYOU;
+                    attacker->as_monster()->target = you.pos();
+                    defender = &you;
+                    end = false;
+                    break;
+                }
+
+                monster* mons = monster_at(*i);
+                if (mons && !mons_aligned(attacker, mons))
+                {
+                    defender = mons;
+                    end = false;
+                    pos = mons->pos();
+                    break;
+                }
+            }
+
+            // No adjacent hostiles.
+            if (end)
+                break;
+        }
+
+        melee_attack attk(attacker, defender, allow_unarmed, attack_number);
+        attk.attack();
+    }
+
+    return (true);
 }
 
 // This function returns the "extra" stats the player gets because of
