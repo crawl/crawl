@@ -1078,7 +1078,7 @@ This scroll allows you to detect the presence of cursed items among your possess
 %%%%
 scroll of enchant armour
 
-This scroll places an enchantment on a piece of armour. Most armour can only be enchanted to +2, except for body armour and bardings which can be enchanted to +8. Using the scroll on well-enchanted items may not work.
+This scroll places an enchantment on a piece of armour. Most armour can only be enchanted to +2, except for shields which can be enchanted to +3, and body armour and bardings which can be enchanted up to the same value as their base AC.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
