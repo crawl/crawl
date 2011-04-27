@@ -8,7 +8,8 @@ Breaks save compatibility with the 0.7 release.
 --------------
 * New god: Ashenzari, god of divinations.
 * New species: Felids, sentient cats.
-* New spells: Malign Gateway, Tornado, Leda's Liquefaction, Summon Dragon, Summon Hydra, Darkness.
+* New spells: Malign Gateway, Tornado, Leda's Liquefaction, Summon Dragon,
+  Summon Hydra, Darkness, Passage of Golubria.
 * Removed spells: Bone Shards, Tame Beasts, Portal, Alter Self, Extension.
 * Split Enchantments into Hexes (harm foes) and Charms (self-buffs).
 * Replaced Selective Amnesia spell with scroll and book destruction.
