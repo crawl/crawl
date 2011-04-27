@@ -4712,10 +4712,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         dprf("HD: %d; pow: %d", mon->hit_dice, ench_power);
 
         if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
-        {
-            simple_monster_message(mon, " is unaffected.");
-            return (MON_OTHER);
-        }
+            return (MON_UNAFFECTED);
 
         // The monster can be no more than lightly wounded/damaged,
         // using the formula from mon-stuff.cc:mons_get_damage_level().
