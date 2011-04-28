@@ -1424,7 +1424,7 @@
        SPELL_AGONY,
        SPELL_PAIN,
        SPELL_HASTE,
-       SPELL_NO_SPELL,
+       SPELL_SYMBOL_OF_TORMENT,
        SPELL_NO_SPELL,
        SPELL_HASTE
       }

@@ -354,6 +354,13 @@ NAME:   uniq_tiamat
 DEPTH:  Zot
 : place_unique(_G, "Tiamat band")
 
+NAME:   uniq_ignacio
+DEPTH:  Pan
+TAGS:   pan transparent extra
+MONS:   Ignacio
+MAP
+1
+ENDMAP
 
 ###############################################################################
 # Crazy Yiuf! Only in his cottage.
