@@ -2707,6 +2707,10 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 
     switch (item.sub_type)
     {
+#if TAG_MAJOR_VERSION == 32
+    case WPN_KNIFE:
+        return TILE_WPN_KNIFE;
+#endif
     case WPN_DAGGER:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_DAGGER_ORC;

@@ -225,6 +225,11 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_PIERCING | DAM_BLUDGEON, 10 },
 
     // Short Blades
+#if TAG_MAJOR_VERSION == 32
+    { WPN_KNIFE,             "knife",               3,  5, 10,  10,  1,
+        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        DAMV_STABBING | DAM_SLICE, 0 },
+#endif
     { WPN_DAGGER,            "dagger",              4,  6, 10,  20,  1,
         SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
         DAMV_STABBING | DAM_SLICE, 10 },
@@ -445,7 +450,7 @@ void init_properties()
 {
     // Compare with enum comments, to catch changes.
     COMPILE_CHECK(NUM_ARMOURS  == 39, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 55, c2);
+    COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
     COMPILE_CHECK(NUM_FOODS    == 23, c4);
 
