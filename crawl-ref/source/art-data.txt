@@ -655,7 +655,7 @@ BOOL:    poison, berserk, tilerim
 
 NAME:     Spriggan's Knife
 APPEAR:   dainty little knife
-OBJ:      OBJ_WEAPONS/WPN_KNIFE
+OBJ:      OBJ_WEAPONS/WPN_DAGGER
 PLUS:     +4/+10
 COLOUR:   LIGHTCYAN
 TILE:     urand_spriggans_knife
