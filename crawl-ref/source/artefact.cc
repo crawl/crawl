@@ -416,11 +416,6 @@ void reveal_randapp_artefact(item_def &item)
     item.colour = unrand->colour;
 }
 
-static uint32_t _calc_seed(const item_def &item)
-{
-    return (item.special & RANDART_SEED_MASK);
-}
-
 void artefact_desc_properties(const item_def &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known,
@@ -698,10 +693,6 @@ void static _get_randart_properties(const item_def &item,
     const object_class_type aclass = item.base_type;
     const int atype = item.sub_type;
     int power_level = 0;
-
-    const uint32_t seed = _calc_seed(item);
-    rng_save_excursion exc;
-    seed_rng(seed);
 
     if (aclass == OBJ_ARMOUR)
         power_level = item.plus / 2 + 2;
@@ -1298,9 +1289,7 @@ void artefact_wpn_properties(const item_def &item,
             proprt[i] = static_cast<short>(unrand->prpty[i]);
     }
     else
-    {
         _get_randart_properties(item, proprt);
-    }
 }
 
 
@@ -1449,8 +1438,6 @@ std::string artefact_name(const item_def &item, bool appearance)
             return unrand->unid_name;
     }
 
-    const uint32_t seed = _calc_seed(item);
-
     std::string lookup;
     std::string result;
 
@@ -1476,9 +1463,6 @@ std::string artefact_name(const item_def &item, bool appearance)
 
     // get base type
     lookup += _get_artefact_type(item, appearance);
-
-    rng_save_excursion rng_state;
-    seed_rng(seed);
 
     if (appearance)
     {
@@ -1928,12 +1912,10 @@ bool make_item_randart(item_def &item, bool force_mundane)
     int randart_tries = 500;
     do
     {
-        item.special = (random_int() & RANDART_SEED_MASK);
         // Now that we found something, initialise the props array.
         if (--randart_tries <= 0 || !_init_artefact_properties(item))
         {
-            // Something went wrong that no amount of changing
-            // item.special will fix.
+            // Something went wrong that no amount of rerolling will fix.
             item.special = 0;
             item.props.erase(ARTEFACT_PROPS_KEY);
             item.props.erase(KNOWN_PROPS_KEY);

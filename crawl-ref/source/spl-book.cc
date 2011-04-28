@@ -1673,8 +1673,6 @@ static void _make_book_randart(item_def &book)
 {
     if (!is_artefact(book))
     {
-        // This may need to get re-initialized at some point.
-        book.special = (random_int() & RANDART_SEED_MASK);
         book.flags |= ISFLAG_RANDART;
         if (!book.props.exists(ARTEFACT_APPEAR_KEY))
         {
