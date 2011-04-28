@@ -2170,7 +2170,7 @@ void dgn_set_colours_from_monsters()
     if (env.mons_alloc[8] >= 0 && env.mons_alloc[8] != MONS_NO_MONSTER
         && env.mons_alloc[8] < NUM_MONSTERS)
     {
-        env.rock_colour = mons_class_colour(env.mons_alloc[9]);
+        env.rock_colour = mons_class_colour(env.mons_alloc[8]);
     }
     if (env.rock_colour == BLACK || env.rock_colour == LIGHTGREY)
         env.rock_colour = coinflip() ? BROWN : LIGHTRED;
