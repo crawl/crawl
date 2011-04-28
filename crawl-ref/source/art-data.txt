@@ -840,8 +840,8 @@ DEX:      -2
 MUTATE:   5
 CURSED:   1
 STEALTH:  -80
-BOOL:     nospell, rnd_tele
-DESC:     A splendid flowing robe of fur and silk.
+BOOL:     nospell, rnd_tele, randapp
+DESC_ID:  A splendid flowing robe of fur and silk.
 
 NAME:     cloak of Flash
 APPEAR:   vibrating cloak
@@ -877,7 +877,7 @@ COLOUR:  ETC_GOLD
 TILE:    urand_lear
 TILE_EQ: lears_chain_mail
 DEX:     -3
-BOOL:    cursed, nospell
+BOOL:    cursed, nospell, randapp
 DESC:    A chain mail made of pure gold.
 
 NAME:    skin of Zhor
@@ -933,7 +933,7 @@ TILE:    urand_folly
 TILE_EQ: robe_red2
 INT:     -5
 CURSED:  2
-BOOL:    nospell
+BOOL:    nospell, randapp
 DESC:    A dull grey robe.
 
 ENUM:    MAXWELL

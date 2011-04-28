@@ -372,6 +372,13 @@ bool is_special_unrandom_artefact(const item_def &item)
             && (_seekunrandart(item)->flags & UNRAND_FLAG_SPECIAL));
 }
 
+bool is_randapp_artefact(const item_def &item)
+{
+    return (item.flags & ISFLAG_UNRANDART
+            && !(item.flags & ISFLAG_KNOW_TYPE)
+            && (_seekunrandart(item)->flags & UNRAND_FLAG_RANDAPP));
+}
+
 unique_item_status_type get_unique_item_status(const item_def& item)
 {
     if (item.flags & ISFLAG_UNRANDART)
@@ -397,6 +404,16 @@ void set_unique_item_status(int art, unique_item_status_type status)
 {
     ASSERT(art > UNRAND_START && art < UNRAND_LAST);
     you.unique_items[art - UNRAND_START] = status;
+}
+
+void reveal_randapp_artefact(item_def &item)
+{
+    ASSERT(is_unrandom_artefact(item));
+    const unrandart_entry *unrand = _seekunrandart(item);
+    ASSERT(unrand);
+    ASSERT(unrand->flags & UNRAND_FLAG_RANDAPP);
+    // name and tile update themselves
+    item.colour = unrand->colour;
 }
 
 static uint32_t _calc_seed(const item_def &item)
@@ -1426,7 +1443,10 @@ std::string artefact_name(const item_def &item, bool appearance)
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry *unrand = _seekunrandart(item);
-        return (item_type_known(item) ? unrand->name : unrand->unid_name);
+        if (item_type_known(item))
+            return unrand->name;
+        if (!(unrand->flags & UNRAND_FLAG_RANDAPP))
+            return unrand->unid_name;
     }
 
     const uint32_t seed = _calc_seed(item);
@@ -2004,7 +2024,13 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     // get artefact appearance
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
-    item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
+    if (!(unrand->flags & UNRAND_FLAG_RANDAPP))
+        item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
+    else
+    {
+        item.props[ARTEFACT_APPEAR_KEY].get_string() = artefact_name(item, true);
+        item_colour(item);
+    }
 
     set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
