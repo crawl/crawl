@@ -98,7 +98,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SACRED_SCOURGE:    return TILEP_HAND1_SACRED_SCOURGE;
 
     // Edge
+#if TAG_MAJOR_VERSION == 32
     case WPN_KNIFE:                return TILEP_HAND1_DAGGER_SLANT;
+#endif
     case WPN_DAGGER:               return TILEP_HAND1_DAGGER_SLANT;
     case WPN_SHORT_SWORD:          return TILEP_HAND1_SHORT_SWORD_SLANT;
     case WPN_LONG_SWORD:           return TILEP_HAND1_LONG_SWORD_SLANT;
