@@ -806,7 +806,63 @@ w:160
 %%%%
 robe appearance
 
-@armour appearance@
+fabulously ornate
+
+dull
+
+see-through
+
+sheer
+
+thick
+
+heavy
+
+wizard
+
+ominously black
+
+brightly glowing
+
+smoking
+
+twisted
+
+shimmering
+
+warped
+
+transparent
+
+slimy
+
+fine
+
+crude
+
+ripped
+
+colourful
+
+creamy pearl
+
+opalescent
+
+ancient
+
+faintly glowing
+
+steaming
+
+faintly humming
+
+bloodstained
+
+heavily jewelled
+
+ichor-stained
+
+distressingly furry
 %%%%
 body armour appearance
 
