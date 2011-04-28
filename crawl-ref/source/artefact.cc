@@ -1376,6 +1376,10 @@ static std::string _get_artefact_type(const item_def &item,
     case OBJ_WEAPONS:
         return "weapon";
     case OBJ_ARMOUR:
+        if (item.sub_type == ARM_ROBE)
+            return "robe";
+        if (get_item_slot(item) == EQ_BODY_ARMOUR)
+            return "body armour";
         return "armour";
     case OBJ_JEWELLERY:
         // Distinguish between amulets and rings only in appearance.
