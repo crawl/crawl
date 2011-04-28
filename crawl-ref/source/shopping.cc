@@ -2404,6 +2404,10 @@ bool ShoppingList::del_thing(std::string desc, const level_pos* _pos)
 unsigned int ShoppingList::cull_identical_items(const item_def& item,
                                                 int cost)
 {
+    // Dead men can't update their shopping lists.
+    if (!crawl_state.need_save)
+        return (0);
+
     // Can't put items in Bazaar shops in the shopping list, so
     // don't bother transferring shopping list items to Bazaar shops.
     if (cost != -1 && you.level_type != LEVEL_DUNGEON)
