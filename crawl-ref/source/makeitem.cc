@@ -91,10 +91,7 @@ static int _newwave_weapon_colour(const item_def &item)
     std::string itname = item.name(DESC_PLAIN);
     lowercase(itname);
 
-    const bool item_runed = itname.find(" runed ") != std::string::npos;
-    const bool heav_runed = itname.find(" heavily ") != std::string::npos;
-
-    if (is_artefact(item) && (!item_runed || heav_runed))
+    if (is_artefact(item))
         return _exciting_colour();
 
     if (is_range_weapon(item))
@@ -270,10 +267,7 @@ static int _newwave_armour_colour(const item_def &item)
     std::string itname = item.name(DESC_PLAIN);
     lowercase(itname);
 
-    const bool item_runed = itname.find(" runed ") != std::string::npos;
-    const bool heav_runed = itname.find(" heavily ") != std::string::npos;
-
-    if (is_artefact(item) && (!item_runed || heav_runed))
+    if (is_artefact(item))
         return (_exciting_colour());
 
     switch (item.sub_type)
