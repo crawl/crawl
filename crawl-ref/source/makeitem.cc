@@ -94,7 +94,7 @@ static int _newwave_weapon_colour(const item_def &item)
     const bool item_runed = itname.find(" runed ") != std::string::npos;
     const bool heav_runed = itname.find(" heavily ") != std::string::npos;
 
-    if (is_random_artefact(item) && (!item_runed || heav_runed))
+    if (is_artefact(item) && (!item_runed || heav_runed))
         return _exciting_colour();
 
     if (is_range_weapon(item))
@@ -273,7 +273,7 @@ static int _newwave_armour_colour(const item_def &item)
     const bool item_runed = itname.find(" runed ") != std::string::npos;
     const bool heav_runed = itname.find(" heavily ") != std::string::npos;
 
-    if (is_random_artefact(item) && (!item_runed || heav_runed))
+    if (is_artefact(item) && (!item_runed || heav_runed))
         return (_exciting_colour());
 
     switch (item.sub_type)
@@ -373,7 +373,7 @@ void item_colour(item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (is_unrandom_artefact(item))
+        if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
             break;              // unrandarts have already been coloured
 
         if (is_demonic(item))
@@ -393,7 +393,7 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_ARMOUR:
-        if (is_unrandom_artefact(item))
+        if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
             break;              // unrandarts have already been coloured
 
         switch (item.sub_type)
