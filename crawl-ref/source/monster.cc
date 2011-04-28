@@ -236,7 +236,7 @@ bool monster::extra_balanced_at(const coord_def p) const
     const dungeon_feature_type grid = grd(p);
     return (grid == DNGN_SHALLOW_WATER
             && (mons_genus(type) == MONS_NAGA             // tails, not feet
-                || body_size(PSIZE_BODY) > SIZE_MEDIUM));
+                || body_size(PSIZE_BODY) >= SIZE_LARGE));
 }
 
 bool monster::extra_balanced() const

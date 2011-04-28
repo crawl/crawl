@@ -118,7 +118,7 @@ bool player::extra_balanced() const
     const dungeon_feature_type grid = grd(pos());
     return (grid == DNGN_SHALLOW_WATER
              && (species == SP_NAGA                      // tails, not feet
-                 || body_size(PSIZE_BODY) > SIZE_MEDIUM)
+                 || body_size(PSIZE_BODY) >= SIZE_LARGE)
                     && !form_changed_physiology());
 }
 
