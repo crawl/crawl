@@ -1398,7 +1398,6 @@ ENDMAP
 # 13 gods
 #
 # XXX: The tiles for floor around the altars might be better.
-#      Cutting a plant leaves grey floor, which is not ideal either.
 NAME:    cyrus_temple_forest
 WEIGHT:  3
 PLACE:   Temple
@@ -1411,7 +1410,7 @@ SUBST:   Y : Y.
 SUBST:   Y = 1112..
 SUBST:   _ = .
 SUBST:   " : """.
-COLOUR:  . = green
+COLOUR:  .12 = green
 COLOUR:  " : darkgrey
 COLOUR:  ' : white / lightgrey
 FTILE:   .t12 = floor_grass
