@@ -1721,7 +1721,7 @@ SUBST:   % = %$
 ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
 ITEM:    wand of digging / wand of disintegration
 ITEM:    stone of earth elementals
-ITEM:    scroll of teleportation q:2 w:20 / knife ego:distortion
+ITEM:    scroll of teleportation q:2 w:20 / dagger ego:distortion
 MAP
 ...................
 ..J.............J..
