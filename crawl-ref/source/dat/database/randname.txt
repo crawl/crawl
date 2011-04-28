@@ -156,6 +156,14 @@ of @god_name@
 ######################################################
 # 2. ARMOUR
 ######################################################
+robe
+
+@armour@
+%%%%
+body armour
+
+@armour@
+%%%%
 armour
 
 # armour specific keywords (see rand_arm.txt)
@@ -432,6 +440,14 @@ of @item_name@
 ######################################################
 # OKAWARU armour
 ######################################################
+Okawaru robe
+
+@Okawaru armour@
+%%%%
+Okawaru body armour
+
+@Okawaru armour@
+%%%%
 Okawaru armour
 
 # again use normal chances with a few exceptions
@@ -496,6 +512,14 @@ w:400
 ######################################################
 # XOM armour
 ######################################################
+Xom robe
+
+@Xom armour@
+%%%%
+Xom body armour
+
+@Xom armour@
+%%%%
 Xom armour
 
 # increased chances (obviously!)
@@ -779,6 +803,14 @@ ichor-stained
 # currently 16 entries, so their overall weight amounts 160
 w:160
 @general appearance@
+%%%%
+robe appearance
+
+@armour appearance@
+%%%%
+body armour appearance
+
+@armour appearance@
 %%%%
 armour appearance
 
