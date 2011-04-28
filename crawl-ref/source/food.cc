@@ -165,9 +165,6 @@ void weapon_switch(int targ)
                  you.inv[targ].name(DESC_INVENTORY).c_str());
             return;
         }
-
-        mprf("Switching back to %s.",
-             you.inv[targ].name(DESC_INVENTORY).c_str());
     }
 
     // Unwield the old weapon and wield the new.
@@ -226,7 +223,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 
     if (wpn_switch)
     {
-        mprf("Switching to boot knife for butchering.");
+        mprf("You start butchering with your knife.");
 
         if (!wield_weapon(true, butchering_tool, false, true, false, false))
             return (false);

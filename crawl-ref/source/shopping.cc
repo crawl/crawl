@@ -883,7 +883,6 @@ unsigned int item_value(item_def item, bool ident)
         switch (item.sub_type)
         {
         case WPN_CLUB:
-        case WPN_KNIFE:
             valued += 10;
             break;
 

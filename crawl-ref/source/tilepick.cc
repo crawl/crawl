@@ -2707,9 +2707,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 
     switch (item.sub_type)
     {
-    case WPN_KNIFE:
-        return TILE_WPN_KNIFE;
-
     case WPN_DAGGER:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_DAGGER_ORC;

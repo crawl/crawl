@@ -85,7 +85,6 @@ lua_file = lua/wield.lua
 lua_file = lua/runrest.lua
 lua_file = lua/gearset.lua
 lua_file = lua/trapwalk.lua
-lua_file = lua/pickup.lua
 
 # kills.lua yields more information at the cost of huge dumps.
 # lua_file = lua/kills.lua
