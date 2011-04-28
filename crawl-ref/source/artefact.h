@@ -15,9 +15,6 @@ struct bolt;
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
-// Reserving the upper bits for later expansion/versioning.
-#define RANDART_SEED_MASK  0x00ffffff
-
 #define KNOWN_PROPS_KEY     "artefact_known_props"
 #define ARTEFACT_PROPS_KEY  "artefact_props"
 #define ARTEFACT_NAME_KEY   "artefact_name"

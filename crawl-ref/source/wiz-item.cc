@@ -1294,6 +1294,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
+#define MAX_TRIES 16777216 /* not special anymore */
 static void _debug_rap_stats(FILE *ostat)
 {
     int i = prompt_invent_item("Generate randart stats on which item?",
@@ -1376,7 +1377,7 @@ static void _debug_rap_stats(FILE *ostat)
 
     artefact_properties_t proprt;
 
-    for (i = 0; i < RANDART_SEED_MASK; ++i)
+    for (i = 0; i < MAX_TRIES; ++i)
     {
         if (kbhit())
         {
@@ -1384,8 +1385,6 @@ static void _debug_rap_stats(FILE *ostat)
             mpr("Stopping early due to keyboard input.");
             break;
         }
-
-        item.special = i;
 
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
@@ -1442,11 +1441,11 @@ static void _debug_rap_stats(FILE *ostat)
         total_bad_props     += num_bad_props;
         total_balance_props += balance;
 
-        if (i % 16777 == 0)
+        if (i % 16767 == 0)
         {
             mesclr();
             float curr_percent = (float) i * 1000.0
-                / (float) RANDART_SEED_MASK;
+                / (float) MAX_TRIES;
             mprf("%4.1f%% done.", curr_percent / 10.0);
         }
 
