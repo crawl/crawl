@@ -22,7 +22,7 @@ The contents of this text are:
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Lua files.
                 stash.lua, wield.lua, kills.lua, runrest.lua,
-                gearset.lua, pickup.lua, trapwalk.lua, autofight.lua
+                gearset.lua, trapwalk.lua, autofight.lua
 4-  Interface.
 4-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
@@ -376,8 +376,6 @@ The available stock Lua scripts are
   gearset.lua   -- provides commands for switching of complete sets via
                    macro.
                    New macroable functions: rememberkit, swapkit
-  pickup.lua    -- allows autopickup of a butchering tool if you don't
-                   already have one.
   trapwalk.lua  -- allows travel to cross certain traps if you have
                    enough HP.
   autofight.lua -- provides a command for moving to and attacking the

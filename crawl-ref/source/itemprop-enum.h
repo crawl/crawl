@@ -467,8 +467,6 @@ enum weapon_type
     WPN_GIANT_CLUB,
     WPN_GIANT_SPIKED_CLUB,
 
-    WPN_KNIFE,
-
     WPN_KATANA,
     WPN_DEMON_BLADE,
     WPN_DOUBLE_SWORD,

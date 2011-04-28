@@ -36,7 +36,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         }
     }
 
-    newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+    //newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS);
 
     // We'll also re-fill the template, all for later possible safe
     // reuse of code in the future.

@@ -3161,7 +3161,7 @@ bool item_def::is_mundane() const
         if (sub_type == WPN_CLUB
             || sub_type == WPN_GIANT_CLUB
             || sub_type == WPN_GIANT_SPIKED_CLUB
-            || sub_type == WPN_KNIFE)
+           )
         {
             return (true);
         }

@@ -962,10 +962,6 @@ static void _give_items_skills(const newgame_def& ng)
                                2);
             break;
 
-        case SP_OGRE:
-            // Give ogres a knife for butchering, as they now start with
-            // a club instead of an axe.
-            newgame_make_item(4, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
         case SP_TROLL:
             newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5,
                                1);
