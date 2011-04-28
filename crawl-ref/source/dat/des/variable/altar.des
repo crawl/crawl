@@ -1301,7 +1301,7 @@ TAGS:  uniq_altar_trog temple_overflow_trog
 DEPTH: D:2-12, Orc, Vault
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_trog
-KITEM: _ = animal skin, knife
+KITEM: _ = animal skin, dagger
 MAP
 ...
 ._.

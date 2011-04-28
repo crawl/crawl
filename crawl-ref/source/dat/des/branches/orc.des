@@ -295,7 +295,7 @@ SUBST: Z : c:60 .
 SUBST: X : c:60 .
 SUBST: v : c:60 .
 SUBST: b : c:60 .
-KITEM: 2 = knife
+KITEM: 2 = dagger
 KFEAT: 2 = 2
 KFEAT: O = enter_orcish_mines
 #

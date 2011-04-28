@@ -829,7 +829,7 @@ ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
          pair of gloves unrand:gauntlets_of_war                              /\
          pair of gloves unrand:fencers_gloves
 ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
-         knife unrand:spriggans_knife / long sword unrand:sword_of_jihad     /\
+         dagger unrand:spriggans_knife / long sword unrand:sword_of_jihad     /\
          dagger unrand:morg / great sword unrand:sword_of_the_doom_knight    /\
          great sword unrand:sword_of_power / long sword unrand:bloodbane     /\
          scimitar unrand:scimitar_of_flaming_death / war axe unrand:arga     /\

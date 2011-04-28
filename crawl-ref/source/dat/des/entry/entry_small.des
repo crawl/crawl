@@ -1532,7 +1532,7 @@ TAGS:    entry no_monster_gen
 ORIENT:  float
 SUBST:   ? : xxcvG.
 ITEM:    meat ration / bread ration / beef jerky / spear / potion of water / \
-         apple / club / hammer / knife
+         apple / club / hammer / dagger
 SHUFFLE: {[(
 WEIGHT:  3
 MAP
@@ -1558,7 +1558,7 @@ TAGS:    entry no_monster_gen
 ORIENT:  float
 SUBST:   ? : xxcvG.
 ITEM:    meat ration / bread ration / beef jerky / spear / potion of water / \
-         apple / club / hammer / knife
+         apple / club / hammer / dagger
 SHUFFLE: {[(
 WEIGHT:  3
 MAP
