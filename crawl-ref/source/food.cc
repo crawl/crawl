@@ -197,7 +197,7 @@ void weapon_switch(int targ)
 }
 
 static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
-                              bool wpn_switch, int butchering_tool)
+                              bool wpn_switch)
 {
     // No preparation necessary.
     if (can_butcher)
@@ -221,19 +221,18 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
         finish_last_delay();
     }
 
-    if (wpn_switch)
+    if (wpn_switch
+        && !wield_weapon(true, SLOT_BARE_HANDS, false, true, false, false))
     {
-        mprf("You start butchering with your knife.");
-
-        if (!wield_weapon(true, butchering_tool, false, true, false, false))
-            return (false);
+        return (false);
     }
 
     // Switched to a good butchering tool.
     return (true);
 }
 
-static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
+static bool _butcher_corpse(int corpse_id, int butcher_tool,
+                            bool first_corpse = true,
                             bool bottle_blood = false)
 {
     ASSERT(corpse_id != -1);
@@ -261,7 +260,8 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
         dtype = DELAY_BOTTLE_BLOOD;
     }
 
-    start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special);
+    start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special,
+                butcher_tool);
 
     you.turn_is_over = true;
     return (true);
@@ -377,6 +377,8 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
                              && !you.inv[you.equip[EQ_GLOVES]].cursed());
 
+    bool knife_butcher    = !barehand_butcher && !gloved_butcher && !you.weapon();
+
     bool can_butcher      = (teeth_butcher || barehand_butcher || birdie_butcher
                              || you.weapon() && can_cut_meat(*you.weapon()));
 
@@ -433,27 +435,37 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     bool wpn_switch     = false;
     bool removed_gloves = false;
-    int butcher_tool    = SLOT_BARE_HANDS;
 
     if (!can_butcher)
     {
         if (gloved_butcher)
             removed_gloves = true;
-        else if (you.equip[EQ_WEAPON] != butcher_tool)
+        else if (you.equip[EQ_WEAPON] != SLOT_BARE_HANDS)
             wpn_switch = true;
     }
+
+    int butcher_tool;
+
+    if (barehand_butcher || gloved_butcher)
+        butcher_tool = SLOT_CLAWS;
+    else if (teeth_butcher)
+        butcher_tool = SLOT_TEETH;
+    else if (birdie_butcher)
+        butcher_tool = SLOT_BIRDIE;
+    else if (wpn_switch || knife_butcher)
+        butcher_tool = SLOT_BUTCHERING_KNIFE;
+    else
+        butcher_tool = you.weapon()->link;
 
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
     bool success = false;
     if (prechosen && corpse_id == which_corpse
         || num_corpses == 1 && !Options.always_confirm_butcher)
     {
-        if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch,
-                               butcher_tool))
-        {
+        if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
             return (false);
-        }
-        success = _butcher_corpse(corpse_id, true, bottle_blood);
+
+        success = _butcher_corpse(corpse_id, butcher_tool, true, bottle_blood);
         _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
 
         // Remind player of corpses in pack that could be butchered or
@@ -513,7 +525,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                     if (!did_weap_swap)
                     {
                         if (_prepare_butchery(can_butcher, removed_gloves,
-                                              wpn_switch, butcher_tool))
+                                              wpn_switch))
                         {
                             did_weap_swap = true;
                         }
@@ -549,7 +561,8 @@ bool butchery(int which_corpse, bool bottle_blood)
 
         if (corpse_id != -1)
         {
-            if (_butcher_corpse(corpse_id, first_corpse, bottle_blood))
+            if (_butcher_corpse(corpse_id, butcher_tool, first_corpse,
+                                bottle_blood))
             {
                 success = true;
                 first_corpse = false;

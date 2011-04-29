@@ -161,7 +161,7 @@ static void _clear_pending_delays()
     }
 }
 
-void start_delay(delay_type type, int turns, int parm1, int parm2)
+void start_delay(delay_type type, int turns, int parm1, int parm2, int parm3)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -174,6 +174,7 @@ void start_delay(delay_type type, int turns, int parm1, int parm2)
     delay.duration = turns;
     delay.parm1    = parm1;
     delay.parm2    = parm2;
+    delay.parm3    = parm3;
     delay.started  = false;
 
     // Paranoia
@@ -402,8 +403,7 @@ void maybe_clear_weapon_swap()
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
-void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
-                             bool transform)
+void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
         || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act() || you.berserk())
@@ -420,8 +420,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
     const bool       prompt = Options.prompt_for_swap && !safe;
     const delay_type delay  = current_delay_action();
 
-    const char* prompt_str  = transform ? "Switch back to main weapon?"
-                                        : "Switch back from butchering tool?";
+    const char* prompt_str  = "Switch back to main weapon?";
 
     // If we're going to prompt then update the window so the player can
     // see what the monsters are.
@@ -663,10 +662,27 @@ void handle_delay()
             if (!mitm[delay.parm1].defined())
                 break;
 
-            mprf(MSGCH_MULTITURN_ACTION, "You start %s the %s.",
-                 (delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
-                                                   : "butchering"),
-                 mitm[delay.parm1].name(DESC_PLAIN).c_str());
+            if (delay.type == DELAY_BOTTLE_BLOOD)
+            {
+                mprf(MSGCH_MULTITURN_ACTION,
+                     "You start bottling blood from the %s.",
+                     mitm[delay.parm1].name(DESC_PLAIN).c_str());
+            }
+            else
+            {
+                std::string tool;
+                switch (delay.parm3)
+                {
+                case SLOT_BUTCHERING_KNIFE: tool = "knife"; break;
+                case SLOT_CLAWS:            tool = "claws"; break;
+                case SLOT_TEETH:            tool = "teeth"; break;
+                case SLOT_BIRDIE:           tool = "beak and talons"; break;
+                default: tool = you.inv[delay.parm3].name(DESC_QUALNAME);
+                }
+                mprf(MSGCH_MULTITURN_ACTION,
+                     "You start butchering the %s with your %s.",
+                     mitm[delay.parm1].name(DESC_PLAIN).c_str(), tool.c_str());
+            }
             break;
 
         case DELAY_MEMORISE:
@@ -1158,12 +1174,7 @@ static void _finish_delay(const delay_queue_item &delay)
             else
             {
                 mprf("You finish %s the %s into pieces.",
-                     (you.has_usable_claws()
-                      || player_mutation_level(MUT_BEAK)
-                         && player_mutation_level(MUT_TALONS)
-                      || you.has_usable_fangs() == 3
-                         && you.species != SP_VAMPIRE) ? "ripping"
-                                                       : "chopping",
+                     delay.parm3 <= SLOT_CLAWS ? "ripping" : "chopping",
                      mitm[delay.parm1].name(DESC_PLAIN).c_str());
 
                 if (god_hates_cannibalism(you.religion)

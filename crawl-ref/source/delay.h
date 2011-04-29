@@ -64,7 +64,8 @@ struct ait_hp_loss
     ait_hp_loss(int _hp, int _ht) : hp(_hp), hurt_type(_ht) { }
 };
 
-void start_delay(delay_type type, int turns, int parm1 = 0, int parm2 = 0);
+void start_delay(delay_type type, int turns, int parm1 = 0, int parm2 = 0,
+                 int parm3 = 0);
 void stop_delay(bool stop_stair_travel = false, bool force_unsafe = false);
 bool you_are_delayed();
 delay_type current_delay_action();
@@ -81,8 +82,7 @@ bool already_learning_spell(int spell);
 void stop_butcher_delay();
 void maybe_clear_weapon_swap();
 void handle_interrupted_swap(bool swap_if_safe = false,
-                             bool force_unsafe = false,
-                             bool transform = false);
+                             bool force_unsafe = false);
 
 void clear_macro_process_key_delay();
 
