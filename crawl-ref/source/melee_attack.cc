@@ -3249,10 +3249,7 @@ int melee_attack::calc_to_hit(bool random)
     {
         const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER)? 25 : 15;
         int mhit = 18 + attacker->get_experience_level() * hd_mult / 10;
-
-    #ifdef DEBUG_DIAGNOSTICS
         const int base_hit = mhit;
-    #endif
 
         if (weapon
             && (weapon->base_type == OBJ_WEAPONS
@@ -3274,18 +3271,12 @@ int melee_attack::calc_to_hit(bool random)
              && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
              mhit -= 5;
 
-        // Invisible defender is hard to hit if you can't see invis. Note
-        // that this applies only to monsters vs monster and monster vs
-        // player. Does not apply to a player fighting an invisible
-        // monster.
         if (!defender->visible_to(attacker))
             mhit = mhit * 65 / 100;
 
-    #ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s: Base to-hit: %d, Final to-hit: %d",
+        dprf(MSGCH_DIAGNOSTICS, "%s: Base to-hit: %d, Final to-hit: %d",
              attacker->name(DESC_PLAIN).c_str(),
              base_hit, mhit);
-    #endif
 
         return (mhit);
     }
