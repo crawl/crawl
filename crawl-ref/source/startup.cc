@@ -478,7 +478,7 @@ static void _construct_save_games_menu(MenuScroller* menu,
 #endif
         tmp->set_text(chars.at(i).short_desc());
         tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-        tmp->set_fg_colour(WHITE);
+        tmp->set_fg_colour(chars.at(i).save_loadable ? WHITE : RED);
         tmp->set_highlight_colour(WHITE);
         // unique id
         tmp->set_id(NUM_GAME_TYPE + i);
