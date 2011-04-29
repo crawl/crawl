@@ -1,6 +1,10 @@
 #ifndef TAG_VERSION_H
 #define TAG_VERSION_H
 
+// Character info has its own top-level tag, mismatching majors don't break
+// compatibility there.
+#define TAG_CHR_FORMAT 0
+
 // Let CDO updaters know if the syntax changes.
 #define TAG_MAJOR_VERSION  32
 
@@ -21,6 +25,7 @@ enum tag_minor_version
     TAG_MINOR_MON_INV_ORDER,       // Change the order of the monster's inventory.
     TAG_MINOR_ASH_PENANCE,         // Ashenzari's wrath counter.
     TAG_MINOR_BOOK_ZOOLOGY,        // Addition of the book of zoology.
+    TAG_MINOR_CHR_COMPAT,          // Future-compatible chr data.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

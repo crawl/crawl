@@ -261,14 +261,11 @@ static void tag_construct_you_items(writer &th);
 static void tag_construct_you_dungeon(writer &th);
 static void tag_construct_lost_monsters(writer &th);
 static void tag_construct_lost_items(writer &th);
-static void tag_construct_game_state(writer &th);
-static void tag_read_char(reader &th);
 static void tag_read_you(reader &th);
 static void tag_read_you_items(reader &th);
 static void tag_read_you_dungeon(reader &th);
 static void tag_read_lost_monsters(reader &th);
 static void tag_read_lost_items(reader &th);
-static void tag_read_game_state(reader &th);
 
 static void tag_construct_level(writer &th);
 static void tag_construct_level_items(writer &th);
@@ -863,7 +860,6 @@ void tag_write(tag_type tagID, writer &outf)
     {
     case TAG_CHR:
         tag_construct_char(th);
-        tag_construct_game_state(th);
         break;
     case TAG_YOU:
         tag_construct_you(th);
@@ -913,10 +909,6 @@ void tag_read(reader &inf, tag_type tag_id)
     reader th(buf, inf.getMinorVersion());
     switch (tag_id)
     {
-    case TAG_CHR:
-        tag_read_char(th);
-        tag_read_game_state(th);
-        break;
     case TAG_YOU:
         tag_read_you(th);
         tag_read_you_items(th);
@@ -941,6 +933,13 @@ void tag_read(reader &inf, tag_type tag_id)
 
 static void tag_construct_char(writer &th)
 {
+    marshallByte(th, TAG_CHR_FORMAT);
+    // Important: you may never remove or alter a field without bumping
+    // CHR_FORMAT.  Bumping it makes all saves invisible when browsed in an
+    // older version.
+
+    // Appending fields is fine.
+
     marshallString(th, you.your_name);
     marshallString(th, Version::Long());
 
@@ -952,6 +951,10 @@ static void tag_construct_char(writer &th)
     marshallString(th, you.jiyva_second_name);
 
     marshallByte(th, you.wizard);
+
+    marshallByte(th, crawl_state.type);
+    if (crawl_state.game_is_tutorial())
+        marshallString(th, get_tutorial_map());
 }
 
 static void tag_construct_you(writer &th)
@@ -1508,14 +1511,7 @@ static void tag_construct_lost_items(writer &th)
                  marshall_item_list);
 }
 
-static void tag_construct_game_state(writer &th)
-{
-    marshallByte(th, crawl_state.type);
-    if (crawl_state.game_is_tutorial())
-        marshallString(th, get_tutorial_map());
-}
-
-static void tag_read_char(reader &th)
+void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 {
     you.your_name         = unmarshallString(th);
     you.prev_save_version = unmarshallString(th);
@@ -1529,6 +1525,10 @@ static void tag_read_char(reader &th)
     you.jiyva_second_name = unmarshallString(th);
 
     you.wizard            = unmarshallBoolean(th);
+
+    crawl_state.type = (game_type) unmarshallByte(th);
+    if (crawl_state.game_is_tutorial())
+        set_tutorial_map(unmarshallString(th));
 }
 
 static void tag_read_you(reader &th)
@@ -2026,13 +2026,6 @@ static void tag_read_lost_items(reader &th)
 
     unmarshallMap(th, transiting_items,
                   unmarshall_level_id, unmarshall_item_list);
-}
-
-static void tag_read_game_state(reader &th)
-{
-    crawl_state.type = (game_type) unmarshallByte(th);
-    if (crawl_state.game_is_tutorial())
-        set_tutorial_map(unmarshallString(th));
 }
 
 template <typename Z>
