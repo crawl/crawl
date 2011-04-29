@@ -1768,7 +1768,7 @@ bool restore_game(const std::string& filename)
                    "Unless you reinstall that version, you can't load it.\n"
                    "Do you want to DELETE that game and start a new one?"
                   ).c_str(),
-                  false, 'n'))
+                  true, 'n'))
         {
             you.save->unlink();
             you.save = 0;
@@ -1782,7 +1782,7 @@ bool restore_game(const std::string& filename)
     {
         if (!yesno("This game comes from a previous release of Crawl.  If you "
                    "load it now, you won't be able to go back.  Continue?",
-                   false, 'n'))
+                   true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
