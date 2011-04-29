@@ -905,7 +905,7 @@ void untransform(bool skip_wielding, bool skip_move)
     calc_hp();
 
     if (!skip_wielding)
-        handle_interrupted_swap(true, false, true);
+        handle_interrupted_swap(true, false);
 
     you.turn_is_over = true;
     if (you.transform_uncancellable)
