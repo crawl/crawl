@@ -2520,7 +2520,7 @@ static monsterentry mondata[] = {
 },
 
 // cyclopes and giants ('C')
-{
+{ // dummy, never spawns
     MONS_GIANT, 'C', LIGHTGREY, "giant",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
