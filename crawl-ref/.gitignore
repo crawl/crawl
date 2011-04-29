@@ -1,0 +1,17 @@
+*.[oa]
+core
+
+DEADJOE
+\#*
+.#*
+*~
+
+/source/crawl
+/source/hexcrawl
+
+/source/util/*.cc
+/source/util/*.d
+/source/util/*.h
+
+/source/morgue
+/source/saves
