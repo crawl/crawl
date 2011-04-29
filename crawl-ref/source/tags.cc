@@ -248,7 +248,7 @@ static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
     marshallLong(th, std::distance(beg, end));
     while ( beg != end )
     {
-        T_marshall(th, *beg);
+        T_marshall(th, *beg, 0);
         ++beg;
     }
 }
@@ -270,7 +270,7 @@ static void unmarshall_container(tagHeader &th, T_container &container,
     container.clear();
     const long num_to_read = unmarshallLong(th);
     for (long i = 0; i < num_to_read; ++i)
-        (container.*inserter)(unmarshal(th));
+        (container.*inserter)(unmarshal(th, 0));
 }
 
 void marshall_level_id( tagHeader& th, const level_id& id )

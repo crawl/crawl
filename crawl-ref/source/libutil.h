@@ -22,6 +22,10 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <algorithm>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 // A collection of named things that can be stacked. The collection merges
 // things that should be merged (by name) and outputs a comma-separated list
