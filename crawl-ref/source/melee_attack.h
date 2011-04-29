@@ -86,6 +86,8 @@ private:
     int calc_base_unarmed_damage();
     int calc_base_weapon_damage();
     int calc_damage();
+    int calc_stat_to_hit_base();
+    int calc_stat_to_dam_base();
     int apply_defender_ac(int damage, int damage_max = 0);
     int fire_res_apply_cerebov_downgrade(int res);
 
@@ -204,11 +206,9 @@ private:
     bool player_fights_well_unarmed(int heavy_armour_penalty);
     int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
                                  bool vampiric = false);
-    int calc_stat_to_hit_base();
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
                                      bool needs_bite_msg = false,
                                      int reduction = 1);
-    int calc_stat_to_dam_base();
     bool _vamp_wants_blood_from_monster(const monster* mon);
 };
 
