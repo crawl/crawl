@@ -3,7 +3,9 @@
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-15 18:51:59 +0100 (Thu, 15 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -75,21 +77,44 @@ int yesnoquit( const char* str, bool safe = true,
                int safeanswer = 0, bool clear_after = true );
 
 
-bool in_bounds( int x, int y );
-bool map_bounds( int x, int y );
+bool in_hex_G_bounds( const hexcoord &pos, int boundary = 0, int square_boundary = 0 );
+bool in_G_bounds( const hexcoord &pos, int boundary = 0 );
+bool in_bounds( const hexcoord &pos );
+bool map_bounds( const hexcoord &pos );
 
-inline bool in_bounds(const coord_def &p)
+inline bool in_G_bounds(int x, int y, int boundary = 0)
 {
-    return in_bounds(p.x, p.y);
+    return in_G_bounds(hexcoord(x,y), boundary);
 }
 
-inline bool map_bounds(const coord_def &p)
+inline bool in_bounds(int x, int y)
 {
-    return map_bounds(p.x, p.y);
+    return in_bounds(hexcoord(x,y));
+}
+
+inline bool map_bounds(int x, int y)
+{
+    return map_bounds(hexcoord(x,y));
+}
+
+inline bool in_G_bounds(const coord_def &pos, int boundary = 0)
+{
+    return in_G_bounds(hexcoord(pos), boundary);
+}
+
+inline bool in_bounds(const coord_def &pos)
+{
+    return in_bounds(hexcoord(pos));
+}
+
+inline bool map_bounds(const coord_def &pos)
+{
+    return map_bounds(hexcoord(pos));
 }
 
 int grid_distance( int x, int y, int x2, int y2 );
 int distance( int x, int y, int x2, int y2);
+int distance( hexcoord c1, hexcoord c2 );
 bool adjacent( int x, int y, int x2, int y2 );
 
 bool silenced(int x, int y);
@@ -110,7 +135,7 @@ char index_to_letter (int the_index);
 
 int letter_to_index(int the_letter);
 
-int near_stairs(const coord_def &p, int max_dist,
+int near_stairs(const hexcoord &p, int max_dist,
                 dungeon_char_type &stair_type,
                 branch_type &branch);
 
@@ -149,6 +174,11 @@ int choose_random_weighted(Iterator beg, const Iterator end)
     }
     return result;
 }
+
+hexdir random_hex(int radius);
+hexdir random_direction();
+hexdir hex_dir_towards(const hexdir &hex);
+bool hexdir_is_straight(const hexdir &d);
 
 int random_rod_subtype();
 

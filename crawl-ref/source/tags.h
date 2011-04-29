@@ -3,7 +3,9 @@
  *  Summary:    Auxilary functions to make savefile versioning simpler.
  *  Written by: Gordon Lipford
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: zelgadis $ on $Date: 2007-09-16 00:33:50 +0100 (Sun, 16 Sep 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -93,7 +95,7 @@ time_t parse_date_string( char[20] );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void tag_init(long largest_tag = 100000);
+void tag_init(long largest_tag = 200000);
 
 
 // last updated 22jan2001 {gdl}

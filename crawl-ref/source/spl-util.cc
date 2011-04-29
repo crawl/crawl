@@ -3,7 +3,9 @@
  *  Summary:    data handlers for player-avilable spell list         *
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
  *                                                                   *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-25 20:23:34 +0200 (Thu, 25 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Changelog(most recent first):                                    *
  *
@@ -55,7 +57,7 @@ static int spell_list[NUM_SPELLS];
 
 static struct spell_desc *seekspell(spell_type spellid);
 static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),
-                         int x, int y, 
+                         const hexcoord &c,
                          int pow, cloud_type ctype, kill_category );
 
 /*
@@ -309,16 +311,10 @@ int apply_area_visible( int (*func) (int, int, int, int), int power )
 int apply_area_square( int (*func) (int, int, int, int), int cx, int cy, 
                         int power )
 {
-    int x, y;
     int rv = 0;
 
-    for (x = cx - 1; x <= cx + 1; x++)
-    {
-        for (y = cy - 1; y <= cy + 1; y++)
-        {
-            rv += func(x, y, power, 0);
-        }
-    }
+    rv += func(0, 0, power, 0);
+    rv += apply_area_around_square( func, cx, cy, power );
 
     return (rv);
 }                               // end apply_area_square()
@@ -329,19 +325,16 @@ int apply_area_square( int (*func) (int, int, int, int), int cx, int cy,
 int apply_area_around_square( int (*func) (int, int, int, int), 
                               int targ_x, int targ_y, int power)
 {
-    int x, y;
+    const hexcoord p(targ_x,targ_y);
     int rv = 0;
 
-    for (x = targ_x - 1; x <= targ_x + 1; x++)
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
     {
-        for (y = targ_y - 1; y <= targ_y + 1; y++)
-        {
-            if (x == targ_x && y == targ_y)
-                continue;
-            else
-                rv += func(x, y, power, 0);
-        }
+	const hexcoord t = p + *it;
+	rv += func(t.x, t.y, power, 0);
     }
+
     return (rv);
 }                               // end apply_area_around_square()
 
@@ -369,101 +362,101 @@ int apply_random_around_square( int (*func) (int, int, int, int),
     FixedVector< coord_def, 8 > targs;
     int count = 0;
 
-    for (int x = targ_x - 1; x <= targ_x + 1; x++)
+    hexdir::disc h(1);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (int y = targ_y - 1; y <= targ_y + 1; y++)
-        {
-            if (hole_in_middle && (x == targ_x && y == targ_y)) 
-                continue;
+	const hexcoord t = hexcoord(targ_x, targ_y) + *it;
 
-            if (mgrd[x][y] == NON_MONSTER 
-                && !(x == you.x_pos && y == you.y_pos))
-            {
-                continue;
-            }
-                
-            // Found target
-            count++;
+	if (hole_in_middle && *it == hexdir::zero) 
+	    continue;
 
-            // Slight difference here over the basic algorithm...
-            //
-            // For cases where the number of choices <= max_targs it's
-            // obvious (all available choices will be selected).
-            //
-            // For choices > max_targs, here's a brief proof:
-            //
-            // Let m = max_targs, k = choices - max_targs, k > 0.
-            //
-            // Proof, by induction (over k):
-            //
-            // 1) Show n = m + 1 (k = 1) gives uniform distribution,
-            //    P(new one not chosen) = 1 / (m + 1).
-            //                                         m     1     1
-            //    P(specific previous one replaced) = --- * --- = ---
-            //                                        m+1    m    m+1
-            //
-            //    So the probablity is uniform (ie. any element has
-            //    a 1/(m+1) chance of being in the unchosen slot).
-            //
-            // 2) Assume the distribution is uniform at n = m+k.
-            //    (ie. the probablity that any of the found elements
-            //     was chosen = m / (m+k) (the slots are symetric,
-            //     so it's the sum of the probabilities of being in
-            //     any of them)).
-            //
-            // 3) Show n = m + k + 1 gives a uniform distribution.
-            //    P(new one chosen) = m / (m + k + 1)
-            //    P(any specific previous choice remaining chosen)
-            //    = [1 - P(swaped into m+k+1 position)] * P(prev. chosen)
-            //              m      1       m
-            //    = [ 1 - ----- * --- ] * ---
-            //            m+k+1    m      m+k
-            //
-            //       m+k     m       m
-            //    = ----- * ---  = -----
-            //      m+k+1   m+k    m+k+1
-            //
-            // Therefore, it's uniform for n = m + k + 1.  QED
-            //
-            // The important thing to note in calculating the last
-            // probability is that the chosen elements have already
-            // passed tests which verify that they *don't* belong
-            // in slots m+1...m+k, so the only positions an already
-            // chosen element can end up in are its original
-            // position (in one of the chosen slots), or in the
-            // new slot.
-            //
-            // The new item can, of course, be placed in any slot,
-            // swapping the value there into the new slot... we
-            // just don't care about the non-chosen slots enough
-            // to store them, so it might look like the item
-            // automatically takes the new slot when not chosen
-            // (although, by symetry all the non-chosen slots are
-            // the same... and similarly, by symetry, all chosen
-            // slots are the same).
-            //
-            // Yes, that's a long comment for a short piece of
-            // code, but I want people to have an understanding
-            // of why this works (or at least make them wary about
-            // changing it without proof and breaking this code). -- bwr
+	if (mgrd(t) == NON_MONSTER 
+		&& !(you.pos() == t))
+	{
+	    continue;
+	}
 
-            // Accept the first max_targs choices, then when
-            // new choices come up, replace one of the choices
-            // at random, max_targs/count of the time (the rest
-            // of the time it replaces an element in an unchosen
-            // slot -- but we don't care about them).
-            if (count <= max_targs)
-            {
-                targs[ count - 1 ].x = x;
-                targs[ count - 1 ].y = y;
-            }
-            else if (random2( count ) < max_targs)
-            {
-                const int pick = random2( max_targs );  
-                targs[ pick ].x = x;
-                targs[ pick ].y = y;
-            }
-        }
+	// Found target
+	count++;
+
+	// Slight difference here over the basic algorithm...
+	//
+	// For cases where the number of choices <= max_targs it's
+	// obvious (all available choices will be selected).
+	//
+	// For choices > max_targs, here's a brief proof:
+	//
+	// Let m = max_targs, k = choices - max_targs, k > 0.
+	//
+	// Proof, by induction (over k):
+	//
+	// 1) Show n = m + 1 (k = 1) gives uniform distribution,
+	//    P(new one not chosen) = 1 / (m + 1).
+	//                                         m     1     1
+	//    P(specific previous one replaced) = --- * --- = ---
+	//                                        m+1    m    m+1
+	//
+	//    So the probablity is uniform (ie. any element has
+	//    a 1/(m+1) chance of being in the unchosen slot).
+	//
+	// 2) Assume the distribution is uniform at n = m+k.
+	//    (ie. the probablity that any of the found elements
+	//     was chosen = m / (m+k) (the slots are symetric,
+	//     so it's the sum of the probabilities of being in
+	//     any of them)).
+	//
+	// 3) Show n = m + k + 1 gives a uniform distribution.
+	//    P(new one chosen) = m / (m + k + 1)
+	//    P(any specific previous choice remaining chosen)
+	//    = [1 - P(swaped into m+k+1 position)] * P(prev. chosen)
+	//              m      1       m
+	//    = [ 1 - ----- * --- ] * ---
+	//            m+k+1    m      m+k
+	//
+	//       m+k     m       m
+	//    = ----- * ---  = -----
+	//      m+k+1   m+k    m+k+1
+	//
+	// Therefore, it's uniform for n = m + k + 1.  QED
+	//
+	// The important thing to note in calculating the last
+	// probability is that the chosen elements have already
+	// passed tests which verify that they *don't* belong
+	// in slots m+1...m+k, so the only positions an already
+	// chosen element can end up in are its original
+	// position (in one of the chosen slots), or in the
+	// new slot.
+	//
+	// The new item can, of course, be placed in any slot,
+	// swapping the value there into the new slot... we
+	// just don't care about the non-chosen slots enough
+	// to store them, so it might look like the item
+	// automatically takes the new slot when not chosen
+	// (although, by symetry all the non-chosen slots are
+	// the same... and similarly, by symetry, all chosen
+	// slots are the same).
+	//
+	// Yes, that's a long comment for a short piece of
+	// code, but I want people to have an understanding
+	// of why this works (or at least make them wary about
+	// changing it without proof and breaking this code). -- bwr
+
+	// Accept the first max_targs choices, then when
+	// new choices come up, replace one of the choices
+	// at random, max_targs/count of the time (the rest
+	// of the time it replaces an element in an unchosen
+	// slot -- but we don't care about them).
+	if (count <= max_targs)
+	{
+	    targs[ count - 1 ].x = t.x;
+	    targs[ count - 1 ].y = t.y;
+	}
+	else if (random2( count ) < max_targs)
+	{
+	    const int pick = random2( max_targs );  
+	    targs[ pick ].x = t.x;
+	    targs[ pick ].y = t.y;
+	}
     }
 
     const int targs_found = (count < max_targs) ? count : max_targs;
@@ -497,7 +490,8 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
         return (-1);
     }
 
-    int rv = func(you.x_pos + bmove.dx, you.y_pos + bmove.dy, power, 1);
+    const hexcoord targ = you.pos() + bmove.dir;
+    int rv = func(targ.x, targ.y, power, 1);
 
     if (rv == 0)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -508,30 +502,14 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
 int apply_area_within_radius( int (*func) (int, int, int, int),
                               int x, int y, int pow, int radius, int ctype )
 {
-    int ix, iy;
-    int sq_radius = radius * radius;
-    int sx, sy, ex, ey;       // start and end x, y - bounds checked
     int rv = 0;
-
-    // begin x,y
-    sx = x - radius;
-    sy = y - radius;
-    if (sx < 0) sx = 0;
-    if (sy < 0) sy = 0;
-
-    // end x,y
-    ex = x + radius;
-    ey = y + radius;
-    if (ex > GXM) ex = GXM;
-    if (ey > GYM) ey = GYM;
-
-    for (ix = sx; ix < ex; ix++)
+    hexdir::disc h(radius);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (iy = sy; iy < ey; iy++)
-        {
-            if (distance(x, y, ix, iy) <= sq_radius)
-                rv += func(ix, iy, pow, ctype);
-        }
+	const hexcoord t = hexcoord(x, y) + *it;
+
+	if (in_G_bounds(t))
+	    rv += func(t.x, t.y, pow, ctype);
     }
 
     return (rv);
@@ -544,157 +522,46 @@ int apply_area_within_radius( int (*func) (int, int, int, int),
 // to do a (shallow) breadth-first-search of the dungeon floor.
 // This ought to work okay for small clouds.
 void apply_area_cloud( int (*func) (int, int, int, cloud_type, kill_category),
-                       int x, int y,
+                       const hexcoord &c,
                        int pow, int number, cloud_type ctype,
                        kill_category whose )
 {
     int spread, clouds_left = number;
-    int good_squares = 0, neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    int dx = 1, dy = 1;
-    bool x_first;
+    int good_squares = 0, neighbours[6] = { 0, 0, 0, 0, 0, 0 };
 
-    if (clouds_left && cloud_helper(func, x, y, pow, ctype, whose))
+    if (clouds_left && cloud_helper(func, c, pow, ctype, whose))
         clouds_left--;
 
     if (!clouds_left)
         return;
 
-    if (coinflip())
-        dx *= -1;
-    if (coinflip())
-        dy *= -1;
-
-    x_first = coinflip();
-
-    if (x_first)
+    int start_rot = random2(6);
+    for (int rot = start_rot; rot < start_rot + 6; rot++)
     {
-        if (clouds_left && cloud_helper(func, x + dx, y, pow, ctype, whose))
+	const hexcoord t = c + hexdir::u.rotated(rot);
+        if (clouds_left && cloud_helper(func, t, pow, ctype, whose))
         {
             clouds_left--;
             good_squares++;
-            neighbours[0]++;
+            neighbours[rot%6]++;
         }
-
-        if (clouds_left && cloud_helper(func, x - dx, y, pow, ctype, whose))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[1]++;
-        }
-
-        if (clouds_left && cloud_helper(func, x, y + dy, pow, ctype, whose))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[2]++;
-        }
-
-        if (clouds_left && cloud_helper(func, x, y - dy, pow, ctype, whose))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[3]++;
-        }
-    }
-    else
-    {
-        if (clouds_left && cloud_helper(func, x, y + dy, pow, ctype, whose))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[2]++;
-        }
-
-        if (clouds_left && cloud_helper(func, x, y - dy, pow, ctype, whose))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[3]++;
-        }
-
-        if (clouds_left && cloud_helper(func, x + dx, y, pow, ctype, whose))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[0]++;
-        }
-
-        if (clouds_left && cloud_helper(func, x - dx, y, pow, ctype, whose))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[1]++;
-        }
-    }
-
-    // now diagonals; we could randomize dx & dy again here
-    if (clouds_left && cloud_helper(func, x + dx, y + dy, pow, ctype, whose))
-    {
-        clouds_left--;
-        good_squares++;
-        neighbours[4]++;
-    }
-
-    if (clouds_left && cloud_helper(func, x - dx, y + dy, pow, ctype, whose))
-    {
-        clouds_left--;
-        good_squares++;
-        neighbours[5]++;
-    }
-
-    if (clouds_left && cloud_helper(func, x + dx, y - dy, pow, ctype, whose))
-    {
-        clouds_left--;
-        good_squares++;
-        neighbours[6]++;
-    }
-
-    if (clouds_left && cloud_helper(func, x - dx, y - dy, pow, ctype, whose))
-    {
-        clouds_left--;
-        good_squares++;
-        neighbours[7]++;
     }
 
     if (!(clouds_left && good_squares))
         return;
 
-    for (int i = 0; i < 8 && clouds_left; i++)
+    start_rot = random2(6);
+    for (int rot = start_rot; rot < start_rot + 6; rot++)
     {
-        if (neighbours[i] == 0)
+        if (neighbours[rot%6] == 0)
             continue;
 
         spread = clouds_left / good_squares;
         clouds_left -= spread;
         good_squares--;
 
-        switch (i)
-        {
-        case 0:
-            apply_area_cloud(func, x + dx, y, pow, spread, ctype, whose);
-            break;
-        case 1:
-            apply_area_cloud(func, x - dx, y, pow, spread, ctype, whose);
-            break;
-        case 2:
-            apply_area_cloud(func, x, y + dy, pow, spread, ctype, whose);
-            break;
-        case 3:
-            apply_area_cloud(func, x, y - dy, pow, spread, ctype, whose);
-            break;
-        case 4:
-            apply_area_cloud(func, x + dx, y + dy, pow, spread, ctype, whose);
-            break;
-        case 5:
-            apply_area_cloud(func, x - dx, y + dy, pow, spread, ctype, whose);
-            break;
-        case 6:
-            apply_area_cloud(func, x + dx, y - dy, pow, spread, ctype, whose);
-            break;
-        case 7:
-            apply_area_cloud(func, x - dx, y - dy, pow, spread, ctype, whose);
-            break;
-        }
+	apply_area_cloud(func, c + hexdir::u.rotated(rot),
+		pow, spread, ctype, whose);
     }
 }                               // end apply_area_cloud()
 
@@ -836,12 +703,12 @@ static spell_desc *seekspell(spell_type spell)
 }
 
 static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),
-                         int x, int y, 
+                         const hexcoord &c,
                          int pow, cloud_type ctype, kill_category whose )
 {
-    if (!grid_is_solid(grd[x][y]) && env.cgrid[x][y] == EMPTY_CLOUD)
+    if (!grid_is_solid(grd(c)) && env.cgrid(c) == EMPTY_CLOUD)
     {
-        func(x, y, pow, ctype, whose);
+        func(c.x, c.y, pow, ctype, whose);
         return true;
     }
 

@@ -3,7 +3,9 @@
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-01 11:47:43 +0100 (Mon, 01 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -55,7 +57,7 @@ int  get_mimic_colour( const monsters *mimic );
 /* ***********************************************************************
    * called from: fight - item_use - items - spell
    * *********************************************************************** */
-void alert_nearby_monsters(void);
+void alert_nearby_monsters(int modifier = 10);
 
 enum poly_power_type {
     PPT_LESS,

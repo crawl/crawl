@@ -3,7 +3,9 @@
  *  Summary:    Functions for using some of the wackier inventory items.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-25 20:23:34 +0200 (Thu, 25 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -251,8 +253,6 @@ void special_wielded()
 static void reaching_weapon_attack(void)
 {
     struct dist beam;
-    int x_distance, y_distance;
-    int x_middle, y_middle;
     int skill;
 
     mpr("Attack whom?", MSGCH_PROMPT);
@@ -267,12 +267,12 @@ static void reaching_weapon_attack(void)
         return;
     }
 
-    x_distance = abs(beam.tx - you.x_pos);
-    y_distance = abs(beam.ty - you.y_pos);
+    const hexcoord t(beam.tx, beam.ty);
+    const int distance = t.distance_from(you.pos());
 
-    if (x_distance > 2 || y_distance > 2)
+    if (distance > 2)
         mpr("Your weapon cannot reach that far!");
-    else if (mgrd[beam.tx][beam.ty] == NON_MONSTER)
+    else if (mgrd(t) == NON_MONSTER)
     {
         mpr("You attack empty space.");
     }
@@ -284,39 +284,36 @@ static void reaching_weapon_attack(void)
          */
 
         // if we're attacking more than a space away
-        if ((x_distance > 1) || (y_distance > 1))
+        if (distance == 2)
         {
-            x_middle = MAX(beam.tx, you.x_pos) - (x_distance / 2);
-            y_middle = MAX(beam.ty, you.y_pos) - (y_distance / 2);
+	    const hexdir d = t - you.pos();
+	    if (hexdir_is_straight(d))
+	    {
+		const hexcoord middle = you.pos() + d/2;
 
-            // if either the x or the y is the same, we should check for
-            // a monster:
-            if (((beam.tx == you.x_pos) || (beam.ty == you.y_pos))
-                    && (mgrd[x_middle][y_middle] != NON_MONSTER))
-            {
                 skill = weapon_skill( you.inv[you.equip[EQ_WEAPON]].base_type,
                                       you.inv[you.equip[EQ_WEAPON]].sub_type );
 
                 if ((5 + (3 * skill)) > random2(100))
                 {
                     mpr("You reach to attack!");
-                    you_attack(mgrd[beam.tx][beam.ty], false);
+                    you_attack(mgrd(t), false);
                 }
                 else
                 {
                     mpr("You could not reach far enough!");
-                    you_attack(mgrd[x_middle][y_middle], false);
+                    you_attack(mgrd(middle), false);
                 }
             }
             else
             {
                 mpr("You reach to attack!");
-                you_attack(mgrd[beam.tx][beam.ty], false);
+                you_attack(mgrd(t), false);
             }
         }
         else
         {
-            you_attack(mgrd[beam.tx][beam.ty], false);
+            you_attack(mgrd(t), false);
         }
     }
 

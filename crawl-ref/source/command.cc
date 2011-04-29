@@ -3,7 +3,9 @@
  *  Summary:    Misc commands.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-11 15:43:37 +0100 (Thu, 11 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *

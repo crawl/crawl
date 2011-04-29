@@ -4,7 +4,9 @@
  *  Summary:    Functions used to print information about various game objects.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-09-17 06:53:14 +0100 (Mon, 17 Sep 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *

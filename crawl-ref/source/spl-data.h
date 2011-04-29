@@ -1,5 +1,7 @@
 /*
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-25 20:23:34 +0200 (Thu, 25 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 /*

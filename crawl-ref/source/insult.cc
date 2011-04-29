@@ -4,7 +4,7 @@
 // to link with Linley Henzel's Dungeon Crawl (or Crawl) without change to
 // Crawl's license.
 //
-// Modified for Crawl Reference by $Author$ on $Date$
+// Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-11 16:21:44 +0100 (Thu, 11 Oct 2007) $
 //
 // The goal of this stuff is catachronistic feel.
 

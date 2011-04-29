@@ -4,6 +4,8 @@
  *  Written by: Darshan Shaligram
  *  
  *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-26T17:43:23.491102Z $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #include "AppHdr.h"

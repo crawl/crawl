@@ -3,7 +3,9 @@
  *  Summary:    Functions for using wands, potions, and weapon/armour removal.4\3
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-10-29 21:16:20 +0100 (Mon, 29 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *

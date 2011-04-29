@@ -1,5 +1,7 @@
 /*
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-10-30 07:18:44 +0100 (Tue, 30 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #include <vector>

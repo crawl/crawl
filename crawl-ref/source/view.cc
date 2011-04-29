@@ -3,7 +3,9 @@
  *  Summary:    Misc function used to render the dungeon.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-15 18:51:59 +0100 (Thu, 15 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -56,6 +58,7 @@
 #include "mon-util.h"
 #include "overmap.h"
 #include "player.h"
+#include "skills.h"
 #include "religion.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -92,6 +95,8 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour = false,
 
 void cloud_grid(void);
 void monster_grid(bool do_updates);
+
+static int gcd( int x, int y );
 
 static void get_symbol( int x, int y,
                         int object, unsigned *ch, 
@@ -933,8 +938,18 @@ void monster_grid(bool do_updates)
                      || monster->behaviour == BEH_WANDER) 
                 && check_awaken(monster))
             {
-                behaviour_event( monster, ME_ALERT, MHITYOU );
-                handle_monster_shouts(monster);
+		if ( monster->behaviour == BEH_SLEEP &&
+			mons_holiness(monster) == MH_NATURAL &&
+			!check_awaken(monster, 20, true))
+		    // sleeping monsters are first merely awoken, but get a
+		    // free try at detecting the player, with a bonus
+		    behaviour_event( monster, ME_DISTURB, MHITNOT, you.x_pos,
+			    you.y_pos );
+		else
+		{
+		    behaviour_event( monster, ME_ALERT, MHITYOU );
+		    handle_monster_shouts(monster);
+		}
             }
 
             if (!update_monster_grid(monster))
@@ -999,10 +1014,80 @@ void fire_monster_alerts()
     monsters_seen_this_turn.clear();
 }
 
-bool check_awaken(monsters* monster)
+static int stealth_subskill_mod(int skill, int skill_factor, int subskill,
+	bool active)
+{
+    int start_lev = 0, pow_init = 0, pow_diverted = 0, pow_factor = 0;
+    int mod = 0;
+
+    // SK_STEALTH-based bonuses, general remarks:
+    //
+    // The first few levels of SK_STEALTH go entirely into general sneakiness,
+    // adding species_stealth_factor() to stealth per skill level. See
+    // check_stealth() in player.cc for that.
+    //
+    // At higher levels, we start adding in situation-dependent stealth
+    // subskills. Each such subskill gets a certain mild power for free at the
+    // level it becomes active. For each SK_STEALTH level increase above that
+    // level, part of the bonus is diverted from general stealth into
+    // increasing the power of this subskill. When the situation-dependent
+    // subskills are active, the bonuses they give are significantly more than
+    // they would be had the points gone into general sneakiness.
+    //
+    // So to contrast this with the old model where all bonuses went wholly
+    // into general sneakiness: blundering thoughtlessly up to monsters is now
+    // nerfed at high SK_STEALTH levels, but actively using the tactical
+    // layout of the dungeon to sneaky effect gives fairly significant
+    // bonuses.
+
+    switch (subskill)
+    {
+	// these number are for "normal" racial stealthiness factor, i.e. 15
+	// points per SK_STEALTH level. Scaling done below.
+	case STSSK_PEEK:
+	    start_lev = 4;      // SK_STEALTH level when this becomes active
+	    pow_init = 8;       // free bonus to power of this subskill
+	    pow_diverted = 2;   // skill points per SK_STEALTH level used
+	    pow_factor = 4;     // effect when active per skill point used
+	    break;
+	case STSSK_WALLS:
+	    start_lev = 6;
+	    pow_init = 12;
+	    pow_diverted = 3;
+	    pow_factor = 4;
+	    break;
+	case STSSK_FREEZE:
+	    start_lev = 8;
+	    pow_init = 10;
+	    pow_diverted = 1;
+	    pow_factor = 5;
+	    break;
+    }
+
+    if (skill >= start_lev)
+    {
+	mod -= (skill - start_lev) * pow_diverted;
+	if (active)
+	    mod += pow_init + (skill - start_lev) * pow_diverted * pow_factor;
+
+	// adjust all mods (positive and negative) according to racial skill
+	// factor:
+	mod *= skill_factor;
+	mod /= 15;
+    }
+
+    return mod;
+}
+
+bool check_awaken(monsters* monster, int modifier, bool no_exercise)
 {
     int mons_perc = 0;
+    int effective_stealth = stealth;
     const mon_holy_type mon_holy = mons_holiness(monster);
+    coord_def you_pos = you.pos();
+    ray_def ray, direct_ray;
+    bool los = false, clouded = false, obscured = false, obscured_adjacent = false;
+    int dist, dist_to_wall = 1;
 
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.
@@ -1022,19 +1107,78 @@ bool check_awaken(monsters* monster)
         return (true);
     }
 
+    // Do some ray-casting
+    los = find_ray( monster->pos(), you_pos, false, ray,
+	    0, true );
+
+    if (los)
+    {
+	// XXX: possible source of infinite loops, if ray code is ever
+	// changed! Similarly with direct_ray below.
+	while (ray.pos() != you_pos)
+	{
+	    if ( !clouded && is_opaque_cloud(env.cgrid(ray.pos())) ) 
+		clouded = true;
+	    ray.advance();
+	}
+
+	for (dist_to_wall = 1; dist_to_wall <= 5; dist_to_wall++)
+	{
+	    ray.advance();
+	    if (!in_G_bounds(ray.pos()))
+		break;
+	    if ( grid_is_opaque(grd(ray.pos())) )
+		break;
+	}
+    }
+
+    find_ray( monster->pos(), you_pos, true, direct_ray, 0, true, true );
+
+    while (direct_ray.pos() != you_pos)
+    {
+	if ( grid_is_opaque(grd(direct_ray.pos())) )
+	{
+	    obscured = true;
+	    obscured_adjacent = true;
+	}
+	else
+	    obscured_adjacent = false;
+	direct_ray.advance();
+    }
+
+
     // I assume that creatures who can sense invisible are very perceptive
     mons_perc = 10 + (mons_intel(monster->type) * 4) + monster->hit_dice
                    + mons_sense_invis(monster) * 5;
 
-    // critters that are wandering still have MHITYOU as their foe are
+    // critters that are wandering but have MHITYOU as their foe are
     // still actively on guard for the player, even if they can't see
-    // him.  Give them a large bonus (handle_behaviour() will nuke 'foe'
-    // after a while, removing this bonus.
+    // him. Give them a large bonus (handle_behaviour() will nuke 'foe'
+    // after a while, removing this bonus).
     if (monster->behaviour == BEH_WANDER && monster->foe == MHITYOU)
-        mons_perc += 15;
+    {
+	mons_perc *= 14;
+	mons_perc /= 10;
+    }
 
-    if (!mons_player_visible(monster))
-        mons_perc -= 75;
+    // Bonus if the current target of the monster's wandering attention is
+    // near the player, as for example it will be if it heard a noise round
+    // there. Cumulative with the previous bonus.
+    if (monster->behaviour == BEH_WANDER)
+    {
+	int dist_from_target = grid_distance(monster->target_x,
+		monster->target_y, you.x_pos, you.y_pos);
+
+	if (dist_from_target == 0)
+	    mons_perc *= 13;
+	else if (dist_from_target <= 2)
+	    mons_perc *= 12;
+	else if (dist_from_target <= 5)
+	    mons_perc *= 11;
+	else
+	    mons_perc *= 10;
+	mons_perc /= 10;
+    }
 
     if (monster->behaviour == BEH_SLEEP)
     {
@@ -1042,26 +1186,247 @@ bool check_awaken(monsters* monster)
         {
             // monster is "hibernating"... reduce chance of waking
             if (monster->has_ench(ENCH_SLEEP_WARY))
-                mons_perc -= 10;
+	    {
+                mons_perc *= 7;
+		mons_perc /= 10;
+	    }
         }
         else // unnatural creature
         {
             // Unnatural monsters don't actually "sleep", they just 
             // haven't noticed an intruder yet... we'll assume that
             // they're diligently on guard.
-            mons_perc += 10;
+            //mons_perc += 10;
+
+	    // Z: No, that's silly. Why should they get this bonus at first,
+	    // but not later when in BEH_WANDER? It's also rather
+	    // counter-intuitive, and so not easily discoverable without
+	    // reading the source.
+            mons_perc += 0;
         }
     }
 
-    // If you've been tagged with Corona or are Glowing, the glow
-    // makes you extremely unstealthy.
-    if (you.backlit() && mons_player_visible(monster))
-        mons_perc += 50;
+    // vary perception with distance to target.
+    // approx 1.25 bonus at dist 1, 1.0 at dist 5, approx 0.75 at dist 9
+    dist = grid_distance(monster->x, monster->y, you.x_pos, you.y_pos);
+    if (dist > 9)
+	dist = 9;
+    mons_perc *= (20-dist);
+    mons_perc /= 15;
+
+    if (modifier != 10)
+    {
+	mons_perc *= modifier;
+	mons_perc /= 10;
+    }
+
+    if (!mons_player_visible(monster) || !los)
+    {
+	// can't see you (due to invisibility or no line of sight)
+
+	// XXX: nerfing invisibility a little. Sound counts for something too.
+        //mons_perc -= 75;
+	mons_perc /= 5;
+    }
+    else
+    {
+	// boni which only make sense if the monster can see the player:
+
+	// If you've been tagged with Corona or are Glowing, the glow
+	// makes you extremely easy to see.
+	if (you.backlit())
+	    mons_perc *= 2;
+
+	if (obscured)
+	{
+	    mons_perc *= 17;
+	    mons_perc /= 20;
+	}
+
+	if (clouded)
+	    mons_perc /= 2;
+
+	// easier to see you if you're in the middle of a room/corridor.
+	// cf. STSSK_WALLS bonus to stealth below
+	switch (dist_to_wall)
+	{
+	    case 1: mons_perc *= 9; break;
+	    case 2: case 3: mons_perc *= 10; break;
+	    case 4: mons_perc *= 11; break;
+	    default: mons_perc *= 12;
+	}
+	mons_perc /= 10;
+    }
 
     if (mons_perc < 0)
         mons_perc = 0;
 
-    return (random2(stealth) <= mons_perc);
+    if (los && mons_player_visible(monster))
+    {
+	int skill = you.skills[SK_STEALTH];
+	int factor = species_stealth_factor(you.species);
+
+	if ( testbits( monster->flags, MF_BATTY ))
+	{
+	    // batty creatures produce lots of spurious stealth tests, so
+	    // let's not have them exercising stealth
+	    no_exercise = true;
+	}
+
+	// subskills:
+
+	// peeking round corners
+	if (skill >= 4)
+	{
+	    effective_stealth += stealth_subskill_mod(skill, factor,
+		    STSSK_PEEK, obscured_adjacent);
+	    if (!no_exercise && obscured_adjacent && one_chance_in(12))
+		exercise(SK_STEALTH, 1);
+	}
+	// hiding against walls:
+	if (skill >= 6)
+	{
+	    effective_stealth += stealth_subskill_mod(skill, factor,
+		    STSSK_WALLS, dist_to_wall == 1);
+	    if (!no_exercise && dist_to_wall == 1 && one_chance_in(24))
+		exercise(SK_STEALTH, 1);
+	}
+	// being highly inconspicuous while pausing
+	if (skill >= 8)
+	{
+	    effective_stealth += stealth_subskill_mod(skill, factor,
+		    STSSK_FREEZE, you.stealthy_action);
+	    if (!no_exercise && you.stealthy_action && one_chance_in(24))
+		exercise(SK_STEALTH, 1);
+	}
+
+	// TODO: probably STSSK_WALLS shouldn't work against green crystal?
+    }
+
+    // [tactics] Notes on the changes to stealth:
+    //
+    // 1. More detailed set of situation-dependent bonuses and maluses, taking
+    //	    into account distance between you and the monster, distance from
+    //	    walls, intervening walls/smoke, whether the monster's attention is
+    //	    focused near your current position, and a few other things.
+    //
+    // 2. We make some bonuses depend on SK_STEALTH and only begin
+    //	    at a certain SK_STEALTH level. That way, we can give a message
+    //	    when you get to the appropriate SK_STEALTH level ("You learn to
+    //	    peek stealthily around corners!"), both adding interest and giving
+    //	    hints as to how to act stealthy without having to source-dive.
+    //
+    //	    The other advantage of this is that characters for whom stealth
+    //	    isn't a major deal shouldn't feel they have to adjust their
+    //	    playstyle to the new rules.
+    //
+    //	    See stealth_subskill_mod() for implementation details.
+    //
+    //	    Such stealth-skills thus far:
+    //
+    //	    Skulking against walls (dist_to_wall==1)
+    //	    Peeking around corners (obscured_adjacent)
+    //	    Staying very still (stealthy_action)
+    //
+    //
+    // Further ideas to make stealth more interesting and tactical:
+    //
+    // 1. Suggestions for further subskills:
+    //	    Actions other than '.' which come to be considered stealthy - e.g.
+    //		wielding weapons, wearing jewelry, drinking potions,
+    //		praying...
+    //	    Greater bonuses for levitation/flying
+    //	    Hiding behind adjacent monsters (friendly or not!) - bonus
+    //		depending on size of monster (and significantly reduced if
+    //		it's attacking you!). Note: would make sense to have a dodging
+    //		bonus at high SK_DODGING which works similarly.
+    //		Actually, this shouldn't work for friendly monsters - since
+    //		the code has all monsters artificially infinitely stealthy,
+    //		this would be abusive.
+    //	    Monsters start randomly losing track of your position (as (and
+    //		instead of) Misdirection below)
+    //
+    // 2. At a high enough SK_STEALTH levels, 'a' abilities for special
+    // stealth-related actions.
+    //
+    //	    Ideas for such:
+    //		Play dead: lie prone, and hope the monsters ignore you!
+    //		Implementable as a significant increase to stealthiness as
+    //		long as you stay still, but with a significant delay in coming
+    //		out of it and a big stabbing-like bonus to any attacks on you
+    //		while prone. Furthermore, monsters attacking you when you
+    //		activate it may stop targetting you.
+    //
+    //		Leap from shadows: hmm, not sure how this would work actually.
+    //
+    //		Misdirection: if successful, target monster loses track of you
+    //		(target set to your last known location, and a perception
+    //		boost while it searches for you).
+    //
+    //	    These would probably be silly.
+    //
+    //	    UPDATE: Leap from shadows implemented, but disabled (funky, but
+    //	    silly.)
+    //
+    // 3. A full-on lighting model, only introduced at high enough SK_STEALTH
+    // level... I think not.
+    //
+    // 4. Successfully shooting a monster shouldn't *automatically* give you
+    // away... though should make them come over while looking around
+    // carefully.
+    //
+    // 5. If you blink/teleport/similar, monsters shouldn't automatically lock
+    // on to your new location.
+    //
+    // 6. You shouldn't be able to sneak up on monsters when you have a crowd
+    // of friendly ogres stomping along beside you!
+    //	    (tricky to implement well though - monsters currently don't have a
+    //	    stealth attribute. And I'm not sure that this is a desireable nerf
+    //	    anyway.)
+    //
+    // 7. transformations (except vampire bat) seem not to affect stealth -
+    // they really should.
+    //
+    // Related suggestions:
+    //  Stabbing:
+    //	    High SK_STABBING could give extra stuff, similar to 1 above. For
+    //	    example, it might be nice to allow stab attempts with thrown
+    //	    daggers/swords (much harder, of course). Ah, this latter has just
+    //	    been discussed on crawl-ref-discuss, and looks like it may make
+    //	    it.
+    //
+    //	    Stab attempts with maces&flails and, lesserly, staves could lead
+    //	    to stunning (cudgel to the back of the neck, you know). Arguably a
+    //	    rather different skill to stabbing, but I think close enough.
+    //
+    //	Dodging:
+    //	    High SK_DODGING skill could give bonuses to dodging ranged attacks
+    //	    similar to the ones for stealth above - namely hiding round
+    //	    corners and behind big adjacent monsters.
+    //
+    //	    Other ideas:
+    //		A move away from an adjacent monster could sometimes be
+    //		interpreted as an attempt to jump away from an attack - if
+    //		successful, it misses you and you end up a square away from
+    //		it. Might be tricky to implement, and plausibly a bit too nice
+    //		(given the stair-following mechanic)
+    //
+    //		'a'bility to dodge past a monster, exchanging squares (high
+    //		failure rate, and comes at cost of a significant decrease in
+    //		dodging chance for that turn whether it succeeds or not).
+    //		Significant bonus if flying, and size-based bonus. Note:
+    //		shouldn't be able to use this ability to trick a monster into
+    //		deep water, a trap, a nasty cloud or similar!
+    //		Problem with this: it makes corridor-based fighting even more
+    //		attractive...
+
+#ifdef DEBUG_STEALTH
+    mprf(MSGCH_DIAGNOSTICS, "stealth: %d; plus: %d; mons_perc %d; one_in %d; dist_to_wall: %d; obscured/adj: %d/%d",
+	    stealth, effective_stealth-stealth, mons_perc, effective_stealth/mons_perc, dist_to_wall,
+	    obscured, obscured_adjacent);
+#endif
+
+    return (random2(effective_stealth) <= mons_perc);
 }                               // end check_awaken()
 
 static void set_show_backup( int ex, int ey )
@@ -1302,8 +1667,6 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 /* The LOS code now uses raycasting -- haranp */
 
 #define LONGSIZE (sizeof(unsigned long)*8)
-#define LOS_MAX_RANGE_X 9
-#define LOS_MAX_RANGE_Y 9
 #define LOS_MAX_RANGE 9
 
 // the following two constants represent the 'middle' of the sh array.
@@ -1316,21 +1679,19 @@ const int sh_xo = 9;            // X and Y origins for the sh array
 const int sh_yo = 9;
 
 // Data used for the LOS algorithm
-int los_radius_squared = 8*8 + 1;
+int los_radius = 8;
 
 unsigned long* los_blockrays = NULL;
 unsigned long* dead_rays = NULL;
 unsigned long* smoke_rays = NULL;
-std::vector<short> ray_coord_x;
-std::vector<short> ray_coord_y;
-std::vector<short> compressed_ray_x;
-std::vector<short> compressed_ray_y;
+std::vector<hexdir> ray_coord;
+std::vector<hexdir> compressed_ray;
 std::vector<int> raylengths;
 std::vector<ray_def> fullrays;
 
 void setLOSRadius(int newLR)
 {
-    los_radius_squared = newLR * newLR + 1*1;
+    los_radius = newLR;
 }
 
 bool get_bit_in_long_array( const unsigned long* data, int where )
@@ -1347,259 +1708,197 @@ static void set_bit_in_long_array( unsigned long* data, int where )
     data[wordloc] |= (1UL << bitloc);
 }
 
-#define EPSILON_VALUE 0.00001
-bool double_is_zero( const double x )
+// hexrays:
+// 
+// Conceptually: we consider a ray to consist of a position and a direction.
+// Both are discrete, but at a finer level of gradation than the overall hex
+// grid. So if we consider our hexdirs as elements of the (rank two free
+// abelian) group L, we consider our ray dirs to be elements of the group of n
+// division points (1/n)L of L, for some natural number n; and we consider the
+// positions as elements of principal homogeneous space for (1/n)L, which we
+// consider to be embedded in the principal homogeneous space for L which is
+// where our hexcoords live. Advancing and regressing the ray then just
+// consists of adding multiples of dir to pos, and bounces and deflections are
+// just a matter of reflecting and rotating dir.
+//
+// But rather than work directly with the position as above, we store and
+// manipulate rather the hexcoord it is closest to along with a displacement,
+// which is a hexdir disp with disp.rdist <= n. So disp is always in the
+// "hexagon around zero". A diagram for n = 6:
+//
+//            \./. . . . .\./. . . . .\./              |
+//            .|. . . . . .|. . . . . .|.              |
+//             | . . * . . | . . c . . |               |
+//            .|. . . . . .|. . . . . .|.              |
+//            /.\. . . . ./.\. . . a ./.\              |
+//            . . \ . . / . . \ . . / . .              |
+//             . . .\./. . . .  \ /. . .               |
+//            . . . .|. . . . . .|. . . .              |
+//             * . . | . . d . . | . . *               |
+//            . . . .|. . . . . .|. . . .              |
+//
+// c is a hexcoord, d is another and d=c+w.
+// a is potential current position for a ray, and it would be stored as
+//	cell = c; disp = -2v
+// The lines indicate the boundaries between the cells, i.e. where the closest
+//  hexcoord to the point changes. So to advance a, we would add dir to it
+//  until we cross one of these lines, then change the cell and disp
+//  appropriately.
+// This is accomplished below, in code which looks horribly inefficient but
+//  which I believe the compiler should be up to optimising to something
+//  fully efficient. By rights, since all the arithmetic is now integer rather
+//  than floating point, it ought to be more efficient than the square code.
+//  I haven't profiled it, but raycasting takes negligible time with -O2.
+
+void ray_def::advance()
 {
-    return (x > -EPSILON_VALUE) && (x < EPSILON_VALUE);
-}
-
-// note that slope must be nonnegative!
-// returns 0 if the advance was in x, 1 if it was in y, 2 if it was
-// the diagonal
-static int find_next_intercept(double* accx, double* accy, const double slope)
-{
-
-    // handle perpendiculars
-    if ( double_is_zero(slope) )
+    if (dir == hexdir::zero)
+	return;
+    while (true)
     {
-        *accx += 1.0;
-        return 0;
+	disp += dir;
+	if (recentre())
+	    break;
     }
-    if ( slope > 100.0 )
-    {
-        *accy += 1.0;
-        return 1;
-    }
-
-    const double xtarget = (static_cast<int>(*accx) + 1);
-    const double ytarget = (static_cast<int>(*accy) + 1);
-    const double xdistance = xtarget - *accx;
-    const double ydistance = ytarget - *accy;
-    const double distdiff = (xdistance * slope - ydistance);
-
-    // exact corner
-    if ( double_is_zero( distdiff ) )
-    {
-        // move somewhat away from the corner
-        if ( slope > 1.0 )
-        {
-            *accx = xtarget + EPSILON_VALUE * 2;
-            *accy = ytarget + EPSILON_VALUE * 2 * slope;
-        }
-        else
-        {
-            *accx = xtarget + EPSILON_VALUE * 2 / slope;
-            *accy = ytarget + EPSILON_VALUE * 2;
-        }
-        return 2;
-    }
-
-    double traveldist;
-    int rc = -1;
-    if ( distdiff > 0.0 )
-    {
-        traveldist = ydistance / slope;
-        rc = 1;
-    }
-    else
-    {
-        traveldist = xdistance;
-        rc = 0;
-    }
-
-    traveldist += EPSILON_VALUE * 10.0;
-
-    *accx += traveldist;
-    *accy += traveldist * slope;
-    return rc;
-}
-
-ray_def::ray_def() : accx(0.0), accy(0.0), slope(0.0), quadrant(0),
-                     fullray_idx(0)
-{
-}
-
-double ray_def::reflect(double p, double c) const
-{
-    return (c + c - p);
-}
-
-double ray_def::reflect(bool rx, double oldx, double newx) const
-{
-    if (rx? fabs(slope) > 1.0 : fabs(slope) < 1.0)
-        return (reflect(oldx, floor(oldx) + 0.5));
-
-    const double flnew = floor(newx);
-    const double flold = floor(oldx);
-    return (reflect(oldx,
-                    flnew > flold? flnew :
-                    flold > flnew? flold :
-                    (newx + oldx) / 2));
-}
-
-void ray_def::set_reflect_point(const double oldx, const double oldy,
-                                double *newx, double *newy,
-                                bool blocked_x, bool blocked_y)
-{
-    if (blocked_x == blocked_y)
-    {
-        // What to do?
-        *newx = oldx;
-        *newy = oldy;
-        return;
-    }
-
-    if (blocked_x)
-    {
-        ASSERT(int(oldy) != int(*newy));
-        *newy = oldy;
-        *newx = reflect(true, oldx, *newx);
-    }
-    else
-    {
-        ASSERT(int(oldx) != int(*newx));
-        *newx = oldx;
-        *newy = reflect(false, oldy, *newy);
-    }
-}
-
-void ray_def::advance_and_bounce()
-{
-    // 0 = down-right, 1 = down-left, 2 = up-left, 3 = up-right
-    int bouncequad[4][3] =
-    {
-        { 1, 3, 2 }, { 0, 2, 3 }, { 3, 1, 0 }, { 2, 0, 1 }
-    };
-    int oldx = x(), oldy = y();
-    const double oldaccx = accx, oldaccy = accy;
-    int rc = advance(false);
-    int newx = x(), newy = y();
-    ASSERT( grid_is_solid(grd[newx][newy]) );
-
-    const bool blocked_x = grid_is_solid(grd[oldx][newy]);
-    const bool blocked_y = grid_is_solid(grd[newx][oldy]);
-    
-    if ( double_is_zero(slope) || slope > 100.0 )
-        quadrant = bouncequad[quadrant][2];
-    else if ( rc != 2 )
-        quadrant = bouncequad[quadrant][rc];
-    else
-    {
-        ASSERT( (oldx != newx) && (oldy != newy) );
-        if ( blocked_x && blocked_y )
-            quadrant = bouncequad[quadrant][rc];
-        else if ( blocked_x )
-            quadrant = bouncequad[quadrant][1];
-        else
-            quadrant = bouncequad[quadrant][0];
-    }
-
-    set_reflect_point(oldaccx, oldaccy, &accx, &accy, blocked_x, blocked_y);
 }
 
 void ray_def::regress()
 {
-    int opp_quadrant[4] = { 2, 3, 0, 1 };
-    quadrant = opp_quadrant[quadrant];
-    advance(false);
-    quadrant = opp_quadrant[quadrant];
-}
-
-int ray_def::advance_through(const coord_def &target)
-{
-    return (advance(true, &target));
-}
-
-int ray_def::advance(bool shortest_possible, const coord_def *target)
-{
-    if (!shortest_possible)
-        return (raw_advance());
-    
-    // If we want to minimize the number of moves on the ray, look one
-    // step ahead and see if we can get a diagonal.
-    
-    const coord_def old(static_cast<int>(accx), static_cast<int>(accy));
-    const int ret = raw_advance();
-
-    if (ret == 2 || (target && pos() == *target))
-        return (ret);
-    
-    const double maccx = accx, maccy = accy;
-    if (raw_advance() != 2)
+    if (dir == hexdir::zero)
+	return;
+    while (true)
     {
-        const coord_def second(static_cast<int>(accx), static_cast<int>(accy));
-        // If we can convert to a diagonal, do so.
-        if ((second - old).abs() == 2)
-            return (2);
-    }
-
-    // No diagonal, so roll back.
-    accx = maccx;
-    accy = maccy;
-
-    return (ret);
-}
-
-int ray_def::raw_advance()
-{
-    int rc;
-    switch ( quadrant )
-    {
-    case 0:
-        // going down-right
-        rc = find_next_intercept( &accx, &accy, slope );
-        return rc;
-    case 1:
-        // going down-left
-        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        rc = find_next_intercept( &accx, &accy, slope );
-        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        return rc;
-    case 2:
-        // going up-left
-        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        rc = find_next_intercept( &accx, &accy, slope );
-        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;        
-        return rc;
-    case 3:
-        // going up-right
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        rc = find_next_intercept( &accx, &accy, slope );
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;        
-        return rc;
-    default:
-        return -1;
+	disp -= dir;
+	if (recentre())
+	    break;
     }
 }
+
+
+bool ray_def::recentre()
+{
+    static const hexdir dirs[6] = { hexdir::u,hexdir::v,hexdir::w,-hexdir::u,-hexdir::v,-hexdir::w };
+    bool changed_once = false;
+    bool changed = false;
+    do
+    {
+	if (changed)
+	    changed_once = true;
+	changed = false;
+	for (int i = 0; i < 6; i++)
+	    if ((dirs[i].X * disp.X + dirs[i].Y * disp.Y + dirs[i].Z * disp.Z)
+		    > n)
+	    {
+		disp -= dirs[i]*n;
+		cell += dirs[i];
+		changed = true;
+		break;
+	    }
+    } while (changed);
+    return changed_once;
+}
+
+void ray_def::advance_and_bounce()
+{
+    // [hex] bounce, with smoothing
+    const hexcoord oldpos = pos();
+
+    advance();
+    const hexcoord newpos = pos();
+    ASSERT( grid_is_solid(grd(newpos)) );
+    regress();
+
+    int hextant = (newpos-oldpos).hextant();
+
+    // rotation is cheap, so the logic code deals explicitly with the case
+    // that newpos==oldpos-hexdir::w (-hexdir::w.hextant() being 0), and rotates
+    // appropriately to handle all cases.
+
+    dir.rotate(-hextant);
+
+    // smooth off walls:
+    // cases: s is the source, * is the solid hex we hit, # are other solid
+    // hexes, . is non-solid:
+    //
+    //   # * #  reflect in u
+    //    s . 
+    //
+    //    #
+    //   . *    reflect in v
+    //    s # 
+    //
+    //    anything else: reflect in X (i.e. back at s)
+    //
+    if ( grid_is_solid(grd(newpos - hexdir::u.rotated(hextant)))
+	    && grid_is_solid(grd(newpos + hexdir::u.rotated(hextant)))
+	    && !grid_is_solid(grd(newpos - hexdir::v.rotated(hextant))) )
+	dir.reflect_u();
+    else if ( grid_is_solid(grd(newpos - hexdir::v.rotated(hextant)))
+	    && grid_is_solid(grd(newpos + hexdir::v.rotated(hextant)))
+	    && !grid_is_solid(grd(newpos - hexdir::u.rotated(hextant))) )
+	dir.reflect_v();
+    else
+	dir.reflect_X();
+
+    dir.rotate(hextant);
+
+    // To avoid having a bounced line which is badly aligned, we do this. Bit
+    // of a hack, but I can't think of anything better.
+    disp = hexdir::zero;
+}
+
+// ensure that m divides n
+void ray_def::rescale(int m)
+{
+    const int lcm = n*m/gcd(n,m);
+    const int scale = lcm/n;
+    disp *= scale;
+    dir *= scale;
+    n = lcm;
+}
+
+// Deflect the direction. A deflect_amount of 60 is, approximately, a rotation
+// of PI/3 anticlockwise - but precisely how deflect_amount translates into
+// an angle actually depends on dir. Not perfect, but close enough for our
+// purposes I hope.
+//
+// Explanation of code: if dir is towards -w (the hextant of which is 0) we
+// add a proportional amount in the -u direction for a positive rotation, and
+// in the -v direction for a negative rotation. So deflect(60) sends n*(-w) to
+// n*v, and deflect(-60) sends n*(-w) to n*u.
+//
+// XXX: problem - deflection can turn a pleasant ray, e.g. one returned by
+// find_ray(find_shortest=true), into an unpleasant one. Not sure what to do
+// about that, really.
+void ray_def::deflect(int deflect_amount)
+{
+    rescale(60);
+    dir += ((deflect_amount > 0 ? -hexdir::u : hexdir::v).rotated(
+		hex_dir_towards(dir).hextant())) *
+	( deflect_amount * dir.rdist() / 60 );
+}
+
 
 // Shoot a ray from the given start point (accx, accy) with the given
 // slope, with a maximum distance (in either x or y coordinate) of
 // maxrange. Store the visited cells in xpos[] and ypos[], and
 // return the number of cells visited.
-static int shoot_ray( double accx, double accy, const double slope,
-                      int maxrange, int xpos[], int ypos[] )
+static int shoot_ray( ray_def ray, int maxrange,
+	hexcoord pos[] )
 {
-    int curx, cury;
     int cellnum;
     for ( cellnum = 0; true; ++cellnum )
     {
-        find_next_intercept( &accx, &accy, slope );
-        curx = static_cast<int>(accx);
-        cury = static_cast<int>(accy);
-        if ( curx > maxrange || cury > maxrange )
-            break;
-
-        // work with the new square
-        xpos[cellnum] = curx;
-        ypos[cellnum] = cury;
+	ray.advance();
+	if ((ray.pos() - hexcoord::centre).rdist() > maxrange)
+	    break;
+	pos[cellnum] = ray.pos();
     }
     return cellnum;
 }
 
 // check if the passed ray has already been created
-static bool is_duplicate_ray( int len, int xpos[], int ypos[] )
+static bool is_duplicate_ray( int len, hexcoord pos[] )
 {
     int cur_offset = 0;
     for ( unsigned int i = 0; i < raylengths.size(); ++i )
@@ -1614,8 +1913,7 @@ static bool is_duplicate_ray( int len, int xpos[], int ypos[] )
         int j;
         for ( j = 0; j < len; ++j )
         {
-            if ( ray_coord_x[j + cur_offset] != xpos[j] ||
-                 ray_coord_y[j + cur_offset] != ypos[j] )
+            if ( ray_coord[j + cur_offset] != (pos[j] - hexcoord::centre) )
                 break;
         }
 
@@ -1636,12 +1934,9 @@ static bool is_subset( int starta, int startb, int lengtha, int lengthb )
     int enda = starta + lengtha, endb = startb + lengthb;
     while ( cura < enda && curb < endb )
     {
-        if ( ray_coord_x[curb] > ray_coord_x[cura] )
+        if ( ray_coord[curb].rdist() > ray_coord[cura].rdist() )
             return false;
-        if ( ray_coord_y[curb] > ray_coord_y[cura] )
-            return false;
-        if ( ray_coord_x[cura] == ray_coord_x[curb] &&
-             ray_coord_y[cura] == ray_coord_y[curb] )
+        if ( ray_coord[cura] == ray_coord[curb] )
             ++cura;
 
         ++curb;
@@ -1669,21 +1964,15 @@ static std::vector<int> find_nonduped_cellrays()
             // XXX We should really check everything up to now
             // completely, and all further rays to see if they're
             // proper subsets.
-            const int curx = ray_coord_x[curidx + cellnum];
-            const int cury = ray_coord_y[curidx + cellnum];
+            const hexdir cur = ray_coord[curidx + cellnum];
             for (testidx = 0, testray = 0; testray < raynum;
                  testidx += raylengths[testray++])
             {
                 // scan ahead to see if there's an intersect
                 for ( testcell = 0; testcell < raylengths[raynum]; ++testcell )
                 {
-                    const int testx = ray_coord_x[testidx + testcell];
-                    const int testy = ray_coord_y[testidx + testcell];
-                    // we can short-circuit sometimes
-                    if ( testx > curx || testy > cury )
-                        break;
-                    // bingo!
-                    if ( testx == curx && testy == cury )
+                    const hexdir test = ray_coord[testidx + testcell];
+                    if ( test == cur )
                     {
                         is_duplicate = is_subset(testidx, curidx,
                                                  testcell, cellnum);
@@ -1702,30 +1991,31 @@ static std::vector<int> find_nonduped_cellrays()
 
 // Create and register the ray defined by the arguments.
 // Return true if the ray was actually registered (i.e., not a duplicate.)
-static bool register_ray( double accx, double accy, double slope )
+static bool register_ray( hexdir disp, hexdir dir, int n )
 {
-    int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
-    int raylen = shoot_ray( accx, accy, slope, LOS_MAX_RANGE, xpos, ypos );
+    hexcoord pos[2*(LOS_MAX_RANGE+1) + 1];
+
+    ray_def ray;
+    ray.disp = disp;
+    ray.dir = dir;
+    ray.cell = hexcoord::centre;
+    ray.n = n;
+
+    int raylen = shoot_ray( ray, LOS_MAX_RANGE, pos );
 
     // early out if ray already exists
-    if ( is_duplicate_ray(raylen, xpos, ypos) )
+    if ( is_duplicate_ray(raylen, pos) )
         return false;
 
     // not duplicate, register
     for ( int i = 0; i < raylen; ++i )
     {
         // create the cellrays
-        ray_coord_x.push_back(xpos[i]);
-        ray_coord_y.push_back(ypos[i]);
+        ray_coord.push_back(pos[i] - hexcoord::centre);
     }
 
     // register the fullray
     raylengths.push_back(raylen);
-    ray_def ray;
-    ray.accx = accx;
-    ray.accy = accy;
-    ray.slope = slope;
-    ray.quadrant = 0;
     fullrays.push_back(ray);
 
     return true;
@@ -1738,15 +2028,15 @@ static void create_blockrays()
     const unsigned int num_nondupe_rays = nondupe_cellrays.size();
     const unsigned int num_nondupe_words =
         (num_nondupe_rays + LONGSIZE - 1) / LONGSIZE;
-    const unsigned int num_cellrays = ray_coord_x.size();
+    const unsigned int num_cellrays = ray_coord.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
     // first build all the rays: easier to do blocking calculations there
     unsigned long* full_los_blockrays;
-    full_los_blockrays = new unsigned long[num_words * (LOS_MAX_RANGE_X+1) *
-                                           (LOS_MAX_RANGE_Y+1)];
+    full_los_blockrays = new unsigned long[num_words * (LOS_MAX_RANGE+2) *
+                                           (LOS_MAX_RANGE+2)];
     memset((void*)full_los_blockrays, 0, sizeof(unsigned long) * num_words *
-           (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y+1));
+           (LOS_MAX_RANGE+2) * (LOS_MAX_RANGE+2));
 
     int cur_offset = 0;
 
@@ -1756,8 +2046,8 @@ static void create_blockrays()
         {
             // every cell blocks...
             unsigned long* const inptr = full_los_blockrays +
-                (ray_coord_x[i + cur_offset] * (LOS_MAX_RANGE_Y + 1) +
-                 ray_coord_y[i + cur_offset]) * num_words;
+                ((ray_coord[i + cur_offset].X+1) * (LOS_MAX_RANGE + 2) +
+                 (ray_coord[i + cur_offset].Y+1)) * num_words;
 
             // ...all following cellrays
             for ( int j = i+1; j < raylengths[ray]; ++j )
@@ -1771,23 +2061,21 @@ static void create_blockrays()
     // only the nonduplicated cellrays.
 
     // allocate and clear memory
-    los_blockrays = new unsigned long[num_nondupe_words * (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y + 1)];
+    los_blockrays = new unsigned long[num_nondupe_words * (LOS_MAX_RANGE+2) * (LOS_MAX_RANGE + 2)];
     memset((void*)los_blockrays, 0, sizeof(unsigned long) * num_nondupe_words *
-           (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y+1));
+           (LOS_MAX_RANGE+2) * (LOS_MAX_RANGE+2));
 
     // we want to only keep the cellrays from nondupe_cellrays.
-    compressed_ray_x.resize(num_nondupe_rays);
-    compressed_ray_y.resize(num_nondupe_rays);
+    compressed_ray.resize(num_nondupe_rays);
     for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
     {
-        compressed_ray_x[i] = ray_coord_x[nondupe_cellrays[i]];
-        compressed_ray_y[i] = ray_coord_y[nondupe_cellrays[i]];
+        compressed_ray[i] = ray_coord[nondupe_cellrays[i]];
     }
     unsigned long* oldptr = full_los_blockrays;
     unsigned long* newptr = los_blockrays;
-    for ( int x = 0; x <= LOS_MAX_RANGE_X; ++x )
+    for ( int X = -1; X <= LOS_MAX_RANGE; ++X )
     {
-        for ( int y = 0; y <= LOS_MAX_RANGE_Y; ++y )
+        for ( int Y = -1; Y <= LOS_MAX_RANGE; ++Y )
         {
             for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
                 if ( get_bit_in_long_array(oldptr, nondupe_cellrays[i]) )
@@ -1822,10 +2110,10 @@ static int gcd( int x, int y )
     return x;
 }
 
-bool complexity_lt( const std::pair<int,int>& lhs,
-                    const std::pair<int,int>& rhs )
+bool complexity_lt( const std::pair<hexdir,int>& lhs,
+                    const std::pair<hexdir,int>& rhs )
 {
-    return lhs.first * lhs.second < rhs.first * rhs.second;
+    return lhs.second < rhs.second;
 }
 
 // Cast all rays
@@ -1835,67 +2123,51 @@ void raycast()
     if ( done_raycast )
         return;
     
-    // Creating all rays for first quadrant
+    // Creating all rays for first hextant
     // We have a considerable amount of overkill.   
     done_raycast = true;
 
-    // register perpendiculars FIRST, to make them top choice
-    // when selecting beams
-    register_ray( 0.5, 0.5, 1000.0 );
-    register_ray( 0.5, 0.5, 0.0 );
+    std::vector< std::pair<hexdir,int> > dirs;
+    for (int dX = 0; dX <= LOS_MAX_RANGE*2; dX++)
+	for (int dY = 1; dY <= LOS_MAX_RANGE*2; dY++)
+	{
+	    if (dX+dY > LOS_MAX_RANGE*2)
+		continue;
 
-    // For a slope of M = y/x, every x we move on the X axis means
-    // that we move y on the y axis. We want to look at the resolution
-    // of x/y: in that case, every step on the X axis means an increase
-    // of 1 in the Y axis at the intercept point. We can assume gcd(x,y)=1,
-    // so we look at steps of 1/y.
+	    if (gcd(dX,dY) != 1)
+		continue;
 
-    // Changing the order a bit. We want to order by the complexity
-    // of the beam, which is log(x) + log(y) ~ xy.
-    std::vector<std::pair<int,int> > xyangles;
-    for ( int xangle = 1; xangle <= LOS_MAX_RANGE; ++xangle )
-        for ( int yangle = 1; yangle <= LOS_MAX_RANGE; ++yangle )
-            if ( gcd(xangle, yangle) == 1 )
-                xyangles.push_back(std::pair<int,int>(xangle, yangle));
+	    hexdir d(dX,dY,-dX-dY);
 
-    std::sort( xyangles.begin(), xyangles.end(), complexity_lt );
-    for ( unsigned int i = 0; i < xyangles.size(); ++i )
+	    // Here we bring dir down close to zero, such that we need to go at least 6
+	    // times along it to get out of the hex around 0.
+	    // 6 is an arbitrary number, but don't change it! We may make use of
+	    // the fact that 2 and 3 divide n.
+	    int n = 6*MAX(abs(d.X-d.Z), MAX(abs(d.Y-d.X), abs(d.Z-d.Y)));
+
+	    dirs.push_back(std::pair<hexdir,int>(d,n));
+	}
+
+    std::sort( dirs.begin(), dirs.end(), complexity_lt );
+
+    for ( unsigned int i = 0; i < dirs.size(); ++i )
     {
-        const int xangle = xyangles[i].first;
-        const int yangle = xyangles[i].second;
+        const hexdir dir = dirs[i].first;
+        const int n = dirs[i].second;
 
-        const double slope = ((double)(yangle)) / xangle;
-        const double rslope = ((double)(xangle)) / yangle;
-        for ( int intercept = 0; intercept <= yangle; ++intercept )
-        {
-            double xstart = ((double)(intercept)) / yangle;
-            if ( intercept == 0 )
-                xstart += EPSILON_VALUE / 10.0;
-            if ( intercept == yangle )
-                xstart -= EPSILON_VALUE / 10.0;
-            // y should be "about to change"            
-            register_ray( xstart, 1.0 - EPSILON_VALUE / 10.0, slope );
-            // also draw the identical ray in octant 2
-            register_ray( 1.0 - EPSILON_VALUE / 10.0, xstart, rslope );
-        }
+	// the v line is perpendicular to the primary hextant, so we start at
+	// various points along the intersection of the v line with the hex
+	// around 0, i.e. (-1/2,1/2)*v.
+
+	for (int j = -5; j < 5; j++)
+	{
+	    const hexdir disp = (hexdir::v*((j*n)/12));
+	    register_ray( disp, dir, n );
+	}
     }
 
     // Now create the appropriate blockrays array
     create_blockrays();   
-}
-
-static void set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
-{
-    if ( tx >= sx && ty >= sy )
-        ray.quadrant = 0;
-    else if ( tx < sx && ty >= sy )
-        ray.quadrant = 1;
-    else if ( tx < sx && ty < sy )
-        ray.quadrant = 2;
-    else if ( tx >= sx && ty < sy )
-        ray.quadrant = 3;
-    else
-        mpr("Bad ray quadrant!", MSGCH_DIAGNOSTICS);
 }
 
 static int cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
@@ -1917,207 +2189,101 @@ static int cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
 }
 
 static const double VERTICAL_SLOPE = 10000.0;
-static double calc_slope(double x, double y)
-{
-    if (double_is_zero(x))
-        return (VERTICAL_SLOPE);
 
-    const double slope = y / x;
-    return (slope > VERTICAL_SLOPE? VERTICAL_SLOPE : slope);
-}
-
-static double slope_factor(const ray_def &ray)
-{
-    double xdiff = fabs(ray.accx - 0.5), ydiff = fabs(ray.accy - 0.5);
-
-    if (double_is_zero(xdiff) && double_is_zero(ydiff))
-        return ray.slope;
-    const double slope = calc_slope(ydiff, xdiff);
-    return (slope + ray.slope) / 2.0;
-}
-
-static bool superior_ray(int shortest, int imbalance,
-                         int raylen, int rayimbalance,
-                         double slope_diff, double ray_slope_diff)
-{
-    if (shortest != raylen)
-        return (shortest > raylen);
-
-    if (imbalance != rayimbalance)
-        return (imbalance > rayimbalance);
-
-    return (slope_diff > ray_slope_diff);
-}
-
-// Find a nonblocked ray from sx, sy to tx, ty. Return false if no
-// such ray could be found, otherwise return true and fill ray
-// appropriately.
-// If allow_fallback is true, fall back to a center-to-center ray
-// if range is too great or all rays are blocked.
-// If cycle_dir is 0, find the first fitting ray. If it is 1 or -1,
-// assume that ray is appropriately filled in, and look for the next
-// ray in that cycle direction.
-// If find_shortest is true, examine all rays that hit the target and
-// take the shortest (starting at ray.fullray_idx).
-
-bool find_ray( int sourcex, int sourcey, int targetx, int targety,
+bool find_ray( hexcoord source, hexcoord target,
                bool allow_fallback, ray_def& ray, int cycle_dir,
-               bool find_shortest )
+               bool find_shortest, bool no_block )
 {
-    int cellray, inray;
-    const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
-    const int signy = ((targety - sourcey >= 0) ? 1 : -1);
-    const int absx = signx * (targetx - sourcex);
-    const int absy = signy * (targety - sourcey);
-    const double want_slope = calc_slope(absx, absy);
-    int cur_offset = 0;
+
+    hexdir diff = target - source;
+
+    // [hex] if find_shortest, literally just look for a ray of minimum length
+    // to the target. They should all be of equal "balance", for any
+    // reasonable value of "balance".
     int shortest = INFINITE_DISTANCE;
-    int imbalance = INFINITE_DISTANCE;
-    double slope_diff = VERTICAL_SLOPE * 10.0;
-    std::vector<coord_def> unaliased_ray;
-    
-    for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
+
+    int cur_offset = 0;
+    int cellray, inray;
+
+    // [hex] due to the slightly messy way hexes work, we have to also
+    // consider the hextants to either side of the current hextant. Of course
+    // this is only an issue if our point is close to the boundary of a
+    // hextant, so we could test for that if optimisation is needed.
+    for (int hextant = diff.hextant() - 1; hextant <= diff.hextant() + 1; hextant++)
     {
-        const int fullray = cyclic_offset( fray, cycle_dir, ray.fullray_idx,
-                                           fullrays.size() );
-        // yeah, yeah, this is O(n^2). I know.
-        cur_offset = 0;
-        for ( int i = 0; i < fullray; ++i )
-            cur_offset += raylengths[i];
+	hexdir d = diff.rotated(-hextant);
+	for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
+	{
+	    const int fullray = cyclic_offset( fray, cycle_dir, ray.fullray_idx,
+		    fullrays.size() );
+	    // yeah, yeah, this is O(n^2). I know.
+	    cur_offset = 0;
+	    for ( int i = 0; i < fullray; ++i )
+		cur_offset += raylengths[i];
 
-        for ( cellray = 0; cellray < raylengths[fullray]; ++cellray )
-        {
-            if ( ray_coord_x[cellray + cur_offset] == absx &&
-                 ray_coord_y[cellray + cur_offset] == absy )
-            {
-                if (find_shortest)
-                {
-                    unaliased_ray.clear();
-                    unaliased_ray.push_back(coord_def(0, 0));
-                }
+	    for ( cellray = 0; cellray < raylengths[fullray]; ++cellray )
+	    {
+		if ( ray_coord[cellray + cur_offset] == d )
+		{
 
-                // check if we're blocked so far
-                bool blocked = false;
-                coord_def c1, c3;
-                int real_length = 0;
-                for ( inray = 0; inray <= cellray; ++inray )
-                {
-                    const int xi = signx * ray_coord_x[inray + cur_offset];
-                    const int yi = signy * ray_coord_y[inray + cur_offset];
-                    if (inray < cellray
-                        && grid_is_solid(grd[sourcex + xi][sourcey + yi]))
-                    {
-                        blocked = true;
-                        break;
-                    }
+		    // check if we're blocked so far
+		    bool blocked = false;
+		    for ( inray = 0; inray <= cellray; ++inray )
+		    {
+			if (!no_block && inray < cellray
+				&& grid_is_solid(grd(source +
+					ray_coord[inray + cur_offset].rotated(hextant))))
+			{
+			    blocked = true;
+			    break;
+			}
+		    }
 
-                    if (find_shortest)
-                    {
-                        c3 = coord_def(xi, yi);
+		    if ( !blocked && cellray < shortest )
+		    {
+			// success!
+			shortest = cellray;
 
-                        // We've moved at least two steps if inray > 0.
-                        if (inray)
-                        {
-                            // Check for a perpendicular corner on the ray and
-                            // pretend that it's a diagonal.
-                            if ((c3 - c1).abs() != 2)
-                                ++real_length;
-                            else
-                            {
-                                // c2 was a dud move, pop it off
-                                unaliased_ray.pop_back();
-                            }
-                        }
-                        else
-                            ++real_length;
-                        
-                        unaliased_ray.push_back(c3);
-                        c1 = unaliased_ray[real_length - 1];
-                    }
-                }
+			ray        = fullrays[fullray];
+			ray.fullray_idx = fullray;
 
-                int cimbalance = 0;
-                // If this ray is a candidate for shortest, calculate
-                // the imbalance. I'm defining 'imbalance' as the
-                // number of consecutive diagonal or orthogonal moves
-                // in the ray. This is a reasonable measure of deviation from
-                // the Bresenham line between our selected source and
-                // destination.
-                if (!blocked && find_shortest && shortest >= real_length)
-                {
-                    int diags = 0, straights = 0;
-                    for (int i = 1, size = unaliased_ray.size(); i < size;
-                         ++i)
-                    {
-                        const int dist =
-                            (unaliased_ray[i] - unaliased_ray[i - 1]).abs();
-                        if (dist == 2)
-                        {
-                            straights = 0;
-                            if (++diags > cimbalance)
-                                cimbalance = diags;
-                        }
-                        else
-                        {
-                            diags = 0;
-                            if (++straights > cimbalance)
-                                cimbalance = straights;
-                        }
-                    }
-                }
+			ray.dir = ray.dir.rotated(hextant);
+			ray.disp = ray.disp.rotated(hextant);
+			ray.cell = source;
 
-                const double ray_slope_diff =
-                    find_shortest? fabs(slope_factor(fullrays[fullray])
-                                      - want_slope)
-                    : 0.0;
-
-                if ( !blocked
-                     &&  (!find_shortest
-                          || superior_ray(shortest, imbalance,
-                                          real_length, cimbalance,
-                                          slope_diff, ray_slope_diff)))
-                {
-                    // success!
-                    ray        = fullrays[fullray];
-                    ray.fullray_idx = fullray;
-
-                    shortest   = real_length;
-                    imbalance  = cimbalance;
-                    slope_diff = ray_slope_diff;
-
-                    if ( sourcex > targetx )
-                        ray.accx = 1.0 - ray.accx;
-                    if ( sourcey > targety )
-                        ray.accy = 1.0 - ray.accy;
-                    ray.accx += sourcex;
-                    ray.accy += sourcey;
-                    set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
-                    if (!find_shortest)
-                        return true;
-                }
-            }
-        }
+			if (!find_shortest)
+			    return true;
+		    }
+		}
+	    }
+	}
     }
 
     if (find_shortest && shortest != INFINITE_DISTANCE)
-        return (true);
-    
-    if ( allow_fallback )
+	return true;
+
+    if (allow_fallback)
     {
-        ray.accx = sourcex + 0.5;
-        ray.accy = sourcey + 0.5;
-        if ( targetx == sourcex )
-            ray.slope = VERTICAL_SLOPE;
-        else
-        {
-            ray.slope = targety - sourcey;
-            ray.slope /= targetx - sourcex;
-            if ( ray.slope < 0 )
-                ray.slope = -ray.slope;
-        }
-        set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
-        ray.fullray_idx = -1;
-        return true;
+	ray.cell = source;
+	ray.disp = hexdir::zero;
+
+	hexdir d = diff;
+
+	if (d == hexdir::zero)
+	{
+	    ray.dir = d;
+	    return true;
+	}
+
+	// normalise
+	int g = abs(gcd(d.X, gcd(d.Y, d.Z)));
+	d /= g;
+
+	// see raycast() for explication
+	ray.n = 6*MAX(abs(d.X-d.Z), MAX(abs(d.Y-d.X), abs(d.Z-d.Y)));
+
+	ray.dir = d;
+	return true;
     }
     return false;
 }
@@ -2160,50 +2326,50 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
 void losight(FixedArray < unsigned int, 19, 19 > &sh,
-             FixedArray < dungeon_feature_type, 80, 70 > &gr, int x_p, int y_p)
+             FixedArray < dungeon_feature_type, GXM, GYM > &gr, hexcoord pos)
 {
     raycast();
-    // go quadrant by quadrant
-    const int quadrant_x[4] = {  1, -1, -1,  1 };
-    const int quadrant_y[4] = {  1,  1, -1, -1 };
+    // go hextant by hextant
 
     // clear out sh
     sh.init(0);
 
-    const unsigned int num_cellrays = compressed_ray_x.size();
+    const unsigned int num_cellrays = compressed_ray.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
-    for ( int quadrant = 0; quadrant < 4; ++quadrant )
+    for ( int hextant = 0; hextant < 6; hextant++ )
     {
-        const int xmult = quadrant_x[quadrant];
-        const int ymult = quadrant_y[quadrant];
-
         // clear out the dead rays array
         memset( (void*)dead_rays,  0, sizeof(unsigned long) * num_words);
         memset( (void*)smoke_rays, 0, sizeof(unsigned long) * num_words);
 
         // kill all blocked rays
+	// XXX: Note we start at -1! A ray with direction in a particular
+	// hextant may pass through cells just outside of the hextant, so we
+	// loop through this extended diamond.
         const unsigned long* inptr = los_blockrays;
-        for ( int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff )
+        for ( int dX = -1; dX <= LOS_MAX_RANGE; ++dX )
         {
-            for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y;
-                 ++ydiff, inptr += num_words )
+            for (int dY = -1; dY <= LOS_MAX_RANGE;
+		    ++dY, inptr += num_words)
             {
-                
-                const int realx = x_p + xdiff * xmult;
-                const int realy = y_p + ydiff * ymult;
+		if (dX+dY > LOS_MAX_RANGE)
+		    continue;
 
-                if (realx < 0 || realx > 79 || realy < 0 || realy > 69)
+		const hexdir d(dX,dY,-dX-dY);
+		const hexcoord target = pos + d.rotated(hextant);
+
+		if (!in_G_bounds(target))
                     continue;
 
                 // if this cell is opaque...
-                if ( grid_is_opaque(gr[realx][realy]) )
+                if ( grid_is_opaque(gr(target)) )
                 {
                     // then block the appropriate rays
                     for ( unsigned int i = 0; i < num_words; ++i )
                         dead_rays[i] |= inptr[i];
                 }
-                else if ( is_opaque_cloud(env.cgrid[realx][realy]) )
+                else if ( is_opaque_cloud(env.cgrid(target)) )
                 {
                     // block rays which have already seen a cloud
                     for ( unsigned int i = 0; i < num_words; ++i )
@@ -2216,7 +2382,7 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
         }
 
         // ray calculation done, now work out which cells in this
-        // quadrant are visible
+        // hextant are visible
         unsigned int rayidx = 0;
         for ( unsigned int wordloc = 0; wordloc < num_words; ++wordloc )
         {
@@ -2228,13 +2394,11 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                 if ( ((curword >> bitloc) & 1UL) == 0 )
                 {
                     // this ray is alive!
-                    const int realx = xmult * compressed_ray_x[rayidx];
-                    const int realy = ymult * compressed_ray_y[rayidx];
+		    const hexdir d = compressed_ray[rayidx].rotated(hextant);
+		    const hexcoord target = pos + d;
                     // update shadow map
-                    if (x_p + realx >= 0 && x_p + realx < 80 &&
-                        y_p + realy >= 0 && y_p + realy < 70 &&
-                        realx * realx + realy * realy <= los_radius_squared )
-                        sh[sh_xo+realx][sh_yo+realy]=gr[x_p+realx][y_p+realy];
+		    if (d.rdist() <= los_radius && in_G_bounds(target))
+                        sh(grid2show(target))=gr(target);
                 }
                 ++rayidx;
                 if ( rayidx == num_cellrays )
@@ -2244,7 +2408,7 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
     }
 
     // [dshaligram] The player's current position is always visible.
-    sh[sh_xo][sh_yo] = gr[x_p][y_p];
+    sh(grid2show(you.pos())) = gr(you.pos());
 }
 
 
@@ -2414,63 +2578,55 @@ bool is_feature(int feature, int x, int y)
     }
 }
 
-static int find_feature(int feature, int curs_x, int curs_y, 
-                         int start_x, int start_y, int anchor_x, int anchor_y,
-                         int ignore_count, int *move_x, int *move_y)
+static int find_feature(int feature, const hexdir &curs, const hexcoord &start,
+			 int anchor_x, int anchor_y, int ignore_count,
+			 hexdir *move)
 {
-    int cx = anchor_x,
-        cy = anchor_y;
+    const hexcoord c(anchor_x, anchor_y);
+    hexcoord t;
 
-    int firstx = -1, firsty = -1;
-    int matchcount = 0;
+    int matchcount = 0, firstx = -1, firsty = -1;
 
-    // Find the first occurrence of feature 'feature', spiralling around (x,y)
-    int maxradius = GXM > GYM? GXM : GYM;
-    for (int radius = 1; radius < maxradius; ++radius)
+    // [hex] go out in a spiral
+    // Same basic spiralling code as in direct.cc:find_hex().
+    hexdir d = hexdir::zero;
+    while (true)
     {
-        for (int axis = -2; axis < 2; ++axis)
-        {
-            int rad = radius - (axis < 0);
-            for (int var = -rad; var <= rad; ++var)
-            {
-                int dx = radius, dy = var;
-                if (axis % 2)
-                    dx = -dx;
-                if (axis < 0)
-                {
-                    int temp = dx;
-                    dx = dy;
-                    dy = temp;
-                }
-
-                int x = cx + dx, y = cy + dy;
-                if (!in_bounds(x, y))
-                    continue;
-                if (is_feature(feature, x, y))
-                {
-                    ++matchcount;
-                    if (!ignore_count--)
-                    {
-                        // We want to cursor to (x,y)
-                        *move_x = x - (start_x + curs_x - 1);
-                        *move_y = y - (start_y + curs_y - 1);
-                        return matchcount;
-                    }
-                    else if (firstx == -1)
-                    {
-                        firstx = x;
-                        firsty = y;
-                    }
-                }
-            }
-        }
+	if ( d == hexdir::u*d.rdist() )
+	    if ( d.rdist() >= GRAD*2 )
+		break;
+	    else
+		d += -hexdir::w;
+	else
+	{
+	    d.reflect_u();
+	    d += -hexdir::v.rotated( d.hextant() );
+	    d.reflect_u();
+	}
+	t = c + d;
+	if (!in_bounds(t))
+	    continue;
+	if (is_feature(feature, t.x, t.y))
+	{
+	    ++matchcount;
+	    if (!ignore_count--)
+	    {
+		// We want to cursor to (x,y)
+		*move = t - (start + curs);
+		return matchcount;
+	    }
+	    else if (firstx == -1)
+	    {
+		firstx = t.x;
+		firsty = t.y;
+	    }
+	}
     }
 
     // We found something, but ignored it because of an ignorecount
     if (firstx != -1)
     {
-        *move_x = firstx - (start_x + curs_x - 1);
-        *move_y = firsty - (start_y + curs_y - 1);
+	*move = hexcoord(firstx,firsty) - (start + curs);
         return 1;
     }
     return 0;
@@ -2488,10 +2644,10 @@ void find_features(const std::vector<coord_def>& features,
 }
 
 static int find_feature( const std::vector<coord_def>& features,
-                         int feature, int curs_x, int curs_y, 
-                         int start_x, int start_y, 
+                         int feature, const hexdir &curs,
+			 const hexcoord &start,
                          int ignore_count, 
-                         int *move_x, int *move_y,
+			 hexdir *move,
                          bool forward)
 {
     int firstx = -1, firsty = -1, firstmatch = -1;
@@ -2507,8 +2663,7 @@ static int find_feature( const std::vector<coord_def>& features,
             if (forward? !ignore_count-- : --ignore_count == 1)
             {
                 // We want to cursor to (x,y)
-                *move_x = coord.x - (start_x + curs_x - 1);
-                *move_y = coord.y - (start_y + curs_y - 1);
+		*move = coord.tohex() - (start + curs);
                 return matchcount;
             }
             else if (!forward || firstx == -1)
@@ -2523,8 +2678,7 @@ static int find_feature( const std::vector<coord_def>& features,
     // We found something, but ignored it because of an ignorecount
     if (firstx != -1)
     {
-        *move_x = firstx - (start_x + curs_x - 1);
-        *move_y = firsty - (start_y + curs_y - 1);
+	*move = hexcoord(firstx, firsty) - (start + curs);
         return firstmatch;
     }
     return 0;
@@ -2535,7 +2689,7 @@ static int get_number_of_lines_levelmap()
     return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
 }
 
-static void draw_level_map(int start_x, int start_y, bool travel_mode)
+static void draw_level_map(hexcoord start, bool travel_mode)
 {
     int bufcount2 = 0;
     screen_buffer_t buffer2[GYM * GXM * 2];
@@ -2574,46 +2728,54 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
     {
         for (int screen_x = 0; screen_x < num_cols - 1; screen_x++)
         {
-            screen_buffer_t colour = DARKGREY;
-
-            coord_def c(start_x + screen_x, start_y + screen_y);
-
-            if (!in_bounds(c))
-            {
+	    if (!screen2hex_valid(coord_def(screen_x,screen_y)))
+	    {
                 buffer2[bufcount2 + 1] = DARKGREY;
                 buffer2[bufcount2] = 0;
             }
-            else
-            {
-                colour = colour_code_map(c.x, c.y,
-                                         Options.item_colour, 
-                                         travel_mode);
+	    else
+	    {
+		screen_buffer_t colour = DARKGREY;
 
-                buffer2[bufcount2 + 1] = colour;
-                buffer2[bufcount2] = env.map(c).glyph();
-            
-                if (c == you.pos())
-                {
-                    // [dshaligram] Draw the @ symbol on the level-map. It's no
-                    // longer saved into the env.map, so we need to draw it 
-                    // directly.
-                    buffer2[bufcount2 + 1] = WHITE;
-                    buffer2[bufcount2]     = you.symbol;
-                }
+		hexcoord c = start + screen2hex(coord_def(screen_x,screen_y));
 
-                // If we've a waypoint on the current square, *and* the
-                // square is a normal floor square with nothing on it,
-                // show the waypoint number.
-                if (Options.show_waypoints)
-                {
-                    // XXX: This is a horrible hack.
-                    screen_buffer_t &bc = buffer2[bufcount2];
-                    unsigned char ch = is_waypoint(c.x, c.y);
-                    if (ch && (bc == get_sightmap_char(DNGN_FLOOR) ||
-                               bc == get_magicmap_char(DNGN_FLOOR)))
-                        bc = ch;
-                }
-            }
+		if (!in_bounds(c))
+		{
+		    buffer2[bufcount2 + 1] = DARKGREY;
+		    buffer2[bufcount2] = 0;
+		}
+		else
+		{
+		    colour = colour_code_map(c.x, c.y,
+			    Options.item_colour, 
+			    travel_mode);
+
+		    buffer2[bufcount2 + 1] = colour;
+		    buffer2[bufcount2] = env.map(c).glyph();
+
+		    if (c == you.pos())
+		    {
+			// [dshaligram] Draw the @ symbol on the level-map. It's no
+			// longer saved into the env.map, so we need to draw it 
+			// directly.
+			buffer2[bufcount2 + 1] = WHITE;
+			buffer2[bufcount2]     = you.symbol;
+		    }
+
+		    // If we've a waypoint on the current square, *and* the
+		    // square is a normal floor square with nothing on it,
+		    // show the waypoint number.
+		    if (Options.show_waypoints)
+		    {
+			// XXX: This is a horrible hack.
+			screen_buffer_t &bc = buffer2[bufcount2];
+			unsigned char ch = is_waypoint(c.x, c.y);
+			if (ch && (bc == get_sightmap_char(DNGN_FLOOR) ||
+				    bc == get_magicmap_char(DNGN_FLOOR)))
+			    bc = ch;
+		    }
+		}
+	    }
             
             bufcount2 += 2;
         }
@@ -2625,7 +2787,7 @@ static void reset_travel_colours(std::vector<coord_def> &features)
 {
     // We now need to redo travel colours
     features.clear();
-    find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+    find_travel_pos(you.pos(), NULL, &features);
     // Sort features into the order the player is likely to prefer.
     arrange_features(features);
 }
@@ -2637,10 +2799,13 @@ static void reset_travel_colours(std::vector<coord_def> &features)
 void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 {
     cursor_control ccon(!Options.use_fake_cursor);
-    int i, j;
 
-    int move_x = 0, move_y = 0, scroll_y = 0;
+    coord_def scroll(0,0);
+    coord_def cursor_at(0,0);
+    hexdir move = hexdir::zero;
     int getty = 0;
+
+    const int border = 5;
 
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
@@ -2648,67 +2813,33 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
     {
         travel_cache.update();
 
-        find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+        find_travel_pos(you.pos(), NULL, &features);
         // Sort features into the order the player is likely to prefer.
         arrange_features(features);
     }
 
-    char min_x = 80, max_x = 0, min_y = 0, max_y = 0;
-    bool found_y = false;
-
     const int num_lines = get_number_of_lines_levelmap();
+    const int num_cols = get_number_of_cols();
+
+    const int min_cursx = border;
+    const int min_cursy = border;
+    const int max_cursx = num_cols - border;
+    const int max_cursy = num_lines - border;
+
     const int half_screen = (num_lines - 1) / 2;
+    const int half_screen_width_hexes = ((num_cols - 1) / 2) / 2;
 
     const int top = 1 + Options.level_map_title;
 
-    for (j = 0; j < GYM; j++)
-    {
-        for (i = 0; i < GXM; i++)
-        {
-            if (env.map[i][j].known())
-            {
-                if (!found_y)
-                {
-                    found_y = true;
-                    min_y = j;
-                }
-
-                max_y = j;
-
-                if (i < min_x)
-                    min_x = i;
-
-                if (i > max_x)
-                    max_x = i;
-            }
-        }
-    }
-
-    const int map_lines = max_y - min_y + 1;
-
-    const int start_x = min_x + (max_x - min_x + 1) / 2 - 40; // no x scrolling
     const int block_step = Options.level_map_cursor_step;
-    int start_y = 0;                                          // y does scroll
 
-    int screen_y = you.y_pos;
+    // grid position to show in top left corner of screen
+    hexcoord start = static_cast<coord_def>(you.pos()) -
+	coord_def(half_screen_width_hexes, half_screen);
 
-    // if close to top of known map, put min_y on top
-    // else if close to bottom of known map, put max_y on bottom.
-    //
-    // The num_lines comparisons are done to keep things neat, by
-    // keeping things at the top of the screen.  By shifting an
-    // additional one in the num_lines > map_lines case, we can 
-    // keep the top line clear... which makes things look a whole
-    // lot better for small maps.
-    if (num_lines > map_lines)
-        screen_y = min_y + half_screen - 1;
-    else if (num_lines == map_lines || screen_y - half_screen < min_y)
-        screen_y = min_y + half_screen;
-    else if (screen_y + half_screen > max_y)
-        screen_y = max_y - half_screen;
+    // grid position of cursor measured from start
+    hexdir curs = you.pos() - start;
 
-    int curs_x = you.x_pos - start_x + 1;
-    int curs_y = you.y_pos - screen_y + half_screen + 1;
     int search_feat = 0, search_found = 0, anchor_x = -1, anchor_y = -1;
 
     bool map_alive  = true;
@@ -2719,332 +2850,266 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
     while (map_alive)
     {
-        start_y = screen_y - half_screen;
+	move = hexdir::zero;
 
-        if (redraw_map)
-            draw_level_map(start_x, start_y, travel_mode);
+	if (redraw_map)
+	    draw_level_map(start, travel_mode);
 
-        redraw_map = true;
-        cursorxy(curs_x, curs_y + top - 1);
+	redraw_map = true;
+	cursor_at = hex2screen(curs) + coord_def(1,top);
+	cursorxy( cursor_at.x, cursor_at.y );
 
-        c_input_reset(true);
-        getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP,
-                                        false, false);
-        c_input_reset(false);
+	c_input_reset(true);
+	getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP,
+		false, false);
+	c_input_reset(false);
 
-        switch (getty)
-        {
-        case '?':
-            show_levelmap_help();
-            break;
+	switch (getty)
+	{
+	    case '?':
+		show_levelmap_help();
+		break;
 
-        case CONTROL('C'):
-            clear_map();
-            break;
+	    case CONTROL('C'):
+		clear_map();
+		break;
 
-        case CONTROL('F'):
-        case CONTROL('W'):
-            travel_cache.add_waypoint(start_x + curs_x - 1,
-                                      start_y + curs_y - 1);
-            // We need to do this all over again so that the user can jump
-            // to the waypoint he just created.
-            features.clear();
-            find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
-            // Sort features into the order the player is likely to prefer.
-            arrange_features(features);
-            move_x = move_y = 0;
-            break;
+	    case CONTROL('F'):
+	    case CONTROL('W'):
+		travel_cache.add_waypoint((start+curs).x, (start+curs).y);
+		// We need to do this all over again so that the user can jump
+		// to the waypoint he just created.
+		features.clear();
+		find_travel_pos(you.pos(), NULL, &features);
+		// Sort features into the order the player is likely to prefer.
+		arrange_features(features);
+		break;
 
-        // Cycle the radius of an exclude.
-        case 'x':
-        {
-            const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
-            if (is_exclude_root(p))
-                cycle_exclude_radius(p);
-            reset_travel_colours(features);
-            move_x = move_y = 0;
-            break;
-        }
+		// Cycle the radius of an exclude.
+	    case 'x':
+		{
+		    const coord_def p = start + curs;
+		    if (is_exclude_root(p))
+			cycle_exclude_radius(p);
+		    reset_travel_colours(features);
+		    break;
+		}
 
-        case CONTROL('E'):
-        case CONTROL('X'):
-        {
-            int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
-            if (getty == CONTROL('X'))
-                toggle_exclude(coord_def(x, y));
-            else
-                clear_excludes();
+	    case CONTROL('E'):
+	    case CONTROL('X'):
+		{
+		    if (getty == CONTROL('X'))
+			toggle_exclude(start+curs);
+		    else
+			clear_excludes();
 
-            reset_travel_colours(features);
-            move_x = move_y = 0;
-            break;
-        }
+		    reset_travel_colours(features);
+		    break;
+		}
 
-        case 'b':
-        case '1':
-            move_x = -1;
-            move_y = 1;
-            break;
+	    case 'b':
+	    case '1':
+		move = hexdir::w;
+		break;
 
-        case 'j':
-        case '2':
-            move_y = 1;
-            move_x = 0;
-            break;
+	    case 'u':
+	    case '9':
+		move = -hexdir::w;
+		break;
 
-        case 'u':
-        case '9':
-            move_x = 1;
-            move_y = -1;
-            break;
+	    case 'y':
+	    case '7':
+		move = hexdir::v;
+		break;
 
-        case 'k':
-        case '8':
-            move_y = -1;
-            move_x = 0;
-            break;
+	    case 'h':
+	    case '4':
+		move = -hexdir::u;
+		break;
 
-        case 'y':
-        case '7':
-            move_y = -1;
-            move_x = -1;
-            break;
+	    case 'n':
+	    case '3':
+		move = -hexdir::v;
+		break;
 
-        case 'h':
-        case '4':
-            move_x = -1;
-            move_y = 0;
-            break;
+	    case 'l':
+	    case '6':
+		move = hexdir::u;
+		break;
 
-        case 'n':
-        case '3':
-            move_y = 1;
-            move_x = 1;
-            break;
+	    case 'B':
+		move = hexdir::w*block_step;
+		break;
 
-        case 'l':
-        case '6':
-            move_x = 1;
-            move_y = 0;
-            break;
+	    case 'U':
+		move = -hexdir::w*block_step;
+		break;
 
-        case 'B':
-            move_x = -block_step;
-            move_y = block_step;
-            break;
+	    case 'Y':
+		move = hexdir::v*block_step;
+		break;
 
-        case 'J':
-            move_y = block_step;
-            move_x = 0;
-            break;
+	    case 'H':
+		move = -hexdir::u*block_step;
+		break;
 
-        case 'U':
-            move_x = block_step;
-            move_y = -block_step;
-            break;
+	    case 'N':
+		move = -hexdir::v*block_step;
+		break;
 
-        case 'K':
-            move_y = -block_step;
-            move_x = 0;
-            break;
+	    case 'L':
+		move = hexdir::u*block_step;
+		break;
 
-        case 'Y':
-            move_y = -block_step;
-            move_x = -block_step;
-            break;
+	    case '+':
+		scroll.set(0,20);
+		break;
+	    case '-':
+		scroll.set(0,-20);
+		break;
+	    case '*':
+		scroll.set(20,0);
+		break;
+	    case '/':
+		scroll.set(-20,0);
+		break;
+	    case '<':
+	    case '>':
+	    case '@':
+	    case '\t':
+	    case '^':
+	    case '_':
+	    case 'X':
+	    case 'F':
+	    case 'W':
+	    case 'I':
+	    case ';':
+	    case '\'':
+		{
+		    bool forward = true;
 
-        case 'H':
-            move_x = -block_step;
-            move_y = 0;
-            break;
+		    if (getty == '/' || getty == ';')
+			forward = false;
 
-        case 'N':
-            move_y = block_step;
-            move_x = block_step;
-            break;
+		    if (getty == '/' || getty == '*' || getty == ';' || getty == '\'')
+			getty = 'I';
 
-        case 'L':
-            move_x = block_step;
-            move_y = 0;
-            break;
+		    if (anchor_x == -1)
+		    {
+			anchor_x = (start+curs).x;
+			anchor_y = (start+curs).y;
+		    }
+		    if (search_feat != getty)
+		    {
+			search_feat         = getty;
+			search_found        = 0;
+		    }
+		    if (travel_mode)
+			search_found = find_feature(features, getty, curs,
+				start,
+				search_found, 
+				&move,
+				forward);
+		    else
+			search_found = find_feature(getty, curs,
+				start,
+				anchor_x, anchor_y,
+				search_found, &move);
+		    break;
+		}
 
-        case '+':
-            move_y = 20;
-            move_x = 0;
-            scroll_y = 20;
-            break;
-        case '-':
-            move_y = -20;
-            move_x = 0;
-            scroll_y = -20;
-            break;
-        case '<':
-        case '>':
-        case '@':
-        case '\t':
-        case '^':
-        case '_':
-        case 'X':
-        case 'F':
-        case 'W':
-        case 'I':
-        case '*':
-        case '/':
-        case '\'':
-        {
-            bool forward = true;
+	    case CK_MOUSE_MOVE:
+		break;
 
-            if (getty == '/' || getty == ';')
-                forward = false;
+	    case CK_MOUSE_CLICK:
+		{
+		    // [hex] FIXME broken
+		    const c_mouse_event cme = get_mouse_event();
+		    const hexcoord curp(start+curs);
+		    const coord_def grdp =
+			cme.pos + coord_def(start.x - 1, start.y - top);
 
-            if (getty == '/' || getty == '*' || getty == ';' || getty == '\'')
-                getty = 'I';
+		    if (cme.left_clicked() && in_bounds(grdp))
+		    {
+			spec_place[0] = grdp.x;
+			spec_place[1] = grdp.y;
+			map_alive     = false;
+		    }
+		    else if (cme.scroll_up())
+			scroll.set(0,-block_step);
+		    else if (cme.scroll_down())
+			scroll.set(0,block_step);
+		    else if (cme.right_clicked())
+		    {
+			move = grdp.tohex() - curp;
+		    }
+		    break;
+		}
 
-            move_x = 0;
-            move_y = 0;
-            if (anchor_x == -1)
-            {
-                anchor_x = start_x + curs_x - 1;
-                anchor_y = start_y + curs_y - 1;
-            }
-            if (search_feat != getty)
-            {
-                search_feat         = getty;
-                search_found        = 0;
-            }
-            if (travel_mode)
-                search_found = find_feature(features, getty, curs_x, curs_y, 
-                                            start_x, start_y,
-                                            search_found, 
-                                            &move_x, &move_y,
-                                            forward);
-            else
-                search_found = find_feature(getty, curs_x, curs_y,
-                                            start_x, start_y,
-                                            anchor_x, anchor_y,
-                                            search_found, &move_x, &move_y);
-            break;
-        }
+	    case '.':
+	    case '\r':
+	    case 'S':
+	    case ',':
+		{
+		    const hexcoord curp = start+curs;
+		    if (in_G_bounds(curp))
+		    {
+			if (travel_mode && curp == you.pos())
+			{
+			    if (you.travel_x > 0 && you.travel_y > 0)
+			    {
+				move = hexcoord(you.travel_x,you.travel_y) - curp;
+			    }
+			    break;
+			}
+			else
+			{
+			    spec_place[0] = curp.x;
+			    spec_place[1] = curp.y;
+			    map_alive = false;
+			    break;
+			}
+		    }
+		}
+	    default:
+		if (travel_mode)
+		{
+		    map_alive = false;
+		    break;
+		}
+		redraw_map = false;
+		continue;
+	}
 
-        case CK_MOUSE_MOVE:
-            move_x = move_y = 0;
-            break;
-        
-        case CK_MOUSE_CLICK:
-        {
-            const c_mouse_event cme = get_mouse_event();
-            const coord_def curp(start_x + curs_x - 1, start_y + curs_y - 1);
-            const coord_def grdp =
-                cme.pos + coord_def(start_x - 1, start_y - top);
-            
-            if (cme.left_clicked() && in_bounds(grdp))
-            {
-                spec_place[0] = grdp.x;
-                spec_place[1] = grdp.y;
-                map_alive     = false;
-            }
-            else if (cme.scroll_up())
-                scroll_y = -block_step;
-            else if (cme.scroll_down())
-                scroll_y = block_step;
-            else if (cme.right_clicked())
-            {
-                const coord_def delta = grdp - curp;
-                move_y = delta.y;
-                move_x = delta.x;
-            }
-            break;
-        }
+	if (!map_alive)
+	    break;
 
-        case '.':
-        case '\r':
-        case 'S':
-        case ',':
-        case ';':
-        {
-            int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
-            if (travel_mode && x == you.x_pos && y == you.y_pos)
-            {
-                if (you.travel_x > 0 && you.travel_y > 0)
-                {
-                    move_x = you.travel_x - x;
-                    move_y = you.travel_y - y;
-                }
-                break;
-            }
-            else
-            {
-                spec_place[0] = x;
-                spec_place[1] = y;
-                map_alive = false;
-                break;
-            }
-        }
-        default:
-            move_x = 0;
-            move_y = 0;
-            if (travel_mode)
-            {
-                map_alive = false;
-                break;
-            }
-            redraw_map = false;
-            continue;
-        }
+	if (scroll != coord_def(0,0))
+	{
+	    start = static_cast<coord_def>(start) + scroll;
+	    scroll.set(0,0);
+	}
+	else
+	{
+	    hexdir shift = hexdir::zero;
+	    const hexdir newcurs = curs + move;
+	    const int newx = hex2screen(newcurs).x;
+	    const int newy = hex2screen(newcurs).y;
 
-        if (!map_alive)
-            break;
+	    if (newy < min_cursy)
+		shift += (hexdir::v - hexdir::w)*((min_cursy-newy)/2);
+	    else if (newy > max_cursy)
+		shift -= (hexdir::v - hexdir::w)*((newy-max_cursy)/2);
 
-        if (curs_x + move_x < 1 || curs_x + move_x > crawl_view.termsz.x)
-            move_x = 0;
+	    if (newx < min_cursx)
+		shift -= hexdir::u*((min_cursx-newx)/2);
+	    else if (newx > max_cursx)
+		shift += hexdir::u*((newx-max_cursx)/2);
 
-        curs_x += move_x;
-
-        if (num_lines < map_lines)
-        {
-            // Scrolling only happens when we don't have a large enough 
-            // display to show the known map.
-            if (scroll_y < 0 && ((screen_y += scroll_y) <= min_y + half_screen))
-                screen_y = min_y + half_screen;
-
-            if (scroll_y > 0 && ((screen_y += scroll_y) >= max_y - half_screen))
-                screen_y = max_y - half_screen;
-
-            scroll_y = 0;
-            
-            if (curs_y + move_y < 1)
-            {
-                screen_y += move_y;
-
-                if (screen_y < min_y + half_screen)
-                {
-                    move_y   = screen_y - (min_y + half_screen);
-                    screen_y = min_y + half_screen;
-                }
-                else
-                    move_y = 0;
-            }
-
-            if (curs_y + move_y > num_lines)
-            {
-                screen_y += move_y;
-
-                if (screen_y > max_y - half_screen)
-                {
-                    move_y   = screen_y - (max_y - half_screen);
-                    screen_y = max_y - half_screen;
-                }
-                else
-                    move_y = 0;
-            }
-        }
-
-        if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
-            move_y = 0;
-
-        curs_y += move_y;
+	    start += shift;
+	    curs = newcurs - shift;
+	}
     }
-
     return;
 }                               // end show_map()
 
@@ -3065,7 +3130,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!suppress_msg)
         mpr( "You feel aware of your surroundings." );
 
-    int i, j, k, l, empty_count;
+    int empty_count;
 
     if (map_radius > 50 && map_radius != 1000)
         map_radius = 50;
@@ -3077,73 +3142,69 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const int very_far = (map_radius * 9) / 10;
 
     const bool wizard_map = map_radius == 1000 && you.wizard;
-    for (i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
+    hexdir::disc h(std::min(map_radius, 4*GRAD));
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
-        {
-            if (proportion < 100 && random2(100) >= proportion)
-                continue;       // note that proportion can be over 100
+	hexcoord t = you.pos() + *it;
 
-            if (!map_bounds(i, j))
-                continue;
+	if (proportion < 100 && random2(100) >= proportion)
+	    continue;       // note that proportion can be over 100
 
-            const int dist = grid_distance( you.x_pos, you.y_pos, i, j );
+	if (!map_bounds(t))
+	    continue;
 
-            if (dist > pfar && one_chance_in(3))
-                continue;
+	const int dist = t.distance_from(you.pos());
 
-            if (dist > very_far && coinflip())
-                continue;
+	if (dist > pfar && one_chance_in(3))
+	    continue;
 
-            if (is_terrain_changed(i, j))
-                clear_envmap_grid(i, j);
+	if (dist > very_far && coinflip())
+	    continue;
 
-            if (!wizard_map && is_terrain_known(i, j))
-                continue;
+	if (is_terrain_changed(t.x, t.y))
+	    clear_envmap_grid(t.x, t.y);
 
-            empty_count = 8;
+	if (!wizard_map && is_terrain_known(t.x, t.y))
+	    continue;
 
-            if (grid_is_solid(grd[i][j]) && grd[i][j] != DNGN_CLOSED_DOOR)
-            {
-                for (k = -1; k <= 1; k++)
-                {
-                    for (l = -1; l <= 1; l++)
-                    {
-                        if (k == 0 && l == 0)
-                            continue;
+	empty_count = 6;
 
-                        if (!map_bounds( i + k, j + l ))
-                        {
-                            --empty_count;
-                            continue;
-                        }
+	if (grid_is_solid(grd(t)) && grd(t) != DNGN_CLOSED_DOOR)
+	{
+	    hexdir::circle c(1);
+	    for (hexdir::circle::iterator it2 = c.begin(); it2 != c.end(); it2++)
+	    {
+		const hexcoord t2 = t + *it2;
+		if (!map_bounds(t2))
+		{
+		    --empty_count;
+		}
+		else if (grid_is_opaque( grd(t2) )
+			&& grd(t2) != DNGN_CLOSED_DOOR)
+		{
+		    empty_count--;
+		}
+	    }
+	}
 
-                        if (grid_is_opaque( grd[i + k][j + l] )
-                                && grd[i + k][j + l] != DNGN_CLOSED_DOOR)
-                            empty_count--;
-                    }
-                }
-            }
+	if (empty_count > 0)
+	{
+	    if (wizard_map || !get_envmap_obj(t.x, t.y))
+		set_envmap_obj(t.x, t.y, grd(t));
 
-            if (empty_count > 0)
-            {
-                if (wizard_map || !get_envmap_obj(i, j))
-                    set_envmap_obj(i, j, grd[i][j]);
-
-                // Hack to give demonspawn Pandemonium mutation the ability
-                // to detect exits magically.
-                if ((you.mutation[MUT_PANDEMONIUM] > 1
-                     && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
-                    || wizard_map)
-                {
-                    set_terrain_seen( i, j );
-                }
-                else
-                {
-                    set_terrain_mapped( i, j );
-                }
-            }
-        }
+	    // Hack to give demonspawn Pandemonium mutation the ability
+	    // to detect exits magically.
+	    if ((you.mutation[MUT_PANDEMONIUM] > 1
+			&& grd(t) == DNGN_EXIT_PANDEMONIUM)
+		    || wizard_map)
+	    {
+		set_terrain_seen( t.x, t.y );
+	    }
+	    else
+	    {
+		set_terrain_mapped( t.x, t.y );
+	    }
+	}
     }
     return true;
 }                               // end magic_mapping()
@@ -3920,48 +3981,55 @@ std::string screenshot( bool fullscreen )
         int lastnonspace = -1;
         
         for (int count_x = 1; count_x <= crawl_view.viewsz.x; count_x++)
-        {
-            // in grid coords
-            const coord_def gc = view2grid(coord_def(count_x, count_y));
+	{
+	    int ch;
+	    const coord_def view_d(count_x, count_y);
 
-            int ch =
-                (!map_bounds(gc)) ? 0 
-                : (!crawl_view.in_grid_los(gc)) ? get_envmap_char(gc.x, gc.y) 
-                : (gc == you.pos()) ? you.symbol 
-                : get_screen_glyph(gc.x, gc.y);
-            
-            if (ch && !isprint(ch)) 
-            {
-                // [ds] Evil hack time again. Peek at grid, use that character.
-                int object = grd(gc);
-                unsigned glych;
-                unsigned short glycol = 0;
+	    if (!view2grid_valid(view_d))
+		ch = ' ';
+	    else
+	    {
+		// in grid coords
+		const hexcoord gc = view2grid(view_d);
 
-                if (object == DNGN_SECRET_DOOR)
-                    object = grid_secret_door_appearance( gc.x, gc.y );
+		ch =
+		    (!map_bounds(gc)) ? 0 
+		    : (!crawl_view.in_grid_los(gc)) ? get_envmap_char(gc.x, gc.y) 
+		    : (gc == you.pos()) ? you.symbol 
+		    : get_screen_glyph(gc.x, gc.y);
+		if (ch && !isprint(ch)) 
+		{
+		    // [ds] Evil hack time again. Peek at grid, use that character.
+		    int object = grd(gc);
+		    unsigned glych;
+		    unsigned short glycol = 0;
 
-                get_symbol( gc.x, gc.y, object, &glych, &glycol );
-                ch = glych;
-            }
-            
-            // More mangling to accommodate C strings.
-            if (!ch)
-                ch = ' ';
+		    if (object == DNGN_SECRET_DOOR)
+			object = grid_secret_door_appearance( gc.x, gc.y );
 
-            if (ch != ' ') 
-            {
-                lastnonspace = count_x;
-                lastpopline = count_y;
+		    get_symbol( gc.x, gc.y, object, &glych, &glycol );
+		    ch = glych;
+		}
+	    }
 
-                if (firstnonspace == -1 || firstnonspace > count_x)
-                    firstnonspace = count_x;
+	    // More mangling to accommodate C strings.
+	    if (!ch)
+		ch = ' ';
 
-                if (firstpopline == -1)
-                    firstpopline = count_y;
-            }
+	    if (ch != ' ') 
+	    {
+		lastnonspace = count_x;
+		lastpopline = count_y;
 
-            lines[count_y - 1] += ch;
-        }
+		if (firstnonspace == -1 || firstnonspace > count_x)
+		    firstnonspace = count_x;
+
+		if (firstpopline == -1)
+		    firstpopline = count_y;
+	    }
+
+	    lines[count_y - 1] += ch;
+	}
 
         if (lastnonspace < (int) lines[count_y - 1].length())
             lines[count_y - 1].erase(lastnonspace + 1);
@@ -4060,6 +4128,112 @@ bool view_update()
     return (false);
 }
 
+static void show_between_hex(coord_def view_d,
+	std::vector<screen_buffer_t>::pointer buf,
+	int flash_colour)
+{
+    // We use the "spare" squares between actual hexes to
+    // display supplementary information and for cosmetic
+    // purposes.
+
+    buf[0] = 0;
+    buf[1] = BLACK;
+
+    if (!Options.hex_interpolate_walls)
+	return;
+
+    // interpolation: if the hexes to the left and right are
+    // both walls, draw a wall here.
+    // TODO: make it optional
+    int LEFT = 0, RIGHT = 1;
+    int object[2] = {DNGN_UNSEEN,DNGN_UNSEEN};
+    unsigned short colour[2] = {BLACK,BLACK};
+    coord_def gc[2];
+
+    bool do_interpolation = true;
+    int special = -1;
+    for (int dir = LEFT; dir <= RIGHT; dir++)
+    {
+	gc[dir] = view2grid(view_d + coord_def((dir == LEFT ? -1 : 1), 0));
+	const coord_def ep = view2show(grid2view(gc[dir]));
+
+	if (!map_bounds(gc[dir]))
+	{
+	    do_interpolation = false;
+	    continue;
+	}
+	if (crawl_view.in_grid_los(gc[dir])
+		&& env.show(ep) != DNGN_UNSEEN)
+	{
+	    object[dir] = env.show(ep);
+	    colour[dir] = env.show_col(ep);
+	    if (object[dir] == DNGN_SECRET_DOOR)
+		object[dir] = grid_secret_door_appearance(gc[dir].x,
+			gc[dir].y);
+	}
+	else
+	{
+	    object[dir] = env.map(gc[dir]).object;
+	    colour[dir] = DARKGREY;
+	}
+	if ( object[dir] == DNGN_UNSEEN ||
+		!grid_is_solid( static_cast<dungeon_feature_type>
+		    (object[dir])))
+	{
+	    do_interpolation = false;
+	    continue;
+	}
+	if ( object[dir] == DNGN_CLOSED_DOOR ||
+		object[dir] == DNGN_ORCISH_IDOL ||
+		object[dir] > DNGN_MINSEE)
+	{
+	    // we treat these specially - we don't interpolate between two
+	    // such, but do interpolate a wall between one such and a wall.
+	    // e.g. '# + #' -> '##+##', but '+ + +' -> '+ + +'
+	    if (special != -1)
+	    {
+		do_interpolation = false;
+		continue;
+	    }
+	    else
+		special = dir;
+	}
+    }
+    if (do_interpolation)
+    {
+	int copy_dir;
+	if (special != -1)
+	    copy_dir = 1-special; // other direction
+	else
+	    copy_dir = object[RIGHT] > object[LEFT];
+
+	const coord_def ep =
+	    view2show(grid2view(gc[copy_dir]));
+	if (crawl_view.in_grid_los(gc[copy_dir])
+		&& env.show(ep) != DNGN_UNSEEN)
+	{
+	    unsigned ch;
+	    get_symbol( gc[copy_dir].x, gc[copy_dir].y, object[copy_dir], &ch,
+		    &colour[copy_dir] );
+	    buf[0] = ch;
+	}
+	else
+	    buf[0] = get_envmap_char( gc[copy_dir].x, gc[copy_dir].y );
+
+	if (!flash_colour)
+	    buf[1] = colour[copy_dir];
+	else
+	{
+	    // alter colour if flashing the characters vision
+	    buf[1] =
+		see_grid(gc[copy_dir].x, gc[copy_dir].y)?
+		real_colour(flash_colour) : DARKGREY;
+	}
+
+	return;
+    }
+}    
+
 //---------------------------------------------------------------
 //
 // viewwindow -- now unified and rolled into a single pass
@@ -4077,8 +4251,9 @@ void viewwindow(bool draw_it, bool do_updates)
     screen_buffer_t *buffy(crawl_view.vbuf);
     
     int count_x, count_y;
+    coord_def view_d;
 
-    losight( env.show, grd, you.x_pos, you.y_pos ); // must be done first
+    losight( env.show, grd, you.pos()); // must be done first
 
     env.show_col.init(LIGHTGREY);
     Show_Backup.init(0);
@@ -4105,162 +4280,170 @@ void viewwindow(bool draw_it, bool do_updates)
             for (count_x = crawl_view.viewp.x; count_x <= crawl_view.viewsz.x;
                  count_x++)
             {
-                // in grid coords
-                const coord_def gc(view2grid(coord_def(count_x, count_y)));
-                const coord_def ep = view2show(grid2view(gc));
+		view_d = coord_def(count_x, count_y);
+		if (!view2grid_valid(view_d))
+		    show_between_hex(view_d, &buffy[bufcount], flash_colour);
+		else
+		{
+		    // in grid coords
+		    const coord_def gc = view2grid(view_d);
+		    const coord_def ep = view2show(view_d);
 
-                if (Options.tutorial_left && in_bounds(gc)
-                    && crawl_view.in_grid_los(gc))
-                {
-                    const int object = env.show(ep);
-                    if (object)
-                    {
-                        if (grid_is_rock_stair(grd(gc)))
-                            learned_something_new(
-                                TUT_SEEN_ESCAPE_HATCH, gc.x, gc.y);
-                        else if (is_feature('>', gc.x, gc.y))
-                            learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
-                        else if (is_feature('_', gc.x, gc.y))
-                            learned_something_new(TUT_SEEN_ALTAR, gc.x, gc.y);
-                        else if (grd(gc) == DNGN_CLOSED_DOOR)
-                            learned_something_new(TUT_SEEN_DOOR, gc.x, gc.y);
-                        else if (grd(gc) == DNGN_ENTER_SHOP)
-                            learned_something_new(TUT_SEEN_SHOP, gc.x, gc.y);
-                    }
-                }
+		    if (Options.tutorial_left && in_bounds(gc)
+			    && crawl_view.in_grid_los(gc))
+		    {
+			const int object = env.show(ep);
+			if (object)
+			{
+			    if (grid_is_rock_stair(grd(gc)))
+				learned_something_new(
+					TUT_SEEN_ESCAPE_HATCH, gc.x, gc.y);
+			    if (is_feature('>', gc.x, gc.y))
+				learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
+			    else if (is_feature('_', gc.x, gc.y))
+				learned_something_new(TUT_SEEN_ALTAR, gc.x, gc.y);
+			    else if (grd(gc) == DNGN_CLOSED_DOOR
+				    && see_grid( gc.x, gc.y ))
+				learned_something_new(TUT_SEEN_DOOR, gc.x, gc.y);
+			    else if (grd(gc) == DNGN_ENTER_SHOP
+				    && see_grid( gc.x, gc.y ))
+				learned_something_new(TUT_SEEN_SHOP, gc.x, gc.y);
+			}
+		    }
 
-                // order is important here
-                if (!map_bounds(gc))
-                {
-                    // off the map
-                    buffy[bufcount] = 0;
-                    buffy[bufcount + 1] = DARKGREY;
-                }
-                else if (!crawl_view.in_grid_los(gc))
-                {
-                    // outside the env.show area
-                    buffy[bufcount] = get_envmap_char( gc.x, gc.y );
-                    buffy[bufcount + 1] = DARKGREY;
+		    // order is important here
+		    if (!map_bounds(gc))
+		    {
+			// off the map
+			buffy[bufcount] = 0;
+			buffy[bufcount + 1] = DARKGREY;
+		    }
+		    else if (!crawl_view.in_grid_los(gc))
+		    {
+			// outside the env.show area
+			buffy[bufcount] = get_envmap_char( gc.x, gc.y );
+			buffy[bufcount + 1] = DARKGREY;
 
-                    if (Options.colour_map)
-                        buffy[bufcount + 1] = 
-                            colour_code_map(gc.x, gc.y, Options.item_colour);
-                }
-                else if (gc == you.pos())
-                {
-                    int             object = env.show(ep);
-                    unsigned short  colour = env.show_col(ep);
-                    unsigned        ch;
-                    get_symbol( gc.x, gc.y, object, &ch, &colour );
+			if (Options.colour_map)
+			    buffy[bufcount + 1] = 
+				colour_code_map(gc.x, gc.y, Options.item_colour);
+		    }
+		    else if (gc == you.pos())
+		    {
+			int             object = env.show(ep);
+			unsigned short  colour = env.show_col(ep);
+			unsigned        ch;
+			get_symbol( gc.x, gc.y, object, &ch, &colour );
 
-                    if (map)
-                    {
-                        set_envmap_glyph( gc.x, gc.y, object, colour );
-                        set_terrain_seen( gc.x, gc.y );
-                        set_envmap_detected_mons(gc.x, gc.y, false);
-                        set_envmap_detected_item(gc.x, gc.y, false);
-                    }
+			if (map)
+			{
+			    set_envmap_glyph( gc.x, gc.y, object, colour );
+			    set_terrain_seen( gc.x, gc.y );
+			    set_envmap_detected_mons(gc.x, gc.y, false);
+			    set_envmap_detected_item(gc.x, gc.y, false);
+			}
 
-                    // player overrides everything in cell
-                    buffy[bufcount] = you.symbol;
-                    buffy[bufcount + 1] = you.colour;
+			// player overrides everything in cell
+			buffy[bufcount] = you.symbol;
+			buffy[bufcount + 1] = you.colour;
 
-                    if (player_is_swimming())
-                    {
-                        if (grd(gc) == DNGN_DEEP_WATER)
-                            buffy[bufcount + 1] = BLUE;
-                        else 
-                            buffy[bufcount + 1] = CYAN;
-                    }
-                }
-                else
-                {
-                    int             object = env.show(ep);
-                    unsigned short  colour = env.show_col(ep);
-                    unsigned        ch;
+			if (player_is_swimming())
+			{
+			    if (grd(gc) == DNGN_DEEP_WATER)
+				buffy[bufcount + 1] = BLUE;
+			    else 
+				buffy[bufcount + 1] = CYAN;
+			}
+		    }
+		    else
+		    {
+			int             object = env.show(ep);
+			unsigned short  colour = env.show_col(ep);
+			unsigned        ch;
 
-                    if (object == DNGN_SECRET_DOOR)
-                        object = grid_secret_door_appearance( gc.x, gc.y );
+			if (object == DNGN_SECRET_DOOR)
+			    object = grid_secret_door_appearance( gc.x, gc.y );
 
-                    get_symbol( gc.x, gc.y, object, &ch, &colour );
+			get_symbol( gc.x, gc.y, object, &ch, &colour );
 
-                    buffy[bufcount] = ch;
-                    buffy[bufcount + 1] = colour;
+			buffy[bufcount] = ch;
+			buffy[bufcount + 1] = colour;
 
-                    if (map)
-                    {
-                        // This section is very tricky because it 
-                        // duplicates the old code (which was horrid).
-                        
-                        // if the grid is in LoS env.show was set and
-                        // we set the buffer already, so...
-                        if (buffy[bufcount] != 0)
-                        {
-                            // ... map that we've seen this
-                            set_envmap_glyph( gc.x, gc.y, object, colour );
-                            set_terrain_seen( gc.x, gc.y );
-                            set_envmap_detected_mons(gc.x, gc.y, false);
-                            set_envmap_detected_item(gc.x, gc.y, false);
-                        }
+			if (map)
+			{
+			    // This section is very tricky because it 
+			    // duplicates the old code (which was horrid).
 
-                        // Check if we're looking to clean_map...
-                        // but don't touch the buffer to clean it, 
-                        // instead we modify the env.map itself so
-                        // that the map stays clean as it moves out
-                        // of the env.show radius.
-                        //
-                        // Note: show_backup is 0 on every square which
-                        // is inside the env.show radius and doesn't
-                        // have a monster or cloud on it, and is equal
-                        // to the grid before monsters and clouds were
-                        // added otherwise.
-                        if (Options.clean_map 
-                            && Show_Backup(ep)
-                            && is_terrain_seen( gc.x, gc.y ))
-                        {
-                            get_symbol( gc.x, gc.y,
-                                        Show_Backup(ep), &ch, &colour );
-                            set_envmap_glyph( gc.x, gc.y, Show_Backup(ep),
-                                              colour );
-                        }
+			    // if the grid is in LoS env.show was set and
+			    // we set the buffer already, so...
+			    if (buffy[bufcount] != 0)
+			    {
+				// ... map that we've seen this
+				set_envmap_glyph( gc.x, gc.y, object, colour );
+				set_terrain_seen( gc.x, gc.y );
+				set_envmap_detected_mons(gc.x, gc.y, false);
+				set_envmap_detected_item(gc.x, gc.y, false);
+			    }
 
-                        // Now we get to filling in both the unseen 
-                        // grids in the env.show radius area as 
-                        // well doing the clean_map.  The clean_map
-                        // is done by having the env.map set to the
-                        // backup character above, and down here we
-                        // procede to override that character if it's
-                        // out of LoS!  If it wasn't, buffy would have
-                        // already been set (but we'd still have 
-                        // clobbered env.map... which is important
-                        // to do for when we move away from the area!)
-                        if (buffy[bufcount] == 0)
-                        {
-                            // show map
-                            buffy[bufcount] = get_envmap_char( gc.x, gc.y );
-                            buffy[bufcount + 1] = DARKGREY;
+			    // Check if we're looking to clean_map...
+			    // but don't touch the buffer to clean it, 
+			    // instead we modify the env.map itself so
+			    // that the map stays clean as it moves out
+			    // of the env.show radius.
+			    //
+			    // Note: show_backup is 0 on every square which
+			    // is inside the env.show radius and doesn't
+			    // have a monster or cloud on it, and is equal
+			    // to the grid before monsters and clouds were
+			    // added otherwise.
+			    if (Options.clean_map 
+				    && Show_Backup(ep)
+				    && is_terrain_seen( gc.x, gc.y ))
+			    {
+				get_symbol( gc.x, gc.y,
+					Show_Backup(ep), &ch, &colour );
+				set_envmap_glyph( gc.x, gc.y, Show_Backup(ep),
+					colour );
+			    }
 
-                            if (Options.colour_map)
-                                buffy[bufcount + 1] = 
-                                    colour_code_map(gc.x, gc.y,
-                                                    Options.item_colour);
-                        }
-                    }
-                }
-                
-                // alter colour if flashing the characters vision
-                if (flash_colour && buffy[bufcount])
-                    buffy[bufcount + 1] =
-                        see_grid(gc.x, gc.y)?
-                        real_colour(flash_colour) : DARKGREY;
+			    // Now we get to filling in both the unseen 
+			    // grids in the env.show radius area as 
+			    // well doing the clean_map.  The clean_map
+			    // is done by having the env.map set to the
+			    // backup character above, and down here we
+			    // procede to override that character if it's
+			    // out of LoS!  If it wasn't, buffy would have
+			    // already been set (but we'd still have 
+			    // clobbered env.map... which is important
+			    // to do for when we move away from the area!)
+			    if (buffy[bufcount] == 0)
+			    {
+				// show map
+				buffy[bufcount] = get_envmap_char( gc.x, gc.y );
+				buffy[bufcount + 1] = DARKGREY;
 
-                bufcount += 2;
-            }
-        }
+				if (Options.colour_map)
+				    buffy[bufcount + 1] = 
+					colour_code_map(gc.x, gc.y,
+						Options.item_colour);
+			    }
+			}
+		    }
 
-        // Leaving it this way because short flashes can occur in long ones,
-        // and this simply works without requiring a stack.
-        you.flash_colour = BLACK;
+		    // alter colour if flashing the characters vision
+		    if (flash_colour && buffy[bufcount])
+			buffy[bufcount + 1] =
+			    see_grid(gc.x, gc.y)?
+			    real_colour(flash_colour) : DARKGREY;
+
+		}
+		bufcount += 2;
+	    }
+	}
+
+	// Leaving it this way because short flashes can occur in long ones,
+	// and this simply works without requiring a stack.
+	you.flash_colour = BLACK;
 
         // avoiding unneeded draws when running
         if (draw)
@@ -4306,7 +4489,7 @@ crawl_view_geometry::crawl_view_geometry()
       hudp(40, 1), hudsz(41, 17),
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       vbuf(), vgrdc(), viewhalfsz(), glos1(), glos2(),
-      vlos1(), vlos2(), mousep(), last_player_pos()
+      mousep(), last_player_pos()
 {
 }
 
@@ -4315,59 +4498,70 @@ void crawl_view_geometry::init_view()
     set_player_at(you.pos(), true);
 }
 
-void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
+void crawl_view_geometry::set_player_at(const hexcoord &c, bool centre)
 {
-    if (centre)
+    // [hex] XXX: we don't support locking just one of x or y
+    if (centre || Options.view_lock_x || Options.view_lock_y)
     {
         vgrdc = c;
     }
     else
     {
-        const coord_def oldc = vgrdc;
+        const hexcoord oldc = vgrdc;
         const int xmarg =
-            Options.scroll_margin_x + LOS_RADIUS <= viewhalfsz.x
+            Options.scroll_margin_x + 2*LOS_RADIUS <= viewhalfsz.x
             ? Options.scroll_margin_x
-            : viewhalfsz.x - LOS_RADIUS;
+            : viewhalfsz.x - 2*LOS_RADIUS;
         const int ymarg =
             Options.scroll_margin_y + LOS_RADIUS <= viewhalfsz.y
             ? Options.scroll_margin_y
             : viewhalfsz.y - LOS_RADIUS;
-        
-        if (Options.view_lock_x)
-            vgrdc.x = c.x;
-        else if (c.x - LOS_RADIUS < vgrdc.x - viewhalfsz.x + xmarg)
-            vgrdc.x = c.x - LOS_RADIUS + viewhalfsz.x - xmarg;
-        else if (c.x + LOS_RADIUS > vgrdc.x + viewhalfsz.x - xmarg)
-            vgrdc.x = c.x + LOS_RADIUS - viewhalfsz.x + xmarg;
 
-        if (Options.view_lock_y)
-            vgrdc.y = c.y;
-        else if (c.y - LOS_RADIUS < vgrdc.y - viewhalfsz.y + ymarg)
-            vgrdc.y = c.y - LOS_RADIUS + viewhalfsz.y - ymarg;
-        else if (c.y + LOS_RADIUS > vgrdc.y + viewhalfsz.y - ymarg)
-            vgrdc.y = c.y + LOS_RADIUS - viewhalfsz.y + ymarg;
+	const hexdir d = c - vgrdc;
+	const int dx = hex2screen(d).x;
+	const int dy = hex2screen(d).y;
+	
+	const int leftdiff = (-viewhalfsz.x + xmarg) - (dx - 2*LOS_RADIUS);
+	const int rightdiff = (dx + 2*LOS_RADIUS) - (viewhalfsz.x - xmarg);
+	if (leftdiff > 0)
+	    vgrdc -= hexdir::u * (leftdiff/2);
+	else if (rightdiff > 0)
+            vgrdc += hexdir::u * (rightdiff/2);
+
+	const int topdiff = (-viewhalfsz.y + ymarg) - (dy - LOS_RADIUS);
+	const int bottomdiff = (dy + LOS_RADIUS) - (viewhalfsz.y - ymarg);
+	if ((topdiff > 0 || bottomdiff > 0))
+	{
+	    if (Options.symmetric_scroll &&
+		    (c - last_player_pos).abs() == 1)
+	    {
+		// special handling for one-hex moves which cause us to scroll
+		// vertically: scroll in the direction of the movement
+		vgrdc += c - last_player_pos;
+	    }
+	    else
+	    {
+		if (topdiff > 0)
+		{
+		    vgrdc -= (hexdir::w - hexdir::v) * (topdiff/2);
+		    if (topdiff % 2 == 1)
+			vgrdc += (dx <= 0 ? hexdir::v : -hexdir::w);
+		}
+		else // (bottomdiff > 0)
+		{
+		    vgrdc += (hexdir::w - hexdir::v) * (bottomdiff/2);
+		    if (bottomdiff % 2 == 1)
+			vgrdc -= (dx >= 0 ? hexdir::v : -hexdir::w);
+		}
+	    }
+	}
 
         if (vgrdc != oldc && Options.center_on_scroll)
             vgrdc = c;
-
-        if (!Options.center_on_scroll && Options.symmetric_scroll
-            && !Options.view_lock_x
-            && !Options.view_lock_y
-            && (c - last_player_pos).abs() == 2
-            && (vgrdc - oldc).abs() == 1)
-        {
-            const coord_def dp = c - last_player_pos;
-            const coord_def dc = vgrdc - oldc;
-            if ((dc.x == dp.x) != (dc.y == dp.y))
-                vgrdc = oldc + dp;
-        }
     }
 
-    glos1 = c - coord_def(LOS_RADIUS, LOS_RADIUS);
-    glos2 = c + coord_def(LOS_RADIUS, LOS_RADIUS);
-
-    vlos1 = glos1 - vgrdc + view_centre();
-    vlos2 = glos2 - vgrdc + view_centre();
+    glos1 = c.tosquare() - coord_def(LOS_RADIUS, LOS_RADIUS);
+    glos2 = c.tosquare() + coord_def(LOS_RADIUS, LOS_RADIUS);
 
     last_player_pos = c;
 }

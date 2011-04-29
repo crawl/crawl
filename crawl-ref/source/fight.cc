@@ -3,7 +3,9 @@
  *  Summary:    Functions used during combat.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-10-29 13:09:38 +0100 (Mon, 29 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -824,7 +826,7 @@ bool melee_attack::player_aux_unarmed()
             
         make_hungry(2, true);
 
-        alert_nearby_monsters();
+        alert_nearby_monsters(40);
 
         // XXX We're clobbering did_hit
         did_hit = false;
@@ -1227,9 +1229,9 @@ int melee_attack::player_stab(int damage)
     else
     {
         stab_bonus = 0;
-        // ok.. if you didn't backstab, you wake up the neighborhood.
+        // ok.. if you didn't backstab, you alert the neighborhood.
         // I can live with that.
-        alert_nearby_monsters();
+        alert_nearby_monsters(40);
     }
 
     if (stab_bonus)
@@ -3562,6 +3564,12 @@ void monster_attack(int monster_attacking)
 
     melee_attack attk(attacker, &you);
     attk.attack();
+
+    if (attacker->behaviour == BEH_WANDER && player_monster_visible(attacker))
+    {
+	// If a monster wanders into you, it notices you!
+	behaviour_event( attacker, ME_ALERT, MHITYOU );
+    }
 }                               // end monster_attack()
 
 bool monsters_fight(int monster_attacking, int monster_attacked)

@@ -3,7 +3,9 @@
  *  Summary:    Traps related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-11-07 15:27:25 +0100 (Wed, 07 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -405,10 +407,12 @@ void disarm_trap( struct dist &disa )
 
     int i, j;
 
+    const hexcoord dispos = you.pos() + disa.dir;
+
     for (i = 0; i < MAX_TRAPS; i++)
     {
-        if (env.trap[i].x == you.x_pos + disa.dx
-            && env.trap[i].y == you.y_pos + disa.dy)
+        if (env.trap[i].x == dispos.x
+            && env.trap[i].y == dispos.y)
         {
             break;
         }
@@ -459,8 +463,8 @@ void disarm_trap( struct dist &disa )
 
     struct bolt beam;
 
-    beam.target_x = you.x_pos + disa.dx;
-    beam.target_y = you.y_pos + disa.dy;
+    beam.target_x = dispos.x;
+    beam.target_y = dispos.y;
 
     if (env.trap[i].type == TRAP_NET)
         trap_item( OBJ_MISSILES, MI_THROWING_NET, beam.target_x, beam.target_y );
@@ -475,7 +479,7 @@ void disarm_trap( struct dist &disa )
         }
     }
 
-    grd[you.x_pos + disa.dx][you.y_pos + disa.dy] = DNGN_FLOOR;
+    grd(dispos) = DNGN_FLOOR;
     env.trap[i].type = TRAP_UNASSIGNED;
     you.turn_is_over = true;
 

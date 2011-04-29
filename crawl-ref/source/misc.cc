@@ -3,7 +3,9 @@
  *  Summary:    Misc functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-11-04 21:49:46 +0100 (Sun, 04 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -162,50 +164,50 @@ void search_around( bool only_adjacent )
     if ( max_dist < 1 )
         max_dist = 1;
 
-    for ( int srx = you.x_pos - max_dist; srx <= you.x_pos + max_dist; ++srx )
+    hexdir::disc h(max_dist);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for ( int sry=you.y_pos - max_dist; sry<=you.y_pos + max_dist; ++sry )
-        {
-            if ( see_grid(srx,sry) ) // must have LOS
-            {
-                // maybe we want distance() instead of grid_distance()?
-                int dist = grid_distance(srx, sry, you.x_pos, you.y_pos);
+	const hexcoord sr = you.pos() + *it;
 
-                // don't exclude own square; may be levitating
-                if (dist == 0)
-                    ++dist;
-                
-                // making this harsher by removing the old +1
-                int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
-                
-                if (grd[srx][sry] == DNGN_SECRET_DOOR &&
-                    random2(17) <= effective)
-                {
-                    grd[srx][sry] = DNGN_CLOSED_DOOR;
-                    mpr("You found a secret door!");
-                    exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
-                }
+	if ( see_grid(sr) ) // must have LOS
+	{
+	    // maybe we want distance() instead of grid_distance()?
+	    int dist = (*it).rdist();
 
-                if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP &&
-                    random2(17) <= effective)
-                {
-                    i = trap_at_xy(srx, sry);
-                    
-                    if (i != -1)
-                    {
-                        grd[srx][sry] = trap_category(env.trap[i].type);
-                        mpr("You found a trap!");
-                    }
-                    else
-                    {
-                        // Maybe we shouldn't kill the trap for debugging
-                        // purposes - oh well.
-                        grd[srx][sry] = DNGN_FLOOR;
-                        mpr("You found a buggy trap! It vanishes!");
-                    }
-                }
-            }
-        }
+	    // don't exclude own square; may be levitating
+	    if (dist == 0)
+		++dist;
+
+	    // making this harsher by removing the old +1
+	    int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
+
+	    if (grd(sr) == DNGN_SECRET_DOOR &&
+		    random2(17) <= effective)
+	    {
+		grd(sr) = DNGN_CLOSED_DOOR;
+		mpr("You found a secret door!");
+		exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
+	    }
+
+	    if (grd(sr) == DNGN_UNDISCOVERED_TRAP &&
+		    random2(17) <= effective)
+	    {
+		i = trap_at_xy(sr.x, sr.y);
+
+		if (i != -1)
+		{
+		    grd(sr) = trap_category(env.trap[i].type);
+		    mpr("You found a trap!");
+		}
+		else
+		{
+		    // Maybe we shouldn't kill the trap for debugging
+		    // purposes - oh well.
+		    grd(sr) = DNGN_FLOOR;
+		    mpr("You found a buggy trap! It vanishes!");
+		}
+	    }
+	}
     }
 
     return;
@@ -1594,21 +1596,20 @@ coord_def pick_adjacent_free_square(int x, int y)
 {
     int num_ok = 0;
     coord_def result(-1, -1);
-    for ( int ux = x-1; ux <= x+1; ++ux )
-    {
-        for ( int uy = y-1; uy <= y+1; ++uy )
-        {
-            if ( ux == x && uy == y )
-                continue;
 
-            if ( ux >= 0 && ux < GXM && uy >= 0 && uy < GYM &&
-                 grd[ux][uy] == DNGN_FLOOR && mgrd[ux][uy] == NON_MONSTER )
-            {
-                ++num_ok;
-                if ( one_chance_in(num_ok) )
-                    result.set(ux, uy);
-            }
-        }
+    hexcoord t;
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
+    {
+	t = hexcoord(x,y) + *it;
+
+	if ( in_G_bounds(t) &&
+		grd(t) == DNGN_FLOOR && mgrd(t) == NON_MONSTER )
+	{
+	    ++num_ok;
+	    if ( one_chance_in(num_ok) )
+		result.set(t.x, t.y);
+	}
     }
     return result;
 }

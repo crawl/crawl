@@ -3,6 +3,8 @@
  *  Summary:    General dungeon events.
  *  
  *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-07-20T11:40:25.964128Z $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *  
  */
 

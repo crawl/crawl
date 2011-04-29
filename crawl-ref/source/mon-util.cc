@@ -3,7 +3,9 @@
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-11-19 01:59:06 +0100 (Mon, 19 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -2356,9 +2358,15 @@ void monsters::init_with(const monsters &mon)
         ghost.reset(NULL);
 }
 
-coord_def monsters::pos() const
+hexcoord monsters::pos() const
 {
-    return coord_def(x, y);
+    return hexcoord(x,y);
+}
+
+void monsters::set_pos(const hexcoord hc)
+{
+    x = hc.x;
+    y = hc.y;
 }
 
 bool monsters::swimming() const
@@ -3530,25 +3538,13 @@ bool monsters::check_set_valid_home(const coord_def &place,
     return (true);
 }
 
-bool monsters::find_home_around(const coord_def &c, int radius)
+bool monsters::find_home_around(const hexcoord &c, int radius)
 {
     coord_def place(-1, -1);
     int nvalid = 0;
-    for (int yi = -radius; yi <= radius; ++yi)
-    {
-        const coord_def c1(c.x - radius, c.y + yi);
-        const coord_def c2(c.x + radius, c.y + yi);
-        check_set_valid_home(c1, place, nvalid);
-        check_set_valid_home(c2, place, nvalid);
-    }
-
-    for (int xi = -radius + 1; xi < radius; ++xi)
-    {
-        const coord_def c1(c.x + xi, c.y - radius);
-        const coord_def c2(c.x + xi, c.y + radius);
-        check_set_valid_home(c1, place, nvalid);
-        check_set_valid_home(c2, place, nvalid);
-    }
+    hexdir::circle circ(radius);
+    for (hexdir::circle::iterator it = circ.begin(); it != circ.end(); it++)
+        check_set_valid_home(c + *it, place, nvalid);
 
     if (nvalid)
     {

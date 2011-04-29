@@ -3,7 +3,9 @@
  *  Summary:    Functions used when building new levels.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-26 18:02:15 +0200 (Fri, 26 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -41,6 +43,7 @@
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
+#include "hexdungeon.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -142,17 +145,10 @@ static void prepare_shoals( int level_number );
 static void prepare_water( int level_number );
 static void check_doors();
 static void hide_doors();
-static void make_trail(int xs, int xr, int ys, int yr,int corrlength,
-                       int intersect_chance,
-                       int no_corr, dungeon_feature_type begin,
-                       dungeon_feature_type end=DNGN_UNSEEN);
-static bool make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel);
 static void place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
                        unsigned char pool_y1, unsigned char pool_x2,
                        unsigned char pool_y2);
 static void many_pools(dungeon_feature_type pool_type);
-static bool join_the_dots(const coord_def &from, const coord_def &to,
-                          unsigned mmask, bool early_exit = false);
 static bool join_the_dots_rigorous(const coord_def &from,
                                    const coord_def &to,
                                    unsigned mapmask,
@@ -164,11 +160,10 @@ static void build_lake(dungeon_feature_type lake_type); //mv
 static void spotty_level(bool seeded, int iterations, bool boxy);
 static void bigger_room();
 static void plan_main(int level_number, int force_plan);
-static char plan_1();
+static char plan_1(int level_number);
 static char plan_2();
 static char plan_3();
-static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
-                   char forbid_y2, dungeon_feature_type force_wall);
+static char plan_4(dgn_region forbid, dungeon_feature_type force_wall);
 static char plan_5();
 static char plan_6(int level_number);
 static bool octa_room(spec_room &sr, int oblique_max,
@@ -177,6 +172,8 @@ static void bazaar_level(int level_number);
 static void labyrinth_level(int level_number);
 static void box_room(int bx1, int bx2, int by1, int by2,
                      dungeon_feature_type wall_type);
+static void hexregion_room(const dgn_region& region,
+	dungeon_feature_type wall_type);
 static int box_room_doors( int bx1, int bx2, int by1, int by2, int new_doors);
 static void city_level(int level_number);
 static void diamond_rooms(int level_number);
@@ -191,6 +188,7 @@ static object_class_type item_in_shop(unsigned char shop_type);
 static bool treasure_area(int level_number, unsigned char ta1_x,
                           unsigned char ta2_x, unsigned char ta1_y,
                           unsigned char ta2_y);
+static bool treasure_region(const dgn_region& region, int level_number);
 static void big_room(int level_number);
 static void chequerboard(spec_room &sr, dungeon_feature_type target,
                          dungeon_feature_type floor1,
@@ -403,15 +401,17 @@ static void dgn_register_vault(const map_def &map)
     }
 }
 
-static inline bool dgn_grid_is_passable(dungeon_feature_type grid)
+static inline bool dgn_grid_is_passable(dungeon_feature_type grid,
+	bool easily=false)
 {
     // Rock wall check is superfluous, but is the most common case.
     return !(grid == DNGN_ROCK_WALL
              || (grid_is_solid(grid) && grid != DNGN_CLOSED_DOOR
-                 && grid != DNGN_SECRET_DOOR));
+                 && grid != DNGN_SECRET_DOOR)
+	     && !(easily && (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)));
 }
 
-static inline bool dgn_square_is_passable(const coord_def &c)
+static inline bool dgn_square_is_passable(const hexcoord &c)
 {
     return (!(dgn_map_mask(c) & MMT_OPAQUE) && dgn_grid_is_passable(grd(c)));
 }
@@ -420,26 +420,33 @@ static inline void dgn_point_record_stub(const coord_def &) { }
 
 template <class point_record>
 static void dgn_fill_zone(
-    const coord_def &c, int zone, point_record &prec,
-    bool (*passable)(const coord_def &) = dgn_square_is_passable)
+    const hexcoord &p, int zone, point_record &prec,
+    bool (*passable)(const hexcoord &) = dgn_square_is_passable)
 {
     // No bounds checks, assuming the level has at least one layer of
     // rock border.
-    travel_point_distance[c.x][c.y] = zone;
-    for (int yi = -1; yi <= 1; ++yi)
+    // [hex]: inserting bounds check to catch bugs (though I think I've
+    // now squished the only such bug)
+    if (!in_bounds(p))
     {
-        for (int xi = -1; xi <= 1; ++xi)
-        {
-            if (!xi && !yi)
-                continue;
+#ifdef DEBUG_DIAGNOSTICS
+	mprf(MSGCH_WARN, "dgn_fill_zone went out of bounds: (%d,%d,%d)",
+		p.X,p.Y,p.Z);
+#endif
+	return;
+    }
 
-            const coord_def cp(c.x + xi, c.y + yi);
-            if (travel_point_distance[cp.x][cp.y] || !passable(cp))
-                continue;
+    travel_point_distance[p.x][p.y] = zone;
+    
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
+    {
+	const hexcoord t = p + *it;
+	if (travel_point_distance[t.x][t.y] || !passable(t))
+	    continue;
 
-            prec(cp);
-            dgn_fill_zone(cp, zone, prec);
-        }
+	prec(t);
+	dgn_fill_zone(t, zone, prec);
     }
 }
 
@@ -481,10 +488,10 @@ static int dgn_count_disconnected_zones()
         for (int x = 0; x < GXM; ++x)
         {
             if (travel_point_distance[x][y]
-                || !dgn_square_is_passable(coord_def(x, y)))
+                || !dgn_square_is_passable(hexcoord(x, y)))
                 continue;
 
-            dgn_fill_zone(coord_def(x, y), ++nzones, dgn_point_record_stub);
+            dgn_fill_zone(hexcoord(x, y), ++nzones, dgn_point_record_stub);
         }
     }
 
@@ -517,10 +524,16 @@ static void fixup_pandemonium_stairs()
 
 static void mask_vault(const vault_placement &place, unsigned mask)
 {
-    for (int y = place.pos.y + place.size.y - 1; y >= place.pos.y; --y)
-        for (int x = place.pos.x + place.size.x - 1; x >= place.pos.x; --x)
-            if (place.map.in_map(coord_def(x - place.pos.x, y - place.pos.y)))
-                dgn_map_mask[x][y] |= mask;
+    const dgn_region reg = place;
+    hexcoord t;
+    for ( dgn_region::contents_iterator it = reg.begin_contents();
+	    it != reg.end_contents();
+	    it++ )
+    {
+	t = reg.pos_in(*it);
+	if (place.map.in_map(*it))
+	    dgn_map_mask(t) |= mask;
+    }
 }
 
 static void register_place(const vault_placement &place)
@@ -633,6 +646,11 @@ static void reset_level()
 static void build_layout_skeleton(int level_number, int level_type,
                                   spec_room &sr)
 {
+#if DEBUG
+    //plan_main(level_number, 6);
+    //return;
+#endif
+
     builder_rc_type skip_build = builder_by_type(level_number, level_type);
 
     if (skip_build == BUILD_QUIT)       // quit immediately
@@ -979,21 +997,28 @@ static void check_doors()
             if (grd[x][y] != DNGN_CLOSED_DOOR)
                 continue;
 
-            int solid_count = 0;
+	    bool found_frame = false;
 
-            if (grid_is_solid( grd[x - 1][y] ))
-                solid_count++;
+	    hexcoord t(x,y);
+	    hexdir::circle c(1);
+	    // look for configuration
+	    //   #          *  
+	    //  * + #  or  # + #
+	    //   * *        * *
+	    for (hexdir::circle::iterator it = c.begin();
+		    it != c.end(); it++)
+	    {
+		if (grid_is_solid(grd(t + *it))
+			&& (!grid_is_solid(grd(t + (*it).rotated(1))))
+			&& (grid_is_solid(grd(t + (*it).rotated(2))) ||
+			    grid_is_solid(grd(t - *it)))) 
+		{
+		    found_frame = true;
+		    break;
+		}
+	    }
 
-            if (grid_is_solid( grd[x + 1][y] ))
-                solid_count++;
-
-            if (grid_is_solid( grd[x][y - 1] ))
-                solid_count++;
-
-            if (grid_is_solid( grd[x][y + 1] ))
-                solid_count++;
-
-            grd[x][y] = ((solid_count < 2) ? DNGN_FLOOR : DNGN_CLOSED_DOOR);
+            grd(t) = (found_frame ? DNGN_CLOSED_DOOR : DNGN_FLOOR);
         }
     }
 }                               // end check_doors()
@@ -1013,17 +1038,14 @@ static void hide_doors()
             {
                 wall_count = 0;
 
-                if (grd[dx - 1][dy] == DNGN_ROCK_WALL)
-                    wall_count++;
-
-                if (grd[dx + 1][dy] == DNGN_ROCK_WALL)
-                    wall_count++;
-
-                if (grd[dx][dy - 1] == DNGN_ROCK_WALL)
-                    wall_count++;
-
-                if (grd[dx][dy + 1] == DNGN_ROCK_WALL)
-                    wall_count++;
+		hexcoord t(dx,dy);
+		hexdir::circle c(1);
+		for (hexdir::circle::iterator it = c.begin(); it != c.end();
+			it++)
+		{
+		    if (grd(t + *it) == DNGN_ROCK_WALL)
+			wall_count++;
+		}
 
                 // if door is attached to more than one wall, hide it {dlb}:
                 if (wall_count > 1)
@@ -1163,6 +1185,13 @@ static void prepare_shoals(int level_number)
     // water, but this is much cooler. Right?
     const int margin = 6;
 
+    // [hex] I haven't messed with this algorithm at all; it works pretty well
+    // as it is.
+    // But since I've upped GXM and GYM, to avoid stupidly huge levels I set
+    // bounds manually:
+    const int max_x = 80;
+    const int max_y = 70;
+
     const bool at_bottom = (your_branch().depth == player_branch_depth());
 
     int num_islands = player_branch_depth() + 1;
@@ -1175,8 +1204,8 @@ static void prepare_shoals(int level_number)
     int num_tries = 0;
     coord_def centres[10];
     do {
-        for (int x = margin; x < GXM-margin; ++x)
-            for (int y = margin; y < GYM-margin; ++y)
+        for (int x = margin; x < max_x-margin; ++x)
+            for (int y = margin; y < max_y-margin; ++y)
                 grd[x][y] = DNGN_DEEP_WATER;
         place_base_islands(margin, num_islands, estradius, centres);
     } while ( ++num_tries < 100 &&
@@ -1188,8 +1217,8 @@ static void prepare_shoals(int level_number)
     
     // Adding shallow water at deep water adjacent to floor.
     // Randomisation: place shallow water if at least 1d(1d3) floor neighbours
-    for ( int i = margin; i < GXM - margin; ++i)
-        for ( int j = margin; j < GYM - margin; ++j)
+    for ( int i = margin; i < max_x - margin; ++i)
+        for ( int j = margin; j < max_y - margin; ++j)
             if (grd[i][j] == DNGN_DEEP_WATER &&
                 count_neighbours(i, j, DNGN_FLOOR) > random2(random2(3)+1))
                 grd[i][j] = DNGN_SHALLOW_WATER;
@@ -1199,8 +1228,8 @@ static void prepare_shoals(int level_number)
     {
         int xsize = 3+random2(3);  // random rectangle
         int ysize = 3+random2(3);  
-        int xb = random2(GXM - 2 * margin - 10) + margin + 2;
-        int yb = random2(GYM - 2 * margin - 10) + margin + 2;
+        int xb = random2(max_x - 2 * margin - 10) + margin + 2;
+        int yb = random2(max_y - 2 * margin - 10) + margin + 2;
 
         bool ok_place = true;
         for ( int i = xb; i < xb + xsize; ++i )
@@ -1222,14 +1251,14 @@ static void prepare_shoals(int level_number)
     // LAVA is a placeholder for cells which will become shallow water
     // at the end of the current iteration.
     // WATER_STUCK is a placeholder for last iteration's generated water.
-    replace_in_grid(margin, margin, GXM-margin, GYM-margin,
+    replace_in_grid(margin, margin, max_x-margin, max_y-margin,
                     DNGN_SHALLOW_WATER, DNGN_WATER_STUCK);
 
     for ( int iteration = 0; iteration < 6; ++iteration )
     {
-        for ( int x = margin; x < GXM - margin; ++x )
+        for ( int x = margin; x < max_x - margin; ++x )
         {
-            for ( int y = margin; y < GYM - margin; ++y )
+            for ( int y = margin; y < max_y - margin; ++y )
             {
                 if ( grd[x][y] == DNGN_DEEP_WATER )
                 {
@@ -1239,10 +1268,10 @@ static void prepare_shoals(int level_number)
                 }
             }
         }
-        replace_in_grid(margin, margin, GXM-margin, GYM-margin,
+        replace_in_grid(margin, margin, max_x-margin, max_y-margin,
                         DNGN_LAVA, DNGN_WATER_STUCK);
     }
-    replace_in_grid(margin, margin, GXM-margin, GYM-margin,
+    replace_in_grid(margin, margin, max_x-margin, max_y-margin,
                     DNGN_WATER_STUCK, DNGN_SHALLOW_WATER);
 
     if ( at_bottom )
@@ -1280,16 +1309,16 @@ static void prepare_shoals(int level_number)
         {
             int x, y;
             do {
-                x = random2(GXM);
-                y = random2(GYM);
+                x = random2(max_x);
+                y = random2(max_y);
             } while ( grd[x][y] != DNGN_FLOOR );
             grd[x][y] =
                 static_cast<dungeon_feature_type>(
                     DNGN_STONE_STAIRS_DOWN_I + i );
             
             do {
-                x = random2(GXM);
-                y = random2(GYM);
+                x = random2(max_x);
+                y = random2(max_y);
             } while ( grd[x][y] != DNGN_FLOOR );
             grd[x][y] =
                 static_cast<dungeon_feature_type>(
@@ -1302,30 +1331,30 @@ static void prepare_swamp()
 {
     const int margin = 10;
 
-    for (int i = margin; i < (GXM - margin); i++)
+    hexdir::disc h(GRAD-margin);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (int j = margin; j < (GYM - margin); j++)
-        {
-            // doors -> floors {dlb}
-            if (grd[i][j] == DNGN_CLOSED_DOOR || grd[i][j] == DNGN_SECRET_DOOR)
-                grd[i][j] = DNGN_FLOOR;
+	const hexcoord t = hexcoord::centre + *it;
 
-            // floors -> shallow water 1 in 3 times {dlb}
-            if (grd[i][j] == DNGN_FLOOR && one_chance_in(3))
-                grd[i][j] = DNGN_SHALLOW_WATER;
+	// doors -> floors {dlb}
+	if (grd(t) == DNGN_CLOSED_DOOR || grd(t) == DNGN_SECRET_DOOR)
+	    grd(t) = DNGN_FLOOR;
 
-            // walls -> deep/shallow water or remain unchanged {dlb}
-            if (grd[i][j] == DNGN_ROCK_WALL)
-            {
-                const int temp_rand = random2(6);
+	// floors -> shallow water 1 in 3 times {dlb}
+	if (grd(t) == DNGN_FLOOR && one_chance_in(3))
+	    grd(t) = DNGN_SHALLOW_WATER;
 
-                if (temp_rand > 0)      // 17% chance unchanged {dlb}
-                {
-                    grd[i][j] = ((temp_rand > 2) ? DNGN_SHALLOW_WATER // 50%
-                                                 : DNGN_DEEP_WATER);  // 33%
-                }
-            }
-        }
+	// walls -> deep/shallow water or remain unchanged {dlb}
+	if (grd(t) == DNGN_ROCK_WALL)
+	{
+	    const int temp_rand = random2(6);
+
+	    if (temp_rand > 0)      // 17% chance unchanged {dlb}
+	    {
+		grd(t) = ((temp_rand > 2) ? DNGN_SHALLOW_WATER // 50%
+			: DNGN_DEEP_WATER);  // 33%
+	    }
+	}
     }
 }                               // end prepare_swamp()
 
@@ -1333,7 +1362,7 @@ static void prepare_swamp()
 // shallow. Checks each water space.
 static void prepare_water( int level_number )
 {
-    int i, j, k, l;             // loop variables {dlb}
+    int i, j;			// loop variables {dlb}
     unsigned char which_grid;   // code compaction {dlb}
 
     for (i = 10; i < (GXM - 10); i++)
@@ -1345,28 +1374,25 @@ static void prepare_water( int level_number )
             
             if (grd[i][j] == DNGN_DEEP_WATER)
             {
-                for (k = -1; k < 2; k++)
-                {
-                    for (l = -1; l < 2; l++)
-                    {
-                        if (k != 0 || l != 0)
-                        {
-                            which_grid = grd[i + k][j + l];
-
-                            // must come first {dlb}
-                            if (which_grid == DNGN_SHALLOW_WATER
-                                && one_chance_in( 8 + level_number ))  
-                            {
-                                grd[i][j] = DNGN_SHALLOW_WATER;
-                            }
-                            else if (which_grid >= DNGN_FLOOR
-                                     && random2(100) < 80 - level_number * 4)
-                            {
-                                grd[i][j] = DNGN_SHALLOW_WATER;
-                            }
-                        }
-                    }
-                }
+		const hexcoord centre(i,j);
+		hexdir::circle c(1);
+		for (hexdir::circle::iterator it = c.begin(); it != c.end();
+			it++)
+		{
+		    const hexcoord t = centre + *it;
+		    which_grid = grd(t);
+		    // must come first {dlb}
+		    if (which_grid == DNGN_SHALLOW_WATER
+			    && one_chance_in( 8 + level_number ))  
+		    {
+			grd(t) = DNGN_SHALLOW_WATER;
+		    }
+		    else if (which_grid >= DNGN_FLOOR
+			    && random2(100) < 80 - level_number * 4)
+		    {
+			grd(t) = DNGN_SHALLOW_WATER;
+		    }
+		}
             }
         }
     }
@@ -1655,13 +1681,25 @@ static builder_rc_type builder_by_branch(int level_number)
     switch (you.where_are_you)
     {
     case BRANCH_LAIR:
-        if (!one_chance_in(3))
-            break;
-    case BRANCH_HIVE:
+        if (one_chance_in(3))
+	{
+	    dissolved_cavern(level_number);
+	    return BUILD_SKIP;
+	}
+	break;
     case BRANCH_SLIME_PITS:
+    case BRANCH_HIVE:
+	if (!one_chance_in(3))
+	    dissolved_cavern(level_number);
+	else
+	    spotty_level(false, 125 + random2(625), false);
+	return BUILD_SKIP;
     case BRANCH_ORCISH_MINES:
-        spotty_level(false, 100 + random2(500), false);
-        return BUILD_SKIP;
+	if (one_chance_in(3))
+	    dissolved_cavern(level_number, true); // without water features
+	else
+	    spotty_level(false, 125 + random2(625), false);
+	return BUILD_SKIP;
 
     default:
         break;
@@ -1803,7 +1841,8 @@ static builder_rc_type builder_normal(int level_number, char level_type,
         skipped = true;
 
     //V was 3
-    if (!skipped && one_chance_in(7))
+    // [hex] disabling roguey_levels - not really hexifiable
+    if (false && !skipped && one_chance_in(7))
     {
         // sometimes roguey_levels generate a special room
         roguey_level(level_number, sr);
@@ -1832,97 +1871,17 @@ static builder_rc_type builder_normal(int level_number, char level_type,
 // returns 1 if we should skip extras(), otherwise 0
 static builder_rc_type builder_basic(int level_number)
 {
-    int temp_rand;
-    int doorlevel = random2(11);
-    int corrlength = 2 + random2(14);
-    int roomsize = 4 + random2(5) + random2(6);
-    int no_corr = (one_chance_in(100) ? 500 + random2(500) : 30 + random2(200));
-    int intersect_chance = (one_chance_in(20) ? 400 : random2(20));
 
-    make_trail( 35, 30, 35, 20, corrlength, intersect_chance, no_corr,
-                DNGN_STONE_STAIRS_DOWN_I, DNGN_STONE_STAIRS_UP_I );
+    builder_basic_hex_trails(level_number);
 
-    make_trail( 10, 15, 10, 15, corrlength, intersect_chance, no_corr,
-                DNGN_STONE_STAIRS_DOWN_II, DNGN_STONE_STAIRS_UP_II );
-
-    make_trail(50,20,10,15,corrlength,intersect_chance,no_corr,
-        DNGN_STONE_STAIRS_DOWN_III, DNGN_STONE_STAIRS_UP_III);
-
-    if (one_chance_in(4))
-    {
-        make_trail( 10, 20, 40, 20, corrlength, intersect_chance, no_corr,
-                    DNGN_ROCK_STAIRS_DOWN );
-    }
-
-    if (one_chance_in(4))
-    {
-        make_trail( 50, 20, 40, 20, corrlength, intersect_chance, no_corr,
-                    DNGN_ROCK_STAIRS_UP );
-    }
-
-
+    // [hex] leaving these in, though they work with square coordinates, for a
+    // bit of variety. They look OK in small numbers.
     if (level_number > 1 && one_chance_in(16))
         big_room(level_number);
-
     if (random2(level_number) > 6 && one_chance_in(3))
         diamond_rooms(level_number);
 
-    // make some rooms:
-    int i, no_rooms, max_doors;
-    int sx,sy,ex,ey, time_run;
-
-    temp_rand = random2(750);
-    time_run = 0;
-
-    no_rooms = ((temp_rand > 63) ? (5 + random2avg(29, 2)) : // 91.47% {dlb}
-                (temp_rand > 14) ? 100                       //  6.53% {dlb}
-                                 : 1);                       //  2.00% {dlb}
-
-    max_doors = 2 + random2(8);
-
-    for (i = 0; i < no_rooms; i++)
-    {
-        sx = 8 + random2(50);
-        sy = 8 + random2(40);
-        ex = sx + 2 + random2(roomsize);
-        ey = sy + 2 + random2(roomsize);
-
-        if (!make_room(sx,sy,ex,ey,max_doors, doorlevel))
-        {
-            time_run++;
-            i--;
-        }
-
-        if (time_run > 30)
-        {
-            time_run = 0;
-            i++;
-        }
-    }
-
-    // make some more rooms:
-    no_rooms = 1 + random2(3);
-    max_doors = 1;
-
-    for (i = 0; i < no_rooms; i++)
-    {
-        sx = 8 + random2(55);
-        sy = 8 + random2(45);
-        ex = sx + 5 + random2(6);
-        ey = sy + 5 + random2(6);
-
-        if (!make_room(sx,sy,ex,ey,max_doors, doorlevel))
-        {
-            time_run++;
-            i--;
-        }
-
-        if (time_run > 30)
-        {
-            time_run = 0;
-            i++;
-        }
-    }
+    builder_basic_hex_rooms(level_number);
 
     return BUILD_CONTINUE;
 }
@@ -2157,267 +2116,6 @@ static void place_branch_entrances(int dlevel, char level_type)
     }
 }
 
-static void make_trail(int xs, int xr, int ys, int yr, int corrlength, 
-                       int intersect_chance, int no_corr,
-                       dungeon_feature_type begin, 
-                       dungeon_feature_type end)
-{
-    int x_start, y_start;                   // begin point
-    int x_ps, y_ps;                         // end point
-    int finish = 0;
-    int length = 0;
-    int temp_rand;
-
-    // temp positions
-    int dir_x = 0;
-    int dir_y = 0;       
-    int dir_x2, dir_y2; 
-
-    do
-    {
-        x_start = xs + random2(xr);
-        y_start = ys + random2(yr);
-    }
-    while (grd[x_start][y_start] != DNGN_ROCK_WALL
-                && grd[x_start][y_start] != DNGN_FLOOR);
-
-    // assign begin feature
-    if (begin != DNGN_UNSEEN)
-        grd[x_start][y_start] = begin;
-    x_ps = x_start;
-    y_ps = y_start;
-
-    // wander
-    do                          // (while finish < no_corr)
-    {
-        dir_x2 = ((x_ps < 15) ? 1 : 0);
-
-        if (x_ps > 65)
-            dir_x2 = -1;
-
-        dir_y2 = ((y_ps < 15) ? 1 : 0);
-
-        if (y_ps > 55)
-            dir_y2 = -1;
-
-        temp_rand = random2(10);
-
-        // Put something in to make it go to parts of map it isn't in now
-        if (coinflip())
-        {
-            if (dir_x2 != 0 && temp_rand < 6)
-                dir_x = dir_x2;
-
-            if (dir_x2 == 0 || temp_rand >= 6)
-                dir_x = (coinflip()? -1 : 1);
-
-            dir_y = 0;
-        }
-        else
-        {
-            if (dir_y2 != 0 && temp_rand < 6)
-                dir_y = dir_y2;
-
-            if (dir_y2 == 0 || temp_rand >= 6)
-                dir_y = (coinflip()? -1 : 1);
-
-            dir_x = 0;
-        }
-
-        if (dir_x == 0 && dir_y == 0)
-            continue;
-
-        if (x_ps < 8)
-        {
-            dir_x = 1;
-            dir_y = 0;
-        }
-
-        if (y_ps < 8)
-        {
-            dir_y = 1;
-            dir_x = 0;
-        }
-
-        if (x_ps > (GXM - 8))
-        {
-            dir_x = -1;
-            dir_y = 0;
-        }
-
-        if (y_ps > (GYM - 8))
-        {
-            dir_y = -1;
-            dir_x = 0;
-        }
-
-        // corridor length.. change only when going vertical?
-        if (dir_x == 0 || length == 0)
-            length = random2(corrlength) + 2;
-
-        int bi = 0;
-
-        for (bi = 0; bi < length; bi++)
-        {
-            // Below, I've changed the values of the unimportant variable from
-            // 0 to random2(3) - 1 to avoid getting stuck on the "stuck!" bit
-            if (x_ps < 9)
-            {
-                dir_y = 0;      //random2(3) - 1;
-                dir_x = 1;
-            }
-
-            if (x_ps > (GXM - 9))
-            {
-                dir_y = 0;      //random2(3) - 1;
-                dir_x = -1;
-            }
-
-            if (y_ps < 9)
-            {
-                dir_y = 1;
-                dir_x = 0;      //random2(3) - 1;
-            }
-
-            if (y_ps > (GYM - 9))
-            {
-                dir_y = -1;
-                dir_x = 0;      //random2(3) - 1;
-            }
-
-            // don't interfere with special rooms
-            if (grd[x_ps + dir_x][y_ps + dir_y] == DNGN_BUILDER_SPECIAL_WALL)
-                break;
-
-            // see if we stop due to intersection with another corridor/room
-            if (grd[x_ps + 2 * dir_x][y_ps + 2 * dir_y] == DNGN_FLOOR
-                && !one_chance_in(intersect_chance))
-                break;
-
-            x_ps += dir_x;
-            y_ps += dir_y;
-
-            if (grd[x_ps][y_ps] == DNGN_ROCK_WALL)
-                grd[x_ps][y_ps] = DNGN_FLOOR;
-        }
-
-        if (finish == no_corr - 1 && grd[x_ps][y_ps] != DNGN_FLOOR)
-            finish -= 2;
-
-        finish++;
-    }
-    while (finish < no_corr);
-
-    // assign end feature
-    if (end != DNGN_UNSEEN)
-        grd[x_ps][y_ps] = end;
-}
-
-static int good_door_spot(int x, int y)
-{
-    if ((!grid_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM)
-        || grd[x][y] == DNGN_CLOSED_DOOR)
-    {
-        return 1;
-    }
-
-    return 0;
-}
-
-// return TRUE if a room was made successfully
-static bool make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
-{
-    int find_door = 0;
-    int diag_door = 0;
-    int rx,ry;
-
-    // check top & bottom for possible doors
-    for (rx = sx; rx <= ex; rx++)
-    {
-        find_door += good_door_spot(rx,sy);
-        find_door += good_door_spot(rx,ey);
-    }
-
-    // check left and right for possible doors
-    for (ry = sy+1; ry < ey; ry++)
-    {
-        find_door += good_door_spot(sx,ry);
-        find_door += good_door_spot(ex,ry);
-    }
-
-    diag_door += good_door_spot(sx,sy);
-    diag_door += good_door_spot(ex,sy);
-    diag_door += good_door_spot(sx,ey);
-    diag_door += good_door_spot(ex,ey);
-
-    if ((diag_door + find_door) > 1 && max_doors == 1)
-        return false;
-
-    if (find_door == 0 || find_door > max_doors)
-        return false;
-
-    // look for 'special' rock walls - don't interrupt them
-    if (find_in_area(sx,sy,ex,ey,DNGN_BUILDER_SPECIAL_WALL))
-        return false;
-
-    // convert the area to floor
-    for (rx=sx; rx<=ex; rx++)
-    {
-        for(ry=sy; ry<=ey; ry++)
-        {
-            if (grd[rx][ry] <= DNGN_FLOOR)
-                grd[rx][ry] = DNGN_FLOOR;
-        }
-    }
-
-    // put some doors on the sides (but not in corners),
-    // where it makes sense to do so.
-    for(ry=sy+1; ry<ey; ry++)
-    {
-        // left side
-        if (grd[sx-1][ry] == DNGN_FLOOR
-            && grid_is_solid(grd[sx-1][ry-1])
-            && grid_is_solid(grd[sx-1][ry+1]))
-        {
-            if (random2(10) < doorlevel)
-                grd[sx-1][ry] = DNGN_CLOSED_DOOR;
-        }
-
-        // right side
-        if (grd[ex+1][ry] == DNGN_FLOOR
-            && grid_is_solid(grd[ex+1][ry-1])
-            && grid_is_solid(grd[ex+1][ry+1]))
-        {
-            if (random2(10) < doorlevel)
-                grd[ex+1][ry] = DNGN_CLOSED_DOOR;
-        }
-    }
-
-    // put some doors on the top & bottom
-    for(rx=sx+1; rx<ex; rx++)
-    {
-        // top
-        if (grd[rx][sy-1] == DNGN_FLOOR
-            && grid_is_solid(grd[rx-1][sy-1])
-            && grid_is_solid(grd[rx+1][sy-1]))
-        {
-            if (random2(10) < doorlevel)
-                grd[rx][sy-1] = DNGN_CLOSED_DOOR;
-        }
-
-        // bottom
-        if (grd[rx][ey+1] == DNGN_FLOOR
-            && grid_is_solid(grd[rx-1][ey+1])
-            && grid_is_solid(grd[rx+1][ey+1]))
-        {
-            if (random2(10) < doorlevel)
-                grd[rx][ey+1] = DNGN_CLOSED_DOOR;
-        }
-    }
-
-    return true;
-}                               //end make_room()
-
 static int pick_unique(int lev)
 {
     int which_unique =
@@ -2483,8 +2181,10 @@ static int place_uniques(int level_number, char level_type)
                            PROX_ANYWHERE, 250, 0, MMT_NO_MONS ))
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Placed %s",
-                 menv[not_used].name(DESC_NOCAP_A).c_str());
+	    // [hex] this was giving ASSERTion errors, so I've commented it
+	    // out
+            //mprf(MSGCH_DIAGNOSTICS, "Placed %s",
+                 //menv[not_used].name(DESC_NOCAP_A).c_str());
 #endif
             ++num_placed;
         }
@@ -3085,7 +2785,75 @@ static void beehive(spec_room &sr)
     mons_place( MONS_QUEEN_BEE, BEH_SLEEP, MHITNOT, true, queenx, queeny );
 }                               // end beehive()
 
-static bool safe_minivault_place(int v1x, int v1y,
+static void post_diamondification(const dgn_region &reg)
+{
+    if (reg.diamond_rot == -1)
+	return;
+
+    // Futzing:
+    // Diamondification maps
+    // #.    ->     # .
+    // .#          . #
+    // causing unwanted disconnections.
+    // We fix this in the only way we can: hackily.
+    // We turn one of the walls into floor, and hope this doesn't connect
+    // areas which weren't meant to be connected. To reduce the chance of
+    // that, in a situation like
+    // .###        . # # #
+    // ##.#  ->   # # . #
+    // #.##      # . # #
+    // ####     # # # #
+    // we turn the SE '#' into a '.' rather than the NW one.
+    //
+    // (note: actually these pictures aren't accurate, because y increases
+    // downwards. But they're clearer than the accurate pictures.)
+
+    ASSERT(reg.sZ == 0 && reg.eZ == 0);
+
+    for (int x = 0; x < reg.size.x; x++)
+    {
+	for ( int y = 0; y < reg.size.y; y++ )
+	{
+	    // we do two checks - one looking for entirely unpassable
+	    // obstacles (like walls), and a second which also counts deep
+	    // water and lava as "unpassable".
+	    for ( int easily = 0; easily < 2; easily++)
+	    {
+		if (x>0 && y>0
+			&& dgn_grid_is_passable(grd(reg.pos_in(x,y)),
+				easily==1) &&
+			!dgn_grid_is_passable(grd(reg.pos_in(x-1,y)),
+				easily==1) &&
+			!dgn_grid_is_passable(grd(reg.pos_in(x,y-1)),
+				easily==1) &&
+			dgn_grid_is_passable(grd(reg.pos_in(x-1,y-1)),
+				easily==1))
+		{
+		    const bool open1 = (y + 1 < reg.size.y && x > 1
+			    && dgn_grid_is_passable(grd(reg.pos_in(x-2,y+1)),
+				    easily==1));
+		    const bool open2 = (x + 1 < reg.size.x && y > 1
+			    && dgn_grid_is_passable(grd(reg.pos_in(x+1,y-2)),
+				    easily==1));
+		    const dungeon_feature_type fill_grid = coinflip() ?
+			grd(reg.pos_in(x,y)) :
+			grd(reg.pos_in(x-1,y-1));
+
+		    if (open1 && !open2)
+			grd(reg.pos_in(x,y-1)) = fill_grid;
+		    else if (open2 && !open1)
+			grd(reg.pos_in(x-1,y)) = fill_grid;
+		    else if (coinflip())
+			grd(reg.pos_in(x,y-1)) = fill_grid;
+		    else
+			grd(reg.pos_in(x-1,y)) = fill_grid;
+		}
+	    }
+	}
+    }
+}
+
+static bool safe_minivault_place(const hexcoord v,
                                  const vault_placement &place,
                                  bool clobber)
 {
@@ -3094,62 +2862,65 @@ static bool safe_minivault_place(int v1x, int v1y,
     
     const bool water_ok = place.map.has_tag("water_ok");
     const std::vector<std::string> &lines = place.map.map.get_lines();
-    for (int vx = v1x; vx < v1x + place.size.x; vx++)
+    const dgn_region reg = place;
+    for ( dgn_region::contents_iterator it = reg.begin_contents();
+	    it != reg.end_contents();
+	    it++ )
     {
-        for (int vy = v1y; vy < v1y + place.size.y; vy++)
-        {
-            if (lines[vy - v1y][vx - v1x] == ' ')
-                continue;
+	if (lines[(*it).y][(*it).x] == ' ')
+	    continue;
 
-            if (dgn_map_mask[vx][vy])
-                return (false);
+	hexcoord t = reg.pos_in(*it) + (v - reg.pos_in(0,0));
+	if (dgn_map_mask(t))
+	    return (false);
 
-            const dungeon_feature_type dfeat = grd[vx][vy];
+	const dungeon_feature_type dfeat = grd(t);
 
-            if ((dfeat != DNGN_FLOOR
-                 && dfeat != DNGN_ROCK_WALL
-                 && dfeat != DNGN_CLOSED_DOOR
-                 && dfeat != DNGN_SECRET_DOOR
-                 && (!water_ok
-                     || (dfeat != DNGN_DEEP_WATER
-                         && dfeat != DNGN_SHALLOW_WATER)))
-                || igrd[vx][vy] != NON_ITEM
-                || mgrd[vx][vy] != NON_MONSTER)
-            {
-                return (false);
-            }
-        }
+	if ((dfeat != DNGN_FLOOR
+		    && dfeat != DNGN_ROCK_WALL
+		    && dfeat != DNGN_CLOSED_DOOR
+		    && dfeat != DNGN_SECRET_DOOR
+		    && (!water_ok
+			|| (dfeat != DNGN_DEEP_WATER
+			    && dfeat != DNGN_SHALLOW_WATER)))
+		|| igrd(t) != NON_ITEM
+		|| mgrd(t) != NON_MONSTER)
+	{
+	    return (false);
+	}
     }
     return (true);
 }
 
-static bool connected_minivault_place(int v1x, int v1y,
+static bool connected_minivault_place(const hexcoord &v,
                                       const vault_placement &place)
 {
     /* must not be completely isolated: */
     const bool water_ok = place.map.has_tag("water_ok");
     const std::vector<std::string> &lines = place.map.map.get_lines();
-    for (int vx = v1x; vx < v1x + place.size.x; vx++)
+    const dgn_region reg = place;
+    for ( dgn_region::contents_iterator it = reg.begin_contents();
+	    it != reg.end_contents();
+	    it++ )
     {
-        for (int vy = v1y; vy < v1y + place.size.y; vy++)
-        {
-            if (lines[vy - v1y][vx - v1x] == ' ')
-                continue;
-            
-            if (grd[vx][vy] == DNGN_FLOOR
-                || grd[vx][vy] == DNGN_CLOSED_DOOR
-                || grd[vx][vy] == DNGN_SECRET_DOOR
-                || (water_ok
-                    && (grd[vx][vy] == DNGN_SHALLOW_WATER ||
-                        grd[vx][vy] == DNGN_DEEP_WATER)))
-                return (true);
-        }
+	if (lines[(*it).y][(*it).x] == ' ')
+	    continue;
+
+	hexcoord t = reg.pos_in(*it) + (v - reg.pos_in(0,0));
+
+	if (grd(t) == DNGN_FLOOR
+		|| grd(t) == DNGN_CLOSED_DOOR
+		|| grd(t) == DNGN_SECRET_DOOR
+		|| (water_ok
+		    && (grd(t) == DNGN_SHALLOW_WATER ||
+			grd(t) == DNGN_DEEP_WATER)))
+	    return (true);
     }
     return (false);
 }
 
 static bool find_minivault_place(const vault_placement &place,
-                                 int &v1x, int &v1y, bool clobber)
+                                 hexcoord &v, bool clobber)
 {
     // [ds] The margin around the edges of the map where the minivault
     // won't be placed. Purely arbitrary as far as I can see.
@@ -3158,13 +2929,13 @@ static bool find_minivault_place(const vault_placement &place,
     /* find a target area which can be safely overwritten: */
     for (int tries = 0; tries < 600; ++tries)
     {
-        v1x = random_range( margin, GXM - margin - place.size.x );
-        v1y = random_range( margin, GYM - margin - place.size.y );
+	v = hexcoord::centre + random_hex(GRAD - margin -
+		(place.size.x + place.size.y));
 
-        if (!safe_minivault_place( v1x, v1y, place, clobber ))
+        if (!safe_minivault_place( v, place, clobber ))
             continue;
 
-        if (connected_minivault_place(v1x, v1y, place))
+        if (connected_minivault_place(v, place))
             return (true);
     }
     return (false);
@@ -3196,19 +2967,24 @@ static bool build_minivaults(int level_number, int force_vault,
     vault_placement place;
     vault_main(vgrid, place, force_vault);
 
-    int v1x, v1y;
+    // [hex]: make a copy of the orig place before clobbering its position...
+    vault_placement vaultplace = place;
 
     if (in_bounds(where)) // not map_bounds, minivaults should never touch edge
     {
-        coord_def tl(where - place.size / 2);
-        fit_region_into_map_bounds(tl, place.size);
-        v1x = tl.x;
-        v1y = tl.y;
+	// 'where' is the centre
+	dgn_region reg = place;
+	hexcoord pos = reg.pos_in(-place.size/2);
+        fit_region_into_map_bounds(pos, place.size, place.diamond_rot);
+	place.pos = pos;
     }
-    else if (!find_minivault_place(place, v1x, v1y, clobber))
-        return (false);
-
-    place.pos = coord_def(v1x, v1y);
+    else 
+    {
+	hexcoord v;
+	if (!find_minivault_place(place, v, clobber))
+	    return (false);
+	place.pos = v;
+    }
 
     level_vaults.push_back(place);
 
@@ -3225,42 +3001,44 @@ static bool build_minivaults(int level_number, int force_vault,
     std::vector<coord_def> &target_connections = place.exits;
     
     // paint the minivault onto the grid
-    for (int vx = v1x; vx < v1x + place.size.x; vx++)
+    const dgn_region reg = place;
+    for ( dgn_region::contents_iterator it = reg.begin_contents();
+	    it != reg.end_contents();
+	    it++ )
     {
-        for (int vy = v1y; vy < v1y + place.size.y; vy++)
-        {
-            const int feat = vgrid[vy - v1y][vx - v1x];
-            if (feat == ' ')
-                continue;
-            const dungeon_feature_type oldgrid = grd[vx][vy];
-            altar_count = vault_grid( place,
-                                      level_number, vx, vy,
-                                      altar_count,
-                                      acq_item_class,
-                                      feat, target_connections,
-                                      num_runes );
-            if (!building_level)
-            {
-                link_items();
-                const dungeon_feature_type newgrid = grd[vx][vy];
-                grd[vx][vy] = oldgrid;
-                dungeon_terrain_changed(coord_def(vx, vy),
-                                        newgrid,
-                                        true, true);
-                env.markers.remove_markers_at(coord_def(vx, vy), MAT_ANY);
-            }
-        }
+	hexcoord vaultp = static_cast<dgn_region>(vaultplace).pos_in(*it);
+	hexcoord t = reg.pos_in(*it);
+	const int feat = vgrid[vaultp.y][vaultp.x];
+	if (feat == ' ')
+	    continue;
+	const dungeon_feature_type oldgrid = grd(t);
+	altar_count = vault_grid( place,
+		level_number, t.x, t.y, altar_count, 
+		acq_item_class,
+		feat, target_connections, 
+		num_runes );
+	if (!building_level)
+	{
+	    link_items();
+	    const dungeon_feature_type newgrid = grd(t);
+	    grd(t) = oldgrid;
+	    dungeon_terrain_changed(t, newgrid,
+		    true, true);
+	    env.markers.remove_markers_at(t, MAT_ANY);
+	}
     }
 
-    place.map.map.apply_overlays(coord_def(v1x, v1y));
+    post_diamondification(place);
+
+    place.map.map.apply_overlays(place);    
 
     if (!make_no_exits)
     {
-        if (target_connections.empty() && place.map.has_tag("mini_float"))
-            pick_float_exits(place, target_connections);
-        
-        if (!target_connections.empty())
-            connect_vault(place);
+	if (target_connections.empty() && place.map.has_tag("mini_float"))
+	    pick_float_exits(place, target_connections);
+
+	if (!target_connections.empty())
+	    connect_vault(place);
     }
 
     return (true);
@@ -3268,16 +3046,19 @@ static bool build_minivaults(int level_number, int force_vault,
 
 static void build_rooms(const dgn_region_list &excluded,
                         const std::vector<coord_def> &connections_needed,
-                        int nrooms)
+                        int nrooms, int force_shape = 0)
 {
     int which_room = 0;
     const bool exclusive = !one_chance_in(10);
+    int dX,dY,dZ,Zp;
 
-    // Where did this magic number come from?
-    const int maxrooms = 30;
+    const int maxrooms = 150;
     dgn_region rom[maxrooms];
 
     std::vector<coord_def> connections = connections_needed;
+
+    const dgn_region dgn_bounds_hex =
+	dgn_region::perfect_hex(hexcoord::centre, GRAD-(MAPGEN_BORDER+1));
 
     for (int i = 0; i < nrooms; i++)
     {
@@ -3286,12 +3067,67 @@ static void build_rooms(const dgn_region_list &excluded,
         int overlap_tries = 200;
         do
         {
-            myroom.size.set(3 + random2(8), 3 + random2(8));
-            myroom.pos.set(
-                random_range(MAPGEN_BORDER,
-                             GXM - MAPGEN_BORDER - 1 - myroom.size.x),
-                random_range(MAPGEN_BORDER,
-                             GYM - MAPGEN_BORDER - 1 - myroom.size.y));
+	    if (force_shape == 1)
+	    {
+		// square
+		int width = 3 + random2(8);
+		int height = 3 + random2(8);
+		myroom.size.set(width, height);
+		myroom.diamond_rot = -1;
+		myroom.sZ = 0; myroom.eZ = 0;
+		coord_def tc;
+		do
+		{
+		    tc = coord_def(hexcoord::centre + random_hex( GRAD-(MAPGEN_BORDER+1)));
+		} while (  !in_hex_G_bounds( tc + coord_def(width,0),
+			    MAPGEN_BORDER+1 )
+			|| !in_hex_G_bounds( tc + coord_def(0, height),
+			    MAPGEN_BORDER+1 )
+			|| !in_hex_G_bounds( tc + coord_def(width, height),
+				MAPGEN_BORDER+1 ) );
+		myroom.pos = tc;
+	    }
+	    else
+	    {
+		if (force_shape == 2 ||
+			( force_shape == 4 && coinflip() ))
+		{
+		    // perfect hex
+		    int rad = 1+random2(6);
+		    dX = rad*2;
+		    dY = rad*2;
+		    dZ = rad*2;
+		    Zp = -rad*3;
+		}
+		else if (force_shape == 3 || force_shape == 4)
+		{
+		    // perfect triangle
+		    int side = 2 + random2(10);
+		    dX = side;
+		    dY = side;
+		    dZ = side;
+		    Zp = -side;
+		}
+		else
+		{
+		    // random hex
+		    // see builder_basic() for reasoning
+		    dX = 2 + random2(12);
+
+		    dY = 2 + random2(12);
+
+		    dZ = (random2( dX+dY ) / 2);
+		    if (dZ < 2)
+			dZ = 2;
+
+		    Zp = -random2(dX+dY) - dZ/2;
+		}
+		do
+		{
+		    myroom = dgn_region( dgn_bounds_hex.random_point(), dX+1,
+			    dY+1, random2(6), Zp, Zp+dZ );
+		} while (!dgn_bounds_hex.contains(myroom));
+	    }
         }
         while (myroom.overlaps(excluded, dgn_map_mask) && overlap_tries-- > 0);
 
@@ -3301,7 +3137,7 @@ static void build_rooms(const dgn_region_list &excluded,
         if (connections.size())
         {
             const coord_def c = connections[0];
-            if (join_the_dots(c, myroom.random_edge_point(), MMT_VAULT))
+            if (join_the_dots_hex(c, myroom.random_edge_point(), MMT_VAULT))
                 connections.erase( connections.begin() );
         }
         
@@ -3309,28 +3145,24 @@ static void build_rooms(const dgn_region_list &excluded,
         {
             const coord_def end = myroom.end();
             bool found_collision = false;
-            for (int cnx = myroom.pos.x - 1;
-                 cnx < end.x && !found_collision;
-                 cnx++)
-            {
-                for (int cny = myroom.pos.y - 1;
-                     cny < end.y;
-                     cny++)
-                {
-                    if (grd[cnx][cny] != DNGN_ROCK_WALL)
-                    {
-                        found_collision = true;
-                        break;
-                    }
-                }
-            }
+	    for ( dgn_region::contents_iterator it = myroom.begin_contents();
+		    it != myroom.end_contents();
+		    it++ )
+	    {
+		const hexcoord c = myroom.pos_in(*it);
+		if (grd(c) != DNGN_ROCK_WALL)
+		{
+		    found_collision = true;
+		    break;
+		}
+	    }
 
             if (found_collision)
                 continue;
         }
 
         const coord_def end = myroom.end();
-        replace_area(myroom.pos.x, myroom.pos.y, end.x, end.y,
+        replace_region(myroom,
                      DNGN_ROCK_WALL, DNGN_FLOOR);
 
         if (which_room > 0)
@@ -3348,87 +3180,36 @@ static void build_rooms(const dgn_region_list &excluded,
     }
 }
 
-static int away_from_edge(int x, int left_edge, int right_edge)
+static hexdir dig_away_dir(const vault_placement &place,
+                              const hexcoord &pos)
 {
-    if (x < left_edge)
-        return (1);
-    else if (x > right_edge)
-        return (-1);
-    else
-        return (coinflip()? 1 : -1);
-}
-
-static coord_def dig_away_dir(const vault_placement &place,
-                              const coord_def &pos)
-{
-    // Figure out which way we need to go to dig our way out of the vault.
-    bool x_edge = 
-        pos.x == place.pos.x || pos.x == place.pos.x + place.size.x - 1;
-    bool y_edge =
-        pos.y == place.pos.y || pos.y == place.pos.y + place.size.y - 1;
-
-    // Handle exits in non-rectangular areas.
-    if (!x_edge && !y_edge)
+    hexdir dir = hexdir::u;
+    const dgn_region reg = place;
+    hexdir::circle c(1, random2(6));
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
     {
-        const coord_def rel = pos - place.pos;
-        for (int yi = -1; yi <= 1; ++yi)
-            for (int xi = -1; xi <= 1; ++xi)
-            {
-                if (!xi == !yi)
-                    continue;
-
-                const coord_def mv(rel.x + xi, rel.y + yi);
-                if (!place.map.in_map(mv))
-                    return (mv - rel);
-            }
+	const coord_def mv = reg.abs_to_rel(pos + *it);
+	if (!place.map.in_map(mv))
+	    return dir;
     }
-
-    if (x_edge && y_edge)
-    {
-        if (coinflip())
-            x_edge = false;
-        else
-            y_edge = false;
-    }
-        
-    coord_def dig_dir;
-    if (x_edge)
-    {
-        if (place.size.x == 1)
-            dig_dir.x =
-                away_from_edge(pos.x,
-                               MAPGEN_BORDER * 2,
-                               GXM - MAPGEN_BORDER * 2);
-        else
-            dig_dir.x = pos.x == place.pos.x? -1 : 1;
-    }
-
-    if (y_edge)
-    {
-        if (place.size.y == 1)
-            dig_dir.y =
-                away_from_edge(pos.y,
-                               MAPGEN_BORDER * 2,
-                               GYM - MAPGEN_BORDER * 2);
-        else
-            dig_dir.y = pos.y == place.pos.y? -1 : 1;
-    }
-
-    return (dig_dir);
+#if DEBUG_DIAGNOSTICS
+    mprf( MSGCH_WARN, "dig_away_dir found no dir at (%d.%d.%d)",
+	    pos.X, pos.Y, pos.Z);
+#endif
+    // shouldn't happen
+    return random_direction();
 }
 
 static void dig_away_from(vault_placement &place, const coord_def &pos)
 {
-    coord_def dig_dir = dig_away_dir(place, pos);
-    coord_def dig_at = pos;
+    hexdir dig_dir = dig_away_dir(place, pos);
+    hexcoord dig_at = pos;
     bool dug = false;
     for (int i = 0; i < GXM; i++)
     {
         dig_at += dig_dir;
         
-        if (dig_at.x < MAPGEN_BORDER || dig_at.x > (GXM - MAPGEN_BORDER - 1)
-            || dig_at.y < MAPGEN_BORDER
-            || dig_at.y > (GYM - MAPGEN_BORDER - 1))
+	if (!in_G_bounds(dig_at, MAPGEN_BORDER))
         {
             break;
         }
@@ -3444,19 +3225,11 @@ static void dig_away_from(vault_placement &place, const coord_def &pos)
             // we're done.
             int adjacent_count = 0;
 
-            for (int yi = -1; yi <= 1; ++yi)
-            {
-                for (int xi = -1; xi <= 1; ++xi)
-                {
-                    if (!xi && !yi)
-                        continue;
-                    if (!grid_is_solid(dig_at + coord_def(xi, yi))
-                        && ++adjacent_count >= 2)
-                    {
-                        return;
-                    }
-                }
-            }
+	    hexdir::circle c(1);
+	    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
+		if (!grid_is_solid(grd(dig_at + *it))
+			&& ++adjacent_count >= 2)
+		    return;
         }
     }
 }
@@ -3471,53 +3244,60 @@ static void dig_vault_loose(
 
 static bool grid_needs_exit(int x, int y)
 {
-    return (!grid_is_solid(x, y)
+    return (in_bounds(x,y)
+	    && !grid_is_solid(x, y)
             || grd[x][y] == DNGN_CLOSED_DOOR
             || grd[x][y] == DNGN_SECRET_DOOR);
 }
-
-static bool map_grid_is_on_edge(const vault_placement &place,
-                                const coord_def &c)
+static bool grid_needs_exit(const hexcoord &p)
 {
-    for (int xi = c.x - 1; xi <= c.x + 1; ++xi)
-        for (int yi = c.y - 1; yi <= c.y + 1; ++yi)
-            if (!place.map.in_map(coord_def(xi, yi) - place.pos))
+    return grid_needs_exit(p.x, p.y);
+}
+
+// [hex] XXX: now wants relative coords, in pos_in sense
+static bool map_grid_is_on_edge(const vault_placement &place,
+	const coord_def &p)
+{
+    for (int dx = -1; dx <= 1; ++dx)
+	for (int dy = -1; dy <= 1; ++dy)
+	{
+	    if (place.diamond_rot != -1 &&
+		    dx != 0 && dx == dy)
+		continue;
+            if (!place.map.in_map(p + coord_def(dx,dy)))
                 return (true);
+	}
     return (false);
 }
 
 static void pick_internal_float_exits(const vault_placement &place,
                                       std::vector<coord_def> &exits)
 {
-    for (int y = place.pos.y + 1; y < place.pos.y + place.size.y - 1; ++y)
-        for (int x = place.pos.x + 1; x < place.pos.x + place.size.x - 1; ++x)
-            if (grid_needs_exit(x, y)
-                && map_grid_is_on_edge(place, coord_def(x, y)))
-            {
-                exits.push_back( coord_def(x, y) );
-            }
+    const dgn_region reg = place;
+    const dgn_region inner = reg.inner_region();
+    for ( dgn_region::contents_iterator it = inner.begin_contents();
+	    it != inner.end_contents();
+	    it++ )
+    {
+	if (grid_needs_exit(inner.pos_in(*it))
+		&& map_grid_is_on_edge(place, *it + coord_def(1,1)))
+	{
+	    exits.push_back( inner.pos_in(*it) );
+	}
+    }
 }
 
 static void pick_float_exits(vault_placement &place,
                              std::vector<coord_def> &targets)
 {
     std::vector<coord_def> possible_exits;
-    for (int y = place.pos.y; y < place.pos.y + place.size.y; ++y)
+    const dgn_region reg = place;
+    for ( dgn_region::perimeter_iterator it = reg.begin_perimeter();
+	    it != reg.end_perimeter();
+	    it++ )
     {
-        if (grid_needs_exit(place.pos.x, y))
-            possible_exits.push_back( coord_def(place.pos.x, y) );
-        if (grid_needs_exit(place.pos.x + place.size.x - 1, y))
-            possible_exits.push_back(
-                coord_def(place.pos.x + place.size.x - 1, y) );
-    }
-
-    for (int x = place.pos.x + 1; x < place.pos.x + place.size.x - 1; ++x)
-    {
-        if (grid_needs_exit(x, place.pos.y))
-            possible_exits.push_back( coord_def(x, place.pos.y) );
-        if (grid_needs_exit(x, place.pos.y + place.size.y - 1))
-            possible_exits.push_back(
-                coord_def(x, place.pos.y + place.size.y - 1) );
+        if (grid_needs_exit(reg.pos_in(*it)))
+            possible_exits.push_back(reg.pos_in(*it));
     }
 
     pick_internal_float_exits(place, possible_exits);
@@ -3554,7 +3334,7 @@ static std::vector<coord_def> external_connection_points(
     // one square, we improve connectibility.
     for (int i = 0, size = target_connections.size(); i < size; ++i)
     {
-        const coord_def &p = target_connections[i];
+        const hexcoord &p = target_connections[i];
         ex_connection_points.push_back(p + dig_away_dir(place, p));
     }
 
@@ -3565,10 +3345,7 @@ static coord_def find_random_grid(int grid, unsigned mask)
 {
     for (int i = 0; i < 100; ++i)
     {
-        coord_def c( random_range(MAPGEN_BORDER,
-                                  GXM - MAPGEN_BORDER - 1),
-                     random_range(MAPGEN_BORDER,
-                                  GYM - MAPGEN_BORDER - 1) );
+	hexcoord c = hexcoord::centre + random_hex(GRAD-MAPGEN_BORDER);
 
         if (unforbidden(c, mask) && grd(c) == grid)
             return c;
@@ -3587,7 +3364,7 @@ static void connect_vault(const vault_placement &vp)
         if (!floor.x && !floor.y)
             continue;
 
-        join_the_dots(p, floor, MMT_VAULT, true);
+        join_the_dots_hex(p, floor, MMT_VAULT, true);
     }
 }
 
@@ -3694,20 +3471,21 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
     // Activate any markers within the map.
     if (did_map && !generating_level)
     {
-        const vault_placement &vp = level_vaults[level_vaults.size() - 1];
-        for (int y = vp.pos.y; y < vp.pos.y + vp.size.y; ++y)
-        {
-            for (int x = vp.pos.x; x < vp.pos.x + vp.size.x; ++x)
-            {
-                std::vector<map_marker *> markers =
-                    env.markers.get_markers_at(coord_def(x, y));
-                for (int i = 0, size = markers.size(); i < size; ++i)
-                    markers[i]->activate();
+        const dgn_region &reg = level_vaults[level_vaults.size() - 1];
+	hexcoord tt;
+	for ( dgn_region::contents_iterator it = reg.begin_contents();
+		it != reg.end_contents();
+		it++ )
+	{
+	    tt = reg.pos_in(*it);
+	    std::vector<map_marker *> markers =
+		env.markers.get_markers_at(tt);
+	    for (int i = 0, size = markers.size(); i < size; ++i)
+		markers[i]->activate();
 
-                if (!see_grid(x, y))
-                    set_terrain_changed(x, y);
-            }
-        }
+	    if (!see_grid(tt))
+		set_terrain_changed(tt);
+	}
     }
 
     if (fixup)
@@ -3780,42 +3558,44 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     if (gluggy == MAP_NONE || !gluggy)
         return (false);
 
-    int vx, vy;
     int  num_runes = 0;
 
-    dgn_region this_vault(place.pos, place.size);
+    dgn_region this_vault(place.pos, place.size, place.diamond_rot);
     // note: assumes *no* previous item (I think) or monster (definitely)
     // placement
-    for (vx = place.pos.x; vx < place.pos.x + place.size.x; vx++)
+    const dgn_region reg = place;
+    for ( dgn_region::contents_iterator it = reg.begin_contents();
+	    it != reg.end_contents();
+	    it++ )
     {
-        for (vy = place.pos.y; vy < place.pos.y + place.size.y; vy++)
-        {
-            if (vgrid[vy][vx] == ' ')
-                continue;
+	hexcoord v = this_vault.pos_in(*it);
+	if (vgrid[v.y][v.x] == ' ')
+	    continue;
 
-            const dungeon_feature_type oldgrid = grd[vx][vy];
-            altar_count = vault_grid( place,
-                                      level_number, vx, vy, altar_count, 
-                                      acq_item_class,
-                                      vgrid[vy][vx],
-                                      target_connections,
-                                      num_runes,
-                                      rune_subst );
-            if (!generating_level)
-            {
-                // Have to link items each square at a time, or
-                // dungeon_terrain_changed could blow up.
-                link_items();
-                const dungeon_feature_type newgrid = grd[vx][vy];
-                grd[vx][vy] = oldgrid;
-                dungeon_terrain_changed(coord_def(vx, vy), newgrid,
-                                        true, true);
-                env.markers.remove_markers_at(coord_def(vx, vy), MAT_ANY);
-            }
-        }
+	const dungeon_feature_type oldgrid = grd(v);
+	altar_count = vault_grid( place,
+		level_number, v.x, v.y, altar_count, 
+		acq_item_class,
+		vgrid[v.y][v.x],
+		target_connections,
+		num_runes,
+		rune_subst );
+	if (!generating_level)
+	{
+	    // Have to link items each square at a time, or
+	    // dungeon_terrain_changed could blow up.
+	    link_items();
+	    const dungeon_feature_type newgrid = grd(v);
+	    grd(v) = oldgrid;
+	    dungeon_terrain_changed(v, newgrid,
+		    true, true);
+	    env.markers.remove_markers_at(v, MAT_ANY);
+	}
     }
 
-    place.map.map.apply_overlays(place.pos);
+    post_diamondification(place);
+
+    place.map.map.apply_overlays(place);
     register_place(place);
 
     if (gluggy == MAP_FLOAT && target_connections.empty())
@@ -3843,27 +3623,24 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     // kind of wallification it wants.
     const bool dis_wallify = place.map.has_tag("dis");
 
-    const int v1x = place.pos.x;
-    const int v1y = place.pos.y;
-    const int v2x = place.pos.x + place.size.x - 1;
-    const int v2y = place.pos.y + place.size.y - 1;
+    const dgn_region region = place;
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-            "Vault: (%d,%d)-(%d,%d); Dis: %s",
-            v1x, v1y, v2x, v2y,
-            dis_wallify? "yes" : "no");
+            "Vault: (%d,%d)-(%d,%d)r%d; Dis: %s",
+	    region.pos.x, region.pos.y, region.end().x, region.end().y,
+	    region.diamond_rot, dis_wallify? "yes" : "no");
 #endif
 
     if (dis_wallify)
     {
-        plan_4(v1x, v1y, v2x, v2y, DNGN_METAL_WALL);
+	plan_4(region,
+		DNGN_METAL_WALL);
     }
     else
     {
         dgn_region_list excluded_regions;
-        excluded_regions.push_back(
-            dgn_region::absolute(v1x, v1y, v2x, v2y));
+        excluded_regions.push_back(region);
 
         int nrooms = random_range(15, 90);
         
@@ -3925,8 +3702,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
                 pos_y = 10 + random2(GYM - 20);
             }
             while (grd[pos_x][pos_y] != DNGN_FLOOR
-                   || (pos_x >= v1x && pos_x <= v2x && pos_y >= v1y
-                       && pos_y <= v2y));
+                   || region.contains(coord_def(pos_x, pos_y)));
 
             grd[pos_x][pos_y] = stair;
         }
@@ -4256,9 +4032,7 @@ static int vault_grid( vault_placement &place,
     }
 
     if ((vgrid == '=' || vgrid == '+')
-        && (vx == place.pos.x || vy == place.pos.y
-            || vx == place.pos.x + place.size.x - 1
-            || vy == place.pos.y + place.size.y - 1))
+        && !(static_cast<dgn_region>(place).fully_contains(hexcoord(vx,vy))))
     {
         targets.push_back( coord_def(vx, vy) );
     }
@@ -4400,6 +4174,19 @@ static int vault_grid( vault_placement &place,
     return (altar_count);
 }                               // end vault_grid()
 
+void replace_region( const dgn_region &region, dungeon_feature_type
+	replace, dungeon_feature_type feature, unsigned mapmask )
+{
+    for ( dgn_region::contents_iterator it = region.begin_contents();
+	    it != region.end_contents();
+	    it++ )
+    {
+	const hexcoord t = region.pos_in(*it);
+	if (grd(t) == replace && unforbidden(t, mapmask))
+	    grd(t) = feature;
+    }
+}
+
 static void replace_area(
     int sx, int sy, int ex, int ey, dungeon_feature_type replace,
     dungeon_feature_type feature, unsigned mapmask)
@@ -4434,152 +4221,26 @@ struct coord_comparator
     }
 };
 
-typedef std::set<coord_def, coord_comparator> coord_set;
-
-static void jtd_init_surrounds(coord_set &coords,
-                              unsigned mapmask,
-                              const coord_def &c)
-{
-    for (int yi = -1; yi <= 1; ++yi)
-    {
-        for (int xi = -1; xi <= 1; ++xi)
-        {
-            if (!xi == !yi)
-                continue;
-            const coord_def cx(c.x + xi, c.y + yi);
-            if (!in_bounds(cx) || travel_point_distance[cx.x][cx.y]
-                || !unforbidden(cx, mapmask))
-            {
-                continue;
-            }
-            coords.insert(cx);
-
-            travel_point_distance[cx.x][cx.y] = (-xi + 2) * 4 + (-yi + 2);
-        }
-    }
-}
-
-static bool join_the_dots_pathfind(coord_set &coords,
-                                   const coord_def &from,
-                                   const coord_def &to,
-                                   unsigned mapmask,
-                                   bool early_exit)
-{
-    coord_def curr = from;
-    while (true)
-    {
-        int &tpd = travel_point_distance[curr.x][curr.y];
-        tpd = !tpd? -1000 : -tpd;
-        
-        if (curr == to)
-            break;
-        
-        jtd_init_surrounds(coords, mapmask, curr);
-
-        if (coords.empty())
-            break;
-        
-        curr = *coords.begin();
-        coords.erase(coords.begin());
-    }
-
-    if (curr != to)
-        return (false);
-
-    while (curr != from)
-    {
-        if (unforbidden(curr, mapmask))
-            grd(curr) = DNGN_FLOOR;
-        const int dist = travel_point_distance[curr.x][curr.y];
-        ASSERT(dist < 0 && dist != -1000);
-        curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
-    }
-    if (unforbidden(curr, mapmask))
-        grd(curr) = DNGN_FLOOR;
-    
-    return (true);
-}
-
 static bool join_the_dots_rigorous(const coord_def &from,
                                    const coord_def &to,
                                    unsigned mapmask,
                                    bool early_exit)
 {
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-
-    const coord_comparator comp(to);
-    coord_set coords(comp);
-    const bool found =
-        join_the_dots_pathfind(coords, from, to, mapmask, early_exit);
-
-    return (found);
+    // [hex] TODO: hexify join_the_dots_pathfind, and make this use that
+    // again.
+    //
+    // Hmm, on second thoughts that might not be such a great idea. The
+    // algorithm in join_the_dots_pathfind is quite specific to square
+    // co-ordinates. The problem is that we want our corridors to be straight
+    // where possible. For square coordinates this is easy to achieve, using
+    // lexicographic order as coord_set does. There's no obvious equivalent
+    // for hexes, so maybe the ad hoc approach in join_the_dots_hex is not far
+    // from optimal. Of course it would be nice to be able to navigate round
+    // obstructions... but I think this can safely be moved from FXME to
+    // TODO.
+    //
+    return join_the_dots_hex_pathfind(from, to, mapmask, early_exit);
 }
-
-static bool join_the_dots(
-    const coord_def &from,
-    const coord_def &to,
-    unsigned mapmask,
-    bool early_exit)
-{
-    if (from == to)
-        return (true);
-
-    int join_count = 0;
-
-    coord_def at = from;
-    do
-    {
-        join_count++;
-
-        const dungeon_feature_type feat = grd(at);
-        if (early_exit && at != from && is_traversable(feat))
-            return (true);
-
-        if (unforbidden(at, MMT_VAULT) && !is_traversable(feat))
-            grd(at) = DNGN_FLOOR;
-
-        if (join_count > 10000) // just insurance
-            return (false);
-
-        if (at.x < to.x
-            && unforbidden(coord_def(at.x + 1, at.y), mapmask))
-        {
-            at.x++;
-            continue;
-        }
-
-        if (at.x > to.x
-            && unforbidden(coord_def(at.x - 1, at.y), mapmask))
-        {
-            at.x--;
-            continue;
-        }
-
-        if (at.y > to.y
-            && unforbidden(coord_def(at.x, at.y - 1), mapmask))
-        {
-            at.y--;
-            continue;
-        }
-
-        if (at.y < to.y
-            && unforbidden(coord_def(at.x, at.y + 1), mapmask))
-        {
-            at.y++;
-            continue;
-        }
-
-        // If we get here, no progress can be made anyway. Why use the
-        // join_count insurance?
-        break;
-    }
-    while (at != to && in_bounds(at));
-
-    if (in_bounds(at) && unforbidden(at, mapmask))
-        grd(at) = DNGN_FLOOR;
-
-    return (at == to);
-}                               // end join_the_dots()
 
 static void place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
                        unsigned char pool_y1, unsigned char pool_x2,
@@ -5082,7 +4743,9 @@ static object_class_type item_in_shop(unsigned char shop_type)
 static void spotty_level(bool seeded, int iterations, bool boxy)
 {
     // assumes starting with a level full of rock walls (1)
-    int i, j, k, l;
+    int i, l;
+    hexcoord t;
+    hexdir dir;
 
     if (!seeded)
     {
@@ -5097,29 +4760,27 @@ static void spotty_level(bool seeded, int iterations, bool boxy)
 
             do
             {
-                j = 10 + random2(GXM - 20);
-                k = 10 + random2(GYM - 20);
+		t = hexcoord::centre + random_hex(GRAD-10);
+		dir = random_direction();
             }
-            while (grd[j][k] != DNGN_ROCK_WALL
-                    && grd[j + 1][k] != DNGN_ROCK_WALL);
+            while (grd(t) != DNGN_ROCK_WALL
+                    && grd(t+dir) != DNGN_ROCK_WALL);
 
-            grd[j][k] = static_cast<dungeon_feature_type>(i);
+            grd(t) = static_cast<dungeon_feature_type>(i);
 
             // creating elevators
             if (i == DNGN_STONE_STAIRS_DOWN_I
                 && !player_in_branch( BRANCH_SLIME_PITS ))
             {
-                grd[j + 1][k] = DNGN_STONE_STAIRS_UP_I;
+                grd(t+dir) = DNGN_STONE_STAIRS_UP_I;
             }
 
-            if (grd[j][k - 1] == DNGN_ROCK_WALL)
-                grd[j][k - 1] = DNGN_FLOOR;
-            if (grd[j][k + 1] == DNGN_ROCK_WALL)
-                grd[j][k + 1] = DNGN_FLOOR;
-            if (grd[j - 1][k] == DNGN_ROCK_WALL)
-                grd[j - 1][k] = DNGN_FLOOR;
-            if (grd[j + 1][k] == DNGN_ROCK_WALL)
-                grd[j + 1][k] = DNGN_FLOOR;
+            if (grd(t+dir) == DNGN_ROCK_WALL)
+                grd(t+dir) = DNGN_FLOOR;
+            if (grd(t+dir.rotated(2)) == DNGN_ROCK_WALL)
+                grd(t+dir.rotated(2)) = DNGN_FLOOR;
+            if (grd(t+dir.rotated(4)) == DNGN_ROCK_WALL)
+                grd(t+dir.rotated(4)) = DNGN_FLOOR;
         }
     }                           // end if !seeded
 
@@ -5127,47 +4788,40 @@ static void spotty_level(bool seeded, int iterations, bool boxy)
 
     // boxy levels have more clearing, so they get fewer iterations:
     if (l == 0)
-        l = 200 + random2( (boxy ? 750 : 1500) );
+        l = 250 + random2( (boxy ? 950 : 1900) );
 
     for (i = 0; i < l; i++)
     {
         do
         {
-            j = random2(GXM - 20) + 10;
-            k = random2(GYM - 20) + 10;
+	    t = hexcoord::centre + random_hex(GRAD-10);
+	    dir = random_direction();
         }
-        while (grd[j][k] == DNGN_ROCK_WALL
-               && grd[j - 1][k] == DNGN_ROCK_WALL
-               && grd[j + 1][k] == DNGN_ROCK_WALL
-               && grd[j][k - 1] == DNGN_ROCK_WALL
-               && grd[j][k + 1] == DNGN_ROCK_WALL
-               && grd[j - 2][k] == DNGN_ROCK_WALL
-               && grd[j + 2][k] == DNGN_ROCK_WALL
-               && grd[j][k - 2] == DNGN_ROCK_WALL
-               && grd[j][k + 2] == DNGN_ROCK_WALL);
+        while (grd(t) == DNGN_ROCK_WALL
+               && grd(t+dir) == DNGN_ROCK_WALL
+               && grd(t+dir*2) == DNGN_ROCK_WALL
+               && grd(t+dir.rotated(2)) == DNGN_ROCK_WALL
+               && grd(t+dir.rotated(2)*2) == DNGN_ROCK_WALL
+               && grd(t+dir.rotated(4)) == DNGN_ROCK_WALL
+               && grd(t+dir.rotated(4)*2) == DNGN_ROCK_WALL);
 
-        if (grd[j][k] == DNGN_ROCK_WALL)
-            grd[j][k] = DNGN_FLOOR;
-        if (grd[j][k - 1] == DNGN_ROCK_WALL)
-            grd[j][k - 1] = DNGN_FLOOR;
-        if (grd[j][k + 1] == DNGN_ROCK_WALL)
-            grd[j][k + 1] = DNGN_FLOOR;
-        if (grd[j - 1][k] == DNGN_ROCK_WALL)
-            grd[j - 1][k] = DNGN_FLOOR;
-        if (grd[j + 1][k] == DNGN_ROCK_WALL)
-            grd[j + 1][k] = DNGN_FLOOR;
-
+	if (grd(t) == DNGN_ROCK_WALL)
+	    grd(t) = DNGN_FLOOR;
+	if (grd(t+dir) == DNGN_ROCK_WALL)
+	    grd(t+dir) = DNGN_FLOOR;
+	if (grd(t+dir.rotated(2)) == DNGN_ROCK_WALL)
+	    grd(t+dir.rotated(2)) = DNGN_FLOOR;
+	if (grd(t+dir.rotated(4)) == DNGN_ROCK_WALL)
+	    grd(t+dir.rotated(4)) = DNGN_FLOOR;
         if (boxy)
-        {
-            if (grd[j - 1][k - 1] == DNGN_ROCK_WALL)
-                grd[j - 1][k - 1] = DNGN_FLOOR;
-            if (grd[j + 1][k + 1] == DNGN_ROCK_WALL)
-                grd[j + 1][k + 1] = DNGN_FLOOR;
-            if (grd[j - 1][k + 1] == DNGN_ROCK_WALL)
-                grd[j - 1][k + 1] = DNGN_FLOOR;
-            if (grd[j + 1][k - 1] == DNGN_ROCK_WALL)
-                grd[j + 1][k - 1] = DNGN_FLOOR;
-        }
+	{
+	    if (grd(t+dir.rotated(1)) == DNGN_ROCK_WALL)
+		grd(t+dir.rotated(1)) = DNGN_FLOOR;
+	    if (grd(t+dir.rotated(3)) == DNGN_ROCK_WALL)
+		grd(t+dir.rotated(3)) = DNGN_FLOOR;
+	    if (grd(t+dir.rotated(5)) == DNGN_ROCK_WALL)
+		grd(t+dir.rotated(5)) = DNGN_FLOOR;
+	}
     }
 }                               // end spotty_level()
 
@@ -5175,9 +4829,9 @@ static void bigger_room()
 {
     unsigned char i, j;
 
-    for (i = 10; i < (GXM - 10); i++)
+    for (i = 10; i < (80 - 10); i++)
     {
-        for (j = 10; j < (GYM - 10); j++)
+        for (j = 10; j < (70 - 10); j++)
         {
             if (grd[i][j] == DNGN_ROCK_WALL)
                 grd[i][j] = DNGN_FLOOR;
@@ -5224,13 +4878,15 @@ static void plan_main(int level_number, int force_plan)
     if (!force_plan)
         force_plan = 1 + random2(12);
 
-    do_stairs = ((force_plan == 1) ? plan_1() :
+    do_stairs = ((force_plan == 1) ? plan_1(level_number) :
                  (force_plan == 2) ? plan_2() :
                  (force_plan == 3) ? plan_3() :
-                 (force_plan == 4) ? plan_4(0, 0, 0, 0, NUM_FEATURES) :
+                 (force_plan == 4) ? plan_4(dgn_region(), NUM_FEATURES) :
                  (force_plan == 5) ? (one_chance_in(9) ? plan_5()
                                                        : plan_3()) :
-                 (force_plan == 6) ? plan_6(level_number)
+                 (force_plan == 6) ? plan_6(level_number) :
+		 (force_plan == -5) ? plan_5() :
+		 (force_plan == -6) ? plan_6(level_number)
                                    : plan_3());
 
     if (do_stairs == 3 || do_stairs == 1)
@@ -5256,81 +4912,20 @@ static void plan_main(int level_number, int force_plan)
         replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,special_grid);
 }                               // end plan_main()
 
-static char plan_1()
+static char plan_1(int level_number)
 {
-    int temp_rand = 0;          // probability determination {dlb}
-
-    unsigned char width = (10 - random2(7));    // value range of [4,10] {dlb}
-
-    replace_area(10, 10, (GXM - 10), (10 + width), DNGN_ROCK_WALL, DNGN_FLOOR);
-    replace_area(10, (60 - width), (GXM - 10), (GYM - 10),
-        DNGN_ROCK_WALL, DNGN_FLOOR);
-    replace_area(10, 10, (10 + width), (GYM - 10), DNGN_ROCK_WALL, DNGN_FLOOR);
-    replace_area((60 - width), 10, (GXM - 10), (GYM - 10),
-        DNGN_ROCK_WALL, DNGN_FLOOR);
-
-    // possible early returns {dlb}:
-    temp_rand = random2(4);
-
-    if (temp_rand > 2)          // 25% chance {dlb}
-        return 3;
-    else if (temp_rand > 1)     // 25% chance {dlb}
-        return 2;
-    else                        // 50% chance {dlb}
-    {
-        unsigned char width2 = (coinflip()? (1 + random2(5)) : 5);
-
-        replace_area(10, (35 - width2), (GXM - 10), (35 + width2),
-                   DNGN_ROCK_WALL, DNGN_FLOOR);
-        replace_area((40 - width2), 10, (40 + width2), (GYM - 10),
-                   DNGN_ROCK_WALL, DNGN_FLOOR);
-    }
-
-    // possible early returns {dlb}:
-    temp_rand = random2(4);
-
-    if (temp_rand > 2)          // 25% chance {dlb}
-        return 3;
-    else if (temp_rand > 1)     // 25% chance {dlb}
-        return 2;
-    else                        // 50% chance {dlb}
-    {
-        temp_rand = random2(15);
-
-        if (temp_rand > 7)      // 7 in 15 odds {dlb}
-        {
-            spec_room sr;
-            sr.x1 = 25;
-            sr.y1 = 25;
-            sr.x2 = (GXM - 25);
-            sr.y2 = (GYM - 25);
-
-            int oblique_max = 0;
-            if (coinflip())
-                oblique_max = 5 + random2(20);
-
-            temp_rand = random2(7);
-
-            dungeon_feature_type floor_type =
-                ((temp_rand > 1) ? DNGN_FLOOR :   // 5/7
-                 (temp_rand > 0) ? DNGN_DEEP_WATER// 1/7
-                                 : DNGN_LAVA);    // 1/7
-            octa_room(sr, oblique_max, floor_type);
-        }
-    }
-
-    // final return {dlb}:
-    return (one_chance_in(5) ? 3 : 2);
-}                               // end plan_1()
+    dissolved_cavern(level_number);
+    return 0;
+}
 
 // just a cross:
 static char plan_2()
 {
     char width2 = (5 - random2(5));     // value range of [1,5] {dlb}
 
-    replace_area(10, (35 - width2), (GXM - 10), (35 + width2),
+    replace_area(10, (35 - width2), (80 - 10), (35 + width2),
                                             DNGN_ROCK_WALL, DNGN_FLOOR);
-    replace_area((40 - width2), 10, (40 + width2), (GYM - 10),
+    replace_area((40 - width2), 10, (40 + width2), (70 - 10),
                                             DNGN_ROCK_WALL, DNGN_FLOOR);
 
     return (one_chance_in(4) ? 2 : 3);
@@ -5338,101 +4933,31 @@ static char plan_2()
 
 static char plan_3()
 {
-
-    /* Draws a room, then another and links them together, then another and etc
-       Of course, this can easily end up looking just like a make_trail level.
-     */
-    int i;
-    int roomsss = 30 + random2(90);
-
-    bool exclusive = (one_chance_in(10) ? false : true);
-    bool exclusive2 = coinflip();
-
-    char romx1[30], romy1[30], romx2[30], romy2[30];
-
-    int which_room = 0;
-
-    for (i = 0; i < roomsss; i++)
-    {
-        romx1[which_room] = 10 + random2(50);
-        romy1[which_room] = 10 + random2(40);
-        romx2[which_room] = romx1[which_room] + 2 + random2(8);
-        romy2[which_room] = romy1[which_room] + 2 + random2(8);
-
-        if (exclusive && count_antifeature_in_box(romx1[which_room] - 1,
-                                                  romy1[which_room] - 1,
-                                                  romx2[which_room] + 1,
-                                                  romy2[which_room] + 1,
-                                                  DNGN_ROCK_WALL))
-            continue;
-
-        replace_area(romx1[which_room], romy1[which_room], romx2[which_room],
-                     romy2[which_room], DNGN_ROCK_WALL, DNGN_FLOOR);
-
-        if (which_room > 0 && !exclusive2)
-        {
-            const int rx1 = romx1[which_room];
-            const int rx2 = romx2[which_room];
-            const int prev_rx1 = romx1[which_room - 1];
-            const int prev_rx2 = romx2[which_room - 1];
-
-            const int ry1 = romy1[which_room];
-            const int ry2 = romy2[which_room];
-            const int prev_ry1 = romy1[which_room - 1];
-            const int prev_ry2 = romy2[which_room - 1];
-
-            join_the_dots( coord_def(rx1 + random2( rx2 - rx1 ),
-                                     ry1 + random2( ry2 - ry1 )),
-                           coord_def(prev_rx1 + random2(prev_rx2 - prev_rx1),
-                                     prev_ry1 + random2(prev_ry2 - prev_ry1)),
-                           MMT_VAULT );
-        }
-
-        which_room++;
-
-        if (which_room >= 29)
-            break;
-
-    }
-
-    if (exclusive2)
-    {
-        for (i = 0; i < which_room; i++)
-        {
-            if (i > 0)
-            {
-                const int rx1 = romx1[i];
-                const int rx2 = romx2[i];
-                const int prev_rx1 = romx1[i - 1];
-                const int prev_rx2 = romx2[i - 1];
-
-                const int ry1 = romy1[i];
-                const int ry2 = romy2[i];
-                const int prev_ry1 = romy1[i - 1];
-                const int prev_ry2 = romy2[i - 1];
-
-                join_the_dots( coord_def( rx1 + random2( rx2 - rx1 ),
-                                          ry1 + random2( ry2 - ry1 ) ),
-                               coord_def(
-                                   prev_rx1 + random2( prev_rx2 - prev_rx1 ),
-                                   prev_ry1 + random2( prev_ry2 - prev_ry1 ) ),
-                               MMT_VAULT );
-            }
-        }
-    }
-
+    int roomsss = 30 + random2(60);
+    dgn_region_list excluded_regions;
+    std::vector<coord_def> ex_connection_points;
+    build_rooms(excluded_regions, ex_connection_points, roomsss, random2(3)+2);
     return 2;
 }                               // end plan_3()
 
-static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
-                   char forbid_y2, dungeon_feature_type force_wall)
+static bool antifeature_in_region(const dgn_region& region,
+	dungeon_feature_type feature)
+{
+    for (dgn_region::contents_iterator it = region.begin_contents();
+	    it != region.end_contents();
+	    it++)
+	if (grd(region.pos_in(*it)) != feature)
+	    return true;
+    return false;
+}
+
+static char plan_4(dgn_region forbid, dungeon_feature_type force_wall)
 {
     // a more chaotic version of city level
     int temp_rand;              // req'd for probability checking
 
     int number_boxes = 5000;
     dungeon_feature_type drawing = DNGN_ROCK_WALL;
-    char b1x, b1y, b2x, b2y;
     int i;
 
     temp_rand = random2(81);
@@ -5454,31 +4979,55 @@ static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                                    : DNGN_METAL_WALL);  // odds:  3 in 18 {dlb}
     }
 
-    replace_area(10, 10, (GXM - 10), (GYM - 10), DNGN_ROCK_WALL, DNGN_FLOOR);
+    const dgn_region mapgen_region = dgn_region::perfect_hex(hexcoord::centre,
+	    GRAD-MAPGEN_BORDER);
+    replace_region(mapgen_region, DNGN_ROCK_WALL, DNGN_FLOOR);
 
+    const dgn_region inner_mapgen_region = mapgen_region.inner_region();
+
+    dgn_region region;
+    
     // replace_area can also be used to fill in:
     for (i = 0; i < number_boxes; i++)
     {
+	do
+	{
+	    const hexcoord p =
+			hexcoord::centre + random_hex(GRAD-MAPGEN_BORDER);
+	    if (!one_chance_in(5))
+	    {
+		// diamond
+		region = dgn_region(p,
+			3 + random2(7) + random2(5),
+			3 + random2(7) + random2(5),
+			random2(6));
+	    }
+	    else
+	    {
+		if (!one_chance_in(3))
+		{
+		    // triangle
+		    region = dgn_region::equilateral_triangle(p,
+			    3 + random2(9) + random2(7),
+			    random2(6));
+		}
+		else
+		{
+		// hex
+		region = dgn_region::perfect_hex(p,
+			3 + random2(9));
+		}
+	    }
+	}
+	while (!inner_mapgen_region.contains(region));
 
-        b1x = 11 + random2(45);
-        b1y = 11 + random2(35);
-
-        b2x = b1x + 3 + random2(7) + random2(5);
-        b2y = b1y + 3 + random2(7) + random2(5);
-
-        if (forbid_x1 != 0 || forbid_x2 != 0)
-        {
-            if (b1x <= forbid_x2 && b1x >= forbid_x1
-                && b1y <= forbid_y2 && b1y >= forbid_y1)
+        if (forbid.pos != coord_def(-1,-1) &&
+		forbid.overlaps(region))
                 continue;
 
-            if (b2x <= forbid_x2 && b2x >= forbid_x1
-                && b2y <= forbid_y2 && b2y >= forbid_y1)
-                continue;
-        }
-
-        if (count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
-            continue;
+	const dgn_region outer_region = region.inner_region(-1);
+	if (antifeature_in_region(outer_region, DNGN_FLOOR))
+	    continue;
 
         if (force_wall == NUM_FEATURES)
         {
@@ -5497,28 +5046,57 @@ static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
         temp_rand = random2(210);
 
         if (temp_rand > 71)     // odds: 138 in 210 {dlb}
-            replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
+            replace_region(region, DNGN_FLOOR, drawing);
         else                    // odds:  72 in 210 {dlb}
-            box_room(b1x, b2x - 1, b1y, b2y - 1, drawing);
+            hexregion_room(region, drawing);
     }
 
-    if (forbid_x1 == 0 && one_chance_in(4))     // a market square
+    if (forbid.pos == coord_def(-1,-1) && one_chance_in(4))     // a market square
     {
-        spec_room sr;
-        sr.x1 = 25;
-        sr.y1 = 25;
-        sr.x2 = 55;
-        sr.y2 = 45;
-
-        int oblique_max = 0;
-        if (!one_chance_in(4))
-            oblique_max = 5 + random2(20);      // used elsewhere {dlb}
-
+	// [hex] make it a perfect hex, but copy some logic from octa_room 
         dungeon_feature_type feature = DNGN_FLOOR;
         if (one_chance_in(10))
+	{
             feature = coinflip()? DNGN_DEEP_WATER : DNGN_LAVA;
 
-        octa_room(sr, oblique_max, feature);
+	    if ((player_in_branch( BRANCH_CRYPT ) ||
+			player_in_branch(BRANCH_TOMB)) &&
+		    feature == DNGN_LAVA)
+	    {
+		feature = DNGN_SHALLOW_WATER;
+	    }
+	}
+	    const dgn_region hex = dgn_region::perfect_hex(hexcoord::centre,
+		    10);
+
+	    bool special_here = false;
+
+	    for ( dgn_region::contents_iterator it = hex.begin_contents();
+		    it != hex.end_contents();
+		    it++ )
+	    {
+		const hexcoord p = hex.pos_in(*it);
+		if (grd(p) == DNGN_BUILDER_SPECIAL_WALL)
+		    special_here = true;
+	    }
+
+	    if (!special_here)
+	    {
+		for ( dgn_region::contents_iterator it = hex.begin_contents();
+			it != hex.end_contents();
+			it++ )
+		{
+		    const hexcoord p = hex.pos_in(*it);
+		    if (grd(p) == DNGN_ROCK_WALL)
+			grd(p) = feature;
+
+		    if (grd(p) == DNGN_FLOOR && feature == DNGN_SHALLOW_WATER)
+			grd(p) = DNGN_SHALLOW_WATER;
+
+		    if (grd(p) == DNGN_CLOSED_DOOR && !grid_is_solid(feature))
+			grd(p) = DNGN_FLOOR;       // ick
+		}
+	    }
     }
 
     return 2;
@@ -5530,69 +5108,21 @@ static char plan_5()
 
     for (unsigned char i = 0; i < imax; i++)
     {
-        join_the_dots(
-            coord_def( random2(GXM - 20) + 10, random2(GYM - 20) + 10 ),
-            coord_def( random2(GXM - 20) + 10, random2(GYM - 20) + 10 ),
+        join_the_dots_hex(
+		hexcoord::centre + random_hex(GRAD-10),
+		hexcoord::centre + random_hex(GRAD-10),
             MMT_VAULT );
     }
 
     if (!one_chance_in(4))
-        spotty_level(true, 100, coinflip());
+        spotty_level(true, 200, coinflip());
 
     return 2;
 }                               // end plan_5()
 
 static char plan_6(int level_number)
 {
-    spec_room sr;
-
-    // circle of standing stones (well, kind of)
-    sr.x1 = 10;
-    sr.x2 = (GXM - 10);
-    sr.y1 = 10;
-    sr.y2 = (GYM - 10);
-
-    octa_room(sr, 14, DNGN_FLOOR);
-
-    replace_area(23, 23, 26, 26, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(23, 47, 26, 50, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(55, 23, 58, 26, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(55, 47, 58, 50, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(39, 20, 43, 23, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(39, 50, 43, 53, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(20, 30, 23, 33, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(20, 40, 23, 43, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(58, 30, 61, 33, DNGN_FLOOR, DNGN_STONE_WALL);
-    replace_area(58, 40, 61, 43, DNGN_FLOOR, DNGN_STONE_WALL);
-
-    grd[35][32] = DNGN_STONE_WALL;
-    grd[46][32] = DNGN_STONE_WALL;
-    grd[35][40] = DNGN_STONE_WALL;
-    grd[46][40] = DNGN_STONE_WALL;
-
-    grd[69][34] = DNGN_STONE_STAIRS_DOWN_I;
-    grd[69][35] = DNGN_STONE_STAIRS_DOWN_II;
-    grd[69][36] = DNGN_STONE_STAIRS_DOWN_III;
-
-    grd[10][34] = DNGN_STONE_STAIRS_UP_I;
-    grd[10][35] = DNGN_STONE_STAIRS_UP_II;
-    grd[10][36] = DNGN_STONE_STAIRS_UP_III;
-
-    // This "back door" is often one of the easier ways to get out of 
-    // pandemonium... the easiest is to use the banish spell.  
-    //
-    // Note, that although "level_number > 20" will work for most 
-    // trips to pandemonium (through regular portals), it won't work 
-    // for demonspawn who gate themselves there. -- bwr
-    if (((player_in_branch( BRANCH_MAIN_DUNGEON ) && level_number > 20)
-            || you.level_type == LEVEL_PANDEMONIUM)
-        && (coinflip() || you.mutation[ MUT_PANDEMONIUM ]))
-    {
-        grd[40][36] = DNGN_ENTER_ABYSS;
-        grd[41][36] = DNGN_ENTER_ABYSS;
-    }
-
-    return 0;
+    return stone_circle(level_number);
 }                               // end plan_6()
 
 static bool octa_room(spec_room &sr, int oblique_max,
@@ -5781,32 +5311,20 @@ static void safe_set_feature(const coord_def &c, dungeon_feature_type feat)
 static void pad_region(const dgn_region &reg, int pad_depth,
                        dungeon_feature_type feat)
 {
-    const coord_def pstart = reg.pos - pad_depth;
-    const coord_def pend   = reg.pos + reg.size + pad_depth;
-    const coord_def end    = reg.pos + reg.size - 1;
+    const coord_def end    = reg.size - 1;
 
-    for (int y = pstart.y; y < pend.y; ++y)
+    dgn_region outer = reg;
+
+    while (pad_depth-- > 0)
     {
-        for (int x = 1; x <= pad_depth; ++x)
-        {
-            const coord_def c1(x + end.x, y);
-            safe_set_feature(c1, feat);
+	outer = outer.inner_region(-1);
 
-            const coord_def c2(reg.pos.x - x, y);
-            safe_set_feature(c2, feat);
-        }
-    }
-
-    for (int x = end.x; x >= reg.pos.x; --x)
-    {
-        for (int y = 1; y <= pad_depth; ++y)
-        {
-            const coord_def c1(x, y + end.y);
-            safe_set_feature(c1, feat);
-
-            const coord_def c2(x, reg.pos.y - y);
-            safe_set_feature(c2, feat);
-        }
+	for ( dgn_region::perimeter_iterator it = outer.begin_perimeter();
+		it != outer.end_perimeter();
+		it++ )
+	{
+            safe_set_feature(outer.pos_in(*it), feat);
+	}
     }
 }
 
@@ -5820,27 +5338,25 @@ static void change_walls_from_centre(const dgn_region &region,
     if (ldist.empty())
         return;
 
-    const coord_def &end = region.pos + region.size;
-    for (int y = region.pos.y; y < end.y; ++y)
+    for ( dgn_region::contents_iterator it = region.begin_contents();
+	    it != region.end_contents();
+	    it++ )
     {
-        for (int x = region.pos.x; x < end.x; ++x)
-        {
-            const coord_def c(x, y);
-            if (grd(c) != wall || !unforbidden(c, mmask))
-                continue;
+	const coord_def c = region.pos_in(*it);
+	if (grd(c) != wall || !unforbidden(c, mmask))
+	    continue;
 
-            const int distance =
-                rectangular? (c - centre).rdist() : (c - centre).abs();
+	const int distance =
+	    rectangular? (c - centre).rdist() : (c - centre).abs();
 
-            for (int i = 0, size = ldist.size(); i < size; ++i)
-            {
-                if (distance <= ldist[i].dist)
-                {
-                    grd(c) = ldist[i].feat;
-                    break;
-                }
-            }
-        }
+	for (int i = 0, size = ldist.size(); i < size; ++i)
+	{
+	    if (distance <= ldist[i].dist)
+	    {
+		grd(c) = ldist[i].feat;
+		break;
+	    }
+	}
     }
 }
 
@@ -5952,8 +5468,8 @@ static void labyrinth_level(int level_number)
     dgn_region lab =
         dgn_region::absolute( MAPGEN_BORDER * 2,
                               MAPGEN_BORDER * 2,
-                              GXM - MAPGEN_BORDER * 2 - 1,
-                              GYM - MAPGEN_BORDER * 2 - 1 );
+                              80 - MAPGEN_BORDER * 2 - 1,
+                              70 - MAPGEN_BORDER * 2 - 1 );
     
     // First decide if we're going to use a Lab minivault.
     int vault = random_map_for_tag("minotaur", true, false);
@@ -6023,7 +5539,7 @@ static void labyrinth_level(int level_number)
     link_items();
 }                               // end labyrinth_level()
 
-static bool is_wall(int x, int y)
+static bool is_wall(const int x, const int y)
 {
     unsigned char feat = grd[x][y];
 
@@ -6038,6 +5554,11 @@ static bool is_wall(int x, int y)
         default:
             return false;
     }
+}
+
+static bool is_wall(const hexcoord& pos)
+{
+    return is_wall(pos.x, pos.y);
 }
 
 
@@ -6193,18 +5714,92 @@ static void box_room(int bx1, int bx2, int by1, int by2,
         box_room_doors(bx1, bx2, by1, by2, new_doors);
 }
 
-static void city_level(int level_number)
+static void hexregion_room(const dgn_region& region,
+	dungeon_feature_type wall_type)
 {
-    int temp_rand;          // probability determination {dlb}
-    // remember, can have many wall types in one level
-    dungeon_feature_type wall_type;
-    // simplifies logic of innermost loop {dlb}
-    dungeon_feature_type wall_type_room;
+    ASSERT(region.diamond_rot != -1);
 
-    int xs = 0, ys = 0;
-    int x1 = 0, x2 = 0;
-    int y1 = 0, y2 = 0;
-    int i,j;
+    for ( dgn_region::perimeter_iterator it = region.begin_perimeter();
+	    it != region.end_perimeter();
+	    it++ )
+	grd(region.pos_in(*it)) = wall_type;
+
+    // following code emulates box_room_doors
+
+    const int temp_rand = random2(100);
+    int doors = (temp_rand > 45) ? 2 :
+                ((temp_rand > 22) ? 1 : 3);
+
+    // small rooms don't have as many doors
+    if (region.size.x*region.size.y < 36 && doors > 1)
+        doors--;
+
+    // check for forced doors:
+    const dgn_region outer_region=region.inner_region(-1);
+    for ( dgn_region::perimeter_iterator it = outer_region.begin_perimeter();
+	    it != outer_region.end_perimeter();
+	    it++ )
+    {
+	const hexcoord p = outer_region.pos_in(*it);
+	if (grd(p) == DNGN_CLOSED_DOOR)
+	{
+	    const hexcoord inner_p = (p +
+		    it.abs_hexdir().rotated(coinflip() ? 1 : 2));
+	    grd(inner_p) = DNGN_CLOSED_DOOR;
+	    doors--;
+	}
+    }
+
+    if (doors > 0)
+    {
+	std::vector<hexcoord> good_door_spots;
+
+	for ( dgn_region::perimeter_iterator it = region.begin_perimeter();
+		it != region.end_perimeter();
+		it++ )
+	{
+	    // require wall ahead and behind, and at least one non-wall on
+	    // each side:
+	    const hexcoord p = region.pos_in(*it);
+	    const hexdir dir = it.abs_hexdir();
+	    if ( is_wall(p) &&
+		    is_wall(p + dir) && is_wall(p - dir) &&
+		    ( !is_wall(p + dir.rotated(1)) ||
+			       !is_wall(p + dir.rotated(2))) &&
+		    ( !is_wall(p - dir.rotated(1)) ||
+			       !is_wall(p - dir.rotated(2))))
+	    {
+		good_door_spots.push_back(p);
+	    }
+	}
+	while (doors > 0 && good_door_spots.size() > 0)
+	{
+	    int i = good_door_spots.size();
+	    for (std::vector<hexcoord>::iterator
+		    spot_it = good_door_spots.begin();
+		    spot_it != good_door_spots.end();
+		    spot_it++)
+	    {
+		if (one_chance_in(i--))
+		{
+		    grd(*spot_it) = DNGN_CLOSED_DOOR;
+		    good_door_spots.erase(spot_it);
+		    doors--;
+		    break;
+		}
+	    }
+	}
+    }
+}
+
+void city_level(int level_number)
+{
+    replace_region( dgn_region::perfect_hex(hexcoord::centre,
+		GRAD-MAPGEN_BORDER), DNGN_ROCK_WALL, DNGN_FLOOR);
+
+    int temp_rand;
+    dungeon_feature_type wall_type;
+    dungeon_feature_type wall_type_room;
 
     temp_rand = random2(8);
 
@@ -6215,18 +5810,53 @@ static void city_level(int level_number)
     if (one_chance_in(100))
         wall_type = DNGN_GREEN_CRYSTAL_WALL;
 
-    make_box( 7, 7, GXM-7, GYM-7, DNGN_FLOOR );
+    // [hex] We emulate the original square city_level, but with a more
+    // interesting pattern than the square grid that used.
+    //
+    // We use a fixed pretty pattern, consisting equilateral diamonds and
+    // triangles, which fills the level hex. Inside each diamond
+    // we place a smaller diamond in the same orientation, of random size at a
+    // random position. Similarly for the triangles. Some are left empty.
 
-    for (i = 0; i < 5; i++)
+    const int side = (GRAD-MAPGEN_BORDER)/3;
+    const coord_def size(side+1, side+1);
+    const hexdir d2 = hexdir::u*side - hexdir::w*side;
+    const hexdir d4 = hexdir::u*side*3;
+
+    for (int h = 0; h < 6; h++)
     {
-        for (j = 0; j < 4; j++)
-        {
-            xs = 8 + (i * 13);
-            ys = 8 + (j * 14);
-            x1 = xs + random2avg(5, 2);
-            y1 = ys + random2avg(5, 2);
-            x2 = xs + 11 - random2avg(5, 2);
-            y2 = ys + 11 - random2avg(5, 2);
+	const dgn_region regions[5] = {
+	    dgn_region(hexcoord::centre, size, h),
+	    dgn_region(hexcoord::centre + d2.rotated(h), size, (h+4)%6),
+	    dgn_region(hexcoord::centre + d2.rotated(h), size, (h+5)%6),
+	    dgn_region(hexcoord::centre + d4.rotated(h), size, (h+3)%6),
+	    dgn_region(hexcoord::centre + d2.rotated(h), size, h, -side)
+	};
+
+	for (int i = 0; i < 5; i++)
+	{
+	    dgn_region room;
+	    if (i < 4)
+	    {
+		// diamonds
+		const int xs = random2avg(regions[i].size.x/3,2);
+		const int ys = random2avg(regions[i].size.y/3,2);
+		room = dgn_region(
+		    regions[i].pos_in(xs,ys),
+		    regions[i].size.x - xs - random2avg(regions[i].size.x/3,2),
+		    regions[i].size.y - ys - random2avg(regions[i].size.y/3,2),
+		    regions[i].diamond_rot);
+	    }
+	    else
+	    {
+		// triangle
+		const int in = random2avg(regions[i].size.x/3,2);
+		const int new_side = regions[i].size.x - 1 - in -
+		    random2avg(regions[i].size.x/3,2);
+		room = dgn_region::equilateral_triangle(
+		    regions[i].pos_in(in,in),
+		    new_side, regions[i].diamond_rot);
+	    }
 
             temp_rand = random2(280);
 
@@ -6240,27 +5870,27 @@ static void city_level(int level_number)
                 if (one_chance_in(250))
                     wall_type_room = DNGN_GREEN_CRYSTAL_WALL;
 
-                box_room(x1, x2, y1, y2, wall_type_room);
+		hexregion_room(room, wall_type_room);
 
                 // inner room - neat.
-                if (x2 - x1 > 5 && y2 - y1 > 5 && one_chance_in(8))
+		if (room.size.x > 5 && room.size.y > 5 &&
+			one_chance_in(8))
                 {
-                    box_room(x1 + 2, x2 - 2, y1 + 2, y2 - 2, wall_type);
+		    hexregion_room(room.inner_region(2), wall_type);
 
                     // treasure area.. neat.
                     if (one_chance_in(3))
-                        treasure_area(level_number, x1 + 3, x2 - 3,
-                                      y1 + 3, y2 - 3);
+                        treasure_region(room.inner_region(3), level_number);
                 }
             }
-        }
+	}
     }
 
     int stair_count = coinflip() ? 2 : 1;
 
-    for (j = 0; j < stair_count; j++)
+    for (int j = 0; j < stair_count; j++)
     {
-        for (i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             place_specific_stair(
                 static_cast<dungeon_feature_type>(
@@ -6268,8 +5898,7 @@ static void city_level(int level_number)
                          : DNGN_STONE_STAIRS_UP_I) ) );
         }
     }
-
-}                               // end city_level()
+}
 
 static bool treasure_area(int level_number, unsigned char ta1_x,
                           unsigned char ta2_x, unsigned char ta1_y,
@@ -6308,6 +5937,31 @@ static bool treasure_area(int level_number, unsigned char ta1_x,
 
     return true;
 }                               // end treasure_area()
+
+static bool treasure_region(const dgn_region& region, int level_number)
+{
+    if (region.size.x * region.size.y >= 40)
+	return false;
+    for ( dgn_region::contents_iterator it = region.begin_contents();
+	    it != region.end_contents();
+	    it++ )
+    {
+	const hexcoord p = region.pos_in(*it);
+	if (grd(p) != DNGN_FLOOR || coinflip())
+	    continue;
+
+	const int item_made = items( 1, OBJ_RANDOM, OBJ_RANDOM, true,
+		random2( level_number * 2 ), MAKE_ITEM_RANDOM_RACE );
+
+	if (item_made != NON_ITEM)
+	{
+	    mitm[item_made].x = p.x;
+	    mitm[item_made].y = p.y;
+	}
+    }
+    return true;
+}
+
 
 static void diamond_rooms(int level_number)
 {
@@ -6438,7 +6092,8 @@ static void big_room(int level_number)
     }
 
     // sometimes make it a chequerboard
-    if (one_chance_in(4))
+    // [hex] oh no you don't
+    if (false && one_chance_in(4))
     {
         chequerboard( sr, type_floor, type_floor, type_2 );
     }
@@ -6471,6 +6126,16 @@ static void big_room(int level_number)
 
 // helper function for chequerboard rooms
 // note that box boundaries are INclusive
+//
+// [hex] TODO: chequerboards really won't work well under our square->hex
+// translation, so I've disabled them. Suggestion for an equivalent:
+// hequerboard:
+//
+// . . . # . . . .
+//  . # . . # . . .
+// # . . # . . # .
+//  . # . . # . . .
+// . . . # . . . .
 static void chequerboard( spec_room &sr, dungeon_feature_type target,
                           dungeon_feature_type floor1,
                           dungeon_feature_type floor2 )
@@ -6489,6 +6154,7 @@ static void chequerboard( spec_room &sr, dungeon_feature_type target,
         }
     }
 }                               // end chequerboard()
+
 
 static void roguey_level(int level_number, spec_room &sr)
 {
@@ -6959,8 +6625,9 @@ void define_zombie( int mid, int ztype, int cs, int power )
 
 static void build_river( dungeon_feature_type river_type ) //mv
 {
-    int i,j;
-    int y, width;
+    int X,Y;
+    int sY, rot, width;
+    hexcoord t;
 
     if (player_in_branch( BRANCH_CRYPT ) || player_in_branch( BRANCH_TOMB ))
         return;
@@ -6970,39 +6637,41 @@ static void build_river( dungeon_feature_type river_type ) //mv
 
     // Made rivers less wide... min width five rivers were too annoying. -- bwr
     width = 3 + random2(4);
-    y = 10 - width + random2avg( GYM-10, 3 );
+    rot = random2(3);
+    sY = -GRAD + 10 - width + random2avg( GRAD*2-20, 3 );
 
-    for (i = 5; i < (GXM - 5); i++)
+    for (X = -(GRAD - 5); X <= (GRAD - 5); X++)
     {
-        if (one_chance_in(3))   y++;
-        if (one_chance_in(3))   y--;
+        if (one_chance_in(3))   sY++;
+        if (one_chance_in(3))   sY--;
         if (coinflip())         width++;
         if (coinflip())         width--;
 
         if (width < 2) width = 2;
         if (width > 6) width = 6;
 
-        for (j = y; j < y+width ; j++)
+        for (Y = sY; Y < sY+width ; Y++)
         {
-            if (j >= 5 && j <= GYM - 5)
+	    t = hexcoord::centre + hexdir(X,Y,-X-Y).rotated(rot);
+	    if (in_G_bounds(t, MAPGEN_BORDER))
             {
                 // Note that vaults might have been created in this area!
                 // So we'll avoid the silliness of orcs/royal jelly on
                 // lava and deep water grids. -- bwr
                 if (!one_chance_in(200)
-                    && (grd[i][j] < DNGN_ENTER_SHOP
-                        || grd[i][j] > DNGN_EXIT_PORTAL_VAULT)
-                    && grd[i][j] != DNGN_EXIT_HELL // just to be safe
-                    && mgrd[i][j] == NON_MONSTER
-                    && igrd[i][j] == NON_ITEM)
+                    && (grd(t) < DNGN_ENTER_SHOP
+			|| grd(t) > DNGN_EXIT_PORTAL_VAULT)
+		    && grd(t) != DNGN_EXIT_HELL // just to be safe
+                    && mgrd(t) == NON_MONSTER
+                    && igrd(t) == NON_ITEM)
                 {
                     if (width == 2 && river_type == DNGN_DEEP_WATER
                         && coinflip())
                     {
-                        grd[i][j] = DNGN_SHALLOW_WATER;
+                        grd(t) = DNGN_SHALLOW_WATER;
                     }
                     else
-                        grd[i][j] = river_type;
+                        grd(t) = river_type;
                 }
             }
         }
@@ -7092,7 +6761,7 @@ struct nearest_point
     }
 };
 
-inline static bool dgn_square_travel_ok(const coord_def &c)
+inline static bool dgn_square_travel_ok(const hexcoord &c)
 {
     const dungeon_feature_type feat = grd(c);
     return (is_traversable(feat) || grid_is_trap(feat)
@@ -7108,7 +6777,7 @@ static coord_def dgn_find_closest_to_stone_stairs()
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
             if (!travel_point_distance[x][y] && grid_is_stone_stair(grd[x][y]))
-                dgn_fill_zone(coord_def(x, y), 1, np, dgn_square_travel_ok);
+                dgn_fill_zone(hexcoord(x, y), 1, np, dgn_square_travel_ok);
     return (np.nearest);
 }
 
@@ -7323,15 +6992,76 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
 bool dgn_region::overlaps(const dgn_region &other) const
 {
-    // The old overlap check checked only two corners - top-left and
-    // bottom-right. I'm hoping nothing actually *relied* on that stupid bug.
-    
-    return (between(pos.x, other.pos.x, other.pos.x + other.size.x - 1)
-            || between(pos.x + size.x - 1, other.pos.x,
-                       other.pos.x + other.size.x - 1))
-        && (between(pos.y, other.pos.y, other.pos.y + other.size.y - 1)
-            || between(pos.y + size.y - 1, other.pos.y,
-                       other.pos.y + other.size.y - 1));
+    // [hex] not so neat, but it'll do
+    // our regions are convex polytopes, so we just need to check the
+    // vertices.
+    //
+    // XXX: actually, this is a rather stupid way of doing it. Each region
+    // is the intersection of an X-interval, a Y-interval and a Z-interval.
+    // The intersection of two such regions is the intersection of the 6
+    // intervals - determining whether this is non-empty is easy. Though that
+    // only works when both regions are hex.
+
+    std::vector<coord_def> our_corners = corners();
+    std::vector<coord_def> other_corners = other.corners();
+
+    for ( std::vector<coord_def>::iterator it = our_corners.begin();
+	    it != our_corners.end();
+	    it++ )
+	if (other.contains(pos_in(*it)))
+	    return true;
+
+    for ( std::vector<coord_def>::iterator it = other_corners.begin();
+	    it != other_corners.end();
+	    it++ )
+	if (contains(other.pos_in(*it)))
+	    return true;
+
+    return false;
+}
+
+bool dgn_region::contains(const dgn_region &other) const
+{
+    std::vector<coord_def> other_corners = other.corners();
+
+    for ( std::vector<coord_def>::iterator it = other_corners.begin();
+	    it != other_corners.end();
+	    it++ )
+	if (!contains(other.pos_in(*it)))
+	    return false;
+
+    return true;
+}
+
+const std::vector<coord_def> dgn_region::corners() const
+{
+    // TODO: memoize
+    std::vector<coord_def> the_corners;
+
+    if (sZ == 0)
+    {
+	the_corners.push_back(coord_def(0,0));
+	the_corners.push_back(coord_def(size.x-1,0));
+	the_corners.push_back(coord_def(0,size.y-1));
+	the_corners.push_back(coord_def(size.x-1,size.y-1));
+    }
+    else
+    {
+	const coord_def possible_corners[12] = {
+	    coord_def(0,0), coord_def(0,size.y-1),
+	    coord_def(size.x-1,0), coord_def(size.x-1,size.y-1),
+	    coord_def(0,-sZ), coord_def(0,-eZ),
+	    coord_def(size.x-1, -sZ-(size.x-1)),
+	    coord_def(size.x-1, -eZ-(size.x-1)),
+	    coord_def(-sZ,0), coord_def(-eZ,0),
+	    coord_def(-sZ-(size.y-1), size.y-1),
+	    coord_def(-eZ-(size.y-1), size.y-1)
+	};
+	for ( int i = 0; i < 12; i++ )
+	    if (contains_rel(possible_corners[i]))
+		the_corners.push_back(possible_corners[i]);
+    }
+    return the_corners;
 }
 
 bool dgn_region::overlaps_any(const dgn_region_list &regions) const
@@ -7353,25 +7083,39 @@ bool dgn_region::overlaps(const dgn_region_list &regions,
 
 bool dgn_region::overlaps(const map_mask &mask) const
 {
-    const coord_def endp = pos + size;
-    for (int y = pos.y; y < endp.y; ++y)
-        for (int x = pos.x; x < endp.x; ++x)
-            if (mask[x][y])
-                return (true);
+    for (contents_iterator it = begin_contents(); it != end_contents(); it++)
+	if (mask(pos_in(*it)))
+	    return (true);
     return (false);
 }
 
-coord_def dgn_region::random_edge_point() const
+hexcoord dgn_region::random_edge_point() const
 {
-    return random2(size.x + size.y) < size.x?
-        coord_def( pos.x + random2(size.x),
-                   coinflip()? pos.y : pos.y + size.y - 1 )
-        :
-        coord_def( coinflip()? pos.x : pos.x + size.x - 1,
-                   pos.y + random2(size.y) );
+    int i = 0;
+    coord_def p;
+    for ( perimeter_iterator it = begin_perimeter();
+	    it != end_perimeter();
+	    it++ )
+    {
+	if (one_chance_in(++i))
+	{
+	    p = *it;
+	}
+    }
+    return pos_in(p);
 }
 
-coord_def dgn_region::random_point() const
+hexcoord dgn_region::random_point() const
 {
-    return coord_def( pos.x + random2(size.x), pos.y + random2(size.y) );
+    int X, Y;
+    do
+    {
+	X = random2(size.x);
+	Y = random2(size.y);
+    } while (sZ != 0 && (-X-Y < sZ || -X-Y > eZ));
+    return pos_in( X,Y );
 }
+
+coord_def dgn_region::perimeter_iterator::dirs[6] = { coord_def(1,0), coord_def(0,1),
+    coord_def(-1,1), coord_def(-1,0), coord_def(0,-1),
+    coord_def(1,-1) };

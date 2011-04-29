@@ -2,7 +2,9 @@
  *  File:     delay.cc
  *  Summary:  Functions for handling multi-turn actions.    
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-03 16:50:53 +0100 (Sat, 03 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -39,6 +41,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
@@ -133,6 +136,9 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
     case DELAY_PASSWALL:
         mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
         break;
+    case DELAY_LEAP:
+        mpr("You brace yourself against the wall.", MSGCH_MULTITURN_ACTION);
+        break;
     default:
         break;
     }
@@ -199,6 +205,11 @@ void stop_delay( void )
         mpr( "Your meditation is interrupted." );
         pop_delay();
         break;
+
+    case DELAY_LEAP:
+	mpr( "Your leap is interrupted." );
+	pop_delay();
+	break;
 
     case DELAY_MULTIDROP:
         // No work lost
@@ -419,6 +430,10 @@ void handle_delay( void )
             mpr("You continue meditating on the rock.",
                 MSGCH_MULTITURN_ACTION);
             break;
+        case DELAY_LEAP:
+            mpr("You prepare to leap.",
+                MSGCH_MULTITURN_ACTION);
+	    break;
         case DELAY_MULTIDROP:
             drop_item( items_for_multidrop[0].slot,
                        items_for_multidrop[0].quantity,
@@ -565,6 +580,64 @@ static void finish_delay(const delay_queue_item &delay)
             redraw_screen();
         }
         break; 
+    }
+
+    case DELAY_LEAP:
+    {
+	// Time freezes as we fly through the air.
+	//
+	// XXX: cool though this indubitably is, it isn't very realistic.
+	// Maybe it should be implemented as another delay, with levitation,
+	// much increased stealth, and very high speed while we're in the air,
+	// but with monsters able to react. Or maybe this is fine.
+	bool already_levitating = false;
+	int maxdist;
+	ray_def ray;
+	hexcoord t_pos(delay.parm1, delay.parm2);
+
+	maxdist = 2 + (you.skills[SK_STEALTH] * 4 + you.strength >= 28);
+
+	// set up ray - shortest if we can see the destination, else direct
+	if (!find_ray( you.pos(), t_pos, false, ray,
+		0, true ))
+	    find_ray( you.pos(), t_pos, true, ray,
+		    0, true, true );
+
+
+	mpr("You leap!");
+	if (you.duration[DUR_LEVITATION])
+	    already_levitating = true;
+	else
+	    you.duration[DUR_LEVITATION] = 1;
+
+	for ( int dist = 0; dist < maxdist; dist++ )
+	{
+	    ray.advance();
+	    if (you.pos() == t_pos)
+		break;
+
+	    more();
+
+	    if (!in_bounds(ray.pos())
+		    || grid_is_solid(grd(ray.pos()))
+		    || mgrd(ray.pos()) != NON_MONSTER)
+	    {
+		mpr("Oof!");
+		more();
+		break;
+	    }
+	    else
+	    {
+		move_player_to_grid(ray.x(), ray.y(), false, true, true);
+		mpr("You speed through the air!");
+	    }
+	}
+
+	if (!already_levitating)
+	    you.duration[DUR_LEVITATION] = 0;
+	redraw_screen();
+
+	break;
     }
 
     case DELAY_BUTCHER:
@@ -827,7 +900,7 @@ static command_type get_running_command()
         delay(Options.travel_delay);
     }
         
-    return direction_to_command( you.running.x, you.running.y );
+    return direction_to_command( you.running.dir );
 }
 
 static void handle_run_delays(const delay_queue_item &delay)
@@ -1187,7 +1260,7 @@ activity_interrupt_type get_activity_interrupt(const std::string &name)
 static const char *delay_names[] =
 {
     "not_delayed", "eat", "armour_on", "armour_off", "jewellery_on",
-    "memorise", "butcher", "weapon_swap", "passwall",
+    "memorise", "butcher", "weapon_swap", "passwall", "leap_from_shadows",
     "drop_item", "multidrop", "ascending_stairs", "descending_stairs", "run",
     "rest", "travel", "macro", "interruptible", "uninterruptible",
 };

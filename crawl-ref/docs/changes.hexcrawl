@@ -1,0 +1,37 @@
+hexcrawl-0.3-3
+--------------
+* brought up to sync with crawl stone soup svn 0.3r2873
+* replaced the pathfinding algorithm used in make_rooms levels (which includes
+    D:1) with an a* based algorithm. These levels are now much less ugly.
+* bugfix: secret doors were given away by inaccurate interpolation
+
+hexcrawl-0.3-2
+--------------
+* brought up to sync with crawl stone soup 0.3.2 - see changes.stone_soup.
+* bugs fixed: doors in stupid places; improper fixing up of vaults.
+
+hexcrawl-0.3-1
+--------------
+* brought up to sync with crawl stone soup 0.3 - see changes.stone_soup.
+* we now fix up vaults which hexification breaks - hive is now playable.
+* we now (optionally) interpolate horizontal walls.
+* added some new and improved hex dungeon generation algorithms.
+* hexified the missile deflection part of the "tactics" code mentioned below:
+    disabled by default; To enable, uncomment the definition of WIDE_SHOTS in
+    AppHdr.h.
+* tens of miscellaneous minor and not-so-minor bugfixes and improvements.
+
+hexcrawl-7drl
+-------------
+Initial release, based on crawl stone soup svn trunk r1987:
+* grid, and associated logic, converted to hex.
+* some simple hex-based dungeon generation algorithms (based on existing
+    square ones), and hexification of square vaults.
+* "tactics patch" - some pre-existing code I'd been playing with, not written
+    during the 7 days; may require balancing:
+    * major changes to stealth and monster awareness code, to make
+	stealth-based play more tactically interesting.
+    * missiles (including spells) no longer go in exactly the direction you
+	aim them towards, with the effect that distance and obstructions
+	between shooter and target now make a big difference. (not in 7drl
+	release, but see 0.3 changes above)

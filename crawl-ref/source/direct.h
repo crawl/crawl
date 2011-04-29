@@ -3,7 +3,9 @@
  *  Summary:    Functions used when picking squares.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 18:44:37 +0200 (Sat, 27 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -49,13 +51,12 @@ public:
 
     crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
 
-    coord_def vgrdc;               // What grid pos is at the centre of the view
+    hexcoord vgrdc;               // What grid pos is at the centre of the view
                                    // usually you.pos().
 
     coord_def viewhalfsz;
 
     coord_def glos1, glos2;        // LOS limit grid coords (inclusive)
-    coord_def vlos1, vlos2;        // LOS limit viewport coords (inclusive)
 
     coord_def mousep;              // Where the mouse is.
 
@@ -65,14 +66,14 @@ public:
     static const int hud_max_gutter = 6;
 
 private:
-    coord_def last_player_pos;
+    hexcoord last_player_pos;
     
 public:
     crawl_view_geometry();
     void init_geometry();
 
     void init_view();
-    void set_player_at(const coord_def &c, bool force_centre = false);
+    void set_player_at(const hexcoord &c, bool force_centre = false);
 
     coord_def view_centre() const
     {
@@ -85,12 +86,6 @@ public:
                 && c.y >= glos1.y && c.y <= glos2.y);
     }
 
-    bool in_view_los(const coord_def &c) const
-    {
-        return (c.x >= vlos1.x && c.x <= vlos2.x
-                && c.y >= vlos1.y && c.y <= vlos2.y);
-    }
-
     bool in_view_viewport(const coord_def &c) const
     {
         return (c.x >= viewp.x && c.y >= viewp.y
@@ -98,13 +93,11 @@ public:
                 && c.y < viewp.y + viewsz.y);
     }
 
-    bool in_grid_viewport(const coord_def &c) const
-    {
-        return in_view_viewport(c - vgrdc + view_centre());
-    }
+    bool in_grid_viewport(const hexcoord &c) const;
 };
 
 extern crawl_view_geometry crawl_view;
+
 
 // An object that modifies the behaviour of the direction prompt.
 class targeting_behaviour
@@ -134,7 +127,7 @@ struct dist
     bool isCancel;      // user cancelled (usually <ESC> key)
     bool choseRay;      // user wants a specific beam
     int  tx,ty;         // target x,y or logical extension of beam to map edge
-    int  dx,dy;         // delta x and y if direction - always -1,0,1
+    hexdir dir;		// direction if chosen; dir.rdist() <= 1
     ray_def ray;        // ray chosen if necessary
 
     // internal use - ignore
@@ -179,46 +172,24 @@ std::string feature_description(dungeon_feature_type grid,
 
 std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
-inline int view2gridX(int vx)
-{
-    return (crawl_view.vgrdc.x + vx - crawl_view.view_centre().x);
-}
+bool screen2hex_valid(const coord_def &pos);
 
-inline int view2gridY(int vy)
-{
-    return (crawl_view.vgrdc.y + vy - crawl_view.view_centre().y);
-}
+hexdir screen2hex(const coord_def &pos);
 
-inline coord_def view2grid(const coord_def &pos)
-{
-    return pos - crawl_view.view_centre() + crawl_view.vgrdc;
-}
+coord_def hex2screen(const hexdir &d);
 
-inline int grid2viewX(int gx)
-{
-    return (gx - crawl_view.vgrdc.x + crawl_view.view_centre().x);
-}
+bool view2grid_valid(const coord_def &pos);
 
-inline int grid2viewY(int gy)
-{
-    return (gy - crawl_view.vgrdc.y + crawl_view.view_centre().y);
-}
+hexcoord view2grid(const coord_def &pos);
 
-inline coord_def grid2view(const coord_def &pos)
-{
-    return (pos - crawl_view.vgrdc + crawl_view.view_centre());
-}
+coord_def hexgrid2view(const hexcoord &pos);
 
-inline coord_def view2show(const coord_def &pos)
-{
-    return (pos - crawl_view.vlos1 + coord_def(1, 1));
-}
+coord_def grid2view(const hexcoord &pos);
 
-inline coord_def grid2show(const coord_def &pos)
-{
-    return (view2show(grid2view(pos)));
-}
+coord_def grid2view(const coord_def &pos);
 
-extern const struct coord_def Compass[8];
+coord_def view2show(const coord_def &pos);
+
+coord_def grid2show(const coord_def &pos);
 
 #endif

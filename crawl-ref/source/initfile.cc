@@ -3,7 +3,9 @@
  *  Summary:    Simple reading of an init file and system variables
  *  Written by: David Loewenstern
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-03 17:08:29 +0100 (Sat, 03 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -426,6 +428,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_memorise = interrupt_armour_on, stat",
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
         "interrupt_passwall = interrupt_butcher",
+        "interrupt_leap_from_shadows = interrupt_butcher",
         "interrupt_multidrop = interrupt_butcher",
         "interrupt_macro = interrupt_multidrop",
         "interrupt_travel = interrupt_butcher, statue, hungry, "
@@ -702,6 +705,8 @@ void game_options::reset_options()
     flush_input[ FLUSH_LUA ]            = true;
 
     lowercase_invocations  = true; 
+
+    hex_interpolate_walls  = true;
 
     fire_items_start       = 2;           // start at slot 'c'
 
@@ -2117,6 +2122,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         lowercase_invocations 
                 = read_bool(field, lowercase_invocations);
+    }
+    else if (key == "hex_interpolate_walls")
+    {
+	hex_interpolate_walls = read_bool(field, hex_interpolate_walls);
     }
     else if (key == "wiz_mode")
     {

@@ -3,7 +3,9 @@
  *  Summary:    Misc function used to render the dungeon.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-15 18:51:59 +0100 (Thu, 15 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -96,7 +98,7 @@ void find_features(const std::vector<coord_def>& features,
  * *********************************************************************** */
 void losight(FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>& sh,
              FixedArray<dungeon_feature_type, GXM, GYM>& gr,
-             int x_p, int y_p);
+             hexcoord pos);
 
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
@@ -127,7 +129,7 @@ void setLOSRadius(int newLR);
 /* ***********************************************************************
  * called from: view monstuff
  * *********************************************************************** */
-bool check_awaken(monsters* monster);
+bool check_awaken(monsters* monster, int modifier = 10, bool no_exercise = false);
 
 void clear_map(bool clear_items = true, bool clear_mons = true);
 
@@ -199,9 +201,9 @@ void viewwindow(bool draw_it, bool do_updates);
 void fire_monster_alerts();
 
 struct ray_def;
-bool find_ray( int sourcex, int sourcey, int targetx, int targety,
+bool find_ray( hexcoord source, hexcoord target,
                bool allow_fallback, ray_def& ray, int cycle_dir = 0,
-               bool find_shortest = false );
+               bool find_shortest = false, bool no_block = false );
 
 dungeon_char_type dchar_by_name(const std::string &name);
 

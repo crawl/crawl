@@ -3,7 +3,9 @@
  *  Summary: Contains version information
  *  Written by: ??
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-10 08:22:53 +0100 (Sat, 10 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -35,16 +37,16 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define CRAWL "Dungeon Crawl Stone Soup"
+#define CRAWL "Dungeon Crawl Stone Soup Hex"
 
-#define VER_NUM  "0.3.2"
+#define VER_NUM  "0.3-3"
 #define VER_QUAL ""
 
 // last updated 07august2001 {mv}
 /* ***********************************************************************
  * called from: chardump - command - newgame
  * *********************************************************************** */
-#define VERSION  VER_NUM VER_QUAL " (crawl-ref)"
+#define VERSION  VER_NUM VER_QUAL " (hexcrawl)"
 
 // last updated 20feb2001 {GDL}
 /* ***********************************************************************

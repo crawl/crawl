@@ -3,7 +3,9 @@
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-10-26 13:53:35 +0200 (Fri, 26 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -665,8 +667,7 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
             plox[1] += random2(3) - 1;
         }
 
-        if (plox[0] < 6 || plox[1] < 6 || plox[0] > (GXM - 5)
-                || plox[1] > (GYM - 5))
+	if (!in_G_bounds(plox[0],plox[1],6))
         {
             mpr("Nearby solid objects disrupt your rematerialisation!");
             is_controlled = false;
@@ -760,85 +761,82 @@ bool entomb(int powc)
     if ( powc < 25 )
         powc = 25;
 
-    for (int srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
     {
-        for (int sry = you.y_pos - 1; sry < you.y_pos + 2; sry++)
-        {
-            // tile already occupied by monster or yourself {dlb}:
-            if (mgrd[srx][sry] != NON_MONSTER
-                    || (srx == you.x_pos && sry == you.y_pos))
-            {
-                continue;
-            }
+	const hexcoord targ = you.pos() + *it;
 
-            if ( random2(100) > powc )
-                continue;
+	// tile already occupied by monster {dlb}:
+	if (mgrd(targ) != NON_MONSTER)
+	    continue;
 
-            bool proceed = false;
-            for (unsigned int i = 0; i < ARRAYSIZE(safe_to_overwrite); ++i)
-            {
-                if (grd[srx][sry] == safe_to_overwrite[i])
-                {
-                    proceed = true;
-                    break;
-                }
-            }
+	if ( random2(100) > powc )
+	    continue;
 
-            // checkpoint one - do we have a legitimate tile? {dlb}
-            if (!proceed)
-                continue;
+	bool proceed = false;
+	for (unsigned int i = 0; i < ARRAYSIZE(safe_to_overwrite); ++i)
+	{
+	    if (grd(you.pos()) == safe_to_overwrite[i])
+	    {
+		proceed = true;
+		break;
+	    }
+	}
 
-            int objl = igrd[srx][sry];
-            int hrg = 0;
+	// checkpoint one - do we have a legitimate tile? {dlb}
+	if (!proceed)
+	    continue;
 
-            while (objl != NON_ITEM)
-            {
-                // hate to see the orb get  detroyed by accident {dlb}:
-                if (mitm[objl].base_type == OBJ_ORBS)
-                {
-                    proceed = false;
-                    break;
-                }
+	int objl = igrd(targ);
+	int hrg = 0;
 
-                hrg = mitm[objl].link;
-                objl = hrg;
-            }
+	while (objl != NON_ITEM)
+	{
+	    // hate to see the orb get  detroyed by accident {dlb}:
+	    if (mitm[objl].base_type == OBJ_ORBS)
+	    {
+		proceed = false;
+		break;
+	    }
 
-            // checkpoint two - is the orb resting in the tile? {dlb}:
-            if (!proceed)
-                continue;
+	    hrg = mitm[objl].link;
+	    objl = hrg;
+	}
 
-            objl = igrd[srx][sry];
-            hrg = 0;
+	// checkpoint two - is the orb resting in the tile? {dlb}:
+	if (!proceed)
+	    continue;
 
-            while (objl != NON_ITEM)
-            {
-                hrg = mitm[objl].link;
-                destroy_item(objl);
-                objl = hrg;
-            }
+	objl = igrd(targ);
+	hrg = 0;
 
-            // deal with clouds {dlb}:
-            if (env.cgrid[srx][sry] != EMPTY_CLOUD)
-                delete_cloud( env.cgrid[srx][sry] );
+	while (objl != NON_ITEM)
+	{
+	    hrg = mitm[objl].link;
+	    destroy_item(objl);
+	    objl = hrg;
+	}
 
-            // mechanical traps are destroyed {dlb}:
-            int which_trap;
-            if ((which_trap = trap_at_xy(srx, sry)) != -1)
-            {
-                if (trap_category(env.trap[which_trap].type)
-                                                    == DNGN_TRAP_MECHANICAL)
-                {
-                    env.trap[which_trap].type = TRAP_UNASSIGNED;
-                    env.trap[which_trap].x = 1;
-                    env.trap[which_trap].y = 1;
-                }
-            }
+	// deal with clouds {dlb}:
+	if (env.cgrid(targ) != EMPTY_CLOUD)
+	    delete_cloud( env.cgrid(targ) );
 
-            // finally, place the wall {dlb}:
-            grd[srx][sry] = DNGN_ROCK_WALL;
-            number_built++;
-        }                       // end "for srx,sry"
+	// mechanical traps are destroyed {dlb}:
+	int which_trap;
+	if ((which_trap = trap_at_xy(targ.x, targ.y)) != -1)
+	{
+	    if (trap_category(env.trap[which_trap].type)
+		    == DNGN_TRAP_MECHANICAL)
+	    {
+		env.trap[which_trap].type = TRAP_UNASSIGNED;
+		env.trap[which_trap].x = 1;
+		env.trap[which_trap].y = 1;
+	    }
+	}
+
+	// finally, place the wall {dlb}:
+	grd(targ) = DNGN_ROCK_WALL;
+	number_built++;
     }
 
     if (number_built > 0)
@@ -897,8 +895,7 @@ bool project_noise(void)
     if (!silenced( plox[0], plox[1] ))
     {
         // player can use this spell to "sound out" the dungeon -- bwr
-        if (plox[0] > 1 && plox[0] < (GXM - 2) 
-            && plox[1] > 1 && plox[1] < (GYM - 2)
+	if (in_G_bounds(plox[0],plox[1],2)
             && !grid_is_solid(grd[ plox[0] ][ plox[1] ]))
         {
             noisy( 30, plox[0], plox[1] );

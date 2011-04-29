@@ -3,7 +3,9 @@
  *  Summary:    Global (ick) enums.
  *  Written by: Daniel Ligon
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-30 14:42:32 +0100 (Tue, 30 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -67,7 +69,8 @@ enum ability_type
     ABIL_MUMMY_RESTORATION,            //   30
     ABIL_EVOKE_MAPPING,
     ABIL_EVOKE_TELEPORTATION,
-    ABIL_EVOKE_BLINK,                  //   33
+    ABIL_EVOKE_BLINK,                  
+    ABIL_LEAP_FROM_SHADOWS,            //   34
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_LEVITATE,
@@ -715,6 +718,7 @@ enum delay_type
     DELAY_BUTCHER,
     DELAY_WEAPON_SWAP,                 // for easy_butcher
     DELAY_PASSWALL,
+    DELAY_LEAP,
     DELAY_DROP_ITEM,
     DELAY_MULTIDROP,
     DELAY_ASCENDING_STAIRS,
@@ -2462,6 +2466,14 @@ enum stat_type
   NUM_STATS, // added for increase_stats() {dlb}
   STAT_ALL, // must remain after NUM_STATS -- added to handle royal jelly, etc. {dlb}
   STAT_RANDOM = 255 // leave at 255, added for increase_stats() handling {dlb}
+};
+
+enum stealth_subskills
+{
+    STSSK_PEEK,
+    STSSK_WALLS,
+    STSSK_FREEZE,
+    NUM_STEALTH_SUBSKILLS
 };
 
 enum targeting_type

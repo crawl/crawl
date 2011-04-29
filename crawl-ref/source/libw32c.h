@@ -1,5 +1,5 @@
 /*
-*  Modified for Crawl Reference by $Author$ on $Date$
+*  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 18:44:37 +0200 (Sat, 27 Oct 2007) $
 */
 
 #ifndef LIBW32C_H

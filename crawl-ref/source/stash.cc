@@ -3,7 +3,9 @@
  *  Summary:    Classes tracking player stashes
  *  Written by: Darshan Shaligram
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-09-30 18:22:52 +0100 (Sun, 30 Sep 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #include "AppHdr.h"

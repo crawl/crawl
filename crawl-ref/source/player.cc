@@ -3,7 +3,9 @@
  *  Summary:    Player related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-11-19 15:28:34 +0100 (Mon, 19 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -3034,6 +3036,35 @@ void level_change(bool skip_ability_increase)
 
 }                               // end level_change()
 
+int species_stealth_factor(int species)
+{
+    switch (species)
+    {
+	case SP_TROLL:
+	case SP_OGRE:
+	case SP_OGRE_MAGE:
+	case SP_CENTAUR:
+	    return 9;
+	case SP_MINOTAUR:
+	case SP_RED_DRACONIAN: case SP_WHITE_DRACONIAN:
+	case SP_GREEN_DRACONIAN: case SP_GOLDEN_DRACONIAN:
+	case SP_GREY_DRACONIAN: case SP_BLACK_DRACONIAN:
+	case SP_PURPLE_DRACONIAN: case SP_MOTTLED_DRACONIAN:
+	case SP_PALE_DRACONIAN: case SP_UNK0_DRACONIAN:
+	case SP_UNK1_DRACONIAN: case SP_BASE_DRACONIAN:
+	    return 12;
+	case SP_VAMPIRE:
+	case SP_GNOME:
+	case SP_HALFLING:
+	case SP_KOBOLD:
+	case SP_SPRIGGAN:
+	case SP_NAGA:       // not small but very good at stealth
+	    return 18;
+	default:
+	    return 15;
+    }
+}
+
 // here's a question for you: does the ordering of mods make a difference?
 // (yes) -- are these things in the right order of application to stealth?
 // - 12mar2000 {dlb}
@@ -3046,43 +3077,16 @@ int check_stealth(void)
 
     if (you.skills[SK_STEALTH])
     {
-        if (player_genus(GENPC_DRACONIAN))
-            stealth += (you.skills[SK_STEALTH] * 12);
-        else
-        {
-            switch (you.species) // why not use body_size here?
-            {
-            case SP_TROLL:
-            case SP_OGRE:
-            case SP_OGRE_MAGE:
-            case SP_CENTAUR:
-                stealth += (you.skills[SK_STEALTH] * 9);
-                break;
-            case SP_MINOTAUR:
-                stealth += (you.skills[SK_STEALTH] * 12);
-                break;
-            case SP_VAMPIRE:
-                if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
-                    || you.hunger_state <= HS_HUNGRY)
-                {
-                    // Hungry/batty vampires are more stealthy
-                    stealth += (you.skills[SK_STEALTH] * 19);
-                }
-                else
-                    stealth += (you.skills[SK_STEALTH] * 18);
-                break;
-            case SP_GNOME:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_NAGA:       // not small but very good at stealth
-                stealth += (you.skills[SK_STEALTH] * 18);
-                break;
-            default:
-                stealth += (you.skills[SK_STEALTH] * 15);
-                break;
-            }
-        }
+	stealth += (you.skills[SK_STEALTH] *
+		species_stealth_factor(you.species));
+
+	if (you.species == SP_VAMPIRE &&
+		(you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+		 || you.hunger_state <= HS_HUNGRY))
+	{
+	    // Hungry/batty vampires are more stealthy
+	    stealth += you.skills[SK_STEALTH];
+	}
     }
 
     if (you.burden_state == BS_ENCUMBERED)
@@ -5021,10 +5025,18 @@ player::~player()
     delete kills;
 }
 
-coord_def player::pos() const
+hexcoord player::pos() const
 {
-    return coord_def(x_pos, y_pos);
+    return hexcoord(x_pos, y_pos);
 }
+
+void player::set_pos(const hexcoord hc)
+{
+    coord_def c(hc);
+    x_pos = c.x;
+    y_pos = c.y;
+}
+
 
 bool player::is_levitating() const
 {
@@ -5711,18 +5723,19 @@ bool player::is_icy() const
 
 void player::moveto(int x, int y)
 {
-    moveto(coord_def(x, y));
+    moveto(hexcoord(x, y));
 }
 
-void player::moveto(const coord_def &c)
+void player::moveto(const hexcoord &hc)
 {
-    const bool real_move = c != pos();
+    const bool real_move = hc != pos();
+    const coord_def c(hc);
     x_pos = c.x;
     y_pos = c.y;
-    crawl_view.set_player_at(c);
+    crawl_view.set_player_at(hc);
 
     if (real_move)
-        dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
+        dungeon_events.fire_position_event(DET_PLAYER_MOVED, hc);
 }
 
 bool player::can_throw_rocks() const

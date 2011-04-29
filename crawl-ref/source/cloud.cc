@@ -3,7 +3,9 @@
  *  Summary:    Functions related to clouds.
  *  Written by: Brent Ross
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-10 00:13:00 +0100 (Sat, 10 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Creating a cloud module so all the cloud stuff can be isolated.
  *

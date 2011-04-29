@@ -1,10 +1,10 @@
 # -*- Makefile -*- for Dungeon Crawl (unix)
 
 #
-# Modified for Crawl Reference by $Author$ on $Date$
+# Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-21 19:30:50 +0200 (Sun, 21 Oct 2007) $
 #
 
-GAME = crawl
+GAME = hexcrawl
 
 # this file contains a list of the libraries.
 # it will make a variable called OBJECTS that contains all the libraries
@@ -91,7 +91,8 @@ INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
 CFWARN := -Wall -Wwrite-strings -Wshadow -Wuninitialized -pedantic
 
-CFOTHERS := -O2 -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS
+CFOTHERS := -O2 -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS)
+# -DCLUA_BINDINGS
 
 ifneq ($(SAVEDIR),)
 CFOTHERS += '-DSAVE_DIR_PATH="$(SAVEDIR)"'
@@ -146,9 +147,10 @@ DOYACC :=
 endif
 
 GAME_DEPENDS := $(LUASRC)$(LUALIBA) $(EXTRA_DEPENDS) $(OBJECTS)
-SRC_PKG_BASE := stone_soup
-SRC_VERSION  := $(shell egrep 'VER_NUM  *".*"' version.h | \
-			egrep -o '[0-9]\.[0-9](\.[0-9])?')
+SRC_PKG_BASE := hexcrawl
+SRC_VERSION := 0.3-3
+#SRC_VERSION  := $(shell egrep 'VER_NUM  *".*"' version.h | \
+			#egrep -o '[0-9]\.[0-9](\.[0-9])?')
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
 SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
 SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip

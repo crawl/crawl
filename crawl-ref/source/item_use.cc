@@ -3,7 +3,9 @@
  *  Summary:    Functions for making use of inventory items.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-08 17:35:25 +0100 (Thu, 08 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -2267,7 +2269,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         noisy( 6, you.x_pos, you.y_pos );
 
     // but any monster nearby can see that something has been thrown:
-    alert_nearby_monsters();
+    alert_nearby_monsters(30);
 
     you.turn_is_over = true;
 
@@ -2975,7 +2977,7 @@ void zap_wand(void)
     }
 
     exercise( SK_EVOCATIONS, 1 );
-    alert_nearby_monsters();
+    alert_nearby_monsters(50);
 
     if (!alreadyknown && !alreadytried && dangerous)
     {
@@ -3825,7 +3827,7 @@ void read_scroll(void)
         mprf("%s emits a brilliant flash of light!",
              you.inv[nthing].name(DESC_CAP_YOUR).c_str());
 
-        alert_nearby_monsters();
+        alert_nearby_monsters(80);
 
         if (get_weapon_brand( you.inv[nthing] ) != SPWPN_NORMAL)
         {

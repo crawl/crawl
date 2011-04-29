@@ -3,7 +3,9 @@
  *  Summary:    Misc (mostly) inventory related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-29 07:53:31 +0100 (Mon, 29 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -2130,42 +2132,36 @@ void update_level( double elapsedTime )
             }
         }
 
-        int pos_x = mon->x, pos_y = mon->y;
-
+	const hexcoord target(mon->target_x, mon->target_y);
+	hexdir dir;
+	int rot;
+	hexcoord pos = mon->pos();
         // dirt simple movement:
         for (i = 0; i < moves; i++)
         {
-            int mx = (pos_x > mon->target_x) ? -1 : 
-                     (pos_x < mon->target_x) ?  1 
-                                             :  0;
+	    dir = hex_dir_towards(target - pos);
 
-            int my = (pos_y > mon->target_y) ? -1 : 
-                     (pos_y < mon->target_y) ?  1 
-                                             :  0;
+            if (dir == hexdir::zero)
+		break;
 
             if (mon->behaviour == BEH_FLEE)
             {
-                mx *= -1;
-                my *= -1;
+		dir *= -1;
             }
 
-            if (pos_x + mx < 0 || pos_x + mx >= GXM)
-                mx = 0;
-
-            if (pos_y + my < 0 || pos_y + my >= GXM)
-                my = 0;
-
-            if (mx == 0 && my == 0)
+	    for (rot = 0; rot < 3; rot++)
+		if (in_G_bounds(pos + dir.rotated(rot==2?-1:rot))
+		    && grd(pos + dir.rotated(rot==2?-1:rot)) < DNGN_FLOOR)
                 break;
+	    if (rot == 3)
+		break;
+	    else
+		dir.rotate(rot==2?-1:rot);
 
-            if (grd[pos_x + mx][pos_y + my] < DNGN_FLOOR)
-                break;
-
-            pos_x += mx;
-            pos_y += my;
+	    pos += dir;
         }
 
-        if (!shift_monster( mon, pos_x, pos_y ))
+        if (!shift_monster( mon, pos.x, pos.y ))
             shift_monster( mon, mon->x, mon->y );
 
 #if DEBUG_DIAGNOSTICS
@@ -2665,7 +2661,15 @@ void handle_time( long time_delta )
         }
 
         if (one_chance_in(18))
-            exercise(SK_STEALTH, 1);
+	{
+	    // At higher SK_STEALTH levels, it stops being exercised so much
+	    // here, as exercise instead comes from active use of stealth
+	    // subskills.
+	    if (!(you.skills[SK_STEALTH] >= 4 && one_chance_in(5)
+		    || you.skills[SK_STEALTH] >= 6 && one_chance_in(5)
+		    || you.skills[SK_STEALTH] >= 8 && one_chance_in(5)))
+		exercise(SK_STEALTH, 1);
+	}
     }
 
     return;

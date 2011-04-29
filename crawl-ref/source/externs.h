@@ -3,7 +3,9 @@
  *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-15 18:51:59 +0100 (Thu, 15 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -61,7 +63,680 @@ const int kPathLen = 256;
 
 class item_def;
 class melee_attack;
-class coord_def;
+struct coord_def;
+struct hexcoord;
+struct hexdir;
+
+struct coord_def
+{
+    int         x;
+    int         y;
+
+/*  int		u;
+    int		v;
+    int		w; */
+
+    explicit coord_def( int x_in = 0, int y_in = 0 ) : x(x_in), y(y_in) { }
+
+    /* explicit coord_def( int x_in = 0, int y_in = 0 ) : x(x_in), y(y_in), u(x_in-y_in/2), v(y_in), w(-x_in-(y_in/2)-(y_in%2)) { }
+    explicit coord_def( int u_in, int v_in, int w_in ) : x(u_in+v_in/2), y(v_in), u(u_in), v(v_in), w(w_in) { } */
+
+    static const coord_def zero;
+
+    coord_def( const hexcoord &hc);
+
+    void set(int xi, int yi)
+    {
+        x = xi;
+        y = yi;
+    }
+
+    void reset()
+    {
+        set(0, 0);
+    }
+
+    int distance_from(const coord_def &b) const;
+    
+    bool operator == (const coord_def &other) const
+    {
+        return x == other.x && y == other.y;
+    }
+
+    bool operator != (const coord_def &other) const
+    {
+        return !operator == (other);
+    }
+
+    bool operator <  (const coord_def &other) const
+    {
+        return (x < other.x) || (x == other.x && y < other.y);
+    }
+
+    const coord_def &operator += (const coord_def &other)
+    {
+        x += other.x;
+        y += other.y;
+        return (*this);
+    }
+
+    const coord_def &operator += (int offset)
+    {
+        x += offset;
+        y += offset;
+        return (*this);
+    }
+    
+    const coord_def &operator -= (const coord_def &other)
+    {
+        x -= other.x;
+        y -= other.y;
+        return (*this);
+    }
+
+    const coord_def &operator -= (int offset)
+    {
+        x -= offset;
+        y -= offset;
+        return (*this);
+    }
+
+    const coord_def &operator /= (int div)
+    {
+        x /= div;
+        y /= div;
+        return (*this);
+    }
+    
+    coord_def operator + (const coord_def &other) const
+    {
+        coord_def copy = *this;
+        return (copy += other);
+    }
+
+    coord_def operator + (int other) const
+    {
+        coord_def copy = *this;
+        return (copy += other);
+    }
+
+    coord_def operator - (const coord_def &other) const
+    {
+        coord_def copy = *this;
+        return (copy -= other);
+    }
+
+    coord_def operator - (int other) const
+    {
+        coord_def copy = *this;
+        return (copy -= other);
+    }
+
+    coord_def operator - () const
+    {
+	coord_def copy = *this;
+	return (zero - copy);
+    }
+
+    coord_def operator / (int div) const
+    {
+        coord_def copy = *this;
+        return (copy /= div);
+    }
+
+    int abs() const
+    {
+        return (x * x + y * y);
+    }
+
+    int rdist() const
+    {
+        return (std::max(std::abs(x), std::abs(y)));
+    }
+
+    hexcoord tohex() const;
+    hexdir tohexdir() const;
+};
+typedef bool (*coord_predicate)(const coord_def &c);
+
+// [hex] Hex coordinate system:
+//
+// We work with the integral points of the plane X + Y + Z = 0.
+// This makes things very nice to work with in some ways (see e.g. the
+// rotation and reflection methods of hexdir), but can be a little confusing
+// in others.
+//
+// Some hopefully elucidatory diagrams:
+//
+//    .   .
+//    v.        u = (1,0,-1)
+//  .   .___.   v = (-1,1,0)          
+//    w,  u     w = (0,-1,1)
+//    .   .                               
+//                                    X
+//                              -2-1 0
+//        Y                     , , , 1
+//      . | .               2 -. . * , 2
+//        |                1 -. . * * ,     * : "principal hextant"
+//    .   .   .         Y 0 -. . 0 . .           x>=0&&y>0
+//      /   \             -1 -. . . . `
+//    / .   . \            -2 -. . . `-2
+//   Z          X               ` ` `-1
+//                               2 1 0
+//                                  Z
+//
+// We separate the analogue of coord_def into two structs.
+// hexcoord is for actual absolute grid coordinates.
+// hexdir is for directions, i.e. relative coordinates.
+// So we can add hexdirs, and add hexdirs to hexcoords to get hexcoords, and
+// find the hexdir difference between two hexcoords, but we can't add two
+// hexcoords. So, to use the appropriate lingo: the hexdirs form a group, and
+// the hexcoords form just a "principal homogeneous space" for that group.
+//
+// In particular, we can translate freely between hexcoords and coord_defs,
+// but you can't translate between hexdirs and coord_defs.
+// The coord_def <-> hexcoord casting works as follows:
+//
+// |.../         | . . . / 
+// |./..   <->    | . / . .
+// +----         + - - - -
+//
+// (x,y) |-> xu - (y/2)(v-w) - (y%2)(-w)
+//         = (x+y/2, -y, -x+(y/2)+(y%2))
+//
+// (X,Y,Z) |-> (X+Y/2,-Y)
+//
+// (warning: y increases downwards, but Y increases upwards!)
+//
+// We shift so that (0,0,0) is (GRAD,GRAD), so the hex of radius GRAD around
+// (0,0,0) fits in the box [(0,0),(GRAD*2,GRAD*2)].
+//
+// This is a fairly arbitrary choice of mapping, but the fact that it
+// approximately preserves the geometry is occasionally useful (and means that
+// code I've failed to hexify may roughly work anyway). Of course, preserving
+// the square coordinate system at all leads to an ungodly hybrid of square
+// and hex code with frequent translations between the two... but it has the
+// significant upshot of reducing by an order of magnitude or two the number
+// of lines of code which needed to be changed.
+//
+// Of course the Correct approach would have been to abstract away from any
+// particular co-ordinate system, and have it be a compile-time (or even
+// run-time!) option. This is not the approach I have followed.
+
+struct hexcoord
+{
+    int         X;
+    int         Y;
+    int         Z;
+    
+    // XXX XXX: these can be read, but should never be written to!
+    // Terribly terribly ugly I know, but means that code which expects a
+    // coord_def will work with a hexcoord.
+    int		x;
+    int		y;
+
+    explicit hexcoord( int X_in, int Y_in, int Z_in ) : X(X_in), Y(Y_in), Z(Z_in), x(GRAD+X_in+Y_in/2), y(GRAD-Y_in) { }
+    explicit hexcoord( int x_in = 0, int y_in = 0 ) : X((x_in-GRAD)+(y_in-GRAD)/2), Y(-(y_in-GRAD)), Z(-(x_in-GRAD)+((y_in-GRAD)/2)+((y_in-GRAD)%2)), x(x_in), y(y_in) { }
+
+    static const hexcoord centre;
+
+    void setxy()
+    {
+	x = GRAD+X+Y/2;
+	y = GRAD-Y;
+    }
+
+    hexcoord( const coord_def &c)
+    {
+	X = (c.x-GRAD)+(c.y-GRAD)/2;
+	Y = -(c.y-GRAD);
+	Z = -(c.x-GRAD)+((c.y-GRAD)/2)+((c.y-GRAD)%2);
+	x = c.x;
+	y = c.y;
+    }
+
+    void set(int Xi, int Yi, int Zi)
+    {
+        X = Xi;
+        Y = Yi;
+        Z = Zi;
+	setxy();
+    }
+
+    void reset()
+    {
+        set(0, 0, 0);
+    }
+
+    bool operator == (const hexcoord &other) const
+    {
+        return X == other.X && Y == other.Y && Z == other.Z;
+    }
+
+    bool operator != (const hexcoord &other) const
+    {
+        return !operator == (other);
+    }
+
+    bool operator <  (const hexcoord &other) const
+    {
+        return (X < other.X) || (X == other.X && Y < other.Y);
+    }
+
+    hexcoord operator = (const hexcoord &other)
+    {
+        X = other.X;
+        Y = other.Y;
+        Z = other.Z;
+        x = other.x;
+        y = other.y;
+        return (*this);
+    }
+
+    const hexcoord &operator += (const hexdir &other);
+
+    const hexcoord &operator -= (const hexdir &other);
+
+    hexcoord operator + (const hexdir &other) const;
+
+    hexcoord operator - (const hexdir &other) const;
+
+    hexdir operator - (const hexcoord &other) const;
+
+    int distance_from(const hexcoord &b) const;
+
+    coord_def tosquare() const
+    {
+	return coord_def(GRAD+X+Y/2,GRAD-Y);
+    }
+};
+typedef bool (*hexcoord_predicate)(const hexcoord &c);
+
+struct hexdir
+{
+    int         X;
+    int         Y;
+    int         Z;
+    
+    explicit hexdir() : X(0), Y(0), Z(0) { }
+    explicit hexdir( int X_in, int Y_in, int Z_in ) : X(X_in), Y(Y_in), Z(Z_in) { }
+
+    // XXX: not to be confused with hexcoord(x,y)!
+    explicit hexdir( int X_in, int Y_in ) : X(X_in), Y(Y_in), Z(-X_in-Y_in) { }
+
+    static const hexdir u;
+    static const hexdir v;
+    static const hexdir w;
+    static const hexdir zero;
+
+    void set(int Xi, int Yi, int Zi)
+    {
+        X = Xi;
+        Y = Yi;
+        Z = Zi;
+    }
+
+    void reset()
+    {
+        set(0, 0, 0);
+    }
+
+    bool operator == (const hexdir &other) const
+    {
+        return X == other.X && Y == other.Y && Z == other.Z;
+    }
+
+    bool operator != (const hexdir &other) const
+    {
+        return !operator == (other);
+    }
+
+    bool operator <  (const hexdir &other) const
+    {
+        return (X < other.X) || (X == other.X && Y < other.Y);
+    }
+
+    hexdir operator = (const hexdir &other)
+    {
+        X = other.X;
+        Y = other.Y;
+        Z = other.Z;
+        return (*this);
+    }
+
+    const hexdir &operator += (const hexdir &other)
+    {
+        X += other.X;
+        Y += other.Y;
+        Z += other.Z;
+        return (*this);
+    }
+
+    const hexdir &operator *= (int factor)
+    {
+        X *= factor;
+        Y *= factor;
+        Z *= factor;
+        return (*this);
+    }
+    
+    const hexdir &operator -= (const hexdir &other)
+    {
+        X -= other.X;
+        Y -= other.Y;
+        Z -= other.Z;
+        return (*this);
+    }
+
+    const hexdir &operator /= (int div)
+    {
+	// XXX: things may go horribly wrong if div does not divide X Y and Z!
+        X /= div;
+        Y /= div;
+        Z /= div;
+        return (*this);
+    }
+
+    hexdir operator + (const hexdir &other) const
+    {
+        hexdir copy = *this;
+        return (copy += other);
+    }
+
+    hexdir operator * (int factor) const
+    {
+        hexdir copy = *this;
+        return (copy *= factor);
+    }
+
+    int operator * (const hexdir &other) const
+    {
+	// scalar multiplication
+	return (X*other.X + Y*other.Y + Z*other.Z);
+    }
+
+    hexdir operator - (const hexdir &other) const
+    {
+        hexdir copy = *this;
+        return (copy -= other);
+    }
+
+    hexdir operator / (int div) const
+    {
+        hexdir copy = *this;
+        return (copy /= div);
+    }
+
+    hexdir operator - () const
+    {
+	hexdir copy = *this;
+	return (zero - copy);
+    }
+
+    int abs() const
+    {
+        return (X * X + Y * Y + Z * Z)/2;
+    }
+
+    int rdist() const
+    {
+	return (std::max(std::abs(X), std::max(std::abs(Y), std::abs(Z))));
+    }
+
+    int hextant() const;
+
+    void rotate(int hextants);
+
+    hexdir rotated(int hextants) const
+    {
+	hexdir copy = *this;
+	copy.rotate(hextants);
+	return copy;
+    }
+
+    void reflect_in_origin()
+    {
+	X = -X;
+	Y = -Y;
+	Z = -Z;
+    }
+
+    void reflect_X()
+    {
+	int temp = Y; Y = Z; Z = temp;
+    }
+    void reflect_Y()
+    {
+	int temp = Z; Z = X; X = temp;
+    }
+    void reflect_Z()
+    {
+	int temp = X; X = Y; Y = temp;
+    }
+
+    void reflect_u()
+    {  reflect_Y(); reflect_in_origin(); }
+    void reflect_v()
+    {  reflect_Z(); reflect_in_origin(); }
+    void reflect_w()
+    {  reflect_X(); reflect_in_origin(); }
+
+    coord_def tosquare() const
+    {
+	return coord_def(X+Y/2,-Y);
+    }
+
+    class circle;
+    class disc;
+};
+typedef bool (*hexdir_predicate)(const hexdir &c);
+
+class hexdir::circle
+{
+public:
+    int rad, rot;
+
+    explicit circle(int irad=1, int irot=0) : rad(irad), rot(irot) {}
+    explicit circle(int irad, const hexdir& irotd) : rad(irad)
+    {
+	// start in direction of the rdist==1 hexdir irotd
+	ASSERT(irotd.rdist() == 1);
+	rot = (irotd.hextant() - 1)%6;
+    }
+
+    class iterator :
+	public std::iterator<std::forward_iterator_tag, hexdir>
+    {
+	// iterates clockwise around the circumference of the hexagon of
+	// radius rad
+	public:
+	    explicit iterator(int irad = 0, hexdir id = hexdir::zero,
+		    bool iunmoved = true) :
+		rad(irad), d(id), unmoved(iunmoved) {}
+
+	    iterator operator=(const iterator& other)
+	    {
+		rad = other.rad;
+		d = other.d;
+		unmoved = other.unmoved;
+		return (*this);
+	    }
+
+	    bool operator==(const iterator& other)
+	    {
+		return (rad == other.rad && d == other.d
+			&& unmoved == other.unmoved);
+	    }  
+	    bool operator!=(const iterator& other)
+	    {
+		return !operator==(other);
+	    }
+
+	    const hexdir& operator*() const
+	    {
+		return d;
+	    }
+
+	    iterator& operator++()
+	    {
+		if (rad == 1)
+		    d.rotate(-1);
+		else if (rad > 1)
+		    d += -hexdir::v.rotated(d.hextant());
+		unmoved = false;
+		return (*this);
+	    }
+
+	    iterator operator++(int)
+	    {
+		iterator tmp(*this);
+		++(*this);
+		return(tmp);
+	    }
+
+	private:
+	    int rad;
+	    hexdir d;
+	    bool unmoved;
+    };
+
+    iterator begin()
+    {
+	return iterator(rad, (hexdir::u*rad).rotated(rot), true);
+    }
+    iterator end() 
+    {
+	return iterator(rad, (hexdir::u*rad).rotated(rot), false);
+    }
+
+};
+
+class hexdir::disc
+{
+public:
+    int rad;
+
+    explicit disc(int irad=1) : rad(irad) {}
+
+    // iterates through the whole of the disc of radius rad
+    class iterator :
+	public std::iterator<std::forward_iterator_tag, hexdir>
+    {
+	public:
+	    explicit iterator(int irad = 0, int iX = 0, int iY = 0) :
+		rad(irad), X(iX), Y(iY) {}
+
+	    iterator operator=(const iterator& other)
+	    {
+		rad = other.rad;
+		X = other.X;
+		Y = other.Y;
+		return (*this);
+	    }
+
+	    bool operator==(const iterator& other)
+	    {
+		return (rad == other.rad && X == other.X
+			&& Y == other.Y);
+	    }  
+	    bool operator!=(const iterator& other)
+	    {
+		return !operator==(other);
+	    }
+
+	    const hexdir operator*() const
+	    {
+		return hexdir(X,Y);
+	    }
+
+	    iterator& operator++()
+	    {
+		Y++;
+		if (Y > rad || X+Y > rad)
+		{
+		    X++;
+		    Y = std::max(-rad, -rad-X);
+		}
+		return (*this);
+	    }
+
+	    iterator operator++(int)
+	    {
+		iterator tmp(*this);
+		++(*this);
+		return(tmp);
+	    }
+
+	private:
+	    int rad, X, Y;
+    };
+
+    iterator begin()
+    {
+	return iterator(rad, -rad, 0);
+    }
+    iterator end() 
+    {
+	return iterator(rad, rad+1, -rad);
+    }
+};
+
+inline hexcoord coord_def::tohex() const
+{
+    return hexcoord((x-GRAD)+(y-GRAD)/2, -(y-GRAD),
+	    -(x-GRAD)+((y-GRAD)/2)+((y-GRAD)%2));
+}
+
+inline hexdir coord_def::tohexdir() const
+{
+    return hexdir(x+y/2, -y, -x+(y/2)+(y%2));
+}
+
+inline coord_def::coord_def(const hexcoord &hc)
+{
+    x = GRAD+hc.X+hc.Y/2;
+    y = GRAD-hc.Y; 
+}
+
+inline const hexcoord& hexcoord::operator += (const hexdir &other)
+{
+    X += other.X;
+    Y += other.Y;
+    Z += other.Z;
+    setxy();
+    return (*this);
+}
+
+inline const hexcoord& hexcoord::operator -= (const hexdir &other)
+{
+    X -= other.X;
+    Y -= other.Y;
+    Z -= other.Z;
+    setxy();
+    return (*this);
+}
+
+inline hexcoord hexcoord::operator + (const hexdir &other) const
+{
+    hexcoord copy = *this;
+    return (copy += other);
+}
+
+inline hexcoord hexcoord::operator - (const hexdir &other) const
+{
+    hexcoord copy = *this;
+    return (copy -= other);
+}
+
+inline hexdir hexcoord::operator - (const hexcoord &other) const
+{
+    return hexdir(X - other.X, Y - other.Y, Z - other.Z);
+}
+
+inline int hexcoord::distance_from(const hexcoord &b) const
+{
+    return (b - *this).rdist();
+}
 
 class actor
 {
@@ -76,7 +751,8 @@ public:
     
     virtual bool      alive() const = 0;
     
-    virtual coord_def pos() const = 0;
+    virtual hexcoord pos() const = 0;
+    virtual void      set_pos(const hexcoord hc) {}
     virtual bool      swimming() const = 0;
     virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
@@ -187,123 +863,6 @@ public:
     }
 };
 
-struct coord_def
-{
-    int         x;
-    int         y;
-
-    explicit coord_def( int x_in = 0, int y_in = 0 ) : x(x_in), y(y_in) { }
-
-    void set(int xi, int yi)
-    {
-        x = xi;
-        y = yi;
-    }
-
-    void reset()
-    {
-        set(0, 0);
-    }
-
-    int distance_from(const coord_def &b) const;
-    
-    bool operator == (const coord_def &other) const
-    {
-        return x == other.x && y == other.y;
-    }
-
-    bool operator != (const coord_def &other) const
-    {
-        return !operator == (other);
-    }
-
-    bool operator <  (const coord_def &other) const
-    {
-        return (x < other.x) || (x == other.x && y < other.y);
-    }
-
-    const coord_def &operator += (const coord_def &other)
-    {
-        x += other.x;
-        y += other.y;
-        return (*this);
-    }
-
-    const coord_def &operator += (int offset)
-    {
-        x += offset;
-        y += offset;
-        return (*this);
-    }
-    
-    const coord_def &operator -= (const coord_def &other)
-    {
-        x -= other.x;
-        y -= other.y;
-        return (*this);
-    }
-
-    const coord_def &operator -= (int offset)
-    {
-        x -= offset;
-        y -= offset;
-        return (*this);
-    }
-
-    const coord_def &operator /= (int div)
-    {
-        x /= div;
-        y /= div;
-        return (*this);
-    }
-    
-    coord_def operator + (const coord_def &other) const
-    {
-        coord_def copy = *this;
-        return (copy += other);
-    }
-
-    coord_def operator + (int other) const
-    {
-        coord_def copy = *this;
-        return (copy += other);
-    }
-
-    coord_def operator - (const coord_def &other) const
-    {
-        coord_def copy = *this;
-        return (copy -= other);
-    }
-
-    coord_def operator - (int other) const
-    {
-        coord_def copy = *this;
-        return (copy -= other);
-    }
-
-    coord_def operator / (int div) const
-    {
-        coord_def copy = *this;
-        return (copy /= div);
-    }
-
-    int abs() const
-    {
-        return (x * x + y * y);
-    }
-
-    int rdist() const
-    {
-        return (std::max(std::abs(x), std::abs(y)));
-    }
-
-    bool origin() const
-    {
-        return (!x && !y);
-    }
-};
-typedef bool (*coord_predicate)(const coord_def &c);
-
 struct dice_def
 {
     int         num;
@@ -314,9 +873,8 @@ struct dice_def
 
 struct run_check_dir
 {
-    dungeon_feature_type grid;
-    int dx;
-    int dy;
+    unsigned char       grid;
+    hexdir	dir;
 };
 
 
@@ -389,13 +947,15 @@ public:
     int runmode;
     int mp;
     int hp;
-    int x, y;
+    int x;
+    int y;
+    hexdir dir;
 
-    FixedVector<run_check_dir,3> run_check; // array of grids to check
+    FixedVector<unsigned char,5> run_check; // array of grids to check
 
 public:
     runrest();
-    void initialise(int rdir, int mode);
+    void initialise(const hexdir &rdir, int mode);
 
     operator int () const;
     const runrest &operator = (int newrunmode);
@@ -416,15 +976,15 @@ public:
 
     // Checks if shift-run should be aborted and aborts the run if necessary.
     // Returns true if you were running and are now no longer running.
-    bool check_stop_running();
+    int check_stop_running();
 
     // Check if we've reached the HP/MP stop-rest condition
     void check_hp();
     void check_mp();
 
 private:
-    void set_run_check(int index, int compass_dir);
-    bool run_grids_changed() const;
+    void set_run_check(int index, const hexdir &d);
+    bool run_grids_changed(int rotate = 0) const;
 };
 
 class PlaceInfo
@@ -479,6 +1039,7 @@ class player : public actor
 {
 public:
   bool turn_is_over; // flag signaling that player has performed a timed action
+  bool stealthy_action; // whether last timed action was stealthy
 
   // If true, player is headed to the Abyss.
   bool banished;
@@ -691,7 +1252,7 @@ public:
     // Low-level move the player to (x, y). Use these functions instead of
     // changing x_pos and y_pos directly.
     void moveto(int x, int y);
-    void moveto(const coord_def &c);
+    void moveto(const hexcoord &c);
     
     bool in_water() const;
     bool can_swim() const;
@@ -722,7 +1283,8 @@ public:
     god_type  deity() const;
     bool      alive() const;
     
-    coord_def pos() const;
+    hexcoord pos() const;
+    void      set_pos(const hexcoord hc);
     bool      swimming() const;
     bool      submerged() const;
     bool      floundering() const;
@@ -963,7 +1525,7 @@ public:
     void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);
     bool find_place_near_player();
-    bool find_home_around(const coord_def &c, int radius);
+    bool find_home_around(const hexcoord &c, int radius);
     bool find_home_anywhere();
         
     void set_ghost(const ghost_demon &ghost);
@@ -979,7 +1541,8 @@ public:
     int id() const;
     god_type  deity() const;
     bool      alive() const;
-    coord_def pos() const;
+    hexcoord pos() const;
+    void      set_pos(const hexcoord hc);
     bool      swimming() const;
     bool      submerged() const;
     bool      can_drown() const;
@@ -1091,6 +1654,8 @@ public:
     std::string describe_enchantments() const;
 
     static int base_speed(int mcls);
+
+    void set_target(const coord_def &p) { target_x = p.x; target_y = p.y; }
 
 private:
     void init_with(const monsters &mons);
@@ -1480,6 +2045,8 @@ public:
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
     bool        lowercase_invocations;          // prefer lowercase invocations
+
+    bool	hex_interpolate_walls; // show '# # #' as '#####'
 
     char_set_type  char_set;
     FixedVector<unsigned, NUM_DCHAR_TYPES> char_table;

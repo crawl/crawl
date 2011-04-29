@@ -3,7 +3,9 @@
  *  Summary:    Functions used to print player related info.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 18:44:37 +0200 (Sat, 27 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -618,7 +620,7 @@ void print_stats(void)
 #if DEBUG_DIAGNOSTICS
     // debug mode GPS
     gotoxy(xcol, 17);
-    cprintf( "Position (%2d,%2d)", you.x_pos, you.y_pos );
+    cprintf( "Position (%3d,%3d,%3d)=(%2d,%2d)", you.pos().X, you.pos().Y, you.pos().Z, you.x_pos, you.y_pos );
 #endif
 
     // get curses to redraw screen

@@ -3,7 +3,9 @@
  *  Summary:    Functions used in Pandemonium.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-07-21 13:17:29 +0100 (Sat, 21 Jul 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *

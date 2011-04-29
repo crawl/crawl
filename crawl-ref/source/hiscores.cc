@@ -3,7 +3,9 @@
  *  Summary: deal with reading and writing of highscore file
  *  Written by: Gordon Lipford
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-05 11:29:43 +0100 (Mon, 05 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *

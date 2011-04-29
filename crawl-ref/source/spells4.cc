@@ -4,7 +4,9 @@
  *              other neglected areas of Crawl magic ;^)
  *  Written by: Copyleft Josh Fishman 1999-2000, All Rights Preserved
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 10:41:12 +0200 (Sat, 27 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -327,7 +329,7 @@ static int shatter_walls(int x, int y, int pow, int garbage)
     int  stuff = 0;
 
     // if not in-bounds then we can't really shatter it -- bwr
-    if (x <= 5 || x >= GXM - 5 || y <= 5 || y >= GYM - 5)
+    if (!in_G_bounds(x,y,6))
         return (0);
 
     switch (grd[x][y])
@@ -585,22 +587,23 @@ void cast_detect_secret_doors(int pow)
 {
     int found = 0;
 
-    for (int x = you.x_pos - 8; x <= you.x_pos + 8; x++)
+    hexcoord t;
+    hexdir::disc h(8);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (int y = you.y_pos - 8; y <= you.y_pos + 8; y++)
-        {
-            if (x < 5 || x > GXM - 5 || y < 5 || y > GYM - 5)
-                continue;
+	t = you.pos() + *it;
 
-            if (!see_grid(x, y)) 
-                continue;
+	if (!in_G_bounds(t,6))
+	    continue;
 
-            if (grd[x][y] == DNGN_SECRET_DOOR && random2(pow) > random2(15))
-            {
-                grd[x][y] = DNGN_CLOSED_DOOR;
-                found++;
-            }
-        }
+	if (!see_grid(t)) 
+	    continue;
+
+	if (grd(t) == DNGN_SECRET_DOOR && random2(pow) > random2(15))
+	{
+	    grd(t) = DNGN_CLOSED_DOOR;
+	    found++;
+	}
     }
 
     if (found)
@@ -1616,7 +1619,7 @@ static int passwall(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    char dx, dy, nx = x, ny = y;
+    hexcoord n(x,y);
     int howdeep = 0;
     bool done = false;
     int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
@@ -1632,20 +1635,19 @@ static int passwall(int x, int y, int pow, int garbage)
         return 0;
     }
 
-    dx = x - you.x_pos;
-    dy = y - you.y_pos;
+    const hexdir dir = hexcoord(x,y) - you.pos();
 
     while (!done)
     {
         // I'm trying to figure proper borders out {dlb}
         // FIXME: dungeon border?
-        if (nx > (GXM - 1) || ny > (GYM - 1) || nx < 2 || ny < 2)
+	if (!in_G_bounds(n,2))
         {
             mpr("You sense an overwhelming volume of rock.");
             return 0;
         }
 
-        switch (grd[nx][ny])
+        switch (grd(n))
         {
         default:
             done = true;
@@ -1654,8 +1656,7 @@ static int passwall(int x, int y, int pow, int garbage)
         case DNGN_ORCISH_IDOL:
         case DNGN_GRANITE_STATUE:
         case DNGN_SECRET_DOOR:
-            nx += dx;
-            ny += dy;
+	    n += dir;
             howdeep++;
             break;
         }
@@ -1688,7 +1689,7 @@ static int passwall(int x, int y, int pow, int garbage)
     // Note that the delay was (1 + howdeep * 2), but now that the
     // delay is stopped when the player is attacked it can be much
     // shorter since its harder to use for quick escapes. -- bwr
-    start_delay( DELAY_PASSWALL, 2 + howdeep, nx, ny );
+    start_delay( DELAY_PASSWALL, 2 + howdeep, n.x, n.y );
 
     return 1;
 }                               // end passwall()
@@ -2299,7 +2300,7 @@ void do_monster_rot(int mon)
 
     if (mons_holiness(&menv[mon]) == MH_UNDEAD && random2(5))
     {
-        apply_area_cloud(make_a_normal_cloud, menv[mon].x, menv[mon].y,
+        apply_area_cloud(make_a_normal_cloud, menv[mon].pos(),
                          10, 1, CLOUD_MIASMA, KC_YOU);
     }
 
@@ -2370,8 +2371,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     const int grid = grd[beam.tx][beam.ty];
     const int mon  = mgrd[beam.tx][beam.ty];
 
-    const bool okay_to_dest = ((beam.tx > 5 && beam.tx < GXM - 5)
-                                && (beam.ty > 5 && beam.ty < GYM - 5));
+    const bool okay_to_dest = (in_G_bounds(beam.tx,beam.ty,6));
 
     if (mon != NON_MONSTER)
     {
@@ -2722,6 +2722,8 @@ void cast_twist(int pow)
 
 bool cast_portaled_projectile(int pow, bolt& beam)
 {
+    int throw_slot;
+
     if ( pow > 50 )
         pow = 50;
 
@@ -2731,14 +2733,50 @@ bool cast_portaled_projectile(int pow, bolt& beam)
         return false;
     }
 
+#if 0
     const int idx = get_fire_item_index();
     if ( idx == ENDOFPACK )
     {
         mpr("No suitable missiles.");
         return false;
     }
+#else
+    throw_slot = prompt_invent_item( "Project which item? (* to show all)",
+                                     MT_INVLIST,
+                                     OBJ_MISSILES, true, true, true, 0, NULL,
+                                     OPER_THROW );
+    if (throw_slot == PROMPT_ABORT)
+    {
+        canned_msg( MSG_OK );
+        return false;
+    }
 
-    throw_it( beam, idx, true, random2(pow/4) );
+    if (throw_slot == you.equip[EQ_WEAPON]
+             && (item_cursed( you.inv[you.equip[EQ_WEAPON]] )))
+    {
+        mpr("That thing is stuck to your hand! Projecting it would be messy.");
+        return false;
+    }
+    else
+    {
+        if ( wearing_slot(throw_slot) )
+        {
+            mpr("You are wearing that object!");
+            return false;
+        }
+    }
+
+    // max mass we can project - half that the apportation spell can handle:
+    const int max_mass = ( pow * 30 + random2( pow * 20 ) ) / 2;
+
+    if (item_mass(you.inv[throw_slot]) > max_mass)
+    {
+	mpr("The mass resists your push.");
+	return true;
+    }
+#endif
+
+    throw_it( beam, throw_slot, true, random2(pow/4) );
     return true;
 }
 
@@ -3057,7 +3095,9 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    if (x == you.x_pos && y == you.y_pos)
+    const hexdir dir = hexcoord(x,y) - you.pos();
+
+    if (dir == hexdir::zero)
         return (0);
 
     if (you.level_type == LEVEL_ABYSS)
@@ -3071,18 +3111,17 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
         pow = 100;
 
     const int dist = random2(6) + 2;  // 2-7
-    const int ox = you.x_pos + (x - you.x_pos) * dist;
-    const int oy = you.y_pos + (y - you.y_pos) * dist;
-   
+    const hexcoord targ = you.pos() + dir*dist;
+
     int tx, ty;
     for ( int i = 0; i < (pow*pow) / 500 + 1; ++i )
     {
         // find a space near our target...
-        if ( !random_near_space(ox, oy, tx, ty) )
+        if ( !random_near_space(targ.x, targ.y, tx, ty) )
             return 0;
         
         // which is close enough, and also far enough from us
-        if ( distance(ox, oy, tx, ty) <= 10 &&
+        if ( distance(targ.x, targ.y, tx, ty) <= 10 &&
              distance(you.x_pos, you.y_pos, tx, ty) >= 8 )
             break;
     }

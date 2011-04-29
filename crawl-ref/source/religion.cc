@@ -3,7 +3,9 @@
  *  Summary:    Misc religion related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-07 21:14:38 +0100 (Wed, 07 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -1681,84 +1683,86 @@ bool trog_burn_books()
     }
 
     int totalpiety = 0;
-    for (int xpos = you.x_pos - 8; xpos < you.x_pos + 8; xpos++)
-        for (int ypos = you.y_pos - 8; ypos < you.y_pos + 8; ypos++)
-        {
-             // checked above
-             if (xpos == you.x_pos && ypos == you.y_pos)
-                 continue;
+    hexcoord pos;
+    hexdir::disc h(8);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
+    {
+	pos = you.pos() + *it;
+	// checked above
+	if (pos == you.pos())
+	    continue;
 
-             // burn only squares in sight
-             if (!see_grid(xpos, ypos))
-                 continue;
+	// burn only squares in sight
+	if (!see_grid(pos))
+	    continue;
 
-             // if a grid is blocked, books lying there will be ignored
-             // allow bombing of monsters
-             const int cloud = env.cgrid[xpos][ypos];
-             if (grid_is_solid(grd[ xpos ][ ypos ]) ||
-//                 mgrd[ xpos ][ ypos ] != NON_MONSTER ||
-                 (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
-             {
-                 continue;
-             }
-             
-             int count = 0;
-             int rarity = 0;
-             i = igrd[xpos][ypos];
-             while (i != NON_ITEM)
-             {
-                 const int next = mitm[i].link;  // in case we can't get it later.
+	// if a grid is blocked, books lying there will be ignored
+	// allow bombing of monsters
+	const int cloud = env.cgrid(pos);
+	if (grid_is_solid(grd(pos)) ||
+		//                 mgrd(pos) != NON_MONSTER ||
+		(cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
+	{
+	    continue;
+	}
 
-                 if (mitm[i].base_type != OBJ_BOOKS
-                     || mitm[i].sub_type == BOOK_MANUAL)
-                 {
-                     i = next;
-                     continue;
-                 }
+	int count = 0;
+	int rarity = 0;
+	i = igrd(pos);
+	while (i != NON_ITEM)
+	{
+	    const int next = mitm[i].link;  // in case we can't get it later.
 
-                 rarity += book_rarity(mitm[i].sub_type);
-                 // piety increases by 2 for books never picked up, else by 1
-                 if (mitm[i].flags & ISFLAG_DROPPED
-                     || mitm[i].flags & ISFLAG_THROWN)
-                 {
-                     totalpiety++;
-                 }
-                 else
-                     totalpiety += 2;
-                 
+	    if (mitm[i].base_type != OBJ_BOOKS
+		    || mitm[i].sub_type == BOOK_MANUAL)
+	    {
+		i = next;
+		continue;
+	    }
+
+	    rarity += book_rarity(mitm[i].sub_type);
+	    // piety increases by 2 for books never picked up, else by 1
+	    if (mitm[i].flags & ISFLAG_DROPPED
+		    || mitm[i].flags & ISFLAG_THROWN)
+	    {
+		totalpiety++;
+	    }
+	    else
+		totalpiety += 2;
+
 #ifdef DEBUG_DIAGNOSTICS
-                 mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
+	    mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
 #endif
 
-                 destroy_item(i);
-                 count++;
-                 i = next;
-             }
+	    destroy_item(i);
+	    count++;
+	    i = next;
+	}
 
-             if (count)
-             {
-                  if ( cloud != EMPTY_CLOUD )
-                  {
-                     // reinforce the cloud
-                     mpr( "The fire roars with new energy!" );
-                     const int extra_dur = count + random2(rarity/2);
-                     env.cloud[cloud].decay += extra_dur * 5;
-                     env.cloud[cloud].whose = KC_YOU;
-                     continue;
-                  }
+	if (count)
+	{
+	    if ( cloud != EMPTY_CLOUD )
+	    {
+		// reinforce the cloud
+		mpr( "The fire roars with new energy!" );
+		const int extra_dur = count + random2(rarity/2);
+		env.cloud[cloud].decay += extra_dur * 5;
+		env.cloud[cloud].whose = KC_YOU;
+		continue;
+	    }
 
-                  int durat = 4 + count + random2(rarity/2);
+	    int durat = 4 + count + random2(rarity/2);
 
-                  if (durat > 23)
-                      durat = 23;
+	    if (durat > 23)
+		durat = 23;
 
-                  place_cloud( CLOUD_FIRE, xpos, ypos, durat, KC_YOU );
+	    place_cloud( CLOUD_FIRE, pos.x, pos.y, durat, KC_YOU );
 
-                  mpr(count == 1 ? "The book bursts into flames."
-                      : "The books burst into flames.", MSGCH_GOD);
-             }
+	    mpr(count == 1 ? "The book bursts into flames."
+		    : "The books burst into flames.", MSGCH_GOD);
+	}
 
-        }
+    }
         
     if (!totalpiety)
     {

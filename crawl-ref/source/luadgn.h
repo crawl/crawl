@@ -3,6 +3,8 @@
  *  Summary:    Dungeon-builder Lua interface.
  *
  *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-21T19:20:47.183838Z $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #ifndef LUADGN_H

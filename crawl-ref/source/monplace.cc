@@ -3,7 +3,9 @@
  *  Summary:    Functions used when placing monsters in the dungeon.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-17 19:57:41 +0100 (Sat, 17 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -665,8 +667,9 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
         // we'll try 1000 times for a good spot
         for (i = 0; i < 1000; i++)
         {
-            fx = px + random2(7) - 3;
-            fy = py + random2(7) - 3;
+	    hexcoord fh = hexcoord(px,py)+random_hex(3);
+            fx = fh.x;
+            fy = fh.y;
 
             // occupied?
             if (mgrd[fx][fy] != NON_MONSTER)
@@ -1658,44 +1661,40 @@ bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
     bool playerSummon = (emx == you.x_pos && emy == you.y_pos);
 
     int good_count = 0;
-    int count_x, count_y;
 
-    for (count_x = -radius; count_x <= radius; count_x++)
+    hexdir::disc h(radius);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (count_y = -radius; count_y <= radius; count_y++)
-        {
-            success = false;
+	success = false;
 
-            if (!allow_centre && count_x == 0 && count_y == 0)
-                continue;
+	if (!allow_centre && *it == hexdir::zero )
+	    continue;
 
-            int tx = emx + count_x;
-            int ty = emy + count_y;
+	hexcoord t = hexcoord(emx, emy) + *it;
 
-            if (tx == you.x_pos && ty == you.y_pos)
-                continue;
+	if (t == you.pos())
+	    continue;
 
-            if (mgrd[tx][ty] != NON_MONSTER)
-                continue;
+	if (mgrd(t) != NON_MONSTER)
+	    continue;
 
-            // players won't summon out of LOS
-            if (!see_grid(tx, ty) && playerSummon)
-                continue;
+	// players won't summon out of LOS
+	if (!see_grid(t) && playerSummon)
+	    continue;
 
-            if (grd[tx][ty] == spc_wanted)
-                success = true;
+	if (grd(t) == spc_wanted)
+	    success = true;
 
-            if (grid_compatible(spc_wanted, grd[tx][ty]))
-                success = true;
+	if (grid_compatible(spc_wanted, grd(t)))
+	    success = true;
 
-            if (success && one_chance_in(++good_count))
-            {
-                // add point to list of good points
-                empty[0] = tx;
-                empty[1] = ty;
-            }
-        }                       // end "for count_y"
-    }                           // end "for count_x"
+	if (success && one_chance_in(++good_count))
+	{
+	    // add point to list of good points
+	    empty[0] = t.x;
+	    empty[1] = t.y;
+	}
+    }
 
     return (good_count > 0);
 }                               // end empty_surrounds()

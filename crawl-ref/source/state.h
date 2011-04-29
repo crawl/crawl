@@ -3,7 +3,7 @@
  *  Summary:    Game state.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: zelgadis $ on $Date: 2007-09-16 04:49:23 +0100 (Sun, 16 Sep 2007) $
  *
  *  Change History (most recent first):
  *

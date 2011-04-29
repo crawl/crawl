@@ -3,7 +3,9 @@
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-15 18:51:59 +0100 (Thu, 15 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -161,18 +163,16 @@ static int follower_tag_radius2()
 {
     // If only friendlies are adjacent, we set a max radius of 6, otherwise
     // only adjacent friendlies may follow.
-    coord_def p;
-    for (p.x = you.x_pos - 1; p.x <= you.x_pos + 1; ++p.x)
-        for (p.y = you.y_pos - 1; p.y <= you.y_pos + 1; ++p.y)
-        {
-            if (p == you.pos())
-                continue;
-            if (const monsters *mon = monster_at(p))
-            {
-                if (!mons_friendly(mon))
-                    return (2);
-            }
-        }
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
+    {
+	const hexcoord p = you.pos() + *it;
+	if (const monsters *mon = monster_at(p))
+	{
+	    if (!mons_friendly(mon))
+		return (2);
+	}
+    }
     return (6 * 6);
 }
 
@@ -181,7 +181,7 @@ void tag_followers()
     const int radius2 = follower_tag_radius2();
     int n_followers = 18;
 
-    std::vector<coord_def> places[2];
+    std::vector<hexcoord> places[2];
     int place_set = 0;
 
     places[place_set].push_back(you.pos());
@@ -189,28 +189,28 @@ void tag_followers()
     while (!places[place_set].empty())
     {
         for (int i = 0, size = places[place_set].size(); i < size; ++i)
-        {
-            const coord_def &p = places[place_set][i];
+	{
+	    const hexcoord &p = places[place_set][i];
 
-            coord_def fp;
-            for (fp.x = p.x - 1; fp.x <= p.x + 1; ++fp.x)
-                for (fp.y = p.y - 1; fp.y <= p.y + 1; ++fp.y)
-                {
-                    if (fp == p || (fp - you.pos()).abs() > radius2
-                        || !in_bounds(fp) || travel_point_distance[fp.x][fp.y])
-                    {
-                        continue;
-                    }
-                    travel_point_distance[fp.x][fp.y] = 1;
-                    if (tag_follower_at(fp))
-                    {
-                        // If we've run out of our follower allowance, bail.
-                        if (--n_followers <= 0)
-                            return;
-                        places[!place_set].push_back(fp);
-                    }
-                }
-        }
+	    hexdir::circle c(1);
+	    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
+	    {
+		const hexcoord fp = p + *it;
+		if ((fp - you.pos()).abs() > radius2
+			|| !in_bounds(fp) || travel_point_distance[fp.x][fp.y])
+		{
+		    continue;
+		}
+		travel_point_distance[fp.x][fp.y] = 1;
+		if (tag_follower_at(fp))
+		{
+		    // If we've run out of our follower allowance, bail.
+		    if (--n_followers <= 0)
+			return;
+		    places[!place_set].push_back(fp);
+		}
+	    }
+	}
         places[place_set].clear();
         place_set = !place_set;
     }
@@ -787,25 +787,25 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
     }
 }    
 
-// More accurate than distance() given the actual movement geometry -- bwr
 int grid_distance( int x, int y, int x2, int y2 )
 {
-    const int dx = abs( x - x2 );
-    const int dy = abs( y - y2 );
-
-    // returns distance in terms of moves:
-    return ((dx > dy) ? dx : dy);
+    return hexcoord(x,y).distance_from(hexcoord(x2,y2));
 }
 
 int distance( int x, int y, int x2, int y2 )
 {
-    //jmf: now accurate, but remember to only compare vs. pre-squared distances
-    //     thus, next to == (distance(m1.x,m1.y, m2.x,m2.y) <= 2)
-    const int dx = x - x2;
-    const int dy = y - y2;
-
-    return ((dx * dx) + (dy * dy));
+    return distance(hexcoord(x,y), hexcoord(x2,y2));
 }                               // end distance()
+
+int distance( hexcoord c1, hexcoord c2 )
+{
+    // [hex]: accurate (X+Y+Z==0, so 0 or 2 of them are odd, so 0 or 2 of
+    // X^2,Y^2,Z^2 are odd, so sum is even). remember to only compare vs.
+    // pre-squared distances thus, next to == (distance(m1.x,m1.y, m2.x,m2.y)
+    // <= 2)
+    const hexdir d = c2 - c1;
+    return (d.X * d.X + d.Y * d.Y + d.Z * d.Z)/2;
+}
 
 bool adjacent( int x, int y, int x2, int y2 )
 {
@@ -836,20 +836,38 @@ bool player_can_hear(int x, int y)
     return (!silenced(x, y) && !silenced(you.x_pos, you.y_pos));
 }                               // end player_can_hear()
 
-// Returns true if inside the area the player can move and dig (ie exclusive)
-bool in_bounds( int x, int y )
+// Returns true if inside the ultimate map, by at least boundary hexes
+bool in_hex_G_bounds( const hexcoord &pos, int boundary, int square_boundary )
 {
-    return (x > X_BOUND_1 && x < X_BOUND_2 
-            && y > Y_BOUND_1 && y < Y_BOUND_2);
+    if (square_boundary <= 0)
+	return ((pos - hexcoord::centre).rdist() <= GRAD - boundary);
+    else
+	return ((pos - hexcoord::centre).rdist() <= GRAD - boundary
+		&& in_G_bounds(pos, square_boundary));
+
+}
+
+bool in_G_bounds( const hexcoord &pos, int boundary )
+{
+    // Eventually it would be nice to replace this by in_hex_G_bounds. For
+    // now, we want square maps to co-exist with hexagonal ones (because
+    // otherwise every ENCOMPASS vault would have to be rewritten).
+    return (pos.x >= boundary && pos.x < GXM - boundary &&
+	    pos.y >= boundary && pos.y < GYM - boundary);
+}
+
+// Returns true if inside the area the player can move and dig (ie exclusive)
+bool in_bounds( const hexcoord &pos )
+{
+    return in_G_bounds(pos, BOUNDARY_BORDER + 1);
 }
 
 // Returns true if inside the area the player can map (ie inclusive).
 // Note that terrain features should be in_bounds() leaving an outer
 // ring of rock to frame the level.
-bool map_bounds( int x, int y )
+bool map_bounds( const hexcoord &pos )
 {
-    return (x >= X_BOUND_1 && x <= X_BOUND_2
-            && y >= Y_BOUND_1 && y <= Y_BOUND_2);
+    return in_G_bounds(pos, BOUNDARY_BORDER);
 }
 
 // Returns a random location in (x_pos, y_pos)... the grid will be
@@ -1130,46 +1148,43 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 // returns 1 if the point is near unoccupied stairs
 // returns 2 if the point is near player-occupied stairs
 
-int near_stairs(const coord_def &p, int max_dist,
+int near_stairs(const hexcoord &p, int max_dist,
                 dungeon_char_type &stair_type,
                 branch_type &branch)
 {
-    coord_def inc;
-    for (inc.x = -max_dist; inc.x <= max_dist; inc.x++)
+    hexdir::disc h(max_dist);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for(inc.y = -max_dist; inc.y <= max_dist; inc.y++)
-        {
-            const coord_def np(p + inc);
+	const hexcoord t = p + *it;
 
-            if (!in_bounds(np))
-                continue;
+	if (!in_G_bounds(t))
+	    continue;
 
-            const dungeon_feature_type feat = grd(np);
-            if (is_stair(feat))
-            {
-                // shouldn't happen for escape hatches
-                if (grid_is_rock_stair(feat))
-                    continue;
+	const dungeon_feature_type feat = grd(t);
+	if (is_stair(feat))
+	{
+	    // shouldn't happen for escape hatches
+	    if (grid_is_rock_stair(feat))
+		continue;
 
-                stair_type = get_feature_dchar(feat);
-                
-                // is it a branch stair?
-                for (int i = 0; i < NUM_BRANCHES; ++i)
-                {
-                     if (branches[i].entry_stairs == feat)
-                     {
-                         branch = branches[i].id;
-                         break;
-                     }
-                     else if (branches[i].exit_stairs == feat)
-                     {
-                         branch = branches[i].parent_branch;
-                         break;
-                     }
-                }
-                return (np == you.pos()? 2 : 1);
-            }
-        }
+	    stair_type = get_feature_dchar(feat);
+
+	    // is it a branch stair?
+	    for (int i = 0; i < NUM_BRANCHES; ++i)
+	    {
+		if (branches[i].entry_stairs == feat)
+		{
+		    branch = branches[i].id;
+		    break;
+		}
+		else if (branches[i].exit_stairs == feat)
+		{
+		    branch = branches[i].parent_branch;
+		    break;
+		}
+	    }
+	    return (t == you.pos()? 2 : 1);
+	}
     }
 
     return false;
@@ -1185,51 +1200,48 @@ bool is_trap_square(int x, int y)
 // applied to new games.
 void zap_los_monsters()
 {
-    losight(env.show, grd, you.x_pos, you.y_pos);
+    losight(env.show, grd, you.pos());
 
-    for (int y = crawl_view.vlos1.y; y <= crawl_view.vlos2.y; ++y)
+    hexdir::disc h(LOS_RADIUS);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (int x = crawl_view.vlos1.x; x <= crawl_view.vlos2.x; ++x)
-        {
-            if (!in_vlos(x, y))
-                continue;
+	const hexcoord g = you.pos() + *it;
 
-            const int gx = view2gridX(x),
-                      gy = view2gridY(y);
+	if (!in_los(g.x,g.y))
+	    continue;
 
-            if (!map_bounds(gx, gy))
-                continue;
+	if (!map_bounds(g))
+	    continue;
 
-            if (gx == you.x_pos && gy == you.y_pos)
-                continue;
+	if (g == you.pos())
+	    continue;
 
-            int imon = mgrd[gx][gy];
-            
-            // at tutorial beginning disallow items in line of sight
-            if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
-            {
-                int item = igrd[gx][gy];
-            
-                if (item != NON_ITEM && is_valid_item(mitm[item]) )
-                    destroy_item(item);
-            }
+	int imon = mgrd(g);
 
-            if (imon == NON_MONSTER || imon == MHITYOU)
-                continue;
+	// at tutorial beginning disallow items in line of sight
+	if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
+	{
+	    int item = igrd(g);
 
-            // If we ever allow starting with a friendly monster,
-            // we'll have to check here.
-            monsters *mon = &menv[imon];
+	    if (item != NON_ITEM && is_valid_item(mitm[item]) )
+		destroy_item(item);
+	}
 
-            if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
-                continue;
-            
+	if (imon == NON_MONSTER || imon == MHITYOU)
+	    continue;
+
+	// If we ever allow starting with a friendly monster,
+	// we'll have to check here.
+	monsters *mon = &menv[imon];
+
+	if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
+	    continue;
+
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
-                 mon->name(DESC_PLAIN, true).c_str() );
+	mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
+		mon->name(DESC_PLAIN, true).c_str() );
 #endif
-            monster_die(mon, KILL_DISMISSED, 0);
-        }
+	monster_die(mon, KILL_DISMISSED, 0);
     }
 }
 
@@ -1238,6 +1250,115 @@ void zap_los_monsters()
 int coord_def::distance_from(const coord_def &other) const
 {
     return (grid_distance(x, y, other.x, other.y));
+}
+
+// hexcoord and hexdir methods:
+
+/*    ` 1 '
+ *    2` '0
+ *    --*--
+ *    3' `5
+ *    ' 4 `
+ * Partitions space; zero is arbitrarily assigned to hextant 0 */
+
+int hexdir::hextant() const
+{
+    if (X >= 0 && Y > 0)
+	return 0;
+    if (-Z >= 0 && -X > 0)
+	return 1;
+    if (Y >= 0 && Z > 0)
+	return 2;
+    if (-X >= 0 && -Y > 0)
+	return 3;
+    if (Z >= 0 && X > 0)
+	return 4;
+    if (-Y >= 0 && -Z > 0)
+	return 5;
+    return 0;
+}
+
+void hexdir::rotate(int hextants)
+{
+    while (hextants < 0)
+	hextants += 6;
+    while (hextants >= 6)
+	hextants -= 6;
+    while (hextants >= 2)
+    {
+	int tZ = Z;
+	Z = Y; Y = X; X = tZ;
+	hextants -= 2;
+    }
+    if (hextants == 1)
+    {
+	int tX = X;
+	X = -Y; Y = -Z; Z = -tX;
+    }
+}
+
+const hexdir hexdir::u(1,0,-1);
+const hexdir hexdir::v(-1,1,0);
+const hexdir hexdir::w(0,-1,1);
+const hexdir hexdir::zero(0,0,0);
+
+const hexcoord hexcoord::centre(0,0,0);
+
+const coord_def coord_def::zero(0,0);
+
+// hexcoord and hexdir functions:
+
+// returns a random hex from those at most radius hexes from zero:
+hexdir random_hex(int radius)
+{
+    if (radius <= 0)
+	return hexdir::zero;
+    int X, Y, Z;
+    do
+    {
+	X = random2(2*radius+1) - radius;
+	Y = random2(2*radius+1) - radius;
+	Z = -X-Y;
+    } while (abs(Z) > radius);
+    return hexdir(X,Y,Z);
+}
+
+// returns a rdist==1 hex
+hexdir random_direction()
+{
+    return hexdir::u.rotated(random2(6));
+}
+// rdist<=1 hexdir towards hexdir
+hexdir hex_dir_towards(const hexdir &hex)
+{
+    hexdir dir(0,0,0);
+
+    if (hex == hexdir::zero)
+	return dir;
+
+    // rotate to the primary hextant
+    hexdir copy = hex.rotated(-hex.hextant());
+
+    if (copy.Y > copy.X)
+	dir.set(0,1,-1);
+    else if (copy.X > copy.Y)
+	dir.set(1,0,-1);
+    else
+    {
+	if (coinflip())
+	    dir.set(0,1,-1);
+	else
+	    dir.set(1,0,-1);
+    }
+
+    // rotate answer back again
+    dir.rotate(hex.hextant());
+    return dir;
+}
+
+bool hexdir_is_straight(const hexdir &d)
+{
+    return (d == hex_dir_towards(d)*d.rdist());
 }
 
 int random_rod_subtype()

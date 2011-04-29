@@ -1,7 +1,7 @@
 # -*- Makefile -*- for Dungeon Crawl
 
 #
-# Modified for Crawl Reference by $Author$ on $Date$
+# Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2006-11-22 08:41:20 +0000 (Wed, 22 Nov 2006) $
 #
 
 PROJECT = Crawl.xcodeproj

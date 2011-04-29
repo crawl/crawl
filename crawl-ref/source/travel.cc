@@ -3,7 +3,9 @@
  *  Summary:    Travel stuff
  *  Written by: Darshan Shaligram
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-31 03:20:47 +0100 (Wed, 31 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Known issues:
  *   Hardcoded dungeon features all over the place - this thing is a devil to
@@ -954,10 +956,8 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
  */
 command_type travel()
 {
-    char holdx, holdy;
-    char *move_x = &holdx;
-    char *move_y = &holdy;
-    holdx = holdy = 0;
+    hexdir hold = hexdir::zero;
+    hexdir *move = &hold;
     
     command_type result = CMD_NO_CMD;
 
@@ -1034,35 +1034,34 @@ command_type travel()
 
         // Get the next step to make. If the travel command can't find a route,
         // we turn off travel (find_travel_pos does that automatically).
-        find_travel_pos(you.x_pos, you.y_pos, move_x, move_y);
+        find_travel_pos(you.pos(), move);
 
-        if ((*move_x || *move_y) && you.running == RMODE_EXPLORE_GREEDY)
+        if (( *move != hexdir::zero ) && you.running == RMODE_EXPLORE_GREEDY)
         {
             // Greedy explore should cut off on reaching an item. We can't
             // check after reaching the item, because at that point the stash
             // tracker will have verified the stash and say "false" to
             // needs_visit.
-            const int new_x = you.x_pos + *move_x;
-            const int new_y = you.y_pos + *move_y;
+	    const hexcoord newpos = you.pos() + *move;
 
-            if (new_x == you.running.x && new_y == you.running.y)
+            if (newpos.x == you.running.x && newpos.y == you.running.y)
             {
                 const LevelStashes *lev = stashes.find_current_level();
-                if (lev && lev->needs_visit(new_x, new_y)
-                    && !lev->shop_needs_visit(new_x, new_y))
+                if (lev && lev->needs_visit(newpos.x, newpos.y)
+                    && !lev->shop_needs_visit(newpos.x, newpos.y))
                 {
                     if ((Options.explore_stop & ES_ITEM)
                             && prompt_stop_explore(ES_ITEM))
                     {
-                        explore_stopped_pos = coord_def(new_x, new_y);
+                        explore_stopped_pos = coord_def(newpos.x, newpos.y);
                         stop_running();
                     }
-                    return direction_to_command( *move_x, *move_y );
+                    return direction_to_command( *move );
                 }
             }
         }
 
-        if (!*move_x && !*move_y)
+        if ( *move == hexdir::zero )
         {
             // If we've reached the square we were traveling towards, travel
             // should stop if this is simple travel. If we're exploring, we
@@ -1125,6 +1124,7 @@ command_type travel()
                     // us to recalculate our travel target next turn (see
                     // previous if block).
                     you.running.x = you.running.y = 0;
+		    you.running.dir = hexdir::zero;
                 }
                 else
                 {
@@ -1151,22 +1151,20 @@ command_type travel()
     if ( result != CMD_NO_CMD )
         return result;
 
-    return direction_to_command( *move_x, *move_y );
+    return direction_to_command( *move );
 }
 
-command_type direction_to_command( char x, char y )
+command_type direction_to_command( hexdir dir )
 {
-    if ( x == -1 && y == -1 ) return CMD_MOVE_UP_LEFT;
-    if ( x == -1 && y ==  0 ) return CMD_MOVE_LEFT;
-    if ( x == -1 && y ==  1 ) return CMD_MOVE_DOWN_LEFT;
-    if ( x ==  0 && y == -1 ) return CMD_MOVE_UP;
-    if ( x ==  0 && y ==  0 )
+    if (dir == hexdir::u) return CMD_MOVE_RIGHT;
+    if (dir == hexdir::v) return CMD_MOVE_UP_LEFT;
+    if (dir == hexdir::w) return CMD_MOVE_DOWN_LEFT;
+    if (dir == -hexdir::u) return CMD_MOVE_LEFT;
+    if (dir == -hexdir::v) return CMD_MOVE_DOWN_RIGHT;
+    if (dir == -hexdir::w) return CMD_MOVE_UP_RIGHT;
+    if (dir == hexdir::zero) 
         return you.running == RMODE_EXPLORE_GREEDY?
             CMD_INSPECT_FLOOR : CMD_NO_CMD;
-    if ( x ==  0 && y ==  1 ) return CMD_MOVE_DOWN;
-    if ( x ==  1 && y == -1 ) return CMD_MOVE_UP_RIGHT;
-    if ( x ==  1 && y ==  0 ) return CMD_MOVE_RIGHT;
-    if ( x ==  1 && y ==  1 ) return CMD_MOVE_DOWN_RIGHT;
 
     ASSERT(0);
     return CMD_NO_CMD;
@@ -1636,17 +1634,16 @@ bool travel_pathfind::point_traverse_delay(const coord_def &c)
     return (false);
 }
 
-bool travel_pathfind::path_examine_point(const coord_def &c)
+bool travel_pathfind::path_examine_point(const coord_def &p)
 {
-    if (point_traverse_delay(c))
+    if (point_traverse_delay(p))
         return (false);
 
-    // For each point, we look at all surrounding points. Take them orthogonals
-    // first so that the travel path doesn't zigzag all over the map. Note the
-    // (dir = 1) is intentional assignment.
-    for (int dir = 0; dir < 8; (dir += 2) == 8 && (dir = 1))
+    // For each point, we look at all surrounding points.
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
     {
-        if (path_flood(c, c + Compass[dir]))
+        if (path_flood(p, p.tohex() + *it))
             return (true);
     }
     
@@ -1655,34 +1652,30 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void find_travel_pos(int youx, int youy, 
-                     char *move_x, char *move_y,
-                     std::vector<coord_def>* features)
+void find_travel_pos( hexcoord youpos, hexdir *move,
+		     std::vector<coord_def>* features)
 {
     travel_pathfind tp;
 
-    if (move_x && move_y)
-        tp.set_src_dst(coord_def(youx, youy),
+    if (move)
+        tp.set_src_dst(youpos,
                        coord_def(you.running.x, you.running.y));
     else
-        tp.set_floodseed(coord_def(youx, youy));
+        tp.set_floodseed(youpos);
 
     tp.set_feature_vector(features);
 
-    run_mode_type rmode = move_x && move_y? RMODE_TRAVEL : RMODE_NOT_RUNNING;
+    run_mode_type rmode = move ? RMODE_TRAVEL : RMODE_NOT_RUNNING;
     
     const coord_def dest = tp.pathfind( rmode );
 
     if (dest.x == 0 && dest.y == 0)
     {
-        if (move_x && move_y)
+        if (move)
             you.running = RMODE_NOT_RUNNING;
     }
-    else if (move_x && move_y)
-    {
-        *move_x = dest.x - youx;
-        *move_y = dest.y - youy;
-    }
+    else if (move)
+	*move = dest.tohex() - youpos;
 }
 
 /*
@@ -2353,6 +2346,7 @@ void start_translevel_travel(bool prompt_for_destination)
     {
         you.running = RMODE_INTERLEVEL;
         you.running.x = you.running.y = 0;
+	you.running.dir = hexdir::zero;
         last_stair.depth = -1;
         start_running();
     }
@@ -2621,7 +2615,7 @@ static bool loadlev_populate_stair_distances(const level_pos &target)
 static void populate_stair_distances(const level_pos &target)
 {
     // Populate travel_point_distance.
-    find_travel_pos(target.pos.x, target.pos.y, NULL, NULL, NULL);
+    find_travel_pos(target.pos.tohex(), NULL, NULL);
 
     LevelInfo &li = travel_cache.get_level_info(target.id);
     const std::vector<stair_info> &stairs = li.get_stairs();
@@ -2651,7 +2645,7 @@ static bool find_transtravel_square(const level_pos &target, bool verbose)
     int best_level_distance = -1;
     travel_cache.clear_distances();
 
-    find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
+    find_travel_pos(you.pos(), NULL, NULL);
 
     const LevelInfo &target_level =
         travel_cache.get_level_info( target.id );
@@ -2746,6 +2740,7 @@ void start_explore(bool grab_items)
     mapshadow = env.map;
 
     you.running.x = you.running.y = 0;
+    you.running.dir = hexdir::zero;
     start_running();
 }
 
@@ -2970,8 +2965,8 @@ void LevelInfo::update_stair_distances()
     {
         // For each stair, we need to ask travel to populate the distance
         // array.
-        find_travel_pos(stairs[s].position.x, stairs[s].position.y, 
-                        NULL, NULL, NULL);
+        find_travel_pos(hexcoord(stairs[s].position.x, stairs[s].position.y),
+                        NULL, NULL);
 
         for (int other = 0; other < end; ++other)
         {
@@ -3600,40 +3595,36 @@ bool can_travel_interlevel()
 // Shift-running and resting.
 
 runrest::runrest()
-    : runmode(0), mp(0), hp(0), x(0), y(0)
+    : runmode(0), mp(0), hp(0), x(0), y(0), dir(hexdir::zero)
 {
 }
 
 // Initialize is only called for resting/shift-running. We should eventually
 // include travel and wrap it all in.
-void runrest::initialise(int dir, int mode)
+void runrest::initialise(const hexdir &rdir, int mode)
 {
     // Note HP and MP for reference.
     hp = you.hp;
     mp = you.magic_points;
 
-    if (dir == RDIR_REST)
+    if (rdir == hexdir::zero)
     {
-        x = 0;
-        y = 0;
+	x = y = 0;
+	dir = rdir;
         runmode = mode;
     }
     else
     {
-        ASSERT( dir >= 0 && dir <= 7 );
-
-        x = Compass[dir].x;
-        y = Compass[dir].y;
+	dir = rdir;
         runmode = mode;
 
-        // Get the compass point to the left/right of intended travel:
-        const int left  = (dir - 1 < 0) ? 7 : (dir - 1);
-        const int right = (dir + 1 > 7) ? 0 : (dir + 1);
+	// [hex] XXX: just in case anything is expecting these to be set to
+	// non-zero values... (the actual information is now stored in dir)
+	x = y = 1;
 
         // Record the direction and starting tile type for later reference:
-        set_run_check( 0, left );
-        set_run_check( 1, dir );
-        set_run_check( 2, right );    
+	for ( int i = -1; i <= 1; i++ )
+	    set_run_check( i+1, dir.rotated(i) );
     }
 
     if (runmode == RMODE_REST_DURATION)
@@ -3669,45 +3660,52 @@ static dungeon_feature_type base_grid_type( dungeon_feature_type grid )
     return (grid);
 }
 
-void runrest::set_run_check(int index, int dir)
+void runrest::set_run_check(int index, const hexdir &d)
 {
-    run_check[index].dx = Compass[dir].x;
-    run_check[index].dy = Compass[dir].y;
-
-    const int targ_x = you.x_pos + Compass[dir].x;
-    const int targ_y = you.y_pos + Compass[dir].y;
-
-    run_check[index].grid = base_grid_type( grd[ targ_x ][ targ_y ] );
+    run_check[index] = base_grid_type( grd(you.pos() + d) );
 }
 
-bool runrest::check_stop_running()
+int runrest::check_stop_running()
 {
     if (runmode > 0 && runmode != RMODE_START && run_grids_changed())
     {
-        stop();
-        return (true);
+	// [hex] If we're running through a "tunnel" and hit a wall...
+	if ( grid_is_solid(grd(you.pos() + dir)) && 
+		grid_is_solid(static_cast<dungeon_feature_type>(run_check[0])) &&
+		grid_is_solid(static_cast<dungeon_feature_type>(run_check[2])) )
+	    // ...then try turning to one side to follow the tunnel
+	    // Note that we don't keep running at a junction, i.e. when we could
+	    // turn in either direction.
+	    // Return codes (sorry): 0 to continue, 1 to stop, 2/3 to turn
+	    // left/right
+	    for ( int i = -1; i<=1; i+=2 )
+		if (!run_grids_changed(i) && run_grids_changed(-i))
+		{
+		    dir.rotate(i);
+		    return i == -1 ? 2 : 3;
+		}
+
+	stop();
+	return 1;
     }
-    return (false);
+    return 0;
 }
 
 // This function creates "equivalence classes" so that undiscovered
 // traps and secret doors aren't running stopping points.
-bool runrest::run_grids_changed() const
+bool runrest::run_grids_changed(int rotate) const
 {
-    if (env.cgrid[you.x_pos + x][you.y_pos + y] != EMPTY_CLOUD)
+    if (env.cgrid(you.pos() + dir.rotated(rotate)) != EMPTY_CLOUD)
         return (true);
 
-    if (mgrd[you.x_pos + x][you.y_pos + y] != NON_MONSTER)
+    if (mgrd(you.pos() + dir.rotated(rotate)) != NON_MONSTER)
         return (true);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = -1; i <= 1; i++)
     {
-        const int targ_x = you.x_pos + run_check[i].dx;
-        const int targ_y = you.y_pos + run_check[i].dy;
-        const dungeon_feature_type targ_grid =
-            base_grid_type( grd[ targ_x ][ targ_y ] );
+        const dungeon_feature_type targ_grid = base_grid_type( grd(you.pos() + dir.rotated(i+rotate)) );
 
-        if (run_check[i].grid != targ_grid)
+        if (run_check[i+1] != targ_grid)
             return (true);
     }
 
@@ -3731,7 +3729,7 @@ void runrest::stop()
 
 bool runrest::is_rest() const
 {
-    return (runmode > 0 && !x && !y);    
+    return (runmode > 0 && dir == hexdir::zero);    
 }
 
 bool runrest::is_explore() const
@@ -3750,6 +3748,7 @@ void runrest::clear()
 {
     runmode = RMODE_NOT_RUNNING;
     x = y = 0;
+    dir = hexdir::zero;
     mp = hp = 0;
 }
 

@@ -3,7 +3,9 @@
  *  Summary:    Misc functions (most of which don't appear to be related to priests).
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-30 06:38:13 +0100 (Tue, 30 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -245,38 +247,35 @@ void area_shift(void)
     }
 
     // shift all monsters & items to new area
-    for (int i = you.x_pos - 10; i < you.x_pos + 11; i++)
+    const hexcoord dest_centre(45,35);
+    hexdir::disc h(10);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        if (i < 0 || i >= GXM)
-            continue;
 
-        for (int j = you.y_pos - 10; j < you.y_pos + 11; j++)
-        {
-            if (j < 0 || j >= GYM)
-                continue;
+	const hexcoord from = you.pos() + *it;
+	const hexcoord to = dest_centre + *it;
 
-            const int ipos = 45 + i - you.x_pos;
-            const int jpos = 35 + j - you.y_pos;
+	if (!in_G_bounds(from))
+	    continue;
 
-            // move terrain
-            grd[ipos][jpos] = grd[i][j];
+	// move terrain
+	grd(to) = grd(from);
 
-            // move item
-            move_item_stack_to_grid( i, j, ipos, jpos );
+	// move item
+	move_item_stack_to_grid( from.x, from.y, to.x, to.y );
 
-            // move monster
-            mgrd[ipos][jpos] = mgrd[i][j];
-            if (mgrd[i][j] != NON_MONSTER)
-            {
-                menv[mgrd[ipos][jpos]].x = ipos;
-                menv[mgrd[ipos][jpos]].y = jpos;
-                mgrd[i][j] = NON_MONSTER;
-            }
+	// move monster
+	mgrd(to) = mgrd(from);
+	if (mgrd(from) != NON_MONSTER)
+	{
+	    menv[mgrd(to)].x = from.x;
+	    menv[mgrd(to)].y = from.y;
+	    mgrd(from) = NON_MONSTER;
+	}
 
-            // move cloud
-            if (env.cgrid[i][j] != EMPTY_CLOUD)
-                move_cloud( env.cgrid[i][j], ipos, jpos );
-        }
+	// move cloud
+	if (env.cgrid(from) != EMPTY_CLOUD)
+	    move_cloud( env.cgrid(to), from.x, from.y );
     }
 
 
@@ -436,13 +435,14 @@ static void initialise_level_corrupt_seeds(int power)
     }
 }
 
-static bool spawn_corrupted_servant_near(const coord_def &pos)
+static bool spawn_corrupted_servant_near(const hexcoord &pos)
 {
     // Thirty tries for a place
     for (int i = 0; i < 30; ++i)
     {
-        const coord_def p( pos.x + random2avg(4, 3) + random2(3),
-                           pos.y + random2avg(4, 3) + random2(3) );
+        //const coord_def p( pos.x + random2avg(4, 3) + random2(3),
+                           //pos.y + random2avg(4, 3) + random2(3) );
+	const hexcoord p = pos + random_hex(1) + random_hex(1) + random_hex(1);
         if (!in_bounds(p) || p == you.pos() || mgrd(p) != NON_MONSTER
             || !grid_compatible(DNGN_FLOOR, grd(p), true))
             continue;
@@ -534,45 +534,35 @@ static bool is_grid_corruptible(const coord_def &c)
     }
 }
 
-// Returns true if the square has <= 4 traversable neighbours. 
-static bool is_crowded_square(const coord_def &c)
+// Returns true if the square has <= 3 traversable neighbours. 
+static bool is_crowded_square(const hexcoord &c)
 {
     int neighbours = 0;
-    for (int xi = -1; xi <= 1; ++xi)
+    hexdir::circle circ(1);
+    for (hexdir::circle::iterator it = circ.begin(); it != circ.end(); it++)
     {
-        for (int yi = -1; yi <= 1; ++yi)
-        {
-            if (!xi && !yi)
-                continue;
+	const hexcoord n = c + *it;
+	if (!in_bounds(n) || !is_traversable(grd(n)))
+	    continue;
 
-            const coord_def n(c.x + xi, c.y + yi);
-            if (!in_bounds(n) || !is_traversable(grd(n)))
-                continue;
-
-            if (++neighbours > 4)
-                return (false);
-        }
+	if (++neighbours > 3)
+	    return (false);
     }
     return (true);
 }
 
 // Returns true if the square has all opaque neighbours.
-static bool is_sealed_square(const coord_def &c)
+static bool is_sealed_square(const hexcoord &c)
 {
-    for (int xi = -1; xi <= 1; ++xi)
+    hexdir::circle circ(1);
+    for (hexdir::circle::iterator it = circ.begin(); it != circ.end(); it++)
     {
-        for (int yi = -1; yi <= 1; ++yi)
-        {
-            if (!xi && !yi)
-                continue;
+	const hexcoord n = c + *it;
+	if (!in_bounds(n))
+	    continue;
 
-            const coord_def n(c.x + xi, c.y + yi);
-            if (!in_bounds(n))
-                continue;
-
-            if (!grid_is_opaque(grd(n)))
-                return (false);
-        }
+	if (!grid_is_opaque(grd(n)))
+	    return (false);
     }
     return (true);
 }

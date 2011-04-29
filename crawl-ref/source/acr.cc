@@ -3,7 +3,9 @@
  *  Summary:    Main entry point, event loop, and some initialization functions
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-11-19 15:28:34 +0100 (Mon, 19 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -159,10 +161,10 @@ const struct coord_def Compass[8] =
 static void do_berserk_no_combat_penalty(void);
 static bool initialise(void);
 static void input(void);
-static void move_player(int move_x, int move_y);
-static void open_door(int move_x, int move_y, bool check_confused = true);
-static void close_door(int move_x, int move_y);
-static void start_running( int dir, int mode );
+static void move_player(hexdir dir);
+static void open_door(const hexdir dir, bool check_confused = true);
+static void close_door();
+static void start_running( const hexdir &dir, int mode );
 
 static void prep_input();
 static void input();
@@ -917,7 +919,7 @@ static void handle_wizard_command( void )
 #endif
 
 // Set up the running variables for the current run.
-static void start_running( int dir, int mode )
+static void start_running( const hexdir &dir, int mode )
 {
     if (Options.tutorial_events[TUT_SHIFT_RUN] && mode == RMODE_START)
         Options.tutorial_events[TUT_SHIFT_RUN] = 0;
@@ -1001,6 +1003,8 @@ static void input()
     you.turn_is_over = false;
     prep_input();
 
+    you.stealthy_action = false;
+
     fire_monster_alerts();
 
     Options.tut_just_triggered = false;
@@ -1043,6 +1047,7 @@ static void input()
  
     if ( you.duration[DUR_PARALYSIS] )
     {
+	you.stealthy_action = true;
         world_reacts();
         return;
     }
@@ -1298,23 +1303,19 @@ void process_command( command_type cmd )
 
     switch (cmd)
     {
-    case CMD_OPEN_DOOR_UP_RIGHT:   open_door(-1, -1); break;
-    case CMD_OPEN_DOOR_UP:         open_door( 0, -1); break;
-    case CMD_OPEN_DOOR_UP_LEFT:    open_door( 1, -1); break;
-    case CMD_OPEN_DOOR_RIGHT:      open_door( 1,  0); break;
-    case CMD_OPEN_DOOR_DOWN_RIGHT: open_door( 1,  1); break;
-    case CMD_OPEN_DOOR_DOWN:       open_door( 0,  1); break;
-    case CMD_OPEN_DOOR_DOWN_LEFT:  open_door(-1,  1); break;
-    case CMD_OPEN_DOOR_LEFT:       open_door(-1,  0); break;
+    case CMD_OPEN_DOOR_DOWN_LEFT:  open_door(hexdir::w); break;
+    case CMD_OPEN_DOOR_UP_RIGHT:   open_door(-hexdir::w); break;
+    case CMD_OPEN_DOOR_UP_LEFT:    open_door(hexdir::v); break;
+    case CMD_OPEN_DOOR_LEFT:       open_door(-hexdir::u); break;
+    case CMD_OPEN_DOOR_DOWN_RIGHT: open_door(-hexdir::v); break;
+    case CMD_OPEN_DOOR_RIGHT:      open_door(hexdir::u); break;
 
-    case CMD_MOVE_DOWN_LEFT:  move_player(-1,  1); break;
-    case CMD_MOVE_DOWN:       move_player( 0,  1); break;
-    case CMD_MOVE_UP_RIGHT:   move_player( 1, -1); break;
-    case CMD_MOVE_UP:         move_player( 0, -1); break;
-    case CMD_MOVE_UP_LEFT:    move_player(-1, -1); break;
-    case CMD_MOVE_LEFT:       move_player(-1,  0); break;
-    case CMD_MOVE_DOWN_RIGHT: move_player( 1,  1); break;
-    case CMD_MOVE_RIGHT:      move_player( 1,  0); break;
+    case CMD_MOVE_DOWN_LEFT:  move_player(hexdir::w); break;
+    case CMD_MOVE_UP_RIGHT:   move_player(-hexdir::w); break;
+    case CMD_MOVE_UP_LEFT:    move_player(hexdir::v); break;
+    case CMD_MOVE_LEFT:       move_player(-hexdir::u); break;
+    case CMD_MOVE_DOWN_RIGHT: move_player(-hexdir::v); break;
+    case CMD_MOVE_RIGHT:      move_player(hexdir::u); break;
 
     case CMD_REST:
         if (i_feel_safe())
@@ -1325,32 +1326,26 @@ void process_command( command_type cmd )
             else
                 mpr("You start resting.");
         }
-        start_running( RDIR_REST, RMODE_REST_DURATION );
+        start_running( hexdir::zero, RMODE_REST_DURATION );
         break;
 
     case CMD_RUN_DOWN_LEFT:
-        start_running( RDIR_DOWN_LEFT, RMODE_START );
-        break;
-    case CMD_RUN_DOWN:
-        start_running( RDIR_DOWN, RMODE_START );
+        start_running( hexdir::w, RMODE_START );
         break;
     case CMD_RUN_UP_RIGHT:
-        start_running( RDIR_UP_RIGHT, RMODE_START );
-        break;
-    case CMD_RUN_UP:
-        start_running( RDIR_UP, RMODE_START );
+        start_running( -hexdir::w, RMODE_START );
         break;
     case CMD_RUN_UP_LEFT:
-        start_running( RDIR_UP_LEFT, RMODE_START );
+        start_running( hexdir::v, RMODE_START );
         break;
     case CMD_RUN_LEFT:
-        start_running( RDIR_LEFT, RMODE_START );
+        start_running( -hexdir::u, RMODE_START );
         break;
     case CMD_RUN_DOWN_RIGHT:
-        start_running( RDIR_DOWN_RIGHT, RMODE_START );
+        start_running( -hexdir::v, RMODE_START );
         break;
     case CMD_RUN_RIGHT:
-        start_running( RDIR_RIGHT, RMODE_START );
+        start_running( hexdir::u, RMODE_START );
         break;
 
     case CMD_DISABLE_MORE:
@@ -1399,8 +1394,8 @@ void process_command( command_type cmd )
     case CMD_GO_UPSTAIRS: go_upstairs(); break;
     case CMD_GO_DOWNSTAIRS: go_downstairs(); break;
     case CMD_DISPLAY_OVERMAP: display_overmap(); break;
-    case CMD_OPEN_DOOR: open_door(0, 0); break;
-    case CMD_CLOSE_DOOR: close_door(0, 0); break;
+    case CMD_OPEN_DOOR: open_door(hexdir::zero); break;
+    case CMD_CLOSE_DOOR: close_door(); break;
 
     case CMD_DROP:
         drop();
@@ -1566,6 +1561,7 @@ void process_command( command_type cmd )
     case CMD_MOVE_NOWHERE:
     case CMD_SEARCH:
         search_around();
+	you.stealthy_action = true;
         you.turn_is_over = true;
         break;
 
@@ -1583,17 +1579,17 @@ void process_command( command_type cmd )
         break;
 
     case CMD_LOOK_AROUND:
-    {
-        mpr("Move the cursor around to observe a square "
-            "(v - describe square, ? - help)",
-            MSGCH_PROMPT);
+	{
+	    mpr("Move the cursor around to observe a square "
+		    "(v - describe square, ? - help)",
+		    MSGCH_PROMPT);
 
-        struct dist lmove;      // will be initialized by direction()
-        direction(lmove, DIR_TARGET, TARG_ANY, true);
-        if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
-            start_travel( lmove.tx, lmove.ty );
-        break;
-    }
+	    struct dist lmove;      // will be initialized by direction()
+	    direction(lmove, DIR_TARGET, TARG_ANY, true);
+	    if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
+		start_travel( lmove.tx, lmove.ty );
+	    break;
+	}
 
     case CMD_CAST_SPELL:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
@@ -2659,8 +2655,6 @@ command_type keycode_to_command( keycode_type key )
     case KEY_MACRO_ENABLE_MORE:  return CMD_ENABLE_MORE;
     case 'b': return CMD_MOVE_DOWN_LEFT;
     case 'h': return CMD_MOVE_LEFT;
-    case 'j': return CMD_MOVE_DOWN;
-    case 'k': return CMD_MOVE_UP;
     case 'l': return CMD_MOVE_RIGHT;
     case 'n': return CMD_MOVE_DOWN_RIGHT;
     case 'u': return CMD_MOVE_UP_RIGHT;
@@ -2687,8 +2681,6 @@ command_type keycode_to_command( keycode_type key )
 
     case 'B': return CMD_RUN_DOWN_LEFT;
     case 'H': return CMD_RUN_LEFT;
-    case 'J': return CMD_RUN_DOWN;
-    case 'K': return CMD_RUN_UP;
     case 'L': return CMD_RUN_RIGHT;
     case 'N': return CMD_RUN_DOWN_RIGHT;
     case 'U': return CMD_RUN_UP_RIGHT;
@@ -2743,8 +2735,6 @@ command_type keycode_to_command( keycode_type key )
 
     case CONTROL('B'): return CMD_OPEN_DOOR_DOWN_LEFT;
     case CONTROL('H'): return CMD_OPEN_DOOR_LEFT;
-    case CONTROL('J'): return CMD_OPEN_DOOR_DOWN;
-    case CONTROL('K'): return CMD_OPEN_DOOR_UP;
     case CONTROL('L'): return CMD_OPEN_DOOR_RIGHT;
     case CONTROL('N'): return CMD_OPEN_DOOR_DOWN_RIGHT;
     case CONTROL('U'): return CMD_OPEN_DOOR_UP_LEFT;
@@ -2792,10 +2782,12 @@ keycode_type get_next_keycode()
    move_y are non-zero,  the pair carries a specific direction for the door
    to be opened (eg if you type ctrl - dir).
  */
-static void open_door(int move_x, int move_y, bool check_confused)
+static void open_door(hexdir dir, bool check_confused)
 {
     struct dist door_move;
-    int dx, dy;             // door x, door y
+    hexcoord t;
+
+    door_move.dir = dir;
 
     if (you.attribute[ATTR_HELD])
     {
@@ -2806,24 +2798,28 @@ static void open_door(int move_x, int move_y, bool check_confused)
 
     if (check_confused && you.duration[DUR_CONF] && !one_chance_in(3))
     {
-        move_x = random2(3) - 1;
-        move_y = random2(3) - 1;
+        if (!one_chance_in(3))
+        {
+	    if (one_chance_in(7))
+		dir = hexdir::zero;
+	    else
+	    {
+		dir = one_chance_in(3) ? hexdir::u : coinflip() ? hexdir::v : hexdir::w;
+		if (coinflip())
+		    dir = -dir;
+	    }
+        }
     }
 
-    door_move.dx = move_x;
-    door_move.dy = move_y;
-
-    if (move_x || move_y)
+    if (dir != hexdir::zero)
     {
         // convenience
-        dx = you.x_pos + move_x;
-        dy = you.y_pos + move_y;
+        t = you.pos() + dir;
 
-        const int mon = mgrd[dx][dy];
+        const int mon = mgrd(t);
 
         if (mon != NON_MONSTER && player_can_hit_monster(&menv[mon]))
         {
-
             if (mons_is_caught(&menv[mon]))
             {
 
@@ -2839,7 +2835,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
 
             }
 
-            you_attack(mgrd[dx][dy], true);
+            you_attack(mgrd(t), true);
             you.turn_is_over = true;
 
             if (you.berserk_penalty != NO_BERSERK_PENALTY)
@@ -2848,9 +2844,9 @@ static void open_door(int move_x, int move_y, bool check_confused)
             return;
         }
 
-        if (grd[dx][dy] >= DNGN_TRAP_MECHANICAL && grd[dx][dy] <= DNGN_TRAP_III)
+        if (grd(t) >= DNGN_TRAP_MECHANICAL && grd(t) <= DNGN_TRAP_III)
         {
-            if (env.cgrid[dx][dy] != EMPTY_CLOUD)
+            if (env.cgrid(t) != EMPTY_CLOUD)
             {
                 mpr("You can't get to that trap right now.");
                 return;
@@ -2869,10 +2865,9 @@ static void open_door(int move_x, int move_y, bool check_confused)
             return;
 
         // convenience
-        dx = you.x_pos + door_move.dx;
-        dy = you.y_pos + door_move.dy;
+	t = you.pos() + door_move.dir;
 
-        if (!in_bounds(dx, dy) || grd[dx][dy] != DNGN_CLOSED_DOOR)
+        if (!in_bounds(t.x, t.y) || grd(t) != DNGN_CLOSED_DOOR)
         {
             mpr( "There's no door there." );
             // Don't lose a turn.
@@ -2880,7 +2875,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
         }
     }
 
-    if (grd[dx][dy] == DNGN_CLOSED_DOOR)
+    if (grd(t) == DNGN_CLOSED_DOOR)
     {
         int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
@@ -2905,7 +2900,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
                                         : "You open the door." );
         }
 
-        grd[dx][dy] = DNGN_OPEN_DOOR;
+        grd(t) = DNGN_OPEN_DOOR;
         you.turn_is_over = true;
     }
     else
@@ -2919,49 +2914,38 @@ static void open_door(int move_x, int move_y, bool check_confused)
 /*
    Similar to open_door. Can you spot the difference?
  */
-static void close_door(int door_x, int door_y)
+static void close_door()
 {
     struct dist door_move;
-    int dx, dy;             // door x, door y
 
-    door_move.dx = door_x;
-    door_move.dy = door_y;
+    mpr("Which direction?", MSGCH_PROMPT);
+    direction( door_move, DIR_DIR );
+    if (!door_move.isValid)
+	return;
 
-    if (!(door_x || door_y))
-    {
-        mpr("Which direction?", MSGCH_PROMPT);
-        direction( door_move, DIR_DIR );
-        if (!door_move.isValid)
-            return;
-    }
-
-    if (door_move.dx == 0 && door_move.dy == 0)
+    if (door_move.dir == hexdir::zero)
     {
         mpr("You can't close doors on yourself!");
         return;
     }
 
-    // convenience
-    dx = you.x_pos + door_move.dx;
-    dy = you.y_pos + door_move.dy;
+    const hexcoord t = you.pos() + door_move.dir;
 
-    if (grd[dx][dy] == DNGN_OPEN_DOOR)
+    if (grd(t) == DNGN_OPEN_DOOR)
     {
-        if (mgrd[dx][dy] != NON_MONSTER)
+        if (mgrd(t) != NON_MONSTER)
         {
             // Need to make sure that turn_is_over is set if creature is 
             // invisible
             mpr("There's a creature in the doorway!");
-            door_move.dx = 0;
-            door_move.dy = 0;
+            door_move.dir = hexdir::zero;
             return;
         }
 
-        if (igrd[dx][dy] != NON_ITEM)
+        if (igrd(t) != NON_ITEM)
         {
             mpr("There's something blocking the doorway.");
-            door_move.dx = 0;
-            door_move.dy = 0;
+            door_move.dir = hexdir::zero;
             return;
         }
 
@@ -2988,7 +2972,7 @@ static void close_door(int door_x, int door_y)
                                         : "You close the door." );
         }
 
-        grd[dx][dy] = DNGN_CLOSED_DOOR;
+        grd(t) = DNGN_CLOSED_DOOR;
         you.turn_is_over = true;
     }
     else
@@ -3205,7 +3189,7 @@ static void do_berserk_no_combat_penalty(void)
 
 // Called when the player moves by walking/running. Also calls
 // attack function and trap function etc when necessary.
-static void move_player(int move_x, int move_y)
+static void move_player(hexdir dir)
 {
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
@@ -3222,14 +3206,20 @@ static void move_player(int move_x, int move_y)
     {
         if (!one_chance_in(3))
         {
-            move_x = random2(3) - 1;
-            move_y = random2(3) - 1;
+	    if (one_chance_in(7))
+		dir = hexdir::zero;
+	    else
+	    {
+		dir = one_chance_in(3) ? hexdir::u : coinflip() ? hexdir::v : hexdir::w;
+		if (coinflip())
+		    dir = -dir;
+	    }
         }
 
-        const int new_targ_x = you.x_pos + move_x;
-        const int new_targ_y = you.y_pos + move_y;
-        if (!in_bounds(new_targ_x, new_targ_y)
-                || grid_is_solid(grd[new_targ_x][new_targ_y]))
+	const hexcoord new_targ = you.pos() + dir;
+
+        if (!in_bounds(new_targ)
+                || grid_is_solid(grd(new_targ)))
         {
             you.turn_is_over = true;
             mpr("Ouch!");
@@ -3238,19 +3228,28 @@ static void move_player(int move_x, int move_y)
         }
     } // end of if you.duration[DUR_CONF]
 
-    if (you.running.check_stop_running())
+    if (int ret = you.running.check_stop_running())
     {
-        move_x = 0;
-        move_y = 0;
-        // [ds] Do we need this? Shouldn't it be false to start with?
-        you.turn_is_over = false;
-        return;
+	// [hex] mysterious return codes... ugly, I know
+	switch (ret)
+	{
+	    case 2: // turn left
+		dir.rotate(-1);
+		break;
+	    case 3: // turn right
+		dir.rotate(1);
+		break;
+	    case 1: default: // stop running
+		dir = hexdir::zero;
+		// [ds] Do we need this? Shouldn't it be false to start with?
+		you.turn_is_over = false;
+		return;
+	}
     }
 
-    const int targ_x = you.x_pos + move_x;
-    const int targ_y = you.y_pos + move_y;
-    const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
-    const unsigned char targ_monst = mgrd[ targ_x ][ targ_y ];
+    const hexcoord targ = you.pos() + dir;
+    const dungeon_feature_type targ_grid  =  grd(targ);
+    const unsigned char targ_monst = mgrd(targ);
     const bool          targ_solid = grid_is_solid(targ_grid);
 
     if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))
@@ -3283,11 +3282,10 @@ static void move_player(int move_x, int move_y)
     {
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
-        if (!move_player_to_grid(targ_x, targ_y, true, false, swap))
-            return;
+        if (!move_player_to_grid(targ.x, targ.y, true, false, swap))
+	    return;
 
-        move_x = 0;
-        move_y = 0;
+	dir = hexdir::zero;
 
         you.turn_is_over = true;
         // item_check( false );
@@ -3296,14 +3294,11 @@ static void move_player(int move_x, int move_y)
 
     // BCR - Easy doors single move
     if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open)
-        open_door(move_x, move_y, false);
+        open_door(dir, false);
     else if (targ_solid)
     {
         stop_running();
-
-        move_x = 0;
-        move_y = 0;
-
+	dir = hexdir::zero;
         you.turn_is_over = 0;
     }
 
@@ -3311,8 +3306,7 @@ static void move_player(int move_x, int move_y)
         you.running = RMODE_CONTINUE;
 
     if (you.level_type == LEVEL_ABYSS
-            && (you.x_pos <= 15 || you.x_pos >= (GXM - 16)
-                    || you.y_pos <= 15 || you.y_pos >= (GYM - 16)))
+	    && !in_G_bounds(you.pos(), 16) )
     {
         area_shift();
         you.pet_target = MHITNOT;

@@ -1,5 +1,5 @@
 #
-# Modified for Crawl Reference by $Author$ on $Date$
+# Modified for Crawl Reference by $Author: zelgadis $ on $Date: 2007-09-16 05:36:54 +0100 (Sun, 16 Sep 2007) $
 #
 
 #Makefile chooser.  Choose one:
@@ -40,7 +40,10 @@ wizard:
 
 # DEBUG mode includes WIZARD mode as well as copious debugging input
 debug:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) DEBUG_CRAWL=y debug EXTRA_FLAGS='-g -DFULLDEBUG -DWIZARD'
+	$(MAKE) $(OTHER) -f $(MAKEFILE) DEBUG_CRAWL=y debug EXTRA_FLAGS='-g -O0 -Wno-uninitialized -DFULLDEBUG -DWIZARD'
+
+debugopt:
+	$(MAKE) $(OTHER) -f $(MAKEFILE) DEBUG_CRAWL=y debug EXTRA_FLAGS='-g -O2 -DFULLDEBUG -DWIZARD'
 
 # [dshaligram] The individual makefile need not necessarily support 
 # package-source; only makefile.unix does at the moment.

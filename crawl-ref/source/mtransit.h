@@ -4,6 +4,8 @@
  * Written by: Darshan Shaligram
  *
  *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-03-15T20:10:20.648083Z $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #ifndef MTRANSIT_H

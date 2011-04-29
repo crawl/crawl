@@ -3,7 +3,9 @@
  *  Summary:    Functions used when building new levels.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-05 11:29:43 +0100 (Mon, 05 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -21,6 +23,7 @@
 #include "travel.h"
 #include "stuff.h"
 #include <vector>
+#include <algorithm>
 
 enum portal_type
 {
@@ -76,28 +79,81 @@ struct dgn_region
 {
     // pos is top-left corner.
     coord_def pos, size;
+    int diamond_rot; // [hex] XXX: -1 means square
+    int sZ, eZ; // [hex] XXX: diamond_rot == -1 && sZ == eZ == 0 means diamond
 
-    dgn_region(int left, int top, int width, int height)
-        : pos(left, top), size(width, height)
+    // [hex] XXX: Some hackery here, I'm afraid. We use this same structure
+    // for 3 different shapes:
+    //
+    // Rectangles in the square-coordinate sense (diamond_rot == -1); 
+    // Diamonds (diamond_rot != -1; sZ == 0 == eZ);
+    // Arbitrary hexes (diamond_rot != -1; sZ < 0)
+    //
+    // In all cases, we work with two relative co-ordinates x and y. For the
+    // square case, these are the obvious things. For the diamond case, x is
+    // dX and y is dY, but we then rotate by diamond_rot. The hex case is
+    // considered as a diamond with extra bounds sZ <= -x-y <= eZ.
+    //
+    // TODO: eliminate remaining uses of square dgn_regions. Having hex-only
+    // dgn_regions will allow much neater and more efficient algorithms. Then
+    // we should probably also use a nicer representation for the regions, as
+    // intersections of half-planes.
+
+    dgn_region(int left, int top, int width, int height, int rot = -1, int in_sZ = 0, int in_eZ = 0)
+        : pos(left, top), size(width, height), diamond_rot(rot), sZ(in_sZ), eZ(in_eZ)
     {
     }
 
-    dgn_region(const coord_def &_pos, const coord_def &_size)
-        : pos(_pos), size(_size)
+    dgn_region(const hexcoord &p, int width, int height, int rot = -1,
+	    int in_sZ = 0, int in_eZ = 0)
+        : pos(p), size(width, height), diamond_rot(rot), sZ(in_sZ), eZ(in_eZ)
     {
     }
 
-    dgn_region() : pos(-1, -1), size()
+    dgn_region(const hexcoord &_pos, const coord_def &_size, int rot = -1, int
+	    in_sZ = 0, int in_eZ = 0)
+        : pos(_pos), size(_size), diamond_rot(rot), sZ(in_sZ), eZ(in_eZ)
     {
     }
 
-    coord_def end() const
+
+    dgn_region() : pos(-1, -1), size(), diamond_rot(-1), sZ(0), eZ(0)
     {
-        return pos + size - coord_def(1, 1);
     }
 
-    coord_def random_edge_point() const;
-    coord_def random_point() const;
+    hexcoord pos_in(int x, int y) const
+    {
+	if (diamond_rot == -1)
+	    return pos + coord_def(x,y);
+	else
+	    return pos.tohex() + ( hexdir::u*x +
+		    (-hexdir::w)*y ).rotated(diamond_rot);
+    }
+
+    hexcoord pos_in(const coord_def &p) const
+    {
+	return pos_in(p.x, p.y);
+    }
+
+    // [hex]: place.pos_in(place.abs_to_rel(foo)) == foo
+    coord_def abs_to_rel(const hexcoord &p) const
+    {
+	if (diamond_rot == -1)
+	    return (coord_def)p - pos;
+	else
+	{
+	    hexdir d = (p - pos.tohex()).rotated(-diamond_rot);
+	    return coord_def(d.X, d.Y);
+	}
+    }
+
+    hexcoord end() const
+    {
+	return pos_in(size.x-1, size.y-1);
+    }
+
+    hexcoord random_edge_point() const;
+    hexcoord random_point() const;
 
     static dgn_region absolute(int left, int top, int right, int bottom)
     {
@@ -109,33 +165,274 @@ struct dgn_region
         return dgn_region(c1.x, c1.y, c2.x, c2.y);
     }
 
+    static dgn_region perfect_hex(const hexcoord &c, int radius)
+    {
+	return dgn_region(c - hexdir::u*radius - (-hexdir::w*radius),
+		2*radius+1, 2*radius+1, 0, -3*radius, -radius);
+    }
+
+    static dgn_region equilateral_triangle(const hexcoord &c, int side, int r)
+    {
+	return dgn_region(c, side+1, side+1, r, -side);
+    }
+
     static bool between(int val, int low, int high)
     {
         return (val >= low && val <= high);
     }
 
-    bool contains(const coord_def &p) const
+    bool contains(const hexcoord &p) const
     {
-        return contains(p.x, p.y);
+	if (diamond_rot == -1)
+	    return (p.x >= pos.x && p.x < pos.x + size.x
+		    && p.y >= pos.y && p.y < pos.y + size.y);
+	else
+	{
+	    const hexdir d = (p-pos).rotated(-diamond_rot);
+	    return (d.X >= 0 && d.X < size.x
+		    && d.Y >= 0 && d.Y < size.y
+		    && (sZ == 0 || ( d.Z >= sZ && d.Z <= eZ )));
+	}
     }
 
     bool contains(int xp, int yp) const
     {
-        return (xp >= pos.x && xp < pos.x + size.x
-                && yp >= pos.y && yp < pos.y + size.y);
+	return contains(hexcoord(xp,yp));
     }
-    
-    bool fully_contains(const coord_def &p) const
+
+    bool contains_rel(const coord_def &p) const
     {
-        return (p.x > pos.x && p.x < pos.x + size.x - 1
-                && p.y > pos.y && p.y < pos.y + size.y - 1);
+	    return (p.x >= 0 && p.x < size.x
+		    && p.y >= 0 && p.y < size.y
+		    && (sZ == 0 || (-p.x-p.y >= sZ && -p.x-p.y <= eZ)));
     }
+
+    const std::vector<coord_def> corners() const;
     
+    bool fully_contains(const hexcoord &p) const
+    {
+	if (diamond_rot == -1)
+	    return (p.x > pos.x && p.x < pos.x + size.x - 1
+		    && p.y > pos.y && p.y < pos.y + size.y - 1);
+	else
+	{
+	    const hexdir d = (p-pos).rotated(-diamond_rot);
+	    return (d.X > 0 && d.X < size.x - 1
+		    && d.Y > 0 && d.Y < size.y - 1
+		    && (sZ == 0 || ( d.Z > sZ && d.Z < eZ )));
+	}
+    }
+
+    bool fully_contains_rel(const coord_def &p) const
+    {
+	    return (p.x > 0 && p.x < size.x -1
+		    && p.y > 0 && p.y < size.y -1
+		    && (sZ == 0 || (-p.x-p.y > sZ && -p.x-p.y < eZ)));
+    }
+
     bool overlaps(const dgn_region &other) const;
     bool overlaps_any(const dgn_region_list &others) const;
     bool overlaps(const dgn_region_list &others,
                   const map_mask &dgn_map_mask) const;
     bool overlaps(const map_mask &dgn_map_mask) const;
+
+    bool contains(const dgn_region &other) const;
+
+    dgn_region inner_region(int d = 1) const
+    {
+	if (diamond_rot == -1)
+	    return dgn_region(pos + coord_def(d,d), size.x-d, size.y-d);
+	else
+	    return dgn_region(pos.tohex() +
+		    ((hexdir::u + (-hexdir::w)).rotated(diamond_rot))*d,
+		    std::max(0,size.x-2*d), std::max(0,size.y-2*d),
+		    diamond_rot, sZ == 0 ? 0 : sZ+2*d, eZ == 0 ? 0 : eZ);
+    }
+
+
+    class perimeter_iterator :
+	public std::iterator<std::forward_iterator_tag, coord_def>
+    {
+	// marches anticlockwise around the perimeter
+	private:
+	    coord_def p;
+	    const dgn_region *regp;
+	    coord_def dir;
+	    bool unmoved;
+
+	    static coord_def dirs[];
+	public:
+	    explicit perimeter_iterator( const coord_def &in_p,
+		    const dgn_region *in_regp,
+		    const coord_def &in_dir = coord_def(1,0),
+		    bool in_unmoved = true ) :
+		p(in_p), regp(in_regp), dir(in_dir), unmoved(in_unmoved) {}
+
+	    perimeter_iterator operator=(const perimeter_iterator& other)
+	    {
+		p = other.p;
+		regp = other.regp;
+		dir = other.dir;
+		unmoved = other.unmoved;
+		return (*this);
+	    }
+
+	    bool operator==(const perimeter_iterator& other)
+	    {
+		return (p == other.p && unmoved == other.unmoved);
+	    }  
+	    bool operator!=(const perimeter_iterator& other)
+	    {
+		return !operator==(other);
+	    }
+
+	    const coord_def& operator*() const
+	    {
+		return p;
+	    }
+
+	    perimeter_iterator operator++()
+	    {
+		int safetynet = 6; // in case of empty regions
+		while (!regp->contains_rel(p+dir) && safetynet-- > 0)
+		{
+		    if (regp->diamond_rot == -1)
+		    {
+			int t = dir.x;
+			dir.x = dir.y;
+			dir.y = -t;
+		    }
+		    else
+		    {
+			for ( int i = 0; i < 6; i++ )
+			{
+			    if (dir == dirs[i])
+			    {
+				dir = dirs[ (i+1)%6 ];
+				break;
+			    }
+			}
+		    }
+		}
+		if (safetynet > 0)
+		    p += dir;
+		unmoved = false;
+		return *this;
+	    }
+
+	    perimeter_iterator operator++(int)
+	    {
+		perimeter_iterator tmp(*this);
+		++(*this);
+		return(tmp);
+	    }
+
+	    const hexdir abs_hexdir() const
+	    {
+		// direction in which we are currently going
+		ASSERT(regp->diamond_rot != -1);
+		for ( int i = 0; i < 6; i++ )
+		    if (dir == dirs[i])
+			return hexdir::u.rotated(i+regp->diamond_rot);
+		ASSERT(false);
+		return hexdir::zero;
+	    }
+    };
+    perimeter_iterator begin_perimeter() const
+    {
+	coord_def p;
+	if (eZ >= 0)
+	    p.set(0,0);
+	else
+	    if (-eZ <= size.x-1)
+		p.set(-eZ, 0);
+	    else
+		p.set(size.x-1, -eZ - (size.x-1));
+	return perimeter_iterator( p, this);
+    }
+    perimeter_iterator end_perimeter() const
+    {
+	coord_def p;
+	if (eZ >= 0)
+	    p.set(0,0);
+	else
+	    if (-eZ <= size.x-1)
+		p.set(-eZ, 0);
+	    else
+		p.set(size.x-1, -eZ - (size.x-1));
+	return perimeter_iterator( p, this, coord_def(1,0), false);
+    }
+
+    class contents_iterator :
+	public std::iterator<std::forward_iterator_tag, coord_def>
+    {
+	private:
+	    coord_def p;
+	    const dgn_region *regp;
+
+	    static coord_def dirs[];
+	public:
+	    explicit contents_iterator( const coord_def &in_p,
+		    const dgn_region *in_regp ) :
+		p(in_p), regp(in_regp) {}
+
+	    contents_iterator operator=(const contents_iterator& other)
+	    {
+		p = other.p;
+		regp = other.regp;
+		return (*this);
+	    }
+
+	    bool operator==(const contents_iterator& other)
+	    {
+		return (p == other.p);
+	    }  
+	    bool operator!=(const contents_iterator& other)
+	    {
+		return !operator==(other);
+	    }
+
+	    const coord_def& operator*() const
+	    {
+		return p;
+	    }
+
+	    contents_iterator operator++()
+	    {
+		p.y++;
+		if (!regp->contains_rel(p))
+		{
+		    p.x++;
+		    if (regp->diamond_rot == -1)
+			p.y = 0;
+		    else
+			p.y = std::max(0, -(regp->eZ)-p.x);
+		}
+		return *this;
+	    }
+
+	    contents_iterator operator++(int)
+	    {
+		contents_iterator tmp(*this);
+		++(*this);
+		return(tmp);
+	    }
+    };
+    contents_iterator begin_contents() const
+    {
+	const int first_x = std::max(0, -eZ-(size.y-1));
+	return contents_iterator( eZ == 0 ?
+		coord_def(0,0) :
+		coord_def(first_x, std::max(0,-eZ-first_x)),
+		this);
+    }
+    contents_iterator end_contents() const
+    {
+	const int one_after_x = std::min(size.x, -sZ+1);
+	return contents_iterator( sZ == 0 ? coord_def(size.x,0) :
+		coord_def(one_after_x, std::max(0, -eZ-one_after_x)),
+		this);
+    }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -298,6 +595,11 @@ bool flood_find<fgrd, bound_check>::path_flood(
 
 
 bool builder(int level_number, int level_type);
+
+void replace_region(const dgn_region &region,
+                         dungeon_feature_type replace,
+                         dungeon_feature_type feature,
+                         unsigned mmask = 0);
 
 int bazaar_floor_colour(int curr_level);
 // Set floor/wall colour based on the mons_alloc array. Used for

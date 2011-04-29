@@ -3,7 +3,9 @@
  *  Summary:    Some spellbook related functions.
  *  Written by: Josh Fishman
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-11-19 15:28:34 +0100 (Mon, 19 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *

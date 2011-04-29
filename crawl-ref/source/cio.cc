@@ -3,6 +3,8 @@
  *  Summary:    Platform-independent console IO functions.
  *
  *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-14T18:14:26.828542Z $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #include "AppHdr.h"

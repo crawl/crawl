@@ -3,7 +3,9 @@
  *  Summary:    Functions used when picking squares.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-08 18:39:42 +0100 (Thu, 08 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -87,21 +89,13 @@ static bool find_object( int x, int y, int mode );
 static bool find_monster( int x, int y, int mode );
 static bool find_feature( int x, int y, int mode );
 
-static char find_square_wrapper( int tx, int ty, 
+static char find_hex (const hexcoord &t,
                                  FixedVector<char, 2> &mfp, char direction,
                                  bool (*targ)(int, int, int),
                                  int mode = TARG_ANY,
-                                 bool wrap = false,
-                                 int los = LOS_ANY);
+                                 bool wrap = false);
 
-static char find_square( int xps, int yps, 
-                         FixedVector<char, 2> &mfp, int direction,
-                         bool (*targ)(int, int, int),
-                         int mode = TARG_ANY,
-                         bool wrap = false,
-                         int los = LOS_ANY);
-
-static int targeting_cmd_to_compass( command_type command );
+static hexdir targeting_cmd_to_dir( command_type command );
 static void describe_oos_square(int x, int y);
 static void extend_move_to_edge(dist &moves);
 
@@ -111,7 +105,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
     moves.isTarget      = false;
     moves.isMe          = false;
     moves.isCancel      = false;
-    moves.dx = moves.dy = 0;
+    moves.dir		= hexdir::zero;
 
     beh->compass        = true;
 
@@ -120,49 +114,44 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
 
         if (key_command == CMD_TARGET_SELECT)
         {
-            moves.dx = moves.dy = 0;
+	    moves.dir = hexdir::zero;
             moves.isMe = true;
             break;
         }
         
-        const int i = targeting_cmd_to_compass(key_command);
-        if ( i != -1 )
+        const hexdir dir = targeting_cmd_to_dir(key_command);
+        if ( dir != hexdir::zero )
         {
-            moves.dx = Compass[i].x;
-            moves.dy = Compass[i].y;
+	    moves.dir = dir;
         }
         else if ( key_command == CMD_TARGET_CANCEL )
         {
             moves.isCancel = true;
             moves.isValid = false;
         }
-    } while ( !moves.isCancel && moves.dx == 0 && moves.dy == 0 );
+    } while ( !moves.isCancel && moves.dir == hexdir::zero );
     
     return;
 }
 
-static int targeting_cmd_to_compass( command_type command )
+static hexdir targeting_cmd_to_dir( command_type command )
 {
     switch ( command )
     {
-    case CMD_TARGET_UP:         case CMD_TARGET_DIR_UP:
-        return 0;
     case CMD_TARGET_UP_RIGHT:   case CMD_TARGET_DIR_UP_RIGHT:
-        return 1;
+        return -hexdir::w;
     case CMD_TARGET_RIGHT:      case CMD_TARGET_DIR_RIGHT:
-        return 2;
+        return hexdir::u;
     case CMD_TARGET_DOWN_RIGHT: case CMD_TARGET_DIR_DOWN_RIGHT:
-        return 3;
-    case CMD_TARGET_DOWN:       case CMD_TARGET_DIR_DOWN:
-        return 4;
+        return -hexdir::v;
     case CMD_TARGET_DOWN_LEFT:  case CMD_TARGET_DIR_DOWN_LEFT:
-        return 5;
+        return hexdir::w;
     case CMD_TARGET_LEFT:       case CMD_TARGET_DIR_LEFT:
-        return 6;
+        return -hexdir::u;
     case CMD_TARGET_UP_LEFT:    case CMD_TARGET_DIR_UP_LEFT:
-        return 7;
+        return hexdir::v;
     default:
-        return -1;
+        return hexdir::zero;
     }
 }
 
@@ -251,7 +240,6 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
 //           ray            ...this one
 //           isEndpoint     player wants the ray to stop on the dime
 //           tx,ty          target x,y
-//           dx,dy          direction delta for DIR_DIR
 //
 //---------------------------------------------------------------
 void direction(dist& moves, targeting_type restricts,
@@ -284,11 +272,13 @@ void direction(dist& moves, targeting_type restricts,
     FixedVector < char, 2 > monsfind_pos;
 
     // init
-    moves.dx = moves.dy = 0;
+    moves.dir = hexdir::zero;
     moves.tx = you.x_pos;
     moves.ty = you.y_pos;
+    hexcoord t = you.pos();
+
     if ( show_beam )
-        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
+        find_ray(you.pos(), t, true, ray);
 
     bool skip_iter = false;
     bool found_autotarget = false;
@@ -304,8 +294,7 @@ void direction(dist& moves, targeting_type restricts,
             if (mons_near(montarget) && player_monster_visible(montarget))
             {
                 found_autotarget = true;
-                moves.tx = montarget->x;
-                moves.ty = montarget->y;
+		t = montarget->pos();
             }
         }
     }
@@ -336,7 +325,8 @@ void direction(dist& moves, targeting_type restricts,
         moves.isEndpoint    = false;
         moves.choseRay      = false;
 
-        cursorxy( grid2viewX(moves.tx), grid2viewY(moves.ty) );
+	coord_def curspos = grid2view(t);
+        cursorxy( curspos.x, curspos.y );
 
         command_type key_command;
 
@@ -350,7 +340,7 @@ void direction(dist& moves, targeting_type restricts,
         else
             key_command = beh->get_command();
 
-        if (target_unshifted && moves.tx == you.x_pos && moves.ty == you.y_pos
+        if (target_unshifted && t == you.pos()
             && restricts != DIR_TARGET)
         {
             key_command = shift_direction(key_command);
@@ -367,7 +357,7 @@ void direction(dist& moves, targeting_type restricts,
 
         if ( key_command == CMD_TARGET_MAYBE_PREV_TARGET )
         {
-            if ( moves.tx == you.x_pos && moves.ty == you.y_pos )
+            if ( t == you.pos() )
                 key_command = CMD_TARGET_PREV_TARGET;
             else
                 key_command = CMD_TARGET_SELECT;
@@ -377,45 +367,44 @@ void direction(dist& moves, targeting_type restricts,
         bool force_redraw = false;
         bool loop_done = false;
 
+	/*
+	 * [hex] FIXME: what was this hack about? I'm currently not replicating it...
         const int old_tx = moves.tx + (skip_iter ? 500 : 0); // hmmm...hack
         const int old_ty = moves.ty;
+	*/
 
-        int i, mid;
+	hexcoord old_t = t;
+
+        int mid;
+	hexdir tdir;
 
         switch ( key_command )
         {
             // standard movement
         case CMD_TARGET_DOWN_LEFT:
-        case CMD_TARGET_DOWN:
         case CMD_TARGET_DOWN_RIGHT:
         case CMD_TARGET_LEFT:
         case CMD_TARGET_RIGHT:
         case CMD_TARGET_UP_LEFT:
-        case CMD_TARGET_UP:
         case CMD_TARGET_UP_RIGHT:
-            i = targeting_cmd_to_compass(key_command);
-            moves.tx += Compass[i].x;
-            moves.ty += Compass[i].y;
+            t += targeting_cmd_to_dir(key_command);
             break;
 
         case CMD_TARGET_DIR_DOWN_LEFT:
-        case CMD_TARGET_DIR_DOWN:
         case CMD_TARGET_DIR_DOWN_RIGHT:
         case CMD_TARGET_DIR_LEFT:
         case CMD_TARGET_DIR_RIGHT:
         case CMD_TARGET_DIR_UP_LEFT:
-        case CMD_TARGET_DIR_UP:
         case CMD_TARGET_DIR_UP_RIGHT:
-            i = targeting_cmd_to_compass(key_command);
+            tdir = targeting_cmd_to_dir(key_command);
 
             if ( restricts != DIR_TARGET )
             {
                 // A direction is allowed, and we've selected it.
-                moves.dx = Compass[i].x;
-                moves.dy = Compass[i].y;
+                moves.dir = tdir;
+
                 // Needed for now...eventually shouldn't be necessary
-                moves.tx = you.x_pos + moves.dx;
-                moves.ty = you.y_pos + moves.dy;
+		t = you.pos() + moves.dir;
                 moves.isValid = true;
                 moves.isTarget = false;
                 loop_done = true;
@@ -423,23 +412,14 @@ void direction(dist& moves, targeting_type restricts,
             else
             {
                 // Direction not allowed, so just move in that direction.
-                // Maybe make this a bigger jump?
-                if (restricts == DIR_TARGET)
-                {
-                    moves.tx += Compass[i].x * 3;
-                    moves.ty += Compass[i].y * 3;
-                }
-                else
-                {
-                    moves.tx += Compass[i].x;
-                    moves.ty += Compass[i].y;
-                }
+                // Make this a bigger jump.
+		t += tdir + tdir + tdir;
             }
             break;
 
 #ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
-            show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+            show_beam = find_ray(you.pos(), t,
                                  true, ray, (show_beam ? 1 : 0));
             need_beam_redraw = true;
             break;
@@ -459,17 +439,15 @@ void direction(dist& moves, targeting_type restricts,
                     break;
                 }
                 
-                show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
-                                     true, ray, 0, true);
+		show_beam = find_ray(you.pos(), t,
+			true, ray, 0, true);
                 need_beam_redraw = show_beam;
             }
             break;
             
         case CMD_TARGET_FIND_YOU:
-            moves.tx = you.x_pos;
-            moves.ty = you.y_pos;
-            moves.dx = 0;
-            moves.dy = 0;
+	    t = you.pos();
+	    moves.dir = hexdir::zero;
             break;
 
         case CMD_TARGET_FIND_TRAP:
@@ -479,13 +457,10 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_FIND_DOWNSTAIR:
             int thing_to_find;
             thing_to_find = targeting_cmd_to_feature(key_command);
-            if (find_square_wrapper(moves.tx, moves.ty, objfind_pos, 1,
-                                    find_feature, thing_to_find, true,
-                                    Options.target_los_first ?
-                                    LOS_FLIPVH : LOS_ANY))
+            if (find_hex(t, objfind_pos, 1,
+                                    find_feature, thing_to_find, true))
             {
-                moves.tx = objfind_pos[0];
-                moves.ty = objfind_pos[1];
+                t = hexcoord(objfind_pos[0], objfind_pos[1]);
             }
             else
             {
@@ -524,8 +499,7 @@ void direction(dist& moves, targeting_type restricts,
                     // We have all the information we need
                     moves.isValid = true;
                     moves.isTarget = true;
-                    moves.tx = montarget->x;
-                    moves.ty = montarget->y;
+		    t = montarget->pos();
                     if ( !just_looking )
                         loop_done = true;
                 }
@@ -540,7 +514,7 @@ void direction(dist& moves, targeting_type restricts,
             moves.isTarget = true;
             loop_done = true;
             // maybe we should except just_looking here?
-            mid = mgrd[moves.tx][moves.ty];
+            mid = mgrd(t);
             if ( mid != NON_MONSTER )
                 you.prev_targ = mid;
             break;
@@ -548,14 +522,10 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_OBJ_CYCLE_BACK:
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
             dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
-            if (find_square_wrapper( moves.tx, moves.ty, objfind_pos, dir,
-                                     find_object, 0, true,
-                                     Options.target_los_first
-                                     ? (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
-                                     : LOS_ANY))
+            if (find_hex( t, objfind_pos, dir,
+                                     find_object, 0, true))
             {
-                moves.tx = objfind_pos[0];
-                moves.ty = objfind_pos[1];
+                t = hexcoord(objfind_pos[0], objfind_pos[1]);
             }
             else
             {
@@ -567,11 +537,10 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_CYCLE_FORWARD:
         case CMD_TARGET_CYCLE_BACK:
             dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
-            if (find_square_wrapper( moves.tx, moves.ty, monsfind_pos, dir, 
+            if (find_hex( t, monsfind_pos, dir, 
                                      find_monster, mode, Options.target_wrap ))
             {
-                moves.tx = monsfind_pos[0];
-                moves.ty = monsfind_pos[1];
+                t = hexcoord(monsfind_pos[0], monsfind_pos[1]);
             }
             else
             {
@@ -588,9 +557,9 @@ void direction(dist& moves, targeting_type restricts,
 #ifdef WIZARD
         case CMD_TARGET_WIZARD_MAKE_FRIENDLY:
             // Maybe we can skip this check...but it can't hurt
-            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(t))
                 break;
-            mid = mgrd[moves.tx][moves.ty];
+            mid = mgrd(t);
             if (mid == NON_MONSTER) // can put in terrain description here
                 break;
 
@@ -630,7 +599,7 @@ void direction(dist& moves, targeting_type restricts,
 #endif
             
         case CMD_TARGET_DESCRIBE:
-            full_describe_square(moves.target());
+            full_describe_square(t);
             force_redraw = true;
             break;
 
@@ -660,14 +629,14 @@ void direction(dist& moves, targeting_type restricts,
             // Confirm self-targeting on TARG_ENEMY.
             // Conceivably we might want to confirm on TARG_ANY too.
             if ( moves.isTarget &&
-                 moves.tx == you.x_pos && moves.ty == you.y_pos &&
+		 t == you.pos() &&
                  mode == TARG_ENEMY && Options.confirm_self_target &&
                  !yesno("Really target yourself?", false, 'n'))
             {
                 mesclr();
                 show_prompt = true;
             }
-            else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
+            else if ( moves.isTarget && !see_grid(t) )
             {
                 mpr("Sorry, you can't target what you can't see.",
                     MSGCH_EXAMINE_FILTER);
@@ -686,19 +655,18 @@ void direction(dist& moves, targeting_type restricts,
         // We'll go on looping. Redraw whatever is necessary.
 
         // Tried to step out of bounds
-        if ( !in_viewport_bounds(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
+	if ( !crawl_view.in_view_viewport(grid2view(t)) )
         {
-            moves.tx = old_tx;
-            moves.ty = old_ty;
+	    t = old_t;
         }
 
         bool have_moved = false;
 
-        if ( old_tx != moves.tx || old_ty != moves.ty )
+        if ( old_t != t )
         {
             have_moved = true;
             show_beam = show_beam &&
-                find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
+                find_ray(you.pos(), t, true, ray,
                          0, true);
         }
 
@@ -714,20 +682,20 @@ void direction(dist& moves, targeting_type restricts,
             if ( !skip_iter )   // don't clear before we get a chance to see
                 mesclr(true);   // maybe not completely necessary
 
-            terse_describe_square(moves.target());
+            terse_describe_square(t);
         }
 
         if ( need_beam_redraw )
         {
             viewwindow(true, false);
             if ( show_beam &&
-                 in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) &&
-                 moves.target() != you.pos() )
+                 in_vlos(grid2view(t)) &&
+                 t != you.pos() )
             {
                 // Draw the new ray with magenta '*'s, not including
                 // your square or the target square.
                 ray_def raycopy = ray; // temporary copy to work with
-                while ( raycopy.pos() != moves.target() )
+                while ( raycopy.pos() != t )
                 {
                     if ( raycopy.pos() != you.pos() )
                     {
@@ -737,19 +705,22 @@ void direction(dist& moves, targeting_type restricts,
                         draw_ray_glyph(raycopy.pos(), MAGENTA, '*',
                                        MAGENTA | COLFLAG_REVERSE);
                     }
-                    raycopy.advance_through(moves.target());
+                    raycopy.advance();
                 }
                 textcolor(LIGHTGREY);
             }
         }
         skip_iter = false;      // only skip one iteration at most
     }
-    moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
+    moves.isMe = (t == you.pos());
     mesclr();
 
     // We need this for directional explosions, otherwise they'll explode one
     // square away from the player.
     extend_move_to_edge(moves);
+
+    moves.tx = t.x;
+    moves.ty = t.y;
 }
 
 void terse_describe_square(const coord_def &c)
@@ -791,31 +762,19 @@ void full_describe_square(const coord_def &c)
 
 static void extend_move_to_edge(dist &moves)
 {
-    if (!moves.dx && !moves.dy)
-        return;
+    if (moves.dir == hexdir::zero)
+	return;
 
-    // now the tricky bit - extend the target x,y out to map edge.
-    int mx = 0, my = 0;
-
-    if (moves.dx > 0)
-        mx = (GXM - 1) - you.x_pos;
-    if (moves.dx < 0)
-        mx = you.x_pos;
-
-    if (moves.dy > 0)
-        my = (GYM - 1) - you.y_pos;
-    if (moves.dy < 0)
-        my = you.y_pos;
-
-    if (!(mx == 0 || my == 0))
-    {
-        if (mx < my)
-            my = mx;
-        else
-            mx = my;
-    }
-    moves.tx = you.x_pos + moves.dx * mx;
-    moves.ty = you.y_pos + moves.dy * my;
+    // [hex] TODO: do this by direct calculation, if that would be
+    // substantially more efficient. But my standing assumption, which by the
+    // way is also my standing excuse for alot of the hex code, is that the
+    // compiler will optimise away apparant inefficiencies like this.
+    hexcoord pos = you.pos();
+    while (in_G_bounds(pos))
+	pos += moves.dir;
+    pos -= moves.dir;
+    moves.tx = pos.x;
+    moves.ty = pos.y;
 }
 
 // Attempts to describe a square that's not in line-of-sight. If
@@ -889,309 +848,93 @@ static bool find_object(int x, int y, int mode)
                     && is_stash(x, y))));
 }
 
-static int next_los(int dir, int los, bool wrap)
-{
-    if (los == LOS_ANY)
-        return (wrap? los : LOS_NONE);
-
-    bool vis    = los & LOS_VISIBLE;
-    bool hidden = los & LOS_HIDDEN;
-    bool flipvh = los & LOS_FLIPVH;
-    bool fliphv = los & LOS_FLIPHV;
-
-    if (!vis && !hidden)
-        vis = true;
-
-    if (wrap)
-    {
-        if (!flipvh && !fliphv)
-            return (los);
-
-        // We have to invert flipvh and fliphv if we're wrapping. Here's
-        // why:
-        //
-        //  * Say the cursor is on the last item in LOS, there are no
-        //    items outside LOS, and wrap == true. flipvh is true.
-        //  * We set wrap false and flip from visible to hidden, but there 
-        //    are no hidden items. So now we need to flip back to visible
-        //    so we can go back to the first item in LOS. Unless we set 
-        //    fliphv, we can't flip from hidden to visible.
-        //
-        los = flipvh? LOS_FLIPHV : LOS_FLIPVH;
-    }
-    else
-    {
-        if (!flipvh && !fliphv)
-            return (LOS_NONE);
-        
-        if (flipvh && vis != (dir == 1))
-            return (LOS_NONE);
-
-        if (fliphv && vis == (dir == 1))
-            return (LOS_NONE);
-    }
-
-    los = (los & ~LOS_VISMASK) | (vis? LOS_HIDDEN : LOS_VISIBLE);
-    return (los);
-}
-
 bool in_viewport_bounds(int x, int y)
 {
     return crawl_view.in_view_viewport(coord_def(x, y));
 }
 
+// [hex] XXX: despite the name, this is in view co-ordinates
 bool in_los_bounds(int x, int y)
 {
-    return crawl_view.in_view_los(coord_def(x, y));
+    const coord_def pos(x,y);
+    return crawl_view.in_grid_los(crawl_view.vgrdc +
+	    screen2hex(pos - crawl_view.view_centre()));
+    //return crawl_view.in_view_los(coord_def(x, y));
 }
 
-//---------------------------------------------------------------
-//
-// find_square
-//
-// Finds the next monster/object/whatever (moving in a spiral 
-// outwards from the player, so closer targets are chosen first; 
-// starts to player's left) and puts its coordinates in mfp. 
-// Returns 1 if it found something, zero otherwise. If direction 
-// is -1, goes backwards.
-//
-// If the game option target_zero_exp is true, zero experience
-// monsters will be targeted.
-//
-//---------------------------------------------------------------
-static char find_square( int xps, int yps,
-                         FixedVector<char, 2> &mfp, int direction,
-                         bool (*find_targ)( int x, int y, int mode ),
-                         int mode, bool wrap, int los )
-{
-    // the day will come when [unsigned] chars will be consigned to
-    // the fires of Gehenna. Not quite yet, though.
-
-    int temp_xps = xps;
-    int temp_yps = yps;
-    int x_change = 0;
-    int y_change = 0;
-
-    bool onlyVis = false, onlyHidden = false;
-
-    int i, j;
-
-    if (los == LOS_NONE)
-        return (0);
-
-    if (los == LOS_FLIPVH || los == LOS_FLIPHV)
-    {
-        if (in_los_bounds(xps, yps))
-        {
-            // We've been told to flip between visible/hidden, so we
-            // need to find what we're currently on.
-            const bool vis = (env.show(view2show(coord_def(xps, yps)))
-                              || view2grid(coord_def(xps, yps)) == you.pos());
-            
-            if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
-            {
-                // We've already flipped over into the other direction,
-                // so correct the flip direction if we're wrapping.
-                los = los == LOS_FLIPHV? LOS_FLIPVH : LOS_FLIPHV;
-            }
-
-            los = (los & ~LOS_VISMASK) | (vis? LOS_VISIBLE : LOS_HIDDEN);
-        }
-        else
-        {
-            if (wrap)
-                los = LOS_HIDDEN | (direction == 1? LOS_FLIPHV : LOS_FLIPVH);
-            else
-                los |= LOS_HIDDEN;
-        }
-    }
-
-    onlyVis     = (los & LOS_VISIBLE);
-    onlyHidden  = (los & LOS_HIDDEN);
-
-    int radius = 0;
-    if (crawl_view.viewsz.x > crawl_view.viewsz.y)
-        radius = crawl_view.viewsz.x - LOS_RADIUS - 1;
-    else
-        radius = crawl_view.viewsz.y - LOS_RADIUS - 1;
-
-    const coord_def vyou = grid2view(you.pos());
-    
-    const int minx = vyou.x - radius, maxx = vyou.x + radius,
-              miny = vyou.y - radius, maxy = vyou.y + radius,
-              ctrx = vyou.x, ctry = vyou.y;
-
-    while (temp_xps >= minx - 1 && temp_xps <= maxx
-           && temp_yps <= maxy && temp_yps >= miny - 1)
-    {
-        if (direction == 1 && temp_xps == minx && temp_yps == maxy)
-        {
-            if (find_targ(you.x_pos, you.y_pos, mode))
-            {
-                mfp[0] = ctrx;
-                mfp[1] = ctry;
-                return (1);
-            }
-            return find_square(ctrx, ctry, mfp, direction, find_targ, mode,
-                               false, next_los(direction, los, wrap));
-        }
-        if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
-            return find_square(minx, maxy, mfp, direction, find_targ, mode,
-                               false, next_los(direction, los, wrap));
-
-        if (direction == 1)
-        {
-            if (temp_xps == minx - 1)
-            {
-                x_change = 0;
-                y_change = -1;
-            }
-            else if (temp_xps == ctrx && temp_yps == ctry)
-            {
-                x_change = -1;
-                y_change = 0;
-            }
-            else if (abs(temp_xps - ctrx) <= abs(temp_yps - ctry))
-            {
-                if (temp_xps - ctrx >= 0 && temp_yps - ctry <= 0)
-                {
-                    if (abs(temp_xps - ctrx) > abs(temp_yps - ctry + 1))
-                    {
-                        x_change = 0;
-                        y_change = -1;
-                        if (temp_xps - ctrx > 0)
-                            y_change = 1;
-                        goto finished_spiralling;
-                    }
-                }
-                x_change = -1;
-                if (temp_yps - ctry < 0)
-                    x_change = 1;
-                y_change = 0;
-            }
-            else
-            {
-                x_change = 0;
-                y_change = -1;
-                if (temp_xps - ctrx > 0)
-                    y_change = 1;
-            }
-        }                       // end if (direction == 1)
-        else
-        {
-            /*
-               This part checks all eight surrounding squares to find the
-               one that leads on to the present square.
-             */
-            for (i = -1; i < 2; i++)
-            {
-                for (j = -1; j < 2; j++)
-                {
-                    if (i == 0 && j == 0)
-                        continue;
-
-                    if (temp_xps + i == minx - 1)
-                    {
-                        x_change = 0;
-                        y_change = -1;
-                    }
-                    else if (temp_xps + i - ctrx == 0 && temp_yps + j - ctry == 0)
-                    {
-                        x_change = -1;
-                        y_change = 0;
-                    }
-                    else if (abs(temp_xps + i - ctrx) <= abs(temp_yps + j - ctry))
-                    {
-                        const int xi = temp_xps + i - ctrx;
-                        const int yj = temp_yps + j - ctry;
-
-                        if (xi >= 0 && yj <= 0)
-                        {
-                            if (abs(xi) > abs(yj + 1))
-                            {
-                                x_change = 0;
-                                y_change = -1;
-                                if (xi > 0)
-                                    y_change = 1;
-                                goto finished_spiralling;
-                            }
-                        }
-
-                        x_change = -1;
-                        if (yj < 0)
-                            x_change = 1;
-                        y_change = 0;
-                    }
-                    else
-                    {
-                        x_change = 0;
-                        y_change = -1;
-                        if (temp_xps + i - ctrx > 0)
-                            y_change = 1;
-                    }
-
-                    if (temp_xps + i + x_change == temp_xps
-                        && temp_yps + j + y_change == temp_yps)
-                    {
-                        goto finished_spiralling;
-                    }
-                }
-            }
-        }                       // end else
-
-
-      finished_spiralling:
-        x_change *= direction;
-        y_change *= direction;
-
-        temp_xps += x_change;
-        if (temp_yps + y_change <= maxy)  // it can wrap, unfortunately
-            temp_yps += y_change;
-
-        const int targ_x = you.x_pos + temp_xps - ctrx;
-        const int targ_y = you.y_pos + temp_yps - ctry;
-
-        // We don't want to be looking outside the bounds of the arrays:
-        //if (!in_los_bounds(temp_xps, temp_yps))
-        //    continue;
-
-        if (!crawl_view.in_grid_viewport(coord_def(targ_x, targ_y)))
-            continue;
-
-        if (!in_bounds(targ_x, targ_y))
-            continue;
-
-        if ((onlyVis || onlyHidden) && onlyVis != in_los(targ_x, targ_y))
-            continue;
-
-        if (find_targ(targ_x, targ_y, mode))
-        {
-            mfp[0] = temp_xps;
-            mfp[1] = temp_yps;
-            return (1);
-        }
-    }
-
-    return (direction == 1?
-        find_square(ctrx, ctry, mfp, direction, find_targ, mode, false, 
-                    next_los(direction, los, wrap))
-      : find_square(minx, maxy, mfp, direction, find_targ, mode, false,
-                    next_los(direction, los, wrap)));
-}
-
-// XXX Unbelievably hacky. And to think that my goal was to clean up the code.
-// Identical to find_square, except that input (tx, ty) and output
-// (mfp) are in grid coordinates rather than view coordinates.
-static char find_square_wrapper( int tx, int ty,
+// Simplistic hex implementation - just spiral round within LOS_BOUNDS
+// Puts (square) grid coords into mfp.
+// TODO: handle out-of-LOS stuff as well, à la find_square
+static char find_hex (const hexcoord &t,
                                  FixedVector<char, 2> &mfp, char direction,
                                  bool (*find_targ)( int x, int y, int mode ),
-                                 int mode, bool wrap, int los )
+                                 int mode, bool wrap )
 {
-    const char r =  find_square(grid2viewX(tx), grid2viewY(ty),
-                                mfp, direction, find_targ, mode, wrap, los);
-    mfp[0] = view2gridX(mfp[0]);
-    mfp[1] = view2gridY(mfp[1]);
-    return r;
+    hexdir dir = t - you.pos();
+    const hexdir init_dir = dir;
+
+    hexcoord targ;
+
+    while ( true )
+    {
+	// step once around the spiral, which looks like
+	//   a 9 8
+	//  b 2 1 7 .
+	// c 3 0 6 .
+	//  d 4 5 .
+	//   e f g
+	// We only go out to LOS_RADIUS.
+	if (direction == 1)
+	{
+	    if ( dir == hexdir::u*dir.rdist() )
+		if ( dir.rdist() >= LOS_RADIUS )
+		    if (wrap)
+			dir = hexdir::zero;
+		    else 
+			return 0;
+		else
+		    dir += -hexdir::w;
+	    else
+	    {
+		// Conjugating by reflection to get the hextant boundaries the
+		// right way round. Makes sense if you think about it, honest!
+		dir.reflect_u();
+		dir += -hexdir::v.rotated( dir.hextant() );
+		dir.reflect_u();
+	    }
+	}
+	else
+	{
+	    if ( dir == hexdir::zero )
+		if (wrap)
+		    dir = hexdir::u * (LOS_RADIUS);
+		else
+		    return 0;
+	    else if ( dir == hexdir::u*(dir.rdist()-1) - hexdir::w )
+		dir += hexdir::w;
+	    else
+		dir -= hexdir::v.rotated( dir.hextant() );
+	}
+
+	if ( dir == init_dir )
+	{
+	    // wrapped right round without finding anything
+	    return 0;
+	}
+
+	targ = you.pos() + dir;
+
+        if (!crawl_view.in_grid_viewport(targ) ||
+		!in_bounds(targ) )
+            continue;
+
+        if (find_targ(targ.x, targ.y, mode))
+        {
+            mfp[0] = targ.x;
+            mfp[1] = targ.y;
+            return 1;
+        }
+    }
 }
 
 static void describe_feature(int mx, int my, bool oos)
@@ -2029,4 +1772,69 @@ command_type targeting_behaviour::get_command(int key)
 bool targeting_behaviour::should_redraw()
 {
     return (false);
+}
+
+// [hex] grid is the grid, which is "really" hexagonal but is often considered
+// as square.
+//
+// screen and view are in actual curses co-ordinates, so always square.
+//
+// show is in *square* coords, and refers to a square of grid points around
+// the player containing the LOS bounds.
+
+bool screen2hex_valid(const coord_def &pos)
+{
+    return ((pos.x+pos.y) % 2 == 0);
+}
+
+hexdir screen2hex(const coord_def &pos)
+{
+    // relative - the zero should be a displayed point
+    return hexdir((pos.x+pos.y)/2, -pos.y, (-pos.x+pos.y)/2);
+}
+
+coord_def hex2screen(const hexdir &d)
+{
+    return coord_def(d.X - d.Z, -d.Y);
+}
+
+bool view2grid_valid(const coord_def &pos)
+{
+    return screen2hex_valid(pos - crawl_view.view_centre());
+}
+
+hexcoord view2grid(const coord_def &pos)
+{
+    return crawl_view.vgrdc + screen2hex(pos - crawl_view.view_centre());
+}
+
+coord_def hexgrid2view(const hexcoord &pos)
+{
+    hexdir hd(pos - crawl_view.vgrdc);
+    return hex2screen(hd) + crawl_view.view_centre();
+}
+
+coord_def grid2view(const hexcoord &pos)
+{
+    return hexgrid2view(pos);
+}
+
+coord_def grid2view(const coord_def &pos)
+{
+    return hexgrid2view(pos.tohex());
+}
+
+coord_def grid2show(const coord_def &pos)
+{
+    return pos - crawl_view.glos1 + coord_def(1,1);
+}
+
+coord_def view2show(const coord_def &pos)
+{
+    return grid2show(view2grid(pos));
+}
+
+bool crawl_view_geometry::in_grid_viewport(const hexcoord &c) const
+{
+    return in_view_viewport(hexgrid2view(c));
 }

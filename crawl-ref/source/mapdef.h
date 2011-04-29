@@ -263,8 +263,8 @@ public:
     std::string add_feature_marker(const std::string &desc);
     
     void apply_markers(const coord_def &pos);
-    void apply_colours(const coord_def &pos);
-    void apply_overlays(const coord_def &pos);
+    void apply_colours(const dgn_region &reg);
+    void apply_overlays(const dgn_region &reg);
     
     const std::vector<std::string> &get_lines() const;
     std::vector<std::string> &get_lines();

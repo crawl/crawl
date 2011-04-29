@@ -3,7 +3,7 @@
  *  Summary:    Place related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-11-04 21:49:46 +0100 (Sun, 04 Nov 2007) $
  *
  *  Change History (most recent first):
  *

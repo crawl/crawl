@@ -205,7 +205,7 @@ typedef union YYSTYPE
     const char *text;
     raw_range range;
 }
-/* Line 193 of yacc.c.  */
+/* Line 187 of yacc.c.  */
 #line 210 "levcomp.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

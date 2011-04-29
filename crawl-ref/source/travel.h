@@ -68,12 +68,13 @@ bool is_exclude_root(const coord_def &p);
 bool is_stair(dungeon_feature_type gridc);
 bool is_travelable_stair(dungeon_feature_type gridc);
 command_type direction_to_command( char x, char y );
+command_type direction_to_command( hexdir dir );
 bool is_resting( void );
 bool can_travel_interlevel();
 bool is_traversable(dungeon_feature_type grid);
 void explore_pickup_event(int did_pickup, int tried_pickup);
 
-void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
+void find_travel_pos( hexcoord youpos, hexdir *move,
                      std::vector<coord_def>* coords = NULL);
 
 bool is_travelsafe_square(int x, int y, bool ignore_hostile = false,

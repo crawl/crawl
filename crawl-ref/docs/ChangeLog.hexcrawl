@@ -1,0 +1,364 @@
+Sat Nov 10 15:58:09 CET 2007  Martin Bays <mbays@freeshell.org>
+  tagged 0.3-2
+
+Sat Nov 10 15:58:01 CET 2007  Martin Bays <mbays@freeshell.org>
+  * version 0.3-2
+
+Sat Nov 10 15:57:42 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2837
+
+Sat Nov 10 12:45:34 CET 2007  Martin Bays <mbays@freeshell.org>
+  * post_diamondification now fixes up lava and deep water as well as walls
+
+Fri Nov  9 16:32:23 CET 2007  Martin Bays <mbays@freeshell.org>
+  * check_doors fix
+
+Fri Nov  9 01:52:10 CET 2007  Martin Bays <mbays@freeshell.org>
+  tagged 0.3-1
+
+Fri Nov  9 01:48:28 CET 2007  Martin Bays <mbays@freeshell.org>
+  * version -> 0.3-1
+  Not a particularly pleasant version numbering system, but it should do. The
+  '0.3' refers to the branch of crawl stone soup we are syncing with, the '1' is
+  the hexcrawl-specific minor version number.
+
+Fri Nov  9 01:48:09 CET 2007  Martin Bays <mbays@freeshell.org>
+  * [makefile.dep]
+
+Fri Nov  9 01:21:26 CET 2007  Martin Bays <mbays@freeshell.org>
+  * implement screenshot() and dump_map(); cleanup
+
+Thu Nov  8 21:39:41 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2826
+
+Thu Nov  8 21:38:55 CET 2007  Martin Bays <mbays@freeshell.org>
+  * implement symmetric_scroll
+
+Thu Nov  8 01:36:56 CET 2007  Martin Bays <mbays@freeshell.org>
+  * remove mention of minor dcss version numbers
+
+Thu Nov  8 01:35:30 CET 2007  Martin Bays <mbays@freeshell.org>
+  * cleanup: make vgrdc of type hexcoord
+
+Thu Nov  8 01:35:07 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2801
+
+Thu Nov  8 01:19:49 CET 2007  Martin Bays <mbays@freeshell.org>
+  * hexify set_player_at
+
+Wed Nov  7 20:32:14 CET 2007  Martin Bays <mbays@freeshell.org>
+  * stopgap hack to enforce view_lock
+
+Wed Nov  7 17:52:10 CET 2007  Martin Bays <mbays@freeshell.org>
+  * remove EXTRA_FLAGS from makefile
+
+Wed Nov  7 17:03:09 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2783
+
+Wed Nov  7 13:45:17 CET 2007  Martin Bays <mbays@freeshell.org>
+  * remove hexcrawl.log
+
+Wed Nov  7 13:35:57 CET 2007  Martin Bays <mbays@freeshell.org>
+  * add makefile.obj
+
+Wed Nov  7 13:24:03 CET 2007  Martin Bays <mbays@freeshell.org>
+  * add all files from svn 2779 - darcs repo is now as complete as svn
+
+Wed Nov  7 13:20:28 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2779
+
+Wed Nov  7 10:35:49 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2777
+
+Wed Nov  7 00:05:35 CET 2007  Martin Bays <mbays@freeshell.org>
+  * fix nasty typo-caused bug
+
+Tue Nov  6 17:26:00 CET 2007  Martin Bays <mbays@freeshell.org>
+  * rewrite make_hex_room
+
+Tue Nov  6 17:13:29 CET 2007  Martin Bays <mbays@freeshell.org>
+  * squish river bug
+
+Mon Nov  5 23:32:08 CET 2007  Martin Bays <mbays@freeshell.org>
+  * add hexdungeon.h to darcs repository
+  (must have missed it before)
+
+Mon Nov  5 23:31:40 CET 2007  Martin Bays <mbays@freeshell.org>
+  * add modification statements
+  as required by the licence
+
+Mon Nov  5 23:26:25 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2772
+
+Mon Nov  5 22:30:43 CET 2007  Martin Bays <mbays@freeshell.org>
+  * fix some dungeon generation bugs
+
+Mon Nov  5 22:29:42 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2747
+
+Sun Nov  4 17:48:49 CET 2007  Martin Bays <mbays@freeshell.org>
+  * hexified city_level and plan_4
+
+Sun Nov  4 15:01:19 CET 2007  Martin Bays <mbays@freeshell.org>
+  * dissolve_cavern cleaning
+
+Sun Nov  4 13:08:00 CET 2007  Martin Bays <mbays@freeshell.org>
+  * shot deflection fixes and cleanup; now compile-time option WIDE_SHOTS
+
+Sat Nov  3 22:52:41 CET 2007  Martin Bays <mbays@freeshell.org>
+  * stone_circle(), hex version of plan_6()
+
+Sat Nov  3 22:48:09 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2743
+
+Sat Nov  3 14:09:04 CET 2007  Martin Bays <mbays@freeshell.org>
+  * doc updates
+
+Sat Nov  3 12:14:16 CET 2007  Martin Bays <mbays@freeshell.org>
+  * make wall interpolation optional
+
+Sat Nov  3 11:50:59 CET 2007  Martin Bays <mbays@freeshell.org>
+  * stealth cleanup
+
+Sat Nov  3 11:50:08 CET 2007  Martin Bays <mbays@freeshell.org>
+  * make check_doors() require walls on oppositish sides of doors
+
+Sat Nov  3 01:43:42 CET 2007  Martin Bays <mbays@freeshell.org>
+  * fix nasty bug
+
+Fri Nov  2 21:51:25 CET 2007  Martin Bays <mbays@freeshell.org>
+  * cleanup: remove commented out square-specific code
+
+Fri Nov  2 20:54:04 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2727
+
+Wed Oct 31 18:54:12 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2699
+
+Wed Oct 31 01:58:27 CET 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2695
+
+Wed Oct 31 01:48:41 CET 2007  Martin Bays <mbays@freeshell.org>
+  * notes on city levels
+
+Sat Oct 27 11:52:09 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2603
+
+Fri Oct 26 17:51:52 CEST 2007  Martin Bays <mbays@freeshell.org>
+  UNDO: show_between_hex monster status
+
+Fri Oct 26 17:51:52 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * show_between_hex monster status
+
+Fri Oct 26 17:51:21 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * make show_between_hex respect flash_colour
+
+Fri Oct 26 17:04:25 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * remove attempted extensions to show_between_hex
+  Only wall-interpolation actually works well, the current brand mechanism
+  probably is the best way to handle extra information.
+
+Fri Oct 26 17:03:03 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * clean up and extend in-between square showing code
+
+Fri Oct 26 01:43:23 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2579
+
+Fri Oct 26 01:42:19 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * between-hex display: bugfix and cleanup
+
+Thu Oct 25 00:49:13 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2540
+
+Wed Oct 24 10:30:56 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2530
+
+Tue Oct 23 17:26:00 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2520
+
+Mon Oct 22 23:04:41 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * better dissolved_cavern water features
+
+Mon Oct 22 21:15:50 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * bad dissolving_cavern water feature attempt
+
+Mon Oct 22 20:36:49 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * dissolve_cavern code reorganisation
+
+Mon Oct 22 20:36:27 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * export hex-specific code from dungeon.cc to new file hexdungeon.cc
+
+Mon Oct 22 19:08:47 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * cleanup
+
+Mon Oct 22 19:08:37 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * dissolved caverns
+
+Mon Oct 22 17:03:18 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2515
+
+Mon Oct 22 03:50:01 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * turn off optimisation for make debug
+
+Mon Oct 22 03:47:54 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * update TODO
+
+Mon Oct 22 03:46:48 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * make use of spare squares in display
+
+Mon Oct 22 03:44:49 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * fix nasty infinite loop
+
+Sun Oct 21 21:21:15 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2512
+
+Sun Oct 21 21:07:22 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * make_trail bounds fix
+
+Fri Oct 19 20:46:52 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2492
+
+Thu Oct 18 12:29:25 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2487
+
+Thu Oct 18 12:01:44 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2400
+
+Thu Oct 18 01:57:27 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up fixes
+
+Thu Oct 18 01:55:09 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2300
+
+Thu Oct 18 01:21:09 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2200
+
+Thu Oct 18 01:12:25 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2160
+
+Thu Oct 18 01:11:47 CEST 2007  Martin Bays <mbays@freeshell.org>
+  tagged svn branchpoint trunk->0.3
+
+Thu Oct 18 00:43:03 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2127
+
+Wed Oct 17 22:41:55 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2110
+
+Wed Sep  5 01:57:01 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2054
+
+Sun Sep  2 20:35:36 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2046
+
+Wed Aug 29 22:01:04 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2034
+
+Wed Aug 29 16:47:12 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * minivault placement bugfix
+
+Wed Aug 29 16:29:55 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * show_map() cleanup and bugfix
+
+Thu Aug 23 19:40:11 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2028
+
+Tue Aug 21 16:11:11 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * minor cleanups
+
+Tue Aug 21 16:09:54 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * [_^K_]make it easier for FLEEing monsters to consider themselves cornered
+
+Tue Aug 21 15:22:27 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2022
+
+Mon Aug 20 16:07:54 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * add some bugs to TODO
+
+Sun Aug 19 22:12:23 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * bugfix: infinite perimeter iteration of empty regions
+
+Sun Aug 19 12:19:06 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2018
+
+Sun Aug 19 12:09:34 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * bugfix - join_the_dots() was going out of bounds
+
+Sat Aug 18 22:06:39 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * hexify update_level monster movement
+
+Sat Aug 18 21:31:23 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * re-introduce and hexify beam deflection code
+
+Sat Aug 18 19:21:31 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * updates to TODO
+
+Sat Aug 18 19:20:43 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * hexified plan_3()
+
+Sat Aug 18 12:14:32 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2011
+
+Sat Aug 18 12:09:52 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * hex dgn_regions, and hex make_rooms rooms
+
+Sat Aug 18 00:21:20 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * remove duplication of dgn_region methods in vault_placement
+
+Fri Aug 17 23:02:21 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * fix vault exit digging
+
+Fri Aug 17 23:01:10 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * post-diamondification futzing - hive now works!
+
+Fri Aug 17 23:00:37 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * try harder to place (non-ENCOMPASS) vaults as diamonds
+
+Fri Aug 17 21:18:26 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * river bugfix
+
+Fri Aug 17 21:18:10 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * hexify reaching weapons
+
+Fri Aug 17 20:29:49 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * explosion bugfix
+
+Fri Aug 17 13:31:18 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * ENCOMPASS diamondification fixes
+
+Fri Aug 17 13:30:53 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * TODO updates
+
+Fri Aug 17 12:31:23 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * fix very unpleasant bug
+  because we have increased (GXM,GYM), the new tagging overhead introduced with
+  the lugonu corruption code tipped the tag size over the hardcoded maximum of
+  100000, resulting in ungdbable segfaults. I've fixed it by merely upping the
+  maximum to 200000 - this is something to watch out for in future!
+
+Fri Aug 17 12:30:22 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2007
+
+Thu Aug 16 01:52:07 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2005
+
+Thu Aug 16 00:08:50 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * diamondification of ENCOMPASS vaults
+
+Wed Aug 15 22:29:11 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2004
+
+Wed Aug 15 21:34:46 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * remove stealth code TODO: current code works fine
+
+Wed Aug 15 20:47:41 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * hexification of some misc functions
+
+Wed Aug 15 19:45:12 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * svn up 2003
+
+Wed Aug 15 19:41:26 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * add makefiles
+
+Wed Aug 15 19:38:43 CEST 2007  Martin Bays <mbays@freeshell.org>
+  * initial import; soon after 7drl version

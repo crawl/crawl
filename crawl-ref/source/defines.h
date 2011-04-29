@@ -10,7 +10,7 @@
  *
  *  Copyright © 1999 Brian Robinson.  // Me?  How come?
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-10 00:13:00 +0100 (Sat, 10 Nov 2007) $
  *
  *  Change History (most recent first):
  *
@@ -70,10 +70,15 @@
 // empty cloud -- (CLOUDS + 1) {dlb}:
 #define EMPTY_CLOUD (MAX_CLOUDS + 1)
 
+// [hex] max radius for hex level generation
+#define GRAD 55
+// [hex] Need GXfoo >= 55*2+1 so the hex will fit
+//	and need GXfoo >= 2+70+80/2 = 112 so old 70*80 vaults will fit as
+//	diamonds.
 // max x-bound for level generation {dlb}
-#define GXM 80
+#define GXM 112
 // max y-bound for level generation {dlb}
-#define GYM 70
+#define GYM 112
 
 #define INFINITE_DISTANCE       30000
 
@@ -298,5 +303,7 @@
 #define KEY_MACRO_MORE_PROTECT -10
 #define KEY_MACRO_DISABLE_MORE -1
 #define KEY_MACRO_ENABLE_MORE  -2
+
+#define PI 3.14159265
 
 #endif

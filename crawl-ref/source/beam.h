@@ -3,7 +3,9 @@
  *  Summary:    Functions related to ranged attacks.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-10 00:13:00 +0100 (Sat, 10 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -178,9 +180,14 @@ public:
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
     killer_type  killer() const;
 
-    coord_def target() const
+    hexcoord target() const
     {
-        return (coord_def(target_x, target_y));
+        return (hexcoord(target_x, target_y));
+    }
+
+    hexcoord source() const
+    {
+        return (hexcoord(source_x, source_y));
     }
 };
 

@@ -4,6 +4,8 @@
  *  Written by: Zooko
  *
  *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-05-15T17:02:30.826843Z $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #include "AppHdr.h"

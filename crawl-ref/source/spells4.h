@@ -3,7 +3,9 @@
  *  Summary:    Yet More Spell Function Declarations
  *  Written by: Josh Fishman
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: zelgadis $ on $Date: 2007-09-16 00:33:50 +0100 (Sun, 16 Sep 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  * <2> 12jul2000  jmf  Fixed random (undocumented) damage

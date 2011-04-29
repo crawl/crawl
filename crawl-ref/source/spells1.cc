@@ -3,7 +3,9 @@
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 10:41:12 +0200 (Sat, 27 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -527,7 +529,7 @@ int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 void big_cloud(cloud_type cl_type, kill_category whose,
                int cl_x, int cl_y, int pow, int size)
 {
-    apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size,
+    apply_area_cloud(make_a_normal_cloud, hexcoord(cl_x, cl_y), pow, size,
                      cl_type, whose);
 }                               // end big_cloud()
 
@@ -546,9 +548,10 @@ static int healing_spell( int healed )
         return 0;
     }
 
-    mgr = mgrd[you.x_pos + bmove.dx][you.y_pos + bmove.dy];
+    hexcoord t = you.pos() + bmove.dir;
+    mgr = mgrd(t);
 
-    if (bmove.dx == 0 && bmove.dy == 0)
+    if (bmove.dir == hexdir::zero)
     {
         mpr("You are healed.");
         inc_hp(healed, false);
@@ -1128,23 +1131,16 @@ void manage_fire_shield(void)
     if (!you.duration[DUR_FIRE_SHIELD])
         return;
 
-    char stx = 0, sty = 0;
-
-    for (stx = -1; stx < 2; stx++)
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
     {
-        for (sty = -1; sty < 2; sty++)
-        {
-            if (sty == 0 && stx == 0)
-                continue;
+	const hexcoord t = you.pos() + *it;
 
-            //if ( one_chance_in(3) ) beam.range ++;
-
-            if (!grid_is_solid(grd[you.x_pos + stx][you.y_pos + sty])
-                && env.cgrid[you.x_pos + stx][you.y_pos + sty] == EMPTY_CLOUD)
-            {
-                place_cloud( CLOUD_FIRE, you.x_pos + stx, you.y_pos + sty,
-                             1 + random2(6), KC_YOU );
-            }
-        }
+	if (!grid_is_solid(grd(t))
+		&& env.cgrid(t) == EMPTY_CLOUD)
+	{
+	    place_cloud( CLOUD_FIRE, t.x, t.y,
+		    1 + random2(6), KC_YOU );
+	}
     }
 }                               // end manage_fire_shield()

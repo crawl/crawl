@@ -3,7 +3,9 @@
  *  Summary:    Skill exercising functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-09-24 15:24:48 +0100 (Mon, 24 Sep 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -471,6 +473,23 @@ static int exercise2( int exsk )
         {
             mpr("You're starting to get the hang of this magic thing.");
         }
+
+	if (exsk == SK_STEALTH)
+	    switch (you.skills[exsk])
+	    {
+		case 4:
+		    mpr("You now peek stealthily around corners.",
+			    MSGCH_INTRINSIC_GAIN);
+		    break;
+		case 6:
+		    mpr("You now try to blend in with adjacent walls.",
+			    MSGCH_INTRINSIC_GAIN);
+		    break;
+		case 8:
+		    mpr("You are now very still and quiet when resting.",
+			    MSGCH_INTRINSIC_GAIN);
+		    break;
+	    }
 
         if (best != old_best_skill || old_best_skill == exsk)
         {

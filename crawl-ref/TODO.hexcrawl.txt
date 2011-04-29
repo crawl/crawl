@@ -1,0 +1,15 @@
+Known bugs:
+None
+
+Unknown bugs:
+* rare bug: found (once) a configuration in which
+    magic missile consistently hit a nearby wall rather than its target. I
+    can't see what could be causing this.
+
+TODO for 0.3:
+None
+
+TODO one day maybe:
+* Support for hex-vaults, i.e. vaults designed for hex.
+* Hexify labyrinth (though it's playable as it is - and very scary!)
+* chequerboard: -> hequerboard

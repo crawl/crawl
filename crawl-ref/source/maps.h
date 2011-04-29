@@ -25,11 +25,17 @@ struct vault_placement
     coord_def size;
 
     int orient;
+    int diamond_rot; // [hex] XXX: -1 means square
     map_def map;
     std::vector<coord_def> exits;
 
+    operator dgn_region() const
+    {
+	return dgn_region(pos,size,diamond_rot);
+    }
+
     vault_placement()
-        : pos(-1, -1), size(0, 0), orient(0), map(),
+        : pos(-1, -1), size(0, 0), orient(0), diamond_rot(-1), map(),
           exits()
     {
     }
@@ -43,7 +49,8 @@ int vault_main(map_type vgrid,
 
 // Given a rectangular region, slides it to fit into the map. size must be
 // smaller than (GXM,GYM).
-void fit_region_into_map_bounds(coord_def &pos, const coord_def &size);
+void fit_region_into_map_bounds(hexcoord& pos, const coord_def& size,
+	const int diamond_rot = -1);
 
 const map_def *map_by_index(int index);
 int map_count();

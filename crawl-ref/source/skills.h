@@ -3,7 +3,9 @@
  *  Summary:    Skill exercising functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2006-11-22 08:41:20 +0000 (Wed, 22 Nov 2006) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -23,6 +25,5 @@ void calc_total_skill_points( void );
  *              items - misc - spell
  * *********************************************************************** */
 int exercise(int exsk, int deg);
-
 
 #endif

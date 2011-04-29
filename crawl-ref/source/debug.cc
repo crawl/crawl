@@ -3,7 +3,9 @@
  *  Summary:    Debug and wizard related functions.
  *  Written by: Linley Henzell and Jesse Jones
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-29 09:01:34 +0100 (Mon, 29 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -1114,8 +1116,9 @@ void stethoscope(int mwh)
         }
         else
         {
-            steth_x = you.x_pos + stth.dx;
-            steth_y = you.x_pos + stth.dy;
+	    const hexcoord steth = you.pos() + stth.dir;
+	    steth_x = steth.x;
+	    steth_y = steth.y;
         }
 
         if (env.cgrid[steth_x][steth_y] != EMPTY_CLOUD)

@@ -1,5 +1,7 @@
 /*
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-07-12 15:16:56 +0100 (Thu, 12 Jul 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #ifndef MON_SPLL_H

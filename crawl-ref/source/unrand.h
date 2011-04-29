@@ -3,7 +3,9 @@
  *  Summary:    Definitions for unrandom artefacts.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-10-04 14:11:58 +0100 (Thu, 04 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first): 
  *               <3>     7 Aug 2001      MV             Added many new items

@@ -3,7 +3,9 @@
  *  Summary:    Functions used to create vaults.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-29 16:20:44 +0100 (Mon, 29 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -37,7 +39,7 @@ static int apply_vault_definition(
                         map_def &def,
                         map_type map,
                         vault_placement &,
-                        bool check_place, bool clobber);
+			bool check_place, bool clobber, bool diamond = false);
 
 static bool resolve_map(map_def &def, const map_def &original);
 
@@ -103,13 +105,22 @@ static int write_vault(map_def &mdef, map_type map,
     // is a map validate Lua hook that keeps rejecting the map.
     int tries = 25;
 
+    //bool nodiamond = one_chance_in(10);
+
     while (tries-- > 0)
     {
         if (!resolve_map(place.map, mdef))
             continue;
 
-        place.orient = apply_vault_definition(place.map, map,
-                                              place, check_place, clobber);
+	if (tries > 15)
+	    place.orient = apply_vault_definition(place.map, map,
+		    place, check_place, clobber, true);
+	else
+	{
+	    // fallback to square placement
+	    place.orient = apply_vault_definition(place.map, map,
+		    place, check_place, clobber);
+	}
 
         if (place.orient != MAP_NONE)
             break;
@@ -204,17 +215,103 @@ static bool bad_map_place(const map_def &map,
     return (false);
 }
 
-void fit_region_into_map_bounds(coord_def &pos, const coord_def &size)
+static bool bad_map_place_diamond(const map_def &map,
+                          const hexcoord &start, int rot, int width, int height,
+                          bool check_place, bool clobber)
 {
-    ASSERT(size.x <= GXM && size.y <= GYM);
-    if (pos.x < X_BOUND_1)
-        pos.x = X_BOUND_1;
-    if (pos.y < Y_BOUND_1)
-        pos.y = Y_BOUND_1;
-    if (pos.x + size.x - 1 > X_BOUND_2)
-        pos.x = X_BOUND_2 - size.x + 1;
-    if (pos.y + size.y - 1 > Y_BOUND_2)
-        pos.y = Y_BOUND_2 - size.y + 1;
+    if (!check_place || clobber)
+        return (false);
+    
+    const std::vector<std::string> &lines = map.map.get_lines();
+    for ( int x = 0; x < width; x++ )
+    {
+	for ( int y = 0; y < height; y++ )
+	{
+
+            if (lines[y][x] == ' ')
+                continue;
+
+	    const hexcoord t = start + ( (hexdir::u)*x +
+		    (-hexdir::w)*y ).rotated(rot);
+
+            if (dgn_map_mask(t))
+                return (true);
+
+            if (igrd(t) != NON_ITEM || mgrd(t) != NON_MONSTER)
+                return (true);
+            
+            const dungeon_feature_type grid = grd(t);
+
+            if (!grid_is_opaque(grid)
+                && grid != DNGN_FLOOR
+                && !grid_is_water(grid)
+                && grid != DNGN_LAVA
+                && grid != DNGN_CLOSED_DOOR
+                && grid != DNGN_OPEN_DOOR
+                && grid != DNGN_SECRET_DOOR)
+            {
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS,
+                     "Rejecting place because of %s at (%d:%d:%d)",
+                     dungeon_feature_name(grid), t.X, t.Y, t.Z);
+#endif
+                return (true);
+            }
+	}
+    }
+
+    return (false);
+}
+
+void fit_region_into_map_bounds(hexcoord& pos, const coord_def& size,
+	const int diamond_rot)
+{
+    if (diamond_rot == -1)
+    {
+	// square
+	ASSERT(size.x <= GXM && size.y <= GYM);
+	if (pos.x < X_BOUND_1)
+	    pos.x = X_BOUND_1;
+	if (pos.y < Y_BOUND_1)
+	    pos.y = Y_BOUND_1;
+	if (pos.x + size.x - 1 > X_BOUND_2)
+	    pos.x = X_BOUND_2 - size.x + 1;
+	if (pos.y + size.y - 1 > Y_BOUND_2)
+	    pos.y = Y_BOUND_2 - size.y + 1;
+    }
+    else
+    {
+	// diamond/hex
+	
+	// normalise to diamond_rot = 0
+	hexdir tpos = (pos - hexcoord::centre).rotated(-diamond_rot);
+
+	const int rad = GRAD+BOUNDARY_BORDER;
+	hexdir delta = hexdir::zero;
+
+	// slightly unpleasant algorithm: keep shifting to get us within the
+	// boundary until we stop having to shift.
+	do
+	{
+	    delta = hexdir::zero;
+	    if (tpos.X < -rad)
+		delta += (-hexdir::v)*(-rad-tpos.X);
+	    else if (tpos.X + size.x > rad)
+		delta += (-hexdir::v)*(rad-(tpos.X+size.x));
+	    if (tpos.Y < -rad || tpos.Y + size.y > rad)
+		delta += (-hexdir::w)*(-rad-tpos.Y);
+	    else if (tpos.Y + size.y > rad)
+		delta += (-hexdir::w)*(rad-(tpos.Y+size.y));
+	    if (tpos.Z < -rad)
+		delta += (-hexdir::u)*(-rad-tpos.Z);
+	    else if (tpos.Z > rad)
+		delta += (-hexdir::u)*(rad-tpos.Z);
+
+	    tpos += delta;
+	} while (delta != hexdir::zero);
+
+	pos = hexcoord::centre + tpos.rotated(diamond_rot);
+    }
 }
 
 static bool apply_vault_grid(map_def &def, map_type map, 
@@ -226,7 +323,7 @@ static bool apply_vault_grid(map_def &def, map_type map,
     const int width = ml.width();
     const int height = ml.height();
 
-    coord_def start(0, 0);
+    hexcoord start(0, 0);
 
     if (orient == MAP_SOUTH || orient == MAP_SOUTHEAST
             || orient == MAP_SOUTHWEST)
@@ -288,15 +385,160 @@ static bool apply_vault_grid(map_def &def, map_type map,
     return (true);
 }
 
+static bool apply_vault_grid_as_diamond(map_def &def, map_type map, 
+                             vault_placement &place,
+                             bool check_place, bool clobber)
+{
+    const map_lines &ml = def.map;
+    const int orient = def.orient;
+    const int width = ml.width();
+    const int height = ml.height();
+
+    hexcoord start;
+    int rot;
+
+    if (orient == MAP_FLOAT
+	    || orient == MAP_SOUTH || orient == MAP_SOUTHEAST || orient == MAP_SOUTHWEST
+	    || orient == MAP_NORTH || orient == MAP_NORTHEAST || orient == MAP_NORTHWEST
+	    || orient == MAP_EAST || orient == MAP_WEST )
+    {
+	// FIXME: dock MAP_SOUTH etc, and dock floats when wanted.
+	// Also: perhaps finding a place should be handled by methods of def, as
+	// it is for square placement
+
+	// here we map x to u and y to -w, but apply a random rotation to get
+	// other possibilities. Note that the remaining 6 cases, which are
+	// rotations of x maps to -w and y maps to u, are handled by the
+	// possibility of rotation of the *square* map.
+	int tries = 0, laxity = 0;
+	do
+	{
+	    rot = random2(6);
+	    start = hexcoord::centre + random_hex( GRAD-MAPGEN_BORDER+laxity );
+	    tries++;
+	    if (tries >= 100)
+	    {
+		// if we can't fit it in the hex, allow it to poke outside
+		laxity = (tries-100)/4;
+	    }
+	} while ( tries < 200 &&
+		( !in_hex_G_bounds( start, MAPGEN_BORDER-laxity, MAPGEN_BORDER )
+		  || !in_hex_G_bounds( start + (hexdir::u*width).rotated(rot),
+				    MAPGEN_BORDER-laxity, MAPGEN_BORDER )
+		  || !in_hex_G_bounds( start + ((-hexdir::w)*height).rotated(rot),
+		      MAPGEN_BORDER-laxity, MAPGEN_BORDER )
+		  || !in_hex_G_bounds( start + (hexdir::u*width +
+			  (-hexdir::w)*height).rotated(rot), MAPGEN_BORDER-laxity, MAPGEN_BORDER ) ) );
+
+	if (tries >= 200)
+	{
+#ifdef DEBUG_DIAGNOSTICS
+	    mprf(MSGCH_DIAGNOSTICS, "Can't find place for diamond: dim (%d,%d)",
+		    width, height);
+#endif
+	    return (false);
+	}
+    }
+    else if (orient == MAP_ENCOMPASS)
+    {
+	rot = random2(6);
+	bool found = false;
+	for (int nudgerot = 0; nudgerot <= 1; nudgerot++)
+	{
+	    const int effrot = rot + nudgerot;
+	    const coord_def c1 = (hexdir::u*width).rotated(effrot).tosquare();
+	    const coord_def c2 =
+		(-hexdir::w*height).rotated(effrot).tosquare();
+	    const coord_def c3 =
+		(hexdir::u*width-hexdir::w*height).rotated(effrot).tosquare();
+	    const int min_x = std::min(std::min(std::min(0,c1.x),c2.x),c3.x);
+	    const int max_x = std::max(std::max(std::max(0,c1.x),c2.x),c3.x);
+	    const int min_y = std::min(std::min(std::min(0,c1.y),c2.y),c3.y);
+	    const int max_y = std::max(std::max(std::max(0,c1.y),c2.y),c3.y);
+
+	    if (max_x-min_x > GXM - 2
+		    || max_y-min_y > GYM - 2)
+	    {
+#ifdef DEBUG_DIAGNOSTICS
+		mprf(MSGCH_DIAGNOSTICS, "diamond doesn't fit: r%d dim (%d,%d) -> (%d,%d)",
+			effrot, width, height, max_x-min_x, max_y-min_y);
+#endif
+		continue;
+	    }
+
+	    start = hexcoord( 1 - min_x + ((GYM-2) - (max_x-min_x))/2,
+		    1 - min_y + ((GYM-2) - (max_y-min_y))/2);
+	    rot = effrot;
+	    found = true;
+	    break;
+	}
+	if (!found)
+	{
+	    // if we can't place it even after nudging by a rotation, we
+	    // aren't going to be able to place it at all.
+#ifdef DEBUG_DIAGNOSTICS
+	    mprf(MSGCH_DIAGNOSTICS, "Can't find place for diamond: r%d/%d dim (%d,%d)",
+		    rot, rot+1, width, height);
+#endif
+	    return false;
+	}
+    }
+    else
+    {
+	// try to just place it at the origin
+	start = hexcoord::centre;
+	rot = random2(6);
+    }
+
+    if ( bad_map_place_diamond(def, start, rot, width, height, check_place,
+		clobber) )
+    {
+#ifdef DEBUG_DIAGNOSTICS
+	mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d:%d:%d)r%d dim (%d,%d)",
+		start.X, start.Y, start.Z, rot, width, height);
+#endif
+	return (false);
+    }
+
+    const std::vector<std::string> &lines = ml.get_lines();
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Applying %s at (%d:%d:%d)r%d, dimensions (%d,%d)",
+	    def.name.c_str(), start.X, start.Y, start.Z, rot, width, height);
+#endif
+
+    for ( int x = 0; x < width; x++ )
+    {
+	for ( int y = 0; y < height; y++ )
+	{
+	    const hexcoord t = start + ( (hexdir::u)*x +
+		    (-hexdir::w)*y ).rotated(rot);
+	    map[t.y][t.x] = lines[y][x];
+	}
+    }
+
+    place.pos = start;
+    place.size = coord_def(width, height);
+    place.diamond_rot = rot;
+
+    return (true);
+}
+
 static int apply_vault_definition(
         map_def &def,
         map_type map,
         vault_placement &place,
         bool check_place,
-        bool clobber)
+        bool clobber,
+	bool diamond)
 {
-    if (!apply_vault_grid(def, map, place, check_place, clobber))
-        return (MAP_NONE);
+    if (diamond)
+    {
+	if (!apply_vault_grid_as_diamond(def, map, place, check_place, clobber))
+	    return (MAP_NONE);
+    }
+    else
+	if (!apply_vault_grid(def, map, place, check_place, clobber))
+	    return (MAP_NONE);
 
     int orient = def.orient;
     if (orient == MAP_NONE)

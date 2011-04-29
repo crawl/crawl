@@ -3,7 +3,9 @@
  *  Summary:    Player related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 10:41:12 +0200 (Sat, 27 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -300,6 +302,10 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg);
  * *********************************************************************** */
 void level_change(bool skip_ability_increase = false);
 
+/* ***********************************************************************
+ * called from: view
+ * *********************************************************************** */
+int species_stealth_factor(int species);
 
 /* ***********************************************************************
  * called from: skills

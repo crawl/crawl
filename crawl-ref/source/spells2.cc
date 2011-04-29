@@ -3,7 +3,9 @@
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 10:18:41 +0200 (Sat, 27 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -104,19 +106,19 @@ unsigned char detect_items( int pow )
 
     mpr("You detect items!");
 
-    for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
+    hexdir::disc h(map_radius);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
-        {
-            if (i < 5 || j < 5 || i > (GXM - 5) || j > (GYM - 5))
-                continue;
+	hexcoord t = you.pos() + *it;
 
-            if (igrd[i][j] != NON_ITEM)
-            {
-                set_envmap_obj(i, j, DNGN_ITEM_DETECTED);
-                set_envmap_detected_item(i, j);
-            }
-        }
+	if (!in_G_bounds(t,5))
+	    continue;
+
+	if (igrd(t) != NON_ITEM)
+	{
+	    set_envmap_obj(t.x, t.y, DNGN_ITEM_DETECTED);
+	    set_envmap_detected_item(t.x, t.y);
+	}
     }
 
     return (items_found);
@@ -145,16 +147,15 @@ static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
 {
     if (fuzz_radius && fuzz_chance > random2(100))
     {
-        const int fuzz_diam = 2 * fuzz_radius + 1;
+	const hexcoord grid(gridx, gridy);
+	hexcoord g;
 
-        int gx, gy;
         bool found_good = false;
         for (int itry = 0; itry < 5; ++itry)
         {
-            gx = gridx + random2(fuzz_diam) - fuzz_radius;
-            gy = gridy + random2(fuzz_diam) - fuzz_radius;
+            g = grid + random_hex(fuzz_radius);
 
-            if (map_bounds(gx, gy) && !grid_is_solid(grd[gx][gy]))
+            if (map_bounds(g) && !grid_is_solid(grd(g)))
             {
                 found_good = true;
                 break;
@@ -163,8 +164,8 @@ static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
 
         if (found_good)
         {
-            gridx = gx;
-            gridy = gy;
+            gridx = g.x;
+            gridy = g.y;
         }
     }
 
@@ -189,28 +190,28 @@ unsigned char detect_creatures( int pow )
 
     mpr("You detect creatures!");
 
-    for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
+    hexdir::disc h(map_radius);
+    for (hexdir::disc::iterator it = h.begin(); it != h.end(); it++)
     {
-        for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
-        {
-            if (i < 5 || j < 5 || i > (GXM - 5) || j > (GYM - 5))
-                continue;
+	hexcoord t = you.pos() + *it;
 
-            if (mgrd[i][j] != NON_MONSTER)
-            {
-                struct monsters *mon = &menv[ mgrd[i][j] ];
-                mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
+	if (!in_G_bounds(t,5))
+	    continue;
 
-                // Assuming that highly intelligent spellcasters can
-                // detect scrying. -- bwr
-                if (mons_intel( mon->type ) == I_HIGH
-                    && mons_class_flag( mon->type, M_SPELLCASTER ))
-                {
-                    behaviour_event( mon, ME_DISTURB, MHITYOU, 
-                                     you.x_pos, you.y_pos );
-                }
-            }
-        }
+	if (mgrd(t) != NON_MONSTER)
+	{
+	    struct monsters *mon = &menv[ mgrd(t) ];
+	    mark_detected_creature(t.x, t.y, mon, fuzz_chance, fuzz_radius);
+
+	    // Assuming that highly intelligent spellcasters can
+	    // detect scrying. -- bwr
+	    if (mons_intel( mon->type ) == I_HIGH
+		    && mons_class_flag( mon->type, M_SPELLCASTER ))
+	    {
+		behaviour_event( mon, ME_DISTURB, MHITYOU, 
+			you.x_pos, you.y_pos );
+	    }
+	}
     }
 
     return (creatures_found);
@@ -220,43 +221,21 @@ int corpse_rot(int power)
 {
     UNUSED( power );
 
-    char adx = 0;
-    char ady = 0;
-
-    char minx = you.x_pos - 6;
-    char maxx = you.x_pos + 7;
-    char miny = you.y_pos - 6;
-    char maxy = you.y_pos + 7;
-    char xinc = 1;
-    char yinc = 1;
-
-    if (coinflip())
+    for (int radius = 0; radius <= 6; radius++)
     {
-        minx = you.x_pos + 6;
-        maxx = you.x_pos - 7;
-        xinc = -1;
-    }
-
-    if (coinflip())
-    {
-        miny = you.y_pos + 6;
-        maxy = you.y_pos - 7;
-        yinc = -1;
-    }
-
-    for (adx = minx; adx != maxx; adx += xinc)
-    {
-        for (ady = miny; ady != maxy; ady += yinc)
-        {
-            if (see_grid(adx, ady))
+	hexdir::circle c(radius);
+	for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
+	{
+	    const hexcoord t = you.pos() + *it;
+            if (see_grid(t))
             {
-                if (igrd[adx][ady] == NON_ITEM
-                    || env.cgrid[adx][ady] != EMPTY_CLOUD)
+                if (igrd(t) == NON_ITEM
+                    || env.cgrid(t) != EMPTY_CLOUD)
                 {
                     continue;
                 }
 
-                int objl = igrd[adx][ady];
+                int objl = igrd(t);
                 int hrg = 0;
 
                 while (objl != NON_ITEM)
@@ -273,7 +252,7 @@ int corpse_rot(int power)
                             mitm[objl].colour = LIGHTGREY;
                         }
 
-                        place_cloud(CLOUD_MIASMA, adx, ady,
+                        place_cloud(CLOUD_MIASMA, t.x, t.y,
                                     4 + random2avg(16, 3), KC_YOU);
 
                         // Don't look for more corpses here
@@ -298,41 +277,19 @@ int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
 {
     UNUSED( power );
 
-    int adx = 0;
-    int ady = 0;
-
-    int minx = you.x_pos - 6;
-    int maxx = you.x_pos + 7;
-    int miny = you.y_pos - 6;
-    int maxy = you.y_pos + 7;
-    int xinc = 1;
-    int yinc = 1;
-
     int number_raised = 0;
 
-    if (coinflip())
+    for (int radius = 0; radius <= 6; radius++)
     {
-        minx = you.x_pos + 6;
-        maxx = you.x_pos - 7;
-        xinc = -1;
-    }
-
-    if (coinflip())
-    {
-        miny = you.y_pos + 6;
-        maxy = you.y_pos - 7;
-        yinc = -1;
-    }
-
-    for (adx = minx; adx != maxx; adx += xinc)
-    {
-        for (ady = miny; ady != maxy; ady += yinc)
-        {
-            if (see_grid(adx, ady))
+	hexdir::circle c(radius);
+	for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
+	{
+	    const hexcoord t = you.pos() + *it;
+            if (see_grid(t))
             {
-                if (igrd[adx][ady] != NON_ITEM)
+                if (igrd(t) != NON_ITEM)
                 {
-                    int objl = igrd[adx][ady];
+                    int objl = igrd(t);
                     int hrg = 0;
 
                     // This searches all the items on the ground for a corpse
@@ -341,7 +298,7 @@ int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
                         if (is_animatable_corpse(mitm[objl])
                             && !is_being_butchered(mitm[objl]))
                         {
-                            number_raised += raise_corpse(objl, adx, ady,
+                            number_raised += raise_corpse(objl, t.x, t.y,
                                                 corps_beh, corps_hit, actual);
                             break;
                         }
@@ -1005,7 +962,7 @@ int vampiric_drain(int pow, const dist &vmove)
     int mgr = 0;
     struct monsters *monster = 0;       // NULL
 
-    mgr = mgrd[you.x_pos + vmove.dx][you.y_pos + vmove.dy];
+    mgr = mgrd(you.pos() + vmove.dir);
 
     if (mgr == NON_MONSTER)
     {
@@ -1087,7 +1044,7 @@ char burn_freeze(int pow, char flavour)
             return -1;
         }
 
-        mgr = mgrd[you.x_pos + bmove.dx][you.y_pos + bmove.dy];
+        mgr = mgrd(you.pos() + bmove.dir);
 
         // Yes, this is strange, but it does maintain the original behaviour
         if (mgr == NON_MONSTER)
@@ -1172,10 +1129,7 @@ int summon_elemental(int pow, int restricted_type,
     char summ_success = 0;
     struct dist smove;
 
-    int dir_x;
-    int dir_y;
-    int targ_x;
-    int targ_y;
+    hexcoord targ;
 
     int numsc = std::min(2 + (random2(pow) / 5), 6);
 
@@ -1191,14 +1145,11 @@ int summon_elemental(int pow, int restricted_type,
             return (-1);
         }
 
-        dir_x  = smove.dx;
-        dir_y  = smove.dy;
-        targ_x = you.x_pos + dir_x;
-        targ_y = you.y_pos + dir_y;
+	targ = you.pos() + smove.dir;
 
-        if (mgrd[ targ_x ][ targ_y ] != NON_MONSTER)
+        if (mgrd(targ) != NON_MONSTER)
         {
-            if ( player_monster_visible(&menv[mgrd[targ_x][targ_y]]) )
+            if ( player_monster_visible(&menv[mgrd(targ)]) )
                 mpr("There's something there already!");
             else
             {
@@ -1206,41 +1157,41 @@ int summon_elemental(int pow, int restricted_type,
                 return 0;
             }
         }
-        else if (dir_x == 0 && dir_y == 0)
+        else if (smove.dir == hexdir::zero)
             mpr("You can't summon an elemental from yourself!");
         else 
             break;
     }
 
-    if (grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
+    if (grd(targ) == DNGN_ROCK_WALL
         && (restricted_type == 0 || restricted_type == MONS_EARTH_ELEMENTAL))
     {
         type_summoned = MONS_EARTH_ELEMENTAL;
 
-        if (targ_x > 6 && targ_x < 74 && targ_y > 6 && targ_y < 64)
-            grd[ targ_x ][ targ_y ] = DNGN_FLOOR;
+        if (targ.x > 6 && targ.x < 74 && targ.y > 6 && targ.y < 64)
+            grd(targ) = DNGN_FLOOR;
     }
-    else if ((env.cgrid[ targ_x ][ targ_y ] != EMPTY_CLOUD
-            && env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE)
+    else if ((env.cgrid(targ) != EMPTY_CLOUD
+            && env.cloud[env.cgrid(targ)].type == CLOUD_FIRE)
         && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         type_summoned = MONS_FIRE_ELEMENTAL;
-        delete_cloud( env.cgrid[ targ_x ][ targ_y ] );
+        delete_cloud( env.cgrid(targ) );
     }
-    else if ((grd[ targ_x ][ targ_y ] == DNGN_LAVA)
+    else if ((grd(targ) == DNGN_LAVA)
         && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         type_summoned = MONS_FIRE_ELEMENTAL;
     }
-    else if ((grd[ targ_x ][ targ_y ] == DNGN_DEEP_WATER
-            || grd[ targ_x ][ targ_y ] == DNGN_SHALLOW_WATER
-            || grd[ targ_x ][ targ_y ] == DNGN_BLUE_FOUNTAIN)
+    else if ((grd(targ) == DNGN_DEEP_WATER
+            || grd(targ) == DNGN_SHALLOW_WATER
+            || grd(targ) == DNGN_BLUE_FOUNTAIN)
         && (restricted_type == 0 || restricted_type == MONS_WATER_ELEMENTAL))
     {
         type_summoned = MONS_WATER_ELEMENTAL;
     }
-    else if ((grd[ targ_x ][ targ_y ] >= DNGN_FLOOR
-            && env.cgrid[ targ_x ][ targ_y ] == EMPTY_CLOUD)
+    else if ((grd(targ) >= DNGN_FLOOR
+            && env.cgrid(targ) == EMPTY_CLOUD)
         && (restricted_type == 0 || restricted_type == MONS_AIR_ELEMENTAL))
     {
         type_summoned = MONS_AIR_ELEMENTAL;
@@ -1276,7 +1227,7 @@ int summon_elemental(int pow, int restricted_type,
         || random2(100) < unfriendly)
     {
         summ_success = create_monster( type_summoned, numsc, BEH_HOSTILE,
-                                       targ_x, targ_y, MHITYOU, 250 );
+                                       targ.x, targ.y, MHITYOU, 250 );
 
         if (summ_success >= 0)
             mpr( "The elemental doesn't seem to appreciate being summoned." );
@@ -1284,7 +1235,7 @@ int summon_elemental(int pow, int restricted_type,
     else
     {
         summ_success = create_monster( type_summoned, numsc, BEH_FRIENDLY,
-                                       targ_x, targ_y, you.pet_target, 250 );
+                                       targ.x, targ.y, you.pet_target, 250 );
     }
 
     return (summ_success >= 0);

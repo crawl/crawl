@@ -3,7 +3,9 @@
  *  Summary:    Dumps character info out to the morgue file.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-08 19:35:07 +0100 (Thu, 08 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -1162,8 +1164,13 @@ static void dump_map(const char* fname)
     
     for ( int y = min_y; y <= max_y; ++y )
     {
+	if (y % 2 == 0)
+	    fputc(' ', fp);
         for ( int x = min_x; x <= max_x; ++x )
-            fputc( env.map[x][y].glyph(), fp );
+	{
+	    fputc( env.map[x][y].glyph(), fp );
+            fputc(' ', fp);
+	}
         fputc('\n', fp);
     }
     fclose(fp);

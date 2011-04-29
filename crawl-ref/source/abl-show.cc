@@ -3,7 +3,9 @@
  *  Summary:    Functions related to special abilities.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 14:54:20 +0200 (Sat, 27 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -39,6 +41,7 @@
 #include "abyss.h"
 #include "beam.h"
 #include "decks.h"
+#include "delay.h"
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
@@ -87,6 +90,7 @@ enum ability_flag_type
 };
 
 static void lugonu_bends_space();
+static bool leap_from_shadows();
 static int find_ability_slot( ability_type which_ability );
 static bool activate_talent(const talent& tal);
 static bool do_ability(const ability_def& abil);
@@ -207,6 +211,8 @@ static const ability_def Ability_List[] =
     { ABIL_FLY_II, "Fly", 0, 0, 25, 0, ABFLAG_NONE },
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball", 0, 0, 0, 0, ABFLAG_INSTANT },
     { ABIL_MUMMY_RESTORATION, "Restoration", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
+
+    { ABIL_LEAP_FROM_SHADOWS, "Leap From Shadows", 0, 0, 0, 0, ABFLAG_NONE },
 
     // EVOKE abilities use Evocations and come from items:
     // Mapping, Teleportation, and Blink can also come from mutations 
@@ -628,6 +634,13 @@ static talent get_talent(ability_type ability, bool check_confused)
         }
         break;
         // end item abilities - some possibly mutagenic {dlb}
+
+	// begin misc abilities
+    case ABIL_LEAP_FROM_SHADOWS:
+	perfect = true;
+	failure = 0;
+	break;
+	// end misc abilities
 
         // begin invocations {dlb}
     case ABIL_ELYVILON_PURIFICATION:
@@ -1160,6 +1173,11 @@ static bool do_ability(const ability_def& abil)
         if ( go_berserk(true) )
             exercise( SK_EVOCATIONS, 1 );
         break;
+
+
+    case ABIL_LEAP_FROM_SHADOWS:    // high stealth skill ability
+	leap_from_shadows();
+	break;
 
     // fly (kenku) -- eventually becomes permanent (see acr.cc)
     case ABIL_FLY:
@@ -2101,6 +2119,13 @@ std::vector<talent> your_talents( bool check_confused )
         add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused );
     }
 
+    // [hex] removing this from the hexcrawl release, as it's a bit silly (and
+    // currently unhexified)
+    //if (you.skills[SK_STEALTH] >= 10)
+    //{
+	//add_talent(talents, ABIL_LEAP_FROM_SHADOWS, check_confused );
+    //}
+
     // find hotkeys for the non-hotkeyed talents
     for (unsigned int i = 0; i < talents.size(); ++i)
     {
@@ -2297,6 +2322,45 @@ static void lugonu_bends_space()
     
     const int damage = roll_dice(1, 4);
     ouch(damage, 0, KILLED_BY_WILD_MAGIC, "a spatial distortion");
+}
+
+static bool leap_from_shadows()
+{
+    struct dist beam;
+    int dx,dy,ddx,ddy;
+
+    mpr("Leap to where?");
+
+    direction( beam, DIR_TARGET, TARG_ANY );
+
+    if (!beam.isValid)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    // it's already here!
+    if (beam.isMe)
+    {
+        mpr( "Jumping on the spot would be fruitless." );
+        return false;
+    }
+
+    dx = beam.tx - you.x_pos;
+    dy = beam.ty - you.y_pos;
+
+    // Maths: it works. Draw it if you don't believe me.
+    ddx = (2*dx > dy) - (2*dx < -dy);
+    ddy = (2*dy > dx) - (2*dy < -dx);
+
+    if (!grid_is_solid(you.x_pos - ddx, you.y_pos - ddy))
+    {
+	mpr( "You need something solid to push off from." );
+	return false;
+    }
+
+    start_delay( DELAY_LEAP, 2, beam.tx, beam.ty );
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////

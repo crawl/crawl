@@ -1,5 +1,7 @@
 /*
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-27 10:41:12 +0200 (Sat, 27 Oct 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #include "AppHdr.h"
@@ -2078,6 +2080,8 @@ static option_handler handlers[] =
     { "no_dark_brand", &Options.no_dark_brand, option_hboolean },
     { "auto_list", &Options.auto_list, option_hboolean },
     { "lowercase_invocations", &Options.lowercase_invocations, 
+                    option_hboolean },
+    { "hex_interpolate_walls", &Options.hex_interpolate_walls,
                     option_hboolean },
     { "pickup_thrown", &Options.pickup_thrown, option_hboolean },
     { "pickup_dropped", &Options.pickup_dropped, option_hboolean },

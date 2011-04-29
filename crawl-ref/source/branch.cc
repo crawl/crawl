@@ -1,5 +1,7 @@
 /*
  *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2006-12-10 22:28:21 +0200 (Sun, 10 Dec 2006) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #include "AppHdr.h"

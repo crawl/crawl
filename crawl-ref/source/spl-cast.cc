@@ -3,7 +3,9 @@
  *  Summary:    Spell casting and miscast functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-07 21:31:57 +0100 (Wed, 07 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -681,7 +683,6 @@ bool cast_a_spell()
     }
 
     you.turn_is_over = true;
-    alert_nearby_monsters();
 
     return (true);
 }                               // end cast_a_spell()
@@ -801,7 +802,7 @@ void spellcasting_side_effects(spell_type spell, bool idonly = false)
         }
     }
 
-    alert_nearby_monsters();
+    alert_nearby_monsters(50);
 }
 
 static bool spell_is_uncastable(spell_type spell)
@@ -3512,6 +3513,9 @@ void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
     }
 
     xom_is_stimulated(sever);
+
+    alert_nearby_monsters( 25*(sever+1) );
+
     return;
 }                               // end miscast_effect()
 

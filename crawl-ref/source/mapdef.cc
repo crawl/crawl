@@ -3,6 +3,8 @@
  *  Summary:    Support code for Crawl des files.
  *
  *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-30T15:49:18.688054Z $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  */
 
 #include <iostream>
@@ -323,6 +325,10 @@ int map_lines::operator () (const coord_def &c) const
 
 bool map_lines::in_map(const coord_def &c) const
 {
+    if ( c.x < 0 || c.x >= width()
+	    || c.y < 0 || c.y >= height() )
+	return (false);
+
     return (lines[c.y][c.x] != ' ');
 }
 
@@ -401,7 +407,7 @@ void map_lines::apply_markers(const coord_def &c)
     markers.clear();
 }
 
-void map_lines::apply_colours(const coord_def &c)
+void map_lines::apply_colours(const dgn_region &reg)
 {
     if (!colour_overlay.get())
         return;
@@ -411,14 +417,14 @@ void map_lines::apply_colours(const coord_def &c)
         {
             const int colour = overlay(x, y);
             if (colour)
-                dgn_set_grid_colour_at(c + coord_def(x, y), colour);
+                dgn_set_grid_colour_at(reg.pos_in(x,y), colour);
         }
 }
 
-void map_lines::apply_overlays(const coord_def &c)
+void map_lines::apply_overlays(const dgn_region &reg)
 {
-    apply_markers(c);
-    apply_colours(c);
+    apply_markers(reg.pos);
+    apply_colours(reg);
 }
 
 const std::vector<std::string> &map_lines::get_lines() const

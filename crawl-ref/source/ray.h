@@ -3,7 +3,9 @@
  *  Summary:    Ray definition
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: zelgadis $ on $Date: 2007-09-16 04:49:23 +0100 (Sun, 16 Sep 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -16,35 +18,26 @@
 struct ray_def
 {
 public:
-    double accx;
-    double accy;
-    double slope;
-    // Quadrant 1: down-right
-    // Quadrant 2: down-left
-    // Quadrant 3: up-left
-    // Quadrant 4: up-right
-    int quadrant;
-    int fullray_idx;            // for cycling: where did we come from?
+    int n;                    // accpos and dir are n-division points
+    hexcoord cell;            // nearest position in lattice L
+    hexdir disp;              // displacement from cell in (1/n)L
+    hexdir dir;               // dir of movement, element of (1/n)L
+
+    int fullray_idx;          // for cycling: where did we come from?
 
 public:
-    ray_def();
-    int x() const { return static_cast<int>(accx); }
-    int y() const { return static_cast<int>(accy); }
-    coord_def pos() const { return coord_def(x(), y()); }
+    hexcoord pos() const { return cell; }
+    int x() const { return cell.x; }
+    int y() const { return cell.y; }
     
-    // returns the direction taken (0,1,2)
-    int advance(bool shorten = false, const coord_def *p = NULL);
-    int advance_through(const coord_def &point);
+    void advance();
     void advance_and_bounce();
     void regress();
+    void deflect(int deflect_amount);
 
 private:
-    int raw_advance();
-    double reflect(bool x, double oldc, double newc) const;
-    double reflect(double x, double c) const;
-    void set_reflect_point(const double oldx, const double oldy,
-                           double *newx, double *newy,
-                           bool blocked_x, bool blocked_y);
+    bool recentre();
+    void rescale(int m);
 };
 
 #endif

@@ -3,7 +3,7 @@
  *  Summary:    Terrain related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-08 18:39:42 +0100 (Thu, 08 Nov 2007) $
  *
  *  Change History (most recent first):
  *
@@ -230,24 +230,21 @@ dungeon_feature_type grid_secret_door_appearance( int gx, int gy )
 {
     dungeon_feature_type ret = DNGN_FLOOR;
 
-    for (int dx = -1; dx <= 1; dx++)
+    hexcoord t;
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
     {
-        for (int dy = -1; dy <= 1; dy++)
-        {
-            // only considering orthogonal grids
-            if ((abs(dx) + abs(dy)) % 2 == 0)
-                continue;
+	t = hexcoord(gx,gy) + *it;
 
-            const dungeon_feature_type targ = grd[gx + dx][gy + dy];
+	const dungeon_feature_type targ = grd(t);
 
-            if (!grid_is_wall( targ ))
-                continue;
+	if (!grid_is_wall( targ ))
+	    continue;
 
-            if (ret == DNGN_FLOOR)
-                ret = targ;
-            else if (ret != targ)
-                ret = ((ret < targ) ? ret : targ);
-        }
+	if (ret == DNGN_FLOOR)
+	    ret = targ;
+	else if (ret != targ)
+	    ret = ((ret < targ) ? ret : targ);
     }
 
     return ((ret == DNGN_FLOOR) ? DNGN_ROCK_WALL 

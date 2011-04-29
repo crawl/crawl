@@ -3,7 +3,9 @@
  *  Summary:    Functions related to ranged attacks.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-11-10 00:13:00 +0100 (Sat, 10 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *
@@ -26,6 +28,7 @@
 #include <cstdarg>
 #include <iostream>
 #include <set>
+#include <cmath>
 
 #ifdef DOS
 #include <dos.h>
@@ -67,9 +70,6 @@
 #define MON_UNAFFECTED  1           // monster unaffected
 #define MON_AFFECTED    2           // monster was unaffected
 
-static int spreadx[] = { 0, 0, 1, -1 };
-static int spready[] = { -1, 1, 0, 0 };
-static int opdir[]   = { 2, 1, 4, 3 };
 static FixedArray < bool, 19, 19 > explode_map;
 
 // helper functions (some of these should probably be public):
@@ -90,9 +90,9 @@ static int  affect_monster_enchantment(bolt &beam, monsters *mon);
 static void beam_paralyses_monster( bolt &pbolt, monsters *monster );
 static int  range_used_on_hit(bolt &beam);
 static void explosion1(bolt &pbolt);
-static void explosion_map(bolt &beam, int x, int y,
-    int count, int dir, int r);
-static void explosion_cell(bolt &beam, int x, int y, bool drawOnly);
+static void explosion_map( bolt &beam, const hexdir &d,
+	int count, const hexdir &dir, int r );
+static void explosion_cell(bolt &beam, const hexdir &d, bool drawOnly);
 
 static void ench_animation( int flavour, const monsters *mon = NULL, bool force = false);
 static void zappy(zap_type z_type, int power, bolt &pbolt);
@@ -171,14 +171,13 @@ void zap_animation( int colour, const monsters *mon, bool force )
     if (!see_grid( x, y ))
         return;
     
-    const int drawx = grid2viewX(x);
-    const int drawy = grid2viewY(y);
+    const coord_def draw = grid2view(hexcoord(x,y));
 
-    if (in_los_bounds(drawx, drawy))
+    if (in_los_bounds(draw.x, draw.y))
     {
         view_update();
         textcolor( colour );
-        gotoxy( drawx, drawy );
+        gotoxy( draw.x, draw.y );
         putch( SYM_ZAP );
         update_screen();
         delay(50);
@@ -213,7 +212,7 @@ void zapping(zap_type ztype, int power, bolt &pbolt)
     // all of the following might be changed by zappy():
     pbolt.range = 8 + random2(5);       // default for "0" beams (I think)
     pbolt.rangeMax = 0;
-    pbolt.hit = 0;                      // default for "0" beams (I think)
+    pbolt.hit = 0;			// default for "0" beams (I think)
     pbolt.damage = dice_def( 1, 0 );    // default for "0" beams (I think)
     pbolt.type = 0;                     // default for "0" beams
     pbolt.flavour = BEAM_MAGIC;         // default for "0" beams
@@ -1266,8 +1265,9 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 void fire_beam( bolt &pbolt, item_def *item )
 {
     bool beamTerminate;     // has beam been 'stopped' by something?
-    int &tx(pbolt.pos.x), &ty(pbolt.pos.y);     // test(new) x,y - integer
+    hexcoord t;
     int rangeRemaining;
+    int aimedDistRemaining;
     bool did_bounce = false;
     cursor_control coff(false);
 
@@ -1303,13 +1303,107 @@ void fire_beam( bolt &pbolt, item_def *item )
     else
     {
         ray.fullray_idx = -1;   // to quiet valgrind
-        find_ray( pbolt.source_x, pbolt.source_y,
-                  pbolt.target_x, pbolt.target_y, true, ray,
-                  0, true );
+	find_ray( pbolt.source(), pbolt.target(), true, ray, 0, true );
     }
 
+    aimedDistRemaining = pbolt.source().distance_from(pbolt.target());
+
+#ifdef WIDE_SHOTS
+    if (!pbolt.is_tracer && !pbolt.aimed_at_feet && pbolt.hit != AUTOMATIC_HIT
+	    && pbolt.name[0] != '0')
+    {
+	// deflect by somewhere in [-pi/3,pi/3], smoothing according to
+	// pbolt.hit, and then adjust pbolt.hit appropriately:
+
+	const int effhit = std::max(2, 2 + pbolt.hit);
+	int aim = (random2avg(121, effhit)-60);
+
+	int sigma = (int)(121/sqrt(effhit*12));
+
+	mprf(MSGCH_DIAGNOSTICS, "pbolt.hit: %d; aim: %d; sigma: %d", pbolt.hit,
+		aim, sigma);
+
+	// We adjust the hit chance according to the probability of getting
+	// this good/bad an aim. Rationale: better-aimed shots are harder to
+	// dodge, but since pbolt.hit already takes this into account to an
+	// extent, what counts as a shot good enough to give a bonus to
+	// pbolt.hit must depend on the original value of pbolt.hit.
+	//
+	// Calculations: the distribution of aims is approximately normal with
+	// mean 0 and standard deviation 121*sqrt(effhit*12), so we just
+	// look at how many standard deviations our shot was off centre.
+
+	if (abs(aim) <= sigma/10) // about 8% chance
+	    pbolt.hit *= 2;
+	else if (abs(aim) <= 2*sigma/10) // about 16% chance
+	{
+	    pbolt.hit *= 3;
+	    pbolt.hit /= 2;
+	}
+	else if (abs(aim) > sigma) // about 32% chance
+	{
+	    pbolt.hit *= 2;
+	    pbolt.hit /= 3;
+	}
+	else if (abs(aim) > 3*sigma/2) // about 13% chance
+	    pbolt.hit /= 2;
+
+	if (abs(aim) <= 4)
+	{
+	    // artificially up the chances of getting a perfect shot
+	    aim = 0;
+	}
+
+	ray.deflect(aim);
+
+	// summary of the effects of the above code, as compared to the
+	// previous system (which did not have this deflection section):
+	//
+	// Badly aimed shots (as measured by pbolt.hit) are likely to go wide
+	// of the mark. When they do, they are easier to evade. When they do
+	// go where they were meant to, they are harder to evade. The
+	// intention is that this roughly balances out overall, so the sum
+	// chance of hitting a target you shoot at is approximately the same
+	// as before. (TODO: calculate how good an approximation it is, adjust
+	// appropriately).
+	//
+	// Similar remarks go for well-aimed shots (high pbolt.hit), except
+	// that going wide of the mark is likely only for distant targets or
+	// partially obscured targets.
+
+
+	// Now introduce some inaccuracy in shots which are aimed at the
+	// ground.  This assumes that any beam which can be targetted at a
+	// square is actually always targetted at the ground rather than at
+	// anything standing in the square. I think this is fine (and more
+	// interesting), but it's arguable.
+
+	aimedDistRemaining += random2avg(7,effhit*2)-3;
+	if (aimedDistRemaining < 1)
+	    aimedDistRemaining = 1;
+
+	// TODO: make intelligent monsters consider that they may miss when
+	// considering what shot to make, probably just by having them fire
+	// off a few tracers at various angles and consider the sum of their
+	// values weighted according to probability. Currently they care as
+	// much as a US marine where their stray shots go.
+	//
+	// TODO: make intelligent monsters use cover cleverly, trying to get a
+	// clear shot to you if it wants to shoot you, and conversely to stay
+	// in cover if you might shoot at it.
+	//
+	// TODO maybe: automatic "leaning round" of corners, which can be
+	// implemented simply by choosing sensible initial values of accx and
+	// accy within your square... I like this idea muchly, but worry about
+	// how discoverable it would be.
+	//
+	// TODO maybe: make DEFLECT_MISSILES etc cause actual deflections, to
+	// your shots as well as your opponents'.
+    }
+#endif
+
     if ( !pbolt.aimed_at_feet )
-        ray.advance_through(pbolt.target());
+        ray.advance();
 
     // give chance for beam to affect one cell even if aimed_at_feet.
     beamTerminate = false;
@@ -1333,38 +1427,38 @@ void fire_beam( bolt &pbolt, item_def *item )
 
     while(!beamTerminate)
     {
-        tx = ray.x();
-        ty = ray.y();
+	t = ray.pos();
+
+	aimedDistRemaining -= 1;
 
         // shooting through clouds affects accuracy
-        if ( env.cgrid[tx][ty] != EMPTY_CLOUD )
+        if ( env.cgrid(t) != EMPTY_CLOUD )
             pbolt.hit = std::max(pbolt.hit - 2, 0);
 
-        // see if tx, ty is blocked by something
-        if (grid_is_solid(grd[tx][ty]))
+        // see if t is blocked by something
+        if (grid_is_solid(grd(t)))
         {
             // first, check to see if this beam affects walls.
-            if (affects_wall(pbolt, grd[tx][ty]))
+            if (affects_wall(pbolt, grd(t)))
             {
                 // should we ever get a tracer with a wall-affecting
                 // beam (possible I suppose), we'll quit tracing now.
                 if (!pbolt.is_tracer)
-                    rangeRemaining -= affect(pbolt, tx, ty);
+                    rangeRemaining -= affect(pbolt, t.x, t.y);
 
                 // if it's still a wall, quit.
-                if (grid_is_solid(grd[tx][ty]))
+                if (grid_is_solid(grd(t)))
                     break;      // breaks from line tracing
             }
             else
             {
                 // BEGIN bounce case
-                if (!isBouncy(pbolt, grd[tx][ty]))
+                if (!isBouncy(pbolt, grd(t)))
                 {
                     do
                         ray.regress();
                     while (grid_is_solid(grd(ray.pos())));
-                    tx = ray.x();
-                    ty = ray.y();
+		    t = ray.pos();
                     break;          // breaks from line tracing
                 }
 
@@ -1378,18 +1472,17 @@ void fire_beam( bolt &pbolt, item_def *item )
                     ray.advance_and_bounce();
                     --rangeRemaining;
                 } while ( rangeRemaining > 0 &&
-                          grid_is_solid(grd[ray.x()][ray.y()]) );
+                          grid_is_solid(grd(ray.pos())) );
 
                 if (rangeRemaining < 1)
                     break;
-                tx = ray.x();
-                ty = ray.y();
+		t = ray.pos();
             } // end else - beam doesn't affect walls
-        } // endif - is tx, ty wall?
+        } // endif - is t a wall?
 
-        // at this point, if grd[tx][ty] is still a wall, we
+        // at this point, if grd(t) is still a wall, we
         // couldn't find any path: bouncy, fuzzy, or not - so break.
-        if (grid_is_solid(grd[tx][ty]))
+        if (grid_is_solid(grd(t)))
             break;
         
         // check for "target termination"
@@ -1400,8 +1493,8 @@ void fire_beam( bolt &pbolt, item_def *item )
         // in this case, don't affect the cell - players and
         // monsters have no chance to dodge or block such
         // a beam, and we want to avoid silly messages.
-        if (tx == pbolt.target_x && ty == pbolt.target_y)
-            beamTerminate = beam_term_on_target(pbolt, tx, ty);
+        if (aimedDistRemaining == 0)
+            beamTerminate = beam_term_on_target(pbolt, t.x, t.y);
 
         // affect the cell, except in the special case noted
         // above -- affect() will early out if something gets
@@ -1417,7 +1510,7 @@ void fire_beam( bolt &pbolt, item_def *item )
             }
 
             if (!pbolt.affects_nothing)
-                rangeRemaining -= affect(pbolt, tx, ty);
+		rangeRemaining -= affect(pbolt, t.x, t.y);
 
             if (random_beam)
             {
@@ -1439,7 +1532,7 @@ void fire_beam( bolt &pbolt, item_def *item )
 
         // actually draw the beam/missile/whatever,
         // if the player can see the cell.
-        if (!pbolt.is_tracer && pbolt.name[0] != '0' && see_grid(tx,ty))
+        if (!pbolt.is_tracer && pbolt.name[0] != '0' && see_grid(t))
         {
             // we don't clean up the old position.
             // first, most people like seeing the full path,
@@ -1447,17 +1540,16 @@ void fire_beam( bolt &pbolt, item_def *item )
             // respect to killed monsters, cloud trails, etc.
 
             // draw new position
-            int drawx = grid2viewX(tx);
-            int drawy = grid2viewY(ty);
+	    coord_def draw = grid2view(t);
             // bounds check
-            if (in_los_bounds(drawx, drawy))
+            if (in_los_bounds(draw.x, draw.y))
             {
                 if (pbolt.colour == BLACK)
                     textcolor(random_colour());
                 else
                     textcolor(pbolt.colour);
 
-                gotoxy(drawx, drawy);
+                gotoxy(draw.x, draw.y);
                 putch(pbolt.type);
 
                 // get curses to update the screen so we can see the beam
@@ -1474,17 +1566,14 @@ void fire_beam( bolt &pbolt, item_def *item )
 
         }
 
-        if (!did_bounce)
-            ray.advance_through(pbolt.target());
-        else
-            ray.advance(true);
+	ray.advance();
     } // end- while !beamTerminate
 
-    // the beam has finished, and terminated at tx, ty
+    // the beam has finished, and terminated at t
 
     // leave an object, if applicable
     if (item)
-        beam_drop_object( pbolt, item, tx, ty );
+        beam_drop_object( pbolt, item, t.x, t.y );
 
     // check for explosion.  NOTE that for tracers, we have to make a copy
     // of target co'ords and then reset after calling this -- tracers should
@@ -1492,7 +1581,7 @@ void fire_beam( bolt &pbolt, item_def *item )
     int ox = pbolt.target_x;
     int oy = pbolt.target_y;
 
-    beam_explodes(pbolt, tx, ty);
+    beam_explodes(pbolt, t.x, t.y);
 
     if (pbolt.is_tracer)
     {
@@ -2217,7 +2306,7 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
     // Note that we are guaranteed to be within the player LOS range,
     // so fallback is unnecessary.
     ray_def ray;
-    return find_ray( sx, sy, tx, ty, false, ray );
+    return find_ray( hexcoord(sx, sy), hexcoord(tx, ty), false, ray );
 }
 
 /*
@@ -2588,8 +2677,7 @@ static int affect_wall(bolt &beam, int x, int y)
         if (grd[x][y] == DNGN_STONE_WALL
             || grd[x][y] == DNGN_METAL_WALL
             || grd[x][y] == DNGN_PERMAROCK_WALL
-            || x <= 5 || x >= (GXM - 5)
-            || y <= 5 || y >= (GYM - 5))
+	    || !in_G_bounds(x,y,6))
         {
             return (0);
         }
@@ -2654,7 +2742,7 @@ static int affect_wall(bolt &beam, int x, int y)
         int targ_grid = grd[x][y];
 
         if ((targ_grid == DNGN_ROCK_WALL || targ_grid == DNGN_WAX_WALL)
-             && !(x <= 6 || y <= 6 || x >= (GXM - 6) || y >= (GYM - 6)))
+             && in_G_bounds(x,y,6))
         {
             grd[ x ][ y ] = DNGN_FLOOR;
             if (!silenced(you.x_pos, you.y_pos))
@@ -4318,23 +4406,21 @@ void explosion( bolt &beam, bool hole_in_the_middle,
                                      beam.target_x, beam.target_y);
 
         ray.fullray_idx = -1; // to quiet valgrind
-        find_ray( beam.source_x, beam.source_y, beam.target_x, beam.target_y,
-                  true, ray, 0, true );
+	find_ray( beam.source(), beam.target(), true, ray, 0, true );
 
         // Can cast explosions out from statues or walls.
-        if (ray.x() == beam.source_x && ray.y() == beam.source_y)
+	if (ray.pos() == beam.source())
         {
             max_dist--;
-            ray.advance(true); 
+            ray.advance(); 
         }
 
         int dist = 0;
-        while (dist++ <= max_dist && !(ray.x()    == beam.target_x
-                                       && ray.y() == beam.target_y))
+        while (dist++ <= max_dist && !(ray.pos() == beam.target()))
         {
-            if (grid_is_solid(ray.x(), ray.y()))
+            if (grid_is_solid(ray.pos()))
             {
-                bool is_wall = grid_is_wall(grd[ray.x()][ray.y()]);
+                bool is_wall = grid_is_wall(grd(ray.pos()));
                 if (!stop_at_statues && !is_wall)
                 {
 #if DEBUG_DIAGNOSTICS
@@ -4366,11 +4452,11 @@ void explosion( bolt &beam, bool hole_in_the_middle,
 
                 break;
             }
-            ray.advance(true);
+            ray.advance();
         } // while (dist++ <= max_dist)
 
         // Backup so we don't explode inside the wall.
-        if (!explode_in_wall && grid_is_wall(grd[ray.x()][ray.y()]))
+        if (!explode_in_wall && grid_is_wall(grd(ray.pos())))
         {
 #if DEBUG_DIAGNOSTICS
             int old_x = ray.x();
@@ -4409,14 +4495,19 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     noisy( 10 + 5*r, beam.target_x, beam.target_y );
 
     // set map to false
-    explode_map.init(false);
+    // [hex] map is a diamond containing the hex of radius 9.
+    for (int i=0; i<19; i++)
+    {
+        for (int j=0; j<19; j++)
+            explode_map[i][j] = false;
+    }
 
     // discover affected cells - recursion is your friend!
     // this is done to model an explosion's behaviour around
     // corners where a simple 'line of sight' isn't quite
     // enough.   This might be slow for really big explosions,
     // as the recursion runs approximately as R^2
-    explosion_map(beam, 0, 0, 0, 0, r);
+    explosion_map(beam, hexdir::zero, 0, hexdir::zero, r);
 
     // go through affected cells, drawing effect and
     // calling affect() and affect_items() for each.
@@ -4438,41 +4529,26 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     {
         // do center -- but only if its affected
         if (!hole_in_the_middle)
-            explosion_cell(beam, 0, 0, drawing);
+            explosion_cell(beam, hexdir::zero, drawing);
  
-        // do the rest of it
-        for(int rad = 1; rad <= r; rad ++)
-        {
-            // do sides
-            for (int ay = 1 - rad; ay <= rad - 1; ay += 1)
-            {
-                if (explode_map[-rad+9][ay+9])
-                    explosion_cell(beam, -rad, ay, drawing);
+	// [hex] go out in a spiral, updating after each ring.
 
-                if (explode_map[rad+9][ay+9])
-                    explosion_cell(beam, rad, ay, drawing);
-            }
+	for (int rad = 1; rad <= r; rad++)
+	{
+	    hexdir::circle c(rad);
+	    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
+		if (explode_map[(*it).X+9][(*it).Y+9])
+		    explosion_cell(beam, *it, drawing);
 
-            // do top & bottom
-            for (int ax = -rad; ax <= rad; ax += 1)
-            {
-                if (explode_map[ax+9][-rad+9])
-                    explosion_cell(beam, ax, -rad, drawing);
-
-                if (explode_map[ax+9][rad+9])
-                    explosion_cell(beam, ax, rad, drawing);
-            }
-
-            // new-- delay after every 'ring' {gdl}
-            // If we don't refresh curses we won't
-            // guarantee that the explosion is visible
-            if (drawing)
-                update_screen();
-            // only delay on real explosion
-            if (!beam.is_tracer && drawing)
-                delay(50);
-        }
-
+	    // new-- delay after every 'ring' {gdl}
+	    // If we don't refresh curses we won't
+	    // guarantee that the explosion is visible
+	    if (drawing)
+		update_screen();
+	    // only delay on real explosion
+	    if (!beam.is_tracer && drawing)
+		delay(50);
+	}
         drawing = false;
     }
 
@@ -4496,11 +4572,10 @@ void explosion( bolt &beam, bool hole_in_the_middle,
         more();
 }
 
-static void explosion_cell(bolt &beam, int x, int y, bool drawOnly)
+static void explosion_cell(bolt &beam, const hexdir &d, bool drawOnly)
 {
     bool random_beam = false;
-    int realx = beam.target_x + x;
-    int realy = beam.target_y + y;
+    const hexcoord real = beam.target() + d;
 
     if (!drawOnly)
     {
@@ -4511,7 +4586,7 @@ static void explosion_cell(bolt &beam, int x, int y, bool drawOnly)
             beam.flavour = BEAM_FIRE + random2(7);
         }
 
-        affect(beam, realx, realy);
+        affect(beam, real.x, real.y);
 
         if (random_beam)
             beam.flavour = BEAM_RANDOM;
@@ -4524,38 +4599,37 @@ static void explosion_cell(bolt &beam, int x, int y, bool drawOnly)
     // now affect items
     if (!drawOnly)
     {
-        affect_items(beam, realx, realy);
-        if (affects_wall(beam, grd[realx][realy]))
-            affect_wall(beam, realx, realy);
+        affect_items(beam, real.x, real.y);
+        if (affects_wall(beam, grd(real)))
+            affect_wall(beam, real.x, real.y);
     }
 
     if (drawOnly)
     {
-        int drawx = grid2viewX(realx);
-        int drawy = grid2viewY(realy);
+	const coord_def draw = grid2view(real);
 
-        if (see_grid(realx, realy) || (realx == you.x_pos && realy == you.y_pos))
+        if (see_grid(real) || real == you.pos())
         {
             // bounds check
-            if (in_los_bounds(drawx, drawy))
+            if (in_los_bounds(draw.x, draw.y))
             {
                 if (beam.colour == BLACK)
                     textcolor(random_colour());
                 else
                     textcolor(beam.colour);
 
-                gotoxy(drawx, drawy);
+                gotoxy(draw.x, draw.y);
                 putch('#');
             }
         }
     }
 }
 
-static void explosion_map( bolt &beam, int x, int y,
-                           int count, int dir, int r )
+static void explosion_map( bolt &beam, const hexdir &d,
+                           int count, const hexdir &dir, int r )
 {
     // 1. check to see out of range
-    if (x * x + y * y > r * r + r)
+    if (dir.rdist() > r)
         return;
 
     // 2. check count
@@ -4565,33 +4639,35 @@ static void explosion_map( bolt &beam, int x, int y,
     // 3. check to see if we're blocked by something
     //    specifically, we're blocked by WALLS.  Not
     //    statues, idols, etc.
-    const int dngn_feat = grd[beam.target_x + x][beam.target_y + y];
+    const int dngn_feat = grd(beam.target() + d);
 
     // special case: explosion originates from rock/statue
     // (e.g. Lee's rapid deconstruction) - in this case, ignore
     // solid cells at the center of the explosion.
     if (dngn_feat < DNGN_GREEN_CRYSTAL_WALL || dngn_feat == DNGN_WAX_WALL)
     {
-        if (!(x==0 && y==0) && !affects_wall(beam, dngn_feat))
+        if (d != hexdir::zero && !affects_wall(beam, dngn_feat))
             return;
     }
 
     // hmm, I think we're ok
-    explode_map[x+9][y+9] = true;
+    explode_map[d.X+9][d.Y+9] = true;
 
-    // now recurse in every direction except the one we
-    // came from
-    for(int i=0; i<4; i++)
+    // now recurse in every direction except the one we came from
+    hexdir::circle c(1);
+    for (hexdir::circle::iterator it = c.begin(); it != c.end(); it++)
     {
-        if (i+1 != dir)
-        {
-            int cadd = 5;
-            if (x * spreadx[i] < 0 || y * spready[i] < 0)
-                cadd = 17;
+	if (*it != -dir)
+	{
+	    int cadd = 5;
+	    if ((*it).X * d.X + (*it).Y * d.Y + (*it).Z * d.Z < 0)
+	    {
+		// going back towards centre is more expensive
+		cadd = 17;
+	    }
 
-            explosion_map( beam, x + spreadx[i], y + spready[i],
-                           count + cadd, opdir[i], r );
-        }
+	    explosion_map( beam, d + *it, count + cadd, *it, r );
+	}
     }
 }
 

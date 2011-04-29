@@ -5,7 +5,9 @@
  *  Summary:    Functions for windows32 console mode support
  *  Written by: Gordon Lipford
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-11-08 18:52:24 +0100 (Thu, 08 Nov 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):
  *

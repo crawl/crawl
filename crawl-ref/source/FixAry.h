@@ -3,7 +3,9 @@
  *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
  *  Written by: Jesse Jones
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-09-28 13:21:57 +0100 (Fri, 28 Sep 2007) $
+ *
+ *  Modified for Hexcrawl by Martin Bays, 2007
  *
  *  Change History (most recent first):    
  *

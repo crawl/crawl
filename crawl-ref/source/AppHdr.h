@@ -14,7 +14,7 @@
  *
  *  Copyright © 1999 Jesse Jones.
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-25 20:23:34 +0200 (Thu, 25 Oct 2007) $
  *
  *  Change History (most recent first):
  *
@@ -347,6 +347,9 @@
 // you define this option, wizard characters are still tagged as such 
 // in the score file.
 // #define SCORE_WIZARD_CHARACTERS
+
+// Wide shots
+// #define WIDE_SHOTS
 
 // ================================================= --------------------------
 //jmf: New defines for a bunch of optional features.
