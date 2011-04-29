@@ -1779,7 +1779,8 @@ bool load_ghost(bool creating_level)
     return (true);
 }
 
-void restore_game(const std::string& name)
+// returns false if a new game should start instead
+bool restore_game(const std::string& name)
 {
     // [ds] Set up branch depths for the current game type before
     // trying to load the game. This is important for Sprint because
@@ -1791,7 +1792,20 @@ void restore_game(const std::string& name)
 
     if (!_read_char_chunk(you.save))
     {
-        fail("This game comes from an incompatible version of Crawl: %s",
+        // Note: if we are here, the save info was properly read, it would
+        // raise an exception otherwise.
+        if (yesno(("This game comes from an incompatible version of Crawl ("
+                   + you.prev_save_version + ").\n"
+                   "Unless you reinstall that version, you can't load it.\n"
+                   "Do you want to DELETE that game and start a new one?"
+                  ).c_str(),
+                  false, 'n'))
+        {
+            you.save->unlink();
+            you.save = 0;
+            return false;
+        }
+        fail("Cannot load an incompatible save from version %s",
              you.prev_save_version.c_str());
     }
 
@@ -1862,6 +1876,7 @@ void restore_game(const std::string& name)
     }
 
     SavefileCallback::post_restore();
+    return true;
 }
 
 static void _load_level(const level_id &level)
