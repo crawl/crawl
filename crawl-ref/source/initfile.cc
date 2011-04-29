@@ -3503,7 +3503,7 @@ static void _print_save_version(char *name)
         std::string filename = name;
         // Check for the exact filename first, then go by char name.
         if (!file_exists(filename))
-            filename = get_savedir_filename(filename, "", "") + SAVE_SUFFIX;
+            filename = get_savedir_filename(filename);
         package save(filename.c_str(), false);
         reader chrf(&save, "chr");
 
@@ -3583,7 +3583,7 @@ static void _edit_save(int argc, char **argv)
         std::string filename = name;
         // Check for the exact filename first, then go by char name.
         if (!file_exists(filename))
-            filename = get_savedir_filename(filename, "", "") + SAVE_SUFFIX;
+            filename = get_savedir_filename(filename);
         package save(filename.c_str(), rw);
 
         if (cmd == ES_LS)

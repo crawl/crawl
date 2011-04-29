@@ -488,7 +488,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
 
         enter_player_name(choice);
         ng->name = choice->name;
-        ng->filename = get_save_filename(choice->name, "", "") + SAVE_SUFFIX;
+        ng->filename = get_save_filename(choice->name);
 
         if (save_exists(choice->filename))
         {
