@@ -54,7 +54,7 @@ public:
 
     // Fetched/Calculated from the attacker, stored to save execution time
     bool            unarmed_capable;
-    bool            ev_margin;
+    int             ev_margin;
 
     item_def        *weapon;
     brand_type      damage_brand;

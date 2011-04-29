@@ -91,17 +91,18 @@
  *             BEGIN PUBLIC FUNCTIONS             *
  **************************************************
 */
-melee_attack::melee_attack(actor *attk, actor *defn,
-                           bool allow_unarmed, int attack_num)
+melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
+                           int attack_num, int effective_attack_num)
     :  // Call attack's constructor
     attack::attack(attk, defn, allow_unarmed),
 
-    perceived_attack(false), obvious_effect(false),
-    attack_number(attack_num), extra_noise(0), skip_chaos_message(false),
-    special_damage_flavour(BEAM_NONE), attacker_body_armour_penalty(0),
-    attacker_shield_penalty(0), attacker_armour_tohit_penalty(0),
-    attacker_shield_tohit_penalty(0), can_do_unarmed(false), miscast_level(-1),
-    miscast_type(SPTYP_NONE), miscast_target(NULL)
+    perceived_attack(false), obvious_effect(false), attack_number(attack_num),
+    effective_attack_number(effective_attack_num), extra_noise(0),
+    skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
+    attacker_body_armour_penalty(0), attacker_shield_penalty(0),
+    attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
+    can_do_unarmed(false), miscast_level(-1), miscast_type(SPTYP_NONE),
+    miscast_target(NULL)
 {
     init_attack();
 }
@@ -4470,21 +4471,6 @@ bool melee_attack::mons_perform_attack()
             attk.type = AT_HIT;
     }
 
-    if (attk.type == AT_NONE)
-    {
-        // Make sure the monster uses up some energy, even though it
-        // didn't actually attack.
-        if (attack_number == 0)
-            attacker->as_monster()->lose_energy(EUT_ATTACK);
-        return (false);
-    }
-
-    if ((!unarmed_ok && attk.type != AT_HIT && attk.flavour != AF_REACH)
-            || attk.type == AT_SHOOT)
-    {
-        return (false);
-    }
-
     if (weapon == NULL)
     {
         switch (attk.type)
@@ -4569,7 +4555,7 @@ bool melee_attack::mons_perform_attack()
     mons_lose_attack_energy(attacker->as_monster(),
                             final_attack_delay,
                             attack_number,
-                            attack_number);
+                            effective_attack_number);
 
     bool shield_blocked = false;
     bool this_round_hit = false;
