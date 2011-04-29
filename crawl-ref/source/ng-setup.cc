@@ -962,6 +962,7 @@ static void _give_items_skills(const newgame_def& ng)
                                2);
             break;
 
+        case SP_OGRE:
         case SP_TROLL:
             newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5,
                                1);
