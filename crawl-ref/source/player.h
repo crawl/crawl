@@ -687,6 +687,7 @@ struct player_save_info
 #endif
 
     bool save_loadable;
+    std::string filename;
 
     player_save_info operator=(const player& rhs);
     bool operator<(const player_save_info& rhs) const;
