@@ -127,7 +127,6 @@ private:
     // Monster-attack specific stuff
     bool mons_attack_you();
     bool mons_attack_mons();
-    int mons_calc_damage(const mon_attack_def &attk);
     void mons_apply_attack_flavour(const mon_attack_def &attk);
     bool mons_perform_attack();
     std::string mons_attack_verb(const mon_attack_def &attk);
@@ -186,7 +185,6 @@ private:
     int  player_staff_damage(skill_type skill);
     void player_apply_staff_damage();
     bool player_check_monster_died();
-    void player_calc_hit_damage();
     void player_stab_check();
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
