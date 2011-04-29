@@ -882,7 +882,7 @@ void game_options::reset_options()
     darken_beyond_range    = true;
 
     dump_kill_places       = KDO_ONE_PLACE;
-    dump_message_count     = 7;
+    dump_message_count     = 20;
     dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
     dump_item_origin_price = -1;
     dump_book_spells       = true;
