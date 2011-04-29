@@ -841,6 +841,7 @@ again:
             // Save the savegame character name
             ng_choice->name = chars.at(save_number).name;
             ng_choice->type = chars.at(save_number).saved_game_type;
+            ng_choice->filename = chars.at(save_number).filename;
             return;
         }
     }
@@ -938,10 +939,17 @@ bool startup_step()
 
     bool newchar = false;
     newgame_def ng;
-    if (save_exists(choice.name) && restore_game(choice.name))
+    if (choice.filename.empty())
+        choice.filename = get_save_filename(choice.name, "", "") + SAVE_SUFFIX;
+    if (save_exists(choice.filename) && restore_game(choice.filename))
+    {
         save_player_name();
-    else if (choose_game(&ng, &choice, defaults) && restore_game(ng.name))
+    }
+    else if (choose_game(&ng, &choice, defaults)
+             && restore_game(ng.filename))
+    {
         save_player_name();
+    }
     else
     {
         setup_game(ng);

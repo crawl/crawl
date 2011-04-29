@@ -140,9 +140,9 @@ bool is_save_file_name(const std::string &name)
     return _is_uid_file(name, SAVE_SUFFIX);
 }
 
-bool save_exists(const std::string& name)
+bool save_exists(const std::string& filename)
 {
-    return (file_exists(get_savedir_filename(name, "", "") + SAVE_SUFFIX));
+    return file_exists(get_savefile_directory() + filename);
 }
 
 // Returns the save_info from the save.
@@ -697,6 +697,7 @@ std::vector<player_save_info> find_saved_characters()
                 player_save_info p = read_character_info(&save);
                 if (!p.name.empty())
                 {
+                    p.filename = filename;
 #ifdef USE_TILE
                     if (Options.tile_menu_icons && save.has_chunk("tdl"))
                         _fill_player_doll(p, &save);
@@ -1780,15 +1781,14 @@ bool load_ghost(bool creating_level)
 }
 
 // returns false if a new game should start instead
-bool restore_game(const std::string& name)
+bool restore_game(const std::string& filename)
 {
     // [ds] Set up branch depths for the current game type before
     // trying to load the game. This is important for Sprint because
     // it reduces the dungeon to 1 level, making D:1's place name "D"
     // in save chunks.
     initialise_branches_for_game_type();
-    you.save = new package((get_savedir_filename(name, "", "")
-                           + SAVE_SUFFIX).c_str(), true);
+    you.save = new package((get_savefile_directory() + filename).c_str(), true);
 
     if (!_read_char_chunk(you.save))
     {
