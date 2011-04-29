@@ -1606,12 +1606,7 @@ COLOUR can be any of the colours described in section 6-a (colours
 option).
 
 The only multi-colour channels currently are monster_damage and god. All
-other channels are defaulted to on, except for multiturn, which defaults
-to mute.
-Note that the template init.txt sets
-     channel.multiturn = on
-in order to help new players. You may want to comment out this option,
-if you feel the messages are too verbose.
+other channels are defaulted to on.
 
 4-m     Inscriptions.
 ---------------------
@@ -1894,7 +1889,7 @@ dump_item_origin_price = -1
         or equal to this amount. Set this to -1 to prevent selection by
         price.
 
-dump_message_count = 7
+dump_message_count = 20
         The number of last messages to be displayed in character dump
         files.
 
@@ -1935,6 +1930,7 @@ The following events are logged:
         - Abandoning a god
         - Being put under penance and being forgiven
         - Receiving a gift from a god (except Xom)
+        - Death of a named orcish ally (when worshipping Beogh)
         - Being able to invoke a godly power for the first time
         - Picking up a rune, the Orb of Zot, or an artefact for the first time.
         - Identifying items.
