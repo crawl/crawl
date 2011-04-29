@@ -5479,8 +5479,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         // 3, 6, 9% of current hp
         int dam = div_rand_round(random2((1 + hit_points)*(me.degree * 3)),100);
 
-		// location, montype, damage (1 hp = 5% chance), spatter, smell_alert
-		bleed_onto_floor(pos(), type, 20, false, true);
+        // location, montype, damage (1 hp = 5% chance), spatter, smell_alert
+        bleed_onto_floor(pos(), type, 20, false, true);
 
         if (dam < hit_points)
         {
