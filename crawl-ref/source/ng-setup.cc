@@ -1557,8 +1557,8 @@ static void _setup_generic(const newgame_def& ng)
         you.nemelex_sacrificing = true;
 
     // Create the save file.
-    you.save = new package((get_savedir_filename(you.your_name, "", "")
-                            + SAVE_SUFFIX).c_str(), true, true);
+    you.save = new package(get_savedir_filename(you.your_name).c_str(),
+                           true, true);
 
     // Pretend that a savefile was just loaded, in order to
     // get things setup properly.

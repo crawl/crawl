@@ -71,14 +71,8 @@ std::vector<player_save_info> find_saved_characters();
 
 std::string get_savefile_directory(bool ignore_game_type = false);
 std::string get_bonefile_directory(bool ignore_game_type = false);
-std::string get_save_filename(const std::string &pre,
-                              const std::string &suf,
-                              const std::string &ext,
-                              bool suppress_uid = false);
-std::string get_savedir_filename(const std::string &pre,
-                                 const std::string &suf,
-                                 const std::string &ext,
-                                 bool suppress_uid = false);
+std::string get_save_filename(const std::string &name);
+std::string get_savedir_filename(const std::string &name);
 std::string get_base_savedir_path(const std::string &subpath = "");
 std::string get_savedir_path(const std::string &shortpath);
 std::string savedir_versioned_path(const std::string &subdirs = "");

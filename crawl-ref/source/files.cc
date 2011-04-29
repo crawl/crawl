@@ -122,22 +122,12 @@ static void _redraw_all(void)
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
 }
 
-static bool _is_uid_file(const std::string &name, const std::string &ext)
+static bool is_save_file_name(const std::string &name)
 {
-    std::string save_suffix = get_savedir_filename("", "", "");
-    save_suffix += ext;
-
-    save_suffix = save_suffix.substr(get_savefile_directory().length());
-
-    std::string::size_type suffix_pos = name.find(save_suffix);
-    return (suffix_pos != std::string::npos
-            && suffix_pos == name.length() - save_suffix.length()
-            && suffix_pos != 0);
-}
-
-bool is_save_file_name(const std::string &name)
-{
-    return _is_uid_file(name, SAVE_SUFFIX);
+    int off = name.length() - strlen(SAVE_SUFFIX);
+    if (off <= 0)
+        return false;
+    return !strcasecmp(name.c_str() + off, SAVE_SUFFIX);
 }
 
 bool save_exists(const std::string& filename)
@@ -718,45 +708,24 @@ std::vector<player_save_info> find_saved_characters()
     return (chars);
 }
 
-std::string get_savedir_filename(const std::string &prefix,
-                                 const std::string &suffix,
-                                 const std::string &extension,
-                                 bool suppress_uid)
+std::string get_savedir_filename(const std::string &name)
 {
-    std::string result = get_savefile_directory();
-    result += get_save_filename(prefix, suffix, extension, suppress_uid);
-
-    return result;
+    return get_savefile_directory() + get_save_filename(name);
 }
 
-std::string get_save_filename(const std::string &prefix,
-                              const std::string &suffix,
-                              const std::string &extension,
-                              bool suppress_uid)
+std::string get_save_filename(const std::string &name)
 {
-    std::string result = "";
-
-    // Shorten string as appropriate
-    result += chop_string(strip_filename_unsafe_chars(prefix), kFileNameLen, false);
-
-    result += suffix;
-
-    if (!extension.empty())
-    {
-        result += '.';
-        result += extension;
-    }
-
-    return result;
+    return chop_string(strip_filename_unsafe_chars(name), kFileNameLen, false)
+           + SAVE_SUFFIX;
 }
 
 std::string get_prefs_filename()
 {
 #ifdef DGL_STARTUP_PREFS_BY_NAME
-    return get_savedir_filename("start-" + Options.game.name + "-",
-                                "ns", "prf", true);
+    return get_savefile_directory() + "start-"
+           + strip_filename_unsafe_chars(Options.game.name) + "-ns.prf";
 #else
-    return get_savedir_filename("start", "-ns", "prf");
+    return get_savefile_directory() + "start-ns.prf";
 #endif
 }
 
