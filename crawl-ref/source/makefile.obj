@@ -1,13 +1,14 @@
 OBJECTS = \
 abl-show.o \
-acquire.o \
 abyss.o \
+acquire.o \
 act-iter.o \
 actor-los.o \
 actor.o \
 areas.o \
 arena.o \
 artefact.o \
+asg.o \
 attitude-change.o \
 beam.o \
 behold.o \
@@ -20,8 +21,8 @@ clua.o \
 cluautil.o \
 colour.o \
 command.o \
-coord-circle.o \
 coord.o \
+coord-circle.o \
 coordit.o \
 ctest.o \
 database.o \
@@ -142,7 +143,6 @@ mon-transit.o \
 mon-util.o \
 mon_resist_def.o \
 monster.o \
-asg.o \
 mutation.o \
 newgame.o \
 ng-init.o \
