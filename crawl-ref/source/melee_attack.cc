@@ -3075,45 +3075,6 @@ bool melee_attack::player_check_monster_died()
     return (false);
 }
 
-void melee_attack::player_calc_hit_damage()
-{
-    int potential_damage;
-
-    potential_damage =
-        !weapon ? calc_base_unarmed_damage()
-                : calc_base_weapon_damage();
-
-    // [0.6 AC/EV overhaul] Shields don't go well with hand-and-half weapons.
-    if (weapon && hands == HANDS_HALF)
-    {
-        potential_damage =
-            std::max(1,
-                     potential_damage - roll_dice(1, attacker_shield_penalty));
-    }
-
-    potential_damage = player_stat_modify_damage(potential_damage);
-
-    //  apply damage bonus from ring of slaying
-    // (before randomization -- some of these rings
-    //  are stupidly powerful) -- GDL
-    potential_damage += slaying_bonus(PWPN_DAMAGE);
-    damage_done =
-        potential_damage > 0 ? one_chance_in(3) + random2(potential_damage) : 0;
-    damage_done = player_apply_weapon_skill(damage_done);
-    damage_done = player_apply_fighting_skill(damage_done, false);
-    damage_done = player_apply_misc_modifiers(damage_done);
-    damage_done = player_apply_weapon_bonuses(damage_done);
-
-    player_weapon_auto_id();
-
-    damage_done = player_stab(damage_done);
-    damage_done = apply_defender_ac(damage_done);
-
-    // This doesn't actually modify damage. -- bwr
-    // It only chooses the appropriate verb.
-    damage_done = std::max(0, player_weapon_type_modify(damage_done));
-}
-
 int melee_attack::calc_to_hit(bool random)
 {
     // This if statement is temporary, it should be removed when the
@@ -3626,87 +3587,6 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     }
 
     return (false);
-}
-
-// TODO: Merge this and calc_base damage, requires the restructuring
-// of how attacks get initiated and handled (these changes are congruent with
-// the original plans for changing combat) in that each instance of melee_attack
-// is strictly associated with one monster attack. Thus, once we're inside a
-// particular melee_attack instantiation, we can pretend as if mon_attack_def's
-// don't exist in the code
-int melee_attack::mons_calc_damage(const mon_attack_def &attk)
-{
-    int damage = 0;
-    int damage_max = 0;
-    if (weapon
-        && (weapon->base_type == OBJ_WEAPONS
-            && !is_range_weapon(*weapon)
-            || item_is_rod(*weapon)))
-    {
-        damage_max = property(*weapon, PWPN_DAMAGE);
-        damage += random2(damage_max);
-
-        if (get_equip_race(*weapon) == ISFLAG_ORCISH
-            && mons_genus(attacker->mons_species()) == MONS_ORC
-            && coinflip())
-        {
-            damage++;
-        }
-
-        int wpn_damage_plus = weapon->plus2;
-        if(item_is_rod(*weapon))
-            wpn_damage_plus = (short)weapon->props["rod_enchantment"];
-
-        if (wpn_damage_plus >= 0)
-            damage += random2(wpn_damage_plus);
-        else
-            damage -= random2(1 - wpn_damage_plus);
-
-        damage -= 1 + random2(3);
-    }
-
-    damage_max += attk.damage;
-    damage     += 1 + random2(attk.damage);
-
-    // Berserk/mighted/frenzied monsters get bonus damage.
-    if (attacker->as_monster()->has_ench(ENCH_MIGHT)
-        || attacker->as_monster()->has_ench(ENCH_BERSERK)
-        || attacker->as_monster()->has_ench(ENCH_INSANE))
-    {
-        damage = damage * 3 / 2;
-    }
-    else if (attacker->as_monster()->has_ench(ENCH_BATTLE_FRENZY))
-    {
-        const mon_enchant ench =
-            attacker->as_monster()->get_ench(ENCH_BATTLE_FRENZY);
-
-#ifdef DEBUG_DIAGNOSTICS
-        const int orig_damage = damage;
-#endif
-
-        damage = damage * (115 + ench.degree * 15) / 100;
-
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s frenzy damage: %d->%d",
-             attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
-#endif
-    }
-
-    if (weapon && get_weapon_brand(*weapon) == SPWPN_SPEED)
-        damage = div_rand_round(damage * 9, 10);
-
-    // If the defender is asleep, the attacker gets a stab.
-    if (defender && defender->asleep())
-    {
-        damage = damage * 5 / 2;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Stab damage vs %s: %d",
-             defender->name(DESC_PLAIN).c_str(),
-             damage);
-#endif
-    }
-
-    return (apply_defender_ac(damage, damage_max));
 }
 
 std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
@@ -4644,7 +4524,7 @@ bool melee_attack::mons_perform_attack()
         {
             did_hit = true;
             perceived_attack = true;
-            damage_done = mons_calc_damage(attk);
+            damage_done = calc_damage();
         }
         else
         {
@@ -5252,7 +5132,118 @@ int melee_attack::calc_base_unarmed_damage()
 
 int melee_attack::calc_damage()
 {
+    if(attacker->atype() == ACT_MONSTER)
+    {
+        mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
+                                               attack_number);
 
+        int damage = 0;
+        int damage_max = 0;
+        if (weapon
+            && (weapon->base_type == OBJ_WEAPONS
+                && !is_range_weapon(*weapon)
+                || item_is_rod(*weapon)))
+        {
+            damage_max = property(*weapon, PWPN_DAMAGE);
+            damage += random2(damage_max);
+
+            if (get_equip_race(*weapon) == ISFLAG_ORCISH
+                && mons_genus(attacker->mons_species()) == MONS_ORC
+                && coinflip())
+            {
+                damage++;
+            }
+
+            int wpn_damage_plus = weapon->plus2;
+            if(item_is_rod(*weapon))
+                wpn_damage_plus = (short)weapon->props["rod_enchantment"];
+
+            if (wpn_damage_plus >= 0)
+                damage += random2(wpn_damage_plus);
+            else
+                damage -= random2(1 - wpn_damage_plus);
+
+            damage -= 1 + random2(3);
+        }
+
+        damage_max += attk.damage;
+        damage     += 1 + random2(attk.damage);
+
+        // Berserk/mighted/frenzied monsters get bonus damage.
+        if (attacker->as_monster()->has_ench(ENCH_MIGHT)
+            || attacker->as_monster()->has_ench(ENCH_BERSERK)
+            || attacker->as_monster()->has_ench(ENCH_INSANE))
+        {
+            damage = damage * 3 / 2;
+        }
+        else if (attacker->as_monster()->has_ench(ENCH_BATTLE_FRENZY))
+        {
+            const mon_enchant ench =
+                attacker->as_monster()->get_ench(ENCH_BATTLE_FRENZY);
+
+            const int orig_damage = damage;
+
+            damage = damage * (115 + ench.degree * 15) / 100;
+
+            dprf("%s frenzy damage: %d->%d",
+                 attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
+        }
+
+        if (weapon && get_weapon_brand(*weapon) == SPWPN_SPEED)
+            damage = div_rand_round(damage * 9, 10);
+
+        // If the defender is asleep, the attacker gets a stab.
+        if (defender && defender->asleep())
+        {
+            damage = damage * 5 / 2;
+
+            dprf("Stab damage vs %s: %d",
+                 defender->name(DESC_PLAIN).c_str(),
+                 damage);
+        }
+
+        return (apply_defender_ac(damage, damage_max));
+    }
+    else
+    {
+        int potential_damage;
+
+        potential_damage =
+            !weapon ? calc_base_unarmed_damage()
+                    : calc_base_weapon_damage();
+
+        // [0.6 AC/EV overhaul] Shields don't go well with hand-and-half weapons.
+        if (weapon && hands == HANDS_HALF)
+        {
+            potential_damage =
+                std::max(1,
+                         potential_damage - roll_dice(1, attacker_shield_penalty));
+        }
+
+        potential_damage = player_stat_modify_damage(potential_damage);
+
+        //  apply damage bonus from ring of slaying
+        // (before randomization -- some of these rings
+        //  are stupidly powerful) -- GDL
+        potential_damage += slaying_bonus(PWPN_DAMAGE);
+        damage_done =
+            potential_damage > 0 ? one_chance_in(3) + random2(potential_damage) : 0;
+        damage_done = player_apply_weapon_skill(damage_done);
+        damage_done = player_apply_fighting_skill(damage_done, false);
+        damage_done = player_apply_misc_modifiers(damage_done);
+        damage_done = player_apply_weapon_bonuses(damage_done);
+
+        player_weapon_auto_id();
+
+        damage_done = player_stab(damage_done);
+        damage_done = apply_defender_ac(damage_done);
+
+        // This doesn't actually modify damage. -- bwr
+        // It only chooses the appropriate verb.
+        damage_done = std::max(0, player_weapon_type_modify(damage_done));
+    }
+
+    return (0);
 }
 
 int melee_attack::apply_defender_ac(int damage, int damage_max)
