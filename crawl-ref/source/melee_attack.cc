@@ -439,7 +439,7 @@ bool melee_attack::player_attack()
         {
             // This actually does more than calculate damage - it also
             // sets up messages, etc.
-            player_calc_hit_damage();
+            calc_damage();
         }
 
         if (you.duration[DUR_SLIMIFY]
@@ -5289,11 +5289,8 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
     return std::max(0, damage);
 }
 
-// TODO: This should be in monster class, there's probably already a method
-// like it that could be merged or replaced/removed.
-// Lose attack energy for attacking with a weapon. which_attack is the actual
-// attack number, effective_attack is the attack number excluding synthetic
-// attacks (i.e. excluding M_ARCHER monsters' AT_SHOOT attacks).
+// This methos isn't exactly necessary, but its fine to stay for the moment.
+// TODO: Inline to the location its called at so we can remove this method.
 void melee_attack::mons_lose_attack_energy(monster* attkr, int wpn_speed,
                                     int which_attack, int effective_attack)
 {
