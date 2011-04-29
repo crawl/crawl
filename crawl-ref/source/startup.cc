@@ -539,6 +539,7 @@ static int _misc_text_start_y(int num)
 static void _show_startup_menu(newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
+again:
     std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
     static int type = GAME_TYPE_UNSPECIFIED;
@@ -831,9 +832,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
 
         case '?':
             list_commands();
-            // recursive escape because help messes up CRTRegion
-            _show_startup_menu(ng_choice, defaults);
-            return;
+            // restart because help messes up CRTRegion
+            goto again;
 
         default:
             // It was a savegame instead
