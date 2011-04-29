@@ -31,6 +31,7 @@ public:
 
     // mon_attack_def stuff
     int       attack_number;
+    int       effective_attack_number;
 
     int       extra_noise;
 
@@ -56,8 +57,8 @@ public:
     actor* miscast_target;
 
 public:
-    melee_attack(actor *attacker, actor *defender,
-                 bool allow_unarmed = true, int attack_num = -1);
+    melee_attack(actor *attacker, actor *defender, bool allow_unarmed = true,
+                 int attack_num = -1, int effective_attack_num = -1);
 
     // Applies attack damage and other effects.
     bool attack();

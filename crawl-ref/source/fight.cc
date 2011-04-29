@@ -155,8 +155,28 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
                 break;
         }
 
-        melee_attack attk(attacker, defender, allow_unarmed, attack_number);
-        attk.attack();
+        mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
+                                               attack_number);
+
+        if (attk.type == AT_NONE)
+        {
+            // Make sure the monster uses up some energy, even though it
+            // didn't actually attack.
+            if (effective_attack_number == 0)
+                attacker->as_monster()->lose_energy(EUT_ATTACK);
+            break;
+        }
+        // Skip dummy attacks.
+        if ((!allow_unarmed && attk.type != AT_HIT && attk.flavour != AF_REACH)
+            || attk.type == AT_SHOOT)
+        {
+            --effective_attack_number;
+            continue;
+        }
+
+        melee_attack melee_attk(attacker, defender, allow_unarmed, attack_number,
+                          effective_attack_number);
+        melee_attk.attack();
     }
 
     return (true);
