@@ -105,6 +105,7 @@ static bool _ghost_version_compatible(reader &ghost_reader);
 
 static bool _restore_tagged_chunk(package *save, const std::string name,
                                   tag_type tag, const char* complaint);
+static bool _read_char_chunk(package *save);
 
 const short GHOST_SIGNATURE = short(0xDC55);
 
@@ -155,8 +156,8 @@ player_save_info read_character_info(package *save)
 
     try // need a redundant try block just so we can restore the backup
     {   // (or risk an = operator on you getting misused)
-        if (_restore_tagged_chunk(save, "chr", TAG_CHR, 0))
-            fromfile = you;
+        fromfile.save_loadable = _read_char_chunk(save);
+        fromfile = you;
     }
     catch (ext_fail_exception &E) {}
 
@@ -1788,7 +1789,11 @@ void restore_game(const std::string& name)
     you.save = new package((get_savedir_filename(name, "", "")
                            + SAVE_SUFFIX).c_str(), true);
 
-    _restore_tagged_chunk(you.save, "chr", TAG_CHR, "Player data is invalid.");
+    if (!_read_char_chunk(you.save))
+    {
+        fail("This game comes from an incompatible version of Crawl: %s",
+             you.prev_save_version.c_str());
+    }
 
     if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1)
     {
@@ -1939,12 +1944,53 @@ bool get_save_version(reader &file, int &major, int &minor)
     return (true);
 }
 
+static bool _read_char_chunk(package *save)
+{
+    reader inf(save, "chr");
+
+    try
+    {
+        uint8_t format, major, minor;
+        inf.read(&major, 1);
+        inf.read(&minor, 1);
+
+        unsigned int len = unmarshallInt(inf);
+        if (len > 1024) // something is fishy
+            fail("Save file corrupted (info > 1KB)");
+        std::vector<unsigned char> buf;
+        buf.resize(len);
+        inf.read(&buf[0], len);
+        inf.fail_if_not_eof("chr");
+        reader th(buf);
+
+        // 0.8 trunks (30.0 .. 32.12) were format 0 but without the marker.
+        if (major > 32 || major == 32 && minor >= 13)
+            th.read(&format, 1);
+        else
+            format = 0;
+
+        if (format > TAG_CHR_FORMAT)
+            fail("Incompatible character data");
+
+        tag_read_char(th, format, major, minor);
+
+        // Check if we read everything only on the exact same version,
+        // but that's the common case.
+        if (major == TAG_MAJOR_VERSION && minor == TAG_MINOR_VERSION)
+            inf.fail_if_not_eof("chr");
+
+        return (major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION);
+    }
+    catch (short_read_exception &E)
+    {
+        fail("Save file corrupted");
+    };
+}
+
 static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
 {
     int major = 0, minor = TAG_MINOR_INVALID;
-    std::string dummy;
-    if (reason == 0)
-        reason = &dummy;
+    ASSERT(reason);
 
     if (!get_save_version(inf, major, minor))
     {
