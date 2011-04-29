@@ -937,25 +937,15 @@ bool startup_step()
     }
 
     bool newchar = false;
-    if (save_exists(choice.name))
-    {
-        restore_game(choice.name);
+    newgame_def ng;
+    if (save_exists(choice.name) && restore_game(choice.name))
         save_player_name();
-    }
+    else if (choose_game(&ng, &choice, defaults) && restore_game(ng.name))
+        save_player_name();
     else
     {
-        newgame_def ng;
-        bool restore = choose_game(&ng, &choice, defaults);
-        if (restore)
-        {
-            restore_game(ng.name);
-            save_player_name();
-        }
-        else
-        {
-            setup_game(ng);
-            newchar = true;
-        }
+        setup_game(ng);
+        newchar = true;
     }
 
     _post_init(newchar);

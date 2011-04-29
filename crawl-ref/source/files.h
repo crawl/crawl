@@ -105,7 +105,7 @@ void save_game_state();
 bool get_save_version(reader &file, int &major, int &minor);
 
 bool save_exists(const std::string& name);
-void restore_game(const std::string& name);
+bool restore_game(const std::string& name);
 
 bool is_existing_level(const level_id &level);
 
