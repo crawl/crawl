@@ -1,14 +1,43 @@
 import os, os.path
 import subprocess
+
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
 
+import crypt
+import sqlite3
+
 bind_address = ""
 bind_port = 8080
 
-os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+password_db = "./webserver/passwd.db3"
+
+debug_log = False
+
+static_path = "./webserver/static"
+
+crawl_binary = "./crawl"
+
+rcfile_path = "./rcs/"
+macro_path = "./rcs/"
+morgue_path = "./rcs/"
+
+def user_passwd_match(username, passwd):
+    crypted_pw = crypt.crypt(passwd, passwd)
+
+    conn = sqlite3.connect(password_db)
+    c = conn.cursor()
+    c.execute("select password from dglusers where username=?", (username,))
+    result = c.fetchone()
+    c.close()
+    conn.close()
+
+    if result is None:
+        return False
+    else:
+        return crypted_pw == result[0]
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -18,16 +47,23 @@ class MainHandler(tornado.web.RequestHandler):
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
         print "SOCKET OPENED"
+        self.username = None
         self.ioloop = tornado.ioloop.IOLoop.instance()
-        self.p = subprocess.Popen("./crawl",
+        self.message_buffer = ""
+
+    def start_crawl(self):
+        print "USERNAME:", self.username
+        self.p = subprocess.Popen([crawl_binary,
+                                   "-name", self.username,
+                                   "-rc", os.path.join(rcfile_path, self.username + ".rc"),
+                                   "-macro", os.path.join(macro_path, self.username + ".macro"),
+                                   "-morgue", os.path.join(morgue_path, self.username)],
                                   stdin = subprocess.PIPE,
                                   stdout = subprocess.PIPE,
                                   stderr = subprocess.PIPE)
 
         self.ioloop.add_handler(self.p.stdout.fileno(), self.on_stdout, self.ioloop.READ)
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr, self.ioloop.READ)
-
-        self.message_buffer = ""
 
     def close_pipes(self):
         self.ioloop.remove_handler(self.p.stdout.fileno())
@@ -38,8 +74,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
 
     def on_message(self, message):
-        print "MESSAGE:", message
-        self.p.stdin.write(message)
+        if message.startswith("Login: "):
+            _, username, password = message.split()
+            if user_passwd_match(username, password):
+                self.username = username
+                self.start_crawl()
+            else:
+                self.write_message("login_failed();")
+        elif self.username is not None:
+            if debug_log: print "MESSAGE:", message
+            self.p.stdin.write(message)
 
     def on_close(self):
         self.close_pipes()
@@ -49,7 +93,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_stderr(self, fd, events):
         s = self.p.stderr.readline()
-        if not (s.isspace() or s == ""):
+        if debug_log and not (s.isspace() or s == ""):
             print "ERR: ", s,
         self.poll_crawl()
 
@@ -64,7 +108,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.poll_crawl()
 
 settings = {
-    "static_path": "./webserver/static/"
+    "static_path": static_path
 }
 
 application = tornado.web.Application([

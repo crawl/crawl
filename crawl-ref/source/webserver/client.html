@@ -27,6 +27,17 @@
     <canvas id="dungeon"></canvas>
     <div id="stats"></div>
     <div id="messages"></div>
+    <div id="login" style="display: none;">
+      <form action="" id="login_form" onsubmit="return login();">
+        <label for="username">User name</label>
+        <input type="text" name="username" id="username"></input>
+        <br>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password"></input>
+        <br>
+        <input type="submit" name="submit" id="submit" value="Login"></input>
+      </form>
+    </div>
     <div style="display: none;">
       <img id="floor" src="/static/floor.png">
       <img id="wall" src="/static/wall.png">

@@ -12,6 +12,8 @@ var log_message_size = false;
 var delay_timeout = undefined;
 var message_queue = [];
 
+var logging_in = false;
+
 function delay(ms)
 {
     clearTimeout(delay_timeout);
@@ -140,7 +142,7 @@ function shift(cx, cy)
 
 function handle_keypress(e)
 {
-    if (delay_timeout) return; // TODO: Do we want to capture keys during delay?
+    if (delay_timeout || logging_in) return; // TODO: Do we want to capture keys during delay?
 
     if (e.ctrlKey || e.altKey)
     {
@@ -165,7 +167,7 @@ function handle_keypress(e)
 
 function handle_keydown(e)
 {
-    if (delay_timeout) return; // TODO: Do we want to capture keys during delay?
+    if (delay_timeout || logging_in) return; // TODO: Do we want to capture keys during delay?
 
     if (e.ctrlKey)
     {
@@ -189,6 +191,28 @@ function handle_keydown(e)
     }
 }
 
+function start_login()
+{
+    logging_in = true;
+    $("#login").show();
+    $("#username").focus();
+}
+
+function login()
+{
+    logging_in = false;
+    $("#login").hide();
+    var username = $("#username").val();
+    var password = $("#password").val();
+    socket.send("Login: " + username + " " + password);
+    return false;
+}
+
+function login_failed()
+{
+    start_login();
+}
+
 $(document).ready(
     function()
     {
@@ -203,7 +227,7 @@ $(document).ready(
 
         socket.onopen = function()
         {
-            // Currently nothing needs to be done here
+            start_login();
         };
 
         socket.onmessage = function(msg)
