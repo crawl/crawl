@@ -17,6 +17,7 @@ password_db = "./webserver/passwd.db3"
 debug_log = True
 
 static_path = "./webserver/static"
+template_path = "./webserver/"
 
 crawl_binary = "./crawl"
 
@@ -119,7 +120,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.poll_crawl()
 
 settings = {
-    "static_path": static_path
+    "static_path": static_path,
+    "template_path": template_path
 }
 
 application = tornado.web.Application([
