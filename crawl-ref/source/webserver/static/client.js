@@ -142,7 +142,7 @@ function shift(cx, cy)
 
 function handle_keypress(e)
 {
-    if (delay_timeout || logging_in) return; // TODO: Do we want to capture keys during delay?
+    if (logging_in) return;
 
     if (e.ctrlKey || e.altKey)
     {
@@ -167,7 +167,7 @@ function handle_keypress(e)
 
 function handle_keydown(e)
 {
-    if (delay_timeout || logging_in) return; // TODO: Do we want to capture keys during delay?
+    if (logging_in) return;
 
     if (e.ctrlKey)
     {
