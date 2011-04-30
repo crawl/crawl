@@ -24,6 +24,9 @@ rcfile_path = "./rcs/"
 macro_path = "./rcs/"
 morgue_path = "./rcs/"
 
+max_connections = 100
+
+
 def user_passwd_match(username, passwd):
     crypted_pw = crypt.crypt(passwd, passwd)
 
@@ -39,6 +42,8 @@ def user_passwd_match(username, passwd):
     else:
         return crypted_pw == result[0]
 
+current_connections = 0
+
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         host = self.request.host
@@ -51,6 +56,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.p = None
         self.ioloop = tornado.ioloop.IOLoop.instance()
         self.message_buffer = ""
+
+        global current_connections
+        current_connections += 1
+
+        if max_connections < current_connections:
+            self.write_message("$('#crt').html('The maximum number of connections has been"
+                               + " reached, sorry :('); $('#login').hide();");
+            self.close()
 
     def start_crawl(self):
         print "USERNAME:", self.username
@@ -88,6 +101,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.p.stdin.write(message.encode("utf8"))
 
     def on_close(self):
+        global current_connections
+        current_connections -= 1
         self.close_pipes()
         if self.p is not None and self.p.poll() is None:
             self.p.terminate()
