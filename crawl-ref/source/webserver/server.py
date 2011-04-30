@@ -14,7 +14,7 @@ bind_port = 8080
 
 password_db = "./webserver/passwd.db3"
 
-debug_log = False
+debug_log = True
 
 static_path = "./webserver/static"
 
@@ -85,7 +85,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.write_message("login_failed();")
         elif self.p is not None:
             if debug_log: print "MESSAGE:", message
-            self.p.stdin.write(message)
+            self.p.stdin.write(message.encode("utf8"))
 
     def on_close(self):
         self.close_pipes()
