@@ -100,13 +100,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.poll_crawl()
 
     def on_stdout(self, fd, events):
-        char = self.p.stdout.read(1)
-        if char == '\n':
-            self.write_message(self.message_buffer)
-            self.message_buffer = ""
-        else:
-            self.message_buffer += char
-
+        self.write_message(self.p.stdout.readline())
         self.poll_crawl()
 
 settings = {
