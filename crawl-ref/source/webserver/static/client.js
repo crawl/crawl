@@ -210,6 +210,7 @@ function login()
 
 function login_failed()
 {
+    $("#login_message").html("Login failed.");
     start_login();
 }
 
