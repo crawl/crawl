@@ -48,6 +48,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
         print "SOCKET OPENED"
         self.username = None
+        self.p = None
         self.ioloop = tornado.ioloop.IOLoop.instance()
         self.message_buffer = ""
 
@@ -66,8 +67,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr, self.ioloop.READ)
 
     def close_pipes(self):
-        self.ioloop.remove_handler(self.p.stdout.fileno())
-        self.ioloop.remove_handler(self.p.stderr.fileno())
+        if self.p is not None:
+            self.ioloop.remove_handler(self.p.stdout.fileno())
+            self.ioloop.remove_handler(self.p.stderr.fileno())
 
     def poll_crawl(self):
         if self.p.poll() is not None:
@@ -81,13 +83,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.start_crawl()
             else:
                 self.write_message("login_failed();")
-        elif self.username is not None:
+        elif self.p is not None:
             if debug_log: print "MESSAGE:", message
             self.p.stdin.write(message)
 
     def on_close(self):
         self.close_pipes()
-        if self.p.poll() is None:
+        if self.p is not None and self.p.poll() is None:
             self.p.terminate()
         print "SOCKET CLOSED"
 
