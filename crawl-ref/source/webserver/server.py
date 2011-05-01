@@ -14,7 +14,9 @@ import logging
 bind_address = ""
 bind_port = 8080
 
-logging.basicConfig(filename = "webtiles.log", level = logging.INFO)
+logging.basicConfig(filename = "webtiles.log",
+                    level = logging.INFO,
+                    format = "%(asctime)s %(levelname)s: %(message)s")
 
 password_db = "./webserver/passwd.db3"
 
