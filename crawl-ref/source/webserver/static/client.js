@@ -266,8 +266,7 @@ $(document).ready(
 
             socket.onclose = function()
             {
-                // TODO: Handle this
-                // Redirect to lobby or something?
+                window.location.reload();
             };
         }
         else
