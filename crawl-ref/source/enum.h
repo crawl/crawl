@@ -1486,6 +1486,24 @@ enum equipment_type
     EQ_ALL_ARMOUR,                     // check all armour types
 };
 
+enum eq_type
+{
+    ET_WEAPON,
+    ET_SHIELD,
+    ET_ARMOUR,
+    ET_JEWELS,
+    NUM_ET
+};
+
+enum eq_type_flags
+{
+    ETF_WEAPON = 0x1,
+    ETF_SHIELD = 0x2,
+    ETF_ARMOUR = 0x4,
+    ETF_JEWELS = 0x8,
+    ETF_ALL    = 0xF
+};
+
 enum feature_flag_type
 {
     FFT_NONE          = 0,

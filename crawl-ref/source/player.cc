@@ -2681,7 +2681,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
     you.zot_points += exp_gained;
 
     if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
-        exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
+        exp_gained = div_rand_round(exp_gained * (8 + you.bondage_level), 8);
     exp_gained -= ash_reduce_xp(exp_gained);
 
     const unsigned int  old_exp   = you.experience;
@@ -5530,7 +5530,7 @@ void player::init()
 
     running.clear();
     received_weapon_warning = false;
-    bondage_level = 0;
+    ash_init_bondage();
 
     delay_queue.clear();
 

@@ -2871,7 +2871,8 @@ void excommunication(god_type new_god)
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.piety = 0;
     you.piety_hysteresis = 0;
-    you.bondage_level = 0;
+    if (old_god == GOD_ASHENZARI)
+        ash_init_bondage();
 
     you.num_current_gifts[old_god] = 0;
 

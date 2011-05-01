@@ -275,7 +275,8 @@ public:
   bool never_die;
 #endif
   bool xray_vision;
-  int bondage_level;  // how much an Ash worshipper is into bondage
+  char bondage_level;  // how much an Ash worshipper is into bondage
+  char bondage[NUM_ET];
 
   // Volatile (same-turn) state:
   bool turn_is_over; // flag signaling that player has performed a timed action
