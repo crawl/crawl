@@ -180,6 +180,9 @@ void delay(int ms)
 {
     tiles.redraw();
     fprintf(stdout, "delay(%d);\n", ms);
+
+    if (ms)
+        usleep(ms * 1000);
 }
 
 void update_screen()
