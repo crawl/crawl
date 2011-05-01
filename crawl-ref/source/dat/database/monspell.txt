@@ -446,6 +446,10 @@ shedu cast
 shedu cast targeted
 
 @The_monster@ beseeches @possessive_God@ to heal its mate!
+%%%%
+eidolon cast targeted
+
+@The_monster@ stares piercingly at @target@.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.
