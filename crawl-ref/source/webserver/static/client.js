@@ -223,44 +223,58 @@ $(document).ready(
         $(document).bind('keypress.client', handle_keypress);
         $(document).bind('keydown.client', handle_keydown);
 
-        // socket_server is set in the client.html template
-        socket = new WebSocket(socket_server);
-
-        socket.onopen = function()
+        if ("WebSocket" in window)
         {
-            start_login();
-        };
+            // socket_server is set in the client.html template
+            socket = new WebSocket(socket_server);
 
-        socket.onmessage = function(msg)
-        {
-            if (log_messages)
+            socket.onopen = function()
             {
-                console.log("Message: " + msg.data);
-            }
-            if (log_message_size)
+                start_login();
+            };
+
+            socket.onmessage = function(msg)
             {
-                console.log("Message size: " + msg.data.length);
-            }
-            if (delay_timeout)
-            {
-                message_queue.push(msg.data);
-            } else
-            {
-                try
+                if (log_messages)
                 {
-                    eval(msg.data);
-                } catch (err)
-                {
-                    console.error("Error in message: " + msg.data + " - " + err);
+                    console.log("Message: " + msg.data);
                 }
-            }
-        };
+                if (log_message_size)
+                {
+                    console.log("Message size: " + msg.data.length);
+                }
+                if (delay_timeout)
+                {
+                    message_queue.push(msg.data);
+                } else
+                {
+                    try
+                    {
+                        eval(msg.data);
+                    } catch (err)
+                    {
+                        console.error("Error in message: " + msg.data + " - " + err);
+                    }
+                }
+            };
 
-        socket.onclose = function()
+            socket.onclose = function()
+            {
+                // TODO: Handle this
+                // Redirect to lobby or something?
+            };
+        }
+        else
         {
-            // TODO: Handle this
-            // Redirect to lobby or something?
-        };
+            $("#crt").html("Sadly, your browser does not support WebSockets. ");
+            if ($.browser.mozilla)
+            {
+                $("#crt").append("If you are using Firefox 4, WebSocket support is ");
+                $("#crt").append("disabled for security reasons. You can enable it in ");
+                $("#crt").append("about:config with the network.websocket");
+                $("#crt").append(".override-security-block setting.");
+            }
+        }
     });
 
 function abs(x)
