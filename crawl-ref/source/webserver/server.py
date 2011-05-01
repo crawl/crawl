@@ -9,12 +9,14 @@ import tornado.web
 import crypt
 import sqlite3
 
+import logging
+
 bind_address = ""
 bind_port = 8080
 
-password_db = "./webserver/passwd.db3"
+logging.basicConfig(filename = "webtiles.log", level = logging.INFO)
 
-debug_log = True
+password_db = "./webserver/passwd.db3"
 
 static_path = "./webserver/static"
 template_path = "./webserver/"
@@ -52,7 +54,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
-        print "Socket opened, from ip:", self.request.remote_ip
+        logging.info("Socket opened from ip %s.", self.request.remote_ip)
         self.username = None
         self.p = None
         self.ioloop = tornado.ioloop.IOLoop.instance()
@@ -67,7 +69,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
 
     def start_crawl(self):
-        print "USERNAME:", self.username
         self.p = subprocess.Popen([crawl_binary,
                                    "-name", self.username,
                                    "-rc", os.path.join(rcfile_path, self.username + ".rc"),
@@ -97,14 +98,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             else:
                 _, username, password = message.split()
                 if user_passwd_match(username, password):
-                    print "User", username, "logged in successfully from", self.request.remote_ip
+                    logging.info("User %s logged in from ip %s.",
+                                 username, self.request.remote_ip)
                     self.username = username
                     self.start_crawl()
                 else:
-                    print "Failed login for user", username + ", ip", self.request.remote_ip
+                    logging.warn("Failed login for user %s from ip %s.",
+                                 username, self.request.remote_ip)
                     self.write_message("login_failed();")
         elif self.p is not None:
-            if debug_log: print "MESSAGE:", message
+            logging.debug("Message: %s (user: %s)", message, self.username)
             self.p.stdin.write(message.encode("utf8"))
 
     def on_close(self):
@@ -113,12 +116,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.close_pipes()
         if self.p is not None and self.p.poll() is None:
             self.p.terminate()
-        print "Socket for ip", self.request.remote_ip, "closed"
+        logging.info("Socket for ip %s closed.", self.request.remote_ip)
 
     def on_stderr(self, fd, events):
         s = self.p.stderr.readline()
-        if debug_log and not (s.isspace() or s == ""):
-            print "ERR: ", s,
+        if not (s.isspace() or s == ""):
+            logging.debug("%s: %s", self.username, s)
         self.poll_crawl()
 
     def on_stdout(self, fd, events):
