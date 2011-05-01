@@ -248,6 +248,7 @@ int main(int argc, char *argv[])
 
     // Load in the system environment variables
     get_system_environment();
+    init_signals();
 
     // Parse command line args -- look only for initfile & crawl_dir entries.
     if (!parse_args(argc, argv, true))
@@ -1066,10 +1067,8 @@ static void _update_place_info()
 //
 static void _input()
 {
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
     if (crawl_state.seen_hups)
         sighup_save_and_exit();
-#endif
 
     crawl_state.clear_mon_acting();
 
@@ -1183,10 +1182,8 @@ static void _input()
 #endif
         const command_type cmd = _get_next_cmd();
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         if (crawl_state.seen_hups)
             sighup_save_and_exit();
-#endif
 
         crawl_state.waiting_for_command = false;
 

@@ -95,10 +95,6 @@
     #define USE_UNIX_SIGNALS
 #endif
 
-    // If this is defined, Crawl will attempt to save and exit when it
-    // receives a hangup signal.
-    #define SIGHUP_SAVE
-
     #define FILE_SEPARATOR '/'
 #ifndef USE_TILE
     #define USE_CURSES

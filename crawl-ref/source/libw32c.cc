@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Functions for windows32 console mode support.
+ * @brief Functions for windows console mode support.
 **/
 
 #include "AppHdr.h"

@@ -321,14 +321,12 @@ int line_reader::read_line(bool clear_previous)
     {
         int ch = getchm(getch_ck);
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         // Don't return a partial string if a HUP signal interrupted things
         if (crawl_state.seen_hups)
         {
             buffer[0] = '\0';
             return (0);
         }
-#endif
 
         if (keyfn)
         {

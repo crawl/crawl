@@ -243,4 +243,5 @@ private:
     static mouse_mode ms_current_mode;
 };
 
+void init_signals();
 #endif

@@ -52,10 +52,6 @@
 static struct termios def_term;
 static struct termios game_term;
 
-// Give Crawl so many seconds after receiving a HUP signal to save and
-// get out of the way.
-const int HANGUP_KILL_DELAY_SECONDS = 10;
-
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
 #endif
@@ -309,73 +305,6 @@ static void handle_sigwinch(int)
         crawl_state.terminal_resized = true;
 }
 
-#ifdef SIGHUP_SAVE
-
-void sighup_save_and_exit();
-
-/* [ds] This SIGHUP handling is primitive and far from safe, but it
- * should be better than nothing. Feel free to get rigorous on this.
- */
-static void handle_hangup(int)
-{
-    if (crawl_state.seen_hups++)
-        return;
-
-    // Set up an alarm to force-kill Crawl if it rudely ignores the
-    // hangup signal.
-    alarm(HANGUP_KILL_DELAY_SECONDS);
-
-    interrupt_activity(AI_FORCE_INTERRUPT);
-
-#ifdef USE_TILE
-    // XXX: Will a tiles build ever need to handle the HUP signal?
-    sighup_save_and_exit();
-#elif defined(USE_CURSES)
-    // When using Curses, closing stdin will cause any Curses call blocking
-    // on key-presses to immediately return, including any call that was
-    // still blocking in the main thread when the HUP signal was caught.
-    // This should guarantee that the main thread will un-stall and
-    // will eventually return to _input() in main.cc, which will then
-    // call sighup_save_and_exit().
-    //
-    // The point to all this is that if a user is playing a game on a
-    // remote server and disconnects at a --more-- prompt, that when
-    // the player reconnects the code behind the more() call will execute
-    // before the disconnected game is saved, thus (for example) preventing
-    // the hack of avoiding excomunication consesquences because of the
-    // more() after "You have lost your religion!"
-    fclose(stdin);
-#else
-     #error "Must use either Curses or tiles on Unix"
-#endif
-}
-
-void sighup_save_and_exit()
-{
-    if (crawl_state.seen_hups == 0)
-    {
-        mpr("sighup_save_and_exit() called without a HUP signal; please"
-            "file a bug report", MSGCH_ERROR);
-        return;
-    }
-
-    if (crawl_state.saving_game || crawl_state.updating_scores)
-        return;
-
-    crawl_state.saving_game = true;
-    if (crawl_state.need_save)
-    {
-        mpr("Received HUP signal, saved and exited game.", MSGCH_ERROR);
-
-        // save_game(true) exits from the game. The "true" is also required
-        // to save changes to the current level.
-        save_game(true, "Received HUP signal, saved game.");
-    }
-    else
-        end(0, false, "Received HUP signal, game already saved.");
-}
-#endif // SIGHUP_SAVE
-
 #endif // USE_UNIX_SIGNALS
 
 static void unix_handle_terminal_resize()
@@ -463,36 +392,8 @@ void unixcurses_startup(void)
     write(1, KPADAPP, strlen(KPADAPP));
 #endif
 
-#ifdef DGAMELAUNCH
-    // Force timezone to UTC.
-    setenv("TZ", "", 1);
-    tzset();
-#endif
-
 #ifdef USE_UNIX_SIGNALS
-#ifdef SIGQUIT
-    signal(SIGQUIT, SIG_IGN);
-#endif
-
-#ifdef SIGINT
-    signal(SIGINT, SIG_IGN);
-#endif
-
-#ifdef SIGHUP_SAVE
-    signal(SIGHUP, handle_hangup);
-#endif
-
     signal(SIGWINCH, handle_sigwinch);
-
-#endif
-
-#ifdef DGL_ENABLE_CORE_DUMP
-    rlimit lim;
-    if (!getrlimit(RLIMIT_CORE, &lim))
-    {
-        lim.rlim_cur = RLIM_INFINITY;
-        setrlimit(RLIMIT_CORE, &lim);
-    }
 #endif
 
     initscr();
@@ -536,18 +437,6 @@ void unixcurses_shutdown()
 #endif
 
 #ifdef USE_UNIX_SIGNALS
-#ifdef SIGQUIT
-    signal(SIGQUIT, SIG_DFL);
-#endif
-
-#ifdef SIGINT
-    signal(SIGINT, SIG_DFL);
-#endif
-
-#ifdef SIGHUP_SAVE
-    signal(SIGHUP, SIG_DFL);
-#endif
-
     signal(SIGWINCH, SIG_DFL);
 #endif
 }

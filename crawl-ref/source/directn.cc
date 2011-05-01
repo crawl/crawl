@@ -1332,7 +1332,6 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 
 bool direction_chooser::handle_signals()
 {
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
     // If we've received a HUP signal then the user can't choose a
     // target.
     if (crawl_state.seen_hups)
@@ -1343,7 +1342,6 @@ bool direction_chooser::handle_signals()
         mpr("Targeting interrupted by HUP signal.", MSGCH_ERROR);
         return true;
     }
-#endif
     return false;
 }
 
