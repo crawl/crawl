@@ -14,6 +14,12 @@ var message_queue = [];
 
 var logging_in = false;
 
+function log(text)
+{
+    if (window.console && window.console.log)
+        window.console.log(text);
+}
+
 function delay(ms)
 {
     clearTimeout(delay_timeout);
@@ -38,7 +44,7 @@ function delay_ended()
 
 function set_layer(layer)
 {
-    console.log("Setting layer: " + layer);
+    log("Setting layer: " + layer);
     if (layer == "crt")
     {
         $("#crt").show();
@@ -67,7 +73,7 @@ function view_size(cols, rows)
     if ((cols == dungeon_cols) && (rows == dungeon_rows))
         return;
 
-    console.log("Changing view size to: " + cols + "/" + rows);
+    log("Changing view size to: " + cols + "/" + rows);
     dungeon_cols = cols;
     dungeon_rows = rows;
     canvas = $("#dungeon")[0];
@@ -146,8 +152,8 @@ function handle_keypress(e)
 
     if (e.ctrlKey || e.altKey)
     {
-        console.log("CTRL key: " + e.ctrlKey + " " + e.which
-                    + " " + String.fromCharCode(e.which));
+        log("CTRL key: " + e.ctrlKey + " " + e.which
+            + " " + String.fromCharCode(e.which));
         return;
     }
 
@@ -187,7 +193,7 @@ function handle_keydown(e)
             socket.send("\\" + key_conversion[e.which] + "\n");
         }
         else
-            console.log("Key: " + e.which);
+            log("Key: " + e.which);
     }
 }
 
