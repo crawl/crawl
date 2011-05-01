@@ -559,7 +559,8 @@ void do_curse_item(item_def &item, bool quiet)
     }
 }
 
-void do_uncurse_item(item_def &item, bool inscribe, bool no_ash)
+void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
+                     bool check_bondage)
 {
     if (!item.cursed())
     {
@@ -595,7 +596,8 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash)
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
 
-    ash_check_bondage();
+    if (check_bondage)
+        ash_check_bondage();
 }
 
 // Is item stationary (cannot be picked up)?

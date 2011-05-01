@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -608,7 +609,7 @@ static bool _selectively_remove_curse(std::string *pre_msg)
         if (!used && pre_msg)
             mpr(*pre_msg);
 
-        do_uncurse_item(item);
+        do_uncurse_item(item, true, false, false);
         used = true;
     }
 }
@@ -616,7 +617,15 @@ static bool _selectively_remove_curse(std::string *pre_msg)
 bool remove_curse(bool alreadyknown, std::string *pre_msg)
 {
     if (you.religion == GOD_ASHENZARI && alreadyknown)
-        return _selectively_remove_curse(pre_msg);
+    {
+        if (_selectively_remove_curse(pre_msg))
+        {
+            ash_check_bondage();
+            return true;
+        }
+        else
+            return false;
+    }
 
     bool success = false;
 
