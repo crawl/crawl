@@ -30,6 +30,12 @@ morgue_path = "./rcs/"
 max_connections = 100
 
 
+class TornadoFilter(logging.Filter):
+    def filter(self, record):
+        if record.module == "web": return False
+        return True
+logging.getLogger().addFilter(TornadoFilter())
+
 def user_passwd_match(username, passwd):
     crypted_pw = crypt.crypt(passwd, passwd)
 
