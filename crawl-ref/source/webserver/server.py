@@ -98,7 +98,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.p.stderr.close()
 
     def poll_crawl(self):
-        if self.p.poll() is not None:
+        if not self.crawl_terminated and self.p.poll() is not None:
             self.crawl_terminated = True
             self.close_pipes()
             if not self.client_terminated: self.close()
@@ -121,6 +121,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.write_message("login_failed();")
         elif self.p is not None:
             logging.debug("Message: %s (user: %s)", message, self.username)
+            self.poll_crawl()
+            if self.crawl_terminated: return
             self.p.stdin.write(message.encode("utf8"))
 
     def on_close(self):
