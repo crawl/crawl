@@ -2146,10 +2146,7 @@ void save_ghost(bool force)
 }
 
 ////////////////////////////////////////////////////////////////////////////
-// Locking for multiuser systems
-
-// first, some file locking stuff for multiuser crawl
-#ifdef USE_FILE_LOCKING
+// Locking
 
 bool lock_file_handle(FILE *handle, bool write)
 {
@@ -2161,15 +2158,12 @@ bool unlock_file_handle(FILE *handle)
     return unlock_file(fileno(handle));
 }
 
-#endif
-
 FILE *lk_open(const char *mode, const std::string &file)
 {
     FILE *handle = fopen_u(file.c_str(), mode);
     if (!handle)
         return NULL;
 
-#ifdef USE_FILE_LOCKING
     bool locktype = false;
     if (mode && mode[0] != 'r')
         locktype = true;
@@ -2180,7 +2174,7 @@ FILE *lk_open(const char *mode, const std::string &file)
         fclose(handle);
         handle = NULL;
     }
-#endif
+
     return handle;
 }
 
@@ -2191,9 +2185,7 @@ void lk_close(FILE *handle, const char *mode, const std::string &file)
     if (handle == NULL || handle == stdin)
         return;
 
-#ifdef USE_FILE_LOCKING
     unlock_file_handle(handle);
-#endif
 
     // actually close
     fclose(handle);
@@ -2207,18 +2199,14 @@ void lk_close(FILE *handle, const char *mode, const std::string &file)
 file_lock::file_lock(const std::string &s, const char *_mode, bool die_on_fail)
     : handle(NULL), mode(_mode), filename(s)
 {
-#ifdef USE_FILE_LOCKING
     if (!(handle = lk_open(mode, filename)) && die_on_fail)
         end(1, true, "Unable to open lock file \"%s\"", filename.c_str());
-#endif
 }
 
 file_lock::~file_lock()
 {
-#ifdef USE_FILE_LOCKING
     if (handle)
         lk_close(handle, mode, filename);
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
