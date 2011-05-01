@@ -39,11 +39,6 @@
 #include "view.h"
 #include "viewgeom.h"
 
-#ifdef DGL_ENABLE_CORE_DUMP
-#include <sys/time.h>
-#include <sys/resource.h>
-#endif
-
 #include <wchar.h>
 #include <locale.h>
 #include <langinfo.h>
