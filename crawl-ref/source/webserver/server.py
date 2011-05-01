@@ -121,7 +121,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         current_connections -= 1
         self.close_pipes()
         if self.p is not None and self.p.poll() is None:
-            self.p.terminate()
+            self.p.send_signal(subprocess.signal.SIGHUP)
         logging.info("Socket for ip %s closed.", self.request.remote_ip)
 
     def on_stderr(self, fd, events):
