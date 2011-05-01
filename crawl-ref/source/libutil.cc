@@ -36,6 +36,11 @@
     #include <signal.h>
 #endif
 
+#ifdef DGL_ENABLE_CORE_DUMP
+    #include <sys/time.h>
+    #include <sys/resource.h>
+#endif
+
 description_level_type description_type_by_name(const char *desc)
 {
     if (!desc)
