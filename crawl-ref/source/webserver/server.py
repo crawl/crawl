@@ -91,12 +91,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         if message.startswith("Login: "):
-            _, username, password = message.split()
-            if user_passwd_match(username, password):
-                self.username = username
-                self.start_crawl()
-            else:
+            parts = message.split()
+            if len(parts) != 3:
                 self.write_message("login_failed();")
+            else:
+                _, username, password = message.split()
+                if user_passwd_match(username, password):
+                    self.username = username
+                    self.start_crawl()
+                else:
+                    self.write_message("login_failed();")
         elif self.p is not None:
             if debug_log: print "MESSAGE:", message
             self.p.stdin.write(message.encode("utf8"))
