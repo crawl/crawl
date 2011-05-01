@@ -647,7 +647,7 @@ void game_options::reset_options()
 
     set_default_activity_interrupts();
 
-#if defined(USE_TILE)
+#if defined(USE_TILE_LOCAL)
     restart_after_game = true;
 #else
     restart_after_game = false;
