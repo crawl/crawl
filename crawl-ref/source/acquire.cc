@@ -1575,7 +1575,6 @@ bool acquirement(object_class_type class_wanted, int agent,
                 return (false);
             }
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
             // If we've gotten a HUP signal then the player will be unable
             // to make a selection.
             if (crawl_state.seen_hups)
@@ -1584,8 +1583,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 you.turn_is_over = false;
                 return (false);
             }
-#endif
-           break;
+            break;
         }
 
         if (you.species == SP_CAT

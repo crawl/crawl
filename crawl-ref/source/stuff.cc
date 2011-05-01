@@ -17,6 +17,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "files.h"
 #include "libutil.h"
 #include "los.h"
 #include "menu.h"
@@ -762,14 +763,12 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
 
         int tmp = getchm(KMC_CONFIRM);
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         // Prevent infinite loop if Curses HUP signal handling happens;
         // if there is no safe answer, then just save-and-exit immediately,
         // since there's no way to know if it would be better to return
         // true or false.
         if (crawl_state.seen_hups && !safeanswer)
             sighup_save_and_exit();
-#endif
 
         if (map && map->find(tmp) != map->end())
             tmp = map->find(tmp)->second;

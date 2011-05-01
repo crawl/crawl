@@ -424,7 +424,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             pos = lpos.pos;
             redraw_screen();
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
             // If we've received a HUP signal then the user can't choose a
             // location, so cancel the teleport.
             if (crawl_state.seen_hups)
@@ -435,7 +434,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                     contaminate_player(1, true);
                 return (false);
             }
-#endif
 
             dprf("Target square (%d,%d)", pos.x, pos.y);
 

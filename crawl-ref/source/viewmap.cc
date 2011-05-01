@@ -850,7 +850,6 @@ bool show_map(level_pos &lpos,
                 new_level = false;
             }
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
             // If we've received a HUP signal then the user can't choose a
             // location, so indicate this by returning an invalid position.
             if (crawl_state.seen_hups)
@@ -858,7 +857,6 @@ bool show_map(level_pos &lpos,
                 lpos = level_pos();
                 chose = false;
             }
-#endif
 
             start_y = screen_y - half_screen;
 

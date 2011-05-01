@@ -140,10 +140,8 @@ void init_crash_handler()
     {
         if (i == SIGALRM)
             continue;
-#ifdef SIGHUP_SAVE
         if (i == SIGHUP)
             continue;
-#endif
 #ifdef SIGQUIT
         if (i == SIGQUIT)
             continue;
