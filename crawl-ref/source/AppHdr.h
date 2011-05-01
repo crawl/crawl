@@ -360,14 +360,6 @@
 // these -- usually this means you should place them in ~/crawl/
 // unless it's a DGL build.
 
-// If we're on a multiuser system, file locking of shared files is
-// very important (else things will just keep getting corrupted)
-#define USE_FILE_LOCKING
-
-#if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
-#error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
-#endif
-
 #if !defined(DB_NDBM) && !defined(DB_DBH) && !defined(USE_SQLITE_DBM)
 #define USE_SQLITE_DBM
 #endif
