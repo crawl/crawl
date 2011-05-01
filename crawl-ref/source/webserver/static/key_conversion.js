@@ -4,6 +4,8 @@ var key_conversion = {
     27: 27,
     // Backspace
     8: 8,
+    // Tab
+    9: 9,
 
     // Numpad / Arrow keys
     35: -1001,
@@ -17,5 +19,5 @@ var key_conversion = {
 };
 
 var captured_control_keys = [
-    "O", "Q", "F", "P", "W", "A", "T", "X", "S", "G"
+    "O", "Q", "F", "P", "W", "A", "T", "X", "S", "G", "I"
 ];
