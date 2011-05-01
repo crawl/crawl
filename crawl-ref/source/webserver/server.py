@@ -65,6 +65,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.p = None
         self.ioloop = tornado.ioloop.IOLoop.instance()
         self.message_buffer = ""
+        self.crawl_terminated = False
 
         global current_connections
         current_connections += 1
@@ -84,17 +85,23 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                   stdout = subprocess.PIPE,
                                   stderr = subprocess.PIPE)
 
-        self.ioloop.add_handler(self.p.stdout.fileno(), self.on_stdout, self.ioloop.READ)
-        self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr, self.ioloop.READ)
+        self.ioloop.add_handler(self.p.stdout.fileno(), self.on_stdout,
+                                self.ioloop.READ | self.ioloop.ERROR)
+        self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
+                                self.ioloop.READ | self.ioloop.ERROR)
 
     def close_pipes(self):
         if self.p is not None:
             self.ioloop.remove_handler(self.p.stdout.fileno())
             self.ioloop.remove_handler(self.p.stderr.fileno())
+            self.p.stdout.close()
+            self.p.stderr.close()
 
     def poll_crawl(self):
         if self.p.poll() is not None:
-            self.close()
+            self.crawl_terminated = True
+            self.close_pipes()
+            if not self.client_terminated: self.close()
 
     def on_message(self, message):
         if message.startswith("Login: "):
@@ -119,20 +126,35 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def on_close(self):
         global current_connections
         current_connections -= 1
-        self.close_pipes()
         if self.p is not None and self.p.poll() is None:
             self.p.send_signal(subprocess.signal.SIGHUP)
         logging.info("Socket for ip %s closed.", self.request.remote_ip)
 
     def on_stderr(self, fd, events):
-        s = self.p.stderr.readline()
-        if not (s.isspace() or s == ""):
-            logging.debug("%s: %s", self.username, s)
-        self.poll_crawl()
+        if events & self.ioloop.ERROR:
+            self.poll_crawl()
+        elif events & self.ioloop.READ:
+            s = self.p.stderr.readline()
+
+            if self.client_terminated or self.crawl_terminated:
+                return
+
+            if not (s.isspace() or s == ""):
+                logging.debug("%s: %s", self.username, s)
+
+            self.poll_crawl()
 
     def on_stdout(self, fd, events):
-        self.write_message(self.p.stdout.readline())
-        self.poll_crawl()
+        if events & self.ioloop.ERROR:
+            self.poll_crawl()
+        elif events & self.ioloop.READ:
+            msg = self.p.stdout.readline()
+
+            if self.client_terminated or self.crawl_terminated:
+                return
+
+            self.write_message(msg)
+            self.poll_crawl()
 
 settings = {
     "static_path": static_path,
