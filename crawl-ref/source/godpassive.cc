@@ -16,6 +16,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "math.h"
 #include "mon-stuff.h"
 #include "options.h"
@@ -224,18 +225,17 @@ void jiyva_slurp_message(int js)
     }
 }
 
-enum eq_type
+void ash_init_bondage()
 {
-    ET_WEAPON,
-    ET_ARMOUR,
-    ET_JEWELS,
-    NUM_ET
-};
+    you.bondage_level = 0;
+    for (int i = ET_WEAPON; i < NUM_ET; ++i)
+        you.bondage[i] = 0;
+}
 
-int ash_bondage_level(int type_only)
+void ash_check_bondage(bool msg)
 {
     if (you.religion != GOD_ASHENZARI)
-        return (0);
+        return;
 
     int cursed[NUM_ET] = {0}, slots[NUM_ET] = {0};
 
@@ -244,19 +244,12 @@ int ash_bondage_level(int type_only)
         eq_type s;
         if (i == EQ_WEAPON)
             s = ET_WEAPON;
+        else if (i == EQ_SHIELD)
+            s= ET_SHIELD;
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
         else
             s = ET_JEWELS;
-
-        // kittehs don't obey hoomie rules!
-        if (you.species == SP_CAT)
-        {
-            if (i >= EQ_LEFT_RING)
-                s = (eq_type)(i - EQ_LEFT_RING);
-            else
-                ASSERT(!you_can_wear(i, true));
-        }
 
         // transformed away slots are still considered to be possibly bound
         if (you_can_wear(i, true))
@@ -271,38 +264,125 @@ int ash_bondage_level(int type_only)
                         || item.base_type == OBJ_STAVES))
                 {
                     cursed[s]++;
+                    if (s == ET_WEAPON
+                        && hands_reqd(item, you.body_size()) == HANDS_TWO)
+                    {
+                        cursed[ET_SHIELD]++;
+                    }
                 }
             }
         }
     }
 
-    int bonus = 0;
+    char new_bondage[NUM_ET];
+    int old_level = you.bondage_level;
     for (int s = ET_WEAPON; s < NUM_ET; s++)
     {
-        if (type_only && s+1 != type_only)
-            continue;
-        if (cursed[s] > slots[s] / 2)
-            bonus++;
+        if (slots[s] == 0)
+            new_bondage[s] = -1;
+        else if (cursed[s] == slots[s])
+            new_bondage[s] = 2;
+        else if (cursed[s] > slots[s] / 2)
+            new_bondage[s] = 1;
+        else
+            new_bondage[s] = 0;
     }
-    return bonus;
+
+    you.bondage_level = 0;
+    // kittehs don't obey hoomie rules!
+    if (you.species == SP_CAT)
+    {
+        for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+            if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
+                ++you.bondage_level;
+    }
+    else
+        for (int i = ET_WEAPON; i < NUM_ET; ++i)
+            if (new_bondage[i])
+                ++you.bondage_level;
+
+    int flags = 0;
+    if (msg)
+        for (int s = ET_WEAPON; s < NUM_ET; s++)
+            if (new_bondage[s] != you.bondage[s])
+                flags |= 1 << s;
+
+
+    for (int s = ET_WEAPON; s < NUM_ET; s++)
+        you.bondage[s] = new_bondage[s];
+
+    if (msg)
+    {
+        mpr(ash_describe_bondage(flags, you.bondage_level != old_level),
+            MSGCH_GOD);
+    }
 }
 
-void ash_check_bondage()
+std::string ash_describe_bondage(int flags, bool level)
 {
-    int new_level = ash_bondage_level();
+    std::string desc;
+    if (flags & ETF_WEAPON && flags & ETF_SHIELD
+        && you.bondage[ET_WEAPON] != -1)
+    {
+        if (you.bondage[ET_WEAPON] == you.bondage[ET_SHIELD])
+        {
+            desc = make_stringf("Your hands are %sbound. ",
+                                you.bondage[ET_WEAPON] ? "" : "not ");
+        }
+        else
+        {
+            desc = make_stringf("Your %s hand is bound but not your %s hand. ",
+                                you.bondage[ET_WEAPON] ? "weapon" : "shield",
+                                you.bondage[ET_WEAPON] ? "shield" : "weapon");
+        }
+    }
+    else if (flags & ETF_WEAPON && you.bondage[ET_WEAPON] != -1)
+    {
+        desc = make_stringf("Your weapon hand is %sbound. ",
+                            you.bondage[ET_WEAPON] ? "" : "not ");
+    }
+    else if (flags & ETF_SHIELD && you.bondage[ET_SHIELD] != -1)
+    {
+        desc = make_stringf("Your shield hand is %sbound. ",
+                            you.bondage[ET_SHIELD] ? "" : "not ");
+    }
 
-    if (new_level == you.bondage_level)
-        return;
-
-    if (new_level > you.bondage_level)
-        mprf(MSGCH_GOD, "You feel %s bound.",
-             (new_level == 1) ? "slightly" :
-             (new_level == 2) ? "seriously" :
-             (new_level == 3) ? "completely" :
-                                "buggily");
+    if (flags & ETF_ARMOUR && flags & ETF_JEWELS
+        && you.bondage[ET_ARMOUR] == you.bondage[ET_JEWELS]
+        && you.bondage[ET_ARMOUR] != -1)
+    {
+        desc += make_stringf("You are %s bound in armour and magic. ",
+                             you.bondage[ET_ARMOUR] == 0 ? "not" :
+                             you.bondage[ET_ARMOUR] == 1 ? "partially"
+                                                         : "fully");
+    }
     else
-        mprf(MSGCH_GOD, "You feel less bound.");
-    you.bondage_level = new_level;
+    {
+        if (flags & ETF_ARMOUR && you.bondage[ET_ARMOUR] != -1)
+            desc += make_stringf("You are %s bound in armour. ",
+                                 you.bondage[ET_ARMOUR] == 0 ? "not" :
+                                 you.bondage[ET_ARMOUR] == 1 ? "partially"
+                                                             : "fully");
+
+        if (flags & ETF_JEWELS && you.bondage[ET_JEWELS] != -1)
+            desc += make_stringf("You are %s bound in magic. ",
+                                 you.bondage[ET_JEWELS] == 0 ? "not" :
+                                 you.bondage[ET_JEWELS] == 1 ? "partially"
+                                                             : "fully");
+    }
+
+    if (level)
+    {
+        desc += make_stringf("You feel %s bound.",
+                             you.bondage_level == 0 ? "not" :
+                             you.bondage_level == 1 ? "slightly" :
+                             you.bondage_level == 2 ? "moderately" :
+                             you.bondage_level == 3 ? "seriously" :
+                             you.bondage_level == 4 ? "fully"
+                                                    : "buggily");
+    }
+
+    return trim_string(desc);
 }
 
 static bool _is_slot_cursed(equipment_type eq)
@@ -503,7 +583,7 @@ void ash_id_monster_equipment(monster* mon)
             continue;
         }
 
-        if (x_chance_in_y(you.bondage_level, 3))
+        if (x_chance_in_y(you.bondage_level, 4))
         {
             if (i == MSLOT_WAND)
             {
