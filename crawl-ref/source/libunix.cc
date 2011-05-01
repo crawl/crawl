@@ -441,46 +441,6 @@ void unixcurses_shutdown()
 #endif
 }
 
-
-/* Convert value to string */
-extern "C" char *itoa(int value, char *strptr, int radix)
-{
-    unsigned int bitmask = 32768;
-    int ctr = 0;
-    int startflag = 0;
-
-    if (radix == 10)
-    {
-        sprintf(strptr, "%i", value);
-    }
-    if (radix == 2)             /* int to "binary string" */
-    {
-        while (bitmask)
-        {
-            if (value & bitmask)
-            {
-                startflag = 1;
-                sprintf(strptr + ctr, "1");
-            }
-            else
-            {
-                if (startflag)
-                    sprintf(strptr + ctr, "0");
-            }
-
-            bitmask = bitmask >> 1;
-            if (startflag)
-                ctr++;
-        }
-
-        if (!startflag)         /* Special case if value == 0 */
-            sprintf((strptr + ctr++), "0");
-
-        strptr[ctr] = (char) NULL;
-    }
-    return strptr;
-}
-
 void cprintf(const char *format, ...)
 {
     char buffer[2048];          // One full screen if no control seq...

@@ -182,12 +182,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
                 }
             }
         }
-        out.cprintf("%s", chop_string(schools, 30).c_str());
-
-        char sval[3];
-        itoa(level_diff, sval, 10);
-        out.cprintf(sval);
-        out.cprintf("\n");
+        out.cprintf("%s%d\n", chop_string(schools, 30).c_str(), level_diff);
         spelcount++;
     }
 
