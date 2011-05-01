@@ -747,7 +747,6 @@ static void _sdump_inventory(dump_params &par)
 
     int inv_class2[OBJ_GOLD];
     int inv_count = 0;
-    char tmp_quant[20];
 
     for (i = 0; i < OBJ_GOLD; i++)
         inv_class2[i] = 0;
@@ -808,13 +807,8 @@ static void _sdump_inventory(dump_params &par)
                         int ival = -1;
                         if (par.show_prices)
                         {
-                            text += " (";
-
-                            itoa(ival = item_value(you.inv[j], true),
-                                  tmp_quant, 10);
-
-                            text += tmp_quant;
-                            text += " gold)";
+                            text += make_stringf(" (%d gold)",
+                                        ival = item_value(you.inv[j], true));
                         }
 
                         if (origin_describable(you.inv[j])
@@ -853,21 +847,14 @@ static void _sdump_inventory(dump_params &par)
 static void _sdump_skills(dump_params &par)
 {
     std::string &text(par.text);
-    char tmp_quant[20];
 
     if (par.se)
         text += " You had ";
     else
         text += " You have ";
 
-    itoa(you.exp_available, tmp_quant, 10);
-    text += tmp_quant;
-    text += " experience left.";
-
-    text += "\n";
-    text += "\n";
-    text += "   Skills:";
-    text += "\n";
+    text += make_stringf("%d experience left.\n", you.exp_available);
+    text += "\n   Skills:\n";
 
     dump_skills(text);
     text += "\n";
@@ -899,7 +886,6 @@ static std::string spell_type_shortname(int spell_class, bool slash)
 static void _sdump_spells(dump_params &par)
 {
     std::string &text(par.text);
-    char tmp_quant[20];
 
 // This array helps output the spell types in the traditional order.
 // this can be tossed as soon as I reorder the enum to the traditional order {dlb}
@@ -940,9 +926,7 @@ static void _sdump_spells(dump_params &par)
             text += "You had ";
         else
             text += "You have ";
-        itoa(spell_levels, tmp_quant, 10);
-        text += tmp_quant;
-        text += " spell levels left.";
+        text += make_stringf("%d spell levels left.", spell_levels);
     }
 
     text += "\n";
@@ -999,10 +983,7 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line = chop_string(spell_line, 66);
 
-                itoa(spell_difficulty(spell), tmp_quant, 10);
-                spell_line += tmp_quant;
-
-                spell_line = chop_string(spell_line, 71);
+                spell_line += make_stringf("%-5d", spell_difficulty(spell));
 
                 spell_line += spell_hunger_string(spell);
                 spell_line += "\n";

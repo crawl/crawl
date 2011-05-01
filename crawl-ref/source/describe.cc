@@ -74,18 +74,13 @@
 // append_value
 //
 // Appends a value to the string. If plussed == 1, will add a + to
-// positive values (itoa always adds - to -ve ones).
+// positive values.
 //
 //---------------------------------------------------------------
 static void _append_value(std::string & description, int valu, bool plussed)
 {
-    if (valu >= 0 && plussed == 1)
-        description += "+";
-
     char value_str[80];
-
-    itoa(valu, value_str, 10);
-
+    sprintf(value_str, plussed ? "%+d" : "%d", valu);
     description += value_str;
 }
 
@@ -1727,10 +1722,7 @@ void append_spells(std::string &desc, const item_def &item)
 
         desc += chop_string(schools, 65 - 36);
 
-        char sval[3];
-        itoa(spell_difficulty(stype), sval, 10);
-        desc += sval;
-        desc += "\n";
+        desc += make_stringf("%d\n", spell_difficulty(stype));
     }
 }
 

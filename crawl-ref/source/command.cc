@@ -1221,10 +1221,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     if (!already)
         desc += "None";
 
-    desc += "\nLevel:      ";
-    char sval[3];
-    itoa(spell_difficulty(type), sval, 10);
-    desc += sval;
+    desc += make_stringf("\nLevel:      %d", spell_difficulty(type));
 
     bool undead = false;
     if (you_cannot_memorise(type, undead))

@@ -12,7 +12,6 @@
 #include <math.h>
 
 #define fileno _fileno
-#define itoa _itoa
 #define snprintf _snprintf
 #define strcasecmp _stricmp
 #define strdup _strdup

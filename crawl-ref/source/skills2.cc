@@ -1847,21 +1847,16 @@ bool is_invalid_skill(skill_type skill)
 
 void dump_skills(std::string &text)
 {
-    char tmp_quant[20];
     for (uint8_t i = 0; i < NUM_SKILLS; i++)
     {
         if (you.skills[i] > 0)
         {
-            text += ((you.skills[i] == 27)   ? " * " :
-                     (you.practise_skill[i]) ? " + "
-                                             : " - ");
-
-            text += "Level ";
-            itoa(you.skills[i], tmp_quant, 10);
-            text += tmp_quant;
-            text += " ";
-            text += skill_name(static_cast<skill_type>(i));
-            text += "\n";
+            text += make_stringf(" %c Level %d %s\n",
+                                 ((you.skills[i] == 27)   ? '*' :
+                                  (you.practise_skill[i]) ? '+'
+                                                          : '-'),
+                                 you.skills[i],
+                                 skill_name(static_cast<skill_type>(i)));
         }
     }
 }
