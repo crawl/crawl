@@ -69,8 +69,12 @@ static const char *features[] = {
     "Lua user scripts",
 #endif
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     "Tile support",
+#endif
+
+#ifdef USE_TILE_WEB
+    "Web Tile support",
 #endif
 
 #ifdef WIZARD
@@ -862,7 +866,7 @@ help_file help_files[] = {
     { "quickstart.txt",    '^', false },
     { "macros_guide.txt",  '~', false },
     { "options_guide.txt", '&', false },
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     { "tiles_help.txt",    'T', false },
 #endif
     { NULL, 0, false }
@@ -1720,7 +1724,7 @@ static void _find_description(bool *again, std::string *error_inout)
 
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only =
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         !(doing_mons || doing_features || doing_spells);
 #else
         true;
@@ -1802,7 +1806,7 @@ static void _find_description(bool *again, std::string *error_inout)
             me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
                                letter);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             if (doing_spells)
             {
                 spell_type spell = spell_by_name(str);
@@ -1999,7 +2003,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>%</w>: Table of aptitudes\n"
             "<w>/</w>: Lookup description\n"
             "<w>Q</w>: FAQ\n"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             "<w>T</w>: Tiles key help\n"
 #endif
             "<w>V</w>: Version information\n"
@@ -2346,7 +2350,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_MAKE_NOTE, CMD_DISPLAY_COMMANDS, 0);
     _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);
     _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
 #else
     _add_command(cols, 0, CMD_READ_MESSAGES, "read messages (online play only)", 2);

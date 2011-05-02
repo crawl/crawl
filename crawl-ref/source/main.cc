@@ -3040,7 +3040,10 @@ void world_reacts()
     if (crawl_state.game_is_hints())
     {
         tiles.clear_text_tags(TAG_TUTORIAL);
+#ifdef USE_TILE_LOCAL
+        // OTTODO
         tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+#endif
     }
 #endif
 

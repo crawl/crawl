@@ -227,8 +227,11 @@ bool direction_chooser::choose_compass()
         else if (key_command == CMD_TARGET_MOUSE_SELECT)
         {
             const coord_def &gc = tiles.get_cursor();
+#ifdef USE_TILE_LOCAL
+            // OTTODO: What??
             if (gc == Region::NO_CURSOR)
                 continue;
+#endif
 
             if (!map_bounds(gc))
                 continue;
@@ -265,7 +268,8 @@ bool direction_chooser::choose_compass()
     }
     while (!moves.isCancel && moves.delta.origin());
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
+    // OTTODO: What's NO_CURSOR?
     tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
 #endif
 
@@ -847,7 +851,10 @@ void full_describe_view()
     }
 #else
     // Clear cursor placement.
+#ifdef USE_TILE_LOCAL
+    // OTTODO
     tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+#endif
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
 }
@@ -1779,7 +1786,8 @@ void direction_chooser::do_redraws()
 
 bool direction_chooser::tiles_update_target()
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
+    // OTTODO
     const coord_def& gc = tiles.get_cursor();
     if (gc != Region::NO_CURSOR && map_bounds(gc))
     {
@@ -2010,7 +2018,8 @@ void direction_chooser::finalize_moves()
     // square away from the player.
     _extend_move_to_edge(moves);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
+    // OTTODO
     tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
 #endif
 }

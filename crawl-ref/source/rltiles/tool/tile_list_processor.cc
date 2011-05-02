@@ -1566,5 +1566,99 @@ bool tile_list_processor::write_data()
         fclose(fp);
     }
 
+    // write "tileinfo-%name.js"
+    if (m_abstract.size() == 0)
+    {
+        char filename[1024];
+        sprintf(filename, "tileinfo-%s.js", lcname.c_str());
+        FILE *fp = tmpfile();
+
+        if (!fp)
+        {
+            fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
+            return (false);
+        }
+
+        fprintf(fp, "// This file has been automatically generated.\n\n");
+
+        fprintf(fp, "var _%sTileInfo = [\n", lcname.c_str());
+        for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
+        {
+            fprintf(fp, "  {w: %d, h: %d, ox: %d, oy: %d, sx: %d, sy: %d, ex: %d, ey: %d},\n",
+                    m_page.m_offsets[i+2], m_page.m_offsets[i+3],
+                    m_page.m_offsets[i], m_page.m_offsets[i+1],
+                    m_page.m_texcoords[i], m_page.m_texcoords[i+1],
+                    m_page.m_texcoords[i+2], m_page.m_texcoords[i+3]);
+        }
+        fprintf(fp, "]\n\n");
+
+        fprintf(fp, "var TILE_%s_MAX = %s + _%sTileInfo.length;\n\n",
+                ucname.c_str(), m_start_value.c_str(), lcname.c_str());
+
+        fprintf(fp, "function get%sTileInfo(idx) {\n", lcname.c_str());
+        fprintf(fp, "    return _%sTileInfo[idx - %s];\n",
+                lcname.c_str(), m_start_value.c_str());
+        fprintf(fp, "}\n\n");
+
+
+        fflush(fp);
+        if (!_write_if_changed(filename, fp))
+            return (false);
+
+        fclose(fp);
+    }
+    else
+    {
+        if (m_abstract.size() == 1)
+        {
+            fprintf(stderr, "Error: <2 abstracts currently unsupported.\n");
+            return (false);
+        }
+
+        char filename[1024];
+        sprintf(filename, "tileinfo-%s.js", lcname.c_str());
+        FILE *fp = tmpfile();
+
+        if (!fp)
+        {
+            fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
+            return (false);
+        }
+
+        fprintf(fp, "// This file has been automatically generated.\n\n");
+
+        std::vector<std::string> uc_max_enum;
+        for (size_t i = 0; i < m_abstract.size(); ++i)
+        {
+            std::string max_enum = m_abstract[i].second;
+            max_enum += "_";
+            max_enum += m_abstract[i].first;
+            max_enum += "_MAX";
+
+            for (size_t j = 0; j < max_enum.size(); ++j)
+                max_enum[j] = std::toupper(max_enum[j]);
+
+            uc_max_enum.push_back(max_enum);
+        }
+
+        std::vector<std::string> lc_enum;
+        for (size_t i = 0; i < m_abstract.size(); ++i)
+            lc_enum.push_back(m_abstract[i].first);
+
+        fprintf(fp, "function get%sTileInfo(idx) {\n", lcname.c_str());
+        add_abstracts(fp, "return (get%sTileInfo(idx));", lc_enum, uc_max_enum);
+        fprintf(fp, "}\n\n");
+
+        fprintf(fp, "function get%sImg(idx) {\n", lcname.c_str());
+        add_abstracts(fp, "return \"/static/%s.png\";", lc_enum, uc_max_enum);
+        fprintf(fp, "}\n\n");
+
+        fflush(fp);
+        if (!_write_if_changed(filename, fp))
+            return false;
+
+        fclose(fp);
+    }
+
     return (true);
 }

@@ -260,6 +260,18 @@ tiletex.o \
 tileview.o
 endif
 
+ifdef ONLINE_TILES
+OBJECTS += \
+libweb.o \
+tiledgnbuf.o \
+tiledoll.o \
+tilemcache.o \
+tilepick.o \
+tilepick-p.o \
+tileweb.o \
+tileview.o
+endif
+
 ifdef SDL
 OBJECTS += windowmanager-sdl.o
 endif

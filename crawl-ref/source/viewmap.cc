@@ -1314,7 +1314,8 @@ bool show_map(level_pos &lpos,
         }
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
+    // OTTODO
     tiles.place_cursor(CURSOR_MAP, Region::NO_CURSOR);
 #endif
 

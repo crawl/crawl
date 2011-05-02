@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_GL
 
 #include "glwrapper-ogl.h"
@@ -403,4 +403,4 @@ void OGLShapeBuffer::clear()
 }
 
 #endif // USE_GL
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL

@@ -1360,7 +1360,7 @@ static command_type _get_running_command()
     {
         you.running.rest();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         if (tiles.need_redraw())
             tiles.redraw();
 #endif

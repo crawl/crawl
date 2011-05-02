@@ -200,7 +200,7 @@ SkillMenu* SkillMenuEntry::m_skm;
 #define APTITUDE_SIZE 5
 SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_name_tile = new TextTileItem();
@@ -214,7 +214,7 @@ SkillMenuEntry::SkillMenuEntry(coord_def coord, MenuFreeform* ff)
     m_progress = new NoSelectTextItem();
     m_aptitude = new FormattedTextItem();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_level->set_tile_height();
@@ -266,7 +266,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     m_name->set_text(make_stringf("%s %-15s", _get_prefix().c_str(),
                                 skill_name(m_sk)));
     m_name->set_fg_colour(_get_colour());
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_name_tile->clear_tile();
@@ -403,7 +403,7 @@ std::string SkillMenuEntry::_get_prefix()
 
     const int sign = (you.skills[m_sk] == 0 || you.skills[m_sk] == 27) ? ' '
                                     : (you.practise_skill[m_sk]) ? '+' : '-';
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     return make_stringf(" %c %c", letter, sign);
 #else
     return make_stringf("%c %c", letter, sign);
@@ -548,7 +548,7 @@ void SkillMenuEntry::_clear()
     m_name->set_id(-1);
     m_name->clear_hotkeys();
     m_name->allow_highlight(false);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
         m_name_tile->clear_tile();
 #endif
@@ -573,7 +573,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 {
     SkillMenuEntry::m_skm = this;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     const int limit = tiles.get_crt_font()->char_height() * 5
                       + SK_ARR_LN * TILE_Y;
     if (Options.tile_menu_icons && tiles.get_crt()->wy >= limit)
@@ -588,7 +588,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 
     m_ff = new MenuFreeform();
     m_help = new FormattedTextItem();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_ff->set_tile_height();
@@ -613,7 +613,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
 
     coord_def help_min_coord(m_min_coord.x + 1, 0);
     help_min_coord.y = (m_min_coord.y + SK_ARR_LN + 2);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
     {
         --help_min_coord.y;
@@ -651,7 +651,7 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     _set_footer();
 
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(this);
 #endif
     m_highlighter = new BoxMenuHighlighter(this);
@@ -748,7 +748,7 @@ void SkillMenu::show_description(skill_type sk)
 {
     describe_skill(sk);
     clrscr();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(this);
 #endif
 }

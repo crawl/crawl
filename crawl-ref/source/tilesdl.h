@@ -8,8 +8,9 @@
 #define TILESDL_H
 
 #include "externs.h"
-#include "tilereg.h"
-#include "tiletex.h"
+#ifdef USE_TILE_LOCAL
+ #include "tilereg.h"
+ #include "tiletex.h"
 
 class Region;
 class CRTRegion;
@@ -34,9 +35,10 @@ class DollEditRegion;
 class StatRegion;
 class MessageRegion;
 
-struct map_cell;
-
 typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
+#endif
+
+struct map_cell;
 
 enum key_mod
 {
@@ -81,8 +83,15 @@ struct MouseEvent
     unsigned int py;
 };
 
+#ifdef USE_TILE_LOCAL
 class FontWrapper;
+#endif
+
+#ifdef USE_TILE_LOCAL
 class crawl_view_buffer;
+#elif defined(USE_TILE_WEB)
+ #include "viewgeom.h"
+#endif
 
 class TilesFramework
 {
@@ -134,28 +143,18 @@ public:
 
     void draw_doll_edit();
 
+#ifdef USE_TILE_LOCAL
     MenuRegion *get_menu() { return m_region_menu; }
-    bool is_fullscreen() { return m_fullscreen; }
 
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
     CRTRegion* get_crt() { return m_region_crt; }
     const ImageManager* get_image_manager() { return m_image; }
+
+    bool is_fullscreen() { return m_fullscreen; }
+#endif
+
     int to_lines(int num_tiles);
 protected:
-    int load_font(const char *font_file, int font_size,
-                  bool default_on_fail, bool outline);
-    int handle_mouse(MouseEvent &event);
-
-    void use_control_region(ControlRegion *region);
-
-    // screen pixel dimensions
-    coord_def m_windowsz;
-    // screen pixels per view cell
-    coord_def m_viewsc;
-
-    bool m_fullscreen;
-    bool m_need_redraw;
-
     enum TabID
     {
         TAB_ITEM,
@@ -174,6 +173,22 @@ protected:
         LAYER_TILE_CONTROL,
         LAYER_MAX,
     };
+    LayerID m_active_layer;
+
+#ifdef USE_TILE_LOCAL
+    int load_font(const char *font_file, int font_size,
+                  bool default_on_fail, bool outline);
+    int handle_mouse(MouseEvent &event);
+
+    void use_control_region(ControlRegion *region);
+
+    // screen pixel dimensions
+    coord_def m_windowsz;
+    // screen pixels per view cell
+    coord_def m_viewsc;
+
+    bool m_fullscreen;
+    bool m_need_redraw;
 
     class Layer
     {
@@ -182,7 +197,6 @@ protected:
         std::vector<Region*> m_regions;
     };
     Layer m_layers[LAYER_MAX];
-    LayerID m_active_layer;
 
     // Normal layer
     TileRegionInit  m_init;
@@ -267,6 +281,9 @@ protected:
         mouse_mode mode;
     };
     cursor_loc m_cur_loc;
+#elif defined(USE_TILE_WEB)
+    crawl_view_buffer m_current_view;
+#endif
 };
 
 // Main interface for tiles functions

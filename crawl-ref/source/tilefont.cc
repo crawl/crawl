@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #include "tilefont.h"
 
 const VColour term_colours[MAX_TERM_COLOUR] =
@@ -23,4 +23,4 @@ const VColour term_colours[MAX_TERM_COLOUR] =
     VColour(255, 255, 255)  // WHITE
 };
 
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL

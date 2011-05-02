@@ -926,6 +926,7 @@ void game_options::reset_options()
     tile_skip_title      = false;
     tile_menu_icons      = true;
 
+#ifdef USE_TILE_LOCAL
     // minimap colours
     tile_player_col      = MAP_WHITE;
     tile_monster_col     = MAP_RED;

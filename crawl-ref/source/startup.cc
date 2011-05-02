@@ -104,7 +104,7 @@ static void _initialize()
     // Set up the Lua interpreter for the dungeon builder.
     init_dungeon_lua();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Draw the splash screen before the database gets initialised as that
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
@@ -118,7 +118,7 @@ static void _initialize()
 
     // Initialise internal databases.
     databaseSystemInit();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (crawl_state.title_screen)
         tiles.update_title_msg("Loading Spells and Features...");
 #endif
@@ -126,7 +126,7 @@ static void _initialize()
     init_feat_desc_cache();
     init_spell_name_cache();
     init_spell_rarities();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (crawl_state.title_screen)
         tiles.update_title_msg("Loading maps...");
 #endif
@@ -143,7 +143,7 @@ static void _initialize()
 
     // System initialisation stuff.
     textbackground(0);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (!Options.tile_skip_title && crawl_state.title_screen)
     {
         tiles.update_title_msg("Loading complete, press any key to start.");
@@ -318,14 +318,14 @@ static void _post_init(bool newc)
  */
 static void _construct_game_modes_menu(MenuScroller* menu)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     TextTileItem* tmp = NULL;
 #else
     TextItem* tmp = NULL;
 #endif
     std::string text;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
 #else
@@ -344,7 +344,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_TUTORIAL), TEX_GUI));
 #else
@@ -363,7 +363,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_HINTS), TEX_GUI));
 #else
@@ -382,7 +382,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_SPRINT), TEX_GUI));
 #else
@@ -400,7 +400,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_ZOTDEF), TEX_GUI));
 #else
@@ -418,7 +418,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_INSTRUCTIONS), TEX_GUI));
 #else
@@ -436,7 +436,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_ARENA), TEX_GUI));
 #else
@@ -469,7 +469,7 @@ static void _construct_save_games_menu(MenuScroller* menu,
     std::vector<player_save_info>::iterator it;
     for (unsigned int i = 0; i < chars.size(); ++i)
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         SaveMenuItem* tmp = new SaveMenuItem();
 #else
         TextItem* tmp = new TextItem();
@@ -480,7 +480,7 @@ static void _construct_save_games_menu(MenuScroller* menu,
         tmp->set_highlight_colour(WHITE);
         // unique id
         tmp->set_id(NUM_GAME_TYPE + i);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         tmp->set_doll(chars.at(i).doll);
 #endif
         //tmp->set_description_text("...");
@@ -542,7 +542,7 @@ again:
     const int num_saves = chars.size();
     static int type = GAME_TYPE_UNSPECIFIED;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     const int max_col    = tiles.get_crt()->mx;
 #else
     const int max_col    = get_number_of_cols() - 1;
@@ -551,7 +551,7 @@ again:
     const int help_start = _misc_text_start_y(num_saves);
     const int help_end   = help_start + NUM_HELP_LINES + 1;
     const int desc_y     = help_end;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     const int game_mode_bottom = GAME_MODES_START_Y + tiles.to_lines(NUM_GAME_TYPE);
     const int game_save_top = help_start - 2 - tiles.to_lines(std::min(2, num_saves));
     const int save_games_start_y = std::min<int>(game_mode_bottom, game_save_top);
@@ -626,7 +626,7 @@ again:
                      "descriptor");
     menu.attach_object(descriptor);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Black and White highlighter looks kinda bad on tiles
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
 #else
@@ -635,7 +635,7 @@ again:
     highlighter->init(coord_def(-1, -1), coord_def(-1, -1), "highlighter");
     menu.attach_object(highlighter);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 

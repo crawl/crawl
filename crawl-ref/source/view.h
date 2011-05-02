@@ -31,7 +31,7 @@ std::string screenshot();
 
 bool view_update();
 void view_update_at(const coord_def &pos);
-void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE?
+void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE_LOCAL?
 void flash_view_delay(uint8_t colour = BLACK, int delay = 150);
 #ifndef USE_TILE
 void flash_monster_colour(const monster* mon, uint8_t fmc_colour,

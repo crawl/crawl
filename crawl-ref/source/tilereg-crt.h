@@ -1,4 +1,4 @@
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifndef TILEREG_CRT_H
 #define TILEREG_CRT_H
 

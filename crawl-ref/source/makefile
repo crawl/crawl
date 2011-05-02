@@ -274,6 +274,14 @@ ifndef IPAD
 	FT = YesPlease
 endif
 
+TILES_ANY = YesPlease
+
+endif
+
+ifdef ONLINE_TILES
+
+TILES_ANY = YesPlease
+
 endif
 
 #
@@ -303,7 +311,7 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 endif
 
-ifndef TILES
+ifndef TILES_ANY
 ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
 else
@@ -501,12 +509,19 @@ endif
 
 RLTILES = rltiles
 
+ifdef ONLINE_TILES
+DEFINES_L += -DUSE_TILE
+DEFINES_L += -DUSE_TILE_WEB
+INCLUDES_L += -I$(RLTILES)
+endif
+
 #
 # Tiles build stuff
 #
 ifdef TILES
 
 DEFINES_L += -DUSE_TILE
+DEFINES_L += -DUSE_TILE_LOCAL
 INCLUDES_L += -I$(RLTILES)
 
 ifdef BUILD_SDL
@@ -806,7 +821,7 @@ ifndef V
 endif
 endif
 
-ifdef TILES
+ifdef TILES_ANY
 TILEIMAGEFILES := floor wall feat main player gui icons
 TILEDEFS = $(TILEIMAGEFILES) dngn unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
@@ -1038,7 +1053,7 @@ endif
 ifeq ($(GAME),crawl.exe)
 	sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
 endif
-ifdef TILES
+ifdef TILES_ANY
 	mkdir -p $(datadir_fp)/dat/tiles
 	$(COPY) dat/tiles/*.png $(datadir_fp)/dat/tiles/
 ifndef PROPORTIONAL_FONT

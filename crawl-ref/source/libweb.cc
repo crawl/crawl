@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE_WEB
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,15 +15,14 @@
 #include "defines.h"
 #include "env.h"
 #include "externs.h"
-#include "tilereg-text.h"
 #include "message.h"
 #include "stash.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "travel.h"
 #include "viewgeom.h"
-#include "windowmanager.h"
 
 int m_getch()
 {
@@ -68,14 +67,14 @@ int putwch(ucs_t chr)
 {
     if (!chr)
         chr = ' ';
-    TextRegion::text_mode->putwch(chr);
+    //    TextRegion::text_mode->putwch(chr);
     return 0;
 }
 
 void clear_to_end_of_line()
 {
     // object's method
-    TextRegion::text_mode->clear_to_end_of_line();
+    //    TextRegion::text_mode->clear_to_end_of_line();
 }
 
 int cprintf(const char *format,...)
@@ -85,45 +84,48 @@ int cprintf(const char *format,...)
     va_start(argp, format);
     vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
+    fprintf(stdout, "puts(\"%s\");\n", buffer);
     // object's method
-    TextRegion::text_mode->addstr(buffer);
+    //    TextRegion::text_mode->addstr(buffer);
     return 0;
 }
 
 void textcolor(int color)
 {
-    TextRegion::textcolor(color);
+    //    TextRegion::textcolor(color);
 }
 
 void textbackground(int bg)
 {
-    TextRegion::textbackground(bg);
+    //    TextRegion::textbackground(bg);
 }
 
 void set_cursor_enabled(bool enabled)
 {
-    if (enabled)
-        TextRegion::_setcursortype(1);
-    else
-        TextRegion::_setcursortype(0);
+    //    if (enabled)
+    //        TextRegion::_setcursortype(1);
+    //    else
+    //        TextRegion::_setcursortype(0);
 }
 
 bool is_cursor_enabled()
 {
-    if (TextRegion::cursor_flag)
-        return (true);
+    //    if (TextRegion::cursor_flag)
+    //        return (true);
 
     return (false);
 }
 
 int wherex()
 {
-    return TextRegion::wherex();
+    //    return TextRegion::wherex();
+    return 1;
 }
 
 int wherey()
 {
-    return TextRegion::wherey();
+    //    return TextRegion::wherey();
+    return 1;
 }
 
 int get_number_of_lines()
@@ -177,7 +179,8 @@ GotoRegion get_cursor_region()
 void delay(int ms)
 {
     tiles.redraw();
-    wm->delay(ms);
+    //    wm->delay(ms);
+    fprintf(stderr, "delay(ms)\n");
 }
 
 void update_screen()
@@ -187,12 +190,49 @@ void update_screen()
 
 bool kbhit()
 {
-    // Look for the presence of any keyboard events in the queue.
-    int count = wm->get_event_count(WM_KEYDOWN);
-    return (count > 0);
+    fprintf(stderr, "kbhit()\n");
+    return false;
 }
 
 #ifdef UNIX
+int itoa(int value, char *strptr, int radix)
+{
+    unsigned int bitmask = 32768;
+    int ctr = 0;
+    int startflag = 0;
+
+    if (radix == 10)
+    {
+        sprintf(strptr, "%i", value);
+    }
+    else if (radix == 2)             /* int to "binary string" */
+    {
+        while (bitmask)
+        {
+            if (value & bitmask)
+            {
+                startflag = 1;
+                sprintf(strptr + ctr, "1");
+            }
+            else if (startflag)
+            {
+                sprintf(strptr + ctr, "0");
+            }
+
+            bitmask = bitmask >> 1;
+            if (startflag)
+                ctr++;
+        }
+
+        if (!startflag)         /* Special case if value == 0 */
+            sprintf((strptr + ctr++), "0");
+
+        strptr[ctr] = (char) NULL;
+    }
+    return (0);                /* Me? Fail? Nah. */
+}
+
+
 // Convert string to lowercase.
 char *strlwr(char *str)
 {
@@ -205,4 +245,4 @@ char *strlwr(char *str)
 }
 
 #endif // #ifdef UNIX
-#endif // #ifdef USE_TILE_LOCAL
+#endif // #ifdef USE_TILE_WEB

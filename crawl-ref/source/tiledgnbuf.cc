@@ -4,6 +4,9 @@
 
 #include "tiledgnbuf.h"
 
+#endif
+
+#ifdef USE_TILE_LOCAL
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -18,7 +21,10 @@
 #include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
+#endif
 
+// OTTODO: Move packed_cell to its own file, this is really ugly
+#ifdef USE_TILE
 void packed_cell::clear()
 {
     num_dngn_overlay = 0;
@@ -34,7 +40,9 @@ void packed_cell::clear()
     is_liquefied     = false;
     swamp_tree_water = false;
 }
+#endif
 
+#ifdef USE_TILE_LOCAL
 DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_floor(&im->m_textures[TEX_FLOOR]),
     m_buf_wall(&im->m_textures[TEX_WALL]),
