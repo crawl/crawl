@@ -266,7 +266,9 @@ $(document).ready(
 
             socket.onclose = function()
             {
-                window.location.reload();
+                set_layer("crt");
+                $("#crt").html("Websocket connection was closed. Reloading shortly...");
+                setTimeout("window.location.reload()", 3000);
             };
         }
         else
