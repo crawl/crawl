@@ -270,7 +270,10 @@ static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
 {
     if ((abs(shift.x) >= vbuf.size().x)
         || (abs(shift.y) >= vbuf.size().y))
+    {
+        fprintf(stdout, "clear_tile_cache();");
         return; // The whole buffer needs to be redrawn anyway
+    }
 
     fprintf(stdout, "shift(%d,%d);", shift.x, shift.y);
 
