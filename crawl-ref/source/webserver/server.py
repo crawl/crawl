@@ -11,26 +11,9 @@ import sqlite3
 
 import logging
 
-bind_address = ""
-bind_port = 8080
+from config import *
 
-logging.basicConfig(filename = "webtiles.log",
-                    level = logging.INFO,
-                    format = "%(asctime)s %(levelname)s: %(message)s")
-
-password_db = "./webserver/passwd.db3"
-
-static_path = "./webserver/static"
-template_path = "./webserver/"
-
-crawl_binary = "./crawl"
-
-rcfile_path = "./rcs/"
-macro_path = "./rcs/"
-morgue_path = "./rcs/"
-
-max_connections = 100
-
+logging.basicConfig(**logging_config)
 
 class TornadoFilter(logging.Filter):
     def filter(self, record):
@@ -58,7 +41,11 @@ current_connections = 0
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         host = self.request.host
-        self.render("client.html", socket_server = "ws://" + host + "/socket")
+        if self.request.protocol == "https":
+            protocol = "wss://"
+        else:
+            protocol = "ws://"
+        self.render("client.html", socket_server = protocol + host + "/socket")
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
@@ -171,6 +158,8 @@ application = tornado.web.Application([
 ], **settings)
 
 application.listen(bind_port, bind_address)
+if ssl_options:
+    application.listen(ssl_port, ssl_address, ssl_options = ssl_options)
 
 ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.start()
