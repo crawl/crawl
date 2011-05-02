@@ -220,6 +220,15 @@ function login_failed()
     start_login();
 }
 
+var received_close_message = false;
+
+function connection_closed(msg)
+{
+    set_layer("crt");
+    $("#crt").html(msg);
+    received_close_message = true;
+}
+
 $(document).ready(
     function()
     {
@@ -266,8 +275,11 @@ $(document).ready(
 
             socket.onclose = function()
             {
-                set_layer("crt");
-                $("#crt").html("Websocket connection was closed. Reloading shortly...");
+                if (!received_close_message)
+                {
+                    set_layer("crt");
+                    $("#crt").html("Websocket connection was closed. Reloading shortly...");
+                }
                 setTimeout("window.location.reload()", 3000);
             };
         }

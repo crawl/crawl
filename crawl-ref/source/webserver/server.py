@@ -41,6 +41,7 @@ def user_passwd_match(username, passwd):
 current_connections = 0
 sockets = set() # Sockets running crawl processes
 current_id = 0
+shutting_down = False
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -78,6 +79,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message("$('#crt').html('The maximum number of connections has been"
                                + " reached, sorry :('); $('#login').hide();");
             self.close()
+        elif shutting_down:
+            self.close()
 
     def start_crawl(self):
         sockets.add(self)
@@ -95,6 +98,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
                                 self.ioloop.READ | self.ioloop.ERROR)
 
+    def shutdown(self, msg):
+        if not self.client_terminated:
+            self.write_message("connection_closed('" + msg + "');");
+            self.close()
+        if not self.crawl_terminated:
+            self.p.send_signal(subprocess.signal.SIGHUP)
+
     def close_pipes(self):
         if self.p is not None:
             self.ioloop.remove_handler(self.p.stdout.fileno())
@@ -108,6 +118,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close_pipes()
             sockets.remove(self)
             if not self.client_terminated: self.close()
+
+            if shutting_down and len(sockets) == 0:
+                # The last crawl process has ended, now we can go
+                self.ioloop.stop()
 
     def on_message(self, message):
         if message.startswith("Login: "):
@@ -164,15 +178,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message(msg)
             self.poll_crawl()
 
-def shutdown():
-    for socket in sockets:
-        socket.p.send_signal(subprocess.signal.SIGHUP)
+def shutdown(msg = "The server is shutting down. Your game has been saved."):
+    global shutting_down
+    shutting_down = True
+    for socket in list(sockets):
+        socket.shutdown(msg)
 
 def handler(signum, frame):
     shutdown()
-    sys.exit()
 
 signal.signal(signal.SIGTERM, handler)
+signal.signal(signal.SIGHUP, handler)
 
 settings = {
     "static_path": static_path,
@@ -192,5 +208,6 @@ ioloop = tornado.ioloop.IOLoop.instance()
 
 try:
     ioloop.start()
-except KeyboardInterrupt, SystemExit:
+except KeyboardInterrupt:
     shutdown()
+    ioloop.start() # We'll wait until all crawl processes have ended.
