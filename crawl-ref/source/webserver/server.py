@@ -10,6 +10,8 @@ import crypt
 import sqlite3
 
 import logging
+import sys
+import signal
 
 from config import *
 
@@ -37,6 +39,8 @@ def user_passwd_match(username, passwd):
         return crypted_pw == result[0]
 
 current_connections = 0
+sockets = set() # Sockets running crawl processes
+current_id = 0
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -52,6 +56,15 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
         self.p = None
+        global current_id
+        self.id = current_id
+        current_id += 1
+
+    def __hash__(self):
+        return self.id
+
+    def __eq__(self, other):
+        return self.id == other.id
 
     def open(self):
         logging.info("Socket opened from ip %s.", self.request.remote_ip)
@@ -67,6 +80,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
 
     def start_crawl(self):
+        sockets.add(self)
         self.p = subprocess.Popen([crawl_binary,
                                    "-name", self.username,
                                    "-rc", os.path.join(rcfile_path, self.username + ".rc"),
@@ -92,6 +106,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not self.crawl_terminated and self.p.poll() is not None:
             self.crawl_terminated = True
             self.close_pipes()
+            sockets.remove(self)
             if not self.client_terminated: self.close()
 
     def on_message(self, message):
@@ -149,6 +164,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message(msg)
             self.poll_crawl()
 
+def shutdown():
+    for socket in sockets:
+        socket.p.send_signal(subprocess.signal.SIGHUP)
+
+def handler(signum, frame):
+    shutdown()
+    sys.exit()
+
+signal.signal(signal.SIGTERM, handler)
+
 settings = {
     "static_path": static_path,
     "template_path": template_path
@@ -164,4 +189,8 @@ if ssl_options:
     application.listen(ssl_port, ssl_address, ssl_options = ssl_options)
 
 ioloop = tornado.ioloop.IOLoop.instance()
-ioloop.start()
+
+try:
+    ioloop.start()
+except KeyboardInterrupt, SystemExit:
+    shutdown()
