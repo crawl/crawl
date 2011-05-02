@@ -48,12 +48,14 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("client.html", socket_server = protocol + host + "/socket")
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
-    def open(self):
-        logging.info("Socket opened from ip %s.", self.request.remote_ip)
+    def __init__(self, app, req, **kwargs):
+        tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
         self.p = None
+
+    def open(self):
+        logging.info("Socket opened from ip %s.", self.request.remote_ip)
         self.ioloop = tornado.ioloop.IOLoop.instance()
-        self.message_buffer = ""
         self.crawl_terminated = False
 
         global current_connections
