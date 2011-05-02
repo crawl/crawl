@@ -1725,7 +1725,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     if (resist_roll < mons->hit_dice)
     {
-        simple_monster_message(mons, " resists!");
+        simple_monster_message(mons, " resists.");
         return (false);
     }
 
