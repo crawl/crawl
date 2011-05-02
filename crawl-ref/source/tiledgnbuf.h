@@ -2,7 +2,9 @@
 #ifndef TILEDGNBUF_H
 #define TILEDGNBUF_H
 
-#include "tilebuf.h"
+#ifdef USE_TILE_LOCAL
+ #include "tilebuf.h"
+#endif
 
 struct packed_cell
 {
@@ -52,6 +54,8 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell);
 
 struct dolls_data;
 class mcache_entry;
+
+#ifdef USE_TILE_LOCAL
 class ImageManager;
 
 // A set of buffers that takes as input the foreground/background pair
@@ -103,5 +107,6 @@ protected:
     TileBuffer m_buf_icons;
 };
 
+#endif
 #endif
 #endif

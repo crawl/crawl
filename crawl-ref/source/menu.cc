@@ -19,7 +19,7 @@
 #include "player.h"
 #include "hints.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "mon-stuff.h"
  #include "mon-util.h"
  #include "terrain.h"
@@ -75,7 +75,7 @@ void MenuDisplayText::draw_more()
     m_menu->get_more().display();
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuDisplayTile::MenuDisplayTile(Menu *menu) : MenuDisplay(menu)
 {
     m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
@@ -117,7 +117,7 @@ Menu::Menu(int _flags, const std::string& tagname, bool text_only)
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
     alive(false), last_selected(-1)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (text_only)
         mdisplay = new MenuDisplayText(this);
     else
@@ -311,7 +311,7 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     mdisplay->set_offset(1 + !!title);
 
     // Lose lines for the title + room for -more- line.
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     pagesize = max_pagesize - !!title - 1;
 #else
     pagesize = get_number_of_lines() - !!title - 1;
@@ -850,7 +850,7 @@ FeatureMenuEntry::FeatureMenuEntry(const std::string &str,
 }
 
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
     MenuEntry(str, MEL_ITEM, 1)
 {
@@ -1807,7 +1807,7 @@ PrecisionMenu::PrecisionMenu() : m_active_object(NULL),
 PrecisionMenu::~PrecisionMenu()
 {
     clear();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->detach_menu();
 #endif
 }
@@ -1964,7 +1964,7 @@ bool PrecisionMenu::process_key(int key)
     return false;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 int PrecisionMenu::handle_mouse(const MouseEvent &me)
 {
     // Feed input to each attached object that the mouse is over
@@ -2229,7 +2229,7 @@ MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
                       m_link_left(NULL), m_link_right(NULL), m_link_up(NULL),
                       m_link_down(NULL), m_item_id(-1)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
     m_unit_height_pixels = tiles.get_crt_font()->char_height();
 #endif
@@ -2243,7 +2243,7 @@ MenuItem::~MenuItem()
 {
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 void MenuItem::set_tile_height()
 {
     m_unit_height_pixels = TILE_Y;
@@ -2255,7 +2255,7 @@ void MenuItem::set_tile_height()
  */
 void MenuItem::set_bounds(const coord_def& min_coord, const coord_def& max_coord)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // these are saved in font dx / dy for mouse to work properly
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
@@ -2407,14 +2407,14 @@ MenuItem* MenuItem::get_link_down() const
     return m_link_down;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 int MenuItem::get_vertical_offset() const
 {
     return m_unit_height_pixels / 2 - tiles.get_crt_font()->char_height() / 2;
 }
 #endif
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 TextItem::TextItem() : m_font_buf(tiles.get_crt_font())
 #else
 TextItem::TextItem()
@@ -2452,7 +2452,7 @@ void TextItem::render()
     if (!m_visible)
         return;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (m_dirty)
     {
         m_font_buf.clear();
@@ -2519,7 +2519,7 @@ void TextItem::_wrap_text()
     int max_lines;
     max_cols = (m_max_coord.x - m_min_coord.x);
     max_lines = (m_max_coord.y - m_min_coord.y);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Tiles saves coordinates in pixels
     max_cols = max_cols / m_unit_width_pixels;
     max_lines = max_lines / m_unit_height_pixels;
@@ -2570,7 +2570,7 @@ void FormattedTextItem::render()
     if (!m_visible)
         return;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (m_dirty)
     {
         m_font_buf.clear();
@@ -2598,7 +2598,7 @@ void FormattedTextItem::render()
 #endif
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 TextTileItem::TextTileItem()
 {
     for (int i = 0; i < TEX_MAX; i++)
@@ -2763,7 +2763,7 @@ MenuObject::MenuObject() : m_dirty(false), m_allow_focus(true), m_min_coord(0,0)
                            m_max_coord(0,0)
 {
     m_object_name = "unnamed object";
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
     m_unit_height_pixels = tiles.get_crt_font()->char_height();
 #endif
@@ -2773,7 +2773,7 @@ MenuObject::~MenuObject()
 {
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 void MenuObject::set_tile_height()
 {
     m_unit_height_pixels = TILE_Y;
@@ -2783,7 +2783,7 @@ void MenuObject::set_tile_height()
 void MenuObject::init(const coord_def& min_coord, const coord_def& max_coord,
               const std::string& name)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // these are saved in font dx / dy for mouse to work properly
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
@@ -3074,7 +3074,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
     return MenuObject::INPUT_NO_ACTION;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
 {
     if (!m_allow_focus || !m_visible)
@@ -3561,7 +3561,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
     return MenuObject::INPUT_NO_ACTION;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
 {
     if (!m_allow_focus || !m_visible)
@@ -3876,7 +3876,7 @@ void MenuScroller::_place_items()
         max_coord.y = min_coord.y + item_height;
         min_coord.x = m_min_coord.x;
         max_coord.x = m_max_coord.x;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         // reserve one tile space for scrollbar
         max_coord.x -= 32;
 #endif
@@ -3943,7 +3943,7 @@ MenuObject::InputReturnValue MenuDescriptor::process_input(int key)
     return MenuObject::INPUT_NO_ACTION;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue MenuDescriptor::handle_mouse(const MouseEvent &me)
 {
     // we have nothing interesting to do on mouse events because render()
@@ -3970,7 +3970,7 @@ void MenuDescriptor::_place_items()
     {
         // update
         m_active_item = tmp;
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         textcolor(BLACK);
         textbackground(BLACK);
         for (int i = 0; i < m_desc_item.get_max_coord().y
@@ -4019,7 +4019,7 @@ MenuObject::InputReturnValue BoxMenuHighlighter::process_input(int key)
     return MenuObject::INPUT_NO_ACTION;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue BoxMenuHighlighter::handle_mouse(const MouseEvent &me)
 {
     // we have nothing interesting to do on mouse events because render()
@@ -4036,7 +4036,7 @@ void BoxMenuHighlighter::render()
     if (!m_visible)
        return;
     _place_items();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_line_buf.draw();
 #else
     if (m_active_item != NULL)
@@ -4050,7 +4050,7 @@ void BoxMenuHighlighter::_place_items()
     if (tmp == m_active_item)
         return;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_line_buf.clear();
     if (tmp != NULL)
     {
@@ -4098,7 +4098,7 @@ void BlackWhiteHighlighter::render()
 
     if (m_active_item != NULL)
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         m_shape_buf.draw();
 #endif
         m_active_item->render();
@@ -4113,7 +4113,7 @@ void BlackWhiteHighlighter::_place_items()
         return;
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_shape_buf.clear();
 #endif
     // we had an active item before
@@ -4127,7 +4127,7 @@ void BlackWhiteHighlighter::_place_items()
     }
     if (tmp != NULL)
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         m_shape_buf.add(tmp->get_min_coord().x, tmp->get_min_coord().y,
                         tmp->get_max_coord().x, tmp->get_max_coord().y,
                         term_colours[LIGHTGRAY]);

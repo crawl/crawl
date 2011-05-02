@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_FT
 
 #include <ft2build.h>
@@ -713,4 +713,4 @@ const GenericTexture *FTFontWrapper::font_tex() const
 }
 
 #endif // USE_FT
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL

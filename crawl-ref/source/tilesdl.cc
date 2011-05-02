@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "artefact.h"
 #include "cio.h"
@@ -1334,5 +1334,4 @@ int TilesFramework::to_lines(int num_tiles)
 {
     return num_tiles * TILE_Y / get_crt_font()->char_height();
 }
-
 #endif

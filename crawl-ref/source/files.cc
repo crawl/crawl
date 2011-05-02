@@ -410,7 +410,7 @@ static std::vector<std::string> _get_base_dirs()
 
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         std::string("dat/tiles") + FILE_SEPARATOR,
 #endif
         std::string("docs") + FILE_SEPARATOR,
@@ -418,7 +418,7 @@ static std::vector<std::string> _get_base_dirs()
 #ifndef DATA_DIR_PATH
         std::string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         std::string("..") + FILE_SEPARATOR + "dat/tiles" + FILE_SEPARATOR,
 #endif
         std::string("..") + FILE_SEPARATOR + "settings" + FILE_SEPARATOR,

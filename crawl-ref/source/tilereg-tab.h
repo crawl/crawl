@@ -1,4 +1,4 @@
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifndef TILEREG_TAB_H
 #define TILEREG_TAB_H
 

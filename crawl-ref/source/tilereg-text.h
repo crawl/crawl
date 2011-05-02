@@ -1,4 +1,4 @@
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifndef TILEREG_TEXT_H
 #define TILEREG_TEXT_H
 
@@ -15,6 +15,7 @@ public:
 
     // STATIC -
     // TODO enne - move these to TilesFramework?
+    // OTTODO
 
     // where now printing? what color?
     static int print_x;

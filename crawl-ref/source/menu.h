@@ -15,7 +15,7 @@
 #include "defines.h"
 #include "libutil.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
  #include "tiledoll.h"
 #endif
@@ -76,7 +76,7 @@ public:
     bool preselected;
     void *data;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     std::vector<tile_def> tiles;
 #endif
 
@@ -158,7 +158,7 @@ public:
         return get_text();
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 
     virtual void add_tile(tile_def tile);
@@ -185,12 +185,12 @@ class MonsterMenuEntry : public MenuEntry
 public:
     MonsterMenuEntry(const std::string &str, const monster* mon, int hotkey);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 class PlayerMenuEntry : public MenuEntry
 {
 public:
@@ -210,7 +210,7 @@ public:
     FeatureMenuEntry(const std::string &str, const dungeon_feature_type f,
                      int hotkey);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
@@ -590,7 +590,7 @@ protected:
     MenuItem* m_link_up;
     MenuItem* m_link_down;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Holds the conversion values to translate unit values to pixel values
     unsigned int m_unit_width_pixels;
     unsigned int m_unit_height_pixels;
@@ -623,7 +623,7 @@ protected:
     std::string m_text;
     std::string m_render_text;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     FontBuffer m_font_buf;
 #endif
 };
@@ -655,7 +655,7 @@ public:
 /**
  * Holds an arbitary number of tiles, currently rendered on top of each other
  */
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 class TextTileItem : public TextItem
 {
 public:
@@ -736,7 +736,7 @@ public:
     virtual bool can_be_focused();
 
     virtual InputReturnValue process_input(int key) = 0;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me) = 0;
 #endif
     virtual void render() = 0;
@@ -783,7 +783,7 @@ protected:
     // if you need a different behaviour, pleare override the
     // affected methods
     std::vector<MenuItem*> m_entries;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Holds the conversion values to translate unit values to pixel values
     unsigned int m_unit_width_pixels;
     unsigned int m_unit_height_pixels;
@@ -802,7 +802,7 @@ public:
     virtual ~MenuFreeform();
 
     virtual InputReturnValue process_input(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
@@ -842,7 +842,7 @@ public:
     virtual ~MenuScroller();
 
     virtual InputReturnValue process_input(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
@@ -882,7 +882,7 @@ public:
               const std::string& name);
 
     virtual InputReturnValue process_input(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
@@ -918,7 +918,7 @@ protected:
 };
 
 /**
- * Class for mouse over tooltips, does nothing if USE_TILE is not defined
+ * Class for mouse over tooltips, does nothing if USE_TILE_LOCAL is not defined
  * TODO: actually implement render() and _place_items()
  */
 class MenuTooltip : public MenuDescriptor
@@ -927,14 +927,14 @@ public:
     MenuTooltip(PrecisionMenu* parent);
     virtual ~MenuTooltip();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
 protected:
     virtual void _place_items();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     ShapeBuffer m_background;
     FontBuffer m_font_buf;
 #endif
@@ -953,7 +953,7 @@ public:
     virtual ~BoxMenuHighlighter();
 
     virtual InputReturnValue process_input(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
@@ -986,7 +986,7 @@ protected:
     PrecisionMenu* m_parent;
     MenuItem* m_active_item;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     LineBuffer m_line_buf;
 #else
     COLORS m_old_bg_colour;
@@ -1003,7 +1003,7 @@ public:
 protected:
     virtual void _place_items();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Tiles does not seem to support background colors
     ShapeBuffer m_shape_buf;
 #endif
@@ -1047,7 +1047,7 @@ public:
 
     virtual void draw_menu();
     virtual bool process_key(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual int handle_mouse(const MouseEvent& me);
 #endif
 

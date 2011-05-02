@@ -346,7 +346,7 @@ InvMenu::InvMenu(int mflags)
     : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(NULL),
       title_annotate(NULL)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
 #endif
         mdisplay->set_num_columns(2);
@@ -512,7 +512,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
         set_title("");
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
