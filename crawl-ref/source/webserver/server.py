@@ -186,6 +186,8 @@ def shutdown(msg = "The server is shutting down. Your game has been saved."):
 
 def handler(signum, frame):
     shutdown()
+    if len(sockets) == 0:
+        ioloop.stop()
 
 signal.signal(signal.SIGTERM, handler)
 signal.signal(signal.SIGHUP, handler)
