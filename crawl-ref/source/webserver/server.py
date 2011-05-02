@@ -210,4 +210,5 @@ try:
     ioloop.start()
 except KeyboardInterrupt:
     shutdown()
-    ioloop.start() # We'll wait until all crawl processes have ended.
+    if len(sockets) > 0:
+        ioloop.start() # We'll wait until all crawl processes have ended.
