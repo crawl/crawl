@@ -3795,21 +3795,22 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // Hellfire and white draconian breath ignores AC.
     if (!damage_ignores_armour())
     {
+        int ac = std::max(mon->ac, 0);
         if (is_tracer && preac_max_damage > 0)
         {
-            tracer_postac_min = std::max(0, preac_min_damage - mon->ac);
+            tracer_postac_min = std::max(0, preac_min_damage - ac);
             tracer_postac_max = preac_max_damage;
             postac = div_round_up(tracer_postac_min + tracer_postac_max, 2);
         }
         else
         {
-            postac -= maybe_random2(1 + mon->ac, !is_tracer);
+            postac -= maybe_random2(1 + ac, !is_tracer);
 
             // Fragmentation has triple AC reduction.
             if (flavour == BEAM_FRAG)
             {
-                postac -= maybe_random2(1 + mon->ac, !is_tracer);
-                postac -= maybe_random2(1 + mon->ac, !is_tracer);
+                postac -= maybe_random2(1 + ac, !is_tracer);
+                postac -= maybe_random2(1 + ac, !is_tracer);
             }
         }
     }
@@ -3834,8 +3835,10 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // Sanity check. Importantly for
     // tracer_nonenchantment_affect_monster, final > 0
     // implies preac > 0.
-    ASSERT(0 <= postac && postac <= preac && 0 <= final
-           && (preac > 0 || final == 0));
+    ASSERT(0 <= postac);
+    ASSERT(postac <= preac);
+    ASSERT(0 <= final);
+    ASSERT(preac > 0 || final == 0);
 
     return (true);
 }
