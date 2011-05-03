@@ -2333,7 +2333,7 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
         hints_describe_pos(pos.x, pos.y);
 
     if (_print_toggle_message(inf))
-        describe_feature_wide(pos, not show_quote);
+        describe_feature_wide(pos, !show_quote);
 }
 
 void set_feature_desc_long(const std::string &raw_name,
