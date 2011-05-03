@@ -1350,7 +1350,8 @@ static void _armour_wear_effects(const int item_slot)
 static command_type _get_running_command()
 {
     if (Options.travel_key_stop && kbhit()
-        || !in_bounds(you.pos() + you.running.pos))
+        || !in_bounds(you.pos() + you.running.pos)
+        || check_for_interesting_features())
     {
         stop_running();
         return CMD_NO_CMD;
