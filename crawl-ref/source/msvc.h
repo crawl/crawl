@@ -27,6 +27,9 @@
 #define va_copy(dst, src) \
    ((void) memcpy(&(dst), &(src), sizeof(va_list)))
 #endif
+// These are not defined in MSVC version of stat.h
+#define        S_IWUSR        S_IWRITE
+#define        S_IRUSR        S_IREAD
 
 #pragma warning(disable : 4290)
 #pragma warning(disable : 4351)
