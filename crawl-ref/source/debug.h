@@ -20,7 +20,7 @@
 
 // Synch with MSVC.
 #ifdef TARGET_COMPILER_VC
-#if _MSC_VER >= 1100 && DEBUG != defined(_DEBUG)
+#if _MSC_VER >= 1100 && defined(DEBUG) != defined(_DEBUG)
 #error DEBUG and _DEBUG are out of sync!
 #endif
 #endif
