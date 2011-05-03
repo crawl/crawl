@@ -20,7 +20,7 @@
  *
  */
 
-
+#include "AppHdr.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -29,8 +29,6 @@
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
-
-#include "AppHdr.h"
 
 #include "branch.h"
 #include "files.h"
