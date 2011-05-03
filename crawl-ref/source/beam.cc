@@ -3762,6 +3762,11 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // will predict a damage output of 1 even if the average damage
     // expected is much closer to 0. This will allow monsters to use
     // ranged attacks vs high AC targets.
+      // [1KB] What ds' code actually does is taking the max damage minus
+      // average AC.  This does work well, even using no AC would.  An
+      // attack that _usually_ does no damage but can possibly do some means
+      // we'll ultimately get it through.  And monsters with weak ranged
+      // almost always would do no better in melee.
     //
     // This is not an entirely beneficial change; the old tracer
     // damage system would make monsters with weak ranged attacks
@@ -3780,7 +3785,8 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // All these are invalid if we return false.
 
     if (is_tracer)
-        preac = div_round_up(preac_max_damage + preac_max_damage, 2);
+        // Was mean between min and max;
+        preac = preac_max_damage;
     else
         preac = damage.roll();
 
