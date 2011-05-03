@@ -46,6 +46,7 @@ static unsigned int get_milliseconds()
 TilesFramework tiles;
 
 TilesFramework::TilesFramework()
+    : m_print_fg(15)
 {
 }
 
