@@ -91,6 +91,8 @@ function shift(cx, cy)
 
     var w = dungeon_cols, h = dungeon_rows;
 
+    var sx, sy, dx, dy;
+
     if (x > 0)
     {
         sx = x;
@@ -159,7 +161,7 @@ function handle_keypress(e)
 
     e.preventDefault();
 
-    s = String.fromCharCode(e.which);
+    var s = String.fromCharCode(e.which);
     if (s == "\\")
     {
         socket.send("\\92\n");

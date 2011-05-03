@@ -2,6 +2,7 @@ var overlaid_locs = [];
 var cursor_locs = [];
 
 // Debug helper
+var mark_sent_cells = false;
 function mark_cell(x, y, mark)
 {
     mark = mark || "m";
@@ -9,26 +10,49 @@ function mark_cell(x, y, mark)
     if (get_tile_cache(x, y))
         get_tile_cache(x, y).mark = mark;
 
-    dungeon_ctx.fillStyle = "red";
-    dungeon_ctx.font = "12px monospace";
-    dungeon_ctx.textAlign = "center";
-    dungeon_ctx.textBaseline = "middle";
-    dungeon_ctx.fillText(mark,
-                         (x + 0.5) * dungeon_cell_w, (y + 0.5) * dungeon_cell_h);
+    render_cell(x, y);
+}
+function unmark_cell(x, y)
+{
+    var cell = get_tile_cache(x, y);
+    if (cell)
+    {
+        delete cell.mark;
+    }
+
+    render_cell(x, y);
 }
 function mark_all()
 {
-    for (x = 0; x < dungeon_cols; x++)
-        for (y = 0; y < dungeon_rows; y++)
+    for (var x = 0; x < dungeon_cols; x++)
+        for (var y = 0; y < dungeon_rows; y++)
             mark_cell(x, y, x + "/" + y);
+}
+function unmark_all()
+{
+    for (var x = 0; x < dungeon_cols; x++)
+        for (var y = 0; y < dungeon_rows; y++)
+            unmark_cell(x, y);
 }
 
 // This gets called by the messages sent by crawl
 function c(x, y, cell)
 {
-    set_tile_cache(x, y, cell);
+    var old_cell = get_tile_cache(x, y);
+    if (!old_cell)
+    {
+        set_tile_cache(x, y, cell);
+    }
+    else
+    {
+        for (attr in cell)
+            old_cell[attr] = cell[attr];
+    }
 
-    render_cell(x, y);
+    if (mark_sent_cells)
+        mark_cell(x, y, x + "/" + y);
+    else
+        render_cell(x, y);
 }
 
 function add_overlay(idx, x, y)
@@ -120,6 +144,9 @@ function render_cell(x, y)
         if (!cell)
             return;
 
+        cell.fg = cell.fg || 0;
+        cell.bg = cell.bg || 0;
+        cell.flv = cell.flv || {};
         cell.flv.s = cell.flv.s || 0;
 
         // cell is basically a packed_cell + doll + mcache entries
@@ -135,7 +162,7 @@ function render_cell(x, y)
         // it looks good enough.
 
         var draw_dolls = function () {
-            if (cell.doll)
+            if ((fg_idx >= TILE_MAIN_MAX) && cell.doll)
             {
                 $.each(cell.doll, function (i, doll_part)
                        {
@@ -143,7 +170,7 @@ function render_cell(x, y)
                        });
             }
 
-            if (cell.mcache)
+            if ((fg_idx >= TILEP_MCACHE_START) && cell.mcache)
             {
                 $.each(cell.mcache, function (i, mcache_part)
                        {
@@ -192,7 +219,7 @@ function render_cell(x, y)
             dungeon_ctx.font = "12px monospace";
             dungeon_ctx.textAlign = "center";
             dungeon_ctx.textBaseline = "middle";
-            dungeon_ctx.fillText(mark,
+            dungeon_ctx.fillText(cell.mark,
                                  (x + 0.5) * dungeon_cell_w, (y + 0.5) * dungeon_cell_h);
         }
     }
@@ -266,8 +293,8 @@ function draw_blood_overlay(x, y, cell, is_wall)
 
 function draw_background(x, y, cell)
 {
-    bg = cell.bg;
-    bg_idx = cell.bg & TILE_FLAG_MASK;
+    var bg = cell.bg;
+    var bg_idx = cell.bg & TILE_FLAG_MASK;
 
     if (cell.swtree && bg_idx > TILE_DNGN_UNSEEN)
         draw_dngn(TILE_DNGN_SHALLOW_WATER, x, y);
@@ -349,14 +376,14 @@ function draw_background(x, y, cell)
 
 function draw_foreground(x, y, cell)
 {
-    fg = cell.fg;
-    bg = cell.bg;
-    fg_idx = cell.fg & TILE_FLAG_MASK;
-    is_in_water = in_water(cell);
+    var fg = cell.fg;
+    var bg = cell.bg;
+    var fg_idx = cell.fg & TILE_FLAG_MASK;
+    var is_in_water = in_water(cell);
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
-        base_idx = cell.base;
+        var base_idx = cell.base;
         if (is_in_water)
         {
             dungeon_ctx.save();
@@ -397,7 +424,7 @@ function draw_foreground(x, y, cell)
     if (fg & TILE_FLAG_S_UNDER)
         draw_icon(TILEI_SOMETHING_UNDER, x, y);
 
-    status_shift = 0;
+    var status_shift = 0;
     if (fg & TILE_FLAG_MIMIC)
         draw_icon(TILEI_MIMIC, x, y);
 
@@ -478,7 +505,7 @@ function draw_foreground(x, y, cell)
     }
     else if (bg & TILE_FLAG_CURSOR)
     {
-        type = ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
+        var type = ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
             TILEI_CURSOR : TILEI_CURSOR2;
 
         if ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
@@ -489,7 +516,7 @@ function draw_foreground(x, y, cell)
 
     if (fg & TILE_FLAG_MDAM_MASK)
     {
-        mdam_flag = fg & TILE_FLAG_MDAM_MASK;
+        var mdam_flag = fg & TILE_FLAG_MDAM_MASK;
         if (mdam_flag == TILE_FLAG_MDAM_LIGHT)
             draw_icon(TILEI_MDAM_LIGHTLY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_MOD)
@@ -504,7 +531,7 @@ function draw_foreground(x, y, cell)
 
     if (fg & TILE_FLAG_DEMON)
     {
-        demon_flag = fg & TILE_FLAG_DEMON;
+        var demon_flag = fg & TILE_FLAG_DEMON;
         if (demon_flag == TILE_FLAG_DEMON_1)
             draw_icon(TILEI_DEMON_NUM1, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_2)
@@ -526,16 +553,16 @@ function draw_foreground(x, y, cell)
 
 function draw_tile(idx, cx, cy, img, info_func, ofsx, ofsy, y_max)
 {
-    x = dungeon_cell_w * cx;
-    y = dungeon_cell_h * cy;
-    info = info_func(idx);
-    img = get_img(img);
+    var x = dungeon_cell_w * cx;
+    var y = dungeon_cell_h * cy;
+    var info = info_func(idx);
+    var img = get_img(img);
     if (!info)
     {
         throw ("Tile not found: " + idx);
     }
-    w = info.ex - info.sx;
-    h = info.ey - info.sy;
+    var w = info.ex - info.sx;
+    var h = info.ey - info.sy;
     if (h > dungeon_cell_h)
         y -= (h - dungeon_cell_h);
     if (y_max)

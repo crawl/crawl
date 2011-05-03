@@ -166,6 +166,8 @@ static void _send_mcache(mcache_entry *entry, bool submerged)
     const dolls_data *doll = entry->doll();
     if (doll)
         _send_doll(*doll, submerged, trans);
+    else
+        fprintf(stdout, "doll:[],");
 
     fprintf(stdout, "mcache:[");
 
@@ -184,9 +186,13 @@ static bool _in_water(const packed_cell &cell)
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
-void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &gc)
+bool _send_cell(int x, int y,
+                const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell,
+                const coord_def &gc)
 {
-    packed_cell cell = packed_cell(vbuf_cell->tile);
+    packed_cell cell = packed_cell(screen_cell->tile);
+    packed_cell &old_cell = old_screen_cell->tile;
+
     if (map_bounds(gc))
     {
         cell.flv = env.tile_flv(gc);
@@ -200,60 +206,113 @@ void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &g
         cell.flv.feat    = 0;
     }
 
-    fprintf(stdout, "c(%d,%d,{fg:%d,bg:%d,%s%s%s%s%s%s%s%s",
-            x, y, cell.fg, cell.bg,
-            // These could obviously be shorter, but I don't think they need to be
-            cell.is_bloody ? "bloody:true," : "",
-            cell.is_silenced ? "silenced:true," : "",
-            cell.is_haloed ? "haloed:true," : "",
-            cell.is_moldy ? "moldy:true," : "",
-            cell.glowing_mold ? "glowing_mold:true" : "",
-            cell.is_sanctuary ? "sanctuary:true," : "",
-            cell.is_liquefied ? "liquefied:true," : "",
-            cell.swamp_tree_water ? "swtree:true," : "");
-
-
-    if (cell.is_bloody)
-    {
-        fprintf(stdout, "bloodrot:%d,", cell.blood_rotation);
-    }
-
-    fprintf(stdout, "flv:{f:%d,", cell.flv.floor);
-    if (cell.flv.special)
-        fprintf(stdout, "s:%d,", cell.flv.special);
-    fprintf(stdout, "},");
+    if (old_cell == cell)
+        return false;
 
     tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
+    bool fg_changed = false;
 
-    if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+    fprintf(stdout, "c(%d,%d,{", x, y);
+
+    if (cell.fg != old_cell.fg)
     {
-        fprintf(stdout, "base:%d,", tileidx_known_base_item(fg_idx));
+        fg_changed = true;
+
+        fprintf(stdout, "fg:%u,", cell.fg);
+        if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+        {
+            fprintf(stdout, "base:%d,", tileidx_known_base_item(fg_idx));
+        }
+    }
+
+    if (cell.bg != old_cell.bg)
+        fprintf(stdout, "bg:%u,", cell.bg);
+
+    if (cell.is_bloody != old_cell.is_bloody)
+        fprintf(stdout, "bloody:%u,", old_cell.is_bloody);
+
+    if (cell.is_silenced != old_cell.is_silenced)
+        fprintf(stdout, "silenced:%u,", old_cell.is_silenced);
+
+    if (cell.is_haloed != old_cell.is_haloed)
+        fprintf(stdout, "haloed:%u,", old_cell.is_haloed);
+
+    if (cell.is_moldy != old_cell.is_moldy)
+        fprintf(stdout, "moldy:%u,", old_cell.is_moldy);
+
+    if (cell.glowing_mold != old_cell.glowing_mold)
+        fprintf(stdout, "glowing_mold:%u,", old_cell.glowing_mold);
+
+    if (cell.is_sanctuary != old_cell.is_sanctuary)
+        fprintf(stdout, "sanctuary:%u,", old_cell.is_sanctuary);
+
+    if (cell.is_liquefied != old_cell.is_liquefied)
+        fprintf(stdout, "liquefied:%u,", old_cell.is_liquefied);
+
+    if (cell.swamp_tree_water != old_cell.swamp_tree_water)
+        fprintf(stdout, "swtree:%u,", old_cell.swamp_tree_water);
+
+    if (cell.blood_rotation != old_cell.blood_rotation)
+        fprintf(stdout, "bloodrot:%d,", cell.blood_rotation);
+
+    if ((cell.flv.floor != old_cell.flv.floor)
+        || (cell.flv.special != old_cell.flv.special))
+    {
+        fprintf(stdout, "flv:{f:%d,", cell.flv.floor);
+        if (cell.flv.special)
+            fprintf(stdout, "s:%d,", cell.flv.special);
+        fprintf(stdout, "},");
     }
 
     if (fg_idx >= TILEP_MCACHE_START)
     {
-        mcache_entry *entry = mcache.get(fg_idx);
-        if (entry)
+        if (fg_changed)
         {
-            _send_mcache(entry, in_water);
+            mcache_entry *entry = mcache.get(fg_idx);
+            if (entry)
+            {
+                _send_mcache(entry, in_water);
+            }
+            else
+                fprintf(stdout, "doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
         }
-        else
-            fprintf(stdout, "doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
     }
     else if (fg_idx == TILEP_PLAYER)
     {
-        dolls_data result = player_doll;
-        fill_doll_equipment(result);
-        _send_doll(result, in_water, false);
+        if (fg_changed)
+        {
+            dolls_data result = player_doll;
+            fill_doll_equipment(result);
+            _send_doll(result, in_water, false);
+        }
     }
     else if (fg_idx >= TILE_MAIN_MAX)
     {
-        fprintf(stdout, "doll:[[%d,%d]],", fg_idx, TILE_Y);
-        // TODO: _transform_add_weapon
+        if (fg_changed)
+        {
+            fprintf(stdout, "doll:[[%d,%d]],", fg_idx, TILE_Y);
+            // TODO: _transform_add_weapon
+        }
     }
 
-    if (cell.num_dngn_overlay > 0)
+    bool overlays_changed = false;
+
+    if (cell.num_dngn_overlay != old_cell.num_dngn_overlay)
+        overlays_changed = true;
+    else
+    {
+        for (int i = 0; i < cell.num_dngn_overlay; i++)
+        {
+            if (cell.dngn_overlay[i] != old_cell.dngn_overlay[i])
+            {
+                overlays_changed = true;
+                break;
+            }
+        }
+    }
+
+    if (overlays_changed)
     {
         fprintf(stdout, "ov:[");
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
@@ -261,25 +320,35 @@ void _send_cell(int x, int y, const screen_cell_t *vbuf_cell, const coord_def &g
         fprintf(stdout, "],");
     }
 
-    // TODO: send flavour?
-
     fprintf(stdout, "});");
+
+    *old_screen_cell = *screen_cell;
+    old_screen_cell->tile = cell;
+    return true;
 }
 
 static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
 {
+    const int w = vbuf.size().x, h = vbuf.size().y;
+
     if ((abs(shift.x) >= vbuf.size().x)
         || (abs(shift.y) >= vbuf.size().y))
     {
+        // The whole buffer needs to be redrawn
         fprintf(stdout, "clear_tile_cache();");
-        return; // The whole buffer needs to be redrawn anyway
+        screen_cell_t *cell = (screen_cell_t *) vbuf;
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < h; x++)
+            {
+                cell->tile.clear();
+                cell++;
+            }
+        return;
     }
 
     fprintf(stdout, "shift(%d,%d);", shift.x, shift.y);
 
     screen_cell_t *cells = (screen_cell_t *) vbuf;
-
-    int w = vbuf.size().x, h = vbuf.size().y;
 
     // shift specifies the shift in the view location; i.e.
     // if shift.x is > 0, we need to move all cells to the left
@@ -301,7 +370,7 @@ static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
             int sx = x + shift.x, sy = y + shift.y;
             if ((0 > sx) || (sx >= w) || (0 > sy) || (sy >= h))
             {
-                cells[y * w + x].tile.bg = 0 + TILE_FLAG_UNSEEN;
+                cells[y * w + x].tile.clear();
             }
             else
             {
@@ -440,8 +509,6 @@ GotoRegion TilesFramework::get_cursor_region() const
 
 void TilesFramework::redraw()
 {
-    fprintf(stderr, "redraw()\n");
-
     m_text_crt.send();
     m_text_stat.send();
     m_text_message.send();
@@ -456,6 +523,8 @@ void TilesFramework::redraw()
     {
         // The view buffer size changed, we need to do a full redraw
         m_current_view = m_next_view;
+        m_current_gc = m_next_gc;
+        screen_cell_t old_cell_dummy; // _send_cell needs a cell to compare to
 
         fprintf(stdout, "view_size(%d,%d);\n", m_current_view.size().x,
                                               m_current_view.size().y);
@@ -466,7 +535,10 @@ void TilesFramework::redraw()
             {
                 coord_def cgc(x + cx_to_gx, y + cy_to_gy);
 
-                _send_cell(x, y, cell, cgc);
+                _send_cell(x, y, cell, &old_cell_dummy, cgc);
+
+                *cell = old_cell_dummy;
+                old_cell_dummy.tile.clear();
                 cell++;
             }
 
@@ -475,7 +547,7 @@ void TilesFramework::redraw()
     }
     else
     {
-        int counter = 0;
+        int counter = 0; // Just for statistics
         // Find differences
 
         // Shift the view, so we need to send less cells
@@ -492,14 +564,11 @@ void TilesFramework::redraw()
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
-                if (cell->tile != old_cell->tile)
-                {
-                    coord_def cgc(x + cx_to_gx, y + cy_to_gy);
+                coord_def cgc(x + cx_to_gx, y + cy_to_gy);
 
-                    _send_cell(x, y, cell, cgc);
-                    *old_cell = *cell;
+                if (_send_cell(x, y, cell, old_cell, cgc))
                     counter++;
-                }
+
                 cell++;
                 old_cell++;
             }
