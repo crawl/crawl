@@ -42,6 +42,70 @@ function delay_ended()
     }
 }
 
+var layout_parameters;
+
+function layout(params)
+{
+    layout_parameters = params;
+
+    do_layout();
+
+    socket.send("\n"); // To end the layout process
+}
+
+function do_layout()
+{
+    // Determine width of stats area
+    var s = "";
+    for (var i = 0; i < layout_parameters.stat_width; i++)
+        s = s + "&nbsp;";
+    $("#stats").html(s);
+    var stat_width_pixels = $("#stats").outerWidth();
+
+    // Determine height of messages area
+    var s = "";
+    for (var i = 0; i < layout_parameters.msg_min_height; i++)
+        s = s + "<br>";
+    $("#messages").html(s);
+    var msg_height_pixels = $("#messages").outerHeight();
+
+    var window_width = $(window).width();
+    var window_height = $(window).height();
+
+    // We have to subtract a bit more for scrollbars and margins
+    var remaining_width = window_width - stat_width_pixels - 50;
+    var remaining_height = window_height - msg_height_pixels;
+
+    var layout = {
+        stats_height: 24,
+        crt_width: 150,
+        crt_height: 50,
+        msg_width: 80
+    };
+
+    layout.view_width = Math.floor(remaining_width / dungeon_cell_w);
+    layout.view_height = Math.floor(remaining_height / dungeon_cell_h);
+    // TODO: Scale so that everything fits
+    if (layout.view_width < layout_parameters.show_diameter)
+        layout.view_width = layout_parameters.show_diameter;
+    if (layout.view_height < layout_parameters.show_diameter)
+        layout.view_height = layout_parameters.show_diameter;
+
+    send_layout(layout);
+}
+
+function send_layout(layout)
+{
+    var msg = "";
+    msg += "^w" + layout.view_width + "\n";
+    msg += "^h" + layout.view_height + "\n";
+    msg += "^s" + layout.stats_height + "\n";
+    msg += "^W" + layout.crt_width + "\n";
+    msg += "^H" + layout.crt_height + "\n";
+    msg += "^m" + layout.msg_width + "\n";
+    socket.send(msg);
+}
+
 function set_layer(layer)
 {
     log("Setting layer: " + layer);
@@ -236,6 +300,11 @@ function connection_closed(msg)
     received_close_message = true;
 }
 
+function request_redraw()
+{
+    socket.send("^r");
+}
+
 $(document).ready(
     function()
     {
@@ -244,6 +313,12 @@ $(document).ready(
         // Key handler
         $(document).bind('keypress.client', handle_keypress);
         $(document).bind('keydown.client', handle_keydown);
+
+        $(window).resize(function (ev)
+                         {
+                             do_layout();
+                             request_redraw();
+                         });
 
         if ("WebSocket" in window)
         {

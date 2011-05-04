@@ -67,6 +67,7 @@ void WebTextArea::put_character(ucs_t chr, int fg, int bg, int x, int y)
 
 void WebTextArea::send()
 {
+    if (m_cbuf == NULL) return;
     if (!m_dirty) return;
     m_dirty = false;
 
@@ -149,8 +150,6 @@ CRTTextArea::CRTTextArea() : WebTextArea("crt") { }
 void CRTTextArea::on_resize()
 {
     WebTextArea::on_resize();
-    crawl_view.termsz.x = mx;
-    crawl_view.termsz.y = my;
 }
 
 StatTextArea::StatTextArea() : WebTextArea("stats") { }

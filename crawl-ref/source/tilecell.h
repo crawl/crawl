@@ -27,9 +27,9 @@ struct packed_cell
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
 
-    packed_cell() : num_dngn_overlay(0), is_bloody(false), is_silenced(false),
-                    is_haloed(false), is_moldy(false), glowing_mold(false),
-                    is_sanctuary(false), is_liquefied(false),
+    packed_cell() : num_dngn_overlay(0), fg(0), bg(0), is_bloody(false),
+                    is_silenced(false), is_haloed(false), is_moldy(false),
+                    glowing_mold(false), is_sanctuary(false), is_liquefied(false),
                     swamp_tree_water (false), blood_rotation(0) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
