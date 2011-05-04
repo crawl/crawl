@@ -366,10 +366,10 @@ public:
     int         tile_window_width;
     int         tile_window_height;
     int         tile_map_pixels;
-    bool        tile_force_overlay;
 #endif
 
 #ifdef USE_TILE
+    bool        tile_force_overlay;
     // display settings
     int         tile_update_rate;
     int         tile_runrest_rate;

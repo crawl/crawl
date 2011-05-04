@@ -973,12 +973,12 @@ void game_options::reset_options()
     tile_window_width     = -90;
     tile_window_height    = -90;
     tile_map_pixels       = 0;
-    tile_force_overlay    = false;
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
                                              "command, spell, monster");
 #endif
 
 #ifdef USE_TILE
+    tile_force_overlay    = false;
     // delays
     tile_update_rate      = 1000;
     tile_runrest_rate     = 100;
@@ -3154,9 +3154,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
-    else BOOL_OPTION(tile_force_overlay);
 #endif // USE_TILE_LOCAL
 #ifdef USE_TILE
+    else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else INT_OPTION(tile_runrest_rate, 0, INT_MAX);

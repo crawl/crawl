@@ -74,8 +74,6 @@ bool TilesFramework::initialise()
 
     cgotoxy(1, 1, GOTO_CRT);
 
-    resize();
-
     return (true);
 }
 
@@ -345,7 +343,7 @@ static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
         fprintf(stdout, "clear_tile_cache();");
         screen_cell_t *cell = (screen_cell_t *) vbuf;
         for (int y = 0; y < h; y++)
-            for (int x = 0; x < h; x++)
+            for (int x = 0; x < w; x++)
             {
                 cell->tile.clear();
                 cell++;
@@ -416,9 +414,21 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 void TilesFramework::resize()
 {
-    m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
+    // Width of status area in characters.
+    static const int stat_width = 42;
+    crawl_view.hudsz.x = stat_width;
+    crawl_view.msgsz.y = Options.msg_min_height;
     m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
+
+    // Send the client the necessary data to do the layout
+    fprintf(stdout, "layout({view_max_width:%u,view_max_height:%u,\
+force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u});\n",
+            Options.view_max_width, Options.view_max_height,
+            Options.tile_force_overlay, ENV_SHOW_DIAMETER,
+            Options.msg_min_height, stat_width);
+
+    // Now wait for the response
+    getch_ck();
 }
 
 int TilesFramework::getch_ck()
@@ -442,7 +452,66 @@ int TilesFramework::getch_ck()
     }
     else if (key == '^')
     {
-        // Control messages. Currently nothing.
+        // Control messages
+        // TODO: This would be much nicer if we just sent messages in JSON
+        int msg = getchar();
+        int num = 0;
+        if (msg == 'w' || msg == 'h' || msg == 's'
+            || msg == 'W' || msg == 'H' || msg == 'm')
+        {
+            // Read the number
+            char data[10];
+            fgets(data, 10, stdin);
+            num = atoi(data);
+        }
+        switch (msg)
+        {
+        case 'w': // Set width of the dungeon view
+            if (num <= 0) num = 1;
+            if (num > 400) num = 400;
+            crawl_view.viewsz.x = num;
+            crawl_view.init_view();
+            break;
+        case 'h': // Set height of the dungeon view
+            if (num <= 0) num = 1;
+            if (num > 400) num = 400;
+            crawl_view.viewsz.y = num;
+            crawl_view.init_view();
+            break;
+        case 's': // Set height of the stats area
+            if (num <= 0) num = 1;
+            if (num > 400) num = 400;
+            crawl_view.hudsz.y = num;
+            m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
+            break;
+        case 'W': // Set width of CRT
+            if (num <= 0) num = 1;
+            if (num > 400) num = 400;
+            crawl_view.termsz.x = num;
+            m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
+            break;
+        case 'H': // Set height of CRT
+            if (num <= 0) num = 1;
+            if (num > 400) num = 400;
+            crawl_view.termsz.y = num;
+            m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
+            break;
+        case 'm': // Set width of the message view
+            if (num <= 0) num = 1;
+            if (num > 400) num = 400;
+            crawl_view.msgsz.x = num;
+            m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
+            break;
+        case 'r': // Redraw everything
+            m_text_crt.clear();
+            m_text_stat.clear();
+            m_text_message.clear();
+            m_current_view.clear();
+            redraw_screen();
+            break;
+        }
+
+        return getch_ck();
     }
     return key;
 }
@@ -554,7 +623,6 @@ void TilesFramework::redraw()
     }
     else
     {
-        int counter = 0; // Just for statistics
         // Find differences
 
         // Shift the view, so we need to send less cells
@@ -572,8 +640,7 @@ void TilesFramework::redraw()
             {
                 coord_def cgc(x + cx_to_gx, y + cy_to_gy);
 
-                if (_send_cell(x, y, cell, old_cell, cgc))
-                    counter++;
+                _send_cell(x, y, cell, old_cell, cgc);
 
                 cell++;
                 old_cell++;
