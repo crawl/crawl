@@ -34,6 +34,8 @@
 
 #include <sys/time.h>
 
+
+
 static unsigned int get_milliseconds()
 {
     // This is Unix-only, but so is Webtiles at the moment.
@@ -60,7 +62,6 @@ void TilesFramework::shutdown()
 
 void TilesFramework::draw_doll_edit()
 {
-    fprintf(stderr, "draw_doll_edit()\n");
 }
 
 bool TilesFramework::initialise()
@@ -554,7 +555,6 @@ void TilesFramework::redraw()
         // Shift the view, so we need to send less cells
         coord_def shift = m_next_gc - m_current_gc;
         m_current_gc = m_next_gc;
-        fprintf(stderr, "Shift: %d/%d\n", shift.x, shift.y);
         if ((shift.x != 0) || (shift.y != 0))
         {
             _shift_view_buffer(m_current_view, shift);
@@ -574,9 +574,6 @@ void TilesFramework::redraw()
                 old_cell++;
             }
 
-        fprintf(stderr, "Sent: %d/%d\n", counter,
-                m_next_view.size().y * m_next_view.size().x);
-
         fprintf(stdout, "\n"); // This sends the message to the client
         fflush(stdout);
     }
@@ -591,7 +588,6 @@ void TilesFramework::update_minimap(const coord_def& gc)
 
 void TilesFramework::clear_minimap()
 {
-    fprintf(stderr, "clear_minimap()\n");
 }
 
 void TilesFramework::update_minimap_bounds()
@@ -600,12 +596,10 @@ void TilesFramework::update_minimap_bounds()
 
 void TilesFramework::update_tabs()
 {
-    fprintf(stderr, "update_tabs()\n");
 }
 
 void TilesFramework::toggle_inventory_display()
 {
-    fprintf(stderr, "toggle_inventory_display()\n");
 }
 
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
@@ -680,7 +674,6 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
     // overlays must be from the main image and must be in LOS.
     if (!crawl_view.in_los_bounds_g(gc))
     {
-        fprintf(stderr, "out of los\n");
         return;
     }
 
@@ -725,7 +718,6 @@ int TilesFramework::to_lines(int num_tiles)
 
 void TilesFramework::layout_statcol()
 {
-    fprintf(stderr, "layout_statcol()\n");
 }
 
 void TilesFramework::textcolor(int col)
