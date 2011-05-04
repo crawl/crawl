@@ -1220,9 +1220,9 @@ TAGS:  extra mini_float luniq_mini
 DEPTH: D:2-23
 KFEAT: S = shaft trap
 MAP
-ccccc
-..S%c
-ccccc
+xxxxx
+..S%x
+xxxxx
 ENDMAP
 
 NAME:  minmay_statues_item
