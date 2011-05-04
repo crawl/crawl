@@ -24,20 +24,21 @@ class TornadoFilter(logging.Filter):
         return True
 logging.getLogger().addFilter(TornadoFilter())
 
-def user_passwd_match(username, passwd):
+def user_passwd_match(username, passwd): # Returns the correctly cased username.
     crypted_pw = crypt.crypt(passwd, passwd)
 
     conn = sqlite3.connect(password_db)
     c = conn.cursor()
-    c.execute("select password from dglusers where username=?", (username,))
+    c.execute("select username,password from dglusers where username=? collate nocase",
+              (username,))
     result = c.fetchone()
     c.close()
     conn.close()
 
-    if result is None:
-        return False
+    if result is None or crypted_pw != result[1]:
+        return None
     else:
-        return crypted_pw == result[0]
+        return result[0]
 
 current_connections = 0
 sockets = set() # Sockets running crawl processes
@@ -156,10 +157,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             else:
                 message = message[len(login_start):]
                 username, _, password = message.partition(' ')
-                if user_passwd_match(username, password):
+                real_username = user_passwd_match(username, password)
+                if real_username:
                     logging.info("User %s logged in from ip %s.",
                                  username, self.request.remote_ip)
-                    self.username = username
+                    self.username = real_username
                     self.start_crawl()
                 else:
                     logging.warn("Failed login for user %s from ip %s.",
