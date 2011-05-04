@@ -67,7 +67,7 @@ void TilesFramework::draw_doll_edit()
 bool TilesFramework::initialise()
 {
     std::string title = CRAWL " " + Version::Long();
-    fprintf(stdout, "document.title = \"%s\";", title.c_str());
+    fprintf(stdout, "document.title = \"%s\";\n", title.c_str());
 
     // Do our initialization here.
     m_active_layer = LAYER_CRT;
@@ -216,6 +216,11 @@ bool _send_cell(int x, int y,
     bool fg_changed = false;
 
     fprintf(stdout, "c(%d,%d,{", x, y);
+
+    if (old_cell.bg == 0)
+    {
+        fprintf(stdout, "c:1,"); // Clears the cell on the client side
+    }
 
     if (cell.fg != old_cell.fg)
     {
