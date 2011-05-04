@@ -112,7 +112,6 @@ public:
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
-    void layout_statcol();
     void clrscr();
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
@@ -123,8 +122,8 @@ public:
     void update_minimap(const coord_def &gc);
     void clear_minimap();
     void update_minimap_bounds();
-    void toggle_inventory_display();
     void update_tabs();
+    void layout_statcol();
 
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
@@ -136,8 +135,6 @@ public:
                       const coord_def &gc);
     void add_text_tag(text_tag_type type, const monster* mon);
 
-//    bool initialise_items(); // XXX: Where is this even implemented?
-
     const coord_def &get_cursor() const;
 
     void add_overlay(const coord_def &gc, tileidx_t idx);
@@ -145,8 +142,12 @@ public:
 
     void draw_doll_edit();
 
+    int to_lines(int num_tiles);
+
 #ifdef USE_TILE_LOCAL
     void calculate_default_options(); // XXX: I don't know why this is public
+
+    void toggle_inventory_display(); // XXX: This doesn't seem to ever be called
 
     void draw_title();
     void update_title_msg(std::string load_msg);
@@ -160,8 +161,6 @@ public:
 
     bool is_fullscreen() { return m_fullscreen; }
 #endif
-
-    int to_lines(int num_tiles);
 
 #ifdef USE_TILE_WEB
     void textcolor(int col);

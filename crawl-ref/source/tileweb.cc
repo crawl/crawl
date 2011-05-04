@@ -598,10 +598,6 @@ void TilesFramework::update_tabs()
 {
 }
 
-void TilesFramework::toggle_inventory_display()
-{
-}
-
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 {
     // This is mainly copied from DungeonRegion::place_cursor.
