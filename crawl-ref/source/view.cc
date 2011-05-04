@@ -61,6 +61,7 @@
 #include "tilemcache.h"
 #include "tilesdl.h"
 #include "travel.h"
+#include "viewmap.h"
 #include "xom.h"
 
 #ifdef USE_TILE
@@ -535,6 +536,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 env.map_knowledge(*ri).set_feature(grd(*ri));
             else if (!env.map_knowledge(*ri).feat())
                 env.map_knowledge(*ri).set_feature(magic_map_base_feat(grd(*ri)));
+	    if (emphasise(*ri))
+	        env.map_knowledge(*ri).flags |= MAP_EMPHASIZE;
 
             if (wizard_map)
             {
