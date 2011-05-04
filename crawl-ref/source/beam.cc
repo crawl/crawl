@@ -4622,7 +4622,7 @@ bool enchant_monster_invisible(monster* mon, const std::string how)
                  is_visible ? " for a moment."
                             : "!");
 
-            if (!is_visible)
+            if (!is_visible && !mons_is_safe(mon))
                 autotoggle_autopickup(true);
         }
 
