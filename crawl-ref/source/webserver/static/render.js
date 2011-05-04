@@ -39,7 +39,7 @@ function unmark_all()
 function c(x, y, cell)
 {
     var old_cell = get_tile_cache(x, y);
-    if (!old_cell)
+    if (!old_cell || cell.c)
     {
         set_tile_cache(x, y, cell);
     }
