@@ -251,7 +251,7 @@ static tileidx_t _random_trousers()
                  + static_cast<int>(you.char_class) * 8719;
     const char *name = you.your_name.c_str();
     for (int i = 0; i < 8 && *name; ++i, ++name)
-        offset += name[i] * 4643;
+        offset += *name * 4643;
 
     const int range = TILEP_LEG_LAST_NORM - TILEP_LEG_FIRST_NORM + 1;
     return (TILEP_LEG_FIRST_NORM + offset % range);
