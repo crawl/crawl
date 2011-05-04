@@ -222,6 +222,11 @@ function login_failed()
     start_login();
 }
 
+function ping()
+{
+    socket.send("Pong");
+}
+
 var received_close_message = false;
 
 function connection_closed(msg)
