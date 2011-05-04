@@ -124,12 +124,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.ioloop.stop()
 
     def on_message(self, message):
-        if message.startswith("Login: "):
+        login_start = "Login: "
+        if message.startswith(login_start):
             parts = message.split()
             if len(parts) != 3:
                 self.write_message("login_failed();")
             else:
-                _, username, password = message.split()
+                message = message[len(login_start):]
+                username, _, password = message.partition(' ')
                 if user_passwd_match(username, password):
                     logging.info("User %s logged in from ip %s.",
                                  username, self.request.remote_ip)
