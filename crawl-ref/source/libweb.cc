@@ -103,7 +103,6 @@ void textbackground(int bg)
 
 void set_cursor_enabled(bool enabled)
 {
-    fprintf(stderr, "set_cursor_enabled(%d);\n", enabled);
     //    if (enabled)
     //        TextRegion::_setcursortype(1);
     //    else

@@ -194,7 +194,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             if not (s.isspace() or s == ""):
-                logging.debug("%s: %s", self.username, s)
+                logging.info("ERR: %s from %s: %s",
+                             self.username, self.request.remote_ip, s)
 
             self.poll_crawl()
 
