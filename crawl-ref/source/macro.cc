@@ -1028,7 +1028,7 @@ static void _read_macros_from(const char* filename)
         s = f.get_line();
         trim_string(s);  // remove white space from ends
 
-        if (s[0] == '#')
+        if (s.empty() || s[0] == '#')
             continue;    // skip comments
         else if (s.substr(0, 2) == "K:")
         {
