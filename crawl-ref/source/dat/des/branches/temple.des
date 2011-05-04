@@ -2842,6 +2842,7 @@ ENDMAP
 # 15 gods
 NAME:       temple_of_Zot
 PLACE:      Temple
+WEIGHT:     1
 ORIENT:     encompass
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
