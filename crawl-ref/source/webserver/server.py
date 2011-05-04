@@ -12,6 +12,7 @@ import sqlite3
 import logging
 import sys
 import signal
+import time
 
 from config import *
 
@@ -57,6 +58,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
         self.p = None
+        self.timeout = None
+
         global current_id
         self.id = current_id
         current_id += 1
@@ -75,12 +78,33 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         global current_connections
         current_connections += 1
 
+        self.reset_timeout()
+
         if max_connections < current_connections:
             self.write_message("$('#crt').html('The maximum number of connections has been"
                                + " reached, sorry :('); $('#login').hide();");
             self.close()
         elif shutting_down:
             self.close()
+
+    def reset_timeout(self):
+        if self.timeout:
+            self.ioloop.remove_timeout(self.timeout)
+
+        self.received_pong = False
+        self.write_message("ping();")
+        self.timeout = self.ioloop.add_timeout(time.time() + connection_timeout,
+                                               self.check_connection)
+
+    def check_connection(self):
+        self.timeout = None
+
+        if not self.received_pong:
+            logging.info("Connection to remote ip %s timed out.", self.request.remote_ip)
+            self.close()
+
+        if not self.client_terminated:
+            self.reset_timeout()
 
     def start_crawl(self):
         sockets.add(self)
@@ -141,6 +165,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     logging.warn("Failed login for user %s from ip %s.",
                                  username, self.request.remote_ip)
                     self.write_message("login_failed();")
+        elif message == "Pong":
+            self.received_pong = True
         elif self.p is not None:
             logging.debug("Message: %s (user: %s)", message, self.username)
             self.poll_crawl()
@@ -150,8 +176,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def on_close(self):
         global current_connections
         current_connections -= 1
+
         if self.p is not None and self.p.poll() is None:
             self.p.send_signal(subprocess.signal.SIGHUP)
+
+        self.ioloop.remove_timeout(self.timeout)
+
         logging.info("Socket for ip %s closed.", self.request.remote_ip)
 
     def on_stderr(self, fd, events):

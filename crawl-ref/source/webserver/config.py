@@ -29,3 +29,5 @@ ssl_options = {
 }
 ssl_address = ""
 ssl_port = 8081
+
+connection_timeout = 600
