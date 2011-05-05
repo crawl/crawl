@@ -504,6 +504,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
             else
                 mpr("You extend your transformation's duration.");
             you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100);
+            transformation_expiration_warning();
 
             return (true);
         }
