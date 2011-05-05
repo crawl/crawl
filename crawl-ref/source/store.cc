@@ -715,26 +715,26 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
                                          vec_size _max_size)
 {
 #ifdef DEBUG
-    CrawlVector* old_vector = static_cast<CrawlVector*>(val.ptr);
+    CrawlVector* old_vec = static_cast<CrawlVector*>(val.ptr);
 
     ASSERT(flags & SFLAG_UNSET);
     ASSERT(type == SV_NONE
            || (type == SV_VEC
-               && old_vector->size() == 0
-               && old_vector->get_type() == SV_NONE
-               && old_vector->get_default_flags() == 0
-               && old_vector->get_max_size() == VEC_MAX_SIZE));
+               && old_vec->size() == 0
+               && old_vec->get_type() == SV_NONE
+               && old_vec->get_default_flags() == 0
+               && old_vec->get_max_size() == VEC_MAX_SIZE));
 #endif
 
-    CrawlVector &vector = get_vector();
+    CrawlVector &vec = get_vector();
 
-    vector.default_flags = _flags;
-    vector.type          = _type;
+    vec.default_flags = _flags;
+    vec.type          = _type;
 
     type   =  SV_VEC;
     flags &= ~SFLAG_UNSET;
 
-    return vector;
+    return vec;
 }
 
 ///////////////////////////////////////////
@@ -1592,7 +1592,7 @@ void CrawlVector::write(writer &th) const
 
     for (vec_size i = 0; i < size(); i++)
     {
-        CrawlStoreValue val = vector[i];
+        CrawlStoreValue val = vec[i];
        val.write(th);
     }
 
@@ -1619,10 +1619,10 @@ void CrawlVector::read(reader &th)
 
     ASSERT(_size <= max_size);
 
-    vector.resize(_size);
+    vec.resize(_size);
 
     for (vec_size i = 0; i < _size; i++)
-        vector[i].read(th);
+        vec[i].read(th);
 
     assert_validity();
 }
@@ -1670,7 +1670,7 @@ void CrawlVector::assert_validity() const
 
     for (vec_size i = 0, _size = size(); i < _size; i++)
     {
-        const CrawlStoreValue &val = vector[i];
+        const CrawlStoreValue &val = vec[i];
 
         if (type != SV_NONE)
             ASSERT(val.type == SV_NONE || val.type == type);
@@ -1726,7 +1726,7 @@ void CrawlVector::set_max_size(vec_size _size)
     ASSERT(max_size == VEC_MAX_SIZE || max_size < _size);
     max_size = _size;
 
-    vector.reserve(max_size);
+    vec.reserve(max_size);
 }
 
 vec_size CrawlVector::get_max_size() const
@@ -1742,9 +1742,9 @@ CrawlStoreValue& CrawlVector::get_value(const vec_size &index)
     assert_validity();
 
     ASSERT(index <= max_size);
-    ASSERT(index <= vector.size());
+    ASSERT(index <= vec.size());
 
-    return vector[index];
+    return vec[index];
 }
 
 const CrawlStoreValue& CrawlVector::get_value(const vec_size &index) const
@@ -1752,9 +1752,9 @@ const CrawlStoreValue& CrawlVector::get_value(const vec_size &index) const
     assert_validity();
 
     ASSERT(index <= max_size);
-    ASSERT(index <= vector.size());
+    ASSERT(index <= vec.size());
 
-    return vector[index];
+    return vec[index];
 }
 
 CrawlStoreValue& CrawlVector::operator[] (const vec_size &index)
@@ -1771,21 +1771,21 @@ const CrawlStoreValue& CrawlVector::operator[] (const vec_size &index) const
 // std::vector style interface
 vec_size CrawlVector::size() const
 {
-    return vector.size();
+    return vec.size();
 }
 
 bool CrawlVector::empty() const
 {
-    return vector.empty();
+    return vec.empty();
 }
 
 CrawlStoreValue& CrawlVector::pop_back()
 {
     assert_validity();
-    ASSERT(vector.size() > 0);
+    ASSERT(vec.size() > 0);
 
-    CrawlStoreValue& val = vector[vector.size() - 1];
-    vector.pop_back();
+    CrawlStoreValue& val = vec[vec.size() - 1];
+    vec.pop_back();
     return val;
 }
 
@@ -1833,7 +1833,7 @@ void CrawlVector::push_back(CrawlStoreValue val)
 #endif
 
     assert_validity();
-    ASSERT(vector.size() < max_size);
+    ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
            || (val.type == type));
@@ -1843,14 +1843,14 @@ void CrawlVector::push_back(CrawlStoreValue val)
         val.type   = type;
         val.flags |= SFLAG_CONST_TYPE;
     }
-    vector.push_back(val);
+    vec.push_back(val);
     assert_validity();
 }
 
 void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
 {
     assert_validity();
-    ASSERT(vector.size() < max_size);
+    ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
            || (val.type == type));
@@ -1860,7 +1860,7 @@ void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
         val.type   = type;
         val.flags |= SFLAG_CONST_TYPE;
     }
-    vector.insert(vector.begin() + index, val);
+    vec.insert(vec.begin() + index, val);
 }
 
 void CrawlVector::resize(const vec_size _size)
@@ -1870,12 +1870,12 @@ void CrawlVector::resize(const vec_size _size)
     ASSERT(_size < max_size);
 
     vec_size old_size = size();
-    vector.resize(_size);
+    vec.resize(_size);
 
     for (vec_size i = old_size; i < _size; i++)
     {
-        vector[i].flags = SFLAG_UNSET | default_flags;
-        vector[i].type  = SV_NONE;
+        vec[i].flags = SFLAG_UNSET | default_flags;
+        vec[i].type  = SV_NONE;
     }
 }
 
@@ -1883,9 +1883,9 @@ void CrawlVector::erase(const vec_size index)
 {
     assert_validity();
     ASSERT(index <= max_size);
-    ASSERT(index <= vector.size());
+    ASSERT(index <= vec.size());
 
-    vector.erase(vector.begin() + index);
+    vec.erase(vec.begin() + index);
 }
 
 void CrawlVector::clear()
@@ -1894,9 +1894,9 @@ void CrawlVector::clear()
     ASSERT(!(default_flags & SFLAG_NO_ERASE));
 
     for (vec_size i = 0, _size = size(); i < _size; i++)
-        ASSERT(!(vector[i].flags & SFLAG_NO_ERASE));
+        ASSERT(!(vec[i].flags & SFLAG_NO_ERASE));
 
-    vector.clear();
+    vec.clear();
     default_flags = 0;
     type          = SV_NONE;
 }
@@ -1904,23 +1904,23 @@ void CrawlVector::clear()
 CrawlVector::iterator CrawlVector::begin()
 {
     assert_validity();
-    return vector.begin();
+    return vec.begin();
 }
 
 CrawlVector::iterator CrawlVector::end()
 {
     assert_validity();
-    return vector.end();
+    return vec.end();
 }
 
 CrawlVector::const_iterator CrawlVector::begin() const
 {
     assert_validity();
-    return vector.begin();
+    return vec.begin();
 }
 
 CrawlVector::const_iterator CrawlVector::end() const
 {
     assert_validity();
-    return vector.end();
+    return vec.end();
 }
