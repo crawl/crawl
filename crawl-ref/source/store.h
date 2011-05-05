@@ -337,7 +337,7 @@ protected:
     store_val_type type;
     store_flags    default_flags;
     vec_size       max_size;
-    vector_type    vector;
+    vector_type    vec;
 
     friend class CrawlStoreValue;
 

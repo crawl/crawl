@@ -2130,17 +2130,17 @@ void cheibriados_make_item_ponderous(item_def &item)
 }
 
 template<typename Z>
-static inline void artefact_pad_store_vector(CrawlVector &vector, Z value)
+static inline void artefact_pad_store_vector(CrawlVector &vec, Z value)
 {
-    if (vector.get_max_size() < ART_PROPERTIES)
+    if (vec.get_max_size() < ART_PROPERTIES)
     {
         // Authentic tribal dance to propitiate the asserts in store.cc:
-        const int old_size = vector.get_max_size();
-        vector.set_max_size(VEC_MAX_SIZE);
-        vector.resize(ART_PROPERTIES);
-        vector.set_max_size(ART_PROPERTIES);
+        const int old_size = vec.get_max_size();
+        vec.set_max_size(VEC_MAX_SIZE);
+        vec.resize(ART_PROPERTIES);
+        vec.set_max_size(ART_PROPERTIES);
         for (int i = old_size; i < ART_PROPERTIES; ++i)
-            vector[i] = value;
+            vec[i] = value;
     }
 }
 
