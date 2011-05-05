@@ -241,7 +241,7 @@ function handle_keydown(e)
 {
     if (logging_in) return;
 
-    if (e.ctrlKey)
+    if (e.ctrlKey && !e.shiftKey && !e.altKey)
     {
         if ($.inArray(String.fromCharCode(e.which), captured_control_keys) == -1)
             return;
@@ -250,9 +250,8 @@ function handle_keydown(e)
         var code = e.which - "A".charCodeAt(0) + 1; // Compare the CONTROL macro in defines.h
         socket.send("\\" + code + "\n");
     }
-    else
+    else if (!e.ctrlKey && !e.shiftKey && !e.altKey)
     {
-        // TODO: Shift and Ctrl?
         if (e.which in key_conversion)
         {
             e.preventDefault();
