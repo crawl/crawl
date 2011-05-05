@@ -71,6 +71,7 @@ bool TilesFramework::initialise()
 
     // Do our initialization here.
     m_active_layer = LAYER_CRT;
+    fprintf(stdout, "set_layer('crt');");
 
     cgotoxy(1, 1, GOTO_CRT);
 

@@ -64,6 +64,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.p = None
         self.timeout = None
         self.last_action_time = time.time()
+        self.watched_game = None
+        self.watchers = set()
 
         global current_id
         self.id = current_id
@@ -103,7 +105,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return self.p is not None
 
     def is_in_lobby(self):
-        return not self.is_running()
+        return not self.is_running() and self.watched_game is None
 
     def update_lobby(self):
         running_games = [game for game in sockets if game.is_running()]
@@ -157,6 +159,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         update_all_lobbys()
 
+    def add_watcher(self, watcher):
+        self.watchers.add(watcher)
+        self.p.stdin.write("^r") # Redraw
+
+    def remove_watcher(self, watcher):
+        self.watchers.remove(watcher)
+
+    def stop_watching(self):
+        if self.watched_game:
+            self.watched_game.remove_watcher(self)
+            self.watched_game = None
+            self.write_message("set_watching(false);")
+            self.write_message("set_layer('lobby');")
+            self.update_lobby();
+
     def shutdown(self, msg):
         if not self.client_terminated:
             self.write_message("connection_closed(" +
@@ -184,6 +201,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.write_message("set_layer('lobby');")
                     self.update_lobby()
 
+            update_all_lobbys()
+
+            for watcher in list(self.watchers):
+                watcher.stop_watching()
+
             if shutting_down and len(sockets) == 0:
                 # The last crawl process has ended, now we can go
                 self.ioloop.stop()
@@ -209,7 +231,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.write_message("login_failed();")
 
         elif message.startswith("Play: "):
-            _, _, game_id = message.partition(' ')
+            game_id = message[len("Play: "):]
             self.start_crawl(game_id)
 
         elif message == "Pong":
@@ -217,6 +239,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         elif message == "UpdateLobby":
             self.update_lobby()
+
+        elif message.startswith("Watch: "):
+            watch_username = message[len("Watch: "):]
+            socket = find_user_socket(watch_username)
+            if socket:
+                logging.info("User %s (ip: %s) started watching %s.",
+                             self.username, self.request.remote_ip, socket.username)
+                self.watched_game = socket
+                socket.add_watcher(self)
+                self.write_message("set_watching(true);")
+            else:
+                self.write_message("set_layer('lobby');")
+
+        elif message == "StopWatching":
+            self.stop_watching()
 
         elif self.p is not None:
             logging.debug("Message: %s (user: %s)", message, self.username)
@@ -233,6 +270,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.ioloop.stop()
         else:
             self.p.send_signal(subprocess.signal.SIGHUP)
+
+        if self.watched_game:
+            self.watched_game.remove_watcher(self)
 
         self.ioloop.remove_timeout(self.timeout)
 
@@ -263,12 +303,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             self.write_message(msg)
+            for watcher in self.watchers:
+                watcher.write_message(msg)
             self.poll_crawl()
 
 def update_all_lobbys():
     for socket in list(sockets):
         if socket.is_in_lobby():
             socket.update_lobby()
+
+def find_user_socket(username):
+    for socket in list(sockets):
+        if socket.username and socket.username.lower() == username.lower():
+            return socket
+
+    return None
 
 def shutdown(msg = "The server is shutting down. Your game has been saved."):
     global shutting_down

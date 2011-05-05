@@ -14,6 +14,8 @@ var message_queue = [];
 
 var logging_in = false;
 
+var received_close_message = false;
+
 function log(text)
 {
     if (window.console && window.console.log)
@@ -110,7 +112,8 @@ var layers = ["crt", "normal", "lobby"]
 
 function set_layer(layer)
 {
-    log("Setting layer: " + layer);
+    if (received_close_message) return;
+
     $.each(layers, function (i, l)
            {
                if (l == layer)
@@ -120,7 +123,7 @@ function set_layer(layer)
            });
     current_layer = layer;
 
-    set_lobby_update(layer == "lobby");
+    lobby(layer == "lobby");
 }
 
 function get_img(id)
@@ -248,7 +251,11 @@ function handle_keydown(e)
     }
     else if (!e.ctrlKey && !e.shiftKey && !e.altKey)
     {
-        if (e.which in key_conversion)
+        if (e.which == 27 && watching)
+        {
+            location.hash = "#lobby";
+        }
+        else if (e.which in key_conversion)
         {
             e.preventDefault();
             socket.send("\\" + key_conversion[e.which] + "\n");
@@ -288,8 +295,6 @@ function ping()
     socket.send("Pong");
 }
 
-var received_close_message = false;
-
 function connection_closed(msg)
 {
     set_layer("crt");
@@ -309,8 +314,10 @@ function play_now(id)
 
 var lobby_update_timeout = undefined;
 var lobby_update_rate = 30000;
-function set_lobby_update(enable)
+function lobby(enable)
 {
+    if (enable) location.hash = "#lobby";
+
     if (enable && lobby_update_timeout == undefined)
     {
         lobby_update_timeout = setInterval(lobby_update, lobby_update_rate);
@@ -323,6 +330,29 @@ function set_lobby_update(enable)
 function lobby_update()
 {
     socket.send("UpdateLobby");
+}
+
+var watching = false;
+function set_watching(val)
+{
+    watching = val;
+}
+
+function hash_changed()
+{
+    var watch = location.hash.match(/^#watch-(.+)/i);
+    log(watch);
+    if (watch)
+    {
+        var watch_user = watch[1];
+        log(watch_user);
+        socket.send("Watch: " + watch_user);
+    }
+    else if (location.hash.match(/^#lobby$/i))
+    {
+        if (watching)
+            socket.send("StopWatching");
+    }
 }
 
 $(document).ready(
@@ -345,7 +375,13 @@ $(document).ready(
 
             socket.onopen = function()
             {
-                set_layer("lobby");
+                window.onhashchange = hash_changed;
+
+                if (location.hash == "" ||
+                    location.hash.match(/^#lobby$/i))
+                    set_layer("lobby");
+                else
+                    hash_changed();
 
                 start_login();
             };

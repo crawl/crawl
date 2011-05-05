@@ -1,6 +1,9 @@
 <div id="player_list">
   <table>
-    <caption>Games currently running: <a href="javascript:lobby_update()">(Refresh)</a></caption>
+    <caption>
+      Games currently running:
+      <a href="javascript:lobby_update()">(Refresh)</a>
+    </caption>
     <tr>
       <th>User</th>
       <th>Where</th>
@@ -8,7 +11,11 @@
     </tr>
     {% for running_game in running_games %}
     <tr class="running_game">
-      <td>{{ running_game.username }}</td>
+      <td>
+        <a href="#watch-{{ running_game.username }}">
+          {{ running_game.username }}
+        </a>
+      </td>
       <td>{{ running_game.where() }}</td>
       <td>{{ int(running_game.idle_time()) }}s</td>
     </tr>
