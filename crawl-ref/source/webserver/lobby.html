@@ -1,0 +1,17 @@
+<div id="player_list">
+  <table>
+    <caption>Games currently running: <a href="javascript:lobby_update()">(Refresh)</a></caption>
+    <tr>
+      <th>User</th>
+      <th>Where</th>
+      <th>Idle</th>
+    </tr>
+    {% for running_game in running_games %}
+    <tr class="running_game">
+      <td>{{ running_game.username }}</td>
+      <td>{{ running_game.where() }}</td>
+      <td>{{ int(running_game.idle_time()) }}s</td>
+    </tr>
+    {% end %}
+  </table>
+</div>

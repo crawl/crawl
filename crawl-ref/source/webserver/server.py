@@ -5,6 +5,7 @@ import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
+import tornado.escape
 
 import crypt
 import sqlite3
@@ -13,6 +14,7 @@ import logging
 import sys
 import signal
 import time
+import collections
 
 from config import *
 
@@ -40,10 +42,11 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
     else:
         return result[0]
 
-current_connections = 0
-sockets = set() # Sockets running crawl processes
+sockets = set()
 current_id = 0
 shutting_down = False
+
+Game = collections.namedtuple("Game", ["id", "name"])
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -60,6 +63,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.username = None
         self.p = None
         self.timeout = None
+        self.last_action_time = time.time()
 
         global current_id
         self.id = current_id
@@ -74,19 +78,46 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
         logging.info("Socket opened from ip %s.", self.request.remote_ip)
         self.ioloop = tornado.ioloop.IOLoop.instance()
-        self.crawl_terminated = False
 
-        global current_connections
-        current_connections += 1
+        global sockets
+        sockets.add(self)
 
         self.reset_timeout()
 
-        if max_connections < current_connections:
+        if max_connections < len(sockets):
             self.write_message("$('#crt').html('The maximum number of connections has been"
                                + " reached, sorry :('); $('#login').hide();");
             self.close()
         elif shutting_down:
             self.close()
+        else:
+            self.update_lobby()
+
+    def idle_time(self):
+        return time.time() - self.last_action_time
+
+    def where(self):
+        return "??"
+
+    def is_running(self):
+        return self.p is not None
+
+    def is_in_lobby(self):
+        return not self.is_running()
+
+    def update_lobby(self):
+        running_games = [game for game in sockets if game.is_running()]
+        lobby_html = self.render_string("lobby.html", running_games = running_games)
+        self.write_message("$('#lobby_body').html(" +
+                           tornado.escape.json_encode(lobby_html) + ");")
+
+    def send_game_links(self):
+        game_choices = [
+            Game("crawl-0.8", "DCSS 0.8")
+        ]
+        play_html = self.render_string("game_links.html", game_choices = game_choices)
+        self.write_message("$('#play_now').html(" +
+                           tornado.escape.json_encode(play_html) + ");")
 
     def reset_timeout(self):
         if self.timeout:
@@ -107,8 +138,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not self.client_terminated:
             self.reset_timeout()
 
-    def start_crawl(self):
-        sockets.add(self)
+    def start_crawl(self, game_id):
+        if self.username == None: return
+
         self.p = subprocess.Popen([crawl_binary,
                                    "-name", self.username,
                                    "-rc", os.path.join(rcfile_path, self.username + ".rc"),
@@ -123,63 +155,83 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
                                 self.ioloop.READ | self.ioloop.ERROR)
 
+        update_all_lobbys()
+
     def shutdown(self, msg):
         if not self.client_terminated:
-            self.write_message("connection_closed('" + msg + "');");
+            self.write_message("connection_closed(" +
+                               tornado.escape.json_encode(msg) + ");");
             self.close()
-        if not self.crawl_terminated:
+        if self.p is not None:
             self.p.send_signal(subprocess.signal.SIGHUP)
 
-    def close_pipes(self):
-        if self.p is not None:
+    def poll_crawl(self):
+        if self.p is not None and self.p.poll() is not None:
             self.ioloop.remove_handler(self.p.stdout.fileno())
             self.ioloop.remove_handler(self.p.stderr.fileno())
             self.p.stdout.close()
             self.p.stderr.close()
+            self.p = None
 
-    def poll_crawl(self):
-        if not self.crawl_terminated and self.p.poll() is not None:
-            self.crawl_terminated = True
-            self.close_pipes()
-            sockets.remove(self)
-            if not self.client_terminated: self.close()
+            if self.client_terminated:
+                global sockets
+                sockets.remove(self)
+            else:
+                if shutting_down:
+                    self.close()
+                else:
+                    # Go back to lobby
+                    self.write_message("set_layer('lobby');")
+                    self.update_lobby()
 
             if shutting_down and len(sockets) == 0:
                 # The last crawl process has ended, now we can go
                 self.ioloop.stop()
 
     def on_message(self, message):
+        self.last_action_time = time.time()
+
         login_start = "Login: "
         if message.startswith(login_start):
-            parts = message.split()
-            if len(parts) != 3:
-                self.write_message("login_failed();")
+            message = message[len(login_start):]
+            username, _, password = message.partition(' ')
+            real_username = user_passwd_match(username, password)
+            if real_username:
+                logging.info("User %s logged in from ip %s.",
+                             username, self.request.remote_ip)
+                self.username = real_username
+                self.write_message("logged_in(" +
+                                   tornado.escape.json_encode(real_username) + ");")
+                self.send_game_links()
             else:
-                message = message[len(login_start):]
-                username, _, password = message.partition(' ')
-                real_username = user_passwd_match(username, password)
-                if real_username:
-                    logging.info("User %s logged in from ip %s.",
-                                 username, self.request.remote_ip)
-                    self.username = real_username
-                    self.start_crawl()
-                else:
-                    logging.warn("Failed login for user %s from ip %s.",
-                                 username, self.request.remote_ip)
-                    self.write_message("login_failed();")
+                logging.warn("Failed login for user %s from ip %s.",
+                             username, self.request.remote_ip)
+                self.write_message("login_failed();")
+
+        elif message.startswith("Play: "):
+            _, _, game_id = message.partition(' ')
+            self.start_crawl(game_id)
+
         elif message == "Pong":
             self.received_pong = True
+
+        elif message == "UpdateLobby":
+            self.update_lobby()
+
         elif self.p is not None:
             logging.debug("Message: %s (user: %s)", message, self.username)
             self.poll_crawl()
-            if self.crawl_terminated: return
-            self.p.stdin.write(message.encode("utf8"))
+            if self.p is not None:
+                self.p.stdin.write(message.encode("utf8"))
 
     def on_close(self):
-        global current_connections
-        current_connections -= 1
-
-        if self.p is not None and self.p.poll() is None:
+        global sockets
+        if self.p is None:
+            sockets.remove(self)
+            if shutting_down and len(sockets) == 0:
+                # The last socket has been closed, now we can go
+                self.ioloop.stop()
+        else:
             self.p.send_signal(subprocess.signal.SIGHUP)
 
         self.ioloop.remove_timeout(self.timeout)
@@ -192,12 +244,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         elif events & self.ioloop.READ:
             s = self.p.stderr.readline()
 
-            if self.client_terminated or self.crawl_terminated:
+            if self.client_terminated:
                 return
 
             if not (s.isspace() or s == ""):
                 logging.info("ERR: %s from %s: %s",
-                             self.username, self.request.remote_ip, s)
+                             self.username, self.request.remote_ip, s.strip())
 
             self.poll_crawl()
 
@@ -207,11 +259,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         elif events & self.ioloop.READ:
             msg = self.p.stdout.readline()
 
-            if self.client_terminated or self.crawl_terminated:
+            if self.client_terminated:
                 return
 
             self.write_message(msg)
             self.poll_crawl()
+
+def update_all_lobbys():
+    for socket in list(sockets):
+        if socket.is_in_lobby():
+            socket.update_lobby()
 
 def shutdown(msg = "The server is shutting down. Your game has been saved."):
     global shutting_down

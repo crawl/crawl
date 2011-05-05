@@ -4,9 +4,25 @@ body {
     font: 16px monospace;
 }
 
+#login {
+    text-align: right;
+}
+
 #stats {
     display: inline-block;
     vertical-align: top;
+}
+
+#player_list {
+    width: 100%;
+}
+
+#player_list table {
+    width: 100%;
+}
+
+#player_list table th {
+    text-align: left;
 }
 
 .fg0 { color: rgb(  0,   0,   0); }

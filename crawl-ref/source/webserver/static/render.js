@@ -551,12 +551,12 @@ function draw_foreground(x, y, cell)
 // TODO: Handle redrawing of cells above higher-than-32 tiles
 // (e.g. the lernaean hydra leaves a trail of heads)
 
-function draw_tile(idx, cx, cy, img, info_func, ofsx, ofsy, y_max)
+function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
 {
     var x = dungeon_cell_w * cx;
     var y = dungeon_cell_h * cy;
     var info = info_func(idx);
-    var img = get_img(img);
+    var img = get_img(img_name);
     if (!info)
     {
         throw ("Tile not found: " + idx);
