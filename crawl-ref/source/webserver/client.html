@@ -25,7 +25,7 @@
   <body>
     <noscript>Please enable javascript!</noscript>
 
-    <div id="lobby">
+    <div id="lobby" style="display: none;">
       <div id="login">
         <span id="login_message"></span>
         <form action="" id="login_form" onsubmit="return login();">
@@ -44,8 +44,8 @@
     </div>
 
     <div id="game">
-      <div id="crt"></div>
-      <div id="normal">
+      <div id="crt" style="display: none;"></div>
+      <div id="normal" style="display: none;">
         <canvas id="dungeon"></canvas>
         <div id="stats"></div>
         <div id="messages"></div>
