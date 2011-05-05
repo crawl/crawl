@@ -24,22 +24,35 @@
   </head>
   <body>
     <noscript>Please enable javascript!</noscript>
-    <div id="crt"></div>
-    <canvas id="dungeon"></canvas>
-    <div id="stats"></div>
-    <div id="messages"></div>
-    <div id="login" style="display: none;">
-      <span id="login_message">Please enter your username and password.</span>
-      <form action="" id="login_form" onsubmit="return login();">
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username"></input>
-        <br>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password"></input>
-        <br>
-        <input type="submit" name="submit" id="submit" value="Login"></input>
-      </form>
+
+    <div id="lobby">
+      <div id="login">
+        <span id="login_message"></span>
+        <form action="" id="login_form" onsubmit="return login();">
+          <label for="username">User:</label>
+          <input type="text" name="username" id="username"></input>
+          <label for="password">Pass:</label>
+          <input type="password" name="password" id="password"></input>
+          <input type="submit" name="submit" id="submit" value="Login"></input>
+        </form>
+
+      </div>
+
+      <div id="play_now"></div>
+
+      <div id="lobby_body"></div>
     </div>
+
+    <div id="game">
+      <div id="crt"></div>
+      <div id="normal">
+        <canvas id="dungeon"></canvas>
+        <div id="stats"></div>
+        <div id="messages"></div>
+      </div>
+    </div>
+
+    <!-- Tile images -->
     <div style="display: none;">
       <img id="floor" src="/static/floor.png">
       <img id="wall" src="/static/wall.png">

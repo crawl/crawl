@@ -106,25 +106,21 @@ function send_layout(layout)
     socket.send(msg);
 }
 
+var layers = ["crt", "normal", "lobby"]
+
 function set_layer(layer)
 {
     log("Setting layer: " + layer);
-    if (layer == "crt")
-    {
-        $("#crt").show();
-        $("#dungeon").hide();
-        $("#stats").hide();
-        $("#messages").hide();
-    }
-    else if (layer == "normal")
-    {
-        $("#crt").hide();
-        $("#dungeon").show();
-        // jQuery should restore display correctly -- but doesn't
-        $("#stats").css("display", "inline-block");
-        $("#messages").show();
-    }
+    $.each(layers, function (i, l)
+           {
+               if (l == layer)
+                   $("#" + l).show();
+               else
+                   $("#" + l).hide();
+           });
     current_layer = layer;
+
+    set_lobby_update(layer == "lobby");
 }
 
 function get_img(id)
@@ -214,7 +210,7 @@ function shift(cx, cy)
 
 function handle_keypress(e)
 {
-    if (logging_in) return;
+    if (current_layer == "lobby") return;
 
     if (e.ctrlKey || e.altKey)
     {
@@ -239,7 +235,7 @@ function handle_keypress(e)
 
 function handle_keydown(e)
 {
-    if (logging_in) return;
+    if (current_layer == "lobby") return;
 
     if (e.ctrlKey && !e.shiftKey && !e.altKey)
     {
@@ -264,15 +260,12 @@ function handle_keydown(e)
 
 function start_login()
 {
-    logging_in = true;
-    $("#login").show();
     $("#username").focus();
 }
-
 function login()
 {
-    logging_in = false;
-    $("#login").hide();
+    $("#login_form").hide();
+    $("#login_message").html("Logging in...");
     var username = $("#username").val();
     var password = $("#password").val();
     socket.send("Login: " + username + " " + password);
@@ -282,7 +275,12 @@ function login()
 function login_failed()
 {
     $("#login_message").html("Login failed.");
-    start_login();
+    $("#login_form").show();
+}
+
+function logged_in(username)
+{
+    $("#login_message").html("Logged in as " + username);
 }
 
 function ping()
@@ -304,11 +302,32 @@ function request_redraw()
     socket.send("^r");
 }
 
+function play_now(id)
+{
+    socket.send("Play: " + id);
+}
+
+var lobby_update_timeout = undefined;
+var lobby_update_rate = 30000;
+function set_lobby_update(enable)
+{
+    if (enable && lobby_update_timeout == undefined)
+    {
+        lobby_update_timeout = setInterval(lobby_update, lobby_update_rate);
+    }
+    else if (!enable && lobby_update_timeout != undefined)
+    {
+        clearInterval(lobby_update_timeout);
+    }
+}
+function lobby_update()
+{
+    socket.send("UpdateLobby");
+}
+
 $(document).ready(
     function()
     {
-        set_layer("crt");
-
         // Key handler
         $(document).bind('keypress.client', handle_keypress);
         $(document).bind('keydown.client', handle_keydown);
@@ -326,6 +345,8 @@ $(document).ready(
 
             socket.onopen = function()
             {
+                set_layer("lobby");
+
                 start_login();
             };
 
@@ -359,13 +380,13 @@ $(document).ready(
                 if (!received_close_message)
                 {
                     set_layer("crt");
-                    $("#crt").html("Websocket connection was closed. Reloading shortly...");
+                    $("#crt").html("The Websocket connection was closed. Reload to try again.");
                 }
-                setTimeout("window.location.reload()", 3000);
             };
         }
         else
         {
+            set_layer("crt");
             $("#crt").html("Sadly, your browser does not support WebSockets. ");
             if ($.browser.mozilla)
             {
