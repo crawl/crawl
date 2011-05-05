@@ -3994,6 +3994,10 @@ bool runrest::run_should_stop() const
     if (mon && !fedhas_passthrough(tcell.monsterinfo()))
         return (true);
 
+    for (adjacent_iterator ai(targ); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            return (true);
+
     for (int i = 0; i < 3; i++)
     {
         const coord_def p = you.pos() + run_check[i].delta;
