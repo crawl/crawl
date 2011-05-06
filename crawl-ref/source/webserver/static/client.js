@@ -45,6 +45,7 @@ function delay_ended()
 }
 
 var layout_parameters;
+var current_layout;
 
 function layout(params)
 {
@@ -57,22 +58,29 @@ function layout(params)
 
 function do_layout()
 {
+    var window_width = $(window).width();
+    var window_height = $(window).height();
+
+    if (!layout_parameters)
+        return false;
+
     // Determine width of stats area
+    var old_html = $("#stats").html();
     var s = "";
     for (var i = 0; i < layout_parameters.stat_width; i++)
         s = s + "&nbsp;";
     $("#stats").html(s);
     var stat_width_pixels = $("#stats").outerWidth();
+    $("#stats").html(old_html);
 
     // Determine height of messages area
+    old_html = $("#messages").html();
     var s = "";
     for (var i = 0; i < layout_parameters.msg_min_height; i++)
         s = s + "<br>";
     $("#messages").html(s);
     var msg_height_pixels = $("#messages").outerHeight();
-
-    var window_width = $(window).width();
-    var window_height = $(window).height();
+    $("#messages").html(old_html);
 
     // We have to subtract a bit more for scrollbars and margins
     var remaining_width = window_width - stat_width_pixels - 50;
@@ -93,7 +101,22 @@ function do_layout()
     if (layout.view_height < layout_parameters.show_diameter)
         layout.view_height = layout_parameters.show_diameter;
 
+    if (current_layout &&
+        layout.stats_height == current_layout.stats_height &&
+        layout.crt_width == current_layout.crt_width &&
+        layout.crt_height == current_layout.crt_height &&
+        layout.msg_width == current_layout.msg_width &&
+        layout.view_width == current_layout.view_width &&
+        layout.view_height == current_layout.view_height)
+        return false;
+
+    log(current_layout);
+    log(layout);
+
+    current_layout = layout;
+
     send_layout(layout);
+    return true;
 }
 
 function send_layout(layout)
@@ -364,8 +387,8 @@ $(document).ready(
 
         $(window).resize(function (ev)
                          {
-                             do_layout();
-                             request_redraw();
+                             if (do_layout())
+                                 request_redraw();
                          });
 
         if ("WebSocket" in window)

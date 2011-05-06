@@ -24,6 +24,9 @@ WebTextArea::~WebTextArea()
 
 void WebTextArea::resize(int x, int y)
 {
+    if (mx == x && my == y)
+        return;
+
     mx = x;
     my = y;
 
@@ -65,10 +68,10 @@ void WebTextArea::put_character(ucs_t chr, int fg, int bg, int x, int y)
     m_abuf[x + y * mx] = col;
 }
 
-void WebTextArea::send()
+void WebTextArea::send(bool force)
 {
     if (m_cbuf == NULL) return;
-    if (!m_dirty) return;
+    if (!force && !m_dirty) return;
     m_dirty = false;
 
     fprintf(stdout, "$(\"#%s\").html(\"", m_client_side_name.c_str());

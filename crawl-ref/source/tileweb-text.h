@@ -16,7 +16,7 @@ public:
 
     void put_character(ucs_t chr, int fg, int bg, int x, int y);
 
-    void send();
+    void send(bool force = false);
 
     int mx, my; // Size
 
