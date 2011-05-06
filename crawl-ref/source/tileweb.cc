@@ -504,11 +504,23 @@ int TilesFramework::getch_ck()
             m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
             break;
         case 'r': // Redraw everything
-            m_text_crt.clear();
-            m_text_stat.clear();
-            m_text_message.clear();
+            m_text_crt.send(true);
+            m_text_stat.send(true);
+            m_text_message.send(true);
             m_current_view.clear();
-            redraw_screen();
+            switch (m_active_layer)
+            {
+            case LAYER_CRT:
+                fprintf(stdout, "set_layer('crt');\n");
+                break;
+            case LAYER_NORMAL:
+                fprintf(stdout, "set_layer('normal');\n");
+                redraw_screen();
+                break;
+            default:
+                // Cannot happen
+                break;
+            }
             break;
         }
 
