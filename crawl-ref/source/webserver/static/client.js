@@ -64,6 +64,9 @@ function do_layout()
     if (!layout_parameters)
         return false;
 
+    var layer = current_layer;
+    set_layer("normal");
+
     // Determine width of stats area
     var old_html = $("#stats").html();
     var s = "";
@@ -81,6 +84,8 @@ function do_layout()
     $("#messages").html(s);
     var msg_height_pixels = $("#messages").outerHeight();
     $("#messages").html(old_html);
+
+    set_layer(layer);
 
     // We have to subtract a bit more for scrollbars and margins
     var remaining_width = window_width - stat_width_pixels - 50;
