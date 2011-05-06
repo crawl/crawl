@@ -246,6 +246,13 @@ int ash_bondage_level(int type_only)
             s = ET_WEAPON;
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
+        // Octopodes don't count these slots:
+        else if (you.species == SP_OCTOPUS &&
+                 (i == EQ_LEFT_RING || i == EQ_RIGHT_RING))
+            continue;
+        // *Only* octopodes count these slots:
+        else if (you.species != SP_OCTOPUS && i > EQ_AMULET)
+            continue;
         else
             s = ET_JEWELS;
 
