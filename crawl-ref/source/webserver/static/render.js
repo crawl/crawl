@@ -35,6 +35,32 @@ function unmark_all()
             unmark_cell(x, y);
 }
 
+function VColour(r, g, b, a)
+{
+    return {r: r, g: g, b: b, a: a};
+}
+
+// Compare tilereg-dgn.cc
+var flash_colours =
+[
+    VColour(  0,   0,   0,   0), // BLACK (transparent)
+    VColour(  0,   0, 128, 100), // BLUE
+    VColour(  0, 128,   0, 100), // GREEN
+    VColour(  0, 128, 128, 100), // CYAN
+    VColour(128,   0,   0, 100), // RED
+    VColour(150,   0, 150, 100), // MAGENTA
+    VColour(165,  91,   0, 100), // BROWN
+    VColour( 50,  50,  50, 150), // LIGHTGRAY
+    VColour(  0,   0,   0, 150), // DARKGRAY
+    VColour( 64,  64, 255, 100), // LIGHTBLUE
+    VColour( 64, 255,  64, 100), // LIGHTGREEN
+    VColour(  0, 255, 255, 100), // LIGHTCYAN
+    VColour(255,  64,  64, 100), // LIGHTRED
+    VColour(255,  64, 255, 100), // LIGHTMAGENTA
+    VColour(150, 150,   0, 100), // YELLOW
+    VColour(255, 255, 255, 100), // WHITE
+];
+
 // This gets called by the messages sent by crawl
 function c(x, y, cell)
 {
@@ -209,6 +235,17 @@ function render_cell(x, y)
         }
 
         draw_foreground(x, y, cell);
+
+        if (cell.fl) // Flash
+        {
+            var col = flash_colours[cell.fl];
+            dungeon_ctx.save();
+            dungeon_ctx.fillStyle = "rgb(" + col.r + "," + col.g + "," + col.b + ")";
+            dungeon_ctx.globalAlpha = col.a / 255;
+            dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
+                                 dungeon_cell_w, dungeon_cell_h);
+            dungeon_ctx.restore();
+        }
 
         render_cursors(x, y);
 
