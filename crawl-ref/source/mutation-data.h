@@ -1365,6 +1365,24 @@
    "Your yellow scales recede somewhat."},
 
   "yellow scales"
+},
+
+{ MUT_CAMOUFLAGE,           1,   3, false, true,
+  "camouflage",
+
+  {"Your skin changes color to match your surroundings (Stlth).",
+   "Your skin blends seamlessly with your surroundings (Stlth).",
+   "Your skin perfectly mimics your surroundings (Stlth)."},
+
+  {"Your skin functions as natural camouflage."
+   "Your natural camouflage becomes more effective.",
+   "Your natural camouflage becomes more effective."},
+
+  {"Your skin no longer functions as natural camouflage.",
+   "Your natural camouflage becomes less effective.",
+   "Your natural camouflage becomes less effective."},
+
+   "camouflage"
 }
 
 #endif
