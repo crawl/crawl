@@ -67,6 +67,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.watched_game = None
         self.watchers = set()
 
+        self.ioloop = tornado.ioloop.IOLoop.instance()
+
         global current_id
         self.id = current_id
         current_id += 1
@@ -79,8 +81,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def open(self):
         logging.info("Socket opened from ip %s.", self.request.remote_ip)
-        self.ioloop = tornado.ioloop.IOLoop.instance()
-
         global sockets
         sockets.add(self)
 
@@ -267,18 +267,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         global sockets
-        if self.p is None:
+        if self.p is None and self in sockets:
             sockets.remove(self)
             if shutting_down and len(sockets) == 0:
                 # The last socket has been closed, now we can go
                 self.ioloop.stop()
-        else:
+        elif self.p:
             self.p.send_signal(subprocess.signal.SIGHUP)
 
         if self.watched_game:
             self.watched_game.remove_watcher(self)
 
-        self.ioloop.remove_timeout(self.timeout)
+        if self.timeout:
+            self.ioloop.remove_timeout(self.timeout)
 
         logging.info("Socket for ip %s closed.", self.request.remote_ip)
 
