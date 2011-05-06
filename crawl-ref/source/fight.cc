@@ -1039,9 +1039,9 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         }
         else if (you.has_usable_tentacles())
         {
-            // Provisional - same damage boost as claws.
+            // From 1 to 3 bonus damage, so not as good as claws.
             aux_verb = "tentacle-slap";
-            aux_damage += roll_dice(you.has_usable_tentacles(), 3);
+            aux_damage += you.has_usable_tentacles();
             noise_factor = 125;
         }
 
@@ -1078,10 +1078,12 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         noise_factor = 125;
         break;
 
+    // Tentacles both gives you a main attack (replacing punch)
+    // and this secondary, high-damage attack.
     case UNAT_TENTACLES:
-        aux_attack = aux_verb = "tentacle-slap";
+        aux_attack = aux_verb = "constrict";
         aux_damage += 4 * you.has_usable_tentacles();
-        noise_factor = 125;
+        noise_factor = 100; // Quieter than slapping.
         break;
 
     default:
@@ -1097,7 +1099,6 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
     case UNAT_KICK:
     case UNAT_HEADBUTT:
     case UNAT_PUNCH:
-    case UNAT_TENTACLES:
         return (you.form == TRAN_ICE_BEAST
                 || you.form == TRAN_DRAGON
                 || you.form == TRAN_SPIDER
@@ -1157,6 +1158,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
                        -1));
 
     // No punching with a shield or 2-handed wpn, except staves.
+    // Octopodes aren't affectd by this, though!
     if (you.species != SP_OCTOPUS && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
 
@@ -1173,6 +1175,12 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         baseattack = UNAT_PSEUDOPODS;
     }
 
+    if (you.has_usable_tentacles()
+        && baseattack == UNAT_KICK && coinflip())
+    {
+        baseattack = UNAT_TENTACLES;
+    }
+
     // With fangs, replace head attacks with bites.
     if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
         && (baseattack == UNAT_HEADBUTT
@@ -1183,17 +1191,13 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         baseattack = UNAT_BITE;
     }
 
-    //Move racial stuff to the bottom, so that nagas can use pseudopods and the like.
+    // Move racial stuff to the bottom, so that nagas can use pseudopods and the like.
     if (you.species == SP_NAGA && baseattack == UNAT_KICK)
         baseattack = UNAT_HEADBUTT;
 
-    //Octopus with no usable offhand has a 50% chance of a punch aux failing to happen.
-    if (you.species == SP_OCTOPUS && (baseattack == UNAT_PUNCH || baseattack == UNAT_KICK) && !you.has_usable_offhand() && you.has_usable_tentacles())
-        baseattack = coinflip() ? UNAT_TENTACLES : UNAT_NO_ATTACK;
-
-    //Octopus with a usable offhand always substitutes in a tentacle attack for a punch aux.
-    if (you.species == SP_OCTOPUS && (baseattack == UNAT_PUNCH || baseattack == UNAT_KICK) && you.has_usable_offhand() && you.has_usable_tentacles())
-        baseattack = UNAT_TENTACLES;
+    // Octopodes turn kicks into punches.
+    if (you.species == SP_OCTOPUS && baseattack == UNAT_KICK)
+        baseattack = UNAT_PUNCH;
 
     if (_tran_forbid_aux_attack(baseattack))
         baseattack = UNAT_NO_ATTACK;
@@ -4319,6 +4323,10 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage += you.has_claws(false) * 2;
         apply_bleeding = true;
     }
+
+    // Tentacles give less bonus damage on hits.
+    if (you.has_usable_tentacles())
+        damage += you.has_tentacles(false);
 
     if (player_in_bat_form())
     {
