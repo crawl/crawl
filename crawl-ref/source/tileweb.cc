@@ -207,7 +207,8 @@ bool _send_cell(int x, int y,
         cell.flv.feat    = 0;
     }
 
-    if (old_cell == cell)
+    if (old_cell == cell &&
+        screen_cell->flash_colour == old_screen_cell->flash_colour)
         return false;
 
     tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
@@ -220,6 +221,9 @@ bool _send_cell(int x, int y,
     {
         fprintf(stdout, "c:1,"); // Clears the cell on the client side
     }
+
+    if (screen_cell->flash_colour != old_screen_cell->flash_colour)
+        fprintf(stdout, "fl:%u,", screen_cell->flash_colour);
 
     if (cell.fg != old_cell.fg)
     {
