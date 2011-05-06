@@ -61,11 +61,6 @@ void fire_final_effects()
         const final_effect &fe = env.final_effects[i];
         // We can't just pass the pointer, as we wouldn't be notified
         // if it becomes invalid between scheduling and firing.
-
-        // This code doesn't check for monster being cleaned and a new one
-        // immediately replacing it; this is not supposed to happen save for
-        // zombifying (and then it's the same monster), but if this changes,
-        // we'd need an identifier or such.
         actor *attacker = actor_by_mid(fe.att);
         actor *defender = actor_by_mid(fe.def);
 
