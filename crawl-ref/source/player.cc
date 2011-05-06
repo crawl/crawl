@@ -3660,6 +3660,7 @@ int check_stealth(void)
     // Mutations.
     stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
+    stealth += 40 * player_mutation_level(MUT_CAMOUFLAGE);
     if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
         stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
 
