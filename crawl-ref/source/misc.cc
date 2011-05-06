@@ -2500,3 +2500,13 @@ std::string part_stack_string(const int num, const int total)
 
     return ret;
 }
+
+unsigned int breakpoint_rank(int val, const int breakpoints[],
+                             unsigned int num_breakpoints)
+{
+    unsigned int result = 0;
+    while (result < num_breakpoints && val >= breakpoints[result])
+        ++result;
+
+    return result;
+}

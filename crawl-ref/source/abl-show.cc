@@ -812,14 +812,6 @@ const std::string make_cost_description(ability_type ability)
     return (ret.str());
 }
 
-static std::string _get_food_amount_str(int value)
-{
-    return (value > 300 ? "extremely large" :
-            value > 200 ? "large" :
-            value > 100 ? "moderate" :
-                          "small");
-}
-
 static std::string _get_piety_amount_str(int value)
 {
     return (value > 15 ? "extremely large" :
@@ -862,7 +854,7 @@ const std::string make_detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\nHunger : ";
-        ret << _get_food_amount_str(abil.food_cost + abil.food_cost / 2);
+        ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
     }
 
     if (abil.piety_cost)

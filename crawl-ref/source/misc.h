@@ -127,6 +127,8 @@ void entered_malign_portal(actor* act);
 
 void handle_real_time(time_t t = time(0));
 std::string part_stack_string(const int num, const int total);
+unsigned int breakpoint_rank(int val, const int breakpoints[],
+                             unsigned int num_breakpoints);
 #define DISCONNECT_DIST (INT_MAX - 1000)
 
 struct position_node

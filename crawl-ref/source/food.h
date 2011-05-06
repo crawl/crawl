@@ -90,5 +90,6 @@ int you_max_hunger();
 int you_min_hunger();
 
 void handle_starvation();
+const char* hunger_cost_string(const int hunger);
 
 #endif
