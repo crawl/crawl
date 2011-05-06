@@ -236,28 +236,28 @@ bool _send_cell(int x, int y,
         fprintf(stdout, "bg:%u,", cell.bg);
 
     if (cell.is_bloody != old_cell.is_bloody)
-        fprintf(stdout, "bloody:%u,", old_cell.is_bloody);
+        fprintf(stdout, "bloody:%u,", cell.is_bloody);
 
     if (cell.is_silenced != old_cell.is_silenced)
-        fprintf(stdout, "silenced:%u,", old_cell.is_silenced);
+        fprintf(stdout, "silenced:%u,", cell.is_silenced);
 
     if (cell.is_haloed != old_cell.is_haloed)
-        fprintf(stdout, "haloed:%u,", old_cell.is_haloed);
+        fprintf(stdout, "haloed:%u,", cell.is_haloed);
 
     if (cell.is_moldy != old_cell.is_moldy)
-        fprintf(stdout, "moldy:%u,", old_cell.is_moldy);
+        fprintf(stdout, "moldy:%u,", cell.is_moldy);
 
     if (cell.glowing_mold != old_cell.glowing_mold)
-        fprintf(stdout, "glowing_mold:%u,", old_cell.glowing_mold);
+        fprintf(stdout, "glowing_mold:%u,", cell.glowing_mold);
 
     if (cell.is_sanctuary != old_cell.is_sanctuary)
-        fprintf(stdout, "sanctuary:%u,", old_cell.is_sanctuary);
+        fprintf(stdout, "sanctuary:%u,", cell.is_sanctuary);
 
     if (cell.is_liquefied != old_cell.is_liquefied)
-        fprintf(stdout, "liquefied:%u,", old_cell.is_liquefied);
+        fprintf(stdout, "liquefied:%u,", cell.is_liquefied);
 
     if (cell.swamp_tree_water != old_cell.swamp_tree_water)
-        fprintf(stdout, "swtree:%u,", old_cell.swamp_tree_water);
+        fprintf(stdout, "swtree:%u,", cell.swamp_tree_water);
 
     if (cell.blood_rotation != old_cell.blood_rotation)
         fprintf(stdout, "bloodrot:%d,", cell.blood_rotation);
