@@ -231,6 +231,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.write_message("login_failed();")
 
         elif message.startswith("Play: "):
+            if self.p or self.watched_game: return
             game_id = message[len("Play: "):]
             self.start_crawl(game_id)
 
@@ -241,9 +242,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.update_lobby()
 
         elif message.startswith("Watch: "):
+            if self.p or self.watched_game: return
             watch_username = message[len("Watch: "):]
-            socket = find_user_socket(watch_username)
-            if socket:
+            sockets = [socket for socket in find_user_sockets(watch_username)
+                       if socket.is_running()]
+            if len(sockets) >= 1:
+                socket = sockets[0]
                 logging.info("User %s (ip: %s) started watching %s.",
                              self.username, self.request.remote_ip, socket.username)
                 self.watched_game = socket
@@ -312,12 +316,10 @@ def update_all_lobbys():
         if socket.is_in_lobby():
             socket.update_lobby()
 
-def find_user_socket(username):
+def find_user_sockets(username):
     for socket in list(sockets):
         if socket.username and socket.username.lower() == username.lower():
-            return socket
-
-    return None
+            yield socket
 
 def shutdown(msg = "The server is shutting down. Your game has been saved."):
     global shutting_down
