@@ -2832,3 +2832,20 @@ void handle_starvation()
         }
     }
 }
+
+const char* hunger_cost_string(const int hunger)
+{
+    if (you.is_undead == US_UNDEAD)
+        return ("N/A");
+
+    // Spell hunger is "Fruit" if casting the spell five times costs at
+    // most one "Fruit".
+    const char* hunger_descriptions[] = {
+        "None", "Sultana", "Strawberry", "Choko", "Honeycomb", "Ration"
+    };
+
+    const int breakpoints[] = { 1, 15, 41, 121, 401 };
+
+    return (hunger_descriptions[breakpoint_rank(hunger, breakpoints,
+                                                ARRAYSZ(breakpoints))]);
+}

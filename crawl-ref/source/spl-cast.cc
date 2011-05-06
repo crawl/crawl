@@ -1996,33 +1996,9 @@ const char* failure_rate_to_string(int fail)
                          : "Perfect";    // 100%
 }
 
-static unsigned int _breakpoint_rank(int val, const int breakpoints[],
-                            unsigned int num_breakpoints)
-{
-    unsigned int result = 0;
-    while (result < num_breakpoints && val >= breakpoints[result])
-        ++result;
-
-    return result;
-}
-
 const char* spell_hunger_string(spell_type spell, bool rod)
 {
-    if (you.is_undead == US_UNDEAD)
-        return ("N/A");
-
-    const int hunger = spell_hunger(spell, rod);
-
-    // Spell hunger is "Fruit" if casting the spell five times costs at
-    // most one "Fruit".
-    const char* hunger_descriptions[] = {
-        "None", "Sultana", "Strawberry", "Choko", "Honeycomb", "Ration"
-    };
-
-    const int breakpoints[] = { 1, 15, 41, 121, 401 };
-
-    return (hunger_descriptions[_breakpoint_rank(hunger, breakpoints,
-                                                 ARRAYSZ(breakpoints))]);
+    return hunger_cost_string(spell_hunger(spell, rod));
 }
 
 std::string spell_noise_string(spell_type spell)
@@ -2089,7 +2065,7 @@ std::string spell_noise_string(spell_type spell)
 
     const int breakpoints[] = { 1, 2, 4, 8, 15, 20, 30 };
 
-    const char* desc = noise_descriptions[_breakpoint_rank(noise, breakpoints,
+    const char* desc = noise_descriptions[breakpoint_rank(noise, breakpoints,
                                                 ARRAYSZ(breakpoints))];
 
 #ifdef WIZARD
@@ -2121,7 +2097,7 @@ static int _power_to_barcount(int power)
         return -1;
 
     const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
-    return (_breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
+    return (breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
 }
 
 int spell_power_bars(spell_type spell, bool rod)
