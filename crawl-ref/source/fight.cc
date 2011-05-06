@@ -1081,7 +1081,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     // Tentacles both gives you a main attack (replacing punch)
     // and this secondary, high-damage attack.
     case UNAT_TENTACLES:
-        aux_attack = aux_verb = "constrict";
+        aux_attack = aux_verb = "squeeze";
         aux_damage += 4 * you.has_usable_tentacles();
         noise_factor = 100; // Quieter than slapping.
         break;
