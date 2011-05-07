@@ -176,7 +176,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def create_mock_ttyrec(self):
         now = datetime.datetime.utcnow()
         self.ttyrec_filename = os.path.join(running_game_path,
-                                            self.username + now.strftime("%Y-%m-%d.%H-%M-%S")
+                                            self.username + ":" + now.strftime("%Y-%m-%d.%H:%M:%S")
                                             + ".ttyrec")
         f = open(self.ttyrec_filename, "w")
         f.close()
