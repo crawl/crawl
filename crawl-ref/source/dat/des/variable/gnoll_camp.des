@@ -6,7 +6,7 @@
 {{
 
 function gnoll_sergeant (e)
-  e.mons("gnoll name:gnoll_sergeant name_replace name_descriptor hd:4 \
+  e.mons("gnoll name:sergeant n_suf hd:4 \
           col:cyan tile:mons_gnoll_sergeant; \
           potion of healing | potion of heal wounds . \
           spear ego:reaching w:2 good_item | spear good_item . \
@@ -15,7 +15,7 @@ end
 
 -- XXX: Petrify for the second spell when it's implemented as a monster spell.
 function gnoll_shaman (e)
-  e.mons("gnoll name:gnoll_shaman name_replace name_descriptor hd:3 \
+  e.mons("gnoll name:shaman n_suf hd:3 \
           col:white tile:mons_gnoll_shaman actual_spells \
           spells:corona;corona;heal_other;haste_other;heal_other;minor_healing\
           ; quarterstaff | club | whip . robe | leather armour")
