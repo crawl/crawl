@@ -22,6 +22,8 @@ morgue_path = "./rcs/"
 
 running_game_path = "./rcs/running/"
 
+dgl_status_file = "./rcs/status"
+
 max_connections = 100
 
 # ssl_options = None # No SSL
