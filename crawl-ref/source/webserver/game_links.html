@@ -1,4 +1,4 @@
 Play now:
 {% for game_choice in game_choices %}
-<a href="javascript:play_now('{{ game_choice.id }}');">{{ game_choice.name }}</id>
+<a href="#play-{{ game_choice.id }}">{{ game_choice.name }}</id>
 {% end %}

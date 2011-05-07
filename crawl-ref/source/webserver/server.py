@@ -292,8 +292,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             else:
                 self.write_message("set_layer('lobby');")
 
-        elif message == "StopWatching":
-            self.stop_watching()
+        elif message == "GoLobby":
+            if self.is_running():
+                self.p.send_signal(subprocess.signal.SIGHUP)
+            elif self.watched_game:
+                self.stop_watching()
 
         elif self.p is not None:
             logging.debug("Message: %s (user: %s)", message, self.username)
