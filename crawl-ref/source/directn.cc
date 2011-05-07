@@ -1318,7 +1318,8 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 {
     if (!allow_out_of_range && !in_range(target()))
     {
-        mpr("That is beyond the maximum range.", MSGCH_EXAMINE_FILTER);
+        mpr(hitfunc? hitfunc->why_not : "That is beyond the maximum range.",
+            MSGCH_EXAMINE_FILTER);
         return false;
     }
 
@@ -1362,7 +1363,7 @@ void direction_chooser::print_target_description(bool &did_cloud) const
         print_target_monster_description(did_cloud);
 
     if (!in_range(target()))
-        mpr("Out of range.", MSGCH_EXAMINE_FILTER);
+        mpr(hitfunc ? hitfunc->why_not : "Out of range.", MSGCH_EXAMINE_FILTER);
 }
 
 std::string direction_chooser::target_interesting_terrain_description() const

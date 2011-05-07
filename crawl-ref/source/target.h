@@ -21,6 +21,7 @@ public:
     coord_def origin;
     coord_def aim;
     const actor* agent;
+    std::string why_not;
 
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
