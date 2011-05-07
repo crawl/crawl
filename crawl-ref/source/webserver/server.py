@@ -234,7 +234,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.close()
                 else:
                     # Go back to lobby
-                    self.write_message("set_layer('lobby');")
+                    self.write_message("crawl_ended();")
                     self.update_lobby()
 
             update_global_status()

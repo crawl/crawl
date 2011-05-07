@@ -344,7 +344,10 @@ var lobby_update_timeout = undefined;
 var lobby_update_rate = 30000;
 function lobby(enable)
 {
-    if (enable) location.hash = "#lobby";
+    if (enable)
+    {
+        location.hash = "#lobby";
+     }
 
     if (enable && lobby_update_timeout == undefined)
     {
@@ -358,6 +361,12 @@ function lobby(enable)
 function lobby_update()
 {
     socket.send("UpdateLobby");
+}
+
+function crawl_ended()
+{
+    set_layer("lobby");
+    current_layout = undefined;
 }
 
 var watching = false;
