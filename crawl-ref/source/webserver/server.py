@@ -196,6 +196,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 _, _, newwhere = f.readline().partition("|")
                 f.close()
 
+                newwhere = newwhere.strip()
+
                 if self.where != newwhere:
                     self.where = newwhere
                     update_global_status()
