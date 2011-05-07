@@ -115,7 +115,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_game_links(self):
         game_choices = [
-            Game("crawl-0.8", "DCSS 0.8")
+            Game("webtiles-0.8", "DCSS 0.8")
         ]
         play_html = self.render_string("game_links.html", game_choices = game_choices)
         self.write_message("$('#play_now').html(" +
@@ -143,6 +143,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def start_crawl(self, game_id):
         if self.username == None: return
 
+        self.game_id = game_id
+
         self.p = subprocess.Popen([crawl_binary,
                                    "-name", self.username,
                                    "-rc", os.path.join(rcfile_path, self.username + ".rc"),
@@ -159,7 +161,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.create_mock_ttyrec()
 
-        update_all_lobbys()
+        update_global_status()
 
     def create_mock_ttyrec(self):
         now = datetime.datetime.utcnow()
@@ -181,9 +183,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if stat.st_mtime > self.wheretime:
                 self.wheretime = time.time()
                 f = open(wherefile, "r")
-                _, _, self.where = f.readline().partition("|")
+                _, _, newwhere = f.readline().partition("|")
                 f.close()
-        except OSError, IOError:
+
+                if self.where != newwhere:
+                    self.where = newwhere
+                    update_global_status()
+        except (OSError, IOError):
             pass
 
     def add_watcher(self, watcher):
@@ -230,7 +236,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.write_message("set_layer('lobby');")
                     self.update_lobby()
 
-            update_all_lobbys()
+            update_global_status()
 
             for watcher in list(self.watchers):
                 watcher.stop_watching()
@@ -343,10 +349,29 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.poll_crawl()
             self.check_where()
 
+def update_global_status():
+    update_all_lobbys()
+    write_dgl_status_file()
+
 def update_all_lobbys():
     for socket in list(sockets):
         if socket.is_in_lobby():
             socket.update_lobby()
+
+def write_dgl_status_file():
+    try:
+        f = open(dgl_status_file, "w")
+        for socket in list(sockets):
+            if socket.username and socket.is_running():
+                f.write(socket.username + "#" +
+                        socket.game_id + "#" +
+                        (socket.where or "") + "#" +
+                        "Tiles" + "#" +
+                        str(int(socket.idle_time())) + "#" +
+                        str(len(socket.watchers)) + "#")
+        f.close()
+    except (OSError, IOError) as e:
+        logging.warn("Could not write dgl status file: %s", e)
 
 def find_user_sockets(username):
     for socket in list(sockets):
