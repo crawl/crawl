@@ -471,9 +471,28 @@ int steam_cloud_damage(int decay)
     return ((decay * 13 + 20) / 50);
 }
 
-bool cloud_is_inferior(cloud_type inf, cloud_type superior)
+static bool _is_weak_cloud(int cl)
 {
-    return (inf == CLOUD_STINK && superior == CLOUD_POISON);
+    if (cl == EMPTY_CLOUD)
+        return true;
+
+    cloud_struct& cloud = env.cloud[cl];
+    return (cloud.type >= CLOUD_GREY_SMOKE && cloud.type <= CLOUD_STEAM
+            || cloud.type == CLOUD_BLACK_SMOKE
+            || cloud.type == CLOUD_MIST
+            || cloud.decay <= 20); // soon gone
+}
+
+static bool cloud_is_stronger(cloud_type ct, int cl)
+{
+    if (_is_weak_cloud(cl))
+        return true;
+    cloud_struct& cloud = env.cloud[cl];
+    if (ct == CLOUD_POISON && cloud.type == CLOUD_STINK)
+        return true; // allow upgrading meph
+    if (ct == CLOUD_TORNADO)
+        return true; // visual/AI only
+    return false;
 }
 
 //   Places a cloud with the given stats. May delete old clouds to
@@ -510,13 +529,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (target_cgrid != EMPTY_CLOUD)
     {
         // There's already a cloud here. See if we can overwrite it.
-        cloud_struct& old_cloud = env.cloud[target_cgrid];
-        if (old_cloud.type >= CLOUD_GREY_SMOKE && old_cloud.type <= CLOUD_STEAM
-            || cloud_is_inferior(old_cloud.type, cl_type)
-            || old_cloud.type == CLOUD_BLACK_SMOKE
-            || old_cloud.type == CLOUD_MIST
-            || old_cloud.type == CLOUD_TORNADO
-            || old_cloud.decay <= 20) // soon gone
+        if (cloud_is_stronger(cl_type, target_cgrid))
         {
             // Delete this cloud and replace it.
             cl_new = target_cgrid;
@@ -535,17 +548,11 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         int cl_del = random2(MAX_CLOUDS);
 
         for (int ci = 0; ci < MAX_CLOUDS; ci++)
-        {
-            cloud_struct& cloud = env.cloud[ci];
-            if (cloud.type >= CLOUD_GREY_SMOKE && cloud.type <= CLOUD_STEAM
-                || cloud.type == CLOUD_BLACK_SMOKE
-                || cloud.type == CLOUD_MIST
-                || cloud.decay <= 20) // soon gone
+            if (_is_weak_cloud(ci))
             {
                 cl_del = ci;
                 break;
             }
-        }
 
         delete_cloud(cl_del);
         cl_new = cl_del;
