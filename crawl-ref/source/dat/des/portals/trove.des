@@ -278,9 +278,9 @@ NAME:   enter_trove_3
 TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
 CHANCE: 5%
 : trove.portal(_G)
-COLOUR: . = blue
-COLOUR: c = blue
-COLOUR: x = blue
+COLOUR: .cx = blue
+TILE:   cx = wall_stone_dark
+FTILE:  .cxO = floor_marble
 SUBST:  x = c:20 =:6
 MAP
 cxxxc
