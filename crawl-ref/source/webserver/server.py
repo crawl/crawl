@@ -13,7 +13,7 @@ import sqlite3
 import logging
 import sys
 import signal
-import time
+import time, datetime
 import collections
 
 from config import *
@@ -66,6 +66,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.last_action_time = time.time()
         self.watched_game = None
         self.watchers = set()
+        self.ttyrec_filename = None
+        self.where = None
+        self.wheretime = time.time()
 
         self.ioloop = tornado.ioloop.IOLoop.instance()
 
@@ -97,9 +100,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def idle_time(self):
         return time.time() - self.last_action_time
-
-    def where(self):
-        return "??"
 
     def is_running(self):
         return self.p is not None
@@ -157,7 +157,34 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
                                 self.ioloop.READ | self.ioloop.ERROR)
 
+        self.create_mock_ttyrec()
+
         update_all_lobbys()
+
+    def create_mock_ttyrec(self):
+        now = datetime.datetime.utcnow()
+        self.ttyrec_filename = os.path.join(running_game_path,
+                                            self.username + now.strftime("%Y-%m-%d.%H-%M-%S")
+                                            + ".ttyrec")
+        f = open(self.ttyrec_filename, "w")
+        f.close()
+
+    def delete_mock_ttyrec(self):
+        if self.ttyrec_filename:
+            os.remove(self.ttyrec_filename)
+            self.ttyrec_filename = None
+
+    def check_where(self):
+        wherefile = os.path.join(morgue_path, self.username, self.username + ".dglwhere")
+        try:
+            stat = os.stat(wherefile)
+            if stat.st_mtime > self.wheretime:
+                self.wheretime = time.time()
+                f = open(wherefile, "r")
+                _, _, self.where = f.readline().partition("|")
+                f.close()
+        except OSError, IOError:
+            pass
 
     def add_watcher(self, watcher):
         self.watchers.add(watcher)
@@ -189,6 +216,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.p.stdout.close()
             self.p.stderr.close()
             self.p = None
+
+            self.delete_mock_ttyrec()
 
             if self.client_terminated:
                 global sockets
@@ -310,7 +339,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message(msg)
             for watcher in self.watchers:
                 watcher.write_message(msg)
+
             self.poll_crawl()
+            self.check_where()
 
 def update_all_lobbys():
     for socket in list(sockets):

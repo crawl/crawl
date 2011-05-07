@@ -16,7 +16,7 @@
           {{ running_game.username }}
         </a>
       </td>
-      <td>{{ running_game.where() }}</td>
+      <td>{{ running_game.where or "" }}</td>
       <td>{{ int(running_game.idle_time()) }}s</td>
     </tr>
     {% end %}
