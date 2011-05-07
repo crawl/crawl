@@ -297,6 +297,8 @@ function start_login()
 {
     $("#username").focus();
 }
+
+var current_user;
 function login()
 {
     $("#login_form").hide();
@@ -316,6 +318,7 @@ function login_failed()
 function logged_in(username)
 {
     $("#login_message").html("Logged in as " + username);
+    current_user = username;
 }
 
 function ping()
@@ -347,6 +350,7 @@ function lobby(enable)
     if (enable)
     {
         location.hash = "#lobby";
+        document.title = "Web Crawl";
      }
 
     if (enable && lobby_update_timeout == undefined)
@@ -378,17 +382,25 @@ function set_watching(val)
 function hash_changed()
 {
     var watch = location.hash.match(/^#watch-(.+)/i);
-    log(watch);
+    var play = location.hash.match(/^#play-(.+)/i);
     if (watch)
     {
         var watch_user = watch[1];
-        log(watch_user);
         socket.send("Watch: " + watch_user);
+    }
+    else if (play)
+    {
+        if (current_user == undefined)
+            set_layer("lobby");
+        else
+        {
+            var game_id = play[1];
+            socket.send("Play: " + game_id);
+        }
     }
     else if (location.hash.match(/^#lobby$/i))
     {
-        if (watching)
-            socket.send("StopWatching");
+        socket.send("GoLobby");
     }
 }
 
