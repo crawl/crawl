@@ -6,6 +6,7 @@ body {
 
 #login {
     text-align: right;
+    float: right;
 }
 
 #stats {
