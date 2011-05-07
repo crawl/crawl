@@ -1640,7 +1640,8 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case NUM_SPECIAL_WEAPONS:
     case NUM_REAL_SPECIAL_WEAPONS:
     case SPWPN_DUMMY_CRUSHING:
-        die("invalid brand");
+        die("invalid brand %d on weapon %d (%s)", brand, type,
+            item.name(DESC_PLAIN).c_str());
         break;
     }
 
