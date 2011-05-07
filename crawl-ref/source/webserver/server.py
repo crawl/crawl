@@ -224,6 +224,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.p = None
 
             self.delete_mock_ttyrec()
+            self.where = None
 
             if self.client_terminated:
                 global sockets
