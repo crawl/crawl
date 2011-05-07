@@ -390,6 +390,11 @@ def write_dgl_status_file():
     finally:
         if f: f.close()
 
+def status_file_timeout():
+    write_dgl_status_file()
+    ioloop.add_timeout(time.time() + status_file_update_rate,
+                       status_file_timeout)
+
 def find_user_sockets(username):
     for socket in list(sockets):
         if socket.username and socket.username.lower() == username.lower():
@@ -424,6 +429,8 @@ if ssl_options:
     application.listen(ssl_port, ssl_address, ssl_options = ssl_options)
 
 ioloop = tornado.ioloop.IOLoop.instance()
+
+status_file_timeout()
 
 try:
     ioloop.start()
