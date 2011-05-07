@@ -384,7 +384,7 @@ def write_dgl_status_file():
                         (socket.where or "") + "#" +
                         "0x0" + "#" +
                         str(int(socket.idle_time())) + "#" +
-                        str(len(socket.watchers)) + "#")
+                        str(len(socket.watchers)) + "#\n")
     except (OSError, IOError) as e:
         logging.warn("Could not write dgl status file: %s", e)
     finally:
