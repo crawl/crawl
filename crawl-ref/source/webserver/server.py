@@ -115,7 +115,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_game_links(self):
         game_choices = [
-            Game("webtiles-0.8", "DCSS 0.8")
+            Game("dcss-web-0.8", "DCSS 0.8")
         ]
         play_html = self.render_string("game_links.html", game_choices = game_choices)
         self.write_message("$('#play_now').html(" +
@@ -380,12 +380,13 @@ def write_dgl_status_file():
                 f.write(socket.username + "#" +
                         socket.game_id + "#" +
                         (socket.where or "") + "#" +
-                        "Tiles" + "#" +
+                        "0x0" + "#" +
                         str(int(socket.idle_time())) + "#" +
                         str(len(socket.watchers)) + "#")
-        f.close()
     except (OSError, IOError) as e:
         logging.warn("Could not write dgl status file: %s", e)
+    finally:
+        if f: f.close()
 
 def find_user_sockets(username):
     for socket in list(sockets):
