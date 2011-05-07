@@ -8,6 +8,7 @@
       <th>User</th>
       <th>Where</th>
       <th>Idle</th>
+      <th>Watchers</th>
     </tr>
     {% for running_game in running_games %}
     <tr class="running_game">
@@ -18,6 +19,7 @@
       </td>
       <td>{{ running_game.where or "" }}</td>
       <td>{{ int(running_game.idle_time()) }}s</td>
+      <td>{{ len(running_game.watchers) }}</td>
     </tr>
     {% end %}
   </table>
