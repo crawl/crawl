@@ -163,6 +163,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         update_global_status()
 
+    def stop_crawl(self):
+        self.p.send_signal(subprocess.signal.SIGHUP)
+        self.ioloop.add_timeout(time.time() + kill_timeout, self.kill_crawl)
+
+    def kill_crawl(self):
+        if self.p:
+            logging.info("Killing crawl process after SIGHUP did nothing (user %s, ip %s).",
+                         self.username, self.request.remote_ip)
+            self.p.send_signal(subprocess.signal.SIGTERM)
+
     def create_mock_ttyrec(self):
         now = datetime.datetime.utcnow()
         self.ttyrec_filename = os.path.join(running_game_path,
@@ -212,8 +222,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message("connection_closed(" +
                                tornado.escape.json_encode(msg) + ");");
             self.close()
-        if self.p is not None:
-            self.p.send_signal(subprocess.signal.SIGHUP)
+        if self.is_running():
+            self.stop_crawl()
 
     def poll_crawl(self):
         if self.p is not None and self.p.poll() is not None:
@@ -294,7 +304,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         elif message == "GoLobby":
             if self.is_running():
-                self.p.send_signal(subprocess.signal.SIGHUP)
+                self.stop_crawl()
             elif self.watched_game:
                 self.stop_watching()
 
@@ -311,8 +321,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if shutting_down and len(sockets) == 0:
                 # The last socket has been closed, now we can go
                 self.ioloop.stop()
-        elif self.p:
-            self.p.send_signal(subprocess.signal.SIGHUP)
+        elif self.is_running():
+            self.stop_crawl()
 
         if self.watched_game:
             self.watched_game.remove_watcher(self)
