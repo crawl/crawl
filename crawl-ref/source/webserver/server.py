@@ -15,6 +15,7 @@ import sys
 import signal
 import time, datetime
 import collections
+import re
 
 from config import *
 
@@ -27,6 +28,7 @@ class TornadoFilter(logging.Filter):
 logging.getLogger().addFilter(TornadoFilter())
 
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
+    passwd = passwd[0:max_passwd_length]
     crypted_pw = crypt.crypt(passwd, passwd)
 
     try:
@@ -45,6 +47,11 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
         if conn: conn.close()
 
 def register_user(username, passwd, email): # Returns an error message or None
+    if passwd == "": return "The password can't be empty!"
+    passwd = passwd[0:max_passwd_length]
+    username = username.strip()
+    if not re.match(nick_regex, username): return "Invalid username!"
+
     crypted_pw = crypt.crypt(passwd, passwd)
 
     try:
