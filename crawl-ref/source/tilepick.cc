@@ -1633,8 +1633,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_EXECUTIONER;
     case MONS_GREEN_DEATH:
         return TILEP_MONS_GREEN_DEATH;
-    case MONS_BLUE_DEATH:
-        return TILEP_MONS_BLUE_DEATH;
+    case MONS_BLIZZARD_DEMON:
+        return TILEP_MONS_BLIZZARD_DEMON;
     case MONS_BALRUG:
         return TILEP_MONS_BALRUG;
     case MONS_CACODEMON:

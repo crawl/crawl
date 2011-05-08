@@ -459,7 +459,7 @@ static void _pan_wave(int power)
                 MONS_GLOORX_VLOQ, MONS_GERYON, MONS_DISPATER,
                 MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_DEMON, END};
     monster_type weakboss[] = {MONS_PANDEMONIUM_DEMON, MONS_FIEND,
-                MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLUE_DEATH, END};
+                MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLIZZARD_DEMON, END};
 
     for (int i = 0; i <= NSLOTS; i++)
     {

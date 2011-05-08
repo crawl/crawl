@@ -570,13 +570,13 @@
       }
     },
 
-    {  MST_BLUE_DEATH,
+    {  MST_BLIZZARD_DEMON,
       {
        SPELL_LIGHTNING_BOLT,
+       SPELL_FREEZING_CLOUD,
+       SPELL_NO_SPELL,
+       SPELL_AIRSTRIKE,
        SPELL_BOLT_OF_COLD,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_SHADOW_CREATURES,
        SPELL_TELEPORT_OTHER
       }
     },

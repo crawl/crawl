@@ -2408,7 +2408,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         summon_demon_type(random_mons(MONS_EXECUTIONER, MONS_GREEN_DEATH,
-                          MONS_BLUE_DEATH, MONS_BALRUG, MONS_CACODEMON, -1),
+                          MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
                           20 + you.skill(SK_INVOCATIONS) * 3, GOD_MAKHLEB);
         break;
 

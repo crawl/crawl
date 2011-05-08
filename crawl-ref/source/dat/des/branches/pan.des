@@ -257,7 +257,7 @@ LFLOORCOL: lightgrey
 LROCKCOL:  white
 KITEM:     O = magical rune of zot
 MONS:      patrolling Lom Lobon
-MONS:      blue death, green death, wizard, draconian annihilator
+MONS:      blizzard demon, green death, wizard, draconian annihilator
 MONS:      sixfirhy
 SUBST:     0 = 23444445566
 NSUBST:    Q = 1:O / *:4
