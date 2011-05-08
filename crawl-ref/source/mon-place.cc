@@ -3608,14 +3608,15 @@ monster_type summon_any_demon(demon_class_type dct)
     switch (dct)
     {
     case DEMON_LESSER:
-        temp_rand = random2(64);
-        mon = ((temp_rand > 54) ? MONS_IMP :        // 15.63%
-               (temp_rand > 45) ? MONS_WHITE_IMP :  // 14.06%
-               (temp_rand > 36) ? MONS_LEMURE :     // 14.06%
-               (temp_rand > 27) ? MONS_UFETUBUS :   // 14.06%
-               (temp_rand > 18) ? MONS_IRON_IMP :   // 14.06%
-               (temp_rand > 9)  ? MONS_MIDGE        // 14.06%
-                                : MONS_SHADOW_IMP); // 14.06%
+        temp_rand = random2(73);
+        mon = ((temp_rand > 63) ? MONS_IMP :        // 13.70%
+               (temp_rand > 54) ? MONS_QUASIT :     // 12.33%
+               (temp_rand > 45) ? MONS_WHITE_IMP :  // 12.33%
+               (temp_rand > 36) ? MONS_LEMURE :     // 12.33%
+               (temp_rand > 27) ? MONS_UFETUBUS :   // 12.33%
+               (temp_rand > 18) ? MONS_IRON_IMP :   // 12.33%
+               (temp_rand > 9)  ? MONS_MIDGE        // 12.33%
+                                : MONS_SHADOW_IMP); // 12.33%
         break;
 
     case DEMON_COMMON:
