@@ -480,7 +480,8 @@ application = tornado.web.Application([
     (r"/socket", CrawlWebSocket),
 ], **settings)
 
-application.listen(bind_port, bind_address)
+if bind_nonsecure:
+    application.listen(bind_port, bind_address)
 if ssl_options:
     application.listen(ssl_port, ssl_address, ssl_options = ssl_options)
 
