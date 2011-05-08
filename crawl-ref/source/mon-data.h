@@ -1333,7 +1333,7 @@ static monsterentry mondata[] = {
 
 // merfolk ('m')
 {
-    MONS_MERFOLK, 'm', BLUE, "merfolk",
+    MONS_MERFOLK, 'm', LIGHTRED, "merfolk",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     500, 4, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
@@ -1345,7 +1345,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_MERFOLK_IMPALER, 'm', LIGHTBLUE, "merfolk impaler",
+    MONS_MERFOLK_IMPALER, 'm', YELLOW, "merfolk impaler",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     500, 8, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
@@ -1358,7 +1358,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_MERFOLK_JAVELINEER, 'm', LIGHTGREY, "merfolk javelineer",
+    MONS_MERFOLK_JAVELINEER, 'm', WHITE, "merfolk javelineer",
     M_WARM_BLOOD | M_ARCHER | M_SPEAKS,
     MR_NO_FLAGS,
     500, 8, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -4,
