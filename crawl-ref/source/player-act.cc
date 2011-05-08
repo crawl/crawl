@@ -298,8 +298,15 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 {
     if (species == SP_CAT)
         return (false);
-    if (body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(item) >= 300)
+    if (body_size() < SIZE_LARGE
+            && (item_mass(item) >= 500
+                || item.base_type == OBJ_WEAPONS
+                    && item_mass(item) >= 300))
         return (false);
+
+    // Anybody can wield missiles to enchant, item_mass permitting
+    if (item.base_type == OBJ_MISSILES)
+        return (true);
 
     // Small species wielding large weapons...
     if (body_size(PSIZE_BODY) < SIZE_MEDIUM
