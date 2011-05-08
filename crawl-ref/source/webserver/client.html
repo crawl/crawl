@@ -35,7 +35,26 @@
           <input type="password" name="password" id="password"></input>
           <input type="submit" name="submit" id="submit" value="Login"></input>
         </form>
+        <a id="reg_link" href="javascript:start_register()">Register</a>
+      </div>
 
+      <div id="register" style="display: none;">
+        <span id="register_message"></span>
+        <form action="" id="register_form" onsubmit="return register();">
+          <label for="username">Username:</label>
+          <input type="text" name="username" id="reg_username"></input>
+          <br>
+          <label for="password">Password:</label>
+          <input type="password" name="password" id="reg_password"></input>
+          <br>
+          <label for="repeat_password">Repeat password:</label>
+          <input type="password" name="repeat_password" id="reg_repeat_password"></input>
+          <br>
+          <label for="email">Email address:</label>
+          <input type="text" name="email" id="reg_email"></input>
+          <br>
+          <input type="submit" name="submit" id="reg_submit" value="Submit"></input>
+        </form>
       </div>
 
       <div id="banner">{% include banner.html %}</div>

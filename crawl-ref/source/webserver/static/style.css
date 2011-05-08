@@ -26,6 +26,25 @@ body {
     text-align: left;
 }
 
+#register {
+    position: absolute;
+    left: 50px;
+    top: 50px;
+
+    border: 1px solid white;
+    padding: 10px;
+    background-color: black;
+}
+
+#register label {
+    width: 200px;
+    float: left;
+}
+
+#reg_submit {
+    float: right;
+}
+
 .fg0 { color: rgb(  0,   0,   0); }
 .fg1 { color: rgb(  0,  82, 255); }
 .fg2 { color: rgb(100, 185,  70); }

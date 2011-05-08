@@ -29,18 +29,42 @@ logging.getLogger().addFilter(TornadoFilter())
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
     crypted_pw = crypt.crypt(passwd, passwd)
 
-    conn = sqlite3.connect(password_db)
-    c = conn.cursor()
-    c.execute("select username,password from dglusers where username=? collate nocase",
-              (username,))
-    result = c.fetchone()
-    c.close()
-    conn.close()
+    try:
+        conn = sqlite3.connect(password_db)
+        c = conn.cursor()
+        c.execute("select username,password from dglusers where username=? collate nocase",
+                  (username,))
+        result = c.fetchone()
 
-    if result is None or crypted_pw != result[1]:
+        if result is None or crypted_pw != result[1]:
+            return None
+        else:
+            return result[0]
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
+def register_user(username, passwd, email): # Returns an error message or None
+    crypted_pw = crypt.crypt(passwd, passwd)
+
+    try:
+        conn = sqlite3.connect(password_db)
+        c = conn.cursor()
+        c.execute("select username from dglusers where username=? collate nocase",
+                  (username,))
+        result = c.fetchone()
+
+        if result: return "User already exists!"
+
+        c.execute("insert into dglusers(username, email, password, flags, env) values (?,?,?,0,'')",
+                  (username, email, crypted_pw))
+
+        conn.commit()
+
         return None
-    else:
-        return result[0]
+    finally:
+        if c: c.close()
+        if conn: conn.close()
 
 sockets = set()
 current_id = 0
@@ -314,6 +338,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.write_message("set_watching(true);")
             else:
                 self.write_message("set_layer('lobby');")
+
+        elif message.startswith("Register: "):
+            message = message[len("Register: "):]
+            username, _, message = message.partition(" ")
+            email, _, password = message.partition(" ")
+            error = register_user(username, password, email)
+            if error is None:
+                self.username = username
+                self.write_message("logged_in(" +
+                                   tornado.escape.json_encode(username) + ");")
+                self.send_game_links()
+            else:
+                self.write_message("register_failed(" +
+                                   tornado.escape.json_encode(error) + ");")
 
         elif message == "GoLobby":
             if self.is_running():
