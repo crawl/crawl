@@ -1,5 +1,6 @@
 import logging
 
+bind_nonsecure = True
 bind_address = ""
 bind_port = 8080
 
