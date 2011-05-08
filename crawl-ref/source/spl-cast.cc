@@ -1665,6 +1665,14 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_ABJURATION:
+        if (!abjuration(powc,
+                        monster_at(spd.isTarget ? beam.target
+                                                : you.pos() + spd.delta))) {
+            return (SPRET_ABORT);
+        }
+        break;
+
+    case SPELL_MASS_ABJURATION:
         abjuration(powc);
         break;
 

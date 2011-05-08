@@ -445,8 +445,21 @@ struct spell_desc
 {
     SPELL_ABJURATION, "Abjuration",
      SPTYP_SUMMONING,
-     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_ESCAPE,
      3,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_MASS_ABJURATION, "Mass Abjuration",
+     SPTYP_SUMMONING,
+     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
+     7,
      200,
      -1, -1,
      0,

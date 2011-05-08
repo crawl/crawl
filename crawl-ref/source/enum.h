@@ -3100,6 +3100,7 @@ enum spell_type
     SPELL_MESMERISE,
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
     SPELL_FIRE_SUMMON,
+    SPELL_MASS_ABJURATION,
 
     NUM_SPELLS
 };
