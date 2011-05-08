@@ -50,11 +50,13 @@ body {
 }
 
 a:link, a:active, a:visited {
-    color: green;
+    color: white;
+    font-weight: bold;
 }
 
 a:hover {
-    color: lightgreen;
+    color: lightgrey;
+    font-weight: bold;
 }
 
 .fg0 { color: rgb(  0,   0,   0); }
