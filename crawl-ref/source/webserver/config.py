@@ -41,3 +41,6 @@ ssl_port = 8081
 connection_timeout = 600
 
 kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
+
+nick_regex = r"^[a-zA-Z0-9]{3,20}$"
+max_passwd_length = 20
