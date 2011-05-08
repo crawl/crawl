@@ -302,6 +302,7 @@ var current_user;
 function login()
 {
     $("#login_form").hide();
+    $("#reg_link").hide();
     $("#login_message").html("Logging in...");
     var username = $("#username").val();
     var password = $("#password").val();
@@ -313,12 +314,59 @@ function login_failed()
 {
     $("#login_message").html("Login failed.");
     $("#login_form").show();
+    $("#reg_link").show();
 }
 
 function logged_in(username)
 {
     $("#login_message").html("Logged in as " + username);
     current_user = username;
+    $("#register").hide();
+    $("#reg_link").hide();
+}
+
+function start_register()
+{
+    $("#register").show();
+    var w = $("#register").width();
+    var ww = $(window).width();
+    $("#register").offset({ left: ww / 2 - w / 2, top: 50 });
+    $("#reg_username").focus();
+}
+
+function register()
+{
+    var username = $("#reg_username").val();
+    var password = $("#reg_password").val();
+    var password_repeat = $("#reg_repeat_password").val();
+    var email = $("#reg_email").val();
+
+    if (username.indexOf(" ") >= 0)
+    {
+        $("#register_message").html("The username can't contain spaces.");
+        return false;
+    }
+
+    if (email.indexOf(" ") >= 0)
+    {
+        $("#register_message").html("The email address can't contain spaces.");
+        return false;
+    }
+
+    if (password !== password_repeat)
+    {
+        $("#register_message").html("Passwords don't match.");
+        return false;
+    }
+
+    socket.send("Register: " + username + " " + email + " " + password);
+
+    return false;
+}
+
+function register_failed(message)
+{
+    $("#register_message").html(message);
 }
 
 function ping()
