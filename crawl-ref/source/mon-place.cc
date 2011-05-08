@@ -3603,52 +3603,76 @@ monster_type summon_any_demon(demon_class_type dct)
     if (dct == DEMON_RANDOM)
         dct = static_cast<demon_class_type>(random2(DEMON_RANDOM));
 
-    int temp_rand = random2(1000);
-
     switch (dct)
     {
     case DEMON_LESSER:
-        mon = ((temp_rand < 125) ? MONS_IMP :           // 12.5%
-               (temp_rand < 248) ? MONS_QUASIT :        // 12.3%
-               (temp_rand < 371) ? MONS_WHITE_IMP :     // 12.3%
-               (temp_rand < 494) ? MONS_LEMURE :        // 12.3%
-               (temp_rand < 617) ? MONS_UFETUBUS :      // 12.3%
-               (temp_rand < 740) ? MONS_IRON_IMP :      // 12.3%
-               (temp_rand < 863) ? MONS_MIDGE           // 12.3%
-                                 : MONS_SHADOW_IMP);    // 13.7%
+        // tier 5
+        mon = static_cast<monster_type>(random_choose_weighted(
+            1, MONS_IMP,
+            1, MONS_QUASIT,
+            1, MONS_WHITE_IMP,
+            1, MONS_LEMURE,
+            1, MONS_UFETUBUS,
+            1, MONS_IRON_IMP,
+            1, MONS_MIDGE,
+            1, MONS_SHADOW_IMP,
+            0));
         break;
 
     case DEMON_COMMON:
-        mon = ((temp_rand <  30) ? MONS_SIXFIRHY :      //  3.0%
-               (temp_rand < 174) ? MONS_NEQOXEC :       // 14.4%
-               (temp_rand < 318) ? MONS_ORANGE_DEMON :  // 14.4%
-               (temp_rand < 462) ? MONS_HELLWING :      // 14.4%
-               (temp_rand < 606) ? MONS_SMOKE_DEMON :   // 14.4%
-               (temp_rand < 750) ? MONS_YNOXINUL :      // 14.4%
-               (temp_rand < 789) ? MONS_RED_DEVIL :     //  3.9%
-               (temp_rand < 809) ? MONS_HELLION :       //  2.0%
-               (temp_rand < 829) ? MONS_ROTTING_DEVIL : //  2.0%
-               (temp_rand < 849) ? MONS_TORMENTOR :     //  2.0%
-               (temp_rand < 869) ? MONS_REAPER :        //  2.0%
-               (temp_rand < 889) ? MONS_SOUL_EATER :    //  2.0%
-               (temp_rand < 909) ? MONS_HAIRY_DEVIL :   //  2.0%
-               (temp_rand < 929) ? MONS_ICE_DEVIL :     //  2.0%
-               (temp_rand < 949) ? MONS_BLUE_DEVIL :    //  2.0%
-               (temp_rand < 969) ? MONS_BEAST :         //  2.0%
-               (temp_rand < 989) ? MONS_IRON_DEVIL      //  2.0%
-                                 : MONS_SUN_DEMON);     //  1.1%
+        if (x_chance_in_y(6, 10)) {
+            // tier 4
+            mon = static_cast<monster_type>(random_choose_weighted(
+                1, MONS_BLUE_DEVIL,
+                1, MONS_IRON_DEVIL,
+                1, MONS_ORANGE_DEMON,
+                1, MONS_RED_DEVIL,
+                1, MONS_ROTTING_DEVIL,
+                1, MONS_HAIRY_DEVIL,
+                1, MONS_SIXFIRHY,
+                1, MONS_HELLWING,
+                0));
+        }
+        else {
+            // tier 3
+            mon = static_cast<monster_type>(random_choose_weighted(
+                1, MONS_SUN_DEMON,
+                1, MONS_SOUL_EATER,
+                1, MONS_ICE_DEVIL,
+                1, MONS_SMOKE_DEMON,
+                1, MONS_NEQOXEC,
+                1, MONS_YNOXINUL,
+                1, MONS_SHADOW_DEMON,
+                1, MONS_CHAOS_SPAWN,
+                0));
+        }
         break;
 
     case DEMON_GREATER:
-        mon = ((temp_rand < 131) ? MONS_CACODEMON :     // 13.1%
-               (temp_rand < 262) ? MONS_BALRUG :        // 13.1%
-               (temp_rand < 393) ? MONS_BLUE_DEATH :    // 13.1%
-               (temp_rand < 524) ? MONS_GREEN_DEATH :   // 13.1%
-               (temp_rand < 655) ? MONS_EXECUTIONER :   // 13.1%
-               (temp_rand < 755) ? MONS_FIEND :         // 10.0%
-               (temp_rand < 845) ? MONS_ICE_FIEND :     //  9.0%
-               (temp_rand < 926) ? MONS_SHADOW_FIEND    //  8.1%
-                                 : MONS_PIT_FIEND);     //  7.4%
+        if (x_chance_in_y(6, 10)) {
+            // tier 2
+            mon = static_cast<monster_type>(random_choose_weighted(
+                1, MONS_GREEN_DEATH,
+                1, MONS_BLUE_DEATH,
+                1, MONS_BALRUG,
+                1, MONS_CACODEMON,
+                1, MONS_BEAST,
+                1, MONS_HELLION,
+                1, MONS_REAPER,
+                1, MONS_LOROCYPROCA,
+                1, MONS_TORMENTOR,
+                0));
+        }
+        else {
+            // tier 1
+            mon = static_cast<monster_type>(random_choose_weighted(
+                1, MONS_FIEND,
+                1, MONS_ICE_FIEND,
+                1, MONS_SHADOW_FIEND,
+                1, MONS_PIT_FIEND,
+                1, MONS_EXECUTIONER,
+                0));
+        }
         break;
 
     default:
