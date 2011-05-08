@@ -143,6 +143,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def start_crawl(self, game_id):
         if self.username == None: return
 
+        if not self.init_user():
+            self.write_message("set_layer('crt'); $('#crt').html('Could not initialize" +
+                               " your rc and morgue!');")
+            return
+
         self.game_id = game_id
 
         self.p = subprocess.Popen([crawl_binary,
@@ -172,6 +177,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             logging.info("Killing crawl process after SIGHUP did nothing (user %s, ip %s).",
                          self.username, self.request.remote_ip)
             self.p.send_signal(subprocess.signal.SIGTERM)
+
+    def init_user(self):
+        with open("/dev/null", "w") as f:
+            result = subprocess.call([init_player_program, self.username],
+                                     stdout = f, stderr = subprocess.STDOUT)
+            return result == 0
 
     def create_mock_ttyrec(self):
         now = datetime.datetime.utcnow()
