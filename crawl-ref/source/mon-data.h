@@ -4714,7 +4714,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_HAIRY_DEVIL, '4', LIGHTRED, "hairy devil",
+    MONS_HAIRY_DEVIL, '4', BROWN, "hairy devil",
     M_NO_FLAGS,
     MR_RES_POISON,
     0, 10, MONS_HAIRY_DEVIL, MONS_HAIRY_DEVIL, MH_DEMONIC, -4,
@@ -4764,7 +4764,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SOUL_EATER, '3', MAGENTA, "soul eater",
+    MONS_SOUL_EATER, '3', BLUE, "soul eater",
     M_SEE_INVIS,
     MR_RES_POISON | MR_RES_COLD,
     0, 12, MONS_SOUL_EATER, MONS_SOUL_EATER, MH_DEMONIC, -10,
@@ -4863,7 +4863,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_BLUE_DEATH, '2', BLUE, "Blue Death",
+    MONS_BLUE_DEATH, '2', LIGHTBLUE, "Blue Death",
     M_SPELLCASTER | M_SEE_INVIS,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD | MR_RES_ELEC, 2),
     0, 13, MONS_BLUE_DEATH, MONS_BLUE_DEATH, MH_DEMONIC, -9,
@@ -4948,7 +4948,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_TORMENTOR, '2', YELLOW, "tormentor",
+    MONS_TORMENTOR, '2', MAGENTA, "tormentor",
     M_SPELLCASTER | M_SPEAKS,
     MR_RES_POISON | MR_RES_FIRE,
     0, 10, MONS_TORMENTOR, MONS_TORMENTOR, MH_DEMONIC, -6,
