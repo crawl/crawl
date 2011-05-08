@@ -944,8 +944,8 @@ KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / hellion /\
                 / chaos spawn / demonic crawler / hellwing / orange demon /\
                 shadow demon / tormentor
 KMONS:      * = lorocyproca / reaper / soul eater / ice devil / sun demon
-KMONS:      | = blue death / green death / pit fiend / fiend / shadow fiend /\
-                ice fiend / executioner / balrug / cacodemon
+KMONS:      | = blizzard demon / green death / pit fiend / fiend /\
+                shadow fiend / ice fiend / executioner / balrug / cacodemon
 :           else
 KMONS:      % = place:D:15 zombie / guardian mummy w:2
 KMONS:      * = place:D:27 zombie / greater mummy w:5
@@ -1723,7 +1723,7 @@ KMONS:      2 = w:1 Lorocyproca / w:20 soul eater / w:20 reaper /\
 KMONS:      3 = blue devil / iron devil / shadow demon / neqoxec /\
             w:5 tormentor / ynoxinul
 KMONS:      4 = kobold demonologist / deep elf demonologist
-KMONS:      5 = blue death / green death / cacodemon
+KMONS:      5 = blizzard demon / green death / cacodemon
 {{
 wizname = crawl.make_name()
 

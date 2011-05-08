@@ -3653,7 +3653,7 @@ monster_type summon_any_demon(demon_class_type dct)
             // tier 2
             mon = static_cast<monster_type>(random_choose_weighted(
                 1, MONS_GREEN_DEATH,
-                1, MONS_BLUE_DEATH,
+                1, MONS_BLIZZARD_DEMON,
                 1, MONS_BALRUG,
                 1, MONS_CACODEMON,
                 1, MONS_BEAST,

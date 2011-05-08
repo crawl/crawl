@@ -320,7 +320,7 @@ ENDMAP
 NAME:   lemuel_nasty_pond
 DEPTH:  Tar:*
 TAGS:   no_pool_fixup no_rotate
-MONS:   plant, oklob plant, death ooze, rotting devil, blue death / green death
+MONS:   plant, oklob plant, death ooze, rotting devil, blizzard demon / green death
 SUBST:  W:w.
 SUBST:  Z:w.
 SUBST:  w = w .:1

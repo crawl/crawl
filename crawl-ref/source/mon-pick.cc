@@ -63,7 +63,7 @@ bool mons_abyss(int mcls)
     case MONS_ANCIENT_LICH:
     case MONS_ANGEL:
     case MONS_BALRUG:
-    case MONS_BLUE_DEATH:
+    case MONS_BLIZZARD_DEMON:
     case MONS_BLUE_DEVIL:
     case MONS_BONE_DRAGON:
     case MONS_BRAIN_WORM:
@@ -261,7 +261,7 @@ int mons_rare_abyss(int mcls)
         return 11;
 
     case MONS_BALRUG:
-    case MONS_BLUE_DEATH:
+    case MONS_BLIZZARD_DEMON:
     case MONS_BLUE_DEVIL:
     case MONS_CACODEMON:
     case MONS_CHAOS_SPAWN:
@@ -441,7 +441,7 @@ bool mons_pan(int mcls)
     case MONS_WIZARD:
     // demons
     case MONS_BALRUG:
-    case MONS_BLUE_DEATH:
+    case MONS_BLIZZARD_DEMON:
     case MONS_CACODEMON:
     case MONS_CHAOS_SPAWN:
     case MONS_DEMONIC_CRAWLER:
