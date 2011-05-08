@@ -28,6 +28,8 @@ status_file_update_rate = 5
 
 max_connections = 100
 
+init_player_program = "/bin/echo"
+
 # ssl_options = None # No SSL
 ssl_options = {
     "certfile": "./webserver/localhost.crt",
