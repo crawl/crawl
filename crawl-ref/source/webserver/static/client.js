@@ -330,6 +330,7 @@ function logged_in(username)
     $("#login_message").html("Logged in as " + username);
     current_user = username;
     $("#register").hide();
+    $("#login_form").hide();
     $("#reg_link").hide();
 }
 
