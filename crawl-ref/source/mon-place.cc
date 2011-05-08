@@ -3609,14 +3609,14 @@ monster_type summon_any_demon(demon_class_type dct)
     {
     case DEMON_LESSER:
         temp_rand = random2(73);
-        mon = ((temp_rand > 63) ? MONS_IMP :        // 13.70%
+        mon = ((temp_rand > 63) ? MONS_IMP :        // 12.33%
                (temp_rand > 54) ? MONS_QUASIT :     // 12.33%
                (temp_rand > 45) ? MONS_WHITE_IMP :  // 12.33%
                (temp_rand > 36) ? MONS_LEMURE :     // 12.33%
                (temp_rand > 27) ? MONS_UFETUBUS :   // 12.33%
                (temp_rand > 18) ? MONS_IRON_IMP :   // 12.33%
                (temp_rand > 9)  ? MONS_MIDGE        // 12.33%
-                                : MONS_SHADOW_IMP); // 12.33%
+                                : MONS_SHADOW_IMP); // 13.70%
         break;
 
     case DEMON_COMMON:
@@ -3638,7 +3638,7 @@ monster_type summon_any_demon(demon_class_type dct)
                (temp_rand > 207)  ? MONS_BLUE_DEVIL :    //  1.97%
                (temp_rand > 128)  ? MONS_BEAST :         //  1.97%
                (temp_rand > 49)   ? MONS_IRON_DEVIL      //  1.97%
-                                  : MONS_SUN_DEMON);     //  1.22%
+                                  : MONS_SUN_DEMON);     //  1.25%
         break;
 
     case DEMON_GREATER:
@@ -3651,7 +3651,7 @@ monster_type summon_any_demon(demon_class_type dct)
                (temp_rand > 244) ? MONS_FIEND :            // 10.00%
                (temp_rand > 154) ? MONS_ICE_FIEND :        //  9.00%
                (temp_rand > 73)  ? MONS_SHADOW_FIEND       //  8.10%
-                                 : MONS_PIT_FIEND);        //  7.30%
+                                 : MONS_PIT_FIEND);        //  7.40%
         break;
 
     default:
