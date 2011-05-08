@@ -392,7 +392,7 @@ end
 
 }}
 
-default-depth: Vault:2-7, Crypt, D:22-27, Elf:5-7
+default-depth: Vault:2-7, Crypt, D:22-27, Elf:3-5
 
 ###############################################################################
 # Portal entrances.

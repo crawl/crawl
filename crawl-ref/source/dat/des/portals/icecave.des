@@ -326,7 +326,7 @@ ENDMAP
 NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
 CHANCE: 5%
-DEPTH:  D:14-20, Elf:3-4, Vault:1-7
+DEPTH:  D:14-20, Elf:3-5, Vault:1-7
 : ice_cave_portal(_G)
 MONS:   ice beast / freezing wraith w:2 / nothing w:2
 MONS:   freezing wraith / nothing w:3
@@ -346,7 +346,7 @@ ENDMAP
 NAME:   portal_ice_cave_demonic_guard
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
 CHANCE: 5%
-DEPTH:  D:14-20, Elf:3-4, Vault:1-7
+DEPTH:  D:14-20, Elf:3-5, Vault:1-7
 : ice_cave_portal(_G)
 MONS:   ice devil
 MAP
@@ -366,7 +366,7 @@ NAME:   portal_ice_cave_entry_ice_statue_01
 TAGS:   uniq_ice_cave chance_icecave
 CHANCE: 5%
 WEIGHT: 5
-DEPTH:  D:11-20, Elf:1-4, Vault:1-7
+DEPTH:  D:11-20, Elf:1-5, Vault:1-7
 : ice_cave_portal(_G)
 MONS:   ice statue
 MAP
@@ -384,7 +384,7 @@ NAME:   portal_ice_cave_entry_ice_statue_02
 TAGS:   uniq_ice_cave chance_icecave
 CHANCE: 5%
 WEIGHT: 5
-DEPTH:  D:14-20, Elf:3-4, Vault:1-7
+DEPTH:  D:14-20, Elf:3-5, Vault:1-7
 : ice_cave_portal(_G)
 MONS:   ice statue
 MAP
