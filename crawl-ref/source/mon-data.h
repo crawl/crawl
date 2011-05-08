@@ -4875,7 +4875,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_BALRUG, '2', RED, "Balrug",
+    MONS_BALRUG, '2', RED, "balrug",
     M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_GLOWS_LIGHT,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 15, MONS_BALRUG, MONS_BALRUG, MH_DEMONIC, -9,
@@ -4887,7 +4887,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_CACODEMON, '2', YELLOW, "Cacodemon",
+    MONS_CACODEMON, '2', YELLOW, "cacodemon",
     M_SPELLCASTER | M_SEE_INVIS,
     mrd(MR_RES_POISON | MR_RES_ELEC, 3),
     0, 14, MONS_CACODEMON, MONS_CACODEMON, MH_DEMONIC, -9,
@@ -4936,7 +4936,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_LOROCYPROCA, '2', BLUE, "Lorocyproca",
+    MONS_LOROCYPROCA, '2', BLUE, "lorocyproca",
     M_SENSE_INVIS | M_INVIS,
     MR_RES_POISON | MR_RES_COLD | MR_RES_FIRE | MR_RES_ELEC,
     0, 12, MONS_LOROCYPROCA, MONS_LOROCYPROCA, MH_DEMONIC, -7,
