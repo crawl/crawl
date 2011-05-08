@@ -17,7 +17,7 @@
           {{ running_game.username }}
         </a>
       </td>
-      <td>{{ running_game.where or "" }}</td>
+      <td><pre>{{ running_game.where or "" }}</pre></td>
       <td>{{ int(running_game.idle_time()) }}s</td>
       <td>{{ len(running_game.watchers) }}</td>
     </tr>
