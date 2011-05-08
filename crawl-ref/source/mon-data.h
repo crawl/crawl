@@ -3053,7 +3053,7 @@ static monsterentry mondata[] = {
     MONS_GRIFFON, 'H', YELLOW, "griffon",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
-    1700, 8, MONS_GRIFFON, MONS_GRIFFON, MH_NATURAL, -3,
+    1700, 5, MONS_GRIFFON, MONS_GRIFFON, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 18}, {AT_PECK, AF_PLAIN, 10},
       {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK },
     { 12, 3, 5, 0 },
