@@ -24,6 +24,8 @@ running_game_path = "./rcs/running/"
 
 dgl_status_file = "./rcs/status"
 
+status_file_update_rate = 5
+
 max_connections = 100
 
 # ssl_options = None # No SSL
