@@ -6,6 +6,7 @@ import tornado.websocket
 import tornado.ioloop
 import tornado.web
 import tornado.escape
+import tornado.template
 
 import crypt
 import sqlite3
@@ -23,7 +24,7 @@ logging.basicConfig(**logging_config)
 
 class TornadoFilter(logging.Filter):
     def filter(self, record):
-        if record.module == "web": return False
+        if record.module == "web" and record.levelno <= logging.INFO: return False
         return True
 logging.getLogger().addFilter(TornadoFilter())
 
@@ -72,6 +73,25 @@ def register_user(username, passwd, email): # Returns an error message or None
     finally:
         if c: c.close()
         if conn: conn.close()
+
+class DynamicTemplateLoader(tornado.template.Loader):
+    def __init__(self, root_dir):
+        tornado.template.Loader.__init__(self, root_dir)
+
+    def load(self, name, parent_path=None):
+        name = self.resolve_path(name, parent_path=parent_path)
+        if name in self.templates:
+            template = self.templates[name]
+            path = os.path.join(self.root, name)
+            stat = os.stat(path)
+            if stat.st_mtime > template.load_time:
+                del self.templates[name]
+            else:
+                return template
+
+        template = super(DynamicTemplateLoader, self).load(name, parent_path)
+        template.load_time = time.time()
+        return template
 
 sockets = set()
 current_id = 0
@@ -476,7 +496,7 @@ signal.signal(signal.SIGHUP, handler)
 
 settings = {
     "static_path": static_path,
-    "template_path": template_path
+    "template_loader": DynamicTemplateLoader(template_path)
 }
 
 application = tornado.web.Application([
