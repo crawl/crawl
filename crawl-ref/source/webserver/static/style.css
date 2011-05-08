@@ -45,6 +45,14 @@ body {
     float: right;
 }
 
+a:link, a:active, a:visited {
+    color: green;
+}
+
+a:hover {
+    color: lightgreen;
+}
+
 .fg0 { color: rgb(  0,   0,   0); }
 .fg1 { color: rgb(  0,  82, 255); }
 .fg2 { color: rgb(100, 185,  70); }
