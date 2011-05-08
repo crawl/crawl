@@ -6,10 +6,18 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "libutil.h"
 #include "player.h"
 #include "terrain.h"
 
 #define notify_fail(x) (why_not = (x), false)
+
+static std::string _wallmsg(coord_def c)
+{
+    ASSERT(map_bounds(c)); // there'd be an information leak
+    const char *wall = feat_type_name(grd(c));
+    return "There is " + article_a(wall) + " there.";
+}
 
 bool targetter::set_aim(coord_def a)
 {
@@ -60,7 +68,7 @@ bool targetter_smite::valid_aim(coord_def a)
     if ((origin - a).abs() > range2)
         return notify_fail("Out of range.");
     if (!affects_walls && feat_is_solid(grd(a)))
-        return notify_fail("There is a wall there."); // FIXME: need a short name ("wall", "tree")
+        return notify_fail(_wallmsg(a));
     return true;
 }
 
@@ -121,7 +129,7 @@ bool targetter_reach::valid_aim(coord_def a)
     if (!cell_see_cell(origin, a))
         return notify_fail("You cannot see that place.");
     if (!agent->see_cell_no_trans(a))
-        return notify_fail("You can'tt get through.");
+        return notify_fail("You can't get through.");
 
     int dist = (origin - a).abs();
 
@@ -172,7 +180,7 @@ bool targetter_cloud::valid_aim(coord_def a)
     if (agent && (origin - a).abs() > range2)
         return notify_fail("Out of range.");
     if (!in_bounds(a) || feat_is_solid(grd(a)))
-        return notify_fail("There's a wall there."); // FIXME: short name
+        return notify_fail(_wallmsg(a));
     if (env.cgrid(a) != EMPTY_CLOUD)
         return notify_fail("There's already a cloud there.");
     ASSERT(_cloudable(a));

@@ -426,6 +426,12 @@ bool feat_is_watery(dungeon_feature_type feat)
     return (feat_is_water(feat) || feat == DNGN_FOUNTAIN_BLUE);
 }
 
+bool feat_is_lava(dungeon_feature_type feat)
+{
+    return (feat == DNGN_LAVA
+            || feat == DNGN_LAVA_SEA);
+}
+
 // Returns GOD_NO_GOD if feat is not an altar, otherwise returns the
 // GOD_* type.
 god_type feat_altar_god(dungeon_feature_type feat)
@@ -1746,4 +1752,33 @@ bool cell_can_cling_to(const coord_def& from, const coord_def to)
                     return true;
 
         return false;
+}
+
+const char* feat_type_name(dungeon_feature_type feat)
+{
+    if (feat_is_door(feat))
+        return "door";
+    if (feat_is_wall(feat))
+        return "wall";
+    if (feat == DNGN_GRATE)
+        return "grate";
+    if (feat_is_tree(feat))
+        return "tree";
+    if (feat_is_statue_or_idol(feat))
+        return "statue";
+    if (feat_is_water(feat))
+        return "water";
+    if (feat_is_lava(feat))
+        return "lava";
+    if (feat_is_altar(feat))
+        return "altar";
+    if (feat_is_trap(feat))
+        return "trap";
+    if (feat_is_stair(feat))
+        return "stair";
+    if (feat_is_portal(feat))
+        return "portal";
+    if (feat == DNGN_UNSEEN)
+        return "unknown terrain";
+    return "floor";
 }
