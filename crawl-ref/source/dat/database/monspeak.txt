@@ -2239,9 +2239,7 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 
 @The_monster@ says, "I asked for directions to the rune, but they belched at me."
 
-@The_monster@ says, "Maybe, with this gold, I'll be able to afford that Trove..."
-
-@The_monster@ says, "I prefer the Lair of the Beasts, to be honest. At least animals don't complain."
+@The_monster@ says, "I prefer the Lair of Beasts, to be honest. At least animals don't complain."
 
 @The_monster@ says, "I hate complainers so much."
 %%%%
@@ -2249,8 +2247,6 @@ Elven Halls Donald
 
 w:50
 @_generic_Donald_@
-
-@The_monster@ says, "They're so pretty, I think it must be a glamour."
 
 @The_monster@ says, "This place goes on forever. I hate that."
 
@@ -2272,7 +2268,9 @@ w:50
 
 @The_monster@ says, "What sort of sludge, anyway?"
 
-@The_monster@ says, "Some of those elves look a bit grey in the face."
+@The_monster@ says, "What a garish colour scheme."
+
+@The_monster@ says, "None of these elves know how to fight. I hate that."
 %%%%
 Swamp Donald
 
@@ -2299,16 +2297,18 @@ w:50
 
 @The_monster@ says, "I hate mosquitoes. Almost as much as I hate swamp water."
 
-@The_monster@ says, "At least there's some dry land and pathways, now."
+@The_monster@ says, "At least there's some dry land. I hate getting wet."
 
 @The_monster@ says, "Is there a plague of frogs happening, or something? At least it's not locusts."
+
+@The_monster@ says, "The more heads they grow, the more I hate hydras."
 %%%%
 Shoals Donald
 
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "Tides? What were they thinking? I hate tides!"
+@The_monster@ says, "Tides? I hate tides!"
 
 @The_monster@ says, "I like turtle soup. I hate turtles."
 
@@ -2353,7 +2353,7 @@ Slime Pits Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "I forgot my corrosion kit. Damn, I hate that!"
+@The_monster@ says, "I forgot to wear corrosion-proof armour. Damn, I hate that!"
 
 @The_monster@ says, "Those eyeballs are creepy."
 
@@ -2392,6 +2392,12 @@ w:50
 @The_monster@ says, "Someone said I could use acid to solve all my problems. It just made them worse."
 
 @The_monster@ says, "I hope the rune isn't sticky."
+
+@The_monster@ says, "I bet a jelly ate the rune."
+
+@The_monster@ says, "I hate that slurping noise."
+
+@The_monster@ says, "I hate that squelching noise."
 %%%%
 Snake Pit Donald
 
@@ -2415,10 +2421,6 @@ w:50
 @The_monster@ says, "Nagas are pretty ugly. I hate nagas."
 
 @The_monster@ says, "I really didn't expect a pair of shoes to bite me."
-
-@The_monster@ says, "There's a difference between guardian serpents and nagas? I never noticed."
-
-@The_monster@ says, "Brown snakes? Black snakes? Grey snakes? This guide is useless!"
 
 @The_monster@ says, "Did all the warriors here go to shield school or something?"
 
@@ -2487,6 +2489,10 @@ w:50
 @The_monster@ says, "I'm hungry."
 
 @The_monster@ says, "I've been waiting here for ages. Nothing new."
+
+@The_monster@ says, "What's so great about these maces?"
+
+@The_monster@ says, "Nobody here wants to dance with me. I hate that."
 %%%%
 Crypt Donald
 
@@ -2535,7 +2541,7 @@ w:50
 
 @The_monster@ says, "Have you seen a sarcophagus full of treasure around? Me neither."
 
-@The_monster@ says, "I just hope they don't have the liches behind glass, I hate that."
+@The_monster@ says, "I just hope the loot isn't guarded by liches. I hate liches."
 
 @The_monster@ says, "The mummy wasn't that great."
 
@@ -2590,8 +2596,6 @@ w:50
 
 @The_monster@ says, "Didn't you like your horns?"
 
-@The_monster@ says, "Don't you hate it when everyone gets mad at you?"
-
 @The_monster@ says, "Damn, I left my potions of berserk rage outside."
 
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
@@ -2641,6 +2645,8 @@ w:50
 @The_monster@ says, "You strike me as a masochist."
 
 @The_monster@ says, "I'm hungry. Can you summon some snacks?"
+
+@The_monster@ says, "Yuck, you smell of miasma."
 %%%%
 Yredelemnul Donald
 
@@ -2663,7 +2669,7 @@ w:50
 
 @The_monster@ says, "A flaming corpse just burned my scrolls. I hate that."
 
-@The_monster@ says, "Zombies? Skeletons? Don't you get bored for real company?"
+@The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
 
 @The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
 %%%%
@@ -2679,8 +2685,6 @@ w:50
 @The_monster@ says, "Oh, hey! I could use a new animal skin. Have you got any spares?"
 
 @The_monster@ says, "Nice kit."
-
-@The_monster@ says, "Can I have your spare potions?"
 
 VISUAL:@The_monster@ yawns.
 
@@ -2735,12 +2739,6 @@ w:50
 @The_monster@ says, "I hate books."
 
 @The_monster@ says, "Surely there's a limit to the number of books you can carry. Right?"
-
-@The_monster@ says, "That skill training requirement sounds like a real pain."
-
-@The_monster@ says, "Did I just see you do a victory dance?"
-
-@The_monster@ says, "What did that wall do to you?"
 
 @The_monster@ says, "I hate spells."
 
@@ -2803,6 +2801,8 @@ w:50
 @The_monster@ says, "I've seen this trick before. You've got the ace up your sleeve, right?"
 
 @The_monster@ says, "You need to come to terms with your gambling problem, mate."
+
+@The_monster@ says, "How about a game of 52 card pickup?"
 %%%%
 Elyvilon Donald
 
@@ -2820,6 +2820,8 @@ w:50
 @The_monster@ says, "If I give you my weapon, will you leave me alone?"
 
 @The_monster@ says, "Come on. Make me an offer of peace that I can't refuse!"
+
+@The_monster@ says, "For every monster you don't kill, I'll kill three."
 %%%%
 Lugonu Donald
 
@@ -2943,8 +2945,6 @@ w:50
 @The_monster@ says, "How do you spell that?"
 
 @The_monster@ says, "How do you pronounce that?"
-
-@The_monster@ says, "Tummy is such a puerile word."
 %%%%
 Xom Donald
 
@@ -2993,6 +2993,8 @@ w:50
 @The_monster@ says, "What's the point of summoning, anyway?"
 
 @The_monster@ says, "Do you find it easier to cast spells, now?"
+
+@The_monster@ says, "I hate explosions."
 %%%%
 No God Donald
 
