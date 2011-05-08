@@ -534,14 +534,14 @@ $(document).ready(
         else
         {
             set_layer("crt");
-            $("#crt").html("Sadly, your browser does not support WebSockets. ");
-            if ($.browser.mozilla)
-            {
-                $("#crt").append("If you are using Firefox 4, WebSocket support is ");
-                $("#crt").append("disabled for security reasons. You can enable it in ");
-                $("#crt").append("about:config with the network.websocket");
-                $("#crt").append(".override-security-block setting.");
-            }
+            $("#crt").html("Sadly, your browser does not support WebSockets. <br><br>");
+            $("#crt").append("The following browsers can be used to run Web Crawl: ");
+            $("#crt").append("<ul><li>Chrome 6 and greater</li>" +
+                             "<li>Firefox 4, after disabling the " +
+                             "network.websocket.override-security-block setting in " +
+                             "about:config</li><li>Opera 11, after " +
+                             " enabling WebSockets in opera:config#Enable%20WebSockets" +
+                             "<li>Safari 5</li></ul>");
         }
     });
 
