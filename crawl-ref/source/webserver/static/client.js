@@ -266,7 +266,15 @@ function handle_keypress(e)
 
 function handle_keydown(e)
 {
-    if (current_layer == "lobby") return;
+    if (current_layer == "lobby")
+    {
+        if (e.which == 27)
+        {
+            e.preventDefault();
+            $("#register").hide();
+        }
+        return;
+    }
 
     if (e.ctrlKey && !e.shiftKey && !e.altKey)
     {
@@ -332,6 +340,11 @@ function start_register()
     var ww = $(window).width();
     $("#register").offset({ left: ww / 2 - w / 2, top: 50 });
     $("#reg_username").focus();
+}
+
+function cancel_register()
+{
+    $("#register").hide();
 }
 
 function register()

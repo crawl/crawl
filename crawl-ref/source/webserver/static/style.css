@@ -41,6 +41,10 @@ body {
     float: left;
 }
 
+#reg_cancel {
+    float: left;
+}
+
 #reg_submit {
     float: right;
 }
