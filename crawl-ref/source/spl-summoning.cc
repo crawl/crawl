@@ -1180,6 +1180,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
         else if (friendly && mons_genus(mon) == MONS_IMP)
         {
             std::string msg = getSpeakString("_friendly_imp_greeting");
+            execute_embedded_lua(msg);
             if (msg == "__NONE")
                 msg.clear();
             mons_speaks_msg(&menv[mons], msg, MSGCH_TALK,

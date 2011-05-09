@@ -424,7 +424,23 @@ magnificent
 %%%%
 _suck_up_adj2
 
-rosy-lipped
+{{
+if you.race() == "Mummy" then
+    return "velvet-covered"
+elseif you.mutation('beak') > 0 then
+    return "pearl-beaked"
+elseif you.transform() == "lich" then
+    return "ivory-boned"
+elseif you.transform() == "statue" then
+    return "marble-toed"
+elseif you.transform() == "dragon" then
+    return "opal-scaled"
+elseif you.race() == "Felid" then
+    return "pillow-pawed"
+else
+    return "rosy-lipped"
+end
+}}
 
 awesome
 
@@ -435,8 +451,6 @@ god-like
 _suck_up_noun
 
 voivode
-
-prince
 
 master
 
