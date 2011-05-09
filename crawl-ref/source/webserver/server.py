@@ -134,7 +134,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return self.id == other.id
 
     def open(self):
-        logging.info("Socket opened from ip %s.", self.request.remote_ip)
+        logging.info("Socket opened from ip %s (fd: %s).",
+                     self.request.remote_ip, self.request.connection.stream.socket.fileno())
         global sockets
         sockets.add(self)
 
@@ -210,6 +211,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                   stdout = subprocess.PIPE,
                                   stderr = subprocess.PIPE)
 
+        logging.info("Starting crawl for user %s (ip %s, fds %s,%s,%s).",
+                     self.username, self.request.remote_ip, self.p.stdin.fileno(),
+                     self.p.stdout.fileno(), self.p.stderr.fileno())
+
         self.ioloop.add_handler(self.p.stdout.fileno(), self.on_stdout,
                                 self.ioloop.READ | self.ioloop.ERROR)
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
@@ -275,6 +280,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def stop_watching(self):
         if self.watched_game:
+            logging.info("User %s stopped watching %s (ip: %s)",
+                         self.username, self.watched_game.username, self.request.remote_ip)
             self.watched_game.remove_watcher(self)
             self.watched_game = None
             self.write_message("set_watching(false);")
