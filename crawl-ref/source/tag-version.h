@@ -26,6 +26,7 @@ enum tag_minor_version
     TAG_MINOR_ASH_PENANCE,         // Ashenzari's wrath counter.
     TAG_MINOR_BOOK_ZOOLOGY,        // Addition of the book of zoology.
     TAG_MINOR_CHR_COMPAT,          // Future-compatible chr data.
+    TAG_MINOR_ZOT_POINTS,          // Untie ZotDef power points from the xp pool.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

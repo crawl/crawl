@@ -149,14 +149,9 @@ int calc_skill_cost(int skill_cost_level, int skill_level)
 // skill levels.
 void reassess_starting_skills()
 {
-    // Zotdef: all skills turned off, but not those with no
-    // skill points (makes it too hard to learn a new skill
-    // otherwise)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (crawl_state.game_is_zotdef())
-            you.practise_skill[i] = !you.skills[sk];
         if (you.skills[sk] == 0
             && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
         {

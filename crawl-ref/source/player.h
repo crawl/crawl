@@ -128,8 +128,10 @@ public:
   int  skill_cost_level;
   int  total_skill_points;
   int  exp_available;
+  int  zot_points; // ZotDef currency
 
   int exp_docked, exp_docked_total; // Ashenzari's wrath
+  int exp_delta; // skill XP added/borrowed
 
   FixedArray<uint8_t, 6, 50> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
