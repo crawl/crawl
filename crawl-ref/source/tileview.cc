@@ -153,7 +153,6 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
     case BRANCH_TARTARUS:
     case BRANCH_CRYPT:
-    case BRANCH_VESTIBULE_OF_HELL:
         flv.wall  = TILE_WALL_UNDEAD;
         flv.floor = TILE_FLOOR_TOMB;
         return;
@@ -161,6 +160,11 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     case BRANCH_TOMB:
         flv.wall  = TILE_WALL_TOMB;
         flv.floor = TILE_FLOOR_TOMB;
+        return;
+
+    case BRANCH_VESTIBULE_OF_HELL:
+        flv.wall  = TILE_WALL_HELL;
+        flv.floor = TILE_FLOOR_INFERNAL;
         return;
 
     case BRANCH_DIS:
