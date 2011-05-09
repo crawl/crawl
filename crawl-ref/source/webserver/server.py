@@ -321,8 +321,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.ioloop.stop()
 
     def on_message(self, message):
-        self.last_action_time = time.time()
-
         login_start = "Login: "
         if message.startswith(login_start):
             message = message[len(login_start):]
@@ -391,6 +389,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.stop_watching()
 
         elif self.p is not None:
+            self.last_action_time = time.time()
+
             logging.debug("Message: %s (user: %s)", message, self.username)
             self.poll_crawl()
             if self.p is not None:
