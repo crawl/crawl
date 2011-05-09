@@ -209,6 +209,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_UNDISCOVERED_TRAP:
         return TILE_FLOOR_NORMAL;
     case DNGN_ENTER_HELL:
+        if (player_in_hell())
+            return TILE_DNGN_RETURN_HELL;
         return TILE_DNGN_ENTER_HELL;
     case DNGN_OPEN_DOOR:
         return TILE_DNGN_OPEN_DOOR;
@@ -238,8 +240,6 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         {
             return TILE_DNGN_EXIT_DUNGEON;
         }
-        if (player_in_hell())
-            return TILE_DNGN_RETURN_HELL;
         return TILE_DNGN_STONE_STAIRS_UP;
     case DNGN_ESCAPE_HATCH_UP:
         return TILE_DNGN_ESCAPE_HATCH_UP;
@@ -253,8 +253,9 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ENTER_TARTARUS;
     case DNGN_ENTER_ABYSS:
         return TILE_DNGN_ENTER_ABYSS;
-    case DNGN_EXIT_ABYSS:
     case DNGN_EXIT_HELL:
+        return TILE_DNGN_RETURN_HELL;
+    case DNGN_EXIT_ABYSS:
     case DNGN_EXIT_PANDEMONIUM:
         return TILE_DNGN_EXIT_ABYSS;
     case DNGN_STONE_ARCH:
