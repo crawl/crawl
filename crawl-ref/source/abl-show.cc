@@ -150,13 +150,13 @@ struct ability_def
     unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
     generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
     unsigned int        flags;          // used for additonal cost notices
-    unsigned int        xp_cost;        // experience point cost of ability
+    unsigned int        zp_cost;        // zot point cost of ability
 };
 
 static int  _find_ability_slot(ability_type which_ability);
 static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
-static void _pay_ability_costs(const ability_def& abil, int xpcost);
+static void _pay_ability_costs(const ability_def& abil, int zpcost);
 static std::string _describe_talent(const talent& tal);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 static std::string _zd_mons_description_for_ability (const ability_def &abil);
@@ -592,19 +592,19 @@ trap_type trap_for_ability(const ability_def& abil)
     }
 }
 
-// Scale the xp cost by the number of friendly monsters
+// Scale the zp cost by the number of friendly monsters
 // of that type. Each successive critter costs 20% more
 // than the last one, after the first two.
-int xp_cost(const ability_def& abil)
+int zp_cost(const ability_def& abil)
 {
-    int cost = abil.xp_cost;
+    int cost = abil.zp_cost;
     int scale10 = 0;        // number of times to scale up by 10%
     int scale20 = 0;        // number of times to scale up by 20%
     int num;
     switch(abil.ability)
     {
         default:
-            return abil.xp_cost;
+            return abil.zp_cost;
 
         // Monster type 1: reasonably generous
         case ABIL_MAKE_PLANT:
@@ -699,13 +699,13 @@ const std::string make_cost_description(ability_type ability)
         ret << " HP";
     }
 
-    if (abil.xp_cost)
+    if (abil.zp_cost)
     {
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << xp_cost(abil);
-        ret << " XP";
+        ret << zp_cost(abil);
+        ret << " ZP";
     }
 
     if (abil.food_cost && you.is_undead != US_UNDEAD
@@ -1666,10 +1666,10 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
-    int xpcost=xp_cost(abil);
-    if (xpcost)
+    int zpcost = zp_cost(abil);
+    if (zpcost)
     {
-        if (!enough_xp(xpcost, false))
+        if (!enough_zp(zpcost, false))
         {
             crawl_state.zero_turns_taken();
             return (false);
@@ -1694,7 +1694,7 @@ static bool _activate_talent(const talent& tal)
     if (success)
     {
         practise(EX_USED_ABIL, abil.ability);
-        _pay_ability_costs(abil, xpcost);
+        _pay_ability_costs(abil, zpcost);
     }
 
     return (success);
@@ -2758,7 +2758,7 @@ static int _scale_piety_cost(ability_type abil, int original_cost)
 
 // We pass in ability XP cost as it may have changed during the exercise
 // of the ability (if the cost is scaled, for example)
-static void _pay_ability_costs(const ability_def& abil, int xpcost)
+static void _pay_ability_costs(const ability_def& abil, int zpcost)
 {
     if (abil.flags & ABFLAG_INSTANT)
     {
@@ -2791,9 +2791,9 @@ static void _pay_ability_costs(const ability_def& abil, int xpcost)
             rot_hp(hp_cost);
     }
 
-    if (xpcost)
+    if (zpcost)
     {
-        you.exp_available -= xpcost;
+        you.zot_points -= zpcost;
         you.redraw_experience = true;
     }
 
