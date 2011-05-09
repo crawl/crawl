@@ -1024,6 +1024,8 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.gold);
 
     marshallInt(th, you.exp_available);
+    marshallInt(th, you.zot_points);
+    marshallInt(th, you.exp_delta);
 
     marshallShort(th, you.base_hp);
     marshallShort(th, you.base_hp2);
@@ -1603,6 +1605,15 @@ static void tag_read_you(reader &th)
     you.experience                = unmarshallInt(th);
     you.gold                      = unmarshallInt(th);
     you.exp_available             = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_ZOT_POINTS)
+    {
+#endif
+    you.zot_points                = unmarshallInt(th);
+    you.exp_delta                 = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
 
     you.base_hp                   = unmarshallShort(th);
     you.base_hp2                  = unmarshallShort(th);

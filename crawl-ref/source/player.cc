@@ -2678,6 +2678,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
     if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS)
         return;
 
+    you.zot_points += exp_gained;
+
     if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
         exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
     exp_gained -= ash_reduce_xp(exp_gained);
@@ -5418,7 +5420,6 @@ void player::init()
     xray_vision = false;
 
     skills.init(0);
-    // In Zot def we turn off all skills with non-zero skill level later
     practise_skill.init(true);
     skill_points.init(0);
     ct_skill_points.init(0);
@@ -5434,7 +5435,9 @@ void player::init()
 
     skill_cost_level = 1;
     total_skill_points = 0;
-    exp_available = 0; // new games get 25 or 80 later
+    exp_available = 0; // new games get 25
+    zot_points = 0;
+    exp_delta = 0;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);

@@ -1504,7 +1504,9 @@ static void _setup_generic(const newgame_def& ng)
     reassess_starting_skills();
     calc_total_skill_points();
     init_skill_order();
-    you.exp_available = crawl_state.game_is_zotdef()? 80 : 25;
+    you.exp_available = 25;
+    if (crawl_state.game_is_zotdef())
+        you.zot_points = 80;
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
