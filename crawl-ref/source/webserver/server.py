@@ -288,10 +288,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message("set_layer('lobby');")
             self.update_lobby();
 
-    def shutdown(self, msg):
+    def shutdown(self):
         if not self.client_terminated:
+            msg = self.render_string("shutdown.html", game=self)
             self.write_message("connection_closed(" +
-                               tornado.escape.json_encode(msg) + ");");
+                               tornado.escape.json_encode(msg) + ");")
             self.close()
         if self.is_running():
             self.stop_crawl()
@@ -487,11 +488,11 @@ def find_user_sockets(username):
         if socket.username and socket.username.lower() == username.lower():
             yield socket
 
-def shutdown(msg = "The server is shutting down. Your game has been saved."):
+def shutdown():
     global shutting_down
     shutting_down = True
     for socket in list(sockets):
-        socket.shutdown(msg)
+        socket.shutdown()
 
 def handler(signum, frame):
     shutdown()
