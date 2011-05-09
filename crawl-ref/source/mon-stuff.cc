@@ -1981,8 +1981,7 @@ int monster_die(monster* mons, killer_type killer,
             }
 
             if (good_kill
-                && (you.religion == GOD_MAKHLEB
-                    || you.religion == GOD_VEHUMET
+                && (you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)

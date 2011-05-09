@@ -372,7 +372,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "speed up your combat" },
     // Makhleb
-    { "gain power from killing",
+    { "gain health from killing",
       "harness Makhleb's destructive might",
       "summon a lesser servant of Makhleb",
       "hurl Makhleb's greater destruction",
