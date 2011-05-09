@@ -366,15 +366,17 @@ MONS:   Geryon
 MONS:   Murray
 NSUBST: . = 1:2 / *:.
 : end
+FTILE:  +'T = floor_infernal_blank
+TILE:   c = dngn_stone_dark
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v.....v..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx.....v.....v.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxx........v.....v........xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx..........v..D..v..........xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx............v.....v............xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx.............v.....v.............xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v'''''v..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx.....v'''''v.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx........v'''''v........xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx..........v''D''v..........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx............v'''''v............xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx.............v'''''v.............xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx..............vvv+vvv..............xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.....................................xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx.......................................xxxxxxxxxxxxxxxx
@@ -391,17 +393,17 @@ xxxxxxx.......................................................xxxxxxxx
 xxxxxx.........................................................xxxxxxx
 xxxxxx............................{......................cccc..xxxxxxx
 xxxxxx...................................................ccccccccxxxxx
-xxxxx...l.l..............................................cccc...cxxxxx
-xxxxx..l.l.l.l.............................................c....cxxxxx
-xxxxx.l.l.l.l.l............................................c....cxxxxx
-xxxx.l.l.l.l.l.............................................c...ccccxxx
-xxxxl.l.l.l.l.l............................................+...c..ccxx
-xxxx.l.l.l.G.l.l.................<1<.......................+...+.T.cxx
-xxxxl.l.l.l.l.l.l.................<........................+...c..ccxx
-xxxx.l.l.l.l.l.l...........................................c...ccccxxx
-xxxxx.l.l.l.l.l.l..........................................c....cxxxxx
-xxxxx..l.l.l.l.............................................c....cxxxxx
-xxxxx.....l.l............................................cccc...cxxxxx
+xxxxx...l.l..............................................cccc'''cxxxxx
+xxxxx..l.l.l.l.............................................c''''cxxxxx
+xxxxx.l.l.l.l.l............................................c''''cxxxxx
+xxxx.l.l.l.l.l.............................................c'''ccccxxx
+xxxxl.l.l.l.l.l............................................+'''c''ccxx
+xxxx.l.l.l.G.l.l.................<1<.......................+'''+'T'cxx
+xxxxl.l.l.l.l.l.l.................<........................+'''c''ccxx
+xxxx.l.l.l.l.l.l...........................................c'''ccccxxx
+xxxxx.l.l.l.l.l.l..........................................c''''cxxxxx
+xxxxx..l.l.l.l.............................................c''''cxxxxx
+xxxxx.....l.l............................................cccc'''cxxxxx
 xxxxxx......................[...........(................ccccccccxxxxx
 xxxxxx...................................................cccc..xxxxxxx
 xxxxxx.........................................................xxxxxxx
@@ -517,6 +519,8 @@ ENDMAP
 NAME: vestibule_tar_mu
 TAGS: vestibule_tar
 MARKER: T=feat:enter_tartarus
+FTILE:  =~T3Dz+'; = floor_infernal_blank
+TILE:   c = dngn_stone_dark
 SUBST:  T=A
 SUBST:  . = ~.........
 SUBST:  ; = ~...
@@ -526,18 +530,18 @@ KMONS:  D = shadow dragon
 KMONS:  2 = reaper / soul eater
 MAP
 ccccccccccccccccccccccccccccccccc
- ccczz+......;;;;;;;......+zzccc
-  cczzc..3..c.;;T;;.c..3..czzcc
-   c=ccc......c;;;c......ccc=c
-    .cccc.......D.......cccc.
-     ..ccc.............ccc..
-      .cccc...cc+cc...cccc.
-       ..cccc.c...c.cccc..
-        .cccc.cz.zc.cccc.
+ ccczz+'''''';;;;;;;''''''+zzccc
+  cczzc''3''c';;T;;'c''3''czzcc
+   c=ccc''''''c;;;c''''''ccc=c
+    .cccc'''''''D'''''''cccc.
+     ..ccc'''''''''''''ccc..
+      .cccc'''cc+cc'''cccc.
+       ..cccc'c'''c'cccc..
+        .cccc'cz'zc'cccc.
          ..cccczzzcccc..
-          .cccc...cccc.
-           ..ccc.ccc..
-            .c2c.c2c.
+          .cccc'''cccc.
+           ..ccc'ccc..
+            .c2c'c2c.
              ..c+c..
               .c.c.
                ...
@@ -553,16 +557,17 @@ KMONS:  5 = imp
 KMONS:  2 = hellion
 KMONS:  3 = red devil
 KMONS:  2 = reaper / soul eater
+FTILE:  x'5a2V+ = floor_infernal_blank
 MAP
 lllllllllllllllllllllllllllllllll
  Lllllllllllllllllllllllllllllll
   LllxxxxxxxxxxxxxxxxxxxxxxxllL
-   Lllxx.................xxllL
-    Lllxx..5....G....5..xxllL
-     Lllxx.............xxllL
-      Lllxx..V..2..V..xxllL
-       Lllxx.........xxllL
-        Lllxx.......xxllL
+   Lllxx'''''''''''''''''xxllL
+    Lllxx''5''''G''''5''xxllL
+     Lllxx'''''''''''''xxllL
+      Lllxx''V''2''V''xxllL
+       Lllxx'''''''''xxllL
+        Lllxx'''''''xxllL
          Lllxxx+++xxxllL
           Lllxx...xxllL
            Lll..3..llL
@@ -608,11 +613,12 @@ SUBST:  D=A
 KMONS:  8 = iron golem
 KMONS:  3 = iron devil
 KMONS:  6 = metal gargoyle
+FTILE:  'A+ = floor_infernal_blank
 MAP
 .............v.vvv.v.............
- ...vv....v...vv.vv...v....vv...
-  ..6v.....vv.v.D.v.vv.....v6..
-   .......v...vv.vv...v.......
+ ...vv....v...vv'vv...v....vv...
+  ..6v.....vv.v'D'v.vv.....v6..
+   .......v...vv'vv...v.......
     ...vv....v.v+v.v....vv...
      ..6v..3...8.8...3..v6..
       .....................
