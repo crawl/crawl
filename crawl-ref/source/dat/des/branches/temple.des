@@ -1445,6 +1445,10 @@ DESC:   Autumnal temple
 PLACE:  Temple
 ORIENT: encompass
 TAGS:   no_rotate no_pool_fixup
+MARKER: A = lua:fog_machine { cloud_type = "thin mist", pow_min = 2, \
+        pow_max = 6, delay = 4, start_clouds = 1, size_min = 2, \
+        size_max = 6, spread_rate = 2 }
+SUBST:  A : w
 SUBST:  c : cd'.
 SUBST:  d : d'.
 FTILE:  B{[( = FLOOR_PEBBLE_BROWN
@@ -1457,10 +1461,6 @@ COLOUR: . = brown
 COLOUR: t = red w:5 / yellow w:5 / brown
 COLOUR: ' = darkgrey
 SUBST:  'd = .
-MARKER: A = lua:fog_machine { cloud_type = "thin mist", pow_min = 2, \
-        pow_max = 6, delay = 4, start_clouds = 1, size_min = 2, \
-        size_max = 6, spread_rate = 2 }
-TILE:   A = DNGN_DEEP_WATER
 MAP
 tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt
