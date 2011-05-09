@@ -1,8 +1,8 @@
 ﻿The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski,
 Jude Brown, Robert Burnham, Chris Campbell, Matthew Cline, Paul Du Bois,
 Eino Keskitalo, Vsevolod Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza,
-Jesse Luehrs, Neil Middleton, Steven Noonan, Haran Pilpel, David Ploog,
-Johanna Ploog, Stefan O'Rear, Charles Otto, David Lawrence Ramsey,
+Jesse Luehrs, Neil Middleton, Steven Noonan, Haran Pilpel, Aaron Pixton, David
+Ploog, Johanna Ploog, Stefan O'Rear, Charles Otto, David Lawrence Ramsey,
 Robert Vollmert, Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
@@ -28,28 +28,27 @@ Robert Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Mike Adams                   Sophie Hamilton              Malwyn P
-Warwick Allison              Chris Hamons                 William Parker
-Juha Arpiainen               R. Dan Henry                 Pedro
-Arxale                       Brendan Hickey               Arlen Phillips
-John 'Poor Yurik' Attea      Sylvia 'Onia' Hörnke         Lemuel Pitkin
-Roy Axenov                   Benoit Hudson                Derek Ray
-Max Bane                     Iainuki                      Terence Reeves
-Bill Beher                   Ilyak                        Remsleep
-Alexander Beisig             Matthew Ince                 RjY
-Stu Black                    Mitsuhiro Itakura            Will Rogers
-Terje Bø                     Mikko Juola                  David Rose
-Erik Inge Bolsø              Jarmo Kielosto               Risto Saarelma
-Peter Borgmann               Kornel Kisielewicz           Sebastian Salman
-Daniel Mark Brownrigg        Daniel Klein                 Brett Scarborough
-Trent W. Buck                Ilkka Koskela                Roman Sêk
-Joe Buzzelli                 Vambola Kotkas               Robert Shimmin
-Henry Cipolla                Ryan Kusnery                 Sigurd
-Aaron Curtis                 Jukka Kuusisto               Edgar Simo
-Denzi                        Maciej Lapinski              Alex Smith
-Mike Drinen                  Jordan Lewis                 Solf
-Kieron Dunbar                Icy Lich                     Michael Spang
-elliptic                     Markus Maier                 Johan Strandell
+Mike Adams                   Chris Hamons                 William Parker
+Warwick Allison              R. Dan Henry                 Pedro
+Juha Arpiainen               Brendan Hickey               Arlen Phillips
+Arxale                       Sylvia 'Onia' Hörnke         Lemuel Pitkin
+John 'Poor Yurik' Attea      Benoit Hudson                Derek Ray
+Roy Axenov                   Iainuki                      Terence Reeves
+Max Bane                     Ilyak                        Remsleep
+Bill Beher                   Matthew Ince                 RjY
+Alexander Beisig             Mitsuhiro Itakura            Will Rogers
+Stu Black                    Mikko Juola                  David Rose
+Terje Bø                     Jarmo Kielosto               Risto Saarelma
+Erik Inge Bolsø              Kornel Kisielewicz           Sebastian Salman
+Peter Borgmann               Daniel Klein                 Brett Scarborough
+Daniel Mark Brownrigg        Ilkka Koskela                Roman Sêk
+Trent W. Buck                Vambola Kotkas               Robert Shimmin
+Joe Buzzelli                 Ryan Kusnery                 Sigurd
+Henry Cipolla                Jukka Kuusisto               Edgar Simo
+Aaron Curtis                 Maciej Lapinski              Alex Smith
+Denzi                        Jordan Lewis                 Solf
+Mike Drinen                  Icy Lich                     Michael Spang
+Kieron Dunbar                Markus Maier                 Johan Strandell
 Micha Elsner                 Arien Malec                  Pavel 'Curio' Svinarchuk
 Carl-Oscar Erneholm          Paul Maloney                 Matthew Tadd
 Christopher Evenstar         Wille Mäntylä                William Tanksley, Jr.
@@ -62,4 +61,5 @@ GreyKnight                   Mattias Nyberg               Jeremey Wilson
 Joshua Gross                 nyra                         Yelve Yakut
 Brian Haase                  Dylan O'Donnell              Zooko
 Shayne Halvorson             Yuuma Oohara
+Sophie Hamilton              Malwyn P
 
