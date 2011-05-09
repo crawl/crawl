@@ -617,6 +617,8 @@ MARKER: Z = lua:item_pickup_change_flags { \
         }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
 COLOUR: cn = magenta
 KMONS:  1 = patrolling Orb Guardian
 MAP
