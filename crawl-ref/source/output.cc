@@ -199,7 +199,7 @@ void update_turn_count()
         return;
     }
 
-    cgotoxy(19+6, 9, GOTO_STAT);
+    cgotoxy(19+6, 9 + crawl_state.game_is_zotdef(), GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
@@ -727,17 +727,25 @@ void print_stats(void)
         else
             cprintf("%4dM", you.exp_available / 1000000);
 #endif
+        if (crawl_state.game_is_zotdef())
+        {
+            cgotoxy(1, 9, GOTO_STAT);
+            textcolor(Options.status_caption_colour);
+            cprintf("ZP: ");
+            textcolor(HUD_VALUE_COLOUR);
+            cprintf("%d     ", you.zot_points);
+        }
         you.redraw_experience = false;
     }
 
-    int yhack = 0;
+    int yhack = crawl_state.game_is_zotdef();
 
     // If Options.show_gold_turns, line 9 is Gold and Turns
     if (Options.show_gold_turns)
     {
         // Increase y-value for all following lines.
-        yhack = 1;
-        cgotoxy(1+6, 9, GOTO_STAT);
+        yhack++;
+        cgotoxy(1+6, 8 + yhack, GOTO_STAT);
         textcolor(HUD_VALUE_COLOUR);
         cprintf("%-6d", you.gold);
     }
@@ -924,8 +932,9 @@ void draw_border(void)
 
     if (Options.show_gold_turns)
     {
-        cgotoxy(1, 9, GOTO_STAT); cprintf("Gold:");
-        cgotoxy(19, 9, GOTO_STAT); cprintf("Turn:");
+        int yhack = crawl_state.game_is_zotdef();
+        cgotoxy(1, 9 + yhack, GOTO_STAT); cprintf("Gold:");
+        cgotoxy(19, 9 + yhack, GOTO_STAT); cprintf("Turn:");
     }
     // Line 8 is exp pool, Level
 }

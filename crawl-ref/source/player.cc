@@ -4392,14 +4392,14 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items)
     return (rc);
 }
 
-bool enough_xp(int minimum, bool suppress_msg)
+bool enough_zp(int minimum, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.exp_available < minimum)
+    if (you.zot_points < minimum)
     {
         if (!suppress_msg)
-            mpr("You haven't enough experience in your experience pool.");
+            mpr("You haven't enough Zot Points.");
 
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
