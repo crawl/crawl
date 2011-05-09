@@ -460,7 +460,7 @@ SUBST:    L = 4 5:30 8 9
 SUBST:    M = 4 5 8:30 9
 
 SUBVAULT:   Y : orb_chamber
-COLOUR:   c = lightred
+COLOUR:   c = magenta
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
