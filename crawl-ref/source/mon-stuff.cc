@@ -4229,8 +4229,10 @@ bool monster_random_space(const monster* mons, coord_def& target,
         if (is_sanctuary(target) && forbid_sanctuary)
             continue;
 
-        // Don't go into no_ctele_into cells.
+        // Don't go into no_ctele_into or n_rtele_into cells.
         if (testbits(env.pgrid(target), FPROP_NO_CTELE_INTO))
+            continue;
+        if (testbits(env.pgrid(target), FPROP_NO_RTELE_INTO))
             continue;
 
         if (monster_habitable_grid(mons, grd(target)))
