@@ -14,6 +14,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "mon-util.h"
+#include "mutation.h"
 #include "jobs.h"
 #include "ouch.h"
 #include "religion.h"
@@ -180,6 +181,26 @@ static int you_can_consume_corpses(lua_State *ls)
     return (1);
 }
 
+LUAFN(you_mutation)
+{
+    std::string mutname = luaL_checkstring(ls, 1);
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        mutation_type mut = static_cast<mutation_type>(i);
+        if (!is_valid_mutation(mut))
+            continue;
+
+        const mutation_def& mdef = get_mutation_def(mut);
+        if (!strcmp(mutname.c_str(), mdef.wizname))
+        {
+            PLUARET(integer, you.mutation[mut]);
+        }
+    }
+
+    std::string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    return (luaL_argerror(ls, 1, err.c_str()));
+}
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -253,6 +274,8 @@ static const struct luaL_reg you_clib[] =
 
     { "see_cell",          you_see_cell_rel },
     { "see_cell_no_trans", you_see_cell_no_trans_rel },
+
+    { "mutation",          you_mutation },
 
     { NULL, NULL },
 };
@@ -438,6 +461,7 @@ LUAFN(_you_at_branch_bottom)
 {
     PLUARET(boolean, at_branch_bottom());
 }
+
 
 static const struct luaL_reg you_dlib[] =
 {
