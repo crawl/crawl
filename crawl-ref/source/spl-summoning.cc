@@ -1690,6 +1690,10 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH, god,
                  static_cast<monster_type>(monnum), number);
 
+    // No experience for monsters animated by god wrath or the Sword of Zongulrok
+    if (nas != "")
+        mg.extra_flags |= MF_NO_REWARD;
+
     mg.non_actor_summoner = nas;
 
     const int mons = create_monster(mg);
