@@ -1451,9 +1451,7 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_INVOCATIONS:
-            if (god == GOD_NO_GOD)
-                result = skills[best_skill][skill_rank];
-            else
+            if (god != GOD_NO_GOD)
                 result = god_title((god_type)god, (species_type)species);
             break;
 
@@ -1464,21 +1462,23 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Master Archer";
                 break;
             }
-            else
-                result = skills[best_skill][skill_rank];
             break;
 
         case SK_SPELLCASTING:
             if (player_genus(GENPC_OGREISH, static_cast<species_type>(species)))
-            {
                 result = "Ogre Mage";
-                break;
-            }
-            // else fall-through
+            break;
+
+        case SK_NECROMANCY:
+            if (you.species == SP_SPRIGGAN && skill_rank == 5)
+                result = "La Petite Mort";
+            break;
+
         default:
-            result = skills[best_skill][skill_rank];
             break;
         }
+        if (result.empty())
+            result = skills[best_skill][skill_rank];
     }
 
     {
