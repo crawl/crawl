@@ -510,6 +510,7 @@ KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
+COLOUR: c = magenta
 KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
@@ -545,6 +546,7 @@ KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
+COLOUR: c = magenta
 KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
@@ -581,6 +583,7 @@ KITEM:  Z = Orb of Zot
 KMASK:  YZ1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
+COLOUR: c = magenta
 KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
@@ -603,6 +606,76 @@ cXXX!!!1X...XXc
 cXXX...X1!!!XXc
 cXXXX.....XXXXc
   XXXXXXXXXXX
+   ccccccccc
+ENDMAP
+
+NAME:   orb_monky_within_orb
+TAGS:   orb_chamber
+WEIGHT: 5
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  Z1! = no_item_gen
+COLOUR: cn = magenta
+KMONS:  1 = patrolling Orb Guardian
+MAP
+   ccccccccc
+  ccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+ ccccccccccccc
+  ccccccccccc
+  XXXXXXXXXXX
+ XXX...1...XXX
+ XX1.nn.nn.1XX
+ X..n1!!!1n..X
+ ...n.!Z!.n...
+ X..n1!!!1n..X
+ XX1.nn.nn.1XX
+ XXX...1...XXX
+  XXXXXXXXXXX
+  ccccccccccc
+ ccccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+  ccccccccccc
+   ccccccccc
+ENDMAP
+
+NAME:   orb_monky_twist
+TAGS:   orb_chamber
+WEIGHT: 5
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  Z1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+COLOUR: cn = magenta
+KMONS:  1 = patrolling Orb Guardian
+MAP
+   ccccccccc
+  ccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+ ccccccccccccc
+  ccXXXXXXXXc
+  XXXnnnnnnXX
+ XXXnn...1..XX
+ XXnn....n..1X
+ Xnnn.!!!nn..X
+ ..nn1!Z!1nn..
+ X..nn!!!.nnnX
+ X1..n....nnXX
+ XX..1...nnXXX
+  XXnnnnnnXXX
+  cXXXXXXXXcc
+ ccccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+  ccccccccccc
    ccccccccc
 ENDMAP
 
