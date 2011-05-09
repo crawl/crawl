@@ -412,7 +412,7 @@ function lobby(enable)
     if (enable)
     {
         location.hash = "#lobby";
-        document.title = "Web Crawl";
+        document.title = "WebTiles - Dungeon Crawl Stone Soup";
      }
 
     if (enable && lobby_update_timeout == undefined)
@@ -535,7 +535,7 @@ $(document).ready(
         {
             set_layer("crt");
             $("#crt").html("Sadly, your browser does not support WebSockets. <br><br>");
-            $("#crt").append("The following browsers can be used to run Web Crawl: ");
+            $("#crt").append("The following browsers can be used to run WebTiles: ");
             $("#crt").append("<ul><li>Chrome 6 and greater</li>" +
                              "<li>Firefox 4, after disabling the " +
                              "network.websocket.override-security-block setting in " +
