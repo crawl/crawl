@@ -2980,13 +2980,11 @@ void excommunication(god_type new_god)
         // leaving your other followers (blessed with friendliness by
         // his power, but not his servants) alone.
         if (!is_good_god(new_god))
-        {
-            _inc_penance(old_god, 50);
             add_daction(DACT_ALLY_HOLY);
-        }
         else
             add_daction(DACT_HOLY_PETS_GO_NEUTRAL);
 
+        _inc_penance(old_god, 50);
         break;
 
     case GOD_ZIN:
@@ -2999,11 +2997,9 @@ void excommunication(god_type new_god)
         // Leaving Zin for a non-good god will make all your followers
         // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
-        {
-            _inc_penance(old_god, 25);
-
             add_daction(DACT_ALLY_HOLY);
-        }
+
+        _inc_penance(old_god, 25);
         break;
 
     case GOD_ELYVILON:
@@ -3014,11 +3010,9 @@ void excommunication(god_type new_god)
         // Leaving Elyvilon for a non-good god will make all your
         // followers (originally from TSO) abandon you.
         if (!is_good_god(new_god))
-        {
-            _inc_penance(old_god, 30);
-
             add_daction(DACT_ALLY_HOLY);
-        }
+
+        _inc_penance(old_god, 30);
         break;
 
     case GOD_JIYVA:
@@ -3036,6 +3030,7 @@ void excommunication(god_type new_god)
 
         _inc_penance(old_god, 30);
         break;
+
     case GOD_FEDHAS:
         if (query_da_counter(DACT_ALLY_PLANT))
         {
