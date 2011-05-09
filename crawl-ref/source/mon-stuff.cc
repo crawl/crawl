@@ -4204,6 +4204,28 @@ bool is_item_jelly_edible(const item_def &item)
     return (true);
 }
 
+static bool _monster_space_valid(const monster* mons, coord_def& target,
+                                 bool forbid_sanctuary)
+{
+    if (!in_bounds(target))
+        return false;
+
+    // Don't land on top of another monster.
+    if (actor_at(target))
+        return false;
+
+    if (is_sanctuary(target) && forbid_sanctuary)
+        return false;
+
+    // Don't go into no_ctele_into or n_rtele_into cells.
+    if (testbits(env.pgrid(target), FPROP_NO_CTELE_INTO))
+        return false;
+    if (testbits(env.pgrid(target), FPROP_NO_RTELE_INTO))
+        return false;
+
+    return monster_habitable_grid(mons, grd(target));
+}
+
 bool monster_random_space(const monster* mons, coord_def& target,
                           bool forbid_sanctuary)
 {
@@ -4211,22 +4233,8 @@ bool monster_random_space(const monster* mons, coord_def& target,
     while (tries++ < 1000)
     {
         target = random_in_bounds();
-
-        // Don't land on top of another monster.
-        if (actor_at(target))
-            continue;
-
-        if (is_sanctuary(target) && forbid_sanctuary)
-            continue;
-
-        // Don't go into no_ctele_into or n_rtele_into cells.
-        if (testbits(env.pgrid(target), FPROP_NO_CTELE_INTO))
-            continue;
-        if (testbits(env.pgrid(target), FPROP_NO_RTELE_INTO))
-            continue;
-
-        if (monster_habitable_grid(mons, grd(target)))
-            return (true);
+        if (_monster_space_valid(mons, target, forbid_sanctuary))
+            return true;
     }
 
     return (false);
@@ -4278,6 +4286,9 @@ void monster_teleport(monster* mons, bool instan, bool silent)
                                random_range(pair.y - 5, pair.y + 5));
 
             if (grid_distance(target, pair) >= 10)
+                continue;
+
+            if (!_monster_space_valid(mons, target, !mons->wont_attack()))
                 continue;
 
             newpos = target;
