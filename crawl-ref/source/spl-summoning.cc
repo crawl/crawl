@@ -1839,7 +1839,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     int number_seen   = 0;
     int motions       = 0;
 
-    radius_iterator ri(caster->pos(), 7, C_ROUND,
+    radius_iterator ri(caster->pos(), LOS_RADIUS, C_ROUND,
                        caster->get_los_no_trans());
 
     for (; ri; ++ri)

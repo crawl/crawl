@@ -17,7 +17,7 @@ This spell works by converting a small portion of brain matter into alcohol, con
 %%%%
 Animate Dead
 
-This spell causes the dead to rise up and serve the caster; every corpse within a certain distance of the caster is affected. By means of this spell, powerful casters could press into service an army of the mindless undead. Note that zombies are incapable of leaving the level they were created on.
+This spell causes the dead to rise up and serve the caster; every corpse within sight of the caster is affected. By means of this spell, powerful casters could press into service an army of the mindless undead. Note that zombies are incapable of leaving the level they were created on.
 %%%%
 Animate Skeleton
 
