@@ -461,13 +461,10 @@ static void _ZONGULDROK_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 static void _ZONGULDROK_world_reacts(item_def *item)
 {
-    if (one_chance_in(5))
-    {
-        animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
-                     "the Sword of Zonguldrok");
-        did_god_conduct(DID_NECROMANCY, 1);
-        did_god_conduct(DID_CORPSE_VIOLATION, 1);
-    }
+    animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
+                 "the Sword of Zonguldrok");
+    did_god_conduct(DID_NECROMANCY, 1);
+    did_god_conduct(DID_CORPSE_VIOLATION, 1);
 }
 
 static void _ZONGULDROK_melee_effect(item_def* weapon, actor* attacker,
