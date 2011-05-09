@@ -459,46 +459,46 @@ SUBST:    K = 4:30 5 8 9
 SUBST:    L = 4 5:30 8 9
 SUBST:    M = 4 5 8:30 9
 
-SUBVAULT:   Y : orb_chamber
+SUBVAULT: Y : orb_chamber
 COLOUR:   c = magenta
 
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccYYYYYYYYYccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccYYYYYYYYYYYcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxcYYYYYYYYYYYYYYYcxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxx
-xxxxxxxxxxxXXXX.............XXXXcYYYYYYYYYYYYYYYcXXXX.............XXXXxxxxxxxxxx
-xxxxxxxxxxXX...................XXXYYYYYYYYYYYYYXXX...................XXxxxxxxxxx
-xxxxxxxxxXX..........3...........XXYYYYYYYYYYYXX...........3..........XXxxxxxxxx
-xxxxxxxxxX..8.....................XYYYYYYYYYYYX.....................8..Xxxxxxxxx
-xxxxxxxxxX.......?..?.....8.8.....YYYYYYYYYYYYY.....8.8.....?..?.......Xxxxxxxxx
-xxxxxxxxxXX.8...........?.........YYYYYYYYYYYYY.........?...........8.XXxxxxxxxx
-xxxxxxxxxxXX......................YYYYYYYYYYYYY......................XXxxxxxxxxx
-xxxxxxxxxxxXX.....4....2....8.8...YYYYYYYYYYYYY...8.8....2....4.....XXxxxxxxxxxx
-xxxxxxxxxxXX....?...?.....?...?...YYYYYYYYYYYYY...?...?.....?....?...XXxxxxxxxxx
-xxxxxxxxxXX.......?....?..........YYYYYYYYYYYYY..........?....2.......XXxxxxxxxx
-xxxxxxxxxX.....8..........8.8.....YYYYYYYYYYYYY.....8.8..........8.....Xxxxxxxxx
-xxxxxxxxxX...8....................cYYYYYYYYYYYc....................8...Xxxxxxxxx
-xxxxxxxxxXX.....8.8.8..8.........ccYYYYYYYYYYYcc........8...8.8.8.....XXxxxxxxxx
-xxxxxxxxxxXX...............8...XccYYYYYYYYYYYYYccX...8............8..XXxxxxxxxxx
-xxxxxxxxxxxXX........8..8...XXXXcYYYYYYYYYYYYYYYcXXXX...8..8........XXxxxxxxxxxx
-xxxxxxxxxxxxXXa111accCCCCCCXXXXXcYYYYYYYYYYYYYYYcXXXXXCCCCCCccb111bXXxxxxxxxxxxx
-xxxxxxxxxxxcc...............AA1.cccYYYYYYYYYYYccc.1BB...............ccxxxxxxxxxx
-xxxxxxxxxxcc...8.8..8.8.....cc1...ccYYYYYYYYYcc...1cc.......8..8.8.8.ccxxxxxxxxx
-xxxxxxxxxcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccxxxxxxxx
-xxxxxxxxxc.8..8....8.8........ccc...............ccc.....8....8..8.8....cxxxxxxxx
-xxxxxxxxxc..8..8.8....8.8.8.5.cxcc.............ccxc.5.8.8.8....8.8...8.cxxxxxxxx
-xxxxxxxxxc..8.....8.8.......8.cxxc.............cxxc8........8.....8.8..cxxxxxxxx
-xxxxxxxxxc.8...8......8.8.....cxxcc.1...1...1.ccxxc......8.......8.....cxxxxxxxx
-xxxxxxxxxc8..8...8.8.8.8...8.8cxxxc...........cxxxc8.8..8..8.8.8...8.8.cxxxxxxxx
-xxxxxxxxxc.....8.........8....cxxcc...........ccxxc....8.8.............cxxxxxxxx
-xxxxxxxxxcc...5..8..8.8....8.ccxxc.............cxxcc8.....8....8..5.8.ccxxxxxxxx
-xxxxxxxxxxcc8......8....8.8.ccxxcc.............ccxxcc.8.8....8....8..ccxxxxxxxxx
-xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxx
-xxxxxxxxxxxxccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccxxxxxxxxxxx
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccYYYYYYYYYccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccYYYYYYYYYYYcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxcYYYYYYYYYYYYYYYcxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxX
+XxxxxxxxxxxXXXX.............XXXXcYYYYYYYYYYYYYYYcXXXX.............XXXXxxxxxxxxxX
+XxxxxxxxxxXX...................XXXYYYYYYYYYYYYYXXX...................XXxxxxxxxxX
+XxxxxxxxxXX..........3...........XXYYYYYYYYYYYXX...........3..........XXxxxxxxxX
+XxxxxxxxxX..8.....................XYYYYYYYYYYYX.....................8..XxxxxxxxX
+XxxxxxxxxX.......?..?.....8.8.....YYYYYYYYYYYYY.....8.8.....?..?.......XxxxxxxxX
+XxxxxxxxxXX.8...........?.........YYYYYYYYYYYYY.........?...........8.XXxxxxxxxX
+XxxxxxxxxxXX......................YYYYYYYYYYYYY......................XXxxxxxxxxX
+XxxxxxxxxxxXX.....4....2....8.8...YYYYYYYYYYYYY...8.8....2....4.....XXxxxxxxxxxX
+XxxxxxxxxxXX....?...?.....?...?...YYYYYYYYYYYYY...?...?.....?....?...XXxxxxxxxxX
+XxxxxxxxxXX.......?....?..........YYYYYYYYYYYYY..........?....2.......XXxxxxxxxX
+XxxxxxxxxX.....8..........8.8.....YYYYYYYYYYYYY.....8.8..........8.....XxxxxxxxX
+XxxxxxxxxX...8....................cYYYYYYYYYYYc....................8...XxxxxxxxX
+XxxxxxxxxXX.....8.8.8..8.........ccYYYYYYYYYYYcc........8...8.8.8.....XXxxxxxxxX
+XxxxxxxxxxXX...............8...XccYYYYYYYYYYYYYccX...8............8..XXxxxxxxxxX
+XxxxxxxxxxxXX........8..8...XXXXcYYYYYYYYYYYYYYYcXXXX...8..8........XXxxxxxxxxxX
+XxxxxxxxxxxxXXa111accCCCCCCXXXXXcYYYYYYYYYYYYYYYcXXXXXCCCCCCccb111bXXxxxxxxxxxxX
+Xxxxxxxxxxxcc...............AA1.cccYYYYYYYYYYYccc.1BB...............ccxxxxxxxxxX
+Xxxxxxxxxxcc...8.8..8.8.....cc1...ccYYYYYYYYYcc...1cc.......8..8.8.8.ccxxxxxxxxX
+Xxxxxxxxxcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccxxxxxxxX
+Xxxxxxxxxc.8..8....8.8........ccc...............ccc.....8....8..8.8....cxxxxxxxX
+Xxxxxxxxxc..8..8.8....8.8.8.5.cxcc.............ccxc.5.8.8.8....8.8...8.cxxxxxxxX
+Xxxxxxxxxc..8.....8.8.......8.cxxc.............cxxc8........8.....8.8..cxxxxxxxX
+Xxxxxxxxxc.8...8......8.8.....cxxcc.1...1...1.ccxxc......8.......8.....cxxxxxxxX
+Xxxxxxxxxc8..8...8.8.8.8...8.8cxxxc...........cxxxc8.8..8..8.8.8...8.8.cxxxxxxxX
+Xxxxxxxxxc.....8.........8....cxxcc...........ccxxc....8.8.............cxxxxxxxX
+Xxxxxxxxxcc...5..8..8.8....8.ccxxc.............cxxcc8.....8....8..5.8.ccxxxxxxxX
+Xxxxxxxxxxcc8......8....8.8.ccxxcc.............ccxxcc.8.8....8....8..ccxxxxxxxxX
+Xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxX
+XXXXXXXXXXXXccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccXXXXXXXXXXX
 ENDMAP
 
 NAME:   orb_original
