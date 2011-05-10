@@ -372,6 +372,8 @@ COLORS SkillMenuEntry::_get_colour() const
         return DARKGREY;
     else if (is_set(SKMF_DO_RESKILL_TO) && m_sk == you.transfer_from_skill)
         return WHITE;
+    else if (you.skill(m_sk) < you.skills[m_sk])
+        return you.practise_skill[m_sk] ? LIGHTRED : RED;
     else if (you.practise_skill[m_sk] == 0 && you.skills[m_sk] < 27)
         return DARKGREY;
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
@@ -414,9 +416,10 @@ std::string SkillMenuEntry::_get_prefix()
 
 void SkillMenuEntry::_set_level()
 {
+    const bool changed = is_set(SKMF_DISP_ENHANCED)
+                         || you.skill(m_sk) < you.skills[m_sk];
     m_level->set_text(make_stringf("%2d",
-                      is_set(SKMF_DISP_ENHANCED) ? you.skill(m_sk)
-                                                 : you.skills[m_sk]));
+                      changed ? you.skill(m_sk) : you.skills[m_sk]));
     m_level->set_fg_colour(_get_colour());
 }
 
@@ -930,7 +933,7 @@ void SkillMenu::_set_skills()
             continue;
         }
         else if (!is_invalid_skill(sk) && you.skill(sk) == 0
-                 && ! is_set(SKMF_DISP_ALL))
+                 && you.skills[sk] == 0 && !is_set(SKMF_DISP_ALL))
         {
             continue;
         }
