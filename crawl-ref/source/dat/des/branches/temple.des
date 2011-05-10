@@ -2743,7 +2743,7 @@ xx.O.xxx.'.xxx.O.xx
 ENDMAP
 
 # 6 gods
-NAME:       temple_of_Zot_5
+NAME:       temple_of_Zot_ovaries
 PLACE:      Temple
 TAGS:       no_rotate
 WEIGHT:     1
@@ -2752,19 +2752,47 @@ LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_zot_magenta
-: if crawl.coinflip() then
-SUBST:      A = .
-: else
-SUBST:      AG = B
-SUBST:      B  = .
-: end
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx......xxxxxx.......xxxxxx......xxxxx
+xxxx........xxxx.........xxxx........xxxx
+xxx..........xxx.........xxx..........xxx
+xxx.................B.................xxx
+xxxx...B.....xxx.........xxx.....B...xxxx
+xxx..........xxx.........xxx..........xxx
+xxx..........xxxx.......xxxx..........xxx
+xxxx........xxxxxxxxxxxxxxxxx........xxxx
+xxxxx......xxxxxxxxxxxxxxxxxxx......xxxxx
+xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxx.......xxxxxxxxxxxxxxxxx.......xxxxx
+xxxx..............xxxxx..............xxxx
+xxx...........xxx...x...xxx...........xxx
+xxx...........xxxx.....xxxx...........xxx
+xxx.....B.....xxxx.....xxxx.....B.....xxx
+xxx...........xxx...B...xxx...........xxx
+xxxx.........xxxx.......xxxx.........xxxx
+xxxxx.......xxxx.........xxxx.......xxxxx
+xxxxxx.....xxx....[.{.(....xxx.....xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 7 gods
+NAME:       temple_of_Zot_orb
+PLACE:      Temple
+TAGS:       no_rotate
+WEIGHT:     1
+ORIENT:     encompass
+LFLOORCOL:  magenta
+LROCKCOL:   lightmagenta
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_magenta
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxx......xxxxxx.......xxxxxx......xxxxx
 xxxx........xxxx....B....xxxx........xxxx
 xxx..........xxx.B.....B.xxx..........xxx
-xxx.................G.................xxx
-xxxx...A.....xxx.B.....B.xxx.....A...xxxx
+xxx.................B.................xxx
+xxxx.........xxx.B.....B.xxx.........xxxx
 xxx..........xxx....B....xxx..........xxx
 xxx..........xxxx.......xxxx..........xxx
 xxxx........xxxxxxxxxxxxxxxxx........xxxx
@@ -2774,8 +2802,8 @@ xxxxx.......xxxxxxxxxxxxxxxxx.......xxxxx
 xxxx..............xxxxx..............xxxx
 xxx...........xxx...x...xxx...........xxx
 xxx...........xxxx.....xxxx...........xxx
-xxx.....A.....xxxx.....xxxx.....A.....xxx
-xxx...........xxx...A...xxx...........xxx
+xxx...........xxxx.....xxxx...........xxx
+xxx...........xxx.......xxx...........xxx
 xxxx.........xxxx.......xxxx.........xxxx
 xxxxx.......xxxx.........xxxx.......xxxxx
 xxxxxx.....xxx....[.{.(....xxx.....xxxxxx
