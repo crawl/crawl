@@ -4128,7 +4128,6 @@ std::string _describe_ash_skill_boost()
         // No need to list all of them since we boost all or none.
         while (it != boosted_skills.end())
         {
-            const skill_type sk = it->first;
             if (it->first > SK_CONJURATIONS && it->first <= SK_POISON_MAGIC)
             {
                 boosted_skills.erase(it);
