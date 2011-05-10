@@ -849,3 +849,26 @@ cccyy..yycc
     c++c
      @@
 ENDMAP
+
+###################################################################
+# < bmh> I got the idea after I introduced a bug where the whole floor of
+#        the abyss turned into altars
+NAME: abyss_xom_lugonu_altar
+TAGS: abyss allow_dup
+COLOUR: " : magenta w:2 / white
+KFEAT: _ = altar_lugonu
+KFEAT: X = altar_xom
+SUBST: a = XXX"
+SUBST: b = X"
+SUBST: c = XX"
+SUBST: d = X""
+SUBST: e = X"""
+MAP
+   ebe
+  dcacd
+ ec"""ce
+ ba"_"ab
+ ec"""ce
+  dcacd
+   ebe
+ENDMAP
