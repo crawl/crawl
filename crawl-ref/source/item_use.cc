@@ -793,7 +793,7 @@ bool do_wear_armour(int item, bool quiet)
 
             removed_cloak = true;
         }
-        else if (you.religion != GOD_ASHENZARI)
+        else
         {
             if (!quiet)
                mpr("Your cloak prevents you from wearing the armour.");
@@ -889,7 +889,7 @@ bool takeoff_armour(int item)
 
                 removed_cloak = true;
             }
-            else if (you.religion != GOD_ASHENZARI)
+            else
             {
                 mpr("Your cloak prevents you from removing the armour.");
                 return (false);
