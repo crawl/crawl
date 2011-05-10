@@ -399,7 +399,7 @@ std::string ash_describe_bondage(int flags, bool level)
 
     if (level)
     {
-        desc += make_stringf("You feel %s bound.",
+        desc += make_stringf("You are %s bound.",
                              you.bondage_level == 0 ? "not" :
                              you.bondage_level == 1 ? "slightly" :
                              you.bondage_level == 2 ? "moderately" :

@@ -4091,6 +4091,80 @@ std::string god_title(god_type which_god, species_type which_species)
     return (title);
 }
 
+std::string _describe_ash_skill_boost()
+{
+    if (!you.bondage_level)
+    {
+        return "Ashenzari won't support your skills until you bind yourself "
+               "with cursed items.";
+    }
+
+    static const char* bondage_parts[NUM_ET] = { "Weapon hand", "Shield hand",
+                                                 "Armour", "Jewellery" };
+    static const char* bonus_level[3] = { "Low", "Medium", "High" };
+    std::ostringstream desc;
+    desc.setf(std::ios::left);
+    desc << std::setw(18) << "Bounded part";
+    desc << std::setw(30) << "Boosted skills";
+    desc << "Bonus\n";
+
+    for (int i = ET_WEAPON; i < NUM_ET; i++)
+    {
+        if (you.bondage[i] <= 0 || i == ET_SHIELD && you.bondage[i] == 3)
+            continue;
+
+        desc << std::setw(18);
+        if (i == ET_WEAPON && you.bondage[i] == 3)
+            desc << "Hands";
+        else
+            desc << bondage_parts[i];
+
+        std::string skills;
+        std::map<skill_type, char> boosted_skills = ash_get_boosted_skills(eq_type(i));
+        int bonus = boosted_skills.begin()->second;
+        std::map<skill_type, char>::iterator it = boosted_skills.begin();
+
+        // First, we keep only one magic school skill (conjuration).
+        // No need to list all of them since we boost all or none.
+        while (it != boosted_skills.end())
+        {
+            const skill_type sk = it->first;
+            if (it->first > SK_CONJURATIONS && it->first <= SK_POISON_MAGIC)
+            {
+                boosted_skills.erase(it);
+                it = boosted_skills.begin();
+            }
+            else
+                ++it;
+        }
+
+        it = boosted_skills.begin();
+        while (!boosted_skills.empty())
+        {
+            // For now, all the bonuses from the same bounded part have
+            // the same level.
+            ASSERT(bonus == it->second);
+            if (it->first == SK_CONJURATIONS)
+                skills += "Magic schools";
+            else
+                skills += skill_name(it->first);
+
+            if (boosted_skills.size() > 2)
+                skills += ", ";
+            else if (boosted_skills.size() == 2)
+                skills += " and ";
+
+            boosted_skills.erase(it);
+            ++it;
+        }
+
+        desc << std::setw(30) << skills;
+        desc << bonus_level[bonus -1] << "\n";
+    }
+
+    return desc.str();
+}
+
 static void _detailed_god_description(god_type which_god)
 {
     clrscr();
@@ -4208,6 +4282,10 @@ static void _detailed_god_description(god_type which_god)
                                            active ? "" : "</darkgrey>");
                 }
             }
+        break;
+        case GOD_ASHENZARI:
+            if (which_god == you.religion && piety_rank() > 1)
+                broken = _describe_ash_skill_boost();
         default:
             break;
         }
