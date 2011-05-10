@@ -232,6 +232,17 @@ void ash_init_bondage()
         you.bondage[i] = 0;
 }
 
+static bool _two_handed()
+{
+    const item_def* wpn = you.slot_item(EQ_WEAPON, true);
+    if (!wpn)
+        return false;
+
+    hands_reqd_type wep_type = hands_reqd(*wpn, you.body_size());
+    return wep_type == HANDS_TWO || wep_type == HANDS_HALF
+                                    && you.has_usable_offhand();
+}
+
 void ash_check_bondage(bool msg)
 {
     if (you.religion != GOD_ASHENZARI)
@@ -263,12 +274,13 @@ void ash_check_bondage(bool msg)
                         || item.base_type == OBJ_WEAPONS
                         || item.base_type == OBJ_STAVES))
                 {
-                    cursed[s]++;
-                    if (s == ET_WEAPON
-                        && hands_reqd(item, you.body_size()) == HANDS_TWO)
+                    if (s == ET_WEAPON && _two_handed())
                     {
-                        cursed[ET_SHIELD]++;
+                        cursed[ET_WEAPON] = 3;
+                        cursed[ET_SHIELD] = 3;
                     }
+                    else
+                        cursed[s]++;
                 }
             }
         }
@@ -280,6 +292,9 @@ void ash_check_bondage(bool msg)
     {
         if (slots[s] == 0)
             new_bondage[s] = -1;
+        // That's only for 2 handed weapons.
+        else if (cursed[s] > slots[s])
+            new_bondage[s] = 3;
         else if (cursed[s] == slots[s])
             new_bondage[s] = 2;
         else if (cursed[s] > slots[s] / 2)
@@ -298,7 +313,7 @@ void ash_check_bondage(bool msg)
     }
     else
         for (int i = ET_WEAPON; i < NUM_ET; ++i)
-            if (new_bondage[i])
+            if (new_bondage[i] > 0)
                 ++you.bondage_level;
 
     int flags = 0;
@@ -307,9 +322,20 @@ void ash_check_bondage(bool msg)
             if (new_bondage[s] != you.bondage[s])
                 flags |= 1 << s;
 
-
+    you.skill_boost.clear();
     for (int s = ET_WEAPON; s < NUM_ET; s++)
+    {
         you.bondage[s] = new_bondage[s];
+        std::map<skill_type, char> boosted_skills = ash_get_boosted_skills(eq_type(s));
+        for (std::map<skill_type, char>::iterator it = boosted_skills.begin();
+             it != boosted_skills.end(); it++)
+        {
+            you.skill_boost[it->first] += it->second;
+            if (you.skill_boost[it->first] > 3)
+                you.skill_boost[it->first] = 3;
+        }
+
+    }
 
     if (msg)
     {
@@ -688,70 +714,98 @@ monster_type ash_monster_tier(const monster *mon)
         return MONS_SENSED_NASTY;
 }
 
-#if 0
-int ash_skill_boost(skill_type sk)
+std::map<skill_type, char> ash_get_boosted_skills(eq_type type)
 {
-    int level = you.skills[sk];
-    std::set<skill_type> boosted_skills;
+    const int bondage = you.bondage[type];
+    std::map<skill_type, char> boost;
+    if (!bondage)
+        return boost;
 
-    bool bondage_types[NUM_ET];
-    for (int i = 0; i < NUM_ET; i++)
-        bondage_types[i] = ash_bondage_level(i+1);
-
-    const item_def* wpn = you.weapon();
-    if (wpn && bondage_types[ET_WEAPON])
+    // Include melded.
+    const item_def* wpn = you.slot_item(EQ_WEAPON, true);
+    const item_def* armour = you.slot_item(EQ_BODY_ARMOUR, true);
+    const int evp = armour ? -property(*armour, PARM_EVASION) : 0;
+    switch (type)
     {
-        // Boost your weapon skill.
+    case (ET_WEAPON):
+        ASSERT(wpn);
+
+        // Boost weapon skill.
         if(wpn->base_type == OBJ_WEAPONS)
         {
-            boosted_skills.insert(is_range_weapon(*wpn) ? range_skill(*wpn)
-                                                        : weapon_skill(*wpn));
+            boost[is_range_weapon(*wpn) ? range_skill(*wpn)
+                                        : weapon_skill(*wpn)] = bondage;
         }
+
         // Those staves don't benefit from evocation.
         //Boost spellcasting instead.
-        else if (item_is_staff(*wpn)
-                 && (wpn->sub_type == STAFF_POWER
-                     || wpn->sub_type == STAFF_CONJURATION
-                     || wpn->sub_type == STAFF_ENCHANTMENT
-                     || wpn->sub_type == STAFF_ENERGY
-                     || wpn->sub_type == STAFF_WIZARDRY))
+        if (item_is_staff(*wpn) && (wpn->sub_type == STAFF_POWER
+                                    || wpn->sub_type == STAFF_CONJURATION
+                                    || wpn->sub_type == STAFF_ENCHANTMENT
+                                    || wpn->sub_type == STAFF_ENERGY
+                                    || wpn->sub_type == STAFF_WIZARDRY))
         {
-            boosted_skills.insert(SK_SPELLCASTING);
+            boost[SK_SPELLCASTING] = 2;
         }
-        // Those staves and rods use evocation. Boost it.
-        else if (item_is_staff(*wpn) || item_is_rod(*wpn))
+        // Other staves use evocation.
+        else if (item_is_staff(*wpn))
         {
-            boosted_skills.insert(SK_EVOCATIONS);
+            boost[SK_EVOCATIONS] = 1;
+            boost[SK_STAVES] = 1;
+
         }
-    }
+        else if (item_is_rod(*wpn))
+            boost[SK_EVOCATIONS] = 2;
 
-    if (bondage_types[ET_ARMOUR])
-    {
-        // Boost armour or dodging, whichever is higher.
-        boosted_skills.insert(compare_skills(SK_ARMOUR, SK_DODGING)
-                              ? SK_ARMOUR
-                              : SK_DODGING);
-    }
+        break;
 
-    if (bondage_types[ET_JEWELS])
-    {
-        // Boost your highest magical skill.
-        skill_type highest = SK_NONE;
+    case (ET_SHIELD):
+        if (bondage == 2)
+            boost[SK_SHIELDS] = 1;
+        break;
+
+    // Bonus for bounded armour depends on body armour type.
+    case (ET_ARMOUR):
+        if (evp < 2)
+        {
+            boost[SK_STEALTH] = bondage;
+            boost[SK_DODGING] = bondage;
+        }
+        else if (evp < 4)
+        {
+            boost[SK_DODGING] = bondage;
+            boost[SK_ARMOUR] = bondage;
+        }
+        else
+            boost[SK_ARMOUR] = bondage + 1;
+        break;
+
+    // Boost all spell schools and evoc (to give some appeal to melee).
+    case (ET_JEWELS):
         for (int i = SK_CONJURATIONS; i <= SK_POISON_MAGIC; ++i)
-            if (compare_skills(skill_type(i), highest))
-                highest = skill_type(i);
+            boost[skill_type(i)] = bondage;
+        boost[SK_EVOCATIONS] = bondage;
+        break;
 
-        boosted_skills.insert(highest);
+    default:
+        die("Unknown equipment type.");
     }
 
-    // Apply the skill boost.
-    if (boosted_skills.find(sk) != boosted_skills.end())
-        level += std::max(0, piety_rank() - 3);
-
-    // If not wearing uncursed items, boost low skills.
-    if (!you.wear_uncursed && you.skills[sk])
-        level = std::max(level, piety_rank() - 1);
-
-    return std::min(level, 27);
+    return boost;
 }
-#endif
+
+int ash_skill_boost(skill_type sk)
+{
+    const int level = you.skills[sk];
+    if (!level || !you.skill_boost[sk] || piety_rank() <= 2)
+        return level;
+
+    // 1 = low bonus    -> factor = 1
+    // 2 = medium bonus -> factor = 1.25
+    // 3 = high bonus   -> factor = 1.5
+    const float piety_factor = (you.skill_boost[sk] + 3) / 4.0;
+    const int base = std::min(piety_rank() - 1, you.bondage_level + 2);
+    const int bonus = std::max<int>(0, base * piety_factor - level / 4.0);
+
+    return std::min(level + bonus, 27);
+}

@@ -277,6 +277,7 @@ public:
   bool xray_vision;
   char bondage_level;  // how much an Ash worshipper is into bondage
   char bondage[NUM_ET];
+  std::map<skill_type, char> skill_boost; // Skill bonuses.
 
   // Volatile (same-turn) state:
   bool turn_is_over; // flag signaling that player has performed a timed action

@@ -5827,12 +5827,15 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::skill(skill_type sk) const
 {
+    int level = skills[sk];
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        return std::min(skills[sk] + 5, 27);
-//    else if (you.religion == GOD_ASHENZARI)
-//        return ash_skill_boost(sk);
+        level = std::min(level + 5, 27);
+    if (you.penance[GOD_ASHENZARI])
+        level = std::max(level - 4, 0);
+    else if (you.religion == GOD_ASHENZARI)
+        level = ash_skill_boost(sk);
 
-    return skills[sk];
+    return level;
 }
 
 // only for purposes of detection, not disarming
