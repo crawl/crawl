@@ -270,6 +270,9 @@ function handle_keypress(e)
         return;
     }
 
+    if ((e.which == 0) ||
+        (e.which in key_conversion)) return;
+
     e.preventDefault();
 
     var s = String.fromCharCode(e.which);
