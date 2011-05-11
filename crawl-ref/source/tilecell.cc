@@ -15,6 +15,14 @@ void packed_cell::clear()
     fg = 0;
     bg = 0;
 
+    flv.floor_idx = 0;
+    flv.wall_idx = 0;
+    flv.feat_idx = 0;
+    flv.floor = 0;
+    flv.wall = 0;
+    flv.feat = 0;
+    flv.special = 0;
+
     is_bloody        = false;
     is_silenced      = false;
     is_haloed        = false;
