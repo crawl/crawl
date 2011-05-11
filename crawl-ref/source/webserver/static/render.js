@@ -173,6 +173,7 @@ function render_cell(x, y)
         cell.fg = cell.fg || 0;
         cell.bg = cell.bg || 0;
         cell.flv = cell.flv || {};
+        cell.flv.f = cell.flv.f || 0;
         cell.flv.s = cell.flv.s || 0;
 
         // cell is basically a packed_cell + doll + mcache entries
@@ -335,15 +336,34 @@ function draw_background(x, y, cell)
 
     if (cell.swtree && bg_idx > TILE_DNGN_UNSEEN)
         draw_dngn(TILE_DNGN_SHALLOW_WATER, x, y);
-
-    if (bg_idx >= TILE_DNGN_WAX_WALL)
+    else if (bg_idx >= TILE_DNGN_WAX_WALL)
         draw_dngn(cell.flv.f, x, y); // f = floor
 
     // Draw blood beneath feature tiles.
     if (bg_idx > TILE_WALL_MAX)
         draw_blood_overlay(x, y, cell);
 
-    draw_dngn(bg_idx, x, y, cell.swtree);
+    if (cell.swtree) // Draw the tree submerged
+    {
+        dungeon_ctx.save();
+        dungeon_ctx.globalAlpha = 1.0;
+
+        set_nonsubmerged_clip(x, y, 20);
+
+        draw_dngn(bg_idx, x, y);
+
+        dungeon_ctx.restore();
+
+        dungeon_ctx.save();
+        dungeon_ctx.globalAlpha = 0.3;
+        set_submerged_clip(x, y, 20);
+
+        draw_dngn(bg_idx, x, y);
+
+        dungeon_ctx.restore();
+    }
+    else
+        draw_dngn(bg_idx, x, y);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
 
