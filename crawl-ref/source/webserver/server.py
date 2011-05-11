@@ -523,6 +523,7 @@ if ssl_options:
     application.listen(ssl_port, ssl_address, ssl_options = ssl_options)
 
 ioloop = tornado.ioloop.IOLoop.instance()
+ioloop.set_blocking_log_threshold(0.5)
 
 status_file_timeout()
 
