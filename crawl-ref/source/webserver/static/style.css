@@ -12,6 +12,7 @@ body {
 #stats {
     display: inline-block;
     vertical-align: top;
+    position: absolute;
 }
 
 #player_list {
