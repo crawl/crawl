@@ -790,7 +790,10 @@ bool do_wear_armour(int item, bool quiet)
         && is_shield_incompatible(*you.weapon(), &invitem))
     {
         if (!quiet)
-           mpr("You'd need three hands to do that!");
+           if (you.species == SP_OCTOPUS)
+               mpr("You'd need nine tentacles to do that!");
+           else
+               mpr("You'd need three hands to do that!");
 
         return (false);
     }
