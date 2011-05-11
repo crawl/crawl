@@ -111,6 +111,11 @@ void melee_attack::init_attack()
 {
     weapon       = attacker->weapon(attack_number);
     damage_brand = attacker->damage_brand(attack_number);
+    wpn_skill    = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
+    to_hit       = calc_to_hit();
+
+    shield = attacker->shield();
+    defender_shield = defender ? defender->shield() : defender_shield;
 
     if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
     {
@@ -119,7 +124,6 @@ void melee_attack::init_attack()
             unrand_entry = get_unrand_entry(weapon->special);
     }
 
-    wpn_skill = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     if (weapon)
     {
         hands = hands_reqd(*weapon, attacker->body_size());
@@ -138,10 +142,6 @@ void melee_attack::init_attack()
             break;
         }
     }
-
-    shield = attacker->shield();
-    if (defender)
-        defender_shield = defender->shield();
 
     hand_half_bonus = (unarmed_ok
                        && !shield
@@ -189,100 +189,6 @@ bool melee_attack::handle_phase_attempted()
         check_autoberserk();
     }
 
-    return true;
-}
-
-bool melee_attack::handle_phase_dodged()
-{
-    return true;
-}
-
-bool melee_attack::handle_phase_blocked()
-{
-    return true;
-}
-
-bool melee_attack::handle_phase_hit()
-{
-    return true;
-}
-
-bool melee_attack::handle_phase_damaged()
-{
-    return true;
-}
-
-bool melee_attack::handle_phase_killed()
-{
-    return true;
-}
-
-bool melee_attack::handle_phase_end()
-{
-    return true;
-}
-
-void melee_attack::check_autoberserk()
-{
-    if (weapon
-        && art_props[ARTP_ANGRY] >= 1
-        && !one_chance_in(1 + art_props[ARTP_ANGRY]))
-    {
-        attacker->go_berserk(false);
-    }
-}
-
-bool melee_attack::check_unrand_effects()
-{
-    // If bashing the defender with a wielded unrandart launcher, don't use
-    // unrand_entry->fight_func, since that's the function used for
-    // launched missiles.
-    if (unrand_entry && unrand_entry->fight_func.melee_effects
-        && weapon && fires_ammo_type(*weapon) == MI_NONE)
-    {
-        unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
-                                               !defender->alive());
-        return (!defender->alive());
-    }
-
-    return (false);
-}
-
-void melee_attack::identify_mimic(actor *act)
-{
-    if (act
-        && act->atype() == ACT_MONSTER
-        && mons_is_mimic(act->type)
-        && you.can_see(act))
-    {
-        monster* mon = act->as_monster();
-        discover_mimic(mon);
-    }
-}
-
-bool melee_attack::attack()
-{
-    // If a mimic is attacking or defending, it is thereafter known.
-    identify_mimic(attacker);
-
-    if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
-    {
-        if (stop_attack_prompt(defender->as_monster(), false,
-                               attacker->pos()))
-        {
-            cancel_attack = true;
-            return (false);
-        }
-    }
-
-    if (attacker != defender)
-    {
-        // Allow setting of your allies' target, etc.
-        attacker->attacking(defender);
-
-        check_autoberserk();
-    }
-
     // The attacker loses nutrition.
     attacker->make_hungry(3, true);
 
@@ -316,6 +222,16 @@ bool melee_attack::attack()
             xom_is_stimulated(128);
     }
 
+    return (true);
+}
+
+bool melee_attack::handle_phase_dodged()
+{
+    return (true);
+}
+
+bool melee_attack::handle_phase_blocked()
+{
     // Defending monster protects itself from attacks using the wall
     // it's in. Zotdef: allow a 5% chance of a hit anyway
     if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
@@ -336,8 +252,7 @@ bool melee_attack::attack()
             }
             else
             {
-                mprf("You hit the %s.",
-                     feat_name.c_str());
+                mprf("You hit the %s.", feat_name.c_str());
             }
         }
         else
@@ -365,16 +280,43 @@ bool melee_attack::attack()
         return (true);
     }
 
-    to_hit = calc_to_hit();
+    return (true);
+}
 
+bool melee_attack::handle_phase_hit()
+{
+    return (true);
+}
+
+bool melee_attack::handle_phase_damaged()
+{
+    return (true);
+}
+
+bool melee_attack::handle_phase_killed()
+{
+    return (true);
+}
+
+bool melee_attack::handle_phase_end()
+{
+    return(true);
+}
+
+bool melee_attack::attack()
+{
+    if(!handle_phase_attempted())
+        return (false);
+
+    // Stuff for god conduct, this has to remain here for scope reasons.
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
     if (attacker->atype() == ACT_PLAYER && attacker != defender)
         set_attack_conducts(conducts, defender->as_monster());
 
-    // Trying to stay general beyond this point is a recipe for insanity.
-    // Maybe when Stone Soup hits 1.0... :-)
+    // Apparently I'm insane for believing that we can still stay general past
+    // this point in the combat code, mebe I am! --Cryptic
     bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
                    (defender->atype() == ACT_PLAYER) ? mons_attack_you()
                                                      : mons_attack_mons());
@@ -566,6 +508,44 @@ bool melee_attack::player_attack()
     }
 
     return (did_primary_hit || did_hit);
+}
+
+void melee_attack::check_autoberserk()
+{
+    if (weapon
+        && art_props[ARTP_ANGRY] >= 1
+        && !one_chance_in(1 + art_props[ARTP_ANGRY]))
+    {
+        attacker->go_berserk(false);
+    }
+}
+
+bool melee_attack::check_unrand_effects()
+{
+    // If bashing the defender with a wielded unrandart launcher, don't use
+    // unrand_entry->fight_func, since that's the function used for
+    // launched missiles.
+    if (unrand_entry && unrand_entry->fight_func.melee_effects
+        && weapon && fires_ammo_type(*weapon) == MI_NONE)
+    {
+        unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
+                                               !defender->alive());
+        return (!defender->alive());
+    }
+
+    return (false);
+}
+
+void melee_attack::identify_mimic(actor *act)
+{
+    if (act
+        && act->atype() == ACT_MONSTER
+        && mons_is_mimic(act->type)
+        && you.can_see(act))
+    {
+        monster* mon = act->as_monster();
+        discover_mimic(mon);
+    }
 }
 
 void melee_attack::player_aux_setup(unarmed_attack_type atk)
@@ -3274,7 +3254,7 @@ int melee_attack::calc_to_hit(bool random)
         if (!defender->visible_to(attacker))
             mhit = mhit * 65 / 100;
 
-        dprf(MSGCH_DIAGNOSTICS, "%s: Base to-hit: %d, Final to-hit: %d",
+        dprf("%s: Base to-hit: %d, Final to-hit: %d",
              attacker->name(DESC_PLAIN).c_str(),
              base_hit, mhit);
 
