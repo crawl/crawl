@@ -1107,7 +1107,10 @@ ucs_t get_glyph_override(int c)
             c = (c & 0x80) ? charset_vt100[c & 0x7f] : c;
     }
     if (wcwidth(c) != 1)
+    {
+        mprf(MSGCH_ERROR, "Invalid glyph override: %X", c);
         c = 0;
+    }
     return c;
 }
 
@@ -1286,18 +1289,7 @@ void game_options::add_cset_override(
 void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
                                      int symbol)
 {
-    if (symbol >= 0)
-    {
-        cset_override[dc] = symbol;
-        return;
-    }
-
-    symbol = -symbol;
-    if (set == CSET_IBM)
-        symbol = (symbol &~ 0xff) ? 0 : charset_cp437[symbol & 0xff];
-    else if (set == CSET_DEC && symbol & 0xff)
-        symbol = charset_vt100[symbol & 0x7f];
-    cset_override[dc] = symbol;
+    cset_override[dc] = get_glyph_override(symbol);
 }
 
 static std::string _find_crawlrc()
