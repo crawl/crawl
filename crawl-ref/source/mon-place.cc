@@ -711,7 +711,7 @@ bool find_mon_place_near_stairs(coord_def& pos,
             break;
         }
     }
-    const monster_type habitat_target = MONS_MEGABAT;
+    const monster_type habitat_target = MONS_BAT;
     pos = find_newmons_square_contiguous(habitat_target, pos);
     return (in_bounds(pos));
 }

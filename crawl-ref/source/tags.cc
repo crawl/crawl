@@ -2851,6 +2851,8 @@ void unmarshallMonster(reader &th, monster& m)
 #if TAG_MAJOR_VERSION == 32
     if (m.type == MONS_GIANT_BLOWFLY)
         m.type = MONS_VAMPIRE_MOSQUITO;
+    else if (m.type == MONS_MEGABAT)
+        m.type = MONS_BAT;
 #endif
 
     m.mid             = unmarshallInt(th);

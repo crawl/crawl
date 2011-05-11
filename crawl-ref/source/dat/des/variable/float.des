@@ -54,7 +54,7 @@ function callback.cathedral_bats (data, triggerable, triggerer, marker, ev)
   if (you_x == x and you_y == y) then return end
   if dgn.mons_at(x, y) then return end
 
-  if (not dgn.create_monster(x, y, "generate_awake megabat / generate_awake w:2 fire bat")) then
+  if (not dgn.create_monster(x, y, "generate_awake bat name:megabat n_rpl n_spe / generate_awake w:2 fire bat")) then
     return
   end
 
@@ -554,7 +554,7 @@ KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
 MONS:    giant mite, scorpion
 MONS:    rat / porcupine, green rat / orange rat
-MONS:    megabat
+MONS:    bat
 SHUFFLE: ?!+
 SUBST:   c:cccvvb , b=cc.
 SUBST:   1 : 1112
@@ -845,7 +845,7 @@ ENDMAP
 NAME:    vampire
 ORIENT:  float
 DEPTH:   D:12-26, Vault, Crypt
-MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 megabat
+MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item

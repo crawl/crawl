@@ -844,6 +844,10 @@ worker ant
 
 A black ant with poisonous pincers, about the size of a large dog.
 %%%%
+bat
+
+A huge black bat.
+%%%%
 megabat
 
 A huge black bat.
