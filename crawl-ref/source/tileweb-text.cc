@@ -134,7 +134,7 @@ void WebTextArea::send(bool force)
                 }
             }
 
-            if (x == mx - 1)
+            if ((x == mx - 1) && (y != my - 1))
             {
                 space_count = 0;
                 fprintf(stdout, "<br>");
