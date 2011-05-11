@@ -306,6 +306,7 @@ function draw_blood_overlay(x, y, cell, is_wall)
     else if (cell.bloody)
 
     {
+        cell.bloodrot = cell.bloodrot || 0;
         if (is_wall)
 
         {
@@ -324,7 +325,7 @@ function draw_blood_overlay(x, y, cell, is_wall)
     }
     else if (cell.glowing_mold)
     {
-        offset = cell.flv.special % tile_dngn_count(TILE_GLOWING_MOLD);
+        offset = cell.flv.s % tile_dngn_count(TILE_GLOWING_MOLD);
         draw_dngn(TILE_GLOWING_MOLD + offset, x, y);
     }
 }
