@@ -979,12 +979,12 @@ void SkillMenu::_set_help(int flag)
         break;
     case SKMF_DO_RESKILL_FROM:
         help = "Select a skill as the source of the knowledge transfer. The "
-               "chosen skill will be reduced to the level showned in "
+               "chosen skill will be reduced to the level shown in "
                "<brown>brown</brown>.";
         break;
     case SKMF_DO_RESKILL_TO:
         help = "Select a skill as the destination of the knowledge transfer. "
-               "The chosen skill will be raised to the level showned in "
+               "The chosen skill will be raised to the level shown in "
                "<lightblue>blue</lightblue>.";
         break;
     case SKMF_DISP_NORMAL:
