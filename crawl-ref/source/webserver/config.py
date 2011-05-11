@@ -40,6 +40,7 @@ ssl_address = ""
 ssl_port = 8081
 
 connection_timeout = 600
+max_idle_time = 5 * 60 * 60
 
 kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 

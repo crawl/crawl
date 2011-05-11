@@ -188,6 +188,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not self.received_pong:
             logging.info("Connection to remote ip %s timed out.", self.request.remote_ip)
             self.close()
+        else:
+            if self.is_running() and self.idle_time() > max_idle_time:
+                logging.info("Stopping crawl after idle time limit for %s.",
+                             self.username)
+                self.stop_crawl()
 
         if not self.client_terminated:
             self.reset_timeout()
