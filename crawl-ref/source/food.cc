@@ -245,6 +245,14 @@ static bool _butcher_corpse(int corpse_id, int butcher_tool,
     {
         return false;
     }
+    else if (!bottle_blood && you.species == SP_VAMPIRE
+             && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+             && !you.has_spell(SPELL_SIMULACRUM)
+             && !yesno("You'd want to drain or bottle this corpse instead. "
+                       "Continue anyway?", true, 'n'))
+    {
+        return false;
+    }
 
     // Start work on the first corpse we butcher.
     if (first_corpse)
