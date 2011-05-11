@@ -35,11 +35,12 @@ void apply_feature_overrides()
         const feature_override      &fov    = Options.feature_overrides[i];
         const feature_def           &ofeat  = fov.override;
         feature_def                 &feat   = Features[fov.object];
+        ucs_t c;
 
-        if (ofeat.symbol)
-            feat.symbol = get_glyph_override(ofeat.symbol);
-        if (ofeat.magic_symbol)
-            feat.magic_symbol = get_glyph_override(ofeat.magic_symbol);
+        if (ofeat.symbol && (c = get_glyph_override(ofeat.symbol)))
+            feat.symbol = c;
+        if (ofeat.magic_symbol && (c = get_glyph_override(ofeat.magic_symbol)))
+            feat.magic_symbol = c;
         if (ofeat.colour)
             feat.colour = ofeat.colour;
         if (ofeat.map_colour)

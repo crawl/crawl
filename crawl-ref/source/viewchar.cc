@@ -108,6 +108,8 @@ void init_char_table(char_set_type set)
             c = Options.cset_override[i];
         else
             c = dchar_table[set][i];
+        if (wcwidth(c) != 1)
+            c = dchar_table[CSET_ASCII][i];
         Options.char_table[i] = c;
     }
 }
