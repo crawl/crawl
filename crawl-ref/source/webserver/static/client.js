@@ -87,7 +87,7 @@ function do_layout()
 
     // We have to subtract a bit more for scrollbars and margins
     var remaining_width = window_width - stat_width_pixels - 50;
-    var remaining_height = window_height - msg_height_pixels;
+    var remaining_height = window_height - msg_height_pixels - 20;
 
     // Determine the maximum size for the CRT layer
     set_layer("crt");
@@ -109,7 +109,7 @@ function do_layout()
     };
 
     layout.crt_width = Math.floor((window_width - 30) / char_w);
-    layout.crt_height = Math.floor((window_height) / char_h);
+    layout.crt_height = Math.floor((window_height - 15) / char_h);
 
     layout.view_width = Math.floor(remaining_width / dungeon_cell_w);
     layout.view_height = Math.floor(remaining_height / dungeon_cell_h);
