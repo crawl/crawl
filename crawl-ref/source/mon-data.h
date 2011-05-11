@@ -214,6 +214,7 @@ static monsterentry mondata[] = {
 // Axed monsters.
 
 #if TAG_MAJOR_VERSION == 32
+    AXED_MON(MONS_MEGABAT)
     AXED_MON(MONS_GIANT_BLOWFLY)
     AXED_MON(MONS_TRAP_MIMIC)
     AXED_MON(MONS_BEAR)
@@ -271,23 +272,11 @@ static monsterentry mondata[] = {
 },
 
 // batty monsters ('b')
-{ // dummy, used for redefining and player (non-vampire) form
-    MONS_BAT, 'b', LIGHTGREY, "bat",
-    M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY | M_NO_POLY_TO,
-    MR_NO_FLAGS,
-    150, 4, MONS_BAT, MONS_BAT, MH_NATURAL, -1,
-    { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 2, 3, 0 },
-    1, 14, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
-    I_ANIMAL, HT_LAND, FL_FLY, 30, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
-},
-
 {
-    MONS_MEGABAT, 'b', LIGHTGREY, "megabat",
+    MONS_BAT, 'b', LIGHTGREY, "bat",
     M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY,
     MR_NO_FLAGS,
-    150, 4, MONS_BAT, MONS_MEGABAT, MH_NATURAL, -1,
+    150, 4, MONS_BAT, MONS_BAT, MH_NATURAL, -1,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 2, 3, 0 },
     1, 14, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,

@@ -274,7 +274,7 @@ ITEM:    staff of wizardry not_cursed
 ITEM:    gold q:20
 ITEM:    bread ration
 MONS:    training dummy ; stone q:20
-MONS:    megabat skeleton, goblin skeleton
+MONS:    bat skeleton, goblin skeleton
 MONS:    rat, goblin
 MARKER:  A = lua:tutorial_msg4.train_spellcasting()
 MARKER:  d = lua:tutorial_msg4.spellbook()
@@ -334,7 +334,7 @@ KFEAT:   ABCDE = .
 COLOUR:  dABCDE = blue
 FTILE:   dABCDE = tutorial_pad
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
-ITEM:    never_decay megabat skeleton
+ITEM:    never_decay bat skeleton
 ITEM:    never_decay goblin; nothing skeleton
 ITEM:    never_decay small snake skeleton
 ITEM:    never_decay jackal skeleton

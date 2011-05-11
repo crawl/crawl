@@ -392,7 +392,7 @@ NAME:  goddamned_bats
 DEPTH: D:3-12, Lair:1-3, Orc:1-2
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
-KMONS:  1 = megabat
+KMONS:  1 = bat name:megabat n_rpl n_spe
 KMONS:  2 = bat name:microbat n_rpl n_spe col:magenta tile:mons_microbat
 # Can we spell them this way?  Please?
 KMONS:  3 = bat name:fruity n_adj n_spe col:lightmagenta tile:mons_fruity_bat
@@ -921,7 +921,7 @@ ENDMAP
 NAME:   kilobyte_rumbling_trees
 DEPTH:  D:14-20, Elf, Lair:4-8
 MONS:   patrolling spriggan druid
-MONS:   black bear / grizzly bear w:20 / megabat w:20
+MONS:   black bear / grizzly bear w:20 / bat w:20
 FTILE:  .t1@ = floor_moss
 MAP
 ttttt       tttt@t

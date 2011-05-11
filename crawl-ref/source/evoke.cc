@@ -554,7 +554,7 @@ static bool _box_of_beasts(item_def &box)
     if (x_chance_in_y(60 + you.skill(SK_EVOCATIONS), 100))
     {
         const monster_type beasts[] = {
-            MONS_MEGABAT,   MONS_HOUND,     MONS_JACKAL,
+            MONS_BAT,       MONS_HOUND,     MONS_JACKAL,
             MONS_RAT,       MONS_ICE_BEAST, MONS_SNAKE,
             MONS_YAK,       MONS_BUTTERFLY, MONS_WATER_MOCCASIN,
             MONS_CROCODILE, MONS_HELL_HOUND
