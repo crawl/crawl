@@ -1301,7 +1301,7 @@ clear_messages = false
 show_more = true
         Setting this option to false will cause the game not to prompt
         if more than a window-full of messages are output at once. This
-        options has no effect if clear_messages is set.
+        option has no effect if clear_messages is set.
 
 small_more = false
         With small_more = false (default), the --more-- prompt is on a
