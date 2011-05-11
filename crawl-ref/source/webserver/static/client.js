@@ -173,6 +173,13 @@ function view_size(cols, rows)
     dungeon_ctx = canvas.getContext("2d");
 
     clear_tile_cache();
+
+    var dungeon_offset = $("#dungeon").offset();
+
+    $("#stats").offset({
+        left: dungeon_offset.left + canvas.width + 10,
+        top: dungeon_offset.top
+    });
 }
 
 function shift(cx, cy)
