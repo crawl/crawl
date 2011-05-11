@@ -15,6 +15,10 @@ body {
     position: absolute;
 }
 
+#crt {
+    display: inline-block;
+}
+
 #player_list {
     width: 100%;
 }

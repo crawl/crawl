@@ -78,25 +78,38 @@ function do_layout()
 
     // Determine height of messages area
     old_html = $("#messages").html();
-    var s = "";
+    s = "";
     for (var i = 0; i < layout_parameters.msg_min_height; i++)
         s = s + "<br>";
     $("#messages").html(s);
     var msg_height_pixels = $("#messages").outerHeight();
     $("#messages").html(old_html);
 
-    set_layer(layer);
-
     // We have to subtract a bit more for scrollbars and margins
     var remaining_width = window_width - stat_width_pixels - 50;
     var remaining_height = window_height - msg_height_pixels;
 
+    // Determine the maximum size for the CRT layer
+    set_layer("crt");
+    old_html = $("#crt").html();
+    var test_size = 20;
+    s = "";
+    for (var i = 0; i < test_size; i++)
+        s = "&nbsp;" + s + "<br>";
+    $("#crt").html(s);
+    var char_w = $("#crt").width() / test_size;
+    var char_h = $("#crt").height() / test_size;
+    $("#crt").html(old_html);
+
+    set_layer(layer);
+
     var layout = {
         stats_height: 24,
-        crt_width: 150,
-        crt_height: 50,
         msg_width: 80
     };
+
+    layout.crt_width = Math.floor((window_width - 30) / char_w);
+    layout.crt_height = Math.floor((window_height) / char_h);
 
     layout.view_width = Math.floor(remaining_width / dungeon_cell_w);
     layout.view_height = Math.floor(remaining_height / dungeon_cell_h);
