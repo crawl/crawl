@@ -738,6 +738,7 @@ void game_options::reset_options()
     autopickup_on    = 1;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
 
+    show_newturn_mark = true;
     show_gold_turns = false;
 #ifdef EUCLIDEAN
     show_game_turns = true;
@@ -2437,6 +2438,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         morgue_dir = field;
 #endif
 #endif
+    else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
 #ifndef USE_TILE

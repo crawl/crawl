@@ -241,7 +241,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # mlist_targetting             = true
 # show_gold_turns              = true
 # show_game_turns              = true
-
+# show_newturn_mark            = false
 # clear_messages             = true
 # small_more                 = true
 # show_more                  = false
