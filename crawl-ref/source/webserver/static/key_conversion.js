@@ -28,7 +28,7 @@ var key_conversion = {
     119: -1018,
     120: -1019,
     121: -1020,
-    122: -1021,
+//    122: -1021, // Don't occupy F11, it's used for fullscreen
     123: -1022
 };
 
