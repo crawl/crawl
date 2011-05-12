@@ -720,9 +720,11 @@ bool cast_summon_hydra(actor *caster, int pow, god_type god)
 
 bool cast_summon_dragon(actor *caster, int pow, god_type god)
 {
-    // Dragons are always friendly now. Dragon type depends on power &
-    // random chance.  Duration fixed at 4 (longer than hydra, less than
-    // many other summons).
+    // Dragons are always friendly. Dragon type depends on power and
+    // random chance, with two low-tier dragons possible at high power.
+    // Duration fixed at 6.
+
+    bool success = false;
 
     if (god == GOD_NO_GOD)
         god = caster->deity();
@@ -730,6 +732,7 @@ bool cast_summon_dragon(actor *caster, int pow, god_type god)
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int chance = random2(pow);
+    int how_many = 1;
 
     if (chance >= 80 || one_chance_in(6))
         mon = (coinflip()) ? MONS_GOLDEN_DRAGON : MONS_QUICKSILVER_DRAGON;
@@ -747,7 +750,11 @@ bool cast_summon_dragon(actor *caster, int pow, god_type god)
             break;
         }
     else
+    {
         mon = (coinflip()) ? MONS_DRAGON : MONS_ICE_DRAGON;
+        if (pow >= 100)
+            how_many = 2;
+    }
     // Now check to see if you are worshipping a good god
     // and adjust dragons accordingly. No pearl dragons (word of due).
     if (god == GOD_ELYVILON || god == GOD_ZIN)
@@ -764,25 +771,28 @@ bool cast_summon_dragon(actor *caster, int pow, god_type god)
             mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
     }
 
-    int midx;
-    if ((midx = create_monster(
-            mgen_data(mon, BEH_COPY, caster,
-                      4, SPELL_SUMMON_DRAGON,
-                      caster->pos(),
-                      (caster->atype() == ACT_PLAYER) ? MHITYOU
-                        : caster->as_monster()->foe,
-                      0, god))) != -1)
+    for (int i = 0; i < how_many; ++i)
     {
-        if (you.see_cell(menv[midx].pos()))
-            mpr("A dragon appears.");
-        // Xom summoning evil dragons if you worship a good god?  Sure!
-        player_angers_monster(&menv[midx]);
-        return (true);
+        int midx;
+        if ((midx = create_monster(
+                mgen_data(mon, BEH_COPY, caster,
+                          6, SPELL_SUMMON_DRAGON,
+                          caster->pos(),
+                          (caster->atype() == ACT_PLAYER) ? MHITYOU
+                            : caster->as_monster()->foe,
+                          0, god))) != -1)
+        {
+            if (you.see_cell(menv[midx].pos()))
+                mpr("A dragon appears.");
+            // Xom summoning evil dragons if you worship a good god?  Sure!
+            player_angers_monster(&menv[midx]);
+            success = true;
+        }
     }
 
-    if (caster == &you)
+    if (!success && caster == &you)
         canned_msg(MSG_NOTHING_HAPPENS);
-    return (false);
+    return (success);
 }
 
 // This assumes that the specified monster can go berserk.
