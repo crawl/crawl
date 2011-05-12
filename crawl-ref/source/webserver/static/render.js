@@ -209,7 +209,7 @@ function render_cell(x, y)
         if (is_in_water)
         {
             dungeon_ctx.save();
-            dungeon_ctx.globalAlpha = cell.trans ? 0.7 : 1.0;
+            dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
 
             set_nonsubmerged_clip(x, y, 20);
 
@@ -228,7 +228,7 @@ function render_cell(x, y)
         else
         {
             dungeon_ctx.save();
-            dungeon_ctx.globalAlpha = cell.trans ? 0.7 : 1.0;
+            dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
 
             draw_dolls();
 
@@ -445,7 +445,7 @@ function draw_foreground(x, y, cell)
         if (is_in_water)
         {
             dungeon_ctx.save();
-            dungeon_ctx.globalAlpha = cell.trans ? 0.7 : 1.0;
+            dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
 
             set_nonsubmerged_clip(x, y, 20);
 
