@@ -25,6 +25,14 @@ Robert Vollmert, Enne Walker) would like to thank:
   server crawl.akrasiac.org, its associated August tourney, and other great
   contributions.
 
+* The members of various usability testing teams from the department of
+  Information Processing Science in Oulu University: Satu Alanko, Tiina
+  Kallinen, Aslak Karsi, Teemu Kaukoranta, Miikka Kuutila, Sami Mylly, Joonas
+  Nissinen, Perttu Piirainen, Jouni Rissanen, Tuomas Ristioja, Arto Saukko,
+  Janne Seppänen, Henri Sorsa and Sebastian Turpeinen. Additional thanks to
+  Mikko Rajanen for providing the opportunity for usability testing during
+  various courses.
+
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
