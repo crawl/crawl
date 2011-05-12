@@ -122,8 +122,6 @@ public:
     {
     }
 
-    // Need not be implemented for the player - player action costs
-    // are explicitly calculated.
     virtual void lose_energy(energy_use_type, int div = 1, int mult = 1)
     {
     }
