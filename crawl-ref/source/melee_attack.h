@@ -155,8 +155,6 @@ private:
                        std::vector<int> items);
     bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
                       item_def &fake_corpse, int last_item);
-    void mons_lose_attack_energy(monster* attacker, int wpn_speed,
-                                 int which_attack, int effective_attack);
 private:
     // Player-attack specific stuff
     bool player_attack();
@@ -170,7 +168,6 @@ private:
 
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
-    void player_apply_attack_delay();
     int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);
     int  player_apply_fighting_skill(int damage, bool aux);

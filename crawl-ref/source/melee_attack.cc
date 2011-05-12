@@ -177,7 +177,6 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER
         && stop_attack_prompt(defender->as_monster(), false, attacker->pos()))
     {
-        cancel_attack = true;
         return (false);
     }
 
@@ -242,7 +241,11 @@ bool melee_attack::handle_phase_blocked()
 
         if (attacker->atype() == ACT_PLAYER)
         {
-            player_apply_attack_delay();
+            // Player incurs their attack delay, of course.
+            // TODO: potentially remove this; since this code has been pushed
+            // back in the time line of attack sequencing, we may have already
+            // incured the attacker's delay...
+            calc_attack_delay();
 
             if (you.can_see(defender))
             {
@@ -322,6 +325,7 @@ bool melee_attack::attack()
                                                      : mons_attack_mons());
     identify_mimic(defender);
 
+    // Remove sanctuary if - through some attack - it was violated.
     if (env.sanctuary_time > 0 && retval && !cancel_attack
         && attacker != defender && !attacker->confused())
     {
@@ -355,12 +359,10 @@ bool melee_attack::attack()
 
 bool melee_attack::player_attack()
 {
-    if (cancel_attack)
-        return (false);
-
+    // TODO: This clobbers the settings in init_attack, not sure why?
     noise_factor = 100;
 
-    player_apply_attack_delay();
+    calc_attack_delay();
     player_stab_check();
 
     coord_def where = defender->pos();
@@ -3265,6 +3267,21 @@ int melee_attack::calc_to_hit(bool random)
     return (0);
 }
 
+/*
+ * Calculate the attack delay for attacker
+ *
+ * All calls to this method by player-attackers (attackers who are players)
+ * implies that the calculated attack delay is automatically applied via
+ * you.time_taken. This application of the attack delay does not happen
+ * implicitly for monsters.
+ *
+ * Although we're trying to unify the code paths for players and monsters,
+ * we don't have a unified system in place for calculating attack_delay using
+ * the same base methods so we still have to check the atype of the attacker
+ * and fork on the logic.
+ *
+ * @param random deterministic or stochastic calculation(s)
+ */
 int melee_attack::calc_attack_delay(bool random)
 {
     if(attacker->atype() == ACT_PLAYER)
@@ -3284,8 +3301,24 @@ int melee_attack::calc_attack_delay(bool random)
         }
 
         attack_delay = rv::max(attack_delay, constant(3));
+        attack_delay = random ? attack_delay.roll() : attack_delay.expected();
 
-        return (random ? attack_delay.roll() : attack_delay.expected());
+        if (you.duration[DUR_FINESSE])
+        {
+            ASSERT(!you.duration[DUR_BERSERK]);
+            // Need to undo haste by hand.
+            if (you.duration[DUR_HASTE])
+                you.time_taken = haste_mul(you.time_taken);
+            you.time_taken = div_rand_round(you.time_taken, 2);
+        }
+
+        you.time_taken =
+            std::max(2, div_rand_round(you.time_taken * attack_delay, 10));
+
+        dprf("Weapon speed: %d; min: %d; attack time: %d",
+             attack_delay, min_delay, you.time_taken);
+
+        return (attack_delay);
     }
     else
     {
@@ -3346,26 +3379,6 @@ void melee_attack::player_stab_check()
         stab_attempt = x_chance_in_y(you.skill(SK_STABBING) + you.dex() + 1,
                                      roll);
     }
-}
-
-void melee_attack::player_apply_attack_delay()
-{
-    final_attack_delay = calc_attack_delay();
-
-    if (you.duration[DUR_FINESSE])
-    {
-        ASSERT(!you.duration[DUR_BERSERK]);
-        // Need to undo haste by hand.
-        if (you.duration[DUR_HASTE])
-            you.time_taken = haste_mul(you.time_taken);
-        you.time_taken = div_rand_round(you.time_taken, 2);
-    }
-
-    you.time_taken =
-        std::max(2, div_rand_round(you.time_taken * final_attack_delay, 10));
-
-    dprf("Weapon speed: %d; min: %d; attack time: %d",
-         final_attack_delay, min_delay, you.time_taken);
 }
 
 random_var melee_attack::player_weapon_speed()
@@ -4403,10 +4416,31 @@ bool melee_attack::mons_perform_attack()
     if (damage_brand == SPWPN_SPEED)
         final_attack_delay = final_attack_delay / 2 + 1;
 
-    mons_lose_attack_energy(attacker->as_monster(),
-                            final_attack_delay,
-                            attack_number,
-                            effective_attack_number);
+    // Initial attack causes energy to be used for all attacks.  No
+    // additional energy is used for unarmed attacks.
+    if (effective_attack_number == 0)
+        attacker->as_monster->lose_energy(EUT_ATTACK);
+
+    // Monsters lose additional energy only for the first two weapon
+    // attacks; subsequent hits are free.
+    if (effective_attack_number > 1)
+        return;
+
+    // speed adjustment for weapon using monsters
+    if (final_attack_delay > 0)
+    {
+        const int atk_speed = attacker->as_monster->action_energy(EUT_ATTACK);
+        // only get one third penalty/bonus for second weapons.
+        if (effective_attack > 0)
+        {
+            final_attack_delay =
+                div_rand_round((2 * atk_speed + final_attack_delay), 3);
+        }
+
+        int delta = div_rand_round((final_attack_delay - 10 + (atk_speed - 10)), 2);
+        if (delta > 0)
+            attacker->as_monster->speed_increment -= delta;
+    }
 
     bool shield_blocked = false;
     bool this_round_hit = false;
@@ -5258,35 +5292,6 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
     }
 
     return std::max(0, damage);
-}
-
-// This methos isn't exactly necessary, but its fine to stay for the moment.
-// TODO: Inline to the location its called at so we can remove this method.
-void melee_attack::mons_lose_attack_energy(monster* attkr, int wpn_speed,
-                                    int which_attack, int effective_attack)
-{
-    // Initial attack causes energy to be used for all attacks.  No
-    // additional energy is used for unarmed attacks.
-    if (effective_attack == 0)
-        attkr->lose_energy(EUT_ATTACK);
-
-    // Monsters lose additional energy only for the first two weapon
-    // attacks; subsequent hits are free.
-    if (effective_attack > 1)
-        return;
-
-    // speed adjustment for weapon using monsters
-    if (wpn_speed > 0)
-    {
-        const int atk_speed = attkr->action_energy(EUT_ATTACK);
-        // only get one third penalty/bonus for second weapons.
-        if (effective_attack > 0)
-            wpn_speed = div_rand_round((2 * atk_speed + wpn_speed), 3);
-
-        int delta = div_rand_round((wpn_speed - 10 + (atk_speed - 10)), 2);
-        if (delta > 0)
-            attkr->speed_increment -= delta;
-    }
 }
 
 // TODO: Move this to attack, or remove it, or do something with it, its
