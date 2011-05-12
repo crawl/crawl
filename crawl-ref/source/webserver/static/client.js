@@ -311,6 +311,7 @@ function handle_keydown(e)
     {
         if (e.which == 27 && watching)
         {
+            e.preventDefault();
             location.hash = "#lobby";
         }
         else if (e.which in key_conversion)
