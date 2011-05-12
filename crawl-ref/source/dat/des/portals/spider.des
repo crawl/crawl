@@ -74,7 +74,8 @@ function spiders_nest_random_monster_set(e)
                          yellow wasp / red wasp / \
                          goliath beetle / boring beetle / boulder beetle / \
                          giant centipede / emperor scorpion / jumping spider / \
-                         tarantella / ghost moth w:2 / demonic crawler w:2")
+                         tarantella / demonic crawler w:2")
+                         -- no more ghost moths, please restore for the branch
 end
 }}
 
@@ -194,7 +195,7 @@ ENDMAP
 NAME:   spiders_nest_the_unseen
 TAGS:   spiders_nest no_item_gen no_monster_gen
 ORIENT: encompass
-WEIGHT: 5
+WEIGHT: 0
 : spiders_nest_colours(_G)
 : spiders_nest_random_monster_set(_G)
 epilogue{{
@@ -227,7 +228,7 @@ ENDMAP
 NAME:   spiders_nest_ghost_moth_duel
 TAGS:   spiders_nest no_item_gen no_monster_gen generate_awake
 ORIENT: encompass
-WEIGHT: 5
+WEIGHT: 0
 : spiders_nest_colours(_G)
 : spiders_nest_random_monster_set(_G)
 epilogue{{
