@@ -50,6 +50,9 @@ public:
 
     bool      can_do_unarmed;
 
+    bool    stab_attempt;
+    int     stab_bonus;
+
     // Miscast to cause after special damage is done. If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
     int    miscast_level;

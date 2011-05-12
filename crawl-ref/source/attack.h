@@ -40,9 +40,6 @@ public:
     int     special_damage; // TODO: We'll see if we can remove this
     int     aux_damage;
 
-    bool    stab_attempt;
-    int     stab_bonus;
-
     int     min_delay;
     int     final_attack_delay;
 
