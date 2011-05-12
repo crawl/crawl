@@ -929,7 +929,7 @@ struct spell_desc
 {
     SPELL_BERSERKER_RAGE, "Berserker Rage",
      SPTYP_CHARMS,
-     SPFLAG_HASTY,
+     SPFLAG_HASTY | SPFLAG_MONSTER,
      3,
      0,
      -1, -1,

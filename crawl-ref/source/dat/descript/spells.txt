@@ -29,10 +29,6 @@ This spell allows the caster to pull the top item or group of similar items from
 
 Extremely powerful magical items, such as the Orb of Zot, may actively resist the pull of this spell.
 %%%%
-Berserker Rage
-
-This spell sends the caster into a temporary psychotic rage.
-%%%%
 Blade Hands
 
 This spell causes long, scythe-shaped blades to grow from the caster's hands. It makes spellcasting somewhat difficult. This spell is not powerful enough to force a cursed weapon from the caster's hands.
