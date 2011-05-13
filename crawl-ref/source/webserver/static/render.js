@@ -209,30 +209,45 @@ function render_cell(x, y)
         if (is_in_water)
         {
             dungeon_ctx.save();
-            dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
+            try
+            {
+                dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
 
-            set_nonsubmerged_clip(x, y, 20);
+                set_nonsubmerged_clip(x, y, 20);
 
-            draw_dolls();
-
-            dungeon_ctx.restore();
+                draw_dolls();
+            }
+            finally
+            {
+                dungeon_ctx.restore();
+            }
 
             dungeon_ctx.save();
-            dungeon_ctx.globalAlpha = cell.trans ? 0.1 : 0.3;
-            set_submerged_clip(x, y, 20);
+            try
+            {
+                dungeon_ctx.globalAlpha = cell.trans ? 0.1 : 0.3;
+                set_submerged_clip(x, y, 20);
 
-            draw_dolls();
-
-            dungeon_ctx.restore();
+                draw_dolls();
+            }
+            finally
+            {
+                dungeon_ctx.restore();
+            }
         }
         else
         {
             dungeon_ctx.save();
-            dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
+            try
+            {
+                dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
 
-            draw_dolls();
-
-            dungeon_ctx.restore();
+                draw_dolls();
+            }
+            finally
+            {
+                dungeon_ctx.restore();
+            }
         }
 
         draw_foreground(x, y, cell);
@@ -241,11 +256,17 @@ function render_cell(x, y)
         {
             var col = flash_colours[cell.fl];
             dungeon_ctx.save();
-            dungeon_ctx.fillStyle = "rgb(" + col.r + "," + col.g + "," + col.b + ")";
-            dungeon_ctx.globalAlpha = col.a / 255;
-            dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
-                                 dungeon_cell_w, dungeon_cell_h);
-            dungeon_ctx.restore();
+            try
+            {
+                dungeon_ctx.fillStyle = "rgb(" + col.r + "," + col.g + "," + col.b + ")";
+                dungeon_ctx.globalAlpha = col.a / 255;
+                dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
+                                     dungeon_cell_w, dungeon_cell_h);
+            }
+            finally
+            {
+                dungeon_ctx.restore();
+            }
         }
 
         render_cursors(x, y);
@@ -347,21 +368,31 @@ function draw_background(x, y, cell)
     if (cell.swtree) // Draw the tree submerged
     {
         dungeon_ctx.save();
-        dungeon_ctx.globalAlpha = 1.0;
+        try
+        {
+            dungeon_ctx.globalAlpha = 1.0;
 
-        set_nonsubmerged_clip(x, y, 20);
+            set_nonsubmerged_clip(x, y, 20);
 
-        draw_dngn(bg_idx, x, y);
-
-        dungeon_ctx.restore();
+            draw_dngn(bg_idx, x, y);
+        }
+        finally
+        {
+            dungeon_ctx.restore();
+        }
 
         dungeon_ctx.save();
-        dungeon_ctx.globalAlpha = 0.3;
-        set_submerged_clip(x, y, 20);
+        try
+        {
+            dungeon_ctx.globalAlpha = 0.3;
+            set_submerged_clip(x, y, 20);
 
-        draw_dngn(bg_idx, x, y);
-
-        dungeon_ctx.restore();
+            draw_dngn(bg_idx, x, y);
+        }
+        finally
+        {
+            dungeon_ctx.restore();
+        }
     }
     else
         draw_dngn(bg_idx, x, y);
@@ -445,27 +476,37 @@ function draw_foreground(x, y, cell)
         if (is_in_water)
         {
             dungeon_ctx.save();
-            dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
+            try
+            {
+                dungeon_ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
 
-            set_nonsubmerged_clip(x, y, 20);
+                set_nonsubmerged_clip(x, y, 20);
 
-            if (base_idx)
-                draw_main(base_idx, x, y);
+                if (base_idx)
+                    draw_main(base_idx, x, y);
 
-            draw_main(fg_idx, x, y);
-
-            dungeon_ctx.restore();
+                draw_main(fg_idx, x, y);
+            }
+            finally
+            {
+                dungeon_ctx.restore();
+            }
 
             dungeon_ctx.save();
-            dungeon_ctx.globalAlpha = cell.trans ? 0.1 : 0.3;
-            set_submerged_clip(x, y, 20);
+            try
+            {
+                dungeon_ctx.globalAlpha = cell.trans ? 0.1 : 0.3;
+                set_submerged_clip(x, y, 20);
 
-            if (base_idx)
-                draw_main(base_idx, x, y);
+                if (base_idx)
+                    draw_main(base_idx, x, y);
 
-            draw_main(fg_idx, x, y);
-
-            dungeon_ctx.restore();
+                draw_main(fg_idx, x, y);
+            }
+            finally
+            {
+                dungeon_ctx.restore();
+            }
         }
         else
         {
