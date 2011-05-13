@@ -9,7 +9,7 @@ function watchers(count, names)
 function chat(msg)
 {
     $("#chat_history").append(msg + "<br>");
-    $("#chat_history").scrollTop($("#chat_history").innerHeight());
+    $("#chat_history_container").scrollTop($("#chat_history").height());
     if ($("#chat_body").css("display") === "none")
     {
         new_message_count++;
@@ -63,6 +63,7 @@ function focus_chat()
     if ($("#chat_body").css("display") === "none")
         toggle_chat();
 
+    $("#chat_history_container").scrollTop($("#chat_history").height());
     $("#chat_input").focus();
 }
 

@@ -86,7 +86,9 @@
         <div id="chat_body" style="display: none;">
           <div id="spectator_list"></div>
 
-          <div id="chat_history"></div>
+          <div id="chat_history_container">
+            <span id="chat_history"></span>
+          </div>
 
           <input class="text" type="text" name="chat_input"
                  id="chat_input" onkeydown="chat_message_send(event)"></input>
