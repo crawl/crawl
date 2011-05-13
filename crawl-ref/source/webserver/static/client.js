@@ -443,6 +443,8 @@ function lobby(enable)
     {
         location.hash = "#lobby";
         document.title = "WebTiles - Dungeon Crawl Stone Soup";
+
+        clear_chat();
     }
 
     if (enable && lobby_update_timeout == undefined)

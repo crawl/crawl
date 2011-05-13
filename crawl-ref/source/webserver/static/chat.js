@@ -65,3 +65,11 @@ function focus_chat()
 
     $("#chat_input").focus();
 }
+
+function clear_chat()
+{
+    $("#spectator_list").html("");
+    $("#chat_history").html("");
+    $("#spectator_count").html("0 spectators");
+    $("#message_count").html("0 new messages");
+}
