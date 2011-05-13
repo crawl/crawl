@@ -1421,7 +1421,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     if (mon->asleep())
         return (true);
 
-    if (mons_is_stationary(mon))
+    if (mons_is_stationary(mon) && !mons_is_tentacle_end(mon->type))
     {
         int dist = grid_distance(you.pos(), mon->pos());
         if (want_move)
@@ -1491,7 +1491,7 @@ static bool _mons_is_always_safe(const monster *mon)
 {
     return (mon->wont_attack()
             || mons_class_flag(mon->type, M_NO_EXP_GAIN)
-               && mon->type != MONS_KRAKEN_TENTACLE
+               && !mons_is_tentacle_end(mon->type)
             || mon->withdrawn()
             || mon->type == MONS_BALLISTOMYCETE && mon->number == 0);
 }

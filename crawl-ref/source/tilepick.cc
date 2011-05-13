@@ -2141,12 +2141,6 @@ static void _handle_tentacle_overlay(const coord_def pos,
     }
 }
 
-static bool _mons_is_tentacle_end(const int mtype)
-{
-    return (mtype == MONS_KRAKEN_TENTACLE
-            || mtype == MONS_ELDRITCH_TENTACLE);
-}
-
 static bool _mons_is_kraken_tentacle(const int mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
@@ -2192,7 +2186,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
         }
 
         // Tentacle end only requires checking of head position.
-        if (_mons_is_tentacle_end(mon->type))
+        if (mons_is_tentacle_end(mon->type))
         {
             if (no_head_connect)
             {
@@ -2238,7 +2232,7 @@ static tileidx_t _tileidx_tentacle(const monster *mon)
     }
     else
     {
-        if (_mons_is_tentacle_end(mon->type))
+        if (mons_is_tentacle_end(mon->type))
         {
             // Can only happen during the database search.
             if (_mons_is_kraken_tentacle(mon->type))
