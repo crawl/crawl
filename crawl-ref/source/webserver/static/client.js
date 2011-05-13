@@ -262,6 +262,7 @@ function shift(cx, cy)
 function handle_keypress(e)
 {
     if (current_layer == "lobby") return;
+    if ($(document.activeElement).hasClass("text")) return;
 
     if (e.ctrlKey || e.altKey)
     {
@@ -297,6 +298,7 @@ function handle_keydown(e)
         }
         return;
     }
+    if ($(document.activeElement).hasClass("text")) return;
 
     if (e.ctrlKey && !e.shiftKey && !e.altKey)
     {
@@ -436,7 +438,7 @@ function lobby(enable)
     {
         location.hash = "#lobby";
         document.title = "WebTiles - Dungeon Crawl Stone Soup";
-     }
+    }
 
     if (enable && lobby_update_timeout == undefined)
     {
@@ -446,6 +448,8 @@ function lobby(enable)
     {
         clearInterval(lobby_update_timeout);
     }
+
+    $("#chat").toggle(!enable);
 }
 function lobby_update()
 {
