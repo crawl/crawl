@@ -4528,3 +4528,9 @@ const char* mons_class_name(monster_type mc)
 
     return get_monster_data(mc)->name;
 }
+
+bool mons_is_tentacle_end(const int mtype)
+{
+    return (mtype == MONS_KRAKEN_TENTACLE
+            || mtype == MONS_ELDRITCH_TENTACLE);
+}
