@@ -96,10 +96,14 @@ input.button {
     color: green;
 }
 
-#chat_history {
+#chat_history_container {
     width: 100%;
     max-height: 200px;
     overflow-y: auto;
+}
+
+#chat_history {
+    width: 100%;
 }
 
 .chat_sender {
