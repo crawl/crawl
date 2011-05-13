@@ -69,7 +69,7 @@ function focus_chat()
 
 function clear_chat()
 {
-    $("#spectator_list").html("");
+    $("#spectator_list").html("&nbsp;");
     $("#chat_history").html("");
     $("#spectator_count").html("0 spectators");
     $("#message_count").html("0 new messages");
