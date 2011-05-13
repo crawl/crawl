@@ -191,34 +191,6 @@ static inline bool is_trap(const coord_def& c)
     return feat_is_trap(env.map_knowledge(c).feat());
 }
 
-static inline bool _is_safe_trap (const coord_def& c)
-{
-#ifdef CLUA_BINDINGS
-    if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name_at(c)))
-    {
-        return  (true);
-    }
-#endif
-
-    const trap_type trap = get_trap_type(c);
-
-    // Teleport traps are safe to travel through with -TELE
-    if (trap == TRAP_TELEPORT && (player_equip(EQ_AMULET, AMU_STASIS, true)
-        || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
-    {
-        return (true);
-    }
-
-    // Known shafts can be side-stepped and thus are safe for auto-travel.
-    if (trap == TRAP_SHAFT)
-    {
-        trap_def* shaft = find_trap(c);
-        return (shaft->is_known());
-    }
-
-    return (false);
-}
-
 static inline bool _is_safe_cloud(const coord_def& c)
 {
     const int cloud = env.cgrid(c);
@@ -436,8 +408,8 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (!ignore_danger && is_excluded(c) && !is_stair_exclusion(c))
         return (false);
 
-    if (is_trap(c) && _is_safe_trap(c))
-        return (true);
+    if (find_trap(c) && find_trap(c)->is_safe())
+            return true;
 
     if (g_Slime_Wall_Check && slime_wall_neighbour(c))
         return (false);
@@ -469,8 +441,8 @@ static bool _is_safe_move(const coord_def& c)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (is_trap(c))
-        return (_is_safe_trap(c));
+    if (const trap_def* trap = find_trap(c))
+        return trap->is_safe();
 
     return _is_safe_cloud(c);
 }
