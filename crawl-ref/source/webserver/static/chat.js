@@ -73,4 +73,5 @@ function clear_chat()
     $("#chat_history").html("");
     $("#spectator_count").html("0 spectators");
     $("#message_count").html("0 new messages");
+    $("#chat_body").slideUp(200);
 }
