@@ -19,7 +19,8 @@ function chat(msg)
 
 function update_message_count()
 {
-    $("#message_count").html(new_message_count + " new messages");
+    var press_ = new_message_count > 0 ? " (Press _)" : "";
+    $("#message_count").html(new_message_count + " new messages" + press_);
     $("#message_count").toggleClass("has_new", new_message_count > 0);
 }
 
@@ -32,6 +33,13 @@ function chat_message_send(e)
         socket.send("Chat: " + $("#chat_input").val());
         $("#chat_input").val("");
         return false;
+    }
+    else if (e.which == 27)
+    {
+        e.preventDefault();
+        e.stopPropagation();
+        toggle_chat();
+        $(document.activeElement).blur();
     }
     return true;
 }
@@ -49,4 +57,12 @@ function toggle_chat()
         $("#chat_body").slideUp(200);
     }
     return false;
+}
+
+function focus_chat()
+{
+    if ($("#chat_body").css("display") === "none")
+        toggle_chat();
+
+    $("#chat_input").focus();
 }

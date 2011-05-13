@@ -276,10 +276,15 @@ function handle_keypress(e)
     e.preventDefault();
 
     var s = String.fromCharCode(e.which);
-    if (s == "\\")
+    if (s == "_")
+    {
+        focus_chat();
+    }
+    else if (s == "\\")
     {
         socket.send("\\92\n");
-    } else if (s == "^")
+    }
+    else if (s == "^")
     {
         socket.send("\\94\n");
     }

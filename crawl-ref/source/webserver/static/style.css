@@ -93,6 +93,7 @@ input.button {
 }
 #message_count.has_new {
     font-weight: bold;
+    color: blue;
 }
 
 #chat_history {
