@@ -200,6 +200,46 @@ bool trap_def::is_known(const actor* act) const
     die("invalid actor type");
 }
 
+bool trap_def::is_safe(actor* act) const
+{
+    if (!act)
+        act = &you;
+
+    // Shaft and mechanical traps are safe when flying or clinging.
+    if ((act->airborne() || act->can_cling_to(pos))
+        && category() != DNGN_TRAP_MAGICAL)
+    {
+        return true;
+    }
+
+    if (act->atype() != ACT_PLAYER)
+        return false;
+
+    // No prompt (teleport traps are ineffective if
+    // wearing an amulet of stasis)
+    if (type == TRAP_TELEPORT
+        && (player_equip(EQ_AMULET, AMU_STASIS, true)
+            || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
+    {
+        return true;
+    }
+
+    if (!is_known(act))
+        return false;
+
+    if (type == TRAP_GOLUBRIA || crawl_state.game_is_zotdef())
+        return true;
+
+    #ifdef CLUA_BINDINGS
+     // Prompt for any trap where you might not have enough hp
+     // as defined in init.txt (see trapwalk.lua)
+     if (clua.callbooleanfn(false, "ch_cross_trap", "s", name().c_str()))
+         return true;
+
+#endif
+
+     return false;
+}
 
 // Returns the number of a net on a given square.
 // If trapped, only stationary ones are counted

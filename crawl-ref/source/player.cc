@@ -152,6 +152,11 @@ static bool _check_moveto_cloud(const coord_def& p,
 
 static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 {
+    // If there's no trap, let's go.
+    trap_def* trap = find_trap(p);
+    if (!trap)
+        return true;
+
     // If we're walking along, give a chance to avoid traps.
     const dungeon_feature_type new_grid = env.grid(p);
     if (new_grid == DNGN_UNDISCOVERED_TRAP)
@@ -163,8 +168,14 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 
         if (random2(skill) > 6)
         {
-            if (trap_def* ptrap = find_trap(p))
-                ptrap->reveal();
+            // We check the safety before revealing it.
+            const bool safe = trap->is_safe();
+            trap->reveal();
+            practise(EX_TRAP_PASSIVE);
+            print_stats();
+
+            if (safe)
+                return true;
 
             viewwindow();
 
@@ -176,70 +187,35 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
             if (!you.running.is_any_travel())
                 more();
 
-            practise(EX_TRAP_PASSIVE);
-            print_stats();
             return (false);
         }
     }
-    else if (new_grid == DNGN_TRAP_MAGICAL
-#ifdef CLUA_BINDINGS
-             || new_grid == DNGN_TRAP_MECHANICAL
-                && Options.trap_prompt
-#endif
-             || new_grid == DNGN_TRAP_NATURAL)
+    else if (trap->type == TRAP_ZOT)
     {
-        const trap_type type = get_trap_type(p);
-        if (type == TRAP_ZOT)
-        {
-            std::string prompt = make_stringf(
-                "Do you really want to %s into the Zot trap",
-                move_verb.c_str()
-          );
-            if (!yes_or_no(prompt.c_str()))
-            {
-                canned_msg(MSG_OK);
-                return (false);
-            }
-        }
-        else if (new_grid != DNGN_TRAP_MAGICAL &&
-                 (you.airborne() || you.can_cling_to(p)))
-        {
-            // No prompt (shaft and mechanical traps
-            // ineffective, if flying)
-        }
-        else if (type == TRAP_TELEPORT
-                 && (player_equip(EQ_AMULET, AMU_STASIS, true)
-                     || scan_artefacts(ARTP_PREVENT_TELEPORTATION,
-                                       false)))
-        {
-            // No prompt (teleport traps are ineffective if
-            // wearing an amulet of stasis)
-        }
-        else
-#ifdef CLUA_BINDINGS
-             // Prompt for any trap where you might not have enough hp
-             // as defined in init.txt (see trapwalk.lua)
-             if (type != TRAP_SHAFT // Known shafts aren't traps
-                 && type != TRAP_GOLUBRIA // don't need a warning here
-                 && (new_grid != DNGN_TRAP_MECHANICAL
-                 || !clua.callbooleanfn(false, "ch_cross_trap",
-                                        "s", trap_name_at(p)))
-                && !crawl_state.game_is_zotdef())
-#endif
-        {
-            std::string prompt = make_stringf(
-                "Really %s %s that %s?",
-                move_verb.c_str(),
-                (type == TRAP_ALARM || type == TRAP_PLATE) ? "onto" : "into",
-                feature_description(new_grid, type,
-                                    "", DESC_BASENAME,
-                                    false).c_str());
+        std::string prompt = make_stringf(
+            "Do you really want to %s into the Zot trap",
+            move_verb.c_str());
 
-            if (!yesno(prompt.c_str(), true, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return (false);
-            }
+        if (!yes_or_no(prompt.c_str()))
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+    }
+    else if (!trap->is_safe())
+    {
+        std::string prompt = make_stringf(
+            "Really %s %s that %s?",
+            move_verb.c_str(),
+            (trap->type == TRAP_ALARM || trap->type == TRAP_PLATE) ? "onto"
+                                                                   : "into",
+            feature_description(new_grid, trap->type, "",
+                                DESC_BASENAME, false).c_str());
+
+        if (!yesno(prompt.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return (false);
         }
     }
     return (true);
