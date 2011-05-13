@@ -560,6 +560,8 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
         return TILEP_MONS_SPECTRAL_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
         return TILEP_MONS_SPECTRAL_QUADRUPED_LARGE;
+    case TILEP_MONS_ZOMBIE_TOAD:
+        return TILEP_MONS_SPECTRAL_TOAD;
     case TILEP_MONS_ZOMBIE_BAT:
         return TILEP_MONS_SPECTRAL_BAT;
     case TILEP_MONS_ZOMBIE_BEE:
@@ -676,11 +678,11 @@ static tileidx_t _tileidx_monster_zombified(const monster* mon)
         }
         // else fall-through
     case MON_SHAPE_QUADRUPED_TAILLESS:
-        if (_is_zombie(z_type)
-            && (mons_genus(subtype) == MONS_GIANT_FROG
-                || mons_genus(subtype) == MONS_BLINK_FROG))
+        if (mons_base_char(subtype) == 'F')
         {
-            return TILEP_MONS_ZOMBIE_TOAD;
+            z_tile = _is_skeleton(z_type) ? TILEP_MONS_SKELETON_TOAD
+                                          : TILEP_MONS_ZOMBIE_TOAD;
+            break;
         }
 
         if (z_type == MONS_SKELETON_SMALL)
