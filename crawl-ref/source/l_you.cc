@@ -100,7 +100,9 @@ LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
 LUARET1(you_res_statdrain, number, player_sust_abil(false))
 LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
+LUARET1(you_spirit_shield, number, player_spirit_shield())
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
+LUARET1(you_like_chunks, boolean, player_likes_chunks(true))
 LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
 LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
 LUARET1(you_flying, boolean, you.flight_mode() == FL_FLY)
@@ -170,6 +172,27 @@ static int l_you_spells(lua_State *ls)
     return (1);
 }
 
+static int l_you_spell_letters(lua_State *ls)
+{
+    lua_newtable(ls);
+    int index = 0;
+
+    char buf[2];
+    buf[1] = 0;
+
+    for (int i = 0; i < 52; ++i)
+    {
+        buf[0] = index_to_letter(i);
+        const spell_type spell = get_spell_by_letter(buf[0]);
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        lua_pushstring(ls, buf);
+        lua_rawseti(ls, -2, ++index);
+    }
+    return (1);
+}
+
 static int l_you_abils(lua_State *ls)
 {
     lua_newtable(ls);
@@ -178,6 +201,23 @@ static int l_you_abils(lua_State *ls)
     for (int i = 0, size = abils.size(); i < size; ++i)
     {
         lua_pushstring(ls, abils[i]);
+        lua_rawseti(ls, -2, i + 1);
+    }
+    return (1);
+}
+
+static int l_you_abil_letters(lua_State *ls)
+{
+    lua_newtable(ls);
+
+    char buf[2];
+    buf[1] = 0;
+
+    std::vector<talent> talents = your_talents(false);
+    for (int i = 0, size = talents.size(); i < size; ++i)
+    {
+        buf[0] = talents[i].hotkey;
+        lua_pushstring(ls, buf);
         lua_rawseti(ls, -2, i + 1);
     }
     return (1);
@@ -218,7 +258,9 @@ static const struct luaL_reg you_clib[] =
     { "turns"       , you_turns },
     { "time"        , you_time },
     { "spells"      , l_you_spells },
+    { "spell_letters", l_you_spell_letters },
     { "abilities"   , l_you_abils },
+    { "ability_letters", l_you_abil_letters },
     { "name"        , you_name },
     { "race"        , you_race },
     { "class"       , you_class },
@@ -243,7 +285,9 @@ static const struct luaL_reg you_clib[] =
     { "res_shock"   , you_res_shock },
     { "res_statdrain", you_res_statdrain },
     { "res_mutation", you_res_mutation },
+    { "spirit_shield", you_spirit_shield },
     { "saprovorous",  you_saprovorous },
+    { "like_chunks",  you_like_chunks },
     { "gourmand",     you_gourmand },
     { "levitating",   you_levitating },
     { "flying",       you_flying },
