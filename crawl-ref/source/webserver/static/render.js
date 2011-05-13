@@ -646,7 +646,6 @@ function draw_foreground(x, y, cell)
 
 
 // Helper functions for drawing from specific textures
-// TODO: Center tiles that are smaller than 32x32?
 // TODO: Handle redrawing of cells above higher-than-32 tiles
 // (e.g. the lernaean hydra leaves a trail of heads)
 
@@ -660,14 +659,24 @@ function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
     {
         throw ("Tile not found: " + idx);
     }
+    var size_ox = dungeon_cell_w / 2 - info.w / 2;
+    var size_oy = dungeon_cell_h / 2 - info.h / 2;
+    var pos_sy_adjust = (ofsy || 0) + info.oy + size_oy;
+    var pos_ey_adjust = pos_sy_adjust + info.ey - info.sy;
+    var sy = pos_sy_adjust;
+    var ey = pos_ey_adjust;
+    if (y_max && y_max < ey)
+        ey = y_max;
+
+    if (sy >= ey) return;
+
     var w = info.ex - info.sx;
     var h = info.ey - info.sy;
-    if (h > dungeon_cell_h)
-        y -= (h - dungeon_cell_h);
-    if (y_max)
-        h -= (dungeon_cell_h - y_max);
-    dungeon_ctx.drawImage(img, info.sx, info.sy, w, h,
-                          x + info.ox + (ofsx || 0), y + info.oy + (ofsy || 0), w, h);
+    dungeon_ctx.drawImage(img,
+                          info.sx, info.sy + sy - pos_sy_adjust,
+                          w, h + ey - pos_ey_adjust,
+                          x + (ofsx || 0) + info.ox + size_ox, y + sy,
+                          w, h + ey - pos_ey_adjust)
 }
 
 function draw_dngn(idx, cx, cy)
