@@ -56,7 +56,6 @@ function toggle_chat()
     {
         $("#chat_body").slideUp(200);
     }
-    return false;
 }
 
 function focus_chat()
