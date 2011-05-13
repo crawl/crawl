@@ -1854,11 +1854,15 @@ void dump_skills(std::string &text)
     {
         if (you.skills[i] > 0)
         {
-            text += make_stringf(" %c Level %d %s\n",
+            skill_type sk = skill_type(i);
+            text += make_stringf(" %c Level %d%s %s\n",
                                  ((you.skills[i] == 27)   ? '*' :
                                   (you.practise_skill[i]) ? '+'
                                                           : '-'),
                                  you.skills[i],
+                                 you.skill(sk) != you.skills[i]
+                                     ? make_stringf("(%d)", you.skill(sk)).c_str()
+                                     : "",
                                  skill_name(static_cast<skill_type>(i)));
         }
     }
