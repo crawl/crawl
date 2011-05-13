@@ -98,6 +98,7 @@ input.button {
 
 #spectator_list {
     background-color: black;
+    z-index: 100;
 }
 
 #chat_history_container {

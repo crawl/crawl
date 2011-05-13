@@ -421,6 +421,7 @@ function ping()
 function connection_closed(msg)
 {
     set_layer("crt");
+    $("#chat").hide();
     $("#crt").html(msg);
     received_close_message = true;
 }
