@@ -101,8 +101,8 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
     attacker_body_armour_penalty(0), attacker_shield_penalty(0),
     attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
-    can_do_unarmed(false), miscast_level(-1), miscast_type(SPTYP_NONE),
-    miscast_target(NULL)
+    can_do_unarmed(false), stab_attempt(false), stab_bonus(0),
+    miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
     init_attack();
 }
@@ -320,9 +320,8 @@ bool melee_attack::attack()
 
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
-    bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
-                   (defender->atype() == ACT_PLAYER) ? mons_attack_you()
-                                                     : mons_attack_mons());
+    bool retval = attacker->atype() == ACT_PLAYER ? player_attack()
+                                                  : monster_attack();
     identify_mimic(defender);
 
     // Remove sanctuary if - through some attack - it was violated.
@@ -510,6 +509,51 @@ bool melee_attack::player_attack()
     }
 
     return (did_primary_hit || did_hit);
+}
+
+bool melee_attack::monster_attack()
+{
+    mons_perform_attack();
+
+    // Check attack perceived
+    if (defender->atype() == ACT_PLAYER)
+    {
+        if(perceived_attack && attacker->alive())
+        {
+            interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
+
+            // If a friend wants to help, they can attack the attacking
+            // monster, unless sanctuary is in effect since pet_target can
+            // only be changed explicitly by the player during sanctuary.
+            if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
+                you.pet_target = attacker->mindex();
+        }
+
+        // If a hydra was attacking it may have switched targets and started
+        // hitting the player. -cao
+        return (did_hit);
+    }
+
+    if (perceived_attack
+        && (defender->as_monster()->foe == MHITNOT || one_chance_in(3))
+        && attacker->alive() && defender->alive())
+    {
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker->mindex());
+    }
+
+    // If an enemy attacked a friend, set the pet target if it isn't set
+    // already, but not if sanctuary is in effect (pet target must be
+    // set explicitly by the player during sanctuary).
+    if (perceived_attack && attacker->alive()
+        && defender->as_monster()->friendly()
+        && !attacker->as_monster()->wont_attack()
+        && you.pet_target == MHITNOT
+        && env.sanctuary_time <= 0)
+    {
+        you.pet_target = attacker->mindex();
+    }
+
+    return (did_hit);
 }
 
 void melee_attack::check_autoberserk()
@@ -1142,9 +1186,8 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         {
             if (you.religion == GOD_BEOGH && !player_under_penance())
             {
-#ifdef DEBUG_DIAGNOSTICS
                 const int orig_damage = damage;
-#endif
+
                 if (you.piety > 80 || coinflip())
                     damage++;
 
@@ -1152,10 +1195,9 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                     random2avg(
                         div_rand_round(
                             std::min(static_cast<int>(you.piety), 180), 33), 2);
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS, "Damage: %d -> %d, Beogh bonus: %d",
+
+                dprf(MSGCH_DIAGNOSTICS, "Damage: %d -> %d, Beogh bonus: %d",
                      orig_damage, damage, damage - orig_damage);
-#endif
             }
 
             if (coinflip())
@@ -1249,20 +1291,6 @@ int melee_attack::player_stab(int damage)
     {
         // Let's make sure we have some damage to work with...
         damage = std::max(1, damage);
-
-        if (defender->asleep())
-        {
-            // Sleeping moster wakes up when stabbed but may be groggy.
-            if (x_chance_in_y(you.skill(SK_STABBING) + you.dex() + 1, 200))
-            {
-                int stun = random2(you.dex() + 1);
-
-                if (defender->as_monster()->speed_increment > stun)
-                    defender->as_monster()->speed_increment -= stun;
-                else
-                    defender->as_monster()->speed_increment = 0;
-            }
-        }
 
         damage = player_stab_weapon_bonus(damage);
     }
@@ -1586,11 +1614,9 @@ bool melee_attack::player_monattk_hit_effects()
             miscast_level = -1;
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Special damage to %s: %d, flavour: %d",
+    dprf("Special damage to %s: %d, flavour: %d",
          defender->name(DESC_THE).c_str(),
          special_damage, special_damage_flavour);
-#endif
 
     special_damage = defender->hurt(&you, special_damage, special_damage_flavour, false);
 
@@ -3151,7 +3177,8 @@ int melee_attack::calc_to_hit(bool random)
             your_to_hit -= 3;
 
         // armour penalty
-        your_to_hit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
+        your_to_hit -= (attacker_armour_tohit_penalty
+                        + attacker_shield_tohit_penalty);
 
         //mutation
         if (player_mutation_level(MUT_EYEBALLS))
@@ -3315,6 +3342,7 @@ int melee_attack::calc_attack_delay(bool random)
         you.time_taken =
             std::max(2, div_rand_round(you.time_taken * attack_delay, 10));
 
+        // TODO: Fix the warning thrown about non-POD for you.time_taken
         dprf("Weapon speed: %d; min: %d; attack time: %d",
              attack_delay, min_delay, you.time_taken);
 
@@ -3443,75 +3471,6 @@ random_var melee_attack::player_unarmed_speed()
 }
 
 ///////////////////////////////////////////////////////////////////////////
-
-bool melee_attack::mons_attack_mons()
-{
-    const coord_def atk_pos = attacker->pos();
-    const coord_def def_pos = defender->pos();
-
-    // Self-attacks never violate sanctuary.
-    if ((is_sanctuary(atk_pos) || is_sanctuary(def_pos))
-        && attacker != defender)
-    {
-        // Friendly monsters should only violate sanctuary if explicitly
-        // ordered to do so by the player.
-        if (attacker->as_monster()->friendly())
-        {
-            if (you.pet_target == MHITYOU || you.pet_target == MHITNOT)
-            {
-                if (attacker->confused() && you.can_see(attacker))
-                {
-                    mpr("Zin prevents your ally from violating sanctuary "
-                        "in its confusion.", MSGCH_GOD);
-                }
-                else if (attacker->berserk() && you.can_see(attacker))
-                {
-                    mpr("Zin prevents your ally from violating sanctuary "
-                        "in its berserker rage.", MSGCH_GOD);
-                }
-
-                cancel_attack = true;
-                return (false);
-            }
-        }
-        // Non-friendly monsters should never violate sanctuary.
-        else
-        {
-            dprf("Preventing hostile violation of sanctuary.");
-            cancel_attack = true;
-            return (false);
-        }
-    }
-
-    mons_perform_attack();
-
-    // If a hydra was attacking it may have switched targets and started
-    // hitting the player. -cao
-    if (defender->atype() == ACT_PLAYER)
-        return (did_hit);
-
-    if (perceived_attack
-        && (defender->as_monster()->foe == MHITNOT || one_chance_in(3))
-        && attacker->alive() && defender->alive())
-    {
-        behaviour_event(defender->as_monster(), ME_WHACK, attacker->mindex());
-    }
-
-    // If an enemy attacked a friend, set the pet target if it isn't set
-    // already, but not if sanctuary is in effect (pet target must be
-    // set explicitly by the player during sanctuary).
-    if (perceived_attack && attacker->alive()
-        && defender->as_monster()->friendly()
-        && !crawl_state.game_is_arena()
-        && !attacker->as_monster()->wont_attack()
-        && you.pet_target == MHITNOT
-        && env.sanctuary_time <= 0)
-    {
-        you.pet_target = attacker->mindex();
-    }
-
-    return (did_hit);
-}
 
 bool melee_attack::attack_warded_off()
 {
@@ -4412,34 +4371,37 @@ bool melee_attack::mons_perform_attack()
     if (chaos_attack && defender->atype() == ACT_MONSTER && !def_copy)
         def_copy = new monster(*defender->as_monster());
 
-    final_attack_delay = calc_attack_delay();
-    if (damage_brand == SPWPN_SPEED)
-        final_attack_delay = final_attack_delay / 2 + 1;
-
-    // Initial attack causes energy to be used for all attacks.  No
-    // additional energy is used for unarmed attacks.
-    if (effective_attack_number == 0)
-        attacker->as_monster->lose_energy(EUT_ATTACK);
-
     // Monsters lose additional energy only for the first two weapon
     // attacks; subsequent hits are free.
-    if (effective_attack_number > 1)
-        return;
-
-    // speed adjustment for weapon using monsters
-    if (final_attack_delay > 0)
+    if (effective_attack_number < 1)
     {
-        const int atk_speed = attacker->as_monster->action_energy(EUT_ATTACK);
-        // only get one third penalty/bonus for second weapons.
-        if (effective_attack > 0)
-        {
-            final_attack_delay =
-                div_rand_round((2 * atk_speed + final_attack_delay), 3);
-        }
+        final_attack_delay = calc_attack_delay();
+        if (damage_brand == SPWPN_SPEED)
+            final_attack_delay = final_attack_delay / 2 + 1;
 
-        int delta = div_rand_round((final_attack_delay - 10 + (atk_speed - 10)), 2);
-        if (delta > 0)
-            attacker->as_monster->speed_increment -= delta;
+        // Initial attack causes energy to be used for all attacks.  No
+        // additional energy is used for unarmed attacks.
+        if (effective_attack_number == 0)
+            attacker->as_monster()->lose_energy(EUT_ATTACK);
+
+        // speed adjustment for weapon using monsters
+        if (final_attack_delay > 0)
+        {
+            const int atk_speed =
+                attacker->as_monster()->action_energy(EUT_ATTACK);
+
+            // only get one third penalty/bonus for second weapons.
+            if (effective_attack_number > 0)
+            {
+                final_attack_delay =
+                    div_rand_round((2 * atk_speed + final_attack_delay), 3);
+            }
+
+            int delta =
+                div_rand_round((final_attack_delay - 10 + (atk_speed - 10)), 2);
+            if (delta > 0)
+                attacker->as_monster()->speed_increment -= delta;
+        }
     }
 
     bool shield_blocked = false;
@@ -4714,27 +4676,6 @@ bool melee_attack::mons_perform_attack()
         && !attacker_visible)
     {
         handle_interrupted_swap(false, true);
-    }
-
-    return (did_hit);
-}
-
-bool melee_attack::mons_attack_you()
-{
-    mons_perform_attack();
-
-    // Check attack perceived
-    if (perceived_attack
-        && attacker->alive()
-        && defender->atype() == ACT_PLAYER)
-    {
-        interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
-
-        // If a friend wants to help, they can attack the attacking
-        // monster, unless sanctuary is in effect since pet_target can
-        // only be changed explicitly by the player during sanctuary.
-        if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
-            you.pet_target = attacker->mindex();
     }
 
     return (did_hit);
