@@ -440,9 +440,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.p.stdin.write(message.encode("utf8"))
 
     def write_message_all(self, msg):
-        self.write_message(msg)
+        if not self.client_terminated:
+            self.write_message(msg)
+
         for watcher in self.watchers:
-            watcher.write_message(msg)
+            if not watcher.client_terminated:
+                watcher.write_message(msg)
 
     def on_close(self):
         global sockets
