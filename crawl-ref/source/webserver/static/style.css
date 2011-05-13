@@ -96,6 +96,10 @@ input.button {
     color: green;
 }
 
+#spectator_list {
+    background-color: black;
+}
+
 #chat_history_container {
     width: 100%;
     max-height: 200px;
