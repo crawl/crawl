@@ -54,6 +54,61 @@ body {
     float: right;
 }
 
+input.text {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+}
+input.button {
+    background-color: #DDDDDD;
+    border: 1px solid white;
+}
+
+#chat {
+    width: 400px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    color: #A2A2A2;
+
+    font-size: small;
+
+    padding: 5px;
+    border: 1px solid #626262;
+
+}
+
+#chat_caption {
+    font-weight: normal;
+    text-decoration: none;
+}
+
+#chat_caption:hover {
+    background-color: #111111;
+}
+
+#message_count {
+    float: right;
+}
+#message_count.has_new {
+    font-weight: bold;
+}
+
+#chat_history {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.chat_sender {
+    font-weight: bold;
+}
+
+#chat_input {
+    width: 394px;
+}
+
 a:link, a:active, a:visited {
     color: white;
     font-weight: bold;

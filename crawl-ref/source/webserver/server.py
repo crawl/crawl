@@ -280,9 +280,23 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def add_watcher(self, watcher):
         self.watchers.add(watcher)
         self.p.stdin.write("^r") # Redraw
+        self.update_watcher_description()
 
     def remove_watcher(self, watcher):
         self.watchers.remove(watcher)
+        self.update_watcher_description()
+
+    def update_watcher_description(self):
+        watcher_names = [watcher.username for watcher in self.watchers
+                         if watcher.username]
+        anon_count = len(self.watchers) - len(watcher_names)
+        s = ", ".join(watcher_names)
+        if len(watcher_names) > 0 and anon_count > 0:
+            s = s + ", and %i Anon" % anon_count
+        elif anon_count > 0:
+            s = "%i Anon" % anon_count
+        self.write_message_all("watchers(%i,'%s')" %
+                               (len(self.watchers), s))
 
     def stop_watching(self):
         if self.watched_game:
@@ -378,6 +392,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             else:
                 self.write_message("set_layer('lobby');")
 
+        elif message.startswith("Chat: "):
+            if self.username is None:
+                self.write_message("chat('You need to log in to send messages!');")
+                return
+
+            chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
+                        (self.username, tornado.escape.xhtml_escape(message[len("Chat: "):])))
+            receiver = None
+            if self.p:
+                receiver = self
+            elif self.watched_game:
+                receiver = self.watched_game
+            if receiver:
+                receiver.write_message_all("chat(%s);" % tornado.escape.json_encode(chat_msg))
+
         elif message.startswith("Register: "):
             message = message[len("Register: "):]
             username, _, message = message.partition(" ")
@@ -409,6 +438,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.poll_crawl()
             if self.p is not None:
                 self.p.stdin.write(message.encode("utf8"))
+
+    def write_message_all(self, msg):
+        self.write_message(msg)
+        for watcher in self.watchers:
+            watcher.write_message(msg)
 
     def on_close(self):
         global sockets
@@ -452,9 +486,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.client_terminated:
                 return
 
-            self.write_message(msg)
-            for watcher in self.watchers:
-                watcher.write_message(msg)
+            self.write_message_all(msg)
 
             self.poll_crawl()
             self.check_where()

@@ -17,6 +17,7 @@
     <script type="text/javascript" src="/static/tileinfo-gui.js"></script>
     <script type="text/javascript" src="/static/render.js"></script>
     <script type="text/javascript" src="/static/client.js"></script>
+    <script type="text/javascript" src="/static/chat.js"></script>
     <script type="text/javascript">
       var socket_server = "{{ socket_server }}";
     </script>
@@ -30,10 +31,10 @@
         <span id="login_message"></span>
         <form action="" id="login_form" onsubmit="return login();">
           <label for="username">User:</label>
-          <input type="text" name="username" id="username"></input>
+          <input class="text" type="text" name="username" id="username"></input>
           <label for="password">Pass:</label>
-          <input type="password" name="password" id="password"></input>
-          <input type="submit" name="submit" id="submit" value="Login"></input>
+          <input class="text" type="password" name="password" id="password"></input>
+          <input class="button" type="submit" name="submit" id="submit" value="Login"></input>
         </form>
         <a id="reg_link" href="javascript:start_register()">Register</a>
       </div>
@@ -42,20 +43,20 @@
         <span id="register_message"></span>
         <form action="" id="register_form" onsubmit="return register();">
           <label for="username">Username:</label>
-          <input type="text" name="username" id="reg_username"></input>
+          <input class="text" type="text" name="username" id="reg_username"></input>
           <br>
           <label for="password">Password:</label>
-          <input type="password" name="password" id="reg_password"></input>
+          <input class="text" type="password" name="password" id="reg_password"></input>
           <br>
           <label for="repeat_password">Repeat password:</label>
-          <input type="password" name="repeat_password" id="reg_repeat_password"></input>
+          <input class="text"type="password" name="repeat_password" id="reg_repeat_password"></input>
           <br>
           <label for="email">Email address:</label>
-          <input type="text" name="email" id="reg_email"></input>
+          <input class="text"type="text" name="email" id="reg_email"></input>
           <br>
-          <input type="button" name="cancel" id="reg_cancel"
+          <input class="button" type="button" name="cancel" id="reg_cancel"
                  onclick="javascript:cancel_register()" value="Cancel"></input>
-          <input type="submit" name="submit" id="reg_submit" value="Submit"></input>
+          <input class="button" type="submit" name="submit" id="reg_submit" value="Submit"></input>
         </form>
       </div>
 
@@ -74,6 +75,22 @@
         <canvas id="dungeon"></canvas>
         <div id="stats"></div>
         <div id="messages"></div>
+      </div>
+
+      <div id="chat" style="display: none;">
+        <a href="javascript:toggle_chat();" id="chat_caption">
+          <span id="spectator_count">0 spectators</span>
+          <span id="message_count">0 new messages</span>
+        </a>
+
+        <div id="chat_body" style="display: none;">
+          <div id="spectator_list"></div>
+
+          <div id="chat_history"></div>
+
+          <input class="text" type="text" name="chat_input"
+                 id="chat_input" onkeypress="chat_message_send(event)"></input>
+        </div>
       </div>
     </div>
 
