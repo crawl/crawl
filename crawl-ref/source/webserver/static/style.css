@@ -108,6 +108,7 @@ input.button {
 
 #chat_input {
     width: 394px;
+    font: small monospace;
 }
 
 a:link, a:active, a:visited {
