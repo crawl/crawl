@@ -2497,6 +2497,7 @@ void melee_attack::chaos_affects_defender()
                                            && !immune);
     const bool can_rage   = defender->can_go_berserk();
     const bool can_slow   = !mon || !mons_is_firewood(defender->as_monster());
+    const bool can_petrify= true; // FIXME
 
     int clone_chance   = can_clone                      ?  1 : 0;
     int poly_chance    = can_poly                       ?  1 : 0;
@@ -2505,6 +2506,7 @@ void melee_attack::chaos_affects_defender()
     int rage_chance    = can_rage                       ? 10 : 0;
     int miscast_chance = 10;
     int slowpara_chance= can_slow                       ? 10 : 0;
+    int petrify_chance = can_slow && can_petrify  ? 99999999 : 0;
 
     // Already a shifter?
     if (is_shifter)
@@ -2552,7 +2554,7 @@ void melee_attack::chaos_affects_defender()
 
         slowpara_chance,// CHAOS_SLOW
         slowpara_chance,// CHAOS_PARALYSIS
-        slowpara_chance,// CHAOS_PETRIFY
+        petrify_chance, // CHAOS_PETRIFY
     };
 
     bolt beam;
@@ -3105,7 +3107,7 @@ int melee_attack::random_chaos_brand()
                     10, SPWPN_FREEZING,
                     10, SPWPN_ELECTROCUTION,
                     10, SPWPN_VENOM,
-                    10, SPWPN_CHAOS,
+               9999999, SPWPN_CHAOS,
                      5, SPWPN_DRAINING,
                      5, SPWPN_VAMPIRICISM,
                      5, SPWPN_HOLY_WRATH,
