@@ -39,6 +39,8 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
 
 MIRET1(number, damage_level, dam)
 MIRET1(boolean, is_safe, is(MB_SAFE))
+MIRET1(number, holiness, holi)
+MIRET1(number, attitude, attitude)
 MIRET1(string, mname, mname.c_str())
 MIRET1(number, type, type)
 MIRET1(number, base_type, base_type)
@@ -52,6 +54,17 @@ LUAFN(moninf_get_is)
     lua_pushboolean(ls, mi->is(num));
     return (1);
 }
+
+LUAFN(moninf_get_is_unique) {
+    MONINF(ls, 1, mi);
+    // XXX: A bit of a hack to prevent using this to determine which is fake.
+    if (mi->type == MONS_MARA_FAKE)
+        lua_pushboolean(ls, true);
+    else
+        lua_pushboolean(ls, mons_is_unique(mi->type));
+    return (1);
+}
+
 
 LUAFN(moninf_get_damage_desc)
 {
@@ -80,6 +93,9 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(mname),
     MIREG(is),
     MIREG(is_safe),
+    MIREG(holiness),
+    MIREG(attitude),
+    MIREG(is_unique),
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),
