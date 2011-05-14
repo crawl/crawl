@@ -115,6 +115,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.username = None
         self.p = None
         self.timeout = None
+        self.kill_timeout = None
         self.last_action_time = time.time()
         self.watched_game = None
         self.watchers = set()
@@ -232,7 +233,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def stop_crawl(self):
         self.p.send_signal(subprocess.signal.SIGHUP)
-        self.ioloop.add_timeout(time.time() + kill_timeout, self.kill_crawl)
+        self.kill_timeout = self.ioloop.add_timeout(time.time() + kill_timeout, self.kill_crawl)
 
     def kill_crawl(self):
         if self.p:
@@ -324,6 +325,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.p.stdout.close()
             self.p.stderr.close()
             self.p = None
+
+            if self.kill_timeout:
+                self.ioloop.remove_timeout(self.kill_timeout)
+                self.kill_timeout = None
 
             self.delete_mock_ttyrec()
             self.where = None
