@@ -51,10 +51,12 @@ function toggle_chat()
         $("#chat_body").slideDown(200);
         new_message_count = 0;
         update_message_count();
+        $("#message_count").html("(Esc: back to game)");
     }
     else
     {
         $("#chat_body").slideUp(200);
+        update_message_count();
     }
 }
 
