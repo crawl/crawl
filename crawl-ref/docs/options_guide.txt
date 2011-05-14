@@ -67,9 +67,9 @@ The contents of this text are:
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, clear_messages, show_more, small_more,
-                show_inventory_weights, show_gold_turns, show_game_turns,
-                show_beam, item_stack_summary_minimum, list_rotten,
-                mlist_min_height, msg_min_height, msg_max_height,
+                show_inventory_weights, show_newturn_mark, show_gold_turns,
+                show_game_turns, show_beam, item_stack_summary_minimum,
+                list_rotten, mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top,
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
@@ -1308,6 +1308,10 @@ show_inventory_weights = false
         weight of each item.
         Note: This option doesn't currently work for Tiles unless you use
               tile_menu_icons = false.
+
+show_newturn_mark = true
+        When set to false, this option disable the underscore (_) displayed in
+        front of the first line of a turn.
 
 show_gold_turns = false
         If set to true, this option adds an extra line to the stat area
