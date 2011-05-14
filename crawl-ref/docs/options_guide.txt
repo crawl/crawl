@@ -53,7 +53,7 @@ The contents of this text are:
                 tc_excluded, tc_exclude_circle,
                 runrest_ignore_message, runrest_stop_message,
                 runrest_ignore_poison, runrest_ignore_monster,
-                trapwalk_safe_hp, trap_prompt, rest_wait_both, auto_exclude
+                trapwalk_safe_hp, rest_wait_both, auto_exclude
 4-h     Stashes.
                 stash_filter, annotate_item_class,
                 annotate_item_dropped
@@ -972,12 +972,6 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         blade) make sense. Note that travel tries to avoid traps if this
         is easily possible. Defaults to none. For example,
               trapwalk_safe_hp = dart:15, needle:25, spear:50
-
-trap_prompt = true
-        If trap_prompt is set to true Crawl will use the trapwalk_safe_hp
-        values to decide whether the player should be prompted before
-        stepping on a mechnical trap. Note that you'll always be prompted
-        before stepping on non-mechanical traps.
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop

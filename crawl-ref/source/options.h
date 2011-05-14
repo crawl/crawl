@@ -228,9 +228,6 @@ public:
     unsigned    feature_item_brand; // Highlight features covered by items.
     unsigned    trap_item_brand;    // Highlight traps covered by items.
 
-    bool        trap_prompt;        // Prompt when stepping on mechnical traps
-                                    // without enough hp (using trapwalk.lua)
-
     // What is the minimum number of items in a stack for which
     // you show summary (one-line) information
     int         item_stack_summary_minimum;
