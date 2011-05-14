@@ -193,7 +193,6 @@ runrest_ignore_monster = butterfly:1
 # runrest_ignore_message = Jiyva's power touches on your attributes
 include = runrest_messages.txt
 
-# trap_prompt = false
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
 #rest_wait_both = true
