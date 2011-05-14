@@ -408,7 +408,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (!ignore_danger && is_excluded(c) && !is_stair_exclusion(c))
         return (false);
 
-    if (find_trap(c) && find_trap(c)->is_safe())
+    if (is_trap(c) && find_trap(c)->is_safe())
             return true;
 
     if (g_Slime_Wall_Check && slime_wall_neighbour(c))
@@ -441,8 +441,8 @@ static bool _is_safe_move(const coord_def& c)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (const trap_def* trap = find_trap(c))
-        return trap->is_safe();
+    if (is_trap(c))
+        return find_trap(c)->is_safe();
 
     return _is_safe_cloud(c);
 }
