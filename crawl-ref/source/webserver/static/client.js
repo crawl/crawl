@@ -50,6 +50,7 @@ var current_layout;
 function layout(params)
 {
     layout_parameters = params;
+    current_layout = undefined;
 
     do_layout();
 
@@ -313,6 +314,11 @@ function handle_keydown(e)
         e.preventDefault();
         var code = e.which - "A".charCodeAt(0) + 1; // Compare the CONTROL macro in defines.h
         socket.send("\\" + code + "\n");
+    }
+    else if (!e.ctrlKey && !e.shiftKey && e.altKey)
+    {
+        var s = String.fromCharCode(e.which);
+        socket.send("\\27\n" + s);
     }
     else if (!e.ctrlKey && !e.shiftKey && !e.altKey)
     {
