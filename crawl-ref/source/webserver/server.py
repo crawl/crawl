@@ -207,6 +207,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                " your rc and morgue!');")
             return
 
+        self.last_action_time = time.time()
+
         self.game_id = game_id
 
         self.p = subprocess.Popen([crawl_binary,
