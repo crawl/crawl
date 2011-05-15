@@ -349,6 +349,7 @@ public:
     int res_torment() const;
     int res_acid() const;
     int res_wind() const;
+    int res_petrify(bool temp = true) const;
     int res_magic() const;
 
     flight_type flight_mode() const;
