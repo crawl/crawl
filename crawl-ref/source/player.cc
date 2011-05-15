@@ -6512,9 +6512,6 @@ void player::petrify(actor *who, int str)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
-        return;
-
     if (you.petrifying())
     {
         mprf("Your limbs have turned to stone.");
