@@ -2900,6 +2900,9 @@ bool bolt::is_harmless(const monster* mon) const
     case BEAM_ACID:
         return (mon->res_acid() >= 3);
 
+    case BEAM_PETRIFY:
+        return (mon->res_petrify());
+
     default:
         return (false);
     }
@@ -2948,6 +2951,9 @@ bool bolt::harmless_to_player() const
     case BEAM_ACID:
         // Fire and ice can destroy inventory items, acid damage equipment.
         return (false);
+
+    case BEAM_PETRIFY:
+        return (you.res_petrify() > 0);
 
     default:
         return (false);

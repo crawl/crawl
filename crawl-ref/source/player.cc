@@ -6218,6 +6218,13 @@ int player::res_wind() const
     return you.duration[DUR_TORNADO] ? 1 : 0;
 }
 
+int player::res_petrify(bool temp) const
+{
+    if (temp && you.form == TRAN_STATUE)
+        return 1;
+    return 0;
+}
+
 int player::res_magic() const
 {
     return player_res_magic();

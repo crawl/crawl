@@ -249,6 +249,7 @@ public:
     virtual int res_negative_energy() const = 0;
     virtual int res_torment() const = 0;
     virtual int res_wind() const = 0;
+    virtual int res_petrify(bool temp = true) const = 0;
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
 
