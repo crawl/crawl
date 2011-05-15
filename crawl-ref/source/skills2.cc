@@ -572,7 +572,8 @@ void SkillMenuEntry::_set_points()
 #define NEXT_DISPLAY_SIZE   19
 #define SHOW_ALL_SIZE       17
 SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
-    m_min_coord(), m_max_coord(), m_disp_queue()
+    m_min_coord(), m_max_coord(), m_crosstrain(false), m_antitrain(false),
+    m_disp_queue()
 {
     SkillMenuEntry::m_skm = this;
 
@@ -642,11 +643,11 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
                                  help_min_coord.y + help_height));
     m_ff->attach_item(m_help);
 
-    _init_disp_queue();
     _init_footer(coord_def(m_min_coord.x, help_min_coord.y + help_height));
 
     _set_title();
     _set_skills();
+    _init_disp_queue();
     _set_footer();
 
 
@@ -995,7 +996,7 @@ void SkillMenu::_set_help(int flag)
             break;
         }
 
-        if (flag == SKMF_DISP_NORMAL || !m_crosstrain && !m_antitrain)
+        if (!m_crosstrain && !m_antitrain)
         {
             help = "The percentage of the progress done before reaching next "
                    "level is in <cyan>cyan</cyan>.\n";
@@ -1003,27 +1004,24 @@ void SkillMenu::_set_help(int flag)
 
         help += "The species aptitude is in <red>red</red>. ";
 
-        if (flag == SKMF_DISP_APTITUDE)
+        if (m_crosstrain)
+            help += "Crosstraining is in <green>green</green>. ";
+        if (m_antitrain)
+            help += "Antitraining is in <magenta>magenta</magenta>. ";
+        if (m_crosstrain && !m_antitrain)
         {
-            if (m_crosstrain)
-                help += "Crosstraining is in <green>green</green>. ";
-            if (m_antitrain)
-                help += "Antitraining is in <magenta>magenta</magenta>. ";
-            if (m_crosstrain && !m_antitrain)
-            {
-                help += "The skill responsible for the bonus is marked with "
-                        "'<green>*</green>'.";
-            }
-            else if (!m_crosstrain && m_antitrain)
-            {
-                help += "The skill responsible for the malus is marked with "
-                        "'<magenta>*</magenta>'.";
-            }
-            else if (m_crosstrain && m_antitrain)
-            {
-                help += "The skill responsible for the bonus or malus is "
-                        "marked with '*'.";
-            }
+            help += "The skill responsible for the bonus is marked with "
+                    "'<green>*</green>'.";
+        }
+        else if (!m_crosstrain && m_antitrain)
+        {
+            help += "The skill responsible for the malus is marked with "
+                    "'<magenta>*</magenta>'.";
+        }
+        else if (m_crosstrain && m_antitrain)
+        {
+            help += "The skill responsible for the bonus or malus is "
+                    "marked with '*'.";
         }
         break;
     case SKMF_DISP_ENHANCED:
