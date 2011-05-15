@@ -767,6 +767,7 @@ void print_stats(void)
         you.m_quiver->on_weapon_changed();
         _print_stats_wp(9 + yhack);
     }
+    you.wield_change  = false;
 
     if (you.species == SP_CAT)
     {
@@ -775,11 +776,9 @@ void print_stats(void)
         yhack -= 1;
     }
     else if (you.redraw_quiver || you.wield_change)
-    {
         _print_stats_qv(10 + yhack);
-        you.redraw_quiver = false;
-    }
-    you.wield_change  = false;
+
+    you.redraw_quiver = false;
 
     if (you.redraw_status_flags)
     {
