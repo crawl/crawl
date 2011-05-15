@@ -1785,9 +1785,6 @@ int melee_attack::player_apply_monster_ac(int damage)
             damage -= random2(1 + defender->armour_class());
     }
 
-    if (defender->petrified())
-        damage /= 3;
-
     return (damage);
 }
 

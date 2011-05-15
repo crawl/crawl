@@ -2045,7 +2045,7 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE)
+    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
         ps /= 10;
@@ -2275,8 +2275,11 @@ int player_evasion_bonuses(ev_ignore_type evit)
 }
 
 // Player EV scaling for being flying kenku or swimming merfolk.
-int player_scale_evasion(const int prescaled_ev, const int scale)
+int player_scale_evasion(int prescaled_ev, const int scale)
 {
+    if (you.duration[DUR_PETRIFYING])
+        prescaled_ev /= 2;
+
     switch (you.species)
     {
     case SP_MERFOLK:
@@ -3644,6 +3647,9 @@ int get_expiration_threshold(duration_type dur)
 {
     switch (dur)
     {
+    case DUR_PETRIFYING:
+        return (1 * BASELINE_DELAY);
+
     case DUR_QUAD_DAMAGE:
         return (3 * BASELINE_DELAY); // per client.qc
 
@@ -3905,6 +3911,7 @@ void display_char_status()
 
     static int statuses[] = {
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+        DUR_PETRIFYING,
         DUR_TRANSFORMATION,
         STATUS_BURDEN,
         DUR_SAGE,
@@ -5765,6 +5772,11 @@ bool player::caught() const
     return (attribute[ATTR_HELD]);
 }
 
+bool player::petrifying() const
+{
+    return (duration[DUR_PETRIFYING]);
+}
+
 bool player::petrified() const
 {
     return (duration[DUR_PETRIFIED]);
@@ -6503,16 +6515,22 @@ void player::petrify(actor *who, int str)
     if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
         return;
 
-    str *= BASELINE_DELAY;
-    int &petrif(duration[DUR_PETRIFIED]);
+    if (you.petrifying())
+    {
+        mprf("Your limbs have turned to stone.");
+        you.duration[DUR_PETRIFYING] = 1;
+        return;
+    }
 
-    mprf("You %s the ability to move!",
-         petrif ? "still haven't" : "suddenly lose");
+    if (you.petrified() || you.petrifying())
+    {
+        mprf("You briefly feel a bit more stoned.");
+        return;
+    }
 
-    if (str > petrif && (petrif < 3 || one_chance_in(petrif)))
-        petrif = str;
+    you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
-    petrif = std::min(13 * BASELINE_DELAY, petrif);
+    mprf(MSGCH_WARN, "You are slowing down.");
 }
 
 void player::slow_down(actor *foe, int str)

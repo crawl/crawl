@@ -788,8 +788,8 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
 
             // Petrifying or petrified monsters can be shattered.
             if (petrifying || petrified)
-                dam_dice.num = petrifying ? 4 : 6; // 3/2 or double damage
-            else
+                dam_dice.num = petrifying ? 4*3 : 6*3; // 3/2 or double damage,
+            else                                       // undo damage reduction
                 dam_dice.num = 3;
         }
         break;

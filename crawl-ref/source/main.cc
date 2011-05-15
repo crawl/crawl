@@ -2107,10 +2107,9 @@ static void _decrement_paralysis(int delay)
 {
     _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
 
-    if (you.duration[DUR_PARALYSIS] || you.petrified())
+    if (you.duration[DUR_PARALYSIS])
     {
         _decrement_a_duration(DUR_PARALYSIS, delay);
-        _decrement_a_duration(DUR_PETRIFIED, delay);
 
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
@@ -2122,6 +2121,34 @@ static void _decrement_paralysis(int delay)
     }
 }
 
+static void _decrement_petrification(int delay)
+{
+    if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
+    {
+        you.redraw_evasion = true;
+        mprf(MSGCH_DURATION, "You turn to %s and can move again.",
+             you.form == TRAN_LICH ? "bone" :
+             you.form == TRAN_ICE_BEAST ? "ice" :
+             "flesh");
+    }
+
+    if (you.duration[DUR_PETRIFYING])
+    {
+        int &dur = you.duration[DUR_PETRIFYING];
+        dprf("dur=%d", dur);
+        int old_dur = dur;
+        if ((dur -= delay) <= 0)
+        {
+            dur = 0;
+            you.duration[DUR_PETRIFIED] = 8 * BASELINE_DELAY;
+                                + random2(4 * BASELINE_DELAY);
+            you.redraw_evasion = true;
+            mpr("You have turned to stone.");
+        }
+        else if (dur < 15 && old_dur >= 15)
+            mpr("Your limbs are stiffening.");
+    }
+}
 
 //  Perhaps we should write functions like: update_liquid_flames(), etc.
 //  Even better, we could have a vector of callback functions (or
@@ -2913,7 +2940,7 @@ static void _player_reacts_to_monsters()
 
     handle_starvation();
     _decrement_paralysis(you.time_taken);
-
+    _decrement_petrification(you.time_taken);
 }
 
 static void _update_golubria_traps()

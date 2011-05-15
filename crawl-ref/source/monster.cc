@@ -2947,7 +2947,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
     if (evit & EV_IGNORE_HELPLESS)
         return (evasion);
 
-    if (paralysed() || asleep())
+    if (paralysed() || petrified() || asleep())
         evasion = 0;
     else if (caught())
         evasion /= (body_size(PSIZE_BODY) + 2);
@@ -3618,6 +3618,9 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             if (amount <= 0)
                 return (0);
         }
+
+        if (amount != INSTANT_DEATH && petrified())
+            amount /= 3;
 
         if (amount == INSTANT_DEATH)
             amount = hit_points;
