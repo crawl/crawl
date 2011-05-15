@@ -2503,7 +2503,7 @@ void melee_attack::chaos_affects_defender()
     int rage_chance    = can_rage                       ? 10 : 0;
     int miscast_chance = 10;
     int slowpara_chance= can_slow                       ? 10 : 0;
-    int petrify_chance = can_slow && can_petrify  ? 99999999 : 0;
+    int petrify_chance = can_slow && can_petrify        ? 10 : 0;
 
     // Already a shifter?
     if (is_shifter)
@@ -3104,7 +3104,7 @@ int melee_attack::random_chaos_brand()
                     10, SPWPN_FREEZING,
                     10, SPWPN_ELECTROCUTION,
                     10, SPWPN_VENOM,
-               9999999, SPWPN_CHAOS,
+                    10, SPWPN_CHAOS,
                      5, SPWPN_DRAINING,
                      5, SPWPN_VAMPIRICISM,
                      5, SPWPN_HOLY_WRATH,
