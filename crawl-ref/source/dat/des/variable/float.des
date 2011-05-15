@@ -67,7 +67,7 @@ end
 }}
 
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
-# easy or tough vaults. Also, exlucde unthemely branches with !Lair etc.
+# easy or tough vaults. Also, exclude unthemely branches with !Lair etc.
 default-depth: D:12-26
 
 ##############################################################################
