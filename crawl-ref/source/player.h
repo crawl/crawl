@@ -587,6 +587,7 @@ public:
     int silence_radius2() const;
     int liquefying_radius2 () const;
     bool glows_naturally() const;
+    bool petrifying() const;
     bool petrified() const;
     bool incapacitated() const
     {

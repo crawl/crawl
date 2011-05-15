@@ -1947,7 +1947,7 @@ void bolt::apply_bolt_paralysis(monster* mons)
 // all of its actions and cannot move away (petrifying), and when that times
 // out it remains properly petrified (no movement or actions). The second
 // part is similar to paralysis, except that insubstantial monsters can't be
-// affected and that stabbing damage is drastically reduced.
+// affected and damage is drastically reduced.
 void bolt::apply_bolt_petrify(monster* mons)
 {
     int petrifying = mons->has_ench(ENCH_PETRIFYING);
