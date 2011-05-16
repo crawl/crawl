@@ -1281,6 +1281,40 @@ int wand_max_charges(int type)
     return wand_charge_value(type) * 3;
 }
 
+bool is_offensive_wand(const item_def& item)
+{
+    switch (item.sub_type)
+    {
+    // Monsters don't use those, so no need to warn the player about them.
+    case WAND_ENSLAVEMENT:
+    case WAND_RANDOM_EFFECTS:
+    case WAND_DIGGING:
+
+    // Monsters will use them on themselves.
+    case WAND_HASTING:
+    case WAND_HEALING:
+    case WAND_INVISIBILITY:
+        return false;
+
+    case WAND_FLAME:
+    case WAND_FROST:
+    case WAND_SLOWING:
+    case WAND_MAGIC_DARTS:
+    case WAND_PARALYSIS:
+    case WAND_FIRE:
+    case WAND_COLD:
+    case WAND_CONFUSION:
+    case WAND_FIREBALL:
+    case WAND_TELEPORTATION:
+    case WAND_LIGHTNING:
+    case WAND_POLYMORPH_OTHER:
+    case WAND_DRAINING:
+    case WAND_DISINTEGRATION:
+        return true;
+    }
+    return false;
+}
+
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
 {
     if (wpn.base_type != OBJ_WEAPONS
