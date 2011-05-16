@@ -1634,6 +1634,9 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
         return false;
+
+    // Disable message for summons. It also disable message for monsters
+    // created with &M, so you might want to comment it when debugging.
     if (testbits(mon->flags, MF_JUST_SUMMONED) && atype == DELAY_NOT_DELAYED)
         return false;
 

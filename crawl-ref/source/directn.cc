@@ -33,6 +33,7 @@
 #include "godabil.h"
 #include "invent.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
 #include "los.h"
@@ -3701,16 +3702,22 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
         item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
 
+#define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
+        // For Ashenzari warnings, we only care about ided and branded stuff.
         if (level == DESC_IDENTIFIED)
         {
-            if (mon_arm && !item_type_known(*mon_arm))
+            if (mon_arm && no_warn(mon_arm))
                 mon_arm = 0;
-            if (mon_shd && !item_type_known(*mon_shd))
+            if (mon_shd && no_warn(mon_shd))
                 mon_shd = 0;
-            if (mon_qvr && !item_type_known(*mon_qvr))
+            if (mon_qvr && no_warn(mon_qvr))
                 mon_qvr = 0;
-            if (mon_alt && !item_type_known(*mon_alt))
+            if (mon_alt && (!item_type_known(*mon_alt)
+                            || mon_alt->base_type == OBJ_WANDS
+                               && !is_offensive_wand(*mon_alt)))
+            {
                 mon_alt = 0;
+            }
         }
 
         // _describe_monster_weapon already took care of this
