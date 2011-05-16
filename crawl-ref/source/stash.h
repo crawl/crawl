@@ -51,7 +51,8 @@ public:
     std::string feature_description() const;
     std::vector<item_def> get_items() const;
 
-    bool show_menu(const level_pos &place, bool can_travel) const;
+    bool show_menu(const level_pos &place, bool can_travel,
+                   const std::vector<item_def>* matching_items = NULL) const;
 
     // Returns true if this Stash contains items that are eligible for
     // autopickup.
@@ -196,22 +197,20 @@ struct stash_search_result
     const Stash    *stash;
     const ShopInfo *shop;
 
-    // The item that matched the search, if any.
-    std::auto_ptr<item_def> matching_item;
+    // The items that matched the search, if any.
+    std::vector<item_def> matching_items;
 
     stash_search_result() : pos(), player_distance(0), matches(0),
                             count(0), match(), stash(NULL), shop(NULL),
-                            matching_item()
+                            matching_items()
     {
     }
 
     stash_search_result(const stash_search_result &o)
         : pos(o.pos), player_distance(o.player_distance), matches(o.matches),
           count(o.count), match(o.match), stash(o.stash), shop(o.shop),
-          matching_item()
+          matching_items(o.matching_items)
     {
-        if (o.matching_item.get())
-            matching_item.reset(new item_def(*o.matching_item));
     }
 
     stash_search_result &operator = (const stash_search_result &o)
@@ -223,16 +222,8 @@ struct stash_search_result
         match = o.match;
         stash = o.stash;
         shop = o.shop;
-        matching_item.reset(NULL);
-        if (o.matching_item.get())
-            matching_item.reset(new item_def(*o.matching_item));
+        matching_items = o.matching_items;
         return (*this);
-    }
-
-    void set_matching_item(const item_def &item)
-    {
-        if (!matching_item.get())
-            matching_item.reset(new item_def(item));
     }
 
     bool operator < (const stash_search_result &ssr) const
@@ -241,6 +232,9 @@ struct stash_search_result
                    || (player_distance == ssr.player_distance
                        && matches > ssr.matches));
     }
+
+    bool show_menu() const;
+
 };
 
 class LevelStashes

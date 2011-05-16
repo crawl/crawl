@@ -594,16 +594,19 @@ static MenuEntry *stash_menu_fixup(MenuEntry *me)
     return (me);
 }
 
-bool Stash::show_menu(const level_pos &prefix, bool can_travel) const
+bool Stash::show_menu(const level_pos &prefix, bool can_travel,
+                      const std::vector<item_def>* matching_items) const
 {
     const std::string prefix_str = short_place_name(prefix.id);
+    const std::vector<item_def> *item_list = matching_items ? matching_items
+                                                            : &items;
     StashMenu menu;
 
     MenuEntry *mtitle = new MenuEntry("Stash (" + prefix_str, MEL_TITLE);
     menu.can_travel   = can_travel;
-    mtitle->quantity  = items.size();
+    mtitle->quantity  = item_list->size();
     menu.set_title(mtitle);
-    menu.load_items(InvMenu::xlat_itemvect(items), stash_menu_fixup);
+    menu.load_items(InvMenu::xlat_itemvect(*item_list), stash_menu_fixup);
 
     std::vector<MenuEntry*> sel;
     while (true)
@@ -670,7 +673,7 @@ bool Stash::matches_search(const std::string &prefix,
             if (!res.count++)
                 res.match = s;
             res.matches += item.quantity;
-            res.set_matching_item(item);
+            res.matching_items.push_back(item);
             continue;
         }
 
@@ -684,7 +687,7 @@ bool Stash::matches_search(const std::string &prefix,
                 if (!res.count++)
                     res.match = s;
                 res.matches += item.quantity;
-                res.set_matching_item(item);
+                res.matching_items.push_back(item);
             }
         }
     }
@@ -1080,7 +1083,7 @@ bool ShopInfo::matches_search(const std::string &prefix,
             if (!res.count++)
                 res.match = sname;
             res.matches++;
-            res.set_matching_item(items[i].item);
+            res.matching_items.push_back(items[i].item);
         }
     }
 
@@ -1980,9 +1983,9 @@ bool StashTracker::display_search_results(
         if (res.shop && !res.shop->is_visited())
             me->colour = CYAN;
 
-        if (res.matching_item.get())
+        if (!res.matching_items.empty())
         {
-            const item_def &first(*res.matching_item);
+            const item_def &first(*res.matching_items.begin());
             const int itemcol = menu_colour(first.name(DESC_PLAIN).c_str(),
                                             menu_colour_item_prefix(first),
                                             "pickup");
@@ -2009,17 +2012,7 @@ bool StashTracker::display_search_results(
             stash_search_result *res =
                 static_cast<stash_search_result *>(sel[0]->data);
 
-            bool dotravel = false;
-            if (res->shop)
-            {
-                dotravel = res->shop->show_menu(res->pos,
-                                                can_travel_to(res->pos.id));
-            }
-            else if (res->stash)
-            {
-                dotravel = res->stash->show_menu(res->pos,
-                                                 can_travel_to(res->pos.id));
-            }
+            bool dotravel = res->show_menu();
 
             if (dotravel && can_travel_to(res->pos.id))
             {
@@ -2222,4 +2215,14 @@ ST_ItemIterator ST_ItemIterator::operator ++ (int dummy)
     const ST_ItemIterator copy = *this;
     ++(*this);
     return (copy);
+}
+
+bool stash_search_result::show_menu() const
+{
+    if (shop)
+        return shop->show_menu(pos, can_travel_to(pos.id));
+    else if (stash)
+        return stash->show_menu(pos, can_travel_to(pos.id), &matching_items);
+    else
+        return false;
 }
