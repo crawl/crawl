@@ -2806,11 +2806,11 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
     // Maybe spend some more gold to regain magic
     if (x_chance_in_y(power_level + 1, 5))
     {
-        int mp = std::min(gold_used / 6, you.max_magic_points - you.magic_points);
+        int mp = std::min(gold_used / 5, you.max_magic_points - you.magic_points);
         if (mp > 0)
         {
             inc_mp(mp, false);
-            gold_used -= mp * 4;
+            gold_used -= mp * 5;
             done_stuff = true;
             mpr("You feel your power returning.");
             dprf("Gained %d magic, %d gold remaining.", mp, gold_used);
