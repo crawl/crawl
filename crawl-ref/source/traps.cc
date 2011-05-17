@@ -890,9 +890,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (trap_destroyed)
     {
         if (know_trap_destroyed)
-        {
             env.map_knowledge(this->pos).set_feature(DNGN_FLOOR);
-        }
         this->destroy();
     }
 }
@@ -947,7 +945,7 @@ int reveal_traps(const int range)
         {
             traps_found++;
             trap.reveal();
-            env.map_knowledge(trap.pos).set_feature(grd(trap.pos));
+            env.map_knowledge(trap.pos).set_feature(grd(trap.pos), 0, trap.type);
             set_terrain_mapped(trap.pos);
         }
     }
