@@ -11,6 +11,7 @@
 
 class monster;
 class mon_acting;
+class targetter;
 
 struct god_act_state
 {
@@ -95,8 +96,8 @@ struct game_state
     bool title_screen;
 #endif
 
-    // Range beyond which view should be darkend, -1 == disabled.
-    int darken_range;
+    // Area beyond which view should be darkened,  0 = disabled.
+    targetter *darken_range;
 
     // Any changes to macros that need to be changed?
     bool unsaved_macros;

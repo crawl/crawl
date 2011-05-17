@@ -17,7 +17,7 @@
 class range_view_annotator
 {
 public:
-    range_view_annotator(int range);
+    range_view_annotator(targetter *range);
     virtual ~range_view_annotator();
 };
 

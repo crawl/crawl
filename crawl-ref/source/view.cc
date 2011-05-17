@@ -1103,13 +1103,9 @@ void viewwindow(bool show_updates)
             }
             cell->flash_colour = cell->colour;
         }
-        else if (crawl_state.darken_range >= 0)
+        else if (crawl_state.darken_range)
         {
-            const int rsq = (crawl_state.darken_range
-                             * crawl_state.darken_range) + 1;
-            bool out_of_range = distance(you.pos(), gc) > rsq
-                                || !you.see_cell(gc);
-            if (out_of_range)
+            if (!crawl_state.darken_range->valid_aim(gc))
             {
                 cell->colour = DARKGREY;
 #ifdef USE_TILE
