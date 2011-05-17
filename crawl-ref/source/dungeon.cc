@@ -5183,7 +5183,8 @@ void dgn_replace_area(const coord_def& p1, const coord_def& p2,
             grd(*ri) = feature;
             if (needs_update && env.map_knowledge(*ri).seen())
             {
-                env.map_knowledge(*ri).set_feature(feature);
+                env.map_knowledge(*ri).set_feature(feature, 0,
+                                                   get_trap_type(*ri));
 #ifdef USE_TILE
                 env.tile_bk_bg(*ri) = feature;
 #endif

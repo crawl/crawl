@@ -60,6 +60,7 @@
 #include "terrain.h"
 #include "tilemcache.h"
 #include "tilesdl.h"
+#include "traps.h"
 #include "travel.h"
 #include "viewmap.h"
 #include "xom.h"
@@ -534,7 +535,11 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (open)
         {
             if (wizard_map)
-                env.map_knowledge(*ri).set_feature(grd(*ri));
+            {
+                env.map_knowledge(*ri).set_feature(grd(*ri), 0,
+                    feat_is_trap(grd(*ri)) ? get_trap_type(*ri)
+                                           : TRAP_UNASSIGNED);
+            }
             else if (!env.map_knowledge(*ri).feat())
                 env.map_knowledge(*ri).set_feature(magic_map_base_feat(grd(*ri)));
 	    if (emphasise(*ri))
@@ -600,7 +605,8 @@ void fully_map_level()
         if (!ok)
             continue;
         set_terrain_visible(*ri);
-        env.map_knowledge(*ri).set_feature(grd(*ri));
+        env.map_knowledge(*ri).set_feature(grd(*ri), 0,
+            feat_is_trap(grd(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
         if (igrd(*ri) != NON_ITEM)
             env.map_knowledge(*ri).set_detected_item();
         env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;

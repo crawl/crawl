@@ -38,7 +38,8 @@ struct map_cell
     uint32_t flags;   // Flags describing the mappedness of this square.
 
     map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
-                 _item(0), _mons(0), _cloud(CLOUD_NONE), _cloud_colour(0)
+                 _cloud(CLOUD_NONE), _cloud_colour(0), _item(0), _mons(0),
+                 _trap(TRAP_UNASSIGNED)
     {
     }
 
@@ -96,10 +97,12 @@ struct map_cell
         return _feat_colour;
     }
 
-    void set_feature(dungeon_feature_type nfeat, unsigned colour = 0)
+    void set_feature(dungeon_feature_type nfeat, unsigned colour = 0,
+                     trap_type tr = TRAP_UNASSIGNED)
     {
         _feat = nfeat;
         _feat_colour = colour;
+        _trap = tr;
     }
 
     item_info* item() const
@@ -224,13 +227,19 @@ struct map_cell
         return !!(flags & MAP_MAGIC_MAPPED_FLAG);
     }
 
+    trap_type trap() const
+    {
+        return _trap;
+    }
+
 private:
-    dungeon_feature_type _feat;
+    dungeon_feature_type _feat:8;
     uint8_t _feat_colour;
+    cloud_type _cloud:8;
+    uint8_t _cloud_colour;
     item_info* _item;
     monster_info* _mons;
-    cloud_type _cloud;
-    uint8_t _cloud_colour;
+    trap_type _trap:8;
 };
 
 void set_terrain_mapped(int x, int y);

@@ -2279,6 +2279,9 @@ void marshallMapCell(writer &th, const map_cell &cell)
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         marshallUnsigned(th, cell.feat_colour());
 
+    if (feat_is_trap(cell.feat()))
+        marshallByte(th, cell.trap());
+
     if (flags & MAP_SERIALIZE_CLOUD)
         marshallUnsigned(th, cell.cloud());
 
@@ -2296,6 +2299,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 {
     unsigned flags = unmarshallUnsigned(th);
     unsigned cell_flags = 0;
+    trap_type trap = TRAP_UNASSIGNED;
 
     cell.clear();
 
@@ -2321,7 +2325,15 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
 
-    cell.set_feature(feature, feat_colour);
+    if (feat_is_trap(feature))
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_TRAP_KNOWLEDGE)
+            trap = TRAP_UNASSIGNED;
+        else
+#endif
+        trap = (trap_type)unmarshallByte(th);
+
+    cell.set_feature(feature, feat_colour, trap);
 
     cloud_type cloud = CLOUD_NONE;
     unsigned cloud_colour = 0;
