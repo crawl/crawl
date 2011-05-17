@@ -8,11 +8,6 @@
 #include <string>
 #include <algorithm>
 
-// I don't seem to need values.h for VACPP..
-#if !defined(__IBMCPP__)
-#include <limits.h>
-#endif
-
 #include <errno.h>
 #include <time.h>
 #include <stdlib.h>
