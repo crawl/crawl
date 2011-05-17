@@ -947,9 +947,9 @@ char mlist_index_to_letter(int index)
 }
 #endif
 
-range_view_annotator::range_view_annotator(int range)
+range_view_annotator::range_view_annotator(targetter *range)
 {
-    if (Options.darken_beyond_range && range >= 0)
+    if (Options.darken_beyond_range && range)
     {
         crawl_state.darken_range = range;
         viewwindow(false);
@@ -958,9 +958,9 @@ range_view_annotator::range_view_annotator(int range)
 
 range_view_annotator::~range_view_annotator()
 {
-    if (Options.darken_beyond_range && crawl_state.darken_range >= 0)
+    if (Options.darken_beyond_range && crawl_state.darken_range)
     {
-        crawl_state.darken_range = -1;
+        crawl_state.darken_range = NULL;
         viewwindow(false);
     }
 }
@@ -2024,7 +2024,9 @@ bool direction_chooser::choose_direction()
     cursor_control ccon(!Options.use_fake_cursor);
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
-    range_view_annotator rva(range);
+    targetter_smite legacy_range(&you, range, 0, 0, true);
+    range_view_annotator rva(hitfunc ? hitfunc :
+                             (range >= 0) ? &legacy_range : NULL);
 
 
     // init

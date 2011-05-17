@@ -2565,8 +2565,8 @@ bool fedhas_plant_ring_from_fruit()
     prioritise_adjacent(you.pos(), adjacent);
 
     // Screwing around with display code I don't really understand. -cao
-    crawl_state.darken_range = 1;
-    viewwindow(false);
+    targetter_smite range(&you, 1);
+    range_view_annotator show_range(&range);
 
     for (int i = 0; i < max_use; ++i)
     {
@@ -2585,8 +2585,6 @@ bool fedhas_plant_ring_from_fruit()
                         "How many plants will you create?"))
     {
         // User canceled at the prompt.
-        crawl_state.darken_range = -1;
-        viewwindow(false);
         return (false);
     }
 
@@ -2629,9 +2627,6 @@ bool fedhas_plant_ring_from_fruit()
     }
 
     _decrease_amount(collected_fruit, created_count);
-
-    crawl_state.darken_range = -1;
-    viewwindow(false);
 
     return (created_count);
 }
@@ -2771,7 +2766,6 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     if (count == 0)
         return (count);
 
-    crawl_state.darken_range = 0;
     viewwindow(false);
     for (unsigned i = 0; i < positions.size(); ++i)
     {
@@ -2793,7 +2787,6 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     if (interactive && yesnoquit("Will you create these spores?",
                                  true, 'y') <= 0)
     {
-        crawl_state.darken_range = -1;
         viewwindow(false);
         return (-1);
     }
@@ -2827,7 +2820,6 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
             destroy_item(positions[i]->index());
     }
 
-    crawl_state.darken_range = -1;
     viewwindow(false);
 
     return (count);

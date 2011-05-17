@@ -722,11 +722,9 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
         if (Options.darken_beyond_range)
         {
-            crawl_state.darken_range = calc_spell_range(spell);
-            viewwindow(false);
+            targetter_smite range(&you, calc_spell_range(spell), 0, 0, true);
+            range_view_annotator show_range(&range);
             delay(50);
-            crawl_state.darken_range = -1;
-            viewwindow(false);
         }
         return (false);
     }

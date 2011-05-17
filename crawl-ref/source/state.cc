@@ -20,6 +20,7 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "state.h"
+#include "target.h"
 #include "hints.h"
 
 game_state::game_state()
@@ -41,7 +42,7 @@ game_state::game_state()
 #else
       title_screen(true),
 #endif
-      darken_range(-1), unsaved_macros(false), mon_act(NULL)
+      darken_range(NULL), unsaved_macros(false), mon_act(NULL)
 {
     reset_cmd_repeat();
     reset_cmd_again();
