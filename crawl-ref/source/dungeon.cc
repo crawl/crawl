@@ -5193,8 +5193,6 @@ void dgn_replace_area(const coord_def& p1, const coord_def& p2,
     }
 }
 
-
-// With apologies to Metallica.
 bool map_masked(const coord_def &c, unsigned mask)
 {
     return (mask && (env.level_map_mask(c) & mask));
