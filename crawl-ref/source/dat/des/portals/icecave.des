@@ -36,11 +36,11 @@ function ice_cave_portal(e)
 
   -- There are actually two kinds of ice caves: easy and hard ones. Players
   -- that enter the portal deeper in the dungeon end up in the hard ones.
-  -- Possible depths for easy ice caves are D:11-14, Lair:1-8, Orc:1-4 and
-  -- Elf:1-2. Hard ice caves are in D:14-19, Elf:3-5 and Vault:1-7. Those
-  -- depths are set in the entry vault default-depth.
+  -- Possible depths for easy ice caves are D:11-14, Lair:1-8, Orc:1-4.
+  -- Hard ice caves are in D:14-19, Elf:1-5 and Vault:1-7. Those depths are
+  -- set in the entry vault default-depth.
   --
-  -- Now, first default to easy destinatinos.
+  -- Now, first default to easy destinations.
   local difficulty = "ice_cave_easy"
 
   -- Handle overlapping depths for easy and hard maps with a coinflip.
@@ -52,7 +52,7 @@ function ice_cave_portal(e)
   end
 
   if you.branch() == "D" and you.subdepth() >= 15 or
-     you.branch() == "Elf" and you.subdepth() >= 3 or
+     you.branch() == "Elf" or
      you.branch() == "Vault" then
       difficulty = "ice_cave_hard"
   end
