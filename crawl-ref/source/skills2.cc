@@ -643,11 +643,15 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
                                  help_min_coord.y + help_height));
     m_ff->attach_item(m_help);
 
+    // We're setting skills a first time just to initialise m_crosstrain and
+    // m_antitrain. We do it again after _init_disp_queue has set the display
+    // flag.
+    _set_skills();
+    _init_disp_queue();
     _init_footer(coord_def(m_min_coord.x, help_min_coord.y + help_height));
 
     _set_title();
     _set_skills();
-    _init_disp_queue();
     _set_footer();
 
 
