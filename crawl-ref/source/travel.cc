@@ -414,8 +414,8 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
         trap.pos = c;
         trap.type = env.map_knowledge(c).trap();
         trap.ammo_qty = 1;
-        if (trap.is_safe())
-            return true;
+        if (!trap.is_safe())
+            return false;
     }
 
     if (g_Slime_Wall_Check && slime_wall_neighbour(c))
@@ -448,8 +448,8 @@ static bool _is_safe_move(const coord_def& c)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (is_trap(c))
-        return find_trap(c)->is_safe();
+    if (is_trap(c) && !find_trap(c)->is_safe())
+        return false;
 
     return _is_safe_cloud(c);
 }
