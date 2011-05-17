@@ -108,7 +108,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
                             - (y_distance / 2);
     const coord_def middle(x_middle, y_middle);
 
-    if (x_distance > 2 || y_distance > 2)
+    if (distance(beam.target, you.pos()) > dist_range(2))
     {
         mpr("Your weapon cannot reach that far!");
         return (false);
