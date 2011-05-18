@@ -958,9 +958,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_EXPLORATION:
             if (you.religion == GOD_ASHENZARI)
             {
-                // levels: x1, x2, x3, x4, x5
-                piety_change = 1 + you.bondage_level;
-                piety_change *= 8; // base gain per dungeon level
+                const int base_gain = 6; // base gain per dungeon level
+                // levels: x1, x1.5, x2, x2.5, x3
+                piety_change = base_gain + base_gain * you.bondage_level / 2;
                 piety_denom = level;
                 retval = true;
             }
