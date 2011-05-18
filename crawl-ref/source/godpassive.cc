@@ -684,7 +684,7 @@ std::map<skill_type, char> ash_get_boosted_skills(eq_type type)
 {
     const int bondage = you.bondage[type];
     std::map<skill_type, char> boost;
-    if (!bondage)
+    if (bondage <= 0)
         return boost;
 
     // Include melded.
