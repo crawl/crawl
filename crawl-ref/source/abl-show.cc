@@ -427,7 +427,7 @@ static const ability_def Ability_List[] =
 
     // Ashenzari
     { ABIL_ASHENZARI_SCRYING, "Scrying",
-      4, 0, 50, generic_cost::range(5, 6), ABFLAG_INSTANT },
+      4, 0, 50, generic_cost::range(2, 3), ABFLAG_INSTANT },
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
       0, 0, 0, 25, ABFLAG_NONE },
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
