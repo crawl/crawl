@@ -160,7 +160,7 @@ private:
     void _set_new_level();
     void _set_title();
     void _clear();
-#ifdef DEBUG
+#ifdef DEBUG_DIAGNOSTICS
     void _set_points();
 #endif
 };
