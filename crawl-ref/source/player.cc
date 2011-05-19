@@ -2033,6 +2033,10 @@ int player_speed(void)
 {
     int ps = 10;
 
+    // When paralysed, speed is irrelevant.
+    if (you.cannot_act())
+        return ps;
+
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.stat_zero[i] > 0)
             ps *= 2;
