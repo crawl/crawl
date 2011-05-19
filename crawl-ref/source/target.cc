@@ -179,13 +179,13 @@ bool targetter_cloud::valid_aim(coord_def a)
 {
     if (agent && (origin - a).abs() > range2)
         return notify_fail("Out of range.");
-    if (!in_bounds(a) || feat_is_solid(grd(a)))
+    if (!map_bounds(a) || agent && !cell_see_cell(origin, a))
+        return notify_fail("You cannot see that place.");
+    if (feat_is_solid(grd(a)))
         return notify_fail(_wallmsg(a));
     if (env.cgrid(a) != EMPTY_CLOUD)
         return notify_fail("There's already a cloud there.");
     ASSERT(_cloudable(a));
-    if (agent && !cell_see_cell(origin, a))
-        return notify_fail("You cannot see that place.");
     return true;
 }
 
