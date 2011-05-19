@@ -3980,6 +3980,8 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                       mons->pronoun(PRONOUN_CAP_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
                       mons->pronoun(PRONOUN_NOCAP_POSSESSIVE));
+    msg = replace_all(msg, "@reflexive@",
+                      mons->pronoun(PRONOUN_REFLEXIVE));
     msg = replace_all(msg, "@objective@",
                       mons->pronoun(PRONOUN_OBJECTIVE));
 
