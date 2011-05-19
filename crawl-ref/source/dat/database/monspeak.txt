@@ -5670,7 +5670,7 @@ VISUAL:@The_monster@ smiles at @foe@.
 
 VISUAL:@The_monster@ grins with merry abandon.
 
-VISUAL:@The_monster@ pulls ten torches out off @possessive@ hat and starts juggling.
+VISUAL:@The_monster@ pulls ten torches out of @possessive@ hat and starts juggling.
 
 VISUAL:@The_monster@ sprays water @at_foe@.
 
