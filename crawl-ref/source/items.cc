@@ -1154,12 +1154,8 @@ std::string origin_desc(const item_def &item)
 
 bool pickup_single_item(int link, int qty)
 {
-    if (you.flight_mode() == FL_LEVITATE)
-    {
-        mpr("You can't reach the floor from up here.");
-        learned_something_new(HINT_LEVITATING);
+    if (!player_can_reach_floor())
         return (false);
-    }
 
     if (qty == 0 && mitm[link].quantity > 1 && mitm[link].base_type != OBJ_GOLD)
     {
@@ -1222,13 +1218,8 @@ void pickup(bool partial_quantity)
 {
     int keyin = 'x';
 
-    if (you.flight_mode() == FL_LEVITATE)
-    {
-        mpr("You can't reach the floor from up here.");
-        learned_something_new(HINT_LEVITATING);
+    if (!player_can_reach_floor())
         return;
-    }
-
 
     int o = you.visible_igrd(you.pos());
     const int num_nonsquelched = _count_nonsquelched_items(o);

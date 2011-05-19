@@ -839,6 +839,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
 
 bool player_in_bat_form();
 bool player_can_open_doors();
+bool player_can_reach_floor(std::string feat = "");
 
 inline bool player_can_handle_equipment()
 {

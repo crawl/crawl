@@ -464,6 +464,20 @@ bool player_can_open_doors()
             && you.form != TRAN_PIG);
 }
 
+bool player_can_reach_floor(std::string feat)
+{
+    if (you.flight_mode() != FL_LEVITATE)
+        return true;
+
+    if (feat == "")
+        mpr("You can't reach the floor from up here.");
+    else
+        mprf("You are floating high above the %s.", feat.c_str());
+
+    learned_something_new(HINT_LEVITATING);
+    return false;
+}
+
 bool player_under_penance(void)
 {
     if (you.religion != GOD_NO_GOD)

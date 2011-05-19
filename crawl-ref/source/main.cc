@@ -1463,12 +1463,8 @@ static void _go_downstairs()
         return;
     }
 
-    if (you.flight_mode() == FL_LEVITATE && !feat_is_gate(ygrd))
-    {
-        mpr("You're floating high up above the floor!");
-        learned_something_new(HINT_LEVITATING);
+    if (!feat_is_gate(ygrd) && !player_can_reach_floor("floor"))
         return;
-    }
 
     if (!_prompt_dangerous_portal(ygrd))
         return;
@@ -3239,6 +3235,9 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                 mpr("You can't disarm traps in your present form.");
                 return (true);
             }
+
+            if (!player_can_reach_floor())
+                return (true);
 
             const int cloud = env.cgrid(target);
             if (cloud != EMPTY_CLOUD

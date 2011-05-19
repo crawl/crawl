@@ -341,11 +341,8 @@ void pray()
     const god_type altar_god = feat_altar_god(grd(you.pos()));
     if (altar_god != GOD_NO_GOD)
     {
-        if (you.flight_mode() == FL_LEVITATE)
-        {
-            mpr("You are floating high above the altar.");
+        if (!player_can_reach_floor("altar"))
             return;
-        }
 
         if (you.religion != GOD_NO_GOD && altar_god == you.religion)
         {
