@@ -2956,6 +2956,8 @@ void world_reacts()
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
 
+    check_for_interesting_features();
+
     update_monsters_in_view();
 
     reset_show_terrain();
