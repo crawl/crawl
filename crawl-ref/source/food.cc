@@ -362,12 +362,8 @@ bool butchery(int which_corpse, bool bottle_blood)
         return (false);
     }
 
-    if (you.flight_mode() == FL_LEVITATE)
-    {
-        mpr("You can't reach the floor from up here.");
-        learned_something_new(HINT_LEVITATING);
+    if (!player_can_reach_floor())
         return (false);
-    }
 
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation

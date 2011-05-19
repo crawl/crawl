@@ -4111,11 +4111,8 @@ static bool _drink_fountain()
     if (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_FOUNTAIN_BLOOD)
         return (false);
 
-    if (you.flight_mode() == FL_LEVITATE)
-    {
-        mpr("You're floating high above the fountain.");
+    if (!player_can_reach_floor("fountain"))
         return (false);
-    }
 
     if (you.berserk())
     {
