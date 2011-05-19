@@ -3439,7 +3439,7 @@ VISUAL:@The_monster@ gestures @at_foe@ with @possessive@ flail.
 
 @The_monster@ says, "You wouldn't believe how much I paid for this flail."
 
-@The_monster@ asks @foe@, "Have you met my brother?"
+@The_monster@ asks @foe,@ "Have you met my brother?"
 
 @The_monster@ says @to_foe@, "I might not be good at magic, but I can still kill you!"
 
