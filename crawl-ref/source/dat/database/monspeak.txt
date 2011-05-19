@@ -2355,7 +2355,7 @@ w:50
 
 @The_monster@ says, "This place goes on forever. I hate that."
 
-@The_monster@ says, "This place goes down forever. Maybe there's turtles at the bottom."
+@The_monster@ says, "This place goes down forever. Maybe there are turtles at the bottom."
 
 @The_monster@ says, "Why would you have your front door in a mine? Stupid."
 
