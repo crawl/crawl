@@ -1074,12 +1074,12 @@ Short Blades player ghost
 
 @The_monster@ says @to_foe@, "You sneer at my short blade, I will sneer at your cold corpse."
 
-VISUAL:@The_monster@ flicks its blade from hand to hand, faster than the eye can follow.
+VISUAL:@The_monster@ flicks @possessive@ blade from hand to hand, faster than the eye can follow.
 
 %%%%
 Long Blades player ghost
 
-VISUAL:@The_monster@ holds its blade at the ready.
+VISUAL:@The_monster@ holds @possessive@ blade at the ready.
 
 @The_monster@ says, "Live by the sword, die by the sword."
 
@@ -1117,7 +1117,7 @@ Staves player ghost
 
 @The_monster@ says, "I excel at staving off weak adventurers."
 
-VISUAL:@The_monster@ twirls its staff.
+VISUAL:@The_monster@ twirls @possessive@ staff.
 
 @The_monster@ threatens to break your skull. @player_only@
 
@@ -1126,7 +1126,7 @@ Slings player ghost
 
 @The_monster@ says, "The bigger they are, the harder they fall!"
 
-VISUAL:@The_monster@ whirls a spectral sling over its head.
+VISUAL:@The_monster@ whirls a spectral sling over @possessive@ head.
 
 @_generic_ranged_@
 %%%%
@@ -1141,7 +1141,7 @@ Crossbows player ghost
 
 @_generic_ranged_@
 
-@The_monster@ @_reloads_adj_@ its weapon.
+@The_monster@ @_reloads_adj_@ @possessive@ weapon.
 
 %%%%
 Throwing player ghost
@@ -1174,9 +1174,9 @@ Stealth player ghost
 
 VISUAL:@The_monster@ tries to sneak away.
 
-VISUAL:@The_monster@ tries to blend into its surroundings.
+VISUAL:@The_monster@ tries to blend into @possessive@ surroundings.
 
-VISUAL:@The_monster@ whispers something so quietly that you cannot hear it.
+VISUAL:@The_monster@ whispers something so quietly that you cannot hear @pronoun@.
 
 VISUAL:For a moment, you lose track of @the_monster@.
 
@@ -1228,9 +1228,9 @@ VISUAL:@The_monster@ assumes a wrestling stance.
 
 @The_monster@ says, "I break bones and crack skulls... with my bare hands."
 
-VISUAL:@The_monster@ swings its fists at you. @player_only@
+VISUAL:@The_monster@ swings @possessive@ fists at you. @player_only@
 
-VISUAL:@The_monster@ flexes its fingers.
+VISUAL:@The_monster@ flexes @possessive@ fingers.
 
 %%%%
 Spellcasting player ghost
@@ -1282,7 +1282,7 @@ Summonings player ghost
 
 @The_monster@ says, "It's dangerous to adventure alone."
 
-VISUAL SPELL:@The_monster@ pulls a quokka out of its cap.
+VISUAL SPELL:@The_monster@ pulls a quokka out of @possessive@ cap.
 
 @The_monster@ points @at_foe@ and yells, "Attack!"
 
@@ -2308,7 +2308,7 @@ w:1
 @The_monster@ presages, "An acid flood will etch off all the scum!"
 
 w:2
-@The_monster@ says, "There is a problem solver and its name is Dissolver!"
+@The_monster@ says, "There is a problem solver and @possessive@ name is Dissolver!"
 ## END Dissolution ##
 %%%%
 ############ DONALD ### An adventurer hating competition
@@ -5670,7 +5670,7 @@ VISUAL:@The_monster@ smiles at @foe@.
 
 VISUAL:@The_monster@ grins with merry abandon.
 
-VISUAL:@The_monster@ pulls ten torches out off its hat and starts juggling.
+VISUAL:@The_monster@ pulls ten torches out off @possessive@ hat and starts juggling.
 
 VISUAL:@The_monster@ sprays water @at_foe@.
 
@@ -5725,7 +5725,7 @@ VISUAL:@The_monster@ gestures at you to be quiet.
 
 VISUAL:@The_monster@ flutters as if in a wind.
 
-VISUAL:@The_monster@ stares at you with its ghostly eyes.
+VISUAL:@The_monster@ stares at you with @possessive@ ghostly eyes.
 
 VISUAL:@The_monster@ fades in and out of visibility.
 
@@ -6438,9 +6438,9 @@ VISUAL:@The_monster@'s flesh secretes a thick mucus.
 
 VISUAL:Hollow, blind eyes appear on the @monster@'s head.
 
-@The_monster@ begs you to kill it.
+@The_monster@ begs you to kill @pronoun@.
 
-VISUAL:@The_monster@ looks at itself and cries without tears.
+VISUAL:@The_monster@ looks at @reflexive@ and cries without tears.
 
 # Pungent Stench
 @The_monster@ screams, "I am only a sick, bizarre, defaced creation."
