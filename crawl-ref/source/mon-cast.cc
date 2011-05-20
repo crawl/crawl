@@ -340,6 +340,11 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+    case SPELL_PETRIFY:
+        beam.flavour  = BEAM_PETRIFY;
+        beam.is_beam  = true;
+        break;
+
     case SPELL_SLOW:
         beam.flavour  = BEAM_SLOW;
         beam.is_beam  = true;
