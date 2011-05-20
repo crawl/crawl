@@ -2596,6 +2596,8 @@ tileidx_t tileidx_monster(const monster* mons)
         ch |= TILE_FLAG_GD_NEUTRAL;
     else if (mons->neutral())
         ch |= TILE_FLAG_NEUTRAL;
+    else if (mons_is_fleeing(mons))
+        ch |= TILE_FLAG_FLEEING;
     else if (mons_looks_stabbable(mons))
         ch |= TILE_FLAG_STAB;
     else if (mons_looks_distracted(mons))
