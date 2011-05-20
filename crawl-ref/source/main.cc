@@ -2126,7 +2126,6 @@ static void _decrement_petrification(int delay)
     if (you.duration[DUR_PETRIFYING])
     {
         int &dur = you.duration[DUR_PETRIFYING];
-        dprf("dur=%d", dur);
         int old_dur = dur;
         if ((dur -= delay) <= 0)
         {
