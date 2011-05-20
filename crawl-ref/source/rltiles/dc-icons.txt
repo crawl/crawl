@@ -31,6 +31,7 @@ poison POISON
 flame FLAME
 berserk BERSERK
 %rim 0
+fleeing FLEEING
 may_stab_brand MAY_STAB_BRAND
 sleeping STAB_BRAND
 
