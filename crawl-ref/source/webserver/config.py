@@ -1,4 +1,5 @@
 import logging
+from collections import OrderedDict
 
 bind_nonsecure = True
 bind_address = ""
@@ -15,11 +16,35 @@ password_db = "./webserver/passwd.db3"
 static_path = "./webserver/static"
 template_path = "./webserver/"
 
-crawl_binary = "./crawl"
-
-rcfile_path = "./rcs/"
-macro_path = "./rcs/"
-morgue_path = "./rcs/"
+games = OrderedDict([
+    ("dcss-web-trunk", dict(
+        name = "DCSS trunk",
+        crawl_binary = "./crawl",
+        rcfile_path = "./rcs/",
+        macro_path = "./rcs/",
+        morgue_path = "./rcs")),
+    ("sprint-web-trunk", dict(
+        name = "Sprint trunk",
+        crawl_binary = "./crawl",
+        rcfile_path = "./rcs/",
+        macro_path = "./rcs/",
+        morgue_path = "./rcs",
+        options = ["-sprint"])),
+    ("zd-web-trunk", dict(
+        name = "Zot Defense trunk",
+        crawl_binary = "./crawl",
+        rcfile_path = "./rcs/",
+        macro_path = "./rcs/",
+        morgue_path = "./rcs",
+        options = ["-zotdef"])),
+    ("tut-web-trunk", dict(
+        name = "Tutorial trunk",
+        crawl_binary = "./crawl",
+        rcfile_path = "./rcs/",
+        macro_path = "./rcs/",
+        morgue_path = "./rcs",
+        options = ["-tutorial"])),
+])
 
 running_game_path = "./rcs/running/"
 
