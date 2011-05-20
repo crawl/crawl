@@ -2901,7 +2901,7 @@ bool bolt::is_harmless(const monster* mon) const
         return (mon->res_acid() >= 3);
 
     case BEAM_PETRIFY:
-        return (mon->res_petrify());
+        return (mon->res_petrify() || mon->petrified());
 
     default:
         return (false);
@@ -2953,7 +2953,7 @@ bool bolt::harmless_to_player() const
         return (false);
 
     case BEAM_PETRIFY:
-        return (you.res_petrify() > 0);
+        return (you.res_petrify() > 0 || you.petrified());
 
     default:
         return (false);
