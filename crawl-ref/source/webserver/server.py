@@ -98,8 +98,6 @@ sockets = set()
 current_id = 0
 shutting_down = False
 
-Game = collections.namedtuple("Game", ["id", "name"])
-
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         host = self.request.host
@@ -168,10 +166,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                            tornado.escape.json_encode(lobby_html) + ");")
 
     def send_game_links(self):
-        game_choices = [
-            Game("dcss-web-0.8", "DCSS 0.8")
-        ]
-        play_html = self.render_string("game_links.html", game_choices = game_choices)
+        play_html = self.render_string("game_links.html", games = games)
         self.write_message("$('#play_now').html(" +
                            tornado.escape.json_encode(play_html) + ");")
 
@@ -201,6 +196,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def start_crawl(self, game_id):
         if self.username == None: return
+        if game_id not in games: return
 
         if not self.init_user():
             self.write_message("set_layer('crt'); $('#crt').html('Could not initialize" +
@@ -211,11 +207,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.game_id = game_id
 
-        self.p = subprocess.Popen([crawl_binary,
-                                   "-name", self.username,
-                                   "-rc", os.path.join(rcfile_path, self.username + ".rc"),
-                                   "-macro", os.path.join(macro_path, self.username + ".macro"),
-                                   "-morgue", os.path.join(morgue_path, self.username)],
+        game = games[game_id]
+
+        call = [game["crawl_binary"],
+                "-name", self.username,
+                "-rc", os.path.join(game["rcfile_path"], self.username + ".rc"),
+                "-macro", os.path.join(game["macro_path"], self.username + ".macro"),
+                "-morgue", os.path.join(game["morgue_path"], self.username)]
+
+        if "options" in game:
+            call += game["options"]
+
+        self.p = subprocess.Popen(call,
                                   stdin = subprocess.PIPE,
                                   stdout = subprocess.PIPE,
                                   stderr = subprocess.PIPE)
@@ -263,6 +266,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.ttyrec_filename = None
 
     def check_where(self):
+        morgue_path = games[self.game_id]["morgue_path"]
         wherefile = os.path.join(morgue_path, self.username, self.username + ".dglwhere")
         try:
             stat = os.stat(wherefile)

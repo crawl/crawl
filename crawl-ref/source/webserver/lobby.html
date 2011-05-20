@@ -6,6 +6,7 @@
     </caption>
     <tr>
       <th>User</th>
+      <th>Game</th>
       <th>Where</th>
       <th>Idle</th>
       <th>Spectators</th>
@@ -17,6 +18,7 @@
           {{ running_game.username }}
         </a>
       </td>
+      <td>{{ running_game.game_id }}</td>
       <td>{{ (running_game.where or "").replace(" ", "&nbsp;") }}</td>
       <td>{{ int(running_game.idle_time()) }}s</td>
       <td>{{ len(running_game.watchers) }}</td>
