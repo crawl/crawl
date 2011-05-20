@@ -408,20 +408,23 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (!ignore_danger && is_excluded(c) && !is_stair_exclusion(c))
         return (false);
 
+    if (g_Slime_Wall_Check && slime_wall_neighbour(c))
+        return (false);
+
+    if (!_is_safe_cloud(c))
+        return (false);
+
     if (is_trap(c))
     {
         trap_def trap;
         trap.pos = c;
         trap.type = env.map_knowledge(c).trap();
         trap.ammo_qty = 1;
-        if (!trap.is_safe())
-            return false;
+        if (trap.is_safe())
+            return true;
     }
 
-    if (g_Slime_Wall_Check && slime_wall_neighbour(c))
-        return (false);
-
-    return (feat_is_traversable(grid) && _is_safe_cloud(c));
+    return (feat_is_traversable(grid));
 }
 
 // Returns true if the location at (x,y) is monster-free and contains
