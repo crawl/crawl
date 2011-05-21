@@ -2302,7 +2302,7 @@ static bool _print_toggle_message(const describe_info &inf)
         const int bottom_line = std::min(30, get_number_of_lines());
         cgotoxy(1, bottom_line);
         formatted_string::parse_string(
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             "Press '<w>!</w>'"
 #else
             "<w>Right-click</w>"
@@ -4299,7 +4299,7 @@ static void _detailed_god_description(god_type which_god)
 
     cgotoxy(1, bottom_line);
     formatted_string::parse_string(
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         "Press '<w>!</w>'"
 #else
         "<w>Right-click</w>"
@@ -4577,7 +4577,7 @@ void describe_god(god_type which_god, bool give_title)
     cgotoxy(1, bottom_line);
     textcolor(LIGHTGREY);
     formatted_string::parse_string(
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         "Press '<w>!</w>'"
 #else
         "<w>Right-click</w>"

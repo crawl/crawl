@@ -425,7 +425,7 @@ formatted_string describe_mutations()
         result += "\n\n";
         result += "\n\n";
         result +=
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             "Press '<w>!</w>'"
 #else
             "<w>Right-click</w>"
@@ -525,7 +525,7 @@ static void _display_vampire_attributes()
 
     result += "\n";
     result +=
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         "Press '<w>!</w>'"
 #else
         "<w>Right-click</w>"
