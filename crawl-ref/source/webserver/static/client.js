@@ -525,7 +525,8 @@ $(document).ready(
         $(window).bind("beforeunload",
                        function (ev)
                        {
-                           if (location.hash.match(/^#play-(.+)/i))
+                           if (location.hash.match(/^#play-(.+)/i) &&
+                               socket.readyState == WebSocket.OPEN)
                            {
                                return "Really quit the game?";
                            }
