@@ -522,6 +522,15 @@ $(document).ready(
                                  request_redraw();
                          });
 
+        $(window).bind("beforeunload",
+                       function (ev)
+                       {
+                           if (location.hash.match(/^#play-(.+)/i))
+                           {
+                               return "Really quit the game?";
+                           }
+                       });
+
         if ("WebSocket" in window)
         {
             // socket_server is set in the client.html template
