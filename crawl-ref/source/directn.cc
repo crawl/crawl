@@ -3965,7 +3965,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {
             std::string msg;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             msg = "(<w>Right-click</w> for more information.)";
 #else
             msg = "(Press <w>v</w> for more information.)";
@@ -3991,7 +3991,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     const bool bloody = is_bloodcovered(where);
     if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         feature_desc += " (<w>Right-click</w> for more information.)";
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
@@ -4010,7 +4010,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         if (_interesting_feature(feat))
         {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             feature_desc += " (Right-click for more information.)";
 #else
             feature_desc += " (Press 'v' for more information.)";

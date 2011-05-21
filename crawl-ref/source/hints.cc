@@ -1558,7 +1558,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "can be thrown by hand, but other missiles like arrows and "
                 "needles require a launcher and training in using it to be "
                 "really effective. "
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                 "<w>Right-clicking</w> on "
 #else
                 "Selecting "
