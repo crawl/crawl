@@ -273,6 +273,8 @@ function handle_keypress(e)
     }
 
     if (e.which == 0) return;
+    if (e.which == 8) return; // Backspace gets a keypress in FF, but not Chrome
+                              // so we handle it in keydown
 
     e.preventDefault();
 
