@@ -65,6 +65,11 @@ var flash_colours =
 function c(x, y, cell)
 {
     var old_cell = get_tile_cache(x, y);
+
+    var redraw_above = false;
+    if (old_cell && old_cell.sy && (old_cell.sy < 0) && y > 0)
+        redraw_above = true;
+
     if (!old_cell || cell.c)
     {
         set_tile_cache(x, y, cell);
@@ -74,6 +79,9 @@ function c(x, y, cell)
         for (attr in cell)
             old_cell[attr] = cell[attr];
     }
+
+    if (redraw_above)
+        render_cell(x, y - 1); // Redraw to remove trails
 
     if (mark_sent_cells)
         mark_cell(x, y, x + "/" + y);
@@ -169,6 +177,9 @@ function render_cell(x, y)
 
         if (!cell)
             return;
+
+        cell.sy = undefined; // Will be set by the tile rendering functions
+                             // to indicate if the cell is oversized
 
         cell.fg = cell.fg || 0;
         cell.bg = cell.bg || 0;
@@ -270,6 +281,14 @@ function render_cell(x, y)
         }
 
         render_cursors(x, y);
+
+        // Redraw the cell below if it overlapped
+        if (y < (dungeon_rows - 1))
+        {
+            var cell_below = get_tile_cache(x, y + 1);
+            if (cell_below && cell_below.sy && (cell_below.sy < 0))
+                render_cell(x, y + 1);
+        }
 
         // Debug helper
         if (cell.mark)
@@ -646,8 +665,6 @@ function draw_foreground(x, y, cell)
 
 
 // Helper functions for drawing from specific textures
-// TODO: Handle redrawing of cells above higher-than-32 tiles
-// (e.g. the lernaean hydra leaves a trail of heads)
 
 function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
 {
@@ -669,6 +686,13 @@ function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
         ey = y_max;
 
     if (sy >= ey) return;
+
+    if (sy < 0)
+    {
+        var cell = get_tile_cache(cx, cy);
+        if (sy < (cell.sy || 0))
+            cell.sy = sy;
+    }
 
     var w = info.ex - info.sx;
     var h = info.ey - info.sy;
