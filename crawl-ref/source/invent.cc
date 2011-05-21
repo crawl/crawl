@@ -829,18 +829,10 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             {
                 const std::string str = "Magical Staves and Rods"; // longest string
                 subtitle += std::string(strwidth(str) - strwidth(subtitle) + 1, ' ');
-                subtitle += "(select all with ";
-#ifdef USE_TILE
-                // For some reason, this is only formatted correctly in the
-                // Tiles version.
-                subtitle += "<w>";
-#endif
+                subtitle += "(select all with <w>";
                 for (unsigned int k = 0; k < glyphs.size(); ++k)
                      subtitle += glyphs[k];
-#ifdef USE_TILE
-                subtitle += "</w><blue>";
-#endif
-                subtitle += ")";
+                subtitle += "</w><blue>)";
             }
         }
 
@@ -1198,7 +1190,7 @@ unsigned char invent_select(const char *title,
                              Menu::selitem_tfn selitemfn,
                              const std::vector<SelItem> *pre_select)
 {
-    InvMenu menu(flags);
+    InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
     menu.set_preselect(pre_select);
     menu.set_title_annotator(titlefn);
