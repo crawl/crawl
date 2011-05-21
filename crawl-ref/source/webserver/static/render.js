@@ -660,7 +660,7 @@ function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
         throw ("Tile not found: " + idx);
     }
     var size_ox = dungeon_cell_w / 2 - info.w / 2;
-    var size_oy = dungeon_cell_h / 2 - info.h / 2;
+    var size_oy = dungeon_cell_h - info.h;
     var pos_sy_adjust = (ofsy || 0) + info.oy + size_oy;
     var pos_ey_adjust = pos_sy_adjust + info.ey - info.sy;
     var sy = pos_sy_adjust;
