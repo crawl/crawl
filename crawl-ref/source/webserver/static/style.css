@@ -21,6 +21,11 @@ body {
 
 #player_list {
     width: 100%;
+    text-align: left;
+}
+
+#lobby_body {
+    text-align: center;
 }
 
 #player_list table {
