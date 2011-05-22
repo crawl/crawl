@@ -356,6 +356,9 @@ public:
     int         tile_font_lbl_size;
     std::string tile_font_tip_file;
     int         tile_font_tip_size;
+#ifdef USE_FT
+    bool        tile_font_ft_light;
+#endif
     // window settings
     screen_mode tile_full_screen;
     int         tile_window_width;

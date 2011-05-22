@@ -979,6 +979,11 @@ void game_options::reset_options()
     tile_font_tip_size   = 0;
     tile_font_lbl_file   = PROPORTIONAL_FONT;
     tile_font_lbl_size   = 0;
+#ifdef USE_FT
+    // TODO: init this from system settings.  This would probably require
+    // using fontconfig, but that's planned.
+    tile_font_ft_light   = false;
+#endif
 
     // window layout
     tile_full_screen      = SCREENMODE_AUTO;
@@ -3168,6 +3173,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "tile_font_lbl_file")
         tile_font_lbl_file = field;
     else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
+#ifdef USE_FT
+    else BOOL_OPTION(tile_font_ft_light);
+#endif
     else INT_OPTION(tile_key_repeat_delay, 0, INT_MAX);
     else if (key == "tile_full_screen")
         tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
