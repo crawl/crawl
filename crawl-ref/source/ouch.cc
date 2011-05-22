@@ -1386,7 +1386,7 @@ void screen_end_game(std::string text)
 void _end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
-        if (item_type_unknown(you.inv[i]))
+        if (you.inv[i].defined() && item_type_unknown(you.inv[i]))
             add_inscription(you.inv[i], "unknown");
 
     for (int i = 0; i < ENDOFPACK; i++)
