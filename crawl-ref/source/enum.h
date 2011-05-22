@@ -2597,7 +2597,7 @@ enum object_class_type                 // mitm[].base_type
     OBJ_ORBS,
     OBJ_MISCELLANY,
     OBJ_CORPSES,
-    OBJ_GOLD, // important role as upper limit to chardump::dump_inventory() {dlb}
+    OBJ_GOLD,
 #if TAG_MAJOR_VERSION == 32
     OBJ_GEMSTONES, // found in itemname.cc, labeled as miscellaneous in invent.cc {dlb}
 #endif
