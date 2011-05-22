@@ -745,10 +745,10 @@ static void _sdump_inventory(dump_params &par)
     std::string &text(par.text);
     std::string text2;
 
-    int inv_class2[OBJ_GOLD];
+    int inv_class2[NUM_OBJECT_CLASSES];
     int inv_count = 0;
 
-    for (i = 0; i < OBJ_GOLD; i++)
+    for (i = 0; i < NUM_OBJECT_CLASSES; i++)
         inv_class2[i] = 0;
 
     for (i = 0; i < ENDOFPACK; i++)
@@ -770,7 +770,7 @@ static void _sdump_inventory(dump_params &par)
     {
         text += "Inventory:\n\n";
 
-        for (i = 0; i < OBJ_GOLD; i++)
+        for (i = 0; i < NUM_OBJECT_CLASSES; i++)
         {
             if (inv_class2[i] != 0)
             {
