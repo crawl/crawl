@@ -3833,7 +3833,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_WANDS:
         if (you.type_ids[ IDTYPE_WANDS ][type] == ID_KNOWN_TYPE
-            ||  (item.flags &ISFLAG_KNOW_TYPE))
+            ||  (item.flags & ISFLAG_KNOW_TYPE))
         {
             return TILE_WAND_ID_FIRST + type;
         }
@@ -3845,7 +3845,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_SCROLLS:
         if (you.type_ids[ IDTYPE_SCROLLS ][type] == ID_KNOWN_TYPE
-            ||  (item.flags &ISFLAG_KNOW_TYPE))
+            ||  (item.flags & ISFLAG_KNOW_TYPE))
         {
             return TILE_SCR_ID_FIRST + type;
         }
@@ -3883,8 +3883,9 @@ tileidx_t tileidx_item(const item_def &item)
         }
 
     case OBJ_POTIONS:
+
         if (you.type_ids[ IDTYPE_POTIONS ][type] == ID_KNOWN_TYPE
-            ||  (item.flags &ISFLAG_KNOW_TYPE))
+            ||  (item.flags & ISFLAG_KNOW_TYPE))
         {
             return TILE_POT_ID_FIRST + type;
         }
