@@ -926,9 +926,6 @@ command_type travel()
         return CMD_NO_CMD;
     }
 
-    if (you.running.is_explore() && check_for_interesting_features())
-            stop_running();
-
     if (you.running.is_explore())
     {
         // Exploring.

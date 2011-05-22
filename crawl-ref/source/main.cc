@@ -2032,7 +2032,6 @@ static void _prep_input()
     print_stats();
 
     viewwindow();
-    maybe_update_stashes();
 
     if (you.seen_portals)
     {
@@ -2955,7 +2954,9 @@ void world_reacts()
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
 
-    check_for_interesting_features();
+    maybe_update_stashes();
+    if (check_for_interesting_features() && you.running.is_explore())
+            stop_running();
 
     update_monsters_in_view();
 
@@ -3583,8 +3584,6 @@ static void _open_door(coord_def move, bool check_confused)
 
     update_exclusion_los(excludes);
     viewwindow();
-    if (check_for_interesting_features() && you.running.is_explore())
-            stop_running();
 
     you.turn_is_over = true;
 }

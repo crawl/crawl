@@ -706,10 +706,6 @@ void up_stairs(dungeon_feature_type force_stair,
 
     viewwindow();
 
-    // Checking new squares for interesting features.
-    if (!you.running)
-        check_for_interesting_features();
-
     seen_monsters_react();
 
     // Left Zot without enough runes to get back in (because they were
@@ -1293,10 +1289,6 @@ void down_stairs(dungeon_feature_type force_stair,
     env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
 
     viewwindow();
-
-    // Checking new squares for interesting features.
-    if (!you.running)
-        check_for_interesting_features();
 
     maybe_update_stashes();
 
