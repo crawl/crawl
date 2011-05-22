@@ -3720,6 +3720,7 @@ void zap_wand(int slot)
     targ_mode_type targ_mode = TARG_HOSTILE;
 
     beam.obvious_effect = false;
+    beam.beam_source = MHITYOU;
 
     if (inv_count() < 1)
     {
