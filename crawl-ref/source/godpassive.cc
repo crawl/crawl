@@ -339,8 +339,10 @@ void ash_check_bondage(bool msg)
 
     if (msg)
     {
-        mpr(ash_describe_bondage(flags, you.bondage_level != old_level),
-            MSGCH_GOD);
+        std::string desc = ash_describe_bondage(flags,
+                                                you.bondage_level != old_level);
+        if (!desc.empty())
+            mpr(desc, MSGCH_GOD);
     }
 }
 
