@@ -2555,15 +2555,12 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     case OBJ_WEAPONS:
     case OBJ_STAVES:
     case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_EMPTY_EBONY_CASKET
-            || item.sub_type == MISC_RUNE_OF_ZOT)
-                break;
-
         if (item_is_equipped(item))
             actions.push_back(CMD_UNWIELD_WEAPON);
         else
         {
-            actions.push_back(CMD_WIELD_WEAPON);
+            if (item_is_wieldable(item))
+                actions.push_back(CMD_WIELD_WEAPON);
             if (is_throwable(&you, item))
                 actions.push_back(CMD_QUIVER_ITEM);
         }
