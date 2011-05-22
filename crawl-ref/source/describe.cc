@@ -4355,7 +4355,7 @@ void describe_god(god_type which_god, bool give_title)
     textcolor(LIGHTGREY);
 
     std::string god_desc = getLongDescription(god_name(which_god));
-    const int numcols = get_number_of_cols();
+    const int numcols = get_number_of_cols() - 1;
     cprintf("%s", get_linebreak_string(god_desc.c_str(), numcols).c_str());
 
     // Title only shown for our own god.
@@ -4654,7 +4654,7 @@ std::string get_skill_description(skill_type skill, bool need_title)
                                                        unarmed_attacks.end(),
                                                        " or ", ", ");
                         broken += ".";
-            linebreak_string(broken, 72);
+            linebreak_string(broken, get_number_of_cols() - 1);
 
             result += "\n";
             result += broken;
@@ -4671,8 +4671,8 @@ std::string get_skill_description(skill_type skill, bool need_title)
         else if (you.religion == GOD_TROG)
         {
             result += "\n";
-            result += "Note that Trog doesn't use Invocations, its being too "
-                      "closely connected to magic.";
+            result += "Note that Trog doesn't use Invocations, due to its "
+                      "close connection to magic.";
         }
         else if (you.religion == GOD_NEMELEX_XOBEH)
         {
