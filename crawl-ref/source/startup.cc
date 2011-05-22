@@ -67,7 +67,6 @@ static void _initialize()
         seed_rng(Options.seed);
     else
         seed_rng();
-    get_typeid_array().init(ID_UNKNOWN_TYPE);
     init_char_table(Options.char_set);
     init_show_table();
     init_monster_symbols();

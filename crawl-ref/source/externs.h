@@ -797,4 +797,6 @@ struct final_effect
     int x;
 };
 
+typedef FixedArray<item_type_id_state_type, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
+
 #endif // EXTERNS_H
