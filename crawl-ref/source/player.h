@@ -258,6 +258,14 @@ public:
   int montiers[5]; // four monster tiers, plus corpse count
 #endif
 
+  // The version the save was last played with.
+  std::string prev_save_version;
+
+  // The type of a zotdef wave, if any.
+  std::string zotdef_wave_name;
+  // The biggest assigned monster id so far.
+  mid_t last_mid;
+
 
   // Non-saved UI state:
   unsigned short prev_targ;
@@ -342,14 +350,6 @@ public:
 
   // The save file itself.
   package *save;
-
-  // The version the save was last played with.
-  std::string prev_save_version;
-
-  // The type of a zotdef wave, if any.
-  std::string zotdef_wave_name;
-  // The biggest assigned monster id so far.
-  mid_t last_mid;
 
   // The last spell cast by the player.
   spell_type last_cast_spell;
