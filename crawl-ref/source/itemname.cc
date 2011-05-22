@@ -44,11 +44,6 @@
 #include "transform.h"
 
 
-id_arr type_ids;
-// Additional information, about tried unidentified items.
-// (e.g. name of item, for scrolls of RC, ID, EA)
-CrawlHashTable type_id_props;
-
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
 
@@ -299,19 +294,22 @@ std::string item_def::name(description_level_type descrip,
                 if (base_type == OBJ_SCROLLS)
                 {
                     if (sub_type == SCR_IDENTIFY
-                        && type_id_props.exists("SCR_ID"))
+                        && you.type_id_props.exists("SCR_ID"))
                     {
-                        tried_str = "tried on " + type_id_props["SCR_ID"].get_string();
+                        tried_str = "tried on " +
+                                    you.type_id_props["SCR_ID"].get_string();
                     }
                     else if (sub_type == SCR_RECHARGING
-                             && type_id_props.exists("SCR_RC"))
+                             && you.type_id_props.exists("SCR_RC"))
                     {
-                        tried_str = "tried on " + type_id_props["SCR_RC"].get_string();
+                        tried_str = "tried on " +
+                                    you.type_id_props["SCR_RC"].get_string();
                     }
                     else if (sub_type == SCR_ENCHANT_ARMOUR
-                             && type_id_props.exists("SCR_EA"))
+                             && you.type_id_props.exists("SCR_EA"))
                     {
-                        tried_str = "tried on " + type_id_props["SCR_EA"].get_string();
+                        tried_str = "tried on " +
+                                    you.type_id_props["SCR_EA"].get_string();
                     }
                 }
             }
@@ -2145,40 +2143,38 @@ void check_item_knowledge(bool unknown_items)
 {
     std::vector<const item_def*> items;
 
-    const object_class_type idx_to_objtype[5] = { OBJ_WANDS, OBJ_SCROLLS,
-                                                  OBJ_JEWELLERY, OBJ_POTIONS,
-                                                  OBJ_STAVES };
-    const int idx_to_maxtype[5] = { NUM_WANDS, NUM_SCROLLS,
-                                    NUM_JEWELLERY, NUM_POTIONS, NUM_STAVES };
-
     bool needs_inversion = false;
-    for (int i = 0; i < 5; i++)
-        for (int j = 0; j < idx_to_maxtype[i]; j++)
+    for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
+    {
+        object_class_type i = (object_class_type)ii;
+        if (!item_type_has_ids(i))
+            continue;
+        for (int j = 0; j < get_max_subtype(i); j++)
         {
 #if TAG_MAJOR_VERSION == 32
-            if (i == 1 && j == SCR_PAPER)
+            if (i == OBJ_SCROLLS && j == SCR_PAPER)
                 continue;
 #endif
-            if (i == 2 && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
+            if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
             // Potions of fizzing liquid are not something that
             // need to be identified, because they never randomly
             // generate! [due]
-            if (i == 3 && j == POT_FIZZING)
+            if (i == OBJ_POTIONS && j == POT_FIZZING)
                 continue;
 
-            if (unknown_items ? type_ids[i][j] != ID_KNOWN_TYPE
-                              : type_ids[i][j] == ID_KNOWN_TYPE)
+            if (unknown_items ? you.type_ids[i][j] != ID_KNOWN_TYPE
+                              : you.type_ids[i][j] == ID_KNOWN_TYPE)
             {
                 item_def* ptmp = new item_def;
                 if (ptmp != 0)
                 {
-                    ptmp->base_type = idx_to_objtype[i];
+                    ptmp->base_type = i;
                     ptmp->sub_type  = j;
                     ptmp->colour    = 1;
                     ptmp->quantity  = 1;
-                    if (i == 0)
+                    if (i == OBJ_WANDS)
                         ptmp->plus = wand_max_charges(j);
                     items.push_back(ptmp);
                 }
@@ -2186,6 +2182,7 @@ void check_item_knowledge(bool unknown_items)
             else
                 needs_inversion = true;
         }
+    }
 
     if (!unknown_items && items.empty())
     {

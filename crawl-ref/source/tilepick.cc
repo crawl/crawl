@@ -3814,8 +3814,6 @@ tileidx_t tileidx_item(const item_def &item)
     int special = item.special;
     int colour  = item.colour;
 
-    id_arr& id = get_typeid_array();
-
     switch (clas)
     {
     case OBJ_WEAPONS:
@@ -3834,7 +3832,7 @@ tileidx_t tileidx_item(const item_def &item)
             return _tileidx_armour(item);
 
     case OBJ_WANDS:
-        if (id[ IDTYPE_WANDS ][type] == ID_KNOWN_TYPE
+        if (you.type_ids[ IDTYPE_WANDS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE))
         {
             return TILE_WAND_ID_FIRST + type;
@@ -3846,7 +3844,7 @@ tileidx_t tileidx_item(const item_def &item)
         return _tileidx_food(item);
 
     case OBJ_SCROLLS:
-        if (id[ IDTYPE_SCROLLS ][type] == ID_KNOWN_TYPE
+        if (you.type_ids[ IDTYPE_SCROLLS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE))
         {
             return TILE_SCR_ID_FIRST + type;
@@ -3863,41 +3861,35 @@ tileidx_t tileidx_item(const item_def &item)
         {
             if (is_artefact(item))
                 return TILE_RING_RANDOM_OFFSET + colour - 1;
-            else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
+            else if (you.type_ids[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_RING_ID_FIRST + type - RING_FIRST_RING;
             }
             else
-            {
                 return TILE_RING_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
-            }
         }
         else
         {
             if (is_artefact(item))
                 return TILE_AMU_RANDOM_OFFSET + colour - 1;
-            else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
+            else if (you.type_ids[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
             }
             else
-            {
                 return TILE_AMU_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
-            }
         }
 
     case OBJ_POTIONS:
-        if (id[ IDTYPE_POTIONS ][type] == ID_KNOWN_TYPE
+        if (you.type_ids[ IDTYPE_POTIONS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE))
         {
             return TILE_POT_ID_FIRST + type;
         }
         else
-        {
             return TILE_POTION_OFFSET + item.plus % NDSC_POT_PRI;
-        }
 
     case OBJ_BOOKS:
         if (is_random_artefact(item))
@@ -3923,7 +3915,7 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_STAVES:
         if (item_is_rod(item))
         {
-            if (id[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
+            if (you.type_ids[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
                 || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_ROD_ID_FIRST + type - STAFF_SMITING;
@@ -3934,7 +3926,7 @@ tileidx_t tileidx_item(const item_def &item)
         }
         else
         {
-            if (id[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
+            if (you.type_ids[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
                 || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_STAFF_ID_FIRST + type;
