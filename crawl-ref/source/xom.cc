@@ -1127,18 +1127,10 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
     return (demon);
 }
 
-static bool _feat_is_deadly(dungeon_feature_type feat)
-{
-    if (you.airborne())
-        return (false);
-
-    return (feat == DNGN_LAVA || feat == DNGN_DEEP_WATER && !you.can_swim());
-}
-
 static bool _player_is_dead()
 {
     return (you.hp <= 0 || you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0
-            || _feat_is_deadly(grd(you.pos()))
+            || is_feat_dangerous(grd(you.pos()))
             || you.did_escape_death());
 }
 
@@ -3725,7 +3717,7 @@ static void _handle_accidental_death(const int orig_hp,
 
         case KILLED_BY_LAVA:
         case KILLED_BY_WATER:
-            if (!_feat_is_deadly(feat))
+            if (!is_feat_dangerous(feat))
                 speech_type = "weird death";
             break;
 
@@ -3745,7 +3737,7 @@ static void _handle_accidental_death(const int orig_hp,
             break;
 
         default:
-            if (_feat_is_deadly(feat))
+            if (is_feat_dangerous(feat))
                 speech_type = "weird death";
             if (you.strength() <= 0 || you.intel() <= 0 || you.dex() <= 0)
                 speech_type = "weird death";
@@ -3809,7 +3801,7 @@ static void _handle_accidental_death(const int orig_hp,
         }
     }
 
-    if (_feat_is_deadly(feat))
+    if (is_feat_dangerous(feat))
         you_teleport_now(false);
 }
 
@@ -3834,7 +3826,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         // escape from death via stat loss, or if the player used wizard
         // mode to escape death from deep water or lava.
         ASSERT(you.wizard && !you.did_escape_death());
-        if (_feat_is_deadly(grd(you.pos())))
+        if (is_feat_dangerous(grd(you.pos())))
         {
             mpr("Player is standing in deadly terrain, skipping Xom act.",
                 MSGCH_DIAGNOSTICS);
