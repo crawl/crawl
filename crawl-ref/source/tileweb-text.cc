@@ -3,11 +3,15 @@
 
 #include "tileweb-text.h"
 
+#include <sstream>
+
 WebTextArea::WebTextArea(std::string name) :
     mx(0),
     my(0),
     m_cbuf(NULL),
     m_abuf(NULL),
+    m_old_cbuf(NULL),
+    m_old_abuf(NULL),
     m_client_side_name(name),
     m_dirty(true)
 {
@@ -19,6 +23,8 @@ WebTextArea::~WebTextArea()
     {
         delete[] m_cbuf;
         delete[] m_abuf;
+        delete[] m_old_cbuf;
+        delete[] m_old_abuf;
     }
 }
 
@@ -34,13 +40,25 @@ void WebTextArea::resize(int x, int y)
     {
         delete[] m_cbuf;
         delete[] m_abuf;
+        delete[] m_old_cbuf;
+        delete[] m_old_abuf;
     }
 
     int size = mx * my;
     m_cbuf = new ucs_t[size];
     m_abuf = new uint8_t[size];
+    m_old_cbuf = new ucs_t[size];
+    m_old_abuf = new uint8_t[size];
 
-    clear();
+    for (int i = 0; i < mx * my; i++)
+    {
+        m_cbuf[i] = ' ';
+        m_abuf[i] = 0;
+        m_old_cbuf[i] = ' ';
+        m_old_abuf[i] = 0;
+    }
+
+    m_dirty = true;
 
     on_resize();
 }
@@ -74,33 +92,48 @@ void WebTextArea::send(bool force)
     if (!force && !m_dirty) return;
     m_dirty = false;
 
-    fprintf(stdout, "$(\"#%s\").html(\"", m_client_side_name.c_str());
-
-    uint8_t last_col = 0;
     bool start = true;
-
+    uint8_t last_col = 0;
     int space_count = 0;
+    bool dirty = false;
+    std::wstringstream html;
+
+    bool sending = false;
 
     for (int y = 0; y < my; ++y)
+    {
+        start = true;
+        space_count = 0;
+        dirty = false;
+        html.str(L"");
+
         for (int x = 0; x < mx; ++x)
         {
             ucs_t chr = m_cbuf[x + y * mx];
             uint8_t col = m_abuf[x + y * mx];
 
+            if (chr != m_old_cbuf[x + y * mx] ||
+                col != m_old_abuf[x + y * mx])
+            {
+                dirty = true;
+                m_old_cbuf[x + y * mx] = chr;
+                m_old_abuf[x + y * mx] = col;
+            }
+
             if (chr != ' ' || ((col >> 4) & 0xF) != 0)
             {
                 while (space_count)
                 {
-                    fprintf(stdout, "&nbsp;");
+                    html << "&nbsp;";
                     space_count--;
                 }
             }
 
             if ((col != last_col) && !start)
-                fprintf(stdout, "</span>");
+                html << "</span>";
             if ((col != last_col) || start)
-                fprintf(stdout, "<span class=\\\"fg%d bg%d\\\">",
-                        col & 0xf, (col >> 4) & 0xf);
+                html << "<span class=\\\"fg" << (col & 0xf)
+                     << " bg" << ((col >> 4) & 0xf) << "\\\">";
             last_col = col;
             start = false;
 
@@ -111,37 +144,43 @@ void WebTextArea::send(bool force)
                 switch (chr)
                 {
                 case ' ':
-                    fprintf(stdout, "&nbsp;");
+                    html << "&nbsp;";
                     break;
                 case '<':
-                    fprintf(stdout, "&lt;");
+                    html << "&lt;";
                     break;
                 case '>':
-                    fprintf(stdout, "&gt;");
+                    html << "&gt;";
                     break;
                 case '&':
-                    fprintf(stdout, "&amp;");
+                    html << "&amp;";
                     break;
                 case '\\':
-                    fprintf(stdout, "\\\\");
+                    html << "\\\\";
                     break;
                 case '"':
-                    fprintf(stdout, "&quot;");
+                    html << "&quot;";
                     break;
                 default:
-                    fprintf(stdout, "%lc", chr);
+                    html.put(chr);
                     break;
                 }
             }
-
-            if ((x == mx - 1) && (y != my - 1))
-            {
-                space_count = 0;
-                fprintf(stdout, "<br>");
-            }
         }
 
-    fprintf(stdout, "</span>\");\n");
+        if (dirty || force)
+        {
+            if (!sending)
+            {
+                fprintf(stdout, "txt('%s',{", m_client_side_name.c_str());
+                sending = true;
+            }
+
+            fprintf(stdout, "%u:\"%ls\",", y, html.str().c_str());
+        }
+    }
+    if (sending)
+        fprintf(stdout, "});\n");
 }
 
 void WebTextArea::on_resize()
