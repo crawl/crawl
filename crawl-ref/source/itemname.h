@@ -117,12 +117,7 @@ const char* armour_ego_name(const item_def& item, bool terse);
 
 void init_properties();
 
-const int NUM_ID_SUBTYPE = 50;
-typedef FixedArray<item_type_id_state_type, NUM_IDTYPE, NUM_ID_SUBTYPE> id_arr;
-
-id_arr& get_typeid_array();
-CrawlHashTable& get_type_id_props();
-
+bool item_type_has_ids(object_class_type base_type);
 item_type_id_state_type get_ident_type(const item_def &item);
 item_type_id_state_type get_ident_type(object_class_type basetype,
                                        int subtype);

@@ -248,6 +248,12 @@ public:
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
 
+  // The player's knowledge about item types.
+  id_arr type_ids;
+  // Additional information, about tried unidentified items.
+  // (e.g. name of item, for scrolls of RC, ID, EA)
+  CrawlHashTable type_id_props;
+
 #if TAG_MAJOR_VERSION == 32
   int montiers[5]; // four monster tiers, plus corpse count
 #endif

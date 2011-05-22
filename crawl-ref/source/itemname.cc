@@ -47,7 +47,7 @@
 id_arr type_ids;
 // Additional information, about tried unidentified items.
 // (e.g. name of item, for scrolls of RC, ID, EA)
-CrawlHashTable type_ids_props;
+CrawlHashTable type_id_props;
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
@@ -299,19 +299,19 @@ std::string item_def::name(description_level_type descrip,
                 if (base_type == OBJ_SCROLLS)
                 {
                     if (sub_type == SCR_IDENTIFY
-                        && type_ids_props.exists("SCR_ID"))
+                        && type_id_props.exists("SCR_ID"))
                     {
-                        tried_str = "tried on " + type_ids_props["SCR_ID"].get_string();
+                        tried_str = "tried on " + type_id_props["SCR_ID"].get_string();
                     }
                     else if (sub_type == SCR_RECHARGING
-                             && type_ids_props.exists("SCR_RC"))
+                             && type_id_props.exists("SCR_RC"))
                     {
-                        tried_str = "tried on " + type_ids_props["SCR_RC"].get_string();
+                        tried_str = "tried on " + type_id_props["SCR_RC"].get_string();
                     }
                     else if (sub_type == SCR_ENCHANT_ARMOUR
-                             && type_ids_props.exists("SCR_EA"))
+                             && type_id_props.exists("SCR_EA"))
                     {
-                        tried_str = "tried on " + type_ids_props["SCR_EA"].get_string();
+                        tried_str = "tried on " + type_id_props["SCR_EA"].get_string();
                     }
                 }
             }
@@ -1978,23 +1978,17 @@ std::string item_def::name_aux(description_level_type desc,
     return buff.str();
 }
 
-static item_type_id_type objtype_to_idtype(object_class_type base_type)
+bool item_type_has_ids(object_class_type base_type)
 {
-    COMPILE_CHECK(NUM_WANDS     <= NUM_ID_SUBTYPE, c1);
-    COMPILE_CHECK(NUM_SCROLLS   <= NUM_ID_SUBTYPE, c2);
-    COMPILE_CHECK(NUM_JEWELLERY <= NUM_ID_SUBTYPE, c3);
-    COMPILE_CHECK(NUM_POTIONS   <= NUM_ID_SUBTYPE, c4);
-    COMPILE_CHECK(NUM_STAVES    <= NUM_ID_SUBTYPE, c5);
+    COMPILE_CHECK(NUM_WANDS     <= MAX_SUBTYPES, c1);
+    COMPILE_CHECK(NUM_SCROLLS   <= MAX_SUBTYPES, c2);
+    COMPILE_CHECK(NUM_JEWELLERY <= MAX_SUBTYPES, c3);
+    COMPILE_CHECK(NUM_POTIONS   <= MAX_SUBTYPES, c4);
+    COMPILE_CHECK(NUM_STAVES    <= MAX_SUBTYPES, c5);
 
-    switch (base_type)
-    {
-    case OBJ_WANDS:     return (IDTYPE_WANDS);
-    case OBJ_SCROLLS:   return (IDTYPE_SCROLLS);
-    case OBJ_JEWELLERY: return (IDTYPE_JEWELLERY);
-    case OBJ_POTIONS:   return (IDTYPE_POTIONS);
-    case OBJ_STAVES:    return (IDTYPE_STAVES);
-    default:            return (NUM_IDTYPE);
-    }
+    return base_type == OBJ_WANDS || base_type == OBJ_SCROLLS
+        || base_type == OBJ_JEWELLERY || base_type == OBJ_POTIONS
+        || base_type == OBJ_STAVES;
 }
 
 bool item_type_known(const item_def& item)
@@ -2013,11 +2007,7 @@ bool item_type_known(const item_def& item)
         return (true);
     }
 
-    const item_type_id_type idt = objtype_to_idtype(item.base_type);
-    if (idt != NUM_IDTYPE)
-        return (type_ids[idt][item.sub_type] == ID_KNOWN_TYPE);
-    else
-        return (false);
+    return (you.type_ids[item.base_type][item.sub_type] == ID_KNOWN_TYPE);
 }
 
 bool item_type_unknown(const item_def& item)
@@ -2028,16 +2018,12 @@ bool item_type_unknown(const item_def& item)
     if (is_artefact(item))
         return (true);
 
-    return (objtype_to_idtype(item.base_type) != NUM_IDTYPE);
+    return item_type_has_ids(item.base_type);
 }
 
 bool item_type_known(const object_class_type base_type, const int sub_type)
 {
-    const item_type_id_type idt = objtype_to_idtype(base_type);
-    if (idt != NUM_IDTYPE)
-        return (type_ids[idt][sub_type] == ID_KNOWN_TYPE);
-    else
-        return (false);
+    return (you.type_ids[base_type][sub_type] == ID_KNOWN_TYPE);
 }
 
 bool item_type_tried(const item_def& item)
@@ -2056,25 +2042,7 @@ bool item_type_tried(const item_def& item)
         return (false);
     }
 
-    const item_type_id_type idt = objtype_to_idtype(item.base_type);
-    if (idt != NUM_IDTYPE)
-    {
-        return (type_ids[idt][item.sub_type] == ID_TRIED_TYPE
-                || type_ids[idt][item.sub_type] == ID_MON_TRIED_TYPE
-                || type_ids[idt][item.sub_type] == ID_TRIED_ITEM_TYPE);
-    }
-    else
-        return (false);
-}
-
-id_arr& get_typeid_array()
-{
-    return type_ids;
-}
-
-CrawlHashTable& get_type_id_props()
-{
-    return type_ids_props;
+    return (you.type_ids[item.base_type][item.sub_type] != ID_UNKNOWN_TYPE);
 }
 
 void set_ident_type(item_def &item, item_type_id_state_type setting,
@@ -2115,15 +2083,13 @@ void set_ident_type(object_class_type basetype, int subtype,
         return;
     }
 
-    const item_type_id_type idt = objtype_to_idtype(basetype);
+    if (!item_type_has_ids(basetype))
+        return;
 
-    if (idt != NUM_IDTYPE)
+    if (you.type_ids[basetype][subtype] != setting)
     {
-        if (type_ids[idt][subtype] != setting)
-        {
-            type_ids[idt][subtype] = setting;
-            request_autoinscribe();
-        }
+        you.type_ids[basetype][subtype] = setting;
+        request_autoinscribe();
     }
 }
 
@@ -2137,11 +2103,10 @@ item_type_id_state_type get_ident_type(const item_def &item)
 
 item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)
 {
-    const item_type_id_type idt = objtype_to_idtype(basetype);
-    if (idt != NUM_IDTYPE && subtype < type_ids.height())
-        return type_ids[idt][subtype];
-    else
+    if (!item_type_has_ids(basetype))
         return ID_UNKNOWN_TYPE;
+    ASSERT(subtype < MAX_SUBTYPES);
+    return you.type_ids[basetype][subtype];
 }
 
 class DiscEntry : public InvEntry

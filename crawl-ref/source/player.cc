@@ -5510,6 +5510,8 @@ void player::init()
     beholders.clear();
     fearmongers.clear();
     dactions.clear();
+    type_ids.init(ID_UNKNOWN_TYPE);
+    type_id_props.clear();
 
     zotdef_wave_name.clear();
     last_mid = 0;

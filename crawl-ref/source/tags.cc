@@ -1192,26 +1192,34 @@ static void tag_construct_you_items(writer &th)
 
     // Item descrip for each type & subtype.
     // how many types?
-    marshallByte(th, NUM_IDESC);
+    marshallUByte(th, NUM_IDESC);
     // how many subtypes?
-    marshallByte(th, 50);
+    marshallUByte(th, MAX_SUBTYPES);
     for (i = 0; i < NUM_IDESC; ++i)
-        for (j = 0; j < 50; ++j)
+        for (j = 0; j < MAX_SUBTYPES; ++j)
             marshallByte(th, you.item_description[i][j]);
 
-    // Identification status.
-    const id_arr& identy(get_typeid_array());
+#if TAG_MAJOR_VERSION == 32
     // how many types?
-    marshallUByte(th, identy.width());
+    j = 0;
+    for (i = 0; i < NUM_OBJECT_CLASSES; i++)
+        if (item_type_has_ids((object_class_type)i))
+            j++;
+    marshallUByte(th, j);
     // how many subtypes?
-    marshallUByte(th, identy.height());
+    marshallUByte(th, MAX_SUBTYPES); // already checked above
+#endif
 
-    for (i = 0; i < identy.width(); ++i)
-        for (j = 0; j < identy.height(); ++j)
-            marshallUByte(th, identy[i][j]);
+    for (i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    {
+        if (!item_type_has_ids((object_class_type)i))
+            continue;
+        for (j = 0; j < MAX_SUBTYPES; ++j)
+            marshallUByte(th, you.type_ids[i][j]);
+    }
 
     // Additional identification info
-    get_type_id_props().write(th);
+    you.type_id_props.write(th);
 
     // how many unique items?
     marshallByte(th, MAX_UNRANDARTS);
@@ -1824,45 +1832,30 @@ static void tag_read_you_items(reader &th)
     count = unmarshallByte(th);
     // how many subtypes?
     count2 = unmarshallByte(th);
+    ASSERT(count2 == MAX_SUBTYPES); // if not, initialize the rest
     for (i = 0; i < count; ++i)
         for (j = 0; j < count2; ++j)
             you.item_description[i][j] = unmarshallByte(th);
 
     // Identification status.
+#if TAG_MAJOR_VERSION == 32
     // how many types?
     count = unmarshallByte(th);
     // how many subtypes?
     count2 = unmarshallByte(th);
+#endif
 
-    // Argh... this is awful!
-    for (i = 0; i < count; ++i)
-        for (j = 0; j < count2; ++j)
-        {
-            const item_type_id_state_type ch =
+    for (i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    {
+        if (!item_type_has_ids((object_class_type)i))
+            continue;
+        for (j = 0; j < MAX_SUBTYPES; ++j)
+            you.type_ids[i][j] =
                 static_cast<item_type_id_state_type>(unmarshallByte(th));
-
-            switch (i)
-            {
-                case IDTYPE_WANDS:
-                    set_ident_type(OBJ_WANDS, j, ch);
-                    break;
-                case IDTYPE_SCROLLS:
-                    set_ident_type(OBJ_SCROLLS, j, ch);
-                    break;
-                case IDTYPE_JEWELLERY:
-                    set_ident_type(OBJ_JEWELLERY, j, ch);
-                    break;
-                case IDTYPE_POTIONS:
-                    set_ident_type(OBJ_POTIONS, j, ch);
-                    break;
-                case IDTYPE_STAVES:
-                    set_ident_type(OBJ_STAVES, j, ch);
-                    break;
-            }
-        }
+    }
 
     // Additional identification info
-    get_type_id_props().read(th);
+    you.type_id_props.read(th);
 
     // how many unique items?
     count = unmarshallByte(th);
