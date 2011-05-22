@@ -973,7 +973,7 @@ static void _describe_cards(std::vector<card_type> cards)
 
         name = uppercase_first(name);
         data << "<w>" << name << "</w>\n"
-             << get_linebreak_string(desc, get_number_of_cols())
+             << get_linebreak_string(desc, get_number_of_cols() - 1)
              << "\n";
     }
     formatted_string fs = formatted_string::parse_string(data.str());
