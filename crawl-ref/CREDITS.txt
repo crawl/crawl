@@ -56,18 +56,18 @@ Henry Cipolla                Jukka Kuusisto               Edgar Simo
 Aaron Curtis                 Maciej Lapinski              Alex Smith
 Denzi                        Jordan Lewis                 Solf
 Mike Drinen                  Icy Lich                     Michael Spang
-Kieron Dunbar                Markus Maier                 Johan Strandell
-Micha Elsner                 Arien Malec                  Pavel 'Curio' Svinarchuk
-Carl-Oscar Erneholm          Paul Maloney                 Matthew Tadd
-Christopher Evenstar         Wille Mäntylä                William Tanksley, Jr.
-Brett Foster                 James 'Eronarn' Meickle      Jared 'Twinge' Tinney
-Chris Galardi                Andrew Minton                Matt Titus
-Ben Goetter                  Shawn M Moore                Steven Wheeler
-Rob Grant                    Eva Myers                    Thomas Willem
-John Greenberg               Erkki Nurmi                  Evan Williams
-GreyKnight                   Mattias Nyberg               Jeremey Wilson
-Joshua Gross                 nyra                         Yelve Yakut
-Brian Haase                  Dylan O'Donnell              Zooko
-Shayne Halvorson             Yuuma Oohara
+Kieron Dunbar                Markus Maier                 Jan 'heftig' Steffens
+Micha Elsner                 Arien Malec                  Johan Strandell
+Carl-Oscar Erneholm          Paul Maloney                 Pavel 'Curio' Svinarchuk
+Christopher Evenstar         Wille Mäntylä                Matthew Tadd
+Brett Foster                 James 'Eronarn' Meickle      William Tanksley, Jr.
+Chris Galardi                Andrew Minton                Jared 'Twinge' Tinney
+Ben Goetter                  Shawn M Moore                Matt Titus
+Rob Grant                    Eva Myers                    Steven Wheeler
+John Greenberg               Erkki Nurmi                  Thomas Willem
+GreyKnight                   Mattias Nyberg               Evan Williams
+Joshua Gross                 nyra                         Jeremey Wilson
+Brian Haase                  Dylan O'Donnell              Yelve Yakut
+Shayne Halvorson             Yuuma Oohara                 Zooko
 Sophie Hamilton              Malwyn P
 
