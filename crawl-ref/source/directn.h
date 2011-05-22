@@ -312,6 +312,6 @@ std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
 void full_describe_view(void);
 
-extern const struct coord_def Compass[8];
+extern const struct coord_def Compass[9];
 
 #endif

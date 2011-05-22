@@ -168,10 +168,11 @@ void world_reacts();
 static key_recorder repeat_again_rec;
 
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
-const struct coord_def Compass[8] =
+const struct coord_def Compass[9] =
 {
     coord_def(0, -1), coord_def(1, -1), coord_def(1, 0), coord_def(1, 1),
     coord_def(0, 1), coord_def(-1, 1), coord_def(-1, 0), coord_def(-1, -1),
+    coord_def(0, 0)
 };
 
 // Functions in main module
