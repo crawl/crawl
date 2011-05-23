@@ -6594,7 +6594,10 @@ static const char *enchant_names[] =
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "levitation",
-    "helpless", "liquefying", "perm_tornado", "fake_abjuration",
+#if TAG_MAJOR_VERSION == 32
+    "helpless",
+#endif
+    "liquefying", "perm_tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "buggy",
 };

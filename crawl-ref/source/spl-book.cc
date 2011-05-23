@@ -431,9 +431,9 @@ void mark_had_book(const item_def &book)
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
     {
-        god_type god;
         const int level = book.plus;
 #if TAG_MAJOR_VERSION == 32
+        god_type god;
         if (level > 0 && level <= 9)
         {
             if (origin_is_acquirement(book)
