@@ -22,4 +22,5 @@ bool is_level_incorruptible();
 bool lugonu_corrupt_level(int power);
 void run_corruption_effects(int duration);
 
+void push_features_to_abyss();
 #endif
