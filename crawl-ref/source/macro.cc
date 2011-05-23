@@ -575,6 +575,11 @@ bool is_processing_macro()
     return (macro_keys_left >= 0);
 }
 
+bool has_pending_input()
+{
+    return !Buffer.empty() && !SendKeysBuffer.empty();
+}
+
 /*
  * Command macros are only applied from the immediate front of the
  * buffer, and only when the game is expecting a command.

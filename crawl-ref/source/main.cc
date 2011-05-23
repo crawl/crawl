@@ -1179,7 +1179,7 @@ static void _input()
     {
         clear_macro_process_key_delay();
 
-        if (!is_processing_macro() && !kbhit())
+        if (!has_pending_input() && !kbhit())
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
