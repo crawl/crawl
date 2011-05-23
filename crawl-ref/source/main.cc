@@ -1179,7 +1179,7 @@ static void _input()
     {
         clear_macro_process_key_delay();
 
-        if (!is_processing_macro())
+        if (!is_processing_macro() && !kbhit())
             clua.callfn("ready", 0);
 
         // Flush messages and display message window.
