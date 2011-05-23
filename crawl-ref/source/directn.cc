@@ -103,7 +103,8 @@ static void _wizard_make_friendly(monster* m);
 #endif
 static void _describe_feature(const coord_def& where, bool oos);
 static void _describe_cell(const coord_def& where, bool in_range = true);
-static void _print_cloud_desc(const coord_def where, bool &cloud_described);
+static bool _print_cloud_desc(const coord_def where);
+static bool _print_item_desc(const coord_def where, bool under_mimic);
 
 static bool _find_object(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
@@ -414,7 +415,8 @@ void direction_chooser::describe_cell() const
         if (just_looking || show_floor_desc)
         {
             print_floor_description(true);
-            _print_cloud_desc(target(), did_cloud);
+            if (!did_cloud)
+                _print_cloud_desc(target());
         }
     }
 
@@ -450,28 +452,21 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 // (Unless flying!)
 static bool _mon_exposed_in_water(const monster* mon)
 {
-    if (!mon)
-        return (false);
-
     return (grd(mon->pos()) == DNGN_SHALLOW_WATER
-            && you.see_cell(mon->pos())
-            && !mon->visible_to(&you)
             && !mons_flies(mon));
 }
 
 static bool _mon_exposed_in_cloud(const monster* mon)
 {
-    if (!mon)
-        return (false);
-
-    return (!mon->visible_to(&you)
-            && you.see_cell(mon->pos())
-            && is_opaque_cloud(env.cgrid(mon->pos()))
+    return (is_opaque_cloud(env.cgrid(mon->pos()))
             && !mon->is_insubstantial());
 }
 
 static bool _mon_exposed(const monster* mon)
 {
+    if (!mon || !you.see_cell(mon->pos()) || mon->visible_to(&you))
+        return (false);
+
     return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
 }
 
@@ -3791,7 +3786,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
     return desc;
 }
 
-static void _print_cloud_desc(const coord_def where, bool &cloud_described)
+static bool _print_cloud_desc(const coord_def where)
 {
     if (is_sanctuary(where))
     {
@@ -3801,15 +3796,37 @@ static void _print_cloud_desc(const coord_def where, bool &cloud_described)
     else if (silenced(where))
         mpr("This square is shrouded in silence.");
 
-    if (!cloud_described && env.cgrid(where) != EMPTY_CLOUD)
+    if (env.cgrid(where) == EMPTY_CLOUD)
+        return false;
+
+    mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
+         cloud_name_at_index(env.cgrid(where)).c_str());
+    return true;
+}
+
+static bool _print_item_desc(const coord_def where, bool under_mimic)
+{
+    int targ_item = you.visible_igrd(where);
+
+    if (targ_item == NON_ITEM)
+        return false;
+
+    // If a mimic is on this square, we pretend it's the first item - bwr
+    if (under_mimic)
+        mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
+    else
     {
-        const int cloud_inspected = env.cgrid(where);
+        std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
+                                                       DESC_NOCAP_A);
+        mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
-        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud_name_at_index(cloud_inspected).c_str());
-
-        cloud_described = true;
+        if (mitm[ targ_item ].link != NON_ITEM)
+        {
+            mprf(MSGCH_FLOOR_ITEMS,
+                 "There is something else lying underneath.");
+        }
     }
+    return true;
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -3862,32 +3879,38 @@ static void _describe_cell(const coord_def& where, bool in_range)
 {
     bool mimic_item = false;
     bool mimic_feat = false;
+#ifndef DEBUG_DIAGNOSTICS
     bool monster_described = false;
-    bool cloud_described = false;
-    bool item_described = false;
+#endif
 
     if (where == you.pos() && !crawl_state.arena_suspended)
         mpr("You.", MSGCH_EXAMINE_FILTER);
 
     if (const monster* mon = monster_at(where))
     {
-        if (_mon_exposed_in_water(mon))
-        {
-            mpr("There is a strange disturbance in the water here.",
-                MSGCH_EXAMINE_FILTER);
-        }
-        else if (_mon_exposed_in_cloud(mon))
-        {
-            mpr("There is a strange disturbance in the cloud here.",
-                MSGCH_EXAMINE_FILTER);
-        }
-
 #ifdef DEBUG_DIAGNOSTICS
         if (!mon->visible_to(&you))
-            mpr("There is a non-visible monster here.", MSGCH_DIAGNOSTICS);
+        {
+            mprf(MSGCH_DIAGNOSTICS, "There is a non-visible %smonster here.",
+                 _mon_exposed_in_water(mon) ? "exposed by water " :
+                 _mon_exposed_in_cloud(mon) ? "exposed by cloud " : "");
+        }
 #else
         if (!mon->visible_to(&you))
+        {
+            if (_mon_exposed_in_water(mon))
+            {
+                mpr("There is a strange disturbance in the water here.",
+                    MSGCH_EXAMINE_FILTER);
+            }
+            else if (_mon_exposed_in_cloud(mon))
+            {
+                mpr("There is a strange disturbance in the cloud here.",
+                    MSGCH_EXAMINE_FILTER);
+            }
+
             goto look_clouds;
+        }
 #endif
 
         if (mons_is_unknown_mimic(mon))
@@ -3899,12 +3922,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
                                                     DESC_NOCAP_A);
                 mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
                 mimic_item = true;
-                item_described = true;
             }
             else
-            {
                 mimic_feat = true;
-            }
         }
         else
         {
@@ -3916,7 +3936,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
                      mon->pronoun(PRONOUN_CAP).c_str());
             }
+#ifndef DEBUG_DIAGNOSTICS
             monster_described = true;
+#endif
         }
 
 #if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
@@ -3934,38 +3956,19 @@ static void _describe_cell(const coord_def& where, bool in_range)
         }
     }
 
-#ifndef DEBUG_DIAGNOSTICS
-  // removing warning
-  look_clouds:
-#endif
-
-    _print_cloud_desc(where, cloud_described);
-
-    int targ_item = you.visible_igrd(where);
-
-    if (targ_item != NON_ITEM)
-    {
-        // If a mimic is on this square, we pretend it's the first item - bwr
-        if (mimic_item)
-            mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
-        else
-        {
-            std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
-                                                           DESC_NOCAP_A);
-            mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
-
-            if (mitm[ targ_item ].link != NON_ITEM)
-            {
-                mprf(MSGCH_FLOOR_ITEMS,
-                     "There is something else lying underneath.");
-            }
-        }
-        item_described = true;
-    }
-
 #ifdef DEBUG_DIAGNOSTICS
+    _print_cloud_desc(where);
+    _print_item_desc(where, mimic_item);
+    if (mimic_feat)
+        mprf("Feature mimic: %s", feature_description(where, true).c_str());
     _debug_describe_feature_at(where);
 #else
+  // removing warning
+  look_clouds:
+
+    bool cloud_described = _print_cloud_desc(where);
+    bool item_described = _print_item_desc(where, mimic_item) || mimic_item;
+
     std::string feature_desc = feature_description(where, true);
     const bool bloody = is_bloodcovered(where);
     if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
@@ -4006,9 +4009,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         msg_channel_type channel = MSGCH_EXAMINE;
         if (feat == DNGN_FLOOR || feat_is_water(feat))
-        {
             channel = MSGCH_EXAMINE_FILTER;
-        }
 
         mpr(feature_desc.c_str(), channel);
     }
