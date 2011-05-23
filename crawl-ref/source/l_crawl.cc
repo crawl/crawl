@@ -118,6 +118,18 @@ static int crawl_set_more_autoclear(lua_State *ls)
     return (0);
 }
 
+static int crawl_enable_more(lua_State *ls)
+{
+    if (lua_isnone(ls, 1))
+    {
+        luaL_argerror(ls, 1, "needs a boolean argument");
+        return (0);
+    }
+    crawl_state.show_more_prompt = lua_toboolean(ls, 1);
+
+    return (0);
+}
+
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
@@ -643,6 +655,7 @@ static const struct luaL_reg crawl_clib[] =
     { "stderr",  crawl_stderr },
     { "more",           crawl_more },
     { "more_autoclear", crawl_set_more_autoclear },
+    { "enable_more",    crawl_enable_more },
     { "flush_prev_message", crawl_flush_prev_message },
     { "mesclr",         crawl_mesclr },
     { "delay",          crawl_delay },
