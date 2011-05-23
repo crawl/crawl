@@ -18,6 +18,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "abyss.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -661,6 +662,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
 
+    push_features_to_abyss();
     down_stairs(gate_type, you.entry_cause);  // heh heh
 }
 
