@@ -1379,6 +1379,13 @@ static void _go_upstairs()
         return;
     }
 
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT
+        && you.level_type_name.find("Ziggurat") != std::string::npos)
+    {
+        if (!yesno("Are you sure you want to leave this Ziggurat?"))
+            return;
+    }
+
     const bool leaving_dungeon =
         level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1);
 
