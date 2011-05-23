@@ -279,7 +279,7 @@ Depending on your Invocations skill, heal a small amount of hit points.
 %%%%
 Purification
 
-Purge your body of bad effects such as sickness, poisoning, slowness, confusion and rotting.
+Purge your body of bad effects such as sickness, poisoning, slowness, petrification, confusion and rotting.
 %%%%
 Greater Healing
 
