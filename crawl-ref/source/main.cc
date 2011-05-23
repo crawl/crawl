@@ -1177,10 +1177,13 @@ static void _input()
     repeat_again_rec.paused = crawl_state.is_replaying_keys();
 
     {
+        clear_macro_process_key_delay();
+
+        if (!is_processing_macro())
+            clua.callfn("ready", 0);
+
         // Flush messages and display message window.
         msgwin_new_cmd();
-
-        clear_macro_process_key_delay();
 
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
