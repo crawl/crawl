@@ -2005,6 +2005,8 @@ bool item_type_known(const item_def& item)
         return (true);
     }
 
+    if (!item_type_has_ids(item.base_type))
+        return false;
     return (you.type_ids[item.base_type][item.sub_type] == ID_KNOWN_TYPE);
 }
 
@@ -2021,6 +2023,8 @@ bool item_type_unknown(const item_def& item)
 
 bool item_type_known(const object_class_type base_type, const int sub_type)
 {
+    if (!item_type_has_ids(base_type))
+        return false;
     return (you.type_ids[base_type][sub_type] == ID_KNOWN_TYPE);
 }
 
@@ -2040,6 +2044,8 @@ bool item_type_tried(const item_def& item)
         return (false);
     }
 
+    if (!item_type_has_ids(item.base_type))
+        return false;
     return (you.type_ids[item.base_type][item.sub_type] != ID_UNKNOWN_TYPE);
 }
 
