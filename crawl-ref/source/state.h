@@ -82,6 +82,7 @@ struct game_state
     command_type    prev_repeat_cmd;
     int             prev_cmd_repeat_goal;
     bool            cmd_repeat_started_unsafe;
+    int             lua_calls_no_turn;
 
     std::vector<std::string> startup_errors;
 

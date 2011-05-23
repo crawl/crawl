@@ -1180,7 +1180,12 @@ static void _input()
         clear_macro_process_key_delay();
 
         if (!is_processing_macro() && !kbhit())
-            clua.callfn("ready", 0);
+        {
+            if (++crawl_state.lua_calls_no_turn > 1000)
+                mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
+            else
+                clua.callfn("ready", 0);
+        }
 
         // Flush messages and display message window.
         msgwin_new_cmd();
@@ -3077,6 +3082,7 @@ void world_reacts()
         record_turn_timestamp();
         update_turn_count();
         msgwin_new_turn();
+        crawl_state.lua_calls_no_turn = 0;
         if (crawl_state.game_is_sprint()
             && !(you.num_turns % 256)
             && !you_are_delayed())
