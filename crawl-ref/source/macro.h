@@ -74,6 +74,7 @@ void add_key_recorder(key_recorder* recorder);
 void remove_key_recorder(key_recorder* recorder);
 
 bool is_processing_macro();
+bool has_pending_input();
 
 int get_macro_buf_size();
 
