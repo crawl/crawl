@@ -18,16 +18,6 @@ struct item_types_pair
     uint8_t           sub_type;
 };
 
-enum item_type_id_type
-{
-    IDTYPE_WANDS = 0,
-    IDTYPE_SCROLLS,
-    IDTYPE_JEWELLERY,
-    IDTYPE_POTIONS,
-    IDTYPE_STAVES,
-    NUM_IDTYPE
-};
-
 // [dshaligram] If you edit potion colours/descriptions, also update
 // itemname.cc.
 enum potion_description_colour_type
