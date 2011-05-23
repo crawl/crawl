@@ -3832,7 +3832,7 @@ tileidx_t tileidx_item(const item_def &item)
             return _tileidx_armour(item);
 
     case OBJ_WANDS:
-        if (you.type_ids[ IDTYPE_WANDS ][type] == ID_KNOWN_TYPE
+        if (you.type_ids[OBJ_WANDS][type] == ID_KNOWN_TYPE
             ||  (item.flags & ISFLAG_KNOW_TYPE))
         {
             return TILE_WAND_ID_FIRST + type;
@@ -3844,7 +3844,7 @@ tileidx_t tileidx_item(const item_def &item)
         return _tileidx_food(item);
 
     case OBJ_SCROLLS:
-        if (you.type_ids[ IDTYPE_SCROLLS ][type] == ID_KNOWN_TYPE
+        if (you.type_ids[OBJ_SCROLLS][type] == ID_KNOWN_TYPE
             ||  (item.flags & ISFLAG_KNOW_TYPE))
         {
             return TILE_SCR_ID_FIRST + type;
@@ -3861,7 +3861,7 @@ tileidx_t tileidx_item(const item_def &item)
         {
             if (is_artefact(item))
                 return TILE_RING_RANDOM_OFFSET + colour - 1;
-            else if (you.type_ids[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
+            else if (you.type_ids[OBJ_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_RING_ID_FIRST + type - RING_FIRST_RING;
@@ -3873,7 +3873,7 @@ tileidx_t tileidx_item(const item_def &item)
         {
             if (is_artefact(item))
                 return TILE_AMU_RANDOM_OFFSET + colour - 1;
-            else if (you.type_ids[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
+            else if (you.type_ids[OBJ_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
@@ -3884,7 +3884,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_POTIONS:
 
-        if (you.type_ids[ IDTYPE_POTIONS ][type] == ID_KNOWN_TYPE
+        if (you.type_ids[OBJ_POTIONS][type] == ID_KNOWN_TYPE
             ||  (item.flags & ISFLAG_KNOW_TYPE))
         {
             return TILE_POT_ID_FIRST + type;
@@ -3916,7 +3916,7 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_STAVES:
         if (item_is_rod(item))
         {
-            if (you.type_ids[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
+            if (you.type_ids[OBJ_STAVES][type] == ID_KNOWN_TYPE
                 || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_ROD_ID_FIRST + type - STAFF_SMITING;
@@ -3927,7 +3927,7 @@ tileidx_t tileidx_item(const item_def &item)
         }
         else
         {
-            if (you.type_ids[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
+            if (you.type_ids[OBJ_STAVES][type] == ID_KNOWN_TYPE
                 || (item.flags & ISFLAG_KNOW_TYPE))
             {
                 return TILE_STAFF_ID_FIRST + type;
