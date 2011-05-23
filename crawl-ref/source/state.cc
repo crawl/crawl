@@ -36,7 +36,7 @@ game_state::game_state()
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
       repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
-      level_annotation_shown(false),
+      lua_calls_no_turn(0), level_annotation_shown(false),
 #ifndef USE_TILE
       mlist_targeting(false),
 #else
