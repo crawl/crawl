@@ -1224,12 +1224,11 @@ bool zin_vitalisation()
 
     // Remove negative afflictions.
     if (you.disease || you.rotting || you.confused()
-        || you.duration[DUR_PARALYSIS] || you.duration[DUR_POISONING]
-        || you.petrified())
+        || you.petrifying() || you.duration[DUR_POISONING])
     {
         do
         {
-            switch (random2(6))
+            switch (random2(5))
             {
             case 0:
                 if (you.disease)
@@ -1249,13 +1248,10 @@ bool zin_vitalisation()
                 success = _kill_duration(DUR_CONF);
                 break;
             case 3:
-                success = _kill_duration(DUR_PARALYSIS);
-                break;
-            case 4:
                 success = _kill_duration(DUR_POISONING);
                 break;
-            case 5:
-                success = _kill_duration(DUR_PETRIFIED);
+            case 4:
+                success = _kill_duration(DUR_PETRIFYING);
                 break;
             }
         }
@@ -1415,8 +1411,7 @@ void elyvilon_purification()
     you.duration[DUR_POISONING] = 0;
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
-    you.duration[DUR_PARALYSIS] = 0;          // can't currently happen -- bwr
-    you.duration[DUR_PETRIFIED] = 0;
+    you.duration[DUR_PETRIFYING] = 0;
 }
 
 bool elyvilon_divine_vigour()
