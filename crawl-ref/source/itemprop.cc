@@ -448,11 +448,12 @@ static food_def Food_prop[NUM_FOODS] =
 // be accessed correctly.
 void init_properties()
 {
-    // Compare with enum comments, to catch changes.
-    COMPILE_CHECK(NUM_ARMOURS  == 39, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
-    COMPILE_CHECK(NUM_MISSILES ==  9, c3);
-    COMPILE_CHECK(NUM_FOODS    == 23, c4);
+    // The compiler would complain about too many initializers but not
+    // about too few, check it by hand:
+    COMPILE_CHECK(NUM_ARMOURS  == ARRAYSZ(Armour_prop), c1);
+    COMPILE_CHECK(NUM_WEAPONS  == ARRAYSZ(Weapon_prop), c2);
+    COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop), c3);
+    COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop), c4);
 
     int i;
 
