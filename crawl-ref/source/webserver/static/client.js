@@ -274,16 +274,22 @@ function lobby_update()
     socket.send("UpdateLobby");
 }
 
-function crawl_ended()
-{
-    set_layer("lobby");
-    current_layout = undefined;
-}
-
 var watching = false;
 function set_watching(val)
 {
     watching = val;
+}
+
+var playing = false;
+function crawl_started()
+{
+    playing = true;
+}
+function crawl_ended()
+{
+    set_layer("lobby");
+    current_layout = undefined;
+    playing = false;
 }
 
 function hash_changed()
