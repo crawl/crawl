@@ -253,6 +253,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                      self.username, self.request.remote_ip, self.p.stdin.fileno(),
                      self.p.stdout.fileno(), self.p.stderr.fileno(), self.client_prefix)
 
+        self.write_message("crawl_started();")
+
         self.create_mock_ttyrec()
 
         update_global_status()
