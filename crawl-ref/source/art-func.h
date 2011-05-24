@@ -599,3 +599,36 @@ static void _DEMON_AXE_unequip(const item_def *item, bool *show_msgs)
         mpr("Your thirst for blood fades away.");
     }
 }
+
+///////////////////////////////////////////////////
+
+static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied)
+{
+    if (!mondied || !defender || !is_dragonkind(defender))
+        return;
+    if (defender->atype() != ACT_MONSTER)
+    {
+        // can't currently happen even on a death blow
+        mpr("<green>You see the lance glow as it kills you.</green>");
+        return;
+    }
+    // The cap can be reached by:
+    // * iron dragon, golden dragon, pearl dragon (18)
+    // * Xtahua (19)
+    // * bone dragon, Serpent of Hell (20)
+    // * Tiamat (22)
+    // * pghosts (up to 27)
+    int hd = std::min(defender->as_monster()->hit_dice, 18);
+    dprf("Killed a drac with hd %d.", hd);
+    bool boosted = false;
+    if (weapon->plus < hd)
+        weapon->plus++, boosted = true;
+    if (weapon->plus2 < hd)
+        weapon->plus2++, boosted = true;
+    if (boosted)
+    {
+        mpr("<green>The lance glows as it skewers the body.</green>");
+        you.wield_change = true;
+    }
+}
