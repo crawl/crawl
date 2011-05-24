@@ -22,28 +22,32 @@ games = OrderedDict([
         crawl_binary = "./crawl",
         rcfile_path = "./rcs/",
         macro_path = "./rcs/",
-        morgue_path = "./rcs")),
+        morgue_path = "./rcs",
+        client_prefix = "game")),
     ("sprint-web-trunk", dict(
         name = "Sprint trunk",
         crawl_binary = "./crawl",
         rcfile_path = "./rcs/",
         macro_path = "./rcs/",
         morgue_path = "./rcs",
-        options = ["-sprint"])),
+        options = ["-sprint"],
+        client_prefix = "game")),
     ("zd-web-trunk", dict(
         name = "Zot Defense trunk",
         crawl_binary = "./crawl",
         rcfile_path = "./rcs/",
         macro_path = "./rcs/",
         morgue_path = "./rcs",
-        options = ["-zotdef"])),
+        options = ["-zotdef"],
+        client_prefix = "game")),
     ("tut-web-trunk", dict(
         name = "Tutorial trunk",
         crawl_binary = "./crawl",
         rcfile_path = "./rcs/",
         macro_path = "./rcs/",
         morgue_path = "./rcs",
-        options = ["-tutorial"])),
+        options = ["-tutorial"],
+        client_prefix = "game")),
 ])
 
 running_game_path = "./rcs/running/"
