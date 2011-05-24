@@ -244,14 +244,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                   stdout = subprocess.PIPE,
                                   stderr = subprocess.PIPE)
 
-        logging.info("Starting crawl for user %s (ip %s, fds %s,%s,%s, client version %s).",
-                     self.username, self.request.remote_ip, self.p.stdin.fileno(),
-                     self.p.stdout.fileno(), self.p.stderr.fileno(), client_prefix)
-
         self.ioloop.add_handler(self.p.stdout.fileno(), self.on_stdout,
                                 self.ioloop.READ | self.ioloop.ERROR)
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
                                 self.ioloop.READ | self.ioloop.ERROR)
+
+        logging.info("Starting crawl for user %s (ip %s, fds %s,%s,%s, client version %s).",
+                     self.username, self.request.remote_ip, self.p.stdin.fileno(),
+                     self.p.stdout.fileno(), self.p.stderr.fileno(), self.client_prefix)
 
         self.create_mock_ttyrec()
 
