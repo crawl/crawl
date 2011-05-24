@@ -2048,6 +2048,10 @@ static void _prep_input()
     print_stats();
 
     viewwindow();
+    maybe_update_stashes();
+    if (check_for_interesting_features() && you.running.is_explore())
+            stop_running();
+
 
     if (you.seen_portals)
     {
@@ -2969,10 +2973,6 @@ void world_reacts()
 {
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
-
-    maybe_update_stashes();
-    if (check_for_interesting_features() && you.running.is_explore())
-            stop_running();
 
     update_monsters_in_view();
 
