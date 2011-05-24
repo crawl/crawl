@@ -84,5 +84,6 @@ uint32_t get_uint32()
 
 void seed_asg(uint32_t seed_array[], int seed_len)
 {
+    delete asg_rng;
     asg_rng = new AsgKISS(seed_array, seed_len);
 }
