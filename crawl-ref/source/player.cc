@@ -2831,7 +2831,6 @@ void level_change(bool skip_attribute_increase)
         const int old_hp = you.hp;
         const int old_maxhp = you.hp_max;
 
-        int hp_adjust = 0;
         int mp_adjust = 0;
 
         // [ds] Make sure we increment you.experience_level and apply
@@ -2871,17 +2870,8 @@ void level_change(bool skip_attribute_increase)
             if (!(new_exp % 3) && !skip_attribute_increase)
                 attribute_increase();
 
-            int brek = 0;
-
-            if (new_exp > 21)
-                brek = 2 + new_exp % 2;
-            else if (new_exp > 12)
-                brek = 4;                  // up from 2 + rand(3) -- bwr
-            else
-                brek = 5 + new_exp % 2;    // up from 3 + rand(4) -- bwr
-
             you.experience_level = new_exp;
-            inc_hp(brek, true);
+            inc_hp(5 + new_exp % 2, true);
             inc_mp(1, true);
 
             switch (you.species)
@@ -2892,9 +2882,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_HIGH_ELF:
-                if (you.experience_level % 3)
-                    hp_adjust--;
-
                 if (!(you.experience_level % 2))
                     mp_adjust++;
 
@@ -2907,12 +2894,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEEP_ELF:
-                if (you.experience_level < 17)
-                    hp_adjust--;
-
-                if (!(you.experience_level % 3))
-                    hp_adjust--;
-
                 mp_adjust++;
 
                 if (!(you.experience_level % 4))
@@ -2920,9 +2901,7 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_SLUDGE_ELF:
-                if (you.experience_level % 3)
-                    hp_adjust--;
-                else
+                if (!(you.experience_level % 3))
                     mp_adjust++;
 
                 if (!(you.experience_level % 4))
@@ -2934,9 +2913,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MOUNTAIN_DWARF:
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
                 if (!(you.experience_level % 3))
                     mp_adjust--;
 
@@ -2945,8 +2921,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEEP_DWARF:
-                hp_adjust++;
-
                 if (you.experience_level == 14)
                 {
                     mpr("You feel somewhat more resistant.",
@@ -2972,9 +2946,6 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_DEX, 1, false, "level gain");
 
-                if (you.experience_level % 3)
-                    hp_adjust--;
-
                 break;
 
             case SP_KOBOLD:
@@ -2985,21 +2956,9 @@ void level_change(bool skip_attribute_increase)
                                 "level gain");
                 }
 
-                if (you.experience_level < 17)
-                    hp_adjust--;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust--;
                 break;
 
             case SP_HILL_ORC:
-                // lower because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
                 if (!(you.experience_level % 3))
                     mp_adjust--;
 
@@ -3043,8 +3002,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_NAGA:
-                hp_adjust++;
-
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
@@ -3056,11 +3013,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_TROLL:
-                hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
                 if (you.experience_level % 3)
                     mp_adjust--;
 
@@ -3069,8 +3021,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_OGRE:
-                hp_adjust += 2;
-
                 if (!(you.experience_level % 3))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -3100,9 +3050,6 @@ void level_change(bool skip_attribute_increase)
             case SP_PURPLE_DRACONIAN:
             case SP_MOTTLED_DRACONIAN:
             case SP_PALE_DRACONIAN:
-                if (!(you.experience_level % 3))
-                    hp_adjust++;
-
                 if (!(you.experience_level % 3))
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
@@ -3141,13 +3088,6 @@ void level_change(bool skip_attribute_increase)
                                 "level gain");
                 }
 
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
                 if (!(you.experience_level % 3))
                     mp_adjust--;
                 break;
@@ -3156,24 +3096,11 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 2))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //    hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
                 if (you.experience_level % 3)
                     mp_adjust++;
                 break;
 
             case SP_SPRIGGAN:
-                if (you.experience_level < 17)
-                    hp_adjust--;
-
-                if (you.experience_level % 3)
-                    hp_adjust--;
-
                 mp_adjust++;
 
                 if (!(you.experience_level % 5))
@@ -3185,13 +3112,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MINOTAUR:
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
                 if (!(you.experience_level % 2))
                     mp_adjust--;
 
@@ -3261,13 +3181,6 @@ void level_change(bool skip_attribute_increase)
             }
 
             case SP_GHOUL:
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
                 if (!(you.experience_level % 3))
                     mp_adjust--;
 
@@ -3276,12 +3189,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_KENKU:
-                if (you.experience_level < 17)
-                    hp_adjust--;
-
-                if (!(you.experience_level % 3))
-                    hp_adjust--;
-
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
@@ -3300,9 +3207,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_CAT:
-                hp_adjust--;
-                hp_adjust--;
-
                 if (you.experience_level % 2)
                     mp_adjust++;
 
@@ -3392,8 +3296,7 @@ void level_change(bool skip_attribute_increase)
 #if TAG_MAJOR_VERSION == 32
         note_montiers();
 #endif
-        // add hp and mp adjustments - GDL
-        inc_max_hp(hp_adjust);
+        // add mp adjustments - GDL
         inc_max_mp(mp_adjust);
 
         deflate_hp(you.hp_max, false);
@@ -4598,8 +4501,7 @@ int get_real_hp(bool trans, bool rotted)
 
     hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
     // Important: we shouldn't add Heroism boosts here.
-    hitp += (you.experience_level * you.skills[SK_FIGHTING]) /
-            (you.species == SP_CAT ? 8 : 5);
+    hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 8;
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())

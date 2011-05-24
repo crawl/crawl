@@ -1625,6 +1625,48 @@ static void tag_read_you(reader &th)
 
     you.base_hp                   = unmarshallShort(th);
     you.base_hp2                  = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_NEW_HP)
+    {
+        switch (you.char_class)
+        {
+        case JOB_FIGHTER:
+        case JOB_BERSERKER:
+            you.base_hp2 = 15; break;
+
+        case JOB_GLADIATOR:
+            you.base_hp2 = 14; break;
+
+        case JOB_CRUSADER:
+        case JOB_CHAOS_KNIGHT:
+        case JOB_DEATH_KNIGHT:
+        case JOB_ABYSSAL_KNIGHT:
+        case JOB_HEALER:
+        case JOB_PRIEST:
+        case JOB_HUNTER:
+        case JOB_MONK:
+        case JOB_ARTIFICER:
+            you.base_hp2 = 13; break;
+
+        case JOB_ASSASSIN:
+        case JOB_STALKER:
+        case JOB_WARPER:
+        case JOB_TRANSMUTER:
+            you.base_hp2 = 12; break;
+
+        case JOB_WANDERER:
+            you.base_hp2 = 11; break;
+
+        case JOB_WIZARD:
+            you.base_hp2 = 8; break;
+
+        default:
+            you.base_hp2 = 10;
+        }
+        you.base_hp2 += (you.experience_level - 1) * 5.5;
+        you.base_hp2 += 5000;
+    }
+#endif
     you.base_magic_points         = unmarshallShort(th);
     you.base_magic_points2        = unmarshallShort(th);
 
@@ -1710,6 +1752,66 @@ static void tag_read_you(reader &th)
     }
     for (j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutations[j] = 0;
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_NEW_HP)
+    {
+        int robust = you.mutation[MUT_ROBUST] - you.mutation[MUT_FRAIL];
+        you.mutation[MUT_ROBUST] = you.mutation[MUT_FRAIL] = 0;
+        switch (you.species)
+        {
+        case SP_HILL_ORC:
+        case SP_MINOTAUR:
+        case SP_CENTAUR:
+        case SP_GHOUL:
+        case SP_DEMIGOD:
+        case SP_BASE_DRACONIAN:
+        case SP_MOUNTAIN_DWARF:
+            you.innate_mutations[MUT_ROBUST] = 1;
+            robust++;
+            break;
+        case SP_NAGA:
+        case SP_DEEP_DWARF:
+            you.innate_mutations[MUT_ROBUST] = 2;
+            robust += 2;
+            break;
+        case SP_OGRE:
+        case SP_TROLL:
+            you.innate_mutations[MUT_ROBUST] = 3;
+            robust += 3;
+            break;
+        case SP_HALFLING:
+        case SP_HIGH_ELF:
+        case SP_SLUDGE_ELF:
+            you.innate_mutations[MUT_FRAIL] = 1;
+            robust--;
+            break;
+        case SP_KENKU:
+        case SP_KOBOLD:
+        case SP_DEEP_ELF:
+            you.innate_mutations[MUT_FRAIL] = 2;
+            robust -= 2;
+            break;
+        case SP_SPRIGGAN:
+            you.innate_mutations[MUT_FRAIL] = 3;
+            robust -= 3;
+            break;
+        case SP_CAT:
+            you.innate_mutations[MUT_FRAIL] = 4;
+            robust -= 4;
+            break;
+        default:
+            break;
+        }
+
+        if (robust < 0)
+            you.mutation[MUT_FRAIL] = -robust;
+        else if (robust > 0)
+            you.mutation[MUT_ROBUST] = robust;
+
+        calc_hp();
+    }
+#endif
 
     count = unmarshallByte(th);
     ASSERT(count >= 0);
