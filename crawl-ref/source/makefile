@@ -931,14 +931,17 @@ ifdef WEBTILES
 webserver/static/%.png: dat/tiles/%.png
 	$(COPY) $< webserver/static/
 
-webserver/static/%.js: $(RLTILES)/%.js
-	$(COPY) $< webserver/static/
+webserver/static/game/%.png: dat/tiles/%.png
+	$(COPY) $< webserver/static/game/
+
+webserver/static/game/%.js: $(RLTILES)/%.js
+	$(COPY) $< webserver/static/game/
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
 
-STATICFILES = $(TILEIMAGEFILES:%=webserver/static/%.png) \
+STATICFILES = $(TILEIMAGEFILES:%=webserver/static/game/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
-              $(TILEINFOJS:%=webserver/static/tileinfo-%.js)
+              $(TILEINFOJS:%=webserver/static/game/tileinfo-%.js)
 
 .PHONY: webserver
 webserver: $(STATICFILES)

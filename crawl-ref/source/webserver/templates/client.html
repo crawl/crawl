@@ -4,18 +4,7 @@
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
     <script type="text/javascript" src="/static/jquery.js"></script>
-    <script type="text/javascript" src="/static/enums.js"></script>
     <script type="text/javascript" src="/static/key_conversion.js"></script>
-    <script type="text/javascript" src="/static/tile_cache.js"></script>
-    <script type="text/javascript" src="/static/tileinfo-floor.js"></script>
-    <script type="text/javascript" src="/static/tileinfo-wall.js"></script>
-    <script type="text/javascript" src="/static/tileinfo-feat.js"></script>
-    <script type="text/javascript" src="/static/tileinfo-dngn.js"></script>
-    <script type="text/javascript" src="/static/tileinfo-main.js"></script>
-    <script type="text/javascript" src="/static/tileinfo-player.js"></script>
-    <script type="text/javascript" src="/static/tileinfo-icons.js"></script>
-    <script type="text/javascript" src="/static/tileinfo-gui.js"></script>
-    <script type="text/javascript" src="/static/render.js"></script>
     <script type="text/javascript" src="/static/client.js"></script>
     <script type="text/javascript" src="/static/chat.js"></script>
     <script type="text/javascript">
@@ -70,41 +59,24 @@
     </div>
 
     <div id="game">
-      <div id="crt" style="display: none;"></div>
-      <div id="normal" style="display: none;">
-        <canvas id="dungeon"></canvas>
-        <div id="stats"></div>
-        <div id="messages"></div>
-      </div>
-
-      <div id="chat" style="display: none;">
-        <a href="javascript:toggle_chat();" id="chat_caption">
-          <span id="spectator_count">0 spectators</span>
-          <span id="message_count">0 new messages</span>
-        </a>
-
-        <div id="chat_body" style="display: none;">
-          <span id="spectator_list">&nbsp;</span>
-
-          <div id="chat_history_container">
-            <span id="chat_history"></span>
-          </div>
-
-          <input class="text" type="text" name="chat_input"
-                 id="chat_input" onkeydown="chat_message_send(event)"></input>
-        </div>
-      </div>
     </div>
 
-    <!-- Tile images -->
-    <div style="display: none;">
-      <img id="floor" src="/static/floor.png">
-      <img id="wall" src="/static/wall.png">
-      <img id="feat" src="/static/feat.png">
-      <img id="main" src="/static/main.png">
-      <img id="player" src="/static/player.png">
-      <img id="icons" src="/static/icons.png">
-      <img id="gui" src="/static/gui.png">
+    <div id="chat" style="display: none;">
+      <a href="javascript:toggle_chat();" id="chat_caption">
+        <span id="spectator_count">0 spectators</span>
+        <span id="message_count">0 new messages</span>
+      </a>
+
+      <div id="chat_body" style="display: none;">
+        <span id="spectator_list">&nbsp;</span>
+
+        <div id="chat_history_container">
+          <span id="chat_history"></span>
+        </div>
+
+        <input class="text" type="text" name="chat_input"
+               id="chat_input" onkeydown="chat_message_send(event)"></input>
+      </div>
     </div>
   </body>
 </html>

@@ -14,7 +14,7 @@ logging_config = {
 password_db = "./webserver/passwd.db3"
 
 static_path = "./webserver/static"
-template_path = "./webserver/"
+template_path = "./webserver/templates/"
 
 games = OrderedDict([
     ("dcss-web-trunk", dict(
