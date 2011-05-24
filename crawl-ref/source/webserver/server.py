@@ -218,14 +218,35 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if "options" in game:
             call += game["options"]
 
+        if "client_prefix" in game:
+            self.client_prefix = game["client_prefix"]
+        else:
+            # Check the crawl version and use that as prefix
+            try:
+                answer = subprocess.check_output(call + ["-version"])
+                match = re.match(r"Crawl version (.+)\n", answer)
+                if match == None:
+                    logging.warn("Could not determine crawl version: unexpected output! (user: %s)\n%s",
+                                 self.username, answer)
+                    self.game_id = None
+                    return
+                self.client_prefix = match.group(1)
+            except subprocess.CalledProcessError:
+                logging.warn("Could not determine crawl version: exit code != 0! (user: %s)",
+                             self.username)
+                self.game_id = None
+                return
+
+        self.send_client(self.client_prefix)
+
         self.p = subprocess.Popen(call,
                                   stdin = subprocess.PIPE,
                                   stdout = subprocess.PIPE,
                                   stderr = subprocess.PIPE)
 
-        logging.info("Starting crawl for user %s (ip %s, fds %s,%s,%s).",
+        logging.info("Starting crawl for user %s (ip %s, fds %s,%s,%s, client version %s).",
                      self.username, self.request.remote_ip, self.p.stdin.fileno(),
-                     self.p.stdout.fileno(), self.p.stderr.fileno())
+                     self.p.stdout.fileno(), self.p.stderr.fileno(), client_prefix)
 
         self.ioloop.add_handler(self.p.stdout.fileno(), self.on_stdout,
                                 self.ioloop.READ | self.ioloop.ERROR)
@@ -286,6 +307,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def add_watcher(self, watcher):
         self.watchers.add(watcher)
+        watcher.send_client(self.client_prefix)
         self.p.stdin.write("^r") # Redraw
         self.update_watcher_description()
 
@@ -314,6 +336,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message("set_watching(false);")
             self.write_message("set_layer('lobby');")
             self.update_lobby();
+
+    def send_client(self, client_prefix):
+        game_html = self.render_string(client_prefix + "/game.html", prefix = client_prefix)
+        self.write_message("$('#game').html(" +
+                           tornado.escape.json_encode(game_html) + ");")
 
     def shutdown(self):
         if not self.client_terminated:
@@ -381,12 +408,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.p or self.watched_game: return
             game_id = message[len("Play: "):]
             self.start_crawl(game_id)
-
-        elif message.startswith("LoadClient: "):
-            client_prefix = message[len("LoadClient: "):]
-            game_html = self.render_string(client_prefix + "/game.html", prefix = client_prefix)
-            self.write_message("$('#game').html(" +
-                               tornado.escape.json_encode(game_html) + ");")
 
         elif message == "Pong":
             self.received_pong = True

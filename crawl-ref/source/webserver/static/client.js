@@ -58,15 +58,6 @@ function set_layer(layer)
     lobby(layer == "lobby");
 }
 
-var current_game_client = undefined;
-function load_game_client(prefix)
-{
-    if (current_game_client == prefix) return;
-    current_game_client = prefix;
-
-    socket.send("LoadClient: " + prefix);
-}
-
 function handle_keypress(e)
 {
     if (current_layer == "lobby") return;
@@ -359,8 +350,6 @@ $(document).ready(
                     hash_changed();
 
                 start_login();
-
-                load_game_client("game");
             };
 
             socket.onmessage = function(msg)
