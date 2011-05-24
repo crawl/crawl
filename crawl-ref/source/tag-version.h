@@ -28,6 +28,7 @@ enum tag_minor_version
     TAG_MINOR_CHR_COMPAT,          // Future-compatible chr data.
     TAG_MINOR_ZOT_POINTS,          // Untie ZotDef power points from the xp pool.
     TAG_MINOR_TRAP_KNOWLEDGE,      // Save trap type in map_knowledge.
+    TAG_MINOR_NEW_HP,              // New HP formula.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
