@@ -145,7 +145,15 @@ int fdatasync(int fd)
 // as a symbol in the libraries without a proper header.
 int fdatasync(int fd)
 {
+# ifdef F_FULLFSYNC
+    // On MacOS X, fsync() doesn't even try to actually do what it was asked.
+    // Sane systems might have this problem only on disks that do write caching
+    // but ignore flush requests.  fsync() should never return before the disk
+    // claims the flush completed, but this is not the case on OS X.
+    return fcntl(fd, F_FULLFSYNC, 0);
+# else
     return fsync(fd);
+# endif
 }
 #endif
 
