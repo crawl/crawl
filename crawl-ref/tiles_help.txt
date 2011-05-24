@@ -130,10 +130,6 @@ machine.
 You can try tweaking a number of options in tiles_options.txt in the settings
 directory to see whether performance improves:
 
-tile_title_screen = false
-    For weak drivers, the title screen can take a long time to load. If this
-    bothers you, you can easily deactivate it.
-
 travel_delay = -1
     This setting suppresses redrawing until travelling is finished or
     interrupted.
