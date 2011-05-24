@@ -382,6 +382,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             game_id = message[len("Play: "):]
             self.start_crawl(game_id)
 
+        elif message.startswith("LoadClient: "):
+            client_prefix = message[len("LoadClient: "):]
+            game_html = self.render_string(client_prefix + "/game.html", prefix = client_prefix)
+            self.write_message("$('#game').html(" +
+                               tornado.escape.json_encode(game_html) + ");")
+
         elif message == "Pong":
             self.received_pong = True
 

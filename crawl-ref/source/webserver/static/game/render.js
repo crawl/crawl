@@ -665,6 +665,10 @@ function draw_foreground(x, y, cell)
 
 
 // Helper functions for drawing from specific textures
+function get_img(id)
+{
+    return $("#" + id)[0];
+}
 
 function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
 {
@@ -721,6 +725,71 @@ function draw_player(idx, cx, cy, ofsx, ofsy, y_max)
 function draw_icon(idx, cx, cy, ofsx, ofsy)
 {
     draw_tile(idx, cx, cy, "icons", get_icons_tile_info, ofsx, ofsy);
+}
+
+// Shifts the dungeon view by cx/cy cells.
+function shift(cx, cy)
+{
+    var x = cx * dungeon_cell_w;
+    var y = cy * dungeon_cell_h;
+
+    var w = dungeon_cols, h = dungeon_rows;
+
+    var sx, sy, dx, dy;
+
+    if (x > 0)
+    {
+        sx = x;
+        dx = 0;
+    }
+    else
+    {
+        sx = 0;
+        dx = -x;
+    }
+    if (y > 0)
+    {
+        sy = y;
+        dy = 0;
+    }
+    else
+    {
+        sy = 0;
+        dy = -y;
+    }
+    w = (w * dungeon_cell_w - abs(x));
+    h = (h * dungeon_cell_h - abs(y));
+
+    dungeon_ctx.drawImage($("#dungeon")[0], sx, sy, w, h, dx, dy, w, h);
+
+    dungeon_ctx.fillStyle = "black";
+    dungeon_ctx.fillRect(0, 0, w * dungeon_cell_w, dy);
+    dungeon_ctx.fillRect(0, dy, dx, h);
+    dungeon_ctx.fillRect(w, 0, sx, h * dungeon_cell_h);
+    dungeon_ctx.fillRect(0, h, w, sy);
+
+    // Shift the tile cache
+    shift_tile_cache(cx, cy);
+
+    // Shift cursors
+    $.each(cursor_locs, function(type, loc)
+           {
+               if (loc)
+               {
+                   loc.x -= cx;
+                   loc.y -= cy;
+               }
+           });
+
+    // Shift overlays
+    $.each(overlaid_locs, function(i, loc)
+           {
+               if (loc)
+               {
+                   loc.x -= cx;
+                   loc.y -= cy;
+               }
+           });
 }
 
 function obj_to_str (o)
