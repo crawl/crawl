@@ -462,6 +462,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.p is not None:
                 self.p.stdin.write(message.encode("utf8"))
 
+    def write_message(self, msg):
+        try:
+            super(CrawlWebSocket, self).write_message(msg)
+        except e:
+            logging.warn("Exception trying to send message to %s.",
+                         self.request.remote_ip, exc_info = True)
+            self._abort()
+
     def write_message_all(self, msg):
         if not self.client_terminated:
             self.write_message(msg)
