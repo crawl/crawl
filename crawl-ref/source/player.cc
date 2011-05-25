@@ -1960,6 +1960,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         // pearl dragon counts
         pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_ARMOUR);
+        pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_HIDE);
 
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
