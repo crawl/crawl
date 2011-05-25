@@ -1623,7 +1623,7 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
     if (victim->type == MONS_SIXFIRHY)
     {
         if (!beam.is_tracer)
-            victim->heal(10 + random2(15), false);
+            victim->heal(10 + random2(15));
         // physical damage is still done
     }
     else

@@ -201,8 +201,8 @@ static void _jobs_stat_init(job_type which_job)
     // experience level 3.
     you.last_chosen = (stat_type) random2(NUM_STATS);
 
-    set_hp(hp, true);
-    set_mp(mp, true);
+    you.base_hp2 = hp + 5000;
+    you.base_magic_points2 = mp + 5000;
 }
 
 // Make sure no stats are unacceptably low
@@ -1513,8 +1513,8 @@ static void _setup_generic(const newgame_def& ng)
     calc_mp();
 
     // Make sure the starting player is fully charged up.
-    set_hp(you.hp_max, false);
-    set_mp(you.max_magic_points, false);
+    set_hp(you.hp_max);
+    set_mp(you.max_magic_points);
 
     // tmpfile purging removed in favour of marking
     Generated_Levels.clear();

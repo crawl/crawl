@@ -898,7 +898,7 @@ void create_wanderer(void)
         mp_adjust++;
     if (secondary_role == STAT_INT)
         mp_adjust++;
-    set_mp(you.magic_points + mp_adjust, true);
+    you.base_magic_points2 += mp_adjust;
 
     // Keep track of what skills we got items from, mostly to prevent
     // giving a good and then a normal version of the same weapon.

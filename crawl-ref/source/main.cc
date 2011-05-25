@@ -2765,7 +2765,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     while (tmp >= 100)
     {
-        inc_hp(1, false);
+        inc_hp(1);
         tmp -= 100;
     }
 
@@ -2788,7 +2788,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     while (tmp >= 100)
     {
-        inc_mp(1, false);
+        inc_mp(1);
         tmp -= 100;
     }
 

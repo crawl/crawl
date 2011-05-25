@@ -338,7 +338,7 @@ static bool _ball_of_seeing(void)
     else if (use < 5 && enough_mp(1, true))
     {
         mpr("You feel your power drain away!");
-        set_mp(0, false);
+        set_mp(0);
         // if you're out of mana, the switch chain falls through to confusion
     }
     else if (use < 10 || you.level_type == LEVEL_LABYRINTH)
@@ -613,7 +613,7 @@ static bool _ball_of_energy(void)
     else if (use < 4 && enough_mp(1, true))
     {
         mpr("You feel your power drain away!");
-        set_mp(0, false);
+        set_mp(0);
     }
     else if (use < 6)
     {
@@ -631,12 +631,12 @@ static bool _ball_of_energy(void)
             || one_chance_in(25))
         {
             mpr("You feel your power drain away!");
-            set_mp(0, false);
+            set_mp(0);
         }
         else
         {
             mpr("You are suffused with power!");
-            inc_mp(6 + roll_dice(2, you.skill(SK_EVOCATIONS)), false);
+            inc_mp(6 + roll_dice(2, you.skill(SK_EVOCATIONS)));
 
             ret = true;
         }
@@ -744,7 +744,7 @@ bool evoke_item(int slot)
                      && x_chance_in_y(you.skill(SK_EVOCATIONS) + 11, 40))
             {
                 mpr("You channel some magical energy.");
-                inc_mp(1 + random2(3), false);
+                inc_mp(1 + random2(3));
                 make_hungry(50, false, true);
                 pract = 1;
                 did_work = true;

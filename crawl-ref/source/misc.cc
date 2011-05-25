@@ -2025,8 +2025,8 @@ void revive()
     you.stat_zero.init(0);
 
     unrot_hp(9999);
-    set_hp(9999, false);
-    set_mp(9999, false);
+    set_hp(9999);
+    set_mp(9999);
     you.dead = false;
 
     // Remove silence.

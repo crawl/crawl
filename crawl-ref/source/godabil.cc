@@ -1431,9 +1431,9 @@ bool elyvilon_divine_vigour()
                          40 + (you.skill(SK_INVOCATIONS)*5)/2);
 
         calc_hp();
-        inc_hp(you.hp_max - old_hp_max, false);
+        inc_hp(you.hp_max - old_hp_max);
         calc_mp();
-        inc_mp(you.max_magic_points - old_mp_max, false);
+        inc_mp(you.max_magic_points - old_mp_max);
 
         success = true;
     }
@@ -1710,7 +1710,7 @@ void yred_drain_life()
     if (hp_gain)
     {
         mpr("You feel life flooding into your body.");
-        inc_hp(hp_gain, false);
+        inc_hp(hp_gain);
     }
 }
 

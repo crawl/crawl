@@ -1765,12 +1765,12 @@ static void _elixir_card(int power, deck_rarity_type rarity)
     }
     else if (power_level == 1)
     {
-        set_hp(you.hp_max, false);
+        set_hp(you.hp_max);
         you.magic_points = 0;
     }
     else if (power_level >= 2)
     {
-        set_hp(you.hp_max, false);
+        set_hp(you.hp_max);
         you.magic_points = you.max_magic_points;
     }
     you.redraw_hit_points = true;
@@ -2796,7 +2796,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
     int hp = std::min(gold_used / 3, you.hp_max - you.hp);
     if (hp > 0)
     {
-        inc_hp(hp, false);
+        inc_hp(hp);
         gold_used -= hp * 2;
         done_stuff = true;
         mpr("You feel better.");
@@ -2809,7 +2809,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         int mp = std::min(gold_used / 5, you.max_magic_points - you.magic_points);
         if (mp > 0)
         {
-            inc_mp(mp, false);
+            inc_mp(mp);
             gold_used -= mp * 5;
             done_stuff = true;
             mpr("You feel your power returning.");

@@ -1975,8 +1975,7 @@ int monster_die(monster* mons, killer_type killer,
                 if (you.hp < you.hp_max)
                 {
                     mpr("You feel a little better.");
-                    inc_hp(mons->hit_dice + random2(mons->hit_dice),
-                           false);
+                    inc_hp(mons->hit_dice + random2(mons->hit_dice));
                 }
             }
 
@@ -1991,7 +1990,7 @@ int monster_die(monster* mons, killer_type killer,
                 if (you.magic_points < you.max_magic_points)
                 {
                     mpr("You feel your power returning.");
-                    inc_mp(1 + random2(mons->hit_dice / 2), false);
+                    inc_mp(1 + random2(mons->hit_dice / 2));
                 }
             }
 
@@ -2226,7 +2225,7 @@ int monster_die(monster* mons, killer_type killer,
                     if (you.magic_points < you.max_magic_points)
                     {
                         mpr("You feel your power returning.");
-                        inc_mp(1 + random2(mons->hit_dice / 2), false);
+                        inc_mp(1 + random2(mons->hit_dice / 2));
                     }
                 }
 

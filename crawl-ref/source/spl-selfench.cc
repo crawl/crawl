@@ -50,7 +50,7 @@ bool cast_deaths_door(int pow)
         mpr("You seem to hear sand running through an hourglass...",
             MSGCH_SOUND);
 
-        set_hp(allowed_deaths_door_hp(), false);
+        set_hp(allowed_deaths_door_hp());
         deflate_hp(you.hp_max, false);
 
         you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
@@ -247,7 +247,7 @@ int cast_selective_amnesia(std::string *pre_msg)
 
     if (ep_gain > 0)
     {
-        inc_mp(ep_gain, false);
+        inc_mp(ep_gain);
         mpr("The spell releases its latent energy back to you as "
             "it unravels.");
     }

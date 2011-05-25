@@ -57,7 +57,7 @@ bool cast_sublimation_of_blood(int pow)
 
             mpr("A flood of magical energy pours into your mind!");
 
-            inc_mp(7 + random2(7), false);
+            inc_mp(7 + random2(7));
 
             dec_inv_item_quantity(wielded, 1);
 
@@ -76,7 +76,7 @@ bool cast_sublimation_of_blood(int pow)
 
             mpr("A flood of magical energy pours into your mind!");
 
-            inc_mp(7 + random2(7), false);
+            inc_mp(7 + random2(7));
 
             remove_oldest_blood_potion(you.inv[wielded]);
             dec_inv_item_quantity(wielded, 1);
@@ -110,7 +110,7 @@ bool cast_sublimation_of_blood(int pow)
             {
                 success = true;
 
-                inc_mp(1, false);
+                inc_mp(1);
                 dec_hp(1, false);
 
                 if (you.species == SP_VAMPIRE)

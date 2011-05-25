@@ -1669,7 +1669,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_WIZARD_HURT_MONSTER:
         if (looking_at_you())
         {
-            set_hp(1, false);
+            set_hp(1);
             print_stats();
         }
     default:

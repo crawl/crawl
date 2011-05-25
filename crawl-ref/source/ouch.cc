@@ -1030,7 +1030,7 @@ static void _pain_recover_mp(int dam)
             int gain_mp = roll_dice(3, 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN));
 
             mpr("You focus.");
-            inc_mp(gain_mp, false);
+            inc_mp(gain_mp);
         }
     }
 }
@@ -1071,7 +1071,7 @@ static void _place_player_corpse(bool explode)
 static void _wizard_restore_life()
 {
     if (you.hp <= 0)
-        set_hp(you.hp_max, false);
+        set_hp(you.hp_max);
     for (int i = 0; i < NUM_STATS; ++i)
     {
         if (you.stat(static_cast<stat_type>(i)) <= 0)

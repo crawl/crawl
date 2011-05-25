@@ -1949,7 +1949,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
 
         mpr("Your body is suffused with distortional energy.");
 
-        set_hp(1 + random2(you.hp), false);
+        set_hp(1 + random2(you.hp));
         deflate_hp(you.hp_max / 2, true);
 
         bool failMsg = true;
