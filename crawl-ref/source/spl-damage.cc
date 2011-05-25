@@ -682,7 +682,7 @@ int airstrike(int pow, const dist &beam)
             hurted = mons->beam_resists(pbeam, hurted, false);
             // perhaps we should let the beam subtract AC and do damage too?
 
-            hurted -= random2(1 + mons->ac);
+            hurted -= random2(1 + mons->armour_class());
 
             hurted = std::max(0, hurted);
 
@@ -795,7 +795,7 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
         break;
     }
 
-    int damage = std::max(0, dam_dice.roll() - random2(mon->ac));
+    int damage = std::max(0, dam_dice.roll() - random2(mon->armour_class()));
 
     if (damage > 0)
         _player_hurt_monster(*mon, damage);
