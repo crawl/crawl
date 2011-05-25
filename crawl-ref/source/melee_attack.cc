@@ -1,9 +1,6 @@
-/*
- *  File:       melee_attack.cc
- *  Summary:    Methods of the melee_attack class, generalized functions which
- *              may be overloaded from inheriting classes.
- *  Written by: Linley Henzell
- *  Revisioned by: Robert Burnham
+/**
+ * @file
+ * @brief melee_attack class and associated melee_attack methods
  */
 
 #include "AppHdr.h"
