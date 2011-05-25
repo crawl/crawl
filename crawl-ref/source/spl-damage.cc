@@ -570,7 +570,7 @@ bool vampiric_drain(int pow, monster* mons)
     if (hp_gain && !mons_was_summoned)
     {
         mpr("You feel life coursing into your body.");
-        inc_hp(hp_gain, false);
+        inc_hp(hp_gain);
     }
 
     return (true);

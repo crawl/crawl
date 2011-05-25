@@ -398,7 +398,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
     mpr("Magical energy flows into your mind!");
 
-    inc_mp(3 + random2(5) + you.skill(SK_EVOCATIONS) / 3, false);
+    inc_mp(3 + random2(5) + you.skill(SK_EVOCATIONS) / 3);
     make_hungry(50, false, true);
 
     *pract    = 1;

@@ -2852,8 +2852,8 @@ void level_change(bool skip_attribute_increase)
 
             you.experience_level = new_exp;
             // Gain back the hp and mp we lose in lose_level().  -- bwr
-            inc_hp(4, true);
-            inc_mp(1, true);
+            inc_max_hp(4);
+            inc_max_mp(1);
         }
         else  // Character has gained a new level
         {
@@ -2872,8 +2872,8 @@ void level_change(bool skip_attribute_increase)
                 attribute_increase();
 
             you.experience_level = new_exp;
-            inc_hp(5 + new_exp % 2, true);
-            inc_mp(1, true);
+            inc_max_hp(5 + new_exp % 2);
+            inc_max_mp(1);
 
             switch (you.species)
             {
@@ -4305,9 +4305,7 @@ bool enough_zp(int minimum, bool suppress_msg)
     return (true);
 }
 
-// Note that "max_too" refers to the base potential, the actual
-// resulting max value is subject to penalties, bonuses, and scalings.
-void inc_mp(int mp_gain, bool max_too)
+void inc_mp(int mp_gain)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4318,23 +4316,19 @@ void inc_mp(int mp_gain, bool max_too)
 
     you.magic_points += mp_gain;
 
-    if (max_too)
-        inc_max_mp(mp_gain);
-
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
 
     if (wasnt_max && you.magic_points == you.max_magic_points)
         interrupt_activity(AI_FULL_MP);
 
-    take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
     you.redraw_magic_points = true;
 }
 
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
 // To avoid message spam, don't take notes when HP increases.
-void inc_hp(int hp_gain, bool max_too)
+void inc_hp(int hp_gain)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4344,9 +4338,6 @@ void inc_hp(int hp_gain, bool max_too)
     bool wasnt_max = (you.hp < you.hp_max);
 
     you.hp += hp_gain;
-
-    if (max_too)
-        inc_max_hp(hp_gain);
 
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
@@ -4395,6 +4386,7 @@ void rot_mp(int mp_loss)
 
 void inc_max_hp(int hp_gain)
 {
+    you.hp += hp_gain;
     you.base_hp2 += hp_gain;
     calc_hp();
 
@@ -4413,6 +4405,7 @@ void dec_max_hp(int hp_loss)
 
 void inc_max_mp(int mp_gain)
 {
+    you.magic_points += mp_gain;
     you.base_magic_points2 += mp_gain;
     calc_mp();
 
@@ -4443,51 +4436,29 @@ void deflate_hp(int new_level, bool floor)
     you.redraw_hit_points = true;
 }
 
-// Note that "max_too" refers to the base potential, the actual
-// resulting max value is subject to penalties, bonuses, and scalings.
-void set_hp(int new_amount, bool max_too)
+void set_hp(int new_amount)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     you.hp = new_amount;
 
-    if (max_too && you.hp_max != new_amount)
-    {
-        you.base_hp2 = 5000 + new_amount;
-        calc_hp();
-    }
-
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
-
-    if (max_too)
-        take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
 
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_hit_points = true;
 }
 
-// Note that "max_too" refers to the base potential, the actual
-// resulting max value is subject to penalties, bonuses, and scalings.
-void set_mp(int new_amount, bool max_too)
+void set_mp(int new_amount)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     you.magic_points = new_amount;
 
-    if (max_too && you.max_magic_points != new_amount)
-    {
-        // Note that this gets scaled down for values > 18.
-        you.base_magic_points2 = 5000 + new_amount;
-        calc_mp();
-    }
-
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-    if (max_too)
-        take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
 
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_magic_points = true;
@@ -5930,7 +5901,8 @@ int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 
 bool player::heal(int amount, bool max_too)
 {
-    ::inc_hp(amount, max_too);
+    ASSERT(!max_too);
+    ::inc_hp(amount);
     return true; /* TODO Check whether the player was healed. */
 }
 

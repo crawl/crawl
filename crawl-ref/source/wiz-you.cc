@@ -231,7 +231,7 @@ void wizard_heal(bool super_heal)
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
-        inc_hp(10, true);
+        inc_max_hp(10);
     }
 
     // Clear most status ailments.
@@ -240,8 +240,8 @@ void wizard_heal(bool super_heal)
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
-    set_hp(you.hp_max, false);
-    set_mp(you.max_magic_points, false);
+    set_hp(you.hp_max);
+    set_mp(you.max_magic_points);
     set_hunger(10999, true);
     you.redraw_hit_points = true;
 }

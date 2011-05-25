@@ -199,7 +199,7 @@ void jiyva_slurp_bonus(int item_value, int *js)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.magic_points < you.max_magic_points)
     {
-         inc_mp(std::max(random2(item_value), 1), false);
+         inc_mp(std::max(random2(item_value), 1));
          *js |= JS_MP;
      }
 
@@ -207,7 +207,7 @@ void jiyva_slurp_bonus(int item_value, int *js)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.hp < you.hp_max)
     {
-         inc_hp(std::max(random2(item_value), 1), false);
+         inc_hp(std::max(random2(item_value), 1));
          *js |= JS_HP;
      }
 }

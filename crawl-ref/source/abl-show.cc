@@ -2317,7 +2317,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         mpr("You channel some magical energy.");
 
-        inc_mp(1 + random2(you.skill(SK_INVOCATIONS) / 4 + 2), false);
+        inc_mp(1 + random2(you.skill(SK_INVOCATIONS) / 4 + 2));
         break;
 
     case ABIL_OKAWARU_HEROISM:
@@ -2539,14 +2539,14 @@ static bool _do_ability(const ability_def& abil)
             you.hp_max = 1;
 
         // Deflate HP.
-        set_hp(1 + random2(you.hp), false);
+        set_hp(1 + random2(you.hp));
 
         // Lose 1d2 permanent MP.
         rot_mp(coinflip() ? 2 : 1);
 
         // Deflate MP.
         if (you.magic_points)
-            set_mp(random2(you.magic_points), false);
+            set_mp(random2(you.magic_points));
 
         bool note_status = notes_are_active();
         activate_notes(false);  // This banishment shouldn't be noted.

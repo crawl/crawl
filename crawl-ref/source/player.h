@@ -875,8 +875,8 @@ bool enough_zp(int minimum, bool suppress_msg);
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
 void dec_mp(int mp_loss);
 
-void inc_mp(int mp_gain, bool max_too);
-void inc_hp(int hp_gain, bool max_too);
+void inc_mp(int mp_gain);
+void inc_hp(int hp_gain);
 
 void rot_hp(int hp_loss);
 void unrot_hp(int hp_recovered);
@@ -890,7 +890,7 @@ void inc_max_mp(int mp_gain);
 void dec_max_mp(int mp_loss);
 
 void deflate_hp(int new_level, bool floor);
-void set_hp(int new_amount, bool max_too);
+void set_hp(int new_amount);
 
 int get_real_hp(bool trans, bool rotted = false);
 int get_real_mp(bool include_items);
@@ -898,7 +898,7 @@ int get_real_mp(bool include_items);
 int get_contamination_level();
 std::string describe_contamination(int level);
 
-void set_mp(int new_amount, bool max_too);
+void set_mp(int new_amount);
 
 void contaminate_player(int change, bool controlled = false,
                         bool msg = true);

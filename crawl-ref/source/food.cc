@@ -2772,10 +2772,10 @@ static void _heal_from_food(int hp_amt, int mp_amt, bool unrot,
                             bool restore_str)
 {
     if (hp_amt > 0)
-        inc_hp(hp_amt, false);
+        inc_hp(hp_amt);
 
     if (mp_amt > 0)
-        inc_mp(mp_amt, false);
+        inc_mp(mp_amt);
 
     if (unrot && player_rotted())
     {

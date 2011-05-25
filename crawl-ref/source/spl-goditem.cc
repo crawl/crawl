@@ -222,7 +222,7 @@ static int _healing_spell(int healed, bool divine_ability,
         }
 
         mpr("You are healed.");
-        inc_hp(healed, false);
+        inc_hp(healed);
         return (1);
     }
 
@@ -352,7 +352,7 @@ bool cast_revivification(int pow)
                 loss++;
 
         dec_max_hp(loss * you.hp_max / 100);
-        set_hp(you.hp_max, false);
+        set_hp(you.hp_max);
 
         if (you.duration[DUR_DEATHS_DOOR])
         {

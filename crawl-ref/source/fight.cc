@@ -760,7 +760,7 @@ static bool _player_vampire_draws_blood(const monster* mon, const int damage,
 
         if (heal > 0 && !you.duration[DUR_DEATHS_DOOR])
         {
-            inc_hp(heal, false);
+            inc_hp(heal);
             mprf("You feel %sbetter.", (you.hp == you.hp_max) ? "much " : "");
         }
     }
@@ -2056,7 +2056,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
 
             dprf("Vampiric healing: damage %d, healed %d",
                  damage_done, heal);
-            inc_hp(heal, false);
+            inc_hp(heal);
 
             did_god_conduct(DID_NECROMANCY, 2);
         }
