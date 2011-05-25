@@ -251,6 +251,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             logging.info("Killing crawl process after SIGHUP did nothing (user %s, ip %s).",
                          self.username, self.request.remote_ip)
             self.p.send_signal(subprocess.signal.SIGTERM)
+            self.kill_timeout = None
 
     def init_user(self):
         with open("/dev/null", "w") as f:
