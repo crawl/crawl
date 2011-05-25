@@ -220,25 +220,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if "client_prefix" in game:
             self.client_prefix = game["client_prefix"]
-        else:
-            # Check the crawl version and use that as prefix
-            try:
-                answer = subprocess.check_output(call + ["-version"])
-                match = re.match(r"Crawl version (.+)\n", answer)
-                if match == None:
-                    logging.warn("Could not determine crawl version: unexpected output! (user: %s)\n%s",
-                                 self.username, answer)
-                    self.game_id = None
-                    return
-                self.client_prefix = match.group(1)
-            except subprocess.CalledProcessError:
-                logging.warn("Could not determine crawl version: exit code != 0! (user: %s)",
-                             self.username)
-                self.game_id = None
-                return
-
-        self.send_client(self.client_prefix)
-
+            self.send_client(self.client_prefix)
+        
         self.p = subprocess.Popen(call,
                                   stdin = subprocess.PIPE,
                                   stdout = subprocess.PIPE,
@@ -249,9 +232,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
                                 self.ioloop.READ | self.ioloop.ERROR)
 
-        logging.info("Starting crawl for user %s (ip %s, fds %s,%s,%s, client version %s).",
+        logging.info("Starting crawl for user %s (ip %s, fds %s,%s,%s).",
                      self.username, self.request.remote_ip, self.p.stdin.fileno(),
-                     self.p.stdout.fileno(), self.p.stderr.fileno(), self.client_prefix)
+                     self.p.stdout.fileno(), self.p.stderr.fileno())
 
         self.write_message("crawl_started();")
 
@@ -520,6 +503,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             self.poll_crawl()
 
+    def handle_crawl_message(self, msg):
+        if msg.startswith("^"):
+            msg = msg[1:]
+            if msg.startswith("ClientPrefix:"):
+                msg = msg[len("ClientPrefix:"):]
+                msg = msg.strip()
+                self.client_prefix = msg
+                logging.info("User %s is using client version %s.",
+                             self.username, self.client_prefix)
+                self.send_client(self.client_prefix)
+        else:
+            self.write_message_all(msg)
+
     def on_stdout(self, fd, events):
         if events & self.ioloop.ERROR:
             self.poll_crawl()
@@ -529,7 +525,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.client_terminated:
                 return
 
-            self.write_message_all(msg)
+            self.handle_crawl_message(msg)
 
             self.poll_crawl()
             self.check_where()
