@@ -629,7 +629,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     mpr(msg.c_str());
                 }
 
-                int damage_taken = 10 + random2avg(29, 2) - random2(1 + m->ac);
+                int damage_taken = 10 + random2avg(29, 2)
+                                      - random2(1 + m->armour_class());
 
                 if (damage_taken < 0)
                     damage_taken = 0;
