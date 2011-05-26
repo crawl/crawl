@@ -296,6 +296,10 @@ template<typename T>
 static void unmarshall_vector(reader& th, std::vector<T>& vec,
                               T (*T_unmarshall)(reader&));
 
+template<int SIZE>
+void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr);
+template<int SIZE>
+void unmarshallFixedBitArray(reader& th, FixedBitArray<SIZE>& arr);
 
 void marshallByte(writer &th, int8_t data)
 {
@@ -436,6 +440,51 @@ int64_t unmarshallSigned(reader& th)
         return (int64_t)(-(u >> 1) - 1);
     else
         return (int64_t)(u >> 1);
+}
+
+// Optimized for short vectors that have only the first few bits set, and
+// can have invalid length.  For long ones you might want to do this
+// differently to not lose 1/8 bits and speed.
+template<int SIZE>
+void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr)
+{
+    int last_bit;
+    for (last_bit = SIZE - 1; last_bit > 0; last_bit--)
+        if (arr[last_bit])
+            break;
+
+    int i = 0;
+    while(1)
+    {
+        uint8_t byte = 0;
+        for (int j = 0; j < 7; j++)
+            if (i < SIZE && arr[i++])
+                byte |= 1 << j;
+        if (i <= last_bit)
+            marshallUByte(th, byte);
+        else
+        {
+            marshallUByte(th, byte | 0x80);
+            break;
+        }
+    }
+}
+
+template<int SIZE>
+void unmarshallFixedBitArray(reader& th, FixedBitArray<SIZE>& arr)
+{
+    arr.reset();
+
+    int i = 0;
+    while (1)
+    {
+        uint8_t byte = unmarshallUByte(th);
+        for (int j = 0; j < 7; j++)
+            if (i < SIZE)
+                arr.set(i++, !!(byte & (1 << j)));
+        if (byte & 0x80)
+            break;
+    }
 }
 
 // FIXME: Kill this abomination - it will break!
@@ -2629,7 +2678,7 @@ void marshallMonster(writer &th, const monster& m)
 void marshallMonsterInfo(writer &th, const monster_info& mi)
 {
     marshallCoord(th, mi.pos);
-    marshallUnsigned(th, mi.mb);
+    marshallFixedBitArray<NUM_MB_FLAGS>(th, mi.mb);
     marshallString(th, mi.mname);
     marshallUnsigned(th, mi.type);
     marshallUnsigned(th, mi.base_type);
@@ -2649,7 +2698,18 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
 void unmarshallMonsterInfo(reader &th, monster_info& mi)
 {
     mi.pos = unmarshallCoord(th);
-    unmarshallUnsigned(th, mi.mb);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_64_MB)
+    {
+        mi.mb.reset();
+        uint64_t mbflags = unmarshallUnsigned(th);
+        for (unsigned i = 0; i < 64; i++)
+            if (mbflags & (((uint64_t)1) << i))
+                mi.mb.set(i);
+    }
+    else
+#endif
+    unmarshallFixedBitArray<NUM_MB_FLAGS>(th, mi.mb);
     mi.mname = unmarshallString(th);
     unmarshallUnsigned(th, mi.type);
     unmarshallUnsigned(th, mi.base_type);

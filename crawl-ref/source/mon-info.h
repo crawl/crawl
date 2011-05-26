@@ -73,12 +73,13 @@ enum monster_info_flags
     MB_CLINGING,
     MB_NAME_ZOMBIE,
     MB_PERM_SUMMON,
+    NUM_MB_FLAGS
 };
 
 struct monster_info_base
 {
     coord_def pos;
-    uint64_t mb;
+    FixedBitArray<NUM_MB_FLAGS> mb;
     std::string mname;
     monster_type type;
     monster_type base_type;
@@ -164,7 +165,7 @@ struct monster_info : public monster_info_base
 
     inline bool is(unsigned mbflag) const
     {
-        return !!(mb & (((uint64_t)1) << mbflag));
+        return mb[mbflag];
     }
 
     inline std::string damage_desc() const
