@@ -217,7 +217,7 @@ static void _OLGREB_equip(item_def *item, bool *show_msgs, bool unmeld)
     _olgreb_pluses(item);
 }
 
-static void _OLGREB_unequip(const item_def *item, bool *show_msgs)
+static void _OLGREB_unequip(item_def *item, bool *show_msgs)
 {
     if (you.can_smell())
         _equip_mpr(show_msgs, "The smell of chlorine vanishes.");
@@ -306,9 +306,27 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
     *show_msgs = false;
 }
 
-static void _SINGING_SWORD_unequip(const item_def *item, bool *show_msgs)
+static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 {
+    set_artefact_name(*item, "Singing Sword");
     _equip_mpr(show_msgs, "The Singing Sword sighs.", MSGCH_TALK);
+}
+
+static void _SINGING_SWORD_world_reacts(item_def *item)
+{
+    int tension = get_tension(GOD_NO_GOD);
+
+    std::string old_name = get_artefact_name(*item);
+    std::string new_name;
+    if (tension < 40)
+        new_name = "Singing Sword";
+    else
+        new_name = "Screaming Sword";
+    if (old_name != new_name)
+    {
+        set_artefact_name(*item, new_name);
+        you.wield_change = true;
+    }
 }
 
 ////////////////////////////////////////////////////
@@ -351,7 +369,7 @@ static void _TROG_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs, "You feel bloodthirsty!");
 }
 
-static void _TROG_unequip(const item_def *item, bool *show_msgs)
+static void _TROG_unequip(item_def *item, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "You feel less violent.");
 }
@@ -587,7 +605,7 @@ static void _DEMON_AXE_world_reacts(item_def *item)
     you.add_beholder(closest, true);
 }
 
-static void _DEMON_AXE_unequip(const item_def *item, bool *show_msgs)
+static void _DEMON_AXE_unequip(item_def *item, bool *show_msgs)
 {
     if (you.beheld())
     {

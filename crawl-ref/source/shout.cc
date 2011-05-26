@@ -394,7 +394,7 @@ bool check_awaken(monster* mons)
 // TODO: Let artefacts besides weapons generate noise.
 void noisy_equipment()
 {
-    if (silenced(you.pos()) || !one_chance_in(20))
+    if (silenced(you.pos()))
         return;
 
     std::string msg;
@@ -403,9 +403,16 @@ void noisy_equipment()
 
     if (weapon && is_unrandom_artefact(*weapon))
     {
+        int tension = get_tension(GOD_NO_GOD);
+
         std::string name = weapon->name(DESC_PLAIN, false, true, false, false,
                                         ISFLAG_IDENT_MASK);
-        msg = getSpeakString(name.c_str());
+        msg = getSpeakString(name + (tension <= 0 ? " no_tension" :
+                                     tension < 40 ? " low_tension" :
+                                                    " high_tension"));
+        if (msg == "NONE")
+            return;
+
         if (!msg.empty())
         {
             // "Your Singing Sword" sounds disrespectful
@@ -417,6 +424,9 @@ void noisy_equipment()
 
     if (msg.empty())
     {
+        if (!one_chance_in(20))
+            return;
+
         msg = getSpeakString("noisy weapon");
         if (!msg.empty())
         {

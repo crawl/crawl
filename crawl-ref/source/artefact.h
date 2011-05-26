@@ -67,7 +67,7 @@ struct unrandart_entry
     const char *desc_end; // appended to ided
 
     void (*equip_func)(item_def* item, bool* show_msgs, bool unmeld);
-    void (*unequip_func)(const item_def* item, bool* show_msgs);
+    void (*unequip_func)(item_def* item, bool* show_msgs);
     void (*world_reacts_func)(item_def* item);
     // An item can't be a melee weapon and launcher at the same time, so have
     // the functions relevant to those item types share a union.

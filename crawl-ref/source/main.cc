@@ -2857,9 +2857,6 @@ static void _player_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
-    if (you.attribute[ATTR_NOISES])
-        noisy_equipment();
-
     if (you.attribute[ATTR_SHADOWS])
         shadow_lantern_effect();
 
@@ -2868,6 +2865,9 @@ static void _player_reacts()
 
     if (you.unrand_reacts != 0)
         unrand_reacts();
+
+    if (you.attribute[ATTR_NOISES])
+        noisy_equipment();
 
     if (one_chance_in(10))
     {

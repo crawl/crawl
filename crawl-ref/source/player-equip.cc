@@ -309,7 +309,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 #undef unknown_proprt
 }
 
-static void _unequip_artefact_effect(const item_def &item,
+static void _unequip_artefact_effect(item_def &item,
                                      bool *show_msgs = NULL, bool meld = false)
 {
     ASSERT(is_artefact(item));
