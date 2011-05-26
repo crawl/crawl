@@ -201,8 +201,8 @@ static void _jobs_stat_init(job_type which_job)
     // experience level 3.
     you.last_chosen = (stat_type) random2(NUM_STATS);
 
-    you.base_hp2 = hp + 5000;
-    you.base_magic_points2 = mp + 5000;
+    you.hp_max_perm = hp - 5;
+    you.mp_max_perm = mp - 1;
 }
 
 // Make sure no stats are unacceptably low

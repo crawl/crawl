@@ -29,6 +29,7 @@ enum tag_minor_version
     TAG_MINOR_ZOT_POINTS,          // Untie ZotDef power points from the xp pool.
     TAG_MINOR_TRAP_KNOWLEDGE,      // Save trap type in map_knowledge.
     TAG_MINOR_NEW_HP,              // New HP formula.
+    TAG_MINOR_HP_MP_CALC,          // HP and MP recalculated rather than stored +5000.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

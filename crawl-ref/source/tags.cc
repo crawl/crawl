@@ -1027,10 +1027,10 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.zot_points);
     marshallInt(th, you.exp_delta);
 
-    marshallShort(th, you.base_hp);
-    marshallShort(th, you.base_hp2);
-    marshallShort(th, you.base_magic_points);
-    marshallShort(th, you.base_magic_points2);
+    marshallShort(th, you.hp_max_temp);
+    marshallShort(th, you.hp_max_perm);
+    marshallShort(th, you.mp_max_temp);
+    marshallShort(th, you.mp_max_perm);
 
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
@@ -1623,8 +1623,10 @@ static void tag_read_you(reader &th)
     }
 #endif
 
-    you.base_hp                   = unmarshallShort(th);
-    you.base_hp2                  = unmarshallShort(th);
+    you.hp_max_temp               = unmarshallShort(th);
+    you.hp_max_perm               = unmarshallShort(th);
+    you.mp_max_temp               = unmarshallShort(th);
+    you.mp_max_perm               = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() < TAG_MINOR_NEW_HP)
     {
@@ -1632,10 +1634,10 @@ static void tag_read_you(reader &th)
         {
         case JOB_FIGHTER:
         case JOB_BERSERKER:
-            you.base_hp2 = 15; break;
+            you.hp_max_perm = 15; break;
 
         case JOB_GLADIATOR:
-            you.base_hp2 = 14; break;
+            you.hp_max_perm = 14; break;
 
         case JOB_CRUSADER:
         case JOB_CHAOS_KNIGHT:
@@ -1646,29 +1648,76 @@ static void tag_read_you(reader &th)
         case JOB_HUNTER:
         case JOB_MONK:
         case JOB_ARTIFICER:
-            you.base_hp2 = 13; break;
+            you.hp_max_perm = 13; break;
 
         case JOB_ASSASSIN:
         case JOB_STALKER:
         case JOB_WARPER:
         case JOB_TRANSMUTER:
-            you.base_hp2 = 12; break;
+            you.hp_max_perm = 12; break;
 
         case JOB_WANDERER:
-            you.base_hp2 = 11; break;
+            you.hp_max_perm = 11; break;
 
         case JOB_WIZARD:
-            you.base_hp2 = 8; break;
+            you.hp_max_perm = 8; break;
 
         default:
-            you.base_hp2 = 10;
+            you.hp_max_perm = 10;
         }
-        you.base_hp2 += (you.experience_level - 1) * 5.5;
-        you.base_hp2 += 5000;
+        you.hp_max_perm += (you.experience_level - 1) * 5.5;
+        you.hp_max_perm += 5000;
+    }
+    if (th.getMinorVersion() < TAG_MINOR_HP_MP_CALC)
+    {
+        you.hp_max_temp -= 5000;
+        you.hp_max_perm -= 5000 + you.experience_level * 11 / 2;
+        you.mp_max_temp = 0;
+        switch (you.char_class)
+        {
+        case JOB_BERSERKER:
+        case JOB_FIGHTER:
+        case JOB_GLADIATOR:
+        case JOB_ASSASSIN:
+        case JOB_HUNTER:
+        case JOB_MONK:
+        default:
+            you.mp_max_perm = 0;
+            break;
+        case JOB_CRUSADER:
+        case JOB_CHAOS_KNIGHT:
+        case JOB_ABYSSAL_KNIGHT:
+        case JOB_STALKER:
+        case JOB_WARPER:
+        case JOB_ARCANE_MARKSMAN:
+        case JOB_TRANSMUTER:
+        case JOB_WANDERER:
+        case JOB_ARTIFICER:
+            you.mp_max_perm = 1;
+            break;
+        case JOB_DEATH_KNIGHT:
+        case JOB_HEALER:
+        case JOB_PRIEST:
+            you.mp_max_perm = 2;
+            break;
+        case JOB_CONJURER:
+        case JOB_ENCHANTER:
+        case JOB_FIRE_ELEMENTALIST:
+        case JOB_ICE_ELEMENTALIST:
+        case JOB_AIR_ELEMENTALIST:
+        case JOB_EARTH_ELEMENTALIST:
+        case JOB_SUMMONER:
+        case JOB_VENOM_MAGE:
+        case JOB_NECROMANCER:
+            you.mp_max_perm = 3;
+            break;
+        case JOB_WIZARD:
+            you.mp_max_perm = 5;
+            break;
+        }
+        you.mp_max_perm--;
     }
 #endif
-    you.base_magic_points         = unmarshallShort(th);
-    you.base_magic_points2        = unmarshallShort(th);
 
     const int x = unmarshallShort(th);
     const int y = unmarshallShort(th);

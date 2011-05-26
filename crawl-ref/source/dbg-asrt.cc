@@ -140,11 +140,11 @@ static void _dump_player(FILE *file)
     fprintf(file, "Job:        %s\n\n", get_job_name(you.char_class));
     fprintf(file, "class_name: %s\n\n", you.class_name.c_str());
 
-    fprintf(file, "HP: %d/%d; base: %d/%d\n", you.hp, you.hp_max,
-            you.base_hp, you.base_hp2);
-    fprintf(file, "MP: %d/%d; base: %d/%d\n",
+    fprintf(file, "HP: %d/%d; mods: %d/%d\n", you.hp, you.hp_max,
+            you.hp_max_temp, you.hp_max_perm);
+    fprintf(file, "MP: %d/%d; mods: %d/%d\n",
             you.magic_points, you.max_magic_points,
-            you.base_magic_points, you.base_magic_points2);
+            you.hp_max_temp, you.mp_max_perm);
     fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)\n",
             you.strength(), you.max_strength(), you.intel(), you.max_intel(),
             you.dex(), you.max_dex());
