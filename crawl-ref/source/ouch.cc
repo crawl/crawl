@@ -764,13 +764,8 @@ void lose_level()
     mprf(MSGCH_WARN,
          "You are now level %d!", you.experience_level);
 
-    // Constant value to avoid grape jelly trick... see level_change() for
-    // where these HPs and MPs are given back.  -- bwr
     ouch(4, NON_MONSTER, KILLED_BY_DRAINING);
-    dec_max_hp(4);
-
     dec_mp(1);
-    dec_max_mp(1);
 
     calc_hp();
     calc_mp();

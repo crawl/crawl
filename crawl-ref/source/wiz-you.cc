@@ -908,22 +908,22 @@ static void debug_uptick_xl(int newxl)
 static void debug_downtick_xl(int newxl)
 {
     you.hp = you.hp_max;
-    while (newxl < you.experience_level)
-    {
-        // Each lose_level() subtracts 4 HP, so do this to avoid death
-        // and/or negative HP when going from a high level to a low level.
-        you.hp     = std::max(5, you.hp);
-        you.hp_max = std::max(5, you.hp_max);
+    you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
+    you.experience = exp_needed(newxl);
+    level_change();
 
-        you.experience = exp_needed(you.experience_level) - 1;
-        level_change();
+    // restore maxhp loss
+    you.hp_max_perm -= 1000;
+    calc_hp();
+    if (you.hp_max <= 0)
+    {
+        // ... but remove it completely if unviable
+        you.hp_max_temp = std::max(you.hp_max_temp, 0);
+        you.hp_max_perm = std::max(you.hp_max_perm, 0);
+        calc_hp();
     }
 
     you.hp       = std::max(1, you.hp);
-    you.hp_max   = std::max(1, you.hp_max);
-
-    you.base_hp  = std::max(5000,              you.base_hp);
-    you.base_hp2 = std::max(5000 + you.hp_max, you.base_hp2);
 }
 
 void wizard_set_xl()

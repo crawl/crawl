@@ -2832,8 +2832,6 @@ void level_change(bool skip_attribute_increase)
         const int old_hp = you.hp;
         const int old_maxhp = you.hp_max;
 
-        int mp_adjust = 0;
-
         // [ds] Make sure we increment you.experience_level and apply
         // any stat/hp increases only after we've cleared all prompts
         // for this experience level. If we do part of the work before
@@ -2851,9 +2849,6 @@ void level_change(bool skip_attribute_increase)
             // No more prompts for this XL past this point.
 
             you.experience_level = new_exp;
-            // Gain back the hp and mp we lose in lose_level().  -- bwr
-            inc_max_hp(4);
-            inc_max_mp(1);
         }
         else  // Character has gained a new level
         {
@@ -2872,8 +2867,6 @@ void level_change(bool skip_attribute_increase)
                 attribute_increase();
 
             you.experience_level = new_exp;
-            inc_max_hp(5 + new_exp % 2);
-            inc_max_mp(1);
 
             switch (you.species)
             {
@@ -2883,9 +2876,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_HIGH_ELF:
-                if (!(you.experience_level % 2))
-                    mp_adjust++;
-
                 if (!(you.experience_level % 3))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -2895,16 +2885,11 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEEP_ELF:
-                mp_adjust++;
-
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_INT, 1, false, "level gain");
                 break;
 
             case SP_SLUDGE_ELF:
-                if (!(you.experience_level % 3))
-                    mp_adjust++;
-
                 if (!(you.experience_level % 4))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -2914,9 +2899,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MOUNTAIN_DWARF:
-                if (!(you.experience_level % 3))
-                    mp_adjust--;
-
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -2946,7 +2928,6 @@ void level_change(bool skip_attribute_increase)
             case SP_HALFLING:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_DEX, 1, false, "level gain");
-
                 break;
 
             case SP_KOBOLD:
@@ -2956,13 +2937,9 @@ void level_change(bool skip_attribute_increase)
                                             : STAT_DEX), 1, false,
                                 "level gain");
                 }
-
                 break;
 
             case SP_HILL_ORC:
-                if (!(you.experience_level % 3))
-                    mp_adjust--;
-
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -3014,9 +2991,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_TROLL:
-                if (you.experience_level % 3)
-                    mp_adjust--;
-
                 if (!(you.experience_level % 3))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -3088,22 +3062,14 @@ void level_change(bool skip_attribute_increase)
                                             : STAT_DEX), 1, false,
                                 "level gain");
                 }
-
-                if (!(you.experience_level % 3))
-                    mp_adjust--;
                 break;
 
             case SP_DEMIGOD:
                 if (!(you.experience_level % 2))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
-
-                if (you.experience_level % 3)
-                    mp_adjust++;
                 break;
 
             case SP_SPRIGGAN:
-                mp_adjust++;
-
                 if (!(you.experience_level % 5))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -3113,9 +3079,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MINOTAUR:
-                if (!(you.experience_level % 2))
-                    mp_adjust--;
-
                 if (!(you.experience_level % 4))
                 {
                     modify_stat((coinflip() ? STAT_STR
@@ -3182,9 +3145,6 @@ void level_change(bool skip_attribute_increase)
             }
 
             case SP_GHOUL:
-                if (!(you.experience_level % 3))
-                    mp_adjust--;
-
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -3208,9 +3168,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_CAT:
-                if (you.experience_level % 2)
-                    mp_adjust++;
-
                 if (!(you.experience_level % 5))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -3297,8 +3254,6 @@ void level_change(bool skip_attribute_increase)
 #if TAG_MAJOR_VERSION == 32
         note_montiers();
 #endif
-        // add mp adjustments - GDL
-        inc_max_mp(mp_adjust);
 
         deflate_hp(you.hp_max, false);
 
@@ -4350,7 +4305,7 @@ void inc_hp(int hp_gain)
 
 void rot_hp(int hp_loss)
 {
-    you.base_hp -= hp_loss;
+    you.hp_max_temp -= hp_loss;
     calc_hp();
 
     if (you.species != SP_GHOUL)
@@ -4361,10 +4316,9 @@ void rot_hp(int hp_loss)
 
 void unrot_hp(int hp_recovered)
 {
-    if (hp_recovered >= 5000 - you.base_hp)
-        you.base_hp = 5000;
-    else
-        you.base_hp += hp_recovered;
+    you.hp_max_temp += hp_recovered;
+    if (you.hp_max_temp > 0)
+        you.hp_max_temp = 0;
 
     calc_hp();
 
@@ -4373,12 +4327,12 @@ void unrot_hp(int hp_recovered)
 
 int player_rotted()
 {
-    return (5000 - you.base_hp);
+    return -you.hp_max_temp;
 }
 
 void rot_mp(int mp_loss)
 {
-    you.base_magic_points -= mp_loss;
+    you.mp_max_temp -= mp_loss;
     calc_mp();
 
     you.redraw_magic_points = true;
@@ -4387,7 +4341,7 @@ void rot_mp(int mp_loss)
 void inc_max_hp(int hp_gain)
 {
     you.hp += hp_gain;
-    you.base_hp2 += hp_gain;
+    you.hp_max_perm += hp_gain;
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
@@ -4396,7 +4350,7 @@ void inc_max_hp(int hp_gain)
 
 void dec_max_hp(int hp_loss)
 {
-    you.base_hp2 -= hp_loss;
+    you.hp_max_perm -= hp_loss;
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
@@ -4406,7 +4360,7 @@ void dec_max_hp(int hp_loss)
 void inc_max_mp(int mp_gain)
 {
     you.magic_points += mp_gain;
-    you.base_magic_points2 += mp_gain;
+    you.mp_max_perm += mp_gain;
     calc_mp();
 
     take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
@@ -4415,7 +4369,7 @@ void inc_max_mp(int mp_gain)
 
 void dec_max_mp(int mp_loss)
 {
-    you.base_magic_points2 -= mp_loss;
+    you.mp_max_perm -= mp_loss;
     calc_mp();
 
     take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
@@ -4471,7 +4425,8 @@ int get_real_hp(bool trans, bool rotted)
 {
     int hitp;
 
-    hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
+    hitp  = you.experience_level * 11 / 2;
+    hitp += you.hp_max_perm + you.hp_max_temp;
     // Important: we shouldn't add Heroism boosts here.
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 8;
 
@@ -4514,10 +4469,39 @@ int get_real_hp(bool trans, bool rotted)
     return (hitp);
 }
 
+static int _racial_mp()
+{
+    switch (you.species)
+    {
+    case SP_TROLL:
+        return -(you.experience_level - 1) * 2 / 3;
+    case SP_MINOTAUR:
+        return -you.experience_level / 2;
+    case SP_MOUNTAIN_DWARF:
+    case SP_HILL_ORC:
+    case SP_CENTAUR:
+    case SP_GHOUL:
+        return -you.experience_level / 3;
+    default:
+        return 0;
+    case SP_SLUDGE_ELF:
+        return you.experience_level / 3;
+    case SP_CAT:
+    case SP_HIGH_ELF:
+        return you.experience_level / 2;
+    case SP_DEMIGOD:
+        return you.experience_level * 2 / 3;
+    case SP_DEEP_ELF:
+    case SP_SPRIGGAN:
+        return you.experience_level - 1;
+    }
+}
+
 int get_real_mp(bool include_items)
 {
     // base_magic_points2 accounts for species
-    int enp = (you.base_magic_points2 - 5000);
+    int enp = you.experience_level + you.mp_max_perm;
+    enp += _racial_mp();
 
     int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
     int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
@@ -4526,7 +4510,7 @@ int get_real_mp(bool include_items)
     enp = stepdown_value(enp, 9, 18, 45, 100);
 
     // This is our "rotted" base (applied after scaling):
-    enp += (you.base_magic_points - 5000);
+    enp += you.mp_max_temp;
 
     // Yes, we really do want this duplication... this is so the stepdown
     // doesn't truncate before we apply the rotted base.  We're doing this
@@ -5220,13 +5204,13 @@ void player::init()
 
     hp               = 0;
     hp_max           = 0;
-    base_hp          = 5000;
-    base_hp2         = 5000;
+    hp_max_temp      = 0;
+    hp_max_perm      = 0;
 
     magic_points       = 0;
     max_magic_points   = 0;
-    base_magic_points  = 5000;
-    base_magic_points2 = 5000;
+    mp_max_temp      = 0;
+    mp_max_perm      = 0;
 
     stat_loss.init(0);
     base_stats.init(0);
