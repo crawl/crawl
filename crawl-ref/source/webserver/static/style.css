@@ -36,6 +36,10 @@ body {
     text-align: left;
 }
 
+#player_list table td:hover {
+    background-color: #101010;
+}
+
 #register {
     position: absolute;
     left: 50px;
