@@ -25,6 +25,38 @@ w:6
 w:1
 @weapon_talks@
 %%%%
+singing sword no_tension
+
+w:190
+NONE
+
+@singing sword@
+%%%%
+singing sword low_tension
+
+w:90
+NONE
+
+@singing sword@
+%%%%
+singing sword high_tension
+
+NONE
+
+@singing sword@
+%%%%
+screaming sword no_tension
+
+@singing sword no_tension@
+%%%%
+screaming sword low_tension
+
+@singing sword low_tension@
+%%%%
+screaming sword high_tension
+
+@singing sword high_tension@
+%%%%
 ############################################################
 # NOISY WEAPONS like to chatter and imitate dungeon noises.
 ############################################################
