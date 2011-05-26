@@ -3807,7 +3807,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // Hellfire and white draconian breath ignores AC.
     if (!damage_ignores_armour())
     {
-        int ac = std::max(mon->armour_class(), 0);
+        int ac = mon->armour_class();
         if (is_tracer && preac_max_damage > 0)
         {
             tracer_postac_min = std::max(0, preac_min_damage - ac);
