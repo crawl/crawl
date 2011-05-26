@@ -3032,9 +3032,7 @@ void level_change(bool skip_attribute_increase)
                 }
 
                 if (!(you.experience_level % 4) && you.experience_level > 7)
-                {
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
-                }
 
                 if (you.experience_level == 14)
                 {
@@ -4482,8 +4480,6 @@ static int _racial_mp()
     case SP_CENTAUR:
     case SP_GHOUL:
         return -you.experience_level / 3;
-    default:
-        return 0;
     case SP_SLUDGE_ELF:
         return you.experience_level / 3;
     case SP_CAT:
@@ -4494,6 +4490,8 @@ static int _racial_mp()
     case SP_DEEP_ELF:
     case SP_SPRIGGAN:
         return you.experience_level - 1;
+    default:
+        return 0;
     }
 }
 
