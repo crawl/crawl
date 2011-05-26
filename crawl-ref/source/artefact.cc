@@ -1426,7 +1426,7 @@ static bool _artefact_name_lookup(std::string &result,
     return (!result.empty());
 }
 
-std::string artefact_name(const item_def &item, bool appearance)
+std::string make_artefact_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
 
@@ -1544,12 +1544,12 @@ std::string get_artefact_name(const item_def &item, bool force_known)
         // print artefact's real name
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
-        return artefact_name(item, false);
+        return make_artefact_name(item, false);
     }
     // print artefact appearance
     if (item.props.exists(ARTEFACT_APPEAR_KEY))
         return item.props[ARTEFACT_APPEAR_KEY].get_string();
-    return artefact_name(item, false);
+    return make_artefact_name(item, false);
 }
 
 void set_artefact_name(item_def &item, const std::string &name)
@@ -1936,14 +1936,14 @@ bool make_item_randart(item_def &item, bool force_mundane)
     if (item.props.exists(ARTEFACT_NAME_KEY))
         ASSERT(item.props[ARTEFACT_NAME_KEY].get_type() == SV_STR);
     else
-        set_artefact_name(item, artefact_name(item, false));
+        set_artefact_name(item, make_artefact_name(item, false));
 
     // get artefact appearance
     if (item.props.exists(ARTEFACT_APPEAR_KEY))
         ASSERT(item.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
     else
         item.props[ARTEFACT_APPEAR_KEY].get_string() =
-            artefact_name(item, true);
+            make_artefact_name(item, true);
 
     return (true);
 }
@@ -2016,7 +2016,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
     else
     {
-        item.props[ARTEFACT_APPEAR_KEY].get_string() = artefact_name(item, true);
+        item.props[ARTEFACT_APPEAR_KEY].get_string() = make_artefact_name(item, true);
         item_colour(item);
     }
 

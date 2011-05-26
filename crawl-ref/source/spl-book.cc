@@ -1672,7 +1672,7 @@ static void _make_book_randart(item_def &book)
         if (!book.props.exists(ARTEFACT_APPEAR_KEY))
         {
             book.props[ARTEFACT_APPEAR_KEY].get_string() =
-                artefact_name(book, true);
+                make_artefact_name(book, true);
         }
     }
 }
