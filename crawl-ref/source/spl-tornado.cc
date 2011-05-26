@@ -166,8 +166,6 @@ void tornado_damage(actor *caster, int dur)
     }
     else
         pow = caster->as_monster()->hit_dice * 4;
-    if (dur > 0)
-        pow = div_rand_round(pow * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
     noisy(25, org, caster->mindex());
@@ -246,8 +244,11 @@ void tornado_damage(actor *caster, int dur)
                         if (standing)
                             float_player(false);
                     }
-                    int dmg = roll_dice(6, rpow) / 10;
-                    if (dur < 0)
+                    int dmg = roll_dice(6, rpow) / 15
+                              - roll_dice(1, victim->armour_class() / 3);
+                    if (dur > 0)
+                        dmg = div_rand_round(dmg * dur, 10);
+                    else if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
                     if (victim->atype() == ACT_PLAYER)
