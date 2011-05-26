@@ -2078,8 +2078,8 @@ void handle_monster_move(monster* mons)
         _monster_regenerate(mons);
 
         if (mons->cannot_act()
-            || mons->type == MONS_SIXFIRHY // these move only 4 of 12 turns
-               && ++mons->number / 4 % 3 != 2)  // but are not helpless
+            || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
+               && ++mons->number / 8 % 3 != 2)  // but are not helpless
         {
             mons->speed_increment -= non_move_energy;
             continue;
