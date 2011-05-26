@@ -2933,7 +2933,7 @@ int monster::shield_bypass_ability(int) const
 int monster::armour_class() const
 {
     // Extra AC for snails/turtles drawn into their shells.
-    return (ac + (has_ench(ENCH_WITHDRAWN) ? 10 : 0));
+    return std::max(ac + (has_ench(ENCH_WITHDRAWN) ? 10 : 0), 0);
 }
 
 int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
