@@ -36,10 +36,6 @@
 #include "view.h" // Elemental colours for unrandarts
 #include "shout.h"
 
-// The initial generation of a randart is very simple - it occurs in
-// dungeon.cc and consists of giving it a few random things - plus &
-// plus2 mainly.
-
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
 {
