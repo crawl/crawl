@@ -1383,13 +1383,12 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
         noisy(10, point);
         mpr("The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!", MSGCH_WARN);
 
-        if (one_chance_in(3) && caster->atype() == ACT_PLAYER)
+        if (one_chance_in(5) && caster->atype() == ACT_PLAYER)
         {
             // if someone deletes the db, no message is ok
             mpr(getMiscString("SHT_int_loss").c_str());
             // Messages the same as for SHT, as they are currently (10/10) generic.
-            lose_stat(STAT_INT, 1, true, "opening a malign portal");
-            // Since sustAbil no longer helps here, this can't fail anymore -- 1KB
+            lose_stat(STAT_INT, 1 + random2(3), false, "opening a malign portal");
         }
     }
     else if (caster->atype() == ACT_PLAYER)
@@ -1404,12 +1403,11 @@ bool cast_malign_gateway(actor * caster, int pow, god_type god)
 
 bool cast_summon_horrible_things(int pow, god_type god)
 {
-    if (one_chance_in(3))
+    if (one_chance_in(5))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("SHT_int_loss").c_str());
-        lose_stat(STAT_INT, 1, true, "summoning horrible things");
-        // Since sustAbil no longer helps here, this can't fail anymore -- 1KB
+        lose_stat(STAT_INT, 1 + random2(3), false, "summoning horrible things");
     }
 
     int how_many_small =
