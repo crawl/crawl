@@ -1190,7 +1190,7 @@ bool melee_attack::player_aux_test_hit()
         && one_chance_in(20))
     {
         simple_god_message(" blocks your attack.", GOD_ELYVILON);
-        dec_penance(GOD_ELYVILON, 1 + random2(to_hit - evasion));
+        dec_penance(GOD_ELYVILON, 1);
         return (false);
     }
 
@@ -1516,7 +1516,7 @@ int melee_attack::player_hits_monster()
         && one_chance_in(20))
     {
         simple_god_message(" blocks your attack.", GOD_ELYVILON);
-        dec_penance(GOD_ELYVILON, 1 + random2(to_hit - evasion));
+        dec_penance(GOD_ELYVILON, 1);
         return (false);
     }
 
