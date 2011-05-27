@@ -103,6 +103,14 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             return (cast_semi_controlled_blink(pow));
         random_blink(false);
     }
+    // The orb sometimes degrades controlled blinks to uncontrolled.
+    else if (you.char_direction == GDT_ASCENDING && one_chance_in(3) && !wizard_blink)
+    {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
+        mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
+        random_blink(false);
+    }
     else
     {
         // query for location {dlb}:
@@ -238,12 +246,20 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     }
 
     //jmf: Add back control, but effect is cast_semi_controlled_blink(pow).
-    else if (player_control_teleport() && !you.confused()
-             && allow_partial_control && allow_control_teleport())
+    else if (player_control_teleport() && !you.confused() && allow_partial_control)
     {
-        mpr("You may select the general direction of your translocation.");
-        cast_semi_controlled_blink(100);
-        maybe_id_ring_TC();
+        // The orb sometimes degrades semicontrolled blinks to uncontrolled.
+        if (you.char_direction == GDT_ASCENDING && one_chance_in(3))
+        {
+            mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
+            random_blink(false);
+        }
+        else if (allow_control_teleport())
+        {
+            mpr("You may select the general direction of your translocation.");
+            cast_semi_controlled_blink(100);
+            maybe_id_ring_TC();
+        }
     }
     else
     {
