@@ -842,50 +842,47 @@ bool cast_apportation(int pow, bolt& beam)
             mons->del_ench(ENCH_HELD, true);
     }
 
-    if (item_is_orb(item))
+    // Heavy items require more power to apport directly to your feet.
+    // They might end up just moving a few squares, depending on spell
+    // power and item mass.
+    beam.is_tracer = true;
+    beam.aimed_at_spot = true;
+    beam.fire();
+
+    // Pop the item's location off the end
+    beam.path_taken.pop_back();
+
+    // The actual number of squares it needs to traverse to get to you.
+    int dist = beam.path_taken.size();
+
+    // The maximum number of squares the item will actually move, always
+    // at least one square.
+    int quantity = item.quantity;
+    int apported_mass = unit_mass * std::min(quantity, max_units);
+
+    int max_dist = std::max(1 + (pow - apported_mass / 20) / 10, 1);
+
+    dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
+
+    coord_def new_spot = beam.path_taken[beam.path_taken.size() - max_dist];
+
+    if (max_dist <= dist)
     {
-        // The orb drags its heels.
-        beam.is_tracer = true;
-        beam.aimed_at_spot = true;
-        beam.fire();
+        dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
-        // Pop the orb's location off the end
-        beam.path_taken.pop_back();
-
-        // The actual number of squares it needs to traverse to get to you.
-        unsigned int dist = beam.path_taken.size();
-
-        // The maximum number of squares the orb will actually move, always
-        // at least one square.
-        unsigned int max_dist = std::max((pow / 10) - 1, 1);
-
-        dprf("Orb apport dist=%d, max_dist=%d", dist, max_dist);
-
-        if (max_dist <= dist)
-        {
-            coord_def new_spot = beam.path_taken[beam.path_taken.size()-max_dist];
-
-            dprf("Orb apport: new spot is %d/%d", new_spot.x, new_spot.y);
-
-            if (feat_virtually_destroys_item(grd(new_spot), item))
-                return (true);
-
-            else
-            {
-                move_top_item(where, new_spot);
-                origin_set(new_spot);
-                return (true);
-            }
-        }
-        // if power is high enough it'll just come straight to you
+        if (feat_virtually_destroys_item(grd(new_spot), item))
+            return (true);
     }
+    // If power is high enough it'll just come straight to you.
+    else
+        new_spot = you.pos();
 
     // Actually move the item.
     if (max_units < item.quantity)
     {
-        if (!copy_item_to_grid(item, you.pos(), max_units))
+        if (!copy_item_to_grid(item, new_spot, max_units))
         {
-            // always >1 item
+            // Always >1 item.
             mpr("They abruptly stop in place!");
             // Too late to abort.
             return (true);
@@ -893,10 +890,10 @@ bool cast_apportation(int pow, bolt& beam)
         item.quantity -= max_units;
     }
     else
-        move_top_item(where, you.pos());
+        move_top_item(where, new_spot);
 
     // Mark the item as found now.
-    origin_set(you.pos());
+    origin_set(new_spot);
 
     return (true);
 }
