@@ -278,6 +278,7 @@ PLUS:    +13/+13
 COLOUR:  ETC_NECRO
 TILE:    spwpn_scythe_of_curses
 TILE_EQ: finisher
+BRAND:   SPWPN_DRAINING
 VALUE:   800
 CURSED:  3
 BOOL:    special, evil
