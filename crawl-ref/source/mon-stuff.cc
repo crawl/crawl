@@ -941,7 +941,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
              mons->hit_points * 2 <= mons->max_hit_points ? "." : "!");
 
     god_speaks(god, info);
-    dec_penance(god, 1 + random2(mons->hit_points/2));
+    dec_penance(god, 1);
 
     return (true);
 }
