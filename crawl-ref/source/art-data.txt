@@ -206,12 +206,13 @@ DESC_ID: It is rather unreliable.
 NAME:    Glaive of Prune
 APPEAR:  purple glaive
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
-PLUS:    0/+12
+PLUS:    +4/+12
 COLOUR:  MAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 VALUE:   1000
 BOOL:    special
+BRAND:   SPWPN_VORPAL
 DESC_ID: It is the creation of a mad god, and carries a curse which
          transforms anyone possessing it into a prune. Fortunately, the
          curse works very slowly, and one can use it briefly with no
@@ -775,9 +776,9 @@ PLUS:    +4
 COLOUR:  LIGHTRED
 TILE:    urand_augmentation
 TILE_EQ: robe_white_blue
-STR:     2
-INT:     2
-DEX:     2
+STR:     4
+INT:     4
+DEX:     4
 DESC:    A robe made of the finest silk.
 
 NAME:     cloak of the Thief
