@@ -2761,6 +2761,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
+        case SCR_NOISE:
             return (true);
         case SCR_TORMENT:
             return (!player_mutation_level(MUT_TORMENT_RESISTANCE)
@@ -2871,7 +2872,6 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_RANDOM_USELESSNESS:
-        case SCR_NOISE:
             return (true);
         case SCR_TELEPORTATION:
             return (crawl_state.game_is_sprint());
