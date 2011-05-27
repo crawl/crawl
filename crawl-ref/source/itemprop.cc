@@ -2713,7 +2713,7 @@ int item_mass(const item_def &item)
         break;
 
     case OBJ_ORBS:
-        unit_mass = 300;
+        unit_mass = 600;
         break;
 
     case OBJ_MISCELLANY:
