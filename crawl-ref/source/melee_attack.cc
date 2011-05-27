@@ -924,16 +924,16 @@ bool melee_attack::monster_attack()
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
     if (perceived_attack && attacker->alive()
-        && (defender->as_monster()->friendly()
-            || defender->atype() == ACT_PLAYER)
+        && (defender->atype() == ACT_PLAYER
+            || defender->as_monster()->friendly())
         && !attacker->as_monster()->wont_attack()
         && you.pet_target == MHITNOT
         && env.sanctuary_time <= 0)
     {
         if (defender->atype() == ACT_PLAYER)
             interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
-
-        you.pet_target = attacker->mindex();
+        else
+            you.pet_target = attacker->mindex();
     }
 
     return (did_hit);
