@@ -3472,7 +3472,16 @@ bool melee_attack::player_check_monster_died()
 
 int melee_attack::calc_to_hit(bool random)
 {
-    int mhit = 0;
+    const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER)? 25 : 15;
+    int mhit = attacker->atype() == ACT_PLAYER ?
+                15 + (calc_stat_to_hit_base() / 2)
+              : 18 + attacker->get_experience_level() * hd_mult / 10;
+
+    const int base_hit = mhit;
+
+    if (wearing_amulet(AMU_INACCURACY))
+        mhit -= 5;
+
     // This if statement is temporary, it should be removed when the
     // implementation of a more universal (and elegant) to-hit calculation
     // is designed. The actual code is copied from the old mons_to_hit and
@@ -3490,15 +3499,6 @@ int melee_attack::calc_to_hit(bool random)
         can_do_unarmed =
             player_fights_well_unarmed(attacker_armour_tohit_penalty
                                        + attacker_shield_tohit_penalty);
-
-        const int base_to_hit = mhit = 15 + (calc_stat_to_hit_base() / 2);
-
-        if (wearing_amulet(AMU_INACCURACY))
-            mhit -= 5;
-
-        // If you can't see yourself, you're a little less accurate.
-        if (!you.visible_to(&you))
-            mhit -= 5;
 
         // fighting contribution
         mhit += maybe_random2(1 + you.skill(SK_FIGHTING), random);
@@ -3568,13 +3568,8 @@ int melee_attack::calc_to_hit(bool random)
         if (player_mutation_level(MUT_EYEBALLS))
             mhit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
 
-        int roll_hit = mhit;
-
         // hit roll
         mhit = maybe_random2(mhit, random);
-
-        dprf("to hit die: %d; rolled value: %d; base: %d",
-              roll_hit, mhit, base_to_hit);
 
         if (weapon && wpn_skill == SK_SHORT_BLADES && you.duration[DUR_SURE_BLADE])
         {
@@ -3593,25 +3588,9 @@ int melee_attack::calc_to_hit(bool random)
                 mhit += maybe_random2(you.dex(), random);
             }
         }
-
-        // Check for backlight (Corona).
-        if (defender && defender->atype() == ACT_MONSTER)
-        {
-            if (defender->backlit(true, false))
-                mhit += 2 + random2(8);
-            // Invisible monsters are hard to hit.
-            else if (!defender->visible_to(&you))
-                mhit -= 6;
-        }
-
-        return (mhit);
     }
     else
     {
-        const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER)? 25 : 15;
-        int mhit = 18 + attacker->get_experience_level() * hd_mult / 10;
-        const int base_hit = mhit;
-
         if (weapon
             && (weapon->base_type == OBJ_WEAPONS
                 && !is_range_weapon(*weapon)
@@ -3619,31 +3598,29 @@ int melee_attack::calc_to_hit(bool random)
         {
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
         }
+
         if(weapon && item_is_rod(*weapon))
             mhit += (short)weapon->props["rod_enchantment"];
-
-        if (attacker->confused())
-            mhit -= 5;
-
-        if (defender->backlit(true, false))
-            mhit += 2 + random2(8);
 
          if (defender->atype() == ACT_PLAYER
              && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
              mhit -= 5;
-
-        if (!defender->visible_to(attacker))
-            mhit = mhit * 65 / 100;
-
-        dprf("%s: Base to-hit: %d, Final to-hit: %d",
-             attacker->name(DESC_PLAIN).c_str(),
-             base_hit, mhit);
-
-        return (mhit);
     }
 
-    // Uh-oh?
-    return (0);
+    if (attacker->confused())
+        mhit -= 5;
+
+    if (defender->backlit(true, false))
+        mhit += 2 + random2(8);
+
+    if (!defender->visible_to(attacker))
+        mhit = mhit * 75 / 100;
+
+    dprf("%s: Base to-hit: %d, Final to-hit: %d",
+         attacker->name(DESC_PLAIN).c_str(),
+         base_hit, mhit);
+
+    return (mhit);
 }
 
 /*
