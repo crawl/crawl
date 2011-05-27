@@ -1490,6 +1490,13 @@ static void _go_downstairs()
     if (!check_annotation_exclusion_warning())
         return;
 
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT
+        && you.level_type_name.find("Ziggurat") != std::string::npos)
+    {
+        if (!yesno("Are you sure you want to leave this Ziggurat?"))
+            return;
+    }
+
     if (you.duration[DUR_MISLED])
     {
         mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
