@@ -299,6 +299,11 @@ void you_teleport(void)
             mpr("You have a feeling this translocation may take a while to kick in...");
             teleport_delay += 5 + random2(10);
         }
+        else if (you.char_direction == GDT_ASCENDING && coinflip())
+        {
+            mpr("You feel the orb delaying this translocation!", MSGCH_ORB);
+            teleport_delay += 5 + random2(5);
+        }
 
         you.set_duration(DUR_TELEPORT, teleport_delay);
     }
@@ -485,6 +490,13 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             {
                 pos.x += random2(3) - 1;
                 pos.y += random2(3) - 1;
+            }
+            // The orb sometimes makes controlled teleports less accurate.
+            if (you.char_direction == GDT_ASCENDING && coinflip())
+            {
+                mpr("You feel the orb interfering with your control of this translocation!", MSGCH_ORB);
+                pos.x += random2(5) + 2;
+                pos.y += random2(5) + 2;
             }
             dprf("Scattered target square (%d, %d)", pos.x, pos.y);
         }
