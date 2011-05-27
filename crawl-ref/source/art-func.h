@@ -33,7 +33,7 @@
 #include "mon-stuff.h"     // For Scythe of Curses cursing items
 #include "player.h"
 #include "spl-cast.h"      // For evokes
-#include "spl-miscast.h"   // For Staff of Wucad Mu miscasts
+#include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow.
 
@@ -138,10 +138,16 @@ static void _CEREBOV_melee_effect(item_def* weapon, actor* attacker,
 }
 
 ////////////////////////////////////////////////////
+static void _curses_miscast(actor* victim, int power, int fail)
+{
+    MiscastEffect(victim, WIELD_MISCAST, SPTYP_NECROMANCY, power, fail,
+                  "the Scythe of Curses", NH_NEVER);
+}
 
 static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
+    _curses_miscast(&you, random2(9), random2(70));
 }
 
 static void _CURSES_world_reacts(item_def *item)
@@ -157,6 +163,8 @@ static void _CURSES_melee_effect(item_def* weapon, actor* attacker,
     {
         did_god_conduct(DID_NECROMANCY, 3);
     }
+    if (defender->has_lifeforce() && !mondied)
+        _curses_miscast(defender, random2(9), random2(70));
 }
 
 /////////////////////////////////////////////////////
