@@ -316,7 +316,7 @@ static bool _check_crystal_ball(int subtype, bool known)
     int min_evo = 2;
     if (known && subtype == MISC_CRYSTAL_BALL_OF_SEEING)
         min_evo = 3;
-    if (you.skills[SK_EVOCATIONS] < min_evo)
+    if (you.skill(SK_EVOCATIONS) < min_evo)
     {
         mpr("You lack the skill to use this item.");
         return false;

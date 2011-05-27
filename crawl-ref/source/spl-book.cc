@@ -1395,8 +1395,8 @@ int staff_spell(int staff)
     item_def& istaff(you.inv[staff]);
     // Spell staves are mostly for the benefit of non-spellcasters, so we're
     // not going to involve INT or Spellcasting skills for power. -- bwr
-    int variable_power = (5 + you.skills[SK_EVOCATIONS]
-                    + roll_dice(2, you.skills[SK_EVOCATIONS]));
+    int variable_power = 5 + you.skill(SK_EVOCATIONS)
+                         + roll_dice(2, you.skill(SK_EVOCATIONS));
 
     if (!item_is_rod(istaff))
     {
