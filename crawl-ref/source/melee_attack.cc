@@ -211,6 +211,7 @@ bool melee_attack::handle_phase_attempted()
     // though.
     else if (attacker == defender && attacker->confused())
     {
+        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 255 : 128);
         // And is still hilarious if it's the player.
         if (attacker->atype() == ACT_PLAYER)
             xom_is_stimulated(255);
@@ -218,11 +219,6 @@ bool melee_attack::handle_phase_attempted()
             xom_is_stimulated(128);
     }
 
-    return (true);
-}
-
-bool melee_attack::handle_phase_dodged()
-{
     return (true);
 }
 
@@ -242,7 +238,7 @@ bool melee_attack::handle_phase_blocked()
             // TODO: potentially remove this; since this code has been pushed
             // back in the time line of attack sequencing, we may have already
             // incured the attacker's delay...
-            calc_attack_delay();
+            you.time_taken = calc_attack_delay();
 
             if (you.can_see(defender))
             {
@@ -280,6 +276,11 @@ bool melee_attack::handle_phase_blocked()
         return (true);
     }
 
+    return (true);
+}
+
+bool melee_attack::handle_phase_dodged()
+{
     return (true);
 }
 
@@ -355,10 +356,7 @@ bool melee_attack::attack()
 
 bool melee_attack::player_attack()
 {
-    // TODO: This clobbers the settings in init_attack, not sure why?
-    noise_factor = 100;
-
-    calc_attack_delay();
+    you.time_taken = calc_attack_delay();
     player_stab_check();
 
     coord_def where = defender->pos();
@@ -510,43 +508,431 @@ bool melee_attack::player_attack()
 
 bool melee_attack::monster_attack()
 {
-    mons_perform_attack();
+    const bool was_delayed = you_are_delayed();
+    monster* def_copy = NULL;
 
-    // Check attack perceived
-    if (defender->atype() == ACT_PLAYER)
+    if (attacker != defender && attacker->self_destructs())
+        return (did_hit = perceived_attack = true);
+
+    if (attacker != defender && attack_warded_off())
     {
-        if(perceived_attack && attacker->alive())
-        {
-            interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
+        // A warded-off attack takes half the normal energy.
+        attacker->lose_energy(EUT_ATTACK, 2);
 
-            // If a friend wants to help, they can attack the attacking
-            // monster, unless sanctuary is in effect since pet_target can
-            // only be changed explicitly by the player during sanctuary.
-            if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
-                you.pet_target = attacker->mindex();
-        }
-
-        // If a hydra was attacking it may have switched targets and started
-        // hitting the player. -cao
-        return (did_hit);
+        perceived_attack = true;
+        return (false);
     }
 
-    if (perceived_attack
-        && (defender->as_monster()->foe == MHITNOT || one_chance_in(3))
-        && attacker->alive() && defender->alive())
+    mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
+                                               attack_number);
+    if (attk.type == AT_WEAP_ONLY)
     {
-        behaviour_event(defender->as_monster(), ME_WHACK, attacker->mindex());
+        int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
+        if (weap == NON_ITEM)
+            attk.type = AT_NONE;
+        else if (is_range_weapon(mitm[weap]))
+            attk.type = AT_SHOOT;
+        else
+            attk.type = AT_HIT;
+    }
+
+    if (weapon == NULL)
+    {
+        switch (attk.type)
+        {
+        case AT_HEADBUTT:
+        case AT_TENTACLE_SLAP:
+        case AT_TAIL_SLAP:
+        case AT_TRAMPLE:
+        case AT_TRUNK_SLAP:
+            noise_factor = 150;
+            break;
+
+        case AT_HIT:
+        case AT_PUNCH:
+        case AT_KICK:
+        case AT_CLAW:
+        case AT_GORE:
+        case AT_SNAP:
+        case AT_SPLASH:
+            noise_factor = 125;
+            break;
+
+        case AT_BITE:
+        case AT_PECK:
+        case AT_CONSTRICT:
+            noise_factor = 100;
+            break;
+
+        case AT_STING:
+        case AT_SPORE:
+        case AT_ENGULF:
+            noise_factor = 75;
+            break;
+
+        case AT_TOUCH:
+            noise_factor = 0;
+            break;
+
+        // To prevent compiler warnings.
+        case AT_NONE:
+        case AT_RANDOM:
+        case AT_SHOOT:
+            die("Invalid attack flavour for noise_factor");
+            break;
+
+        default:
+            die("Unhandled attack flavour for noise_factor");
+            break;
+        }
+
+        switch(attk.flavour)
+        {
+        case AF_FIRE:
+            noise_factor += 50;
+            break;
+
+        case AF_ELEC:
+            noise_factor += 100;
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    damage_done = 0;
+    mons_set_weapon(attk);
+    to_hit = calc_to_hit();
+
+    const bool chaos_attack = damage_brand == SPWPN_CHAOS
+                              || (attk.flavour == AF_CHAOS
+                                  && attacker != defender);
+
+    // Make copy of monster before monster_die() resets it.
+    if (chaos_attack && defender->atype() == ACT_MONSTER && !def_copy)
+        def_copy = new monster(*defender->as_monster());
+
+    // Monsters lose additional energy only for the first two weapon
+    // attacks; subsequent hits are free.
+    if (effective_attack_number < 1)
+    {
+        final_attack_delay = calc_attack_delay();
+        if (damage_brand == SPWPN_SPEED)
+            final_attack_delay = final_attack_delay / 2 + 1;
+
+        // Initial attack causes energy to be used for all attacks.  No
+        // additional energy is used for unarmed attacks.
+        if (effective_attack_number == 0)
+            attacker->as_monster()->lose_energy(EUT_ATTACK);
+
+        // speed adjustment for weapon using monsters
+        if (final_attack_delay > 0)
+        {
+            const int atk_speed =
+                attacker->as_monster()->action_energy(EUT_ATTACK);
+
+            // only get one third penalty/bonus for second weapons.
+            if (effective_attack_number > 0)
+            {
+                final_attack_delay =
+                    div_rand_round((2 * atk_speed + final_attack_delay), 3);
+            }
+
+            int delta =
+                div_rand_round((final_attack_delay - 10 + (atk_speed - 10)), 2);
+            if (delta > 0)
+                attacker->as_monster()->speed_increment -= delta;
+        }
+    }
+
+    bool shield_blocked = false;
+    bool this_round_hit = false;
+
+    if (attacker != defender)
+    {
+        if (attack_shield_blocked(true))
+        {
+            shield_blocked   = true;
+            perceived_attack = true;
+            this_round_hit = did_hit = true;
+        }
+        // XXX: what is the chance for here?
+        else if (attacker_visible && one_chance_in(3))
+        {
+            perceived_attack = true;
+            if (defender == &you)
+                practise(EX_MONSTER_MAY_HIT);
+        }
+    }
+
+    if (!shield_blocked)
+    {
+        const int defender_evasion = defender->melee_evasion(attacker);
+        int defender_evasion_help
+            = defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
+        int defender_evasion_nophase
+            = defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+
+        defer_rand r;
+
+        if (defender_invisible)
+        {
+            // No evasion feedback if we don't know what we're
+            // fighting.
+            defender_evasion_help = defender_evasion;
+            defender_evasion_nophase = defender_evasion;
+        }
+
+        ev_margin = test_melee_hit(to_hit, defender_evasion_help, r);
+
+        if (attacker == defender || ev_margin >= 0)
+        {
+            // Will hit no matter what.
+            this_round_hit = true;
+        }
+        else if (test_melee_hit(to_hit, defender_evasion, r) >= 0)
+        {
+            if (needs_message)
+            {
+                mprf("Helpless, %s %s to dodge %s attack.",
+                     mons_defender_name().c_str(),
+                     defender->conj_verb("fail").c_str(),
+                     atk_name(DESC_ITS).c_str());
+            }
+            this_round_hit = true;
+        }
+        else if (test_melee_hit(to_hit, defender_evasion_nophase, r) >= 0)
+        {
+            if (needs_message)
+            {
+                mprf("%s momentarily %s out as %s "
+                     "attack passes through %s%s",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("phase").c_str(),
+                     atk_name(DESC_ITS).c_str(),
+                     defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
+                     attack_strength_punctuation().c_str());
+            }
+            this_round_hit = false;
+        }
+        else
+        {
+            // Misses no matter what.
+            if (needs_message)
+            {
+                mprf("%s%s misses %s%s",
+                     atk_name(DESC_THE).c_str(),
+                     evasion_margin_adverb().c_str(),
+                     mons_defender_name().c_str(),
+                     attack_strength_punctuation().c_str());
+            }
+        }
+
+        if (this_round_hit)
+        {
+            did_hit = true;
+            perceived_attack = true;
+            damage_done = calc_damage();
+        }
+        else
+        {
+            perceived_attack = perceived_attack || attacker_visible;
+        }
+
+        if (attacker != defender &&
+            defender->atype() == ACT_PLAYER &&
+            (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
+            || attk.flavour == AF_REACH))
+        {
+            // Check for spiny mutation.
+            mons_do_spines();
+
+            // Spines can kill!
+            if (!attacker->alive())
+                return (false);
+        }
+    }
+
+    if (check_unrand_effects())
+        return (false);
+
+    if (damage_done < 1 && this_round_hit && !shield_blocked)
+        mons_announce_dud_hit(attk);
+
+    if (damage_done > 0)
+    {
+        if (shield_blocked)
+            dprf("ERROR: Non-zero damage after shield block!");
+        mons_announce_hit(attk);
+
+        if (defender == &you)
+            practise(EX_MONSTER_WILL_HIT);
+
+        if (defender->can_bleed()
+            && !defender->is_summoned()
+            && !defender->submerged())
+        {
+            int blood = _modify_blood_amount(damage_done,
+                                             attacker->damage_type());
+
+            if (blood > defender->stat_hp())
+                blood = defender->stat_hp();
+
+            bleed_onto_floor(defender->pos(), defender->type, blood, true);
+        }
+
+        if (decapitate_hydra(damage_done,
+                             attacker->damage_type(attack_number)))
+        {
+            return (true);
+        }
+
+        special_damage = 0;
+        special_damage_message.clear();
+        special_damage_flavour = BEAM_NONE;
+
+        if (attacker != defender && attk.type == AT_TRAMPLE)
+            do_knockback();
+
+        // Monsters attacking themselves don't get attack flavour.
+        // The message sequences look too weird.  Also, stealing
+        // attacks aren't handled until after the damage msg.
+        if (attacker != defender && attk.flavour != AF_STEAL)
+            mons_apply_attack_flavour(attk);
+
+        if (needs_message && !special_damage_message.empty())
+            mprf("%s", special_damage_message.c_str());
+
+        // Defender banished.  Bail before chaos_killed_defender()
+        // is called, since the defender is still alive in the
+        // Abyss.
+        if (defender->is_banished())
+        {
+            if (chaos_attack && attacker->alive())
+                chaos_affects_attacker();
+
+            do_miscast();
+            return (false);
+        }
+
+        defender->hurt(attacker, damage_done + special_damage,
+                       special_damage_flavour);
+
+        if (!defender->alive())
+        {
+            if (chaos_attack && defender->atype() == ACT_MONSTER)
+                chaos_killed_defender(def_copy);
+
+            if (chaos_attack && attacker->alive())
+                chaos_affects_attacker();
+
+            do_miscast();
+            return (true);
+        }
+
+        // Yredelemnul's injury mirroring can kill the attacker.
+        // Also, bail if the monster is attacking itself without a
+        // weapon, since intrinsic monster attack flavours aren't
+        // applied for self-attacks.
+        if (!attacker->alive() || (attacker == defender && !weapon))
+        {
+            if (miscast_target == defender)
+                do_miscast();
+            return (false);
+        }
+
+        special_damage = 0;
+        special_damage_message.clear();
+        special_damage_flavour = BEAM_NONE;
+        apply_damage_brand();
+
+        if (needs_message && !special_damage_message.empty())
+        {
+            mprf("%s", special_damage_message.c_str());
+            // Don't do message-only miscasts along with a special
+            // damage message.
+            if (miscast_level == 0)
+                miscast_level = -1;
+        }
+
+        if (special_damage > 0)
+            defender->hurt(attacker, special_damage, special_damage_flavour);
+
+        if (!defender->alive())
+        {
+            if (chaos_attack && defender->atype() == ACT_MONSTER)
+                chaos_killed_defender(def_copy);
+
+            if (chaos_attack && attacker->alive())
+                chaos_affects_attacker();
+
+            do_miscast();
+            return (true);
+        }
+
+        if (chaos_attack && attacker->alive())
+            chaos_affects_attacker();
+
+        if (miscast_target == defender)
+            do_miscast();
+
+        // Yredelemnul's injury mirroring can kill the attacker.
+        if (!attacker->alive())
+            return (false);
+
+        if (miscast_target == attacker)
+            do_miscast();
+
+        // Miscast might have killed the attacker.
+        if (!attacker->alive())
+            return (false);
+
+        if (attk.flavour == AF_STEAL)
+            mons_apply_attack_flavour(attk);
+    }
+
+    item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
+    if (weap && you.can_see(attacker) && weap->cursed()
+        && is_range_weapon(*weap))
+    {
+        set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
+    }
+
+    // Check for passive freeze or eyeball mutation.
+    if (defender->atype() == ACT_PLAYER && defender->alive()
+        && attacker != defender)
+    {
+        mons_do_eyeball_confusion();
+        mons_do_passive_freeze();
+    }
+
+    // Handle noise from last round.
+    handle_noise(defender->pos());
+
+    if (def_copy)
+        delete def_copy;
+
+    // Invisible monster might have interrupted butchering.
+    if (was_delayed && defender->atype() == ACT_PLAYER && perceived_attack
+        && !attacker_visible)
+    {
+        handle_interrupted_swap(false, true);
     }
 
     // If an enemy attacked a friend, set the pet target if it isn't set
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
     if (perceived_attack && attacker->alive()
-        && defender->as_monster()->friendly()
+        && (defender->as_monster()->friendly()
+            || defender->atype() == ACT_PLAYER)
         && !attacker->as_monster()->wont_attack()
         && you.pet_target == MHITNOT
         && env.sanctuary_time <= 0)
     {
+        if (defender->atype() == ACT_PLAYER)
+            interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
+
         you.pet_target = attacker->mindex();
     }
 
@@ -1054,8 +1440,11 @@ int melee_attack::player_hits_monster()
     const int evasion = defender->melee_evasion(attacker);
     const int helpful_evasion =
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
-    dprf("your to-hit: %d; defender effective EV: %d", to_hit, evasion);
+    dprf("attacker to-hit: %d; defender effective EV: %d", to_hit, evasion);
 
+    /* Having gods directly contradict other gods is cool, but when its as
+     * infrequent as this case is, we have to wonder if its actually adding
+     * anything to the actual game. I don't think it does. -Cryptic
     if (you.religion != GOD_ELYVILON
         && you.penance[GOD_ELYVILON]
         && god_hates_your_god(GOD_ELYVILON, you.religion)
@@ -1066,6 +1455,7 @@ int melee_attack::player_hits_monster()
         dec_penance(GOD_ELYVILON, 1 + random2(to_hit - evasion));
         return (false);
     }
+     */
 
     if (to_hit >= evasion && helpful_evasion > evasion
         || ((defender->cannot_act() || defender->asleep())
@@ -1193,7 +1583,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                         div_rand_round(
                             std::min(static_cast<int>(you.piety), 180), 33), 2);
 
-                dprf(MSGCH_DIAGNOSTICS, "Damage: %d -> %d, Beogh bonus: %d",
+                dprf("Damage: %d -> %d, Beogh bonus: %d",
                      orig_damage, damage, damage - orig_damage);
             }
 
@@ -3294,11 +3684,6 @@ int melee_attack::calc_to_hit(bool random)
 /*
  * Calculate the attack delay for attacker
  *
- * All calls to this method by player-attackers (attackers who are players)
- * implies that the calculated attack delay is automatically applied via
- * you.time_taken. This application of the attack delay does not happen
- * implicitly for monsters.
- *
  * Although we're trying to unify the code paths for players and monsters,
  * we don't have a unified system in place for calculating attack_delay using
  * the same base methods so we still have to check the atype of the attacker
@@ -3336,14 +3721,11 @@ int melee_attack::calc_attack_delay(bool random)
             you.time_taken = div_rand_round(you.time_taken, 2);
         }
 
-        you.time_taken =
-            std::max(2, div_rand_round(you.time_taken * attack_delay, 10));
-
         // TODO: Fix the warning thrown about non-POD for you.time_taken
         dprf("Weapon speed: %d; min: %d; attack time: %d",
              attack_delay, min_delay, you.time_taken);
 
-        return (attack_delay);
+        return (std::max(2, div_rand_round(you.time_taken * attack_delay, 10)));
     }
     else
     {
@@ -4258,424 +4640,6 @@ bool melee_attack::do_knockback(bool trample)
     }
 
     return false;
-}
-
-bool melee_attack::mons_perform_attack()
-{
-    coord_def pos    = defender->pos();
-    const bool was_delayed = you_are_delayed();
-    monster* def_copy = NULL;
-
-    if (attacker != defender && attacker->self_destructs())
-        return (did_hit = perceived_attack = true);
-
-    if (attacker != defender && attack_warded_off())
-    {
-        // A warded-off attack takes half the normal energy.
-        attacker->lose_energy(EUT_ATTACK, 2);
-
-        perceived_attack = true;
-        return (false);
-    }
-
-    mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
-                                               attack_number);
-    if (attk.type == AT_WEAP_ONLY)
-    {
-        int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
-        if (weap == NON_ITEM)
-            attk.type = AT_NONE;
-        else if (is_range_weapon(mitm[weap]))
-            attk.type = AT_SHOOT;
-        else
-            attk.type = AT_HIT;
-    }
-
-    if (weapon == NULL)
-    {
-        switch (attk.type)
-        {
-        case AT_HEADBUTT:
-        case AT_TENTACLE_SLAP:
-        case AT_TAIL_SLAP:
-        case AT_TRAMPLE:
-        case AT_TRUNK_SLAP:
-            noise_factor = 150;
-            break;
-
-        case AT_HIT:
-        case AT_PUNCH:
-        case AT_KICK:
-        case AT_CLAW:
-        case AT_GORE:
-        case AT_SNAP:
-        case AT_SPLASH:
-            noise_factor = 125;
-            break;
-
-        case AT_BITE:
-        case AT_PECK:
-        case AT_CONSTRICT:
-            noise_factor = 100;
-            break;
-
-        case AT_STING:
-        case AT_SPORE:
-        case AT_ENGULF:
-            noise_factor = 75;
-            break;
-
-        case AT_TOUCH:
-            noise_factor = 0;
-            break;
-
-        // To prevent compiler warnings.
-        case AT_NONE:
-        case AT_RANDOM:
-        case AT_SHOOT:
-            die("Invalid attack flavour for noise_factor");
-            break;
-
-        default:
-            die("Unhandled attack flavour for noise_factor");
-            break;
-        }
-
-        switch(attk.flavour)
-        {
-        case AF_FIRE:
-            noise_factor += 50;
-            break;
-
-        case AF_ELEC:
-            noise_factor += 100;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    damage_done = 0;
-    mons_set_weapon(attk);
-    to_hit = calc_to_hit();
-
-    const bool chaos_attack = damage_brand == SPWPN_CHAOS
-                              || (attk.flavour == AF_CHAOS
-                                  && attacker != defender);
-
-    // Make copy of monster before monster_die() resets it.
-    if (chaos_attack && defender->atype() == ACT_MONSTER && !def_copy)
-        def_copy = new monster(*defender->as_monster());
-
-    // Monsters lose additional energy only for the first two weapon
-    // attacks; subsequent hits are free.
-    if (effective_attack_number < 1)
-    {
-        final_attack_delay = calc_attack_delay();
-        if (damage_brand == SPWPN_SPEED)
-            final_attack_delay = final_attack_delay / 2 + 1;
-
-        // Initial attack causes energy to be used for all attacks.  No
-        // additional energy is used for unarmed attacks.
-        if (effective_attack_number == 0)
-            attacker->as_monster()->lose_energy(EUT_ATTACK);
-
-        // speed adjustment for weapon using monsters
-        if (final_attack_delay > 0)
-        {
-            const int atk_speed =
-                attacker->as_monster()->action_energy(EUT_ATTACK);
-
-            // only get one third penalty/bonus for second weapons.
-            if (effective_attack_number > 0)
-            {
-                final_attack_delay =
-                    div_rand_round((2 * atk_speed + final_attack_delay), 3);
-            }
-
-            int delta =
-                div_rand_round((final_attack_delay - 10 + (atk_speed - 10)), 2);
-            if (delta > 0)
-                attacker->as_monster()->speed_increment -= delta;
-        }
-    }
-
-    bool shield_blocked = false;
-    bool this_round_hit = false;
-
-    if (attacker != defender)
-    {
-        if (attack_shield_blocked(true))
-        {
-            shield_blocked   = true;
-            perceived_attack = true;
-            this_round_hit = did_hit = true;
-        }
-        // XXX: what is the chance for here?
-        else if (attacker_visible && one_chance_in(3))
-        {
-            perceived_attack = true;
-            if (defender == &you)
-                practise(EX_MONSTER_MAY_HIT);
-        }
-    }
-
-    if (!shield_blocked)
-    {
-        const int defender_evasion = defender->melee_evasion(attacker);
-        int defender_evasion_help
-            = defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
-        int defender_evasion_nophase
-            = defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
-
-        defer_rand r;
-
-        if (defender_invisible)
-        {
-            // No evasion feedback if we don't know what we're
-            // fighting.
-            defender_evasion_help = defender_evasion;
-            defender_evasion_nophase = defender_evasion;
-        }
-
-        ev_margin = test_melee_hit(to_hit, defender_evasion_help, r);
-
-        if (attacker == defender || ev_margin >= 0)
-        {
-            // Will hit no matter what.
-            this_round_hit = true;
-        }
-        else if (test_melee_hit(to_hit, defender_evasion, r) >= 0)
-        {
-            if (needs_message)
-            {
-                mprf("Helpless, %s %s to dodge %s attack.",
-                     mons_defender_name().c_str(),
-                     defender->conj_verb("fail").c_str(),
-                     atk_name(DESC_ITS).c_str());
-            }
-            this_round_hit = true;
-        }
-        else if (test_melee_hit(to_hit, defender_evasion_nophase, r) >= 0)
-        {
-            if (needs_message)
-            {
-                mprf("%s momentarily %s out as %s "
-                     "attack passes through %s%s",
-                     defender->name(DESC_THE).c_str(),
-                     defender->conj_verb("phase").c_str(),
-                     atk_name(DESC_ITS).c_str(),
-                     defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                     attack_strength_punctuation().c_str());
-            }
-            this_round_hit = false;
-        }
-        else
-        {
-            // Misses no matter what.
-            if (needs_message)
-            {
-                mprf("%s%s misses %s%s",
-                     atk_name(DESC_THE).c_str(),
-                     evasion_margin_adverb().c_str(),
-                     mons_defender_name().c_str(),
-                     attack_strength_punctuation().c_str());
-            }
-        }
-
-        if (this_round_hit)
-        {
-            did_hit = true;
-            perceived_attack = true;
-            damage_done = calc_damage();
-        }
-        else
-        {
-            perceived_attack = perceived_attack || attacker_visible;
-        }
-
-        if (attacker != defender &&
-            defender->atype() == ACT_PLAYER &&
-            (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
-            || attk.flavour == AF_REACH))
-        {
-            // Check for spiny mutation.
-            mons_do_spines();
-
-            // Spines can kill!
-            if (!attacker->alive())
-                return (false);
-        }
-    }
-
-    if (check_unrand_effects())
-        return (false);
-
-    if (damage_done < 1 && this_round_hit && !shield_blocked)
-        mons_announce_dud_hit(attk);
-
-    if (damage_done > 0)
-    {
-        if (shield_blocked)
-            dprf("ERROR: Non-zero damage after shield block!");
-        mons_announce_hit(attk);
-
-        if (defender == &you)
-            practise(EX_MONSTER_WILL_HIT);
-
-        if (defender->can_bleed()
-            && !defender->is_summoned()
-            && !defender->submerged())
-        {
-            int blood = _modify_blood_amount(damage_done,
-                                             attacker->damage_type());
-
-            if (blood > defender->stat_hp())
-                blood = defender->stat_hp();
-
-            bleed_onto_floor(pos, defender->type, blood, true);
-        }
-
-        if (decapitate_hydra(damage_done,
-                             attacker->damage_type(attack_number)))
-        {
-            return (true);
-        }
-
-        special_damage = 0;
-        special_damage_message.clear();
-        special_damage_flavour = BEAM_NONE;
-
-        if (attacker != defender && attk.type == AT_TRAMPLE)
-            do_knockback();
-
-        // Monsters attacking themselves don't get attack flavour.
-        // The message sequences look too weird.  Also, stealing
-        // attacks aren't handled until after the damage msg.
-        if (attacker != defender && attk.flavour != AF_STEAL)
-            mons_apply_attack_flavour(attk);
-
-        if (needs_message && !special_damage_message.empty())
-            mprf("%s", special_damage_message.c_str());
-
-        // Defender banished.  Bail before chaos_killed_defender()
-        // is called, since the defender is still alive in the
-        // Abyss.
-        if (defender->is_banished())
-        {
-            if (chaos_attack && attacker->alive())
-                chaos_affects_attacker();
-
-            do_miscast();
-            return (false);
-        }
-
-        defender->hurt(attacker, damage_done + special_damage,
-                       special_damage_flavour);
-
-        if (!defender->alive())
-        {
-            if (chaos_attack && defender->atype() == ACT_MONSTER)
-                chaos_killed_defender(def_copy);
-
-            if (chaos_attack && attacker->alive())
-                chaos_affects_attacker();
-
-            do_miscast();
-            return (true);
-        }
-
-        // Yredelemnul's injury mirroring can kill the attacker.
-        // Also, bail if the monster is attacking itself without a
-        // weapon, since intrinsic monster attack flavours aren't
-        // applied for self-attacks.
-        if (!attacker->alive() || (attacker == defender && !weapon))
-        {
-            if (miscast_target == defender)
-                do_miscast();
-            return (false);
-        }
-
-        special_damage = 0;
-        special_damage_message.clear();
-        special_damage_flavour = BEAM_NONE;
-        apply_damage_brand();
-
-        if (needs_message && !special_damage_message.empty())
-        {
-            mprf("%s", special_damage_message.c_str());
-            // Don't do message-only miscasts along with a special
-            // damage message.
-            if (miscast_level == 0)
-                miscast_level = -1;
-        }
-
-        if (special_damage > 0)
-            defender->hurt(attacker, special_damage, special_damage_flavour);
-
-        if (!defender->alive())
-        {
-            if (chaos_attack && defender->atype() == ACT_MONSTER)
-                chaos_killed_defender(def_copy);
-
-            if (chaos_attack && attacker->alive())
-                chaos_affects_attacker();
-
-            do_miscast();
-            return (true);
-        }
-
-        if (chaos_attack && attacker->alive())
-            chaos_affects_attacker();
-
-        if (miscast_target == defender)
-            do_miscast();
-
-        // Yredelemnul's injury mirroring can kill the attacker.
-        if (!attacker->alive())
-            return (false);
-
-        if (miscast_target == attacker)
-            do_miscast();
-
-        // Miscast might have killed the attacker.
-        if (!attacker->alive())
-            return (false);
-
-        if (attk.flavour == AF_STEAL)
-            mons_apply_attack_flavour(attk);
-    }
-
-    item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
-    if (weap && you.can_see(attacker) && weap->cursed()
-        && is_range_weapon(*weap))
-    {
-        set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
-    }
-
-    // Check for passive freeze or eyeball mutation.
-    if (defender->atype() == ACT_PLAYER && defender->alive()
-        && attacker != defender)
-    {
-        mons_do_eyeball_confusion();
-        mons_do_passive_freeze();
-    }
-
-    // Handle noise from last round.
-    handle_noise(pos);
-
-    if (def_copy)
-        delete def_copy;
-
-    // Invisible monster might have interrupted butchering.
-    if (was_delayed && defender->atype() == ACT_PLAYER && perceived_attack
-        && !attacker_visible)
-    {
-        handle_interrupted_swap(false, true);
-    }
-
-    return (did_hit);
 }
 
 void melee_attack::chaos_affect_actor(actor *victim)
