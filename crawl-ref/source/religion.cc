@@ -2362,7 +2362,7 @@ god_type str_to_god(const std::string _name, bool exact)
     god_type partial      = GOD_NO_GOD;
     for (int i = 0; i < NUM_GODS; ++i)
     {
-        god_type    god  = (god_type) i;
+        god_type    god  = static_cast<god_type>(i);
         std::string name = lowercase_string(god_name(god, false));
 
         if (name == target)
