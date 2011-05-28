@@ -449,13 +449,13 @@ dungeon_feature_type altar_for_god(god_type god)
     if (god == GOD_NO_GOD || god >= NUM_GODS)
         return (DNGN_FLOOR);  // Yeah, lame. Tell me about it.
 
-    return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
+    return (static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1));
 }
 
 // Returns true if the dungeon feature supplied is an altar.
 bool feat_is_altar(dungeon_feature_type grid)
 {
-    return feat_altar_god(grid) != GOD_NO_GOD;
+    return (feat_altar_god(grid) != GOD_NO_GOD);
 }
 
 bool feat_is_player_altar(dungeon_feature_type grid)
@@ -473,7 +473,7 @@ bool feat_is_branch_stairs(dungeon_feature_type feat)
 
 bool feat_is_tree(dungeon_feature_type feat)
 {
-    return feat == DNGN_TREE || feat == DNGN_SWAMP_TREE;
+    return (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE);
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
