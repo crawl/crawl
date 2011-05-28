@@ -128,7 +128,7 @@ function handle_keydown(e)
         {
             e.preventDefault();
             socket.send("\\" + shift_key_conversion[e.which] + "\n");
-        }            
+        }
     }
     else if (!e.ctrlKey && !e.shiftKey && e.altKey)
     {
@@ -193,7 +193,7 @@ function logged_in(username)
     $("#register").hide();
     $("#login_form").hide();
     $("#reg_link").hide();
-    
+
     if ($("#remember_me").attr("checked"))
     {
         socket.send("Remember");
@@ -215,7 +215,7 @@ function remember_me_click()
 
 function set_login_cookie(value, expires)
 {
-    $.cookie("login", value, { expires: 7 }); 
+    $.cookie("login", value, { expires: 7 });
 }
 
 function get_login_cookie()

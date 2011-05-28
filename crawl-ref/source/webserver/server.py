@@ -202,7 +202,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message("set_layer('lobby');")
             self.update_lobby()
             return
-        
+
         if game_id not in games: return
 
         if not self.init_user():
@@ -228,7 +228,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if "client_prefix" in game:
             self.client_prefix = game["client_prefix"]
             self.send_client(self.client_prefix)
-        
+
         self.p = subprocess.Popen(call,
                                   stdin = subprocess.PIPE,
                                   stdout = subprocess.PIPE,
