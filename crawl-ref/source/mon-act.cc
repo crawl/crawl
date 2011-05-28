@@ -2660,8 +2660,10 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     monster_type mt = static_cast<monster_type>(item.plus);
     if (do_heal)
     {
+        int base_max = mons_avg_hp(mons->type);
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
-        mons->hit_points = std::min(MAX_MONSTER_HP, mons->hit_points);
+        mons->hit_points = std::min(MAX_MONSTER_HP,
+                           std::min(base_max * 2, mons->hit_points));
         mons->max_hit_points = std::max(mons->hit_points,
                                            mons->max_hit_points);
     }
