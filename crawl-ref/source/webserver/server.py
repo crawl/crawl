@@ -142,8 +142,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.reset_timeout()
 
         if max_connections < len(sockets):
-            self.write_message("$('#crt').html('The maximum number of connections has been"
-                               + " reached, sorry :('); $('#login').hide();");
+            self.write_message("connection_closed('The maximum number of connections "
+                               + "has been reached, sorry :(');");
             self.close()
         elif shutting_down:
             self.close()
