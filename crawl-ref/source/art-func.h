@@ -355,7 +355,7 @@ static void _TORMENT_world_reacts(item_def *item)
 {
     if (one_chance_in(200))
     {
-        torment(TORMENT_SPWLD, you.pos());
+        torment(&you, TORMENT_SPWLD, you.pos());
         did_god_conduct(DID_UNHOLY, 1);
     }
 }
@@ -363,11 +363,11 @@ static void _TORMENT_world_reacts(item_def *item)
 static void _TORMENT_melee_effect(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied)
 {
-    if (attacker->atype() == ACT_PLAYER && coinflip())
-    {
-        torment(TORMENT_SPWLD, you.pos());
+    if (!coinflip())
+        return;
+    torment(attacker, TORMENT_SPWLD, attacker->pos());
+    if (attacker->atype() == ACT_PLAYER)
         did_god_conduct(DID_UNHOLY, 5);
-    }
 }
 
 /////////////////////////////////////////////////////

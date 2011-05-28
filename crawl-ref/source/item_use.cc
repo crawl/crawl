@@ -4295,7 +4295,7 @@ static bool _vorpalise_weapon(bool already_known)
         // Can't fix pain brand (balance)...you just get tormented.
         mprf("%s shrieks out in agony!", itname.c_str());
 
-        torment_monsters(you.pos(), 0, TORMENT_GENERIC);
+        torment_monsters(you.pos(), &you, TORMENT_GENERIC);
         success = false;
 
         // This is only naughty if you know you're doing it.
@@ -5018,7 +5018,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_TORMENT:
-        torment(TORMENT_SCROLL, you.pos());
+        torment(&you, TORMENT_SCROLL, you.pos());
 
         // This is only naughty if you know you're doing it.
         did_god_conduct(DID_NECROMANCY, 10, item_type_known(scroll));

@@ -496,7 +496,7 @@ static bool _kikubaaqudgha_retribution()
     {
         // torment, or 3 necromancy miscasts
         if (!player_res_torment(false))
-            torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+            torment(NULL, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
             for (int i = 0; i < 3; ++i)
