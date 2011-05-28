@@ -74,6 +74,8 @@ function handle_keypress(e)
     if (e.which == 8) return; // Backspace gets a keypress in FF, but not Chrome
                               // so we handle it in keydown
 
+    if (e.which >= 48 && e.which <= 57) return; // Numbers are handled in keydown
+
     e.preventDefault();
 
     var s = String.fromCharCode(e.which);
@@ -108,12 +110,25 @@ function handle_keydown(e)
 
     if (e.ctrlKey && !e.shiftKey && !e.altKey)
     {
-        if ($.inArray(String.fromCharCode(e.which), captured_control_keys) == -1)
-            return;
-
-        e.preventDefault();
-        var code = e.which - "A".charCodeAt(0) + 1; // Compare the CONTROL macro in defines.h
-        socket.send("\\" + code + "\n");
+        if (e.which in ctrl_key_conversion)
+        {
+            e.preventDefault();
+            socket.send("\\" + ctrl_key_conversion[e.which] + "\n");
+        }
+        else if ($.inArray(String.fromCharCode(e.which), captured_control_keys) != -1)
+        {
+            e.preventDefault();
+            var code = e.which - "A".charCodeAt(0) + 1; // Compare the CONTROL macro in defines.h
+            socket.send("\\" + code + "\n");
+        }
+    }
+    else if (!e.ctrlKey && e.shiftKey && !e.altKey)
+    {
+        if (e.which in shift_key_conversion)
+        {
+            e.preventDefault();
+            socket.send("\\" + shift_key_conversion[e.which] + "\n");
+        }            
     }
     else if (!e.ctrlKey && !e.shiftKey && e.altKey)
     {
