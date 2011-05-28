@@ -34,7 +34,7 @@ Gods
 * Elyvilon allows destruction of staves.
 * Clarified Ely's healing/pacification messaging.
 * Fedhas cares about trees burnt down in forest fires.
-* Fedhas's corpse decomposition is now activated by prayer.
+* Fedhas' corpse decomposition is now activated by prayer.
 * Followers of Jiyva gain food, hp and mp on jellies slurping items.
 * Jiyva no longer provides duplicate conservation and resist corrosion effects.
 * Allowed the player more control over what items to sacrifice to Nemelex (on the '^!' screen).

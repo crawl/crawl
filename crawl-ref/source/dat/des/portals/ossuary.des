@@ -837,7 +837,7 @@ ccc cc+cc   cc''=cccccc''+''''+.x.+Xc
            ccc              ccccccc
 ENDMAP
 
-# Menkaures's pyramid
+# Menkaures' pyramid
 NAME:    ossuary_due_pyramid
 WEIGHT:  10
 ORIENT:  encompass

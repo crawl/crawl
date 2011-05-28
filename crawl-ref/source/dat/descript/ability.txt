@@ -376,7 +376,7 @@ Turn plants and fungi adjacent to you into stronger species. Upgrading fungi req
 # Cheibriados
 Make Ponderous
 
-Alter a piece of body armour of your choice so it slows the wearer down. This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados's favour when they are not so fast.
+Alter a piece of body armour of your choice so it slows the wearer down. This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados' favour when they are not so fast.
 %%%%
 Bend Time
 

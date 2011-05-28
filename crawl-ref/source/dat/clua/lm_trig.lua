@@ -356,7 +356,7 @@ function Triggerable:read(marker, th)
     local trig_class    = file.unmarshall_string(th)
 
     -- _G is the global symbol table, and the class name of the triggerer is
-    -- the name of that class's class object
+    -- the name of that class' class object
     local trig_table = _G[trig_class].read(nil, marker, th)
     table.insert(self.triggerers, trig_table)
   end
