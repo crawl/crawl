@@ -2166,6 +2166,22 @@ static void _decrement_petrification(int delay)
     }
 }
 
+static void _check_invisibles()
+{
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    {
+        if (!cell_see_cell(you.pos(), *ri))
+            continue;
+        const monster* mons = monster_at(*ri);
+        if (mons && !mons->visible_to(&you) && !mons->submerged())
+        {
+            // we _could_ see the monster
+            autotoggle_autopickup(true);
+            return;
+        }
+    }
+}
+
 //  Perhaps we should write functions like: update_liquid_flames(), etc.
 //  Even better, we could have a vector of callback functions (or
 //  objects) which get installed at some point.
@@ -2386,6 +2402,7 @@ static void _decrement_durations()
         && !you.can_see_invisible())
     {
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
+        _check_invisibles();
     }
 
     _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
