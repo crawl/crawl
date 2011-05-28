@@ -27,6 +27,9 @@ bool is_chaotic_god(god_type god);
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.
 bool is_unavailable_god(god_type god);
+
+god_type random_god(bool disallow_no_god = false);
+
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);

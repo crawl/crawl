@@ -463,21 +463,18 @@ static bool _abyss_check_place_feat(coord_def p,
 
 static dungeon_feature_type _abyss_pick_altar()
 {
-    dungeon_feature_type altar = DNGN_UNSEEN;
-
     // Lugonu has a flat 50% chance of corrupting the altar.
     if (coinflip())
         return (DNGN_ALTAR_LUGONU);
 
-    do
-    {
-        altar = static_cast<dungeon_feature_type>(
-            DNGN_ALTAR_FIRST_GOD + random2(NUM_GODS - 1));
-    }
-    while (is_good_god(feat_altar_god(altar))
-           || is_unavailable_god(feat_altar_god(altar)));
+    god_type god;
 
-    return (altar);
+    do
+        god = random_god(true);
+    while (is_good_god(god)
+           || is_unavailable_god(god));
+
+    return (altar_for_god(god));
 }
 
 static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)

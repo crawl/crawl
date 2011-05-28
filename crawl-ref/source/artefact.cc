@@ -316,7 +316,7 @@ std::string replace_name_parts(const std::string name_in, const item_def& item)
         else
         {
             do
-                which_god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+                which_god = random_god(true);
             while (!_god_fits_artefact(which_god, item, true));
         }
 

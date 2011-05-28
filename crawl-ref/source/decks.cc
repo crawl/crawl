@@ -2464,7 +2464,7 @@ static void _godly_wrath()
     int tries = 100;
     while (tries-- > 0)
     {
-        god_type god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+        god_type god = random_god(true);
 
         // Don't recursively make player draw from the Deck of Punishment.
         if (god == GOD_NEMELEX_XOBEH)

@@ -5480,11 +5480,7 @@ static dungeon_feature_type _pick_an_altar()
 
         default:
             do
-            {
-                altar_type =
-                    static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD +
-                                                      random2(NUM_GODS - 1));
-            }
+                altar_type = random_altar(true);
             while (altar_type == DNGN_ALTAR_NEMELEX_XOBEH
                    || altar_type == DNGN_ALTAR_LUGONU
                    || altar_type == DNGN_ALTAR_BEOGH

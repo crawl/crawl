@@ -72,6 +72,9 @@ bool feat_is_watery(dungeon_feature_type feat);
 bool feat_is_lava(dungeon_feature_type feat);
 god_type feat_altar_god(dungeon_feature_type feat);
 dungeon_feature_type altar_for_god(god_type god);
+
+dungeon_feature_type random_altar(bool disallow_no_altar = false);
+
 bool feat_is_altar(dungeon_feature_type feat);
 bool feat_is_player_altar(dungeon_feature_type grid);
 
