@@ -193,6 +193,11 @@ std::string comma_separated_line(Z start, Z end,
     return (text);
 }
 
+inline int sqr(int x)
+{
+    return x * x;
+}
+
 #ifdef NEED_USLEEP
 void usleep(unsigned long time);
 #endif

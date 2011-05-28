@@ -5,6 +5,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "fixedarray.h"
+#include "libutil.h"
 #include "los_def.h"
 
 typedef uint8_t losfield_t;
@@ -50,12 +51,14 @@ static void _save_los(los_def* los, los_type l)
 // Opacity at p has changed.
 void invalidate_los_around(const coord_def& p)
 {
-    const coord_def tl = p - coord_def(LOS_MAX_RANGE, LOS_MAX_RANGE);
-    const coord_def br = p + coord_def(0, LOS_MAX_RANGE);
-    // We're wiping out a little more than required here.
-    for (rectangle_iterator ri(tl, br); ri; ++ri)
-        if (map_bounds(*ri))
-            memset(globallos[ri->x][ri->y], LOS_FLAG_INVALID, sizeof(halflos_t));
+    int x1 = std::max(p.x - LOS_MAX_RANGE, 0);
+    int y1 = std::max(p.y - LOS_MAX_RANGE, 0);
+    int x2 = std::min(p.x, GXM - 1);
+    int y2 = std::min(p.y + LOS_MAX_RANGE, GYM - 1);
+    for (int y = y1; y <= y2; y++)
+        for (int x = x1; x <= x2; x++)
+            if (sqr(p.x - x) + sqr(p.y - y) <= sqr(LOS_MAX_RANGE) + 1)
+                memset(globallos[x][y], LOS_FLAG_INVALID, sizeof(halflos_t));
 }
 
 void invalidate_los()
