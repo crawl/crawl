@@ -5021,8 +5021,11 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     if (vgrid != -1)
         grd(where) = _glyph_to_feat(vgrid, &place);
 
-    if (grd(where) == DNGN_ALTAR_JIYVA && jiyva_is_dead())
+    if (feat_is_altar(grd(where))
+        && is_unavailable_god(feat_altar_god(grd(where))))
+    {
         grd(where) = DNGN_FLOOR;
+    }
 
     // then, handle oddball grids {dlb}:
     switch (vgrid)
@@ -5468,7 +5471,7 @@ static dungeon_feature_type _pick_an_altar()
             break;
 
         case BRANCH_SLIME_PITS:
-            altar_type = jiyva_is_dead() ? DNGN_FLOOR : DNGN_ALTAR_JIYVA;
+            altar_type = DNGN_ALTAR_JIYVA;
             break;
 
         case BRANCH_TOMB:
@@ -5504,6 +5507,9 @@ static dungeon_feature_type _pick_an_altar()
                       (temp_rand == 7) ? DNGN_ALTAR_TROG
                                        : DNGN_ALTAR_ELYVILON);
     }
+
+    if (is_unavailable_god(feat_altar_god(altar_type)))
+        altar_type = DNGN_FLOOR;
 
     return (altar_type);
 }

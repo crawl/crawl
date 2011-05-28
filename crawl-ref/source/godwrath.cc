@@ -1208,7 +1208,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (god == GOD_JIYVA && jiyva_is_dead())
+    if (is_unavailable_god(god))
         return (false);
 
     // Good gods don't use divine retribution on their followers, and
