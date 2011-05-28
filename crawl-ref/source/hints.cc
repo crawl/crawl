@@ -4327,7 +4327,7 @@ bool hints_pos_interesting(int x, int y)
 static bool _hints_feat_interesting(dungeon_feature_type feat)
 {
     // Altars and branch entrances are always interesting.
-    if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
+    if (feat_is_altar(feat))
         return (true);
     if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
         return (true);
@@ -4500,7 +4500,7 @@ static void _hints_describe_feature(int x, int y)
             break;
 
        default:
-            if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
+            if (feat_is_altar(feat))
             {
                 god_type altar_god = feat_altar_god(feat);
 
