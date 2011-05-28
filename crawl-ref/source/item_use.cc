@@ -1726,7 +1726,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
         if (victim->atype() == ACT_MONSTER)
             simple_monster_message(victim->as_monster(), " resists.");
         else
-            mpr("You resist.");
+            canned_msg(MSG_YOU_RESIST);
         return (false);
     }
 
