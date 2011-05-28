@@ -4,6 +4,7 @@
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
     <script type="text/javascript" src="/static/jquery.js"></script>
+    <script type="text/javascript" src="/static/jquery.cookie.js"></script>
     <script type="text/javascript" src="/static/key_conversion.js"></script>
     <script type="text/javascript" src="/static/client.js"></script>
     <script type="text/javascript" src="/static/chat.js"></script>
@@ -25,6 +26,9 @@
           <input class="text" type="password" name="password" id="password"></input>
           <input class="button" type="submit" name="submit" id="submit" value="Login"></input>
         </form>
+        <input type="checkbox" name="remember_me" id="remember_me"
+               onclick="remember_me_click()">Remember me</input>
+        |
         <a id="reg_link" href="javascript:start_register()">Register</a>
       </div>
 

@@ -154,7 +154,17 @@ function handle_keydown(e)
 
 function start_login()
 {
-    $("#username").focus();
+    if (get_login_cookie())
+    {
+        $("#login_form").hide();
+        $("#reg_link").hide();
+        $("#login_message").html("Logging in...");
+        $("#remember_me").attr("checked", true);
+        socket.send("LoginToken: " + get_login_cookie());
+        set_login_cookie(null);
+    }
+    else
+        $("#username").focus();
 }
 
 var current_user;
@@ -183,6 +193,34 @@ function logged_in(username)
     $("#register").hide();
     $("#login_form").hide();
     $("#reg_link").hide();
+    
+    if ($("#remember_me").attr("checked"))
+    {
+        socket.send("Remember");
+    }
+}
+
+function remember_me_click()
+{
+    if ($("#remember_me").attr("checked"))
+    {
+        socket.send("Remember");
+    }
+    else
+    {
+        socket.send("UnRemember: " + get_login_cookie());
+        set_login_cookie(null);
+    }
+}
+
+function set_login_cookie(value, expires)
+{
+    $.cookie("login", value, { expires: 7 }); 
+}
+
+function get_login_cookie()
+{
+    return $.cookie("login");
 }
 
 function start_register()
@@ -318,13 +356,8 @@ function hash_changed()
     }
     else if (play)
     {
-        if (current_user == undefined)
-            set_layer("lobby");
-        else
-        {
-            var game_id = play[1];
-            socket.send("Play: " + game_id);
-        }
+        var game_id = play[1];
+        socket.send("Play: " + game_id);
     }
     else if (location.hash.match(/^#lobby$/i))
     {
@@ -364,13 +397,13 @@ $(document).ready(
             {
                 window.onhashchange = hash_changed;
 
+                start_login();
+
                 if (location.hash == "" ||
                     location.hash.match(/^#lobby$/i))
                     set_layer("lobby");
                 else
                     hash_changed();
-
-                start_login();
             };
 
             socket.onmessage = function(msg)

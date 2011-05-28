@@ -18,6 +18,7 @@ import signal
 import time, datetime
 import collections
 import re
+import random
 
 from config import *
 
@@ -97,6 +98,8 @@ class DynamicTemplateLoader(tornado.template.Loader):
 sockets = set()
 current_id = 0
 shutting_down = False
+login_tokens = {}
+rand = random.SystemRandom()
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -195,7 +198,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def start_crawl(self, game_id):
-        if self.username == None: return
+        if self.username == None:
+            self.write_message("set_layer('lobby');")
+            self.update_lobby()
+            return
+        
         if game_id not in games: return
 
         if not self.init_user():
@@ -389,6 +396,41 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 logging.warn("Failed login for user %s from ip %s.",
                              username, self.request.remote_ip)
                 self.write_message("login_failed();")
+
+        elif message.startswith("LoginToken: "):
+            message = message[len("LoginToken: "):]
+            username, _, token = message.partition(' ')
+            token = long(token)
+            if (token, username) in login_tokens:
+                del login_tokens[(token, username)]
+                logging.info("User %s logged in from ip %s (via token).",
+                             username, self.request.remote_ip)
+                self.username = username
+                self.write_message("logged_in(" +
+                                   tornado.escape.json_encode(username) + ");")
+                self.send_game_links()
+            else:
+                logging.warn("Wrong login token for user %s from ip %s.",
+                             username, self.request.remote_ip)
+                self.write_message("login_failed();")
+
+        elif message == "Remember":
+            if self.username is None: return
+            token = rand.getrandbits(128)
+            expires = datetime.datetime.now() + datetime.timedelta(login_token_lifetime)
+            login_tokens[(token, self.username)] = expires
+            cookie = self.username + " " + str(token)
+            self.write_message("set_login_cookie(" +
+                               tornado.escape.json_encode(cookie) + "," +
+                               str(login_token_lifetime) + ");")
+            pass
+
+        elif message.startswith("UnRemember: "):
+            message = message[len("UnRemember: "):]
+            username, _, token = message.partition(' ')
+            token = long(token)
+            if (token, username) in login_tokens:
+                del login_tokens[(token, username)]
 
         elif message.startswith("Play: "):
             if self.p or self.watched_game: return
@@ -585,6 +627,16 @@ def handler(signum, frame):
     if len(sockets) == 0:
         ioloop.stop()
 
+def purge_login_tokens():
+    for token in list(login_tokens):
+        if datetime.datetime.now() > login_tokens[token]:
+            del login_tokens[token]
+
+def purge_login_tokens_timeout():
+    purge_login_tokens()
+    ioloop.add_timeout(time.time() + 60 * 60 * 1000,
+                       purge_login_tokens_timeout)
+
 signal.signal(signal.SIGTERM, handler)
 signal.signal(signal.SIGHUP, handler)
 
@@ -607,6 +659,7 @@ ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.set_blocking_log_threshold(0.5)
 
 status_file_timeout()
+purge_login_tokens_timeout()
 
 try:
     ioloop.start()
