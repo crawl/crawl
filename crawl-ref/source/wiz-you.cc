@@ -672,8 +672,7 @@ void wizard_get_religion(void)
         mpr("That god doesn't seem to be taking followers today.");
     else
     {
-        dungeon_feature_type feat =
-            static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
+        dungeon_feature_type feat = altar_for_god(god);
         dungeon_terrain_changed(you.pos(), feat, false);
 
         pray();
