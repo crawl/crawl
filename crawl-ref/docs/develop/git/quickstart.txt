@@ -188,7 +188,7 @@ Using git for Stone Soup development
    nothing to commit (working directory clean)
 
    So git's telling us that we have one local commit that we haven't
-   sent to gitorious's git repository yet. Let's send in our fix
+   sent to gitorious' git repository yet. Let's send in our fix
    to gitorious.org (core devs only):
 
    $ git push
