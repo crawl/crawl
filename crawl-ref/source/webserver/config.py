@@ -75,3 +75,5 @@ kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 
 nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 max_passwd_length = 20
+
+login_token_lifetime = 7 # Days
