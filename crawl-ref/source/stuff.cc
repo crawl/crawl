@@ -682,6 +682,10 @@ void canned_msg(canned_message_type which_message)
         mpr("There's nothing close enough!");
         crawl_state.cancel_cmd_repeat();
         break;
+    case MSG_NO_ENERGY:
+        mpr("You don't have the energy to cast that spell.");
+        crawl_state.cancel_cmd_repeat();
+        break;
     case MSG_SPELL_FIZZLES:
         mpr("The spell fizzles.");
         break;
@@ -709,6 +713,9 @@ void canned_msg(canned_message_type which_message)
         break;
     case MSG_MANA_DECREASE:
         mpr("You feel your mana capacity decrease.");
+        break;
+    case MSG_DISORIENTED:
+        mpr("You feel momentarily disoriented.");
         break;
     case MSG_TOO_HUNGRY:
         mpr("You're too hungry.");
