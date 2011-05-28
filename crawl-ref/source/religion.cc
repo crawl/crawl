@@ -481,6 +481,17 @@ bool is_unavailable_god(god_type god)
     return (god == GOD_JIYVA && jiyva_is_dead());
 }
 
+god_type random_god(bool disallow_no_god)
+{
+    god_type god;
+
+    do
+        god = static_cast<god_type>(random2(NUM_GODS - 1));
+    while (disallow_no_god && god == GOD_NO_GOD);
+
+    return (god);
+}
+
 std::string get_god_powers(god_type which_god)
 {
     // Return early for the special cases.
