@@ -2323,6 +2323,30 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 }
 
+bool create_altar(bool disallow_no_altar)
+{
+    // Generate an altar.
+    if (grd(you.pos()) == DNGN_FLOOR)
+    {
+        god_type god;
+
+        do
+            god = random_god(disallow_no_altar);
+        while (is_unavailable_god(god));
+
+        grd(you.pos()) = altar_for_god(god);
+
+        if (grd(you.pos()) != DNGN_FLOOR)
+        {
+            mprf("An altar to %s grows from the floor before you!",
+                 god_name(god).c_str());
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
 static void _trowel_card(int power, deck_rarity_type rarity)
 {
     // Early exit: don't clobber important features.
@@ -2416,26 +2440,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
         }
     }
     else
-    {
-        // Generate an altar.
-        if (grd(you.pos()) == DNGN_FLOOR)
-        {
-            // Might get GOD_NO_GOD and no altar.
-            god_type rgod = static_cast<god_type>(random2(NUM_GODS));
-
-            if (rgod == GOD_JIYVA && jiyva_is_dead())
-                rgod = GOD_NO_GOD;
-
-            grd(you.pos()) = altar_for_god(rgod);
-
-            if (grd(you.pos()) != DNGN_FLOOR)
-            {
-                done_stuff = true;
-                mprf("An altar to %s grows from the floor before you!",
-                     god_name(rgod).c_str());
-            }
-        }
-    }
+        done_stuff = create_altar();
 
     if (!done_stuff)
         canned_msg(MSG_NOTHING_HAPPENS);
