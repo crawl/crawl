@@ -733,7 +733,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         && (you.hunger_state == HS_STARVING
             || you.hunger <= spell_hunger(spell)))
     {
-        mpr("You don't have the energy to cast that spell.");
+        canned_msg(MSG_NO_ENERGY);
         return (false);
     }
 
@@ -945,10 +945,10 @@ static int _setup_evaporate_cast()
 static bool _can_cast_detect()
 {
     if (player_in_mappable_area())
-        return true;
+        return (true);
 
-    mpr("You feel momentarily disoriented.");
-    return false;
+    canned_msg(MSG_DISORIENTED);
+    return (false);
 }
 
 static void _maybe_cancel_repeat(spell_type spell)
@@ -1585,6 +1585,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_HORRIBLE_THINGS:
         cast_summon_horrible_things(powc, god);
         break;
+
     case SPELL_MALIGN_GATEWAY:
         if (!cast_malign_gateway(&you, powc, god))
             return (SPRET_ABORT);

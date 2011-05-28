@@ -461,7 +461,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
     {
         if (!suppress_msg)
-            mpr("You feel momentarily disoriented.");
+            canned_msg(MSG_DISORIENTED);
 
         return (false);
     }
@@ -571,8 +571,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
     if (!suppress_msg)
     {
-        mpr(did_map ? "You feel aware of your surroundings."
-                    : "You feel momentarily disoriented.");
+        if (did_map)
+            mpr("You feel aware of your surroundings.");
+        else
+            canned_msg(MSG_DISORIENTED);
 
         std::vector<std::string> sensed;
 

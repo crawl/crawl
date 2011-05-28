@@ -477,6 +477,7 @@ enum canned_message_type
     MSG_UNTHINKING_ACT,
     MSG_NOTHING_THERE,
     MSG_NOTHING_CLOSE_ENOUGH,
+    MSG_NO_ENERGY,
     MSG_SPELL_FIZZLES,
     MSG_HUH,
     MSG_EMPTY_HANDED,
@@ -485,6 +486,7 @@ enum canned_message_type
     MSG_NO_SPELLS,
     MSG_MANA_INCREASE,
     MSG_MANA_DECREASE,
+    MSG_DISORIENTED,
     MSG_TOO_HUNGRY,
 };
 
