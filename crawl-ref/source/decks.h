@@ -150,6 +150,7 @@ card_type get_card_and_flags(const item_def& deck, int idx,
 // Used elsewhere in ZotDef.
 void sage_card(int power, deck_rarity_type rarity);
 void create_pond(const coord_def& center, int radius, bool allow_deep);
+bool create_altar(bool disallow_no_altar = false);
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
 

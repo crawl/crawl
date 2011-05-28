@@ -1853,22 +1853,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_MAKE_ALTAR:
-        // Generate an altar.
-        if (grd(you.pos()) == DNGN_FLOOR)
-        {
-            god_type rgod=GOD_NO_GOD;
-            // Don't allow Fedhas, as his abilities don't fit
-            while (rgod==GOD_NO_GOD || rgod==GOD_FEDHAS)
-                rgod = static_cast<god_type>(random2(NUM_GODS));
-            grd(you.pos()) = altar_for_god(rgod);
-
-            if (grd(you.pos()) != DNGN_FLOOR)
-            {
-                mprf("An altar to %s grows from the floor before you!",
-                     god_name(rgod).c_str());
-            }
-        }
-        else
+        if (!create_altar(true))
         {
             mpr("The dungeon dims for a moment.");
             return (false);

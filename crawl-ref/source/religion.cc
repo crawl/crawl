@@ -478,7 +478,14 @@ bool is_chaotic_god(god_type god)
 
 bool is_unavailable_god(god_type god)
 {
-    return (god == GOD_JIYVA && jiyva_is_dead());
+    if (god == GOD_JIYVA && jiyva_is_dead())
+        return (true);
+
+    // Don't allow Fedhas in ZotDef, as his abilities don't fit.
+    if (god == GOD_FEDHAS && crawl_state.game_is_zotdef())
+        return (true);
+
+    return (false);
 }
 
 god_type random_god(bool disallow_no_god)
