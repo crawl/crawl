@@ -1556,7 +1556,7 @@ int mons_class_hit_dice(int mc)
     return (me ? me->hpdice[0] : 0);
 }
 
-int mons_difficulty(int mc)
+int mons_avg_hp(int mc)
 {
     // Currently, difficulty is defined as "average hp".  Leaks too much info?
     const monsterentry* me = get_monster_data(mc);

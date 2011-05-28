@@ -822,7 +822,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return (false);
     }
 
-    int diff_delta = mons_difficulty(m1.type) - mons_difficulty(m2.type);
+    int diff_delta = mons_avg_hp(m1.type) - mons_avg_hp(m2.type);
 
     // By descending difficulty
     if (diff_delta > 0)
@@ -988,7 +988,7 @@ void monster_info::to_string(int count, std::string& desc,
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    out << " av" << mons_difficulty(type);
+    out << " av" << mons_avg_hp(type);
 #endif
 
     if (count == 1)
