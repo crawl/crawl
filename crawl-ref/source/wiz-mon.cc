@@ -468,6 +468,14 @@ void debug_stethoscope(int mon)
          get_monster_data(mons.base_monster)->name : "",
          mons.mid, mons.number, mons.stealth(), mons.flags);
 
+    if (mons.damage_total)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "pdam=%1.1f/%d (%d%%)",
+             0.5 * mons.damage_friendly, mons.damage_total,
+             50 * mons.damage_friendly / mons.damage_total);
+    }
+
     // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat(&mons);
 
