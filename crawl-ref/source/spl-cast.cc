@@ -1138,9 +1138,7 @@ spret_type your_spells(spell_type spell, int powc,
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
         {
             if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_POLYMORPH_OTHER)
-            {
                 mpr("Sorry, this spell works on others only.");
-            }
             else
                 canned_msg(MSG_UNTHINKING_ACT);
 
@@ -1195,9 +1193,8 @@ spret_type your_spells(spell_type spell, int powc,
         if (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
             && testbits(flags, SPFLAG_MAPPING))
         {
-            mprf(MSGCH_WARN,
-                 "The warped magic of this place twists your "
-                 "spell in on itself!");
+            mpr("The warped magic of this place twists your spell in on "
+                "itself!", MSGCH_WARN);
             spfl = spfail_chance / 2 - 1;
         }
 
@@ -1265,7 +1262,7 @@ spret_type your_spells(spell_type spell, int powc,
         if (is_valid_spell(spell))
         {
             mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
-                spell_title(spell));
+                 spell_title(spell));
         }
         else
             mpr("Invalid spell!", MSGCH_ERROR);
@@ -1283,7 +1280,9 @@ static void _spell_zap_effect(spell_type spell)
     // Deep Dwarves' damage reduction always blocks at least 1 hp.
     if (spell == SPELL_PAIN
         && (you.species != SP_DEEP_DWARF && !player_res_torment()))
+    {
         dec_hp(1, false);
+    }
 }
 
 // Spell failure check has been passed successfully.
@@ -1464,15 +1463,15 @@ static spret_type _do_cast(spell_type spell, int powc,
         if (!you.stand_on_solid_ground())
         {
             if (!you.ground_level())
-                mprf("You can't cast this spell without touching the ground.");
+                mpr("You can't cast this spell without touching the ground.");
             else
-                mprf("You need to be on clear, solid ground to cast this spell.");
+                mpr("You need to be on clear, solid ground to cast this spell.");
             return (SPRET_ABORT);
         }
 
         if (you.duration[DUR_LIQUEFYING] || liquefied(you.pos()))
         {
-            mprf("The ground here is already liquefied! You'll have to wait.");
+            mpr("The ground here is already liquefied! You'll have to wait.");
             return (SPRET_ABORT);
         }
 
@@ -1601,7 +1600,7 @@ static spret_type _do_cast(spell_type spell, int powc,
                 && mons_skeleton(si->plus))
             {
                 turn_corpse_into_skeleton_and_chunks(*si);
-                mprf("Before your eyes, flesh is ripped from the corpse!");
+                mpr("Before your eyes, flesh is ripped from the corpse!");
                 // Only convert the top one.
                 break;
             }
@@ -1806,7 +1805,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_LEVITATION:
         if (liquefied(you.pos()) && you.ground_level())
         {
-            mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
+            mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
             return (SPRET_ABORT);
         }
 
@@ -1817,7 +1816,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_FLY:
         if (liquefied(you.pos()) && you.ground_level())
         {
-            mprf(MSGCH_WARN, "Such puny magic can't pull you from the ground!");
+            mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
             return (SPRET_ABORT);
         }
 
