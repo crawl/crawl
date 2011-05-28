@@ -467,7 +467,7 @@ static dungeon_feature_type _abyss_pick_altar()
 
     // Lugonu has a flat 50% chance of corrupting the altar.
     if (coinflip())
-        return DNGN_ALTAR_LUGONU;
+        return (DNGN_ALTAR_LUGONU);
 
     do
     {
