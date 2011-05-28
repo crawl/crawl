@@ -187,9 +187,9 @@ static bool _in_water(const packed_cell &cell)
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
-bool _send_cell(int x, int y,
-                const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell,
-                const coord_def &gc)
+bool TilesFramework::_send_cell(int x, int y,
+                                const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell,
+                                const coord_def &gc)
 {
     packed_cell cell = packed_cell(screen_cell->tile);
     packed_cell &old_cell = old_screen_cell->tile;
@@ -207,11 +207,24 @@ bool _send_cell(int x, int y,
         cell.flv.feat    = 0;
     }
 
+    tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
+
+    bool is_changed_player_doll = false;
+    if (fg_idx == TILEP_PLAYER)
+    {
+        dolls_data result = player_doll;
+        fill_doll_equipment(result);
+        if (result != last_player_doll)
+        {
+            is_changed_player_doll = true;
+            last_player_doll = result;
+        }
+    }
     if (old_cell == cell &&
-        screen_cell->flash_colour == old_screen_cell->flash_colour)
+        screen_cell->flash_colour == old_screen_cell->flash_colour &&
+        !is_changed_player_doll)
         return false;
 
-    tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
     bool fg_changed = false;
 
@@ -290,11 +303,9 @@ bool _send_cell(int x, int y,
     }
     else if (fg_idx == TILEP_PLAYER)
     {
-        if (fg_changed)
+        if (fg_changed || is_changed_player_doll)
         {
-            dolls_data result = player_doll;
-            fill_doll_equipment(result);
-            _send_doll(result, in_water, false);
+            _send_doll(last_player_doll, in_water, false);
         }
     }
     else if (fg_idx >= TILE_MAIN_MAX)

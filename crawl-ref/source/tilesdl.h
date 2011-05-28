@@ -42,6 +42,7 @@ typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
 #elif defined(USE_TILE_WEB)
 
 #include "tileweb-text.h"
+#include "tiledoll.h"
 
 #endif
 
@@ -324,6 +325,12 @@ protected:
     WebTextArea *m_print_area;
     int m_print_x, m_print_y;
     int m_print_fg, m_print_bg;
+
+    dolls_data last_player_doll;
+
+    bool _send_cell(int x, int y,
+                    const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell,
+                    const coord_def &gc);
 #endif
 };
 

@@ -44,6 +44,15 @@ dolls_data::~dolls_data()
     parts = NULL;
 }
 
+bool dolls_data::operator==(const dolls_data& other) const
+{
+    for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
+    {
+        if (parts[i] != other.parts[i]) return false;
+    }
+    return true;
+}
+
 dolls_data player_doll;
 
 bool save_doll_data(int mode, int num, const dolls_data* dolls)
