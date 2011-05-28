@@ -264,9 +264,6 @@ void cast_see_invisible(int pow)
         mpr("Your vision seems to sharpen.");
 
         // We might have to turn autopickup back on again.
-        // TODO: Once the spell times out we might want to check all monsters
-        //       in LOS for invisibility and turn autopickup off again, if
-        //       needed.
         autotoggle_autopickup(false);
     }
 
