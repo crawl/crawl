@@ -3919,7 +3919,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
             msg = replace_all(msg, "@surface@", "lava");
         else if (feat_is_water(feat))
             msg = replace_all(msg, "@surface@", "water");
-        else if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
+        else if (feat_is_altar(feat))
             msg = replace_all(msg, "@surface@", "altar");
         else
             msg = replace_all(msg, "@surface@", "ground");
