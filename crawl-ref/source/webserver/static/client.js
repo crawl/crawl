@@ -74,8 +74,6 @@ function handle_keypress(e)
     if (e.which == 8) return; // Backspace gets a keypress in FF, but not Chrome
                               // so we handle it in keydown
 
-    if (e.which >= 48 && e.which <= 57) return; // Numbers are handled in keydown
-
     e.preventDefault();
 
     var s = String.fromCharCode(e.which);
