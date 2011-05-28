@@ -207,6 +207,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     if (god == GOD_KIKUBAAQUDGHA)
     {
         you.gift_timeout = 0; // no protection during pain branding weapon
+        you.turn_is_over = true; // torment() relies on this to assign xp
 
         torment(TORMENT_KIKUBAAQUDGHA, you.pos());
 
