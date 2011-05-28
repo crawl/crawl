@@ -3809,7 +3809,7 @@ void handle_god_time()
 
         case GOD_FEDHAS:
         case GOD_CHEIBRIADOS:
-            // Fedhas's piety is stable over time but we need a case here to
+            // Fedhas' piety is stable over time but we need a case here to
             // avoid the error message below.
             break;
 
