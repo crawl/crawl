@@ -875,8 +875,11 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.colour    = YELLOW;       // forced by force_item above {dlb}
 
-        item.sub_type  = (one_chance_in(4) ? WPN_EUDEMON_BLADE
-                                           : WPN_LONG_SWORD);
+        item.sub_type  = random_choose(WPN_EUDEMON_BLADE,
+                                       WPN_BLESSED_LONG_SWORD,
+                                       WPN_BLESSED_SCIMITAR,
+                                       WPN_BLESSED_FALCHION,
+                                       -1);
 
         set_equip_desc(item, ISFLAG_GLOWING);
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
