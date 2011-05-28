@@ -869,8 +869,8 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     if (a->type == b->type)
         return (false);
 
-    int a_toughness = mons_difficulty(a->type);
-    int b_toughness = mons_difficulty(b->type);
+    int a_toughness = mons_avg_hp(a->type);
+    int b_toughness = mons_avg_hp(b->type);
 
     if (a_toughness == b_toughness)
     {
