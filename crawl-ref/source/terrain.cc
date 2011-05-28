@@ -1646,10 +1646,15 @@ dungeon_feature_type dungeon_feature_by_name(const std::string &name)
     {
         if (dngn_feature_names[i] == name)
         {
-            if (jiyva_is_dead() && name == "altar_jiyva")
-                return (DNGN_FLOOR);
+            dungeon_feature_type feat = static_cast<dungeon_feature_type>(i);
 
-            return (static_cast<dungeon_feature_type>(i));
+            if (feat_is_altar(feat)
+                && is_unavailable_god(feat_altar_god(feat)))
+            {
+                return (DNGN_FLOOR);
+            }
+
+            return (feat);
         }
     }
 
