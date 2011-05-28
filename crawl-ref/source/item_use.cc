@@ -1716,8 +1716,6 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
     if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
         return (true);
 
-    monster* mons = victim->as_monster();
-
     const int skill = you.skill(SK_THROWING);
     const item_def* wp = agent->weapon();
     ASSERT(wp && wp->sub_type == WPN_BLOWGUN);
@@ -1725,17 +1723,20 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     // You have a really minor chance of hitting with no skills or good
     // enchants.
-    if (mons->hit_dice < 15 && random2(100) <= 2)
+    if (victim->get_experience_level() < 15 && random2(100) <= 2)
         return (true);
 
     const int resist_roll = 2 + random2(4 + skill + enchantment);
 
-    dprf("Brand rolled %d against monster HD: %d.",
-         resist_roll, mons->hit_dice);
+    dprf("Brand rolled %d against defender HD: %d.",
+         resist_roll, victim->get_experience_level());
 
-    if (resist_roll < mons->hit_dice)
+    if (resist_roll < victim->get_experience_level())
     {
-        simple_monster_message(mons, " resists!");
+        if (victim->atype() == ACT_MONSTER)
+            simple_monster_message(victim->as_monster(), " resists.");
+        else
+            mpr("You resist.");
         return (false);
     }
 
