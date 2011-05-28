@@ -2265,7 +2265,7 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
         simple_god_message(" torments the living!");
-        torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+        torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
         break;
 
     case ABIL_YRED_INJURY_MIRROR:

@@ -208,11 +208,9 @@ int holy_word(int pow, int caster, const coord_def& where, bool silent,
     return (r);
 }
 
-int torment_player(int pow, int caster)
+int torment_player(actor *attacker, int taux)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-    UNUSED(pow);
 
     // [dshaligram] Switched to using ouch() instead of dec_hp() so that
     // notes can also track torment and activities can be interrupted
@@ -261,13 +259,13 @@ int torment_player(int pow, int caster)
     const char *aux = "torment";
 
     kill_method_type type = KILLED_BY_MONSTER;
-    if (invalid_monster_index(caster))
+    if (invalid_monster_index(taux))
     {
         type = KILLED_BY_SOMETHING;
         if (crawl_state.is_god_acting())
             type = KILLED_BY_DIVINE_WRATH;
 
-        switch (caster)
+        switch (taux)
         {
         case TORMENT_CARDS:
         case TORMENT_SPELL:
@@ -295,7 +293,7 @@ int torment_player(int pow, int caster)
         }
     }
 
-    ouch(hploss, caster, type, aux);
+    ouch(hploss, attacker? attacker->mindex() : MHITNOT, type, aux);
 
     return (1);
 }
@@ -305,15 +303,13 @@ int torment_player(int pow, int caster)
 // maximum power of 1000, high level monsters and characters would save
 // too often.  (GDL)
 
-int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
+int torment_monsters(coord_def where, actor *attacker, int taux)
 {
-    UNUSED(pow);
-
     int retval = 0;
 
     // Is the player in this cell?
     if (where == you.pos())
-        retval = torment_player(0, caster);
+        retval = torment_player(attacker, taux);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
@@ -345,26 +341,13 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
     return (retval);
 }
 
-int torment(int caster, const coord_def& where)
+int torment(actor *attacker, int taux, const coord_def& where)
 {
-    actor* attacker = NULL;
-
-    if (!invalid_monster_index(caster))
-        attacker = &menv[caster];
-    else if (caster < 0 && you.turn_is_over && where == you.pos()
-             && !(crawl_state.is_god_acting()
-                  && crawl_state.is_god_retribution()))
-    {
-        // Maybe monsters should still consider it your fault if it's
-        // caused by divine retribution?
-        attacker = &you;
-    }
-
     los_def los(where);
     los.update();
     int r = 0;
     for (radius_iterator ri(&los); ri; ++ri)
-        r += torment_monsters(*ri, 0, caster, attacker);
+        r += torment_monsters(*ri, attacker, taux);
     return (r);
 }
 
