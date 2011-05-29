@@ -373,14 +373,6 @@ int spell_fail(spell_type spell)
     dprf("Armour+Shield spell failure penalty: %d", armour_shield_penalty);
     chance += armour_shield_penalty;
 
-    if (you.weapon() && you.weapon()->base_type == OBJ_WEAPONS)
-    {
-        int wpn_penalty = (3 * (property(*you.weapon(), PWPN_SPEED) - 12))/2;
-
-        if (wpn_penalty > 0)
-            chance += wpn_penalty;
-    }
-
     switch (spell_difficulty(spell))
     {
     case  1: chance +=   3; break;
@@ -451,10 +443,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     }
     else
     {
-        // When checking failure rates, wizardry is handled after the various
-        // stepping calulations.
-        power = (you.skill(SK_SPELLCASTING) / 2)
-                     + (fail_rate_check? 0 : player_mag_abil(false));
+        power = (you.skill(SK_SPELLCASTING) / 2);
+
         int enhanced = 0;
 
         unsigned int disciplines = get_spell_disciplines(spell);
