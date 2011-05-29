@@ -151,7 +151,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         elif shutting_down:
             self.close()
         else:
-            self.update_lobby()
+            if dgl_mode:
+                self.update_lobby()
+            else:
+                self.start_crawl(None)
 
     def idle_time(self):
         return time.time() - self.last_action_time
@@ -198,36 +201,41 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def start_crawl(self, game_id):
-        if self.username == None:
-            self.write_message("set_layer('lobby');")
-            self.update_lobby()
-            return
+        if dgl_mode:
+            if self.username == None:
+                self.write_message("set_layer('lobby');")
+                self.update_lobby()
+                return
 
-        if game_id not in games: return
+            if game_id not in games: return
 
-        if not self.init_user():
-            self.write_message("set_layer('crt'); $('#crt').html('Could not initialize" +
-                               " your rc and morgue!');")
-            return
+            if not self.init_user():
+                self.write_message("set_layer('crt'); $('#crt').html('Could not initialize" +
+                                   " your rc and morgue!');")
+                return
 
         self.last_action_time = time.time()
 
         self.game_id = game_id
 
-        game = games[game_id]
+        if dgl_mode:
+            game = games[game_id]
 
-        call = [game["crawl_binary"],
-                "-name", self.username,
-                "-rc", os.path.join(game["rcfile_path"], self.username + ".rc"),
-                "-macro", os.path.join(game["macro_path"], self.username + ".macro"),
-                "-morgue", os.path.join(game["morgue_path"], self.username)]
+            call = [game["crawl_binary"],
+                    "-name", self.username,
+                    "-rc", os.path.join(game["rcfile_path"], self.username + ".rc"),
+                    "-macro", os.path.join(game["macro_path"], self.username + ".macro"),
+                    "-morgue", os.path.join(game["morgue_path"], self.username)]
 
-        if "options" in game:
-            call += game["options"]
+            if "options" in game:
+                call += game["options"]
 
-        if "client_prefix" in game:
-            self.client_prefix = game["client_prefix"]
-            self.send_client(self.client_prefix)
+            if "client_prefix" in game:
+                self.client_prefix = game["client_prefix"]
+                self.send_client(self.client_prefix)
+        else:
+            call = ["./crawl"]
+            self.send_client("game")
 
         self.p = subprocess.Popen(call,
                                   stdin = subprocess.PIPE,
@@ -245,9 +253,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.write_message("crawl_started();")
 
-        self.create_mock_ttyrec()
+        if dgl_mode:
+            self.create_mock_ttyrec()
 
-        update_global_status()
+            update_global_status()
 
     def stop_crawl(self):
         self.p.send_signal(subprocess.signal.SIGHUP)
@@ -356,7 +365,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.ioloop.remove_timeout(self.kill_timeout)
                 self.kill_timeout = None
 
-            self.delete_mock_ttyrec()
+            if dgl_mode: self.delete_mock_ttyrec()
             self.where = None
 
             if self.client_terminated:
@@ -368,9 +377,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 else:
                     # Go back to lobby
                     self.write_message("crawl_ended();")
-                    self.update_lobby()
+                    if dgl_mode:
+                        self.update_lobby()
+                    else:
+                        self.start_crawl(None)
 
-            update_global_status()
+            if dgl_mode: update_global_status()
 
             for watcher in list(self.watchers):
                 watcher.stop_watching()
@@ -579,7 +591,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.handle_crawl_message(msg)
 
             self.poll_crawl()
-            self.check_where()
+            if dgl_mode: self.check_where()
 
 def update_global_status():
     update_all_lobbys()
@@ -658,8 +670,9 @@ if ssl_options:
 ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.set_blocking_log_threshold(0.5)
 
-status_file_timeout()
-purge_login_tokens_timeout()
+if dgl_mode:
+    status_file_timeout()
+    purge_login_tokens_timeout()
 
 try:
     ioloop.start()
