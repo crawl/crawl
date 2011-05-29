@@ -820,7 +820,6 @@ static bool _vampire_cannot_cast(spell_type spell)
     // Satiated or less
     switch (spell)
     {
-    case SPELL_BERSERKER_RAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_CURE_POISON:
     case SPELL_DRAGON_FORM:
@@ -1007,12 +1006,6 @@ static bool _spellcasting_aborted(spell_type spell,
         mpr("The dungeon can only cope with one malign gateway at a time!");
         return (true);
     }
-    if (spell == SPELL_BERSERKER_RAGE && (!you.can_go_berserk(true)
-                                          || !berserk_check_wielded_weapon()))
-    {
-        return (true);
-    }
-
 
     return (false);
 }
@@ -1783,10 +1776,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 #endif
 
     // General enhancement.
-    case SPELL_BERSERKER_RAGE:
-        cast_berserk();
-        break;
-
     case SPELL_REGENERATION:
         cast_regen(powc);
         break;
