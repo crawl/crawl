@@ -812,11 +812,11 @@ function obj_to_str (o)
                 {
                     if (typeof t == "string")
                     {
-                        a[a.length] = [ p+ ": \"" + t.toString() + "\"" ];
+                        a[a.length] = [ p+ ": \"" + t + "\"" ];
                     }
                     else
                     {
-                        a[a.length] = [ p+ ": " + t.toString()];
+                        a[a.length] = [ p+ ": " + t];
                     }
                 }
             }
