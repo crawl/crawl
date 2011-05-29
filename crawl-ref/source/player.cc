@@ -4497,7 +4497,6 @@ static int _racial_mp()
 
 int get_real_mp(bool include_items)
 {
-    // base_magic_points2 accounts for species
     int enp = you.experience_level + you.mp_max_perm;
     enp += _racial_mp();
 
