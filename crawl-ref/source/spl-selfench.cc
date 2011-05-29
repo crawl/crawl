@@ -140,11 +140,6 @@ void cast_regen(int pow, bool divine_ability)
     }
 }
 
-void cast_berserk(void)
-{
-    go_berserk(true);
-}
-
 void cast_swiftness(int power)
 {
     if (you.in_water())

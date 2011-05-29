@@ -10,7 +10,6 @@ void deflection(int pow);
 
 void remove_regen(bool divine_ability = false);
 void cast_regen(int pow, bool divine_ability = false);
-void cast_berserk(void);
 
 void cast_swiftness(int power);
 void cast_fly(int power);
