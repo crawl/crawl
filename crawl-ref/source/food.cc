@@ -2522,7 +2522,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             }
             else if (kindof_thing == FOOD_CHUNK)
             {
-                if (rotten && !_player_can_eat_rotten_meat(true))
+                if (rotten && !_player_can_eat_rotten_meat(!suppress_msg))
                     return (false);
 
                 if (ur_chunkslover)
