@@ -174,8 +174,6 @@ namespace worley {
         return;
     }
 
-
-
     static void AddSamples(int32_t xi, int32_t yi, int32_t zi, int32_t max_order,
             double at[3], double *F,
             double (*delta)[3], uint32_t *ID)

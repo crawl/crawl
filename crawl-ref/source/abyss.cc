@@ -382,7 +382,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
     return (items_placed);
 }
 
-static std::vector<dungeon_feature_type> _abyss_pick_terrain_elements(bool for_proto = false)
+static std::vector<dungeon_feature_type> _abyss_pick_terrain_elements()
 {
     std::vector<dungeon_feature_type> terrain_elements;
 
@@ -391,14 +391,7 @@ static std::vector<dungeon_feature_type> _abyss_pick_terrain_elements(bool for_p
     // Generate level composition vector.
     for (int i = 0; i < n_terrain_elements; i++)
     {
-        dungeon_feature_type feat;
-        if (for_proto)
-        {
-            feat = _abyss_proto_feature();
-        }
-        else
-        {
-            feat = static_cast<dungeon_feature_type>(
+        dungeon_feature_type feat = static_cast<dungeon_feature_type>(
                 random_choose_weighted(5073, DNGN_ROCK_WALL,
                                        2008, DNGN_STONE_WALL,
                                        914, DNGN_METAL_WALL,
@@ -407,7 +400,6 @@ static std::vector<dungeon_feature_type> _abyss_pick_terrain_elements(bool for_p
                                        601, DNGN_DEEP_WATER,
                                        16, DNGN_CLOSED_DOOR,
                                        0));
-        }
         terrain_elements.push_back(feat);
     }
 
@@ -518,9 +510,9 @@ static dungeon_feature_type _abyss_pick_altar()
     return (altar_for_god(god));
 }
 
-static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask, bool proto=false)
+static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
 {
-    const std::vector<dungeon_feature_type> terrain_elements = _abyss_pick_terrain_elements(proto);
+    const std::vector<dungeon_feature_type> terrain_elements = _abyss_pick_terrain_elements();
 
     if (one_chance_in(3))
         _abyss_create_rooms(abyss_genlevel_mask, random_range(1, 10));
@@ -537,19 +529,27 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask, bool proto
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
 
-    const double abyss_id = random2(0x7FFFFF);
+
+    const double x_offset = random2(0x7FFFFFF);
+    const double y_offset = random2(0x7FFFFFF);
+    const double z_offset = random2(0x7FFFFFF);
     const double floor_density = 120;
     const int column_chance = 4;
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
-
-        worley::noise_datum noise = worley::worley(p.x/2.2, p.y/2.2, abyss_id);
+        double x = p.x / 2.2;
+        double y = p.y / 2.2;
+        worley::noise_datum noise = worley::worley(x + x_offset, y + y_offset, z_offset);
         if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
             continue;
 
-        if (floor_density > noise.first_order * 100
+        if (0 == (noise.id % (2 * n_terrain_elements + 1)))
+        {
+            grd(p) = terrain_elements[random2(n_terrain_elements)];
+        }
+        else if (floor_density > noise.first_order * 100
             && !one_chance_in(column_chance))
             grd(p) = DNGN_FLOOR;
         else if (grd(p) == DNGN_UNSEEN)
@@ -574,50 +574,6 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask, bool proto
                                  DNGN_STONE_ARCH,
                                  abyss_genlevel_mask));
     }
-
-}
-
-// Generate the initial (proto) Abyss level. The proto Abyss is where
-// the player lands when they arrive in the Abyss from elsewhere.
-// _generate_area generates all other Abyss areas.
-void generate_abyss()
-{
-    env.level_build_method += " abyss";
-    env.level_layout_types.insert("abyss");
-
-    dprf("generate_abyss(); turn_on_level: %d", env.turns_on_level);
-
-    map_mask abyss_genlevel_mask;
-    _abyss_apply_terrain(abyss_genlevel_mask, true);
-
-    if (just_banished)
-    {
-        _write_abyssal_features();
-        just_banished = false;
-    }
-
-    // If we're starting out in the Abyss, make sure the starting grid is
-    // an altar to Lugonu and there's an exit near-by.
-    // Otherwise, we start out on floor and there's a chance there's an
-    // altar near-by.
-    if (you.char_direction == GDT_GAME_START)
-    {
-        grd(ABYSS_CENTRE) = DNGN_ALTAR_LUGONU;
-        _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 2,
-                             DNGN_FLOOR, DNGN_EXIT_ABYSS, 50, true);
-    }
-    else
-    {
-        grd(ABYSS_CENTRE) = DNGN_FLOOR;
-        if (one_chance_in(5))
-        {
-            _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
-                                 DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
-        }
-    }
-
-    generate_random_blood_spatter_on_level(&abyss_genlevel_mask);
-    setup_environment_effects();
 
 }
 
@@ -668,6 +624,52 @@ static void _generate_area(const map_mask &abyss_genlevel_mask,
     // Abyss has a constant density.
     env.density = 0;
 }
+
+// Generate the initial (proto) Abyss level. The proto Abyss is where
+// the player lands when they arrive in the Abyss from elsewhere.
+// _generate_area generates all other Abyss areas.
+void generate_abyss()
+{
+    env.level_build_method += " abyss";
+    env.level_layout_types.insert("abyss");
+
+    dprf("generate_abyss(); turn_on_level: %d", env.turns_on_level);
+
+    map_mask abyss_genlevel_mask;
+    abyss_genlevel_mask.init(true);
+    // Generate the abyss without vaults. Vaults are horrifying.
+    _generate_area(abyss_genlevel_mask, false);
+
+    if (just_banished)
+    {
+        _write_abyssal_features();
+        just_banished = false;
+    }
+
+    // If we're starting out in the Abyss, make sure the starting grid is
+    // an altar to Lugonu and there's an exit near-by.
+    // Otherwise, we start out on floor and there's a chance there's an
+    // altar near-by.
+    if (you.char_direction == GDT_GAME_START)
+    {
+        grd(ABYSS_CENTRE) = DNGN_ALTAR_LUGONU;
+        _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 2,
+                             DNGN_FLOOR, DNGN_EXIT_ABYSS, 50, true);
+    }
+    else
+    {
+        grd(ABYSS_CENTRE) = DNGN_FLOOR;
+        if (one_chance_in(5))
+        {
+            _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
+                                 DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
+        }
+    }
+
+    generate_random_blood_spatter_on_level(&abyss_genlevel_mask);
+    setup_environment_effects();
+}
+
 
 class xom_abyss_feature_amusement_check
 {

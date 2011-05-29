@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "abyss.h"
 #include "arena.h"
 #include "cio.h"
 #include "command.h"
@@ -223,6 +224,7 @@ static void _post_init(bool newc)
     if (newc && you.char_direction == GDT_GAME_START)
     {
         // Randomise colours properly for the Abyss.
+        generate_abyss();
         init_pandemonium();
     }
 
