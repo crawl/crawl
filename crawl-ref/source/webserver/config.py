@@ -1,6 +1,8 @@
 import logging
 from collections import OrderedDict
 
+dgl_mode = False
+
 bind_nonsecure = True
 bind_address = ""
 bind_port = 8080
