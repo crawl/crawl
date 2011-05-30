@@ -5405,86 +5405,86 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
 //jmf: Generate altar based on where you are, or possibly randomly.
 static dungeon_feature_type _pick_an_altar()
 {
-    dungeon_feature_type altar_type;
+    god_type god;
     int temp_rand;              // probability determination {dlb}
 
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || you.level_type == LEVEL_LABYRINTH)
     {
         // No extra altars in Temple, none at all in Labyrinth.
-        altar_type = DNGN_FLOOR;
+        god = GOD_NO_GOD;
     }
     else if (you.level_type == LEVEL_DUNGEON && !one_chance_in(5))
     {
         switch (you.where_are_you)
         {
         case BRANCH_CRYPT:
-            altar_type = (coinflip() ? DNGN_ALTAR_KIKUBAAQUDGHA
-                                     : DNGN_ALTAR_YREDELEMNUL);
+            god = (coinflip() ? GOD_KIKUBAAQUDGHA
+                              : GOD_YREDELEMNUL);
             break;
 
         case BRANCH_DWARVEN_HALL:
             temp_rand = random2(7);
 
-            altar_type = ((temp_rand == 0) ? DNGN_ALTAR_KIKUBAAQUDGHA :
-                          (temp_rand == 1) ? DNGN_ALTAR_YREDELEMNUL :
-                          (temp_rand == 2) ? DNGN_ALTAR_MAKHLEB :
-                          (temp_rand == 3) ? DNGN_ALTAR_TROG :
-                          (temp_rand == 4) ? DNGN_ALTAR_CHEIBRIADOS:
-                          (temp_rand == 5) ? DNGN_ALTAR_ELYVILON
-                                           : DNGN_ALTAR_OKAWARU);
+            god = ((temp_rand == 0) ? GOD_KIKUBAAQUDGHA :
+                   (temp_rand == 1) ? GOD_YREDELEMNUL :
+                   (temp_rand == 2) ? GOD_MAKHLEB :
+                   (temp_rand == 3) ? GOD_TROG :
+                   (temp_rand == 4) ? GOD_CHEIBRIADOS:
+                   (temp_rand == 5) ? GOD_ELYVILON
+                                    : GOD_OKAWARU);
             break;
 
         case BRANCH_ORCISH_MINES:    // violent gods
             temp_rand = random2(10); // 50% chance of Beogh
 
-            altar_type = ((temp_rand == 0) ? DNGN_ALTAR_VEHUMET :
-                          (temp_rand == 1) ? DNGN_ALTAR_MAKHLEB :
-                          (temp_rand == 2) ? DNGN_ALTAR_OKAWARU :
-                          (temp_rand == 3) ? DNGN_ALTAR_TROG :
-                          (temp_rand == 4) ? DNGN_ALTAR_XOM
-                                           : DNGN_ALTAR_BEOGH);
+            god = ((temp_rand == 0) ? GOD_VEHUMET :
+                   (temp_rand == 1) ? GOD_MAKHLEB :
+                   (temp_rand == 2) ? GOD_OKAWARU :
+                   (temp_rand == 3) ? GOD_TROG :
+                   (temp_rand == 4) ? GOD_XOM
+                                    : GOD_BEOGH);
             break;
 
         case BRANCH_VAULTS: // "lawful" gods
             temp_rand = random2(7);
 
-            altar_type = ((temp_rand == 0) ? DNGN_ALTAR_ELYVILON :
-                          (temp_rand == 1) ? DNGN_ALTAR_SIF_MUNA :
-                          (temp_rand == 2) ? DNGN_ALTAR_SHINING_ONE :
-                          (temp_rand == 3
-                              || temp_rand == 4) ? DNGN_ALTAR_OKAWARU
-                                                 : DNGN_ALTAR_ZIN);
+            god = ((temp_rand == 0) ? GOD_ELYVILON :
+                   (temp_rand == 1) ? GOD_SIF_MUNA :
+                   (temp_rand == 2) ? GOD_SHINING_ONE :
+                   (temp_rand == 3
+                       || temp_rand == 4) ? GOD_OKAWARU
+                                          : GOD_ZIN);
             break;
 
         case BRANCH_HALL_OF_BLADES:
-            altar_type = DNGN_ALTAR_OKAWARU;
+            god = GOD_OKAWARU;
             break;
 
         case BRANCH_ELVEN_HALLS:    // "magic" gods
             temp_rand = random2(4);
 
-            altar_type = ((temp_rand == 0) ? DNGN_ALTAR_VEHUMET :
-                          (temp_rand == 1) ? DNGN_ALTAR_SIF_MUNA :
-                          (temp_rand == 2) ? DNGN_ALTAR_XOM
-                                           : DNGN_ALTAR_MAKHLEB);
+            god = ((temp_rand == 0) ? GOD_VEHUMET :
+                   (temp_rand == 1) ? GOD_SIF_MUNA :
+                   (temp_rand == 2) ? GOD_XOM
+                                    : GOD_MAKHLEB);
             break;
 
         case BRANCH_SLIME_PITS:
-            altar_type = DNGN_ALTAR_JIYVA;
+            god = GOD_JIYVA;
             break;
 
         case BRANCH_TOMB:
-            altar_type = DNGN_ALTAR_KIKUBAAQUDGHA;
+            god = GOD_KIKUBAAQUDGHA;
             break;
 
         default:
             do
-                altar_type = random_altar(true);
-            while (altar_type == DNGN_ALTAR_NEMELEX_XOBEH
-                   || altar_type == DNGN_ALTAR_LUGONU
-                   || altar_type == DNGN_ALTAR_BEOGH
-                   || altar_type == DNGN_ALTAR_JIYVA);
+                god = random_god(true);
+            while (god == GOD_NEMELEX_XOBEH
+                   || god == GOD_LUGONU
+                   || god == GOD_BEOGH
+                   || god == GOD_JIYVA);
             break;
         }
     }
@@ -5493,21 +5493,21 @@ static dungeon_feature_type _pick_an_altar()
         // Note: this case includes Pandemonium or the Abyss.
         temp_rand = random2(9);
 
-        altar_type = ((temp_rand == 0) ? DNGN_ALTAR_ZIN :
-                      (temp_rand == 1) ? DNGN_ALTAR_SHINING_ONE :
-                      (temp_rand == 2) ? DNGN_ALTAR_KIKUBAAQUDGHA :
-                      (temp_rand == 3) ? DNGN_ALTAR_XOM :
-                      (temp_rand == 4) ? DNGN_ALTAR_OKAWARU :
-                      (temp_rand == 5) ? DNGN_ALTAR_MAKHLEB :
-                      (temp_rand == 6) ? DNGN_ALTAR_SIF_MUNA :
-                      (temp_rand == 7) ? DNGN_ALTAR_TROG
-                                       : DNGN_ALTAR_ELYVILON);
+        god = ((temp_rand == 0) ? GOD_ZIN :
+               (temp_rand == 1) ? GOD_SHINING_ONE :
+               (temp_rand == 2) ? GOD_KIKUBAAQUDGHA :
+               (temp_rand == 3) ? GOD_XOM :
+               (temp_rand == 4) ? GOD_OKAWARU :
+               (temp_rand == 5) ? GOD_MAKHLEB :
+               (temp_rand == 6) ? GOD_SIF_MUNA :
+               (temp_rand == 7) ? GOD_TROG
+                                : GOD_ELYVILON);
     }
 
-    if (is_unavailable_god(feat_altar_god(altar_type)))
-        altar_type = DNGN_FLOOR;
+    if (is_unavailable_god(god))
+        god = GOD_NO_GOD;
 
-    return (altar_type);
+    return (altar_for_god(god));
 }
 
 static bool _need_varied_selection(shop_type shop)

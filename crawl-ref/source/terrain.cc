@@ -452,11 +452,6 @@ dungeon_feature_type altar_for_god(god_type god)
     return (static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1));
 }
 
-dungeon_feature_type random_altar(bool disallow_no_altar)
-{
-    return (altar_for_god(random_god(disallow_no_altar)));
-}
-
 // Returns true if the dungeon feature supplied is an altar.
 bool feat_is_altar(dungeon_feature_type grid)
 {
