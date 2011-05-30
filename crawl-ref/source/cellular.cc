@@ -272,9 +272,10 @@ cases.]
         Worley(point, 2, F, delta, id);
 
         noise_datum datum;
-        datum.first_order = F[0];
-        datum.second_order = F[0];
-        datum.id = id[0];
+        datum.distance[0] = F[0];
+        datum.distance[1] = F[0];
+        datum.id[0] = id[0];
+        datum.id[1] = id[1];
 
         return datum;
     }

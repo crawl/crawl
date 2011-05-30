@@ -44,9 +44,8 @@
    computation. The book lists the details of this tuning.  */
 namespace worley {
 struct noise_datum {
-    double first_order;
-    double second_order;
-    uint32_t id;
+    double distance[2];
+    uint32_t id[2];
 };
 
 noise_datum worley(double x, double y, double z);

@@ -533,9 +533,9 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     const double x_offset = random2(0x7FFFFFF);
     const double y_offset = random2(0x7FFFFFF);
     const double z_offset = random2(0x7FFFFFF);
-    const double floor_density = 120;
+    const double floor_density = 115;
     const int column_chance = 4;
-
+    const int uniform_density = random_range(30,90);
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
@@ -545,16 +545,21 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
         if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
             continue;
 
-        if (0 == (noise.id % (2 * n_terrain_elements + 1)))
+        if (0 == ((noise.id[0] + noise.id[1]) % (2 * n_terrain_elements + 1)))
         {
+            if (random2(100) < uniform_density)
+                grd(p) = DNGN_FLOOR;
+            else
             grd(p) = terrain_elements[random2(n_terrain_elements)];
         }
-        else if (floor_density > noise.first_order * 100
+        else if (floor_density > noise.distance[0] * 100
             && !one_chance_in(column_chance))
+        {
             grd(p) = DNGN_FLOOR;
+        }
         else if (grd(p) == DNGN_UNSEEN)
         {
-            int id = (noise.id + one_chance_in(3)) % n_terrain_elements;
+            int id = (noise.id[0] + one_chance_in(3)) % n_terrain_elements;
             grd(p) = terrain_elements[id];
         }
         // Place abyss exits, stone arches, and altars to liven up the scene:
@@ -637,8 +642,9 @@ void generate_abyss()
 
     map_mask abyss_genlevel_mask;
     abyss_genlevel_mask.init(true);
-    // Generate the abyss without vaults. Vaults are horrifying.
-    _generate_area(abyss_genlevel_mask, false);
+    // Generate the initial abyss without vaults. Vaults are horrifying.
+    bool use_vaults = (you.char_direction == GDT_GAME_START ? false : true);
+    _generate_area(abyss_genlevel_mask, use_vaults);
 
     if (just_banished)
     {
