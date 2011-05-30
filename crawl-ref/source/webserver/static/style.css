@@ -36,7 +36,7 @@ body {
     text-align: left;
 }
 
-#player_list table td:hover {
+#player_list table tr:hover {
     background-color: #101010;
 }
 
