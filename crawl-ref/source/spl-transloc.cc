@@ -511,8 +511,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             if (you.char_direction == GDT_ASCENDING && coinflip())
             {
                 mpr("You feel the orb interfering with your control of this translocation!", MSGCH_ORB);
-                pos.x += random2(5) + 2;
-                pos.y += random2(5) + 2;
+                pos.x += random2(7) - 3;
+                pos.y += random2(7) - 3;
             }
             dprf("Scattered target square (%d, %d)", pos.x, pos.y);
         }
