@@ -950,7 +950,7 @@
     ZAP_MAGMA,
     "bolt of magma",
     200,
-    new calcdice_calculator<4, 10, 3, 5>,
+    new calcdice_calculator<4, 15, 3, 5>,
     new tohit_calculator<8, 1, 25>,
     RED,
     false,
