@@ -364,7 +364,7 @@ a flourish of trumpets!
 ###############################################################################
 
 # The Sword operates in three modes: no tension, low tension, high tension.
-# 
+#
 # No tension:
 # Speech is very rare, soft (does not wake up monsters), bored or witty,
 # sometimes just chatty. The sword is rational, sometimes introspective.
@@ -372,17 +372,17 @@ a flourish of trumpets!
 #
 # Low tension:
 # Speech is common, somewhat loud (do wake up nearby monsters) and slightly
-# damages everyone in sight. The sword is calm and cool. It enjoys the 
+# damages everyone in sight. The sword is calm and cool. It enjoys the
 # bloodshed, but is sane. Of course, work is more fun with a little tune...
 #
 # High tension:
-# Speech is very common, extremely loud (you may use CAPS) and does more 
+# Speech is very common, extremely loud (you may use CAPS) and does more
 # damage. Messages are insane, the sword is out of control.
 #
 # Generally, the Sword is arrogant: it sees itself as the main hero, with the
 # wielder just being a disposable tool/fool.
 #
-# There are some (occasionally modified) lines from actual songs. Those are 
+# There are some (occasionally modified) lines from actual songs. Those are
 # okay to use, but particularly rare.
 #
 # There are the following types of messages:
@@ -409,7 +409,7 @@ a flourish of trumpets!
 
 
 #######
-# Do not add speech to the "screaming sword" sections. 
+# Do not add speech to the "screaming sword" sections.
 
 %%%%
 screaming sword no_tension
@@ -495,16 +495,16 @@ w:100
 w:100
 @speaking_low-high_tension@
 
-w:7 
+w:7
 @real_song_low_tension@
 
-w:3 
+w:3
 @real_song_low-high_tension@
 
 w:160
 @instrumental_noises@
 
-w:70 
+w:70
 @weapon_noises@
 
 w:160
@@ -529,7 +529,7 @@ w:7
 w:200
 @instrumental_noises@
 
-w:30 
+w:30
 @weapon_noises@
 
 w:360
@@ -558,7 +558,7 @@ w:100
 @The_weapon@ laughs in a fit of madness.
 
 @The_weapon@ makes a horrifying noise.
-  
+
 ###############################################################################
 # Singing or other making of music
 # The Singing Sword will happily sing a song during work (i.e. at low tension).
@@ -1313,4 +1313,3 @@ faintheart
 poltroon
 
 wuss
-
