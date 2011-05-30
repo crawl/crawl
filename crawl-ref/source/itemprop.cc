@@ -494,6 +494,12 @@ void do_curse_item(item_def &item, bool quiet)
     if (item.flags & ISFLAG_CURSED)
         return;
 
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
+        && item.base_type != OBJ_JEWELLERY && item.base_type != OBJ_STAVES)
+    {
+        return;
+    }
+
     // Holy wrath weapons cannot be cursed.
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
