@@ -860,7 +860,7 @@ bool cast_apportation(int pow, bolt& beam)
     int quantity = item.quantity;
     int apported_mass = unit_mass * std::min(quantity, max_units);
 
-    int max_dist = std::max(1 + (pow - apported_mass / 20) / 10, 1);
+    int max_dist = std::max(60 * pow / (apported_mass + 150), 1);
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
