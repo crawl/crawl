@@ -77,18 +77,6 @@ var key_conversion = {
     38: -254,//-1008,
     33: -1009,
 
-    // Numpad with numlock
-    96: 48,
-    97: 49,
-    98: 50,
-    99: 51,
-    100: 52,
-    101: 53,
-    102: 54,
-    103: 55,
-    104: 56,
-    105: 57,
-
     // Function keys
     112: -1011, // F1
     113: -1012,
@@ -103,6 +91,15 @@ var key_conversion = {
 //    122: -1021, // Don't occupy F11, it's used for fullscreen
     123: -1022
 };
+
+if (!$.browser.mozilla)
+{
+    // Numpad with numlock -- FF sends keypresses, Chrome doesn't
+    for (var i = 0; i <= 9; i++)
+    {
+        key_conversion[96 + i] = 48 + i;
+    }
+}
 
 var shift_key_conversion = {
     // Numpad / Arrow keys
