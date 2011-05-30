@@ -157,13 +157,7 @@ void tornado_damage(actor *caster, int dur)
     int pow;
     // Not stored so unwielding that staff will reduce damage.
     if (caster->atype() == ACT_PLAYER)
-    {
-        // don't dis-enhance our own power
-        int dur_left = you.duration[DUR_TORNADO];
-        you.duration[DUR_TORNADO] = 0;
         pow = calc_spell_power(SPELL_TORNADO, true);
-        you.duration[DUR_TORNADO] = dur_left;
-    }
     else
         pow = caster->as_monster()->hit_dice * 4;
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
