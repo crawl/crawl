@@ -913,13 +913,13 @@ speaking_high_tension
 real_song_no_tension
 
 # The Tremoloes?
-@The_weapon@ roars, "Silence is golden, golden ..."
+@The_weapon@ roars, "Silence is golden, golden..."
 
 # folklore, confusing flowers and monsters
 @The_weapon@ sings, "Where have all the monsters gone?"
 
 # Neil Diamond
-@The_weapon@ sings, "Song sung blue, everybody knows one ..."
+@The_weapon@ sings, "Song sung blue, everybody knows one..."
 
 # ABBA
 @The_weapon@ sings, "Thank you for the music..."
@@ -928,15 +928,15 @@ real_song_no_tension
 @The_weapon@ wails, "Look what they done to my song!"
 
 # folklore
-@The_weapon@ sings, "Old McDonald has a farm ..."
+@The_weapon@ sings, "Old McDonald has a farm..."
 
 @The_weapon@ sings, "Pop! Goes the weasel."
 
 # Beatles
-@The_weapon@ sings, "Obladi oblada, life goes on ..."
+@The_weapon@ sings, "Obladi oblada, life goes on..."
 
 # drinking song
-@The_weapon@ sings, "Ninety-nine potions of booze on the wall ..."
+@The_weapon@ sings, "Ninety-nine potions of booze on the wall..."
 
 # Folklore (Sailing)
 @The_weapon@ sings, "Can you hear me through the dark night far away?"
@@ -971,7 +971,7 @@ real_song_low-high_tension
 @The_weapon@ happily sings, "... another one bites the dust!"
 
 # Monty Python
-@The_weapon@ @sings_or_whistles@, "Always look on the bright side of death ..."
+@The_weapon@ @sings_or_whistles@, "Always look on the bright side of death..."
 
 # GG Allin
 @The_weapon@ sings, "Die when you die!"
@@ -999,7 +999,7 @@ real_song_high_tension
 @The_weapon@ sings, "We are the champions of the world!"
 
 # Spice Girls
-@The_weapon@ sings, "Ain't no stopping us now ..."
+@The_weapon@ sings, "Ain't no stopping us now..."
 
 # Frank Sinatra (or Sid Vicious)
 @The_weapon@ sings, "I did it my way!"
