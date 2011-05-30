@@ -2909,7 +2909,7 @@ struct spell_desc
      7,
      200,
      -1, -1,
-     0,
+     -4,
      NULL,
      false,
      false
