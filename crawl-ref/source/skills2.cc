@@ -374,6 +374,8 @@ COLORS SkillMenuEntry::_get_colour() const
         return WHITE;
     else if (you.skill(m_sk) < you.skills[m_sk])
         return you.practise_skill[m_sk] ? LIGHTRED : RED;
+    else if (is_set(SKMF_DISP_ENHANCED) && you.skill(m_sk) > you.skills[m_sk])
+        return you.practise_skill[m_sk] ? LIGHTBLUE : BLUE;
     else if (you.practise_skill[m_sk] == 0 && you.skills[m_sk] < 27)
         return DARKGREY;
     else if (is_set(SKMF_DISP_RESKILL) && (m_sk == you.transfer_from_skill
@@ -381,8 +383,6 @@ COLORS SkillMenuEntry::_get_colour() const
     {
         return LIGHTBLUE;
     }
-    else if (is_set(SKMF_DISP_ENHANCED) && you.skill(m_sk) > you.skills[m_sk])
-        return LIGHTBLUE;
     else if (you.skills[m_sk] == 27)
         return YELLOW;
     else if (you.skills[m_sk] == 0)
