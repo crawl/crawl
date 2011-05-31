@@ -1678,9 +1678,11 @@ int monster_die(monster* mons, killer_type killer,
 #endif
 
     // Take note!
-    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena() && MONST_INTERESTING(mons))
+    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena()
+        && MONST_INTERESTING(mons))
     {
-        take_note(Note(NOTE_KILL_MONSTER,
+        take_note(Note(killer == KILL_BANISHED ? NOTE_BANISH_MONSTER
+                                               : NOTE_KILL_MONSTER,
                        mons->type, mons->friendly(),
                        mons->full_name(DESC_NOCAP_A).c_str()));
     }
