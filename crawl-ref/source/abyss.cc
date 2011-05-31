@@ -57,8 +57,12 @@
 #endif
 
 const int ABYSSAL_RUNE_MAX_ROLL = 200;
+static coord_def abyss_position = ABYSS_CENTRE;
+static double abyss_depth = 0.0;
+
 bool just_banished = false;
 std::vector<dungeon_feature_type> abyssal_features;
+
 
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.
@@ -529,19 +533,15 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
 
-
-    const double x_offset = random2(0x7FFFFFF);
-    const double y_offset = random2(0x7FFFFFF);
-    const double z_offset = random2(0x7FFFFFF);
     const double floor_density = 115;
     const int column_chance = 4;
     const int uniform_density = random_range(30,90);
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
-        double x = p.x / 2.2;
-        double y = p.y / 2.2;
-        worley::noise_datum noise = worley::worley(x + x_offset, y + y_offset, z_offset);
+        double x = (p.x + abyss_position.x) / 2.2;
+        double y = (p.y + abyss_position.y) / 2.2;
+        worley::noise_datum noise = worley::worley(x, y, abyss_depth);
         if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
             continue;
 
@@ -637,6 +637,9 @@ void generate_abyss()
 {
     env.level_build_method += " abyss";
     env.level_layout_types.insert("abyss");
+
+    abyss_position.x = random2(0x7FFFFFFF);
+    abyss_position.y = random2(0x7FFFFFFF);
 
     dprf("generate_abyss(); turn_on_level: %d", env.turns_on_level);
 
@@ -993,6 +996,8 @@ static void _abyss_shift_level_contents_around_player(
     map_mask &abyss_destruction_mask)
 {
     const coord_def source_centre = you.pos();
+
+    abyss_position += (source_centre - ABYSS_CENTRE);
 
     ASSERT(radius >= LOS_RADIUS);
 #ifdef WIZARD
