@@ -509,6 +509,9 @@ direction_chooser::direction_chooser(dist& moves_,
 
     behaviour->just_looking = just_looking;
 
+    if (hitfunc)
+        needs_path = true;
+
     show_beam = Options.show_beam && !just_looking && needs_path;
     need_beam_redraw = show_beam;
     have_beam = false;
@@ -1162,6 +1165,16 @@ void direction_chooser::draw_beam_if_needed()
 
     need_beam_redraw = false;
 
+    if (!show_beam)
+    {
+        viewwindow(
+#ifndef USE_TILE
+            false
+#endif
+            );
+        return;
+    }
+
     // Clear the old beam if necessary.
     viewwindow(false);
 
@@ -1200,7 +1213,7 @@ void direction_chooser::draw_beam_if_needed()
     }
 
     // If we don't have a new beam to show, we're done.
-    if (!show_beam || !have_beam)
+    if (!have_beam)
     {
 #ifdef USE_TILE
         // Clear the old beam if we're not drawing anything else.
