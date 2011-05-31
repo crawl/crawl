@@ -29,8 +29,8 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     {
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '#', '_', '\\', '}', '~', '8', '{', '{',       // grate .. item detect
-        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '|', '}', '%', '$', '"', '#', '7',        // book .. tree
+        '{', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
+        ':', '|', '}', '%', '$', '"', '0', '7',        // book .. tree
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
