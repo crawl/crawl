@@ -1578,7 +1578,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         for (stack_iterator si(you.pos(), true); si; ++si)
         {
             if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
-                && mons_skeleton(si->plus))
+                && mons_skeleton(si->plus)
+                && mons_class_can_be_zombified(si->plus))
             {
                 turn_corpse_into_skeleton_and_chunks(*si);
                 mpr("Before your eyes, flesh is ripped from the corpse!");
