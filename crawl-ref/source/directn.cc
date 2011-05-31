@@ -1187,9 +1187,9 @@ void direction_chooser::draw_beam_if_needed()
                 if (aff < 0)
                     bcol = DARKGREY;
                 else if (aff < AFF_YES)
-                    bcol = MAGENTA;
+                    bcol = (*ri == target()) ? RED : MAGENTA;
                 else
-                    bcol = LIGHTMAGENTA;
+                    bcol = (*ri == target()) ? LIGHTRED : LIGHTMAGENTA;
                 _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
 #endif
             }
