@@ -924,6 +924,9 @@ runrest_stop_message = <list of regexes>
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message = god:wrath finds you
+        Or to remind yourself to renew expiring spells:
+             runrest_stop_message = Your transformation is almost over
+             runrest_stop_message = You are starting to lose your buoyancy
         Or you can explicitly ignore some messages:
              runrest_ignore_message = offer a prayer,prayer is over
              runrest_ignore_message = pleased with you,exalted
