@@ -1155,6 +1155,8 @@ This scroll calls on the powers of Hell to inflict great pain on any nearby crea
 scroll of vorpalise weapon
 
 This scroll enchants the wielded weapon so as to make it far more effective at inflicting harm on its wielder's enemies. Using it on a weapon already affected by some kind of permanent branding is not advised. On the other hand, the scroll can make permanent the temporary branding of weapons obtained from some spells.
+
+Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha, The Shining One) cannot be affixed this way. Xom, on the other hand is, let's say... less than predictable.
 %%%%
 scroll of vulnerability
 

@@ -4221,6 +4221,24 @@ static bool _drink_fountain()
     return (true);
 }
 
+static void _chaos_explosion(coord_def where, actor *agent, std::string cause)
+{
+    bolt beam;
+    beam.is_explosion = true;
+    beam.aux_source = cause;
+    beam.source = where;
+    beam.target = where;
+    beam.set_agent(agent);
+    beam.range = 0;
+    beam.damage = dice_def(5, 8);
+    beam.ex_size = 5;
+    beam.flavour = BEAM_CHAOS;
+    beam.hit = AUTOMATIC_HIT;
+    beam.name = "chaos eruption";
+    beam.loudness = 10;
+    beam.explode(true, false);
+}
+
 // Returns true if a message has already been printed (which will identify
 // the scroll.)
 static bool _vorpalise_weapon(bool already_known)
@@ -4291,6 +4309,38 @@ static bool _vorpalise_weapon(bool already_known)
         cast_toxic_radiance();
         break;
 
+    case SPWPN_CHAOS:
+        mprf("%s erupts in a glittering mayhem of all colours.", itname.c_str());
+        success = !one_chance_in(3); // You mean, you wanted this... guaranteed?
+        // but the eruption _is_ guaranteed.  What it will do is not.
+        _chaos_explosion(you.pos(), &you, "chaos affixation");
+        xom_is_stimulated(200);
+        switch(random2(success? 4 : 2))
+        {
+        case 3:
+            if (transform(50, coinflip() ? TRAN_PIG :
+                              coinflip() ? TRAN_DRAGON :
+                                           TRAN_BAT))
+            {
+                // after getting possibly banished, we don't want you to just
+                // say "end transformation" immediately
+                you.transform_uncancellable = true;
+                break;
+            }
+        case 2:
+            if (you.can_safely_mutate())
+            {
+                // not funny on the undead
+                mutate(RANDOM_MUTATION);
+                break;
+            }
+        case 1:
+            xom_acts(coinflip(), HALF_MAX_PIETY, 0); // ignore tension
+        default:
+            break;
+        }
+        break;
+
     case SPWPN_PAIN:
         // Can't fix pain brand (balance)...you just get tormented.
         mprf("%s shrieks out in agony!", itname.c_str());
@@ -4313,6 +4363,12 @@ static bool _vorpalise_weapon(bool already_known)
         // from unwield_item
         MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 9, 90,
                       "distortion affixation");
+        success = false;
+        break;
+
+    case SPWPN_ANTIMAGIC:
+        mprf("%s repels your magic.", itname.c_str());
+        set_mp(0);
         success = false;
         break;
 
