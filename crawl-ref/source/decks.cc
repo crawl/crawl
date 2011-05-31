@@ -1910,7 +1910,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
     {
         const brand_type brands[] = {
             SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_VENOM, SPWPN_DRAINING,
-            SPWPN_VORPAL, SPWPN_DISTORTION, SPWPN_PAIN, SPWPN_DUMMY_CRUSHING
+            SPWPN_VORPAL, SPWPN_DISTORTION, SPWPN_PAIN,
         };
 
         if (!brand_weapon(RANDOM_ELEMENT(brands), random2(power/4)))
