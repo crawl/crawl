@@ -1093,6 +1093,8 @@ int prompt_for_quantity(const char *prompt)
     int ch = getch_ck();
     if (ch == CK_ENTER || ch == ';')
         return -1;
+    else if (ch == CK_ESCAPE)
+        return 0;
 
     macro_buf_add(ch);
     return prompt_for_int("", false);
