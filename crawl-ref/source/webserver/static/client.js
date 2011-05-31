@@ -130,8 +130,9 @@ function handle_keydown(e)
     }
     else if (!e.ctrlKey && !e.shiftKey && e.altKey)
     {
-        var s = String.fromCharCode(e.which);
-        socket.send("\\27\n" + s);
+        //e.preventDefault();
+        //var s = String.fromCharCode(e.which);
+        //socket.send("\\27\n" + s);
     }
     else if (!e.ctrlKey && !e.shiftKey && !e.altKey)
     {
