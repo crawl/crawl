@@ -1823,7 +1823,7 @@ bool compare_skills(skill_type sk1, skill_type sk2)
 bool is_antitrained(skill_type sk)
 {
     skill_type opposite = _get_opposite(sk);
-    if (opposite == SK_NONE)
+    if (opposite == SK_NONE || you.skills[sk] >= 27)
         return false;
 
     return compare_skills(opposite, sk) && you.skills[opposite];
@@ -1836,7 +1836,7 @@ bool antitrain_other(skill_type sk, bool show_zero)
         return false;
 
     return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
-            && compare_skills(sk, opposite));
+            && you.skills[opposite] < 27 && compare_skills(sk, opposite));
 }
 
 bool is_invalid_skill(skill_type skill)
