@@ -41,7 +41,8 @@ static brand_type _convert_to_launcher(brand_type which_brand)
 {
     switch (which_brand)
     {
-    case SPWPN_FREEZING: return SPWPN_FROST; case SPWPN_FLAMING: return SPWPN_FLAME;
+    case SPWPN_FREEZING: return SPWPN_FROST;
+    case SPWPN_FLAMING: return SPWPN_FLAME;
     default: return (which_brand);
     }
 }
@@ -59,6 +60,7 @@ static bool _ok_for_launchers(brand_type which_brand)
     //case SPWPN_PAIN: -- no pain missile type yet
     case SPWPN_RETURNING:
     case SPWPN_CHAOS:
+    case SPWPN_VORPAL:
         return (true);
     default:
         return (false);
@@ -92,8 +94,6 @@ bool brand_weapon(brand_type which_brand, int power)
     // Some brandings are restricted to certain damage types.
     const int wpn_type = get_vorpal_type(weapon);
     if (which_brand == SPWPN_VENOM && wpn_type == DVORP_CRUSHING
-        || which_brand == SPWPN_VORPAL && wpn_type != DVORP_SLICING
-                                       && wpn_type != DVORP_STABBING
         || which_brand == SPWPN_DUMMY_CRUSHING && wpn_type != DVORP_CRUSHING)
     {
         return (false);
