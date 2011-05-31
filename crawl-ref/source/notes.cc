@@ -126,7 +126,8 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_SEEN_FEAT
         || note.type == NOTE_PARALYSIS
         || note.type == NOTE_NAMED_ALLY
-        || note.type == NOTE_ALLY_DEATH)
+        || note.type == NOTE_ALLY_DEATH
+        || note.type == NOTE_BANISH_MONSTER)
     {
         return (true);
     }
@@ -403,6 +404,12 @@ std::string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_ALLY_DEATH:
             result << "Your ally " << name << " died";
+            break;
+        case NOTE_BANISH_MONSTER:
+            if (second)
+                result << name << " (ally) was banished";
+            else
+                result << "Banished " << name;
             break;
         default:
             result << "Buggy note description: unknown note type";
