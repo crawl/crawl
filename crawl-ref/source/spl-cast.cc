@@ -1583,6 +1583,8 @@ static spret_type _do_cast(spell_type spell, int powc,
             {
                 turn_corpse_into_skeleton_and_chunks(*si);
                 mpr("Before your eyes, flesh is ripped from the corpse!");
+                if (Options.chunks_autopickup)
+                    request_autopickup();
                 // Only convert the top one.
                 break;
             }
