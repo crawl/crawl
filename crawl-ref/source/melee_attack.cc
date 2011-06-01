@@ -3652,7 +3652,7 @@ int melee_attack::calc_attack_delay(bool random)
         }
 
         attack_delay = rv::max(attack_delay, constant(3));
-        attack_delay = random ? attack_delay.roll() : attack_delay.expected();
+        int final_delay = random ? attack_delay.roll() : attack_delay.expected();
 
         if (you.duration[DUR_FINESSE])
         {
@@ -3663,11 +3663,10 @@ int melee_attack::calc_attack_delay(bool random)
             you.time_taken = div_rand_round(you.time_taken, 2);
         }
 
-        // TODO: Fix the warning thrown about non-POD for you.time_taken
         dprf("Weapon speed: %d; min: %d; attack time: %d",
-             attack_delay, min_delay, you.time_taken);
+             final_delay, min_delay, you.time_taken);
 
-        return (std::max(2, div_rand_round(you.time_taken * attack_delay, 10)));
+        return (std::max(2, div_rand_round(you.time_taken * final_delay, 10)));
     }
     else
     {
