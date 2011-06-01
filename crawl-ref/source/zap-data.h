@@ -330,7 +330,7 @@
     ZAP_BEAM_OF_ENERGY,
     "narrow beam of energy",
     1000,
-    new calcdice_calculator<12, 40, 3, 2>,
+    new calcdice_calculator<10, 40, 1, 1>,
     new tohit_calculator<1>,
     YELLOW,
     false,
