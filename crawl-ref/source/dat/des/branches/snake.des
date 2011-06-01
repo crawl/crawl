@@ -189,8 +189,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx''''''x4O4x""""""xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx''''''c4O4c""""""xxxxxxxxxxx
 xxxxxxxxxxx''''''xxxx664z466xxxx""""""xxxxxx
 xxxxxxxx''''xxxxxxxx.5665665.xxxxxxxx""""xxx
 xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
@@ -284,7 +284,7 @@ TAGS:    no_rotate
 ORIENT:  southwest
 MONS:    naga, naga warrior, naga mage, greater naga
 SUBST:   1 = 11., 2 = 23., 4 = 444123..
-SUBST:   c : c:20 x:4 v:1
+SUBST:   c : c:20 v:5
 KITEM:   O = serpentine rune of Zot
 MAP
 xxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
