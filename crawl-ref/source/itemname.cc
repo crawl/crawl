@@ -2615,6 +2615,7 @@ bool is_emergency_item(const item_def &item)
         case POT_HEALING:
         case POT_HEAL_WOUNDS:
         case POT_RESISTANCE:
+        case POT_MAGIC:
             return (true);
         default:
             return (false);
@@ -2640,19 +2641,11 @@ bool is_good_item(const item_def &item)
     case OBJ_POTIONS:
         switch (item.sub_type)
         {
-        case POT_BERSERK_RAGE:
-            if (you.religion == GOD_CHEIBRIADOS)
-                return (false);
         case POT_CURE_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
         case POT_EXPERIENCE:
-        case POT_MAGIC:
-        case POT_MIGHT:
-        case POT_AGILITY:
-        case POT_BRILLIANCE:
-        case POT_RESTORE_ABILITIES:
             return (true);
         default:
             return (false);
