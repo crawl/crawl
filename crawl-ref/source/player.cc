@@ -2829,9 +2829,6 @@ void level_change(bool skip_attribute_increase)
                 flush_input_buffer(FLUSH_ABORT_MACRO);
         }
 
-        const int old_hp = you.hp;
-        const int old_maxhp = you.hp_max;
-
         // [ds] Make sure we increment you.experience_level and apply
         // any stat/hp increases only after we've cleared all prompts
         // for this experience level. If we do part of the work before
@@ -3253,10 +3250,18 @@ void level_change(bool skip_attribute_increase)
         note_montiers();
 #endif
 
-        deflate_hp(you.hp_max, false);
+        const int old_hp = you.hp;
+        const int old_maxhp = you.hp_max;
+	const int old_mp = you.magic_points;
+	const int old_maxmp = you.max_magic_points;
+
+        // recalculate for game
+	calc_hp();
+	calc_mp();
 
         you.hp = old_hp * you.hp_max / old_maxhp;
-        you.magic_points = std::max(0, you.magic_points);
+        you.magic_points = old_maxmp > 0 ?
+          old_mp * you.max_magic_points / old_maxmp : you.max_magic_points;
 
         // Get "real" values for note-taking, i.e. ignore Berserk,
         // transformations or equipped items.
@@ -3268,10 +3273,6 @@ void level_change(bool skip_attribute_increase)
                 std::min(you.hp, note_maxhp), note_maxhp,
                 std::min(you.magic_points, note_maxmp), note_maxmp);
         take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
-
-        // recalculate for game
-        calc_hp();
-        calc_mp();
 
         if (you.experience_level > you.max_level)
             you.max_level = you.experience_level;
