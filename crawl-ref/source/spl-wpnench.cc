@@ -15,6 +15,7 @@
 #include "message.h"
 #include "misc.h"
 #include "shout.h"
+#include "skills2.h"
 
 
 // We need to know what brands equate with what missile brands to know if
@@ -134,7 +135,7 @@ bool brand_weapon(brand_type which_brand, int power)
     std::string msg = weapon.name(DESC_CAP_YOUR);
 
     bool emit_special_message = !temp_brand;
-    int duration_affected = 0;
+    int duration_affected = 10;
     switch (which_brand)
     {
     case SPWPN_FLAME:
@@ -195,6 +196,22 @@ bool brand_weapon(brand_type which_brand, int power)
         emit_special_message = true;
         break;
 
+    case SPWPN_HOLY_WRATH:
+        msg += " shines with holy light.";
+        break;
+
+    case SPWPN_ELECTROCUTION:
+        msg += " starts to spark.";
+        break;
+
+    case SPWPN_ANTIMAGIC:
+        msg += " depletes magic around it.";
+        break;
+
+    case SPWPN_CHAOS:
+        msg += " glistens with random hues.";
+        break;
+
     case SPWPN_DUMMY_CRUSHING:  //jmf: Added for Maxwell's Silver Hammer.
         which_brand = SPWPN_VORPAL;
         msg += " glows silver and feels heavier.";
@@ -223,6 +240,8 @@ bool brand_weapon(brand_type which_brand, int power)
 
     you.increase_duration(DUR_WEAPON_BRAND,
                           duration_affected + roll_dice(2, power), 50);
+    if (which_brand == SPWPN_ANTIMAGIC)
+        calc_mp();
 
     return (true);
 }
