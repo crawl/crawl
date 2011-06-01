@@ -134,24 +134,6 @@ export MAKEFLAGS
 export CONFIGURE_FLAGS
 export uname_S
 
-LIBPCRE := contrib/install/lib/libpcre.a
-LIBSDL := contrib/install/lib/libSDL.a
-LIBPNG := contrib/install/lib/libpng.a
-LIBSDLIMAGE := contrib/install/lib/libSDL_image.a
-LIBFREETYPE := contrib/install/lib/libfreetype.a
-LIBSQLITE := contrib/install/lib/libsqlite3.a
-ifdef USE_LUAJIT
-LIBLUA := contrib/install/lib/libluajit.a
-else
-LIBLUA := contrib/install/lib/liblua.a
-endif
-LIBZ := contrib/install/lib/libz.a
-
-LUA_INCLUDE_DIR := /usr/include/lua5.1
-LUA_LIB := -llua5.1
-SQLITE_INCLUDE_DIR := /usr/include
-SQLITE_LIB := -lsqlite3
-
 #
 # Platform Detection
 #
@@ -162,11 +144,11 @@ uname_R := $(shell sh -c 'uname -r 2>/dev/null || echo not')
 uname_P := $(shell sh -c 'uname -p 2>/dev/null || echo not')
 uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 
-HOST = $(shell sh -c 'cc -dumpmachine || echo unknown')
-ARCH = $(HOST)
+HOST := $(shell sh -c 'cc -dumpmachine || echo unknown')
+ARCH := $(HOST)
 
 ifdef CROSSHOST
-	ARCH = $(CROSSHOST)
+	ARCH := $(CROSSHOST)
 	NO_PKGCONFIG = YesPlease
 	NO_AUTO_OPT = YesPlease
 	NEED_STATIC = YesPlease
@@ -194,7 +176,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	DEFINES_L += -DWINMM_PLAY_SOUNDS
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
-		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/lib/libSDLmain.a -mwindows
+		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDLmain.a -mwindows
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
@@ -209,7 +191,7 @@ ifeq ($(uname_S),Darwin)
 	BUILD_SQLITE = YesPlease
 	BUILD_ZLIB = YesPlease
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/lib/libSDLmain.a
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDLmain.a
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
@@ -238,6 +220,24 @@ ifdef BUILD_ALL
 	BUILD_LIBPNG = YesPlease
 	BUILD_ZLIB = YesPlease
 endif
+
+LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
+LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
+LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
+LIBSDLIMAGE := contrib/install/$(ARCH)/lib/libSDL_image.a
+LIBFREETYPE := contrib/install/$(ARCH)/lib/libfreetype.a
+LIBSQLITE := contrib/install/$(ARCH)/lib/libsqlite3.a
+ifdef USE_LUAJIT
+LIBLUA := contrib/install/$(ARCH)/lib/libluajit.a
+else
+LIBLUA := contrib/install/$(ARCH)/lib/liblua.a
+endif
+LIBZ := contrib/install/$(ARCH)/lib/libz.a
+
+LUA_INCLUDE_DIR := /usr/include/lua5.1
+LUA_LIB := -llua5.1
+SQLITE_INCLUDE_DIR := /usr/include
+SQLITE_LIB := -lsqlite3
 
 #
 # Set up the TILES variant
@@ -347,8 +347,8 @@ SAVEDIR := ~/.crawl
 endif
 
 
-INCLUDES_L += -Icontrib/install/include
-LIBS += -Lcontrib/install/lib
+INCLUDES_L += -Icontrib/install/$(ARCH)/include
+LIBS += -Lcontrib/install/$(ARCH)/lib
 
 INCLUDES_L += -Iutil -I.
 
@@ -492,10 +492,10 @@ DEFINES_L += -DUSE_TILE
 INCLUDES_L += -I$(RLTILES)
 
 ifdef BUILD_SDL
-INCLUDES_L += -Icontrib/install/include/SDL
+INCLUDES_L += -Icontrib/install/$(ARCH)/include/SDL
 endif
 ifdef BUILD_FREETYPE
-INCLUDES_L += -Icontrib/install/include/freetype2
+INCLUDES_L += -Icontrib/install/$(ARCH)/include/freetype2
 endif
 
 ifdef SDL
@@ -1137,7 +1137,7 @@ $(CONTRIB_LIBS): .contrib-libs
 
 .contrib-libs: .cflags
 ifneq (,$(CONTRIBS))
-	  +@$(MAKE) -C contrib $(CONTRIBS)
+	  +@$(MAKE) -C contrib $(CONTRIBS) ARCH=$(ARCH)
 endif
 	@touch $@
 
@@ -1164,7 +1164,7 @@ mon-util.d: mon-mst.h
 
 .PHONY: rltile-build
 rltile-build: .contrib-libs $(RLTILES)/dc-unrand.txt
-	+$(MAKE) -C $(RLTILES) all
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH)
 
 $(TILEDEFSRCS): rltile-build
 $(TILEDEFHDRS): rltile-build

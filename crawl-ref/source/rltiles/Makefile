@@ -5,19 +5,19 @@ LDFLAGS += -lmingw32
 endif
 
 ifndef CONTRIB_SDL
-SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/include/SDL")
-SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/lib/libSDL.a ../contrib/install/lib/libSDLmain.a ../contrib/install/lib/libSDL_image.a")
+SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
+SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a")
 else
-SDL_CFLAGS := -I../contrib/install/include/SDL
-SDL_LDFLAGS := ../contrib/install/lib/libSDL.a ../contrib/install/lib/libSDLmain.a ../contrib/install/lib/libSDL_image.a
+SDL_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL
+SDL_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a
 endif
 
 ifndef NO_PKGCONFIG
-PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/include")
-PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/lib/libpng.a ../contrib/install/lib/libz.a")
+PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
+PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
 else
-PNG_INCLUDE := -I../contrib/install/include
-PNG_LIB := ../contrib/install/lib/libpng.a ../contrib/install/lib/libz.a
+PNG_INCLUDE := -I../contrib/install/$(ARCH)/include
+PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
 endif
 
 CFLAGS := -O2 $(SDL_CFLAGS) $(PNG_INCLUDE)
@@ -43,10 +43,6 @@ ifeq ($(shell which $(LMACH)gcc > /dev/null 2> /dev/null && echo "Yes"),)
 LMACH :=
 endif
 CXX = $(LMACH)g++
-ifdef ARCH
-CF_ARCHS := $(patsubst %,-arch %,$(ARCH))
-CXX += $(CF_ARCHS)
-endif
 
 DELETE = rm -f
 
