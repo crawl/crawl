@@ -4221,7 +4221,8 @@ static bool _drink_fountain()
     return (true);
 }
 
-static void _chaos_explosion(coord_def where, actor *agent, std::string cause)
+static void _explosion(coord_def where, actor *agent, beam_type flavour,
+                       std::string name, std::string cause)
 {
     bolt beam;
     beam.is_explosion = true;
@@ -4232,9 +4233,9 @@ static void _chaos_explosion(coord_def where, actor *agent, std::string cause)
     beam.range = 0;
     beam.damage = dice_def(5, 8);
     beam.ex_size = 5;
-    beam.flavour = BEAM_CHAOS;
+    beam.flavour = flavour;
     beam.hit = AUTOMATIC_HIT;
-    beam.name = "chaos eruption";
+    beam.name = name;
     beam.loudness = 10;
     beam.explode(true, false);
 }
@@ -4309,11 +4310,17 @@ static bool _vorpalise_weapon(bool already_known)
         cast_toxic_radiance();
         break;
 
+    case SPWPN_ELECTROCUTION:
+        mprf("%s releases a massive orb of lightning.", itname.c_str());
+        _explosion(you.pos(), &you, BEAM_ELECTRICITY, "electricity",
+                   "electrocution affixation");
+        break;
+
     case SPWPN_CHAOS:
         mprf("%s erupts in a glittering mayhem of all colours.", itname.c_str());
         success = !one_chance_in(3); // You mean, you wanted this... guaranteed?
         // but the eruption _is_ guaranteed.  What it will do is not.
-        _chaos_explosion(you.pos(), &you, "chaos affixation");
+        _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
         xom_is_stimulated(200);
         switch(random2(success? 4 : 2))
         {
@@ -4369,6 +4376,13 @@ static bool _vorpalise_weapon(bool already_known)
     case SPWPN_ANTIMAGIC:
         mprf("%s repels your magic.", itname.c_str());
         set_mp(0);
+        success = false;
+        break;
+
+    case SPWPN_HOLY_WRATH:
+        mprf("%s emits a blast of cleansing flame.", itname.c_str());
+        _explosion(you.pos(), &you, BEAM_HOLY, "cleansing flame",
+                   "holy wrath affixation");
         success = false;
         break;
 
