@@ -436,11 +436,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                      bool cap_power, bool rod)
 {
     int power;
-    if (rod) {
-        // This is only the average of the power. It's used for display and
-        // calculating range. The real power is randomized in staff_spell()
-        power = (5 + you.skill(SK_EVOCATIONS) * 2);
-    }
+    if (rod)
+        power = 5 + you.skill(SK_EVOCATIONS) * 3;
     else
     {
         power = (you.skill(SK_SPELLCASTING) / 2);
@@ -1019,7 +1016,7 @@ targetter* _spell_targetter(spell_type spell, int pow, int range)
 // effects might also land us here.
 // Others are currently unused or unimplemented.
 spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail, bool check_range, int range_power)
+                       bool allow_fail, bool check_range)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1028,10 +1025,6 @@ spret_type your_spells(spell_type spell, int powc,
     dist spd;
     bolt beam;
     beam.origin_spell = spell;
-
-    if (range_power == 0)
-        range_power = powc;
-
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
@@ -1092,7 +1085,7 @@ spret_type your_spells(spell_type spell, int powc,
         const bool dont_cancel_me = (testbits(flags, SPFLAG_HELPFUL)
                                      || testbits(flags, SPFLAG_ALLOW_SELF));
 
-        const int range = calc_spell_range(spell, range_power, false);
+        const int range = calc_spell_range(spell, powc, false);
 
         targetter *hitfunc = _spell_targetter(spell, powc, range);
 

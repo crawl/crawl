@@ -1391,10 +1391,6 @@ int count_staff_spells(const item_def &item, bool need_id)
 int staff_spell(int staff)
 {
     item_def& istaff(you.inv[staff]);
-    // Spell staves are mostly for the benefit of non-spellcasters, so we're
-    // not going to involve INT or Spellcasting skills for power. -- bwr
-    int variable_power = 5 + you.skill(SK_EVOCATIONS)
-                         + roll_dice(2, you.skill(SK_EVOCATIONS));
 
     if (!item_is_rod(istaff))
     {
@@ -1447,9 +1443,7 @@ int staff_spell(int staff)
 
     const spell_type spell = which_spell_in_book(istaff, idx);
     const int mana = spell_mana(spell) * ROD_CHARGE_MULT;
-
-    // We also need a fixed power for range calculation
-    int fixed_power = calc_spell_power(spell, false, false, true, true);
+    int power = calc_spell_power(spell, false, false, true, true);
 
     int food = spell_hunger(spell, true);
 
@@ -1486,7 +1480,7 @@ int staff_spell(int staff)
         mpr("Something interferes with your magic!");
     }
     // All checks passed, we can cast the spell.
-    else if (your_spells(spell, variable_power, false, false, fixed_power)
+    else if (your_spells(spell, power, false, false)
             == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
