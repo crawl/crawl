@@ -3856,6 +3856,7 @@ void zap_wand(int slot)
     beam.set_target(zap_wand);
 
     const bool aimed_at_self = (beam.target == you.pos());
+    const int power = 15 + you.skill(SK_EVOCATIONS) * 5 / 2;
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
@@ -3865,8 +3866,7 @@ void zap_wand(int slot)
         beam.range = tracer_range;
         if (!player_tracer(beam.effect_known ? type_zapped
                                              : ZAP_DEBUGGING_RAY,
-                           2 * (you.skill(SK_EVOCATIONS) - 1),
-                           beam, beam.effect_known ? 0 : 17))
+                           power, beam, beam.effect_known ? 0 : 17))
         {
             return;
         }
@@ -3901,7 +3901,7 @@ void zap_wand(int slot)
 #endif
 
     // zapping() updates beam.
-    zapping(type_zapped, 30 + roll_dice(2, you.skill(SK_EVOCATIONS)), beam);
+    zapping(type_zapped, power, beam);
 
     // Take off a charge.
     wand.plus--;
