@@ -2397,8 +2397,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 4 + random2(4);
         break;
     case MONS_GNOLL:
-        band = BAND_GNOLLS;
-        band_size = (coinflip() ? 3 : 2);
+        if (you.absdepth0 != 0)
+	{
+            band = BAND_GNOLLS;
+            band_size = (coinflip() ? 3 : 2);
+        }
         break;
     case MONS_DEEP_DWARF_SCION:
         band = BAND_DEEP_DWARF;
