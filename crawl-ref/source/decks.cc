@@ -36,6 +36,7 @@
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mon-util.h"
 #include "mgen_data.h"
 #include "coord.h"
@@ -121,6 +122,7 @@ const deck_archetype deck_of_destruction[] = {
     { CARD_HAMMER,  {5, 5, 5} },
     { CARD_SPARK,   {5, 5, 5} },
     { CARD_PAIN,    {5, 5, 5} },
+    { CARD_ORB,     {5, 5, 5} },
     { CARD_TORMENT, {0, 2, 4} },
     END_OF_DECK
 };
@@ -350,6 +352,7 @@ const char* card_name(card_type card)
     case CARD_CURSE:           return "the Curse";
     case CARD_SWINE:           return "the Swine";
     case CARD_ALCHEMIST:       return "the Alchemist";
+    case CARD_ORB:             return "the Orb";
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -1700,6 +1703,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     const zap_type sparkzaps[3]  = { ZAP_ELECTRICITY, ZAP_LIGHTNING,
                                      ZAP_ORB_OF_ELECTRICITY };
     const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_NEGATIVE_ENERGY };
+    const zap_type orbzaps[3]    = { ZAP_MYSTIC_BLAST, ZAP_IOOD, ZAP_IOOD };
 
     switch (card)
     {
@@ -1715,6 +1719,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     case CARD_HAMMER: ztype = hammerzaps[power_level]; break;
     case CARD_VENOM:  ztype = venomzaps[power_level];  break;
     case CARD_SPARK:  ztype = sparkzaps[power_level];  break;
+    case CARD_ORB:    ztype = orbzaps[power_level];    break;
 
     case CARD_PAIN:
         if (power_level == 2)
@@ -1741,7 +1746,21 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
                         LOS_RADIUS, true, true, false, NULL, prompt.c_str())
         && player_tracer(ZAP_DEBUGGING_RAY, power/4, beam))
     {
-        zapping(ztype, random2(power/4), beam);
+        if (ztype == ZAP_IOOD)
+        {
+            if (power_level == 1)
+                cast_iood(&you, power, &beam);
+            else
+                cast_iood_burst(power, beam.target);
+        }
+        else
+            zapping(ztype, random2(power/4), beam);
+    }
+    else if (ztype == ZAP_IOOD && power_level == 2)
+    {
+        // cancelled orb bursts just become uncontrolled
+        cast_iood_burst(random2(power/4), coord_def(-1, -1));
+        return true;
     }
     else
         rc = false;
@@ -2880,7 +2899,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         if (which_card != CARD_VITRIOL && which_card != CARD_FLAME
             && which_card != CARD_FROST && which_card != CARD_HAMMER
             && which_card != CARD_SPARK && which_card != CARD_PAIN
-            && which_card != CARD_VENOM)
+            && which_card != CARD_VENOM && which_card != CARD_ORB)
         {
            mprf("You have drawn %s.", card_name(which_card));
         }
@@ -2962,6 +2981,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_HAMMER:
     case CARD_SPARK:
     case CARD_PAIN:
+    case CARD_ORB:
         rc = _damaging_card(which_card, power, rarity);
         break;
 

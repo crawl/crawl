@@ -70,6 +70,9 @@ enum card_type
     CARD_SPARK,                 // lightning damage
     CARD_PAIN,                  // single target, like spell of agony
     CARD_TORMENT,               // Symbol of Torment
+#if TAG_MAJOR_VERSION != 32
+    CARD_ORB,
+#endif
 
     CARD_ELIXIR,                // healing
     CARD_BATTLELUST,            // melee boosts
@@ -115,6 +118,10 @@ enum card_type
     CARD_CURSE,                 // Curse your items
     CARD_SWINE,                 // *oink*
     CARD_ALCHEMIST,
+
+#if TAG_MAJOR_VERSION == 32
+    CARD_ORB,
+#endif
 
     NUM_CARDS
 };
