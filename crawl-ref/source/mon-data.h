@@ -218,6 +218,7 @@ static monsterentry mondata[] = {
     AXED_MON(MONS_GIANT_BLOWFLY)
     AXED_MON(MONS_TRAP_MIMIC)
     AXED_MON(MONS_BEAR)
+    AXED_MON(MONS_GILA_MONSTER)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -1246,16 +1247,15 @@ static monsterentry mondata[] = {
 },
 
 {
-    // Old gila monster colour: a random color from ETC_GILA.
-    MONS_GILA_MONSTER, 'l', MAGENTA, "gila monster",
-    M_COLD_BLOOD,
+    MONS_BASILISK, 'l', MAGENTA, "basilisk",
+    M_COLD_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS,
     MR_NO_FLAGS,
-    450, 10, MONS_GIANT_NEWT, MONS_GILA_MONSTER, MH_NATURAL, -3,
+    450, 10, MONS_GIANT_NEWT, MONS_BASILISK, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 4, 4, 0 },
-    3, 12, MST_NO_SPELLS, CE_POISON_CONTAM, Z_SMALL, S_HISS,
-    I_INSECT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
+    3, 12, MST_BASILISK, CE_POISON_CONTAM, Z_SMALL, S_HISS,
+    I_ANIMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
 {

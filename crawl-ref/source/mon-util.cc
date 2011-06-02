@@ -2025,13 +2025,6 @@ void define_monster(monster* mons)
         monnumber = 27;
         break;
 
-    case MONS_GILA_MONSTER:
-        if (col != BLACK) // May be overwritten by the mon_glyph option.
-            break;
-
-        col = element_colour(ETC_GILA);
-        break;
-
     case MONS_KRAKEN:
         if (col != BLACK) // May be overwritten by the mon_glyph option.
             break;

@@ -409,6 +409,10 @@ Balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
+basilisk
+
+A large lizard with a terrible, petrifying gaze.
+%%%%
 beast
 
 A weird and hideous cross between beast and human.

@@ -546,7 +546,6 @@ int mons_standard_level(int mcls)
         return 11;
 
     case MONS_EYE_OF_DRAINING:
-    case MONS_GILA_MONSTER:
     case MONS_MANTICORE:
     case MONS_PLANT:
     case MONS_WYVERN:
@@ -577,6 +576,7 @@ int mons_standard_level(int mcls)
     case MONS_TRAPDOOR_SPIDER:
         return 14;
 
+    case MONS_BASILISK:
     case MONS_BRAIN_WORM:
     case MONS_CYCLOPS:
     case MONS_EFREET:
@@ -855,7 +855,7 @@ int mons_standard_rare(int mcls)
 
     case MONS_FREEZING_WRAITH:
     case MONS_GIANT_AMOEBA:
-    case MONS_GILA_MONSTER:
+    case MONS_BASILISK:
     case MONS_GLOWING_SHAPESHIFTER:
     case MONS_SOLDIER_ANT:
         return 35;
@@ -1291,7 +1291,6 @@ int mons_lair_level(int mcls)
         break;
 
     case MONS_GIANT_FROG:
-    case MONS_GILA_MONSTER:
     case MONS_PORCUPINE:
     case MONS_HOUND:
     case MONS_BLACK_BEAR:
@@ -1319,6 +1318,7 @@ int mons_lair_level(int mcls)
     case MONS_SPINY_FROG:
     case MONS_WAR_DOG:
     case MONS_YELLOW_WASP:
+    case MONS_BASILISK:
         mlev += 3;
         break;
 
@@ -1400,7 +1400,6 @@ int mons_lair_rare(int mcls)
 
     case MONS_JACKAL:
     case MONS_IGUANA:
-    case MONS_GILA_MONSTER:
         return 70;
 
     case MONS_GREEN_RAT:
@@ -1424,6 +1423,7 @@ int mons_lair_rare(int mcls)
     case MONS_YAK:
         return 50;
 
+    case MONS_BASILISK:
     case MONS_BLACK_MAMBA:
         return 47;
 

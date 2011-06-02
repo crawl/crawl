@@ -90,7 +90,7 @@ ORIENT:  float
 MONS:    w:50 nothing / w:30 giant slug / w:30 agate snail
 MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
-         gila monster / komodo dragon
+         komodo dragon / basilisk w:5
 MONS:    green rat / porcupine / orange rat / quokka / rat
 MONS:    w:90 nothing / w:30 giant frog / blink frog / giant toad /\
          spiny frog
@@ -168,7 +168,7 @@ NAME:   minmay_lair_entry_grove
 TAGS:   lair_entry
 ORIENT: float
 MONS:   plant / bush w:2 / fungus w:2
-MONS:   crocodile / gila monster / agate snail w:5 / giant slug w:5
+MONS:   crocodile / basilisk w:5 / agate snail w:5 / giant slug w:5
 MONS:   yak
 MONS:   sheep
 MONS:   rat w:2 / porcupine / green rat / quokka w:1
@@ -304,7 +304,7 @@ ENDMAP
 NAME:   due_lair_maze_entry_diamond
 TAGS:   lair_entry
 MONS:   plant / fungus
-MONS:   w:100 bat / w:100 rat / w:30 green rat / gila monster /\
+MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile /\
         yak / nothing
 ORIENT: float
 SUBST:  . = G:20 B:15 .
@@ -389,7 +389,7 @@ MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
 MONS:    giant slug zombie / agate snail zombie / \
          elephant slug zombie w:2 / nothing
-MONS:    crocodile zombie / gila monster zombie / \
+MONS:    crocodile zombie / basilisk zombie / \
          komodo dragon zombie w:4 / nothing
 MAP
              wwwwwwwww
@@ -916,7 +916,7 @@ TAGS:   ruin_lair
 DEPTH:  Lair
 ORIENT: north
 MONS:   black mamba / spiny frog / wolf spider / spiny worm
-MONS:   gila monster / komodo dragon / yellow wasp
+MONS:   basilisk / komodo dragon / yellow wasp
 MONS:   giant mite / giant centipede
 MONS:   plant / fungus w:2 / bush w:1
 SUBST:  4 = 444. t:2, . = ...4 t:2
@@ -948,7 +948,7 @@ TAGS:   allow_dup no_monster_gen no_item_gen mini_float
 MONS:   w:5 death drake / ice dragon / dragon / swamp dragon
 MONS:   swamp dragon / hydra / anaconda
 MONS:   swamp drake / w:20 spiny frog / w:20 komodo dragon /\
-        w:20 gila monster / w:20 black mamba
+        w:20 basilisk / w:20 black mamba
 : if you.absdepth() >= 18 then
 SUBST:  M = 1:1 2:9 3:20
 : elseif you.absdepth() >= 13 then

@@ -52,7 +52,7 @@ giant_firefly CORPSE_FIREFLY
 giant_newt CORPSE_GIANT_NEWT
 giant_gecko CORPSE_GIANT_GECKO
 iguana CORPSE_IGUANA
-gila_monster CORPSE_GILA_MONSTER
+basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
 
 ## Slugs ('j')
