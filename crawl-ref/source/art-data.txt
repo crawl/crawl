@@ -686,15 +686,15 @@ CURSED:  1
 STEALTH: -20
 DESC:    A triple sword made of weird glowing metal.
 
-NAME:    great mace "Undeadhunter"
-APPEAR:  great steel mace
-OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
-PLUS:    +7/+7
-COLOUR:  LIGHTGREY
-TILE:    urand_undeadhunter
-TILE_EQ: undeadhunter
-BRAND:   SPWPN_HOLY_WRATH
-BOOL:    life
+NAME:     great mace "Undeadhunter"
+APPEAR:   great steel mace
+OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
+PLUS:     +7/+7
+COLOUR:   LIGHTGREY
+TILE:     urand_undeadhunter
+TILE_EQ:  undeadhunter
+BOOL:     life
+DESC_END: This weapon is blessed to inflict great damage to the the undead.
 
 NAME:    whip "Snakebite"
 APPEAR:  forked whip

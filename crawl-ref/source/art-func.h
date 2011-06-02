@@ -24,7 +24,7 @@
 #include "effects.h"       // For Sceptre of Torment tormenting
 #include "env.h"           // For storm bow env.cgrid
 #include "food.h"          // For evokes
-#include "godconduct.h"    // did_god_conduct.
+#include "godconduct.h"    // did_god_conduct
 #include "coord.h"
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
@@ -35,7 +35,7 @@
 #include "spl-cast.h"      // For evokes
 #include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
-#include "terrain.h"       // For storm bow.
+#include "terrain.h"       // For storm bow
 
 /*******************
  * Helper functions.
@@ -663,5 +663,19 @@ static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
     {
         mpr("<green>The lance glows as it skewers the body.</green>");
         you.wield_change = true;
+    }
+}
+
+///////////////////////////////////////////////////
+
+static void _UNDEADHUNTER_melee_effect(item_def* item, actor* attacker,
+                                       actor* defender, bool mondied)
+{
+    if (defender->holiness() == MH_UNDEAD && one_chance_in(3) && !mondied)
+    {
+        mprf("%s %s blasted with holy energy!",
+              defender->name(DESC_CAP_THE).c_str(),
+              defender->atype() == ACT_PLAYER ? "are" : "is");
+        defender->hurt(attacker, 10 + roll_dice(2, 10));
     }
 }
