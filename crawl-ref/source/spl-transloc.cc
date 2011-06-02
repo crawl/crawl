@@ -780,9 +780,11 @@ bool cast_apportation(int pow, bolt& beam)
     }
 
     // Protect the player from destroying the item.
-    if (feat_destroys_item(grd(you.pos()), item))
+    if (feat_virtually_destroys_item(grd(you.pos()), item)
+        && !yesno("Really apport while over this terrain?",
+                  false, 'n'))
     {
-        mpr("That would be silly while over this terrain!");
+        canned_msg(MSG_OK);
         return (false);
     }
 
@@ -799,6 +801,7 @@ bool cast_apportation(int pow, bolt& beam)
         if (item_is_orb(item))
         {
             orb_pickup_noise(where, 30);
+            mpr("The mass is resisting your pull.");
             return (true);
         }
         else
@@ -811,9 +814,6 @@ bool cast_apportation(int pow, bolt& beam)
     // We need to modify the item *before* we move it, because
     // move_top_item() might change the location, or merge
     // with something at our position.
-    mprf("Yoink! You pull the item%s towards yourself.",
-         (item.quantity > 1) ? "s" : "");
-
     if (item_is_orb(item))
     {
         fake_noisy(30, where);
@@ -871,13 +871,19 @@ bool cast_apportation(int pow, bolt& beam)
         dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
         if (feat_virtually_destroys_item(grd(new_spot), item))
+        {
+            mpr("Not with that terrain in the way!");
             return (true);
+        }
     }
     // If power is high enough it'll just come straight to you.
     else
         new_spot = you.pos();
 
     // Actually move the item.
+    mprf("Yoink! You pull the item%s towards yourself.",
+         (item.quantity > 1) ? "s" : "");
+
     if (max_units < item.quantity)
     {
         if (!copy_item_to_grid(item, new_spot, max_units))
