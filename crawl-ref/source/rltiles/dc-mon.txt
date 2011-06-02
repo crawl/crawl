@@ -59,7 +59,7 @@ giant_firefly MONS_FIREFLY
 giant_newt MONS_GIANT_NEWT
 giant_gecko MONS_GIANT_GECKO
 iguana MONS_IGUANA
-gila_monster MONS_GILA_MONSTER
+basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON
 
 ## Slugs ('j')

@@ -3069,6 +3069,8 @@ void unmarshallMonster(reader &th, monster& m)
         m.type = MONS_VAMPIRE_MOSQUITO;
     else if (m.type == MONS_MEGABAT)
         m.type = MONS_BAT;
+    else if (m.type == MONS_GILA_MONSTER)
+        m.type = MONS_BASILISK;
 #endif
 
     m.mid             = unmarshallInt(th);

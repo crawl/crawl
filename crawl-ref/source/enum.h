@@ -1847,7 +1847,9 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_NEWT,
     MONS_GIANT_GECKO,
     MONS_IGUANA,
+#if TAG_MAJOR_VERSION == 32
     MONS_GILA_MONSTER,
+#endif
     MONS_KOMODO_DRAGON,
     MONS_SMALL_SNAKE,
     MONS_SNAKE,
@@ -2392,6 +2394,7 @@ enum monster_type                      // (int) menv[].type
     MONS_HOLY_SWINE,            // porkalator only
     MONS_SENSED_FRIENDLY,
     MONS_GIANT,
+    MONS_BASILISK,
 
     NUM_MONSTERS,                      // used for polymorph
 

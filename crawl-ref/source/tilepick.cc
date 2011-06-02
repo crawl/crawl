@@ -932,8 +932,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GIANT_GECKO;
     case MONS_IGUANA:
         return TILEP_MONS_IGUANA;
-    case MONS_GILA_MONSTER:
-        return TILEP_MONS_GILA_MONSTER;
+    case MONS_BASILISK:
+        return TILEP_MONS_BASILISK;
     case MONS_KOMODO_DRAGON:
         return TILEP_MONS_KOMODO_DRAGON;
 
@@ -3335,8 +3335,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_GECKO;
     case MONS_IGUANA:
         return TILE_CORPSE_IGUANA;
-    case MONS_GILA_MONSTER:
-        return TILE_CORPSE_GILA_MONSTER;
+    case MONS_BASILISK:
+        return TILE_CORPSE_BASILISK;
     case MONS_KOMODO_DRAGON:
         return TILE_CORPSE_KOMODO_DRAGON;
 

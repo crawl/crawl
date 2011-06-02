@@ -370,6 +370,14 @@ sphinx cast
 @The_monster@ mumbles some strange words.
 
 @The_monster@ casts a spell.
+%%%%
+eidolon cast targeted
+
+@The_monster@ stares piercingly at @target@.
+%%%%
+basilisk cast targeted
+
+@giant eyeball cast targeted@
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -446,10 +454,6 @@ shedu cast
 shedu cast targeted
 
 @The_monster@ beseeches @possessive_God@ to heal its mate!
-%%%%
-eidolon cast targeted
-
-@The_monster@ stares piercingly at @target@.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.
