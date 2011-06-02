@@ -1058,10 +1058,10 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case ZIN_ANTIMAGIC:
+        ASSERT(prayertype == RECITE_HERETIC);
         if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
-            ASSERT(prayertype == RECITE_HERETIC);
             simple_monster_message(mon,
                 minor ? " quails at your recitation."
                       : " looks feeble and powerless before your recitation.");
