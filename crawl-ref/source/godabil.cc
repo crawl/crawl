@@ -1716,6 +1716,8 @@ void yred_drain_life()
 
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
+    ASSERT(mons_enslaved_body_and_soul(mon));
+
     add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
     const std::string whose =
