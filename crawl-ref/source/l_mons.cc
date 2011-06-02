@@ -257,6 +257,44 @@ static int l_mons_do_dismiss(lua_State *ls)
 }
 MDEFN(dismiss, do_dismiss)
 
+static int l_mons_set_hp(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    int hp = luaL_checkint(ls, 1);
+    if (hp <= 0)
+    {
+        luaL_argerror(ls, 1, "hp must be positive");
+        return 0;
+    }
+    hp = std::min(hp, mons->max_hit_points);
+    mons->hit_points = std::min(hp, MAX_MONSTER_HP);
+    return 0;
+}
+MDEFN(set_hp, set_hp)
+
+static int l_mons_set_max_hp(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    int maxhp = luaL_checkint(ls, 1);
+    if (maxhp <= 0)
+    {
+        luaL_argerror(ls, 1, "maxhp must be positive");
+        return 0;
+    }
+    mons->max_hit_points = std::min(maxhp, MAX_MONSTER_HP);
+    mons->hit_points = mons->max_hit_points;
+    return 0;
+}
+MDEFN(set_max_hp, set_max_hp)
+
 // Run the monster AI code.
 static int l_mons_do_run_ai(lua_State *ls)
 {
@@ -490,6 +528,8 @@ static MonsAccessor mons_attrs[] =
     { "energy",          l_mons_energy          },
     { "add_energy",      l_mons_add_energy      },
     { "dismiss",         l_mons_dismiss         },
+    { "set_hp",          l_mons_set_hp          },
+    { "set_max_hp",      l_mons_set_max_hp      },
     { "run_ai",          l_mons_run_ai          },
     { "handle_behaviour",l_mons_handle_behaviour },
     { "experience",      l_mons_experience      },
