@@ -800,7 +800,6 @@
     false,
     0
 },
-#endif
 
 {
     ZAP_ORB_OF_FRAGMENTATION,
@@ -817,6 +816,7 @@
     true,
     5 // XXX: Seems like it might be louder than this.
 },
+#endif
 
 {
     ZAP_THROW_ICICLE,
