@@ -57,8 +57,8 @@
 #endif
 
 const int ABYSSAL_RUNE_MAX_ROLL = 200;
-static coord_def abyss_position = ABYSS_CENTRE;
-static double abyss_depth = 0.0;
+
+static abyss_state abyssal_state;
 
 bool just_banished = false;
 std::vector<dungeon_feature_type> abyssal_features;
@@ -536,32 +536,30 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     const double floor_density = 115;
     const int column_chance = 4;
     const int uniform_density = random_range(30,90);
+    const coord_def major_coord = abyssal_state.major_coord;
+    const coord_def minor_coord = abyssal_state.minor_coord;
+    const double abyss_depth = abyssal_state.depth;
+
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
-        double x = (p.x + abyss_position.x) / 2.2;
-        double y = (p.y + abyss_position.y) / 2.2;
+        double x = (p.x + major_coord.x) / 2.2;
+        double y = (p.y + major_coord.y) / 2.2;
         worley::noise_datum noise = worley::worley(x, y, abyss_depth);
         if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
             continue;
 
-        if (0 == ((noise.id[0] + noise.id[1]) % (2 * n_terrain_elements + 1)))
+        dungeon_feature_type feat = DNGN_FLOOR;
+
+        if (grd(p) == DNGN_UNSEEN
+                && floor_density <= noise.distance[0] * 100)
         {
-            if (random2(100) < uniform_density)
-                grd(p) = DNGN_FLOOR;
-            else
-            grd(p) = terrain_elements[random2(n_terrain_elements)];
+            int id = noise.id[0] % n_terrain_elements;
+            feat = terrain_elements[id];
         }
-        else if (floor_density > noise.distance[0] * 100
-            && !one_chance_in(column_chance))
-        {
-            grd(p) = DNGN_FLOOR;
-        }
-        else if (grd(p) == DNGN_UNSEEN)
-        {
-            int id = (noise.id[0] + one_chance_in(3)) % n_terrain_elements;
-            grd(p) = terrain_elements[id];
-        }
+
+        grd(p) = feat;
+
         // Place abyss exits, stone arches, and altars to liven up the scene:
         (_abyss_check_place_feat(p, exit_chance,
                                  &exits_wanted,
@@ -630,6 +628,14 @@ static void _generate_area(const map_mask &abyss_genlevel_mask,
     env.density = 0;
 }
 
+void _initialize_abyss_state() {
+    // TODO randomize this.
+    abyssal_state.major_coord = ABYSS_CENTRE;
+    abyssal_state.minor_coord = ABYSS_CENTRE;
+    abyssal_state.depth = 0.0;
+    abyssal_state.mask.init(true);
+}
+
 // Generate the initial (proto) Abyss level. The proto Abyss is where
 // the player lands when they arrive in the Abyss from elsewhere.
 // _generate_area generates all other Abyss areas.
@@ -638,16 +644,13 @@ void generate_abyss()
     env.level_build_method += " abyss";
     env.level_layout_types.insert("abyss");
 
-    abyss_position.x = random2(0x7FFFFFFF);
-    abyss_position.y = random2(0x7FFFFFFF);
+    _initialize_abyss_state();
 
     dprf("generate_abyss(); turn_on_level: %d", env.turns_on_level);
 
-    map_mask abyss_genlevel_mask;
-    abyss_genlevel_mask.init(true);
     // Generate the initial abyss without vaults. Vaults are horrifying.
     bool use_vaults = (you.char_direction == GDT_GAME_START ? false : true);
-    _generate_area(abyss_genlevel_mask, use_vaults);
+    _generate_area(abyssal_state.mask, use_vaults);
 
     if (just_banished)
     {
@@ -675,7 +678,7 @@ void generate_abyss()
         }
     }
 
-    generate_random_blood_spatter_on_level(&abyss_genlevel_mask);
+    generate_random_blood_spatter_on_level(&abyssal_state.mask);
     setup_environment_effects();
 }
 
@@ -997,7 +1000,8 @@ static void _abyss_shift_level_contents_around_player(
 {
     const coord_def source_centre = you.pos();
 
-    abyss_position += (source_centre - ABYSS_CENTRE);
+    abyssal_state.major_coord += (source_centre - ABYSS_CENTRE);
+    abyssal_state.minor_coord += (source_centre - ABYSS_CENTRE);
 
     ASSERT(radius >= LOS_RADIUS);
 #ifdef WIZARD
@@ -1179,6 +1183,18 @@ static bool _abyss_teleport_within_level()
         }
     }
     return (false);
+}
+
+void abyss_morph()
+{
+    abyssal_state.depth += 0.25;
+    map_mask abyss_genlevel_mask;
+    _abyss_wipe_unmasked_area(abyss_genlevel_mask);
+    _abyss_invert_mask(&abyss_genlevel_mask);
+    dgn_erase_unused_vault_placements();
+    _abyss_apply_terrain(abyss_genlevel_mask);
+    abyssal_state.mask = abyss_genlevel_mask;
+    los_changed();
 }
 
 void abyss_teleport(bool new_area)
