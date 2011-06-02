@@ -77,7 +77,7 @@ monster* player::get_fearmonger(const coord_def &target) const
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
-        if (olddist >= newdist)
+        if (olddist > newdist)
             return (mon);
     }
     return (NULL);
