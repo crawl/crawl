@@ -628,6 +628,13 @@ static void _DEMON_AXE_unequip(item_def *item, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
+static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, player_genus(GENPC_DRACONIAN) || you.form == TRAN_DRAGON
+                            ? "You feel an overwhelming desire to commit suicide."
+                            : "You feel an overwhelming desire to slay dragons!");
+}
+
 static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied)
 {
