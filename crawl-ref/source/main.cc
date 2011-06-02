@@ -2156,7 +2156,7 @@ static void _decrement_petrification(int delay)
         if ((dur -= delay) <= 0)
         {
             dur = 0;
-            you.duration[DUR_PETRIFIED] = 8 * BASELINE_DELAY;
+            you.duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY;
                                 + random2(4 * BASELINE_DELAY);
             you.redraw_evasion = true;
             mpr("You have turned to stone.");

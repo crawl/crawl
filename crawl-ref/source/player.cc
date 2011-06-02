@@ -6400,10 +6400,7 @@ void player::petrify(actor *who, int str)
     }
 
     if (you.petrified() || you.petrifying())
-    {
-        mprf("You briefly feel a bit more stoned.");
         return;
-    }
 
     you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
