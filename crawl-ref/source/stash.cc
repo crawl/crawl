@@ -1375,7 +1375,7 @@ void LevelStashes::get_matching_stashes(
 
     // a single digit or * means we're searching for waypoints' content.
     const std::string s = search.tostring();
-    if (s.size() == 1 && s[0] == '*')
+    if (s == "*")
     {
         for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
             _waypoint_search(i, results);
