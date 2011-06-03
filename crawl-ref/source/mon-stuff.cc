@@ -16,7 +16,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "dlua.h"

@@ -12,7 +12,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "delay.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"

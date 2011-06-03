@@ -21,7 +21,7 @@
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"

@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "dgn-actions.h"
+#include "dactions.h"
 
 #include "coordit.h"
 #include "debug.h"

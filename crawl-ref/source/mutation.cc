@@ -24,7 +24,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "defines.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "coord.h"
 #include "effects.h"
 #include "env.h"
