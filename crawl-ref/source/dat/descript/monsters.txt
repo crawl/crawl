@@ -1836,6 +1836,10 @@ tormentor
 
 This malign devil is covered in all manner of claws, spines and cruel hooks.
 %%%%
+training dummy
+
+A mannequin used for battle practice.
+%%%%
 trapdoor spider
 
 A sneaky arachnid that surprises its prey by hiding underneath the dungeon floor.
