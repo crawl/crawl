@@ -1611,7 +1611,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
     if (you.form == TRAN_STATUE)
-        damage = div_rand_round(damage * 2, 3);
+        damage = div_rand_round(damage * 3, 2);
 
     return (damage);
 }
