@@ -378,6 +378,10 @@ bool melee_attack::attack()
     {
         handle_phase_hit();
     }
+    else
+    {
+        handle_phase_dodged();
+    }
 
     identify_mimic(defender);
 
