@@ -928,10 +928,6 @@ giga bat
 
 A huge, bloated bat.
 %%%%
-gila monster
-
-A large lizard with brightly coloured stripes and splotches.
-%%%%
 glowing shapeshifter
 
 A shapeshifter which has lost control over its transformations, and is constantly changing form.
