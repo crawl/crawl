@@ -5871,6 +5871,16 @@ int player::armour_class() const
   **/
 int player::gdr_perc() const
 {
+    switch(you.form)
+    {
+    case TRAN_DRAGON:
+        return 34; // base AC 8
+    case TRAN_STATUE:
+        return 40; // like plate (AC 10)
+    default:
+        break;
+    }
+
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
 
     if (!body_armour)
