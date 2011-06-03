@@ -113,7 +113,7 @@ void cast_iood_burst(int pow, coord_def target)
             foe = mons->mindex();
     }
 
-    int n_orbs = random_range(3, 8);
+    int n_orbs = random_range(3, 7);
     dprf("Bursting %d orbs.", n_orbs);
     double angle0 = random2(2097152) * PI / 1048576;
 
