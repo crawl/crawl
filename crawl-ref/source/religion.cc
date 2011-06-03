@@ -3289,8 +3289,11 @@ bool transformed_player_can_join_god(god_type which_god)
     if (which_god == GOD_ZIN && you.form != TRAN_NONE)
         return (false);
 
-    if (which_god == GOD_YREDELEMNUL && you.form == TRAN_STATUE)
+    if (which_god == GOD_YREDELEMNUL
+        && (you.form == TRAN_STATUE || you.petrified()))
+    {
         return (false);
+    }
 
     return (true);
 }
