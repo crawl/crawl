@@ -16,6 +16,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
+#include "stuff.h"
 #include "travel.h"
 #include "view.h"
 
@@ -39,6 +40,7 @@ static const char *daction_names[] =
     "shuffle decks",
     "reapply passive mapping",
     "remove Jiyva altars",
+    "Pikel's slaves go good-neutral",
 };
 
 static bool _mons_matches_counter(const monster* mon, daction_type act)
@@ -71,6 +73,16 @@ static bool _mons_matches_counter(const monster* mon, daction_type act)
     // Not a stored counter:
     case DACT_ALLY_TROG:
         return (mon->friendly() && mons_is_god_gift(mon, GOD_TROG));
+    case DACT_HOLY_PETS_GO_NEUTRAL:
+        return (mon->friendly()
+                && !mon->has_ench(ENCH_CHARM)
+                && mon->is_holy()
+                && mons_is_god_gift(mon, GOD_SHINING_ONE));
+    case DACT_PIKEL_SLAVES:
+        return (mon->type == MONS_SLAVE
+                && testbits(mon->flags, MF_BAND_MEMBER)
+                && mon->props.exists("pikel_band")
+                && mon->mname != "freed slave");
 
     default:
         return (false);
@@ -155,17 +167,22 @@ static void _apply_daction(daction_type act)
                 mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
         break;
     case DACT_HOLY_PETS_GO_NEUTRAL:
+    case DACT_PIKEL_SLAVES:
         for (monster_iterator mi; mi; ++mi)
-            if (mi->friendly()
-                && !mi->has_ench(ENCH_CHARM)
-                && mi->is_holy()
-                && mons_is_god_gift(*mi, GOD_SHINING_ONE))
+            if (_mons_matches_counter(*mi, act))
             {
                 // monster changes attitude
                 mi->attitude = ATT_GOOD_NEUTRAL;
                 mons_att_changed(*mi);
 
-                simple_monster_message(*mi, " becomes indifferent.");
+                if (act == DACT_PIKEL_SLAVES)
+                {
+                    mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                    mi->mname = "freed slave";
+                }
+                else
+                    simple_monster_message(*mi, " becomes indifferent.");
+                mi->behaviour = BEH_WANDER;
             }
         break;
 
