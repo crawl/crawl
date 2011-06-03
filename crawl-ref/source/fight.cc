@@ -1608,6 +1608,11 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         damage -= random2(5);
 
+    // not additive, statues are supposed to be bad with tiny toothpicks but
+    // deal crushing blows with big weapons
+    if (you.form = TRAN_STATUE)
+        damage = div_rand_round(damage * 2, 3);
+
     return (damage);
 }
 
@@ -4257,11 +4262,11 @@ int melee_attack::player_calc_base_unarmed_damage()
     case TRAN_BLADE_HANDS:
         damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
         break;
-    case TRAN_STATUE:
-        damage = 12 + you.strength();
+    case TRAN_STATUE: // multiplied later
+        damage = 6 + div_rand_round(you.strength(), 2);
         break;
-    case TRAN_DRAGON:
-        damage = 20 + you.strength();
+    case TRAN_DRAGON: // + 6 from claws
+        damage = 14 + div_rand_round(you.strength() * 2, 3);
         break;
     case TRAN_LICH:
         damage = 5;
