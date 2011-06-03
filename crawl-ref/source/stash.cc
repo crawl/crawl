@@ -1351,11 +1351,42 @@ int LevelStashes::_num_enabled_stashes() const
     return rawcount;
 }
 
+void LevelStashes::_waypoint_search(
+        int n,
+        std::vector<stash_search_result> &results) const
+{
+    level_pos waypoint = travel_cache.get_waypoint(n);
+    if (!waypoint.is_valid() || waypoint.id != m_place)
+        return;
+    const Stash* stash = find_stash(waypoint.pos);
+    if (!stash)
+        return;
+    stash_search_result res;
+    stash->matches_search("", text_pattern(".*"), res);
+    res.pos.id = m_place;
+    results.push_back(res);
+}
+
 void LevelStashes::get_matching_stashes(
         const base_pattern &search,
         std::vector<stash_search_result> &results) const
 {
     std::string lplace = "{" + m_place.describe() + "}";
+
+    // a single digit or * means we're searching for waypoints' content.
+    const std::string s = search.tostring();
+    if (s.size() == 1 && s[0] == '*')
+    {
+        for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+            _waypoint_search(i, results);
+        return;
+    }
+    else if (s.size() == 1 && s[0] >= '0' && s[0] <= '9')
+    {
+        _waypoint_search(s[0] - '0', results);
+        return;
+    }
+
     for (stashes_t::const_iterator iter = m_stashes.begin();
             iter != m_stashes.end(); iter++)
     {
@@ -1824,7 +1855,7 @@ void StashTracker::search_stashes()
     if (lua_text_pattern::is_lua_pattern(csearch))
         search = &ltpat;
 
-    if (!search->valid())
+    if (!search->valid() && csearch != "*")
     {
         mpr("Your search expression is invalid.", MSGCH_PLAIN);
         lastsearch = help;

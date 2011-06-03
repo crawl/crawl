@@ -292,6 +292,7 @@ public:
     int _num_enabled_stashes() const;
     void _update_corpses(int rot_time);
     void _update_identification();
+    void _waypoint_search(int n, std::vector<stash_search_result> &results) const;
 
  private:
     typedef std::map<int, Stash>  stashes_t;
