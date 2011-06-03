@@ -40,8 +40,8 @@ show_more = false
 :       crawl.sendkeys("&H")
 :     end
 :   end
-:   if (you.turns() % 7) == 0 then
-:     crawl.sendkeys("&^200" .. eol)
+:   if (you.turns() % 7) == 1 then
+:     crawl.sendkeys("&^200" .. eol .. eol .. eol)
 :     crawl.sendkeys("&" .. string.char(20) ..
 :                    "require('clua/stress.lua')" .. eol ..
 :                    "stress.boost_monster_hp()" .. eol .. esc)
