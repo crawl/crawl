@@ -369,11 +369,7 @@ bool melee_attack::attack()
 
     // TODO you.skill needs to be ambiguized to actor.skil somehow
     // Check for a stab (helpless or petrifying)
-    if (to_hit >= ev && ev_nohelpless > ev
-        || ((defender->cannot_act() || defender->asleep())
-            && !one_chance_in(10 + you.skill(SK_STABBING)))
-        || defender->as_monster()->petrifying()
-            && !one_chance_in(2 + you.skill(SK_STABBING)))
+    if (to_hit >= ev && ev_nohelpless > ev)
     {
         defender->props["helpless"] = true;
         ev_margin = 1;
