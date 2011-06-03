@@ -3655,7 +3655,7 @@ bool god_hates_spell(spell_type spell, god_type god)
         }
         break;
     case GOD_YREDELEMNUL:
-        if (is_holy_spell(spell))
+        if (is_holy_spell(spell) || spell == SPELL_STATUE_FORM)
             return (true);
         break;
     case GOD_FEDHAS:

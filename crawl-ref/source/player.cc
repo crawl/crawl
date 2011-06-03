@@ -1658,7 +1658,9 @@ int player_res_torment(bool, bool temp)
 {
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
             || you.form == TRAN_LICH
+            || you.form == TRAN_STATUE
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
+            || you.petrified()
             || (temp &&
                 (20 * player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
                  > random2(100))));
@@ -1717,6 +1719,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         default:
             break;
         }
+
+        if (you.petrified())
+            rp++;
     }
 
     if (rp > 1)
@@ -1927,6 +1932,10 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         default:
            break;
         }
+
+        // completely stoned, unlike statue which has some life force
+        if (you.petrified())
+            pl += 3;
     }
 
     if (items)
@@ -5890,6 +5899,9 @@ bool player::heal(int amount, bool max_too)
 
 mon_holy_type player::holiness() const
 {
+    if (form == TRAN_STATUE || petrified())
+        return (MH_NONLIVING);
+
     if (is_undead)
         return (MH_UNDEAD);
 
@@ -5940,7 +5952,7 @@ bool player::is_chaotic() const
 
 bool player::is_artificial() const
 {
-    return (false);
+    return (form == TRAN_STATUE || petrified());
 }
 
 bool player::is_unbreathing() const
@@ -5953,6 +5965,8 @@ bool player::is_unbreathing() const
     default:
         break;
     }
+    if (petrified())
+        return (true);
 
     return (player_mutation_level(MUT_UNBREATHING));
 }
@@ -6037,6 +6051,9 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
+    if (temp && (petrified() || form == TRAN_STATUE))
+        return 3;
+
     switch (is_undead)
     {
         default:

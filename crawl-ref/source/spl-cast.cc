@@ -789,6 +789,11 @@ static void _spellcasting_side_effects(spell_type spell, int pow)
         if (spell == SPELL_NECROMUTATION && is_good_god(you.religion))
             excommunication();
     }
+    if (spell == SPELL_STATUE_FORM && you.religion == GOD_YREDELEMNUL
+        && !crawl_state.is_god_acting())
+    {
+        excommunication();
+    }
 
     alert_nearby_monsters();
 }
