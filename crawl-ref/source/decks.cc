@@ -1749,9 +1749,9 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         if (ztype == ZAP_IOOD)
         {
             if (power_level == 1)
-                cast_iood(&you, power, &beam);
+                cast_iood(&you, power/6, &beam);
             else
-                cast_iood_burst(power, beam.target);
+                cast_iood_burst(power/6, beam.target);
         }
         else
             zapping(ztype, random2(power/4), beam);
@@ -1759,7 +1759,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     else if (ztype == ZAP_IOOD && power_level == 2)
     {
         // cancelled orb bursts just become uncontrolled
-        cast_iood_burst(random2(power/4), coord_def(-1, -1));
+        cast_iood_burst(power/6, coord_def(-1, -1));
         return true;
     }
     else
