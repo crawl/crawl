@@ -1658,7 +1658,6 @@ int player_res_torment(bool, bool temp)
 {
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
             || you.form == TRAN_LICH
-            || you.form == TRAN_STATUE
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || you.petrified()
             || (temp &&
