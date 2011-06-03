@@ -3261,12 +3261,12 @@ void level_change(bool skip_attribute_increase)
 
         const int old_hp = you.hp;
         const int old_maxhp = you.hp_max;
-	const int old_mp = you.magic_points;
-	const int old_maxmp = you.max_magic_points;
+        const int old_mp = you.magic_points;
+        const int old_maxmp = you.max_magic_points;
 
         // recalculate for game
-	calc_hp();
-	calc_mp();
+        calc_hp();
+        calc_mp();
 
         you.hp = old_hp * you.hp_max / old_maxhp;
         you.magic_points = old_maxmp > 0 ?

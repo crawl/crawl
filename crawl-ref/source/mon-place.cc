@@ -2398,7 +2398,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         break;
     case MONS_GNOLL:
         if (you.absdepth0 != 0)
-	{
+        {
             band = BAND_GNOLLS;
             band_size = (coinflip() ? 3 : 2);
         }
