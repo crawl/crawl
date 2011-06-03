@@ -2002,6 +2002,9 @@ bool StashTracker::display_search_results(
     {
         stash_search_result &res = results[i];
         std::ostringstream matchtitle;
+        if (const uint8_t waypoint = travel_cache.is_waypoint(res.pos))
+            matchtitle << "(" << waypoint << ") ";
+
         matchtitle << "[" << short_place_name(res.pos.id) << "] "
                    << res.match;
 
