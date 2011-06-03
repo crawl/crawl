@@ -5965,6 +5965,7 @@ bool player::is_unbreathing() const
     default:
         break;
     }
+
     if (petrified())
         return (true);
 
