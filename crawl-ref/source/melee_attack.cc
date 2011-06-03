@@ -281,11 +281,27 @@ bool melee_attack::handle_phase_blocked()
 
 bool melee_attack::handle_phase_dodged()
 {
+
+    if (attacker != defender &&
+        defender->atype() == ACT_PLAYER &&
+        grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
+    {
+        // Check for spiny mutation.
+        mons_do_spines();
+
+        // Spines can kill!
+        if (!attacker->alive())
+            return (false);
+    }
     return (true);
 }
 
 bool melee_attack::handle_phase_hit()
 {
+    did_hit = true;
+    perceived_attack = true;
+    damage_done = calc_damage();
+
     return (true);
 }
 
@@ -301,6 +317,15 @@ bool melee_attack::handle_phase_killed()
 
 bool melee_attack::handle_phase_end()
 {
+
+    // Check for passive freeze or eyeball mutation.
+    if (defender->atype() == ACT_PLAYER && defender->alive()
+        && attacker != defender)
+    {
+        mons_do_eyeball_confusion();
+        mons_do_passive_freeze();
+    }
+
     return(true);
 }
 
@@ -318,8 +343,46 @@ bool melee_attack::attack()
 
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
-    bool retval = attacker->atype() == ACT_PLAYER ? player_attack()
-                                                  : monster_attack();
+
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        // Apply attack delay
+        you.time_taken = calc_attack_delay();
+        // Check for stab (and set stab_attempt and stab_bonus)
+        player_stab_check();
+
+        ev_margin = player_hits_monster();
+    }
+    else
+    {
+
+    }
+
+    // Calculate various ev values and begin to check them to determine the
+    // correct handle_phase_ handler.
+    coord_def where = defender->pos();
+    const int ev = defender->melee_evasion(attacker);
+    const int ev_nohelpless = defender_invisible ? ev
+        : defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
+    const int ev_nophase = defender_invisible ? ev
+        : defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+
+    // TODO you.skill needs to be ambiguized to actor.skil somehow
+    // Check for a stab (helpless or petrifying)
+    if (to_hit >= ev && ev_nohelpless > ev
+        || ((defender->cannot_act() || defender->asleep())
+            && !one_chance_in(10 + you.skill(SK_STABBING)))
+        || defender->as_monster()->petrifying()
+            && !one_chance_in(2 + you.skill(SK_STABBING)))
+    {
+        defender->props["helpless"] = true;
+        ev_margin = 1;
+    }
+    else if (test_hit(to_hit, ev, r) >= ev)
+    {
+        handle_phase_hit();
+    }
+
     identify_mimic(defender);
 
     // Remove sanctuary if - through some attack - it was violated.
@@ -356,12 +419,6 @@ bool melee_attack::attack()
 
 bool melee_attack::player_attack()
 {
-    you.time_taken = calc_attack_delay();
-    player_stab_check();
-
-    coord_def where = defender->pos();
-
-    ev_margin = player_hits_monster();
 
     if (ev_margin >= 0)
     {
@@ -684,14 +741,14 @@ bool melee_attack::monster_attack()
             defender_evasion_nophase = defender_evasion;
         }
 
-        ev_margin = test_melee_hit(to_hit, defender_evasion_help, r);
+        ev_margin = test_hit(to_hit, defender_evasion_help, r);
 
         if (attacker == defender || ev_margin >= 0)
         {
             // Will hit no matter what.
             this_round_hit = true;
         }
-        else if (test_melee_hit(to_hit, defender_evasion, r) >= 0)
+        else if (test_hit(to_hit, defender_evasion, r) >= 0)
         {
             if (needs_message)
             {
@@ -702,7 +759,7 @@ bool melee_attack::monster_attack()
             }
             this_round_hit = true;
         }
-        else if (test_melee_hit(to_hit, defender_evasion_nophase, r) >= 0)
+        else if (test_hit(to_hit, defender_evasion_nophase, r) >= 0)
         {
             if (needs_message)
             {
@@ -738,19 +795,6 @@ bool melee_attack::monster_attack()
         else
         {
             perceived_attack = perceived_attack || attacker_visible;
-        }
-
-        if (attacker != defender &&
-            defender->atype() == ACT_PLAYER &&
-            (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
-            || attk.flavour == AF_REACH))
-        {
-            // Check for spiny mutation.
-            mons_do_spines();
-
-            // Spines can kill!
-            if (!attacker->alive())
-                return (false);
         }
     }
 
@@ -897,14 +941,6 @@ bool melee_attack::monster_attack()
         && is_range_weapon(*weap))
     {
         set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
-    }
-
-    // Check for passive freeze or eyeball mutation.
-    if (defender->atype() == ACT_PLAYER && defender->alive()
-        && attacker != defender)
-    {
-        mons_do_eyeball_confusion();
-        mons_do_passive_freeze();
     }
 
     // Handle noise from last round.
@@ -3470,6 +3506,11 @@ bool melee_attack::player_check_monster_died()
     return (false);
 }
 
+/* Calculate the to-hit for an attacker
+ *
+ *
+ * @param random deterministic or stochastic calculation(s)
+ */
 int melee_attack::calc_to_hit(bool random)
 {
     const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER)? 25 : 15;
@@ -3827,10 +3868,8 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     if (!attacker->visible_to(defender))
         pro_block /= 3;
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Defender: %s, Pro-block: %d, Con-block: %d",
+    dprf("Defender: %s, Pro-block: %d, Con-block: %d",
          def_name(DESC_PLAIN).c_str(), pro_block, con_block);
-#endif
 
     if (pro_block >= con_block)
     {
@@ -4496,7 +4535,7 @@ void melee_attack::mons_do_spines()
         && attacker->alive()
         && one_chance_in(evp + 1))
     {
-        if (test_melee_hit(2 + 4 * mut, attacker->melee_evasion(defender), r)
+        if (test_hit(2 + 4 * mut, attacker->melee_evasion(defender), r)
             < 0)
         {
             simple_monster_message(attacker->as_monster(),
@@ -4851,12 +4890,12 @@ int melee_attack::calc_stat_to_hit_base()
     return (you.dex() + towards_str_avg * player_weapon_str_weight() / 10);
 }
 
-int melee_attack::test_melee_hit(int to_land, int ev, defer_rand& r)
+int melee_attack::test_hit(int to_land, int ev, defer_rand& r)
 {
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
 
-    ev *= 2;
+    //ev *= 2; ???
 
     if (to_land >= AUTOMATIC_HIT)
         return (true);
@@ -4879,10 +4918,9 @@ int melee_attack::test_melee_hit(int to_land, int ev, defer_rand& r)
             ((100.0 - MIN_HIT_MISS_PERCENTAGE) * ev) / to_hit;
     }
 
-    mprf(MSGCH_DIAGNOSTICS,
-          "to hit: %d; ev: %d; miss: %0.2f%%; roll: %d; result: %s%s (%d)",
-              to_hit, ev, miss, roll, (margin >= 0) ? "hit" : "miss",
-              (roll == -1) ? "!!!" : "", margin);
+    dprf("to hit: %d; ev: %d; miss: %0.2f%%; roll: %d; result: %s%s (%d)",
+         to_hit, ev, miss, roll, (margin >= 0) ? "hit" : "miss",
+            (roll == -1) ? "!!!" : "", margin);
 #endif
 
     return (margin);

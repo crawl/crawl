@@ -85,7 +85,7 @@ private:
     bool handle_phase_end();
 
     /* Combat Calculations */
-    int test_melee_hit(int to_hit, int ev, defer_rand& r);
+    int test_hit(int to_hit, int ev, defer_rand& r);
     int calc_base_unarmed_damage();
     int calc_base_weapon_damage();
     int calc_damage();
