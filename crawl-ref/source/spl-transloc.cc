@@ -847,6 +847,7 @@ bool cast_apportation(int pow, bolt& beam)
     // power and item mass.
     beam.is_tracer = true;
     beam.aimed_at_spot = true;
+    beam.affects_nothing = true;
     beam.fire();
 
     // Pop the item's location off the end
