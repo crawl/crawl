@@ -213,6 +213,7 @@ public:
 
     bool valid() const;
     bool matches(const std::string &s) const;
+    const std::string &tostring() const { return pattern; }
 
     static bool is_lua_pattern(const std::string &s);
 
