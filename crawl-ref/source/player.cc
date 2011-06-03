@@ -2292,7 +2292,7 @@ int player_evasion_bonuses(ev_ignore_type evit)
 
     // transformation penalties/bonuses not covered by size alone:
     if (you.form == TRAN_STATUE)
-        evbonus -= 5;                // stiff
+        evbonus -= 10;               // stiff and slow
 
     return (evbonus);
 }
@@ -4447,7 +4447,7 @@ int get_real_hp(bool trans, bool rotted)
         switch (you.form)
         {
         case TRAN_STATUE:
-            hitp *= 15;
+            hitp *= 13;
             hitp /= 10;
             break;
         case TRAN_ICE_BEAST:
@@ -4455,7 +4455,7 @@ int get_real_hp(bool trans, bool rotted)
             hitp /= 10;
             break;
         case TRAN_DRAGON:
-            hitp *= 16;
+            hitp *= 15;
             hitp /= 10;
             break;
         default:
@@ -5875,7 +5875,7 @@ int player::gdr_perc() const
     case TRAN_DRAGON:
         return 34; // base AC 8
     case TRAN_STATUE:
-        return 40; // like plate (AC 10)
+        return 39; // like plate (AC 10)
     default:
         break;
     }
