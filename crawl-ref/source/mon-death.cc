@@ -10,6 +10,7 @@
 #include "areas.h"
 #include "coordit.h"
 #include "database.h"
+#include "dgn-actions.h"
 #include "env.h"
 #include "items.h"
 #include "message.h"
@@ -81,6 +82,12 @@ void pikel_band_neutralise (bool check_tagged)
             mons_pacify(*mi);
         }
     }
+
+    // Neutralize band members on other levels as well.
+    // This will try the current level too, redundant with the above, but a
+    // single message is better and we already need that code to implement
+    // check_tagged.
+    add_daction(DACT_PIKEL_SLAVES);
 }
 
 /**
