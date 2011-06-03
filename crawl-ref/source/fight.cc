@@ -4262,11 +4262,11 @@ int melee_attack::player_calc_base_unarmed_damage()
     case TRAN_BLADE_HANDS:
         damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
         break;
-    case TRAN_STATUE: // multiplied later
-        damage = 6 + div_rand_round(you.strength(), 2);
+    case TRAN_STATUE: // multiplied by 1.5 later
+        damage = 6 + div_rand_round(you.strength(), 3);
         break;
     case TRAN_DRAGON: // + 6 from claws
-        damage = 14 + div_rand_round(you.strength() * 2, 3);
+        damage = 12 + div_rand_round(you.strength() * 2, 3);
         break;
     case TRAN_LICH:
         damage = 5;
