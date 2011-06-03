@@ -41,7 +41,6 @@ void jiyva_slurp_message(int js);
 void ash_init_bondage();
 void ash_check_bondage(bool msg = true);
 std::string ash_describe_bondage(int flags, bool level);
-bool ash_id_item(const coord_def p);
 bool ash_id_item(item_def& item, bool silent = true);
 void ash_id_inventory();
 void ash_id_monster_equipment(monster* mon);
