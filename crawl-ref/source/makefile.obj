@@ -25,6 +25,7 @@ coord.o \
 coord-circle.o \
 coordit.o \
 ctest.o \
+dactions.o \
 database.o \
 dbg-asrt.o \
 dbg-maps.o \
@@ -34,7 +35,6 @@ decks.o \
 delay.o \
 describe.o \
 dgl-message.o \
-dgn-actions.o \
 dgn-height.o \
 dgn-overview.o \
 dgn-shoals.o \

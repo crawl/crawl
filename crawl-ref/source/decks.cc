@@ -17,7 +17,7 @@
 #include "cio.h"
 #include "coordit.h"
 #include "database.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"

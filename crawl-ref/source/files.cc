@@ -46,7 +46,7 @@
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"

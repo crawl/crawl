@@ -10,7 +10,7 @@
 #include "areas.h"
 #include "coordit.h"
 #include "database.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "env.h"
 #include "items.h"
 #include "message.h"

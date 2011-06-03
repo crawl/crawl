@@ -29,7 +29,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dgnevent.h"
 #include "dlua.h"
 #include "effects.h"
