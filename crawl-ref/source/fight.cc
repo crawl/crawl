@@ -492,7 +492,7 @@ bool melee_attack::check_unrand_effects(bool mondied)
         && weapon && fires_ammo_type(*weapon) == MI_NONE)
     {
         unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
-                                               mondied);
+                                               mondied, damage_done);
         return (!defender->alive());
     }
 

@@ -71,7 +71,7 @@ struct unrandart_entry
     union
     {
         void (*melee_effects)(item_def* item, actor* attacker,
-                              actor* defender, bool mondied);
+                              actor* defender, bool mondied, int damage);
         setup_missile_type (*launch)(item_def* item, bolt* beam,
                                      std::string* ammo_name, bool* returning);
     } fight_func;
