@@ -13,6 +13,7 @@
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "food.h"
@@ -1797,4 +1798,92 @@ bool cast_sandblast(int pow, bolt &beam)
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
     return (success);
+}
+
+// Find an enemy who would suffer from Awaken Forest.
+actor* forest_near_enemy(const actor *mon)
+{
+    const coord_def pos = mon->pos();
+
+    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+    {
+        actor* foe = actor_at(*ri);
+        if (!foe || mons_aligned(foe, mon))
+            continue;
+
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
+                return (foe);
+    }
+
+    return (NULL);
+}
+
+// Print a message only if you can see any affected trees.
+void forest_message(const coord_def pos, const std::string msg, msg_channel_type ch)
+{
+    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+        if (feat_is_tree(grd(*ri))
+            && cell_see_cell(you.pos(), *ri, LOS_DEFAULT)
+            && cell_see_cell(pos, *ri, LOS_DEFAULT))
+        {
+            mpr(msg, ch);
+            return;
+        }
+}
+
+void forest_damage(const actor *mon)
+{
+    const coord_def pos = mon->pos();
+
+    if (one_chance_in(4))
+        forest_message(pos, random_choose_string(
+            "The trees move their gnarly branches around.",
+            "You feel roots moving beneath the ground.",
+            "Branches wave dangerously above you.",
+            "Trunks creak and shift.",
+            "Tree limbs sway around you.",
+            0), MSGCH_TALK_VISUAL);
+
+    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+    {
+        actor* foe = actor_at(*ri);
+        if (!foe || mons_aligned(foe, mon))
+            continue;
+
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            {
+                const int damage = 5 + random2(10);
+                if (foe->atype() == ACT_PLAYER)
+                {
+                    mpr(random_choose_string(
+                        "You are hit by a branch!",
+                        "A tree reaches out and hits you!",
+                        "A root smacks you from below.",
+                        0));
+                    ouch(damage, mon->mindex(), KILLED_BY_BEAM,
+                         "angry trees", true);
+                }
+                else
+                {
+                    if (you.see_cell(foe->pos()))
+                    {
+                        const char *msg = random_choose_string(
+                            "%s is hit by a branch!",
+                            "A tree reaches out and hits %s!",
+                            "A root smacks %s from below.",
+                            0);
+                        const bool up = *msg == '%';
+                        // "it" looks butt-ugly here...
+                        mprf(msg, foe->visible_to(&you) ?
+                                      foe->name(up ? DESC_CAP_THE
+                                                   : DESC_NOCAP_THE).c_str()
+                                    : up ? "Something" : "something");
+                    }
+                    foe->hurt(mon, damage);
+                }
+                break;
+            }
+    }
 }
