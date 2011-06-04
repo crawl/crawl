@@ -295,13 +295,6 @@ void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 
 bool mons_should_fire(struct bolt &beam);
 
-bool ms_direct_nasty(spell_type monspell);
-
-bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell);
-bool ms_quick_get_away(const monster* mon, spell_type monspell);
-bool ms_waste_of_time(const monster* mon, spell_type monspell);
-bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell);
-
 bool mons_has_los_ability(monster_type mon_type);
 bool mons_has_los_attack(const monster* mon);
 bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,

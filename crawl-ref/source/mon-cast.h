@@ -30,4 +30,9 @@ void mons_cast_mislead(monster* mons);
 bool actor_is_illusion_cloneable(actor *target);
 void mons_cast_spectral_orcs(monster* mons);
 
+bool ms_direct_nasty(spell_type monspell);
+bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell);
+bool ms_quick_get_away(const monster* mon, spell_type monspell);
+bool ms_waste_of_time(const monster* mon, spell_type monspell);
+bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell);
 #endif
