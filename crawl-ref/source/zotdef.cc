@@ -24,7 +24,6 @@
 #include "player.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"

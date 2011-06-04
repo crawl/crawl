@@ -19,7 +19,6 @@
 #include "message.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "travel.h"

@@ -226,6 +226,65 @@ static int _cull_items(void)
     return (first_cleaned);
 }
 
+
+/*---------------------------------------------------------------------*/
+stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
+{
+    cur_link = accessible ? you.visible_igrd(pos) : igrd(pos);
+    if (cur_link != NON_ITEM)
+        next_link = mitm[cur_link].link;
+    else
+        next_link = NON_ITEM;
+}
+
+stack_iterator::stack_iterator(int start_link)
+{
+    cur_link = start_link;
+    if (cur_link != NON_ITEM)
+        next_link = mitm[cur_link].link;
+    else
+        next_link = NON_ITEM;
+}
+
+stack_iterator::operator bool() const
+{
+    return (cur_link != NON_ITEM);
+}
+
+item_def& stack_iterator::operator*() const
+{
+    ASSERT(cur_link != NON_ITEM);
+    return mitm[cur_link];
+}
+
+item_def* stack_iterator::operator->() const
+{
+    ASSERT(cur_link != NON_ITEM);
+    return &mitm[cur_link];
+}
+
+int stack_iterator::link() const
+{
+    return cur_link;
+}
+
+const stack_iterator& stack_iterator::operator ++ ()
+{
+    cur_link = next_link;
+    if (cur_link != NON_ITEM)
+        next_link = mitm[cur_link].link;
+    return *this;
+}
+
+stack_iterator stack_iterator::operator++(int dummy)
+{
+    const stack_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+/*---------------------------------------------------------------------*/
+
+
 // Reduce quantity of an inventory item, do cleanup if item goes away.
 //
 // Returns true if stack of items no longer exists.

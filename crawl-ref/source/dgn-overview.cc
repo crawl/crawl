@@ -30,7 +30,6 @@
 #include "religion.h"
 #include "shopping.h"
 #include "state.h"
-#include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
 #include "travel.h"

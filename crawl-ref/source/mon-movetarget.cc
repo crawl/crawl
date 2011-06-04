@@ -6,6 +6,8 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
+#include "items.h"
+#include "libutil.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-pathfind.h"
@@ -16,7 +18,6 @@
 #include "player.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 

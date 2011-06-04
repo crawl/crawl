@@ -17,7 +17,6 @@
 #include "options.h"
 #include "player.h"
 #include "state.h"
-#include "stuff.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"

@@ -46,7 +46,6 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-book.h"
-#include "stuff.h"
 #include "env.h"
 #include "tags.h"
 #ifdef USE_TILE

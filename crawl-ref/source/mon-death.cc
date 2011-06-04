@@ -24,7 +24,6 @@
 #include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "stuff.h"
 #include "transform.h"
 #include "view.h"
 

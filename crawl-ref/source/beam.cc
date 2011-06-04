@@ -64,7 +64,6 @@
 #include "spl-monench.h"
 #include "spl-transloc.h"
 #include "state.h"
-#include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE

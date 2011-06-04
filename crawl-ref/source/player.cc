@@ -1127,6 +1127,13 @@ bool player_can_hit_monster(const monster* mon)
     return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
 }
 
+bool player_can_hear(const coord_def& p, int hear_distance)
+{
+    return (!silenced(p)
+            && !silenced(you.pos())
+            && you.pos().distance_from(p) <= hear_distance);
+}
+
 int player_teleport(bool calc_unid)
 {
     ASSERT(!crawl_state.game_is_arena());

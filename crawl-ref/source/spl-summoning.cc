@@ -39,7 +39,6 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
-#include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "xom.h"

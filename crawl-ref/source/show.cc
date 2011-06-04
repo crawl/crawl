@@ -27,7 +27,6 @@
 #include "random.h"
 #include "showsymb.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 #include "terrain.h"
 #ifdef USE_TILE

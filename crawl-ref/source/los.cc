@@ -59,7 +59,6 @@
 #include "losparam.h"
 #include "player.h"
 #include "ray.h"
-#include "stuff.h"
 #include "env.h"
 #include "terrain.h"
 

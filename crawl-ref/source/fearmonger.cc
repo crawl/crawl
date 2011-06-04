@@ -15,7 +15,6 @@
 #include "monster.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 
 // Add a monster to the list of fearmongers.

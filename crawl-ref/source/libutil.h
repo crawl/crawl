@@ -198,6 +198,11 @@ inline int sqr(int x)
     return x * x;
 }
 
+inline bool testbits(uint64_t flags, uint64_t test)
+{
+    return ((flags & test) == test);
+}
+
 #ifdef NEED_USLEEP
 void usleep(unsigned long time);
 #endif

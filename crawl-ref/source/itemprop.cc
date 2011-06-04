@@ -33,7 +33,6 @@
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"
-#include "stuff.h"
 #include "xom.h"
 
 

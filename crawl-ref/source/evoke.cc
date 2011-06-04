@@ -13,6 +13,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -38,7 +39,6 @@
 #include "spl-clouds.h"
 #include "spl-summoning.h"
 #include "stuff.h"
-#include "areas.h"
 #include "view.h"
 #include "xom.h"
 

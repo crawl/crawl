@@ -52,7 +52,6 @@
 #include "show.h"
 #include "showsymb.h"
 #include "state.h"
-#include "stuff.h"
 #include "env.h"
 #include "areas.h"
 #include "stash.h"

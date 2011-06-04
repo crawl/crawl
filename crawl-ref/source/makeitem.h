@@ -34,6 +34,7 @@ jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
 armour_type get_random_body_armour_type(int level);
 armour_type get_random_armour_type(int item_level);
+stave_type get_random_rod_type();
 void item_set_appearance(item_def &item);
 
 bool is_weapon_brand_ok(int type, int brand, bool strict);

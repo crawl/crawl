@@ -33,7 +33,6 @@
 #include "religion.h"
 #include "skills.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "areas.h"
 #include "hints.h"

@@ -18,7 +18,6 @@
 #include "options.h"
 #include "show.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "viewchar.h"
 #include "viewgeom.h"

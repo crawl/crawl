@@ -30,7 +30,6 @@
 #include "religion.h"
 #include "species.h"
 #include "skills.h"
-#include "stuff.h"
 #include "tilepick.h"
 #include "tilereg-crt.h"
 
@@ -1626,6 +1625,12 @@ bool is_useless_skill(int skill)
             return true;
         }
     return false;
+}
+
+int skill_bump(skill_type skill)
+{
+    int sk = you.skill(skill);
+    return sk < 3 ? sk * 2 : sk + 3;
 }
 
 // What aptitude value corresponds to doubled skill learning

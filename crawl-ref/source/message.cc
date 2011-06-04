@@ -23,7 +23,6 @@
 #include "showsymb.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 #include "tags.h"
 #include "tagstring.h"

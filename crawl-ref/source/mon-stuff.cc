@@ -4188,6 +4188,42 @@ int dismiss_monsters(std::string pattern)
     return (ndismissed);
 }
 
+// Does the equivalent of KILL_RESET on all monsters in LOS. Should only be
+// applied to new games.
+void zap_los_monsters(bool items_also)
+{
+    // Not using player LOS since clouds might temporarily
+    // block monsters.
+    los_def los(you.pos(), opc_fullyopaque);
+    los.update();
+
+    for (radius_iterator ri(&los); ri; ++ri)
+    {
+        if (items_also)
+        {
+            int item = igrd(*ri);
+
+            if (item != NON_ITEM && mitm[item].defined())
+                destroy_item(item);
+        }
+
+        // If we ever allow starting with a friendly monster,
+        // we'll have to check here.
+        monster* mon = monster_at(*ri);
+        if (mon == NULL || mons_class_flag(mon->type, M_NO_EXP_GAIN))
+            continue;
+
+        dprf("Dismissing %s",
+             mon->name(DESC_PLAIN, true).c_str());
+
+        // Do a hard reset so the monster's items will be discarded.
+        mon->flags |= MF_HARD_RESET;
+        // Do a silent, wizard-mode monster_die() just to be extra sure the
+        // player sees nothing.
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+    }
+}
+
 bool is_item_jelly_edible(const item_def &item)
 {
     // Don't eat artefacts.

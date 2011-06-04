@@ -14,7 +14,6 @@
 #include "options.h"
 #include "show.h"
 #include "showsymb.h"
-#include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"

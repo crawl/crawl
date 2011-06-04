@@ -42,7 +42,6 @@
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
-#include "stuff.h"
 #include "env.h"
 #include "terrain.h"
 #include "traps.h"

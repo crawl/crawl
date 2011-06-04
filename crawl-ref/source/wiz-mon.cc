@@ -39,7 +39,6 @@
 #include "showsymb.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "view.h"
 #include "viewmap.h"
