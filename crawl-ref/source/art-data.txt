@@ -694,7 +694,8 @@ COLOUR:   LIGHTGREY
 TILE:     urand_undeadhunter
 TILE_EQ:  undeadhunter
 BOOL:     life
-DESC_END: This weapon is blessed to inflict great damage to the the undead.
+DESC_END: This weapon is imbued with magic that can counter and disrupt the
+          magic holding undead together, inflicting great damage.
 
 NAME:    whip "Snakebite"
 APPEAR:  forked whip

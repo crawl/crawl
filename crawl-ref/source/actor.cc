@@ -197,7 +197,7 @@ void actor::shield_block_succeeded(actor *foe)
         && (unrand_entry = get_unrand_entry(sh->special))
         && unrand_entry->fight_func.melee_effects)
     {
-       unrand_entry->fight_func.melee_effects(sh, this, foe, false);
+       unrand_entry->fight_func.melee_effects(sh, this, foe, false, 0);
     }
 }
 
