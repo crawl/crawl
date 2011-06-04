@@ -25,6 +25,10 @@ int fdatasync(int fd);
 int fdatasync(int fd);
 #endif
 
+#ifdef NEED_USLEEP
+void usleep(unsigned long time);
+#endif
+
 int rename_u(const char *oldpath, const char *newpath);
 int unlink_u(const char *pathname);
 int chmod_u(const char *path, mode_t mode);

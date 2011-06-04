@@ -5,9 +5,9 @@
 
 #include "AppHdr.h"
 
-#include "libutil.h"
 #include "sqldbm.h"
 #include "stuff.h"
+#include "syscalls.h"
 #include <fcntl.h>
 #include <cstring>
 

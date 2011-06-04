@@ -203,10 +203,6 @@ inline bool testbits(uint64_t flags, uint64_t test)
     return ((flags & test) == test);
 }
 
-#ifdef NEED_USLEEP
-void usleep(unsigned long time);
-#endif
-
 #ifndef USE_TILE
 coord_def cgettopleft(GotoRegion region = GOTO_CRT);
 coord_def cgetpos(GotoRegion region = GOTO_CRT);

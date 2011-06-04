@@ -157,6 +157,37 @@ int fdatasync(int fd)
 }
 #endif
 
+
+// The old school way of doing short delays via low level I/O sync.
+// Good for systems like old versions of Solaris that don't have usleep.
+#ifdef NEED_USLEEP
+
+# ifdef TARGET_OS_WINDOWS
+void usleep(unsigned long time)
+{
+    ASSERT(time > 0);
+    ASSERT(!(time % 1000));
+    Sleep(time/1000);
+}
+# else
+
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/unistd.h>
+
+void usleep(unsigned long time)
+{
+    struct timeval timer;
+
+    timer.tv_sec  = (time / 1000000L);
+    timer.tv_usec = (time % 1000000L);
+
+    select(0, NULL, NULL, NULL, &timer);
+}
+# endif
+#endif
+
+
 bool file_exists(const std::string &name)
 {
 #ifdef TARGET_OS_WINDOWS
