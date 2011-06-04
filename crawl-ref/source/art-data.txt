@@ -89,9 +89,7 @@
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * special:  Artefact is "special": can't be picked up by monsters,
-#             can't be affected by Tukima's Dance, generated less
-#             frequently than normal randarts, can be generated in the
-#             Abyss if its been lost elsewhere.
+#             can't be affected by Tukima's Dance.
 # * tilerim:  Adds a black outline to the tile, see above section.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
@@ -185,7 +183,6 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
 VALUE:   1000
-BOOL:    special
 BRAND:   SPWPN_ANTIMAGIC
 DESC_ID: This was the favourite weapon of the old god Trog, before it was
          lost one day. It induces a bloodthirsty berserker rage in anyone
@@ -211,7 +208,6 @@ COLOUR:  MAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 VALUE:   1000
-BOOL:    special
 BRAND:   SPWPN_VORPAL
 DESC_ID: It is the creation of a mad god, and carries a curse which
          transforms anyone possessing it into a prune. Fortunately, the
@@ -237,7 +233,7 @@ COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
-BOOL:    poison, special
+BOOL:    poison
 DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
          before he met his fate somewhere within these dungeons. It
          increases the ability of its wielder to use venomous magic, and
@@ -281,7 +277,7 @@ TILE_EQ: finisher
 BRAND:   SPWPN_DRAINING
 VALUE:   800
 CURSED:  3
-BOOL:    special, evil
+BOOL:    evil
 DESC_ID: This weapon carries a terrible and highly irritating curse.
 
 NAME:    Sceptre of Torment
@@ -317,7 +313,7 @@ TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    cursed, tilerim, special, evil, nogen
+BOOL:    cursed, tilerim, evil, nogen
 DESC:    Eerie flames cover its twisted blade.
 
 NAME:    Staff of Dispater
@@ -755,7 +751,6 @@ COLOUR:   BLUE
 TILE:     urand_storm_bow
 TILE_EQ:  bow_blue
 BRAND:    SPWPN_ELECTROCUTION
-BOOL:     special
 DESC:     This bow has the color of dark rain clouds, and the smell of wet ozone.
 
 NAME:    shield of Ignorance
