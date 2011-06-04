@@ -2480,7 +2480,7 @@ int player_mag_abil(bool is_weighted)
     return ((is_weighted) ? ((ma * you.intel()) / 10) : ma);
 }
 
-int player_shield_class(void)   //jmf: changes for new spell
+int player_shield_class(void)
 {
     int shield = 0;
     int stat = 0;

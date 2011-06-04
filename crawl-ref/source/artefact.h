@@ -3,7 +3,6 @@
  * @brief Random and unrandom artefact functions.
 **/
 
-
 #ifndef RANDART_H
 #define RANDART_H
 
@@ -43,8 +42,6 @@ enum setup_missile_type
     SM_CANCEL,
 };
 
-// The following unrandart bits were taken from $pellbinder's mon-util
-// code (see mon-util.h & mon-util.cc) and modified (LRH).
 struct unrandart_entry
 {
     const char *name;        // true name of unrandart

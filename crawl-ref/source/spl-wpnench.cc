@@ -169,7 +169,7 @@ bool brand_weapon(brand_type which_brand, int power)
         duration_affected = 10;
         break;
 
-    case SPWPN_DISTORTION:      //jmf: Added for Warp Weapon.
+    case SPWPN_DISTORTION:
         msg += " seems to ";
         msg += random_choose_string("twist", "bend", "vibrate",
                                     "flex", "wobble", "twang", NULL);
@@ -212,7 +212,7 @@ bool brand_weapon(brand_type which_brand, int power)
         msg += " glistens with random hues.";
         break;
 
-    case SPWPN_DUMMY_CRUSHING:  //jmf: Added for Maxwell's Silver Hammer.
+    case SPWPN_DUMMY_CRUSHING:  // Maxwell's Silver Hammer.
         which_brand = SPWPN_VORPAL;
         msg += " glows silver and feels heavier.";
         duration_affected = 7;

@@ -3,9 +3,6 @@
  * @brief Misc monster related functions.
 **/
 
-// $pellbinder: (c) D.G.S.E 1998
-// some routines snatched from former monsstat.cc
-
 #include "AppHdr.h"
 
 #include "mon-util.h"
@@ -50,7 +47,6 @@
 #include "unicode.h"
 #include "viewchar.h"
 
-//jmf: moved from inside function
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
 mon_display monster_symbols[NUM_MONSTERS];
