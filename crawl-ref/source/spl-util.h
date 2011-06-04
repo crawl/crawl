@@ -12,8 +12,8 @@
 
 enum spschool_flag_type
 {
-  SPTYP_NONE           = 0,    // "0" is reserved for no type at all {dlb}
-  SPTYP_CONJURATION    = 1<<0, // was 11, but only for old typematch routine {dlb}
+  SPTYP_NONE           = 0,
+  SPTYP_CONJURATION    = 1<<0,
   SPTYP_HEXES          = 1<<1,
   SPTYP_CHARMS         = 1<<2,
   SPTYP_FIRE           = 1<<3,
@@ -26,7 +26,7 @@ enum spschool_flag_type
   SPTYP_POISON         = 1<<10,
   SPTYP_EARTH          = 1<<11,
   SPTYP_AIR            = 1<<12,
-  SPTYP_HOLY           = 1<<13, //jmf: moved to accommodate "random" miscast f/x
+  SPTYP_HOLY           = 1<<13,
   SPTYP_LAST_EXPONENT  = 13,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
   NUM_SPELL_TYPES      = 15,
   SPTYP_RANDOM         = 1<<14,

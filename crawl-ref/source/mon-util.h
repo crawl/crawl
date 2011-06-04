@@ -18,8 +18,6 @@
 
 struct bolt;
 
-// ($pellbinder) (c) D.G.S.E. 1998
-
 struct mon_attack_def
 {
     mon_attack_type     type;

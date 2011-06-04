@@ -229,7 +229,6 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     return (keyn);     // try to figure out that for which this is used {dlb}
 }
 
-//jmf: was in shopping.cc
 // Rarity 100 is reserved for unused books.
 int book_rarity(uint8_t which_book)
 {
@@ -237,7 +236,7 @@ int book_rarity(uint8_t which_book)
     {
     case BOOK_MINOR_MAGIC:
     case BOOK_HINDERANCE:
-    case BOOK_CANTRIPS: //jmf: added 04jan2000
+    case BOOK_CANTRIPS:
         return 1;
 
     case BOOK_CHANGES:
@@ -258,7 +257,7 @@ int book_rarity(uint8_t which_book)
         return 4;
 
     case BOOK_YOUNG_POISONERS:
-    case BOOK_STALKING:    //jmf: added 24jun2000
+    case BOOK_STALKING:
     case BOOK_WAR_CHANTS:
         return 5;
 
@@ -267,7 +266,7 @@ int book_rarity(uint8_t which_book)
         return 6;
 
     case BOOK_ENCHANTMENTS:
-    case BOOK_PARTY_TRICKS:     //jmf: added 04jan2000
+    case BOOK_PARTY_TRICKS:
         return 7;
 
     case BOOK_TRANSFIGURATIONS:
