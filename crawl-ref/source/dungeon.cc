@@ -1464,11 +1464,8 @@ static void _fixup_branch_stairs()
         }
     }
 
-    // Bottom level of branch - wipes out down stairs, or, in case of the main
-    // dungeon, replaces them with Zot entrances.
+    // Bottom level of branch - wipes out down stairs and hatches
     dungeon_feature_type feat = DNGN_FLOOR;
-    if (player_in_branch(BRANCH_MAIN_DUNGEON))
-        feat = DNGN_ENTER_ZOT;
 
     if (at_branch_bottom() && you.level_type == LEVEL_DUNGEON)
     {
@@ -1537,7 +1534,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             replace = DNGN_FLOOR;
             base = DNGN_STONE_STAIRS_DOWN_I;
 
-            if (at_branch_bottom() && you.where_are_you != BRANCH_MAIN_DUNGEON)
+            if (at_branch_bottom())
                 needed_stairs = 0;
             else
                 needed_stairs = 3;
