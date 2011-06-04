@@ -149,4 +149,26 @@ void move_items(const coord_def r, const coord_def p);
 // Returns the Orb's position on the ground, or origin()
 coord_def orb_position();
 
+// stack_iterator guarantees validity so long as you don't manually
+// mess with item_def.link: i.e., you can kill the item you're
+// examining but you can't kill the item linked to it.
+class stack_iterator : public std::iterator<std::forward_iterator_tag,
+                                            item_def>
+{
+public:
+    explicit stack_iterator(const coord_def& pos, bool accessible = false);
+    explicit stack_iterator(int start_link);
+
+    operator bool() const;
+    item_def& operator *() const;
+    item_def* operator->() const;
+    int link() const;
+
+    const stack_iterator& operator ++ ();
+    stack_iterator operator ++ (int);
+private:
+    int cur_link;
+    int next_link;
+};
+
 #endif

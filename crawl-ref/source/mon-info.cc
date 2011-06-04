@@ -27,7 +27,6 @@
 #include "showsymb.h"
 #include "skills2.h"
 #include "state.h"
-#include "stuff.h"
 #include "tagstring.h"
 
 #include <algorithm>

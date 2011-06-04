@@ -81,6 +81,7 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 void find_connected_identical(const coord_def& d, dungeon_feature_type ft,
                               std::set<coord_def>& out);
 std::set<coord_def> connected_doors(const coord_def& d);
+coord_def get_random_stair();
 
 bool slime_wall_neighbour(const coord_def& c);
 

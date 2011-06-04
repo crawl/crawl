@@ -64,7 +64,6 @@
 #include "spl-util.h"
 #include "sprint.h"
 #include "state.h"
-#include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
 #ifdef USE_TILE

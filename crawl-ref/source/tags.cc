@@ -49,7 +49,6 @@
 #include "skills.h"
 #include "skills2.h"
 #include "state.h"
-#include "stuff.h"
 #include "env.h"
 #include "syscalls.h"
 #include "tags.h"

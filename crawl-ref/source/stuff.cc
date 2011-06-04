@@ -5,32 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "stuff.h"
-
-#include "areas.h"
-#include "beam.h"
-#include "cio.h"
-#include "colour.h"
-#include "coord.h"
-#include "coordit.h"
-#include "database.h"
-#include "directn.h"
-#include "dungeon.h"
-#include "env.h"
-#include "files.h"
-#include "libutil.h"
-#include "los.h"
-#include "menu.h"
-#include "message.h"
-#include "misc.h"
-#include "mon-place.h"
-#include "terrain.h"
-#include "state.h"
-#include "travel.h"
-#include "view.h"
-#include "viewchar.h"
-#include "viewgeom.h"
-
 #include <cstdarg>
 #include <sstream>
 #include <iomanip>
@@ -51,76 +25,23 @@
  #endif
 #endif
 
-#include "branch.h"
+
+#include "cio.h"
+#include "colour.h"
+#include "database.h"
 #include "delay.h"
-#include "externs.h"
-#include "options.h"
-#include "items.h"
-#include "macro.h"
-#include "misc.h"
-#include "mon-stuff.h"
-#include "mon-util.h"
-#include "notes.h"
-#include "output.h"
-#include "player.h"
-#include "religion.h"
+#include "dungeon.h"
+#include "files.h"
 #include "hints.h"
+#include "macro.h"
+#include "menu.h"
+#include "message.h"
+#include "notes.h"
+#include "options.h"
+#include "output.h"
 #include "view.h"
+#include "viewgeom.h"
 
-stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
-{
-    cur_link = accessible ? you.visible_igrd(pos) : igrd(pos);
-    if (cur_link != NON_ITEM)
-        next_link = mitm[cur_link].link;
-    else
-        next_link = NON_ITEM;
-}
-
-stack_iterator::stack_iterator(int start_link)
-{
-    cur_link = start_link;
-    if (cur_link != NON_ITEM)
-        next_link = mitm[cur_link].link;
-    else
-        next_link = NON_ITEM;
-}
-
-stack_iterator::operator bool() const
-{
-    return (cur_link != NON_ITEM);
-}
-
-item_def& stack_iterator::operator*() const
-{
-    ASSERT(cur_link != NON_ITEM);
-    return mitm[cur_link];
-}
-
-item_def* stack_iterator::operator->() const
-{
-    ASSERT(cur_link != NON_ITEM);
-    return &mitm[cur_link];
-}
-
-int stack_iterator::link() const
-{
-    return cur_link;
-}
-
-const stack_iterator& stack_iterator::operator ++ ()
-{
-    cur_link = next_link;
-    if (cur_link != NON_ITEM)
-        next_link = mitm[cur_link].link;
-    return *this;
-}
-
-stack_iterator stack_iterator::operator++(int dummy)
-{
-    const stack_iterator copy = *this;
-    ++(*this);
-    return copy;
-}
 
 // Crude, but functional.
 std::string make_time_string(time_t abs_time, bool terse)
@@ -157,144 +78,6 @@ std::string make_file_time(time_t when)
 void set_redraw_status(uint64_t flags)
 {
     you.redraw_status_flags |= flags;
-}
-
-static bool _is_religious_follower(const monster* mon)
-{
-    return ((you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
-            && is_follower(mon));
-}
-
-static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
-{
-    if (!in_bounds(pos) || pos == you.pos())
-        return (false);
-
-    monster* fmenv = monster_at(pos);
-    if (fmenv == NULL)
-        return (false);
-
-    if (!fmenv->alive()
-        || fmenv->speed_increment < 50
-        || fmenv->incapacitated()
-        || mons_is_stationary(fmenv))
-    {
-        return (false);
-    }
-
-    if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
-        return (false);
-
-    // Only non-wandering friendly monsters or those actively
-    // seeking the player will follow up/down stairs.
-    if (!fmenv->friendly()
-          && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU)
-        || fmenv->foe == MHITNOT)
-    {
-        return (false);
-    }
-
-    // Monsters that are not directly adjacent are subject to more
-    // stringent checks.
-    if ((pos - you.pos()).abs() > 2)
-    {
-        if (!fmenv->friendly())
-            return (false);
-
-        // Undead will follow Yredelemnul worshippers, and orcs will
-        // follow Beogh worshippers.
-        if (!_is_religious_follower(fmenv))
-            return (false);
-    }
-
-    // Monsters that can't use stairs can still be marked as followers
-    // (though they'll be ignored for transit), so any adjacent real
-    // follower can follow through. (jpeg)
-    if (!mons_can_use_stairs(fmenv))
-    {
-        if (_is_religious_follower(fmenv))
-        {
-            fmenv->flags |= MF_TAKING_STAIRS;
-            return (true);
-        }
-        return (false);
-    }
-
-    real_follower = true;
-
-    // Monster is chasing player through stairs.
-    fmenv->flags |= MF_TAKING_STAIRS;
-
-    // Clear patrolling/travel markers.
-    fmenv->patrol_point.reset();
-    fmenv->travel_path.clear();
-    fmenv->travel_target = MTRAV_NONE;
-
-    fmenv->clear_clinging();
-
-    dprf("%s is marked for following.",
-         fmenv->name(DESC_CAP_THE, true).c_str());
-
-    return (true);
-}
-
-static int follower_tag_radius2()
-{
-    // If only friendlies are adjacent, we set a max radius of 6, otherwise
-    // only adjacent friendlies may follow.
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
-    {
-        if (const monster* mon = monster_at(*ai))
-            if (!mon->friendly())
-                return (2);
-    }
-
-    return (6 * 6);
-}
-
-void tag_followers()
-{
-    const int radius2 = follower_tag_radius2();
-    int n_followers = 18;
-
-    std::vector<coord_def> places[2];
-    int place_set = 0;
-
-    places[place_set].push_back(you.pos());
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-    while (!places[place_set].empty())
-    {
-        for (int i = 0, size = places[place_set].size(); i < size; ++i)
-        {
-            const coord_def &p = places[place_set][i];
-            for (adjacent_iterator ai(p); ai; ++ai)
-            {
-                if ((*ai - you.pos()).abs() > radius2
-                    || travel_point_distance[ai->x][ai->y])
-                {
-                    continue;
-                }
-                travel_point_distance[ai->x][ai->y] = 1;
-
-                bool real_follower = false;
-                if (_tag_follower_at(*ai, real_follower))
-                {
-                    // If we've run out of our follower allowance, bail.
-                    if (real_follower && --n_followers <= 0)
-                        return;
-                    places[!place_set].push_back(*ai);
-                }
-            }
-        }
-        places[place_set].clear();
-        place_set = !place_set;
-    }
-}
-
-void untag_followers()
-{
-    for (int m = 0; m < MAX_MONSTERS; ++m)
-        menv[m].flags &= (~MF_TAKING_STAIRS);
 }
 
 unsigned char get_ch()
@@ -608,21 +391,6 @@ int stepdown_value(int base_value, int stepping, int first_step,
 
 }
 
-int skill_bump(skill_type skill)
-{
-    int sk = you.skill(skill);
-    return sk < 3 ? sk * 2 : sk + 3;
-}
-
-// This gives (default div = 20, shift = 3):
-// - shift/div% @ stat_level = 0; (default 3/20 = 15%, or 20% at stat 1)
-// - even (100%) @ stat_level = div - shift; (default 17)
-// - 1/div% per stat_level (default 1/20 = 5%)
-int stat_mult(int stat_level, int value, int div, int shift)
-{
-    return (((stat_level + shift) * value) / ((div > 1) ? div : 1));
-}
-
 int div_round_up(int num, int den)
 {
     return (num / den + (num % den != 0));
@@ -934,13 +702,6 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
     }
 }
 
-bool player_can_hear(const coord_def& p, int hear_distance)
-{
-    return (!silenced(p)
-            && !silenced(you.pos())
-            && you.pos().distance_from(p) <= hear_distance);
-}
-
 char index_to_letter(int the_index)
 {
     return (the_index + ((the_index < 26) ? 'a' : ('A' - 26)));
@@ -956,85 +717,6 @@ int letter_to_index(int the_letter)
         the_letter -= ('A' - 26);
 
     return (the_letter);
-}
-
-// Returns 0 if the point is not near stairs.
-// Returns 1 if the point is near unoccupied stairs.
-// Returns 2 if the point is near player-occupied stairs.
-int near_stairs(const coord_def &p, int max_dist,
-                dungeon_char_type &stair_type, branch_type &branch)
-{
-    for (radius_iterator ri(p, max_dist, true, false); ri; ++ri)
-    {
-        const dungeon_feature_type feat = grd(*ri);
-        if (feat_is_stair(feat))
-        {
-            // Shouldn't happen for escape hatches.
-            if (feat_is_escape_hatch(feat))
-                continue;
-
-            stair_type = get_feature_dchar(feat);
-
-            // Is it a branch stair?
-            for (int i = 0; i < NUM_BRANCHES; ++i)
-            {
-                if (branches[i].entry_stairs == feat)
-                {
-                    branch = branches[i].id;
-                    break;
-                }
-                else if (branches[i].exit_stairs == feat)
-                {
-                    branch = branches[i].parent_branch;
-                    break;
-                }
-            }
-            return (*ri == you.pos()) ? 2 : 1;
-        }
-    }
-
-    return (false);
-}
-
-// Does the equivalent of KILL_RESET on all monsters in LOS. Should only be
-// applied to new games.
-void zap_los_monsters(bool items_also)
-{
-    // Not using player LOS since clouds might temporarily
-    // block monsters.
-    los_def los(you.pos(), opc_fullyopaque);
-    los.update();
-
-    for (radius_iterator ri(&los); ri; ++ri)
-    {
-        if (items_also)
-        {
-            int item = igrd(*ri);
-
-            if (item != NON_ITEM && mitm[item].defined())
-                destroy_item(item);
-        }
-
-        // If we ever allow starting with a friendly monster,
-        // we'll have to check here.
-        monster* mon = monster_at(*ri);
-        if (mon == NULL || mons_class_flag(mon->type, M_NO_EXP_GAIN))
-            continue;
-
-        dprf("Dismissing %s",
-             mon->name(DESC_PLAIN, true).c_str());
-
-        // Do a hard reset so the monster's items will be discarded.
-        mon->flags |= MF_HARD_RESET;
-        // Do a silent, wizard-mode monster_die() just to be extra sure the
-        // player sees nothing.
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
-    }
-}
-
-int random_rod_subtype()
-{
-    return STAFF_FIRST_ROD + random2(NUM_STAVES - STAFF_FIRST_ROD);
 }
 
 maybe_bool frombool(bool b)
@@ -1061,23 +743,6 @@ bool tobool(maybe_bool mb, bool def)
         return (def);
     }
 }
-
-coord_def get_random_stair()
-{
-    std::vector<coord_def> st;
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        const dungeon_feature_type feat = grd(*ri);
-        if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat))
-        {
-            st.push_back(*ri);
-        }
-    }
-    if (!st.size())
-        return coord_def();        // sanity check: shouldn't happen
-    return st[random2(st.size())];
-}
-
 
 //---------------------------------------------------------------
 //

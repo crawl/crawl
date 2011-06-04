@@ -81,7 +81,6 @@
 #include "show.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE

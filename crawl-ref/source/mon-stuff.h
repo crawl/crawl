@@ -104,6 +104,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 void monster_cleanup(monster* mons);
 
 int dismiss_monsters(std::string pattern);
+void zap_los_monsters(bool items_also);
 
 bool curse_an_item(bool destroy_potions, bool quiet = false);
 

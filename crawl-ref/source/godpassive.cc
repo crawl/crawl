@@ -26,7 +26,6 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stuff.h"
 
 int che_boost_level()
 {

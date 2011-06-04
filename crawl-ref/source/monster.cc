@@ -42,7 +42,6 @@
 #include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tileview.h"

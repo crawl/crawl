@@ -9,7 +9,7 @@
 
 #include "coord.h"
 #include "env.h"
-#include "stuff.h"
+#include "libutil.h"
 
 bool is_sanctuary(const coord_def& p)
 {

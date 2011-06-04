@@ -34,7 +34,6 @@
 #include "options.h"
 #include "files.h"
 #include "state.h"
-#include "stuff.h"
 #include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"

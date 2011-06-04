@@ -41,7 +41,6 @@
 #include "showsymb.h"
 #include "sprint.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tiledef-dngn.h"

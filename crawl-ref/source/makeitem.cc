@@ -2938,7 +2938,7 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
 
         // rods are rare (10% of all staves)
         if (one_chance_in(10))
-            item.sub_type = random_rod_subtype();
+            item.sub_type = get_random_rod_type();
 
         // staves of energy/channeling are 25% less common, wizardry/power
         // are more common
@@ -3587,6 +3587,11 @@ armour_type get_random_armour_type(int item_level)
     }
 
     return static_cast<armour_type>(armtype);
+}
+
+stave_type get_random_rod_type()
+{
+    return (stave_type)(STAFF_FIRST_ROD + random2(NUM_STAVES - STAFF_FIRST_ROD));
 }
 
 // Sets item appearance to match brands, if any.

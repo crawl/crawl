@@ -11,12 +11,12 @@
 #include "debug.h"
 #include "decks.h"
 #include "env.h"
+#include "libutil.h"
 #include "mon-behv.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
-#include "stuff.h"
 #include "travel.h"
 #include "view.h"
 

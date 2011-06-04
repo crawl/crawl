@@ -16,7 +16,6 @@
 #include "monster.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 
 static bool _mermaid_beholder (const monster* mons)

@@ -29,7 +29,6 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "spl-miscast.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "xom.h"

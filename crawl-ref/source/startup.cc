@@ -45,7 +45,6 @@
 #include "startup.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "view.h"
 #include "viewchar.h"

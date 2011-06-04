@@ -5,13 +5,13 @@
 #include "fight.h"
 #include "godpassive.h"
 #include "godwrath.h"
+#include "libutil.h"
 #include "monster.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "stuff.h"
 
 /////////////////////////////////////////////////////////////////////
 // god_conduct_trigger

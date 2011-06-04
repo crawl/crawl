@@ -727,6 +727,7 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);
 int player_equip_ego_type(int slot, int sub_type, bool calc_unid = true);
 bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
+bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
 bool player_is_shapechanged(void);
 

@@ -34,7 +34,6 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
 
 static armour_type _random_nonbody_armour_type()
 {
@@ -652,7 +651,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 
     case SK_EVOCATIONS:
         if (!one_chance_in(4))
-            result = random_rod_subtype();
+            result = get_random_rod_type();
         break;
 
     default: // Invocations and leftover spell schools.
@@ -676,7 +675,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
             && result < STAFF_FIRST_ROD
             && !one_chance_in(4)))
     {
-        result = random_rod_subtype();
+        result = get_random_rod_type();
     }
 
     return (result);

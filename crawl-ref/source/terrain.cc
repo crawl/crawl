@@ -36,7 +36,6 @@
 #include "religion.h"
 #include "species.h"
 #include "spl-transloc.h"
-#include "stuff.h"
 #include "env.h"
 #ifdef USE_TILE
  #include "tileview.h"
@@ -634,6 +633,22 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
     dungeon_feature_type feat;
     find_secret_door_info(where, &feat, NULL);
     return (feat);
+}
+
+coord_def get_random_stair()
+{
+    std::vector<coord_def> st;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const dungeon_feature_type feat = grd(*ri);
+        if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat))
+        {
+            st.push_back(*ri);
+        }
+    }
+    if (!st.size())
+        return coord_def();        // sanity check: shouldn't happen
+    return st[random2(st.size())];
 }
 
 
