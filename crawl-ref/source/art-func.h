@@ -156,9 +156,7 @@ static void _CURSES_melee_effect(item_def* weapon, actor* attacker,
                                  actor* defender, bool mondied, int dam)
 {
     if (attacker->atype() == ACT_PLAYER)
-    {
         did_god_conduct(DID_NECROMANCY, 3);
-    }
     if (defender->has_lifeforce() && !mondied)
         _curses_miscast(defender, random2(9), random2(70));
 }
@@ -256,11 +254,12 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
 static void _OLGREB_melee_effect(item_def* weapon, actor* attacker,
                                  actor* defender, bool mondied, int dam)
 {
+    int skill = attacker->skill(SK_POISON_MAGIC);
     if (defender->alive()
-        && (coinflip() || x_chance_in_y(you.skill(SK_POISON_MAGIC), 8)))
+        && (coinflip() || x_chance_in_y(skill, 8)))
     {
         defender->poison(attacker, 2, defender->has_lifeforce()
-                                      && x_chance_in_y(you.skill(SK_POISON_MAGIC), 8));
+                                      && x_chance_in_y(skill, 8));
         if (attacker->atype() == ACT_PLAYER)
             did_god_conduct(DID_POISON, 3);
     }
@@ -554,9 +553,10 @@ static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
     if (one_chance_in(10))
-        cast_summon_demon(50+random2(100), you.religion);
+        cast_summon_demon(50+random2(100), attacker->deity());
 
-    did_god_conduct(DID_UNHOLY, 3);
+    if (attacker->atype() == ACT_PLAYER)
+        did_god_conduct(DID_UNHOLY, 3);
 }
 
 static void _DEMON_AXE_world_reacts(item_def *item)

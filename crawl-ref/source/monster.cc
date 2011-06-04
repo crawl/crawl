@@ -3528,6 +3528,9 @@ int monster::skill(skill_type sk) const
     case SK_NECROMANCY:
         return ((holiness() == MH_UNDEAD || holiness() == MH_DEMONIC) ? hit_dice : hit_dice / 2);
 
+    case SK_POISON_MAGIC:
+        return (is_actual_spellcaster() ? hit_dice : hit_dice / 3);
+
     default:
         return (0);
     }
