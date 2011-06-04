@@ -3812,11 +3812,8 @@ mon_body_shape get_mon_shape(const int type)
         return (MON_SHAPE_HUMANOID);
     case 'f': // fungi
         return (MON_SHAPE_FUNGUS);
-    case 'g': // gargoyles, gnolls, goblins and hobgoblins
-        if (type == MONS_GARGOYLE)
-            return (MON_SHAPE_HUMANOID_WINGED_TAILED);
-        else
-            return (MON_SHAPE_HUMANOID);
+    case 'g': // gnolls, goblins and hobgoblins
+        return (MON_SHAPE_HUMANOID);
     case 'h': // hounds
         return (MON_SHAPE_QUADRUPED);
     case 'i': // spriggans
@@ -3964,6 +3961,7 @@ mon_body_shape get_mon_shape(const int type)
     case '&':
     case '8':
     case '@':
+    {
         // Assume that a demon has wings if it can fly, and that it has
         // a tail if it has a sting or tail-slap attack.
         monsterentry *mon_data = get_monster_data(type);
@@ -3984,6 +3982,10 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID_TAILED);
         else
             return (MON_SHAPE_HUMANOID);
+    }
+
+    case '9': // gargoyles
+        return (MON_SHAPE_HUMANOID_WINGED_TAILED);
     }
 
     return (MON_SHAPE_MISC);
