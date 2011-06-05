@@ -3249,6 +3249,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_DRACONIAN_WHITE;
     case MONS_MOTTLED_DRACONIAN:
         return TILE_CORPSE_DRACONIAN_MOTTLED;
+    case MONS_GREY_DRACONIAN:
+        return TILE_CORPSE_DRACONIAN_GREY;
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_ZEALOT:
