@@ -2493,9 +2493,9 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         if (item_level == -5)
             do_curse_item(item);
     }
-    else if ((force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
+    else if ((forced_ego || item.sub_type == ARM_WIZARD_HAT
                     || x_chance_in_y(51 + item_level, 250))
-                && (!item.is_mundane() || force_good))
+                && !item.is_mundane() || force_good)
     {
         // Make a good item...
         item.plus += random2(3);
