@@ -21,10 +21,6 @@
 
 #include "ouch.h"
 
-#ifdef TARGET_COMPILER_MINGW
-#include <io.h>
-#endif
-
 #include "externs.h"
 #include "options.h"
 

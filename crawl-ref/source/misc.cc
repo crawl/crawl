@@ -15,10 +15,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef TARGET_COMPILER_MINGW
-#include <io.h>
-#endif
-
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
