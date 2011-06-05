@@ -1872,7 +1872,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
             && weapon.quantity == 1
             && !is_range_weapon(weapon)
             && !is_special_unrandom_artefact(weapon)
-            && !get_weapon_brand(weapon) != SPWPN_DISTORTION)
+            && get_weapon_brand(weapon) != SPWPN_DISTORTION)
         {
             mons_wpn.push_back(*mi);
         }
