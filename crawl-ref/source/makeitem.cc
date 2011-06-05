@@ -2011,6 +2011,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    10, MI_NEEDLE,
                                    2,  MI_JAVELIN,
                                    1,  MI_THROWING_NET,
+                                   1,  MI_LARGE_ROCK,
                                    0);
     }
 
