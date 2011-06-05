@@ -2095,13 +2095,14 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         }
         else
         {
-            item.plus = random2(4);
+            int max_plus = armour_max_enchant(item);
+            item.plus = random2(max_plus + 1);
 
             if (one_chance_in(5))
-                item.plus += random2(4);
+                item.plus += random2(max_plus + 6) / 2;
 
             if (one_chance_in(6))
-                item.plus -= random2(8);
+                item.plus -= random2(max_plus + 6);
 
             if (item.plus < 0 && !one_chance_in(3))
                 do_curse_item(item);

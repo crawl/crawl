@@ -697,7 +697,7 @@ void static _get_randart_properties(const item_def &item,
     int power_level = 0;
 
     if (aclass == OBJ_ARMOUR)
-        power_level = item.plus / 2 + 2;
+        power_level = item.plus * 2 / (armour_max_enchant(item) + 2) + 2;
     else if (aclass == OBJ_JEWELLERY)
         power_level = 1 + random2(3) + random2(2);
     else // OBJ_WEAPON
