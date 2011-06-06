@@ -435,13 +435,11 @@ int spell_fail(spell_type spell)
 int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                      bool cap_power, bool rod)
 {
-    int power;
+    int power = 0;
     if (rod)
         power = 5 + you.skill(SK_EVOCATIONS) * 3;
     else
     {
-        power = (you.skill(SK_SPELLCASTING) / 2);
-
         int enhanced = 0;
 
         unsigned int disciplines = get_spell_disciplines(spell);
@@ -456,9 +454,12 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             {
                 unsigned int bit = (1 << ndx);
                 if (disciplines & bit)
-                    power += (you.skill(spell_type2skill(bit)) * 2) / skillcount;
+                    power += you.skill(spell_type2skill(bit)) * 2;
             }
         }
+        power /= skillcount;
+
+        power += you.skill(SK_SPELLCASTING) / 2;
 
         if (apply_intel)
             power = (power * you.intel()) / 10;
