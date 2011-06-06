@@ -4440,9 +4440,19 @@ int get_real_hp(bool trans, bool rotted)
     int hitp;
 
     hitp  = you.experience_level * 11 / 2;
-    hitp += you.hp_max_perm + you.hp_max_temp;
+    hitp += you.hp_max_perm;
     // Important: we shouldn't add Heroism boosts here.
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 8;
+
+    // Frail and robust mutations, divine vigour, and rugged scale mut.
+    hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
+                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
+                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
+                - (player_mutation_level(MUT_FRAIL) * 10);
+    hitp /= 100;
+
+    if (!rotted)
+        hitp += you.hp_max_temp;
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
@@ -4469,16 +4479,6 @@ int get_real_hp(bool trans, bool rotted)
             break;
         }
     }
-
-    if (rotted)
-        hitp += player_rotted();
-
-    // Frail and robust mutations, divine vigour, and rugged scale mut.
-    hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
-                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
-                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
-                - (player_mutation_level(MUT_FRAIL) * 10);
-    hitp /= 100;
 
     return (hitp);
 }
