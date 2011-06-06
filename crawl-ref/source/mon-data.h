@@ -5104,7 +5104,7 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// statues (also '8')
+// statues and statue-like things (also '8')
 {
     MONS_ICE_STATUE, '8', LIGHTBLUE, "ice statue",
     M_ARTIFICIAL | M_SPELLCASTER | M_STATIONARY | M_SPEAKS,
@@ -5157,7 +5157,7 @@ static monsterentry mondata[] = {
     MONS_TRAINING_DUMMY, '8', LIGHTGREY, "training dummy",
     M_STATIONARY,
     MR_NO_FLAGS,
-    0, 10, MONS_STATUE, MONS_TRAINING_DUMMY, MH_NONLIVING, MAG_IMMUNE,
+    0, 10, MONS_TRAINING_DUMMY, MONS_TRAINING_DUMMY, MH_NONLIVING, MAG_IMMUNE,
     { {AT_WEAP_ONLY, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 0, 0, 6 },
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
@@ -5169,7 +5169,7 @@ static monsterentry mondata[] = {
     MONS_SALT_PILLAR, '8', WHITE, "pillar of salt",
     M_NO_EXP_GAIN | M_STATIONARY,
     MR_RES_POISON,
-    0, 10, MONS_STATUE, MONS_SALT_PILLAR, MH_NONLIVING, MAG_IMMUNE,
+    0, 10, MONS_SALT_PILLAR, MONS_SALT_PILLAR, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 0, 0, 1 },
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
