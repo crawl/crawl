@@ -15,6 +15,7 @@
 
 #include "areas.h"
 #include "beam.h"
+#include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
 #include "describe.h"
@@ -514,7 +515,13 @@ int spell_enhancement(unsigned int typeflags)
         enhanced += player_spec_death() - player_spec_holy();
 
     if (typeflags & SPTYP_FIRE)
+    {
         enhanced += player_spec_fire() - player_spec_cold();
+
+        // if it's raining... {due}
+        if (in_what_cloud(CLOUD_RAIN))
+            enhanced--;
+    }
 
     if (typeflags & SPTYP_ICE)
         enhanced += player_spec_cold() - player_spec_fire();
