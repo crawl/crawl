@@ -1184,7 +1184,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.position.reset();
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (load_mode != LOAD_VISITOR)
     {
         tiles.clear_minimap();
