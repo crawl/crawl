@@ -39,6 +39,7 @@
 
   "strong"
 },
+
 { MUT_CLEVER,                     8, 14, false,  true,
   NULL,
 
@@ -68,6 +69,7 @@
 
   "poison resistance"
 },
+
 { MUT_CARNIVOROUS,                5,  3, false, false,
   "carnivore",
 
@@ -85,6 +87,7 @@
 
   "carnivorous"
 },
+
 { MUT_HERBIVOROUS,                5,  3,  true, false,
   "herbivore",
 
@@ -102,6 +105,7 @@
 
   "herbivorous"
 },
+
 { MUT_HEAT_RESISTANCE,            4,  3, false, false,
   "fire resistance",
 
@@ -119,6 +123,7 @@
 
   "heat resistance"
 },
+
 { MUT_COLD_RESISTANCE,            4,  3, false, false,
   "cold resistance",
 
@@ -136,6 +141,7 @@
 
   "cold resistance"
 },
+
 { MUT_DEMONIC_GUARDIAN,            0,  3, false, false,
   "demonic guardian",
 
@@ -153,6 +159,7 @@
 
   "demonic guardian"
 },
+
 { MUT_SHOCK_RESISTANCE,           2,  1, false, false,
   "electricity resistance",
 
@@ -162,6 +169,7 @@
 
   "shock resistance"
 },
+
 { MUT_REGENERATION,               3,  3, false, false,
   "regeneration",
 
@@ -179,6 +187,7 @@
 
   "regeneration"
 },
+
 { MUT_SLOW_HEALING,               3,  3,  true, false,
   "slow healing",
 
@@ -196,6 +205,7 @@
 
   "slow healing"
 },
+
 { MUT_FAST_METABOLISM,           10,  3,  true, false,
   "fast metabolism",
 
@@ -213,6 +223,7 @@
 
   "fast metabolism"
 },
+
 { MUT_SLOW_METABOLISM,            7,  3, false, false,
   "slow metabolism",
 
@@ -238,6 +249,7 @@
   {"", "", ""},
   "weak"
 },
+
 { MUT_DOPEY,                     10, 14,  true,  true,
   NULL,
   {"You are dopey (Int -", "", ""},
@@ -245,6 +257,7 @@
   {"", "", ""},
   "dopey",
 },
+
 { MUT_CLUMSY,                    10, 14,  true,  true,
   NULL,
   {"You are clumsy (Dex -", "", ""},
@@ -252,6 +265,7 @@
   {"", "", ""},
   "clumsy"
 },
+
 { MUT_TELEPORT_CONTROL,           2,  1, false, false,
   "teleport control",
 
@@ -279,6 +293,7 @@
 
   "teleport"
 },
+
 { MUT_MAGIC_RESISTANCE,           5,  3, false, false,
   "magic resistance",
 
@@ -366,6 +381,7 @@
 
   "deformed"
 },
+
 { MUT_TELEPORT_AT_WILL,           0,  3, false, false,
   "teleport at will",
 
@@ -383,6 +399,7 @@
 
   "teleport at will"
 },
+
 { MUT_SPIT_POISON,                8,  3, false, false,
   "spit poison",
 
@@ -436,6 +453,7 @@
 
   "blink"
 },
+
 { MUT_STRONG_STIFF,              10,  3, false,  true,
   NULL,
 
@@ -692,6 +710,7 @@
 
   "horns"
 },
+
 { MUT_BEAK,                       1,  1, false,  true,
   "beak",
 
