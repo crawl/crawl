@@ -591,8 +591,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     bool found_eligible = false;
     recite_counts count(0);
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, you.get_los());
-         ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         recite_counts retval;
         switch (zin_check_recite_to_single_monster(*ri, retval))
@@ -1596,8 +1595,7 @@ bool jiyva_can_paralyse_jellies()
 void jiyva_paralyse_jellies()
 {
     int jelly_count = 0;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, you.get_los());
-         ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
 

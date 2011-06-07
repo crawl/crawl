@@ -177,8 +177,7 @@ bool yred_slaves_abandon_you()
     int num_reclaim = 0;
     int num_slaves = 0;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, you.get_los());
-         ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         monster* mons = monster_at(*ri);
         if (mons == NULL)
@@ -229,8 +228,7 @@ bool beogh_followers_abandon_you()
     int num_reconvert = 0;
     int num_followers = 0;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, you.get_los());
-         ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         monster* mons = monster_at(*ri);
         if (mons == NULL)
