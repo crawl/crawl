@@ -316,17 +316,14 @@ static bool _try_give_plain_armour(item_def &arm)
     static const equipment_type armour_slots[] =
         {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
 
-    equipment_type picked = EQ_BODY_ARMOUR;
+    armour_type picked = NUM_ARMOURS;
     const int num_slots = ARRAYSZ(armour_slots);
     for (int i = 0, count = 0; i < num_slots; ++i)
     {
         if (!you_can_wear(armour_slots[i], true))
             continue;
 
-        if (you.equip[armour_slots[i]] != -1)
-            continue;
-
-        // Consider shield slot filled in some cases.
+        // Consider shield uninteresting in some cases.
         if (armour_slots[i] == EQ_SHIELD)
         {
             const item_def* weapon = you.weapon();
@@ -344,34 +341,38 @@ static bool _try_give_plain_armour(item_def &arm)
             }
         }
 
+        armour_type result;
+        switch (armour_slots[i])
+        {
+        case EQ_SHIELD:
+            result = ARM_SHIELD; break;
+        case EQ_CLOAK:
+            result = ARM_CLOAK;  break;
+        case EQ_HELMET:
+            result = ARM_HELMET; break;
+        case EQ_GLOVES:
+            result = ARM_GLOVES; break;
+        case EQ_BOOTS:
+            result = ARM_BOOTS;  break;
+        default:
+            continue;
+        }
+        result = _pick_wearable_armour(result);
+        if (result == NUM_ARMOURS || you.seen_armour[result])
+            continue;
+
         if (one_chance_in(++count))
-            picked = armour_slots[i];
+            picked = result;
     }
 
     // All available secondary slots already filled.
-    if (picked == EQ_BODY_ARMOUR)
+    if (picked == NUM_ARMOURS)
         return (false);
 
-    armour_type result = NUM_ARMOURS;
-    switch (picked)
-    {
-    case EQ_SHIELD:
-        result = ARM_SHIELD; break;
-    case EQ_CLOAK:
-        result = ARM_CLOAK;  break;
-    case EQ_HELMET:
-        result = ARM_HELMET; break;
-    case EQ_GLOVES:
-        result = ARM_GLOVES; break;
-    case EQ_BOOTS:
-        result = ARM_BOOTS;  break;
-    default:
-        return (false);
-    }
     arm.clear();
     arm.quantity = 1;
     arm.base_type = OBJ_ARMOUR;
-    arm.sub_type = _pick_wearable_armour(result);
+    arm.sub_type = picked;
     arm.plus = random2(5) - 2;
 
     const int max_ench = armour_max_enchant(arm);
@@ -1138,7 +1139,30 @@ static int _weapon_brand_quality(int brand, bool range)
     }
 }
 
-static int _is_armour_plain(const item_def &item)
+static bool _armour_slot_seen(armour_type arm)
+{
+    item_def item;
+    item.base_type = OBJ_ARMOUR;
+    item.quantity = 1;
+
+    for (int i = 0; i < NUM_ARMOURS; i++)
+    {
+        if (get_armour_slot(arm) != get_armour_slot((armour_type)i))
+            continue;
+        item.sub_type = i;
+
+        // having seen a helmet means nothing about your decision to go
+        // bare-headed if you have horns
+        if (!can_wear_armour(item, false, true))
+            continue;
+
+        if (you.seen_armour[i])
+            return true;
+    }
+    return false;
+}
+
+static bool _is_armour_plain(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
     if (is_artefact(item))
@@ -1218,7 +1242,6 @@ int acquirement_create_item(object_class_type class_wanted,
         // matching a currently unfilled equipment slot.
         if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad))
         {
-            const equipment_type eq = get_armour_slot(doodad);
             const special_armour_type sparm = get_armour_ego_type(doodad);
 
             if (agent != GOD_XOM
@@ -1238,16 +1261,13 @@ int acquirement_create_item(object_class_type class_wanted,
                 continue;
             }
 
-            // Don't try to replace an item if it would already fill a
-            // currently unfilled secondary armour slot.
-            if (eq == EQ_BODY_ARMOUR || you.equip[eq] != -1
-                && _is_armour_plain(doodad))
+            // Try to fill empty slots.
+            if ((_is_armour_plain(doodad)
+                 || get_armour_slot(doodad) == EQ_BODY_ARMOUR)
+                && _armour_slot_seen((armour_type)doodad.sub_type))
             {
                 if (_try_give_plain_armour(doodad))
                 {
-                    // Make sure the item is plain.
-                    doodad.special = SPARM_NORMAL;
-
                     // Only Xom gives negatively enchanted items (75% if not 0).
                     if (doodad.plus < 0 && agent != GOD_XOM)
                         doodad.plus = 0;
