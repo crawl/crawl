@@ -224,11 +224,11 @@ void jiyva_slurp_message(int js)
     }
 }
 
-void ash_init_bondage()
+void ash_init_bondage(player *y)
 {
-    you.bondage_level = 0;
+    y->bondage_level = 0;
     for (int i = ET_WEAPON; i < NUM_ET; ++i)
-        you.bondage[i] = 0;
+        y->bondage[i] = 0;
 }
 
 static bool _two_handed()

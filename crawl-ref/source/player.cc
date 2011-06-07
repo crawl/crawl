@@ -5392,7 +5392,7 @@ void player::init()
 
     running.clear();
     received_weapon_warning = false;
-    ash_init_bondage();
+    ash_init_bondage(this);
 
     delay_queue.clear();
 

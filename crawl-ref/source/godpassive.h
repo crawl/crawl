@@ -38,7 +38,7 @@ void che_handle_change(che_change_type ct, int diff);
 void jiyva_eat_offlevel_items();
 void jiyva_slurp_bonus(int item_value, int *js);
 void jiyva_slurp_message(int js);
-void ash_init_bondage();
+void ash_init_bondage(player *y);
 void ash_check_bondage(bool msg = true);
 std::string ash_describe_bondage(int flags, bool level);
 bool ash_id_item(item_def& item, bool silent = true);
