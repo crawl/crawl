@@ -167,7 +167,7 @@ void wizard_change_species(void)
             perma_mutate(MUT_PASSIVE_MAPPING, 1);
         break;
 
-    case SP_CAT:
+    case SP_FELID:
         if (you.experience_level >= 6)
             perma_mutate(MUT_SHAGGY_FUR, 1);
         if (you.experience_level >= 12)

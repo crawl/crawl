@@ -2072,7 +2072,7 @@ bool do_god_gift(bool forced)
                 break;
 
             // Should gift catnip instead.
-            if (you.species == SP_CAT)
+            if (you.species == SP_FELID)
                 break;
 
             const bool need_missiles = _need_missile_gift(forced);
@@ -3335,7 +3335,7 @@ void god_pitch(god_type which_god)
     mprf("You %s the altar of %s.",
          you.species == SP_NAGA ? "coil in front of" :
          // < TGWi> you curl up on the altar and go to sleep
-         you.species == SP_CAT  ? "sit before"
+         you.species == SP_FELID  ? "sit before"
                                 : "kneel at",
          god_name(which_god).c_str());
     more();

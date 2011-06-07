@@ -148,7 +148,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
     }
 
-    if (you.species == SP_CAT
+    if (you.species == SP_FELID
         && (weapon->base_type == OBJ_WEAPONS
             || weapon->base_type == OBJ_STAVES))
     {
@@ -247,7 +247,7 @@ static bool _valid_weapon_swap(const item_def &item)
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES
         || item.base_type == OBJ_MISSILES)
     {
-        return (you.species != SP_CAT);
+        return (you.species != SP_FELID);
     }
 
     // Some misc. items need to be wielded to be evoked.
@@ -539,7 +539,7 @@ static bool cloak_is_being_removed(void)
 //---------------------------------------------------------------
 void wear_armour(int slot) // slot is for tiles
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         mpr("You can't wear anything.");
         return;
@@ -578,7 +578,7 @@ static int armour_equip_delay(const item_def &item)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR || you.species == SP_CAT)
+    if (base_type != OBJ_ARMOUR || you.species == SP_FELID)
     {
         if (verbose)
            mpr("You can't wear that.");
@@ -1204,7 +1204,7 @@ static bool _fire_validate_item(int slot, std::string &err)
 // Returns true if warning is given.
 bool fire_warn_if_impossible(bool silent)
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         if (!silent)
             mpr("You can't grasp things well enough to throw them.");
@@ -3694,7 +3694,7 @@ static bool _dont_use_invis()
 
 void zap_wand(int slot)
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         mpr("You have no means to grasp a wand firmly enough.");
         return;

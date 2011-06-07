@@ -1605,7 +1605,7 @@ static void _do_look_around()
 
 static void _do_remove_armour()
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         mpr("You can't remove your fur, sorry.");
         return;
@@ -1717,7 +1717,7 @@ static void _do_display_map()
 
 static void _do_cycle_quiver(int dir)
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         mpr("You can't grasp things well enough to throw them.");
         return;

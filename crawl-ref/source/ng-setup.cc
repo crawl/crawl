@@ -90,7 +90,7 @@ static void _species_stat_init(species_type which_species)
     case SP_PALE_DRACONIAN:
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
 
-    case SP_CAT:                sb =  2; ib =  7; db =  9;      break;  // 18
+    case SP_FELID:              sb =  2; ib =  7; db =  9;      break;  // 18
     }
 
     you.base_stats[STAT_STR] = sb + 2;
@@ -320,7 +320,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ACUTE_VISION] = 1;
         you.mutation[MUT_UNBREATHING]  = 1;
         break;
-    case SP_CAT:
+    case SP_FELID:
         you.mutation[MUT_FRAIL]           = 4;
         you.mutation[MUT_FANGS]           = 3;
         you.mutation[MUT_SHAGGY_FUR]      = 1;
@@ -490,7 +490,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_SHIELDS]  = 2;
 
-        weap_skill = (you.species == SP_CAT) ? 4 : 2;
+        weap_skill = (you.species == SP_FELID) ? 4 : 2;
 
         you.skills[(player_effectively_in_light_armour()
                    ? SK_DODGING : SK_ARMOUR)] = 3;
@@ -1088,7 +1088,7 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[weapon_skill(*you.weapon())] = weap_skill;
     }
 
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
         {
@@ -1149,7 +1149,7 @@ static void _give_starting_food()
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
             || player_genus(GENPC_OGREISH) || you.species == SP_TROLL
-            || you.species == SP_CAT)
+            || you.species == SP_FELID)
         {
             item.sub_type = FOOD_MEAT_RATION;
         }

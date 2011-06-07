@@ -327,7 +327,7 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
-    case SP_CAT:
+    case SP_FELID:
         result += "You cannot wear armour.\n";
         result += "You are incapable of any advanced item manipulation.\n";
         result += "Your paws have sharp claws.\n";
@@ -341,7 +341,7 @@ formatted_string describe_mutations()
     switch (you.body_size(PSIZE_TORSO, true))
     {
     case SIZE_LITTLE:
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             break;
         result += "You are tiny and cannot use many weapons and most armour.\n";
         have_any = true;
@@ -942,7 +942,7 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Already innate, and unlike trolls/ghouls, no increases for you!
-    if (mutat == MUT_CLAWS && you.species == SP_CAT)
+    if (mutat == MUT_CLAWS && you.species == SP_FELID)
         return (true);
 
     equipment_type eq_type = EQ_NONE;

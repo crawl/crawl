@@ -71,7 +71,6 @@ sub fix_draco_species {
     }
     $sp =~ s/ Base//;
   }
-  $sp =~ s/^Cat$/Felid/;
   $sp
 }
 

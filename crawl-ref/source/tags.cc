@@ -1893,7 +1893,7 @@ static void tag_read_you(reader &th)
             you.innate_mutations[MUT_FRAIL] = 3;
             robust -= 3;
             break;
-        case SP_CAT:
+        case SP_FELID:
             you.innate_mutations[MUT_FRAIL] = 4;
             robust -= 4;
             break;
