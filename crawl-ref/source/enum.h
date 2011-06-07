@@ -2871,7 +2871,7 @@ enum species_type
     SP_MERFOLK,
     SP_VAMPIRE,
     SP_DEEP_DWARF,
-    SP_CAT,
+    SP_FELID,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)

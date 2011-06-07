@@ -585,7 +585,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
         rc = true;
 
-    if (you.species == SP_CAT && spell == SPELL_PORTAL_PROJECTILE)
+    if (you.species == SP_FELID && spell == SPELL_PORTAL_PROJECTILE)
         rc = true;
 
     return (rc);

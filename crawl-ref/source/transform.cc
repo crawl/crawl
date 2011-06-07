@@ -393,7 +393,7 @@ monster_type transform_mons()
 
 std::string blade_parts(bool terse)
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
         return terse ? "paws" : "front paws";
     return "hands";
 }
@@ -582,7 +582,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_BLADE_HANDS:
         tran_name = "Blade Hands";
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             tran_name = "Blade Paws";
         dur       = std::min(10 + random2(pow), 100);
         msg       = "Your " + blade_parts()

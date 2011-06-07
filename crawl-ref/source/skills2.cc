@@ -1308,7 +1308,7 @@ static std::string _stk_adj_cap()
 
 static std::string _stk_genus_cap()
 {
-    if (Skill_Species == SP_CAT)
+    if (Skill_Species == SP_FELID)
         return "Cat";
     return species_name(Skill_Species, true, false);
 }
@@ -1322,7 +1322,7 @@ static std::string _stk_genus_nocap()
 static std::string _stk_genus_short_cap()
 {
     return (Skill_Species == SP_DEMIGOD ? "God" :
-            Skill_Species == SP_CAT     ? "Cat" :
+            Skill_Species == SP_FELID     ? "Cat" :
             _stk_genus_cap());
 }
 
@@ -1361,7 +1361,7 @@ static std::string _stk_weight()
     case SP_SPRIGGAN:
         return "Fly";
 
-    case SP_CAT:
+    case SP_FELID:
         return "Bacteria"; // not used
     }
 }
@@ -1444,7 +1444,7 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         switch (best_skill)
         {
         case SK_UNARMED_COMBAT:
-            if (species == SP_CAT)
+            if (species == SP_FELID)
             {
                 result = claw_and_tooth_titles[skill_rank];
                 break;
@@ -1607,7 +1607,7 @@ bool is_useless_skill(int skill)
 {
     if (you.species == SP_DEMIGOD && skill == SK_INVOCATIONS)
         return true;
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
         switch(skill)
         {
         case SK_SHORT_BLADES:

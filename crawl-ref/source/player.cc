@@ -606,7 +606,7 @@ void update_vision_range()
 // ---------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
         return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
 
     switch (eq)
@@ -692,7 +692,7 @@ bool you_can_wear(int eq, bool special_armour)
 
 bool player_has_feet()
 {
-    if (you.species == SP_NAGA || you.species == SP_CAT || you.fishtail)
+    if (you.species == SP_NAGA || you.species == SP_FELID || you.fishtail)
         return (false);
 
     if (player_mutation_level(MUT_HOOVES) >= 3
@@ -3173,7 +3173,7 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
-            case SP_CAT:
+            case SP_FELID:
                 if (!(you.experience_level % 5))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -3298,7 +3298,7 @@ void level_change(bool skip_attribute_increase)
         ASSERT(you.experience_level == 27);
         ASSERT(you.max_level < 127);
         you.max_level++;
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             _felid_extra_life();
     }
 
@@ -3396,7 +3396,7 @@ int check_stealth(void)
         case SP_SPRIGGAN:
         case SP_GREY_DRACONIAN:
         case SP_NAGA:       // not small but very good at stealth
-        case SP_CAT:
+        case SP_FELID:
             race_mod = 18;
             break;
         default:
@@ -3427,7 +3427,7 @@ int check_stealth(void)
             race_mod = 17;
         break;
     case TRAN_BLADE_HANDS:
-        if (you.species == SP_CAT && !you.airborne())
+        if (you.species == SP_FELID && !you.airborne())
             stealth -= 50; // a constant penalty
         break;
     case TRAN_LICH:
@@ -3493,7 +3493,7 @@ int check_stealth(void)
             stealth += 20;
     }
 
-    else if (you.species == SP_CAT && !you.form)
+    else if (you.species == SP_FELID && !you.form)
         stealth += 20;  // paws
 
     // Radiating silence is the negative complement of shouting all the
@@ -3967,7 +3967,7 @@ static int _species_exp_mod(species_type species)
         case SP_DEMONSPAWN:
             return 15;
         case SP_DEMIGOD:
-        case SP_CAT:
+        case SP_FELID:
             return 16;
         default:
             return 0;
@@ -4494,7 +4494,7 @@ static int _racial_mp()
         return -you.experience_level / 3;
     case SP_SLUDGE_ELF:
         return you.experience_level / 3;
-    case SP_CAT:
+    case SP_FELID:
     case SP_HIGH_ELF:
         return you.experience_level / 2;
     case SP_DEMIGOD:
@@ -5590,7 +5590,7 @@ std::string player::shout_verb() const
     case TRAN_PIG:
         return "squeal";
     default:
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             return coinflip() ? "meow" : "yowl";
         // depends on SCREAM mutation
         int level = player_mutation_level(MUT_SCREAM);
@@ -6157,7 +6157,7 @@ int player_res_magic(bool calc_unid, bool temp)
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
-    case SP_CAT:
+    case SP_FELID:
         rm = you.experience_level * 6;
         break;
     case SP_SPRIGGAN:

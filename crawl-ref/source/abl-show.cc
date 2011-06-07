@@ -2264,9 +2264,9 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             mprf("You %s in prayer and are bathed in unholy energy.",
-                 you.species == SP_NAGA ? "coil" :
-                 you.species == SP_CAT  ? "sit"
-                                        : "kneel");
+                 you.species == SP_NAGA  ? "coil" :
+                 you.species == SP_FELID ? "sit"
+                                         : "kneel");
         }
         you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
                      + random2avg(you.piety * BASELINE_DELAY, 2) / 10;

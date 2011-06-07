@@ -241,7 +241,7 @@ std::string item_def::name(description_level_type descrip,
                 case EQ_WEAPON:
                     if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
                         buff << " (weapon)";
-                    else if (you.species != SP_CAT)
+                    else if (you.species != SP_FELID)
                         buff << " (in hand)";
                     else
                         buff << " (in mouth)";
@@ -255,12 +255,12 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (worn)";
                     break;
                 case EQ_LEFT_RING:
-                    buff << (you.species != SP_CAT ? " (left hand)"
-                                                   : " (left paw)");
+                    buff << (you.species != SP_FELID ? " (left hand)"
+                                                     : " (left paw)");
                     break;
                 case EQ_RIGHT_RING:
-                    buff << (you.species != SP_CAT ? " (right hand)"
-                                                   : " (right paw)");
+                    buff << (you.species != SP_FELID ? " (right hand)"
+                                                     : " (right paw)");
                     break;
                 case EQ_AMULET:
                     buff << " (around neck)";
@@ -2795,7 +2795,7 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             return (true);
 
         if (!you.could_wield(item, true)
@@ -2834,7 +2834,7 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
         // Save for the above spells, all missiles are useless for felids.
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             return true;
 
         // These are the same checks as in is_throwable(), except that
@@ -2878,14 +2878,14 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_ENCHANT_WEAPON_III:
         case SCR_ENCHANT_ARMOUR:
         case SCR_VORPALISE_WEAPON:
-            return (you.species == SP_CAT);
+            return (you.species == SP_FELID);
         case SCR_DETECT_CURSE:
             return (you.religion == GOD_ASHENZARI);
         default:
             return (false);
         }
     case OBJ_WANDS:
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             return (true);
 
         return (item.plus2 == ZAPCOUNT_EMPTY)
@@ -3020,7 +3020,7 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_STAVES:
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             return (true);
         if (you.religion == GOD_TROG && !item_is_rod(item))
             return (true);

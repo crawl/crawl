@@ -1228,7 +1228,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_POISON_WEAPON:
     // could be useful if it didn't require wielding
     case SPELL_TUKIMAS_DANCE:
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             return (true);
         break;
     case SPELL_DARKNESS:

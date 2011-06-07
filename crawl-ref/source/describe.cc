@@ -2566,7 +2566,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         }
         break;
     case OBJ_MISSILES:
-        if (you.species != SP_CAT)
+        if (you.species != SP_FELID)
             actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:
@@ -4628,7 +4628,7 @@ std::string get_skill_description(skill_type skill, bool need_title)
             unarmed_attacks.push_back("kick with your hooves");
         else if (player_mutation_level(MUT_TALONS))
             unarmed_attacks.push_back("claw with your talons");
-        else if (you.species != SP_NAGA && you.species != SP_CAT
+        else if (you.species != SP_NAGA && you.species != SP_FELID
                  && !you.fishtail)
         {
             unarmed_attacks.push_back("deliver a kick");
@@ -4637,7 +4637,7 @@ std::string get_skill_description(skill_type skill, bool need_title)
         if (you.has_usable_pseudopods())
             unarmed_attacks.push_back("slap with your pseudopods");
 
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             unarmed_attacks.push_back("use your claws");
         else if (!you.weapon())
             unarmed_attacks.push_back("throw a punch");

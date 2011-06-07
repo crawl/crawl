@@ -392,7 +392,7 @@ tileidx_t tileidx_player()
             {
             case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
             case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
-            case SP_CAT:     ch = TILEP_TRAN_STATUE_FELID;    break;
+            case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
             default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
             }
             break;
@@ -404,7 +404,7 @@ tileidx_t tileidx_player()
             {
             case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
             case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
-            case SP_CAT:     ch = TILEP_TRAN_LICH_FELID;    break;
+            case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
             default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
             }
             break;
@@ -529,7 +529,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_VAMPIRE;
     case SP_DEEP_DWARF:
         return TILEP_BASE_DEEP_DWARF;
-    case SP_CAT:
+    case SP_FELID:
         return TILEP_BASE_FELID;
     default:
         return TILEP_BASE_HUMAN;

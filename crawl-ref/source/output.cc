@@ -410,7 +410,7 @@ static void _print_stats_wp(int y)
         const std::string prefix = "-) ";
         col = LIGHTGREY;
         text = you.has_usable_claws(true) ? "Claws" : "Nothing wielded";
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             text = "Teeth and claws";
 
         switch (you.form)
@@ -769,7 +769,7 @@ void print_stats(void)
     }
     you.wield_change  = false;
 
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         // There are no circumstances under which Felids could quiver something.
         // Reduce line counter for status display.y
@@ -1672,7 +1672,7 @@ static std::vector<formatted_string> _get_overview_stats()
 #endif
 
     char lives[40];
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         snprintf(lives, sizeof(lives), "Lives: %d, deaths: %d",
                  you.lives, you.deaths);
@@ -2086,7 +2086,7 @@ std::string _status_mut_abilities()
           }
           break;
 
-      case SP_CAT:
+      case SP_FELID:
           mutations.push_back("paw claws");
           break;
 
@@ -2138,7 +2138,7 @@ std::string _status_mut_abilities()
         mutations.push_back("unfitting armour");
     }
 
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         mutations.push_back("no armour");
         mutations.push_back("no advanced items");

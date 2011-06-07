@@ -37,7 +37,7 @@ static species_type species_order[] = {
     SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE,
     // not humanoid at all
-    SP_CAT
+    SP_FELID
 };
 
 species_type random_draconian_player_species()
@@ -246,7 +246,7 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
-        case SP_CAT:        res = (adj ? "Feline"     : "Felid");      break;
+        case SP_FELID:      res = (adj ? "Feline"     : "Felid");      break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }
@@ -263,7 +263,7 @@ int species_has_claws(species_type species, bool mut_level)
 
     // Felid claws don't count as a claws mutation.  The claws mutation
     // does only hands, not paws.
-    if (species == SP_CAT && !mut_level)
+    if (species == SP_FELID && !mut_level)
         return (1);
 
     return (0);
@@ -326,7 +326,7 @@ size_type species_size(species_type species, size_part_type psize)
     case SP_KOBOLD:
         return (SIZE_SMALL);
     case SP_SPRIGGAN:
-    case SP_CAT:
+    case SP_FELID:
         return (SIZE_LITTLE);
 
     default:
@@ -400,7 +400,7 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_VAMPIRE);
     case SP_DEEP_DWARF:
         return (MONS_DEEP_DWARF);
-    case SP_CAT:
+    case SP_FELID:
         return (MONS_FELID);
     case SP_ELF:
     case SP_HILL_DWARF:
