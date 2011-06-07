@@ -424,6 +424,22 @@ monster_type dragon_form_dragon_type()
     }
 }
 
+// with a denominator of 10
+int form_hp_mod()
+{
+    switch(you.form)
+    {
+    case TRAN_STATUE:
+        return 13;
+    case TRAN_ICE_BEAST:
+        return 12;
+    case TRAN_DRAGON:
+        return 15;
+    default:
+        return 10;
+    }
+}
+
 bool feat_dangerous_for_form(transformation_type which_trans,
                              dungeon_feature_type feat)
 {
@@ -558,7 +574,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    int str = 0, dex = 0, xhp = 0, dur = 0;
+    int str = 0, dex = 0, dur = 0;
     const char* tran_name = "buggy";
     std::string msg;
 
@@ -593,7 +609,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "statue";
         str       = 2;
         dex       = -2;
-        xhp       = 15;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
@@ -603,7 +618,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_ICE_BEAST:
         tran_name = "ice beast";
-        xhp       = 12;
         dur       = std::min(30 + random2(pow) + random2(pow), 100);
         msg      += "a creature of crystalline ice.";
         break;
@@ -611,7 +625,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_DRAGON:
         tran_name = "dragon";
         str       = 10;
-        xhp       = 16;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         msg      += "a fearsome dragon!";
         break;
@@ -691,8 +704,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
                                  tran_name).c_str());
     }
 
-    if (xhp)
-        _extra_hp(xhp);
+    _extra_hp(form_hp_mod());
 
     // Extra effects
     switch (which_trans)
@@ -771,6 +783,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form = you.form;
+    int hp_downscale = form_hp_mod();
 
     // We may have to unmeld a couple of equipment types.
     std::set<equipment_type> melded = _init_equipment_removal(old_form);
@@ -780,8 +793,6 @@ void untransform(bool skip_wielding, bool skip_move)
     update_player_symbol();
 
     burden_change();
-
-    int hp_downscale = 10;
 
     switch (old_form)
     {
@@ -818,8 +829,6 @@ void untransform(bool skip_wielding, bool skip_move)
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_STONESKIN])
             you.duration[DUR_STONESKIN] = 1;
-
-        hp_downscale = 15;
         break;
 
     case TRAN_ICE_BEAST:
@@ -829,15 +838,12 @@ void untransform(bool skip_wielding, bool skip_move)
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_ICY_ARMOUR])
             you.duration[DUR_ICY_ARMOUR] = 1;
-
-        hp_downscale = 12;
         break;
 
     case TRAN_DRAGON:
         mpr("Your transformation has ended.", MSGCH_DURATION);
         notify_stat_change(STAT_STR, -10, true,
                     "losing the dragon transformation");
-        hp_downscale = 16;
         break;
 
     case TRAN_LICH:
