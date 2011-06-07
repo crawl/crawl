@@ -1609,9 +1609,11 @@ void jiyva_paralyse_jellies()
 
     if (jelly_count > 0)
     {
-        mprf(MSGCH_PRAY, "%s.",
-             jelly_count > 1 ? "The nearby slimes join your prayer"
-                             : "A nearby slime joins your prayer");
+        if (jelly_count > 1)
+            mpr("The nearby slimes join your prayer.", MSGCH_PRAY);
+        else
+            mpr("A nearby slime joins your prayer.", MSGCH_PRAY);
+
         lose_piety(5);
     }
 }
@@ -2092,7 +2094,7 @@ int fedhas_fungal_bloom()
         mushroom_spawn_message(seen_mushrooms, seen_corpses);
 
     if (kills)
-        mprf("That felt like a moral victory.");
+        mpr("That felt like a moral victory.");
 
     if (processed_count)
     {
@@ -2309,10 +2311,10 @@ bool fedhas_sunlight()
     }
 
     if (evap_count)
-        mprf("Some water evaporates in the bright sunlight.");
+        mpr("Some water evaporates in the bright sunlight.");
 
     if (cloud_count)
-        mprf("Sunlight penetrates the thick gloom.");
+        mpr("Sunlight penetrates the thick gloom.");
 
     return (true);
 }
@@ -2552,9 +2554,9 @@ bool fedhas_plant_ring_from_fruit()
     if (max_use == 0)
     {
         if (adjacent.size() == 0)
-            mprf("No empty adjacent squares.");
+            mpr("No empty adjacent squares.");
         else
-            mprf("No fruit available.");
+            mpr("No fruit available.");
 
         return (false);
     }
@@ -2896,8 +2898,8 @@ static bool _place_ballisto(const coord_def & pos)
     if (ballisto != -1)
     {
         remove_mold(pos);
-        mprf("The mold grows into a ballistomycete.");
-        mprf("Your piety has decreased.");
+        mpr("The mold grows into a ballistomycete.");
+        mpr("Your piety has decreased.");
         lose_piety(1);
         return (true);
     }
@@ -2930,7 +2932,7 @@ bool fedhas_evolve_flora()
 
     if (!in_range)
     {
-        mprf("No evolvable flora in sight.");
+        mpr("No evolvable flora in sight.");
         return (false);
     }
 
@@ -2963,9 +2965,9 @@ bool fedhas_evolve_flora()
                                     env.grid(spelld.target)))
         {
             if (feat_is_tree(env.grid(spelld.target)))
-                mprf("The tree has already reached the pinnacle of evolution.");
+                mpr("The tree has already reached the pinnacle of evolution.");
             else
-                mprf("You must target a plant or fungus.");
+                mpr("You must target a plant or fungus.");
             return (false);
         }
         return (_place_ballisto(spelld.target));
@@ -2978,7 +2980,7 @@ bool fedhas_evolve_flora()
             simple_monster_message(target, " has already reached "
                                    "the pinnacle of evolution.");
         else
-            mprf("Only plants or fungi may be upgraded.");
+            mpr("Only plants or fungi may be upgraded.");
 
         return (false);
     }
@@ -2990,14 +2992,14 @@ bool fedhas_evolve_flora()
 
         if (total_fruit < upgrade.fruit_cost)
         {
-            mprf("Not enough fruit available.");
+            mpr("Not enough fruit available.");
             return (false);
         }
     }
 
     if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
     {
-        mprf("Not enough piety.");
+        mpr("Not enough piety.");
         return (false);
     }
 
@@ -3060,7 +3062,7 @@ bool fedhas_evolve_flora()
     if (upgrade.piety_cost)
     {
         lose_piety(upgrade.piety_cost);
-        mprf("Your piety has decreased.");
+        mpr("Your piety has decreased.");
     }
 
     return (true);
