@@ -591,7 +591,8 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     bool found_eligible = false;
     recite_counts count(0);
 
-    for (radius_iterator ri(you.pos(), 8); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, you.get_los());
+         ri; ++ri)
     {
         recite_counts retval;
         switch (zin_check_recite_to_single_monster(*ri, retval))
@@ -1595,7 +1596,8 @@ bool jiyva_can_paralyse_jellies()
 void jiyva_paralyse_jellies()
 {
     int jelly_count = 0;
-    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, you.get_los());
+         ri; ++ri)
     {
         monster* mon = monster_at(*ri);
 
@@ -1782,8 +1784,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
     // in a hallway as in an open room.
     int spaces_for_corpses = 0;
     for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
-                            you.get_los(), true);
-         ri; ++ri)
+                            you.get_los(), true); ri; ++ri)
     {
         if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
             spaces_for_corpses++;
@@ -1798,8 +1799,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
     int corpses_created = 0;
 
     for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
-                            you.get_los());
-         ri; ++ri)
+                            you.get_los()); ri; ++ri)
     {
         bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
         bool square_is_player_square = (*ri == where);

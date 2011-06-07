@@ -171,13 +171,14 @@ bool make_god_gifts_disappear()
     return (count);
 }
 
-// When under penance, Yredelemnulites can lose all undead slaves in sight.
+// When under penance, Yredelemnulites can lose all nearby undead slaves.
 bool yred_slaves_abandon_you()
 {
     int num_reclaim = 0;
     int num_slaves = 0;
 
-    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, you.get_los());
+         ri; ++ri)
     {
         monster* mons = monster_at(*ri);
         if (mons == NULL)
@@ -220,7 +221,7 @@ bool yred_slaves_abandon_you()
     return (false);
 }
 
-// When under penance, Beoghites can lose all orcish followers in sight,
+// When under penance, Beoghites can lose all nearby orcish followers,
 // subject to a few limitations.
 bool beogh_followers_abandon_you()
 {
@@ -228,7 +229,8 @@ bool beogh_followers_abandon_you()
     int num_reconvert = 0;
     int num_followers = 0;
 
-    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, you.get_los());
+         ri; ++ri)
     {
         monster* mons = monster_at(*ri);
         if (mons == NULL)
