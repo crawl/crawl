@@ -3,6 +3,52 @@
 #          should be serious challenges! Players dying on Zot:5 are okay :)
 ##############################################################################
 
+###########################
+# Zot entries (D side)
+###########################
+# Old-style three stairs
+#
+NAME:   zot_entry_traditional
+TAGS:   zot_entry
+KFEAT:  O = enter_zot
+{{
+  hook("post_place", function()
+    dgn.place_maps { tag = "zot_entry_secondary", count = 2 }
+  end)
+}}
+MAP
+O
+ENDMAP
+
+NAME:   zot_entry_traditional_secondary
+TAGS:   zot_entry_secondary allow_dup
+KFEAT:  O = enter_zot
+MAP
+O
+ENDMAP
+
+###########################
+# Something to give the builder a chance if massive vaults keep failing.
+#
+NAME:   zot_entry_small
+TAGS:   zot_entry
+KFEAT:  O = enter_zot
+COLOUR: c = lightmagenta
+COLOUR: .+ = magenta
+TILE:   c = WALL_ZOT_MAGENTA
+FTILE:  .O+ = FLOOR_HALL
+MONS:   killer klown
+MAP
+xxxxxxxxx
+xxxcccxxx
+xxcc.ccxx
+xcc...ccx
+xc..O..+@
+xcc...ccx
+xxcc.ccxx
+xxxcccxxx
+xxxxxxxxx
+ENDMAP
 
 ###########################
 #
