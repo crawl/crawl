@@ -2077,6 +2077,8 @@ std::string _status_mut_abilities()
           break;
 
       case SP_MUMMY:
+          mutations.push_back("no food or potions");
+          mutations.push_back("fire vulnerability");
           if (you.experience_level > 12)
           {
               std::string help = "in touch with death";
@@ -2084,6 +2086,14 @@ std::string _status_mut_abilities()
                   help = "strongly " + help;
               mutations.push_back(help);
           }
+          break;
+
+      case SP_KOBOLD:
+          mutations.push_back("disease resistance");
+          break;
+
+      case SP_DEEP_DWARF:
+          mutations.push_back("damage resistance");
           break;
 
       case SP_FELID:
