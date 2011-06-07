@@ -2890,7 +2890,7 @@ void excommunication(god_type new_god)
     you.piety = 0;
     you.piety_hysteresis = 0;
     if (old_god == GOD_ASHENZARI)
-        ash_init_bondage();
+        ash_init_bondage(&you);
 
     you.num_current_gifts[old_god] = 0;
 
