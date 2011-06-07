@@ -1063,7 +1063,7 @@ void scorefile_entry::reset()
     num_turns            = -1;
     num_diff_runes       = 0;
     num_runes            = 0;
-    kills                = 0L;
+    kills                = 0;
     maxed_skills.clear();
     status_effects.clear();
     gold                 = 0;

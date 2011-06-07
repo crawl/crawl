@@ -2099,8 +2099,8 @@ void define_monster(monster* mons)
     if (mons->number == 0)
         mons->number = monnumber;
 
-    mons->flags      = 0L;
-    mons->experience = 0L;
+    mons->flags      = 0;
+    mons->experience = 0;
     mons->colour     = col;
 
     mons->bind_melee_flags();

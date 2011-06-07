@@ -63,7 +63,7 @@ monster::monster()
       ac(0), ev(0), speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
-      enchantments(), flags(0L), experience(0), base_monster(MONS_NO_MONSTER),
+      enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
       god(GOD_NO_GOD), ghost(), seen_context("")
 
@@ -101,7 +101,7 @@ void monster::reset()
     inv.init(NON_ITEM);
 
     flags           = 0;
-    experience      = 0L;
+    experience      = 0;
     type            = MONS_NO_MONSTER;
     base_monster    = MONS_NO_MONSTER;
     hit_points      = 0;
