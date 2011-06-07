@@ -74,24 +74,24 @@ bool zin_sustenance(bool actual)
 std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
 {
 
-    //'prayertype':
-    //This is in enum.h; there are currently five prayers.
+    // 'prayertype':
+    // This is in enum.h; there are currently five prayers.
 
-    //'step':
-    //-1: We're either starting or stopping, so we just want the passage name.
-    //2/1/0: That many rounds are left. So, if step = 2, we want to show the passage #1/3.
+    // 'step':
+    // -1: We're either starting or stopping, so we just want the passage name.
+    // 2/1/0: That many rounds are left. So, if step = 2, we want to show the passage #1/3.
 
-    //That's too confusing, so:
+    // That's too confusing, so:
 
     if (step > -1)
         step = abs(step-3);
 
-    //We change it to turn 1, turn 2, turn 3.
+    // We change it to turn 1, turn 2, turn 3.
 
-    //'trits' && 'len':
-    //To have deterministic passages we need to store a random seed. Ours consists of an array of trinary bits.
+    // 'trits' && 'len':
+    // To have deterministic passages we need to store a random seed. Ours consists of an array of trinary bits.
 
-    //Yes, really.
+    // Yes, really.
 
     int chapter = 1 + trits[0] + trits[1] * 3 + trits[2] * 9;
     int verse = 1 + trits[3] + trits[4] * 3 + trits[5] * 9 + trits[6] * 27;
@@ -386,7 +386,7 @@ int zin_check_recite_to_single_monster(const coord_def& where,
 {
     monster* mon = monster_at(where);
 
-    //Can't recite at nothing!
+    // Can't recite at nothing!
     if (mon == NULL || !you.can_see(mon))
         return 0;
 
@@ -396,18 +396,18 @@ int zin_check_recite_to_single_monster(const coord_def& where,
 
     const mon_holy_type holiness = mon->holiness();
 
-    //Can't recite at plants or golems.
+    // Can't recite at plants or golems.
     if (holiness == MH_PLANT || holiness == MH_NONLIVING)
         return -1;
 
     eligibility.init(0);
 
-    //Recitations are based on monster::is_unclean, but are NOT identical to it,
-    //because that lumps all forms of uncleanliness together. We want to specify.
+    // Recitations are based on monster::is_unclean, but are NOT identical to it,
+    // because that lumps all forms of uncleanliness together. We want to specify.
 
-    //Anti-chaos prayer:
+    // Anti-chaos prayer:
 
-    //Hits some specific insane or shapeshifted uniques.
+    // Hits some specific insane or shapeshifted uniques.
     if (mon->type == MONS_CRAZY_YIUF
         || mon->type == MONS_PSYCHE
         || mon->type == MONS_GASTRONOK)
@@ -415,37 +415,37 @@ int zin_check_recite_to_single_monster(const coord_def& where,
         eligibility[RECITE_CHAOTIC]++;
     }
 
-    //Hits monsters that have chaotic spells memorized.
+    // Hits monsters that have chaotic spells memorized.
     if (mon->has_chaotic_spell() && mon->is_actual_spellcaster())
         eligibility[RECITE_CHAOTIC]++;
 
-    //Hits monsters with 'innate' chaos.
+    // Hits monsters with 'innate' chaos.
     if (mon->is_chaotic())
         eligibility[RECITE_CHAOTIC]++;
 
-    //Hits monsters that are worshipers of a chaotic god.
+    // Hits monsters that are worshipers of a chaotic god.
     if (is_chaotic_god(mon->god))
         eligibility[RECITE_CHAOTIC]++;
 
-    //Hits (again) monsters that are priests of a chaotic god.
+    // Hits (again) monsters that are priests of a chaotic god.
     if (is_chaotic_god(mon->god) && mon->is_priest())
         eligibility[RECITE_CHAOTIC]++;
 
-    //Anti-impure prayer:
+    // Anti-impure prayer:
 
-    //Hits monsters that have unclean spells memorized.
+    // Hits monsters that have unclean spells memorized.
     if (mon->has_unclean_spell())
         eligibility[RECITE_IMPURE]++;
 
-    //Hits monsters that desecrate the dead.
+    // Hits monsters that desecrate the dead.
     if (mons_eats_corpses(mon))
         eligibility[RECITE_IMPURE]++;
 
-    //Hits corporeal undead, which are a perversion of natural form.
+    // Hits corporeal undead, which are a perversion of natural form.
     if (holiness == MH_UNDEAD && !mon->is_insubstantial())
         eligibility[RECITE_IMPURE]++;
 
-    //Hits monsters that have these brands.
+    // Hits monsters that have these brands.
     if (mon->has_attack_flavour(AF_VAMPIRIC))
         eligibility[RECITE_IMPURE]++;
     if (mon->has_attack_flavour(AF_DISEASE))
@@ -459,11 +459,11 @@ int zin_check_recite_to_single_monster(const coord_def& where,
     if (mon->has_attack_flavour(AF_STEAL_FOOD))
         eligibility[RECITE_IMPURE]++;
 
-    //Death drakes and rotting devils get a bump to uncleanliness.
+    // Death drakes and rotting devils get a bump to uncleanliness.
     if (mon->type == MONS_ROTTING_DEVIL || mon->type == MONS_DEATH_DRAKE)
         eligibility[RECITE_IMPURE]++;
 
-    //Sanity check: if a monster is 'really' natural, don't consider it impure.
+    // Sanity check: if a monster is 'really' natural, don't consider it impure.
     if (mons_intel(mon) < I_NORMAL
         && (holiness == MH_NATURAL || holiness == MH_PLANT)
         && mon->type != MONS_UGLY_THING
@@ -550,7 +550,7 @@ int zin_check_recite_to_single_monster(const coord_def& where,
     dprf("Eligibility: %s", elig.c_str());
 #endif
 
-    //Checking to see whether they were eligible for anything at all.
+    // Checking to see whether they were eligible for anything at all.
     for (int i = 0; i < NUM_RECITE_TYPES; i++)
         if (eligibility[i] > 0)
             return 1;
@@ -627,7 +627,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
         if (count[i] > 0)
             eligible_types++;
 
-    //If there's only one eligible recitation, and we're actually reciting, then perform it.
+    // If there's only one eligible recitation, and we're actually reciting, then perform it.
     if (eligible_types == 1)
     {
         for (int i = 0; i < NUM_RECITE_TYPES; i++)
@@ -639,7 +639,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
         return (1);
     }
 
-    //But often, you'll have multiple options...
+    // But often, you'll have multiple options...
     mesclr();
 
     mpr("Recite a passage from which book of the Axioms of Law?", MSGCH_PROMPT);
