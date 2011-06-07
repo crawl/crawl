@@ -456,8 +456,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                 if (disciplines & bit)
                     power += you.skill(spell_type2skill(bit)) * 2;
             }
+            power /= skillcount;
         }
-        power /= skillcount;
 
         power += you.skill(SK_SPELLCASTING) / 2;
 
