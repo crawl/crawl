@@ -120,6 +120,7 @@
 #include "shout.h"
 #include "stash.h"
 #include "view.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
 #include "wiz-dgn.h"
@@ -254,6 +255,7 @@ int main(int argc, char *argv[])
     }
 
     // Init monsters up front - needed to handle the mon_glyph option right.
+    init_char_table(CSET_ASCII);
     init_monsters();
 
     // Init name cache so that we can parse stash_filter by item name.
