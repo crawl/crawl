@@ -44,7 +44,7 @@ CLua::CLua(bool managed)
       throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
       lua_call_depth(0), max_mixed_call_depth(8),
       max_lua_call_depth(100), memory_used(0),
-      _state(NULL), sourced_files(), uniqindex(0L)
+      _state(NULL), sourced_files(), uniqindex(0)
 {
 }
 
