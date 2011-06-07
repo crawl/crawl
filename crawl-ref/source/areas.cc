@@ -129,8 +129,8 @@ static void _update_agrid()
         {
             _agrid_centres.push_back(area_centre(AREA_LIQUID, ai->pos(), r));
 
-            for (radius_iterator ri(ai->pos(),r, C_CIRCLE, ai->get_los());
-                ri; ++ri)
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
+                 ri; ++ri)
             {
                 dungeon_feature_type f = grd(*ri);
 
