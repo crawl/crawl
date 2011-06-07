@@ -199,11 +199,6 @@
     // it in-place, instead of torching the old file.
     #define DGL_REWRITE_PROTECT_DB_FILES
 
-    // This secures the PRNG itself by hashing the values with SHA256.
-    // PRNG will be about 15 times slower when this is turned on, but
-    // even with that the cpu time used by the PRNG is relatively small.
-    #define MORE_HARDENED_PRNG
-
     // Startup preferences are saved by player name rather than uid,
     // since all players use the same uid in dgamelaunch.
     #ifndef DGL_NO_STARTUP_PREFS_BY_NAME
