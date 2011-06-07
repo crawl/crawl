@@ -779,9 +779,8 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                       || class_wanted == OBJ_MISCELLANY);
     int useless_count = 0;
 
-    do
+    while (1)
     {
-        again:
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -808,18 +807,17 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
         dummy.flags |= ISFLAG_IDENT_MASK;
 
         if (is_useless_item(dummy, false) && useless_count++ < 200)
-            goto again;
+            continue;
 
-        if (try_again)
-        {
-            ASSERT(type_wanted < max_has_value);
-            if (!already_has[type_wanted])
-                try_again = false;
-            if (one_chance_in(200))
-                try_again = false;
-        }
+        if (!try_again)
+            break;
+
+        ASSERT(type_wanted < max_has_value);
+        if (!already_has[type_wanted])
+            break;
+        if (one_chance_in(200))
+            break;
     }
-    while (try_again);
 
     return (type_wanted);
 }
