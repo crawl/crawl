@@ -739,10 +739,11 @@ void game_options::reset_options()
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
 
     show_newturn_mark = true;
-    show_gold_turns = false;
 #ifdef EUCLIDEAN
+    show_gold_turns = true;
     show_game_turns = true;
 #else
+    show_gold_turns = false;
     show_game_turns = false;
 #endif
     show_beam       = true;
