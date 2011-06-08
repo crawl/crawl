@@ -4146,6 +4146,10 @@ static bool _foe_should_res_negative_energy(const actor* foe)
         // Demonspawn do not appear immune.
         if (holiness == MH_DEMONIC)
             return (false);
+
+        // Nor do statues (they only have partial resistance).
+        if (you.form == TRAN_STATUE)
+            return (false);
     }
 
     return (holiness != MH_NATURAL);
