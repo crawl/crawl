@@ -219,7 +219,7 @@ bool TilesFramework::_send_cell(int x, int y,
 
     fprintf(stdout, "c(%d,%d,{", x, y);
 
-    if (old_cell.bg == 0)
+    if (old_cell.bg == TILE_FLAG_UNSEEN)
     {
         fprintf(stdout, "c:1,"); // Clears the cell on the client side
     }
@@ -270,7 +270,7 @@ bool TilesFramework::_send_cell(int x, int y,
 
     if ((cell.flv.floor != old_cell.flv.floor)
         || (cell.flv.special != old_cell.flv.special)
-        || (old_cell.bg == 0))
+        || (old_cell.bg == TILE_FLAG_UNSEEN))
     {
         fprintf(stdout, "flv:{f:%d,", cell.flv.floor);
         if (cell.flv.special)
