@@ -190,14 +190,11 @@ static bool _in_water(const packed_cell &cell)
 bool TilesFramework::_send_cell(int x, int y,
                                 const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell)
 {
-    packed_cell cell = packed_cell(screen_cell->tile);
+    const packed_cell &cell = screen_cell->tile;
     packed_cell &old_cell = old_screen_cell->tile;
     coord_def gc(x, y);
 
     ASSERT(map_bounds(gc));
-
-    cell.flv = env.tile_flv(gc);
-    pack_cell_overlays(gc, &cell);
 
     tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
 
@@ -335,8 +332,6 @@ bool TilesFramework::_send_cell(int x, int y,
 
     fprintf(stdout, "});");
 
-    *old_screen_cell = *screen_cell;
-    old_screen_cell->tile = cell;
     return true;
 }
 
@@ -368,10 +363,20 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     place_cursor(CURSOR_MAP, cen);
 }
 
+static const int stat_width = 42;
+static void _send_layout_data(bool need_response)
+{
+    // need_response indicates if the client needs to set a layout
+    fprintf(stdout, "layout({view_max_width:%u,view_max_height:%u,\
+force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u},%u);\n",
+            Options.view_max_width, Options.view_max_height,
+            Options.tile_force_overlay, ENV_SHOW_DIAMETER,
+            Options.msg_min_height, stat_width, need_response);
+}
+
 void TilesFramework::resize()
 {
     // Width of status area in characters.
-    static const int stat_width = 42;
     crawl_view.hudsz.x = stat_width;
     crawl_view.msgsz.y = Options.msg_min_height;
     m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
@@ -381,11 +386,7 @@ void TilesFramework::resize()
     crawl_view.init_view();
 
     // Send the client the necessary data to do the layout
-    fprintf(stdout, "layout({view_max_width:%u,view_max_height:%u,\
-force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u});\n",
-            Options.view_max_width, Options.view_max_height,
-            Options.tile_force_overlay, ENV_SHOW_DIAMETER,
-            Options.msg_min_height, stat_width);
+    _send_layout_data(true);
 
     // Now wait for the response
     getch_ck();
@@ -450,11 +451,15 @@ int TilesFramework::getch_ck()
             crawl_view.msgsz.x = num;
             m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
             break;
-        case 'r': // Redraw everything
+        case 'r': // A spectator joined, resend the necessary data
+            std::string title = CRAWL " " + Version::Long();
+            fprintf(stdout, "document.title = \"%s\";\n", title.c_str());
             m_text_crt.send(true);
             m_text_stat.send(true);
             m_text_message.send(true);
-            m_current_view.clear();
+            _send_layout_data(false);
+            fprintf(stdout, "vgrdc(%d,%d);\n", m_current_gc.x, m_current_gc.y);
+            _send_current_view();
             switch (m_active_layer)
             {
             case LAYER_CRT:
@@ -462,7 +467,6 @@ int TilesFramework::getch_ck()
                 break;
             case LAYER_NORMAL:
                 fprintf(stdout, "set_layer('normal');\n");
-                redraw_screen();
                 break;
             default:
                 // Cannot happen
@@ -543,6 +547,23 @@ GotoRegion TilesFramework::get_cursor_region() const
     return m_cursor_region;
 }
 
+void TilesFramework::_send_current_view()
+{
+    screen_cell_t old_cell_dummy; // _send_cell needs a cell to compare to
+
+    screen_cell_t *cell = (screen_cell_t *) m_current_view;
+    for (int y = 0; y < m_current_view.size().y; y++)
+        for (int x = 0; x < m_current_view.size().x; x++)
+        {
+            _send_cell(x, y, cell, &old_cell_dummy);
+
+            old_cell_dummy.tile.clear();
+            cell++;
+        }
+
+    fprintf(stdout, "\n");
+}
+
 void TilesFramework::redraw()
 {
     m_text_crt.send();
@@ -562,21 +583,18 @@ void TilesFramework::redraw()
     {
         // The view buffer size changed, we need to do a full redraw
         m_current_view = m_next_view;
-        screen_cell_t old_cell_dummy; // _send_cell needs a cell to compare to
-
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
-                _send_cell(x, y, cell, &old_cell_dummy);
+                coord_def gc(x, y);
+                cell->tile.flv = env.tile_flv(gc);
+                pack_cell_overlays(gc, &(cell->tile));
 
-                *cell = old_cell_dummy;
-                old_cell_dummy.tile.clear();
                 cell++;
             }
 
-        fprintf(stdout, "\n");
-        fflush(stdout);
+        _send_current_view();
     }
     else
     {
@@ -587,15 +605,23 @@ void TilesFramework::redraw()
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
-                _send_cell(x, y, cell, old_cell);
+                screen_cell_t new_cell = *cell;
+                coord_def gc(x, y);
+                new_cell.tile.flv = env.tile_flv(gc);
+                pack_cell_overlays(gc, &(new_cell.tile));
+                
+                _send_cell(x, y, &new_cell, old_cell);
+
+                *old_cell = new_cell;
 
                 cell++;
                 old_cell++;
             }
 
-        fprintf(stdout, "\n"); // This sends the message to the client
-        fflush(stdout);
+        fprintf(stdout, "\n");
     }
+    
+    fflush(stdout);
 
     m_need_redraw = false;
     m_last_tick_redraw = get_milliseconds();

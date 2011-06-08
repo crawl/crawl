@@ -2,6 +2,7 @@ var dungeon_ctx;
 var dungeon_cell_w = 32, dungeon_cell_h = 32;
 var dungeon_cols = 0, dungeon_rows = 0;
 var view_x = 0, view_y = 0;
+var view_center_x = 0, view_center_y = 0;
 
 // Text area handling ----------------------------------------------------------
 function get_text_area_line(name, line)
@@ -54,14 +55,15 @@ function txt(name, lines)
 var layout_parameters;
 var current_layout;
 
-function layout(params)
+function layout(params, need_response)
 {
     layout_parameters = params;
     current_layout = undefined;
 
     do_layout();
 
-    socket.send("\n"); // To end the layout process
+    if (need_response)
+        socket.send("\n"); // To end the layout process
 }
 
 function do_layout()
@@ -169,18 +171,23 @@ function view_size(cols, rows)
     canvas.height = dungeon_rows * dungeon_cell_h;
     dungeon_ctx = canvas.getContext("2d");
 
-    clear_tile_cache();
-
     var dungeon_offset = $("#dungeon").offset();
 
     $("#stats").offset({
         left: dungeon_offset.left + canvas.width + 10,
         top: dungeon_offset.top
     });
+
+    for (var y = 0; y < dungeon_rows; y++)
+        for (var x = 0; x < dungeon_cols; x++)
+            render_cell(x + view_x, y + view_y);
+    vgrdc(view_center_x, view_center_y);
 }
 
 function vgrdc(x, y)
 {
+    view_center_x = x;
+    view_center_y = y;
     var old_vx = view_x, old_vy = view_y;
     view_x = x - Math.floor(dungeon_cols / 2);
     view_y = y - Math.floor(dungeon_rows / 2);
