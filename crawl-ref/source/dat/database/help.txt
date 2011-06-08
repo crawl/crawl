@@ -33,23 +33,27 @@ You can search for items and dungeon features by name (or a substring of the
 name). In the list of search results, you can select a search result by its
 hotkey to travel to its location.
 
-You can also examine shops and items in the search results by pressing <w>?</w> and
-then hitting the hotkey for the search result. This will give a description
-of the item or the contents of the shop.
-
 Some examples of search strings:
 <w>cure mutation</w> find all potions of cure mutation, including potions in shops.
-<w>jell</w>          finds every single royal jelly and heaps of royal jellies
+<w>jell</w>          finds every single royal jelly and heaps of royal jellies.
+<w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.
 <w>D:[2-4]</w>       finds everything on Dungeon levels 2-4. Regexes are allowed!
               Note that D:[3-10] will not work as intended, since [x-y] is a
               regex character range.
-<w>.</w>             is a shortcut to find everything on your current level.
-<w>..</w>            is a shortcut for listing all items you know.
 <w>Lair.*axe</w> and <w>axe && Lair</w> both show all axes in the Lair.
 
-The stash search string is case-insensitive.
+Some shortcuts:
+<w>.</w>             lists everything on your current level.
+<w>..</w>            lists all items you know.
+<w>0</w> to <w>9</w>        lists all items at the specified waypoint.
+<w>*</w>             lists all items at all waypoints.
 
+You can also examine shops and items in the search results by pressing <w>?</w> and
+then hitting the hotkey for the search result. This will give a description
+of the item or the contents of the shop.
+
+The stash search string is case-insensitive.
 
 <h>Searching by item properties:</h>
 
@@ -60,13 +64,12 @@ You can search for artefact item properties (such as <w>prevents.*teleport</w>)
 to find artefacts that have the property.
 
 If you're using stash.lua (which is the default), you can also search by
-some additional item properties: <w>artefact</w> will find identified artefacts.
-Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that
-train that skill.
+some additional item properties: <w>artefact</w> will find identified artefacts,
+<w>ego</w> will find non-artefacts with a brand. Skill names (such as <w>Polearms</w>
+or <w>Long Blades</w>) will find all weapons that train that skill.
 
 If you're using stash.lua and have set annotate_item_class = true in your
 initfile, you can also search by item types such as <w>book</w> or <w>jewellery</w>.
-
 
 <h>Finding Dungeon Features:</h>
 
@@ -74,7 +77,6 @@ You can search for dungeon features by name: all shops will be found by a
 search for <w>shop</w> (including shops that do not have "shop" in their name);
 other dungeon features can also be found by name: <w>fountain</w>, <w>axe trap</w>,
 <w>altar</w>, etc. You can also search for altars by deity name: <w>Zin</w>.
-
 
 <h>Non-regex operators:</h>
 
