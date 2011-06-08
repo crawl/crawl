@@ -74,6 +74,12 @@ public:
     std::vector<std::string> list_chunks();
     void abort();
     void unlink();
+
+    // statistics
+    len_t get_slack();
+    len_t get_size() { return file_len; };
+    len_t get_chunk_fragmentation(const std::string name);
+    len_t get_chunk_compressed_length(const std::string name);
 private:
     std::string filename;
     bool rw;
@@ -98,6 +104,7 @@ private:
     void read_directory(len_t start, uint8_t version);
     void trace_chunk(len_t start);
     void load();
+    void load_traces();
     friend class chunk_writer;
     friend class chunk_reader;
 };

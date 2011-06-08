@@ -152,20 +152,28 @@ void package::load()
     read_directory(htole(head.start), head.version);
 
     if (rw)
-    {
-        free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
+        load_traces();
+}
 
-        for(directory_t::iterator ch = directory.begin();
-            ch != directory.end(); ch++)
-        {
-            trace_chunk(ch->second);
-        }
-#ifdef COSTLY_ASSERTS
-        // any inconsitency in the save is guaranteed to be already found
-        // by this time -- this checks only for internal bugs
-        fsck();
-#endif
+void package::load_traces()
+{
+    ASSERT(!dirty);
+    ASSERT(!n_users);
+    if (directory.empty() || !block_map.empty())
+        return;
+
+    free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
+
+    for(directory_t::iterator ch = directory.begin();
+        ch != directory.end(); ch++)
+    {
+        trace_chunk(ch->second);
     }
+#ifdef COSTLY_ASSERTS
+    // any inconsitency in the save is guaranteed to be already found
+    // by this time -- this checks only for internal bugs
+    fsck();
+#endif
 }
 
 package::~package()
@@ -566,6 +574,48 @@ void package::unlink()
     ::unlink_u(filename.c_str());
 }
 
+// the amount of free space not at the end of file
+len_t package::get_slack()
+{
+    load_traces();
+
+    len_t slack = 0;
+    for(fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); bl++)
+        slack += bl->second;
+    return slack;
+}
+
+len_t package::get_chunk_fragmentation(const std::string name)
+{
+    load_traces();
+    ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
+    len_t frags = 0;
+    len_t at = directory[name];
+    while(at)
+    {
+        bm_t::iterator bl = block_map.find(at);
+        ASSERT(bl != block_map.end());
+        frags ++;
+        at = bl->second.second;
+    }
+    return frags;
+}
+
+len_t package::get_chunk_compressed_length(const std::string name)
+{
+    load_traces();
+    ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
+    len_t len = 0;
+    len_t at = directory[name];
+    while(at)
+    {
+        bm_t::iterator bl = block_map.find(at);
+        ASSERT(bl != block_map.end());
+        len += bl->second.first;
+        at = bl->second.second;
+    }
+    return len;
+}
 
 chunk_writer::chunk_writer(package *parent, const std::string _name)
     : first_block(0), cur_block(0), block_len(0)
