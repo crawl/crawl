@@ -26,13 +26,13 @@ function mark_all()
 {
     for (var x = 0; x < dungeon_cols; x++)
         for (var y = 0; y < dungeon_rows; y++)
-            mark_cell(x, y, x + "/" + y);
+            mark_cell(view_x + x, view_y + y, (view_x + x) + "/" + (view_y + y));
 }
 function unmark_all()
 {
     for (var x = 0; x < dungeon_cols; x++)
         for (var y = 0; y < dungeon_rows; y++)
-            unmark_cell(x, y);
+            unmark_cell(view_x + x, view_y + y);
 }
 
 function VColour(r, g, b, a)
@@ -91,7 +91,8 @@ function c(x, y, cell)
 
 function add_overlay(idx, x, y)
 {
-    draw_main(idx, x, y);
+    if (in_view(x, y))
+        draw_main(idx, x - view_x, y - view_y);
     overlaid_locs.push({x: x, y: y});
 }
 
@@ -118,7 +119,8 @@ function place_cursor(type, x, y)
     if (old_loc)
         render_cell(old_loc.x, old_loc.y);
 
-    render_cursors(x, y);
+    if (in_view(x, y))
+        render_cursors(x, y);
 }
 
 function remove_cursor(type)
@@ -137,11 +139,11 @@ function remove_cursor(type)
 
 // Render functions
 
-function render_cursors(x, y)
+function render_cursors(cx, cy)
 {
     $.each(cursor_locs, function (type, loc)
            {
-               if (loc && (loc.x == x) && (loc.y == y))
+               if (loc && (loc.x == cx) && (loc.y == cy))
                {
                    var idx;
 
@@ -160,20 +162,26 @@ function render_cursors(x, y)
                        break;
                    }
 
-                   draw_icon(idx, x, y);
+                   draw_icon(idx, cx - view_x, cy - view_y);
                }
            });
 }
 
-function render_cell(x, y)
+function render_cell(cx, cy)
 {
     try
     {
+        if (!in_view(cx, cy))
+            return;
+
+        var cell = get_tile_cache(cx, cy);
+
+        var x = cx - view_x;
+        var y = cy - view_y;
+
         dungeon_ctx.fillStyle = "black";
         dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
                              dungeon_cell_w, dungeon_cell_h);
-
-        var cell = get_tile_cache(x, y);
 
         if (!cell)
             return;
@@ -280,14 +288,14 @@ function render_cell(x, y)
             }
         }
 
-        render_cursors(x, y);
+        render_cursors(cx, cy);
 
         // Redraw the cell below if it overlapped
-        if (y < (dungeon_rows - 1))
+        if (y < (view_y + dungeon_rows))
         {
             var cell_below = get_tile_cache(x, y + 1);
             if (cell_below && cell_below.sy && (cell_below.sy < 0))
-                render_cell(x, y + 1);
+                render_cell(cx, cy + 1);
         }
 
         // Debug helper
@@ -304,7 +312,7 @@ function render_cell(x, y)
     catch (err)
     {
         console.error("Error while drawing cell " + obj_to_str(cell)
-                      + " at " + x + "/" + y + ": " + err);
+                      + " at " + cx + "/" + cy + ": " + err);
     }
 }
 
@@ -728,12 +736,12 @@ function draw_icon(idx, cx, cy, ofsx, ofsy)
 }
 
 // Shifts the dungeon view by cx/cy cells.
-function shift(cx, cy)
+function shift(x, y)
 {
-    var x = cx * dungeon_cell_w;
-    var y = cy * dungeon_cell_h;
-
-    var w = dungeon_cols, h = dungeon_rows;
+    if (x > dungeon_cols) x = dungeon_cols;
+    if (x < -dungeon_cols) x = -dungeon_cols;
+    if (y > dungeon_rows) y = dungeon_rows;
+    if (y < -dungeon_rows) y = -dungeon_rows;
 
     var sx, sy, dx, dy;
 
@@ -757,39 +765,33 @@ function shift(cx, cy)
         sy = 0;
         dy = -y;
     }
-    w = (w * dungeon_cell_w - abs(x));
-    h = (h * dungeon_cell_h - abs(y));
 
-    dungeon_ctx.drawImage($("#dungeon")[0], sx, sy, w, h, dx, dy, w, h);
+    var cw = dungeon_cell_w;
+    var ch = dungeon_cell_h;
 
-    dungeon_ctx.fillStyle = "black";
-    dungeon_ctx.fillRect(0, 0, w * dungeon_cell_w, dy);
-    dungeon_ctx.fillRect(0, dy, dx, h);
-    dungeon_ctx.fillRect(w, 0, sx, h * dungeon_cell_h);
-    dungeon_ctx.fillRect(0, h, w, sy);
+    var w = (dungeon_cols - abs(x)) * cw;
+    var h = (dungeon_rows - abs(y)) * ch;
 
-    // Shift the tile cache
-    shift_tile_cache(cx, cy);
+    dungeon_ctx.drawImage($("#dungeon")[0],
+                          sx * cw, sy * ch, w, h,
+                          dx * cw, dy * ch, w, h);
 
-    // Shift cursors
-    $.each(cursor_locs, function(type, loc)
-           {
-               if (loc)
-               {
-                   loc.x -= cx;
-                   loc.y -= cy;
-               }
-           });
+    // Render cells that came into view
+    for (var cy = 0; cy < dy; cy++)
+        for (var cx = 0; cx < dungeon_cols; cx++)
+            render_cell(cx + view_x, cy + view_y);
 
-    // Shift overlays
-    $.each(overlaid_locs, function(i, loc)
-           {
-               if (loc)
-               {
-                   loc.x -= cx;
-                   loc.y -= cy;
-               }
-           });
+    for (var cy = dy; cy < dungeon_rows - sy; cy++)
+    {
+        for (var cx = 0; cx < dx; cx++)
+            render_cell(cx + view_x, cy + view_y);
+        for (var cx = dungeon_cols - sx; cx < dungeon_cols; cx++)
+            render_cell(cx + view_x, cy + view_y);
+    }
+
+    for (var cy = dungeon_rows - sy; cy < dungeon_rows; cy++)
+        for (var cx = 0; cx < dungeon_cols; cx++)
+            render_cell(cx + view_x, cy + view_y);
 }
 
 function obj_to_str (o)

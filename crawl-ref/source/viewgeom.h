@@ -77,12 +77,20 @@ public:
 
     inline coord_def view2grid(const coord_def &pos) const
     {
+#ifdef USE_TILE_WEB
+        return (pos - coord_def(1, 1));
+#else
         return (pos - viewhalfsz + vgrdc - coord_def(1, 1));
+#endif
     }
 
     inline coord_def grid2view(const coord_def &pos) const
     {
+#ifdef USE_TILE_WEB
+        return (pos + coord_def(1, 1));
+#else
         return (pos - vgrdc + viewhalfsz + coord_def(1, 1));
+#endif
     }
 
     inline coord_def view2show(const coord_def &pos) const

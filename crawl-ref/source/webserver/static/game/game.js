@@ -1,6 +1,7 @@
 var dungeon_ctx;
 var dungeon_cell_w = 32, dungeon_cell_h = 32;
 var dungeon_cols = 0, dungeon_rows = 0;
+var view_x = 0, view_y = 0;
 
 // Text area handling ----------------------------------------------------------
 function get_text_area_line(name, line)
@@ -118,21 +119,21 @@ function do_layout()
     layout.crt_width = Math.floor((window_width - 30) / char_w);
     layout.crt_height = Math.floor((window_height - 15) / char_h);
 
-    layout.view_width = Math.floor(remaining_width / dungeon_cell_w);
-    layout.view_height = Math.floor(remaining_height / dungeon_cell_h);
+    view_width = Math.floor(remaining_width / dungeon_cell_w);
+    view_height = Math.floor(remaining_height / dungeon_cell_h);
     // TODO: Scale so that everything fits
-    if (layout.view_width < layout_parameters.show_diameter)
-        layout.view_width = layout_parameters.show_diameter;
-    if (layout.view_height < layout_parameters.show_diameter)
-        layout.view_height = layout_parameters.show_diameter;
+    if (view_width < layout_parameters.show_diameter)
+        view_width = layout_parameters.show_diameter;
+    if (view_height < layout_parameters.show_diameter)
+        view_height = layout_parameters.show_diameter;
+
+    view_size(view_width, view_height);
 
     if (current_layout &&
         layout.stats_height == current_layout.stats_height &&
         layout.crt_width == current_layout.crt_width &&
         layout.crt_height == current_layout.crt_height &&
-        layout.msg_width == current_layout.msg_width &&
-        layout.view_width == current_layout.view_width &&
-        layout.view_height == current_layout.view_height)
+        layout.msg_width == current_layout.msg_width)
         return false;
 
     log(current_layout);
@@ -147,8 +148,6 @@ function do_layout()
 function send_layout(layout)
 {
     var msg = "";
-    msg += "^w" + layout.view_width + "\n";
-    msg += "^h" + layout.view_height + "\n";
     msg += "^s" + layout.stats_height + "\n";
     msg += "^W" + layout.crt_width + "\n";
     msg += "^H" + layout.crt_height + "\n";
@@ -156,6 +155,7 @@ function send_layout(layout)
     socket.send(msg);
 }
 
+// View area -------------------------------------------------------------------
 function view_size(cols, rows)
 {
     if ((cols == dungeon_cols) && (rows == dungeon_rows))
@@ -177,4 +177,18 @@ function view_size(cols, rows)
         left: dungeon_offset.left + canvas.width + 10,
         top: dungeon_offset.top
     });
+}
+
+function vgrdc(x, y)
+{
+    var old_vx = view_x, old_vy = view_y;
+    view_x = x - Math.floor(dungeon_cols / 2);
+    view_y = y - Math.floor(dungeon_rows / 2);
+    shift(view_x - old_vx, view_y - old_vy);
+}
+
+function in_view(cx, cy)
+{
+    return (cx >= view_x) && (view_x + dungeon_cols > cx) &&
+        (cy >= view_y) && (view_y + dungeon_rows > cy);
 }

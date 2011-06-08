@@ -329,8 +329,7 @@ protected:
     dolls_data last_player_doll;
 
     bool _send_cell(int x, int y,
-                    const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell,
-                    const coord_def &gc);
+                    const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell);
 #endif
 };
 
