@@ -859,6 +859,12 @@ not_numeric:
     return 0;
 }
 
+// make STL sort happy
+bool numcmpstr(const std::string a, const std::string b)
+{
+    return numcmp(a.c_str(), b.c_str()) == -1;
+}
+
 #ifndef USE_TILE
 coord_def cgettopleft(GotoRegion region)
 {

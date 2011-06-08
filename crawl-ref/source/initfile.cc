@@ -3526,6 +3526,7 @@ enum es_command_type
     ES_GET,
     ES_PUT,
     ES_REPACK,
+    ES_INFO,
     NUM_ES
 };
 
@@ -3542,6 +3543,7 @@ static struct es_command
     { ES_PUT,     "put",     true,  1, 2, },
     { ES_RM,      "rm",      true,  1, 1, },
     { ES_REPACK,  "repack",  false, 0, 0, },
+    { ES_INFO,    "info",    false, 0, 0, },
 };
 
 #define ERR(...) do { fprintf(stderr, __VA_ARGS__); return; } while(0)
@@ -3589,6 +3591,7 @@ static void _edit_save(int argc, char **argv)
         if (cmd == ES_LS)
         {
             std::vector<std::string> list = save.list_chunks();
+            std::sort(list.begin(), list.end(), numcmpstr);
             for (size_t i = 0; i < list.size(); i++)
                 printf("%s\n", list[i].c_str());
         }
@@ -3671,6 +3674,36 @@ static void _edit_save(int argc, char **argv)
             save2.commit();
             save.unlink();
             rename_u((filename + ".tmp").c_str(), filename.c_str());
+        }
+        else if (cmd == ES_INFO)
+        {
+            std::vector<std::string> list = save.list_chunks();
+            std::sort(list.begin(), list.end(), numcmpstr);
+            len_t nchunks = list.size();
+            len_t frag = save.get_chunk_fragmentation("");
+            len_t flen = save.get_size();
+            len_t slack = save.get_slack();
+            printf("Chunks: (size compressed/uncompressed, fragments, name)\n");
+            for (size_t i = 0; i < list.size(); i++)
+            {
+                int cfrag = save.get_chunk_fragmentation(list[i]);
+                frag += cfrag;
+                int cclen = save.get_chunk_compressed_length(list[i]);
+
+                char buf[16384];
+                chunk_reader in(&save, list[i]);
+                len_t clen = 0;
+                while(len_t s = in.read(buf, sizeof(buf)))
+                    clen += s;
+                printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, list[i].c_str());
+            }
+            // the directory is not a chunk visible from the outside
+            printf("Fragmentation:    %u/%u (%4.2f)\n", frag, nchunks + 1,
+                   ((float)frag) / (nchunks + 1));
+            printf("Unused space:     %u/%u (%u%%)\n", slack, flen,
+                   100 - (100 * (flen - slack) / flen));
+            // there's also wasted space due to fragmentation, but since
+            // it's linear, there's no need to print it
         }
     }
     catch (ext_fail_exception &fe)
