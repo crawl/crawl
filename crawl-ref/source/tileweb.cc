@@ -188,24 +188,16 @@ static bool _in_water(const packed_cell &cell)
 }
 
 bool TilesFramework::_send_cell(int x, int y,
-                                const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell,
-                                const coord_def &gc)
+                                const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell)
 {
     packed_cell cell = packed_cell(screen_cell->tile);
     packed_cell &old_cell = old_screen_cell->tile;
+    coord_def gc(x, y);
 
-    if (map_bounds(gc))
-    {
-        cell.flv = env.tile_flv(gc);
-        pack_cell_overlays(gc, &cell);
-    }
-    else
-    {
-        cell.flv.floor   = 0;
-        cell.flv.wall    = 0;
-        cell.flv.special = 0;
-        cell.flv.feat    = 0;
-    }
+    ASSERT(map_bounds(gc));
+
+    cell.flv = env.tile_flv(gc);
+    pack_cell_overlays(gc, &cell);
 
     tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
 
@@ -348,63 +340,11 @@ bool TilesFramework::_send_cell(int x, int y,
     return true;
 }
 
-static void _shift_view_buffer(crawl_view_buffer &vbuf, coord_def &shift)
-{
-    const int w = vbuf.size().x, h = vbuf.size().y;
-
-    if ((abs(shift.x) >= vbuf.size().x)
-        || (abs(shift.y) >= vbuf.size().y))
-    {
-        // The whole buffer needs to be redrawn
-        fprintf(stdout, "clear_tile_cache();");
-        screen_cell_t *cell = (screen_cell_t *) vbuf;
-        for (int y = 0; y < h; y++)
-            for (int x = 0; x < w; x++)
-            {
-                cell->tile.clear();
-                cell++;
-            }
-        return;
-    }
-
-    fprintf(stdout, "shift(%d,%d);", shift.x, shift.y);
-
-    screen_cell_t *cells = (screen_cell_t *) vbuf;
-
-    // shift specifies the shift in the view location; i.e.
-    // if shift.x is > 0, we need to move all cells to the left
-    // Also, if shift.x is < 0, we need to iterate through the cells from right to left,
-    // because we would overwrite the cells we haven't shifted yet otherwise.
-    // All this is of course analogous for y.
-    int start_x = shift.x >= 0 ? 0 : w - 1;
-    int start_y = shift.y >= 0 ? 0 : h - 1;
-    int end_x = shift.x >= 0 ? w : -1;
-    int end_y = shift.y >= 0 ? h : -1;
-
-    // We now iterate over the locations _that are shifted to_, copying their data
-    // from the locations they come from.
-    for (int y = start_y; y != end_y; shift.y >= 0 ? y++ : y--)
-        for (int x = start_x; x != end_x; shift.x >= 0 ? x++ : x--)
-        {
-            ASSERT((0 <= x) && (x < w) && (0 <= y) && (y < h));
-
-            int sx = x + shift.x, sy = y + shift.y;
-            if ((0 > sx) || (sx >= w) || (0 > sy) || (sy >= h))
-            {
-                cells[y * w + x].tile.clear();
-            }
-            else
-            {
-                cells[y * w + x] = cells[sy * w + sx];
-            }
-        }
-}
-
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)
 {
     if (vbuf.size().equals(0, 0))
-        return; // It seems the view buffer changes to size 0 while using stairs
+        return;
 
     if (m_active_layer != LAYER_NORMAL)
     {
@@ -435,6 +375,10 @@ void TilesFramework::resize()
     crawl_view.hudsz.x = stat_width;
     crawl_view.msgsz.y = Options.msg_min_height;
     m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
+
+    // We want to always render the whole map.
+    crawl_view.viewsz = coord_def(GXM, GYM);
+    crawl_view.init_view();
 
     // Send the client the necessary data to do the layout
     fprintf(stdout, "layout({view_max_width:%u,view_max_height:%u,\
@@ -482,18 +426,6 @@ int TilesFramework::getch_ck()
         }
         switch (msg)
         {
-        case 'w': // Set width of the dungeon view
-            if (num <= 0) num = 1;
-            if (num > 400) num = 400;
-            crawl_view.viewsz.x = num;
-            crawl_view.init_view();
-            break;
-        case 'h': // Set height of the dungeon view
-            if (num <= 0) num = 1;
-            if (num > 400) num = 400;
-            crawl_view.viewsz.y = num;
-            crawl_view.init_view();
-            break;
         case 's': // Set height of the stats area
             if (num <= 0) num = 1;
             if (num > 400) num = 400;
@@ -620,26 +552,23 @@ void TilesFramework::redraw()
     if (m_next_view.size().equals(0, 0))
         return; // Nothing yet to draw
 
-    int cx_to_gx = m_next_gc.x - m_next_view.size().x / 2;
-    int cy_to_gy = m_next_gc.y - m_next_view.size().y / 2;
+    if (m_current_gc != m_next_gc)
+    {
+        fprintf(stdout, "vgrdc(%d,%d);\n", m_next_gc.x, m_next_gc.y);
+        m_current_gc = m_next_gc;
+    }
 
     if ((m_next_view.size() != m_current_view.size()))
     {
         // The view buffer size changed, we need to do a full redraw
         m_current_view = m_next_view;
-        m_current_gc = m_next_gc;
         screen_cell_t old_cell_dummy; // _send_cell needs a cell to compare to
-
-        fprintf(stdout, "view_size(%d,%d);\n", m_current_view.size().x,
-                                              m_current_view.size().y);
 
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
-                coord_def cgc(x + cx_to_gx, y + cy_to_gy);
-
-                _send_cell(x, y, cell, &old_cell_dummy, cgc);
+                _send_cell(x, y, cell, &old_cell_dummy);
 
                 *cell = old_cell_dummy;
                 old_cell_dummy.tile.clear();
@@ -653,22 +582,12 @@ void TilesFramework::redraw()
     {
         // Find differences
 
-        // Shift the view, so we need to send less cells
-        coord_def shift = m_next_gc - m_current_gc;
-        m_current_gc = m_next_gc;
-        if ((shift.x != 0) || (shift.y != 0))
-        {
-            _shift_view_buffer(m_current_view, shift);
-        }
-
         const screen_cell_t *cell = (const screen_cell_t *) m_next_view;
         screen_cell_t *old_cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
             {
-                coord_def cgc(x + cx_to_gx, y + cy_to_gy);
-
-                _send_cell(x, y, cell, old_cell, cgc);
+                _send_cell(x, y, cell, old_cell);
 
                 cell++;
                 old_cell++;
@@ -738,11 +657,7 @@ void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
         }
         else
         {
-            int cx_to_gx = m_current_gc.x - m_current_view.size().x / 2;
-            int cy_to_gy = m_current_gc.y - m_current_view.size().y / 2;
-
-            fprintf(stdout, "place_cursor(%d,%d,%d);\n",
-                    type, result.x - cx_to_gx, result.y - cy_to_gy);
+            fprintf(stdout, "place_cursor(%d,%d,%d);\n", type, result.x, result.y);
         }
     }
 }
@@ -767,22 +682,12 @@ const coord_def &TilesFramework::get_cursor() const
 
 void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 {
-    // overlays must be from the main image and must be in LOS.
-    if (!crawl_view.in_los_bounds_g(gc))
-    {
-        return;
-    }
-
     if (idx >= TILE_MAIN_MAX)
         return;
 
     m_has_overlays = true;
 
-    int cx_to_gx = m_current_gc.x - m_current_view.size().x / 2;
-    int cy_to_gy = m_current_gc.y - m_current_view.size().y / 2;
-
-    fprintf(stdout, "add_overlay(%d,%d,%d);\n",
-            idx, gc.x - cx_to_gx, gc.y - cy_to_gy);
+    fprintf(stdout, "add_overlay(%d,%d,%d);\n", idx, gc.x, gc.y);
 }
 
 void TilesFramework::clear_overlays()

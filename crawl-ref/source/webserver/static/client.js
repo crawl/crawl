@@ -284,11 +284,6 @@ function connection_closed(msg)
     received_close_message = true;
 }
 
-function request_redraw()
-{
-    socket.send("^r");
-}
-
 function play_now(id)
 {
     socket.send("Play: " + id);
@@ -373,8 +368,7 @@ $(document).ready(
 
         $(window).resize(function (ev)
                          {
-                             if (do_layout())
-                                 request_redraw();
+                             do_layout();
                          });
 
         $(window).bind("beforeunload",
