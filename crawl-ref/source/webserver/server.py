@@ -203,8 +203,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def start_crawl(self, game_id):
         if dgl_mode:
             if self.username == None:
-                self.write_message("set_layer('lobby');")
-                self.update_lobby()
+                self.write_message("go_lobby();")
                 return
 
             if game_id not in games: return
@@ -336,8 +335,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.watched_game.remove_watcher(self)
             self.watched_game = None
             self.write_message("set_watching(false);")
-            self.write_message("set_layer('lobby');")
-            self.update_lobby();
+            self.write_message("go_lobby();")
 
     def send_client(self, client_prefix):
         game_html = self.render_string(client_prefix + "/game.html", prefix = client_prefix)
@@ -468,7 +466,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 socket.add_watcher(self)
                 self.write_message("set_watching(true);")
             else:
-                self.write_message("set_layer('lobby');")
+                self.write_message("go_lobby();")
 
         elif message.startswith("Chat: "):
             if self.username is None:
