@@ -519,10 +519,12 @@ IDEF(artefact)
 
 IDEF(branded)
 {
-    if (!item || !item->defined() || !item_type_known(*item))
+    if (!item || !item->defined())
         return (0);
 
-    lua_pushboolean(ls, item_is_branded(*item));
+    lua_pushboolean(ls, item_is_branded(*item)
+                        || item->flags & ISFLAG_COSMETIC_MASK
+                           && !item_type_known(*item));
     return (1);
 }
 
