@@ -62,6 +62,15 @@ var flash_colours =
 ];
 
 // This gets called by the messages sent by crawl
+function clear_map()
+{
+    clear_tile_cache();
+    dungeon_ctx.fillStyle = "black";
+    dungeon_ctx.fillRect(0, 0,
+                         dungeon_cols * dungeon_cell_w,
+                         dungeon_rows * dungeon_cell_h);
+}
+
 function c(x, y, cell)
 {
     var old_cell = get_tile_cache(x, y);
