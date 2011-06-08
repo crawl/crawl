@@ -610,7 +610,7 @@ bool you_can_wear(int eq, bool special_armour)
         return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
 
     // Octopodes can wear soft helmets, eight rings, and an amulet.
-    if (you.species == SP_OCTOPUS)
+    if (you.species == SP_OCTOPODE)
     {
         if (special_armour && eq == EQ_HELMET)
             return (true);
@@ -705,7 +705,7 @@ bool player_has_feet()
 {
     if (you.species == SP_NAGA
         || you.species == SP_FELID
-        || you.species == SP_OCTOPUS
+        || you.species == SP_OCTOPODE
         || you.fishtail)
     {
         return (false);
@@ -767,9 +767,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
-    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species != SP_OCTOPUS)
+    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species != SP_OCTOPODE)
         eq = EQ_LEFT_RING;
-    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species == SP_OCTOPUS)
+    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species == SP_OCTOPODE)
         eq = EQ_RING_ONE;
 
     // Everybody can wear at least some type of armour.
@@ -3198,7 +3198,7 @@ void level_change(bool skip_attribute_increase)
                 _felid_extra_life();
                 break;
 
-            case SP_OCTOPUS:
+            case SP_OCTOPODE:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
@@ -3413,7 +3413,7 @@ int check_stealth(void)
         case SP_GREY_DRACONIAN:
         case SP_NAGA:       // not small but very good at stealth
         case SP_FELID:
-        case SP_OCTOPUS:
+        case SP_OCTOPODE:
             race_mod = 18;
             break;
         default:
@@ -3494,7 +3494,7 @@ int check_stealth(void)
     else if (you.in_water())
     {
         // Merfolk can sneak up on monsters underwater -- bwr
-        if (you.fishtail || you.species == SP_OCTOPUS)
+        if (you.fishtail || you.species == SP_OCTOPODE)
             stealth += 50;
         else if (!you.can_swim() && !you.extra_balanced())
             stealth /= 2;       // splashy-splashy
@@ -3970,7 +3970,7 @@ static int _species_exp_mod(species_type species)
         case SP_NAGA:
         case SP_GHOUL:
         case SP_MERFOLK:
-        case SP_OCTOPUS:
+        case SP_OCTOPODE:
             return 12;
         case SP_SPRIGGAN:
         case SP_KENKU:
@@ -5537,7 +5537,7 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return (species == SP_MERFOLK || species == SP_OCTOPUS
+    return (species == SP_MERFOLK || species == SP_OCTOPODE
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || !permanently)
                 && form_can_swim();
@@ -5548,7 +5548,7 @@ int player::visible_igrd(const coord_def &where) const
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
             && species != SP_MERFOLK && species != SP_GREY_DRACONIAN
-            && species != SP_OCTOPUS))
+            && species != SP_OCTOPODE))
     {
         return (NON_ITEM);
     }

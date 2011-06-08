@@ -1362,20 +1362,20 @@ static void _print_overview_screen_equip(column_composer& cols,
 
         int eqslot = e_order[i];
 
-        if (you.species == SP_OCTOPUS
+        if (you.species == SP_OCTOPODE
             && e_order[i] != EQ_WEAPON
             && !you_can_wear(e_order[i], true))
         {
             continue;
         }
 
-        if (you.species == SP_OCTOPUS && (eqslot == EQ_RIGHT_RING
+        if (you.species == SP_OCTOPODE && (eqslot == EQ_RIGHT_RING
                                        || eqslot == EQ_LEFT_RING))
         {
             continue;
         }
 
-        if (you.species != SP_OCTOPUS && eqslot > EQ_AMULET)
+        if (you.species != SP_OCTOPODE && eqslot > EQ_AMULET)
             continue;
 
         char slot_name_lwr[15];
@@ -2190,7 +2190,7 @@ std::string _status_mut_abilities()
         mutations.push_back("no advanced items");
     }
 
-    if (you.species == SP_OCTOPUS)
+    if (you.species == SP_OCTOPODE)
     {
         mutations.push_back("no armour");
     }

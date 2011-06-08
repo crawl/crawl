@@ -412,7 +412,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str         = "underbelly";
             *can_plural = false;
         }
-        else if (species == SP_OCTOPUS)
+        else if (species == SP_OCTOPODE)
         {
             str         = "tentacles";
             *can_plural = false;
@@ -449,7 +449,7 @@ std::string player::arm_name(bool plural, bool *can_plural) const
         str = "feathered arm";
     else if (species == SP_MUMMY)
         str = "bandage-wrapped arm";
-    else if (species == SP_OCTOPUS)
+    else if (species == SP_OCTOPODE)
         str = "tentacle";
 
     if (plural)

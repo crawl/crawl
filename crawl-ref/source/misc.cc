@@ -2191,14 +2191,14 @@ std::string your_hand(bool plural)
         result = (you.has_usable_claws()) ? "claw" : "hand";
         if (you.species == SP_FELID)
             result = "paw";
-        if (you.species == SP_OCTOPUS)
+        if (you.species == SP_OCTOPODE)
             result = "tentacle";
         break;
     case TRAN_ICE_BEAST:
         result = "hand";
         if (you.species == SP_FELID)
             result = "paw";
-        if (you.species == SP_OCTOPUS)
+        if (you.species == SP_OCTOPODE)
             result = "tentacle";
         break;
     case TRAN_SPIDER:

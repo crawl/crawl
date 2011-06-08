@@ -1332,7 +1332,7 @@ neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
 %%%%
-octopus
+octopode
 
 A more intelligent cousin of the mighty kraken, capable of using tools and spells. They are fully amphibious, but most of their species choose to stay beneath the waves and serve their King.
 %%%%
