@@ -269,7 +269,8 @@ bool TilesFramework::_send_cell(int x, int y,
         fprintf(stdout, "bloodrot:%d,", cell.blood_rotation);
 
     if ((cell.flv.floor != old_cell.flv.floor)
-        || (cell.flv.special != old_cell.flv.special))
+        || (cell.flv.special != old_cell.flv.special)
+        || (old_cell.bg == 0))
     {
         fprintf(stdout, "flv:{f:%d,", cell.flv.floor);
         if (cell.flv.special)
@@ -555,6 +556,10 @@ void TilesFramework::_send_current_view()
     for (int y = 0; y < m_current_view.size().y; y++)
         for (int x = 0; x < m_current_view.size().x; x++)
         {
+            // Don't send data for default black tiles
+            old_cell_dummy.tile.bg |= TILE_FLAG_UNSEEN;
+            old_cell_dummy.tile.flv = env.tile_flv(coord_def(x, y));
+            
             _send_cell(x, y, cell, &old_cell_dummy);
 
             old_cell_dummy.tile.clear();
@@ -583,6 +588,7 @@ void TilesFramework::redraw()
     {
         // The view buffer size changed, we need to do a full redraw
         m_current_view = m_next_view;
+        
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
