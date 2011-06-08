@@ -187,6 +187,17 @@ static bool _in_water(const packed_cell &cell)
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
+static bool _needs_flavour(const packed_cell &cell)
+{
+    tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
+    if (bg_idx >= TILE_DNGN_WAX_WALL)
+        return true; // Needs flv.floor
+    if (cell.is_liquefied || cell.is_bloody ||
+        cell.is_moldy || cell.glowing_mold)
+        return true; // Needs flv.special
+    return false;
+}
+
 bool TilesFramework::_send_cell(int x, int y,
                                 const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell)
 {
@@ -268,9 +279,10 @@ bool TilesFramework::_send_cell(int x, int y,
     if (cell.blood_rotation != old_cell.blood_rotation)
         fprintf(stdout, "bloodrot:%d,", cell.blood_rotation);
 
-    if ((cell.flv.floor != old_cell.flv.floor)
-        || (cell.flv.special != old_cell.flv.special)
-        || (old_cell.bg == TILE_FLAG_UNSEEN))
+    if (_needs_flavour(cell) &&
+        ((cell.flv.floor != old_cell.flv.floor)
+         || (cell.flv.special != old_cell.flv.special)
+         || !_needs_flavour(old_cell)))
     {
         fprintf(stdout, "flv:{f:%d,", cell.flv.floor);
         if (cell.flv.special)
