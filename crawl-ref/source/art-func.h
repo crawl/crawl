@@ -181,7 +181,7 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
 
     mpr("You feel the staff feeding on your energy!");
 
-    dec_hp(5 + random2avg(19, 2), false, "Staff of Dispater");
+    dec_hp(5 + random2avg(19, 2), false);
     dec_mp(2 + random2avg(5, 2));
     make_hungry(100, false, true);
 
