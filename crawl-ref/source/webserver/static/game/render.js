@@ -69,6 +69,11 @@ function clear_map()
     dungeon_ctx.fillRect(0, 0,
                          dungeon_cols * dungeon_cell_w,
                          dungeon_rows * dungeon_cell_h);
+
+    minimap_ctx.fillStyle = "black";
+    minimap_ctx.fillRect(0, 0,
+                         $("#minimap").width(),
+                         $("#minimap").height());
 }
 
 function c(x, y, cell)
@@ -180,20 +185,22 @@ function render_cell(cx, cy)
 {
     try
     {
-        if (!in_view(cx, cy))
-            return;
-
-        var cell = get_tile_cache(cx, cy);
-
         var x = cx - view_x;
         var y = cy - view_y;
 
-        dungeon_ctx.fillStyle = "black";
-        dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
-                             dungeon_cell_w, dungeon_cell_h);
+        if (in_view(cx, cy))
+        {
+            dungeon_ctx.fillStyle = "black";
+            dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
+                                 dungeon_cell_w, dungeon_cell_h);
+        }
+
+        var cell = get_tile_cache(cx, cy);
 
         if (!cell)
+        {
             return;
+        }
 
         cell.sy = undefined; // Will be set by the tile rendering functions
                              // to indicate if the cell is oversized
@@ -203,6 +210,12 @@ function render_cell(cx, cy)
         cell.flv = cell.flv || {};
         cell.flv.f = cell.flv.f || 0;
         cell.flv.s = cell.flv.s || 0;
+
+        var minimap_feat = get_cell_map_feature(cell);
+        set_minimap(cx, cy, minimap_colours[minimap_feat]);
+
+        if (!in_view(cx, cy))
+            return;
 
         // cell is basically a packed_cell + doll + mcache entries
         draw_background(x, y, cell);
@@ -323,6 +336,31 @@ function render_cell(cx, cy)
         console.error("Error while drawing cell " + obj_to_str(cell)
                       + " at " + cx + "/" + cy + ": " + err);
     }
+}
+
+function get_cell_map_feature(cell)
+{
+    var fg_idx = cell.fg & TILE_FLAG_MASK;
+    var bg_idx = cell.bg & TILE_FLAG_MASK;
+
+    // XXX: This needs feature data
+
+    if (fg_idx == TILEP_PLAYER)
+        return MF_PLAYER;
+    else if (fg_idx >= TILEP_MCACHE_START)
+        return MF_MONS_HOSTILE;
+    else if (fg_idx >= TILE_MAIN_MAX)
+        return MF_MONS_HOSTILE;
+    else if (fg_idx > 0)
+        return MF_ITEM;
+    else if (cell.bg & TILE_FLAG_WATER)
+        return MF_WATER;
+    else if (bg_idx > TILE_WALL_MAX)
+        return MF_FEATURE;
+    else if (bg_idx >= TILE_FLOOR_MAX)
+        return MF_WALL;
+    else
+        return MF_FLOOR;
 }
 
 function set_submerged_clip(cx, cy, water_level)
@@ -744,6 +782,15 @@ function draw_icon(idx, cx, cy, ofsx, ofsy)
     draw_tile(idx, cx, cy, "icons", get_icons_tile_info, ofsx, ofsy);
 }
 
+function set_minimap(cx, cy, colour)
+{
+    var x = cx - minimap_x;
+    var y = cy - minimap_y;
+    minimap_ctx.fillStyle = colour;
+    minimap_ctx.fillRect(x * minimap_cell_w, y * minimap_cell_h,
+                         minimap_cell_w, minimap_cell_h);
+}
+
 // Shifts the dungeon view by cx/cy cells.
 function shift(x, y)
 {
@@ -781,7 +828,7 @@ function shift(x, y)
     var w = (dungeon_cols - abs(x)) * cw;
     var h = (dungeon_rows - abs(y)) * ch;
 
-    if (w > 0 || h > 0)
+    if (w > 0 && h > 0)
     {
         dungeon_ctx.drawImage($("#dungeon")[0],
                               sx * cw, sy * ch, w, h,

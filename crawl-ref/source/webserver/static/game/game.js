@@ -4,6 +4,10 @@ var dungeon_cols = 0, dungeon_rows = 0;
 var view_x = 0, view_y = 0;
 var view_center_x = 0, view_center_y = 0;
 
+var minimap_ctx;
+var minimap_cell_w, minimap_cell_h;
+var minimap_x = 0, minimap_y = 0;
+
 // Text area handling ----------------------------------------------------------
 function get_text_area_line(name, line)
 {
@@ -77,13 +81,16 @@ function do_layout()
     var layer = current_layer;
     set_layer("normal");
 
-    // Determine width of stats area
+    // Determine width/height of stats area
     var old_html = $("#stats").html();
     var s = "";
     for (var i = 0; i < layout_parameters.stat_width; i++)
         s = s + "&nbsp;";
+    for (var i = 0; i < layout_parameters.min_stat_height; i++)
+        s = s + "<br>";
     $("#stats").html(s);
     var stat_width_pixels = $("#stats").outerWidth();
+    var stat_height_pixels = $("#stats").outerHeight();
     $("#stats").html(old_html);
 
     // Determine height of messages area
@@ -114,7 +121,7 @@ function do_layout()
     set_layer(layer);
 
     var layout = {
-        stats_height: 24,
+        stats_height: layout_parameters.min_stat_height,
         msg_width: 80
     };
 
@@ -129,8 +136,33 @@ function do_layout()
     if (view_height < layout_parameters.show_diameter)
         view_height = layout_parameters.show_diameter;
 
+    // Position controls
     view_size(view_width, view_height);
 
+    var dungeon_offset = $("#dungeon").offset();
+
+    $("#stats").offset({
+        left: dungeon_offset.left + $("#dungeon").width() + 10,
+        top: dungeon_offset.top
+    });
+
+    $("#minimap").offset({
+        left: dungeon_offset.left + $("#dungeon").width() + 10,
+        top: dungeon_offset.top + stat_height_pixels + 10
+    });
+    
+    var minimap_canvas = $("#minimap")[0];
+    minimap_canvas.width = stat_width_pixels;
+    minimap_cell_w = minimap_cell_h = Math.floor(stat_width_pixels / layout_parameters.gxm);
+    minimap_canvas.height = layout_parameters.gym * minimap_cell_h;
+    minimap_ctx = minimap_canvas.getContext("2d");
+
+    $("#minimap_overlay").offset($("#minimap").offset());
+    var minimap_overlay = $("#minimap_overlay")[0];
+    minimap_overlay.width = minimap_canvas.width;
+    minimap_overlay.height = minimap_canvas.height;
+
+    // Send the layout
     if (current_layout &&
         layout.stats_height == current_layout.stats_height &&
         layout.crt_width == current_layout.crt_width &&
@@ -166,17 +198,10 @@ function view_size(cols, rows)
     log("Changing view size to: " + cols + "/" + rows);
     dungeon_cols = cols;
     dungeon_rows = rows;
-    canvas = $("#dungeon")[0];
+    var canvas = $("#dungeon")[0];
     canvas.width = dungeon_cols * dungeon_cell_w;
     canvas.height = dungeon_rows * dungeon_cell_h;
     dungeon_ctx = canvas.getContext("2d");
-
-    var dungeon_offset = $("#dungeon").offset();
-
-    $("#stats").offset({
-        left: dungeon_offset.left + canvas.width + 10,
-        top: dungeon_offset.top
-    });
 
     for (var y = 0; y < dungeon_rows; y++)
         for (var x = 0; x < dungeon_cols; x++)
@@ -192,6 +217,16 @@ function vgrdc(x, y)
     view_x = x - Math.floor(dungeon_cols / 2);
     view_y = y - Math.floor(dungeon_rows / 2);
     shift(view_x - old_vx, view_y - old_vy);
+
+    // Update the minimap overlay
+    var minimap_overlay = $("#minimap_overlay")[0];
+    var ctx = minimap_overlay.getContext("2d");
+    ctx.clearRect(0, 0, minimap_overlay.width, minimap_overlay.height);
+    ctx.strokeStyle = "yellow";
+    ctx.strokeRect((view_x - minimap_x) * minimap_cell_w + 0.5,
+                   (view_y - minimap_y) * minimap_cell_h + 0.5,
+                   dungeon_cols * minimap_cell_w - 1,
+                   dungeon_rows * minimap_cell_h - 1);
 }
 
 function in_view(cx, cy)

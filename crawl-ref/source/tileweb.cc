@@ -376,15 +376,20 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     place_cursor(CURSOR_MAP, cen);
 }
 
+static const int min_stat_height = 12;
 static const int stat_width = 42;
+
 static void _send_layout_data(bool need_response)
 {
     // need_response indicates if the client needs to set a layout
     fprintf(stdout, "layout({view_max_width:%u,view_max_height:%u,\
-force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u},%u);\n",
+force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u,\
+min_stat_height:%u,gxm:%u,gym:%u},%u);\n",
             Options.view_max_width, Options.view_max_height,
             Options.tile_force_overlay, ENV_SHOW_DIAMETER,
-            Options.msg_min_height, stat_width, need_response);
+            Options.msg_min_height, stat_width, min_stat_height,
+            GXM, GYM,
+            need_response);
 }
 
 void TilesFramework::resize()
@@ -592,7 +597,7 @@ void TilesFramework::redraw()
 
     if (m_current_gc != m_next_gc)
     {
-        fprintf(stdout, "vgrdc(%d,%d);\n", m_next_gc.x, m_next_gc.y);
+        fprintf(stdout, "vgrdc(%d,%d);", m_next_gc.x, m_next_gc.y);
         m_current_gc = m_next_gc;
     }
 

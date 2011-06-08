@@ -77,3 +77,58 @@ TILE_FLAG_ELDRITCH_SW = 0x80000000;
 
 // General
 TILE_FLAG_MASK       = 0x000007FF;
+
+
+// Minimap features
+var val = 0;
+MF_UNSEEN = val++;
+MF_FLOOR = val++;
+MF_WALL = val++;
+MF_MAP_FLOOR = val++;
+MF_MAP_WALL = val++;
+MF_DOOR = val++;
+MF_ITEM = val++;
+MF_MONS_FRIENDLY = val++;
+MF_MONS_PEACEFUL = val++;
+MF_MONS_NEUTRAL = val++;
+MF_MONS_HOSTILE = val++;
+MF_MONS_NO_EXP = val++;
+MF_STAIR_UP = val++;
+MF_STAIR_DOWN = val++;
+MF_STAIR_BRANCH = val++;
+MF_FEATURE = val++;
+MF_WATER = val++;
+MF_LAVA = val++;
+MF_TRAP = val++;
+MF_EXCL_ROOT = val++;
+MF_EXCL = val++;
+MF_PLAYER = val++;
+MF_MAX = val++;
+
+MF_SKIP = val++;
+
+minimap_colours = [
+    "black",       // MF_UNSEEN
+    "darkgrey",    // MF_FLOOR
+    "grey",        // MF_WALL
+    "darkgrey",    // MF_MAP_FLOOR
+    "blue",        // MF_MAP_WALL
+    "brown",       // MF_DOOR
+    "green",       // MF_ITEM
+    "lightred",    // MF_MONS_FRIENDLY
+    "lightred",    // MF_MONS_PEACEFUL
+    "red",         // MF_MONS_NEUTRAL
+    "red",         // MF_MONS_HOSTILE
+    "darkgreen",   // MF_MONS_NO_EXP
+    "blue",        // MF_STAIR_UP
+    "magenta",     // MF_STAIR_DOWN
+    "cyan",        // MF_STAIR_BRANCH
+    "cyan",        // MF_FEATURE
+    "grey",        // MF_WATER
+    "grey",        // MF_LAVA
+    "yellow",      // MF_TRAP
+    "darkblue",    // MF_EXCL_ROOT
+    "darkcyan",    // MF_EXCL
+    "white"        // MF_PLAYER
+]
+
