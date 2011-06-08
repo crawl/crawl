@@ -1284,16 +1284,17 @@ static const char *s_equip_slot_names[] =
     "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
     "Shield", "Armour", "Left Ring", "Right Ring", "Amulet",
     "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
-    "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring"
+    "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
 };
 
 const char *equip_slot_to_name(int equip)
 {
-    if (equip == EQ_RINGS || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
-        || equip == EQ_RING_ONE || equip == EQ_RING_TWO || equip == EQ_RING_THREE
-        || equip == EQ_RING_FOUR || equip == EQ_RING_FIVE || equip == EQ_RING_SIX
-        || equip == EQ_RING_SEVEN || equip == EQ_RING_EIGHT)
+    if (equip == EQ_RINGS
+        || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
+        || equip >= EQ_RING_ONE || equip <= EQ_RING_EIGHT)
+    {
         return "Ring";
+    }
 
     if (equip == EQ_BOOTS
         && (you.species == SP_CENTAUR || you.species == SP_NAGA))
@@ -1352,7 +1353,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
         EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
-        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT
+        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
     };
 
     char buf[100];
@@ -1361,15 +1362,18 @@ static void _print_overview_screen_equip(column_composer& cols,
 
         int eqslot = e_order[i];
 
-//Handle armour:
-
-        if (you.species == SP_OCTOPUS && e_order[i] != EQ_WEAPON && !you_can_wear(e_order[i], true))
+        if (you.species == SP_OCTOPUS
+            && e_order[i] != EQ_WEAPON
+            && !you_can_wear(e_order[i], true))
+        {
             continue;
+        }
 
-//Handle jewellery:
-
-        if (you.species == SP_OCTOPUS && (eqslot == EQ_RIGHT_RING || eqslot == EQ_LEFT_RING))
+        if (you.species == SP_OCTOPUS && (eqslot == EQ_RIGHT_RING
+                                       || eqslot == EQ_LEFT_RING))
+        {
             continue;
+        }
 
         if (you.species != SP_OCTOPUS && eqslot > EQ_AMULET)
             continue;
