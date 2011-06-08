@@ -355,6 +355,9 @@ static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell)
 
 void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
 {
+    if (env.map_knowledge(gc).feat() == DNGN_UNSEEN)
+        return; // Don't put overlays on unseen tiles
+
     if (player_in_branch(BRANCH_SHOALS))
     {
         _pack_shoal_waves(gc, cell);
