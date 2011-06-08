@@ -5272,12 +5272,16 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (you.see_cell(position))
 
             {
-                if (type == MONS_SALT_PILLAR)
+                if (type == MONS_PILLAR_OF_SALT)
+                {
                      mprf("The %s crumbles away.",
-                     name(DESC_PLAIN, false).c_str());
+                          name(DESC_PLAIN, false).c_str());
+                }
                 else
+                {
                      mprf("A nearby %s withers and dies.",
-                     name(DESC_PLAIN, false).c_str());
+                          name(DESC_PLAIN, false).c_str());
+                }
             }
 
             monster_die(this, KILL_MISC, NON_MONSTER, true);

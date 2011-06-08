@@ -572,7 +572,7 @@ std::string monster_info::_core_name() const
     case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
     case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-    case MONS_SPECTRAL_THING:   case MONS_SALT_PILLAR:
+    case MONS_SPECTRAL_THING:   case MONS_PILLAR_OF_SALT:
         nametype = base_type;
         break;
 
@@ -731,7 +731,7 @@ std::string monster_info::common_name(description_level_type desc) const
         if (!is(MB_NAME_ZOMBIE))
             ss << " simulacrum";
         break;
-    case MONS_SALT_PILLAR:
+    case MONS_PILLAR_OF_SALT:
         ss << " shaped pillar of salt";
         break;
     default:

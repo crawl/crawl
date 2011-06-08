@@ -2385,7 +2385,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED_EASY,
     MONS_SENSED_TOUGH,
     MONS_SENSED_NASTY,
-    MONS_SALT_PILLAR,
+    MONS_PILLAR_OF_SALT,
     MONS_TERPSICHORE,
     MONS_BAT,
     MONS_SPRIGGAN_AIR_MAGE,
