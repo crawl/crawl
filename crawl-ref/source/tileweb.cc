@@ -600,6 +600,8 @@ void TilesFramework::redraw()
     {
         // The view buffer size changed, we need to do a full redraw
         m_current_view = m_next_view;
+
+        fprintf(stdout, "clear_map();");
         
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
@@ -651,6 +653,7 @@ void TilesFramework::update_minimap(const coord_def& gc)
 
 void TilesFramework::clear_minimap()
 {
+    m_current_view = crawl_view_buffer();
 }
 
 void TilesFramework::update_minimap_bounds()
