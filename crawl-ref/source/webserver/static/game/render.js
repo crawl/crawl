@@ -772,9 +772,12 @@ function shift(x, y)
     var w = (dungeon_cols - abs(x)) * cw;
     var h = (dungeon_rows - abs(y)) * ch;
 
-    dungeon_ctx.drawImage($("#dungeon")[0],
-                          sx * cw, sy * ch, w, h,
-                          dx * cw, dy * ch, w, h);
+    if (w > 0 || h > 0)
+    {
+        dungeon_ctx.drawImage($("#dungeon")[0],
+                              sx * cw, sy * ch, w, h,
+                              dx * cw, dy * ch, w, h);
+    }
 
     // Render cells that came into view
     for (var cy = 0; cy < dy; cy++)
