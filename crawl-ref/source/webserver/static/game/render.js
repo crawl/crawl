@@ -806,6 +806,17 @@ function shift(x, y)
             render_cell(cx + view_x, cy + view_y);
 }
 
+function tile_flags_to_string(flags)
+{
+    var s = "";
+    for (var v in window)
+    {
+        if (v.match(/^TILE_FLAG_/) && (flags & window[v]))
+            s = s + " " + v;
+    }
+    return s;
+}
+
 function obj_to_str (o)
 {
     var parse = function (_o)
