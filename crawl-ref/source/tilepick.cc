@@ -1661,8 +1661,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_ELECTRIC_GOLEM:
         return TILEP_MONS_ELECTRIC_GOLEM;
 
-    // statues (also '8')
-    case MONS_SALT_PILLAR:
+    // statues and statue-like things (also '8')
+    case MONS_PILLAR_OF_SALT:
         return TILEP_MONS_PILLAR_OF_SALT;
     case MONS_TRAINING_DUMMY:
         return TILEP_MONS_TRAINING_DUMMY;

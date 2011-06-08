@@ -1189,7 +1189,7 @@ void zin_saltify(monster* mon)
         destroy_item(corpse);
 
     const int pillar = create_monster(
-                        mgen_data(MONS_SALT_PILLAR,
+                        mgen_data(MONS_PILLAR_OF_SALT,
                                   BEH_HOSTILE,
                                   0,
                                   0,
