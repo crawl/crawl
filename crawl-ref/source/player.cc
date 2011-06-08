@@ -609,18 +609,15 @@ bool you_can_wear(int eq, bool special_armour)
     if (you.species == SP_FELID)
         return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
 
-//Octopodes can wear soft helmets, eight rings, and an amulet.
-
+    // Octopodes can wear soft helmets, eight rings, and an amulet.
     if (you.species == SP_OCTOPUS)
     {
         if (special_armour && eq == EQ_HELMET)
             return (true);
 
         else
-            return (eq == EQ_RING_ONE || eq == EQ_RING_TWO || eq == EQ_RING_THREE ||
-                    eq == EQ_RING_FOUR || eq == EQ_RING_FIVE || eq == EQ_RING_SIX ||
-                    eq == EQ_RING_SEVEN || eq == EQ_RING_EIGHT || eq == EQ_AMULET ||
-                    eq == EQ_SHIELD || eq == EQ_WEAPON);
+            return (eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
+                    || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON);
     }
 
     switch (eq)
