@@ -339,8 +339,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_client(self, client_prefix):
         game_html = self.render_string(client_prefix + "/game.html", prefix = client_prefix)
-        self.write_message("$('#game').html(" +
-                           tornado.escape.json_encode(game_html) + ");")
+        self.write_message("delay_timeout = 1;$('#game').html(" +
+                           tornado.escape.json_encode(game_html) + ");delay_ended();")
 
     def shutdown(self):
         if not self.client_terminated:
