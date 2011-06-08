@@ -2493,7 +2493,6 @@ enum mutation_type
     MUT_HORNS,          // head
     MUT_STINGER,
     MUT_TALONS,         // feet
-    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
     // scales
     MUT_DISTORTION_FIELD,
     MUT_ICY_BLUE_SCALES,
@@ -2583,6 +2582,7 @@ enum mutation_type
     MUT_POWERED_BY_PAIN,
 #endif
     MUT_CAMOUFLAGE,
+    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
