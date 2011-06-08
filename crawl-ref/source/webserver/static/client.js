@@ -291,20 +291,27 @@ function play_now(id)
 
 var lobby_update_timeout = undefined;
 var lobby_update_rate = 30000;
+
+function go_lobby()
+{
+    document.title = "WebTiles - Dungeon Crawl Stone Soup";
+    location.hash = "#lobby";
+
+    set_layer("lobby");
+
+    $("#crt").html("");
+    $("#stats").html("");
+    $("#messages").html("");
+
+    $("#username").focus();
+
+    clear_chat();
+
+    lobby_update();
+}
+
 function lobby(enable)
 {
-    if (enable)
-    {
-        location.hash = "#lobby";
-        document.title = "WebTiles - Dungeon Crawl Stone Soup";
-
-        $("#crt").html("");
-        $("#stats").html("");
-        $("#messages").html("");
-
-        clear_chat();
-    }
-
     if (enable && lobby_update_timeout == undefined)
     {
         lobby_update_timeout = setInterval(lobby_update, lobby_update_rate);
@@ -334,7 +341,7 @@ function crawl_started()
 }
 function crawl_ended()
 {
-    set_layer("lobby");
+    go_lobby();
     current_layout = undefined;
     playing = false;
 }
@@ -394,7 +401,7 @@ $(document).ready(
 
                 if (location.hash == "" ||
                     location.hash.match(/^#lobby$/i))
-                    set_layer("lobby");
+                    go_lobby();
                 else
                     hash_changed();
             };
