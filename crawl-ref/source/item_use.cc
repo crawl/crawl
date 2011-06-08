@@ -589,7 +589,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (you.species == SP_OCTOPUS && slot != EQ_HELMET && slot != EQ_SHIELD)
+    if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD)
     {
         if (verbose)
             mpr("You can't wear that!");
@@ -715,7 +715,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (you.species == SP_OCTOPUS)
+        if (you.species == SP_OCTOPODE)
         {
             if (verbose)
                 mpr("You can't wear that!");
@@ -777,7 +777,7 @@ bool do_wear_armour(int item, bool quiet)
         && is_shield_incompatible(*you.weapon(), &invitem))
     {
         if (!quiet)
-           if (you.species == SP_OCTOPUS)
+           if (you.species == SP_OCTOPODE)
                mpr("You'd need nine tentacles to do that!");
            else
                mpr("You'd need three hands to do that!");
@@ -3225,7 +3225,7 @@ static int _prompt_ring_to_remove(int new_ring)
     return (you.equip[eqslot]);
 }
 
-static int _prompt_ring_to_remove_octopus(int new_ring)
+static int _prompt_ring_to_remove_octopode(int new_ring)
 {
     const item_def *one_ring = you.slot_item(EQ_RING_ONE, true);
     const item_def *two_ring = you.slot_item(EQ_RING_TWO, true);
@@ -3488,7 +3488,7 @@ static bool _swap_rings(int ring_slot)
     return (true);
 }
 
-static bool _swap_rings_octopus(int ring_slot)
+static bool _swap_rings_octopode(int ring_slot)
 {
     const item_def* ring [8] = {you.slot_item(EQ_RING_ONE, true),
                                 you.slot_item(EQ_RING_TWO, true),
@@ -3537,7 +3537,7 @@ static bool _swap_rings_octopus(int ring_slot)
    //We can't put a ring on without swapping - because we found multiple uncursed rings.
     else if (uncursed > 1)
     {
-      unwanted = _prompt_ring_to_remove_octopus(ring_slot);
+      unwanted = _prompt_ring_to_remove_octopode(ring_slot);
       if (!remove_ring(unwanted, false))
           return (false);
     }
@@ -3596,7 +3596,7 @@ bool puton_item(int item_slot)
     const bool lring = you.slot_item(EQ_LEFT_RING, true);
     const bool rring = you.slot_item(EQ_RIGHT_RING, true);
     const bool is_amulet = jewellery_is_amulet(item);
-    const bool blinged_octopus = (you.species == SP_OCTOPUS
+    const bool blinged_octopode = (you.species == SP_OCTOPODE
                         && you.slot_item(EQ_RING_ONE, true)
                         && you.slot_item(EQ_RING_TWO, true)
                         && you.slot_item(EQ_RING_THREE, true)
@@ -3616,8 +3616,8 @@ bool puton_item(int item_slot)
             return (false);
         }
 
-        if (blinged_octopus)
-            return _swap_rings_octopus(item_slot);
+        if (blinged_octopode)
+            return _swap_rings_octopode(item_slot);
 
         if (lring && rring)
             return _swap_rings(item_slot);
@@ -3652,7 +3652,7 @@ bool puton_item(int item_slot)
     {
         hand_used = EQ_AMULET;
     }
-    else if (you.species == SP_OCTOPUS)
+    else if (you.species == SP_OCTOPODE)
     {
         hand_used = you.slot_item(EQ_RING_ONE, true)    ? EQ_RING_ONE   :
                     you.slot_item(EQ_RING_TWO, true)    ? EQ_RING_TWO   :
@@ -3739,7 +3739,7 @@ bool remove_ring(int slot, bool announce)
     const bool left  = player_wearing_slot(EQ_LEFT_RING);
     const bool right = player_wearing_slot(EQ_RIGHT_RING);
     const bool amu   = player_wearing_slot(EQ_AMULET);
-    const bool octopus_with_ring = (you.species == SP_OCTOPUS &&
+    const bool octopode_with_ring = (you.species == SP_OCTOPODE &&
                           (player_wearing_slot(EQ_RING_ONE)
                         || player_wearing_slot(EQ_RING_TWO)
                         || player_wearing_slot(EQ_RING_THREE)
@@ -3749,7 +3749,7 @@ bool remove_ring(int slot, bool announce)
                         || player_wearing_slot(EQ_RING_SEVEN)
                         || player_wearing_slot(EQ_RING_EIGHT)));
 
-    if (!left && !right && !amu && !octopus_with_ring)
+    if (!left && !right && !amu && !octopode_with_ring)
     {
         mpr("You aren't wearing any rings or amulets.");
         return (false);
@@ -3773,7 +3773,7 @@ bool remove_ring(int slot, bool announce)
         hand_used = EQ_LEFT_RING;
     else if (!left && right && !amu)
         hand_used = EQ_RIGHT_RING;
-    else if (!left && !right && !octopus_with_ring && amu)
+    else if (!left && !right && !octopode_with_ring && amu)
         hand_used = EQ_AMULET;
 
     if (hand_used == EQ_NONE)

@@ -265,7 +265,7 @@ std::string item_def::name(description_level_type descrip,
                                                      : " (right paw)");
                     break;
                 case EQ_AMULET:
-                    if (you.species == SP_OCTOPUS)
+                    if (you.species == SP_OCTOPODE)
                         buff << " (around mantle)";
                     else
                         buff << " (around neck)";

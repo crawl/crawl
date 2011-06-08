@@ -2884,7 +2884,7 @@ enum species_type
     SP_VAMPIRE,
     SP_DEEP_DWARF,
     SP_FELID,
-    SP_OCTOPUS,
+    SP_OCTOPODE,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)

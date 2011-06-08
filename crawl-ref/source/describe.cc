@@ -4642,9 +4642,9 @@ std::string get_skill_description(skill_type skill, bool need_title)
 
         if (you.species == SP_FELID)
             unarmed_attacks.push_back("use your claws");
-        else if (you.species != SP_OCTOPUS && !you.weapon())
+        else if (you.species != SP_OCTOPODE && !you.weapon())
             unarmed_attacks.push_back("throw a punch");
-        else if (you.species != SP_OCTOPUS && you.has_usable_offhand())
+        else if (you.species != SP_OCTOPODE && you.has_usable_offhand())
             unarmed_attacks.push_back("punch with your free hand");
 
         if (!unarmed_attacks.empty())

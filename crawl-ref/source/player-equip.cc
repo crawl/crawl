@@ -121,7 +121,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
 
     ASSERT(slot == eq
            || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
-           || eq == EQ_RINGS && you.species == SP_OCTOPUS);
+           || eq == EQ_RINGS && you.species == SP_OCTOPODE);
 
     if (msg)
         _equip_use_warning(item);
@@ -145,7 +145,7 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
 
     ASSERT(slot == eq
            || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
-           || eq == EQ_RINGS && you.species == SP_OCTOPUS);
+           || eq == EQ_RINGS && you.species == SP_OCTOPODE);
 
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg, meld);

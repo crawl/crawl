@@ -1159,7 +1159,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affectd by this, though!
-    if (you.species != SP_OCTOPUS && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
+    if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
 
     if (you.has_usable_tail()
@@ -1196,7 +1196,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         baseattack = UNAT_HEADBUTT;
 
     // Octopodes turn kicks into punches.
-    if (you.species == SP_OCTOPUS && baseattack == UNAT_KICK)
+    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK)
         baseattack = UNAT_PUNCH;
 
     if (_tran_forbid_aux_attack(baseattack))
