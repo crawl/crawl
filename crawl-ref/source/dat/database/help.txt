@@ -35,7 +35,7 @@ hotkey to travel to its location.
 
 Some examples of search strings:
 <w>cure mutation</w> find all potions of cure mutation, including potions in shops.
-<w>jell</w>          finds every single royal jelly and heaps of royal jellies.
+<w>jelly</w>         finds every single royal jelly and heaps of royal jellies.
 <w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.
 <w>D:[2-4]</w>       finds everything on Dungeon levels 2-4. Regexes are allowed!
