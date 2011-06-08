@@ -650,6 +650,9 @@ std::string Stash::feature_description() const
     if (feat == DNGN_FLOOR)
         return ("");
 
+    if (feat == DNGN_ENTER_PORTAL_VAULT)
+        return (::feature_description(coord_def(x, y), false));
+
     return (::feature_description(feat, trap));
 }
 
