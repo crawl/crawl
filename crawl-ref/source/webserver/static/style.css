@@ -15,6 +15,10 @@ body {
     position: absolute;
 }
 
+#minimap, #minimap_overlay {
+    position: absolute;
+}
+
 #crt {
     display: inline-block;
 }
