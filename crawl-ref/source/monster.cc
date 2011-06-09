@@ -5696,7 +5696,7 @@ void monster::calc_speed()
 
     // Going berserk on liquid ground doesn't speed you up any.
     if (!is_liquefied && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
-        speed *= 2;
+        speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);
     if (has_ench(ENCH_SLOW))

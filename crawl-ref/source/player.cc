@@ -2077,7 +2077,7 @@ int player_speed(void)
         ps = haste_mul(ps);
 
     if (you.duration[DUR_BERSERK] && you.religion != GOD_CHEIBRIADOS)
-        ps /= 2;
+        ps = berserk_div(ps);
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
