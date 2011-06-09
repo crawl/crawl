@@ -149,7 +149,7 @@ Branch branches[] = {
       "Hell", "the Vestibule of Hell", "Hell",
       NULL,
       true, LIGHTGREY, LIGHTRED,
-      mons_standard_rare, mons_standard_level,
+      mons_vestibule_rare, mons_vestibule_level,
       NULL, NULL, NULL, NULL,
       'U', false, false, 0 },
 

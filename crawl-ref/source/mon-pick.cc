@@ -2471,6 +2471,59 @@ int mons_hallzot_rare(int mcls)
 
 // The Hells
 
+// The Vestibule of Hell
+int mons_vestibule_level(int mcls)
+{
+    int mlev = absdungeon_depth(BRANCH_VESTIBULE_OF_HELL, 1);
+
+    if (!mons_vestibule_rare(mcls))
+        return mlev + 99;
+    // Depths are irrelevant for a depth-1 branch.
+    return mlev + 1;
+}
+
+int mons_vestibule_rare(int mcls)
+{
+    switch (mcls)
+    {
+    case MONS_SUN_DEMON:
+    case MONS_REAPER:
+    case MONS_SOUL_EATER:
+    case MONS_ICE_DEVIL:
+        return 50;
+
+    case MONS_HELL_KNIGHT:
+    case MONS_NECROMANCER:
+    case MONS_HELL_HOG:
+        return 25;
+
+    case MONS_DEMONIC_CRAWLER:
+    case MONS_HELL_HOUND:
+    case MONS_ORANGE_RAT:
+    case MONS_RED_DEVIL:
+    case MONS_HAIRY_DEVIL:
+    case MONS_BLUE_DEVIL:
+    case MONS_IRON_DEVIL:
+    case MONS_LOROCYPROCA:
+        return 20;
+
+    case MONS_GREEN_DEATH:
+    case MONS_BLUE_DEATH:
+    case MONS_BALRUG:
+    case MONS_CACODEMON:
+        return 15;
+
+    case MONS_HELLION:
+    case MONS_TORMENTOR:
+    case MONS_TENTACLED_MONSTROSITY:
+    case MONS_HELLEPHANT:
+        return 10;
+
+    default:
+        return 0;
+    }
+}
+
 // The Iron City of Dis
 int mons_dis_level(int mcls)
 {
