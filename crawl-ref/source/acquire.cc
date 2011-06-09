@@ -1201,7 +1201,9 @@ int acquirement_create_item(object_class_type class_wanted,
 
         // Don't generate randart books in items(), we do that
         // ourselves.
-        int want_arts = (class_wanted == OBJ_BOOKS ? 0 : 1);
+        bool want_arts = (class_wanted != OBJ_BOOKS);
+        if (agent == GOD_TROG && !one_chance_in(3))
+            want_arts = false;
 
         thing_created = items(want_arts, class_wanted, type_wanted, true,
                                ITEM_LEVEL, MAKE_ITEM_RANDOM_RACE,
@@ -1298,7 +1300,7 @@ int acquirement_create_item(object_class_type class_wanted,
         if (agent == GOD_TROG)
         {
             // ... but he loves the antimagic brand specially.
-            if (one_chance_in(4) && doodad.base_type == OBJ_WEAPONS
+            if (coinflip() && doodad.base_type == OBJ_WEAPONS
                 && !is_range_weapon(doodad) && !is_unrandom_artefact(doodad))
             {
                 set_item_ego_type(doodad, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
