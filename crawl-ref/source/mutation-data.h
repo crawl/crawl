@@ -811,7 +811,7 @@
   "talons"
 },
 
-{ MUT_TENTACLES,                 0,    3, false, true,
+{ MUT_TENTACLES,                 0,  3, false, true,
   "tentacles",
 
   {"You have a mass of small tentacles instead of fingers.",
