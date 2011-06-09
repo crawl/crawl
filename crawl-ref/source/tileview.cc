@@ -1066,7 +1066,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         }
     }
 
-    const dungeon_feature_type feat = grd(gc);
+    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
     if (feat_is_water(feat) || feat == DNGN_LAVA)
         cell.bg |= TILE_FLAG_WATER;
 
@@ -1076,7 +1076,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (silenced(gc))
         cell.is_silenced = true;
 
-    if (grd(gc) == DNGN_SWAMP_TREE)
+    if (feat == DNGN_SWAMP_TREE)
         cell.swamp_tree_water = true;
 }
 
