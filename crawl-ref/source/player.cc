@@ -6629,7 +6629,6 @@ int player::has_usable_tentacles(bool allow_tran) const
     return (has_tentacles(allow_tran));
 }
 
-
 bool player::sicken(int amount, bool allow_hint)
 {
     ASSERT(!crawl_state.game_is_arena());
