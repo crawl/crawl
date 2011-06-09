@@ -827,7 +827,7 @@ bool evoke_item(int slot)
 
         case MISC_BOX_OF_BEASTS:
             if (_box_of_beasts(item))
-                pract = 1;
+                pract = 1, ident = true;
             break;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
