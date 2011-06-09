@@ -2306,13 +2306,9 @@ void sighup_save_and_exit()
     if (crawl_state.saving_game || crawl_state.updating_scores)
         return;
 
-#ifdef UNIX
     // Set up an alarm to force-kill Crawl if it rudely ignores the
     // hangup signal.
     alarm(10);
-#else
-    #warning FIXME -- hanging process if anything bad happens during shutdown
-#endif
 
     interrupt_activity(AI_FORCE_INTERRUPT);
 

@@ -102,6 +102,17 @@ bool read_urandom(char *buf, int len)
 
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
+static void CALLBACK _abortion(PVOID dummy, BOOLEAN timedout)
+{
+    TerminateProcess(GetCurrentProcess(), 0);
+}
+
+void alarm(unsigned int seconds)
+{
+    HANDLE dummy;
+    CreateTimerQueueTimer(&dummy, 0, _abortion, 0, seconds * 1000, 0, 0);
+}
+
 // implementation by Richard W.M. Jones
 // He claims this is the equivalent to fsync(), reading the MSDN doesn't seem
 // to show that vital metadata is indeed flushed, others report that at least
