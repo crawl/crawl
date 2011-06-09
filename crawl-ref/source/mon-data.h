@@ -4145,6 +4145,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
+// Octopode race, not a 'normal' octopus.
+{
+    MONS_OCTOPODE, 'X', LIGHTCYAN, "octopode",
+    M_NO_SKELETON | M_COLD_BLOOD | M_SPEAKS,
+    MR_NO_FLAGS,
+    700, 10, MONS_KRAKEN, MONS_OCTOPODE, MH_NATURAL, -1,
+    { {AT_TENTACLE_SLAP, AF_PLAIN, 15}, {AT_BITE, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK },
+    { 6, 4, 6, 0 },
+    0, 5, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SHOUT,
+    I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // lava monsters
 {
     MONS_LAVA_WORM, 'w', RED, "lava worm",

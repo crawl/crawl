@@ -120,8 +120,8 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
         return;
 
     ASSERT(slot == eq
-           || eq == EQ_RINGS
-              && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING));
+           || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
+           || eq == EQ_RINGS && you.species == SP_OCTOPUS);
 
     if (msg)
         _equip_use_warning(item);
@@ -130,7 +130,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
         _equip_weapon_effect(item, msg, unmeld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _equip_armour_effect(item, unmeld);
-    else if (slot >= EQ_LEFT_RING && slot <= EQ_AMULET)
+    else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
         _equip_jewellery_effect(item, unmeld);
 }
 
@@ -144,14 +144,14 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
         return;
 
     ASSERT(slot == eq
-           || eq == EQ_RINGS
-              && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING));
+           || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
+           || eq == EQ_RINGS && you.species == SP_OCTOPUS);
 
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg, meld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _unequip_armour_effect(item, meld);
-    else if (slot >= EQ_LEFT_RING && slot <= EQ_AMULET)
+    else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
         _unequip_jewellery_effect(item, msg);
 }
 

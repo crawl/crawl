@@ -91,6 +91,7 @@ static void _species_stat_init(species_type which_species)
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
 
     case SP_FELID:              sb =  2; ib =  7; db =  9;      break;  // 18
+    case SP_OCTOPUS:            sb =  5; ib =  8; db =  5;      break;  // 18
     }
 
     you.base_stats[STAT_STR] = sb + 2;
@@ -340,6 +341,13 @@ void give_basic_mutations(species_type speci)
     case SP_BASE_DRACONIAN:
     case SP_MOUNTAIN_DWARF:
         you.mutation[MUT_ROBUST] = 1;
+        break;
+    case SP_OCTOPUS:
+        you.mutation[MUT_TENTACLES]       = 3;
+        you.mutation[MUT_BEAK]            = 1;
+        you.mutation[MUT_CAMOUFLAGE]      = 1;
+        you.mutation[MUT_GELATINOUS_BODY] = 1;
+        you.mutation[MUT_FRAIL]           = 1;
         break;
     default:
         break;

@@ -811,6 +811,24 @@
   "talons"
 },
 
+{ MUT_TENTACLES,                 0,    3, false, true,
+  "tentacles",
+
+  {"You have a mass of small tentacles instead of fingers.",
+   "You have a mass of tentacles instead of hands.",
+   "You have a mass of large tentacles instead of arms."},
+
+  {"Your fingers turn into small tentacles.",
+   "Your hands turn into tentacles.",
+   "Your arms turn into large tentacles."},
+
+  {"Your fingers look less like tentacles.",
+   "Your hands look less like tentacles.",
+   "Your arms look less like tentacles."},
+
+   "tentacles"
+},
+
 // Naga only
 { MUT_BREATHE_POISON,             0,  1, false, false,
   "breathe poison",
@@ -1366,6 +1384,24 @@
    "Your yellow scales recede somewhat."},
 
   "yellow scales"
+},
+
+{ MUT_CAMOUFLAGE,           1,   3, false, true,
+  "camouflage",
+
+  {"Your skin changes color to match your surroundings (Stlth).",
+   "Your skin blends seamlessly with your surroundings (Stlth).",
+   "Your skin perfectly mimics your surroundings (Stlth)."},
+
+  {"Your skin functions as natural camouflage."
+   "Your natural camouflage becomes more effective.",
+   "Your natural camouflage becomes more effective."},
+
+  {"Your skin no longer functions as natural camouflage.",
+   "Your natural camouflage becomes less effective.",
+   "Your natural camouflage becomes less effective."},
+
+   "camouflage"
 }
 
 #endif
