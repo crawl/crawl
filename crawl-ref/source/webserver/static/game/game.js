@@ -7,6 +7,7 @@ var view_center_x = 0, view_center_y = 0;
 var minimap_ctx;
 var minimap_cell_w, minimap_cell_h;
 var minimap_x = 0, minimap_y = 0;
+var minimap_display_x = 0, minimap_display_y = 0;
 
 // Text area handling ----------------------------------------------------------
 function get_text_area_line(name, line)
@@ -217,14 +218,17 @@ function vgrdc(x, y)
     view_x = x - Math.floor(dungeon_cols / 2);
     view_y = y - Math.floor(dungeon_rows / 2);
     shift(view_x - old_vx, view_y - old_vy);
+}
 
+function update_minimap_overlay()
+{
     // Update the minimap overlay
     var minimap_overlay = $("#minimap_overlay")[0];
     var ctx = minimap_overlay.getContext("2d");
     ctx.clearRect(0, 0, minimap_overlay.width, minimap_overlay.height);
     ctx.strokeStyle = "yellow";
-    ctx.strokeRect((view_x - minimap_x) * minimap_cell_w + 0.5,
-                   (view_y - minimap_y) * minimap_cell_h + 0.5,
+    ctx.strokeRect(minimap_display_x + (view_x - minimap_x) * minimap_cell_w + 0.5,
+                   minimap_display_y + (view_y - minimap_y) * minimap_cell_h + 0.5,
                    dungeon_cols * minimap_cell_w - 1,
                    dungeon_rows * minimap_cell_h - 1);
 }

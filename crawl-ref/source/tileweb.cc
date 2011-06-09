@@ -228,7 +228,10 @@ bool TilesFramework::_send_cell(int x, int y,
     const bool in_water = _in_water(cell);
     bool fg_changed = false;
 
-    fprintf(stdout, "c(%d,%d,{", x, y);
+    if (m_origin.equals(-1, -1))
+        m_origin = gc;
+
+    fprintf(stdout, "c(%d,%d,{", x - m_origin.x, y - m_origin.y);
 
     if (old_cell.bg == TILE_FLAG_UNSEEN)
     {
@@ -583,6 +586,7 @@ void TilesFramework::_send_current_view()
             cell++;
         }
 
+    fprintf(stdout, "display();");
     fprintf(stdout, "\n");
 }
 
@@ -597,7 +601,11 @@ void TilesFramework::redraw()
 
     if (m_current_gc != m_next_gc)
     {
-        fprintf(stdout, "vgrdc(%d,%d);", m_next_gc.x, m_next_gc.y);
+        if (m_origin.equals(-1, -1))
+            m_origin = m_next_gc;
+        fprintf(stdout, "vgrdc(%d,%d);",
+                m_next_gc.x - m_origin.x,
+                m_next_gc.y - m_origin.y);
         m_current_gc = m_next_gc;
     }
 
@@ -643,6 +651,7 @@ void TilesFramework::redraw()
                 old_cell++;
             }
 
+        fprintf(stdout, "display();");
         fprintf(stdout, "\n");
     }
     
@@ -659,6 +668,7 @@ void TilesFramework::update_minimap(const coord_def& gc)
 void TilesFramework::clear_minimap()
 {
     m_current_view = crawl_view_buffer();
+    m_origin = coord_def(-1, -1);
 }
 
 void TilesFramework::update_minimap_bounds()
@@ -709,7 +719,8 @@ void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
         }
         else
         {
-            fprintf(stdout, "place_cursor(%d,%d,%d);\n", type, result.x, result.y);
+            fprintf(stdout, "place_cursor(%d,%d,%d);\n", type,
+                    result.x - m_origin.x, result.y - m_origin.y);
         }
     }
 }
@@ -739,7 +750,8 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 
     m_has_overlays = true;
 
-    fprintf(stdout, "add_overlay(%d,%d,%d);\n", idx, gc.x, gc.y);
+    fprintf(stdout, "add_overlay(%d,%d,%d);\n", idx,
+            gc.x - m_origin.x, gc.y - m_origin.y);
 }
 
 void TilesFramework::clear_overlays()
