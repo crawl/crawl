@@ -506,7 +506,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_GLADIATOR:
-    {
         // Equipment.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         _update_weapon(ng);
@@ -540,7 +539,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_UNARMED_COMBAT] = 2;
         weap_skill = 3;
         break;
-    }
 
     case JOB_MONK:
         you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
