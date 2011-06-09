@@ -2996,7 +2996,7 @@ int get_max_subtype(object_class_type base_type)
         0,              // "gemstones"  -- no items of type
 #endif
     };
-    COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES, c1);
+    COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES);
 
     ASSERT(base_type < NUM_OBJECT_CLASSES);
 

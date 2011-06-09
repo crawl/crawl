@@ -37,7 +37,7 @@ static bool _items_similar(const item_def& a, const item_def& b,
 player_quiver::player_quiver()
     : m_last_used_type(AMMO_THROW)
 {
-    COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) == NUM_AMMO, a);
+    COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) == NUM_AMMO);
 }
 
 // Return:
@@ -503,7 +503,7 @@ preserve_quiver_slots::preserve_quiver_slots()
         return;
 
     COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) ==
-                  ARRAYSZ(you.m_quiver->m_last_used_of_type), a);
+                  ARRAYSZ(you.m_quiver->m_last_used_of_type));
 
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {

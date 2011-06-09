@@ -208,7 +208,7 @@ static const char *_monuse_names[] =
 
 static const char *_monuse_to_str(mon_itemuse_type utyp)
 {
-    COMPILE_CHECK(ARRAYSZ(_monuse_names) == NUM_MONUSE, c1);
+    COMPILE_CHECK(ARRAYSZ(_monuse_names) == NUM_MONUSE);
     return _monuse_names[utyp];
 }
 
@@ -228,7 +228,7 @@ static const char *_moneat_names[] =
 
 static const char *_moneat_to_str(mon_itemeat_type etyp)
 {
-    COMPILE_CHECK(ARRAYSZ(_moneat_names) == NUM_MONEAT, c1);
+    COMPILE_CHECK(ARRAYSZ(_moneat_names) == NUM_MONEAT);
     return _moneat_names[etyp];
 }
 

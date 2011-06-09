@@ -27,9 +27,9 @@
 
 
 #ifndef _lint
-#define COMPILE_CHECK(expr, tag) typedef char compile_check_ ## tag[(expr) ? 1 : -1]
+#define COMPILE_CHECK(expr) typedef char compile_check_ ## __LINE__[(expr) ? 1 : -1]
 #else
-#define COMPILE_CHECK(expr, tag)
+#define COMPILE_CHECK(expr)
 #endif
 
 #if defined(DEBUG) && !defined(ASSERTS)

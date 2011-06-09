@@ -1011,7 +1011,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Exploration", "Desecrated Holy Remains",
             };
 
-            COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
+            COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
             dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
                  conducts[thing_done],
                  you.piety, piety_change, piety_denom,

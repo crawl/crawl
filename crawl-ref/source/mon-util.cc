@@ -2208,8 +2208,7 @@ uint8_t ugly_thing_random_colour()
 
 int str_to_ugly_thing_colour(const std::string &s)
 {
-    COMPILE_CHECK(ARRAYSZ(ugly_colour_values) == ARRAYSZ(ugly_colour_names),
-                  ugly_thing_colour_size_check);
+    COMPILE_CHECK(ARRAYSZ(ugly_colour_values) == ARRAYSZ(ugly_colour_names));
     for (int i = 0, size = ARRAYSZ(ugly_colour_values); i < size; ++i)
         if (s == ugly_colour_names[i])
             return ugly_colour_values[i];
@@ -2234,7 +2233,7 @@ static const char *drac_colour_names[] = {
 std::string draconian_colour_name(monster_type mon_type)
 {
     COMPILE_CHECK(ARRAYSZ(drac_colour_names) ==
-                  MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
+                  MONS_PALE_DRACONIAN - MONS_DRACONIAN);
 
     if (mon_type < MONS_BLACK_DRACONIAN || mon_type > MONS_PALE_DRACONIAN)
         return ("buggy");
@@ -2245,7 +2244,7 @@ std::string draconian_colour_name(monster_type mon_type)
 monster_type draconian_colour_by_name(const std::string &name)
 {
     COMPILE_CHECK(ARRAYSZ(drac_colour_names)
-                  == (MONS_PALE_DRACONIAN - MONS_DRACONIAN), c1);
+                  == (MONS_PALE_DRACONIAN - MONS_DRACONIAN));
 
     for (unsigned i = 0; i < ARRAYSZ(drac_colour_names); ++i)
     {
@@ -3729,7 +3728,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "shouts",       // S_LOUD
         "screams"       // S_VERY_LOUD
     };
-    COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS, shout_list);
+    COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {

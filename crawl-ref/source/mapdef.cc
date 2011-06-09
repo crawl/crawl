@@ -4385,8 +4385,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "archery",
         NULL
     };
-    COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_SPECIAL_ARMOURS,
-                  cc_armour_ego);
+    COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_SPECIAL_ARMOURS);
 
     const char* weapon_brands[] = {
         "flaming",
@@ -4415,8 +4414,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "reaping",
         NULL
     };
-    COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS,
-                  cc_weapon_brands);
+    COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS);
 
     const char* missile_brands[] = {
         "flame",
@@ -4439,8 +4437,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "wrath",
         NULL
     };
-    COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_SPECIAL_MISSILES,
-                  cc_missile_brands);
+    COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_SPECIAL_MISSILES);
 
     const char** name_lists[3] = {armour_egos, weapon_brands, missile_brands};
 

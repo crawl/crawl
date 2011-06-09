@@ -4462,33 +4462,33 @@ static void _compile_time_asserts()
 {
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
-    COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
-    COMPILE_CHECK(SK_EVOCATIONS == 32           , c2);
-    COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
+    COMPILE_CHECK(SK_UNARMED_COMBAT == 17);
+    COMPILE_CHECK(SK_EVOCATIONS == 32);
+    COMPILE_CHECK(SP_VAMPIRE == 30);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
-    COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);
-    COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c8);
-    COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER, cmax_mon);
+    COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN);
+    COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN);
+    COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER);
 
     // Make sure there's enough room in you.unique_items to hold all
     // the unrandarts.
-    COMPILE_CHECK(NO_UNRANDARTS < MAX_UNRANDARTS, c9);
+    COMPILE_CHECK(NO_UNRANDARTS < MAX_UNRANDARTS);
 
     // Non-artefact brands and unrandart indexes both go into
     // item.special, so make sure they don't overlap.
-    COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START, c10);
+    COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START);
 
     // We have space for 32 brands in the bitfield.
-    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]), c11);
-    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]), c12);
-    COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND, c13);
-    COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND, c14);
-    COMPILE_CHECK(sizeof(float) == sizeof(int32_t), c15);
-    COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t), c16);
-    COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t), c17);
+    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
+    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
+    COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND);
+    COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND);
+    COMPILE_CHECK(sizeof(float) == sizeof(int32_t));
+    COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
+    COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t));
     // Travel cache, traversable_terrain.
-    COMPILE_CHECK(NUM_FEATURES <= 256, c18);
+    COMPILE_CHECK(NUM_FEATURES <= 256);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

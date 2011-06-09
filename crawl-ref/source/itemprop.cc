@@ -449,10 +449,10 @@ void init_properties()
 {
     // The compiler would complain about too many initializers but not
     // about too few, check it by hand:
-    COMPILE_CHECK(NUM_ARMOURS  == ARRAYSZ(Armour_prop), c1);
-    COMPILE_CHECK(NUM_WEAPONS  == ARRAYSZ(Weapon_prop), c2);
-    COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop), c3);
-    COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop), c4);
+    COMPILE_CHECK(NUM_ARMOURS  == ARRAYSZ(Armour_prop));
+    COMPILE_CHECK(NUM_WEAPONS  == ARRAYSZ(Weapon_prop));
+    COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
+    COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop));
 
     int i;
 

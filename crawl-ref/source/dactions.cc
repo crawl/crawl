@@ -102,7 +102,7 @@ void update_da_counters(LevelInfo *lev)
 
 void add_daction(daction_type act)
 {
-    COMPILE_CHECK(ARRAYSZ(daction_names) == NUM_DACTIONS, dactions_names_size);
+    COMPILE_CHECK(ARRAYSZ(daction_names) == NUM_DACTIONS);
 
     dprf("scheduling delayed action: %s", daction_names[act]);
     you.dactions.push_back(act);

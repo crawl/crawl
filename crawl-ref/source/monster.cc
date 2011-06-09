@@ -6609,7 +6609,7 @@ static const char *enchant_names[] =
 
 static const char *_mons_enchantment_name(enchant_type ench)
 {
-    COMPILE_CHECK(ARRAYSZ(enchant_names) == NUM_ENCHANTMENTS+1, c1);
+    COMPILE_CHECK(ARRAYSZ(enchant_names) == NUM_ENCHANTMENTS+1);
 
     if (ench > NUM_ENCHANTMENTS)
         ench = NUM_ENCHANTMENTS;
