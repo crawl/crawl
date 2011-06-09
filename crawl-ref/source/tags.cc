@@ -334,7 +334,7 @@ static void marshallUByteRef(writer &th, const uint8_t &data)
 void marshallShort(std::vector<unsigned char>& buf, short data)
 {
     CHECK_INITIALIZED(data);
-    COMPILE_CHECK(sizeof(data) == 2, c1);
+    COMPILE_CHECK(sizeof(data) == 2);
     buf.push_back((unsigned char) ((data & 0xFF00) >> 8));
     buf.push_back((unsigned char) ((data & 0x00FF)   ));
 }
@@ -1053,7 +1053,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.magic_points);
     marshallByte(th, you.max_magic_points);
 
-    COMPILE_CHECK(NUM_STATS == 3, c2);
+    COMPILE_CHECK(NUM_STATS == 3);
     for (i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.base_stats[i]);
     for (i = 0; i < NUM_STATS; ++i)

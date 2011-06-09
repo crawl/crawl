@@ -67,7 +67,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
 
 int get_species_index_by_abbrev(const char *abbrev)
 {
-    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
+    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES);
 
     for (unsigned i = 0; i < ARRAYSZ(species_order); i++)
     {
@@ -123,7 +123,7 @@ const char *get_species_abbrev(species_type which_species)
 species_type get_species_by_abbrev(const char *abbrev)
 {
     int i;
-    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
+    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES);
     for (i = 0; i < NUM_SPECIES; i++)
     {
         if (tolower(abbrev[0]) == tolower(Species_Abbrev_List[i][0])
@@ -139,7 +139,7 @@ species_type get_species_by_abbrev(const char *abbrev)
 int ng_num_species()
 {
     // The list musn't be longer than the number of actual species.
-    COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES, c1);
+    COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
     return (ARRAYSZ(species_order));
 }
 

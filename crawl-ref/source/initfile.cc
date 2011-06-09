@@ -3754,7 +3754,7 @@ static bool _check_extra_opt(char* _opt)
 
 bool parse_args(int argc, char **argv, bool rc_only)
 {
-    COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS, c1);
+    COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS);
 
     if (crawl_state.command_line_arguments.empty())
     {

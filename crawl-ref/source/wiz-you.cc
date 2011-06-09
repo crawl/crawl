@@ -787,7 +787,7 @@ static const char* dur_names[] =
 
 void wizard_edit_durations(void)
 {
-    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS, dur_names_size);
+    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS);
     std::vector<int> durs;
     size_t max_len = 0;
 

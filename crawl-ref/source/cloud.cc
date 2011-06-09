@@ -1237,10 +1237,8 @@ static const char *_verbose_cloud_names[] =
 
 std::string cloud_type_name(cloud_type type, bool terse)
 {
-    COMPILE_CHECK(ARRAYSZ(_terse_cloud_names) == NUM_CLOUD_TYPES,
-                  check_terse_cloud_names);
-    COMPILE_CHECK(ARRAYSZ(_verbose_cloud_names) == NUM_CLOUD_TYPES,
-                  check_verbose_cloud_names);
+    COMPILE_CHECK(ARRAYSZ(_terse_cloud_names) == NUM_CLOUD_TYPES);
+    COMPILE_CHECK(ARRAYSZ(_verbose_cloud_names) == NUM_CLOUD_TYPES);
 
     return (type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES
             ? "buggy goodness"
