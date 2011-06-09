@@ -5341,6 +5341,7 @@ void player::init()
     seen_spell.init(false);
     seen_weapon.init(0);
     seen_armour.init(0);
+    seen_misc.reset();
 
     normal_vision    = LOS_RADIUS;
     current_vision   = LOS_RADIUS;
