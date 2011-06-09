@@ -1322,15 +1322,17 @@ static std::string _stk_genus_nocap()
 static std::string _stk_genus_short_cap()
 {
     return (Skill_Species == SP_DEMIGOD ? "God" :
-            Skill_Species == SP_FELID     ? "Cat" :
+            Skill_Species == SP_FELID   ? "Cat" :
+            Skill_Species == SP_OCTOPUS ? "Octopus" :
             _stk_genus_cap());
 }
 
 static std::string _stk_walker()
 {
-    return (Skill_Species == SP_NAGA  ? "Slider" :
-            Skill_Species == SP_KENKU ? "Glider"
-                                      : "Walker");
+    return (Skill_Species == SP_NAGA    ? "Slider" :
+            Skill_Species == SP_KENKU   ? "Glider" :
+            Skill_Species == SP_OCTOPUS ? "Wriggler"
+                                        : "Walker");
 }
 
 static std::string _stk_weight()

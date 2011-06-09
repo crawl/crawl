@@ -334,6 +334,13 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
+    case SP_OCTOPUS:
+        result += "You cannot wear most types of armour.\n";
+        result += "You can wear up to eight rings at the same time.\n";
+        result += "You are amphibious.\n";
+        have_any = true;
+        break;
+
     default:
         break;
     }

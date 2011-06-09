@@ -196,6 +196,8 @@ int player::damage_type(int)
         return (DVORP_SLICING);
     else if (has_usable_claws())
         return (DVORP_CLAWING);
+    else if (has_usable_tentacles())
+        return (DVORP_TENTACLE);
 
     return (DVORP_CRUSHING);
 }
@@ -245,7 +247,7 @@ int player::damage_brand(int)
 // eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded)
 {
-    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+    ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -256,7 +258,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded)
 // const variant of the above...
 const item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
-    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+    ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -410,6 +412,11 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str         = "underbelly";
             *can_plural = false;
         }
+        else if (species == SP_OCTOPUS)
+        {
+            str         = "tentacles";
+            *can_plural = false;
+        }
         else if (fishtail)
         {
             str         = "tail";
@@ -442,6 +449,8 @@ std::string player::arm_name(bool plural, bool *can_plural) const
         str = "feathered arm";
     else if (species == SP_MUMMY)
         str = "bandage-wrapped arm";
+    else if (species == SP_OCTOPUS)
+        str = "tentacle";
 
     if (plural)
         str = pluralise(str);

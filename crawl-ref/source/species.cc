@@ -37,7 +37,8 @@ static species_type species_order[] = {
     SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE,
     // not humanoid at all
-    SP_FELID
+    SP_FELID,
+    SP_OCTOPUS,
 };
 
 species_type random_draconian_player_species()
@@ -60,7 +61,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
-      "Fe",
+      "Fe", "OP",
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
@@ -247,6 +248,7 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
         case SP_FELID:      res = (adj ? "Feline"     : "Felid");      break;
+        case SP_OCTOPUS:    res = (adj ? "Octopoid"   : "Octopode");   break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }
@@ -271,7 +273,8 @@ int species_has_claws(species_type species, bool mut_level)
 
 bool species_likes_water(species_type species)
 {
-    return (species == SP_MERFOLK || species == SP_GREY_DRACONIAN);
+    return (species == SP_MERFOLK || species == SP_GREY_DRACONIAN
+            || species == SP_OCTOPUS);
 }
 
 genus_type species_genus(species_type species)
@@ -402,6 +405,8 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_DEEP_DWARF);
     case SP_FELID:
         return (MONS_FELID);
+    case SP_OCTOPUS:
+        return (MONS_OCTOPODE);
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:

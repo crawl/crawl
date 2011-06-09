@@ -241,10 +241,12 @@ std::string item_def::name(description_level_type descrip,
                 case EQ_WEAPON:
                     if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
                         buff << " (weapon)";
-                    else if (you.species != SP_FELID)
-                        buff << " (in hand)";
-                    else
+                    else if (you.has_usable_tentacles(true))
+                        buff << " (in tentacles)";
+                    else if (you.species == SP_FELID)
                         buff << " (in mouth)";
+                    else
+                        buff << " (in hand)";
                     break;
                 case EQ_CLOAK:
                 case EQ_HELMET:
@@ -263,8 +265,21 @@ std::string item_def::name(description_level_type descrip,
                                                      : " (right paw)");
                     break;
                 case EQ_AMULET:
-                    buff << " (around neck)";
+                    if (you.species == SP_OCTOPUS)
+                        buff << " (around mantle)";
+                    else
+                        buff << " (around neck)";
                     break;
+                case EQ_RING_ONE:
+                case EQ_RING_TWO:
+                case EQ_RING_THREE:
+                case EQ_RING_FOUR:
+                case EQ_RING_FIVE:
+                case EQ_RING_SIX:
+                case EQ_RING_SEVEN:
+                case EQ_RING_EIGHT:
+                    buff << " (on tentacle)";
+                break;
                 default:
                     die("Item in an invalid slot");
                 }

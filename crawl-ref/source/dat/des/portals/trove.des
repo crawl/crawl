@@ -616,7 +616,7 @@ ENDMAP
 NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -645,7 +645,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -667,7 +667,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 COLOUR:  o = blue
@@ -937,7 +937,7 @@ ENDMAP
 
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
