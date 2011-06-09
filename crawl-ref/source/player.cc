@@ -635,7 +635,7 @@ bool you_can_wear(int eq, bool special_armour)
         {
             return (false);
         }
-        if (player_mutation_level(MUT_CLAWS) >= 3)
+        if (player_mutation_level(MUT_CLAWS) == 3)
             return (false);
         return (true);
 
@@ -643,8 +643,8 @@ bool you_can_wear(int eq, bool special_armour)
         // Bardings.
         if (you.species == SP_NAGA || you.species == SP_CENTAUR)
             return (special_armour);
-        if (player_mutation_level(MUT_HOOVES) >= 3
-            || player_mutation_level(MUT_TALONS) >= 3)
+        if (player_mutation_level(MUT_HOOVES) == 3
+            || player_mutation_level(MUT_TALONS) == 3)
         {
             return (false);
         }
@@ -710,8 +710,8 @@ bool player_has_feet()
         return (false);
     }
 
-    if (player_mutation_level(MUT_HOOVES) >= 3
-        || player_mutation_level(MUT_TALONS) >= 3)
+    if (player_mutation_level(MUT_HOOVES) == 3
+        || player_mutation_level(MUT_TALONS) == 3)
     {
         return (false);
     }
@@ -778,19 +778,19 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     // Not a transformation, but also temporary -> check first.
     if (check_mutation)
     {
-        if (eq == EQ_GLOVES && you.has_claws(false) >= 3)
+        if (eq == EQ_GLOVES && you.has_claws(false) == 3)
             return (false);
 
-        if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) >= 3)
+        if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
             return (false);
 
-        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) >= 3)
+        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) == 3)
             return (false);
 
         if (eq == EQ_BOOTS
             && (you.fishtail
-                || player_mutation_level(MUT_HOOVES) >= 3
-                || player_mutation_level(MUT_TALONS) >= 3))
+                || player_mutation_level(MUT_HOOVES) == 3
+                || player_mutation_level(MUT_TALONS) == 3))
         {
             return (false);
         }
@@ -3209,7 +3209,6 @@ void level_change(bool skip_attribute_increase)
             case SP_OCTOPODE:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
-
                 break;
 
             default:
