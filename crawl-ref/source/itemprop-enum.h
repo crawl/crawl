@@ -245,9 +245,11 @@ enum misc_item_type
 
     MISC_RUNE_OF_ZOT,
 
-    MISC_QUAD_DAMAGE, // Sprint only
+    MISC_QUAD_DAMAGE,
 
-    NUM_MISCELLANY // mv: used for random generation
+    NUM_MISCELLANY, // mv: used for random generation
+    MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
+    MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,
 };
 
 enum missile_type

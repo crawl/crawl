@@ -684,19 +684,51 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 
 static int _acquirement_misc_subtype()
 {
-    int result = NUM_MISCELLANY;
-    do
+    // Note: items listed early are less likely due to chances of being
+    // overwritten.
+    int result = random_range(MISC_FIRST_DECK, MISC_LAST_DECK);
+    if (result == MISC_DECK_OF_PUNISHMENT)
+        result = MISC_BOX_OF_BEASTS;
+    if (one_chance_in(4))
+        result = MISC_BOTTLED_EFREET;
+    if (one_chance_in(4))
+        result = MISC_QUAD_DAMAGE;
+    if (one_chance_in(4) && !you.seen_misc[MISC_DISC_OF_STORMS])
+        result = MISC_DISC_OF_STORMS;
+    if (x_chance_in_y(you.skills[SK_FIRE_MAGIC], 27)
+        && !you.seen_misc[MISC_LAMP_OF_FIRE]
+        && you.skills[SK_EVOCATIONS])
     {
-        result = random2(NUM_MISCELLANY);
+        result = MISC_LAMP_OF_FIRE; // useless with no skill
     }
-    while (result == MISC_HORN_OF_GERYON
-           || result == MISC_RUNE_OF_ZOT
-#if TAG_MAJOR_VERSION == 32
-           || result == MISC_CRYSTAL_BALL_OF_FIXATION
-#endif
-           || result == MISC_EMPTY_EBONY_CASKET
-           || result == MISC_QUAD_DAMAGE
-           || result == MISC_DECK_OF_PUNISHMENT);
+    if (x_chance_in_y(you.skills[SK_AIR_MAGIC], 27)
+        && !you.seen_misc[MISC_AIR_ELEMENTAL_FAN]
+        && you.skills[SK_EVOCATIONS])
+    {
+        result = MISC_AIR_ELEMENTAL_FAN; // useless with no skill
+    }
+    if (one_chance_in(4)
+        && !you.seen_misc[MISC_STONE_OF_EARTH_ELEMENTALS]
+        && you.skills[SK_EVOCATIONS])
+    {   // useful for anyone with >= 1 skill, can't practice otherwise
+        result = MISC_STONE_OF_EARTH_ELEMENTALS;
+    }
+    if (one_chance_in(4) && !you.seen_misc[MISC_LANTERN_OF_SHADOWS])
+        result = MISC_LANTERN_OF_SHADOWS;
+    if (x_chance_in_y(you.skills[SK_EVOCATIONS], 27)
+        && (x_chance_in_y(std::max(you.skills[SK_SPELLCASTING],
+                                    you.skills[SK_INVOCATIONS]), 27)
+            || player_spirit_shield())
+        && !you.seen_misc[MISC_CRYSTAL_BALL_OF_ENERGY])
+    {
+        result = MISC_CRYSTAL_BALL_OF_ENERGY;
+    }
+    if (x_chance_in_y(you.skills[SK_EVOCATIONS], 27)
+        && !you.seen_misc[MISC_CRYSTAL_BALL_OF_SEEING]
+        && you.religion != GOD_ASHENZARI)
+    {
+        result = MISC_CRYSTAL_BALL_OF_SEEING;
+    }
 
     return (result);
 }
