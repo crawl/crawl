@@ -2038,6 +2038,14 @@ void revive()
     // Remove silence.
     invalidate_agrid();
 
+    if (you.hp_max <= 0)
+    {
+        you.lives = 0;
+        mpr("You are too frail to live.");
+        // possible only with an extreme abuse of Borgnjor's
+        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
+    }
+
     mpr("You rejoin the land of the living...");
     more();
 }
