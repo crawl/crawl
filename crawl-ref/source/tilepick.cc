@@ -36,7 +36,7 @@
 #include "viewgeom.h"
 
 // This should not be changed.
-COMPILE_CHECK(TILE_DNGN_UNSEEN == 0, c0);
+COMPILE_CHECK(TILE_DNGN_UNSEEN == 0);
 
 // NOTE: If one of the following asserts fail, it's because the corresponding
 // enum in itemprop-enum.h was modified, but rltiles/dc-item.txt was not
@@ -44,31 +44,31 @@ COMPILE_CHECK(TILE_DNGN_UNSEEN == 0, c0);
 
 // These brands start with "normal" which there's no tile for, so subtract 1.
 COMPILE_CHECK(NUM_REAL_SPECIAL_WEAPONS - 1
-              == TILE_BRAND_WEP_LAST - TILE_BRAND_WEP_FIRST + 1, c1);
+              == TILE_BRAND_WEP_LAST - TILE_BRAND_WEP_FIRST + 1);
 COMPILE_CHECK(NUM_SPECIAL_ARMOURS - 1
-              == TILE_BRAND_ARM_LAST - TILE_BRAND_ARM_FIRST + 1, c2);
+              == TILE_BRAND_ARM_LAST - TILE_BRAND_ARM_FIRST + 1);
 
-COMPILE_CHECK(NUM_RINGS == TILE_RING_ID_LAST - TILE_RING_ID_FIRST + 1, c4);
+COMPILE_CHECK(NUM_RINGS == TILE_RING_ID_LAST - TILE_RING_ID_FIRST + 1);
 COMPILE_CHECK(NUM_JEWELLERY - AMU_FIRST_AMULET
-              == TILE_AMU_ID_LAST - TILE_AMU_ID_FIRST + 1, c5);
-COMPILE_CHECK(NUM_SCROLLS == TILE_SCR_ID_LAST - TILE_SCR_ID_FIRST + 1, c6);
+              == TILE_AMU_ID_LAST - TILE_AMU_ID_FIRST + 1);
+COMPILE_CHECK(NUM_SCROLLS == TILE_SCR_ID_LAST - TILE_SCR_ID_FIRST + 1);
 // Note: STAFF_FIRST_ROD == total number of staves that aren't rods
 COMPILE_CHECK(STAFF_FIRST_ROD
-              == TILE_STAFF_ID_LAST - TILE_STAFF_ID_FIRST + 1, c7);
+              == TILE_STAFF_ID_LAST - TILE_STAFF_ID_FIRST + 1);
 COMPILE_CHECK(NUM_STAVES - STAFF_FIRST_ROD
-              == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1, c8);
-COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1, c9);
-COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1, c10);
+              == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
+COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1);
+COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1);
 
 // Some tile sets have a corresponding tile for every colour (excepting black).
 // If this assert breaks, then it means that either there are tiles that are
 // being unused in the tileset or an incorrect type of tile will get used.
 COMPILE_CHECK(MAX_TERM_COLOUR - 1
-              == TILE_RING_COL_LAST - TILE_RING_COL_FIRST + 1, c11);
+              == TILE_RING_COL_LAST - TILE_RING_COL_FIRST + 1);
 COMPILE_CHECK(MAX_TERM_COLOUR - 1
-              == TILE_AMU_COL_LAST - TILE_AMU_COL_FIRST + 1, c12);
+              == TILE_AMU_COL_LAST - TILE_AMU_COL_FIRST + 1);
 COMPILE_CHECK(MAX_TERM_COLOUR - 1
-              == TILE_BOOK_COL_LAST - TILE_BOOK_COL_FIRST + 1, c12);
+              == TILE_BOOK_COL_LAST - TILE_BOOK_COL_FIRST + 1);
 
 static tileidx_t _tileidx_monster_base(int type,
                                        bool in_water = false,
