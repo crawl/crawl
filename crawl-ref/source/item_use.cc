@@ -3227,23 +3227,15 @@ static int _prompt_ring_to_remove(int new_ring)
 
 static int _prompt_ring_to_remove_octopode(int new_ring)
 {
-    const item_def *one_ring = you.slot_item(EQ_RING_ONE, true);
-    const item_def *two_ring = you.slot_item(EQ_RING_TWO, true);
-    const item_def *three_ring = you.slot_item(EQ_RING_THREE, true);
-    const item_def *four_ring = you.slot_item(EQ_RING_FOUR, true);
-    const item_def *five_ring = you.slot_item(EQ_RING_FIVE, true);
-    const item_def *six_ring = you.slot_item(EQ_RING_SIX, true);
-    const item_def *seven_ring = you.slot_item(EQ_RING_SEVEN, true);
-    const item_def *eight_ring = you.slot_item(EQ_RING_EIGHT, true);
+    const item_def *rings[8];
+    char slots[8];
 
-    const char one_slot = index_to_letter(one_ring->link);
-    const char two_slot = index_to_letter(two_ring->link);
-    const char three_slot = index_to_letter(three_ring->link);
-    const char four_slot = index_to_letter(four_ring->link);
-    const char five_slot = index_to_letter(five_ring->link);
-    const char six_slot = index_to_letter(six_ring->link);
-    const char seven_slot = index_to_letter(seven_ring->link);
-    const char eight_slot = index_to_letter(eight_ring->link);
+    for (int i = 0; i < 8; i++)
+    {
+        rings[i] = you.slot_item((equipment_type)(EQ_RING_ONE + i), true);
+        ASSERT(rings[i]);
+        slots[i] = index_to_letter(rings[i]->link);
+    }
 
     mesclr();
 //    mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
@@ -3254,41 +3246,33 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
 // (%c/%c/%c/%c/%c/%c/%c/%c/Esc)",
 //         one_slot, two_slot, three_slot, four_slot, five_slot, six_slot, seven_slot, eight_slot);
 
-    mprf("%s", one_ring->name(DESC_INVENTORY).c_str());
-    mprf("%s", two_ring->name(DESC_INVENTORY).c_str());
-    mprf("%s", three_ring->name(DESC_INVENTORY).c_str());
-    mprf("%s", four_ring->name(DESC_INVENTORY).c_str());
-    mprf("%s", five_ring->name(DESC_INVENTORY).c_str());
-    mprf("%s", six_ring->name(DESC_INVENTORY).c_str());
-    mprf("%s", seven_ring->name(DESC_INVENTORY).c_str());
-    mprf("%s", eight_ring->name(DESC_INVENTORY).c_str());
+    for (int i = 0; i < 8; i++)
+        mprf("%s", rings[i]->name(DESC_INVENTORY).c_str());
     flush_prev_message();
 
     // Deactivate choice from tile inventory.
     // FIXME: We need to be able to get the choice (item letter)
     //        *without* the choice taking action by itself!
+    int eqslot = EQ_NONE;
 
     mouse_control mc(MOUSE_MODE_MORE);
     int c;
     do
+    {
         c = getchm();
-    while (c != one_slot && c != two_slot && c != three_slot && c != four_slot &&
-           c != five_slot && c != six_slot && c != seven_slot && c != eight_slot &&
-           !key_is_escape(c) && c != ' ');
+        for (int i = 0; i < 8; i++)
+            if (c == slots[i])
+            {
+                eqslot = EQ_RING_ONE + i;
+                c = ' ';
+                break;
+            }
+    } while (!key_is_escape(c) && c != ' ');
 
     mesclr();
 
-    if (key_is_escape(c) || c == ' ')
+    if (eqslot == EQ_NONE)
         return (-1);
-
-    const int eqslot = (c == one_slot)   ? EQ_RING_ONE   :
-                       (c == two_slot)   ? EQ_RING_TWO   :
-                       (c == three_slot) ? EQ_RING_THREE :
-                       (c == four_slot)  ? EQ_RING_FOUR  :
-                       (c == five_slot)  ? EQ_RING_FIVE  :
-                       (c == six_slot)   ? EQ_RING_SIX   :
-                       (c == seven_slot) ? EQ_RING_SEVEN :
-                                           EQ_RING_EIGHT;
     return (you.equip[eqslot]);
 }
 
@@ -3490,14 +3474,9 @@ static bool _swap_rings(int ring_slot)
 
 static bool _swap_rings_octopode(int ring_slot)
 {
-    const item_def* ring [8] = {you.slot_item(EQ_RING_ONE, true),
-                                you.slot_item(EQ_RING_TWO, true),
-                                you.slot_item(EQ_RING_THREE, true),
-                                you.slot_item(EQ_RING_FOUR, true),
-                                you.slot_item(EQ_RING_FIVE, true),
-                                you.slot_item(EQ_RING_SIX, true),
-                                you.slot_item(EQ_RING_SEVEN, true),
-                                you.slot_item(EQ_RING_EIGHT, true)};
+    const item_def* ring[8];
+    for (int i = 0; i < 8; i++)
+        ring[i] = you.slot_item((equipment_type)(EQ_RING_ONE + i), true);
     int array = 0;
     int unwanted = 0;
     int cursed = 0;
@@ -3559,27 +3538,18 @@ bool puton_item(int item_slot)
 {
     item_def& item = you.inv[item_slot];
 
-    if (item_slot == you.equip[EQ_LEFT_RING]
-        || item_slot == you.equip[EQ_RIGHT_RING]
-        || item_slot == you.equip[EQ_AMULET]
-        || item_slot == you.equip[EQ_RING_ONE]
-        || item_slot == you.equip[EQ_RING_TWO]
-        || item_slot == you.equip[EQ_RING_THREE]
-        || item_slot == you.equip[EQ_RING_FOUR]
-        || item_slot == you.equip[EQ_RING_FIVE]
-        || item_slot == you.equip[EQ_RING_SIX]
-        || item_slot == you.equip[EQ_RING_SEVEN]
-        || item_slot == you.equip[EQ_RING_EIGHT])
-    {
-        // "Putting on" an equipped item means taking it off.
-        if (Options.equip_unequip)
-            return (!remove_ring(item_slot));
-        else
+    for (int eq = EQ_LEFT_RING; eq < NUM_EQUIP; eq++)
+        if (item_slot == you.equip[eq])
         {
-            mpr("You're already wearing that object!");
-            return (false);
+            // "Putting on" an equipped item means taking it off.
+            if (Options.equip_unequip)
+                return (!remove_ring(item_slot));
+            else
+            {
+                mpr("You're already wearing that object!");
+                return (false);
+            }
         }
-    }
 
     if (item_slot == you.equip[EQ_WEAPON])
     {
@@ -3596,15 +3566,17 @@ bool puton_item(int item_slot)
     const bool lring = you.slot_item(EQ_LEFT_RING, true);
     const bool rring = you.slot_item(EQ_RIGHT_RING, true);
     const bool is_amulet = jewellery_is_amulet(item);
-    const bool blinged_octopode = (you.species == SP_OCTOPODE
-                        && you.slot_item(EQ_RING_ONE, true)
-                        && you.slot_item(EQ_RING_TWO, true)
-                        && you.slot_item(EQ_RING_THREE, true)
-                        && you.slot_item(EQ_RING_FOUR, true)
-                        && you.slot_item(EQ_RING_FIVE, true)
-                        && you.slot_item(EQ_RING_SIX, true)
-                        && you.slot_item(EQ_RING_SEVEN, true)
-                        && you.slot_item(EQ_RING_EIGHT, true));
+    bool blinged_octopode = false;
+    if (you.species == SP_OCTOPODE)
+    {
+        blinged_octopode = true;
+        for (int eq = EQ_RING_ONE; eq <= EQ_RING_EIGHT; eq++)
+            if (you.slot_item((equipment_type)eq, true))
+            {
+                blinged_octopode = false;
+                break;
+            }
+    }
 
     if (!is_amulet)     // i.e. it's a ring
     {
@@ -3649,20 +3621,16 @@ bool puton_item(int item_slot)
     equipment_type hand_used;
 
     if (is_amulet)
-    {
         hand_used = EQ_AMULET;
-    }
     else if (you.species == SP_OCTOPODE)
     {
-        hand_used = you.slot_item(EQ_RING_ONE, true)    ? EQ_RING_ONE   :
-                    you.slot_item(EQ_RING_TWO, true)    ? EQ_RING_TWO   :
-                    you.slot_item(EQ_RING_THREE, true)  ? EQ_RING_THREE :
-                    you.slot_item(EQ_RING_FOUR, true)   ? EQ_RING_FOUR  :
-                    you.slot_item(EQ_RING_FIVE, true)   ? EQ_RING_FIVE  :
-                    you.slot_item(EQ_RING_SIX, true)    ? EQ_RING_SIX   :
-                    you.slot_item(EQ_RING_SEVEN, true)  ? EQ_RING_SEVEN :
-                    you.slot_item(EQ_RING_EIGHT, true)  ? EQ_RING_EIGHT :
-                                                          EQ_NONE;
+        for (hand_used = EQ_RING_ONE; hand_used <= EQ_RING_EIGHT;
+             hand_used = (equipment_type)(hand_used + 1))
+        {
+            if (you.slot_item(hand_used, true))
+                break;
+        }
+        ASSERT(hand_used <= EQ_RING_EIGHT);
     }
     else
     {
@@ -3739,15 +3707,13 @@ bool remove_ring(int slot, bool announce)
     const bool left  = player_wearing_slot(EQ_LEFT_RING);
     const bool right = player_wearing_slot(EQ_RIGHT_RING);
     const bool amu   = player_wearing_slot(EQ_AMULET);
-    const bool octopode_with_ring = (you.species == SP_OCTOPODE &&
-                          (player_wearing_slot(EQ_RING_ONE)
-                        || player_wearing_slot(EQ_RING_TWO)
-                        || player_wearing_slot(EQ_RING_THREE)
-                        || player_wearing_slot(EQ_RING_FOUR)
-                        || player_wearing_slot(EQ_RING_FIVE)
-                        || player_wearing_slot(EQ_RING_SIX)
-                        || player_wearing_slot(EQ_RING_SEVEN)
-                        || player_wearing_slot(EQ_RING_EIGHT)));
+    bool octopode_with_ring = false;
+    if (you.species == SP_OCTOPODE)
+    {
+        for (int eq = EQ_RING_ONE; eq <= EQ_RING_EIGHT; eq++)
+            if (player_wearing_slot(eq))
+                octopode_with_ring = true;
+    }
 
     if (!left && !right && !amu && !octopode_with_ring)
     {
