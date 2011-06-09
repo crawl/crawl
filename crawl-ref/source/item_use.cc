@@ -684,6 +684,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You can't wear any headgear with your large antennae!");
             return (false);
         }
+
         // Soft helmets (caps and wizard hats) always fit, otherwise.
         if (!is_hard_helmet(item))
             return (true);
@@ -715,14 +716,12 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You can't wear that!");
             return (false);
         }
-
     }
 
     if (!can_equip(slot, ignore_temporary))
     {
         if (verbose)
             mpr("You can't wear that in your present form.");
-
         return (false);
     }
 
@@ -736,7 +735,6 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
            mpr("You don't have any such object.");
-
         return (false);
     }
 
@@ -749,7 +747,6 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
            mpr("You are wielding that object!");
-
         return (false);
     }
 
@@ -772,12 +769,11 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
         {
-            if (player_mutation_level(MUT_TENTACLES) == 3)
+            if (you.has_tentacles(false) == 3)
                 mpr("You'd need nine tentacles to do that!");
             else
                 mpr("You'd need three hands to do that!");
         }
-
         return (false);
     }
 
@@ -811,7 +807,6 @@ bool do_wear_armour(int item, bool quiet)
         {
             if (!quiet)
                mpr("Your cloak prevents you from wearing the armour.");
-
             return (false);
         }
     }
