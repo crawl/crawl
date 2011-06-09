@@ -1,7 +1,7 @@
 %%%%
 Dungeon
 
-It is still a mystery how this bizarre place was created. Some claim that it is the playground of bored gods, whereas others maintain that it was shaped by all kinds of species who fled the overworld and shunned the light. No matter what the origin of this cave is, it is filled with riches unheard of as well as with ample dangers to any intruder. Few have escaped alive, and even fewer have kept some rest of sanity to tell the tale.
+It is still a mystery how this bizarre place was created. Some claim that it is the playground of bored gods, whereas others maintain that it was shaped by all kinds of species who fled the overworld and shunned the light. No matter what the origin of this cave is, it is filled with riches unheard of as well as with ample dangers to any intruder. Few have escaped alive, and even fewer have kept some sliver of sanity to tell the tale.
 
 The dungeon is 27 levels deep, but, honestly, this is only the beginning.
 %%%%
@@ -35,7 +35,7 @@ The Swamp is five levels deep and contains the decaying rune. A dungeon features
 %%%%
 Shoals
 
-From afar you hear the steady sounds of waves and smell the salty spray. Upon reaching the Shoals, you are impressed by exotic underground beaches, making up a few islands in a vast sea. Out of a sudden, a bloodcurdling scream fills the air, followed by a gurgle. Anxiously, you look around and wonder: Who is the predator? And who is the prey?
+From afar you hear the steady sounds of waves and smell the salty spray. Upon reaching the Shoals, you are impressed by exotic underground beaches, making up a few islands in a vast sea. All of a sudden, a bloodcurdling scream fills the air, followed by a gurgle. Anxiously, you look around and wonder: Who is the predator? And who is the prey?
 
 The Shoals are five levels deep and contain the barnacled rune. A dungeon features only two of the Snake Pit, Swamp and Shoals branches. If the Shoals are present, the entrance is located between Lair:3 and Lair:6.
 %%%%
