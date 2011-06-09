@@ -1993,6 +1993,8 @@ void bring_to_safety()
 // This includes ALL afflictions, unlike wizard/Xom revive.
 void revive()
 {
+    adjust_level(-1);
+
     you.disease = 0;
     you.magic_contamination = 0;
     set_hunger(6000, true);
