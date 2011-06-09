@@ -2493,6 +2493,10 @@ enum mutation_type
     MUT_HORNS,          // head
     MUT_STINGER,
     MUT_TALONS,         // feet
+#if TAG_MAJOR_VERSION != 32
+    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+#endif
+
     // scales
     MUT_DISTORTION_FIELD,
     MUT_ICY_BLUE_SCALES,
@@ -2505,6 +2509,9 @@ enum mutation_type
     MUT_THIN_METALLIC_SCALES,
     MUT_THIN_SKELETAL_STRUCTURE,
     MUT_YELLOW_SCALES,
+#if TAG_MAJOR_VERSION != 32
+    MUT_CAMOUFLAGE,
+#endif
 
     MUT_ACUTE_VISION,
     MUT_AGILE,
@@ -2580,9 +2587,9 @@ enum mutation_type
 
 #if TAG_MAJOR_VERSION == 32
     MUT_POWERED_BY_PAIN,
-#endif
     MUT_CAMOUFLAGE,
     MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
