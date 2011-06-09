@@ -599,7 +599,7 @@ static void _construct_species_menu(const newgame_def* ng,
                                     MenuFreeform* menu)
 {
     ASSERT(menu != NULL);
-    static const int ITEMS_IN_COLUMN = 8;
+    static const int ITEMS_IN_COLUMN = 9;
     // Construct the menu, 3 columns
     TextItem* tmp = NULL;
     std::string text;
