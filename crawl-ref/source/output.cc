@@ -2192,7 +2192,8 @@ std::string _status_mut_abilities()
 
     if (you.species == SP_OCTOPODE)
     {
-        mutations.push_back("no armour");
+        mutations.push_back("almost no armour");
+        mutations.push_back("amphibious");
     }
 
     if (beogh_water_walk())
