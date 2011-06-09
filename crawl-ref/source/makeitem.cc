@@ -2848,7 +2848,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
     item.plus = 0;
 }
 
-static void _generate_book_item(item_def& item, int allow_uniques,
+static void _generate_book_item(item_def& item, bool allow_uniques,
                                 int force_type, int item_level)
 {
     // determine special (description)
@@ -3117,8 +3117,7 @@ deck_rarity_type random_deck_rarity() {
 
 
 // Returns item slot or NON_ITEM if it fails.
-int items(int allow_uniques,       // not just true-false,
-                                   // because of BCR acquirement hack
+int items(bool allow_uniques,
           object_class_type force_class, // desired OBJECTS class {dlb}
           int force_type,          // desired SUBTYPE - enum varies by OBJ
           bool dont_place,         // don't randomly place item on level
