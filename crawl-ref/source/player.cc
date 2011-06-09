@@ -2819,7 +2819,15 @@ static void _draconian_scale_colour_message()
 
 static void _felid_extra_life()
 {
-    if (you.lives + you.deaths < you.max_level/3 && you.lives < 2)
+    int xl = you.max_level;
+    int liv = 0;
+    while (xl > 3 + liv / 2)
+    {
+        xl -= 3 + liv / 2;
+        liv++;
+    }
+
+    if (you.lives + you.deaths < liv && you.lives < 2)
     {
         you.lives++;
         mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
@@ -2885,6 +2893,7 @@ void level_change(bool skip_attribute_increase)
                 attribute_increase();
 
             you.experience_level = new_exp;
+            you.max_level = you.experience_level;
 
             switch (you.species)
             {
@@ -3299,9 +3308,6 @@ void level_change(bool skip_attribute_increase)
                 std::min(you.hp, note_maxhp), note_maxhp,
                 std::min(you.magic_points, note_maxmp), note_maxmp);
         take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
-
-        if (you.experience_level > you.max_level)
-            you.max_level = you.experience_level;
 
         xom_is_stimulated(16);
 
@@ -3978,6 +3984,7 @@ static int _species_exp_mod(species_type species)
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_MUMMY:
+        case SP_FELID:
             return 14;
         case SP_HIGH_ELF:
         case SP_VAMPIRE:
@@ -3985,7 +3992,6 @@ static int _species_exp_mod(species_type species)
         case SP_DEMONSPAWN:
             return 15;
         case SP_DEMIGOD:
-        case SP_FELID:
             return 16;
         default:
             return 0;
