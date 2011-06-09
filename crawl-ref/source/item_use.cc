@@ -3475,7 +3475,7 @@ static bool _swap_rings_octopode(int ring_slot)
 
     for (int slots = EQ_RING_ONE;
          slots < NUM_EQUIP && array < 8;
-         ++slots && ++array)
+         ++slots, ++array)
     {
         if (ring[array] != NULL)
         {
