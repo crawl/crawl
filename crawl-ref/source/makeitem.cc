@@ -776,7 +776,7 @@ void item_colour(item_def &item)
             // - bwr
             case RUNE_DEMONIC:                  // random Pandemonium lords
             {
-                element_type types[] =
+                const element_type types[] =
                     {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL,
                      ETC_BLOOD, ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH,
                      ETC_CRYSTAL, ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_GILA,
