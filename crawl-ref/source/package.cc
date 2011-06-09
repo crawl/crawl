@@ -712,7 +712,7 @@ void chunk_writer::raw_write(const void *data, len_t len)
         }
 
         pkg->seek(cur_block + block_len + sizeof(block_header));
-        if (::write(pkg->fd, data, space) != space)
+        if (::write(pkg->fd, data, space) != (ssize_t)space)
             sysfail("write error while saving");
         data = (char*)data + space;
         block_len += space;
