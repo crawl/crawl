@@ -947,7 +947,7 @@
   "low mp"
 },
 
-{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 3, false, false,
+{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0,  3, false, false,
   NULL,
 
   {"You are somewhat able to resist unholy torments (1 in 5 success).",
@@ -1127,7 +1127,7 @@
     "eyeballs"
 },
 
-{ MUT_TRANSLUCENT_SKIN,           0,   3, false, true,
+{ MUT_TRANSLUCENT_SKIN,           0,  3, false, true,
   "translucent skin",
 
   {"Your skin is partially translucent.",
@@ -1145,7 +1145,7 @@
    "translucent skin"
 },
 
-{ MUT_PSEUDOPODS,                 0,    3, false, true,
+{ MUT_PSEUDOPODS,                 0,  3, false, true,
   "pseudopods",
 
   {"Armour fits poorly on your pseudopods.",
@@ -1163,25 +1163,21 @@
    "pseudopods"
 },
 
-{ MUT_FOOD_JELLY,                 0,    1, false, true,
+{ MUT_FOOD_JELLY,                       0,  1, false, true,
   "spawn jellies when eating",
 
   {"You occasionally spawn a jelly by eating.", "", ""},
-
   {"You feel more connected to the slimes.", "", ""},
-
   {"Your connection to the slimes vanishes.", "", ""},
 
   "jelly spawner"
 },
 
-{ MUT_ACIDIC_BITE,                0,     1, false, true,
+{ MUT_ACIDIC_BITE,                      0,  1, false, true,
   "acidic bite",
 
   {"You have acidic saliva.", "", ""},
-
   {"Acid begins to drip from your mouth.", "", ""},
-
   {"Your mouth feels dry.", "", ""},
 
   "acidic bite"
