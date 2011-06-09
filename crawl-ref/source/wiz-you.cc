@@ -178,6 +178,9 @@ void wizard_change_species(void)
         break;
     }
 
+    calc_hp();
+    calc_mp();
+
     burden_change();
     update_player_symbol();
 #ifdef USE_TILE
