@@ -3500,7 +3500,7 @@ static bool _swap_rings_octopode(int ring_slot)
     // We can't put a ring on, because we're wearing 8 cursed ones.
     if (cursed == 8)
     {
-        mprf("You're already wearing eight cursed rings! Isn't that enough for you?");
+        mpr("You're already wearing eight cursed rings! Isn't that enough for you?");
         return (false);
     }
     // The simple case - only one uncursed ring.
