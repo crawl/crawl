@@ -3909,7 +3909,7 @@ static void _do_berserk_no_combat_penalty(void)
             break;
         }
 
-        const int berserk_base_delay = BASELINE_DELAY / 2; // _not_ haste
+        const int berserk_base_delay = BASELINE_DELAY;
         int berserk_delay_penalty = you.berserk_penalty * berserk_base_delay;
 
         you.duration[DUR_BERSERK] -= berserk_delay_penalty;
