@@ -614,7 +614,6 @@ bool you_can_wear(int eq, bool special_armour)
     {
         if (special_armour && eq == EQ_HELMET)
             return (true);
-
         else
             return (eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
                     || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON);
