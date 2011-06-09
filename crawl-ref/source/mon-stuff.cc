@@ -1977,13 +1977,16 @@ int monster_die(monster* mons, killer_type killer,
             {
                 if (you.hp < you.hp_max)
                 {
-                    mpr("You feel a little better.");
-                    inc_hp(mons->hit_dice + random2(mons->hit_dice));
+                    int heal = random2(1 + 2 * mons->hit_dice);
+                    if (heal > 0)
+                        mprf("You feel a little better.");
+                    inc_hp(heal);
                 }
             }
 
             if (good_kill
-                && (you.religion == GOD_VEHUMET
+                && (you.religion == GOD_MAKHLEB
+                    || you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
@@ -1992,8 +1995,14 @@ int monster_die(monster* mons, killer_type killer,
             {
                 if (you.magic_points < you.max_magic_points)
                 {
-                    mpr("You feel your power returning.");
-                    inc_mp(1 + random2(mons->hit_dice / 2));
+                    int mana = (you.religion == GOD_VEHUMET) ?
+                            1 + random2(mons->hit_dice / 2) :
+                            random2(2 + mons->hit_dice / 3);
+                    if (mana > 0)
+                    {
+                        mpr("You feel your power returning.");
+                        inc_mp(mana);
+                    }
                 }
             }
 
