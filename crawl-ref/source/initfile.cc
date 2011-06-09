@@ -752,13 +752,7 @@ void game_options::reset_options()
 
     remember_name = true;
 
-#ifdef USE_TILE
-    // NOTE: Tiles relies on the IBM character set for evaluating glyphs
-    //       of magic mapped dungeon cells.
-    char_set      = CSET_IBM;
-#else
     char_set      = CSET_DEFAULT;
-#endif
 
     // set it to the .crawlrc default
     autopickups = ((1 << 15) | // gold
@@ -2205,7 +2199,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         game.name = field;
     }
 #endif
-#ifndef USE_TILE
     else if (key == "char_set")
     {
         if (field == "ascii")
@@ -2221,7 +2214,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             fprintf(stderr, "Bad character set: %s\n", field.c_str());
     }
-#endif
     else if (key == "default_autopickup")
     {
         if (_read_bool(field, true))
