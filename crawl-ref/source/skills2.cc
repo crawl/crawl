@@ -341,9 +341,6 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
         return false;
     }
 
-    if (is_set(SKMF_RESKILLING) && m_sk == SK_FIGHTING)
-        return false;
-
     if (you.skills[m_sk] == 0 && !is_set(SKMF_DO_RESKILL_TO))
         return false;
 
