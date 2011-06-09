@@ -218,6 +218,8 @@ function vgrdc(x, y)
     view_x = x - Math.floor(dungeon_cols / 2);
     view_y = y - Math.floor(dungeon_rows / 2);
     shift(view_x - old_vx, view_y - old_vy);
+
+    update_minimap_overlay();
 }
 
 function update_minimap_overlay()
