@@ -2274,18 +2274,15 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     case ARM_GLOVES:
-        switch (random2(3))
-        {
-        case 0:
-            rc = SPARM_DEXTERITY;
-            break;
-        case 1:
-            rc = SPARM_STRENGTH;
-            break;
-        default:
-            rc = SPARM_ARCHERY;
-        }
+    {
+        const special_armour_type gloves_egos[] = {
+            SPARM_DEXTERITY, SPARM_STRENGTH,
+            SPARM_ARCHERY
+        };
+
+        rc = RANDOM_ELEMENT(gloves_egos);
         break;
+    }
 
     case ARM_BOOTS:
     case ARM_NAGA_BARDING:
