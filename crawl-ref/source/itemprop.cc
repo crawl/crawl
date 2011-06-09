@@ -2940,6 +2940,13 @@ void seen_item(const item_def &item)
             you.seen_weapon[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_ARMOUR)
             you.seen_armour[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+        if (item.base_type == OBJ_MISCELLANY
+            && item.sub_type != MISC_CRYSTAL_BALL_OF_SEEING
+            && item.sub_type != MISC_CRYSTAL_BALL_OF_ENERGY
+            && !is_deck(item))
+        {
+            you.seen_misc.set(item.sub_type);
+        }
     }
 
     // major hack.  Deconstify should be safe here, but it's still repulsive.
