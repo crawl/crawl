@@ -42,7 +42,7 @@ function ch_stash_search_annotate_item(it)
   if it.artefact then
     annot = annot .. "{artefact} {artifact} "
   elseif it.branded then
-    annot = annot .. "{ego} "
+    annot = annot .. "{ego} {branded} "
   end
 
   if it.snakable then
