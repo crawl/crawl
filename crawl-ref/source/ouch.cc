@@ -947,6 +947,11 @@ static void _yred_mirrors_injury(int dam, int death_source)
 {
     if (yred_injury_mirror())
     {
+        // Cap damage to what was enough to kill you  Can matter if Yred
+        // saves your life or you have an extra kitty.
+        if (you.hp < 0)
+            dam += you.hp;
+
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
 
