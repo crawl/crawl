@@ -3062,8 +3062,8 @@ card_type top_card(const item_def &deck)
 bool is_deck(const item_def &item)
 {
     return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type >= MISC_DECK_OF_ESCAPE
-            && item.sub_type <= MISC_DECK_OF_DEFENCE);
+            && item.sub_type >= MISC_FIRST_DECK
+            && item.sub_type <= MISC_LAST_DECK);
 }
 
 bool bad_deck(const item_def &item)
