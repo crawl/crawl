@@ -3563,7 +3563,7 @@ bool puton_item(int item_slot)
     {
         blinged_octopode = true;
         for (int eq = EQ_RING_ONE; eq <= EQ_RING_EIGHT; eq++)
-            if (you.slot_item((equipment_type)eq, true))
+            if (!you.slot_item((equipment_type)eq, true))
             {
                 blinged_octopode = false;
                 break;
@@ -3619,7 +3619,7 @@ bool puton_item(int item_slot)
         for (hand_used = EQ_RING_ONE; hand_used <= EQ_RING_EIGHT;
              hand_used = (equipment_type)(hand_used + 1))
         {
-            if (you.slot_item(hand_used, true))
+            if (!you.slot_item(hand_used, true))
                 break;
         }
         ASSERT(hand_used <= EQ_RING_EIGHT);
