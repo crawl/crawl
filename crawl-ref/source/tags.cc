@@ -1289,6 +1289,8 @@ static void tag_construct_you_items(writer &th)
     marshallShort(th, NUM_ARMOURS);
     for (j = 0; j < NUM_ARMOURS; ++j)
         marshallInt(th,you.seen_armour[j]);
+
+    marshallFixedBitArray<NUM_MISCELLANY>(th, you.seen_misc);
 }
 
 static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
@@ -2108,6 +2110,12 @@ static void tag_read_you_items(reader &th)
         you.seen_armour[j] = 0;
     for (j = NUM_ARMOURS; j < count; ++j)
         unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_SEEN_MISC)
+        you.seen_misc.reset();
+    else
+#endif
+    unmarshallFixedBitArray<NUM_MISCELLANY>(th, you.seen_misc);
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)

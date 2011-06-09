@@ -31,6 +31,7 @@ enum tag_minor_version
     TAG_MINOR_NEW_HP,              // New HP formula.
     TAG_MINOR_HP_MP_CALC,          // HP and MP recalculated rather than stored +5000.
     TAG_MINOR_64_MB,               // More than 64 monster info flags.
+    TAG_MINOR_SEEN_MISC,           // Record misc items seen.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

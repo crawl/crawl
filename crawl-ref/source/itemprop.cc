@@ -711,6 +711,8 @@ void set_ident_flags(item_def &item, iflags_t flags)
             you.seen_weapon[item.sub_type] |= 1 << item.special;
         if (item.base_type == OBJ_ARMOUR)
             you.seen_armour[item.sub_type] |= 1 << item.special;
+        if (item.base_type == OBJ_MISCELLANY)
+            you.seen_misc.set(item.sub_type);
     }
 }
 
