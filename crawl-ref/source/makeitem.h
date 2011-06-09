@@ -22,7 +22,7 @@ enum item_make_species_type
 int create_item_named(std::string name, coord_def pos,
                       std::string *error);
 
-int items(int allow_uniques, object_class_type force_class, int force_type,
+int items(bool allow_uniques, object_class_type force_class, int force_type,
            bool dont_place, int item_level, int item_race,
            uint32_t mapmask = 0, int force_ego = 0, int agent = -1,
            bool mundane = false);
