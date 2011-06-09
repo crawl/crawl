@@ -305,6 +305,8 @@ protected:
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
 
+    coord_def m_origin;
+
     crawl_view_buffer m_current_view;
     coord_def m_current_gc;
 

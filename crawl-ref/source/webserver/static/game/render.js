@@ -1,5 +1,7 @@
 var overlaid_locs = [];
 var cursor_locs = [];
+var minimap_bounds;
+var minimap_changed = false;
 
 // Debug helper
 var mark_sent_cells = false;
@@ -74,6 +76,13 @@ function clear_map()
     minimap_ctx.fillRect(0, 0,
                          $("#minimap").width(),
                          $("#minimap").height());
+
+    minimap_bounds = {
+        left: 100000,
+        right: -100000,
+        top: 100000,
+        bottom: -100000
+    };
 }
 
 function c(x, y, cell)
@@ -94,6 +103,27 @@ function c(x, y, cell)
             old_cell[attr] = cell[attr];
     }
 
+    if (minimap_bounds.left > x)
+    {
+        minimap_bounds.left = x;
+        minimap_changed = true;
+    }
+    if (minimap_bounds.right < x)
+    {
+        minimap_bounds.right = x;
+        minimap_changed = true;
+    }
+    if (minimap_bounds.top > y)
+    {
+        minimap_bounds.top = y;
+        minimap_changed = true;
+    }
+    if (minimap_bounds.bottom < y)
+    {
+        minimap_bounds.bottom = y;
+        minimap_changed = true;
+    }
+
     if (redraw_above)
         render_cell(x, y - 1); // Redraw to remove trails
 
@@ -101,6 +131,15 @@ function c(x, y, cell)
         mark_cell(x, y, x + "/" + y);
     else
         render_cell(x, y);
+}
+
+function display()
+{
+    if (minimap_changed)
+    {
+        center_minimap();
+        minimap_changed = false;
+    }
 }
 
 function add_overlay(idx, x, y)
@@ -782,12 +821,49 @@ function draw_icon(idx, cx, cy, ofsx, ofsy)
     draw_tile(idx, cx, cy, "icons", get_icons_tile_info, ofsx, ofsy);
 }
 
+function center_minimap()
+{
+    var minimap = $("#minimap")[0];
+    var mm_w = minimap_bounds.right - minimap_bounds.left;
+    var mm_h = minimap_bounds.bottom - minimap_bounds.top;
+
+    if (mm_w < 0 || mm_h < 0) return;
+
+    var old_x = minimap_display_x - minimap_x * minimap_cell_w;
+    var old_y = minimap_display_y - minimap_y * minimap_cell_h;
+
+    minimap_x = minimap_bounds.left;
+    minimap_y = minimap_bounds.top;
+    minimap_display_x = Math.floor((minimap.width - minimap_cell_w * mm_w) / 2);
+    minimap_display_y = Math.floor((minimap.height - minimap_cell_h * mm_h) / 2);
+    
+    var dx = minimap_display_x - minimap_x * minimap_cell_w - old_x;
+    var dy = minimap_display_y - minimap_y * minimap_cell_h - old_y;
+
+    minimap_ctx.drawImage(minimap,
+                          0, 0, minimap.width, minimap.height,
+                          dx, dy, minimap.width, minimap.height);
+    
+    minimap_ctx.fillStyle = "black";
+    if (dx > 0)
+        minimap_ctx.fillRect(0, 0, dx, minimap.height);
+    if (dx < 0)
+        minimap_ctx.fillRect(minimap.width + dx, 0, -dx, minimap.height);
+    if (dy > 0)
+        minimap_ctx.fillRect(0, 0, minimap.width, dy);
+    if (dy < 0)
+        minimap_ctx.fillRect(0, minimap.height + dy, minimap.width, -dy);
+
+    update_minimap_overlay();
+}
+
 function set_minimap(cx, cy, colour)
 {
     var x = cx - minimap_x;
     var y = cy - minimap_y;
     minimap_ctx.fillStyle = colour;
-    minimap_ctx.fillRect(x * minimap_cell_w, y * minimap_cell_h,
+    minimap_ctx.fillRect(minimap_display_x + x * minimap_cell_w,
+                         minimap_display_y + y * minimap_cell_h,
                          minimap_cell_w, minimap_cell_h);
 }
 
