@@ -509,7 +509,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
 
         beem.flavour = flavour;
         dam = mons_adjust_flavoured(mon_target, beem, dam, true);
-        mon_target->hurt(NULL, dam, BEAM_MISSILE, false);
+        mon_target->hurt(guilty, dam, BEAM_MISSILE, false);
 
         if (!mon_target->alive())
             monster_die(mon_target, kt, kill_source);
@@ -1965,7 +1965,7 @@ void MiscastEffect::_transmutation(int severity)
             _ouch(3 + random2avg(23, 2));
             break;
         case 1:
-            _potion_effect(POT_PARALYSIS, 10);
+            target->petrify(guilty);
             break;
         case 2:
             _potion_effect(POT_CONFUSION, 10);
