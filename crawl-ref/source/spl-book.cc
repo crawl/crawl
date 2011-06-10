@@ -852,8 +852,6 @@ static int _failure_rate_to_group(int fail)
 {
     return (fail == 100) ? 100 :
            (fail > 77)   ?  78 :
-           (fail > 71)   ?  72 :
-           (fail > 64)   ?  65 :
            (fail > 59)   ?  60 :
            (fail > 50)   ?  51 :
            (fail > 40)   ?  41 :
