@@ -3701,12 +3701,12 @@ void monster::paralyse(actor *atk, int strength)
     enchant_monster_with_flavour(this, atk, BEAM_PARALYSIS, strength);
 }
 
-void monster::petrify(actor *atk, int strength)
+void monster::petrify(actor *atk)
 {
     if (is_insubstantial())
         return;
 
-    enchant_monster_with_flavour(this, atk, BEAM_PETRIFY, strength);
+    enchant_monster_with_flavour(this, atk, BEAM_PETRIFY);
 }
 
 void monster::slow_down(actor *atk, int strength)

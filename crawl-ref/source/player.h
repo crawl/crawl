@@ -540,7 +540,7 @@ public:
     void poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int amount, bool allow_hint = true);
     void paralyse(actor *, int str);
-    void petrify(actor *, int str);
+    void petrify(actor *);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
     bool heal(int amount, bool max_too = false);
