@@ -3058,7 +3058,7 @@ void level_change(bool skip_attribute_increase)
                     you.redraw_armour_class = true;
                 }
 
-                if (!(you.experience_level % 4) && you.experience_level > 7)
+                if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 14)
