@@ -863,13 +863,13 @@ static const mutation_type _all_scales[] = {
     MUT_YELLOW_SCALES,
 };
 
-static int _is_covering(mutation_type mut)
+static bool _is_covering(mutation_type mut)
 {
     for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
         if (_all_scales[i] == mut)
-            return (1);
+            return (true);
 
-    return (0);
+    return (false);
 }
 
 static int _body_covered()
