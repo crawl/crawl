@@ -2982,7 +2982,6 @@ void bolt::reflect()
     reflections++;
 
     target = leg_source();
-    extra_range_used += range_used(true);
     source = pos();
 
     // Reset bounce_pos, so that if we somehow reflect again before reaching
