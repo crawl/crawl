@@ -1359,7 +1359,6 @@ static void _print_overview_screen_equip(column_composer& cols,
     char buf[100];
     for (int i = 0; i < NUM_EQUIP; i++)
     {
-
         int eqslot = e_order[i];
 
         if (you.species == SP_OCTOPODE
