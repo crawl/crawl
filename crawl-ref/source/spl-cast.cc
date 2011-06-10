@@ -469,6 +469,11 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
         power += you.skill(SK_SPELLCASTING) / 2;
 
+        // Brilliance boosts spell power a bit (equivalent to three
+        // spell school levels).
+        if (!fail_rate_check && you.duration[DUR_BRILLIANCE])
+            power += 6;
+
         if (apply_intel)
             power = (power * you.intel()) / 10;
 
