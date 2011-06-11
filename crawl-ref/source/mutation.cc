@@ -391,17 +391,6 @@ formatted_string describe_mutations()
         have_any = true;
     }
 
-    // If the innate frail/robust mutation has been cancelled out.
-    if (!you.mutation[MUT_FRAIL] && !you.mutation[MUT_ROBUST]
-        && (you.innate_mutations[MUT_FRAIL]
-            || you.innate_mutations[MUT_ROBUST]))
-    {
-        result += make_stringf("<cyan>You are no longer %s.</cyan>\n",
-                               you.innate_mutations[MUT_FRAIL] ? "frail"
-                                                               : "robust");
-        have_any = true;
-    }
-
     textcolor(LIGHTGREY);
 
     // First add (non-removable) inborn abilities and demon powers.
@@ -637,16 +626,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     return (amusement);
 }
 
-static inline mutation_type _opposite(mutation_type mutat)
-{
-    switch (mutat)
-    {
-    case MUT_FRAIL:  return MUT_ROBUST;
-    case MUT_ROBUST: return MUT_FRAIL;
-    default:         return NUM_MUTATIONS;
-    }
-}
-
 static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 {
     if (!is_valid_mutation(mutat))
@@ -657,21 +636,10 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
     if (you.mutation[mutat] >= mdef.levels)
         return (false);
 
-    // Special case for frail/robust. It keeps a -3/+3 range to innate.
-    const mutation_type opposite = _opposite(mutat);
-    if (opposite != NUM_MUTATIONS
-        && you.mutation[mutat] - you.innate_mutations[mutat]
-                               + you.innate_mutations[opposite] >= 3)
-    {
-        return false;
-    }
-
     if (ignore_rarity)
         return (true);
 
-    int rarity = mdef.rarity;
-    if (mutat != MUT_FRAIL && mutat != MUT_ROBUST)
-        rarity += you.innate_mutations[mutat];
+    const int rarity = mdef.rarity + you.innate_mutations[mutat];
 
     // Low rarity means unlikely to choose it.
     return (x_chance_in_y(rarity, 10));
@@ -841,11 +809,10 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                 case 1:
                     // If we have one of the pair, delete a level of the
                     // other, and that's it.
-                    delete_mutation(b, true, true, false, false,
-                                    b == MUT_ROBUST || b == MUT_FRAIL);
+                    delete_mutation(b, true, true);
                     return (1);     // Nothing more to do.
                 default:
-                    die("bad mutation conflict resolution");
+                    die("bad mutation conflict resulution");
                 }
             }
         }
@@ -1198,7 +1165,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     bool gain_msg = true;
 
     you.mutation[mutat]++;
-    const int level = std::min<int>(you.mutation[mutat], 3);
 
     // More than three messages, need to give them by hand.
     switch (mutat)
@@ -1219,7 +1185,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     notify_stat_change("gaining a mutation");
 
     if (gain_msg)
-        mpr(mdef.gain[level - 1], MSGCH_MUTATION);
+        mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
 
     // Do post-mutation effects.
     switch (mutat)
@@ -1242,13 +1208,13 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_HOOVES:
     case MUT_TALONS:
         // Hooves and talons force boots off at 3.
-        if (level == 3 && !you.melded[EQ_BOOTS])
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
             remove_one_equip(EQ_BOOTS, false, true);
         break;
 
     case MUT_CLAWS:
         // Gloves aren't prevented until level 3.
-        if (level == 3 && !you.melded[EQ_GLOVES])
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
 
@@ -1256,7 +1222,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_ANTENNAE:
         // Horns & Antennae 3 removes all headgear.  Same algorithm as with
         // glove removal.
-        if (level == 3 && !you.melded[EQ_HELMET])
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
             remove_one_equip(EQ_HELMET, false, true);
         // Intentional fall-through
     case MUT_BEAK:
@@ -1295,23 +1261,12 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     return (true);
 }
 
-static bool _delete_single_mutation_level(mutation_type mutat,
-                                          bool ignore_innate = false)
+static bool _delete_single_mutation_level(mutation_type mutat)
 {
-    // If we have innate frail and we gained a robust mutation which brought
-    // it to 0, then removing robust means gaining back that level of frail.
-    const mutation_type opposite = _opposite(mutat);
-    if (opposite != NUM_MUTATIONS && you.mutation[mutat] == 0
-        && you.mutation[opposite] < you.innate_mutations[opposite])
-    {
-        mutate(opposite);
-        return true;
-    }
-
     if (you.mutation[mutat] == 0)
         return (false);
 
-    if (you.innate_mutations[mutat] >= you.mutation[mutat] && !ignore_innate)
+    if (you.innate_mutations[mutat] >= you.mutation[mutat])
         return (false);
 
     const mutation_def& mdef = get_mutation_def(mutat);
@@ -1319,7 +1274,6 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     bool lose_msg = true;
 
     you.mutation[mutat]--;
-    const int level = std::min<int>(you.mutation[mutat], 2);
 
     switch (mutat)
     {
@@ -1356,7 +1310,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     notify_stat_change("losing a mutation");
 
     if (lose_msg)
-        mpr(mdef.lose[level], MSGCH_MUTATION);
+        mpr(mdef.lose[you.mutation[mutat]], MSGCH_MUTATION);
 
     // Do post-mutation effects.
     if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
@@ -1374,7 +1328,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg,
                      bool force_mutation, bool god_gift,
-                     bool disallow_mismatch, bool ignore_innate)
+                     bool disallow_mismatch)
 {
     if (!god_gift)
     {
@@ -1422,9 +1376,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                 && mutat != MUT_AGILE
                 && mutat != MUT_WEAK
                 && mutat != MUT_DOPEY
-                && mutat != MUT_CLUMSY
-                && mutat != MUT_FRAIL
-                && mutat != MUT_ROBUST)
+                && mutat != MUT_CLUMSY)
             {
                 continue;
             }
@@ -1435,17 +1387,8 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                 continue;
             }
 
-            // If the opposite mutation is lower than the innate level, then we
-            // accept the deletion, even if the mutation level is 0, because it
-            // will increase the opposite mutation's level.
-            const mutation_type opposite = _opposite(mutat);
-            if (you.innate_mutations[mutat] >= you.mutation[mutat]
-                && !ignore_innate
-                && (!is_valid_mutation(opposite)
-                    || you.mutation[opposite] >= you.innate_mutations[opposite]))
-            {
+            if (you.innate_mutations[mutat] >= you.mutation[mutat])
                 continue;
-            }
 
             const mutation_def& mdef = get_mutation_def(mutat);
 
@@ -1470,7 +1413,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
             return false;
     }
 
-    return _delete_single_mutation_level(mutat, ignore_innate);
+    return (_delete_single_mutation_level(mutat));
 }
 
 bool delete_all_mutations()
@@ -1517,12 +1460,6 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         ostr << mdef.have[0] << level << ").";
         result = ostr.str();
     }
-    else if (mut == MUT_FRAIL || mut == MUT_ROBUST)
-    {
-        std::ostringstream ostr;
-        ostr << mdef.have[std::min(level - 1, 2)] << level << "0% HP).";
-        result = ostr.str();
-    }
     else if (mut == MUT_ICEMAIL)
     {
         std::ostringstream ostr;
@@ -1540,18 +1477,14 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 
     if (colour)
     {
-        const char* colourname        = (mdef.bad ? "red" : "lightgrey");
-        const bool permanent          = you.innate_mutations[mut];
-        const mutation_type opposite  = _opposite(mut);
-        const bool opposite_permanent = opposite != NUM_MUTATIONS
-                                        && you.innate_mutations[opposite];
+        const char* colourname = (mdef.bad ? "red" : "lightgrey");
+        const bool permanent   = (you.innate_mutations[mut] > 0);
         if (innate)
             colourname = (level > 0 ? "cyan" : "lightblue");
-        else if (permanent || opposite_permanent)
+        else if (permanent)
         {
             const bool demonspawn = (you.species == SP_DEMONSPAWN);
-            const bool extra = (you.mutation[mut] != you.innate_mutations[mut]
-                                || opposite_permanent);
+            const bool extra = (you.mutation[mut] > you.innate_mutations[mut]);
 
             if (fully_inactive)
                 colourname = "darkgrey";

@@ -76,8 +76,7 @@ formatted_string describe_mutations();
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
                      bool force_mutation = false, bool god_gift = false,
-                     bool disallow_mismatch = false,
-                     bool ignore_innate = false);
+                     bool disallow_mismatch = false);
 
 bool delete_all_mutations();
 

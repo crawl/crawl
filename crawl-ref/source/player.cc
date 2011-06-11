@@ -4464,6 +4464,10 @@ int get_real_hp(bool trans, bool rotted)
     // Important: we shouldn't add Heroism boosts here.
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 8;
 
+    // Racial modifier.
+    hitp *= 10 + species_hp_modifier(you.species);
+    hitp /= 10;
+
     // Frail and robust mutations, divine vigour, and rugged scale mut.
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
