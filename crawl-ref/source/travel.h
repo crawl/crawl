@@ -42,9 +42,9 @@ enum run_dir_type
 
 enum run_mode_type
 {
-    RMODE_INTERLEVEL     = -4, // Interlevel travel (Ctrl+G)
-    RMODE_EXPLORE_GREEDY = -3, // Explore + grab items (Tab/Ctrl+I)
-    RMODE_EXPLORE        = -2, // Exploring (Ctrl+O)
+    RMODE_INTERLEVEL     = -4, // Interlevel travel
+    RMODE_EXPLORE_GREEDY = -3, // Explore + grab items
+    RMODE_EXPLORE        = -2, // Exploring
     RMODE_TRAVEL         = -1, // Classic or Plain Old travel
     RMODE_NOT_RUNNING    = 0,  // must remain equal to 0
     RMODE_CONTINUE,
@@ -502,6 +502,8 @@ public:
     // Extract features without pathfinding
     void get_features();
 
+    const std::set<coord_def> get_unreachables() const;
+
     // The next square to go to to move towards the travel destination. Return
     // value is undefined if pathfind was not called with RMODE_TRAVEL.
     const coord_def travel_move() const;
@@ -584,6 +586,9 @@ protected:
     std::vector<coord_def> reseed_points;
 
     std::vector<coord_def> *features;
+
+    // List of unexplored and unreachable points.
+    std::set<coord_def> unreachables;
 
     travel_distance_col *point_distance;
 

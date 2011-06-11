@@ -299,6 +299,10 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 
     map_cell &cell(env.map_knowledge(c));
     const dungeon_feature_type grid = cell.feat();
+
+    if (feat_is_wall(grid))
+        return false;
+
     return (feat_is_water(grid)
             || grid == DNGN_LAVA
             || is_trap(c)
@@ -662,9 +666,11 @@ void stop_running()
 
 static bool _is_valid_explore_target(const coord_def& where)
 {
-    // If an adjacent square is unmapped, it's valid.
-    for (adjacent_iterator ai(where); ai; ++ai)
-        if (!env.map_knowledge(*ai).seen())
+    // If a square in LOS is unmapped, it's valid.
+    los_def los(where);
+    los.update();
+    for (radius_iterator ri(&los, true); ri; ++ri)
+        if (!env.map_knowledge(*ri).seen())
             return (true);
 
     if (you.running == RMODE_EXPLORE_GREEDY)
@@ -698,7 +704,7 @@ static int _find_explore_status(const travel_pathfind &tp)
         explore_status |= EST_GREED_UNFULFILLED;
 
     const coord_def unexplored = tp.unexplored_square();
-    if (unexplored.x || unexplored.y)
+    if (unexplored.x || unexplored.y || !tp.get_unreachables().empty())
         explore_status |= EST_PARTLY_EXPLORED;
 
     return (explore_status);
@@ -1148,7 +1154,7 @@ travel_pathfind::travel_pathfind()
       ignore_danger(false), annotate_map(false), ls(NULL),
       need_for_greed(false), unexplored_place(), greedy_place(),
       unexplored_dist(0), greedy_dist(0), refdist(NULL), reseed_points(),
-      features(NULL), point_distance(travel_point_distance),
+      features(NULL), unreachables(), point_distance(travel_point_distance),
       points(0), next_iter_points(0), traveled_distance(0),
       circ_index(0)
 {
@@ -1458,6 +1464,11 @@ void travel_pathfind::get_features()
     }
 }
 
+const std::set<coord_def> travel_pathfind::get_unreachables() const
+{
+    return unreachables;
+}
+
 bool travel_pathfind::square_slows_movement(const coord_def &c)
 {
     // c is a known (explored) location - we never put unknown points in the
@@ -1495,7 +1506,7 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 
 bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 {
-    if (!in_bounds(dc))
+    if (!in_bounds(dc) || unreachables.count(dc))
         return (false);
 
     if (floodout
@@ -1503,19 +1514,50 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     {
         if (!env.map_knowledge(dc).seen())
         {
-            if (!need_for_greed)
+            if (ignore_hostile)
+            {
+                // This point is unexplored but unreachable. Let's find a
+                // place from where we can see it.
+                los_def los(dc);
+                los.update();
+                for (radius_iterator ri(&los, true); ri; ++ri)
+                {
+                    const int dist = point_distance[ri->x][ri->y];
+                    if (dist > 0
+                        && (dist < unexplored_dist || unexplored_dist < 0))
+                    {
+                        unexplored_dist = dist;
+                        unexplored_place = *ri;
+                    }
+
+                    // We can't do better than that.
+                    if (unexplored_dist == 1)
+                    {
+                        _set_target_square(unexplored_place);
+                        return true;
+                    }
+                }
+
+                // We can't even see the place.
+                // Let's store it and look for another.
+                if (unexplored_dist < 0)
+                    unreachables.insert(dc);
+                else
+                    _set_target_square(unexplored_place);
+
+            }
+            else if (!need_for_greed)
             {
                 // Found explore target!
                 unexplored_place = c;
                 unexplored_dist  = traveled_distance;
                 return (true);
             }
-
-            if (unexplored_dist == UNFOUND_DIST)
+            else if (unexplored_dist == UNFOUND_DIST)
             {
                 unexplored_place = c;
-                unexplored_dist  =
-                    traveled_distance + Options.explore_item_greed;
+                unexplored_dist  = traveled_distance
+                                   + Options.explore_item_greed;
             }
         }
 
