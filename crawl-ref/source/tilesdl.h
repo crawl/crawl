@@ -171,6 +171,10 @@ public:
     void clear_to_end_of_line();
     int wherex() { return m_print_x + 1; }
     int wherey() { return m_print_y + 1; }
+
+    void write_message(const char *format, ...);
+    void finish_message();
+    void send_message(const char *format, ...);
 #endif
 protected:
     enum TabID

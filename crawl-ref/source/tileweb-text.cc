@@ -2,6 +2,7 @@
 #include "AppHdr.h"
 
 #include "tileweb-text.h"
+#include "tilesdl.h"
 
 #include <sstream>
 
@@ -172,15 +173,15 @@ void WebTextArea::send(bool force)
         {
             if (!sending)
             {
-                fprintf(stdout, "txt('%s',{", m_client_side_name.c_str());
+                tiles.write_message("txt('%s',{", m_client_side_name.c_str());
                 sending = true;
             }
 
-            fprintf(stdout, "%u:\"%ls\",", y, html.str().c_str());
+            tiles.write_message("%u:\"%ls\",", y, html.str().c_str());
         }
     }
     if (sending)
-        fprintf(stdout, "});\n");
+        tiles.send_message("});");
 }
 
 void WebTextArea::on_resize()

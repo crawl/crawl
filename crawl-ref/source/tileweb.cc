@@ -33,6 +33,7 @@
 #include "viewgeom.h"
 
 #include <sys/time.h>
+#include <stdarg.h>
 
 
 
@@ -67,15 +68,38 @@ void TilesFramework::draw_doll_edit()
 bool TilesFramework::initialise()
 {
     std::string title = CRAWL " " + Version::Long();
-    fprintf(stdout, "document.title = \"%s\";\n", title.c_str());
+    send_message("document.title = \"%s\";", title.c_str());
 
     // Do our initialization here.
     m_active_layer = LAYER_CRT;
-    fprintf(stdout, "set_layer('crt');");
+    send_message("set_layer('crt');");
 
     cgotoxy(1, 1, GOTO_CRT);
 
     return (true);
+}
+
+void TilesFramework::write_message(const char *format, ...)
+{
+    va_list  argp;
+    va_start(argp, format);
+    vfprintf(stdout, format, argp);
+    va_end(argp);
+}
+
+void TilesFramework::finish_message()
+{
+    fprintf(stdout, "\n");
+    fflush(stdout);
+}
+
+void TilesFramework::send_message(const char *format, ...)
+{
+    va_list  argp;
+    va_start(argp, format);
+    vfprintf(stdout, format, argp);
+    va_end(argp);
+    finish_message();
 }
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
@@ -132,7 +156,7 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    fprintf(stdout, "doll:[");
+    tiles.write_message("doll:[");
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
@@ -152,34 +176,34 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
             ymax = 18;
         }
 
-        fprintf(stdout, "[%d,%d],", doll.parts[p], ymax);
+        tiles.write_message("[%d,%d],", doll.parts[p], ymax);
     }
 
-    fprintf(stdout, "],");
+    tiles.write_message("],");
 }
 
 static void _send_mcache(mcache_entry *entry, bool submerged)
 {
     bool trans = entry->transparent();
     if (trans)
-        fprintf(stdout, "trans:true,");
+        tiles.write_message("trans:true,");
 
     const dolls_data *doll = entry->doll();
     if (doll)
         _send_doll(*doll, submerged, trans);
     else
-        fprintf(stdout, "doll:[],");
+        tiles.write_message("doll:[],");
 
-    fprintf(stdout, "mcache:[");
+    tiles.write_message("mcache:[");
 
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
     int draw_info_count = entry->info(&dinfo[0]);
     for (int i = 0; i < draw_info_count; i++)
     {
-        fprintf(stdout, "[%d,%d,%d],", dinfo[i].idx, dinfo[i].ofs_x, dinfo[i].ofs_y);
+        tiles.write_message("[%d,%d,%d],", dinfo[i].idx, dinfo[i].ofs_x, dinfo[i].ofs_y);
     }
 
-    fprintf(stdout, "],");
+    tiles.write_message("],");
 }
 
 static bool _in_water(const packed_cell &cell)
@@ -231,66 +255,66 @@ bool TilesFramework::_send_cell(int x, int y,
     if (m_origin.equals(-1, -1))
         m_origin = gc;
 
-    fprintf(stdout, "c(%d,%d,{", x - m_origin.x, y - m_origin.y);
+    write_message("c(%d,%d,{", x - m_origin.x, y - m_origin.y);
 
     if (old_cell.bg == TILE_FLAG_UNSEEN)
     {
-        fprintf(stdout, "c:1,"); // Clears the cell on the client side
+        write_message("c:1,"); // Clears the cell on the client side
     }
 
     if (screen_cell->flash_colour != old_screen_cell->flash_colour)
-        fprintf(stdout, "fl:%u,", screen_cell->flash_colour);
+        write_message("fl:%u,", screen_cell->flash_colour);
 
     if (cell.fg != old_cell.fg)
     {
         fg_changed = true;
 
-        fprintf(stdout, "fg:%u,", cell.fg);
+        write_message("fg:%u,", cell.fg);
         if (fg_idx && fg_idx <= TILE_MAIN_MAX)
         {
-            fprintf(stdout, "base:%d,", tileidx_known_base_item(fg_idx));
+            write_message("base:%d,", tileidx_known_base_item(fg_idx));
         }
     }
 
     if (cell.bg != old_cell.bg)
-        fprintf(stdout, "bg:%u,", cell.bg);
+        write_message("bg:%u,", cell.bg);
 
     if (cell.is_bloody != old_cell.is_bloody)
-        fprintf(stdout, "bloody:%u,", cell.is_bloody);
+        write_message("bloody:%u,", cell.is_bloody);
 
     if (cell.is_silenced != old_cell.is_silenced)
-        fprintf(stdout, "silenced:%u,", cell.is_silenced);
+        write_message("silenced:%u,", cell.is_silenced);
 
     if (cell.is_haloed != old_cell.is_haloed)
-        fprintf(stdout, "haloed:%u,", cell.is_haloed);
+        write_message("haloed:%u,", cell.is_haloed);
 
     if (cell.is_moldy != old_cell.is_moldy)
-        fprintf(stdout, "moldy:%u,", cell.is_moldy);
+        write_message("moldy:%u,", cell.is_moldy);
 
     if (cell.glowing_mold != old_cell.glowing_mold)
-        fprintf(stdout, "glowing_mold:%u,", cell.glowing_mold);
+        write_message("glowing_mold:%u,", cell.glowing_mold);
 
     if (cell.is_sanctuary != old_cell.is_sanctuary)
-        fprintf(stdout, "sanctuary:%u,", cell.is_sanctuary);
+        write_message("sanctuary:%u,", cell.is_sanctuary);
 
     if (cell.is_liquefied != old_cell.is_liquefied)
-        fprintf(stdout, "liquefied:%u,", cell.is_liquefied);
+        write_message("liquefied:%u,", cell.is_liquefied);
 
     if (cell.swamp_tree_water != old_cell.swamp_tree_water)
-        fprintf(stdout, "swtree:%u,", cell.swamp_tree_water);
+        write_message("swtree:%u,", cell.swamp_tree_water);
 
     if (cell.blood_rotation != old_cell.blood_rotation)
-        fprintf(stdout, "bloodrot:%d,", cell.blood_rotation);
+        write_message("bloodrot:%d,", cell.blood_rotation);
 
     if (_needs_flavour(cell) &&
         ((cell.flv.floor != old_cell.flv.floor)
          || (cell.flv.special != old_cell.flv.special)
          || !_needs_flavour(old_cell)))
     {
-        fprintf(stdout, "flv:{f:%d,", cell.flv.floor);
+        write_message("flv:{f:%d,", cell.flv.floor);
         if (cell.flv.special)
-            fprintf(stdout, "s:%d,", cell.flv.special);
-        fprintf(stdout, "},");
+            write_message("s:%d,", cell.flv.special);
+        write_message("},");
     }
 
     if (fg_idx >= TILEP_MCACHE_START)
@@ -303,7 +327,7 @@ bool TilesFramework::_send_cell(int x, int y,
                 _send_mcache(entry, in_water);
             }
             else
-                fprintf(stdout, "doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
+                write_message("doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
         }
     }
     else if (fg_idx == TILEP_PLAYER)
@@ -317,7 +341,7 @@ bool TilesFramework::_send_cell(int x, int y,
     {
         if (fg_changed)
         {
-            fprintf(stdout, "doll:[[%d,%d]],", fg_idx, TILE_Y);
+            write_message("doll:[[%d,%d]],", fg_idx, TILE_Y);
             // TODO: _transform_add_weapon
         }
     }
@@ -340,13 +364,13 @@ bool TilesFramework::_send_cell(int x, int y,
 
     if (overlays_changed)
     {
-        fprintf(stdout, "ov:[");
+        write_message("ov:[");
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
-            fprintf(stdout, "%d,", cell.dngn_overlay[i]);
-        fprintf(stdout, "],");
+            write_message("%d,", cell.dngn_overlay[i]);
+        write_message("],");
     }
 
-    fprintf(stdout, "});");
+    write_message("});");
 
     return true;
 }
@@ -360,7 +384,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     if (m_active_layer != LAYER_NORMAL)
     {
         m_active_layer = LAYER_NORMAL;
-        fprintf(stdout, "set_layer(\"normal\");\n");
+        write_message("set_layer(\"normal\");\n");
     }
 
     m_next_view = vbuf;
@@ -385,14 +409,14 @@ static const int stat_width = 42;
 static void _send_layout_data(bool need_response)
 {
     // need_response indicates if the client needs to set a layout
-    fprintf(stdout, "layout({view_max_width:%u,view_max_height:%u,\
-force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u,\
-min_stat_height:%u,gxm:%u,gym:%u},%u);\n",
-            Options.view_max_width, Options.view_max_height,
-            Options.tile_force_overlay, ENV_SHOW_DIAMETER,
-            Options.msg_min_height, stat_width, min_stat_height,
-            GXM, GYM,
-            need_response);
+    tiles.send_message("layout({view_max_width:%u,view_max_height:%u,\
+force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u,   \
+min_stat_height:%u,gxm:%u,gym:%u},%u);",
+                       Options.view_max_width, Options.view_max_height,
+                       Options.tile_force_overlay, ENV_SHOW_DIAMETER,
+                       Options.msg_min_height, stat_width, min_stat_height,
+                       GXM, GYM,
+                       need_response);
 }
 
 void TilesFramework::resize()
@@ -421,8 +445,6 @@ int TilesFramework::getch_ck()
 
     if (need_redraw())
         redraw();
-
-    fflush(stdout);
 
     int key = getchar();
     if (key == '\\')
@@ -474,20 +496,20 @@ int TilesFramework::getch_ck()
             break;
         case 'r': // A spectator joined, resend the necessary data
             std::string title = CRAWL " " + Version::Long();
-            fprintf(stdout, "document.title = \"%s\";\n", title.c_str());
+            send_message("document.title = \"%s\";", title.c_str());
             m_text_crt.send(true);
             m_text_stat.send(true);
             m_text_message.send(true);
             _send_layout_data(false);
-            fprintf(stdout, "vgrdc(%d,%d);\n", m_current_gc.x, m_current_gc.y);
+            send_message("vgrdc(%d,%d);", m_current_gc.x, m_current_gc.y);
             _send_current_view();
             switch (m_active_layer)
             {
             case LAYER_CRT:
-                fprintf(stdout, "set_layer('crt');\n");
+                send_message("set_layer('crt');");
                 break;
             case LAYER_NORMAL:
-                fprintf(stdout, "set_layer('normal');\n");
+                send_message("set_layer('normal');");
                 break;
             default:
                 // Cannot happen
@@ -540,19 +562,19 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     {
     case GOTO_CRT:
         if (m_active_layer != LAYER_CRT)
-            fprintf(stdout, "set_layer(\"crt\");\n");
+            send_message("set_layer(\"crt\");");
         m_active_layer = LAYER_CRT;
         m_print_area = &m_text_crt;
         break;
     case GOTO_MSG:
         if (m_active_layer != LAYER_NORMAL)
-            fprintf(stdout, "set_layer(\"normal\");\n");
+            send_message("set_layer(\"normal\");");
         m_active_layer = LAYER_NORMAL;
         m_print_area = &m_text_message;
         break;
     case GOTO_STAT:
         if (m_active_layer != LAYER_NORMAL)
-            fprintf(stdout, "set_layer(\"normal\");\n");
+            send_message("set_layer(\"normal\");");
         m_active_layer = LAYER_NORMAL;
         m_print_area = &m_text_stat;
         break;
@@ -586,8 +608,7 @@ void TilesFramework::_send_current_view()
             cell++;
         }
 
-    fprintf(stdout, "display();");
-    fprintf(stdout, "\n");
+    send_message("display();");
 }
 
 void TilesFramework::redraw()
@@ -603,7 +624,7 @@ void TilesFramework::redraw()
     {
         if (m_origin.equals(-1, -1))
             m_origin = m_next_gc;
-        fprintf(stdout, "vgrdc(%d,%d);",
+        write_message("vgrdc(%d,%d);",
                 m_next_gc.x - m_origin.x,
                 m_next_gc.y - m_origin.y);
         m_current_gc = m_next_gc;
@@ -614,7 +635,7 @@ void TilesFramework::redraw()
         // The view buffer size changed, we need to do a full redraw
         m_current_view = m_next_view;
 
-        fprintf(stdout, "clear_map();");
+        write_message("clear_map();");
         
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
@@ -651,12 +672,9 @@ void TilesFramework::redraw()
                 old_cell++;
             }
 
-        fprintf(stdout, "display();");
-        fprintf(stdout, "\n");
+        send_message("display();");
     }
     
-    fflush(stdout);
-
     m_need_redraw = false;
     m_last_tick_redraw = get_milliseconds();
 }
@@ -714,12 +732,12 @@ void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 
         if (result == NO_CURSOR)
         {
-            fprintf(stdout, "remove_cursor(%d);\n", type);
+            send_message("remove_cursor(%d);", type);
             return;
         }
         else
         {
-            fprintf(stdout, "place_cursor(%d,%d,%d);\n", type,
+            send_message("place_cursor(%d,%d,%d);", type,
                     result.x - m_origin.x, result.y - m_origin.y);
         }
     }
@@ -750,14 +768,14 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 
     m_has_overlays = true;
 
-    fprintf(stdout, "add_overlay(%d,%d,%d);\n", idx,
+    send_message("add_overlay(%d,%d,%d);", idx,
             gc.x - m_origin.x, gc.y - m_origin.y);
 }
 
 void TilesFramework::clear_overlays()
 {
     if (m_has_overlays)
-        fprintf(stdout, "clear_overlays();\n");
+        send_message("clear_overlays();");
 
     m_has_overlays = false;
 }
