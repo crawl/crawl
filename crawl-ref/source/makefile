@@ -174,6 +174,8 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	BUILD_PCRE = YesPlease
 	BUILD_ZLIB = YesPlease
 	DEFINES_L += -DWINMM_PLAY_SOUNDS
+	# Windows XP and above.
+	DEFINES_L += -D_WIN32_WINNT=0x0501
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
 		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDLmain.a -mwindows
