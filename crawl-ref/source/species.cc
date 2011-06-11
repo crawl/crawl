@@ -426,3 +426,48 @@ bool is_valid_species(species_type species)
 {
     return (species >= 0 && species < NUM_SPECIES);
 }
+
+int species_hp_modifier(species_type species)
+{
+    switch (species)
+    {
+    case SP_FELID:
+        return -4;
+    case SP_SPRIGGAN:
+        return -3;
+    case SP_DEEP_ELF:
+    case SP_KENKU:
+    case SP_KOBOLD:
+        return -2;
+    case SP_HIGH_ELF:
+    case SP_SLUDGE_ELF:
+    case SP_HALFLING:
+    case SP_OCTOPODE:
+        return -1;
+    default:
+        return 0;
+    case SP_CENTAUR:
+    case SP_DEMIGOD:
+    case SP_BASE_DRACONIAN:
+    case SP_RED_DRACONIAN:
+    case SP_WHITE_DRACONIAN:
+    case SP_GREEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
+    case SP_GREY_DRACONIAN:
+    case SP_BLACK_DRACONIAN:
+    case SP_PURPLE_DRACONIAN:
+    case SP_MOTTLED_DRACONIAN:
+    case SP_PALE_DRACONIAN:
+    case SP_MOUNTAIN_DWARF:
+    case SP_GHOUL:
+    case SP_HILL_ORC:
+    case SP_MINOTAUR:
+        return 1;
+    case SP_DEEP_DWARF:
+    case SP_NAGA:
+        return 2;
+    case SP_OGRE:
+    case SP_TROLL:
+        return 3;
+    }
+}

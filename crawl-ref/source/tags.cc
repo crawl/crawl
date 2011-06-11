@@ -1910,6 +1910,13 @@ static void tag_read_you(reader &th)
 
         calc_hp();
     }
+    else if (th.getMinorVersion() < TAG_MINOR_SPECIES_HP_NO_MUT)
+    {
+        you.mutation[MUT_FRAIL] -= you.innate_mutations[MUT_FRAIL];
+        you.mutation[MUT_ROBUST] -= you.innate_mutations[MUT_ROBUST];
+        you.innate_mutations[MUT_FRAIL] = 0;
+        you.innate_mutations[MUT_ROBUST] = 0;
+    }
 #endif
 
     count = unmarshallByte(th);

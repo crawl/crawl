@@ -590,12 +590,12 @@
   "mutation resistance"
 },
 
-{ MUT_FRAIL,                     10,  7,  true,  true,
+{ MUT_FRAIL,                     10,  3,  true,  true,
   NULL,
 
-  {"You are frail (-",
-   "You are very frail (-",
-   "You are extremely frail (-"},
+  {"You are frail (-10% HP).",
+   "You are very frail (-20% HP).",
+   "You are extremely frail (-30% HP)."},
 
   {"You feel frail.",
    "You feel frail.",
@@ -608,12 +608,12 @@
   "frail"
 },
 
-{ MUT_ROBUST,                     5,  6, false,  true,
+{ MUT_ROBUST,                     5,  3, false,  true,
   NULL,
 
-  {"You are robust (+",
-   "You are very robust (+",
-   "You are extremely robust (+"},
+  {"You are robust (+10% HP).",
+   "You are very robust (+20% HP).",
+   "You are extremely robust (+30% HP)."},
 
   {"You feel robust.",
    "You feel robust.",
