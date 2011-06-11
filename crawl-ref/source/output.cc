@@ -1291,7 +1291,7 @@ const char *equip_slot_to_name(int equip)
 {
     if (equip == EQ_RINGS
         || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
-        || equip >= EQ_RING_ONE || equip <= EQ_RING_EIGHT)
+        || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT)
     {
         return "Ring";
     }
