@@ -1853,64 +1853,7 @@ static void tag_read_you(reader &th)
         you.mutation[j] = you.innate_mutations[j] = 0;
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_NEW_HP)
-    {
-        int robust = you.mutation[MUT_ROBUST] - you.mutation[MUT_FRAIL];
-        you.mutation[MUT_ROBUST] = you.mutation[MUT_FRAIL] = 0;
-        switch (you.species)
-        {
-        case SP_HILL_ORC:
-        case SP_MINOTAUR:
-        case SP_CENTAUR:
-        case SP_GHOUL:
-        case SP_DEMIGOD:
-        case SP_BASE_DRACONIAN:
-        case SP_MOUNTAIN_DWARF:
-            you.innate_mutations[MUT_ROBUST] = 1;
-            robust++;
-            break;
-        case SP_NAGA:
-        case SP_DEEP_DWARF:
-            you.innate_mutations[MUT_ROBUST] = 2;
-            robust += 2;
-            break;
-        case SP_OGRE:
-        case SP_TROLL:
-            you.innate_mutations[MUT_ROBUST] = 3;
-            robust += 3;
-            break;
-        case SP_HALFLING:
-        case SP_HIGH_ELF:
-        case SP_SLUDGE_ELF:
-            you.innate_mutations[MUT_FRAIL] = 1;
-            robust--;
-            break;
-        case SP_KENKU:
-        case SP_KOBOLD:
-        case SP_DEEP_ELF:
-            you.innate_mutations[MUT_FRAIL] = 2;
-            robust -= 2;
-            break;
-        case SP_SPRIGGAN:
-            you.innate_mutations[MUT_FRAIL] = 3;
-            robust -= 3;
-            break;
-        case SP_FELID:
-            you.innate_mutations[MUT_FRAIL] = 4;
-            robust -= 4;
-            break;
-        default:
-            break;
-        }
-
-        if (robust < 0)
-            you.mutation[MUT_FRAIL] = -robust;
-        else if (robust > 0)
-            you.mutation[MUT_ROBUST] = robust;
-
-        calc_hp();
-    }
-    else if (th.getMinorVersion() < TAG_MINOR_SPECIES_HP_NO_MUT)
+    if (th.getMinorVersion() < TAG_MINOR_SPECIES_HP_NO_MUT)
     {
         you.mutation[MUT_FRAIL] -= you.innate_mutations[MUT_FRAIL];
         you.mutation[MUT_ROBUST] -= you.innate_mutations[MUT_ROBUST];
