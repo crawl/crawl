@@ -119,8 +119,6 @@ function do_layout()
     var char_h = $("#crt").height() / test_size;
     $("#crt").html(old_html);
 
-    set_layer(layer);
-
     var layout = {
         stats_height: layout_parameters.min_stat_height,
         msg_width: 80
@@ -138,6 +136,7 @@ function do_layout()
         view_height = layout_parameters.show_diameter;
 
     // Position controls
+    set_layer("normal");
     view_size(view_width, view_height);
 
     var dungeon_offset = $("#dungeon").offset();
@@ -162,6 +161,9 @@ function do_layout()
     var minimap_overlay = $("#minimap_overlay")[0];
     minimap_overlay.width = minimap_canvas.width;
     minimap_overlay.height = minimap_canvas.height;
+
+    // Go back to the old layer
+    set_layer(layer);
 
     // Send the layout
     if (current_layout &&
