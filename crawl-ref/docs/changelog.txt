@@ -1,3 +1,16 @@
+Stone Soup 0.8 (20110612)
+-------------------------
+* Fixes a number of crashes.
+* Fixes stair colouring on the map being wrong.
+* Jiyva's wrath won't summon giant spores, abusably by Fedhas.
+* Fixes running not noticing new items.
+* Ashenzari worshippers no longer can change armour under cursed cloaks.
+* Glyphs not present in the locale won't cause display corruption in some
+  cases (mostly LC_CTYPE=C).
+* Fixes massive slowdown for resting felids.
+* Removes (or reduce) chances for save corruption on MacOS X.
+* Fixed Kikubaaqudgha's torment invocation not granting xp.
+
 Stone Soup 0.8 (20110426)
 -------------------------
 
