@@ -51,6 +51,8 @@ inline double round(double x)
         return ceil(x - 0.5);
 }
 
+typedef ptrdiff_t ssize_t;
+
 #endif /* defined(TARGET_COMPILER_VC) */
 
 #endif
