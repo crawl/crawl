@@ -8,6 +8,8 @@
 
 #if defined(TARGET_COMPILER_VC)
 
+#include "MSVC/inttypes.h"
+
 #include <io.h>
 #include <math.h>
 
