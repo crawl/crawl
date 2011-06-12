@@ -142,8 +142,8 @@ function display()
         minimap_changed = false;
     }
 
-    for (var x = view_x; x < view_x + dungeon_cols; x++)
-        for (var y = view_y; y < view_y + dungeon_rows; y++)
+    for (var x = minimap_bounds.left; x <= minimap_bounds.right; x++)
+        for (var y = minimap_bounds.top; y <= minimap_bounds.bottom; y++)
     {
         var cell = get_tile_cache(x, y);
         if (!cell || cell.dirty) render_cell(x, y);
