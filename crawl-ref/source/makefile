@@ -354,16 +354,15 @@ INCLUDES_L += -Iutil -I.
 
 ifdef APPLE_GCC
 
-ARCH := $(uname_M)
-export ARCH
+MARCH := $(uname_M)
 
-ifeq ($(ARCH),ppc)
+ifeq ($(MARCH),ppc)
 	SDK_VER := 10.4
 endif
-ifeq ($(ARCH),i386)
+ifeq ($(MARCH),i386)
 	SDK_VER := 10.4
 endif
-ifeq ($(ARCH),x86_64)
+ifeq ($(MARCH),x86_64)
 ifdef TILES
 	SDK_VER := 10.6
 else
@@ -386,7 +385,7 @@ ifdef BUILD_UNIVERSAL
 CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
 CFLAGS_DEPCC_ARCH := -arch i386
 else
-CFLAGS_ARCH := -arch $(ARCH)
+CFLAGS_ARCH := -arch $(MARCH)
 endif
 
 CC = $(GCC) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
