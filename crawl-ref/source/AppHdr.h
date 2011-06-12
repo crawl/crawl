@@ -162,6 +162,11 @@
     #error Missing platform #define or unsupported compiler.
 #endif
 
+#ifndef _WIN32_WINNT
+// Allow using Win2000 syscalls.
+# define _WIN32_WINNT 0x501
+#endif
+
 #if defined(__GNUC__)
 # define NORETURN __attribute__ ((noreturn))
 #elif defined(_MSC_VER)
