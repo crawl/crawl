@@ -700,7 +700,7 @@ std::string screenshot()
     return (ss.str());
 }
 
-static int _viewmap_flash_colour()
+int viewmap_flash_colour()
 {
     if (you.attribute[ATTR_SHADOWS])
         return (DARKGREY);
@@ -725,7 +725,7 @@ void view_update_at(const coord_def &pos)
     glyph g = get_cell_glyph(pos);
 
     int flash_colour = you.flash_colour == BLACK
-        ? _viewmap_flash_colour()
+        ? viewmap_flash_colour()
         : you.flash_colour;
     int mons = env.map_knowledge(pos).monster();
     int cell_colour =
@@ -1052,7 +1052,7 @@ void viewwindow(bool show_updates)
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
-        flash_colour = _viewmap_flash_colour();
+        flash_colour = viewmap_flash_colour();
 
     const coord_def tl = coord_def(1, 1);
     const coord_def br = crawl_view.viewsz;

@@ -49,7 +49,9 @@ static unsigned int get_milliseconds()
 TilesFramework tiles;
 
 TilesFramework::TilesFramework()
-    : m_print_fg(15)
+    : m_current_flash_colour(BLACK),
+      m_next_flash_colour(BLACK),
+      m_print_fg(15)
 {
 }
 
@@ -245,7 +247,6 @@ bool TilesFramework::_send_cell(int x, int y,
         }
     }
     if (old_cell == cell &&
-        screen_cell->flash_colour == old_screen_cell->flash_colour &&
         !is_changed_player_doll)
         return false;
 
@@ -261,9 +262,6 @@ bool TilesFramework::_send_cell(int x, int y,
     {
         write_message("c:1,"); // Clears the cell on the client side
     }
-
-    if (screen_cell->flash_colour != old_screen_cell->flash_colour)
-        write_message("fl:%u,", screen_cell->flash_colour);
 
     if (cell.fg != old_cell.fg)
     {
@@ -389,6 +387,9 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
     m_next_view = vbuf;
     m_next_gc = gc;
+    m_next_flash_colour = you.flash_colour;
+    if (m_next_flash_colour == BLACK)
+        m_next_flash_colour = viewmap_flash_colour();
 }
 
 void TilesFramework::load_dungeon(const coord_def &cen)
@@ -502,6 +503,7 @@ int TilesFramework::getch_ck()
             m_text_message.send(true);
             _send_layout_data(false);
             send_message("vgrdc(%d,%d);", m_current_gc.x, m_current_gc.y);
+            send_message("set_flash(%d);", m_current_flash_colour);
             _send_current_view();
             switch (m_active_layer)
             {
@@ -628,6 +630,13 @@ void TilesFramework::redraw()
                 m_next_gc.x - m_origin.x,
                 m_next_gc.y - m_origin.y);
         m_current_gc = m_next_gc;
+    }
+
+    if (m_current_flash_colour != m_next_flash_colour)
+    {
+        write_message("set_flash(%d);",
+                      m_next_flash_colour);
+        m_current_flash_colour = m_next_flash_colour;
     }
 
     if ((m_next_view.size() != m_current_view.size()))

@@ -2,6 +2,7 @@ var overlaid_locs = [];
 var cursor_locs = [];
 var minimap_bounds;
 var minimap_changed = false;
+var flash = 0;
 
 // Debug helper
 var mark_sent_cells = false;
@@ -89,9 +90,11 @@ function c(x, y, cell)
 {
     var old_cell = get_tile_cache(x, y);
 
-    var redraw_above = false;
     if (old_cell && old_cell.sy && (old_cell.sy < 0) && y > 0)
-        redraw_above = true;
+    {
+        var above = get_tile_cache(x, y - 1) || {};
+        above.dirty = true;
+    }
 
     if (!old_cell || cell.c)
     {
@@ -101,8 +104,11 @@ function c(x, y, cell)
     {
         for (attr in cell)
             old_cell[attr] = cell[attr];
+        cell = old_cell;
     }
 
+    cell.dirty = true;
+    
     if (minimap_bounds.left > x)
     {
         minimap_bounds.left = x;
@@ -124,13 +130,8 @@ function c(x, y, cell)
         minimap_changed = true;
     }
 
-    if (redraw_above)
-        render_cell(x, y - 1); // Redraw to remove trails
-
     if (mark_sent_cells)
-        mark_cell(x, y, x + "/" + y);
-    else
-        render_cell(x, y);
+        cell.mark = x + "/" + y;
 }
 
 function display()
@@ -140,6 +141,28 @@ function display()
         center_minimap();
         minimap_changed = false;
     }
+
+    for (var x = view_x; x < view_x + dungeon_cols; x++)
+        for (var y = view_y; y < view_y + dungeon_rows; y++)
+    {
+        var cell = get_tile_cache(x, y);
+        if (!cell || cell.dirty) render_cell(x, y);
+        if (cell) cell.dirty = false;
+    }
+}
+
+function set_flash(colour)
+{
+    if (colour != flash)
+    {
+        for (var x = view_x; x < view_x + dungeon_cols; x++)
+            for (var y = view_y; y < view_y + dungeon_rows; y++)
+        {
+            var cell = get_tile_cache(x, y);
+            if (cell) cell.dirty = true;
+        }
+    }
+    flash = colour;
 }
 
 function add_overlay(idx, x, y)
@@ -238,6 +261,9 @@ function render_cell(cx, cy)
 
         if (!cell)
         {
+            render_flash(x, y);
+
+            render_cursors(cx, cy);
             return;
         }
 
@@ -332,22 +358,7 @@ function render_cell(cx, cy)
 
         draw_foreground(x, y, cell);
 
-        if (cell.fl) // Flash
-        {
-            var col = flash_colours[cell.fl];
-            dungeon_ctx.save();
-            try
-            {
-                dungeon_ctx.fillStyle = "rgb(" + col.r + "," + col.g + "," + col.b + ")";
-                dungeon_ctx.globalAlpha = col.a / 255;
-                dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
-                                     dungeon_cell_w, dungeon_cell_h);
-            }
-            finally
-            {
-                dungeon_ctx.restore();
-            }
-        }
+        render_flash(x, y);
 
         render_cursors(cx, cy);
 
@@ -374,6 +385,26 @@ function render_cell(cx, cy)
     {
         console.error("Error while drawing cell " + obj_to_str(cell)
                       + " at " + cx + "/" + cy + ": " + err);
+    }
+}
+
+function render_flash(x, y)
+{
+    if (flash) // Flash
+    {
+        var col = flash_colours[flash];
+        dungeon_ctx.save();
+        try
+        {
+            dungeon_ctx.fillStyle = "rgb(" + col.r + "," + col.g + "," + col.b + ")";
+            dungeon_ctx.globalAlpha = col.a / 255;
+            dungeon_ctx.fillRect(x * dungeon_cell_w, y * dungeon_cell_h,
+                                 dungeon_cell_w, dungeon_cell_h);
+        }
+        finally
+        {
+            dungeon_ctx.restore();
+        }
     }
 }
 
@@ -691,13 +722,13 @@ function draw_foreground(x, y, cell)
     if (fg & TILE_FLAG_ANIM_WEP)
         draw_icon(TILEI_ANIMATED_WEAPON, x, y);
 
-    if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
+    if (bg & TILE_FLAG_UNSEEN && ((bg != TILE_FLAG_UNSEEN) || fg))
         draw_icon(TILEI_MESH, x, y);
 
-    if (bg & TILE_FLAG_OOR && (bg != TILE_FLAG_OOR || fg))
+    if (bg & TILE_FLAG_OOR && ((bg != TILE_FLAG_OOR) || fg))
         draw_icon(TILEI_OOR_MESH, x, y);
 
-    if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
+    if (bg & TILE_FLAG_MM_UNSEEN && ((bg != TILE_FLAG_MM_UNSEEN) || fg))
         draw_icon(TILEI_MAGIC_MAP_MESH, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but

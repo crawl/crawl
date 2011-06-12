@@ -29,6 +29,7 @@ bool is_feature(wchar_t feature, const coord_def& where);
 
 std::string screenshot();
 
+int viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
 void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE_LOCAL?
