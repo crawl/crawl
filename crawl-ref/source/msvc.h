@@ -23,6 +23,7 @@
 #define strnicmp _strnicmp
 #define ftruncate _chsize
 #define putenv _putenv
+#define strtoll _strtoi64
 
 // No va_copy in MSVC
 #if !defined(va_copy)
