@@ -1376,6 +1376,9 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 
         if (mons->type == MONS_IGNACIO)
             return (weapon.sub_type == WPN_EXECUTIONERS_AXE);
+
+        if (mons->type == MONS_MENNAS)
+            return (get_weapon_brand(weapon) == SPWPN_HOLY_WRATH);
     }
 
     if (is_unrandom_artefact(weapon))
