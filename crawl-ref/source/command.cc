@@ -50,6 +50,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "syscalls.h"
+#include "tagstring.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tilepick.h"
@@ -571,11 +572,11 @@ void list_armour()
 
 void list_jewellery(void)
 {
-    std::ostringstream jstr;
+    std::string jstr;
+    int cols = get_number_of_cols() - 1;
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
     {
-
         if ((you.species != SP_OCTOPODE && i > EQ_AMULET)
             || (you.species == SP_OCTOPODE && i < EQ_AMULET))
             continue;
@@ -583,10 +584,8 @@ void list_jewellery(void)
         const int jewellery_id = you.equip[i];
         int       colour       = MSGCOL_BLACK;
 
-        jstr.str("");
-        jstr.clear();
-
-        jstr << ((i == EQ_LEFT_RING)  ? "Left ring " :
+        const char *slot =
+                 (i == EQ_LEFT_RING)  ? "Left ring " :
                  (i == EQ_RIGHT_RING) ? "Right ring" :
                  (i == EQ_AMULET)     ? "Amulet    " :
                  (i == EQ_RING_ONE)   ? "1st ring  " :
@@ -597,28 +596,35 @@ void list_jewellery(void)
                  (i == EQ_RING_SIX)   ? "6th ring  " :
                  (i == EQ_RING_SEVEN) ? "7th ring  " :
                  (i == EQ_RING_EIGHT) ? "8th ring  "
-                                      : "unknown   ")
-             << " : ";
+                                      : "unknown   ";
 
+        std::string item;
         if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])
             || !you_tran_can_wear(i))
         {
-            jstr << "    (currently unavailable)";
+            item = "    (currently unavailable)";
         }
         else if (jewellery_id != -1)
         {
-            jstr << you.inv[jewellery_id].name(DESC_INVENTORY);
+            item = you.inv[jewellery_id].name(DESC_INVENTORY);
             std::string
                 prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(jstr.str(), prefix, "equip");
+            colour = menu_colour(item, prefix, "equip");
         }
         else
-            jstr << "    none";
+            item = "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(jstr.str(), "", "equip");
+            colour = menu_colour(item, "", "equip");
 
-        mpr(jstr.str().c_str(), MSGCH_EQUIPMENT, colour);
+        item = chop_string(make_stringf("%s : %s", slot, item.c_str()),
+                           i > EQ_AMULET ? cols / 2 : cols);
+        item = colour_string(item, colour);
+
+        if (i > EQ_AMULET && (i - EQ_AMULET) % 2)
+            jstr = item + " ";
+        else
+            mpr(jstr + item, MSGCH_EQUIPMENT);
     }
 }
 
