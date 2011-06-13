@@ -573,7 +573,8 @@ void list_armour()
 void list_jewellery(void)
 {
     std::string jstr;
-    int cols = get_number_of_cols() - 1;
+    int cols = get_number_of_cols();
+    bool split = you.species == SP_OCTOPODE && cols > 84;
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
     {
@@ -585,18 +586,18 @@ void list_jewellery(void)
         int       colour       = MSGCOL_BLACK;
 
         const char *slot =
-                 (i == EQ_LEFT_RING)  ? "Left ring " :
+                 (i == EQ_LEFT_RING)  ? "Left ring" :
                  (i == EQ_RIGHT_RING) ? "Right ring" :
-                 (i == EQ_AMULET)     ? "Amulet    " :
-                 (i == EQ_RING_ONE)   ? "1st ring  " :
-                 (i == EQ_RING_TWO)   ? "2nd ring  " :
-                 (i == EQ_RING_THREE) ? "3rd ring  " :
-                 (i == EQ_RING_FOUR)  ? "4th ring  " :
-                 (i == EQ_RING_FIVE)  ? "5th ring  " :
-                 (i == EQ_RING_SIX)   ? "6th ring  " :
-                 (i == EQ_RING_SEVEN) ? "7th ring  " :
-                 (i == EQ_RING_EIGHT) ? "8th ring  "
-                                      : "unknown   ";
+                 (i == EQ_AMULET)     ? "Amulet" :
+                 (i == EQ_RING_ONE)   ? "1st ring" :
+                 (i == EQ_RING_TWO)   ? "2nd ring" :
+                 (i == EQ_RING_THREE) ? "3rd ring" :
+                 (i == EQ_RING_FOUR)  ? "4th ring" :
+                 (i == EQ_RING_FIVE)  ? "5th ring" :
+                 (i == EQ_RING_SIX)   ? "6th ring" :
+                 (i == EQ_RING_SEVEN) ? "7th ring" :
+                 (i == EQ_RING_EIGHT) ? "8th ring"
+                                      : "unknown";
 
         std::string item;
         if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])
@@ -617,11 +618,13 @@ void list_jewellery(void)
         if (colour == MSGCOL_BLACK)
             colour = menu_colour(item, "", "equip");
 
-        item = chop_string(make_stringf("%s : %s", slot, item.c_str()),
-                           i > EQ_AMULET ? cols / 2 : cols);
+        item = chop_string(make_stringf("%-*s: %s",
+                                        split ? cols > 96 ? 9 : 8 : 11,
+                                        slot, item.c_str()),
+                           split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
         item = colour_string(item, colour);
 
-        if (i > EQ_AMULET && (i - EQ_AMULET) % 2)
+        if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else
             mpr(jstr + item, MSGCH_EQUIPMENT);
