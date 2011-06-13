@@ -245,7 +245,8 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     }
 
     //jmf: Add back control, but effect is cast_semi_controlled_blink(pow).
-    else if (player_control_teleport() && !you.confused() && allow_partial_control)
+    else if (player_control_teleport() && !you.confused() && allow_partial_control
+             && allow_control_teleport())
     {
         // The orb sometimes degrades semicontrolled blinks to uncontrolled.
         if (you.char_direction == GDT_ASCENDING && one_chance_in(3))
@@ -253,7 +254,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
             mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
             random_blink(false);
         }
-        else if (allow_control_teleport())
+        else
         {
             mpr("You may select the general direction of your translocation.");
             cast_semi_controlled_blink(100);
