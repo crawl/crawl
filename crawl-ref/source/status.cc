@@ -443,6 +443,16 @@ void fill_status_info(int status, status_info* inf)
         _describe_stat_zero(inf, STAT_DEX);
         break;
 
+    case STATUS_FIREBALL:
+        if (you.attribute[ATTR_DELAYED_FIREBALL])
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text   = "Fball";
+            inf->short_text   = "delayed fireball";
+            inf->long_text    = "You have a stored fireball ready to release.";
+        }
+        break;
+
     default:
         if (!found)
         {
