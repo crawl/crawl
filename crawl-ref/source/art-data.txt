@@ -208,6 +208,7 @@ COLOUR:  MAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 VALUE:   1000
+BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
 DESC_ID: It is the creation of a mad god, and carries a curse which
          transforms anyone possessing it into a prune. Fortunately, the

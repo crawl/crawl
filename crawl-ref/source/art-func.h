@@ -337,6 +337,12 @@ static void _PRUNE_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs, "You feel pruney.");
 }
 
+static void _PRUNE_world_reacts(item_def *item)
+{
+    if (one_chance_in(10))
+        did_god_conduct(DID_CHAOS, 1);
+}
+
 ////////////////////////////////////////////////////
 
 static void _TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
