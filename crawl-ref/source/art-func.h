@@ -421,6 +421,12 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
         return (false);
     }
 
+    if (one_chance_in(5))
+    {
+        _wucad_miscast(&you, random2(9), random2(70));
+        return (false);
+    }
+
     mpr("Magical energy flows into your mind!");
 
     inc_mp(3 + random2(5) + you.skill(SK_EVOCATIONS) / 3);
@@ -428,9 +434,6 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
     *pract    = 1;
     *did_work = true;
-
-    if (one_chance_in(3))
-        _wucad_miscast(&you, random2(9), random2(70));
 
     return (false);
 }
