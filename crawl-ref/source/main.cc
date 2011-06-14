@@ -2023,7 +2023,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_QUIT:
-        if (yes_or_no("Are you sure you want to quit"))
+        if (yes_or_no("Are you sure you want to quit without saving"))
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_QUITTING);
         else
             canned_msg(MSG_OK);
