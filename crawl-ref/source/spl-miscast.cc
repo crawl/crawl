@@ -741,6 +741,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     return (create_monster(data) != -1);
 }
 
+// hair or hair-equivalent (like bandages)
 static bool _has_hair(actor* target)
 {
     // Don't bother for monsters.
@@ -748,6 +749,7 @@ static bool _has_hair(actor* target)
         return (false);
 
     return (!form_changed_physiology() && you.species != SP_GHOUL
+            && you.species != SP_OCTOPODE
             && you.species != SP_KENKU && !player_genus(GENPC_DRACONIAN));
 }
 
