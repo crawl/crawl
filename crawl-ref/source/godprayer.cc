@@ -366,9 +366,11 @@ void pray()
 
     if (you.religion == GOD_NO_GOD)
     {
+        const mon_holy_type holi = you.holiness();
+
         mprf(MSGCH_PRAY,
-             "You spend a moment contemplating the meaning of %slife.",
-             you.is_undead ? "un" : "");
+             "You spend a moment contemplating the meaning of %s.",
+             holi == MH_NONLIVING || holi == MH_UNDEAD ? "existence" : "life");
 
         // Zen meditation is timeless.
         return;
