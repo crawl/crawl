@@ -3867,6 +3867,7 @@ void display_char_status()
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
         STATUS_CLINGING,
+        STATUS_FIREBALL,
     };
 
     status_info inf;

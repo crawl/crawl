@@ -618,6 +618,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_FINESSE,
         DUR_LIFESAVING,
         DUR_DARKNESS,
+        STATUS_FIREBALL,
     };
 
     status_info inf;
@@ -2043,6 +2044,7 @@ std::string _status_mut_abilities()
         DUR_FINESSE,
         DUR_LIFESAVING,
         DUR_DARKNESS,
+        STATUS_FIREBALL,
     };
 
     status_info inf;

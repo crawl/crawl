@@ -22,6 +22,7 @@ enum status_type
     STATUS_STR_ZERO,
     STATUS_INT_ZERO,
     STATUS_DEX_ZERO,
+    STATUS_FIREBALL,
 };
 
 struct status_info
