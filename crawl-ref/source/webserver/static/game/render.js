@@ -413,16 +413,30 @@ function get_cell_map_feature(cell)
     var fg_idx = cell.fg & TILE_FLAG_MASK;
     var bg_idx = cell.bg & TILE_FLAG_MASK;
 
-    // XXX: This needs feature data
+    // TODO: This needs feature data
+    // Or at least send the minimap feature. Using tile data is very hacky
 
     if (fg_idx == TILEP_PLAYER)
         return MF_PLAYER;
-    else if (fg_idx >= TILEP_MCACHE_START)
-        return MF_MONS_HOSTILE;
     else if (fg_idx >= TILE_MAIN_MAX)
+    {
+        var att_flag = cell.fg & TILE_FLAG_ATT_MASK;
+        if (att_flag == TILE_FLAG_NEUTRAL)
+            return MF_MONS_NEUTRAL;
+        else if (att_flag == TILE_FLAG_GD_NEUTRAL)
+            return MF_MONS_PEACEFUL;
+        else if (att_flag == TILE_FLAG_PET)
+            return MF_MONS_FRIENDLY;
         return MF_MONS_HOSTILE;
+    }
+    else if (fg_idx >= TILE_CLOUD_FIRE_0 && fg_idx <= TILE_CLOUD_RAGING_WINDS_1)
+        return MF_FEATURE;
     else if (fg_idx > 0)
         return MF_ITEM;
+    else if (cell.bg & TILE_FLAG_EXCL_CTR && (cell.bg & TILE_FLAG_UNSEEN))
+        return MF_EXCL_ROOT;
+    else if (cell.bg & TILE_FLAG_TRAV_EXCL && (cell.bg & TILE_FLAG_UNSEEN))
+        return MF_EXCL;
     else if (cell.bg & TILE_FLAG_WATER)
         return MF_WATER;
     else if (bg_idx > TILE_WALL_MAX)
