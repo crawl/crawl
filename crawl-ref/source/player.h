@@ -250,6 +250,9 @@ public:
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
 
+  // Path back from portal levels.
+  std::vector<level_pos> level_stack;
+
   // The player's knowledge about item types.
   id_arr type_ids;
   // Additional information, about tried unidentified items.

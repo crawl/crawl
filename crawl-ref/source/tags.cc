@@ -1264,6 +1264,10 @@ static void tag_construct_you(writer &th)
     for (unsigned int k = 0; k < you.dactions.size(); k++)
         marshallByte(th, you.dactions[k]);
 
+    marshallInt(th, you.level_stack.size());
+    for (unsigned int k = 0; k < you.level_stack.size(); k++)
+        you.level_stack[k].save(th);
+
     // List of currently beholding monsters (usually empty).
     marshallShort(th, you.beholders.size());
     for (unsigned int k = 0; k < you.beholders.size(); k++)
@@ -2235,6 +2239,22 @@ static void tag_read_you(reader &th)
     you.dactions.resize(n_dact, NUM_DACTIONS);
     for (i = 0; i < n_dact; i++)
         you.dactions[i] = static_cast<daction_type>(unmarshallByte(th));
+
+    you.level_stack.clear();
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_NO_LEVEL_TYPE)
+    {
+#endif
+    int n_levs = unmarshallInt(th);
+    for (int k = 0; k < n_levs; k++)
+    {
+        level_pos pos;
+        pos.load(th);
+        you.level_stack.push_back(pos);
+    }
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
 
     // List of currently beholding monsters (usually empty).
     count = unmarshallShort(th);
