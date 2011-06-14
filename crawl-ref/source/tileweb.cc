@@ -49,7 +49,8 @@ static unsigned int get_milliseconds()
 TilesFramework tiles;
 
 TilesFramework::TilesFramework()
-    : m_current_flash_colour(BLACK),
+    : m_next_view(coord_def(GXM, GYM)),
+      m_current_flash_colour(BLACK),
       m_next_flash_colour(BLACK),
       m_print_fg(15)
 {
@@ -385,11 +386,37 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
         write_message("set_layer(\"normal\");\n");
     }
 
-    m_next_view = vbuf;
-    m_next_gc = gc;
     m_next_flash_colour = you.flash_colour;
     if (m_next_flash_colour == BLACK)
         m_next_flash_colour = viewmap_flash_colour();
+
+    screen_cell_t *cell(m_next_view);
+
+    // Render the view cells not in vbuf and write everything
+    // into m_next_view
+    // HACK: This assumes vbuf is crawl_view.vbuf, since it will
+    // only ever be called with that
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
+        {
+            coord_def pos(x, y);
+            coord_def view = grid2view(pos);
+
+            if (crawl_view.in_viewport_v(view))
+            {
+                *cell = ((const screen_cell_t *) vbuf)[view.x - 1 +
+                                                       vbuf.size().x * (view.y - 1)];
+            }
+            else
+            {
+                // The cell is not in vbuf, we need to render it ourselves
+                draw_cell(cell, pos, false, m_next_flash_colour);
+            }
+
+            cell++;
+        }
+
+    m_next_gc = gc;
 }
 
 void TilesFramework::load_dungeon(const coord_def &cen)
@@ -427,8 +454,7 @@ void TilesFramework::resize()
     crawl_view.msgsz.y = Options.msg_min_height;
     m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
 
-    // We want to always render the whole map.
-    crawl_view.viewsz = coord_def(GXM, GYM);
+    crawl_view.viewsz = coord_def(ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER);
     crawl_view.init_view();
 
     // Send the client the necessary data to do the layout

@@ -40,6 +40,9 @@ void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
 #endif
 
 void viewwindow(bool show_updates = true);
+void draw_cell(screen_cell_t *cell, const coord_def &gc,
+               bool anim_updates, int flash_colour);
+
 void update_monsters_in_view();
 bool handle_seen_interrupt(monster* mons,
                            std::vector<std::string>* msgs_buf = NULL);
