@@ -1058,83 +1058,10 @@ void viewwindow(bool show_updates)
     const coord_def br = crawl_view.viewsz;
     for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
-#ifdef USE_TILE
-        cell->tile.clear();
-#endif
-
         // in grid coords
         const coord_def gc = view2grid(*ri);
-        const coord_def ep = grid2show(gc);
-
-        if (!map_bounds(gc))
-            _draw_out_of_bounds(cell);
-        else if (!crawl_view.in_los_bounds_g(gc))
-            _draw_outside_los(cell, gc);
-        else if (gc == you.pos() && you.on_current_level && !_show_terrain
-                 && !crawl_state.game_is_arena()
-                 && !crawl_state.arena_suspended)
-        {
-            _draw_player(cell, gc, ep, anim_updates);
-        }
-        else if (you.see_cell(gc) && you.on_current_level)
-            _draw_los(cell, gc, ep, anim_updates);
-        else
-            _draw_outside_los(cell, gc);
-
-        cell->flash_colour = BLACK;
-
-        // Alter colour if flashing the characters vision.
-        if (flash_colour)
-        {
-            if (you.see_cell(gc))
-            {
-#ifdef USE_TILE
-                cell->colour = real_colour(flash_colour);
-#else
-                monster_type mons = env.map_knowledge(gc).monster();
-                if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
-                    !you.berserk())
-                {
-                    cell->colour = real_colour(flash_colour);
-                }
-#endif
-            }
-            else
-            {
-                cell->colour = DARKGREY;
-            }
-            cell->flash_colour = cell->colour;
-        }
-        else if (crawl_state.darken_range)
-        {
-            if (!crawl_state.darken_range->valid_aim(gc))
-            {
-                cell->colour = DARKGREY;
-#ifdef USE_TILE
-                if (you.see_cell(gc))
-                    cell->tile.bg |= TILE_FLAG_OOR;
-#endif
-            }
-        }
-#ifdef USE_TILE_LOCAL
-        // Grey out grids that cannot be reached due to beholders.
-        else if (you.get_beholder(gc))
-            cell->tile.bg |= TILE_FLAG_OOR;
-
-        else if (you.get_fearmonger(gc))
-            cell->tile.bg |= TILE_FLAG_OOR;
-
-        tile_apply_properties(gc, cell->tile);
-#elif defined(USE_TILE_WEB)
-        // For webtiles, we only grey out visible tiles
-        else if (you.get_beholder(gc) && you.see_cell(gc))
-            cell->tile.bg |= TILE_FLAG_OOR;
-
-        else if (you.get_fearmonger(gc) && you.see_cell(gc))
-            cell->tile.bg |= TILE_FLAG_OOR;
-
-        tile_apply_properties(gc, cell->tile);
-#endif
+        
+        draw_cell(cell, gc, anim_updates, flash_colour);
 
         cell++;
     }
@@ -1157,6 +1084,85 @@ void viewwindow(bool show_updates)
         show_init();
 
     _debug_pane_bounds();
+}
+
+void draw_cell(screen_cell_t *cell, const coord_def &gc,
+               bool anim_updates, int flash_colour)
+{
+#ifdef USE_TILE
+    cell->tile.clear();
+#endif
+    const coord_def ep = grid2show(gc);
+
+    if (!map_bounds(gc))
+        _draw_out_of_bounds(cell);
+    else if (!crawl_view.in_los_bounds_g(gc))
+        _draw_outside_los(cell, gc);
+    else if (gc == you.pos() && you.on_current_level && !_show_terrain
+             && !crawl_state.game_is_arena()
+             && !crawl_state.arena_suspended)
+    {
+        _draw_player(cell, gc, ep, anim_updates);
+    }
+    else if (you.see_cell(gc) && you.on_current_level)
+        _draw_los(cell, gc, ep, anim_updates);
+    else
+        _draw_outside_los(cell, gc);
+
+    cell->flash_colour = BLACK;
+
+    // Alter colour if flashing the characters vision.
+    if (flash_colour)
+    {
+        if (you.see_cell(gc))
+        {
+#ifdef USE_TILE
+            cell->colour = real_colour(flash_colour);
+#else
+            monster_type mons = env.map_knowledge(gc).monster();
+            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
+                !you.berserk())
+            {
+                cell->colour = real_colour(flash_colour);
+            }
+#endif
+        }
+        else
+        {
+            cell->colour = DARKGREY;
+        }
+        cell->flash_colour = cell->colour;
+    }
+    else if (crawl_state.darken_range)
+    {
+        if (!crawl_state.darken_range->valid_aim(gc))
+        {
+            cell->colour = DARKGREY;
+#ifdef USE_TILE
+            if (you.see_cell(gc))
+                cell->tile.bg |= TILE_FLAG_OOR;
+#endif
+        }
+    }
+#ifdef USE_TILE_LOCAL
+    // Grey out grids that cannot be reached due to beholders.
+    else if (you.get_beholder(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    else if (you.get_fearmonger(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    tile_apply_properties(gc, cell->tile);
+#elif defined(USE_TILE_WEB)
+    // For webtiles, we only grey out visible tiles
+    else if (you.get_beholder(gc) && you.see_cell(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    else if (you.get_fearmonger(gc) && you.see_cell(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    tile_apply_properties(gc, cell->tile);
+#endif
 }
 
 void toggle_show_terrain()
