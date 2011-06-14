@@ -9,6 +9,12 @@ CFOPTIMIZE = -O2
 ifneq (,$(filter noopt,$(DEB_BUILD_OPTIONS)))
 	CFOPTIMIZE = -O0
 endif
+ifneq (,$(shell gcc --version|grep 'gcc (.*) 4\.4\.'))
+  ifeq ($(DEB_HOST_ARCH),powerpc)
+	# g++-4.4 has an ICE there.
+	CFOPTIMIZE = -O0
+  endif
+endif
 
 tree-stamp:
 	dh_testdir
