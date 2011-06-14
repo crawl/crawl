@@ -1775,7 +1775,8 @@ bool kiku_receive_corpses(int pow, coord_def where)
     dprf("kiku_receive_corpses() power: %d", pow);
 
     // Kiku gives branch-appropriate corpses (like shadow creatures).
-    int expected_extra_corpses = 1 + random2(pow / 36); // 1 at 0 Nec, up to 4 at 27 Nec.
+    // 1d2 at 0 Nec, up to 8 at 27 Nec.
+    int expected_extra_corpses = 1 + random2(2) + random2(pow / 18);
     int corpse_delivery_radius = 1;
 
     // We should get the same number of corpses
