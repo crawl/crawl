@@ -1299,13 +1299,8 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
-static bool _check_carrying_orb()
+static bool _has_orb()
 {
-    // We never picked up the Orb, no problem.
-    if (you.char_direction != GDT_ASCENDING)
-        return (true);
-
-    // So we did pick up the Orb. Now check whether we're carrying it.
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].defined()
@@ -1315,7 +1310,7 @@ static bool _check_carrying_orb()
             return (true);
         }
     }
-    return (yes_or_no("You're not carrying the Orb! Leave anyway"));
+    return false;
 }
 
 static void _go_downstairs();
@@ -1393,16 +1388,19 @@ static void _go_upstairs()
 
     if (leaving_dungeon)
     {
-        bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
-                            false, 'n') || !_check_carrying_orb());
-
-        if (!stay && crawl_state.game_is_hints())
+        bool stay = true;
+        if (_has_orb())
+            stay = !yesno("Are you sure you want to win?");
+        else if (yesno("Are you sure you want to leave the Dungeon? "
+                       "This will make you lose the game!",
+                       false, 'n'))
         {
-            if (!yesno("Are you *sure*? Doing so will end the game!", false,
-                       'n'))
-            {
-                stay = true;
-            }
+            // You did pick up the Orb but are not carrying it, this deserves
+            // another warning due to automatism.
+            if (you.char_direction == GDT_ASCENDING)
+                stay = !yes_or_no("You're not carrying the Orb! Leave anyway");
+            else
+                stay = false;
         }
 
         if (stay)
