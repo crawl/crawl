@@ -1431,8 +1431,10 @@ void _end_game(scorefile_entry &se)
             break;
 
         case GOD_KIKUBAAQUDGHA:
-            if (you.is_undead
-                && you.form != TRAN_LICH)
+        {
+            const mon_holy_type holi = you.holiness();
+
+            if (holi == MH_NONLIVING || holi == MH_UNDEAD)
             {
                 simple_god_message(" rasps: \"You have failed me! "
                                    "Welcome... oblivion!\"");
@@ -1443,6 +1445,7 @@ void _end_game(scorefile_entry &se)
                                    "Welcome... death!\"");
             }
             break;
+        }
 
         case GOD_YREDELEMNUL:
             if (you.is_undead)
