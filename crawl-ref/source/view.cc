@@ -1116,12 +1116,21 @@ void viewwindow(bool show_updates)
 #endif
             }
         }
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         // Grey out grids that cannot be reached due to beholders.
         else if (you.get_beholder(gc))
             cell->tile.bg |= TILE_FLAG_OOR;
 
         else if (you.get_fearmonger(gc))
+            cell->tile.bg |= TILE_FLAG_OOR;
+
+        tile_apply_properties(gc, cell->tile);
+#elif defined(USE_TILE_WEB)
+        // For webtiles, we only grey out visible tiles
+        else if (you.get_beholder(gc) && you.see_cell(gc))
+            cell->tile.bg |= TILE_FLAG_OOR;
+
+        else if (you.get_fearmonger(gc) && you.see_cell(gc))
             cell->tile.bg |= TILE_FLAG_OOR;
 
         tile_apply_properties(gc, cell->tile);
