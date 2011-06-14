@@ -1,0 +1,51 @@
+Source: crawl
+Section: games
+Priority: optional
+Maintainer: Guus Sliepen <guus@debian.org>
+Uploaders: Trent W. Buck <trentbuck@gmail.com>, Adam Borowski <kilobyte@angband.pl>
+DM-Upload-Allowed: yes
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 7), libncursesw5-dev, bison, flex, liblua5.1-0-dev,
+	pkg-config, libsdl-image1.2-dev, libsdl1.2-dev, libsqlite3-dev,
+	libfreetype6-dev, advancecomp
+Homepage: http://crawl.develz.org/
+
+Package: crawl-common
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: crawl | crawl-tiles
+Description: Dungeon Crawl, a text-based roguelike game (data files)
+ Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
+ Moria. Your objective is to travel deep into a subterranean cave complex and
+ retrieve the Orb of Zot, which is guarded by many horrible and hideous
+ creatures.
+ .
+ These are the data and support files.
+ .
+ This is the Stone Soup version of Dungeon Crawl.
+
+Package: crawl
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, crawl-common (= ${source:Version})
+Description: Dungeon Crawl, a text-based roguelike game
+ Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
+ Moria. Your objective is to travel deep into a subterranean cave complex and
+ retrieve the Orb of Zot, which is guarded by many horrible and hideous
+ creatures.
+ .
+ This is the console version, for tiles, use crawl-tiles instead.
+ .
+ This is the Stone Soup version of Dungeon Crawl.
+
+Package: crawl-tiles
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, crawl-common (= ${source:Version}), ttf-dejavu
+Description: Dungeon Crawl, a roguelike game, tiles version
+ Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
+ Moria. Your objective is to travel deep into a subterranean cave complex and
+ retrieve the Orb of Zot, which is guarded by many horrible and hideous
+ creatures.
+ .
+ This is the graphical (tiles) version.
+ .
+ This is the Stone Soup version of Dungeon Crawl.

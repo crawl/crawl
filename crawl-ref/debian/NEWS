@@ -1,0 +1,6 @@
+crawl (2:0.8.0-1) unstable; urgency=low
+
+  Savegames from 0.8.0 on are incompatible with savegames from previous
+  versions. 
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 21 May 2011 20:50:03 +0200
