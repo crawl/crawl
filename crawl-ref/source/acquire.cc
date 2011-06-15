@@ -599,7 +599,8 @@ static int _acquirement_jewellery_subtype()
     for (int i = 0; i < 10; i++)
     {
         // 1/3 amulets, 2/3 rings.
-        result = (one_chance_in(3) ? get_random_amulet_type()
+        result = (one_chance_in(you.species == SP_OCTOPODE ? 9 : 3)
+                                   ? get_random_amulet_type()
                                    : get_random_ring_type());
 
         // If we haven't seen this yet, we're done.
