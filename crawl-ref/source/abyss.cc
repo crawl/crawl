@@ -51,6 +51,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "viewgeom.h"
 #include "xom.h"
 #ifdef WIZARD
  #include "wiz-dgn.h"
@@ -125,7 +126,8 @@ void _write_abyssal_features()
         int chance = pow(0.98, dist) * scalar;
         if (!map_masked(*ri, MMT_VAULT)) {
             if (dist < 4 || x_chance_in_y(chance, scalar)) {
-                grd(*ri) = abyssal_features[index];
+                if (abyssal_features[index] != DNGN_UNSEEN)
+                    grd(*ri) = abyssal_features[index];
             }
             else
             {
@@ -418,6 +420,10 @@ void push_features_to_abyss()
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
     {
         dungeon_feature_type feature = grd(*ri);
+
+        if(!in_bounds(*ri))
+            feature = DNGN_UNSEEN;
+
         if (feat_is_stair(feature))
             feature = (one_chance_in(3) ? DNGN_STONE_ARCH : DNGN_FLOOR);
 
@@ -618,6 +624,7 @@ static void _place_displaced_monsters()
         mon_itr != displaced_monsters.end(); ++mon_itr)
     {
         monster* mon = *mon_itr;
+        maybe_bloodify_square(mon->pos());
         if (!mon->find_home_near_place(mon->pos()))
             _abyss_lose_monster(*mon);
     }
@@ -1001,16 +1008,31 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
     const coord_def minor_coord = abyssal_state.minor_coord;
     const double abyss_depth = abyssal_state.depth;
     const double scale = 2.2;
+
+    const int NUM_CLOUDS = 6;
+    const cloud_type clouds[NUM_CLOUDS] = {
+        CLOUD_BLACK_SMOKE,
+        CLOUD_GREY_SMOKE,
+        CLOUD_BLUE_SMOKE,
+        CLOUD_PURPLE_SMOKE,
+        CLOUD_TLOC_ENERGY,
+        CLOUD_MIST
+    };
+
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
 
         const coord_def p(*ri);
-        double x = (p.x + major_coord.x);
-        double y = (p.y + major_coord.y);
-        worley::noise_datum noise = worley::worley(x/scale, y/scale, abyss_depth);
+
+        if (you.pos() == p)
+            continue;
+
         if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
             continue;
 
+        double x = (p.x + major_coord.x);
+        double y = (p.y + major_coord.y);
+        worley::noise_datum noise = worley::worley(x/scale, y/scale, abyss_depth);
         dungeon_feature_type feat = DNGN_FLOOR;
 
         if (grd(p) == DNGN_UNSEEN || applyGlobal)
@@ -1043,6 +1065,11 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
                     _abyss_wipe_square_at(*ri, true);
                 }
 
+                if (feat == DNGN_FLOOR && in_los_bounds_g(p) && !(noise.id[1] % 3))
+                {
+                    cloud_type cloud = clouds[sub_noise.id[1] % NUM_CLOUDS];
+                    check_place_cloud(cloud, p, (noise.id[1] % 4)+2, 0);
+                }
                 grd(p) = feat;
             }
 
