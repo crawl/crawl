@@ -90,7 +90,7 @@ function c(x, y, cell)
 {
     var old_cell = get_tile_cache(x, y);
 
-    if (old_cell && old_cell.sy && (old_cell.sy < 0) && y > 0)
+    if (old_cell && old_cell.sy && (old_cell.sy < 0))
     {
         var above = get_tile_cache(x, y - 1) || {};
         above.dirty = true;
@@ -363,12 +363,9 @@ function render_cell(cx, cy)
         render_cursors(cx, cy);
 
         // Redraw the cell below if it overlapped
-        if (y < (view_y + dungeon_rows))
-        {
-            var cell_below = get_tile_cache(x, y + 1);
-            if (cell_below && cell_below.sy && (cell_below.sy < 0))
-                render_cell(cx, cy + 1);
-        }
+        var cell_below = get_tile_cache(x, y + 1);
+        if (cell_below && cell_below.sy && (cell_below.sy < 0))
+            render_cell(cx, cy + 1);
 
         // Debug helper
         if (cell.mark)
