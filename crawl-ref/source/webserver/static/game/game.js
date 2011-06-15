@@ -150,7 +150,7 @@ function do_layout()
         left: dungeon_offset.left + $("#dungeon").width() + 10,
         top: dungeon_offset.top + stat_height_pixels + 10
     });
-    
+
     var minimap_canvas = $("#minimap")[0];
     minimap_canvas.width = stat_width_pixels;
     minimap_cell_w = minimap_cell_h = Math.floor(stat_width_pixels / layout_parameters.gxm);

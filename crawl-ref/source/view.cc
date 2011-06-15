@@ -1059,7 +1059,7 @@ void viewwindow(bool show_updates)
     {
         // in grid coords
         const coord_def gc = view2grid(*ri);
-        
+
         draw_cell(cell, gc, anim_updates, flash_colour);
 
         cell++;

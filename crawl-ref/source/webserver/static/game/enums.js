@@ -131,4 +131,3 @@ minimap_colours = [
     "darkcyan",    // MF_EXCL
     "white"        // MF_PLAYER
 ]
-
