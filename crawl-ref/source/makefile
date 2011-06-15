@@ -916,23 +916,22 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
         profile wizard package-source source build-windows package-windows
 
-all: $(GAME) $(GENERATED_DOCS)
+all: $(GAME) $(GENERATED_DOCS) webserver
 
 test:
 	./$(GAME) -test > /dev/null
 
 
-ifeq (,$(findstring clean,$(MAKECMDGOALS)))
-ifeq (,$(findstring test,$(MAKECMDGOALS)))
-ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
-
 # Webtiles data
-ifdef WEBTILES
+.PHONY: webserver clean-webserver
+
 webserver/static/%.png: dat/tiles/%.png
 	$(COPY) $< webserver/static/
 
 webserver/static/game/%.png: dat/tiles/%.png
 	$(COPY) $< webserver/static/game/
+
+$(RLTILES)/%.js: rltile-build
 
 webserver/static/game/%.js: $(RLTILES)/%.js
 	$(COPY) $< webserver/static/game/
@@ -943,9 +942,19 @@ STATICFILES = $(TILEIMAGEFILES:%=webserver/static/game/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
               $(TILEINFOJS:%=webserver/static/game/tileinfo-%.js)
 
-.PHONY: webserver
+clean-webserver:
+	$(RM) $(STATICFILES)
+
+ifdef WEBTILES
 webserver: $(STATICFILES)
+else
+webserver:
 endif
+
+
+ifeq (,$(findstring clean,$(MAKECMDGOALS)))
+ifeq (,$(findstring test,$(MAKECMDGOALS)))
+ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
 
 #
 # CFLAGS difference check
@@ -1114,7 +1123,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles
+clean: clean-rltiles clean-webserver
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
