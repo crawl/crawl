@@ -537,7 +537,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
         max_hp = hit_points(xl, 3, 5);
     }
 
-    const mon_attack_type att_types[] =
+    const attack_type att_types[] =
     {
         AT_BITE, AT_STING, AT_ENGULF, AT_CLAW, AT_PECK, AT_HEADBUTT, AT_PUNCH,
         AT_KICK, AT_TENTACLE_SLAP, AT_TAIL_SLAP, AT_GORE, AT_TRUNK_SLAP
@@ -1145,7 +1145,7 @@ void ghost_demon::init_labrat (uint8_t force_colour)
     case LIGHTMAGENTA: // mutated
     {
         att_flav = AF_MUTATE;
-        const mon_attack_type possibles[] = { AT_CLAW, AT_PECK,
+        const attack_type possibles[] = { AT_CLAW, AT_PECK,
                 AT_TENTACLE_SLAP, AT_TRUNK_SLAP, AT_SNAP, AT_SPLASH };
         att_type = RANDOM_ELEMENT(possibles);
         break;

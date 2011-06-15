@@ -1392,7 +1392,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     mon_attack_def attk = smc->attack[attk_number];
 
     if (attk.type == AT_RANDOM)
-        attk.type = static_cast<mon_attack_type>(random_range(AT_HIT,
+        attk.type = static_cast<attack_type>(random_range(AT_HIT,
                                                               AT_GORE));
 
     if (attk.flavour == AF_KLOWN)
