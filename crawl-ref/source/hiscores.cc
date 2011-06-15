@@ -1779,7 +1779,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_WEAKNESS:
-        desc += terse? "collapsed " : "Collapsed under their own weight";
+        desc += terse? "collapsed" : "Collapsed under their own weight";
         break;
 
     case KILLED_BY_CLUMSINESS:
