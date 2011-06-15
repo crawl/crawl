@@ -1662,7 +1662,7 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
         switch (wp.first)
         {
         case WPN_UNARMED:
-            if (ng->job == JOB_GLADIATOR || !species_has_claws(ng->species))
+            if (!species_has_claws(ng->species))
                 continue;
             break;
         case WPN_SPEAR:
