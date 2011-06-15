@@ -9,17 +9,6 @@ const int HIT_WEAK   = 7;
 const int HIT_MED    = 18;
 const int HIT_STRONG = 36;
 
-enum atk_phase
-{
-    ATK_ATTEMPTED,                      //  0
-    ATK_DODGED,
-    ATK_BLOCKED,
-    ATK_HIT,
-    ATK_DAMAGED,
-    ATK_KILLED,
-    ATK_END
-};
-
 class attack
 {
 // Public Properties
@@ -27,8 +16,8 @@ public:
     // General attack properties, set on instantiation or through a normal
     // thread of execution
     actor        *attacker, *defender;
-    atk_phase    attack_phase;
 
+    bool    attack_occurred;
     bool    cancel_attack;
     bool    did_hit;
     bool    needs_message;
