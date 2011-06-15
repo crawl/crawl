@@ -73,8 +73,6 @@ public:
     static void chaos_affect_actor(actor *victim);
 
 private:
-    void init_attack();
-
     /* Attack phases */
     bool handle_phase_attempted();
     bool handle_phase_dodged();
@@ -85,7 +83,7 @@ private:
     bool handle_phase_end();
 
     /* Combat Calculations */
-    int test_hit(int to_hit, int ev, defer_rand& r);
+    int test_hit(int to_hit, int ev);
     int calc_base_unarmed_damage();
     int calc_base_weapon_damage();
     int calc_damage();
@@ -119,8 +117,11 @@ private:
     bool attack_warded_off();
 
     /* Output methods */
+    void adjust_noise(mon_attack_def &attk);
     void emit_nodmg_hit_message();
     bool attack_shield_blocked(bool verbose);
+
+    void set_attack_verb();
 
     /* Misc methods */
     void handle_noise(const coord_def & pos);
@@ -158,8 +159,6 @@ private:
                       item_def &fake_corpse, int last_item);
 private:
     // Player-attack specific stuff
-    bool player_attack();
-
     // Auxiliary unarmed attacks.
     bool player_aux_unarmed();
     unarmed_attack_type player_aux_choose_baseattack();
@@ -176,7 +175,6 @@ private:
     void player_weapon_auto_id();
     int  player_stab_weapon_bonus(int damage);
     int  player_stab(int damage);
-    int  player_weapon_type_modify(int damage);
 
     int  player_hits_monster();
     void player_exercise_combat_skills();

@@ -26,7 +26,7 @@
  **************************************************
 */
 attack::attack(actor *attk, actor *defn, bool allow_unarmed)
-    : attacker(attk), defender(defn), attack_phase(ATK_ATTEMPTED),
+    : attacker(attk), defender(defn), attack_occurred(false),
     cancel_attack(false), did_hit(false), needs_message(false),
     attacker_visible(false), defender_visible(false),
     attacker_invisible(false), defender_invisible(false), to_hit(0),
