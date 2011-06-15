@@ -510,7 +510,9 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_THROWING] = 2;
         you.skills[SK_DODGING]  = 2;
         you.skills[SK_SHIELDS]  = 2;
-        you.skills[SK_UNARMED_COMBAT] = 2;
+        // Gladiators with weapons also get some unarmed skill for offhand attacks.
+        if (you.weapon())
+            you.skills[SK_UNARMED_COMBAT] = 2;
         weap_skill = 3;
         break;
 
