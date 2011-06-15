@@ -626,7 +626,13 @@ static void _place_displaced_monsters()
         monster* mon = *mon_itr;
         maybe_bloodify_square(mon->pos());
         if (!mon->find_home_near_place(mon->pos()))
+        {
+            if (you.can_see(mon))
+                simple_monster_message(mon, " is devoured by a tear in reality.",
+                        MSGCH_BANISHMENT);
             _abyss_lose_monster(*mon);
+
+        }
     }
 
     displaced_monsters.clear();
