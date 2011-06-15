@@ -108,7 +108,7 @@ function c(x, y, cell)
     }
 
     cell.dirty = true;
-    
+
     if (minimap_bounds.left > x)
     {
         minimap_bounds.left = x;
@@ -881,14 +881,14 @@ function center_minimap()
     minimap_y = minimap_bounds.top;
     minimap_display_x = Math.floor((minimap.width - minimap_cell_w * mm_w) / 2);
     minimap_display_y = Math.floor((minimap.height - minimap_cell_h * mm_h) / 2);
-    
+
     var dx = minimap_display_x - minimap_x * minimap_cell_w - old_x;
     var dy = minimap_display_y - minimap_y * minimap_cell_h - old_y;
 
     minimap_ctx.drawImage(minimap,
                           0, 0, minimap.width, minimap.height,
                           dx, dy, minimap.width, minimap.height);
-    
+
     minimap_ctx.fillStyle = "black";
     if (dx > 0)
         minimap_ctx.fillRect(0, 0, dx, minimap.height);

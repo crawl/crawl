@@ -629,7 +629,7 @@ void TilesFramework::_send_current_view()
             // Don't send data for default black tiles
             old_cell_dummy.tile.bg |= TILE_FLAG_UNSEEN;
             old_cell_dummy.tile.flv = env.tile_flv(coord_def(x, y));
-            
+
             _send_cell(x, y, cell, &old_cell_dummy);
 
             old_cell_dummy.tile.clear();
@@ -671,7 +671,7 @@ void TilesFramework::redraw()
         m_current_view = m_next_view;
 
         write_message("clear_map();");
-        
+
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)
             for (int x = 0; x < m_current_view.size().x; x++)
@@ -698,7 +698,7 @@ void TilesFramework::redraw()
                 coord_def gc(x, y);
                 new_cell.tile.flv = env.tile_flv(gc);
                 pack_cell_overlays(gc, &(new_cell.tile));
-                
+
                 _send_cell(x, y, &new_cell, old_cell);
 
                 *old_cell = new_cell;
@@ -709,7 +709,7 @@ void TilesFramework::redraw()
 
         send_message("display();");
     }
-    
+
     m_need_redraw = false;
     m_last_tick_redraw = get_milliseconds();
 }
