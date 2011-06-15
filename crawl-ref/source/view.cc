@@ -18,7 +18,6 @@
 
 #include "map_knowledge.h"
 #include "viewchar.h"
-#include "viewgeom.h"
 #include "showsymb.h"
 
 #include "attitude-change.h"
