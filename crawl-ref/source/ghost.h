@@ -35,7 +35,7 @@ public:
     short max_hp, ev, ac, damage, speed;
     bool see_invis;
     brand_type brand;
-    mon_attack_type att_type;
+    attack_type att_type;
     mon_attack_flavour att_flav;
     mon_resist_def resists;
 

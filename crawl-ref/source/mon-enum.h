@@ -59,7 +59,7 @@ enum mon_attack_type
     AT_SPLASH,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
-    AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
+    AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap
                     //   use it, no weapon: stand there doing nothing.
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
 };
