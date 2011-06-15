@@ -1216,9 +1216,11 @@ static void _abyss_generate_new_area()
 
 
 void _initialize_abyss_state() {
-    // TODO randomize this.
     abyssal_state.major_coord = ABYSS_CENTRE;
-    abyssal_state.minor_coord = ABYSS_CENTRE;
+    abyssal_state.major_coord.x = random2(0x7FFFFFFF);
+    abyssal_state.major_coord.y = random2(0x7FFFFFFF);
+    abyssal_state.minor_coord.x = random2(0x7FFFFFFF);
+    abyssal_state.minor_coord.y = random2(0x7FFFFFFF);
     abyssal_state.depth = 0.0;
     abyssal_state.mask.init(true);
 }
