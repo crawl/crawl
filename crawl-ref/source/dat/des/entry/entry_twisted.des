@@ -96,18 +96,17 @@ NSUBST: C=*:., h=1:./*:l, i=1:./*:l, j=1:./*:l, k=1:./*:l
 : elseif rnd == 3 then
 NSUBST: D=*:., m=1:./*:w, n=1:./*:w, o=1:./*:w, p=1:./*:w
 : elseif rnd == 4 then
-NSUBST: e=*:., q=1:./*:w, r=1:./*:w, s=1:./*:w
-SUBST:  E=., ABCabcdefghijk=l, DFmnoptuv=w
+NSUBST: E=*:., q=1:./*:w, r=1:./*:w, s=1:./*:w
 : elseif rnd == 5 then
 NSUBST: F=*:., t=1:./*:w, u=1:./*:w, v=1:./*:w
 : else
-SUBST:  X=+
+SUBST:  X=+, Y:YYY+
 NSUBST: Y=1:+/*:x
 : end
+SUBST:  XY=x, ABCabcdefghijk=l, DEFmnopqrstuv=w
 MONS:   bush w:1 / plant w:6 / fungus w:9
 MONS:   fungus
-SUBST:  "=2', '=2..., 2:2.
-SUBST:  X=x, Y=x, ABCabcdefghijk=l, DEFmnopqrstuv=w
+SUBST:  "=2', '=2..., 2:222.WW
 : if crawl.coinflip() then
 SUBST:  Z=x, z=+, V=x
 : elseif crawl.coinflip() then
@@ -121,14 +120,14 @@ MAP
        xxxxxx'''''''''''xxxxxx
    xxxxx.......'"""""'.......xxxxx
  xxx..........lll222www..........xxx
-xx......lllkkklll222wwpppwwww......xx
-x....gllglllCllll222wwwDwwwwwwww....x
-x.lllffBxlljjjlxxXXXxxwoowwwxwwssww.x
-xlAlxlBlxlllCxxx11111xxxnnwwxwwExwFxx
-xllAxeeexllCxx111111111xxDwwxwEwxvwvx
-xlbbxlBlxlClx11111111111xnnwxrrrxwuux
-xlAlxlddxilix11111G11111xDwwxwEwxwwFx
-xaalxlccxhhhx11111111111xmmwxqqqxwttx
+xx......lllkkklll222wwwppwwww......xx
+x....gllglllCllll222wwwwDwwwwwww....x
+x.lllffBxlljjjlxxXXXxxwwoowwxwwssww.x
+xlAlxlBlxlllCxxx11111xxxwDwwxwwExwvvx
+xllAxeeexllCxx111111111xxnnwxwEwxwFwx
+xlbbxlBlxliix11111111111xwDwxrrrxwuux
+xlAlxlddxlClx11111G11111xmmwxwEwxwwFx
+xaalxlccxhhhx11111111111xwDwxqqqxwttx
 x...x...x...xx111111111xx...x...x...x
 x...V...V...xxYx11111xYxx...V...V...x
 xZzZx...x...xx.xxxYxxx.xx...x...xZzZx
@@ -137,7 +136,7 @@ x....ZzZx...x...x.}.x...x...xZzZ....x
 xx......xZzZxZzZx...xZzZxZzZx......xx
  xxx...........ZxZzZxZ...........xxx
    xxxxx.....................xxxxx
-       xxxxxx...[.{ (...xxxxxx
+       xxxxxx...[.{.(...xxxxxx
             xxxxxxxxxxxxx
 ENDMAP
 
