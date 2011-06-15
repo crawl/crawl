@@ -145,7 +145,7 @@ private:
     skill_type m_sk;
 
     TextItem* m_name;
-#ifdef USE_TILE_LOCAL_LOCAL
+#ifdef USE_TILE_LOCAL
     TextTileItem* m_name_tile;
 #endif
     NoSelectTextItem* m_level;
