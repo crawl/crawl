@@ -75,11 +75,11 @@ static int _screen_sizes[4][8] =
 TilesFramework tiles;
 
 TilesFramework::TilesFramework() :
+    m_active_layer(LAYER_CRT),
     m_windowsz(1024, 768),
     m_viewsc(0, 0),
     m_fullscreen(false),
     m_need_redraw(false),
-    m_active_layer(LAYER_CRT),
     m_buttons_held(0),
     m_key_mod(0),
     m_mouse(-1, -1),
