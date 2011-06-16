@@ -769,6 +769,7 @@ int player_magical_power(void);
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
+int player_bonus_regen(void);
 int player_regen(void);
 
 int player_res_cold(bool calc_unid = true, bool temp = true,
