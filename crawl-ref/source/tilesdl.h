@@ -314,6 +314,8 @@ protected:
 
     crawl_view_buffer m_next_view;
     coord_def m_next_gc;
+    coord_def m_next_view_tl;
+    coord_def m_next_view_br;
 
     int m_current_flash_colour;
     int m_next_flash_colour;

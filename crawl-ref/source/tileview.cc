@@ -28,12 +28,6 @@
 
 void tile_new_level(bool first_time, bool init_unseen)
 {
-    tiles.clear_minimap();
-
-    for (unsigned int x = 0; x < GXM; x++)
-        for (unsigned int y = 0; y < GYM; y++)
-            tiles.update_minimap(coord_def(x, y));
-
     if (first_time)
         tile_init_flavour();
 
@@ -59,6 +53,12 @@ void tile_new_level(bool first_time, bool init_unseen)
             if (!is_unknown_stair(coord_def(x,y)))
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
         }
+
+    tiles.clear_minimap();
+
+    for (unsigned int x = 0; x < GXM; x++)
+        for (unsigned int y = 0; y < GYM; y++)
+            tiles.update_minimap(coord_def(x, y));
 }
 
 void tile_init_default_flavour()
