@@ -7,7 +7,7 @@
 #define MONDEATH_H
 
 bool mons_is_pikel (monster* mons);
-void pikel_band_neutralise(bool check_tagged = false);
+void pikel_band_neutralise();
 
 bool mons_is_duvessa(const monster* mons);
 bool mons_is_dowan(const monster* mons);
