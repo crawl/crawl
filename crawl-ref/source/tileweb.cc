@@ -687,6 +687,7 @@ void TilesFramework::redraw()
         m_current_view = m_next_view;
 
         write_message("clear_map();");
+        write_message("mappable(%u);", player_in_mappable_area());
 
         screen_cell_t *cell = (screen_cell_t *) m_current_view;
         for (int y = 0; y < m_current_view.size().y; y++)

@@ -3,6 +3,7 @@ var cursor_locs = [];
 var minimap_bounds;
 var minimap_changed = false;
 var flash = 0;
+var minimap_enabled = true;
 
 // Debug helper
 var mark_sent_cells = false;
@@ -84,6 +85,12 @@ function clear_map()
         top: 100000,
         bottom: -100000
     };
+}
+
+function mappable(val)
+{
+    minimap_enabled = val;
+    $("#minimap,#minimap_overlay").toggle(val);
 }
 
 function c(x, y, cell)
@@ -865,6 +872,8 @@ function draw_icon(idx, cx, cy, ofsx, ofsy)
 
 function center_minimap()
 {
+    if (!minimap_enabled) return;
+
     var minimap = $("#minimap")[0];
     var mm_w = minimap_bounds.right - minimap_bounds.left;
     var mm_h = minimap_bounds.bottom - minimap_bounds.top;
@@ -901,6 +910,8 @@ function center_minimap()
 
 function set_minimap(cx, cy, colour)
 {
+    if (!minimap_enabled) return;
+    
     var x = cx - minimap_x;
     var y = cy - minimap_y;
     minimap_ctx.fillStyle = colour;
