@@ -899,6 +899,9 @@ int mons_demon_tier(int mc)
 {
     switch(mons_base_char(mc))
     {
+    case 'C':
+        if (mc != MONS_ANTAEUS)
+            return 0;
     case '&':
         return -1;
     case '1':
