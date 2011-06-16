@@ -12,7 +12,7 @@ TAGS:   swamp_entry
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
 O
 ENDMAP
@@ -23,7 +23,7 @@ TAGS:   swamp_entry no_pool_fixup
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 SUBST:  '= t.., "= tw, t=ttw, w=Ww
 KFEAT:  t = swamp_tree
 validate {{ return glyphs_connected("O", "@") }}
@@ -48,7 +48,7 @@ KFEAT:  O = enter_swamp
 KFEAT:  t = swamp_tree
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
    ttttt
   tTTTTTt
@@ -69,7 +69,7 @@ MONS:   insubstantial wisp / nothing
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
 111
 1O1
@@ -84,7 +84,7 @@ MONS:   baby alligator / crocodile / iguana / giant newt
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
 2.1
 .O.
@@ -100,7 +100,7 @@ KFEAT:  O = enter_swamp
 KFEAT:  t = swamp_tree
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
  ttttt
 ttTTTtt
@@ -119,7 +119,7 @@ KFEAT:  w = w / W
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
   .....
  .......
@@ -308,7 +308,7 @@ SUBST:   S = llw, L = ll.
 SUBST:   ' = t., " = t
 MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \
-             size = 1, walk_dist = 1, spread_rate= 3 }
+             size = 2, walk_dist = 1, spread_rate= 3 }
 KFEAT:   XR = lava
 KFEAT:   t = swamp_tree
 KITEM:   O = decaying rune of Zot
@@ -343,7 +343,7 @@ ORIENT:  southeast
 SHUFFLE: OR
 MARKER:  Q = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 KMONS:   ? = swamp worm simulacrum / giant goldfish simulacrum / electric eel \
              simulacrum
 MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly / ice dragon w:5
@@ -405,7 +405,7 @@ MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              size = 1, walk_dist = 1, spread_rate= 33 }
 MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 KMONS:   O = bone dragon
 KITEM:   O = decaying rune of Zot
 SUBST:   ? = ? ! w

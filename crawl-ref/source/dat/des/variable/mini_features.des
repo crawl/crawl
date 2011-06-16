@@ -1493,7 +1493,7 @@ DEPTH:  D:12-27, Vault, Elf, Geh
 TAGS:   allow_dup abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
-            size = 1, walk_dist = 0, spread_rate= 75 }
+            size = 2, walk_dist = 0, spread_rate= 75 }
 COLOUR: * = red
 SUBST:  * = .
 MAP
@@ -1511,7 +1511,7 @@ DEPTH:  D:5-27, Vault, Elf, Geh
 TAGS:   abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
-            size = 1, walk_dist = 0, spread_rate= 75 }
+            size = 2, walk_dist = 0, spread_rate= 75 }
 COLOUR: n = red
 SUBST:  * = .
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
@@ -1535,7 +1535,7 @@ DEPTH:  D:5-27, Vault, Elf, Geh
 TAGS:   layout_rooms layout_city
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
-            size = 1, walk_dist = 0, spread_rate= 75 }
+            size = 2, walk_dist = 0, spread_rate= 75 }
 COLOUR: * = red
 SUBST:  * = .
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
@@ -1567,7 +1567,7 @@ TAGS:   uniq_geyser no_monster_gen
 MONS:   nothing,nothing
 MARKER: 1 = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 5, delay = 25, \
-            size = 1, walk_dist = 3, spread_rate= 10 }
+            size = 2, walk_dist = 3, spread_rate= 10 }
 MARKER: 2 = lua:fog_machine { cloud_type="steam", \
             pow_min = 10, pow_max = 20, delay = 750, \
             size = 10, walk_dist = 1, spread_rate= 75 }
@@ -1625,7 +1625,7 @@ DEPTH: D:11-27, Crypt, Tar
 TAGS:  allow_dup
 MARKER: Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
 Y
 ENDMAP
@@ -1638,7 +1638,7 @@ SUBST:  * : *$
 NSUBST: @ = 2:@ / *:@.
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
+             size = 2, walk_dist = 0, spread_rate= 0 }
 SUBST:  ' = .
 MAP
 ccccc.@.ccccc
@@ -1666,16 +1666,16 @@ MONS:    nothing, nothing, nothing, nothing
 SHUFFLE: 1234
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 85, \
-             size = 1, walk_dist = 2, spread_rate= 20 }
+             size = 2, walk_dist = 2, spread_rate= 20 }
 MARKER:  2 = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 95, \
-             size = 1, walk_dist = 2, spread_rate= 20 }
+             size = 2, walk_dist = 2, spread_rate= 20 }
 MARKER:  3 = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 105, \
-             size = 1, walk_dist = 2, spread_rate= 20 }
+             size = 2, walk_dist = 2, spread_rate= 20 }
 MARKER:  4 = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 115, \
-             size = 1, walk_dist = 2, spread_rate= 20 }
+             size = 2, walk_dist = 2, spread_rate= 20 }
 SUBST:   1=w, 2=w, 3=w, 4=w
 MAP
    .wwwww.
@@ -1701,13 +1701,13 @@ ITEM:   nothing, nothing, nothing
 NSUBST: . = 4:d / 4:e / 4:f / *:.
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay = 29, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
+             size = 2, walk_dist = 2, spread_rate= 0 }
 MARKER: e = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay = 31, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
+             size = 2, walk_dist = 2, spread_rate= 0 }
 MARKER: f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay = 37, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
+             size = 2, walk_dist = 2, spread_rate= 0 }
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
         , feature_description = "scorch-marked granite statue" }
 MAP
@@ -1735,7 +1735,7 @@ ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
+             size = 2, walk_dist = 0, spread_rate= 0 }
 MAP
 ccccccccccc
 cccccc...{c
@@ -1752,7 +1752,7 @@ ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
+             size = 2, walk_dist = 0, spread_rate= 0 }
 MAP
 ccccccccccccc
 cccccccc...{c
@@ -1769,7 +1769,7 @@ DEPTH:  D:9-27, Vault, Elf, Geh
 TAGS:   layout_rooms layout_city no_item_gen abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 25, pow_max = 50, delay = 150, \
-            size = 2, walk_dist = 0, spread_rate= 40 }
+            size = 3, walk_dist = 0, spread_rate= 40 }
 COLOUR: * = red
 SUBST:  * = .
 SUBST:  $ : $$*|.c

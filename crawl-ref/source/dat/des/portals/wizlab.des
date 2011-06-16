@@ -457,12 +457,12 @@ ORIENT:     float
 :           wizlab_portal(_G)
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "flame" \
              }
 MARKER:     ? = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
 COLOUR:     . = red / blue
@@ -1105,7 +1105,7 @@ MARKER:     b = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotu
 MARKER:     d = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 15, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 20, \
+                 size = 2, size_buildup_amnt = 20, \
                  size_buildup_time = 500, cloud_type = "mutagenic fog" \
              }
 MARKER:     ? = lua:fog_machine { \
@@ -1565,7 +1565,7 @@ KMONS:      * = w:5 vapour / w:20 air elemental
 SUBST:      . = .:120 *
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 1, size_buildup_amnt = 5, \
+                size = 2, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
                 colour = "white", name = "white fluffiness" \
             }
@@ -1716,7 +1716,7 @@ RTILE:      x = wall_undead
 SUBST:      u = 3
 MARKER:     f = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 1, size_buildup_amnt = 5, \
+                size = 2, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "flame" }
 KMONS:      2 = w:1 Lorocyproca / w:20 soul eater / w:20 reaper /\
             w:20 ice devil / w:20 sun demon / hellion

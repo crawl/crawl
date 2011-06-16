@@ -312,8 +312,8 @@ MARKER:  [ = lua:one_way_stair { desc = "exit from the tutorial", \
                                  dst  = "tutorial_lesson1", \
                                  onclimb = "tutorial_msg.win" }
 MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
-             pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
-             size_max = 1, spread_rate = 0 }
+             pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \
+             size_max = 2, spread_rate = 0 }
 epilogue{{
   tutorial_msg.start()
 }}
