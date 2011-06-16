@@ -5692,7 +5692,7 @@ bool monster::bleed(const actor* agent, int amount, int degree)
 // Recalculate movement speed.
 void monster::calc_speed()
 {
-    speed = mons_real_base_speed(type);
+    speed = mons_base_speed(this);
 
     bool is_liquefied = (liquefied(pos()) && ground_level()
                          && !is_insubstantial());
