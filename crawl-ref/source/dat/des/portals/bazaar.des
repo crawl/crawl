@@ -258,7 +258,7 @@ NAME:   freezing_bzr
 TAGS:   bzr_entry
 MARKER: W = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 5, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 3, spread_rate= 20 }
+             size = 2, walk_dist = 3, spread_rate= 20 }
 : place_bazaar_portal(_G)
 MAP
   W
@@ -287,7 +287,7 @@ TAGS:    bzr_entry uniq_firewalk no_item_gen
 SUBST:   $ : $ .
 MARKER:  * = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay_min = 5, delay_max = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
+             size = 2, walk_dist = 0, spread_rate= 0 }
 SUBST:   * = .
 : place_bazaar_portal(_G)
 MAP

@@ -243,7 +243,7 @@ TAGS:   abyss_rune allow_dup
 KITEM:  O = abyssal rune of Zot
 MARKER: ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 1, size_buildup_amnt = 5, \
+                size = 2, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "seething chaos" \
             }
 SUBST:  ! = ., X = x., x = xc
@@ -723,7 +723,7 @@ TAGS:   abyss_exit allow_dup
 KFEAT:  O = exit_abyss
 MARKER: O = lua:fog_machine {                               \
                 pow_min = 8, pow_max = 12, delay = 25,      \
-                size = 1, walk_dist = 1, spread_rate = 33,  \
+                size = 2, walk_dist = 1, spread_rate = 33,  \
                 cloud_type = "mutagenic fog"                \
             }
 MAP

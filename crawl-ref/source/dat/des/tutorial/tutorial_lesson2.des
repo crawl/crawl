@@ -377,7 +377,7 @@ MARKER:  D = lua:tutorial_msg2.quiver()
 MARKER:  E = lua:tutorial_msg2.explore()
 # This is just for atmosphere.
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 10, \
-             pow_max = 10, delay = 10, start_clouds = 1, size_min = 1, \
+             pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \
              size_max = 3, spread_rate = -1 }
 MARKER:  } = lua:tutorial_msg2.tutorial_end()
 MARKER:  ) = lua:tutorial_msg2.tutorial_end()

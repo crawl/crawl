@@ -302,13 +302,13 @@ ITEM:    nothing, nothing, nothing
 SHUFFLE: def
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 3, delay = 20, start_clouds = 1, \
-             size = 1, walk_dist = 1, spread_rate= 0 }
+             size = 2, walk_dist = 1, spread_rate= 0 }
 MARKER:  e = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay = 39, start_clouds = 1, \
-             size = 1, walk_dist = 1, spread_rate= 0 }
+             size = 2, walk_dist = 1, spread_rate= 0 }
 MARKER:  f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 5, delay = 47, start_clouds = 1, \
-             size = 1, walk_dist = 1, spread_rate= 0 }
+             size = 2, walk_dist = 1, spread_rate= 0 }
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
         , feature_description = "scorch-marked granite statue" }
 KFEAT:  O = enter_temple
@@ -345,13 +345,13 @@ ITEM:    nothing, nothing, nothing, nothing
 SHUFFLE: def
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
               pow_min = 2, pow_max = 3, delay = 39, start_clouds = 1, \
-              size = 1, walk_dist = 2, spread_rate= 0 }
+              size = 2, walk_dist = 2, spread_rate= 0 }
 MARKER:  e = lua:fog_machine { cloud_type = "flame", \
               pow_min = 2, pow_max = 5, delay = 59, start_clouds = 1, \
-              size = 1, walk_dist = 2, spread_rate= 0 }
+              size = 2, walk_dist = 2, spread_rate= 0 }
 MARKER:  f = lua:fog_machine { cloud_type = "flame", \
               pow_min = 2, pow_max = 7, delay = 79, start_clouds = 1, \
-              size = 1, walk_dist = 2, spread_rate= 0 }
+              size = 2, walk_dist = 2, spread_rate= 0 }
 COLOUR:  g = yellow
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
         , feature_description = "scorch-marked granite statue" }
@@ -570,7 +570,7 @@ NAME:   minmay_temple_entry_mist
 TAGS:   temple_entry
 ORIENT: float
 MARKER: l = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
-        pow_max = 3, delay = 10, start_clouds = 1, size_min = 1, \
+        pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
         size_max = 3, spread_rate = -1 }
 KMASK:  W = no_monster_gen
 KMASK:  l = no_monster_gen
@@ -625,7 +625,7 @@ TAGS:   temple_entry
 ORIENT: float
 MARKER: O = lua:fog_machine { cloud_type = "purple smoke", pow_min = 1, \
         pow_max = 3, delay_min = 1, delay_max = 10, start_clouds = 5,  \
-        size_min = 1, size_max = 2, spread_rate = 1 }
+        size_min = 2, size_max = 2, spread_rate = 1 }
 KFEAT:  O = enter_temple
 MAP
 .....
@@ -2672,7 +2672,7 @@ COLOUR:  c = white
 # XXX: What are good tiles to use here?
 MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 3, pow_max = 5, delay = 5, start_clouds = 3, \
-             size = 1, spread_rate= 0 }
+             size = 2, spread_rate= 0 }
 MAP
 ccccccccccccccc
 c.............c

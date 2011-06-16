@@ -2073,7 +2073,7 @@ DEPTH:   D:14-24, Vault, Crypt:1-4
 TAGS:    no_monster_gen no_item_gen
 MARKER:  a = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "black smoke" \
              }
 KMONS:   a = vampire mosquito

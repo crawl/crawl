@@ -1389,7 +1389,7 @@ WEIGHT: 8
 TAGS:   temple_overflow_vehumet
 MARKER: _ = lua:fog_machine { cloud_type = "flame", \
                pow_min = 6, pow_max = 8, delay_min = 35, delay_max = 55, \
-               size = 1, walk_dist = 0, spread_rate= 0 }
+               size = 2, walk_dist = 0, spread_rate= 0 }
 KFEAT:  _ = altar_vehumet
 MAP
 .....
@@ -1408,7 +1408,7 @@ WEIGHT: 2
 TAGS:   temple_overflow_vehumet
 MARKER: _ = lua:fog_machine { cloud_type = "freezing vapour", \
                pow_min = 6, pow_max = 8, delay_min = 35, delay_max = 55, \
-               size = 1, walk_dist = 0, spread_rate= 0 }
+               size = 2, walk_dist = 0, spread_rate= 0 }
 KFEAT:  _ = altar_vehumet
 MARKER: + = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 10, pow_max = 12, delay = 30, \
@@ -1532,7 +1532,7 @@ KFEAT:   B = needle trap
 KFEAT:   C = shaft trap
 MARKER:  E = lua:fog_machine { cloud_type = "flame", \
                pow_min = 5, pow_max = 8, delay_min = 80, delay_max = 150, \
-               size = 1, walk_dist = 0, spread_rate= 0 }
+               size = 2, walk_dist = 0, spread_rate= 0 }
 SUBST:   D = 1, EFG = .
 MONS:    kobold; dagger ego:chaos / gnoll; spear ego:chaos / orc; short sword ego:chaos
 MAP

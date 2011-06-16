@@ -1563,12 +1563,12 @@ TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: east
 MARKER: m = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 1, size_buildup_amnt = 1, \
+                size = 2, size_buildup_amnt = 1, \
                 size_buildup_time = 25, cloud_type = "flame" \
             }
 MARKER: z = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 1, size_buildup_amnt = 1, \
+                size = 2, size_buildup_amnt = 1, \
                 size_buildup_time = 25, cloud_type = "freezing vapour" \
             }
 MONS:   wood golem, clay golem, toenail golem, stone golem, iron golem, crystal golem
