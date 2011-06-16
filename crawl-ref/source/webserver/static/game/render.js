@@ -90,7 +90,7 @@ function clear_map()
 function mappable(val)
 {
     minimap_enabled = val;
-    $("#minimap,#minimap_overlay").toggle(val);
+    $("#minimap,#minimap_overlay").toggle(!!val);
 }
 
 function c(x, y, cell)
