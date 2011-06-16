@@ -4691,184 +4691,182 @@ int dgn_place_monster(mons_spec &mspec,
                       int monster_level, const coord_def& where,
                       bool force_pos, bool generate_awake, bool patrolling)
 {
-    if (mspec.mid != -1)
+    if (mspec.mid == -1)
+        return -1;
+
+    const monster_type mid = static_cast<monster_type>(mspec.mid);
+    const bool m_generate_awake = (generate_awake || mspec.generate_awake);
+    const bool m_patrolling     = (patrolling || mspec.patrolling);
+    const bool m_band           = mspec.band;
+
+    const int mlev = mspec.mlevel;
+    if (mlev)
     {
-        const monster_type mid = static_cast<monster_type>(mspec.mid);
-        const bool m_generate_awake = (generate_awake || mspec.generate_awake);
-        const bool m_patrolling     = (patrolling || mspec.patrolling);
-        const bool m_band           = mspec.band;
-
-        const int mlev = mspec.mlevel;
-        if (mlev)
-        {
-            if (mlev > 0)
-                monster_level = mlev;
-            else if (mlev == -8)
-                monster_level = 4 + monster_level * 2;
-            else if (mlev == -9)
-                monster_level += 5;
-        }
-
-        if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
-        {
-            // Don't place a unique monster a second time.
-            // (Boris is handled specially.)
-            if (mons_is_unique(mid) && you.unique_creatures[mid]
-                && !crawl_state.game_is_arena())
-            {
-                return (-1);
-            }
-
-            const monster_type montype = mons_class_is_zombified(mid)
-                                                             ? mspec.monbase
-                                                             : mid;
-
-            const habitat_type habitat = mons_class_primary_habitat(montype);
-
-            if (in_bounds(where)
-                && !monster_habitable_grid(montype, grd(where)))
-            {
-                dungeon_terrain_changed(where, habitat2grid(habitat));
-            }
-        }
-
-        mgen_data mg(mid);
-
-        if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
-        {
-            const monster_type mon =
-                pick_random_monster_for_place(mspec.place, mspec.monbase,
-                                              mlev == -9,
-                                              mlev == -8,
-                                              false);
-            mg.cls = mon == MONS_NO_MONSTER? RANDOM_MONSTER : mon;
-        }
-
-        mg.power     = monster_level;
-        mg.behaviour = (m_generate_awake) ? BEH_WANDER : BEH_SLEEP;
-        switch (mspec.attitude)
-        {
-        case ATT_FRIENDLY:
-            mg.behaviour = BEH_FRIENDLY;
-            break;
-        case ATT_NEUTRAL:
-            mg.behaviour = BEH_NEUTRAL;
-            break;
-        case ATT_GOOD_NEUTRAL:
-            mg.behaviour = BEH_GOOD_NEUTRAL;
-            break;
-        case ATT_STRICT_NEUTRAL:
-            mg.behaviour = BEH_STRICT_NEUTRAL;
-            break;
-        default:
-            break;
-        }
-        mg.base_type = mspec.monbase;
-        mg.number    = mspec.number;
-        mg.colour    = mspec.colour;
-
-        if (mspec.god != GOD_NO_GOD)
-            mg.god   = mspec.god;
-
-        mg.mname     = mspec.monname;
-        mg.hd        = mspec.hd;
-        mg.hp        = mspec.hp;
-        mg.props     = mspec.props;
-        mg.initial_shifter = mspec.initial_shifter;
-
-        // Marking monsters as summoned
-        mg.abjuration_duration = mspec.abjuration_duration;
-        mg.summon_type         = mspec.summon_type;
-        mg.non_actor_summoner  = mspec.non_actor_summoner;
-
-        // XXX: hack (also, never hand out darkgrey)
-        if (mg.colour == -1)
-            mg.colour = random_monster_colour();
-
-        coord_def place(where);
-        if (!force_pos && monster_at(place)
-            && (mg.cls < NUM_MONSTERS || mg.cls == RANDOM_MONSTER))
-        {
-            const monster_type habitat_target =
-                mg.cls == RANDOM_MONSTER ? MONS_BAT : mg.cls;
-            place = find_newmons_square_contiguous(habitat_target, where, 0);
-        }
-
-        mg.pos = place;
-
-        if (mons_class_is_zombified(mg.base_type))
-        {
-            if (mons_class_is_zombified(mg.cls))
-                mg.base_type = MONS_NO_MONSTER;
-            else
-                std::swap(mg.base_type, mg.cls);
-        }
-
-        if (m_patrolling)
-            mg.flags |= MG_PATROLLING;
-
-        if (m_band)
-            mg.flags |= MG_PERMIT_BANDS;
-
-        // Store any extra flags here.
-        mg.extra_flags |= mspec.extra_monster_flags;
-
-        // have to do this before the monster is created, so things are
-        // initialized properly
-        if (mspec.props.exists("serpent_of_hell_flavour"))
-            mg.props["serpent_of_hell_flavour"] =
-                mspec.props["serpent_of_hell_flavour"].get_int();
-
-        const int mindex = place_monster(mg, true);
-        if (mindex != -1)
-        {
-            monster& mons(menv[mindex]);
-
-            if (!mspec.items.empty())
-                _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
-
-            if (mspec.explicit_spells)
-                mons.spells = mspec.spells[random2(mspec.spells.size())];
-
-            if (mspec.props.exists("monster_tile"))
-            {
-                mons.props["monster_tile"] =
-                    mspec.props["monster_tile"].get_short();
-            }
-            if (mspec.props.exists("monster_tile_name"))
-            {
-                mons.props["monster_tile_name"].get_string() =
-                    mspec.props["monster_tile_name"].get_string();
-            }
-
-            if (mspec.props.exists("always_corpse"))
-                mons.props["always_corpse"] = true;
-
-            // These are applied earlier to prevent issues with renamed monsters
-            // and "<monster> comes into view" (see delay.cc:_monster_warning).
-            //mons.flags |= mspec.extra_monster_flags;
-
-            // Monsters with gods set by the spec aren't god gifts
-            // unless they have the "god_gift" tag.  place_monster(),
-            // by default, marks any monsters with gods as god gifts,
-            // so unmark them here.
-            if (mspec.god != GOD_NO_GOD && !mspec.god_gift)
-                mons.flags &= ~MF_GOD_GIFT;
-
-            if (mons.is_priest() && mons.god == GOD_NO_GOD)
-                mons.god = GOD_NAMELESS;
-
-            if (mons.type == MONS_DANCING_WEAPON)
-            {
-                item_def *wpn = mons.mslot_item(MSLOT_WEAPON);
-                ASSERT(wpn);
-                mons.ghost->init_dancing_weapon(*wpn, 180);
-                mons.dancing_weapon_init();
-            }
-        }
-        return (mindex);
+        if (mlev > 0)
+            monster_level = mlev;
+        else if (mlev == -8)
+            monster_level = 4 + monster_level * 2;
+        else if (mlev == -9)
+            monster_level += 5;
     }
-    return (-1);
+
+    if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
+    {
+        // Don't place a unique monster a second time.
+        // (Boris is handled specially.)
+        if (mons_is_unique(mid) && you.unique_creatures[mid]
+            && !crawl_state.game_is_arena())
+        {
+            return (-1);
+        }
+
+        const monster_type montype = mons_class_is_zombified(mid)
+                                                         ? mspec.monbase
+                                                         : mid;
+
+        const habitat_type habitat = mons_class_primary_habitat(montype);
+
+        if (in_bounds(where)
+            && !monster_habitable_grid(montype, grd(where)))
+        {
+            dungeon_terrain_changed(where, habitat2grid(habitat));
+        }
+    }
+
+    mgen_data mg(mid);
+
+    if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
+    {
+        const monster_type mon =
+            pick_random_monster_for_place(mspec.place, mspec.monbase,
+                                          mlev == -9,
+                                          mlev == -8,
+                                          false);
+        mg.cls = mon == MONS_NO_MONSTER? RANDOM_MONSTER : mon;
+    }
+
+    mg.power     = monster_level;
+    mg.behaviour = (m_generate_awake) ? BEH_WANDER : BEH_SLEEP;
+    switch (mspec.attitude)
+    {
+    case ATT_FRIENDLY:
+        mg.behaviour = BEH_FRIENDLY;
+        break;
+    case ATT_NEUTRAL:
+        mg.behaviour = BEH_NEUTRAL;
+        break;
+    case ATT_GOOD_NEUTRAL:
+        mg.behaviour = BEH_GOOD_NEUTRAL;
+        break;
+    case ATT_STRICT_NEUTRAL:
+        mg.behaviour = BEH_STRICT_NEUTRAL;
+        break;
+    default:
+        break;
+    }
+    mg.base_type = mspec.monbase;
+    mg.number    = mspec.number;
+    mg.colour    = mspec.colour;
+
+    if (mspec.god != GOD_NO_GOD)
+        mg.god   = mspec.god;
+
+    mg.mname     = mspec.monname;
+    mg.hd        = mspec.hd;
+    mg.hp        = mspec.hp;
+    mg.props     = mspec.props;
+    mg.initial_shifter = mspec.initial_shifter;
+
+    // Marking monsters as summoned
+    mg.abjuration_duration = mspec.abjuration_duration;
+    mg.summon_type         = mspec.summon_type;
+    mg.non_actor_summoner  = mspec.non_actor_summoner;
+
+    // XXX: hack (also, never hand out darkgrey)
+    if (mg.colour == -1)
+        mg.colour = random_monster_colour();
+
+    coord_def place(where);
+    if (!force_pos && monster_at(place)
+        && (mg.cls < NUM_MONSTERS || mg.cls == RANDOM_MONSTER))
+    {
+        const monster_type habitat_target =
+            mg.cls == RANDOM_MONSTER ? MONS_BAT : mg.cls;
+        place = find_newmons_square_contiguous(habitat_target, where, 0);
+    }
+
+    mg.pos = place;
+
+    if (mons_class_is_zombified(mg.base_type))
+    {
+        if (mons_class_is_zombified(mg.cls))
+            mg.base_type = MONS_NO_MONSTER;
+        else
+            std::swap(mg.base_type, mg.cls);
+    }
+
+    if (m_patrolling)
+        mg.flags |= MG_PATROLLING;
+
+    if (m_band)
+        mg.flags |= MG_PERMIT_BANDS;
+
+    // Store any extra flags here.
+    mg.extra_flags |= mspec.extra_monster_flags;
+
+    // have to do this before the monster is created, so things are
+    // initialized properly
+    if (mspec.props.exists("serpent_of_hell_flavour"))
+        mg.props["serpent_of_hell_flavour"] =
+            mspec.props["serpent_of_hell_flavour"].get_int();
+
+    const int mindex = place_monster(mg, true);
+    if (mindex == -1)
+        return -1;
+    monster& mons(menv[mindex]);
+
+    if (!mspec.items.empty())
+        _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
+
+    if (mspec.explicit_spells)
+        mons.spells = mspec.spells[random2(mspec.spells.size())];
+
+    if (mspec.props.exists("monster_tile"))
+    {
+        mons.props["monster_tile"] =
+            mspec.props["monster_tile"].get_short();
+    }
+    if (mspec.props.exists("monster_tile_name"))
+    {
+        mons.props["monster_tile_name"].get_string() =
+            mspec.props["monster_tile_name"].get_string();
+    }
+
+    if (mspec.props.exists("always_corpse"))
+        mons.props["always_corpse"] = true;
+
+    // These are applied earlier to prevent issues with renamed monsters
+    // and "<monster> comes into view" (see delay.cc:_monster_warning).
+    //mons.flags |= mspec.extra_monster_flags;
+
+    // Monsters with gods set by the spec aren't god gifts
+    // unless they have the "god_gift" tag.  place_monster(),
+    // by default, marks any monsters with gods as god gifts,
+    // so unmark them here.
+    if (mspec.god != GOD_NO_GOD && !mspec.god_gift)
+        mons.flags &= ~MF_GOD_GIFT;
+
+    if (mons.is_priest() && mons.god == GOD_NO_GOD)
+        mons.god = GOD_NAMELESS;
+
+    if (mons.type == MONS_DANCING_WEAPON)
+    {
+        item_def *wpn = mons.mslot_item(MSLOT_WEAPON);
+        ASSERT(wpn);
+        mons.ghost->init_dancing_weapon(*wpn, 180);
+        mons.dancing_weapon_init();
+    }
+    return (mindex);
 }
 
 static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
