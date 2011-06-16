@@ -402,7 +402,9 @@ void canned_msg(canned_message_type which_message)
     {
     case MSG_SOMETHING_APPEARS:
         mprf("Something appears %s!",
-             (you.species == SP_NAGA || player_mutation_level(MUT_HOOVES))
+             (you.species == SP_NAGA 
+              || you.species == SP_OCTOPODE
+              || player_mutation_level(MUT_HOOVES))
                  ? "before you" : "at your feet");
         break;
     case MSG_NOTHING_HAPPENS:
