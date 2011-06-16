@@ -256,7 +256,6 @@ mon_resist_def serpent_of_hell_resists(int flavour);
 int mons_class_base_speed(int mc);
 int mons_class_zombie_base_speed(int zombie_base_mc);
 int mons_base_speed(const monster* mon);
-int mons_real_base_speed(int mc);
 
 bool mons_class_can_regenerate(int mc);
 bool mons_can_regenerate(const monster* mon);

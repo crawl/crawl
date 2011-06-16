@@ -5694,6 +5694,20 @@ void monster::calc_speed()
 {
     speed = mons_base_speed(this);
 
+    switch (type)
+    {
+    case MONS_ABOMINATION_SMALL:
+        speed = 7 + random2avg(9, 2);
+        break;
+    case MONS_ABOMINATION_LARGE:
+        speed = 6 + random2avg(7, 2);
+        break;
+    case MONS_BEAST:
+        speed = 10 + random2(8);
+    default:
+        break;
+    }
+
     bool is_liquefied = (liquefied(pos()) && ground_level()
                          && !is_insubstantial());
 

@@ -1968,7 +1968,6 @@ void define_monster(monster* mons)
     const monsterentry *m     = get_monster_data(mcls);
     int col                   = mons_class_colour(mcls);
     int hd                    = mons_class_hit_dice(mcls);
-    int speed                 = mons_real_base_speed(mcls);
     int hp, hp_max, ac, ev;
 
     mons->mname.clear();
@@ -2098,7 +2097,6 @@ void define_monster(monster* mons)
     mons->max_hit_points  = hp_max;
     mons->ac              = ac;
     mons->ev              = ev;
-    mons->speed           = speed;
     mons->speed_increment = 70;
 
     if (mons->base_monster == MONS_NO_MONSTER)
@@ -2173,6 +2171,8 @@ void define_monster(monster* mons)
     default:
         break;
     }
+
+    mons->calc_speed();
 }
 
 static const char *ugly_colour_names[] = {
@@ -2381,27 +2381,6 @@ int mons_class_base_speed(int mc)
 {
     ASSERT(smc);
     return (smc->speed);
-}
-
-int mons_real_base_speed(int mc)
-{
-    ASSERT(smc);
-    int speed = smc->speed;
-
-    switch (mc)
-    {
-    case MONS_ABOMINATION_SMALL:
-        speed = 7 + random2avg(9, 2);
-        break;
-    case MONS_ABOMINATION_LARGE:
-        speed = 6 + random2avg(7, 2);
-        break;
-    case MONS_BEAST:
-        speed = 10 + random2(8);
-        break;
-    }
-
-    return (speed);
 }
 
 int mons_class_zombie_base_speed(int zombie_base_mc)
