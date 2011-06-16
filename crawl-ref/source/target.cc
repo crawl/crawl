@@ -185,9 +185,12 @@ bool targetter_cloud::valid_aim(coord_def a)
         return notify_fail("You cannot see that place.");
     if (feat_is_solid(grd(a)))
         return notify_fail(_wallmsg(a));
-    if (env.cgrid(a) != EMPTY_CLOUD)
-        return notify_fail("There's already a cloud there.");
-    ASSERT(_cloudable(a));
+    if (agent)
+    {
+        if (env.cgrid(a) != EMPTY_CLOUD)
+            return notify_fail("There's already a cloud there.");
+        ASSERT(_cloudable(a));
+    }
     return true;
 }
 
@@ -202,7 +205,6 @@ bool targetter_cloud::set_aim(coord_def a)
 
     int placed = 0;
     queue[0].push_back(a);
-    ASSERT(_cloudable(a));
 
     for (unsigned int d1 = 0; d1 < queue.size() && placed < cnt_max; d1++)
     {
