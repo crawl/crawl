@@ -2335,26 +2335,26 @@ void bolt::affect_endpoint()
     }
 
     if (name == "noxious blast")
-        big_cloud(CLOUD_STINK, agent(), pos(), 0, 7 + random2(5));
+        big_cloud(CLOUD_STINK, agent(), pos(), 0, 8 + random2(5));
 
     if (name == "blast of poison")
-        big_cloud(CLOUD_POISON, agent(), pos(), 0, 7 + random2(5));
+        big_cloud(CLOUD_POISON, agent(), pos(), 0, 8 + random2(5));
 
     if (origin_spell == SPELL_HOLY_BREATH)
-        big_cloud(CLOUD_HOLY_FLAMES, agent(), pos(), 0, 7 + random2(5));
+        big_cloud(CLOUD_HOLY_FLAMES, agent(), pos(), 0, 8 + random2(5));
 
     if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
-        big_cloud(CLOUD_FIRE, agent(), pos(), 0, 7 + random2(5));
+        big_cloud(CLOUD_FIRE, agent(), pos(), 0, 8 + random2(5));
 
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
         ASSERT(flavour == BEAM_MIASMA);
-        big_cloud(CLOUD_MIASMA, agent(), pos(), 0, 9);
+        big_cloud(CLOUD_MIASMA, agent(), pos(), 0, 10);
     }
 
     if (name == "freezing blast")
-        big_cloud(CLOUD_COLD, agent(), pos(), random_range(10, 15), 9);
+        big_cloud(CLOUD_COLD, agent(), pos(), random_range(10, 15), 10);
 
     if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN)
         || name == "searing blast") // monster and player red draconian breath abilities
