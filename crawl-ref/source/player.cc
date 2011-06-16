@@ -1171,22 +1171,22 @@ int player_teleport(bool calc_unid)
     return tp;
 }
 
-int player_regen()
+// Computes bonuses to regeneration from most sources. Does not handle
+// slow healing, vampireness, or Trog's Hand.
+int player_bonus_regen()
 {
-    int rr = you.hp_max / 3;
+    int rr = 0;
 
-    if (rr > 20)
-        rr = 20 + ((rr - 20) / 2);
-
-    // Rings.
-    rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
-
-    // Spell.
+    // Trog's Hand is handled separately so that it will bypass slow healing,
+    // and it overrides the spell.
     if (you.duration[DUR_REGENERATION]
         && !you.attribute[ATTR_DIVINE_REGENERATION])
     {
         rr += 100;
     }
+
+    // Rings.
+    rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
 
     // Troll leather (except for trolls).
     if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
@@ -1197,6 +1197,26 @@ int player_regen()
 
     // Fast heal mutation.
     rr += player_mutation_level(MUT_REGENERATION) * 20;
+
+    // Powered By Death mutation, boosts regen by 10 per corpse in
+    // a mutation_level * 3 (3/6/9) radius, to a maximum of 7
+    // corpses.  If and only if the duration of the effect is
+    // still active.
+    if (you.duration[DUR_POWERED_BY_DEATH])
+        rr += handle_pbd_corpses(false) * 100;
+
+    return (rr);
+}
+
+int player_regen()
+{
+    int rr = you.hp_max / 3;
+
+    if (rr > 20)
+        rr = 20 + ((rr - 20) / 2);
+
+    // Add in miscellaneous bonuses
+    rr += player_bonus_regen();
 
     // Before applying other effects, make sure that there's something
     // to heal.
@@ -1219,13 +1239,6 @@ int player_regen()
             // Bonus regeneration for full vampires.
             rr += 10;
     }
-
-    // Powered By Death mutation, boosts regen by 10 per corpse in
-    // a mutation_level * 3 (3/6/9) radius, to a maximum of 7
-    // corpses.  If and only if the duration of the effect is
-    // still active.
-    if (you.duration[DUR_POWERED_BY_DEATH])
-        rr += handle_pbd_corpses(false) * 100;
 
     // Slow heal mutation.  Each level reduces your natural healing by
     // one third.
@@ -5048,27 +5061,22 @@ void dec_disease_player(int delay)
 {
     if (you.disease > 0)
     {
-        // If Cheibriados has slowed your life processes, there's a
-        // chance that your disease level is unaffected.
-        if (GOD_CHEIBRIADOS == you.religion
-            && you.piety >= piety_breakpoint(0)
-            && coinflip())
-        {
-          return;
-        }
+        int rr = 50;
 
-        you.disease -= delay;
+        // Extra regeneration means faster recovery from disease.
+        rr += player_bonus_regen();
+
+        // Trog's Hand.
+        if (you.attribute[ATTR_DIVINE_REGENERATION])
+            rr += 100;
+
+        // Kobolds get a bonus too.
+        if (you.species == SP_KOBOLD)
+            rr += 100;
+
+        you.disease -= div_rand_round(rr * delay, 50);
         if (you.disease < 0)
             you.disease = 0;
-
-        // kobolds and regenerators recuperate quickly
-        if (you.disease > 5 * BASELINE_DELAY
-            && (you.species == SP_KOBOLD
-                || you.duration[DUR_REGENERATION]
-                || player_mutation_level(MUT_REGENERATION) == 3))
-        {
-            you.disease -= 2 * BASELINE_DELAY;
-        }
 
         if (you.disease == 0)
             mpr("You feel your health improve.", MSGCH_RECOVERY);
