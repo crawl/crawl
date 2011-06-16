@@ -723,7 +723,7 @@ static bool _player_hurt_monster(monster& m, int damage,
 // Here begin the actual spells:
 static int _shatter_monsters(coord_def where, int pow, int, actor *)
 {
-    dice_def dam_dice(0, 5 + pow / 3); // number of dice set below
+    dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
 
     if (mon == NULL)
@@ -734,65 +734,50 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     // made out of the substance. - bwr
     switch (mon->type)
     {
-    case MONS_SILVER_STATUE: // 3/2 damage
-        dam_dice.num = 4;
-        break;
-
-    case MONS_CURSE_SKULL:      // double damage
+    // Double damage to stone, metal and crystal.
+    case MONS_EARTH_ELEMENTAL:
     case MONS_CLAY_GOLEM:
     case MONS_STONE_GOLEM:
-    case MONS_IRON_GOLEM:
-    case MONS_CRYSTAL_GOLEM:
-    case MONS_ORANGE_STATUE:
     case MONS_STATUE:
-    case MONS_EARTH_ELEMENTAL:
     case MONS_GARGOYLE:
+    case MONS_IRON_ELEMENTAL:
+    case MONS_IRON_GOLEM:
+    case MONS_METAL_GARGOYLE:
+    case MONS_CRYSTAL_GOLEM:
+    case MONS_SILVER_STATUE:
+    case MONS_ORANGE_STATUE:
+    case MONS_ROXANNE:
         dam_dice.num = 6;
         break;
 
-    case MONS_PULSATING_LUMP:
-    case MONS_JELLY:
-    case MONS_SLIME_CREATURE:
-    case MONS_BROWN_OOZE:
-    case MONS_AZURE_JELLY:
-    case MONS_DEATH_OOZE:
-    case MONS_ACID_BLOB:
-    case MONS_ROYAL_JELLY:
-    case MONS_OOZE:
+    // 1/3 damage to liquids.
     case MONS_JELLYFISH:
     case MONS_WATER_ELEMENTAL:
         dam_dice.num = 1;
-        dam_dice.size /= 2;
-        break;
-
-    case MONS_DANCING_WEAPON:     // flies, but earth based
-    case MONS_MOLTEN_GARGOYLE:
-    case MONS_QUICKSILVER_DRAGON:
-        // Soft, earth creatures... would normally resist to 1 die, but
-        // are sensitive to this spell. - bwr
-        dam_dice.num = 2;
         break;
 
     default:
-        if (mon->is_insubstantial()) // no damage
-            dam_dice.num = 0;
-        else if (mons_flies(mon))    // 1/3 damage
-            dam_dice.num = 1;
-        else if (mon->is_icy())      // 3/2 damage
-            dam_dice.num = 4;
-        else if (mon->is_skeletal()) // double damage
-            dam_dice.num = 6;
-        else
-        {
-            const bool petrifying = mon->petrifying();
-            const bool petrified = mon->petrified() && !petrifying;
+        const bool petrifying = mon->petrifying();
+        const bool petrified = mon->petrified() && !petrifying;
 
-            // Petrifying or petrified monsters can be shattered.
-            if (petrifying || petrified)
-                dam_dice.num = petrifying ? 4*3 : 6*3; // 3/2 or double damage,
-            else                                       // undo damage reduction
-                dam_dice.num = 3;
-        }
+        // Extra damage to petrifying/petrified things.
+        if (petrifying || petrified)
+            dam_dice.num = petrifying ? 4 : 6;
+        // No damage to insubstantials.
+        else if (mon->is_insubstantial())
+            dam_dice.num = 0;
+        // 1/3 damage to fliers and slimes.
+        else if (mons_flies(mon) || mons_is_slime(mon))
+            dam_dice.num = 1;    
+        // 3/2 damage to ice.
+        else if (mon->is_icy())
+            dam_dice.num = 4;
+        // Double damage to bone.
+        else if (mon->is_skeletal())
+            dam_dice.num = 6;
+        // Normal damage to everything else.
+        else
+            dam_dice.num = 3;
         break;
     }
 
@@ -1371,7 +1356,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
     if (!exists_ray(you.pos(), spd.target))
     {
-        mpr("There's a wall in the way!");
+        mpr("There's something in the way!");
         return (false);
     }
 
@@ -1414,6 +1399,17 @@ bool cast_fragmentation(int pow, const dist& spd)
                                  BEAM_DISINTEGRATION);
             break;
 
+        case MONS_TOENAIL_GOLEM:
+            explode         = true;
+            beam.name       = "blast of toenail fragments";
+            beam.colour     = RED;
+            beam.damage.num = 2;
+            if (_player_hurt_monster(*mon, beam.damage.roll(),
+                                     BEAM_DISINTEGRATION))
+                beam.damage.num ++;
+            break;
+
+        case MONS_IRON_ELEMENTAL:
         case MONS_IRON_GOLEM:
         case MONS_METAL_GARGOYLE:
             explode         = true;
@@ -1425,11 +1421,11 @@ bool cast_fragmentation(int pow, const dist& spd)
                 beam.damage.num += 2;
             break;
 
-        case MONS_CLAY_GOLEM:   // Assume baked clay and not wet loam.
-        case MONS_STONE_GOLEM:
         case MONS_EARTH_ELEMENTAL:
-        case MONS_GARGOYLE:
+        case MONS_CLAY_GOLEM:
+        case MONS_STONE_GOLEM:
         case MONS_STATUE:
+        case MONS_GARGOYLE:
             explode         = true;
             beam.ex_size    = 2;
             beam.name       = "blast of rock fragments";
@@ -1444,17 +1440,16 @@ bool cast_fragmentation(int pow, const dist& spd)
         case MONS_ORANGE_STATUE:
             explode         = true;
             beam.ex_size    = 2;
+            beam.damage.num = 4;
             if (mon->type == MONS_SILVER_STATUE)
             {
                 beam.name       = "blast of silver fragments";
                 beam.colour     = WHITE;
-                beam.damage.num = 3;
             }
             else
             {
                 beam.name       = "blast of orange crystal shards";
                 beam.colour     = LIGHTRED;
-                beam.damage.num = 6;
             }
 
             {
@@ -1469,18 +1464,43 @@ bool cast_fragmentation(int pow, const dist& spd)
             break;
 
         case MONS_CRYSTAL_GOLEM:
+        case MONS_ROXANNE:
             explode         = true;
             beam.ex_size    = 2;
-            beam.name       = "blast of crystal shards";
-            beam.colour     = WHITE;
             beam.damage.num = 4;
+            if (mon->type == MONS_CRYSTAL_GOLEM)
+            {
+                beam.name       = "blast of crystal shards";
+                beam.colour     = GREEN;
+            }
+            else
+            {
+                beam.name       = "blast of sapphire shards";
+                beam.colour     = BLUE;
+            }
             if (_player_hurt_monster(*mon, beam.damage.roll(),
                                      BEAM_DISINTEGRATION))
                 beam.damage.num += 2;
             break;
 
         default:
-            if (mon->is_icy()) // blast of ice
+            const bool petrifying = mon->petrifying();
+            const bool petrified = mon->petrified() && !petrifying;
+
+            // Petrifying or petrified monsters can be exploded.
+            if (petrifying || petrified)
+            {
+                explode         = true;
+                beam.ex_size    = petrifying ? 1 : 2;
+                beam.name       = "blast of petrified fragments";
+                beam.colour     = mons_class_colour(mon->type);
+                beam.damage.num = petrifying ? 2 : 3;
+                if (_player_hurt_monster(*mon, beam.damage.roll(),
+                                         BEAM_DISINTEGRATION))
+                    beam.damage.num++;
+                break;
+            }
+            else if (mon->is_icy()) // blast of ice
             {
                 explode         = true;
                 beam.name       = "icy blast";
@@ -1514,25 +1534,6 @@ bool cast_fragmentation(int pow, const dist& spd)
                           beam.damage.num += 2;
                   }
                   goto all_done; // i.e., no "Foo Explodes!"
-            }
-            else
-            {
-                const bool petrifying = mon->petrifying();
-                const bool petrified = mon->petrified() && !petrifying;
-
-                // Petrifying or petrified monsters can be exploded.
-                if (petrifying || petrified)
-                {
-                    explode         = true;
-                    beam.ex_size    = petrifying ? 1 : 2;
-                    beam.name       = "blast of petrified fragments";
-                    beam.colour     = mons_class_colour(mon->type);
-                    beam.damage.num = petrifying ? 2 : 3;
-                    if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                             BEAM_DISINTEGRATION))
-                        beam.damage.num++;
-                    break;
-                }
             }
 
             // Mark that a monster was targeted.
