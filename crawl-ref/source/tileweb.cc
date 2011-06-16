@@ -49,7 +49,9 @@ static unsigned int get_milliseconds()
 TilesFramework tiles;
 
 TilesFramework::TilesFramework()
-    : m_next_view(coord_def(GXM, GYM)),
+    : m_next_view(),
+      m_next_view_tl(0, 0),
+      m_next_view_br(-1, -1),
       m_current_flash_colour(BLACK),
       m_next_flash_colour(BLACK),
       m_print_fg(15)
@@ -380,6 +382,14 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     if (vbuf.size().equals(0, 0))
         return;
 
+    if (m_next_view.size().equals(0, 0))
+    {
+        m_next_view.resize(coord_def(GXM, GYM));
+        // Make sure the whole map is rendered below
+        m_next_view_tl = coord_def(0, 0);
+        m_next_view_br = coord_def(GXM - 1, GYM - 1);
+    }
+
     if (m_active_layer != LAYER_NORMAL)
     {
         m_active_layer = LAYER_NORMAL;
@@ -390,30 +400,36 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     if (m_next_flash_colour == BLACK)
         m_next_flash_colour = viewmap_flash_colour();
 
-    screen_cell_t *cell(m_next_view);
-
-    // Render the view cells not in vbuf and write everything
-    // into m_next_view
-    // HACK: This assumes vbuf is crawl_view.vbuf, since it will
-    // only ever be called with that
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
+    // First re-render the area that was covered by vbuf the last time
+    for (int y = m_next_view_tl.y; y <= m_next_view_br.y; y++)
+        for (int x = m_next_view_tl.x; x <= m_next_view_br.x; x++)
         {
-            coord_def pos(x, y);
-            coord_def view = grid2view(pos);
+            if (x < 0 || x >= GXM || y < 0 || y >= GYM)
+                continue;
 
-            if (crawl_view.in_viewport_v(view))
+            if (!crawl_view.in_viewport_g(coord_def(x, y)))
             {
-                *cell = ((const screen_cell_t *) vbuf)[view.x - 1 +
-                                                       vbuf.size().x * (view.y - 1)];
-            }
-            else
-            {
-                // The cell is not in vbuf, we need to render it ourselves
-                draw_cell(cell, pos, false, m_next_flash_colour);
-            }
+                screen_cell_t *cell = &m_next_view[x + y * GXM];
 
-            cell++;
+                draw_cell(cell, coord_def(x, y), false, m_next_flash_colour);
+            }
+        }
+    
+    m_next_view_tl = view2grid(coord_def(1, 1));
+    m_next_view_br = view2grid(crawl_view.viewsz);
+
+    // Copy vbuf into m_next_view
+    for (int y = 0; y < vbuf.size().y; y++)
+        for (int x = 0; x < vbuf.size().x; x++)
+        {
+            coord_def pos(x+1, y+1);
+            coord_def grid = view2grid(pos);
+
+            if (grid.x < 0 || grid.x >= GXM || grid.y < 0 || grid.y >= GYM)
+                continue;
+
+            ((screen_cell_t *) m_next_view)[grid.x + GXM * grid.y] =
+                ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
         }
 
     m_next_gc = gc;
@@ -716,6 +732,13 @@ void TilesFramework::redraw()
 
 void TilesFramework::update_minimap(const coord_def& gc)
 {
+    if (gc.x < 0 || gc.x >= m_next_view.size().x ||
+        gc.y < 0 || gc.y >= m_next_view.size().y)
+        return;
+
+    screen_cell_t *cell = &m_next_view[gc.x + gc.y * GXM];
+
+    draw_cell(cell, gc, false, m_next_flash_colour);
 }
 
 void TilesFramework::clear_minimap()
