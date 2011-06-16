@@ -999,7 +999,6 @@ static void _grab_followers()
     int non_stair_using_allies = 0;
     monster* dowan = NULL;
     monster* duvessa = NULL;
-    monster* pikel = NULL;
 
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
@@ -1024,10 +1023,6 @@ static void _grab_followers()
                 mpr("The ghost fades into the shadows.");
             monster_teleport(fmenv, true);
         }
-
-        // From here, we can't fail, so check to see if we've got Pikel
-        if (mons_is_pikel(fmenv))
-            pikel = fmenv;
     }
 
     // Deal with Dowan and Duvessa here.
@@ -1093,9 +1088,6 @@ static void _grab_followers()
             continue;
         mons->flags &= ~MF_TAKING_STAIRS;
     }
-
-    if (pikel && !pikel->alive())
-        pikel_band_neutralise(true);
 }
 
 // Should be called after _grab_followers(), so that items carried by
