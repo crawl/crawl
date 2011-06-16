@@ -4380,32 +4380,42 @@ static const object_class_type _acquirement_item_classes[] =
 int dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
     mons_spec mspec(ispec.corpse_monster_spec());
-    const int mindex = dgn_place_monster(mspec, 0, where);
-    if (invalid_monster_index(mindex))
-        return (NON_ITEM);
-
-    const int corpse_index = place_monster_corpse(&menv[mindex], true, true);
-    // Dismiss the monster we used to place the corpse.
-    monster_die(&menv[mindex], KILL_DISMISSED, NON_MONSTER, false, true);
-    if (corpse_index != -1 && corpse_index != NON_ITEM)
+    int corpse_index = -1;
+    for (int tries = 0; ; tries++)
     {
-        item_def &corpse(mitm[corpse_index]);
-        if (ispec.props.exists(CORPSE_NEVER_DECAYS))
-            corpse.props[CORPSE_NEVER_DECAYS].get_bool() =
-                ispec.props[CORPSE_NEVER_DECAYS].get_bool();
+        if (tries > 200)
+            return NON_ITEM;
+        int mindex = dgn_place_monster(mspec, you.absdepth0, coord_def(), true);
+        if (invalid_monster_index(mindex))
+            continue;
+        menv[mindex].position = where;
+        if (mons_class_can_leave_corpse(menv[mindex].type))
+            corpse_index = place_monster_corpse(&menv[mindex], true, true);
+        // Dismiss the monster we used to place the corpse.
+        menv[mindex].flags |= MF_HARD_RESET;
+        monster_die(&menv[mindex], KILL_DISMISSED, NON_MONSTER, false, true);
 
-        if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
-            turn_corpse_into_skeleton(corpse);
-        else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-            turn_corpse_into_chunks(corpse, false, false);
-
-        if (ispec.props.exists(MONSTER_HIT_DICE))
-            corpse.props[MONSTER_HIT_DICE].get_short() =
-                ispec.props[MONSTER_HIT_DICE].get_short();
-
-        if (ispec.qty && ispec.base_type == OBJ_FOOD)
-            corpse.quantity = ispec.qty;
+        if (corpse_index != -1 && corpse_index != NON_ITEM)
+            break;
     }
+
+    item_def &corpse(mitm[corpse_index]);
+    if (ispec.props.exists(CORPSE_NEVER_DECAYS))
+        corpse.props[CORPSE_NEVER_DECAYS].get_bool() =
+            ispec.props[CORPSE_NEVER_DECAYS].get_bool();
+
+    if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
+        turn_corpse_into_skeleton(corpse);
+    else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
+        turn_corpse_into_chunks(corpse, false, false);
+
+    if (ispec.props.exists(MONSTER_HIT_DICE))
+        corpse.props[MONSTER_HIT_DICE].get_short() =
+            ispec.props[MONSTER_HIT_DICE].get_short();
+
+    if (ispec.qty && ispec.base_type == OBJ_FOOD)
+        corpse.quantity = ispec.qty;
+
     return corpse_index;
 }
 
@@ -4820,7 +4830,7 @@ int dgn_place_monster(mons_spec &mspec,
         mg.props["serpent_of_hell_flavour"] =
             mspec.props["serpent_of_hell_flavour"].get_int();
 
-    const int mindex = place_monster(mg, true);
+    const int mindex = place_monster(mg, true, force_pos && place.origin());
     if (mindex == -1)
         return -1;
     monster& mons(menv[mindex]);
