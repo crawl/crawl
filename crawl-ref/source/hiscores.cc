@@ -37,6 +37,7 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"
@@ -1133,74 +1134,33 @@ void scorefile_entry::init(time_t dt)
      *    + 0.1 * Experience above 3,000,000
      *    + (distinct Runes +2)^2 * 1000, winners with distinct runes >= 3 only
      *    + value of Inventory, for winners only
+     *      changed to 250k (Orb) + 10k per rune
      *    + (250,000 * d. runes) * (25,000/(turns/d. runes)), for winners only
      *
      */
 
     // do points first.
-    points = you.gold;
-    points += _award_modified_experience();
+    uint64_t pt = you.gold; // sprint games could overflow a 32 bit value
+    pt += _award_modified_experience();
 
-    num_runes      = 0;
-    num_diff_runes = 0;
+    num_runes      = runes_in_pack();
+    num_diff_runes = num_runes;
 
-    FixedVector< int, NUM_RUNE_TYPES >  rune_array;
-    rune_array.init(0);
-
-    // inventory value is only calculated for winners
-    const bool calc_item_values = (death_type == KILLED_BY_WINNING);
-
-    // Calculate value of pack and runes when character leaves dungeon
-    for (int d = 0; d < ENDOFPACK; d++)
+    // There's no point in rewarding lugging artefacts.  Thus, no points
+    // for the value of the inventory. -- 1KB
+    if (death_type == KILLED_BY_WINNING)
     {
-        if (you.inv[d].defined())
-        {
-            if (calc_item_values)
-                points += item_value(you.inv[d], true);
-
-            if (you.inv[d].base_type == OBJ_MISCELLANY
-                && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)
-            {
-                num_runes += you.inv[d].quantity;
-
-                // Don't assert in rune_array[] due to buggy runes,
-                // since checks for buggy runes are already done
-                // elsewhere.
-                if (you.inv[d].plus < 0 || you.inv[d].plus >= NUM_RUNE_TYPES)
-                {
-                    mpr("WARNING: Buggy rune in pack!", MSGCH_ERROR);
-                    // Be nice and assume the buggy rune was originally
-                    // different from any of the other rune types.
-                    num_diff_runes++;
-                    continue;
-                }
-
-                if (rune_array[ you.inv[d].plus ] == 0)
-                    num_diff_runes++;
-
-                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
-            }
-        }
-    }
-
-    // Bonus for exploring different areas, not for collecting a
-    // huge stack of demonic runes in Pandemonium (gold value
-    // is enough for those). -- bwr
-
-    if (calc_item_values && num_diff_runes >= 3)
-        points += ((num_diff_runes + 2) * (num_diff_runes + 2) * 1000);
-
-    if (calc_item_values) // winners only
-    {
-        points +=
-            static_cast<long>(
-                (250000 * num_diff_runes)
-                * ((25000.0 * num_diff_runes) / (1+you.num_turns)));
+        pt += 250000; // the Orb
+        pt += num_runes * 10000;
+        pt += (num_runes + 2) * (num_runes + 2) * 1000;
+        pt += ((uint64_t)6250000000) * num_runes * num_runes
+            / (1+you.num_turns);
     }
 
     // Players will have a hard time getting 1/10 of this (see XP cap):
-    if (points > 99999999)
-        points = 99999999;
+    if (pt > 99999999)
+        pt = 99999999;
+    points = pt;
 
     race = you.species;
     job  = you.char_class;
@@ -2086,13 +2046,6 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                          (death_type == KILLED_BY_WINNING) ? "and" : "with",
                           num_runes, (num_runes > 1) ? "s" : "");
                 desc += scratch;
-
-                if (!semiverbose && num_diff_runes > 1)
-                {
-                    snprintf(scratch, INFO_SIZE, " (of %d types)",
-                             num_diff_runes);
-                    desc += scratch;
-                }
 
                 if (!semiverbose
                     && death_time > 0

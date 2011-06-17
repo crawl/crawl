@@ -1238,6 +1238,8 @@ static void tag_construct_you_items(writer &th)
     for (i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
 
+    marshallFixedBitArray<NUM_RUNE_TYPES>(th, you.runes);
+
     // Item descrip for each type & subtype.
     // how many types?
     marshallUByte(th, NUM_IDESC);
@@ -1977,6 +1979,20 @@ static void tag_read_you_items(reader &th)
     ASSERT(count == ENDOFPACK); // not supposed to change
     for (i = 0; i < count; ++i)
         unmarshallItem(th, you.inv[i]);
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_GOLDIFIED_RUNES)
+    {
+        for (i = 0; i < ENDOFPACK; i++)
+            if (you.inv[i].defined() && item_is_rune(you.inv[i]))
+            {
+                you.runes.set(you.inv[i].plus);
+                you.inv[i].quantity = 0;
+            }
+    }
+    else
+#endif
+    unmarshallFixedBitArray<NUM_RUNE_TYPES>(th, you.runes);
 
     // Item descrip for each type & subtype.
     // how many types?

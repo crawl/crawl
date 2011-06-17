@@ -818,7 +818,7 @@ static const char* amulet_primary_string(int p)
     }
 }
 
-static const char* rune_type_name(int p)
+const char* rune_type_name(int p)
 {
     switch (static_cast<rune_type>(p))
     {
