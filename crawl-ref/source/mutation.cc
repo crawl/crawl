@@ -916,9 +916,14 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
         return (true);
     }
 
-    // Already innate, and unlike trolls/ghouls, no increases for you!
-    if (mutat == MUT_CLAWS && you.species == SP_FELID)
+    // Felids have innate claws, and unlike trolls/ghouls, there are no
+    // increases for them. Felids cannot get tentacles, since they have
+    // no fingers, hands or arms to mutate into tentacles.
+    if ((mutat == MUT_CLAWS || mutat == MUT_TENTACLES)
+        && you.species == SP_FELID)
+    {
         return (true);
+    }
 
     equipment_type eq_type = EQ_NONE;
 
