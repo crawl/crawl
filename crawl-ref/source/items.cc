@@ -3258,14 +3258,16 @@ static void _rune_from_specs(const char* _specs, item_def &item)
 
     while (true)
     {
-        mpr("[a] iron       [b] obsidian [c] icy      [d] bone     [e] slimy    [f] silver",
-            MSGCH_PROMPT);
-        mpr("[g] serpentine [h] elven    [i] golden   [j] decaying [k] barnacle [l] demonic",
-            MSGCH_PROMPT);
-        mpr("[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark     [r] gossamer",
-            MSGCH_PROMPT);
-        mpr("[s] mossy      [t] buggy",
-            MSGCH_PROMPT);
+        std::string line;
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        {
+            line += make_stringf("[%c] %-10s ", i + 'a', rune_type_name(i));
+            if (i % 5 == 4 || i == NUM_RUNE_TYPES - 1)
+            {
+                mpr(line, MSGCH_PROMPT);
+                line.clear();
+            }
+        }
         mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
 
         int keyin = tolower(get_ch());
@@ -3278,36 +3280,10 @@ static void _rune_from_specs(const char* _specs, item_def &item)
             return;
         }
 
-        if (keyin < 'a' || keyin > 'r')
+        if (keyin < 'a' || keyin >= 'a' + NUM_RUNE_TYPES)
             continue;
 
-        rune_type types[] = {
-            RUNE_DIS,
-            RUNE_GEHENNA,
-            RUNE_COCYTUS,
-            RUNE_TARTARUS,
-            RUNE_SLIME_PITS,
-            RUNE_VAULTS,
-            RUNE_SNAKE_PIT,
-            RUNE_ELVEN_HALLS,
-            RUNE_TOMB,
-            RUNE_SWAMP,
-            RUNE_SHOALS,
-
-            RUNE_DEMONIC,
-            RUNE_ABYSSAL,
-
-            RUNE_MNOLEG,
-            RUNE_LOM_LOBON,
-            RUNE_CEREBOV,
-            RUNE_GLOORX_VLOQ,
-
-            RUNE_SPIDER_NEST,
-            RUNE_FOREST,
-            NUM_RUNE_TYPES
-        };
-
-        item.plus = types[keyin - 'a'];
+        item.plus = keyin - 'a';
 
         return;
     }
