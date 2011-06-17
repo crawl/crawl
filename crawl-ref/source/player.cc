@@ -2711,6 +2711,9 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     you.zot_points += exp_gained;
 
+    if (you.penance[GOD_ASHENZARI])
+        ash_reduce_penance(exp_gained);
+
     const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
