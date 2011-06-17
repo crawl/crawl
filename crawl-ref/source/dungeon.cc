@@ -4532,6 +4532,12 @@ retry:
             item_colour(item);
         }
 
+        if (item_is_rune(item) && you.runes[item.plus])
+        {
+            destroy_item(item, true);
+            return NON_ITEM;
+        }
+
         if (props.exists("cursed"))
             do_curse_item(item);
         else if (props.exists("uncursed"))
