@@ -682,3 +682,14 @@ static void _UNDEADHUNTER_melee_effect(item_def* item, actor* attacker,
         defender->hurt(attacker, random2avg((1 + (dam * 3)), 3));
     }
 }
+
+///////////////////////////////////////////////////
+static void _BRILLIANCE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    invalidate_agrid(true);
+}
+
+static void _BRILLIANCE_unequip(item_def *item, bool *show_msgs)
+{
+    invalidate_agrid(true);
+}
