@@ -1153,7 +1153,7 @@ void scorefile_entry::init(time_t dt)
         pt += 250000; // the Orb
         pt += num_runes * 10000;
         pt += (num_runes + 2) * (num_runes + 2) * 1000;
-        pt += ((uint64_t)6250000000) * num_runes * num_runes
+        pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
             / (1+you.num_turns);
     }
 
