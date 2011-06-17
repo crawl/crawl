@@ -381,7 +381,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
                              && !you.inv[you.equip[EQ_GLOVES]].cursed());
 
-    bool knife_butcher    = !barehand_butcher && !you.weapon();
+    bool knife_butcher    = !barehand_butcher && !you.weapon() && form_can_wield();
 
     bool can_butcher      = (teeth_butcher || barehand_butcher
                              || birdie_butcher || knife_butcher
@@ -443,7 +443,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     if (!can_butcher)
     {
-        if (you.weapon()->cursed() && gloved_butcher)
+        if (you.weapon() && you.weapon()->cursed() && gloved_butcher)
             removed_gloves = true;
         else
             wpn_switch = true;
