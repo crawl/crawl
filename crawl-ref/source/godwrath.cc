@@ -1458,3 +1458,17 @@ static void _god_smites_you(god_type god, const char *message,
         dec_penance(god, 1);
     }
 }
+
+void ash_reduce_penance(int amount)
+{
+    if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
+        return 0;
+
+    int lost = std::min(amount / 2, you.exp_docked);
+    you.exp_docked -= lost;
+
+    int new_pen = (((int64_t)you.exp_docked * 50) + you.exp_docked_total - 1)
+                / you.exp_docked_total;
+    if (new_pen < you.penance[GOD_ASHENZARI])
+        dec_penance(GOD_ASHENZARI, you.penance[GOD_ASHENZARI] - new_pen);
+}
