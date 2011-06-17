@@ -1618,11 +1618,26 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     {
         you.runes.set(mitm[obj].plus);
         _check_note_item(mitm[obj]);
-        dec_mitm_item_quantity(obj, quant_got);
 
         if (!quiet)
-            mpr("You pick up the rune and feel its power.");
+        {
+            mprf("You pick up the %s rune and feel its power.",
+                 rune_type_name(mitm[obj].plus));
+            int nrunes = runes_in_pack();
+            if (nrunes >= you.obtainable_runes)
+                mpr("You have collected all the runes!  Now go and win!");
+            else if (nrunes == NUMBER_OF_RUNES_NEEDED
+                     && !crawl_state.game_is_zotdef())
+            {
+                // might be inappropriate in new Sprints, please change it then
+                mprf("%d runes!  That's enough to enter the realm of Zot.",
+                     nrunes);
+            }
+            else if (nrunes > 1)
+                mprf("You now have %d runes.", nrunes);
+        }
 
+        dec_mitm_item_quantity(obj, quant_got);
         you.turn_is_over = true;
         if (you.religion == GOD_ASHENZARI)
         {
