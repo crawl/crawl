@@ -81,6 +81,7 @@ public:
 
   FixedVector< item_def, ENDOFPACK > inv;
   FixedBitArray<NUM_RUNE_TYPES> runes;
+  int obtainable_runes; // can be != 15 in Sprint
 
   int burden;
   burden_state_type burden_state;

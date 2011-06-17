@@ -1239,6 +1239,7 @@ static void tag_construct_you_items(writer &th)
         marshallItem(th, you.inv[i]);
 
     marshallFixedBitArray<NUM_RUNE_TYPES>(th, you.runes);
+    marshallByte(th, you.obtainable_runes);
 
     // Item descrip for each type & subtype.
     // how many types?
@@ -1993,6 +1994,12 @@ static void tag_read_you_items(reader &th)
     else
 #endif
     unmarshallFixedBitArray<NUM_RUNE_TYPES>(th, you.runes);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_GOLDIFIED_RUNES)
+        you.obtainable_runes = crawl_state.game_is_sprint() ? 10 : 15;
+    else // the only old Sprint with runes has 10
+#endif
+    you.obtainable_runes = unmarshallByte(th);
 
     // Item descrip for each type & subtype.
     // how many types?

@@ -820,6 +820,16 @@ static int _crawl_god_speaks(lua_State *ls)
     return (0);
 }
 
+LUAFN(_crawl_set_max_runes)
+{
+    int max_runes = luaL_checkinteger(ls, 1);
+    if (max_runes < 0 || max_runes > NUM_RUNE_TYPES)
+        luaL_error(ls, make_stringf("Bad number of max runes: %d", max_runes).c_str());
+    else
+        you.obtainable_runes = max_runes;
+    return (0);
+}
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -831,6 +841,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "millis", _crawl_millis },
 #endif
 { "make_name", crawl_make_name },
+{ "set_max_runes", _crawl_set_max_runes },
 { NULL, NULL }
 };
 
