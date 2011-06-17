@@ -1462,7 +1462,7 @@ static void _god_smites_you(god_type god, const char *message,
 void ash_reduce_penance(int amount)
 {
     if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
-        return 0;
+        return;
 
     int lost = std::min(amount / 2, you.exp_docked);
     you.exp_docked -= lost;
