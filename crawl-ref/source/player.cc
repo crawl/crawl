@@ -5721,7 +5721,7 @@ int player::skill(skill_type sk) const
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = std::min(level + 5, 27);
     if (you.penance[GOD_ASHENZARI])
-        level = std::max(level - 4, 0);
+        level = std::max(level - std::min(4, level / 2), 0);
     else if (you.religion == GOD_ASHENZARI)
         level = ash_skill_boost(sk);
 
