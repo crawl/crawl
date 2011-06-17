@@ -1885,63 +1885,35 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_MISCELLANY:
-        if (item_type_known(item))
+        switch (item.sub_type)
         {
-            switch (item.sub_type)
+        case MISC_RUNE_OF_ZOT:  // upped from 1200 to encourage collecting
+            valued += 10000;
+            break;
+
+        case MISC_HORN_OF_GERYON:
+            valued += 5000;
+            break;
+
+        case MISC_DISC_OF_STORMS:
+            valued += 2000;
+            break;
+
+        case MISC_BOTTLED_EFREET:
+            valued += 400;
+            break;
+
+        case MISC_EMPTY_EBONY_CASKET:
+            if (item_type_known(item))
             {
-            case MISC_RUNE_OF_ZOT:  // upped from 1200 to encourage collecting
-                valued += 10000;
-                break;
-
-            case MISC_HORN_OF_GERYON:
-                valued += 5000;
-                break;
-
-            case MISC_DISC_OF_STORMS:
-                valued += 2000;
-                break;
-
-            case MISC_CRYSTAL_BALL_OF_SEEING:
-                valued += 500;
-                break;
-
-            case MISC_BOTTLED_EFREET:
-                valued += 400;
-                break;
-
-            case MISC_EMPTY_EBONY_CASKET:
                 valued += 20;
                 break;
-            default:
-                if (is_deck(item))
-                    valued += 200 + item.special * 150;
-                else
-                    valued += 500;
             }
-        }
-        else
-        {
-            switch (item.sub_type)
-            {
-            case MISC_RUNE_OF_ZOT:
-                valued += 5000;
-                break;
-
-            case MISC_HORN_OF_GERYON:
-                valued += 1000;
-                break;
-
-            case MISC_CRYSTAL_BALL_OF_SEEING:
-                valued += 450;
-                break;
-
-            case MISC_BOTTLED_EFREET:
-                valued += 350;
-                break;
-
-            default:
-                valued += 400;
-            }
+        default:
+            if (is_deck(item))
+                valued += 200 + item.special * 150;
+            else
+                valued += 500;
         }
         break;
 
