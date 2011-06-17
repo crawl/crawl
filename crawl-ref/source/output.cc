@@ -2391,6 +2391,24 @@ std::string _status_mut_abilities()
     //----------------------------
 
     text += print_abilities();
+
+    //--------------
+    // print runes
+    //--------------
+    std::vector<std::string> runes;
+    for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        if (you.runes[i])
+            runes.push_back(rune_type_name(i));
+    if (!runes.empty())
+    {
+        text += make_stringf("\n<w>%s:</w> %d/%d rune%s: %s",
+                    stringize_glyph(get_item_symbol(SHOW_ITEM_MISCELLANY)).c_str(),
+                    runes.size(), you.obtainable_runes,
+                    you.obtainable_runes == 1 ? "" : "s",
+                    comma_separated_line(runes.begin(), runes.end(),
+                                         ", ", ", ").c_str());
+    }
+
     linebreak_string(text, get_number_of_cols());
 
     return text;

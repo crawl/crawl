@@ -69,6 +69,11 @@ SUBST:    ETOF = x
 SUBST:    HLVM = x
 SUBST:    BYUG = x
 SUBST:    NIRCZ = x
+{{
+  hook("post_place", function()
+    crawl.set_max_runes(10)
+  end)
+}}
 
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
