@@ -98,6 +98,7 @@ bool multiple_items_at(const coord_def& where, bool allow_mimic_item);
 void drop(void);
 
 int inv_count(void);
+int runes_in_pack();
 
 bool pickup_single_item(int link, int qty);
 

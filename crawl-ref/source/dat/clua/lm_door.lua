@@ -72,8 +72,7 @@ function LockDoor:property (marker, pname)
 end
 
 function LockDoor:check_veto (marker, pname, dry_run)
-  local iter_table = items.inventory()
-  local rune_count, rune_table = you.num_runes()
+  local rune_count = you.num_runes()
 
   if dry_run ~= nil then crawl.mpr("Got " .. rune_count .. " runes") end
   if rune_count < 3 then

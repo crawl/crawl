@@ -140,13 +140,13 @@ void generate_abyss()
 // Returns the roll to use to check if we want to create an abyssal rune.
 static int _abyssal_rune_roll()
 {
-    if (you.attribute[ATTR_ABYSSAL_RUNES])
+    if (you.runes[RUNE_ABYSSAL])
         return (-1);
 
     // The longer the player's hung around in the Abyss, the more
     // likely the rune. Never generate a new rune if the player
     // already found one, but make the Abyssal rune eligible for
-    // generation again if the player loses it.
+    // generation again if the player fails to find or pick it up.
 
     // If the player leaves the Abyss turns_on_level resets to 0. So
     // hang in there if you want your Abyssal rune fix quick. :P
@@ -630,14 +630,12 @@ public:
         const bool rune_is_near = abyss_rune_nearness();
 
         if (exit_was_near && !exit_is_near
-            || rune_was_near && !rune_is_near
-            && you.attribute[ATTR_ABYSSAL_RUNES] == 0)
+            || rune_was_near && !rune_is_near)
         {
             xom_is_stimulated(255, "Xom snickers loudly.", true);
         }
 
         if (!rune_was_near && rune_is_near
-            && you.attribute[ATTR_ABYSSAL_RUNES] == 0
             || !exit_was_near && exit_is_near)
         {
             xom_is_stimulated(255);

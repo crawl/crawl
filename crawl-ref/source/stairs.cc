@@ -784,28 +784,6 @@ static void _maybe_destroy_trap(const coord_def &p)
         trap->destroy();
 }
 
-int runes_in_pack(std::vector<int> &runes)
-{
-    int num_runes = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].base_type == OBJ_MISCELLANY
-            && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
-        {
-            num_runes += you.inv[i].quantity;
-            for (int q = 1;
-                 runes.size() < 3 && q <= you.inv[i].quantity; ++q)
-            {
-                runes.push_back(i);
-            }
-        }
-    }
-
-    return num_runes;
-}
-
 static bool _is_portal_exit(dungeon_feature_type stair)
 {
     return stair == DNGN_EXIT_HELL
@@ -932,9 +910,11 @@ void down_stairs(dungeon_feature_type force_stair,
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
     {
         std::vector<int> runes;
-        const int num_runes = runes_in_pack(runes);
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (you.runes[i])
+                runes.push_back(i);
 
-        if (num_runes < NUMBER_OF_RUNES_NEEDED)
+        if (runes.size() < NUMBER_OF_RUNES_NEEDED)
         {
             switch (NUMBER_OF_RUNES_NEEDED)
             {
@@ -951,8 +931,8 @@ void down_stairs(dungeon_feature_type force_stair,
 
         ASSERT(runes.size() >= 3);
 
-        mprf("You insert %s into the lock.",
-             you.inv[runes[0]].name(DESC_NOCAP_THE).c_str());
+        std::random_shuffle(runes.begin(), runes.end());
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
 #ifdef USE_TILE
         tiles.add_overlay(you.pos(), tileidx_zap(GREEN));
         update_screen();
@@ -962,15 +942,13 @@ void down_stairs(dungeon_feature_type force_stair,
         mpr("The lock glows an eerie green colour!");
         more();
 
-        mprf("You insert %s into the lock.",
-             you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
         big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
         viewwindow();
         mpr("Heavy smoke blows from the lock!");
         more();
 
-        mprf("You insert %s into the lock.",
-             you.inv[runes[2]].name(DESC_NOCAP_THE).c_str());
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[2]));
 
         if (silenced(you.pos()))
             mpr("The gate opens wide!");

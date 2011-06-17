@@ -223,10 +223,12 @@ enum attribute_type
     ATTR_DIVINE_VIGOUR,         // strength of Ely's Divine Vigour
     ATTR_DIVINE_STAMINA,        // strength of Zin's Divine Stamina
     ATTR_DIVINE_SHIELD,         // strength of TSO's Divine Shield
-    ATTR_UNIQUE_RUNES,
-    ATTR_DEMONIC_RUNES,
-    ATTR_ABYSSAL_RUNES,
-    ATTR_RUNES_IN_ZOT,         // Unused but needed for save file compatibility.
+#if TAG_MAJOR_VERSION == 32
+    ATTR_UNUSED_UNIQUE_RUNES,
+    ATTR_UNUSED_DEMONIC_RUNES,
+    ATTR_UNUSED_ABYSSAL_RUNES,
+    ATTR_UNUSED_RUNES_IN_ZOT,
+#endif
     ATTR_WEAPON_SWAP_INTERRUPTED,
     ATTR_GOLD_FOUND,
     ATTR_PURCHASES,            // Gold amount spent at shops.
