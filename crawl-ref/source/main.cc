@@ -1384,7 +1384,8 @@ static void _go_upstairs()
     }
 
     const bool leaving_dungeon =
-        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1);
+        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1)
+        && !feat_is_gate(ygrd);
 
     if (leaving_dungeon)
     {
