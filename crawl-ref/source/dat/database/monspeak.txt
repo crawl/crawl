@@ -2679,7 +2679,7 @@ w:50
 
 @The_monster@ says, "Zin? Why would you even bother?"
 
-@The_monster@ says, "So much for spreading the word, you get punched in the face instead."
+@The_monster@ says, "So much for spreading the word; you get punched in the face instead."
 
 @The_monster@ says, "This pamphlet doesn't say what the point to Recitation is."
 
@@ -2712,7 +2712,7 @@ w:50
 
 @The_monster@ says, "What's the point of being chivalric if nobody's going to be chivalric back?"
 
-@The_monster@ says, "I opened the door for a goblin, he punched me in the face. I hate chivalry."
+@The_monster@ says, "I opened the door for a goblin; he punched me in the face. I hate chivalry."
 
 @The_monster@ says, "I think I'll have a nap."
 
@@ -6326,7 +6326,7 @@ beogh_converted_orc_reaction_battle
 %%%%
 beogh_converted_orc_speech_battle
 
-@Pronoun@ shouts, "I'll follow you, let me live!"
+@Pronoun@ shouts, "I'll follow you; let me live!"
 
 @Pronoun@ says, "You must be the Messiah, I see it now!"
 
