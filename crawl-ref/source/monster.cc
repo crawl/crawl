@@ -2910,7 +2910,9 @@ int monster::shield_bonus() const
             return (0);
 
         int shld_c = property(*shld, PARM_AC) + shld->plus;
-        return (random2avg(shld_c + hit_dice * 2 / 3, 2));
+        shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
+                            * (shld->sub_type - ARM_LARGE_SHIELD);
+        return (random2avg(shld_c + hit_dice * 4 / 3, 2) / 2);
     }
     return (-100);
 }

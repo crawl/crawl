@@ -145,7 +145,7 @@ static armour_def Armour_prop[NUM_ARMOURS] =
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
-    { ARM_BUCKLER,              "buckler",                5,  -1,   90,
+    { ARM_BUCKLER,              "buckler",                3,  -1,   90,
         true,  EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM },
     { ARM_SHIELD,               "shield",                 8,  -3,  150,
         false, EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG    },
