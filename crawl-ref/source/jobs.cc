@@ -40,6 +40,8 @@ static const char * Job_Name_List[ NUM_JOBS ] =
 
 const char *get_job_abbrev(int which_job)
 {
+    if (which_job == JOB_UNKNOWN)
+        return "Un";
     COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS);
     ASSERT(which_job >= 0 && which_job < NUM_JOBS);
 
@@ -64,6 +66,8 @@ job_type get_job_by_abbrev(const char *abbrev)
 
 const char *get_job_name(int which_job)
 {
+    if (which_job == JOB_UNKNOWN)
+        return "Unemployed";
     COMPILE_CHECK(ARRAYSZ(Job_Name_List) == NUM_JOBS);
     ASSERT(which_job >= 0 && which_job < NUM_JOBS);
 
