@@ -403,7 +403,7 @@ In case dstname is missing, dst will be used.
 You can replace lua:one_way_stair by lua:timed_marker in order to make timed
 portal vaults (which will disappear after some time). bazaar.des and lab.des
 contain examples. For timed portals, you may want to add messages to the file
-dat/clua/lm_tmsg.lua.
+dat/dlua/lm_tmsg.lua.
 
 Using lua functions as shortcuts
 --------------------------------
@@ -626,7 +626,7 @@ the actual Lua call needs to be:
 dgn.tags(<map>, "no_rotate")
 
 Where <map> is the C++ map object to which the tag should be added.
-Since calling dgn.<foo>(<map>, <xxx>) is tedious, dat/clua/dungeon.lua
+Since calling dgn.<foo>(<map>, <xxx>) is tedious, dat/dlua/dungeon.lua
 wraps the Lua chunk for the map into an environment that defines
 wrappers for all the functions in 'dgn' as:
 
@@ -1106,7 +1106,7 @@ following variables:
         will have ".<iteration>" appended. For example, "volcano.map" will
         result in files named "volcano.map.1", "volcano.map.2", etc.
  * need_to_load_des: If the file is not included in one of the .des files that
-        are listed in source/dat/clua/loadmaps.lua, this should be set to true,
+        are listed in source/dat/dlua/loadmaps.lua, this should be set to true,
         and the following variable should be set.
  * des_file: The name of the file to load. The file should be located in the
         source/dat folder.

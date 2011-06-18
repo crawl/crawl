@@ -89,7 +89,7 @@ namespace crawl_tests
     {
         lua_stack_cleaner clean(dlua);
         luaL_openlib(dlua, "crawl", crawl_test_lib, 0);
-        dlua.execfile("clua/test.lua", true, true);
+        dlua.execfile("dlua/test.lua", true, true);
         initialise_branch_depths();
     }
 

@@ -5,7 +5,7 @@
 local map_to_test = ""
 -- Which des file is the map in?
 local des_file = ""
--- Change to true if the des file isn't specificed in dat/clua/loadmaps.lua
+-- Change to true if the des file isn't specificed in dat/dlua/loadmaps.lua
 local need_to_load_des = false
 -- How many times should we generate?
 local checks = 10

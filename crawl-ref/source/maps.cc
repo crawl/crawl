@@ -1294,7 +1294,7 @@ void read_map(const std::string &file)
 
 void read_maps()
 {
-    if (dlua.execfile("clua/loadmaps.lua", true, true, true))
+    if (dlua.execfile("dlua/loadmaps.lua", true, true, true))
         end(1, false, "Lua error: %s", dlua.error.c_str());
 
     lc_loaded_maps.clear();
@@ -1366,7 +1366,7 @@ const map_def *map_by_index(int index)
 
 void sanity_check_maps()
 {
-    dlua.execfile("clua/sanity.lua", true, true);
+    dlua.execfile("dlua/sanity.lua", true, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////

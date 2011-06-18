@@ -7,7 +7,7 @@
 #  * trigger on "might hit yourself" prompt
 #
 {{
-require("clua/tutorial.lua")
+require("dlua/tutorial.lua")
 
 tutorial_msg4 = {}
 

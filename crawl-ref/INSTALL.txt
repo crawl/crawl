@@ -312,7 +312,7 @@ Data files
 Crawl looks for several data files when starting up. They include:
 
 * Special level and vault layout (dat/*.des) files.
-* Core Lua code (dat/clua/*.lua).
+* Core Lua code (dat/dlua/*.lua).
 * Descriptions for monsters and game features (dat/descript/*.txt).
 * Definitions for monster dialogue and randart names (dat/database/*.txt).
 

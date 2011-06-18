@@ -1311,7 +1311,7 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
 
           Here's a Lua marker that creates a cloud generator (for a
           full explanation of the various parameters, read the header
-          of dat/clua/lm_fog.lua):
+          of dat/dlua/lm_fog.lua):
 
           MARKER:  A = lua:fog_machine { \
                        pow_max = 15, delay_min = 100, delay_max = 150, \

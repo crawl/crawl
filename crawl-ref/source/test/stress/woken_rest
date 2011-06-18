@@ -19,7 +19,7 @@ show_more = false
 :     crawl.enable_more(false)
 :     crawl.sendkeys("&Y" .. esc)
 :     crawl.sendkeys("&" .. string.char(20) ..
-:                    "require('clua/stress.lua')" .. eol ..
+:                    "require('dlua/stress.lua')" .. eol ..
 :                    "stress.entomb()" .. eol ..
 :                    "stress.awaken_level()" .. eol .. esc)
 :     crawl.sendkeys("5")

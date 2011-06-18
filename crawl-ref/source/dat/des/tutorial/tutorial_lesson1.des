@@ -11,7 +11,7 @@
 #  * Maybe send the player back to the entrance?
 #
 {{
-require("clua/tutorial.lua")
+require("dlua/tutorial.lua")
 
 tutorial_msg = {}
 

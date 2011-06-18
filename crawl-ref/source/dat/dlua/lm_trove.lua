@@ -13,7 +13,7 @@
 --  runes and the horn of Geryon
 ------------------------------------------------------------------------------
 
-require('clua/lm_1way.lua')
+require('dlua/lm_1way.lua')
 
 TroveMarker = util.subclass(OneWayStair)
 TroveMarker.CLASS = "TroveMarker"

@@ -3,7 +3,7 @@
 -- Debugging functions to call from the wizard lua interpreter.
 ------------------------------------------------------------------------------
 
-require('clua/userbase.lua')
+require('dlua/userbase.lua')
 
 function debug_wrath()
   debug.never_die(true)
