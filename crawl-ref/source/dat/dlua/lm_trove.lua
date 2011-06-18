@@ -310,6 +310,21 @@ end
 -- Returns true if the item was found and "used", false
 -- if we didn't find anything.
 function TroveMarker:check_item(marker, pname, position, dry_run)
+-- Begin by checking for runes.
+  if self.toll_item.base_type == "miscellaneous" and 
+     self.toll_item.sub_type == "rune of Zot" then
+    if you.have_rune(self.toll_item.plus1) then
+      if dry_run == nil then
+        return self:accept_item(nil)
+      else
+        crawl.mpr("Accepting " .. self.toll_item.ego_type .. " rune.")
+        return nil
+      end
+    else
+      if dry_run ~= nil then crawl.mpr("No " .. self.toll_item.ego_type .. " rune.") end
+      return false
+    end
+  end
   local iter_table
   local acceptable_items = {}
 
@@ -468,7 +483,7 @@ end
 
 function TroveMarker:accept_item (it)
   -- We don't take misc items away from people.
-  if it.base_type == "miscellaneous" then
+  if it == nil or it.base_type == "miscellaneous" then
     crawl.mpr("The portal draws power from the presence of the item" .. self:plural() .. " and buzzes to life!")
   else
     crawl.mpr("The portal accepts the item" .. self:plural() .. " and buzzes to life!")
