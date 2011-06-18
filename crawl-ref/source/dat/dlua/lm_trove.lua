@@ -242,11 +242,12 @@ function TroveMarker:item_name(do_grammar)
     end
 
     if item.plus2 ~= false and item.plus2 ~= nil then
-      if item.plus1 ~= item.plus2 and item.base_type ~= "armour" then
-        s = s .. ", +"
+      if item.base_type ~= "armour" then
+        s = s .. ","
         if item.plus2 > -1 then
-          s = s .. item.plus2
+          s = s .. "+"
         end
+        s = s .. item.plus2
       end
     end
   end
@@ -270,9 +271,15 @@ function TroveMarker:item_name(do_grammar)
     end
   elseif item.base_type == "book" then
     books = {"Necronomicon", "tome of Destruction",
-             "Young Poisoner's Handbook", "Monster Manual"}
-    if not string.find(item.sub_type, "manual")
-       and not util.contains(books, item.sub_type) then
+             "Young Poisoner's Handbook", "Grand Grimoire"}
+    if util.contains(books, item.sub_type) then
+      if do_grammar == false then
+        return item.sub_type
+      else
+        return "a " .. item.sub_type
+      end
+    end
+    if not string.find(item.sub_type, "manual") then
       s = s .. " book of"
     end
   elseif item.base_type == "wand" then
@@ -334,11 +341,6 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
 
     if not it.identified("type properties pluses") then
       if dry_run ~= nil then crawl.mpr("Item not identified.") end
-      this_item = false
-    end
-
-    if it.artefact == true and item.artefact_name == false then
-      if dry_run ~= nil then crawl.mpr("Item artefact doesn't match.") end
       this_item = false
     end
 
