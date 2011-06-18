@@ -193,8 +193,11 @@ bool monster_habitable_grid(monster_type mt,
 
     if (actual_grid == DNGN_TEMP_PORTAL)
     {
-        if (mt == MONS_ELDRITCH_TENTACLE || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        if (mt == MONS_ELDRITCH_TENTACLE
+            || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        {
             return (true);
+        }
         else
             return (false);
     }
@@ -1925,9 +1928,7 @@ static int _place_monster_aux(const mgen_data &mg,
     std::string blame_prefix;
 
     if (mg.flags & MG_BAND_MINION)
-    {
         blame_prefix = "led by ";
-    }
     else if (mg.abjuration_duration > 0)
     {
         blame_prefix = "summoned by ";
@@ -1936,29 +1937,26 @@ static int _place_monster_aux(const mgen_data &mg,
             && mg.summoner->atype() == ACT_MONSTER
             && static_cast<const monster* >(mg.summoner)->type == MONS_MARA)
         {
-                blame_prefix = "woven by ";
+            blame_prefix = "woven by ";
         }
     }
     else if (mons_class_is_zombified(mg.cls))
-    {
         blame_prefix = "animated by ";
-    }
     else if (mg.summon_type == SPELL_STICKS_TO_SNAKES)
-    {
         blame_prefix = "transmuted by ";
-    }
     else
     {
         blame_prefix = "created by ";
 
-        if (mg.cls == MONS_ELDRITCH_TENTACLE || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        if (mg.cls == MONS_ELDRITCH_TENTACLE
+            || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        {
             blame_prefix = "called by ";
+        }
     }
 
     if (!mg.non_actor_summoner.empty())
-    {
         mons_add_blame(mon, blame_prefix + mg.non_actor_summoner);
-    }
     // NOTE: The summoner might be dead if the summoned is placed by a
     // beam which killed the summoner first (like fire vortexes placed
     // by the Fire Storm spell); a deceased summoner's mindex might also
@@ -1969,9 +1967,7 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         ASSERT(mg.summoner->alive());
         if (mg.summoner->atype() == ACT_PLAYER)
-        {
             mons_add_blame(mon, blame_prefix + "the player character");
-        }
         else
         {
             monster* sum = mg.summoner->as_monster();
