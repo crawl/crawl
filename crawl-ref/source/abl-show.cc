@@ -1187,7 +1187,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_CHEIBRIADOS_TIME_BEND:
         invoc = true;
-        failure = 50 - (you.piety / 20) - (you.skill(SK_INVOCATIONS) * 4);
+        failure = 50 - (you.piety / 20) - (4 * you.skill(SK_INVOCATIONS));
         break;
 
     case ABIL_ZIN_IMPRISON:
@@ -1207,7 +1207,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_OKAWARU_FINESSE:
         invoc = true;
-        failure = 60 - (you.piety / 25) - (you.skill(SK_INVOCATIONS) * 4);
+        failure = 60 - (you.piety / 25) - (4 * you.skill(SK_INVOCATIONS));
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
@@ -1216,7 +1216,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_CORRUPT:
     case ABIL_FEDHAS_RAIN:
         invoc = true;
-        failure = 70 - (you.piety / 25) - (you.skill(SK_INVOCATIONS) * 4);
+        failure = 70 - (you.piety / 25) - (4 * you.skill(SK_INVOCATIONS));
         break;
 
     case ABIL_ZIN_SANCTUARY:
@@ -1227,7 +1227,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_CHEIBRIADOS_TIME_STEP:
         invoc = true;
-        failure = 80 - (you.piety / 25) - (you.skill(SK_INVOCATIONS) * 4);
+        failure = 80 - (you.piety / 25) - (4 * you.skill(SK_INVOCATIONS));
         break;
 
     case ABIL_NEMELEX_STACK_FIVE:
@@ -1237,8 +1237,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_NEMELEX_MARK_FOUR:
         invoc = true;
-        failure = 70 - (you.piety * 2 / 45)
-            - (9 * you.skill(SK_EVOCATIONS) / 2);
+        failure = 70 - (you.piety * 2 / 45) - (9 * you.skill(SK_EVOCATIONS) / 2);
         break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
