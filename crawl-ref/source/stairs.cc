@@ -322,8 +322,15 @@ static void _clear_golubria_traps()
     }
 }
 
-static void _leaving_level_now()
+static void _leaving_level_now(dungeon_feature_type stair_used)
 {
+    if (you.level_type == LEVEL_PORTAL_VAULT
+        && stair_used == DNGN_EXIT_PORTAL_VAULT
+        && you.level_type_name_abbrev == "Zig:27") // yay no depth
+    {
+        you.zigs_completed++;
+    }
+
     // Note the name ahead of time because the events may cause markers
     // to be discarded.
     const std::string newtype =
@@ -620,7 +627,7 @@ void up_stairs(dungeon_feature_type force_stair,
     clear_trapping_net();
 
     // Checks are done, the character is committed to moving between levels.
-    _leaving_level_now();
+    _leaving_level_now(stair_find);
 
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
@@ -973,7 +980,7 @@ void down_stairs(dungeon_feature_type force_stair,
     clear_trapping_net();
 
     // Fire level-leaving trigger.
-    _leaving_level_now();
+    _leaving_level_now(stair_find);
 
     if (!force_stair && !crawl_state.game_is_arena())
     {
@@ -1285,6 +1292,14 @@ void new_level(bool restore)
         std::string desc = "Entered " + place_name(get_packed_place(), true, true);
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, NULL,
                       desc.c_str()));
+
+        // Ziggurat code is a big steaming pile of duplicating in an
+        // incompatible and buggy way things which are already done
+        // elsewhere.  So, instead of having a branch enum and proper
+        // depth like everything else, all you can do is parse strings.
+        int zig_depth;
+        if (sscanf(you.level_type_name_abbrev.c_str(), "Zig:%d", &zig_depth) == 1)
+            you.zig_max = zig_depth;
     }
     else
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));

@@ -114,6 +114,9 @@ private:
 
     uint32_t    fruit_found_mask;   // Mask of fruits found.
 
+    int         zigs;               // Ziggurats completed.
+    int         zigmax;             // Max level reached in a ziggurat.
+
     mutable std::auto_ptr<xlog_fields> fields;
 
 public:

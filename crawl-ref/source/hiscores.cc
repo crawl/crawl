@@ -532,6 +532,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     gold_spent        = se.gold_spent;
     gold_found        = se.gold_found;
     fruit_found_mask  = se.fruit_found_mask;
+    zigs              = se.zigs;
+    zigmax            = se.zigmax;
     fixup_char_name();
 }
 
@@ -714,6 +716,9 @@ void scorefile_entry::init_with_fields()
     gold_spent = fields->int_field("goldspent");
     fruit_found_mask = fields->int_field("fruit");
 
+    zigs       = fields->int_field("zigs");
+    zigmax     = fields->int_field("zigmax");
+
     fixup_char_name();
 }
 
@@ -794,6 +799,10 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("goldspent", "%d", gold_spent);
     if (fruit_found_mask)
         fields->add_field("fruit", "%d", fruit_found_mask);
+    if (zigs)
+        fields->add_field("zigs", "%d", zigs);
+    if (zigmax)
+        fields->add_field("zigmax", "%d", zigmax);
 }
 
 void scorefile_entry::set_score_fields() const
@@ -1069,6 +1078,8 @@ void scorefile_entry::reset()
     gold_found           = 0;
     gold_spent           = 0;
     fruit_found_mask     = 0;
+    zigs                 = 0;
+    zigmax               = 0;
 }
 
 static int _award_modified_experience()
@@ -1255,6 +1266,9 @@ void scorefile_entry::init(time_t dt)
     gold_spent = you.attribute[ATTR_PURCHASES];
 
     fruit_found_mask = you.attribute[ATTR_FRUIT_FOUND];
+
+    zigs       = you.zigs_completed;
+    zigmax     = you.zig_max;
 
     wiz_mode = (you.wizard ? 1 : 0);
 }
