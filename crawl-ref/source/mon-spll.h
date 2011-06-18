@@ -1520,7 +1520,7 @@
 
     { MST_THE_ENCHANTRESS,
       {
-       SPELL_PARALYSE,
+       SPELL_CORONA,
        SPELL_SLEEP,
        SPELL_HASTE,
        SPELL_BANISHMENT,
