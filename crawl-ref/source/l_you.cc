@@ -348,6 +348,16 @@ static int _you_uniques(lua_State *ls)
 
 LUARET1(you_num_runes, number, runes_in_pack())
 
+static int _you_have_rune(lua_State *ls)
+{
+    int which_rune = luaL_checkint(ls, 1);
+    bool have_rune = false;
+    if (which_rune >= 0 && which_rune < NUM_RUNE_TYPES)
+        have_rune = you.runes[which_rune];
+    lua_pushboolean(ls, have_rune);
+    return (1);
+}
+
 static int _you_gold(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1)
@@ -452,6 +462,7 @@ static const struct luaL_reg you_dlib[] =
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
 { "num_runes",          you_num_runes },
+{ "have_rune",          _you_have_rune },
 { "die",                _you_die },
 { "piety",              you_piety },
 { "in_branch",          you_in_branch },
