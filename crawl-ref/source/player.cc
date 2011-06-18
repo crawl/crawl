@@ -2510,14 +2510,16 @@ int player_shield_class(void)
     if (player_wearing_slot(EQ_SHIELD))
     {
         const item_def& item = you.inv[you.equip[EQ_SHIELD]];
-        int base_shield = property(item, PARM_AC);
+        int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
+                        * (item.sub_type - ARM_LARGE_SHIELD);
+        int base_shield = property(item, PARM_AC) * 2 + size_factor;
 
         int racial_bonus = _player_armour_racial_bonus(item);
 
         // bonus applied only to base, see above for effect:
-        shield += base_shield * 100;
-        shield += base_shield * 5 * you.skill(SK_SHIELDS);
-        shield += base_shield * racial_bonus * 10 / 3;
+        shield += base_shield * 50;
+        shield += base_shield * 5 * you.skill(SK_SHIELDS) / 2;
+        shield += base_shield * racial_bonus * 10 / 6;
 
         shield += item.plus * 100;
 
