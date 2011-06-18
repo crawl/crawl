@@ -3,7 +3,7 @@
 ##############################################
 
 {{
-require("clua/tutorial.lua")
+require("dlua/tutorial.lua")
 
 tutorial_msg5 = {}
 

@@ -147,7 +147,7 @@ void debug_terp_dlua()
 {
     if (!_loaded_terp_files)
     {
-        dlua.execfile("clua/debug.lua", false, false);
+        dlua.execfile("dlua/debug.lua", false, false);
         for (unsigned int i = 0; i < Options.terp_files.size(); i++)
         {
             dlua.execfile(Options.terp_files[i].c_str(), false, false);

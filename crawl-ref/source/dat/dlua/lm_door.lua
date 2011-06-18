@@ -8,7 +8,7 @@
 -- unless the door has already previously been opened by the player.
 -------------------------------------------------------------------------------
 
-require('clua/lm_trig.lua')
+require('dlua/lm_trig.lua')
 
 RestrictDoor       = util.subclass(Triggerable)
 RestrictDoor.CLASS = "RestrictDoor"
@@ -52,7 +52,7 @@ end
 -- "veto_func" parameter.                                                    --
 -------------------------------------------------------------------------------
 
-require("clua/lm_pdesc.lua")
+require("dlua/lm_pdesc.lua")
 
 LockDoor       = util.subclass(PortalDescriptor)
 LockDoor.CLASS = "LockDoor"

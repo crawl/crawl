@@ -3,7 +3,7 @@
 -- and delegates to the supplied global
 -------------------------------------------------------------------------
 
-require('clua/util.lua')
+require('dlua/util.lua')
 util.defclass("FunctionWrapper")
 
 local global_function_name_cache = { }

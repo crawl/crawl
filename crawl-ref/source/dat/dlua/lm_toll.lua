@@ -3,7 +3,7 @@
 -- One-way toll-stair marker.
 ------------------------------------------------------------------------------
 
-require("clua/lm_1way.lua")
+require("dlua/lm_1way.lua")
 
 TollStair = util.subclass(OneWayStair)
 TollStair.CLASS = "TollStair"

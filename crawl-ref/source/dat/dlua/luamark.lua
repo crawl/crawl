@@ -3,7 +3,7 @@
 -- Lua map marker handling.
 ------------------------------------------------------------------------------
 
-require('clua/fnwrap.lua')
+require('dlua/fnwrap.lua')
 
 -- Every marker class must register its class name keyed to its reader
 -- function in this table.
@@ -16,19 +16,19 @@ function dlua_register_marker_table(table, reader)
   MARKER_UNMARSHALL_TABLE[table.CLASS] = reader
 end
 
-require('clua/lm_trig.lua')
-require('clua/lm_pdesc.lua')
-require('clua/lm_1way.lua')
-require('clua/lm_timed.lua')
-require('clua/lm_flags.lua')
-require('clua/lm_fog.lua')
-require('clua/lm_props.lua')
-require('clua/lm_mon_prop.lua')
-require('clua/lm_monst.lua')
-require('clua/lm_trove.lua')
-require('clua/lm_door.lua')
-require('clua/lm_items.lua')
-require('clua/fnwrap.lua')
+require('dlua/lm_trig.lua')
+require('dlua/lm_pdesc.lua')
+require('dlua/lm_1way.lua')
+require('dlua/lm_timed.lua')
+require('dlua/lm_flags.lua')
+require('dlua/lm_fog.lua')
+require('dlua/lm_props.lua')
+require('dlua/lm_mon_prop.lua')
+require('dlua/lm_monst.lua')
+require('dlua/lm_trove.lua')
+require('dlua/lm_door.lua')
+require('dlua/lm_items.lua')
+require('dlua/fnwrap.lua')
 
 function dlua_marker_reader_name(table)
   -- Check that the reader is actually registered for this table.

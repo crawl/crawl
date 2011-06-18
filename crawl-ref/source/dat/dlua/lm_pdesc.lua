@@ -3,7 +3,7 @@
 -- Portal descriptor markers.
 ------------------------------------------------------------------------------
 
-require('clua/util.lua')
+require('dlua/util.lua')
 
 util.defclass("PortalDescriptor")
 

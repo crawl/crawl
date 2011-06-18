@@ -994,7 +994,7 @@ endif
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
 	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
 	mkdir -p $(datadir_fp)/dat/des
-	mkdir -p $(datadir_fp)/dat/clua
+	mkdir -p $(datadir_fp)/dat/dlua
 	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
 	mkdir -p $(datadir_fp)/dat/descript
@@ -1003,7 +1003,7 @@ endif
 	mkdir -p $(datadir_fp)/docs/license
 	mkdir -p $(datadir_fp)/settings
 	$(COPY_R) dat/des/* $(datadir_fp)/dat/des/
-	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
+	$(COPY)   dat/dlua/*.lua $(datadir_fp)/dat/dlua/
 	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
 	$(COPY)   dat/database/*.txt $(datadir_fp)/dat/database/
 	$(COPY)   dat/descript/*.txt $(datadir_fp)/dat/descript/

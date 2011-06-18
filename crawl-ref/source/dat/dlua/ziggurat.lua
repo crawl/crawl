@@ -10,7 +10,7 @@
 -- upvalues cannot (yet) be saved.
 ------------------------------------------------------------------------------
 
-require("clua/lm_toll.lua")
+require("dlua/lm_toll.lua")
 
 -- Deepest you can go in a ziggurat - at this point it's beyond
 -- obvious that we're not challenging the player, and one could hope

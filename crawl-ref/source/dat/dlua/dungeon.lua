@@ -3,9 +3,9 @@
 -- Dungeoneering functions.
 ------------------------------------------------------------------------------
 
-require("clua/point.lua")
-require("clua/fnwrap.lua")
-require('clua/util.lua')
+require("dlua/point.lua")
+require("dlua/fnwrap.lua")
+require('dlua/util.lua')
 
 -- Namespace for callbacks (just an aid to recognising callbacks, no magic)
 util.namespace('callback')

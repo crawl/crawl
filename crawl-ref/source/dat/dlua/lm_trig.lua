@@ -4,7 +4,7 @@
 --
 -- This is similar to the observable/observer design pattern: a triggerable
 -- class which does something and a triggerer which sets it off.  As an
--- example, the ChangeFlags class (clua/lm_flags.lua), rather than having
+-- example, the ChangeFlags class (dlua/lm_flags.lua), rather than having
 -- three subclasses (for monster death, feature change and item pickup)
 -- needs no subclasses, but is just one class which is given triggerers
 -- which listen for different events.  Additionally, new types of triggerers
@@ -52,7 +52,7 @@
 -- events.  However, we don't need that much flexibility yet, so it's
 -- all handled inside of the Triggerable class.
 
-require('clua/lm_mslav.lua')
+require('dlua/lm_mslav.lua')
 
 Triggerable = { CLASS = "Triggerable" }
 Triggerable.__index = Triggerable

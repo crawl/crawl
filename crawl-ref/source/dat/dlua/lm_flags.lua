@@ -61,7 +61,7 @@
 -- triggerers (or more than one) can be added.
 --------------------------------------------------------------------------
 
-require('clua/lm_trig.lua')
+require('dlua/lm_trig.lua')
 
 ChangeFlags       = util.subclass(Triggerable)
 ChangeFlags.CLASS = "ChangeFlags"

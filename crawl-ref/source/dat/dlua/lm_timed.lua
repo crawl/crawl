@@ -3,9 +3,9 @@
 -- Lua timed map feature markers.
 ------------------------------------------------------------------------------
 
-require('clua/lm_tmsg.lua')
-require('clua/lm_1way.lua')
-require('clua/lm_toll.lua')
+require('dlua/lm_tmsg.lua')
+require('dlua/lm_1way.lua')
+require('dlua/lm_toll.lua')
 
 TimedMarker = util.subclass(OneWayStair)
 TimedMarker.CLASS = "TimedMarker"
