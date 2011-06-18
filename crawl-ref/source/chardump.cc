@@ -370,13 +370,21 @@ static void _sdump_visits(dump_params &par)
 
         if (num_zigs > 0)
         {
-            text += make_stringf("You %svisited %d Ziggurat",
-                                 have.c_str(), num_zigs);
+            text += make_stringf("You %s%s %d Ziggurat",
+                                 have.c_str(),
+                                 (num_zigs == you.zigs_completed) ? "completed"
+                                                                  : "visited",
+                                 num_zigs);
             if (num_zigs > 1)
                 text += "s";
-            text += make_stringf(", and %s %d of %s levels.\n",
+            if (num_zigs != you.zigs_completed && you.zigs_completed)
+                text += make_stringf(" (completing %d)", you.zigs_completed);
+            text += make_stringf(", and %s %d of %s levels",
                                  seen.c_str(), zig_levels,
                                  num_zigs > 1 ? "their" : "its");
+            if (num_zigs != 1 && !you.zigs_completed)
+                text += make_stringf(" (deepest: %d)", you.zig_max);
+            text += ".\n";
         }
 
         if (!misc_portals.empty())

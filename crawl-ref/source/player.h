@@ -70,6 +70,7 @@ public:
   unsigned int experience;
   int experience_level;
   int gold;
+  int zigs_completed, zig_max;
 
   FixedVector<int8_t, NUM_EQUIP> equip;
   FixedVector<bool, NUM_EQUIP> melded;
