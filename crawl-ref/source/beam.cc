@@ -4849,6 +4849,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
 
     case BEAM_PETRIFY:
+        if (mon->res_petrify())
+            return (MON_UNAFFECTED);
+
         apply_bolt_petrify(mon);
         return (MON_AFFECTED);
 
