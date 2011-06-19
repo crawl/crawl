@@ -1467,7 +1467,7 @@ static void _fixup_branch_stairs()
     // Bottom level of branch - wipes out down stairs and hatches
     dungeon_feature_type feat = DNGN_FLOOR;
 
-    if (at_branch_bottom() && you.level_type == LEVEL_DUNGEON)
+    if (at_branch_bottom())
     {
         for (rectangle_iterator ri(1); ri; ++ri)
         {

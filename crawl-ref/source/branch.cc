@@ -15,7 +15,8 @@ Branch& your_branch()
 
 bool at_branch_bottom()
 {
-    return your_branch().depth == player_branch_depth();
+    return your_branch().depth == player_branch_depth()
+           && you.level_type == LEVEL_DUNGEON;
 }
 
 level_id branch_entry_level(branch_type branch)
