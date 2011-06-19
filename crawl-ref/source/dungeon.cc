@@ -4238,6 +4238,8 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    bool clobber, bool no_exits,
                                    const coord_def &where)
 {
+    const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
+                        || player_in_branch(BRANCH_SLIME_PITS);
     const int map_index = env.level_vaults.size();
     if (_build_vault_impl(level_number, vault, true, !clobber, no_exits, where))
     {
@@ -4245,7 +4247,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
         {
             const vault_placement &vp = *env.level_vaults[map_index];
             ASSERT(vault->name == vp.map.name);
-            vp.connect(player_in_branch(BRANCH_ORCISH_MINES));
+            vp.connect(spotty);
         }
         return (true);
     }
