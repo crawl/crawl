@@ -7193,7 +7193,7 @@ static coord_def _dgn_find_labyrinth_entry_point()
 static void _fixup_slime_hatch_dest(coord_def* pos)
 {
     int max_walls = 9;
-    for (adjacent_iterator ai(*pos, true); ai; ++ai)
+    for (adjacent_iterator ai(*pos, false); ai; ++ai)
     {
         if (!feat_is_traversable(env.grid(*ai)))
             continue;
