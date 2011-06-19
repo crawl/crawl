@@ -2825,8 +2825,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(mons), mons,
                           0, 0, adj_squares[i], mons->foe,
                           MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
-                          mons->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                          you.level_type));
+                          mons->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
 
             if (tentacle != -1)
             {

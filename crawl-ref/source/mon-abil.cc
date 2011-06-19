@@ -1021,8 +1021,8 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, last->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                      you.level_type));
+                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
+
         if (connect < 0)
         {
             // Big failure mode.
@@ -1069,8 +1069,7 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, current->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                      you.level_type));
+                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
 
         if (connect >= 0)
         {
