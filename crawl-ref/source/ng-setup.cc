@@ -470,7 +470,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Skills.
         you.skills[SK_FIGHTING] = 3;
-        you.skills[SK_SHIELDS]  = 2;
+        you.skills[SK_SHIELDS]  = 3;
 
         weap_skill = (you.species == SP_FELID) ? 4 : 2;
 
@@ -509,7 +509,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_THROWING] = 2;
         you.skills[SK_DODGING]  = 2;
-        you.skills[SK_SHIELDS]  = 2;
+        you.skills[SK_SHIELDS]  = 1;
         // Gladiators with weapons also get some unarmed skill for offhand attacks.
         if (you.weapon())
             you.skills[SK_UNARMED_COMBAT] = 2;
@@ -670,7 +670,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_ARMOUR]       = 1;
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_CHARMS]       = 2;
+        you.skills[SK_CHARMS]       = 3;
         weap_skill = 2;
         break;
 
