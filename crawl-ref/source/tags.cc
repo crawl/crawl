@@ -1683,6 +1683,11 @@ static void tag_read_you(reader &th)
     you.zigs_completed            = unmarshallInt(th);
     you.zig_max                   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_ZIG_FIX)
+        {
+        you.zigs_completed = 0;
+        you.zig_max = 0;
+        }
     }
     else
         you.zigs_completed = you.zig_max = 0;

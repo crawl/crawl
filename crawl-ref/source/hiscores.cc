@@ -716,8 +716,8 @@ void scorefile_entry::init_with_fields()
     gold_spent = fields->int_field("goldspent");
     fruit_found_mask = fields->int_field("fruit");
 
-    zigs       = fields->int_field("zigs");
-    zigmax     = fields->int_field("zigmax");
+    zigs       = fields->int_field("zigscompleted");
+    zigmax     = fields->int_field("zigdeepest");
 
     fixup_char_name();
 }
@@ -800,9 +800,9 @@ void scorefile_entry::set_base_xlog_fields() const
     if (fruit_found_mask)
         fields->add_field("fruit", "%d", fruit_found_mask);
     if (zigs)
-        fields->add_field("zigs", "%d", zigs);
+        fields->add_field("zigscompleted", "%d", zigs);
     if (zigmax)
-        fields->add_field("zigmax", "%d", zigmax);
+        fields->add_field("zigdeepest", "%d", zigmax);
 }
 
 void scorefile_entry::set_score_fields() const
