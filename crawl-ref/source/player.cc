@@ -2529,6 +2529,7 @@ int player_shield_class(void)
             stat = you.dex() * 12 + you.strength() * 26;
         else
             stat = you.dex() * 19 + you.strength() * 19;
+        stat = stat * (base_shield + 13) / 26;
     }
     else
     {
