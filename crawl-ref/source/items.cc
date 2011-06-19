@@ -1625,12 +1625,12 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                  rune_type_name(mitm[obj].plus));
             int nrunes = runes_in_pack();
             if (nrunes >= you.obtainable_runes)
-                mpr("You have collected all the runes!  Now go and win!");
+                mpr("You have collected all the runes! Now go and win!");
             else if (nrunes == NUMBER_OF_RUNES_NEEDED
                      && !crawl_state.game_is_zotdef())
             {
                 // might be inappropriate in new Sprints, please change it then
-                mprf("%d runes!  That's enough to enter the realm of Zot.",
+                mprf("%d runes! That's enough to enter the realm of Zot.",
                      nrunes);
             }
             else if (nrunes > 1)
