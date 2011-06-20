@@ -3448,7 +3448,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << "An illusion of " << get_ghost_description(mi) << ".\n";
         break;
 
-    case MONS_PANDEMONIUM_DEMON:
+    case MONS_PANDEMONIUM_LORD:
         inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
         break;
 

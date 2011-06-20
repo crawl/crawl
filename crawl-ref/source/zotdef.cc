@@ -143,7 +143,7 @@ static int _mon_strength(monster_type mon_type)
         case MONS_ZOMBIE_LARGE:
             strength += 4;
             break;
-        case MONS_PANDEMONIUM_DEMON:        // base init has 4HD (!)
+        case MONS_PANDEMONIUM_LORD: // base init has 4HD (!)
             strength = 30;
             break;
         default:
@@ -456,8 +456,8 @@ static void _pan_wave(int power)
     // Lobon in particular is almost unkillable
     monster_type boss[] = {MONS_MNOLEG, MONS_LOM_LOBON, MONS_CEREBOV,
                 MONS_GLOORX_VLOQ, MONS_GERYON, MONS_DISPATER,
-                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_DEMON, END};
-    monster_type weakboss[] = {MONS_PANDEMONIUM_DEMON, MONS_FIEND,
+                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD, END};
+    monster_type weakboss[] = {MONS_PANDEMONIUM_LORD, MONS_FIEND,
                 MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLUE_DEATH, END};
 
     for (int i = 0; i <= NSLOTS; i++)

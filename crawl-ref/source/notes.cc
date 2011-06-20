@@ -419,7 +419,7 @@ std::string Note::describe(bool when, bool where, bool what) const
 
     if (type == NOTE_SEEN_MONSTER || type == NOTE_KILL_MONSTER)
     {
-        if (what && first == MONS_PANDEMONIUM_DEMON)
+        if (what && first == MONS_PANDEMONIUM_LORD)
             result << " the pandemonium lord";
     }
     return result.str();

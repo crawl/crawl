@@ -1,5 +1,5 @@
 ## used for Detect Creatures
-dc-mon/panlord/pandemonium_demon MONS_PANDEMONIUM_DEMON
+dc-mon/panlord/pandemonium_lord MONS_PANDEMONIUM_LORD
 
 dc-misc/error MONS_PROGRAM_BUG
 

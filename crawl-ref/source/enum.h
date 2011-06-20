@@ -2232,7 +2232,7 @@ enum monster_type                      // (int) menv[].type
     MONS_FIEND,
     MONS_ICE_FIEND,
     MONS_SHADOW_FIEND,
-    MONS_PANDEMONIUM_DEMON,
+    MONS_PANDEMONIUM_LORD,
     MONS_EFREET,
     MONS_RAKSHASA,
     MONS_RAKSHASA_FAKE,
@@ -2386,7 +2386,7 @@ enum monster_type                      // (int) menv[].type
     MONS_PLAYER_GHOST,
     MONS_BALL_LIGHTNING,
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
-    MONS_HELL_DEMON,
+    MONS_HELL_LORD,
     MONS_MERGED_SLIME_CREATURE, // used only for recoloring
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_PLAYER,                // a certain ugly creature

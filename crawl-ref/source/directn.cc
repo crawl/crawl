@@ -3659,7 +3659,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
             }
 
             if (mi.type == MONS_DANCING_WEAPON
-                || mi.type == MONS_PANDEMONIUM_DEMON
+                || mi.type == MONS_PANDEMONIUM_LORD
                 || mi.type == MONS_PLAYER_GHOST
                 || mons_is_mimic(mi.type))
             {
@@ -3668,8 +3668,8 @@ std::string get_monster_equipment_desc(const monster_info& mi,
 
                 if (mi.type == MONS_DANCING_WEAPON)
                     str += "dancing weapon";
-                else if (mi.type == MONS_PANDEMONIUM_DEMON)
-                    str += "pandemonium demon";
+                else if (mi.type == MONS_PANDEMONIUM_LORD)
+                    str += "pandemonium lord";
                 else if (mi.type == MONS_PLAYER_GHOST)
                     str += "ghost";
                 else if (mi.type == MONS_PLAYER_ILLUSION)

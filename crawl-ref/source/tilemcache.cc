@@ -878,7 +878,7 @@ int mcache_demon::info(tile_draw_info *dinfo) const
 
 bool mcache_demon::valid(const monster* mon)
 {
-    return (mon && mon->type == MONS_PANDEMONIUM_DEMON);
+    return (mon && mon->type == MONS_PANDEMONIUM_LORD);
 }
 
 mcache_demon::mcache_demon(reader &th) : mcache_entry(th)
