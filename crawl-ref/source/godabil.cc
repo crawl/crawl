@@ -1839,7 +1839,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
             continue;
         }
 
-        mitm[index_of_corpse_created].props["DoNotDropHide"] = true;
+        mitm[index_of_corpse_created].props["never_hide"] = true;
 
         ASSERT(valid_corpse >= 0);
 
