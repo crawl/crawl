@@ -257,6 +257,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                            WPN_SHORT_SWORD, WPN_SHORT_SWORD,
                                            WPN_CLUB,        WPN_WHIP,       -1);
         }
+        else if (one_chance_in(30) && level > 2)
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = WPN_CROSSBOW;
+            break;
+        }
         else
             return (item_race);
         break;
