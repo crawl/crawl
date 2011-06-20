@@ -10,6 +10,7 @@
 #include "fineff.h"
 #include "godconduct.h"
 #include "los.h"
+#include "math.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -149,6 +150,48 @@ bool cast_tornado(int powc)
     return true;
 }
 
+static bool _mons_is_unmovable(const monster *mons)
+{
+    // hard to explain uprooted oklobs surviving
+    if (mons_is_stationary(mons))
+        return true;
+    // we'd have to rotate everything
+    if (mons_is_tentacle(mons->type) || mons_base_type(mons) == MONS_KRAKEN)
+        return true;
+    return false;
+}
+
+static coord_def _rotate(coord_def org, coord_def from,
+                         std::vector<coord_def> &avail, int dur)
+{
+    if (avail.empty())
+        return from;
+
+    coord_def best;
+    double hiscore = 1e38;
+
+    double dist0 = sqrt((from - org).abs());
+    double ang0 = atan2(from.x - org.x, from.y - org.y) + dur * 0.1;
+    if (ang0 > PI)
+        ang0 -= 2 * PI;
+    for (unsigned int i = 0; i < avail.size(); i++)
+    {
+        double dist = sqrt((avail[i] - org).abs());
+        double distdiff = fabs(dist - dist0);
+        double ang = atan2(avail[i].x - org.x, avail[i].y - org.y);
+        double angdiff = std::min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
+
+        // Let's give 1 rad =~ 57⁰ of mismatch the same weight as changing
+        // radius by 1.  In general, infelicities in radius have bigger balance
+        // effect than those in angle.
+        double score = distdiff + angdiff;
+        if (score < hiscore)
+            best = avail[i], hiscore = score;
+    }
+
+    return best;
+}
+
 void tornado_damage(actor *caster, int dur)
 {
     if (!dur)
@@ -165,7 +208,9 @@ void tornado_damage(actor *caster, int dur)
     noisy(25, org, caster->mindex());
     WindSystem winds(org);
 
-    std::stack<actor*>    move_act;
+    std::vector<actor*>        move_act;   // victims to move
+    std::vector<coord_def>     move_avail; // legal destinations
+    std::map<mid_t, coord_def> move_dest;  // chosen destination
     int cnt_open = 0;
     int cnt_all  = 0;
 
@@ -201,12 +246,18 @@ void tornado_damage(actor *caster, int dur)
             if (!winds.has_wind(*dam_i))
                 continue;
 
+            bool leda = false; // squares with ledaed enemies are no-go
             if (actor* victim = actor_at(*dam_i))
             {
                 if (victim->submerged())
+                {
+                    leda = true; // and with fish, too
                     continue;
+                }
 
-                bool leda = liquefied(victim->pos()) && victim->ground_level();
+                leda = liquefied(victim->pos()) && victim->ground_level()
+                    || victim->atype() == ACT_MONSTER
+                       && _mons_is_unmovable(victim->as_monster());
                 if (!victim->res_wind())
                 {
                     if (victim->atype() == ACT_MONSTER)
@@ -253,7 +304,7 @@ void tornado_damage(actor *caster, int dur)
                 }
 
                 if (victim->alive() && !leda)
-                    move_act.push(victim);
+                    move_act.push_back(victim);
             }
             if ((env.cgrid(*dam_i) == EMPTY_CLOUD
                 || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
@@ -263,8 +314,45 @@ void tornado_damage(actor *caster, int dur)
             }
             clouds.push_back(*dam_i);
             swap_clouds(clouds[random2(clouds.size())], *dam_i);
+
+            if (!leda)
+                move_avail.push_back(*dam_i);
         }
     }
+
+    if (dur <= 0)
+        return;
+
+    for (unsigned int i = 0; i < move_act.size(); i++)
+    {
+        coord_def dest = _rotate(org, move_act[i]->pos(), move_avail, dur);
+        for (unsigned int j = 0; j < move_avail.size(); j++)
+            if (move_avail[j] == dest)
+            {
+                // Only one monster per destination.
+                move_avail[j] = move_avail[move_avail.size() - 1];
+                move_avail.pop_back();
+                break;
+            }
+        move_dest[move_act[i]->mid] = dest;
+    }
+    for (unsigned int i = 0; i < move_act.size(); i++)
+        if (move_act[i]->alive()) // shouldn't ever change...
+        {
+            // Temporarily move to (0,0) to allow permutations.
+            if (mgrd(move_act[i]->pos()) == move_act[i]->mindex())
+                mgrd(move_act[i]->pos()) = NON_MONSTER;
+            move_act[i]->moveto(coord_def());
+        }
+    for (unsigned int i = 0; i < move_act.size(); i++)
+        if (move_act[i]->alive())
+        {
+            coord_def newpos = move_dest[move_act[i]->mid];
+            ASSERT(!actor_at(newpos));
+            move_act[i]->move_to_pos(newpos);
+            ASSERT(move_act[i]->pos() == newpos);
+        }
+
     if (caster == &you)
         fire_final_effects();
 }
