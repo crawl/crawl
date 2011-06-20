@@ -1672,6 +1672,15 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_ZOT_POINTS)
     {
+        if (th.getMinorVersion() < TAG_MINOR_XP_POOL_FIX)
+        {
+            if (you.exp_available < 0)
+                you.exp_available = 0;
+            // a wild-ass guess, possibly harming Zig raiders
+            int cap = you.experience_level * you.experience_level * 100;
+            if (you.exp_available > cap)
+                you.exp_available = cap;
+        }
 #endif
     you.zot_points                = unmarshallInt(th);
     you.exp_delta                 = unmarshallInt(th);

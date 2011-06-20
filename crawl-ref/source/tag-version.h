@@ -36,6 +36,7 @@ enum tag_minor_version
     TAG_MINOR_GOLDIFIED_RUNES,     // Runes are undroppable and don't take space.
     TAG_MINOR_ZIG_COUNT,           // Count completed Ziggurats and max level of partials.
     TAG_MINOR_ZIG_FIX,             // Zero out junk ziggurat variable values.
+    TAG_MINOR_XP_POOL_FIX,         // Clamp possibly junk values of XP pool.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
