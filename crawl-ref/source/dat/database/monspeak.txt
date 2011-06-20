@@ -2697,7 +2697,7 @@ w:50
 
 @The_monster@ says, "I hate stupid dietary laws! If I wanna eat a cow, I'll eat a cow!"
 
-@The_monster@ says, "I've got two hundred gold pieces, is that enough to cure these mutations?"
+@The_monster@ says, "I've got two hundred gold pieces. Is that enough to cure these mutations?"
 
 @The_monster@ says, "Didn't you like your horns?"
 
