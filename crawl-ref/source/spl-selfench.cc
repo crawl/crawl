@@ -273,7 +273,7 @@ void cast_silence(int pow)
 
     you.attribute[ATTR_WAS_SILENCED] = 1;
 
-    you.increase_duration(DUR_SILENCE, 10 + random2avg(pow, 2), 100);
+    you.increase_duration(DUR_SILENCE, 10 + pow/4 + random2avg(pow/2, 2), 100);
     invalidate_agrid(true);
 
     if (you.beheld())
