@@ -2734,8 +2734,6 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     if (th.getMinorVersion() >= TAG_MINOR_MINFO_PROP)
 #endif
         mi.props.read(th);
-#if TAG_MAJOR_VERSION == 32
-#endif
 }
 
 static void tag_construct_level_monsters(writer &th)
