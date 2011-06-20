@@ -897,7 +897,7 @@ bool mons_is_demon(int mc)
 
 int mons_demon_tier(int mc)
 {
-    switch(mons_base_char(mc))
+    switch (mons_base_char(mc))
     {
     case 'C':
         if (mc != MONS_ANTAEUS)
