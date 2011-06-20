@@ -109,26 +109,75 @@ void attribute_increase()
     }
 }
 
-// Rearrange stats, biased towards the stat chosen last at level up.
+// Rearrange stats, biased based on your armour and skills.
 void jiyva_stat_action()
 {
-    int inc_weight[] = {1, 1, 1};
-    int dec_weight[3];
-    int stat_up_choice;
-    int stat_down_choice;
-
-    inc_weight[you.last_chosen] = 2;
-
+    int cur_stat[3];
+    int stat_total = 0;
+    int evp = player_raw_body_armour_evasion_penalty();
+    int target_stat[3];
     for (int x = 0; x < 3; ++x)
     {
-         const int8_t m = you.max_stat(static_cast<stat_type>(x));
-         dec_weight[x] = std::min(10, std::max(0, m - 7));
+        cur_stat[x] = you.max_stat(static_cast<stat_type>(x));
+        stat_total += cur_stat[x];
     }
+    // Always try for a little more strength, since Jiyva chars need their
+    // carrying capacity.
+    target_stat[0] = std::max(11, 2 + 3 * evp);
+    target_stat[1] = 9;
+    target_stat[2] = 9;
+    int remaining = stat_total - 18 - target_stat[0];
+    // Divide up the remaining stat points between Int and either Str or Dex,
+    // based on skills.
+    if (remaining > 0)
+    {
+        int magic_weights = 0;
+        int other_weights = 0;
+        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+        {
+            skill_type sk = static_cast<skill_type>(i);
 
-    stat_up_choice = choose_random_weighted(inc_weight, inc_weight + 3);
-    stat_down_choice = choose_random_weighted(dec_weight, dec_weight + 3);
+            int weight = you.skills[sk];
 
-    if (stat_up_choice != stat_down_choice)
+            // Anyone can get Spellcasting 1. Doesn't prove anything.
+            if (sk == SK_SPELLCASTING && weight >= 1)
+                weight--;
+
+            if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
+                magic_weights += weight;
+            else
+                other_weights += weight;
+        }
+        other_weights = std::max(other_weights - magic_weights/2, 0);
+        magic_weights = div_rand_round(remaining * magic_weights, magic_weights + other_weights);
+        other_weights = remaining - magic_weights;
+        target_stat[1] += magic_weights;
+        // If you are in anything heavier than dragon armour, you probably don't
+        // care much for Dex.
+        target_stat[(evp >= 5) ? 0 : 2] += other_weights;
+    }
+    // Add a little fuzz to the target.
+    for (int x = 0; x < 3; ++x)
+        target_stat[x] += random2(5) - 2;
+    int choices = 0;
+    int stat_up_choice = 0;
+    int stat_down_choice = 0;
+    // Choose a random stat shuffle that doesn't increase the l^2 distance to
+    // the (fuzzed) target.
+    for (int x = 0; x < 3; ++x)
+        for (int y = 0; y < 3; ++y)
+        {
+            if (x != y && target_stat[x] - cur_stat[x] + cur_stat[y] - target_stat[y] >= 0)
+            {
+                choices++;
+                if (one_chance_in(choices))
+                {
+                    stat_up_choice = x;
+                    stat_down_choice = y;
+                }
+            }
+        }
+    if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
         const std::string cause = "the 'helpfulness' of "
