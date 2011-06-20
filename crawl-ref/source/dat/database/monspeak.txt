@@ -2745,8 +2745,6 @@ w:50
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "Butchering is such a pain, isn't it?"
-
 @The_monster@ says, "You strike me as a masochist."
 
 @The_monster@ says, "I'm hungry. Can you summon some snacks?"
