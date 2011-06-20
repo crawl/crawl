@@ -1283,7 +1283,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
 void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
 {
     // HACK.  Large-tile monsters don't interact well with name tags.
-    if (mon->type == MONS_PANDEMONIUM_DEMON
+    if (mon->type == MONS_PANDEMONIUM_LORD
         || mon->type == MONS_LERNAEAN_HYDRA)
     {
         return;

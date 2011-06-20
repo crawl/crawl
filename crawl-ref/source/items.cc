@@ -1065,8 +1065,8 @@ std::string origin_monster_name(const item_def &item)
     const int monnum = item.orig_monnum - 1;
     if (monnum == MONS_PLAYER_GHOST)
         return ("a player ghost");
-    else if (monnum == MONS_PANDEMONIUM_DEMON)
-        return ("a demon");
+    else if (monnum == MONS_PANDEMONIUM_LORD)
+        return ("a pandemonium lord");
     return mons_type_name(monnum, DESC_NOCAP_A);
 }
 

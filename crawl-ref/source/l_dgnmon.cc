@@ -101,7 +101,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
 
         // Pandemonium lords are pseudo-unique, so don't randomly generate
         // them.
-        if (mon.mid == MONS_PANDEMONIUM_DEMON)
+        if (mon.mid == MONS_PANDEMONIUM_LORD)
         {
             num_lords++;
             continue;

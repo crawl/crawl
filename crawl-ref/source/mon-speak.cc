@@ -570,7 +570,7 @@ bool mons_speaks(monster* mons)
                                     unseen);
         }
     }
-    else if (mons->type == MONS_PANDEMONIUM_DEMON)
+    else if (mons->type == MONS_PANDEMONIUM_LORD)
     {
         // Pandemonium demons have randomly generated names, so use
         // "pandemonium lord" instead.

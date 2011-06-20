@@ -2469,9 +2469,9 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         }
         break;
 
-    case MONS_PANDEMONIUM_DEMON:
+    case MONS_PANDEMONIUM_LORD:
         natural_leader = true;
-        band = BAND_PANDEMONIUM_DEMON;
+        band = BAND_PANDEMONIUM_LORD;
         band_size = random_range(1, 3);
         break;
 
@@ -2872,7 +2872,7 @@ static monster_type _band_member(band_type band, int power)
                                : MONS_ABOMINATION_LARGE);
         break;
 
-    case BAND_PANDEMONIUM_DEMON:
+    case BAND_PANDEMONIUM_LORD:
         if (one_chance_in(7))
         {
             mon_type = static_cast<monster_type>(
@@ -3160,9 +3160,9 @@ static monster_type _pick_zot_exit_defender()
     if (one_chance_in(11))
     {
 #ifdef DEBUG_MON_CREATION
-        mpr("Create a pandemonium demon!", MSGCH_DIAGNOSTICS);
+        mpr("Create a pandemonium lord!", MSGCH_DIAGNOSTICS);
 #endif
-        return (MONS_PANDEMONIUM_DEMON);
+        return (MONS_PANDEMONIUM_LORD);
     }
 
     const int temp_rand = random2(276);

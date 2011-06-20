@@ -482,8 +482,8 @@ void kill_def::add_place(unsigned short place, bool force)
 std::string kill_def::base_name(const kill_monster_desc &md) const
 {
     std::string name;
-    if (md.monnum == MONS_PANDEMONIUM_DEMON || md.monnum == MONS_HELL_DEMON)
-        name = "demon lord";
+    if (md.monnum == MONS_PANDEMONIUM_LORD)
+        name = "pandemonium lord";
     else
         name = mons_type_name(md.monnum, DESC_PLAIN);
 
@@ -516,8 +516,6 @@ std::string kill_def::base_name(const kill_monster_desc &md) const
         // Do nothing
         break;
       case MONS_RAKSHASA_FAKE:
-        name = "illusory " + name;
-        break;
       case MONS_MARA_FAKE:
         name = "illusory " + name;
         break;

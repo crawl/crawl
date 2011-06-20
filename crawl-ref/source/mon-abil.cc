@@ -2654,7 +2654,7 @@ void mon_nearby_ability(monster* mons)
             mons->add_ench(ENCH_SUBMERGED);
         break;
 
-    case MONS_PANDEMONIUM_DEMON:
+    case MONS_PANDEMONIUM_LORD:
         if (mons->ghost->cycle_colours)
             mons->colour = random_colour();
         break;

@@ -4083,8 +4083,8 @@ mons_spec mons_list::mons_by_name(std::string name) const
         return (-1);
 
     // Special casery:
-    if (name == "pandemonium demon")
-        return (MONS_PANDEMONIUM_DEMON);
+    if (name == "pandemonium lord")
+        return (MONS_PANDEMONIUM_LORD);
 
     if (name == "any" || name == "any monster")
         return (RANDOM_MONSTER);

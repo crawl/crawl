@@ -641,7 +641,7 @@ std::string monster_info::_core_name() const
         case MONS_PLAYER_ILLUSION:
             s = apostrophise(mname) + " illusion";
             break;
-        case MONS_PANDEMONIUM_DEMON:
+        case MONS_PANDEMONIUM_LORD:
             s = mname;
             break;
         default:

@@ -739,7 +739,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
         return;
 
     // HACK.  Large-tile monsters don't interact well with name tags.
-    if (mon->type == MONS_PANDEMONIUM_DEMON
+    if (mon->type == MONS_PANDEMONIUM_LORD
         || mon->type == MONS_LERNAEAN_HYDRA)
     {
         return;

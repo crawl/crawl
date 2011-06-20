@@ -1079,7 +1079,7 @@ bool mons_is_ghost_demon(int mc)
             || mc == MONS_PLAYER_GHOST
             || mc == MONS_PLAYER_ILLUSION
             || mc == MONS_DANCING_WEAPON
-            || mc == MONS_PANDEMONIUM_DEMON
+            || mc == MONS_PANDEMONIUM_LORD
             || mc == MONS_LABORATORY_RAT);
 }
 
@@ -2129,7 +2129,7 @@ void define_monster(monster* mons)
     // _find_description() in command.cc.
     switch (mcls)
     {
-    case MONS_PANDEMONIUM_DEMON:
+    case MONS_PANDEMONIUM_LORD:
     {
         ghost_demon ghost;
         ghost.init_random_demon();

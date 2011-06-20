@@ -1682,8 +1682,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_MOLTEN_GARGOYLE;
 
     // major demons ('&')
-    case MONS_PANDEMONIUM_DEMON:
-        return TILEP_MONS_PANDEMONIUM_DEMON;
+    case MONS_PANDEMONIUM_LORD:
+        return TILEP_MONS_PANDEMONIUM_LORD;
 
     // ball lightning / orb of fire ('*')
     case MONS_BALL_LIGHTNING:
@@ -4728,7 +4728,7 @@ tileidx_t get_clean_map_idx(tileidx_t tile_idx, bool mon_only)
     if (!mon_only && idx >= TILE_CLOUD_FIRE_0 && idx <= TILE_CLOUD_TLOC_ENERGY)
         return 0;
 
-    if (idx >= TILEP_MONS_PANDEMONIUM_DEMON && idx <= TILEP_MONS_TEST_SPAWNER
+    if (idx >= TILEP_MONS_PANDEMONIUM_LORD && idx <= TILEP_MONS_TEST_SPAWNER
         || idx >= TILEP_MCACHE_START)
     {
         return 0;
