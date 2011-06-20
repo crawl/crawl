@@ -1782,7 +1782,7 @@ struct spell_desc
 
 {
     SPELL_SILENCE, "Silence",
-     SPTYP_CHARMS | SPTYP_AIR,
+     SPTYP_HEXES | SPTYP_AIR,
      SPFLAG_AREA,
      5,
      200,

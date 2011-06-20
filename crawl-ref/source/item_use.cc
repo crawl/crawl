@@ -5439,7 +5439,7 @@ void read_scroll(int slot)
     }
 
     case SCR_SILENCE:
-        cast_silence(25);
+        cast_silence(30);
         break;
 
     case SCR_VULNERABILITY:
