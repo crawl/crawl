@@ -3596,6 +3596,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_HASTE:
     case DUR_BERSERK:
     case DUR_ICY_ARMOUR:
+    case DUR_CONDENSATION_SHIELD:
     case DUR_PHASE_SHIFT:
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
