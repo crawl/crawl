@@ -3276,6 +3276,7 @@ int items(bool allow_uniques,
 
     if (mundane)
     {
+        ASSERT(!is_deck(item));
         item.plus    = 0;
         item.plus2   = 0;
         item.special = 0;
