@@ -107,6 +107,16 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
     wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     to_hit          = calc_to_hit();
 
+    if (attacker->atype() == ACT_MONSTER)
+    {
+        mon_attack_def mon_attk = mons_attack_spec(attacker->as_monster(),
+                                               attack_number);
+
+        attk_type       = mon_attk.type;
+        attk_flavour    = mon_attk.flavour;
+        attk_damage     = mon_attk.damage;
+    }
+
     shield = attacker->shield();
     defender_shield = defender ? defender->shield() : defender_shield;
 
@@ -416,11 +426,6 @@ bool melee_attack::handle_phase_hit()
             return (false);
     else
     {
-        // TODO: Remove this when mon_attack_def is generalized to attack_def
-        // or when mon_attack_def is flat our removed
-        mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
-                                               attack_number);
-
         // Slimify does no damage and serves as an on-hit effect, handle it
         if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
             && mon_can_be_slimified(defender->as_monster()))
@@ -443,7 +448,7 @@ bool melee_attack::handle_phase_hit()
             if (attacker->atype() == ACT_PLAYER)
                 player_announce_hit();
             else
-                mons_announce_hit(attk);
+                mons_announce_hit();
 
             if (!handle_phase_damaged())
                 return (false);
@@ -467,7 +472,7 @@ bool melee_attack::handle_phase_hit()
                                              defender->name(DESC_THE).c_str());
             }
             else
-                mons_announce_dud_hit(attk);
+                mons_announce_dud_hit();
         }
 
         // TODO: Remove this, placed here so we can do away with player_attack
@@ -663,9 +668,7 @@ bool melee_attack::attack()
     }
     else
     {
-        mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
-                                               attack_number);
-        adjust_noise(attk);
+        adjust_noise();
 
         handle_noise(defender->pos());
     }
@@ -678,22 +681,22 @@ bool melee_attack::attack()
     return (attack_occurred);
 }
 
-void melee_attack::adjust_noise(mon_attack_def &attk)
+void melee_attack::adjust_noise()
 {
-    if (attk.type == AT_WEAP_ONLY)
+    if (attk_type == AT_WEAP_ONLY)
     {
         int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
         if (weap == NON_ITEM)
-            attk.type = AT_NONE;
+            attk_type = AT_NONE;
         else if (is_range_weapon(mitm[weap]))
-            attk.type = AT_SHOOT;
+            attk_type = AT_SHOOT;
         else
-            attk.type = AT_HIT;
+            attk_type = AT_HIT;
     }
 
     if (weapon == NULL)
     {
-        switch (attk.type)
+        switch (attk_type)
         {
         case AT_HEADBUTT:
         case AT_TENTACLE_SLAP:
@@ -741,7 +744,7 @@ void melee_attack::adjust_noise(mon_attack_def &attk)
             break;
         }
 
-        switch(attk.flavour)
+        switch(attk_flavour)
         {
         case AF_FIRE:
             noise_factor += 50;
@@ -764,7 +767,7 @@ bool melee_attack::monster_attack()
 
 
     const bool chaos_attack = damage_brand == SPWPN_CHAOS
-                              || (attk.flavour == AF_CHAOS
+                              || (attk_flavour == AF_CHAOS
                                   && attacker != defender);
 
     // Make copy of monster before monster_die() resets it.
@@ -776,8 +779,6 @@ bool melee_attack::monster_attack()
 
     if (damage_done > 0)
     {
-        mons_announce_hit(attk);
-
         if (defender == &you)
             practise(EX_MONSTER_WILL_HIT);
 
@@ -804,14 +805,14 @@ bool melee_attack::monster_attack()
         special_damage_message.clear();
         special_damage_flavour = BEAM_NONE;
 
-        if (attacker != defender && attk.type == AT_TRAMPLE)
+        if (attacker != defender && attk_type == AT_TRAMPLE)
             do_knockback();
 
         // Monsters attacking themselves don't get attack flavour.
         // The message sequences look too weird.  Also, stealing
         // attacks aren't handled until after the damage msg.
-        if (attacker != defender && attk.flavour != AF_STEAL)
-            mons_apply_attack_flavour(attk);
+        if (attacker != defender && attk_flavour != AF_STEAL)
+            mons_apply_attack_flavour();
 
         if (needs_message && !special_damage_message.empty())
             mprf("%s", special_damage_message.c_str());
@@ -900,8 +901,8 @@ bool melee_attack::monster_attack()
         if (!attacker->alive())
             return (false);
 
-        if (attk.flavour == AF_STEAL)
-            mons_apply_attack_flavour(attk);
+        if (attk_flavour == AF_STEAL)
+            mons_apply_attack_flavour();
     }
 
     item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
@@ -2821,9 +2822,9 @@ int melee_attack::random_chaos_brand()
     return (brand);
 }
 
-mon_attack_flavour melee_attack::random_chaos_attack_flavour()
+attack_flavour melee_attack::random_chaos_attack_flavour()
 {
-    mon_attack_flavour flavours[] =
+    attack_flavour flavours[] =
         {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON_NASTY, AF_VAMPIRIC, AF_DISTORT,
          AF_CONFUSE, AF_CHAOS};
     return (RANDOM_ELEMENT(flavours));
@@ -3850,7 +3851,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     return (false);
 }
 
-std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
+std::string melee_attack::mons_attack_verb()
 {
     static const char *klown_attack[] =
     {
@@ -3876,10 +3877,10 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "kneecap"
     };
 
-    if (attacker->type == MONS_KILLER_KLOWN && attk.type == AT_HIT)
+    if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
-    if (attk.type == AT_TENTACLE_SLAP
+    if (attk_type == AT_TENTACLE_SLAP
         && (attacker->type == MONS_KRAKEN_TENTACLE
             || attacker->type == MONS_ELDRITCH_TENTACLE))
     {
@@ -3913,12 +3914,12 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "splash"
     };
 
-    ASSERT(attk.type <
+    ASSERT(attk_type <
            static_cast<int>(sizeof(attack_types) / sizeof(const char *)));
-    return (attack_types[attk.type]);
+    return (attack_types[attk_type]);
 }
 
-std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
+std::string melee_attack::mons_attack_desc()
 {
     if (!you.can_see(attacker))
         return ("");
@@ -3941,7 +3942,7 @@ std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
 
         return (result);
     }
-    else if (attk.flavour == AF_REACH
+    else if (attk_flavour == AF_REACH
              && grid_distance(attacker->pos(), defender->pos()) == 2)
     {
         return " from afar";
@@ -3958,58 +3959,58 @@ std::string melee_attack::mons_defender_name()
         return def_name(DESC_THE);
 }
 
-void melee_attack::mons_announce_hit(const mon_attack_def &attk)
+void melee_attack::mons_announce_hit()
 {
     if (needs_message)
     {
         mprf("%s %s %s%s%s%s",
              atk_name(DESC_THE).c_str(),
-             attacker->conj_verb(mons_attack_verb(attk)).c_str(),
+             attacker->conj_verb(mons_attack_verb()).c_str(),
              mons_defender_name().c_str(),
              debug_damage_number().c_str(),
-             mons_attack_desc(attk).c_str(),
+             mons_attack_desc().c_str(),
              attack_strength_punctuation().c_str());
     }
 }
 
-void melee_attack::mons_announce_dud_hit(const mon_attack_def &attk)
+void melee_attack::mons_announce_dud_hit()
 {
     if (needs_message)
     {
         mprf("%s %s %s but does no damage.",
              atk_name(DESC_THE).c_str(),
-             attacker->conj_verb(mons_attack_verb(attk)).c_str(),
+             attacker->conj_verb(mons_attack_verb()).c_str(),
              mons_defender_name().c_str());
     }
 }
 
 // TODO: Remove after monster attack rounds is handled outside of melee_attack
-void melee_attack::mons_set_weapon(const mon_attack_def &attk)
+void melee_attack::mons_set_weapon()
 {
-    weapon = (attk.type == AT_HIT) ? attacker->weapon(attack_number) : NULL;
+    weapon = (attk_type == AT_HIT) ? attacker->weapon(attack_number) : NULL;
     damage_brand = attacker->damage_brand(attack_number);
 }
 
-void melee_attack::mons_do_poison(const mon_attack_def &attk)
+void melee_attack::mons_do_poison()
 {
     if (defender->res_poison() > 0)
         return;
 
-    if (attk.flavour == AF_POISON_NASTY
-        || one_chance_in(15 + 5 * (attk.flavour == AF_POISON ? 1 : 0))
+    if (attk_flavour == AF_POISON_NASTY
+        || one_chance_in(15 + 5 * (attk_flavour == AF_POISON ? 1 : 0))
         || (damage_done > 1
-            && one_chance_in(attk.flavour == AF_POISON ? 4 : 3)))
+            && one_chance_in(attk_flavour == AF_POISON ? 4 : 3)))
     {
         if (needs_message)
         {
             if (defender->atype() == ACT_PLAYER
-                && (attk.type == AT_BITE || attk.type == AT_STING))
+                && (attk_type == AT_BITE || attk_type == AT_STING))
             {
                 if (attacker_visible)
                 {
                     mprf("%s %s was poisonous!",
                          apostrophise(attacker->name(DESC_THE)).c_str(),
-                         mons_attack_verb(attk).c_str());
+                         mons_attack_verb().c_str());
                 }
             }
             else
@@ -4021,11 +4022,11 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
         }
 
         int amount = 1;
-        if (attk.flavour == AF_POISON_NASTY)
+        if (attk_flavour == AF_POISON_NASTY)
             amount++;
-        else if (attk.flavour == AF_POISON_MEDIUM)
+        else if (attk_flavour == AF_POISON_MEDIUM)
             amount += random2(3);
-        else if (attk.flavour == AF_POISON_STRONG)
+        else if (attk_flavour == AF_POISON_STRONG)
             amount += roll_dice(2, 5);
 
         defender->poison(attacker, amount);
@@ -4095,11 +4096,11 @@ void melee_attack::splash_defender_with_acid(int strength)
     }
 }
 
-void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
+void melee_attack::mons_apply_attack_flavour()
 {
     // Most of this is from BWR 4.1.2.
 
-    mon_attack_flavour flavour = attk.flavour;
+    attack_flavour flavour = attk_flavour;
     if (flavour == AF_CHAOS)
         flavour = random_chaos_attack_flavour();
 
@@ -4117,7 +4118,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_POISON_NASTY:
     case AF_POISON_MEDIUM:
     case AF_POISON_STRONG:
-        mons_do_poison(attk);
+        mons_do_poison();
         break;
 
     case AF_POISON_STR:
@@ -4276,7 +4277,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_CONFUSE:
-        if (attk.type == AT_SPORE)
+        if (attk_type == AT_SPORE)
         {
             if (defender->res_poison() > 0)
                 break;
@@ -4303,7 +4304,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_DRAIN_XP:
         if (one_chance_in(30)
             || (damage_done > 5 && coinflip())
-            || (attk.damage == 0 && !one_chance_in(3)))
+            || (attk_damage == 0 && !one_chance_in(3)))
         {
             drain_defender();
         }
@@ -4392,7 +4393,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_HOLY:
 
         if (defender->is_evil() || defender->is_unholy())
-            special_damage = attk.damage * 0.75;
+            special_damage = attk_damage * 0.75;
 
         if (needs_message && special_damage)
         {
@@ -4977,9 +4978,6 @@ int melee_attack::calc_damage()
 {
     if(attacker->atype() == ACT_MONSTER)
     {
-        mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
-                                               attack_number);
-
         int damage = 0;
         int damage_max = 0;
         if (weapon
@@ -5009,8 +5007,8 @@ int melee_attack::calc_damage()
             damage -= 1 + random2(3);
         }
 
-        damage_max += attk.damage;
-        damage     += 1 + random2(attk.damage);
+        damage_max += attk_damage;
+        damage     += 1 + random2(attk_damage);
 
         // Berserk/mighted/frenzied monsters get bonus damage.
         if (attacker->as_monster()->has_ench(ENCH_MIGHT)

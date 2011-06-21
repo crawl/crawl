@@ -35,7 +35,7 @@ enum gender_type
     GENDER_FEMALE,
 };
 
-enum mon_attack_type
+enum attack_type
 {
     AT_NONE,
     AT_HIT,         // Including weapon attacks.
@@ -64,7 +64,7 @@ enum mon_attack_type
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
 };
 
-enum mon_attack_flavour
+enum attack_flavour
 {
     AF_PLAIN,
     AF_ACID,

@@ -11,8 +11,8 @@
 #include "mon-enum.h"
 #include "mon_resist_def.h"
 
-mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour);
-mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav);
+attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour);
+mon_resist_def ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav);
 
 #ifdef USE_TILE
 int tile_offset_for_labrat_colour(uint8_t l_colour);
@@ -36,7 +36,7 @@ public:
     bool see_invis;
     brand_type brand;
     attack_type att_type;
-    mon_attack_flavour att_flav;
+    attack_flavour att_flav;
     mon_resist_def resists;
 
     bool spellcaster, cycle_colours;
@@ -70,7 +70,7 @@ private:
     void add_spells();
     spell_type translate_spell(spell_type playerspell) const;
     void ugly_thing_add_resistance(bool very_ugly,
-                                   mon_attack_flavour u_att_flav);
+                                   attack_flavour u_att_flav);
 };
 
 bool debug_check_ghosts();

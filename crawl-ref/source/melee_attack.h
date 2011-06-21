@@ -117,7 +117,7 @@ private:
     bool attack_warded_off();
 
     /* Output methods */
-    void adjust_noise(mon_attack_def &attk);
+    void adjust_noise();
     void emit_nodmg_hit_message();
     bool attack_shield_blocked(bool verbose);
 
@@ -132,15 +132,15 @@ private:
 private:
     // Monster-attack specific stuff
     bool monster_attack();
-    void mons_apply_attack_flavour(const mon_attack_def &attk);
-    std::string mons_attack_verb(const mon_attack_def &attk);
-    std::string mons_attack_desc(const mon_attack_def &attk);
-    void mons_announce_hit(const mon_attack_def &attk);
-    void mons_announce_dud_hit(const mon_attack_def &attk);
-    void mons_set_weapon(const mon_attack_def &attk);
+    void mons_apply_attack_flavour();
+    std::string mons_attack_verb();
+    std::string mons_attack_desc();
+    void mons_announce_hit();
+    void mons_announce_dud_hit();
+    void mons_set_weapon();
     // TODO: Generalizing do_poison is trivial, but what purpose would it serve
     // when all the player poisoning seems to be handled elsewhere...
-    void mons_do_poison(const mon_attack_def &attk);
+    void mons_do_poison();
     void mons_do_napalm();
     std::string mons_defender_name();
     void wasp_paralyse_defender();
@@ -148,7 +148,7 @@ private:
     void mons_do_spines();
     void mons_do_eyeball_confusion();
 
-    mon_attack_flavour random_chaos_attack_flavour();
+    attack_flavour random_chaos_attack_flavour();
 
     // Added in, were previously static functions in fight.cc, most should
     // be removed and placed in other classes (monster of player, mostly)
