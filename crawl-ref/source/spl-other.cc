@@ -57,7 +57,7 @@ bool cast_sublimation_of_blood(int pow)
 
             mpr("A flood of magical energy pours into your mind!");
 
-            inc_mp(7 + random2(7));
+            inc_mp(5 + random2(2 + pow / 15));
 
             dec_inv_item_quantity(wielded, 1);
 
@@ -76,7 +76,7 @@ bool cast_sublimation_of_blood(int pow)
 
             mpr("A flood of magical energy pours into your mind!");
 
-            inc_mp(7 + random2(7));
+            inc_mp(5 + random2(2 + pow / 15));
 
             remove_oldest_blood_potion(you.inv[wielded]);
             dec_inv_item_quantity(wielded, 1);
