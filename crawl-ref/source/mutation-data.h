@@ -1389,7 +1389,7 @@
    "Your skin blends seamlessly with your surroundings (Stlth).",
    "Your skin perfectly mimics your surroundings (Stlth)."},
 
-  {"Your skin functions as natural camouflage."
+  {"Your skin functions as natural camouflage.",
    "Your natural camouflage becomes more effective.",
    "Your natural camouflage becomes more effective."},
 
