@@ -492,6 +492,13 @@ VISUAL:@The_monster@ disappears for a moment.
 VISUAL:@The_monster@ summons a swarm of flies.
 ## END _hostile_imp_ ##
 %%%%
+_hell_lord_taunt_
+
+@The_monster@ @says@ @to_foe@, "@demon_taunt@"
+
+w:1
+@The_monster@ proclaims, "For the glory of @God@!"
+%%%%
 _demon_taunt_
 
 @The_monster@ @says@ @to_foe@, "@demon_taunt@"
@@ -1626,6 +1633,12 @@ _Agnes_rare_
 @The_monster@ screams, "I hate dirty adventurers like you!" @player_only@
 
 ## END Agnes ##
+%%%%
+############ ANTAEUS ### A titan demonically corrupted into a hell lord.
+Antaeus
+
+@_hell_lord_taunt_@
+## END Antaeus
 %%%%
 ############ AZRAEL ### efreet
 Azrael
@@ -2808,8 +2821,6 @@ w:50
 
 @The_monster@ says, "Are you sure that summoning demons is a good idea?"
 
-@The_monster@ says, "Don't you ever wonder where those demons come from?"
-
 @The_monster@ says, "What's so minor about destruction?"
 
 @The_monster@ says, "Hey, watch where you throw those lightning balls!"
@@ -2817,6 +2828,12 @@ w:50
 @The_monster@ says, "Don't blow yourself up now."
 
 @The_monster@ says, "I hate demons."
+
+@The_monster@ says, "I hate blood."
+
+@The_monster@ says, "I hate suffering."
+
+@The_monster@ says, "I just stubbed my toe. Does that mean I'm cleansed?"
 %%%%
 Sif Muna Donald
 
@@ -3597,7 +3614,7 @@ VISUAL:@The_monster@ twirls @possessive@ moustache.
 # doesn't really work if there are no summons nearby
 #VISUAL:@The_monster@ strokes @possessive@ familiar.
 
-SPELL:@The_monster@ calls on the powers of Hell!
+SPELL:@The_monster@ calls on the powers of darkness!
 
 @The_monster@ brags, "I can call spirits from the vasty deep."
 ## END Eustachio ##
@@ -3839,6 +3856,8 @@ _Grinder_rare_
 @The_monster@ says, "What is the universe for?"
 
 @The_monster@ says, "My boss said I was rubbish. His entrails said otherwise."
+
+@The_monster@ says, "At least @God@ appreciates what I do."
 
 VISUAL:@The_monster@ rolls @possessive@ eyes.
 %%%%
@@ -5618,6 +5637,10 @@ SOUND:@The_monster@ crackles and sizzles.
 default ice statue
 
 VISUAL:@The_monster@ glitters in the dim dungeon light.
+%%%%
+hell lord
+
+@_hell_lord_taunt_@
 %%%%
 imp
 

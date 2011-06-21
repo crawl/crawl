@@ -1142,7 +1142,7 @@ Reading the words on this scroll translocates you to a random position.
 %%%%
 scroll of torment
 
-This scroll calls on the powers of Hell to inflict great pain on any nearby creature - including you!
+This scroll calls on the powers of darkness to inflict great pain on any nearby creature - including you!
 %%%%
 scroll of vorpalise weapon
 

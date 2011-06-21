@@ -1559,9 +1559,14 @@ static int _place_monster_aux(const mgen_data &mg,
     // Mennas belongs to Zin.
     else if (mg.cls == MONS_MENNAS)
         mon->god = GOD_ZIN;
-    // Ignacio belongs to Makhleb.
-    else if (mg.cls == MONS_IGNACIO)
+    // The hell lords, Grinder and Ignacio belong to Makhleb.
+    else if (mons_species(mg.cls) == MONS_HELL_LORD
+             || mg.cls == MONS_ANTAEUS
+             || mg.cls == MONS_GRINDER
+             || mg.cls == MONS_IGNACIO)
+    {
         mon->god = GOD_MAKHLEB;
+    }
     // 1 out of 7 non-priestly orcs are unbelievers.
     else if (mons_genus(mg.cls) == MONS_ORC)
     {
@@ -1577,11 +1582,19 @@ static int _place_monster_aux(const mgen_data &mg,
         else
             mon->god = GOD_XOM;
     }
-    // 6 out of 7 demons in the Abyss belong to Lugonu.
+    // 6 out of 7 demons in the Abyss belong to Lugonu, and 6 out of 7
+    // demons in hell belong to Makhleb.
     else if (mons_class_holiness(mg.cls) == MH_DEMONIC)
     {
         if (mg.level_type == LEVEL_ABYSS && !one_chance_in(7))
             mon->god = GOD_LUGONU;
+        else if (mg.level_type == LEVEL_DUNGEON
+                 && (you.where_are_you == BRANCH_VESTIBULE_OF_HELL
+                     || player_in_hell())
+                 && !one_chance_in(7))
+        {
+            mon->god = GOD_MAKHLEB;
+        }
     }
 
     // Holy monsters need their halo!
