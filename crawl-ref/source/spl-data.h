@@ -878,7 +878,7 @@ struct spell_desc
     SPELL_SUMMON_ICE_BEAST, "Summon Ice Beast",
      SPTYP_ICE | SPTYP_SUMMONING,
      SPFLAG_BATTLE,
-     5,
+     4,
      200,
      -1, -1,
      0,
