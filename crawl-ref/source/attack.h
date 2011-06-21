@@ -3,6 +3,7 @@
 
 #include "artefact.h"
 #include "itemprop-enum.h"
+#include "mon-enum.h"
 
 // Used throughout inheriting classes, define them here for universal access
 const int HIT_WEAK   = 7;
@@ -42,11 +43,20 @@ public:
     bool            unarmed_capable;
     int             ev_margin;
 
+    // TODO: Expand the implementation of attack_type/attack_flavour to be used
+    // by players as well as monsters. It could be a good middle ground for
+    // brands and attack types (presently, players don't really have an attack
+    // type)
+    attack_type     attk_type;
+    attack_flavour  attk_flavour;
+    int             attk_damage;
+
     item_def        *weapon;
     brand_type      damage_brand;
     skill_type      wpn_skill;
     hands_reqd_type hands;
     bool            hand_half_bonus;
+
     // Attacker's shield, stored so we can reference it and determine
     // the attacker's combat effectiveness (staff + shield == bad)
     item_def  *shield;

@@ -448,7 +448,7 @@ static uint8_t _ugly_thing_assign_colour(uint8_t force_colour,
     return (colour);
 }
 
-static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_att_flav)
+static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav)
 {
     switch (u_att_flav)
     {
@@ -471,9 +471,9 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
     return (u_att_flav);
 }
 
-mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
+attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
-    mon_attack_flavour u_att_flav = AF_PLAIN;
+    attack_flavour u_att_flav = AF_PLAIN;
 
     switch (make_low_colour(u_colour))
     {
@@ -589,7 +589,7 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     ugly_thing_add_resistance(true, att_flav);
 }
 
-mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
+mon_resist_def ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
 {
     mon_resist_def resists;
     resists.elec = 0;
@@ -637,7 +637,7 @@ mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
 }
 
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
-                                            mon_attack_flavour u_att_flav)
+                                            attack_flavour u_att_flav)
 {
     resists = ::ugly_thing_resists(very_ugly, u_att_flav);
 }

@@ -3337,7 +3337,7 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
 
     ghost.att_type = static_cast<attack_type>(unmarshallShort(th));
-    ghost.att_flav = static_cast<mon_attack_flavour>(unmarshallShort(th));
+    ghost.att_flav = static_cast<attack_flavour>(unmarshallShort(th));
 
     unmarshallResists(th, ghost.resists);
 

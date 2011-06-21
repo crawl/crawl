@@ -1397,7 +1397,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
     if (attk.flavour == AF_KLOWN)
     {
-        mon_attack_flavour flavours[] =
+        attack_flavour flavours[] =
             {AF_POISON_NASTY, AF_ROT, AF_DRAIN_XP, AF_FIRE, AF_COLD, AF_BLINK};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
@@ -1405,7 +1405,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
     if (attk.flavour == AF_POISON_STAT)
     {
-        mon_attack_flavour flavours[] =
+        attack_flavour flavours[] =
             {AF_POISON_STR, AF_POISON_INT, AF_POISON_DEX};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
@@ -1413,7 +1413,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
     if (attk.flavour == AF_DRAIN_STAT)
     {
-        mon_attack_flavour flavours[] =
+        attack_flavour flavours[] =
             {AF_DRAIN_STR, AF_DRAIN_INT, AF_DRAIN_DEX};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
