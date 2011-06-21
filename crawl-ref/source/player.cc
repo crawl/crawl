@@ -3979,48 +3979,6 @@ bool wearing_amulet(jewellery_type amulet, bool calc_unid, bool ignore_extrinsic
     return (amu.sub_type == amulet && (calc_unid || item_type_known(amu)));
 }
 
-static int _species_exp_mod(species_type species)
-{
-    if (player_genus(GENPC_DRACONIAN, species))
-        return 14;
-    else if (player_genus(GENPC_DWARVEN, species))
-        return 13;
-    switch (species)
-    {
-        case SP_HUMAN:
-        case SP_HALFLING:
-        case SP_HILL_ORC:
-        case SP_KOBOLD:
-            return 10;
-        case SP_OGRE:
-            return 11;
-        case SP_SLUDGE_ELF:
-        case SP_NAGA:
-        case SP_GHOUL:
-        case SP_MERFOLK:
-        case SP_OCTOPODE:
-            return 12;
-        case SP_SPRIGGAN:
-        case SP_KENKU:
-            return 13;
-        case SP_DEEP_ELF:
-        case SP_CENTAUR:
-        case SP_MINOTAUR:
-        case SP_MUMMY:
-        case SP_FELID:
-            return 14;
-        case SP_HIGH_ELF:
-        case SP_VAMPIRE:
-        case SP_TROLL:
-        case SP_DEMONSPAWN:
-            return 15;
-        case SP_DEMIGOD:
-            return 16;
-        default:
-            return 0;
-    }
-}
-
 unsigned int exp_needed(int lev)
 {
     unsigned int level = 0;
@@ -4100,7 +4058,7 @@ unsigned int exp_needed(int lev)
         break;
     }
 
-    return ((level - 1) * _species_exp_mod(you.species) / 10);
+    return ((level - 1) * species_exp_modifier(you.species) / 10);
 }
 
 // returns bonuses from rings of slaying, etc.

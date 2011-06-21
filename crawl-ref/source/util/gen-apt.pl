@@ -9,10 +9,10 @@
 use strict;
 use warnings;
 
-my ($target, $template, $expmodfile, $skillfile) = @ARGV;
+my ($target, $template, $modfile, $skillfile) = @ARGV;
 die "Usage: $0 <target> <template> player.cc skills2.cc\n"
-  unless ($expmodfile && $skillfile && $template && $target && -r $template
-          && -r $skillfile && -r $expmodfile);
+  unless ($modfile && $skillfile && $template && $target && -r $template
+          && -r $skillfile && -r $modfile);
 
 my %ABBR_SKILL;
 my %SKILL_ABBR;
@@ -25,7 +25,7 @@ main();
 sub main {
   load_skill_abbreviations($template);
   load_aptitudes($skillfile);
-  load_expmods($expmodfile);
+  load_mods($modfile);
   create_aptitude_file($template, $target);
 }
 
@@ -115,7 +115,7 @@ sub aptitude_table {
     $line .= fix_draco_species($sp, \$seen_draconian_length);
 
     for my $abbr (@skill_abbrevs) {
-      my $skill = find_skill($sp, abbr_to_skill($abbr));
+      my $skill = find_skill($sp, abbr_to_skill($abbr)) || 0;
 
       my $pos = index($headers, " $abbr");
       die "Could not find $abbr in $headers?\n" if $pos == -1;
@@ -125,11 +125,10 @@ sub aptitude_table {
       }
 
       my $cwidth = length($abbr);
-      $cwidth = 3 if $cwidth < 3;
+      $cwidth = 3 if $abbr eq "UC"; #$cwidth < 3;
       my $fmt = "%+*d";
-      if ($skill == 0 || $abbr eq "Exp") {
-          $fmt = "%*d";
-      }
+      $fmt = "%*d" if $skill == 0;
+      $fmt = "%*d0", $cwidth = 2 if $abbr eq "Exp";
       $line .= sprintf($fmt, $cwidth, $skill);
     }
     $text .= "$line\n";
@@ -141,7 +140,6 @@ sub skill_name {
   my $text = shift;
   $text =~ tr/a-zA-Z / /c;
   $text =~ s/ +/ /g;
-  $text =~ s/s$//i;
   propercase_string($text)
 }
 
@@ -210,41 +208,36 @@ sub load_aptitudes {
     unless %SPECIES_SKILLS;
 }
 
-sub species_for_genus {
-  my $genus = lc(shift);
-  $genus = 'dwarf' if $genus eq 'dwarven';
-  grep(index(lc($_), $genus) != -1, @SPECIES)
-}
+sub load_mods {
+  my $modfile = shift;
+  open my $inf, '<', $modfile or die "Can't read $modfile: $!\n";
 
-sub load_expmods {
-  my $expmodfile = shift;
-  open my $inf, '<', $expmodfile or die "Can't read $expmodfile: $!\n";
-
-  my $inexpmod;
+  my $table;
 
   my @species;
   while (<$inf>) {
-    $inexpmod = 1 if /static.*species_exp_mod/;
-    next unless $inexpmod;
+    $table = $1 if m{// table: ([A-Za-z ]+)$};
+    next unless $table;
 
-    if (/GENPC_(\w+)/) {
-      push @species, species_for_genus($1);
-    }
     if (/SP_(\w+)/) {
       push @species, propercase_string(fix_underscores($1));
     }
 
-    if (/return/ && /(\d+)/) {
-      my $exp = $1;
-      last if $exp eq '0';
-      die "$expmodfile:$.: No species associated with xp mod $1\n"
-        unless @species;
+    if (/return/ && /(-?\d+)/) {
+      my $mod = $1;
+      #die "$modfile:$.: No species associated with $table mod $1\n"
+      #  unless @species;
       for my $sp (@species) {
-        $SPECIES_SKILLS{$sp}{Experience} = $1 * 10;
+        $SPECIES_SKILLS{$sp}{$table} = $1;
       }
       @species = ();
     }
+
+    undef $table if /}/;
   }
   close $inf;
-  die "Could not find species exp mods in $expmodfile\n" unless $inexpmod;
+  for ("Experience", "Hit Points", "Magic Points")
+  {
+      die "Can't find table: $_ in $modfile\n" unless $SPECIES_SKILLS{Spriggan}{$_};
+  }
 }
