@@ -527,7 +527,6 @@ int species_mp_modifier(species_type species)
     switch(species) // table: Magic Points
     {
     case SP_TROLL:
-        return -3;
     case SP_MINOTAUR:
         return -2;
     case SP_MOUNTAIN_DWARF:
@@ -541,11 +540,10 @@ int species_mp_modifier(species_type species)
         return 1;
     case SP_FELID:
     case SP_HIGH_ELF:
-        return 2;
     case SP_DEMIGOD:
-        return 3;
+        return 2;
     case SP_DEEP_ELF:
     case SP_SPRIGGAN:
-        return 4;
+        return 3;
     }
 }

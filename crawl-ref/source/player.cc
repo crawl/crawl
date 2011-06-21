@@ -4470,33 +4470,10 @@ int get_real_hp(bool trans, bool rotted)
     return (hitp);
 }
 
-static int _racial_mp()
-{
-    switch (species_mp_modifier(you.species))
-    {
-    case -3:
-        return -(you.experience_level - 1) * 2 / 3;
-    case -2:
-        return -you.experience_level / 2;
-    case -1:
-        return -you.experience_level / 3;
-    default:
-        return 0;
-    case +1:
-        return you.experience_level / 3;
-    case +2:
-        return you.experience_level / 2;
-    case +3:
-        return you.experience_level * 2 / 3;
-    case +4:
-        return you.experience_level - 1;
-    }
-}
-
 int get_real_mp(bool include_items)
 {
     int enp = you.experience_level + you.mp_max_perm;
-    enp += _racial_mp();
+    enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
     int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
     int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
