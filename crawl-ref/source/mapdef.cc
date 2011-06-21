@@ -4575,10 +4575,12 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
 }
 
 // Strips the first word from s and returns it.
-static std::string _get_and_discard_word(std::string* s) {
+static std::string _get_and_discard_word(std::string* s)
+{
     std::string result;
     const size_t spaceloc = s->find(' ');
-    if (spaceloc == std::string::npos) {
+    if (spaceloc == std::string::npos)
+    {
         result = *s;
         s->clear();
     }
@@ -4591,7 +4593,8 @@ static std::string _get_and_discard_word(std::string* s) {
     return result;
 }
 
-static deck_rarity_type _rarity_string_to_rarity(const std::string& s) {
+static deck_rarity_type _rarity_string_to_rarity(const std::string& s)
+{
     if (s == "common")    return DECK_RARITY_COMMON;
     if (s == "plain")     return DECK_RARITY_COMMON; // synonym
     if (s == "rare")      return DECK_RARITY_RARE;
@@ -4601,7 +4604,8 @@ static deck_rarity_type _rarity_string_to_rarity(const std::string& s) {
     return DECK_RARITY_COMMON;
 }
 
-static misc_item_type _deck_type_string_to_subtype(const std::string& s) {
+static misc_item_type _deck_type_string_to_subtype(const std::string& s)
+{
     if (s == "escape")      return MISC_DECK_OF_ESCAPE;
     if (s == "destruction") return MISC_DECK_OF_DESTRUCTION;
     if (s == "dungeons")    return MISC_DECK_OF_DUNGEONS;
@@ -4657,9 +4661,7 @@ void item_list::build_deck_spec(std::string s, item_spec* spec)
         word = _get_and_discard_word(&s);
     }
     else
-    {
         spec->item_special = random_deck_rarity();
-    }
 
     // Error checking.
     if (word != "deck")
@@ -4684,9 +4686,7 @@ void item_list::build_deck_spec(std::string s, item_spec* spec)
         spec->sub_type = sub_type;
     }
     else
-    {
         spec->sub_type = _random_deck_subtype();
-    }
 }
 
 item_spec item_list::parse_single_spec(std::string s)
@@ -5432,9 +5432,12 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
 
     bool use_all = strip_tag(s, "use_all");
 
-    std::string shop_name = replace_all_of(strip_tag_prefix(s, "name:"), "_", " ");
-    std::string shop_type_name = replace_all_of(strip_tag_prefix(s, "type:"), "_", " ");
-    std::string shop_suffix_name = replace_all_of(strip_tag_prefix(s, "suffix:"), "_", " ");
+    std::string shop_name = replace_all_of(strip_tag_prefix(s, "name:"),
+                                           "_", " ");
+    std::string shop_type_name = replace_all_of(strip_tag_prefix(s, "type:"),
+                                                "_", " ");
+    std::string shop_suffix_name = replace_all_of(strip_tag_prefix(s,
+                                                  "suffix:"), "_", " ");
 
     int num_items = std::min(20, strip_number_tag(s, "count:"));
     if (num_items == TAG_UNFOUND)
@@ -5470,7 +5473,9 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
     }
 
     feature_spec fspec(-1, weight);
-    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name, shop_type_name, shop_suffix_name, greed, num_items, use_all));
+    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name,
+                                   shop_type_name, shop_suffix_name, greed,
+                                   num_items, use_all));
     fspec.shop->items = items;
     return (fspec);
 }

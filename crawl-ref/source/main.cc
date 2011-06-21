@@ -819,13 +819,14 @@ static void _start_running(int dir, int mode)
     if (Hints.hints_events[HINT_SHIFT_RUN] && mode == RMODE_START)
         Hints.hints_events[HINT_SHIFT_RUN] = false;
 
-    if (!i_feel_safe(true)) {
+    if (!i_feel_safe(true))
         return;
-    }
 
     coord_def next_pos = you.pos() + Compass[dir];
-    for (adjacent_iterator ai(next_pos); ai; ++ai) {
-        if (env.grid(*ai) == DNGN_SLIMY_WALL) {
+    for (adjacent_iterator ai(next_pos); ai; ++ai)
+    {
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+        {
             mpr("You're about to run into the slime covered wall!",
                 MSGCH_WARN);
             return;
