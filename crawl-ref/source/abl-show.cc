@@ -281,8 +281,8 @@ static const ability_def Ability_List[] =
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
       1, 0, 0, 0, ABFLAG_PERMANENT_MP },
 
-    // EVOKE abilities use Evocations and come from items:
-    // Mapping, Teleportation, and Blink can also come from mutations
+    // EVOKE abilities use Evocations and come from items.
+    // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above).  The off items
     // below are labeled EVOKE because they only work now if the
     // player has an item with the evocable power (not just because
