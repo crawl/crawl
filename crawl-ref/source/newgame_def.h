@@ -3,16 +3,6 @@
 
 #include "itemprop-enum.h"
 
-enum startup_book_type
-{
-    SBT_FIRE,
-    SBT_COLD,
-    SBT_SUMM,
-    SBT_NONE,
-    SBT_RANDOM,
-    SBT_VIABLE,
-};
-
 enum startup_wand_type
 {
     SWT_ENSLAVEMENT,
@@ -46,7 +36,6 @@ struct newgame_def
     job_type job;
 
     weapon_type weapon;
-    startup_book_type book;
     god_type religion;
     startup_wand_type wand;
 

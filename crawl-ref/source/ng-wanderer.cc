@@ -298,18 +298,15 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_CONJURATIONS:
-        switch (random2(4))
+        switch (random2(3))
         {
         case 0:
             book_type = BOOK_MINOR_MAGIC;
             break;
         case 1:
-            book_type = BOOK_CONJURATIONS_I;
-            break;
-        case 2:
             book_type = BOOK_CONJURATIONS_II;
             break;
-        case 3:
+        case 2:
             book_type = BOOK_YOUNG_POISONERS;
             break;
         }
@@ -351,13 +348,14 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_FIRE_MAGIC:
-        switch (random2(2))
+        switch (random2(3))
         {
         case 0:
+        case 1:
             book_type = BOOK_FLAMES;
             break;
-        case 1:
-            book_type = BOOK_CONJURATIONS_I;
+        case 2:
+            book_type = BOOK_MINOR_MAGIC;
             break;
         }
         break;
@@ -375,7 +373,15 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_AIR_MAGIC:
-        book_type = BOOK_AIR;
+        switch (random2(2))
+        {
+        case 0:
+            book_type = BOOK_AIR;
+            break;
+        case 1:
+            book_type = BOOK_CONJURATIONS_II;
+            break;
+        }
         break;
 
     case SK_EARTH_MAGIC:

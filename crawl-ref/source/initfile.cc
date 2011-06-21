@@ -125,20 +125,6 @@ std::string channel_to_str(int channel)
     return message_channel_names[channel];
 }
 
-static startup_book_type _str_to_book(const std::string& str)
-{
-    if (str == "flame" || str == "fire")
-        return (SBT_FIRE);
-    if (str == "frost" || str == "cold" || str == "ice")
-        return (SBT_COLD);
-    if (str == "random")
-        return (SBT_RANDOM);
-    if (str == "viable")
-        return (SBT_VIABLE);
-
-    return (SBT_NONE);
-}
-
 static weapon_type _str_to_weapon(const std::string &str)
 {
     if (str == "shortsword" || str == "short sword")
@@ -1436,14 +1422,6 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
     if (prefs.religion != GOD_NO_GOD)
         fprintf(f, "religion = %s\n", god_name(prefs.religion).c_str());
-    if (prefs.book != SBT_NONE)
-    {
-        fprintf(f, "book = %s\n",
-                prefs.book == SBT_FIRE ? "fire" :
-                prefs.book == SBT_COLD ? "cold" :
-                prefs.book == SBT_RANDOM ? "random" :
-                "viable");
-    }
     if (prefs.wand != SWT_NO_SELECTION)
         fprintf(f, "wand = %s\n", _wand_to_str(prefs.wand).c_str());
     fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
@@ -2378,11 +2356,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // Choose this weapon for backgrounds that get choice.
         game.weapon = _str_to_weapon(field);
-    }
-    else if (key == "book")
-    {
-        // Choose this book for backgrounds that get choice.
-        game.book = _str_to_book(field);
     }
     else if (key == "wand")
     {

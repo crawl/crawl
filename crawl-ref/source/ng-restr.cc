@@ -601,45 +601,6 @@ bool is_good_combination(species_type spc, job_type job, bool good)
     return (restrict != CC_BANNED);
 }
 
-// Is the given book restricted for the character defined by ng?
-// Only uses ng.species.
-char_choice_restriction book_restriction(startup_book_type booktype,
-                                         const newgame_def &ng)
-{
-    ASSERT(is_valid_species(ng.species));
-    switch (booktype)
-    {
-        case SBT_FIRE: // Fire/Earth book
-            switch (ng.species)
-        {
-            case SP_HIGH_ELF:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_VAMPIRE:
-            case SP_KENKU:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
-        }
-            break;
-
-        case SBT_COLD: // Ice/Air book
-            switch (ng.species)
-        {
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
-        }
-            break;
-
-        default:
-            return (CC_UNRESTRICTED);
-    }
-}
-
 // Is the given god restricted for the character defined by ng?
 // Only uses ng.species and ng.job.
 char_choice_restriction weapon_restriction(weapon_type wpn,
