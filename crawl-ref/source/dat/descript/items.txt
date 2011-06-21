@@ -257,10 +257,6 @@ book of power
 
 A book of magic spells.
 %%%%
-book of practical magic
-
-A book of magic spells.
-%%%%
 book of spatial translocations
 
 A book of magic spells.
@@ -294,10 +290,6 @@ book of the warp
 A book of magic spells.
 %%%%
 book of transfigurations
-
-A book of magic spells.
-%%%%
-book of tukima
 
 A book of magic spells.
 %%%%
