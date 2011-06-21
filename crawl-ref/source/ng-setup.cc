@@ -1095,9 +1095,7 @@ static void _give_species_bonus_mp()
     switch (you.species)
     {
     case SP_VAMPIRE:
-    case SP_SPRIGGAN:
     case SP_DEMIGOD:
-    case SP_DEEP_ELF:
         inc_max_mp(1);
         break;
 
