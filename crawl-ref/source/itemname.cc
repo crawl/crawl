@@ -856,8 +856,8 @@ static const char* deck_rarity_name(deck_rarity_type rarity)
     case DECK_RARITY_COMMON:    return "plain";
     case DECK_RARITY_RARE:      return "ornate";
     case DECK_RARITY_LEGENDARY: return "legendary";
+    default:                    return "buggy rarity";
     }
-    return "buggy rarity";
 }
 
 static const char* misc_type_name(int type, bool known)
@@ -3328,6 +3328,7 @@ void init_item_name_cache()
             if (is_deck(item))
             {
                 item.plus = 1;
+                item.special = DECK_RARITY_COMMON;
                 init_deck(item);
             }
             std::string name = item.name(DESC_DBNAME, true, true);

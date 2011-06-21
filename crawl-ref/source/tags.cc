@@ -2390,6 +2390,10 @@ void unmarshallItem(reader &th, item_def &item)
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_DECK_RARITY && is_deck(item))
+        item.special++;
+#endif
     item.quantity    = unmarshallShort(th);
     item.colour      = unmarshallUByte(th);
     item.rnd         = unmarshallUByte(th);

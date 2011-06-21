@@ -3066,7 +3066,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 }
 
-static void _generate_misc_item(item_def& item, int force_type, int item_race)
+static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -3099,7 +3099,10 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
     if (is_deck(item))
     {
         item.plus = 4 + random2(10);
-        item.special = random_deck_rarity();
+        if (force_ego >= DECK_RARITY_COMMON && force_ego <= DECK_RARITY_LEGENDARY)
+            item.special = force_ego;
+        else
+            item.special = random_deck_rarity();
         init_deck(item);
     }
 }
@@ -3128,8 +3131,12 @@ int items(bool allow_uniques,
           bool mundane)            // no plusses
 {
     ASSERT(force_ego <= 0
-           || force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
-           || force_class == OBJ_MISSILES);
+           || force_class == OBJ_WEAPONS
+           || force_class == OBJ_ARMOUR
+           || force_class == OBJ_MISSILES
+           || force_class == OBJ_MISCELLANY
+              && force_type >= MISC_FIRST_DECK
+              && force_type <= MISC_LAST_DECK);
 
     // Find an empty slot for the item (with culling if required).
     int p = get_item_slot(10);
@@ -3261,7 +3268,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_MISCELLANY:
-        _generate_misc_item(item, force_type, item_race);
+        _generate_misc_item(item, force_type, force_ego);
         break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}
