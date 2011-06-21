@@ -119,11 +119,11 @@ Something weaves an illusion!
 %%%%
 Symbol of Torment cast
 
-@The_monster@ calls on the powers of Hell!
+@The_monster@ calls on the powers of darkness!
 %%%%
 unseen Symbol of Torment cast
 
-@The_something@ calls on the powers of Hell!
+@The_something@ calls on the powers of darkness!
 %%%%
 Holy Word cast
 
