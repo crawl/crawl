@@ -261,7 +261,7 @@ ignacio MONS_IGNACIO
 %sdir dc-mon/demons
 
 # type '2' demons
-beast MONS_BEAST
+hell_beast MONS_HELL_BEAST
 ice_devil MONS_ICE_DEVIL
 lorocyproca MONS_LOROCYPROCA
 reaper MONS_REAPER

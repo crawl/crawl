@@ -4832,10 +4832,10 @@ static monsterentry mondata[] = {
 // reaper etc. ('2')
 
 {   // with randomised stats
-    MONS_BEAST, '2', BROWN, "beast",
+    MONS_HELL_BEAST, '2', BROWN, "hell beast",
     M_FIGHTER,
     MR_NO_FLAGS,
-    0, 10, MONS_BEAST, MONS_BEAST, MH_DEMONIC, -3,
+    0, 10, MONS_HELL_BEAST, MONS_HELL_BEAST, MH_DEMONIC, -3,
     { {AT_BITE, AF_PLAIN, 28}, {AT_TRAMPLE, AF_PLAIN, 20}, AT_NO_ATK,
        AT_NO_ATK },
     { 7, 9, 6, 0 },

@@ -5701,7 +5701,7 @@ void monster::calc_speed()
     case MONS_ABOMINATION_LARGE:
         speed = 6 + random2avg(7, 2);
         break;
-    case MONS_BEAST:
+    case MONS_HELL_BEAST:
         speed = 10 + random2(8);
     default:
         break;

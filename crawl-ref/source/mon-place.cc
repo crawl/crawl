@@ -3646,7 +3646,7 @@ monster_type summon_any_demon(demon_class_type dct)
                (temp_rand > 365)  ? MONS_HAIRY_DEVIL :   //  1.97%
                (temp_rand > 286)  ? MONS_ICE_DEVIL :     //  1.97%
                (temp_rand > 207)  ? MONS_BLUE_DEVIL :    //  1.97%
-               (temp_rand > 128)  ? MONS_BEAST :         //  1.97%
+               (temp_rand > 128)  ? MONS_HELL_BEAST :    //  1.97%
                (temp_rand > 49)   ? MONS_IRON_DEVIL      //  1.97%
                                   : MONS_SUN_DEMON);     //  1.22%
         break;
