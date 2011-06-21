@@ -307,7 +307,7 @@ A book of magic spells, filled with sigils for binding the dead.
 %%%%
 book of war chants
 
-A book of magic spells.
+A book of spells helpful for a warrior. The versions contained here have a musical form, following the traditions of fighting skalds. Functionally, though, they work the same as spells whose magic words are merely spoken.
 %%%%
 book of wizardry
 
