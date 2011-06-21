@@ -534,7 +534,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         this->shoot_ammo(triggerer, trig_knows);
     else switch (this->type)
     {
-    case TRAP_GOLUBRIA: {
+    case TRAP_GOLUBRIA:
+    {
         coord_def to = p;
         if (_find_other_passage_side(to))
         {

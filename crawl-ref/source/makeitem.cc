@@ -3104,12 +3104,13 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
     }
 }
 
-deck_rarity_type random_deck_rarity() {
-  return static_cast<deck_rarity_type>
-    (random_choose_weighted(8, DECK_RARITY_LEGENDARY,
-                            20, DECK_RARITY_RARE,
-                            72, DECK_RARITY_COMMON,
-                            0));
+deck_rarity_type random_deck_rarity()
+{
+    return static_cast<deck_rarity_type>
+        (random_choose_weighted(8, DECK_RARITY_LEGENDARY,
+                                20, DECK_RARITY_RARE,
+                                72, DECK_RARITY_COMMON,
+                                0));
 }
 
 
