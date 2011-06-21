@@ -363,10 +363,10 @@ static void _butterfly_wave(int power)
     _zotdef_danger_msg("You feel a sudden sense of peace!");
 }
 
-static void _beast_wave(int power)
+static void _hell_beast_wave(int power)
 {
-    wave_name("BEAST WAVE");
-    monster_type bst[] = {MONS_BEAST, END};
+    wave_name("HELL BEAST WAVE");
+    monster_type bst[] = {MONS_HELL_BEAST, END};
     _zotdef_fill_from_list(bst, 0, power); // full
     _zotdef_danger_msg("A hideous howling noise can be heard in the distance!");
 }
@@ -506,7 +506,7 @@ static void _zotdef_set_special_wave(int power)
             case 8: wave_fn = _golem_wave; wpow = 22; break;
             case 9: wave_fn = _human_wave; wpow = 12; break;
             case 10: wave_fn = _butterfly_wave; wpow = 1; break;
-            case 11: wave_fn = _beast_wave; wpow = 12; break;
+            case 11: wave_fn = _hell_beast_wave; wpow = 12; break;
             case 12: wave_fn = _frog_wave; wpow = 4; break;
             case 13: wave_fn = _bear_wave; wpow = 6; break;
             case 14: wave_fn = _wraith_wave; wpow = 8; break;

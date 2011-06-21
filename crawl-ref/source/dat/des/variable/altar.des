@@ -479,7 +479,7 @@ ENDMAP
 NAME:  lemuel_hellish_altar
 DEPTH: D:2-21, Crypt, Geh
 TAGS:  no_monster_gen
-MONS:  iron devil/orange demon, beast/rotting devil, lemure/iron imp, hellion
+MONS:  iron devil/orange demon, hell beast/rotting devil, lemure/iron imp, hellion
 SUBST: 2 = 23
 SUBST: 2 = 12
 SUBST: 3 = 3L

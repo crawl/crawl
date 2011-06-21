@@ -2960,7 +2960,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_BEAST:       // Geryon
         create_monster(
-            mgen_data(MONS_BEAST, SAME_ATTITUDE(mons), mons,
+            mgen_data(MONS_HELL_BEAST, SAME_ATTITUDE(mons), mons,
                       4, spell_cast, mons->pos(), mons->foe, 0, god));
         return;
 

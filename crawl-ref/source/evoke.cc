@@ -238,7 +238,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
     {
         mpr("You produce a hideous howling noise!", MSGCH_SOUND);
         create_monster(
-            mgen_data::hostile_at(MONS_BEAST, "the horn of Geryon",
+            mgen_data::hostile_at(MONS_HELL_BEAST, "the horn of Geryon",
                 true, 4, 0, you.pos()));
     }
     return (rc);

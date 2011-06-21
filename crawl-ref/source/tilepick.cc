@@ -1609,8 +1609,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_CHAOS_SPAWN;
 
     // '2' demon
-    case MONS_BEAST:
-        return TILEP_MONS_BEAST;
+    case MONS_HELL_BEAST:
+        return TILEP_MONS_HELL_BEAST;
     case MONS_SUN_DEMON:
         return TILEP_MONS_SUN_DEMON;
     case MONS_REAPER:
