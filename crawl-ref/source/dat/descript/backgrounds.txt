@@ -29,7 +29,7 @@ Chaos Knights are playthings of the unpredictable Xom, and are subject to the go
 %%%%
 Conjurer
 
-Conjurers confront problems with damaging spells. They can choose whether they want their destruction to be fire or ice flavoured.
+Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
 Crusader
 

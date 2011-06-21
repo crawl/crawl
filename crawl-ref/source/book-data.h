@@ -31,7 +31,6 @@
     SPELL_MEPHITIC_CLOUD,
     SPELL_NO_SPELL,
 },
-#endif
 
 {   // Book of Conjurations I - Fire and Earth
     SPELL_MAGIC_DART,
@@ -43,6 +42,7 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
+#endif
 
 {   // Book of Conjurations II - Air and Ice
     SPELL_MAGIC_DART,

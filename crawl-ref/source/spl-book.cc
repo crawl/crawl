@@ -243,7 +243,6 @@ int book_rarity(uint8_t which_book)
     case BOOK_MALEDICT:
         return 2;
 
-    case BOOK_CONJURATIONS_I:
     case BOOK_CONJURATIONS_II:
     case BOOK_NECROMANCY:
     case BOOK_CALLINGS:
@@ -313,6 +312,7 @@ int book_rarity(uint8_t which_book)
 #if TAG_MAJOR_VERSION == 32
     case BOOK_MINOR_MAGIC_II:
     case BOOK_MINOR_MAGIC_III:
+    case BOOK_CONJURATIONS_I:
 #endif
        return 100;
 
@@ -455,13 +455,6 @@ void mark_had_book(int booktype)
     ASSERT(booktype >= 0 && booktype <= MAX_FIXED_BOOK);
 
     you.had_book[booktype] = true;
-
-    if (booktype == BOOK_CONJURATIONS_I
-        || booktype == BOOK_CONJURATIONS_II)
-    {
-        you.had_book[BOOK_CONJURATIONS_I]  = true;
-        you.had_book[BOOK_CONJURATIONS_II] = true;
-    }
 }
 
 void inscribe_book_highlevel(item_def &book)

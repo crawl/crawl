@@ -14,7 +14,7 @@ The contents of this text are:
 0-c     Options and how to set them.
 0-d     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, weapon, book, wand,
+                name, remember_name, weapon, wand,
                 religion,
                 species, background, random_pick, good_random,
                 restart_after_game
@@ -223,7 +223,6 @@ are as follows:
    clear_messages      = true
    auto_list           = true
    weapon              = hand axe, for Berserkers
-   book                = random, for Conjurers
 and, for Tiles,
    tile_tag_pref       = tutorial
 
@@ -279,10 +278,6 @@ weapon = (short sword | falchion | hand axe | spear | mace | trident
         fighters and gladiators, and unarmed is restricted to races with
         claws. The standard weapon prompt will be shown if an illegal choice
         for the selected background is specified.
-
-book = (flame | fire | ice | cold | random)
-        Conjurers can choose their starting spellbook. Note flame=fire and
-        ice=cold.
 
 wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
         Artificers can start with either a wand of random effects and another
