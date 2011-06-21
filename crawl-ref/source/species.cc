@@ -427,9 +427,59 @@ bool is_valid_species(species_type species)
     return (species >= 0 && species < NUM_SPECIES);
 }
 
+int species_exp_modifier(species_type species)
+{
+    switch (species) // table: Experience
+    {
+    case SP_HUMAN:
+    case SP_HALFLING:
+    case SP_HILL_ORC:
+    case SP_KOBOLD:
+        return 10;
+    case SP_OGRE:
+        return 11;
+    case SP_SLUDGE_ELF:
+    case SP_NAGA:
+    case SP_GHOUL:
+    case SP_MERFOLK:
+    case SP_OCTOPODE:
+        return 12;
+    case SP_SPRIGGAN:
+    case SP_KENKU:
+    case SP_MOUNTAIN_DWARF:
+    case SP_DEEP_DWARF:
+        return 13;
+    case SP_BASE_DRACONIAN:
+    case SP_RED_DRACONIAN:
+    case SP_WHITE_DRACONIAN:
+    case SP_GREEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
+    case SP_GREY_DRACONIAN:
+    case SP_BLACK_DRACONIAN:
+    case SP_PURPLE_DRACONIAN:
+    case SP_MOTTLED_DRACONIAN:
+    case SP_PALE_DRACONIAN:
+    case SP_DEEP_ELF:
+    case SP_CENTAUR:
+    case SP_MINOTAUR:
+    case SP_MUMMY:
+    case SP_FELID:
+        return 14;
+    case SP_HIGH_ELF:
+    case SP_VAMPIRE:
+    case SP_TROLL:
+    case SP_DEMONSPAWN:
+        return 15;
+    case SP_DEMIGOD:
+        return 16;
+    default:
+        return 0;
+    }
+}
+
 int species_hp_modifier(species_type species)
 {
-    switch (species)
+    switch (species) // table: Hit Points
     {
     case SP_FELID:
         return -4;
@@ -474,7 +524,7 @@ int species_hp_modifier(species_type species)
 
 int species_mp_modifier(species_type species)
 {
-    switch(species)
+    switch(species) // table: Magic Points
     {
     case SP_TROLL:
         return -3;
