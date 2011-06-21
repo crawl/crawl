@@ -505,18 +505,11 @@ void cast_condensation_shield(int pow)
     else
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
             mpr("The disc of vapour around you crackles some more.");
-            you.increase_duration(DUR_CONDENSATION_SHIELD,
-                                  5 + roll_dice(2,3), 30);
-        }
         else
-        {
             mpr("A crackling disc of dense vapour forms in the air!");
-            you.increase_duration(DUR_CONDENSATION_SHIELD,
-                                  10 + roll_dice(2, pow / 5), 30);
-            you.redraw_armour_class = true;
-        }
+        you.increase_duration(DUR_CONDENSATION_SHIELD, 15 + random2(pow), 40);
+        you.redraw_armour_class = true;
     }
 }
 

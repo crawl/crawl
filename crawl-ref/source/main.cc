@@ -2421,8 +2421,13 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
 
-    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD, delay))
-        remove_condensation_shield();
+    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD, delay,
+                              "Your icy shield evaporates.",
+                              coinflip(),
+                              "Your icy shield starts to melt."))
+    {
+        you.redraw_armour_class = true;
+    }
 
     if (_decrement_a_duration(DUR_MAGIC_SHIELD, delay,
                               "Your magical shield disappears."))
