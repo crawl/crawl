@@ -762,17 +762,9 @@ void melee_attack::adjust_noise()
 
 bool melee_attack::monster_attack()
 {
-    const bool was_delayed = you_are_delayed();
-    monster* def_copy = NULL;
-
-
     const bool chaos_attack = damage_brand == SPWPN_CHAOS
                               || (attk_flavour == AF_CHAOS
                                   && attacker != defender);
-
-    // Make copy of monster before monster_die() resets it.
-    if (chaos_attack && defender->atype() == ACT_MONSTER && !def_copy)
-        def_copy = new monster(*defender->as_monster());
 
     if (check_unrand_effects())
         return (false);
@@ -817,8 +809,7 @@ bool melee_attack::monster_attack()
         if (needs_message && !special_damage_message.empty())
             mprf("%s", special_damage_message.c_str());
 
-        // Defender banished.  Bail before chaos_killed_defender()
-        // is called, since the defender is still alive in the
+        // Defender banished.  Bail since the defender is still alive in the
         // Abyss.
         if (defender->is_banished())
         {
@@ -834,9 +825,6 @@ bool melee_attack::monster_attack()
 
         if (!defender->alive())
         {
-            if (chaos_attack && defender->atype() == ACT_MONSTER)
-                chaos_killed_defender(def_copy);
-
             if (chaos_attack && attacker->alive())
                 chaos_affects_attacker();
 
@@ -874,9 +862,6 @@ bool melee_attack::monster_attack()
 
         if (!defender->alive())
         {
-            if (chaos_attack && defender->atype() == ACT_MONSTER)
-                chaos_killed_defender(def_copy);
-
             if (chaos_attack && attacker->alive())
                 chaos_affects_attacker();
 
@@ -915,12 +900,9 @@ bool melee_attack::monster_attack()
     // Handle noise from last round.
     handle_noise(defender->pos());
 
-    if (def_copy)
-        delete def_copy;
-
     // Invisible monster might have interrupted butchering.
-    if (was_delayed && defender->atype() == ACT_PLAYER && perceived_attack
-        && !attacker_visible)
+    if (you_are_delayed() && defender->atype() == ACT_PLAYER
+        && perceived_attack && !attacker_visible)
     {
         handle_interrupted_swap(false, true);
     }
@@ -2032,22 +2014,16 @@ void melee_attack::_monster_die(monster* mons, killer_type killer,
     if (invalid_monster(mons))
         return; // Already died some other way.
 
-    const bool chaos = (damage_brand == SPWPN_CHAOS);
     const bool reaping = (damage_brand == SPWPN_REAPING);
 
     // Copy defender before it gets reset by monster_die().
     monster* def_copy = NULL;
-    if (chaos || reaping)
+    if (reaping)
         def_copy = new monster(*mons);
 
     int corpse = monster_die(mons, killer, killer_index);
 
-    if (chaos)
-    {
-        chaos_killed_defender(def_copy);
-        delete def_copy;
-    }
-    else if (reaping)
+    if (reaping)
     {
         if (corpse != -1)
             mons_reaped(attacker, def_copy);
@@ -2600,43 +2576,6 @@ void melee_attack::chaos_affects_attacker()
 #endif
             DID_AFFECT();
         }
-    }
-}
-
-// mon is a copy of the monster from before monster_die() was called,
-// though its hitpoints may be non-positive.
-//
-// NOTE: Isn't called if monster dies from poisoning caused by chaos.
-void melee_attack::chaos_killed_defender(monster* mon)
-{
-    ASSERT(mon->type != -1 && mon->type != MONS_NO_MONSTER);
-    ASSERT(in_bounds(mon->pos()));
-    ASSERT(!defender->alive());
-
-    if (!attacker->alive())
-        return;
-
-    if (attacker->atype() == ACT_PLAYER && you.banished)
-        return;
-
-    if (mon->is_summoned() || (mon->flags & (MF_BANISHED | MF_HARD_RESET)))
-        return;
-
-    int              corpse_class, corpse_index, last_item;
-    item_def         fake_corpse;
-    std::vector<int> items;
-    _find_remains(mon, corpse_class, corpse_index, fake_corpse, last_item,
-                  items);
-
-    if (one_chance_in(100)
-        && _make_zombie(mon, corpse_class, corpse_index, fake_corpse,
-                        last_item))
-    {
-#ifdef NOTE_DEBUG_CHAOS_EFFECTS
-        take_note(Note(NOTE_MESSAGE, 0, 0,
-                       "CHAOS killed defender: zombified monster"), true);
-#endif
-        DID_AFFECT();
     }
 }
 
@@ -4647,143 +4586,6 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     default:
         return (false);
     }
-}
-
-// TODO: Move this to the monster class, it probably belongs there
-void melee_attack::_find_remains(monster* mon, int &corpse_class,
-                                 int &corpse_index, item_def &fake_corpse,
-                                 int &last_item, std::vector<int> items)
-{
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-    {
-        const int idx = mon->inv[i];
-
-        if (idx == NON_ITEM)
-            continue;
-
-        item_def &item(mitm[idx]);
-
-        if (!item.defined() || item.pos != mon->pos())
-            continue;
-
-        items.push_back(idx);
-    }
-
-    corpse_index = NON_ITEM;
-    last_item    = NON_ITEM;
-
-    corpse_class = fill_out_corpse(mon, mon->type, fake_corpse, true);
-    if (corpse_class == -1 || mons_weight(corpse_class) == 0)
-        return;
-
-    // Stop at first non-matching corpse, since the freshest corpse will
-    // be at the top of the stack.
-    for (stack_iterator si(mon->pos()); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-        {
-            if (si->orig_monnum != fake_corpse.orig_monnum
-                || si->plus != fake_corpse.plus
-                || si->plus2 != fake_corpse.plus2
-                || si->special != fake_corpse.special
-                || si->flags != fake_corpse.flags)
-            {
-                break;
-            }
-
-            // If it's a hydra the number of heads must match.
-            if ((short) mon->number != si->props[MONSTER_NUMBER].get_short())
-                break;
-
-            // Got it!
-            corpse_index = si.link();
-            break;
-        }
-        else
-        {
-            // Last item which we're sure belonged to the monster.
-            for (unsigned int i = 0; i < items.size(); i++)
-                if (items[i] == si.link())
-                    last_item = si.link();
-        }
-    }
-}
-
-// TODO: This may be able to be moved to the monster class, definitely
-// shouldn't remain here
-bool melee_attack::_make_zombie(monster* mon, int corpse_class,
-                                int corpse_index, item_def &fake_corpse,
-                                int last_item)
-{
-    // If the monster dropped a corpse, then don't waste it by turning
-    // it into a zombie.
-    if (corpse_index != NON_ITEM || !mons_class_can_be_zombified(corpse_class))
-        return (false);
-
-    // Good gods won't let their gifts/followers be raised as the
-    // undead.
-    if (is_good_god(mon->god))
-        return (false);
-
-    // First attempt to raise zombie fitted out with all its old
-    // equipment.
-    int zombie_index = -1;
-    int idx = get_item_slot(0);
-    if (idx != NON_ITEM && last_item != NON_ITEM)
-    {
-        mitm[idx]     = fake_corpse;
-        mitm[idx].pos = mon->pos();
-
-        // Insert it in the item stack right after the monster's last
-        // item, so it will be equipped with all the monster's items.
-        mitm[idx].link       = mitm[last_item].link;
-        mitm[last_item].link = idx;
-
-        animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
-                        mon->foe, 0, "a chaos effect", mon->god,
-                        true, true, true, &zombie_index);
-    }
-
-    // No equipment to get, or couldn't get it for some reason.
-    if (zombie_index == -1)
-    {
-        monster_type type = (mons_zombie_size(mon->type) == Z_SMALL) ?
-                                MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
-        mgen_data mg(type, mon->behaviour, 0, 0, 0, mon->pos(),
-                     mon->foe, MG_FORCE_PLACE, mon->god,
-                     mon->type, mon->number);
-        mg.non_actor_summoner = "a chaos effect";
-        zombie_index = create_monster(mg);
-    }
-
-    if (zombie_index == -1)
-        return (false);
-
-    monster* zombie = &menv[zombie_index];
-
-    // Attempt to force zombie into exact same spot.
-    if (zombie->pos() != mon->pos() && zombie->is_habitable(mon->pos()))
-        zombie->move_to_pos(mon->pos());
-
-    if (you.can_see(mon))
-    {
-        if (you.can_see(zombie))
-            simple_monster_message(mon, " turns into a zombie!");
-        else if (last_item != NON_ITEM)
-        {
-            simple_monster_message(mon, "'s equipment vanishes!");
-            autotoggle_autopickup(true);
-        }
-    }
-    else
-    {
-        simple_monster_message(zombie, " appears from thin air!");
-        autotoggle_autopickup(false);
-    }
-
-    player_angers_monster(zombie);
-
-    return (true);
 }
 
 // TODO: Move to the player class, DEFINITELY doesn't belong here
