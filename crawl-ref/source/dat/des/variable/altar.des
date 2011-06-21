@@ -1680,7 +1680,10 @@ COLOUR: G = lightgray
 COLOUR: c = white
 TILE:   c = wall_church
 FTILE: _.G1m+ = floor_limestone
-MONS:   angel god:zin name:glowing name_adjective
+MONS:   angel god:zin name:glowing n_adj / \
+        angel god:zin name:glowing n_adj ; any weapon level:20 ego:holy_wrath / \
+        angel god:zin name:glowing n_adj ; long sword ego:holy_wrath / \
+        angel god:zin name:glowing n_adj ; mace ego:holy_wrath
 DEPTH:  2-27
 MAP
 xxxxxxxxx
