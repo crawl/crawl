@@ -4514,29 +4514,24 @@ int get_real_hp(bool trans, bool rotted)
 
 static int _racial_mp()
 {
-    switch (you.species)
+    switch (species_mp_modifier(you.species))
     {
-    case SP_TROLL:
+    case -3:
         return -(you.experience_level - 1) * 2 / 3;
-    case SP_MINOTAUR:
+    case -2:
         return -you.experience_level / 2;
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-    case SP_CENTAUR:
-    case SP_GHOUL:
+    case -1:
         return -you.experience_level / 3;
-    case SP_SLUDGE_ELF:
-        return you.experience_level / 3;
-    case SP_FELID:
-    case SP_HIGH_ELF:
-        return you.experience_level / 2;
-    case SP_DEMIGOD:
-        return you.experience_level * 2 / 3;
-    case SP_DEEP_ELF:
-    case SP_SPRIGGAN:
-        return you.experience_level - 1;
     default:
         return 0;
+    case +1:
+        return you.experience_level / 3;
+    case +2:
+        return you.experience_level / 2;
+    case +3:
+        return you.experience_level * 2 / 3;
+    case +4:
+        return you.experience_level - 1;
     }
 }
 
