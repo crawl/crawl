@@ -778,8 +778,7 @@ int ash_skill_boost(skill_type sk)
     // 2 = medium bonus -> factor = 1.25
     // 3 = high bonus   -> factor = 1.5
     const float piety_factor = (you.skill_boost[sk] + 3) / 4.0;
-    const int base = std::min(std::min(piety_rank() - 1, level),
-                              you.bondage_level + 2);
+    const int base = std::min(piety_rank() - 1, level);
     const int bonus = std::max<int>(0, base * piety_factor - level / 4.0);
 
     return std::min(level + bonus, 27);
