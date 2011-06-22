@@ -27,9 +27,6 @@ void fully_map_level();
 
 bool is_feature(wchar_t feature, const coord_def& where);
 
-void clear_feature_overrides();
-void add_feature_override(const std::string &text);
-
 std::string screenshot();
 
 bool view_update();
