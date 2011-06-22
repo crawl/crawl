@@ -44,7 +44,7 @@ Okawaru is a dangerous and powerful God of battle. Followers can gain a number o
 %%%%
 Makhleb
 
-Makhleb the Destroyer is a fearsome God of bloodshed and mortification of the flesh. Followers are expected to cleanse others by inflicting suffering and death on them in Makhleb's name, and can gain further favour by ravaging the freshly dead. Dedicated followers may also access the raw energies and hell-spawned servants of chaos, so that they may better break the impure world and its false laws for this evil God's glory.
+Makhleb the Destroyer is a fearsome deity of bloodshed and mortification of the flesh. Followers are expected to cleanse others by inflicting suffering and death on them in Makhleb's name, and can gain further favour by ravaging the freshly dead. Dedicated followers may also access the raw energies and hell-spawned servants of chaos, so that they may better break the impure world and its false laws for this evil God's glory.
 %%%%
 Sif Muna
 
@@ -60,7 +60,7 @@ Nemelex is a strange and unpredictable trickster God, whose powers can be invoke
 %%%%
 Elyvilon
 
-Elyvilon the Healer welcomes all good souls who are prepared for long worship and devotion. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons. Being a good God, Elyvilon does not mind if worshippers shift to one of the two allied Gods, Zin or the Shining One.
+Elyvilon the Healer welcomes all good souls who are prepared for long worship and devotion. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons. Elyvilon does not mind if worshippers shift to Zin or the Shining One.
 %%%%
 Lugonu
 
@@ -76,7 +76,7 @@ Fedhas Madash is the God of plant and fungal life. Fedhas demands that followers
 %%%%
 Cheibriados
 
-Cheibriados is a God who meditates on the mystery of time. Those who choose to follow this God's path will learn to eschew unnecessary haste, slowing down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbances.
+Cheibriados is a God who meditates on the mystery of time. Those who choose to follow this deity's path will learn to eschew unnecessary haste, slow down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbances.
 %%%%
 Ashenzari
 
@@ -130,7 +130,7 @@ The Trickster's followers gain various ways to influence fate when playing cards
 %%%%
 Elyvilon powers
 
-The healer God offers followers means to heal themselves from damage and other ill effects. Elyvilon also allows healing of hostile monsters, trying to turn them neutral. The healer God may directly intervene to save a follower's life, especially when called upon; highly pious followers can be sure of such aid.
+The Healer offers followers means to heal themselves from damage and other ill effects. Elyvilon also allows healing of hostile monsters, trying to turn them neutral. Elyvilon may directly intervene to save a follower's life, especially when called upon; highly pious followers can be sure of such aid.
 %%%%
 Lugonu powers
 
@@ -142,19 +142,19 @@ Beogh encourages followers to make use of orcish gear found in the dungeon. Foll
 %%%%
 Fedhas powers
 
-Plants and fungi will not attack Fedhas worshippers without provocation. Fedhas worshippers may walk through plants or fungi, and even fire missiles or spells through them without causing harm. Fedhas grants the ability to promote plants and fungi into stronger species. Followers can eventually grow a wall of plants and create explosive spores from corpses. Followers are granted some control over the weather; they may call sunlight and eventually rainstorms.
+Plants and fungi will not attack Fedhas' worshippers without provocation. Fedhas' worshippers may walk through plants or fungi, and even fire missiles or spells through them without causing harm. Fedhas grants the ability to promote plants and fungi into stronger species. Followers can eventually grow a wall of plants and create explosive spores from corpses. They are also granted some control over the weather, being able to call sunlight and eventually rainstorms.
 %%%%
 Cheibriados powers
 
-Followers are rewarded for moving slowly and killing creatures which are faster than they are. Moving too quickly or using magically hastened weapons is frowned upon. Cheibriados rewards the faithful with a slowed metabolism, the power to slow other creatures, the power to harm those who move more quickly than you do and, finally, the ability to step out of the flow of time.
+Followers of Cheibriados are rewarded for moving slowly and killing creatures which are faster than they are. Moving too quickly or using magically hastened weapons is frowned upon. Cheibriados rewards the faithful with a slowed metabolism, the power to slow other creatures, the power to harm those who move more quickly than they do, and, finally, the ability to step out of the flow of time.
 %%%%
 Jiyva powers
 
-Followers can request a jelly from Jiyva, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange their attributes to favour the attribute last chosen when gaining an experience level, and grant mutation gifts. All slimes will never harm a follower of Jiyva, and Jiyva demands that worshippers do the same. Eventually, all visible slimes will join in on a prayer, preventing them from moving for a while.
+Jiyva's followers can request jellies, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange followers' attributes to favour the attribute last chosen when gaining an experience level, and grant mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands the same conduct in return. Eventually, all visible slimes will join in on prayers, preventing them from moving for awhile.
 %%%%
 Ashenzari powers
 
-Ashenzari exhorts followers to garb themselves with curses, rewarding followers for time spent using cursed armour, jewelry or weapons. Ashenzari's ultimate desire, however, is not for the devotion of followers but for knowledge of all things. Pious followers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
+Ashenzari exhorts followers to garb themselves with curses, and provides rewards for time spent using cursed armour, jewelry or weapons. Ashenzari's ultimate desire, however, is not for devotion but the knowledge of all things. Pious worshippers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
 
 %%%%
 Zin lastname
