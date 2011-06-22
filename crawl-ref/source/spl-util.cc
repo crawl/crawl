@@ -163,7 +163,7 @@ spell_type spell_by_name(std::string name, bool partial_match)
         return (SPELL_NO_SPELL);
     }
 
-    int spellmatch = -1;
+    spell_type spellmatch = SPELL_NO_SPELL;
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
@@ -176,14 +176,13 @@ spell_type spell_by_name(std::string name, bool partial_match)
         if (spell_name.find(name) != std::string::npos)
         {
             if (spell_name == name)
-                return static_cast<spell_type>(i);
+                return type;
 
-            spellmatch = i;
+            spellmatch = type;
         }
     }
 
-    return (spellmatch != -1 ? static_cast<spell_type>(spellmatch)
-                             : SPELL_NO_SPELL);
+    return spellmatch;
 }
 
 spschool_flag_type school_by_name(std::string name)
