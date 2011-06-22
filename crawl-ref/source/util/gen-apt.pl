@@ -216,7 +216,7 @@ sub load_mods {
 
   my @species;
   while (<$inf>) {
-    $table = $1 if m{// table: ([A-Za-z ]+)$};
+    $table = $1 if m{// table: ([A-Za-z ]+)\s*$};
     next unless $table;
 
     if (/SP_(\w+)/) {
