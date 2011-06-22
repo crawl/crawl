@@ -1141,6 +1141,18 @@ x.............x
 x.............x
 ENDMAP
 
+NAME:  bloody_makhleb
+TAGS:  uniq_altar_makhleb temple_overflow_makhleb
+DEPTH: D:2-12, Orc, Vault
+KPROP: . = bloody / nothing
+KFEAT: _ = altar_makhleb
+KITEM: _ = robe, whip
+MAP
+...
+._.
+...
+ENDMAP
+
 
 ### Nemelex overflow altars ###################################################
 
