@@ -977,6 +977,7 @@ static void _give_items_skills(const newgame_def& ng)
             break;
 
         case SP_HALFLING:
+        case SP_SPRIGGAN:
             newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
                                30, 1);
