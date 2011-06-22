@@ -46,9 +46,9 @@ MAP
  ......
 ENDMAP
 
-NAME:  minmay_butterfly_box
-DEPTH: D:1-4
-MONS:  butterfly
+NAME:  minmay_bat_box
+DEPTH: D:2-4
+MONS:  bat / nothing w:5
 MAP
     ....
    ......
@@ -1953,34 +1953,6 @@ xx...xx
 xxxxxxx
 ENDMAP
 
-NAME:  minmay_layered_prison
-DEPTH: D:2-, Vault, Crypt
-TAGS:  no_monster_gen no_item_gen
-KPROP: 789. = no_rtele_into
-KITEM: 8 = acquire any
-KMONS: 8 = 8
-KITEM: 9 = |
-KMONS: 9 = 9
-KITEM: 7 = %
-KMONS: 7 = random
-MAP
-...............
-.mmmmmmmmmmmmm.
-.m7....7....7m.
-.m.bbbbbbbbb.m.
-.m.b9..9..9b.m.
-.m.b.vvvvv.b.m.
-.m.b.v888v.b.m.
-.m7b9v888v9b7m.
-.m.b.v888v.b.m.
-.m.b.vvvvv.b.m.
-.m.b9..9..9b.m.
-.m.bbbbbbbbb.m.
-.m7....7....7m.
-.mmmmmmmmmmmmm.
-...............
-ENDMAP
-
 NAME:  kb_rosetta
 DEPTH: D:6-, Vault, Elf
 SUBST: x : xcvmnot
@@ -2271,20 +2243,20 @@ DEPTH:  D:10-, Vault
 TAGS:   no_monster_gen no_item_gen
 WEIGHT: 3
 # Iron golems are speed 7, so even a naga can outrun them.
-MONS:   patrolling iron golem
+MONS:   patrolling iron golem, patrolling metal gargoyle
 ITEM:   ring of protection unrand:ring_of_robustness
 MAP
 ...............
 .vvvvv.@.vvvvv.
 .v1.........1v.
 .v.vvvvvvvvv.v.
-.v.v1..1..1v.v.
+.v.v2..2..2v.v.
 .v.v.vv.vv.v.v.
 .v...v1.1v...v.
-.v.1.v.d.v.1.v.
+.v.2.v.d.v.2.v.
 .v...v1.1v...v.
 .v.v.vv.vv.v.v.
-.v.v1..1..1v.v.
+.v.v2..2..2v.v.
 .v.vvvvvvvvv.v.
 .v1.........1v.
 .vvvvv.@.vvvvv.
@@ -2353,9 +2325,10 @@ ENDMAP
 #
 NAME:   minmay_guarded_unrand_dyrovepreva
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:10-
+DEPTH:  D:14-
 WEIGHT: 3
-MONS:   crystal golem, orange crystal statue
+MONS:   patrolling crystal golem name:crystal_guardian n_rpl spells:bolt_of_fire;bolt_of_cold
+MONS:   orange crystal statue
 ITEM:   cap unrand:crown_of_dyrovepreva
 KPROP:  12d' = no_rtele_into
 SUBST:  ' = .
@@ -2372,19 +2345,19 @@ MAP
 ..bbbb'''''b'''''b'''''bbbb..
 ..bbbbb'''bbb'''bbb'''bbbbb..
 ...bbbbb'bbbbbbbbbbb'bbbbb...
-....bbb''.bbb'1'bbb'''bbb....
+....bbb''.bbb'''bbb'''bbb....
 .....b'''''b'1'1'b'''''b.....
-....2b1'''1b1'd'1b1'''1b2....
+.....b''1''b''d''b''1''b.....
 .....b'''''b'1'1'b'''''b.....
-....bbb'''bbb'1'bbb'''bbb....
+....bbb'''bbb'''bbb'''bbb....
 ...bbbbb'bbbbb2bbbbb'bbbbb...
-..bbbbb'''bbb'1'bbb'''bbbbb..
+..bbbbb'''bbb'''bbb'''bbbbb..
 ..bbbb'''''b'''''b'''''bbbb..
-...bbb1'''1'''''''1'''1bbb...
+...bbb''1'''''1'''''1''bbb...
  ...bb'''''b'''''b'''''bb...
-  ...bb'1'bbb'1'bbb'1'bb...
+  ...bb'''bbb'''bbb'''bb...
    ...bbbbbbbbbbbbbbbbb...
-    ...bbbbbb.2.bbbbbb...
+    ...bbbbbb...bbbbbb...
      ...bbbb.....bbbb...
       ...bb.......bb...
        ...............
