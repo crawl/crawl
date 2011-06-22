@@ -1417,6 +1417,8 @@ int get_power_level(int power, deck_rarity_type rarity)
         if (x_chance_in_y(power, 700))
             ++power_level;
         break;
+    case DECK_RARITY_RANDOM:
+        die("unset deck rarity");
     }
     return power_level;
 }
@@ -3099,6 +3101,9 @@ uint8_t deck_rarity_to_color(deck_rarity_type rarity)
 
     case DECK_RARITY_LEGENDARY:
         return LIGHTMAGENTA;
+
+    case DECK_RARITY_RANDOM:
+        die("unset deck rarity");
     }
 
     return (WHITE);
