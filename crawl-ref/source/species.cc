@@ -524,7 +524,7 @@ int species_hp_modifier(species_type species)
 
 int species_mp_modifier(species_type species)
 {
-    switch(species) // table: Magic Points
+    switch (species) // table: Magic Points
     {
     case SP_TROLL:
     case SP_MINOTAUR:
