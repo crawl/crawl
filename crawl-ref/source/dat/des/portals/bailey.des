@@ -469,9 +469,9 @@ MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
 ITEM:   potion of healing / potion of heal wounds / potion of magic / nothing /\
         potion of might w:5 / potion of speed w:2 / potion of berserk rage w:3
-ITEM:   potion of experience q:1 w:30 / potion of cure mutation q:2 w:30 /\
-        potion of gain intelligence q:6 / potion of gain strength q:6 /\
-        potion of gain dexterity q:6
+ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
+        potion of gain intelligence q:2 / potion of gain strength q:2 /\
+        potion of gain dexterity q:2
 : bailey_setup(_G)
 epilogue{{
 bailey_milestone(_G)
@@ -645,7 +645,7 @@ NAME:   bailey_axe_minmay_hex_keep
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen
-# Loot consists of 16 good potions and scrolls in the last outer room, with a
+# Loot consists of 8 good potions and scrolls in the last outer room, with a
 # lot of gold and especially good items in the (very dangerous) center room.
 #
 # The secret door does not work well, it will always be open. I also believe
@@ -672,9 +672,9 @@ MAP
 ttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttt
 tttttttttttttttcccccccttttttttttttttt
-ttttttttttttttccde<edcctttttttttttttt
-ttttttttttttttcdddddddctttttttttttttt
-tttttttttttttcc.ddddd.ccttttttttttttt
+ttttttttttttttccdd<ddcctttttttttttttt
+ttttttttttttttcdd...ddctttttttttttttt
+tttttttttttttcc.......ccttttttttttttt
 tttttttttttttc.........cttttttttttttt
 ttttttttttttcc.1.....1.cctttttttttttt
 ttttttccccccc2...1T1...2ccccccctttttt
@@ -691,10 +691,10 @@ tttttc.......c2.......2c.......cttttt
 tttttcc1...1cc..1...1..cc1...1ccttttt
 ttttttcc+cccc2....3....2cccc+cctttttt
 tttttcc.....cc..1...1..cc.....ccttttt
-tttttc1.....1c2..$$$..2c1.....1cttttt
-ttttcc.......cc$$$$$$$cc.......cctttt
-ttttc1.......1c|$e$e$|c1.......1ctttt
-tttcc.........cce|e|ecc.........ccttt
+tttttc1.....1c2.......2c1.....1cttttt
+ttttcc.......cc.......cc.......cctttt
+ttttc1.......1c|$$$$$|c1.......1ctttt
+tttcc.........cc$e$e$cc.........ccttt
 tttc1....T....1ccccccc1....T....1cttt
 tttcc.........cc1.1.1cc.........ccttt
 ttttc1.......1c.......c1.......1ctttt
@@ -759,7 +759,7 @@ bailey_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xAxxxxxxxxxxx.........xxxxxxxxxxxxx
-xx...xxxxxxx..wwwwwww..xxxxxxxxxxxx
+xx<..xxxxxxx..wwwwwww..xxxxxxxxxxxx
 xxxxx...xx...ww.....ww..xxxxxxxxxxx
 xxxxxxxx.xx..w..ccc..ww..xxxxxxxxxx
 x.........xx...cc.cc..ww..........x
@@ -817,8 +817,8 @@ bailey_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xA.......................................<x
-x.........................................x
+x<.......................................<x
+x.A.......................................x
 x.........................................x
 x.........................................x
 x.........................................x
@@ -870,7 +870,7 @@ SHUFFLE: DF/EG
 SUBST:   D : d, E = 1.., F : 3, G : .
 NSUBST:  d = 3:d / *:$
 ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
-         scroll of acquirement q:2 w:5 / scroll of silence q:3 /\
+         scroll of acquirement w:5 / scroll of silence q:3 /\
          scroll of fog q:3 / scroll of vulnerability q:3 /\
          scroll of recharging q:3 / scroll of immolation q:3 /\
          any good_item book w:30 /\
@@ -932,10 +932,10 @@ MAP
 ccccccccccccccccccccccccccccccc
 ccxxxcccccccccxxxcccccccccxxxcc
 cxx1xxcccccccxx<xxcccccccxx1xxc
-cxd..xc.....cx...xc.....cx..dxc
+cxd..xc.....cx.A.xc.....cx..dxc
 cxd..x..www..x...x..www..x..dxc
 cxd..c.ww1ww.......ww1ww.c..dxc
-cx2..+.w212w...A...w212w.+..2xc
+cx2..+.w212w.......w212w.+..2xc
 cxd..c.ww1ww.......ww1ww.c..dxc
 cxd..x..www..x...x..www..x..dxc
 cxd..xc.....cx...xc.....cx..dxc
@@ -982,9 +982,9 @@ MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cc...<.....1cccccccc....1ccccccccc....1ccc..........cc
 c..........12cccccc.....13c.....c.....14+....5......5c
-c..........12c.$$.c.....13+.!!!.+.....14+......????..c
-cA.........12+.$$.+.....13+.!!!.+.....14+......????.<c
-c..........12c.$$.c.....13+.!!!.+.....14+......????..c
+c..........12c.$$.c.....13+.!!!.+.....14+.......???..c
+cA.........12+.$$.+.....13+.!!!.+.....14+.......???.<c
+c..........12c.$$.c.....13+.!!!.+.....14+.......???..c
 c..........12cccccc.....13c.....c.....14+....5......5c
 cc...<.....1cccccccc....1ccccccccc....1ccc..........cc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
