@@ -3039,6 +3039,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return (true);
         if (you.religion == GOD_TROG && !item_is_rod(item))
             return (true);
+        if (!item_type_known(item))
+            return (false);
         if (item.sub_type == STAFF_ENERGY && you.species == SP_MUMMY)
             return (true);
         if (item.sub_type == STAFF_ENERGY && temp && (you.form == TRAN_LICH
