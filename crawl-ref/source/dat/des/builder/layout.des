@@ -777,6 +777,9 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
+    -- Prevent staircases from being placed in special or inner rooms.
+    _G.nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
+
     if special ~= -1 then
         _G.subvault('O : special_room')
     end
