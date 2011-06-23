@@ -1664,38 +1664,13 @@ static int _base_cost(skill_type sk)
 
 unsigned int skill_exp_needed(int lev)
 {
-    switch (lev)
-    {
-    case 0:  return 0;
-    case 1:  return 200;
-    case 2:  return 300;
-    case 3:  return 450;
-    case 4:  return 650;
-    case 5:  return 900;
-    case 6:  return 1200;
-    case 7:  return 1550;
-    case 8:  return 1950;
-    case 9:  return 2400;
-    case 10: return 2950;
-    case 11: return 3600;
-    case 12: return 4350;
-    case 13: return 5200;
-    case 14: return 6150;
-    case 15: return 7200;
-    case 16: return 8350;
-    case 17: return 9600;
-    case 18: return 10950;
-    case 19: return 12450;
-    case 20: return 14100;
-    case 21: return 15900;
-    case 22: return 17850;
-    case 23: return 19950;
-    case 24: return 22200;
-    case 25: return 24600;
-    case 26: return 27150;
-    case 27: return 29900;
-    }
-    return 0;
+    const int exp[28] = { 0, 50, 150, 300, 500, 750,         // 0-5
+                          1050, 1400, 1800, 2250, 2800,      // 6-10
+                          3450, 4200, 5050, 6000, 7050,      // 11-15
+                          8200, 9450, 10800, 12300, 13950,   // 16-20
+                          15750, 17700, 19800, 22050, 24450, // 21-25
+                          27000, 29750 };
+    return exp[lev];
 }
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
