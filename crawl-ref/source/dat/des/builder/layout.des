@@ -733,15 +733,15 @@ TAGS: overwritable layout allow_dup unrand
 
     for y = 0, cols - 1 do
         for x = 0, rows - 1 do
+            local base_x, base_y = x * 13 + 8, y * 11 + 8
+
             local room = {
-                x1 = x * 13 + 8 + crawl.random2(4),
-                y1 = y * 11 + 8 + crawl.random2(4),
+                x1 = base_x + crawl.random2(4),
+                y1 = base_y + crawl.random2(4),
+                x2 = base_x + 6 + crawl.random2(5),
+                y2 = base_y + 6 + crawl.random2(3),
+                fill = '.',
             }
-
-            room.x2 = room.x1 + 3 + crawl.random2(8)
-            room.y2 = room.y1 + 3 + crawl.random2(6)
-
-            room.fill = '.'
 
             table.insert(rooms, room)
         end
