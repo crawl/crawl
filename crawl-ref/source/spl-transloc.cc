@@ -46,12 +46,8 @@
 
 static bool _abyss_blocks_teleport(bool cblink)
 {
-    // Lugonu worshippers get their perks.
-    if (you.religion == GOD_LUGONU)
-        return (false);
-
-    // Controlled Blink (the spell) works quite reliably in the Abyss.
-    return (cblink ? one_chance_in(3) : !one_chance_in(3));
+    // Controlled Blink (the spell) works more reliably in the Abyss.
+    return (cblink ? coinflip() : !one_chance_in(3));
 }
 
 // If wizard_blink is set, all restriction are ignored (except for
@@ -234,7 +230,8 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     if (item_blocks_teleport(true, true))
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.level_type == LEVEL_ABYSS
-             && !override_abyss && !one_chance_in(3))
+             && !override_abyss
+             && _abyss_blocks_teleport(false))
     {
         mpr("The power of the Abyss keeps you in your place!");
     }
@@ -271,13 +268,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
-
-        if (you.level_type == LEVEL_ABYSS)
-        {
-            abyss_teleport(false);
-            if (you.pet_target != MHITYOU)
-                you.pet_target = MHITNOT;
-        }
     }
 }
 
@@ -911,14 +901,6 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     if (where == you.pos())
         return (1);
 
-    if (you.level_type == LEVEL_ABYSS)
-    {
-        abyss_teleport(false);
-        if (you.pet_target != MHITYOU)
-            you.pet_target = MHITNOT;
-        return (1);
-    }
-
     if (pow > 100)
         pow = 100;
 
@@ -955,7 +937,8 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
 
     if (!found)
     {
-        random_blink(false);
+        // We've already succeeded at blinking, so the Abyss shouldn't block it.
+        random_blink(false, true);
         return (1);
     }
 
