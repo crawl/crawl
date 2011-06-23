@@ -26,19 +26,14 @@ end
 -- just do nothing. Can't use dummy vaults to do this since vault
 -- frequency is controlled by absolute depth rather than by branch depth.
 function is_in_lair()
-    local l_name = dgn.level_name(dgn.level_id())
-    return string.find(dgn.level_name(dgn.level_id()), "Lair")
+    return you.in_branch("Lair")
 end
 
 function sroom_kobold_lair(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if e.is_validating() then
-        return
-    end
-
-    if is_in_lair() then
+    if e.is_validating() or is_in_lair() then
         return
     end
 
@@ -64,11 +59,7 @@ function sroom_orc_lair(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if e.is_validating() then
-        return
-    end
-
-    if is_in_lair() then
+    if e.is_validating() or is_in_lair() then
         return
     end
 
