@@ -93,6 +93,16 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr(pre_msg->c_str());
         random_blink(false);
     }
+    // The orb degrades controlled blinks to uncontrolled.
+    else if (you.char_direction == GDT_ASCENDING && !wizard_blink)
+    {
+        if (pre_msg)
+            mpr(pre_msg->c_str());
+        mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
+        if (high_level_controlled_blink && coinflip())
+            return (cast_semi_controlled_blink(pow));
+        random_blink(false);
+    }
     else if (!allow_control_teleport(true) && !wizard_blink)
     {
         if (pre_msg)
@@ -100,14 +110,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         mpr("A powerful magic interferes with your control of the blink.");
         if (high_level_controlled_blink)
             return (cast_semi_controlled_blink(pow));
-        random_blink(false);
-    }
-    // The orb sometimes degrades controlled blinks to uncontrolled.
-    else if (you.char_direction == GDT_ASCENDING && one_chance_in(3) && !wizard_blink)
-    {
-        if (pre_msg)
-            mpr(pre_msg->c_str());
-        mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
         random_blink(false);
     }
     else
@@ -248,8 +250,8 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     else if (player_control_teleport() && !you.confused() && allow_partial_control
              && allow_control_teleport())
     {
-        // The orb sometimes degrades semicontrolled blinks to uncontrolled.
-        if (you.char_direction == GDT_ASCENDING && one_chance_in(3))
+        // The orb degrades semicontrolled blinks to uncontrolled.
+        if (you.char_direction == GDT_ASCENDING)
         {
             mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
             random_blink(false);
@@ -426,6 +428,12 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     bool      large_change  = false;
     bool      check_ring_TC = false;
 
+    if (is_controlled && you.char_direction == GDT_ASCENDING)
+    {
+        mpr("You feel the orb preventing control of your teleportation!", MSGCH_ORB);
+        is_controlled = false;
+    }
+
     if (is_controlled)
     {
         check_ring_TC = true;
@@ -506,13 +514,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             {
                 pos.x += random2(3) - 1;
                 pos.y += random2(3) - 1;
-            }
-            // The orb sometimes makes controlled teleports less accurate.
-            if (you.char_direction == GDT_ASCENDING && coinflip())
-            {
-                mpr("You feel the orb interfering with your control of this translocation!", MSGCH_ORB);
-                pos.x += random2(7) - 3;
-                pos.y += random2(7) - 3;
             }
             dprf("Scattered target square (%d, %d)", pos.x, pos.y);
         }
