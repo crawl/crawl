@@ -242,9 +242,23 @@ LIBLUA := contrib/install/$(ARCH)/lib/liblua.a
 endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
-LUA_INCLUDE_DIR := /usr/include/lua5.1
+ifndef CROSSHOST
+	LUA_INCLUDE_DIR := /usr/include/lua5.1
+	SQLITE_INCLUDE_DIR := /usr/include
+else
+	# This is totally wrong, works only with some old-style setups, and
+	# on some architectures of Debian/new FHS multiarch -- excluding, for
+	# example, i386.  Fortunately, i386 is rarely cross-compiled to.
+	# There's no support for /usr/local/ too, without thorough handholding.
+	# It's still an improvement over Crawl 0.8 which had no cross-compiling
+	# to non-win32 at all.
+	#
+	# Needs to be replaced by compile checks.  Guessing the paths is fragile,
+	# while the compiler knows them already.
+	LUA_INCLUDE_DIR := /usr/$(ARCH)/include/lua5.1
+	SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
+endif
 LUA_LIB := -llua5.1
-SQLITE_INCLUDE_DIR := /usr/include
 SQLITE_LIB := -lsqlite3
 
 #
@@ -709,7 +723,11 @@ datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
 
 ifndef NO_NCURSES
 
-NC_PREFIX = /usr
+ifndef CROSSHOST
+	NC_PREFIX = /usr
+else
+	NC_PREFIX = /usr/$(ARCH)
+endif
 
 # Include path for (n)curses with Unicode support.
 
