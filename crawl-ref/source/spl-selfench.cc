@@ -293,3 +293,9 @@ void cast_liquefaction(int pow)
     you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
     invalidate_agrid(true);
 }
+
+void cast_shroud_of_golubria(int pow)
+{
+    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 7 + roll_dice(2, pow), 50,
+        "Space distorts slightly along a thin shroud covering your body.");
+}

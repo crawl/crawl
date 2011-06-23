@@ -1970,6 +1970,10 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
+    case SPELL_SHROUD_OF_GOLUBRIA:
+        cast_shroud_of_golubria(powc);
+        break;
+
     default:
         return (SPRET_NONE);
     }

@@ -129,13 +129,15 @@ static duration_def duration_data[] =
       YELLOW, "Liquid", "liquefying",
       "The ground has become liquefied beneath your feet." },
     { DUR_HEROISM, false,
-      LIGHTBLUE, "Hero", "heroism", "You posess the skills of a mighty hero." },
+      LIGHTBLUE, "Hero", "heroism", "You possess the skills of a mighty hero." },
     { DUR_FINESSE, false,
       LIGHTBLUE, "Finesse", "finesse", "Your blows are lightning fast." },
     { DUR_LIFESAVING, true,
       LIGHTGREY, "Prot", "protection", "You ask for being saved." },
     { DUR_DARKNESS, true,
       BLUE, "Dark", "darkness", "You emit darkness." },
+    { DUR_SHROUD_OF_GOLUBRIA, true,
+      BLUE, "Shroud", "shrouded", "You are protected by a distorting shroud." },
 };
 
 static int duration_index[NUM_DURATIONS];

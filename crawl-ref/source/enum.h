@@ -1358,6 +1358,7 @@ enum duration_type
     DUR_PARALYSIS_IMMUNITY,
     DUR_DARKNESS,
     DUR_PETRIFYING,
+    DUR_SHROUD_OF_GOLUBRIA,
     NUM_DURATIONS
 };
 
@@ -3148,6 +3149,7 @@ enum spell_type
     SPELL_MESMERISE,
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
     SPELL_FIRE_SUMMON,
+    SPELL_SHROUD_OF_GOLUBRIA,
 
     NUM_SPELLS
 };

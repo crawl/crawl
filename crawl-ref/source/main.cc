@@ -2755,6 +2755,11 @@ static void _decrement_durations()
         }
         update_vision_range();
     }
+
+    _decrement_a_duration(DUR_SHROUD_OF_GOLUBRIA, delay,
+                          "Your shroud disappears.",
+                          0,
+                          "Your shroud flickers.");
 }
 
 static void _check_banished()

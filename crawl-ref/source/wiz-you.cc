@@ -786,6 +786,7 @@ static const char* dur_names[] =
     "paralysis immunity",
     "darkness",
     "petrifying",
+    "shrouded",
 };
 
 void wizard_edit_durations(void)
