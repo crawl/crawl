@@ -119,6 +119,7 @@ CHOWN = chown 2>/dev/null
 PNGCRUSH = $(COPY)
 PNGCRUSH_LABEL = COPY
 ADVPNG = advpng -z -4
+PKGCONFIG = pkg-config
 DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
@@ -149,13 +150,21 @@ ARCH := $(HOST)
 
 ifdef CROSSHOST
 	ARCH := $(CROSSHOST)
-	NO_PKGCONFIG = YesPlease
+	ifneq (,$($shell which $(ARCH)-pkg-config 2>/dev/null))
+	  PKGCONFIG = $(ARCH)-pkg-config
+	else
+	  ifneq (,$(wildcard /usr/$(ARCH)/lib/pkgconfig))
+	    PKGCONFIG = PKG_CONFIG_LIBDIR=/usr/$(ARCH)/lib/pkgconfig pkg-config
+	  else
+	    NO_PKGCONFIG = YesPlease
+	    BUILD_LUA = yes
+	    BUILD_SQLITE = yes
+	    BUILD_ZLIB = YesPlease
+	  endif
+	endif
 	NO_AUTO_OPT = YesPlease
 	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
-	BUILD_LUA = yes
-	BUILD_SQLITE = yes
-	BUILD_ZLIB = YesPlease
 
 	# If needed, override uname_S so we get the appropriate
 	# things compiled.
@@ -522,24 +531,24 @@ endif
 #
 
 ifndef NO_PKGCONFIG
-ifneq ($(shell which pkg-config 2> /dev/null),)
-PKGCONFIG = YesPlease
+ifeq ($(shell which pkg-config 2> /dev/null),)
+NO_PKGCONFIG = YesPlease
 endif
 endif
 
-ifdef PKGCONFIG
+ifndef NO_PKGCONFIG
 
 # If pkg-config is available, it's the surest way to find where
 # the contributing libraries are located.
 #
 
-FREETYPE_INCLUDE := $(shell pkg-config freetype2 --cflags-only-I)
-FREETYPE_CFLAGS  := $(shell pkg-config freetype2 --cflags-only-other)
-FREETYPE_LDFLAGS := $(shell pkg-config freetype2 --libs-only-L) $(shell pkg-config freetype2 --libs-only-l)
+FREETYPE_INCLUDE := $(shell $(PKGCONFIG) freetype2 --cflags-only-I)
+FREETYPE_CFLAGS  := $(shell $(PKGCONFIG) freetype2 --cflags-only-other)
+FREETYPE_LDFLAGS := $(shell $(PKGCONFIG) freetype2 --libs-only-L) $(shell $(PKGCONFIG) freetype2 --libs-only-l)
 
-SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
-SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
-SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
+SDL_INCLUDE := $(shell $(PKGCONFIG) sdl --cflags-only-I)
+SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl --cflags-only-other)
+SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl --libs-only-L) $(shell $(PKGCONFIG) sdl --libs-only-l)
 
 LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
