@@ -397,7 +397,7 @@ void spawn_random_monsters()
 
         // The rules change once the player has picked up the Orb...
         if (you.char_direction == GDT_ASCENDING)
-            prox = (one_chance_in(6) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
+            prox = (one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = prox;
