@@ -163,7 +163,6 @@ ifdef CROSSHOST
 	  endif
 	endif
 	NO_AUTO_OPT = YesPlease
-	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
 
 	# If needed, override uname_S so we get the appropriate
@@ -302,9 +301,6 @@ endif
 # Note that MinGW doesn't support -rdynamic.
 ifndef NO_RDYNAMIC
 LDFLAGS := -rdynamic
-endif
-ifdef NEED_STATIC
-LDFLAGS += -static
 endif
 
 ifdef USE_MERGE_BASE
