@@ -689,13 +689,13 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 5);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
 
-        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
         you.skills[SK_TRANSLOCATIONS] = 3;
         you.skills[SK_THROWING]       = 1;
-        weap_skill = 3;
+        weap_skill = 2;
     break;
 
     case JOB_ARCANE_MARKSMAN:
