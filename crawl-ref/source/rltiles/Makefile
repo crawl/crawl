@@ -4,6 +4,12 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lmingw32
 endif
 
+# Note: since generation of tiles is done on the host, we don't care about
+# cross-compilation here.
+#
+# Also, cross-compilation with no system libraries for host rather than target
+# is not supported.  If host=target, contribs are enough.
+
 ifndef CONTRIB_SDL
 SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
 SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a")
