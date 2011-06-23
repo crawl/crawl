@@ -88,7 +88,7 @@ static void _species_stat_init(species_type which_species)
     case SP_PURPLE_DRACONIAN:
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
+    case SP_BASE_DRACONIAN:     sb =  8; ib =  6; db =  4;      break;  // 18
 
     case SP_FELID:              sb =  2; ib =  7; db =  9;      break;  // 18
     case SP_OCTOPODE:           sb =  5; ib =  8; db =  5;      break;  // 18
