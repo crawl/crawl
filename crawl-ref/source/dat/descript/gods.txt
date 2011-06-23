@@ -72,19 +72,19 @@ Beogh is the deity worshipped by the cave orcs native to parts of the dungeon. O
 %%%%
 Fedhas
 
-Fedhas Madash is the God of plant and fungal life. Fedhas demands that followers encourage the decomposition of corpses. Fedhas forbids followers from harming any species under Fedhas' protection, and from using any necromantic effects that interfere with corpses. In return Fedhas grants a number of abilities that promote the growth of plants and fungi. These abilities may incidentally prove useful to adventurers.
+Fedhas Madash is the god of plant and fungal life. Fedhas demands that followers encourage the decomposition of corpses. Fedhas forbids followers from harming any species under Fedhas' protection, and from using any necromantic effects that interfere with corpses. In return Fedhas grants a number of abilities that promote the growth of plants and fungi. These abilities may incidentally prove useful to adventurers.
 %%%%
 Cheibriados
 
-Cheibriados is a God who meditates on the mystery of time. Those who choose to follow this deity's path will learn to eschew unnecessary haste, slow down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbances.
+Cheibriados is a god who meditates on the mystery of time. Those who choose to follow this deity's path will learn to eschew unnecessary haste, slow down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbances.
 %%%%
 Ashenzari
 
-While it seems inconceivable that the divine could be shackled, Ashenzari is just that: being purposely nailed to the sky for eternity, the unbudging God is all-knowing, all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge and foresight, but be warned: to Ashenzari, power and blessing and curse are all the same thing.
+While it seems inconceivable that the divine could be shackled, Ashenzari is just that: being purposely nailed to the sky for eternity, the unbudging god is all-knowing, all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge and foresight, but be warned: to Ashenzari, power and blessing and curse are all the same thing.
 %%%%
 Jiyva
 
-Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items and are forbidden from harming any slimes. Jiyva will even occasionally consume items left elsewhere in the Dungeon by followers. Especially favoured followers will become as shapeless as their God, as their attributes and mutations shift around under Jiyva's influence.
+Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items and are forbidden from harming any slimes. Jiyva will even occasionally consume items left elsewhere in the Dungeon by followers. Especially favoured followers will become as shapeless as their god, as their attributes and mutations shift around under Jiyva's influence.
 %%%%
 Zin powers
 
@@ -104,7 +104,7 @@ Yredelemnul gives you the power to raise skeletons and corpses to fight on your 
 %%%%
 Xom powers
 
-To worship Xom is to live riskily. In a good mood Xom may shower you with gifts, while at other times this capricious God could decide to "spice things up a little" and send you to your doom. If you prove yourself the stronger, so much the better; if not, well, there'll be other playthings...
+To worship Xom is to live riskily. In a good mood Xom may shower you with gifts, while at other times this capricious god could decide to "spice things up a little" and send you to your doom. If you prove yourself the stronger, so much the better; if not, well, there'll be other playthings...
 %%%%
 # no active powers of Vehumet
 %%%%
