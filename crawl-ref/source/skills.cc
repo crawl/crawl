@@ -334,8 +334,9 @@ int exercise(skill_type exsk, int deg)
         deg--;
     }
 
-    if (ret)
+    if (ret && !crawl_state.script)
     {
+        // Disabled in script mode because it slows down the training simulator
         dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
         dprf("Cost %d experience points", exp_pool - you.exp_available);
     }

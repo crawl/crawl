@@ -125,7 +125,7 @@ std::string channel_to_str(int channel)
     return message_channel_names[channel];
 }
 
-static weapon_type _str_to_weapon(const std::string &str)
+weapon_type str_to_weapon(const std::string &str)
 {
     if (str == "shortsword" || str == "short sword")
         return (WPN_SHORT_SWORD);
@@ -2355,7 +2355,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "weapon")
     {
         // Choose this weapon for backgrounds that get choice.
-        game.weapon = _str_to_weapon(field);
+        game.weapon = str_to_weapon(field);
     }
     else if (key == "wand")
     {
