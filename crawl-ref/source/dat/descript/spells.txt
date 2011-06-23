@@ -456,6 +456,10 @@ Shock
 
 This spell throws a bouncing bolt of electricity.
 %%%%
+Shroud of Golubria
+
+This spell bends space along a shroud covering your body, protecting you from some blows by redirecting their force to the air around you. Ranged attacks move too quickly to be diverted in this way. The shroud is highly unstable and may fall apart unexpectedly under stress.
+%%%%
 Silence
 
 This spell eliminates all sound near the caster. This makes reading scrolls, casting spells, praying or yelling in the caster's vicinity impossible. (Applies to caster too, of course.) This spell will not hide your presence, since its oppressive, unnatural effect will almost certainly alert any living creature that something is very wrong.

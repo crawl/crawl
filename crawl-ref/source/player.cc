@@ -3600,6 +3600,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
     case DUR_SEE_INVISIBLE:
+    case DUR_SHROUD_OF_GOLUBRIA:
         return (6 * BASELINE_DELAY);
 
     case DUR_LEVITATION:
@@ -3890,6 +3891,7 @@ void display_char_status()
         DUR_SCRYING,
         STATUS_CLINGING,
         STATUS_FIREBALL,
+        DUR_SHROUD_OF_GOLUBRIA,
     };
 
     status_info inf;

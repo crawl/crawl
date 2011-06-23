@@ -2955,6 +2955,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SHROUD_OF_GOLUBRIA, "Shroud of Golubria",
+     SPTYP_CHARMS | SPTYP_TRANSLOCATION,
+     SPFLAG_NONE,
+     2,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

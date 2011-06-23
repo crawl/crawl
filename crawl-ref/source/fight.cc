@@ -5794,8 +5794,10 @@ void melee_attack::mons_perform_attack_rounds()
 
             if (this_round_hit)
             {
-                did_hit = true;
                 perceived_attack = true;
+                // Compute damage now, but we might not actually do the damage
+                // because of spines killing the attacker or
+                // Shroud of Golubria protecting the defender.
                 damage_done = mons_calc_damage(attk);
             }
             else
@@ -5815,6 +5817,33 @@ void melee_attack::mons_perform_attack_rounds()
                 if (!attacker->alive())
                     break;
             }
+
+            if (attacker != defender &&
+                defender->atype() == ACT_PLAYER &&
+                you.duration[DUR_SHROUD_OF_GOLUBRIA] && this_round_hit &&
+                !one_chance_in(3))
+            {
+                // Chance of the shroud falling apart increases based on the
+                // strain on it, i.e. the damage it is redirecting.
+                if (x_chance_in_y(damage_done, 10+damage_done))
+                {
+                    mpr("Your shroud falls apart!", MSGCH_WARN);
+                    you.duration[DUR_SHROUD_OF_GOLUBRIA] = 0;
+                }
+                else
+                {
+                    if (needs_message)
+                    {
+                        mprf("Your shroud bends %s attack away%s",
+                             atk_name(DESC_NOCAP_ITS).c_str(),
+                             attack_strength_punctuation().c_str());
+                    }
+                    this_round_hit = false;
+                    damage_done = 0;
+                }
+            }
+            if (this_round_hit)
+                did_hit = true;
         }
 
         if (check_unrand_effects())
