@@ -39,39 +39,33 @@
 
 static int _exercise2(skill_type exsk);
 
-// These values were calculated by running a simulation of gaining skills.
-// The goal is to try and match the old cost system which used the player's
-// experience level (which has a number of problems) so things shouldn't
-// seem too different to the player... but we still try to err on the
-// high side for the lower levels. -- bwr
 int skill_cost_needed(int level)
 {
-    // The average starting skill total is actually lower, but
-    // some classes get about 2200, and they would probably be
-    // start around skill cost level 3 if we used the average.  -- bwr
-    int ret = 2200;
+    static bool init = true;
+    static int scn[27];
 
-    switch (level)
+    if (init)
     {
-    case 1: ret = 0; break;
+        species_type sp = you.species;
+        you.species = SP_MINOTAUR;
 
-    case 2:  ret +=   250; break; //  250 -- big because of initial 25 pool
-    case 3:  ret +=   350; break; //  100
-    case 4:  ret +=   550; break; //  200
-    case 5:  ret +=   900; break; //  350
-    case 6:  ret +=  1300; break; //  400
-    case 7:  ret +=  1900; break; //  600
-    case 8:  ret +=  2800; break; //  900
-    case 9:  ret +=  4200; break; // 1400
-    case 10: ret +=  5900; break; // 1700
-    case 11: ret +=  9000; break; // 3100
+        // The average starting skill total is actually lower, but warpers get
+        // about 1200, and they would start around skill cost level 4 if we
+        // used the average.
+        scn[0] = 1200;
 
-    default:
-        ret += 9000 + (4000 * (level - 11));
-        break;
+        for (int i = 1; i < 27; ++i)
+        {
+            scn[i] = scn[i - 1] + (exp_needed(i + 1) - exp_needed(i)) * 10
+                                  / calc_skill_cost(i);
+        }
+
+        scn[0] = 0;
+        you.species = sp;
+        init = false;
     }
 
-    return (ret);
+    return scn[level - 1];
 }
 
 void calc_total_skill_points(void)
@@ -95,53 +89,19 @@ void calc_total_skill_points(void)
 }
 
 // skill_cost_level makes skills more expensive for more experienced characters
-// skill_level      makes higher skills more expensive
-int calc_skill_cost(int skill_cost_level, int skill_level)
+int calc_skill_cost(int skill_cost_level)
 {
-    int ret = 1 + skill_level;
-
-    // does not yet allow for loss of skill levels.
-    if (skill_level > 9)
-    {
-        ret *= (skill_level - 7);
-        ret /= 3;
-    }
-
-    if (skill_cost_level > 4)
-        ret += skill_cost_level - 4;
-    if (skill_cost_level > 7)
-        ret += skill_cost_level - 7;
-    if (skill_cost_level > 10)
-        ret += skill_cost_level - 10;
-    if (skill_cost_level > 13)
-        ret += skill_cost_level - 13;
-    if (skill_cost_level > 16)
-        ret += skill_cost_level - 16;
-
-    if (skill_cost_level > 10)
-    {
-        ret *= (skill_cost_level - 5);
-        ret /= 5;
-    }
-
-    if (skill_level > 7)
-        ret += 1;
-    if (skill_level > 9)
-        ret += 2;
-    if (skill_level > 11)
-        ret += 3;
-    if (skill_level > 13)
-        ret += 4;
-    if (skill_level > 15)
-        ret += 5;
-
-    if (ret > MAX_COST_LIMIT)
-        ret = MAX_COST_LIMIT;
+    const int cost[] = { 1, 2, 3, 4, 5,            // 1-5
+                         7, 9, 12, 15, 18,         // 6-10
+                         28, 40, 56, 76, 100,      // 11-15
+                         130, 165, 195, 215, 230,  // 16-20
+                         240, 248, 250, 250, 250,  // 21-25
+                         250, 250 };
 
     if (crawl_state.game_is_zotdef())
-        ret = ret / 3 + 1;
-
-    return (ret);
+        return cost[skill_cost_level - 1] / 3 + 1;
+    else
+        return cost[skill_cost_level - 1];
 }
 
 // Characters are actually granted skill points, not skill levels.
@@ -414,8 +374,14 @@ static int _exercise2(skill_type exsk)
     // This will be added to you.skill_points[exsk];
     int skill_inc = 10;
 
+    // skill cost of level 1 has been reduced from 200 to 50. XP cost has
+    // been raised to compensate, and this is to increase the number of needed
+    // exercises to 10 (was 20).
+    if (you.skills[exsk] == 0)
+        skill_inc /= 2;
+
     // This will be deducted from you.exp_available.
-    int cost = calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
+    int cost = calc_skill_cost(you.skill_cost_level);
 
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
@@ -465,17 +431,6 @@ static int _exercise2(skill_type exsk)
 
     if (skill_inc <= 0)
         return (0);
-
-    if (is_antitrained(exsk))
-    {
-        cost -= random2(3);
-        cost = std::max<int>(cost, 2);
-    }
-    else
-    {
-        cost -= random2(5);        // XXX: what's this for?
-        cost = std::max<int>(cost, 1); // No free lunch.
-    }
 
     you.skill_points[exsk] += skill_inc;
     you.ct_skill_points[exsk] += (1 - 1 / crosstrain_bonus(exsk))

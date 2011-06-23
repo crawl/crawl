@@ -2734,8 +2734,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
         else
         {
             int amount = exp_gained * 10
-                                / calc_skill_cost(you.skill_cost_level,
-                                            you.skills[you.transfer_to_skill]);
+                                / calc_skill_cost(you.skill_cost_level);
             if (amount >= 20 || one_chance_in(20 - amount))
             {
                 amount = std::max(20, amount);
