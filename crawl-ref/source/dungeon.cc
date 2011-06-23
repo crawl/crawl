@@ -3351,7 +3351,11 @@ static coord_def _dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
 
 static void _place_specific_feature(dungeon_feature_type feat)
 {
-    coord_def c = _dgn_random_point_in_bounds(DNGN_FLOOR, 0, DNGN_UNSEEN, true);
+    /* Only overwrite vaults when absolutely necessary. */
+    coord_def c = _dgn_random_point_in_bounds(DNGN_FLOOR, MMT_VAULT, DNGN_UNSEEN, true);
+    if (!in_bounds(c))
+        c = _dgn_random_point_in_bounds(DNGN_FLOOR, 0, DNGN_UNSEEN, true);
+
     if (in_bounds(c))
         env.grid(c) = feat;
     else
