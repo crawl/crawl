@@ -1998,7 +1998,7 @@ static bool _jiyva_mutate()
 
     if (rand < 10)
         return (delete_mutation(RANDOM_SLIME_MUTATION, true, false, true));
-    else if (rand < 40)
+    else if (rand < 35)
         return (delete_mutation(RANDOM_NON_SLIME_MUTATION, true, false, true));
     else if (rand < 60)
         return (mutate(RANDOM_MUTATION, true, false, true));
