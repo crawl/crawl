@@ -1828,6 +1828,40 @@ MAP
 .......
 ENDMAP
 
+NAME:  kilobyte_tornado_obelisk
+TAGS:  no_monster_gen
+DEPTH: D:15-27, Elf
+ITEM:  acquire any
+MONS:  statue generate_awake n_rpl name:diamond_obelisk hd:15 hp:10000 \
+       col:white tile:mons_diamond_obelisk
+KPROP: .d1 = no_tele_into
+{{
+  hook("post_place", function()
+    for mons in iter.mons_rect_iterator(dgn.point(1, 1),
+                         dgn.point(dgn.GXM - 2, dgn.GYM - 2)) do
+      if mons.name == "diamond obelisk" then
+        mons.add_ench("perm_tornado", 1, 1)
+      end
+    end
+  end)
+}}
+MAP
+     ccc
+    ccdcc
+   cc...cc
+  cc.....cc
+  c.......c
+ cc.......cc
+ c.........c
+ c....1....c
+ c.........c
+ cc.......cc
+  c.......c
+  cc.....cc
+   cc...cc
+    cc@cc
+ENDMAP
+
 
 #######################################################################
 #

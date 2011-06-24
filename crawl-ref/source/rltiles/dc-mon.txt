@@ -417,6 +417,7 @@ guardian-eyeclosed-flame3
 guardian-eyeclosed-flame4
 
 firespitter_statue MONS_FIRESPITTER_STATUE
+obelisk MONS_DIAMOND_OBELISK
 %rim 1
 
 ## Gargoyles ('9')

@@ -658,6 +658,10 @@ demonspawn
 
 This creature could almost pass for human... yet you sense something evil about it.
 %%%%
+diamond obelisk
+
+This obelisk seems to be for all practical purposes indestructible. You'd better find a way around... it might even provide one.
+%%%%
 dire elephant
 
 With thick skin, even thicker legs and a memory to die for, this enraged pachyderm would like nothing more than to kill you and feast on your remains.
