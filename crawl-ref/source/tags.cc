@@ -1718,7 +1718,7 @@ static void tag_read_you(reader &th)
         case JOB_GLADIATOR:
             you.hp_max_perm = 14; break;
 
-        case JOB_CRUSADER:
+        case JOB_SKALD:
         case JOB_CHAOS_KNIGHT:
         case JOB_DEATH_KNIGHT:
         case JOB_ABYSSAL_KNIGHT:
@@ -1763,7 +1763,7 @@ static void tag_read_you(reader &th)
         default:
             you.mp_max_perm = 0;
             break;
-        case JOB_CRUSADER:
+        case JOB_SKALD:
         case JOB_CHAOS_KNIGHT:
         case JOB_ABYSSAL_KNIGHT:
         case JOB_STALKER:

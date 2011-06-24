@@ -154,7 +154,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_BERSERKER:         s =  9; i = -1; d =  4; hp = 15; mp = 0; break;
     case JOB_GLADIATOR:         s =  7; i =  0; d =  5; hp = 14; mp = 0; break;
 
-    case JOB_CRUSADER:          s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
+    case JOB_SKALD:             s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 2; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
@@ -658,7 +658,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_INVOCATIONS]    = 4;
         break;
 
-    case JOB_CRUSADER:
+    case JOB_SKALD:
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         _update_weapon(ng);
 
