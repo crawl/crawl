@@ -61,7 +61,8 @@ void che_handle_change(che_change_type ct, int diff)
         return;
 
     const std::string typestr = (ct == CB_PIETY ? "piety" :
-                (ct == CB_PONDEROUSNESS ? "ponderousness" : "ponderous count"));
+                (ct == CB_PONDEROUSNESS ? "ponderousness" :
+            (ct == CB_PONDEROUS_COUNT ? "ponderous count" : "slots")));
 
     // Values after the change.
     const int ponder = player_ponderousness();
@@ -71,15 +72,22 @@ void che_handle_change(che_change_type ct, int diff)
     // Reconstruct values before the change.
     int oldponder = ponder;
     int oldprank = prank;
+    int slots = player_armour_slots();
     if (ct == CB_PIETY)
         oldprank -= diff;
     else if (ct == CB_PONDEROUSNESS)
         oldponder -= diff;
-    else // ct == CB_PONDEROUS_COUNT
+    else if (ct == CB_PONDEROUS_COUNT)
     {
-        int slots = player_armour_slots();
         if (slots != 0)
             oldponder = ((player_ponderous_count() - diff) * 10)/slots;
+    }
+    else // ct == CB_SLOTS
+    {
+        if (slots - diff == 0)
+            oldponder = 0;
+        else
+            oldponder = (player_ponderous_count() * 10)/(slots - diff);
     }
     const int oldlev = std::min(oldponder, 2 * oldprank);
     dprf("Che %s %+d: %d/%d -> %d/%d", typestr.c_str(), diff,
