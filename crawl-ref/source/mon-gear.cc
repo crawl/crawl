@@ -593,6 +593,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
     case MONS_GREY_DRACONIAN:
+    case MONS_KENKU:
         if (mons_genus(mon->type) == MONS_NAGA)
             item_race = MAKE_ITEM_NO_RACE;
 
@@ -1548,6 +1549,14 @@ void give_shield(monster* mon, int level)
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
                                   coinflip()? ARM_LARGE_SHIELD : ARM_SHIELD,
+                                  level, MAKE_ITEM_NO_RACE);
+        }
+        break;
+    case MONS_KENKU:
+        if (one_chance_in(3))
+        {
+            make_item_for_monster(mon, OBJ_ARMOUR,
+                                  coinflip()? ARM_BUCKLER : ARM_SHIELD,
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;
