@@ -341,6 +341,19 @@ Roxanne cast
 
 @sphinx cast@
 %%%%
+Berserker Rage Rupert cast
+
+@The_monster@ roars madly and goes into a rage!
+%%%%
+Paralyse Rupert cast
+
+@The_monster@ roars, making @target@ freeze in fear.
+%%%%
+Confuse Rupert cast
+
+# Hrm, this could use more variables to sound acceptable.
+@The_monster@ yells loudly, causing @target@ to lose all wits.
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
