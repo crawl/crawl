@@ -186,6 +186,7 @@ bool mons_abyss(int mcls)
     case MONS_DEEP_DWARF_BERSERKER:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_UNBORN_DEEP_DWARF:
+    case MONS_KENKU:
         return (true);
     default:
         return (false);
@@ -332,6 +333,7 @@ int mons_rare_abyss(int mcls)
     case MONS_DEEP_DWARF_BERSERKER:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_UNBORN_DEEP_DWARF:
+    case MONS_KENKU:
         return 5;
 
     case MONS_AIR_ELEMENTAL:
