@@ -121,13 +121,6 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("There's a wall in the way.");
         return (false);
     }
-    else if (mons == NULL)
-    {
-        // Must return true, otherwise you get a free discovery
-        // of invisible monsters.
-        mpr("You attack empty space.");
-        return (true);
-    }
 
     // BCR - Added a check for monsters in the way.  Only checks cardinal
     //       directions.  Knight moves are ignored.  Assume the weapon
@@ -136,41 +129,36 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     // If we're attacking more than a space away...
     if (x_distance > 1 || y_distance > 1)
     {
-        bool success = false;
-        // If either the x or the y is the same, we should check for
-        // a monster:
-        if ((beam.target.x == you.pos().x || beam.target.y == you.pos().y)
+        bool success = true;
+        // If not a knight move, we should check for a monster:
+        if ((beam.target.x - you.pos().x) % 2 == 0
+            && (beam.target.y - you.pos().y) % 2 == 0
             && monster_at(middle))
         {
             const int skill = weapon_skill(wpn.base_type, wpn.sub_type);
 
-            if (x_chance_in_y(5 + (3 * skill), 40))
+            if (!x_chance_in_y(5 + (3 * skill), 40))
             {
-                mpr("You reach to attack!");
-                success = you_attack(mons->mindex(), false);
-            }
-            else
-            {
-                mpr("You could not reach far enough!");
-                return (true);
+                success = false;
+                beam.target = middle;
+                mons = monster_at(middle);
             }
         }
-        else
-        {
-            mpr("You reach to attack!");
-            success = you_attack(mons->mindex(), false);
-        }
-
         if (success)
-        {
-            // Monster might have died or gone away.
-            if (monster* m = monster_at(beam.target))
-                if (mons_is_mimic(m->type))
-                    mimic_alert(m);
-        }
+            mpr("You reach to attack!");
+        else
+            mpr("You could not reach far enough!");
+        success = you_attack(mons->mindex(), false);
     }
-    else
-        you_attack(mons->mindex(), false);
+
+    if (mons == NULL)
+    {
+        // Must return true, otherwise you get a free discovery
+        // of invisible monsters.
+        mpr("You attack empty space.");
+        return (true);
+    }
+    you_attack(mons->mindex(), false);
 
     return (true);
 }
