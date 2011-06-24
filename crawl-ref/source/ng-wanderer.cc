@@ -264,7 +264,6 @@ static void _wanderer_role_skill(stat_type role, int levels)
                                                      spell2);
         you.skills[selected_skill]++;
     }
-
 }
 
 // Select a random skill from all skills we have at least 1 level in.
