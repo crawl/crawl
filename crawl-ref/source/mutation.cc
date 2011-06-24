@@ -1196,6 +1196,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (gain_msg)
         mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
 
+    // Did we lose a slot?
+    slots = player_armour_slots() - slots;
+    if (slots != 0)
+        che_handle_change(CB_SLOTS, slots);
+
     // Do post-mutation effects.
     switch (mutat)
     {
@@ -1256,10 +1261,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     default:
         break;
     }
-    // Did we lose a slot?
-    slots = player_armour_slots() - slots;
-    if (slots != 0)
-        che_handle_change(CB_SLOTS, slots);
 
     // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
