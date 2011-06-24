@@ -142,12 +142,21 @@ static bool _reaching_weapon_attack(const item_def& wpn)
                 success = false;
                 beam.target = middle;
                 mons = monster_at(middle);
+                if (mons->wont_attack())
+                {
+                    // Let's assume friendlies cooperate.
+                    mpr("You could not reach far enough!");
+                    return true;
+                }
             }
         }
         if (success)
             mpr("You reach to attack!");
         else
-            mpr("You could not reach far enough!");
+        {
+            mprf("You could not reach far enough and hit %s!",
+                 mons->name(DESC_NOCAP_THE).c_str());
+        }
         success = you_attack(mons->mindex(), false);
     }
 
