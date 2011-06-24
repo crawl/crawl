@@ -397,18 +397,6 @@ static int _exercise2(skill_type exsk)
     if (you.skill_points[exsk] < skill_exp_needed(1, exsk))
         skill_inc = _stat_mult(exsk, skill_inc);
 
-    // Spellcasting and Inv/Evo is cheaper early on.
-    if (exsk >= SK_SPELLCASTING && exsk <= SK_EVOCATIONS)
-    {
-        if (you.skill_cost_level < 5)
-            cost /= 2;
-        else if (you.skill_cost_level < 15)
-        {
-            cost *= (10 + (you.skill_cost_level - 5));
-            cost /= 20;
-        }
-    }
-
     if (is_antitrained(exsk))
         cost *= ANTITRAIN_PENALTY;
 
