@@ -1208,10 +1208,7 @@ clean-rltiles:
 
 # To package, you *must* have lex and yacc to generate the intermediates.
 BSRC = build/crawl-ref/source/
-package-source: prebuildyacc
-	+@$(MAKE) source
-
-source: removeold
+source: removeold prebuildyacc
 	@git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
 	rm -rf build
 	mkdir build
@@ -1229,15 +1226,22 @@ source: removeold
 	  git describe --tags $(MERGE_BASE) 2> /dev/null) \
 	  > $(BSRC)util/release_ver
 	cd build && mv crawl-ref $(PKG_SRC_DIR)
+
+package-tarball-deps: source
 	cd build && tar cfj ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
+
+package-zipball-deps: source
 	@if which zip >/dev/null; then \
 	  echo "cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)"; \
 	  cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR); \
 	else \
 	  echo "**** No ZIP installed -- not creating the zipball."; \
 	fi
-	cd build && rm -rf $(PKG_SRC_DIR)/source/contrib \
-		 && tar cjf ../../../$(SRC_PKG_TAR_NODEPS) $(PKG_SRC_DIR)
+
+package-tarball-nodeps: source
+	cd build && tar cjf ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib $(PKG_SRC_DIR)
+
+package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
 	rm -rf build
 
 removeold:
