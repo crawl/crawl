@@ -169,6 +169,15 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     }
     you_attack(mons->mindex(), false);
 
+    if ((beam.target - you.pos()).abs() > 2)
+    {
+        // Reaching to mimics might be done over water, consider this ranged.
+        // It's silly for a weapon attack...
+        if (monster* m = monster_at(beam.target))
+        if (mons_is_mimic(m->type))
+            mimic_alert(m);
+    }
+
     return (true);
 }
 
