@@ -1026,7 +1026,7 @@ void MiscastEffect::_enchantment(int severity)
             if (target->atype() == ACT_PLAYER)
             {
                 mpr("You sense a malignant aura.");
-                curse_an_item(false);
+                curse_an_item();
                 break;
             }
             // Intentional fall-through for monsters.
@@ -1056,7 +1056,7 @@ void MiscastEffect::_enchantment(int severity)
             break;
         case 3:
             do
-                curse_an_item(false);
+                curse_an_item();
             while (!one_chance_in(3));
             mpr("You sense an overwhelmingly malignant aura!");
             break;

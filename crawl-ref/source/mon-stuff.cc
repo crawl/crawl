@@ -245,7 +245,7 @@ int get_mimic_colour(const monster* mimic)
 }
 
 // Monster curses a random player inventory item.
-bool curse_an_item(bool destroy_potions, bool quiet)
+bool curse_an_item(bool quiet)
 {
     // allowing these would enable mummy scumming
     if (you.religion == GOD_ASHENZARI)
@@ -269,9 +269,9 @@ bool curse_an_item(bool destroy_potions, bool quiet)
         if (you.inv[i].base_type == OBJ_WEAPONS
             || you.inv[i].base_type == OBJ_ARMOUR
             || you.inv[i].base_type == OBJ_JEWELLERY
-            || you.inv[i].base_type == OBJ_POTIONS)
+            || you.inv[i].base_type == OBJ_STAVES)
         {
-            if (you.inv[i] .cursed())
+            if (you.inv[i].cursed())
                 continue;
 
             if (you.inv[i].base_type != OBJ_POTIONS
@@ -280,9 +280,6 @@ bool curse_an_item(bool destroy_potions, bool quiet)
                 // Melded items cannot be cursed.
                 continue;
             }
-
-            if (you.inv[i].base_type == OBJ_POTIONS && !destroy_potions)
-                continue;
 
             // Item is valid for cursing, so we'll give it a chance.
             count++;
@@ -295,34 +292,7 @@ bool curse_an_item(bool destroy_potions, bool quiet)
     if (item == ENDOFPACK)
         return (false);
 
-    if (you.inv[item].base_type == OBJ_POTIONS)
-    {
-        int amount;
-        // Destroy at least two of the stack.
-        if (you.inv[item].quantity <= 2)
-            amount = you.inv[item].quantity;
-        else
-            amount = 2 + random2(you.inv[item].quantity - 1);
-
-        const std::string item_name = you.inv[item].name(DESC_PLAIN);
-        const int quantity = you.inv[item].quantity;
-        mprf("%s %s rot%s away!",
-             part_stack_string(amount, quantity).c_str(),
-             item_name.c_str(),
-             (amount == 1) ? "s" : "");
-
-        dec_inv_item_quantity(item, amount);
-
-        // We're being nice here, and only destroy the *oldest* potions.
-        if (is_blood_potion(you.inv[item]))
-            for (int i = 0; i < amount; i++)
-                remove_oldest_blood_potion(you.inv[item]);
-
-        if (item_value(you.inv[item], true) / amount > 2)
-            xom_is_stimulated(32 * amount);
-    }
-    else
-        do_curse_item(you.inv[item], false);
+    do_curse_item(you.inv[item], false);
 
     return (true);
 }
@@ -1161,7 +1131,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         }
 
         mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
-        curse_an_item(false);
+        curse_an_item();
     }
     else
     {
