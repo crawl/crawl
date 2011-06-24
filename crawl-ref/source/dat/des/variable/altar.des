@@ -1298,8 +1298,6 @@ NSUBST:     M = 1:1 / *:"
 SUBST:      ' : "'., ' = ''.
 COLOUR:     . = blue
 SUBST:      ' = ., " = .
-ITEM:       potion of gain intelligence w:2 / potion of brilliance /\
-            potion of magic / any book w:1
 MAP
         xx@xx
         x...x
@@ -1315,7 +1313,7 @@ MAP
    xx''.wwwww.''xx
     x'''.www.'''x
     xx'''...'''xx
-     xx''d'd''xx
+     xx'''''''xx
       xxx...xxx
         x._.x
         x...x
