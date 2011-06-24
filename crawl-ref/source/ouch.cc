@@ -850,16 +850,6 @@ bool drain_exp(bool announce_full)
         dprf("You lose %d experience points, %d from pool.",
              exp_drained, pool_drained);
 
-        char buf[128];
-        snprintf(buf, sizeof(buf),
-            "Drained %d experience points, %d from pool.%s%s",
-             exp_drained, pool_drained,
-             protection < 0 ? " rN-" :
-             protection == 1 ? " rN+" :
-             protection == 2 ? " rN++" : "",
-             you.religion == GOD_SHINING_ONE ? " TSO":"");
-        take_note(Note(NOTE_MESSAGE, 0, 0, buf));
-
         level_change();
 
         return (true);
