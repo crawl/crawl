@@ -3141,7 +3141,7 @@ bool ponderousify_armour()
     {
         mprf("You feel %s ponderous.",
              old_ponder? "even more" : "rather");
-        che_handle_change(CB_PONDEROUS, new_ponder - old_ponder);
+        che_handle_change(CB_PONDEROUSNESS, new_ponder - old_ponder);
     }
 
     return (true);
