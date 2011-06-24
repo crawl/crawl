@@ -32,7 +32,7 @@ int che_boost_level()
     if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
         return (0);
 
-    return (std::min(player_ponderousness(), piety_rank() - 1));
+    return (std::min(player_ponderousness(), 2*(piety_rank() - 1)));
 }
 
 int che_boost(che_boost_type bt, int level)
@@ -43,13 +43,13 @@ int che_boost(che_boost_type bt, int level)
     switch (bt)
     {
     case CB_RNEG:
-        return (level > 0 ? 1 : 0);
-    case CB_RCOLD:
         return (level > 1 ? 1 : 0);
+    case CB_RCOLD:
+        return (level > 3 ? 1 : 0);
     case CB_RFIRE:
-        return (level > 2 ? 1 : 0);
+        return (level > 5 ? 1 : 0);
     case CB_STATS:
-        return (level * (level + 1)) / 2;
+        return ((level * 3)/2);
     default:
         return (0);
     }
@@ -60,21 +60,28 @@ void che_handle_change(che_change_type ct, int diff)
     if (you.religion != GOD_CHEIBRIADOS)
         return;
 
-    const std::string typestr = (ct == CB_PIETY ? "piety" : "ponderous");
+    const std::string typestr = (ct == CB_PIETY ? "piety" :
+                (ct == CB_PONDEROUSNESS ? "ponderousness" : "ponderous count"));
 
     // Values after the change.
     const int ponder = player_ponderousness();
     const int prank = piety_rank() - 1;
-    const int newlev = std::min(ponder, prank);
+    const int newlev = std::min(ponder, 2 * prank);
 
     // Reconstruct values before the change.
     int oldponder = ponder;
     int oldprank = prank;
     if (ct == CB_PIETY)
         oldprank -= diff;
-    else // ct == CB_PONDEROUS
+    else if (ct == CB_PONDEROUSNESS)
         oldponder -= diff;
-    const int oldlev = std::min(oldponder, oldprank);
+    else // ct == CB_PONDEROUS_COUNT
+    {
+        int slots = player_armour_slots();
+        if (slots != 0)
+            oldponder = ((player_ponderous_count() - diff) * 10)/slots;
+    }
+    const int oldlev = std::min(oldponder, 2 * oldprank);
     dprf("Che %s %+d: %d/%d -> %d/%d", typestr.c_str(), diff,
          oldponder, oldprank,
          ponder, prank);

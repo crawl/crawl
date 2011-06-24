@@ -2026,7 +2026,7 @@ int player_movement_speed(bool ignore_burden)
         mv -= 2;
 
     // ponderous brand and artefact property
-    mv += 2 * player_ponderousness();
+    mv += player_ponderousness();
 
     // In the air, can fly fast (should be lightly burdened).
     if (!ignore_burden && you.light_flight())
@@ -2103,10 +2103,27 @@ int player_speed(void)
     return ps;
 }
 
-int player_ponderousness()
+int player_armour_slots()
+{
+    int armour_slot_count = 0;
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+        if (i != EQ_SHIELD && you_can_wear(i, true))
+            armour_slot_count++;
+    return armour_slot_count;
+}
+
+int player_ponderous_count()
 {
     return (scan_artefacts(ARTP_PONDEROUS)
             + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS));
+}
+
+int player_ponderousness()
+{
+    int slots = player_armour_slots();
+    if (slots == 0)
+        return 0;
+    return ((player_ponderous_count() * 10)/slots);
 }
 
 static int _player_armour_racial_bonus(const item_def& item)

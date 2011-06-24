@@ -223,7 +223,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     {
         if (msg)
             mpr("You feel rather ponderous.");
-        che_handle_change(CB_PONDEROUS, 1);
+        che_handle_change(CB_PONDEROUS_COUNT, 1);
     }
 
     if (proprt[ARTP_EYESIGHT])
@@ -343,7 +343,7 @@ static void _unequip_artefact_effect(item_def &item,
     {
         if (msg)
             mpr("That put a bit of spring back into your step.");
-        che_handle_change(CB_PONDEROUS, -1);
+        che_handle_change(CB_PONDEROUS_COUNT, -1);
     }
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
@@ -876,7 +876,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             if (!unmeld)
             {
                 mpr("You feel rather ponderous.");
-                che_handle_change(CB_PONDEROUS, 1);
+                che_handle_change(CB_PONDEROUS_COUNT, 1);
                 you.redraw_evasion = true;
             }
             break;
@@ -1024,7 +1024,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         if (!meld)
         {
             mpr("That put a bit of spring back into your step.");
-            che_handle_change(CB_PONDEROUS, -1);
+            che_handle_change(CB_PONDEROUS_COUNT, -1);
         }
         break;
 
