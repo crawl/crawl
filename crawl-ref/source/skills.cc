@@ -46,10 +46,15 @@ int skill_cost_needed(int level)
 
     if (init)
     {
+        // The progress of skill_cost_level depends only on total skill points,
+        // it's independent of species. We try to keep close to the old system
+        // and use minotaur as a reference (exp apt: 140). This means that for
+        // a species with 140 exp apt, skill_cost_level will be about the same
+        // as XL (a bit lower in the beginning).
         species_type sp = you.species;
         you.species = SP_MINOTAUR;
 
-        // The average starting skill total is actually lower, but warpers get
+        // The average starting skill total is actually lower, but monks get
         // about 1200, and they would start around skill cost level 4 if we
         // used the average.
         scn[0] = 1200;
