@@ -219,7 +219,7 @@ bool get_tornado_phase(const coord_def& loc)
         int y = loc.y - center.y;
         double dir = atan2(x, y)/PI;
         double dist = sqrt(x*x + y*y);
-        return ((int)floor(dir*2 + dist*0.33 + (you.frame_no % 54)/2.7))&1;
+        return ((int)floor(dir*2 + dist*0.33 - (you.frame_no % 54)/2.7))&1;
     }
 }
 
