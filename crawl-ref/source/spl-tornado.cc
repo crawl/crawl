@@ -181,10 +181,7 @@ static coord_def _rotate(coord_def org, coord_def from,
         double ang = atan2(avail[i].x - org.x, avail[i].y - org.y);
         double angdiff = std::min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
 
-        // Let's give 1 rad =~ 57⁰ of mismatch the same weight as changing
-        // radius by 1.  In general, infelicities in radius have bigger balance
-        // effect than those in angle.
-        double score = distdiff + angdiff;
+        double score = distdiff + angdiff * 2;
         if (score < hiscore)
             best = avail[i], hiscore = score;
     }
