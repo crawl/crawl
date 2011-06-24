@@ -1171,6 +1171,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     bool gain_msg = true;
 
+    // Count our slots before giving the mutation.
+    int slots = player_armour_slots();
     you.mutation[mutat]++;
 
     // More than three messages, need to give them by hand.
@@ -1254,6 +1256,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     default:
         break;
     }
+    // Did we lose a slot?
+    slots = player_armour_slots() - slots;
+    if (slots != 0)
+        che_handle_change(CB_SLOTS, slots);
 
     // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
@@ -1280,6 +1286,8 @@ static bool _delete_single_mutation_level(mutation_type mutat)
 
     bool lose_msg = true;
 
+    // Count our slots before giving the mutation.
+    int slots = player_armour_slots();
     you.mutation[mutat]--;
 
     switch (mutat)
@@ -1327,6 +1335,11 @@ static bool _delete_single_mutation_level(mutation_type mutat)
     }
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
+
+    // Did we gain a slot?
+    slots = player_armour_slots() - slots;
+    if (slots != 0)
+        che_handle_change(CB_SLOTS, slots);
 
     take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
 
