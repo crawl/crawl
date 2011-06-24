@@ -234,7 +234,7 @@ Earth Elementalist player ghost
 
 @player ghost@
 %%%%
-Crusader player ghost
+Skald player ghost
 
 @player ghost@
 %%%%

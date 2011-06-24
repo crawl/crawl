@@ -31,10 +31,6 @@ Conjurer
 
 Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
-Crusader
-
-Crusaders are melee fighters who can boost themselves in battle with spells from the book of War Chants.
-%%%%
 Death Knight
 
 Death Knights are melee fighters who command the undead in the name of Yredelemnul the Dark.
@@ -82,6 +78,10 @@ Necromancers are wizards specializing in the practice of death magic. They start
 Priest
 
 Priests are followers of Zin, spreading the god's word to the Dungeon's inhabitants. Hill Orcs can follow the orc god Beogh.
+%%%%
+Skald
+
+Skalds are melee fighters who can boost themselves in battle with spells from the book of War Chants.
 %%%%
 Stalker
 
