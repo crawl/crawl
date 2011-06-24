@@ -149,7 +149,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _CURSES_world_reacts(item_def *item)
 {
     if (one_chance_in(30))
-        curse_an_item(false);
+        curse_an_item();
 }
 
 static void _CURSES_melee_effect(item_def* weapon, actor* attacker,
