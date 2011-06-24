@@ -1848,18 +1848,18 @@ KPROP: .d1 = no_tele_into
 MAP
      ccc
     ccdcc
-   cc...cc
-  cc.....cc
-  c.......c
+  ccc...ccc
  cc.......cc
  c.........c
- c....1....c
- c.........c
+cc.........cc
+c...........c
+c.....1.....c
+c...........c
+cc.........cc
+ c.........cc
  cc.......cc
-  c.......c
-  cc.....cc
-   cc...cc
-    cc@cc
+  ccc...ccc
+    c.@.c
 ENDMAP
 
 
