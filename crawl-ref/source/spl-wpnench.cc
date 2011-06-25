@@ -94,8 +94,7 @@ bool brand_weapon(brand_type which_brand, int power)
 
     // Some brandings are restricted to certain damage types.
     const int wpn_type = get_vorpal_type(weapon);
-    if (which_brand == SPWPN_VENOM && wpn_type == DVORP_CRUSHING
-        || which_brand == SPWPN_DUMMY_CRUSHING && wpn_type != DVORP_CRUSHING)
+    if (which_brand == SPWPN_DUMMY_CRUSHING && wpn_type != DVORP_CRUSHING)
     {
         return (false);
     }
