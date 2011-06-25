@@ -810,13 +810,13 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
-NAME: layout_plan_4
+NAME: layout_chaotic_city
 DEPTH: Vault, Pan, 4-
 WEIGHT: 1 (Pan), 2 (Vault), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if not is_validating() then layout_plan_4() end
+    if not is_validating() then layout_chaotic_city() end
 }}
 MAP
 ENDMAP

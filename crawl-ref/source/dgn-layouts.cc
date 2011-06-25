@@ -42,7 +42,7 @@ static bool _may_overwrite_pos(coord_def c);
 static void _build_river(dungeon_feature_type river_type);
 static void _build_lake(dungeon_feature_type lake_type);
 
-void builder_basic(int level_number)
+void dgn_build_basic_level(int level_number)
 {
     env.level_build_method += " basic";
     env.level_layout_types.insert("basic");
@@ -131,7 +131,7 @@ void builder_basic(int level_number)
     _builder_extras(level_number);
 }
 
-void bigger_room(void)
+void dgn_build_bigger_room_level(void)
 {
     env.level_build_method += " bigger_room";
     env.level_layout_types.insert("open");
@@ -159,9 +159,9 @@ void bigger_room(void)
 }
 
 // A more chaotic version of city level.
-void plan_4(dungeon_feature_type force_wall)
+void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
 {
-    env.level_build_method += make_stringf(" plan_4 [%d]", (int) force_wall);
+    env.level_build_method += make_stringf(" chaotic_city [%d]", (int) force_wall);
     env.level_layout_types.insert("city");
 
     int number_boxes = 5000;
@@ -235,7 +235,7 @@ void plan_4(dungeon_feature_type force_wall)
     }
 }
 
-void build_rooms(int nrooms)
+void dgn_build_rooms_level(int nrooms)
 {
     env.level_build_method += " build_rooms";
     env.level_layout_types.insert("rooms");

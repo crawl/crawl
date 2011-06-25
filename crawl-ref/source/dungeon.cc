@@ -3884,12 +3884,12 @@ static void _build_postvault_level(vault_placement &place)
     // XXX: Change this so the level definition can explicitly state what
     // kind of wallification it wants.
     if (place.map.has_tag("dis"))
-        plan_4(DNGN_METAL_WALL);
+        dgn_build_chaotic_city_level(DNGN_METAL_WALL);
     else if (player_in_branch(BRANCH_SWAMP))
         dgn_build_swamp_level(place.level_number);
     else
     {
-        build_rooms(random_range(25, 100));
+        dgn_build_rooms_level(random_range(25, 100));
 
         // Excavate and connect the vault to the rest of the level.
         place.connect();
