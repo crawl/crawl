@@ -301,7 +301,7 @@ static monsterentry mondata[] = {
     MONS_VAMPIRE_BAT, 'b', DARKGREY, "vampire bat",
     M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY | M_NO_POLY_TO,
     MR_NO_FLAGS,
-    0, 8, MONS_BAT, MONS_VAMPIRE_BAT, MH_NATURAL, -1,
+    0, 8, MONS_BAT, MONS_VAMPIRE_BAT, MH_UNDEAD, -1,
     { {AT_BITE, AF_VAMPIRIC, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 2, 3, 0 },
     1, 14, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
