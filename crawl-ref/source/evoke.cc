@@ -130,10 +130,12 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (x_distance > 1 || y_distance > 1)
     {
         bool success = true;
+        monster *midmons;
         // If not a knight move, we should check for a monster:
         if ((beam.target.x - you.pos().x) % 2 == 0
             && (beam.target.y - you.pos().y) % 2 == 0
-            && monster_at(middle))
+            && (midmons = monster_at(middle))
+            && !midmons->submerged())
         {
             const int skill = weapon_skill(wpn.base_type, wpn.sub_type);
 
@@ -141,7 +143,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             {
                 success = false;
                 beam.target = middle;
-                mons = monster_at(middle);
+                mons = midmons;
                 if (mons->wont_attack())
                 {
                     // Let's assume friendlies cooperate.
