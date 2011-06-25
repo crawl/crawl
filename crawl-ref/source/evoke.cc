@@ -154,8 +154,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             mpr("You reach to attack!");
         else
         {
-            mprf("You could not reach far enough and hit %s!",
-                 mons->name(DESC_NOCAP_THE).c_str());
+            mprf("%s is in the way.",
+                 mons->observable() ? mons->name(DESC_CAP_THE).c_str()
+                                    : "Something you can't see");
         }
     }
 
