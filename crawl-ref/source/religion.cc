@@ -2535,6 +2535,7 @@ int piety_scale(int piety)
     return (piety);
 }
 
+static void _gain_piety_point();
 void gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
 {
     if (original_gain <= 0)
@@ -2553,21 +2554,21 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         pgn = sprint_modify_piety(pgn);
 
     pgn = div_rand_round(pgn, denominator);
-    if (pgn <= 0)
-        return;
+    while (pgn-- > 0)
+        _gain_piety_point();
+}
 
+static void _gain_piety_point()
+{
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
     {
-        dec_penance(pgn);
+        dec_penance(1);
         return;
     }
     else if (you.gift_timeout > 0)
     {
-        if (you.gift_timeout > pgn)
-            you.gift_timeout -= pgn;
-        else
-            you.gift_timeout = 0;
+        you.gift_timeout--;
 
         // Slow down piety gain to account for the fact that gifts
         // no longer have a piety cost for getting them.
@@ -2605,25 +2606,14 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         }
     }
 
-    // Apply hysteresis.
-    {
-        // piety_hysteresis is the amount of _loss_ stored up, so this
-        // may look backwards.
-        const int old_hysteresis = you.piety_hysteresis;
-        you.piety_hysteresis = std::max<int>(0, you.piety_hysteresis - pgn);
-        const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
-        pgn -= pgn_borrowed;
-
-#ifdef DEBUG_PIETY
-        mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from "
-                                "hysteresis, %d original)",
-             pgn, pgn_borrowed, original_gain);
-#endif
-    }
-
     int old_piety = you.piety;
-
-    you.piety += std::min<int>(MAX_PIETY - you.piety, pgn);
+    // Apply hysteresis.
+    // piety_hysteresis is the amount of _loss_ stored up, so this
+    // may look backwards.
+    if (you.piety_hysteresis)
+        you.piety_hysteresis--;
+    else if (you.piety < MAX_PIETY)
+        you.piety++;
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {

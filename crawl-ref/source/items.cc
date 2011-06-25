@@ -1647,9 +1647,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             simple_god_message(" appreciates your discovery of this rune.");
             // Important!  This should _not_ be scaled by bondage level, as
             // otherwise people would curse just before picking up.
-            for (int i = 0; i < 10; i++)
-                // do this in pieces because of the high piety taper
-                gain_piety(1, 1);
+            gain_piety(10, 1);
         }
 
         return (retval);
