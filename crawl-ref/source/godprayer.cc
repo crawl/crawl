@@ -560,6 +560,32 @@ static bool _destroyed_valuable_weapon(int value, int type)
     return (false);
 }
 
+static piety_gain_t _sac_corpse(const item_def& item)
+{
+    if (you.religion != GOD_OKAWARU)
+    {
+        gain_piety(13, 19);
+
+        // The feedback is not accurate any longer on purpose; it only reveals
+        // the rate you get piety at.
+        return x_chance_in_y(13, 19) ? PIETY_SOME : PIETY_NONE;
+    }
+
+    monster dummy;
+    dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum - 1 : item.plus);
+    if (item.props.exists(MONSTER_HIT_DICE))
+        dummy.hit_dice = item.props[MONSTER_HIT_DICE].get_short();
+    if (item.props.exists(MONSTER_NUMBER))
+        dummy.number   = item.props[MONSTER_NUMBER].get_short();
+    define_monster(&dummy);
+    int gain = get_fuzzied_monster_difficulty(&dummy);
+    dprf("fuzzied corpse difficulty: %d", gain);
+
+    gain_piety(gain, 7);
+    gain = div_rand_round(gain, 7);
+    return (gain <= 0) ? PIETY_NONE : (gain < 4) ? PIETY_SOME : PIETY_LOTS;
+}
+
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.).  Does not modify the actual item in any way.
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
@@ -568,13 +594,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     // XXX: this assumes that there's no overlap between
     //      item-accepting gods and corpse-accepting gods.
     if (god_likes_fresh_corpses(you.religion))
-    {
-        gain_piety(13, 19);
-
-        // The feedback is not accurate any longer on purpose; it only reveals
-        // the rate you get piety at.
-        return x_chance_in_y(13, 19) ? PIETY_SOME : PIETY_NONE;
-    }
+        return _sac_corpse(item);
 
     piety_gain_t relative_piety_gain = PIETY_NONE;
     switch (you.religion)

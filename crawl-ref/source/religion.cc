@@ -4150,6 +4150,14 @@ int get_tension(god_type god)
     return std::max(0, tension);
 }
 
+int get_fuzzied_monster_difficulty(const monster *mons)
+{
+    double factor = sqrt(exp_needed(you.experience_level) / 30.0);
+    int exp = exper_value(mons);
+    exp = random2(exp) + random2(exp);
+    return exp / (1 + factor);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Stuff for placing god gift monsters after the player's turn has ended.
 /////////////////////////////////////////////////////////////////////////////

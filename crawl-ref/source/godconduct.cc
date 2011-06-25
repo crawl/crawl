@@ -334,7 +334,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_KIKUBAAQUDGHA:
             case GOD_YREDELEMNUL:
-            case GOD_OKAWARU:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
@@ -360,7 +359,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
-            case GOD_OKAWARU:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
@@ -387,7 +385,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
-            case GOD_OKAWARU:
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_KIKUBAAQUDGHA:
@@ -520,7 +517,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
-            case GOD_OKAWARU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -533,7 +529,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 {
                     simple_god_message(" appreciates your killing of a holy "
                                        "being.");
-                    retval = true;
                     piety_change *= 2;
                 }
                 break;
@@ -969,6 +964,24 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
+        }
+
+        if (you.religion == GOD_OKAWARU
+            // currently no constructs and plants
+            && (thing_done == DID_KILL_LIVING
+             || thing_done == DID_KILL_UNDEAD
+             || thing_done == DID_KILL_DEMON
+             || thing_done == DID_KILL_HOLY)
+            && ! god_hates_attacking_friend(you.religion, victim))
+        {
+            piety_change = get_fuzzied_monster_difficulty(victim);
+            dprf("fuzzied monster difficulty: %d", piety_change);
+            piety_denom = 7;
+            if (piety_change > 32)
+                simple_god_message(" appreciates your kill.");
+            else if (piety_change > 0) // might still be miniscule
+                simple_god_message(" accepts your kill.");
+            retval = true;
         }
 
 #ifdef DEBUG_DIAGNOSTICS

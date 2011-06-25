@@ -384,9 +384,9 @@ monster_type fill_out_corpse(const monster* mons,
         }
 
         if (mons->has_ench(ENCH_SHAPESHIFTER))
-            corpse_class = MONS_SHAPESHIFTER;
+            mtype = corpse_class = MONS_SHAPESHIFTER;
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-            corpse_class = MONS_GLOWING_SHAPESHIFTER;
+            mtype = corpse_class = MONS_GLOWING_SHAPESHIFTER;
     }
 
     // Doesn't leave a corpse.
