@@ -191,11 +191,14 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
     // replace_area can also be used to fill in:
     for (i = 0; i < number_boxes; i++)
     {
-        b1x = 11 + random2(45);
-        b1y = 11 + random2(35);
+        int room_width = 3 + random2(7) + random2(5);
+        int room_height = 3 + random2(7) + random2(5);
 
-        b2x = b1x + 3 + random2(7) + random2(5);
-        b2y = b1y + 3 + random2(7) + random2(5);
+        b1x = 11 + random2(GXM - 21 - room_width);
+        b1y = 11 + random2(GYM - 21 - room_height);
+
+        b2x = b1x + room_width;
+        b2y = b1y + room_height;
 
         dgn_region box = dgn_region::absolute(b1x, b1y, b2x, b2y);
         if (_find_forbidden_in_area(box, MMT_VAULT))
