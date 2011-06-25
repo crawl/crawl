@@ -316,8 +316,8 @@ std::string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 
-void builder_basic(int level_number);
-void bigger_room();
-void plan_4(dungeon_feature_type force_wall);
+bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
+int count_feature_in_box(int x0, int y0, int x1, int y1,
+                         dungeon_feature_type feat);
 
 #endif
