@@ -95,8 +95,6 @@ static const int ndisplayed_skills = ARRAYSZ(skill_display_order);
 
 enum skill_menu_flags
 {
-    SKMF_NONE            = 0,
-
 //Actions
     SKMF_DO_PRACTISE     = 0x0001,
     SKMF_DO_SHOW_DESC    = 0x0002,
@@ -172,7 +170,7 @@ static const int SK_ARR_COL =  2;
 class SkillMenu : public PrecisionMenu
 {
 public:
-    SkillMenu(int flags);
+    SkillMenu(bool reskilling);
     bool is_set(int flag) const;
     void set_flag(int flag);
     void clear_flag(int flag);
@@ -183,8 +181,6 @@ public:
     void show_description(skill_type sk);
     void toggle_show_all();
     void clear_selections();
-    void set_crosstrain();
-    void set_antitrain();
 
 private:
     MenuFreeform*        m_ff;
@@ -197,6 +193,8 @@ private:
 
     bool m_crosstrain;
     bool m_antitrain;
+    bool m_enhanced;
+    bool m_reduced;
 
     SkillMenuEntry  m_skills[SK_ARR_LN][SK_ARR_COL];
 
@@ -210,6 +208,7 @@ private:
     std::queue<int> m_disp_queue;
 
     SkillMenuEntry* _find_entry(skill_type sk);
+    void _init_flags(bool reskilling);
     void _init_disp_queue();
     void _init_title();
     void _init_footer(coord_def coord);
@@ -217,13 +216,12 @@ private:
     void _refresh_names();
     void _set_title();
     void _set_skills();
-    void _set_help(int flag = SKMF_NONE);
+    void _set_help(int flag = 0);
     void _set_footer();
     TextItem* _find_closest_selectable(int start_ln, int col);
     void _set_links();
     int _get_next_action() const;
     int _get_next_display() const;
-    bool _skill_enhanced() const;
 };
 
 #endif
