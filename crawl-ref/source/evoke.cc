@@ -157,7 +157,6 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             mprf("You could not reach far enough and hit %s!",
                  mons->name(DESC_NOCAP_THE).c_str());
         }
-        success = you_attack(mons->mindex(), false);
     }
 
     if (mons == NULL)
