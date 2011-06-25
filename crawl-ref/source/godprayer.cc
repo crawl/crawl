@@ -565,8 +565,6 @@ static bool _destroyed_valuable_weapon(int value, int type)
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
        int *js, bool first)
 {
-    piety_gain_t relative_piety_gain = PIETY_NONE;
-
     // XXX: this assumes that there's no overlap between
     //      item-accepting gods and corpse-accepting gods.
     if (god_likes_fresh_corpses(you.religion))
@@ -575,146 +573,144 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
 
         // The feedback is not accurate any longer on purpose; it only reveals
         // the rate you get piety at.
-        if (x_chance_in_y(13, 19))
-            relative_piety_gain = PIETY_SOME;
+        return x_chance_in_y(13, 19) ? PIETY_SOME : PIETY_NONE;
     }
-    else
+
+    piety_gain_t relative_piety_gain = PIETY_NONE;
+    switch (you.religion)
     {
-        switch (you.religion)
-        {
-        case GOD_ELYVILON:
-        {
-            const int value = item_value(item) / item.quantity;
-            const bool valuable_weapon =
-                _destroyed_valuable_weapon(value, item.base_type);
-            const bool unholy_weapon = is_unholy_item(item);
-            const bool evil_weapon = is_evil_item(item);
+    case GOD_ELYVILON:
+    {
+        const int value = item_value(item) / item.quantity;
+        const bool valuable_weapon =
+            _destroyed_valuable_weapon(value, item.base_type);
+        const bool unholy_weapon = is_unholy_item(item);
+        const bool evil_weapon = is_evil_item(item);
 
-            if (valuable_weapon || unholy_weapon || evil_weapon)
+        if (valuable_weapon || unholy_weapon || evil_weapon)
+        {
+            if (unholy_weapon || evil_weapon)
             {
-                if (unholy_weapon || evil_weapon)
+                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
+
+                // Print this in addition to the above!
+                if (first)
                 {
-                    const char *desc_weapon = evil_weapon ? "evil" : "unholy";
-
-                    // Print this in addition to the above!
-                    if (first)
-                    {
-                        simple_god_message(make_stringf(
-                                 " welcomes the destruction of %s %s weapon%s.",
-                                 item.quantity == 1 ? "this" : "these",
-                                 desc_weapon,
-                                 item.quantity == 1 ? ""     : "s").c_str(),
-                                 GOD_ELYVILON);
-                    }
+                    simple_god_message(make_stringf(
+                             " welcomes the destruction of %s %s weapon%s.",
+                             item.quantity == 1 ? "this" : "these",
+                             desc_weapon,
+                             item.quantity == 1 ? ""     : "s").c_str(),
+                             GOD_ELYVILON);
                 }
-
-                gain_piety(1);
-                relative_piety_gain = PIETY_SOME;
             }
-            break;
+
+            gain_piety(1);
+            relative_piety_gain = PIETY_SOME;
         }
+        break;
+    }
 
-        case GOD_BEOGH:
+    case GOD_BEOGH:
+    {
+        const int item_orig = item.orig_monnum - 1;
+
+        int chance = 4;
+
+        if (item_orig == MONS_SAINT_ROKA)
+            chance += 12;
+        else if (item_orig == MONS_ORC_HIGH_PRIEST)
+            chance += 8;
+        else if (item_orig == MONS_ORC_PRIEST)
+            chance += 4;
+
+        if (food_is_rotten(item))
+            chance--;
+        else if (item.sub_type == CORPSE_SKELETON)
+            chance -= 2;
+
+        gain_piety(chance, 20);
+        if (x_chance_in_y(chance, 20))
+            relative_piety_gain = PIETY_SOME;
+        break;
+    }
+
+    case GOD_NEMELEX_XOBEH:
+    {
+        // item_value() multiplies by quantity.
+        const int value = item_value(item) / item.quantity;
+
+        if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
         {
-            const int item_orig = item.orig_monnum - 1;
-
-            int chance = 4;
-
-            if (item_orig == MONS_SAINT_ROKA)
-                chance += 12;
-            else if (item_orig == MONS_ORC_HIGH_PRIEST)
-                chance += 8;
-            else if (item_orig == MONS_ORC_PRIEST)
-                chance += 4;
-
-            if (food_is_rotten(item))
-                chance--;
-            else if (item.sub_type == CORPSE_SKELETON)
-                chance -= 2;
-
-            gain_piety(chance, 20);
-            if (x_chance_in_y(chance, 20))
-                relative_piety_gain = PIETY_SOME;
-            break;
-        }
-
-        case GOD_NEMELEX_XOBEH:
-        {
-            // item_value() multiplies by quantity.
-            const int value = item_value(item) / item.quantity;
-
-            if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
-            {
-                you.attribute[ATTR_CARD_COUNTDOWN]--;
+            you.attribute[ATTR_CARD_COUNTDOWN]--;
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
-                mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
-                     you.attribute[ATTR_CARD_COUNTDOWN]);
+            mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
+                 you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
-            }
-            // Nemelex piety gain is fairly fast... at least when you
-            // have low piety.
-            int piety_change, piety_denom;
-            if (item.base_type == OBJ_CORPSES)
-            {
-                piety_change = 1;
-                piety_denom = 2 + you.piety/50;
-            }
-            else
-            {
-                piety_change = value/2 + 1;
-                if (is_artefact(item))
-                    piety_change *= 2;
-                piety_denom = 30 + you.piety/2;
-            }
-
-            gain_piety(piety_change, piety_denom);
-
-            // Preserving the old behaviour of giving the big message for
-            // artifacts and artifacts only.
-            relative_piety_gain = x_chance_in_y(piety_change, piety_denom) ?
-                                    is_artefact(item) ?
-                                      PIETY_LOTS : PIETY_SOME : PIETY_NONE;
-
-            if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
-                || is_blood_potion(item))
-            {
-                // Count chunks and blood potions towards decks of
-                // Summoning.
-                you.sacrifice_value[OBJ_CORPSES] += value;
-            }
-            else if (item.base_type == OBJ_CORPSES)
-            {
-#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
-                mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
-                     item_mass(item));
-#endif
-                you.sacrifice_value[item.base_type] += item_mass(item);
-            }
-            else
-                you.sacrifice_value[item.base_type] += value;
-            break;
         }
-
-        case GOD_JIYVA:
+        // Nemelex piety gain is fairly fast... at least when you
+        // have low piety.
+        int piety_change, piety_denom;
+        if (item.base_type == OBJ_CORPSES)
         {
-            // item_value() multiplies by quantity.
-            const int value = item_value(item) / item.quantity;
-            // compress into range 0..250
-            const int stepped = stepdown_value(value, 50, 50, 200, 250);
-            gain_piety(stepped, 50);
-            relative_piety_gain = (piety_gain_t)std::min(2,
-                                    div_rand_round(stepped, 50));
-            jiyva_slurp_bonus(div_rand_round(stepped, 50), js);
-            break;
+            piety_change = 1;
+            piety_denom = 2 + you.piety/50;
+        }
+        else
+        {
+            piety_change = value/2 + 1;
+            if (is_artefact(item))
+                piety_change *= 2;
+            piety_denom = 30 + you.piety/2;
         }
 
-        case GOD_ASHENZARI:
-            _ashenzari_sac_scroll(item);
-            break;
+        gain_piety(piety_change, piety_denom);
 
-        default:
-            break;
+        // Preserving the old behaviour of giving the big message for
+        // artifacts and artifacts only.
+        relative_piety_gain = x_chance_in_y(piety_change, piety_denom) ?
+                                is_artefact(item) ?
+                                  PIETY_LOTS : PIETY_SOME : PIETY_NONE;
+
+        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
+            || is_blood_potion(item))
+        {
+            // Count chunks and blood potions towards decks of
+            // Summoning.
+            you.sacrifice_value[OBJ_CORPSES] += value;
         }
+        else if (item.base_type == OBJ_CORPSES)
+        {
+#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
+            mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
+                 item_mass(item));
+#endif
+            you.sacrifice_value[item.base_type] += item_mass(item);
+        }
+        else
+            you.sacrifice_value[item.base_type] += value;
+        break;
+    }
+
+    case GOD_JIYVA:
+    {
+        // item_value() multiplies by quantity.
+        const int value = item_value(item) / item.quantity;
+        // compress into range 0..250
+        const int stepped = stepdown_value(value, 50, 50, 200, 250);
+        gain_piety(stepped, 50);
+        relative_piety_gain = (piety_gain_t)std::min(2,
+                                div_rand_round(stepped, 50));
+        jiyva_slurp_bonus(div_rand_round(stepped, 50), js);
+        break;
+    }
+
+    case GOD_ASHENZARI:
+        _ashenzari_sac_scroll(item);
+        break;
+
+    default:
+        break;
     }
 
     return (relative_piety_gain);
