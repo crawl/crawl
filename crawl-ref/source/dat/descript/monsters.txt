@@ -1876,6 +1876,10 @@ vampire
 
 A powerful blood-drinking undead.
 %%%%
+vampire bat
+
+The preferred form for vampires in disguise: a blood-sucking undead bat.
+%%%%
 vampire knight
 
 A powerful warrior, with skills undiminished by undeath. It complements its combat prowess with powerful enchantments.
