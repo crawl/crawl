@@ -5711,6 +5711,7 @@ void melee_attack::mons_perform_attack_rounds()
 
         bool shield_blocked = false;
         bool this_round_hit = false;
+        bool shroud_broken = false;
 
         if (attacker != defender)
         {
@@ -5827,7 +5828,9 @@ void melee_attack::mons_perform_attack_rounds()
                 // strain on it, i.e. the damage it is redirecting.
                 if (x_chance_in_y(damage_done, 10+damage_done))
                 {
-                    mpr("Your shroud falls apart!", MSGCH_WARN);
+                    // Delay the message for the shroud breaking until after
+                    // the attack message.
+                    shroud_broken = true;
                     you.duration[DUR_SHROUD_OF_GOLUBRIA] = 0;
                 }
                 else
@@ -5857,7 +5860,8 @@ void melee_attack::mons_perform_attack_rounds()
             if (shield_blocked)
                 dprf("ERROR: Non-zero damage after shield block!");
             mons_announce_hit(attk);
-
+            if (shroud_broken)
+                mpr("Your shroud falls apart!", MSGCH_WARN);
             if (defender == &you)
                 practise(EX_MONSTER_WILL_HIT);
 
