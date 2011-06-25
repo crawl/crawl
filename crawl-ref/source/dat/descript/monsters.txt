@@ -900,10 +900,6 @@ giant mite
 
 A large arachnid with vicious poisoned mouth-parts.
 %%%%
-vampire mosquito
-
-This unfortunate and now massive creature once fed upon the blood of a vampire. Now it wants to feed upon yours.
-%%%%
 giant newt
 
 Several times the size of a normal newt, but still not really impressive.
@@ -1887,6 +1883,10 @@ A powerful warrior, with skills undiminished by undeath. It complements its comb
 vampire mage
 
 Undeath has not lessened this powerful mage.
+%%%%
+vampire mosquito
+
+This unfortunate and now massive creature once fed upon the blood of a vampire. Now it wants to feed upon yours.
 %%%%
 vapour
 
