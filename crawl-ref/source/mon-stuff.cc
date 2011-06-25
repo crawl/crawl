@@ -662,6 +662,20 @@ void note_montiers()
 #endif
     for (unsigned int i = 0; i < ARRAYSZ(you.montiers); i++)
         you.montiers[i] = 0;
+
+    if (you.props.exists("oka0") && you.props.exists("oka1"))
+    {
+        char buf[128];
+        snprintf(buf, sizeof(buf),
+                 "Okawaru piety gains: old %4.2f, new %4.2f, new unfloored %4.2f",
+                 you.props["oka0"].get_float(),
+                 you.props["oka1"].get_float(),
+                 you.props["oka2"].get_float());
+        take_note(Note(NOTE_MESSAGE, 0, 0, buf));
+        you.props.erase("oka0");
+        you.props.erase("oka1");
+        you.props.erase("oka2");
+    }
 }
 #endif
 

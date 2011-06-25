@@ -334,6 +334,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_KIKUBAAQUDGHA:
             case GOD_YREDELEMNUL:
+            case GOD_OKAWARU:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
@@ -359,6 +360,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+            case GOD_OKAWARU:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
@@ -385,6 +387,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+            case GOD_OKAWARU:
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_KIKUBAAQUDGHA:
@@ -517,6 +520,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
+            case GOD_OKAWARU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -974,14 +978,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
              || thing_done == DID_KILL_HOLY)
             && ! god_hates_attacking_friend(you.religion, victim))
         {
-            piety_change = get_fuzzied_monster_difficulty(victim);
-            dprf("fuzzied monster difficulty: %d", piety_change);
-            piety_denom = 7;
-            if (piety_change > 32)
-                simple_god_message(" appreciates your kill.");
-            else if (piety_change > 0) // might still be miniscule
-                simple_god_message(" accepts your kill.");
-            retval = true;
+            int gain = get_fuzzied_monster_difficulty(victim);
+            dprf("fuzzied monster difficulty: %4.2f", gain*0.01);
+            okawaru_gain_piety(gain, 700);
+            // piety_denom = 700;
+            // if (piety_change > 3200)
+            //     simple_god_message(" appreciates your kill.");
+            // else if (piety_change > 9) // might still be miniscule
+            //     simple_god_message(" accepts your kill.");
+            // retval = true;
         }
 
 #ifdef DEBUG_DIAGNOSTICS
