@@ -10,6 +10,7 @@
 #include "dungeon.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
+#include "dgn-layouts.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "coordit.h"
