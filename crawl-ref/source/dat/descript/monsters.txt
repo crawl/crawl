@@ -938,7 +938,7 @@ A small, stout humanoid said to be good at finding its way through underground p
 %%%%
 goblin
 
-A short, ugly and unfriendly humanoid:  squat, broad, flat-nosed, sallow-skinned, with a wide mouth and pistachio-shaped eyes.
+A short, ugly and unfriendly humanoid: squat, broad, flat-nosed, sallow-skinned, with a wide mouth and pistachio-shaped eyes.
 %%%%
 golden dragon
 
