@@ -201,7 +201,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
         if (_find_forbidden_in_area(box, MMT_VAULT))
             continue;
 
-        if (_count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
+        if (_count_antifeature_in_box(b1x-1, b1y-1, b2x+2, b2y+2, DNGN_FLOOR))
             continue;
 
         if (force_wall == NUM_FEATURES && one_chance_in(3))
@@ -213,7 +213,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
         }
 
         if (one_chance_in(3))
-            _box_room(b1x, b2x - 1, b1y, b2y - 1, drawing);
+            _box_room(b1x, b2x, b1y, b2y, drawing);
         else
             dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
     }
@@ -271,7 +271,7 @@ void dgn_build_rooms_level(int nrooms)
 
         if (i > 0 && exclusive
          && _count_antifeature_in_box(room.pos.x - 1, room.pos.y - 1,
-                                      end.x, end.y, DNGN_ROCK_WALL))
+                                      end.x + 2, end.y + 2, DNGN_ROCK_WALL))
         {
             continue;
         }
