@@ -1637,6 +1637,9 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                 mprf("You now have %d runes.", nrunes);
         }
 
+        dungeon_events.fire_position_event(
+            dgn_event(DET_ITEM_PICKUP, you.pos(), 0, obj, -1), you.pos());
+
         dec_mitm_item_quantity(obj, quant_got);
         you.turn_is_over = true;
         if (you.religion == GOD_ASHENZARI)
