@@ -362,8 +362,6 @@ TextItem* SkillMenuEntry::get_name_item() const
 
 COLORS SkillMenuEntry::_get_colour() const
 {
-    int ct_bonus = crosstrain_bonus(m_sk);
-
     if (is_set(SKMF_DO_SHOW_DESC))
         return DARKGREY;
     else if (is_set(SKMF_DO_RESKILL_TO) && m_sk == you.transfer_from_skill)
@@ -383,7 +381,7 @@ COLORS SkillMenuEntry::_get_colour() const
         return YELLOW;
     else if (you.skills[m_sk] == 0)
         return DARKGREY;
-    else if (ct_bonus > 1 && is_set(SKMF_DISP_APTITUDE))
+    else if (crosstrain_bonus(m_sk) > 1 && is_set(SKMF_DISP_APTITUDE))
         return GREEN;
     else if (is_antitrained(m_sk) && is_set(SKMF_DISP_APTITUDE))
         return MAGENTA;
@@ -448,7 +446,6 @@ void SkillMenuEntry::_set_aptitude()
 
     if (crosstrain_other(m_sk, show_all) || ct_bonus > 1)
     {
-        m_skm->set_crosstrain();
         text += "<green>";
         text += crosstrain_other(m_sk, show_all) ? "*" : " ";
 
@@ -459,7 +456,6 @@ void SkillMenuEntry::_set_aptitude()
     }
     else if (antitrain_other(m_sk, show_all) || is_antitrained(m_sk))
     {
-        m_skm->set_antitrain();
         text += "<magenta>";
         text += antitrain_other(m_sk, show_all) ? "*" : " ";
         if (is_antitrained(m_sk))
@@ -567,11 +563,12 @@ void SkillMenuEntry::_set_points()
 #define NEXT_ACTION_SIZE    16
 #define NEXT_DISPLAY_SIZE   19
 #define SHOW_ALL_SIZE       17
-SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
+SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
     m_min_coord(), m_max_coord(), m_crosstrain(false), m_antitrain(false),
-    m_disp_queue()
+    m_enhanced(false), m_reduced(false), m_disp_queue()
 {
     SkillMenuEntry::m_skm = this;
+    _init_flags(reskilling);
 
 #ifdef USE_TILE
     const int limit = tiles.get_crt_font()->char_height() * 5
@@ -599,7 +596,10 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
     attach_object(m_ff);
     set_active_object(m_ff);
 
-    _init_title();
+    if (is_set(SKMF_RESKILLING))
+        _init_title();
+
+    const int first_line = m_min_coord.y + is_set(SKMF_RESKILLING);
     const int col_split = MIN_COLS / 2
                           + (is_set(SKMF_SKILL_ICONS) ? TILES_COL : 0);
     for (int col = 0; col < SK_ARR_COL; ++col)
@@ -607,12 +607,15 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
         {
             m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x + 1
                                                          + col_split * col,
-                                                         m_min_coord.y + 1 + ln),
+                                                         first_line + ln),
                                                m_ff);
         }
 
     coord_def help_min_coord(m_min_coord.x + 1, 0);
-    help_min_coord.y = (m_min_coord.y + SK_ARR_LN + 2);
+    help_min_coord.y = (m_min_coord.y + SK_ARR_LN + 1);
+    if (is_set(SKMF_RESKILLING))
+        ++help_min_coord.y;
+
 #ifdef USE_TILE
     if (is_set(SKMF_SKILL_ICONS))
     {
@@ -620,7 +623,8 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
         help_min_coord.y = tiles.to_lines(help_min_coord.y);
     }
 #else
-    help_min_coord.y = std::min(help_min_coord.y, m_max_coord.y - 3);
+    help_min_coord.y = std::min(help_min_coord.y,
+                                m_max_coord.y + is_set(SKMF_RESKILLING) - 4);
 #endif
 
     int help_height;
@@ -639,14 +643,11 @@ SkillMenu::SkillMenu(int flags) : PrecisionMenu(), m_flags(flags),
                                  help_min_coord.y + help_height));
     m_ff->attach_item(m_help);
 
-    // We're setting skills a first time just to initialise m_crosstrain and
-    // m_antitrain. We do it again after _init_disp_queue has set the display
-    // flag.
-    _set_skills();
     _init_disp_queue();
     _init_footer(coord_def(m_min_coord.x, help_min_coord.y + help_height));
 
-    _set_title();
+    if (is_set(SKMF_RESKILLING))
+        _set_title();
     _set_skills();
     _set_footer();
 
@@ -766,16 +767,6 @@ void SkillMenu::clear_selections()
     _clear_selections();
 }
 
-void SkillMenu::set_crosstrain()
-{
-    m_crosstrain = true;
-}
-
-void SkillMenu::set_antitrain()
-{
-    m_antitrain = true;
-}
-
 SkillMenuEntry* SkillMenu::_find_entry(skill_type sk)
 {
     for (int col = 0; col < SK_ARR_COL; ++col)
@@ -793,7 +784,7 @@ void SkillMenu::_init_disp_queue()
     else if (!is_invalid_skill(you.transfer_to_skill))
         m_disp_queue.push(SKMF_DISP_RESKILL);
 
-    if (_skill_enhanced())
+    if (m_enhanced || m_reduced)
         m_disp_queue.push(SKMF_DISP_ENHANCED);
 
     m_disp_queue.push(SKMF_DISP_NORMAL);
@@ -883,21 +874,6 @@ void SkillMenu::_set_title()
         t = make_stringf(format, "source");
     else if (is_set(SKMF_DO_RESKILL_TO))
         t = make_stringf(format, "destination");
-    else
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        t = make_stringf("You have %d points of unallocated experience "
-                         " (cost lvl %d; total %d).\n\n",
-                         you.exp_available, you.skill_cost_level,
-                         you.total_skill_points);
-#else
-        t = make_stringf(" You have %s unallocated experience.\n\n",
-                         you.exp_available == 0? "no" :
-                         make_stringf("%d point%s of", you.exp_available,
-                                      you.exp_available == 1? "" : "s").c_str()
-                        );
-#endif
-    }
 
     m_title->set_text(t);
 }
@@ -1180,41 +1156,43 @@ int SkillMenu::_get_next_display() const
     return m_disp_queue.front();
 }
 
-bool SkillMenu::_skill_enhanced() const
+void SkillMenu::_init_flags(bool reskilling)
 {
-    if (you.religion != GOD_OKAWARU && you.religion != GOD_ASHENZARI)
-        return false;
+    if (reskilling)
+    {
+        if (is_invalid_skill(you.transfer_from_skill))
+            set_flag(SKMF_DO_RESKILL_FROM);
+        else
+            set_flag(SKMF_DO_RESKILL_TO);
+
+        set_flag(SKMF_RESKILLING);
+    }
+    else
+        set_flag(SKMF_DO_PRACTISE);
+
+    if (crawl_state.game_is_hints_tutorial())
+        set_flag(SKMF_SIMPLE);
+    else
+        set_flag(SKMF_DISP_APTITUDE);
 
     for (unsigned int i = 0; i < NUM_SKILLS; ++i)
+    {
         if (you.skill(skill_type(i)) > you.skills[i])
-            return true;
+            m_enhanced = true;
+        else if (you.skill(skill_type(i)) < you.skills[i])
+            m_reduced = true;
 
-    return false;
+        if (crosstrain_bonus(skill_type(i)) > 1)
+            m_crosstrain = true;
+        else if (is_antitrained(skill_type(i)))
+            m_antitrain = true;
+    }
 }
 
 void skill_menu(bool reskilling)
 {
-    int flags = SKMF_NONE;
-
-    if (reskilling)
-    {
-        if (is_invalid_skill(you.transfer_from_skill))
-            flags |= SKMF_DO_RESKILL_FROM;
-        else
-            flags |= SKMF_DO_RESKILL_TO;
-
-        flags |= SKMF_RESKILLING;
-    }
-    else
-        flags |= SKMF_DO_PRACTISE;
-
-    if (crawl_state.game_is_hints_tutorial())
-        flags |= SKMF_SIMPLE;
-    else
-        flags |= SKMF_DISP_APTITUDE;
-
     clrscr();
-    SkillMenu skm(flags);
+    SkillMenu skm(reskilling);
     int keyn;
 
     while (true)
