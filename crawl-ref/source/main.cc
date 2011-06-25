@@ -2757,9 +2757,9 @@ static void _decrement_durations()
     }
 
     _decrement_a_duration(DUR_SHROUD_OF_GOLUBRIA, delay,
-                          "Your shroud disappears.",
+                          "Your shroud unravels.",
                           0,
-                          "Your shroud flickers.");
+                          "Your shroud begins to fray at the edges.");
 }
 
 static void _check_banished()
