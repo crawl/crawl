@@ -562,7 +562,23 @@ static bool _destroyed_valuable_weapon(int value, int type)
 
 static piety_gain_t _sac_corpse(const item_def& item)
 {
-    if (you.religion != GOD_OKAWARU)
+    if (you.religion == GOD_OKAWARU)
+    {
+        monster dummy;
+        dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum - 1 : item.plus);
+        if (item.props.exists(MONSTER_HIT_DICE))
+            dummy.hit_dice = item.props[MONSTER_HIT_DICE].get_short();
+        if (item.props.exists(MONSTER_NUMBER))
+            dummy.number   = item.props[MONSTER_NUMBER].get_short();
+        define_monster(&dummy);
+        int gain = get_fuzzied_monster_difficulty(&dummy);
+        dprf("fuzzied corpse difficulty: %4.2f", gain*0.01);
+
+        okawaru_gain_piety(gain, 700);
+        // gain = div_rand_round(gain, 700);
+        // return (gain <= 0) ? PIETY_NONE : (gain < 4) ? PIETY_SOME : PIETY_LOTS;
+    }
+
     {
         gain_piety(13, 19);
 
@@ -570,20 +586,6 @@ static piety_gain_t _sac_corpse(const item_def& item)
         // the rate you get piety at.
         return x_chance_in_y(13, 19) ? PIETY_SOME : PIETY_NONE;
     }
-
-    monster dummy;
-    dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum - 1 : item.plus);
-    if (item.props.exists(MONSTER_HIT_DICE))
-        dummy.hit_dice = item.props[MONSTER_HIT_DICE].get_short();
-    if (item.props.exists(MONSTER_NUMBER))
-        dummy.number   = item.props[MONSTER_NUMBER].get_short();
-    define_monster(&dummy);
-    int gain = get_fuzzied_monster_difficulty(&dummy);
-    dprf("fuzzied corpse difficulty: %d", gain);
-
-    gain_piety(gain, 7);
-    gain = div_rand_round(gain, 7);
-    return (gain <= 0) ? PIETY_NONE : (gain < 4) ? PIETY_SOME : PIETY_LOTS;
 }
 
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
