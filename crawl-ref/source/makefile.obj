@@ -36,6 +36,7 @@ delay.o \
 describe.o \
 dgl-message.o \
 dgn-height.o \
+dgn-labyrinth.o \
 dgn-layouts.o \
 dgn-overview.o \
 dgn-shoals.o \
