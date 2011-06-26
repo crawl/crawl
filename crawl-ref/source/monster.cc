@@ -4457,11 +4457,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_INVIS:
-        // Invisible monsters stay invisible.
-        if (mons_class_flag(type, M_INVIS))
-            add_ench(mon_enchant(ENCH_INVIS));
-        else if (mons_near(this) && !you.can_see_invisible()
-                 && !has_ench(ENCH_SUBMERGED))
+        // Note: Invisible monsters are not forced to stay invisible, so
+        // that they can properly have their invisibility removed just
+        // before being polymorphed into a non-invisible monster.
+        if (mons_near(this) && !you.can_see_invisible()
+            && !has_ench(ENCH_SUBMERGED))
         {
             if (!quiet)
             {
