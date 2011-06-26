@@ -184,6 +184,7 @@ public:
     std::vector<std::pair<text_pattern, std::string> > autoinscriptions;
     std::vector<text_pattern> note_items;     // Objects to note
     std::vector<int> note_skill_levels;       // Skill levels to note
+    std::vector<std::pair<text_pattern, std::string> > auto_spell_letters;
 
     bool        autoinscribe_artefacts; // Auto-inscribe identified artefacts.
     bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
