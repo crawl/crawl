@@ -590,14 +590,14 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE, 1, 2);
 
-        you.skills[SK_FIGHTING] = 4;
+        you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
         else
             you.skills[SK_ARMOUR]++;
-        weap_skill = 2;
+        weap_skill = 3;
         break;
 
     case JOB_DEATH_KNIGHT:
