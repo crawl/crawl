@@ -754,20 +754,17 @@ bool cast_summon_dragon(actor *caster, int pow, god_type god)
         if (pow >= 100)
             how_many = 2;
     }
-    // Now check to see if you are worshipping a good god
-    // and adjust dragons accordingly. No pearl dragons (word of due).
-    if (god == GOD_ELYVILON || god == GOD_ZIN)
+    // Now check to see if you are worshipping a good god and adjust
+    // dragons accordingly. No pearl dragons (word of due).
+    if (is_good_god(god))
     {
-        // Switch away from shadow dragon to storm/iron.
-        if (mon == MONS_SHADOW_DRAGON)
+        // Switch away from shadow dragon to storm/iron. TSO doesn't
+        // like golden dragons either (poison).
+        if (mon == MONS_SHADOW_DRAGON
+            || (god == GOD_SHINING_ONE && mon == MONS_GOLDEN_DRAGON))
+        {
             mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
-    }
-
-    if (god == GOD_SHINING_ONE)
-    {
-        // TSO doesn't like golden dragons either (poison).
-        if (mon == MONS_SHADOW_DRAGON || mon == MONS_GOLDEN_DRAGON)
-            mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
+        }
     }
 
     for (int i = 0; i < how_many; ++i)
