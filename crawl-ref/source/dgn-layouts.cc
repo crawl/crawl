@@ -1075,9 +1075,6 @@ static void _build_river(dungeon_feature_type river_type) //mv
 
     env.level_build_method += make_stringf(" river [%d]", (int) river_type);
 
-    // if (one_chance_in(10))
-    //     _build_river(river_type);
-
     // Made rivers less wide... min width five rivers were too annoying. -- bwr
     width = 3 + random2(4);
     y = 10 - width + random2avg(GYM-10, 3);
@@ -1125,9 +1122,6 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
 
     env.level_build_method += make_stringf(" lake [%d]", (int) lake_type);
 
-    // if (one_chance_in (10))
-    //     _build_lake(lake_type);
-
     x1 = 5 + random2(GXM - 30);
     y1 = 5 + random2(GYM - 30);
     x2 = x1 + 4 + random2(16);
@@ -1139,10 +1133,6 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
         if (coinflip())  x1 -= random2(3);
         if (coinflip())  x2 += random2(3);
         if (coinflip())  x2 -= random2(3);
-
-    //  mv: this does much more worse effects
-    //    if (coinflip()) x1 = x1 -2 + random2(5);
-    //    if (coinflip()) x2 = x2 -2 + random2(5);
 
         if (j - y1 < (y2 - y1) / 2)
         {
