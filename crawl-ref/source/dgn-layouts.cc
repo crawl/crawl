@@ -490,7 +490,7 @@ static bool _octa_room(dgn_region& region, int oblique_max,
     {
         for (y = tl.y + oblique; y < br.y - oblique; y++)
         {
-            if (grd[x][y] == DNGN_ROCK_WALL)
+            if (_is_wall(x, y))
                 grd[x][y] = type_floor;
 
             if (grd[x][y] == DNGN_FLOOR && type_floor == DNGN_SHALLOW_WATER)
