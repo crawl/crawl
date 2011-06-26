@@ -2893,6 +2893,11 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             name   = "shaped Lernaean hydra";
             flags |= MF_NAME_SUFFIX;
         }
+        else if (mons->type == MONS_SERPENT_OF_HELL)
+        {
+            name   = "shaped Serpent of Hell";
+            flags |= MF_NAME_SUFFIX;
+        }
 
         // "Blork the orc" and similar.
         const size_t the_pos = name.find(" the ");
