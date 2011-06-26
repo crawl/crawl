@@ -29,6 +29,7 @@
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "options.h"
 #include "player.h"
 #include "religion.h"
 #include "spl-cast.h"
@@ -273,8 +274,10 @@ spell_type get_spell_by_letter(char letter)
 
 bool add_spell_to_memory(spell_type spell)
 {
-    int i, j;
-
+    int i;
+    int j = -1;
+    std::string sname = spell_title(spell);
+    lowercase(sname);
     // first we find a slot in our head:
     for (i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
@@ -285,11 +288,28 @@ bool add_spell_to_memory(spell_type spell)
     you.spells[i] = spell;
 
     // now we find an available label:
-    for (j = 0; j < 52; j++)
+    // first check to see whether we've chosen an automatic label:
+    for (unsigned k = 0; k < Options.auto_spell_letters.size(); ++k)
     {
-        if (you.spell_letter_table[j] == -1)
+        if (!Options.auto_spell_letters[k].first.matches(sname))
+            continue;
+        for (unsigned l = 0; l < Options.auto_spell_letters[k].second.length(); ++l)
+            if (isaalpha(Options.auto_spell_letters[k].second[l]) &&
+                you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
+            {
+                j = letter_to_index(Options.auto_spell_letters[k].second[l]);
+                break;
+            }
+        if (j != -1)
             break;
     }
+    // If we didn't find a label above, choose the first available one.
+    if (j == -1)
+        for (j = 0; j < 52; j++)
+        {
+            if (you.spell_letter_table[j] == -1)
+                break;
+        }
 
     you.spell_letter_table[j] = i;
 

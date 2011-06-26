@@ -1038,6 +1038,7 @@ void game_options::reset_options()
     autoinscribe_cursed = true;
     note_items.clear();
     note_skill_levels.clear();
+    auto_spell_letters.clear();
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
@@ -2109,6 +2110,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries"
         && key != "include" && key != "bindkey"
+        && key != "spell_slot"
         && key.find("font") == std::string::npos)
     {
         lowercase(field);
@@ -2751,6 +2753,20 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 continue;
             }
         }
+    }
+    else if (key == "spell_slot")
+    {
+        std::vector<std::string> thesplit = split_string(":", field);
+        if (thesplit.size() != 2)
+            {
+                report_error(
+                    make_stringf("Error parsing spell lettering string: %s\n",
+                    field.c_str()));
+                return;
+            }
+        lowercase(thesplit[0]);
+        auto_spell_letters.push_back(
+            std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
     }
     else BOOL_OPTION(pickup_thrown);
     else BOOL_OPTION(pickup_dropped);

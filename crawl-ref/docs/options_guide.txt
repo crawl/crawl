@@ -63,7 +63,7 @@ The contents of this text are:
                 easy_butcher, always_confirm_butcher, prefer_safe_chunks,
                 easy_eat_chunks, easy_eat_gourmand, easy_eat_contaminated,
                 prompt_for_swap, easy_quit_item_prompts,
-                easy_exit_menu, sort_menus
+                easy_exit_menu, sort_menus, spell_slot
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, clear_messages, show_more, small_more,
@@ -1250,6 +1250,23 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         If you define sort_menus differently for two or more selectors,
         the last one matching will always take precedence, i.e. "any"
         as last setting would override any of the others.
+
+spell_slot = <regex>:<list of spell letters>
+        When you memorise any spell that matches the regex, it will
+        assign itself to the first available letter in the list. (If
+        all letters in the list are occupied for each regex the spell
+        matches, it will use the default ordering abc...xyzABC..XYZ.)
+
+        Examples: 
+        * if you want Haste to be placed on H:
+            spell_slot = Haste:H
+        * if you want Deflect Missiles to be placed on r normally or R if
+          r is unavailable:
+            spell_slot = Deflect:rR
+        * if you want to change the default spell slot assignment
+          to use capital letters: (place this after all other
+          spell_slot lines):
+            spell_slot = .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 4-j     Messages and Display Enhancements.
 ------------------------------------------
