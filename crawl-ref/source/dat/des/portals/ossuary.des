@@ -583,9 +583,10 @@ flood(flood_x, flood_y, crawl.random_range(6, 16), function(x, y, distance)
 end)
 
 }}
-SHUFFLE: AB/CD/EF/GH
-SUBST:   AC : ., B : A, D : <
-SUBST:   EFGH : d
+SHUFFLE: ABI/CDJ/EFK/GHL
+SUBST:   A : ., B : A, I : <
+SUBST:   EFKGHL : d
+SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
 MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
@@ -610,11 +611,11 @@ xxxxc1+.............+1cxxxx
 xxxxccc.vv+vv+vv+vv.cccxxxx
 xxxxc1+.vAAAv1vCCCv.+1cxxxx
 xxxxccc.vABAvvvCDCv.cccxxxx
-xxxxc1+.vAAAv1vCCCv.+1cxxxx
+xxxxc1+.vAAIv1vJCCv.+1cxxxx
 xxxxccc.vvvvv+vvvvv.cccxxxx
 xxxxc1+.............+1cxxxx
 xxxxccc.vvvvv+vvvvv.cccxxxx
-xxxxc1+.vEEEv1vGGGv.+1cxxxx
+xxxxc1+.vEEKv1vLGGv.+1cxxxx
 xxxxccc.vEFEvvvGHGv.cccxxxx
 xxxxc1+.vEEEv1vGGGv.+1cxxxx
 xxxxccc.vv+vv+vv+vv.cccxxxx
