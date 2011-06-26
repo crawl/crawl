@@ -282,6 +282,10 @@ Ignite Poison
 
 This spell attempts to convert all poison within the caster's view into liquid flame. It is very effective against poisonous creatures or those carrying poison potions. The caster and his gear are not affected.
 %%%%
+Inner Flame
+
+This spell fills an enemy with an intense fire, to be explosively released upon death. The size of the explosion caused is dependent on the size of the target.
+%%%%
 Insulation
 
 This spell protects the caster from electric shocks.

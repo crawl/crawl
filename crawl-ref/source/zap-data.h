@@ -1123,4 +1123,20 @@
     0
 },
 
+{
+    ZAP_INNER_FLAME,
+    "",
+    100,
+    NULL,
+    NULL,
+    BLACK,
+    true,
+    BEAM_INNER_FLAME,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
+
 #endif

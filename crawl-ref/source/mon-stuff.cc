@@ -1210,8 +1210,21 @@ void setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size = coinflip() ? 3 : 2;
 }
 
-static bool _spore_goes_pop(monster* mons, killer_type killer,
-                            int killer_index, bool pet_kill, bool wizard)
+void setup_inner_flame_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    const int size = origin.body_size(PSIZE_BODY);
+    beam.flavour   = BEAM_FIRE;
+    beam.damage    = (size > SIZE_BIG) ? dice_def(3, 25)
+                                       : dice_def(3, 20);
+    beam.name      = "fiery explosion";
+    beam.colour    = RED;
+    beam.ex_size   = (size > SIZE_BIG) ? 2 : 1;
+    beam.thrower   = KILL_YOU;
+}
+
+static bool _explode_monster(monster* mons, killer_type killer,
+                             int killer_index, bool pet_kill, bool wizard)
 {
     if (mons->hit_points > 0 || mons->hit_points <= -15 || wizard
         || killer == KILL_RESET || killer == KILL_DISMISSED || killer == KILL_BANISHED)
@@ -1221,21 +1234,25 @@ static bool _spore_goes_pop(monster* mons, killer_type killer,
 
     bolt beam;
     const int type = mons->type;
-
-    const char* msg       = NULL;
     const char* sanct_msg = NULL;
+
     if (type == MONS_GIANT_SPORE)
     {
         setup_spore_explosion(beam, *mons);
-        msg          = "The giant spore explodes!";
         sanct_msg    = "By Zin's power, the giant spore's explosion is "
                        "contained.";
     }
     else if (type == MONS_BALL_LIGHTNING)
     {
         setup_lightning_explosion(beam, *mons);
-        msg          = "The ball lightning explodes!";
         sanct_msg    = "By Zin's power, the ball lightning's explosion "
+                       "is contained.";
+    }
+    else if (mons->has_ench(ENCH_INNER_FLAME))
+    {
+        setup_inner_flame_explosion(beam, *mons);
+        mons->flags |= MF_EXPLODE_KILL;
+        sanct_msg    = "By Zin's power, the fiery explosion "
                        "is contained.";
     }
     else
@@ -1259,7 +1276,8 @@ static bool _spore_goes_pop(monster* mons, killer_type killer,
         if (is_sanctuary(mons->pos()))
             mpr(sanct_msg, MSGCH_GOD);
         else
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, msg);
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s explodes!",
+                 mons->full_name(DESC_CAP_THE).c_str());
     }
 
     if (is_sanctuary(mons->pos()))
@@ -1273,7 +1291,8 @@ static bool _spore_goes_pop(monster* mons, killer_type killer,
     // used to be, so make sure that mgrd() doesn't get cleared a second
     // time (causing the new monster to become floating) when
     // mons->reset() is called.
-    mons->set_position(coord_def(0,0));
+    if (type == MONS_GIANT_SPORE)
+        mons->set_position(coord_def(0,0));
 
     // Exploding kills the monster a bit earlier than normal.
     mons->hit_points = -16;
@@ -1711,10 +1730,11 @@ int monster_die(monster* mons, killer_type killer,
     bool did_death_message = false;
 
     if (mons->type == MONS_GIANT_SPORE
-        || mons->type == MONS_BALL_LIGHTNING)
+        || mons->type == MONS_BALL_LIGHTNING
+        || mons->has_ench(ENCH_INNER_FLAME))
     {
         did_death_message =
-            _spore_goes_pop(mons, killer, killer_index, pet_kill, wizard);
+            _explode_monster(mons, killer, killer_index, pet_kill, wizard);
     }
     else if (mons->type == MONS_FIRE_VORTEX
              || mons->type == MONS_SPATIAL_VORTEX
