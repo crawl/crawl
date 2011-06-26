@@ -91,8 +91,7 @@ static bool _surge_identify_boosters(spell_type spell)
                     continue;
 
                 if (player_wearing_slot(i)
-                    && !item_ident(you.inv[you.equip[i]],
-                                   ISFLAG_KNOW_PROPERTIES))
+                    && !item_type_known(you.inv[you.equip[i]]))
                 {
                     ++num_unknown;
                 }
