@@ -2795,7 +2795,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     bool need_note = false;
     std::string old_name = mons->full_name(DESC_CAP_A);
 
-    // If old monster is visible to the player, and is interesting,
+    // If the old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.
     if (can_see && MONST_INTERESTING(mons))
         need_note = true;
