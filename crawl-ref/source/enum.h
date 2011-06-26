@@ -324,7 +324,12 @@ enum beam_type                  // beam[].flavour
     BEAM_HIBERNATION,
     BEAM_BERSERK,
     BEAM_SLEEP,
+#if TAG_MAJOR_VERSION != 32
+    BEAM_INNER_FLAME,
+    BEAM_LAST_ENCHANTMENT = BEAM_INNER_FLAME,
+#else
     BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
+#endif
 
     // new beams for evaporate
     BEAM_POTION_STINKING_CLOUD,
@@ -345,8 +350,13 @@ enum beam_type                  // beam[].flavour
     BEAM_HOLY_LIGHT,
     BEAM_POTION_RANDOM,
     BEAM_AIR,
+#if TAG_MAJOR_VERSION == 32
+    BEAM_INNER_FLAME,
+    BEAM_LAST_REAL = BEAM_INNER_FLAME,
+#else
 
     BEAM_LAST_REAL = BEAM_AIR,
+#endif
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -1441,6 +1451,7 @@ enum enchant_type
     ENCH_MAD,           // Permanently mad.
     ENCH_SILVER_CORONA, // Zin's silver light.
     ENCH_RECITE_TIMER,  // Was recited against.
+    ENCH_INNER_FLAME,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3150,6 +3161,7 @@ enum spell_type
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
     SPELL_FIRE_SUMMON,
     SPELL_SHROUD_OF_GOLUBRIA,
+    SPELL_INNER_FLAME,
 
     NUM_SPELLS
 };
@@ -3319,6 +3331,7 @@ enum zap_type
     ZAP_HOLY_BREATH,
     ZAP_BREATHE_MEPHITIC,
     ZAP_IOOD_BURST,
+    ZAP_INNER_FLAME,
 
     NUM_ZAPS
 };

@@ -194,6 +194,7 @@ struct bolt;
 
 void setup_spore_explosion(bolt & beam, const monster& origin);
 void setup_lightning_explosion(bolt & beam, const monster& origin);
+void setup_inner_flame_explosion(bolt & beam, const monster& origin);
 
 bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
                        bool placement = false);

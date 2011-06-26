@@ -73,6 +73,7 @@ enum monster_info_flags
     MB_CLINGING,
     MB_NAME_ZOMBIE,
     MB_PERM_SUMMON,
+    MB_INNER_FLAME,
     NUM_MB_FLAGS
 };
 
