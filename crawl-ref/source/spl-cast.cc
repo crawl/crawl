@@ -76,53 +76,44 @@ static bool _surge_identify_boosters(spell_type spell)
     const unsigned int typeflags = get_spell_disciplines(spell);
     if ((typeflags & SPTYP_FIRE) || (typeflags & SPTYP_ICE))
     {
-        // Must not be wielding an unIDed staff.
-        // Note that robes of the Archmagi identify on wearing,
-        // so that's less of an issue.
-        const item_def* wpn = you.weapon();
-        if (wpn == NULL
-            || wpn->base_type != OBJ_STAVES
-            || item_ident(*wpn, ISFLAG_KNOW_PROPERTIES))
+        int num_unknown = 0;
+        for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
         {
-            int num_unknown = 0;
+            if (i == EQ_AMULET)
+                continue;
+
+            if (player_wearing_slot(i)
+                && !item_type_known(you.inv[you.equip[i]]))
+            {
+                ++num_unknown;
+            }
+        }
+
+        // We can also identify cases with two unknown rings, both
+        // of fire (or both of ice)...let's skip it.
+        if (num_unknown == 1)
+        {
             for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
             {
                 if (i == EQ_AMULET)
                     continue;
 
-                if (player_wearing_slot(i)
-                    && !item_type_known(you.inv[you.equip[i]]))
+                if (player_wearing_slot(i))
                 {
-                    ++num_unknown;
-                }
-            }
-
-            // We can also identify cases with two unknown rings, both
-            // of fire (or both of ice)...let's skip it.
-            if (num_unknown == 1)
-            {
-                for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
-                {
-                    if (i == EQ_AMULET)
-                        continue;
-
-                    if (player_wearing_slot(i))
+                    item_def& ring = you.inv[you.equip[i]];
+                    if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES)
+                        && (ring.sub_type == RING_FIRE
+                            || ring.sub_type == RING_ICE))
                     {
-                        item_def& ring = you.inv[you.equip[i]];
-                        if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES)
-                            && (ring.sub_type == RING_FIRE
-                                || ring.sub_type == RING_ICE))
-                        {
-                            set_ident_type(ring.base_type, ring.sub_type,
-                                            ID_KNOWN_TYPE);
-                            set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
-                            mprf("You are wearing: %s",
-                                 ring.name(DESC_INVENTORY_EQUIP).c_str());
-                        }
+                        set_ident_type(ring.base_type, ring.sub_type,
+                                        ID_KNOWN_TYPE);
+                        set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
+                        mprf("You are wearing: %s",
+                             ring.name(DESC_INVENTORY_EQUIP).c_str());
                     }
                 }
-                return (true);
             }
+            return (true);
         }
     }
     return (false);
