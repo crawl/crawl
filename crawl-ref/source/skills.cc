@@ -311,12 +311,6 @@ int exercise(skill_type exsk, int deg)
     return (ret);
 }
 
-// These get a discount in the late game -- still required?
-static bool _discounted_throwing_skill(skill_type exsk)
-{
-    return (exsk == SK_THROWING || exsk == SK_BOWS || exsk == SK_CROSSBOWS);
-}
-
 static int _stat_mult(skill_type exsk, int skill_inc)
 {
     int stat = 10;
@@ -405,19 +399,6 @@ static int _exercise2(skill_type exsk)
     if (cost > spending_limit)
     {
         int frac = (spending_limit * 10) / cost;
-
-        // This system is a bit hard on missile weapons in the late
-        // game, since they require expendable ammo in order to
-        // practise.  Increasing skill_inc would make
-        // missile weapons too easy earlier on, so, instead, we're
-        // giving them a special case here.
-        if (_discounted_throwing_skill(exsk)
-            && cost <= you.exp_available)
-        {
-            // MAX_SPENDING_LIMIT < cost <= you.exp_available
-            frac = ((cost / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
-        }
-
         cost = spending_limit;
         skill_inc = (skill_inc * frac) / 10;
     }
