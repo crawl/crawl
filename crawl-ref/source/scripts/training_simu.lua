@@ -44,7 +44,7 @@ elseif (job == "FE") then
                ["Air Magic"]     = {  1, 13, 6 },
                Evocations        = {  5, 5,  5 },
               }
-elseif (job == "Cr") then
+elseif (job == "Sk") then
     skills = { Fighting          = {  2, 1, 27 },
                [weapon_skill]    = {  1, 1, 18 },
                Armour            = {  3, 1, 27 },
