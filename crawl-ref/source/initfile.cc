@@ -625,19 +625,19 @@ std::string user_home_subpath(const std::string subpath)
     return catpath(user_home_dir(), subpath);
 }
 
-#if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
 static std::string _resolve_dir(const char* path, const char* suffix)
 {
 #if defined(DGAMELAUNCH)
     return catpath(path, "");
 #else
+    if (!path[0])
+        return suffix;
     if (path[0] != '~')
-        return std::string(path) + suffix;
+        return std::string(path) + "/" + suffix;
     else
-        return user_home_subpath(std::string(path + 1) + suffix);
+        return user_home_subpath(std::string(path + 1) + "/" + suffix);
 #endif
 }
-#endif
 
 void game_options::reset_options()
 {
@@ -666,10 +666,7 @@ void game_options::reset_options()
     }
 #endif
 
-#if defined(SAVE_DIR_PATH)
-    save_dir   = _resolve_dir(SAVE_DIR_PATH, "/saves/");
-    morgue_dir = _resolve_dir(SAVE_DIR_PATH, "/morgue/");
-#elif defined(TARGET_OS_MACOSX)
+#if defined(TARGET_OS_MACOSX)
     const std::string tmp_path_base =
         user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
@@ -677,15 +674,15 @@ void game_options::reset_options()
     if (SysEnv.macro_dir.empty())
         macro_dir  = tmp_path_base;
 #else
-    save_dir   = "saves/";
+        save_dir   = _resolve_dir(SysEnv.crawl_dir.c_str(), "saves/");
 #endif
 
-#if !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
-    morgue_dir = "morgue/";
+#if !defined(TARGET_OS_MACOSX)
+        morgue_dir = _resolve_dir(SysEnv.crawl_dir.c_str(), "morgue/");
 #endif
 
 #if defined(SHARED_DIR_PATH)
-    shared_dir = _resolve_dir(SHARED_DIR_PATH, "/");
+    shared_dir = _resolve_dir(SHARED_DIR_PATH, "");
 #else
     shared_dir = save_dir;
 #endif
@@ -2398,18 +2395,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(remember_name);
 #endif
 #ifndef DGAMELAUNCH
-#ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
-    {
-        // If SAVE_DIR_PATH was defined, there are very likely security issues
-        // with allowing the user to specify a different directory.
         save_dir = field;
-    }
-#endif
-#ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")
         morgue_dir = field;
-#endif
 #endif
     else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_gold_turns);
@@ -3359,6 +3348,11 @@ void get_system_environment(void)
     // The directory which contians init.txt, macro.txt, morgue.txt
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = check_string(getenv("CRAWL_DIR"));
+
+#ifdef SAVE_DIR_PATH
+    if (SysEnv.crawl_dir == "")
+        SysEnv.crawl_dir = SAVE_DIR_PATH;
+#endif
 
 #ifdef DGL_SIMPLE_MESSAGING
     // Enable DGL_SIMPLE_MESSAGING only if SIMPLEMAIL and MAIL are set.
