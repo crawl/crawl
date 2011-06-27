@@ -298,6 +298,8 @@ bool add_spell_to_memory(spell_type spell)
                 you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
             {
                 j = letter_to_index(Options.auto_spell_letters[k].second[l]);
+                mprf("Spell assigned to '%c'.",
+                     Options.auto_spell_letters[k].second[l]);
                 break;
             }
         if (j != -1)
