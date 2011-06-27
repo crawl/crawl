@@ -1128,7 +1128,7 @@
     "",
     100,
     NULL,
-    NULL,
+    new tohit_calculator<0, 3, 1>,
     BLACK,
     true,
     BEAM_INNER_FLAME,
