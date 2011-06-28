@@ -1895,8 +1895,12 @@ int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
     int ret = 0;
 
     // Note: ret currently measured in halves (see skill factor).
-    if (wpn.sub_type == WPN_WHIP || wpn.sub_type == WPN_DEMON_WHIP)
+    if (wpn.sub_type == WPN_WHIP
+        || wpn.sub_type == WPN_DEMON_WHIP
+        || wpn.sub_type == WPN_SACRED_SCOURGE)
+    {
         ret = 3 + (dex / 5);
+    }
     else if (weapon_skill(wpn) == SK_POLEARMS)
         ret = 2 + (dex / 5);
 
