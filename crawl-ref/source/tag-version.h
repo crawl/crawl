@@ -38,6 +38,7 @@ enum tag_minor_version
     TAG_MINOR_ZIG_FIX,             // Zero out junk ziggurat variable values.
     TAG_MINOR_XP_POOL_FIX,         // Clamp possibly junk values of XP pool.
     TAG_MINOR_DECK_RARITY,         // Make item.special=0 not clash with real rarities.
+    TAG_MINOR_PIETY_MAX,           // Remember the maximum piety attained with each god.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

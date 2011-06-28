@@ -2565,6 +2565,15 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
     pgn = div_rand_round(pgn, denominator);
     while (pgn-- > 0)
         _gain_piety_point();
+    if (you.piety > you.piety_max[you.religion])
+    {
+        if (you.piety > 160 && you.piety_max[you.religion] <= 160)
+        {
+            mark_milestone("god.maxpiety", "became the Champion of "
+                           + god_name(you.religion) + ".");
+        }
+        you.piety_max[you.religion] = you.piety;
+    }
 }
 
 static void _gain_piety_point()
@@ -3371,6 +3380,8 @@ void god_pitch(god_type which_god)
     else
     {
         you.piety = 15; // to prevent near instant excommunication
+        if (you.piety_max[you.religion] < 15)
+            you.piety_max[you.religion] = 15;
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
     }
