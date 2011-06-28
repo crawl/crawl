@@ -692,8 +692,6 @@ static int _acquirement_misc_subtype()
         result = MISC_BOX_OF_BEASTS;
     if (one_chance_in(4))
         result = MISC_BOTTLED_EFREET;
-    if (one_chance_in(4))
-        result = MISC_QUAD_DAMAGE;
     if (one_chance_in(4) && !you.seen_misc[MISC_DISC_OF_STORMS])
         result = MISC_DISC_OF_STORMS;
     if (x_chance_in_y(you.skills[SK_FIRE_MAGIC], 27)
