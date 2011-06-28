@@ -2853,14 +2853,10 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     bool player_messaged = can_see
                        && simple_monster_message(mons, str_polymon.c_str());
 
-    // If the old monster is permanently invisible, but the new one
-    // isn't, quietly remove the old monster's invisibility before
-    // transforming it.
-    if (mons_class_flag(mons->type, M_INVIS)
-        && !mons_class_flag(targetc, M_INVIS))
-    {
-        mons->del_ench(ENCH_INVIS, false, false);
-    }
+    // Quietly remove the old monster's invisibility before transforming
+    // it.  If we don't do this, it'll stay invisible even after losing
+    // the invisibility enchantment below.
+    mons->del_ench(ENCH_INVIS, false, false);
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
