@@ -1014,10 +1014,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_STEALTH]  = 1;
         weap_skill = 1;
 
-        if (is_range_weapon(you.inv[1]))
-            you.skills[range_skill(you.inv[1])] = 4;
-        else
-            you.skills[SK_THROWING] = 4;
+        you.skills[range_skill(you.inv[1])] = 4;
         break;
 
     case JOB_WANDERER:

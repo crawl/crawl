@@ -1862,12 +1862,8 @@ skill_type range_skill(const item_def &item)
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
     else if (item.base_type == OBJ_MISSILES)
     {
-        switch (item.sub_type)
-        {
-        case MI_DART:    return (SK_THROWING);
-        case MI_JAVELIN: return (SK_POLEARMS);
-        default:         break;
-        }
+        if (!has_launcher(item))
+            return (SK_THROWING);
     }
 
     return (SK_THROWING);
