@@ -1163,6 +1163,10 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < MAX_NUM_GODS; i++)
         marshallShort(th, you.num_total_gifts[i]);
 
+    // how much piety have you achieved at highest with each god?
+    for (i = 0; i < MAX_NUM_GODS; i++)
+        marshallByte(th, you.piety_max[i]);
+
     marshallByte(th, NUM_NEMELEX_GIFT_TYPES);
     for (i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
         marshallBoolean(th, you.nemelex_sacrificing[i]);
@@ -1916,7 +1920,15 @@ static void tag_read_you(reader &th)
         you.num_current_gifts[i] = unmarshallShort(th);
     for (i = 0; i < count; i++)
         you.num_total_gifts[i] = unmarshallShort(th);
-
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_PIETY_MAX)
+    {
+#endif
+    for (i = 0; i < count; i++)
+        you.piety_max[i] = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
     count = unmarshallByte(th);
     for (i = 0; i < count; i++)
         you.nemelex_sacrificing[i] = unmarshallBoolean(th);

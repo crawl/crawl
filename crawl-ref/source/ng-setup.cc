@@ -1087,6 +1087,8 @@ static void _give_items_skills(const newgame_def& ng)
     {
         you.worshipped[you.religion] = 1;
         set_god_ability_slots();
+        if (you.religion != GOD_XOM)
+            you.piety_max[you.religion] = you.piety;
     }
 }
 
