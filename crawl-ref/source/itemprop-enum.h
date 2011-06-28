@@ -245,7 +245,7 @@ enum misc_item_type
 
     MISC_RUNE_OF_ZOT,
 
-    MISC_QUAD_DAMAGE,
+    MISC_QUAD_DAMAGE, // Sprint only
 
     NUM_MISCELLANY, // mv: used for random generation
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
