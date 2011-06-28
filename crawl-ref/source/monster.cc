@@ -4772,7 +4772,7 @@ void monster::timeout_enchantments(int levels)
             }
             // Deliberate fall-through
 
-        case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA
+        case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
