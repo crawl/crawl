@@ -1574,10 +1574,7 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         }
 
         // Adjust handedness for size only for non-whip melee weapons.
-        if (!is_range_weapon(item)
-            && item.sub_type != WPN_WHIP
-            && item.sub_type != WPN_DEMON_WHIP
-            && item.sub_type != WPN_SACRED_SCOURGE)
+        if (!is_range_weapon(item) && !is_whip_type(item.sub_type))
         {
             fit = cmp_weapon_size(item, size);
 
@@ -1624,6 +1621,13 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         ret = HANDS_ONE;
 
     return (static_cast< hands_reqd_type >(ret));
+}
+
+bool is_whip_type(int wpn_type)
+{
+    return (wpn_type == WPN_WHIP
+            || wpn_type == WPN_DEMON_WHIP
+            || wpn_type == WPN_SACRED_SCOURGE);
 }
 
 bool is_demonic(const item_def &item)
@@ -1891,12 +1895,8 @@ int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
     int ret = 0;
 
     // Note: ret currently measured in halves (see skill factor).
-    if (wpn.sub_type == WPN_WHIP
-        || wpn.sub_type == WPN_DEMON_WHIP
-        || wpn.sub_type == WPN_SACRED_SCOURGE)
-    {
+    if (is_whip_type(wpn.sub_type))
         ret = 3 + (dex / 5);
-    }
     else if (weapon_skill(wpn) == SK_POLEARMS)
         ret = 2 + (dex / 5);
 
