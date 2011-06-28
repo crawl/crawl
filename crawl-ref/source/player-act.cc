@@ -519,8 +519,7 @@ void player::attacking(actor *other)
     }
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
-    if (player_mutation_level(MUT_BERSERK)
-            && x_chance_in_y(pow(3, player_mutation_level(MUT_BERSERK) - 1), 100)
+    if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100)
         || _equipment_make_berserk())
     {
         go_berserk(false);
