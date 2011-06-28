@@ -175,7 +175,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     }
 
     if (!monster_habitable_grid(mover, grd(moved->pos()))
-        || !monster_habitable_grid(moved, grd(mover->pos())))
+            && !mover->can_cling_to(moved->pos())
+        || !monster_habitable_grid(moved, grd(mover->pos()))
+            && !moved->can_cling_to(mover->pos()))
     {
         return (false);
     }
@@ -188,7 +190,7 @@ static bool _swap_monsters(monster* mover, monster* moved)
     moved->set_position(mover_pos);
 
     mover->check_clinging(true);
-    moved->check_clinging(false);
+    moved->check_clinging(true);
 
     mgrd(mover->pos()) = mover->mindex();
     mgrd(moved->pos()) = moved->mindex();
@@ -3413,8 +3415,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     const coord_def c = mon->pos();
     const coord_def n = mon->pos() + delta;
 
-    if (!monster_habitable_grid(mon, grd(n))
-        || !monster_habitable_grid(m2, grd(c)))
+    if (!monster_habitable_grid(mon, grd(n)) && !mon->can_cling_to(n)
+        || !monster_habitable_grid(m2, grd(c)) && !m2->can_cling_to(c))
     {
         return (false);
     }
@@ -3435,9 +3437,16 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     immobile_monster[m2i] = true;
 
     mon->check_redraw(c, false);
-    mon->apply_location_effects(c);
+    if (mon->is_wall_clinging())
+        mon->check_clinging(true);
+    else
+        mon->apply_location_effects(c);
+
     m2->check_redraw(n, false);
-    m2->apply_location_effects(n);
+    if (m2->is_wall_clinging())
+        m2->check_clinging(true);
+    else
+        m2->apply_location_effects(n);
 
     // The seen context no longer applies if the monster is moving normally.
     mon->seen_context.clear();
